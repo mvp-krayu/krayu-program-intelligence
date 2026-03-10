@@ -49,7 +49,7 @@ Demonstrations illustrating the discipline in controlled environments:
 
 
 DISCIPLINE STACK (CONCEPTUAL)
-
+```
 ┌─────────────────────────────────────┐
 │ Executive Insight                   │
 │ (Leadership understanding)          │
@@ -71,7 +71,7 @@ DISCIPLINE STACK (CONCEPTUAL)
 │ (Observable program activity)       │
 │ Stream 10                           │
 └─────────────────────────────────────┘
-
+```
 
 ## ROLE IN THE HANDBOOK
 
