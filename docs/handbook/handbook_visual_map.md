@@ -7,7 +7,7 @@ This artifact provides a visual representation of how the Program Intelligence d
 It illustrates the transformation chain that converts operational program activity into executive insight.
 
 ## DISCIPLINE FLOW
-
+```
 Execution Evidence
         │
         ▼
@@ -21,7 +21,7 @@ Program Intelligence
         │
         ▼
 Executive Insight
-
+```
 
 ## STREAM MAPPING
 
