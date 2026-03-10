@@ -23,7 +23,7 @@ HANDBOOK LOCATION
 
 All handbook artifacts are stored under:
 
-~/Projects/Krayu_Signäl/docs/handbook/
+~/Projects/krayu-program-intelligence/docs/handbook/
 
 
 TRIGGER EVENTS FOR HANDBOOK UPDATES
@@ -50,7 +50,9 @@ Add a link to the new artifact using a relative path.
 
 Example:
 
+```
 - [New Framework Model](../program-intelligence-framework/new_framework_model.md)
+```
 
 The stream index must always reflect the current artifact inventory of the stream directory.
 

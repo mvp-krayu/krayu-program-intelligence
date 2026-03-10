@@ -1,4 +1,4 @@
-PROGRAM INTELLIGENCE HANDBOOK
+# PROGRAM INTELLIGENCE HANDBOOK
 
 Purpose
 
@@ -10,7 +10,7 @@ The handbook does not replace authoritative stream artifacts.
 Instead, it provides the reader with an integrated path through the discipline and links to the detailed materials stored in the repository.
 
 
-HANDBOOK ENTRY MODEL
+## HANDBOOK ENTRY MODEL
 
 This handbook should be read as the root navigation document of the discipline.
 
@@ -23,7 +23,7 @@ The handbook is therefore both:
 • the root of the repository-book structure
 
 
-INTRODUCTION
+## INTRODUCTION
 
 [Open Handbook Introduction](handbook_introduction.md)
 
@@ -34,7 +34,7 @@ INTRODUCTION
 [Open Cross-Stream Synthesis](handbook_cross_stream_synthesis.md)
 
 
-PART I — DISCIPLINE
+## PART I — DISCIPLINE
 
 Source Stream:
 10 — Program Intelligence Discipline
@@ -51,7 +51,7 @@ Primary source artifacts:
 - [Program Intelligence Body of Knowledge](../program-intelligence-discipline/program_intelligence_body_of_knowledge.md)
 
 
-PART II — PROGRAM INTELLIGENCE FRAMEWORK
+## PART II — PROGRAM INTELLIGENCE FRAMEWORK
 
 Source Stream:
 20 — Program Intelligence Framework
@@ -71,7 +71,7 @@ Primary source artifacts:
 - [Program Intelligence Value Loop](../program-intelligence-framework/program_intelligence_value_loop.md)
 
 
-PART III — EXECUTION SIGNAL SCIENCE
+## PART III — EXECUTION SIGNAL SCIENCE
 
 Source Stream:
 40 — Signäl Execution Signal Infrastructure
@@ -90,7 +90,7 @@ Primary source artifacts:
 - [Signal Interpretation Model](../signal-science/signal_interpretation_model.md)
 
 
-PART IV — DEMONSTRATIONS
+## PART IV — DEMONSTRATIONS
 
 Source Stream:
 50 — Program Intelligence Demonstrations
@@ -108,7 +108,7 @@ Primary source artifacts:
 - [WOW 30 Day Demonstration](../program-intelligence-demonstrations/wow_30_day_demonstration.md)
 
 
-PART V — CASE STUDIES
+## PART V — CASE STUDIES
 
 Source Stream:
 60 — Program Intelligence Case Studies
@@ -126,7 +126,7 @@ Primary source artifacts:
 - [Program Signal Behavior Case](../program-intelligence-case-studies/program_signal_behavior_case.md)
 
 
-PART VI — COMMERCIALIZATION
+## PART VI — COMMERCIALIZATION
 
 Source Stream:
 30 — Program Intelligence Commercialization
@@ -144,7 +144,7 @@ Primary source artifacts:
 - [Program Intelligence Value Proposition](../program-intelligence-commercialization/program_intelligence_value_proposition.md)
 
 
-DISCIPLINE FLOW
+## DISCIPLINE FLOW
 
 The Program Intelligence discipline can be understood through the following transformation chain:
 
@@ -157,12 +157,12 @@ Execution Evidence
 This flow is distributed across the streams and synthesized through this handbook.
 
 
-CONCLUSION
+## CONCLUSION
 
 [Open Conclusion — The Future of Program Intelligence](handbook_conclusion_future_of_program_intelligence.md)
 
 
-HANDBOOK DIRECTORY
+## HANDBOOK DIRECTORY
 
 Handbook root:
 
@@ -174,7 +174,7 @@ The handbook should therefore be treated as a modular book:
 one root file, supported by linked chapters, linked visual material, linked stream indexes, and direct artifact links into the authoritative source streams.
 
 
-HANDBOOK OPERATING RULE
+## HANDBOOK OPERATING RULE
 
 The handbook must remain dynamic and navigable.
 
