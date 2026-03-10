@@ -1,13 +1,12 @@
-PROGRAM INTELLIGENCE HANDBOOK
+# PROGRAM INTELLIGENCE HANDBOOK
 Visual Map of the Discipline
 
-Purpose
+## Purpose
 
 This artifact provides a visual representation of how the Program Intelligence discipline is structured across the Krayu streams.
-
 It illustrates the transformation chain that converts operational program activity into executive insight.
 
-DISCIPLINE FLOW
+## DISCIPLINE FLOW
 
 Execution Evidence
         │
@@ -24,7 +23,7 @@ Program Intelligence
 Executive Insight
 
 
-STREAM MAPPING
+## STREAM MAPPING
 
 Execution Evidence
 → Stream 10 — Program Intelligence Discipline
@@ -42,7 +41,7 @@ Executive Insight / Application
 → Stream 30 — Program Intelligence Commercialization
 
 
-SUPPORTING DOMAIN
+## SUPPORTING DOMAIN
 
 Demonstrations illustrating the discipline in controlled environments:
 
@@ -74,14 +73,13 @@ DISCIPLINE STACK (CONCEPTUAL)
 └─────────────────────────────────────┘
 
 
-ROLE IN THE HANDBOOK
+## ROLE IN THE HANDBOOK
 
 This visual map acts as the conceptual overview of the discipline.
-
 It allows readers to understand:
 
-• how the discipline is layered
-• how the streams relate to each other
-• how execution data becomes strategic insight
+- how the discipline is layered
+- how the streams relate to each other
+- how execution data becomes strategic insight
 
 The diagram should be referenced early in the handbook to orient readers before they navigate into the individual parts.
