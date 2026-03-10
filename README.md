@@ -9,12 +9,12 @@ state of complex programs.
 
 This repository contains:
 
-• the Program Intelligence discipline
-• the Program Intelligence framework
-• the Signäl execution signal model
-• demonstration designs
-• case study methodology
-• commercialization structure
+- the Program Intelligence discipline
+- the Program Intelligence framework
+- the Signäl execution signal model
+- demonstration designs
+- case study methodology
+- commercialization structure
 
 The repository does NOT contain implementation systems.
 
