@@ -1,180 +1,365 @@
 # Evidence Surface Inventory
-
-**Contract:** INT-03-40.2-GITHUB-INTAKE
-**Stream:** 40.2 — PiOS Evidence Connectors Layer
-**Date:** 2026-03-18
-**Source:** krayu-program-intelligence repository (full recursive scan)
-
----
-
-## Summary
-
-**Classification rule:** Each file has exactly one primary classification. No file is counted in more than one category.
-
-| Category | Count |
-|---|---|
-| Code | 1 |
-| Documentation | 94 |
-| Configuration | 3 |
-| Interface | 0 |
-| Other | 8 |
-| **Total** | **106** |
+run_id: run_02_blueedge
+stream: Stream 40.2 — PiOS Evidence Connectors Layer
+contract: PIOS-40.2-RUN02-CONTRACT-v2
+version: v3.23.0
+date: 2026-03-19
 
 ---
 
-## Code
+## Boundary Reference
 
-| Relative File Path | File Type | Classification |
-|---|---|---|
-| scripts/generate-stream-indexes.sh | Shell Script (.sh) | code |
-
----
-
-## Documentation
-
-| Relative File Path | File Type | Classification |
-|---|---|---|
-| README.md | Markdown (.md) | documentation |
-| docs/governance/canonical_knowledge_registry.md | Markdown (.md) | documentation |
-| docs/governance/canonical_knowledge_registry_backup.md | Markdown (.md) | documentation |
-| docs/governance/governance_master_capsule.md | Markdown (.md) | documentation |
-| docs/governance/governance_master_capsule_backup.md | Markdown (.md) | documentation |
-| docs/governance/governance_operating_model.md | Markdown (.md) | documentation |
-| docs/handbook/handbook_conclusion_future_of_program_intelligence.md | Markdown (.md) | documentation |
-| docs/handbook/handbook_cross_stream_synthesis.md | Markdown (.md) | documentation |
-| docs/handbook/handbook_introduction.md | Markdown (.md) | documentation |
-| docs/handbook/handbook_maintenance_protocol.md | Markdown (.md) | documentation |
-| docs/handbook/handbook_navigation_model.md | Markdown (.md) | documentation |
-| docs/handbook/handbook_part_1_discipline.md | Markdown (.md) | documentation |
-| docs/handbook/handbook_part_2_framework.md | Markdown (.md) | documentation |
-| docs/handbook/handbook_part_3_signal_science.md | Markdown (.md) | documentation |
-| docs/handbook/handbook_part_4_demonstrations.md | Markdown (.md) | documentation |
-| docs/handbook/handbook_part_5_case_studies.md | Markdown (.md) | documentation |
-| docs/handbook/handbook_part_6_commercialization.md | Markdown (.md) | documentation |
-| docs/handbook/handbook_repository_graph.md | Markdown (.md) | documentation |
-| docs/handbook/handbook_stream_10_index.md | Markdown (.md) | documentation |
-| docs/handbook/handbook_stream_20_index.md | Markdown (.md) | documentation |
-| docs/handbook/handbook_stream_30_index.md | Markdown (.md) | documentation |
-| docs/handbook/handbook_stream_40_index.md | Markdown (.md) | documentation |
-| docs/handbook/handbook_stream_50_index.md | Markdown (.md) | documentation |
-| docs/handbook/handbook_stream_60_index.md | Markdown (.md) | documentation |
-| docs/handbook/handbook_visual_map.md | Markdown (.md) | documentation |
-| docs/handbook/program_intelligence_handbook.md | Markdown (.md) | documentation |
-| docs/handbook/program_intelligence_handbook_structure.md | Markdown (.md) | documentation |
-| docs/handbook/program_intelligence_handbook_v2.md | Markdown (.md) | documentation |
-| docs/program-intelligence-case-studies/blueedge_program_case_study.md | Markdown (.md) | documentation |
-| docs/program-intelligence-case-studies/program_intelligence_case_study_index.md | Markdown (.md) | documentation |
-| docs/program-intelligence-case-studies/program_intelligence_case_study_model.md | Markdown (.md) | documentation |
-| docs/program-intelligence-case-studies/program_signal_behavior_case.md | Markdown (.md) | documentation |
-| docs/program-intelligence-commercialization/krayu_program_intelligence_positioning.md | Markdown (.md) | documentation |
-| docs/program-intelligence-commercialization/program_intelligence_advisory_engagement.md | Markdown (.md) | documentation |
-| docs/program-intelligence-commercialization/program_intelligence_advisory_model.md | Markdown (.md) | documentation |
-| docs/program-intelligence-commercialization/program_intelligence_value_proposition.md | Markdown (.md) | documentation |
-| docs/program-intelligence-demonstrations/demonstration_exec_intelligence.md | Markdown (.md) | documentation |
-| docs/program-intelligence-demonstrations/demonstration_signal_pipeline.md | Markdown (.md) | documentation |
-| docs/program-intelligence-demonstrations/program_intelligence_demonstration_model.md | Markdown (.md) | documentation |
-| docs/program-intelligence-demonstrations/wow_30_day_demonstration.md | Markdown (.md) | documentation |
-| docs/program-intelligence-discipline/cross_program_context_model.md | Markdown (.md) | documentation |
-| docs/program-intelligence-discipline/discipline_feedback_registry.md | Markdown (.md) | documentation |
-| docs/program-intelligence-discipline/program_intelligence_body_of_knowledge.md | Markdown (.md) | documentation |
-| docs/program-intelligence-discipline/program_intelligence_definition.md | Markdown (.md) | documentation |
-| docs/program-intelligence-discipline/program_intelligence_manifesto.md | Markdown (.md) | documentation |
-| docs/program-intelligence-discipline/stream_bootstrap_capsule.md | Markdown (.md) | documentation |
-| docs/program-intelligence-discipline/stream_end_state_model.md | Markdown (.md) | documentation |
-| docs/program-intelligence-discipline/stream_execution_operating_instructions.md | Markdown (.md) | documentation |
-| docs/program-intelligence-discipline/working_state_model.md | Markdown (.md) | documentation |
-| docs/program-intelligence-framework/drafts/execution_signal_model.md | Markdown (.md) | documentation |
-| docs/program-intelligence-framework/drafts/execution_signal_taxonomy.md | Markdown (.md) | documentation |
-| docs/program-intelligence-framework/drafts/executive_intelligence_model.md | Markdown (.md) | documentation |
-| docs/program-intelligence-framework/drafts/program_intelligence_analytical_model.md | Markdown (.md) | documentation |
-| docs/program-intelligence-framework/drafts/program_intelligence_framework_map.md | Markdown (.md) | documentation |
-| docs/program-intelligence-framework/drafts/program_intelligence_manifesto.md | Markdown (.md) | documentation |
-| docs/program-intelligence-framework/drafts/program_intelligence_maturity_model.md | Markdown (.md) | documentation |
-| docs/program-intelligence-framework/drafts/program_intelligence_ontology.md | Markdown (.md) | documentation |
-| docs/program-intelligence-framework/drafts/program_intelligence_reference_architecture.md | Markdown (.md) | documentation |
-| docs/program-intelligence-framework/framework_signal_alignment.md | Markdown (.md) | documentation |
-| docs/program-intelligence-framework/pios/pios_execution_contract.md | Markdown (.md) | documentation |
-| docs/program-intelligence-framework/pios/pios_pipeline_specification.md | Markdown (.md) | documentation |
-| docs/program-intelligence-framework/pios/pios_runtime_architecture.md | Markdown (.md) | documentation |
-| docs/program-intelligence-framework/program_execution_reconstruction_model.md | Markdown (.md) | documentation |
-| docs/program-intelligence-framework/program_intelligence_knowledge_map_togaf.md | Markdown (.md) | documentation |
-| docs/program-intelligence-framework/program_intelligence_maturity_model.md | Markdown (.md) | documentation |
-| docs/program-intelligence-framework/program_intelligence_pyramid.md | Markdown (.md) | documentation |
-| docs/program-intelligence-framework/program_intelligence_three_layer_model.md | Markdown (.md) | documentation |
-| docs/program-intelligence-framework/program_intelligence_value_loop.md | Markdown (.md) | documentation |
-| docs/research/RSR-06_execution_stability_index.md | Markdown (.md) | documentation |
-| docs/signal-science/docs_signal_science_program_condition_model.md | Markdown (.md) | documentation |
-| docs/signal-science/docs_signal_science_program_diagnosis_model.md | Markdown (.md) | documentation |
-| docs/signal-science/execution_signal_model.md | Markdown (.md) | documentation |
-| docs/signal-science/execution_signal_taxonomy.md | Markdown (.md) | documentation |
-| docs/signal-science/program_execution_graph_formal_model.md | Markdown (.md) | documentation |
-| docs/signal-science/program_intelligence_analytical_stack.md | Markdown (.md) | documentation |
-| docs/signal-science/program_intelligence_model.md | Markdown (.md) | documentation |
-| docs/signal-science/program_intelligence_signal_matrix.md | Markdown (.md) | documentation |
-| docs/signal-science/signal_computation_model.md | Markdown (.md) | documentation |
-| docs/signal-science/signal_evidence_model.md | Markdown (.md) | documentation |
-| docs/signal-science/signal_interpretation_model.md | Markdown (.md) | documentation |
-| docs/signal-science/signal_reasoning_model.md | Markdown (.md) | documentation |
-| docs/signal-science/signal_taxonomy.md | Markdown (.md) | documentation |
-| docs/signal-science/signal_validation_model.md | Markdown (.md) | documentation |
-| docs/web-governance/krayu_governance_capsule.md | Markdown (.md) | documentation |
-| streams/40_Signal Execution Signal Infra/40.0_PiOSRuntimeLayerConceptualModel.md | Markdown (.md) | documentation |
-| streams/40_Signal Execution Signal Infra/40.0_PiOSRuntimeLayer/40.1_PiOSRuntimeArchitecture/PiOSRuntimeArchitecture.md | Markdown (.md) | documentation |
-| streams/40_Signal Execution Signal Infra/40.0_PiOSRuntimeLayer/40.2_PiOSEvidenceConnectors/EvidenceConnectors.md | Markdown (.md) | documentation |
-| streams/40_Signal Execution Signal Infra/40.0_PiOSRuntimeLayer/40.3_PIOSReverseEngineering/PiOSReverseEngineering.md | Markdown (.md) | documentation |
-| streams/40_Signal Execution Signal Infra/40.0_PiOSRuntimeLayer/40.4_PiOSTelementryExtraction/PiOSTelemetryExtraction.md | Markdown (.md) | documentation |
-| streams/40_Signal Execution Signal Infra/40.0_PiOSRuntimeLayer/40.5_PiOSSignalComputation/PiOSSignalComputation.md | Markdown (.md) | documentation |
-| streams/40_Signal Execution Signal Infra/40.0_PiOSRuntimeLayer/40.6_PiOSConditionDiagnosisLayer/PiOSConditionDiagnosisLayer.md | Markdown (.md) | documentation |
-| streams/40_Signal Execution Signal Infra/40.0_PiOSRuntimeLayer/40.7_PiOSIntellignceSynthesisLayer/PiOSIntelligenceSynthesisLayer.md | Markdown (.md) | documentation |
-| streams/40_Signal Execution Signal Infra/40.0_PiOSRuntimeLayer/40.8_PiOSAgenticOrchestrationLayer/PiOSAgenticLayer.md | Markdown (.md) | documentation |
-| streams/40_Signal Execution Signal Infra/40.0_PiOSRuntimeLayer/40.9_PiOSFeedbackAndCI Layer/PiOSFeedbackAndCILayer.md | Markdown (.md) | documentation |
+evidence_boundary: docs/pios/runs/run_02_blueedge/evidence_boundary.md
+evidence_origin_root: ~/Projects/blueedge-program-intelligence/source-v3.23/
 
 ---
 
-## Configuration
+## Evidence Domain 1 — HTML Documentation
 
-| Relative File Path | File Type | Classification |
-|---|---|---|
-| .gitignore | Git Ignore (.gitignore) | configuration |
-| .env.claude | Environment Config (.env.claude) | configuration |
-| .github/workflows/update-handbook-indexes.yml | YAML Workflow (.yml) | configuration |
+Path: source-v3.23/ (root level)
+Evidence class: documentation / interface artifact
+Intake status: ACCEPTED
 
----
+| File | Description |
+|------|-------------|
+| BlueEdge_Unified_Architecture_v3_23_0.html | System architecture documentation export |
+| BlueEdge_Competitive_Dashboard_Feb2026.html | Competitive intelligence dashboard export |
+| Blue_Edge_PMO_Dashboard.html | Program management office dashboard export |
 
-## Interface
-
-No interface files (API schemas, OpenAPI specs, interface definitions) were discovered in this repository.
-
----
-
-## Other
-
-| Relative File Path | File Type | Classification |
-|---|---|---|
-| .DS_Store | macOS System File (.DS_Store) | other |
-| docs/.DS_Store | macOS System File (.DS_Store) | other |
-| docs/program-intelligence-discipline/.DS_Store | macOS System File (.DS_Store) | other |
-| streams/.DS_Store | macOS System File (.DS_Store) | other |
-| streams/40_Signal Execution Signal Infra/.DS_Store | macOS System File (.DS_Store) | other |
-| streams/40_Signal Execution Signal Infra/40.0_PiOSRuntimeLayer/.DS_Store | macOS System File (.DS_Store) | other |
-| 2026_0317_krayu_docs.zip | Binary Archive (.zip) | other |
-| streams/40_Signal Execution Signal Infra.zip | Binary Archive (.zip) | other |
+File count: 3
 
 ---
 
-## Empty Directories Observed
+## Evidence Domain 2 — Extraction Analysis
 
-| Relative Path | Note |
-|---|---|
-| working-state/ | Directory present, no readable files discovered |
+Path: source-v3.23/analysis/
+Evidence class: extraction metadata
+Intake status: ACCEPTED AS EXTRACTION-SUPPORT EVIDENCE ONLY
+Restriction: Accepted only as extraction-support evidence per evidence_boundary.md. Not treated as analytical conclusions. Content may inform extraction context but does not constitute primary evidence.
+
+| File | Description |
+|------|-------------|
+| 00_extraction_log.md | Log of extraction operations performed on raw archives |
+| 01_repository_classification.md | Classification of extracted repository components |
+| 02_top_level_component_inventory.md | Top-level component inventory from extraction |
+| 03_overlap_validation.md | Validation of overlap between extracted components |
+
+File count: 4
 
 ---
 
-## Classification Notes
+## Evidence Domain 3 — Extracted Backend Source
 
-- Each file carries exactly one primary classification. No file appears in more than one category.
-- `.github/workflows/update-handbook-indexes.yml` is classified as **configuration** (CI/CD pipeline definition file). Interpretive note only: the file also embeds shell execution logic, but this does not affect its inventory classification or count.
-- `.DS_Store` files are non-readable macOS system artifacts; classified as other.
-- `.zip` archives are binary; content not scanned; classified as other.
-- `.env.claude` is an environment configuration file; content not expanded per forbidden input rules.
-- `working-state/` directory contained no files at time of scan.
+Path: source-v3.23/extracted/backend/backend/
+Evidence class: code / configuration / structural artifact
+Intake status: ACCEPTED
+Priority: canonical isolated-component code evidence
+
+### Infrastructure Artifacts
+
+| File | Type |
+|------|------|
+| Dockerfile | configuration / structural |
+| .dockerignore | configuration |
+| .env.example | configuration |
+| package.json | structural artifact |
+| migrations/init.sql | code (SQL DDL) |
+| migrations/seeds/seed-driver-sessions.sql | code (SQL seed) |
+| migrations/seeds/seed.sql | code (SQL seed) |
+
+### Source Root
+
+| File | Type |
+|------|------|
+| src/main.ts | code (application entry) |
+| src/app.module.ts | code (root module) |
+
+### Source Subsystems
+
+| Subsystem | Path | File type |
+|-----------|------|-----------|
+| common/cache | src/common/cache/ | code (TypeScript) |
+| common/dto | src/common/dto/ | code (TypeScript) |
+| common/guards | src/common/guards/ | code (TypeScript) |
+| common/logging | src/common/logging/ | code (TypeScript) |
+| common/throttle | src/common/throttle/ | code (TypeScript) |
+| common/versioning | src/common/versioning/ | code (TypeScript) |
+| common root | src/common/ | code (TypeScript) |
+| config | src/config/ | configuration (TypeScript) |
+| database | src/database/ | code (TypeScript) |
+| events | src/events/ | code (TypeScript) |
+| gateways | src/gateways/ | code (TypeScript) |
+| health | src/health/ | code (TypeScript) |
+| migrations (TypeORM) | src/migrations/ | code (TypeScript) |
+
+### Domain Modules (63 total)
+
+| Module | Domain category |
+|--------|----------------|
+| aftersales | asset lifecycle |
+| agentic-ai | intelligence |
+| alerts | operations |
+| analytics | intelligence |
+| anomaly-detection | intelligence |
+| api-marketplace | platform |
+| auth | platform |
+| billing | platform |
+| blockchain | intelligence |
+| bus | fleet |
+| charging-stations | energy |
+| coldchain | energy |
+| compliance | safety |
+| cross-border | safety |
+| customer-portal | people |
+| data-monetization | intelligence |
+| depot-charging | energy |
+| devices | assets |
+| diagnostics | assets |
+| digital-twin | intelligence |
+| driver-incentives | people |
+| driver-mobile | people |
+| driver-scoring | intelligence |
+| driver-sessions | fleet |
+| drivers | fleet |
+| electrification | energy |
+| erp-connectors | platform |
+| errors | platform |
+| ev | energy |
+| executive | intelligence |
+| fatigue-risk | safety |
+| finance | people |
+| fleet-lifecycle | assets |
+| fleets | fleet |
+| fuel | assets |
+| geofence-automation | intelligence |
+| hasi | platform |
+| insurance | safety |
+| integration-hub | platform |
+| integration-notifications | platform |
+| maintenance | assets |
+| messaging | platform |
+| multi-tenant | platform |
+| notifications | platform |
+| onboarding | platform |
+| operations | fleet |
+| ota | assets |
+| parts-marketplace | assets |
+| permits | safety |
+| predictive-maintenance | assets |
+| reports | intelligence |
+| road-intelligence | intelligence |
+| safety | safety |
+| sensors | platform |
+| surge-pricing | fleet |
+| tanker | fleet |
+| taxi | fleet |
+| trips | fleet |
+| users | platform |
+| v2g | energy |
+| vehicle-lifecycle | assets |
+| vehicles | fleet |
+| white-label | platform |
+
+Technology: NestJS / TypeScript
+Each module follows pattern: controller, module, service, spec, entities/
+
+Total file count: 397
+
+---
+
+## Evidence Domain 4 — Extracted Frontend Source
+
+Path: source-v3.23/extracted/frontend/frontend/
+Evidence class: code / configuration / structural artifact / interface artifact
+Intake status: ACCEPTED
+Priority: canonical isolated-component code evidence
+
+### Infrastructure Artifacts
+
+| File | Type |
+|------|------|
+| Dockerfile | configuration / structural |
+| .dockerignore | configuration |
+| .env.example | configuration |
+| package.json | structural artifact |
+| nginx.conf | configuration |
+| tsconfig.json | configuration |
+| vite.config.ts | configuration |
+| vitest.config.ts | configuration |
+| cypress.config.ts | configuration |
+| postcss.config.js | configuration |
+| tailwind.config.ts | configuration |
+| .eslintrc.cjs | configuration |
+| index.html | interface artifact |
+| main.tsx | code (application entry) |
+| App.tsx | code (root component) |
+
+### Source Subsystems
+
+| Subsystem | Path | Approx files | File type |
+|-----------|------|-------------|-----------|
+| API clients | api/ | ~70 | code (TypeScript) |
+| components/charts | components/charts/ | 7 | code (TSX) |
+| components/data | components/data/ | 6 | code (TSX) |
+| components/layout | components/layout/ | 10 | code (TSX) |
+| components/map | components/map/ | 2 | code (TSX) |
+| components/realtime | components/realtime/ | 4 | code (TSX) |
+| components/ui | components/ui/ | ~35 | code (TSX) |
+| constants | constants/ | 4 | code (TypeScript) |
+| contexts | contexts/ | 7 | code (TSX) |
+| hooks | hooks/ | 7 | code (TypeScript) |
+| pages/assets | pages/assets/ | 7 | code (TSX) |
+| pages/energy | pages/energy/ | 7 | code (TSX) |
+| pages/fleet | pages/fleet/ | 11 | code (TSX) |
+| pages/intelligence | pages/intelligence/ | 12 | code (TSX) |
+| pages/people | pages/people/ | 10 | code (TSX) |
+| pages/platform | pages/platform/ | 4 | code (TSX) |
+| pages/safety | pages/safety/ | 7 | code (TSX) |
+| src/pages | src/pages/ | 2 | code (TSX) |
+| public | public/ | ~12 (icons + assets) | interface artifact |
+| pwa | pwa/ | 1 | code (TypeScript) |
+| router | router/ | 1 | code (TSX) |
+| socket | socket/ | 2 | code (TypeScript/TSX) |
+| stories | stories/ | ~25 | structural artifact (Storybook) |
+| styles | styles/ | 6 | interface artifact (CSS) |
+| test | test/ | ~20 | code (TypeScript/TSX) |
+| cypress/e2e | cypress/e2e/ | 8 | code (TypeScript) |
+| types | types/ | 2 | code (TypeScript) |
+| utils | utils/ | 2 | code (TypeScript) |
+
+Technology: React / TypeScript / Vite / Tailwind CSS
+PWA: yes (manifest.json, sw.js, pwa/register.ts)
+Testing: Vitest (unit) + Cypress (e2e) + Storybook (component)
+
+Total file count: 324
+
+---
+
+## Evidence Domain 5 — Extracted Platform Source
+
+Path: source-v3.23/extracted/platform/blueedge-platform/
+Evidence class: code / configuration / structural artifact / documentation
+Intake status: ACCEPTED
+Priority: canonical integrated-system evidence (includes platform-unique artifacts)
+
+### Platform Root Artifacts
+
+| File | Type |
+|------|------|
+| README.md | documentation |
+| .env.example | configuration |
+| .github/workflows/ci.yml | configuration (CI/CD YAML) |
+| .github/workflows/deploy.yml | configuration (CI/CD YAML) |
+
+### Platform Backend (embedded)
+
+Path: backend/
+Structure: same 63-module NestJS structure as extracted/backend/
+See Domain 3 for module map.
+Overlap status: see normalized_evidence_map.md — OVERLAP-NOTED
+
+### Platform Frontend (embedded)
+
+Path: frontend/
+Structure: same page/component structure as extracted/frontend/ with additional public/screenshots/
+See Domain 4 for subsystem map.
+Overlap status: see normalized_evidence_map.md — OVERLAP-NOTED
+
+### Platform-Unique Artifacts
+
+#### svg-agents (7 files)
+
+| File | Type |
+|------|------|
+| svg-agents/config/blueedge.yaml | configuration (YAML) |
+| svg-agents/config/sensors.yaml | configuration (YAML) |
+| svg-agents/hasi-bridge/hasi_bridge.py | code (Python) |
+| svg-agents/sensor-collector/sensor_collector.py | code (Python) |
+| svg-agents/install.sh | code (shell script) |
+| svg-agents/systemd/blueedge-hasi-bridge.service | configuration (systemd unit) |
+| svg-agents/systemd/blueedge-sensor-collector.service | configuration (systemd unit) |
+
+#### monitoring (4 files)
+
+| File | Type |
+|------|------|
+| monitoring/grafana/dashboards/fleet-operations.json | configuration (Grafana dashboard) |
+| monitoring/grafana/provisioning/dashboards/default.yml | configuration (YAML) |
+| monitoring/grafana/provisioning/datasources/prometheus.yml | configuration (YAML) |
+| monitoring/prometheus/prometheus.yml | configuration (YAML) |
+
+#### load-tests (3 files)
+
+| File | Type |
+|------|------|
+| load-tests/api-load.js | code (k6 JavaScript) |
+| load-tests/ws-load.js | code (k6 JavaScript) |
+| load-tests/run.sh | code (shell script) |
+
+Total file count: 741 (includes embedded backend and frontend mirrors)
+Platform-unique file count (excluding backend/frontend mirrors): approximately 18
+
+---
+
+## Evidence Domain 6 — Raw Provenance Archives
+
+Path: source-v3.23/raw/
+Evidence class: provenance reference only
+Intake status: EXISTENCE CONFIRMED — NOT INGESTED
+Basis: Raw tar archives are provenance-only per evidence_boundary.md. They were not ingested as direct evidence.
+
+| File | Size | Existence |
+|------|------|-----------|
+| blueedge-backend-v3_23_0-COMPLETE.tar | 1.8 MB | CONFIRMED |
+| blueedge-frontend-v3_23_0-COMPLETE.tar | 2.4 MB | CONFIRMED |
+| blueedge-platform-v3_23_0-COMPLETE.tar | 4.3 MB | CONFIRMED |
+
+---
+
+## Evidence Surface Summary
+
+| Domain | Evidence Class | File Count | Intake Status |
+|--------|---------------|------------|---------------|
+| HTML Documentation | documentation / interface artifact | 3 | ACCEPTED |
+| Extraction Analysis | extraction metadata | 4 | ACCEPTED — support only |
+| Extracted Backend | code / configuration / structural | 397 | ACCEPTED |
+| Extracted Frontend | code / configuration / structural / interface | 324 | ACCEPTED |
+| Extracted Platform | code / configuration / structural / documentation | 741 | ACCEPTED |
+| Raw Archives | provenance only | 3 | EXISTENCE CONFIRMED — NOT INGESTED |
+| **Total ingested** | | **1,469** | |
+| **Total provenance-only** | | **3** | |
+
+---
+
+## Overlap Observation
+
+overlap_status: NOTED — NOT RESOLVED AT INVENTORY LEVEL
+overlap_positions:
+- extracted/backend/backend/ ↔ extracted/platform/blueedge-platform/backend/: same 63-module NestJS structure observed
+- extracted/frontend/frontend/ ↔ extracted/platform/blueedge-platform/frontend/: same page/component structure observed
+
+overlap_resolution_position: normalized_evidence_map.md
+unknown_space_preserved: TRUE
+
+Note: Whether the embedded platform components contain file-level differences relative to the standalone extracted components is UNKNOWN. No file-level diff was performed. This unknown-space is preserved and not inferred.
+
+---
+
+## Prohibited Path Compliance
+
+Paths confirmed NOT accessed:
+- docs/reverse_engineering/ — EXCLUDED
+- docs/program-charter/ — EXCLUDED
+- docs/execution-telemetry/ — EXCLUDED
+- docs/signal-layer/ — EXCLUDED
+- docs/case-study/ — EXCLUDED
+- weekly/ — EXCLUDED
+
+prohibited_access: NONE
+
+---
+
+## Status
+
+inventory_complete: TRUE
+evidence_boundary_compliance: CONFIRMED
