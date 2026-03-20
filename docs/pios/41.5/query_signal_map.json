@@ -1,0 +1,197 @@
+{
+  "map_id": "PIOS-41.5-QUERY-SIGNAL-MAP",
+  "contract_id": "PIOS-41.5-RUN01-CONTRACT-v1",
+  "run_reference": "run_01_blueedge",
+  "generated_date": "2026-03-20",
+  "total_queries": 10,
+  "signal_pool_size": 5,
+  "queries": [
+    {
+      "query_id": "GQ-001",
+      "query_text": "What operational dimensions of the platform are currently invisible to the program?",
+      "intent_type": "UNKNOWN_SPACE",
+      "semantic_tags": ["unknown_space", "runtime_gap", "platform_blind_spot", "structural_intelligence_gap"],
+      "mapped_signals": [
+        {
+          "signal_id": "SIG-002",
+          "relevance": "HIGH",
+          "mapping_rationale": "SIG-002 directly enumerates the seven operational dimensions that cannot be determined from available evidence, making it the primary signal for all unknown-space queries about platform visibility."
+        }
+      ],
+      "aggregate_confidence": "STRONG",
+      "response_template_ref": "query_response_templates.md#GQ-001"
+    },
+    {
+      "query_id": "GQ-002",
+      "query_text": "Is the platform's real-time event and connection layer operating within expected bounds?",
+      "intent_type": "UNKNOWN_SPACE",
+      "semantic_tags": ["unknown_space", "runtime_gap", "event_pipeline", "dependency_load"],
+      "mapped_signals": [
+        {
+          "signal_id": "SIG-002",
+          "relevance": "HIGH",
+          "mapping_rationale": "SIG-002 explicitly identifies event pipeline activity (FleetEventsModule) and fleet connection count (GatewaysModule) as two of the seven unknown runtime dimensions, directly blocking any answer about real-time operational state."
+        },
+        {
+          "signal_id": "SIG-003",
+          "relevance": "MEDIUM",
+          "mapping_rationale": "SIG-003 identifies FleetEventsModule as the architectural dependency hub (R-038: all backend modules DEPENDS_ON FleetEventsModule), providing structural context for why the unknown event pipeline state has broad downstream impact."
+        }
+      ],
+      "aggregate_confidence": "MODERATE",
+      "response_template_ref": "query_response_templates.md#GQ-002"
+    },
+    {
+      "query_id": "GQ-003",
+      "query_text": "What is the blast radius if a core platform component fails or is changed right now?",
+      "intent_type": "INSTABILITY",
+      "semantic_tags": ["dependency_load", "structural_volatility", "blast_radius", "change_propagation"],
+      "mapped_signals": [
+        {
+          "signal_id": "SIG-003",
+          "relevance": "HIGH",
+          "mapping_rationale": "SIG-003 directly quantifies dependency density at 0.682 (15 of 22 edges are load-bearing dependencies), establishing the structural basis for blast radius estimation."
+        },
+        {
+          "signal_id": "SIG-004",
+          "relevance": "HIGH",
+          "mapping_rationale": "SIG-004 shows the edge-to-node ratio exceeds unity (1.273), confirming a mesh topology where failure propagation paths are numerous and cross module boundaries."
+        }
+      ],
+      "aggregate_confidence": "MODERATE",
+      "response_template_ref": "query_response_templates.md#GQ-003"
+    },
+    {
+      "query_id": "GQ-004",
+      "query_text": "How structurally stable is the platform's component boundary architecture?",
+      "intent_type": "INSTABILITY",
+      "semantic_tags": ["structural_volatility", "module_boundary", "encapsulation", "mesh_topology"],
+      "mapped_signals": [
+        {
+          "signal_id": "SIG-004",
+          "relevance": "HIGH",
+          "mapping_rationale": "SIG-004 provides four directly relevant structural ratios — edge-to-node density (1.273), containment depth (0.545), responsibility concentration (0.364), and module boundary ratio (0.455) — all computed from platform structural telemetry."
+        }
+      ],
+      "aggregate_confidence": "MODERATE",
+      "response_template_ref": "query_response_templates.md#GQ-004"
+    },
+    {
+      "query_id": "GQ-005",
+      "query_text": "What is the highest-risk single point of failure in the current architecture?",
+      "intent_type": "RISK",
+      "semantic_tags": ["dependency_load", "coordination_pressure", "weakly_grounded", "coupling_concentration"],
+      "mapped_signals": [
+        {
+          "signal_id": "SIG-003",
+          "relevance": "HIGH",
+          "mapping_rationale": "SIG-003 confirms FleetEventsModule as the dependency concentration point (all 63 backend modules depend on it per R-038), making it the structurally identified highest-risk single node."
+        },
+        {
+          "signal_id": "SIG-005",
+          "relevance": "MEDIUM",
+          "mapping_rationale": "SIG-005 establishes that 87.5% of interfaces are shared, amplifying the impact of any failure at a shared interface node — but its WEAK confidence limits what can be asserted about runtime risk."
+        }
+      ],
+      "aggregate_confidence": "WEAK",
+      "response_template_ref": "query_response_templates.md#GQ-005"
+    },
+    {
+      "query_id": "GQ-006",
+      "query_text": "Is the primary data ingestion pipeline operating at its declared capacity ceiling?",
+      "intent_type": "PERFORMANCE",
+      "semantic_tags": ["throughput_ceiling", "sensor_bridge", "capacity_planning", "static_configuration"],
+      "mapped_signals": [
+        {
+          "signal_id": "SIG-001",
+          "relevance": "HIGH",
+          "mapping_rationale": "SIG-001 is the only performance signal in the pool and directly addresses ingestion throughput: the sensor bridge is configured at 0.333 rec/sec but actual runtime throughput is unknown."
+        }
+      ],
+      "aggregate_confidence": "STRONG",
+      "response_template_ref": "query_response_templates.md#GQ-006"
+    },
+    {
+      "query_id": "GQ-007",
+      "query_text": "What components does the program depend on that have not been confirmed at runtime?",
+      "intent_type": "DEPENDENCY",
+      "semantic_tags": ["runtime_gap", "throughput_ceiling", "dependency_load", "unconfirmed_runtime"],
+      "mapped_signals": [
+        {
+          "signal_id": "SIG-001",
+          "relevance": "HIGH",
+          "mapping_rationale": "SIG-001 identifies hasi_bridge.py and HASI v1.0.0 as confirmed-configured but runtime-unconfirmed components — a specific named dependency with an unresolved live state."
+        },
+        {
+          "signal_id": "SIG-002",
+          "relevance": "HIGH",
+          "mapping_rationale": "SIG-002 identifies four platform components (RedisCacheModule, Redis 7, FleetEventsModule, GatewaysModule) whose runtime states are entirely unknown, representing the core unconfirmed dependency cluster."
+        }
+      ],
+      "aggregate_confidence": "STRONG",
+      "response_template_ref": "query_response_templates.md#GQ-007"
+    },
+    {
+      "query_id": "GQ-008",
+      "query_text": "How much of the platform's observable state is currently covered by intelligence signals?",
+      "intent_type": "COVERAGE",
+      "semantic_tags": ["unknown_space", "runtime_gap", "coverage_gap", "intelligence_completeness"],
+      "mapped_signals": [
+        {
+          "signal_id": "SIG-002",
+          "relevance": "HIGH",
+          "mapping_rationale": "SIG-002 provides the definitive coverage gap measurement: 7 of the core CE-001 runtime dimensions are structurally unknown, establishing the outer boundary of what current intelligence cannot see."
+        }
+      ],
+      "aggregate_confidence": "STRONG",
+      "response_template_ref": "query_response_templates.md#GQ-008"
+    },
+    {
+      "query_id": "GQ-009",
+      "query_text": "Are cross-team coordination mechanisms operating at a frequency adequate to manage current interface pressure?",
+      "intent_type": "COORDINATION",
+      "semantic_tags": ["coordination_pressure", "weakly_grounded", "interface_sharing", "delivery_pipeline"],
+      "mapped_signals": [
+        {
+          "signal_id": "SIG-005",
+          "relevance": "HIGH",
+          "mapping_rationale": "SIG-005 directly measures coordination pressure: 87.5% interface sharing is confirmed statically, but the runtime component (pipeline runs, validation gate counts) is blocked, making the adequacy of coordination mechanisms unconfirmable."
+        },
+        {
+          "signal_id": "SIG-003",
+          "relevance": "MEDIUM",
+          "mapping_rationale": "SIG-003 establishes that 68.2% dependency density compounds the coordination burden — high dependency load means more coordination is structurally required, amplifying the relevance of any coordination gap."
+        }
+      ],
+      "aggregate_confidence": "WEAK",
+      "response_template_ref": "query_response_templates.md#GQ-009"
+    },
+    {
+      "query_id": "GQ-010",
+      "query_text": "What structural conditions are compounding risk across the delivery pipeline?",
+      "intent_type": "RISK",
+      "semantic_tags": ["structural_volatility", "coordination_pressure", "delivery_pipeline", "compounding_risk"],
+      "mapped_signals": [
+        {
+          "signal_id": "SIG-004",
+          "relevance": "HIGH",
+          "mapping_rationale": "SIG-004 identifies structural volatility (1.273 edge-to-node, 0.455 module boundary ratio) as a confirmed platform-level condition that increases change cost and risk as the platform scales."
+        },
+        {
+          "signal_id": "SIG-005",
+          "relevance": "HIGH",
+          "mapping_rationale": "SIG-005 confirms that 87.5% of interfaces are shared and that runtime validation gate frequency is unknown — together with SIG-004, this constitutes the compound structural risk posture in the delivery pipeline."
+        }
+      ],
+      "aggregate_confidence": "WEAK",
+      "response_template_ref": "query_response_templates.md#GQ-010"
+    }
+  ],
+  "signal_coverage": {
+    "SIG-001": ["GQ-006", "GQ-007"],
+    "SIG-002": ["GQ-001", "GQ-002", "GQ-007", "GQ-008"],
+    "SIG-003": ["GQ-002", "GQ-003", "GQ-005", "GQ-009"],
+    "SIG-004": ["GQ-003", "GQ-004", "GQ-010"],
+    "SIG-005": ["GQ-005", "GQ-009", "GQ-010"]
+  }
+}

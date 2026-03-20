@@ -4,3 +4,5 @@
 node_modules/
 *.log
 *.tmp
+.next/
+docs/pios/41.2/pie_vault/.obsidian/

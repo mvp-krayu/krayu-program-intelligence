@@ -1,0 +1,119 @@
+{
+  "registry_id": "PIOS-41.4-RUN01-SIGNAL-REGISTRY",
+  "contract_id": "PIOS-41.4-RUN01-CONTRACT-v1",
+  "run_reference": "run_01_blueedge",
+  "generated_date": "2026-03-20",
+  "total_signals": 5,
+  "signals": [
+    {
+      "signal_id": "SIG-001",
+      "title": "Sensor Bridge Throughput Ceiling: Configuration Confirmed, Runtime Unknown",
+      "statement": "The HASI sensor bridge (hasi_bridge.py) is confirmed configured at a declared throughput ceiling of 0.333 records/second (10 records per 30-second polling cycle). This is a static configuration constant, not a runtime performance measurement. Actual ingestion throughput under live conditions is unknown.",
+      "domain_id": "DOMAIN-01",
+      "domain_name": "Edge Data Acquisition",
+      "capability_id": "CAP-02",
+      "capability_name": "Network Security Intelligence Collection",
+      "component_ids": ["COMP-74", "COMP-75"],
+      "component_names": ["hasi_bridge.py", "HASI v1.0.0"],
+      "source_refs": ["INTEL-001", "DIAG-006", "COND-006", "SIG-006"],
+      "trace_links": [
+        "docs/pios/40.7/intelligence_output_set.md",
+        "docs/pios/40.7/diagnosis_output_set.md",
+        "docs/pios/40.6/condition_output_set.md",
+        "docs/pios/40.5/signal_output_set.md"
+      ],
+      "evidence_confidence": "STRONG",
+      "confidence_rationale": "Both SIG-006 and DIAG-006 are fully computed from static configuration constants (DIM-PC-001=30s, DIM-PC-002=10 records) confirmed in CEU-10 :: hasi_bridge.py DEFAULT_CONFIG, with a complete four-layer evidence chain: signal → condition → diagnosis → intelligence.",
+      "business_impact": "The sensor bridge is the sole forwarding pathway for HASI network security intelligence; its 0.333 rec/sec ceiling is the hard upper bound on threat data delivery to the cloud, directly constraining the security intelligence pipeline capacity for all connected SVG devices.",
+      "risk": "If runtime sensor bridge performance deviates from configured parameters — due to execution failures, connection errors, or configuration drift — the security intelligence pipeline will silently underperform with no currently observable indicator in the platform's operational state."
+    },
+    {
+      "signal_id": "SIG-002",
+      "title": "Platform Runtime State: Seven Core Dimensions Are Currently Unknown",
+      "statement": "Seven operational dimensions of the BlueEdge Fleet Management Platform are currently unknown: backend memory state, cache efficiency, cache availability, event pipeline activity, fleet connection count, alert activity, and driver session performance. These cannot be inferred or approximated from static analysis and must be declared as unknown in all downstream artifacts.",
+      "domain_id": "DOMAIN-10",
+      "domain_name": "Platform Infrastructure and Data",
+      "capability_id": "CAP-27",
+      "capability_name": "Caching Layer",
+      "component_ids": ["COMP-64", "COMP-81", "COMP-65", "COMP-27"],
+      "component_names": ["RedisCacheModule", "Redis 7", "FleetEventsModule", "GatewaysModule"],
+      "source_refs": [
+        "INTEL-002",
+        "DIAG-001", "DIAG-002", "DIAG-003", "DIAG-004", "DIAG-005", "DIAG-007", "DIAG-008",
+        "COND-001", "COND-002", "COND-003", "COND-004", "COND-005", "COND-007", "COND-008"
+      ],
+      "trace_links": [
+        "docs/pios/40.7/intelligence_output_set.md",
+        "docs/pios/40.7/diagnosis_output_set.md",
+        "docs/pios/40.6/condition_output_set.md"
+      ],
+      "evidence_confidence": "STRONG",
+      "confidence_rationale": "All seven blocked diagnoses are independently confirmed across DIAG-001 through DIAG-008 (excluding DIAG-006), with complete condition-to-signal chains in diagnosis and intelligence traceability maps; the blocking cause is consistently confirmed across 40.5, 40.6, and 40.7 artifacts.",
+      "business_impact": "The entire observable CE-001 platform runtime — cache performance, event delivery, fleet connectivity, alert processing, and driver session scoring — operates as a structural unknown; any operational decision about platform health or capacity lacks an evidence base.",
+      "risk": "If the backend is running in a degraded state (high memory pressure, disconnected cache, stalled event pipeline), the platform may be delivering incorrect or stale data to fleet operators with no observable indicator in the current intelligence output; the risk compounds across infrastructure, real-time streaming, and fleet core operations domains."
+    },
+    {
+      "signal_id": "SIG-003",
+      "title": "Dependency Load: 68% of Architectural Relationships Are Dependency Edges",
+      "statement": "The program-level dependency load is computed at 0.682 — 15 of 22 architectural relationship edges are dependency relationships. This indicates a structurally dense dependency graph where most inter-component connections are direct load-bearing dependencies rather than loose event-driven couplings.",
+      "domain_id": "DOMAIN-11",
+      "domain_name": "Event-Driven Architecture",
+      "capability_id": "CAP-30",
+      "capability_name": "Domain Event Bus",
+      "component_ids": ["COMP-65"],
+      "component_names": ["FleetEventsModule"],
+      "source_refs": ["COND-001", "SIG-002"],
+      "trace_links": [
+        "docs/pios/40.6/condition_output_set.md",
+        "docs/pios/40.6/condition_validation_report.md",
+        "docs/pios/40.5/signal_validation_report.md"
+      ],
+      "evidence_confidence": "MODERATE",
+      "confidence_rationale": "The ratio value (0.682, 15/22 edges) is deterministically computed and confirmed reproducible in 40.5 signal validation; COND-001 is evaluable pending Stream 75.1 threshold activation, and the semantic mapping to FleetEventsModule reflects its confirmed role as the dependency hub (R-038: all backend modules DEPENDS_ON FleetEventsModule), though full graph scope is bounded to the 22-node observed boundary.",
+      "business_impact": "A dependency load of 0.682 means most architectural connections are direct dependencies, elevating the blast radius of any component-level failure or change; deployment safety, change management, and incident containment all require accounting for this coupling density.",
+      "risk": "If any of the 15 dependency edges involves a WEAKLY GROUNDED component (such as Apache Kafka or Apache Flink) or an undocumented runtime dependency, the actual coupling may be higher than observed; unmanaged dependency concentration will increase non-linearly as new modules are added to the 63-module backend."
+    },
+    {
+      "signal_id": "SIG-004",
+      "title": "Structural Volatility: Edge-to-Node Density Exceeds Unity",
+      "statement": "The structural volatility signal produces four computed ratios: edge-to-node density (1.273), containment depth ratio (0.545), responsibility concentration ratio (0.364), and module boundary ratio (0.455). The edge-to-node ratio exceeding 1.0 indicates the system has more relationship edges than component nodes — a mesh-like rather than hierarchical dependency structure.",
+      "domain_id": "DOMAIN-10",
+      "domain_name": "Platform Infrastructure and Data",
+      "capability_id": "CAP-29",
+      "capability_name": "Platform Monorepo Container",
+      "component_ids": ["COMP-01"],
+      "component_names": ["blueedge-platform (Monorepo)"],
+      "source_refs": ["COND-002", "SIG-004"],
+      "trace_links": [
+        "docs/pios/40.6/condition_output_set.md",
+        "docs/pios/40.6/condition_validation_report.md",
+        "docs/pios/40.5/signal_validation_report.md"
+      ],
+      "evidence_confidence": "MODERATE",
+      "confidence_rationale": "All four ratio values (1.273, 0.545, 0.364, 0.455) are deterministically computed and confirmed reproducible from static structural telemetry in the 40.5 validation report; COND-002 is evaluable pending Stream 75.1 activation, and the monorepo container is the correct semantic anchor for platform-level structural volatility.",
+      "business_impact": "An edge-to-node ratio exceeding 1.0 signals a mesh-like architecture where the cost and risk of structural changes grows with platform scale; with 89 components and 63 backend modules already in the monorepo, unmanaged structural growth will compound integration complexity.",
+      "risk": "As the platform grows — particularly through addition of new modules without corresponding boundary enforcement — structural volatility will continue to compound; the current containment ratio (0.545) indicates nearly half of components already operate across module boundaries, creating an environment where encapsulation failures are structurally facilitated."
+    },
+    {
+      "signal_id": "SIG-005",
+      "title": "Coordination Pressure: Static Interface Sharing at 87.5%; Runtime State Unresolved",
+      "statement": "The coordination pressure signal has a resolved static component of 0.875 — 7 of 8 observable interfaces are shared rather than isolated. The runtime component (active pipeline runs, AT-005; validation gate counts, AT-007) remains pending. The static ratio alone indicates near-total interface sharing in the observed scope.",
+      "domain_id": "DOMAIN-16",
+      "domain_name": "Operational Engineering",
+      "capability_id": "CAP-40",
+      "capability_name": "Delivery and Quality Infrastructure",
+      "component_ids": ["COMP-88", "COMP-89"],
+      "component_names": ["CI/CD Workflows", "Docker Compose Orchestration"],
+      "source_refs": ["COND-003", "SIG-001"],
+      "trace_links": [
+        "docs/pios/40.6/condition_output_set.md",
+        "docs/pios/40.6/condition_validation_report.md",
+        "docs/pios/40.5/signal_validation_report.md"
+      ],
+      "evidence_confidence": "WEAK",
+      "confidence_rationale": "Only the static component of SIG-001 is computed (structural ratio 0.875); the runtime component (AT-005, AT-007) is blocked pending live pipeline events, making COND-003 partial rather than evaluable; confidence cannot be elevated above WEAK because the signal's defining runtime dimension is absent and the static ratio alone is insufficient for full condition activation.",
+      "business_impact": "A static interface sharing ratio of 0.875 means virtually all observable interfaces are coordinated across multiple components, elevating the coordination cost of any platform change; when combined with dependency load (0.682) and structural volatility (1.273), the compounding coordination burden across the delivery pipeline is materially elevated.",
+      "risk": "Without the runtime component (AT-005 and AT-007), it is unknown whether validation gates are operating at a frequency sufficient to manage the high static coordination pressure; absent runtime confirmation, the 0.875 ratio represents an unvalidated coordination risk that could manifest as integration failures in the delivery pipeline."
+    }
+  ]
+}

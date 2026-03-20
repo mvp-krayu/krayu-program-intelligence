@@ -1,0 +1,1718 @@
+/* ExecLens Demo Surface — PIOS-42.4-RUN01-CONTRACT-v2 */
+/* Evidence-first program intelligence interface */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg:           #0d0f14;
+  --bg-panel:     #141720;
+  --bg-card:      #1a1e2b;
+  --bg-card-deep: #12151f;
+  --border:       #2a2f40;
+  --border-dim:   #1e2330;
+  --border-glow:  rgba(74,158,255,0.18);
+  --accent:       #4a9eff;
+  --accent-dim:   #2a5a99;
+  --accent-faint: rgba(74,158,255,0.08);
+  --text:         #ccd6f6;
+  --text-dim:     #7a8aaa;
+  --text-muted:   #4a5570;
+  --green:        #64ffda;
+  --yellow:       #ffd700;
+  --orange:       #ff9e4a;
+  --red:          #ff6b6b;
+  --strong:       #64ffda;
+  --moderate:     #ffd700;
+  --weak:         #ff9e4a;
+  --shadow-panel: 0 2px 16px rgba(0,0,0,0.4);
+  --shadow-card:  0 1px 8px rgba(0,0,0,0.3);
+  --font-mono:    'Courier New', Courier, monospace;
+  --font-ui:      -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+html, body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.page-root {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+
+/* ---------- Header ---------- */
+
+.site-header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+}
+
+.site-header h1 {
+  font-size: 16px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.site-header .contract-line {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.site-header .layer-chain {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 6px;
+}
+
+/* ---------- Panels ---------- */
+
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 18px 22px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-panel);
+}
+
+.panel-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-dim);
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+}
+
+.panel-title-count {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 10px;
+  padding: 1px 7px;
+  border-radius: 10px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ---------- QuerySelector ---------- */
+
+.query-selector-wrap {
+  margin-bottom: 24px;
+}
+
+.query-selector-wrap label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.query-selector-wrap select {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 8px 12px;
+  border-radius: 3px;
+  width: 100%;
+  cursor: pointer;
+  appearance: none;
+}
+
+.query-selector-wrap select:focus {
+  outline: 1px solid var(--accent-dim);
+  border-color: var(--accent-dim);
+}
+
+.query-selector-wrap select option {
+  background: var(--bg-card);
+  color: var(--text);
+}
+
+/* ---------- ExecutivePanel ---------- */
+
+.exec-panel .query-id {
+  font-size: 22px;
+  color: var(--accent);
+  font-weight: bold;
+  letter-spacing: 0.08em;
+}
+
+.exec-panel .query-text {
+  font-size: 14px;
+  color: var(--text);
+  margin: 8px 0 14px;
+  line-height: 1.5;
+}
+
+.exec-panel .meta-row {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.exec-panel .meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.exec-panel .meta-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+.exec-panel .meta-value {
+  font-size: 12px;
+  color: var(--text);
+}
+
+.exec-panel .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.exec-panel .tag {
+  font-size: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 2px 8px;
+  border-radius: 2px;
+  letter-spacing: 0.04em;
+}
+
+/* ---------- Confidence badge + gauge ---------- */
+
+.conf-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.conf-label {
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 0.06em;
+}
+
+.conf-label.STRONG   { color: var(--strong); }
+.conf-label.MODERATE { color: var(--moderate); }
+.conf-label.WEAK     { color: var(--weak); }
+
+.conf-gauge-track {
+  width: 80px;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.conf-gauge-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.conf-gauge-fill.STRONG   { width: 100%; background: var(--strong); }
+.conf-gauge-fill.MODERATE { width: 62%;  background: var(--moderate); }
+.conf-gauge-fill.WEAK     { width: 25%;  background: var(--weak); }
+
+/* Relevance gauge — HIGH / MEDIUM / LOW
+   Mapping rule (PIOS-42.5 R4/G7, deterministic):
+   HIGH → full bar (same visual weight as STRONG)
+   MEDIUM → 62% bar (same visual weight as MODERATE)
+   LOW → 25% bar (same visual weight as WEAK)
+   Source: signal.relevance from adapter output */
+.conf-label.rel-HIGH   { color: var(--accent); }
+.conf-label.rel-MEDIUM { color: var(--text-dim); }
+.conf-label.rel-LOW    { color: var(--text-muted); }
+
+.conf-gauge-fill.rel-HIGH   { width: 100%; background: var(--accent); }
+.conf-gauge-fill.rel-MEDIUM { width: 62%;  background: var(--text-dim); }
+.conf-gauge-fill.rel-LOW    { width: 25%;  background: var(--text-muted); }
+
+.gauge-prefix-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-right: 2px;
+}
+
+/* ---------- SignalGaugeCard ---------- */
+
+.signal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.signal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 14px 16px;
+}
+
+.signal-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  gap: 10px;
+}
+
+.signal-id {
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.signal-relevance {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.signal-title {
+  font-size: 13px;
+  color: var(--text);
+  font-weight: bold;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.signal-meta {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+
+.signal-meta span {
+  color: var(--text-muted);
+  margin-right: 4px;
+}
+
+.signal-gauge-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+/* Evidence metrics row — PIOS-42.5
+   Values: chain stages (count of → segments), evidence objects (array length),
+   blocked state (blocking_point != null). All from adapter signal.evidence. */
+.evidence-metrics-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 8px 0 10px;
+  padding: 8px 10px;
+  background: var(--bg);
+  border: 1px solid var(--border-dim);
+  border-radius: 3px;
+}
+
+.evidence-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.evidence-metric-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+.evidence-metric-value {
+  font-size: 14px;
+  color: var(--text);
+  font-weight: bold;
+}
+
+.blocked-badge {
+  font-size: 10px;
+  color: var(--orange);
+  font-weight: bold;
+  align-self: center;
+  padding: 2px 6px;
+  border: 1px solid rgba(255,158,74,0.3);
+  border-radius: 2px;
+  background: rgba(255,158,74,0.08);
+}
+
+.signal-statement {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-dim);
+  line-height: 1.5;
+}
+
+/* ---------- EvidencePanel ---------- */
+
+.evidence-entry {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.evidence-entry:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.evidence-sig-header {
+  font-size: 12px;
+  color: var(--accent);
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.evidence-warning {
+  font-size: 11px;
+  color: var(--orange);
+}
+
+.evidence-source {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+.evidence-source span {
+  color: var(--text-muted);
+  margin-right: 4px;
+}
+
+.supporting-obj {
+  font-size: 11px;
+  color: var(--text-dim);
+  padding-left: 16px;
+  margin-bottom: 2px;
+}
+
+.supporting-obj::before {
+  content: '↳  ';
+  color: var(--text-muted);
+}
+
+.supporting-obj .obj-state {
+  color: var(--text-muted);
+  font-size: 10px;
+}
+
+.evidence-chain-wrap {
+  margin-top: 8px;
+}
+
+.evidence-chain-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.chain-segment {
+  font-size: 11px;
+  color: var(--text-dim);
+  padding-left: 16px;
+  margin-bottom: 2px;
+}
+
+.chain-segment::before {
+  content: '→  ';
+  color: var(--text-muted);
+}
+
+.evidence-blocking {
+  font-size: 11px;
+  color: var(--orange);
+  margin-top: 6px;
+}
+
+.evidence-blocking::before {
+  content: '⚑  ';
+}
+
+.evidence-temporal {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.evidence-temporal::before {
+  content: '⏱  ';
+}
+
+/* ---------- NavigationPanel ---------- */
+
+/* Coverage gauge — PIOS-42.5 O1
+   Source: resolvedCount / navigation.length — both integers from adapter output
+   Ratio rendered as fill width via inline style (deterministic calculation) */
+.coverage-gauge-wrap {
+  margin-bottom: 16px;
+}
+
+.coverage-gauge-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+
+.coverage-gauge-counts {
+  color: var(--text-dim);
+  font-size: 11px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.coverage-gauge-track {
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.coverage-gauge-fill {
+  height: 100%;
+  background: var(--green);
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.coverage-gauge-unresolved {
+  font-size: 10px;
+  color: var(--orange);
+  margin-top: 4px;
+}
+
+/* Obsidian deep-link — PIOS-42.5 O2
+   Link formula (R5/G7): obsidian://open?vault=<vault>&file=<path minus .md>
+   Only rendered when NEXT_PUBLIC_OBSIDIAN_VAULT_NAME is configured */
+.obsidian-link {
+  display: inline-block;
+  font-size: 10px;
+  color: var(--accent-dim);
+  border: 1px solid var(--accent-dim);
+  padding: 1px 6px;
+  border-radius: 2px;
+  margin-top: 3px;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.obsidian-link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.obsidian-link-hint {
+  font-size: 9px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  font-style: italic;
+}
+
+.obsidian-vault-label {
+  font-size: 9px;
+  color: var(--accent-dim);
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: normal;
+}
+
+.nav-summary {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+
+.nav-group-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  margin-top: 12px;
+}
+
+.nav-link-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 11px;
+}
+
+.nav-resolved-icon {
+  color: var(--green);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.nav-unresolved-icon {
+  color: var(--orange);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.nav-link-name {
+  color: var(--accent);
+  font-family: var(--font-mono);
+}
+
+.nav-link-path {
+  color: var(--text-muted);
+  font-size: 10px;
+  word-break: break-all;
+}
+
+.nav-link-unresolved {
+  color: var(--orange);
+  font-size: 10px;
+}
+
+/* ---------- Loading / Error states ---------- */
+
+.loading-state {
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 24px 0;
+  text-align: center;
+}
+
+.error-state {
+  font-size: 12px;
+  color: var(--red);
+  padding: 12px 16px;
+  background: rgba(255,107,107,0.08);
+  border: 1px solid rgba(255,107,107,0.2);
+  border-radius: 4px;
+}
+
+.no-query-state {
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 32px 0;
+  text-align: center;
+}
+
+/* ---------- Template section (fallback) ---------- */
+
+.template-text {
+  font-size: 12px;
+  color: var(--text-dim);
+  white-space: pre-wrap;
+  line-height: 1.7;
+  font-family: var(--font-mono);
+}
+
+/* ============================================================
+   PIOS-42.5 — Demo-grade rendering refinement
+   ============================================================ */
+
+/* ---------- Hero ---------- */
+
+.hero {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 28px;
+  margin-bottom: 28px;
+  position: relative;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
+}
+
+.hero-eyebrow {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.hero-title {
+  font-size: 36px;
+  font-weight: bold;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  line-height: 1.1;
+  margin-bottom: 10px;
+  text-shadow: 0 0 40px rgba(74,158,255,0.15);
+}
+
+.hero-subtitle {
+  font-size: 13px;
+  color: var(--text-dim);
+  max-width: 600px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  font-family: var(--font-mono);
+}
+
+.pipeline-strip {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0;
+  margin-bottom: 18px;
+}
+
+.pipeline-segment {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.pipeline-node {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-dim);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  border-radius: 2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.pipeline-arrow {
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 0 6px;
+}
+
+.hero-meta {
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+}
+
+/* ---------- Query zone ---------- */
+
+.query-zone {
+  margin-bottom: 24px;
+}
+
+/* ---------- Active query bar ---------- */
+
+.active-query-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent-dim);
+  border-radius: 3px;
+  padding: 8px 14px;
+  margin-top: 10px;
+  font-size: 11px;
+}
+
+.aq-id {
+  color: var(--accent);
+  font-weight: bold;
+  letter-spacing: 0.06em;
+}
+
+.aq-sep {
+  color: var(--text-muted);
+}
+
+.aq-intent {
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 10px;
+}
+
+.aq-conf {
+  font-weight: bold;
+  letter-spacing: 0.06em;
+  font-size: 10px;
+}
+
+.aq-signals {
+  color: var(--text-muted);
+  font-size: 10px;
+}
+
+/* ---------- Intelligence output wrapper ---------- */
+
+.intelligence-output {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.intelligence-output > * {
+  margin-bottom: 0;
+}
+
+/* ---------- TemplateRenderer ---------- */
+
+.tr-root {
+  background: var(--bg-panel);
+}
+
+.tr-header .panel-title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.tr-source-label {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: normal;
+}
+
+.tr-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ---------- Section blocks ---------- */
+
+.tr-section {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.tr-section:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.tr-section-accent {
+  background: linear-gradient(180deg, rgba(74,158,255,0.03) 0%, transparent 100%);
+  padding: 16px 14px;
+  margin: 0 -14px;
+  border-radius: 4px;
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.tr-section-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.tr-section-body {
+  /* body content */
+}
+
+/* ---------- Answer paragraphs ---------- */
+
+.tr-answer-para {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text);
+  margin-bottom: 12px;
+  font-family: var(--font-mono);
+}
+
+.tr-answer-para:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- Standard paragraphs ---------- */
+
+.tr-para {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+  font-family: var(--font-mono);
+}
+
+.tr-para:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- Inline token styles ---------- */
+
+.numeric-highlight {
+  color: var(--accent);
+  font-weight: bold;
+  letter-spacing: 0.02em;
+}
+
+.sig-ref {
+  color: var(--moderate);
+  font-size: 0.9em;
+  letter-spacing: 0.04em;
+  font-weight: bold;
+}
+
+/* ---------- Wiki chips ---------- */
+
+.wiki-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  white-space: nowrap;
+  vertical-align: middle;
+  margin: 1px 2px;
+  text-decoration: none;
+  cursor: default;
+}
+
+.wiki-chip-resolved {
+  background: rgba(100,255,218,0.07);
+  border: 1px solid rgba(100,255,218,0.2);
+  color: var(--green);
+}
+
+a.wiki-chip-resolved {
+  cursor: pointer;
+}
+
+a.wiki-chip-resolved:hover {
+  background: rgba(100,255,218,0.14);
+  border-color: rgba(100,255,218,0.4);
+}
+
+.wiki-chip-arrow {
+  font-size: 9px;
+  margin-left: 4px;
+  opacity: 0.7;
+}
+
+.wiki-chip-unresolved {
+  background: rgba(255,158,74,0.07);
+  border: 1px solid rgba(255,158,74,0.2);
+  color: var(--orange);
+}
+
+.wiki-chip-neutral {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+}
+
+/* ---------- Key Signals table ---------- */
+
+.tr-table-wrap {
+  overflow-x: auto;
+}
+
+.tr-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  font-family: var(--font-mono);
+}
+
+.tr-table th {
+  text-align: left;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  padding: 6px 12px 8px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  font-weight: normal;
+}
+
+.tr-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-dim);
+  color: var(--text-dim);
+  vertical-align: middle;
+  line-height: 1.4;
+}
+
+.tr-table tr:last-child td {
+  border-bottom: none;
+}
+
+.tr-table-sig-id {
+  color: var(--moderate);
+  font-weight: bold;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.tr-table-conf {
+  font-weight: bold;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  font-size: 11px;
+}
+
+/* ---------- Evidence confidence block ---------- */
+
+.tr-confidence-block {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.tr-confidence-level {
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.tr-confidence-level.conf-STRONG   { color: var(--strong); }
+.tr-confidence-level.conf-MODERATE { color: var(--moderate); }
+.tr-confidence-level.conf-WEAK     { color: var(--weak); }
+
+.tr-confidence-dash {
+  color: var(--text-muted);
+}
+
+.tr-confidence-body {
+  color: var(--text-dim);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* ---------- Drill-down ---------- */
+
+.tr-drilldown {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.tr-drilldown-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tr-drilldown-group-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+}
+
+.tr-drilldown-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* ---------- Fallback text block ---------- */
+
+.tr-fallback-text {
+  font-size: 12px;
+  color: var(--text-dim);
+  white-space: pre-wrap;
+  line-height: 1.6;
+  font-family: var(--font-mono);
+}
+
+/* ============================================================
+   PIOS-42.6 — Landing Gauge Strip
+   ============================================================ */
+
+/* ---------- Strip wrapper ---------- */
+
+.lg-strip {
+  background: var(--bg-card-deep);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent-dim);
+  border-radius: 6px;
+  padding: 16px 20px 18px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-panel);
+}
+
+.lg-strip-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.lg-strip-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--text-muted);
+}
+
+.lg-strip-source {
+  font-size: 9px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ---------- Grid ---------- */
+
+.lg-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 800px) {
+  .lg-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .lg-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Individual metric card ---------- */
+
+.lg-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  border-radius: 4px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lg-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.lg-metric-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+.lg-signal-ref {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.lg-signal-id {
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+.lg-conf-chip {
+  font-size: 8px;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ---------- Value display ---------- */
+
+.lg-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.lg-value {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--text);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  font-family: var(--font-mono);
+}
+
+.lg-exceeds-badge {
+  font-size: 9px;
+  color: var(--orange);
+  border: 1px solid rgba(255,158,74,0.3);
+  padding: 2px 6px;
+  border-radius: 2px;
+  background: rgba(255,158,74,0.08);
+  letter-spacing: 0.06em;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.lg-count-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.lg-value-unavailable {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ---------- Gauge bar ---------- */
+
+.lg-gauge-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lg-gauge-track {
+  position: relative;
+  flex: 1;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: visible;
+}
+
+.lg-gauge-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.5s ease;
+  opacity: 0.85;
+}
+
+/* Threshold marker (structural density: unity = 1.0) */
+.lg-threshold-marker {
+  position: absolute;
+  top: -3px;
+  width: 1px;
+  height: 10px;
+  background: var(--text-muted);
+  z-index: 1;
+}
+
+.lg-gauge-pct {
+  font-size: 10px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  font-family: var(--font-mono);
+}
+
+/* ---------- Context line ---------- */
+
+.lg-context {
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ---------- Loading / error states ---------- */
+
+.lg-strip-loading,
+.lg-strip-error {
+  padding: 14px 20px;
+}
+
+.lg-loading-text {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.lg-error-text {
+  font-size: 11px;
+  color: var(--orange);
+}
+
+/* ============================================================
+   TOPOLOGY PANEL — PIOS-42.7-RUN01-CONTRACT-v2
+   Structural topology: Domain → Capability → Component
+   ============================================================ */
+
+/* ---- Panel shell ---- */
+
+.topo-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.topo-panel-loading,
+.topo-panel-error {
+  padding: 14px 20px;
+}
+
+.topo-loading-text {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.topo-error-text {
+  font-size: 11px;
+  color: var(--orange);
+}
+
+/* ---- Panel header ---- */
+
+.topo-panel-header {
+  padding: 12px 20px 10px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-card-deep, rgba(0,0,0,0.25));
+}
+
+.topo-panel-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 3px;
+}
+
+.topo-panel-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+.topo-panel-counts {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.topo-panel-meta {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.topo-highlight-label {
+  color: var(--moderate);
+}
+
+.topo-panel-hint {
+  font-size: 10px;
+  color: var(--text-muted);
+  padding: 8px 20px 12px;
+  border-top: 1px solid var(--border);
+}
+
+/* ---- Domain grid ---- */
+
+.topo-domains-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+}
+
+@media (max-width: 900px) {
+  .topo-domains-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ---- Domain block ---- */
+
+.topo-domain {
+  background: var(--bg-card);
+  padding: 14px 14px 12px;
+}
+
+.topo-domain-highlighted {
+  background: color-mix(in srgb, var(--bg-card) 85%, var(--accent) 15%);
+}
+
+.topo-domain-header {
+  margin-bottom: 10px;
+}
+
+.topo-domain-id {
+  display: block;
+  font-size: 9px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  margin-bottom: 2px;
+}
+
+.topo-domain-name {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.topo-domain-name a,
+a.topo-domain-name {
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.topo-domain-name:hover,
+a.topo-domain-name:hover {
+  color: var(--accent);
+}
+
+.topo-domain-highlighted .topo-domain-name {
+  color: var(--accent);
+}
+
+/* ---- Capability group ---- */
+
+.topo-caps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.topo-cap {
+  background: var(--bg-card-deep, rgba(0,0,0,0.2));
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 7px 9px 8px;
+}
+
+.topo-cap-highlighted {
+  border-color: var(--moderate);
+  background: color-mix(in srgb, var(--bg-card-deep, rgba(0,0,0,0.2)) 80%, var(--moderate) 20%);
+}
+
+.topo-cap-unresolved {
+  opacity: 0.6;
+}
+
+.topo-cap-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-dim);
+  margin-bottom: 5px;
+  line-height: 1.3;
+}
+
+.topo-cap-label a {
+  color: var(--text-dim);
+  text-decoration: none;
+}
+
+.topo-cap-label a:hover {
+  color: var(--accent);
+}
+
+.topo-cap-highlighted .topo-cap-label {
+  color: var(--text-primary);
+}
+
+.topo-cap-label-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.topo-empty-caps {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 4px 0;
+}
+
+/* ---- Component chips ---- */
+
+.topo-comp-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.topo-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 9px;
+  font-family: var(--font-mono);
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  background: var(--bg-base);
+  color: var(--text-muted);
+  text-decoration: none;
+  line-height: 1.4;
+  cursor: default;
+}
+
+a.topo-chip {
+  cursor: pointer;
+}
+
+a.topo-chip:hover {
+  background: var(--bg-card);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.topo-chip-highlighted {
+  border-color: var(--strong);
+  color: var(--text-dim);
+  background: color-mix(in srgb, var(--bg-base) 70%, var(--strong) 30%);
+}
+
+.topo-chip-unresolved {
+  opacity: 0.5;
+  border-style: dashed;
+}
+
+/* ---- Shared element: unresolved icon ---- */
+
+.topo-unresolved-icon {
+  font-size: 9px;
+  color: var(--orange);
+}
+
+/* ---- Shared element: highlight dot ---- */
+
+.topo-highlight-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--strong);
+  flex-shrink: 0;
+}
+
+
+/* ============================================================
+   DEMO CHOREOGRAPHY — PIOS-42.8-RUN01-CONTRACT-v1
+   Presentation-only layer: no content changes, only focus.
+   ============================================================ */
+
+/* ---- Demo start button (in hero) ---- */
+
+.demo-start-btn {
+  margin-top: 16px;
+  padding: 8px 20px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: transparent;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.demo-start-btn:hover {
+  background: var(--accent);
+  color: var(--bg-base);
+}
+
+/* ---- Demo active: push bottom for the bar ---- */
+
+.demo-active {
+  padding-bottom: 68px;
+}
+
+/* ---- Spotlight: applied/removed per step ---- */
+
+.demo-spotlight {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 6px;
+  transition: outline 0.2s;
+}
+
+/* ---- Fixed bottom bar ---- */
+
+.demo-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 20px;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+}
+
+/* ---- Step pips row ---- */
+
+.demo-steps-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.demo-pip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-family: var(--font-mono);
+  padding: 3px 7px;
+  border-radius: 3px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.demo-pip-future {
+  color: var(--text-muted);
+  border-color: var(--border);
+}
+
+.demo-pip-done {
+  color: var(--text-dim);
+  border-color: var(--border);
+  background: var(--bg-card-deep, rgba(0,0,0,0.2));
+}
+
+.demo-pip-active {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--bg-card) 80%, var(--accent) 20%);
+  font-weight: 700;
+}
+
+.demo-pip-num {
+  font-size: 9px;
+  opacity: 0.7;
+}
+
+.demo-pip-label {
+  /* Hide label on smaller viewports */
+}
+
+@media (max-width: 700px) {
+  .demo-pip-label { display: none; }
+}
+
+/* ---- Step title (middle) ---- */
+
+.demo-step-title {
+  flex: 1;
+  font-size: 11px;
+  color: var(--text-primary);
+  text-align: center;
+  font-style: italic;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---- Controls ---- */
+
+.demo-controls {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.demo-btn {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 5px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  border: 1px solid;
+  transition: background 0.12s, color 0.12s;
+}
+
+.demo-btn-exit {
+  color: var(--text-muted);
+  border-color: var(--border);
+  background: transparent;
+}
+
+.demo-btn-exit:hover {
+  color: var(--text-primary);
+  border-color: var(--text-dim);
+}
+
+.demo-btn-next {
+  color: var(--bg-base);
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.demo-btn-next:hover {
+  opacity: 0.85;
+}
+

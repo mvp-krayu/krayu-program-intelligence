@@ -1,0 +1,194 @@
+{
+  "mapping_id": "PIOS-41.4-EVIDENCE-INDEX",
+  "contract_id": "PIOS-41.4-RUN01-CONTRACT-v1",
+  "run_reference": "run_01_blueedge",
+  "generated_date": "2026-03-20",
+  "signals": [
+    {
+      "signal_id": "SIG-001",
+      "source_layer": "40.7",
+      "source_file": "intelligence_output_set.md",
+      "source_object_id": "INTEL-001",
+      "supporting_objects": [
+        {
+          "layer": "40.7",
+          "file": "diagnosis_output_set.md",
+          "object_id": "DIAG-006",
+          "state": "computed"
+        },
+        {
+          "layer": "40.6",
+          "file": "condition_output_set.md",
+          "object_id": "COND-006",
+          "state": "complete"
+        },
+        {
+          "layer": "40.5",
+          "file": "signal_output_set.md",
+          "object_id": "SIG-006",
+          "state": "complete"
+        }
+      ],
+      "semantic_anchor": {
+        "domain_id": "DOMAIN-01",
+        "domain_name": "Edge Data Acquisition",
+        "capability_id": "CAP-02",
+        "capability_name": "Network Security Intelligence Collection",
+        "component_ids": ["COMP-74", "COMP-75"]
+      },
+      "evidence_chain": "40.5 SIG-006 (complete: DIM-PC-002/DIM-PC-001 = 10/30 = 0.333 rec/sec) → 40.6 COND-006 (complete: activation_state=configured) → 40.7 DIAG-006 (computed: SENSOR_BRIDGE_CONFIGURED, 0.333 rec/sec, static config) → 40.7 INTEL-001 (computed: confirmed claims, runtime state UNAVAILABLE) → 41.1 DOMAIN-01/CAP-02/COMP-74,COMP-75 → 41.2 vault: D_01_Edge_Data_Acquisition / C_02_Network_Security_Intelligence_Collection",
+      "blocking_point": null,
+      "temporal_reference": "TMP-009 (30s config-defined)"
+    },
+    {
+      "signal_id": "SIG-002",
+      "source_layer": "40.7",
+      "source_file": "intelligence_output_set.md",
+      "source_object_id": "INTEL-002",
+      "supporting_objects": [
+        {
+          "layer": "40.7",
+          "file": "diagnosis_output_set.md",
+          "object_id": "DIAG-001",
+          "state": "blocked"
+        },
+        {
+          "layer": "40.7",
+          "file": "diagnosis_output_set.md",
+          "object_id": "DIAG-002",
+          "state": "blocked"
+        },
+        {
+          "layer": "40.7",
+          "file": "diagnosis_output_set.md",
+          "object_id": "DIAG-003",
+          "state": "blocked"
+        },
+        {
+          "layer": "40.7",
+          "file": "diagnosis_output_set.md",
+          "object_id": "DIAG-004",
+          "state": "blocked"
+        },
+        {
+          "layer": "40.7",
+          "file": "diagnosis_output_set.md",
+          "object_id": "DIAG-005",
+          "state": "blocked"
+        },
+        {
+          "layer": "40.7",
+          "file": "diagnosis_output_set.md",
+          "object_id": "DIAG-007",
+          "state": "blocked"
+        },
+        {
+          "layer": "40.7",
+          "file": "diagnosis_output_set.md",
+          "object_id": "DIAG-008",
+          "state": "blocked"
+        }
+      ],
+      "semantic_anchor": {
+        "domain_id": "DOMAIN-10",
+        "domain_name": "Platform Infrastructure and Data",
+        "capability_id": "CAP-27",
+        "capability_name": "Caching Layer",
+        "component_ids": ["COMP-64", "COMP-81", "COMP-65", "COMP-27"]
+      },
+      "evidence_chain": "40.5 SIG-001..005, SIG-007..008 (all pending: runtime telemetry unavailable) → 40.6 COND-001..005, COND-007..008 (all blocked: signal inputs pending) → 40.7 DIAG-001..005, DIAG-007..008 (all blocked: conditions blocked) → 40.7 INTEL-002 (blocked: unknown_space declaration, 7 dimensions unknown) → 41.1 DOMAIN-10/CAP-27/COMP-64,COMP-81 + DOMAIN-11/CAP-30/COMP-65 + DOMAIN-08/CAP-22/COMP-27",
+      "blocking_point": "INF-003 Prometheus scrape (TMP-004) not available; WebSocket fleet:* rooms not active (TMP-010); alert event flow not active (TMP-003/TMP-010); driver session lifecycle events not active (TMP-010)",
+      "temporal_reference": "TMP-004 (10s Prometheus), TMP-010 (event-driven), TMP-003 (15-30s broadcast)"
+    },
+    {
+      "signal_id": "SIG-003",
+      "source_layer": "40.6",
+      "source_file": "condition_output_set.md",
+      "source_object_id": "COND-001",
+      "supporting_objects": [
+        {
+          "layer": "40.5",
+          "file": "signal_validation_report.md",
+          "object_id": "SIG-002",
+          "state": "complete (program-level signal: ratio 0.682, 15 dependency edges, 22 nodes)"
+        },
+        {
+          "layer": "40.6",
+          "file": "condition_validation_report.md",
+          "object_id": "COND-001",
+          "state": "evaluable (full signal input available)"
+        }
+      ],
+      "semantic_anchor": {
+        "domain_id": "DOMAIN-11",
+        "domain_name": "Event-Driven Architecture",
+        "capability_id": "CAP-30",
+        "capability_name": "Domain Event Bus",
+        "component_ids": ["COMP-65"]
+      },
+      "evidence_chain": "40.4 ST-007, ST-010, ST-012, ST-013, ST-014, ST-015 (structural telemetry, static) → 40.5 SIG-002 Dependency Load (CKR-007: 15/22 = 0.682, complete) → 40.6 COND-001 Dependency Load Elevation (CKR-012, evaluable, awaiting Stream 75.1 threshold activation) → 41.1 DOMAIN-11/CAP-30/COMP-65 (FleetEventsModule: hub of all dependency relationships, R-038 confirmed)",
+      "blocking_point": "Stream 75.1 threshold definition required for full condition activation; signal values fully computed",
+      "temporal_reference": "static (no temporal dependency on runtime events)"
+    },
+    {
+      "signal_id": "SIG-004",
+      "source_layer": "40.6",
+      "source_file": "condition_output_set.md",
+      "source_object_id": "COND-002",
+      "supporting_objects": [
+        {
+          "layer": "40.5",
+          "file": "signal_validation_report.md",
+          "object_id": "SIG-004",
+          "state": "complete (program-level signal: edge/node=1.273, containment=0.545, responsibility=0.364, module=0.455)"
+        },
+        {
+          "layer": "40.6",
+          "file": "condition_validation_report.md",
+          "object_id": "COND-002",
+          "state": "evaluable (full signal input available)"
+        }
+      ],
+      "semantic_anchor": {
+        "domain_id": "DOMAIN-10",
+        "domain_name": "Platform Infrastructure and Data",
+        "capability_id": "CAP-29",
+        "capability_name": "Platform Monorepo Container",
+        "component_ids": ["COMP-01"]
+      },
+      "evidence_chain": "40.4 ST-006, ST-007, ST-009, ST-010, ST-011, ST-022 (structural telemetry, static) → 40.5 SIG-004 Structural Volatility (CKR-009: four computed ratios, complete) → 40.6 COND-002 Structural Volatility State (CKR-012, evaluable, awaiting Stream 75.1 threshold activation) → 41.1 DOMAIN-10/CAP-29/COMP-01 (blueedge-platform Monorepo: structural host for all 89 components, all 63 backend modules)",
+      "blocking_point": "Stream 75.1 threshold definition required for full condition activation; all four ratio values fully computed",
+      "temporal_reference": "static (no temporal dependency on runtime events)"
+    },
+    {
+      "signal_id": "SIG-005",
+      "source_layer": "40.6",
+      "source_file": "condition_output_set.md",
+      "source_object_id": "COND-003",
+      "supporting_objects": [
+        {
+          "layer": "40.5",
+          "file": "signal_validation_report.md",
+          "object_id": "SIG-001",
+          "state": "partial (program-level signal: static ratio 0.875 computed; AT-005, AT-007 runtime components pending)"
+        },
+        {
+          "layer": "40.6",
+          "file": "condition_validation_report.md",
+          "object_id": "COND-003",
+          "state": "partial (SIG-001 structural: 0.875 resolved; runtime component blocked)"
+        }
+      ],
+      "semantic_anchor": {
+        "domain_id": "DOMAIN-16",
+        "domain_name": "Operational Engineering",
+        "capability_id": "CAP-40",
+        "capability_name": "Delivery and Quality Infrastructure",
+        "component_ids": ["COMP-88", "COMP-89"]
+      },
+      "evidence_chain": "40.4 ST-016, ST-012 (structural telemetry, static: 7/8 shared interfaces) + AT-005, AT-007 (activity telemetry, event-based: NOT AVAILABLE) → 40.5 SIG-001 Coordination Pressure (CKR-006: partial — static ratio 0.875 computed, runtime blocked) → 40.6 COND-003 Coordination Pressure Active (CKR-012, partial — static component resolved, runtime blocked) → 41.1 DOMAIN-16/CAP-40/COMP-88,COMP-89 (CI/CD Workflows + Docker Compose: delivery pipeline components governing coordination mechanisms)",
+      "blocking_point": "AT-005 (active pipeline runs, event-based) and AT-007 (validation gate count per run, event-based) require live pipeline execution; not available in static analysis context",
+      "temporal_reference": "static + event-based (partial: static component only)"
+    }
+  ]
+}
