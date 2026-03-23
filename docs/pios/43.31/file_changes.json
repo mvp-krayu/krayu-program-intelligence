@@ -1,0 +1,65 @@
+{
+  "file_changes_id": "PIOS-43.31-FILE-CHANGES",
+  "stream": "43.31",
+  "program": "Krayu — Program Intelligence Discipline",
+  "date": "2026-03-23",
+  "contract_version": "43.31-v1",
+  "status": "COMPLETE",
+  "files_created": [
+    {
+      "path": "docs/pios/43.31/materialization_contract.md",
+      "type": "CONTRACT DEFINITION",
+      "description": "Governed Materialization & Reproducibility Contract — primary document. Defines artifact schemas, canonical paths, field-by-field source mappings, fail-closed triggers, provenance continuity rules, audit contract, and consumption rules for 43.3 and 44.2 runtime artifacts.",
+      "authority": "43.31"
+    },
+    {
+      "path": "docs/pios/43.31/reproducibility_contract.md",
+      "type": "CONTRACT DEFINITION",
+      "description": "Governed Reproduction & Replay Contract. Defines ordered 7-step replay procedure (R-1 through R-7), required inputs, checksum verification method, deterministic execution order (41.x → 43.3 → 44.2), and replay equivalence rule.",
+      "authority": "43.31"
+    },
+    {
+      "path": "docs/pios/43.31/validation_log.json",
+      "type": "VALIDATION LOG",
+      "description": "Stream-level validation log confirming completeness of all defined contracts. 9 validation checks: PASS for all dimensions including input inventory, schema completeness (43.3 and 44.2), provenance continuity, reproduction completeness, fail-closed completeness, checksum method, audit contract, and blocker resolution scope.",
+      "authority": "43.31"
+    },
+    {
+      "path": "docs/pios/43.31/file_changes.json",
+      "type": "FILE CHANGES LOG",
+      "description": "This file. Record of all files created and modified by Stream 43.31.",
+      "authority": "43.31"
+    },
+    {
+      "path": "docs/pios/43.31/changelog.md",
+      "type": "CHANGELOG",
+      "description": "Human-readable record of decisions made in Stream 43.31 and the rationale for scope boundaries.",
+      "authority": "43.31"
+    },
+    {
+      "path": "docs/pios/43.31/CLOSURE.md",
+      "type": "CLOSURE RECORD",
+      "description": "Stream closure record confirming contract locked, status COMPLETE, and scope of blocks lifted.",
+      "authority": "43.31"
+    },
+    {
+      "path": "docs/pios/contracts/43.31_execution_contract.md",
+      "type": "EXECUTION CONTRACT",
+      "description": "Execution contract for Stream 43.31 as filed in the contracts registry.",
+      "authority": "43.31"
+    }
+  ],
+  "files_modified": [],
+  "files_read_as_inputs": [
+    "docs/pios/43.1/signal_binding_definition.md",
+    "docs/pios/43.2/binding_payload_contract.md",
+    "docs/pios/43.3/binding_validation_envelope.md",
+    "docs/pios/44.1/structural_overlay_projection_definition.md",
+    "docs/pios/44.2/projection_attachment_contract.md",
+    "docs/pios/44.3/projection_emphasis_attribute.md",
+    "docs/pios/41.4/signal_registry.json",
+    "docs/pios/41.4/evidence_mapping_index.json",
+    "docs/pios/41.5/query_signal_map.json",
+    "scripts/pios/42.1/run_execlens_query.py"
+  ]
+}
