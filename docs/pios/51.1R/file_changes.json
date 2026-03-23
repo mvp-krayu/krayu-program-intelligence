@@ -1,0 +1,96 @@
+{
+  "file_changes_id": "PIOS-51.1R-FILE-CHANGES",
+  "stream": "51.1R",
+  "branch": "feature/51-1r-rendering-normalization",
+  "program": "Krayu — Program Intelligence Discipline",
+  "date": "2026-03-23",
+  "execution_version": "51.1R-v1",
+  "status": "COMPLETE",
+  "files_created": [
+    {
+      "path": "docs/pios/51.1R/normalization_report.md",
+      "type": "NORMALIZATION REPORT",
+      "description": "Full normalization record. Input inventory pre-normalization, closed-set decision, 3 normalization actions, post-normalization checksums, downstream gate decision.",
+      "canonical": false
+    },
+    {
+      "path": "docs/pios/51.1R/closed_set_decision.md",
+      "type": "CLOSED-SET DECISION RECORD",
+      "description": "Governs Outcome B: closed set = HIGH / MEDIUM / LOW / NONE. Evidence from 42.22 attribute_lineage.json. NONE confirmed as governed member.",
+      "canonical": false
+    },
+    {
+      "path": "docs/pios/51.1R/validation_log.json",
+      "type": "VALIDATION LOG",
+      "description": "Structured validation log. 13 validations: all PASS. 0 fail-closed triggers fired.",
+      "canonical": false
+    },
+    {
+      "path": "docs/pios/51.1R/file_changes.json",
+      "type": "FILE CHANGES LOG",
+      "description": "This file. Record of all files created and modified by Stream 51.1R.",
+      "canonical": false
+    },
+    {
+      "path": "docs/pios/51.1R/changelog.md",
+      "type": "CHANGELOG",
+      "description": "Human-readable record of decisions made in Stream 51.1R.",
+      "canonical": false
+    },
+    {
+      "path": "docs/pios/51.1R/CLOSURE.md",
+      "type": "CLOSURE RECORD",
+      "description": "Stream closure record. Status COMPLETE. 51.1 requalified as clean upstream dependency. 51.2 gate OPEN.",
+      "canonical": false
+    }
+  ],
+  "files_normalized": [
+    {
+      "path": "docs/pios/51.1/rendering_spec.md",
+      "pre_normalization_sha256": "76a7ae7db1bdd4d1a6b3ad2f6fc3e16108a38887efd9ce07185f28cf7b03e4c1",
+      "post_normalization_sha256": "593a299629b28cc023feb356246f19b390d9c395cda44973b6167add6c58c835",
+      "changes": "Added explicit NONE governed-member statement. Renamed distribution section with non-canonical evidence label."
+    },
+    {
+      "path": "docs/pios/51.1/ui_mapping_contract.md",
+      "pre_normalization_sha256": "72e5932e441cdf9c2eff1d57dc6b3218ae8a464873e30c906d519f61f1bd421c",
+      "post_normalization_sha256": "3b993881c4c3ab1316dd7c2962902349d45285b13f0eaed2a455f10ddc316d88",
+      "changes": "Added Governed Closed Set section. RENDER_NONE declared as governed mapping outcome."
+    },
+    {
+      "path": "docs/pios/51.1/validation_log.json",
+      "pre_normalization_sha256": "6e3ecffcff57a45f83ff787a47872749eef58daf54a11ae965eacb8e637010fd",
+      "post_normalization_sha256": "fa6706e686179510b048347c59039db905976c310b230ac5da9cf8778c08e97a",
+      "changes": "Added governed_closed_set field and closed_set_source. Added none_not_treated_as_fallback validation. Total: 17→20 validations."
+    },
+    {
+      "path": "docs/pios/51.1/changelog.md",
+      "pre_normalization_sha256": "eb988ba698b317f6f0d2012697ba948182db5e45597481f72dcc3618e01fa3fd",
+      "post_normalization_sha256": "b00e61ac590bb6d01c4d9218f542e89f48f0096bb361f2de1197f507d0dd8d95",
+      "changes": "Added Entry 004 recording 51.1R normalization actions."
+    },
+    {
+      "path": "docs/pios/51.1/CLOSURE.md",
+      "pre_normalization_sha256": "a8ae5a9aa7e53b0b0c9e19e7e91d179a9aae29e677483c681bf35ea2328fc434",
+      "post_normalization_sha256": "e62e1ab906d48b9edef18cfbe5622228f2e738b66a36a99a70f046494e7c9097",
+      "changes": "Renamed distribution section with non-canonical evidence label. Added normalization record section."
+    }
+  ],
+  "upstream_artifacts_read": [
+    {
+      "path": "docs/pios/42.22/sample_runtime_output.json",
+      "checksum_sha256": "ca6c9e1ca8d9ac2c66a1a77edf4155050036f0af55fd80e6ab2445d84530b9af",
+      "modified": false
+    },
+    {
+      "path": "docs/pios/42.22/attribute_lineage.json",
+      "checksum_sha256": "b94e0cae0f5769aff2740388a74e8016defc25980ccd16723b473c14c271719a",
+      "modified": false
+    },
+    {
+      "path": "docs/pios/42.22/validation_log.json",
+      "checksum_sha256": "604136c1005e9d09443ff0a3af0e045034989f431735dc6f0651ce070fbddf45",
+      "modified": false
+    }
+  ]
+}

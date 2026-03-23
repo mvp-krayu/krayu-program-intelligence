@@ -1,0 +1,95 @@
+{
+  "file_changes_id": "PIOS-51.2C-FILE-CHANGES",
+  "stream": "51.2C",
+  "branch": "feature/51-2c-wow-script-alignment-flat",
+  "program": "Krayu — Program Intelligence Discipline",
+  "date": "2026-03-23",
+  "execution_version": "51.2C-v1",
+  "status": "COMPLETE",
+  "files_created": [
+    {
+      "path": "docs/pios/51.2C/script_alignment_report.md",
+      "type": "SCRIPT ALIGNMENT REPORT",
+      "description": "Full alignment assessment. Input inventory, governing rendering contract, per-file rendering conflict scan (4 files, 0 conflicts), alignment decision (no in-place modifications authorized).",
+      "canonical": false
+    },
+    {
+      "path": "docs/pios/51.2C/cue_integration_contract.md",
+      "type": "CUE INTEGRATION CONTRACT",
+      "description": "4 cue points defined (CUE-01 through CUE-04). Each cue traceable to rendering authority and canonical flat demo authority. Forbidden presenter actions defined per cue.",
+      "canonical": false
+    },
+    {
+      "path": "docs/pios/51.2C/validation_log.json",
+      "type": "VALIDATION LOG",
+      "description": "16 validations: all PASS. 0 fail-closed triggers fired.",
+      "canonical": false
+    },
+    {
+      "path": "docs/pios/51.2C/file_changes.json",
+      "type": "FILE CHANGES LOG",
+      "description": "This file.",
+      "canonical": false
+    },
+    {
+      "path": "docs/pios/51.2C/changelog.md",
+      "type": "CHANGELOG",
+      "description": "Human-readable record of decisions made in Stream 51.2C.",
+      "canonical": false
+    },
+    {
+      "path": "docs/pios/51.2C/CLOSURE.md",
+      "type": "CLOSURE RECORD",
+      "description": "Stream closure record. Status COMPLETE. WOW delivery governed, reproducible, and audit-ready.",
+      "canonical": false
+    }
+  ],
+  "files_modified_in_place": [],
+  "upstream_artifacts_read": [
+    {
+      "path": "docs/pios/51.1/rendering_spec.md",
+      "checksum_sha256": "593a299629b28cc023feb356246f19b390d9c395cda44973b6167add6c58c835",
+      "modified": false
+    },
+    {
+      "path": "docs/pios/51.1/ui_mapping_contract.md",
+      "checksum_sha256": "3b993881c4c3ab1316dd7c2962902349d45285b13f0eaed2a455f10ddc316d88",
+      "modified": false
+    },
+    {
+      "path": "docs/pios/51.1R/closed_set_decision.md",
+      "checksum_sha256": "5840d9a79dc1e9c1cf98b1b86f73ab6c53b0d649d217f8f363121eb6b97ef71c",
+      "modified": false
+    },
+    {
+      "path": "docs/pios/51.1S/canonicalization_decision.md",
+      "checksum_sha256": "fb49a49d5e90791d02af45b284dbc99eaff6881d1ff745af0f90a456b5c72955",
+      "modified": false
+    },
+    {
+      "path": "docs/pios/51.1S/input_authority_matrix.md",
+      "checksum_sha256": "670a32e3d0e50eead87ebccf0440afc1fc234200627b21aa675552200ac32c93",
+      "modified": false
+    },
+    {
+      "path": "docs/program-intelligence-demonstrations/program_intelligence_demonstration_model.md",
+      "checksum_sha256": "11b3562525fa96ebf11696693604a2d98ab4c99b093db39f3640a56935cb57ca",
+      "modified": false
+    },
+    {
+      "path": "docs/program-intelligence-demonstrations/wow_30_day_demonstration.md",
+      "checksum_sha256": "6ee67de7c1ee0111ba8d7114d0212bb357fc8537cd9725e123745a104543a49a",
+      "modified": false
+    },
+    {
+      "path": "docs/program-intelligence-demonstrations/demonstration_exec_intelligence.md",
+      "checksum_sha256": "57dd6e070b60750795302eb094c522d2d30806b98067e7e21028329a2821222d",
+      "modified": false
+    },
+    {
+      "path": "docs/program-intelligence-demonstrations/demonstration_signal_pipeline.md",
+      "checksum_sha256": "7d54fb021d4ec0397da22ef492ed33909ee1b0f1066b5ea4b238802cf8b7ca85",
+      "modified": false
+    }
+  ]
+}
