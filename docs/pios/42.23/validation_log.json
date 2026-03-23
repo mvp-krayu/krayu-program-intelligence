@@ -1,0 +1,103 @@
+{
+  "validation_log_id": "PIOS-42.23-VALIDATION-LOG",
+  "stream": "42.23",
+  "program": "Krayu — Program Intelligence Discipline",
+  "date": "2026-03-23",
+  "execution_timestamp": "2026-03-23T15:30:00Z",
+  "execution_version": "42.23-v1",
+  "branch": "feature/42-23-governed-demo-surface-rewiring",
+  "status": "COMPLETE",
+  "source_42_22_sample_runtime_output_checksum": "ca6c9e1ca8d9ac2c66a1a77edf4155050036f0af55fd80e6ab2445d84530b9af",
+  "source_42_22_attribute_lineage_checksum": "b94e0cae0f5769aff2740388a74e8016defc25980ccd16723b473c14c271719a",
+  "source_51_1_rendering_spec_checksum": "593a299629b28cc023feb356246f19b390d9c395cda44973b6167add6c58c835",
+  "source_51_1_ui_mapping_contract_checksum": "3b993881c4c3ab1316dd7c2962902349d45285b13f0eaed2a455f10ddc316d88",
+  "validations": [
+    {
+      "name": "source_inputs_confirmed",
+      "result": "PASS",
+      "evidence": "All 4 governed source inputs present, checksums confirmed unmodified against 51.1R-recorded values."
+    },
+    {
+      "name": "adapter_created_via_shell",
+      "result": "PASS",
+      "evidence": "scripts/pios/42.23/execlens_wowchain_adapter.py created via cat <<'EOF' heredoc. No Write() abstraction used."
+    },
+    {
+      "name": "adapter_reads_42_22_only",
+      "result": "PASS",
+      "evidence": "Adapter opens docs/pios/42.22/sample_runtime_output.json as sole data source. No import of 42.2 or 42.7 modules."
+    },
+    {
+      "name": "adapter_validates_closed_set",
+      "result": "PASS",
+      "evidence": "GOVERNED_CLOSED_SET = {high, medium, low, none}. Any record with emphasis outside this set triggers fail-closed (exit 1)."
+    },
+    {
+      "name": "static_mapping_verbatim_from_51_1",
+      "result": "PASS",
+      "evidence": "RENDERING_MAP = {high: RENDER_RED, medium: RENDER_AMBER, low: RENDER_NEUTRAL, none: RENDER_NONE}. Verbatim from 51.1 rendering_spec.md static mapping table."
+    },
+    {
+      "name": "adapter_fail_closed_defined",
+      "result": "PASS",
+      "evidence": "5 fail-closed triggers defined: source missing, exposure_records absent, emphasis absent, emphasis out-of-set, mapping ambiguity. All call fail_closed() which exits 1."
+    },
+    {
+      "name": "adapter_test_execution_pass",
+      "result": "PASS",
+      "evidence": "python3 scripts/pios/42.23/execlens_wowchain_adapter.py executed. Output: 5 records, all emphasis=none→RENDER_NONE, record_count=5, exit 0. No fail-closed triggers fired."
+    },
+    {
+      "name": "adapter_wow_chain_flag_set",
+      "result": "PASS",
+      "evidence": "Adapter output carries wow_chain=true. TopologyPanel.js detects this to switch render path."
+    },
+    {
+      "name": "execlens_js_adapter_42_7_removed",
+      "result": "PASS",
+      "evidence": "ADAPTER_42_7 constant removed from pages/api/execlens.js. ADAPTER_42_23 added. topology route calls ADAPTER_42_23."
+    },
+    {
+      "name": "execlens_js_42_4_42_6_unchanged",
+      "result": "PASS",
+      "evidence": "ADAPTER_42_4 and ADAPTER_42_6 constants and their route handlers are unchanged. Only topology route modified."
+    },
+    {
+      "name": "topology_panel_wow_chain_path_added",
+      "result": "PASS",
+      "evidence": "ExposureNodeRow component and RENDER_TOKEN_CLASS map added. WOW chain render path: if topology.wow_chain === true. Legacy render path retained."
+    },
+    {
+      "name": "topology_panel_metadata_updated",
+      "result": "PASS",
+      "evidence": "WOW chain metadata text: 'source: 42.22 WOW chain · governed emphasis exposure · 51.1 rendering spec'."
+    },
+    {
+      "name": "index_js_hero_meta_updated",
+      "result": "PASS",
+      "evidence": "Hero meta: PIOS-42.23-RUN01-CONTRACT-v1 · run_02_governed · 42.22 → 51.1 → 51.1R → 42.23."
+    },
+    {
+      "name": "no_upstream_artifacts_modified",
+      "result": "PASS",
+      "evidence": "42.22, 51.1, 51.1R, 43.x, 44.x artifacts unmodified. file_changes.json confirms unchanged checksums for all source inputs."
+    },
+    {
+      "name": "no_synthetic_data_introduced",
+      "result": "PASS",
+      "evidence": "Adapter reads only from 42.22 runtime-exposed artifacts. No values invented. Null on missing fields, fail-closed on absent required fields."
+    },
+    {
+      "name": "no_fail_closed_triggers_fired",
+      "result": "PASS",
+      "evidence": "Adapter test execution: 5 records, all valid, exit 0. No fail-closed conditions triggered."
+    }
+  ],
+  "fail_closed_triggers_fired": [],
+  "summary": {
+    "total_validations": 16,
+    "pass_count": 16,
+    "fail_count": 0,
+    "blocked_count": 0
+  }
+}

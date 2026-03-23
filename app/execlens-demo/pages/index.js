@@ -1,16 +1,12 @@
 /**
  * pages/index.js
- * PIOS-42.8-RUN01-CONTRACT-v1 (demo choreography layer)
+ * PIOS-42.23-RUN01-CONTRACT-v1
  *
  * ExecLens Demo Surface — main page.
- * Layer chain: 42.1 (traversal) → 42.2 (rendering) → 42.3 (CLI) → 42.4 (adapter) → 42.5 (UI)
+ * Topology rewired to governed WOW chain: 42.22 → 51.1 → 51.1R → 42.23
  *
- * All content sourced from /api/execlens → adapter → 42.2 → 42.1.
- * No synthetic data. No hardcoded query content. Rendering improvements only.
- *
- * 42.8 adds: Demo choreography layer (DemoController).
- *   - Presentation-only: scroll + spotlight + step sequencing
- *   - No content mutation, no adapter bypass
+ * All content sourced from /api/execlens → adapter → governed artifacts.
+ * No synthetic data. No hardcoded query content.
  */
 
 import { useState, useEffect } from 'react'
@@ -134,7 +130,7 @@ export default function Home() {
     <>
       <Head>
         <title>ExecLens — Program Intelligence</title>
-        <meta name="description" content="Evidence-first program intelligence surface — PIOS run_01_blueedge" />
+        <meta name="description" content="Evidence-first program intelligence surface — PIOS run_02_governed" />
       </Head>
 
       <div className={`page-root${demoActive ? ' demo-active' : ''}`}>
@@ -148,9 +144,9 @@ export default function Home() {
           </p>
           <PipelineStrip />
           <div className="hero-meta">
-            PIOS-42.8-RUN01-CONTRACT-v1 · run_01_blueedge
+            PIOS-42.23-RUN01-CONTRACT-v1 · run_02_governed
             &ensp;·&ensp;
-            42.1 → 42.2 → 42.4 → 42.6 → 42.7 → 42.8
+            42.22 → 51.1 → 51.1R → 42.23
             &ensp;·&ensp;
             No inference. No synthetic data.
           </div>
