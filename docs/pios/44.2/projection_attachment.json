@@ -1,0 +1,448 @@
+{
+  "artifact_checksum": "bf20bec6f01dbca39e44233187214239e450e041e0f48516f5b016c890d090e8",
+  "artifact_id": "PIOS-44.2-RUN01-PROJECTION-ATTACHMENT",
+  "artifact_path": "docs/pios/44.2/projection_attachment.json",
+  "contract_version": "43.31-v1",
+  "execution_version": "43.33-v1",
+  "generated_date": "2026-03-23",
+  "projections": [
+    {
+      "attachment_id": "PROJ-BIND-SIG-001-C_02_Network_Security_Intelligence_Collection-C_02_Network_Security_Intelligence_Collection",
+      "attachment_status": "ATTACHED",
+      "binding_id": "BIND-SIG-001-C_02_Network_Security_Intelligence_Collection",
+      "checksum": "0b920378495d317475213cf676570712b2715521fd9e8a5134f5f7c3e05fd9c3",
+      "contract_version": "43.31-v1",
+      "emphasis": "none",
+      "evidence_reference": {
+        "association_basis": "domain_id:DOMAIN-01 / capability_id:CAP-02 / component_ids:[COMP-74,COMP-75] — semantic_anchor confirmed in evidence_mapping_index.json::SIG-001",
+        "provenance_chain": "40.5 SIG-006 (complete: DIM-PC-002/DIM-PC-001 = 10/30 = 0.333 rec/sec) → 40.6 COND-006 (complete: activation_state=configured) → 40.7 DIAG-006 (computed: SENSOR_BRIDGE_CONFIGURED, 0.333 rec/sec, static config) → 40.7 INTEL-001 (computed: confirmed claims, runtime state UNAVAILABLE) → 41.1 DOMAIN-01/CAP-02/COMP-74,COMP-75 → 41.2 vault: D_01_Edge_Data_Acquisition / C_02_Network_Security_Intelligence_Collection",
+        "source_reference": "docs/pios/41.4/evidence_mapping_index.json::SIG-001",
+        "temporal_reference": "TMP-009 (30s config-defined)"
+      },
+      "node_reference": {
+        "node_id": "C_02_Network_Security_Intelligence_Collection",
+        "vault_path": "docs/pios/41.2/pie_vault/02_Capabilities/C_02_Network_Security_Intelligence_Collection.md"
+      },
+      "projection_reference": "BIND-SIG-001-C_02_Network_Security_Intelligence_Collection:VALID:43.31-v1",
+      "signal_reference": {
+        "signal_id": "SIG-001",
+        "signal_state": "computed",
+        "source_reference": "docs/pios/41.4/signal_registry.json::SIG-001"
+      },
+      "source_snapshot_reference": {
+        "extraction_timestamp": "2026-03-23T12:39:36Z",
+        "source_files": [
+          {
+            "checksum_sha256": "71c628d1ce0e4dd80800eaafe84ae3e5a922302adba9543d44f07ddad3c8aa7b",
+            "path": "docs/pios/43.3/validated_binding_payload.json"
+          },
+          {
+            "checksum_sha256": "08e298ac171e5db585043ae15c51a53c4a992c9ca2be57ba8c61951fa88bc951",
+            "path": "docs/pios/44.1/structural_overlay_projection_definition.md"
+          },
+          {
+            "checksum_sha256": "f6ca91a48708b0d0cb5e0fc52f3b899ca336d3994464567cd173c21129f41e17",
+            "path": "docs/pios/44.2/projection_attachment_contract.md"
+          },
+          {
+            "checksum_sha256": "0ae54ffaae289424ef788f96da5f110f0beef38debaad0ac96fe1f06f1fbfe67",
+            "path": "docs/pios/contracts/43.31_execution_contract.md"
+          },
+          {
+            "checksum_sha256": "0747ae0e33854f49cea1d3bb69f1ba6b58346c3b634256920101c052341946de",
+            "path": "docs/pios/43.31/materialization_contract.md"
+          },
+          {
+            "checksum_sha256": "26e95e18afa8d295f7a6549a6789017667a078c5639f50eebbe91e27d8a8244f",
+            "path": "docs/pios/43.31/reproducibility_contract.md"
+          }
+        ]
+      },
+      "upstream_artifact_checksum": "71c628d1ce0e4dd80800eaafe84ae3e5a922302adba9543d44f07ddad3c8aa7b",
+      "validation_trace": [
+        {
+          "evidence_reference": "docs/pios/41.2/pie_vault/02_Capabilities/C_02_Network_Security_Intelligence_Collection.md",
+          "result": "PASS",
+          "rule_description": "Node Resolution (44.2 §3.2): node_id exactly matches one entry in authoritative pie_vault/02_Capabilities/ topology; no heuristic, approximation, or inference used",
+          "rule_id": "44.2-NR-001"
+        },
+        {
+          "evidence_reference": "docs/pios/43.3/validated_binding_payload.json::BIND-SIG-001-C_02_Network_Security_Intelligence_Collection",
+          "result": "PASS",
+          "rule_description": "Binding Identity Preserved (44.2 §4.2): signal_reference and node_reference carried from validated binding record unchanged; no transformation, normalization, annotation, or extension",
+          "rule_id": "44.2-BI-001"
+        },
+        {
+          "evidence_reference": "docs/pios/43.3/validated_binding_payload.json::BIND-SIG-001-C_02_Network_Security_Intelligence_Collection",
+          "result": "PASS",
+          "rule_description": "Evidence Linkage Preserved (44.2 §4.3): full evidence provenance chain carried verbatim from binding record; association between overlay element and originating signal, source reference, and provenance chain not weakened or abbreviated",
+          "rule_id": "44.2-EL-001"
+        },
+        {
+          "evidence_reference": "docs/pios/43.3/validated_binding_payload.json::BIND-SIG-001-C_02_Network_Security_Intelligence_Collection",
+          "result": "PASS",
+          "rule_description": "One Binding to One Node (44.2 §4.1, §4.4, §4.5): exactly one validated binding record attaches to exactly one resolved node; no duplication, splitting, or merging",
+          "rule_id": "44.2-OB-001"
+        },
+        {
+          "evidence_reference": "docs/pios/44.2/projection_attachment_contract.md",
+          "result": "PASS",
+          "rule_description": "No Content Transformation (44.2 §4.7, §7): no interpretation, no narrative, no inferred meaning, no aggregation, no rendering instructions, no heuristics introduced; attachment is association only",
+          "rule_id": "44.2-NT-001"
+        }
+      ]
+    },
+    {
+      "attachment_id": "PROJ-BIND-SIG-002-C_27_Caching_Layer-C_27_Caching_Layer",
+      "attachment_status": "ATTACHED",
+      "binding_id": "BIND-SIG-002-C_27_Caching_Layer",
+      "checksum": "56f1fd58093b92420142051d915d86f04bba60caa8a7d03c803e6493b4828b5c",
+      "contract_version": "43.31-v1",
+      "emphasis": "none",
+      "evidence_reference": {
+        "association_basis": "domain_id:DOMAIN-10 / capability_id:CAP-27 / component_ids:[COMP-64,COMP-81,COMP-65,COMP-27] — semantic_anchor confirmed in evidence_mapping_index.json::SIG-002",
+        "provenance_chain": "40.5 SIG-001..005, SIG-007..008 (all pending: runtime telemetry unavailable) → 40.6 COND-001..005, COND-007..008 (all blocked: signal inputs pending) → 40.7 DIAG-001..005, DIAG-007..008 (all blocked: conditions blocked) → 40.7 INTEL-002 (blocked: unknown_space declaration, 7 dimensions unknown) → 41.1 DOMAIN-10/CAP-27/COMP-64,COMP-81 + DOMAIN-11/CAP-30/COMP-65 + DOMAIN-08/CAP-22/COMP-27",
+        "source_reference": "docs/pios/41.4/evidence_mapping_index.json::SIG-002",
+        "temporal_reference": "TMP-004 (10s Prometheus), TMP-010 (event-driven), TMP-003 (15-30s broadcast)"
+      },
+      "node_reference": {
+        "node_id": "C_27_Caching_Layer",
+        "vault_path": "docs/pios/41.2/pie_vault/02_Capabilities/C_27_Caching_Layer.md"
+      },
+      "projection_reference": "BIND-SIG-002-C_27_Caching_Layer:VALID:43.31-v1",
+      "signal_reference": {
+        "signal_id": "SIG-002",
+        "signal_state": "blocked",
+        "source_reference": "docs/pios/41.4/signal_registry.json::SIG-002"
+      },
+      "source_snapshot_reference": {
+        "extraction_timestamp": "2026-03-23T12:39:36Z",
+        "source_files": [
+          {
+            "checksum_sha256": "71c628d1ce0e4dd80800eaafe84ae3e5a922302adba9543d44f07ddad3c8aa7b",
+            "path": "docs/pios/43.3/validated_binding_payload.json"
+          },
+          {
+            "checksum_sha256": "08e298ac171e5db585043ae15c51a53c4a992c9ca2be57ba8c61951fa88bc951",
+            "path": "docs/pios/44.1/structural_overlay_projection_definition.md"
+          },
+          {
+            "checksum_sha256": "f6ca91a48708b0d0cb5e0fc52f3b899ca336d3994464567cd173c21129f41e17",
+            "path": "docs/pios/44.2/projection_attachment_contract.md"
+          },
+          {
+            "checksum_sha256": "0ae54ffaae289424ef788f96da5f110f0beef38debaad0ac96fe1f06f1fbfe67",
+            "path": "docs/pios/contracts/43.31_execution_contract.md"
+          },
+          {
+            "checksum_sha256": "0747ae0e33854f49cea1d3bb69f1ba6b58346c3b634256920101c052341946de",
+            "path": "docs/pios/43.31/materialization_contract.md"
+          },
+          {
+            "checksum_sha256": "26e95e18afa8d295f7a6549a6789017667a078c5639f50eebbe91e27d8a8244f",
+            "path": "docs/pios/43.31/reproducibility_contract.md"
+          }
+        ]
+      },
+      "upstream_artifact_checksum": "71c628d1ce0e4dd80800eaafe84ae3e5a922302adba9543d44f07ddad3c8aa7b",
+      "validation_trace": [
+        {
+          "evidence_reference": "docs/pios/41.2/pie_vault/02_Capabilities/C_27_Caching_Layer.md",
+          "result": "PASS",
+          "rule_description": "Node Resolution (44.2 §3.2): node_id exactly matches one entry in authoritative pie_vault/02_Capabilities/ topology; no heuristic, approximation, or inference used",
+          "rule_id": "44.2-NR-001"
+        },
+        {
+          "evidence_reference": "docs/pios/43.3/validated_binding_payload.json::BIND-SIG-002-C_27_Caching_Layer",
+          "result": "PASS",
+          "rule_description": "Binding Identity Preserved (44.2 §4.2): signal_reference and node_reference carried from validated binding record unchanged; no transformation, normalization, annotation, or extension",
+          "rule_id": "44.2-BI-001"
+        },
+        {
+          "evidence_reference": "docs/pios/43.3/validated_binding_payload.json::BIND-SIG-002-C_27_Caching_Layer",
+          "result": "PASS",
+          "rule_description": "Evidence Linkage Preserved (44.2 §4.3): full evidence provenance chain carried verbatim from binding record; association between overlay element and originating signal, source reference, and provenance chain not weakened or abbreviated",
+          "rule_id": "44.2-EL-001"
+        },
+        {
+          "evidence_reference": "docs/pios/43.3/validated_binding_payload.json::BIND-SIG-002-C_27_Caching_Layer",
+          "result": "PASS",
+          "rule_description": "One Binding to One Node (44.2 §4.1, §4.4, §4.5): exactly one validated binding record attaches to exactly one resolved node; no duplication, splitting, or merging",
+          "rule_id": "44.2-OB-001"
+        },
+        {
+          "evidence_reference": "docs/pios/44.2/projection_attachment_contract.md",
+          "result": "PASS",
+          "rule_description": "No Content Transformation (44.2 §4.7, §7): no interpretation, no narrative, no inferred meaning, no aggregation, no rendering instructions, no heuristics introduced; attachment is association only",
+          "rule_id": "44.2-NT-001"
+        }
+      ]
+    },
+    {
+      "attachment_id": "PROJ-BIND-SIG-003-C_30_Domain_Event_Bus-C_30_Domain_Event_Bus",
+      "attachment_status": "ATTACHED",
+      "binding_id": "BIND-SIG-003-C_30_Domain_Event_Bus",
+      "checksum": "7e278b98a860d5e3a81271c0f8e2fef12a2a9b2a3c589442bcd9549c1f6b2351",
+      "contract_version": "43.31-v1",
+      "emphasis": "none",
+      "evidence_reference": {
+        "association_basis": "domain_id:DOMAIN-11 / capability_id:CAP-30 / component_ids:[COMP-65] — semantic_anchor confirmed in evidence_mapping_index.json::SIG-003",
+        "provenance_chain": "40.4 ST-007, ST-010, ST-012, ST-013, ST-014, ST-015 (structural telemetry, static) → 40.5 SIG-002 Dependency Load (CKR-007: 15/22 = 0.682, complete) → 40.6 COND-001 Dependency Load Elevation (CKR-012, evaluable, awaiting Stream 75.1 threshold activation) → 41.1 DOMAIN-11/CAP-30/COMP-65 (FleetEventsModule: hub of all dependency relationships, R-038 confirmed)",
+        "source_reference": "docs/pios/41.4/evidence_mapping_index.json::SIG-003",
+        "temporal_reference": "static (no temporal dependency on runtime events)"
+      },
+      "node_reference": {
+        "node_id": "C_30_Domain_Event_Bus",
+        "vault_path": "docs/pios/41.2/pie_vault/02_Capabilities/C_30_Domain_Event_Bus.md"
+      },
+      "projection_reference": "BIND-SIG-003-C_30_Domain_Event_Bus:VALID:43.31-v1",
+      "signal_reference": {
+        "signal_id": "SIG-003",
+        "signal_state": "evaluable",
+        "source_reference": "docs/pios/41.4/signal_registry.json::SIG-003"
+      },
+      "source_snapshot_reference": {
+        "extraction_timestamp": "2026-03-23T12:39:36Z",
+        "source_files": [
+          {
+            "checksum_sha256": "71c628d1ce0e4dd80800eaafe84ae3e5a922302adba9543d44f07ddad3c8aa7b",
+            "path": "docs/pios/43.3/validated_binding_payload.json"
+          },
+          {
+            "checksum_sha256": "08e298ac171e5db585043ae15c51a53c4a992c9ca2be57ba8c61951fa88bc951",
+            "path": "docs/pios/44.1/structural_overlay_projection_definition.md"
+          },
+          {
+            "checksum_sha256": "f6ca91a48708b0d0cb5e0fc52f3b899ca336d3994464567cd173c21129f41e17",
+            "path": "docs/pios/44.2/projection_attachment_contract.md"
+          },
+          {
+            "checksum_sha256": "0ae54ffaae289424ef788f96da5f110f0beef38debaad0ac96fe1f06f1fbfe67",
+            "path": "docs/pios/contracts/43.31_execution_contract.md"
+          },
+          {
+            "checksum_sha256": "0747ae0e33854f49cea1d3bb69f1ba6b58346c3b634256920101c052341946de",
+            "path": "docs/pios/43.31/materialization_contract.md"
+          },
+          {
+            "checksum_sha256": "26e95e18afa8d295f7a6549a6789017667a078c5639f50eebbe91e27d8a8244f",
+            "path": "docs/pios/43.31/reproducibility_contract.md"
+          }
+        ]
+      },
+      "upstream_artifact_checksum": "71c628d1ce0e4dd80800eaafe84ae3e5a922302adba9543d44f07ddad3c8aa7b",
+      "validation_trace": [
+        {
+          "evidence_reference": "docs/pios/41.2/pie_vault/02_Capabilities/C_30_Domain_Event_Bus.md",
+          "result": "PASS",
+          "rule_description": "Node Resolution (44.2 §3.2): node_id exactly matches one entry in authoritative pie_vault/02_Capabilities/ topology; no heuristic, approximation, or inference used",
+          "rule_id": "44.2-NR-001"
+        },
+        {
+          "evidence_reference": "docs/pios/43.3/validated_binding_payload.json::BIND-SIG-003-C_30_Domain_Event_Bus",
+          "result": "PASS",
+          "rule_description": "Binding Identity Preserved (44.2 §4.2): signal_reference and node_reference carried from validated binding record unchanged; no transformation, normalization, annotation, or extension",
+          "rule_id": "44.2-BI-001"
+        },
+        {
+          "evidence_reference": "docs/pios/43.3/validated_binding_payload.json::BIND-SIG-003-C_30_Domain_Event_Bus",
+          "result": "PASS",
+          "rule_description": "Evidence Linkage Preserved (44.2 §4.3): full evidence provenance chain carried verbatim from binding record; association between overlay element and originating signal, source reference, and provenance chain not weakened or abbreviated",
+          "rule_id": "44.2-EL-001"
+        },
+        {
+          "evidence_reference": "docs/pios/43.3/validated_binding_payload.json::BIND-SIG-003-C_30_Domain_Event_Bus",
+          "result": "PASS",
+          "rule_description": "One Binding to One Node (44.2 §4.1, §4.4, §4.5): exactly one validated binding record attaches to exactly one resolved node; no duplication, splitting, or merging",
+          "rule_id": "44.2-OB-001"
+        },
+        {
+          "evidence_reference": "docs/pios/44.2/projection_attachment_contract.md",
+          "result": "PASS",
+          "rule_description": "No Content Transformation (44.2 §4.7, §7): no interpretation, no narrative, no inferred meaning, no aggregation, no rendering instructions, no heuristics introduced; attachment is association only",
+          "rule_id": "44.2-NT-001"
+        }
+      ]
+    },
+    {
+      "attachment_id": "PROJ-BIND-SIG-004-C_29_Platform_Monorepo_Container-C_29_Platform_Monorepo_Container",
+      "attachment_status": "ATTACHED",
+      "binding_id": "BIND-SIG-004-C_29_Platform_Monorepo_Container",
+      "checksum": "9b205b02ce3b3c55e433062a39b36b12ab1e56e737f49141981c29400d3d8352",
+      "contract_version": "43.31-v1",
+      "emphasis": "none",
+      "evidence_reference": {
+        "association_basis": "domain_id:DOMAIN-10 / capability_id:CAP-29 / component_ids:[COMP-01] — semantic_anchor confirmed in evidence_mapping_index.json::SIG-004",
+        "provenance_chain": "40.4 ST-006, ST-007, ST-009, ST-010, ST-011, ST-022 (structural telemetry, static) → 40.5 SIG-004 Structural Volatility (CKR-009: four computed ratios, complete) → 40.6 COND-002 Structural Volatility State (CKR-012, evaluable, awaiting Stream 75.1 threshold activation) → 41.1 DOMAIN-10/CAP-29/COMP-01 (blueedge-platform Monorepo: structural host for all 89 components, all 63 backend modules)",
+        "source_reference": "docs/pios/41.4/evidence_mapping_index.json::SIG-004",
+        "temporal_reference": "static (no temporal dependency on runtime events)"
+      },
+      "node_reference": {
+        "node_id": "C_29_Platform_Monorepo_Container",
+        "vault_path": "docs/pios/41.2/pie_vault/02_Capabilities/C_29_Platform_Monorepo_Container.md"
+      },
+      "projection_reference": "BIND-SIG-004-C_29_Platform_Monorepo_Container:VALID:43.31-v1",
+      "signal_reference": {
+        "signal_id": "SIG-004",
+        "signal_state": "evaluable",
+        "source_reference": "docs/pios/41.4/signal_registry.json::SIG-004"
+      },
+      "source_snapshot_reference": {
+        "extraction_timestamp": "2026-03-23T12:39:36Z",
+        "source_files": [
+          {
+            "checksum_sha256": "71c628d1ce0e4dd80800eaafe84ae3e5a922302adba9543d44f07ddad3c8aa7b",
+            "path": "docs/pios/43.3/validated_binding_payload.json"
+          },
+          {
+            "checksum_sha256": "08e298ac171e5db585043ae15c51a53c4a992c9ca2be57ba8c61951fa88bc951",
+            "path": "docs/pios/44.1/structural_overlay_projection_definition.md"
+          },
+          {
+            "checksum_sha256": "f6ca91a48708b0d0cb5e0fc52f3b899ca336d3994464567cd173c21129f41e17",
+            "path": "docs/pios/44.2/projection_attachment_contract.md"
+          },
+          {
+            "checksum_sha256": "0ae54ffaae289424ef788f96da5f110f0beef38debaad0ac96fe1f06f1fbfe67",
+            "path": "docs/pios/contracts/43.31_execution_contract.md"
+          },
+          {
+            "checksum_sha256": "0747ae0e33854f49cea1d3bb69f1ba6b58346c3b634256920101c052341946de",
+            "path": "docs/pios/43.31/materialization_contract.md"
+          },
+          {
+            "checksum_sha256": "26e95e18afa8d295f7a6549a6789017667a078c5639f50eebbe91e27d8a8244f",
+            "path": "docs/pios/43.31/reproducibility_contract.md"
+          }
+        ]
+      },
+      "upstream_artifact_checksum": "71c628d1ce0e4dd80800eaafe84ae3e5a922302adba9543d44f07ddad3c8aa7b",
+      "validation_trace": [
+        {
+          "evidence_reference": "docs/pios/41.2/pie_vault/02_Capabilities/C_29_Platform_Monorepo_Container.md",
+          "result": "PASS",
+          "rule_description": "Node Resolution (44.2 §3.2): node_id exactly matches one entry in authoritative pie_vault/02_Capabilities/ topology; no heuristic, approximation, or inference used",
+          "rule_id": "44.2-NR-001"
+        },
+        {
+          "evidence_reference": "docs/pios/43.3/validated_binding_payload.json::BIND-SIG-004-C_29_Platform_Monorepo_Container",
+          "result": "PASS",
+          "rule_description": "Binding Identity Preserved (44.2 §4.2): signal_reference and node_reference carried from validated binding record unchanged; no transformation, normalization, annotation, or extension",
+          "rule_id": "44.2-BI-001"
+        },
+        {
+          "evidence_reference": "docs/pios/43.3/validated_binding_payload.json::BIND-SIG-004-C_29_Platform_Monorepo_Container",
+          "result": "PASS",
+          "rule_description": "Evidence Linkage Preserved (44.2 §4.3): full evidence provenance chain carried verbatim from binding record; association between overlay element and originating signal, source reference, and provenance chain not weakened or abbreviated",
+          "rule_id": "44.2-EL-001"
+        },
+        {
+          "evidence_reference": "docs/pios/43.3/validated_binding_payload.json::BIND-SIG-004-C_29_Platform_Monorepo_Container",
+          "result": "PASS",
+          "rule_description": "One Binding to One Node (44.2 §4.1, §4.4, §4.5): exactly one validated binding record attaches to exactly one resolved node; no duplication, splitting, or merging",
+          "rule_id": "44.2-OB-001"
+        },
+        {
+          "evidence_reference": "docs/pios/44.2/projection_attachment_contract.md",
+          "result": "PASS",
+          "rule_description": "No Content Transformation (44.2 §4.7, §7): no interpretation, no narrative, no inferred meaning, no aggregation, no rendering instructions, no heuristics introduced; attachment is association only",
+          "rule_id": "44.2-NT-001"
+        }
+      ]
+    },
+    {
+      "attachment_id": "PROJ-BIND-SIG-005-C_40_Delivery_and_Quality_Infrastructure-C_40_Delivery_and_Quality_Infrastructure",
+      "attachment_status": "ATTACHED",
+      "binding_id": "BIND-SIG-005-C_40_Delivery_and_Quality_Infrastructure",
+      "checksum": "8213dc932ff9ec363d9731ef7e96d7ec62bd820c0f3aacb88ffdb74f62ad4834",
+      "contract_version": "43.31-v1",
+      "emphasis": "none",
+      "evidence_reference": {
+        "association_basis": "domain_id:DOMAIN-16 / capability_id:CAP-40 / component_ids:[COMP-88,COMP-89] — semantic_anchor confirmed in evidence_mapping_index.json::SIG-005",
+        "provenance_chain": "40.4 ST-016, ST-012 (structural telemetry, static: 7/8 shared interfaces) + AT-005, AT-007 (activity telemetry, event-based: NOT AVAILABLE) → 40.5 SIG-001 Coordination Pressure (CKR-006: partial — static ratio 0.875 computed, runtime blocked) → 40.6 COND-003 Coordination Pressure Active (CKR-012, partial — static component resolved, runtime blocked) → 41.1 DOMAIN-16/CAP-40/COMP-88,COMP-89 (CI/CD Workflows + Docker Compose: delivery pipeline components governing coordination mechanisms)",
+        "source_reference": "docs/pios/41.4/evidence_mapping_index.json::SIG-005",
+        "temporal_reference": "static + event-based (partial: static component only)"
+      },
+      "node_reference": {
+        "node_id": "C_40_Delivery_and_Quality_Infrastructure",
+        "vault_path": "docs/pios/41.2/pie_vault/02_Capabilities/C_40_Delivery_and_Quality_Infrastructure.md"
+      },
+      "projection_reference": "BIND-SIG-005-C_40_Delivery_and_Quality_Infrastructure:VALID:43.31-v1",
+      "signal_reference": {
+        "signal_id": "SIG-005",
+        "signal_state": "partial",
+        "source_reference": "docs/pios/41.4/signal_registry.json::SIG-005"
+      },
+      "source_snapshot_reference": {
+        "extraction_timestamp": "2026-03-23T12:39:36Z",
+        "source_files": [
+          {
+            "checksum_sha256": "71c628d1ce0e4dd80800eaafe84ae3e5a922302adba9543d44f07ddad3c8aa7b",
+            "path": "docs/pios/43.3/validated_binding_payload.json"
+          },
+          {
+            "checksum_sha256": "08e298ac171e5db585043ae15c51a53c4a992c9ca2be57ba8c61951fa88bc951",
+            "path": "docs/pios/44.1/structural_overlay_projection_definition.md"
+          },
+          {
+            "checksum_sha256": "f6ca91a48708b0d0cb5e0fc52f3b899ca336d3994464567cd173c21129f41e17",
+            "path": "docs/pios/44.2/projection_attachment_contract.md"
+          },
+          {
+            "checksum_sha256": "0ae54ffaae289424ef788f96da5f110f0beef38debaad0ac96fe1f06f1fbfe67",
+            "path": "docs/pios/contracts/43.31_execution_contract.md"
+          },
+          {
+            "checksum_sha256": "0747ae0e33854f49cea1d3bb69f1ba6b58346c3b634256920101c052341946de",
+            "path": "docs/pios/43.31/materialization_contract.md"
+          },
+          {
+            "checksum_sha256": "26e95e18afa8d295f7a6549a6789017667a078c5639f50eebbe91e27d8a8244f",
+            "path": "docs/pios/43.31/reproducibility_contract.md"
+          }
+        ]
+      },
+      "upstream_artifact_checksum": "71c628d1ce0e4dd80800eaafe84ae3e5a922302adba9543d44f07ddad3c8aa7b",
+      "validation_trace": [
+        {
+          "evidence_reference": "docs/pios/41.2/pie_vault/02_Capabilities/C_40_Delivery_and_Quality_Infrastructure.md",
+          "result": "PASS",
+          "rule_description": "Node Resolution (44.2 §3.2): node_id exactly matches one entry in authoritative pie_vault/02_Capabilities/ topology; no heuristic, approximation, or inference used",
+          "rule_id": "44.2-NR-001"
+        },
+        {
+          "evidence_reference": "docs/pios/43.3/validated_binding_payload.json::BIND-SIG-005-C_40_Delivery_and_Quality_Infrastructure",
+          "result": "PASS",
+          "rule_description": "Binding Identity Preserved (44.2 §4.2): signal_reference and node_reference carried from validated binding record unchanged; no transformation, normalization, annotation, or extension",
+          "rule_id": "44.2-BI-001"
+        },
+        {
+          "evidence_reference": "docs/pios/43.3/validated_binding_payload.json::BIND-SIG-005-C_40_Delivery_and_Quality_Infrastructure",
+          "result": "PASS",
+          "rule_description": "Evidence Linkage Preserved (44.2 §4.3): full evidence provenance chain carried verbatim from binding record; association between overlay element and originating signal, source reference, and provenance chain not weakened or abbreviated",
+          "rule_id": "44.2-EL-001"
+        },
+        {
+          "evidence_reference": "docs/pios/43.3/validated_binding_payload.json::BIND-SIG-005-C_40_Delivery_and_Quality_Infrastructure",
+          "result": "PASS",
+          "rule_description": "One Binding to One Node (44.2 §4.1, §4.4, §4.5): exactly one validated binding record attaches to exactly one resolved node; no duplication, splitting, or merging",
+          "rule_id": "44.2-OB-001"
+        },
+        {
+          "evidence_reference": "docs/pios/44.2/projection_attachment_contract.md",
+          "result": "PASS",
+          "rule_description": "No Content Transformation (44.2 §4.7, §7): no interpretation, no narrative, no inferred meaning, no aggregation, no rendering instructions, no heuristics introduced; attachment is association only",
+          "rule_id": "44.2-NT-001"
+        }
+      ]
+    }
+  ],
+  "run_reference": "run_01_blueedge",
+  "stats": {
+    "attached_count": 5,
+    "rejected_count": 0,
+    "total_count": 5
+  },
+  "upstream_binding_artifact": "docs/pios/43.3/validated_binding_payload.json",
+  "upstream_binding_checksum": "71c628d1ce0e4dd80800eaafe84ae3e5a922302adba9543d44f07ddad3c8aa7b"
+}

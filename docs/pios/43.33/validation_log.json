@@ -1,0 +1,111 @@
+{
+  "validation_log_id": "PIOS-43.33-VALIDATION-LOG",
+  "stream": "43.33",
+  "program": "Krayu — Program Intelligence Discipline",
+  "date": "2026-03-23",
+  "execution_timestamp": "2026-03-23T12:39:36Z",
+  "contract_version": "43.31-v1",
+  "execution_version": "43.33-v1",
+  "status": "COMPLETE",
+  "artifact_checksum": "bf20bec6f01dbca39e44233187214239e450e041e0f48516f5b016c890d090e8",
+  "upstream_binding_checksum": "71c628d1ce0e4dd80800eaafe84ae3e5a922302adba9543d44f07ddad3c8aa7b",
+  "validations": [
+    {
+      "name": "input_inventory_completeness",
+      "result": "PASS",
+      "evidence": "All 6 mandatory file-based inputs present and readable. SHA-256 checksums recorded. No missing inputs. FC not triggered."
+    },
+    {
+      "name": "source_authority_conformity",
+      "result": "PASS",
+      "evidence": "All input files are from the authoritative path set defined in the 43.33 execution contract. No additional files treated as authoritative. Provenance support files (43.32/validation_log.json, 43.32/replay_record.md) used only for checksum verification, not as authoritative inputs."
+    },
+    {
+      "name": "upstream_artifact_verified",
+      "result": "PASS",
+      "evidence": "docs/pios/43.3/validated_binding_payload.json loaded. Input file SHA-256 (authoritative): 71c628d1ce0e4dd80800eaafe84ae3e5a922302adba9543d44f07ddad3c8aa7b. Embedded artifact_checksum field (binding array integrity seal, distinct from file checksum): 25c2e9dc04dd6f06dacf4a6f973b6b2306c15067aa9e5d09a24b9d4783009f69 — confirmed as internal field value. All 5 per-record checksums verified. All 5 records validation_status=VALID. contract_version=43.31-v1 confirmed."
+    },
+    {
+      "name": "upstream_binding_continuity",
+      "result": "PASS",
+      "evidence": "upstream_binding_checksum 71c628d1... (authoritative file-level SHA-256 of docs/pios/43.3/validated_binding_payload.json) recorded in artifact envelope and in all 5 per-record upstream_artifact_checksum fields. Binding lineage is traceable from each projection record to the exact 43.3 artifact file that produced the upstream binding."
+    },
+    {
+      "name": "node_resolution_all_records",
+      "result": "PASS",
+      "evidence": "Rule 44.2-NR-001 PASS for all 5 records. Each node_id carried from upstream binding record. All 5 node_ids previously confirmed present in pie_vault/02_Capabilities/ with exact filename stem match (confirmed in 43.32). No re-resolution required; upstream record already passed 43.3-SV-001. No heuristic or approximate resolution."
+    },
+    {
+      "name": "binding_identity_preserved",
+      "result": "PASS",
+      "evidence": "Rule 44.2-BI-001 PASS for all 5 records. signal_reference and node_reference carried verbatim from upstream binding records. No transformation, normalization, annotation, or extension applied."
+    },
+    {
+      "name": "evidence_linkage_preserved",
+      "result": "PASS",
+      "evidence": "Rule 44.2-EL-001 PASS for all 5 records. evidence_reference populated from evidence_embedding of upstream binding record. All 4 evidence fields present: association_basis, provenance_chain, source_reference, temporal_reference. Provenance chain not abbreviated, summarized, or modified."
+    },
+    {
+      "name": "one_binding_to_one_node",
+      "result": "PASS",
+      "evidence": "Rule 44.2-OB-001 PASS for all 5 records. Each of the 5 upstream binding records produces exactly 1 projection record. No duplication, splitting, or merging. 5 inputs → 5 outputs, one-to-one."
+    },
+    {
+      "name": "no_content_transformation",
+      "result": "PASS",
+      "evidence": "Rule 44.2-NT-001 PASS for all 5 records. No interpretation content, narrative constructs, inferred meaning, aggregation, fusion, or rendering instructions introduced. No emphasis field introduced; no emphasis logic applied."
+    },
+    {
+      "name": "record_schema_completeness",
+      "result": "PASS",
+      "evidence": "All required per-record fields present in all 5 records: attachment_id, attachment_status, binding_id, contract_version, emphasis, evidence_reference, node_reference, projection_reference, signal_reference, source_snapshot_reference, upstream_artifact_checksum, validation_trace, checksum."
+    },
+    {
+      "name": "provenance_completeness",
+      "result": "PASS",
+      "evidence": "All 4 evidence_reference fields present and non-null in all 5 records: association_basis, provenance_chain, source_reference, temporal_reference. Provenance chain traces to 40.x origin for each signal."
+    },
+    {
+      "name": "validation_trace_completeness",
+      "result": "PASS",
+      "evidence": "All 5 records contain 5-entry validation_trace. Rule IDs present in all records: 44.2-NR-001, 44.2-BI-001, 44.2-EL-001, 44.2-OB-001, 44.2-NT-001. All results = PASS."
+    },
+    {
+      "name": "contract_version_all_records",
+      "result": "PASS",
+      "evidence": "All 5 records carry contract_version: 43.31-v1. Artifact envelope carries contract_version: 43.31-v1."
+    },
+    {
+      "name": "per_record_checksums",
+      "result": "PASS",
+      "evidence": "SHA-256 recomputed for all 5 records (canonical JSON, sort_keys, no whitespace, excluding checksum field). All recomputed checksums match stored values: SIG-001=0b920378..., SIG-002=56f1fd58..., SIG-003=7e278b98..., SIG-004=9b205b02..., SIG-005=8213dc93..."
+    },
+    {
+      "name": "artifact_level_checksum",
+      "result": "PASS",
+      "evidence": "Artifact-level SHA-256 recomputed on full projections array. Recomputed matches stored artifact_checksum exactly: bf20bec6f01dbca39e44233187214239e450e041e0f48516f5b016c890d090e8."
+    },
+    {
+      "name": "deterministic_ordering",
+      "result": "PASS",
+      "evidence": "Records sorted lexicographically by attachment_id confirmed. Ordering is identical to sort(attachment_id, ascending). FC-non-deterministic-ordering not triggered."
+    },
+    {
+      "name": "canonical_path_correct",
+      "result": "PASS",
+      "evidence": "artifact_path = docs/pios/44.2/projection_attachment.json matches required canonical path."
+    },
+    {
+      "name": "replay_readiness",
+      "result": "PASS",
+      "evidence": "Replay record produced at docs/pios/43.33/replay_record.md with exact input checksums, execution timestamp, deterministic ordering rule, per-record checksums, artifact checksum, and replay equivalence conditions. All information required for governed-equivalent reproduction is present."
+    }
+  ],
+  "fail_closed_triggers_fired": [],
+  "summary": {
+    "total_validations": 18,
+    "pass_count": 18,
+    "fail_count": 0,
+    "blocked_count": 0
+  }
+}
