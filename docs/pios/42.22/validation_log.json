@@ -1,0 +1,113 @@
+{
+  "validation_log_id": "PIOS-42.22-VALIDATION-LOG",
+  "stream": "42.22",
+  "program": "Krayu — Program Intelligence Discipline",
+  "date": "2026-03-23",
+  "execution_timestamp": "2026-03-23T14:16:42Z",
+  "execution_version": "42.22-v1",
+  "branch": "feature/42-22-runtime-rendering-exposure",
+  "status": "COMPLETE",
+  "source_binding_checksum": "71c628d1ce0e4dd80800eaafe84ae3e5a922302adba9543d44f07ddad3c8aa7b",
+  "source_projection_checksum": "e580a5edb62e2ec6fe8e683a5166532edd5ff6418d868a31565c9f091af716ae",
+  "lineage_checksum": "c374818c9593e54d7d8dfba23f1083fec9cb8127db13ea390c1317b6e32e707b",
+  "exposure_checksum": "e6bea5ea3ebf97c071fd7859a7857baaa311623f95ced5b396d6ad6edce65773",
+  "validations": [
+    {
+      "name": "input_inventory_completeness",
+      "result": "PASS",
+      "evidence": "Both mandatory inputs present and readable. File-level SHA-256 recorded for each. docs/pios/44.2/projection_attachment.json = e580a5ed... docs/pios/43.3/validated_binding_payload.json = 71c628d1..."
+    },
+    {
+      "name": "emphasis_field_present_all_records",
+      "result": "PASS",
+      "evidence": "All 5 projection records in projection_attachment.json carry emphasis field at projections[].emphasis. No missing field. No null value."
+    },
+    {
+      "name": "emphasis_values_within_closed_set",
+      "result": "PASS",
+      "evidence": "All 5 records carry emphasis = 'none'. Closed set: high, medium, low, none. All values within set. No out-of-set value present."
+    },
+    {
+      "name": "emphasis_layer_origin_44x",
+      "result": "PASS",
+      "evidence": "Emphasis attribute origin confirmed as 44.3 — Projection Emphasis Attribute, carried by 44.2 — Projection Attachment Contract. Emphasis is NOT present in 43.3 binding records. Governance boundary intact."
+    },
+    {
+      "name": "emphasis_absent_from_binding_records",
+      "result": "PASS",
+      "evidence": "docs/pios/43.3/validated_binding_payload.json confirmed to carry no emphasis field in any of 5 binding records. Emphasis is a 44.x-only attribute. Not reconstructed from 43.x."
+    },
+    {
+      "name": "projection_references_valid",
+      "result": "PASS",
+      "evidence": "All 5 projection records carry projection_reference = '{binding_id}:VALID:43.31-v1' with correct binding_id substitution. Pattern valid for all 5."
+    },
+    {
+      "name": "no_inference_applied",
+      "result": "PASS",
+      "evidence": "All 5 lineage records carry inference_applied = false. No emphasis value inferred at runtime. Values carried verbatim from upstream projection artifact."
+    },
+    {
+      "name": "no_transformation_applied",
+      "result": "PASS",
+      "evidence": "All 5 lineage records carry transformation_applied = false. Emphasis values not mapped, normalized, or modified at runtime."
+    },
+    {
+      "name": "no_runtime_computed",
+      "result": "PASS",
+      "evidence": "All 5 lineage records carry runtime_computed = false. Emphasis values not derived from signal_state, node properties, or any runtime computation."
+    },
+    {
+      "name": "pass_through_eligible_all_records",
+      "result": "PASS",
+      "evidence": "All 5 records carry pass_through = true in attribute_lineage.json. No record fails pass-through eligibility. All conditions satisfied: field present, value in closed set, no inference, no transformation, no runtime computation."
+    },
+    {
+      "name": "no_semantic_extension",
+      "result": "PASS",
+      "evidence": "No new semantic fields introduced at exposure layer. No aggregation across records. No cross-record derivation. Exposure records carry only fields verbatim from upstream projection records."
+    },
+    {
+      "name": "exposure_structure_verbatim",
+      "result": "PASS",
+      "evidence": "Exposure records carry verbatim: attachment_id, binding_id, signal_id, signal_state, node_id, projection_reference, emphasis. No synthetic fields. No fallback values."
+    },
+    {
+      "name": "deterministic_processing",
+      "result": "PASS",
+      "evidence": "Records processed in stable lexicographic order by attachment_id. Identical input files produce identical exposure structure and checksum e6bea5ea..."
+    },
+    {
+      "name": "lineage_checksum_valid",
+      "result": "PASS",
+      "evidence": "lineage_checksum c374818c... computed as SHA-256 of canonical JSON of lineage records array. Recorded in attribute_lineage.json."
+    },
+    {
+      "name": "exposure_checksum_valid",
+      "result": "PASS",
+      "evidence": "exposure_checksum e6bea5ea... computed as SHA-256 of canonical JSON of exposure_records array. Recorded in sample_runtime_output.json."
+    },
+    {
+      "name": "sample_output_labeled_non_canonical",
+      "result": "PASS",
+      "evidence": "sample_runtime_output.json carries _label: 'SAMPLE RUNTIME OUTPUT — NON-CANONICAL — VALIDATION ONLY — REMOVABLE' and canonical: false."
+    },
+    {
+      "name": "no_canonical_artifact_produced",
+      "result": "PASS",
+      "evidence": "Stream 42.22 produces no canonical artifact. No upstream artifact modified. Execution evidence and non-canonical sample only."
+    },
+    {
+      "name": "no_fail_closed_triggers_fired",
+      "result": "PASS",
+      "evidence": "All 8 defined fail-closed conditions monitored and not triggered: emphasis field absent, value outside closed set, value inferred, value transformed, origin outside 44.x, pass-through eligibility failed, upstream checksum mismatch, non-deterministic processing."
+    }
+  ],
+  "fail_closed_triggers_fired": [],
+  "summary": {
+    "total_validations": 18,
+    "pass_count": 18,
+    "fail_count": 0,
+    "blocked_count": 0
+  }
+}

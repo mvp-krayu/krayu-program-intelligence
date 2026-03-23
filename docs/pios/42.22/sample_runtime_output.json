@@ -1,0 +1,64 @@
+{
+  "_label": "SAMPLE RUNTIME OUTPUT — NON-CANONICAL — VALIDATION ONLY — REMOVABLE",
+  "artifact_id": "PIOS-42.22-SAMPLE-RUNTIME-OUTPUT",
+  "canonical": false,
+  "execution_timestamp": "2026-03-23T14:16:42Z",
+  "execution_version": "42.22-v1",
+  "exposure_checksum": "e6bea5ea3ebf97c071fd7859a7857baaa311623f95ced5b396d6ad6edce65773",
+  "exposure_records": [
+    {
+      "attachment_id": "PROJ-BIND-SIG-001-C_02_Network_Security_Intelligence_Collection-C_02_Network_Security_Intelligence_Collection",
+      "binding_id": "BIND-SIG-001-C_02_Network_Security_Intelligence_Collection",
+      "emphasis": "none",
+      "node_id": "C_02_Network_Security_Intelligence_Collection",
+      "projection_reference": "BIND-SIG-001-C_02_Network_Security_Intelligence_Collection:VALID:43.31-v1",
+      "signal_id": "SIG-001",
+      "signal_state": "computed"
+    },
+    {
+      "attachment_id": "PROJ-BIND-SIG-002-C_27_Caching_Layer-C_27_Caching_Layer",
+      "binding_id": "BIND-SIG-002-C_27_Caching_Layer",
+      "emphasis": "none",
+      "node_id": "C_27_Caching_Layer",
+      "projection_reference": "BIND-SIG-002-C_27_Caching_Layer:VALID:43.31-v1",
+      "signal_id": "SIG-002",
+      "signal_state": "blocked"
+    },
+    {
+      "attachment_id": "PROJ-BIND-SIG-003-C_30_Domain_Event_Bus-C_30_Domain_Event_Bus",
+      "binding_id": "BIND-SIG-003-C_30_Domain_Event_Bus",
+      "emphasis": "none",
+      "node_id": "C_30_Domain_Event_Bus",
+      "projection_reference": "BIND-SIG-003-C_30_Domain_Event_Bus:VALID:43.31-v1",
+      "signal_id": "SIG-003",
+      "signal_state": "evaluable"
+    },
+    {
+      "attachment_id": "PROJ-BIND-SIG-004-C_29_Platform_Monorepo_Container-C_29_Platform_Monorepo_Container",
+      "binding_id": "BIND-SIG-004-C_29_Platform_Monorepo_Container",
+      "emphasis": "none",
+      "node_id": "C_29_Platform_Monorepo_Container",
+      "projection_reference": "BIND-SIG-004-C_29_Platform_Monorepo_Container:VALID:43.31-v1",
+      "signal_id": "SIG-004",
+      "signal_state": "evaluable"
+    },
+    {
+      "attachment_id": "PROJ-BIND-SIG-005-C_40_Delivery_and_Quality_Infrastructure-C_40_Delivery_and_Quality_Infrastructure",
+      "binding_id": "BIND-SIG-005-C_40_Delivery_and_Quality_Infrastructure",
+      "emphasis": "none",
+      "node_id": "C_40_Delivery_and_Quality_Infrastructure",
+      "projection_reference": "BIND-SIG-005-C_40_Delivery_and_Quality_Infrastructure:VALID:43.31-v1",
+      "signal_id": "SIG-005",
+      "signal_state": "partial"
+    }
+  ],
+  "source_projection_checksum": "e580a5edb62e2ec6fe8e683a5166532edd5ff6418d868a31565c9f091af716ae",
+  "stats": {
+    "emphasis_high": 0,
+    "emphasis_low": 0,
+    "emphasis_medium": 0,
+    "emphasis_none": 5,
+    "total_records": 5
+  },
+  "stream": "42.22"
+}
