@@ -1,0 +1,65 @@
+{
+  "file_changes_id": "PIOS-43.33-FILE-CHANGES",
+  "branch": "feature/43-33-projection-attachment-materialization",
+  "stream": "43.33",
+  "program": "Krayu — Program Intelligence Discipline",
+  "date": "2026-03-23",
+  "contract_version": "43.31-v1",
+  "execution_version": "43.33-v1",
+  "status": "COMPLETE",
+  "files_created": [
+    {
+      "path": "docs/pios/44.2/projection_attachment.json",
+      "type": "CANONICAL ARTIFACT",
+      "description": "Governed projection attachment artifact. 5 projection records, all ATTACHED. artifact_checksum: bf20bec6f01dbca39e44233187214239e450e041e0f48516f5b016c890d090e8. Upstream binding checksum (file-level): 71c628d1ce0e4dd80800eaafe84ae3e5a922302adba9543d44f07ddad3c8aa7b. This is the primary output of Stream 43.33.",
+      "artifact_checksum": "bf20bec6f01dbca39e44233187214239e450e041e0f48516f5b016c890d090e8"
+    },
+    {
+      "path": "docs/pios/43.33/execution_report.md",
+      "type": "EXECUTION REPORT",
+      "description": "Full step-by-step execution record for Stream 43.33. Records input checksums, upstream artifact verification, attachment resolution table, validation results per record per rule, per-record checksums, and post-write validation summary.",
+      "artifact_checksum": null
+    },
+    {
+      "path": "docs/pios/43.33/validation_log.json",
+      "type": "VALIDATION LOG",
+      "description": "Structured validation log. 18 validations: all PASS. No fail-closed triggers fired. Covers input inventory, source authority, upstream artifact verification, upstream binding continuity, all five 44.2 attachment rules, record schema, provenance completeness, validation_trace, checksums, ordering, and replay readiness.",
+      "artifact_checksum": null
+    },
+    {
+      "path": "docs/pios/43.33/replay_record.md",
+      "type": "REPRODUCIBILITY RECORD",
+      "description": "Complete reproducibility record. Contains exact input inventory with checksums, upstream binding artifact_checksum, execution timestamp, deterministic ordering rule, per-record and artifact-level checksums, rerun instructions, and replay equivalence conditions.",
+      "artifact_checksum": null
+    },
+    {
+      "path": "docs/pios/43.33/file_changes.json",
+      "type": "FILE CHANGES LOG",
+      "description": "This file. Record of all files created by Stream 43.33.",
+      "artifact_checksum": null
+    },
+    {
+      "path": "docs/pios/43.33/changelog.md",
+      "type": "CHANGELOG",
+      "description": "Human-readable record of decisions made in Stream 43.33.",
+      "artifact_checksum": null
+    },
+    {
+      "path": "docs/pios/43.33/CLOSURE.md",
+      "type": "CLOSURE RECORD",
+      "description": "Stream closure record. Status COMPLETE. Both canonical artifacts (43.3 and 44.2) now present.",
+      "artifact_checksum": null
+    }
+  ],
+  "files_modified": [],
+  "files_read_as_inputs": [
+    "docs/pios/43.3/validated_binding_payload.json",
+    "docs/pios/44.1/structural_overlay_projection_definition.md",
+    "docs/pios/44.2/projection_attachment_contract.md",
+    "docs/pios/contracts/43.31_execution_contract.md",
+    "docs/pios/43.31/materialization_contract.md",
+    "docs/pios/43.31/reproducibility_contract.md",
+    "docs/pios/43.32/validation_log.json",
+    "docs/pios/43.32/replay_record.md"
+  ]
+}

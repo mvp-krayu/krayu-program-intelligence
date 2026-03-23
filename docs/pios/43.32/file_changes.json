@@ -1,0 +1,70 @@
+{
+  "file_changes_id": "PIOS-43.32-FILE-CHANGES",
+  "stream": "43.32",
+  "program": "Krayu — Program Intelligence Discipline",
+  "date": "2026-03-23",
+  "contract_version": "43.31-v1",
+  "execution_version": "43.32-v1",
+  "status": "COMPLETE",
+  "files_created": [
+    {
+      "path": "docs/pios/43.3/validated_binding_payload.json",
+      "type": "CANONICAL ARTIFACT",
+      "description": "Governed validated binding payload. 5 binding records, all VALID. artifact_checksum: 25c2e9dc04dd6f06dacf4a6f973b6b2306c15067aa9e5d09a24b9d4783009f69. This is the primary output of Stream 43.32 and the mandatory input for Stream 43.33 (44.2 materialization).",
+      "artifact_checksum": "25c2e9dc04dd6f06dacf4a6f973b6b2306c15067aa9e5d09a24b9d4783009f69"
+    },
+    {
+      "path": "docs/pios/43.32/execution_report.md",
+      "type": "EXECUTION REPORT",
+      "description": "Full step-by-step execution record for Stream 43.32. Records input checksums, binding resolution table, validation results per record per dimension, per-record checksums, deterministic ordering confirmation, and post-write validation summary.",
+      "artifact_checksum": null
+    },
+    {
+      "path": "docs/pios/43.32/validation_log.json",
+      "type": "VALIDATION LOG",
+      "description": "Structured validation log. 15 validations: all PASS. No fail-closed triggers fired. Covers input inventory, schema validation, all five 43.3 validation dimensions, per-record and artifact-level checksums, ordering, contract version, and canonical artifact path.",
+      "artifact_checksum": null
+    },
+    {
+      "path": "docs/pios/43.32/replay_record.md",
+      "type": "REPRODUCIBILITY RECORD",
+      "description": "Complete reproducibility record per reproducibility_contract.md. Contains exact input inventory with checksums, execution timestamp, deterministic ordering rule, per-record and artifact-level checksums, and replay equivalence conditions.",
+      "artifact_checksum": null
+    },
+    {
+      "path": "docs/pios/43.32/file_changes.json",
+      "type": "FILE CHANGES LOG",
+      "description": "This file. Record of all files created by Stream 43.32.",
+      "artifact_checksum": null
+    },
+    {
+      "path": "docs/pios/43.32/changelog.md",
+      "type": "CHANGELOG",
+      "description": "Human-readable record of decisions made in Stream 43.32.",
+      "artifact_checksum": null
+    },
+    {
+      "path": "docs/pios/43.32/CLOSURE.md",
+      "type": "CLOSURE RECORD",
+      "description": "Stream closure record. Status COMPLETE. Canonical artifact confirmed at required path.",
+      "artifact_checksum": null
+    }
+  ],
+  "files_modified": [],
+  "files_read_as_inputs": [
+    "docs/pios/41.4/signal_registry.json",
+    "docs/pios/41.4/evidence_mapping_index.json",
+    "docs/pios/41.5/query_signal_map.json",
+    "docs/pios/43.1/signal_to_structure_binding.md",
+    "docs/pios/43.2/binding_payload_contract.md",
+    "docs/pios/43.3/binding_validation_envelope.md",
+    "docs/pios/contracts/43.31_execution_contract.md",
+    "docs/pios/43.31/materialization_contract.md",
+    "docs/pios/43.31/reproducibility_contract.md",
+    "docs/pios/41.2/pie_vault/02_Capabilities/C_02_Network_Security_Intelligence_Collection.md",
+    "docs/pios/41.2/pie_vault/02_Capabilities/C_27_Caching_Layer.md",
+    "docs/pios/41.2/pie_vault/02_Capabilities/C_30_Domain_Event_Bus.md",
+    "docs/pios/41.2/pie_vault/02_Capabilities/C_29_Platform_Monorepo_Container.md",
+    "docs/pios/41.2/pie_vault/02_Capabilities/C_40_Delivery_and_Quality_Infrastructure.md"
+  ]
+}

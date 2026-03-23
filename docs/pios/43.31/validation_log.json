@@ -1,0 +1,55 @@
+{
+  "validation_log_id": "PIOS-43.31-VALIDATION-LOG",
+  "stream": "43.31",
+  "program": "Krayu — Program Intelligence Discipline",
+  "date": "2026-03-23",
+  "contract_version": "43.31-v1",
+  "status": "COMPLETE",
+  "validations": [
+    {
+      "name": "input_inventory_completeness",
+      "result": "PASS",
+      "evidence": "All 6 mandatory inputs defined with canonical paths: docs/pios/41.4/signal_registry.json, docs/pios/41.4/evidence_mapping_index.json, docs/pios/41.2/pie_vault/01_Domains/, docs/pios/41.2/pie_vault/02_Capabilities/, docs/pios/41.2/pie_vault/03_Components/, docs/pios/43.3/validated_binding_payload.json. No optional inputs. No alternative inputs. Defined in materialization_contract.md §3.2 and reproducibility_contract.md Required Inputs table."
+    },
+    {
+      "name": "schema_definition_completeness_43_3",
+      "result": "PASS",
+      "evidence": "43.3 output artifact fully specified. Path: docs/pios/43.3/validated_binding_payload.json. Schema: JSON array of records. Per-record fields defined: binding_id, signal_reference (signal_id, signal_state, source_reference), node_reference (node_id, source_reference), evidence_embedding (association_basis, provenance_chain, source_reference, temporal_reference), validation_status (VALID|INVALID), validation_trace, contract_version, source_snapshot_reference, checksum. binding_id construction rule: BIND-{signal_id}-{node_id}. Defined in materialization_contract.md §3.4."
+    },
+    {
+      "name": "schema_definition_completeness_44_2",
+      "result": "PASS",
+      "evidence": "44.2 output artifact fully specified. Path: docs/pios/44.2/projection_attachment.json. Schema: JSON array of records. Per-record fields defined: projection_id, node_reference (node_id, vault_path), signal_reference (signal_id, signal_state, source_reference), evidence_reference (association_basis, provenance_chain, source_reference, temporal_reference), upstream_binding_reference, emphasis (closed set: high|medium|low|none), validation_basis_reference, contract_version, source_snapshot_reference, checksum. projection_id construction rule: PROJ-{binding_id}-{node_id}. Defined in materialization_contract.md §3.5."
+    },
+    {
+      "name": "provenance_continuity",
+      "result": "PASS",
+      "evidence": "Field-by-field source mapping from 41.x origin defined for both 43.3 and 44.2 artifacts. All evidence_embedding fields trace to 41.4/evidence_mapping_index.json verbatim. signal_reference fields trace to 41.4/signal_registry.json. node_reference fields trace to 41.2/pie_vault topology. No synthetic field values permitted. Provenance_chain carried verbatim from upstream. Defined in materialization_contract.md §3.6."
+    },
+    {
+      "name": "reproduction_completeness",
+      "result": "PASS",
+      "evidence": "Ordered 7-step replay procedure defined in reproducibility_contract.md: R-1 input verification, R-2 schema validation, R-3 43.3 binding execution (sub-steps R-3a through R-3l), R-4 43.3 output verification, R-5 44.2 projection execution (sub-steps R-5a through R-5k), R-6 44.2 output verification, R-7 audit log emission. Deterministic execution order fixed: 41.x → 43.3 → 44.2. Replay equivalence rule defined (4 conditions). contract_version: 43.31-v1 required on all artifacts."
+    },
+    {
+      "name": "fail_closed_completeness",
+      "result": "PASS",
+      "evidence": "12 fail-closed triggers defined in materialization_contract.md §3.8: FC-001 through FC-012. Each trigger specifies exact condition, outcome (TERMINATE — NO OUTPUT or RECORD REJECTED), and applicable step. No degraded mode, no partial output, no inference or repair on any trigger. Audit log must record FAILED status when any trigger fires. Consistent with 43.3 §10 fail-closed model and 44.2 §5 failure handling rules."
+    },
+    {
+      "name": "checksum_method_defined",
+      "result": "PASS",
+      "evidence": "Checksum algorithm specified: SHA256, lowercase hex string, deterministic key ordering (lexicographic), no whitespace variation. Per-record checksum: SHA256 of record JSON with all fields except checksum field. Artifact-level checksum: SHA256 of full JSON array. Verification: recomputed must equal stored exactly; mismatch → FC-006 → TERMINATE. Defined in reproducibility_contract.md Checksum Verification Method section."
+    },
+    {
+      "name": "audit_contract_defined",
+      "result": "PASS",
+      "evidence": "Audit log structure defined in materialization_contract.md §3.9 and reproducibility_contract.md R-7. Required fields: execution timestamp (ISO-8601 UTC), input file checksums, record counts (total, valid, invalid, rejected), output artifact paths and checksums, contract_version (43.31-v1), execution_version (assigned by executing stream), final status (COMPLETE|FAILED). Audit log must be emitted regardless of outcome."
+    },
+    {
+      "name": "42_21_blocker_resolution_scope",
+      "result": "PASS",
+      "evidence": "Stream 43.31 resolves BLOCKER-007 (no artifact schema defined) and BLOCKER-008 (no canonical output paths defined) from the 42.21 dry-run assessment. Concrete JSON schemas, field mappings, and canonical paths are now defined. 42.21 remains BLOCKED on BLOCKER-001 (no runtime materialization scripts at scripts/pios/43.3/ or scripts/pios/44.2/), BLOCKER-002 (no produced artifacts at docs/pios/43.3/validated_binding_payload.json or docs/pios/44.2/projection_attachment.json). Those blockers require execution streams, not this contract stream."
+    }
+  ]
+}

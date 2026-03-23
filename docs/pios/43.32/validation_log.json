@@ -1,0 +1,95 @@
+{
+  "validation_log_id": "PIOS-43.32-VALIDATION-LOG",
+  "stream": "43.32",
+  "program": "Krayu — Program Intelligence Discipline",
+  "date": "2026-03-23",
+  "execution_timestamp": "2026-03-23T11:23:46Z",
+  "contract_version": "43.31-v1",
+  "execution_version": "43.32-v1",
+  "status": "COMPLETE",
+  "artifact_checksum": "25c2e9dc04dd6f06dacf4a6f973b6b2306c15067aa9e5d09a24b9d4783009f69",
+  "validations": [
+    {
+      "name": "input_inventory_completeness",
+      "result": "PASS",
+      "evidence": "All 9 file-based mandatory inputs present and readable. Pie vault directories confirmed containing .md files. SHA-256 checksums recorded for all inputs at time of read. No missing inputs. FC-001 not triggered."
+    },
+    {
+      "name": "schema_validation_signal_registry",
+      "result": "PASS",
+      "evidence": "signal_registry.json contains 'signals' array with 5 entries. Each entry carries: signal_id, statement, domain_id, capability_id, component_ids, source_refs. All required fields present per reproducibility_contract.md R-2."
+    },
+    {
+      "name": "schema_validation_evidence_mapping_index",
+      "result": "PASS",
+      "evidence": "evidence_mapping_index.json contains 'signals' array with 5 entries. Each entry carries: signal_id, source_object_id, semantic_anchor (domain_id, capability_id, component_ids), evidence_chain, temporal_reference. All required fields present per reproducibility_contract.md R-2."
+    },
+    {
+      "name": "binding_candidate_resolution",
+      "result": "PASS",
+      "evidence": "5 binding candidates resolved — one per signal. Each mapped to capability-level node via semantic_anchor.capability_id. Exact filename stem match against pie_vault/02_Capabilities/: CAP-02→C_02_Network_Security_Intelligence_Collection, CAP-27→C_27_Caching_Layer, CAP-30→C_30_Domain_Event_Bus, CAP-29→C_29_Platform_Monorepo_Container, CAP-40→C_40_Delivery_and_Quality_Infrastructure. No inference. FC-008 not triggered."
+    },
+    {
+      "name": "structure_validity_all_records",
+      "result": "PASS",
+      "evidence": "Rule 43.3-SV-001 PASS for all 5 records. node_reference present in all records. All 5 node_ids resolve exactly to governed topology entries in pie_vault/02_Capabilities/. FC-002 not triggered."
+    },
+    {
+      "name": "signal_integrity_all_records",
+      "result": "PASS",
+      "evidence": "Rule 43.3-SI-001 PASS for all 5 records. All signal_ids confirmed present in signal_registry.json. All signal states carried from upstream 40.x source objects (computed, blocked, evaluable, partial). No signal computed within 43.x. FC-002 not triggered."
+    },
+    {
+      "name": "evidence_completeness_all_records",
+      "result": "PASS",
+      "evidence": "Rule 43.3-EC-001 PASS for all 5 records. All evidence_embedding fields present and non-null: association_basis, provenance_chain, source_reference, temporal_reference. Provenance chain carried verbatim from evidence_mapping_index.json. FC-003, FC-004, FC-005, FC-009 not triggered."
+    },
+    {
+      "name": "derivation_compliance_all_records",
+      "result": "PASS",
+      "evidence": "Rule 43.3-DC-001 PASS for all 5 records. No SSZ or SSI in any field. No derived signals. No computed metrics. All signal content carried from upstream only. FC-002 not triggered."
+    },
+    {
+      "name": "boundary_compliance_all_records",
+      "result": "PASS",
+      "evidence": "Rule 43.3-BC-001 PASS for all 5 records. No interpretation content. No narrative constructs. No inferred meaning. No aggregation or fusion. No rendering instructions. FC-002 not triggered."
+    },
+    {
+      "name": "per_record_checksums",
+      "result": "PASS",
+      "evidence": "SHA-256 recomputed for each of the 5 records (canonical JSON, sort_keys, no whitespace, excluding checksum field). All 5 recomputed checksums match stored checksums exactly. FC-006 not triggered. Checksums: BIND-SIG-001=58555a38..., BIND-SIG-002=f7d1e64c..., BIND-SIG-003=b8127f20..., BIND-SIG-004=89d3ee36..., BIND-SIG-005=4b27e1e8..."
+    },
+    {
+      "name": "artifact_level_checksum",
+      "result": "PASS",
+      "evidence": "Artifact-level SHA-256 recomputed on full records array. Recomputed matches stored artifact_checksum exactly: 25c2e9dc04dd6f06dacf4a6f973b6b2306c15067aa9e5d09a24b9d4783009f69. FC-006 not triggered."
+    },
+    {
+      "name": "deterministic_ordering",
+      "result": "PASS",
+      "evidence": "Records sorted lexicographically by binding_id confirmed. Actual order: BIND-SIG-001-C_02_..., BIND-SIG-002-C_27_..., BIND-SIG-003-C_30_..., BIND-SIG-004-C_29_..., BIND-SIG-005-C_40_... matches lexicographic sort. FC-007 not triggered."
+    },
+    {
+      "name": "contract_version_all_records",
+      "result": "PASS",
+      "evidence": "All 5 records carry contract_version: 43.31-v1. Artifact envelope carries contract_version: 43.31-v1. FC-012 not triggered."
+    },
+    {
+      "name": "validation_status_all_valid",
+      "result": "PASS",
+      "evidence": "All 5 records carry validation_status: VALID. stats.valid_count=5, stats.invalid_count=0, stats.total_count=5. FC-011 not triggered."
+    },
+    {
+      "name": "canonical_artifact_present_at_path",
+      "result": "PASS",
+      "evidence": "docs/pios/43.3/validated_binding_payload.json exists, readable, passes all schema and checksum checks. Artifact is the canonical and only output of this stream."
+    }
+  ],
+  "fail_closed_triggers_fired": [],
+  "summary": {
+    "total_validations": 15,
+    "pass_count": 15,
+    "fail_count": 0,
+    "blocked_count": 0
+  }
+}
