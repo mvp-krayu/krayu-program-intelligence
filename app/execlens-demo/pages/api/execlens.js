@@ -1,16 +1,17 @@
 /**
  * pages/api/execlens.js
- * PIOS-42.7-RUN01-CONTRACT-v2 (extends 42.6)
+ * PIOS-42.23-RUN01-CONTRACT-v1
  *
- * ExecLens API route — delegates to Python adapters via 42.2 → 42.1.
- * No data synthesized here. All content from locked 41.x artifacts.
+ * ExecLens API route — delegates to Python adapters.
+ * Topology route rewired to governed WOW chain (42.22 + 51.1 + 51.1R).
+ * No data synthesized here. All content from locked governed artifacts.
  *
  * Query params:
  *   ?query=GQ-001        — retrieve structured data for one query (42.4 adapter)
  *   ?list=true           — retrieve list of all available queries (42.4 adapter)
  *   ?overview=true       — retrieve landing gauge strip metrics (42.6 adapter)
- *   ?topology=true       — retrieve structural topology for landing panel (42.7 adapter)
- *   ?topology=true&highlight=GQ-003  — topology with highlight flags for selected query
+ *   ?topology=true       — retrieve governed WOW chain exposure (42.23 adapter)
+ *   ?topology=true&highlight=GQ-003  — topology with query context
  */
 
 import { execFile } from 'child_process'
@@ -19,9 +20,9 @@ import path from 'path'
 const REPO_ROOT = process.env.REPO_ROOT
   || path.resolve(__dirname, '..', '..', '..', '..')
 
-const ADAPTER_42_4 = path.join(REPO_ROOT, 'scripts', 'pios', '42.4', 'execlens_adapter.py')
-const ADAPTER_42_6 = path.join(REPO_ROOT, 'scripts', 'pios', '42.6', 'execlens_overview_adapter.py')
-const ADAPTER_42_7 = path.join(REPO_ROOT, 'scripts', 'pios', '42.7', 'execlens_topology_adapter.py')
+const ADAPTER_42_4  = path.join(REPO_ROOT, 'scripts', 'pios', '42.4',  'execlens_adapter.py')
+const ADAPTER_42_6  = path.join(REPO_ROOT, 'scripts', 'pios', '42.6',  'execlens_overview_adapter.py')
+const ADAPTER_42_23 = path.join(REPO_ROOT, 'scripts', 'pios', '42.23', 'execlens_wowchain_adapter.py')
 
 function runScript(scriptPath, args, res) {
   execFile('python3', [scriptPath, ...args], { timeout: 30000 }, (err, stdout, stderr) => {
@@ -53,14 +54,9 @@ export default function handler(req, res) {
     return runScript(ADAPTER_42_6, [], res)
   }
 
-  // Structural topology for landing topology panel (42.7)
+  // Governed WOW chain topology (42.23 — rewired from 42.7)
   if (topology === 'true') {
-    const args = []
-    if (highlight) {
-      const sanitizedHighlight = String(highlight).toUpperCase().replace(/[^A-Z0-9\-]/g, '')
-      if (sanitizedHighlight) args.push('--query', sanitizedHighlight)
-    }
-    return runScript(ADAPTER_42_7, args, res)
+    return runScript(ADAPTER_42_23, [], res)
   }
 
   // Query list (42.4)

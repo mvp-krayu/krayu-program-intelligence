@@ -1,0 +1,45 @@
+{
+  "artifact_id": "PIOS-42.23-FILE-CHANGES",
+  "stream": "42.23",
+  "program": "Krayu — Program Intelligence Discipline",
+  "date": "2026-03-23",
+  "execution_version": "42.23-v1",
+  "branch": "feature/42-23-governed-demo-surface-rewiring",
+  "files_created": [
+    {
+      "file": "scripts/pios/42.23/execlens_wowchain_adapter.py",
+      "action": "CREATE",
+      "post_execution_sha256": "61d7a2c228155fe3b72f182af1054b25d6d688981844b8de213aa3b4eadb9991"
+    }
+  ],
+  "files_modified": [
+    {
+      "file": "app/execlens-demo/pages/api/execlens.js",
+      "action": "MODIFY",
+      "pre_execution_sha256": "32712ef70b0f579073640d6a288f25ad901b40d1ecf1c84f10b9c5436b20d444",
+      "post_execution_sha256": "098d685c17e14ba872c1d1ebb8f0b021c7ab022bf91aeb3186fe3f6b5ab907ed"
+    },
+    {
+      "file": "app/execlens-demo/components/TopologyPanel.js",
+      "action": "MODIFY",
+      "pre_execution_sha256": "2503e67fcba8b572dad1e9c471a0394aef2996648f84bea901e45d5bbd36d80a",
+      "post_execution_sha256": "8d2949113d43fc168cd81b824f6cf266e67bfb2a90f5a7cde6c08f0973c3da99"
+    },
+    {
+      "file": "app/execlens-demo/pages/index.js",
+      "action": "MODIFY",
+      "pre_execution_sha256": "b546fac64323b4346341252edf5b460366b356d66b692ecff9b353619973d223",
+      "post_execution_sha256": "1bc3d8721639ddeedba59681b7974d80c0bcefc979d32af51f6b9b6a3f4d2054"
+    }
+  ],
+  "files_unchanged": [
+    "scripts/pios/42.4/execlens_adapter.py",
+    "scripts/pios/42.6/execlens_overview_adapter.py",
+    "scripts/pios/42.7/execlens_topology_adapter.py",
+    "app/execlens-demo/components/DemoController.js",
+    "docs/pios/42.22/attribute_lineage.json",
+    "docs/pios/42.22/sample_runtime_output.json",
+    "docs/pios/51.1/rendering_spec.md",
+    "docs/pios/51.1/ui_mapping_contract.md"
+  ]
+}
