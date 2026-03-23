@@ -74,12 +74,12 @@ Artifact-level checksum: `bf20bec6f01dbca39e44233187214239e450e041e0f48516f5b016
 To produce a governed-equivalent reproduction of this artifact:
 
 1. Verify all inputs in the Input Inventory table above are present at their canonical paths with matching SHA-256 checksums
-2. Verify the upstream binding artifact checksum matches: `25c2e9dc04dd6f06dacf4a6f973b6b2306c15067aa9e5d09a24b9d4783009f69`
+2. Verify the upstream binding artifact file SHA-256 matches: `71c628d1ce0e4dd80800eaafe84ae3e5a922302adba9543d44f07ddad3c8aa7b`
 3. Execute the attachment logic per reproducibility_contract.md R-5 (steps R-5a through R-5k)
 4. Use contract_version: `43.31-v1`
 5. Sort output records lexicographically by attachment_id
 6. Serialize with sort_keys=True, separators=(',', ':'), no whitespace
-7. Verify output artifact_checksum matches: `c2e22fdf7643937304c5bae568a4b458c9178ac182a99577eb4bd6cb850b8b57`
+7. Verify output artifact_checksum matches: `bf20bec6f01dbca39e44233187214239e450e041e0f48516f5b016c890d090e8`
 
 ---
 
