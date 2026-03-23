@@ -1,0 +1,76 @@
+{
+  "file_changes_id": "PIOS-42.21-FILE-CHANGES",
+  "stream": "42.21",
+  "branch": "feature/42-21-governed-runtime-intake",
+  "program": "Krayu — Program Intelligence Discipline",
+  "date": "2026-03-23",
+  "execution_version": "42.21-v1",
+  "status": "COMPLETE",
+  "files_created": [
+    {
+      "path": "docs/pios/42.21/execution_report.md",
+      "type": "EXECUTION REPORT",
+      "description": "Full step-by-step execution record for Stream 42.21. Records input inventory with file-level checksums, upstream consistency validation results, runtime intake structure construction, determinism enforcement, per-record behavior validation, and fail-closed trigger log.",
+      "canonical": false
+    },
+    {
+      "path": "docs/pios/42.21/validation_log.json",
+      "type": "VALIDATION LOG",
+      "description": "Structured validation log. 19 validations: all PASS. No fail-closed triggers fired. Covers input inventory, contract version and checksum continuity, binding/projection linkage, evidence completeness, determinism, and runtime behavior boundaries.",
+      "canonical": false
+    },
+    {
+      "path": "docs/pios/42.21/replay_record.md",
+      "type": "REPRODUCIBILITY RECORD",
+      "description": "Complete reproducibility record. Exact input checksums, execution timestamp, ordering rule, snapshot checksum, rerun instructions, and 4-condition replay equivalence rule.",
+      "canonical": false
+    },
+    {
+      "path": "docs/pios/42.21/file_changes.json",
+      "type": "FILE CHANGES LOG",
+      "description": "This file. Record of all files created by Stream 42.21.",
+      "canonical": false
+    },
+    {
+      "path": "docs/pios/42.21/changelog.md",
+      "type": "CHANGELOG",
+      "description": "Human-readable record of decisions made in Stream 42.21.",
+      "canonical": false
+    },
+    {
+      "path": "docs/pios/42.21/CLOSURE.md",
+      "type": "CLOSURE RECORD",
+      "description": "Stream closure record. Status COMPLETE. Runtime intake proven governed and deterministic.",
+      "canonical": false
+    },
+    {
+      "path": "docs/pios/42.21/runtime_intake_snapshot.json",
+      "type": "RUNTIME INTAKE SNAPSHOT",
+      "description": "Non-canonical, validation-only, removable snapshot of the runtime intake structure. 5 records. snapshot_checksum: 0dce38b03dcf2de25cd89fd0ddf5ccb3f62ed1676d0f8227c3ae28d20d05a593.",
+      "canonical": false
+    }
+  ],
+  "files_modified": [],
+  "upstream_artifacts_read": [
+    {
+      "path": "docs/pios/43.3/validated_binding_payload.json",
+      "checksum_sha256": "71c628d1ce0e4dd80800eaafe84ae3e5a922302adba9543d44f07ddad3c8aa7b",
+      "modified": false
+    },
+    {
+      "path": "docs/pios/44.2/projection_attachment.json",
+      "checksum_sha256": "e580a5edb62e2ec6fe8e683a5166532edd5ff6418d868a31565c9f091af716ae",
+      "modified": false
+    },
+    {
+      "path": "docs/pios/contracts/43.31_execution_contract.md",
+      "checksum_sha256": "0ae54ffaae289424ef788f96da5f110f0beef38debaad0ac96fe1f06f1fbfe67",
+      "modified": false
+    },
+    {
+      "path": "docs/pios/43.31/reproducibility_contract.md",
+      "checksum_sha256": "26e95e18afa8d295f7a6549a6789017667a078c5639f50eebbe91e27d8a8244f",
+      "modified": false
+    }
+  ]
+}

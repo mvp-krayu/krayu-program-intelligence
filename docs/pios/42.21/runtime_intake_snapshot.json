@@ -1,0 +1,132 @@
+{
+  "_label": "RUNTIME INTAKE SNAPSHOT — NON-CANONICAL — VALIDATION ONLY — REMOVABLE",
+  "artifact_id": "PIOS-42.21-RUN01-RUNTIME-INTAKE-SNAPSHOT",
+  "canonical": false,
+  "checksum": "0dce38b03dcf2de25cd89fd0ddf5ccb3f62ed1676d0f8227c3ae28d20d05a593",
+  "contract_version": "43.31-v1",
+  "execution_timestamp": "2026-03-23T13:01:00Z",
+  "execution_version": "42.21-v1",
+  "generated_date": "2026-03-23",
+  "intake_records": [
+    {
+      "attachment_id": "PROJ-BIND-SIG-001-C_02_Network_Security_Intelligence_Collection-C_02_Network_Security_Intelligence_Collection",
+      "attachment_status": "ATTACHED",
+      "binding_id": "BIND-SIG-001-C_02_Network_Security_Intelligence_Collection",
+      "contract_version": "43.31-v1",
+      "evidence_reference": {
+        "association_basis": "domain_id:DOMAIN-01 / capability_id:CAP-02 / component_ids:[COMP-74,COMP-75] — semantic_anchor confirmed in evidence_mapping_index.json::SIG-001",
+        "provenance_chain": "40.5 SIG-006 (complete: DIM-PC-002/DIM-PC-001 = 10/30 = 0.333 rec/sec) → 40.6 COND-006 (complete: activation_state=configured) → 40.7 DIAG-006 (computed: SENSOR_BRIDGE_CONFIGURED, 0.333 rec/sec, static config) → 40.7 INTEL-001 (computed: confirmed claims, runtime state UNAVAILABLE) → 41.1 DOMAIN-01/CAP-02/COMP-74,COMP-75 → 41.2 vault: D_01_Edge_Data_Acquisition / C_02_Network_Security_Intelligence_Collection",
+        "source_reference": "docs/pios/41.4/evidence_mapping_index.json::SIG-001",
+        "temporal_reference": "TMP-009 (30s config-defined)"
+      },
+      "node_reference": {
+        "node_id": "C_02_Network_Security_Intelligence_Collection",
+        "vault_path": "docs/pios/41.2/pie_vault/02_Capabilities/C_02_Network_Security_Intelligence_Collection.md"
+      },
+      "projection_reference": "BIND-SIG-001-C_02_Network_Security_Intelligence_Collection:VALID:43.31-v1",
+      "signal_reference": {
+        "signal_id": "SIG-001",
+        "signal_state": "computed",
+        "source_reference": "docs/pios/41.4/signal_registry.json::SIG-001"
+      }
+    },
+    {
+      "attachment_id": "PROJ-BIND-SIG-002-C_27_Caching_Layer-C_27_Caching_Layer",
+      "attachment_status": "ATTACHED",
+      "binding_id": "BIND-SIG-002-C_27_Caching_Layer",
+      "contract_version": "43.31-v1",
+      "evidence_reference": {
+        "association_basis": "domain_id:DOMAIN-10 / capability_id:CAP-27 / component_ids:[COMP-64,COMP-81,COMP-65,COMP-27] — semantic_anchor confirmed in evidence_mapping_index.json::SIG-002",
+        "provenance_chain": "40.5 SIG-001..005, SIG-007..008 (all pending: runtime telemetry unavailable) → 40.6 COND-001..005, COND-007..008 (all blocked: signal inputs pending) → 40.7 DIAG-001..005, DIAG-007..008 (all blocked: conditions blocked) → 40.7 INTEL-002 (blocked: unknown_space declaration, 7 dimensions unknown) → 41.1 DOMAIN-10/CAP-27/COMP-64,COMP-81 + DOMAIN-11/CAP-30/COMP-65 + DOMAIN-08/CAP-22/COMP-27",
+        "source_reference": "docs/pios/41.4/evidence_mapping_index.json::SIG-002",
+        "temporal_reference": "TMP-004 (10s Prometheus), TMP-010 (event-driven), TMP-003 (15-30s broadcast)"
+      },
+      "node_reference": {
+        "node_id": "C_27_Caching_Layer",
+        "vault_path": "docs/pios/41.2/pie_vault/02_Capabilities/C_27_Caching_Layer.md"
+      },
+      "projection_reference": "BIND-SIG-002-C_27_Caching_Layer:VALID:43.31-v1",
+      "signal_reference": {
+        "signal_id": "SIG-002",
+        "signal_state": "blocked",
+        "source_reference": "docs/pios/41.4/signal_registry.json::SIG-002"
+      }
+    },
+    {
+      "attachment_id": "PROJ-BIND-SIG-003-C_30_Domain_Event_Bus-C_30_Domain_Event_Bus",
+      "attachment_status": "ATTACHED",
+      "binding_id": "BIND-SIG-003-C_30_Domain_Event_Bus",
+      "contract_version": "43.31-v1",
+      "evidence_reference": {
+        "association_basis": "domain_id:DOMAIN-11 / capability_id:CAP-30 / component_ids:[COMP-65] — semantic_anchor confirmed in evidence_mapping_index.json::SIG-003",
+        "provenance_chain": "40.4 ST-007, ST-010, ST-012, ST-013, ST-014, ST-015 (structural telemetry, static) → 40.5 SIG-002 Dependency Load (CKR-007: 15/22 = 0.682, complete) → 40.6 COND-001 Dependency Load Elevation (CKR-012, evaluable, awaiting Stream 75.1 threshold activation) → 41.1 DOMAIN-11/CAP-30/COMP-65 (FleetEventsModule: hub of all dependency relationships, R-038 confirmed)",
+        "source_reference": "docs/pios/41.4/evidence_mapping_index.json::SIG-003",
+        "temporal_reference": "static (no temporal dependency on runtime events)"
+      },
+      "node_reference": {
+        "node_id": "C_30_Domain_Event_Bus",
+        "vault_path": "docs/pios/41.2/pie_vault/02_Capabilities/C_30_Domain_Event_Bus.md"
+      },
+      "projection_reference": "BIND-SIG-003-C_30_Domain_Event_Bus:VALID:43.31-v1",
+      "signal_reference": {
+        "signal_id": "SIG-003",
+        "signal_state": "evaluable",
+        "source_reference": "docs/pios/41.4/signal_registry.json::SIG-003"
+      }
+    },
+    {
+      "attachment_id": "PROJ-BIND-SIG-004-C_29_Platform_Monorepo_Container-C_29_Platform_Monorepo_Container",
+      "attachment_status": "ATTACHED",
+      "binding_id": "BIND-SIG-004-C_29_Platform_Monorepo_Container",
+      "contract_version": "43.31-v1",
+      "evidence_reference": {
+        "association_basis": "domain_id:DOMAIN-10 / capability_id:CAP-29 / component_ids:[COMP-01] — semantic_anchor confirmed in evidence_mapping_index.json::SIG-004",
+        "provenance_chain": "40.4 ST-006, ST-007, ST-009, ST-010, ST-011, ST-022 (structural telemetry, static) → 40.5 SIG-004 Structural Volatility (CKR-009: four computed ratios, complete) → 40.6 COND-002 Structural Volatility State (CKR-012, evaluable, awaiting Stream 75.1 threshold activation) → 41.1 DOMAIN-10/CAP-29/COMP-01 (blueedge-platform Monorepo: structural host for all 89 components, all 63 backend modules)",
+        "source_reference": "docs/pios/41.4/evidence_mapping_index.json::SIG-004",
+        "temporal_reference": "static (no temporal dependency on runtime events)"
+      },
+      "node_reference": {
+        "node_id": "C_29_Platform_Monorepo_Container",
+        "vault_path": "docs/pios/41.2/pie_vault/02_Capabilities/C_29_Platform_Monorepo_Container.md"
+      },
+      "projection_reference": "BIND-SIG-004-C_29_Platform_Monorepo_Container:VALID:43.31-v1",
+      "signal_reference": {
+        "signal_id": "SIG-004",
+        "signal_state": "evaluable",
+        "source_reference": "docs/pios/41.4/signal_registry.json::SIG-004"
+      }
+    },
+    {
+      "attachment_id": "PROJ-BIND-SIG-005-C_40_Delivery_and_Quality_Infrastructure-C_40_Delivery_and_Quality_Infrastructure",
+      "attachment_status": "ATTACHED",
+      "binding_id": "BIND-SIG-005-C_40_Delivery_and_Quality_Infrastructure",
+      "contract_version": "43.31-v1",
+      "evidence_reference": {
+        "association_basis": "domain_id:DOMAIN-16 / capability_id:CAP-40 / component_ids:[COMP-88,COMP-89] — semantic_anchor confirmed in evidence_mapping_index.json::SIG-005",
+        "provenance_chain": "40.4 ST-016, ST-012 (structural telemetry, static: 7/8 shared interfaces) + AT-005, AT-007 (activity telemetry, event-based: NOT AVAILABLE) → 40.5 SIG-001 Coordination Pressure (CKR-006: partial — static ratio 0.875 computed, runtime blocked) → 40.6 COND-003 Coordination Pressure Active (CKR-012, partial — static component resolved, runtime blocked) → 41.1 DOMAIN-16/CAP-40/COMP-88,COMP-89 (CI/CD Workflows + Docker Compose: delivery pipeline components governing coordination mechanisms)",
+        "source_reference": "docs/pios/41.4/evidence_mapping_index.json::SIG-005",
+        "temporal_reference": "static + event-based (partial: static component only)"
+      },
+      "node_reference": {
+        "node_id": "C_40_Delivery_and_Quality_Infrastructure",
+        "vault_path": "docs/pios/41.2/pie_vault/02_Capabilities/C_40_Delivery_and_Quality_Infrastructure.md"
+      },
+      "projection_reference": "BIND-SIG-005-C_40_Delivery_and_Quality_Infrastructure:VALID:43.31-v1",
+      "signal_reference": {
+        "signal_id": "SIG-005",
+        "signal_state": "partial",
+        "source_reference": "docs/pios/41.4/signal_registry.json::SIG-005"
+      }
+    }
+  ],
+  "run_reference": "run_01_blueedge",
+  "source_binding_artifact": "docs/pios/43.3/validated_binding_payload.json",
+  "source_binding_checksum": "71c628d1ce0e4dd80800eaafe84ae3e5a922302adba9543d44f07ddad3c8aa7b",
+  "source_projection_artifact": "docs/pios/44.2/projection_attachment.json",
+  "source_projection_checksum": "e580a5edb62e2ec6fe8e683a5166532edd5ff6418d868a31565c9f091af716ae",
+  "stats": {
+    "records_failed": 0,
+    "records_processed": 5,
+    "records_valid": 5
+  }
+}
