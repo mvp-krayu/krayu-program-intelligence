@@ -1716,3 +1716,35 @@ a.topo-chip:hover {
   opacity: 0.85;
 }
 
+/* =========================================================
+   42.24 topology color parity — query-adapted highlight visibility
+   ========================================================= */
+
+.topo-domain-highlighted {
+  border-color: #3b82f6 !important;
+  background: rgba(59, 130, 246, 0.10) !important;
+}
+
+.topo-cap-highlighted {
+  border-color: #facc15 !important;
+  background: rgba(250, 204, 21, 0.14) !important;
+  box-shadow: inset 0 0 0 1px rgba(250, 204, 21, 0.22);
+}
+
+.topo-chip-highlighted {
+  border-color: #5eead4 !important;
+  background: rgba(94, 234, 212, 0.16) !important;
+  color: #d1fae5 !important;
+}
+
+.topo-highlight-dot {
+  background: #facc15 !important;
+  box-shadow: 0 0 8px rgba(250, 204, 21, 0.65);
+}
+
+.topo-domain-highlighted .topo-domain-name,
+.topo-cap-highlighted .topo-cap-label,
+.topo-chip-highlighted {
+  opacity: 1 !important;
+}
+

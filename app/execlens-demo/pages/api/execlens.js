@@ -1,17 +1,17 @@
 /**
  * pages/api/execlens.js
- * PIOS-42.23-RUN01-CONTRACT-v1
+ * PIOS-42.24-RUN01-CONTRACT-v1
  *
  * ExecLens API route — delegates to Python adapters.
- * Topology route rewired to governed WOW chain (42.22 + 51.1 + 51.1R).
+ * Topology route restored to 42.7 structural hierarchy adapter (42.24 parity restoration).
  * No data synthesized here. All content from locked governed artifacts.
  *
  * Query params:
  *   ?query=GQ-001        — retrieve structured data for one query (42.4 adapter)
  *   ?list=true           — retrieve list of all available queries (42.4 adapter)
  *   ?overview=true       — retrieve landing gauge strip metrics (42.6 adapter)
- *   ?topology=true       — retrieve governed WOW chain exposure (42.23 adapter)
- *   ?topology=true&highlight=GQ-003  — topology with query context
+ *   ?topology=true       — retrieve structural topology hierarchy (42.7 adapter)
+ *   ?topology=true&highlight=GQ-003  — topology with query-adapted highlighting
  */
 
 import { execFile } from 'child_process'
@@ -22,6 +22,7 @@ const REPO_ROOT = process.env.REPO_ROOT
 
 const ADAPTER_42_4  = path.join(REPO_ROOT, 'scripts', 'pios', '42.4',  'execlens_adapter.py')
 const ADAPTER_42_6  = path.join(REPO_ROOT, 'scripts', 'pios', '42.6',  'execlens_overview_adapter.py')
+const ADAPTER_42_7  = path.join(REPO_ROOT, 'scripts', 'pios', '42.7',  'execlens_topology_adapter.py')
 const ADAPTER_42_23 = path.join(REPO_ROOT, 'scripts', 'pios', '42.23', 'execlens_wowchain_adapter.py')
 
 function runScript(scriptPath, args, res) {
@@ -54,9 +55,13 @@ export default function handler(req, res) {
     return runScript(ADAPTER_42_6, [], res)
   }
 
-  // Governed WOW chain topology (42.23 — rewired from 42.7)
+  // 42.7 structural topology — query-adapted highlighting (42.24 parity restoration)
   if (topology === 'true') {
-    return runScript(ADAPTER_42_23, [], res)
+    const args = []
+    if (highlight) {
+      args.push('--query', String(highlight).toUpperCase().replace(/[^A-Z0-9\-]/g, ''))
+    }
+    return runScript(ADAPTER_42_7, args, res)
   }
 
   // Query list (42.4)
