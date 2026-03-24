@@ -1,0 +1,77 @@
+{
+  "schema_id": "enl_graph_rules_v1",
+  "version": "1.0.0",
+  "contract_ref": "ENL-002-CONTRACT-v1",
+  "enl_001_ref": "docs/pios/enl/ENL-001_evidence_navigation_system.md",
+  "description": "Allowed layer transitions, terminal node policy, run-awareness constraints, and fail conditions for ENL graphs.",
+
+  "allowed_transitions": {
+    "description": "Maps each node_type to the set of node_types it is allowed to declare in derived_from.",
+    "rules": {
+      "INTEL":  ["SIG-41"],
+      "SIG-41": ["SIG-40"],
+      "SIG-40": ["EVID"],
+      "EVID":   []
+    },
+    "rationale": "Preserves progressive concreteness (ENL-001 Principle 5). Prevents layer collapse and cross-layer shortcuts."
+  },
+
+  "forbidden_transitions": [
+    {"from": "INTEL",  "to": "SIG-40", "reason": "cross-layer shortcut — skips semantic layer"},
+    {"from": "INTEL",  "to": "EVID",   "reason": "cross-layer shortcut — skips all intermediate layers"},
+    {"from": "SIG-41", "to": "EVID",   "reason": "cross-layer shortcut — skips computed layer"},
+    {"from": "SIG-41", "to": "INTEL",  "reason": "reverse direction — not permitted"},
+    {"from": "SIG-40", "to": "SIG-41", "reason": "reverse direction — not permitted"},
+    {"from": "SIG-40", "to": "INTEL",  "reason": "reverse direction — not permitted"},
+    {"from": "EVID",   "to": "SIG-40", "reason": "reverse direction — not permitted"},
+    {"from": "INTEL",  "to": "INTEL",  "reason": "same-layer derivation — not permitted in v1"},
+    {"from": "SIG-41", "to": "SIG-41", "reason": "same-layer derivation — not permitted in v1"},
+    {"from": "SIG-40", "to": "SIG-40", "reason": "same-layer derivation — not permitted in v1"},
+    {"from": "EVID",   "to": "EVID",   "reason": "same-layer derivation — not permitted in v1"}
+  ],
+
+  "terminal_node_policy": {
+    "terminal_node_types": ["EVID"],
+    "rule": "Every valid navigation path must terminate in an EVID node.",
+    "enforcement": "A graph without at least one EVID node fails validation. A valid chain must reach EVID without interruption through all intermediate layers.",
+    "rationale": "ENL-001 Principle 3: Every navigation path must terminate in verifiable evidence."
+  },
+
+  "empty_derived_from_policy": {
+    "permitted_types": ["EVID"],
+    "rule": "derived_from may be an empty array only for nodes of type EVID.",
+    "non_evid_empty_handling": "FAIL — any non-EVID node with an empty derived_from is invalid and must not be accepted."
+  },
+
+  "run_awareness": {
+    "rule": "All nodes in a graph must carry a run_id. All nodes linked via derived_from must share the same run_id.",
+    "cross_run_linking": "NOT PERMITTED in v1.",
+    "validation": "Validator must compare run_id of each node with run_id of every node it references in derived_from. Mismatch → FAIL.",
+    "future_work": "Cross-run linking may be considered in a future schema version with explicit declaration and governance rules."
+  },
+
+  "fail_conditions": [
+    "node_type is not one of the canonical enum values",
+    "any required field is absent or null",
+    "derived_from references a node_id that does not exist in the graph",
+    "a derived_from reference violates allowed_transitions (invalid layer transition)",
+    "a non-EVID node has an empty derived_from array",
+    "the graph contains no EVID node (evidence termination not satisfied)",
+    "the example graph chain is incomplete (does not cover INTEL → SIG-41 → SIG-40 → EVID)",
+    "run_id is missing or empty on any node",
+    "source_ref is missing or empty on any node",
+    "duplicate node_id exists within the same graph",
+    "any node in a linked pair belongs to a different run_id than its upstream dependency"
+  ],
+
+  "v1_scope_boundaries": {
+    "not_supported": [
+      "cross-run derivation",
+      "same-layer derivation",
+      "partial or branching chains (v1 example requires linear chain)",
+      "node types beyond INTEL, SIG-41, SIG-40, EVID",
+      "computed or inferred relationships"
+    ],
+    "note": "These constraints may be relaxed in future schema versions with explicit governance. v1 is intentionally minimal and strict."
+  }
+}

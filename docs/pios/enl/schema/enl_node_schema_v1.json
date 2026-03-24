@@ -1,0 +1,80 @@
+{
+  "schema_id": "enl_node_schema_v1",
+  "version": "1.0.0",
+  "contract_ref": "ENL-002-CONTRACT-v1",
+  "enl_001_ref": "docs/pios/enl/ENL-001_evidence_navigation_system.md",
+  "description": "Canonical field definitions for ENL node types. All nodes conforming to ENL-002 must satisfy this schema.",
+
+  "node_types": ["INTEL", "SIG-41", "SIG-40", "EVID"],
+
+  "required_fields": {
+    "node_id": {
+      "type": "string",
+      "description": "Unique identifier for this node within the graph. Must not be shared across nodes in the same graph.",
+      "constraints": ["non-empty", "unique within graph"]
+    },
+    "node_type": {
+      "type": "string",
+      "enum": ["INTEL", "SIG-41", "SIG-40", "EVID"],
+      "description": "Canonical ENL node type. Determines allowed layer position and derivation rules."
+    },
+    "run_id": {
+      "type": "string",
+      "description": "Execution context identifier. All linked nodes in a graph must share the same run_id in v1.",
+      "constraints": ["non-empty"]
+    },
+    "title": {
+      "type": "string",
+      "description": "Short human-readable label for the node. Used for navigation display only.",
+      "constraints": ["non-empty"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["defined", "active", "validated", "blocked", "rejected"],
+      "description": "Current lifecycle status of the node."
+    },
+    "derived_from": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Ordered list of upstream node_ids this node depends on. Empty array is only valid for EVID nodes. All referenced node_ids must exist in the same graph.",
+      "constraints": [
+        "empty only permitted for EVID node_type",
+        "all values must be resolvable node_ids in the same graph",
+        "all referenced nodes must belong to the correct upstream layer type"
+      ]
+    },
+    "source_ref": {
+      "type": "string",
+      "description": "Canonical reference to the source artifact this node is grounded in. Must point to a declared artifact path or identifier.",
+      "constraints": ["non-empty"]
+    },
+    "created_at": {
+      "type": "string",
+      "description": "ISO 8601 date or timestamp indicating when this node artifact was created.",
+      "constraints": ["non-empty"]
+    }
+  },
+
+  "status_values": {
+    "defined":   "Node declared but not yet active in an execution context.",
+    "active":    "Node is part of an active execution run.",
+    "validated": "Node has passed all required validation checks.",
+    "blocked":   "Node cannot proceed due to upstream dependency failure or missing evidence.",
+    "rejected":  "Node has been explicitly rejected and must not be used in navigation paths."
+  },
+
+  "node_type_layer_mapping": {
+    "INTEL":  "narrative — highest abstraction, lowest concreteness",
+    "SIG-41": "semantic  — interpreted signal layer",
+    "SIG-40": "computed  — computed signal layer",
+    "EVID":   "raw       — terminal verifiable evidence"
+  },
+
+  "v1_constraints": [
+    "All fields in required_fields are mandatory for every node.",
+    "No additional fields are required by v1 beyond those declared here.",
+    "Optional fields may be added by consuming systems but must not replace required fields.",
+    "Cross-run derivation is not permitted in v1.",
+    "Same-layer derivation is not permitted in v1."
+  ]
+}

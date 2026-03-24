@@ -1,29 +1,26 @@
-/**
- * DemoController.js
- * PIOS-42.8-RUN01-CONTRACT-v1
- *
- * Demo choreography layer — presentation-only.
- *
- * Manages:
- *   - Step sequence (7 fixed steps, deterministic, no branching)
- *   - Scroll orchestration (smooth scroll to data-demo-section targets)
- *   - Spotlight highlight (CSS class applied/removed per step)
- *   - Step indicator (fixed bottom bar, visible in demo mode only)
- *   - Keyboard navigation (→/Enter/Space = next, Escape = exit)
- *
- * Rules:
- *   R3  no content modification — only scroll + CSS class application
- *   R4  spotlight via .demo-spotlight CSS class — no DOM mutation beyond class
- *   R6  highlight removed when advancing forward
- *   G4  if target section absent from DOM → skip scroll, continue
- *   G5  no synthetic narration, no injected text
- */
-
 import { useEffect, useCallback } from 'react'
 
-// ---------------------------------------------------------------------------
-// Demo step definitions
-// ---------------------------------------------------------------------------
+/**
+ * DemoController
+ * -----------------------------------------------------------
+ * Lightweight guided demo controller for the ExecLens surface.
+ *
+ * Governing rules (Stream 42.8):
+ *   - Step sequence (9 fixed steps, deterministic, no branching)
+ *   - Scroll/spotlight only against pre-declared DOM anchors
+ *   - No synthetic data, no invented content, no state mutation outside demo UI
+ *   - Exit returns page to clean resting state
+ *
+ * Required anchors on page:
+ *   data-demo-section="gauges"
+ *   data-demo-section="topology"
+ *   data-demo-section="query"
+ *   data-demo-section="signals"
+ *   data-demo-section="evidence"
+ *   data-demo-section="enl"
+ *   data-demo-section="navigation"
+ *   data-demo-section="persona"
+ */
 
 export const DEMO_STEPS = [
   {
@@ -43,7 +40,6 @@ export const DEMO_STEPS = [
     label:  'Query',
     title:  'GQ-003 — Blast radius if a core platform component fails',
     target: 'query',
-    // Auto-select handled in parent (index.js) via useEffect
   },
   {
     num:    4,
@@ -59,15 +55,27 @@ export const DEMO_STEPS = [
   },
   {
     num:    6,
+    label:  'ENL',
+    title:  'ENL chain reveal — same signals, navigation-layer depth',
+    target: 'enl',
+  },
+  {
+    num:    7,
     label:  'Navigate',
     title:  'Vault-resolved deep links — direct access to architecture artifacts',
     target: 'navigation',
   },
   {
-    num:    7,
+    num:    8,
+    label:  'Persona',
+    title:  'Audience lens projection — Executive, CTO, Analyst',
+    target: 'persona',
+  },
+  {
+    num:    9,
     label:  'Complete',
     title:  'Program Intelligence — evidence-first, governed, deployable',
-    target: null,   // Scroll to top
+    target: null,
   },
 ]
 
@@ -104,7 +112,7 @@ export default function DemoController({ active, step, onNext, onExit }) {
         setTimeout(() => el.classList.add('demo-spotlight'), 100)
       }
     } else {
-      // Step 7: scroll to top, no spotlight (full-page completion state)
+      // Final step: scroll to top, no spotlight (full-page completion state)
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }, [active, step])

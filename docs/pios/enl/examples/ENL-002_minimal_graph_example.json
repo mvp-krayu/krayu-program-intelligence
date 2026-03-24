@@ -1,0 +1,49 @@
+{
+  "graph_id":    "enl_example_minimal_001",
+  "contract_ref": "ENL-002-CONTRACT-v1",
+  "run_id":      "run_01_blueedge",
+  "description": "Minimal valid ENL graph example. Covers the full 4-layer chain: INTEL → SIG-41 → SIG-40 → EVID. All nodes share run_id. All layer transitions conform to enl_graph_rules_v1. EVID is the terminal node.",
+
+  "nodes": [
+    {
+      "node_id":      "INTEL-GQ003-001",
+      "node_type":    "INTEL",
+      "run_id":       "run_01_blueedge",
+      "title":        "Blast radius if a core platform component fails or is changed",
+      "status":       "validated",
+      "derived_from": ["SIG41-SIG003-001"],
+      "source_ref":   "docs/pios/41.5/query_response_templates.md#GQ-003",
+      "created_at":   "2026-03-21"
+    },
+    {
+      "node_id":      "SIG41-SIG003-001",
+      "node_type":    "SIG-41",
+      "run_id":       "run_01_blueedge",
+      "title":        "Dependency Load — semantic signal (SIG-003)",
+      "status":       "validated",
+      "derived_from": ["SIG40-SIG003-001"],
+      "source_ref":   "docs/pios/41.4/signal_registry.json#SIG-003",
+      "created_at":   "2026-03-21"
+    },
+    {
+      "node_id":      "SIG40-SIG003-001",
+      "node_type":    "SIG-40",
+      "run_id":       "run_01_blueedge",
+      "title":        "Dependency Load — computed signal (SIG-003 evidence binding)",
+      "status":       "validated",
+      "derived_from": ["EVID-ST007-001"],
+      "source_ref":   "docs/pios/41.4/evidence_mapping_index.json#SIG-003",
+      "created_at":   "2026-03-21"
+    },
+    {
+      "node_id":      "EVID-ST007-001",
+      "node_type":    "EVID",
+      "run_id":       "run_01_blueedge",
+      "title":        "ST-007: Structural telemetry — dependency relationship map",
+      "status":       "validated",
+      "derived_from": [],
+      "source_ref":   "docs/pios/40.x/structural_telemetry#ST-007",
+      "created_at":   "2026-03-21"
+    }
+  ]
+}
