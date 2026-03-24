@@ -237,7 +237,7 @@ export default function TopologyPanel({ selectedQuery }) {
   }
 
   // WOW chain rendering path (42.23 / 51.1)
-  if (topology.wow_chain === true) {
+  if (false && topology.wow_chain === true) {
     const records = topology.exposure_records || []
     const ec = topology.emphasis_counts || {}
     return (

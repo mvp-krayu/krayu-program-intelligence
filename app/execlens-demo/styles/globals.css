@@ -1716,8 +1716,75 @@ a.topo-chip:hover {
   opacity: 0.85;
 }
 
+
 /* =========================================================
-   42.24 topology color parity — query-adapted highlight visibility
+   ENL-010 overflow hardening
+   Fixes:
+   - ENL chain panel horizontal overflow
+   - Persona panel horizontal overflow
+   - selector wrapping
+   - panel title chip wrapping
+   ========================================================= */
+
+.panel {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.panel-title {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+}
+
+.panel-title-count {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.persona-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.persona-btn {
+  flex: 0 0 auto;
+}
+
+.enl-reveal-output,
+.persona-view-output,
+.panel pre {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  box-sizing: border-box;
+}
+
+.enl-reveal-output code,
+.persona-view-output code,
+.panel pre code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Optional: keep large content visually contained on smaller widths */
+@media (max-width: 1200px) {
+  .panel {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+}
+
+/* =========================================================
+   42.8 topology parity — stronger highlight visibility
    ========================================================= */
 
 .topo-domain-highlighted {
@@ -1747,4 +1814,3 @@ a.topo-chip:hover {
 .topo-chip-highlighted {
   opacity: 1 !important;
 }
-
