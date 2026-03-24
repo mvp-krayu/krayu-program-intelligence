@@ -21,11 +21,13 @@ import TemplateRenderer  from '../components/TemplateRenderer'
 import LandingGaugeStrip from '../components/LandingGaugeStrip'
 import TopologyPanel     from '../components/TopologyPanel'
 import DemoController    from '../components/DemoController'
+import ENLRevealPanel from '../components/ENLRevealPanel'
+import PersonaPanel from '../components/PersonaPanel'
 
 // Pipeline nodes rendered in the hero strip
 const PIPELINE_NODES = ['QUERY', 'SIGNAL', 'EVIDENCE', 'NAVIGATION', 'OUTPUT']
 
-const TOTAL_DEMO_STEPS = 7
+const TOTAL_DEMO_STEPS = 9
 
 function PipelineStrip() {
   return (
@@ -72,6 +74,7 @@ export default function Home() {
   // ── Demo choreography state (42.8) ──
   const [demoActive, setDemoActive] = useState(false)
   const [demoStep,   setDemoStep]   = useState(0)
+  const [activePersona, setActivePersona] = useState('EXECUTIVE')
 
   // Query fetch
   useEffect(() => {
@@ -107,8 +110,16 @@ export default function Home() {
     }
   }, [demoActive, demoStep])
 
+  // Demo step 8: default persona projection
+  useEffect(() => {
+    if (demoActive && demoStep === 8) {
+      setActivePersona('EXECUTIVE')
+    }
+  }, [demoActive, demoStep])
+
   // Demo control handlers
   const handleStartDemo = () => {
+    setActivePersona('EXECUTIVE')
     setDemoActive(true)
     setDemoStep(1)
   }
@@ -124,6 +135,7 @@ export default function Home() {
   const handleDemoExit = () => {
     setDemoActive(false)
     setDemoStep(0)
+    setActivePersona('EXECUTIVE')
   }
 
   return (
@@ -230,9 +242,23 @@ export default function Home() {
               <EvidencePanel signals={queryData.signals} />
             </div>
 
-            {/* 5. Navigation vault references */}
+            {/* 5. ENL chain reveal */}
+            <div data-demo-section="enl">
+              <ENLRevealPanel queryId={queryData.query_id} active={demoActive && demoStep >= 6} />
+            </div>
+
+            {/* 6. Navigation vault references */}
             <div data-demo-section="navigation">
               <NavigationPanel navigation={queryData.navigation} />
+            </div>
+
+            {/* 7. Persona projection */}
+            <div data-demo-section="persona">
+              <PersonaPanel
+                queryId={queryData.query_id}
+                persona={activePersona}
+                onPersonaChange={setActivePersona}
+              />
             </div>
 
           </div>
