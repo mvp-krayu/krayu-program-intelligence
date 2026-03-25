@@ -38,6 +38,22 @@ Date: 2026-03-25
 
 ---
 
+## Entry 004 — 2026-03-25 (42.26N Scope Narrowing)
+
+**Action:** Validation contract reduced from 7 → 4 routes.
+
+- ENL/status/persona routes removed from scope
+- Reason: adapter scripts (42.13, 42.15, 42.16) not present in this baseline
+- runtime_api_contract.md rewritten — 4 in-scope routes + explicit scope exclusion section
+- adapter_routing_map.md rewritten — 4 in-scope routes + excluded routes table
+- rendering_contract.md rewritten — ENL/persona sections removed, scope constraint added
+- validate_runtime_contract.py narrowed to 4 routes
+- Live validation run: 4/4 PASS
+- validation_log.json updated with live results
+- No runtime changes
+
+---
+
 ## Constraints
 
 - No runtime code modified

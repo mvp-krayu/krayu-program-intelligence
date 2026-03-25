@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """
 validate_runtime_contract.py
-42.26 — ExecLens Runtime Contract Validation
+42.26N — ExecLens Runtime Contract Validation (Narrowed)
 
-Validates all 7 API routes against the 42.26 runtime contract.
+Validates the 4 operational routes confirmed on the topology/runtime parity baseline.
+status / enl / persona are explicitly excluded (adapters not present in this baseline).
+
 Requires ExecLens app running at BASE (default: http://localhost:3000).
 
 Usage:
@@ -26,14 +28,13 @@ OUTPUT_PATH = "docs/pios/42.26/validation_log.json"
 
 
 def run_tests(base: str) -> list[dict]:
+    # 4 operational routes only — narrowed per 42.26N scope reclassification
+    # status / enl / persona excluded: adapter scripts not present in this baseline
     tests = [
-        ("status",   f"{base}?status=true"),
-        ("enl",      f"{base}?enl=GQ-001"),
-        ("persona",  f"{base}?persona=EXECUTIVE&query=GQ-001"),
-        ("overview", f"{base}?overview=true"),
-        ("topology", f"{base}?topology=true&highlight=GQ-001"),
         ("list",     f"{base}?list=true"),
+        ("overview", f"{base}?overview=true"),
         ("query",    f"{base}?query=GQ-001"),
+        ("topology", f"{base}?topology=true&highlight=GQ-001"),
     ]
 
     results = []

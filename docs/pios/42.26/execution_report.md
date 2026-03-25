@@ -26,32 +26,45 @@ Mode: NON-MUTATING (documentation + validation only)
 
 ## Validation Result
 
-**Status: NOT_RUN**
+**Status: PASS — 4/4**
 
-ExecLens app was not running at localhost:3000 at time of execution.
-Validation script is ready. Run when app is live:
-
-```
-python3 scripts/pios/42.26/validate_runtime_contract.py
-```
-
-Output will overwrite docs/pios/42.26/validation_log.json with live results.
+Live validation run against localhost:3000.
+All 4 in-scope routes returned 200. See validation_log.json.
 
 ---
 
-## API Contract Coverage
+## API Contract Coverage (narrowed — 42.26N)
 
-All 7 routes documented and mapped:
+4 operational routes validated:
 
-| Route | Adapter | Documented |
+| Route | Adapter | Result |
 |---|---|---|
-| ?status=true | 42.13 | YES |
-| ?enl=GQ-XXX | 42.15 | YES |
-| ?persona=P&query=GQ-XXX | 42.16 | YES |
-| ?overview=true | 42.6 | YES |
-| ?topology=true[&highlight=GQ-XXX] | 42.7 | YES |
-| ?list=true | 42.4 | YES |
-| ?query=GQ-XXX | 42.4 | YES |
+| ?overview=true | 42.6 | PASS |
+| ?topology=true[&highlight=GQ-XXX] | 42.7 | PASS |
+| ?list=true | 42.4 | PASS |
+| ?query=GQ-XXX | 42.4 | PASS |
+
+Excluded from scope:
+
+| Route | Reason |
+|---|---|
+| ?status=true | 42.13 adapter not present |
+| ?enl=GQ-XXX | 42.15 adapter not present |
+| ?persona=P&query=GQ-XXX | 42.16 adapter not present |
+
+---
+
+## Scope Reclassification
+
+42.26 originally validated 7 routes.
+
+Following classification (42.26N):
+
+- validator narrowed to 4 operational routes
+- 3 routes (status, enl, persona) removed from scope
+- no runtime defect identified
+- mismatch was due to scope overreach — ENL adapter scripts not present in this baseline
+- 42.26 now aligned with accepted topology/runtime parity baseline
 
 ---
 

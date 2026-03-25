@@ -1,8 +1,21 @@
 # Rendering Contract — 42.26
 
-Source: app/execlens-demo/components/TopologyPanel.js, ENLRevealPanel.js, PersonaPanel.js
+Source: app/execlens-demo/components/TopologyPanel.js
 Branch: feature/42-25-topology-highlight-color-remediation
 Date: 2026-03-25
+Narrowed: 42.26N — 2026-03-25
+
+---
+
+## Scope Constraint
+
+Rendering contract applies ONLY to:
+- topology
+- overview
+- list
+- query
+
+No ENL or persona rendering is validated in this stream. Those surfaces belong to ENL-010 integration and require a separate governed baseline.
 
 ---
 
@@ -18,21 +31,6 @@ Date: 2026-03-25
   - `.topo-cap-highlighted` — yellow border (#facc15), yellow background
   - `.topo-chip-highlighted` — teal border (#5eead4), teal background, green text
   - `.topo-highlight-dot` — yellow dot (#facc15) with glow
-
-## ENL Chain Reveal
-
-- Text-only output from 42.15 adapter (enl_console_adapter.py)
-- Rendered verbatim — no transformation in UI (ER-001 rule)
-- No interpretation added by panel
-- No inference, no enrichment
-
-## Persona Projection
-
-- Persona allowlist: EXECUTIVE / CTO / ANALYST only
-- Requires query param — no fallback persona
-- Text-only output from 42.16 adapter (persona_view_map.py)
-- Rendered verbatim
-- Persona switch never changes selectedQuery (PS-001)
 
 ## General
 

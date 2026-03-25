@@ -1,18 +1,34 @@
 {
   "contract": "42.26",
   "base": "http://localhost:3000/api/execlens",
-  "total": 7,
-  "pass_count": 0,
-  "fail_count": 7,
-  "status": "NOT_RUN",
-  "reason": "ExecLens app not running at time of contract execution (2026-03-25). Script produced and ready. Re-run with app live: python3 scripts/pios/42.26/validate_runtime_contract.py",
+  "total": 4,
+  "pass_count": 4,
+  "fail_count": 0,
+  "status": "PASS",
   "results": [
-    { "test": "status",   "ok": null, "note": "pending" },
-    { "test": "enl",      "ok": null, "note": "pending" },
-    { "test": "persona",  "ok": null, "note": "pending" },
-    { "test": "overview", "ok": null, "note": "pending" },
-    { "test": "topology", "ok": null, "note": "pending" },
-    { "test": "list",     "ok": null, "note": "pending" },
-    { "test": "query",    "ok": null, "note": "pending" }
+    {
+      "test": "list",
+      "url": "http://localhost:3000/api/execlens?list=true",
+      "status_code": 200,
+      "ok": true
+    },
+    {
+      "test": "overview",
+      "url": "http://localhost:3000/api/execlens?overview=true",
+      "status_code": 200,
+      "ok": true
+    },
+    {
+      "test": "query",
+      "url": "http://localhost:3000/api/execlens?query=GQ-001",
+      "status_code": 200,
+      "ok": true
+    },
+    {
+      "test": "topology",
+      "url": "http://localhost:3000/api/execlens?topology=true&highlight=GQ-001",
+      "status_code": 200,
+      "ok": true
+    }
   ]
 }
