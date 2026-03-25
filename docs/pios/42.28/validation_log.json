@@ -1,0 +1,70 @@
+{
+  "contract": "42.28",
+  "base": "http://localhost:3000/api/execlens",
+  "total": 12,
+  "pass_count": 12,
+  "fail_count": 0,
+  "status": "PASS",
+  "results": [
+    {
+      "test": "topology_200",
+      "ok": true,
+      "detail": "topology[] present"
+    },
+    {
+      "test": "topology_structure_stable",
+      "ok": true,
+      "detail": "domain_count=4 capability_count=5 component_count=9"
+    },
+    {
+      "test": "topology_contract_id",
+      "ok": true,
+      "detail": "contract_id=PIOS-42.7-RUN01-CONTRACT-v2"
+    },
+    {
+      "test": "topology_highlight_200",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "test": "topology_highlight_id",
+      "ok": true,
+      "detail": "highlight_query_id=GQ-003"
+    },
+    {
+      "test": "red_node_present",
+      "ok": true,
+      "detail": "emphasis:high nodes=[('capability', 'C_30_Domain_Event_Bus')] \u2014 C_30_Domain_Event_Bus confirmed"
+    },
+    {
+      "test": "emphasis_field_on_all_nodes",
+      "ok": true,
+      "detail": "all nodes carry emphasis field"
+    },
+    {
+      "test": "emphasis_values_valid",
+      "ok": true,
+      "detail": "covered by emphasis_field_on_all_nodes check"
+    },
+    {
+      "test": "projection_file_emphasis",
+      "ok": true,
+      "detail": "C_30_Domain_Event_Bus emphasis=high \u2014 confirmed in 44.2 artifact"
+    },
+    {
+      "test": "overview_200",
+      "ok": true,
+      "detail": "metrics present"
+    },
+    {
+      "test": "query_GQ003_200",
+      "ok": true,
+      "detail": "query_id/signals present"
+    },
+    {
+      "test": "list_200",
+      "ok": true,
+      "detail": "queries[] present"
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "stream": "42.28",
+  "date": "2026-03-25",
+  "code_files_modified": [],
+  "files_created": [
+    {
+      "path": "docs/pios/42.28/live_runtime_surface_inventory.md",
+      "purpose": "Enumerate and classify all routes in execlens.js — active, optional, declared-but-unused",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/42.28/baseline_snapshot.json",
+      "purpose": "Live baseline of all route responses with status codes, checksums, and red-node confirmation",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/42.28/adapter_governance_classification.md",
+      "purpose": "Certification of each adapter — thin/non-deriving check, source traceability, certification result",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/42.28/unified_demo_route_map.md",
+      "purpose": "51.3 9-step sequence mapped to live routes; coexistence of topology/highlight/red-node documented; PARTIAL status declared",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/42.28/regression_control_contract.md",
+      "purpose": "Required stable behaviors, no-regression checks, failure conditions for the certified surface",
+      "category": "governance"
+    },
+    {
+      "path": "scripts/pios/42.28/validate_unified_runtime_surface.py",
+      "purpose": "12-test regression validator covering all certified routes and red-node emphasis",
+      "category": "validation"
+    },
+    {
+      "path": "docs/pios/42.28/validation_log.json",
+      "purpose": "Live validation run output — 12/12 PASS",
+      "category": "evidence"
+    },
+    {
+      "path": "docs/pios/42.28/execution_report.md",
+      "purpose": "Certification summary — routes, adapters, unified demo status, deviations, regression control",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/42.28/file_changes.json",
+      "purpose": "This file — full list of files created/modified in this stream",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/42.28/replay_record.md",
+      "purpose": "Exact commands run and rerun order for certification replay",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/42.28/CLOSURE.md",
+      "purpose": "Stream closure — final certification status, what is certified, what remains out of scope",
+      "category": "governance"
+    }
+  ]
+}

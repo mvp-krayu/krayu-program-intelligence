@@ -1,0 +1,106 @@
+{
+  "stream": "42.28",
+  "date": "2026-03-25",
+  "branch": "feature/42-28-runtime-certification",
+  "base": "http://localhost:3000/api/execlens",
+  "red_node_confirmed": {
+    "node_id": "C_30_Domain_Event_Bus",
+    "emphasis": "high",
+    "location": "capability level",
+    "domain": "DOMAIN-11"
+  },
+  "topology_shape": {
+    "domain_count": 4,
+    "capability_count": 5,
+    "component_count": 9,
+    "contract_id": "PIOS-42.7-RUN01-CONTRACT-v2"
+  },
+  "results": [
+    {
+      "test": "query_GQ003",
+      "url": "http://localhost:3000/api/execlens?query=GQ-003",
+      "status_code": 200,
+      "checksum_sha256_prefix": "af926c1b128a80c0",
+      "route_classification": "active_required",
+      "ok": true
+    },
+    {
+      "test": "list",
+      "url": "http://localhost:3000/api/execlens?list=true",
+      "status_code": 200,
+      "checksum_sha256_prefix": "042c56fbb24b05ad",
+      "route_classification": "active_required",
+      "ok": true
+    },
+    {
+      "test": "overview",
+      "url": "http://localhost:3000/api/execlens?overview=true",
+      "status_code": 200,
+      "checksum_sha256_prefix": "89bbc70b6264e2c6",
+      "route_classification": "active_required",
+      "ok": true
+    },
+    {
+      "test": "topology_highlight_GQ003",
+      "url": "http://localhost:3000/api/execlens?topology=true&highlight=GQ-003",
+      "status_code": 200,
+      "checksum_sha256_prefix": "c68c35dfaff5eccb",
+      "route_classification": "active_required",
+      "ok": true,
+      "emphasis_high_node": "C_30_Domain_Event_Bus"
+    },
+    {
+      "test": "topology_plain",
+      "url": "http://localhost:3000/api/execlens?topology=true",
+      "status_code": 200,
+      "checksum_sha256_prefix": "6ff23e51f1f91467",
+      "route_classification": "active_required",
+      "ok": true
+    },
+    {
+      "test": "status",
+      "url": "http://localhost:3000/api/execlens?status=true",
+      "status_code": 400,
+      "route_classification": "declared_adapter_absent",
+      "ok": false,
+      "note": "ADAPTER_42_13 (demo_activate.py) not present in this branch"
+    },
+    {
+      "test": "enl_GQ003",
+      "url": "http://localhost:3000/api/execlens?enl=GQ-003",
+      "status_code": 400,
+      "route_classification": "declared_adapter_absent",
+      "ok": false,
+      "note": "ADAPTER_42_15 (enl_console_adapter.py) not present in this branch"
+    },
+    {
+      "test": "persona_EXECUTIVE",
+      "url": "http://localhost:3000/api/execlens?persona=EXECUTIVE&query=GQ-003",
+      "status_code": 400,
+      "route_classification": "declared_adapter_absent",
+      "ok": false,
+      "note": "ADAPTER_42_16 (persona_view_map.py) not present in this branch"
+    },
+    {
+      "test": "persona_CTO",
+      "url": "http://localhost:3000/api/execlens?persona=CTO&query=GQ-003",
+      "status_code": 400,
+      "route_classification": "declared_adapter_absent",
+      "ok": false,
+      "note": "ADAPTER_42_16 (persona_view_map.py) not present in this branch"
+    },
+    {
+      "test": "persona_ANALYST",
+      "url": "http://localhost:3000/api/execlens?persona=ANALYST&query=GQ-003",
+      "status_code": 400,
+      "route_classification": "declared_adapter_absent",
+      "ok": false,
+      "note": "ADAPTER_42_16 (persona_view_map.py) not present in this branch"
+    }
+  ],
+  "summary": {
+    "active_required_pass": 5,
+    "declared_adapter_absent_fail": 5,
+    "total": 10
+  }
+}
