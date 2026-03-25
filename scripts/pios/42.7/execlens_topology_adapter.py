@@ -72,8 +72,32 @@ except ImportError as e:
     }), file=sys.stderr)
     sys.exit(1)
 
-CONTRACT_ID   = "PIOS-42.7-RUN01-CONTRACT-v2"
-VAULT_PREFIX  = "docs/pios/41.2/pie_vault/"
+CONTRACT_ID                = "PIOS-42.7-RUN01-CONTRACT-v2"
+VAULT_PREFIX               = "docs/pios/41.2/pie_vault/"
+PROJECTION_ATTACHMENT_PATH = Path(__file__).resolve().parents[3] / "docs/pios/44.2/projection_attachment.json"
+
+# ---------------------------------------------------------------------------
+# Projection emphasis loader (44.2 → 44.3)
+# ---------------------------------------------------------------------------
+
+def _load_emphasis_lookup() -> dict:
+    """
+    Load emphasis values from the 44.2 projection attachment artifact.
+    Returns {node_id: emphasis_value} for all attached projection elements.
+    Defaults to empty dict (all nodes treated as emphasis:none) if unavailable.
+    42.x reads emphasis only — never assigns or modifies (44.3 E-ATT-007).
+    """
+    try:
+        with open(PROJECTION_ATTACHMENT_PATH) as f:
+            data = json.load(f)
+        return {
+            p["node_reference"]["node_id"]: p.get("emphasis", "none")
+            for p in data.get("projections", [])
+            if p.get("attachment_status") == "ATTACHED"
+        }
+    except Exception:
+        return {}
+
 
 # ---------------------------------------------------------------------------
 # Entity classification helpers
@@ -353,6 +377,15 @@ def get_topology(highlight_query_id: Optional[str] = None) -> dict:
                 cap["highlighted"] = cap["id"] in highlight_entities["capabilities"]
                 for cmp in cap.get("components", []):
                     cmp["highlighted"] = cmp["id"] in highlight_entities["components"]
+
+    # Attach projection emphasis from 44.2 governed artifact (read-only — 44.3 E-ATT-007)
+    emphasis_lookup = _load_emphasis_lookup()
+    for dom in topology:
+        dom["emphasis"] = emphasis_lookup.get(dom["id"], "none")
+        for cap in dom.get("capabilities", []):
+            cap["emphasis"] = emphasis_lookup.get(cap["id"], "none")
+            for cmp in cap.get("components", []):
+                cmp["emphasis"] = emphasis_lookup.get(cmp["id"], "none")
 
     return {
         "contract_id":        CONTRACT_ID,

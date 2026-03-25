@@ -1,0 +1,43 @@
+{
+  "stream": "44.4C",
+  "date": "2026-03-25",
+  "file": "docs/pios/44.2/projection_attachment.json",
+  "status": "PASS",
+  "checks": [
+    {
+      "check": "json_valid",
+      "result": "PASS",
+      "detail": "File parses as valid JSON"
+    },
+    {
+      "check": "projections_count_unchanged",
+      "result": "PASS",
+      "detail": "projections[] still contains 5 records"
+    },
+    {
+      "check": "query_emphasis_absent",
+      "result": "PASS",
+      "detail": "query_emphasis top-level key removed"
+    },
+    {
+      "check": "emphasis_high_present",
+      "result": "PASS",
+      "detail": "C_30_Domain_Event_Bus carries emphasis:high"
+    },
+    {
+      "check": "modified_record_traceable",
+      "result": "PASS",
+      "detail": "C_30_Domain_Event_Bus association_basis: domain_id:DOMAIN-11 / component_ids:[COMP-65] — matches both mandatory targets"
+    },
+    {
+      "check": "unrelated_records_unchanged",
+      "result": "PASS",
+      "detail": "C_02, C_27, C_29, C_40 all retain emphasis:none"
+    },
+    {
+      "check": "no_schema_drift",
+      "result": "PASS",
+      "detail": "Only the emphasis field value changed on one existing record; no new keys, no structural additions"
+    }
+  ]
+}

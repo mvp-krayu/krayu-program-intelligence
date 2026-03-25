@@ -184,7 +184,7 @@
       "binding_id": "BIND-SIG-003-C_30_Domain_Event_Bus",
       "checksum": "7e278b98a860d5e3a81271c0f8e2fef12a2a9b2a3c589442bcd9549c1f6b2351",
       "contract_version": "43.31-v1",
-      "emphasis": "none",
+      "emphasis": "high",
       "evidence_reference": {
         "association_basis": "domain_id:DOMAIN-11 / capability_id:CAP-30 / component_ids:[COMP-65] — semantic_anchor confirmed in evidence_mapping_index.json::SIG-003",
         "provenance_chain": "40.4 ST-007, ST-010, ST-012, ST-013, ST-014, ST-015 (structural telemetry, static) → 40.5 SIG-002 Dependency Load (CKR-007: 15/22 = 0.682, complete) → 40.6 COND-001 Dependency Load Elevation (CKR-012, evaluable, awaiting Stream 75.1 threshold activation) → 41.1 DOMAIN-11/CAP-30/COMP-65 (FleetEventsModule: hub of all dependency relationships, R-038 confirmed)",
