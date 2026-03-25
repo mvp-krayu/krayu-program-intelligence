@@ -1,0 +1,75 @@
+{
+  "contract": "PIOS-42.29-RUN01-CONTRACT-v1",
+  "base": "http://localhost:3000/api/execlens",
+  "total": 13,
+  "pass_count": 13,
+  "fail_count": 0,
+  "status": "PASS",
+  "results": [
+    {
+      "test": "topology_200",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "test": "topology_structure_stable",
+      "ok": true,
+      "detail": "domain_count=4 capability_count=5 component_count=9"
+    },
+    {
+      "test": "red_node_present",
+      "ok": true,
+      "detail": "emphasis:high nodes=[('capability', 'C_30_Domain_Event_Bus')]"
+    },
+    {
+      "test": "overview_200",
+      "ok": true,
+      "detail": "keys=['contract_id', 'metrics']"
+    },
+    {
+      "test": "query_GQ003_200",
+      "ok": true,
+      "detail": "query_id=GQ-003 signals=2"
+    },
+    {
+      "test": "list_200",
+      "ok": true,
+      "detail": "queries count=10"
+    },
+    {
+      "test": "enl_GQ003_200",
+      "ok": true,
+      "detail": "status=200 enl_signals=2 emphasis_nodes=1"
+    },
+    {
+      "test": "enl_emphasis_node_present",
+      "ok": true,
+      "detail": "C_30_Domain_Event_Bus in emphasis_nodes=True"
+    },
+    {
+      "test": "persona_executive_200",
+      "ok": true,
+      "detail": "status=200 persona=EXECUTIVE lens=delivery_commitment signals=2"
+    },
+    {
+      "test": "persona_cto_200",
+      "ok": true,
+      "detail": "status=200 persona=CTO lens=structural_risk signals=2"
+    },
+    {
+      "test": "persona_analyst_200",
+      "ok": true,
+      "detail": "status=200 persona=ANALYST lens=evidence_gap signals=2"
+    },
+    {
+      "test": "status_200",
+      "ok": true,
+      "detail": "status=200 surface_status=ACTIVE"
+    },
+    {
+      "test": "persona_switching_same_query",
+      "ok": true,
+      "detail": "EXECUTIVE:GQ-003, CTO:GQ-003, ANALYST:GQ-003"
+    }
+  ]
+}
