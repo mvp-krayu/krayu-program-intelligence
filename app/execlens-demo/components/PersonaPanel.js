@@ -1,8 +1,10 @@
 /**
  * PersonaPanel.js
- * PIOS-42.29-RUN01-CONTRACT-v1
+ * PIOS-51.4-RUN01-CONTRACT-v1
+ * (supersedes PIOS-42.29-RUN01-CONTRACT-v1)
  *
- * Persona selector + ENL display panel.
+ * Persona selector + ENL display — content only.
+ * Panel header and collapse are provided by DisclosurePanel wrapper in index.js.
  *
  * - Renders EXECUTIVE / CTO / ANALYST selector buttons
  * - On selection: calls ?persona=P&query=GQ-XXX
@@ -11,9 +13,10 @@
  * - Updates perspective only
  *
  * Rules:
- *   R1  persona calls same query as currently active
+ *   R1  persona calls same query as currently active queryId prop
  *   R2  no new computation — display only
  *   R3  ENL section keyed to current queryId prop
+ *   R4  no panel-level wrapper here — DisclosurePanel provides it
  */
 
 import { useState, useEffect } from 'react'
@@ -72,15 +75,8 @@ export default function PersonaPanel({ queryId }) {
 
   if (!queryId) return null
 
-  const activePersonaMeta = PERSONAS.find(p => p.id === selectedPersona)
-
   return (
-    <div className="panel persona-panel" data-demo-section="persona">
-
-      <div className="panel-title">
-        Persona Lens
-        <span className="panel-title-sub">— select audience perspective</span>
-      </div>
+    <div className="persona-panel-body">
 
       {/* Selector buttons */}
       <div className="persona-selector">
@@ -89,6 +85,7 @@ export default function PersonaPanel({ queryId }) {
             key={p.id}
             className={`persona-btn${selectedPersona === p.id ? ' persona-btn-active' : ''}`}
             onClick={() => setSelectedPersona(p.id)}
+            type="button"
           >
             <span className="persona-btn-label">{p.label}</span>
             <span className="persona-btn-question">{p.question}</span>
@@ -96,9 +93,9 @@ export default function PersonaPanel({ queryId }) {
         ))}
       </div>
 
-      {/* ENL output section */}
+      {/* ENL output — only after persona selected */}
       {selectedPersona && (
-        <div className="enl-output" data-demo-section="enl">
+        <div className="enl-output">
 
           {loading && (
             <div className="loading-state">
@@ -139,10 +136,7 @@ export default function PersonaPanel({ queryId }) {
                       <div key={sig.signal_id} className="enl-signal-row">
                         <div className="enl-signal-header">
                           <span className="enl-signal-id">{sig.signal_id}</span>
-                          <span
-                            className="enl-signal-state"
-                            style={{ color: stateMeta.color }}
-                          >
+                          <span className="enl-signal-state" style={{ color: stateMeta.color }}>
                             {stateMeta.label}
                           </span>
                           <span className="enl-signal-relevance">{sig.relevance}</span>

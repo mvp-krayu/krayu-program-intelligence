@@ -2009,3 +2009,131 @@ a.topo-chip:hover {
   margin-top: 0.75rem;
   font-family: monospace;
 }
+
+/* =========================================================
+   51.4 — DisclosurePanel + panel system
+   ========================================================= */
+
+.dp {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  background: var(--bg-panel);
+  overflow: hidden;
+}
+
+.dp-open {
+  border-color: var(--border-glow);
+}
+
+.dp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.875rem 1.25rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  gap: 0.75rem;
+}
+
+.dp-header:hover {
+  background: rgba(74, 158, 255, 0.04);
+}
+
+.dp-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1;
+}
+
+.dp-header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.dp-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+
+.dp-open .dp-title {
+  color: var(--accent);
+}
+
+.dp-subtitle {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+.dp-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  background: var(--accent-faint);
+  border: 1px solid var(--accent-dim);
+  color: var(--accent);
+  padding: 0.1rem 0.45rem;
+  border-radius: 10px;
+}
+
+.dp-chevron {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+}
+
+.dp-body {
+  padding: 0 1.25rem 1.25rem;
+  border-top: 1px solid var(--border-dim);
+}
+
+/* =========================================================
+   51.4 — Demo bar: stage dots (replaces step pips)
+   ========================================================= */
+
+.demo-stages-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.demo-stage-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.demo-stage-dot-future {
+  background: var(--border);
+}
+
+.demo-stage-dot-done {
+  background: var(--accent-dim);
+}
+
+.demo-stage-dot-active {
+  background: var(--accent);
+  box-shadow: 0 0 6px rgba(74, 158, 255, 0.6);
+}
+
+.demo-stage-current-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-left: 0.4rem;
+}
+
+/* PersonaPanel body (no outer wrapper — DisclosurePanel provides it) */
+.persona-panel-body {
+  padding-top: 0.25rem;
+}

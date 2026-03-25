@@ -1,49 +1,62 @@
 /**
  * pages/index.js
- * PIOS-42.23-RUN01-CONTRACT-v1
+ * PIOS-51.4-RUN01-CONTRACT-v1
  *
- * ExecLens Demo Surface — main page.
- * Topology rewired to governed WOW chain: 42.22 → 51.1 → 51.1R → 42.23
+ * ExecLens Demo Surface — panel-orchestrated progressive disclosure.
+ * Supersedes: PIOS-51.3 (step-driven navigation)
  *
- * All content sourced from /api/execlens → adapter → governed artifacts.
- * No synthetic data. No hardcoded query content.
+ * Panel system:
+ *   SituationPanel  — topology + gauges (entry: open)
+ *   SignalPanel     — intelligence signals ("Why is this critical?")
+ *   PersonaPanel    — persona selector + ENL ("What does this mean for you?")
+ *   ENLPanel        — evidence + navigation ("Show evidence")
+ *   NarrativePanel  — executive narrative ("So what?")
+ *
+ * Rules:
+ *   R1  max 2 panels open simultaneously
+ *   R2  no new API calls beyond what 42.29 established
+ *   R3  same query drives all panels
+ *   R4  demo choreography maps stage → panel open (deterministic)
+ *   R5  non-demo mode: user can toggle any panel freely (max 2)
  */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Head from 'next/head'
 
-import QuerySelector     from '../components/QuerySelector'
-import ExecutivePanel    from '../components/ExecutivePanel'
-import SignalGaugeCard   from '../components/SignalGaugeCard'
-import EvidencePanel     from '../components/EvidencePanel'
-import NavigationPanel   from '../components/NavigationPanel'
-import TemplateRenderer  from '../components/TemplateRenderer'
+import QuerySelector    from '../components/QuerySelector'
+import SignalGaugeCard  from '../components/SignalGaugeCard'
 import LandingGaugeStrip from '../components/LandingGaugeStrip'
-import TopologyPanel     from '../components/TopologyPanel'
-import DemoController    from '../components/DemoController'
-import PersonaPanel      from '../components/PersonaPanel'
+import TopologyPanel    from '../components/TopologyPanel'
+import DemoController   from '../components/DemoController'
+import DisclosurePanel  from '../components/DisclosurePanel'
+import PersonaPanel     from '../components/PersonaPanel'
+import ENLPanel         from '../components/ENLPanel'
+import NarrativePanel   from '../components/NarrativePanel'
 
-// Pipeline nodes rendered in the hero strip
-const PIPELINE_NODES = ['QUERY', 'SIGNAL', 'EVIDENCE', 'NAVIGATION', 'OUTPUT']
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
 
-const TOTAL_DEMO_STEPS = 9
+const TOTAL_STAGES = 5
 
-function PipelineStrip() {
-  return (
-    <div className="pipeline-strip">
-      {PIPELINE_NODES.map((node, i) => (
-        <span key={node} className="pipeline-segment">
-          <span className="pipeline-node">{node}</span>
-          {i < PIPELINE_NODES.length - 1 && (
-            <span className="pipeline-arrow">→</span>
-          )}
-        </span>
-      ))}
-    </div>
-  )
+// Stage → panel to open
+const STAGE_PANEL = {
+  1: 'situation',
+  2: 'signals',
+  3: 'persona',
+  4: 'evidence',
+  5: 'narrative',
 }
 
-const CONF_COLORS = { STRONG: 'var(--strong)', MODERATE: 'var(--moderate)', WEAK: 'var(--weak)' }
+const CONF_COLORS = {
+  STRONG:   'var(--strong)',
+  MODERATE: 'var(--moderate)',
+  WEAK:     'var(--weak)',
+}
+
+// ---------------------------------------------------------------------------
+// ActiveQueryBar
+// ---------------------------------------------------------------------------
 
 function ActiveQueryBar({ data }) {
   const confColor = CONF_COLORS[data.aggregate_confidence] || 'var(--text-dim)'
@@ -64,17 +77,46 @@ function ActiveQueryBar({ data }) {
   )
 }
 
+// ---------------------------------------------------------------------------
+// Home
+// ---------------------------------------------------------------------------
+
 export default function Home() {
   const [selectedQuery, setSelectedQuery] = useState(null)
   const [queryData,     setQueryData]     = useState(null)
   const [loading,       setLoading]       = useState(false)
   const [error,         setError]         = useState(null)
 
-  // ── Demo choreography state (42.8) ──
-  const [demoActive, setDemoActive] = useState(false)
-  const [demoStep,   setDemoStep]   = useState(0)
+  // Panel open state — array, max 2 [R1]
+  const [openPanels, setOpenPanels] = useState(['situation'])
 
-  // Query fetch
+  // Demo choreography state
+  const [demoActive, setDemoActive] = useState(false)
+  const [demoStage,  setDemoStage]  = useState(0)
+
+  // ── Panel helpers ──
+
+  const openPanel = useCallback((panelId) => {
+    setOpenPanels(prev => {
+      if (prev.includes(panelId)) return prev
+      const next = [...prev, panelId]
+      // max 2: drop oldest if over limit [R1]
+      return next.length > 2 ? next.slice(next.length - 2) : next
+    })
+  }, [])
+
+  const togglePanel = useCallback((panelId) => {
+    setOpenPanels(prev => {
+      if (prev.includes(panelId)) {
+        return prev.filter(id => id !== panelId)
+      }
+      const next = [...prev, panelId]
+      return next.length > 2 ? next.slice(next.length - 2) : next
+    })
+  }, [])
+
+  // ── Query fetch [R2: same API calls as 42.29] ──
+
   useEffect(() => {
     if (!selectedQuery) {
       setQueryData(null)
@@ -101,31 +143,44 @@ export default function Home() {
       })
   }, [selectedQuery])
 
-  // Demo step 2 (51.3): auto-select GQ-003 via normal query path
+  // ── Demo stage → panel mapping [R4] ──
+
   useEffect(() => {
-    if (demoActive && demoStep === 2) {
+    if (!demoActive || !demoStage) return
+
+    // Stage 1: auto-select GQ-003 so data loads during Situation reveal
+    if (demoStage === 1) {
       setSelectedQuery('GQ-003')
     }
-  }, [demoActive, demoStep])
 
-  // Demo control handlers
+    const panelId = STAGE_PANEL[demoStage]
+    if (panelId) {
+      openPanel(panelId)
+    }
+  }, [demoActive, demoStage, openPanel])
+
+  // ── Demo control handlers ──
+
   const handleStartDemo = () => {
+    setOpenPanels(['situation'])
     setDemoActive(true)
-    setDemoStep(1)
+    setDemoStage(1)
   }
 
   const handleDemoNext = () => {
-    if (demoStep >= TOTAL_DEMO_STEPS) {
+    if (demoStage >= TOTAL_STAGES) {
       handleDemoExit()
     } else {
-      setDemoStep(prev => prev + 1)
+      setDemoStage(prev => prev + 1)
     }
   }
 
   const handleDemoExit = () => {
     setDemoActive(false)
-    setDemoStep(0)
+    setDemoStage(0)
   }
+
+  // ── Render ──
 
   return (
     <>
@@ -143,35 +198,21 @@ export default function Home() {
           <p className="hero-subtitle">
             Evidence-first system for program diagnosis, structural risk, and execution visibility
           </p>
-          <PipelineStrip />
           <div className="hero-meta">
-            PIOS-42.23-RUN01-CONTRACT-v1 · run_02_governed
-            &ensp;·&ensp;
-            42.22 → 51.1 → 51.1R → 42.23
+            PIOS-51.4-RUN01-CONTRACT-v1 · run_02_governed
             &ensp;·&ensp;
             No inference. No synthetic data.
           </div>
 
-          {/* ── Demo activation button ── */}
           {!demoActive && (
-            <button className="demo-start-btn" onClick={handleStartDemo}>
+            <button className="demo-start-btn" onClick={handleStartDemo} type="button">
               Start ExecLens Demo
             </button>
           )}
         </header>
 
-        {/* ── Landing gauge strip — structural overview before query selection ── */}
-        <div data-demo-section="gauges">
-          <LandingGaugeStrip />
-        </div>
-
-        {/* ── Structural topology panel — beneath gauges, above query selector ── */}
-        <div data-demo-section="topology">
-          <TopologyPanel selectedQuery={selectedQuery} />
-        </div>
-
-        {/* ── Query selector ── */}
-        <div className="query-zone" data-demo-section="query">
+        {/* ── Query selector — always visible ── */}
+        <div className="query-zone">
           <QuerySelector selectedQuery={selectedQuery} onSelect={setSelectedQuery} />
 
           {queryData && !loading && <ActiveQueryBar data={queryData} />}
@@ -195,61 +236,94 @@ export default function Home() {
           )}
         </div>
 
-        {/* ── Intelligence output ── */}
-        {queryData && !loading && (
-          <div className="intelligence-output">
-
-            {/* 1. Query identity panel */}
-            <ExecutivePanel data={queryData} />
-
-            {/* 2. Intelligence response — primary executive content */}
-            {queryData.template_section && (
-              <TemplateRenderer
-                templateSection={queryData.template_section}
-                navigation={queryData.navigation}
-                queryId={queryData.query_id}
-              />
-            )}
-
-            {/* 3. Bound signals — supporting detail */}
-            {queryData.signals && queryData.signals.length > 0 && (
-              <div className="panel" data-demo-section="signals">
-                <div className="panel-title">
-                  Intelligence Signals
-                  <span className="panel-title-count">{queryData.signals.length} bound</span>
-                </div>
-                <div className="signal-grid">
-                  {queryData.signals.map(sig => (
-                    <SignalGaugeCard key={sig.signal_id} signal={sig} />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* 4. Evidence chains — technical detail */}
-            <div data-demo-section="evidence">
-              <EvidencePanel signals={queryData.signals} />
-            </div>
-
-            {/* 5. Navigation vault references */}
-            <div data-demo-section="navigation">
-              <NavigationPanel navigation={queryData.navigation} />
-            </div>
-
+        {/* ── Panel: Situation — topology + structural baseline ── */}
+        <DisclosurePanel
+          id="situation"
+          title="Situation"
+          subtitle="Structural baseline — architecture and projection emphasis"
+          expanded={openPanels.includes('situation')}
+          onToggle={() => togglePanel('situation')}
+        >
+          <div data-demo-section="gauges">
+            <LandingGaugeStrip />
           </div>
-        )}
+          <div data-demo-section="topology">
+            <TopologyPanel selectedQuery={selectedQuery} />
+          </div>
+        </DisclosurePanel>
 
-        {/* ── Persona lens + ENL display — tied to current query ── */}
-        {selectedQuery && (
+        {/* ── Panel: Signals — intelligence signals ── */}
+        <DisclosurePanel
+          id="signals"
+          title="Why is this critical?"
+          subtitle={queryData ? `${queryData.signals?.length || 0} intelligence signals bound` : 'Select a query to load signals'}
+          badge={queryData?.signals?.length ? String(queryData.signals.length) : null}
+          expanded={openPanels.includes('signals')}
+          onToggle={() => togglePanel('signals')}
+        >
+          {queryData && queryData.signals && queryData.signals.length > 0 ? (
+            <div className="signal-grid" data-demo-section="signals">
+              {queryData.signals.map(sig => (
+                <SignalGaugeCard key={sig.signal_id} signal={sig} />
+              ))}
+            </div>
+          ) : (
+            <div className="no-query-state">
+              {selectedQuery && loading ? 'Loading signals…' : 'Select a query to load signals.'}
+            </div>
+          )}
+        </DisclosurePanel>
+
+        {/* ── Panel: Persona — persona selector + ENL lens ── */}
+        <DisclosurePanel
+          id="persona"
+          title="What does this mean for you?"
+          subtitle="Select audience perspective — Executive, CTO, or Analyst"
+          expanded={openPanels.includes('persona')}
+          onToggle={() => togglePanel('persona')}
+        >
           <PersonaPanel queryId={selectedQuery} />
-        )}
+        </DisclosurePanel>
+
+        {/* ── Panel: Evidence — evidence chain + traceability ── */}
+        <DisclosurePanel
+          id="evidence"
+          title="Show evidence"
+          subtitle="Evidence chain and vault traceability"
+          expanded={openPanels.includes('evidence')}
+          onToggle={() => togglePanel('evidence')}
+        >
+          {queryData ? (
+            <ENLPanel
+              signals={queryData.signals}
+              navigation={queryData.navigation}
+            />
+          ) : (
+            <div className="no-query-state">Select a query to load evidence.</div>
+          )}
+        </DisclosurePanel>
+
+        {/* ── Panel: Narrative — executive summary ── */}
+        <DisclosurePanel
+          id="narrative"
+          title="So what?"
+          subtitle="Executive narrative — evidence-grounded"
+          expanded={openPanels.includes('narrative')}
+          onToggle={() => togglePanel('narrative')}
+        >
+          {queryData ? (
+            <NarrativePanel queryData={queryData} />
+          ) : (
+            <div className="no-query-state">Select a query to load narrative.</div>
+          )}
+        </DisclosurePanel>
 
       </div>
 
-      {/* ── Demo choreography bar — rendered outside page-root for fixed positioning ── */}
+      {/* ── Demo bar — rendered outside page-root for fixed positioning ── */}
       <DemoController
         active={demoActive}
-        step={demoStep}
+        stage={demoStage}
         onNext={handleDemoNext}
         onExit={handleDemoExit}
       />

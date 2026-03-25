@@ -1,0 +1,198 @@
+{
+  "contract": "PIOS-51.4-RUN01-CONTRACT-v1",
+  "base": "http://localhost:3000/api/execlens",
+  "app_online": true,
+  "total": 31,
+  "pass_count": 31,
+  "fail_count": 0,
+  "skip_count": 0,
+  "status": "PASS",
+  "results": [
+    {
+      "test": "route_topology",
+      "ok": true,
+      "detail": "status=200",
+      "group": "api_regression"
+    },
+    {
+      "test": "route_topology_highlight",
+      "ok": true,
+      "detail": "status=200",
+      "group": "api_regression"
+    },
+    {
+      "test": "route_overview",
+      "ok": true,
+      "detail": "status=200",
+      "group": "api_regression"
+    },
+    {
+      "test": "route_query_GQ003",
+      "ok": true,
+      "detail": "status=200",
+      "group": "api_regression"
+    },
+    {
+      "test": "route_list",
+      "ok": true,
+      "detail": "status=200",
+      "group": "api_regression"
+    },
+    {
+      "test": "route_enl_GQ003",
+      "ok": true,
+      "detail": "status=200",
+      "group": "api_regression"
+    },
+    {
+      "test": "route_persona_executive",
+      "ok": true,
+      "detail": "status=200",
+      "group": "api_regression"
+    },
+    {
+      "test": "route_persona_cto",
+      "ok": true,
+      "detail": "status=200",
+      "group": "api_regression"
+    },
+    {
+      "test": "route_persona_analyst",
+      "ok": true,
+      "detail": "status=200",
+      "group": "api_regression"
+    },
+    {
+      "test": "route_status",
+      "ok": true,
+      "detail": "status=200",
+      "group": "api_regression"
+    },
+    {
+      "test": "red_node_present",
+      "ok": true,
+      "detail": "high_emphasis_nodes=['C_30_Domain_Event_Bus']",
+      "group": "api_regression"
+    },
+    {
+      "test": "topology_4D5C9N",
+      "ok": true,
+      "detail": "domain_count=4 capability_count=5 component_count=9",
+      "group": "api_regression"
+    },
+    {
+      "test": "democontroller_has_stages",
+      "ok": true,
+      "detail": "DEMO_STAGES present",
+      "group": "source_structure"
+    },
+    {
+      "test": "democontroller_no_step_pips",
+      "ok": true,
+      "detail": "demo-pip absent",
+      "group": "source_structure"
+    },
+    {
+      "test": "democontroller_no_scroll",
+      "ok": true,
+      "detail": "scrollIntoView absent",
+      "group": "source_structure"
+    },
+    {
+      "test": "index_imports_disclosurepanel",
+      "ok": true,
+      "detail": "DisclosurePanel imported",
+      "group": "source_structure"
+    },
+    {
+      "test": "index_has_openpanels",
+      "ok": true,
+      "detail": "openPanels state present",
+      "group": "source_structure"
+    },
+    {
+      "test": "index_no_intelligence_output",
+      "ok": true,
+      "detail": "flat intelligence-output div removed",
+      "group": "source_structure"
+    },
+    {
+      "test": "index_has_all_5_panels",
+      "ok": true,
+      "detail": "all 5 panel IDs present",
+      "group": "source_structure"
+    },
+    {
+      "test": "personapanel_no_outer_panel",
+      "ok": true,
+      "detail": "outer panel wrapper removed",
+      "group": "source_structure"
+    },
+    {
+      "test": "personapanel_has_persona_body",
+      "ok": true,
+      "detail": "persona-panel-body class present",
+      "group": "source_structure"
+    },
+    {
+      "test": "component_exists_disclosurepanel",
+      "ok": true,
+      "detail": "DisclosurePanel.js present",
+      "group": "source_structure"
+    },
+    {
+      "test": "component_exists_enlpanel",
+      "ok": true,
+      "detail": "ENLPanel.js present",
+      "group": "source_structure"
+    },
+    {
+      "test": "component_exists_narrativepanel",
+      "ok": true,
+      "detail": "NarrativePanel.js present",
+      "group": "source_structure"
+    },
+    {
+      "test": "api_route_present_query",
+      "ok": true,
+      "detail": "query present in execlens.js",
+      "group": "api_structure"
+    },
+    {
+      "test": "api_route_present_list",
+      "ok": true,
+      "detail": "list present in execlens.js",
+      "group": "api_structure"
+    },
+    {
+      "test": "api_route_present_overview",
+      "ok": true,
+      "detail": "overview present in execlens.js",
+      "group": "api_structure"
+    },
+    {
+      "test": "api_route_present_topology",
+      "ok": true,
+      "detail": "topology present in execlens.js",
+      "group": "api_structure"
+    },
+    {
+      "test": "api_route_present_enl",
+      "ok": true,
+      "detail": "enl present in execlens.js",
+      "group": "api_structure"
+    },
+    {
+      "test": "api_route_present_persona",
+      "ok": true,
+      "detail": "persona present in execlens.js",
+      "group": "api_structure"
+    },
+    {
+      "test": "api_route_present_status",
+      "ok": true,
+      "detail": "status present in execlens.js",
+      "group": "api_structure"
+    }
+  ]
+}
