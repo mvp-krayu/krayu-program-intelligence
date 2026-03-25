@@ -1,0 +1,333 @@
+{
+  "stream": "51.5",
+  "timestamp": "2026-03-25T17:14:07.227484Z",
+  "total": 51,
+  "passed": 51,
+  "failed": 0,
+  "groups": {
+    "source_structure": {
+      "pass": 29,
+      "fail": 0
+    },
+    "api_regression": {
+      "pass": 12,
+      "fail": 0
+    },
+    "enl_traversal": {
+      "pass": 5,
+      "fail": 0
+    },
+    "persona_lift": {
+      "pass": 5,
+      "fail": 0
+    }
+  },
+  "results": [
+    {
+      "name": "ENLPanel.js has PIOS-51.5 contract header",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js imports NavigationPanel",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js exports ENLPanel function",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js accepts persona prop",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js accepts personaData prop",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js defines ENL_TRAVERSAL static rules",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js defines EXECUTIVE traversal",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js defines CTO traversal",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js defines ANALYST traversal",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js applyTraversalOrder no computation",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js TraversalPath component",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js TraversalEvidenceEntry component",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js traversal-entry-point marker",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel.js has PIOS-51.5 contract header",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel.js onPersonaChange prop",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel.js onPersonaDataChange prop",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel.js calls onPersonaChange on reset",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel.js calls onPersonaDataChange success",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "index.js has PIOS-51.5 contract header",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "index.js enlPersona state",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "index.js enlPersonaData state",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "index.js passes persona to ENLPanel",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "index.js passes personaData to ENLPanel",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "index.js passes onPersonaChange to PersonaPanel",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "index.js passes onPersonaDataChange to PersonaPanel",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css has PIOS-51.5 block",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css traversal-evidence-entry",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css enl-traversal-header",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css traversal-entry-point",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "route: query GQ-001",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: query GQ-002",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: query GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: topology",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: status",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: enl GQ-001",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: enl GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona EXECUTIVE GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona CTO GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona ANALYST GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona EXECUTIVE GQ-001",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona CTO GQ-002",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "ENL_TRAVERSAL has exactly 3 personas",
+      "group": "enl_traversal",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "applyTraversalOrder returns input unchanged when no personaData",
+      "group": "enl_traversal",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "applyTraversalOrder uses enl_signals order (no sort)",
+      "group": "enl_traversal",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel renders NavigationPanel last",
+      "group": "enl_traversal",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "TraversalPath absent when no persona",
+      "group": "enl_traversal",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel resets persona on queryId change",
+      "group": "persona_lift",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel resets personaData on queryId change",
+      "group": "persona_lift",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel clears personaData at fetch start",
+      "group": "persona_lift",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel calls onPersonaChange on button click",
+      "group": "persona_lift",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel clears both on fetch error",
+      "group": "persona_lift",
+      "status": "PASS",
+      "detail": ""
+    }
+  ]
+}

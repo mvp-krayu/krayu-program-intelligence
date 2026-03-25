@@ -1,6 +1,6 @@
 /**
  * pages/index.js
- * PIOS-51.4-RUN01-CONTRACT-v1
+ * PIOS-51.5-RUN01-CONTRACT-v1
  *
  * ExecLens Demo Surface — panel-orchestrated progressive disclosure.
  * Supersedes: PIOS-51.3 (step-driven navigation)
@@ -90,6 +90,10 @@ export default function Home() {
   // Panel open state — array, max 2 [R1]
   const [openPanels, setOpenPanels] = useState(['situation'])
 
+  // ENL persona lift state [51.5]
+  const [enlPersona,     setEnlPersona]     = useState(null)
+  const [enlPersonaData, setEnlPersonaData] = useState(null)
+
   // Demo choreography state
   const [demoActive, setDemoActive] = useState(false)
   const [demoStage,  setDemoStage]  = useState(0)
@@ -120,6 +124,8 @@ export default function Home() {
   useEffect(() => {
     if (!selectedQuery) {
       setQueryData(null)
+    setEnlPersona(null)
+    setEnlPersonaData(null)
       setError(null)
       return
     }
@@ -127,6 +133,8 @@ export default function Home() {
     setLoading(true)
     setError(null)
     setQueryData(null)
+    setEnlPersona(null)
+    setEnlPersonaData(null)
 
     fetch(`/api/execlens?query=${encodeURIComponent(selectedQuery)}`)
       .then(r => {
@@ -199,7 +207,7 @@ export default function Home() {
             Evidence-first system for program diagnosis, structural risk, and execution visibility
           </p>
           <div className="hero-meta">
-            PIOS-51.4-RUN01-CONTRACT-v1 · run_02_governed
+            PIOS-51.5-RUN01-CONTRACT-v1 · run_02_governed
             &ensp;·&ensp;
             No inference. No synthetic data.
           </div>
@@ -282,7 +290,7 @@ export default function Home() {
           expanded={openPanels.includes('persona')}
           onToggle={() => togglePanel('persona')}
         >
-          <PersonaPanel queryId={selectedQuery} />
+          <PersonaPanel queryId={selectedQuery} onPersonaChange={setEnlPersona} onPersonaDataChange={setEnlPersonaData} />
         </DisclosurePanel>
 
         {/* ── Panel: Evidence — evidence chain + traceability ── */}
@@ -296,6 +304,8 @@ export default function Home() {
           {queryData ? (
             <ENLPanel
               signals={queryData.signals}
+              persona={enlPersona}
+              personaData={enlPersonaData}
               navigation={queryData.navigation}
             />
           ) : (

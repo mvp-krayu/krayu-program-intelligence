@@ -1,0 +1,64 @@
+{
+  "stream": "51.5",
+  "date": "2026-03-25",
+  "code_files_modified": [
+    {
+      "path": "app/execlens-demo/components/ENLPanel.js",
+      "change": "Full rewrite: persona-shaped traversal layer — ENL_TRAVERSAL static rules, applyTraversalOrder, TraversalPath, TraversalEvidenceEntry, persona+personaData props"
+    },
+    {
+      "path": "app/execlens-demo/components/PersonaPanel.js",
+      "change": "Added onPersonaChange + onPersonaDataChange callback props; persona state lifted to parent"
+    },
+    {
+      "path": "app/execlens-demo/pages/index.js",
+      "change": "Added enlPersona + enlPersonaData state; wired persona callbacks; pass persona/personaData to ENLPanel; reset on query change"
+    },
+    {
+      "path": "app/execlens-demo/styles/globals.css",
+      "change": "Appended PIOS-51.5 traversal CSS block: enl-traversal-header, traversal-evidence-entry, traversal-entry-point, etc."
+    }
+  ],
+  "files_created": [
+    {
+      "path": "scripts/pios/51.5/validate_enl_materialization.py",
+      "purpose": "51-test validator: source_structure + api_regression + enl_traversal + persona_lift",
+      "category": "validation"
+    },
+    {
+      "path": "docs/pios/51.5/validation_log.json",
+      "purpose": "Live validation run — 51/51 PASS",
+      "category": "evidence"
+    },
+    {
+      "path": "docs/pios/51.5/enl_traversal_definition.md",
+      "purpose": "Traversal sequence authority — static rules per persona",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/51.5/persona_state_lift.md",
+      "purpose": "Persona state lift — data flow from PersonaPanel to ENLPanel",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/51.5/execution_report.md",
+      "purpose": "Execution summary — changes, validation, regression",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/51.5/file_changes.json",
+      "purpose": "This file",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/51.5/replay_record.md",
+      "purpose": "Commands run and rerun order",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/51.5/CLOSURE.md",
+      "purpose": "Stream closure",
+      "category": "governance"
+    }
+  ]
+}

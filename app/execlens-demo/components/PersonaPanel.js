@@ -1,7 +1,7 @@
 /**
  * PersonaPanel.js
- * PIOS-51.4-RUN01-CONTRACT-v1
- * (supersedes PIOS-42.29-RUN01-CONTRACT-v1)
+ * PIOS-51.5-RUN01-CONTRACT-v1
+ * (supersedes PIOS-51.4-RUN01-CONTRACT-v1)
  *
  * Persona selector + ENL display — content only.
  * Panel header and collapse are provided by DisclosurePanel wrapper in index.js.
@@ -9,6 +9,7 @@
  * - Renders EXECUTIVE / CTO / ANALYST selector buttons
  * - On selection: calls ?persona=P&query=GQ-XXX
  * - Displays ENL output (projection-enriched signals) for selected persona
+ * - Lifts persona selection + data to parent via callbacks [51.5]
  * - Reuses same query — no separate demo, no reload
  * - Updates perspective only
  *
@@ -17,6 +18,7 @@
  *   R2  no new computation — display only
  *   R3  ENL section keyed to current queryId prop
  *   R4  no panel-level wrapper here — DisclosurePanel provides it
+ *   R5  onPersonaChange + onPersonaDataChange lifted to parent [51.5]
  */
 
 import { useState, useEffect } from 'react'
@@ -35,7 +37,7 @@ const SIGNAL_STATE_LABEL = {
   unknown:   { label: 'Unknown',   color: 'var(--text-dim)' },
 }
 
-export default function PersonaPanel({ queryId }) {
+export default function PersonaPanel({ queryId, onPersonaChange, onPersonaDataChange }) {
   const [selectedPersona, setSelectedPersona] = useState(null)
   const [personaData,     setPersonaData]     = useState(null)
   const [loading,         setLoading]         = useState(false)
@@ -46,6 +48,8 @@ export default function PersonaPanel({ queryId }) {
     setSelectedPersona(null)
     setPersonaData(null)
     setError(null)
+    onPersonaChange?.(null)
+    onPersonaDataChange?.(null)
   }, [queryId])
 
   // Fetch persona view [R1]
@@ -55,6 +59,7 @@ export default function PersonaPanel({ queryId }) {
     setLoading(true)
     setError(null)
     setPersonaData(null)
+    onPersonaDataChange?.(null)
 
     fetch(
       `/api/execlens?persona=${encodeURIComponent(selectedPersona)}&query=${encodeURIComponent(queryId)}`
@@ -66,12 +71,20 @@ export default function PersonaPanel({ queryId }) {
       .then(data => {
         setPersonaData(data)
         setLoading(false)
+        onPersonaDataChange?.(data)
       })
       .catch(err => {
         setError(err.message)
         setLoading(false)
+        onPersonaChange?.(null)
+        onPersonaDataChange?.(null)
       })
   }, [selectedPersona, queryId])
+
+  const handlePersonaSelect = (personaId) => {
+    setSelectedPersona(personaId)
+    onPersonaChange?.(personaId)
+  }
 
   if (!queryId) return null
 
@@ -84,7 +97,7 @@ export default function PersonaPanel({ queryId }) {
           <button
             key={p.id}
             className={`persona-btn${selectedPersona === p.id ? ' persona-btn-active' : ''}`}
-            onClick={() => setSelectedPersona(p.id)}
+            onClick={() => handlePersonaSelect(p.id)}
             type="button"
           >
             <span className="persona-btn-label">{p.label}</span>
