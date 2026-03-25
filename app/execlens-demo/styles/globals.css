@@ -1814,3 +1814,14 @@ a.topo-chip:hover {
 .topo-chip-highlighted {
   opacity: 1 !important;
 }
+
+/* =========================================================
+   42.27 — projection-driven red node activation
+   emphasis:high → RED; read from 44.2 projection attachment
+   ========================================================= */
+
+.topo-emphasis-red {
+  border-color: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.12) !important;
+  color: #fca5a5 !important;
+}

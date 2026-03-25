@@ -57,17 +57,19 @@ function ExposureNodeRow({ record }) {
 // ---------------------------------------------------------------------------
 
 function EntityChip({ entity, type }) {
-  const highlighted = entity.highlighted === true
-  const resolved    = entity.resolved
-  const vaultLink   = (resolved && VAULT_NAME && entity.vault_path)
+  const highlighted  = entity.highlighted === true
+  const emphasisHigh = entity.emphasis === 'high'
+  const resolved     = entity.resolved
+  const vaultLink    = (resolved && VAULT_NAME && entity.vault_path)
     ? buildObsidianLink(VAULT_NAME, `docs/pios/41.2/pie_vault/${entity.vault_path}.md`)
     : null
 
   const chipClass = [
     'topo-chip',
     `topo-chip-${type}`,
-    highlighted ? 'topo-chip-highlighted' : '',
-    !resolved   ? 'topo-chip-unresolved'  : '',
+    highlighted  ? 'topo-chip-highlighted' : '',
+    emphasisHigh ? 'topo-emphasis-red'     : '',
+    !resolved    ? 'topo-chip-unresolved'  : '',
   ].filter(Boolean).join(' ')
 
   if (vaultLink) {
@@ -93,16 +95,18 @@ function EntityChip({ entity, type }) {
 // ---------------------------------------------------------------------------
 
 function CapabilityGroup({ cap }) {
-  const highlighted = cap.highlighted === true
-  const resolved    = cap.resolved
-  const vaultLink   = (resolved && VAULT_NAME && cap.vault_path)
+  const highlighted  = cap.highlighted === true
+  const emphasisHigh = cap.emphasis === 'high'
+  const resolved     = cap.resolved
+  const vaultLink    = (resolved && VAULT_NAME && cap.vault_path)
     ? buildObsidianLink(VAULT_NAME, `docs/pios/41.2/pie_vault/${cap.vault_path}.md`)
     : null
 
   const capClass = [
     'topo-cap',
-    highlighted ? 'topo-cap-highlighted' : '',
-    !resolved   ? 'topo-cap-unresolved'  : '',
+    highlighted  ? 'topo-cap-highlighted' : '',
+    emphasisHigh ? 'topo-emphasis-red'    : '',
+    !resolved    ? 'topo-cap-unresolved'  : '',
   ].filter(Boolean).join(' ')
 
   const capLabel = (
@@ -139,15 +143,17 @@ function CapabilityGroup({ cap }) {
 // ---------------------------------------------------------------------------
 
 function DomainBlock({ domain }) {
-  const highlighted = domain.highlighted === true
-  const resolved    = domain.resolved
-  const vaultLink   = (resolved && VAULT_NAME && domain.vault_path)
+  const highlighted  = domain.highlighted === true
+  const emphasisHigh = domain.emphasis === 'high'
+  const resolved     = domain.resolved
+  const vaultLink    = (resolved && VAULT_NAME && domain.vault_path)
     ? buildObsidianLink(VAULT_NAME, `docs/pios/41.2/pie_vault/${domain.vault_path}.md`)
     : null
 
   const domainClass = [
     'topo-domain',
-    highlighted ? 'topo-domain-highlighted' : '',
+    highlighted  ? 'topo-domain-highlighted' : '',
+    emphasisHigh ? 'topo-emphasis-red'        : '',
   ].filter(Boolean).join(' ')
 
   const domainLabel = (

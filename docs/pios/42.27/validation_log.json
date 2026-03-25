@@ -1,0 +1,29 @@
+{
+  "contract": "42.27",
+  "base": "http://localhost:3000/api/execlens",
+  "total": 3,
+  "pass_count": 3,
+  "fail_count": 0,
+  "status": "PASS",
+  "results": [
+    {
+      "test": "topology_200",
+      "url": "http://localhost:3000/api/execlens?topology=true",
+      "status_code": 200,
+      "ok": true,
+      "detail": "topology array present"
+    },
+    {
+      "test": "emphasis_fields_present_and_valid",
+      "ok": true,
+      "issues": [],
+      "detail": "all nodes carry valid emphasis"
+    },
+    {
+      "test": "emphasis_matches_baseline",
+      "ok": true,
+      "mismatches": [],
+      "detail": "all emphasis values match 44.2 baseline"
+    }
+  ]
+}
