@@ -21,11 +21,12 @@ import TemplateRenderer  from '../components/TemplateRenderer'
 import LandingGaugeStrip from '../components/LandingGaugeStrip'
 import TopologyPanel     from '../components/TopologyPanel'
 import DemoController    from '../components/DemoController'
+import PersonaPanel      from '../components/PersonaPanel'
 
 // Pipeline nodes rendered in the hero strip
 const PIPELINE_NODES = ['QUERY', 'SIGNAL', 'EVIDENCE', 'NAVIGATION', 'OUTPUT']
 
-const TOTAL_DEMO_STEPS = 7
+const TOTAL_DEMO_STEPS = 9
 
 function PipelineStrip() {
   return (
@@ -100,9 +101,9 @@ export default function Home() {
       })
   }, [selectedQuery])
 
-  // Demo step 3: auto-select GQ-003 via normal query path (R7)
+  // Demo step 2 (51.3): auto-select GQ-003 via normal query path
   useEffect(() => {
-    if (demoActive && demoStep === 3) {
+    if (demoActive && demoStep === 2) {
       setSelectedQuery('GQ-003')
     }
   }, [demoActive, demoStep])
@@ -236,6 +237,11 @@ export default function Home() {
             </div>
 
           </div>
+        )}
+
+        {/* ── Persona lens + ENL display — tied to current query ── */}
+        {selectedQuery && (
+          <PersonaPanel queryId={selectedQuery} />
         )}
 
       </div>

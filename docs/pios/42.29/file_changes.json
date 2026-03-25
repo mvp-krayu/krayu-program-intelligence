@@ -1,0 +1,102 @@
+{
+  "stream": "42.29",
+  "date": "2026-03-25",
+  "code_files_modified": [
+    {
+      "path": "app/execlens-demo/pages/api/execlens.js",
+      "change": "runScriptText → runScript for status/enl/persona routes"
+    },
+    {
+      "path": "app/execlens-demo/components/DemoController.js",
+      "change": "7-step (42.8) → 9-step (51.3); contract updated to PIOS-51.3-RUN01-CONTRACT-v1"
+    },
+    {
+      "path": "app/execlens-demo/pages/index.js",
+      "change": "Import PersonaPanel; TOTAL_DEMO_STEPS 7→9; auto-select trigger step 3→2; PersonaPanel added to layout"
+    },
+    {
+      "path": "app/execlens-demo/styles/globals.css",
+      "change": "PersonaPanel + ENL display styles appended (42.29 block)"
+    }
+  ],
+  "files_created": [
+    {
+      "path": "scripts/pios/42.15/enl_console_adapter.py",
+      "purpose": "ENL Console Adapter — projection-enriched signal view for query_id",
+      "contract": "PIOS-42.15-RUN01-CONTRACT-v1",
+      "category": "adapter"
+    },
+    {
+      "path": "scripts/pios/42.16/persona_view_map.py",
+      "purpose": "Persona View Map — maps ENL output to EXECUTIVE/CTO/ANALYST perspective",
+      "contract": "PIOS-42.16-RUN01-CONTRACT-v1",
+      "category": "adapter"
+    },
+    {
+      "path": "scripts/pios/42.13/demo_activate.py",
+      "purpose": "Demo Activation Status Adapter — returns demo surface state",
+      "contract": "PIOS-42.13-RUN01-CONTRACT-v1",
+      "category": "adapter"
+    },
+    {
+      "path": "app/execlens-demo/components/PersonaPanel.js",
+      "purpose": "Persona selector + ENL display panel; persona triggers ?persona=P&query=GQ-XXX",
+      "category": "ui"
+    },
+    {
+      "path": "scripts/pios/42.29/validate_unified_demo_complete.py",
+      "purpose": "13-test regression + completeness validator; 13/13 PASS",
+      "category": "validation"
+    },
+    {
+      "path": "docs/pios/42.29/validation_log.json",
+      "purpose": "Live validation run output — 13/13 PASS",
+      "category": "evidence"
+    },
+    {
+      "path": "docs/pios/42.29/execution_report.md",
+      "purpose": "Execution summary — routes, adapters, UI, validation, regression",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/42.29/runtime_route_extension.md",
+      "purpose": "Route extension contract — ENL/persona/status route specs",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/42.29/adapter_spec_enl.md",
+      "purpose": "42.15 adapter spec — data sources, rules, output fields",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/42.29/adapter_spec_persona.md",
+      "purpose": "42.16 adapter spec — persona mapping, signal ordering, output",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/42.29/demo_controller_9step.md",
+      "purpose": "DemoController 9-step spec — step table, target sections, notes",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/42.29/persona_panel_spec.md",
+      "purpose": "PersonaPanel component spec — props, behavior, DOM sections",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/42.29/file_changes.json",
+      "purpose": "This file — full list of files created/modified in this stream",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/42.29/replay_record.md",
+      "purpose": "Exact commands run and rerun order",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/42.29/CLOSURE.md",
+      "purpose": "Stream closure — final demo surface status",
+      "category": "governance"
+    }
+  ]
+}

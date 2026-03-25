@@ -79,7 +79,7 @@ export default function handler(req, res) {
 
   // ENL: semantic path status
   if (status === 'true') {
-    return runScriptText(ADAPTER_42_13, ['--status'], res)
+    return runScript(ADAPTER_42_13, ['--status'], res)
   }
 
   // ENL: chain reveal
@@ -88,7 +88,7 @@ export default function handler(req, res) {
     if (!sanitized) {
       return res.status(400).json({ error: 'invalid enl parameter' })
     }
-    return runScriptText(ADAPTER_42_15, ['--query', sanitized], res)
+    return runScript(ADAPTER_42_15, ['--query', sanitized], res)
   }
 
   // ENL: persona projection
@@ -106,7 +106,7 @@ export default function handler(req, res) {
       return res.status(400).json({ error: 'query parameter required for persona view' })
     }
 
-    return runScriptText(
+    return runScript(
       ADAPTER_42_16,
       ['--persona', sanitizedPersona, '--query', sanitizedQuery],
       res

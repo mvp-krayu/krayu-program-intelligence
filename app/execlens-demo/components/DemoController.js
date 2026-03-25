@@ -1,11 +1,12 @@
 /**
  * DemoController.js
- * PIOS-42.8-RUN01-CONTRACT-v1
+ * PIOS-51.3-RUN01-CONTRACT-v1
  *
  * Demo choreography layer — presentation-only.
+ * Supersedes: PIOS-42.8-RUN01-CONTRACT-v1 (7-step flow → 9-step unified flow)
  *
  * Manages:
- *   - Step sequence (7 fixed steps, deterministic, no branching)
+ *   - Step sequence (9 fixed steps, deterministic, no branching)
  *   - Scroll orchestration (smooth scroll to data-demo-section targets)
  *   - Spotlight highlight (CSS class applied/removed per step)
  *   - Step indicator (fixed bottom bar, visible in demo mode only)
@@ -17,57 +18,71 @@
  *   R6  highlight removed when advancing forward
  *   G4  if target section absent from DOM → skip scroll, continue
  *   G5  no synthetic narration, no injected text
+ *
+ * Sequence authority: docs/pios/51.3/demo_sequence.md
  */
 
 import { useEffect, useCallback } from 'react'
 
 // ---------------------------------------------------------------------------
-// Demo step definitions
+// Demo step definitions — 9-step unified flow (51.3)
 // ---------------------------------------------------------------------------
 
 export const DEMO_STEPS = [
   {
     num:    1,
-    label:  'System',
-    title:  'Live structural metrics — no query required',
-    target: 'gauges',
+    label:  'Entry',
+    title:  'ExecLens — evidence-first program intelligence, governed and deployable',
+    target: null,   // Verbal framing only — scroll to top
   },
   {
     num:    2,
-    label:  'Structure',
-    title:  'BlueEdge architecture — 4 domains from governed artifacts',
-    target: 'topology',
+    label:  'Query',
+    title:  'GQ-003 — What is the blast radius if a core platform component fails?',
+    target: 'query',
+    // Auto-select GQ-003 handled in parent (index.js) via useEffect on demoStep === 2
   },
   {
     num:    3,
-    label:  'Query',
-    title:  'GQ-003 — Blast radius if a core platform component fails',
-    target: 'query',
-    // Auto-select handled in parent (index.js) via useEffect
+    label:  'Overview',
+    title:  'Structural baseline — coordination pressure, dependency load, visibility deficit',
+    target: 'gauges',
   },
   {
     num:    4,
-    label:  'Signals',
-    title:  'Bound intelligence signals — evidence-first, no inference',
-    target: 'signals',
+    label:  'Topology',
+    title:  'BlueEdge architecture — 4 domains, 5 capabilities, 9 components from governed artifacts',
+    target: 'topology',
   },
   {
     num:    5,
-    label:  'Evidence',
-    title:  'Evidence chains — structural basis for every signal',
-    target: 'evidence',
+    label:  'Focus',
+    title:  'Query-linked highlighting — GQ-003 relevant nodes traced through evidence index',
+    target: 'topology',
   },
   {
     num:    6,
-    label:  'Navigate',
-    title:  'Vault-resolved deep links — direct access to architecture artifacts',
-    target: 'navigation',
+    label:  'Emphasis',
+    title:  'Projection-driven RED node — C_30_Domain_Event_Bus emphasis:high via 44.4C',
+    target: 'topology',
   },
   {
     num:    7,
-    label:  'Complete',
-    title:  'Program Intelligence — evidence-first, governed, deployable',
-    target: null,   // Scroll to top
+    label:  'Persona',
+    title:  'Audience lens — Exec / CTO / Analyst perspective selection',
+    target: 'persona',
+  },
+  {
+    num:    8,
+    label:  'ENL',
+    title:  'ENL lens — projection-enriched signal view for GQ-003',
+    target: 'enl',
+  },
+  {
+    num:    9,
+    label:  'Narrative',
+    title:  'Executive narrative — evidence-grounded program intelligence summary',
+    target: 'signals',
   },
 ]
 
@@ -104,7 +119,7 @@ export default function DemoController({ active, step, onNext, onExit }) {
         setTimeout(() => el.classList.add('demo-spotlight'), 100)
       }
     } else {
-      // Step 7: scroll to top, no spotlight (full-page completion state)
+      // Step 1 (Entry) and any null-target step: scroll to top, no spotlight
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }, [active, step])
