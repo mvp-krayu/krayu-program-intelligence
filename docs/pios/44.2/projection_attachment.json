@@ -444,5 +444,15 @@
     "total_count": 5
   },
   "upstream_binding_artifact": "docs/pios/43.3/validated_binding_payload.json",
-  "upstream_binding_checksum": "71c628d1ce0e4dd80800eaafe84ae3e5a922302adba9543d44f07ddad3c8aa7b"
+  "upstream_binding_checksum": "71c628d1ce0e4dd80800eaafe84ae3e5a922302adba9543d44f07ddad3c8aa7b",
+  "query_emphasis": {
+    "GQ-003": {
+      "domains": {
+        "DOMAIN-11": "high"
+      },
+      "components": {
+        "COMP-65": "high"
+      }
+    }
+  }
 }

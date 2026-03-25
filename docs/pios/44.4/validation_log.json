@@ -1,0 +1,38 @@
+{
+  "stream": "44.4",
+  "date": "2026-03-25",
+  "file": "docs/pios/44.2/projection_attachment.json",
+  "status": "PASS",
+  "checks": [
+    {
+      "check": "json_valid",
+      "result": "PASS",
+      "detail": "File parses as valid JSON"
+    },
+    {
+      "check": "no_schema_change",
+      "result": "PASS",
+      "detail": "Existing top-level keys and projections[] structure unchanged; query_emphasis added as new additive key"
+    },
+    {
+      "check": "existing_projections_unchanged",
+      "result": "PASS",
+      "detail": "All 5 projection records retain emphasis:none; no existing field modified"
+    },
+    {
+      "check": "only_gq003_affected",
+      "result": "PASS",
+      "detail": "query_emphasis contains only GQ-003; no other query blocks present"
+    },
+    {
+      "check": "values_valid",
+      "result": "PASS",
+      "detail": "DOMAIN-11:high, COMP-65:high — both in closed set {high, medium, low, none}"
+    },
+    {
+      "check": "no_derivation",
+      "result": "PASS",
+      "detail": "Values assigned from explicit contract instruction only; no computation performed"
+    }
+  ]
+}
