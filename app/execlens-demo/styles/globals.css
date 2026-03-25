@@ -1716,3 +1716,112 @@ a.topo-chip:hover {
   opacity: 0.85;
 }
 
+
+/* =========================================================
+   ENL-010 overflow hardening
+   Fixes:
+   - ENL chain panel horizontal overflow
+   - Persona panel horizontal overflow
+   - selector wrapping
+   - panel title chip wrapping
+   ========================================================= */
+
+.panel {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.panel-title {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+}
+
+.panel-title-count {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.persona-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.persona-btn {
+  flex: 0 0 auto;
+}
+
+.enl-reveal-output,
+.persona-view-output,
+.panel pre {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  box-sizing: border-box;
+}
+
+.enl-reveal-output code,
+.persona-view-output code,
+.panel pre code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Optional: keep large content visually contained on smaller widths */
+@media (max-width: 1200px) {
+  .panel {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+}
+
+/* =========================================================
+   42.8 topology parity — stronger highlight visibility
+   ========================================================= */
+
+.topo-domain-highlighted {
+  border-color: #3b82f6 !important;
+  background: rgba(59, 130, 246, 0.10) !important;
+}
+
+.topo-cap-highlighted {
+  border-color: #facc15 !important;
+  background: rgba(250, 204, 21, 0.14) !important;
+  box-shadow: inset 0 0 0 1px rgba(250, 204, 21, 0.22);
+}
+
+.topo-chip-highlighted {
+  border-color: #5eead4 !important;
+  background: rgba(94, 234, 212, 0.16) !important;
+  color: #d1fae5 !important;
+}
+
+.topo-highlight-dot {
+  background: #facc15 !important;
+  box-shadow: 0 0 8px rgba(250, 204, 21, 0.65);
+}
+
+.topo-domain-highlighted .topo-domain-name,
+.topo-cap-highlighted .topo-cap-label,
+.topo-chip-highlighted {
+  opacity: 1 !important;
+}
+
+/* =========================================================
+   42.27 — projection-driven red node activation
+   emphasis:high → RED; read from 44.2 projection attachment
+   ========================================================= */
+
+.topo-emphasis-red {
+  border-color: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.12) !important;
+  color: #fca5a5 !important;
+}
