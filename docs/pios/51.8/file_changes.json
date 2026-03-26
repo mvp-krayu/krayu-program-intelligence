@@ -1,0 +1,46 @@
+{
+  "stream": "51.8",
+  "contract": "PIOS-51.8-RUN01-CONTRACT-v1",
+  "baseline": "8edaec6",
+  "date": "2026-03-26",
+  "modified": [
+    {
+      "file": "app/execlens-demo/pages/index.js",
+      "prior_contract": "PIOS-51.7-RUN01-CONTRACT-v1",
+      "new_contract": "PIOS-51.8-RUN01-CONTRACT-v1",
+      "changes": [
+        "PIOS annotation updated to 51.8; lineage extended with 51.8",
+        "useState(['situation']) → useState(['persona']) — persona panel opens first",
+        "handleToggle added — gates togglePanel during demoActive",
+        "All panel onToggle props use handleToggle instead of togglePanel directly",
+        "PersonaPanel DisclosurePanel moved to first render position",
+        "Hero section: gate message replaced with guided-entry-steps step guide",
+        "hero-meta updated to PIOS-51.8-RUN01-CONTRACT-v1"
+      ]
+    },
+    {
+      "file": "app/execlens-demo/styles/globals.css",
+      "changes": [
+        "PIOS-51.8 block appended: .guided-entry-steps, .guided-step, .guided-step-active, .guided-step-done, .guided-step-num, .guided-step-label, .guided-step-persona"
+      ]
+    }
+  ],
+  "created": [
+    "scripts/pios/51.8/validate_51_8.py",
+    "docs/pios/51.8/guided_demo_choreography.md",
+    "docs/pios/51.8/persona_entry_contract.md",
+    "docs/pios/51.8/mode_behavior_definition.md",
+    "docs/pios/51.8/execution_report.md",
+    "docs/pios/51.8/validation_log.json",
+    "docs/pios/51.8/file_changes.json",
+    "docs/pios/51.8/CLOSURE.md"
+  ],
+  "unchanged": [
+    "app/execlens-demo/components/TraversalEngine.js",
+    "app/execlens-demo/components/DemoController.js",
+    "app/execlens-demo/components/PersonaPanel.js",
+    "app/execlens-demo/components/ENLPanel.js",
+    "app/execlens-demo/components/NarrativePanel.js",
+    "app/execlens-demo/pages/api/*"
+  ]
+}

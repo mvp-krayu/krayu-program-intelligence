@@ -1,0 +1,303 @@
+{
+  "stream": "51.8",
+  "timestamp": "2026-03-26T14:18:46.384588Z",
+  "total": 44,
+  "passed": 44,
+  "failed": 0,
+  "groups": {
+    "persona_first_entry": {
+      "pass": 9,
+      "fail": 0
+    },
+    "guided_demo_sequence": {
+      "pass": 7,
+      "fail": 0
+    },
+    "free_explore_separation": {
+      "pass": 5,
+      "fail": 0
+    },
+    "no_persona_gate_regression": {
+      "pass": 6,
+      "fail": 0
+    },
+    "no_empty_evidence_regression": {
+      "pass": 6,
+      "fail": 0
+    },
+    "analyst_raw_access_regression": {
+      "pass": 5,
+      "fail": 0
+    },
+    "api_regression": {
+      "pass": 6,
+      "fail": 0
+    }
+  },
+  "results": [
+    {
+      "name": "index.js has PIOS-51.8 contract",
+      "group": "persona_first_entry",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "guided-entry-steps class present in index.js",
+      "group": "persona_first_entry",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Step 1 label present",
+      "group": "persona_first_entry",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Step 2 label present",
+      "group": "persona_first_entry",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona first in panel render order",
+      "group": "persona_first_entry",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel opens by default: useState(['persona'])",
+      "group": "persona_first_entry",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css has PIOS-51.8 block",
+      "group": "persona_first_entry",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css .guided-entry-steps defined",
+      "group": "persona_first_entry",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css .guided-step defined",
+      "group": "persona_first_entry",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle present in index.js",
+      "group": "guided_demo_sequence",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle gates on demoActive",
+      "group": "guided_demo_sequence",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle used on all panel onToggle props",
+      "group": "guided_demo_sequence",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "togglePanel no longer used in onToggle props",
+      "group": "guided_demo_sequence",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Guided lock annotation present",
+      "group": "guided_demo_sequence",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Traversal single-focus preserved",
+      "group": "guided_demo_sequence",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoNext advances traversal deterministically",
+      "group": "guided_demo_sequence",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "togglePanel defined and used internally",
+      "group": "free_explore_separation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle calls togglePanel when !demoActive",
+      "group": "free_explore_separation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Free explore effect guarded by !demoActive",
+      "group": "free_explore_separation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Guided toggle locked by demoActive guard",
+      "group": "free_explore_separation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit resets to free explore state",
+      "group": "free_explore_separation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona hard gate preserved",
+      "group": "no_persona_gate_regression",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Start button disabled without persona",
+      "group": "no_persona_gate_regression",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "persona-gate-message class present",
+      "group": "no_persona_gate_regression",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Gate message text preserved",
+      "group": "no_persona_gate_regression",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No default persona bypass",
+      "group": "no_persona_gate_regression",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "51.7 lineage preserved in index.js",
+      "group": "no_persona_gate_regression",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Evidence blocked-state class present",
+      "group": "no_empty_evidence_regression",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Evidence fallback message present",
+      "group": "no_empty_evidence_regression",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Evidence guarded by queryData && enlPersona",
+      "group": "no_empty_evidence_regression",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Evidence fallback on queryData && !enlPersona",
+      "group": "no_empty_evidence_regression",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css .evidence-blocked-state defined",
+      "group": "no_empty_evidence_regression",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel renders exactly once",
+      "group": "no_empty_evidence_regression",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "RawArtifactsSection present in ENLPanel",
+      "group": "analyst_raw_access_regression",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Raw artifacts gated to ANALYST persona",
+      "group": "analyst_raw_access_regression",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "View raw artifacts toggle present",
+      "group": "analyst_raw_access_regression",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel contract lineage preserved",
+      "group": "analyst_raw_access_regression",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel not modified in 51.8",
+      "group": "analyst_raw_access_regression",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "route: query GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: topology",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: status",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona EXECUTIVE GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona CTO GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona ANALYST GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    }
+  ]
+}

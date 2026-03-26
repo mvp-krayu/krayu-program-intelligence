@@ -1,8 +1,8 @@
 /**
  * pages/index.js
- * PIOS-51.7-RUN01-CONTRACT-v1
- * (supersedes PIOS-51.6R.4-RUN01-CONTRACT-v1)
- * Lineage: PIOS-51.6-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1 → PIOS-51.6R.1-RUN01-CONTRACT-v1 → PIOS-51.6R.2-RUN01-CONTRACT-v1 → PIOS-51.6R.3-RUN01-CONTRACT-v1 → PIOS-51.6R.4-RUN01-CONTRACT-v1 → PIOS-51.7-RUN01-CONTRACT-v1
+ * PIOS-51.8-RUN01-CONTRACT-v1
+ * (supersedes PIOS-51.7-RUN01-CONTRACT-v1)
+ * Lineage: PIOS-51.6-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1 → PIOS-51.6R.1-RUN01-CONTRACT-v1 → PIOS-51.6R.2-RUN01-CONTRACT-v1 → PIOS-51.6R.3-RUN01-CONTRACT-v1 → PIOS-51.6R.4-RUN01-CONTRACT-v1 → PIOS-51.7-RUN01-CONTRACT-v1 → PIOS-51.8-RUN01-CONTRACT-v1
  *
  * ExecLens Demo Surface — panel-orchestrated progressive disclosure.
  * Supersedes: PIOS-51.3 (step-driven navigation)
@@ -102,7 +102,8 @@ export default function Home() {
   const [error,         setError]         = useState(null)
 
   // Panel open state — array, max 2 [R1]
-  const [openPanels, setOpenPanels] = useState(['situation'])
+  // Persona panel opens first — guided entry starts with persona selection [51.8]
+  const [openPanels, setOpenPanels] = useState(['persona'])
 
   // ENL persona lift state [51.5]
   const [enlPersona,     setEnlPersona]     = useState(null)
@@ -136,6 +137,13 @@ export default function Home() {
       return next.length > 2 ? next.slice(next.length - 2) : next
     })
   }, [])
+
+  // ── Guided toggle — locked during active guided demo [51.8] ──
+  // Free explore: toggles normally. Guided mode: panels opened by choreography only.
+  const handleToggle = useCallback((panelId) => {
+    if (demoActive) return
+    togglePanel(panelId)
+  }, [demoActive, togglePanel])
 
 
   // ── Persona auto-open — reveal depth only [51.6, R3] ──
@@ -282,23 +290,34 @@ export default function Home() {
             Evidence-first system for program diagnosis, structural risk, and execution visibility
           </p>
           <div className="hero-meta">
-            PIOS-51.7-RUN01-CONTRACT-v1 · run_02_governed
+            PIOS-51.8-RUN01-CONTRACT-v1 · run_02_governed
             &ensp;·&ensp;
             No inference. No synthetic data.
           </div>
 
-          {!demoActive && !enlPersona && (
-            <div className="persona-gate-message">Select a Persona to enable execution</div>
-          )}
           {!demoActive && (
-            <button
-              className="demo-start-btn"
-              onClick={handleStartDemo}
-              type="button"
-              disabled={!enlPersona}
-            >
-              Start Lens Demo
-            </button>
+            <div className="guided-entry-steps">
+              <div className={`guided-step${enlPersona ? ' guided-step-done' : ' guided-step-active'}`}>
+                <span className="guided-step-num">1</span>
+                <span className="guided-step-label">Select your lens persona</span>
+                {enlPersona && <span className="guided-step-persona">{enlPersona}</span>}
+              </div>
+              {!enlPersona && (
+                <div className="persona-gate-message">Select a Persona to enable execution</div>
+              )}
+              <div className={`guided-step${enlPersona ? ' guided-step-active' : ''}`}>
+                <span className="guided-step-num">2</span>
+                <span className="guided-step-label">Begin guided execution</span>
+              </div>
+              <button
+                className="demo-start-btn"
+                onClick={handleStartDemo}
+                type="button"
+                disabled={!enlPersona}
+              >
+                Start Lens Demo
+              </button>
+            </div>
           )}
         </header>
 
@@ -327,13 +346,25 @@ export default function Home() {
           )}
         </div>
 
+        {/* ── Panel: Persona — persona selector + ENL lens ── */}
+        {/* First in guided entry order — persona selection is step 1 [51.8] */}
+        <DisclosurePanel
+          id="persona"
+          title="What does this mean for you?"
+          subtitle="Select audience perspective — Executive, CTO, or Analyst"
+          expanded={openPanels.includes('persona')}
+          onToggle={() => handleToggle('persona')}
+        >
+          <PersonaPanel queryId={selectedQuery} onPersonaChange={setEnlPersona} onPersonaDataChange={setEnlPersonaData} />
+        </DisclosurePanel>
+
         {/* ── Panel: Situation — topology + structural baseline ── */}
         <DisclosurePanel
           id="situation"
           title="Situation"
           subtitle="Structural baseline — architecture and projection emphasis"
           expanded={openPanels.includes('situation')}
-          onToggle={() => togglePanel('situation')}
+          onToggle={() => handleToggle('situation')}
         >
           <div data-demo-section="gauges">
             <LandingGaugeStrip />
@@ -350,7 +381,7 @@ export default function Home() {
           subtitle={queryData ? `${queryData.signals?.length || 0} intelligence signals bound` : 'Select a query to load signals'}
           badge={queryData?.signals?.length ? String(queryData.signals.length) : null}
           expanded={openPanels.includes('signals')}
-          onToggle={() => togglePanel('signals')}
+          onToggle={() => handleToggle('signals')}
         >
           {queryData && queryData.signals && queryData.signals.length > 0 ? (
             <div className="signal-grid" data-demo-section="signals">
@@ -365,24 +396,13 @@ export default function Home() {
           )}
         </DisclosurePanel>
 
-        {/* ── Panel: Persona — persona selector + ENL lens ── */}
-        <DisclosurePanel
-          id="persona"
-          title="What does this mean for you?"
-          subtitle="Select audience perspective — Executive, CTO, or Analyst"
-          expanded={openPanels.includes('persona')}
-          onToggle={() => togglePanel('persona')}
-        >
-          <PersonaPanel queryId={selectedQuery} onPersonaChange={setEnlPersona} onPersonaDataChange={setEnlPersonaData} />
-        </DisclosurePanel>
-
         {/* ── Panel: Evidence — evidence chain + traceability ── */}
         <DisclosurePanel
           id="evidence"
           title="Show evidence"
           subtitle="Evidence chain and vault traceability"
           expanded={openPanels.includes('evidence')}
-          onToggle={() => togglePanel('evidence')}
+          onToggle={() => handleToggle('evidence')}
         >
           {queryData && enlPersona ? (
             <ENLPanel
@@ -404,7 +424,7 @@ export default function Home() {
           title="So what?"
           subtitle="Executive narrative — evidence-grounded"
           expanded={openPanels.includes('narrative')}
-          onToggle={() => togglePanel('narrative')}
+          onToggle={() => handleToggle('narrative')}
         >
           {queryData && enlPersona ? (
             <NarrativePanel queryData={queryData} />
