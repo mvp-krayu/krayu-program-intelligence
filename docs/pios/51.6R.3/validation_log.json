@@ -1,0 +1,227 @@
+{
+  "stream": "51.6R.3",
+  "timestamp": "2026-03-26T11:40:42.232393Z",
+  "total": 32,
+  "passed": 32,
+  "failed": 0,
+  "groups": {
+    "persona_panel_content": {
+      "pass": 8,
+      "fail": 0
+    },
+    "evidence_open_behavior": {
+      "pass": 5,
+      "fail": 0
+    },
+    "persona_isolation": {
+      "pass": 5,
+      "fail": 0
+    },
+    "no_duplication": {
+      "pass": 4,
+      "fail": 0
+    },
+    "no_mutation": {
+      "pass": 4,
+      "fail": 0
+    },
+    "api_regression": {
+      "pass": 6,
+      "fail": 0
+    }
+  },
+  "results": [
+    {
+      "name": "PersonaPanel.js has PIOS-51.6R.3 contract",
+      "group": "persona_panel_content",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel renders framing_label",
+      "group": "persona_panel_content",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel renders primary_question",
+      "group": "persona_panel_content",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel renders persona selector buttons",
+      "group": "persona_panel_content",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel: no signal card rendering",
+      "group": "persona_panel_content",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel: no emphasis block",
+      "group": "persona_panel_content",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel: no source reference rendered",
+      "group": "persona_panel_content",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel: SIGNAL_STATE_LABEL removed",
+      "group": "persona_panel_content",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "index.js has PIOS-51.6R.3 contract",
+      "group": "evidence_open_behavior",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona\u2192evidence effect: openPanel('evidence')",
+      "group": "evidence_open_behavior",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Evidence open: guarded by !demoActive",
+      "group": "evidence_open_behavior",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Evidence open: no selectedFlow dependency",
+      "group": "evidence_open_behavior",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Evidence open effect depends on enlPersona",
+      "group": "evidence_open_behavior",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona change: setEnlPersona callback only",
+      "group": "persona_isolation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No flow logic triggered on persona click",
+      "group": "persona_isolation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel does not import TraversalEngine",
+      "group": "persona_isolation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel: fetch unchanged \u2014 only persona API",
+      "group": "persona_isolation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "index.js: one query fetch only",
+      "group": "persona_isolation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Signal content not in PersonaPanel",
+      "group": "no_duplication",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Evidence chain not in PersonaPanel",
+      "group": "no_duplication",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel owns evidence chain rendering",
+      "group": "no_duplication",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel does not render blocking_point",
+      "group": "no_duplication",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "TraversalEngine.js unchanged (no 51.6R.3 ref)",
+      "group": "no_mutation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DemoController.js unchanged (no 51.6R.3 ref)",
+      "group": "no_mutation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No new fetch calls in index.js",
+      "group": "no_mutation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel unchanged (no 51.6R.3 ref)",
+      "group": "no_mutation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "route: query GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: topology",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: status",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona EXECUTIVE GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona CTO GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona ANALYST GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    }
+  ]
+}

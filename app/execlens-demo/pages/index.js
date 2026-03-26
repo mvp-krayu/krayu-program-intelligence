@@ -1,8 +1,8 @@
 /**
  * pages/index.js
- * PIOS-51.6R.2-RUN01-CONTRACT-v1
- * (supersedes PIOS-51.6R.1-RUN01-CONTRACT-v1)
- * Lineage: PIOS-51.6-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1 → PIOS-51.6R.1-RUN01-CONTRACT-v1 → PIOS-51.6R.2-RUN01-CONTRACT-v1
+ * PIOS-51.6R.3-RUN01-CONTRACT-v1
+ * (supersedes PIOS-51.6R.2-RUN01-CONTRACT-v1)
+ * Lineage: PIOS-51.6-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1 → PIOS-51.6R.1-RUN01-CONTRACT-v1 → PIOS-51.6R.2-RUN01-CONTRACT-v1 → PIOS-51.6R.3-RUN01-CONTRACT-v1
  *
  * ExecLens Demo Surface — panel-orchestrated progressive disclosure.
  * Supersedes: PIOS-51.3 (step-driven navigation)
@@ -153,6 +153,14 @@ export default function Home() {
     })
   }, [enlPersona, demoActive])
 
+  // ── Persona → evidence open [51.6R.3] ──
+  // Explicit panel open — free explore only. No flow, no traversal.
+
+  useEffect(() => {
+    if (!enlPersona || demoActive) return
+    openPanel('evidence')
+  }, [enlPersona, demoActive, openPanel])
+
   // ── Query fetch [R2: same API calls as 42.29] ──
 
   useEffect(() => {
@@ -271,7 +279,7 @@ export default function Home() {
             Evidence-first system for program diagnosis, structural risk, and execution visibility
           </p>
           <div className="hero-meta">
-            PIOS-51.6R.2-RUN01-CONTRACT-v1 · run_02_governed
+            PIOS-51.6R.3-RUN01-CONTRACT-v1 · run_02_governed
             &ensp;·&ensp;
             No inference. No synthetic data.
           </div>
