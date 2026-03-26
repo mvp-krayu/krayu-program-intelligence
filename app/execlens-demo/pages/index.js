@@ -1,6 +1,6 @@
 /**
  * pages/index.js
- * PIOS-51.8R-RUN01-CONTRACT-v1
+ * PIOS-51.8R-RUN01-CONTRACT-v1 (amended: terminal state, ⌘K exit, persona reset)
  * (supersedes PIOS-51.8-RUN01-CONTRACT-v1)
  * Lineage: PIOS-51.6-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1 → PIOS-51.6R.1-RUN01-CONTRACT-v1 → PIOS-51.6R.2-RUN01-CONTRACT-v1 → PIOS-51.6R.3-RUN01-CONTRACT-v1 → PIOS-51.6R.4-RUN01-CONTRACT-v1 → PIOS-51.7-RUN01-CONTRACT-v1 → PIOS-51.8-RUN01-CONTRACT-v1 → PIOS-51.8R-RUN01-CONTRACT-v1
  *
@@ -22,7 +22,7 @@
  *   R5  non-demo mode: user can toggle any panel freely (max 2)
  */
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import Head from 'next/head'
 
 import QuerySelector    from '../components/QuerySelector'
@@ -41,6 +41,31 @@ const PERSONA_DEFAULT_FLOW = {
   EXECUTIVE: 'executive_insight',
   CTO:       'structural_analysis',
   ANALYST:   'evidence_audit',
+}
+
+// ---------------------------------------------------------------------------
+// PERSONA_GUIDED_FLOWS — persona-specific guided step sequences [51.8R guided correction]
+// Static. No computation. Reuse existing panel IDs only.
+// ANALYST raw step: special guided state of evidence panel — forces source evidence open.
+// ---------------------------------------------------------------------------
+
+const PERSONA_GUIDED_FLOWS = {
+  EXECUTIVE: [
+    { id: 'narrative', label: 'Answer',   panelId: 'narrative' },
+    { id: 'signals',   label: 'Signal',   panelId: 'signals'   },
+    { id: 'evidence',  label: 'Evidence', panelId: 'evidence'  },
+  ],
+  CTO: [
+    { id: 'signals',   label: 'Signal',   panelId: 'signals'   },
+    { id: 'evidence',  label: 'Evidence', panelId: 'evidence'  },
+    { id: 'narrative', label: 'Answer',   panelId: 'narrative' },
+  ],
+  ANALYST: [
+    { id: 'evidence',  label: 'Evidence', panelId: 'evidence'  },
+    { id: 'signals',   label: 'Signal',   panelId: 'signals'   },
+    { id: 'narrative', label: 'Answer',   panelId: 'narrative' },
+    { id: 'raw',       label: 'Raw',      panelId: 'evidence',  rawStep: true },
+  ],
 }
 import DisclosurePanel  from '../components/DisclosurePanel'
 import PersonaPanel     from '../components/PersonaPanel'
@@ -102,8 +127,8 @@ export default function Home() {
   const [error,         setError]         = useState(null)
 
   // Panel open state — array, max 2 [R1]
-  // Persona panel opens first — guided entry starts with persona selection [51.8]
-  const [openPanels, setOpenPanels] = useState(['persona'])
+  // Situation panel open by default — first visible content on entry [51.8R final polish]
+  const [openPanels, setOpenPanels] = useState(['situation'])
 
   // ENL persona lift state [51.5]
   const [enlPersona,     setEnlPersona]     = useState(null)
@@ -114,8 +139,17 @@ export default function Home() {
   const [traversalNodeIndex, setTraversalNodeIndex] = useState(0)
 
   // Demo choreography state
-  const [demoActive, setDemoActive] = useState(false)
-  const [demoStage,  setDemoStage]  = useState(0)
+  const [demoActive,    setDemoActive]    = useState(false)
+  const [demoStage,     setDemoStage]     = useState(0)
+  // Terminal state: traversal complete, guided lock held, awaiting explicit exit [51.8R amendment]
+  const [demoComplete,  setDemoComplete]  = useState(false)
+  // Persona-guided flow step index [51.8R guided correction]
+  const [guidedStepIndex, setGuidedStepIndex] = useState(0)
+  // ANALYST raw step active — forces source evidence open [51.8R guided correction]
+  const [rawStepActive,   setRawStepActive]   = useState(false)
+
+  // Persona change detection — ref-based to avoid [enlPersona]-only dep [51.8R amendment]
+  const prevEnlPersonaRef = useRef(null)
 
   // ── Panel helpers ──
 
@@ -220,35 +254,90 @@ export default function Home() {
     }
   }, [demoActive, demoStage, openPanel, selectedFlow])
 
+  // ── Persona change reset — resets demo if persona switches mid-demo [51.8R amendment] ──
+  // Uses prevEnlPersonaRef to detect change without [enlPersona]-only dep [51.6R.2 guard preserved]
+
+  useEffect(() => {
+    if (prevEnlPersonaRef.current === null) { prevEnlPersonaRef.current = enlPersona; return }
+    if (prevEnlPersonaRef.current === enlPersona) return
+    prevEnlPersonaRef.current = enlPersona
+    if (demoActive) {
+      setDemoActive(false)
+      setDemoStage(0)
+      setTraversalNodeIndex(0)
+      setSelectedFlow(null)
+      setDemoComplete(false)
+      setGuidedStepIndex(0)    // clear guided step on persona change [51.8R guided correction]
+      setRawStepActive(false)  // clear raw step on persona change [51.8R guided correction]
+    }
+  }, [enlPersona, demoActive, demoComplete])
+
+  // ── ⌘K handler — exit guided mode from terminal or mid-demo [51.8R amendment] ──
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        if (demoActive) { e.preventDefault(); handleDemoExit() }
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [demoActive])
+
   // ── Demo control handlers ──
 
   const handleStartDemo = () => {
     // Persona hard gate — execution blocked without explicit selection [51.7]
     if (!enlPersona) return
-    // Derive active flow at demo start — persona binding happens here, not on persona click [51.6R.2]
+    // Query hard gate — query required for guided execution [51.8R guided correction]
+    if (!selectedQuery) return
+    setDemoComplete(false)   // reset terminal state on re-run [51.8R amendment]
+    setGuidedStepIndex(0)    // reset guided step [51.8R guided correction]
+    setRawStepActive(false)  // reset raw step [51.8R guided correction]
+    // Derive active flow — backward compat [51.6R.2]
     const activeFlow = selectedFlow || (enlPersona ? PERSONA_DEFAULT_FLOW[enlPersona] : null)
     setTraversalNodeIndex(0)
-    setSelectedQuery('GQ-003')
     if (activeFlow) {
-      // Traversal mode [51.6]: single-focus-node, open first panel
+      // Keep traversal flow state for compat; persona-guided flow controls panel opening
       setSelectedFlow(activeFlow)
       const panels = getFlowPanels(activeFlow)
-      setOpenPanels(panels.length > 0 ? [panels[0]] : ['situation'])
+      // Open first step of persona-guided flow [51.8R guided correction]
+      const steps = PERSONA_GUIDED_FLOWS[enlPersona]
+      setOpenPanels(steps && steps.length > 0 ? [steps[0].panelId] : panels.length > 0 ? [panels[0]] : ['situation'])
     } else {
-      // Standard 51.4 stage mode
-      setOpenPanels(['situation'])
+      // Standard 51.4 stage mode fallback
+      const steps = PERSONA_GUIDED_FLOWS[enlPersona]
+      setOpenPanels(steps && steps.length > 0 ? [steps[0].panelId] : ['situation'])
     }
     setDemoActive(true)
     setDemoStage(1)
   }
 
   const handleDemoNext = () => {
+    // Persona-guided flow [51.8R guided correction]: primary path
+    const steps = PERSONA_GUIDED_FLOWS[enlPersona]
+    if (steps) {
+      const nextIndex = guidedStepIndex + 1
+      if (nextIndex >= steps.length) {
+        // Terminal: hold guided lock, await explicit exit [51.8R amendment]
+        setDemoComplete(true)
+      } else {
+        const step = steps[nextIndex]
+        setGuidedStepIndex(nextIndex)
+        setOpenPanels([step.panelId])
+        if (step.rawStep) {
+          // ANALYST raw step: force source evidence open [51.8R guided correction]
+          setRawStepActive(true)
+        }
+      }
+      return
+    }
+    // Legacy traversal mode [51.6] — backward compat path
     if (selectedFlow) {
-      // Traversal mode [51.6]: advance node pointer, single-focus-node
       const panels = getFlowPanels(selectedFlow)
       const nextIndex = traversalNodeIndex + 1
       if (nextIndex >= panels.length) {
-        handleDemoExit()
+        setDemoComplete(true)
       } else {
         setTraversalNodeIndex(nextIndex)
         setOpenPanels([panels[nextIndex]])
@@ -256,7 +345,7 @@ export default function Home() {
     } else {
       // Standard 51.4 stage mode
       if (demoStage >= TOTAL_STAGES) {
-        handleDemoExit()
+        setDemoComplete(true)
       } else {
         setDemoStage(prev => prev + 1)
       }
@@ -267,7 +356,10 @@ export default function Home() {
     setDemoActive(false)
     setDemoStage(0)
     setTraversalNodeIndex(0)
-    setSelectedFlow(null)  // mandatory exit reset [51.6R.2]
+    setSelectedFlow(null)       // mandatory exit reset [51.6R.2]
+    setDemoComplete(false)      // clear terminal state [51.8R amendment]
+    setGuidedStepIndex(0)       // clear guided step [51.8R guided correction]
+    setRawStepActive(false)     // clear raw step [51.8R guided correction]
   }
 
   // ── Render ──
@@ -313,7 +405,7 @@ export default function Home() {
                   className="demo-start-btn"
                   onClick={handleStartDemo}
                   type="button"
-                  disabled={!enlPersona}
+                  disabled={!enlPersona || !selectedQuery}
                 >
                   Start Lens Demo
                 </button>
@@ -325,7 +417,36 @@ export default function Home() {
           )}
         </header>
 
-        {/* ── Query selector — always visible ── */}
+        {/* ── Panel: Situation — first visible content panel [51.8R final polish] ── */}
+        {/* Top position, expanded by default — structural baseline is entry anchor */}
+        <DisclosurePanel
+          id="situation"
+          title="Situation"
+          subtitle="Structural baseline — architecture and projection emphasis"
+          expanded={openPanels.includes('situation')}
+          onToggle={() => handleToggle('situation')}
+        >
+          <div data-demo-section="gauges">
+            <LandingGaugeStrip />
+          </div>
+          <div data-demo-section="topology">
+            <TopologyPanel selectedQuery={selectedQuery} />
+          </div>
+        </DisclosurePanel>
+
+        {/* ── Panel: Persona — persona selector + ENL lens ── */}
+        {/* Second position — immediately below Situation; persona gating unchanged [51.8R final polish] */}
+        <DisclosurePanel
+          id="persona"
+          title="What does this mean for you?"
+          subtitle="Interpret this situation from a decision perspective"
+          expanded={openPanels.includes('persona')}
+          onToggle={() => handleToggle('persona')}
+        >
+          <PersonaPanel queryId={selectedQuery} onPersonaChange={setEnlPersona} onPersonaDataChange={setEnlPersonaData} />
+        </DisclosurePanel>
+
+        {/* ── Query selector — third position [51.8R final polish] ── */}
         <div className="query-zone">
           <QuerySelector selectedQuery={selectedQuery} onSelect={setSelectedQuery} />
 
@@ -333,7 +454,7 @@ export default function Home() {
 
           {!selectedQuery && (
             <div className="no-query-state">
-              Select a query to load program intelligence.
+              Select a query to project signals onto this structure.
             </div>
           )}
 
@@ -349,34 +470,6 @@ export default function Home() {
             </div>
           )}
         </div>
-
-        {/* ── Panel: Persona — persona selector + ENL lens ── */}
-        {/* First in guided entry order — persona selection is step 1 [51.8] */}
-        <DisclosurePanel
-          id="persona"
-          title="What does this mean for you?"
-          subtitle="Select audience perspective — Executive, CTO, or Analyst"
-          expanded={openPanels.includes('persona')}
-          onToggle={() => handleToggle('persona')}
-        >
-          <PersonaPanel queryId={selectedQuery} onPersonaChange={setEnlPersona} onPersonaDataChange={setEnlPersonaData} />
-        </DisclosurePanel>
-
-        {/* ── Panel: Situation — topology + structural baseline ── */}
-        <DisclosurePanel
-          id="situation"
-          title="Situation"
-          subtitle="Structural baseline — architecture and projection emphasis"
-          expanded={openPanels.includes('situation')}
-          onToggle={() => handleToggle('situation')}
-        >
-          <div data-demo-section="gauges">
-            <LandingGaugeStrip />
-          </div>
-          <div data-demo-section="topology">
-            <TopologyPanel selectedQuery={selectedQuery} />
-          </div>
-        </DisclosurePanel>
 
         {/* ── Panel: Signals — intelligence signals ── */}
         <DisclosurePanel
@@ -414,6 +507,7 @@ export default function Home() {
               persona={enlPersona}
               personaData={enlPersonaData}
               navigation={queryData.navigation}
+              rawStepActive={rawStepActive}
             />
           ) : queryData && !enlPersona ? (
             <div className="evidence-blocked-state">Evidence requires a selected Persona</div>
@@ -442,15 +536,29 @@ export default function Home() {
       </div>
 
       {/* ── Demo bar — rendered outside page-root for fixed positioning ── */}
+      {/* active: false during terminal state — DemoController hidden when complete [51.8R amendment] */}
       <DemoController
-        active={demoActive}
+        active={demoActive && !demoComplete}
         stage={demoStage}
         onNext={handleDemoNext}
         onExit={handleDemoExit}
         selectedFlow={selectedFlow}
         traversalNodeIndex={traversalNodeIndex}
         traversalNodes={selectedFlow ? getFlowNodes(selectedFlow) : null}
+        guidedSteps={enlPersona ? PERSONA_GUIDED_FLOWS[enlPersona] : null}
+        guidedStepIndex={guidedStepIndex}
+        guidedPersona={enlPersona}
       />
+
+      {/* ── Terminal strip — guided demo complete, awaiting explicit exit [51.8R amendment] ── */}
+      {demoComplete && (
+        <div className="guided-terminal-strip">
+          <span className="guided-terminal-label">Guided demo complete</span>
+          <button className="guided-exit-btn" onClick={handleDemoExit} type="button">
+            Exit guided mode <kbd className="guided-exit-kbd">⌘K</kbd>
+          </button>
+        </div>
+      )}
     </>
   )
 }

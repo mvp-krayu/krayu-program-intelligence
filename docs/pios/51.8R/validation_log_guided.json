@@ -1,0 +1,568 @@
+{
+  "stream": "51.8R",
+  "validator": "validate_51_8R_guided",
+  "timestamp": "2026-03-26T15:58:36.037427Z",
+  "total": 82,
+  "passed": 82,
+  "failed": 0,
+  "groups": {
+    "persona_selectable_without_query": {
+      "pass": 5,
+      "fail": 0
+    },
+    "start_demo_still_blocked_without_query": {
+      "pass": 5,
+      "fail": 0
+    },
+    "guided_tabs_not_free_navigation": {
+      "pass": 7,
+      "fail": 0
+    },
+    "exec_flow_order_correct": {
+      "pass": 5,
+      "fail": 0
+    },
+    "cto_flow_order_correct": {
+      "pass": 5,
+      "fail": 0
+    },
+    "analyst_flow_order_correct": {
+      "pass": 5,
+      "fail": 0
+    },
+    "analyst_raw_step_present": {
+      "pass": 5,
+      "fail": 0
+    },
+    "raw_step_reuses_evidence_panel": {
+      "pass": 5,
+      "fail": 0
+    },
+    "source_level_labels_correct": {
+      "pass": 5,
+      "fail": 0
+    },
+    "source_reference_visible": {
+      "pass": 5,
+      "fail": 0
+    },
+    "terminal_state_present": {
+      "pass": 5,
+      "fail": 0
+    },
+    "rerun_demo_resets_sequence": {
+      "pass": 4,
+      "fail": 0
+    },
+    "persona_change_resets_to_step_1": {
+      "pass": 5,
+      "fail": 0
+    },
+    "ctrl_k_exits_guided_mode": {
+      "pass": 5,
+      "fail": 0
+    },
+    "no_zombie_guided_state": {
+      "pass": 5,
+      "fail": 0
+    },
+    "api_regression": {
+      "pass": 6,
+      "fail": 0
+    }
+  },
+  "results": [
+    {
+      "name": "PersonaPanel: query gate removed",
+      "group": "persona_selectable_without_query",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel: selector renders always",
+      "group": "persona_selectable_without_query",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel: ENL output gated by queryId",
+      "group": "persona_selectable_without_query",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel: fetch still gated by queryId",
+      "group": "persona_selectable_without_query",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel: persona change fires without query",
+      "group": "persona_selectable_without_query",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleStartDemo: query gate present",
+      "group": "start_demo_still_blocked_without_query",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona gate still first",
+      "group": "start_demo_still_blocked_without_query",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Both gates before setDemoActive",
+      "group": "start_demo_still_blocked_without_query",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Start button disabled without persona OR query",
+      "group": "start_demo_still_blocked_without_query",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona hard gate annotation present",
+      "group": "start_demo_still_blocked_without_query",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_GUIDED_FLOWS constant defined",
+      "group": "guided_tabs_not_free_navigation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoNext uses PERSONA_GUIDED_FLOWS",
+      "group": "guided_tabs_not_free_navigation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "guidedStepIndex state declared",
+      "group": "guided_tabs_not_free_navigation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setGuidedStepIndex called on advance",
+      "group": "guided_tabs_not_free_navigation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GuidedBar in DemoController",
+      "group": "guided_tabs_not_free_navigation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DemoController routes to GuidedBar",
+      "group": "guided_tabs_not_free_navigation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle guided lock preserved",
+      "group": "guided_tabs_not_free_navigation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "EXEC flow: narrative step present",
+      "group": "exec_flow_order_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "EXEC flow: signals step present",
+      "group": "exec_flow_order_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "EXEC flow: evidence step present",
+      "group": "exec_flow_order_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "EXEC flow: Answer first",
+      "group": "exec_flow_order_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "EXEC flow: 3 steps",
+      "group": "exec_flow_order_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTO flow: signals step present",
+      "group": "cto_flow_order_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTO flow: evidence step present",
+      "group": "cto_flow_order_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTO flow: narrative step present",
+      "group": "cto_flow_order_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTO flow: Signal first",
+      "group": "cto_flow_order_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTO flow: 3 steps",
+      "group": "cto_flow_order_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ANALYST flow: evidence first",
+      "group": "analyst_flow_order_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ANALYST flow: signals second",
+      "group": "analyst_flow_order_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ANALYST flow: narrative third",
+      "group": "analyst_flow_order_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ANALYST flow: raw step last",
+      "group": "analyst_flow_order_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ANALYST flow: 4 steps",
+      "group": "analyst_flow_order_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "rawStep: true in ANALYST flow",
+      "group": "analyst_raw_step_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "rawStepActive state declared",
+      "group": "analyst_raw_step_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setRawStepActive(true) called on raw step",
+      "group": "analyst_raw_step_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "rawStepActive passed to ENLPanel",
+      "group": "analyst_raw_step_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel accepts rawStepActive prop",
+      "group": "analyst_raw_step_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "RAW step panelId is 'evidence'",
+      "group": "raw_step_reuses_evidence_panel",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No new panel for RAW step",
+      "group": "raw_step_reuses_evidence_panel",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "forceOpen prop in RawArtifactsSection",
+      "group": "raw_step_reuses_evidence_panel",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "forceOpen triggers setOpen(true)",
+      "group": "raw_step_reuses_evidence_panel",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No new fetch call for raw step",
+      "group": "raw_step_reuses_evidence_panel",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Collapsed label: 'View source-level evidence'",
+      "group": "source_level_labels_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Expanded label: 'Hide source-level evidence'",
+      "group": "source_level_labels_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Header: ANALYST MODE \u2014 SOURCE EVIDENCE",
+      "group": "source_level_labels_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "'View raw evidence' label removed",
+      "group": "source_level_labels_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "'View raw artifacts' non-prominent preserved",
+      "group": "source_level_labels_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "sig.evidence.source_file present",
+      "group": "source_reference_visible",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "[Open] affordance present",
+      "group": "source_reference_visible",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "raw-artifact-source-ref class present",
+      "group": "source_reference_visible",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "raw-artifact-source-file class present",
+      "group": "source_reference_visible",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No new API call for source ref",
+      "group": "source_reference_visible",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "demoComplete state declared",
+      "group": "terminal_state_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "guided-terminal-strip renders on demoComplete",
+      "group": "terminal_state_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Guided demo complete label",
+      "group": "terminal_state_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Exit guided mode button present",
+      "group": "terminal_state_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DemoController inactive at terminal",
+      "group": "terminal_state_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleStartDemo resets guidedStepIndex",
+      "group": "rerun_demo_resets_sequence",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleStartDemo resets rawStepActive",
+      "group": "rerun_demo_resets_sequence",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleStartDemo resets demoComplete",
+      "group": "rerun_demo_resets_sequence",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleStartDemo persona gate first",
+      "group": "rerun_demo_resets_sequence",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "prevEnlPersonaRef declared",
+      "group": "persona_change_resets_to_step_1",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "persona change clears guidedStepIndex",
+      "group": "persona_change_resets_to_step_1",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "persona change clears rawStepActive",
+      "group": "persona_change_resets_to_step_1",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "persona change dep: not [enlPersona] only",
+      "group": "persona_change_resets_to_step_1",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "persona change clears demoActive",
+      "group": "persona_change_resets_to_step_1",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "\u2318K keydown handler present",
+      "group": "ctrl_k_exits_guided_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "key === 'k' check present",
+      "group": "ctrl_k_exits_guided_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "\u2318K calls handleDemoExit",
+      "group": "ctrl_k_exits_guided_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Event listener cleaned up",
+      "group": "ctrl_k_exits_guided_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "guided-exit-kbd kbd element",
+      "group": "ctrl_k_exits_guided_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit resets guidedStepIndex",
+      "group": "no_zombie_guided_state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit resets rawStepActive",
+      "group": "no_zombie_guided_state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle still locks on demoActive",
+      "group": "no_zombie_guided_state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No hybrid guided/free state",
+      "group": "no_zombie_guided_state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Guided lock held at terminal (demoActive=true)",
+      "group": "no_zombie_guided_state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "route: query GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: topology",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: status",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona EXECUTIVE GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona CTO GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona ANALYST GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    }
+  ]
+}

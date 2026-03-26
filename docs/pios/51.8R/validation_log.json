@@ -1,8 +1,8 @@
 {
   "stream": "51.8R",
-  "timestamp": "2026-03-26T14:38:02.204410Z",
-  "total": 42,
-  "passed": 42,
+  "timestamp": "2026-03-26T15:58:50.846665Z",
+  "total": 88,
+  "passed": 88,
   "failed": 0,
   "groups": {
     "entry_strip_horizontal_alignment": {
@@ -31,6 +31,38 @@
     },
     "api_regression": {
       "pass": 6,
+      "fail": 0
+    },
+    "analyst_label_corrected": {
+      "pass": 6,
+      "fail": 0
+    },
+    "source_link_present": {
+      "pass": 8,
+      "fail": 0
+    },
+    "active_tab_contrast_readable": {
+      "pass": 2,
+      "fail": 0
+    },
+    "demo_terminal_state_present": {
+      "pass": 10,
+      "fail": 0
+    },
+    "ctrl_k_exit_guided_mode": {
+      "pass": 7,
+      "fail": 0
+    },
+    "rerun_demo_resets_sequence": {
+      "pass": 3,
+      "fail": 0
+    },
+    "persona_switch_resets_to_step_1": {
+      "pass": 6,
+      "fail": 0
+    },
+    "no_zombie_guided_state": {
+      "pass": 4,
       "fail": 0
     }
   },
@@ -108,7 +140,7 @@
       "detail": ""
     },
     {
-      "name": "Start button still disabled without persona",
+      "name": "Start button disabled without persona and query",
       "group": "persona_gate_preserved",
       "status": "PASS",
       "detail": ""
@@ -156,7 +188,7 @@
       "detail": ""
     },
     {
-      "name": "View raw evidence label present",
+      "name": "View source-level evidence label present",
       "group": "analyst_raw_evidence_visible",
       "status": "PASS",
       "detail": ""
@@ -192,13 +224,13 @@
       "detail": ""
     },
     {
-      "name": "DemoController unchanged",
+      "name": "DemoController contract lineage preserved",
       "group": "no_runtime_regression",
       "status": "PASS",
       "detail": ""
     },
     {
-      "name": "PersonaPanel unchanged",
+      "name": "PersonaPanel selector ungated from query",
       "group": "no_runtime_regression",
       "status": "PASS",
       "detail": ""
@@ -286,6 +318,282 @@
       "group": "api_regression",
       "status": "PASS",
       "detail": "HTTP 200"
+    },
+    {
+      "name": "Hide source-level evidence label present",
+      "group": "analyst_label_corrected",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Hide raw artifacts label preserved (ternary)",
+      "group": "analyst_label_corrected",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Label ternary: prominent-aware hide",
+      "group": "analyst_label_corrected",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "analyst-source-header present in ENLPanel",
+      "group": "analyst_label_corrected",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ANALYST MODE \u2014 SOURCE EVIDENCE header text",
+      "group": "analyst_label_corrected",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "analyst-source-header CSS class in globals.css",
+      "group": "analyst_label_corrected",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "raw-artifact-source-ref class in ENLPanel",
+      "group": "source_link_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "raw-artifact-source-label class in ENLPanel",
+      "group": "source_link_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "raw-artifact-source-file class in ENLPanel",
+      "group": "source_link_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "raw-artifact-open-btn class in ENLPanel",
+      "group": "source_link_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "source_file field reference in ENLPanel",
+      "group": "source_link_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "[Open] affordance button present",
+      "group": "source_link_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "raw-artifact-source-ref CSS in globals.css",
+      "group": "source_link_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "raw-artifact-open-btn CSS in globals.css",
+      "group": "source_link_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "te-node-dot-active CSS class defined",
+      "group": "active_tab_contrast_readable",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "te-node-dot-active uses dark color #0d0f14",
+      "group": "active_tab_contrast_readable",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "demoComplete state declared in index.js",
+      "group": "demo_terminal_state_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setDemoComplete present",
+      "group": "demo_terminal_state_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "guided-terminal-strip present in index.js",
+      "group": "demo_terminal_state_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "guided-terminal-strip CSS defined",
+      "group": "demo_terminal_state_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "guided-terminal-label CSS defined",
+      "group": "demo_terminal_state_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "guided-exit-btn CSS defined",
+      "group": "demo_terminal_state_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "guided-exit-kbd CSS defined",
+      "group": "demo_terminal_state_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "demoComplete in DemoController active prop",
+      "group": "demo_terminal_state_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Terminal strip shown when demoComplete",
+      "group": "demo_terminal_state_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Guided demo complete label text",
+      "group": "demo_terminal_state_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "\u2318K keydown handler present",
+      "group": "ctrl_k_exit_guided_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "key === 'k' check present",
+      "group": "ctrl_k_exit_guided_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "demoActive guard in \u2318K handler",
+      "group": "ctrl_k_exit_guided_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "\u2318K calls handleDemoExit",
+      "group": "ctrl_k_exit_guided_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "\u2318K: event listener cleaned up (removeEventListener)",
+      "group": "ctrl_k_exit_guided_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Exit guided mode label in terminal strip",
+      "group": "ctrl_k_exit_guided_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "guided-exit-kbd kbd element present",
+      "group": "ctrl_k_exit_guided_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleStartDemo clears demoComplete",
+      "group": "rerun_demo_resets_sequence",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleStartDemo: traversalNodeIndex reset",
+      "group": "rerun_demo_resets_sequence",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit clears demoComplete",
+      "group": "rerun_demo_resets_sequence",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "prevEnlPersonaRef declared",
+      "group": "persona_switch_resets_to_step_1",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "useRef imported",
+      "group": "persona_switch_resets_to_step_1",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "persona-change effect resets demoActive",
+      "group": "persona_switch_resets_to_step_1",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "persona-change effect clears demoComplete",
+      "group": "persona_switch_resets_to_step_1",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "persona-change dep not [enlPersona] only",
+      "group": "persona_switch_resets_to_step_1",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "persona-change effect clears selectedFlow",
+      "group": "persona_switch_resets_to_step_1",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle still locks on demoActive",
+      "group": "no_zombie_guided_state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "demoActive stays true at terminal",
+      "group": "no_zombie_guided_state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DemoController inactive at terminal",
+      "group": "no_zombie_guided_state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit resets all state",
+      "group": "no_zombie_guided_state",
+      "status": "PASS",
+      "detail": ""
     }
   ]
 }

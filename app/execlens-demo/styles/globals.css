@@ -3178,3 +3178,120 @@ a.topo-chip:hover {
   border-color: var(--weak);
   color: var(--text);
 }
+
+/* Active traversal node dot — dark text on green background [51.8R amendment] */
+.te-node-dot-active {
+  color: #0d0f14;
+}
+
+/* Guided demo terminal strip — fixed bottom, post-traversal [51.8R amendment] */
+.guided-terminal-strip {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 0.65rem 1.5rem;
+  background: rgba(13, 15, 20, 0.97);
+  border-top: 1px solid rgba(100, 255, 218, 0.2);
+  z-index: 200;
+}
+
+.guided-terminal-label {
+  font-size: 0.72rem;
+  color: var(--strong);
+  letter-spacing: 0.04em;
+}
+
+.guided-exit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.85rem;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  background: transparent;
+  border: 1px solid rgba(100, 255, 218, 0.35);
+  color: var(--strong);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.guided-exit-btn:hover {
+  background: rgba(100, 255, 218, 0.06);
+  border-color: var(--strong);
+}
+
+.guided-exit-kbd {
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  background: rgba(100, 255, 218, 0.1);
+  border: 1px solid rgba(100, 255, 218, 0.25);
+  border-radius: 3px;
+  padding: 0.05rem 0.35rem;
+  color: var(--strong);
+}
+
+/* Analyst source header — prominent affordance label [51.8R amendment] */
+.analyst-source-header {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--weak);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+/* Per-block source reference — traceability affordance [51.8R amendment] */
+.raw-artifact-source-ref {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+  font-size: 0.68rem;
+}
+
+.raw-artifact-source-label {
+  color: var(--text-dim);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.raw-artifact-source-file {
+  color: var(--text);
+  font-family: var(--font-mono);
+}
+
+.raw-artifact-open-btn {
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--accent);
+  border-radius: 3px;
+  padding: 0.05rem 0.35rem;
+  cursor: pointer;
+}
+
+.raw-artifact-open-btn:hover {
+  border-color: var(--accent);
+  background: var(--accent-faint);
+}
+
+/* Guided bar — persona label [51.8R guided correction] */
+.demo-bar-guided {
+  /* inherits .demo-bar layout */
+}
+
+.guided-bar-persona-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--strong);
+  flex-shrink: 0;
+}

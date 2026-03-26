@@ -49,8 +49,8 @@ check("No PERSONA_DEFAULT_FLOW.CTO silent fallback",     "persona_required",
       "PERSONA_DEFAULT_FLOW.CTO" not in idx)
 check("Persona required message present",                "persona_required",
       "Select a Persona to enable execution" in idx)
-check("Start button disabled without persona",           "persona_required",
-      "disabled={!enlPersona}" in idx)
+check("Start button disabled without persona and query", "persona_required",
+      "disabled={!enlPersona || !selectedQuery}" in idx)  # 51.8R guided correction: dual gate supersedes persona-only
 
 # ── execution_blocked_without_persona ─────────────────────────────────────────
 

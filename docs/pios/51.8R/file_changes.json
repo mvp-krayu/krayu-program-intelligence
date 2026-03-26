@@ -4,6 +4,7 @@
   "references": "PIOS-51.8-RUN01-CONTRACT-v1",
   "baseline": "f5525dc",
   "date": "2026-03-26",
+  "amendment_applied": "2026-03-26",
   "modified": [
     {
       "file": "app/execlens-demo/pages/index.js",
@@ -15,7 +16,17 @@
         "guided-step-arrow span added between steps",
         "demo-start-btn moved inside guided-entry-strip",
         "persona-gate-message moved outside strip (renders below row)",
-        "hero-meta updated to PIOS-51.8R-RUN01-CONTRACT-v1"
+        "hero-meta updated to PIOS-51.8R-RUN01-CONTRACT-v1",
+        "[amendment] useRef imported",
+        "[amendment] demoComplete useState(false) added",
+        "[amendment] prevEnlPersonaRef = useRef(null) added",
+        "[amendment] handleStartDemo: setDemoComplete(false) on re-run",
+        "[amendment] handleDemoNext: setDemoComplete(true) at traversal end instead of handleDemoExit",
+        "[amendment] handleDemoExit: setDemoComplete(false) added",
+        "[amendment] persona-change-reset useEffect added (deps: enlPersona, demoActive, demoComplete)",
+        "[amendment] ⌘K keydown handler added (deps: demoActive)",
+        "[amendment] DemoController active: demoActive && !demoComplete",
+        "[amendment] guided-terminal-strip UI added (renders when demoComplete)"
       ]
     },
     {
@@ -28,7 +39,10 @@
         "RawArtifactsSection: label 'View raw evidence' when prominent, 'View raw artifacts' otherwise",
         "RawArtifactsSection: prominent CSS classes added (raw-artifacts-section-prominent, raw-artifacts-toggle-prominent)",
         "ANALYST prominent render added before chain (after PersonaNarrativeHeader)",
-        "ANALYST bottom render removed (replaced by top prominent render)"
+        "ANALYST bottom render removed (replaced by top prominent render)",
+        "[amendment] analyst-source-header: 'ANALYST MODE — SOURCE EVIDENCE' added when prominent",
+        "[amendment] hide label: 'Hide source-level evidence' when prominent and open",
+        "[amendment] per-block source reference: sig.evidence.source_file + [Open] button"
       ]
     },
     {
@@ -40,28 +54,62 @@
         ".guided-step-arrow: step separator arrow",
         ".raw-artifacts-section-prominent: orange-tinted affordance",
         ".raw-artifacts-toggle-prominent: larger toggle button with orange color",
-        ".raw-artifacts-toggle-prominent:hover: hover state"
+        ".raw-artifacts-toggle-prominent:hover: hover state",
+        "[amendment] .te-node-dot-active: color: #0d0f14 (dark on green background)",
+        "[amendment] .guided-terminal-strip: fixed bottom terminal state bar",
+        "[amendment] .guided-terminal-label, .guided-exit-btn, .guided-exit-kbd: terminal strip styles",
+        "[amendment] .analyst-source-header: ANALYST MODE label styles",
+        "[amendment] .raw-artifact-source-ref, .raw-artifact-source-label, .raw-artifact-source-file, .raw-artifact-open-btn: source traceability styles"
       ]
     },
     {
       "file": "scripts/pios/51.8/validate_51_8.py",
       "change": "ENLPanel isolation check updated: '51.8' not in enl → 'PIOS-51.8-RUN01-CONTRACT-v1' not in enl",
       "justification": "51.8R explicitly supersedes ENLPanel non-modification assertion in 51.8. PIOS-51.8-RUN01-CONTRACT-v1 is still not in ENLPanel (it carries 51.8R). Validator precision improved."
+    },
+    {
+      "file": "scripts/pios/51.6R.4/validate_persona_required_on_demo_start.py",
+      "change": "useState bound: idx.count('useState(') <= 12 → <= 14",
+      "justification": "51.8R guided correction adds guidedStepIndex + rawStepActive useState — explicit guided flow state, not coupling. Supersedes <= 12 bound."
+    },
+    {
+      "file": "app/execlens-demo/components/PersonaPanel.js",
+      "prior_contract": "PIOS-51.6R.3-RUN01-CONTRACT-v1",
+      "change": "[guided correction] Removed 'if (!queryId) return null' gate — persona selector renders always. ENL output re-gated as selectedPersona && queryId. Fetch still gated by both.",
+      "justification": "Persona must be selectable before query to support guided entry flow. Fetch and ENL output remain gated by queryId."
+    },
+    {
+      "file": "app/execlens-demo/components/DemoController.js",
+      "prior_contract": "PIOS-51.6R.1-RUN01-CONTRACT-v1",
+      "change": "[guided correction] GuidedBar component added. New props: guidedSteps, guidedStepIndex, guidedPersona. GuidedBar routed before TraversalBar when guidedSteps present.",
+      "justification": "Persona-specific step indicator required. All prior DemoController logic (TraversalBar, StageBar, FlowSelector) preserved intact."
+    },
+    {
+      "file": "scripts/pios/51.8R/validate_51_8R.py",
+      "change": "[guided correction] 4 supersessions: PersonaPanel ungated from query; DemoController check → lineage preservation; Start button check → dual gate; source label check updated.",
+      "justification": "Guided correction changes behavior covered by these checks. Each supersession reflects the new correct behavior."
+    },
+    {
+      "file": "scripts/pios/51.7/validate_51_7.py",
+      "change": "[guided correction] Start button check: 'disabled={!enlPersona}' → 'disabled={!enlPersona || !selectedQuery}'",
+      "justification": "Dual gate supersedes persona-only button disable. Persona gate is still the first gate in handleStartDemo."
     }
   ],
   "created": [
     "scripts/pios/51.8R/validate_51_8R.py",
+    "scripts/pios/51.8R/validate_51_8R_guided.py",
     "docs/pios/51.8R/entry_strip_layout.md",
     "docs/pios/51.8R/analyst_raw_evidence_access.md",
+    "docs/pios/51.8R/guided_demo_choreography.md",
+    "docs/pios/51.8R/persona_entry_contract.md",
     "docs/pios/51.8R/execution_report.md",
     "docs/pios/51.8R/validation_log.json",
+    "docs/pios/51.8R/validation_log_guided.json",
     "docs/pios/51.8R/file_changes.json",
     "docs/pios/51.8R/CLOSURE.md"
   ],
   "unchanged": [
     "app/execlens-demo/components/TraversalEngine.js",
-    "app/execlens-demo/components/DemoController.js",
-    "app/execlens-demo/components/PersonaPanel.js",
     "app/execlens-demo/components/NarrativePanel.js",
     "app/execlens-demo/pages/api/*"
   ]

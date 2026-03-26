@@ -1,6 +1,6 @@
 {
   "stream": "51.8",
-  "timestamp": "2026-03-26T14:18:46.384588Z",
+  "timestamp": "2026-03-26T15:58:51.158402Z",
   "total": 44,
   "passed": 44,
   "failed": 0,
@@ -60,13 +60,13 @@
       "detail": ""
     },
     {
-      "name": "Persona first in panel render order",
+      "name": "Persona and Situation panels present",
       "group": "persona_first_entry",
       "status": "PASS",
       "detail": ""
     },
     {
-      "name": "PersonaPanel opens by default: useState(['persona'])",
+      "name": "Panel default open state present",
       "group": "persona_first_entry",
       "status": "PASS",
       "detail": ""
@@ -168,7 +168,7 @@
       "detail": ""
     },
     {
-      "name": "Start button disabled without persona",
+      "name": "Start button disabled without persona and query",
       "group": "no_persona_gate_regression",
       "status": "PASS",
       "detail": ""

@@ -1,6 +1,6 @@
 /**
  * DemoController.js
- * PIOS-51.6R.1-RUN01-CONTRACT-v1
+ * PIOS-51.6R.1-RUN01-CONTRACT-v1 (extended: GuidedBar for persona-specific flows [51.8R guided correction])
  * (supersedes PIOS-51.6R-RUN01-CONTRACT-v1)
  * Lineage: PIOS-51.6-RUN01-CONTRACT-v1 → PIOS-51.6R → PIOS-51.6R.1-RUN01-CONTRACT-v1
  *
@@ -178,6 +178,52 @@ function StageBar({ stage, onNext, onExit }) {
 }
 
 // ---------------------------------------------------------------------------
+// GuidedBar — persona-specific guided step indicator [51.8R guided correction]
+// Replaces TraversalBar when persona-guided flow is active
+// ---------------------------------------------------------------------------
+
+function GuidedBar({ steps, stepIndex, persona, onNext, onExit }) {
+  const isLast  = stepIndex >= steps.length - 1
+  const current = steps[stepIndex]
+
+  return (
+    <div className="demo-bar demo-bar-guided" role="navigation" aria-label="Guided demo navigation">
+
+      {/* Persona + flow label */}
+      <div className="guided-bar-persona-label">
+        {persona} — GUIDED FLOW
+      </div>
+
+      {/* Step sequence indicators */}
+      <div className="te-node-row">
+        {steps.map((s, i) => {
+          const state = i === stepIndex ? 'active' : i < stepIndex ? 'done' : 'future'
+          return (
+            <span key={i} className={`te-node-dot te-node-dot-${state}`} title={s.label}>
+              <span className="te-node-label">{s.label}</span>
+            </span>
+          )
+        })}
+      </div>
+
+      {/* Current step */}
+      <div className="te-current-node">
+        {current ? `${stepIndex + 1} / ${steps.length} — ${current.label}` : ''}
+      </div>
+
+      {/* Controls */}
+      <div className="demo-controls">
+        <button className="demo-btn demo-btn-exit" onClick={onExit} type="button">Exit</button>
+        <button className="demo-btn demo-btn-next" onClick={onNext} type="button">
+          {isLast ? 'Finish ✓' : 'Next →'}
+        </button>
+      </div>
+
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // DemoController
 // ---------------------------------------------------------------------------
 
@@ -191,6 +237,10 @@ export default function DemoController({
   onFlowSelect,
   traversalNodeIndex,
   traversalNodes,
+  // Persona-guided flow props [51.8R guided correction]
+  guidedSteps,
+  guidedStepIndex,
+  guidedPersona,
 }) {
 
   // Keyboard navigation [R3]
@@ -212,6 +262,19 @@ export default function DemoController({
 
   // Pre-demo: DemoController renders null — index.js owns pre-demo UI [R7]
   if (!active) return null
+
+  // Persona-guided mode [51.8R guided correction]: takes precedence
+  if (guidedSteps && guidedSteps.length > 0) {
+    return (
+      <GuidedBar
+        steps={guidedSteps}
+        stepIndex={guidedStepIndex || 0}
+        persona={guidedPersona}
+        onNext={onNext}
+        onExit={onExit}
+      />
+    )
+  }
 
   // Traversal mode [R5]
   if (selectedFlow && traversalNodes && traversalNodes.length > 0) {

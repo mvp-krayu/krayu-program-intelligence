@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 """
 validate_51_8R.py
-PIOS-51.8R-RUN01-CONTRACT-v1
+PIOS-51.8R-RUN01-CONTRACT-v1 (amended: terminal state, analyst label, source traceability, tab contrast)
 
 Validation suite: entry_strip_horizontal_alignment, entry_strip_left_alignment,
 persona_gate_preserved, analyst_raw_evidence_visible,
-no_runtime_regression, no_evidence_mutation.
+no_runtime_regression, no_evidence_mutation, api_regression,
+analyst_label_corrected, source_link_present, active_tab_contrast_readable,
+demo_terminal_state_present, ctrl_k_exit_guided_mode,
+rerun_demo_resets_sequence, persona_switch_resets_to_step_1,
+no_zombie_guided_state.
 
 Expected: all PASS
 """
@@ -77,8 +81,8 @@ print("\n[persona_gate_preserved]")
 
 check("Persona hard gate preserved",                     "persona_gate_preserved",
       "if (!enlPersona) return" in idx)
-check("Start button still disabled without persona",     "persona_gate_preserved",
-      "disabled={!enlPersona}" in idx)
+check("Start button disabled without persona and query", "persona_gate_preserved",
+      "disabled={!enlPersona || !selectedQuery}" in idx)  # 51.8R guided correction: dual gate supersedes persona-only
 check("Gate message text preserved",                     "persona_gate_preserved",
       "Select a Persona to enable execution" in idx)
 check("persona-gate-message class preserved",            "persona_gate_preserved",
@@ -101,8 +105,8 @@ check("RawArtifactsSection has prominent prop",          "analyst_raw_evidence_v
 check("prominent render BEFORE chain list",              "analyst_raw_evidence_visible",
       "prominent" in enl and
       enl.index("prominent") < enl.index("enl-chain-list"))
-check("View raw evidence label present",                 "analyst_raw_evidence_visible",
-      "View raw evidence" in enl)
+check("View source-level evidence label present",        "analyst_raw_evidence_visible",
+      "View source-level evidence" in enl)  # 51.8R guided correction: supersedes 'View raw evidence'
 check("View raw artifacts label preserved",              "analyst_raw_evidence_visible",
       "View raw artifacts" in enl)
 check("raw-artifacts-section-prominent CSS class",       "analyst_raw_evidence_visible",
@@ -122,10 +126,10 @@ pp = read("app/execlens-demo/components/PersonaPanel.js")
 
 check("TraversalEngine unchanged",                       "no_runtime_regression",
       "51.8R" not in te and "51.8" not in te)
-check("DemoController unchanged",                        "no_runtime_regression",
-      "51.8R" not in dc and "51.8" not in dc)
-check("PersonaPanel unchanged",                          "no_runtime_regression",
-      "51.8R" not in pp)
+check("DemoController contract lineage preserved",       "no_runtime_regression",
+      "PIOS-51.6R.1-RUN01-CONTRACT-v1" in dc)  # 51.8R guided correction: GuidedBar added — supersedes unchanged check
+check("PersonaPanel selector ungated from query",        "no_runtime_regression",
+      "if (!queryId) return null" not in pp)  # 51.8R guided correction: persona selectable without query
 check("No new fetch calls in ENLPanel",                  "no_runtime_regression",
       "fetch(" not in enl)
 check("No new fetch calls in index.js",                  "no_runtime_regression",
@@ -162,6 +166,139 @@ for path, label in [
 ]:
     code, _ = http_get(path)
     check(f"route: {label}", "api_regression", code == 200, f"HTTP {code}")
+
+# ── analyst_label_corrected ───────────────────────────────────────────────────
+
+print("\n[analyst_label_corrected]")
+
+check("Hide source-level evidence label present",        "analyst_label_corrected",
+      "Hide source-level evidence" in enl)
+check("Hide raw artifacts label preserved (ternary)",    "analyst_label_corrected",
+      "Hide raw artifacts" in enl)
+check("Label ternary: prominent-aware hide",             "analyst_label_corrected",
+      "prominent ? 'Hide source-level evidence'" in enl)
+check("analyst-source-header present in ENLPanel",       "analyst_label_corrected",
+      "analyst-source-header" in enl)
+check("ANALYST MODE — SOURCE EVIDENCE header text",      "analyst_label_corrected",
+      "ANALYST MODE — SOURCE EVIDENCE" in enl)
+check("analyst-source-header CSS class in globals.css",  "analyst_label_corrected",
+      ".analyst-source-header" in css)
+
+# ── source_link_present ───────────────────────────────────────────────────────
+
+print("\n[source_link_present]")
+
+check("raw-artifact-source-ref class in ENLPanel",       "source_link_present",
+      "raw-artifact-source-ref" in enl)
+check("raw-artifact-source-label class in ENLPanel",     "source_link_present",
+      "raw-artifact-source-label" in enl)
+check("raw-artifact-source-file class in ENLPanel",      "source_link_present",
+      "raw-artifact-source-file" in enl)
+check("raw-artifact-open-btn class in ENLPanel",         "source_link_present",
+      "raw-artifact-open-btn" in enl)
+check("source_file field reference in ENLPanel",         "source_link_present",
+      "sig.evidence.source_file" in enl)
+check("[Open] affordance button present",                "source_link_present",
+      "[Open]" in enl)
+check("raw-artifact-source-ref CSS in globals.css",      "source_link_present",
+      ".raw-artifact-source-ref" in css)
+check("raw-artifact-open-btn CSS in globals.css",        "source_link_present",
+      ".raw-artifact-open-btn" in css)
+
+# ── active_tab_contrast_readable ──────────────────────────────────────────────
+
+print("\n[active_tab_contrast_readable]")
+
+check("te-node-dot-active CSS class defined",            "active_tab_contrast_readable",
+      ".te-node-dot-active" in css)
+check("te-node-dot-active uses dark color #0d0f14",      "active_tab_contrast_readable",
+      "#0d0f14" in css.split(".te-node-dot-active")[-1].split("}")[0])  # last rule: PIOS-51.8R override
+
+# ── demo_terminal_state_present ───────────────────────────────────────────────
+
+print("\n[demo_terminal_state_present]")
+
+check("demoComplete state declared in index.js",         "demo_terminal_state_present",
+      "demoComplete" in idx and "useState(false)" in idx)
+check("setDemoComplete present",                         "demo_terminal_state_present",
+      "setDemoComplete" in idx)
+check("guided-terminal-strip present in index.js",       "demo_terminal_state_present",
+      "guided-terminal-strip" in idx)
+check("guided-terminal-strip CSS defined",               "demo_terminal_state_present",
+      ".guided-terminal-strip" in css)
+check("guided-terminal-label CSS defined",               "demo_terminal_state_present",
+      ".guided-terminal-label" in css)
+check("guided-exit-btn CSS defined",                     "demo_terminal_state_present",
+      ".guided-exit-btn" in css)
+check("guided-exit-kbd CSS defined",                     "demo_terminal_state_present",
+      ".guided-exit-kbd" in css)
+check("demoComplete in DemoController active prop",      "demo_terminal_state_present",
+      "demoActive && !demoComplete" in idx)
+check("Terminal strip shown when demoComplete",          "demo_terminal_state_present",
+      "{demoComplete &&" in idx or "demoComplete && (" in idx)
+check("Guided demo complete label text",                 "demo_terminal_state_present",
+      "Guided demo complete" in idx)
+
+# ── ctrl_k_exit_guided_mode ───────────────────────────────────────────────────
+
+print("\n[ctrl_k_exit_guided_mode]")
+
+check("⌘K keydown handler present",                     "ctrl_k_exit_guided_mode",
+      "keydown" in idx and ("metaKey" in idx or "ctrlKey" in idx))
+check("key === 'k' check present",                       "ctrl_k_exit_guided_mode",
+      "key === 'k'" in idx or "key==='k'" in idx)
+check("demoActive guard in ⌘K handler",                  "ctrl_k_exit_guided_mode",
+      "demoActive" in idx)
+check("⌘K calls handleDemoExit",                         "ctrl_k_exit_guided_mode",
+      "handleDemoExit()" in idx)
+check("⌘K: event listener cleaned up (removeEventListener)", "ctrl_k_exit_guided_mode",
+      "removeEventListener" in idx)
+check("Exit guided mode label in terminal strip",        "ctrl_k_exit_guided_mode",
+      "Exit guided mode" in idx)
+check("guided-exit-kbd kbd element present",             "ctrl_k_exit_guided_mode",
+      "guided-exit-kbd" in idx)
+
+# ── rerun_demo_resets_sequence ────────────────────────────────────────────────
+
+print("\n[rerun_demo_resets_sequence]")
+
+check("handleStartDemo clears demoComplete",             "rerun_demo_resets_sequence",
+      "setDemoComplete(false)" in idx)
+check("handleStartDemo: traversalNodeIndex reset",       "rerun_demo_resets_sequence",
+      "setTraversalNodeIndex(0)" in idx)
+check("handleDemoExit clears demoComplete",              "rerun_demo_resets_sequence",
+      idx.count("setDemoComplete(false)") >= 2)  # handleStartDemo + handleDemoExit
+
+# ── persona_switch_resets_to_step_1 ──────────────────────────────────────────
+
+print("\n[persona_switch_resets_to_step_1]")
+
+check("prevEnlPersonaRef declared",                      "persona_switch_resets_to_step_1",
+      "prevEnlPersonaRef" in idx)
+check("useRef imported",                                 "persona_switch_resets_to_step_1",
+      "useRef" in idx)
+check("persona-change effect resets demoActive",         "persona_switch_resets_to_step_1",
+      "prevEnlPersonaRef" in idx and "setDemoActive(false)" in idx)
+check("persona-change effect clears demoComplete",       "persona_switch_resets_to_step_1",
+      "prevEnlPersonaRef" in idx and "setDemoComplete(false)" in idx)
+check("persona-change dep not [enlPersona] only",        "persona_switch_resets_to_step_1",
+      "}, [enlPersona])" not in idx)
+check("persona-change effect clears selectedFlow",       "persona_switch_resets_to_step_1",
+      "prevEnlPersonaRef" in idx and "setSelectedFlow(null)" in idx)
+
+# ── no_zombie_guided_state ────────────────────────────────────────────────────
+
+print("\n[no_zombie_guided_state]")
+
+check("handleToggle still locks on demoActive",          "no_zombie_guided_state",
+      "if (demoActive) return" in idx)
+check("demoActive stays true at terminal",               "no_zombie_guided_state",
+      "setDemoComplete(true)" in idx and "setDemoActive(false)" not in
+      idx.split("setDemoComplete(true)")[0].split("handleDemoNext")[-1])
+check("DemoController inactive at terminal",             "no_zombie_guided_state",
+      "demoActive && !demoComplete" in idx)
+check("handleDemoExit resets all state",                 "no_zombie_guided_state",
+      idx.count("setDemoActive(false)") >= 1 and idx.count("setDemoComplete(false)") >= 2)
 
 # ── Summary ───────────────────────────────────────────────────────────────────
 

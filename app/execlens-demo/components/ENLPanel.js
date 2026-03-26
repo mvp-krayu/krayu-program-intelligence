@@ -1,6 +1,6 @@
 /**
  * ENLPanel.js
- * PIOS-51.8R-RUN01-CONTRACT-v1
+ * PIOS-51.8R-RUN01-CONTRACT-v1 (amended: analyst label, source traceability)
  * (supersedes PIOS-51.6R.4-RUN01-CONTRACT-v1)
  * Lineage: PIOS-51.5R-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1 → PIOS-51.6R.4-RUN01-CONTRACT-v1 → PIOS-51.8R-RUN01-CONTRACT-v1
  *
@@ -28,7 +28,7 @@
  * Sequence authority: docs/pios/51.5R/enl_visible_chain_contract.md
  */
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import NavigationPanel from './NavigationPanel'
 
 // ---------------------------------------------------------------------------
@@ -357,23 +357,37 @@ function ChainStep({ signal, stepNum, isEntry, persona, personaData }) {
 // prominent prop: positions at top of ANALYST view with enhanced affordance [51.8R]
 // ---------------------------------------------------------------------------
 
-function RawArtifactsSection({ signals, prominent }) {
-  const [open, setOpen] = useState(false)
+function RawArtifactsSection({ signals, prominent, forceOpen }) {
+  const [open, setOpen] = useState(forceOpen || false)
+
+  // Auto-expand when guided RAW step activates [51.8R guided correction]
+  useEffect(() => {
+    if (forceOpen) setOpen(true)
+  }, [forceOpen])
+
   if (!signals || signals.length === 0) return null
   return (
     <div className={`raw-artifacts-section${prominent ? ' raw-artifacts-section-prominent' : ''}`}>
+      {prominent && <div className="analyst-source-header">ANALYST MODE — SOURCE EVIDENCE</div>}
       <button
         className={`raw-artifacts-toggle${open ? ' raw-artifacts-toggle-open' : ''}${prominent ? ' raw-artifacts-toggle-prominent' : ''}`}
         onClick={() => setOpen(o => !o)}
         type="button"
       >
-        {open ? 'Hide raw artifacts' : (prominent ? 'View raw evidence' : 'View raw artifacts')}
+        {open ? (prominent ? 'Hide source-level evidence' : 'Hide raw artifacts') : (prominent ? 'View source-level evidence' : 'View raw artifacts')}
       </button>
       {open && (
         <div className="raw-artifacts-body">
           {signals.map(sig => sig.evidence ? (
             <div key={sig.signal_id} className="raw-artifact-entry">
               <div className="raw-artifact-id">{sig.signal_id}</div>
+              {sig.evidence.source_file && (
+                <div className="raw-artifact-source-ref">
+                  <span className="raw-artifact-source-label">Source</span>
+                  <span className="raw-artifact-source-file">{sig.evidence.source_file}</span>
+                  <button className="raw-artifact-open-btn" type="button">[Open]</button>
+                </div>
+              )}
               <pre className="raw-artifact-data">{JSON.stringify(sig.evidence, null, 2)}</pre>
             </div>
           ) : null)}
@@ -387,7 +401,7 @@ function RawArtifactsSection({ signals, prominent }) {
 // ENLPanel
 // ---------------------------------------------------------------------------
 
-export default function ENLPanel({ signals, navigation, persona, personaData }) {
+export default function ENLPanel({ signals, navigation, persona, personaData, rawStepActive }) {
   if (!signals || signals.length === 0) {
     return (
       <div className="enl-panel-body">
@@ -408,8 +422,9 @@ export default function ENLPanel({ signals, navigation, persona, personaData }) 
       />
 
       {/* Analyst: raw evidence access — prominent affordance before chain [51.8R] */}
+      {/* forceOpen: true during guided RAW step — auto-expands source evidence [51.8R guided correction] */}
       {persona === 'ANALYST' && (
-        <RawArtifactsSection signals={orderedSignals} prominent />
+        <RawArtifactsSection signals={orderedSignals} prominent forceOpen={rawStepActive} />
       )}
 
       {/* Chain header — persona-shaped traversal label [R3] */}

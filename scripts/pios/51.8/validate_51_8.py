@@ -49,10 +49,10 @@ check("Step 1 label present",                            "persona_first_entry",
       "Select your lens persona" in idx)
 check("Step 2 label present",                            "persona_first_entry",
       "guided-step-num" in idx and "guided-step-label" in idx)
-check("Persona first in panel render order",             "persona_first_entry",
-      idx.index("id=\"persona\"") < idx.index("id=\"situation\""))
-check("PersonaPanel opens by default: useState(['persona'])", "persona_first_entry",
-      "useState(['persona'])" in idx)
+check("Persona and Situation panels present",            "persona_first_entry",
+      "id=\"persona\"" in idx and "id=\"situation\"" in idx)  # 51.8R final polish: order superseded — situation moved to first position
+check("Panel default open state present",               "persona_first_entry",
+      "useState(['situation'])" in idx)  # 51.8R final polish: default superseded — situation expands on entry
 check("globals.css has PIOS-51.8 block",                 "persona_first_entry",
       "PIOS-51.8" in css)
 check("globals.css .guided-entry-steps defined",         "persona_first_entry",
@@ -100,8 +100,8 @@ print("\n[no_persona_gate_regression]")
 
 check("Persona hard gate preserved",                     "no_persona_gate_regression",
       "if (!enlPersona) return" in idx)
-check("Start button disabled without persona",           "no_persona_gate_regression",
-      "disabled={!enlPersona}" in idx)
+check("Start button disabled without persona and query", "no_persona_gate_regression",
+      "disabled={!enlPersona || !selectedQuery}" in idx)  # 51.8R guided correction: dual gate supersedes persona-only
 check("persona-gate-message class present",              "no_persona_gate_regression",
       "persona-gate-message" in idx)
 check("Gate message text preserved",                     "no_persona_gate_regression",

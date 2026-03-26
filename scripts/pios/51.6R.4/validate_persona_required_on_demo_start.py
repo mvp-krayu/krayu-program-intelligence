@@ -77,7 +77,7 @@ check("TraversalEngine.js unchanged",                    "no_new_coupling",
 check("DemoController.js unchanged",                     "no_new_coupling",
       "51.6R.4" not in dc)
 check("No new state variables introduced",               "no_new_coupling",
-      idx.count("useState(") <= 11)
+      idx.count("useState(") <= 14)  # 51.8R guided correction: guidedStepIndex + rawStepActive added — supersedes <= 12
 check("No new fetch calls in index.js",                  "no_new_coupling",
       idx.count("fetch(") == 1)
 check("selectedFlow logic unchanged",                    "no_new_coupling",

@@ -1,6 +1,6 @@
 /**
  * PersonaPanel.js
- * PIOS-51.6R.3-RUN01-CONTRACT-v1
+ * PIOS-51.6R.3-RUN01-CONTRACT-v1 (extended: persona selectable without query [51.8R guided correction])
  * (supersedes PIOS-51.5-RUN01-CONTRACT-v1)
  * Lineage: PIOS-51.4-RUN01-CONTRACT-v1 → PIOS-51.5-RUN01-CONTRACT-v1 → PIOS-51.6R.3-RUN01-CONTRACT-v1
  *
@@ -81,12 +81,11 @@ export default function PersonaPanel({ queryId, onPersonaChange, onPersonaDataCh
     onPersonaChange?.(personaId)
   }
 
-  if (!queryId) return null
-
+  // Persona selector renders always — query not required for selection [51.8R guided correction]
   return (
     <div className="persona-panel-body">
 
-      {/* Selector buttons */}
+      {/* Selector buttons — visible without query [51.8R guided correction] */}
       <div className="persona-selector">
         {PERSONAS.map(p => (
           <button
@@ -101,8 +100,8 @@ export default function PersonaPanel({ queryId, onPersonaChange, onPersonaDataCh
         ))}
       </div>
 
-      {/* ENL output — only after persona selected */}
-      {selectedPersona && (
+      {/* ENL output — requires queryId for fetch [R1] */}
+      {selectedPersona && queryId && (
         <div className="enl-output">
 
           {loading && (
