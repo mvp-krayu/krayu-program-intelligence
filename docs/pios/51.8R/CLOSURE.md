@@ -1,12 +1,13 @@
 # CLOSURE — Stream 51.8R
 
-1. Status: COMPLETE (including amendment + guided flow correction + loop closure)
+1. Status: COMPLETE (including amendment + guided flow correction + loop closure + persona perspective reset)
 
 2. Scope:
-   Entry strip layout correction (Step 1 / Step 2 horizontal, left-aligned). Analyst raw evidence access affordance promoted to top of ANALYST ENL view with prominent visual treatment. Amendment 1: analyst label correction ("Hide source-level evidence"), "ANALYST MODE — SOURCE EVIDENCE" header, per-block source traceability ([Open] affordance), active tab contrast fix (.te-node-dot-active), guided demo terminal state (demoComplete, held guided lock, ⌘K exit, persona-change reset). Amendment 2 (final panel order): Situation panel moved to top position expanded by default; Persona panel second; Query selector third. Guided flow correction: persona selectable without query; persona-specific guided flows (EXEC/CTO/ANALYST with RAW step); Start Demo dual gate (persona + query); source-level evidence wording; copy corrections. Amendment 3 (loop closure): completion sets demoActive=false + guided state reset; entry strip visible immediately; "Try another perspective" CTA; no ⌘K required for continuation.
+   Entry strip layout correction (Step 1 / Step 2 horizontal, left-aligned). Analyst raw evidence access affordance promoted to top of ANALYST ENL view with prominent visual treatment. Amendment 1: analyst label correction ("Hide source-level evidence"), "ANALYST MODE — SOURCE EVIDENCE" header, per-block source traceability ([Open] affordance), active tab contrast fix (.te-node-dot-active), guided demo terminal state (demoComplete, held guided lock, ⌘K exit, persona-change reset). Amendment 2 (final panel order): Situation panel moved to top position expanded by default; Persona panel second; Query selector third. Guided flow correction: persona selectable without query; persona-specific guided flows (EXEC/CTO/ANALYST with RAW step); Start Demo dual gate (persona + query); source-level evidence wording; copy corrections. Amendment 3 (loop closure): completion sets demoActive=false + guided state reset; entry strip visible immediately; "Try another perspective" CTA; no ⌘K required for continuation. Amendment 4 (persona perspective reset): setEnlPersona(null) at completion; PersonaPanel activePersona prop + reset effect; query preserved; Start Demo re-blocked until persona re-selected.
 
 3. Change log:
-   - index.js: guided-entry-strip inner wrapper; steps + arrow + button in one horizontal row; gate message below; PIOS annotation → 51.8R; [amendment] demoComplete state, prevEnlPersonaRef, ⌘K handler, persona-change-reset effect, terminal strip UI, DemoController active prop; [final panel order] Situation first/expanded, Persona second, Query zone third; useState(['situation']); [guided correction] PERSONA_GUIDED_FLOWS constant; guidedStepIndex + rawStepActive states (total 14); handleStartDemo dual gate + guided init; handleDemoNext persona-guided primary path; handleDemoExit guided reset; DemoController guided props; ENLPanel rawStepActive; dual gate button; copy corrections; [amendment 3] handleDemoNext terminal: setDemoActive(false) + setGuidedStepIndex(0) + setRawStepActive(false); "Try another perspective" CTA ternary
+   - index.js: guided-entry-strip inner wrapper; steps + arrow + button in one horizontal row; gate message below; PIOS annotation → 51.8R; [amendment] demoComplete state, prevEnlPersonaRef, ⌘K handler, persona-change-reset effect, terminal strip UI, DemoController active prop; [final panel order] Situation first/expanded, Persona second, Query zone third; useState(['situation']); [guided correction] PERSONA_GUIDED_FLOWS constant; guidedStepIndex + rawStepActive states (total 14); handleStartDemo dual gate + guided init; handleDemoNext persona-guided primary path; handleDemoExit guided reset; DemoController guided props; ENLPanel rawStepActive; dual gate button; copy corrections; [amendment 3] handleDemoNext terminal: setDemoActive(false) + setGuidedStepIndex(0) + setRawStepActive(false); "Try another perspective" CTA ternary; [amendment 4] setEnlPersona(null) at terminal; activePersona={enlPersona} prop to PersonaPanel
+   - PersonaPanel.js: [amendment 4] activePersona prop added; useEffect resets internal state when activePersona===null
    - ENLPanel.js: RawArtifactsSection prominent prop added; ANALYST prominent render moved before chain; bottom render removed; PIOS annotation → 51.8R; [amendment] analyst-source-header, hide label → "Hide source-level evidence", per-block source reference; [guided correction] useEffect imported; forceOpen prop on RawArtifactsSection; rawStepActive prop on ENLPanel export
    - DemoController.js: [guided correction] GuidedBar component added; guidedSteps/guidedStepIndex/guidedPersona props; GuidedBar routed before TraversalBar
    - PersonaPanel.js: [guided correction] if (!queryId) return null removed; ENL output gated by selectedPersona && queryId; annotation extended
@@ -40,7 +41,7 @@
 
 5. Validation:
    - validate_51_8R_guided.py: 82/82 PASS (16 groups — guided flow correction)
-   - validate_51_8R.py: 95/95 PASS (16 groups — entry strip + amendment + loop closure)
+   - validate_51_8R.py: 122/122 PASS (23 groups — entry strip + amendment + loop closure + persona perspective reset)
    - validate_51_8.py: 44/44 PASS
    - validate_51_7.py: 27/27 PASS
    - validate_mode_state_guard.py (51.6R.2): 35/35 PASS
@@ -67,7 +68,10 @@
    - Analyst raw access read-only: JSON.stringify of existing evidence fields only
    - Source traceability: sig.evidence.source_file read-only display; [Open] visual only
    - ⌘K: demo exit only — no evidence or query mutation
-   - Terminal state: guided lock preserved (demoActive=true) at traversal completion
+   - Terminal state: demoActive=false at completion [amendment 3]; guided lock no longer held — entry strip immediately visible
+   - Persona reset: setEnlPersona(null) at terminal — no persona state preserved after completion [amendment 4]
+   - Query preserved: selectedQuery not reset — context maintained for re-entry [amendment 4]
+   - PersonaPanel.js: activePersona prop reset effect — no new state variables; no data fetched
    - Guided flow: PERSONA_GUIDED_FLOWS reuses existing panel IDs only — no new panels
    - Dual gate: persona hard gate (first) + query hard gate (second) — both required; Start Demo blocked without both
    - PersonaPanel: selector rendered always; fetch still gated by both persona AND query
@@ -80,6 +84,7 @@
    validate_persona_required_on_demo_start.py bound updated to <= 14 (guidedStepIndex + rawStepActive added; documented).
    validate_51_8R.py: 4 supersessions applied (PersonaPanel ungated, DemoController lineage, button dual gate, source label correction); 1 supersession for amendment 3 (demoActive terminal behavior); guided_loop_closure group added (7 checks).
    validate_51_8R_guided.py: 1 check name superseded (Guided lock held → demoComplete set at traversal end).
+   validate_51_8R.py amendment 4: guided_loop_closure check superseded (Persona NOT reset → Persona reset after demoActive=false); 7 new groups added (persona perspective reset validation).
    validate_mode_state_guard.py [enlPersona]-only dep guard preserved — persona-change effect uses [enlPersona, demoActive, demoComplete].
    validate_enl_materialization.py (51.5): pre-existing failure — superseded by stream 51.6+; not caused by any amendment.
 

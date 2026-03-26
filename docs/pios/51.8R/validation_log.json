@@ -1,8 +1,8 @@
 {
   "stream": "51.8R",
-  "timestamp": "2026-03-26T16:43:34.597809Z",
-  "total": 95,
-  "passed": 95,
+  "timestamp": "2026-03-26T17:11:10.406533Z",
+  "total": 122,
+  "passed": 122,
   "failed": 0,
   "groups": {
     "entry_strip_horizontal_alignment": {
@@ -67,6 +67,34 @@
     },
     "guided_loop_closure": {
       "pass": 7,
+      "fail": 0
+    },
+    "persona_cleared_on_completion": {
+      "pass": 5,
+      "fail": 0
+    },
+    "query_preserved_on_completion": {
+      "pass": 3,
+      "fail": 0
+    },
+    "demo_blocked_without_persona_after_return": {
+      "pass": 3,
+      "fail": 0
+    },
+    "no_persona_output_after_completion": {
+      "pass": 4,
+      "fail": 0
+    },
+    "no_raw_evidence_after_completion": {
+      "pass": 4,
+      "fail": 0
+    },
+    "persona_panel_interactive_after_completion": {
+      "pass": 4,
+      "fail": 0
+    },
+    "no_zombie_persona_state": {
+      "pass": 4,
       "fail": 0
     }
   },
@@ -636,8 +664,170 @@
       "detail": ""
     },
     {
-      "name": "Persona NOT reset at completion",
+      "name": "Persona reset after demoActive=false at terminal",
       "group": "guided_loop_closure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setEnlPersona(null) called at terminal",
+      "group": "persona_cleared_on_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setEnlPersona(null) after setDemoActive(false)",
+      "group": "persona_cleared_on_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel activePersona prop present",
+      "group": "persona_cleared_on_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel activePersona reset effect present",
+      "group": "persona_cleared_on_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel personaData cleared on reset",
+      "group": "persona_cleared_on_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setSelectedQuery not called at terminal",
+      "group": "query_preserved_on_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "queryId still passed to PersonaPanel",
+      "group": "query_preserved_on_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "query gate preserved in handleStartDemo",
+      "group": "query_preserved_on_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Start button disabled without persona",
+      "group": "demo_blocked_without_persona_after_return",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona hard gate in handleStartDemo",
+      "group": "demo_blocked_without_persona_after_return",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona required message preserved",
+      "group": "demo_blocked_without_persona_after_return",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel gated by enlPersona",
+      "group": "no_persona_output_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel not rendered when enlPersona null",
+      "group": "no_persona_output_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel ENL output gated by selectedPersona && queryId",
+      "group": "no_persona_output_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "activePersona null resets PersonaPanel output",
+      "group": "no_persona_output_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "rawStepActive reset to false at terminal",
+      "group": "no_raw_evidence_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "forceOpen tied to rawStepActive in ENLPanel call",
+      "group": "no_raw_evidence_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "RawArtifactsSection ANALYST-gated in ENLPanel",
+      "group": "no_raw_evidence_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "forceOpen prop in RawArtifactsSection",
+      "group": "no_raw_evidence_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel selector not gated by query",
+      "group": "persona_panel_interactive_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel has activePersona prop",
+      "group": "persona_panel_interactive_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel selector buttons always rendered",
+      "group": "persona_panel_interactive_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Entry strip shows after completion (!demoActive)",
+      "group": "persona_panel_interactive_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setEnlPersona(null) at terminal: explicit reset",
+      "group": "no_zombie_persona_state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "guidedPersona={enlPersona}: null when cleared",
+      "group": "no_zombie_persona_state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "activePersona prop flows null to PersonaPanel",
+      "group": "no_zombie_persona_state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No persona auto-restore after completion",
+      "group": "no_zombie_persona_state",
       "status": "PASS",
       "detail": ""
     }

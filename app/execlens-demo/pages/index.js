@@ -320,10 +320,12 @@ export default function Home() {
       const nextIndex = guidedStepIndex + 1
       if (nextIndex >= steps.length) {
         // Amendment 3: close loop — return to entry strip immediately [51.8R amendment 3]
+        // Amendment 4: reset persona for full perspective reset [51.8R amendment 4]
         setDemoComplete(true)
         setDemoActive(false)
         setGuidedStepIndex(0)
         setRawStepActive(false)
+        setEnlPersona(null)
       } else {
         const step = steps[nextIndex]
         setGuidedStepIndex(nextIndex)
@@ -344,6 +346,7 @@ export default function Home() {
         setDemoActive(false)
         setGuidedStepIndex(0)
         setRawStepActive(false)
+        setEnlPersona(null)
       } else {
         setTraversalNodeIndex(nextIndex)
         setOpenPanels([panels[nextIndex]])
@@ -355,6 +358,7 @@ export default function Home() {
         setDemoActive(false)
         setGuidedStepIndex(0)
         setRawStepActive(false)
+        setEnlPersona(null)
       } else {
         setDemoStage(prev => prev + 1)
       }
@@ -452,7 +456,7 @@ export default function Home() {
           expanded={openPanels.includes('persona')}
           onToggle={() => handleToggle('persona')}
         >
-          <PersonaPanel queryId={selectedQuery} onPersonaChange={setEnlPersona} onPersonaDataChange={setEnlPersonaData} />
+          <PersonaPanel queryId={selectedQuery} onPersonaChange={setEnlPersona} onPersonaDataChange={setEnlPersonaData} activePersona={enlPersona} />
         </DisclosurePanel>
 
         {/* ── Query selector — third position [51.8R final polish] ── */}

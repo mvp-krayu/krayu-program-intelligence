@@ -1,6 +1,6 @@
 /**
  * PersonaPanel.js
- * PIOS-51.6R.3-RUN01-CONTRACT-v1 (extended: persona selectable without query [51.8R guided correction])
+ * PIOS-51.6R.3-RUN01-CONTRACT-v1 (extended: persona selectable without query [51.8R guided correction]; activePersona reset prop [51.8R amendment 4])
  * (supersedes PIOS-51.5-RUN01-CONTRACT-v1)
  * Lineage: PIOS-51.4-RUN01-CONTRACT-v1 → PIOS-51.5-RUN01-CONTRACT-v1 → PIOS-51.6R.3-RUN01-CONTRACT-v1
  *
@@ -32,7 +32,7 @@ const PERSONAS = [
 ]
 
 
-export default function PersonaPanel({ queryId, onPersonaChange, onPersonaDataChange }) {
+export default function PersonaPanel({ queryId, onPersonaChange, onPersonaDataChange, activePersona }) {
   const [selectedPersona, setSelectedPersona] = useState(null)
   const [personaData,     setPersonaData]     = useState(null)
   const [loading,         setLoading]         = useState(false)
@@ -46,6 +46,16 @@ export default function PersonaPanel({ queryId, onPersonaChange, onPersonaDataCh
     onPersonaChange?.(null)
     onPersonaDataChange?.(null)
   }, [queryId])
+
+  // Reset on external persona clear — e.g., guided loop completion [51.8R amendment 4]
+  useEffect(() => {
+    if (activePersona === null) {
+      setSelectedPersona(null)
+      setPersonaData(null)
+      setError(null)
+      onPersonaDataChange?.(null)
+    }
+  }, [activePersona])
 
   // Fetch persona view [R1]
   useEffect(() => {

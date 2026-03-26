@@ -2,7 +2,7 @@
 """
 validate_51_8R.py
 PIOS-51.8R-RUN01-CONTRACT-v1 (amended: terminal state, analyst label, source traceability,
-tab contrast, guided flow correction, guided loop closure)
+tab contrast, guided flow correction, guided loop closure, persona perspective reset)
 
 Validation suite: entry_strip_horizontal_alignment, entry_strip_left_alignment,
 persona_gate_preserved, analyst_raw_evidence_visible,
@@ -10,7 +10,11 @@ no_runtime_regression, no_evidence_mutation, api_regression,
 analyst_label_corrected, source_link_present, active_tab_contrast_readable,
 demo_terminal_state_present, ctrl_k_exit_guided_mode,
 rerun_demo_resets_sequence, persona_switch_resets_to_step_1,
-no_zombie_guided_state, guided_loop_closure.
+no_zombie_guided_state, guided_loop_closure,
+persona_cleared_on_completion, query_preserved_on_completion,
+demo_blocked_without_persona_after_return, no_persona_output_after_completion,
+no_raw_evidence_after_completion, persona_panel_interactive_after_completion,
+no_zombie_persona_state.
 
 Expected: all PASS
 """
@@ -309,6 +313,7 @@ check("handleDemoNext: demoActive false at terminal",   "guided_loop_closure",
       "setDemoComplete(true)" in idx and "setDemoActive(false)" in idx.split("setDemoComplete(true)")[1])
 check("handleDemoNext: guidedStepIndex reset at terminal", "guided_loop_closure",
       idx.count("setGuidedStepIndex(0)") >= 3)  # handleStartDemo + handleDemoNext + handleDemoExit
+                                                  # 51.8R amendment 4: setEnlPersona(null) also at terminal — count unaffected
 check("handleDemoNext: rawStepActive reset at terminal", "guided_loop_closure",
       idx.count("setRawStepActive(false)") >= 3)  # handleStartDemo + handleDemoNext + handleDemoExit
 check("Entry strip visible after completion (!demoActive)", "guided_loop_closure",
@@ -318,8 +323,101 @@ check("CTA: Try another perspective when demoComplete",  "guided_loop_closure",
 check("CTA ternary: demoComplete controls label",       "guided_loop_closure",
       "demoComplete ? 'Try another perspective'" in idx or
       'demoComplete ? "Try another perspective"' in idx)
-check("Persona NOT reset at completion",                "guided_loop_closure",
-      "setEnlPersona" not in idx.split("setDemoComplete(true)")[1].split("setDemoActive(false)")[0])
+_term = idx.split("setDemoComplete(true)")[1] if "setDemoComplete(true)" in idx else ""
+check("Persona reset after demoActive=false at terminal","guided_loop_closure",  # 51.8R amendment 4: supersedes 'Persona NOT reset at completion'
+      "setEnlPersona(null)" in _term and
+      _term.index("setDemoActive(false)") < _term.index("setEnlPersona(null)"))
+
+# ── persona_cleared_on_completion ────────────────────────────────────────────
+
+print("\n[persona_cleared_on_completion]")
+
+check("setEnlPersona(null) called at terminal",         "persona_cleared_on_completion",
+      "setEnlPersona(null)" in idx.split("setDemoComplete(true)")[1])
+check("setEnlPersona(null) after setDemoActive(false)", "persona_cleared_on_completion",
+      "setEnlPersona(null)" in _term and
+      _term.index("setDemoActive(false)") < _term.index("setEnlPersona(null)"))
+check("PersonaPanel activePersona prop present",        "persona_cleared_on_completion",
+      "activePersona={enlPersona}" in idx)
+check("PersonaPanel activePersona reset effect present","persona_cleared_on_completion",
+      "activePersona === null" in pp and "setSelectedPersona(null)" in pp)
+check("PersonaPanel personaData cleared on reset",      "persona_cleared_on_completion",
+      "activePersona === null" in pp and "setPersonaData(null)" in pp)
+
+# ── query_preserved_on_completion ────────────────────────────────────────────
+
+print("\n[query_preserved_on_completion]")
+
+terminal_tail = idx.split("setDemoComplete(true)")[1] if "setDemoComplete(true)" in idx else ""
+check("setSelectedQuery not called at terminal",        "query_preserved_on_completion",
+      "setSelectedQuery" not in terminal_tail.split("return")[0])
+check("queryId still passed to PersonaPanel",           "query_preserved_on_completion",
+      "queryId={selectedQuery}" in idx)
+check("query gate preserved in handleStartDemo",        "query_preserved_on_completion",
+      "if (!selectedQuery) return" in idx)
+
+# ── demo_blocked_without_persona_after_return ─────────────────────────────────
+
+print("\n[demo_blocked_without_persona_after_return]")
+
+check("Start button disabled without persona",          "demo_blocked_without_persona_after_return",
+      "disabled={!enlPersona || !selectedQuery}" in idx)
+check("Persona hard gate in handleStartDemo",           "demo_blocked_without_persona_after_return",
+      "if (!enlPersona) return" in idx)
+check("Persona required message preserved",             "demo_blocked_without_persona_after_return",
+      "Select a Persona to enable execution" in idx)
+
+# ── no_persona_output_after_completion ────────────────────────────────────────
+
+print("\n[no_persona_output_after_completion]")
+
+check("ENLPanel gated by enlPersona",                   "no_persona_output_after_completion",
+      "queryData && enlPersona" in idx)
+check("ENLPanel not rendered when enlPersona null",     "no_persona_output_after_completion",
+      idx.count("<ENLPanel") == 1)
+check("PersonaPanel ENL output gated by selectedPersona && queryId", "no_persona_output_after_completion",
+      "selectedPersona && queryId" in pp)
+check("activePersona null resets PersonaPanel output",  "no_persona_output_after_completion",
+      "activePersona === null" in pp and "setSelectedPersona(null)" in pp)
+
+# ── no_raw_evidence_after_completion ──────────────────────────────────────────
+
+print("\n[no_raw_evidence_after_completion]")
+
+check("rawStepActive reset to false at terminal",       "no_raw_evidence_after_completion",
+      "setRawStepActive(false)" in terminal_tail)
+check("forceOpen tied to rawStepActive in ENLPanel call","no_raw_evidence_after_completion",
+      "rawStepActive={rawStepActive}" in idx or "forceOpen={rawStepActive}" in idx)
+check("RawArtifactsSection ANALYST-gated in ENLPanel",  "no_raw_evidence_after_completion",
+      "persona === 'ANALYST'" in enl)
+check("forceOpen prop in RawArtifactsSection",          "no_raw_evidence_after_completion",
+      "forceOpen" in enl)
+
+# ── persona_panel_interactive_after_completion ────────────────────────────────
+
+print("\n[persona_panel_interactive_after_completion]")
+
+check("PersonaPanel selector not gated by query",       "persona_panel_interactive_after_completion",
+      "if (!queryId) return null" not in pp)
+check("PersonaPanel has activePersona prop",            "persona_panel_interactive_after_completion",
+      "activePersona" in pp)
+check("PersonaPanel selector buttons always rendered",  "persona_panel_interactive_after_completion",
+      "persona-btn" in pp and "persona-selector" in pp)
+check("Entry strip shows after completion (!demoActive)","persona_panel_interactive_after_completion",
+      "{!demoActive &&" in idx or "!demoActive && (" in idx)
+
+# ── no_zombie_persona_state ───────────────────────────────────────────────────
+
+print("\n[no_zombie_persona_state]")
+
+check("setEnlPersona(null) at terminal: explicit reset",  "no_zombie_persona_state",
+      "setEnlPersona(null)" in terminal_tail)
+check("guidedPersona={enlPersona}: null when cleared",    "no_zombie_persona_state",
+      "guidedPersona={enlPersona}" in idx)
+check("activePersona prop flows null to PersonaPanel",    "no_zombie_persona_state",
+      "activePersona={enlPersona}" in idx and "activePersona" in pp)
+check("No persona auto-restore after completion",         "no_zombie_persona_state",
+      "setEnlPersona(" not in idx.split("setEnlPersona(null)")[1].split("handleDemoExit")[0])
 
 # ── Summary ───────────────────────────────────────────────────────────────────
 
