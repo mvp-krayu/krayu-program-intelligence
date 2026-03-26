@@ -1,0 +1,65 @@
+{
+  "stream": "51.6R.4",
+  "date": "2026-03-26",
+  "code_files_modified": [
+    {
+      "path": "app/execlens-demo/components/ENLPanel.js",
+      "change": "Add RawArtifactsSection component (Analyst only, toggle, read-only evidence display); add useState import; update contract to PIOS-51.6R.4"
+    },
+    {
+      "path": "app/execlens-demo/pages/index.js",
+      "change": "handleStartDemo: setEnlPersona('CTO') if null; evidence panel: blocked when persona null; UI naming: Lens title/h1/CTA/positioning; update contract to PIOS-51.6R.4"
+    },
+    {
+      "path": "app/execlens-demo/styles/globals.css",
+      "change": "PIOS-51.6R.4 block appended: .hero-positioning, .raw-artifacts-section, .raw-artifacts-toggle, .raw-artifact-data"
+    }
+  ],
+  "files_created": [
+    {
+      "path": "scripts/pios/51.6R.4/validate_persona_required_on_demo_start.py",
+      "purpose": "21-test validator: persona enforcement, evidence guard, no new coupling",
+      "category": "validation"
+    },
+    {
+      "path": "scripts/pios/51.6R.4/validate_analyst_raw_access.py",
+      "purpose": "22-test validator: analyst-only raw artifacts, no new data, css",
+      "category": "validation"
+    },
+    {
+      "path": "scripts/pios/51.6R.4/validate_ui_naming_lens.py",
+      "purpose": "17-test validator: UI naming Lens, positioning tagline, identifier preservation",
+      "category": "validation"
+    },
+    {
+      "path": "docs/pios/51.6R.4/validation_log_persona_required.json",
+      "purpose": "Validation run — 21/21 PASS",
+      "category": "evidence"
+    },
+    {
+      "path": "docs/pios/51.6R.4/validation_log_analyst_raw.json",
+      "purpose": "Validation run — 22/22 PASS",
+      "category": "evidence"
+    },
+    {
+      "path": "docs/pios/51.6R.4/validation_log_ui_naming.json",
+      "purpose": "Validation run — 17/17 PASS",
+      "category": "evidence"
+    },
+    {
+      "path": "docs/pios/51.6R.4/execution_report.md",
+      "purpose": "Execution summary",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/51.6R.4/file_changes.json",
+      "purpose": "This file",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/51.6R.4/CLOSURE.md",
+      "purpose": "Stream closure",
+      "category": "governance"
+    }
+  ]
+}

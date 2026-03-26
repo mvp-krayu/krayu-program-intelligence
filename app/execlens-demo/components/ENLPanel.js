@@ -1,7 +1,8 @@
 /**
  * ENLPanel.js
- * PIOS-51.6R-RUN01-CONTRACT-v1
- * (supersedes PIOS-51.5-RUN01-CONTRACT-v1)
+ * PIOS-51.6R.4-RUN01-CONTRACT-v1
+ * (supersedes PIOS-51.6R-RUN01-CONTRACT-v1)
+ * Lineage: PIOS-51.5R-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1 → PIOS-51.6R.4-RUN01-CONTRACT-v1
  *
  * Visible ENL chain repair — persona-shaped chain navigation.
  *
@@ -27,6 +28,7 @@
  * Sequence authority: docs/pios/51.5R/enl_visible_chain_contract.md
  */
 
+import { useState } from 'react'
 import NavigationPanel from './NavigationPanel'
 
 // ---------------------------------------------------------------------------
@@ -350,6 +352,37 @@ function ChainStep({ signal, stepNum, isEntry, persona, personaData }) {
 }
 
 // ---------------------------------------------------------------------------
+// RawArtifactsSection — Analyst only [51.6R.4]
+// Opens existing evidence fields — read-only, no transformation, no new API [R5]
+// ---------------------------------------------------------------------------
+
+function RawArtifactsSection({ signals }) {
+  const [open, setOpen] = useState(false)
+  if (!signals || signals.length === 0) return null
+  return (
+    <div className="raw-artifacts-section">
+      <button
+        className={`raw-artifacts-toggle${open ? ' raw-artifacts-toggle-open' : ''}`}
+        onClick={() => setOpen(o => !o)}
+        type="button"
+      >
+        {open ? 'Hide raw artifacts' : 'View raw artifacts'}
+      </button>
+      {open && (
+        <div className="raw-artifacts-body">
+          {signals.map(sig => sig.evidence ? (
+            <div key={sig.signal_id} className="raw-artifact-entry">
+              <div className="raw-artifact-id">{sig.signal_id}</div>
+              <pre className="raw-artifact-data">{JSON.stringify(sig.evidence, null, 2)}</pre>
+            </div>
+          ) : null)}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // ENLPanel
 // ---------------------------------------------------------------------------
 
@@ -402,6 +435,11 @@ export default function ENLPanel({ signals, navigation, persona, personaData }) 
 
       {/* Navigation vault links — always after chain */}
       <NavigationPanel navigation={navigation} />
+
+      {/* Raw artifacts — Analyst only [51.6R.4, R5] */}
+      {persona === 'ANALYST' && (
+        <RawArtifactsSection signals={orderedSignals} />
+      )}
 
     </div>
   )

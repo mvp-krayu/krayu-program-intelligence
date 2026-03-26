@@ -1,0 +1,154 @@
+{
+  "stream": "51.6R.4",
+  "validator": "validate_persona_required_on_demo_start",
+  "timestamp": "2026-03-26T12:31:00.421856Z",
+  "total": 21,
+  "passed": 21,
+  "failed": 0,
+  "groups": {
+    "persona_enforcement": {
+      "pass": 6,
+      "fail": 0
+    },
+    "evidence_guard": {
+      "pass": 4,
+      "fail": 0
+    },
+    "no_new_coupling": {
+      "pass": 5,
+      "fail": 0
+    },
+    "api_regression": {
+      "pass": 6,
+      "fail": 0
+    }
+  },
+  "results": [
+    {
+      "name": "index.js has PIOS-51.6R.4 contract",
+      "group": "persona_enforcement",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleStartDemo: setEnlPersona('CTO') present",
+      "group": "persona_enforcement",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleStartDemo: null persona guard",
+      "group": "persona_enforcement",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona enforcement annotation present",
+      "group": "persona_enforcement",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_DEFAULT_FLOW.CTO fallback present",
+      "group": "persona_enforcement",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona enforcement at handleStartDemo only",
+      "group": "persona_enforcement",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Evidence panel: persona null guard present",
+      "group": "evidence_guard",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Evidence panel: blocked message when no persona",
+      "group": "evidence_guard",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel only rendered with persona present",
+      "group": "evidence_guard",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Evidence guard uses enlPersona (not selectedFlow)",
+      "group": "evidence_guard",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "TraversalEngine.js unchanged",
+      "group": "no_new_coupling",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DemoController.js unchanged",
+      "group": "no_new_coupling",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No new state variables introduced",
+      "group": "no_new_coupling",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No new fetch calls in index.js",
+      "group": "no_new_coupling",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "selectedFlow logic unchanged",
+      "group": "no_new_coupling",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "route: query GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: topology",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: status",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona EXECUTIVE GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona CTO GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona ANALYST GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    }
+  ]
+}

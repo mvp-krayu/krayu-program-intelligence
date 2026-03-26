@@ -1,0 +1,130 @@
+{
+  "stream": "51.6R.4",
+  "validator": "validate_ui_naming_lens",
+  "timestamp": "2026-03-26T12:31:00.643832Z",
+  "total": 17,
+  "passed": 17,
+  "failed": 0,
+  "groups": {
+    "ui_naming": {
+      "pass": 7,
+      "fail": 0
+    },
+    "identifier_preservation": {
+      "pass": 6,
+      "fail": 0
+    },
+    "no_repetition": {
+      "pass": 3,
+      "fail": 0
+    },
+    "css_present": {
+      "pass": 1,
+      "fail": 0
+    }
+  },
+  "results": [
+    {
+      "name": "Page title is 'Lens \u2014 Program Intelligence'",
+      "group": "ui_naming",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "h1 hero title is 'Lens' (not ExecLens)",
+      "group": "ui_naming",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Start button text is 'Start Lens Demo'",
+      "group": "ui_naming",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No 'Start ExecLens Demo' in user-facing output",
+      "group": "ui_naming",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Positioning tagline present",
+      "group": "ui_naming",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Krayu attribution in tagline",
+      "group": "ui_naming",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "hero-positioning class used",
+      "group": "ui_naming",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js file unchanged (no rename)",
+      "group": "identifier_preservation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "execlens-demo directory preserved",
+      "group": "identifier_preservation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "api/execlens route preserved in index.js",
+      "group": "identifier_preservation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No ExecLens in hero title element",
+      "group": "identifier_preservation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "enl- CSS class prefix unchanged",
+      "group": "identifier_preservation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Internal contract identifiers unchanged",
+      "group": "identifier_preservation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Positioning tagline appears once",
+      "group": "no_repetition",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Start Lens Demo button appears once",
+      "group": "no_repetition",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "hero-positioning class used once",
+      "group": "no_repetition",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css .hero-positioning present",
+      "group": "css_present",
+      "status": "PASS",
+      "detail": ""
+    }
+  ]
+}

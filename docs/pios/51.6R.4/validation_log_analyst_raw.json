@@ -1,0 +1,164 @@
+{
+  "stream": "51.6R.4",
+  "validator": "validate_analyst_raw_access",
+  "timestamp": "2026-03-26T12:31:00.609359Z",
+  "total": 22,
+  "passed": 22,
+  "failed": 0,
+  "groups": {
+    "raw_artifacts_content": {
+      "pass": 6,
+      "fail": 0
+    },
+    "analyst_only_guard": {
+      "pass": 4,
+      "fail": 0
+    },
+    "no_new_data": {
+      "pass": 5,
+      "fail": 0
+    },
+    "css_present": {
+      "pass": 4,
+      "fail": 0
+    },
+    "api_regression": {
+      "pass": 3,
+      "fail": 0
+    }
+  },
+  "results": [
+    {
+      "name": "ENLPanel has PIOS-51.6R.4 contract",
+      "group": "raw_artifacts_content",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "RawArtifactsSection component present",
+      "group": "raw_artifacts_content",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "View raw artifacts label present",
+      "group": "raw_artifacts_content",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Raw artifacts toggle button present",
+      "group": "raw_artifacts_content",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Raw artifacts uses useState for toggle",
+      "group": "raw_artifacts_content",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "raw-artifact-data renders existing evidence",
+      "group": "raw_artifacts_content",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Raw artifacts guarded by ANALYST persona",
+      "group": "analyst_only_guard",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "RawArtifactsSection only rendered for ANALYST",
+      "group": "analyst_only_guard",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No raw artifacts in PersonaPanel",
+      "group": "analyst_only_guard",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No raw artifacts in index.js panels",
+      "group": "analyst_only_guard",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel: no new fetch calls",
+      "group": "no_new_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Raw artifacts: read-only (no setState on data)",
+      "group": "no_new_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Raw artifacts: JSON.stringify read-only display",
+      "group": "no_new_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Raw artifacts: uses orderedSignals (existing)",
+      "group": "no_new_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No new API routes added",
+      "group": "no_new_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css PIOS-51.6R.4 block present",
+      "group": "css_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css .raw-artifacts-section",
+      "group": "css_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css .raw-artifacts-toggle",
+      "group": "css_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css .raw-artifact-data",
+      "group": "css_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "route: query GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona ANALYST GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona CTO GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    }
+  ]
+}

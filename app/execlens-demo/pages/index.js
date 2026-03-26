@@ -1,8 +1,8 @@
 /**
  * pages/index.js
- * PIOS-51.6R.3-RUN01-CONTRACT-v1
- * (supersedes PIOS-51.6R.2-RUN01-CONTRACT-v1)
- * Lineage: PIOS-51.6-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1 → PIOS-51.6R.1-RUN01-CONTRACT-v1 → PIOS-51.6R.2-RUN01-CONTRACT-v1 → PIOS-51.6R.3-RUN01-CONTRACT-v1
+ * PIOS-51.6R.4-RUN01-CONTRACT-v1
+ * (supersedes PIOS-51.6R.3-RUN01-CONTRACT-v1)
+ * Lineage: PIOS-51.6-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1 → PIOS-51.6R.1-RUN01-CONTRACT-v1 → PIOS-51.6R.2-RUN01-CONTRACT-v1 → PIOS-51.6R.3-RUN01-CONTRACT-v1 → PIOS-51.6R.4-RUN01-CONTRACT-v1
  *
  * ExecLens Demo Surface — panel-orchestrated progressive disclosure.
  * Supersedes: PIOS-51.3 (step-driven navigation)
@@ -215,8 +215,10 @@ export default function Home() {
   // ── Demo control handlers ──
 
   const handleStartDemo = () => {
+    // Persona enforcement — default CTO if none selected [51.6R.4]
+    if (!enlPersona) setEnlPersona('CTO')
     // Derive active flow at demo start — persona binding happens here, not on persona click [51.6R.2]
-    const activeFlow = selectedFlow || (enlPersona ? PERSONA_DEFAULT_FLOW[enlPersona] : null)
+    const activeFlow = selectedFlow || (enlPersona ? PERSONA_DEFAULT_FLOW[enlPersona] : PERSONA_DEFAULT_FLOW.CTO)
     setTraversalNodeIndex(0)
     setSelectedQuery('GQ-003')
     if (activeFlow) {
@@ -265,7 +267,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>ExecLens — Program Intelligence</title>
+        <title>Lens — Program Intelligence</title>
         <meta name="description" content="Evidence-first program intelligence surface — PIOS run_02_governed" />
       </Head>
 
@@ -274,19 +276,20 @@ export default function Home() {
         {/* ── Hero ── */}
         <header className="hero">
           <div className="hero-eyebrow">PROGRAM INTELLIGENCE — EXECUTION SURFACE</div>
-          <h1 className="hero-title">ExecLens</h1>
+          <h1 className="hero-title">Lens</h1>
+          <div className="hero-positioning">Lens — a Signäl capability (Krayu · Program Intelligence)</div>
           <p className="hero-subtitle">
             Evidence-first system for program diagnosis, structural risk, and execution visibility
           </p>
           <div className="hero-meta">
-            PIOS-51.6R.3-RUN01-CONTRACT-v1 · run_02_governed
+            PIOS-51.6R.4-RUN01-CONTRACT-v1 · run_02_governed
             &ensp;·&ensp;
             No inference. No synthetic data.
           </div>
 
           {!demoActive && (
             <button className="demo-start-btn" onClick={handleStartDemo} type="button">
-              Start ExecLens Demo
+              Start Lens Demo
             </button>
           )}
         </header>
@@ -373,13 +376,15 @@ export default function Home() {
           expanded={openPanels.includes('evidence')}
           onToggle={() => togglePanel('evidence')}
         >
-          {queryData ? (
+          {queryData && enlPersona ? (
             <ENLPanel
               signals={queryData.signals}
               persona={enlPersona}
               personaData={enlPersonaData}
               navigation={queryData.navigation}
             />
+          ) : queryData && !enlPersona ? (
+            <div className="no-query-state">Select a persona to view evidence.</div>
           ) : (
             <div className="no-query-state">Select a query to load evidence.</div>
           )}
