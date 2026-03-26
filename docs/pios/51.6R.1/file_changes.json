@@ -1,0 +1,26 @@
+{
+  "stream": "51.6R.1",
+  "date": "2026-03-26",
+  "baseline_commit": "4d653db",
+  "code_files_modified": [
+    {
+      "path": "app/execlens-demo/pages/index.js",
+      "change": "Removed demo-entry-zone and inline flow selector from hero; bare Start button is sole pre-demo CTA; contract updated to 51.6R.1"
+    },
+    {
+      "path": "app/execlens-demo/components/DemoController.js",
+      "change": "Added te-bar-flow-zone + te-flow-override compact buttons inside TraversalBar; onFlowSelect wired through; contract updated to 51.6R.1"
+    },
+    {
+      "path": "app/execlens-demo/styles/globals.css",
+      "change": "Appended PIOS-51.6R.1 CSS block: .te-bar-flow-zone, .te-flow-override, .te-flow-override-btn, .te-flow-override-btn-active"
+    }
+  ],
+  "files_not_changed": [
+    "app/execlens-demo/components/TraversalEngine.js",
+    "app/execlens-demo/components/ENLPanel.js",
+    "app/execlens-demo/components/PersonaPanel.js",
+    "scripts/pios/51.6/validate_traversal_sequence.py",
+    "scripts/pios/51.6/validate_persona_invariance.py"
+  ]
+}

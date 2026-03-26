@@ -1,0 +1,235 @@
+{
+  "stream": "51.6R.1",
+  "timestamp": "2026-03-26T09:56:50.804709Z",
+  "total": 34,
+  "passed": 34,
+  "failed": 0,
+  "groups": {
+    "entry_hierarchy": {
+      "pass": 10,
+      "fail": 0
+    },
+    "persona_priority": {
+      "pass": 7,
+      "fail": 0
+    },
+    "no_traversal_logic_change": {
+      "pass": 6,
+      "fail": 0
+    },
+    "no_data_mutation": {
+      "pass": 5,
+      "fail": 0
+    },
+    "api_regression": {
+      "pass": 6,
+      "fail": 0
+    }
+  },
+  "results": [
+    {
+      "name": "index.js has PIOS-51.6R.1 contract",
+      "group": "entry_hierarchy",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DemoController.js has PIOS-51.6R.1 contract",
+      "group": "entry_hierarchy",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Pre-demo: only Start button at entry",
+      "group": "entry_hierarchy",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Flow selector not in pre-demo hero",
+      "group": "entry_hierarchy",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Single CTA: no competing flow action at entry",
+      "group": "entry_hierarchy",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Flow override inside TraversalBar only",
+      "group": "entry_hierarchy",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Flow override absent from pre-demo render",
+      "group": "entry_hierarchy",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css has PIOS-51.6R.1 block",
+      "group": "entry_hierarchy",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css .te-flow-override",
+      "group": "entry_hierarchy",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css .te-bar-flow-zone",
+      "group": "entry_hierarchy",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_DEFAULT_FLOW in index.js",
+      "group": "persona_priority",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona\u2192flow auto-binding effect present",
+      "group": "persona_priority",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaNarrativeHeader in ENLPanel",
+      "group": "persona_priority",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona narrative dominant: framing_label",
+      "group": "persona_priority",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona narrative dominant: primary_question",
+      "group": "persona_priority",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_AUTO_OPEN preserved in TraversalEngine",
+      "group": "persona_priority",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona auto-open effect in index.js",
+      "group": "persona_priority",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "TraversalEngine.js PIOS-51.6 contract preserved",
+      "group": "no_traversal_logic_change",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "TraversalEngine.js NOT modified in 51.6R.1",
+      "group": "no_traversal_logic_change",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "TRAVERSAL_FLOWS unchanged",
+      "group": "no_traversal_logic_change",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "NODE_TO_PANEL unchanged",
+      "group": "no_traversal_logic_change",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "getFlowPanels unchanged",
+      "group": "no_traversal_logic_change",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Traversal single-focus logic in index.js",
+      "group": "no_traversal_logic_change",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No new fetch calls in index.js",
+      "group": "no_data_mutation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No new fetch calls in DemoController",
+      "group": "no_data_mutation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No new API routes",
+      "group": "no_data_mutation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel not modified in 51.6R.1",
+      "group": "no_data_mutation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "TraversalEngine not modified",
+      "group": "no_data_mutation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "route: query GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: topology",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: status",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona EXECUTIVE GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona CTO GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona ANALYST GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    }
+  ]
+}

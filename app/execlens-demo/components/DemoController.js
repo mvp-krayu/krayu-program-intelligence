@@ -1,8 +1,8 @@
 /**
  * DemoController.js
- * PIOS-51.6R-RUN01-CONTRACT-v1
- * (supersedes PIOS-51.6-RUN01-CONTRACT-v1)
- * Lineage: PIOS-51.6-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1
+ * PIOS-51.6R.1-RUN01-CONTRACT-v1
+ * (supersedes PIOS-51.6R-RUN01-CONTRACT-v1)
+ * Lineage: PIOS-51.6-RUN01-CONTRACT-v1 → PIOS-51.6R → PIOS-51.6R.1-RUN01-CONTRACT-v1
  *
  * Demo choreography layer — panel orchestration.
  * Extends 51.4 with traversal flow selection and node position indicator.
@@ -15,10 +15,11 @@
  *   R1  no scroll orchestration — panels handle visibility
  *   R2  no content modification — stage/node signaling only
  *   R3  keyboard navigation: →/Enter/Space = next, Escape = exit
- *   R4  flow selector shown inline in index.js near Start Demo [51.6R — demoted]
+ *   R4  flow selector hidden pre-demo; tucked into TraversalBar during active demo [51.6R.1]
  *   R5  traversal mode enforces single focus node at a time
  *   R6  standard mode (no flow selected) falls back to 51.4 behavior
- *   R7  pre-demo: DemoController renders null — index.js owns pre-demo UI [51.6R]
+ *   R7  pre-demo: DemoController renders null — single CTA is Start button in index.js [51.6R.1]
+ *   R8  traversal flow override available inside TraversalBar only (secondary, during demo) [51.6R.1]
  *
  * Sequence authority: docs/pios/51.6R/persona_narrative_restoration.md
  */
@@ -78,7 +79,7 @@ export function FlowSelector({ selectedFlow, onFlowSelect }) {
 // TraversalBar — node-position indicator (traversal mode)
 // ---------------------------------------------------------------------------
 
-function TraversalBar({ flowId, nodeIndex, nodes, onNext, onExit }) {
+function TraversalBar({ flowId, nodeIndex, nodes, onNext, onExit, onFlowSelect }) {
   const flow    = TRAVERSAL_FLOWS[flowId]
   const isLast  = nodeIndex >= nodes.length - 1
   const current = nodes[nodeIndex]
@@ -86,8 +87,25 @@ function TraversalBar({ flowId, nodeIndex, nodes, onNext, onExit }) {
   return (
     <div className="demo-bar demo-bar-traversal" role="navigation" aria-label="Traversal navigation">
 
-      {/* Flow label */}
-      <div className="te-bar-flow-label">{flow?.label}</div>
+      {/* Flow label + compact override — secondary, during demo only [R8] */}
+      <div className="te-bar-flow-zone">
+        <span className="te-bar-flow-label">{flow?.label}</span>
+        {onFlowSelect && (
+          <div className="te-flow-override">
+            {Object.entries(TRAVERSAL_FLOWS).map(([id, f]) => (
+              <button
+                key={id}
+                className={`te-flow-override-btn${flowId === id ? ' te-flow-override-btn-active' : ''}`}
+                onClick={() => onFlowSelect(id)}
+                type="button"
+                title={f.description}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* Node sequence indicators */}
       <div className="te-node-row">
@@ -204,6 +222,7 @@ export default function DemoController({
         nodes={traversalNodes}
         onNext={onNext}
         onExit={onExit}
+        onFlowSelect={onFlowSelect}
       />
     )
   }

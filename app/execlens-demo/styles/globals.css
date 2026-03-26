@@ -2928,3 +2928,45 @@ a.topo-chip:hover {
   line-height: 1.5;
   font-style: italic;
 }
+
+/* ============================================================
+   PIOS-51.6R.1 — Persona-First Entry Correction CSS
+   ============================================================ */
+
+/* Flow zone inside TraversalBar — flow label + compact override */
+.te-bar-flow-zone {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+/* Compact flow override — visible only during active demo [R8] */
+.te-flow-override {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.te-flow-override-btn {
+  font-size: 10px;
+  padding: 2px 7px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: border-color 0.12s, color 0.12s;
+  white-space: nowrap;
+}
+
+.te-flow-override-btn:hover {
+  color: var(--text-secondary);
+  border-color: var(--text-secondary);
+}
+
+.te-flow-override-btn-active {
+  border-color: var(--strong);
+  color: var(--strong);
+  background: color-mix(in srgb, var(--strong) 8%, transparent);
+}

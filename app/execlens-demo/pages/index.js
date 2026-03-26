@@ -1,8 +1,8 @@
 /**
  * pages/index.js
- * PIOS-51.6R-RUN01-CONTRACT-v1
- * (supersedes PIOS-51.6-RUN01-CONTRACT-v1)
- * Lineage: PIOS-51.6-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1
+ * PIOS-51.6R.1-RUN01-CONTRACT-v1
+ * (supersedes PIOS-51.6R-RUN01-CONTRACT-v1)
+ * Lineage: PIOS-51.6-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1 → PIOS-51.6R.1-RUN01-CONTRACT-v1
  *
  * ExecLens Demo Surface — panel-orchestrated progressive disclosure.
  * Supersedes: PIOS-51.3 (step-driven navigation)
@@ -275,37 +275,15 @@ export default function Home() {
             Evidence-first system for program diagnosis, structural risk, and execution visibility
           </p>
           <div className="hero-meta">
-            PIOS-51.6R-RUN01-CONTRACT-v1 · run_02_governed
+            PIOS-51.6R.1-RUN01-CONTRACT-v1 · run_02_governed
             &ensp;·&ensp;
             No inference. No synthetic data.
           </div>
 
           {!demoActive && (
-            <div className="demo-entry-zone">
-              {/* Inline flow selector — secondary, contextual [51.6R] */}
-              <div className="demo-flow-inline-wrap">
-                <span className="demo-flow-inline-label">Flow</span>
-                {Object.entries(TRAVERSAL_FLOWS).map(([id, flow]) => (
-                  <button
-                    key={id}
-                    className={`demo-flow-inline-btn${selectedFlow === id ? ' demo-flow-inline-btn-active' : ''}`}
-                    onClick={() => setSelectedFlow(id)}
-                    type="button"
-                    title={flow.description}
-                  >
-                    {flow.label}
-                  </button>
-                ))}
-                {selectedFlow && (
-                  <span className="demo-flow-inline-desc">
-                    {TRAVERSAL_FLOWS[selectedFlow]?.description}
-                  </span>
-                )}
-              </div>
-              <button className="demo-start-btn" onClick={handleStartDemo} type="button">
-                Start ExecLens Demo
-              </button>
-            </div>
+            <button className="demo-start-btn" onClick={handleStartDemo} type="button">
+              Start ExecLens Demo
+            </button>
           )}
         </header>
 
