@@ -1,8 +1,8 @@
 /**
  * pages/index.js
- * PIOS-51.8-RUN01-CONTRACT-v1
- * (supersedes PIOS-51.7-RUN01-CONTRACT-v1)
- * Lineage: PIOS-51.6-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1 → PIOS-51.6R.1-RUN01-CONTRACT-v1 → PIOS-51.6R.2-RUN01-CONTRACT-v1 → PIOS-51.6R.3-RUN01-CONTRACT-v1 → PIOS-51.6R.4-RUN01-CONTRACT-v1 → PIOS-51.7-RUN01-CONTRACT-v1 → PIOS-51.8-RUN01-CONTRACT-v1
+ * PIOS-51.8R-RUN01-CONTRACT-v1
+ * (supersedes PIOS-51.8-RUN01-CONTRACT-v1)
+ * Lineage: PIOS-51.6-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1 → PIOS-51.6R.1-RUN01-CONTRACT-v1 → PIOS-51.6R.2-RUN01-CONTRACT-v1 → PIOS-51.6R.3-RUN01-CONTRACT-v1 → PIOS-51.6R.4-RUN01-CONTRACT-v1 → PIOS-51.7-RUN01-CONTRACT-v1 → PIOS-51.8-RUN01-CONTRACT-v1 → PIOS-51.8R-RUN01-CONTRACT-v1
  *
  * ExecLens Demo Surface — panel-orchestrated progressive disclosure.
  * Supersedes: PIOS-51.3 (step-driven navigation)
@@ -290,33 +290,37 @@ export default function Home() {
             Evidence-first system for program diagnosis, structural risk, and execution visibility
           </p>
           <div className="hero-meta">
-            PIOS-51.8-RUN01-CONTRACT-v1 · run_02_governed
+            PIOS-51.8R-RUN01-CONTRACT-v1 · run_02_governed
             &ensp;·&ensp;
             No inference. No synthetic data.
           </div>
 
           {!demoActive && (
             <div className="guided-entry-steps">
-              <div className={`guided-step${enlPersona ? ' guided-step-done' : ' guided-step-active'}`}>
-                <span className="guided-step-num">1</span>
-                <span className="guided-step-label">Select your lens persona</span>
-                {enlPersona && <span className="guided-step-persona">{enlPersona}</span>}
+              {/* Horizontal step strip — Step 1 → Step 2 → Start [51.8R] */}
+              <div className="guided-entry-strip">
+                <div className={`guided-step${enlPersona ? ' guided-step-done' : ' guided-step-active'}`}>
+                  <span className="guided-step-num">1</span>
+                  <span className="guided-step-label">Select your lens persona</span>
+                  {enlPersona && <span className="guided-step-persona">{enlPersona}</span>}
+                </div>
+                <span className="guided-step-arrow">→</span>
+                <div className={`guided-step${enlPersona ? ' guided-step-active' : ''}`}>
+                  <span className="guided-step-num">2</span>
+                  <span className="guided-step-label">Begin guided execution</span>
+                </div>
+                <button
+                  className="demo-start-btn"
+                  onClick={handleStartDemo}
+                  type="button"
+                  disabled={!enlPersona}
+                >
+                  Start Lens Demo
+                </button>
               </div>
               {!enlPersona && (
                 <div className="persona-gate-message">Select a Persona to enable execution</div>
               )}
-              <div className={`guided-step${enlPersona ? ' guided-step-active' : ''}`}>
-                <span className="guided-step-num">2</span>
-                <span className="guided-step-label">Begin guided execution</span>
-              </div>
-              <button
-                className="demo-start-btn"
-                onClick={handleStartDemo}
-                type="button"
-                disabled={!enlPersona}
-              >
-                Start Lens Demo
-              </button>
             </div>
           )}
         </header>

@@ -3132,3 +3132,49 @@ a.topo-chip:hover {
   padding: 0.1rem 0.4rem;
   border-radius: 3px;
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   PIOS-51.8R — Entry Strip Layout + Analyst Raw Evidence Access
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Override: guided-entry-steps — left-aligned column (strip + gate message) */
+.guided-entry-steps {
+  align-items: flex-start;
+}
+
+/* Horizontal step strip — Step 1 → Step 2 → Start on one line */
+.guided-entry-strip {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.guided-step-arrow {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* Analyst raw evidence — prominent affordance (top of ANALYST ENL view) */
+.raw-artifacts-section-prominent {
+  border: 1px solid rgba(255, 158, 74, 0.25);
+  border-radius: 5px;
+  padding: 0.65rem 0.9rem;
+  background: rgba(255, 158, 74, 0.03);
+  margin-bottom: 1rem;
+}
+
+.raw-artifacts-toggle-prominent {
+  font-size: 0.78rem;
+  padding: 0.3rem 0.75rem;
+  color: var(--weak);
+  border-color: rgba(255, 158, 74, 0.4);
+}
+
+.raw-artifacts-toggle-prominent:hover {
+  background: rgba(255, 158, 74, 0.07);
+  border-color: var(--weak);
+  color: var(--text);
+}

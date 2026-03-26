@@ -1,8 +1,8 @@
 /**
  * ENLPanel.js
- * PIOS-51.6R.4-RUN01-CONTRACT-v1
- * (supersedes PIOS-51.6R-RUN01-CONTRACT-v1)
- * Lineage: PIOS-51.5R-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1 → PIOS-51.6R.4-RUN01-CONTRACT-v1
+ * PIOS-51.8R-RUN01-CONTRACT-v1
+ * (supersedes PIOS-51.6R.4-RUN01-CONTRACT-v1)
+ * Lineage: PIOS-51.5R-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1 → PIOS-51.6R.4-RUN01-CONTRACT-v1 → PIOS-51.8R-RUN01-CONTRACT-v1
  *
  * Visible ENL chain repair — persona-shaped chain navigation.
  *
@@ -354,19 +354,20 @@ function ChainStep({ signal, stepNum, isEntry, persona, personaData }) {
 // ---------------------------------------------------------------------------
 // RawArtifactsSection — Analyst only [51.6R.4]
 // Opens existing evidence fields — read-only, no transformation, no new API [R5]
+// prominent prop: positions at top of ANALYST view with enhanced affordance [51.8R]
 // ---------------------------------------------------------------------------
 
-function RawArtifactsSection({ signals }) {
+function RawArtifactsSection({ signals, prominent }) {
   const [open, setOpen] = useState(false)
   if (!signals || signals.length === 0) return null
   return (
-    <div className="raw-artifacts-section">
+    <div className={`raw-artifacts-section${prominent ? ' raw-artifacts-section-prominent' : ''}`}>
       <button
-        className={`raw-artifacts-toggle${open ? ' raw-artifacts-toggle-open' : ''}`}
+        className={`raw-artifacts-toggle${open ? ' raw-artifacts-toggle-open' : ''}${prominent ? ' raw-artifacts-toggle-prominent' : ''}`}
         onClick={() => setOpen(o => !o)}
         type="button"
       >
-        {open ? 'Hide raw artifacts' : 'View raw artifacts'}
+        {open ? 'Hide raw artifacts' : (prominent ? 'View raw evidence' : 'View raw artifacts')}
       </button>
       {open && (
         <div className="raw-artifacts-body">
@@ -406,6 +407,11 @@ export default function ENLPanel({ signals, navigation, persona, personaData }) 
         personaData={personaData}
       />
 
+      {/* Analyst: raw evidence access — prominent affordance before chain [51.8R] */}
+      {persona === 'ANALYST' && (
+        <RawArtifactsSection signals={orderedSignals} prominent />
+      )}
+
       {/* Chain header — persona-shaped traversal label [R3] */}
       <ChainHeader
         persona={persona}
@@ -435,11 +441,6 @@ export default function ENLPanel({ signals, navigation, persona, personaData }) 
 
       {/* Navigation vault links — always after chain */}
       <NavigationPanel navigation={navigation} />
-
-      {/* Raw artifacts — Analyst only [51.6R.4, R5] */}
-      {persona === 'ANALYST' && (
-        <RawArtifactsSection signals={orderedSignals} />
-      )}
 
     </div>
   )

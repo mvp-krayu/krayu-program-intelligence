@@ -1,0 +1,291 @@
+{
+  "stream": "51.8R",
+  "timestamp": "2026-03-26T14:38:02.204410Z",
+  "total": 42,
+  "passed": 42,
+  "failed": 0,
+  "groups": {
+    "entry_strip_horizontal_alignment": {
+      "pass": 7,
+      "fail": 0
+    },
+    "entry_strip_left_alignment": {
+      "pass": 4,
+      "fail": 0
+    },
+    "persona_gate_preserved": {
+      "pass": 6,
+      "fail": 0
+    },
+    "analyst_raw_evidence_visible": {
+      "pass": 8,
+      "fail": 0
+    },
+    "no_runtime_regression": {
+      "pass": 6,
+      "fail": 0
+    },
+    "no_evidence_mutation": {
+      "pass": 5,
+      "fail": 0
+    },
+    "api_regression": {
+      "pass": 6,
+      "fail": 0
+    }
+  },
+  "results": [
+    {
+      "name": "index.js has PIOS-51.8R contract",
+      "group": "entry_strip_horizontal_alignment",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "guided-entry-strip present in index.js",
+      "group": "entry_strip_horizontal_alignment",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "guided-step-arrow present (step separator)",
+      "group": "entry_strip_horizontal_alignment",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Step 1 and Step 2 inside guided-entry-strip",
+      "group": "entry_strip_horizontal_alignment",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css PIOS-51.8R block present",
+      "group": "entry_strip_horizontal_alignment",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css .guided-entry-strip defined",
+      "group": "entry_strip_horizontal_alignment",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css guided-entry-strip flex-direction row",
+      "group": "entry_strip_horizontal_alignment",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "guided-entry-steps has align-items: flex-start",
+      "group": "entry_strip_left_alignment",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "guided-step-arrow CSS class defined",
+      "group": "entry_strip_left_alignment",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "persona-gate-message outside strip (below)",
+      "group": "entry_strip_left_alignment",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Step states (active/done) preserved",
+      "group": "entry_strip_left_alignment",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona hard gate preserved",
+      "group": "persona_gate_preserved",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Start button still disabled without persona",
+      "group": "persona_gate_preserved",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Gate message text preserved",
+      "group": "persona_gate_preserved",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "persona-gate-message class preserved",
+      "group": "persona_gate_preserved",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle guided lock preserved",
+      "group": "persona_gate_preserved",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "51.8 lineage in index.js",
+      "group": "persona_gate_preserved",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel has PIOS-51.8R contract",
+      "group": "analyst_raw_evidence_visible",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "RawArtifactsSection has prominent prop",
+      "group": "analyst_raw_evidence_visible",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "prominent render BEFORE chain list",
+      "group": "analyst_raw_evidence_visible",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "View raw evidence label present",
+      "group": "analyst_raw_evidence_visible",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "View raw artifacts label preserved",
+      "group": "analyst_raw_evidence_visible",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "raw-artifacts-section-prominent CSS class",
+      "group": "analyst_raw_evidence_visible",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "raw-artifacts-toggle-prominent CSS class",
+      "group": "analyst_raw_evidence_visible",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css .raw-artifacts-section-prominent",
+      "group": "analyst_raw_evidence_visible",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "TraversalEngine unchanged",
+      "group": "no_runtime_regression",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DemoController unchanged",
+      "group": "no_runtime_regression",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel unchanged",
+      "group": "no_runtime_regression",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No new fetch calls in ENLPanel",
+      "group": "no_runtime_regression",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No new fetch calls in index.js",
+      "group": "no_runtime_regression",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No new API routes",
+      "group": "no_runtime_regression",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Raw artifacts read-only: JSON.stringify only",
+      "group": "no_evidence_mutation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No setSignals or setEvidence in ENLPanel",
+      "group": "no_evidence_mutation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Raw artifacts display: existing orderedSignals",
+      "group": "no_evidence_mutation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No new state variables in ENLPanel",
+      "group": "no_evidence_mutation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No synthetic content in ENLPanel",
+      "group": "no_evidence_mutation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "route: query GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: topology",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: status",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona EXECUTIVE GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona CTO GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona ANALYST GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    }
+  ]
+}

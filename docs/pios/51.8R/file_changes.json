@@ -1,0 +1,68 @@
+{
+  "stream": "51.8R",
+  "contract": "PIOS-51.8R-RUN01-CONTRACT-v1",
+  "references": "PIOS-51.8-RUN01-CONTRACT-v1",
+  "baseline": "f5525dc",
+  "date": "2026-03-26",
+  "modified": [
+    {
+      "file": "app/execlens-demo/pages/index.js",
+      "prior_contract": "PIOS-51.8-RUN01-CONTRACT-v1",
+      "new_contract": "PIOS-51.8R-RUN01-CONTRACT-v1",
+      "changes": [
+        "PIOS annotation updated to 51.8R; lineage extended",
+        "guided-entry-strip inner wrapper added — horizontal row for steps",
+        "guided-step-arrow span added between steps",
+        "demo-start-btn moved inside guided-entry-strip",
+        "persona-gate-message moved outside strip (renders below row)",
+        "hero-meta updated to PIOS-51.8R-RUN01-CONTRACT-v1"
+      ]
+    },
+    {
+      "file": "app/execlens-demo/components/ENLPanel.js",
+      "prior_contract": "PIOS-51.6R.4-RUN01-CONTRACT-v1",
+      "new_contract": "PIOS-51.8R-RUN01-CONTRACT-v1",
+      "changes": [
+        "PIOS annotation updated to 51.8R; lineage extended",
+        "RawArtifactsSection: prominent prop added",
+        "RawArtifactsSection: label 'View raw evidence' when prominent, 'View raw artifacts' otherwise",
+        "RawArtifactsSection: prominent CSS classes added (raw-artifacts-section-prominent, raw-artifacts-toggle-prominent)",
+        "ANALYST prominent render added before chain (after PersonaNarrativeHeader)",
+        "ANALYST bottom render removed (replaced by top prominent render)"
+      ]
+    },
+    {
+      "file": "app/execlens-demo/styles/globals.css",
+      "changes": [
+        "PIOS-51.8R block appended",
+        ".guided-entry-steps: align-items: flex-start override (left-align)",
+        ".guided-entry-strip: flex-direction: row horizontal layout",
+        ".guided-step-arrow: step separator arrow",
+        ".raw-artifacts-section-prominent: orange-tinted affordance",
+        ".raw-artifacts-toggle-prominent: larger toggle button with orange color",
+        ".raw-artifacts-toggle-prominent:hover: hover state"
+      ]
+    },
+    {
+      "file": "scripts/pios/51.8/validate_51_8.py",
+      "change": "ENLPanel isolation check updated: '51.8' not in enl → 'PIOS-51.8-RUN01-CONTRACT-v1' not in enl",
+      "justification": "51.8R explicitly supersedes ENLPanel non-modification assertion in 51.8. PIOS-51.8-RUN01-CONTRACT-v1 is still not in ENLPanel (it carries 51.8R). Validator precision improved."
+    }
+  ],
+  "created": [
+    "scripts/pios/51.8R/validate_51_8R.py",
+    "docs/pios/51.8R/entry_strip_layout.md",
+    "docs/pios/51.8R/analyst_raw_evidence_access.md",
+    "docs/pios/51.8R/execution_report.md",
+    "docs/pios/51.8R/validation_log.json",
+    "docs/pios/51.8R/file_changes.json",
+    "docs/pios/51.8R/CLOSURE.md"
+  ],
+  "unchanged": [
+    "app/execlens-demo/components/TraversalEngine.js",
+    "app/execlens-demo/components/DemoController.js",
+    "app/execlens-demo/components/PersonaPanel.js",
+    "app/execlens-demo/components/NarrativePanel.js",
+    "app/execlens-demo/pages/api/*"
+  ]
+}

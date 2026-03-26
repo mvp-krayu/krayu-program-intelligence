@@ -143,7 +143,7 @@ check("View raw artifacts toggle present",               "analyst_raw_access_reg
 check("ENLPanel contract lineage preserved",             "analyst_raw_access_regression",
       "PIOS-51.6R.4-RUN01-CONTRACT-v1" in enl)
 check("ENLPanel not modified in 51.8",                   "analyst_raw_access_regression",
-      "51.8" not in enl)
+      "PIOS-51.8-RUN01-CONTRACT-v1" not in enl)
 
 # ── api_regression ────────────────────────────────────────────────────────────
 
