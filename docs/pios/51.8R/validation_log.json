@@ -1,8 +1,8 @@
 {
   "stream": "51.8R",
-  "timestamp": "2026-03-26T15:58:50.846665Z",
-  "total": 88,
-  "passed": 88,
+  "timestamp": "2026-03-26T16:43:34.597809Z",
+  "total": 95,
+  "passed": 95,
   "failed": 0,
   "groups": {
     "entry_strip_horizontal_alignment": {
@@ -63,6 +63,10 @@
     },
     "no_zombie_guided_state": {
       "pass": 4,
+      "fail": 0
+    },
+    "guided_loop_closure": {
+      "pass": 7,
       "fail": 0
     }
   },
@@ -578,7 +582,7 @@
       "detail": ""
     },
     {
-      "name": "demoActive stays true at terminal",
+      "name": "demo loop closes on completion (demoActive false)",
       "group": "no_zombie_guided_state",
       "status": "PASS",
       "detail": ""
@@ -592,6 +596,48 @@
     {
       "name": "handleDemoExit resets all state",
       "group": "no_zombie_guided_state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoNext: demoActive false at terminal",
+      "group": "guided_loop_closure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoNext: guidedStepIndex reset at terminal",
+      "group": "guided_loop_closure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoNext: rawStepActive reset at terminal",
+      "group": "guided_loop_closure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Entry strip visible after completion (!demoActive)",
+      "group": "guided_loop_closure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTA: Try another perspective when demoComplete",
+      "group": "guided_loop_closure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTA ternary: demoComplete controls label",
+      "group": "guided_loop_closure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona NOT reset at completion",
+      "group": "guided_loop_closure",
       "status": "PASS",
       "detail": ""
     }

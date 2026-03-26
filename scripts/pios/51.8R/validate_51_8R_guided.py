@@ -276,7 +276,7 @@ check("handleToggle still locks on demoActive",         "no_zombie_guided_state"
       "if (demoActive) return" in idx)
 check("No hybrid guided/free state",                   "no_zombie_guided_state",
       "guidedStepIndex" in idx and "setDemoActive(false)" in idx)
-check("Guided lock held at terminal (demoActive=true)", "no_zombie_guided_state",
+check("demoComplete set at traversal end",               "no_zombie_guided_state",  # 51.8R amendment 3: demoActive=false at terminal; check retains setDemoComplete(true) assertion
       "setDemoComplete(true)" in idx)
 
 # ── api_regression ────────────────────────────────────────────────────────────

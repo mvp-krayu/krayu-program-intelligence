@@ -319,8 +319,11 @@ export default function Home() {
     if (steps) {
       const nextIndex = guidedStepIndex + 1
       if (nextIndex >= steps.length) {
-        // Terminal: hold guided lock, await explicit exit [51.8R amendment]
+        // Amendment 3: close loop — return to entry strip immediately [51.8R amendment 3]
         setDemoComplete(true)
+        setDemoActive(false)
+        setGuidedStepIndex(0)
+        setRawStepActive(false)
       } else {
         const step = steps[nextIndex]
         setGuidedStepIndex(nextIndex)
@@ -338,6 +341,9 @@ export default function Home() {
       const nextIndex = traversalNodeIndex + 1
       if (nextIndex >= panels.length) {
         setDemoComplete(true)
+        setDemoActive(false)
+        setGuidedStepIndex(0)
+        setRawStepActive(false)
       } else {
         setTraversalNodeIndex(nextIndex)
         setOpenPanels([panels[nextIndex]])
@@ -346,6 +352,9 @@ export default function Home() {
       // Standard 51.4 stage mode
       if (demoStage >= TOTAL_STAGES) {
         setDemoComplete(true)
+        setDemoActive(false)
+        setGuidedStepIndex(0)
+        setRawStepActive(false)
       } else {
         setDemoStage(prev => prev + 1)
       }
@@ -407,7 +416,7 @@ export default function Home() {
                   type="button"
                   disabled={!enlPersona || !selectedQuery}
                 >
-                  Start Lens Demo
+                  {demoComplete ? 'Try another perspective' : 'Start Lens Demo'}
                 </button>
               </div>
               {!enlPersona && (

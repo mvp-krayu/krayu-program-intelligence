@@ -1,6 +1,6 @@
 # Execution Report — 51.8R
 
-Stream: 51.8R — Entry Strip + Analyst Raw Evidence Access + Final Polish + Guided Flow Correction
+Stream: 51.8R — Entry Strip + Analyst Raw Evidence Access + Final Polish + Guided Flow Correction + Loop Closure
 Date: 2026-03-26
 Amendment applied: 2026-03-26
 Branch: feature/51-8R-entry-strip-analyst-access
@@ -113,6 +113,19 @@ References: PIOS-51.8-RUN01-CONTRACT-v1
 - Justification: 51.8R explicitly supersedes ENLPanel isolation asserted in 51.8
 - Documented in file_changes.json
 
+### 10. Guided Loop Closure [amendment 3]
+
+- `handleDemoNext` terminal path: after `setDemoComplete(true)` → `setDemoActive(false)`, `setGuidedStepIndex(0)`, `setRawStepActive(false)`
+- Entry strip becomes visible immediately on completion (`!demoActive` guard already present)
+- Button CTA: `{demoComplete ? 'Try another perspective' : 'Start Lens Demo'}`
+- Persona NOT reset — context preserved across completion
+- Query NOT reset — may persist
+- ⌘K handler still present; no longer fires at terminal (demoActive=false)
+- Terminal strip still renders on `demoComplete` — "Exit guided mode" button clears completion label
+- All three legacy terminal paths updated for consistency (unreachable in practice)
+- `validate_51_8R.py`: `guided_loop_closure` group added (7 checks); `no_zombie_guided_state` check superseded
+- `validate_51_8R_guided.py`: `"Guided lock held at terminal"` check name superseded
+
 ### 9. Guided Flow Correction
 
 - `PERSONA_GUIDED_FLOWS` constant in index.js — static, no computation, reuses existing panel IDs only
@@ -137,7 +150,7 @@ References: PIOS-51.8-RUN01-CONTRACT-v1
 | Validator | Result |
 |---|---|
 | validate_51_8R_guided.py | 82/82 PASS (16 groups — guided correction) |
-| validate_51_8R.py | 88/88 PASS (15 groups) |
+| validate_51_8R.py | 95/95 PASS (16 groups — entry strip + amendment + loop closure) |
 | validate_51_8.py | 44/44 PASS |
 | validate_51_7.py | 27/27 PASS |
 | validate_mode_state_guard.py (51.6R.2) | 35/35 PASS |

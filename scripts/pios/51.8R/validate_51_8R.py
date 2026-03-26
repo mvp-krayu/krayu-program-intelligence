@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 validate_51_8R.py
-PIOS-51.8R-RUN01-CONTRACT-v1 (amended: terminal state, analyst label, source traceability, tab contrast)
+PIOS-51.8R-RUN01-CONTRACT-v1 (amended: terminal state, analyst label, source traceability,
+tab contrast, guided flow correction, guided loop closure)
 
 Validation suite: entry_strip_horizontal_alignment, entry_strip_left_alignment,
 persona_gate_preserved, analyst_raw_evidence_visible,
@@ -9,7 +10,7 @@ no_runtime_regression, no_evidence_mutation, api_regression,
 analyst_label_corrected, source_link_present, active_tab_contrast_readable,
 demo_terminal_state_present, ctrl_k_exit_guided_mode,
 rerun_demo_resets_sequence, persona_switch_resets_to_step_1,
-no_zombie_guided_state.
+no_zombie_guided_state, guided_loop_closure.
 
 Expected: all PASS
 """
@@ -292,13 +293,33 @@ print("\n[no_zombie_guided_state]")
 
 check("handleToggle still locks on demoActive",          "no_zombie_guided_state",
       "if (demoActive) return" in idx)
-check("demoActive stays true at terminal",               "no_zombie_guided_state",
-      "setDemoComplete(true)" in idx and "setDemoActive(false)" not in
-      idx.split("setDemoComplete(true)")[0].split("handleDemoNext")[-1])
+check("demo loop closes on completion (demoActive false)", "no_zombie_guided_state",  # 51.8R amendment 3: supersedes 'demoActive stays true at terminal'
+      "setDemoComplete(true)" in idx and "setDemoActive(false)" in
+      idx.split("setDemoComplete(true)")[1])
 check("DemoController inactive at terminal",             "no_zombie_guided_state",
       "demoActive && !demoComplete" in idx)
 check("handleDemoExit resets all state",                 "no_zombie_guided_state",
       idx.count("setDemoActive(false)") >= 1 and idx.count("setDemoComplete(false)") >= 2)
+
+# ── guided_loop_closure ───────────────────────────────────────────────────────
+
+print("\n[guided_loop_closure]")
+
+check("handleDemoNext: demoActive false at terminal",   "guided_loop_closure",
+      "setDemoComplete(true)" in idx and "setDemoActive(false)" in idx.split("setDemoComplete(true)")[1])
+check("handleDemoNext: guidedStepIndex reset at terminal", "guided_loop_closure",
+      idx.count("setGuidedStepIndex(0)") >= 3)  # handleStartDemo + handleDemoNext + handleDemoExit
+check("handleDemoNext: rawStepActive reset at terminal", "guided_loop_closure",
+      idx.count("setRawStepActive(false)") >= 3)  # handleStartDemo + handleDemoNext + handleDemoExit
+check("Entry strip visible after completion (!demoActive)", "guided_loop_closure",
+      "!demoActive" in idx and "guided-entry-strip" in idx)
+check("CTA: Try another perspective when demoComplete",  "guided_loop_closure",
+      "Try another perspective" in idx and "demoComplete" in idx)
+check("CTA ternary: demoComplete controls label",       "guided_loop_closure",
+      "demoComplete ? 'Try another perspective'" in idx or
+      'demoComplete ? "Try another perspective"' in idx)
+check("Persona NOT reset at completion",                "guided_loop_closure",
+      "setEnlPersona" not in idx.split("setDemoComplete(true)")[1].split("setDemoActive(false)")[0])
 
 # ── Summary ───────────────────────────────────────────────────────────────────
 

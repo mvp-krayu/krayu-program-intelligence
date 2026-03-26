@@ -60,11 +60,13 @@ Step 4 is a special guided state of the evidence panel: `rawStep: true` forces `
 
 ```
 handleStartDemo     → guidedStepIndex=0, rawStepActive=false, demoComplete=false, demoActive=true
-handleDemoNext      → guidedStepIndex++; if at end → demoComplete=true
+handleDemoNext      → guidedStepIndex++; if at end → demoComplete=true, demoActive=false, guidedStepIndex=0, rawStepActive=false [amendment 3]
 handleDemoExit      → guidedStepIndex=0, rawStepActive=false, demoComplete=false, demoActive=false
-persona change      → guidedStepIndex=0, rawStepActive=false, demoComplete=false, demoActive=false
-⌘K                 → calls handleDemoExit
+persona change      → guidedStepIndex=0, rawStepActive=false, demoComplete=false, demoActive=false (if mid-demo)
+⌘K                 → calls handleDemoExit (fires only when demoActive=true, i.e. mid-demo only)
 ```
+
+At terminal: `demoActive=false` → entry strip visible; `demoComplete=true` → terminal strip visible; CTA becomes "Try another perspective". Persona and query persist.
 
 ---
 
@@ -73,7 +75,7 @@ persona change      → guidedStepIndex=0, rawStepActive=false, demoComplete=fal
 - Persona hard gate: `if (!enlPersona) return` — first gate in handleStartDemo
 - Query hard gate: `if (!selectedQuery) return` — second gate in handleStartDemo
 - Guided lock: `if (demoActive) return` in handleToggle — no manual panel switching during demo
-- DemoController active: `demoActive && !demoComplete` — controller hides at terminal state
+- DemoController active: `demoActive && !demoComplete` — controller hides at terminal state (redundant after amendment 3 since demoActive=false, preserved for validator compat)
 
 ---
 
