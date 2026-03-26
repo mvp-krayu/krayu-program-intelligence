@@ -1,6 +1,8 @@
 /**
  * pages/index.js
- * PIOS-51.6-RUN01-CONTRACT-v1
+ * PIOS-51.6R-RUN01-CONTRACT-v1
+ * (supersedes PIOS-51.6-RUN01-CONTRACT-v1)
+ * Lineage: PIOS-51.6-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1
  *
  * ExecLens Demo Surface — panel-orchestrated progressive disclosure.
  * Supersedes: PIOS-51.3 (step-driven navigation)
@@ -29,6 +31,17 @@ import LandingGaugeStrip from '../components/LandingGaugeStrip'
 import TopologyPanel    from '../components/TopologyPanel'
 import DemoController   from '../components/DemoController'
 import { TRAVERSAL_FLOWS, PERSONA_AUTO_OPEN, getFlowPanels, getFlowNodes } from '../components/TraversalEngine'
+
+// ---------------------------------------------------------------------------
+// PERSONA_DEFAULT_FLOW — static mapping, no computation [51.6R]
+// Persona → default DemoFlow binding
+// ---------------------------------------------------------------------------
+
+const PERSONA_DEFAULT_FLOW = {
+  EXECUTIVE: 'executive_insight',
+  CTO:       'structural_analysis',
+  ANALYST:   'evidence_audit',
+}
 import DisclosurePanel  from '../components/DisclosurePanel'
 import PersonaPanel     from '../components/PersonaPanel'
 import ENLPanel         from '../components/ENLPanel'
@@ -138,6 +151,15 @@ export default function Home() {
       return merged.length > 2 ? merged.slice(merged.length - 2) : merged
     })
   }, [enlPersona, demoActive])
+
+  // ── Persona → default flow binding [51.6R] ──
+  // Static mapping only. User may override. No computation.
+
+  useEffect(() => {
+    if (!enlPersona) return
+    const defaultFlow = PERSONA_DEFAULT_FLOW[enlPersona]
+    if (defaultFlow) setSelectedFlow(defaultFlow)
+  }, [enlPersona])
 
   // ── Query fetch [R2: same API calls as 42.29] ──
 
@@ -253,15 +275,37 @@ export default function Home() {
             Evidence-first system for program diagnosis, structural risk, and execution visibility
           </p>
           <div className="hero-meta">
-            PIOS-51.6-RUN01-CONTRACT-v1 · run_02_governed
+            PIOS-51.6R-RUN01-CONTRACT-v1 · run_02_governed
             &ensp;·&ensp;
             No inference. No synthetic data.
           </div>
 
           {!demoActive && (
-            <button className="demo-start-btn" onClick={handleStartDemo} type="button">
-              Start ExecLens Demo
-            </button>
+            <div className="demo-entry-zone">
+              {/* Inline flow selector — secondary, contextual [51.6R] */}
+              <div className="demo-flow-inline-wrap">
+                <span className="demo-flow-inline-label">Flow</span>
+                {Object.entries(TRAVERSAL_FLOWS).map(([id, flow]) => (
+                  <button
+                    key={id}
+                    className={`demo-flow-inline-btn${selectedFlow === id ? ' demo-flow-inline-btn-active' : ''}`}
+                    onClick={() => setSelectedFlow(id)}
+                    type="button"
+                    title={flow.description}
+                  >
+                    {flow.label}
+                  </button>
+                ))}
+                {selectedFlow && (
+                  <span className="demo-flow-inline-desc">
+                    {TRAVERSAL_FLOWS[selectedFlow]?.description}
+                  </span>
+                )}
+              </div>
+              <button className="demo-start-btn" onClick={handleStartDemo} type="button">
+                Start ExecLens Demo
+              </button>
+            </div>
           )}
         </header>
 
@@ -383,7 +427,6 @@ export default function Home() {
         onNext={handleDemoNext}
         onExit={handleDemoExit}
         selectedFlow={selectedFlow}
-        onFlowSelect={setSelectedFlow}
         traversalNodeIndex={traversalNodeIndex}
         traversalNodes={selectedFlow ? getFlowNodes(selectedFlow) : null}
       />

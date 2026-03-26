@@ -2807,3 +2807,124 @@ a.topo-chip:hover {
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
+
+/* ============================================================
+   PIOS-51.6R — Persona Narrative Restoration CSS
+   ============================================================ */
+
+/* ── Override: demote .te-pre-demo (no longer fixed-bottom) [51.6R] ── */
+.te-pre-demo {
+  position: static;
+  border-top: none;
+  padding: 0;
+  background: transparent;
+}
+
+/* ── Demo entry zone — flow selector + start button inline in hero [51.6R] ── */
+.demo-entry-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.demo-flow-inline-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.demo-flow-inline-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-dim);
+}
+
+.demo-flow-inline-btn {
+  font-size: 11px;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color 0.12s, color 0.12s;
+}
+
+.demo-flow-inline-btn:hover {
+  border-color: var(--text-secondary);
+  color: var(--text-primary);
+}
+
+.demo-flow-inline-btn-active {
+  border-color: var(--strong);
+  color: var(--strong);
+  background: color-mix(in srgb, var(--strong) 8%, transparent);
+}
+
+.demo-flow-inline-desc {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+/* ── PersonaNarrativeHeader — dominant persona anchor [51.6R] ── */
+.enl-persona-narrative-header {
+  border-left: 4px solid var(--strong);
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  border-radius: 0 6px 6px 0;
+}
+
+.enl-pnh-persona-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.enl-pnh-persona-chip {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+
+.enl-pnh-lens {
+  font-size: 10px;
+  color: var(--text-dim);
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+}
+
+.enl-pnh-confidence {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--moderate);
+  margin-left: auto;
+}
+
+.enl-pnh-framing-label {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+.enl-pnh-primary-question {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  font-style: italic;
+}

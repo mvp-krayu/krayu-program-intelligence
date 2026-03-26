@@ -1,14 +1,18 @@
 /**
  * ENLPanel.js
- * PIOS-51.5R-RUN01-CONTRACT-v1
+ * PIOS-51.6R-RUN01-CONTRACT-v1
  * (supersedes PIOS-51.5-RUN01-CONTRACT-v1)
  *
  * Visible ENL chain repair — persona-shaped chain navigation.
  *
- * Gap repaired:
+ * Gap repaired (51.5R):
  *   Prior version surfaced same evidence fields regardless of persona.
  *   Repair makes persona-specific primary field visibly dominant in each chain step.
  *   Chain structure (numbered steps, connectors, entry marker) is now primary.
+ *
+ * Persona narrative restoration (51.6R):
+ *   PersonaNarrativeHeader renders framing_label + primary_question as dominant anchor.
+ *   Persona identity is felt immediately before chain traversal begins.
  *
  * Rules:
  *   R1  traversal order from personaData.enl_signals (42.16) — array reorder only
@@ -18,6 +22,7 @@
  *   R5  no new API calls, no new computation
  *   R6  no duplication — evidence owned here, signals owned by SignalPanel
  *   R7  chain step structure is primary; source detail is secondary
+ *   R8  PersonaNarrativeHeader: persona framing is dominant anchor before chain [51.6R]
  *
  * Sequence authority: docs/pios/51.5R/enl_visible_chain_contract.md
  */
@@ -95,6 +100,40 @@ function applyTraversalOrder(signals, personaData) {
   const inOrder  = enlOrder.map(id => signals.find(s => s.signal_id === id)).filter(Boolean)
   const rest     = signals.filter(s => !enlOrder.includes(s.signal_id))
   return [...inOrder, ...rest]
+}
+
+
+// ---------------------------------------------------------------------------
+// PersonaNarrativeHeader — persona framing as dominant anchor [R8]
+// framing_label + primary_question: immediately differentiates persona experience
+// Source: personaData from 42.16 adapter — direct read, no computation
+// ---------------------------------------------------------------------------
+
+const PERSONA_ACCENT = {
+  EXECUTIVE: { color: 'var(--strong)',   label: 'Executive' },
+  CTO:       { color: 'var(--moderate)', label: 'CTO' },
+  ANALYST:   { color: 'var(--weak)',     label: 'Analyst' },
+}
+
+function PersonaNarrativeHeader({ persona, personaData }) {
+  if (!persona || !personaData) return null
+  const accent  = PERSONA_ACCENT[persona] || { color: 'var(--text-dim)', label: persona }
+
+  return (
+    <div className="enl-persona-narrative-header" style={{ borderLeftColor: accent.color }}>
+      <div className="enl-pnh-persona-row">
+        <span className="enl-pnh-persona-chip" style={{ background: accent.color }}>
+          {accent.label}
+        </span>
+        <span className="enl-pnh-lens">{personaData.lens}</span>
+        {personaData.aggregate_confidence && (
+          <span className="enl-pnh-confidence">{personaData.aggregate_confidence}</span>
+        )}
+      </div>
+      <div className="enl-pnh-framing-label">{personaData.framing_label}</div>
+      <div className="enl-pnh-primary-question">{personaData.primary_question}</div>
+    </div>
+  )
 }
 
 // ---------------------------------------------------------------------------
@@ -327,6 +366,12 @@ export default function ENLPanel({ signals, navigation, persona, personaData }) 
 
   return (
     <div className="enl-panel-body">
+
+      {/* Persona narrative — dominant anchor [R8] */}
+      <PersonaNarrativeHeader
+        persona={persona}
+        personaData={personaData}
+      />
 
       {/* Chain header — persona-shaped traversal label [R3] */}
       <ChainHeader

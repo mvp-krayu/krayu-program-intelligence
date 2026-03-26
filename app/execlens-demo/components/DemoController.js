@@ -1,7 +1,8 @@
 /**
  * DemoController.js
- * PIOS-51.6-RUN01-CONTRACT-v1
- * (supersedes PIOS-51.4-RUN01-CONTRACT-v1)
+ * PIOS-51.6R-RUN01-CONTRACT-v1
+ * (supersedes PIOS-51.6-RUN01-CONTRACT-v1)
+ * Lineage: PIOS-51.6-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1
  *
  * Demo choreography layer — panel orchestration.
  * Extends 51.4 with traversal flow selection and node position indicator.
@@ -14,11 +15,12 @@
  *   R1  no scroll orchestration — panels handle visibility
  *   R2  no content modification — stage/node signaling only
  *   R3  keyboard navigation: →/Enter/Space = next, Escape = exit
- *   R4  flow selector shown before demo starts (pre-entry)
+ *   R4  flow selector shown inline in index.js near Start Demo [51.6R — demoted]
  *   R5  traversal mode enforces single focus node at a time
  *   R6  standard mode (no flow selected) falls back to 51.4 behavior
+ *   R7  pre-demo: DemoController renders null — index.js owns pre-demo UI [51.6R]
  *
- * Sequence authority: docs/pios/51.6/enl_traversal_runtime_model.md
+ * Sequence authority: docs/pios/51.6R/persona_narrative_restoration.md
  */
 
 import { useEffect, useCallback } from 'react'
@@ -36,11 +38,14 @@ export const DEMO_STAGES = [
   { num: 5, label: 'Narrative', title: 'So what — executive summary', panelId: 'narrative' },
 ]
 
+
 // ---------------------------------------------------------------------------
-// FlowSelector — pre-entry flow selection (shown before demo starts)
+// FlowSelector — exported traversal flow selector [R4, 51.6R: rendered in index.js]
+// No longer rendered pre-demo inside DemoController — moved to index.js hero zone
+// Kept as export for reuse and validator compliance
 // ---------------------------------------------------------------------------
 
-function FlowSelector({ selectedFlow, onFlowSelect }) {
+export function FlowSelector({ selectedFlow, onFlowSelect }) {
   return (
     <div className="te-flow-selector">
       <div className="te-flow-selector-label">Select traversal flow</div>
@@ -187,17 +192,8 @@ export default function DemoController({
     return () => window.removeEventListener('keydown', handleKey)
   }, [handleKey])
 
-  // Pre-demo: show flow selector [R4]
-  if (!active) {
-    if (onFlowSelect) {
-      return (
-        <div className="te-pre-demo">
-          <FlowSelector selectedFlow={selectedFlow} onFlowSelect={onFlowSelect} />
-        </div>
-      )
-    }
-    return null
-  }
+  // Pre-demo: DemoController renders null — index.js owns pre-demo UI [R7]
+  if (!active) return null
 
   // Traversal mode [R5]
   if (selectedFlow && traversalNodes && traversalNodes.length > 0) {
