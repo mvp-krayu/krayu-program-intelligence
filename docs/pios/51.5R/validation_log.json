@@ -1,0 +1,427 @@
+{
+  "stream": "51.5R",
+  "timestamp": "2026-03-26T07:50:35.421828Z",
+  "total": 66,
+  "passed": 66,
+  "failed": 0,
+  "groups": {
+    "source_structure": {
+      "pass": 18,
+      "fail": 0
+    },
+    "chain_contract": {
+      "pass": 10,
+      "fail": 0
+    },
+    "persona_fields": {
+      "pass": 10,
+      "fail": 0
+    },
+    "api_regression": {
+      "pass": 12,
+      "fail": 0
+    },
+    "persona_data": {
+      "pass": 16,
+      "fail": 0
+    }
+  },
+  "results": [
+    {
+      "name": "ENLPanel.js has PIOS-51.5R contract header",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js imports NavigationPanel",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js exports ENLPanel function",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js defines ENL_TRAVERSAL",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js defines PERSONA_LENS_FOCUS",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js defines FIELD_LABEL",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js applyTraversalOrder present",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js ChainHeader component",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js ChainBreadcrumb component",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js ChainPrimaryField component",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js ChainStep component",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js NavigationPanel rendered last",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css PIOS-51.5R block present",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css .enl-chain-header",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css .enl-chain-step",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css .enl-chain-primary-field",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css .enl-step-number-col",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css .enl-step-connector",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ChainStep renders numbered step",
+      "group": "chain_contract",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ChainStep entry marker present",
+      "group": "chain_contract",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ChainStep entry marker text",
+      "group": "chain_contract",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ChainStep visual connector",
+      "group": "chain_contract",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ChainHeader absent when no persona",
+      "group": "chain_contract",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ChainBreadcrumb entry node distinguished",
+      "group": "chain_contract",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ChainStep source row is secondary",
+      "group": "chain_contract",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ChainPrimaryField handles evidence_chain segs",
+      "group": "chain_contract",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ChainPrimaryField handles blocking_point",
+      "group": "chain_contract",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "applyTraversalOrder no sort",
+      "group": "chain_contract",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_LENS_FOCUS EXECUTIVE primary=business_impact",
+      "group": "persona_fields",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_LENS_FOCUS CTO primary=risk",
+      "group": "persona_fields",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_LENS_FOCUS CTO secondary=evidence_chain",
+      "group": "persona_fields",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_LENS_FOCUS ANALYST primary=evidence_chain",
+      "group": "persona_fields",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_LENS_FOCUS ANALYST secondary=blocking_point",
+      "group": "persona_fields",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ChainPrimaryField business_impact reads signal.business_impact",
+      "group": "persona_fields",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ChainPrimaryField risk reads signal.risk",
+      "group": "persona_fields",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ChainPrimaryField evidence_chain reads ev.evidence_chain",
+      "group": "persona_fields",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ChainPrimaryField blocking_point reads ev.blocking_point",
+      "group": "persona_fields",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No-persona fallback shows evidence_chain",
+      "group": "persona_fields",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "route: query GQ-001",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: query GQ-002",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: query GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: topology",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: status",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: enl GQ-001",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: enl GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona EXECUTIVE GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona CTO GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona ANALYST GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona EXECUTIVE GQ-001",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona CTO GQ-002",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "EXECUTIVE GQ-003 returns 200",
+      "group": "persona_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "EXECUTIVE has enl_signals array",
+      "group": "persona_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "EXECUTIVE has framing_label",
+      "group": "persona_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "EXECUTIVE has lens field",
+      "group": "persona_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTO GQ-003 returns 200",
+      "group": "persona_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTO has enl_signals array",
+      "group": "persona_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTO has framing_label",
+      "group": "persona_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTO has lens field",
+      "group": "persona_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ANALYST GQ-003 returns 200",
+      "group": "persona_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ANALYST has enl_signals array",
+      "group": "persona_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ANALYST has framing_label",
+      "group": "persona_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ANALYST has lens field",
+      "group": "persona_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "query signal has business_impact field",
+      "group": "persona_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "query signal has risk field",
+      "group": "persona_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "query signal.evidence has evidence_chain",
+      "group": "persona_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "query signal.evidence has blocking_point",
+      "group": "persona_data",
+      "status": "PASS",
+      "detail": ""
+    }
+  ]
+}

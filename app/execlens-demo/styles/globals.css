@@ -2343,3 +2343,328 @@ a.topo-chip:hover {
 .enl-panel-body .no-query-state {
   padding: 16px 0;
 }
+
+/* ============================================================
+   PIOS-51.5R — ENL Visible Chain Repair CSS
+   ============================================================ */
+
+/* Chain header */
+.enl-chain-header {
+  padding: 12px 0 14px;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 14px;
+}
+
+.enl-chain-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.enl-chain-traversal-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+}
+
+.enl-chain-step-count {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.enl-chain-path-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.enl-chain-entry-rule {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+/* Chain breadcrumb */
+.enl-chain-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin-bottom: 16px;
+  font-size: 11px;
+}
+
+.enl-breadcrumb-seg {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.enl-breadcrumb-arrow {
+  color: var(--text-dim);
+  font-size: 11px;
+  margin: 0 3px;
+}
+
+.enl-breadcrumb-node {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: transparent;
+}
+
+.enl-breadcrumb-entry {
+  background: color-mix(in srgb, var(--strong) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--strong) 25%, transparent);
+}
+
+.enl-breadcrumb-id {
+  font-family: monospace;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.enl-breadcrumb-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--weak);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.enl-breadcrumb-state {
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* Chain list */
+.enl-chain-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 20px;
+}
+
+/* Chain step */
+.enl-chain-step {
+  display: flex;
+  gap: 0;
+}
+
+.enl-chain-step-entry .enl-step-body {
+  border: 1px solid var(--strong);
+  border-left: 3px solid var(--strong);
+  border-radius: 0 6px 6px 0;
+}
+
+.enl-chain-step:not(.enl-chain-step-entry) .enl-step-body {
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--border);
+  border-radius: 0 6px 6px 0;
+}
+
+/* Step number column */
+.enl-step-number-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 36px;
+  flex-shrink: 0;
+}
+
+.enl-step-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  margin-top: 12px;
+  z-index: 1;
+}
+
+.enl-step-num-entry {
+  background: var(--strong);
+  border-color: var(--strong);
+  color: #fff;
+}
+
+.enl-step-connector {
+  width: 2px;
+  flex: 1;
+  background: var(--border);
+  min-height: 20px;
+}
+
+/* Step body */
+.enl-step-body {
+  flex: 1;
+  padding: 12px 14px;
+  margin: 8px 0;
+  background: var(--surface);
+}
+
+.enl-step-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.enl-step-entry-marker {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--strong);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.enl-step-sig-id {
+  font-family: monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.enl-step-sig-state {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.enl-step-emphasis-badge {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--weak);
+  background: color-mix(in srgb, var(--weak) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--weak) 30%, transparent);
+  border-radius: 3px;
+  padding: 1px 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.enl-step-lens-tag {
+  font-size: 10px;
+  color: var(--text-dim);
+  background: color-mix(in srgb, var(--text-dim) 10%, transparent);
+  border-radius: 3px;
+  padding: 1px 5px;
+  margin-left: auto;
+}
+
+.enl-step-sig-title {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+/* Primary field — persona-focused [R3, R4] */
+.enl-chain-primary-field {
+  margin-bottom: 10px;
+  padding: 8px 10px;
+  background: color-mix(in srgb, var(--background) 60%, transparent);
+  border-radius: 4px;
+  border-left: 2px solid var(--moderate);
+}
+
+.enl-chain-field-blocking {
+  border-left-color: var(--weak);
+}
+
+.enl-chain-field-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-dim);
+  margin-bottom: 5px;
+}
+
+.enl-chain-field-value {
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+/* Evidence chain segments */
+.enl-chain-segments {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.enl-chain-segment {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.enl-seg-arrow {
+  font-size: 11px;
+  color: var(--text-dim);
+  padding-left: 4px;
+}
+
+.enl-seg-text {
+  font-family: monospace;
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* Step source row — secondary */
+.enl-step-source-row {
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+}
+
+.enl-step-source-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+}
+
+.enl-step-source-id {
+  font-family: monospace;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.enl-step-source-loc {
+  color: var(--text-dim);
+  font-family: monospace;
+  font-size: 10px;
+}
+
+.enl-step-temporal {
+  color: var(--text-dim);
+  font-style: italic;
+  font-size: 10px;
+  margin-left: auto;
+}

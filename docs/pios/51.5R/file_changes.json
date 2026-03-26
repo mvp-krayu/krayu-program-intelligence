@@ -1,0 +1,67 @@
+{
+  "stream": "51.5R",
+  "date": "2026-03-26",
+  "baseline_commit": "cb31c09",
+  "code_files_modified": [
+    {
+      "path": "app/execlens-demo/components/ENLPanel.js",
+      "change": "Full rewrite: visible chain repair — ChainHeader, ChainBreadcrumb, ChainStep, ChainPrimaryField; PERSONA_LENS_FOCUS static field rules; numbered steps with connector; entry marker"
+    },
+    {
+      "path": "app/execlens-demo/styles/globals.css",
+      "change": "Appended PIOS-51.5R chain CSS block: enl-chain-header, enl-chain-breadcrumb, enl-chain-list, enl-chain-step, enl-chain-primary-field, enl-step-number-col, enl-step-connector, etc."
+    }
+  ],
+  "files_created": [
+    {
+      "path": "scripts/pios/51.5R/validate_enl_visible_chain.py",
+      "purpose": "66-test validator: source_structure + chain_contract + persona_fields + api_regression + persona_data",
+      "category": "validation"
+    },
+    {
+      "path": "docs/pios/51.5R/validation_log.json",
+      "purpose": "Live validation run — 66/66 PASS",
+      "category": "evidence"
+    },
+    {
+      "path": "docs/pios/51.5R/enl_visible_chain_contract.md",
+      "purpose": "Visible chain contract — gap analysis, allowed/forbidden repair actions, determinism guarantee",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/51.5R/enl_visible_chain_definition.md",
+      "purpose": "Chain component definitions, field mapping, CSS structure",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/51.5R/persona_chain_matrix.md",
+      "purpose": "Persona differentiation table — GQ-003 chain per persona",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/51.5R/execution_report.md",
+      "purpose": "Execution summary — gap, repair approach, changes, validation, regression",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/51.5R/regression_report.md",
+      "purpose": "API and behavioral regression report",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/51.5R/file_changes.json",
+      "purpose": "This file",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/51.5R/replay_record.md",
+      "purpose": "Commands run and rerun order",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/51.5R/CLOSURE.md",
+      "purpose": "Stream closure",
+      "category": "governance"
+    }
+  ]
+}

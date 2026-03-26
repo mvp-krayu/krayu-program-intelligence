@@ -1,41 +1,69 @@
 /**
  * ENLPanel.js
- * PIOS-51.5-RUN01-CONTRACT-v1
- * (supersedes PIOS-51.4-RUN01-CONTRACT-v1)
+ * PIOS-51.5R-RUN01-CONTRACT-v1
+ * (supersedes PIOS-51.5-RUN01-CONTRACT-v1)
  *
- * Persona-shaped evidence traversal panel.
- * Materializes ENL as governed, persona-ordered evidence navigation.
+ * Visible ENL chain repair — persona-shaped chain navigation.
+ *
+ * Gap repaired:
+ *   Prior version surfaced same evidence fields regardless of persona.
+ *   Repair makes persona-specific primary field visibly dominant in each chain step.
+ *   Chain structure (numbered steps, connectors, entry marker) is now primary.
  *
  * Rules:
- *   R1  traversal order is deterministic by persona — static rules, no computation
- *   R2  evidence data sourced from signals prop (42.4 adapter) — unchanged
- *   R3  traversal ordering sourced from personaData.enl_signals (42.16) — unchanged
- *   R4  no new API calls, no new computation
- *   R5  same evidence set, different documented path through it
+ *   R1  traversal order from personaData.enl_signals (42.16) — array reorder only
+ *   R2  evidence data from signals prop (42.4) — unchanged
+ *   R3  PERSONA_LENS_FOCUS: static rules, no computation, no ranking
+ *   R4  same evidence set — different primary field foregrounded per persona
+ *   R5  no new API calls, no new computation
  *   R6  no duplication — evidence owned here, signals owned by SignalPanel
+ *   R7  chain step structure is primary; source detail is secondary
  *
- * Sequence authority: docs/pios/51.5/enl_traversal_definition.md
+ * Sequence authority: docs/pios/51.5R/enl_visible_chain_contract.md
  */
 
 import NavigationPanel from './NavigationPanel'
 
 // ---------------------------------------------------------------------------
-// PIOS-51.5: Static traversal rules — deterministic by persona [R1]
-// No computation. Path labels and sort keys only.
+// PIOS-51.5R: Static traversal rules — deterministic by persona [R3]
+// No computation. Static field focus only.
 // ---------------------------------------------------------------------------
 
 const ENL_TRAVERSAL = {
   EXECUTIVE: {
-    label:     'Impact-First Traversal',
-    path_desc: 'High-emphasis signals first, then evaluable — program delivery impact lens',
+    label:        'Impact-First Traversal',
+    path_desc:    'High-emphasis signals first — program delivery impact lens',
+    chain_label:  'Delivery Impact',
+    entry_rule:   'emphasis:high first',
   },
   CTO: {
-    label:     'Evidence-Grounded Traversal',
-    path_desc: 'Evaluable signals first, then computed — structural risk evidence lens',
+    label:        'Evidence-Grounded Traversal',
+    path_desc:    'Structural evidence foregrounded — architectural risk lens',
+    chain_label:  'Structural Evidence',
+    entry_rule:   'evaluable state first',
   },
   ANALYST: {
-    label:     'Gap-First Traversal',
-    path_desc: 'Blocked signals first, then partial — evidence gap identification lens',
+    label:        'Chain & Gap Traversal',
+    path_desc:    'Evidence chain and blocking points — evidence gap lens',
+    chain_label:  'Evidence Chain & Gaps',
+    entry_rule:   'blocking point first',
+  },
+}
+
+// Static lens focus — which evidence fields are primary per persona [R3]
+// No computation. Direct field reads from governed payload.
+const PERSONA_LENS_FOCUS = {
+  EXECUTIVE: {
+    primary:   'business_impact',
+    secondary: null,
+  },
+  CTO: {
+    primary:   'risk',
+    secondary: 'evidence_chain',
+  },
+  ANALYST: {
+    primary:   'evidence_chain',
+    secondary: 'blocking_point',
   },
 }
 
@@ -47,8 +75,15 @@ const SIGNAL_STATE_BADGE = {
   unknown:   { label: 'Unknown',   color: 'var(--text-dim)' },
 }
 
+const FIELD_LABEL = {
+  business_impact: 'Delivery Impact',
+  risk:            'Structural Risk',
+  evidence_chain:  'Evidence Chain',
+  blocking_point:  'Blocking Point',
+}
+
 // ---------------------------------------------------------------------------
-// Traversal ordering — uses ENL signal order from 42.16 adapter [R3]
+// Traversal ordering — uses ENL signal order from 42.16 adapter [R1]
 // array reorder only — no data transformation
 // ---------------------------------------------------------------------------
 
@@ -63,120 +98,214 @@ function applyTraversalOrder(signals, personaData) {
 }
 
 // ---------------------------------------------------------------------------
-// TraversalPath — breadcrumb showing traversal order + entry point
+// ChainHeader — traversal label + entry rule + step count
 // ---------------------------------------------------------------------------
 
-function TraversalPath({ persona, personaData, orderedSignals }) {
+function ChainHeader({ persona, personaData, stepCount }) {
   if (!persona) return null
   const rule = ENL_TRAVERSAL[persona]
   if (!rule) return null
 
   return (
-    <div className="enl-traversal-header">
-      <div className="enl-traversal-label">{rule.label}</div>
-      <div className="enl-traversal-desc">{rule.path_desc}</div>
-      {orderedSignals.length > 0 && (
-        <div className="enl-traversal-path">
-          {orderedSignals.map((sig, i) => {
-            const enlSig = personaData?.enl_signals?.find(s => s.signal_id === sig.signal_id)
-            const state  = enlSig?.signal_state || 'unknown'
-            const emph   = enlSig?.emphasis || 'none'
-            const badge  = SIGNAL_STATE_BADGE[state] || SIGNAL_STATE_BADGE.unknown
-            return (
-              <span key={sig.signal_id} className="enl-path-seg">
-                {i > 0 && <span className="enl-path-arrow">→</span>}
-                <span className="enl-path-sig">
-                  {sig.signal_id}
-                  {emph === 'high' && (
-                    <span className="enl-path-red-dot" title="emphasis:high" />
-                  )}
-                </span>
-                <span
-                  className="enl-path-state"
-                  style={{ color: badge.color }}
-                >
-                  {badge.label}
-                </span>
-              </span>
-            )
-          })}
-        </div>
-      )}
+    <div className="enl-chain-header">
+      <div className="enl-chain-header-top">
+        <span className="enl-chain-traversal-label">{rule.label}</span>
+        <span className="enl-chain-step-count">{stepCount} step{stepCount !== 1 ? 's' : ''}</span>
+      </div>
+      <div className="enl-chain-path-desc">{rule.path_desc}</div>
+      <div className="enl-chain-entry-rule">Entry rule: {rule.entry_rule}</div>
     </div>
   )
 }
 
 // ---------------------------------------------------------------------------
-// TraversalEvidenceEntry — single signal evidence in traversal position
+// ChainBreadcrumb — horizontal path showing signal IDs in order
 // ---------------------------------------------------------------------------
 
-function TraversalEvidenceEntry({ signal, personaData, isEntry }) {
+function ChainBreadcrumb({ orderedSignals, personaData }) {
+  if (!orderedSignals || orderedSignals.length === 0) return null
+
+  return (
+    <div className="enl-chain-breadcrumb">
+      {orderedSignals.map((sig, i) => {
+        const enlSig = personaData?.enl_signals?.find(s => s.signal_id === sig.signal_id)
+        const state  = enlSig?.signal_state || 'unknown'
+        const emph   = enlSig?.emphasis || 'none'
+        const badge  = SIGNAL_STATE_BADGE[state] || SIGNAL_STATE_BADGE.unknown
+        return (
+          <span key={sig.signal_id} className="enl-breadcrumb-seg">
+            {i > 0 && <span className="enl-breadcrumb-arrow">→</span>}
+            <span className={`enl-breadcrumb-node${i === 0 ? ' enl-breadcrumb-entry' : ''}`}>
+              <span className="enl-breadcrumb-id">{sig.signal_id}</span>
+              {emph === 'high' && <span className="enl-breadcrumb-dot" title="emphasis:high" />}
+              <span className="enl-breadcrumb-state" style={{ color: badge.color }}>{badge.label}</span>
+            </span>
+          </span>
+        )
+      })}
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// ChainPrimaryField — renders the persona-foregrounded evidence field [R3, R4]
+// Static read — no computation or transformation
+// ---------------------------------------------------------------------------
+
+function ChainPrimaryField({ signal, fieldKey, label }) {
+  if (!fieldKey) return null
+  const ev = signal.evidence
+
+  if (fieldKey === 'business_impact') {
+    const val = signal.business_impact
+    if (!val) return null
+    return (
+      <div className="enl-chain-primary-field">
+        <div className="enl-chain-field-label">{label}</div>
+        <div className="enl-chain-field-value">{val}</div>
+      </div>
+    )
+  }
+
+  if (fieldKey === 'risk') {
+    const val = signal.risk
+    if (!val) return null
+    return (
+      <div className="enl-chain-primary-field">
+        <div className="enl-chain-field-label">{label}</div>
+        <div className="enl-chain-field-value">{val}</div>
+      </div>
+    )
+  }
+
+  if (fieldKey === 'evidence_chain') {
+    const val = ev?.evidence_chain
+    if (!val) return null
+    const segs = val.split('→').map(s => s.trim()).filter(Boolean)
+    return (
+      <div className="enl-chain-primary-field">
+        <div className="enl-chain-field-label">{label}</div>
+        <div className="enl-chain-segments">
+          {segs.map((seg, i) => (
+            <div key={i} className="enl-chain-segment">
+              {i > 0 && <span className="enl-seg-arrow">↓</span>}
+              <span className="enl-seg-text">{seg}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  if (fieldKey === 'blocking_point') {
+    const val = ev?.blocking_point
+    if (!val) return null
+    return (
+      <div className="enl-chain-primary-field enl-chain-field-blocking">
+        <div className="enl-chain-field-label">{label}</div>
+        <div className="enl-chain-field-value">{val}</div>
+      </div>
+    )
+  }
+
+  return null
+}
+
+// ---------------------------------------------------------------------------
+// ChainStep — single step in the visible ENL chain [R7]
+// Primary field is persona-focused. Source detail is secondary.
+// ---------------------------------------------------------------------------
+
+function ChainStep({ signal, stepNum, isEntry, persona, personaData }) {
   const ev     = signal.evidence
   const enlSig = personaData?.enl_signals?.find(s => s.signal_id === signal.signal_id)
   const state  = enlSig?.signal_state || 'unknown'
   const emph   = enlSig?.emphasis     || 'none'
   const badge  = SIGNAL_STATE_BADGE[state] || SIGNAL_STATE_BADGE.unknown
+  const focus  = persona ? (PERSONA_LENS_FOCUS[persona] || null) : null
 
   return (
-    <div className={`traversal-evidence-entry${isEntry ? ' traversal-entry-point' : ''}`}>
+    <div className={`enl-chain-step${isEntry ? ' enl-chain-step-entry' : ''}`}>
 
-      <div className="traversal-sig-header">
-        {isEntry && <span className="traversal-entry-marker">▶ Entry</span>}
-        <span className="traversal-sig-id">{signal.signal_id}</span>
-        <span
-          className="traversal-sig-state"
-          style={{ color: badge.color }}
-        >
-          {badge.label}
-        </span>
-        {emph === 'high' && (
-          <span className="traversal-emphasis-badge">emphasis:high</span>
-        )}
-        <span className="traversal-sig-title">{signal.title}</span>
+      {/* Step number + signal identity */}
+      <div className="enl-step-number-col">
+        <div className={`enl-step-num${isEntry ? ' enl-step-num-entry' : ''}`}>{stepNum}</div>
+        {!isEntry && <div className="enl-step-connector" />}
       </div>
 
-      {signal.evidence_warning ? (
-        <div className="evidence-warning">⚠ {signal.evidence_warning}</div>
-      ) : ev ? (
-        <div className="traversal-evidence-detail">
-          <div className="evidence-source">
-            <span>Source</span>
-            {ev.source_object_id} ({ev.source_layer}/{ev.source_file})
-          </div>
+      <div className="enl-step-body">
 
-          {ev.supporting_objects && ev.supporting_objects.length > 0 && (
-            <div>
-              {ev.supporting_objects.map((so, i) => (
-                <div key={i} className="supporting-obj">
-                  {so.object_id} [{so.layer}/{so.file}]
-                  {so.state && <span className="obj-state"> state: {so.state}</span>}
-                </div>
-              ))}
-            </div>
+        {/* Step header */}
+        <div className="enl-step-header">
+          {isEntry && <span className="enl-step-entry-marker">▶ Entry</span>}
+          <span className="enl-step-sig-id">{signal.signal_id}</span>
+          <span className="enl-step-sig-state" style={{ color: badge.color }}>{badge.label}</span>
+          {emph === 'high' && (
+            <span className="enl-step-emphasis-badge">emphasis:high</span>
           )}
+          {focus && (
+            <span className="enl-step-lens-tag">{ENL_TRAVERSAL[persona]?.chain_label}</span>
+          )}
+        </div>
 
-          {ev.evidence_chain && (
-            <div className="evidence-chain-wrap">
-              <div className="evidence-chain-label">Evidence chain</div>
+        {/* Signal title */}
+        <div className="enl-step-sig-title">{signal.title}</div>
+
+        {/* Persona primary field — foregrounded [R3, R4] */}
+        {focus && (
+          <>
+            <ChainPrimaryField
+              signal={signal}
+              fieldKey={focus.primary}
+              label={FIELD_LABEL[focus.primary] || focus.primary}
+            />
+            {focus.secondary && (
+              <ChainPrimaryField
+                signal={signal}
+                fieldKey={focus.secondary}
+                label={FIELD_LABEL[focus.secondary] || focus.secondary}
+              />
+            )}
+          </>
+        )}
+
+        {/* No-persona fallback: show evidence_chain */}
+        {!focus && ev?.evidence_chain && (
+          <div className="enl-chain-primary-field">
+            <div className="enl-chain-field-label">Evidence Chain</div>
+            <div className="enl-chain-segments">
               {ev.evidence_chain.split('→').map((seg, i) => (
                 seg.trim()
-                  ? <div key={i} className="chain-segment">{seg.trim()}</div>
+                  ? (
+                    <div key={i} className="enl-chain-segment">
+                      {i > 0 && <span className="enl-seg-arrow">↓</span>}
+                      <span className="enl-seg-text">{seg.trim()}</span>
+                    </div>
+                  )
                   : null
               ))}
             </div>
-          )}
+          </div>
+        )}
 
-          {ev.blocking_point && (
-            <div className="evidence-blocking">{ev.blocking_point}</div>
-          )}
+        {/* Evidence source — secondary [R7] */}
+        {ev && (
+          <div className="enl-step-source-row">
+            <span className="enl-step-source-label">Source</span>
+            <span className="enl-step-source-id">{ev.source_object_id}</span>
+            <span className="enl-step-source-loc">({ev.source_layer}/{ev.source_file})</span>
+            {ev.temporal_reference && (
+              <span className="enl-step-temporal">{ev.temporal_reference}</span>
+            )}
+          </div>
+        )}
 
-          {ev.temporal_reference && (
-            <div className="evidence-temporal">{ev.temporal_reference}</div>
-          )}
-        </div>
-      ) : (
-        <div className="evidence-warning">No evidence data available.</div>
-      )}
+        {/* Warning */}
+        {signal.evidence_warning && (
+          <div className="evidence-warning">⚠ {signal.evidence_warning}</div>
+        )}
+
+      </div>
     </div>
   )
 }
@@ -199,26 +328,34 @@ export default function ENLPanel({ signals, navigation, persona, personaData }) 
   return (
     <div className="enl-panel-body">
 
-      {/* Traversal path header — persona-shaped, absent if no persona selected */}
-      <TraversalPath
+      {/* Chain header — persona-shaped traversal label [R3] */}
+      <ChainHeader
         persona={persona}
         personaData={personaData}
-        orderedSignals={orderedSignals}
+        stepCount={orderedSignals.length}
       />
 
-      {/* Evidence entries in traversal order [R1, R5] */}
-      <div className="traversal-evidence-list">
+      {/* Chain breadcrumb — ordered path with state badges */}
+      <ChainBreadcrumb
+        orderedSignals={orderedSignals}
+        personaData={personaData}
+      />
+
+      {/* Chain steps — persona-focused evidence fields are primary [R4, R7] */}
+      <div className="enl-chain-list">
         {orderedSignals.map((sig, i) => (
-          <TraversalEvidenceEntry
+          <ChainStep
             key={sig.signal_id}
             signal={sig}
+            stepNum={i + 1}
+            isEntry={i === 0}
+            persona={persona}
             personaData={personaData}
-            isEntry={i === 0 && !!persona}
           />
         ))}
       </div>
 
-      {/* Navigation vault links — always after evidence */}
+      {/* Navigation vault links — always after chain */}
       <NavigationPanel navigation={navigation} />
 
     </div>
