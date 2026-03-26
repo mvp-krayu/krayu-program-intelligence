@@ -1,0 +1,245 @@
+{
+  "stream": "51.6R.2",
+  "timestamp": "2026-03-26T10:49:58.238700Z",
+  "total": 35,
+  "passed": 35,
+  "failed": 0,
+  "groups": {
+    "mode_state_guard": {
+      "pass": 7,
+      "fail": 0
+    },
+    "persona_isolation": {
+      "pass": 7,
+      "fail": 0
+    },
+    "demo_exit_reset": {
+      "pass": 5,
+      "fail": 0
+    },
+    "flow_derivation": {
+      "pass": 6,
+      "fail": 0
+    },
+    "no_mutation": {
+      "pass": 4,
+      "fail": 0
+    },
+    "api_regression": {
+      "pass": 6,
+      "fail": 0
+    }
+  },
+  "results": [
+    {
+      "name": "index.js has PIOS-51.6R.2 contract",
+      "group": "mode_state_guard",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "index.js hero meta shows 51.6R.2",
+      "group": "mode_state_guard",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Stage effect has explicit demoActive guard",
+      "group": "mode_state_guard",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Stage effect: selectedFlow gate preserved",
+      "group": "mode_state_guard",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_AUTO_OPEN guarded: only during demo",
+      "group": "mode_state_guard",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "demoActive referenced in index.js",
+      "group": "mode_state_guard",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DemoController contract lineage preserved",
+      "group": "mode_state_guard",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona\u2192flow auto-assign effect removed",
+      "group": "persona_isolation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No standalone [enlPersona]-only effect",
+      "group": "persona_isolation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona click: setEnlPersona callback only",
+      "group": "persona_isolation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_DEFAULT_FLOW constant preserved",
+      "group": "persona_isolation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_AUTO_OPEN import preserved",
+      "group": "persona_isolation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona auto-open effect depends on demoActive",
+      "group": "persona_isolation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No flow selector in pre-demo hero",
+      "group": "persona_isolation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit resets selectedFlow to null",
+      "group": "demo_exit_reset",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit resets demoActive",
+      "group": "demo_exit_reset",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit resets demoStage",
+      "group": "demo_exit_reset",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit resets traversalNodeIndex",
+      "group": "demo_exit_reset",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "exit reset annotation present",
+      "group": "demo_exit_reset",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "activeFlow derived in handleStartDemo",
+      "group": "flow_derivation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_DEFAULT_FLOW[enlPersona] in handleStartDemo",
+      "group": "flow_derivation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "selectedFlow fallback in flow derivation",
+      "group": "flow_derivation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setSelectedFlow(activeFlow) at demo start",
+      "group": "flow_derivation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "getFlowPanels uses activeFlow",
+      "group": "flow_derivation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "selectedFlow state declared",
+      "group": "flow_derivation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "TraversalEngine.js unchanged (no 51.6R.2 ref)",
+      "group": "no_mutation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel.js unchanged (no 51.6R.2 ref)",
+      "group": "no_mutation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No new fetch calls in index.js",
+      "group": "no_mutation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No new API routes in index.js",
+      "group": "no_mutation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "route: query GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: topology",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: status",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona EXECUTIVE GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona CTO GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona ANALYST GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    }
+  ]
+}

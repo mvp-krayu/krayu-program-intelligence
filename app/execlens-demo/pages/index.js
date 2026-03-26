@@ -1,8 +1,8 @@
 /**
  * pages/index.js
- * PIOS-51.6R.1-RUN01-CONTRACT-v1
- * (supersedes PIOS-51.6R-RUN01-CONTRACT-v1)
- * Lineage: PIOS-51.6-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1 → PIOS-51.6R.1-RUN01-CONTRACT-v1
+ * PIOS-51.6R.2-RUN01-CONTRACT-v1
+ * (supersedes PIOS-51.6R.1-RUN01-CONTRACT-v1)
+ * Lineage: PIOS-51.6-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1 → PIOS-51.6R.1-RUN01-CONTRACT-v1 → PIOS-51.6R.2-RUN01-CONTRACT-v1
  *
  * ExecLens Demo Surface — panel-orchestrated progressive disclosure.
  * Supersedes: PIOS-51.3 (step-driven navigation)
@@ -140,9 +140,10 @@ export default function Home() {
 
   // ── Persona auto-open — reveal depth only [51.6, R3] ──
   // Zero content variation. Only panel open depth differs.
+  // Guard: only fires during active demo [51.6R.2 — persona click must not open panels implicitly]
 
   useEffect(() => {
-    if (!enlPersona || demoActive) return
+    if (!enlPersona || !demoActive) return
     const autoPanels = PERSONA_AUTO_OPEN[enlPersona]
     if (!autoPanels || autoPanels.length === 0) return
     setOpenPanels(prev => {
@@ -151,15 +152,6 @@ export default function Home() {
       return merged.length > 2 ? merged.slice(merged.length - 2) : merged
     })
   }, [enlPersona, demoActive])
-
-  // ── Persona → default flow binding [51.6R] ──
-  // Static mapping only. User may override. No computation.
-
-  useEffect(() => {
-    if (!enlPersona) return
-    const defaultFlow = PERSONA_DEFAULT_FLOW[enlPersona]
-    if (defaultFlow) setSelectedFlow(defaultFlow)
-  }, [enlPersona])
 
   // ── Query fetch [R2: same API calls as 42.29] ──
 
@@ -215,11 +207,14 @@ export default function Home() {
   // ── Demo control handlers ──
 
   const handleStartDemo = () => {
+    // Derive active flow at demo start — persona binding happens here, not on persona click [51.6R.2]
+    const activeFlow = selectedFlow || (enlPersona ? PERSONA_DEFAULT_FLOW[enlPersona] : null)
     setTraversalNodeIndex(0)
     setSelectedQuery('GQ-003')
-    if (selectedFlow) {
+    if (activeFlow) {
       // Traversal mode [51.6]: single-focus-node, open first panel
-      const panels = getFlowPanels(selectedFlow)
+      setSelectedFlow(activeFlow)
+      const panels = getFlowPanels(activeFlow)
       setOpenPanels(panels.length > 0 ? [panels[0]] : ['situation'])
     } else {
       // Standard 51.4 stage mode
@@ -254,6 +249,7 @@ export default function Home() {
     setDemoActive(false)
     setDemoStage(0)
     setTraversalNodeIndex(0)
+    setSelectedFlow(null)  // mandatory exit reset [51.6R.2]
   }
 
   // ── Render ──
@@ -275,7 +271,7 @@ export default function Home() {
             Evidence-first system for program diagnosis, structural risk, and execution visibility
           </p>
           <div className="hero-meta">
-            PIOS-51.6R.1-RUN01-CONTRACT-v1 · run_02_governed
+            PIOS-51.6R.2-RUN01-CONTRACT-v1 · run_02_governed
             &ensp;·&ensp;
             No inference. No synthetic data.
           </div>

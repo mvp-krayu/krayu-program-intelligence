@@ -1,0 +1,42 @@
+{
+  "stream": "51.6R.2",
+  "date": "2026-03-26",
+  "code_files_modified": [
+    {
+      "path": "app/execlens-demo/pages/index.js",
+      "change": "Remove PERSONA_DEFAULT_FLOW auto-assign useEffect; flip PERSONA_AUTO_OPEN guard to only-during-demo; add setSelectedFlow(null) to handleDemoExit; derive activeFlow at handleStartDemo; update contract header to PIOS-51.6R.2"
+    }
+  ],
+  "files_created": [
+    {
+      "path": "scripts/pios/51.6R.2/validate_mode_state_guard.py",
+      "purpose": "35-test validator: mode state guard, persona isolation, demo exit reset, flow derivation",
+      "category": "validation"
+    },
+    {
+      "path": "docs/pios/51.6R.2/validation_log.json",
+      "purpose": "Live validation run — 35/35 PASS",
+      "category": "evidence"
+    },
+    {
+      "path": "docs/pios/51.6R.2/execution_report.md",
+      "purpose": "Execution summary — behavioral contract, code changes, regression",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/51.6R.2/file_changes.json",
+      "purpose": "This file",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/51.6R.2/replay_record.md",
+      "purpose": "Commands run and rerun order",
+      "category": "governance"
+    },
+    {
+      "path": "docs/pios/51.6R.2/CLOSURE.md",
+      "purpose": "Stream closure",
+      "category": "governance"
+    }
+  ]
+}
