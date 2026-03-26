@@ -1,0 +1,446 @@
+{
+  "stream": "51.6",
+  "validator": "validate_traversal_sequence",
+  "timestamp": "2026-03-26T08:24:55.997477Z",
+  "total": 69,
+  "passed": 69,
+  "failed": 0,
+  "groups": {
+    "source_structure": {
+      "pass": 23,
+      "fail": 0
+    },
+    "traversal_engine": {
+      "pass": 20,
+      "fail": 0
+    },
+    "persona_behavior": {
+      "pass": 9,
+      "fail": 0
+    },
+    "progressive_disclosure": {
+      "pass": 5,
+      "fail": 0
+    },
+    "api_regression": {
+      "pass": 12,
+      "fail": 0
+    }
+  },
+  "results": [
+    {
+      "name": "TraversalEngine.js present",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "TraversalEngine.js PIOS-51.6 contract",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "TraversalEngine.js NODE_TO_PANEL",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "TraversalEngine.js TRAVERSAL_FLOWS",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "TraversalEngine.js PERSONA_AUTO_OPEN",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "TraversalEngine.js getFlowPanels",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "TraversalEngine.js getFlowNodes",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DemoController.js PIOS-51.6 contract",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DemoController.js imports TraversalEngine",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DemoController.js FlowSelector component",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DemoController.js TraversalBar component",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DemoController.js DEMO_STAGES preserved",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "index.js PIOS-51.6 contract",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "index.js imports TraversalEngine",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "index.js selectedFlow state",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "index.js traversalNodeIndex state",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "index.js PERSONA_AUTO_OPEN used",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "index.js getFlowPanels used",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "index.js getFlowNodes used",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css PIOS-51.6 block",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css .te-flow-selector",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css .te-node-dot",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css .demo-bar-traversal",
+      "group": "source_structure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "executive_insight flow defined",
+      "group": "traversal_engine",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "structural_analysis flow defined",
+      "group": "traversal_engine",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "evidence_audit flow defined",
+      "group": "traversal_engine",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "NODE_TO_PANEL ENTRY defined",
+      "group": "traversal_engine",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "NODE_TO_PANEL ANSWER defined",
+      "group": "traversal_engine",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "NODE_TO_PANEL SIGNAL defined",
+      "group": "traversal_engine",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "NODE_TO_PANEL STRUCTURE defined",
+      "group": "traversal_engine",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "NODE_TO_PANEL EVIDENCE defined",
+      "group": "traversal_engine",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "NODE_TO_PANEL TRACEABILITY defined",
+      "group": "traversal_engine",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "NODE_TO_PANEL NAVIGATION defined",
+      "group": "traversal_engine",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ANSWER maps to narrative",
+      "group": "traversal_engine",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "SIGNAL maps to signals",
+      "group": "traversal_engine",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "STRUCTURE maps to situation",
+      "group": "traversal_engine",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "EVIDENCE maps to evidence",
+      "group": "traversal_engine",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "executive_insight: ANSWER first",
+      "group": "traversal_engine",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "evidence_audit: EVIDENCE first",
+      "group": "traversal_engine",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "structural_analysis has 4 nodes",
+      "group": "traversal_engine",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "traversal mode sets openPanels to single panel",
+      "group": "traversal_engine",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleStartDemo opens first flow panel",
+      "group": "traversal_engine",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "stage effect skipped when traversal active",
+      "group": "traversal_engine",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_AUTO_OPEN EXECUTIVE defined",
+      "group": "persona_behavior",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_AUTO_OPEN CTO defined",
+      "group": "persona_behavior",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_AUTO_OPEN ANALYST defined",
+      "group": "persona_behavior",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_AUTO_OPEN: EXECUTIVE ANSWER only",
+      "group": "persona_behavior",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_AUTO_OPEN: CTO ANSWER+STRUCTURE+SIGNAL",
+      "group": "persona_behavior",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_AUTO_OPEN: ANALYST ANSWER+SIGNAL",
+      "group": "persona_behavior",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "persona auto-open skips when demo active",
+      "group": "persona_behavior",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "persona auto-open respects max-2 rule",
+      "group": "persona_behavior",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "persona auto-open: zero content variation",
+      "group": "persona_behavior",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "traversal mode: single panel open at a time",
+      "group": "progressive_disclosure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DemoController shows flow selector pre-demo",
+      "group": "progressive_disclosure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DemoController traversal bar shows node pos",
+      "group": "progressive_disclosure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DemoController standard mode preserved",
+      "group": "progressive_disclosure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DemoController keyboard nav preserved",
+      "group": "progressive_disclosure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "route: query GQ-001",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: query GQ-002",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: query GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: topology",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: status",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: enl GQ-001",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: enl GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona EXECUTIVE GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona CTO GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona ANALYST GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona EXECUTIVE GQ-001",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona CTO GQ-002",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    }
+  ]
+}

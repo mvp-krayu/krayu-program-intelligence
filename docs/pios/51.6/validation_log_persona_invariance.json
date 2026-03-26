@@ -1,0 +1,264 @@
+{
+  "stream": "51.6",
+  "validator": "validate_persona_invariance",
+  "timestamp": "2026-03-26T08:26:04.352138Z",
+  "total": 40,
+  "passed": 40,
+  "failed": 0,
+  "groups": {
+    "persona_invariance": {
+      "pass": 28,
+      "fail": 0
+    },
+    "no_new_data": {
+      "pass": 8,
+      "fail": 0
+    },
+    "source_no_mutation": {
+      "pass": 4,
+      "fail": 0
+    }
+  },
+  "results": [
+    {
+      "name": "query GQ-001 returns 200",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "EXECUTIVE GQ-001 returns 200",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTO GQ-001 returns 200",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ANALYST GQ-001 returns 200",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GQ-001 same signal IDs across all personas",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GQ-001 framing_label differs per persona",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GQ-001 SIG-002 title invariant EXECUTIVE vs CTO",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GQ-001 SIG-002 title invariant EXECUTIVE vs ANALYST",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "query GQ-002 returns 200",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "EXECUTIVE GQ-002 returns 200",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTO GQ-002 returns 200",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ANALYST GQ-002 returns 200",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GQ-002 same signal IDs across all personas",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GQ-002 framing_label differs per persona",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GQ-002 SIG-003 title invariant EXECUTIVE vs CTO",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GQ-002 SIG-003 title invariant EXECUTIVE vs ANALYST",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GQ-002 SIG-002 title invariant EXECUTIVE vs CTO",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GQ-002 SIG-002 title invariant EXECUTIVE vs ANALYST",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "query GQ-003 returns 200",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "EXECUTIVE GQ-003 returns 200",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTO GQ-003 returns 200",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ANALYST GQ-003 returns 200",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GQ-003 same signal IDs across all personas",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GQ-003 framing_label differs per persona",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GQ-003 SIG-003 title invariant EXECUTIVE vs CTO",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GQ-003 SIG-003 title invariant EXECUTIVE vs ANALYST",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GQ-003 SIG-004 title invariant EXECUTIVE vs CTO",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GQ-003 SIG-004 title invariant EXECUTIVE vs ANALYST",
+      "group": "persona_invariance",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "TraversalEngine has no fetch calls",
+      "group": "no_new_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "TraversalEngine has no API calls",
+      "group": "no_new_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "TraversalEngine has no data mutation",
+      "group": "no_new_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DemoController has no fetch calls",
+      "group": "no_new_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DemoController has no API calls",
+      "group": "no_new_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No new API routes in index.js",
+      "group": "no_new_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_AUTO_OPEN values are panel IDs only",
+      "group": "no_new_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "getFlowPanels returns panel IDs only",
+      "group": "no_new_data",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "TraversalEngine no computation",
+      "group": "source_no_mutation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DemoController no data transform",
+      "group": "source_no_mutation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "index.js traversal: visibility control only",
+      "group": "source_no_mutation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No 40.x/41.x/42.x/43.x/44.x docs modified",
+      "group": "source_no_mutation",
+      "status": "PASS",
+      "detail": ""
+    }
+  ]
+}

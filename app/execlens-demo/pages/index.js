@@ -1,6 +1,6 @@
 /**
  * pages/index.js
- * PIOS-51.5-RUN01-CONTRACT-v1
+ * PIOS-51.6-RUN01-CONTRACT-v1
  *
  * ExecLens Demo Surface — panel-orchestrated progressive disclosure.
  * Supersedes: PIOS-51.3 (step-driven navigation)
@@ -28,6 +28,7 @@ import SignalGaugeCard  from '../components/SignalGaugeCard'
 import LandingGaugeStrip from '../components/LandingGaugeStrip'
 import TopologyPanel    from '../components/TopologyPanel'
 import DemoController   from '../components/DemoController'
+import { TRAVERSAL_FLOWS, PERSONA_AUTO_OPEN, getFlowPanels, getFlowNodes } from '../components/TraversalEngine'
 import DisclosurePanel  from '../components/DisclosurePanel'
 import PersonaPanel     from '../components/PersonaPanel'
 import ENLPanel         from '../components/ENLPanel'
@@ -94,6 +95,10 @@ export default function Home() {
   const [enlPersona,     setEnlPersona]     = useState(null)
   const [enlPersonaData, setEnlPersonaData] = useState(null)
 
+  // Traversal engine state [51.6]
+  const [selectedFlow,       setSelectedFlow]       = useState(null)
+  const [traversalNodeIndex, setTraversalNodeIndex] = useState(0)
+
   // Demo choreography state
   const [demoActive, setDemoActive] = useState(false)
   const [demoStage,  setDemoStage]  = useState(0)
@@ -119,6 +124,21 @@ export default function Home() {
     })
   }, [])
 
+
+  // ── Persona auto-open — reveal depth only [51.6, R3] ──
+  // Zero content variation. Only panel open depth differs.
+
+  useEffect(() => {
+    if (!enlPersona || demoActive) return
+    const autoPanels = PERSONA_AUTO_OPEN[enlPersona]
+    if (!autoPanels || autoPanels.length === 0) return
+    setOpenPanels(prev => {
+      // Open persona's default panels, respect max-2 rule
+      const merged = [...new Set([...prev, ...autoPanels])]
+      return merged.length > 2 ? merged.slice(merged.length - 2) : merged
+    })
+  }, [enlPersona, demoActive])
+
   // ── Query fetch [R2: same API calls as 42.29] ──
 
   useEffect(() => {
@@ -126,6 +146,7 @@ export default function Home() {
       setQueryData(null)
     setEnlPersona(null)
     setEnlPersonaData(null)
+    setTraversalNodeIndex(0)
       setError(null)
       return
     }
@@ -135,6 +156,7 @@ export default function Home() {
     setQueryData(null)
     setEnlPersona(null)
     setEnlPersonaData(null)
+    setTraversalNodeIndex(0)
 
     fetch(`/api/execlens?query=${encodeURIComponent(selectedQuery)}`)
       .then(r => {
@@ -151,10 +173,11 @@ export default function Home() {
       })
   }, [selectedQuery])
 
-  // ── Demo stage → panel mapping [R4] ──
+  // ── Demo stage → panel mapping [R4] — standard mode only ──
 
   useEffect(() => {
     if (!demoActive || !demoStage) return
+    if (selectedFlow) return  // traversal mode handles its own panel opening [51.6]
 
     // Stage 1: auto-select GQ-003 so data loads during Situation reveal
     if (demoStage === 1) {
@@ -165,27 +188,50 @@ export default function Home() {
     if (panelId) {
       openPanel(panelId)
     }
-  }, [demoActive, demoStage, openPanel])
+  }, [demoActive, demoStage, openPanel, selectedFlow])
 
   // ── Demo control handlers ──
 
   const handleStartDemo = () => {
-    setOpenPanels(['situation'])
+    setTraversalNodeIndex(0)
+    setSelectedQuery('GQ-003')
+    if (selectedFlow) {
+      // Traversal mode [51.6]: single-focus-node, open first panel
+      const panels = getFlowPanels(selectedFlow)
+      setOpenPanels(panels.length > 0 ? [panels[0]] : ['situation'])
+    } else {
+      // Standard 51.4 stage mode
+      setOpenPanels(['situation'])
+    }
     setDemoActive(true)
     setDemoStage(1)
   }
 
   const handleDemoNext = () => {
-    if (demoStage >= TOTAL_STAGES) {
-      handleDemoExit()
+    if (selectedFlow) {
+      // Traversal mode [51.6]: advance node pointer, single-focus-node
+      const panels = getFlowPanels(selectedFlow)
+      const nextIndex = traversalNodeIndex + 1
+      if (nextIndex >= panels.length) {
+        handleDemoExit()
+      } else {
+        setTraversalNodeIndex(nextIndex)
+        setOpenPanels([panels[nextIndex]])
+      }
     } else {
-      setDemoStage(prev => prev + 1)
+      // Standard 51.4 stage mode
+      if (demoStage >= TOTAL_STAGES) {
+        handleDemoExit()
+      } else {
+        setDemoStage(prev => prev + 1)
+      }
     }
   }
 
   const handleDemoExit = () => {
     setDemoActive(false)
     setDemoStage(0)
+    setTraversalNodeIndex(0)
   }
 
   // ── Render ──
@@ -207,7 +253,7 @@ export default function Home() {
             Evidence-first system for program diagnosis, structural risk, and execution visibility
           </p>
           <div className="hero-meta">
-            PIOS-51.5-RUN01-CONTRACT-v1 · run_02_governed
+            PIOS-51.6-RUN01-CONTRACT-v1 · run_02_governed
             &ensp;·&ensp;
             No inference. No synthetic data.
           </div>
@@ -336,6 +382,10 @@ export default function Home() {
         stage={demoStage}
         onNext={handleDemoNext}
         onExit={handleDemoExit}
+        selectedFlow={selectedFlow}
+        onFlowSelect={setSelectedFlow}
+        traversalNodeIndex={traversalNodeIndex}
+        traversalNodes={selectedFlow ? getFlowNodes(selectedFlow) : null}
       />
     </>
   )
