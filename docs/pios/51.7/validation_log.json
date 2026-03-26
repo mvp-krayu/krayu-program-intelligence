@@ -1,0 +1,193 @@
+{
+  "stream": "51.7",
+  "timestamp": "2026-03-26T13:16:58.305849Z",
+  "total": 27,
+  "passed": 27,
+  "failed": 0,
+  "groups": {
+    "persona_required": {
+      "pass": 6,
+      "fail": 0
+    },
+    "execution_blocked_without_persona": {
+      "pass": 5,
+      "fail": 0
+    },
+    "evidence_no_empty_state": {
+      "pass": 5,
+      "fail": 0
+    },
+    "adapter_calls_blocked": {
+      "pass": 5,
+      "fail": 0
+    },
+    "api_regression": {
+      "pass": 6,
+      "fail": 0
+    }
+  },
+  "results": [
+    {
+      "name": "index.js has PIOS-51.7 contract",
+      "group": "persona_required",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleStartDemo hard gate present",
+      "group": "persona_required",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No default persona assignment at demo start",
+      "group": "persona_required",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No PERSONA_DEFAULT_FLOW.CTO silent fallback",
+      "group": "persona_required",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona required message present",
+      "group": "persona_required",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Start button disabled without persona",
+      "group": "persona_required",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Demo start blocked: setDemoActive not reachable without persona",
+      "group": "execution_blocked_without_persona",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No persona auto-assignment bypasses gate",
+      "group": "execution_blocked_without_persona",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Narrative panel guarded by enlPersona",
+      "group": "execution_blocked_without_persona",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel render guarded by enlPersona",
+      "group": "execution_blocked_without_persona",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona gate annotation in source",
+      "group": "execution_blocked_without_persona",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Evidence fallback message present",
+      "group": "evidence_no_empty_state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Evidence never renders without persona",
+      "group": "evidence_no_empty_state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Evidence fallback CSS class present",
+      "group": "evidence_no_empty_state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "globals.css .evidence-blocked-state defined",
+      "group": "evidence_no_empty_state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel not rendered when persona null",
+      "group": "evidence_no_empty_state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel fetch guarded by selectedPersona",
+      "group": "adapter_calls_blocked",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel fetch only fires with persona set",
+      "group": "adapter_calls_blocked",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No fetch in index.js dependent on persona",
+      "group": "adapter_calls_blocked",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No adapter call in DemoController",
+      "group": "adapter_calls_blocked",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "TraversalEngine has no fetch calls",
+      "group": "adapter_calls_blocked",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "route: query GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: topology",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: status",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona EXECUTIVE GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona CTO GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "route: persona ANALYST GQ-003",
+      "group": "api_regression",
+      "status": "PASS",
+      "detail": "HTTP 200"
+    }
+  ]
+}

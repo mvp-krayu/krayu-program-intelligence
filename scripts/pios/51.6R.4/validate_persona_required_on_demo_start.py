@@ -39,18 +39,18 @@ print("\n[persona_enforcement]")
 
 idx = read("app/execlens-demo/pages/index.js")
 
-check("index.js has PIOS-51.6R.4 contract",              "persona_enforcement",
-      "PIOS-51.6R.4-RUN01-CONTRACT-v1" in idx)
-check("handleStartDemo: setEnlPersona('CTO') present",   "persona_enforcement",
-      "setEnlPersona('CTO')" in idx)
-check("handleStartDemo: null persona guard",             "persona_enforcement",
-      "if (!enlPersona) setEnlPersona('CTO')" in idx)
-check("Persona enforcement annotation present",          "persona_enforcement",
-      "51.6R.4" in idx and "default CTO" in idx)
-check("PERSONA_DEFAULT_FLOW.CTO fallback present",       "persona_enforcement",
-      "PERSONA_DEFAULT_FLOW.CTO" in idx)
-check("Persona enforcement at handleStartDemo only",     "persona_enforcement",
-      idx.count("setEnlPersona('CTO')") == 1)
+check("index.js has PIOS-51.7 contract",                 "persona_enforcement",
+      "PIOS-51.7-RUN01-CONTRACT-v1" in idx)
+check("handleStartDemo: hard gate present",              "persona_enforcement",
+      "if (!enlPersona) return" in idx)
+check("handleStartDemo: no CTO default assignment",      "persona_enforcement",
+      "setEnlPersona('CTO')" not in idx)
+check("Persona gate annotation present",                 "persona_enforcement",
+      "51.7" in idx and "hard gate" in idx)
+check("No PERSONA_DEFAULT_FLOW.CTO silent fallback",     "persona_enforcement",
+      "PERSONA_DEFAULT_FLOW.CTO" not in idx)
+check("No implicit persona in handleStartDemo",          "persona_enforcement",
+      idx.count("setEnlPersona(") == 0 or "handleStartDemo" not in idx.split("setEnlPersona(")[0])
 
 # ── evidence_guard ────────────────────────────────────────────────────────────
 
@@ -59,7 +59,7 @@ print("\n[evidence_guard]")
 check("Evidence panel: persona null guard present",      "evidence_guard",
       "queryData && enlPersona" in idx and "queryData && !enlPersona" in idx)
 check("Evidence panel: blocked message when no persona", "evidence_guard",
-      "Select a persona to view evidence" in idx)
+      "Evidence requires a selected Persona" in idx)
 check("ENLPanel only rendered with persona present",     "evidence_guard",
       idx.count("<ENLPanel") == 1)
 check("Evidence guard uses enlPersona (not selectedFlow)","evidence_guard",

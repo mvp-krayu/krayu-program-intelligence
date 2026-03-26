@@ -1,8 +1,8 @@
 /**
  * pages/index.js
- * PIOS-51.6R.4-RUN01-CONTRACT-v1
- * (supersedes PIOS-51.6R.3-RUN01-CONTRACT-v1)
- * Lineage: PIOS-51.6-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1 → PIOS-51.6R.1-RUN01-CONTRACT-v1 → PIOS-51.6R.2-RUN01-CONTRACT-v1 → PIOS-51.6R.3-RUN01-CONTRACT-v1 → PIOS-51.6R.4-RUN01-CONTRACT-v1
+ * PIOS-51.7-RUN01-CONTRACT-v1
+ * (supersedes PIOS-51.6R.4-RUN01-CONTRACT-v1)
+ * Lineage: PIOS-51.6-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1 → PIOS-51.6R.1-RUN01-CONTRACT-v1 → PIOS-51.6R.2-RUN01-CONTRACT-v1 → PIOS-51.6R.3-RUN01-CONTRACT-v1 → PIOS-51.6R.4-RUN01-CONTRACT-v1 → PIOS-51.7-RUN01-CONTRACT-v1
  *
  * ExecLens Demo Surface — panel-orchestrated progressive disclosure.
  * Supersedes: PIOS-51.3 (step-driven navigation)
@@ -215,10 +215,10 @@ export default function Home() {
   // ── Demo control handlers ──
 
   const handleStartDemo = () => {
-    // Persona enforcement — default CTO if none selected [51.6R.4]
-    if (!enlPersona) setEnlPersona('CTO')
+    // Persona hard gate — execution blocked without explicit selection [51.7]
+    if (!enlPersona) return
     // Derive active flow at demo start — persona binding happens here, not on persona click [51.6R.2]
-    const activeFlow = selectedFlow || (enlPersona ? PERSONA_DEFAULT_FLOW[enlPersona] : PERSONA_DEFAULT_FLOW.CTO)
+    const activeFlow = selectedFlow || (enlPersona ? PERSONA_DEFAULT_FLOW[enlPersona] : null)
     setTraversalNodeIndex(0)
     setSelectedQuery('GQ-003')
     if (activeFlow) {
@@ -282,13 +282,21 @@ export default function Home() {
             Evidence-first system for program diagnosis, structural risk, and execution visibility
           </p>
           <div className="hero-meta">
-            PIOS-51.6R.4-RUN01-CONTRACT-v1 · run_02_governed
+            PIOS-51.7-RUN01-CONTRACT-v1 · run_02_governed
             &ensp;·&ensp;
             No inference. No synthetic data.
           </div>
 
+          {!demoActive && !enlPersona && (
+            <div className="persona-gate-message">Select a Persona to enable execution</div>
+          )}
           {!demoActive && (
-            <button className="demo-start-btn" onClick={handleStartDemo} type="button">
+            <button
+              className="demo-start-btn"
+              onClick={handleStartDemo}
+              type="button"
+              disabled={!enlPersona}
+            >
               Start Lens Demo
             </button>
           )}
@@ -384,7 +392,7 @@ export default function Home() {
               navigation={queryData.navigation}
             />
           ) : queryData && !enlPersona ? (
-            <div className="no-query-state">Select a persona to view evidence.</div>
+            <div className="evidence-blocked-state">Evidence requires a selected Persona</div>
           ) : (
             <div className="no-query-state">Select a query to load evidence.</div>
           )}
@@ -398,8 +406,10 @@ export default function Home() {
           expanded={openPanels.includes('narrative')}
           onToggle={() => togglePanel('narrative')}
         >
-          {queryData ? (
+          {queryData && enlPersona ? (
             <NarrativePanel queryData={queryData} />
+          ) : queryData && !enlPersona ? (
+            <div className="no-query-state">Select a Persona to enable execution</div>
           ) : (
             <div className="no-query-state">Select a query to load narrative.</div>
           )}

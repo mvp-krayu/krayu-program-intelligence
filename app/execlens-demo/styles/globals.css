@@ -3047,3 +3047,29 @@ a.topo-chip:hover {
   word-break: break-word;
   overflow-x: auto;
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   PIOS-51.7 — Persona Hard Gate
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.persona-gate-message {
+  font-size: 0.78rem;
+  color: var(--weak);
+  letter-spacing: 0.03em;
+  margin-bottom: 0.6rem;
+  font-style: italic;
+}
+
+.demo-start-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.evidence-blocked-state {
+  padding: 1rem;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  border-left: 2px solid var(--border);
+}

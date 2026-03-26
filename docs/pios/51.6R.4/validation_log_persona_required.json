@@ -1,7 +1,7 @@
 {
   "stream": "51.6R.4",
   "validator": "validate_persona_required_on_demo_start",
-  "timestamp": "2026-03-26T12:31:00.421856Z",
+  "timestamp": "2026-03-26T13:17:05.095303Z",
   "total": 21,
   "passed": 21,
   "failed": 0,
@@ -25,37 +25,37 @@
   },
   "results": [
     {
-      "name": "index.js has PIOS-51.6R.4 contract",
+      "name": "index.js has PIOS-51.7 contract",
       "group": "persona_enforcement",
       "status": "PASS",
       "detail": ""
     },
     {
-      "name": "handleStartDemo: setEnlPersona('CTO') present",
+      "name": "handleStartDemo: hard gate present",
       "group": "persona_enforcement",
       "status": "PASS",
       "detail": ""
     },
     {
-      "name": "handleStartDemo: null persona guard",
+      "name": "handleStartDemo: no CTO default assignment",
       "group": "persona_enforcement",
       "status": "PASS",
       "detail": ""
     },
     {
-      "name": "Persona enforcement annotation present",
+      "name": "Persona gate annotation present",
       "group": "persona_enforcement",
       "status": "PASS",
       "detail": ""
     },
     {
-      "name": "PERSONA_DEFAULT_FLOW.CTO fallback present",
+      "name": "No PERSONA_DEFAULT_FLOW.CTO silent fallback",
       "group": "persona_enforcement",
       "status": "PASS",
       "detail": ""
     },
     {
-      "name": "Persona enforcement at handleStartDemo only",
+      "name": "No implicit persona in handleStartDemo",
       "group": "persona_enforcement",
       "status": "PASS",
       "detail": ""
