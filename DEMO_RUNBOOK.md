@@ -2,6 +2,11 @@
 ## PIOS-51.8R-RUN05-CONTRACT-v1 · run_02_governed
 ### (supersedes PIOS-42.9-RUN01-CONTRACT-v1 · run_01_blueedge)
 
+**Demo Baseline**
+- Control Model: RUN05 (locked)
+- Documentation: RUN06A (aligned)
+- Mode Logic: Frozen (no changes allowed)
+
 ---
 
 ## Before You Begin

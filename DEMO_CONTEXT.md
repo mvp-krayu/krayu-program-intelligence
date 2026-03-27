@@ -1,3 +1,27 @@
+<!--
+DEMO LOCK — PIOS 51.8R / RUN05 + RUN06A
+
+Locked baseline:
+- RUN05 = final control/render/runtime baseline
+- RUN06A = final demo documentation alignment baseline
+
+Locked truths:
+- Guided mode behavior accepted
+- FREE / OPERATOR mode accepted
+- ENTRY vs FREE separation accepted
+- explicit operator indicator accepted
+- evidence panel behavior in FREE accepted
+- exit / CTRL-K semantics accepted
+- explicit re-entry semantics accepted
+- demo docs aligned to actual runtime truth
+
+Rule:
+No further changes to control logic, mode semantics, or demo documentation unless a new concrete defect is observed in runtime truth.
+
+Phase:
+30-Day WOW Demo — LOCKED BASELINE
+-->
+
 # ExecLens — What This Is and What It Is Not
 ## PIOS-51.8R-RUN05-CONTRACT-v1
 ### (supersedes PIOS-42.9-RUN01-CONTRACT-v1)
