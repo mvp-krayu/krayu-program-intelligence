@@ -1,5 +1,6 @@
 # ExecLens Demo — Technical Setup
-## PIOS-42.9-RUN01-CONTRACT-v1
+## PIOS-51.8R-RUN05-CONTRACT-v1
+### (supersedes PIOS-42.9-RUN01-CONTRACT-v1)
 
 ---
 
@@ -75,6 +76,22 @@ http://localhost:3000
 
 ---
 
+## Demo Surface — Runtime Mode
+
+The current demo surface (PIOS 51.8R) is **persona-guided**.
+
+**Entry flow:**
+1. Select a persona (EXECUTIVE / CTO / ANALYST) in the "What does this mean for you?" panel
+2. Select a query (GQ-001 to GQ-010) — unlocks after persona selection
+3. Demo auto-starts immediately with a persona-specific guided flow
+
+**Control states:** ENTRY → GUIDED → COMPLETE → FREE/OPERATOR
+
+**Exit:** Press the **Exit** button in the demo bar or **CTRL-K** at any point
+to enter durable OPERATOR MODE (panels freely browsable; "Run Lens Demo" re-entry button visible).
+
+---
+
 ## How the System Works
 
 The browser calls `/api/execlens` which executes Python adapter scripts:
@@ -84,6 +101,7 @@ The browser calls `/api/execlens` which executes Python adapter scripts:
 | `?overview=true` | `scripts/pios/42.6/execlens_overview_adapter.py` | Landing gauge metrics |
 | `?topology=true` | `scripts/pios/42.7/execlens_topology_adapter.py` | Structural topology |
 | `?query=GQ-NNN` | `scripts/pios/42.4/execlens_adapter.py` | Single query execution |
+| `?persona=X&query=GQ-NNN` | `scripts/pios/42.4/execlens_adapter.py` | Persona-filtered query execution |
 | `?list=true` | `scripts/pios/42.4/execlens_adapter.py` | Available query list |
 
 Each Python adapter runs a deterministic traversal through locked 41.x artifacts.
@@ -133,9 +151,14 @@ The topology adapter processes all 10 queries to build the hierarchy. First load
 **Obsidian link opens wrong vault**
 The vault name in `NEXT_PUBLIC_OBSIDIAN_VAULT_NAME` must exactly match the vault name registered in Obsidian (case-sensitive).
 
+**Demo does not auto-start after query selection**
+Confirm persona is selected first (query is locked until persona is set). If freeMode is active (OPERATOR MODE badge visible), press "Run Lens Demo" for explicit re-entry.
+
 ---
 
 ## Running Validators
+
+### Adapter Chain Validators (42.x — data integrity)
 
 ```bash
 # From repo root
@@ -146,3 +169,14 @@ python3 scripts/pios/42.7/validate_topology_panel.py    # 22/22
 python3 scripts/pios/42.8/validate_demo_choreography.py # 21/21
 python3 scripts/pios/42.9/validate_demo_package.py      # package check
 ```
+
+### Demo Surface Validators (51.x — runtime behavior)
+
+```bash
+# From repo root
+python3 scripts/pios/51.7/validate_51_7.py              # 27/27
+python3 scripts/pios/51.8R/validate_51_8R.py            # 431/431
+python3 scripts/pios/51.8R/validate_51_8R_guided.py     # 82/82
+```
+
+All validators must pass before demo delivery.

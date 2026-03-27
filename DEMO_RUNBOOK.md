@@ -1,158 +1,208 @@
-# ExecLens Demo Runbook — 3-Minute Stakeholder Walkthrough
-## PIOS-42.9-RUN01-CONTRACT-v1 · run_01_blueedge
+# ExecLens Demo Runbook — Persona-Guided Walkthrough
+## PIOS-51.8R-RUN05-CONTRACT-v1 · run_02_governed
+### (supersedes PIOS-42.9-RUN01-CONTRACT-v1 · run_01_blueedge)
 
 ---
 
 ## Before You Begin
 
 - [ ] `npm run dev` is running → `http://localhost:3000` is open
-- [ ] Browser is on the landing page (full page visible)
-- [ ] Obsidian is open (optional — for deep link demo at Step 6)
-- [ ] No query is selected (clean state)
+- [ ] Browser is on the landing page (Situation panel visible — topology + gauges)
+- [ ] No persona selected, no query selected (clean ENTRY state)
+- [ ] Obsidian is open (optional — for architecture deep-link reference in topology)
 
 ---
 
-## Demo Script
+## Demo Overview
+
+The Lens demo is persona-driven. Before any query runs, the presenter selects
+a lens persona that determines the evidence traversal sequence:
+
+| Persona | Sequence | Best for |
+|---------|----------|----------|
+| **EXECUTIVE** | Answer → Signal → Evidence | Board-level / investor audience |
+| **CTO** | Signal → Evidence → Answer | Technical executive / architecture review |
+| **ANALYST** | Evidence → Signal → Answer → Raw | Technical deep-dive / audit audience |
+
+**Recommended default: CTO + GQ-003** (blast radius query, 3-step guided flow)
+
+---
+
+## Primary Demo Script — CTO Lens · GQ-003
 
 ---
 
 ### Opening (15 seconds)
 
-> "This is ExecLens. What you're seeing right now is your program's structural
+> "This is Lens. What you're seeing right now is your program's structural
 > condition — loaded directly from your architecture artifacts. No surveys. No
 > manual reports. No synthetic data."
 
-*[Gesture to the four gauge cards at the top of the page.]*
+*[Gesture to the four gauge cards in the Situation panel.]*
 
 > "These four metrics — Dependency Load, Structural Density, Coordination
 > Pressure, Visibility Deficit — were extracted from your own signal registry.
-> Every number has a direct source. You can see where each one comes from."
+> Every number has a direct source."
 
 ---
 
-### CLICK: "Start ExecLens Demo"
+### Persona Selection (10 seconds)
 
-*[Click the button in the hero. The demo bar appears at the bottom of the page.]*
+*[Scroll to or click "What does this mean for you?" panel to expand it.]*
+
+> "Before we run anything, we select a lens. The same program intelligence
+> surfaces differently depending on who's in the room."
+
+*[Click **CTO**.]*
+
+> "CTO lens: we lead with signals, walk through evidence, and arrive at the
+> structured answer."
+
+*[The query selector unlocks. Entry strip shows CTO persona as selected.]*
 
 ---
 
-### Step 1 — System (20 seconds)
+### Query Selection → Auto-Start (10 seconds)
 
-*[Demo bar shows: **1 System** active. Page spotlights the gauge strip.]*
+*[Select **GQ-003** from the query selector.]*
 
-> "Before you select any query, the system already knows your structural state.
-> Coordination pressure at 87.5%. Seven runtime dimensions currently unknown.
-> This is your baseline — evidence-grounded, not estimated."
+> "The hardest question first: what is the blast radius if a core platform
+> component fails?"
+
+*[Demo starts automatically. GuidedBar appears at bottom: "CTO — GUIDED FLOW".
+Situation panel remains open. Signals panel opens alongside it.]*
+
+---
+
+### Step 1 — Signal (20 seconds)
+
+*[GuidedBar shows step 1 of 3. Signals panel is active.]*
+
+> "Three intelligence signals are bound to this query. Each carries a
+> confidence rating, a relevance level, and a direct evidence chain. This is
+> exactly what the system used to form its answer."
+
+*[Point to STRONG / MODERATE confidence chips. Note signal IDs.]*
+
+> "No inference. These confidence levels came from your own evidence index."
 
 *[CLICK Next →]*
 
 ---
 
-### Step 2 — Structure (25 seconds)
+### Step 2 — Evidence (20 seconds)
 
-*[Page scrolls to topology panel. Spotlighted.]*
+*[Evidence panel opens. ENLPanel renders with CTO persona analysis.]*
 
-> "This is your architecture as ExecLens sees it — four domains, five
-> capabilities, nine components. These groupings came from your own query
-> drill-downs. Nothing was invented."
-
-*[Point to domain blocks.]*
-
-> "Edge Data Acquisition. Platform Infrastructure. Event-Driven Architecture.
-> Operational Engineering. These are the structural anchors of the BlueEdge
-> platform."
-
-*[CLICK Next →]*
-
----
-
-### Step 3 — Query (30 seconds)
-
-*[GQ-003 auto-selects. Page scrolls to query zone. System begins executing.]*
-
-> "Now we ask the hardest question: what is the blast radius if a core
-> platform component fails?"
-
-*[Wait for data to load — ~3 seconds. Results appear.]*
-
-> "The system has traversed your signal registry, bound the evidence, and
-> returned a structured response. No inference. No summarization. Pure
-> signal extraction."
-
-*[Note: the answer section renders with the executive response.]*
-
-*[CLICK Next →]*
-
----
-
-### Step 4 — Signals (20 seconds)
-
-*[Page scrolls to Intelligence Signals panel. Spotlighted.]*
-
-> "Three intelligence signals are bound to this query. Each signal has a
-> confidence rating, a relevance level, and a direct evidence chain. You
-> can see exactly what the system used to form its answer."
-
-*[Point to STRONG / MODERATE confidence chips.]*
-
-*[CLICK Next →]*
-
----
-
-### Step 5 — Evidence (20 seconds)
-
-*[Page scrolls to Evidence panel. Spotlighted.]*
-
-> "This is the evidence layer. Every signal traces back to specific structural
+> "Here is the evidence layer. Every signal traces to specific structural
 > telemetry artifacts — ST-006, ST-007, and so on. The chain depth tells you
-> how many steps of verification exist between the signal and the raw artifact."
+> how many verification steps exist between the signal and the raw artifact."
 
-> "If you ask 'why does ExecLens say this?' — the answer is here, explicitly."
-
-*[CLICK Next →]*
-
----
-
-### Step 6 — Navigate (20 seconds)
-
-*[Page scrolls to Navigation panel. Spotlighted.]*
-
-> "And here's where it connects to your living architecture documentation.
-> These are vault-resolved links — direct paths to notes in your Obsidian
-> vault."
-
-*[If Obsidian is configured — click a resolved link.]*
-
-> "One click opens the actual architecture note."
-
-*[If Obsidian is not configured.]*
-
-> "When the vault is connected, each resolved entity becomes a direct link
-> into your architecture documentation."
+> "If anyone asks 'why does the system say this?' — the answer is here,
+> explicitly, and it's inspectable."
 
 *[CLICK Next →]*
 
 ---
 
-### Step 7 — Complete (15 seconds)
+### Step 3 — Answer (20 seconds)
 
-*[Demo bar shows: **7 Complete**. Page scrolls to top.]*
+*[Narrative panel opens with structured executive response.]*
 
-> "Three minutes. Ten queries available. Four domains. Evidence-first throughout."
+> "So what? This is the structured answer — evidence-grounded, not generated.
+> Same input, same query, same output every time."
 
-> "This isn't a dashboard built on guesses. It's a traversal engine that
-> reads your actual program artifacts and returns structured intelligence."
+*[GuidedBar shows "Try another perspective" on the CTA.]*
 
-> "Every value you saw is traceable to a specific signal, a specific evidence
-> artifact, and a specific source file. That's Program Intelligence."
+*[CLICK Try another perspective.]*
 
-*[CLICK Finish ✓ — demo mode exits.]*
+*[Demo completes. Persona clears. Panels reset to Situation. Demo bar disappears.]*
 
 ---
 
-## Post-Demo Exploration
+### After Completion (10 seconds)
 
-The stakeholder can now freely explore:
+> "The loop is closed. To run again with a different lens — select another
+> persona."
+
+*[Select EXECUTIVE or ANALYST from the persona panel for a follow-on run if
+the audience wants to see a different traversal sequence.]*
+
+---
+
+### Timing Summary — CTO Lens
+
+| Phase | Duration | Cumulative |
+|-------|----------|------------|
+| Opening | 15s | 0:15 |
+| Persona selection | 10s | 0:25 |
+| Query selection + auto-start | 10s | 0:35 |
+| Step 1 — Signal | 20s | 0:55 |
+| Step 2 — Evidence | 20s | 1:15 |
+| Step 3 — Answer | 20s | 1:35 |
+| Completion | 10s | **1:45** |
+
+*Note: EXECUTIVE lens adds ~0 time (same step count). ANALYST lens adds one
+step (Raw evidence at step 4) — approximately +20s.*
+
+---
+
+## Operator Mode (FREE) — Post-Demo Exploration
+
+After the guided loop completes, press **Exit** (in demo bar during a run)
+or **CTRL-K** at any point to enter OPERATOR MODE.
+
+**What OPERATOR MODE looks like:**
+- "OPERATOR MODE" badge appears in the hero
+- Entry step strip is hidden
+- "Run Lens Demo" button is visible
+- All panels are freely toggleable
+
+**What you can do in OPERATOR MODE:**
+- Open any panel in any order
+- Browse the evidence panel directly (ENLPanel renders with last active persona if still set)
+- Toggle topology + signals + narrative freely
+- Change persona or query to re-examine any angle
+
+**To re-enter guided mode from FREE:**
+*[Ensure persona + query are selected, then click **Run Lens Demo**.]*
+
+> "This is operator mode — the same intelligence, free navigation, no guided
+> constraints. The analyst or architect can explore any dimension independently."
+
+---
+
+## Persona Variants
+
+### EXECUTIVE Lens
+
+Sequence: **Answer → Signal → Evidence**
+
+Start with the conclusion. Audience sees the answer immediately, then traces
+back through the signals and evidence chain on demand.
+
+Best for: board presentation, investor walkthrough, executive briefing.
+
+*[Use same script structure: select EXECUTIVE → select query → follow 3 steps.]*
+
+---
+
+### ANALYST Lens
+
+Sequence: **Evidence → Signal → Answer → Raw**
+
+Evidence-first. Step 4 opens raw source artifacts directly in the evidence panel.
+
+Best for: technical audit, architecture review, deep-dive session.
+
+> "ANALYST mode exposes the raw structural telemetry artifacts at step 4.
+> These are the actual source files the extraction rules ran against."
+
+*[At step 4, the evidence panel switches to source artifact view.]*
+
+---
+
+## Available Queries
 
 | Query | Question |
 |-------|----------|
@@ -176,32 +226,25 @@ The stakeholder can now freely explore:
 > architecture artifacts for the BlueEdge program. No values were invented
 > or estimated.
 
+**"Why does the same question look different for CTO vs EXECUTIVE?"**
+> The underlying data is identical. The traversal sequence is different. CTO
+> leads with signals. EXECUTIVE leads with the answer. Same intelligence,
+> different entry point.
+
 **"Can we add our own queries?"**
 > Yes. Queries are defined in `docs/pios/41.5/query_signal_map.json`.
 > Each query maps to signals in the signal registry.
 
 **"How is this different from a dashboard?"**
-> A dashboard visualizes data you already have. ExecLens traverses your
-> program artifacts and extracts structural intelligence you didn't know
-> you had. The intelligence is derived — not reported.
+> A dashboard visualizes data you already have. Lens traverses your program
+> artifacts and extracts structural intelligence you didn't know you had.
+> The intelligence is derived — not reported.
 
 **"What's the evidence-first principle?"**
-> Every value displayed traces to a specific source artifact. If ExecLens
+> Every value displayed traces to a specific source artifact. If the system
 > cannot find evidence, it returns null — not an estimate.
 
----
-
-## Timing Summary
-
-| Step | Duration | Cumulative |
-|------|----------|------------|
-| Opening | 15s | 0:15 |
-| Start Demo | 5s | 0:20 |
-| Step 1 — System | 20s | 0:40 |
-| Step 2 — Structure | 25s | 1:05 |
-| Step 3 — Query | 30s | 1:35 |
-| Step 4 — Signals | 20s | 1:55 |
-| Step 5 — Evidence | 20s | 2:15 |
-| Step 6 — Navigate | 20s | 2:35 |
-| Step 7 — Complete | 15s | 2:50 |
-| Finish | 10s | **3:00** |
+**"What is OPERATOR MODE?"**
+> After a guided session exits, OPERATOR MODE gives the presenter or analyst
+> free access to all panels — no choreography, no sequence. It's the same
+> intelligence surface without the guided flow.

@@ -1,5 +1,6 @@
 # ExecLens — What This Is and What It Is Not
-## PIOS-42.9-RUN01-CONTRACT-v1
+## PIOS-51.8R-RUN05-CONTRACT-v1
+### (supersedes PIOS-42.9-RUN01-CONTRACT-v1)
 
 ---
 
@@ -51,13 +52,49 @@ This means:
 - Extraction failure → null, not a default value
 
 This principle is enforced at every layer of the execution chain (42.1–42.7)
-and validated by 101 automated checks.
+and validated by 101 automated adapter checks. The demo surface itself is
+governed by an additional 431 checks (PIOS 51.x validation suite).
+
+---
+
+## Demo Control Model
+
+The Lens surface operates in five distinct states:
+
+| State | Trigger | Description |
+|-------|---------|-------------|
+| ENTRY | Initial load | Situation panel open. Persona selection required to unlock query. Guided start pending. |
+| READY | Persona + query both selected | Transient. Auto-start fires immediately. |
+| GUIDED | Auto-start or CTA | Active persona-specific walkthrough. Step-driven panel control. Situation pinned. |
+| COMPLETE | Final guided step reached | Persona cleared. Panels locked pending re-selection. Demo bar hidden. |
+| FREE / OPERATOR | Exit button or CTRL-K | Durable operator exploration mode. All panels browsable. Explicit re-entry required. |
+
+**ENTRY and FREE are not the same state.** ENTRY is a pre-demo shell — no
+guided sequence has been executed. FREE is a post-exit operator surface — the
+guided sequence has run and the user has explicitly exited.
+
+---
+
+## Guided Flows by Persona
+
+ExecLens surfaces intelligence differently per audience. Persona selection
+binds a specific evidence traversal sequence:
+
+| Persona | Steps | Sequence | Emphasis |
+|---------|-------|----------|----------|
+| EXECUTIVE | 3 | Answer → Signal → Evidence | Start with the conclusion; show evidence on demand |
+| CTO | 3 | Signal → Evidence → Answer | Lead with signals; walk to answer through evidence |
+| ANALYST | 4 | Evidence → Signal → Answer → Raw | Evidence-first; raw artifact access at step 4 |
+
+Each step opens its associated panel alongside the pinned Situation panel.
+Step transitions are explicit (Next →). The last step shows "Try another
+perspective" — pressing it closes the loop and returns to COMPLETE state.
 
 ---
 
 ## What the Demo Shows
 
-The ExecLens demo (run_01_blueedge) demonstrates Program Intelligence for the
+ExecLens (run_02_governed) demonstrates Program Intelligence for the
 **BlueEdge platform** — a real software delivery program.
 
 The demonstration includes:
@@ -66,27 +103,28 @@ The demonstration includes:
 |-----------|--------|
 | 4 structural metrics | Signal registry (SIG-002, SIG-003, SIG-004, SIG-005) |
 | 4 domains, 5 capabilities, 9 components | PIE vault + drill-down co-occurrence |
-| 10 intelligence queries | Query signal map + response templates |
+| 10 intelligence queries (GQ-001 to GQ-010) | Query signal map + response templates |
+| 3 persona lenses (EXECUTIVE, CTO, ANALYST) | PERSONA_GUIDED_FLOWS static binding |
 | Signal confidence levels | Evidence mapping index |
-| Evidence chains | Structural telemetry artifacts (ST-xxx) |
-| Architecture deep links | PIE vault (docs/pios/41.2/pie_vault/) |
+| Evidence chains with source artifacts | Structural telemetry artifacts (ST-xxx) |
+| Architecture navigation (in Situation panel) | PIE vault (docs/pios/41.2/pie_vault/) |
 
 ---
 
 ## The Execution Chain
 
 ```
-Query
+Query + Persona
   → Signal Registry (41.4)        — which signals are relevant?
   → Evidence Index (41.4)         — what evidence supports each signal?
   → PIE Vault (41.2)              — which architecture notes are referenced?
   → Response Templates (41.5)     — how should the answer be structured?
   → ExecLens Adapter (42.4)       — what JSON does the browser receive?
-  → ExecLens Surface (42.4–42.8)  — what does the CTO see?
+  → Lens Surface (PIOS 51.8R)     — what does the persona see?
 ```
 
 Each step is deterministic. Same input → same output.
-The same query run twice produces identical results.
+The same query + persona combination run twice produces identical results.
 
 ---
 
@@ -99,7 +137,7 @@ This guarantee is structural, not asserted:
 3. Every metric extraction rule is a regex or word-map — not a heuristic
 4. The topology hierarchy is computed by co-occurrence frequency — not
    semantic inference or manual labelling
-5. 101 automated validation checks verify these properties across the stack
+5. 101 automated validation checks verify these properties across the adapter stack
 
 If any value could not be extracted from governed sources, it would not appear.
 
@@ -116,5 +154,5 @@ The discipline is documented in:
 - `docs/program-intelligence-framework/`
 - `docs/signal-science/`
 
-ExecLens (run_01_blueedge) is the first operational demonstration of
-the discipline applied to a real program.
+ExecLens (run_02_governed) is the operational demonstration of the discipline
+applied to a real program, with persona-driven evidence traversal.
