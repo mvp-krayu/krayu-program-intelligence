@@ -1,6 +1,6 @@
 /**
  * ENLPanel.js
- * PIOS-51.8R-RUN01-CONTRACT-v1 (amended: analyst label, source traceability)
+ * PIOS-51.8R-RUN01-CONTRACT-v1 (amended: analyst label, source traceability; navigation relocated to TopologyPanel [amendment 5])
  * (supersedes PIOS-51.6R.4-RUN01-CONTRACT-v1)
  * Lineage: PIOS-51.5R-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1 → PIOS-51.6R.4-RUN01-CONTRACT-v1 → PIOS-51.8R-RUN01-CONTRACT-v1
  *
@@ -29,7 +29,6 @@
  */
 
 import { useState, useEffect } from 'react'
-import NavigationPanel from './NavigationPanel'
 
 // ---------------------------------------------------------------------------
 // PIOS-51.5R: Static traversal rules — deterministic by persona [R3]
@@ -401,7 +400,7 @@ function RawArtifactsSection({ signals, prominent, forceOpen }) {
 // ENLPanel
 // ---------------------------------------------------------------------------
 
-export default function ENLPanel({ signals, navigation, persona, personaData, rawStepActive }) {
+export default function ENLPanel({ signals, persona, personaData, rawStepActive }) {
   if (!signals || signals.length === 0) {
     return (
       <div className="enl-panel-body">
@@ -454,8 +453,6 @@ export default function ENLPanel({ signals, navigation, persona, personaData, ra
         ))}
       </div>
 
-      {/* Navigation vault links — always after chain */}
-      <NavigationPanel navigation={navigation} />
 
     </div>
   )

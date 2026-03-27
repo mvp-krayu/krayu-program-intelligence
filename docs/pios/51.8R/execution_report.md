@@ -1,11 +1,11 @@
 # Execution Report — 51.8R
 
-Stream: 51.8R — Entry Strip + Analyst Raw Evidence Access + Final Polish + Guided Flow Correction + Loop Closure
+Stream: 51.8R — Entry Strip + Analyst Raw Evidence Access + Final Polish + Guided Flow Correction + Loop Closure + Amendment 5
 Date: 2026-03-26
-Amendment applied: 2026-03-26
+Amendment applied: 2026-03-26; Amendment 5 applied: 2026-03-27
 Branch: feature/51-8R-entry-strip-analyst-access
 Baseline commit: f5525dc (stream 51.8)
-Contract: PIOS-51.8R-RUN01-CONTRACT-v1
+Contract: PIOS-51.8R-RUN01-CONTRACT-v2 (supersedes v1)
 References: PIOS-51.8-RUN01-CONTRACT-v1
 
 ---
@@ -143,14 +143,46 @@ References: PIOS-51.8-RUN01-CONTRACT-v1
 - Start Demo button: `disabled={!enlPersona || !selectedQuery}` — dual gate
 - Copy: "Select a query to project signals onto this structure." and "Interpret this situation from a decision perspective"
 
+### 11. Amendment 5 — PIOS-51.8R-RUN01-CONTRACT-v2 [2026-03-27]
+
+#### A. Query-First Entry Gate
+- `PersonaPanel` buttons gain `disabled={!queryId}` — persona selection blocked without query
+- Persona selector still renders; no layout change; fetch still gated by both persona AND queryId
+
+#### B. Guided Flow Rebinding on Persona Switch
+- Persona-change useEffect: `setGuidedStepIndex(0)` and `setDemoComplete(false)` moved outside `if (demoActive)` guard — always reset on persona switch
+- Ensures GuidedBar reflects new persona's step sequence from step 1 regardless of demo state
+
+#### C. Deterministic Reset — Canonical Entry State
+- `handleDemoNext` terminal path: `setDemoComplete(false)` (was `true`), adds `setOpenPanels(['situation'])`
+- Completion immediately returns to canonical entry state — no terminal strip, no ⌘K required
+- `guided-terminal-strip` removed from index.js — `demoComplete` preserved for DemoController active prop only
+- CTA simplifies to `'Start Lens Demo'` (no ternary)
+
+#### D. GuidedBar Last-Step Label
+- `DemoController.js` GuidedBar: `{isLast ? 'Try another perspective' : 'Next →'}` (was `'Finish ✓'`)
+- User sees "Try another perspective" on last guided step before clicking
+
+#### E. Navigation Relocation to Topology
+- `NavigationPanel` removed from `ENLPanel` — import and render both removed
+- `NavigationPanel` added to `TopologyPanel` inside `<details className="topo-nav-links">` with summary "View source-level topology links"
+- `navigation` prop added to `TopologyPanel`; removed from `ENLPanel`
+- `index.js`: `<TopologyPanel navigation={queryData?.navigation} />` — passes navigation from query data
+- Navigation content exposed only on explicit user action within Situation panel
+
+#### Validator changes (amendment 5)
+- `validate_51_8R.py`: 8 new groups (34 checks); 10 supersessions; total 156/156 PASS
+- `validate_51_8R_guided.py`: 5 supersessions; total 82/82 PASS
+- `validate_enl_visible_chain.py` (51.5R): 2 supersessions (NavigationPanel moved to TopologyPanel); total 66/66 PASS
+
 ---
 
 ## Validator Results
 
 | Validator | Result |
 |---|---|
-| validate_51_8R_guided.py | 82/82 PASS (16 groups — guided correction) |
-| validate_51_8R.py | 95/95 PASS (16 groups — entry strip + amendment + loop closure) |
+| validate_51_8R_guided.py | 82/82 PASS (16 groups — guided correction; amendment 5 supersessions) |
+| validate_51_8R.py | 156/156 PASS (31 groups — entry strip + amendments + loop closure + amendment 5) |
 | validate_51_8.py | 44/44 PASS |
 | validate_51_7.py | 27/27 PASS |
 | validate_mode_state_guard.py (51.6R.2) | 35/35 PASS |

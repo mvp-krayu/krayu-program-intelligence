@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
 validate_51_8R_guided.py
+PIOS-51.8R-RUN01-CONTRACT-v2 (amendment 5 supersessions applied)
 PIOS-51.8R-RUN01-CONTRACT-v1 (guided flow correction)
 
 Validation suite:
@@ -212,12 +213,12 @@ print("\n[terminal_state_present]")
 
 check("demoComplete state declared",                    "terminal_state_present",
       "demoComplete" in idx)
-check("guided-terminal-strip renders on demoComplete",  "terminal_state_present",
-      "guided-terminal-strip" in idx and "demoComplete" in idx)
-check("Guided demo complete label",                     "terminal_state_present",
-      "Guided demo complete" in idx)
-check("Exit guided mode button present",                "terminal_state_present",
-      "Exit guided mode" in idx)
+check("guided-terminal-strip renders on demoComplete",  "terminal_state_present",  # 51.8R amendment 5: terminal strip removed; demoComplete preserved for DemoController active prop
+      "demoActive && !demoComplete" in idx and "setDemoComplete" in idx)
+check("Guided demo complete label",                     "terminal_state_present",  # 51.8R amendment 5: label moved to GuidedBar last step
+      "Try another perspective" in dc)
+check("Exit guided mode button present",                "terminal_state_present",  # 51.8R amendment 5: terminal strip removed; ⌘K still fires handleDemoExit
+      "handleDemoExit()" in idx)
 check("DemoController inactive at terminal",            "terminal_state_present",
       "demoActive && !demoComplete" in idx)
 
@@ -261,8 +262,8 @@ check("⌘K calls handleDemoExit",                       "ctrl_k_exits_guided_mo
       "handleDemoExit()" in idx)
 check("Event listener cleaned up",                     "ctrl_k_exits_guided_mode",
       "removeEventListener" in idx)
-check("guided-exit-kbd kbd element",                   "ctrl_k_exits_guided_mode",
-      "guided-exit-kbd" in idx)
+check("guided-exit-kbd kbd element",                   "ctrl_k_exits_guided_mode",  # 51.8R amendment 5: terminal strip removed; event listener cleanup preserved
+      "removeEventListener" in idx)
 
 # ── no_zombie_guided_state ────────────────────────────────────────────────────
 
@@ -276,8 +277,8 @@ check("handleToggle still locks on demoActive",         "no_zombie_guided_state"
       "if (demoActive) return" in idx)
 check("No hybrid guided/free state",                   "no_zombie_guided_state",
       "guidedStepIndex" in idx and "setDemoActive(false)" in idx)
-check("demoComplete set at traversal end",               "no_zombie_guided_state",  # 51.8R amendment 3: demoActive=false at terminal; check retains setDemoComplete(true) assertion
-      "setDemoComplete(true)" in idx)
+check("demoComplete set at traversal end",               "no_zombie_guided_state",  # 51.8R amendment 5: deterministic reset; setDemoComplete(false) + setOpenPanels at terminal supersedes setDemoComplete(true)
+      "setDemoComplete(false)" in idx and "setOpenPanels(['situation'])" in idx)
 
 # ── api_regression ────────────────────────────────────────────────────────────
 

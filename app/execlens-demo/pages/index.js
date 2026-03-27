@@ -1,8 +1,9 @@
 /**
  * pages/index.js
+ * PIOS-51.8R-RUN01-CONTRACT-v2 (extended: query-first gate, guided flow rebinding, deterministic reset, navigation relocation [51.8R amendment 5])
  * PIOS-51.8R-RUN01-CONTRACT-v1 (amended: terminal state, ⌘K exit, persona reset)
  * (supersedes PIOS-51.8-RUN01-CONTRACT-v1)
- * Lineage: PIOS-51.6-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1 → PIOS-51.6R.1-RUN01-CONTRACT-v1 → PIOS-51.6R.2-RUN01-CONTRACT-v1 → PIOS-51.6R.3-RUN01-CONTRACT-v1 → PIOS-51.6R.4-RUN01-CONTRACT-v1 → PIOS-51.7-RUN01-CONTRACT-v1 → PIOS-51.8-RUN01-CONTRACT-v1 → PIOS-51.8R-RUN01-CONTRACT-v1
+ * Lineage: PIOS-51.6-RUN01-CONTRACT-v1 → PIOS-51.6R-RUN01-CONTRACT-v1 → PIOS-51.6R.1-RUN01-CONTRACT-v1 → PIOS-51.6R.2-RUN01-CONTRACT-v1 → PIOS-51.6R.3-RUN01-CONTRACT-v1 → PIOS-51.6R.4-RUN01-CONTRACT-v1 → PIOS-51.7-RUN01-CONTRACT-v1 → PIOS-51.8-RUN01-CONTRACT-v1 → PIOS-51.8R-RUN01-CONTRACT-v1 → PIOS-51.8R-RUN01-CONTRACT-v2
  *
  * ExecLens Demo Surface — panel-orchestrated progressive disclosure.
  * Supersedes: PIOS-51.3 (step-driven navigation)
@@ -256,18 +257,20 @@ export default function Home() {
 
   // ── Persona change reset — resets demo if persona switches mid-demo [51.8R amendment] ──
   // Uses prevEnlPersonaRef to detect change without [enlPersona]-only dep [51.6R.2 guard preserved]
+  // Always rebinds guided flow steps on persona switch [51.8R amendment 5]
 
   useEffect(() => {
     if (prevEnlPersonaRef.current === null) { prevEnlPersonaRef.current = enlPersona; return }
     if (prevEnlPersonaRef.current === enlPersona) return
     prevEnlPersonaRef.current = enlPersona
+    // Always rebind guided steps on persona switch — step 1 for any persona [51.8R amendment 5]
+    setGuidedStepIndex(0)
+    setDemoComplete(false)
     if (demoActive) {
       setDemoActive(false)
       setDemoStage(0)
       setTraversalNodeIndex(0)
       setSelectedFlow(null)
-      setDemoComplete(false)
-      setGuidedStepIndex(0)    // clear guided step on persona change [51.8R guided correction]
       setRawStepActive(false)  // clear raw step on persona change [51.8R guided correction]
     }
   }, [enlPersona, demoActive, demoComplete])
@@ -319,13 +322,13 @@ export default function Home() {
     if (steps) {
       const nextIndex = guidedStepIndex + 1
       if (nextIndex >= steps.length) {
-        // Amendment 3: close loop — return to entry strip immediately [51.8R amendment 3]
-        // Amendment 4: reset persona for full perspective reset [51.8R amendment 4]
-        setDemoComplete(true)
+        // Amendment 5: deterministic reset — returns to canonical entry state [51.8R amendment 5]
+        setDemoComplete(false)
         setDemoActive(false)
         setGuidedStepIndex(0)
         setRawStepActive(false)
         setEnlPersona(null)
+        setOpenPanels(['situation'])
       } else {
         const step = steps[nextIndex]
         setGuidedStepIndex(nextIndex)
@@ -395,7 +398,7 @@ export default function Home() {
             Evidence-first system for program diagnosis, structural risk, and execution visibility
           </p>
           <div className="hero-meta">
-            PIOS-51.8R-RUN01-CONTRACT-v1 · run_02_governed
+            PIOS-51.8R-RUN01-CONTRACT-v2 · run_02_governed
             &ensp;·&ensp;
             No inference. No synthetic data.
           </div>
@@ -420,7 +423,7 @@ export default function Home() {
                   type="button"
                   disabled={!enlPersona || !selectedQuery}
                 >
-                  {demoComplete ? 'Try another perspective' : 'Start Lens Demo'}
+                  {'Start Lens Demo'}
                 </button>
               </div>
               {!enlPersona && (
@@ -443,7 +446,7 @@ export default function Home() {
             <LandingGaugeStrip />
           </div>
           <div data-demo-section="topology">
-            <TopologyPanel selectedQuery={selectedQuery} />
+            <TopologyPanel selectedQuery={selectedQuery} navigation={queryData?.navigation} />
           </div>
         </DisclosurePanel>
 
@@ -519,7 +522,6 @@ export default function Home() {
               signals={queryData.signals}
               persona={enlPersona}
               personaData={enlPersonaData}
-              navigation={queryData.navigation}
               rawStepActive={rawStepActive}
             />
           ) : queryData && !enlPersona ? (
@@ -563,15 +565,6 @@ export default function Home() {
         guidedPersona={enlPersona}
       />
 
-      {/* ── Terminal strip — guided demo complete, awaiting explicit exit [51.8R amendment] ── */}
-      {demoComplete && (
-        <div className="guided-terminal-strip">
-          <span className="guided-terminal-label">Guided demo complete</span>
-          <button className="guided-exit-btn" onClick={handleDemoExit} type="button">
-            Exit guided mode <kbd className="guided-exit-kbd">⌘K</kbd>
-          </button>
-        </div>
-      )}
     </>
   )
 }

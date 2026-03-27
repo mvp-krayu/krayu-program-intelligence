@@ -1,6 +1,6 @@
 /**
  * DemoController.js
- * PIOS-51.6R.1-RUN01-CONTRACT-v1 (extended: GuidedBar for persona-specific flows [51.8R guided correction])
+ * PIOS-51.6R.1-RUN01-CONTRACT-v1 (extended: GuidedBar for persona-specific flows [51.8R guided correction]; GuidedBar last-step label [51.8R amendment 5])
  * (supersedes PIOS-51.6R-RUN01-CONTRACT-v1)
  * Lineage: PIOS-51.6-RUN01-CONTRACT-v1 → PIOS-51.6R → PIOS-51.6R.1-RUN01-CONTRACT-v1
  *
@@ -215,7 +215,7 @@ function GuidedBar({ steps, stepIndex, persona, onNext, onExit }) {
       <div className="demo-controls">
         <button className="demo-btn demo-btn-exit" onClick={onExit} type="button">Exit</button>
         <button className="demo-btn demo-btn-next" onClick={onNext} type="button">
-          {isLast ? 'Finish ✓' : 'Next →'}
+          {isLast ? 'Try another perspective' : 'Next →'}
         </button>
       </div>
 

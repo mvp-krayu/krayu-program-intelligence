@@ -1,6 +1,6 @@
 /**
  * TopologyPanel.js
- * PIOS-42.23-RUN01-CONTRACT-v1
+ * PIOS-42.23-RUN01-CONTRACT-v1 (extended: navigation embedded in details toggle [51.8R amendment 5])
  *
  * Landing-page structural topology panel.
  * Rewired to governed WOW chain (42.22 + 51.1 + 51.1R).
@@ -22,6 +22,7 @@
 
 import { useState, useEffect } from 'react'
 import { buildObsidianLink } from '../utils/obsidian'
+import NavigationPanel from './NavigationPanel'
 
 // Vault name from Next.js NEXT_PUBLIC_* env — configured only, never hardcoded
 const VAULT_NAME = process.env.NEXT_PUBLIC_OBSIDIAN_VAULT_NAME || null
@@ -193,7 +194,7 @@ function DomainBlock({ domain }) {
 // TopologyPanel
 // ---------------------------------------------------------------------------
 
-export default function TopologyPanel({ selectedQuery }) {
+export default function TopologyPanel({ selectedQuery, navigation }) {
   const [topology,  setTopology]  = useState(null)
   const [loading,   setLoading]   = useState(true)
   const [error,     setError]     = useState(null)
@@ -301,6 +302,14 @@ export default function TopologyPanel({ selectedQuery }) {
         <div className="topo-panel-hint">
           Select a query above to highlight relevant domains, capabilities, and components.
         </div>
+      )}
+
+      {/* Source-level topology links — contextual, explicit user action [51.8R amendment 5] */}
+      {navigation && (
+        <details className="topo-nav-links">
+          <summary className="topo-nav-links-trigger">View source-level topology links</summary>
+          <NavigationPanel navigation={navigation} />
+        </details>
       )}
     </div>
   )

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
 validate_51_8R.py
+PIOS-51.8R-RUN01-CONTRACT-v2 (amendment 5: query-first gate, guided flow rebinding,
+deterministic reset, navigation relocation; supersessions applied)
 PIOS-51.8R-RUN01-CONTRACT-v1 (amended: terminal state, analyst label, source traceability,
 tab contrast, guided flow correction, guided loop closure, persona perspective reset)
 
@@ -14,7 +16,11 @@ no_zombie_guided_state, guided_loop_closure,
 persona_cleared_on_completion, query_preserved_on_completion,
 demo_blocked_without_persona_after_return, no_persona_output_after_completion,
 no_raw_evidence_after_completion, persona_panel_interactive_after_completion,
-no_zombie_persona_state.
+no_zombie_persona_state,
+entry_gate_query_first, guided_flow_resets_on_persona_switch,
+guided_steps_rebound_per_persona, deterministic_reset_canonical_entry_state,
+navigation_embedded_in_topology_only, navigation_panel_absent,
+panel_order_enforced, guided_bar_resets_on_persona_switch.
 
 Expected: all PASS
 """
@@ -227,8 +233,8 @@ check("demoComplete state declared in index.js",         "demo_terminal_state_pr
       "demoComplete" in idx and "useState(false)" in idx)
 check("setDemoComplete present",                         "demo_terminal_state_present",
       "setDemoComplete" in idx)
-check("guided-terminal-strip present in index.js",       "demo_terminal_state_present",
-      "guided-terminal-strip" in idx)
+check("guided-terminal-strip present in index.js",       "demo_terminal_state_present",  # 51.8R amendment 5: terminal strip removed; canonical reset via setOpenPanels supersedes
+      "setOpenPanels(['situation'])" in idx)
 check("guided-terminal-strip CSS defined",               "demo_terminal_state_present",
       ".guided-terminal-strip" in css)
 check("guided-terminal-label CSS defined",               "demo_terminal_state_present",
@@ -239,10 +245,10 @@ check("guided-exit-kbd CSS defined",                     "demo_terminal_state_pr
       ".guided-exit-kbd" in css)
 check("demoComplete in DemoController active prop",      "demo_terminal_state_present",
       "demoActive && !demoComplete" in idx)
-check("Terminal strip shown when demoComplete",          "demo_terminal_state_present",
-      "{demoComplete &&" in idx or "demoComplete && (" in idx)
-check("Guided demo complete label text",                 "demo_terminal_state_present",
-      "Guided demo complete" in idx)
+check("Terminal strip shown when demoComplete",          "demo_terminal_state_present",  # 51.8R amendment 5: terminal strip removed; demoComplete preserved for DemoController active prop
+      "demoActive && !demoComplete" in idx)
+check("Guided demo complete label text",                 "demo_terminal_state_present",  # 51.8R amendment 5: label moved to GuidedBar last step
+      "Try another perspective" in dc)
 
 # ── ctrl_k_exit_guided_mode ───────────────────────────────────────────────────
 
@@ -258,10 +264,10 @@ check("⌘K calls handleDemoExit",                         "ctrl_k_exit_guided_m
       "handleDemoExit()" in idx)
 check("⌘K: event listener cleaned up (removeEventListener)", "ctrl_k_exit_guided_mode",
       "removeEventListener" in idx)
-check("Exit guided mode label in terminal strip",        "ctrl_k_exit_guided_mode",
-      "Exit guided mode" in idx)
-check("guided-exit-kbd kbd element present",             "ctrl_k_exit_guided_mode",
-      "guided-exit-kbd" in idx)
+check("Exit guided mode label in terminal strip",        "ctrl_k_exit_guided_mode",  # 51.8R amendment 5: terminal strip removed; ⌘K still calls handleDemoExit
+      "handleDemoExit()" in idx)
+check("guided-exit-kbd kbd element present",             "ctrl_k_exit_guided_mode",  # 51.8R amendment 5: terminal strip removed; DemoController inactive gate preserved
+      "if (!active) return null" in dc)
 
 # ── rerun_demo_resets_sequence ────────────────────────────────────────────────
 
@@ -297,9 +303,8 @@ print("\n[no_zombie_guided_state]")
 
 check("handleToggle still locks on demoActive",          "no_zombie_guided_state",
       "if (demoActive) return" in idx)
-check("demo loop closes on completion (demoActive false)", "no_zombie_guided_state",  # 51.8R amendment 3: supersedes 'demoActive stays true at terminal'
-      "setDemoComplete(true)" in idx and "setDemoActive(false)" in
-      idx.split("setDemoComplete(true)")[1])
+check("demo loop closes on completion (demoActive false)", "no_zombie_guided_state",  # 51.8R amendment 5: deterministic reset supersedes; setDemoComplete(false) + setOpenPanels at terminal
+      "setOpenPanels(['situation'])" in idx and "setDemoActive(false)" in idx and "setDemoComplete(false)" in idx)
 check("DemoController inactive at terminal",             "no_zombie_guided_state",
       "demoActive && !demoComplete" in idx)
 check("handleDemoExit resets all state",                 "no_zombie_guided_state",
@@ -309,21 +314,27 @@ check("handleDemoExit resets all state",                 "no_zombie_guided_state
 
 print("\n[guided_loop_closure]")
 
-check("handleDemoNext: demoActive false at terminal",   "guided_loop_closure",
-      "setDemoComplete(true)" in idx and "setDemoActive(false)" in idx.split("setDemoComplete(true)")[1])
+# 51.8R amendment 5: terminal block identified by setOpenPanels(['situation']) — unique to terminal path
+_term5 = ""
+if "nextIndex >= steps.length" in idx and "setOpenPanels(['situation'])" in idx:
+    _between = idx.split("nextIndex >= steps.length")[1]
+    if "setOpenPanels(['situation'])" in _between:
+        _term5 = _between.split("setOpenPanels(['situation'])")[0]
+_term = _term5  # 51.8R amendment 5: supersedes setDemoComplete(true) split
+
+check("handleDemoNext: demoActive false at terminal",   "guided_loop_closure",  # 51.8R amendment 5: terminal marker changed to setOpenPanels block
+      "setDemoActive(false)" in _term5)
 check("handleDemoNext: guidedStepIndex reset at terminal", "guided_loop_closure",
-      idx.count("setGuidedStepIndex(0)") >= 3)  # handleStartDemo + handleDemoNext + handleDemoExit
-                                                  # 51.8R amendment 4: setEnlPersona(null) also at terminal — count unaffected
+      idx.count("setGuidedStepIndex(0)") >= 3)  # handleStartDemo + handleDemoNext + handleDemoExit + persona-change (always)
+                                                  # 51.8R amendment 5: also reset in persona-change effect always
 check("handleDemoNext: rawStepActive reset at terminal", "guided_loop_closure",
       idx.count("setRawStepActive(false)") >= 3)  # handleStartDemo + handleDemoNext + handleDemoExit
 check("Entry strip visible after completion (!demoActive)", "guided_loop_closure",
       "!demoActive" in idx and "guided-entry-strip" in idx)
-check("CTA: Try another perspective when demoComplete",  "guided_loop_closure",
-      "Try another perspective" in idx and "demoComplete" in idx)
-check("CTA ternary: demoComplete controls label",       "guided_loop_closure",
-      "demoComplete ? 'Try another perspective'" in idx or
-      'demoComplete ? "Try another perspective"' in idx)
-_term = idx.split("setDemoComplete(true)")[1] if "setDemoComplete(true)" in idx else ""
+check("CTA: Try another perspective when demoComplete",  "guided_loop_closure",  # 51.8R amendment 5: CTA moved to GuidedBar last step; supersedes demoComplete-based ternary
+      "Try another perspective" in dc and "isLast" in dc)
+check("CTA ternary: demoComplete controls label",       "guided_loop_closure",  # 51.8R amendment 5: ternary moved to GuidedBar isLast
+      "isLast ? 'Try another perspective'" in dc)
 check("Persona reset after demoActive=false at terminal","guided_loop_closure",  # 51.8R amendment 4: supersedes 'Persona NOT reset at completion'
       "setEnlPersona(null)" in _term and
       _term.index("setDemoActive(false)") < _term.index("setEnlPersona(null)"))
@@ -332,8 +343,8 @@ check("Persona reset after demoActive=false at terminal","guided_loop_closure", 
 
 print("\n[persona_cleared_on_completion]")
 
-check("setEnlPersona(null) called at terminal",         "persona_cleared_on_completion",
-      "setEnlPersona(null)" in idx.split("setDemoComplete(true)")[1])
+check("setEnlPersona(null) called at terminal",         "persona_cleared_on_completion",  # 51.8R amendment 5: split marker changed to setOpenPanels terminal block
+      "setEnlPersona(null)" in _term5)
 check("setEnlPersona(null) after setDemoActive(false)", "persona_cleared_on_completion",
       "setEnlPersona(null)" in _term and
       _term.index("setDemoActive(false)") < _term.index("setEnlPersona(null)"))
@@ -348,7 +359,7 @@ check("PersonaPanel personaData cleared on reset",      "persona_cleared_on_comp
 
 print("\n[query_preserved_on_completion]")
 
-terminal_tail = idx.split("setDemoComplete(true)")[1] if "setDemoComplete(true)" in idx else ""
+terminal_tail = _term5  # 51.8R amendment 5: terminal block identified via setOpenPanels
 check("setSelectedQuery not called at terminal",        "query_preserved_on_completion",
       "setSelectedQuery" not in terminal_tail.split("return")[0])
 check("queryId still passed to PersonaPanel",           "query_preserved_on_completion",
@@ -418,6 +429,119 @@ check("activePersona prop flows null to PersonaPanel",    "no_zombie_persona_sta
       "activePersona={enlPersona}" in idx and "activePersona" in pp)
 check("No persona auto-restore after completion",         "no_zombie_persona_state",
       "setEnlPersona(" not in idx.split("setEnlPersona(null)")[1].split("handleDemoExit")[0])
+
+# ── entry_gate_query_first ────────────────────────────────────────────────────
+
+print("\n[entry_gate_query_first]")
+
+check("PersonaPanel buttons disabled without query",    "entry_gate_query_first",
+      "disabled={!queryId}" in pp)
+check("PersonaPanel queryId prop used for gate",        "entry_gate_query_first",
+      "queryId" in pp and "disabled" in pp)
+check("Persona selector still always rendered",         "entry_gate_query_first",
+      "persona-selector" in pp and "persona-btn" in pp)
+check("Query required before persona selection",        "entry_gate_query_first",
+      "disabled={!queryId}" in pp and "persona-btn" in pp)
+
+# ── guided_flow_resets_on_persona_switch ──────────────────────────────────────
+
+print("\n[guided_flow_resets_on_persona_switch]")
+
+_pcb = idx.split("prevEnlPersonaRef.current = enlPersona")[2].split("}, [enlPersona")[0] if idx.count("prevEnlPersonaRef.current = enlPersona") >= 2 else ""
+check("setGuidedStepIndex(0) always on persona switch", "guided_flow_resets_on_persona_switch",
+      "setGuidedStepIndex(0)" in _pcb)
+check("setDemoComplete(false) always on persona switch","guided_flow_resets_on_persona_switch",
+      "setDemoComplete(false)" in _pcb)
+check("setGuidedStepIndex(0) before demoActive gate",   "guided_flow_resets_on_persona_switch",
+      "setGuidedStepIndex(0)" in _pcb and
+      (("if (demoActive)" not in _pcb) or
+       _pcb.index("setGuidedStepIndex(0)") < _pcb.index("if (demoActive)")))
+
+# ── guided_steps_rebound_per_persona ─────────────────────────────────────────
+
+print("\n[guided_steps_rebound_per_persona]")
+
+check("GuidedBar Try another perspective on last step", "guided_steps_rebound_per_persona",
+      "Try another perspective" in dc)
+check("GuidedBar isLast controls final step label",     "guided_steps_rebound_per_persona",
+      "isLast" in dc and "Try another perspective" in dc)
+check("isLast ternary: Try another perspective",        "guided_steps_rebound_per_persona",
+      "isLast ? 'Try another perspective'" in dc)
+check("PERSONA_GUIDED_FLOWS passed as guidedSteps prop","guided_steps_rebound_per_persona",
+      "guidedSteps={enlPersona ? PERSONA_GUIDED_FLOWS[enlPersona] : null}" in idx)
+
+# ── deterministic_reset_canonical_entry_state ─────────────────────────────────
+
+print("\n[deterministic_reset_canonical_entry_state]")
+
+check("setOpenPanels(['situation']) at terminal",       "deterministic_reset_canonical_entry_state",
+      "setOpenPanels(['situation'])" in idx)
+check("setDemoComplete(false) at terminal (not true)",  "deterministic_reset_canonical_entry_state",
+      "setDemoComplete(false)" in _term5 and "setDemoComplete(true)" not in _term5)
+check("setDemoActive(false) at terminal",               "deterministic_reset_canonical_entry_state",
+      "setDemoActive(false)" in _term5)
+check("setEnlPersona(null) at terminal",                "deterministic_reset_canonical_entry_state",
+      "setEnlPersona(null)" in _term5)
+check("setGuidedStepIndex(0) at terminal",              "deterministic_reset_canonical_entry_state",
+      "setGuidedStepIndex(0)" in _term5)
+check("setRawStepActive(false) at terminal",            "deterministic_reset_canonical_entry_state",
+      "setRawStepActive(false)" in _term5)
+
+# ── navigation_embedded_in_topology_only ─────────────────────────────────────
+
+print("\n[navigation_embedded_in_topology_only]")
+
+tp = read("app/execlens-demo/components/TopologyPanel.js")
+
+check("TopologyPanel imports NavigationPanel",          "navigation_embedded_in_topology_only",
+      "import NavigationPanel" in tp)
+check("TopologyPanel receives navigation prop",         "navigation_embedded_in_topology_only",
+      "navigation" in tp)
+check("NavigationPanel in TopologyPanel details toggle","navigation_embedded_in_topology_only",
+      "<details" in tp and "NavigationPanel" in tp)
+check("details trigger: View source-level topology links","navigation_embedded_in_topology_only",
+      "View source-level topology links" in tp)
+check("navigation prop passed from index.js to TopologyPanel","navigation_embedded_in_topology_only",
+      "navigation={queryData?.navigation}" in idx)
+
+# ── navigation_panel_absent ───────────────────────────────────────────────────
+
+print("\n[navigation_panel_absent]")
+
+check("ENLPanel no longer imports NavigationPanel",     "navigation_panel_absent",
+      "import NavigationPanel" not in enl)
+check("ENLPanel no longer renders NavigationPanel",     "navigation_panel_absent",
+      "<NavigationPanel" not in enl)
+check("NavigationPanel not rendered in index.js",       "navigation_panel_absent",
+      "NavigationPanel" not in idx)
+
+# ── panel_order_enforced ──────────────────────────────────────────────────────
+
+print("\n[panel_order_enforced]")
+
+check("Situation panel first in render",                "panel_order_enforced",
+      idx.index('id="situation"') < idx.index('id="persona"'))
+check("Persona panel before query-zone",                "panel_order_enforced",
+      idx.index('id="persona"') < idx.index('"query-zone"'))
+check("Query-zone before signals panel",                "panel_order_enforced",
+      idx.index('"query-zone"') < idx.index('id="signals"'))
+check("Signals before evidence panel",                  "panel_order_enforced",
+      idx.index('id="signals"') < idx.index('id="evidence"'))
+check("Evidence before narrative panel",                "panel_order_enforced",
+      idx.index('id="evidence"') < idx.index('id="narrative"'))
+
+# ── guided_bar_resets_on_persona_switch ───────────────────────────────────────
+
+print("\n[guided_bar_resets_on_persona_switch]")
+
+check("guidedSteps derived from current enlPersona",    "guided_bar_resets_on_persona_switch",
+      "PERSONA_GUIDED_FLOWS[enlPersona]" in idx)
+check("guidedPersona={enlPersona} tracks current persona","guided_bar_resets_on_persona_switch",
+      "guidedPersona={enlPersona}" in idx)
+check("GuidedBar persona label rendered per persona",   "guided_bar_resets_on_persona_switch",
+      "{persona} — GUIDED FLOW" in dc)
+check("guidedStepIndex reset on persona switch always", "guided_bar_resets_on_persona_switch",
+      "setGuidedStepIndex(0)" in _pcb)
 
 # ── Summary ───────────────────────────────────────────────────────────────────
 

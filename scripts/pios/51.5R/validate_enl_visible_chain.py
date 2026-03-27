@@ -57,9 +57,10 @@ print("\n[source_structure]")
 
 enl = read("app/execlens-demo/components/ENLPanel.js")
 css = read("app/execlens-demo/styles/globals.css")
+tp  = read("app/execlens-demo/components/TopologyPanel.js")  # 51.8R amendment 5: NavigationPanel relocated
 
 check("ENLPanel.js has PIOS-51.5R contract header",    "source_structure", "PIOS-51.5R-RUN01-CONTRACT-v1" in enl)
-check("ENLPanel.js imports NavigationPanel",           "source_structure", "import NavigationPanel" in enl)
+check("ENLPanel.js imports NavigationPanel",           "source_structure", "import NavigationPanel" in tp)  # 51.8R amendment 5: NavigationPanel moved to TopologyPanel
 check("ENLPanel.js exports ENLPanel function",         "source_structure", "export default function ENLPanel" in enl)
 check("ENLPanel.js defines ENL_TRAVERSAL",             "source_structure", "const ENL_TRAVERSAL" in enl)
 check("ENLPanel.js defines PERSONA_LENS_FOCUS",        "source_structure", "const PERSONA_LENS_FOCUS" in enl)
@@ -69,7 +70,7 @@ check("ENLPanel.js ChainHeader component",             "source_structure", "func
 check("ENLPanel.js ChainBreadcrumb component",         "source_structure", "function ChainBreadcrumb" in enl)
 check("ENLPanel.js ChainPrimaryField component",       "source_structure", "function ChainPrimaryField" in enl)
 check("ENLPanel.js ChainStep component",               "source_structure", "function ChainStep" in enl)
-check("ENLPanel.js NavigationPanel rendered last",     "source_structure", enl.rfind("NavigationPanel") > enl.index("enl-chain-list"))
+check("ENLPanel.js NavigationPanel rendered last",     "source_structure", "NavigationPanel" in tp and "<details" in tp)  # 51.8R amendment 5: NavigationPanel rendered in TopologyPanel details toggle
 check("globals.css PIOS-51.5R block present",          "source_structure", "PIOS-51.5R" in css)
 check("globals.css .enl-chain-header",                 "source_structure", ".enl-chain-header" in css)
 check("globals.css .enl-chain-step",                   "source_structure", ".enl-chain-step" in css)

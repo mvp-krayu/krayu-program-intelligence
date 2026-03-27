@@ -1,8 +1,8 @@
 {
   "stream": "51.8R",
-  "timestamp": "2026-03-26T17:11:10.406533Z",
-  "total": 122,
-  "passed": 122,
+  "timestamp": "2026-03-27T09:12:39.121252Z",
+  "total": 156,
+  "passed": 156,
   "failed": 0,
   "groups": {
     "entry_strip_horizontal_alignment": {
@@ -94,6 +94,38 @@
       "fail": 0
     },
     "no_zombie_persona_state": {
+      "pass": 4,
+      "fail": 0
+    },
+    "entry_gate_query_first": {
+      "pass": 4,
+      "fail": 0
+    },
+    "guided_flow_resets_on_persona_switch": {
+      "pass": 3,
+      "fail": 0
+    },
+    "guided_steps_rebound_per_persona": {
+      "pass": 4,
+      "fail": 0
+    },
+    "deterministic_reset_canonical_entry_state": {
+      "pass": 6,
+      "fail": 0
+    },
+    "navigation_embedded_in_topology_only": {
+      "pass": 5,
+      "fail": 0
+    },
+    "navigation_panel_absent": {
+      "pass": 3,
+      "fail": 0
+    },
+    "panel_order_enforced": {
+      "pass": 5,
+      "fail": 0
+    },
+    "guided_bar_resets_on_persona_switch": {
       "pass": 4,
       "fail": 0
     }
@@ -828,6 +860,210 @@
     {
       "name": "No persona auto-restore after completion",
       "group": "no_zombie_persona_state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel buttons disabled without query",
+      "group": "entry_gate_query_first",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel queryId prop used for gate",
+      "group": "entry_gate_query_first",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona selector still always rendered",
+      "group": "entry_gate_query_first",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Query required before persona selection",
+      "group": "entry_gate_query_first",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setGuidedStepIndex(0) always on persona switch",
+      "group": "guided_flow_resets_on_persona_switch",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setDemoComplete(false) always on persona switch",
+      "group": "guided_flow_resets_on_persona_switch",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setGuidedStepIndex(0) before demoActive gate",
+      "group": "guided_flow_resets_on_persona_switch",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GuidedBar Try another perspective on last step",
+      "group": "guided_steps_rebound_per_persona",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GuidedBar isLast controls final step label",
+      "group": "guided_steps_rebound_per_persona",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "isLast ternary: Try another perspective",
+      "group": "guided_steps_rebound_per_persona",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_GUIDED_FLOWS passed as guidedSteps prop",
+      "group": "guided_steps_rebound_per_persona",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setOpenPanels(['situation']) at terminal",
+      "group": "deterministic_reset_canonical_entry_state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setDemoComplete(false) at terminal (not true)",
+      "group": "deterministic_reset_canonical_entry_state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setDemoActive(false) at terminal",
+      "group": "deterministic_reset_canonical_entry_state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setEnlPersona(null) at terminal",
+      "group": "deterministic_reset_canonical_entry_state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setGuidedStepIndex(0) at terminal",
+      "group": "deterministic_reset_canonical_entry_state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setRawStepActive(false) at terminal",
+      "group": "deterministic_reset_canonical_entry_state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "TopologyPanel imports NavigationPanel",
+      "group": "navigation_embedded_in_topology_only",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "TopologyPanel receives navigation prop",
+      "group": "navigation_embedded_in_topology_only",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "NavigationPanel in TopologyPanel details toggle",
+      "group": "navigation_embedded_in_topology_only",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "details trigger: View source-level topology links",
+      "group": "navigation_embedded_in_topology_only",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "navigation prop passed from index.js to TopologyPanel",
+      "group": "navigation_embedded_in_topology_only",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel no longer imports NavigationPanel",
+      "group": "navigation_panel_absent",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel no longer renders NavigationPanel",
+      "group": "navigation_panel_absent",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "NavigationPanel not rendered in index.js",
+      "group": "navigation_panel_absent",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Situation panel first in render",
+      "group": "panel_order_enforced",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona panel before query-zone",
+      "group": "panel_order_enforced",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Query-zone before signals panel",
+      "group": "panel_order_enforced",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Signals before evidence panel",
+      "group": "panel_order_enforced",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Evidence before narrative panel",
+      "group": "panel_order_enforced",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "guidedSteps derived from current enlPersona",
+      "group": "guided_bar_resets_on_persona_switch",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "guidedPersona={enlPersona} tracks current persona",
+      "group": "guided_bar_resets_on_persona_switch",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GuidedBar persona label rendered per persona",
+      "group": "guided_bar_resets_on_persona_switch",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "guidedStepIndex reset on persona switch always",
+      "group": "guided_bar_resets_on_persona_switch",
       "status": "PASS",
       "detail": ""
     }
