@@ -1,5 +1,6 @@
 /**
  * pages/index.js
+ * PIOS-51.8R-RUN04-FREE (freeMode state: explicit operator mode entered only via Exit/CTRL-K; auto-start blocked in freeMode; entry strip hidden; operator surface with explicit re-entry)
  * PIOS-51.8R-RUN03-HARDENING (demoActive added to auto-start deps; mid-guided persona switch now deterministically restarts guided flow — demoActive dep change fires after persona-change teardown)
  * PIOS-51.8R-RUN01-CONTRACT-v7 (extended: Viewport enforcement on step change, deterministic auto-start across all runs, exit guard suppresses re-start, demoComplete in auto-start deps [51.8R amendment 10])
  * PIOS-51.8R-RUN01-CONTRACT-v6 (extended: Situation pinned during guided, auto-start on persona+query, persona switch full reset, uniform panel gate [51.8R amendment 9])
@@ -154,6 +155,8 @@ export default function Home() {
   const [guidedStepIndex, setGuidedStepIndex] = useState(0)
   // ANALYST raw step active — forces source evidence open [51.8R guided correction]
   const [rawStepActive,   setRawStepActive]   = useState(false)
+  // Operator / FREE mode — true only after explicit Exit or CTRL-K; blocks auto-start [51.8R RUN04]
+  const [freeMode,        setFreeMode]        = useState(false)
 
   // Persona change detection — ref-based to avoid [enlPersona]-only dep [51.8R amendment]
   const prevEnlPersonaRef = useRef(null)
@@ -302,28 +305,30 @@ export default function Home() {
     if (panelEl) panelEl.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }, [demoActive, guidedStepIndex, enlPersona])
 
-  // ── Auto-start guided demo on Persona + Query selection [51.8R amendment 9/10/RUN03] ──
-  // Deps: [enlPersona, selectedQuery, demoComplete, demoActive]
+  // ── Auto-start guided demo on Persona + Query selection [51.8R amendment 9/10/RUN03/RUN04] ──
+  // Deps: [enlPersona, selectedQuery, demoComplete, demoActive, freeMode]
   //   - First run: persona or query changes with both present → start
   //   - After completion: persona-change effect sets demoComplete=false → dep change → start
   //   - Mid-guided persona switch: persona-change tears down (demoActive→false) → dep change → start for new persona
-  //   - After CTRL+K/Exit: exitedRef.current=true; demoActive/demoComplete dep fires but exitedRef suppresses (persona/query unchanged)
-  // autoStartPrevRef tracks previous persona/query values to distinguish dep change source.
-  // exitedRef distinguishes persona-change teardown (not set → allowed) from explicit exit (set → suppressed).
+  //   - FREE mode: freeMode=true blocks unconditionally — no auto-restart in operator mode [51.8R RUN04]
+  //   - After CTRL+K/Exit: freeMode=true blocks before exitedRef check
+  //   - Explicit re-entry (handleStartDemo): freeMode→false → dep change → effect fires → demoActive=true → no-op
+  // autoStartPrevRef tracks persona/query even in FREE mode (accurate change detection on re-entry after mode switch).
   useEffect(() => {
     const personaChanged = autoStartPrevRef.current.persona !== enlPersona
     const queryChanged   = autoStartPrevRef.current.query   !== selectedQuery
     autoStartPrevRef.current = { persona: enlPersona, query: selectedQuery }
 
+    if (freeMode) return                       // operator mode — no auto-restart until explicit guided start [51.8R RUN04]
     if (!enlPersona || !selectedQuery) return  // both required
     if (demoActive) return                     // already running — also catches immediate re-fire after demo start
     if (demoComplete) return                   // completion lock not yet cleared; persona-change effect will clear → dep fires again
     if (exitedRef.current && !personaChanged && !queryChanged) {
-      // demoActive or demoComplete changed (CTRL+K/Exit) but persona/query unchanged → suppress [51.8R amendment 10/RUN03]
+      // dep changed but persona/query unchanged → suppress [51.8R amendment 10/RUN03]
       exitedRef.current = false  // consume exit flag
       return
     }
-    exitedRef.current = false  // clear exit flag on genuine persona/query/teardown-driven start
+    exitedRef.current = false  // clear exit flag on genuine start
     const steps = PERSONA_GUIDED_FLOWS[enlPersona]
     const activeFlow = PERSONA_DEFAULT_FLOW[enlPersona]
     setDemoComplete(false)
@@ -335,7 +340,7 @@ export default function Home() {
     setOpenPanels(firstPanel === 'situation' ? ['situation'] : ['situation', firstPanel])
     setDemoActive(true)
     setDemoStage(1)
-  }, [enlPersona, selectedQuery, demoComplete, demoActive])  // demoActive added: fires on persona-change teardown (false) → mid-guided restart deterministic [51.8R RUN03]
+  }, [enlPersona, selectedQuery, demoComplete, demoActive, freeMode])  // freeMode added: operator mode guard; dep change on explicit start [51.8R RUN04]
 
   // ── ⌘K handler — exit guided mode or post-completion state [51.8R amendment 7] ──
   // Fires when demoActive (mid-demo) OR demoComplete (post-completion lock).
@@ -359,6 +364,8 @@ export default function Home() {
     if (!enlPersona) return
     // Query hard gate — query required for guided execution [51.8R guided correction]
     if (!selectedQuery) return
+    setFreeMode(false)           // exit operator mode on explicit guided start [51.8R RUN04]
+    exitedRef.current = false    // clear exit flag on explicit restart [51.8R RUN04]
     setDemoComplete(false)   // reset terminal state on re-run [51.8R amendment]
     setGuidedStepIndex(0)    // reset guided step [51.8R guided correction]
     setRawStepActive(false)  // reset raw step [51.8R guided correction]
@@ -438,7 +445,8 @@ export default function Home() {
   }
 
   const handleDemoExit = () => {
-    exitedRef.current = true    // suppress auto-start on demoComplete dep change [51.8R amendment 10]
+    setFreeMode(true)           // enter operator FREE mode — blocks all auto-restart [51.8R RUN04]
+    exitedRef.current = true    // defense-in-depth: also suppress via exitedRef [51.8R amendment 10]
     setDemoActive(false)
     setDemoStage(0)
     setTraversalNodeIndex(0)
@@ -468,12 +476,12 @@ export default function Home() {
             Evidence-first system for program diagnosis, structural risk, and execution visibility
           </p>
           <div className="hero-meta">
-            PIOS-51.8R-RUN03-HARDENING · run_02_governed
+            PIOS-51.8R-RUN04-FREE · run_02_governed
             &ensp;·&ensp;
             No inference. No synthetic data.
           </div>
 
-          {!demoActive && (
+          {!demoActive && !freeMode && (
             <div className="guided-entry-steps">
               {/* Horizontal step strip — Step 1 → Step 2 → Start [51.8R] */}
               <div className="guided-entry-strip">
@@ -499,6 +507,21 @@ export default function Home() {
               {!enlPersona && (
                 <div className="persona-gate-message">Select a Persona to enable execution</div>
               )}
+            </div>
+          )}
+
+          {/* ── Operator surface — FREE mode re-entry [51.8R RUN04] ── */}
+          {/* Visible only in explicit FREE mode (after Exit / CTRL-K). No guided shell. */}
+          {freeMode && !demoActive && (
+            <div className="operator-surface">
+              <button
+                className="demo-start-btn"
+                onClick={handleStartDemo}
+                type="button"
+                disabled={!enlPersona || !selectedQuery}
+              >
+                Run Lens Demo
+              </button>
             </div>
           )}
         </header>

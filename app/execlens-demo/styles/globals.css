@@ -3295,3 +3295,9 @@ a.topo-chip:hover {
   color: var(--strong);
   flex-shrink: 0;
 }
+
+/* Operator surface — FREE mode re-entry [51.8R RUN04] */
+/* Replaces guided entry strip when freeMode=true. No step guidance, no CTA pressure. */
+.operator-surface {
+  margin-top: 0.75rem;
+}

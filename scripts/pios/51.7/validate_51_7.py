@@ -56,10 +56,9 @@ check("Start button disabled without persona and query", "persona_required",
 
 print("\n[execution_blocked_without_persona]")
 
-check("Demo start blocked: setDemoActive not reachable without persona",
+check("Demo start blocked: setDemoActive not reachable without persona in handleStartDemo [51.8R amendment 9 supersedes index-based check]",
       "execution_blocked_without_persona",
-      "if (!enlPersona) return" in idx and
-      idx.index("if (!enlPersona) return") < idx.index("setDemoActive(true)"))
+      "if (!enlPersona) return" in idx.split("const handleStartDemo")[1].split("setDemoActive(true)")[0])  # 51.8R RUN04: split on "const handleStartDemo" to land at function definition, not comment mention
 check("No persona auto-assignment bypasses gate",        "execution_blocked_without_persona",
       "setEnlPersona('CTO')" not in idx)
 check("Narrative panel guarded by enlPersona",           "execution_blocked_without_persona",

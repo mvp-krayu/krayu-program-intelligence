@@ -71,8 +71,8 @@ check("handleStartDemo: query gate present",             "start_demo_still_block
 check("Persona gate still first",                        "start_demo_still_blocked_without_query",
       "if (!enlPersona) return" in idx and
       idx.index("if (!enlPersona) return") < idx.index("if (!selectedQuery) return"))
-check("Both gates before setDemoActive",                 "start_demo_still_blocked_without_query",
-      idx.index("if (!selectedQuery) return") < idx.index("setDemoActive(true)"))
+check("Both gates before setDemoActive in handleStartDemo [51.8R amendment 9 supersedes index-based check]",  "start_demo_still_blocked_without_query",
+      "if (!selectedQuery) return" in idx.split("const handleStartDemo")[1].split("setDemoActive(true)")[0])  # 51.8R RUN04: split on "const handleStartDemo" to land at function definition, not comment mention
 check("Start button disabled without persona OR query",  "start_demo_still_blocked_without_query",
       "disabled={!enlPersona || !selectedQuery}" in idx)
 check("Persona hard gate annotation present",            "start_demo_still_blocked_without_query",

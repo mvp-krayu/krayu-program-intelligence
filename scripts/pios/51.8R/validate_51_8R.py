@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
 validate_51_8R.py
+Post-RUN04 hardening: freeMode state; real operator FREE mode; entry strip hidden; operator surface with explicit re-entry
 Post-RUN03 hardening: demoActive in auto-start deps; mid-guided persona switch now deterministically restarts
 Post-RUN01 hardening: persona auto-open guided-mode guard (prevents CTO/ANALYST situation drop via max-2)
 PIOS-51.8R-RUN01-CONTRACT-v7 (amendment 10: Viewport enforcement on step change, deterministic
@@ -58,7 +59,8 @@ auto_start_deterministic_across_runs, no_cta_required_any_run,
 exit_prevents_auto_restart, free_mode_has_no_guided_constraints,
 situation_pinned_during_guided_all_steps, no_multi_panel_open_in_guided,
 persona_auto_open_guided_blocked,
-mid_guided_persona_switch_restart.
+mid_guided_persona_switch_restart,
+free_mode_real.
 
 Expected: all PASS
 """
@@ -616,7 +618,7 @@ print("\n[query_unlocks_on_persona_selection]")
 check("disabled={!enlPersona}: falsy when persona set", "query_unlocks_on_persona_selection",
       "disabled={!enlPersona}" in idx)
 check("No new state for query lock — derived from enlPersona", "query_unlocks_on_persona_selection",
-      idx.count("useState(") <= 14)  # no new state variables [amendment 6 governance]
+      idx.count("useState(") <= 15)  # 51.8R RUN04: freeMode state added (was <= 14 at amendment 6 governance)
 check("QuerySelector onSelect unchanged",               "query_unlocks_on_persona_selection",
       "onSelect={setSelectedQuery}" in idx)
 check("Query still controls all panels via selectedQuery","query_unlocks_on_persona_selection",
@@ -802,8 +804,8 @@ check("QuerySelector onSelect bound to setSelectedQuery","query_selection_does_n
       "onSelect={setSelectedQuery}" in idx)
 check("setSelectedQuery cannot trigger setDemoActive via onSelect [51.8R amendment 9 supersedes count==1]",  "query_selection_does_not_unlock_panels",
       "onSelect={setSelectedQuery}" in idx and "onSelect={handleStartDemo}" not in idx)  # 51.8R amendment 9: auto-start useEffect also calls setDemoActive(true); count==1 superseded
-check("Auto-start requires both persona AND query — query alone insufficient [51.8R RUN03 supersedes amendment 10 dep string]",  "query_selection_does_not_unlock_panels",
-      "}, [enlPersona, selectedQuery, demoComplete, demoActive])" in idx and "if (!enlPersona || !selectedQuery) return" in idx)  # 51.8R RUN03: dep string updated to include demoActive; guard still requires both
+check("Auto-start requires both persona AND query — query alone insufficient [51.8R RUN04 supersedes RUN03 dep string]",  "query_selection_does_not_unlock_panels",
+      "}, [enlPersona, selectedQuery, demoComplete, demoActive, freeMode])" in idx and "if (!enlPersona || !selectedQuery) return" in idx)  # 51.8R RUN04: dep string updated to include freeMode; guard still requires both
 check("Query selection only updates selectedQuery state","query_selection_does_not_unlock_panels",
       "setSelectedQuery" in idx and "onSelect={setSelectedQuery}" in idx)
 
@@ -824,14 +826,14 @@ check("handleStartDemo has persona + query hard gates",  "only_cta_sets_demo_act
 
 print("\n[no_implicit_demo_activation]")
 
-check("Auto-start useEffect present with demoActive dep [51.8R RUN03 supersedes amendment 10 dep string]",  "no_implicit_demo_activation",
-      "}, [enlPersona, selectedQuery, demoComplete, demoActive])" in idx and "setDemoActive(true)" in idx)  # 51.8R RUN03: demoActive added; supersedes [enlPersona, selectedQuery, demoComplete] check
+check("Auto-start useEffect present with freeMode dep [51.8R RUN04 supersedes RUN03 dep string]",  "no_implicit_demo_activation",
+      "}, [enlPersona, selectedQuery, demoComplete, demoActive, freeMode])" in idx and "setDemoActive(true)" in idx)  # 51.8R RUN04: freeMode added; supersedes [enlPersona, selectedQuery, demoComplete, demoActive] check
 check("setDemoActive(true) in handleStartDemo AND auto-start (2 total) [51.8R amendment 9]",  "no_implicit_demo_activation",
       idx.count("setDemoActive(true)") == 2)  # 51.8R amendment 9: count==1 superseded; exactly 2 expected
 check("QuerySelector change handler does not start demo","no_implicit_demo_activation",
       "onSelect={setSelectedQuery}" in idx and "onSelect={handleStartDemo}" not in idx)
 check("No onClick starts demo except CTA button",        "no_implicit_demo_activation",
-      idx.count("onClick={handleStartDemo}") == 1)
+      idx.count("onClick={handleStartDemo}") == 2)  # 51.8R RUN04: entry strip + operator surface both have onClick={handleStartDemo}; supersedes == 1
 
 # ── analyst_mode_blocked_pre_demo ─────────────────────────────────────────────
 
@@ -963,7 +965,7 @@ check("CTA gates: persona AND query — no third condition",  "cta_enabled_after
 
 print("\n[guided_start_direct_after_cta]")
 
-_hsd = idx.split("handleStartDemo")[1].split("handleDemoNext")[0] if "handleStartDemo" in idx else ""
+_hsd = idx.split("const handleStartDemo")[1].split("handleDemoNext")[0] if "const handleStartDemo" in idx else ""  # 51.8R RUN04: split on "const handleStartDemo" to land at function definition, not comment mention
 
 check("handleStartDemo gates only enlPersona and selectedQuery",  "guided_start_direct_after_cta",
       "if (!enlPersona) return" in _hsd and "if (!selectedQuery) return" in _hsd)
@@ -1205,15 +1207,17 @@ check("CTRL+K and Exit share same handleDemoExit",         "exit_button_restores
 
 print("\n[guided_autostarts_on_persona_and_query]")
 
-# Extract auto-start effect block [51.8R RUN03: deps changed to include demoActive]
+# Extract auto-start effect block [51.8R RUN04: deps changed to include freeMode]
+# Delimiter: autoStartPrevRef.current update (before freeMode guard) — ensures if (freeMode) return is captured [51.8R RUN04 fix]
+# Prior delimiter "if (!enlPersona || !selectedQuery) return" excluded freeMode guard which precedes it in source.
 _autostart = ""
-if "}, [enlPersona, selectedQuery, demoComplete, demoActive])" in idx:
-    _autostart_raw = idx.split("}, [enlPersona, selectedQuery, demoComplete, demoActive])")[0]
-    if "if (!enlPersona || !selectedQuery) return" in _autostart_raw:
-        _autostart = _autostart_raw.split("if (!enlPersona || !selectedQuery) return")[-1]
+if "}, [enlPersona, selectedQuery, demoComplete, demoActive, freeMode])" in idx:
+    _autostart_raw = idx.split("}, [enlPersona, selectedQuery, demoComplete, demoActive, freeMode])")[0]
+    if "autoStartPrevRef.current = { persona: enlPersona, query: selectedQuery }" in _autostart_raw:
+        _autostart = _autostart_raw.split("autoStartPrevRef.current = { persona: enlPersona, query: selectedQuery }")[1]
 
-check("Auto-start useEffect present with [enlPersona, selectedQuery, demoComplete, demoActive] deps [51.8R RUN03 supersedes amendment 10 deps]",  "guided_autostarts_on_persona_and_query",
-      "}, [enlPersona, selectedQuery, demoComplete, demoActive])" in idx)  # 51.8R RUN03: demoActive added for mid-guided persona switch restart; supersedes [enlPersona, selectedQuery, demoComplete] only
+check("Auto-start useEffect present with [enlPersona, selectedQuery, demoComplete, demoActive, freeMode] deps [51.8R RUN04 supersedes RUN03 deps]",  "guided_autostarts_on_persona_and_query",
+      "}, [enlPersona, selectedQuery, demoComplete, demoActive, freeMode])" in idx)  # 51.8R RUN04: freeMode added for operator mode guard; supersedes [enlPersona, selectedQuery, demoComplete, demoActive]
 check("Auto-start: guard requires both persona AND query",  "guided_autostarts_on_persona_and_query",
       "if (!enlPersona || !selectedQuery) return" in idx)
 check("Auto-start: demoActive and demoComplete guards present [51.8R amendment 10; demoActive now fresh read in RUN03]",  "guided_autostarts_on_persona_and_query",
@@ -1237,14 +1241,14 @@ check("Auto-start: exitedRef guard present [51.8R amendment 10]",  "guided_autos
 
 print("\n[no_cta_required_for_entry]")
 
-check("Auto-start effect present — CTA not required [51.8R RUN03 supersedes amendment 10 dep string]",  "no_cta_required_for_entry",
-      "}, [enlPersona, selectedQuery, demoComplete, demoActive])" in idx)  # 51.8R RUN03: demoActive added; effect still present
+check("Auto-start effect present — CTA not required [51.8R RUN04 supersedes RUN03 dep string]",  "no_cta_required_for_entry",
+      "}, [enlPersona, selectedQuery, demoComplete, demoActive, freeMode])" in idx)  # 51.8R RUN04: freeMode added; effect still present
 check("setDemoActive(true) in auto-start (not only CTA-triggered) [amendment 9]",  "no_cta_required_for_entry",
       idx.count("setDemoActive(true)") == 2)  # CTA (handleStartDemo) + auto-start effect
 check("CTA button preserved as fallback (disabled without both gates)",  "no_cta_required_for_entry",
       "disabled={!enlPersona || !selectedQuery}" in idx)
-check("Auto-start deps include demoActive for mid-guided restart [51.8R RUN03 supersedes amendment 10 demoComplete-only check]",  "no_cta_required_for_entry",
-      "}, [enlPersona, selectedQuery, demoComplete, demoActive])" in idx)  # 51.8R RUN03: demoActive added; fires on persona-change teardown for mid-guided deterministic restart
+check("Auto-start deps include freeMode for operator mode guard [51.8R RUN04 supersedes RUN03 demoActive-only addition]",  "no_cta_required_for_entry",
+      "}, [enlPersona, selectedQuery, demoComplete, demoActive, freeMode])" in idx)  # 51.8R RUN04: freeMode added; operator mode blocks auto-start; freeMode dep change fires on explicit re-entry
 check("CTRL+K does not re-trigger auto-start (deps unchanged after exit)",  "no_cta_required_for_entry",
       "setEnlPersona" not in _exit_block and "setSelectedQuery" not in _exit_block)  # CTRL+K preserves both → deps unchanged
 
@@ -1322,8 +1326,8 @@ check("Viewport scroll targets step.panelId (same as setOpenPanels panel)",     
 
 print("\n[auto_start_deterministic_across_runs]")
 
-check("Auto-start deps include demoActive [51.8R RUN03 supersedes amendment 10 dep string]",  "auto_start_deterministic_across_runs",
-      "}, [enlPersona, selectedQuery, demoComplete, demoActive])" in idx)  # 51.8R RUN03: demoActive added; mid-guided restart now fires on demoActive dep change
+check("Auto-start deps include freeMode [51.8R RUN04 supersedes RUN03 dep string]",  "auto_start_deterministic_across_runs",
+      "}, [enlPersona, selectedQuery, demoComplete, demoActive, freeMode])" in idx)  # 51.8R RUN04: freeMode added; all run types including operator re-entry now covered
 check("autoStartPrevRef tracks previous persona and query",  "auto_start_deterministic_across_runs",
       "autoStartPrevRef" in idx and "persona" in _autostart and "query" in _autostart)
 check("personaChanged and queryChanged computed in auto-start",  "auto_start_deterministic_across_runs",
@@ -1342,8 +1346,8 @@ check("Auto-start: setGuidedStepIndex(0) present (step reset for all runs)",  "a
 
 print("\n[no_cta_required_any_run]")
 
-check("Auto-start present with demoActive dep (mid-guided restart covered) [51.8R RUN03 supersedes amendment 10]",  "no_cta_required_any_run",
-      "}, [enlPersona, selectedQuery, demoComplete, demoActive])" in idx)  # 51.8R RUN03: all run types now covered by 4-dep array
+check("Auto-start present with freeMode dep (operator mode covered) [51.8R RUN04 supersedes RUN03]",  "no_cta_required_any_run",
+      "}, [enlPersona, selectedQuery, demoComplete, demoActive, freeMode])" in idx)  # 51.8R RUN04: all run types now covered by 5-dep array including operator mode guard
 check("CTA button disabled — visual fallback only (not required)",  "no_cta_required_any_run",
       "disabled={!enlPersona || !selectedQuery}" in idx)
 check("setDemoActive(true) in auto-start AND handleStartDemo (2 paths)",  "no_cta_required_any_run",
@@ -1451,8 +1455,8 @@ if "}, [enlPersona, demoActive, demoComplete])" in idx:
     if "prevEnlPersonaRef.current === enlPersona" in _pcb_full_raw:
         _pcb_full = _pcb_full_raw.split("prevEnlPersonaRef.current === enlPersona")[-1]
 
-check("Auto-start deps include demoActive [51.8R RUN03 — mid-guided restart key]",  "mid_guided_persona_switch_restart",
-      "}, [enlPersona, selectedQuery, demoComplete, demoActive])" in idx)
+check("Auto-start deps include demoActive AND freeMode [51.8R RUN03/RUN04 — mid-guided restart key]",  "mid_guided_persona_switch_restart",
+      "}, [enlPersona, selectedQuery, demoComplete, demoActive, freeMode])" in idx)
 check("Auto-start: demoActive guard still present (no-op when running; re-fire guard after setDemoActive(true))",  "mid_guided_persona_switch_restart",
       "if (demoActive) return" in _autostart)
 check("exitedRef set ONLY in handleDemoExit — not in persona-change effect [key: distinguishes exit from switch]",  "mid_guided_persona_switch_restart",
@@ -1463,6 +1467,43 @@ check("exitedRef suppression requires exitedRef AND no persona/query change [CTR
       "exitedRef.current && !personaChanged && !queryChanged" in _autostart)
 check("autoStartPrevRef updated before guards [persona change recorded on render 1; re-fire sees same persona → personaChanged=false → not suppressed]",  "mid_guided_persona_switch_restart",
       "autoStartPrevRef.current = { persona: enlPersona, query: selectedQuery }" in idx)
+
+# ── free_mode_real ────────────────────────────────────────────────────────────
+# Post-RUN04: freeMode state makes FREE mode real and durable.
+# handleDemoExit: setFreeMode(true) — enters operator mode.
+# handleStartDemo: setFreeMode(false) after gates — exits operator mode on explicit restart.
+# auto-start: if (freeMode) return — blocks ALL auto-restart in operator mode.
+# Entry strip: hidden when freeMode=true — no guided shell in FREE.
+# Operator surface: shown when freeMode && !demoActive — explicit re-entry path.
+
+print("\n[free_mode_real]")
+
+# Extract handleStartDemo block for setFreeMode(false) check
+_hsd_full = ""
+if "const handleStartDemo" in idx:
+    _hsd_full = idx.split("const handleStartDemo")[1].split("handleDemoNext")[0]  # 51.8R RUN04: split on "const handleStartDemo" to land at function definition, not comment mention
+
+# Extract handleDemoExit block for setFreeMode(true) check
+_exit_run04 = ""
+if "handleDemoExit = () => {" in idx:
+    _exit_run04 = idx.split("handleDemoExit = () => {")[1].split("}")[0]
+
+check("freeMode state declared with useState(false) [51.8R RUN04]",            "free_mode_real",
+      "freeMode" in idx and "useState(false)" in idx and "setFreeMode" in idx)
+check("handleDemoExit sets freeMode=true (enters operator mode) [51.8R RUN04]", "free_mode_real",
+      "setFreeMode(true)" in _exit_run04)
+check("handleStartDemo sets freeMode=false after gates (explicit exit from FREE) [51.8R RUN04]", "free_mode_real",
+      "setFreeMode(false)" in _hsd_full)
+check("Auto-start freeMode guard present — no auto-restart in operator mode [51.8R RUN04]", "free_mode_real",
+      "if (freeMode) return" in _autostart)
+check("Entry strip hidden when freeMode=true — no guided shell in FREE [51.8R RUN04]",      "free_mode_real",
+      "!demoActive && !freeMode" in idx)
+check("Operator surface rendered when freeMode && !demoActive [51.8R RUN04]",               "free_mode_real",
+      "freeMode && !demoActive" in idx and "operator-surface" in idx)
+check("operator-surface CSS class defined [51.8R RUN04]",                                    "free_mode_real",
+      ".operator-surface" in css)
+check("handleStartDemo clears exitedRef on explicit restart [51.8R RUN04]",                 "free_mode_real",
+      "exitedRef.current = false" in _hsd_full)
 
 # ── persona_auto_open_guided_blocked ─────────────────────────────────────────
 # Post-RUN01 hardening: persona auto-open effect must bail out when persona has a
