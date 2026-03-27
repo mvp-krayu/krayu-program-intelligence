@@ -1,5 +1,6 @@
 /**
  * pages/index.js
+ * PIOS-51.8R-RUN03-HARDENING (demoActive added to auto-start deps; mid-guided persona switch now deterministically restarts guided flow — demoActive dep change fires after persona-change teardown)
  * PIOS-51.8R-RUN01-CONTRACT-v7 (extended: Viewport enforcement on step change, deterministic auto-start across all runs, exit guard suppresses re-start, demoComplete in auto-start deps [51.8R amendment 10])
  * PIOS-51.8R-RUN01-CONTRACT-v6 (extended: Situation pinned during guided, auto-start on persona+query, persona switch full reset, uniform panel gate [51.8R amendment 9])
  * PIOS-51.8R-RUN01-CONTRACT-v5 (extended: Situation persistence, no duplicate persona gate, persona preserved across query change, evidence auto-open effect removed [51.8R amendment 8])
@@ -301,27 +302,28 @@ export default function Home() {
     if (panelEl) panelEl.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }, [demoActive, guidedStepIndex, enlPersona])
 
-  // ── Auto-start guided demo on Persona + Query selection [51.8R amendment 9/10] ──
-  // Deps: [enlPersona, selectedQuery, demoComplete]
+  // ── Auto-start guided demo on Persona + Query selection [51.8R amendment 9/10/RUN03] ──
+  // Deps: [enlPersona, selectedQuery, demoComplete, demoActive]
   //   - First run: persona or query changes with both present → start
   //   - After completion: persona-change effect sets demoComplete=false → dep change → start
-  //   - After CTRL+K: exitedRef.current=true; demoComplete dep fires but exitedRef suppresses unless persona/query changed
+  //   - Mid-guided persona switch: persona-change tears down (demoActive→false) → dep change → start for new persona
+  //   - After CTRL+K/Exit: exitedRef.current=true; demoActive/demoComplete dep fires but exitedRef suppresses (persona/query unchanged)
   // autoStartPrevRef tracks previous persona/query values to distinguish dep change source.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // exitedRef distinguishes persona-change teardown (not set → allowed) from explicit exit (set → suppressed).
   useEffect(() => {
     const personaChanged = autoStartPrevRef.current.persona !== enlPersona
     const queryChanged   = autoStartPrevRef.current.query   !== selectedQuery
     autoStartPrevRef.current = { persona: enlPersona, query: selectedQuery }
 
     if (!enlPersona || !selectedQuery) return  // both required
-    if (demoActive) return                     // already running (intentional stale read)
-    if (demoComplete) return                   // completion lock not yet cleared (stale; persona-change effect will clear)
+    if (demoActive) return                     // already running — also catches immediate re-fire after demo start
+    if (demoComplete) return                   // completion lock not yet cleared; persona-change effect will clear → dep fires again
     if (exitedRef.current && !personaChanged && !queryChanged) {
-      // demoComplete changed (CTRL+K cleared it) but persona/query unchanged → suppress auto-start [51.8R amendment 10]
+      // demoActive or demoComplete changed (CTRL+K/Exit) but persona/query unchanged → suppress [51.8R amendment 10/RUN03]
       exitedRef.current = false  // consume exit flag
       return
     }
-    exitedRef.current = false  // clear exit flag on genuine persona/query selection
+    exitedRef.current = false  // clear exit flag on genuine persona/query/teardown-driven start
     const steps = PERSONA_GUIDED_FLOWS[enlPersona]
     const activeFlow = PERSONA_DEFAULT_FLOW[enlPersona]
     setDemoComplete(false)
@@ -333,7 +335,7 @@ export default function Home() {
     setOpenPanels(firstPanel === 'situation' ? ['situation'] : ['situation', firstPanel])
     setDemoActive(true)
     setDemoStage(1)
-  }, [enlPersona, selectedQuery, demoComplete])  // demoComplete added: fires after persona-change effect clears lock [51.8R amendment 10]
+  }, [enlPersona, selectedQuery, demoComplete, demoActive])  // demoActive added: fires on persona-change teardown (false) → mid-guided restart deterministic [51.8R RUN03]
 
   // ── ⌘K handler — exit guided mode or post-completion state [51.8R amendment 7] ──
   // Fires when demoActive (mid-demo) OR demoComplete (post-completion lock).
@@ -466,7 +468,7 @@ export default function Home() {
             Evidence-first system for program diagnosis, structural risk, and execution visibility
           </p>
           <div className="hero-meta">
-            PIOS-51.8R-RUN01-CONTRACT-v7 · run_02_governed
+            PIOS-51.8R-RUN03-HARDENING · run_02_governed
             &ensp;·&ensp;
             No inference. No synthetic data.
           </div>

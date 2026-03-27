@@ -1,8 +1,8 @@
 {
   "stream": "51.8R",
-  "timestamp": "2026-03-27T14:52:31.351829Z",
-  "total": 409,
-  "passed": 409,
+  "timestamp": "2026-03-27T15:03:28.468617Z",
+  "total": 415,
+  "passed": 415,
   "failed": 0,
   "groups": {
     "entry_strip_horizontal_alignment": {
@@ -319,6 +319,10 @@
     },
     "no_multi_panel_open_in_guided": {
       "pass": 5,
+      "fail": 0
+    },
+    "mid_guided_persona_switch_restart": {
+      "pass": 6,
       "fail": 0
     },
     "persona_auto_open_guided_blocked": {
@@ -1636,7 +1640,7 @@
       "detail": ""
     },
     {
-      "name": "Auto-start requires both persona AND query \u2014 query alone insufficient [51.8R amendment 10 supersedes dep string]",
+      "name": "Auto-start requires both persona AND query \u2014 query alone insufficient [51.8R RUN03 supersedes amendment 10 dep string]",
       "group": "query_selection_does_not_unlock_panels",
       "status": "PASS",
       "detail": ""
@@ -1672,7 +1676,7 @@
       "detail": ""
     },
     {
-      "name": "Auto-start useEffect present with demoComplete dep [51.8R amendment 10 supersedes amendment 9 dep string]",
+      "name": "Auto-start useEffect present with demoActive dep [51.8R RUN03 supersedes amendment 10 dep string]",
       "group": "no_implicit_demo_activation",
       "status": "PASS",
       "detail": ""
@@ -2344,7 +2348,7 @@
       "detail": ""
     },
     {
-      "name": "Auto-start useEffect present with [enlPersona, selectedQuery, demoComplete] deps [51.8R amendment 10 supersedes amendment 9 deps]",
+      "name": "Auto-start useEffect present with [enlPersona, selectedQuery, demoComplete, demoActive] deps [51.8R RUN03 supersedes amendment 10 deps]",
       "group": "guided_autostarts_on_persona_and_query",
       "status": "PASS",
       "detail": ""
@@ -2356,7 +2360,7 @@
       "detail": ""
     },
     {
-      "name": "Auto-start: separate demoActive and demoComplete guards [51.8R amendment 10 supersedes combined guard]",
+      "name": "Auto-start: demoActive and demoComplete guards present [51.8R amendment 10; demoActive now fresh read in RUN03]",
       "group": "guided_autostarts_on_persona_and_query",
       "status": "PASS",
       "detail": ""
@@ -2398,7 +2402,7 @@
       "detail": ""
     },
     {
-      "name": "Auto-start effect present \u2014 CTA not required [51.8R amendment 10 supersedes amendment 9 dep string]",
+      "name": "Auto-start effect present \u2014 CTA not required [51.8R RUN03 supersedes amendment 10 dep string]",
       "group": "no_cta_required_for_entry",
       "status": "PASS",
       "detail": ""
@@ -2416,7 +2420,7 @@
       "detail": ""
     },
     {
-      "name": "Auto-start deps include demoComplete for post-completion re-entry [51.8R amendment 10 supersedes selectedQuery-only dep check]",
+      "name": "Auto-start deps include demoActive for mid-guided restart [51.8R RUN03 supersedes amendment 10 demoComplete-only check]",
       "group": "no_cta_required_for_entry",
       "status": "PASS",
       "detail": ""
@@ -2548,7 +2552,7 @@
       "detail": ""
     },
     {
-      "name": "Auto-start deps include demoComplete [amendment 10]",
+      "name": "Auto-start deps include demoActive [51.8R RUN03 supersedes amendment 10 dep string]",
       "group": "auto_start_deterministic_across_runs",
       "status": "PASS",
       "detail": ""
@@ -2590,7 +2594,7 @@
       "detail": ""
     },
     {
-      "name": "Auto-start present with demoComplete dep (post-completion runs covered)",
+      "name": "Auto-start present with demoActive dep (mid-guided restart covered) [51.8R RUN03 supersedes amendment 10]",
       "group": "no_cta_required_any_run",
       "status": "PASS",
       "detail": ""
@@ -2748,6 +2752,42 @@
     {
       "name": "handleToggle max-2 in togglePanel (not bypassed in guided)",
       "group": "no_multi_panel_open_in_guided",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start deps include demoActive [51.8R RUN03 \u2014 mid-guided restart key]",
+      "group": "mid_guided_persona_switch_restart",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start: demoActive guard still present (no-op when running; re-fire guard after setDemoActive(true))",
+      "group": "mid_guided_persona_switch_restart",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "exitedRef set ONLY in handleDemoExit \u2014 not in persona-change effect [key: distinguishes exit from switch]",
+      "group": "mid_guided_persona_switch_restart",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona-change effect sets demoActive=false in demoActive teardown branch [triggers dep change]",
+      "group": "mid_guided_persona_switch_restart",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "exitedRef suppression requires exitedRef AND no persona/query change [CTRL+K suppressed; switch allowed]",
+      "group": "mid_guided_persona_switch_restart",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "autoStartPrevRef updated before guards [persona change recorded on render 1; re-fire sees same persona \u2192 personaChanged=false \u2192 not suppressed]",
+      "group": "mid_guided_persona_switch_restart",
       "status": "PASS",
       "detail": ""
     },

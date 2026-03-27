@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
 validate_51_8R.py
+Post-RUN03 hardening: demoActive in auto-start deps; mid-guided persona switch now deterministically restarts
 Post-RUN01 hardening: persona auto-open guided-mode guard (prevents CTO/ANALYST situation drop via max-2)
 PIOS-51.8R-RUN01-CONTRACT-v7 (amendment 10: Viewport enforcement on step change, deterministic
 auto-start across runs, exitedRef exit guard, demoComplete in auto-start deps; supersessions applied)
@@ -56,7 +57,8 @@ viewport_aligns_with_active_step, step_panel_mapping_correct,
 auto_start_deterministic_across_runs, no_cta_required_any_run,
 exit_prevents_auto_restart, free_mode_has_no_guided_constraints,
 situation_pinned_during_guided_all_steps, no_multi_panel_open_in_guided,
-persona_auto_open_guided_blocked.
+persona_auto_open_guided_blocked,
+mid_guided_persona_switch_restart.
 
 Expected: all PASS
 """
@@ -800,8 +802,8 @@ check("QuerySelector onSelect bound to setSelectedQuery","query_selection_does_n
       "onSelect={setSelectedQuery}" in idx)
 check("setSelectedQuery cannot trigger setDemoActive via onSelect [51.8R amendment 9 supersedes count==1]",  "query_selection_does_not_unlock_panels",
       "onSelect={setSelectedQuery}" in idx and "onSelect={handleStartDemo}" not in idx)  # 51.8R amendment 9: auto-start useEffect also calls setDemoActive(true); count==1 superseded
-check("Auto-start requires both persona AND query — query alone insufficient [51.8R amendment 10 supersedes dep string]",  "query_selection_does_not_unlock_panels",
-      "}, [enlPersona, selectedQuery, demoComplete])" in idx and "if (!enlPersona || !selectedQuery) return" in idx)  # 51.8R amendment 10: guard requires both; dep string updated to include demoComplete
+check("Auto-start requires both persona AND query — query alone insufficient [51.8R RUN03 supersedes amendment 10 dep string]",  "query_selection_does_not_unlock_panels",
+      "}, [enlPersona, selectedQuery, demoComplete, demoActive])" in idx and "if (!enlPersona || !selectedQuery) return" in idx)  # 51.8R RUN03: dep string updated to include demoActive; guard still requires both
 check("Query selection only updates selectedQuery state","query_selection_does_not_unlock_panels",
       "setSelectedQuery" in idx and "onSelect={setSelectedQuery}" in idx)
 
@@ -822,8 +824,8 @@ check("handleStartDemo has persona + query hard gates",  "only_cta_sets_demo_act
 
 print("\n[no_implicit_demo_activation]")
 
-check("Auto-start useEffect present with demoComplete dep [51.8R amendment 10 supersedes amendment 9 dep string]",  "no_implicit_demo_activation",
-      "}, [enlPersona, selectedQuery, demoComplete])" in idx and "setDemoActive(true)" in idx)  # 51.8R amendment 10: dep string updated; supersedes [enlPersona, selectedQuery] check
+check("Auto-start useEffect present with demoActive dep [51.8R RUN03 supersedes amendment 10 dep string]",  "no_implicit_demo_activation",
+      "}, [enlPersona, selectedQuery, demoComplete, demoActive])" in idx and "setDemoActive(true)" in idx)  # 51.8R RUN03: demoActive added; supersedes [enlPersona, selectedQuery, demoComplete] check
 check("setDemoActive(true) in handleStartDemo AND auto-start (2 total) [51.8R amendment 9]",  "no_implicit_demo_activation",
       idx.count("setDemoActive(true)") == 2)  # 51.8R amendment 9: count==1 superseded; exactly 2 expected
 check("QuerySelector change handler does not start demo","no_implicit_demo_activation",
@@ -1203,19 +1205,19 @@ check("CTRL+K and Exit share same handleDemoExit",         "exit_button_restores
 
 print("\n[guided_autostarts_on_persona_and_query]")
 
-# Extract auto-start effect block [51.8R amendment 10: deps changed to include demoComplete]
+# Extract auto-start effect block [51.8R RUN03: deps changed to include demoActive]
 _autostart = ""
-if "}, [enlPersona, selectedQuery, demoComplete])" in idx:
-    _autostart_raw = idx.split("}, [enlPersona, selectedQuery, demoComplete])")[0]
+if "}, [enlPersona, selectedQuery, demoComplete, demoActive])" in idx:
+    _autostart_raw = idx.split("}, [enlPersona, selectedQuery, demoComplete, demoActive])")[0]
     if "if (!enlPersona || !selectedQuery) return" in _autostart_raw:
         _autostart = _autostart_raw.split("if (!enlPersona || !selectedQuery) return")[-1]
 
-check("Auto-start useEffect present with [enlPersona, selectedQuery, demoComplete] deps [51.8R amendment 10 supersedes amendment 9 deps]",  "guided_autostarts_on_persona_and_query",
-      "}, [enlPersona, selectedQuery, demoComplete])" in idx)  # 51.8R amendment 10: demoComplete added for post-completion re-entry; supersedes [enlPersona, selectedQuery] only
+check("Auto-start useEffect present with [enlPersona, selectedQuery, demoComplete, demoActive] deps [51.8R RUN03 supersedes amendment 10 deps]",  "guided_autostarts_on_persona_and_query",
+      "}, [enlPersona, selectedQuery, demoComplete, demoActive])" in idx)  # 51.8R RUN03: demoActive added for mid-guided persona switch restart; supersedes [enlPersona, selectedQuery, demoComplete] only
 check("Auto-start: guard requires both persona AND query",  "guided_autostarts_on_persona_and_query",
       "if (!enlPersona || !selectedQuery) return" in idx)
-check("Auto-start: separate demoActive and demoComplete guards [51.8R amendment 10 supersedes combined guard]",  "guided_autostarts_on_persona_and_query",
-      "if (demoActive) return" in _autostart and "if (demoComplete) return" in _autostart)  # 51.8R amendment 10: guards split for independent stale-read semantics; supersedes combined 'if (demoActive || demoComplete)'
+check("Auto-start: demoActive and demoComplete guards present [51.8R amendment 10; demoActive now fresh read in RUN03]",  "guided_autostarts_on_persona_and_query",
+      "if (demoActive) return" in _autostart and "if (demoComplete) return" in _autostart)  # 51.8R RUN03: demoActive no longer stale read; both guards still present
 check("Auto-start: calls setDemoActive(true)",             "guided_autostarts_on_persona_and_query",
       "setDemoActive(true)" in _autostart)
 check("Auto-start: calls setDemoStage(1)",                 "guided_autostarts_on_persona_and_query",
@@ -1235,14 +1237,14 @@ check("Auto-start: exitedRef guard present [51.8R amendment 10]",  "guided_autos
 
 print("\n[no_cta_required_for_entry]")
 
-check("Auto-start effect present — CTA not required [51.8R amendment 10 supersedes amendment 9 dep string]",  "no_cta_required_for_entry",
-      "}, [enlPersona, selectedQuery, demoComplete])" in idx)  # 51.8R amendment 10: deps updated; effect still present
+check("Auto-start effect present — CTA not required [51.8R RUN03 supersedes amendment 10 dep string]",  "no_cta_required_for_entry",
+      "}, [enlPersona, selectedQuery, demoComplete, demoActive])" in idx)  # 51.8R RUN03: demoActive added; effect still present
 check("setDemoActive(true) in auto-start (not only CTA-triggered) [amendment 9]",  "no_cta_required_for_entry",
       idx.count("setDemoActive(true)") == 2)  # CTA (handleStartDemo) + auto-start effect
 check("CTA button preserved as fallback (disabled without both gates)",  "no_cta_required_for_entry",
       "disabled={!enlPersona || !selectedQuery}" in idx)
-check("Auto-start deps include demoComplete for post-completion re-entry [51.8R amendment 10 supersedes selectedQuery-only dep check]",  "no_cta_required_for_entry",
-      "}, [enlPersona, selectedQuery, demoComplete])" in idx)  # 51.8R amendment 10: demoComplete added for deterministic re-entry across all runs
+check("Auto-start deps include demoActive for mid-guided restart [51.8R RUN03 supersedes amendment 10 demoComplete-only check]",  "no_cta_required_for_entry",
+      "}, [enlPersona, selectedQuery, demoComplete, demoActive])" in idx)  # 51.8R RUN03: demoActive added; fires on persona-change teardown for mid-guided deterministic restart
 check("CTRL+K does not re-trigger auto-start (deps unchanged after exit)",  "no_cta_required_for_entry",
       "setEnlPersona" not in _exit_block and "setSelectedQuery" not in _exit_block)  # CTRL+K preserves both → deps unchanged
 
@@ -1320,8 +1322,8 @@ check("Viewport scroll targets step.panelId (same as setOpenPanels panel)",     
 
 print("\n[auto_start_deterministic_across_runs]")
 
-check("Auto-start deps include demoComplete [amendment 10]",  "auto_start_deterministic_across_runs",
-      "}, [enlPersona, selectedQuery, demoComplete])" in idx)
+check("Auto-start deps include demoActive [51.8R RUN03 supersedes amendment 10 dep string]",  "auto_start_deterministic_across_runs",
+      "}, [enlPersona, selectedQuery, demoComplete, demoActive])" in idx)  # 51.8R RUN03: demoActive added; mid-guided restart now fires on demoActive dep change
 check("autoStartPrevRef tracks previous persona and query",  "auto_start_deterministic_across_runs",
       "autoStartPrevRef" in idx and "persona" in _autostart and "query" in _autostart)
 check("personaChanged and queryChanged computed in auto-start",  "auto_start_deterministic_across_runs",
@@ -1340,8 +1342,8 @@ check("Auto-start: setGuidedStepIndex(0) present (step reset for all runs)",  "a
 
 print("\n[no_cta_required_any_run]")
 
-check("Auto-start present with demoComplete dep (post-completion runs covered)",  "no_cta_required_any_run",
-      "}, [enlPersona, selectedQuery, demoComplete])" in idx)
+check("Auto-start present with demoActive dep (mid-guided restart covered) [51.8R RUN03 supersedes amendment 10]",  "no_cta_required_any_run",
+      "}, [enlPersona, selectedQuery, demoComplete, demoActive])" in idx)  # 51.8R RUN03: all run types now covered by 4-dep array
 check("CTA button disabled — visual fallback only (not required)",  "no_cta_required_any_run",
       "disabled={!enlPersona || !selectedQuery}" in idx)
 check("setDemoActive(true) in auto-start AND handleStartDemo (2 paths)",  "no_cta_required_any_run",
@@ -1427,6 +1429,40 @@ check("Persona auto-open effect: max-2 slice preserved",      "no_multi_panel_op
       "merged.length > 2 ? merged.slice(merged.length - 2) : merged" in idx)
 check("handleToggle max-2 in togglePanel (not bypassed in guided)",  "no_multi_panel_open_in_guided",
       "next.length > 2 ? next.slice(next.length - 2) : next" in idx)
+
+# ── mid_guided_persona_switch_restart ────────────────────────────────────────
+# Post-RUN03 hardening: demoActive added to auto-start deps.
+# When persona switches mid-guided, persona-change tears down (demoActive→false).
+# demoActive dep change fires auto-start on the subsequent render.
+# exitedRef is NOT set by persona-change effect → suppression skipped → new demo starts.
+# exitedRef IS set by handleDemoExit → explicit exit still suppresses.
+
+print("\n[mid_guided_persona_switch_restart]")
+
+# Extract handleDemoExit block for exitedRef check
+_exit_a10_full = ""
+if "handleDemoExit = () => {" in idx:
+    _exit_a10_full = idx.split("handleDemoExit = () => {")[1].split("}")[0]
+
+# Extract persona-change effect block
+_pcb_full = ""
+if "}, [enlPersona, demoActive, demoComplete])" in idx:
+    _pcb_full_raw = idx.split("}, [enlPersona, demoActive, demoComplete])")[0]
+    if "prevEnlPersonaRef.current === enlPersona" in _pcb_full_raw:
+        _pcb_full = _pcb_full_raw.split("prevEnlPersonaRef.current === enlPersona")[-1]
+
+check("Auto-start deps include demoActive [51.8R RUN03 — mid-guided restart key]",  "mid_guided_persona_switch_restart",
+      "}, [enlPersona, selectedQuery, demoComplete, demoActive])" in idx)
+check("Auto-start: demoActive guard still present (no-op when running; re-fire guard after setDemoActive(true))",  "mid_guided_persona_switch_restart",
+      "if (demoActive) return" in _autostart)
+check("exitedRef set ONLY in handleDemoExit — not in persona-change effect [key: distinguishes exit from switch]",  "mid_guided_persona_switch_restart",
+      "exitedRef.current = true" in _exit_a10_full and "exitedRef.current = true" not in _pcb_full)
+check("Persona-change effect sets demoActive=false in demoActive teardown branch [triggers dep change]",  "mid_guided_persona_switch_restart",
+      "setDemoActive(false)" in _pcb_full)
+check("exitedRef suppression requires exitedRef AND no persona/query change [CTRL+K suppressed; switch allowed]",  "mid_guided_persona_switch_restart",
+      "exitedRef.current && !personaChanged && !queryChanged" in _autostart)
+check("autoStartPrevRef updated before guards [persona change recorded on render 1; re-fire sees same persona → personaChanged=false → not suppressed]",  "mid_guided_persona_switch_restart",
+      "autoStartPrevRef.current = { persona: enlPersona, query: selectedQuery }" in idx)
 
 # ── persona_auto_open_guided_blocked ─────────────────────────────────────────
 # Post-RUN01 hardening: persona auto-open effect must bail out when persona has a
