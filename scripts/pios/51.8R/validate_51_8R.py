@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
 validate_51_8R.py
+Post-RUN05 hardening: FREE panel data restored; ENLPanel accessible in freeMode; operator-mode-badge; ENTRY vs FREE render separation
 Post-RUN04 hardening: freeMode state; real operator FREE mode; entry strip hidden; operator surface with explicit re-entry
 Post-RUN03 hardening: demoActive in auto-start deps; mid-guided persona switch now deterministically restarts
 Post-RUN01 hardening: persona auto-open guided-mode guard (prevents CTO/ANALYST situation drop via max-2)
@@ -60,7 +61,8 @@ exit_prevents_auto_restart, free_mode_has_no_guided_constraints,
 situation_pinned_during_guided_all_steps, no_multi_panel_open_in_guided,
 persona_auto_open_guided_blocked,
 mid_guided_persona_switch_restart,
-free_mode_real.
+free_mode_real,
+free_panel_data_restoration.
 
 Expected: all PASS
 """
@@ -754,8 +756,8 @@ check("handleToggle demoActive lock present",            "panels_locked_until_de
       "if (demoActive) return" in _htb)
 check("handleToggle demoComplete post-completion lock",  "panels_locked_until_demo_active",
       "demoComplete && panelId !== 'persona'" in _htb)
-check("Evidence gated by demoActive in render",          "panels_locked_until_demo_active",
-      "queryData && enlPersona && demoActive" in idx)
+check("Evidence gated by demoActive or freeMode in render [51.8R RUN05]",          "panels_locked_until_demo_active",
+      "queryData && enlPersona && (demoActive || freeMode)" in idx)  # 51.8R RUN05: freeMode added — ENLPanel accessible in operator mode; ENTRY still blocked via !demoActive && !freeMode
 check("Pre-demo evidence message present",               "panels_locked_until_demo_active",
       "Start Lens Demo to view evidence" in idx)
 check("CTRL+K releases post-completion via handleDemoExit", "panels_locked_until_demo_active",
@@ -765,19 +767,19 @@ check("CTRL+K releases post-completion via handleDemoExit", "panels_locked_until
 
 print("\n[evidence_disabled_pre_demo]")
 
-# Extract evidence panel render block
+# Extract evidence panel render block [51.8R RUN05: delimiter updated to (demoActive || freeMode) condition]
 _evb = ""
-if "queryData && enlPersona && demoActive" in idx:
-    _evb_raw = idx.split("queryData && enlPersona && demoActive")[1]
+if "queryData && enlPersona && (demoActive || freeMode)" in idx:
+    _evb_raw = idx.split("queryData && enlPersona && (demoActive || freeMode)")[1]
     if "no-query-state" in _evb_raw:
         _evb = _evb_raw.split("no-query-state")[0]
 
-check("ENLPanel requires demoActive",                    "evidence_disabled_pre_demo",
-      "queryData && enlPersona && demoActive" in idx)
+check("ENLPanel renders in demoActive or freeMode [51.8R RUN05]",                    "evidence_disabled_pre_demo",
+      "queryData && enlPersona && (demoActive || freeMode)" in idx)  # 51.8R RUN05: freeMode added; ENLPanel accessible in operator mode
 check("Pre-demo blocked state message",                  "evidence_disabled_pre_demo",
       "Start Lens Demo to view evidence analysis" in idx)
-check("Evidence blocked when !demoActive with persona",  "evidence_disabled_pre_demo",
-      "enlPersona && !demoActive" in _evb)
+check("Evidence blocked when !demoActive && !freeMode (ENTRY only) [51.8R RUN05]",  "evidence_disabled_pre_demo",
+      "enlPersona && !demoActive && !freeMode" in _evb)  # 51.8R RUN05: !freeMode added — placeholder shown in ENTRY only, not FREE
 check("Evidence blocked state class present",            "evidence_disabled_pre_demo",
       "evidence-blocked-state" in idx)
 check("ENLPanel rawStepActive prop still passed",        "evidence_disabled_pre_demo",
@@ -839,8 +841,8 @@ check("No onClick starts demo except CTA button",        "no_implicit_demo_activ
 
 print("\n[analyst_mode_blocked_pre_demo]")
 
-check("ENLPanel only rendered when demoActive",          "analyst_mode_blocked_pre_demo",
-      "queryData && enlPersona && demoActive" in idx)
+check("ENLPanel rendered in demoActive or freeMode [51.8R RUN05]",          "analyst_mode_blocked_pre_demo",
+      "queryData && enlPersona && (demoActive || freeMode)" in idx)  # 51.8R RUN05: freeMode added — ENLPanel accessible in operator mode
 check("rawStepActive initial state false",               "analyst_mode_blocked_pre_demo",
       "useState(false)" in idx and "rawStepActive" in idx)
 check("rawStepActive set only in handleDemoNext",        "analyst_mode_blocked_pre_demo",
@@ -1107,8 +1109,8 @@ check("handleToggle has demoComplete guard (completion lock)",  "panels_locked_p
       "demoComplete && panelId !== 'persona'" in _htb)
 check("Free mode: both false → togglePanel called",        "panels_locked_pre_demo",
       "togglePanel(panelId)" in _htb)
-check("Evidence gated by demoActive in render (pre-demo blocked)",  "panels_locked_pre_demo",
-      "queryData && enlPersona && demoActive" in idx)
+check("Evidence gated by demoActive or freeMode (pre-demo ENTRY still blocked) [51.8R RUN05]",  "panels_locked_pre_demo",
+      "queryData && enlPersona && (demoActive || freeMode)" in idx)  # 51.8R RUN05: freeMode added; ENTRY blocked via !demoActive && !freeMode; FREE opens ENLPanel
 check("Pre-demo evidence message present",                 "panels_locked_pre_demo",
       "Start Lens Demo to view evidence" in idx)
 
@@ -1529,6 +1531,30 @@ check("Persona auto-open effect deps unchanged [enlPersona, demoActive]",       
       "}, [enlPersona, demoActive])" in idx)
 check("PERSONA_GUIDED_FLOWS defined in index.js (guard target exists)",           "persona_auto_open_guided_blocked",
       "const PERSONA_GUIDED_FLOWS = {" in idx)
+
+# ── free_panel_data_restoration ───────────────────────────────────────────────
+# Post-RUN05: ENLPanel accessible in FREE/OPERATOR mode when persona + data available.
+# ENTRY placeholder ("Start Lens Demo…") shown only in ENTRY (!demoActive && !freeMode).
+# Operator mode badge added to operator surface for explicit FREE state visibility.
+
+print("\n[free_panel_data_restoration]")
+
+check("ENLPanel render guard includes freeMode [51.8R RUN05]",                     "free_panel_data_restoration",
+      "queryData && enlPersona && (demoActive || freeMode)" in idx)
+check("ENTRY placeholder gated by !demoActive && !freeMode [51.8R RUN05]",         "free_panel_data_restoration",
+      "!demoActive && !freeMode" in idx)  # placeholder only shown in ENTRY, not FREE
+check("ENTRY placeholder string still present (not removed)",                       "free_panel_data_restoration",
+      "Start Lens Demo to view evidence analysis" in idx)
+check("evidence-blocked-state class still present (ENTRY gate preserved)",          "free_panel_data_restoration",
+      "evidence-blocked-state" in idx)
+check("Operator mode badge element present [51.8R RUN05]",                          "free_panel_data_restoration",
+      "operator-mode-badge" in idx)
+check("OPERATOR MODE text in operator surface [51.8R RUN05]",                       "free_panel_data_restoration",
+      "OPERATOR MODE" in idx)
+check("operator-mode-badge CSS defined [51.8R RUN05]",                              "free_panel_data_restoration",
+      ".operator-mode-badge" in css)
+check("ENLPanel rawStepActive=false in FREE (reset by handleDemoExit)",             "free_panel_data_restoration",
+      "setRawStepActive(false)" in _exit_block)  # rawStep not forced in FREE — read-only operator access
 
 # ── Summary ───────────────────────────────────────────────────────────────────
 

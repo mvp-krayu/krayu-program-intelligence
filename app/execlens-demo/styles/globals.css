@@ -3301,3 +3301,17 @@ a.topo-chip:hover {
 .operator-surface {
   margin-top: 0.75rem;
 }
+
+/* Operator mode badge — explicit FREE / OPERATOR state indicator [51.8R RUN05] */
+.operator-mode-badge {
+  display: inline-block;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 0.1rem 0.4rem;
+  margin-bottom: 0.5rem;
+}

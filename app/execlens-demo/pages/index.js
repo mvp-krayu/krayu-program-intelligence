@@ -1,5 +1,6 @@
 /**
  * pages/index.js
+ * PIOS-51.8R-RUN05-OPERATOR (FREE panel data restored: ENLPanel accessible in freeMode; operator-mode-badge; ENTRY vs FREE render separation — !demoActive && !freeMode gates ENTRY placeholder only)
  * PIOS-51.8R-RUN04-FREE (freeMode state: explicit operator mode entered only via Exit/CTRL-K; auto-start blocked in freeMode; entry strip hidden; operator surface with explicit re-entry)
  * PIOS-51.8R-RUN03-HARDENING (demoActive added to auto-start deps; mid-guided persona switch now deterministically restarts guided flow — demoActive dep change fires after persona-change teardown)
  * PIOS-51.8R-RUN01-CONTRACT-v7 (extended: Viewport enforcement on step change, deterministic auto-start across all runs, exit guard suppresses re-start, demoComplete in auto-start deps [51.8R amendment 10])
@@ -476,7 +477,7 @@ export default function Home() {
             Evidence-first system for program diagnosis, structural risk, and execution visibility
           </p>
           <div className="hero-meta">
-            PIOS-51.8R-RUN04-FREE · run_02_governed
+            PIOS-51.8R-RUN05-OPERATOR · run_02_governed
             &ensp;·&ensp;
             No inference. No synthetic data.
           </div>
@@ -514,6 +515,7 @@ export default function Home() {
           {/* Visible only in explicit FREE mode (after Exit / CTRL-K). No guided shell. */}
           {freeMode && !demoActive && (
             <div className="operator-surface">
+              <div className="operator-mode-badge">OPERATOR MODE</div>
               <button
                 className="demo-start-btn"
                 onClick={handleStartDemo}
@@ -617,14 +619,16 @@ export default function Home() {
           expanded={openPanels.includes('evidence')}
           onToggle={() => handleToggle('evidence')}
         >
-          {queryData && enlPersona && demoActive ? (
+          {queryData && enlPersona && (demoActive || freeMode) ? (
+            // demoActive: guided mode — step-driven evidence; freeMode: operator mode — full evidence access [51.8R RUN05]
             <ENLPanel
               signals={queryData.signals}
               persona={enlPersona}
               personaData={enlPersonaData}
               rawStepActive={rawStepActive}
             />
-          ) : queryData && enlPersona && !demoActive ? (
+          ) : queryData && enlPersona && !demoActive && !freeMode ? (
+            // ENTRY only — pre-guided shell; not FREE [51.8R RUN05]
             <div className="evidence-blocked-state">Start Lens Demo to view evidence analysis</div>
           ) : queryData && !enlPersona ? (
             <div className="evidence-blocked-state">Evidence requires a selected Persona</div>
