@@ -1,8 +1,8 @@
 {
   "stream": "51.8R",
-  "timestamp": "2026-03-27T09:12:39.121252Z",
-  "total": 156,
-  "passed": 156,
+  "timestamp": "2026-03-27T14:52:31.351829Z",
+  "total": 409,
+  "passed": 409,
   "failed": 0,
   "groups": {
     "entry_strip_horizontal_alignment": {
@@ -127,6 +127,202 @@
     },
     "guided_bar_resets_on_persona_switch": {
       "pass": 4,
+      "fail": 0
+    },
+    "query_locked_before_persona": {
+      "pass": 5,
+      "fail": 0
+    },
+    "query_unlocks_on_persona_selection": {
+      "pass": 4,
+      "fail": 0
+    },
+    "demo_requires_cta_trigger": {
+      "pass": 5,
+      "fail": 0
+    },
+    "no_panel_interaction_starts_demo": {
+      "pass": 4,
+      "fail": 0
+    },
+    "ui_locked_after_completion_except_persona": {
+      "pass": 5,
+      "fail": 0
+    },
+    "persona_only_interactive_after_completion": {
+      "pass": 5,
+      "fail": 0
+    },
+    "query_relocked_after_completion": {
+      "pass": 4,
+      "fail": 0
+    },
+    "demo_cannot_restart_without_cta": {
+      "pass": 4,
+      "fail": 0
+    },
+    "guided_state_resets_on_persona_change": {
+      "pass": 5,
+      "fail": 0
+    },
+    "no_bypass_via_query_or_panel_interaction": {
+      "pass": 5,
+      "fail": 0
+    },
+    "panels_locked_until_demo_active": {
+      "pass": 5,
+      "fail": 0
+    },
+    "evidence_disabled_pre_demo": {
+      "pass": 5,
+      "fail": 0
+    },
+    "navigation_disabled_pre_demo": {
+      "pass": 4,
+      "fail": 0
+    },
+    "query_selection_does_not_unlock_panels": {
+      "pass": 4,
+      "fail": 0
+    },
+    "only_cta_sets_demo_active": {
+      "pass": 4,
+      "fail": 0
+    },
+    "no_implicit_demo_activation": {
+      "pass": 4,
+      "fail": 0
+    },
+    "analyst_mode_blocked_pre_demo": {
+      "pass": 5,
+      "fail": 0
+    },
+    "raw_blocked_pre_demo": {
+      "pass": 5,
+      "fail": 0
+    },
+    "ctrl_k_restores_free_mode": {
+      "pass": 5,
+      "fail": 0
+    },
+    "ctrl_k_does_not_clear_context": {
+      "pass": 5,
+      "fail": 0
+    },
+    "situation_persists_on_persona_selection": {
+      "pass": 5,
+      "fail": 0
+    },
+    "no_duplicate_persona_selection_required": {
+      "pass": 6,
+      "fail": 0
+    },
+    "cta_enabled_after_persona_and_query": {
+      "pass": 4,
+      "fail": 0
+    },
+    "guided_start_direct_after_cta": {
+      "pass": 5,
+      "fail": 0
+    },
+    "post_completion_panels_locked_except_persona": {
+      "pass": 5,
+      "fail": 0
+    },
+    "why_panel_locked_after_completion": {
+      "pass": 5,
+      "fail": 0
+    },
+    "so_what_locked_after_completion": {
+      "pass": 5,
+      "fail": 0
+    },
+    "ctrl_k_works_when_demo_complete": {
+      "pass": 5,
+      "fail": 0
+    },
+    "ctrl_k_restores_free_mode_a8": {
+      "pass": 5,
+      "fail": 0
+    },
+    "no_guided_lock_after_ctrl_k": {
+      "pass": 5,
+      "fail": 0
+    },
+    "situation_pinned_during_guided": {
+      "pass": 5,
+      "fail": 0
+    },
+    "panels_locked_pre_demo": {
+      "pass": 5,
+      "fail": 0
+    },
+    "panels_reset_on_persona_change": {
+      "pass": 6,
+      "fail": 0
+    },
+    "no_partial_panel_unlock_states": {
+      "pass": 5,
+      "fail": 0
+    },
+    "loop_closure_invariant_across_runs": {
+      "pass": 6,
+      "fail": 0
+    },
+    "ctrl_k_restores_full_free_mode": {
+      "pass": 6,
+      "fail": 0
+    },
+    "exit_button_restores_full_free_mode": {
+      "pass": 5,
+      "fail": 0
+    },
+    "guided_autostarts_on_persona_and_query": {
+      "pass": 9,
+      "fail": 0
+    },
+    "no_cta_required_for_entry": {
+      "pass": 5,
+      "fail": 0
+    },
+    "no_duplicate_persona_selection": {
+      "pass": 6,
+      "fail": 0
+    },
+    "viewport_aligns_with_active_step": {
+      "pass": 7,
+      "fail": 0
+    },
+    "step_panel_mapping_correct": {
+      "pass": 7,
+      "fail": 0
+    },
+    "auto_start_deterministic_across_runs": {
+      "pass": 7,
+      "fail": 0
+    },
+    "no_cta_required_any_run": {
+      "pass": 5,
+      "fail": 0
+    },
+    "exit_prevents_auto_restart": {
+      "pass": 6,
+      "fail": 0
+    },
+    "free_mode_has_no_guided_constraints": {
+      "pass": 5,
+      "fail": 0
+    },
+    "situation_pinned_during_guided_all_steps": {
+      "pass": 6,
+      "fail": 0
+    },
+    "no_multi_panel_open_in_guided": {
+      "pass": 5,
+      "fail": 0
+    },
+    "persona_auto_open_guided_blocked": {
+      "pass": 5,
       "fail": 0
     }
   },
@@ -864,43 +1060,43 @@
       "detail": ""
     },
     {
-      "name": "PersonaPanel buttons disabled without query",
+      "name": "QuerySelector has disabled prop [51.8R amendment 6]",
       "group": "entry_gate_query_first",
       "status": "PASS",
       "detail": ""
     },
     {
-      "name": "PersonaPanel queryId prop used for gate",
+      "name": "QuerySelector disabled={!enlPersona} in index.js [51.8R amendment 6]",
       "group": "entry_gate_query_first",
       "status": "PASS",
       "detail": ""
     },
     {
-      "name": "Persona selector still always rendered",
+      "name": "Persona selector always rendered (no disabled) [51.8R amendment 6]",
       "group": "entry_gate_query_first",
       "status": "PASS",
       "detail": ""
     },
     {
-      "name": "Query required before persona selection",
+      "name": "Persona-first gate message in query-zone [51.8R amendment 6]",
       "group": "entry_gate_query_first",
       "status": "PASS",
       "detail": ""
     },
     {
-      "name": "setGuidedStepIndex(0) always on persona switch",
+      "name": "setGuidedStepIndex(0) on persona switch [51.8R amendment 6]",
       "group": "guided_flow_resets_on_persona_switch",
       "status": "PASS",
       "detail": ""
     },
     {
-      "name": "setDemoComplete(false) always on persona switch",
+      "name": "setDemoComplete(false) on persona selection [51.8R amendment 6]",
       "group": "guided_flow_resets_on_persona_switch",
       "status": "PASS",
       "detail": ""
     },
     {
-      "name": "setGuidedStepIndex(0) before demoActive gate",
+      "name": "setGuidedStepIndex(0) before demoActive gate [51.8R amendment 6]",
       "group": "guided_flow_resets_on_persona_switch",
       "status": "PASS",
       "detail": ""
@@ -936,7 +1132,7 @@
       "detail": ""
     },
     {
-      "name": "setDemoComplete(false) at terminal (not true)",
+      "name": "setDemoComplete(true) at terminal (post-completion lock) [51.8R amendment 6]",
       "group": "deterministic_reset_canonical_entry_state",
       "status": "PASS",
       "detail": ""
@@ -1014,13 +1210,13 @@
       "detail": ""
     },
     {
-      "name": "Situation panel first in render",
+      "name": "query-zone first in render (before situation) [51.8R amendment 6]",
       "group": "panel_order_enforced",
       "status": "PASS",
       "detail": ""
     },
     {
-      "name": "Persona panel before query-zone",
+      "name": "Situation panel before persona panel",
       "group": "panel_order_enforced",
       "status": "PASS",
       "detail": ""
@@ -1062,8 +1258,1526 @@
       "detail": ""
     },
     {
-      "name": "guidedStepIndex reset on persona switch always",
+      "name": "guidedStepIndex reset on persona switch [51.8R amendment 6]",
       "group": "guided_bar_resets_on_persona_switch",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "QuerySelector has disabled prop signature",
+      "group": "query_locked_before_persona",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "QuerySelector select element gets disabled",
+      "group": "query_locked_before_persona",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "index.js passes disabled={!enlPersona}",
+      "group": "query_locked_before_persona",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Gate message: Select a persona first",
+      "group": "query_locked_before_persona",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Gate message rendered when !enlPersona",
+      "group": "query_locked_before_persona",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "disabled={!enlPersona}: falsy when persona set",
+      "group": "query_unlocks_on_persona_selection",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No new state for query lock \u2014 derived from enlPersona",
+      "group": "query_unlocks_on_persona_selection",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "QuerySelector onSelect unchanged",
+      "group": "query_unlocks_on_persona_selection",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Query still controls all panels via selectedQuery",
+      "group": "query_unlocks_on_persona_selection",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona hard gate in handleStartDemo",
+      "group": "demo_requires_cta_trigger",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Query hard gate in handleStartDemo",
+      "group": "demo_requires_cta_trigger",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Start button disabled without both gates",
+      "group": "demo_requires_cta_trigger",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleStartDemo is only CTA-triggered demo path [51.8R amendment 9: auto-start also sets demoActive]",
+      "group": "demo_requires_cta_trigger",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setDemoActive(true) inside handleStartDemo",
+      "group": "demo_requires_cta_trigger",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle does not call setDemoActive",
+      "group": "no_panel_interaction_starts_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle does not call handleStartDemo",
+      "group": "no_panel_interaction_starts_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Panel onToggle calls handleToggle only",
+      "group": "no_panel_interaction_starts_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No direct setDemoActive in JSX render",
+      "group": "no_panel_interaction_starts_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle has post-completion lock [51.8R amendment 7]",
+      "group": "ui_locked_after_completion_except_persona",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Post-completion lock exempts persona panel",
+      "group": "ui_locked_after_completion_except_persona",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Post-completion lock uses demoComplete [51.8R amendment 7]",
+      "group": "ui_locked_after_completion_except_persona",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle dep array includes demoComplete [51.8R amendment 7]",
+      "group": "ui_locked_after_completion_except_persona",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle dep array no longer requires enlPersona [51.8R amendment 7]",
+      "group": "ui_locked_after_completion_except_persona",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel buttons have no disabled attr",
+      "group": "persona_only_interactive_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel buttons have no demoComplete gate",
+      "group": "persona_only_interactive_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel always renders selector",
+      "group": "persona_only_interactive_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona panel toggle not locked post-completion",
+      "group": "persona_only_interactive_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel ENL still gated by selectedPersona && queryId",
+      "group": "persona_only_interactive_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setEnlPersona(null) at terminal re-locks query",
+      "group": "query_relocked_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "disabled={!enlPersona}: null \u2192 query locked",
+      "group": "query_relocked_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Gate message reappears when enlPersona null",
+      "group": "query_relocked_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setSelectedQuery not reset at terminal",
+      "group": "query_relocked_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Post-completion lock in handleToggle active [51.8R amendment 7]",
+      "group": "demo_cannot_restart_without_cta",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTA (handleStartDemo) + auto-start are both demo entry points [51.8R amendment 9 supersedes count==1]",
+      "group": "demo_cannot_restart_without_cta",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "demoActive && !demoComplete gates DemoController",
+      "group": "demo_cannot_restart_without_cta",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleStartDemo clears demoComplete on restart",
+      "group": "demo_cannot_restart_without_cta",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setGuidedStepIndex(0) in persona-change effect",
+      "group": "guided_state_resets_on_persona_change",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setDemoComplete(false) conditioned on enlPersona !== null",
+      "group": "guided_state_resets_on_persona_change",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona-change effect has correct dep array",
+      "group": "guided_state_resets_on_persona_change",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Terminal null-set does not reset demoComplete",
+      "group": "guided_state_resets_on_persona_change",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Re-entry persona selection resets demoComplete",
+      "group": "guided_state_resets_on_persona_change",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Query onSelect bound to setSelectedQuery only",
+      "group": "no_bypass_via_query_or_panel_interaction",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Panel toggle calls handleToggle (not demo start)",
+      "group": "no_bypass_via_query_or_panel_interaction",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle has dual lock (demoActive + completion) [51.8R amendment 7]",
+      "group": "no_bypass_via_query_or_panel_interaction",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No direct setDemoActive in panel JSX",
+      "group": "no_bypass_via_query_or_panel_interaction",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No demoActive setter in QuerySelector component",
+      "group": "no_bypass_via_query_or_panel_interaction",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle demoActive lock present",
+      "group": "panels_locked_until_demo_active",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle demoComplete post-completion lock",
+      "group": "panels_locked_until_demo_active",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Evidence gated by demoActive in render",
+      "group": "panels_locked_until_demo_active",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Pre-demo evidence message present",
+      "group": "panels_locked_until_demo_active",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTRL+K releases post-completion via handleDemoExit",
+      "group": "panels_locked_until_demo_active",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel requires demoActive",
+      "group": "evidence_disabled_pre_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Pre-demo blocked state message",
+      "group": "evidence_disabled_pre_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Evidence blocked when !demoActive with persona",
+      "group": "evidence_disabled_pre_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Evidence blocked state class present",
+      "group": "evidence_disabled_pre_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel rawStepActive prop still passed",
+      "group": "evidence_disabled_pre_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "NavigationPanel in TopologyPanel details toggle",
+      "group": "navigation_disabled_pre_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Navigation behind explicit user action (details)",
+      "group": "navigation_disabled_pre_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No direct NavigationPanel in index.js render",
+      "group": "navigation_disabled_pre_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "TopologyPanel receives navigation prop",
+      "group": "navigation_disabled_pre_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "QuerySelector onSelect bound to setSelectedQuery",
+      "group": "query_selection_does_not_unlock_panels",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setSelectedQuery cannot trigger setDemoActive via onSelect [51.8R amendment 9 supersedes count==1]",
+      "group": "query_selection_does_not_unlock_panels",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start requires both persona AND query \u2014 query alone insufficient [51.8R amendment 10 supersedes dep string]",
+      "group": "query_selection_does_not_unlock_panels",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Query selection only updates selectedQuery state",
+      "group": "query_selection_does_not_unlock_panels",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setDemoActive(true) in handleStartDemo AND auto-start effect [51.8R amendment 9 supersedes count==1]",
+      "group": "only_cta_sets_demo_active",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setDemoActive(true) inside handleStartDemo",
+      "group": "only_cta_sets_demo_active",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleStartDemo triggered by CTA onClick (fallback preserved)",
+      "group": "only_cta_sets_demo_active",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleStartDemo has persona + query hard gates",
+      "group": "only_cta_sets_demo_active",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start useEffect present with demoComplete dep [51.8R amendment 10 supersedes amendment 9 dep string]",
+      "group": "no_implicit_demo_activation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setDemoActive(true) in handleStartDemo AND auto-start (2 total) [51.8R amendment 9]",
+      "group": "no_implicit_demo_activation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "QuerySelector change handler does not start demo",
+      "group": "no_implicit_demo_activation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No onClick starts demo except CTA button",
+      "group": "no_implicit_demo_activation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel only rendered when demoActive",
+      "group": "analyst_mode_blocked_pre_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "rawStepActive initial state false",
+      "group": "analyst_mode_blocked_pre_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "rawStepActive set only in handleDemoNext",
+      "group": "analyst_mode_blocked_pre_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ANALYST flow raw step via rawStepActive",
+      "group": "analyst_mode_blocked_pre_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "rawStepActive={rawStepActive} prop passed to ENL",
+      "group": "analyst_mode_blocked_pre_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "RawArtifactsSection forceOpen tied to rawStepActive",
+      "group": "raw_blocked_pre_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "rawStepActive reset to false at handleDemoExit",
+      "group": "raw_blocked_pre_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "rawStepActive reset to false at terminal",
+      "group": "raw_blocked_pre_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "RawArtifactsSection ANALYST-gated in ENLPanel",
+      "group": "raw_blocked_pre_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "rawStepActive=false on re-run (handleStartDemo)",
+      "group": "raw_blocked_pre_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTRL+K fires when demoActive OR demoComplete",
+      "group": "ctrl_k_restores_free_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTRL+K calls handleDemoExit",
+      "group": "ctrl_k_restores_free_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit sets demoComplete=false",
+      "group": "ctrl_k_restores_free_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "demoComplete=false releases post-completion lock",
+      "group": "ctrl_k_restores_free_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTRL+K handler deps include demoComplete",
+      "group": "ctrl_k_restores_free_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit does not clear enlPersona",
+      "group": "ctrl_k_does_not_clear_context",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit does not clear selectedQuery",
+      "group": "ctrl_k_does_not_clear_context",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit preserves context state",
+      "group": "ctrl_k_does_not_clear_context",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTRL+K handler does not call setEnlPersona",
+      "group": "ctrl_k_does_not_clear_context",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Terminal path (not CTRL+K) clears persona",
+      "group": "ctrl_k_does_not_clear_context",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Evidence auto-open effect removed [51.8R amendment 8]",
+      "group": "situation_persists_on_persona_selection",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No effect fires openPanel('evidence') on persona change",
+      "group": "situation_persists_on_persona_selection",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Situation in initial openPanels",
+      "group": "situation_persists_on_persona_selection",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Situation panel always in render",
+      "group": "situation_persists_on_persona_selection",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle preserves situation toggle path",
+      "group": "situation_persists_on_persona_selection",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Query loading block does not clear enlPersona [51.8R amendment 8]",
+      "group": "no_duplicate_persona_selection_required",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Query loading block does not clear enlPersonaData [51.8R amendment 8]",
+      "group": "no_duplicate_persona_selection_required",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel queryId effect does not reset persona selection [51.8R amendment 8]",
+      "group": "no_duplicate_persona_selection_required",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel queryId effect does not call onPersonaChange(null) [51.8R amendment 8]",
+      "group": "no_duplicate_persona_selection_required",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel queryId effect still clears personaData for re-fetch",
+      "group": "no_duplicate_persona_selection_required",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel fetch effect re-fetches on queryId change",
+      "group": "no_duplicate_persona_selection_required",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTA disabled={!enlPersona || !selectedQuery}",
+      "group": "cta_enabled_after_persona_and_query",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona selection survives query change (no clear in qload)",
+      "group": "cta_enabled_after_persona_and_query",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona selection survived queryId effect reset (no clear)",
+      "group": "cta_enabled_after_persona_and_query",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTA gates: persona AND query \u2014 no third condition",
+      "group": "cta_enabled_after_persona_and_query",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleStartDemo gates only enlPersona and selectedQuery",
+      "group": "guided_start_direct_after_cta",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleStartDemo sets demoActive(true) after gates",
+      "group": "guided_start_direct_after_cta",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No second persona gate in handleStartDemo",
+      "group": "guided_start_direct_after_cta",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No setEnlPersona in handleStartDemo \u2014 no persona mutation",
+      "group": "guided_start_direct_after_cta",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Guided flow from PERSONA_GUIDED_FLOWS initialized in handleStartDemo",
+      "group": "guided_start_direct_after_cta",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle: demoComplete alone gates all non-persona [amendment 7]",
+      "group": "post_completion_panels_locked_except_persona",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Post-completion lock does not depend on enlPersona condition [amendment 7]",
+      "group": "post_completion_panels_locked_except_persona",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona exempt from lock via panelId !== 'persona'",
+      "group": "post_completion_panels_locked_except_persona",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Situation in openPanels at terminal (canonical entry)",
+      "group": "post_completion_panels_locked_except_persona",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "demoComplete=true at terminal activates lock",
+      "group": "post_completion_panels_locked_except_persona",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Signals panel toggle calls handleToggle",
+      "group": "why_panel_locked_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle blocks 'signals' when demoComplete",
+      "group": "why_panel_locked_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Signals panel id='signals' in render",
+      "group": "why_panel_locked_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No direct signals open bypassing handleToggle",
+      "group": "why_panel_locked_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "openPanels guards signals panel expansion",
+      "group": "why_panel_locked_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Narrative panel toggle calls handleToggle",
+      "group": "so_what_locked_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle blocks 'narrative' when demoComplete",
+      "group": "so_what_locked_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Narrative panel id='narrative' in render",
+      "group": "so_what_locked_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "openPanels guards narrative expansion",
+      "group": "so_what_locked_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No direct narrative open bypassing handleToggle",
+      "group": "so_what_locked_after_completion",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTRL+K fires on demoActive OR demoComplete",
+      "group": "ctrl_k_works_when_demo_complete",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTRL+K calls handleDemoExit when demoComplete",
+      "group": "ctrl_k_works_when_demo_complete",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTRL+K useEffect includes demoComplete in deps",
+      "group": "ctrl_k_works_when_demo_complete",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit sets demoComplete=false (releases lock)",
+      "group": "ctrl_k_works_when_demo_complete",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTRL+K condition symmetric: demoActive OR demoComplete",
+      "group": "ctrl_k_works_when_demo_complete",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit clears demoActive [ctrl+k path]",
+      "group": "ctrl_k_restores_free_mode_a8",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit clears demoComplete [ctrl+k path]",
+      "group": "ctrl_k_restores_free_mode_a8",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit does NOT clear enlPersona",
+      "group": "ctrl_k_restores_free_mode_a8",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit does NOT clear selectedQuery",
+      "group": "ctrl_k_restores_free_mode_a8",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "After CTRL+K: handleToggle allows all \u2014 demoActive=false demoComplete=false",
+      "group": "ctrl_k_restores_free_mode_a8",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit resets guidedStepIndex to 0",
+      "group": "no_guided_lock_after_ctrl_k",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit resets rawStepActive to false",
+      "group": "no_guided_lock_after_ctrl_k",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit resets selectedFlow to null",
+      "group": "no_guided_lock_after_ctrl_k",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit resets demoStage to 0",
+      "group": "no_guided_lock_after_ctrl_k",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No guided state remains after CTRL+K exit",
+      "group": "no_guided_lock_after_ctrl_k",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle returns early when demoActive (no close possible)",
+      "group": "situation_pinned_during_guided",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleStartDemo setOpenPanels includes 'situation' pin [amendment 9]",
+      "group": "situation_pinned_during_guided",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoNext guided setOpenPanels includes 'situation' pin [amendment 9]",
+      "group": "situation_pinned_during_guided",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Situation panel rendered in JSX (always present)",
+      "group": "situation_pinned_during_guided",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Situation toggle calls handleToggle (cannot fire during demoActive)",
+      "group": "situation_pinned_during_guided",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle has demoActive guard (guided lock)",
+      "group": "panels_locked_pre_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle has demoComplete guard (completion lock)",
+      "group": "panels_locked_pre_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Free mode: both false \u2192 togglePanel called",
+      "group": "panels_locked_pre_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Evidence gated by demoActive in render (pre-demo blocked)",
+      "group": "panels_locked_pre_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Pre-demo evidence message present",
+      "group": "panels_locked_pre_demo",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona-change effect resets guidedStepIndex",
+      "group": "panels_reset_on_persona_change",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona-change effect resets demoComplete on non-null enlPersona",
+      "group": "panels_reset_on_persona_change",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona-change effect resets demoActive when active",
+      "group": "panels_reset_on_persona_change",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona-change effect clears selectedFlow",
+      "group": "panels_reset_on_persona_change",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona-change effect clears rawStepActive",
+      "group": "panels_reset_on_persona_change",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona-change dep array correct",
+      "group": "panels_reset_on_persona_change",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Single handleToggle gates all panel toggles",
+      "group": "no_partial_panel_unlock_states",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No panel has onToggle bypassing handleToggle",
+      "group": "no_partial_panel_unlock_states",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle: single demoActive gate (no per-panel exceptions)",
+      "group": "no_partial_panel_unlock_states",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle: single completion gate (no per-panel partial unlock)",
+      "group": "no_partial_panel_unlock_states",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Evidence panel uses same handleToggle (no special unlock)",
+      "group": "no_partial_panel_unlock_states",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Terminal: setDemoComplete(true)",
+      "group": "loop_closure_invariant_across_runs",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Terminal: setDemoActive(false)",
+      "group": "loop_closure_invariant_across_runs",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Terminal: setEnlPersona(null) \u2014 persona cleared",
+      "group": "loop_closure_invariant_across_runs",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Terminal: setOpenPanels(['situation']) \u2014 canonical reset",
+      "group": "loop_closure_invariant_across_runs",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Terminal: setSelectedQuery NOT called \u2014 query preserved",
+      "group": "loop_closure_invariant_across_runs",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Terminal: persona-change null guard preserves demoComplete=true",
+      "group": "loop_closure_invariant_across_runs",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit clears demoActive",
+      "group": "ctrl_k_restores_full_free_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit clears demoComplete",
+      "group": "ctrl_k_restores_full_free_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit preserves enlPersona",
+      "group": "ctrl_k_restores_full_free_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit preserves selectedQuery",
+      "group": "ctrl_k_restores_full_free_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "After CTRL+K: demoActive=false demoComplete=false \u2192 handleToggle free",
+      "group": "ctrl_k_restores_full_free_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTRL+K does not change enlPersona or selectedQuery (auto-start won't re-fire)",
+      "group": "ctrl_k_restores_full_free_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DemoController onExit={handleDemoExit}",
+      "group": "exit_button_restores_full_free_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit resets all guided state",
+      "group": "exit_button_restores_full_free_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit sets demoActive=false",
+      "group": "exit_button_restores_full_free_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit sets demoComplete=false",
+      "group": "exit_button_restores_full_free_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTRL+K and Exit share same handleDemoExit",
+      "group": "exit_button_restores_full_free_mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start useEffect present with [enlPersona, selectedQuery, demoComplete] deps [51.8R amendment 10 supersedes amendment 9 deps]",
+      "group": "guided_autostarts_on_persona_and_query",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start: guard requires both persona AND query",
+      "group": "guided_autostarts_on_persona_and_query",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start: separate demoActive and demoComplete guards [51.8R amendment 10 supersedes combined guard]",
+      "group": "guided_autostarts_on_persona_and_query",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start: calls setDemoActive(true)",
+      "group": "guided_autostarts_on_persona_and_query",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start: calls setDemoStage(1)",
+      "group": "guided_autostarts_on_persona_and_query",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start: resets guidedStepIndex to 0",
+      "group": "guided_autostarts_on_persona_and_query",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start: situation pinned in setOpenPanels",
+      "group": "guided_autostarts_on_persona_and_query",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start: sets selectedFlow from PERSONA_DEFAULT_FLOW",
+      "group": "guided_autostarts_on_persona_and_query",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start: exitedRef guard present [51.8R amendment 10]",
+      "group": "guided_autostarts_on_persona_and_query",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start effect present \u2014 CTA not required [51.8R amendment 10 supersedes amendment 9 dep string]",
+      "group": "no_cta_required_for_entry",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setDemoActive(true) in auto-start (not only CTA-triggered) [amendment 9]",
+      "group": "no_cta_required_for_entry",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTA button preserved as fallback (disabled without both gates)",
+      "group": "no_cta_required_for_entry",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start deps include demoComplete for post-completion re-entry [51.8R amendment 10 supersedes selectedQuery-only dep check]",
+      "group": "no_cta_required_for_entry",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTRL+K does not re-trigger auto-start (deps unchanged after exit)",
+      "group": "no_cta_required_for_entry",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Query loading block does not clear enlPersona [a8 preserved]",
+      "group": "no_duplicate_persona_selection",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel queryId effect does not reset persona selection [a8 preserved]",
+      "group": "no_duplicate_persona_selection",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PersonaPanel queryId effect does not call onPersonaChange(null) [a8 preserved]",
+      "group": "no_duplicate_persona_selection",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start does not clear persona before starting",
+      "group": "no_duplicate_persona_selection",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona preserved in handleDemoExit (CTRL+K path)",
+      "group": "no_duplicate_persona_selection",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona cleared only at terminal (setEnlPersona(null) in _term5)",
+      "group": "no_duplicate_persona_selection",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "scrollIntoView call present in index.js [amendment 10]",
+      "group": "viewport_aligns_with_active_step",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "scrollIntoView uses smooth behavior",
+      "group": "viewport_aligns_with_active_step",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "scrollIntoView block: 'start' alignment",
+      "group": "viewport_aligns_with_active_step",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Viewport effect: guarded by demoActive",
+      "group": "viewport_aligns_with_active_step",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Viewport effect: uses guidedStepIndex to select step",
+      "group": "viewport_aligns_with_active_step",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Viewport effect: scrolls to step.panelId element",
+      "group": "viewport_aligns_with_active_step",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Viewport effect deps: [demoActive, guidedStepIndex, enlPersona]",
+      "group": "viewport_aligns_with_active_step",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_GUIDED_FLOWS EXECUTIVE has narrative/signals/evidence panels",
+      "group": "step_panel_mapping_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_GUIDED_FLOWS CTO has signals/evidence/narrative panels",
+      "group": "step_panel_mapping_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_GUIDED_FLOWS ANALYST has raw step (rawStep: true)",
+      "group": "step_panel_mapping_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoNext guided path uses stepPanel from step.panelId",
+      "group": "step_panel_mapping_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setOpenPanels in guided step uses ['situation', stepPanel]",
+      "group": "step_panel_mapping_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Situation excluded from step panel mismatch \u2014 pinned separately",
+      "group": "step_panel_mapping_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Viewport scroll targets step.panelId (same as setOpenPanels panel)",
+      "group": "step_panel_mapping_correct",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start deps include demoComplete [amendment 10]",
+      "group": "auto_start_deterministic_across_runs",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "autoStartPrevRef tracks previous persona and query",
+      "group": "auto_start_deterministic_across_runs",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "personaChanged and queryChanged computed in auto-start",
+      "group": "auto_start_deterministic_across_runs",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "autoStartPrevRef updated at start of effect",
+      "group": "auto_start_deterministic_across_runs",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start: demoComplete guard returns early (waits for persona-change effect)",
+      "group": "auto_start_deterministic_across_runs",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start: setDemoActive(true) present (fires for all runs)",
+      "group": "auto_start_deterministic_across_runs",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start: setGuidedStepIndex(0) present (step reset for all runs)",
+      "group": "auto_start_deterministic_across_runs",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start present with demoComplete dep (post-completion runs covered)",
+      "group": "no_cta_required_any_run",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CTA button disabled \u2014 visual fallback only (not required)",
+      "group": "no_cta_required_any_run",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "setDemoActive(true) in auto-start AND handleStartDemo (2 paths)",
+      "group": "no_cta_required_any_run",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start: both guards present (persona + query) [guard is extraction delimiter \u2014 check in idx]",
+      "group": "no_cta_required_any_run",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Terminal persona null \u2192 auto-start guard returns early [in idx]",
+      "group": "no_cta_required_any_run",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "exitedRef declared with useRef(false)",
+      "group": "exit_prevents_auto_restart",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit sets exitedRef.current = true",
+      "group": "exit_prevents_auto_restart",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start: exitedRef guard fires when no persona/query change",
+      "group": "exit_prevents_auto_restart",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start: exitedRef consumed (set false) on suppress",
+      "group": "exit_prevents_auto_restart",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start: exitedRef cleared on genuine selection",
+      "group": "exit_prevents_auto_restart",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "autoStartPrevRef enables persona/query change detection",
+      "group": "exit_prevents_auto_restart",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle free path calls togglePanel (no lock)",
+      "group": "free_mode_has_no_guided_constraints",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle: two locks only \u2014 demoActive and demoComplete",
+      "group": "free_mode_has_no_guided_constraints",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Situation toggle uses handleToggle (not blocked in free mode)",
+      "group": "free_mode_has_no_guided_constraints",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No persistent guided lock after handleDemoExit",
+      "group": "free_mode_has_no_guided_constraints",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle: no per-panel exceptions beyond persona exemption",
+      "group": "free_mode_has_no_guided_constraints",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleStartDemo setOpenPanels always includes situation",
+      "group": "situation_pinned_during_guided_all_steps",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoNext guided setOpenPanels always includes situation",
+      "group": "situation_pinned_during_guided_all_steps",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start setOpenPanels always includes situation",
+      "group": "situation_pinned_during_guided_all_steps",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Terminal setOpenPanels(['situation']) at loop end",
+      "group": "situation_pinned_during_guided_all_steps",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle blocks situation close during demoActive (returns early)",
+      "group": "situation_pinned_during_guided_all_steps",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Situation always in initial openPanels state",
+      "group": "situation_pinned_during_guided_all_steps",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Guided setOpenPanels: max 2 (situation + stepPanel)",
+      "group": "no_multi_panel_open_in_guided",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No setOpenPanels with 3+ panels in guided path",
+      "group": "no_multi_panel_open_in_guided",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No openPanel() called during guided step advancement",
+      "group": "no_multi_panel_open_in_guided",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona auto-open effect: max-2 slice preserved",
+      "group": "no_multi_panel_open_in_guided",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleToggle max-2 in togglePanel (not bypassed in guided)",
+      "group": "no_multi_panel_open_in_guided",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona auto-open effect has guided-mode guard [Post-RUN01 hardening]",
+      "group": "persona_auto_open_guided_blocked",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Guided-mode guard precedes autoPanels lookup in effect",
+      "group": "persona_auto_open_guided_blocked",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona auto-open max-2 slice still present (non-guided path preserved)",
+      "group": "persona_auto_open_guided_blocked",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Persona auto-open effect deps unchanged [enlPersona, demoActive]",
+      "group": "persona_auto_open_guided_blocked",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PERSONA_GUIDED_FLOWS defined in index.js (guard target exists)",
+      "group": "persona_auto_open_guided_blocked",
       "status": "PASS",
       "detail": ""
     }

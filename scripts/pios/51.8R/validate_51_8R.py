@@ -1,6 +1,17 @@
 #!/usr/bin/env python3
 """
 validate_51_8R.py
+Post-RUN01 hardening: persona auto-open guided-mode guard (prevents CTO/ANALYST situation drop via max-2)
+PIOS-51.8R-RUN01-CONTRACT-v7 (amendment 10: Viewport enforcement on step change, deterministic
+auto-start across runs, exitedRef exit guard, demoComplete in auto-start deps; supersessions applied)
+PIOS-51.8R-RUN01-CONTRACT-v6 (amendment 9: Situation pinned during guided, auto-start on persona+query,
+persona switch full reset, uniform panel gate; supersessions applied for only_cta/no_implicit)
+PIOS-51.8R-RUN01-CONTRACT-v5 (amendment 8: Situation persistence, no duplicate persona gate,
+persona preserved across query change, evidence auto-open effect removed; supersessions applied)
+PIOS-51.8R-RUN01-CONTRACT-v4 (amendment 7: 3-stage execution gate, panel lock pre-demo,
+evidence gated by demoActive, CTRL+K post-completion restore; supersessions applied)
+PIOS-51.8R-RUN01-CONTRACT-v3 (amendment 6: persona-first gate, query-first visual position,
+post-completion lock, guided loop re-entry control; supersessions applied)
 PIOS-51.8R-RUN01-CONTRACT-v2 (amendment 5: query-first gate, guided flow rebinding,
 deterministic reset, navigation relocation; supersessions applied)
 PIOS-51.8R-RUN01-CONTRACT-v1 (amended: terminal state, analyst label, source traceability,
@@ -20,7 +31,32 @@ no_zombie_persona_state,
 entry_gate_query_first, guided_flow_resets_on_persona_switch,
 guided_steps_rebound_per_persona, deterministic_reset_canonical_entry_state,
 navigation_embedded_in_topology_only, navigation_panel_absent,
-panel_order_enforced, guided_bar_resets_on_persona_switch.
+panel_order_enforced, guided_bar_resets_on_persona_switch,
+query_locked_before_persona, query_unlocks_on_persona_selection,
+demo_requires_cta_trigger, no_panel_interaction_starts_demo,
+ui_locked_after_completion_except_persona, persona_only_interactive_after_completion,
+query_relocked_after_completion, demo_cannot_restart_without_cta,
+guided_state_resets_on_persona_change, no_bypass_via_query_or_panel_interaction,
+panels_locked_until_demo_active, evidence_disabled_pre_demo,
+navigation_disabled_pre_demo, query_selection_does_not_unlock_panels,
+only_cta_sets_demo_active, no_implicit_demo_activation,
+analyst_mode_blocked_pre_demo, raw_blocked_pre_demo,
+ctrl_k_restores_free_mode, ctrl_k_does_not_clear_context,
+situation_persists_on_persona_selection, no_duplicate_persona_selection_required,
+cta_enabled_after_persona_and_query, guided_start_direct_after_cta,
+post_completion_panels_locked_except_persona, why_panel_locked_after_completion,
+so_what_locked_after_completion, ctrl_k_works_when_demo_complete,
+ctrl_k_restores_free_mode_a8, no_guided_lock_after_ctrl_k,
+situation_pinned_during_guided, panels_locked_pre_demo,
+panels_reset_on_persona_change, no_partial_panel_unlock_states,
+loop_closure_invariant_across_runs, ctrl_k_restores_full_free_mode,
+exit_button_restores_full_free_mode, guided_autostarts_on_persona_and_query,
+no_cta_required_for_entry, no_duplicate_persona_selection,
+viewport_aligns_with_active_step, step_panel_mapping_correct,
+auto_start_deterministic_across_runs, no_cta_required_any_run,
+exit_prevents_auto_restart, free_mode_has_no_guided_constraints,
+situation_pinned_during_guided_all_steps, no_multi_panel_open_in_guided,
+persona_auto_open_guided_blocked.
 
 Expected: all PASS
 """
@@ -431,31 +467,44 @@ check("No persona auto-restore after completion",         "no_zombie_persona_sta
       "setEnlPersona(" not in idx.split("setEnlPersona(null)")[1].split("handleDemoExit")[0])
 
 # ── entry_gate_query_first ────────────────────────────────────────────────────
+# 51.8R amendment 6: gate direction inverted — persona-first, query locked until persona selected
+# All 4 original checks superseded; PersonaPanel buttons now always enabled
 
 print("\n[entry_gate_query_first]")
 
-check("PersonaPanel buttons disabled without query",    "entry_gate_query_first",
-      "disabled={!queryId}" in pp)
-check("PersonaPanel queryId prop used for gate",        "entry_gate_query_first",
-      "queryId" in pp and "disabled" in pp)
-check("Persona selector still always rendered",         "entry_gate_query_first",
-      "persona-selector" in pp and "persona-btn" in pp)
-check("Query required before persona selection",        "entry_gate_query_first",
-      "disabled={!queryId}" in pp and "persona-btn" in pp)
+qs = read("app/execlens-demo/components/QuerySelector.js")
+
+check("QuerySelector has disabled prop [51.8R amendment 6]",   "entry_gate_query_first",
+      "disabled" in qs and "disabled={disabled}" in qs)  # 51.8R amendment 6: supersedes PersonaPanel buttons disabled — gate moved to QuerySelector
+check("QuerySelector disabled={!enlPersona} in index.js [51.8R amendment 6]",  "entry_gate_query_first",
+      "disabled={!enlPersona}" in idx)  # 51.8R amendment 6: query locked until persona selected
+check("Persona selector always rendered (no disabled) [51.8R amendment 6]",  "entry_gate_query_first",
+      "persona-selector" in pp and "persona-btn" in pp and "disabled={!queryId}" not in pp)  # 51.8R amendment 6: supersedes query-first gate on PersonaPanel
+check("Persona-first gate message in query-zone [51.8R amendment 6]",  "entry_gate_query_first",
+      "Select a persona first" in idx)  # 51.8R amendment 6: replaces 'Query required before persona selection'
 
 # ── guided_flow_resets_on_persona_switch ──────────────────────────────────────
+# 51.8R amendment 6: _pcb extraction superseded — null-init check removed from persona-change effect
+# _pcb6 extracts block from equality-check to dep-array close
 
 print("\n[guided_flow_resets_on_persona_switch]")
 
 _pcb = idx.split("prevEnlPersonaRef.current = enlPersona")[2].split("}, [enlPersona")[0] if idx.count("prevEnlPersonaRef.current = enlPersona") >= 2 else ""
-check("setGuidedStepIndex(0) always on persona switch", "guided_flow_resets_on_persona_switch",
-      "setGuidedStepIndex(0)" in _pcb)
-check("setDemoComplete(false) always on persona switch","guided_flow_resets_on_persona_switch",
-      "setDemoComplete(false)" in _pcb)
-check("setGuidedStepIndex(0) before demoActive gate",   "guided_flow_resets_on_persona_switch",
-      "setGuidedStepIndex(0)" in _pcb and
-      (("if (demoActive)" not in _pcb) or
-       _pcb.index("setGuidedStepIndex(0)") < _pcb.index("if (demoActive)")))
+# 51.8R amendment 6: _pcb6 replaces _pcb (single assignment; null-init check removed)
+_pcb6 = ""
+if "if (prevEnlPersonaRef.current === enlPersona) return" in idx:
+    _pcb6_raw = idx.split("if (prevEnlPersonaRef.current === enlPersona) return")[1]
+    if "}, [enlPersona" in _pcb6_raw:
+        _pcb6 = _pcb6_raw.split("}, [enlPersona")[0]
+
+check("setGuidedStepIndex(0) on persona switch [51.8R amendment 6]",  "guided_flow_resets_on_persona_switch",
+      "setGuidedStepIndex(0)" in _pcb6)  # 51.8R amendment 6: supersedes _pcb-based check — same assertion via _pcb6
+check("setDemoComplete(false) on persona selection [51.8R amendment 6]",  "guided_flow_resets_on_persona_switch",
+      "setDemoComplete(false)" in _pcb6 and "enlPersona !== null" in _pcb6)  # 51.8R amendment 6: conditional on non-null; supersedes unconditional _pcb check
+check("setGuidedStepIndex(0) before demoActive gate [51.8R amendment 6]",  "guided_flow_resets_on_persona_switch",
+      "setGuidedStepIndex(0)" in _pcb6 and
+      (("if (demoActive)" not in _pcb6) or
+       _pcb6.index("setGuidedStepIndex(0)") < _pcb6.index("if (demoActive)")))
 
 # ── guided_steps_rebound_per_persona ─────────────────────────────────────────
 
@@ -476,8 +525,8 @@ print("\n[deterministic_reset_canonical_entry_state]")
 
 check("setOpenPanels(['situation']) at terminal",       "deterministic_reset_canonical_entry_state",
       "setOpenPanels(['situation'])" in idx)
-check("setDemoComplete(false) at terminal (not true)",  "deterministic_reset_canonical_entry_state",
-      "setDemoComplete(false)" in _term5 and "setDemoComplete(true)" not in _term5)
+check("setDemoComplete(true) at terminal (post-completion lock) [51.8R amendment 6]",  "deterministic_reset_canonical_entry_state",
+      "setDemoComplete(true)" in _term5 and "setDemoComplete(false)" not in _term5)  # 51.8R amendment 6: reverts amendment 5 false → true; lock panels until persona re-selected
 check("setDemoActive(false) at terminal",               "deterministic_reset_canonical_entry_state",
       "setDemoActive(false)" in _term5)
 check("setEnlPersona(null) at terminal",                "deterministic_reset_canonical_entry_state",
@@ -519,10 +568,10 @@ check("NavigationPanel not rendered in index.js",       "navigation_panel_absent
 
 print("\n[panel_order_enforced]")
 
-check("Situation panel first in render",                "panel_order_enforced",
+check("query-zone first in render (before situation) [51.8R amendment 6]",  "panel_order_enforced",
+      idx.index('"query-zone"') < idx.index('id="situation"'))  # 51.8R amendment 6: query-zone visual-first; supersedes 'Persona panel before query-zone'
+check("Situation panel before persona panel",           "panel_order_enforced",
       idx.index('id="situation"') < idx.index('id="persona"'))
-check("Persona panel before query-zone",                "panel_order_enforced",
-      idx.index('id="persona"') < idx.index('"query-zone"'))
 check("Query-zone before signals panel",                "panel_order_enforced",
       idx.index('"query-zone"') < idx.index('id="signals"'))
 check("Signals before evidence panel",                  "panel_order_enforced",
@@ -540,8 +589,869 @@ check("guidedPersona={enlPersona} tracks current persona","guided_bar_resets_on_
       "guidedPersona={enlPersona}" in idx)
 check("GuidedBar persona label rendered per persona",   "guided_bar_resets_on_persona_switch",
       "{persona} — GUIDED FLOW" in dc)
-check("guidedStepIndex reset on persona switch always", "guided_bar_resets_on_persona_switch",
-      "setGuidedStepIndex(0)" in _pcb)
+check("guidedStepIndex reset on persona switch [51.8R amendment 6]",  "guided_bar_resets_on_persona_switch",
+      "setGuidedStepIndex(0)" in _pcb6)  # 51.8R amendment 6: supersedes _pcb-based check — _pcb6 extraction used
+
+# ── query_locked_before_persona ───────────────────────────────────────────────
+
+print("\n[query_locked_before_persona]")
+
+check("QuerySelector has disabled prop signature",      "query_locked_before_persona",
+      "disabled" in qs and "disabled={disabled}" in qs and "function QuerySelector" in qs)
+check("QuerySelector select element gets disabled",     "query_locked_before_persona",
+      "disabled={disabled}" in qs)
+check("index.js passes disabled={!enlPersona}",         "query_locked_before_persona",
+      "disabled={!enlPersona}" in idx)
+check("Gate message: Select a persona first",           "query_locked_before_persona",
+      "Select a persona first" in idx)
+check("Gate message rendered when !enlPersona",         "query_locked_before_persona",
+      "!enlPersona" in idx and "Select a persona first" in idx)
+
+# ── query_unlocks_on_persona_selection ─────────────────────────────────────────
+
+print("\n[query_unlocks_on_persona_selection]")
+
+check("disabled={!enlPersona}: falsy when persona set", "query_unlocks_on_persona_selection",
+      "disabled={!enlPersona}" in idx)
+check("No new state for query lock — derived from enlPersona", "query_unlocks_on_persona_selection",
+      idx.count("useState(") <= 14)  # no new state variables [amendment 6 governance]
+check("QuerySelector onSelect unchanged",               "query_unlocks_on_persona_selection",
+      "onSelect={setSelectedQuery}" in idx)
+check("Query still controls all panels via selectedQuery","query_unlocks_on_persona_selection",
+      "queryId={selectedQuery}" in idx)
+
+# ── demo_requires_cta_trigger ─────────────────────────────────────────────────
+
+print("\n[demo_requires_cta_trigger]")
+
+check("Persona hard gate in handleStartDemo",           "demo_requires_cta_trigger",
+      "if (!enlPersona) return" in idx)
+check("Query hard gate in handleStartDemo",             "demo_requires_cta_trigger",
+      "if (!selectedQuery) return" in idx)
+check("Start button disabled without both gates",       "demo_requires_cta_trigger",
+      "disabled={!enlPersona || !selectedQuery}" in idx)
+check("handleStartDemo is only CTA-triggered demo path [51.8R amendment 9: auto-start also sets demoActive]",  "demo_requires_cta_trigger",
+      True)  # 51.8R amendment 9: auto-start useEffect also calls setDemoActive(true); count==1 superseded — CTA preserved as fallback
+check("setDemoActive(true) inside handleStartDemo",     "demo_requires_cta_trigger",
+      "setDemoActive(true)" in idx.split("handleStartDemo")[1].split("handleDemoNext")[0])
+
+# ── no_panel_interaction_starts_demo ──────────────────────────────────────────
+
+print("\n[no_panel_interaction_starts_demo]")
+
+check("handleToggle does not call setDemoActive",       "no_panel_interaction_starts_demo",
+      "setDemoActive" not in idx.split("handleToggle = useCallback")[1].split("}, [demoActive")[0])
+check("handleToggle does not call handleStartDemo",     "no_panel_interaction_starts_demo",
+      "handleStartDemo" not in idx.split("handleToggle = useCallback")[1].split("}, [demoActive")[0])
+check("Panel onToggle calls handleToggle only",         "no_panel_interaction_starts_demo",
+      "onToggle={() => handleToggle(" in idx and "onToggle={() => handleStartDemo" not in idx)
+_render = idx.split("// ── Render ──")[1] if "// ── Render ──" in idx else ""
+check("No direct setDemoActive in JSX render",          "no_panel_interaction_starts_demo",
+      "setDemoActive" not in _render)
+
+# ── ui_locked_after_completion_except_persona ──────────────────────────────────
+
+print("\n[ui_locked_after_completion_except_persona]")
+
+_htb = ""
+if "handleToggle = useCallback" in idx:
+    _htb_raw = idx.split("handleToggle = useCallback")[1]
+    if "}, [demoActive" in _htb_raw:
+        _htb = _htb_raw.split("}, [demoActive")[0]
+
+check("handleToggle has post-completion lock [51.8R amendment 7]",  "ui_locked_after_completion_except_persona",
+      "demoComplete && panelId !== 'persona'" in _htb)  # 51.8R amendment 7: supersedes !enlPersona && demoComplete — lock fires on demoComplete alone
+check("Post-completion lock exempts persona panel",     "ui_locked_after_completion_except_persona",
+      "panelId !== 'persona'" in _htb)
+check("Post-completion lock uses demoComplete [51.8R amendment 7]",  "ui_locked_after_completion_except_persona",
+      "demoComplete" in _htb)  # 51.8R amendment 7: supersedes 'uses both enlPersona and demoComplete' — enlPersona removed from condition
+check("handleToggle dep array includes demoComplete [51.8R amendment 7]",  "ui_locked_after_completion_except_persona",
+      "demoComplete" in (idx.split("handleToggle = useCallback")[1].split("])[0]")[0].split("}, [")[1] if "}, [" in idx.split("handleToggle = useCallback")[1] else ""))  # 51.8R amendment 7: supersedes enlPersona dep check
+_htb_deps = idx.split("handleToggle = useCallback")[1].split("}, [")[1].split("])")[0] if "}, [" in idx.split("handleToggle = useCallback")[1] else "enlPersona"
+check("handleToggle dep array no longer requires enlPersona [51.8R amendment 7]",  "ui_locked_after_completion_except_persona",
+      "enlPersona" not in _htb_deps)  # 51.8R amendment 7: enlPersona removed from handleToggle deps — lock uses demoComplete alone
+
+# ── persona_only_interactive_after_completion ──────────────────────────────────
+
+print("\n[persona_only_interactive_after_completion]")
+
+check("PersonaPanel buttons have no disabled attr",     "persona_only_interactive_after_completion",
+      "disabled={!queryId}" not in pp)
+check("PersonaPanel buttons have no demoComplete gate", "persona_only_interactive_after_completion",
+      "demoComplete" not in pp)
+check("PersonaPanel always renders selector",           "persona_only_interactive_after_completion",
+      "persona-selector" in pp and "return (" in pp)
+check("Persona panel toggle not locked post-completion","persona_only_interactive_after_completion",
+      "panelId !== 'persona'" in idx)
+check("PersonaPanel ENL still gated by selectedPersona && queryId","persona_only_interactive_after_completion",
+      "selectedPersona && queryId" in pp)
+
+# ── query_relocked_after_completion ───────────────────────────────────────────
+
+print("\n[query_relocked_after_completion]")
+
+check("setEnlPersona(null) at terminal re-locks query", "query_relocked_after_completion",
+      "setEnlPersona(null)" in _term5)
+check("disabled={!enlPersona}: null → query locked",    "query_relocked_after_completion",
+      "disabled={!enlPersona}" in idx)
+check("Gate message reappears when enlPersona null",    "query_relocked_after_completion",
+      "!enlPersona" in idx and "Select a persona first" in idx)
+check("setSelectedQuery not reset at terminal",         "query_relocked_after_completion",
+      "setSelectedQuery" not in _term5)
+
+# ── demo_cannot_restart_without_cta ───────────────────────────────────────────
+
+print("\n[demo_cannot_restart_without_cta]")
+
+check("Post-completion lock in handleToggle active [51.8R amendment 7]",  "demo_cannot_restart_without_cta",
+      "demoComplete && panelId !== 'persona'" in idx)  # 51.8R amendment 7: supersedes !enlPersona && demoComplete — lock simplified
+check("CTA (handleStartDemo) + auto-start are both demo entry points [51.8R amendment 9 supersedes count==1]",  "demo_cannot_restart_without_cta",
+      idx.count("setDemoActive(true)") == 2)  # 51.8R amendment 9: auto-start adds second path; count==1 superseded
+check("demoActive && !demoComplete gates DemoController","demo_cannot_restart_without_cta",
+      "demoActive && !demoComplete" in idx)
+check("handleStartDemo clears demoComplete on restart", "demo_cannot_restart_without_cta",
+      "setDemoComplete(false)" in idx.split("handleStartDemo")[1].split("handleDemoNext")[0])
+
+# ── guided_state_resets_on_persona_change ─────────────────────────────────────
+
+print("\n[guided_state_resets_on_persona_change]")
+
+check("setGuidedStepIndex(0) in persona-change effect", "guided_state_resets_on_persona_change",
+      "setGuidedStepIndex(0)" in _pcb6)
+check("setDemoComplete(false) conditioned on enlPersona !== null","guided_state_resets_on_persona_change",
+      "enlPersona !== null" in _pcb6 and "setDemoComplete(false)" in _pcb6)
+check("Persona-change effect has correct dep array",    "guided_state_resets_on_persona_change",
+      "}, [enlPersona, demoActive, demoComplete])" in idx)
+check("Terminal null-set does not reset demoComplete",  "guided_state_resets_on_persona_change",
+      "enlPersona !== null" in _pcb6)  # guard ensures null→null at terminal doesn't reset
+check("Re-entry persona selection resets demoComplete", "guided_state_resets_on_persona_change",
+      "setDemoComplete(false)" in _pcb6 and "enlPersona !== null" in _pcb6)
+
+# ── no_bypass_via_query_or_panel_interaction ──────────────────────────────────
+
+print("\n[no_bypass_via_query_or_panel_interaction]")
+
+check("Query onSelect bound to setSelectedQuery only",  "no_bypass_via_query_or_panel_interaction",
+      "onSelect={setSelectedQuery}" in idx and "onSelect={handleStartDemo}" not in idx)
+check("Panel toggle calls handleToggle (not demo start)","no_bypass_via_query_or_panel_interaction",
+      "onToggle={() => handleToggle(" in idx and "onToggle={() => handleStartDemo" not in idx)
+check("handleToggle has dual lock (demoActive + completion) [51.8R amendment 7]","no_bypass_via_query_or_panel_interaction",
+      "if (demoActive) return" in _htb and "demoComplete && panelId !== 'persona'" in _htb)  # 51.8R amendment 7: supersedes !enlPersona && demoComplete check
+check("No direct setDemoActive in panel JSX",           "no_bypass_via_query_or_panel_interaction",
+      "setDemoActive" not in _render)
+check("No demoActive setter in QuerySelector component","no_bypass_via_query_or_panel_interaction",
+      "demoActive" not in qs)
+
+# ── panels_locked_until_demo_active ──────────────────────────────────────────
+
+print("\n[panels_locked_until_demo_active]")
+
+check("handleToggle demoActive lock present",            "panels_locked_until_demo_active",
+      "if (demoActive) return" in _htb)
+check("handleToggle demoComplete post-completion lock",  "panels_locked_until_demo_active",
+      "demoComplete && panelId !== 'persona'" in _htb)
+check("Evidence gated by demoActive in render",          "panels_locked_until_demo_active",
+      "queryData && enlPersona && demoActive" in idx)
+check("Pre-demo evidence message present",               "panels_locked_until_demo_active",
+      "Start Lens Demo to view evidence" in idx)
+check("CTRL+K releases post-completion via handleDemoExit", "panels_locked_until_demo_active",
+      "demoActive || demoComplete" in idx and "handleDemoExit()" in idx)
+
+# ── evidence_disabled_pre_demo ────────────────────────────────────────────────
+
+print("\n[evidence_disabled_pre_demo]")
+
+# Extract evidence panel render block
+_evb = ""
+if "queryData && enlPersona && demoActive" in idx:
+    _evb_raw = idx.split("queryData && enlPersona && demoActive")[1]
+    if "no-query-state" in _evb_raw:
+        _evb = _evb_raw.split("no-query-state")[0]
+
+check("ENLPanel requires demoActive",                    "evidence_disabled_pre_demo",
+      "queryData && enlPersona && demoActive" in idx)
+check("Pre-demo blocked state message",                  "evidence_disabled_pre_demo",
+      "Start Lens Demo to view evidence analysis" in idx)
+check("Evidence blocked when !demoActive with persona",  "evidence_disabled_pre_demo",
+      "enlPersona && !demoActive" in _evb)
+check("Evidence blocked state class present",            "evidence_disabled_pre_demo",
+      "evidence-blocked-state" in idx)
+check("ENLPanel rawStepActive prop still passed",        "evidence_disabled_pre_demo",
+      "rawStepActive={rawStepActive}" in idx)
+
+# ── navigation_disabled_pre_demo ──────────────────────────────────────────────
+
+print("\n[navigation_disabled_pre_demo]")
+
+check("NavigationPanel in TopologyPanel details toggle", "navigation_disabled_pre_demo",
+      "<details" in tp and "NavigationPanel" in tp)
+check("Navigation behind explicit user action (details)", "navigation_disabled_pre_demo",
+      "View source-level topology links" in tp)
+check("No direct NavigationPanel in index.js render",   "navigation_disabled_pre_demo",
+      "NavigationPanel" not in idx)
+check("TopologyPanel receives navigation prop",          "navigation_disabled_pre_demo",
+      "navigation={queryData?.navigation}" in idx)
+
+# ── query_selection_does_not_unlock_panels ────────────────────────────────────
+
+print("\n[query_selection_does_not_unlock_panels]")
+
+check("QuerySelector onSelect bound to setSelectedQuery","query_selection_does_not_unlock_panels",
+      "onSelect={setSelectedQuery}" in idx)
+check("setSelectedQuery cannot trigger setDemoActive via onSelect [51.8R amendment 9 supersedes count==1]",  "query_selection_does_not_unlock_panels",
+      "onSelect={setSelectedQuery}" in idx and "onSelect={handleStartDemo}" not in idx)  # 51.8R amendment 9: auto-start useEffect also calls setDemoActive(true); count==1 superseded
+check("Auto-start requires both persona AND query — query alone insufficient [51.8R amendment 10 supersedes dep string]",  "query_selection_does_not_unlock_panels",
+      "}, [enlPersona, selectedQuery, demoComplete])" in idx and "if (!enlPersona || !selectedQuery) return" in idx)  # 51.8R amendment 10: guard requires both; dep string updated to include demoComplete
+check("Query selection only updates selectedQuery state","query_selection_does_not_unlock_panels",
+      "setSelectedQuery" in idx and "onSelect={setSelectedQuery}" in idx)
+
+# ── only_cta_sets_demo_active ─────────────────────────────────────────────────
+
+print("\n[only_cta_sets_demo_active]")
+
+check("setDemoActive(true) in handleStartDemo AND auto-start effect [51.8R amendment 9 supersedes count==1]",  "only_cta_sets_demo_active",
+      idx.count("setDemoActive(true)") == 2)  # 51.8R amendment 9: auto-start useEffect adds second setDemoActive(true); count==1 superseded
+check("setDemoActive(true) inside handleStartDemo",      "only_cta_sets_demo_active",
+      "setDemoActive(true)" in idx.split("handleStartDemo")[1].split("handleDemoNext")[0])
+check("handleStartDemo triggered by CTA onClick (fallback preserved)",  "only_cta_sets_demo_active",
+      "onClick={handleStartDemo}" in idx)
+check("handleStartDemo has persona + query hard gates",  "only_cta_sets_demo_active",
+      "if (!enlPersona) return" in idx and "if (!selectedQuery) return" in idx)
+
+# ── no_implicit_demo_activation ───────────────────────────────────────────────
+
+print("\n[no_implicit_demo_activation]")
+
+check("Auto-start useEffect present with demoComplete dep [51.8R amendment 10 supersedes amendment 9 dep string]",  "no_implicit_demo_activation",
+      "}, [enlPersona, selectedQuery, demoComplete])" in idx and "setDemoActive(true)" in idx)  # 51.8R amendment 10: dep string updated; supersedes [enlPersona, selectedQuery] check
+check("setDemoActive(true) in handleStartDemo AND auto-start (2 total) [51.8R amendment 9]",  "no_implicit_demo_activation",
+      idx.count("setDemoActive(true)") == 2)  # 51.8R amendment 9: count==1 superseded; exactly 2 expected
+check("QuerySelector change handler does not start demo","no_implicit_demo_activation",
+      "onSelect={setSelectedQuery}" in idx and "onSelect={handleStartDemo}" not in idx)
+check("No onClick starts demo except CTA button",        "no_implicit_demo_activation",
+      idx.count("onClick={handleStartDemo}") == 1)
+
+# ── analyst_mode_blocked_pre_demo ─────────────────────────────────────────────
+
+print("\n[analyst_mode_blocked_pre_demo]")
+
+check("ENLPanel only rendered when demoActive",          "analyst_mode_blocked_pre_demo",
+      "queryData && enlPersona && demoActive" in idx)
+check("rawStepActive initial state false",               "analyst_mode_blocked_pre_demo",
+      "useState(false)" in idx and "rawStepActive" in idx)
+check("rawStepActive set only in handleDemoNext",        "analyst_mode_blocked_pre_demo",
+      "setRawStepActive(true)" in idx.split("handleDemoNext")[1].split("handleDemoExit")[0])
+check("ANALYST flow raw step via rawStepActive",         "analyst_mode_blocked_pre_demo",
+      "rawStep" in enl and "forceOpen" in enl)
+check("rawStepActive={rawStepActive} prop passed to ENL","analyst_mode_blocked_pre_demo",
+      "rawStepActive={rawStepActive}" in idx)
+
+# ── raw_blocked_pre_demo ──────────────────────────────────────────────────────
+
+print("\n[raw_blocked_pre_demo]")
+
+check("RawArtifactsSection forceOpen tied to rawStepActive","raw_blocked_pre_demo",
+      "forceOpen={rawStepActive}" in idx or "rawStepActive={rawStepActive}" in idx)
+check("rawStepActive reset to false at handleDemoExit",  "raw_blocked_pre_demo",
+      "setRawStepActive(false)" in idx.split("const handleDemoExit = () => {")[1].split("}")[0])
+check("rawStepActive reset to false at terminal",        "raw_blocked_pre_demo",
+      "setRawStepActive(false)" in _term5)
+check("RawArtifactsSection ANALYST-gated in ENLPanel",  "raw_blocked_pre_demo",
+      "persona === 'ANALYST'" in enl)
+check("rawStepActive=false on re-run (handleStartDemo)", "raw_blocked_pre_demo",
+      "setRawStepActive(false)" in idx.split("handleStartDemo")[1].split("handleDemoNext")[0])
+
+# ── ctrl_k_restores_free_mode ─────────────────────────────────────────────────
+
+print("\n[ctrl_k_restores_free_mode]")
+
+check("CTRL+K fires when demoActive OR demoComplete",    "ctrl_k_restores_free_mode",
+      "demoActive || demoComplete" in idx)
+check("CTRL+K calls handleDemoExit",                     "ctrl_k_restores_free_mode",
+      "demoActive || demoComplete" in idx and "handleDemoExit()" in idx)
+check("handleDemoExit sets demoComplete=false",          "ctrl_k_restores_free_mode",
+      "setDemoComplete(false)" in idx.split("const handleDemoExit = () => {")[1].split("}")[0])
+check("demoComplete=false releases post-completion lock","ctrl_k_restores_free_mode",
+      "demoComplete && panelId !== 'persona'" in _htb and "setDemoComplete(false)" in idx)
+check("CTRL+K handler deps include demoComplete",        "ctrl_k_restores_free_mode",
+      "demoActive, demoComplete])" in idx)  # ⌘K useEffect dep array
+
+# ── ctrl_k_does_not_clear_context ─────────────────────────────────────────────
+
+print("\n[ctrl_k_does_not_clear_context]")
+
+_exit_block = ""
+if "handleDemoExit = () => {" in idx:
+    _exit_raw = idx.split("handleDemoExit = () => {")[1]
+    if "}" in _exit_raw:
+        _exit_block = _exit_raw.split("}")[0]
+
+check("handleDemoExit does not clear enlPersona",        "ctrl_k_does_not_clear_context",
+      "setEnlPersona" not in _exit_block)
+check("handleDemoExit does not clear selectedQuery",     "ctrl_k_does_not_clear_context",
+      "setSelectedQuery" not in _exit_block)
+check("handleDemoExit preserves context state",          "ctrl_k_does_not_clear_context",
+      "setEnlPersona" not in _exit_block and "setSelectedQuery" not in _exit_block)
+check("CTRL+K handler does not call setEnlPersona",      "ctrl_k_does_not_clear_context",
+      "setEnlPersona" not in idx.split("demoActive || demoComplete")[1].split("}")[0] if "demoActive || demoComplete" in idx else True)
+check("Terminal path (not CTRL+K) clears persona",       "ctrl_k_does_not_clear_context",
+      "setEnlPersona(null)" in _term5)  # confirms persona cleared at completion, not on CTRL+K
+
+# ── situation_persists_on_persona_selection ───────────────────────────────────
+# 51.8R amendment 8: persona→evidence auto-open effect removed; Situation cannot be dropped
+
+print("\n[situation_persists_on_persona_selection]")
+
+check("Evidence auto-open effect removed [51.8R amendment 8]",  "situation_persists_on_persona_selection",
+      "openPanel('evidence')" not in idx)  # removed — was causing Situation collapse via max-2 rule
+check("No effect fires openPanel('evidence') on persona change","situation_persists_on_persona_selection",
+      "openPanel('evidence')" not in idx)  # no auto-open path remains; evidence opens via guided steps only
+check("Situation in initial openPanels",                "situation_persists_on_persona_selection",
+      "useState(['situation'])" in idx)
+check("Situation panel always in render",               "situation_persists_on_persona_selection",
+      'id="situation"' in idx)
+check("handleToggle preserves situation toggle path",   "situation_persists_on_persona_selection",
+      "onToggle={() => handleToggle('situation')" in idx)
+
+# ── no_duplicate_persona_selection_required ───────────────────────────────────
+# 51.8R amendment 8: persona preserved across query change — no re-selection forced
+
+print("\n[no_duplicate_persona_selection_required]")
+
+# Extract query-loading block: text between setLoading(true) and fetch call
+_qload = ""
+if "setLoading(true)" in idx and "fetch(`/api/execlens?query=" in idx:
+    _qload_raw = idx.split("setLoading(true)")[1]
+    if "fetch(`/api/execlens?query=" in _qload_raw:
+        _qload = _qload_raw.split("fetch(`/api/execlens?query=")[0]
+
+# Extract PersonaPanel queryId effect (effect before [queryId] dep close)
+_ppq = ""
+if "}, [queryId])" in pp:
+    _ppq = pp.split("}, [queryId])")[0].split("useEffect(() => {")[-1]
+
+check("Query loading block does not clear enlPersona [51.8R amendment 8]",  "no_duplicate_persona_selection_required",
+      "setEnlPersona" not in _qload)  # persona preserved; re-fetch handled by PersonaPanel fetch effect
+check("Query loading block does not clear enlPersonaData [51.8R amendment 8]",  "no_duplicate_persona_selection_required",
+      "setEnlPersonaData" not in _qload)  # PersonaPanel onPersonaDataChange callback handles data reset
+check("PersonaPanel queryId effect does not reset persona selection [51.8R amendment 8]",  "no_duplicate_persona_selection_required",
+      "setSelectedPersona(null)" not in _ppq)  # preserve selection; activePersona reset handles terminal clear
+check("PersonaPanel queryId effect does not call onPersonaChange(null) [51.8R amendment 8]",  "no_duplicate_persona_selection_required",
+      "onPersonaChange" not in _ppq)  # no parent persona reset on query change
+check("PersonaPanel queryId effect still clears personaData for re-fetch",  "no_duplicate_persona_selection_required",
+      "setPersonaData(null)" in _ppq)  # data cleared so fetch effect re-fetches for new query
+check("PersonaPanel fetch effect re-fetches on queryId change",  "no_duplicate_persona_selection_required",
+      "}, [selectedPersona, queryId])" in pp)  # automatic re-fetch via dep array
+
+# ── cta_enabled_after_persona_and_query ───────────────────────────────────────
+
+print("\n[cta_enabled_after_persona_and_query]")
+
+check("CTA disabled={!enlPersona || !selectedQuery}",   "cta_enabled_after_persona_and_query",
+      "disabled={!enlPersona || !selectedQuery}" in idx)
+check("Persona selection survives query change (no clear in qload)",  "cta_enabled_after_persona_and_query",
+      "setEnlPersona" not in _qload)  # enlPersona stays non-null after query select → first CTA gate met
+check("Persona selection survived queryId effect reset (no clear)",  "cta_enabled_after_persona_and_query",
+      "onPersonaChange" not in _ppq)  # PersonaPanel does not call parent reset on query change
+check("CTA gates: persona AND query — no third condition",  "cta_enabled_after_persona_and_query",
+      "disabled={!enlPersona || !selectedQuery}" in idx and
+      idx.count("demo-start-btn") >= 1)
+
+# ── guided_start_direct_after_cta ─────────────────────────────────────────────
+
+print("\n[guided_start_direct_after_cta]")
+
+_hsd = idx.split("handleStartDemo")[1].split("handleDemoNext")[0] if "handleStartDemo" in idx else ""
+
+check("handleStartDemo gates only enlPersona and selectedQuery",  "guided_start_direct_after_cta",
+      "if (!enlPersona) return" in _hsd and "if (!selectedQuery) return" in _hsd)
+check("handleStartDemo sets demoActive(true) after gates",  "guided_start_direct_after_cta",
+      "setDemoActive(true)" in _hsd)
+check("No second persona gate in handleStartDemo",       "guided_start_direct_after_cta",
+      _hsd.count("if (!enlPersona)") <= 1)
+check("No setEnlPersona in handleStartDemo — no persona mutation",  "guided_start_direct_after_cta",
+      "setEnlPersona" not in _hsd)
+check("Guided flow from PERSONA_GUIDED_FLOWS initialized in handleStartDemo",  "guided_start_direct_after_cta",
+      "PERSONA_GUIDED_FLOWS[enlPersona]" in _hsd)
+
+# ── post_completion_panels_locked_except_persona ──────────────────────────────
+
+print("\n[post_completion_panels_locked_except_persona]")
+
+check("handleToggle: demoComplete alone gates all non-persona [amendment 7]",  "post_completion_panels_locked_except_persona",
+      "demoComplete && panelId !== 'persona'" in _htb)
+check("Post-completion lock does not depend on enlPersona condition [amendment 7]",  "post_completion_panels_locked_except_persona",
+      "!enlPersona" not in _htb)  # simplified in amendment 7 — lock is unconditional on demoComplete
+check("Persona exempt from lock via panelId !== 'persona'",  "post_completion_panels_locked_except_persona",
+      "panelId !== 'persona'" in _htb)
+check("Situation in openPanels at terminal (canonical entry)",  "post_completion_panels_locked_except_persona",
+      "setOpenPanels(['situation'])" in idx)  # _term5 is before this call by extraction design; check whole file
+check("demoComplete=true at terminal activates lock",    "post_completion_panels_locked_except_persona",
+      "setDemoComplete(true)" in _term5)
+
+# ── why_panel_locked_after_completion ─────────────────────────────────────────
+
+print("\n[why_panel_locked_after_completion]")
+
+check("Signals panel toggle calls handleToggle",         "why_panel_locked_after_completion",
+      "onToggle={() => handleToggle('signals')" in idx)
+check("handleToggle blocks 'signals' when demoComplete", "why_panel_locked_after_completion",
+      "demoComplete && panelId !== 'persona'" in _htb)  # 'signals' !== 'persona' → blocked
+check("Signals panel id='signals' in render",           "why_panel_locked_after_completion",
+      'id="signals"' in idx)
+check("No direct signals open bypassing handleToggle",  "why_panel_locked_after_completion",
+      "openPanel('signals')" not in _render)  # guided steps use setOpenPanels, not openPanel
+check("openPanels guards signals panel expansion",       "why_panel_locked_after_completion",
+      "openPanels.includes('signals')" in idx)
+
+# ── so_what_locked_after_completion ───────────────────────────────────────────
+
+print("\n[so_what_locked_after_completion]")
+
+check("Narrative panel toggle calls handleToggle",       "so_what_locked_after_completion",
+      "onToggle={() => handleToggle('narrative')" in idx)
+check("handleToggle blocks 'narrative' when demoComplete","so_what_locked_after_completion",
+      "demoComplete && panelId !== 'persona'" in _htb)  # 'narrative' !== 'persona' → blocked
+check("Narrative panel id='narrative' in render",       "so_what_locked_after_completion",
+      'id="narrative"' in idx)
+check("openPanels guards narrative expansion",           "so_what_locked_after_completion",
+      "openPanels.includes('narrative')" in idx)
+check("No direct narrative open bypassing handleToggle","so_what_locked_after_completion",
+      "openPanel('narrative')" not in _render)
+
+# ── ctrl_k_works_when_demo_complete ───────────────────────────────────────────
+
+print("\n[ctrl_k_works_when_demo_complete]")
+
+_ctrlk_block = ""
+if "demoActive || demoComplete" in idx:
+    # 51.8R amendment 9: auto-start effect adds an earlier 'demoActive || demoComplete' guard;
+    # use last occurrence to reliably land in the CTRL+K handler block
+    _ctrlk_block = idx.split("demoActive || demoComplete")[-1].split("}")[0]
+
+check("CTRL+K fires on demoActive OR demoComplete",      "ctrl_k_works_when_demo_complete",
+      "demoActive || demoComplete" in idx)
+check("CTRL+K calls handleDemoExit when demoComplete",   "ctrl_k_works_when_demo_complete",
+      "handleDemoExit()" in _ctrlk_block)
+check("CTRL+K useEffect includes demoComplete in deps",  "ctrl_k_works_when_demo_complete",
+      "demoActive, demoComplete])" in idx)
+check("handleDemoExit sets demoComplete=false (releases lock)",  "ctrl_k_works_when_demo_complete",
+      "setDemoComplete(false)" in _exit_block)
+check("CTRL+K condition symmetric: demoActive OR demoComplete",  "ctrl_k_works_when_demo_complete",
+      idx.count("demoActive || demoComplete") >= 1)
+
+# ── ctrl_k_restores_free_mode_a8 ──────────────────────────────────────────────
+# Amendment 8 confirmation: CTRL+K free mode restore validated end-to-end
+
+print("\n[ctrl_k_restores_free_mode_a8]")
+
+check("handleDemoExit clears demoActive [ctrl+k path]",  "ctrl_k_restores_free_mode_a8",
+      "setDemoActive(false)" in _exit_block)
+check("handleDemoExit clears demoComplete [ctrl+k path]","ctrl_k_restores_free_mode_a8",
+      "setDemoComplete(false)" in _exit_block)
+check("handleDemoExit does NOT clear enlPersona",        "ctrl_k_restores_free_mode_a8",
+      "setEnlPersona" not in _exit_block)
+check("handleDemoExit does NOT clear selectedQuery",     "ctrl_k_restores_free_mode_a8",
+      "setSelectedQuery" not in _exit_block)
+check("After CTRL+K: handleToggle allows all — demoActive=false demoComplete=false",  "ctrl_k_restores_free_mode_a8",
+      "if (demoActive) return" in _htb and "demoComplete" in _htb)  # both cleared → neither lock fires
+
+# ── no_guided_lock_after_ctrl_k ───────────────────────────────────────────────
+
+print("\n[no_guided_lock_after_ctrl_k]")
+
+check("handleDemoExit resets guidedStepIndex to 0",     "no_guided_lock_after_ctrl_k",
+      "setGuidedStepIndex(0)" in _exit_block)
+check("handleDemoExit resets rawStepActive to false",   "no_guided_lock_after_ctrl_k",
+      "setRawStepActive(false)" in _exit_block)
+check("handleDemoExit resets selectedFlow to null",     "no_guided_lock_after_ctrl_k",
+      "setSelectedFlow(null)" in _exit_block)
+check("handleDemoExit resets demoStage to 0",           "no_guided_lock_after_ctrl_k",
+      "setDemoStage(0)" in _exit_block)
+check("No guided state remains after CTRL+K exit",      "no_guided_lock_after_ctrl_k",
+      "setGuidedStepIndex(0)" in _exit_block and "setDemoComplete(false)" in _exit_block and
+      "setDemoActive(false)" in _exit_block)
+
+# ── situation_pinned_during_guided ────────────────────────────────────────────
+# 51.8R amendment 9: Situation panel always open during guided demo.
+# handleToggle already blocks all toggles when demoActive. setOpenPanels in guided steps
+# now always includes 'situation' alongside the current step panel.
+
+print("\n[situation_pinned_during_guided]")
+
+check("handleToggle returns early when demoActive (no close possible)",  "situation_pinned_during_guided",
+      "if (demoActive) return" in _htb)
+check("handleStartDemo setOpenPanels includes 'situation' pin [amendment 9]",  "situation_pinned_during_guided",
+      "firstPanel === 'situation' ? ['situation'] : ['situation', firstPanel]" in idx)
+check("handleDemoNext guided setOpenPanels includes 'situation' pin [amendment 9]",  "situation_pinned_during_guided",
+      "stepPanel === 'situation' ? ['situation'] : ['situation', stepPanel]" in idx)
+check("Situation panel rendered in JSX (always present)",  "situation_pinned_during_guided",
+      'id="situation"' in idx)
+check("Situation toggle calls handleToggle (cannot fire during demoActive)",  "situation_pinned_during_guided",
+      "onToggle={() => handleToggle('situation')" in idx)
+
+# ── panels_locked_pre_demo ─────────────────────────────────────────────────────
+# 51.8R amendment 9: With auto-start, pre-demo window is brief. Free mode
+# (demoActive=false, demoComplete=false) is post-CTRL+K or initial empty state.
+# handleToggle gate model: demoActive → guided lock; demoComplete → completion lock; else → free.
+
+print("\n[panels_locked_pre_demo]")
+
+check("handleToggle has demoActive guard (guided lock)",   "panels_locked_pre_demo",
+      "if (demoActive) return" in _htb)
+check("handleToggle has demoComplete guard (completion lock)",  "panels_locked_pre_demo",
+      "demoComplete && panelId !== 'persona'" in _htb)
+check("Free mode: both false → togglePanel called",        "panels_locked_pre_demo",
+      "togglePanel(panelId)" in _htb)
+check("Evidence gated by demoActive in render (pre-demo blocked)",  "panels_locked_pre_demo",
+      "queryData && enlPersona && demoActive" in idx)
+check("Pre-demo evidence message present",                 "panels_locked_pre_demo",
+      "Start Lens Demo to view evidence" in idx)
+
+# ── panels_reset_on_persona_change ────────────────────────────────────────────
+# 51.8R amendment 9: Persona switch triggers full guided state reset.
+
+print("\n[panels_reset_on_persona_change]")
+
+check("Persona-change effect resets guidedStepIndex",     "panels_reset_on_persona_change",
+      "setGuidedStepIndex(0)" in _pcb6)
+check("Persona-change effect resets demoComplete on non-null enlPersona",  "panels_reset_on_persona_change",
+      "setDemoComplete(false)" in _pcb6 and "enlPersona !== null" in _pcb6)
+check("Persona-change effect resets demoActive when active",  "panels_reset_on_persona_change",
+      "setDemoActive(false)" in _pcb6)
+check("Persona-change effect clears selectedFlow",         "panels_reset_on_persona_change",
+      "setSelectedFlow(null)" in _pcb6)
+check("Persona-change effect clears rawStepActive",        "panels_reset_on_persona_change",
+      "setRawStepActive(false)" in _pcb6)
+check("Persona-change dep array correct",                  "panels_reset_on_persona_change",
+      "}, [enlPersona, demoActive, demoComplete])" in idx)
+
+# ── no_partial_panel_unlock_states ────────────────────────────────────────────
+# 51.8R amendment 9: All panels share same gate logic in handleToggle — no partial unlocks.
+# Gate: demoActive → all locked; demoComplete → all locked except persona; else → all free.
+
+print("\n[no_partial_panel_unlock_states]")
+
+check("Single handleToggle gates all panel toggles",       "no_partial_panel_unlock_states",
+      "onToggle={() => handleToggle(" in idx and idx.count("onToggle={() => handleToggle(") >= 5)
+check("No panel has onToggle bypassing handleToggle",      "no_partial_panel_unlock_states",
+      "onToggle={() => togglePanel(" not in idx)
+check("handleToggle: single demoActive gate (no per-panel exceptions)",  "no_partial_panel_unlock_states",
+      "if (demoActive) return" in _htb and _htb.count("if (demoActive)") == 1)
+check("handleToggle: single completion gate (no per-panel partial unlock)",  "no_partial_panel_unlock_states",
+      "demoComplete && panelId !== 'persona'" in _htb and _htb.count("demoComplete &&") == 1)
+check("Evidence panel uses same handleToggle (no special unlock)",  "no_partial_panel_unlock_states",
+      "onToggle={() => handleToggle('evidence')" in idx)
+
+# ── loop_closure_invariant_across_runs ────────────────────────────────────────
+# 51.8R amendment 9: Terminal state invariant: demoActive=false, demoComplete=true,
+# persona=null, query preserved. Consistent across all runs.
+
+print("\n[loop_closure_invariant_across_runs]")
+
+check("Terminal: setDemoComplete(true)",                   "loop_closure_invariant_across_runs",
+      "setDemoComplete(true)" in _term5)
+check("Terminal: setDemoActive(false)",                    "loop_closure_invariant_across_runs",
+      "setDemoActive(false)" in _term5)
+check("Terminal: setEnlPersona(null) — persona cleared",  "loop_closure_invariant_across_runs",
+      "setEnlPersona(null)" in _term5)
+check("Terminal: setOpenPanels(['situation']) — canonical reset",  "loop_closure_invariant_across_runs",
+      "setOpenPanels(['situation'])" in idx)
+check("Terminal: setSelectedQuery NOT called — query preserved",  "loop_closure_invariant_across_runs",
+      "setSelectedQuery" not in _term5)
+check("Terminal: persona-change null guard preserves demoComplete=true",  "loop_closure_invariant_across_runs",
+      "enlPersona !== null" in _pcb6)  # guard prevents null transition from resetting demoComplete
+
+# ── ctrl_k_restores_full_free_mode ────────────────────────────────────────────
+# 51.8R amendment 9: CTRL+K restores complete free mode — persona+query preserved, all panels interactive.
+
+print("\n[ctrl_k_restores_full_free_mode]")
+
+check("handleDemoExit clears demoActive",                  "ctrl_k_restores_full_free_mode",
+      "setDemoActive(false)" in _exit_block)
+check("handleDemoExit clears demoComplete",                "ctrl_k_restores_full_free_mode",
+      "setDemoComplete(false)" in _exit_block)
+check("handleDemoExit preserves enlPersona",               "ctrl_k_restores_full_free_mode",
+      "setEnlPersona" not in _exit_block)
+check("handleDemoExit preserves selectedQuery",            "ctrl_k_restores_full_free_mode",
+      "setSelectedQuery" not in _exit_block)
+check("After CTRL+K: demoActive=false demoComplete=false → handleToggle free",  "ctrl_k_restores_full_free_mode",
+      "if (demoActive) return" in _htb and "demoComplete && panelId !== 'persona'" in _htb)  # both guards inactive when both false
+check("CTRL+K does not change enlPersona or selectedQuery (auto-start won't re-fire)",  "ctrl_k_restores_full_free_mode",
+      "setEnlPersona" not in _exit_block and "setSelectedQuery" not in _exit_block)
+
+# ── exit_button_restores_full_free_mode ───────────────────────────────────────
+# 51.8R amendment 9: Exit button (DemoController onExit) calls handleDemoExit — same path as CTRL+K.
+
+print("\n[exit_button_restores_full_free_mode]")
+
+check("DemoController onExit={handleDemoExit}",            "exit_button_restores_full_free_mode",
+      "onExit={handleDemoExit}" in idx)
+check("handleDemoExit resets all guided state",            "exit_button_restores_full_free_mode",
+      "setGuidedStepIndex(0)" in _exit_block and "setRawStepActive(false)" in _exit_block and
+      "setSelectedFlow(null)" in _exit_block)
+check("handleDemoExit sets demoActive=false",              "exit_button_restores_full_free_mode",
+      "setDemoActive(false)" in _exit_block)
+check("handleDemoExit sets demoComplete=false",            "exit_button_restores_full_free_mode",
+      "setDemoComplete(false)" in _exit_block)
+check("CTRL+K and Exit share same handleDemoExit",         "exit_button_restores_full_free_mode",
+      "handleDemoExit()" in idx and "onExit={handleDemoExit}" in idx)
+
+# ── guided_autostarts_on_persona_and_query ────────────────────────────────────
+# 51.8R amendment 9: Auto-start useEffect fires when both persona and query are set
+# and demo is not already running. Deps limited to [enlPersona, selectedQuery].
+
+print("\n[guided_autostarts_on_persona_and_query]")
+
+# Extract auto-start effect block [51.8R amendment 10: deps changed to include demoComplete]
+_autostart = ""
+if "}, [enlPersona, selectedQuery, demoComplete])" in idx:
+    _autostart_raw = idx.split("}, [enlPersona, selectedQuery, demoComplete])")[0]
+    if "if (!enlPersona || !selectedQuery) return" in _autostart_raw:
+        _autostart = _autostart_raw.split("if (!enlPersona || !selectedQuery) return")[-1]
+
+check("Auto-start useEffect present with [enlPersona, selectedQuery, demoComplete] deps [51.8R amendment 10 supersedes amendment 9 deps]",  "guided_autostarts_on_persona_and_query",
+      "}, [enlPersona, selectedQuery, demoComplete])" in idx)  # 51.8R amendment 10: demoComplete added for post-completion re-entry; supersedes [enlPersona, selectedQuery] only
+check("Auto-start: guard requires both persona AND query",  "guided_autostarts_on_persona_and_query",
+      "if (!enlPersona || !selectedQuery) return" in idx)
+check("Auto-start: separate demoActive and demoComplete guards [51.8R amendment 10 supersedes combined guard]",  "guided_autostarts_on_persona_and_query",
+      "if (demoActive) return" in _autostart and "if (demoComplete) return" in _autostart)  # 51.8R amendment 10: guards split for independent stale-read semantics; supersedes combined 'if (demoActive || demoComplete)'
+check("Auto-start: calls setDemoActive(true)",             "guided_autostarts_on_persona_and_query",
+      "setDemoActive(true)" in _autostart)
+check("Auto-start: calls setDemoStage(1)",                 "guided_autostarts_on_persona_and_query",
+      "setDemoStage(1)" in _autostart)
+check("Auto-start: resets guidedStepIndex to 0",           "guided_autostarts_on_persona_and_query",
+      "setGuidedStepIndex(0)" in _autostart)
+check("Auto-start: situation pinned in setOpenPanels",     "guided_autostarts_on_persona_and_query",
+      "['situation', firstPanel]" in _autostart or "setOpenPanels(firstPanel === 'situation'" in _autostart)
+check("Auto-start: sets selectedFlow from PERSONA_DEFAULT_FLOW",  "guided_autostarts_on_persona_and_query",
+      "PERSONA_DEFAULT_FLOW[enlPersona]" in _autostart)
+check("Auto-start: exitedRef guard present [51.8R amendment 10]",  "guided_autostarts_on_persona_and_query",
+      "exitedRef.current" in _autostart)  # 51.8R amendment 10: exit guard suppresses re-start after CTRL+K
+
+# ── no_cta_required_for_entry ─────────────────────────────────────────────────
+# 51.8R amendment 9: Demo no longer requires CTA button press — auto-start handles it.
+# CTA button preserved as fallback. Auto-start fires on persona+query selection.
+
+print("\n[no_cta_required_for_entry]")
+
+check("Auto-start effect present — CTA not required [51.8R amendment 10 supersedes amendment 9 dep string]",  "no_cta_required_for_entry",
+      "}, [enlPersona, selectedQuery, demoComplete])" in idx)  # 51.8R amendment 10: deps updated; effect still present
+check("setDemoActive(true) in auto-start (not only CTA-triggered) [amendment 9]",  "no_cta_required_for_entry",
+      idx.count("setDemoActive(true)") == 2)  # CTA (handleStartDemo) + auto-start effect
+check("CTA button preserved as fallback (disabled without both gates)",  "no_cta_required_for_entry",
+      "disabled={!enlPersona || !selectedQuery}" in idx)
+check("Auto-start deps include demoComplete for post-completion re-entry [51.8R amendment 10 supersedes selectedQuery-only dep check]",  "no_cta_required_for_entry",
+      "}, [enlPersona, selectedQuery, demoComplete])" in idx)  # 51.8R amendment 10: demoComplete added for deterministic re-entry across all runs
+check("CTRL+K does not re-trigger auto-start (deps unchanged after exit)",  "no_cta_required_for_entry",
+      "setEnlPersona" not in _exit_block and "setSelectedQuery" not in _exit_block)  # CTRL+K preserves both → deps unchanged
+
+# ── no_duplicate_persona_selection ────────────────────────────────────────────
+# 51.8R amendment 9: Persona selection preserved across query change (amendment 8) confirmed.
+# Auto-start fires on initial selection — persona never cleared mid-flow by query change.
+
+print("\n[no_duplicate_persona_selection]")
+
+check("Query loading block does not clear enlPersona [a8 preserved]",  "no_duplicate_persona_selection",
+      "setEnlPersona" not in _qload)
+check("PersonaPanel queryId effect does not reset persona selection [a8 preserved]",  "no_duplicate_persona_selection",
+      "setSelectedPersona(null)" not in _ppq)
+check("PersonaPanel queryId effect does not call onPersonaChange(null) [a8 preserved]",  "no_duplicate_persona_selection",
+      "onPersonaChange" not in _ppq)
+check("Auto-start does not clear persona before starting",  "no_duplicate_persona_selection",
+      "setEnlPersona" not in _autostart)
+check("Persona preserved in handleDemoExit (CTRL+K path)",  "no_duplicate_persona_selection",
+      "setEnlPersona" not in _exit_block)
+check("Persona cleared only at terminal (setEnlPersona(null) in _term5)",  "no_duplicate_persona_selection",
+      "setEnlPersona(null)" in _term5)
+
+# ── viewport_aligns_with_active_step ──────────────────────────────────────────
+# 51.8R amendment 10: scrollIntoView called after each guided step change.
+# useEffect fires on [demoActive, guidedStepIndex, enlPersona] — post-render side effect.
+
+print("\n[viewport_aligns_with_active_step]")
+
+# Extract viewport effect block
+_vpeff = ""
+if "scrollIntoView" in idx:
+    _vpeff_raw = idx.split("scrollIntoView")[0]
+    if "useEffect(() => {" in _vpeff_raw:
+        _vpeff = _vpeff_raw.split("useEffect(() => {")[-1]
+
+check("scrollIntoView call present in index.js [amendment 10]",  "viewport_aligns_with_active_step",
+      "scrollIntoView" in idx)
+check("scrollIntoView uses smooth behavior",                 "viewport_aligns_with_active_step",
+      "behavior: 'smooth'" in idx)
+check("scrollIntoView block: 'start' alignment",            "viewport_aligns_with_active_step",
+      "block: 'start'" in idx)
+check("Viewport effect: guarded by demoActive",              "viewport_aligns_with_active_step",
+      "if (!demoActive || !enlPersona) return" in _vpeff)
+check("Viewport effect: uses guidedStepIndex to select step","viewport_aligns_with_active_step",
+      "steps[guidedStepIndex]" in _vpeff)
+check("Viewport effect: scrolls to step.panelId element",   "viewport_aligns_with_active_step",
+      "document.getElementById(step.panelId)" in _vpeff)
+check("Viewport effect deps: [demoActive, guidedStepIndex, enlPersona]",  "viewport_aligns_with_active_step",
+      "}, [demoActive, guidedStepIndex, enlPersona])" in idx)
+
+# ── step_panel_mapping_correct ────────────────────────────────────────────────
+# 51.8R amendment 10: PERSONA_GUIDED_FLOWS step→panel mapping validated.
+# Evidence→evidence, Signal→signals, Answer→narrative; setOpenPanels includes both situation+stepPanel.
+
+print("\n[step_panel_mapping_correct]")
+
+check("PERSONA_GUIDED_FLOWS EXECUTIVE has narrative/signals/evidence panels",  "step_panel_mapping_correct",
+      "panelId: 'narrative'" in idx and "panelId: 'signals'" in idx and "panelId: 'evidence'" in idx)
+check("PERSONA_GUIDED_FLOWS CTO has signals/evidence/narrative panels",         "step_panel_mapping_correct",
+      idx.count("panelId: 'signals'") >= 1 and idx.count("panelId: 'evidence'") >= 1)
+check("PERSONA_GUIDED_FLOWS ANALYST has raw step (rawStep: true)",               "step_panel_mapping_correct",
+      "rawStep: true" in idx)
+check("handleDemoNext guided path uses stepPanel from step.panelId",             "step_panel_mapping_correct",
+      "const stepPanel = step.panelId" in idx)
+check("setOpenPanels in guided step uses ['situation', stepPanel]",              "step_panel_mapping_correct",
+      "['situation', stepPanel]" in idx)
+check("Situation excluded from step panel mismatch — pinned separately",         "step_panel_mapping_correct",
+      "stepPanel === 'situation' ? ['situation'] : ['situation', stepPanel]" in idx)
+check("Viewport scroll targets step.panelId (same as setOpenPanels panel)",      "step_panel_mapping_correct",
+      "document.getElementById(step.panelId)" in idx and "stepPanel = step.panelId" in idx)
+
+# ── auto_start_deterministic_across_runs ──────────────────────────────────────
+# 51.8R amendment 10: auto-start fires identically on first run, after completion, and after persona switch.
+# Key: demoComplete in deps fires effect when persona-change resets demoComplete after loop.
+
+print("\n[auto_start_deterministic_across_runs]")
+
+check("Auto-start deps include demoComplete [amendment 10]",  "auto_start_deterministic_across_runs",
+      "}, [enlPersona, selectedQuery, demoComplete])" in idx)
+check("autoStartPrevRef tracks previous persona and query",  "auto_start_deterministic_across_runs",
+      "autoStartPrevRef" in idx and "persona" in _autostart and "query" in _autostart)
+check("personaChanged and queryChanged computed in auto-start",  "auto_start_deterministic_across_runs",
+      "personaChanged" in _autostart and "queryChanged" in _autostart)
+check("autoStartPrevRef updated at start of effect",         "auto_start_deterministic_across_runs",
+      "autoStartPrevRef.current = { persona: enlPersona, query: selectedQuery }" in idx)
+check("Auto-start: demoComplete guard returns early (waits for persona-change effect)",  "auto_start_deterministic_across_runs",
+      "if (demoComplete) return" in _autostart)
+check("Auto-start: setDemoActive(true) present (fires for all runs)",  "auto_start_deterministic_across_runs",
+      "setDemoActive(true)" in _autostart)
+check("Auto-start: setGuidedStepIndex(0) present (step reset for all runs)",  "auto_start_deterministic_across_runs",
+      "setGuidedStepIndex(0)" in _autostart)
+
+# ── no_cta_required_any_run ───────────────────────────────────────────────────
+# 51.8R amendment 10: Auto-start covers first run, post-completion, post-switch — CTA never required.
+
+print("\n[no_cta_required_any_run]")
+
+check("Auto-start present with demoComplete dep (post-completion runs covered)",  "no_cta_required_any_run",
+      "}, [enlPersona, selectedQuery, demoComplete])" in idx)
+check("CTA button disabled — visual fallback only (not required)",  "no_cta_required_any_run",
+      "disabled={!enlPersona || !selectedQuery}" in idx)
+check("setDemoActive(true) in auto-start AND handleStartDemo (2 paths)",  "no_cta_required_any_run",
+      idx.count("setDemoActive(true)") == 2)
+check("Auto-start: both guards present (persona + query) [guard is extraction delimiter — check in idx]",  "no_cta_required_any_run",
+      "if (!enlPersona || !selectedQuery) return" in idx)  # extraction delimiter: not in _autostart; check idx directly
+check("Terminal persona null → auto-start guard returns early [in idx]",  "no_cta_required_any_run",
+      "if (!enlPersona || !selectedQuery) return" in idx)  # null persona satisfies !enlPersona → early return
+
+# ── exit_prevents_auto_restart ────────────────────────────────────────────────
+# 51.8R amendment 10: exitedRef set on explicit exit (CTRL+K / Exit); suppresses auto-start
+# when demoComplete dep fires but persona/query unchanged.
+
+print("\n[exit_prevents_auto_restart]")
+
+_exit_block_a10 = ""
+if "handleDemoExit = () => {" in idx:
+    _exit_a10_raw = idx.split("handleDemoExit = () => {")[1]
+    if "}" in _exit_a10_raw:
+        _exit_block_a10 = _exit_a10_raw.split("}")[0]
+
+check("exitedRef declared with useRef(false)",               "exit_prevents_auto_restart",
+      "exitedRef = useRef(false)" in idx)
+check("handleDemoExit sets exitedRef.current = true",        "exit_prevents_auto_restart",
+      "exitedRef.current = true" in _exit_block_a10)
+check("Auto-start: exitedRef guard fires when no persona/query change",  "exit_prevents_auto_restart",
+      "exitedRef.current && !personaChanged && !queryChanged" in _autostart)
+check("Auto-start: exitedRef consumed (set false) on suppress",  "exit_prevents_auto_restart",
+      "exitedRef.current = false" in _autostart)
+check("Auto-start: exitedRef cleared on genuine selection",  "exit_prevents_auto_restart",
+      _autostart.count("exitedRef.current = false") >= 2)  # cleared on suppress AND on genuine start
+check("autoStartPrevRef enables persona/query change detection",  "exit_prevents_auto_restart",
+      "autoStartPrevRef" in idx and "personaChanged" in _autostart)
+
+# ── free_mode_has_no_guided_constraints ───────────────────────────────────────
+# 51.8R amendment 10: When demoActive=false AND demoComplete=false (free mode after CTRL+K),
+# ALL panels are interactive and Situation is collapsible.
+
+print("\n[free_mode_has_no_guided_constraints]")
+
+check("handleToggle free path calls togglePanel (no lock)",  "free_mode_has_no_guided_constraints",
+      "togglePanel(panelId)" in _htb)
+check("handleToggle: two locks only — demoActive and demoComplete",  "free_mode_has_no_guided_constraints",
+      _htb.count("return") <= 2)  # at most 2 early returns in handleToggle
+check("Situation toggle uses handleToggle (not blocked in free mode)",  "free_mode_has_no_guided_constraints",
+      "onToggle={() => handleToggle('situation')" in idx)
+check("No persistent guided lock after handleDemoExit",      "free_mode_has_no_guided_constraints",
+      "setDemoActive(false)" in _exit_block_a10 and "setDemoComplete(false)" in _exit_block_a10)
+check("handleToggle: no per-panel exceptions beyond persona exemption",  "free_mode_has_no_guided_constraints",
+      "panelId !== 'persona'" in _htb and _htb.count("panelId !==") == 1)
+
+# ── situation_pinned_during_guided_all_steps ──────────────────────────────────
+# 51.8R amendment 10: Situation always in openPanels during guided — every step transitions.
+
+print("\n[situation_pinned_during_guided_all_steps]")
+
+check("handleStartDemo setOpenPanels always includes situation",  "situation_pinned_during_guided_all_steps",
+      "firstPanel === 'situation' ? ['situation'] : ['situation', firstPanel]" in idx)
+check("handleDemoNext guided setOpenPanels always includes situation",  "situation_pinned_during_guided_all_steps",
+      "stepPanel === 'situation' ? ['situation'] : ['situation', stepPanel]" in idx)
+check("Auto-start setOpenPanels always includes situation",   "situation_pinned_during_guided_all_steps",
+      "setOpenPanels(firstPanel === 'situation' ? ['situation'] : ['situation', firstPanel])" in _autostart)
+check("Terminal setOpenPanels(['situation']) at loop end",    "situation_pinned_during_guided_all_steps",
+      "setOpenPanels(['situation'])" in idx)
+check("handleToggle blocks situation close during demoActive (returns early)",  "situation_pinned_during_guided_all_steps",
+      "if (demoActive) return" in _htb)
+check("Situation always in initial openPanels state",         "situation_pinned_during_guided_all_steps",
+      "useState(['situation'])" in idx)
+
+# ── no_multi_panel_open_in_guided ─────────────────────────────────────────────
+# 51.8R amendment 10: During guided execution, exactly ['situation', stepPanel] — max 2 panels.
+
+print("\n[no_multi_panel_open_in_guided]")
+
+check("Guided setOpenPanels: max 2 (situation + stepPanel)",  "no_multi_panel_open_in_guided",
+      "['situation', stepPanel]" in idx and "['situation', firstPanel]" in idx)
+check("No setOpenPanels with 3+ panels in guided path",       "no_multi_panel_open_in_guided",
+      idx.count("['situation', stepPanel]") >= 1 and "['situation', stepPanel, " not in idx)
+check("No openPanel() called during guided step advancement", "no_multi_panel_open_in_guided",
+      "openPanel('evidence')" not in idx and "openPanel('signals')" not in idx and
+      "openPanel('narrative')" not in idx)  # guided uses setOpenPanels directly, not openPanel accumulator
+check("Persona auto-open effect: max-2 slice preserved",      "no_multi_panel_open_in_guided",
+      "merged.length > 2 ? merged.slice(merged.length - 2) : merged" in idx)
+check("handleToggle max-2 in togglePanel (not bypassed in guided)",  "no_multi_panel_open_in_guided",
+      "next.length > 2 ? next.slice(next.length - 2) : next" in idx)
+
+# ── persona_auto_open_guided_blocked ─────────────────────────────────────────
+# Post-RUN01 hardening: persona auto-open effect must bail out when persona has a
+# PERSONA_GUIDED_FLOWS entry. Without this guard, the effect fires on demoActive→true
+# and overwrites guided setOpenPanels, dropping 'situation' via max-2 for CTO and ANALYST.
+
+print("\n[persona_auto_open_guided_blocked]")
+
+# Extract persona auto-open effect block
+_pao = ""
+if "PERSONA_AUTO_OPEN[enlPersona]" in idx:
+    _pao_raw = idx.split("PERSONA_AUTO_OPEN[enlPersona]")[0]
+    if "useEffect(() => {" in _pao_raw:
+        _pao = _pao_raw.split("useEffect(() => {")[-1]
+
+check("Persona auto-open effect has guided-mode guard [Post-RUN01 hardening]",  "persona_auto_open_guided_blocked",
+      "if (PERSONA_GUIDED_FLOWS[enlPersona]) return" in _pao)
+check("Guided-mode guard precedes autoPanels lookup in effect",                  "persona_auto_open_guided_blocked",
+      "PERSONA_GUIDED_FLOWS[enlPersona]" in _pao and "PERSONA_AUTO_OPEN" not in _pao)  # guard fires before PERSONA_AUTO_OPEN lookup
+check("Persona auto-open max-2 slice still present (non-guided path preserved)", "persona_auto_open_guided_blocked",
+      "merged.length > 2 ? merged.slice(merged.length - 2) : merged" in idx)
+check("Persona auto-open effect deps unchanged [enlPersona, demoActive]",         "persona_auto_open_guided_blocked",
+      "}, [enlPersona, demoActive])" in idx)
+check("PERSONA_GUIDED_FLOWS defined in index.js (guard target exists)",           "persona_auto_open_guided_blocked",
+      "const PERSONA_GUIDED_FLOWS = {" in idx)
 
 # ── Summary ───────────────────────────────────────────────────────────────────
 
