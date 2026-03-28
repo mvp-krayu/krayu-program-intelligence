@@ -322,7 +322,7 @@ export function CONTROL(intent, runtimeContext, currentSnapshot) {
     }
     const partial = {
       ...currentSnapshot,
-      openPanels:         ['situation'],
+      // openPanels preserved: runtime handleDemoExit does not call setOpenPanels [MM-001 fix]
       traversalHistory:   [], // D.3: Operator mode session not added to governed traversal history
       orchestrationState: newOrchestration,
     }
@@ -381,7 +381,7 @@ export function CONTROL(intent, runtimeContext, currentSnapshot) {
         selectedFlow:       null,
         rawStepActive:      false,
       }
-      newTraversalHistory = [] // mid-demo reset clears traversal history
+      // traversalHistory preserved: runtime persona change effect does not clear it [MM-002/MM-003 fix]
     }
     const partial = {
       ...currentSnapshot,
