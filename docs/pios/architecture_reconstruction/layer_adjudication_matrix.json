@@ -1,0 +1,222 @@
+{
+  "registry_id": "LAM-v1",
+  "date": "2026-03-28",
+  "l1_l6_verdict": "MODIFIED \u2014 see adjudication below",
+  "adjudication": {
+    "question": "Is L1-L6 as a complete 6-layer model supported by evidence in this repo?",
+    "verdict": "MODIFIED",
+    "rationale": [
+      "L1-L6 as a standalone 6-layer named model is NOT explicitly defined in any artifact in this repo.",
+      "The canonical L0-L8 model is referenced in 43.1, 44.1, 44.2, 43.2, 43.3 via 'Stream 00.2 \u2014 Canonical Layer Model Restoration' but that defining document is absent from this repo.",
+      "L3 (signal derivation), L4 (semantic shaping), L5 (presentation assembly), L6 (runtime rendering) are partially supported by fragments in 43.1/44.1 \u2014 HIGH confidence for L3-L4, MEDIUM for L5, MEDIUM for L6.",
+      "L1, L2 are NOT defined by direct evidence in this repo.",
+      "L7-L8 are NOT defined by direct evidence in this repo.",
+      "The actual pipeline has 9 stages (F-A) mapping to 3 analytical layers (F-B), which is richer and more precise than a 6-layer model.",
+      "The Three-Layer Model (F-B) IS fully supported and is the canonical analytical architecture.",
+      "The 9-Stage Pipeline (F-A) IS fully supported and is the canonical operational execution model."
+    ],
+    "supported_layers": [
+      {
+        "layer_ref": "L3",
+        "support": "HIGH \u2014 explicit fragment in 44.1 Section 2 and 43.1"
+      },
+      {
+        "layer_ref": "L4",
+        "support": "HIGH \u2014 explicit fragment in 43.1 Section 10"
+      },
+      {
+        "layer_ref": "L5",
+        "support": "MEDIUM \u2014 inferred from 43.1 Section 10; 43.x-44.x maps to presentation assembly zone"
+      },
+      {
+        "layer_ref": "L6",
+        "support": "MEDIUM \u2014 inferred from 43.1 Section 10; 42.x consumer execution maps to runtime rendering"
+      }
+    ],
+    "unsupported_layers": [
+      {
+        "layer_ref": "L1",
+        "reason": "No defining anchor found in this repo; Stream 00.2 absent"
+      },
+      {
+        "layer_ref": "L2",
+        "reason": "No defining anchor found in this repo; Stream 00.2 absent"
+      },
+      {
+        "layer_ref": "L7-L8",
+        "reason": "Not referenced anywhere in available evidence"
+      }
+    ],
+    "canonical_supported_model": {
+      "name": "9-Stage Pipeline + Three-Layer Analytical Model",
+      "framing_ids": [
+        "F-A",
+        "F-B"
+      ],
+      "confidence": "HIGH",
+      "anchor": "pios_pipeline_specification.md, pios_runtime_architecture.md, program_intelligence_three_layer_model.md"
+    },
+    "51x_architecture_verdict": {
+      "question": "Is 51.x an architecture layer?",
+      "verdict": "REJECTED \u2014 51.x is explicitly a Demo Surface, not an architecture layer",
+      "evidence": "40.11/stream_50_handover_capsule.md: Stream 50 authorized to USE 40.x outputs read-only, NOT to recompute or redefine; 51.x streams confirm demo surface designation; DEMO_CONTEXT.md confirms demo vs. architecture separation"
+    }
+  },
+  "layer_definitions": [
+    {
+      "id": "LAYER-A1",
+      "label": "Observability Layer",
+      "model": "Three-Layer (F-B)",
+      "purpose": "Capture operational evidence without interpretation",
+      "inputs": "Source systems: git, CI/CD, issue trackers, deployment platforms",
+      "outputs": "Evidence snapshot, reconstructed program structure, PEG, telemetry datasets",
+      "streams": [
+        "40.2 Evidence Acquisition",
+        "40.3 Reconstruction",
+        "40.4 Telemetry"
+      ],
+      "allowed": [
+        "evidence retrieval",
+        "structural reconstruction",
+        "telemetry extraction",
+        "PEG production"
+      ],
+      "forbidden": [
+        "signal interpretation",
+        "condition assessment",
+        "diagnosis"
+      ],
+      "confidence": "HIGH"
+    },
+    {
+      "id": "LAYER-A2",
+      "label": "Intelligence Layer",
+      "model": "Three-Layer (F-B)",
+      "purpose": "Transform telemetry into interpretable signals and conditions",
+      "inputs": "Telemetry datasets, governed signal definitions, condition models",
+      "outputs": "Signal datasets, condition datasets, diagnosis outputs",
+      "streams": [
+        "40.5 Signal Computation",
+        "40.6 Condition+Diagnosis Activation"
+      ],
+      "allowed": [
+        "signal computation",
+        "condition activation",
+        "diagnosis activation"
+      ],
+      "forbidden": [
+        "evidence re-acquisition",
+        "executive narrative",
+        "structural modification"
+      ],
+      "confidence": "HIGH"
+    },
+    {
+      "id": "LAYER-A3",
+      "label": "Executive Intelligence Layer",
+      "model": "Three-Layer (F-B)",
+      "purpose": "Convert signals into decision-grade program insight",
+      "inputs": "Condition datasets, diagnosis outputs",
+      "outputs": "Intelligence objects, program state summaries, evidence-linked intelligence packets",
+      "streams": [
+        "40.7 Intelligence Synthesis"
+      ],
+      "allowed": [
+        "intelligence assembly",
+        "evidence-linked synthesis"
+      ],
+      "forbidden": [
+        "rendering logic",
+        "signal redefinition",
+        "diagnosis recalculation"
+      ],
+      "confidence": "HIGH"
+    },
+    {
+      "id": "LAYER-B4",
+      "label": "Semantic Shaping Layer (L4)",
+      "model": "L-Number (F-C, partial)",
+      "purpose": "Shape signal outputs into semantic representations (domains, capabilities, navigation)",
+      "inputs": "Intelligence outputs, signal outputs from 40.5/40.7",
+      "outputs": "Signal registry, evidence index, PIE vault, query-signal map, semantic domains+capabilities",
+      "streams": [
+        "41.1 Semantic Elevation",
+        "41.2 PIE Vault",
+        "41.3 Consolidation",
+        "41.4 Registry",
+        "41.5 Queries"
+      ],
+      "allowed": [
+        "semantic grouping",
+        "domain abstraction",
+        "navigation surface creation",
+        "signal registry maintenance"
+      ],
+      "forbidden": [
+        "signal creation",
+        "structural modification",
+        "consumer rendering"
+      ],
+      "confidence": "HIGH",
+      "note": "L4 label supported by explicit fragments in 43.1 Section 10"
+    },
+    {
+      "id": "LAYER-B5",
+      "label": "Binding + Projection Layer (L5 zone)",
+      "model": "L-Number (F-C, partial)",
+      "purpose": "Deterministically attach governed signals to governed structural nodes; produce structural overlay",
+      "inputs": "Signal outputs (41.x), structural topology (external)",
+      "outputs": "Validated binding payloads, structural overlay with emphasis attributes",
+      "streams": [
+        "43.1 Binding Definition",
+        "43.2 Payload Contract",
+        "43.3 Validation Envelope",
+        "44.1 Projection Definition",
+        "44.2 Projection Attachment",
+        "44.3 Emphasis Attribute"
+      ],
+      "allowed": [
+        "signal-to-node binding",
+        "projection attachment",
+        "emphasis assignment"
+      ],
+      "forbidden": [
+        "signal creation",
+        "signal interpretation",
+        "topology modification",
+        "rendering instruction",
+        "SSZ/SSI constructs"
+      ],
+      "confidence": "MEDIUM",
+      "note": "L5 label (presentation assembly) inferred from 43.1 Section 10 fragment \u2014 full L5 definition absent"
+    },
+    {
+      "id": "LAYER-B6",
+      "label": "Consumer Execution + Runtime Rendering Layer (L6)",
+      "model": "L-Number (F-C, partial)",
+      "purpose": "Runtime intake of governed binding+projection artifacts; render governed intelligence for consumption",
+      "inputs": "Validated projection payloads (44.2), signal registry (41.4), query-signal map (41.5)",
+      "outputs": "ExecLens demo surface, governed WOW chain rendering, persona-guided intelligence surface",
+      "streams": [
+        "42.21 Runtime Intake",
+        "42.22 Exposure Validation",
+        "42.23 WOW Chain Rewiring",
+        "42.x ExecLens adapters"
+      ],
+      "allowed": [
+        "governed artifact consumption",
+        "emphasis pass-through",
+        "query execution against locked artifacts"
+      ],
+      "forbidden": [
+        "binding creation",
+        "signal computation",
+        "projection",
+        "evidence fabrication",
+        "compensation for absent upstream outputs"
+      ],
+      "confidence": "MEDIUM",
+      "note": "L6 label (runtime rendering) inferred from 43.1 Section 10 fragment \u2014 full L6 definition absent"
+    }
+  ]
+}

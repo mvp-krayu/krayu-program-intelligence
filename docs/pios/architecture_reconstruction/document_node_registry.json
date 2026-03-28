@@ -1,0 +1,311 @@
+{
+  "registry_id": "DNR-v1",
+  "date": "2026-03-28",
+  "total_nodes": 32,
+  "nodes": [
+    {
+      "id": "N-001",
+      "path": "docs/governance/governance_master_capsule.md",
+      "type": "governance",
+      "layer": "ARZ-01",
+      "stream": "00",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-002",
+      "path": "docs/program-intelligence-framework/pios/pios_pipeline_specification.md",
+      "type": "specification",
+      "layer": "ARZ-02",
+      "stream": "20/40.0",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-003",
+      "path": "docs/program-intelligence-framework/pios/pios_runtime_architecture.md",
+      "type": "architecture",
+      "layer": "ARZ-02",
+      "stream": "40.0",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-004",
+      "path": "docs/program-intelligence-framework/pios/pios_execution_contract.md",
+      "type": "contract",
+      "layer": "ARZ-02",
+      "stream": "40.0",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-005",
+      "path": "docs/program-intelligence-framework/program_intelligence_three_layer_model.md",
+      "type": "model",
+      "layer": "ARZ-02",
+      "stream": "20",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-006",
+      "path": "docs/pios/40.2/ (normalized_evidence_map, evidence_classification_map)",
+      "type": "stream-output",
+      "layer": "ARZ-08",
+      "stream": "40.2",
+      "stage": 1,
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-007",
+      "path": "docs/pios/40.3/ (reconstruction/* + PEG)",
+      "type": "stream-output",
+      "layer": "ARZ-08",
+      "stream": "40.3",
+      "stage": 2,
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-008",
+      "path": "docs/pios/40.4/ (telemetry artifacts)",
+      "type": "stream-output",
+      "layer": "ARZ-08",
+      "stream": "40.4",
+      "stage": 3,
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-009",
+      "path": "docs/pios/40.5/ (signal_output_set, signal_registry)",
+      "type": "stream-output",
+      "layer": "ARZ-08",
+      "stream": "40.5",
+      "stage": 4,
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-010",
+      "path": "docs/pios/40.6/ (condition_output_set, diagnosis artifacts)",
+      "type": "stream-output",
+      "layer": "ARZ-08",
+      "stream": "40.6",
+      "stage": "5+6",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-011",
+      "path": "docs/pios/40.7/ (intelligence_output_set, diagnosis_boundary_enforcement)",
+      "type": "stream-output",
+      "layer": "ARZ-08",
+      "stream": "40.7",
+      "stage": 7,
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-012",
+      "path": "docs/pios/40.8/ (delivery_output_packet)",
+      "type": "stream-output",
+      "layer": "ARZ-08",
+      "stream": "40.8",
+      "stage": 8,
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-013",
+      "path": "docs/pios/40.9/ (feedback artifacts)",
+      "type": "stream-output",
+      "layer": "ARZ-08",
+      "stream": "40.9",
+      "stage": 9,
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-014",
+      "path": "docs/pios/40.10/ (orchestration control)",
+      "type": "stream-output",
+      "layer": "ARZ-08",
+      "stream": "40.10",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-015",
+      "path": "docs/pios/40.11/ (loop review + handover capsule)",
+      "type": "stream-output",
+      "layer": "ARZ-08",
+      "stream": "40.11",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-016",
+      "path": "docs/pios/41.1/ (semantic elevation)",
+      "type": "semantic-shaping",
+      "layer": "ARZ-08",
+      "stream": "41.1",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-017",
+      "path": "docs/pios/41.2/pie_vault/ (Obsidian vault)",
+      "type": "navigation-surface",
+      "layer": "ARZ-08",
+      "stream": "41.2",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-018",
+      "path": "docs/pios/41.4/signal_registry.json + evidence_mapping_index.json",
+      "type": "registry",
+      "layer": "ARZ-08",
+      "stream": "41.4",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-019",
+      "path": "docs/pios/41.5/query_signal_map.json",
+      "type": "map",
+      "layer": "ARZ-08",
+      "stream": "41.5",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-020",
+      "path": "docs/pios/43.1/signal_to_structure_binding.md",
+      "type": "binding-definition",
+      "layer": "ARZ-08",
+      "stream": "43.1",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-021",
+      "path": "docs/pios/43.2/binding_payload_contract.md",
+      "type": "binding-contract",
+      "layer": "ARZ-08",
+      "stream": "43.2",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-022",
+      "path": "docs/pios/43.3/binding_validation_envelope.md",
+      "type": "validation-gate",
+      "layer": "ARZ-08",
+      "stream": "43.3",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-023",
+      "path": "docs/pios/43.31-43.33/ (binding materialization + execution)",
+      "type": "execution-evidence",
+      "layer": "ARZ-08",
+      "stream": "43.31-43.33",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-024",
+      "path": "docs/pios/44.1/structural_overlay_projection_definition.md",
+      "type": "projection-definition",
+      "layer": "ARZ-08",
+      "stream": "44.1",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-025",
+      "path": "docs/pios/44.2/projection_attachment_contract.md",
+      "type": "projection-contract",
+      "layer": "ARZ-08",
+      "stream": "44.2",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-026",
+      "path": "docs/pios/44.3/projection_emphasis_attribute.md",
+      "type": "attribute",
+      "layer": "ARZ-08",
+      "stream": "44.3",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-027",
+      "path": "docs/pios/42.21/ (runtime intake)",
+      "type": "runtime-execution",
+      "layer": "ARZ-08",
+      "stream": "42.21",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-028",
+      "path": "docs/pios/42.22/ (exposure validation)",
+      "type": "runtime-execution",
+      "layer": "ARZ-08",
+      "stream": "42.22",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-029",
+      "path": "docs/pios/42.23/ (WOW chain rewiring)",
+      "type": "runtime-execution",
+      "layer": "ARZ-08",
+      "stream": "42.23",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-030",
+      "path": "docs/pios/51.8R/ (ExecLens demo surface)",
+      "type": "demo-surface",
+      "layer": "ARZ-04",
+      "stream": "51.x",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-031",
+      "path": "krayu-knowledge/GOV-00 + INT-00 + INT-01 + INT-02",
+      "type": "knowledge-governance",
+      "layer": "external-repo",
+      "stream": "GOV/INT",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-032",
+      "path": "docs/pios/40.3/reconstruction/architectural_responsibility_zones.md",
+      "type": "reconstruction-output",
+      "layer": "ARZ-08",
+      "stream": "40.3",
+      "status": "OBSERVED",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "N-ABSENT-001",
+      "path": "Stream 00.2 \u2014 Canonical Layer Model Restoration (defining L0-L8 model)",
+      "type": "ABSENT",
+      "status": "NOT_FOUND",
+      "confidence": "N/A",
+      "note": "Referenced in 43.1, 44.1, 44.2, 43.2, 43.3 but absent from this repo"
+    }
+  ]
+}

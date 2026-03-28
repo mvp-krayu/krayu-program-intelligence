@@ -1,0 +1,142 @@
+{
+  "registry_id": "CPE-v1",
+  "date": "2026-03-28",
+  "edges": [
+    {
+      "id": "CP-001",
+      "concept": "C-002 Evidence First",
+      "from": "GOV-00 / governance_master_capsule.md",
+      "to": "pios_execution_contract.md (Non-Negotiable Rule)",
+      "type": "PROPAGATES",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "CP-002",
+      "concept": "C-002 Evidence First",
+      "from": "pios_execution_contract.md",
+      "to": "40.2-40.9 boundary_enforcement artifacts",
+      "type": "PROPAGATES",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "CP-003",
+      "concept": "C-002 Evidence First",
+      "from": "40.x streams",
+      "to": "43.1 binding layer (fail-closed on evidence)",
+      "type": "PROPAGATES",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "CP-004",
+      "concept": "C-006 Signals",
+      "from": "40.5 signal_output_set.md",
+      "to": "41.4/signal_registry.json",
+      "type": "REFINES",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "CP-005",
+      "concept": "C-006 Signals",
+      "from": "41.4/signal_registry.json",
+      "to": "43.1 binding inputs",
+      "type": "PROPAGATES",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "CP-006",
+      "concept": "C-006 Signals",
+      "from": "43.3 validated binding payload",
+      "to": "44.1 structural overlay (signal reference carries)",
+      "type": "PROPAGATES",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "CP-007",
+      "concept": "C-006 Signals",
+      "from": "44.2 projection attachment",
+      "to": "42.21 runtime intake",
+      "type": "PROPAGATES",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "CP-008",
+      "concept": "C-010 Semantic Elevation",
+      "from": "40.3 reconstruction outputs (89 components)",
+      "to": "41.1 semantic_domain_model.md (17 domains, 42 capabilities)",
+      "type": "PRODUCES",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "CP-009",
+      "concept": "C-010 Semantic Elevation",
+      "from": "41.1 semantic outputs",
+      "to": "41.2 PIE vault (Obsidian navigation surface)",
+      "type": "PRODUCES",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "CP-010",
+      "concept": "C-007 Conditions",
+      "from": "40.6 condition_output_set.md",
+      "to": "40.7 diagnosis_input_matrix (input boundary)",
+      "type": "PROPAGATES",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "CP-011",
+      "concept": "C-008 Diagnosis",
+      "from": "40.7 diagnosis_output_set.md",
+      "to": "40.7 intelligence_output_set.md",
+      "type": "PRODUCES",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "CP-012",
+      "concept": "C-011 Binding",
+      "from": "43.1 definition",
+      "to": "43.2 payload contract (refines)",
+      "type": "REFINES",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "CP-013",
+      "concept": "C-011 Binding",
+      "from": "43.2 contract",
+      "to": "43.3 validation envelope (validates)",
+      "type": "VALIDATES",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "CP-014",
+      "concept": "C-012 Projection",
+      "from": "43.3 validated payload",
+      "to": "44.1 structural overlay",
+      "type": "PRODUCES",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "CP-015",
+      "concept": "C-012 Projection",
+      "from": "44.1 definition",
+      "to": "44.2 attachment contract (refines)",
+      "type": "REFINES",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "CP-016",
+      "concept": "C-014 Demo Surface",
+      "from": "40.11 stream_50_handover_capsule.md",
+      "to": "51.x demo surface (authorized consumer only)",
+      "type": "ADJACENT_TO",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "CP-017",
+      "concept": "C-017 L-Number Layer Model",
+      "from": "Stream 00.2 (absent)",
+      "to": "43.1 / 44.1 / 44.2 / 43.2 / 43.3 (fragments only)",
+      "type": "REFERENCES",
+      "confidence": "LOW"
+    }
+  ]
+}

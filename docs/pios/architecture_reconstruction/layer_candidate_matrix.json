@@ -1,0 +1,160 @@
+{
+  "registry_id": "LCM-v1",
+  "date": "2026-03-28",
+  "framing_note": "The contract asks to adjudicate L1-L6. Three layer framings are present in evidence. They are compared and adjudicated below.",
+  "framings": [
+    {
+      "id": "F-A",
+      "name": "9-Stage Pipeline Model",
+      "source": "pios_pipeline_specification.md + pios_runtime_architecture.md",
+      "confidence": "HIGH",
+      "status": "OBSERVED",
+      "stages": [
+        {
+          "stage": 1,
+          "name": "Evidence Acquisition",
+          "stream": "40.2",
+          "inputs": "source definitions, credentials, time window",
+          "outputs": "evidence snapshot, provenance"
+        },
+        {
+          "stage": 2,
+          "name": "Program Reconstruction",
+          "stream": "40.3",
+          "inputs": "evidence snapshot",
+          "outputs": "repository map, architecture inventory, PEG"
+        },
+        {
+          "stage": 3,
+          "name": "Telemetry Extraction",
+          "stream": "40.4",
+          "inputs": "evidence snapshot, reconstructed structure, PEG",
+          "outputs": "structural/activity/delivery telemetry datasets"
+        },
+        {
+          "stage": 4,
+          "name": "Signal Computation",
+          "stream": "40.5",
+          "inputs": "telemetry datasets, governed signal definitions",
+          "outputs": "signal datasets, provenance"
+        },
+        {
+          "stage": 5,
+          "name": "Condition Activation",
+          "stream": "40.6",
+          "inputs": "signal datasets, condition models",
+          "outputs": "condition datasets"
+        },
+        {
+          "stage": 6,
+          "name": "Diagnosis Activation",
+          "stream": "40.6",
+          "inputs": "condition datasets, diagnosis models",
+          "outputs": "diagnosis outputs"
+        },
+        {
+          "stage": 7,
+          "name": "Intelligence Synthesis",
+          "stream": "40.7",
+          "inputs": "condition datasets, diagnosis outputs",
+          "outputs": "intelligence objects"
+        },
+        {
+          "stage": 8,
+          "name": "Agentic Orchestration",
+          "stream": "40.8",
+          "inputs": "pipeline schedules, runtime state",
+          "outputs": "execution monitoring, anomaly observations"
+        },
+        {
+          "stage": 9,
+          "name": "Feedback and Continuous Improvement",
+          "stream": "40.9",
+          "inputs": "runtime observations, anomalies",
+          "outputs": "structured feedback records"
+        }
+      ]
+    },
+    {
+      "id": "F-B",
+      "name": "Three-Layer Analytical Model",
+      "source": "program_intelligence_three_layer_model.md",
+      "confidence": "HIGH",
+      "status": "OBSERVED",
+      "layers": [
+        {
+          "layer": 1,
+          "name": "Observability Layer",
+          "maps_to_streams": [
+            "40.2",
+            "40.3",
+            "40.4"
+          ],
+          "purpose": "Capture operational evidence; no interpretation"
+        },
+        {
+          "layer": 2,
+          "name": "Intelligence Layer",
+          "maps_to_streams": [
+            "40.5",
+            "40.6"
+          ],
+          "purpose": "Transform telemetry into interpretable signals; pattern analysis"
+        },
+        {
+          "layer": 3,
+          "name": "Executive Intelligence Layer",
+          "maps_to_streams": [
+            "40.7"
+          ],
+          "purpose": "Convert signals into decision-grade program insight"
+        }
+      ]
+    },
+    {
+      "id": "F-C",
+      "name": "L-Number Layer Model (canonical L0-L8)",
+      "source": "43.1/44.1/44.2/43.2/43.3 fragments; defining document Stream 00.2 ABSENT",
+      "confidence": "LOW",
+      "status": "AMBIGUOUS",
+      "partial_fragments": [
+        {
+          "l_number": "L3",
+          "label": "Signal Derivation (authoritative)",
+          "evidence_anchor": "44.1 Section 2: 'L3 \u2014 signal derivation (authoritative)'; 43.1: 'produced at L3'",
+          "maps_to_stream": "40.5"
+        },
+        {
+          "l_number": "L4",
+          "label": "Semantic Shaping",
+          "evidence_anchor": "43.1 Section 10: 'no semantic shaping authority (L4)'; 43.1: 'shaped at L4'",
+          "maps_to_stream": "41.x"
+        },
+        {
+          "l_number": "L5",
+          "label": "Presentation Assembly",
+          "evidence_anchor": "43.1 Section 10: 'no presentation assembly responsibility (L5)'",
+          "maps_to_stream": "43.x (INFERRED)"
+        },
+        {
+          "l_number": "L6",
+          "label": "Runtime Rendering",
+          "evidence_anchor": "43.1 Section 10: 'no runtime rendering responsibility (L6)'",
+          "maps_to_stream": "42.x (INFERRED)"
+        },
+        {
+          "l_number": "L0-L2",
+          "label": "NOT DEFINED IN THIS REPO",
+          "evidence_anchor": "NONE \u2014 defining document Stream 00.2 absent",
+          "maps_to_stream": "UNKNOWN"
+        },
+        {
+          "l_number": "L7-L8",
+          "label": "NOT DEFINED IN THIS REPO",
+          "evidence_anchor": "NONE \u2014 defining document Stream 00.2 absent",
+          "maps_to_stream": "UNKNOWN"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,147 @@
+{
+  "registry_id": "CR-v1",
+  "date": "2026-03-28",
+  "total_concepts": 18,
+  "concepts": [
+    {
+      "id": "C-001",
+      "name": "PiOS",
+      "full_name": "Program Intelligence Operating System",
+      "first_occurrence": "docs/program-intelligence-framework/pios/pios_runtime_architecture.md",
+      "status": "STABLE",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "C-002",
+      "name": "Evidence First",
+      "first_occurrence": "docs/governance/governance_master_capsule.md (GC-06)",
+      "locations": [
+        "governance_master_capsule.md",
+        "pios_execution_contract.md",
+        "43.1",
+        "43.3",
+        "44.1",
+        "44.2",
+        "INT-01"
+      ],
+      "status": "STABLE",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "C-003",
+      "name": "PiOS Core Engine",
+      "notes": "Collectively: 40.2-40.7 runtime execution chain; also referenced as 'PiOS GitHub-only proof (40.2-40.7)' in INT-01",
+      "status": "STABLE",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "C-004",
+      "name": "Reconstruction",
+      "notes": "Program structural reconstruction; produced by 40.3 Reverse Engineering Engine; PERM model governs it",
+      "first_occurrence": "docs/pios/40.3/",
+      "status": "STABLE",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "C-005",
+      "name": "Telemetry",
+      "notes": "Execution telemetry datasets from 40.4; structural/activity/delivery/dependency dimensions",
+      "status": "STABLE",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "C-006",
+      "name": "Signals",
+      "notes": "Governed signal outputs from 40.5 Signal Computation Engine; 8 signals defined in run_01_blueedge",
+      "status": "STABLE",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "C-007",
+      "name": "Conditions",
+      "notes": "Observable execution state derived from signals; produced in 40.6; distinct from Diagnosis (GC-07)",
+      "status": "STABLE",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "C-008",
+      "name": "Diagnosis",
+      "notes": "Systemic execution dynamics interpretation; produced in 40.7; separated from Conditions by State-Diagnosis Separation Principle",
+      "status": "STABLE",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "C-009",
+      "name": "Intelligence",
+      "notes": "Evidence-linked intelligence objects; produced in 40.7 Intelligence Synthesis Layer",
+      "status": "STABLE",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "C-010",
+      "name": "Semantic Elevation",
+      "notes": "Transformation of structural components into semantic domains/capabilities; performed in 41.1; 89 components \u2192 17 domains + 42 capabilities (BlueEdge)",
+      "first_occurrence": "docs/pios/41.1/semantic_elevation_report.md",
+      "status": "STABLE",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "C-011",
+      "name": "Binding",
+      "notes": "Deterministic attachment of governed signal output to governed structural node; 43.x layer; non-interpretive, non-mutative",
+      "first_occurrence": "docs/pios/43.1/signal_to_structure_binding.md",
+      "status": "STABLE",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "C-012",
+      "name": "Projection",
+      "notes": "Governed attachment of validated binding payload to authoritative structural node; 44.x layer; produces structural overlay",
+      "first_occurrence": "docs/pios/44.1/structural_overlay_projection_definition.md",
+      "status": "STABLE",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "C-013",
+      "name": "Delivery",
+      "notes": "Stream 40.8 Agentic Orchestration Layer also called 'Delivery Structuring' in 40.11 handover; ambiguous \u2014 delivery vs. orchestration naming",
+      "status": "AMBIGUOUS",
+      "confidence": "MEDIUM"
+    },
+    {
+      "id": "C-014",
+      "name": "Demo Surface",
+      "notes": "51.x streams; ExecLens demo surface; explicitly NOT an architecture layer per 40.11 handover capsule; authorized to consume 40.x outputs read-only",
+      "status": "STABLE",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "C-015",
+      "name": "Runtime Consumption",
+      "notes": "42.x streams; governed runtime intake and rendering; consumer execution layer; no binding/projection authority",
+      "status": "STABLE",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "C-016",
+      "name": "Program Execution Graph (PEG)",
+      "notes": "Produced by 40.3; 87 nodes, 40 edges (BlueEdge); canonical structural representation",
+      "status": "STABLE",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "C-017",
+      "name": "L-Number Layer Model",
+      "notes": "Canonical L0-L8 model referenced in 43.1, 44.1, 44.2, 43.2, 43.3 via 'Stream 00.2 \u2014 Canonical Layer Model Restoration'; defining document NOT FOUND in this repo. Fragments: L3=signal derivation, L4=semantic shaping, L5=presentation assembly, L6=runtime rendering",
+      "status": "AMBIGUOUS",
+      "confidence": "LOW"
+    },
+    {
+      "id": "C-018",
+      "name": "WOW Chain",
+      "notes": "42.22 + 51.1 + 51.1R chain; governed rendering chain from emphasis attribute through demo surface; mentioned in 42.23 rewiring plan",
+      "status": "EVOLVING",
+      "confidence": "MEDIUM"
+    }
+  ]
+}

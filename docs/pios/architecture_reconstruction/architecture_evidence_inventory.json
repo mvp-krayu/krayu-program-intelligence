@@ -1,0 +1,388 @@
+{
+  "registry_id": "AEI-v1",
+  "stream": "A.1 \u2014 PiOS L1-L6 Architecture Reconstruction",
+  "date": "2026-03-28",
+  "method": "reverse-crawl from repo /Users/khorrix/Projects/repos/k-pi",
+  "total_artifacts_catalogued": 87,
+  "sources_crawled": [
+    "docs/pios/ (40.x\u201351.x, contracts/, runs/, baselines/)",
+    "docs/program-intelligence-framework/pios/",
+    "docs/program-intelligence-discipline/",
+    "docs/governance/",
+    "docs/signal-science/",
+    "docs/handbook/",
+    "/Users/khorrix/Projects/krayu-knowledge/ (GOV,CAT,SCI,INT,RES domains)"
+  ],
+  "artifact_groups": [
+    {
+      "group": "Governance / Framework Authority",
+      "path": "docs/governance/ + docs/program-intelligence-framework/pios/",
+      "key_artifacts": [
+        {
+          "id": "AF-001",
+          "path": "docs/governance/governance_master_capsule.md",
+          "type": "governance",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-002",
+          "path": "docs/governance/governance_operating_model.md",
+          "type": "governance",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-003",
+          "path": "docs/program-intelligence-framework/pios/pios_pipeline_specification.md",
+          "type": "specification",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-004",
+          "path": "docs/program-intelligence-framework/pios/pios_runtime_architecture.md",
+          "type": "architecture",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-005",
+          "path": "docs/program-intelligence-framework/pios/pios_execution_contract.md",
+          "type": "contract",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-006",
+          "path": "docs/program-intelligence-framework/program_intelligence_three_layer_model.md",
+          "type": "model",
+          "status": "OBSERVED"
+        }
+      ]
+    },
+    {
+      "group": "PiOS Runtime Pipeline (40.x)",
+      "path": "docs/pios/40.x/",
+      "key_artifacts": [
+        {
+          "id": "AF-010",
+          "path": "docs/pios/40.2/",
+          "type": "stream-outputs",
+          "stage": "Evidence Acquisition",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-011",
+          "path": "docs/pios/40.3/",
+          "type": "stream-outputs",
+          "stage": "Reconstruction",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-012",
+          "path": "docs/pios/40.4/",
+          "type": "stream-outputs",
+          "stage": "Telemetry Extraction",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-013",
+          "path": "docs/pios/40.5/",
+          "type": "stream-outputs",
+          "stage": "Signal Computation",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-014",
+          "path": "docs/pios/40.6/",
+          "type": "stream-outputs",
+          "stage": "Condition+Diagnosis Activation",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-015",
+          "path": "docs/pios/40.7/",
+          "type": "stream-outputs",
+          "stage": "Intelligence Synthesis",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-016",
+          "path": "docs/pios/40.8/",
+          "type": "stream-outputs",
+          "stage": "Agentic Orchestration",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-017",
+          "path": "docs/pios/40.9/",
+          "type": "stream-outputs",
+          "stage": "Feedback",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-018",
+          "path": "docs/pios/40.10/",
+          "type": "stream-outputs",
+          "stage": "Orchestration Control",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-019",
+          "path": "docs/pios/40.11/",
+          "type": "stream-outputs",
+          "stage": "Stream 40 Loop Review + Handover",
+          "status": "OBSERVED"
+        }
+      ]
+    },
+    {
+      "group": "Semantic Shaping Layer (41.x)",
+      "path": "docs/pios/41.x/",
+      "key_artifacts": [
+        {
+          "id": "AF-020",
+          "path": "docs/pios/41.1/",
+          "type": "semantic-shaping",
+          "stage": "Semantic Elevation",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-021",
+          "path": "docs/pios/41.2/pie_vault/",
+          "type": "obsidian-vault",
+          "stage": "PIE Vault Navigation",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-022",
+          "path": "docs/pios/41.3/",
+          "type": "semantic-consolidation",
+          "stage": "Semantic Consolidation",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-023",
+          "path": "docs/pios/41.4/signal_registry.json",
+          "type": "registry",
+          "stage": "Signal Registry",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-024",
+          "path": "docs/pios/41.4/evidence_mapping_index.json",
+          "type": "index",
+          "stage": "Evidence Index",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-025",
+          "path": "docs/pios/41.5/query_signal_map.json",
+          "type": "map",
+          "stage": "Query-Signal Binding",
+          "status": "OBSERVED"
+        }
+      ]
+    },
+    {
+      "group": "Consumer Execution Layer (42.x)",
+      "path": "docs/pios/42.x/ + scripts/pios/42.x/ + app/execlens-demo/",
+      "key_artifacts": [
+        {
+          "id": "AF-030",
+          "path": "docs/pios/contracts/42.1/",
+          "type": "contract",
+          "stage": "ExecLens Query Execution",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-031",
+          "path": "docs/pios/42.21/",
+          "type": "runtime-intake",
+          "stage": "Governed Runtime Intake",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-032",
+          "path": "docs/pios/42.22/",
+          "type": "runtime-exposure",
+          "stage": "Rendering Capability Validation",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-033",
+          "path": "docs/pios/42.23/",
+          "type": "rewiring",
+          "stage": "Demo Surface Rewiring to WOW Chain",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-034",
+          "path": "app/execlens-demo/",
+          "type": "demo-app",
+          "stage": "ExecLens Next.js Surface",
+          "status": "OBSERVED"
+        }
+      ]
+    },
+    {
+      "group": "Signal-to-Structure Binding Layer (43.x)",
+      "path": "docs/pios/43.x/",
+      "key_artifacts": [
+        {
+          "id": "AF-040",
+          "path": "docs/pios/43.1/signal_to_structure_binding.md",
+          "type": "definition",
+          "stage": "Binding Definition",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-041",
+          "path": "docs/pios/43.2/binding_payload_contract.md",
+          "type": "contract",
+          "stage": "Binding Payload Schema",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-042",
+          "path": "docs/pios/43.3/binding_validation_envelope.md",
+          "type": "validation-gate",
+          "stage": "Binding Validation",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-043",
+          "path": "docs/pios/43.31/",
+          "type": "materialization",
+          "stage": "Binding Materialization",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-044",
+          "path": "docs/pios/43.32/",
+          "type": "execution",
+          "stage": "Binding Execution",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-045",
+          "path": "docs/pios/43.33/",
+          "type": "execution",
+          "stage": "Binding Payload Production",
+          "status": "OBSERVED"
+        }
+      ]
+    },
+    {
+      "group": "Structural Overlay Projection Layer (44.x)",
+      "path": "docs/pios/44.x/",
+      "key_artifacts": [
+        {
+          "id": "AF-050",
+          "path": "docs/pios/44.1/structural_overlay_projection_definition.md",
+          "type": "definition",
+          "stage": "Projection Definition",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-051",
+          "path": "docs/pios/44.2/projection_attachment_contract.md",
+          "type": "contract",
+          "stage": "Projection Attachment Contract",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-052",
+          "path": "docs/pios/44.3/projection_emphasis_attribute.md",
+          "type": "attribute",
+          "stage": "Projection Emphasis",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-053",
+          "path": "docs/pios/44.4/",
+          "type": "closure",
+          "stage": "44.x Layer Closure",
+          "status": "OBSERVED"
+        }
+      ]
+    },
+    {
+      "group": "Demo Surface (51.x) \u2014 NOT architecture layer",
+      "path": "docs/pios/51.x/",
+      "key_artifacts": [
+        {
+          "id": "AF-060",
+          "path": "docs/pios/51.1/",
+          "type": "rendering-spec",
+          "stage": "WOW Chain Rendering Spec",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-061",
+          "path": "docs/pios/51.8R/",
+          "type": "demo-surface",
+          "stage": "ExecLens PIOS 51.8R Demo",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-062",
+          "path": "docs/pios/40.11/stream_50_handover_capsule.md",
+          "type": "handover",
+          "stage": "40\u219250 Handover",
+          "status": "OBSERVED"
+        }
+      ]
+    },
+    {
+      "group": "Discipline / Knowledge Base",
+      "path": "docs/program-intelligence-discipline/ + krayu-knowledge/",
+      "key_artifacts": [
+        {
+          "id": "AF-070",
+          "path": "docs/program-intelligence-discipline/program_intelligence_body_of_knowledge.md",
+          "type": "discipline",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-071",
+          "path": "krayu-knowledge/GOV/GOV-00.md",
+          "type": "governance",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-072",
+          "path": "krayu-knowledge/INT/INT-00.md",
+          "type": "integration",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-073",
+          "path": "krayu-knowledge/INT/INT-01.md",
+          "type": "dual-agent-model",
+          "status": "OBSERVED"
+        },
+        {
+          "id": "AF-074",
+          "path": "krayu-knowledge/INT/INT-02.md",
+          "type": "handover-contract-spec",
+          "status": "OBSERVED"
+        }
+      ]
+    },
+    {
+      "group": "Architectural Responsibility Zones",
+      "path": "docs/pios/40.3/reconstruction/",
+      "key_artifacts": [
+        {
+          "id": "AF-080",
+          "path": "docs/pios/40.3/reconstruction/architectural_responsibility_zones.md",
+          "type": "reconstruction-output",
+          "status": "OBSERVED"
+        }
+      ]
+    }
+  ],
+  "notable_absence": {
+    "id": "ABS-001",
+    "description": "Stream 00.2 \u2014 Canonical Layer Model Restoration (defining L0\u2013L8 model) referenced in 43.1, 44.1, 44.2, 43.2, 43.3 but not found in this repo. Defining document is absent. L-number mappings reconstructed from fragments only.",
+    "status": "AMBIGUOUS",
+    "confidence": "LOW"
+  }
+}

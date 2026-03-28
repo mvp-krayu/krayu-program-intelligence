@@ -1,0 +1,231 @@
+{
+  "registry_id": "DER-v1",
+  "date": "2026-03-28",
+  "total_edges": 28,
+  "edges": [
+    {
+      "id": "E-001",
+      "source": "N-006",
+      "target": "N-007",
+      "type": "PRODUCES",
+      "evidence": "pios_pipeline_specification.md Stage 1\u21922; 40.3 upstream_contract: PIOS-40.2",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-002",
+      "source": "N-007",
+      "target": "N-008",
+      "type": "PRODUCES",
+      "evidence": "pios_pipeline_specification.md Stage 2\u21923; 40.4 input: reconstructed program structure + PEG",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-003",
+      "source": "N-008",
+      "target": "N-009",
+      "type": "PRODUCES",
+      "evidence": "pios_pipeline_specification.md Stage 3\u21924; 40.5 upstream_contract: PIOS-40.4",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-004",
+      "source": "N-009",
+      "target": "N-010",
+      "type": "PRODUCES",
+      "evidence": "pios_pipeline_specification.md Stage 4\u21925; 40.6 input: signal datasets",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-005",
+      "source": "N-010",
+      "target": "N-011",
+      "type": "PRODUCES",
+      "evidence": "pios_pipeline_specification.md Stage 5+6\u21927; 40.7 upstream_contract: PIOS-40.6; diagnosis_boundary_enforcement.md input boundary: 40.6 only",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-006",
+      "source": "N-011",
+      "target": "N-012",
+      "type": "PRODUCES",
+      "evidence": "pios_pipeline_specification.md Stage 7\u21928; 40.8 input: intelligence objects",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-007",
+      "source": "N-012",
+      "target": "N-013",
+      "type": "PRODUCES",
+      "evidence": "pios_pipeline_specification.md Stage 8\u21929; 40.9 input: runtime observations + anomalies",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-008",
+      "source": "N-009",
+      "target": "N-016",
+      "type": "PRODUCES",
+      "evidence": "43.1 Section 4: 'signals produced at L3 and shaped at L4' \u2014 40.5 outputs feed 41.x semantic shaping",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-009",
+      "source": "N-016",
+      "target": "N-018",
+      "type": "PRODUCES",
+      "evidence": "41.1 semantic elevation produces signal_registry.json and evidence_mapping_index.json in 41.4",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-010",
+      "source": "N-016",
+      "target": "N-019",
+      "type": "PRODUCES",
+      "evidence": "41.5 query_signal_map.json built on 41.4 signal_registry outputs",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-011",
+      "source": "N-018",
+      "target": "N-020",
+      "type": "CONSUMES",
+      "evidence": "43.1 Section 4: receives governed signal outputs from 41.x as inputs",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-012",
+      "source": "N-020",
+      "target": "N-021",
+      "type": "REFINES",
+      "evidence": "43.2 Section 2: 43.2 defines payload shape; 43.1 defines binding logic \u2014 refinement chain",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-013",
+      "source": "N-021",
+      "target": "N-022",
+      "type": "VALIDATES",
+      "evidence": "43.3 Section 2: 43.3 validates against 43.2 payload contract",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-014",
+      "source": "N-022",
+      "target": "N-024",
+      "type": "PRODUCES",
+      "evidence": "44.1 Section 2: 43.3 produces validated payload; 44.1 receives it for projection",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-015",
+      "source": "N-024",
+      "target": "N-025",
+      "type": "REFINES",
+      "evidence": "44.2 Section 2: 44.2 refines 44.1 projection definition \u2014 tightens attachment contract",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-016",
+      "source": "N-025",
+      "target": "N-027",
+      "type": "PRODUCES",
+      "evidence": "42.21 changelog: first controlled runtime intake of 43.32+43.33 governed artifacts via 44.2 projection attachment",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-017",
+      "source": "N-027",
+      "target": "N-028",
+      "type": "PRODUCES",
+      "evidence": "42.22 exposure_validation_report.md: consumes 44.2/projection_attachment.json from 42.21 intake",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-018",
+      "source": "N-028",
+      "target": "N-029",
+      "type": "PRODUCES",
+      "evidence": "42.23 rewiring_plan.md: source inputs include 42.22/attribute_lineage.json and 42.22/sample_runtime_output.json",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-019",
+      "source": "N-029",
+      "target": "N-030",
+      "type": "PRODUCES",
+      "evidence": "42.23 rewiring_plan.md: target files include app/execlens-demo/; demo surface consumes governed WOW chain output",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-020",
+      "source": "N-001",
+      "target": "N-002",
+      "type": "VALIDATES",
+      "evidence": "governance_master_capsule.md governs all streams; pios_pipeline_specification.md cites Stream 40.0 authority",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-021",
+      "source": "N-002",
+      "target": "N-003",
+      "type": "REFINES",
+      "evidence": "pios_pipeline_specification.md and pios_runtime_architecture.md are both Stream 40.0 authority documents; pipeline spec \u2192 runtime architecture",
+      "confidence": "MEDIUM"
+    },
+    {
+      "id": "E-022",
+      "source": "N-005",
+      "target": "N-003",
+      "type": "REFINES",
+      "evidence": "pios_runtime_architecture.md Section 10: Three-Layer Model explains analytical architecture; PiOS operationalizes it",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-023",
+      "source": "N-004",
+      "target": "N-006",
+      "type": "VALIDATES",
+      "evidence": "pios_execution_contract.md defines determinism rules; 40.2-40.7 streams all reference compliance with these gates",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-024",
+      "source": "N-015",
+      "target": "N-030",
+      "type": "PRODUCES",
+      "evidence": "40.11/stream_50_handover_capsule.md: handover from Stream 40 to Stream 50 authorizes demo use of 40.x outputs",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-025",
+      "source": "N-023",
+      "target": "N-022",
+      "type": "VALIDATES",
+      "evidence": "43.31/43.32/43.33 execution streams feed validated_binding_payload.json into 43.3 validation envelope",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-026",
+      "source": "N-009",
+      "target": "N-018",
+      "type": "DERIVED_FROM",
+      "evidence": "41.4/signal_registry.json references SIG-002 through SIG-005 which are derived from 40.5 signal computation outputs (run_01_blueedge)",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-027",
+      "source": "N-019",
+      "target": "N-027",
+      "type": "CONSUMES",
+      "evidence": "42.1 contract: QUERY \u2192 SIGNAL (signal_registry) \u2192 EVIDENCE (evidence_mapping_index) \u2192 NAVIGATION \u2192 OUTPUT traversal path",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E-028",
+      "source": "N-032",
+      "target": "N-003",
+      "type": "REFERENCES",
+      "evidence": "architectural_responsibility_zones.md documents 8 ARZs that map to pios_runtime_architecture.md zones; cross-reference explicit",
+      "confidence": "HIGH"
+    }
+  ]
+}

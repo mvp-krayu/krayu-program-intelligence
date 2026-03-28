@@ -1,0 +1,70 @@
+{
+  "registry_id": "AR-v1",
+  "date": "2026-03-28",
+  "total_ambiguities": 7,
+  "ambiguities": [
+    {
+      "id": "AMB-001",
+      "title": "Stream 00.2 Canonical Layer Model (L0-L8) Defining Document Absent",
+      "description": "43.1, 44.1, 44.2, 43.2, 43.3 all reference 'Stream 00.2 \u2014 Canonical Layer Model Restoration' as the authority for the L0-L8 model. L3, L4, L5, L6 are cited with specific responsibilities but the full 9-layer spectrum is not defined in any artifact in this repo.",
+      "impact": "L1, L2, L7, L8 cannot be defined; L1-L6 as a complete 6-layer model cannot be confirmed from evidence in this repo alone",
+      "resolution_path": "Obtain Stream 00.2 document from its authority source (likely a separate governance context or prior session)",
+      "status": "OPEN",
+      "confidence_impact": "HIGH \u2014 materially affects L1-L6 adjudication"
+    },
+    {
+      "id": "AMB-002",
+      "title": "40.8 Stream: Orchestration vs. Delivery Structuring Naming Conflict",
+      "description": "pios_pipeline_specification.md names Stream 40.8 as 'Agentic Orchestration Layer'. 40.11/stream_50_handover_capsule.md names it '40.8 \u2192 Delivery Structuring'. These are functionally different labels for the same stream.",
+      "impact": "Minor \u2014 concept propagation of C-013 'Delivery' is ambiguous",
+      "resolution_path": "Read 40.8 artifacts directly to determine canonical designation",
+      "status": "OPEN",
+      "confidence_impact": "LOW"
+    },
+    {
+      "id": "AMB-003",
+      "title": "L5 Mapping: 43.x or 44.x or Both?",
+      "description": "L5 (presentation assembly) is attributed to no specific stream. 43.x (binding) and 44.x (projection) both occupy the zone between L4 (41.x) and L6 (42.x). Whether L5 maps to 43.x, 44.x, or both together is not defined in available evidence.",
+      "impact": "L5 boundary claim cannot be confirmed without Stream 00.2",
+      "resolution_path": "Stream 00.2 defines L5 scope; or additional governance artifacts in external context",
+      "status": "OPEN",
+      "confidence_impact": "MEDIUM"
+    },
+    {
+      "id": "AMB-004",
+      "title": "40.6 Hosts Two Pipeline Stages (Conditions + Diagnosis)",
+      "description": "pios_pipeline_specification.md defines Stage 5 (Condition Activation) and Stage 6 (Diagnosis Activation) both as Stream 40.6. The State-Diagnosis Separation Principle (GC-07) requires these be analytically separate, but they share a stream number.",
+      "impact": "Whether Condition and Diagnosis constitute separate sub-layers or a single stream with internal separation is not fully resolved",
+      "resolution_path": "Confirmed by 40.7 boundary enforcement \u2014 input: 40.6 only. Analytical separation enforced internally. Not a critical structural gap.",
+      "status": "RESOLVED-PARTIAL",
+      "confidence_impact": "LOW"
+    },
+    {
+      "id": "AMB-005",
+      "title": "krayu-knowledge CKR entries not fully enumerated in this repo",
+      "description": "GOV-00 states CKR governs all 34 constructs. This repo shows CKR-001 through CKR-015 referenced. Full 34-construct registry not directly available in crawled evidence.",
+      "impact": "Signal admission completeness cannot be confirmed beyond the 5 signals in 41.4/signal_registry.json",
+      "resolution_path": "krayu-knowledge repo has CAT/SCI/RES entries; CKR full registry may be in those or in a separate CKR document",
+      "status": "OPEN",
+      "confidence_impact": "MEDIUM"
+    },
+    {
+      "id": "AMB-006",
+      "title": "Relationship Between 40.x (run_01_blueedge) and 41.x (run_03_blueedge_derivation_validation)",
+      "description": "40.5 execution manifest references run_01_blueedge. 41.1/semantic_elevation_report.md references run_03_blueedge_derivation_validation. Run numbering suggests intermediate runs (run_02?) that are not captured in the current docs/pios/ structure.",
+      "impact": "Run continuity chain may have gaps; lineage between 40.x and 41.x runs is INFERRED rather than explicitly documented",
+      "resolution_path": "Read additional run manifests and contracts under docs/pios/runs/",
+      "status": "OPEN",
+      "confidence_impact": "LOW"
+    },
+    {
+      "id": "AMB-007",
+      "title": "75.x Interpretation Layer Referenced But Absent",
+      "description": "42.23 rewiring_plan.md states '75.x interpretation layer: remains blocked'. pios_execution_contract.md references Stream 75 \u2014 Program Diagnosis and Intelligence Models. No 75.x artifacts found in this repo.",
+      "impact": "An external diagnosis/intelligence model stream is referenced as a dependency but is absent; the demo surface explicitly works around it as 'blocked'",
+      "resolution_path": "75.x may reside in a separate stream repo or future execution phase",
+      "status": "OPEN",
+      "confidence_impact": "MEDIUM"
+    }
+  ]
+}
