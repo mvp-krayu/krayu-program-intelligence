@@ -1,5 +1,7 @@
 /**
  * pages/index.js
+ * PIOS-51.9B-AUTHORITY-WIRING (getPanelExpanded: computePanelState governs GUIDED rendering; validatePanelTransition bypassed in ENTRY/FREE/OPERATOR; valid-by-construction comment on handleDemoNext [51.9B])
+ * PIOS-51.9A-TRAVERSAL-HISTORY (reset+first-panel recording on session start for handleStartDemo and auto-start; traversalHistory is primary traversal record [51.9A])
  * PIOS-51.8R-RUN05-OPERATOR (FREE panel data restored: ENLPanel accessible in freeMode; operator-mode-badge; ENTRY vs FREE render separation — !demoActive && !freeMode gates ENTRY placeholder only)
  * PIOS-51.8R-RUN04-FREE (freeMode state: explicit operator mode entered only via Exit/CTRL-K; auto-start blocked in freeMode; entry strip hidden; operator surface with explicit re-entry)
  * PIOS-51.8R-RUN03-HARDENING (demoActive added to auto-start deps; mid-guided persona switch now deterministically restarts guided flow — demoActive dep change fires after persona-change teardown)
@@ -202,8 +204,29 @@ export default function Home() {
   const handleToggle = useCallback((panelId) => {
     if (demoActive) return  // guided demo: step-driven only [51.8]
     if (demoComplete && panelId !== 'persona') return  // post-completion lock [51.8R amendment 7]
+    // validatePanelTransition NOT applied here: ENTRY/FREE/OPERATOR modes are sanctioned open-access
+    // paths; traversal sequence enforcement applies only within governed GUIDED sessions [51.9B]
     togglePanel(panelId)
   }, [demoActive, demoComplete, togglePanel])
+
+  // ── Panel expanded state — D.3 authority wiring [51.9B] ──
+  // GUIDED mode: computePanelState is rendering authority per D.3 / lens_runtime_state_mapping.md §4
+  // ENTRY / FREE / POST-COMPLETION: openPanels-driven (51.8R sanctioned)
+  // Non-traversal companion panels (situation, persona): always openPanels — never in traversalHistory
+  // rawStep exception: ANALYST step 4 reopens 'evidence' without new traversalHistory entry [51.8R amendment]
+  const getPanelExpanded = useCallback((panelId) => {
+    // Non-traversal companion panels: bypass computePanelState [situation pinned, persona always interactive]
+    if (panelId === 'situation' || panelId === 'persona') return openPanels.includes(panelId)
+    // GUIDED mode: computePanelState governs [D.3]
+    if (demoActive) {
+      // rawStep exception: evidence re-opened without new traversalHistory entry [51.8R ANALYST step 4]
+      if (rawStepActive && panelId === 'evidence') return openPanels.includes('evidence')
+      const state = computePanelState(panelId, openPanels, traversalHistory, enlPersona, demoActive, freeMode)
+      return state === PANEL_STATES.ACTIVE || state === PANEL_STATES.EXPANDED
+    }
+    // ENTRY / FREE / POST-COMPLETION: openPanels-driven [51.8R sanctioned]
+    return openPanels.includes(panelId)
+  }, [openPanels, traversalHistory, enlPersona, demoActive, freeMode, rawStepActive])
 
 
   // ── Persona auto-open — reveal depth only [51.6, R3] ──
@@ -404,6 +427,9 @@ export default function Home() {
 
   const handleDemoNext = () => {
     // Persona-guided flow [51.8R guided correction]: primary path
+    // validatePanelTransition NOT applied: PERSONA_GUIDED_FLOWS sequences are valid-by-construction.
+    // ANALYST (evidence→signals) and CTO (signals-first) diverge from D2_PATH_MAP paths and are
+    // sanctioned 51.8R exceptions; sequence enforcement via validatePanelTransition would block both. [51.9B]
     const steps = PERSONA_GUIDED_FLOWS[enlPersona]
     if (steps) {
       const nextIndex = guidedStepIndex + 1
@@ -581,7 +607,7 @@ export default function Home() {
           id="situation"
           title="Situation"
           subtitle="Structural baseline — architecture and projection emphasis"
-          expanded={openPanels.includes('situation')}
+          expanded={getPanelExpanded('situation')}
           onToggle={() => handleToggle('situation')}
         >
           <div data-demo-section="gauges">
@@ -598,7 +624,7 @@ export default function Home() {
           id="persona"
           title="What does this mean for you?"
           subtitle="Interpret this situation from a decision perspective"
-          expanded={openPanels.includes('persona')}
+          expanded={getPanelExpanded('persona')}
           onToggle={() => handleToggle('persona')}
         >
           <PersonaPanel queryId={selectedQuery} onPersonaChange={setEnlPersona} onPersonaDataChange={setEnlPersonaData} activePersona={enlPersona} />
@@ -610,7 +636,7 @@ export default function Home() {
           title="Why is this critical?"
           subtitle={queryData ? `${queryData.signals?.length || 0} intelligence signals bound` : 'Select a query to load signals'}
           badge={queryData?.signals?.length ? String(queryData.signals.length) : null}
-          expanded={openPanels.includes('signals')}
+          expanded={getPanelExpanded('signals')}
           onToggle={() => handleToggle('signals')}
         >
           {queryData && queryData.signals && queryData.signals.length > 0 ? (
@@ -631,7 +657,7 @@ export default function Home() {
           id="evidence"
           title="Show evidence"
           subtitle="Evidence chain and vault traceability"
-          expanded={openPanels.includes('evidence')}
+          expanded={getPanelExpanded('evidence')}
           onToggle={() => handleToggle('evidence')}
         >
           {queryData && enlPersona && (demoActive || freeMode) ? (
@@ -657,7 +683,7 @@ export default function Home() {
           id="narrative"
           title="So what?"
           subtitle="Executive narrative — evidence-grounded"
-          expanded={openPanels.includes('narrative')}
+          expanded={getPanelExpanded('narrative')}
           onToggle={() => handleToggle('narrative')}
         >
           {queryData && enlPersona ? (
