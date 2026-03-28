@@ -347,6 +347,7 @@ export default function Home() {
     setSelectedFlow(activeFlow)
     const firstPanel = steps && steps.length > 0 ? steps[0].panelId : 'situation'
     setOpenPanels(firstPanel === 'situation' ? ['situation'] : ['situation', firstPanel])
+    setTraversalHistory(firstPanel && firstPanel !== 'situation' ? [firstPanel] : [])  // 51.9A: reset + record first panel on auto-start
     setDemoActive(true)
     setDemoStage(1)
   }, [enlPersona, selectedQuery, demoComplete, demoActive, freeMode])  // freeMode added: operator mode guard; dep change on explicit start [51.8R RUN04]
@@ -378,7 +379,6 @@ export default function Home() {
     setDemoComplete(false)   // reset terminal state on re-run [51.8R amendment]
     setGuidedStepIndex(0)    // reset guided step [51.8R guided correction]
     setRawStepActive(false)  // reset raw step [51.8R guided correction]
-    setTraversalHistory([])  // D.3: fresh governed session — Operator mode history does not carry forward
     // Derive active flow — backward compat [51.6R.2]
     const activeFlow = selectedFlow || (enlPersona ? PERSONA_DEFAULT_FLOW[enlPersona] : null)
     setTraversalNodeIndex(0)
@@ -390,11 +390,13 @@ export default function Home() {
       const steps = PERSONA_GUIDED_FLOWS[enlPersona]
       const firstPanel = steps && steps.length > 0 ? steps[0].panelId : panels.length > 0 ? panels[0] : 'situation'
       setOpenPanels(firstPanel === 'situation' ? ['situation'] : ['situation', firstPanel])  // situation pinned [51.8R amendment 9]
+      setTraversalHistory(firstPanel && firstPanel !== 'situation' ? [firstPanel] : [])  // 51.9A: reset + record first panel
     } else {
       // Standard 51.4 stage mode fallback
       const steps = PERSONA_GUIDED_FLOWS[enlPersona]
       const firstPanel = steps && steps.length > 0 ? steps[0].panelId : 'situation'
       setOpenPanels(firstPanel === 'situation' ? ['situation'] : ['situation', firstPanel])  // situation pinned [51.8R amendment 9]
+      setTraversalHistory(firstPanel && firstPanel !== 'situation' ? [firstPanel] : [])  // 51.9A: reset + record first panel
     }
     setDemoActive(true)
     setDemoStage(1)
