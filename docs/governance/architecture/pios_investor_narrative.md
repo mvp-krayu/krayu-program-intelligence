@@ -1,7 +1,7 @@
 # Program Intelligence — Investor Narrative
 
 Program: Krayu — Program Intelligence Discipline
-Authority: [[canonical-layer-model]], [[program_intelligence_stack]]
+Authority: [[canonical/canonical-layer-model]], [[program_intelligence_stack]]
 Date: 2026-03-28
 
 ---
@@ -41,7 +41,7 @@ The third requirement of the discipline is determinism. Given the same governed 
 
 PiOS — the Program Intelligence Operating System — is the system that operationalizes this discipline. Where the discipline defines what must be true about the transformation from evidence to intelligence, PiOS defines how those truths are produced and enforced across a governed computational pipeline.
 
-The structural foundation of PiOS is a layered architecture defined in [[canonical-layer-model]]. Nine layers govern the system from evidence source to governance validation. Evidence enters at L0 as raw source system state. It is normalized at L1 into machine-usable structural form without interpretation. It is made navigable at L2 through governed retrieval and adjacency structures. Derivation happens at L3 — and only at L3 — through formally specified computation rules that transform evidence-bound inputs into measurable outputs. Semantic shaping happens at L4, transforming derived outputs into controlled representations without altering their derivation truth. Presentation assembly happens at L5, constructing display-ready payloads from the governed outputs of L3 and L4. The runtime experience layer at L6 renders those payloads. Demonstration and narrative packaging happens at L7, downstream of everything that matters analytically. Governance, contracts, and validation constrain and audit the entire system at L8 without substituting for its logic.
+The structural foundation of PiOS is a layered architecture defined in [[canonical/canonical-layer-model]]. Nine layers govern the system from evidence source to governance validation. Evidence enters at L0 as raw source system state. It is normalized at L1 into machine-usable structural form without interpretation. It is made navigable at L2 through governed retrieval and adjacency structures. Derivation happens at L3 — and only at L3 — through formally specified computation rules that transform evidence-bound inputs into measurable outputs. Semantic shaping happens at L4, transforming derived outputs into controlled representations without altering their derivation truth. Presentation assembly happens at L5, constructing display-ready payloads from the governed outputs of L3 and L4. The runtime experience layer at L6 renders those payloads. Demonstration and narrative packaging happens at L7, downstream of everything that matters analytically. Governance, contracts, and validation constrain and audit the entire system at L8 without substituting for its logic.
 
 Each layer has a defined responsibility it owns, a defined set of inputs it may accept, a defined set of outputs it may produce, and a set of behaviors it must never perform. These prohibitions are not guidelines. A layer that performs derivation work it does not own has committed a governed boundary violation. A layer that claims semantic authority it does not hold has introduced an ungoverned assertion into the output chain. The system tracks these violations, classifies them, and remediates them through a governed correction process — because the integrity of every downstream output depends on the integrity of every upstream boundary.
 
@@ -93,4 +93,4 @@ The architecture that enforces these constraints is documented, governed, and ve
 
 ---
 
-*Authority: [[canonical-layer-model]] (Stream 00.2) | [[program_intelligence_stack]] | [[pios_architecture_whitepaper]]*
+*Authority: [[canonical/canonical-layer-model]] (Stream 00.2) | [[program_intelligence_stack]] | [[pios_architecture_whitepaper]]*

@@ -2,10 +2,10 @@
 
 Program: Krayu — Program Intelligence Discipline
 Stream: C.1 — Canonical Narrative & Technical Pair
-Authority: [[canonical-layer-model]]
+Authority: [[canonical/canonical-layer-model]]
 Date: 2026-03-28
 
-> All architectural claims in this document are sourced from [[canonical-layer-model]] (Stream 00.2) and [[pios_architecture_whitepaper]]. No claim is inferred or interpolated. Where an anchor is not present in canonical sources, no claim is made.
+> All architectural claims in this document are sourced from [[canonical/canonical-layer-model]] (Stream 00.2) and [[pios_architecture_whitepaper]]. No claim is inferred or interpolated. Where an anchor is not present in canonical sources, no claim is made.
 
 ---
 
@@ -22,11 +22,11 @@ Date: 2026-03-28
 
 The root authority for all layer definitions, placement rules, cross-layer control rules, and enforcement invariants in this document is:
 
-**[[canonical-layer-model]]** — Stream 00.2, Canonical Layer Model Restoration
+**[[canonical/canonical-layer-model]]** — Stream 00.2, Canonical Layer Model Restoration
 
-All layers in this appendix derive from that document. No layer definition, layer boundary, or placement rule stated here has been reinterpreted, extended, or derived from any source other than [[canonical-layer-model]] and, where noted, [[pios_architecture_whitepaper]].
+All layers in this appendix derive from that document. No layer definition, layer boundary, or placement rule stated here has been reinterpreted, extended, or derived from any source other than [[canonical/canonical-layer-model]] and, where noted, [[pios_architecture_whitepaper]].
 
-The canonical layer model is governed under the Program Intelligence discipline held by Krayu. Its authority is established by the governance lock in [[canonical-layer-model]] Section 10:
+The canonical layer model is governed under the Program Intelligence discipline held by Krayu. Its authority is established by the governance lock in [[canonical/canonical-layer-model]] Section 10:
 
 > "This artifact is hereby declared the authoritative reference for the canonical Program Intelligence layer model. All future streams must align to this model. No contract may redefine layer ownership."
 
@@ -38,7 +38,7 @@ For the complete governance corpus index, see [[index]].
 
 ## 2. Layer Model (L0–L8)
 
-Source: [[canonical-layer-model]] Section 3 (inventory) and Section 4 (definitions).
+Source: [[canonical/canonical-layer-model]] Section 3 (inventory) and Section 4 (definitions).
 
 The canonical layer inventory, reproduced without reinterpretation:
 
@@ -54,7 +54,7 @@ L7 — Demo / Narrative Packaging Layer
 L8 — Governance, Contract, and Validation Layer
 ```
 
-This ordering is strict and authoritative per [[canonical-layer-model]] Section 3.
+This ordering is strict and authoritative per [[canonical/canonical-layer-model]] Section 3.
 
 ---
 
@@ -89,7 +89,7 @@ This ordering is strict and authoritative per [[canonical-layer-model]] Section 
 **Allowed outputs:** Evidence navigation structures, evidence paths, retrieval references, contextual evidence adjacency, governed evidence selection surfaces.
 **Must Never:** introduce interpretation, create business conclusions, emit executive insight, behave as a scoring layer, invent semantic claims beyond evidence navigation.
 
-**Canonical note (reproduced from [[canonical-layer-model]]):** ENL is canonical. ENL is not a presentation layer. ENL is not an interpretation layer.
+**Canonical note (reproduced from [[canonical/canonical-layer-model]]):** ENL is canonical. ENL is not a presentation layer. ENL is not an interpretation layer.
 
 *PiOS runtime anchor:* ENL chain construction across 40.x/41.x streams.
 
@@ -103,7 +103,7 @@ This ordering is strict and authoritative per [[canonical-layer-model]] Section 
 **Allowed outputs:** Evidence-bound derived metrics, evidence-bound computed structures, signal primitives, topology states, formal derivation artifacts.
 **Must Never:** produce freeform executive interpretation, generate investor storytelling, perform cosmetic UI packaging as logic substitution, obscure derivation lineage, claim certainty beyond evidence and rules.
 
-**Placement rule (from [[canonical-layer-model]] Section 4 L3):** Signal derivation belongs here. This includes any construct equivalent to signal state zones, signal state indices, acceleration or stability computations, or topology-derived structural state markers.
+**Placement rule (from [[canonical/canonical-layer-model]] Section 4 L3):** Signal derivation belongs here. This includes any construct equivalent to signal state zones, signal state indices, acceleration or stability computations, or topology-derived structural state markers.
 
 *PiOS runtime anchor:* Stream 40.5 — Signal Computation Engine. 8 signals defined in run_01_blueedge; 5 admitted to canonical signal registry (SIG-001..SIG-005).
 
@@ -119,7 +119,7 @@ This ordering is strict and authoritative per [[canonical-layer-model]] Section 
 **Allowed outputs:** Semantic representations, structured explanatory forms, controlled language mappings, executive-readable but evidence-bound meaning structures.
 **Must Never:** alter derivation truth, fabricate evidence bindings, introduce speculative executive interpretation, overwrite upstream signal ownership, become a freeform narrative engine.
 
-**Precision rule (from [[canonical-layer-model]] Section 4 L4):** This layer may transform representation and structure, but must never alter ENL truth claims, evidence bindings, or governed derivation results.
+**Precision rule (from [[canonical/canonical-layer-model]] Section 4 L4):** This layer may transform representation and structure, but must never alter ENL truth claims, evidence bindings, or governed derivation results.
 
 *PiOS runtime anchor:* Streams 41.1–41.5 — semantic elevation, PIE Vault, signal registry. run_01_blueedge: 89 structural components elevated to 17 domains + 42 capabilities.
 
@@ -133,7 +133,7 @@ This ordering is strict and authoritative per [[canonical-layer-model]] Section 
 **Allowed outputs:** Presentation payloads, modules for dashboards or panels, evidence deep-link bundles, topology highlight payloads, traceable structured display objects.
 **Must Never:** recompute signals ad hoc, reinterpret results because the UI wants a different story, introduce investor persuasion logic, create new business meaning without governed upstream support.
 
-**Placement rule (from [[canonical-layer-model]] Section 4 L5):** Evidence deep links belong here as assembled presentation constructs backed by L2 references. Topology highlighting belongs here if it is a display treatment of already-derived structural states from L3.
+**Placement rule (from [[canonical/canonical-layer-model]] Section 4 L5):** Evidence deep links belong here as assembled presentation constructs backed by L2 references. Topology highlighting belongs here if it is a display treatment of already-derived structural states from L3.
 
 *PiOS runtime anchor:* Streams 43.x (Signal-to-Structure Binding) and 44.x (Structural Overlay Projection).
 
@@ -147,7 +147,7 @@ This ordering is strict and authoritative per [[canonical-layer-model]] Section 
 **Allowed outputs:** Rendered views, interactive navigation states, user-visible panels, charts, cards, drilldowns, runtime interaction states.
 **Must Never:** compute canonical signals, redefine semantics, absorb derivation logic, become the place where architecture is decided, silently fill missing upstream outputs with implied logic.
 
-**Placement rule (from [[canonical-layer-model]] Section 4 L6):** ExecLens belongs here as a runtime consumer layer. ExecLens is not the owner of signal derivation, semantic truth, or architectural contracts.
+**Placement rule (from [[canonical/canonical-layer-model]] Section 4 L6):** ExecLens belongs here as a runtime consumer layer. ExecLens is not the owner of signal derivation, semantic truth, or architectural contracts.
 
 *PiOS runtime anchor:* Streams 42.x — runtime intake (42.21), exposure validation (42.22), WOW chain (42.23).
 
@@ -173,9 +173,9 @@ This ordering is strict and authoritative per [[canonical-layer-model]] Section 
 **Allowed outputs:** Contracts, validation logs, governance artifacts, architectural references, drift findings, compliance statements.
 **Must Never:** serve as the hidden owner of runtime logic, replace missing system architecture, become a proxy derivation engine, silently redefine layer ownership inside contract prose.
 
-**Placement rule (from [[canonical-layer-model]] Section 6.6):** Architecture artifacts belong here. This canonical layer model and the documents in `docs/governance/architecture/canonical/` belong here.
+**Placement rule (from [[canonical/canonical-layer-model]] Section 6.6):** Architecture artifacts belong here. This canonical layer model and the documents in `docs/governance/architecture/canonical/` belong here.
 
-*PiOS governance anchor:* [[governance_master_capsule]], [[canonical-layer-model]], docs/pios/contracts/, [[index]].
+*PiOS governance anchor:* [[governance_master_capsule]], [[canonical/canonical-layer-model]], docs/pios/contracts/, [[index]].
 
 ---
 
@@ -218,8 +218,8 @@ The full stack is ordered by the direction of constraint, not the direction of d
 | Stack Element | Role | Constraint Source |
 |---|---|---|
 | Krayu | Discipline authority — holds Program Intelligence doctrine | [[governance_master_capsule]] |
-| PiOS | System — operationalizes discipline through L0–L8 pipeline | [[canonical-layer-model]] |
-| Signäl | Product line — surfaces PiOS intelligence under read-only contract | [[canonical-layer-model]] L6–L7 placement rules |
+| PiOS | System — operationalizes discipline through L0–L8 pipeline | [[canonical/canonical-layer-model]] |
+| Signäl | Product line — surfaces PiOS intelligence under read-only contract | [[canonical/canonical-layer-model]] L6–L7 placement rules |
 | Lens | Module — scoped presentation of Signäl capability | L0–L8 canonical layer model |
 
 Signäl operates strictly under a read-only contract with PiOS outputs. It may not recompute, reinterpret, or supplement PiOS outputs. Where PiOS outputs are absent, Signäl surfaces the absence.
@@ -247,10 +247,10 @@ The canonical architecture zone contains four Stream 00.2 artifacts:
 
 | Document | Role |
 |---|---|
-| [[canonical-layer-model]] | Primary — L0-L8 complete definitions |
-| [[canonical-layer-model.validation]] | Validation record — 11/11 sections pass |
-| [[canonical-layer-model.classification]] | Construct classification — 10 constructs |
-| [[canonical-layer-model.drift]] | Drift record — 6 drift items (D1-D6) |
+| [[canonical/canonical-layer-model]] | Primary — L0-L8 complete definitions |
+| [[canonical/canonical-layer-model.validation]] | Validation record — 11/11 sections pass |
+| [[canonical/canonical-layer-model.classification]] | Construct classification — 10 constructs |
+| [[canonical/canonical-layer-model.drift]] | Drift record — 6 drift items (D1-D6) |
 
 The remediation corpus (seven artifacts, Streams 00.3 and 40.12–40.17) operationalizes corrections against the canonical model. It does not define the canonical model. See [[index]] for the complete corpus map.
 
@@ -275,7 +275,7 @@ Drift cases record instances where the implemented system deviated from the cano
 
 **Nature of violation:** SSZ (Structural Stress Zone) and SSI (Structural Stress Index) were implemented at L6 (ExecLens runtime) performing derivation computation that belongs at L3. The Runtime Experience Layer absorbed Derivation Layer ownership.
 
-**Canonical position of SSZ/SSI:** L3 (Derivation Layer), per [[canonical-layer-model]] Section 4 L3 Placement Rule and Section 7 construct classification. Until formally specified at L3, SSZ and SSI are PROVISIONAL constructs. They must not appear in binding inputs, projection values, or canonical architecture references.
+**Canonical position of SSZ/SSI:** L3 (Derivation Layer), per [[canonical/canonical-layer-model]] Section 4 L3 Placement Rule and Section 7 construct classification. Until formally specified at L3, SSZ and SSI are PROVISIONAL constructs. They must not appear in binding inputs, projection values, or canonical architecture references.
 
 **Resolution state:** Governance reinforced. L3 derivation specification stream designated as Domain A (Stream 40.16) per [[remediation-planning-framework]]. Specification not yet executed — open violation remains managed and bounded.
 
@@ -285,24 +285,24 @@ Drift cases record instances where the implemented system deviated from the cano
 
 ## 7. Enforcement Rules
 
-Source: [[canonical-layer-model]] Sections 4 and 5; [[program_intelligence_stack]] Section 5.
+Source: [[canonical/canonical-layer-model]] Sections 4 and 5; [[program_intelligence_stack]] Section 5.
 
 These rules are reproduced from canonical sources without modification. They are not advisory.
 
 **No derivation outside L3.**
-All signal computation, structural state derivation, and transformation of evidence-bound inputs into measurable outputs must be specified, governed, and produced at L3. No other layer may own derivation. A layer that performs derivation work it does not own has committed a governed boundary violation. See [[canonical-layer-model]] Section 4 L3, [[derivation-boundary-audit]] findings F1 and F2.
+All signal computation, structural state derivation, and transformation of evidence-bound inputs into measurable outputs must be specified, governed, and produced at L3. No other layer may own derivation. A layer that performs derivation work it does not own has committed a governed boundary violation. See [[canonical/canonical-layer-model]] Section 4 L3, [[derivation-boundary-audit]] findings F1 and F2.
 
 **No semantic authority outside L4.**
-Semantic shaping — the transformation of derived outputs into controlled representations — is the exclusive responsibility of L4. L6 may render semantic payloads assembled at L5. L6 may not produce semantic shaping decisions. A template renderer at L6 that makes language or framing decisions without upstream L4 governance is performing L4 work at the wrong layer. See [[canonical-layer-model]] Section 4 L4, [[canonical-layer-model.drift]] Drift D2.
+Semantic shaping — the transformation of derived outputs into controlled representations — is the exclusive responsibility of L4. L6 may render semantic payloads assembled at L5. L6 may not produce semantic shaping decisions. A template renderer at L6 that makes language or framing decisions without upstream L4 governance is performing L4 work at the wrong layer. See [[canonical/canonical-layer-model]] Section 4 L4, [[canonical/canonical-layer-model.drift]] Drift D2.
 
 **No recomputation in L6 or L7.**
-L6 accepts L5 presentation payloads and renders them. L7 packages L5/L6 outputs for demonstration contexts. Neither layer may recompute signals, reinterpret derivation results, or introduce analytical logic to compensate for absent upstream outputs. Where upstream outputs are absent, the surface surfaces the absence. See [[canonical-layer-model]] Section 4 L6 and L7, [[canonical-layer-model]] Section 5.3 (forbidden flows).
+L6 accepts L5 presentation payloads and renders them. L7 packages L5/L6 outputs for demonstration contexts. Neither layer may recompute signals, reinterpret derivation results, or introduce analytical logic to compensate for absent upstream outputs. Where upstream outputs are absent, the surface surfaces the absence. See [[canonical/canonical-layer-model]] Section 4 L6 and L7, [[canonical/canonical-layer-model]] Section 5.3 (forbidden flows).
 
 **No UI-layer ownership of signals.**
-ExecLens (L6) is a runtime consumer layer. It may render, navigate, and stage PiOS outputs. It may not originate canonical signals, define evidence truth, or make architectural decisions. Signal ownership belongs exclusively to L3. See [[canonical-layer-model]] Section 4 L6 Placement Rule, [[drift_register]] DRIFT-001.
+ExecLens (L6) is a runtime consumer layer. It may render, navigate, and stage PiOS outputs. It may not originate canonical signals, define evidence truth, or make architectural decisions. Signal ownership belongs exclusively to L3. See [[canonical/canonical-layer-model]] Section 4 L6 Placement Rule, [[drift_register]] DRIFT-001.
 
 **Contracts do not define architecture.**
-L8 governance artifacts — contracts, validation logs, stream controls — constrain execution scope and validate stream boundaries. They do not define canonical architecture. For layer boundary questions, [[canonical-layer-model]] governs, not any contract artifact. See [[canonical-layer-model]] Section 4 L8, [[canonical-layer-model.drift]] Drift D3.
+L8 governance artifacts — contracts, validation logs, stream controls — constrain execution scope and validate stream boundaries. They do not define canonical architecture. For layer boundary questions, [[canonical/canonical-layer-model]] governs, not any contract artifact. See [[canonical/canonical-layer-model]] Section 4 L8, [[canonical/canonical-layer-model.drift]] Drift D3.
 
 **No downstream compensation.**
 Any consumer layer implementing local approximations or informal derivations to substitute for absent upstream outputs is performing compensation behavior. Compensation behavior is a governed violation regardless of the intent behind it. See [[program_intelligence_stack]] Section 5, [[ssi-ssz-postmortem]] Section 2.
@@ -317,10 +317,10 @@ Root entry point: [[pios_architecture_whitepaper]]
 [[pios_architecture_whitepaper]]          ← Root navigation node
 │
 ├── CANONICAL AUTHORITY
-│   ├── [[canonical-layer-model]]          ← L0-L8 definitions (primary)
-│   ├── [[canonical-layer-model.validation]]
-│   ├── [[canonical-layer-model.classification]]
-│   └── [[canonical-layer-model.drift]]
+│   ├── [[canonical/canonical-layer-model]]          ← L0-L8 definitions (primary)
+│   ├── [[canonical/canonical-layer-model.validation]]
+│   ├── [[canonical/canonical-layer-model.classification]]
+│   └── [[canonical/canonical-layer-model.drift]]
 │
 ├── STACK ARTICULATION
 │   └── [[program_intelligence_stack]]     ← Discipline → System → Product → Module
@@ -350,4 +350,4 @@ Root entry point: [[pios_architecture_whitepaper]]
 
 ---
 
-*Authority: [[canonical-layer-model]] (Stream 00.2) | Governance status: CONFIRMED (PROVISIONAL implementation compliance)*
+*Authority: [[canonical/canonical-layer-model]] (Stream 00.2) | Governance status: CONFIRMED (PROVISIONAL implementation compliance)*

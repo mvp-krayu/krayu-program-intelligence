@@ -2,7 +2,7 @@
 
 Program: Krayu — Program Intelligence Discipline
 Stream: B.1 — Stack Articulation (Discipline-First)
-Authority: [[canonical-layer-model]], [[pios_architecture_whitepaper]]
+Authority: [[canonical/canonical-layer-model]], [[pios_architecture_whitepaper]]
 Date: 2026-03-28
 
 ---
@@ -36,7 +36,7 @@ All systems and products within the Krayu program derive their constraints from 
 
 PiOS is the system that operationalizes the Program Intelligence discipline. Where the discipline defines what must be true about evidence, signals, derivation, and intelligence, PiOS defines how those truths are produced through a governed computational pipeline. PiOS is the execution engine of Program Intelligence.
 
-The structural foundation of PiOS is the canonical layer model, defined in [[canonical-layer-model]] and navigable through [[pios_architecture_whitepaper]]. The canonical model specifies nine layers — L0 through L8 — each with a bounded responsibility, a defined set of allowed inputs and outputs, and a set of behaviors it must never perform. The ordering of these layers is strict. L0 owns raw evidence origins. L1 normalizes that evidence into machine-usable form. L2 provides governed evidence navigation and retrieval. L3 performs all formal derivation — signal computation, structural state derivation, and any transformation of evidence-bound inputs into measurable outputs. L4 shapes derived outputs into controlled semantic representations without altering their derivation truth. L5 assembles those semantic representations into presentation-ready payloads. L6 renders those payloads in the runtime experience. L7 packages the runtime experience into demonstration and narrative sequences. L8 governs, validates, and audits the entire system without becoming its hidden logic engine.
+The structural foundation of PiOS is the canonical layer model, defined in [[canonical/canonical-layer-model]] and navigable through [[pios_architecture_whitepaper]]. The canonical model specifies nine layers — L0 through L8 — each with a bounded responsibility, a defined set of allowed inputs and outputs, and a set of behaviors it must never perform. The ordering of these layers is strict. L0 owns raw evidence origins. L1 normalizes that evidence into machine-usable form. L2 provides governed evidence navigation and retrieval. L3 performs all formal derivation — signal computation, structural state derivation, and any transformation of evidence-bound inputs into measurable outputs. L4 shapes derived outputs into controlled semantic representations without altering their derivation truth. L5 assembles those semantic representations into presentation-ready payloads. L6 renders those payloads in the runtime experience. L7 packages the runtime experience into demonstration and narrative sequences. L8 governs, validates, and audits the entire system without becoming its hidden logic engine.
 
 This layering is not organizational convenience. It is the structural guarantee of the discipline's evidence-first constraint. Each layer boundary defines exactly where one analytical responsibility ends and another begins. Derivation cannot happen in the rendering layer. Semantic authority cannot be claimed by the runtime. Governance contracts cannot redefine architecture. The canonical model enforces these prohibitions in writing, and remediation streams (documented in [[derivation-boundary-audit]] and [[remediation-planning-framework]]) exist precisely because boundary discipline is difficult to maintain across a fast-moving execution program.
 
@@ -64,7 +64,7 @@ Lens is a module within Signäl. A Lens is a bounded capability that exposes a d
 
 Lens is constructed from L5 presentation assemblies and exposed through L6 runtime surfaces. It does not constitute a layer and does not own layer responsibilities. It does not participate in derivation (L3). It does not perform semantic shaping (L4). It does not define what signals mean or which structural nodes are significant. Its function is to structure the presentation of governed outputs and to provide the runtime interaction through which those outputs are navigated and consumed.
 
-A Lens is not an architecture unit. It is not a signal owner. It does not hold semantic authority. These are not arbitrary restrictions — they follow directly from the layer structure defined in [[canonical-layer-model]]. A module constructed from L5 assemblies and rendered at L6 cannot claim authority that belongs to L3 or L4 without crossing a governed boundary. ExecLens, the current Lens implementation, is explicitly positioned at L6 in the canonical model: it is a runtime consumer layer. It may render, navigate, and stage PiOS outputs. It may not originate canonical signals, define evidence truth, or make architectural decisions.
+A Lens is not an architecture unit. It is not a signal owner. It does not hold semantic authority. These are not arbitrary restrictions — they follow directly from the layer structure defined in [[canonical/canonical-layer-model]]. A module constructed from L5 assemblies and rendered at L6 cannot claim authority that belongs to L3 or L4 without crossing a governed boundary. ExecLens, the current Lens implementation, is explicitly positioned at L6 in the canonical model: it is a runtime consumer layer. It may render, navigate, and stage PiOS outputs. It may not originate canonical signals, define evidence truth, or make architectural decisions.
 
 Lens instances may differ in their presentation scope, their navigation structure, and the subset of intelligence they expose. They share, without exception, the constraint that they derive their content from PiOS outputs consumed through Signäl's governed intake chain. A Lens that invents content, compensates for missing upstream outputs, or introduces its own derivation logic is not a governed Lens — it is a boundary violation instantiated as a product module.
 
@@ -82,7 +82,7 @@ The product cannot absorb system responsibilities. Signäl's intake of PiOS outp
 
 Modules cannot redefine signals or semantics. A Lens is a scoped presentation unit. It has no authority to determine what a signal means, which signals are significant, or how evidence should be interpreted. If a Lens-level requirement would require redefining a signal, that requirement must be routed to the appropriate upstream layer (L3 for derivation, L4 for semantic shaping) and governed there before it appears in any presentation surface.
 
-These rules apply without exception. The canonical authority for their enforcement is [[canonical-layer-model]], and boundary deviations are classified, tracked, and remediated through the drift and remediation corpora documented in [[drift_register]] and [[derivation-boundary-audit]].
+These rules apply without exception. The canonical authority for their enforcement is [[canonical/canonical-layer-model]], and boundary deviations are classified, tracked, and remediated through the drift and remediation corpora documented in [[drift_register]] and [[derivation-boundary-audit]].
 
 ---
 
@@ -90,7 +90,7 @@ These rules apply without exception. The canonical authority for their enforceme
 
 The stack is ordered by the direction of constraint, not the direction of data flow. Data flows forward from L0 through L7. Constraints flow in the opposite direction, originating from the discipline and enforced through governance. This inversion ensures that downstream convenience cannot override upstream truth.
 
-**Krayu** holds the Program Intelligence discipline. Krayu defines what evidence-first analytical intelligence is, what constraints govern its production, and what constitutes a boundary violation. Krayu's authority is expressed through [[governance_master_capsule]] and operationalized through the canonical layer model at [[canonical-layer-model]]. Nothing in PiOS, Signäl, or any Lens instance may contradict or circumvent the constraints Krayu holds.
+**Krayu** holds the Program Intelligence discipline. Krayu defines what evidence-first analytical intelligence is, what constraints govern its production, and what constitutes a boundary violation. Krayu's authority is expressed through [[governance_master_capsule]] and operationalized through the canonical layer model at [[canonical/canonical-layer-model]]. Nothing in PiOS, Signäl, or any Lens instance may contradict or circumvent the constraints Krayu holds.
 
 **PiOS** operationalizes the discipline as a governed computational system. PiOS is constrained by Krayu's discipline and expresses that constraint as layer boundaries, pipeline stages, derivation rules, and semantic shaping governance. PiOS produces intelligence artifacts. It does not consume them. Everything downstream of PiOS — Signäl and its modules — depends on the integrity of what PiOS produces. If PiOS produces ungoverned outputs, no amount of surface-level governance can restore the integrity of what is displayed.
 
@@ -127,7 +127,7 @@ The third is non-fragile productization. Because Signäl and its modules do not 
 
 | Document | Role |
 |---|---|
-| [[canonical-layer-model]] | L0-L8 layer definitions — authoritative |
+| [[canonical/canonical-layer-model]] | L0-L8 layer definitions — authoritative |
 | [[pios_architecture_whitepaper]] | Architecture root navigation node |
 | [[governance_master_capsule]] | GC-01..GC-11 governing constraints |
 | [[drift_register]] | DRIFT-001 — SSZ/SSI boundary violation |
