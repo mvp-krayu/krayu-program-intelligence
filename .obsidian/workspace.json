@@ -1,0 +1,221 @@
+{
+  "main": {
+    "id": "ccbcfbc95ea3b4f7",
+    "type": "split",
+    "children": [
+      {
+        "id": "38ee4f88c7ddebae",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "291bc99d24619887",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "New tab"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "6ac0e78ce13cc32c",
+    "type": "split",
+    "children": [
+      {
+        "id": "103fb6201a30e7d7",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b2cb863875f99280",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "fed7206663492d73",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "0cde7f85ed48423e",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "6924db1d6e2d7d9f",
+    "type": "split",
+    "children": [
+      {
+        "id": "f96c9d6844245646",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e0a5d5b8f5720f46",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "docs/governance/architecture/pios_investor_narrative.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for pios_investor_narrative"
+            }
+          },
+          {
+            "id": "98ad9cddfe327311",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "docs/governance/architecture/pios_investor_narrative.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from pios_investor_narrative"
+            }
+          },
+          {
+            "id": "699266109aeee337",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "e54bdc00d7ca94ee",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "394269c0af5498c5",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "docs/governance/architecture/pios_investor_narrative.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of pios_investor_narrative"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "b2cb863875f99280",
+  "lastOpenFiles": [
+    "docs/governance/index.md",
+    "docs/governance/governance_operating_model.md",
+    "docs/governance/governance_master_capsule.md",
+    "docs/governance/remediation/remediation-planning-framework.md",
+    "docs/governance/remediation/remediation-execution-domain-02.md",
+    "docs/governance/remediation/remediation-execution-domain-01.md",
+    "docs/governance/remediation/derivation-ownership-correction.md",
+    "docs/governance/remediation/derivation-boundary-audit.md",
+    "docs/governance/remediation/canonical-model-closure-validation.md",
+    "docs/governance/remediation/boundary-remediation-allocation.md",
+    "docs/governance/remediation",
+    "docs/governance/drift/cases/ssi-ssz-postmortem.md",
+    "docs/governance/drift/drift_register.md",
+    "docs/governance/drift/cases",
+    "docs/governance/drift",
+    "docs/governance/architecture/traversal_runtime_validation.md",
+    "docs/governance/architecture/runtime_activation_receipt.md",
+    "docs/governance/architecture/program_intelligence_stack.md",
+    "docs/governance/architecture/pios_whitepaper.md",
+    "docs/governance/architecture/pios_traversal_contract.md",
+    "docs/governance/architecture/pios_technical_appendix.md",
+    "docs/governance/architecture/pios_investor_narrative.md",
+    "docs/governance/architecture/pios_architecture_whitepaper.md",
+    "docs/governance/architecture/obsidian_index.md",
+    "docs/governance/architecture/lens_runtime_state_mapping.md",
+    "docs/governance/architecture/lens_runtime_path_enforcement.md",
+    "docs/governance/architecture/lens_runtime_operator_mode.md",
+    "docs/governance/architecture/lens_runtime_fail_closed.md",
+    "docs/governance/architecture/lens_runtime_persona_activation.md",
+    "docs/governance/architecture/file_changes.json",
+    "docs/governance/architecture/canonical",
+    "docs/governance/architecture",
+    "docs/governance",
+    "docs/governance__corrupted_20260328_160514/architecture/file_changes.json",
+    "docs/governance__corrupted_20260328_160514/architecture",
+    "docs/governance__corrupted_20260328_160514"
+  ]
+}
