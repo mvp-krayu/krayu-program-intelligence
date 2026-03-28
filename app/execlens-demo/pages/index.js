@@ -1,5 +1,6 @@
 /**
  * pages/index.js
+ * PIOS-A.9-RUNTIME-CONFORMANCE (openPanel local authority removed; demo stage useEffect removed; runtime is projection-only, CONTROL-driven, transition non-authoritative [A.9])
  * PIOS-A.7-PROJECTION-PURIFICATION (UI is pure projection of CONTROL state; getPanelExpanded replaced by resolvedPanelState lookup; persona auto-open useEffect removed; TraversalEngine imports pruned [A.7])
  * PIOS-A.6-AUTHORITY-SWITCH (CONTROL is sole authority for all state transitions; index.js is adapter + projection only [A.6])
  * PIOS-51.9B-AUTHORITY-WIRING (getPanelExpanded: computePanelState governs GUIDED rendering; validatePanelTransition bypassed in ENTRY/FREE/OPERATOR; valid-by-construction comment on handleDemoNext [51.9B])
@@ -197,19 +198,9 @@ export default function Home() {
     setResolvedPanelState(s.resolvedPanelState)  // A.7: projection-layer authority
   }
 
-  // ── Panel helpers ──
-
-  // openPanel kept for demo stage useEffect (uncovered Path C) [A.6]
-  const openPanel = useCallback((panelId) => {
-    setOpenPanels(prev => {
-      if (prev.includes(panelId)) return prev
-      const next = [...prev, panelId]
-      // max 2: drop oldest if over limit [R1]
-      return next.length > 2 ? next.slice(next.length - 2) : next
-    })
-  }, [])
-
-  // togglePanel REMOVED: all toggle transitions route through CONTROL [A.6]
+  // A.9: openPanel REMOVED — was local panel-state authority bypassing CONTROL.
+  // All panel mutations now exclusively through CONTROL via applyControlResponse.
+  // togglePanel was already removed in A.6. [A.9]
 
   // ── handleToggle — routes PANEL_TOGGLE through CONTROL [A.6] ──
   // CONTROL enforces: guided lock, post-completion lock, max-2 rule. [51.8, 51.8R amendment 7]
@@ -269,22 +260,11 @@ export default function Home() {
       })
   }, [selectedQuery])
 
-  // ── Demo stage → panel mapping [R4] — standard mode only ──
-
-  useEffect(() => {
-    if (!demoActive || !demoStage) return
-    if (selectedFlow) return  // traversal mode handles its own panel opening [51.6]
-
-    // Stage 1: auto-select GQ-003 so data loads during Situation reveal
-    if (demoStage === 1) {
-      setSelectedQuery('GQ-003')
-    }
-
-    const panelId = STAGE_PANEL[demoStage]
-    if (panelId) {
-      openPanel(panelId)
-    }
-  }, [demoActive, demoStage, openPanel, selectedFlow])
+  // A.9: Demo stage useEffect REMOVED — contained two illegal local authority sites:
+  //   1. setSelectedQuery('GQ-003') — bypassed CONTROL QUERY_SELECT intent
+  //   2. openPanel(panelId) — local panel-open authority bypassing CONTROL
+  // CONTROL.DEMO_NEXT Path C sets openPanels in its response (canonical); panel-open is now CONTROL-owned.
+  // setSelectedQuery for Path C is missing canonical wiring — exposed as truth-revealing controlled degradation. [A.9]
 
   // A.6: Persona change reset useEffect REMOVED.
   // CONTROL handles all persona-change resets atomically via PERSONA_SELECT intent.

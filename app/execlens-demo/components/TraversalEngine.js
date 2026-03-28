@@ -18,7 +18,7 @@
  *   D3.3  D2_PATH_MAP: four D.2 traversal paths with code sequences
  *   D3.4  PERSONA_DEPTH_ENVELOPE: per-persona reachable panel sets
  *   D3.5  computePanelState: derive D.2 state from session context
- *   D3.6  validatePanelTransition: authorize or block a proposed transition
+ *   D3.6  validatePanelTransition: REMOVED [A.9] — transition validation authority belongs to CONTROL only
  *
  * Authority: docs/pios/51.6/enl_traversal_runtime_model.md
  *            docs/governance/architecture/execlens_traversal_binding.md (D.2)
@@ -239,58 +239,7 @@ function _isValidNextStep(panelId, currentPanel, persona) {
   })
 }
 
-// ---------------------------------------------------------------------------
-// D3.6 — validatePanelTransition
-// Authorizes or blocks a proposed panel transition.
-// Returns { authorized: boolean, reason: string }.
-// Pure function. No side effects.
-// Authority: docs/governance/architecture/traversal_runtime_validation.md §3
-// ---------------------------------------------------------------------------
-
-export function validatePanelTransition(fromPanel, toPanel, traversalHistory, persona) {
-  // Null destination — panel not implemented
-  if (toPanel === null) {
-    return { authorized: false, reason: 'Panel not implemented in current runtime.' }
-  }
-
-  // No persona — cannot authorize traversal without a depth envelope
-  if (!persona) {
-    return { authorized: false, reason: 'No active persona: traversal depth envelope undefined.' }
-  }
-
-  const envelope = PERSONA_DEPTH_ENVELOPE[persona]
-
-  // Destination outside persona envelope — LOCKED
-  if (!envelope || !envelope.panels.includes(toPanel)) {
-    return { authorized: false, reason: `Panel LOCKED: outside ${persona} active depth envelope.` }
-  }
-
-  // Check sequence integrity: destination must be valid next step from fromPanel
-  const validNextStep = _isValidNextStep(toPanel, fromPanel, persona)
-  if (!validNextStep) {
-    return {
-      authorized: false,
-      reason: `Sequence violation: no authorized path from '${fromPanel}' to '${toPanel}' for ${persona} persona.`,
-    }
-  }
-
-  // Destination must not skip an unvisited intermediate panel
-  // Find the path and check for skipped panels
-  for (const path of Object.values(D2_PATH_MAP)) {
-    const seq = path.codeSequence.filter(Boolean)
-    const fromIdx = seq.indexOf(fromPanel)
-    const toIdx = seq.indexOf(toPanel)
-    if (fromIdx !== -1 && toIdx !== -1 && toIdx > fromIdx + 1) {
-      // There are panels between from and to on this path
-      const skipped = seq.slice(fromIdx + 1, toIdx).filter(p => !traversalHistory.includes(p))
-      if (skipped.length > 0) {
-        return {
-          authorized: false,
-          reason: `Sequence violation: '${skipped[0]}' must be visited before '${toPanel}' on this path.`,
-        }
-      }
-    }
-  }
-
-  return { authorized: true, reason: 'Transition authorized.' }
-}
+// D3.6 — validatePanelTransition REMOVED [A.9]
+// Transition validation authority belongs to CONTROL only.
+// This function was not imported by index.js (removed in A.7) or Control.js.
+// Its presence as exported runtime logic violated A.9 Rule 3 (transitions must not be runtime-validated).
