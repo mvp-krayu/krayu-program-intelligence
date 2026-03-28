@@ -3,7 +3,7 @@
 
 Program: Krayu — Program Intelligence Discipline
 Stream: C.2 — Whitepaper Entrypoint & Navigation Layer
-Authority: [[canonical-layer-model]], [[program_intelligence_stack]]
+Authority: canonical-layer-model, program_intelligence_stack
 Date: 2026-03-28
 
 ---
@@ -94,7 +94,7 @@ Signäl operates strictly under a read-only contract with PiOS outputs. This is 
 
 ## 6. Obsidian Navigation
 
-This repository is structured to be opened as an Obsidian vault. Every document in the governance corpus is a navigable node. Links written in relative path form (`./file.md`) resolve correctly in both GitHub and Obsidian. Links written in Obsidian wiki-link form (`[[document-name]]`) create graph edges within the vault, connecting documents according to their structural relationships rather than their directory positions.
+This repository is structured to be opened as an Obsidian vault. Every document in the governance corpus is a navigable node. Links written in relative path form (`./file.md`) resolve correctly in both GitHub and Obsidian. Links written in Obsidian wiki-link form create graph edges within the vault, connecting documents according to their structural relationships rather than their directory positions.
 
 The governance corpus has a deliberate topology. The canonical layer model is the root node of the architecture graph. The whitepaper, the stack articulation, the investor narrative, and the technical appendix are all downstream of it — they draw their definitions and constraints from the canonical model and link back to it as their authority source. The drift register and remediation corpus are lateral — they enforce the canonical model without modifying it. The reconstruction evidence is foundational — it is the record from which the current canonical model was restored.
 
@@ -114,4 +114,4 @@ When a specific architectural question arises — what a layer owns, what a stre
 
 ---
 
-*Authority: [[canonical-layer-model]] (Stream 00.2) | [[program_intelligence_stack]] | [[pios_technical_appendix]] | [[governance_index]]*
+*Authority: canonical-layer-model (Stream 00.2) | program_intelligence_stack | pios_technical_appendix | governance_index*
