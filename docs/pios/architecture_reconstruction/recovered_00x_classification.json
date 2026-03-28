@@ -1,0 +1,132 @@
+{
+  "registry_id": "R00X-CLS-v1",
+  "stream": "A.2b — Recovered 00.x Governance Reassessment",
+  "date": "2026-03-28",
+  "source_directory": "docs/architecture/_recovered_00x/",
+  "total_files": 11,
+  "classification_split": {
+    "accepted_canonical_subset": 4,
+    "retained_historical_subset": 7
+  },
+  "accepted_canonical_subset": [
+    {
+      "file": "canonical-layer-model.md",
+      "stream_id": "00.2",
+      "stream_name": "Canonical Layer Model Restoration",
+      "classification": "CANONICAL GOVERNANCE BASELINE",
+      "role": "PRIMARY — defines L0-L8 complete canonical layer model",
+      "governance_status": "PROVISIONAL (validation record status; self-consistent and in effect per Section 10 governance lock)",
+      "confidence": "HIGH",
+      "basis": "Explicitly labelled as Stream 00.2. Defines all 9 layers (L0-L8) with: purpose, ownership, allowed inputs, allowed outputs, must-never constraints, placement rules, cross-layer control rules, governing principles, drift identification, correction statement, governance lock. Structurally complete: 11/11 sections pass validation.",
+      "l1_l6_contribution": "Defines L0-L8 completely. L1=Evidence Normalization, L2=Evidence Navigation (ENL), L3=Derivation, L4=Semantic Shaping, L5=Presentation Assembly, L6=Runtime Experience. Resolves MCA-001 CRITICAL blocker."
+    },
+    {
+      "file": "canonical-layer-model.classification.md",
+      "stream_id": "00.2",
+      "stream_name": "Canonical Layer Model Restoration — Construct Classification",
+      "classification": "CANONICAL GOVERNANCE BASELINE",
+      "role": "Companion classification of all system constructs against L0-L8 model",
+      "governance_status": "PROVISIONAL (90% confidence; SSZ/SSI/Executive Interpretation upgrades pending)",
+      "confidence": "HIGH",
+      "basis": "Explicitly labelled as Stream 00.2 sub-artifact. Classifies 10 constructs: SSZ, SSI, Executive Interpretation, Demo Sequencing, Topology Highlighting, Evidence Deep Links, Killer Shots, ENL, Contracts, PiOS Scripts."
+    },
+    {
+      "file": "canonical-layer-model.drift.md",
+      "stream_id": "00.2",
+      "stream_name": "Canonical Layer Model Restoration — Drift Record",
+      "classification": "CANONICAL GOVERNANCE BASELINE",
+      "role": "Records 6 architectural drift items across Streams 40.x, 41.x, 42.x, 51 with corrective positioning",
+      "governance_status": "PROVISIONAL (4 of 6 drift items open)",
+      "confidence": "HIGH",
+      "basis": "Explicitly labelled as Stream 00.2 sub-artifact. 6 drifts: D1 (SSZ/SSI at L6), D2 (Exec Interp at L6), D3 (contracts as architecture carriers), D4 (shorthand vocabulary without L3 anchor), D5 (demo constructs appearing architecture-like), D6 (validation without durable archive)."
+    },
+    {
+      "file": "canonical-layer-model.validation.md",
+      "stream_id": "00.2",
+      "stream_name": "Canonical Layer Model Restoration — Validation Record",
+      "classification": "CANONICAL GOVERNANCE BASELINE",
+      "role": "Formal validation of canonical-layer-model.md against structural and compliance criteria",
+      "governance_status": "PROVISIONAL (88% overall; 3 unresolved items block LOCK-READY)",
+      "confidence": "HIGH",
+      "basis": "11/11 sections pass. 4/4 layer ordering checks pass. 10/10 Evidence First compliance checks pass. 8/8 boundary compliance checks pass. 3 unresolved: SSZ/SSI L3 spec missing, L4 semantic shaping spec absent, validation memory not archived."
+    }
+  ],
+  "retained_historical_subset": [
+    {
+      "file": "canonical-model-closure-validation.md",
+      "stream_id": "00.3",
+      "stream_name": "Canonical Model Closure Validation",
+      "classification": "DOWNSTREAM GOVERNANCE ENFORCEMENT — CLOSURE",
+      "role": "Formal closure validation of 00.2 + 40.12-40.15 governance record; confirms system cleared for remediation execution",
+      "governance_status": "GOVERNANCE CLOSURE VALIDATION",
+      "confidence": "HIGH",
+      "basis": "Stream 00.3 — explicitly downstream of 00.2. Validates alignment (CONFIRMED), derivation ownership (CONFIRMED), boundary integrity (CONFIRMED), remediation readiness (CONFIRMED), downstream isolation (CONFIRMED). Identifies 4 residual risks."
+    },
+    {
+      "file": "derivation-ownership-correction.md",
+      "stream_id": "40.12",
+      "stream_name": "Derivation Ownership & Placement Correction",
+      "classification": "DOWNSTREAM GOVERNANCE ENFORCEMENT",
+      "role": "Restores derivation ownership to L3; identifies SSZ, SSI, ESI as mis-layered or ungoverned",
+      "governance_status": "GOVERNANCE CORRECTION",
+      "confidence": "HIGH",
+      "basis": "Authority: Stream 00.2. Downstream enforcement of 00.2 canonical model."
+    },
+    {
+      "file": "derivation-boundary-audit.md",
+      "stream_id": "40.13",
+      "stream_name": "Derivation Boundary Audit & Enforcement Baseline",
+      "classification": "DOWNSTREAM GOVERNANCE ENFORCEMENT",
+      "role": "Audits derivation boundary compliance; classifies 8 findings (F1-F8): violations, tolerated deviations, compliant",
+      "governance_status": "GOVERNANCE AUDIT",
+      "confidence": "HIGH",
+      "basis": "Authority: Stream 00.2 + Stream 40.12. 3 open violations (F1-SSZ, F2-SSI, F6), 3 tolerated deviations (F3,F4,F5), 2 compliant (F7,F8)."
+    },
+    {
+      "file": "boundary-remediation-allocation.md",
+      "stream_id": "40.14",
+      "stream_name": "Boundary Violation Disposition & Remediation Allocation",
+      "classification": "DOWNSTREAM GOVERNANCE ENFORCEMENT",
+      "role": "Formally dispositions all 8 findings; allocates remediation ownership; defines protected downstream boundaries",
+      "governance_status": "GOVERNANCE ALLOCATION",
+      "confidence": "HIGH",
+      "basis": "Authority: 00.2 + 40.12 + 40.13."
+    },
+    {
+      "file": "remediation-planning-framework.md",
+      "stream_id": "40.15",
+      "stream_name": "Remediation Planning & Execution Envelope Definition",
+      "classification": "DOWNSTREAM GOVERNANCE ENFORCEMENT",
+      "role": "Organizes violations into Domains A/B/C; defines execution envelopes per layer; sequencing constraints S1-S6; downstream protection rules P1-P5",
+      "governance_status": "GOVERNANCE PLANNING",
+      "confidence": "HIGH",
+      "basis": "Authority: 00.2 + 40.12 + 40.13 + 40.14."
+    },
+    {
+      "file": "remediation-execution-domain-01.md",
+      "stream_id": "40.16",
+      "stream_name": "Remediation Execution Domain 01 — Derivation Ownership & Boundary Correction",
+      "classification": "DOWNSTREAM GOVERNANCE ENFORCEMENT — EXECUTION",
+      "role": "Domain A remediation execution: L3 derivation specification for SSZ, SSI, ESI",
+      "governance_status": "REMEDIATION EXECUTION — DOMAIN A",
+      "confidence": "HIGH",
+      "basis": "Authority: 00.2 + 40.12 + 40.14 + 40.15 + 00.3."
+    },
+    {
+      "file": "remediation-execution-domain-02.md",
+      "stream_id": "40.17",
+      "stream_name": "Remediation Execution Domain 02 — Boundary Enforcement (Non-Derivation Leakage)",
+      "classification": "DOWNSTREAM GOVERNANCE ENFORCEMENT — EXECUTION",
+      "role": "Domain B remediation execution: non-derivation boundary enforcement (contract overload, validation memory, demo bleed)",
+      "governance_status": "REMEDIATION EXECUTION — DOMAIN 02",
+      "confidence": "HIGH",
+      "basis": "Authority: 00.2 + 40.12 + 40.14 + 40.15 + 00.3 + 40.16."
+    }
+  ],
+  "stream_00x_summary": {
+    "streams_found": ["00.2", "00.3"],
+    "streams_in_enforcement_chain": ["40.12", "40.13", "40.14", "40.15", "40.16", "40.17"],
+    "00_2_status": "FOUND — canonical layer model fully defined (L0-L8); governance status PROVISIONAL",
+    "mca_001_resolution": "RESOLVED — Stream 00.2 is present in docs/architecture/_recovered_00x/canonical-layer-model.md"
+  }
+}

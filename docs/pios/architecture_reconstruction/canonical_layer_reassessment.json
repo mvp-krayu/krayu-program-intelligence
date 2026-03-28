@@ -1,28 +1,35 @@
 {
-  "registry_id": "CLR-v1",
-  "stream": "A.2 — PiOS Architecture Post-Execution Consolidation",
+  "registry_id": "CLR-v2",
+  "stream": "A.2b — Recovered 00.x Governance Reassessment (updates CLR-v1)",
   "date": "2026-03-28",
-  "source": "Canonical corpus CAC-v1 (26 nodes, ACTIVE+HIGH only) applied to L1-L6 question",
+  "source": "CLR-v1 updated with Stream 00.2 recovered from docs/architecture/_recovered_00x/canonical-layer-model.md",
   "prior_verdict": {
-    "from": "LAM-v1 (A.1)",
+    "from": "CLR-v1 (A.2)",
     "verdict": "MODIFIED",
-    "basis": "All 33 nodes including PARTIAL/MEDIUM/ABSENT; full A.1 crawl"
+    "basis": "Stream 00.2 absent; L1-L2 not defined"
   },
-  "reassessment_question": "From canonical corpus only (ACTIVE+HIGH, 26 nodes), is the L1-L6 model CONFIRMED, MODIFIED, or REJECTED?",
-  "reassessment_verdict": "MODIFIED — UNCHANGED FROM A.1",
+  "a2b_update": "Stream 00.2 (canonical-layer-model.md) found in docs/architecture/_recovered_00x/. L0-L8 now fully defined. MCA-001 resolved. Verdict upgraded.",
+  "reassessment_question": "With Stream 00.2 recovered, is the L1-L6 model CONFIRMED, MODIFIED, or REJECTED?",
+  "reassessment_verdict": "CONFIRMED — with PROVISIONAL governance status",
   "rationale": [
-    "Canonical corpus (26 nodes, ACTIVE+HIGH) contains more evidence-dense artifacts than full A.1 set, but the key blocker (Stream 00.2 absence) is unchanged.",
-    "L3 and L4 fragments remain the best-supported L-number evidence in the canonical corpus.",
-    "The Three-Layer Analytical Model (CC-005) and 9-Stage Pipeline (CC-002) are both CONFIRMED from canonical corpus at HIGH confidence.",
-    "Without Stream 00.2 (MCA-001, CRITICAL), L0-L8 complete definition remains unverifiable.",
-    "Canonical corpus strengthens confidence in the MODIFIED verdict but cannot elevate it to CONFIRMED."
+    "Stream 00.2 (canonical-layer-model.md) is FOUND at docs/architecture/_recovered_00x/canonical-layer-model.md.",
+    "The document defines all 9 layers (L0-L8) with complete definitions: purpose, ownership, allowed inputs/outputs, must-never constraints, placement rules.",
+    "L1 = Evidence Normalization Layer. L2 = Evidence Navigation Layer (ENL). Both previously undefined.",
+    "L3 = Derivation Layer (maps to 40.5 Signal Computation — consistent with A.1 HIGH-confidence fragments).",
+    "L4 = Semantic Shaping Layer (maps to 41.x — consistent with A.1 HIGH-confidence fragments).",
+    "L5 = Presentation Assembly Layer (maps to 43.x-44.x binding+projection zone — consistent with A.1 MEDIUM-inferred).",
+    "L6 = Runtime Experience Layer (maps to 42.x ExecLens — consistent with A.1 MEDIUM-inferred).",
+    "All L1-L6 definitions match observed runtime stream behavior from A.1 crawl.",
+    "Governance status is PROVISIONAL (not LOCK-READY) due to open drift items (SSZ/SSI at L6, L4 spec absent), but these are implementation deviations, not definitional gaps.",
+    "PROVISIONAL does not mean MODIFIED — the model is defined and its definitions are confirmed."
   ],
   "canonical_corpus_layer_evidence": {
     "L1": {
-      "verdict": "NOT DEFINED",
-      "canonical_corpus_support": "NONE",
-      "best_anchor": null,
-      "notes": "No canonical corpus node defines L1. Stream 00.2 would define it."
+      "verdict": "CONFIRMED — HIGH",
+      "canonical_corpus_support": "HIGH",
+      "best_anchor": "docs/architecture/_recovered_00x/canonical-layer-model.md Section 4 L1",
+      "definition": "Evidence Normalization Layer — converts heterogeneous evidence into controlled machine-usable structural form without changing truth claims",
+      "notes": "Previously NOT DEFINED. Now explicitly defined by Stream 00.2."
     },
     "L2": {
       "verdict": "NOT DEFINED",
@@ -45,23 +52,36 @@
       "notes": "L4 = Semantic Shaping. Explicit fragment in 43.1; functional zone confirmed by 41.x canonical corpus nodes."
     },
     "L5": {
-      "verdict": "SUPPORTED — MEDIUM (inferred)",
-      "canonical_corpus_support": "MEDIUM",
-      "best_anchor": "CC-016 (43.1 Section 10 negative assertion: 43.x/44.x does not hold L5/L6 authority implies L5 exists)",
-      "notes": "L5 = Presentation Assembly. Inferred from negative assertion. 43.x-44.x canonical corpus zone maps to L5 function but L5 label is not explicitly assigned."
+      "verdict": "CONFIRMED — HIGH",
+      "canonical_corpus_support": "HIGH",
+      "best_anchor": "docs/architecture/_recovered_00x/canonical-layer-model.md Section 4 L5",
+      "definition": "Presentation Assembly Layer — assembles evidence-bound semantic and derived outputs into presentation-ready payloads",
+      "runtime_map": "43.x binding + 44.x projection zone (CC-016 through CC-021)",
+      "notes": "Previously MEDIUM inferred. Now explicitly defined by Stream 00.2. L5 = Presentation Assembly confirms 43.x-44.x functional zone mapping."
     },
     "L6": {
-      "verdict": "SUPPORTED — MEDIUM (inferred)",
-      "canonical_corpus_support": "MEDIUM",
-      "best_anchor": "CC-016 (43.1 Section 10 negative assertion: similar to L5)",
-      "secondary_anchor": "CC-022, CC-023 (42.21, 42.22 runtime rendering zone confirmed)",
-      "notes": "L6 = Runtime Rendering. 42.x consumer execution zone maps to L6 function. Label inferred, not explicitly assigned."
+      "verdict": "CONFIRMED — HIGH",
+      "canonical_corpus_support": "HIGH",
+      "best_anchor": "docs/architecture/_recovered_00x/canonical-layer-model.md Section 4 L6",
+      "definition": "Runtime Experience Layer — renders and interacts with assembled outputs",
+      "runtime_map": "42.x ExecLens consumer execution (CC-022, CC-023)",
+      "notes": "Previously MEDIUM inferred. Now explicitly defined by Stream 00.2. L6 explicitly names ExecLens as runtime consumer layer."
     },
-    "L7_L8": {
-      "verdict": "NOT DEFINED",
-      "canonical_corpus_support": "NONE",
-      "best_anchor": null,
-      "notes": "No canonical corpus node references L7 or L8."
+    "L7": {
+      "verdict": "CONFIRMED — HIGH",
+      "canonical_corpus_support": "HIGH",
+      "best_anchor": "docs/architecture/_recovered_00x/canonical-layer-model.md Section 4 L7",
+      "definition": "Demo / Narrative Packaging Layer — packages system for demonstrations, investor sequencing, curated walkthroughs",
+      "runtime_map": "51.x Demo Surface streams",
+      "notes": "L7 is beyond the L1-L6 scope but now fully defined. 51.x explicitly classified as L7 in the canonical model."
+    },
+    "L8": {
+      "verdict": "CONFIRMED — HIGH",
+      "canonical_corpus_support": "HIGH",
+      "best_anchor": "docs/architecture/_recovered_00x/canonical-layer-model.md Section 4 L8",
+      "definition": "Governance, Contract, and Validation Layer — constrains, validates, documents, and audits the system",
+      "runtime_map": "docs/pios/contracts/, governance docs, validation artifacts",
+      "notes": "L8 is beyond the L1-L6 scope but now fully defined. Cross-cutting layer."
     }
   },
   "canonical_model_confirmation": {
@@ -78,16 +98,16 @@
       "notes": "All three layers (Observability, Intelligence, Executive Intelligence) fully represented in canonical corpus."
     },
     "l_number_model_complete": {
-      "verdict": "NOT CONFIRMED — MODIFIED",
-      "confidence": "LOW for complete model",
-      "notes": "L3-L4 HIGH, L5-L6 MEDIUM from fragments only. L1-L2 absent. L7-L8 absent. Cannot confirm L1-L6 as a complete named model."
+      "verdict": "CONFIRMED — PROVISIONAL governance status",
+      "confidence": "HIGH for definitions; PROVISIONAL for implementation compliance",
+      "notes": "L0-L8 all explicitly defined by Stream 00.2. L1-L6 definitions confirmed. Governance status PROVISIONAL due to open drift: SSZ/SSI at L6 (should be L3), L4 formal spec absent. Definitions are confirmed; implementation has known deviations under remediation."
     }
   },
-  "delta_from_a1": {
-    "verdict_change": "NONE — MODIFIED verdict stands",
-    "confidence_change": "Marginal increase — canonical corpus filtering strengthens confidence in supported layers (L3, L4) by removing PARTIAL/MEDIUM noise. Does not change L1-L6 overall verdict.",
-    "new_findings": "NONE — canonical corpus reassessment confirms A.1 conclusions without contradiction",
-    "resolved_ambiguities": "NONE — AMB-001 (Stream 00.2 absent) remains open; MCA-001 is CRITICAL and unresolved"
+  "delta_from_a2": {
+    "verdict_change": "MODIFIED → CONFIRMED (PROVISIONAL governance status)",
+    "confidence_change": "L1-L2: NONE→HIGH. L3-L4: HIGH (unchanged, now also definitionally confirmed). L5-L6: MEDIUM inferred→HIGH definitionally confirmed. L7-L8: NONE→HIGH (out of L1-L6 scope but now defined).",
+    "new_findings": "Stream 00.2 found. L0-L8 complete. Governance lock in effect. 6 drift items identified (4 open). 8 audit findings classified (F1-F8). Remediation streams 40.16-40.17 in evidence.",
+    "resolved_ambiguities": "AMB-001 CLOSED. MCA-001 RESOLVED."
   },
-  "final_reassessment_verdict": "MODIFIED — The canonical corpus reassessment produces no change from the A.1 MODIFIED verdict. The 9-Stage Pipeline and Three-Layer Analytical Model are CONFIRMED at HIGH confidence. L3-L4 are supported at HIGH confidence by canonical corpus evidence. L5-L6 remain MEDIUM (inferred). L1-L2 remain NOT DEFINED. The complete L1-L6 named model cannot be CONFIRMED without Stream 00.2."
+  "final_reassessment_verdict": "CONFIRMED (PROVISIONAL governance status) — Stream 00.2 found at docs/architecture/_recovered_00x/canonical-layer-model.md. L0-L8 are fully defined. All L1-L6 layers are explicitly defined and their definitions are consistent with observed runtime stream behavior from A.1 crawl. Governance status is PROVISIONAL because SSZ/SSI derivation is currently mis-layered at L6 (should be L3) and L4 semantic shaping formal specification is absent. These are known implementation deviations under remediation — they do not change the definitional verdict. The 9-Stage Pipeline and Three-Layer Analytical Model remain CONFIRMED at HIGH confidence and are structurally independent of the L-number model."
 }

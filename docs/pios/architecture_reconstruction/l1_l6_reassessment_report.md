@@ -1,150 +1,153 @@
 # L1-L6 Reassessment Report
 
-Stream: A.2 — PiOS Architecture Post-Execution Consolidation
+Stream: A.2b — Recovered 00.x Governance Reassessment (supersedes A.2 version)
 Date: 2026-03-28
-Source: CLR-v1
-Basis: Canonical corpus only (CAC-v1 — 26 nodes, ACTIVE + HIGH confidence)
+Source: CLR-v2 (canonical_layer_reassessment.json)
 
 ---
 
-## Prior Verdict (A.1)
+## Version History
 
-| Field | Value |
-|---|---|
-| Registry | LAM-v1 |
-| Verdict | MODIFIED |
-| Basis | All 33 A.1 nodes including PARTIAL/MEDIUM/ABSENT |
-
----
-
-## Reassessment Question
-
-From the canonical corpus only (26 ACTIVE+HIGH nodes), is the L1-L6 model CONFIRMED, MODIFIED, or REJECTED?
-
----
-
-## Layer-by-Layer Reassessment
-
-### L1
-
-**Verdict: NOT DEFINED**
-
-No canonical corpus node defines L1. The defining document (Stream 00.2) is absent. No fragment, no reference, no anchor. L1 cannot be confirmed from canonical evidence.
-
-### L2
-
-**Verdict: NOT DEFINED**
-
-Same as L1. No canonical corpus anchor. Stream 00.2 is the only known defining source. Absent.
-
-### L3 — Signal Derivation
-
-**Verdict: SUPPORTED — HIGH**
-
-Two independent canonical corpus nodes contain explicit L3 references:
-- **CC-019** (44.1 Section 2): "signals produced at L3, shaped at L4" — direct text anchor
-- **CC-016** (43.1 Section 10): L3/L4 framing referenced in binding context
-
-L3 = Signal Derivation maps directly to 40.5 Signal Computation in the 9-Stage Pipeline. This mapping is confirmed at HIGH confidence from canonical corpus.
-
-### L4 — Semantic Shaping
-
-**Verdict: SUPPORTED — HIGH**
-
-Two independent canonical corpus nodes confirm L4:
-- **CC-016** (43.1 Section 10): explicit L4 = semantic shaping reference
-- **CC-013** (41.1 semantic_elevation_report.md): functional confirmation of the semantic shaping zone
-
-L4 maps to the 41.x Semantic Shaping Layer (CC-013, CC-014, CC-015) in the canonical corpus. This is the most evidence-dense L-number assignment.
-
-### L5 — Presentation Assembly
-
-**Verdict: SUPPORTED — MEDIUM (inferred)**
-
-L5 is supported only by negative assertion in the canonical corpus:
-- **CC-016** (43.1 Section 10) negates L5/L6 authority from 43.x/44.x, implying L5 exists as a layer designation
-
-The 43.x-44.x zone (Binding + Projection) functionally maps to what would be called "Presentation Assembly" but the L5 label is not explicitly assigned. Inferred.
-
-### L6 — Runtime Rendering
-
-**Verdict: SUPPORTED — MEDIUM (inferred)**
-
-Same mechanism as L5 — inferred from negative assertion:
-- **CC-016** (43.1 Section 10) negates L6 authority from 43.x/44.x
-- **CC-022, CC-023** (42.21, 42.22) confirm the consumer execution zone functionally
-
-L6 maps to the 42.x Consumer Execution Layer. Label is inferred, not explicitly assigned.
-
-### L7, L8
-
-**Verdict: NOT DEFINED**
-
-No canonical corpus node references L7 or L8. These layers are entirely absent from all available evidence.
-
----
-
-## L-Number Verdict Table
-
-| Layer | Label | Canonical Corpus Support | Confidence | Key Anchor |
-|---|---|---|---|---|
-| L1 | Unknown | NONE | NONE | N/A — Stream 00.2 absent |
-| L2 | Unknown | NONE | NONE | N/A — Stream 00.2 absent |
-| L3 | Signal Derivation | DIRECT ANCHOR | HIGH | CC-019 (44.1 §2), CC-016 (43.1 §10) |
-| L4 | Semantic Shaping | DIRECT ANCHOR | HIGH | CC-016 (43.1 §10), CC-013 (41.1) |
-| L5 | Presentation Assembly | INFERRED | MEDIUM | CC-016 (43.1 §10 negative assertion) |
-| L6 | Runtime Rendering | INFERRED | MEDIUM | CC-016, CC-022, CC-023 |
-| L7 | Unknown | NONE | NONE | N/A |
-| L8 | Unknown | NONE | NONE | N/A |
-
----
-
-## Canonical Model Confirmation
-
-### 9-Stage Pipeline
-
-**Verdict: CONFIRMED — HIGH**
-
-Canonical corpus nodes CC-002, CC-006 through CC-011 confirm Stages 1-7. Stages 8-9 are excluded from canonical corpus (PARTIAL lifecycle) but do not affect pipeline model confirmation. The 9-Stage Pipeline as an operational execution model is CONFIRMED.
-
-### Three-Layer Analytical Model
-
-**Verdict: CONFIRMED — HIGH**
-
-CC-005 defines the model explicitly. CC-006..CC-008 confirm Observability Layer. CC-009..CC-010 confirm Intelligence Layer. CC-011 confirms Executive Intelligence Layer. All three layers are represented in the canonical corpus at HIGH confidence.
-
-### L1-L6 Complete Named Model
-
-**Verdict: NOT CONFIRMED — MODIFIED**
-
-The complete L1-L6 named model requires Stream 00.2 to confirm L1-L2. Without it, the complete 6-layer named model cannot be confirmed from any available evidence.
-
----
-
-## Verdict Delta
-
-| Dimension | A.1 Verdict | A.2 Reassessment | Delta |
+| Version | Stream | Verdict | Date |
 |---|---|---|---|
-| L1-L6 complete model | MODIFIED | MODIFIED | NONE |
-| L3 support | HIGH | HIGH | NONE |
-| L4 support | HIGH | HIGH | NONE |
-| L5 support | MEDIUM | MEDIUM | NONE |
-| L6 support | MEDIUM | MEDIUM | NONE |
-| 9-Stage Pipeline | CONFIRMED | CONFIRMED | NONE |
-| Three-Layer Model | CONFIRMED | CONFIRMED | NONE |
-| 51.x as architecture layer | REJECTED | REJECTED | NONE |
-
-**Delta assessment: ZERO CHANGE.** Canonical corpus filtering strengthens analytical precision but produces no new evidence that changes any verdict.
+| v1 (A.2) | CLR-v1 | MODIFIED — unchanged from A.1 | 2026-03-28 |
+| v2 (A.2b) | CLR-v2 | CONFIRMED (PROVISIONAL governance) | 2026-03-28 |
 
 ---
 
-## Final A.2 Reassessment Verdict
+## A.2b Change: Stream 00.2 Found
 
-**MODIFIED — UNCHANGED FROM A.1**
+The A.2 reassessment maintained the MODIFIED verdict because Stream 00.2 (the defining L0-L8 document) was absent from all searched repos. A.2b targeted the `docs/architecture/_recovered_00x/` directory and found:
 
-The canonical corpus reassessment confirms the A.1 MODIFIED verdict with no delta. The A.1 architecture paper (pios_l1_l6_architecture_paper.md) stands as the authoritative final paper. No consolidated replacement paper is required.
+`canonical-layer-model.md` — explicitly labelled "Stream: 00.2 — Canonical Layer Model Restoration"
 
-**Conditions for future verdict change:**
-1. Stream 00.2 located and L1-L2 defined → could elevate L1-L6 to CONFIRMED (if content supports)
-2. Stream 75.x executed → would complete interpretation layer gap (does not affect L1-L6 verdict)
-3. run_02 advances through equivalent pipeline stages → triggers future A.3 consolidation pass
+This resolves MCA-001 (CRITICAL) and AMB-001 (HIGH impact). The verdict changes.
+
+---
+
+## Current Verdict
+
+**CONFIRMED — with PROVISIONAL governance status**
+
+---
+
+## Layer-by-Layer Assessment (Updated)
+
+### L0 — Evidence Source Layer
+
+**Verdict: CONFIRMED — HIGH**
+
+Defined by Stream 00.2 Section 4. Purpose: own raw evidence origins. Ownership: external systems and primary source repositories. Maps to git, CI/CD, issue trackers, deployment platforms feeding 40.2.
+
+### L1 — Evidence Normalization Layer
+
+**Verdict: CONFIRMED — HIGH (previously NOT DEFINED)**
+
+Defined by Stream 00.2 Section 4 L1. Purpose: convert heterogeneous evidence into controlled, machine-usable structural form without changing truth claims. Ownership: ingestion, parsing, schema mapping, evidence preparation. Maps to 40.1-40.2 evidence acquisition and normalization stages. Previously NOT DEFINED due to Stream 00.2 absence. Now explicitly defined.
+
+### L2 — Evidence Navigation Layer (ENL)
+
+**Verdict: CONFIRMED — HIGH (previously NOT DEFINED)**
+
+Defined by Stream 00.2 Section 4 L2. Purpose: provide evidence-addressable navigation and retrieval structure across normalized evidence. Ownership: traversal, evidence pathing, evidence adjacency, governed retrieval structure. ENL explicitly named as canonical at L2. Maps to ENL chain construction in 40.x/41.x. Previously NOT DEFINED due to Stream 00.2 absence. Now explicitly defined.
+
+**Note:** ENL was already observed as a runtime construct in A.1. The layer assignment is now definitionally confirmed.
+
+### L3 — Derivation Layer
+
+**Verdict: CONFIRMED — HIGH (unchanged from A.1/A.2)**
+
+Defined by Stream 00.2 Section 4 L3. Purpose: perform governed computation and signal derivation from evidence-bound inputs. Ownership: all formally defined computation transforming evidence-bound structures into measurable derived outputs. Maps to 40.5 Signal Computation Engine (SIG-001..008). The A.1 HIGH-confidence fragment ("signals produced at L3") in 44.1 Section 2 is now definitionally confirmed.
+
+**SSZ/SSI note:** Stream 00.2 explicitly states SSZ/SSI belong at L3 (Placement Rule in L3 section). Current implementation has them at L6 — this is an open violation per drift record D1.
+
+### L4 — Semantic Shaping Layer
+
+**Verdict: CONFIRMED — HIGH (unchanged from A.1/A.2)**
+
+Defined by Stream 00.2 Section 4 L4. Purpose: transform derived outputs into controlled semantic representations without altering evidence truth claims. Ownership: representation shaping, semantic framing, structured explanatory forms. Maps to 41.x Semantic Shaping Layer (41.1 semantic elevation, 41.2 PIE Vault, 41.3-41.5). The A.1 HIGH-confidence fragment in 43.1 Section 10 is now definitionally confirmed.
+
+**L4 governance gap:** Stream 00.2 validation record notes L4 formal specification is absent as an open governance item. Current L6 template-based executive interpretation is a tolerated deviation.
+
+### L5 — Presentation Assembly Layer
+
+**Verdict: CONFIRMED — HIGH (previously MEDIUM inferred)**
+
+Defined by Stream 00.2 Section 4 L5. Purpose: assemble evidence-bound semantic and derived outputs into presentation-ready payloads. Ownership: view models, panel payloads, module assembly, ordered output bundles, deep-link wiring. Maps to 43.x binding + 44.x projection zone.
+
+The A.1 MEDIUM inferred verdict was correct in functional mapping but lacked the definitional anchor. That anchor is now present.
+
+### L6 — Runtime Experience Layer
+
+**Verdict: CONFIRMED — HIGH (previously MEDIUM inferred)**
+
+Defined by Stream 00.2 Section 4 L6. Purpose: render and interact with assembled outputs. Ownership: runtime UI behavior, user interaction, rendering, filters, navigation controls. ExecLens explicitly named as runtime consumer layer in L6 placement rule. Maps to 42.x ExecLens consumer execution.
+
+The A.1 MEDIUM inferred verdict was correct in functional mapping but lacked the definitional anchor. Stream 00.2 directly names ExecLens at L6.
+
+---
+
+## L-Number Verdict Table (Updated)
+
+| Layer | Label | Defined By | Verdict | Runtime Map |
+|---|---|---|---|---|
+| L0 | Evidence Source Layer | 00.2 §4 L0 | CONFIRMED HIGH | External source systems |
+| L1 | Evidence Normalization Layer | 00.2 §4 L1 | CONFIRMED HIGH | 40.1-40.2 evidence acquisition |
+| L2 | Evidence Navigation Layer (ENL) | 00.2 §4 L2 | CONFIRMED HIGH | ENL chain (40.x/41.x) |
+| L3 | Derivation Layer | 00.2 §4 L3 | CONFIRMED HIGH | 40.5 Signal Computation |
+| L4 | Semantic Shaping Layer | 00.2 §4 L4 | CONFIRMED HIGH | 41.x Semantic Shaping |
+| L5 | Presentation Assembly Layer | 00.2 §4 L5 | CONFIRMED HIGH | 43.x Binding + 44.x Projection |
+| L6 | Runtime Experience Layer | 00.2 §4 L6 | CONFIRMED HIGH | 42.x ExecLens |
+| L7 | Demo / Narrative Packaging Layer | 00.2 §4 L7 | CONFIRMED HIGH | 51.x Demo Surface |
+| L8 | Governance / Contract / Validation | 00.2 §4 L8 | CONFIRMED HIGH | docs/pios/contracts/, governance |
+
+---
+
+## Governance Status: PROVISIONAL (not LOCK-READY)
+
+CONFIRMED means: the model is defined, complete, internally consistent, and the definitions match observed runtime stream behavior.
+
+PROVISIONAL means: the implementation has known deviations from the model that are under managed remediation. Specifically:
+
+| Deviation | Nature | Status |
+|---|---|---|
+| SSZ/SSI at L6 (should be L3) | Layer boundary violation | OPEN — requires L3 formal derivation spec |
+| Executive Interpretation at L6 (should be L4→L6) | L4 semantic shaping absent | TOLERATED — pending L4 spec |
+| Shorthand signal vocabulary without L3 anchor | ESI, RAG, etc. | OPEN |
+| Validation memory not archived | Operational governance gap | OPEN |
+
+These are IMPLEMENTATION deviations, not DEFINITIONAL gaps. The model is CONFIRMED. The deviations are tracked and managed under Streams 40.12-40.17.
+
+---
+
+## Previously Confirmed Models — Unchanged
+
+### 9-Stage Pipeline: CONFIRMED HIGH (unchanged)
+### Three-Layer Analytical Model: CONFIRMED HIGH (unchanged)
+
+Both models are structurally independent of the L-number verdict. The L-number model adds precision to the layer naming. The 9-Stage Pipeline and Three-Layer Model remain the canonical operational and analytical models.
+
+---
+
+## Verdict Delta Summary
+
+| Dimension | A.1 / A.2 | A.2b |
+|---|---|---|
+| Stream 00.2 | NOT FOUND | FOUND |
+| L1 | NOT DEFINED | CONFIRMED HIGH |
+| L2 | NOT DEFINED | CONFIRMED HIGH |
+| L3 | HIGH (fragment) | CONFIRMED HIGH (definitional) |
+| L4 | HIGH (fragment) | CONFIRMED HIGH (definitional) |
+| L5 | MEDIUM (inferred) | CONFIRMED HIGH (definitional) |
+| L6 | MEDIUM (inferred) | CONFIRMED HIGH (definitional) |
+| L7 | NOT DEFINED | CONFIRMED HIGH (out of scope) |
+| L8 | NOT DEFINED | CONFIRMED HIGH (out of scope) |
+| L1-L6 overall | MODIFIED | CONFIRMED (PROVISIONAL governance) |
+| AMB-001 | OPEN | CLOSED |
+| MCA-001 | CRITICAL / NOT FOUND | RESOLVED |
+
+---
+
+## A.1 Paper Status
+
+The A.1 architecture paper (pios_l1_l6_architecture_paper.md) remains valid as a reconstruction record. Its evidence documentation and methodology are sound. The verdict stated in the paper ("MODIFIED") is now superseded by this A.2b finding ("CONFIRMED — PROVISIONAL"). The paper does not need to be rewritten — a note or addendum marking the verdict change is sufficient.

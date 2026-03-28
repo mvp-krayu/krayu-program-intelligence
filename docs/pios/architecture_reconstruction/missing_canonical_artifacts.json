@@ -1,22 +1,24 @@
 {
-  "registry_id": "MCA-v1",
-  "stream": "A.2 — PiOS Architecture Post-Execution Consolidation",
+  "registry_id": "MCA-v2",
+  "stream": "A.2b — Recovered 00.x Governance Reassessment (updates MCA-v1)",
   "date": "2026-03-28",
-  "method": "Derived from A.1 ambiguity_register.json (AMB-001..AMB-007) + A.2 lifecycle classification (PARTIAL nodes) + boundary exclusion gaps",
+  "method": "MCA-v1 updated after A.2b targeted reassessment of docs/architecture/_recovered_00x/",
   "search_scope_exhausted": [
     "/Users/khorrix/Projects/repos/k-pi",
     "/Users/khorrix/Projects/krayu-knowledge",
     "/Users/khorrix/Projects/krayu-mirror",
     "/Users/khorrix/Projects/krayu-program-intelligence"
   ],
-  "total_missing": 5,
+  "total_missing": 4,
+  "total_resolved": 1,
   "missing_artifacts": [
     {
       "id": "MCA-001",
       "name": "Stream 00.2 — Canonical Layer Model Restoration",
       "type": "model-definition",
-      "severity": "CRITICAL",
-      "impact": "Blocks full confirmation of L1-L6 model. L0-L8 canonical definition cannot be verified. L1, L2, L7, L8 have no anchor. L3-L6 fragments exist but are incomplete without the defining document.",
+      "severity": "RESOLVED",
+      "prior_severity": "CRITICAL",
+      "impact": "RESOLVED — L0-L8 now fully defined. L1-L6 verdict upgraded from MODIFIED to CONFIRMED (PROVISIONAL governance status).",
       "referenced_by": [
         "43.1 (signal_to_structure_binding.md)",
         "43.2",
@@ -25,10 +27,12 @@
         "44.2"
       ],
       "reference_label": "Stream 00.2 — Canonical Layer Model Restoration",
-      "search_result": "NOT FOUND in any accessible repo (k-pi, krayu-knowledge, krayu-mirror, krayu-program-intelligence)",
+      "search_result": "FOUND — docs/architecture/_recovered_00x/canonical-layer-model.md",
+      "found_in_stream": "A.2b targeted reassessment",
       "amb_id": "AMB-001",
-      "resolution_path": "Must be located in an external or private repository, or must be reconstructed by authoritative authorship. Cannot be resolved by evidence-first search alone.",
-      "effect_on_l1_l6": "Primary blocker for L1-L6 CONFIRMED verdict. Without this, verdict remains MODIFIED."
+      "amb_status": "CLOSED",
+      "resolution": "canonical-layer-model.md is explicitly labelled Stream 00.2; defines L0-L8; governance lock in effect; validation status PROVISIONAL.",
+      "effect_on_l1_l6": "PRIMARY BLOCKER RESOLVED. L1-L6 verdict upgrades from MODIFIED to CONFIRMED (PROVISIONAL governance status)."
     },
     {
       "id": "MCA-002",
