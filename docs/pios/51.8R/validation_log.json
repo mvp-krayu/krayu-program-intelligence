@@ -1,8 +1,8 @@
 {
   "stream": "51.8R",
-  "timestamp": "2026-03-27T15:03:28.468617Z",
-  "total": 415,
-  "passed": 415,
+  "timestamp": "2026-03-27T16:32:15.129153Z",
+  "total": 431,
+  "passed": 431,
   "failed": 0,
   "groups": {
     "entry_strip_horizontal_alignment": {
@@ -325,8 +325,16 @@
       "pass": 6,
       "fail": 0
     },
+    "free_mode_real": {
+      "pass": 8,
+      "fail": 0
+    },
     "persona_auto_open_guided_blocked": {
       "pass": 5,
+      "fail": 0
+    },
+    "free_panel_data_restoration": {
+      "pass": 8,
       "fail": 0
     }
   },
@@ -1556,7 +1564,7 @@
       "detail": ""
     },
     {
-      "name": "Evidence gated by demoActive in render",
+      "name": "Evidence gated by demoActive or freeMode in render [51.8R RUN05]",
       "group": "panels_locked_until_demo_active",
       "status": "PASS",
       "detail": ""
@@ -1574,7 +1582,7 @@
       "detail": ""
     },
     {
-      "name": "ENLPanel requires demoActive",
+      "name": "ENLPanel renders in demoActive or freeMode [51.8R RUN05]",
       "group": "evidence_disabled_pre_demo",
       "status": "PASS",
       "detail": ""
@@ -1586,7 +1594,7 @@
       "detail": ""
     },
     {
-      "name": "Evidence blocked when !demoActive with persona",
+      "name": "Evidence blocked when !demoActive && !freeMode (ENTRY only) [51.8R RUN05]",
       "group": "evidence_disabled_pre_demo",
       "status": "PASS",
       "detail": ""
@@ -1640,7 +1648,7 @@
       "detail": ""
     },
     {
-      "name": "Auto-start requires both persona AND query \u2014 query alone insufficient [51.8R RUN03 supersedes amendment 10 dep string]",
+      "name": "Auto-start requires both persona AND query \u2014 query alone insufficient [51.8R RUN04 supersedes RUN03 dep string]",
       "group": "query_selection_does_not_unlock_panels",
       "status": "PASS",
       "detail": ""
@@ -1676,7 +1684,7 @@
       "detail": ""
     },
     {
-      "name": "Auto-start useEffect present with demoActive dep [51.8R RUN03 supersedes amendment 10 dep string]",
+      "name": "Auto-start useEffect present with freeMode dep [51.8R RUN04 supersedes RUN03 dep string]",
       "group": "no_implicit_demo_activation",
       "status": "PASS",
       "detail": ""
@@ -1700,7 +1708,7 @@
       "detail": ""
     },
     {
-      "name": "ENLPanel only rendered when demoActive",
+      "name": "ENLPanel rendered in demoActive or freeMode [51.8R RUN05]",
       "group": "analyst_mode_blocked_pre_demo",
       "status": "PASS",
       "detail": ""
@@ -2168,7 +2176,7 @@
       "detail": ""
     },
     {
-      "name": "Evidence gated by demoActive in render (pre-demo blocked)",
+      "name": "Evidence gated by demoActive or freeMode (pre-demo ENTRY still blocked) [51.8R RUN05]",
       "group": "panels_locked_pre_demo",
       "status": "PASS",
       "detail": ""
@@ -2348,7 +2356,7 @@
       "detail": ""
     },
     {
-      "name": "Auto-start useEffect present with [enlPersona, selectedQuery, demoComplete, demoActive] deps [51.8R RUN03 supersedes amendment 10 deps]",
+      "name": "Auto-start useEffect present with [enlPersona, selectedQuery, demoComplete, demoActive, freeMode] deps [51.8R RUN04 supersedes RUN03 deps]",
       "group": "guided_autostarts_on_persona_and_query",
       "status": "PASS",
       "detail": ""
@@ -2402,7 +2410,7 @@
       "detail": ""
     },
     {
-      "name": "Auto-start effect present \u2014 CTA not required [51.8R RUN03 supersedes amendment 10 dep string]",
+      "name": "Auto-start effect present \u2014 CTA not required [51.8R RUN04 supersedes RUN03 dep string]",
       "group": "no_cta_required_for_entry",
       "status": "PASS",
       "detail": ""
@@ -2420,7 +2428,7 @@
       "detail": ""
     },
     {
-      "name": "Auto-start deps include demoActive for mid-guided restart [51.8R RUN03 supersedes amendment 10 demoComplete-only check]",
+      "name": "Auto-start deps include freeMode for operator mode guard [51.8R RUN04 supersedes RUN03 demoActive-only addition]",
       "group": "no_cta_required_for_entry",
       "status": "PASS",
       "detail": ""
@@ -2552,7 +2560,7 @@
       "detail": ""
     },
     {
-      "name": "Auto-start deps include demoActive [51.8R RUN03 supersedes amendment 10 dep string]",
+      "name": "Auto-start deps include freeMode [51.8R RUN04 supersedes RUN03 dep string]",
       "group": "auto_start_deterministic_across_runs",
       "status": "PASS",
       "detail": ""
@@ -2594,7 +2602,7 @@
       "detail": ""
     },
     {
-      "name": "Auto-start present with demoActive dep (mid-guided restart covered) [51.8R RUN03 supersedes amendment 10]",
+      "name": "Auto-start present with freeMode dep (operator mode covered) [51.8R RUN04 supersedes RUN03]",
       "group": "no_cta_required_any_run",
       "status": "PASS",
       "detail": ""
@@ -2756,7 +2764,7 @@
       "detail": ""
     },
     {
-      "name": "Auto-start deps include demoActive [51.8R RUN03 \u2014 mid-guided restart key]",
+      "name": "Auto-start deps include demoActive AND freeMode [51.8R RUN03/RUN04 \u2014 mid-guided restart key]",
       "group": "mid_guided_persona_switch_restart",
       "status": "PASS",
       "detail": ""
@@ -2792,6 +2800,54 @@
       "detail": ""
     },
     {
+      "name": "freeMode state declared with useState(false) [51.8R RUN04]",
+      "group": "free_mode_real",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleDemoExit sets freeMode=true (enters operator mode) [51.8R RUN04]",
+      "group": "free_mode_real",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleStartDemo sets freeMode=false after gates (explicit exit from FREE) [51.8R RUN04]",
+      "group": "free_mode_real",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Auto-start freeMode guard present \u2014 no auto-restart in operator mode [51.8R RUN04]",
+      "group": "free_mode_real",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Entry strip hidden when freeMode=true \u2014 no guided shell in FREE [51.8R RUN04]",
+      "group": "free_mode_real",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Operator surface rendered when freeMode && !demoActive [51.8R RUN04]",
+      "group": "free_mode_real",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "operator-surface CSS class defined [51.8R RUN04]",
+      "group": "free_mode_real",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handleStartDemo clears exitedRef on explicit restart [51.8R RUN04]",
+      "group": "free_mode_real",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
       "name": "Persona auto-open effect has guided-mode guard [Post-RUN01 hardening]",
       "group": "persona_auto_open_guided_blocked",
       "status": "PASS",
@@ -2818,6 +2874,54 @@
     {
       "name": "PERSONA_GUIDED_FLOWS defined in index.js (guard target exists)",
       "group": "persona_auto_open_guided_blocked",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel render guard includes freeMode [51.8R RUN05]",
+      "group": "free_panel_data_restoration",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENTRY placeholder gated by !demoActive && !freeMode [51.8R RUN05]",
+      "group": "free_panel_data_restoration",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENTRY placeholder string still present (not removed)",
+      "group": "free_panel_data_restoration",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "evidence-blocked-state class still present (ENTRY gate preserved)",
+      "group": "free_panel_data_restoration",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Operator mode badge element present [51.8R RUN05]",
+      "group": "free_panel_data_restoration",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "OPERATOR MODE text in operator surface [51.8R RUN05]",
+      "group": "free_panel_data_restoration",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "operator-mode-badge CSS defined [51.8R RUN05]",
+      "group": "free_panel_data_restoration",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ENLPanel rawStepActive=false in FREE (reset by handleDemoExit)",
+      "group": "free_panel_data_restoration",
       "status": "PASS",
       "detail": ""
     }

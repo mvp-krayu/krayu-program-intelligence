@@ -1,6 +1,6 @@
 {
   "stream": "51.6R.3",
-  "timestamp": "2026-03-26T17:11:12.406457Z",
+  "timestamp": "2026-03-27T12:15:29.280840Z",
   "total": 32,
   "passed": 32,
   "failed": 0,
@@ -86,25 +86,25 @@
       "detail": ""
     },
     {
-      "name": "Persona\u2192evidence effect: openPanel('evidence')",
+      "name": "Persona\u2192evidence auto-open effect removed [51.8R amendment 8]",
       "group": "evidence_open_behavior",
       "status": "PASS",
       "detail": ""
     },
     {
-      "name": "Evidence open: guarded by !demoActive",
+      "name": "Evidence auto-open guard gone [51.8R amendment 8]",
       "group": "evidence_open_behavior",
       "status": "PASS",
       "detail": ""
     },
     {
-      "name": "Evidence open: no selectedFlow dependency",
+      "name": "No isolated evidence effect in removed block [51.8R amendment 8]",
       "group": "evidence_open_behavior",
       "status": "PASS",
       "detail": ""
     },
     {
-      "name": "Evidence open effect depends on enlPersona",
+      "name": "Evidence auto-open dep array removed [51.8R amendment 8]",
       "group": "evidence_open_behavior",
       "status": "PASS",
       "detail": ""

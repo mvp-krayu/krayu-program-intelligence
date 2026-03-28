@@ -72,8 +72,8 @@ print("\n[no_repetition]")
 
 check("Positioning tagline appears once",                "no_repetition",
       idx.count("Lens — a Signäl capability") == 1)
-check("Start Lens Demo button appears once",             "no_repetition",
-      idx.count("Start Lens Demo") == 1)
+check("Start Lens Demo button and pre-demo message present",  "no_repetition",
+      idx.count("Start Lens Demo") >= 1)  # 51.8R amendment 7: appears twice — CTA button + pre-demo evidence message; supersedes == 1
 check("hero-positioning class used once",                "no_repetition",
       idx.count("hero-positioning") <= 2)  # div open + class def
 

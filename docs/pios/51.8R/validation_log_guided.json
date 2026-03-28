@@ -1,7 +1,7 @@
 {
   "stream": "51.8R",
   "validator": "validate_51_8R_guided",
-  "timestamp": "2026-03-27T09:00:43.460137Z",
+  "timestamp": "2026-03-27T16:32:15.439294Z",
   "total": 82,
   "passed": 82,
   "failed": 0,
@@ -115,7 +115,7 @@
       "detail": ""
     },
     {
-      "name": "Both gates before setDemoActive",
+      "name": "Both gates before setDemoActive in handleStartDemo [51.8R amendment 9 supersedes index-based check]",
       "group": "start_demo_still_blocked_without_query",
       "status": "PASS",
       "detail": ""

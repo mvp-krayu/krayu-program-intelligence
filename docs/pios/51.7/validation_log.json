@@ -1,6 +1,6 @@
 {
   "stream": "51.7",
-  "timestamp": "2026-03-26T17:11:11.118697Z",
+  "timestamp": "2026-03-27T16:32:15.757575Z",
   "total": 27,
   "passed": 27,
   "failed": 0,
@@ -64,7 +64,7 @@
       "detail": ""
     },
     {
-      "name": "Demo start blocked: setDemoActive not reachable without persona",
+      "name": "Demo start blocked: setDemoActive not reachable without persona in handleStartDemo [51.8R amendment 9 supersedes index-based check]",
       "group": "execution_blocked_without_persona",
       "status": "PASS",
       "detail": ""

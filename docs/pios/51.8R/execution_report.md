@@ -1,11 +1,11 @@
 # Execution Report — 51.8R
 
-Stream: 51.8R — Entry Strip + Analyst Raw Evidence Access + Final Polish + Guided Flow Correction + Loop Closure + Amendment 5
+Stream: 51.8R — Entry Strip + Analyst Raw Evidence Access + Final Polish + Guided Flow Correction + Loop Closure + Amendment 5 + Amendment 6 + Amendment 7 + Amendment 8 + Amendment 9 + Amendment 10
 Date: 2026-03-26
-Amendment applied: 2026-03-26; Amendment 5 applied: 2026-03-27
+Amendment applied: 2026-03-26; Amendment 5 applied: 2026-03-27; Amendment 6 applied: 2026-03-27; Amendment 7 applied: 2026-03-27; Amendment 8 applied: 2026-03-27; Amendment 9 applied: 2026-03-27; Amendment 10 applied: 2026-03-27
 Branch: feature/51-8R-entry-strip-analyst-access
 Baseline commit: f5525dc (stream 51.8)
-Contract: PIOS-51.8R-RUN01-CONTRACT-v2 (supersedes v1)
+Contract: PIOS-51.8R-RUN01-CONTRACT-v7 (supersedes v6, v5, v4, v3, v2, v1)
 References: PIOS-51.8-RUN01-CONTRACT-v1
 
 ---
@@ -175,6 +175,101 @@ References: PIOS-51.8-RUN01-CONTRACT-v1
 - `validate_51_8R_guided.py`: 5 supersessions; total 82/82 PASS
 - `validate_enl_visible_chain.py` (51.5R): 2 supersessions (NavigationPanel moved to TopologyPanel); total 66/66 PASS
 
+### 12. Amendment 6 — PIOS-51.8R-RUN01-CONTRACT-v3 [2026-03-27]
+
+#### A. Persona-First Entry Gate (Gate Direction Inverted)
+- `QuerySelector.js` gains `disabled` prop; passed to `<select disabled={disabled}>`
+- `index.js` calls `<QuerySelector disabled={!enlPersona} />` — query selector non-interactive until persona selected
+- Gate message "Select a persona first to enable query selection" rendered in query-zone when `!enlPersona`
+- `PersonaPanel` buttons: `disabled={!queryId}` removed — persona always interactive at all times (supersedes Amendment 5)
+
+#### B. Query-Zone First Visual Position
+- `query-zone` div moved to first render position (before Situation and Persona panels)
+- Visual order: query-zone → Situation → Persona → Signals → Evidence → Narrative
+- No data path change; no API change; layout only
+
+#### C. Post-Completion Interaction Lock
+- `handleToggle` gains second lock condition: `if (!enlPersona && demoComplete && panelId !== 'persona') return`
+- All panels non-interactive after completion except Persona panel (exempt via `panelId !== 'persona'`)
+- Dep array updated: `[demoActive, enlPersona, demoComplete, togglePanel]`
+
+#### D. Terminal setDemoComplete(true) — Reverts Amendment 5
+- `handleDemoNext` terminal path: `setDemoComplete(true)` (was `false` in Amendment 5)
+- `demoComplete=true` + `enlPersona=null` activates post-completion lock
+- `setOpenPanels(['situation'])` preserved — panel state still canonical
+
+#### E. Persona-Change Effect Restructure
+- Null-init check (`if (prevEnlPersonaRef.current === null)`) removed — equality check handles mount case
+- `setDemoComplete(false)` conditioned on `enlPersona !== null`: persona selection resets lock; terminal clear (null) preserves it
+- Effect structure: `if (prev === current) return` → assign ref → `setGuidedStepIndex(0)` → `if (enlPersona !== null) { setDemoComplete(false) }` → `if (demoActive)` reset block
+
+#### Validator changes (amendment 6)
+- `validate_51_8R.py`: ~10 supersessions (panel_order query-zone-first, deterministic_reset true, entry_gate inverted, _pcb→_pcb6 extraction); 10 new groups (46 checks); total 202/202 PASS
+- All prior validators: no regressions
+
+---
+
+### 13. Amendment 7 — PIOS-51.8R-RUN01-CONTRACT-v4 [2026-03-27]
+
+#### A. 3-Stage Execution Gating (Persona → Query → CTA)
+- Evidence panel fully gated by `demoActive`: renders `ENLPanel` only when `demoActive === true`
+- Pre-demo (persona + query selected, demo not started): `<div className="evidence-blocked-state">Start Lens Demo to view evidence analysis</div>`
+- Without persona: `<div className="evidence-blocked-state">Evidence requires a selected Persona</div>`
+- Without query: `<div className="no-query-state">Select a query to load evidence.</div>`
+- No panel interaction, evidence access, or navigation possible before explicit CTA click
+
+#### B. Post-Completion Lock Simplified
+- `handleToggle` second condition simplified: `if (demoComplete && panelId !== 'persona') return` (removed `!enlPersona &&`)
+- Dep array simplified: `[demoActive, demoComplete, togglePanel]` (removed `enlPersona`)
+- Lock is unconditional on demoComplete — no persona-state dependency
+
+#### C. CTRL+K Restores Free Navigation from Post-Completion
+- CTRL+K handler condition extended: `if (demoActive || demoComplete)` (was `demoActive` only)
+- Post-completion: CTRL+K calls `handleDemoExit()` → sets `demoComplete(false)` → releases lock → free navigation
+- Pre-demo: CTRL+K does not fire (both flags false)
+- `handleDemoExit` does NOT clear persona or query — context preserved for re-entry
+- CTRL+K useEffect deps updated to `[demoActive, demoComplete]`
+
+#### D. validate_ui_naming_lens.py Supersession
+- `Start Lens Demo` count check: `== 1` → `>= 1` — Amendment 7 added pre-demo evidence message containing "Start Lens Demo"; count = 2 in index.js
+- After supersession: 17/17 PASS
+
+#### Validator changes (amendment 7)
+- `validate_51_8R.py`: ~5 supersessions (ui_locked !enlPersona&& removed, no_bypass simplified, demo_cannot_restart simplified); 10 new groups (46 checks); total 248/248 PASS
+- `validate_ui_naming_lens.py` (51.6R.4): 1 supersession (Start Lens Demo count == 1 → >= 1); 17/17 PASS
+- All prior validators: no regressions
+
+---
+
+### 14. Amendment 8 — PIOS-51.8R-RUN01-CONTRACT-v5 [2026-03-27]
+
+#### A. Situation Persistence — Persona→Evidence Auto-Open Effect Removed
+- `useEffect(() => { if (!enlPersona || demoActive) return; openPanel('evidence') }, [enlPersona, demoActive, openPanel])` removed from `index.js`
+- Root cause: when PersonaPanel was open (`openPanels = ['situation', 'persona']`) and user selected a persona, effect fired `openPanel('evidence')`, which pushed evidence in and dropped Situation via max-2 rule → Situation disappeared
+- Replacement: comment block documents the removal and rationale
+- Evidence opens via guided flow step transitions only (`setOpenPanels([step.panelId])` in `handleDemoNext`)
+- Free explore post-CTRL+K: user toggles evidence manually
+
+#### B. Persona Preserved Across Query Change — Query Fetch Effect
+- `setEnlPersona(null)` and `setEnlPersonaData(null)` removed from the non-null query selection branch in the query fetch `useEffect`
+- Previously: selecting a query cleared persona → user forced to re-select persona before CTA became enabled (duplicate selection)
+- Now: `enlPersona` persists through query change; `PersonaPanel` fetch effect `[selectedPersona, queryId]` automatically re-fetches persona data for the new query
+- Comment block added documenting the preservation contract
+- `setEnlPersona(null)` preserved in: null-query branch (query cleared) and guided completion terminal path
+
+#### C. PersonaPanel queryId Reset Effect — Preserve Persona Selection
+- `setSelectedPersona(null)` removed from queryId reset effect in `PersonaPanel.js`
+- `onPersonaChange?.(null)` removed from queryId reset effect — no longer calls parent reset on query change
+- `setPersonaData(null)` and `onPersonaDataChange?.(null)` retained — data cleared and re-fetched automatically
+- Comment block added: "preserve persona selection [51.8R amendment 8]"
+- `activePersona` reset effect unchanged — terminal completion still clears PersonaPanel internal state via `activePersona === null`
+
+#### Validator changes (amendment 8)
+- `validate_51_8R.py`: 10 new groups (50 new checks); 1 check precision fix (situation terminal: use `idx` not `_term5`); total 298/298 PASS
+- `validate_51_8.py`: 1 supersession (free explore effect guard check inverted to confirm removal); 44/44 PASS
+- `validate_persona_panel_transform.py` (51.6R.3): 4 supersessions in `evidence_open_behavior` group; 32/32 PASS
+- All prior validators: no regressions
+
 ---
 
 ## Validator Results
@@ -182,7 +277,7 @@ References: PIOS-51.8-RUN01-CONTRACT-v1
 | Validator | Result |
 |---|---|
 | validate_51_8R_guided.py | 82/82 PASS (16 groups — guided correction; amendment 5 supersessions) |
-| validate_51_8R.py | 156/156 PASS (31 groups — entry strip + amendments + loop closure + amendment 5) |
+| validate_51_8R.py | 298/298 PASS (61 groups — entry strip + amendments + loop closure + amendment 5 + amendment 6 + amendment 7 + amendment 8) |
 | validate_51_8.py | 44/44 PASS |
 | validate_51_7.py | 27/27 PASS |
 | validate_mode_state_guard.py (51.6R.2) | 35/35 PASS |
@@ -215,3 +310,79 @@ References: PIOS-51.8-RUN01-CONTRACT-v1
 - [Open] button: visual affordance only, no handler, no navigation
 - ⌘K: exits demo only — does not mutate evidence or query state
 - Terminal state: demoActive=true held — guided lock preserved at completion
+
+## Section 16 — Amendment 10 (CONTRACT-v7) — 2026-03-27
+
+### Purpose
+Viewport enforcement on every guided step change, deterministic auto-start across all runs (first run, post-completion, post-persona-switch), exit guard suppresses auto-restart after explicit exit.
+
+### Behavioral changes
+1. **Viewport enforcement**: `useEffect([demoActive, guidedStepIndex, enlPersona])` fires after each step advance. Calls `document.getElementById(step.panelId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })`. Ensures active panel is in viewport on every step transition.
+2. **Deterministic auto-start across runs**: Auto-start deps changed from `[enlPersona, selectedQuery]` to `[enlPersona, selectedQuery, demoComplete]`. After loop completion: persona-change effect sets `demoComplete=false` → dep change triggers auto-start on re-render → demo re-starts for new persona.
+3. **Exit guard (`exitedRef`)**: `handleDemoExit` sets `exitedRef.current = true`. Auto-start checks: if `exitedRef.current && !personaChanged && !queryChanged` → suppress and consume flag. If persona or query changed (new selection) → proceed with auto-start (flag also cleared).
+4. **`autoStartPrevRef`**: tracks previous persona+query values. Enables auto-start to distinguish "dep changed because persona/query changed" (should auto-start) from "dep changed because demoComplete changed" (may need suppression via exitedRef).
+5. **Separate demoActive/demoComplete guards**: `if (demoActive) return` and `if (demoComplete) return` as separate guards (previous: combined `if (demoActive || demoComplete) return`). demoComplete guard is intentional stale read — fires on dep change but returns early when lock not yet cleared; second firing (after persona-change clears lock) proceeds.
+
+### Validator results
+- validate_51_8R.py: 404/404 PASS (79 groups — added 8 Amendment 10 groups; 6 supersessions for dep-string change and combined-guard supersession)
+- validate_51_8R_guided.py: 82/82 PASS
+- validate_51_8.py: 44/44 PASS
+- validate_51_7.py: 27/27 PASS
+
+### Governance
+- Two new refs (exitedRef, autoStartPrevRef) — not state variables; not tracked by React
+- Viewport scroll: DOM read only (`getElementById` + `scrollIntoView`) — no mutation
+- Auto-start dep addition (demoComplete): no new state; no new API; no behavioral change to data path
+- TraversalEngine.js unchanged; DemoController.js unchanged; PersonaPanel.js unchanged
+
+## Section 15 — Amendment 9 (CONTRACT-v6) — 2026-03-27
+
+### Purpose
+Stabilize guided demo control model: Situation panel pinned during guided execution, auto-start on Persona + Query selection (CTA no longer required), uniform panel gate model (no partial unlock states).
+
+### Behavioral changes
+1. **Situation pinned during guided demo**: `handleStartDemo` and `handleDemoNext` `setOpenPanels` calls always include `'situation'` alongside the current step panel (`['situation', stepPanel]`). `handleToggle` already blocks all toggles when `demoActive` — situation cannot be closed during guided execution.
+2. **Auto-start on Persona + Query**: `useEffect` with deps `[enlPersona, selectedQuery]` fires when both are set and demo is not running. Sets `demoActive=true`, `demoStage=1`, initializes guided state — same as `handleStartDemo`. CTA button preserved as fallback.
+3. **CTRL+K free mode preserved**: auto-start deps are `[enlPersona, selectedQuery]` only — CTRL+K does not change either → effect does not re-fire → free mode maintained post-exit.
+4. **Terminal no-restart**: at loop completion, `setEnlPersona(null)` fires → auto-start guard `if (!enlPersona || !selectedQuery) return` fires → no restart.
+5. **Uniform panel gate**: all panel toggles flow through `handleToggle` with the same two guards (demoActive lock, demoComplete lock). No per-panel partial unlock logic added.
+
+### Validator results
+- validate_51_8R.py: 355/355 PASS (71 groups — added 10 Amendment 9 groups, 4 supersessions for count==1 checks broken by auto-start, _ctrlk_block extraction fix)
+- validate_51_8R_guided.py: 82/82 PASS (1 supersession: Both gates before setDemoActive — index-based → handleStartDemo-relative)
+- validate_51_8.py: 44/44 PASS
+- validate_51_7.py: 27/27 PASS (1 supersession: execution_blocked_without_persona — index-based → handleStartDemo-relative)
+
+### Governance
+- No new state variables
+- No new API calls
+- TraversalEngine.js unchanged
+- DemoController.js unchanged
+- PersonaPanel.js unchanged
+- Auto-start effect: no data fetch, no evidence access, no mutation
+
+## Section 16 — Amendment 10 (CONTRACT-v7) — 2026-03-27
+
+### Purpose
+Stabilize guided demo control model: Situation panel pinned during guided execution, auto-start on Persona + Query selection (CTA no longer required), uniform panel gate model (no partial unlock states).
+
+### Behavioral changes
+1. **Situation pinned during guided demo**: `handleStartDemo` and `handleDemoNext` `setOpenPanels` calls always include `'situation'` alongside the current step panel (`['situation', stepPanel]`). `handleToggle` already blocks all toggles when `demoActive` — situation cannot be closed during guided execution.
+2. **Auto-start on Persona + Query**: `useEffect` with deps `[enlPersona, selectedQuery]` fires when both are set and demo is not running. Sets `demoActive=true`, `demoStage=1`, initializes guided state — same as `handleStartDemo`. CTA button preserved as fallback.
+3. **CTRL+K free mode preserved**: auto-start deps are `[enlPersona, selectedQuery]` only — CTRL+K does not change either → effect does not re-fire → free mode maintained post-exit.
+4. **Terminal no-restart**: at loop completion, `setEnlPersona(null)` fires → auto-start guard `if (!enlPersona || !selectedQuery) return` fires → no restart.
+5. **Uniform panel gate**: all panel toggles flow through `handleToggle` with the same two guards (demoActive lock, demoComplete lock). No per-panel partial unlock logic added.
+
+### Validator results
+- validate_51_8R.py: 355/355 PASS (71 groups — added 10 Amendment 9 groups, 4 supersessions for count==1 checks broken by auto-start, _ctrlk_block extraction fix)
+- validate_51_8R_guided.py: 82/82 PASS (1 supersession: Both gates before setDemoActive — index-based → handleStartDemo-relative)
+- validate_51_8.py: 44/44 PASS
+- validate_51_7.py: 27/27 PASS (1 supersession: execution_blocked_without_persona — index-based → handleStartDemo-relative)
+
+### Governance
+- No new state variables
+- No new API calls
+- TraversalEngine.js unchanged
+- DemoController.js unchanged
+- PersonaPanel.js unchanged
+- Auto-start effect: no data fetch, no evidence access, no mutation

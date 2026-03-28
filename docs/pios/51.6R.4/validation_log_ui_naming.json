@@ -1,7 +1,7 @@
 {
   "stream": "51.6R.4",
   "validator": "validate_ui_naming_lens",
-  "timestamp": "2026-03-26T15:17:41.650686Z",
+  "timestamp": "2026-03-27T12:15:28.973443Z",
   "total": 17,
   "passed": 17,
   "failed": 0,
@@ -109,7 +109,7 @@
       "detail": ""
     },
     {
-      "name": "Start Lens Demo button appears once",
+      "name": "Start Lens Demo button and pre-demo message present",
       "group": "no_repetition",
       "status": "PASS",
       "detail": ""

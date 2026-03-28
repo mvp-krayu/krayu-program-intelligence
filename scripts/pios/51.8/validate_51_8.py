@@ -87,8 +87,8 @@ check("togglePanel defined and used internally",         "free_explore_separatio
       "const togglePanel = useCallback" in idx)
 check("handleToggle calls togglePanel when !demoActive", "free_explore_separation",
       "togglePanel(panelId)" in idx)
-check("Free explore effect guarded by !demoActive",      "free_explore_separation",
-      "if (!enlPersona || demoActive) return" in idx)
+check("Free explore evidence effect removed [51.8R amendment 8]",  "free_explore_separation",
+      "if (!enlPersona || demoActive) return" not in idx)  # 51.8R amendment 8: persona→evidence auto-open effect removed for Situation persistence; supersedes 'if (!enlPersona || demoActive) return' present check
 check("Guided toggle locked by demoActive guard",        "free_explore_separation",
       "if (demoActive) return" in idx)
 check("handleDemoExit resets to free explore state",     "free_explore_separation",

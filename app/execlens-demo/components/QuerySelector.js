@@ -8,7 +8,7 @@
 
 import { useState, useEffect } from 'react'
 
-export default function QuerySelector({ selectedQuery, onSelect }) {
+export default function QuerySelector({ selectedQuery, onSelect, disabled }) {
   const [queries, setQueries]   = useState(null)
   const [loading, setLoading]   = useState(true)
   const [error,   setError]     = useState(null)
@@ -60,6 +60,7 @@ export default function QuerySelector({ selectedQuery, onSelect }) {
         id="query-select"
         value={selectedQuery || ''}
         onChange={e => onSelect(e.target.value || null)}
+        disabled={disabled}
       >
         <option value="">— choose a query —</option>
         {queries.map(q => (

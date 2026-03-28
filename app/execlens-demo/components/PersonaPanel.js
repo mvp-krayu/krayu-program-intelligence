@@ -1,6 +1,6 @@
 /**
  * PersonaPanel.js
- * PIOS-51.6R.3-RUN01-CONTRACT-v1 (extended: persona selectable without query [51.8R guided correction]; activePersona reset prop [51.8R amendment 4]; query-first gate [51.8R amendment 5])
+ * PIOS-51.6R.3-RUN01-CONTRACT-v1 (extended: persona selectable without query [51.8R guided correction]; activePersona reset prop [51.8R amendment 4]; query-first gate [51.8R amendment 5]; persona always interactive [51.8R amendment 6]; persona selection preserved across query change [51.8R amendment 8])
  * (supersedes PIOS-51.5-RUN01-CONTRACT-v1)
  * Lineage: PIOS-51.4-RUN01-CONTRACT-v1 → PIOS-51.5-RUN01-CONTRACT-v1 → PIOS-51.6R.3-RUN01-CONTRACT-v1
  *
@@ -38,12 +38,13 @@ export default function PersonaPanel({ queryId, onPersonaChange, onPersonaDataCh
   const [loading,         setLoading]         = useState(false)
   const [error,           setError]           = useState(null)
 
-  // Reset on query change [R3]
+  // Reset persona data on query change [R3] — preserve persona selection [51.8R amendment 8]
+  // Persona selection is preserved so CTA remains enabled after query change.
+  // PersonaPanel fetch effect [selectedPersona, queryId] re-fetches data for new query automatically.
+  // Persona cleared only via: activePersona reset (terminal completion), query cleared (null queryId).
   useEffect(() => {
-    setSelectedPersona(null)
     setPersonaData(null)
     setError(null)
-    onPersonaChange?.(null)
     onPersonaDataChange?.(null)
   }, [queryId])
 
@@ -102,7 +103,6 @@ export default function PersonaPanel({ queryId, onPersonaChange, onPersonaDataCh
             key={p.id}
             className={`persona-btn${selectedPersona === p.id ? ' persona-btn-active' : ''}`}
             onClick={() => handlePersonaSelect(p.id)}
-            disabled={!queryId}
             type="button"
           >
             <span className="persona-btn-label">{p.label}</span>

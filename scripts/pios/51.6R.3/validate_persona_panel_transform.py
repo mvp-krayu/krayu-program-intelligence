@@ -64,14 +64,14 @@ print("\n[evidence_open_behavior]")
 
 check("index.js has PIOS-51.6R.3 contract",              "evidence_open_behavior",
       "PIOS-51.6R.3-RUN01-CONTRACT-v1" in idx)
-check("Persona→evidence effect: openPanel('evidence')",  "evidence_open_behavior",
-      "openPanel('evidence')" in idx)
-check("Evidence open: guarded by !demoActive",           "evidence_open_behavior",
-      "if (!enlPersona || demoActive) return" in idx)
-check("Evidence open: no selectedFlow dependency",       "evidence_open_behavior",
-      "selectedFlow" not in idx.split("openPanel('evidence')")[0].split("useEffect")[-1])
-check("Evidence open effect depends on enlPersona",      "evidence_open_behavior",
-      "enlPersona, demoActive, openPanel" in idx)
+check("Persona→evidence auto-open effect removed [51.8R amendment 8]",  "evidence_open_behavior",
+      "openPanel('evidence')" not in idx)  # 51.8R amendment 8: effect removed — Situation persistence requires no auto-open on persona select; max-2 rule was dropping Situation. Supersedes: openPanel('evidence') in idx
+check("Evidence auto-open guard gone [51.8R amendment 8]",           "evidence_open_behavior",
+      True)  # 51.8R amendment 8: effect removed entirely — guard condition gone with it. Supersedes: "if (!enlPersona || demoActive) return" in idx
+check("No isolated evidence effect in removed block [51.8R amendment 8]",       "evidence_open_behavior",
+      True)  # 51.8R amendment 8: effect removed — no block to check selectedFlow isolation. Supersedes: selectedFlow not in ... openPanel('evidence') split
+check("Evidence auto-open dep array removed [51.8R amendment 8]",      "evidence_open_behavior",
+      "enlPersona, demoActive, openPanel" not in idx)  # 51.8R amendment 8: dep array gone with effect. Supersedes: enlPersona, demoActive, openPanel in idx
 
 # ── persona_isolation ─────────────────────────────────────────────────────────
 
