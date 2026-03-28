@@ -1,5 +1,6 @@
 /**
  * pages/index.js
+ * PIOS-A.6-AUTHORITY-SWITCH (CONTROL is sole authority for all state transitions; index.js is adapter + projection only [A.6])
  * PIOS-51.9B-AUTHORITY-WIRING (getPanelExpanded: computePanelState governs GUIDED rendering; validatePanelTransition bypassed in ENTRY/FREE/OPERATOR; valid-by-construction comment on handleDemoNext [51.9B])
  * PIOS-51.9A-TRAVERSAL-HISTORY (reset+first-panel recording on session start for handleStartDemo and auto-start; traversalHistory is primary traversal record [51.9A])
  * PIOS-51.8R-RUN05-OPERATOR (FREE panel data restored: ENLPanel accessible in freeMode; operator-mode-badge; ENTRY vs FREE render separation — !demoActive && !freeMode gates ENTRY placeholder only)
@@ -45,22 +46,11 @@ import { TRAVERSAL_FLOWS, PERSONA_AUTO_OPEN, getFlowPanels, getFlowNodes,
          PANEL_STATES, D2_PANEL_MAP, PERSONA_DEPTH_ENVELOPE,       // D3.1–D3.4
          computePanelState, validatePanelTransition                  // D3.5–D3.6
        } from '../components/TraversalEngine'
+import { CONTROL, buildSnapshot, INTENTS } from '../components/Control'
 
 // ---------------------------------------------------------------------------
-// PERSONA_DEFAULT_FLOW — static mapping, no computation [51.6R]
-// Persona → default DemoFlow binding
-// ---------------------------------------------------------------------------
-
-const PERSONA_DEFAULT_FLOW = {
-  EXECUTIVE: 'executive_insight',
-  CTO:       'structural_analysis',
-  ANALYST:   'evidence_audit',
-}
-
-// ---------------------------------------------------------------------------
-// PERSONA_GUIDED_FLOWS — persona-specific guided step sequences [51.8R guided correction]
-// Static. No computation. Reuse existing panel IDs only.
-// ANALYST raw step: special guided state of evidence panel — forces source evidence open.
+// PERSONA_GUIDED_FLOWS — kept for display/scroll/auto-open guard usage only [A.6]
+// Orchestration authority transferred to CONTROL. Not used for state transitions.
 // ---------------------------------------------------------------------------
 
 const PERSONA_GUIDED_FLOWS = {
@@ -90,9 +80,7 @@ import NarrativePanel   from '../components/NarrativePanel'
 // Constants
 // ---------------------------------------------------------------------------
 
-const TOTAL_STAGES = 5
-
-// Stage → panel to open
+// Stage → panel to open [uncovered Path C — standard stage mode side effect only, not touched by A.6]
 const STAGE_PANEL = {
   1: 'situation',
   2: 'signals',
@@ -169,15 +157,44 @@ export default function Home() {
   // Reset on demo start and demo exit; not populated during Operator mode.
   const [traversalHistory, setTraversalHistory] = useState([])
 
-  // Persona change detection — ref-based to avoid [enlPersona]-only dep [51.8R amendment]
-  const prevEnlPersonaRef = useRef(null)
   // Exit guard — set by handleDemoExit; suppresses auto-start on demoComplete dep change [51.8R amendment 10]
   const exitedRef = useRef(false)
   // Auto-start previous deps — detects persona/query change vs demoComplete change [51.8R amendment 10]
   const autoStartPrevRef = useRef({ persona: null, query: null })
 
+  // ── A.6: CONTROL adapter helpers ──
+
+  // captureState — snapshot current React state for CONTROL input.
+  // Reads from closure; correct at call time within event handlers and effects. [A.6]
+  const captureState = () => ({
+    openPanels, traversalHistory, enlPersona, selectedQuery,
+    demoActive, demoStage, demoComplete, guidedStepIndex,
+    rawStepActive, freeMode, selectedFlow, traversalNodeIndex,
+  })
+
+  // applyControlResponse — unpack CONTROL_RESPONSE.newSnapshot to React state setters.
+  // Fail-closed: no-op if CONTROL returns FAIL. Atomic: React 18 batches all setters. [A.6]
+  const applyControlResponse = (response) => {
+    if (!response || response.status === 'FAIL') return
+    const s = response.newSnapshot
+    const o = s.orchestrationState
+    setOpenPanels(s.openPanels)
+    setTraversalHistory(s.traversalHistory)
+    setEnlPersona(s.selectedPersona)
+    setSelectedQuery(s.selectedQuery)
+    setDemoActive(o.demoActive)
+    setDemoStage(o.demoStage)
+    setDemoComplete(o.demoComplete)
+    setGuidedStepIndex(o.guidedStepIndex)
+    setRawStepActive(o.rawStepActive)
+    setFreeMode(o.freeMode)
+    setTraversalNodeIndex(o.traversalNodeIndex)
+    setSelectedFlow(o.selectedFlow)
+  }
+
   // ── Panel helpers ──
 
+  // openPanel kept for demo stage useEffect (uncovered Path C) [A.6]
   const openPanel = useCallback((panelId) => {
     setOpenPanels(prev => {
       if (prev.includes(panelId)) return prev
@@ -187,27 +204,17 @@ export default function Home() {
     })
   }, [])
 
-  const togglePanel = useCallback((panelId) => {
-    setOpenPanels(prev => {
-      if (prev.includes(panelId)) {
-        return prev.filter(id => id !== panelId)
-      }
-      const next = [...prev, panelId]
-      return next.length > 2 ? next.slice(next.length - 2) : next
-    })
-  }, [])
+  // togglePanel REMOVED: all toggle transitions route through CONTROL [A.6]
 
-  // ── Guided toggle — locked during active guided demo [51.8] ──
-  // Free explore: toggles normally. Guided mode: panels opened by choreography only.
-  // Post-completion lock: only persona panel interactive after guided completion [51.8R amendment 7]
-  // CTRL+K releases post-completion by setting demoComplete=false → all panels free again
+  // ── handleToggle — routes PANEL_TOGGLE through CONTROL [A.6] ──
+  // CONTROL enforces: guided lock, post-completion lock, max-2 rule. [51.8, 51.8R amendment 7]
+  // validatePanelTransition NOT applied: ENTRY/FREE/OPERATOR are sanctioned open-access paths. [51.9B]
   const handleToggle = useCallback((panelId) => {
-    if (demoActive) return  // guided demo: step-driven only [51.8]
-    if (demoComplete && panelId !== 'persona') return  // post-completion lock [51.8R amendment 7]
-    // validatePanelTransition NOT applied here: ENTRY/FREE/OPERATOR modes are sanctioned open-access
-    // paths; traversal sequence enforcement applies only within governed GUIDED sessions [51.9B]
-    togglePanel(panelId)
-  }, [demoActive, demoComplete, togglePanel])
+    const snap = buildSnapshot(captureState())
+    const response = CONTROL(INTENTS.PANEL_TOGGLE, { panelId }, snap)
+    applyControlResponse(response)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openPanels, traversalHistory, enlPersona, selectedQuery, demoActive, demoStage, demoComplete, guidedStepIndex, rawStepActive, freeMode, selectedFlow, traversalNodeIndex])
 
   // ── Panel expanded state — D.3 authority wiring [51.9B] ──
   // GUIDED mode: computePanelState is rendering authority per D.3 / lens_runtime_state_mapping.md §4
@@ -252,11 +259,11 @@ export default function Home() {
   // Free explore: user toggles evidence manually after CTRL+K.
 
   useEffect(() => {
+    // A.6: orchestration setters removed — CONTROL handles enlPersona and traversalNodeIndex
+    // via QUERY_SELECT intent in handleQuerySelect. Only data state managed here.
     if (!selectedQuery) {
       setQueryData(null)
-    setEnlPersona(null)
-    setEnlPersonaData(null)
-    setTraversalNodeIndex(0)
+      setEnlPersonaData(null)
       setError(null)
       return
     }
@@ -264,10 +271,6 @@ export default function Home() {
     setLoading(true)
     setError(null)
     setQueryData(null)
-    // [51.8R amendment 8] Preserve enlPersona across query change — no reset here.
-    // PersonaPanel re-fetches persona data automatically on queryId change via [selectedPersona, queryId] effect.
-    // enlPersona cleared only on: query cleared (null branch above), guided completion terminal, or CTRL+K.
-    setTraversalNodeIndex(0)
 
     fetch(`/api/execlens?query=${encodeURIComponent(selectedQuery)}`)
       .then(r => {
@@ -301,27 +304,9 @@ export default function Home() {
     }
   }, [demoActive, demoStage, openPanel, selectedFlow])
 
-  // ── Persona change reset — resets demo if persona switches mid-demo [51.8R amendment] ──
-  // Uses prevEnlPersonaRef to detect change without [enlPersona]-only dep [51.6R.2 guard preserved]
-  // Always rebinds guided flow steps on persona switch [51.8R amendment 5]
-
-  useEffect(() => {
-    if (prevEnlPersonaRef.current === enlPersona) return  // no change (includes null→null on mount)
-    prevEnlPersonaRef.current = enlPersona
-    // Reset guided step on any persona change [51.8R amendment 5]
-    setGuidedStepIndex(0)
-    // Reset completion lock on persona selection only (non-null); terminal clear preserves lock [51.8R amendment 6]
-    if (enlPersona !== null) {
-      setDemoComplete(false)
-    }
-    if (demoActive) {
-      setDemoActive(false)
-      setDemoStage(0)
-      setTraversalNodeIndex(0)
-      setSelectedFlow(null)
-      setRawStepActive(false)  // clear raw step on persona change [51.8R guided correction]
-    }
-  }, [enlPersona, demoActive, demoComplete])
+  // A.6: Persona change reset useEffect REMOVED.
+  // CONTROL handles all persona-change resets atomically via PERSONA_SELECT intent.
+  // handlePersonaSelect routes all persona changes through CONTROL. [A.6]
 
   // ── Viewport enforcement — scroll active guided panel into view on step change [51.8R amendment 10] ──
   // Fires after render on every guided step index change.
@@ -337,43 +322,31 @@ export default function Home() {
     if (panelEl) panelEl.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }, [demoActive, guidedStepIndex, enlPersona])
 
-  // ── Auto-start guided demo on Persona + Query selection [51.8R amendment 9/10/RUN03/RUN04] ──
-  // Deps: [enlPersona, selectedQuery, demoComplete, demoActive, freeMode]
-  //   - First run: persona or query changes with both present → start
-  //   - After completion: persona-change effect sets demoComplete=false → dep change → start
-  //   - Mid-guided persona switch: persona-change tears down (demoActive→false) → dep change → start for new persona
-  //   - FREE mode: freeMode=true blocks unconditionally — no auto-restart in operator mode [51.8R RUN04]
-  //   - After CTRL+K/Exit: freeMode=true blocks before exitedRef check
-  //   - Explicit re-entry (handleStartDemo): freeMode→false → dep change → effect fires → demoActive=true → no-op
-  // autoStartPrevRef tracks persona/query even in FREE mode (accurate change detection on re-entry after mode switch).
+  // ── Auto-start guided demo — routes AUTO_START through CONTROL [A.6] ──
+  // Runtime-specific guards (exitedRef, autoStartPrevRef) preserved as-is — not CONTROL's concern.
+  // CONTROL guards (freeMode, demoActive, demoComplete, persona/query presence) remain in CONTROL.
+  // [51.8R amendment 9/10/RUN03/RUN04]
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const personaChanged = autoStartPrevRef.current.persona !== enlPersona
     const queryChanged   = autoStartPrevRef.current.query   !== selectedQuery
     autoStartPrevRef.current = { persona: enlPersona, query: selectedQuery }
 
-    if (freeMode) return                       // operator mode — no auto-restart until explicit guided start [51.8R RUN04]
+    if (freeMode) return                       // operator mode guard [51.8R RUN04]
     if (!enlPersona || !selectedQuery) return  // both required
-    if (demoActive) return                     // already running — also catches immediate re-fire after demo start
-    if (demoComplete) return                   // completion lock not yet cleared; persona-change effect will clear → dep fires again
+    if (demoActive) return                     // already running
+    if (demoComplete) return                   // completion lock
     if (exitedRef.current && !personaChanged && !queryChanged) {
-      // dep changed but persona/query unchanged → suppress [51.8R amendment 10/RUN03]
-      exitedRef.current = false  // consume exit flag
+      exitedRef.current = false
       return
     }
-    exitedRef.current = false  // clear exit flag on genuine start
-    const steps = PERSONA_GUIDED_FLOWS[enlPersona]
-    const activeFlow = PERSONA_DEFAULT_FLOW[enlPersona]
-    setDemoComplete(false)
-    setGuidedStepIndex(0)
-    setRawStepActive(false)
-    setTraversalNodeIndex(0)
-    setSelectedFlow(activeFlow)
-    const firstPanel = steps && steps.length > 0 ? steps[0].panelId : 'situation'
-    setOpenPanels(firstPanel === 'situation' ? ['situation'] : ['situation', firstPanel])
-    setTraversalHistory(firstPanel && firstPanel !== 'situation' ? [firstPanel] : [])  // 51.9A: reset + record first panel on auto-start
-    setDemoActive(true)
-    setDemoStage(1)
-  }, [enlPersona, selectedQuery, demoComplete, demoActive, freeMode])  // freeMode added: operator mode guard; dep change on explicit start [51.8R RUN04]
+    exitedRef.current = false
+
+    // A.6: route AUTO_START through CONTROL
+    const snap = buildSnapshot(captureState())
+    const response = CONTROL(INTENTS.AUTO_START, {}, snap)
+    applyControlResponse(response)
+  }, [enlPersona, selectedQuery, demoComplete, demoActive, freeMode])
 
   // ── ⌘K handler — exit guided mode or post-completion state [51.8R amendment 7] ──
   // Fires when demoActive (mid-demo) OR demoComplete (post-completion lock).
@@ -392,111 +365,51 @@ export default function Home() {
 
   // ── Demo control handlers ──
 
+  // ── handleStartDemo — routes DEMO_START through CONTROL [A.6] ──
+  // CONTROL enforces persona/query gates and derives first step. [51.7, 51.8R]
   const handleStartDemo = () => {
-    // Persona hard gate — execution blocked without explicit selection [51.7]
-    if (!enlPersona) return
-    // Query hard gate — query required for guided execution [51.8R guided correction]
-    if (!selectedQuery) return
-    setFreeMode(false)           // exit operator mode on explicit guided start [51.8R RUN04]
-    exitedRef.current = false    // clear exit flag on explicit restart [51.8R RUN04]
-    setDemoComplete(false)   // reset terminal state on re-run [51.8R amendment]
-    setGuidedStepIndex(0)    // reset guided step [51.8R guided correction]
-    setRawStepActive(false)  // reset raw step [51.8R guided correction]
-    // Derive active flow — backward compat [51.6R.2]
-    const activeFlow = selectedFlow || (enlPersona ? PERSONA_DEFAULT_FLOW[enlPersona] : null)
-    setTraversalNodeIndex(0)
-    if (activeFlow) {
-      // Keep traversal flow state for compat; persona-guided flow controls panel opening
-      setSelectedFlow(activeFlow)
-      const panels = getFlowPanels(activeFlow)
-      // Open first step of persona-guided flow; situation pinned alongside [51.8R amendment 9]
-      const steps = PERSONA_GUIDED_FLOWS[enlPersona]
-      const firstPanel = steps && steps.length > 0 ? steps[0].panelId : panels.length > 0 ? panels[0] : 'situation'
-      setOpenPanels(firstPanel === 'situation' ? ['situation'] : ['situation', firstPanel])  // situation pinned [51.8R amendment 9]
-      setTraversalHistory(firstPanel && firstPanel !== 'situation' ? [firstPanel] : [])  // 51.9A: reset + record first panel
-    } else {
-      // Standard 51.4 stage mode fallback
-      const steps = PERSONA_GUIDED_FLOWS[enlPersona]
-      const firstPanel = steps && steps.length > 0 ? steps[0].panelId : 'situation'
-      setOpenPanels(firstPanel === 'situation' ? ['situation'] : ['situation', firstPanel])  // situation pinned [51.8R amendment 9]
-      setTraversalHistory(firstPanel && firstPanel !== 'situation' ? [firstPanel] : [])  // 51.9A: reset + record first panel
-    }
-    setDemoActive(true)
-    setDemoStage(1)
+    const snap = buildSnapshot(captureState())
+    const response = CONTROL(INTENTS.DEMO_START, {}, snap)
+    if (response.status === 'FAIL') return  // fail-closed: persona or query missing
+    exitedRef.current = false               // clear exit flag on explicit guided start [51.8R RUN04]
+    applyControlResponse(response)
   }
 
+  // ── handleDemoNext — routes DEMO_NEXT through CONTROL [A.6] ──
+  // CONTROL handles all three paths: PERSONA_GUIDED_FLOWS, legacy selectedFlow, standard stage mode.
+  // validatePanelTransition NOT applied: sequences are valid-by-construction [51.9B]
   const handleDemoNext = () => {
-    // Persona-guided flow [51.8R guided correction]: primary path
-    // validatePanelTransition NOT applied: PERSONA_GUIDED_FLOWS sequences are valid-by-construction.
-    // ANALYST (evidence→signals) and CTO (signals-first) diverge from D2_PATH_MAP paths and are
-    // sanctioned 51.8R exceptions; sequence enforcement via validatePanelTransition would block both. [51.9B]
-    const steps = PERSONA_GUIDED_FLOWS[enlPersona]
-    if (steps) {
-      const nextIndex = guidedStepIndex + 1
-      if (nextIndex >= steps.length) {
-        // Amendment 6: post-completion lock state [51.8R amendment 6]
-        // setDemoComplete(true) reverts Amendment 5 false — lock panels until persona re-selected
-        setDemoComplete(true)
-        setDemoActive(false)
-        setGuidedStepIndex(0)
-        setRawStepActive(false)
-        setEnlPersona(null)
-        setOpenPanels(['situation'])
-      } else {
-        const step = steps[nextIndex]
-        setGuidedStepIndex(nextIndex)
-        const stepPanel = step.panelId
-        setOpenPanels(stepPanel === 'situation' ? ['situation'] : ['situation', stepPanel])  // situation pinned [51.8R amendment 9]
-        if (stepPanel && stepPanel !== 'situation') {
-          setTraversalHistory(h => h.includes(stepPanel) ? h : [...h, stepPanel]) // D.3: record traversal position
-        }
-        if (step.rawStep) {
-          // ANALYST raw step: force source evidence open [51.8R guided correction]
-          setRawStepActive(true)
-        }
-      }
-      return
-    }
-    // Legacy traversal mode [51.6] — backward compat path
-    if (selectedFlow) {
-      const panels = getFlowPanels(selectedFlow)
-      const nextIndex = traversalNodeIndex + 1
-      if (nextIndex >= panels.length) {
-        setDemoComplete(true)
-        setDemoActive(false)
-        setGuidedStepIndex(0)
-        setRawStepActive(false)
-        setEnlPersona(null)
-      } else {
-        setTraversalNodeIndex(nextIndex)
-        setOpenPanels([panels[nextIndex]])
-      }
-    } else {
-      // Standard 51.4 stage mode
-      if (demoStage >= TOTAL_STAGES) {
-        setDemoComplete(true)
-        setDemoActive(false)
-        setGuidedStepIndex(0)
-        setRawStepActive(false)
-        setEnlPersona(null)
-      } else {
-        setDemoStage(prev => prev + 1)
-      }
-    }
+    const snap = buildSnapshot(captureState())
+    const response = CONTROL(INTENTS.DEMO_NEXT, {}, snap)
+    applyControlResponse(response)
   }
 
+  // ── handleDemoExit — routes DEMO_EXIT through CONTROL [A.6] ──
+  // exitedRef set before CONTROL call: defense-in-depth guard preserved [51.8R amendment 10]
   const handleDemoExit = () => {
-    setFreeMode(true)           // enter operator FREE mode — blocks all auto-restart [51.8R RUN04]
-    exitedRef.current = true    // defense-in-depth: also suppress via exitedRef [51.8R amendment 10]
-    setDemoActive(false)
-    setDemoStage(0)
-    setTraversalNodeIndex(0)
-    setSelectedFlow(null)       // mandatory exit reset [51.6R.2]
-    setDemoComplete(false)      // clear terminal state [51.8R amendment]
-    setGuidedStepIndex(0)       // clear guided step [51.8R guided correction]
-    setRawStepActive(false)     // clear raw step [51.8R guided correction]
-    setTraversalHistory([])     // D.3: Operator mode session not added to governed traversal history
+    exitedRef.current = true    // defense-in-depth: suppress auto-start on demoActive dep change [51.8R amendment 10]
+    const snap = buildSnapshot(captureState())
+    const response = CONTROL(INTENTS.DEMO_EXIT, {}, snap)
+    applyControlResponse(response)
   }
+
+  // ── handleQuerySelect — routes QUERY_SELECT through CONTROL [A.6] ──
+  // Replaces direct setSelectedQuery; query fetch useEffect fires after selectedQuery state update.
+  const handleQuerySelect = useCallback((query) => {
+    const snap = buildSnapshot(captureState())
+    const response = CONTROL(INTENTS.QUERY_SELECT, { query }, snap)
+    applyControlResponse(response)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openPanels, traversalHistory, enlPersona, selectedQuery, demoActive, demoStage, demoComplete, guidedStepIndex, rawStepActive, freeMode, selectedFlow, traversalNodeIndex])
+
+  // ── handlePersonaSelect — routes PERSONA_SELECT through CONTROL [A.6] ──
+  // Replaces direct setEnlPersona; CONTROL handles all resets (guidedStepIndex, demoComplete, demoActive mid-demo).
+  const handlePersonaSelect = useCallback((persona) => {
+    const snap = buildSnapshot(captureState())
+    const response = CONTROL(INTENTS.PERSONA_SELECT, { persona }, snap)
+    applyControlResponse(response)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openPanels, traversalHistory, enlPersona, selectedQuery, demoActive, demoStage, demoComplete, guidedStepIndex, rawStepActive, freeMode, selectedFlow, traversalNodeIndex])
 
   // ── Render ──
 
@@ -572,7 +485,7 @@ export default function Home() {
         {/* ── Query selector — first position [51.8R amendment 6: persona-first gate, query-first visual] ── */}
         {/* Non-interactive until persona selected — disabled={!enlPersona} */}
         <div className="query-zone">
-          <QuerySelector selectedQuery={selectedQuery} onSelect={setSelectedQuery} disabled={!enlPersona} />
+          <QuerySelector selectedQuery={selectedQuery} onSelect={handleQuerySelect} disabled={!enlPersona} />
 
           {!enlPersona && (
             <div className="no-query-state">
@@ -627,7 +540,7 @@ export default function Home() {
           expanded={getPanelExpanded('persona')}
           onToggle={() => handleToggle('persona')}
         >
-          <PersonaPanel queryId={selectedQuery} onPersonaChange={setEnlPersona} onPersonaDataChange={setEnlPersonaData} activePersona={enlPersona} />
+          <PersonaPanel queryId={selectedQuery} onPersonaChange={handlePersonaSelect} onPersonaDataChange={setEnlPersonaData} activePersona={enlPersona} />
         </DisclosurePanel>
 
         {/* ── Panel: Signals — intelligence signals ── */}
