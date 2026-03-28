@@ -1,18 +1,20 @@
 # A.5B — CONTROL Shadow Parity Validation Summary
 
 Stream: A.5B | Validation Summary | Verdict Authority
-Authority: A.5, A.4, A.3, A.2R, A.2G, canonical-layer-model.md (00.2)
+Authority: A.5, A.5C, A.4, A.3, A.2R, A.2G, canonical-layer-model.md (00.2)
 Runtime target: index.js HEAD a5691c3 | Branch: feature/51-9-runtime-convergence
-Execution date: 2026-03-28
+Initial execution date: 2026-03-28 | Rerun date: 2026-03-28 (post A.5C remediation commit 49e4c32)
 Script: scripts/pios/A.5B/run_control_shadow_validation.mjs
 
 ---
 
 ## Verdict
 
-**FAIL**
+**PASS**
 
-Two unexpected mismatches were identified between CONTROL.js and the runtime state machine. These mismatches are not within acceptable tolerance and cannot be waived without formal authority. A.6 is BLOCKED pending remediation.
+Zero unexpected mismatches. Zero documented mismatches. 44/44 validation events pass.
+All previously identified mismatches (MM-001, MM-002, MM-003) resolved by A.5C.
+A.6 is eligible to proceed subject to path coverage governance review (see uncovered paths below).
 
 ---
 
@@ -29,47 +31,31 @@ Two unexpected mismatches were identified between CONTROL.js and the runtime sta
 
 ---
 
-## Results
+## Results (Rerun — Post A.5C)
 
 | Category | Count |
 |----------|-------|
-| Pass | 41 |
-| Fail (unexpected) | 2 |
-| Fail (documented) | 1 |
+| Pass | 44 |
+| Fail (unexpected) | 0 |
+| Fail (documented) | 0 |
 | Incomplete | 0 |
 | **Total events** | **44** |
 
 ---
 
-## Unexpected Mismatches
+## Prior Mismatches — Resolved
 
-### MM-001 — D1/1 — DEMO_EXIT openPanels
-- **Field:** `openPanels`
-- **Runtime:** `["situation","narrative"]`
-- **CONTROL:** `["situation"]`
-- **Root cause:** CONTROL's DEMO_EXIT handler resets openPanels to `['situation']`; runtime does not call setOpenPanels on exit
-- **Severity:** HIGH
-
-### MM-003 — F1b/1 — PERSONA_SELECT mid-demo traversalHistory
-- **Field:** `traversalHistory`
-- **Runtime:** `["narrative"]`
-- **CONTROL:** `[]`
-- **Root cause:** CONTROL clears traversalHistory on PERSONA_SELECT when demoActive; runtime persona effect does not
-- **Severity:** MEDIUM (same root as documented MM-002; unexpected because event lacks expectFail declaration)
-
----
-
-## Documented Mismatch
-
-### MM-002 — F1a/1 — PERSONA_SELECT mid-demo traversalHistory (pre-declared)
-- **Field:** `traversalHistory`
-- **Runtime:** `["narrative"]`
-- **CONTROL:** `[]`
-- **Status:** Pre-declared in scenario matrix. Reflects a known design gap — CONTROL models desired authority behavior; runtime not yet updated. Does not block on its own.
+| ID | Field | Initial result | Post-A.5C |
+|----|-------|---------------|-----------|
+| MM-001 | D1/1 `openPanels` | UNEXPECTED FAIL | PASS |
+| MM-002 | F1a/1 `traversalHistory` | DOCUMENTED | PASS |
+| MM-003 | F1b/1 `traversalHistory` | UNEXPECTED FAIL | PASS |
 
 ---
 
 ## Uncovered Paths (INCOMPLETE — documented, not failures)
+
+These paths remain uncovered under A.5B. They were uncovered in the initial run and remain uncovered in the rerun. Coverage governance for A.6 must address these explicitly.
 
 | Path | Reason |
 |------|--------|
@@ -84,10 +70,8 @@ Two unexpected mismatches were identified between CONTROL.js and the runtime sta
 
 | Gate | Status |
 |------|--------|
-| A.6 (CONTROL Integration) | **BLOCKED** |
-| Reason | MM-001 and MM-003 are UNEXPECTED; must be resolved before A.6 |
-| Required remediation | Fix CONTROL.js: (1) DEMO_EXIT must not reset openPanels; (2) PERSONA_SELECT must not clear traversalHistory when demoActive |
-| Alternate resolution | MM-003 may be reclassified as DOCUMENTED if MM-002 decision determines CONTROL model is authoritative — then runtime must be updated to match; A.6 still blocked pending that change |
+| A.6 (CONTROL Integration) | **ELIGIBLE** — subject to uncovered path governance |
+| Condition | A.6 stream must explicitly acknowledge the 4 uncovered paths and declare acceptable coverage governance before proceeding |
 
 ---
 
@@ -97,6 +81,7 @@ Two unexpected mismatches were identified between CONTROL.js and the runtime sta
 |----------|------|
 | Validation plan | docs/pios/contracts/A.5B/control_shadow_validation_plan.md |
 | Trace log (44 events) | docs/pios/contracts/A.5B/control_shadow_trace_log.md |
-| Mismatch register (3 entries) | docs/pios/contracts/A.5B/control_shadow_mismatch_register.md |
+| Mismatch register (3 resolved) | docs/pios/contracts/A.5B/control_shadow_mismatch_register.md |
 | Validation summary (this file) | docs/pios/contracts/A.5B/control_shadow_validation_summary.md |
 | Execution script | scripts/pios/A.5B/run_control_shadow_validation.mjs |
+| Remediation record | docs/pios/contracts/A.5C/control_shadow_remediation_record.md |

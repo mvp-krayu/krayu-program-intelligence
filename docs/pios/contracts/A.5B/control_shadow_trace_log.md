@@ -1,9 +1,9 @@
 # A.5B — CONTROL Shadow Parity Trace Log
 
 Stream: A.5B | Execution Trace | Non-Destructive
-Authority: A.5, A.4, A.3, A.2R, A.2G, canonical-layer-model.md (00.2)
+Authority: A.5, A.5C, A.4, A.3, A.2R, A.2G, canonical-layer-model.md (00.2)
 Runtime target: index.js HEAD a5691c3 | Branch: feature/51-9-runtime-convergence
-Execution date: 2026-03-28
+Execution date: 2026-03-28 | Rerun date: 2026-03-28 (post A.5C remediation)
 
 ---
 
@@ -121,11 +121,7 @@ Result codes: PASS | FAIL | DOCUMENTED
 ### D1 — DEMO_EXIT from active guided mode
 | Evt | Result | Description |
 |-----|--------|-------------|
-| D1/1 | **FAIL** | Exit from GUIDED — freeMode=true, traversalHistory=[] |
-| | | MISMATCH field: `openPanels` |
-| | | runtime: `["situation","narrative"]` |
-| | | control: `["situation"]` |
-| | | Root cause: CONTROL.DEMO_EXIT sets `openPanels: ['situation']`; runtime handleDemoExit does not call setOpenPanels |
+| D1/1 | PASS | Exit from GUIDED — freeMode=true, traversalHistory=[], openPanels preserved [A.5C MM-001 resolved] |
 
 ### D2 — PANEL_TOGGLE in FREE mode
 | Evt | Result | Description |
@@ -147,7 +143,7 @@ Result codes: PASS | FAIL | DOCUMENTED
 | D4/1 | PASS | Select new persona in FREE mode |
 | D4/2 | PASS | Explicit DEMO_START from FREE — freeMode→false, guided starts |
 
-**Section result: 8/9 — 1 FAIL (D1/1, unexpected)**
+**Section result: 9/9 PASS**
 
 ---
 
@@ -174,22 +170,15 @@ Result codes: PASS | FAIL | DOCUMENTED
 
 ## F. MID-STATE DISRUPTION
 
-### F1a — PERSONA_SELECT mid-demo (documented mismatch)
+### F1a — PERSONA_SELECT mid-demo (traversalHistory preserved)
 | Evt | Result | Description |
 |-----|--------|-------------|
-| F1a/1 | **DOCUMENTED** | KNOWN MISMATCH: runtime preserves traversalHistory on persona change mid-demo; CONTROL clears it |
-| | | field: `traversalHistory` |
-| | | runtime: `["narrative"]` |
-| | | control: `[]` |
-| | | Classification: pre-declared in scenario matrix; not an unexpected regression |
+| F1a/1 | PASS | PERSONA_SELECT mid-demo — traversalHistory preserved in both runtime and CONTROL [A.5C MM-002/MM-003 resolved] |
 
 ### F1b — PERSONA_SELECT mid-demo + AUTO_START
 | Evt | Result | Description |
 |-----|--------|-------------|
-| F1b/1 | **FAIL** | Change persona mid-demo — traversalHistory mismatch (same root as F1a, not flagged as expectFail) |
-| | | field: `traversalHistory` |
-| | | runtime: `["narrative"]` |
-| | | control: `[]` |
+| F1b/1 | PASS | Change persona mid-demo — traversalHistory preserved in both [A.5C fix] |
 | F1b/2 | PASS | Net state: both runtime and CONTROL reach traversalHistory=[signals] for CTO after AUTO_START |
 
 ### F2 — QUERY_SELECT null in ENTRY with persona
@@ -202,7 +191,7 @@ Result codes: PASS | FAIL | DOCUMENTED
 |-----|--------|-------------|
 | F3/1 | PASS | Change query — persona preserved [51.8R amendment 8], traversalNodeIndex=0 |
 
-**Section result: 3/4 (1 FAIL F1b/1, 1 DOCUMENTED F1a/1)**
+**Section result: 5/5 PASS**
 
 ---
 
@@ -239,10 +228,10 @@ Result codes: PASS | FAIL | DOCUMENTED
 | A. INITIALIZATION | 5 | 6 | 6 | 0 | 0 |
 | B. GUIDED START | 6 | 6 | 6 | 0 | 0 |
 | C. GUIDED ADVANCE | 4 | 11 | 11 | 0 | 0 |
-| D. EXIT / FREE | 4 | 9 | 8 | 1 | 0 |
+| D. EXIT / FREE | 4 | 9 | 9 | 0 | 0 |
 | E. POST-COMPLETION | 3 | 3 | 3 | 0 | 0 |
-| F. MID-STATE | 4 | 5 | 3 | 1 | 1 |
+| F. MID-STATE | 4 | 5 | 5 | 0 | 0 |
 | G. NO-OP / DENIAL | 4 | 4 | 4 | 0 | 0 |
-| **TOTAL** | **30** | **44** | **41** | **2** | **1** |
+| **TOTAL** | **30** | **44** | **44** | **0** | **0** |
 
-**VERDICT: FAIL** — 2 unexpected mismatches. See mismatch register.
+**VERDICT: PASS** — Zero mismatches. Post A.5C remediation rerun.

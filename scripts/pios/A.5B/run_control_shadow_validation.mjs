@@ -225,7 +225,8 @@ function CONTROL(intent, ctx, snapshot) {
 
   if (intent === INTENTS.DEMO_EXIT) {
     const no = { ...orchestrationState, freeMode:true, demoActive:false, demoStage:0, demoComplete:false, guidedStepIndex:0, rawStepActive:false, traversalNodeIndex:0, selectedFlow:null }
-    return { status:'OK', failReason:null, traceId, newSnapshot:_rebuildDerivedFields({ ...snapshot, openPanels:['situation'], traversalHistory:[], orchestrationState:no }) }
+    // openPanels preserved: runtime handleDemoExit does not call setOpenPanels [MM-001 / A.5C]
+    return { status:'OK', failReason:null, traceId, newSnapshot:_rebuildDerivedFields({ ...snapshot, traversalHistory:[], orchestrationState:no }) }
   }
 
   if (intent === INTENTS.PANEL_TOGGLE) {
@@ -242,7 +243,8 @@ function CONTROL(intent, ctx, snapshot) {
     let no = { ...orchestrationState, guidedStepIndex:0 }
     if (persona !== null) no.demoComplete = false
     let newTH = traversalHistory
-    if (demoActive) { no = { ...no, demoActive:false, demoStage:0, traversalNodeIndex:0, selectedFlow:null, rawStepActive:false }; newTH = [] }
+    // traversalHistory preserved when demoActive: runtime persona change effect does not clear it [MM-002/MM-003 / A.5C]
+    if (demoActive) { no = { ...no, demoActive:false, demoStage:0, traversalNodeIndex:0, selectedFlow:null, rawStepActive:false } }
     return { status:'OK', failReason:null, traceId, newSnapshot:_rebuildDerivedFields({ ...snapshot, selectedPersona:persona, traversalHistory:newTH, orchestrationState:no }) }
   }
 
@@ -624,7 +626,7 @@ const scenarios = [
 
   { id:'D1', desc:'DEMO_EXIT from active guided mode',
     setup: s => rt_AUTO_START(rt_PERSONA_SELECT(rt_QUERY_SELECT(rt_INIT(), 'GQ-001'), 'EXECUTIVE')),
-    steps:[{ intent:'DEMO_EXIT', ctx:{}, note:'Exit from GUIDED — freeMode=true, traversalHistory=[], openPanels=[situation]' }]
+    steps:[{ intent:'DEMO_EXIT', ctx:{}, note:'Exit from GUIDED — freeMode=true, traversalHistory=[], openPanels preserved (runtime does not reset on exit) [A.5C MM-001]' }]
   },
   { id:'D2', desc:'PANEL_TOGGLE in FREE mode',
     setup: s => rt_DEMO_EXIT(rt_AUTO_START(rt_PERSONA_SELECT(rt_QUERY_SELECT(rt_INIT(), 'GQ-001'), 'EXECUTIVE'))),
@@ -676,15 +678,14 @@ const scenarios = [
 
   // ── F. MID-STATE DISRUPTION ────────────────────────────────────────────────
 
-  { id:'F1a', desc:'PERSONA_SELECT during guided mode — before auto-start (expects traversalHistory mismatch)',
+  { id:'F1a', desc:'PERSONA_SELECT during guided mode — traversalHistory preserved [A.5C MM-002/MM-003]',
     setup: s => rt_AUTO_START(rt_PERSONA_SELECT(rt_QUERY_SELECT(rt_INIT(), 'GQ-001'), 'EXECUTIVE')),
-    expectFail: true, // runtime does NOT clear traversalHistory; CONTROL does
-    steps:[{ intent:'PERSONA_SELECT', ctx:{ persona:'CTO' }, note:'KNOWN MISMATCH: runtime preserves traversalHistory; CONTROL clears it. See A.5B mismatch register.' }]
+    steps:[{ intent:'PERSONA_SELECT', ctx:{ persona:'CTO' }, note:'PERSONA_SELECT mid-demo — traversalHistory preserved in both runtime and CONTROL [A.5C fix]' }]
   },
   { id:'F1b', desc:'PERSONA_SELECT mid-demo + AUTO_START (net parity)',
     setup: s => rt_AUTO_START(rt_PERSONA_SELECT(rt_QUERY_SELECT(rt_INIT(), 'GQ-001'), 'EXECUTIVE')),
     steps:[
-      { intent:'PERSONA_SELECT', ctx:{ persona:'CTO' }, note:'Change persona mid-demo — runtime: traversalHistory stays, CONTROL: cleared (F1a mismatch)' },
+      { intent:'PERSONA_SELECT', ctx:{ persona:'CTO' }, note:'Change persona mid-demo — traversalHistory preserved in both runtime and CONTROL [A.5C fix]' },
       { intent:'AUTO_START',     ctx:{},                note:'Net state: both runtime and CONTROL reach traversalHistory=[signals] for CTO' },
     ]
   },
@@ -868,7 +869,7 @@ console.log('Uncovered runtime paths:')
 console.log('  - Legacy selectedFlow Path B (DEMO_NEXT path B): tested with selectedFlow=null in all scenarios')
 console.log('  - Standard stage mode Path C (demoStage iteration): not exercised in primary persona flows')
 console.log('  - QUERY_SELECT null mid-demo: traversalHistory interaction not tested (ENTRY-only tested)')
-console.log('  - handleDemoExit with open non-situation panels: covered via D1 (verified openPanels=[situation])')
+console.log('  - handleDemoExit with open non-situation panels: covered via D1 (verified openPanels preserved on exit) [A.5C MM-001]')
 console.log()
 console.log(`Export: traceLog contains ${traceLog.length} events`)
 console.log(`Export: mismatchRegister contains ${mismatchRegister.length} entries (${expectedFails.length} expected, ${unexpectedFails.length} unexpected)`)
