@@ -39,7 +39,10 @@ import SignalGaugeCard  from '../components/SignalGaugeCard'
 import LandingGaugeStrip from '../components/LandingGaugeStrip'
 import TopologyPanel    from '../components/TopologyPanel'
 import DemoController   from '../components/DemoController'
-import { TRAVERSAL_FLOWS, PERSONA_AUTO_OPEN, getFlowPanels, getFlowNodes } from '../components/TraversalEngine'
+import { TRAVERSAL_FLOWS, PERSONA_AUTO_OPEN, getFlowPanels, getFlowNodes,
+         PANEL_STATES, D2_PANEL_MAP, PERSONA_DEPTH_ENVELOPE,       // D3.1–D3.4
+         computePanelState, validatePanelTransition                  // D3.5–D3.6
+       } from '../components/TraversalEngine'
 
 // ---------------------------------------------------------------------------
 // PERSONA_DEFAULT_FLOW — static mapping, no computation [51.6R]
@@ -158,6 +161,11 @@ export default function Home() {
   const [rawStepActive,   setRawStepActive]   = useState(false)
   // Operator / FREE mode — true only after explicit Exit or CTRL-K; blocks auto-start [51.8R RUN04]
   const [freeMode,        setFreeMode]        = useState(false)
+
+  // D.3 — traversal history [lens_runtime_state_mapping.md §5]
+  // Ordered array of panel IDs visited in the current governed session.
+  // Reset on demo start and demo exit; not populated during Operator mode.
+  const [traversalHistory, setTraversalHistory] = useState([])
 
   // Persona change detection — ref-based to avoid [enlPersona]-only dep [51.8R amendment]
   const prevEnlPersonaRef = useRef(null)
@@ -370,6 +378,7 @@ export default function Home() {
     setDemoComplete(false)   // reset terminal state on re-run [51.8R amendment]
     setGuidedStepIndex(0)    // reset guided step [51.8R guided correction]
     setRawStepActive(false)  // reset raw step [51.8R guided correction]
+    setTraversalHistory([])  // D.3: fresh governed session — Operator mode history does not carry forward
     // Derive active flow — backward compat [51.6R.2]
     const activeFlow = selectedFlow || (enlPersona ? PERSONA_DEFAULT_FLOW[enlPersona] : null)
     setTraversalNodeIndex(0)
@@ -410,6 +419,9 @@ export default function Home() {
         setGuidedStepIndex(nextIndex)
         const stepPanel = step.panelId
         setOpenPanels(stepPanel === 'situation' ? ['situation'] : ['situation', stepPanel])  // situation pinned [51.8R amendment 9]
+        if (stepPanel && stepPanel !== 'situation') {
+          setTraversalHistory(h => h.includes(stepPanel) ? h : [...h, stepPanel]) // D.3: record traversal position
+        }
         if (step.rawStep) {
           // ANALYST raw step: force source evidence open [51.8R guided correction]
           setRawStepActive(true)
@@ -455,6 +467,7 @@ export default function Home() {
     setDemoComplete(false)      // clear terminal state [51.8R amendment]
     setGuidedStepIndex(0)       // clear guided step [51.8R guided correction]
     setRawStepActive(false)     // clear raw step [51.8R guided correction]
+    setTraversalHistory([])     // D.3: Operator mode session not added to governed traversal history
   }
 
   // ── Render ──

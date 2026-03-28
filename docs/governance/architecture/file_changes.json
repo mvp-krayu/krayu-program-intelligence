@@ -1,0 +1,139 @@
+{
+  "stream": "D.3",
+  "name": "Lens Runtime Activation",
+  "branch": "feature/pios-lens-runtime-activation",
+  "date": "2026-03-28",
+  "authority": "docs/governance/architecture/lens_runtime_activation.md",
+  "files_created": [
+    {
+      "path": "docs/governance/architecture/lens_runtime_activation.md",
+      "description": "Activation contract — scope, preservation commitments, acknowledged gaps"
+    },
+    {
+      "path": "docs/governance/architecture/lens_runtime_state_mapping.md",
+      "description": "D.2 panel → code panel ID mapping; state model runtime expression"
+    },
+    {
+      "path": "docs/governance/architecture/lens_runtime_path_enforcement.md",
+      "description": "Four traversal path sequences; enforcement gaps; validatePanelTransition logic"
+    },
+    {
+      "path": "docs/governance/architecture/lens_runtime_persona_activation.md",
+      "description": "PERSONA_DEPTH_ENVELOPE; persona change rules; non-alteration confirmation"
+    },
+    {
+      "path": "docs/governance/architecture/lens_runtime_operator_mode.md",
+      "description": "freeMode/operator-mode-badge implementation; boundary requirement verification"
+    },
+    {
+      "path": "docs/governance/architecture/lens_runtime_fail_closed.md",
+      "description": "Fail-closed mechanisms; absent upstream output model; failure classification"
+    },
+    {
+      "path": "docs/governance/architecture/lens_runtime_activation_validation.md",
+      "description": "Activation validation receipt; proof checklist; gap governance standing"
+    },
+    {
+      "path": "docs/governance/architecture/file_changes.json",
+      "description": "This file — exact record of all D.3 file changes"
+    },
+    {
+      "path": "docs/governance/architecture/runtime_activation_receipt.md",
+      "description": "Concise execution report"
+    }
+  ],
+  "files_modified": [
+    {
+      "path": "app/execlens-demo/components/TraversalEngine.js",
+      "changes": [
+        {
+          "type": "header_update",
+          "description": "Updated contract header to include D.3 identifier and list D3.1–D3.6 additions"
+        },
+        {
+          "type": "constant_added",
+          "name": "PANEL_STATES",
+          "description": "Five canonical D.2 panel states: HIDDEN, AVAILABLE, ACTIVE, EXPANDED, LOCKED"
+        },
+        {
+          "type": "constant_added",
+          "name": "D2_PANEL_MAP",
+          "description": "D.2 panel name → code panel ID mapping; Drift and Remediation map to null (not implemented)"
+        },
+        {
+          "type": "constant_added",
+          "name": "D2_PATH_MAP",
+          "description": "Four D.2 traversal paths with canonical sequences and code panel ID sequences"
+        },
+        {
+          "type": "constant_added",
+          "name": "PERSONA_DEPTH_ENVELOPE",
+          "description": "Per-persona reachable panel sets and maxDepth values for EXECUTIVE, CTO, ANALYST"
+        },
+        {
+          "type": "function_added",
+          "name": "computePanelState",
+          "description": "Pure function — derives D.2 canonical state for a panel given full session context"
+        },
+        {
+          "type": "function_added",
+          "name": "_isValidNextStep",
+          "description": "Internal helper — checks if panelId is a valid next step from currentPanel on any path"
+        },
+        {
+          "type": "function_added",
+          "name": "validatePanelTransition",
+          "description": "Pure function — returns {authorized, reason} for a proposed panel transition"
+        }
+      ],
+      "preserved": [
+        "NODE_TO_PANEL",
+        "TRAVERSAL_FLOWS",
+        "PERSONA_AUTO_OPEN",
+        "NODE_LABELS",
+        "getFlowPanels",
+        "getFlowNodes"
+      ]
+    },
+    {
+      "path": "app/execlens-demo/pages/index.js",
+      "changes": [
+        {
+          "type": "import_update",
+          "description": "Added PANEL_STATES, D2_PANEL_MAP, PERSONA_DEPTH_ENVELOPE, computePanelState, validatePanelTransition to TraversalEngine import"
+        },
+        {
+          "type": "state_added",
+          "name": "traversalHistory",
+          "description": "useState([]) — ordered array of panel IDs visited in current governed session"
+        },
+        {
+          "type": "state_update",
+          "location": "handleStartDemo",
+          "description": "setTraversalHistory([]) — reset traversal history on new governed session start"
+        },
+        {
+          "type": "state_update",
+          "location": "handleDemoNext",
+          "description": "setTraversalHistory — append stepPanel to history on each guided step advance"
+        },
+        {
+          "type": "state_update",
+          "location": "handleDemoExit",
+          "description": "setTraversalHistory([]) — clear traversal history on transition to Operator mode"
+        }
+      ],
+      "preserved": [
+        "PERSONA_GUIDED_FLOWS",
+        "PERSONA_DEFAULT_FLOW",
+        "handleStartDemo (core logic)",
+        "handleDemoNext (core logic)",
+        "handleDemoExit (core logic)",
+        "handleToggle",
+        "operator-mode-badge rendering",
+        "Evidence panel gating logic",
+        "All 51.8.R governed baseline behavior"
+      ]
+    }
+  ]
+}
