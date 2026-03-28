@@ -1,5 +1,6 @@
 /**
  * pages/index.js
+ * PIOS-A.7-PROJECTION-PURIFICATION (UI is pure projection of CONTROL state; getPanelExpanded replaced by resolvedPanelState lookup; persona auto-open useEffect removed; TraversalEngine imports pruned [A.7])
  * PIOS-A.6-AUTHORITY-SWITCH (CONTROL is sole authority for all state transitions; index.js is adapter + projection only [A.6])
  * PIOS-51.9B-AUTHORITY-WIRING (getPanelExpanded: computePanelState governs GUIDED rendering; validatePanelTransition bypassed in ENTRY/FREE/OPERATOR; valid-by-construction comment on handleDemoNext [51.9B])
  * PIOS-51.9A-TRAVERSAL-HISTORY (reset+first-panel recording on session start for handleStartDemo and auto-start; traversalHistory is primary traversal record [51.9A])
@@ -42,10 +43,7 @@ import SignalGaugeCard  from '../components/SignalGaugeCard'
 import LandingGaugeStrip from '../components/LandingGaugeStrip'
 import TopologyPanel    from '../components/TopologyPanel'
 import DemoController   from '../components/DemoController'
-import { TRAVERSAL_FLOWS, PERSONA_AUTO_OPEN, getFlowPanels, getFlowNodes,
-         PANEL_STATES, D2_PANEL_MAP, PERSONA_DEPTH_ENVELOPE,       // D3.1–D3.4
-         computePanelState, validatePanelTransition                  // D3.5–D3.6
-       } from '../components/TraversalEngine'
+import { getFlowNodes, PANEL_STATES } from '../components/TraversalEngine'
 import { CONTROL, buildSnapshot, INTENTS } from '../components/Control'
 
 // ---------------------------------------------------------------------------
@@ -157,6 +155,12 @@ export default function Home() {
   // Reset on demo start and demo exit; not populated during Operator mode.
   const [traversalHistory, setTraversalHistory] = useState([])
 
+  // A.7: Resolved panel state — pre-computed by CONTROL, updated via applyControlResponse.
+  // Replaces getPanelExpanded orchestration logic. Initialized from CONTROL INIT output. [A.7]
+  const [resolvedPanelState, setResolvedPanelState] = useState(
+    () => CONTROL(INTENTS.INIT, {}, null).newSnapshot.resolvedPanelState
+  )
+
   // Exit guard — set by handleDemoExit; suppresses auto-start on demoComplete dep change [51.8R amendment 10]
   const exitedRef = useRef(false)
   // Auto-start previous deps — detects persona/query change vs demoComplete change [51.8R amendment 10]
@@ -190,6 +194,7 @@ export default function Home() {
     setFreeMode(o.freeMode)
     setTraversalNodeIndex(o.traversalNodeIndex)
     setSelectedFlow(o.selectedFlow)
+    setResolvedPanelState(s.resolvedPanelState)  // A.7: projection-layer authority
   }
 
   // ── Panel helpers ──
@@ -216,41 +221,18 @@ export default function Home() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openPanels, traversalHistory, enlPersona, selectedQuery, demoActive, demoStage, demoComplete, guidedStepIndex, rawStepActive, freeMode, selectedFlow, traversalNodeIndex])
 
-  // ── Panel expanded state — D.3 authority wiring [51.9B] ──
-  // GUIDED mode: computePanelState is rendering authority per D.3 / lens_runtime_state_mapping.md §4
-  // ENTRY / FREE / POST-COMPLETION: openPanels-driven (51.8R sanctioned)
-  // Non-traversal companion panels (situation, persona): always openPanels — never in traversalHistory
-  // rawStep exception: ANALYST step 4 reopens 'evidence' without new traversalHistory entry [51.8R amendment]
+  // ── Panel expanded state — A.7: pure projection of CONTROL-derived resolvedPanelState ──
+  // All orchestration logic (GUIDED branching, computePanelState, rawStep exception) is in CONTROL.
+  // UI reads pre-computed result only. [A.7]
   const getPanelExpanded = useCallback((panelId) => {
-    // Non-traversal companion panels: bypass computePanelState [situation pinned, persona always interactive]
-    if (panelId === 'situation' || panelId === 'persona') return openPanels.includes(panelId)
-    // GUIDED mode: computePanelState governs [D.3]
-    if (demoActive) {
-      // rawStep exception: evidence re-opened without new traversalHistory entry [51.8R ANALYST step 4]
-      if (rawStepActive && panelId === 'evidence') return openPanels.includes('evidence')
-      const state = computePanelState(panelId, openPanels, traversalHistory, enlPersona, demoActive, freeMode)
-      return state === PANEL_STATES.ACTIVE || state === PANEL_STATES.EXPANDED
-    }
-    // ENTRY / FREE / POST-COMPLETION: openPanels-driven [51.8R sanctioned]
-    return openPanels.includes(panelId)
-  }, [openPanels, traversalHistory, enlPersona, demoActive, freeMode, rawStepActive])
+    const state = resolvedPanelState?.[panelId]
+    return state === PANEL_STATES.ACTIVE || state === PANEL_STATES.EXPANDED
+  }, [resolvedPanelState])
 
 
-  // ── Persona auto-open — reveal depth only [51.6, R3] ──
-  // Zero content variation. Only panel open depth differs.
-  // Guard: only fires during active demo [51.6R.2 — persona click must not open panels implicitly]
-
-  useEffect(() => {
-    if (!enlPersona || !demoActive) return
-    if (PERSONA_GUIDED_FLOWS[enlPersona]) return  // guided mode owns panel management — auto-open would drop situation via max-2 [51.8R Post-RUN01 hardening]
-    const autoPanels = PERSONA_AUTO_OPEN[enlPersona]
-    if (!autoPanels || autoPanels.length === 0) return
-    setOpenPanels(prev => {
-      // Open persona's default panels, respect max-2 rule
-      const merged = [...new Set([...prev, ...autoPanels])]
-      return merged.length > 2 ? merged.slice(merged.length - 2) : merged
-    })
-  }, [enlPersona, demoActive])
+  // A.7: Persona auto-open useEffect REMOVED.
+  // Was a no-op for all current personas (PERSONA_GUIDED_FLOWS guard exited early for every case).
+  // Panel state is governed entirely by CONTROL via resolvedPanelState. [A.7]
 
   // ── Query fetch [R2: same API calls as 42.29] ──
   // [51.8R amendment 8: persona→evidence auto-open effect removed]
