@@ -1,6 +1,6 @@
 {
   "stream": "51.8",
-  "timestamp": "2026-03-26T17:11:10.757567Z",
+  "timestamp": "2026-03-27T14:41:05.803842Z",
   "total": 44,
   "passed": 44,
   "failed": 0,
@@ -144,7 +144,7 @@
       "detail": ""
     },
     {
-      "name": "Free explore effect guarded by !demoActive",
+      "name": "Free explore evidence effect removed [51.8R amendment 8]",
       "group": "free_explore_separation",
       "status": "PASS",
       "detail": ""
