@@ -1,0 +1,267 @@
+{
+  "registry_id": "CAC-v1",
+  "stream": "A.2 — PiOS Architecture Post-Execution Consolidation",
+  "date": "2026-03-28",
+  "filter_criteria": "ACTIVE (lifecycle) AND HIGH (confidence) from ALR-v1 + ACR-v1",
+  "total_canonical_nodes": 26,
+  "excluded": {
+    "PARTIAL_nodes": 3,
+    "MEDIUM_confidence_nodes": 6,
+    "NONE_confidence_nodes": 1,
+    "REJECTED_as_architecture": 1,
+    "note": "N-032 (51.x Demo Surface) is ACTIVE+HIGH but REJECTED as architecture layer. Included in canonical corpus as consumer boundary, not as architecture layer."
+  },
+  "canonical_corpus": [
+    {
+      "corpus_id": "CC-001",
+      "node_id": "N-001",
+      "label": "Governance Master Capsule",
+      "path": "docs/governance/governance_master_capsule.md",
+      "layer_zone": "Governance Authority",
+      "role": "Defines 11 governing constraints including GC-06 (Evidence First) and GC-07 (State-Diagnosis Separation)",
+      "architecture_contribution": "Foundational governance; all downstream architecture must comply"
+    },
+    {
+      "corpus_id": "CC-002",
+      "node_id": "N-002",
+      "label": "PiOS Pipeline Specification",
+      "path": "docs/program-intelligence-framework/pios/pios_pipeline_specification.md",
+      "layer_zone": "Framework Specification",
+      "role": "9-Stage Pipeline canonical definition (Stages 1-9 mapped to streams 40.2-40.9)",
+      "architecture_contribution": "Canonical operational pipeline; confirmed F-A framing HIGH confidence"
+    },
+    {
+      "corpus_id": "CC-003",
+      "node_id": "N-003",
+      "label": "PiOS Runtime Architecture",
+      "path": "docs/program-intelligence-framework/pios/pios_runtime_architecture.md",
+      "layer_zone": "Framework Specification",
+      "role": "Defines stream zones, execution model, and PiOS scope",
+      "architecture_contribution": "Canonical architecture document; source of stream zone boundaries"
+    },
+    {
+      "corpus_id": "CC-004",
+      "node_id": "N-004",
+      "label": "PiOS Execution Contract",
+      "path": "docs/program-intelligence-framework/pios/pios_execution_contract.md",
+      "layer_zone": "Framework Specification",
+      "role": "Non-negotiable execution rules; Evidence First rule; fail-closed constraints",
+      "architecture_contribution": "Binding execution constraints across all layers"
+    },
+    {
+      "corpus_id": "CC-005",
+      "node_id": "N-005",
+      "label": "Three-Layer Analytical Model",
+      "path": "docs/program-intelligence-framework/program_intelligence_three_layer_model.md",
+      "layer_zone": "Framework Model",
+      "role": "Defines Observability Layer (40.2-40.4), Intelligence Layer (40.5-40.6), Executive Intelligence Layer (40.7)",
+      "architecture_contribution": "Canonical analytical architecture; confirmed F-B framing HIGH confidence"
+    },
+    {
+      "corpus_id": "CC-006",
+      "node_id": "N-006",
+      "label": "40.2 Evidence Acquisition",
+      "path": "docs/pios/40.2/",
+      "layer_zone": "Observability Layer (Stage 1)",
+      "role": "Evidence snapshot, provenance tracking; source-only intake (run_02 boundary)",
+      "architecture_contribution": "Pipeline Stage 1; Three-Layer Layer 1 input"
+    },
+    {
+      "corpus_id": "CC-007",
+      "node_id": "N-007",
+      "label": "40.3 Program Reconstruction",
+      "path": "docs/pios/40.3/",
+      "layer_zone": "Observability Layer (Stage 2)",
+      "role": "PEG production (87 nodes, 40 edges); repository map; capability map",
+      "architecture_contribution": "Pipeline Stage 2; PEG feeds 41.1 semantic elevation"
+    },
+    {
+      "corpus_id": "CC-008",
+      "node_id": "N-008",
+      "label": "40.4 Telemetry Extraction",
+      "path": "docs/pios/40.4/",
+      "layer_zone": "Observability Layer (Stage 3)",
+      "role": "Structural/activity/delivery telemetry datasets",
+      "architecture_contribution": "Pipeline Stage 3; telemetry input to 40.5 signal computation"
+    },
+    {
+      "corpus_id": "CC-009",
+      "node_id": "N-009",
+      "label": "40.5 Signal Computation",
+      "path": "docs/pios/40.5/",
+      "layer_zone": "Intelligence Layer (Stage 4)",
+      "role": "8 signals defined; 5 admitted (SIG-001..005) to 41.4 registry",
+      "architecture_contribution": "Pipeline Stage 4; L3 signal derivation layer; source of all downstream signal flow"
+    },
+    {
+      "corpus_id": "CC-010",
+      "node_id": "N-010",
+      "label": "40.6 Condition+Diagnosis Activation",
+      "path": "docs/pios/40.6/",
+      "layer_zone": "Intelligence Layer (Stages 5+6)",
+      "role": "Condition datasets (observable state) + diagnosis outputs (systemic dynamics); GC-07 enforced",
+      "architecture_contribution": "Pipeline Stages 5+6; exclusive input to 40.7 via boundary enforcement"
+    },
+    {
+      "corpus_id": "CC-011",
+      "node_id": "N-011",
+      "label": "40.7 Intelligence Synthesis",
+      "path": "docs/pios/40.7/",
+      "layer_zone": "Executive Intelligence Layer (Stage 7)",
+      "role": "Intelligence objects; evidence-linked program state summaries",
+      "architecture_contribution": "Pipeline Stage 7; Three-Layer Layer 3 output; decision-grade intelligence"
+    },
+    {
+      "corpus_id": "CC-012",
+      "node_id": "N-014",
+      "label": "40.11 Handover Capsule",
+      "path": "docs/pios/40.11/stream_50_handover_capsule.md",
+      "layer_zone": "Pipeline Boundary",
+      "role": "Authoritative boundary between 40.x runtime and 50/51.x demo surface",
+      "architecture_contribution": "Defines 51.x as consumer-only; establishes read-only constraint on 40.x outputs for demo surface"
+    },
+    {
+      "corpus_id": "CC-013",
+      "node_id": "N-015",
+      "label": "41.1 Semantic Elevation",
+      "path": "docs/pios/41.1/semantic_elevation_report.md",
+      "layer_zone": "Semantic Shaping Layer L4 (Stage post-40.7)",
+      "role": "89 components → 17 domains + 42 capabilities; evidence-grounded transformation",
+      "architecture_contribution": "L4 semantic shaping layer; transforms structural reconstruction into navigable semantic structure"
+    },
+    {
+      "corpus_id": "CC-014",
+      "node_id": "N-016",
+      "label": "41.2 PIE Vault",
+      "path": "docs/pios/41.2/",
+      "layer_zone": "Semantic Shaping Layer L4",
+      "role": "Program intelligence evidence vault",
+      "architecture_contribution": "Evidence repository for semantic layer; feeds consolidation (41.3)"
+    },
+    {
+      "corpus_id": "CC-015",
+      "node_id": "N-018",
+      "label": "41.4 Signal Registry",
+      "path": "docs/pios/41.4/signal_registry.md",
+      "layer_zone": "Semantic Shaping Layer L4",
+      "role": "5 admitted signals (SIG-001..005); CKR-backed; governs binding eligibility",
+      "architecture_contribution": "Canonical signal gate; only CKR-admitted signals proceed to 43.x binding"
+    },
+    {
+      "corpus_id": "CC-016",
+      "node_id": "N-020",
+      "label": "43.1 Signal-to-Structure Binding",
+      "path": "docs/pios/43.1/signal_to_structure_binding.md",
+      "layer_zone": "Binding Layer L5 zone",
+      "role": "Deterministic non-interpretive signal-to-node binding; fail-closed; SSZ/SSI prohibited; L3/L4 fragment anchors",
+      "architecture_contribution": "Primary binding definition; contains most explicit L-number fragment evidence"
+    },
+    {
+      "corpus_id": "CC-017",
+      "node_id": "N-021",
+      "label": "43.2 Payload Contract",
+      "path": "docs/pios/43.2/",
+      "layer_zone": "Binding Layer L5 zone",
+      "role": "Binding output payload shape specification",
+      "architecture_contribution": "Defines what binding must produce for validation gate"
+    },
+    {
+      "corpus_id": "CC-018",
+      "node_id": "N-022",
+      "label": "43.3 Validation Envelope",
+      "path": "docs/pios/43.3/",
+      "layer_zone": "Binding Layer L5 zone",
+      "role": "Validation gate; 5 projection records produced from 5 admitted signals",
+      "architecture_contribution": "Gate between binding and projection layers; fail-closed"
+    },
+    {
+      "corpus_id": "CC-019",
+      "node_id": "N-023",
+      "label": "44.1 Projection Definition",
+      "path": "docs/pios/44.1/structural_overlay_projection_definition.md",
+      "layer_zone": "Projection Layer L5 zone",
+      "role": "Projection from validated binding to structural overlay; L3 explicit anchor; no reverse dependency",
+      "architecture_contribution": "Projection definition; L3 layer fragment most explicit here (Section 2)"
+    },
+    {
+      "corpus_id": "CC-020",
+      "node_id": "N-024",
+      "label": "44.2 Projection Attachment",
+      "path": "docs/pios/44.2/",
+      "layer_zone": "Projection Layer L5 zone",
+      "role": "5 records with emphasis attributes; direct input to 42.21 runtime intake",
+      "architecture_contribution": "Output of projection layer; consumed by 42.x"
+    },
+    {
+      "corpus_id": "CC-021",
+      "node_id": "N-025",
+      "label": "44.3 Emphasis Attribute",
+      "path": "docs/pios/44.3/",
+      "layer_zone": "Projection Layer L5 zone",
+      "role": "Emphasis attribute definition (primary/secondary); pass-through to rendering",
+      "architecture_contribution": "Final projection output attribute; visible in ExecLens surface"
+    },
+    {
+      "corpus_id": "CC-022",
+      "node_id": "N-027",
+      "label": "42.21 Runtime Intake",
+      "path": "docs/pios/42.21/",
+      "layer_zone": "Consumer Execution Layer L6",
+      "role": "First consumer layer; governed artifact intake from 44.2; read-only",
+      "architecture_contribution": "Consumer boundary entry point; no binding production"
+    },
+    {
+      "corpus_id": "CC-023",
+      "node_id": "N-028",
+      "label": "42.22 Exposure Validation",
+      "path": "docs/pios/42.22/",
+      "layer_zone": "Consumer Execution Layer L6",
+      "role": "5 records validated for rendering; end-to-end provenance chain terminus",
+      "architecture_contribution": "Consumer validation gate; provenance chain confirmed from 42.22 back to 40.5"
+    },
+    {
+      "corpus_id": "CC-024",
+      "node_id": "N-030",
+      "label": "CKR — Canonical Knowledge Registry",
+      "path": "krayu-knowledge/canonical_knowledge_registry.md",
+      "layer_zone": "Governance / Knowledge Authority",
+      "role": "34 governed constructs; admission authority for all signal participation in binding",
+      "architecture_contribution": "Governs what signals are eligible for architecture participation"
+    },
+    {
+      "corpus_id": "CC-025",
+      "node_id": "N-031",
+      "label": "INT-01 / INT-02 Integration Protocol",
+      "path": "docs/pios/ (integration protocol docs)",
+      "layer_zone": "Execution Protocol",
+      "role": "Dual-agent model; ChatGPT architect + Claude Code engine; authority separation",
+      "architecture_contribution": "Defines execution authority model; determines who can change what"
+    },
+    {
+      "corpus_id": "CC-026",
+      "node_id": "N-032",
+      "label": "51.x Demo Surface (Consumer Boundary)",
+      "path": "docs/pios/51.x/",
+      "layer_zone": "Consumer Boundary (NOT architecture layer)",
+      "role": "ExecLens demo surface; 4 signals displayed (SIG-002..005); reads 40.x outputs",
+      "architecture_contribution": "Confirms consumer boundary; validates read-only enforcement; REJECTED as architecture layer"
+    }
+  ],
+  "corpus_summary": {
+    "total_canonical_nodes": 26,
+    "layer_distribution": {
+      "Governance/Framework": 5,
+      "Observability Layer (40.2-40.4)": 3,
+      "Intelligence Layer (40.5-40.6)": 2,
+      "Executive Intelligence Layer (40.7)": 1,
+      "Pipeline Boundary": 1,
+      "Semantic Shaping Layer L4 (41.x)": 3,
+      "Binding Layer (43.x)": 3,
+      "Projection Layer (44.x)": 3,
+      "Consumer Execution Layer L6 (42.x)": 2,
+      "Governance/Knowledge": 1,
+      "Execution Protocol": 1,
+      "Consumer Boundary": 1
+    }
+  }
+}

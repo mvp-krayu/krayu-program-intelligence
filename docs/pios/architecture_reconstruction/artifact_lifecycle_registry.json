@@ -1,0 +1,299 @@
+{
+  "registry_id": "ALR-v1",
+  "stream": "A.2 — PiOS Architecture Post-Execution Consolidation",
+  "date": "2026-03-28",
+  "source_registry": "DNR-v1 (32 nodes + 1 absent) + AEI-v1 (87 artifacts)",
+  "lifecycle_states": ["ACTIVE", "SUPERSEDED", "EXPERIMENTAL", "PARTIAL", "REJECTED", "UNKNOWN"],
+  "definitions": {
+    "ACTIVE": "Currently canonical, in operation, and not superseded",
+    "SUPERSEDED": "Replaced by a newer artifact; retained for lineage tracing only",
+    "EXPERIMENTAL": "Provisional; not yet admitted to canonical corpus; may be retracted",
+    "PARTIAL": "Exists but incomplete or known to be missing required components",
+    "REJECTED": "Explicitly excluded from architecture or corpus",
+    "UNKNOWN": "Cannot determine lifecycle state from available evidence"
+  },
+  "node_classifications": [
+    {
+      "node_id": "N-001",
+      "path": "docs/governance/governance_master_capsule.md",
+      "type": "governance",
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "Defines 11 governing constraints (GC-01..GC-11); referenced across all runtime layers; no supersession detected"
+    },
+    {
+      "node_id": "N-002",
+      "path": "docs/program-intelligence-framework/pios/pios_pipeline_specification.md",
+      "type": "specification",
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "Canonical 9-stage pipeline definition; no replacement document found"
+    },
+    {
+      "node_id": "N-003",
+      "path": "docs/program-intelligence-framework/pios/pios_runtime_architecture.md",
+      "type": "architecture",
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "Canonical runtime architecture document; defines stream zones and execution model"
+    },
+    {
+      "node_id": "N-004",
+      "path": "docs/program-intelligence-framework/pios/pios_execution_contract.md",
+      "type": "contract",
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "Non-negotiable execution rules including Evidence First non-negotiable rule; no supersession"
+    },
+    {
+      "node_id": "N-005",
+      "path": "docs/program-intelligence-framework/program_intelligence_three_layer_model.md",
+      "type": "model",
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "Three-Layer Analytical Model (Observability, Intelligence, Executive Intelligence); CONFIRMED HIGH confidence in A.1"
+    },
+    {
+      "node_id": "N-006",
+      "path": "docs/pios/40.2/",
+      "type": "stream-output",
+      "stage": 1,
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "Evidence acquisition outputs operational in run_01_blueedge; run_02 advancing but run_01 baseline is frozen (commit e52e389)"
+    },
+    {
+      "node_id": "N-007",
+      "path": "docs/pios/40.3/",
+      "type": "stream-output",
+      "stage": 2,
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "Reconstruction outputs: PEG (87 nodes, 40 edges), repository map, capability map; run_01 baseline frozen"
+    },
+    {
+      "node_id": "N-008",
+      "path": "docs/pios/40.4/",
+      "type": "stream-output",
+      "stage": 3,
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "Telemetry datasets: structural, activity, delivery; run_01 baseline frozen"
+    },
+    {
+      "node_id": "N-009",
+      "path": "docs/pios/40.5/",
+      "type": "stream-output",
+      "stage": 4,
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "Signal datasets: 8 defined, SIG-001..008; 5 admitted (SIG-001..005) via 41.4; run_01 baseline frozen"
+    },
+    {
+      "node_id": "N-010",
+      "path": "docs/pios/40.6/",
+      "type": "stream-output",
+      "stage": "5+6",
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "Condition datasets + diagnosis outputs; State-Diagnosis Separation Principle enforced (GC-07); run_01 baseline frozen"
+    },
+    {
+      "node_id": "N-011",
+      "path": "docs/pios/40.7/",
+      "type": "stream-output",
+      "stage": 7,
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "Intelligence synthesis outputs; Executive Intelligence Layer; run_01 baseline frozen"
+    },
+    {
+      "node_id": "N-012",
+      "path": "docs/pios/40.8/",
+      "type": "stream-output",
+      "stage": 8,
+      "lifecycle": "PARTIAL",
+      "confidence": "MEDIUM",
+      "basis": "Agentic Orchestration Layer; naming conflict (delivery vs orchestration, AMB-002); present in pipeline spec but execution evidence is thinner than 40.2-40.7"
+    },
+    {
+      "node_id": "N-013",
+      "path": "docs/pios/40.9/",
+      "type": "stream-output",
+      "stage": 9,
+      "lifecycle": "PARTIAL",
+      "confidence": "MEDIUM",
+      "basis": "Feedback records; structured feedback loop stage; present in spec but less execution evidence observed"
+    },
+    {
+      "node_id": "N-014",
+      "path": "docs/pios/40.11/stream_50_handover_capsule.md",
+      "type": "handover",
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "Authoritative boundary document between PiOS runtime (40.x) and demo surface (50/51.x); explicitly excludes 51.x from architecture"
+    },
+    {
+      "node_id": "N-015",
+      "path": "docs/pios/41.1/semantic_elevation_report.md",
+      "type": "stream-output",
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "Semantic elevation: 89 components → 17 domains + 42 capabilities (BlueEdge); evidence-grounded, conflict-resolved"
+    },
+    {
+      "node_id": "N-016",
+      "path": "docs/pios/41.2/",
+      "type": "stream-output",
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "PIE Vault outputs; program intelligence evidence repository for semantic layer"
+    },
+    {
+      "node_id": "N-017",
+      "path": "docs/pios/41.3/",
+      "type": "stream-output",
+      "lifecycle": "ACTIVE",
+      "confidence": "MEDIUM",
+      "basis": "Consolidation outputs; functional but less direct evidence references in downstream docs"
+    },
+    {
+      "node_id": "N-018",
+      "path": "docs/pios/41.4/signal_registry.md",
+      "type": "stream-output",
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "Signal registry: 5 admitted signals (SIG-001..005); governs what binds downstream; CKR-backed"
+    },
+    {
+      "node_id": "N-019",
+      "path": "docs/pios/41.5/",
+      "type": "stream-output",
+      "lifecycle": "ACTIVE",
+      "confidence": "MEDIUM",
+      "basis": "Query-signal map; functional but moderate evidence density in downstream references"
+    },
+    {
+      "node_id": "N-020",
+      "path": "docs/pios/43.1/signal_to_structure_binding.md",
+      "type": "specification",
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "Binding definition: deterministic, non-interpretive, fail-closed; SSZ/SSI prohibited; L4 fragment explicit"
+    },
+    {
+      "node_id": "N-021",
+      "path": "docs/pios/43.2/",
+      "type": "stream-output",
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "Payload contract: defines shape of binding output; referenced by 43.3 as gate input"
+    },
+    {
+      "node_id": "N-022",
+      "path": "docs/pios/43.3/",
+      "type": "stream-output",
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "Validation envelope: gate between 43.x and 44.x; 5 projection records produced from 5 admitted signals"
+    },
+    {
+      "node_id": "N-023",
+      "path": "docs/pios/44.1/structural_overlay_projection_definition.md",
+      "type": "specification",
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "Projection definition: validated binding payload → structural overlay; L3/L4 fragments explicit; no reverse dependency from 42.x"
+    },
+    {
+      "node_id": "N-024",
+      "path": "docs/pios/44.2/",
+      "type": "stream-output",
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "Projection attachment contract; 5 records with emphasis attributes; input to 42.21"
+    },
+    {
+      "node_id": "N-025",
+      "path": "docs/pios/44.3/",
+      "type": "stream-output",
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "Emphasis attribute outputs; distinction between primary/secondary emphasis established"
+    },
+    {
+      "node_id": "N-026",
+      "path": "docs/pios/44.4/",
+      "type": "stream-output",
+      "lifecycle": "ACTIVE",
+      "confidence": "MEDIUM",
+      "basis": "Projection layer closure artifacts; present but lower evidence density in direct references"
+    },
+    {
+      "node_id": "N-027",
+      "path": "docs/pios/42.21/",
+      "type": "stream-output",
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "Runtime intake: governed artifact intake from 44.2; no binding production; read-only consumer"
+    },
+    {
+      "node_id": "N-028",
+      "path": "docs/pios/42.22/",
+      "type": "stream-output",
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "Exposure validation: 5 signal records validated for rendering; provenance chain traced from 42.22 back to 40.5"
+    },
+    {
+      "node_id": "N-029",
+      "path": "docs/pios/42.23/rewiring_plan.md",
+      "type": "stream-output",
+      "lifecycle": "ACTIVE",
+      "confidence": "MEDIUM",
+      "basis": "WOW chain rewiring; 75.x interpretation layer noted as blocked; still operational plan doc"
+    },
+    {
+      "node_id": "N-030",
+      "path": "krayu-knowledge/canonical_knowledge_registry.md",
+      "type": "governance",
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "CKR: 34 governed constructs; admission authority for signals to binding; governs CKR admission chain"
+    },
+    {
+      "node_id": "N-031",
+      "path": "docs/pios/ (INT-01, INT-02 integration protocol docs)",
+      "type": "protocol",
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "Dual-agent integration protocol; ChatGPT architect + Claude Code engine; defines authority separation"
+    },
+    {
+      "node_id": "N-032",
+      "path": "docs/pios/51.x/ (demo surface streams)",
+      "type": "demo-surface",
+      "lifecycle": "ACTIVE",
+      "confidence": "HIGH",
+      "basis": "ExecLens demo surface; authorized consumer of 40.x outputs; REJECTED as architecture layer (see LAM-v1)",
+      "note": "ACTIVE as demo consumer; REJECTED as architecture layer"
+    },
+    {
+      "node_id": "N-ABSENT-001",
+      "path": "Stream 00.2 — Canonical Layer Model Restoration (NOT FOUND)",
+      "type": "ABSENT",
+      "lifecycle": "PARTIAL",
+      "confidence": "NONE",
+      "basis": "Referenced in 43.1, 44.1, 44.2, 43.2, 43.3 as canonical L0-L8 layer model defining document; not found in k-pi, krayu-knowledge, krayu-mirror, or krayu-program-intelligence; AMB-001 HIGH impact"
+    }
+  ],
+  "lifecycle_summary": {
+    "ACTIVE": 29,
+    "SUPERSEDED": 0,
+    "EXPERIMENTAL": 0,
+    "PARTIAL": 3,
+    "REJECTED": 0,
+    "UNKNOWN": 0,
+    "note": "No superseded artifacts detected in A.1 crawl scope. No experimental artifacts found admitted to canonical corpus. 3 PARTIAL: N-012 (40.8), N-013 (40.9), N-ABSENT-001 (Stream 00.2)."
+  }
+}

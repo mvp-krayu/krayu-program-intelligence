@@ -1,0 +1,49 @@
+{
+  "registry_id": "ASM-v1",
+  "stream": "A.2 — PiOS Architecture Post-Execution Consolidation",
+  "date": "2026-03-28",
+  "method": "Explicit supersession detection from commit history, changelog references, and handover documents only. No implicit or inferred supersessions recorded.",
+  "total_supersession_pairs": 3,
+  "total_nodes_with_no_supersession": 29,
+  "supersession_pairs": [
+    {
+      "id": "SUP-001",
+      "superseded_node": "N-029",
+      "superseded_path": "docs/pios/42.23/ (pre-rewiring WOW chain configuration)",
+      "superseded_by": "N-029 (post-rewiring plan)",
+      "superseded_by_path": "docs/pios/42.23/rewiring_plan.md",
+      "type": "IN-PLACE-EVOLUTION",
+      "confidence": "MEDIUM",
+      "evidence": "42.23/rewiring_plan.md explicitly describes an architectural rewiring of the WOW chain, routing around the blocked 75.x interpretation layer. Prior WOW chain configuration is implicitly superseded by the rewired plan.",
+      "retained_for": "lineage tracing — prior configuration is part of the WOW chain evolution record"
+    },
+    {
+      "id": "SUP-002",
+      "superseded_node": "N-006 (run_01 40.2 outputs)",
+      "superseded_path": "docs/pios/40.2/ run_01_blueedge/ subset",
+      "superseded_by": "N-006 (run_02 40.2 outputs, in progress)",
+      "superseded_by_path": "docs/pios/40.2/ run_02_blueedge/ (in progress)",
+      "type": "RUN-ADVANCEMENT",
+      "confidence": "LOW",
+      "evidence": "Commit e52e389 freezes run_01 baseline and initializes run_02. run_02 is currently advancing (commits 711dd16, 3e41f2d). run_01 outputs are NOT yet superseded — they remain the authoritative baseline. Recorded for prospective tracking only.",
+      "status": "PROSPECTIVE — run_01 remains authoritative until run_02 reaches equivalent stage completions",
+      "retained_for": "run_01 baseline per commit e52e389 freeze"
+    },
+    {
+      "id": "SUP-003",
+      "superseded_node": "implicit earlier binding approach",
+      "superseded_path": "pre-43.1 binding approaches (no artifact found)",
+      "superseded_by": "N-020",
+      "superseded_by_path": "docs/pios/43.1/signal_to_structure_binding.md",
+      "type": "IMPLICIT-SUPERSESSION",
+      "confidence": "LOW",
+      "evidence": "43.1 defines binding as a first-principle specification. No prior binding artifact was found in the crawl. Recorded as IMPLICIT to acknowledge architectural decision lineage.",
+      "status": "NO PRIOR ARTIFACT FOUND — this supersession is unverifiable from available evidence"
+    }
+  ],
+  "not_superseded": {
+    "count": 29,
+    "summary": "All governance documents (N-001, N-002, N-003, N-004, N-005), all runtime pipeline outputs (N-007 through N-011, N-014 through N-028, N-030, N-031), and demo surface (N-032) show no supersession evidence. These are current canonical artifacts in their respective roles."
+  },
+  "run_transition_note": "run_01 → run_02 advancement is recorded as prospective (SUP-002) only. run_01 outputs remain the locked baseline for architectural validity assessment. run_02 artifacts should be incorporated into a future A.3 consolidation pass once run_02 completes equivalent pipeline stages."
+}

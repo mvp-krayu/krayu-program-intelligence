@@ -1,0 +1,357 @@
+{
+  "registry_id": "ACR-v1",
+  "stream": "A.2 — PiOS Architecture Post-Execution Consolidation",
+  "date": "2026-03-28",
+  "source": "ALR-v1 lifecycle classifications applied with A.1 evidence density scoring",
+  "confidence_tiers": {
+    "HIGH": "Direct textual anchor in at least 2 independent documents; no contradicting evidence",
+    "MEDIUM": "Single document anchor or multiple indirect references; no direct contradiction",
+    "LOW": "Only inferred from negative assertions or context; no direct definition anchor",
+    "NONE": "No evidence; artifact is absent or not found"
+  },
+  "scoring_dimensions": [
+    "anchor_count: number of independent document anchors",
+    "cross_layer_reference: whether the artifact is referenced across multiple layers",
+    "internal_consistency: no conflicting claims about the artifact",
+    "admission_status: whether artifact is CKR-admitted or governance-certified"
+  ],
+  "node_confidence_scores": [
+    {
+      "node_id": "N-001",
+      "label": "Governance Master Capsule",
+      "confidence": "HIGH",
+      "anchor_count": 6,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "governance-certified",
+      "score_basis": "Referenced in pios_execution_contract.md, 43.1, 44.1, governance_operating_model.md, INT-01, INT-02"
+    },
+    {
+      "node_id": "N-002",
+      "label": "PiOS Pipeline Specification",
+      "confidence": "HIGH",
+      "anchor_count": 4,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "framework-certified",
+      "score_basis": "Defines 9-stage pipeline; referenced by pios_runtime_architecture.md, 40.x contracts, INT-01"
+    },
+    {
+      "node_id": "N-003",
+      "label": "PiOS Runtime Architecture",
+      "confidence": "HIGH",
+      "anchor_count": 4,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "framework-certified",
+      "score_basis": "Canonical architecture doc; source for stream zone definitions"
+    },
+    {
+      "node_id": "N-004",
+      "label": "PiOS Execution Contract",
+      "confidence": "HIGH",
+      "anchor_count": 5,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "governance-certified",
+      "score_basis": "Non-negotiable Evidence First rule; referenced across all runtime stream contracts"
+    },
+    {
+      "node_id": "N-005",
+      "label": "Three-Layer Model",
+      "confidence": "HIGH",
+      "anchor_count": 3,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "framework-certified",
+      "score_basis": "Confirmed in A.1 F-B framing; no contradicting model found"
+    },
+    {
+      "node_id": "N-006",
+      "label": "40.2 Evidence Acquisition Outputs",
+      "confidence": "HIGH",
+      "anchor_count": 3,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "runtime-executed",
+      "score_basis": "Outputs observed; run_01_blueedge frozen; referenced by 40.3 as source"
+    },
+    {
+      "node_id": "N-007",
+      "label": "40.3 Reconstruction Outputs",
+      "confidence": "HIGH",
+      "anchor_count": 4,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "runtime-executed",
+      "score_basis": "PEG (87 nodes, 40 edges); semantic layer (41.1) takes output as direct input; explicitly quantified"
+    },
+    {
+      "node_id": "N-008",
+      "label": "40.4 Telemetry Outputs",
+      "confidence": "HIGH",
+      "anchor_count": 3,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "runtime-executed",
+      "score_basis": "Telemetry datasets feed 40.5 signal computation; run_01 frozen"
+    },
+    {
+      "node_id": "N-009",
+      "label": "40.5 Signal Computation Outputs",
+      "confidence": "HIGH",
+      "anchor_count": 5,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "runtime-executed",
+      "score_basis": "8 signals defined; 5 admitted (SIG-001..005) via 41.4; traced end-to-end to ExecLens surface"
+    },
+    {
+      "node_id": "N-010",
+      "label": "40.6 Condition+Diagnosis Outputs",
+      "confidence": "HIGH",
+      "anchor_count": 4,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "runtime-executed",
+      "score_basis": "GC-07 State-Diagnosis Separation enforced; 40.7 input boundary enforces 40.6-only access"
+    },
+    {
+      "node_id": "N-011",
+      "label": "40.7 Intelligence Synthesis Outputs",
+      "confidence": "HIGH",
+      "anchor_count": 3,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "runtime-executed",
+      "score_basis": "Intelligence objects produced; Executive Intelligence Layer confirmed in Three-Layer Model"
+    },
+    {
+      "node_id": "N-012",
+      "label": "40.8 Agentic Orchestration",
+      "confidence": "MEDIUM",
+      "anchor_count": 2,
+      "cross_layer_reference": false,
+      "internal_consistency": false,
+      "admission_status": "partial",
+      "score_basis": "Present in pipeline spec; naming conflict delivery/orchestration (AMB-002); thinner execution evidence than 40.2-40.7"
+    },
+    {
+      "node_id": "N-013",
+      "label": "40.9 Feedback",
+      "confidence": "MEDIUM",
+      "anchor_count": 2,
+      "cross_layer_reference": false,
+      "internal_consistency": true,
+      "admission_status": "partial",
+      "score_basis": "Defined in pipeline spec; structured feedback loop; less execution evidence observed in crawl"
+    },
+    {
+      "node_id": "N-014",
+      "label": "40.11 Handover Capsule",
+      "confidence": "HIGH",
+      "anchor_count": 4,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "governance-certified",
+      "score_basis": "Authoritative 40.x→50.x boundary; 51.x exclusion confirmed; read-only authorization explicit"
+    },
+    {
+      "node_id": "N-015",
+      "label": "41.1 Semantic Elevation",
+      "confidence": "HIGH",
+      "anchor_count": 3,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "runtime-executed",
+      "score_basis": "89→17/42 transformation quantified; evidence-grounded, conflict-resolved per 41.1 report"
+    },
+    {
+      "node_id": "N-016",
+      "label": "41.2 PIE Vault",
+      "confidence": "HIGH",
+      "anchor_count": 2,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "runtime-executed",
+      "score_basis": "PIE Vault functional; feeds 41.3 and downstream semantic layer"
+    },
+    {
+      "node_id": "N-017",
+      "label": "41.3 Consolidation",
+      "confidence": "MEDIUM",
+      "anchor_count": 2,
+      "cross_layer_reference": false,
+      "internal_consistency": true,
+      "admission_status": "partial",
+      "score_basis": "Consolidation stage present; less direct downstream reference density"
+    },
+    {
+      "node_id": "N-018",
+      "label": "41.4 Signal Registry",
+      "confidence": "HIGH",
+      "anchor_count": 5,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "CKR-admitted",
+      "score_basis": "5 admitted signals (SIG-001..005); governs binding layer eligibility; CKR-backed admission"
+    },
+    {
+      "node_id": "N-019",
+      "label": "41.5 Query-Signal Map",
+      "confidence": "MEDIUM",
+      "anchor_count": 2,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "runtime-executed",
+      "score_basis": "Referenced by 42.x for query execution; operational but moderate evidence density"
+    },
+    {
+      "node_id": "N-020",
+      "label": "43.1 Signal-to-Structure Binding",
+      "confidence": "HIGH",
+      "anchor_count": 6,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "governance-certified",
+      "score_basis": "Most evidence-dense binding document; contains L3/L4 fragment evidence; SSZ/SSI prohibition explicit"
+    },
+    {
+      "node_id": "N-021",
+      "label": "43.2 Payload Contract",
+      "confidence": "HIGH",
+      "anchor_count": 3,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "governance-certified",
+      "score_basis": "Payload shape for binding outputs; 43.3 validation gate depends on it"
+    },
+    {
+      "node_id": "N-022",
+      "label": "43.3 Validation Envelope",
+      "confidence": "HIGH",
+      "anchor_count": 3,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "governance-certified",
+      "score_basis": "Gate between binding and projection; 5 records produced; fail-closed on evidence"
+    },
+    {
+      "node_id": "N-023",
+      "label": "44.1 Projection Definition",
+      "confidence": "HIGH",
+      "anchor_count": 5,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "governance-certified",
+      "score_basis": "L3 layer fragment explicit (Section 2); no reverse dependency from 42.x; structural overlay definition"
+    },
+    {
+      "node_id": "N-024",
+      "label": "44.2 Projection Attachment",
+      "confidence": "HIGH",
+      "anchor_count": 4,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "governance-certified",
+      "score_basis": "5 records with emphasis attributes; direct input to 42.21; L3/L4 fragment reference"
+    },
+    {
+      "node_id": "N-025",
+      "label": "44.3 Emphasis Attribute",
+      "confidence": "HIGH",
+      "anchor_count": 3,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "governance-certified",
+      "score_basis": "Emphasis attribute added to projection output; referenced in 42.x rendering logic"
+    },
+    {
+      "node_id": "N-026",
+      "label": "44.4 Projection Closure",
+      "confidence": "MEDIUM",
+      "anchor_count": 2,
+      "cross_layer_reference": false,
+      "internal_consistency": true,
+      "admission_status": "runtime-executed",
+      "score_basis": "Closure artifacts present; lower direct reference density in downstream docs"
+    },
+    {
+      "node_id": "N-027",
+      "label": "42.21 Runtime Intake",
+      "confidence": "HIGH",
+      "anchor_count": 3,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "runtime-executed",
+      "score_basis": "First consumer layer; intake from 44.2; no binding production per 43.1 Section 9"
+    },
+    {
+      "node_id": "N-028",
+      "label": "42.22 Exposure Validation",
+      "confidence": "HIGH",
+      "anchor_count": 4,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "runtime-executed",
+      "score_basis": "5 records validated; end-to-end provenance chain traced from 42.22 back to 40.5 in A.1"
+    },
+    {
+      "node_id": "N-029",
+      "label": "42.23 WOW Chain Rewiring",
+      "confidence": "MEDIUM",
+      "anchor_count": 2,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "partial",
+      "score_basis": "75.x blocked; rewiring plan operational; WOW chain routes around absent interpretation layer"
+    },
+    {
+      "node_id": "N-030",
+      "label": "CKR — Canonical Knowledge Registry",
+      "confidence": "HIGH",
+      "anchor_count": 4,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "governance-certified",
+      "score_basis": "34 governed constructs; admission authority for signals; GOV→CKR→CAT→SCI→RES→INT chain"
+    },
+    {
+      "node_id": "N-031",
+      "label": "INT-01 / INT-02 Integration Protocol",
+      "confidence": "HIGH",
+      "anchor_count": 3,
+      "cross_layer_reference": true,
+      "internal_consistency": true,
+      "admission_status": "governance-certified",
+      "score_basis": "Dual-agent authority separation defined; referenced in boundary_and_exclusion_report"
+    },
+    {
+      "node_id": "N-032",
+      "label": "51.x Demo Surface",
+      "confidence": "HIGH",
+      "anchor_count": 4,
+      "cross_layer_reference": false,
+      "internal_consistency": true,
+      "admission_status": "consumer-only",
+      "score_basis": "ExecLens demo surface; 4 signals displayed (SIG-002..005); authorized consumer; REJECTED as architecture layer"
+    },
+    {
+      "node_id": "N-ABSENT-001",
+      "label": "Stream 00.2 — Canonical Layer Model",
+      "confidence": "NONE",
+      "anchor_count": 0,
+      "cross_layer_reference": false,
+      "internal_consistency": false,
+      "admission_status": "absent",
+      "score_basis": "Referenced 5x as defining document for L0-L8 model; not found in any accessible repo; AMB-001 HIGH impact"
+    }
+  ],
+  "confidence_distribution": {
+    "HIGH": 26,
+    "MEDIUM": 6,
+    "LOW": 0,
+    "NONE": 1
+  },
+  "canonical_threshold": "HIGH confidence only — 26 nodes qualify for canonical corpus extraction"
+}

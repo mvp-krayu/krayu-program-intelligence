@@ -1,0 +1,100 @@
+{
+  "registry_id": "MCA-v1",
+  "stream": "A.2 — PiOS Architecture Post-Execution Consolidation",
+  "date": "2026-03-28",
+  "method": "Derived from A.1 ambiguity_register.json (AMB-001..AMB-007) + A.2 lifecycle classification (PARTIAL nodes) + boundary exclusion gaps",
+  "search_scope_exhausted": [
+    "/Users/khorrix/Projects/repos/k-pi",
+    "/Users/khorrix/Projects/krayu-knowledge",
+    "/Users/khorrix/Projects/krayu-mirror",
+    "/Users/khorrix/Projects/krayu-program-intelligence"
+  ],
+  "total_missing": 5,
+  "missing_artifacts": [
+    {
+      "id": "MCA-001",
+      "name": "Stream 00.2 — Canonical Layer Model Restoration",
+      "type": "model-definition",
+      "severity": "CRITICAL",
+      "impact": "Blocks full confirmation of L1-L6 model. L0-L8 canonical definition cannot be verified. L1, L2, L7, L8 have no anchor. L3-L6 fragments exist but are incomplete without the defining document.",
+      "referenced_by": [
+        "43.1 (signal_to_structure_binding.md)",
+        "43.2",
+        "43.3",
+        "44.1 (structural_overlay_projection_definition.md)",
+        "44.2"
+      ],
+      "reference_label": "Stream 00.2 — Canonical Layer Model Restoration",
+      "search_result": "NOT FOUND in any accessible repo (k-pi, krayu-knowledge, krayu-mirror, krayu-program-intelligence)",
+      "amb_id": "AMB-001",
+      "resolution_path": "Must be located in an external or private repository, or must be reconstructed by authoritative authorship. Cannot be resolved by evidence-first search alone.",
+      "effect_on_l1_l6": "Primary blocker for L1-L6 CONFIRMED verdict. Without this, verdict remains MODIFIED."
+    },
+    {
+      "id": "MCA-002",
+      "name": "Stream 75.x — Program Diagnosis and Intelligence Models (Interpretation Layer)",
+      "type": "stream-definition",
+      "severity": "HIGH",
+      "impact": "Interpretation layer is architecturally referenced but absent. 42.23/rewiring_plan.md confirms '75.x interpretation layer: remains blocked'. Demo surface routes around it. Without 75.x, the interpretation path is incomplete and the WOW chain operates in compensated mode.",
+      "referenced_by": [
+        "42.23/rewiring_plan.md"
+      ],
+      "reference_label": "75.x interpretation layer",
+      "search_result": "NOT FOUND in any accessible repo",
+      "amb_id": "AMB-007",
+      "resolution_path": "75.x must be defined and executed to complete the interpretation layer. Currently a known architectural gap.",
+      "effect_on_l1_l6": "Does not block current verdict. Relevant to future architecture reassessment."
+    },
+    {
+      "id": "MCA-003",
+      "name": "40.8 Complete Execution Artifacts",
+      "type": "stream-output",
+      "severity": "MEDIUM",
+      "impact": "Stage 8 (Agentic Orchestration) has thinner execution evidence than 40.2-40.7. Named inconsistently (delivery vs. orchestration per AMB-002). Present in pipeline specification but execution outputs not observed with same density as core stages.",
+      "referenced_by": [
+        "pios_pipeline_specification.md (Stage 8)",
+        "40.11/stream_50_handover_capsule.md (indirect)"
+      ],
+      "search_result": "PARTIAL — pipeline spec references exist; execution artifact density lower",
+      "amb_id": "AMB-002",
+      "resolution_path": "40.8 outputs should be verified against run_01_blueedge completed artifacts. Naming conflict (delivery vs. orchestration) should be resolved by canonical document authority.",
+      "effect_on_l1_l6": "Does not affect L1-L6 verdict. Relevant to 9-Stage Pipeline completeness."
+    },
+    {
+      "id": "MCA-004",
+      "name": "40.9 Structured Feedback Records",
+      "type": "stream-output",
+      "severity": "LOW",
+      "impact": "Stage 9 (Feedback) is defined in pipeline specification but execution feedback records were not observed in A.1 crawl with sufficient density to confirm the feedback loop is operational.",
+      "referenced_by": [
+        "pios_pipeline_specification.md (Stage 9)"
+      ],
+      "search_result": "PARTIAL — pipeline spec reference exists; execution outputs not confirmed",
+      "resolution_path": "Verify 40.9 output artifacts in run_01_blueedge. If absent, note as pipeline stage gap.",
+      "effect_on_l1_l6": "Does not affect L1-L6 verdict."
+    },
+    {
+      "id": "MCA-005",
+      "name": "CKR 34-Construct Full Enumeration",
+      "type": "registry-completeness",
+      "severity": "MEDIUM",
+      "impact": "CKR is referenced as governing 34 constructs. AMB-005 notes the CKR 34-construct registry is not fully enumerable from available evidence. The 5 admitted signals (SIG-001..005) are confirmed. The remaining 29 constructs cannot be verified from k-pi repo alone.",
+      "referenced_by": [
+        "krayu-knowledge/canonical_knowledge_registry.md",
+        "43.1 (CKR admission requirements)",
+        "41.4 (CKR-backed signal registry)"
+      ],
+      "search_result": "PARTIAL — CKR exists; 34-construct claim cannot be fully verified from available evidence",
+      "amb_id": "AMB-005",
+      "resolution_path": "Full enumeration requires access to krayu-knowledge complete registry. Not accessible for machine verification from k-pi scope.",
+      "effect_on_l1_l6": "Does not affect L1-L6 verdict. Affects canonical corpus completeness."
+    }
+  ],
+  "resolution_priority": {
+    "CRITICAL": ["MCA-001"],
+    "HIGH": ["MCA-002"],
+    "MEDIUM": ["MCA-003", "MCA-005"],
+    "LOW": ["MCA-004"]
+  },
+  "verdict_impact_summary": "Only MCA-001 (Stream 00.2) directly blocks L1-L6 CONFIRMED verdict. All other missing artifacts represent pipeline completeness gaps that do not change the current MODIFIED verdict."
+}

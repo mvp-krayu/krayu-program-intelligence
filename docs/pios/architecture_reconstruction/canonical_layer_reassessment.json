@@ -1,0 +1,93 @@
+{
+  "registry_id": "CLR-v1",
+  "stream": "A.2 — PiOS Architecture Post-Execution Consolidation",
+  "date": "2026-03-28",
+  "source": "Canonical corpus CAC-v1 (26 nodes, ACTIVE+HIGH only) applied to L1-L6 question",
+  "prior_verdict": {
+    "from": "LAM-v1 (A.1)",
+    "verdict": "MODIFIED",
+    "basis": "All 33 nodes including PARTIAL/MEDIUM/ABSENT; full A.1 crawl"
+  },
+  "reassessment_question": "From canonical corpus only (ACTIVE+HIGH, 26 nodes), is the L1-L6 model CONFIRMED, MODIFIED, or REJECTED?",
+  "reassessment_verdict": "MODIFIED — UNCHANGED FROM A.1",
+  "rationale": [
+    "Canonical corpus (26 nodes, ACTIVE+HIGH) contains more evidence-dense artifacts than full A.1 set, but the key blocker (Stream 00.2 absence) is unchanged.",
+    "L3 and L4 fragments remain the best-supported L-number evidence in the canonical corpus.",
+    "The Three-Layer Analytical Model (CC-005) and 9-Stage Pipeline (CC-002) are both CONFIRMED from canonical corpus at HIGH confidence.",
+    "Without Stream 00.2 (MCA-001, CRITICAL), L0-L8 complete definition remains unverifiable.",
+    "Canonical corpus strengthens confidence in the MODIFIED verdict but cannot elevate it to CONFIRMED."
+  ],
+  "canonical_corpus_layer_evidence": {
+    "L1": {
+      "verdict": "NOT DEFINED",
+      "canonical_corpus_support": "NONE",
+      "best_anchor": null,
+      "notes": "No canonical corpus node defines L1. Stream 00.2 would define it."
+    },
+    "L2": {
+      "verdict": "NOT DEFINED",
+      "canonical_corpus_support": "NONE",
+      "best_anchor": null,
+      "notes": "No canonical corpus node defines L2. Stream 00.2 would define it."
+    },
+    "L3": {
+      "verdict": "SUPPORTED — HIGH",
+      "canonical_corpus_support": "HIGH",
+      "best_anchor": "CC-019 (44.1 Section 2: 'signals produced at L3, shaped at L4')",
+      "secondary_anchor": "CC-016 (43.1 Section 10)",
+      "notes": "L3 = Signal Derivation. Fragment is explicit and appears in two canonical corpus nodes independently."
+    },
+    "L4": {
+      "verdict": "SUPPORTED — HIGH",
+      "canonical_corpus_support": "HIGH",
+      "best_anchor": "CC-016 (43.1 Section 10: semantic shaping layer reference)",
+      "secondary_anchor": "CC-013 (41.1 semantic elevation confirms L4 functional zone)",
+      "notes": "L4 = Semantic Shaping. Explicit fragment in 43.1; functional zone confirmed by 41.x canonical corpus nodes."
+    },
+    "L5": {
+      "verdict": "SUPPORTED — MEDIUM (inferred)",
+      "canonical_corpus_support": "MEDIUM",
+      "best_anchor": "CC-016 (43.1 Section 10 negative assertion: 43.x/44.x does not hold L5/L6 authority implies L5 exists)",
+      "notes": "L5 = Presentation Assembly. Inferred from negative assertion. 43.x-44.x canonical corpus zone maps to L5 function but L5 label is not explicitly assigned."
+    },
+    "L6": {
+      "verdict": "SUPPORTED — MEDIUM (inferred)",
+      "canonical_corpus_support": "MEDIUM",
+      "best_anchor": "CC-016 (43.1 Section 10 negative assertion: similar to L5)",
+      "secondary_anchor": "CC-022, CC-023 (42.21, 42.22 runtime rendering zone confirmed)",
+      "notes": "L6 = Runtime Rendering. 42.x consumer execution zone maps to L6 function. Label inferred, not explicitly assigned."
+    },
+    "L7_L8": {
+      "verdict": "NOT DEFINED",
+      "canonical_corpus_support": "NONE",
+      "best_anchor": null,
+      "notes": "No canonical corpus node references L7 or L8."
+    }
+  },
+  "canonical_model_confirmation": {
+    "nine_stage_pipeline": {
+      "verdict": "CONFIRMED",
+      "confidence": "HIGH",
+      "canonical_corpus_anchors": ["CC-002", "CC-003", "CC-006", "CC-007", "CC-008", "CC-009", "CC-010", "CC-011"],
+      "notes": "Stages 1-7 fully confirmed in canonical corpus. Stages 8-9 (N-012, N-013) excluded as MEDIUM confidence (PARTIAL lifecycle)."
+    },
+    "three_layer_analytical_model": {
+      "verdict": "CONFIRMED",
+      "confidence": "HIGH",
+      "canonical_corpus_anchors": ["CC-005", "CC-006", "CC-007", "CC-008", "CC-009", "CC-010", "CC-011"],
+      "notes": "All three layers (Observability, Intelligence, Executive Intelligence) fully represented in canonical corpus."
+    },
+    "l_number_model_complete": {
+      "verdict": "NOT CONFIRMED — MODIFIED",
+      "confidence": "LOW for complete model",
+      "notes": "L3-L4 HIGH, L5-L6 MEDIUM from fragments only. L1-L2 absent. L7-L8 absent. Cannot confirm L1-L6 as a complete named model."
+    }
+  },
+  "delta_from_a1": {
+    "verdict_change": "NONE — MODIFIED verdict stands",
+    "confidence_change": "Marginal increase — canonical corpus filtering strengthens confidence in supported layers (L3, L4) by removing PARTIAL/MEDIUM noise. Does not change L1-L6 overall verdict.",
+    "new_findings": "NONE — canonical corpus reassessment confirms A.1 conclusions without contradiction",
+    "resolved_ambiguities": "NONE — AMB-001 (Stream 00.2 absent) remains open; MCA-001 is CRITICAL and unresolved"
+  },
+  "final_reassessment_verdict": "MODIFIED — The canonical corpus reassessment produces no change from the A.1 MODIFIED verdict. The 9-Stage Pipeline and Three-Layer Analytical Model are CONFIRMED at HIGH confidence. L3-L4 are supported at HIGH confidence by canonical corpus evidence. L5-L6 remain MEDIUM (inferred). L1-L2 remain NOT DEFINED. The complete L1-L6 named model cannot be CONFIRMED without Stream 00.2."
+}
