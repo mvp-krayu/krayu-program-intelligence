@@ -8,6 +8,15 @@ Date: 2026-03-28
 
 ---
 
+## Navigation (Obsidian)
+
+→ [[pios_investor_narrative]]
+→ [[program_intelligence_stack]]
+→ [[pios_technical_appendix]]
+→ [[index]]
+
+---
+
 ## 1. Purpose of this Document
 
 This document is the canonical entrypoint to the PiOS architecture. It does not restate the architecture — it orients the reader within it and defines the sequence in which the architecture should be understood.

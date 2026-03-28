@@ -9,6 +9,15 @@ Date: 2026-03-28
 
 ---
 
+## Navigation (Obsidian)
+
+→ [[pios_whitepaper]]
+→ [[program_intelligence_stack]]
+→ [[pios_investor_narrative]]
+→ [[index]]
+
+---
+
 ## 1. Canonical Reference
 
 The root authority for all layer definitions, placement rules, cross-layer control rules, and enforcement invariants in this document is:

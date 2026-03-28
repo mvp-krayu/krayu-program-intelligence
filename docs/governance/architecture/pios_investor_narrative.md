@@ -6,6 +6,15 @@ Date: 2026-03-28
 
 ---
 
+## Navigation (Obsidian)
+
+→ [[pios_whitepaper]]
+→ [[program_intelligence_stack]]
+→ [[pios_technical_appendix]]
+→ [[index]]
+
+---
+
 ## 1. The Problem
 
 The fundamental difficulty with software program intelligence is not that data is unavailable. It is that the systems built to interpret that data are structurally incapable of guaranteeing the integrity of their outputs. A system that derives executive insight from evidence while also allowing its presentation layer to fill gaps, compensate for missing derivation, or reframe outputs for narrative convenience is not an intelligence system — it is a reporting system with an uncertain boundary between what was observed and what was constructed. The outputs of such systems cannot be audited to their origins, because the origins are partially inaccessible and partially synthetic. Decisions made on the basis of those outputs inherit that uncertainty without being aware of it.

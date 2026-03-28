@@ -7,6 +7,15 @@ Date: 2026-03-28
 
 ---
 
+## Navigation (Obsidian)
+
+→ [[pios_whitepaper]]
+→ [[pios_investor_narrative]]
+→ [[pios_technical_appendix]]
+→ [[index]]
+
+---
+
 ## 1. The Discipline — Program Intelligence (Krayu)
 
 Program Intelligence is a formal analytical discipline concerned with the deterministic transformation of execution evidence into governed, traceable intelligence about software programs. It is not a methodology. It is not a framework in the practitioner sense. It is a doctrine with precisely defined constraints governing how evidence is acquired, normalized, navigated, derived, shaped, assembled, rendered, and governed.
