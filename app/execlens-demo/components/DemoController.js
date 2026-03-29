@@ -126,7 +126,7 @@ function TraversalBar({ flowId, nodeIndex, nodes, onNext, onExit, onFlowSelect }
 
       {/* Controls */}
       <div className="demo-controls">
-        <button className="demo-btn demo-btn-exit" onClick={onExit} type="button">Exit</button>
+        <button className="demo-btn demo-btn-exit" onClick={onExit} type="button" title="Return to neutral entry state">Exit demo</button>
         <button className="demo-btn demo-btn-next" onClick={onNext} type="button">
           {isLast ? 'Finish ✓' : 'Next →'}
         </button>
@@ -167,7 +167,7 @@ function StageBar({ stage, onNext, onExit }) {
       {stageDef && <div className="demo-step-title">{stageDef.title}</div>}
 
       <div className="demo-controls">
-        <button className="demo-btn demo-btn-exit" onClick={onExit} type="button">Exit</button>
+        <button className="demo-btn demo-btn-exit" onClick={onExit} type="button" title="Return to neutral entry state">Exit demo</button>
         <button className="demo-btn demo-btn-next" onClick={onNext} type="button">
           {isLast ? 'Finish ✓' : 'Next →'}
         </button>
@@ -213,7 +213,7 @@ function GuidedBar({ steps, stepIndex, persona, onNext, onExit }) {
 
       {/* Controls */}
       <div className="demo-controls">
-        <button className="demo-btn demo-btn-exit" onClick={onExit} type="button">Exit</button>
+        <button className="demo-btn demo-btn-exit" onClick={onExit} type="button" title="Return to neutral entry state">Exit demo</button>
         <button className="demo-btn demo-btn-next" onClick={onNext} type="button">
           {isLast ? 'Try another perspective' : 'Next →'}
         </button>

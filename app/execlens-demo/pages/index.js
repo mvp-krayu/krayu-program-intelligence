@@ -1,5 +1,14 @@
 /**
  * pages/index.js
+ * PIOS-51.15-SURFACE-CLARITY (entry strip border/bg; active step elevated contrast; operator mode orange tint + desc text; presentation-only [51.15])
+ * PIOS-51.14T-ENTRY-RESET (demoComplete removed from showExtendedPanels; POST_COMPLETION renders clean ENTRY surface; activePanelId ENTRY logic applies at POST_COMPLETION [51.14T])
+ * PIOS-51.14S-FOCUS-STEERING (viewport scroll fixed: getElementById→querySelector; activePanelId elevated to useMemo; scroll-on-change useEffect added; persona-switch focus covered [51.14S])
+ * PIOS-51.14R-ENTRY-ENFORCEMENT (query-first activation: QuerySelector always enabled; signals/narrative gated to showExtendedPanels only; entry strip query→persona order; attention corrected [51.14R])
+ * PIOS-51.14-ENTRY-SEMANTICS (entry strip restructured: query is explicit Step 2/activation point; persona framed as context modifier; attention guidance via activePanelId/dp-active; exit clarity [51.14])
+ * PIOS-51.13-GUIDED-CLARITY (progressive panel reveal: signals/evidence/narrative deferred from ENTRY surface; showExtendedPanels derived from CONTROL orchestration state [51.13])
+ * PIOS-51.12-PROJECTION-REFINEMENT (STAGE_PANEL dead constant removed; post-completion context indicator added; projection-layer cleanup only [51.12])
+ * PIOS-A.12-CONSISTENCY-DRIFT (G4 closed: PERSONA_GUIDED_FLOWS local duplicate removed; imported from CONTROL canonical export [A.12])
+ * PIOS-51.10-BOOT-INTEGRITY (safe INIT contract validation; BLOCKED STATE on invalid CONTROL.INIT response; resolvedPanelState null-sentinel fail-closed [51.10])
  * PIOS-A.9-RUNTIME-CONFORMANCE (openPanel local authority removed; demo stage useEffect removed; runtime is projection-only, CONTROL-driven, transition non-authoritative [A.9])
  * PIOS-A.7-PROJECTION-PURIFICATION (UI is pure projection of CONTROL state; getPanelExpanded replaced by resolvedPanelState lookup; persona auto-open useEffect removed; TraversalEngine imports pruned [A.7])
  * PIOS-A.6-AUTHORITY-SWITCH (CONTROL is sole authority for all state transitions; index.js is adapter + projection only [A.6])
@@ -36,7 +45,7 @@
  *   R5  non-demo mode: user can toggle any panel freely (max 2)
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import Head from 'next/head'
 
 import QuerySelector    from '../components/QuerySelector'
@@ -45,31 +54,9 @@ import LandingGaugeStrip from '../components/LandingGaugeStrip'
 import TopologyPanel    from '../components/TopologyPanel'
 import DemoController   from '../components/DemoController'
 import { getFlowNodes, PANEL_STATES } from '../components/TraversalEngine'
-import { CONTROL, buildSnapshot, INTENTS } from '../components/Control'
+import { CONTROL, buildSnapshot, INTENTS, PERSONA_GUIDED_FLOWS } from '../components/Control'
 
-// ---------------------------------------------------------------------------
-// PERSONA_GUIDED_FLOWS — kept for display/scroll/auto-open guard usage only [A.6]
-// Orchestration authority transferred to CONTROL. Not used for state transitions.
-// ---------------------------------------------------------------------------
-
-const PERSONA_GUIDED_FLOWS = {
-  EXECUTIVE: [
-    { id: 'narrative', label: 'Answer',   panelId: 'narrative' },
-    { id: 'signals',   label: 'Signal',   panelId: 'signals'   },
-    { id: 'evidence',  label: 'Evidence', panelId: 'evidence'  },
-  ],
-  CTO: [
-    { id: 'signals',   label: 'Signal',   panelId: 'signals'   },
-    { id: 'evidence',  label: 'Evidence', panelId: 'evidence'  },
-    { id: 'narrative', label: 'Answer',   panelId: 'narrative' },
-  ],
-  ANALYST: [
-    { id: 'evidence',  label: 'Evidence', panelId: 'evidence'  },
-    { id: 'signals',   label: 'Signal',   panelId: 'signals'   },
-    { id: 'narrative', label: 'Answer',   panelId: 'narrative' },
-    { id: 'raw',       label: 'Raw',      panelId: 'evidence',  rawStep: true },
-  ],
-}
+// A.12: PERSONA_GUIDED_FLOWS local duplicate removed — imported from CONTROL canonical export. [A.12 G4]
 import DisclosurePanel  from '../components/DisclosurePanel'
 import PersonaPanel     from '../components/PersonaPanel'
 import ENLPanel         from '../components/ENLPanel'
@@ -79,14 +66,8 @@ import NarrativePanel   from '../components/NarrativePanel'
 // Constants
 // ---------------------------------------------------------------------------
 
-// Stage → panel to open [uncovered Path C — standard stage mode side effect only, not touched by A.6]
-const STAGE_PANEL = {
-  1: 'situation',
-  2: 'signals',
-  3: 'persona',
-  4: 'evidence',
-  5: 'narrative',
-}
+// 51.12: STAGE_PANEL removed — was sole call site in demo stage useEffect removed in A.9.
+// Path C (standard stage mode) is DORMANT-GOVERNED LEGACY [A.14]. No active call sites remain.
 
 const CONF_COLORS = {
   STRONG:   'var(--strong)',
@@ -158,9 +139,18 @@ export default function Home() {
 
   // A.7: Resolved panel state — pre-computed by CONTROL, updated via applyControlResponse.
   // Replaces getPanelExpanded orchestration logic. Initialized from CONTROL INIT output. [A.7]
-  const [resolvedPanelState, setResolvedPanelState] = useState(
-    () => CONTROL(INTENTS.INIT, {}, null).newSnapshot.resolvedPanelState
-  )
+  // 51.10: Fail-closed INIT contract validation. Null-sentinel: if INIT returns invalid output,
+  // resolvedPanelState is null → BLOCKED STATE render fires. [51.10]
+  // 51.11: A.13 resolved the INIT deadlock — CONTROL(INTENTS.INIT, {}, null) now returns
+  // { status: 'OK', newSnapshot: { resolvedPanelState: {...valid map...}, ... } }.
+  // The validation below correctly accepts this output. BLOCKED STATE guard does not trigger.
+  // 51.10 guard is retained as a permanent fail-closed safety net. [51.11]
+  const [resolvedPanelState, setResolvedPanelState] = useState(() => {
+    const r = CONTROL(INTENTS.INIT, {}, null)
+    return (r && r.newSnapshot && r.newSnapshot.resolvedPanelState != null)
+      ? r.newSnapshot.resolvedPanelState
+      : null
+  })
 
   // Exit guard — set by handleDemoExit; suppresses auto-start on demoComplete dep change [51.8R amendment 10]
   const exitedRef = useRef(false)
@@ -272,7 +262,7 @@ export default function Home() {
 
   // ── Viewport enforcement — scroll active guided panel into view on step change [51.8R amendment 10] ──
   // Fires after render on every guided step index change.
-  // Scrolls panel element by id (panel id matches DisclosurePanel id prop).
+  // 51.14S: Fixed querySelector — DisclosurePanel renders data-panel-id, not id; getElementById was a no-op. [51.14S]
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!demoActive || !enlPersona) return
@@ -280,8 +270,8 @@ export default function Home() {
     if (!steps) return
     const step = steps[guidedStepIndex]
     if (!step) return
-    const panelEl = document.getElementById(step.panelId)
-    if (panelEl) panelEl.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    const panelEl = document.querySelector(`[data-panel-id="${step.panelId}"]`)
+    if (panelEl) panelEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
   }, [demoActive, guidedStepIndex, enlPersona])
 
   // ── Auto-start guided demo — routes AUTO_START through CONTROL [A.6] ──
@@ -373,7 +363,58 @@ export default function Home() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openPanels, traversalHistory, enlPersona, selectedQuery, demoActive, demoStage, demoComplete, guidedStepIndex, rawStepActive, freeMode, selectedFlow, traversalNodeIndex])
 
+  // ── 51.14S: activePanelId — elevated to useMemo so useEffect can depend on it safely. [51.14S] ──
+  // Pure derivation from existing CONTROL-derived state. No state mutation. No authority.
+  // null when resolvedPanelState is unavailable (BLOCKED STATE guard fires independently).
+  const activePanelId = useMemo(() => {
+    if (!resolvedPanelState) return null
+    // 51.14T: demoComplete not used as a gate — ENTRY logic applies at POST_COMPLETION too. [51.14T]
+    if (!demoActive && !freeMode) {
+      // ENTRY / POST_COMPLETION: step 2 focus — persona panel when query selected but perspective not yet chosen
+      if (selectedQuery && !enlPersona) return 'persona'
+      return null
+    }
+    if (demoActive) {
+      // Active demo — highlight panel CONTROL set to EXPANDED
+      return Object.keys(resolvedPanelState).find(
+        id => resolvedPanelState[id] === PANEL_STATES.EXPANDED
+      ) || null
+    }
+    return null
+  }, [resolvedPanelState, demoActive, freeMode, selectedQuery, enlPersona])
+
+  // ── 51.14S: Scroll viewport to canonically active panel when focus changes. [51.14S] ──
+  // Presentation-only. Fires only when activePanelId changes value (React dep comparison).
+  // Covers: guided-flow advances, persona-switch in demo, ENTRY attention after query selection.
+  // 80ms delay: allows panel open transition to begin before scroll fires.
+  useEffect(() => {
+    if (!activePanelId) return
+    const el = document.querySelector(`[data-panel-id="${activePanelId}"]`)
+    if (!el) return
+    const t = setTimeout(() => {
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    }, 80)
+    return () => clearTimeout(t)
+  }, [activePanelId])
+
+  // ── 51.10: BLOCKED STATE — fail-closed render when CONTROL.INIT is invalid ──
+  // resolvedPanelState === null means INIT contract validation failed at mount.
+  // No panel state available — render blocked. No synthetic fallback. No authority inference. [51.10]
+  if (resolvedPanelState === null) {
+    return (
+      <div style={{ padding: '2rem', fontFamily: 'monospace', color: 'var(--text-dim, #888)' }}>
+        Initialization unavailable — canonical state missing
+      </div>
+    )
+  }
+
   // ── Render ──
+
+  // 51.13: Progressive reveal — derived from CONTROL orchestration state only. [51.13]
+  // 51.14T: demoComplete removed — POST_COMPLETION must render clean ENTRY surface, not extend panels. [51.14T]
+  const showExtendedPanels = demoActive || freeMode
+
+  // activePanelId is now a useMemo above (51.14S) — used directly in render below.
 
   return (
     <>
@@ -400,18 +441,27 @@ export default function Home() {
 
           {!demoActive && !freeMode && (
             <div className="guided-entry-steps">
-              {/* Horizontal step strip — Step 1 → Step 2 → Start [51.8R] */}
+              {/* Post-completion context — pure projection of demoComplete state [51.12] */}
+              {demoComplete && (
+                <div className="demo-complete-message">
+                  Guided execution complete · Select a new persona to run again
+                </div>
+              )}
+              {/* Horizontal step strip — Step 1 (query/activation) → Step 2 (perspective/modifier) → Start [51.14R] */}
+              {/* 51.14R: query is Step 1 and the activation trigger; persona is Step 2 context modifier [51.14R] */}
               <div className="guided-entry-strip">
-                <div className={`guided-step${enlPersona ? ' guided-step-done' : ' guided-step-active'}`}>
+                <div className={`guided-step${selectedQuery ? ' guided-step-done' : ' guided-step-active'}`}>
                   <span className="guided-step-num">1</span>
-                  <span className="guided-step-label">Select your lens persona</span>
+                  <span className="guided-step-label">Select a query</span>
+                  {selectedQuery && <span className="guided-step-persona">{selectedQuery}</span>}
+                </div>
+                <span className="guided-step-arrow">→</span>
+                <div className={`guided-step${enlPersona ? ' guided-step-done' : (selectedQuery ? ' guided-step-active' : '')}`}>
+                  <span className="guided-step-num">2</span>
+                  <span className="guided-step-label">Select a perspective</span>
                   {enlPersona && <span className="guided-step-persona">{enlPersona}</span>}
                 </div>
                 <span className="guided-step-arrow">→</span>
-                <div className={`guided-step${enlPersona ? ' guided-step-active' : ''}`}>
-                  <span className="guided-step-num">2</span>
-                  <span className="guided-step-label">Begin guided execution</span>
-                </div>
                 <button
                   className="demo-start-btn"
                   onClick={handleStartDemo}
@@ -421,8 +471,8 @@ export default function Home() {
                   {'Start Lens Demo'}
                 </button>
               </div>
-              {!enlPersona && (
-                <div className="persona-gate-message">Select a Persona to enable execution</div>
+              {selectedQuery && !enlPersona && (
+                <div className="persona-gate-message">Select a perspective to enable guided execution</div>
               )}
             </div>
           )}
@@ -432,6 +482,8 @@ export default function Home() {
           {freeMode && !demoActive && (
             <div className="operator-surface">
               <div className="operator-mode-badge">OPERATOR MODE</div>
+              {/* 51.15: description text — presentation only; makes operator mode feel deliberate [51.15] */}
+              <div className="operator-mode-desc">Free exploration · no guided sequence · full surface accessible</div>
               <button
                 className="demo-start-btn"
                 onClick={handleStartDemo}
@@ -444,22 +496,22 @@ export default function Home() {
           )}
         </header>
 
-        {/* ── Query selector — first position [51.8R amendment 6: persona-first gate, query-first visual] ── */}
-        {/* Non-interactive until persona selected — disabled={!enlPersona} */}
+        {/* ── Query selector — first position; query is the activation trigger [51.14R] ── */}
+        {/* 51.14R: always enabled — query is Step 1 and the activation point; persona is Step 2 modifier [51.14R] */}
         <div className="query-zone">
-          <QuerySelector selectedQuery={selectedQuery} onSelect={handleQuerySelect} disabled={!enlPersona} />
-
-          {!enlPersona && (
-            <div className="no-query-state">
-              Select a persona first to enable query selection.
-            </div>
-          )}
+          <QuerySelector selectedQuery={selectedQuery} onSelect={handleQuerySelect} disabled={false} />
 
           {queryData && !loading && <ActiveQueryBar data={queryData} />}
 
-          {enlPersona && !selectedQuery && (
+          {!selectedQuery && (
             <div className="no-query-state">
-              Select a query to project signals onto this structure.
+              Select a query to activate guided execution.
+            </div>
+          )}
+
+          {selectedQuery && !enlPersona && (
+            <div className="no-query-state">
+              Select a perspective to complete setup.
             </div>
           )}
 
@@ -484,6 +536,7 @@ export default function Home() {
           subtitle="Structural baseline — architecture and projection emphasis"
           expanded={getPanelExpanded('situation')}
           onToggle={() => handleToggle('situation')}
+          active={activePanelId === 'situation'}
         >
           <div data-demo-section="gauges">
             <LandingGaugeStrip />
@@ -498,14 +551,17 @@ export default function Home() {
         <DisclosurePanel
           id="persona"
           title="What does this mean for you?"
-          subtitle="Interpret this situation from a decision perspective"
+          subtitle="Determines depth and perspective of interpretation"
           expanded={getPanelExpanded('persona')}
           onToggle={() => handleToggle('persona')}
+          active={activePanelId === 'persona'}
         >
           <PersonaPanel queryId={selectedQuery} onPersonaChange={handlePersonaSelect} onPersonaDataChange={setEnlPersonaData} activePersona={enlPersona} />
         </DisclosurePanel>
 
         {/* ── Panel: Signals — intelligence signals ── */}
+        {/* 51.14R: visible only after canonical activation (demoActive, freeMode, demoComplete) — not at ENTRY [51.14R] */}
+        {showExtendedPanels && (
         <DisclosurePanel
           id="signals"
           title="Why is this critical?"
@@ -513,6 +569,7 @@ export default function Home() {
           badge={queryData?.signals?.length ? String(queryData.signals.length) : null}
           expanded={getPanelExpanded('signals')}
           onToggle={() => handleToggle('signals')}
+          active={activePanelId === 'signals'}
         >
           {queryData && queryData.signals && queryData.signals.length > 0 ? (
             <div className="signal-grid" data-demo-section="signals">
@@ -526,14 +583,18 @@ export default function Home() {
             </div>
           )}
         </DisclosurePanel>
+        )}
 
         {/* ── Panel: Evidence — evidence chain + traceability ── */}
+        {/* 51.13: visible only when demo is active or complete — not rendered at ENTRY [51.13] */}
+        {showExtendedPanels && (
         <DisclosurePanel
           id="evidence"
           title="Show evidence"
           subtitle="Evidence chain and vault traceability"
           expanded={getPanelExpanded('evidence')}
           onToggle={() => handleToggle('evidence')}
+          active={activePanelId === 'evidence'}
         >
           {queryData && enlPersona && (demoActive || freeMode) ? (
             // demoActive: guided mode — step-driven evidence; freeMode: operator mode — full evidence access [51.8R RUN05]
@@ -552,14 +613,18 @@ export default function Home() {
             <div className="no-query-state">Select a query to load evidence.</div>
           )}
         </DisclosurePanel>
+        )}
 
         {/* ── Panel: Narrative — executive summary ── */}
+        {/* 51.14R: visible only after canonical activation (demoActive, freeMode, demoComplete) — not at ENTRY [51.14R] */}
+        {showExtendedPanels && (
         <DisclosurePanel
           id="narrative"
           title="So what?"
           subtitle="Executive narrative — evidence-grounded"
           expanded={getPanelExpanded('narrative')}
           onToggle={() => handleToggle('narrative')}
+          active={activePanelId === 'narrative'}
         >
           {queryData && enlPersona ? (
             <NarrativePanel queryData={queryData} />
@@ -569,6 +634,7 @@ export default function Home() {
             <div className="no-query-state">Select a query to load narrative.</div>
           )}
         </DisclosurePanel>
+        )}
 
       </div>
 

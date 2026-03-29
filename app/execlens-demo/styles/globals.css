@@ -2026,6 +2026,16 @@ a.topo-chip:hover {
   border-color: var(--border-glow);
 }
 
+/* 51.14: Active panel attention — projection-layer visual emphasis only; no state effect */
+.dp-active:not(.dp-open) {
+  border-left: 2px solid var(--accent-dim);
+  background: rgba(74, 158, 255, 0.025);
+}
+
+.dp-active:not(.dp-open) .dp-title {
+  color: var(--accent-dim);
+}
+
 .dp-header {
   display: flex;
   align-items: center;
@@ -3314,4 +3324,77 @@ a.topo-chip:hover {
   border-radius: 2px;
   padding: 0.1rem 0.4rem;
   margin-bottom: 0.5rem;
+}
+
+/* ==========================================================
+   51.15 — Surface Clarity & Operator Mode Reinforcement
+   Presentation-only. No logic changes.
+   ========================================================== */
+
+/* Entry strip — reinforced as primary start zone */
+.guided-entry-steps {
+  margin-top: 1rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--border-dim);
+  border-radius: 6px;
+  background: rgba(74, 158, 255, 0.018);
+  gap: 0.55rem;
+}
+
+/* Active step — elevated contrast so Step 1 reads as the primary action */
+.guided-step-active {
+  color: var(--text);
+}
+
+.guided-step-active .guided-step-num {
+  color: var(--accent);
+  /* border inherits currentColor → becomes var(--accent) automatically */
+}
+
+.guided-step-active .guided-step-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* Operator surface — explicit top-level state, peer to guided mode */
+.operator-surface {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid rgba(255, 158, 74, 0.2);
+  border-radius: 6px;
+  background: rgba(255, 158, 74, 0.02);
+}
+
+/* Operator badge — orange tint signals distinct deliberate mode, not fallback */
+.operator-mode-badge {
+  font-size: 0.68rem;
+  color: var(--weak);
+  border-color: rgba(255, 158, 74, 0.35);
+  margin-bottom: 0;
+}
+
+/* Operator description — explanatory line within the mode surface */
+.operator-mode-desc {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Operator start button — orange accent distinguishes from guided blue */
+.operator-surface .demo-start-btn {
+  margin-top: 0;
+  border-color: var(--weak);
+  color: var(--weak);
+  flex-shrink: 0;
+}
+
+.operator-surface .demo-start-btn:hover {
+  background: var(--weak);
+  color: var(--bg);
 }

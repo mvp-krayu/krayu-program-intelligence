@@ -15,10 +15,11 @@
  *   children — panel body content
  */
 
-export default function DisclosurePanel({ id, title, subtitle, badge, expanded, onToggle, children }) {
+// 51.14: active — projection-layer attention guidance; applies dp-active class for visual emphasis only [51.14]
+export default function DisclosurePanel({ id, title, subtitle, badge, expanded, onToggle, active, children }) {
   return (
     <div
-      className={`dp${expanded ? ' dp-open' : ''}`}
+      className={`dp${expanded ? ' dp-open' : ''}${active ? ' dp-active' : ''}`}
       data-panel-id={id}
     >
       <button

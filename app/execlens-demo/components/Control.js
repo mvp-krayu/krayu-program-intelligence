@@ -1,5 +1,9 @@
 /**
  * Control.js
+ * A.15 — Snapshot Surface Normalization (G3 closed: allowedTransitions/personaEnvelope removed; mode/currentStepIndex/sequenceId/terminalState declared non-authoritative derived fields [A.15])
+ * A.14 — Legacy Path Governance (G5 closed: Path B and Path C annotated as dormant-governed legacy in DEMO_NEXT; activation preconditions stated; A.10R/A.11 cited as governing authority [A.14])
+ * A.13 — CONTROL Bootstrap Authority Closure (G2/G6 closed: INIT executes before !currentSnapshot guard; sole bootstrap authority established [A.13])
+ * A.12 — Consistency Drift Elimination (G4 closed: PERSONA_GUIDED_FLOWS exported as canonical named export; local runtime duplicate removed [A.12])
  * A.5 — CONTROL Shadow Implementation
  *
  * Stream:    A.5 | Shadow Implementation | Fail-Closed | Non-Destructive
@@ -33,11 +37,11 @@
 
 import {
   PANEL_STATES,
-  PERSONA_DEPTH_ENVELOPE,
-  D2_PATH_MAP,
   computePanelState,
   getFlowPanels,
 } from './TraversalEngine'
+// A.15: PERSONA_DEPTH_ENVELOPE and D2_PATH_MAP removed from import — were used only by
+// allowedTransitions and personaEnvelope (both removed as unconsumed G3 fields). [A.15]
 
 // ---------------------------------------------------------------------------
 // §1 — Constants (mirrored exactly from runtime source of truth)
@@ -46,9 +50,9 @@ import {
 
 const PANEL_IDS = ['situation', 'persona', 'signals', 'evidence', 'narrative']
 
-// PERSONA_GUIDED_FLOWS — mirrored from index.js:66–83
+// PERSONA_GUIDED_FLOWS — canonical flow definition; exported as named export for runtime consumption. [A.12 G4]
 // Static. No computation. Reuse existing panel IDs only.
-const _PERSONA_GUIDED_FLOWS = {
+export const PERSONA_GUIDED_FLOWS = {
   EXECUTIVE: [
     { id: 'narrative', label: 'Answer',   panelId: 'narrative' },
     { id: 'signals',   label: 'Signal',   panelId: 'signals'   },
@@ -155,27 +159,8 @@ function _resolveAllPanelStates(openPanels, traversalHistory, persona, demoActiv
   return result
 }
 
-// _resolveAllowedTransitions — derives reachable next panels from current traversal position
-// Mirrors _isValidNextStep / D2_PATH_MAP logic from TraversalEngine.js:231–240
-// ENTRY/FREE: open-access — all PANEL_IDS reachable (no governed constraint)
-function _resolveAllowedTransitions(traversalHistory, persona, demoActive, freeMode) {
-  if (freeMode || !demoActive || !persona) return [...PANEL_IDS]
-  const envelope = PERSONA_DEPTH_ENVELOPE[persona]
-  if (!envelope) return []
-  const currentPanel = traversalHistory.length > 0 ? traversalHistory[traversalHistory.length - 1] : null
-  const allowed = []
-  for (const path of Object.values(D2_PATH_MAP)) {
-    const seq = path.codeSequence.filter(Boolean)
-    const idx = seq.indexOf(currentPanel)
-    if (idx !== -1 && idx + 1 < seq.length) {
-      const next = seq[idx + 1]
-      if (envelope.panels.includes(next) && !allowed.includes(next)) {
-        allowed.push(next)
-      }
-    }
-  }
-  return allowed
-}
+// A.15: _resolveAllowedTransitions REMOVED — sole call site was allowedTransitions in
+// _rebuildDerivedFields, which is removed as an unconsumed G3 field. [A.15]
 
 // _applyToggle — mirrors togglePanel (index.js:188–196): toggle with max-2 rule
 function _applyToggle(openPanels, panelId) {
@@ -220,18 +205,20 @@ function _buildInitSnapshot() {
   const selectedPersona  = null
 
   return {
-    mode:               MODES.ENTRY,
+    // ── Authoritative fields — consumed by applyControlResponse [A.6] ──────────
     selectedPersona,
     selectedQuery:      null,
     resolvedPanelState: _resolveAllPanelStates(openPanels, traversalHistory, null, false, false, false),
     openPanels,
     traversalHistory,
-    currentStepIndex:   0,
-    sequenceId:         null,
-    allowedTransitions: [...PANEL_IDS], // ENTRY: open-access
-    personaEnvelope:    [],
     orchestrationState,
-    terminalState:      false,
+    // ── Non-authoritative derived fields — informational; not applied to React state [A.15 G3] ──
+    mode:               MODES.ENTRY,
+    currentStepIndex:   0,    // mirrors orchestrationState.guidedStepIndex
+    sequenceId:         null, // mirrors selectedPersona
+    terminalState:      false, // derivable: demoComplete && !demoActive && !freeMode
+    // allowedTransitions: REMOVED [A.15] — no render consumer
+    // personaEnvelope:    REMOVED [A.15] — no render consumer
   }
 }
 
@@ -241,14 +228,16 @@ function _rebuildDerivedFields(snapshot) {
   const { demoActive, freeMode, rawStepActive, demoComplete } = orchestrationState
   return {
     ...snapshot,
-    mode:               _deriveMode(orchestrationState),
+    // ── Authoritative derived field — consumed by applyControlResponse [A.6] ────
     resolvedPanelState: _resolveAllPanelStates(
       openPanels, traversalHistory, selectedPersona, demoActive, freeMode, rawStepActive
     ),
-    allowedTransitions: _resolveAllowedTransitions(traversalHistory, selectedPersona, demoActive, freeMode),
-    personaEnvelope:    selectedPersona ? (PERSONA_DEPTH_ENVELOPE[selectedPersona]?.panels || []) : [],
-    sequenceId:         selectedPersona || null,
+    // ── Non-authoritative derived fields — informational; not applied to React state [A.15 G3] ──
+    mode:               _deriveMode(orchestrationState),
+    sequenceId:         selectedPersona || null, // mirrors selectedPersona
     terminalState:      demoComplete && !demoActive && !freeMode,
+    // allowedTransitions: REMOVED [A.15] — no render consumer
+    // personaEnvelope:    REMOVED [A.15] — no render consumer
   }
 }
 
@@ -274,6 +263,16 @@ export function CONTROL(intent, runtimeContext, currentSnapshot) {
   if (!intent) {
     return { status: 'FAIL', failReason: 'intent is required', traceId, newSnapshot: currentSnapshot || null }
   }
+
+  // ── INTENT: INIT ──────────────────────────────────────────────────────────
+  // INIT requires no prior snapshot — must execute before the !currentSnapshot guard. [A.13 G2/G6]
+  // _buildInitSnapshot() is entirely self-contained: constructs canonical bootstrap state from scratch.
+  // Calling CONTROL(INTENTS.INIT, {}, null) now returns a valid snapshot. Deadlock resolved.
+  if (intent === INTENTS.INIT) {
+    return { status: 'OK', failReason: null, traceId, newSnapshot: _buildInitSnapshot() }
+  }
+
+  // All other intents require a valid current snapshot
   if (!currentSnapshot) {
     return { status: 'FAIL', failReason: 'currentSnapshot is required', traceId, newSnapshot: null }
   }
@@ -298,12 +297,6 @@ export function CONTROL(intent, runtimeContext, currentSnapshot) {
     selectedFlow,
     traversalNodeIndex,
   } = orchestrationState
-
-  // ── INTENT: INIT ──────────────────────────────────────────────────────────
-  // Mirrors runtime useState initializations. No prior state required.
-  if (intent === INTENTS.INIT) {
-    return { status: 'OK', failReason: null, traceId, newSnapshot: _buildInitSnapshot() }
-  }
 
   // ── INTENT: DEMO_EXIT ─────────────────────────────────────────────────────
   // Mirrors handleDemoExit (index.js:488–499)
@@ -440,7 +433,7 @@ export function CONTROL(intent, runtimeContext, currentSnapshot) {
       return { status: 'FAIL', failReason: 'DEMO_START requires selectedQuery', traceId, newSnapshot: currentSnapshot }
     }
     // Derive first step (mirrors activeFlow path in handleStartDemo — always resolves for known personas)
-    const steps       = _PERSONA_GUIDED_FLOWS[selectedPersona]
+    const steps       = PERSONA_GUIDED_FLOWS[selectedPersona]
     const activeFlow  = _PERSONA_DEFAULT_FLOW[selectedPersona] || null
     const firstPanel  = steps && steps.length > 0
       ? steps[0].panelId
@@ -491,7 +484,7 @@ export function CONTROL(intent, runtimeContext, currentSnapshot) {
       return { status: 'FAIL', failReason: 'AUTO_START blocked: demoComplete (persona change effect must clear first)', traceId, newSnapshot: currentSnapshot }
     }
 
-    const steps      = _PERSONA_GUIDED_FLOWS[selectedPersona]
+    const steps      = PERSONA_GUIDED_FLOWS[selectedPersona]
     const activeFlow = _PERSONA_DEFAULT_FLOW[selectedPersona] || null
     const firstPanel = steps && steps.length > 0 ? steps[0].panelId : 'situation'
 
@@ -521,11 +514,11 @@ export function CONTROL(intent, runtimeContext, currentSnapshot) {
 
   // ── INTENT: DEMO_NEXT ─────────────────────────────────────────────────────
   // Mirrors handleDemoNext (index.js:428–486) — three execution paths:
-  //   Path A: PERSONA_GUIDED_FLOWS (primary — all current personas)
-  //   Path B: legacy selectedFlow traversal mode [51.6]
-  //   Path C: standard stage mode [51.4]
+  //   Path A: PERSONA_GUIDED_FLOWS (primary — all current personas) [DECLARED / AUTHORIZED]
+  //   Path B: legacy selectedFlow traversal mode [51.6]             [DORMANT-GOVERNED LEGACY — A.14]
+  //   Path C: standard stage mode [51.4]                            [DORMANT-GOVERNED LEGACY — A.14]
   if (intent === INTENTS.DEMO_NEXT) {
-    const steps = selectedPersona ? _PERSONA_GUIDED_FLOWS[selectedPersona] : null
+    const steps = selectedPersona ? PERSONA_GUIDED_FLOWS[selectedPersona] : null
 
     // ── Path A: PERSONA_GUIDED_FLOWS (primary path) ──────────────────────
     // validatePanelTransition NOT applied: sequences are valid-by-construction [51.9B]
@@ -579,7 +572,15 @@ export function CONTROL(intent, runtimeContext, currentSnapshot) {
       return { status: 'OK', failReason: null, traceId, newSnapshot: _rebuildDerivedFields(partial) }
     }
 
-    // ── Path B: legacy selectedFlow traversal mode [51.6] ────────────────
+    // ── Path B: DORMANT-GOVERNED LEGACY — selectedFlow traversal mode [51.6] ─────
+    // Governance authority: A.10R (gate verdict) | A.11 (closure planning) | A.14 (archival)
+    // Status: ARCHIVED — non-authoritative; retained for historical traceability only.
+    // Reachability: state combination (selectedPersona=null && selectedFlow!=null) is
+    //   CONTROL-unproducible. DEMO_START gates on non-null selectedPersona; no current
+    //   transition produces selectedFlow without selectedPersona. Path is unreachable.
+    // Activation precondition: full snapshot coverage for Path B scenarios required;
+    //   A.5B-equivalent validation required; dedicated CONTROL stream must explicitly
+    //   activate this path. NO execution without that stream.
     if (selectedFlow) {
       const panels    = getFlowPanels(selectedFlow)
       const nextIndex = traversalNodeIndex + 1
@@ -614,7 +615,17 @@ export function CONTROL(intent, runtimeContext, currentSnapshot) {
       return { status: 'OK', failReason: null, traceId, newSnapshot: _rebuildDerivedFields(partial) }
     }
 
-    // ── Path C: standard stage mode [51.4] ───────────────────────────────
+    // ── Path C: DORMANT-GOVERNED LEGACY — standard stage mode [51.4] ────────────
+    // Governance authority: A.10R (gate verdict) | A.11 (closure planning) | A.14 (archival)
+    // Status: ARCHIVED — non-authoritative; retained for historical traceability only.
+    // Reachability: state (!selectedPersona && !selectedFlow && demoActive) is
+    //   unreachable — DEMO_START gates on non-null selectedPersona, so demoActive=true
+    //   implies selectedPersona is non-null, which populates `steps` (Path A). Unreachable.
+    // Open gap: G1 — DEMO_NEXT Path C does not set selectedQuery (removed in A.9).
+    // Activation preconditions: (1) G1 must be closed (selectedQuery mutation added);
+    //   (2) path must be formally declared; (3) A.5B-equivalent validation for Path C
+    //   scenarios must be performed; (4) dedicated CONTROL stream must explicitly activate.
+    //   NO execution without all four preconditions met.
     const newDemoStage = demoStage + 1
     if (newDemoStage > TOTAL_STAGES) {
       const newOrchestration = {
@@ -723,19 +734,21 @@ export function buildSnapshot(runtimeState) {
   }
 
   const snapshot = {
+    // ── Authoritative fields — consumed by applyControlResponse [A.6] ──────────
     status:             'OK',
-    mode:               _deriveMode(orchestrationState),
     selectedPersona:    enlPersona,
     selectedQuery,
     resolvedPanelState: _resolveAllPanelStates(openPanels, traversalHistory, enlPersona, demoActive, freeMode, rawStepActive),
     openPanels:         [...openPanels],
     traversalHistory:   [...traversalHistory],
-    currentStepIndex:   guidedStepIndex,
-    sequenceId:         enlPersona,
-    allowedTransitions: _resolveAllowedTransitions(traversalHistory, enlPersona, demoActive, freeMode),
-    personaEnvelope:    enlPersona ? (PERSONA_DEPTH_ENVELOPE[enlPersona]?.panels || []) : [],
     orchestrationState,
+    // ── Non-authoritative derived fields — informational; not applied to React state [A.15 G3] ──
+    mode:               _deriveMode(orchestrationState),
+    currentStepIndex:   guidedStepIndex, // mirrors orchestrationState.guidedStepIndex
+    sequenceId:         enlPersona,      // mirrors selectedPersona
     terminalState:      demoComplete && !demoActive && !freeMode,
+    // allowedTransitions: REMOVED [A.15] — no render consumer
+    // personaEnvelope:    REMOVED [A.15] — no render consumer
   }
 
   return snapshot
