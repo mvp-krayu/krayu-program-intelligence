@@ -1,26 +1,27 @@
 {
-  "run_id": "run_01_blueedge",
-  "generated": "2026-04-01T10:40:19Z",
+  "run_id": "run_40_4_primary",
+  "generated": "2026-04-01T10:51:23Z",
+  "input_source": "40.4",
   "script": "scripts/pios/40.16/run_esi_derivation.py",
   "window_count": 1,
   "windows": [
     {
-      "window_id": "W001",
+      "window_id": "W001_40_4_intake",
       "nf": {
         "NF-01": null,
         "NF-02": 0.5,
-        "NF-03": 1.0,
+        "NF-03": null,
         "NF-04": 1.0,
         "NF-05": null,
-        "NF-06": 1.0,
-        "NF-07": 1.0
+        "NF-06": null,
+        "NF-07": null
       },
       "pes": {
         "PES-ESI-01": null,
         "PES-ESI-02": null,
-        "PES-ESI-03": 1.0,
+        "PES-ESI-03": null,
         "PES-ESI-04": null,
-        "PES-ESI-05": 1.0
+        "PES-ESI-05": null
       },
       "esi": {
         "value": null,
@@ -38,8 +39,8 @@
         },
         "TC-02": {
           "metric": "DT-007",
-          "value": "complete",
-          "status": "COVERED"
+          "value": null,
+          "status": "UNDEFINED"
         },
         "TC-03": {
           "metrics": [
@@ -56,8 +57,8 @@
         },
         "TC-05": {
           "metric": "AT-007",
-          "value": 8,
-          "status": "COVERED"
+          "value": null,
+          "status": "UNDEFINED"
         },
         "TC-06": {
           "metric": "AT-008",
@@ -74,8 +75,8 @@
             "AT-009",
             "DT-008"
           ],
-          "value": 2,
-          "status": "COVERED"
+          "value": null,
+          "status": "UNDEFINED"
         },
         "TC-09": {
           "status": "NOT_DEFINED",
@@ -91,6 +92,13 @@
     "L_target": null,
     "L_max": null,
     "gates_defined": 8,
-    "feedback_expected": 2
+    "feedback_expected": 1,
+    "_source": "40.4",
+    "_derivation": {
+      "artifacts_expected": "DT-001(4) + DT-003(5)",
+      "gates_defined": "AT-005(8)",
+      "F_expected": "structural: one push-to-main trigger per interval",
+      "feedback_expected": "structural: one feedback delivery edge E-06a"
+    }
   }
 }

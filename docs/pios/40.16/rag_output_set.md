@@ -1,8 +1,9 @@
 # RAG Output Set
 
 **Stream:** 40.16 — RAG Derivation
-**Run ID:** run_01_blueedge
-**Generated:** 2026-04-01T10:40:42Z
+**Run ID:** run_40_4_primary
+**Input Source:** 40.4
+**Generated:** 2026-04-01T10:51:23Z
 **Script:** scripts/pios/40.16/run_rag_derivation.py
 **Spec:** docs/pios/40.16/rag_derivation_specification.md
 

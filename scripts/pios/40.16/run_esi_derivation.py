@@ -4,20 +4,23 @@ Stream 40.16 — ESI Derivation Script
 Layer: L3 (Derivation)
 Contract: docs/pios/contracts/40.16/execution_contract.md
 
-Inputs:
-  docs/pios/40.16/observations.json
+PRIMARY input path: docs/pios/40.4/ (via load_40_4_intake.py)
+SECONDARY input path (harness/override): docs/pios/40.16/observations.json +
   docs/pios/40.16/program_constants.json
+
+Usage:
+  python run_esi_derivation.py                  # 40.4 primary path (default)
+  python run_esi_derivation.py --harness        # observations.json harness path
 
 Outputs:
   docs/pios/40.16/esi_output_set.md
   docs/pios/40.16/esi_manifest.json  (internal handoff to RAG script)
 
 Derivation chain:
-  TC observations → NF-01..07 → PES-ESI-01..05 → ESI composite (full or PARTIAL)
+  40.4 AT/DT metrics → TC observations → NF-01..07 → PES-ESI-01..05 → ESI composite
 """
 
 import json
-import math
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -28,6 +31,10 @@ OBS_PATH = DOCS_40_16 / "observations.json"
 CONST_PATH = DOCS_40_16 / "program_constants.json"
 ESI_MD_PATH = DOCS_40_16 / "esi_output_set.md"
 ESI_JSON_PATH = DOCS_40_16 / "esi_manifest.json"
+
+# Primary input path — loaded at runtime
+sys.path.insert(0, str(Path(__file__).parent))
+from load_40_4_intake import build_40_4_run
 
 UNDEFINED = None
 
@@ -400,17 +407,27 @@ def render_esi_md(run_id, windows_results, run_ts):
 
 
 def main():
-    if not OBS_PATH.exists():
-        print(f"ERROR: observations.json not found at {OBS_PATH}", file=sys.stderr)
-        sys.exit(1)
-    if not CONST_PATH.exists():
-        print(f"ERROR: program_constants.json not found at {CONST_PATH}", file=sys.stderr)
-        sys.exit(1)
+    use_harness = "--harness" in sys.argv
 
-    with open(OBS_PATH) as f:
-        observations = json.load(f)
-    with open(CONST_PATH) as f:
-        constants = json.load(f)
+    if use_harness:
+        # Secondary path: manually seeded observations.json
+        if not OBS_PATH.exists():
+            print(f"ERROR: --harness specified but observations.json not found at {OBS_PATH}", file=sys.stderr)
+            sys.exit(1)
+        if not CONST_PATH.exists():
+            print(f"ERROR: --harness specified but program_constants.json not found at {CONST_PATH}", file=sys.stderr)
+            sys.exit(1)
+        with open(OBS_PATH) as f:
+            observations = json.load(f)
+        with open(CONST_PATH) as f:
+            constants = json.load(f)
+        input_source = "harness"
+        print("Input path: HARNESS (observations.json)")
+    else:
+        # Primary path: derive observations directly from docs/pios/40.4/
+        print("Input path: 40.4 PRIMARY")
+        observations, constants, _ = build_40_4_run(run_id="run_40_4_primary")
+        input_source = "40.4"
 
     run_id = observations["run_id"]
     windows = observations["windows"]
@@ -428,6 +445,7 @@ def main():
     manifest = {
         "run_id": run_id,
         "generated": run_ts,
+        "input_source": input_source,
         "script": "scripts/pios/40.16/run_esi_derivation.py",
         "window_count": window_count,
         "windows": windows_results,

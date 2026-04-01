@@ -276,6 +276,19 @@ def run_dvt_13(esi_manifest):
                 f"run_id={run_id} present in all output artifacts")
 
 
+def run_dvt_14(esi_manifest):
+    """DVT-14: Primary input path declared as 40.4 for default (non-harness) runs."""
+    input_source = esi_manifest.get("input_source", "")
+    if input_source == "harness":
+        return test("DVT-14", "Input source declaration", WARN,
+                    "input_source=harness: secondary path active; 40.4 primary path not used this run")
+    if input_source == "40.4":
+        return test("DVT-14", "Input source declaration", PASS,
+                    "input_source=40.4: primary path confirmed")
+    return test("DVT-14", "Input source declaration", FAIL,
+                f"input_source='{input_source}': expected '40.4' or 'harness'")
+
+
 def run_da_01():
     """DA-01: DRIFT-001 audit — verify SSZ/SSI computation is NOT present in 40.16 scripts."""
     script_dir = Path(__file__).parent
@@ -407,6 +420,7 @@ def main():
         run_dvt_11(esi_manifest),
         run_dvt_12(),
         run_dvt_13(esi_manifest),
+        run_dvt_14(esi_manifest),
         run_da_01(),
         run_da_02(),
         run_da_03(esi_manifest),

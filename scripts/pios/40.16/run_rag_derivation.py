@@ -199,11 +199,13 @@ def compute_rag_composite(rag_rate, rag_accel, rag_cross_tuple):
 
 
 def render_rag_md(run_id, rag_result, run_ts):
+    input_source = rag_result.get("input_source", "unknown")
     lines = [
         "# RAG Output Set",
         "",
         f"**Stream:** 40.16 — RAG Derivation",
         f"**Run ID:** {run_id}",
+        f"**Input Source:** {input_source}",
         f"**Generated:** {run_ts}",
         f"**Script:** scripts/pios/40.16/run_rag_derivation.py",
         f"**Spec:** docs/pios/40.16/rag_derivation_specification.md",
@@ -279,6 +281,7 @@ def render_manifest_md(run_id, esi_manifest, rag_result, run_ts):
         f"| Field | Value |",
         f"|---|---|",
         f"| Run ID | {run_id} |",
+        f"| Input Source | {esi_manifest.get('input_source', 'unknown')} |",
         f"| Generated | {run_ts} |",
         f"| ESI Script | scripts/pios/40.16/run_esi_derivation.py |",
         f"| RAG Script | scripts/pios/40.16/run_rag_derivation.py |",
@@ -462,6 +465,7 @@ def main():
         "warnings": rag_warnings,
         "window_count": window_count,
         "per_signal_rates": per_signal,
+        "input_source": esi_manifest.get("input_source", "unknown"),
     }
 
     # Write RAG output markdown
