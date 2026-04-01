@@ -1,2 +1,232 @@
+contract_id: PIOS-DEMO-COMPAT-ADAPTER-CONTRACT-v1
 version: v0.1
-status: placeholder
+date: 2026-04-01
+branch: feature/demo-compat-adapter
+script: pios/core/v0.1/adapters/demo_compat/map_core_to_demo.py
+
+# ---------------------------------------------------------------------------
+# Purpose
+# ---------------------------------------------------------------------------
+
+purpose: >
+  Bridge Core PiOS engine outputs (synthesize_intelligence.py) to the
+  demo-compatible signal format expected by app/execlens-demo/. The adapter
+  absorbs all compatibility burden. It does not modify the Core engine, the
+  demo application, or any 41.x/42.x artifacts.
+
+# ---------------------------------------------------------------------------
+# Input sources (authorized read-only)
+# ---------------------------------------------------------------------------
+
+inputs:
+  core_intelligence_output:
+    description: JSON output from synthesize_intelligence.py (any run_id)
+    schema: runs/pios/40.7/<run_id>/intelligence_output.json
+    required: true
+    access: read-only
+
+  signal_registry:
+    path: docs/pios/41.4/signal_registry.json
+    description: Demo signal registry — 5 demo signals with title, statement, domain,
+                 capability, component, evidence_confidence, business_impact, risk fields.
+    access: read-only
+    authorization_basis: >
+      scripts/pios/42.1/run_execlens_query.py PATH_SIGNAL_REGISTRY declaration.
+      41.4 is the upstream source for all demo signal metadata consumed by the
+      42.x adapter chain. Reading it is required to derive the demo output contract.
+
+  evidence_mapping_index:
+    path: docs/pios/41.4/evidence_mapping_index.json
+    description: Demo evidence mapping — source_object_id, source_layer, source_file,
+                 supporting_objects, evidence_chain, blocking_point, temporal_reference.
+    access: read-only
+    authorization_basis: >
+      scripts/pios/42.1/run_execlens_query.py PATH_EVIDENCE_INDEX declaration.
+      Same authorization basis as signal_registry.
+
+# ---------------------------------------------------------------------------
+# Output
+# ---------------------------------------------------------------------------
+
+output:
+  default_path: runs/pios/adapter/<run_id>/demo_compat_output.json
+  format: JSON
+  fields:
+    adapter: constant — "demo_compat/map_core_to_demo.py"
+    contract: constant — this file path
+    run_id: adapter run identifier (caller-supplied)
+    upstream_intel: path to Core intelligence output JSON
+    core_stream: stream field from Core intelligence output
+    core_run_id: run_id field from Core intelligence output
+    registry_source: resolved path to signal_registry.json
+    evidence_source: resolved path to evidence_mapping_index.json
+    signals: list of 5 demo-compatible signal entries (SIG-001..SIG-005)
+    summary: signal counts by relevance and synthesis_state
+
+# ---------------------------------------------------------------------------
+# Signal field contract
+# ---------------------------------------------------------------------------
+
+signal_fields:
+  signal_id:
+    source: demo namespace (SIG-001..SIG-005)
+    derivation: DEMO_SIGNAL_ORDER constant — fixed canonical order
+  relevance:
+    source: adapter — derived from synthesis_state via SYNTHESIS_STATE_TO_RELEVANCE
+    values: [HIGH, MEDIUM, LOW]
+    rule: A6 — no override; synthesized=HIGH / partial=MEDIUM / blocked=LOW
+  title:
+    source: 41.4 signal_registry — verbatim (A7)
+  evidence_confidence:
+    source: 41.4 signal_registry — verbatim (A7)
+  domain_id:
+    source: 41.4 signal_registry — verbatim (A7)
+  domain_name:
+    source: 41.4 signal_registry — verbatim (A7)
+  capability_id:
+    source: 41.4 signal_registry — verbatim (A7)
+  capability_name:
+    source: 41.4 signal_registry — verbatim (A7)
+  component_ids:
+    source: 41.4 signal_registry — verbatim (A7)
+  component_names:
+    source: 41.4 signal_registry — verbatim (A7)
+  statement:
+    source: 41.4 signal_registry — verbatim (A7)
+  business_impact:
+    source: 41.4 signal_registry — verbatim (A7)
+  risk:
+    source: 41.4 signal_registry — verbatim (A7)
+  synthesis_state:
+    source: Core INTEL record (A5) or aggregate derivation (A9 for SIG-002)
+    rule: A5 — no elevation above source Core INTEL synthesis_state
+  core_intel_id:
+    source: DEMO_TO_CORE_INTEL mapping — traceability field
+    note: null for SIG-002 (aggregate signal — no single Core INTEL)
+  evidence.source_object_id:
+    source: 41.4 evidence_mapping_index — verbatim (A8)
+  evidence.source_layer:
+    source: 41.4 evidence_mapping_index — verbatim (A8)
+  evidence.source_file:
+    source: 41.4 evidence_mapping_index — verbatim (A8)
+  evidence.supporting_objects:
+    source: 41.4 evidence_mapping_index — verbatim (A8)
+  evidence.evidence_chain:
+    source: 41.4 evidence_mapping_index — verbatim (A8)
+  evidence.blocking_point:
+    source: 41.4 evidence_mapping_index — verbatim (A8)
+  evidence.temporal_reference:
+    source: 41.4 evidence_mapping_index — verbatim (A8)
+  evidence_warning:
+    source: adapter — null if evidence present; warning string if evidence missing
+
+# ---------------------------------------------------------------------------
+# Demo signal → Core INTEL mapping
+# ---------------------------------------------------------------------------
+
+demo_to_core_intel:
+  SIG-001:
+    core_intel_id: INTEL-006
+    derivation_basis: >
+      41.4 signal_registry SIG-001 source_refs contains ["DIAG-006", "COND-006", "SIG-006"].
+      Core INTEL-006 has originating_condition: COND-006. COND-006 match is authoritative.
+  SIG-002:
+    core_intel_id: null
+    derivation_basis: >
+      SIG-002 represents aggregate blocked/partial platform dimension space.
+      synthesis_state and relevance derived from blocked Core INTEL count (A9):
+        blocked Core INTELs present → synthesis_state=synthesized, relevance=HIGH
+        partial only → synthesis_state=partial, relevance=MEDIUM
+        all synthesized → synthesis_state=synthesized, relevance=LOW
+  SIG-003:
+    core_intel_id: INTEL-001
+    derivation_basis: >
+      41.4 signal_registry SIG-003 source_refs contains ["COND-001", "SIG-002"].
+      Core INTEL-001 has originating_condition: COND-001. COND-001 match is authoritative.
+  SIG-004:
+    core_intel_id: INTEL-002
+    derivation_basis: >
+      41.4 signal_registry SIG-004 source_refs contains ["COND-002", "SIG-004"].
+      Core INTEL-002 has originating_condition: COND-002. COND-002 match is authoritative.
+  SIG-005:
+    core_intel_id: INTEL-003
+    derivation_basis: >
+      41.4 signal_registry SIG-005 source_refs contains ["COND-003", "SIG-001"].
+      Core INTEL-003 has originating_condition: COND-003. COND-003 match is authoritative.
+
+# ---------------------------------------------------------------------------
+# Namespace conflict declaration
+# ---------------------------------------------------------------------------
+
+namespace_conflict:
+  description: >
+    The 41.4 evidence_mapping_index source_object_id for SIG-001 is "INTEL-001"
+    (referencing the 41.x-context intelligence output, where INTEL-001 = hasi_bridge).
+    In the Core engine v0.1 namespace, INTEL-001 = Dependency Load Elevation (COND-001).
+    These are different INTEL numbering schemes from different analysis contexts.
+  resolution: >
+    The DEMO_TO_CORE_INTEL mapping resolves this by using COND cross-reference,
+    not INTEL ID matching. Evidence fields are carried verbatim from 41.4
+    (source_object_id = "INTEL-001" is preserved as-is from the evidence_mapping_index).
+    The core_intel_id traceability field records the Core engine INTEL ID (INTEL-006)
+    separately.
+
+# ---------------------------------------------------------------------------
+# Forbidden transforms
+# ---------------------------------------------------------------------------
+
+forbidden:
+  - Modify any file under app/execlens-demo/
+  - Modify any file under scripts/pios/
+  - Modify any file under pios/core/v0.1/engine/
+  - Write to docs/ (read-only)
+  - Write to runs/pios/40.5/run_02_ce_validation/ (immutable)
+  - Write to runs/pios/40.6/run_01_condition_activation/ (immutable)
+  - Write to runs/pios/40.7/run_01_intelligence_synthesis/ (immutable)
+  - Invent or fabricate any field value not present in 41.4 registry or Core output
+  - Substitute UNDEFINED/null values with estimates or defaults
+  - Elevate synthesis_state above source Core INTEL synthesis_state
+  - Override relevance outside SYNTHESIS_STATE_TO_RELEVANCE table
+  - Add narrative text, semantic enrichment, or business commentary beyond 41.4 registry
+
+# ---------------------------------------------------------------------------
+# Invariance guarantees
+# ---------------------------------------------------------------------------
+
+invariance:
+  - >
+    All 41.4 signal_registry fields (title, statement, domain_id, domain_name,
+    capability_id, capability_name, component_ids, component_names,
+    evidence_confidence, business_impact, risk) are copied verbatim.
+    Zero drift tolerance.
+  - >
+    All 41.4 evidence_mapping_index fields (source_object_id, source_layer,
+    source_file, supporting_objects, evidence_chain, blocking_point,
+    temporal_reference) are copied verbatim. Zero drift tolerance.
+  - >
+    synthesis_state for SIG-001, SIG-003, SIG-004, SIG-005 equals the
+    synthesis_state of the corresponding Core INTEL entry exactly.
+  - >
+    DEMO_TO_CORE_INTEL mapping is static — not computed at runtime.
+    Derivation basis is documented in this contract and not re-derived per run.
+
+# ---------------------------------------------------------------------------
+# Scope
+# ---------------------------------------------------------------------------
+
+scope:
+  in_scope:
+    - Reading Core intelligence output JSON
+    - Reading 41.4 signal_registry.json
+    - Reading 41.4 evidence_mapping_index.json
+    - Writing demo_compat_output.json to runs/pios/adapter/<run_id>/
+    - Mapping Core INTEL synthesis states to demo signal format
+
+  out_of_scope:
+    - Threshold evaluation (Stream 75.1 authority)
+    - Root cause attribution (Stream 75.2 authority)
+    - Signal recomputation (Stream 40.5 authority)
+    - Condition activation (Stream 40.6 authority)
+    - Intelligence synthesis (Stream 40.7 authority)
+    - Query routing or response template rendering (42.x authority)
+    - Navigation link resolution (41.2/42.1 authority)
