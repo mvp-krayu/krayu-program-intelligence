@@ -1,0 +1,32 @@
+{
+  "baseline_id": "pios_core_40.16_baseline_0.1",
+  "created_at": "2026-04-01T00:00:00Z",
+  "artifacts": [
+    {
+      "path": "docs/pios/40.16/baseline/esi_manifest.json",
+      "sha256": "3814ec2f44eb2cf255f9a1a6353ed42ad709d08d74aa9581a93eb15a0ca06258"
+    },
+    {
+      "path": "docs/pios/40.16/baseline/rag_output_set.md",
+      "sha256": "2f8e1e003cbf74188414785fd797883fece8d94e3b6473f16403d383e46db595"
+    },
+    {
+      "path": "docs/pios/40.16/baseline/derivation_execution_manifest.md",
+      "sha256": "c5e06b38c1f3773c40f809308783b435e95b43f58d62130dc486a4c6fffd2de1"
+    },
+    {
+      "path": "docs/pios/40.16/baseline/baseline_stability_report.md",
+      "sha256": "aece4374f84ba3d957d76649d3894f5d06a6f15f7049bb648756057f8bcc7d17"
+    }
+  ],
+  "stability": {
+    "runs": 5,
+    "verdict": "STABLE"
+  },
+  "input_reference": "docs/pios/40.4/",
+  "rules": [
+    "no modification allowed",
+    "re-execution must match hashes",
+    "identity is authoritative reference"
+  ]
+}
