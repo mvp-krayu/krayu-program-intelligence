@@ -1,0 +1,142 @@
+{
+  "run_id": "run_01_demo_compat_verification",
+  "stream": "40.5",
+  "script": "compute_signals.py",
+  "derivation_run": "run_02_ce_validation",
+  "signals": {
+    "SIG-001": {
+      "signal_id": "SIG-001",
+      "canonical_name": "Coordination Pressure",
+      "ckr": "CKR-006",
+      "state": "PARTIAL",
+      "output": {
+        "static_structural_ratio": 0.875,
+        "runtime_component": null
+      },
+      "traceability": {
+        "static_structural_ratio": "VAR_ST_012 / VAR_ST_016",
+        "runtime_component": "VAR_AT_005 * VAR_AT_007 (PENDING)"
+      }
+    },
+    "SIG-002": {
+      "signal_id": "SIG-002",
+      "canonical_name": "Dependency Load",
+      "ckr": "CKR-007",
+      "state": "COMPLETE",
+      "output": {
+        "dependency_edge_count": 15,
+        "dependency_load_ratio": 0.682
+      },
+      "traceability": {
+        "dependency_edge_count": "VAR_ST_012 + VAR_ST_013 + VAR_ST_014 + VAR_ST_015",
+        "dependency_load_ratio": "dependency_edge_count / VAR_ST_007"
+      }
+    },
+    "SIG-003": {
+      "signal_id": "SIG-003",
+      "canonical_name": "Change Concentration",
+      "ckr": "CKR-008",
+      "state": "BLOCKED",
+      "output": null,
+      "blocking_inputs": [
+        "VAR_AT_001",
+        "VAR_AT_002"
+      ],
+      "blocking_reason": "AT-001 and AT-002 require accumulated time-series data across successive push-to-main intervals; not present in static 40.4 telemetry"
+    },
+    "SIG-004": {
+      "signal_id": "SIG-004",
+      "canonical_name": "Structural Volatility",
+      "ckr": "CKR-009",
+      "state": "COMPLETE",
+      "output": {
+        "total_edge_density": 1.273,
+        "containment_density": 0.545,
+        "responsibility_density": 0.364,
+        "module_density": 0.455
+      },
+      "traceability": {
+        "total_edge_density": "VAR_ST_010 / VAR_ST_007",
+        "containment_density": "VAR_ST_011 / VAR_ST_007",
+        "responsibility_density": "VAR_ST_006 / VAR_ST_007",
+        "module_density": "VAR_ST_009 / VAR_ST_007"
+      }
+    },
+    "SIG-005": {
+      "signal_id": "SIG-005",
+      "canonical_name": "Execution Throughput",
+      "ckr": "CKR-010",
+      "state": "PARTIAL",
+      "output": {
+        "total_artifacts_per_run": 9,
+        "pipeline_stages_per_run": 8,
+        "throughput_rate": 1.125,
+        "completion_factor": null
+      },
+      "traceability": {
+        "total_artifacts_per_run": "VAR_DT_001 + VAR_DT_003",
+        "pipeline_stages_per_run": "VAR_AT_005",
+        "throughput_rate": "total_artifacts_per_run / pipeline_stages_per_run",
+        "completion_factor": "VAR_DT_007 (PENDING)"
+      }
+    },
+    "SIG-006": {
+      "signal_id": "SIG-006",
+      "canonical_name": "Execution Stability",
+      "ckr": "CKR-011",
+      "state": "BLOCKED",
+      "output": null,
+      "blocking_inputs": [
+        "VAR_AT_007",
+        "VAR_AT_009",
+        "VAR_DT_007",
+        "VAR_DT_008"
+      ],
+      "blocking_reason": "All inputs event-based; require live pipeline execution"
+    },
+    "SIG-007": {
+      "signal_id": "SIG-007",
+      "canonical_name": "ESI",
+      "ckr": "CKR-014",
+      "state": "PARTIAL",
+      "output": {
+        "sig_002_dependency_load_component": 0.682,
+        "sig_005_completion_factor_component": null,
+        "sig_006_stability_component": null
+      },
+      "note": "ESI composite not computable. SIG-006 (Execution Stability) is BLOCKED. SIG-002 component resolved. SIG-005 completion factor UNDEFINED (DT-007 PENDING)."
+    },
+    "SIG-008": {
+      "signal_id": "SIG-008",
+      "canonical_name": "RAG",
+      "ckr": "CKR-015",
+      "state": "PARTIAL",
+      "output": {
+        "sig_001_coordination_pressure_component": 0.875,
+        "sig_004_total_edge_density": 1.273,
+        "sig_004_containment_density": 0.545,
+        "sig_004_responsibility_density": 0.364,
+        "sig_004_module_density": 0.455,
+        "sig_003_change_concentration_component": null
+      },
+      "note": "RAG acceleration component not computable. SIG-003 (Change Concentration) is BLOCKED (AT-001, AT-002 time-series PENDING). SIG-001 static structural component resolved. SIG-004 all density ratios resolved."
+    }
+  },
+  "summary": {
+    "COMPLETE": [
+      "SIG-002",
+      "SIG-004"
+    ],
+    "PARTIAL": [
+      "SIG-001",
+      "SIG-005",
+      "SIG-007",
+      "SIG-008"
+    ],
+    "BLOCKED": [
+      "SIG-003",
+      "SIG-006"
+    ],
+    "signal_output_completeness": "PARTIAL"
+  }
+}
