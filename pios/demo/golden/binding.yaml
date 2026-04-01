@@ -1,3 +1,111 @@
-version: v0.1
-demo_run_id: run_01
-status: placeholder
+version: v0.2
+status: active
+date: 2026-04-01
+branch: feature/demo-binding
+
+contract_id: PIOS-DEMO-BINDING-CONTRACT-v1
+tag: pios-demo-compat-verified-v0.1
+
+# ---------------------------------------------------------------------------
+# Binding declaration
+# ---------------------------------------------------------------------------
+
+demo_run_id: run_01_demo_compat_verification
+
+binding_source:
+  path: runs/pios/adapter/run_01_demo_compat_verification/demo_compat_output.json
+  run_id: run_01_demo_compat_verification
+  verification_report: runs/pios/adapter/run_01_demo_compat_verification/demo_compat_verification_report.md
+  adapter_contract: pios/core/v0.1/adapters/demo_compat/contract.yaml
+  verification_status: PASS
+  verification_checks: V1-V7 all PASS
+
+# ---------------------------------------------------------------------------
+# Bound signal set (from verified adapter output)
+# ---------------------------------------------------------------------------
+
+bound_signals:
+  - signal_id: SIG-001
+    canonical_name: Sensor Bridge Throughput Ceiling
+    synthesis_state: blocked
+    relevance: LOW
+    core_intel_id: INTEL-006
+
+  - signal_id: SIG-002
+    canonical_name: Platform Runtime State (Seven Dimensions Unknown)
+    synthesis_state: synthesized
+    relevance: HIGH
+    core_intel_id: null   # aggregate — A9 derivation
+
+  - signal_id: SIG-003
+    canonical_name: Dependency Load (0.682)
+    synthesis_state: synthesized
+    relevance: HIGH
+    core_intel_id: INTEL-001
+
+  - signal_id: SIG-004
+    canonical_name: Structural Volatility (1.273 edge/node)
+    synthesis_state: synthesized
+    relevance: HIGH
+    core_intel_id: INTEL-002
+
+  - signal_id: SIG-005
+    canonical_name: Coordination Pressure (0.875 static)
+    synthesis_state: partial
+    relevance: MEDIUM
+    core_intel_id: INTEL-003
+
+# ---------------------------------------------------------------------------
+# Consumer binding
+# ---------------------------------------------------------------------------
+
+consumer:
+  file: app/execlens-demo/pages/api/execlens.js
+  constant: ADAPTER_PIOS_SOURCE
+  mechanism: >
+    Single-query handler (?query=) reads adapter signals from ADAPTER_PIOS_SOURCE
+    (fs.readFileSync, fail-closed). Query context (navigation, template_section,
+    aggregate_confidence) from ADAPTER_42_4 chain unchanged.
+    Legacy implicit signal source (ADAPTER_42_4 signals array) replaced.
+    No fallback to legacy source. No dynamic discovery. No "latest" resolution.
+
+# ---------------------------------------------------------------------------
+# Scope
+# ---------------------------------------------------------------------------
+
+bound_paths:
+  - app/execlens-demo/pages/api/execlens.js  # ADAPTER_PIOS_SOURCE + query handler
+
+unchanged_paths:
+  - app/execlens-demo/pages/index.js
+  - app/execlens-demo/components/
+  - app/execlens-demo/utils/
+  - scripts/pios/42.4/execlens_adapter.py    # still provides query context
+  - scripts/pios/42.6/execlens_overview_adapter.py  # gauge strip unaffected
+  - scripts/pios/42.7/execlens_topology_adapter.py  # topology unaffected
+  - pios/core/v0.1/engine/                   # Core executables untouched
+  - pios/core/v0.1/adapters/demo_compat/     # adapter source untouched
+
+# ---------------------------------------------------------------------------
+# Invariants
+# ---------------------------------------------------------------------------
+
+invariants:
+  - signal_ids: [SIG-001, SIG-002, SIG-003, SIG-004, SIG-005]
+  - all_field_values_verbatim_from: docs/pios/41.4/signal_registry.json
+  - all_evidence_verbatim_from: docs/pios/41.4/evidence_mapping_index.json
+  - synthesis_state_source: pios/core/v0.1/engine/synthesize_intelligence.py output
+  - no_runtime_signal_computation: true
+  - no_direct_core_coupling: true
+  - fixed_source_path: runs/pios/adapter/run_01_demo_compat_verification/demo_compat_output.json
+
+# ---------------------------------------------------------------------------
+# Forbidden
+# ---------------------------------------------------------------------------
+
+forbidden:
+  - bind to "latest" run discovery
+  - bind directly to compute_signals.py, activate_conditions.py, synthesize_intelligence.py
+  - silent fallback to ADAPTER_42_4 signals on binding source failure
+  - modify bound_signals values
+  - modify signal field schema

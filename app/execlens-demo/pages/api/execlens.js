@@ -16,6 +16,7 @@
  */
 
 import { execFile } from 'child_process'
+import fs from 'fs'
 import path from 'path'
 
 const REPO_ROOT = process.env.REPO_ROOT
@@ -31,6 +32,14 @@ const ADAPTER_42_7  = path.join(REPO_ROOT, 'scripts', 'pios', '42.7',  'execlens
 const ADAPTER_42_13 = path.join(REPO_ROOT, 'scripts', 'pios', '42.13', 'demo_activate.py')
 const ADAPTER_42_15 = path.join(REPO_ROOT, 'scripts', 'pios', '42.15', 'enl_console_adapter.py')
 const ADAPTER_42_16 = path.join(REPO_ROOT, 'scripts', 'pios', '42.16', 'persona_view_map.py')
+
+// pios/core adapter-derived signals — verified run, explicit fixed path (binding.yaml v0.2)
+// Binding contract: pios/demo/golden/binding.yaml
+// Verification run: runs/pios/adapter/run_01_demo_compat_verification/
+const ADAPTER_PIOS_SOURCE = path.join(
+  REPO_ROOT, 'runs', 'pios', 'adapter',
+  'run_01_demo_compat_verification', 'demo_compat_output.json'
+)
 
 function runScript(scriptPath, args, res) {
   execFile('python3', [scriptPath, ...args], { timeout: 30000 }, (err, stdout, stderr) => {
@@ -142,5 +151,40 @@ export default function handler(req, res) {
     return res.status(400).json({ error: 'invalid query parameter' })
   }
 
-  return runScript(ADAPTER_42_4, [sanitized], res)
+  // Binding: load adapter-derived signals from verified pre-computed run (ADAPTER_PIOS_SOURCE).
+  // Fail-closed — no silent fallback to legacy signal source.
+  let adapterSignals
+  try {
+    const raw = fs.readFileSync(ADAPTER_PIOS_SOURCE, 'utf8')
+    const adapterData = JSON.parse(raw)
+    adapterSignals = adapterData.signals
+    if (!Array.isArray(adapterSignals)) {
+      throw new Error('signals field missing or not an array')
+    }
+  } catch (e) {
+    return res.status(500).json({
+      error: `ADAPTER SIGNALS UNAVAILABLE — binding source unreadable: ${e.message}`,
+      source: ADAPTER_PIOS_SOURCE,
+    })
+  }
+
+  // Get query context (navigation, template_section, query_id, aggregate_confidence) from
+  // 42.4 chain. Inject adapter signals into response — signals are now adapter-derived only.
+  execFile('python3', [ADAPTER_42_4, sanitized], { timeout: 30000 }, (err, stdout, stderr) => {
+    if (err) {
+      const message = stderr || err.message || 'adapter execution failed'
+      return res.status(400).json({ error: message.trim() })
+    }
+    try {
+      const queryContext = JSON.parse(stdout)
+      // Replace legacy implicit signal source with adapter-derived canonical signal set
+      queryContext.signals = adapterSignals
+      return res.status(200).json(queryContext)
+    } catch {
+      return res.status(500).json({
+        error: 'JSON parse error from adapter',
+        raw: stdout.slice(0, 500),
+      })
+    }
+  })
 }
