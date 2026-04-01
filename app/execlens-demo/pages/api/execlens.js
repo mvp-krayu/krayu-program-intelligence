@@ -42,35 +42,43 @@ const ADAPTER_PIOS_SOURCE = path.join(
 )
 
 function runScript(scriptPath, args, res) {
-  execFile('python3', [scriptPath, ...args], { timeout: 30000 }, (err, stdout, stderr) => {
-    if (err) {
-      const message = stderr || err.message || 'adapter execution failed'
-      return res.status(400).json({ error: message.trim() })
-    }
-    try {
-      const data = JSON.parse(stdout)
-      return res.status(200).json(data)
-    } catch {
-      return res.status(500).json({
-        error: 'JSON parse error from adapter',
-        raw: stdout.slice(0, 500),
-      })
-    }
+  return new Promise((resolve) => {
+    execFile('python3', [scriptPath, ...args], { timeout: 30000 }, (err, stdout, stderr) => {
+      if (err) {
+        const message = stderr || err.message || 'adapter execution failed'
+        res.status(400).json({ error: message.trim() })
+      } else {
+        try {
+          const data = JSON.parse(stdout)
+          res.status(200).json(data)
+        } catch {
+          res.status(500).json({
+            error: 'JSON parse error from adapter',
+            raw: stdout.slice(0, 500),
+          })
+        }
+      }
+      resolve()
+    })
   })
 }
 
 // ENL: text-return handler (verbatim output)
 function runScriptText(scriptPath, args, res) {
-  execFile('python3', [scriptPath, ...args], { timeout: 30000 }, (err, stdout, stderr) => {
-    if (err) {
-      const message = stderr || err.message || 'adapter error'
-      return res.status(400).json({ error: message.trim() })
-    }
-    return res.status(200).json({ text: stdout })
+  return new Promise((resolve) => {
+    execFile('python3', [scriptPath, ...args], { timeout: 30000 }, (err, stdout, stderr) => {
+      if (err) {
+        const message = stderr || err.message || 'adapter error'
+        res.status(400).json({ error: message.trim() })
+      } else {
+        res.status(200).json({ text: stdout })
+      }
+      resolve()
+    })
   })
 }
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'method not allowed' })
   }
@@ -170,21 +178,25 @@ export default function handler(req, res) {
 
   // Get query context (navigation, template_section, query_id, aggregate_confidence) from
   // 42.4 chain. Inject adapter signals into response — signals are now adapter-derived only.
-  execFile('python3', [ADAPTER_42_4, sanitized], { timeout: 30000 }, (err, stdout, stderr) => {
-    if (err) {
-      const message = stderr || err.message || 'adapter execution failed'
-      return res.status(400).json({ error: message.trim() })
-    }
-    try {
-      const queryContext = JSON.parse(stdout)
-      // Replace legacy implicit signal source with adapter-derived canonical signal set
-      queryContext.signals = adapterSignals
-      return res.status(200).json(queryContext)
-    } catch {
-      return res.status(500).json({
-        error: 'JSON parse error from adapter',
-        raw: stdout.slice(0, 500),
-      })
-    }
+  await new Promise((resolve) => {
+    execFile('python3', [ADAPTER_42_4, sanitized], { timeout: 30000 }, (err, stdout, stderr) => {
+      if (err) {
+        const message = stderr || err.message || 'adapter execution failed'
+        res.status(400).json({ error: message.trim() })
+      } else {
+        try {
+          const queryContext = JSON.parse(stdout)
+          // Replace legacy implicit signal source with adapter-derived canonical signal set
+          queryContext.signals = adapterSignals
+          res.status(200).json(queryContext)
+        } catch {
+          res.status(500).json({
+            error: 'JSON parse error from adapter',
+            raw: stdout.slice(0, 500),
+          })
+        }
+      }
+      resolve()
+    })
   })
 }
