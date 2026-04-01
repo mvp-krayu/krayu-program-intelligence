@@ -1,0 +1,104 @@
+{
+  "run_id": "run_40_4_primary",
+  "generated": "2026-04-01T10:51:23Z",
+  "input_source": "40.4",
+  "script": "scripts/pios/40.16/run_esi_derivation.py",
+  "window_count": 1,
+  "windows": [
+    {
+      "window_id": "W001_40_4_intake",
+      "nf": {
+        "NF-01": null,
+        "NF-02": 0.5,
+        "NF-03": null,
+        "NF-04": 1.0,
+        "NF-05": null,
+        "NF-06": null,
+        "NF-07": null
+      },
+      "pes": {
+        "PES-ESI-01": null,
+        "PES-ESI-02": null,
+        "PES-ESI-03": null,
+        "PES-ESI-04": null,
+        "PES-ESI-05": null
+      },
+      "esi": {
+        "value": null,
+        "mode": "PARTIAL",
+        "warnings": [
+          "CG-01 ACTIVE: TC-09 not defined; PES-ESI-02 UNDEFINED; ESI computed in PARTIAL mode",
+          "PES-ESI-01 UNDEFINED; ESI UNDEFINED"
+        ]
+      },
+      "tc_observations": {
+        "TC-01": {
+          "metric": "AT-001",
+          "value": null,
+          "status": "UNDEFINED"
+        },
+        "TC-02": {
+          "metric": "DT-007",
+          "value": null,
+          "status": "UNDEFINED"
+        },
+        "TC-03": {
+          "metrics": [
+            "DT-001",
+            "DT-003"
+          ],
+          "value": 9,
+          "status": "COVERED"
+        },
+        "TC-04": {
+          "metric": "DT-006",
+          "value": null,
+          "status": "UNDEFINED"
+        },
+        "TC-05": {
+          "metric": "AT-007",
+          "value": null,
+          "status": "UNDEFINED"
+        },
+        "TC-06": {
+          "metric": "AT-008",
+          "value": null,
+          "status": "UNDEFINED"
+        },
+        "TC-07": {
+          "note": "variance_observed",
+          "value": null,
+          "status": "UNDEFINED"
+        },
+        "TC-08": {
+          "metrics": [
+            "AT-009",
+            "DT-008"
+          ],
+          "value": null,
+          "status": "UNDEFINED"
+        },
+        "TC-09": {
+          "status": "NOT_DEFINED",
+          "gap": "CG-01"
+        }
+      }
+    }
+  ],
+  "program_constants": {
+    "F_expected": 1.0,
+    "sigma_max": null,
+    "artifacts_expected": 9,
+    "L_target": null,
+    "L_max": null,
+    "gates_defined": 8,
+    "feedback_expected": 1,
+    "_source": "40.4",
+    "_derivation": {
+      "artifacts_expected": "DT-001(4) + DT-003(5)",
+      "gates_defined": "AT-005(8)",
+      "F_expected": "structural: one push-to-main trigger per interval",
+      "feedback_expected": "structural: one feedback delivery edge E-06a"
+    }
+  }
+}
