@@ -1,0 +1,9 @@
+{
+  "F_expected": 1.0,
+  "sigma_max": null,
+  "artifacts_expected": 9,
+  "L_target": null,
+  "L_max": null,
+  "gates_defined": 8,
+  "feedback_expected": 2
+}

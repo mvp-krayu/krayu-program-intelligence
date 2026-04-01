@@ -1,0 +1,22 @@
+{
+  "run_id": "run_01_blueedge",
+  "windows": [
+    {
+      "window_id": "W001",
+      "window_start": "2026-03-18T00:00:00Z",
+      "window_end": "2026-03-18T23:59:59Z",
+      "window_duration_days": 1.0,
+      "observations": {
+        "AT-001": null,
+        "AT-007": 8,
+        "AT-008": null,
+        "AT-009": 1,
+        "DT-001": 4,
+        "DT-003": 5,
+        "DT-006": null,
+        "DT-007": "complete",
+        "DT-008": 1
+      }
+    }
+  ]
+}

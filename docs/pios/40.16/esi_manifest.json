@@ -1,0 +1,96 @@
+{
+  "run_id": "run_01_blueedge",
+  "generated": "2026-04-01T10:40:19Z",
+  "script": "scripts/pios/40.16/run_esi_derivation.py",
+  "window_count": 1,
+  "windows": [
+    {
+      "window_id": "W001",
+      "nf": {
+        "NF-01": null,
+        "NF-02": 0.5,
+        "NF-03": 1.0,
+        "NF-04": 1.0,
+        "NF-05": null,
+        "NF-06": 1.0,
+        "NF-07": 1.0
+      },
+      "pes": {
+        "PES-ESI-01": null,
+        "PES-ESI-02": null,
+        "PES-ESI-03": 1.0,
+        "PES-ESI-04": null,
+        "PES-ESI-05": 1.0
+      },
+      "esi": {
+        "value": null,
+        "mode": "PARTIAL",
+        "warnings": [
+          "CG-01 ACTIVE: TC-09 not defined; PES-ESI-02 UNDEFINED; ESI computed in PARTIAL mode",
+          "PES-ESI-01 UNDEFINED; ESI UNDEFINED"
+        ]
+      },
+      "tc_observations": {
+        "TC-01": {
+          "metric": "AT-001",
+          "value": null,
+          "status": "UNDEFINED"
+        },
+        "TC-02": {
+          "metric": "DT-007",
+          "value": "complete",
+          "status": "COVERED"
+        },
+        "TC-03": {
+          "metrics": [
+            "DT-001",
+            "DT-003"
+          ],
+          "value": 9,
+          "status": "COVERED"
+        },
+        "TC-04": {
+          "metric": "DT-006",
+          "value": null,
+          "status": "UNDEFINED"
+        },
+        "TC-05": {
+          "metric": "AT-007",
+          "value": 8,
+          "status": "COVERED"
+        },
+        "TC-06": {
+          "metric": "AT-008",
+          "value": null,
+          "status": "UNDEFINED"
+        },
+        "TC-07": {
+          "note": "variance_observed",
+          "value": null,
+          "status": "UNDEFINED"
+        },
+        "TC-08": {
+          "metrics": [
+            "AT-009",
+            "DT-008"
+          ],
+          "value": 2,
+          "status": "COVERED"
+        },
+        "TC-09": {
+          "status": "NOT_DEFINED",
+          "gap": "CG-01"
+        }
+      }
+    }
+  ],
+  "program_constants": {
+    "F_expected": 1.0,
+    "sigma_max": null,
+    "artifacts_expected": 9,
+    "L_target": null,
+    "L_max": null,
+    "gates_defined": 8,
+    "feedback_expected": 2
+  }
+}
