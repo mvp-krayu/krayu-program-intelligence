@@ -1,0 +1,26 @@
+{
+  "contract_id": "PIOS-40.11-EXECUTABLE-RUN-v1",
+  "status": "PASS",
+  "engine": "pios/core/v0.1/engine/validate_loop.py",
+  "input_chain": [
+    "runs/pios/40.5/run_03_executable/",
+    "runs/pios/40.6/run_02_executable/",
+    "runs/pios/40.7/run_02_executable/",
+    "runs/pios/40.8/run_00_baseline_delivery_packaging/",
+    "runs/pios/40.8/run_01_delivery_packaging/",
+    "runs/pios/40.9/run_01_feedback_registry/",
+    "runs/pios/40.10/run_01_control_surface/"
+  ],
+  "output_target": "runs/pios/40.11/run_01_loop_closure",
+  "processing_type": "loop_closure_self_validation",
+  "rules_enforced": [
+    "no_interpretation",
+    "end_to_end_integrity_only",
+    "no_transformation",
+    "traceability_closure",
+    "no_enrichment",
+    "json_only",
+    "no_overwrite"
+  ],
+  "timestamp": "2026-04-02T10:06:26Z"
+}

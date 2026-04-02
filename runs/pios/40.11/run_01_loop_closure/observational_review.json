@@ -1,0 +1,74 @@
+{
+  "run_id": "run_01_loop_closure",
+  "observation_scope": "system_self_validation",
+  "observations": [
+    {
+      "type": "CHAIN_STABLE",
+      "status": "PASS",
+      "source_layer": "40.5-40.10"
+    },
+    {
+      "type": "CHAIN_STABLE",
+      "status": "PASS",
+      "source_layer": "40.7",
+      "entity_id": "INTEL-001"
+    },
+    {
+      "type": "CHAIN_STABLE",
+      "status": "PASS",
+      "source_layer": "40.7",
+      "entity_id": "INTEL-002"
+    },
+    {
+      "type": "CHAIN_STABLE",
+      "status": "PASS",
+      "source_layer": "40.7",
+      "entity_id": "INTEL-003"
+    },
+    {
+      "type": "CHAIN_STABLE",
+      "status": "PASS",
+      "source_layer": "40.7",
+      "entity_id": "INTEL-004"
+    },
+    {
+      "type": "CHAIN_STABLE",
+      "status": "PASS",
+      "source_layer": "40.7",
+      "entity_id": "INTEL-005"
+    },
+    {
+      "type": "CHAIN_STABLE",
+      "status": "PASS",
+      "source_layer": "40.7",
+      "entity_id": "INTEL-006"
+    },
+    {
+      "type": "CHAIN_STABLE",
+      "status": "PASS",
+      "source_layer": "40.7",
+      "entity_id": "INTEL-007"
+    },
+    {
+      "type": "CHAIN_STABLE",
+      "status": "PASS",
+      "source_layer": "40.7",
+      "entity_id": "INTEL-008"
+    },
+    {
+      "type": "DELTA_STABLE",
+      "status": "PASS",
+      "source_layer": "40.8"
+    },
+    {
+      "type": "DELTA_STABLE",
+      "status": "PASS",
+      "source_layer": "40.9"
+    },
+    {
+      "type": "CONTROL_STABLE",
+      "status": "PASS",
+      "source_layer": "40.10"
+    }
+  ]
+}
