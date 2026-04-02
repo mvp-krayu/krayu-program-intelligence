@@ -1,0 +1,37 @@
+{
+  "contract_id": "PIOS-40.6-EXECUTABLE-RUN-v1",
+  "status": "PASS",
+  "engine": "pios/core/v0.1/engine/activate_conditions.py",
+  "runtime_input_source": "runs/pios/40.5/run_03_executable/",
+  "reference_basis": "runs/pios/40.6/run_01_condition_activation/",
+  "output_target": "runs/pios/40.6/run_02_executable/",
+  "lineage_type": "json_native_runtime",
+  "rules_enforced": [
+    "computational_invariance",
+    "upstream_preservation",
+    "propagation_invariance",
+    "no_reinterpretation",
+    "no_enrichment",
+    "traceability_preserved",
+    "json_only",
+    "no_overwrite"
+  ],
+  "artifacts_produced": [
+    "condition_output.json",
+    "diagnosis_output.json",
+    "condition_traceability_map.json",
+    "condition_validation_report.json",
+    "execution_manifest.json"
+  ],
+  "condition_summary": {
+    "complete": ["COND-001", "COND-002"],
+    "partial": ["COND-003", "COND-004", "COND-007", "COND-008"],
+    "blocked": ["COND-005", "COND-006"]
+  },
+  "diagnosis_summary": {
+    "active": ["DIAG-001", "DIAG-002"],
+    "partial": ["DIAG-003", "DIAG-004", "DIAG-007", "DIAG-008"],
+    "blocked": ["DIAG-005", "DIAG-006"]
+  },
+  "timestamp": "2026-04-02T08:34:53Z"
+}

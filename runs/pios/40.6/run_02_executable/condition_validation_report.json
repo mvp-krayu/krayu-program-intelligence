@@ -1,0 +1,94 @@
+{
+  "run_id": "run_02_executable",
+  "stream": "40.6",
+  "reference_basis": "runs/pios/40.6/run_01_condition_activation/",
+  "upstream_signal_run": "runs/pios/40.5/run_03_executable/signal_output.json",
+  "parity_check_against_run_01": "PASS",
+  "condition_state_match": "PASS",
+  "diagnosis_state_match": "PASS",
+  "blocked_preservation": "PASS",
+  "partial_preservation": "PASS",
+  "upstream_signal_integrity": "PASS",
+  "traceability_coverage": "PASS",
+  "unexpected_fields": [],
+  "mismatch_details": [],
+  "condition_state_verification": {
+    "complete": {
+      "expected": ["COND-001", "COND-002"],
+      "actual": ["COND-001", "COND-002"],
+      "match": true
+    },
+    "partial": {
+      "expected": ["COND-003", "COND-004", "COND-007", "COND-008"],
+      "actual": ["COND-003", "COND-004", "COND-007", "COND-008"],
+      "match": true
+    },
+    "blocked": {
+      "expected": ["COND-005", "COND-006"],
+      "actual": ["COND-005", "COND-006"],
+      "match": true
+    }
+  },
+  "diagnosis_state_verification": {
+    "active": {
+      "expected": ["DIAG-001", "DIAG-002"],
+      "actual": ["DIAG-001", "DIAG-002"],
+      "match": true
+    },
+    "partial": {
+      "expected": ["DIAG-003", "DIAG-004", "DIAG-007", "DIAG-008"],
+      "actual": ["DIAG-003", "DIAG-004", "DIAG-007", "DIAG-008"],
+      "match": true
+    },
+    "blocked": {
+      "expected": ["DIAG-005", "DIAG-006"],
+      "actual": ["DIAG-005", "DIAG-006"],
+      "match": true
+    }
+  },
+  "value_verification": {
+    "COND-001.dependency_load_ratio": {"expected": 0.682, "actual": 0.682, "match": true},
+    "COND-001.dependency_edge_count": {"expected": 15, "actual": 15, "match": true},
+    "COND-002.total_edge_density": {"expected": 1.273, "actual": 1.273, "match": true},
+    "COND-002.containment_density": {"expected": 0.545, "actual": 0.545, "match": true},
+    "COND-002.responsibility_density": {"expected": 0.364, "actual": 0.364, "match": true},
+    "COND-002.module_density": {"expected": 0.455, "actual": 0.455, "match": true},
+    "COND-003.structural_ratio": {"expected": 0.875, "actual": 0.875, "match": true},
+    "COND-003.runtime_component": {"expected": null, "actual": null, "match": true},
+    "COND-004.throughput_rate": {"expected": 1.125, "actual": 1.125, "match": true},
+    "COND-004.completion_factor": {"expected": null, "actual": null, "match": true},
+    "COND-007.sig_002_dependency_load_component": {"expected": 0.682, "actual": 0.682, "match": true},
+    "COND-007.sig_005_completion_factor_component": {"expected": null, "actual": null, "match": true},
+    "COND-007.sig_006_stability_component": {"expected": null, "actual": null, "match": true},
+    "COND-008.sig_001_coordination_pressure_component": {"expected": 0.875, "actual": 0.875, "match": true},
+    "COND-008.sig_004_total_edge_density": {"expected": 1.273, "actual": 1.273, "match": true},
+    "COND-008.sig_004_containment_density": {"expected": 0.545, "actual": 0.545, "match": true},
+    "COND-008.sig_004_responsibility_density": {"expected": 0.364, "actual": 0.364, "match": true},
+    "COND-008.sig_004_module_density": {"expected": 0.455, "actual": 0.455, "match": true},
+    "COND-008.sig_003_change_concentration_component": {"expected": null, "actual": null, "match": true}
+  },
+  "blocked_verification": {
+    "COND-005.blocking_inputs": {"expected": ["VAR_AT_001", "VAR_AT_002"], "actual": ["VAR_AT_001", "VAR_AT_002"], "match": true},
+    "COND-006.blocking_inputs": {"expected": ["VAR_AT_007", "VAR_AT_009", "VAR_DT_007", "VAR_DT_008"], "actual": ["VAR_AT_007", "VAR_AT_009", "VAR_DT_007", "VAR_DT_008"], "match": true}
+  },
+  "upstream_signal_integrity_check": {
+    "upstream_run": "runs/pios/40.5/run_03_executable/",
+    "signal_states_consumed": {
+      "SIG-001": "PARTIAL",
+      "SIG-002": "COMPLETE",
+      "SIG-003": "BLOCKED",
+      "SIG-004": "COMPLETE",
+      "SIG-005": "PARTIAL",
+      "SIG-006": "BLOCKED",
+      "SIG-007": "PARTIAL",
+      "SIG-008": "PARTIAL"
+    },
+    "no_signals_recomputed": true,
+    "all_8_signals_present": true
+  },
+  "traceability_completeness": {
+    "total_conditions": 8,
+    "conditions_traced": 8,
+    "coverage": "100%"
+  }
+}

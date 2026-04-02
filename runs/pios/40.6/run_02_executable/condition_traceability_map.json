@@ -1,0 +1,123 @@
+{
+  "run_id": "run_02_executable",
+  "stream": "40.6",
+  "reference_basis": "runs/pios/40.6/run_01_condition_activation/condition_traceability_map.md",
+  "upstream_signal_run": "runs/pios/40.5/run_03_executable/signal_output.json",
+  "traceability_rule": "Every condition traces to: (1) CKR-012 governed definition, (2) governing 40.5 signal from run_03_executable, (3) 40.5 artifact, (4) temporal reference inherited from governing signal, (5) original 40.4 metric chain via signal traceability. No condition references 40.4 artifacts directly.",
+  "conditions": {
+    "COND-001": {
+      "condition_id": "COND-001",
+      "ckr_ref": "CKR-012",
+      "governing_signal": "SIG-002",
+      "signal_artifact": "runs/pios/40.5/run_03_executable/signal_output.json",
+      "signal_values": {
+        "dependency_load_ratio": 0.682,
+        "dependency_edge_count": 15
+      },
+      "chain_40_4": "ST-007(22), ST-012(7), ST-013(3), ST-014(2), ST-015(3) — structural_telemetry.md",
+      "lineage_chain": "40.4 structural_telemetry.md → SIG-002 (run_03_executable) → COND-001 (this run)",
+      "traceability_complete": true
+    },
+    "COND-002": {
+      "condition_id": "COND-002",
+      "ckr_ref": "CKR-012",
+      "governing_signal": "SIG-004",
+      "signal_artifact": "runs/pios/40.5/run_03_executable/signal_output.json",
+      "signal_values": {
+        "total_edge_density": 1.273,
+        "containment_density": 0.545,
+        "responsibility_density": 0.364,
+        "module_density": 0.455
+      },
+      "chain_40_4": "ST-007(22), ST-009(10), ST-010(28), ST-011(12), ST-006(8) — structural_telemetry.md",
+      "lineage_chain": "40.4 structural_telemetry.md → SIG-004 (run_03_executable) → COND-002 (this run)",
+      "traceability_complete": true
+    },
+    "COND-003": {
+      "condition_id": "COND-003",
+      "ckr_ref": "CKR-012",
+      "governing_signal": "SIG-001",
+      "signal_artifact": "runs/pios/40.5/run_03_executable/signal_output.json",
+      "signal_values": {
+        "static_structural_ratio": 0.875,
+        "runtime_component": null
+      },
+      "chain_40_4": "ST-012(7), ST-016(8), AT-005(8), AT-007(PENDING) — structural_telemetry.md, activity_telemetry.md",
+      "lineage_chain": "40.4 structural/activity_telemetry.md → SIG-001 (run_03_executable) → COND-003 (this run)",
+      "partial_lineage_note": "Static component (0.875) fully traced. Runtime component (AT-007) lineage declared but value absent — UNDEFINED propagated.",
+      "traceability_complete": true
+    },
+    "COND-004": {
+      "condition_id": "COND-004",
+      "ckr_ref": "CKR-012",
+      "governing_signal": "SIG-005",
+      "signal_artifact": "runs/pios/40.5/run_03_executable/signal_output.json",
+      "signal_values": {
+        "throughput_rate": 1.125,
+        "completion_factor": null
+      },
+      "chain_40_4": "AT-005(8), DT-001(4), DT-003(5), DT-007(PENDING) — activity_telemetry.md, delivery_telemetry.md",
+      "lineage_chain": "40.4 activity/delivery_telemetry.md → SIG-005 (run_03_executable) → COND-004 (this run)",
+      "traceability_complete": true
+    },
+    "COND-005": {
+      "condition_id": "COND-005",
+      "ckr_ref": "CKR-012",
+      "governing_signal": "SIG-003",
+      "signal_artifact": "runs/pios/40.5/run_03_executable/signal_output.json",
+      "signal_values": null,
+      "blocking_inputs": ["VAR_AT_001", "VAR_AT_002"],
+      "chain_40_4": "AT-001(PENDING time-series), AT-002(PENDING time-series), AT-003(1/invocation) — activity_telemetry.md",
+      "lineage_chain": "40.4 activity_telemetry.md → SIG-003 BLOCKED (run_03_executable) → COND-005 BLOCKED (this run)",
+      "traceability_complete": true
+    },
+    "COND-006": {
+      "condition_id": "COND-006",
+      "ckr_ref": "CKR-012",
+      "governing_signal": "SIG-006",
+      "signal_artifact": "runs/pios/40.5/run_03_executable/signal_output.json",
+      "signal_values": null,
+      "blocking_inputs": ["VAR_AT_007", "VAR_AT_009", "VAR_DT_007", "VAR_DT_008"],
+      "chain_40_4": "AT-007, AT-009, DT-007, DT-008 (all PENDING) — activity_telemetry.md, delivery_telemetry.md",
+      "lineage_chain": "40.4 activity/delivery_telemetry.md → SIG-006 BLOCKED (run_03_executable) → COND-006 BLOCKED (this run)",
+      "traceability_complete": true
+    },
+    "COND-007": {
+      "condition_id": "COND-007",
+      "ckr_ref": "CKR-012",
+      "governing_signal": "SIG-007",
+      "signal_artifact": "runs/pios/40.5/run_03_executable/signal_output.json",
+      "signal_values": {
+        "sig_002_dependency_load_component": 0.682,
+        "sig_005_completion_factor_component": null,
+        "sig_006_stability_component": null
+      },
+      "chain_40_4": "SIG-002 → ST-007/ST-012/ST-013/ST-014/ST-015; SIG-005/SIG-006 UNDEFINED",
+      "lineage_chain": "40.4 structural_telemetry.md → SIG-002 → SIG-007 partial (run_03_executable) → COND-007 partial (this run)",
+      "traceability_complete": true
+    },
+    "COND-008": {
+      "condition_id": "COND-008",
+      "ckr_ref": "CKR-012",
+      "governing_signal": "SIG-008",
+      "signal_artifact": "runs/pios/40.5/run_03_executable/signal_output.json",
+      "signal_values": {
+        "sig_001_coordination_pressure_component": 0.875,
+        "sig_004_total_edge_density": 1.273,
+        "sig_004_containment_density": 0.545,
+        "sig_004_responsibility_density": 0.364,
+        "sig_004_module_density": 0.455,
+        "sig_003_change_concentration_component": null
+      },
+      "chain_40_4": "SIG-001 → ST-012/ST-016; SIG-004 → ST-006/ST-007/ST-009/ST-010/ST-011; SIG-003 BLOCKED",
+      "lineage_chain": "40.4 structural_telemetry.md → SIG-001/SIG-004 → SIG-008 partial (run_03_executable) → COND-008 partial (this run)",
+      "traceability_complete": true
+    }
+  },
+  "completeness_declaration": {
+    "total_conditions": 8,
+    "conditions_traced": 8,
+    "conditions_with_missing_traceability": 0,
+    "coverage": "100%"
+  }
+}
