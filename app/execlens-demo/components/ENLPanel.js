@@ -81,6 +81,15 @@ const SIGNAL_STATE_BADGE = {
   unknown:   { label: 'Unknown',   color: 'var(--text-dim)' },
 }
 
+// 42.DEMO-FIDELITY.3: synthesis_state → evidence state mapping.
+// Fallback when signal is not in personaData.enl_signals (no signal_state available).
+// synthesized → evaluable (signal evaluated from evidence), partial/blocked preserved.
+const SYNTHESIS_TO_STATE = {
+  synthesized: 'evaluable',
+  partial:     'partial',
+  blocked:     'blocked',
+}
+
 const FIELD_LABEL = {
   business_impact: 'Delivery Impact',
   risk:            'Structural Risk',
@@ -169,7 +178,7 @@ function ChainBreadcrumb({ orderedSignals, personaData }) {
     <div className="enl-chain-breadcrumb">
       {orderedSignals.map((sig, i) => {
         const enlSig = personaData?.enl_signals?.find(s => s.signal_id === sig.signal_id)
-        const state  = enlSig?.signal_state || 'unknown'
+        const state  = enlSig?.signal_state || SYNTHESIS_TO_STATE[sig.synthesis_state] || 'evaluable'
         const emph   = enlSig?.emphasis || 'none'
         const badge  = SIGNAL_STATE_BADGE[state] || SIGNAL_STATE_BADGE.unknown
         return (
@@ -259,7 +268,7 @@ function ChainPrimaryField({ signal, fieldKey, label }) {
 function ChainStep({ signal, stepNum, isEntry, persona, personaData }) {
   const ev     = signal.evidence
   const enlSig = personaData?.enl_signals?.find(s => s.signal_id === signal.signal_id)
-  const state  = enlSig?.signal_state || 'unknown'
+  const state  = enlSig?.signal_state || SYNTHESIS_TO_STATE[signal.synthesis_state] || 'evaluable'
   const emph   = enlSig?.emphasis     || 'none'
   const badge  = SIGNAL_STATE_BADGE[state] || SIGNAL_STATE_BADGE.unknown
   const focus  = persona ? (PERSONA_LENS_FOCUS[persona] || null) : null

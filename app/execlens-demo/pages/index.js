@@ -635,7 +635,7 @@ export default function Home() {
           {queryData && enlPersona && (demoActive || freeMode) ? (
             // demoActive: guided mode — step-driven evidence; freeMode: operator mode — full evidence access [51.8R RUN05]
             <ENLPanel
-              signals={queryData.signals}
+              signals={causalSignals}
               persona={enlPersona}
               personaData={enlPersonaData}
               rawStepActive={rawStepActive}
