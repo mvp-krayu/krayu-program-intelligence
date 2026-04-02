@@ -1,0 +1,57 @@
+{
+  "run_id": "CE.2-R01-MIX-v02",
+  "stream": "40.10",
+  "source_registry": "runs/pios/40.9/CE.2-R01-MIX-v02/feedback_signal_registry.json",
+  "source_run": "CE.2-R01-MIX-v02",
+  "comparison_basis": "40.9_feedback_signal_registry",
+  "entity_traceability": [
+    {
+      "entity_id": "INTEL-001",
+      "source_change_type": "NO_CHANGE",
+      "directive_type": "NO_ACTION",
+      "origin_run": "40.9/run_01_feedback_registry"
+    },
+    {
+      "entity_id": "INTEL-002",
+      "source_change_type": "STATE_CHANGE",
+      "directive_type": "REVIEW_REQUIRED",
+      "origin_run": "40.9/run_01_feedback_registry"
+    },
+    {
+      "entity_id": "INTEL-003",
+      "source_change_type": "STATE_CHANGE",
+      "directive_type": "REVIEW_REQUIRED",
+      "origin_run": "40.9/run_01_feedback_registry"
+    },
+    {
+      "entity_id": "INTEL-004",
+      "source_change_type": "STATE_CHANGE",
+      "directive_type": "REVIEW_REQUIRED",
+      "origin_run": "40.9/run_01_feedback_registry"
+    },
+    {
+      "entity_id": "INTEL-005",
+      "source_change_type": "NO_CHANGE",
+      "directive_type": "NO_ACTION",
+      "origin_run": "40.9/run_01_feedback_registry"
+    },
+    {
+      "entity_id": "INTEL-006",
+      "source_change_type": "NO_CHANGE",
+      "directive_type": "NO_ACTION",
+      "origin_run": "40.9/run_01_feedback_registry"
+    },
+    {
+      "entity_id": "INTEL-007",
+      "source_change_type": "STATE_CHANGE",
+      "directive_type": "REVIEW_REQUIRED",
+      "origin_run": "40.9/run_01_feedback_registry"
+    },
+    {
+      "entity_id": "INTEL-008",
+      "source_change_type": "STATE_CHANGE",
+      "directive_type": "REVIEW_REQUIRED",
+      "origin_run": "40.9/run_01_feedback_registry"
+    }
+  ]
+}

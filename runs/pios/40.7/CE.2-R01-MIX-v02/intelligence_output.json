@@ -1,0 +1,80 @@
+{
+  "run_id": "CE.2-R01-MIX-v02",
+  "stream": "40.7",
+  "activation_model": "CE.2-v02",
+  "upstream_condition_input": "runs/pios/40.6/CE.2-R01-MIX-v02/condition_output.json",
+  "intelligence": {
+    "INTEL-001": {
+      "intel_id": "INTEL-001",
+      "source_diagnosis": "DIAG-001",
+      "diagnosis_activation_state": "ACTIVE",
+      "synthesis_state": "synthesized",
+      "activation_model": "CE.2-v02"
+    },
+    "INTEL-002": {
+      "intel_id": "INTEL-002",
+      "source_diagnosis": "DIAG-002",
+      "diagnosis_activation_state": "INACTIVE",
+      "synthesis_state": "stable",
+      "activation_model": "CE.2-v02"
+    },
+    "INTEL-003": {
+      "intel_id": "INTEL-003",
+      "source_diagnosis": "DIAG-003",
+      "diagnosis_activation_state": "INACTIVE",
+      "synthesis_state": "stable",
+      "activation_model": "CE.2-v02"
+    },
+    "INTEL-004": {
+      "intel_id": "INTEL-004",
+      "source_diagnosis": "DIAG-004",
+      "diagnosis_activation_state": "ACTIVE",
+      "synthesis_state": "synthesized",
+      "activation_model": "CE.2-v02"
+    },
+    "INTEL-005": {
+      "intel_id": "INTEL-005",
+      "source_diagnosis": "DIAG-005",
+      "diagnosis_activation_state": "BLOCKED",
+      "synthesis_state": "blocked",
+      "activation_model": "CE.2-v02"
+    },
+    "INTEL-006": {
+      "intel_id": "INTEL-006",
+      "source_diagnosis": "DIAG-006",
+      "diagnosis_activation_state": "BLOCKED",
+      "synthesis_state": "blocked",
+      "activation_model": "CE.2-v02"
+    },
+    "INTEL-007": {
+      "intel_id": "INTEL-007",
+      "source_diagnosis": "DIAG-007",
+      "diagnosis_activation_state": "ACTIVE",
+      "synthesis_state": "synthesized",
+      "activation_model": "CE.2-v02"
+    },
+    "INTEL-008": {
+      "intel_id": "INTEL-008",
+      "source_diagnosis": "DIAG-008",
+      "diagnosis_activation_state": "INACTIVE",
+      "synthesis_state": "stable",
+      "activation_model": "CE.2-v02"
+    }
+  },
+  "synthesis_summary": {
+    "synthesized": [
+      "INTEL-001",
+      "INTEL-004",
+      "INTEL-007"
+    ],
+    "stable": [
+      "INTEL-002",
+      "INTEL-003",
+      "INTEL-008"
+    ],
+    "blocked": [
+      "INTEL-005",
+      "INTEL-006"
+    ]
+  }
+}
