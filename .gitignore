@@ -6,3 +6,5 @@ node_modules/
 *.tmp
 .next/
 docs/pios/41.2/pie_vault/.obsidian/
+app/execlens-demo/.env
+docs/pios/contracts/
