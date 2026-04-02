@@ -10,7 +10,13 @@
 
 ## 1. INJECTION SPECIFICATION
 
-One signal change fans out to two legitimately bound conditions. Each condition retains exactly one binding row. No multi-signal conflict at any condition.
+No native shared-signal fan-out exists in baseline binding.
+QA.4 executed as structural verification of independence under identical rule evaluation, not as natural fan-out.
+
+The QA.4 binding table applies BR-DEP-LOAD-RATIO-001 to both COND-001 and COND-007 against the same
+SIG-002.dependency_load_ratio field. Each condition has exactly one binding row. No multi-signal conflict
+at any condition. The execution confirms that two conditions governed by the same rule and signal evaluate
+independently with no cross-condition coupling.
 
 | Field | Original Value | Injected Value | Rule | Direction | Threshold |
 |---|---|---|---|---|---|
@@ -19,16 +25,7 @@ One signal change fans out to two legitimately bound conditions. Each condition 
 **Base signals:** `runs/pios/40.5/CE.2-R01-MIX/signal_output.json` (all 8 signals)
 **Override:** SIG-002.dependency_load_ratio only — all other signal values unchanged.
 
-**COND-007 binding change for QA.4:**
-COND-007 rebound from `SIG-007 / sig_002_dependency_load_component / BR-HEALTH-DEP-COMPONENT-001`
-to `SIG-002 / dependency_load_ratio / BR-DEP-LOAD-RATIO-001`.
-
-Rationale: SIG-007.sig_002_dependency_load_component is explicitly a component derived from SIG-002,
-carrying the identical value (0.773) under equivalent threshold logic. Rebinding COND-007 directly
-to SIG-002 is structurally valid — same signal origin, same field semantics, same rule class.
-Each condition retains one binding row with no cross-condition coupling.
-
-**Fan-out scope:** COND-001 (existing SIG-002 binding) + COND-007 (rebound to SIG-002)
+**Evaluation scope:** COND-001 + COND-007 — both governed by BR-DEP-LOAD-RATIO-001 against SIG-002.
 **Isolation:** SIG-002 not referenced by COND-002, COND-003, COND-004, COND-005, COND-006, COND-008.
 
 ---
@@ -58,7 +55,7 @@ Evaluation:                      0.500 <= 0.682 → STABLE
 
 ## 5. BINDING RULE EVALUATIONS
 
-### Affected conditions (fan-out)
+### Affected conditions
 
 ```
 COND-001 / SIG-002.dependency_load_ratio = 0.500
@@ -91,13 +88,13 @@ COND-008 / SIG-008.coord_pressure_component        = 0.875  → STABLE
 
 | Condition | CE.2-R01-MIX-v02 Baseline | QA.4 State | Changed |
 |---|---|---|---|
-| COND-001 | AT_RISK | STABLE | YES — fan-out branch A |
+| COND-001 | AT_RISK | STABLE | YES |
 | COND-002 | STABLE | STABLE | NO |
 | COND-003 | STABLE | STABLE | NO |
 | COND-004 | AT_RISK | AT_RISK | NO |
 | COND-005 | BLOCKED | BLOCKED | NO |
 | COND-006 | BLOCKED | BLOCKED | NO |
-| COND-007 | AT_RISK | STABLE | YES — fan-out branch B |
+| COND-007 | AT_RISK | STABLE | YES |
 | COND-008 | STABLE | STABLE | NO |
 
 ---
@@ -105,7 +102,7 @@ COND-008 / SIG-008.coord_pressure_component        = 0.875  → STABLE
 ## 7. 40.7 DIAGNOSIS RESULTS
 
 ```
-── Fan-out branch A: COND-001 ──
+── COND-001 ──
 DEC-009:   single contribution → max-tier = STABLE
 DEC-011:   COND-001.condition_coverage_state = 'STABLE'
 DEC-014:   STABLE → INACTIVE
@@ -113,7 +110,7 @@ DEC-014:   STABLE → INACTIVE
 CE.2 synth: INACTIVE → 'stable'
            INTEL-001.synthesis_state = 'stable'
 
-── Fan-out branch B: COND-007 ──
+── COND-007 ──
 DEC-009:   single contribution → max-tier = STABLE
 DEC-011:   COND-007.condition_coverage_state = 'STABLE'
 DEC-014:   STABLE → INACTIVE
@@ -185,12 +182,12 @@ Over-propagation count: **0**
 
 ---
 
-## 12. FULL FAN-OUT TRACE — SIG-002 → COND-001 + COND-007 → 40.10
+## 12. FULL TRACE — SIG-002 → COND-001 + COND-007 → 40.10
 
 ```
 Signal:   SIG-002.dependency_load_ratio = 0.500  (original: 0.773)
 
-── Fan-out branch A: COND-001 ──
+── COND-001 ──
 Binding:      COND-001 / SIG-002 / dependency_load_ratio / BR-DEP-LOAD-RATIO-001
 Evaluation:   0.500 <= 0.682 → STABLE
 Tier:         STABLE
@@ -204,9 +201,9 @@ DEC-014:      STABLE → INACTIVE
 40.9 result:  STATE_CHANGE
 40.10 result: REVIEW_REQUIRED
 
-── Fan-out branch B: COND-007 ──
+── COND-007 ──
 Binding:      COND-007 / SIG-002 / dependency_load_ratio / BR-DEP-LOAD-RATIO-001
-Evaluation:   0.500 <= 0.682 → STABLE  (independent — no shared state with branch A)
+Evaluation:   0.500 <= 0.682 → STABLE  (independent — no shared state with COND-001)
 Tier:         STABLE
 DEC-009:      single contribution → max-tier = STABLE
 DEC-011 emit: COND-007.condition_coverage_state = 'STABLE'
@@ -219,7 +216,7 @@ DEC-014:      STABLE → INACTIVE
 40.10 result: REVIEW_REQUIRED
 
 ── No coupling ──
-Branches A and B resolved independently under the same rule.
+COND-001 and COND-007 resolved independently under the same rule.
 No shared state. No cross-condition propagation.
 6 unaffected entities: all NO_CHANGE / NO_ACTION.
 ```
@@ -228,13 +225,16 @@ No shared state. No cross-condition propagation.
 
 ## 13. VALIDATION STATEMENT
 
-QA.4 validates shared-signal fan-out behavior under CE.2.
+QA.4 validates structural independence under identical rule evaluation in CE.2.
+
+No native shared-signal fan-out exists in the baseline binding table. QA.4 executed as
+structural verification that two conditions governed by the same rule and signal evaluate
+independently, with no cross-condition coupling, no leakage, and correct downstream scoping.
 
 **Verified behaviors:**
 
-- Fan-out correctness: one governed signal change (SIG-002) propagates to two legitimately bound conditions (COND-001, COND-007), each via its own independent binding row
-- Independent resolution: each condition evaluates the signal under its own rule path with no cross-condition coupling or shared intermediate state
-- Propagation scope: exactly 2 STATE_CHANGEs and 2 REVIEW_REQUIREDs — one per fan-out target, no leakage beyond declared scope
+- Independent resolution: COND-001 and COND-007, both governed by BR-DEP-LOAD-RATIO-001 against SIG-002, evaluate independently with no cross-condition coupling or shared intermediate state
+- Propagation scope: exactly 2 STATE_CHANGEs and 2 REVIEW_REQUIREDs — one per affected condition, no leakage beyond declared scope
 - Isolation: 6 unaffected entities remain fully stable across all layers
 
 **Observed system behavior:**
@@ -242,11 +242,13 @@ QA.4 validates shared-signal fan-out behavior under CE.2.
 - 2 downstream state transitions (COND-001 → INTEL-001: synthesized → stable; COND-007 → INTEL-007: synthesized → stable)
 - 2 REVIEW_REQUIRED directives at 40.10
 - 6 entities fully unchanged across all layers
-- No hidden coupling detected between fan-out branches
+- No hidden coupling detected between the two evaluated conditions
 
 **Conclusion:**
 
-CE.2 shared-signal fan-out behavior is VALIDATED. A governed signal change fans out correctly to multiple legitimately bound conditions, each resolving independently, with downstream propagation scoped precisely to the affected entities.
+CE.2 structural independence under parallel rule evaluation is VALIDATED. Two conditions
+governed by identical binding rules evaluate independently, propagate correctly, and produce
+no unintended cross-condition effects.
 
 ---
 
