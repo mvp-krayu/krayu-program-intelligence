@@ -1,0 +1,212 @@
+{
+  "run_id": "run_03_executable",
+  "source_basis": "runs/pios/40.5/run_02_ce_validation/",
+  "parity_check_against_run_02": "PASS",
+  "computed_values_match": "PASS",
+  "state_match": "PASS",
+  "blocked_preservation": "PASS",
+  "partial_preservation": "PASS",
+  "traceability_coverage": "FAIL",
+  "losslessness_status": "PASS",
+  "unexpected_fields": [],
+  "mismatch_details": [],
+  "state_checks": [
+    {
+      "signal_id": "SIG-001",
+      "expected": "PARTIAL",
+      "actual": "PARTIAL",
+      "match": true
+    },
+    {
+      "signal_id": "SIG-002",
+      "expected": "COMPLETE",
+      "actual": "COMPLETE",
+      "match": true
+    },
+    {
+      "signal_id": "SIG-003",
+      "expected": "BLOCKED",
+      "actual": "BLOCKED",
+      "match": true
+    },
+    {
+      "signal_id": "SIG-004",
+      "expected": "COMPLETE",
+      "actual": "COMPLETE",
+      "match": true
+    },
+    {
+      "signal_id": "SIG-005",
+      "expected": "PARTIAL",
+      "actual": "PARTIAL",
+      "match": true
+    },
+    {
+      "signal_id": "SIG-006",
+      "expected": "BLOCKED",
+      "actual": "BLOCKED",
+      "match": true
+    },
+    {
+      "signal_id": "SIG-007",
+      "expected": "PARTIAL",
+      "actual": "PARTIAL",
+      "match": true
+    },
+    {
+      "signal_id": "SIG-008",
+      "expected": "PARTIAL",
+      "actual": "PARTIAL",
+      "match": true
+    }
+  ],
+  "value_checks": [
+    {
+      "signal_id": "SIG-001",
+      "field": "static_structural_ratio",
+      "expected": 0.875,
+      "actual": 0.875,
+      "match": true
+    },
+    {
+      "signal_id": "SIG-001",
+      "field": "runtime_component",
+      "expected": null,
+      "actual": null,
+      "match": true
+    },
+    {
+      "signal_id": "SIG-002",
+      "field": "dependency_edge_count",
+      "expected": 15,
+      "actual": 15,
+      "match": true
+    },
+    {
+      "signal_id": "SIG-002",
+      "field": "dependency_load_ratio",
+      "expected": 0.682,
+      "actual": 0.682,
+      "match": true
+    },
+    {
+      "signal_id": "SIG-004",
+      "field": "total_edge_density",
+      "expected": 1.273,
+      "actual": 1.273,
+      "match": true
+    },
+    {
+      "signal_id": "SIG-004",
+      "field": "containment_density",
+      "expected": 0.545,
+      "actual": 0.545,
+      "match": true
+    },
+    {
+      "signal_id": "SIG-004",
+      "field": "responsibility_density",
+      "expected": 0.364,
+      "actual": 0.364,
+      "match": true
+    },
+    {
+      "signal_id": "SIG-004",
+      "field": "module_density",
+      "expected": 0.455,
+      "actual": 0.455,
+      "match": true
+    },
+    {
+      "signal_id": "SIG-005",
+      "field": "total_artifacts_per_run",
+      "expected": 9,
+      "actual": 9,
+      "match": true
+    },
+    {
+      "signal_id": "SIG-005",
+      "field": "pipeline_stages_per_run",
+      "expected": 8,
+      "actual": 8,
+      "match": true
+    },
+    {
+      "signal_id": "SIG-005",
+      "field": "throughput_rate",
+      "expected": 1.125,
+      "actual": 1.125,
+      "match": true
+    },
+    {
+      "signal_id": "SIG-005",
+      "field": "completion_factor",
+      "expected": null,
+      "actual": null,
+      "match": true
+    },
+    {
+      "signal_id": "SIG-007",
+      "field": "sig_002_dependency_load_component",
+      "expected": 0.682,
+      "actual": 0.682,
+      "match": true
+    },
+    {
+      "signal_id": "SIG-007",
+      "field": "sig_005_completion_factor_component",
+      "expected": null,
+      "actual": null,
+      "match": true
+    },
+    {
+      "signal_id": "SIG-007",
+      "field": "sig_006_stability_component",
+      "expected": null,
+      "actual": null,
+      "match": true
+    },
+    {
+      "signal_id": "SIG-008",
+      "field": "sig_001_coordination_pressure_component",
+      "expected": 0.875,
+      "actual": 0.875,
+      "match": true
+    },
+    {
+      "signal_id": "SIG-008",
+      "field": "sig_004_total_edge_density",
+      "expected": 1.273,
+      "actual": 1.273,
+      "match": true
+    },
+    {
+      "signal_id": "SIG-008",
+      "field": "sig_004_containment_density",
+      "expected": 0.545,
+      "actual": 0.545,
+      "match": true
+    },
+    {
+      "signal_id": "SIG-008",
+      "field": "sig_004_responsibility_density",
+      "expected": 0.364,
+      "actual": 0.364,
+      "match": true
+    },
+    {
+      "signal_id": "SIG-008",
+      "field": "sig_004_module_density",
+      "expected": 0.455,
+      "actual": 0.455,
+      "match": true
+    },
+    {
+      "signal_id": "SIG-008",
+      "field": "sig_003_change_concentration_component",
+      "expected": null,
+      "actual": null,
+      "match": true
+    }
+  ]
+}
