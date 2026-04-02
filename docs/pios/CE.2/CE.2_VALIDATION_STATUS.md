@@ -1,8 +1,19 @@
 # CE.2 — Validation Status
 
 **Stream:** CE.2 — PiOS Core v0.2 Boundary Definition
-**Status:** VALIDATED — Phase 5 proof run and QA.1-v02 complete
+**Status:** CLOSED — VALIDATED BASELINE
 **Date:** 2026-04-02
+
+---
+
+## CE.2 STATUS: CLOSED — VALIDATED BASELINE
+
+This stream is no longer in definition or proof phase.
+It is the active PiOS v0.2 activation architecture.
+
+The CE.2 decision ledger (DEC-001 through DEC-014), proof run (CE.2-R01-MIX-v02),
+and QA.1-v02 rerun collectively constitute the validated baseline. No further
+governed change events are open under CE.2.
 
 ---
 
@@ -60,6 +71,7 @@ not evidence of a regression.
 
 ### 4. Scorecard: CE.2-Native (`ce2_scorecard.sh CE.2-R01-MIX-v02`)
 
+**Classification:** NON-AUTHORITATIVE
 **Role:** CE.2-native evaluation under new emitted tier semantics.
 **Result:** FAIL (structural gap — NOT activation model failure)
 
