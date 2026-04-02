@@ -1,0 +1,62 @@
+{
+  "run_id": "QA.2-v02",
+  "stream": "40.8",
+  "source_run": "runs/pios/40.7/QA.2-v02/intelligence_output.json",
+  "activation_model": "CE.2-v02",
+  "intelligence": {
+    "stream": "40.7",
+    "run_id": "QA.2-v02",
+    "intelligence": {
+      "INTEL-001": {
+        "synthesis_state": "synthesized"
+      },
+      "INTEL-002": {
+        "synthesis_state": "stable"
+      },
+      "INTEL-003": {
+        "synthesis_state": "stable"
+      },
+      "INTEL-004": {
+        "synthesis_state": "synthesized"
+      },
+      "INTEL-005": {
+        "synthesis_state": "blocked"
+      },
+      "INTEL-006": {
+        "synthesis_state": "blocked"
+      },
+      "INTEL-007": {
+        "synthesis_state": "blocked"
+      },
+      "INTEL-008": {
+        "synthesis_state": "stable"
+      }
+    }
+  },
+  "diagnosis": {
+    "DIAG-001": {
+      "diagnosis_activation_state": "ACTIVE"
+    },
+    "DIAG-002": {
+      "diagnosis_activation_state": "INACTIVE"
+    },
+    "DIAG-003": {
+      "diagnosis_activation_state": "INACTIVE"
+    },
+    "DIAG-004": {
+      "diagnosis_activation_state": "ACTIVE"
+    },
+    "DIAG-005": {
+      "diagnosis_activation_state": "BLOCKED"
+    },
+    "DIAG-006": {
+      "diagnosis_activation_state": "BLOCKED"
+    },
+    "DIAG-007": {
+      "diagnosis_activation_state": "BLOCKED"
+    },
+    "DIAG-008": {
+      "diagnosis_activation_state": "INACTIVE"
+    }
+  }
+}

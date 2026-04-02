@@ -1,0 +1,81 @@
+{
+  "run_id": "QA.2-v02",
+  "qa_id": "QA.2-v02",
+  "purpose": "Multi-signal conflict validation",
+  "governed_by": "DEC-001 through DEC-014",
+  "conflict_patterns": {
+    "A": {
+      "condition": "COND-001",
+      "signals": [
+        "SIG-002\u2192AT_RISK",
+        "SIG-004\u2192STABLE"
+      ],
+      "expected_max_tier": "AT_RISK"
+    },
+    "B": {
+      "condition": "COND-007",
+      "signals": [
+        "SIG-007\u2192AT_RISK",
+        "SIG-003\u2192BLOCKED"
+      ],
+      "expected_max_tier": "BLOCKED"
+    },
+    "C": {
+      "condition": "COND-003",
+      "signals": [
+        "SIG-001\u2192STABLE",
+        "SIG-008\u2192STABLE"
+      ],
+      "expected_max_tier": "STABLE"
+    }
+  },
+  "injected_signals": {
+    "SIG-001": {
+      "state": "PARTIAL",
+      "output": {
+        "static_structural_ratio": 0.82,
+        "sig_001_coordination_pressure_component": 0.82
+      }
+    },
+    "SIG-002": {
+      "state": "PARTIAL",
+      "output": {
+        "dependency_load_ratio": 0.773
+      }
+    },
+    "SIG-003": {
+      "state": "BLOCKED",
+      "output": null
+    },
+    "SIG-004": {
+      "state": "STABLE",
+      "output": {
+        "total_edge_density": 1.15
+      }
+    },
+    "SIG-005": {
+      "state": "PARTIAL",
+      "output": {
+        "throughput_rate": 0.9
+      }
+    },
+    "SIG-006": {
+      "state": "BLOCKED",
+      "output": null
+    },
+    "SIG-007": {
+      "state": "PARTIAL",
+      "output": {
+        "sig_002_dependency_load_component": 0.773
+      }
+    },
+    "SIG-008": {
+      "state": "STABLE",
+      "output": {
+        "sig_001_coordination_pressure_component": 0.82
+      }
+    }
+  },
+  "binding_table_rows": 11,
+  "multi_signal_rows": 6
+}
