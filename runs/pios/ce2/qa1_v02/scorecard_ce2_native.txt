@@ -1,0 +1,16 @@
+======================================
+CE.2 FINAL 5-MINUTE SCORECARD
+RUN: CE.2-R01-MIX-v02
+======================================
+40.11 LOOP INTEGRITY: FAIL (MISSING)
+40.9 CHANGE DETECTED: FAIL (no STATE_CHANGE)
+40.10 CONTROL ACTIVATION: FAIL (no directives)
+40.6 STATE CHANGE: FAIL (no transitions detected)
+40.7 DIAGNOSIS OUTPUT: FAIL (no diagnosis)
+40.8 DELIVERY STRUCTURE: FAIL
+40.5 SIGNAL SHIFT: CHECK (no PARTIAL signals detected)
+TRACEABILITY: FAIL (no injection log)
+======================================
+SUMMARY
+CE.2 RESULT: FAIL ❌
+======================================
