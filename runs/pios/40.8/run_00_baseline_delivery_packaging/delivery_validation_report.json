@@ -1,0 +1,39 @@
+{
+  "run_id": "run_01_delivery_packaging",
+  "stream": "40.8",
+  "parity_check_against_run_01": "PASS",
+  "field_count_match": "PASS",
+  "missing_fields": [],
+  "extra_fields": [],
+  "losslessness_status": "PASS",
+  "traceability_coverage": "PASS",
+  "mismatch_details": [],
+  "intelligence_state_summary": {
+    "synthesized": [
+      "INTEL-001",
+      "INTEL-002"
+    ],
+    "partial": [
+      "INTEL-003",
+      "INTEL-004",
+      "INTEL-007",
+      "INTEL-008"
+    ],
+    "blocked": [
+      "INTEL-005",
+      "INTEL-006"
+    ]
+  },
+  "diagnosis_ids_present": [
+    "DIAG-001",
+    "DIAG-002",
+    "DIAG-003",
+    "DIAG-004",
+    "DIAG-005",
+    "DIAG-006",
+    "DIAG-007",
+    "DIAG-008"
+  ],
+  "no_transformation": true,
+  "no_enrichment": true
+}
