@@ -3398,3 +3398,34 @@ a.topo-chip:hover {
   background: var(--weak);
   color: var(--bg);
 }
+
+/* =========================================================
+   42.DEMO-FIDELITY.2 — secondary signals (related, non-causal)
+   Collapsed by default; dimmed to indicate non-primary status.
+   ========================================================= */
+
+.secondary-signals {
+  margin-top: 16px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+
+.secondary-signals-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+  padding: 4px 0;
+}
+
+.secondary-signals-label::-webkit-details-marker {
+  display: none;
+}
+
+.signal-grid-secondary {
+  opacity: 0.55;
+  margin-top: 8px;
+}

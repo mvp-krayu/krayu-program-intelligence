@@ -76,6 +76,23 @@ const CONF_COLORS = {
 }
 
 // ---------------------------------------------------------------------------
+// extractCausalSignals — derive primary causal signal set from intelligence layer
+// Source of truth: template_section (causal/intelligence output), not binding layer.
+// Signals referenced by SIG-* in template_section are causal; remainder are secondary.
+// Fallback: if no SIG-* found in template, or causal set is empty, all signals are causal.
+// ---------------------------------------------------------------------------
+
+function extractCausalSignals(signals, templateSection) {
+  if (!signals || !templateSection) return { causal: signals || [], secondary: [] }
+  const ids = new Set([...templateSection.matchAll(/\bSIG-\d+\b/g)].map(m => m[0]))
+  if (ids.size === 0) return { causal: signals, secondary: [] }
+  const causal    = signals.filter(s => ids.has(s.signal_id))
+  const secondary = signals.filter(s => !ids.has(s.signal_id))
+  if (causal.length === 0) return { causal: signals, secondary: [] }
+  return { causal, secondary }
+}
+
+// ---------------------------------------------------------------------------
 // ActiveQueryBar
 // ---------------------------------------------------------------------------
 
@@ -414,6 +431,11 @@ export default function Home() {
   // 51.14T: demoComplete removed — POST_COMPLETION must render clean ENTRY surface, not extend panels. [51.14T]
   const showExtendedPanels = demoActive || freeMode
 
+  // 42.DEMO-FIDELITY.2: Causal signal derivation — intelligence layer is authoritative.
+  // causalSignals: shown in primary signal view. secondarySignals: collapsed "related" area.
+  const { causal: causalSignals, secondary: secondarySignals } =
+    extractCausalSignals(queryData?.signals, queryData?.template_section)
+
   // activePanelId is now a useMemo above (51.14S) — used directly in render below.
 
   return (
@@ -565,18 +587,32 @@ export default function Home() {
         <DisclosurePanel
           id="signals"
           title="Why is this critical?"
-          subtitle={queryData ? `${queryData.signals?.length || 0} intelligence signals bound` : 'Select a query to load signals'}
-          badge={queryData?.signals?.length ? String(queryData.signals.length) : null}
+          subtitle={queryData
+            ? `${causalSignals.length} causal signal${causalSignals.length !== 1 ? 's' : ''}${secondarySignals.length > 0 ? ` · ${secondarySignals.length} related` : ''}`
+            : 'Select a query to load signals'}
+          badge={causalSignals.length > 0 ? String(causalSignals.length) : null}
           expanded={getPanelExpanded('signals')}
           onToggle={() => handleToggle('signals')}
           active={activePanelId === 'signals'}
         >
-          {queryData && queryData.signals && queryData.signals.length > 0 ? (
-            <div className="signal-grid" data-demo-section="signals">
-              {queryData.signals.map(sig => (
-                <SignalGaugeCard key={sig.signal_id} signal={sig} />
-              ))}
-            </div>
+          {queryData && causalSignals.length > 0 ? (
+            <>
+              <div className="signal-grid" data-demo-section="signals">
+                {causalSignals.map(sig => (
+                  <SignalGaugeCard key={sig.signal_id} signal={sig} />
+                ))}
+              </div>
+              {secondarySignals.length > 0 && (
+                <details className="secondary-signals">
+                  <summary className="secondary-signals-label">Other related signals ({secondarySignals.length})</summary>
+                  <div className="signal-grid signal-grid-secondary">
+                    {secondarySignals.map(sig => (
+                      <SignalGaugeCard key={sig.signal_id} signal={sig} />
+                    ))}
+                  </div>
+                </details>
+              )}
+            </>
           ) : (
             <div className="no-query-state">
               {selectedQuery && loading ? 'Loading signals…' : 'Select a query to load signals.'}
