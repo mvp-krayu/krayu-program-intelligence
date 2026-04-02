@@ -1,0 +1,32 @@
+{
+  "contract_id": "PIOS-40.7-EXECUTABLE-RUN-v1",
+  "status": "PASS",
+  "engine": "pios/core/v0.1/engine/synthesize_intelligence.py",
+  "runtime_input_source": "runs/pios/40.6/run_02_executable/",
+  "reference_basis": "runs/pios/40.7/run_01_intelligence_synthesis/",
+  "output_target": "runs/pios/40.7/run_02_executable/",
+  "lineage_type": "json_native_runtime",
+  "rules_enforced": [
+    "computational_invariance",
+    "upstream_preservation",
+    "state_propagation_invariance",
+    "no_reinterpretation",
+    "no_enrichment",
+    "traceability_preserved",
+    "json_only",
+    "no_overwrite"
+  ],
+  "artifacts_produced": [
+    "intelligence_output.json",
+    "intelligence_traceability_map.json",
+    "intelligence_validation_report.json",
+    "execution_manifest.json"
+  ],
+  "intelligence_summary": {
+    "synthesized": ["INTEL-001", "INTEL-002"],
+    "partial": ["INTEL-003", "INTEL-004", "INTEL-007", "INTEL-008"],
+    "blocked": ["INTEL-005", "INTEL-006"],
+    "intelligence_output_completeness": "PARTIAL"
+  },
+  "timestamp": "2026-04-02T08:45:50Z"
+}
