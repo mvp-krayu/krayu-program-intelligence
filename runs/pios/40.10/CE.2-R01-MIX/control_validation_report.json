@@ -1,0 +1,12 @@
+{
+  "run_id": "CE.2-R01-MIX",
+  "stream": "40.10",
+  "entities_processed": 8,
+  "directive_types_valid": "PASS",
+  "directive_fields_exact": "PASS",
+  "origin_run_present": "PASS",
+  "no_interpretation": "PASS",
+  "no_transformation": "PASS",
+  "validation_status": "PASS",
+  "mismatch_details": []
+}

@@ -1,0 +1,15 @@
+{
+  "run_id": "CE.2-R01-MIX",
+  "entity_coverage": {
+    "40.5_signals": 8,
+    "40.6_conditions": 8,
+    "40.6_diagnoses": 8,
+    "40.7_intelligence": 8,
+    "40.8_delivery_intelligence": 8,
+    "40.9_feedback_entities": 8,
+    "40.10_control_entities": 8
+  },
+  "lineage_breaks": [],
+  "state_mismatches": [],
+  "missing_links": []
+}

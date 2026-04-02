@@ -1,0 +1,132 @@
+{
+  "run_id": "CE.2-R01-MIX",
+  "source_basis": "runs/pios/ce2/CE.2-R01-MIX/input/telemetry_stress_input.json",
+  "coverage": "100%",
+  "stress_events_applied": [
+    "CE2-EVT-001",
+    "CE2-EVT-002",
+    "CE2-EVT-003"
+  ],
+  "fields": {
+    "signals.SIG-001.signal_id": {
+      "source_file": "telemetry_stress_input.json",
+      "lineage": "compute_signals.py::SIG-001",
+      "stress_modified": false
+    },
+    "signals.SIG-001.state": {
+      "source_file": "telemetry_stress_input.json",
+      "lineage": "compute_signals.py::SIG-001",
+      "stress_modified": false
+    },
+    "signals.SIG-001.output": {
+      "source_file": "telemetry_stress_input.json",
+      "lineage": "compute_signals.py::SIG-001",
+      "stress_modified": false
+    },
+    "signals.SIG-002.signal_id": {
+      "source_file": "telemetry_stress_input.json",
+      "lineage": "compute_signals.py::SIG-002",
+      "stress_modified": true
+    },
+    "signals.SIG-002.state": {
+      "source_file": "telemetry_stress_input.json",
+      "lineage": "compute_signals.py::SIG-002",
+      "stress_modified": true
+    },
+    "signals.SIG-002.output": {
+      "source_file": "telemetry_stress_input.json",
+      "lineage": "compute_signals.py::SIG-002",
+      "stress_modified": true
+    },
+    "signals.SIG-003.signal_id": {
+      "source_file": "telemetry_stress_input.json",
+      "lineage": "compute_signals.py::SIG-003",
+      "stress_modified": true
+    },
+    "signals.SIG-003.state": {
+      "source_file": "telemetry_stress_input.json",
+      "lineage": "compute_signals.py::SIG-003",
+      "stress_modified": true
+    },
+    "signals.SIG-003.output": {
+      "source_file": "telemetry_stress_input.json",
+      "lineage": "compute_signals.py::SIG-003",
+      "stress_modified": true
+    },
+    "signals.SIG-004.signal_id": {
+      "source_file": "telemetry_stress_input.json",
+      "lineage": "compute_signals.py::SIG-004",
+      "stress_modified": false
+    },
+    "signals.SIG-004.state": {
+      "source_file": "telemetry_stress_input.json",
+      "lineage": "compute_signals.py::SIG-004",
+      "stress_modified": false
+    },
+    "signals.SIG-004.output": {
+      "source_file": "telemetry_stress_input.json",
+      "lineage": "compute_signals.py::SIG-004",
+      "stress_modified": false
+    },
+    "signals.SIG-005.signal_id": {
+      "source_file": "telemetry_stress_input.json",
+      "lineage": "compute_signals.py::SIG-005",
+      "stress_modified": true
+    },
+    "signals.SIG-005.state": {
+      "source_file": "telemetry_stress_input.json",
+      "lineage": "compute_signals.py::SIG-005",
+      "stress_modified": true
+    },
+    "signals.SIG-005.output": {
+      "source_file": "telemetry_stress_input.json",
+      "lineage": "compute_signals.py::SIG-005",
+      "stress_modified": true
+    },
+    "signals.SIG-006.signal_id": {
+      "source_file": "telemetry_stress_input.json",
+      "lineage": "compute_signals.py::SIG-006",
+      "stress_modified": false
+    },
+    "signals.SIG-006.state": {
+      "source_file": "telemetry_stress_input.json",
+      "lineage": "compute_signals.py::SIG-006",
+      "stress_modified": false
+    },
+    "signals.SIG-006.output": {
+      "source_file": "telemetry_stress_input.json",
+      "lineage": "compute_signals.py::SIG-006",
+      "stress_modified": false
+    },
+    "signals.SIG-007.signal_id": {
+      "source_file": "telemetry_stress_input.json",
+      "lineage": "compute_signals.py::SIG-007",
+      "stress_modified": false
+    },
+    "signals.SIG-007.state": {
+      "source_file": "telemetry_stress_input.json",
+      "lineage": "compute_signals.py::SIG-007",
+      "stress_modified": false
+    },
+    "signals.SIG-007.output": {
+      "source_file": "telemetry_stress_input.json",
+      "lineage": "compute_signals.py::SIG-007",
+      "stress_modified": false
+    },
+    "signals.SIG-008.signal_id": {
+      "source_file": "telemetry_stress_input.json",
+      "lineage": "compute_signals.py::SIG-008",
+      "stress_modified": false
+    },
+    "signals.SIG-008.state": {
+      "source_file": "telemetry_stress_input.json",
+      "lineage": "compute_signals.py::SIG-008",
+      "stress_modified": false
+    },
+    "signals.SIG-008.output": {
+      "source_file": "telemetry_stress_input.json",
+      "lineage": "compute_signals.py::SIG-008",
+      "stress_modified": false
+    }
+  }
+}

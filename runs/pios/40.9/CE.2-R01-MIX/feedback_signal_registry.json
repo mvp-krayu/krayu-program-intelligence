@@ -1,0 +1,80 @@
+{
+  "run_id": "CE.2-R01-MIX",
+  "stream": "40.9",
+  "comparison": {
+    "baseline_run": "run_01_delivery_packaging",
+    "current_run": "CE.2-R01-MIX"
+  },
+  "signals": [
+    {
+      "entity_id": "INTEL-001",
+      "classification": "NO_CHANGE",
+      "baseline_state": "synthesized",
+      "current_state": "synthesized",
+      "state_field": "synthesis_state",
+      "source": "40.8_delivery_packet"
+    },
+    {
+      "entity_id": "INTEL-002",
+      "classification": "NO_CHANGE",
+      "baseline_state": "synthesized",
+      "current_state": "synthesized",
+      "state_field": "synthesis_state",
+      "source": "40.8_delivery_packet"
+    },
+    {
+      "entity_id": "INTEL-003",
+      "classification": "NO_CHANGE",
+      "baseline_state": "partial",
+      "current_state": "partial",
+      "state_field": "synthesis_state",
+      "source": "40.8_delivery_packet"
+    },
+    {
+      "entity_id": "INTEL-004",
+      "classification": "NO_CHANGE",
+      "baseline_state": "partial",
+      "current_state": "partial",
+      "state_field": "synthesis_state",
+      "source": "40.8_delivery_packet"
+    },
+    {
+      "entity_id": "INTEL-005",
+      "classification": "NO_CHANGE",
+      "baseline_state": "blocked",
+      "current_state": "blocked",
+      "state_field": "synthesis_state",
+      "source": "40.8_delivery_packet"
+    },
+    {
+      "entity_id": "INTEL-006",
+      "classification": "NO_CHANGE",
+      "baseline_state": "blocked",
+      "current_state": "blocked",
+      "state_field": "synthesis_state",
+      "source": "40.8_delivery_packet"
+    },
+    {
+      "entity_id": "INTEL-007",
+      "classification": "NO_CHANGE",
+      "baseline_state": "partial",
+      "current_state": "partial",
+      "state_field": "synthesis_state",
+      "source": "40.8_delivery_packet"
+    },
+    {
+      "entity_id": "INTEL-008",
+      "classification": "NO_CHANGE",
+      "baseline_state": "partial",
+      "current_state": "partial",
+      "state_field": "synthesis_state",
+      "source": "40.8_delivery_packet"
+    }
+  ],
+  "classification_summary": {
+    "NO_CHANGE": 8,
+    "STATE_CHANGE": 0,
+    "ADDED": 0,
+    "REMOVED": 0
+  }
+}

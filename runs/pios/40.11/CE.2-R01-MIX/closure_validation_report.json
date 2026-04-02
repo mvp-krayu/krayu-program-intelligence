@@ -1,0 +1,11 @@
+{
+  "run_id": "CE.2-R01-MIX",
+  "chain_presence": "PASS",
+  "lineage_continuity": "PASS",
+  "state_preservation": "PASS",
+  "delivery_losslessness": "PASS",
+  "feedback_consistency": "PASS",
+  "control_consistency": "PASS",
+  "governance_compliance": "PASS",
+  "overall_status": "PASS"
+}

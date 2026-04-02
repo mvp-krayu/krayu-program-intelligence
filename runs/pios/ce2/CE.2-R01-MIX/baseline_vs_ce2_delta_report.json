@@ -1,0 +1,142 @@
+{
+  "run_id": "CE.2-R01-MIX",
+  "stream": "CE.2",
+  "comparison": {
+    "baseline_tag": "pios-core-v0.1",
+    "baseline_commit": "c069f3ebe1c975ba9f7ae7f85f6ba3e8c6f431c4",
+    "baseline_signal_run": "runs/pios/40.5/run_03_executable",
+    "ce2_signal_run": "runs/pios/40.5/CE.2-R01-MIX"
+  },
+  "stress_events_applied": [
+    "CE2-EVT-001",
+    "CE2-EVT-002",
+    "CE2-EVT-003"
+  ],
+  "layer_deltas": {
+    "40.5": {
+      "delta_detected": true,
+      "changed_signals": {
+        "SIG-002": {
+          "dependency_edge_count": {
+            "baseline": 15,
+            "ce2": 17,
+            "delta": 2
+          },
+          "dependency_load_ratio": {
+            "baseline": 0.682,
+            "ce2": 0.773,
+            "delta": 0.091
+          },
+          "state": {
+            "baseline": "COMPLETE",
+            "ce2": "COMPLETE",
+            "changed": false
+          }
+        },
+        "SIG-005": {
+          "pipeline_stages_per_run": {
+            "baseline": 8,
+            "ce2": 14,
+            "delta": 6
+          },
+          "throughput_rate": {
+            "baseline": 1.125,
+            "ce2": 0.643,
+            "delta": -0.482
+          },
+          "state": {
+            "baseline": "PARTIAL",
+            "ce2": "PARTIAL",
+            "changed": false
+          }
+        },
+        "SIG-003": {
+          "state": {
+            "baseline": "BLOCKED",
+            "ce2": "BLOCKED",
+            "changed": false
+          },
+          "structural_change": "blocking_inputs/blocking_reason keys absent in CE.2 output (second branch taken when AT-001/AT-002 provided)"
+        }
+      },
+      "state_changes": 0,
+      "value_changes": 2
+    },
+    "40.6": {
+      "delta_detected": true,
+      "changed_conditions": {
+        "COND-001": {
+          "dependency_load_ratio": {
+            "baseline": 0.682,
+            "ce2": 0.773
+          },
+          "state": "complete (unchanged)"
+        },
+        "COND-004": {
+          "throughput_rate": {
+            "baseline": 1.125,
+            "ce2": 0.643
+          },
+          "state": "partial (unchanged)"
+        }
+      },
+      "state_changes": 0,
+      "value_changes": 2
+    },
+    "40.7": {
+      "delta_detected": true,
+      "changed_intel": {
+        "INTEL-001": {
+          "dependency_load_ratio": {
+            "baseline": 0.682,
+            "ce2": 0.773
+          },
+          "synthesis_state": "synthesized (unchanged)"
+        },
+        "INTEL-004": {
+          "throughput_rate": {
+            "baseline": 1.125,
+            "ce2": 0.643
+          },
+          "synthesis_state": "partial (unchanged)"
+        }
+      },
+      "state_changes": 0,
+      "value_changes": 2,
+      "schema_drift": false
+    },
+    "40.8": {
+      "delta_detected": true,
+      "losslessness": "PASS",
+      "note": "CE.2 delivery carries perturbed values exactly; synthesis_states unchanged"
+    },
+    "40.9": {
+      "delta_detected": false,
+      "NO_CHANGE": 8,
+      "STATE_CHANGE": 0,
+      "ADDED": 0,
+      "REMOVED": 0,
+      "note": "All synthesis_states identical between baseline and CE.2 delivery; engine hardcodes synthesis_states \u2014 telemetry perturbation does not propagate to state level"
+    },
+    "40.10": {
+      "delta_detected": false,
+      "NO_ACTION": 8,
+      "REVIEW_REQUIRED": 0,
+      "REGISTER_ENTITY": 0,
+      "DEREGISTER_ENTITY": 0,
+      "note": "No STATE_CHANGE in 40.9 \u2192 all directives NO_ACTION"
+    }
+  },
+  "governance_finding": {
+    "finding_id": "CE2-FINDING-001",
+    "description": "v0.1 engine synthesis_states are invariant to 40.4 telemetry perturbation. The engine hardcodes condition_coverage_state in activate_conditions.py activation functions. compute_sig_003 returns BLOCKED regardless of AT-001/AT-002 input values. Therefore 40.9 feedback and 40.10 control layers cannot be activated through 40.4 telemetry injection with the current engine architecture.",
+    "affected_assertions": [
+      5,
+      6,
+      7,
+      8
+    ],
+    "root_cause": "hardcoded_state_propagation_in_v0.1_engine",
+    "resolution_path": "CE.2_LAYER_RULESET.md \u00a7 40.6 specifies threshold-based condition activation using signal values \u2014 a threshold-aware engine would satisfy assertions 5-8"
+  }
+}

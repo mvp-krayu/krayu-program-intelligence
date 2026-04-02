@@ -1,0 +1,62 @@
+{
+  "contract_id": "CE.2-R01-MIX",
+  "status": "FAIL",
+  "stream": "CE.2",
+  "run_type": "MIXED STRESS (STRUCTURAL + TEMPORAL + STATE)",
+  "baseline_tag": "pios-core-v0.1",
+  "baseline_commit": "c069f3ebe1c975ba9f7ae7f85f6ba3e8c6f431c4",
+  "branch": "feature/ce2-r01-mix",
+  "execution_chain": {
+    "40.5": "PASS",
+    "40.6": "PASS",
+    "40.7": "PASS",
+    "40.8": "PASS",
+    "40.9": "PASS (executed; assertions 5-6 FAIL)",
+    "40.10": "PASS (executed; assertions 7-8 FAIL)",
+    "40.11": "PASS (chain_status=PASS, closure_status=CLOSED)"
+  },
+  "assertions": {
+    "1_40.5_ne_baseline": "PASS",
+    "2_40.6_ne_baseline": "PASS",
+    "3_40.7_ne_baseline_no_drift": "PASS",
+    "4_40.8_losslessness": "PASS",
+    "5_40.9_nonzero_change": "FAIL",
+    "6_40.9_state_change": "FAIL",
+    "7_40.10_not_no_action": "FAIL",
+    "8_40.10_review_required": "FAIL",
+    "9_40.11_pass": "PASS",
+    "10_baseline_unchanged": "PASS",
+    "11_engines_unchanged": "PASS",
+    "12_deltas_traceable": "PARTIAL (value-level: PASS; state-level: FAIL \u2014 architectural)"
+  },
+  "fail_reason": "Assertions 5, 6, 7, 8 violated. FAIL_CLOSED rule applies.",
+  "governance_finding": "CE2-FINDING-001: v0.1 engine synthesis_states are invariant to 40.4 telemetry perturbation. Hardcoded condition_coverage_state in activate_conditions.py functions. compute_sig_003 always returns BLOCKED. 40.9 feedback and 40.10 control unreachable via telemetry-only injection.",
+  "rules_enforced": [
+    "no_engine_modification",
+    "no_baseline_modification",
+    "cloned_telemetry_only",
+    "no_heuristic_or_ai_logic",
+    "no_post_processing",
+    "deterministic_execution",
+    "traceability_absolute",
+    "fail_closed"
+  ],
+  "stress_events": [
+    {
+      "event_id": "CE2-EVT-001",
+      "status": "INJECTED",
+      "effect": "value_change_only"
+    },
+    {
+      "event_id": "CE2-EVT-002",
+      "status": "INJECTED",
+      "effect": "value_change_only"
+    },
+    {
+      "event_id": "CE2-EVT-003",
+      "status": "INJECTED",
+      "effect": "engine_blocked_unchanged"
+    }
+  ],
+  "timestamp": "2026-04-02T11:00:13Z"
+}

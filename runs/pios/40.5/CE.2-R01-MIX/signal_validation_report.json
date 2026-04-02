@@ -1,0 +1,89 @@
+{
+  "run_id": "CE.2-R01-MIX",
+  "source_basis": "runs/pios/40.5/run_02_ce_validation/",
+  "parity_check_against_run_02": "N/A (CE.2 stress run \u2014 values intentionally perturbed)",
+  "state_match": "PASS",
+  "blocked_preservation": "PASS",
+  "partial_preservation": "PASS",
+  "traceability_coverage": "PASS",
+  "losslessness_status": "PASS",
+  "unexpected_fields": [],
+  "mismatch_details": [],
+  "state_checks": [
+    {
+      "signal_id": "SIG-001",
+      "expected": "PARTIAL",
+      "actual": "PARTIAL",
+      "match": true
+    },
+    {
+      "signal_id": "SIG-002",
+      "expected": "COMPLETE",
+      "actual": "COMPLETE",
+      "match": true
+    },
+    {
+      "signal_id": "SIG-003",
+      "expected": "BLOCKED",
+      "actual": "BLOCKED",
+      "match": true
+    },
+    {
+      "signal_id": "SIG-004",
+      "expected": "COMPLETE",
+      "actual": "COMPLETE",
+      "match": true
+    },
+    {
+      "signal_id": "SIG-005",
+      "expected": "PARTIAL",
+      "actual": "PARTIAL",
+      "match": true
+    },
+    {
+      "signal_id": "SIG-006",
+      "expected": "BLOCKED",
+      "actual": "BLOCKED",
+      "match": true
+    },
+    {
+      "signal_id": "SIG-007",
+      "expected": "PARTIAL",
+      "actual": "PARTIAL",
+      "match": true
+    },
+    {
+      "signal_id": "SIG-008",
+      "expected": "PARTIAL",
+      "actual": "PARTIAL",
+      "match": true
+    }
+  ],
+  "stress_events_applied": [
+    "CE2-EVT-001",
+    "CE2-EVT-002",
+    "CE2-EVT-003"
+  ],
+  "value_changes": {
+    "SIG-002.dependency_edge_count": {
+      "baseline": 15,
+      "ce2": 17
+    },
+    "SIG-002.dependency_load_ratio": {
+      "baseline": 0.682,
+      "ce2": 0.773
+    },
+    "SIG-005.pipeline_stages_per_run": {
+      "baseline": 8,
+      "ce2": 14
+    },
+    "SIG-005.throughput_rate": {
+      "baseline": 1.125,
+      "ce2": 0.643
+    },
+    "SIG-003.blocking_inputs_key": {
+      "baseline": "present",
+      "ce2": "absent (AT-001/AT-002 provided, second branch taken)"
+    }
+  }
+}

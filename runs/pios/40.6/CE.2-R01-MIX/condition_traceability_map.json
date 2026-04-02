@@ -1,0 +1,45 @@
+{
+  "run_id": "CE.2-R01-MIX",
+  "stream": "40.6",
+  "source_basis": "runs/pios/40.5/CE.2-R01-MIX/signal_output.json",
+  "coverage": "100%",
+  "stress_events_propagated": [
+    "CE2-EVT-001",
+    "CE2-EVT-002",
+    "CE2-EVT-003"
+  ],
+  "condition_sources": {
+    "COND-001": {
+      "governing_signal": "SIG-002",
+      "signal_state": "COMPLETE"
+    },
+    "COND-002": {
+      "governing_signal": "SIG-004",
+      "signal_state": "COMPLETE"
+    },
+    "COND-003": {
+      "governing_signal": "SIG-001",
+      "signal_state": "PARTIAL"
+    },
+    "COND-004": {
+      "governing_signal": "SIG-005",
+      "signal_state": "PARTIAL"
+    },
+    "COND-005": {
+      "governing_signal": "SIG-003",
+      "signal_state": "BLOCKED"
+    },
+    "COND-006": {
+      "governing_signal": "SIG-006",
+      "signal_state": "BLOCKED"
+    },
+    "COND-007": {
+      "governing_signal": "SIG-007",
+      "signal_state": "PARTIAL"
+    },
+    "COND-008": {
+      "governing_signal": "SIG-008",
+      "signal_state": "PARTIAL"
+    }
+  }
+}

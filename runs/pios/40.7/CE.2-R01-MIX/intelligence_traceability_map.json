@@ -1,0 +1,53 @@
+{
+  "run_id": "CE.2-R01-MIX",
+  "stream": "40.7",
+  "source_basis": "runs/pios/40.6/CE.2-R01-MIX/condition_output.json",
+  "coverage": "100%",
+  "stress_events_propagated": [
+    "CE2-EVT-001",
+    "CE2-EVT-002",
+    "CE2-EVT-003"
+  ],
+  "entity_sources": {
+    "INTEL-001": {
+      "source_diagnosis": "DIAG-001",
+      "synthesis_state": "synthesized",
+      "origin": "40.6/CE.2-R01-MIX/condition_output.json"
+    },
+    "INTEL-002": {
+      "source_diagnosis": "DIAG-002",
+      "synthesis_state": "synthesized",
+      "origin": "40.6/CE.2-R01-MIX/condition_output.json"
+    },
+    "INTEL-003": {
+      "source_diagnosis": "DIAG-003",
+      "synthesis_state": "partial",
+      "origin": "40.6/CE.2-R01-MIX/condition_output.json"
+    },
+    "INTEL-004": {
+      "source_diagnosis": "DIAG-004",
+      "synthesis_state": "partial",
+      "origin": "40.6/CE.2-R01-MIX/condition_output.json"
+    },
+    "INTEL-005": {
+      "source_diagnosis": "DIAG-005",
+      "synthesis_state": "blocked",
+      "origin": "40.6/CE.2-R01-MIX/condition_output.json"
+    },
+    "INTEL-006": {
+      "source_diagnosis": "DIAG-006",
+      "synthesis_state": "blocked",
+      "origin": "40.6/CE.2-R01-MIX/condition_output.json"
+    },
+    "INTEL-007": {
+      "source_diagnosis": "DIAG-007",
+      "synthesis_state": "partial",
+      "origin": "40.6/CE.2-R01-MIX/condition_output.json"
+    },
+    "INTEL-008": {
+      "source_diagnosis": "DIAG-008",
+      "synthesis_state": "partial",
+      "origin": "40.6/CE.2-R01-MIX/condition_output.json"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "run_id": "CE.2-R01-MIX",
+  "chain_status": "PASS",
+  "layers_checked": [
+    "40.5",
+    "40.6",
+    "40.7",
+    "40.8",
+    "40.9",
+    "40.10"
+  ],
+  "closure_status": "CLOSED",
+  "blocking_issues": []
+}

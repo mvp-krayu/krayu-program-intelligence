@@ -1,0 +1,77 @@
+{
+  "run_id": "CE.2-R01-MIX",
+  "stream": "40.10",
+  "source_run": "CE.2-R01-MIX",
+  "directives": [
+    {
+      "entity_id": "INTEL-001",
+      "directive_type": "NO_ACTION",
+      "source_change_type": "NO_CHANGE",
+      "baseline_state": "synthesized",
+      "current_state": "synthesized",
+      "origin_run": "40.9/run_01_feedback_registry"
+    },
+    {
+      "entity_id": "INTEL-002",
+      "directive_type": "NO_ACTION",
+      "source_change_type": "NO_CHANGE",
+      "baseline_state": "synthesized",
+      "current_state": "synthesized",
+      "origin_run": "40.9/run_01_feedback_registry"
+    },
+    {
+      "entity_id": "INTEL-003",
+      "directive_type": "NO_ACTION",
+      "source_change_type": "NO_CHANGE",
+      "baseline_state": "partial",
+      "current_state": "partial",
+      "origin_run": "40.9/run_01_feedback_registry"
+    },
+    {
+      "entity_id": "INTEL-004",
+      "directive_type": "NO_ACTION",
+      "source_change_type": "NO_CHANGE",
+      "baseline_state": "partial",
+      "current_state": "partial",
+      "origin_run": "40.9/run_01_feedback_registry"
+    },
+    {
+      "entity_id": "INTEL-005",
+      "directive_type": "NO_ACTION",
+      "source_change_type": "NO_CHANGE",
+      "baseline_state": "blocked",
+      "current_state": "blocked",
+      "origin_run": "40.9/run_01_feedback_registry"
+    },
+    {
+      "entity_id": "INTEL-006",
+      "directive_type": "NO_ACTION",
+      "source_change_type": "NO_CHANGE",
+      "baseline_state": "blocked",
+      "current_state": "blocked",
+      "origin_run": "40.9/run_01_feedback_registry"
+    },
+    {
+      "entity_id": "INTEL-007",
+      "directive_type": "NO_ACTION",
+      "source_change_type": "NO_CHANGE",
+      "baseline_state": "partial",
+      "current_state": "partial",
+      "origin_run": "40.9/run_01_feedback_registry"
+    },
+    {
+      "entity_id": "INTEL-008",
+      "directive_type": "NO_ACTION",
+      "source_change_type": "NO_CHANGE",
+      "baseline_state": "partial",
+      "current_state": "partial",
+      "origin_run": "40.9/run_01_feedback_registry"
+    }
+  ],
+  "directive_summary": {
+    "NO_ACTION": 8,
+    "REVIEW_REQUIRED": 0,
+    "REGISTER_ENTITY": 0,
+    "DEREGISTER_ENTITY": 0
+  }
+}

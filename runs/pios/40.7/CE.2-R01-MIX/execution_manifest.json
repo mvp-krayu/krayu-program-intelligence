@@ -1,0 +1,24 @@
+{
+  "contract_id": "CE.2-R01-MIX",
+  "status": "PASS",
+  "engine": "pios/core/v0.1/engine/synthesize_intelligence.py",
+  "condition_input": "runs/pios/40.6/CE.2-R01-MIX/condition_output.json",
+  "output_target": "runs/pios/40.7/CE.2-R01-MIX",
+  "lineage_type": "ce2_stress_run",
+  "synthesized": [
+    "INTEL-001",
+    "INTEL-002"
+  ],
+  "partial": [
+    "INTEL-003",
+    "INTEL-004",
+    "INTEL-007",
+    "INTEL-008"
+  ],
+  "blocked": [
+    "INTEL-005",
+    "INTEL-006"
+  ],
+  "intelligence_output_completeness": "PARTIAL",
+  "timestamp": "2026-04-02T10:58:24Z"
+}

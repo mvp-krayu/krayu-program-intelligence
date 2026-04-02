@@ -1,0 +1,78 @@
+{
+  "run_id": "CE.2-R01-MIX",
+  "stream": "40.7",
+  "all_entities_valid": "PASS",
+  "state_propagation": "PASS",
+  "no_schema_drift": "PASS",
+  "traceability_coverage": "PASS",
+  "validation_status": "PASS",
+  "intelligence_checks": [
+    {
+      "intel_id": "INTEL-001",
+      "synthesis_state": "synthesized",
+      "valid": true
+    },
+    {
+      "intel_id": "INTEL-002",
+      "synthesis_state": "synthesized",
+      "valid": true
+    },
+    {
+      "intel_id": "INTEL-003",
+      "synthesis_state": "partial",
+      "valid": true
+    },
+    {
+      "intel_id": "INTEL-004",
+      "synthesis_state": "partial",
+      "valid": true
+    },
+    {
+      "intel_id": "INTEL-005",
+      "synthesis_state": "blocked",
+      "valid": true
+    },
+    {
+      "intel_id": "INTEL-006",
+      "synthesis_state": "blocked",
+      "valid": true
+    },
+    {
+      "intel_id": "INTEL-007",
+      "synthesis_state": "partial",
+      "valid": true
+    },
+    {
+      "intel_id": "INTEL-008",
+      "synthesis_state": "partial",
+      "valid": true
+    }
+  ],
+  "synthesis_summary": {
+    "synthesized": [
+      "INTEL-001",
+      "INTEL-002"
+    ],
+    "partial": [
+      "INTEL-003",
+      "INTEL-004",
+      "INTEL-007",
+      "INTEL-008"
+    ],
+    "blocked": [
+      "INTEL-005",
+      "INTEL-006"
+    ]
+  },
+  "value_changes": {
+    "INTEL-001.components.dependency_load_ratio": {
+      "baseline": 0.682,
+      "ce2": 0.773
+    },
+    "INTEL-004.components.throughput_rate": {
+      "baseline": 1.125,
+      "ce2": 0.643
+    }
+  },
+  "state_changes": "NONE \u2014 synthesis_states are invariant in v0.1 engine (hardcoded from condition_coverage_state mappings)"
+}

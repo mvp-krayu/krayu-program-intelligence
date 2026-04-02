@@ -1,0 +1,108 @@
+{
+  "run_id": "CE.2-R01-MIX",
+  "stream": "40.6",
+  "all_conditions_valid": "PASS",
+  "all_diagnoses_valid": "PASS",
+  "state_propagation": "PASS",
+  "no_extra_fields": "PASS",
+  "traceability_coverage": "PASS",
+  "validation_status": "PASS",
+  "condition_checks": [
+    {
+      "condition_id": "COND-001",
+      "state": "complete",
+      "valid": true
+    },
+    {
+      "condition_id": "COND-002",
+      "state": "complete",
+      "valid": true
+    },
+    {
+      "condition_id": "COND-003",
+      "state": "partial",
+      "valid": true
+    },
+    {
+      "condition_id": "COND-004",
+      "state": "partial",
+      "valid": true
+    },
+    {
+      "condition_id": "COND-005",
+      "state": "blocked",
+      "valid": true
+    },
+    {
+      "condition_id": "COND-006",
+      "state": "blocked",
+      "valid": true
+    },
+    {
+      "condition_id": "COND-007",
+      "state": "partial",
+      "valid": true
+    },
+    {
+      "condition_id": "COND-008",
+      "state": "partial",
+      "valid": true
+    }
+  ],
+  "diagnosis_checks": [
+    {
+      "diagnosis_id": "DIAG-001",
+      "state": "active",
+      "valid": true
+    },
+    {
+      "diagnosis_id": "DIAG-002",
+      "state": "active",
+      "valid": true
+    },
+    {
+      "diagnosis_id": "DIAG-003",
+      "state": "partial",
+      "valid": true
+    },
+    {
+      "diagnosis_id": "DIAG-004",
+      "state": "partial",
+      "valid": true
+    },
+    {
+      "diagnosis_id": "DIAG-005",
+      "state": "blocked",
+      "valid": true
+    },
+    {
+      "diagnosis_id": "DIAG-006",
+      "state": "blocked",
+      "valid": true
+    },
+    {
+      "diagnosis_id": "DIAG-007",
+      "state": "partial",
+      "valid": true
+    },
+    {
+      "diagnosis_id": "DIAG-008",
+      "state": "partial",
+      "valid": true
+    }
+  ],
+  "value_changes": {
+    "COND-001.dependency_load_ratio": {
+      "baseline": 0.682,
+      "ce2": 0.773
+    },
+    "COND-001.dependency_edge_count": {
+      "baseline": 15,
+      "ce2": 17
+    },
+    "COND-004.throughput_rate": {
+      "baseline": 1.125,
+      "ce2": 0.643
+    }
+  }
+}
