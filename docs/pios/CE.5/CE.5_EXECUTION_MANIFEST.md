@@ -16,7 +16,7 @@
 | single_signal_consumption_rules.md | CONSUMPTION RULES | COMPLETE |
 | propagation_semantics.md | PROPAGATION SPECIFICATION | COMPLETE |
 | propagation_boundary_enforcement.md | BOUNDARY ENFORCEMENT | COMPLETE |
-| consumption_traceability_model.md | TRACEABILITY MODEL | COMPLETE |
+| consumption_traceability_model.md | TRACEABILITY MODEL | COMPLETE — PATCHED: structural gap trace rule added |
 | CE.5_EXECUTION_MANIFEST.md | EXECUTION MANIFEST | COMPLETE |
 
 ---
