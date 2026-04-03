@@ -80,19 +80,108 @@ SIGNAL_TO_CONDITION_STATE = {
 }
 
 # CE.2 DEC-014 governed tier → diagnosis state mapping
-# CE.6 gaps: GAP-P-003, GAP-P-004 — CE.7 R-005
-# Note: DEC-009 tier derivation (binding rules DEC-012/DEC-013) deferred to CE.9.
-# Interim CE.5 consumption state keys active until tier derivation is implemented.
+# CE.6 gaps: GAP-P-003, GAP-P-004 — CE.10 closure
+# Input: DEC-009/DEC-011 tier value (BLOCKED/DEGRADED/AT_RISK/STABLE)
+# CE.8 interim AVAILABLE/PARTIAL shim entries removed — CE.9 supersession rule applied.
 CONDITION_TO_DIAGNOSIS_STATE = {
-    # CE.2 DEC-014 governed tier mappings (for future DEC-009 tier derivation)
-    "BLOCKED":   "BLOCKED",
-    "DEGRADED":  "ACTIVE",
-    "AT_RISK":   "ACTIVE",
-    "STABLE":    "INACTIVE",
-    # Interim CE.5 consumption state mappings (pending DEC-009 tier derivation)
-    "AVAILABLE": "ACTIVE",    # interim: fully present signal → active diagnosis
-    "PARTIAL":   "ACTIVE",    # interim: partial signal → active (conservative)
+    "BLOCKED":   "BLOCKED",   # DEC-014
+    "DEGRADED":  "ACTIVE",    # DEC-014
+    "AT_RISK":   "ACTIVE",    # DEC-014
+    "STABLE":    "INACTIVE",  # DEC-014
 }
+
+# ---------------------------------------------------------------------------
+# DEC-013 governed binding rule definitions — CE.10
+# Every binding_rule_id resolves to a value-reactive rule specification.
+# Fields: binding_rule_id, signal_field, evaluation_type, evaluation_logic,
+#         output_tier, null_handling — DEC-013 minimum specification.
+# ---------------------------------------------------------------------------
+
+BINDING_RULES = {
+    "BR-NULL-SIGNAL-BLOCKED": {
+        "binding_rule_id":  "BR-NULL-SIGNAL-BLOCKED",
+        "signal_field":     "output",
+        "evaluation_type":  "NULL_CHECK",
+        "evaluation_logic": "if output is None → BLOCKED",
+        "output_tier":      {"null": "BLOCKED"},
+        "null_handling":    "None is the trigger; always → BLOCKED",
+    },
+    "BR-DEP-LOAD-RATIO-001": {
+        "binding_rule_id":  "BR-DEP-LOAD-RATIO-001",
+        "signal_field":     "dependency_load_ratio",
+        "evaluation_type":  "BASELINE_THRESHOLD_ABOVE",
+        "evaluation_logic": "if value > 0.682 → AT_RISK; else → STABLE",
+        "output_tier":      {"above": "AT_RISK", "at_or_below": "STABLE"},
+        "threshold":        0.682,
+        "null_handling":    "None → BLOCKED",
+    },
+    "BR-EDGE-DENSITY-001": {
+        "binding_rule_id":  "BR-EDGE-DENSITY-001",
+        "signal_field":     "total_edge_density",
+        "evaluation_type":  "BASELINE_THRESHOLD_ABOVE",
+        "evaluation_logic": "if value > 1.273 → AT_RISK; else → STABLE",
+        "output_tier":      {"above": "AT_RISK", "at_or_below": "STABLE"},
+        "threshold":        1.273,
+        "null_handling":    "None → BLOCKED",
+    },
+    "BR-STRUCTURAL-RATIO-001": {
+        "binding_rule_id":  "BR-STRUCTURAL-RATIO-001",
+        "signal_field":     "static_structural_ratio",
+        "evaluation_type":  "BASELINE_THRESHOLD_ABOVE",
+        "evaluation_logic": "if value > 0.875 → AT_RISK; else → STABLE",
+        "output_tier":      {"above": "AT_RISK", "at_or_below": "STABLE"},
+        "threshold":        0.875,
+        "null_handling":    "None → BLOCKED",
+    },
+    "BR-COORD-PRESSURE-001": {
+        "binding_rule_id":  "BR-COORD-PRESSURE-001",
+        "signal_field":     "sig_001_coordination_pressure_component",
+        "evaluation_type":  "BASELINE_THRESHOLD_ABOVE",
+        "evaluation_logic": "if value > 0.875 → AT_RISK; else → STABLE",
+        "output_tier":      {"above": "AT_RISK", "at_or_below": "STABLE"},
+        "threshold":        0.875,
+        "null_handling":    "None → BLOCKED",
+    },
+    "BR-THROUGHPUT-RATE-001": {
+        "binding_rule_id":  "BR-THROUGHPUT-RATE-001",
+        "signal_field":     "throughput_rate",
+        "evaluation_type":  "BASELINE_THRESHOLD_BELOW",
+        "evaluation_logic": "if value < 1.125 → AT_RISK; else → STABLE",
+        "output_tier":      {"below": "AT_RISK", "at_or_above": "STABLE"},
+        "threshold":        1.125,
+        "null_handling":    "None → BLOCKED",
+    },
+    "BR-HEALTH-DEP-COMP-001": {
+        "binding_rule_id":  "BR-HEALTH-DEP-COMP-001",
+        "signal_field":     "sig_002_dependency_load_component",
+        "evaluation_type":  "BASELINE_THRESHOLD_ABOVE",
+        "evaluation_logic": "if value > 0.682 → AT_RISK; else → STABLE",
+        "output_tier":      {"above": "AT_RISK", "at_or_below": "STABLE"},
+        "threshold":        0.682,
+        "null_handling":    "None → BLOCKED",
+    },
+}
+
+# ---------------------------------------------------------------------------
+# DEC-012 binding surface — CE.10
+# Governed table: (condition_id, signal_id, signal_field, binding_rule_id)
+# 8-row baseline: one binding row per condition (CE.2 baseline configuration).
+# Determinism from governed rule evaluation — not from row order.
+# ---------------------------------------------------------------------------
+
+BINDING_SURFACE = [
+    {"condition_id": "COND-001", "signal_id": "SIG-002", "signal_field": "dependency_load_ratio",                  "binding_rule_id": "BR-DEP-LOAD-RATIO-001"},
+    {"condition_id": "COND-002", "signal_id": "SIG-004", "signal_field": "total_edge_density",                     "binding_rule_id": "BR-EDGE-DENSITY-001"},
+    {"condition_id": "COND-003", "signal_id": "SIG-001", "signal_field": "static_structural_ratio",                "binding_rule_id": "BR-STRUCTURAL-RATIO-001"},
+    {"condition_id": "COND-004", "signal_id": "SIG-005", "signal_field": "throughput_rate",                        "binding_rule_id": "BR-THROUGHPUT-RATE-001"},
+    {"condition_id": "COND-005", "signal_id": "SIG-003", "signal_field": "output",                                 "binding_rule_id": "BR-NULL-SIGNAL-BLOCKED"},
+    {"condition_id": "COND-006", "signal_id": "SIG-006", "signal_field": "output",                                 "binding_rule_id": "BR-NULL-SIGNAL-BLOCKED"},
+    {"condition_id": "COND-007", "signal_id": "SIG-002", "signal_field": "dependency_load_ratio",                  "binding_rule_id": "BR-DEP-LOAD-RATIO-001"},
+    {"condition_id": "COND-008", "signal_id": "SIG-008", "signal_field": "sig_001_coordination_pressure_component", "binding_rule_id": "BR-COORD-PRESSURE-001"},
+]
+
+# DEC-009 tier order — strict total order; BLOCKED dominates all lower tiers
+TIER_ORDER = {"BLOCKED": 3, "DEGRADED": 2, "AT_RISK": 1, "STABLE": 0}
 
 # ---------------------------------------------------------------------------
 # CVAR_ mapping — condition_input_matrix.md
@@ -381,6 +470,59 @@ def produce_ce5_traceability_records(signals):
 
 
 # ---------------------------------------------------------------------------
+# DEC-009 tier derivation — CE.10 (closes GAP-P-003, GAP-P-004)
+# Per-condition-instance: each condition resolves independently (DEC-006).
+# ---------------------------------------------------------------------------
+
+def _get_field_value(signal, signal_field):
+    """Extract signal field value for binding rule evaluation.
+    For field='output': returns the raw output value (None for BLOCKED signals).
+    For named fields: returns signal['output'][field_name] or None if output is None.
+    """
+    if signal_field == "output":
+        return signal.get("output")
+    output = signal.get("output")
+    if output is None:
+        return None
+    return output.get(signal_field)
+
+
+def _evaluate_rule(rule_id, field_value):
+    """Evaluate one governed binding rule against a field value → exactly one tier.
+    DEC-013: value-reactive; deterministic; one rule → one tier contribution.
+    """
+    rule = BINDING_RULES[rule_id]
+    et = rule["evaluation_type"]
+    if et == "NULL_CHECK":
+        return "BLOCKED" if field_value is None else "STABLE"
+    if field_value is None:
+        return "BLOCKED"                            # null_handling for threshold rules
+    if et == "BASELINE_THRESHOLD_ABOVE":
+        return "AT_RISK" if field_value > rule["threshold"] else "STABLE"
+    if et == "BASELINE_THRESHOLD_BELOW":
+        return "AT_RISK" if field_value < rule["threshold"] else "STABLE"
+    raise ValueError(f"Unknown evaluation_type in rule {rule_id}: {et}")
+
+
+def derive_condition_tier(condition_id, signals):
+    """DEC-009 per-condition-instance tier derivation.
+    1. Collect binding rows for condition_id from BINDING_SURFACE (DEC-012).
+    2. Evaluate each row's binding rule against declared signal field (DEC-013).
+    3. Select max-tier per TIER_ORDER (DEC-009).
+    CE.6 GAP-P-003, GAP-P-004 — CE.9 Decisions 2, 3 — CE.10 closure.
+    """
+    rows = [r for r in BINDING_SURFACE if r["condition_id"] == condition_id]
+    contributions = [
+        _evaluate_rule(
+            row["binding_rule_id"],
+            _get_field_value(signals[row["signal_id"]], row["signal_field"]),
+        )
+        for row in rows
+    ]
+    return max(contributions, key=lambda t: TIER_ORDER[t])
+
+
+# ---------------------------------------------------------------------------
 # Path validation — fail-closed
 # ---------------------------------------------------------------------------
 
@@ -473,6 +615,12 @@ def activate(run_id, signal_input_path, output_path=None):
     conditions = [cond_001, cond_002, cond_003, cond_004,
                   cond_005, cond_006, cond_007, cond_008]
 
+    # DEC-009 tier derivation — per-condition-instance (CE.6 GAP-P-003, GAP-P-004 — CE.10)
+    # Overwrites condition_coverage_state with governed tier value (BLOCKED/DEGRADED/AT_RISK/STABLE).
+    # Inserted between condition activation and diagnosis activation per CE.9 Decision 3.
+    for cond in conditions:
+        cond["condition_coverage_state"] = derive_condition_tier(cond["condition_id"], signals)
+
     # Activate diagnoses — DVAR_ mapping, canonical order DIAG-001..DIAG-008, deterministic
     cond_by_id = {c["condition_id"]: c for c in conditions}
     diag_001 = activate_diag("DIAG-001", cond_by_id["COND-001"])
@@ -487,9 +635,10 @@ def activate(run_id, signal_input_path, output_path=None):
     diagnoses = [diag_001, diag_002, diag_003, diag_004,
                  diag_005, diag_006, diag_007, diag_008]
 
-    # Summaries — CE.5 vocabulary (AVAILABLE/PARTIAL/BLOCKED)
-    cond_available = [c["condition_id"] for c in conditions if c["condition_coverage_state"] == "AVAILABLE"]
-    cond_partial   = [c["condition_id"] for c in conditions if c["condition_coverage_state"] == "PARTIAL"]
+    # Summaries — DEC-009 tier vocabulary (BLOCKED/DEGRADED/AT_RISK/STABLE) — CE.10
+    cond_stable    = [c["condition_id"] for c in conditions if c["condition_coverage_state"] == "STABLE"]
+    cond_at_risk   = [c["condition_id"] for c in conditions if c["condition_coverage_state"] == "AT_RISK"]
+    cond_degraded  = [c["condition_id"] for c in conditions if c["condition_coverage_state"] == "DEGRADED"]
     cond_blocked   = [c["condition_id"] for c in conditions if c["condition_coverage_state"] == "BLOCKED"]
 
     diag_active   = [d["diagnosis_id"] for d in diagnoses if d["diagnosis_activation_state"] == "ACTIVE"]
@@ -507,8 +656,9 @@ def activate(run_id, signal_input_path, output_path=None):
         "conditions": {c["condition_id"]: c for c in conditions},
         "diagnoses":  {d["diagnosis_id"]: d for d in diagnoses},
         "condition_summary": {
-            "AVAILABLE": cond_available,
-            "PARTIAL":   cond_partial,
+            "STABLE":    cond_stable,
+            "AT_RISK":   cond_at_risk,
+            "DEGRADED":  cond_degraded,
             "BLOCKED":   cond_blocked,
         },
         "diagnosis_summary": {
@@ -525,7 +675,7 @@ def activate(run_id, signal_input_path, output_path=None):
     with open(output_path, "w") as f:
         json.dump(output, f, indent=2)
 
-    print(f"conditions  — AVAILABLE: {cond_available}  PARTIAL: {cond_partial}  BLOCKED: {cond_blocked}")
+    print(f"conditions  — STABLE: {cond_stable}  AT_RISK: {cond_at_risk}  DEGRADED: {cond_degraded}  BLOCKED: {cond_blocked}")
     print(f"diagnoses   — ACTIVE:    {diag_active}  INACTIVE: {diag_inactive}  BLOCKED: {diag_blocked}")
     print(f"ce5_traceability: {len(ce5_traceability_records)} records ({sum(1 for r in ce5_traceability_records.values() if r['record_type'] == 'Type 1')} Type 1, {sum(1 for r in ce5_traceability_records.values() if r['record_type'] == 'Type 2')} Type 2)")
     print(f"output: {output_path}")
