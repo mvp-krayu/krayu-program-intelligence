@@ -13,6 +13,7 @@
  *   ?enl=GQ-003                       — ENL chain reveal
  *   ?persona=EXECUTIVE&query=GQ-003   — persona projection
  *   ?status=true                      — semantic path state
+ *   ?pios_live=true                   — live PiOS engine: CE.4/CE.5/CE.2 governed outputs (EX.1A)
  */
 
 import { execFile } from 'child_process'
@@ -31,6 +32,9 @@ const ADAPTER_42_7  = path.join(REPO_ROOT, 'scripts', 'pios', '42.7',  'execlens
 const ADAPTER_42_13 = path.join(REPO_ROOT, 'scripts', 'pios', '42.13', 'demo_activate.py')
 const ADAPTER_42_15 = path.join(REPO_ROOT, 'scripts', 'pios', '42.15', 'enl_console_adapter.py')
 const ADAPTER_42_16 = path.join(REPO_ROOT, 'scripts', 'pios', '42.16', 'persona_view_map.py')
+
+// EX.1A — live PiOS engine binding adapter
+const ADAPTER_EX1A = path.join(REPO_ROOT, 'scripts', 'pios', 'EX.1A', 'pios_live_adapter.py')
 
 function runScript(scriptPath, args, res) {
   execFile('python3', [scriptPath, ...args], { timeout: 30000 }, (err, stdout, stderr) => {
@@ -74,8 +78,14 @@ export default function handler(req, res) {
     highlight,
     enl,
     persona,
-    status
+    status,
+    pios_live,
   } = req.query
+
+  // EX.1A: live PiOS engine — CE.4/CE.5/CE.2 governed outputs
+  if (pios_live === 'true') {
+    return runScript(ADAPTER_EX1A, [], res)
+  }
 
   // ENL: semantic path status
   if (status === 'true') {
