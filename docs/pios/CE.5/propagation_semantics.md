@@ -74,7 +74,10 @@ the propagation of any other signal's consumption record.
 ### Rule P-005 — No derived propagation
 
 CE.5 does not produce propagation records for signals not present in the CE.4 packet.
-No new signal records are created by CE.5.
+CE.5 does not create new propagation records beyond those derived from signals present in the CE.4 packet.
+
+CE.5 may produce structural gap trace records for expected-but-absent signals as traceability-only output, per consumption_traceability_model.md Rules T-001 and T-002.
+These are not propagation records. They do not enter downstream consumption.
 
 ---
 

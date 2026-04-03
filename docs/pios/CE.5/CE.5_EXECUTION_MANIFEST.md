@@ -47,7 +47,9 @@
 ## GOVERNANCE RECORD
 
 **Input:** CE.4 signal output packet (docs/pios/CE.4/)
-**Output:** CE.5 consumption records (signal_id, origin, consumption_state, output_ref)
+**Output:**
+- Type 1: CE.5 consumption records (signal_id, origin, consumption_state, output_ref) — for signals present in CE.4 packet
+- Type 2: CE.5 structural gap trace records (signal_id, origin, status: "MISSING") — for expected-but-absent signals; traceability-only, not propagated
 **States defined:** AVAILABLE / PARTIAL / BLOCKED
 **Rules defined:** C-001..C-005, P-001..P-005
 **Violations during execution:** NONE
