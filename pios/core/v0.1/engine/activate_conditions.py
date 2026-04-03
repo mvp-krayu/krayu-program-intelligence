@@ -59,21 +59,39 @@ DIAGNOSIS_SCHEMA = {
 }
 
 # ---------------------------------------------------------------------------
-# Coverage state propagation rule — condition_activation_specification.md
-# Signal state → condition coverage state
-# Condition coverage state → diagnosis activation state
+# CE.5 consumption state mapping — consumption_state_model.md §3
+# Maps CE.4 emission state → CE.5 consumption state (AVAILABLE/PARTIAL/BLOCKED)
+# CE.6 gaps: GAP-C-001, GAP-C-002 — CE.7 R-004
 # ---------------------------------------------------------------------------
 
-SIGNAL_TO_CONDITION_STATE = {
-    "COMPLETE": "complete",
-    "PARTIAL":  "partial",
-    "BLOCKED":  "blocked",
+CE4_TO_CE5_CONSUMPTION_STATE = {
+    "COMPLETE":           "AVAILABLE",
+    "PARTIAL":            "PARTIAL",
+    "BLOCKED":            "BLOCKED",
+    "COMPUTABLE_PENDING": "PARTIAL",    # C-004
 }
 
+# CE.5 consumption vocabulary — replaces v0.1 lowercase emission state passthrough
+# CE.6 gaps: GAP-C-001, GAP-C-002
+SIGNAL_TO_CONDITION_STATE = {
+    "COMPLETE": "AVAILABLE",
+    "PARTIAL":  "PARTIAL",
+    "BLOCKED":  "BLOCKED",
+}
+
+# CE.2 DEC-014 governed tier → diagnosis state mapping
+# CE.6 gaps: GAP-P-003, GAP-P-004 — CE.7 R-005
+# Note: DEC-009 tier derivation (binding rules DEC-012/DEC-013) deferred to CE.9.
+# Interim CE.5 consumption state keys active until tier derivation is implemented.
 CONDITION_TO_DIAGNOSIS_STATE = {
-    "complete": "active",
-    "partial":  "partial",
-    "blocked":  "blocked",
+    # CE.2 DEC-014 governed tier mappings (for future DEC-009 tier derivation)
+    "BLOCKED":   "BLOCKED",
+    "DEGRADED":  "ACTIVE",
+    "AT_RISK":   "ACTIVE",
+    "STABLE":    "INACTIVE",
+    # Interim CE.5 consumption state mappings (pending DEC-009 tier derivation)
+    "AVAILABLE": "ACTIVE",    # interim: fully present signal → active diagnosis
+    "PARTIAL":   "ACTIVE",    # interim: partial signal → active (conservative)
 }
 
 # ---------------------------------------------------------------------------
@@ -109,7 +127,7 @@ def activate_cond_001(sig_002_output):
         "ckr": "CKR-012",
         "governing_signal": "SIG-002",
         "signal_state": "COMPLETE",
-        "condition_coverage_state": "complete",
+        "condition_coverage_state": "AVAILABLE",   # CE.6 GAP-C-001
         "activation_state": "activated",
         "components": {
             "dependency_load_ratio":  sig_002_output["dependency_load_ratio"],
@@ -129,7 +147,7 @@ def activate_cond_002(sig_004_output):
         "ckr": "CKR-012",
         "governing_signal": "SIG-004",
         "signal_state": "COMPLETE",
-        "condition_coverage_state": "complete",
+        "condition_coverage_state": "AVAILABLE",   # CE.6 GAP-C-001
         "activation_state": "activated",
         "components": {
             "total_edge_density":     sig_004_output["total_edge_density"],
@@ -152,7 +170,7 @@ def activate_cond_003(sig_001_output):
         "ckr": "CKR-012",
         "governing_signal": "SIG-001",
         "signal_state": "PARTIAL",
-        "condition_coverage_state": "partial",
+        "condition_coverage_state": "PARTIAL",   # CE.6 GAP-C-001
         "activation_state": "partial — structural component activated; runtime component UNDEFINED",
         "components": {
             "structural_ratio":    sig_001_output["static_structural_ratio"],
@@ -173,7 +191,7 @@ def activate_cond_004(sig_005_output):
         "ckr": "CKR-012",
         "governing_signal": "SIG-005",
         "signal_state": "PARTIAL",
-        "condition_coverage_state": "partial",
+        "condition_coverage_state": "PARTIAL",   # CE.6 GAP-C-001
         "activation_state": "partial — throughput rate activated; completion factor UNDEFINED",
         "components": {
             "throughput_rate":     sig_005_output["throughput_rate"],
@@ -193,7 +211,7 @@ def activate_cond_005(sig_003):
         "ckr": "CKR-012",
         "governing_signal": "SIG-003",
         "signal_state": "BLOCKED",
-        "condition_coverage_state": "blocked",
+        "condition_coverage_state": "BLOCKED",   # CE.6 GAP-C-001
         "activation_state": "blocked",
         "blocking_inputs": sig_003.get("blocking_inputs", ["VAR_AT_001", "VAR_AT_002"]),
         "blocking_reason": sig_003.get(
@@ -214,7 +232,7 @@ def activate_cond_006(sig_006):
         "ckr": "CKR-012",
         "governing_signal": "SIG-006",
         "signal_state": "BLOCKED",
-        "condition_coverage_state": "blocked",
+        "condition_coverage_state": "BLOCKED",   # CE.6 GAP-C-001
         "activation_state": "blocked",
         "blocking_inputs": sig_006.get("blocking_inputs", ["VAR_AT_007", "VAR_AT_009", "VAR_DT_007", "VAR_DT_008"]),
         "blocking_reason": sig_006.get(
@@ -236,7 +254,7 @@ def activate_cond_007(sig_007_output):
         "ckr": "CKR-012",
         "governing_signal": "SIG-007",
         "signal_state": "PARTIAL",
-        "condition_coverage_state": "partial",
+        "condition_coverage_state": "PARTIAL",   # CE.6 GAP-C-001
         "activation_state": "partial — SIG-002 component activated; SIG-005 and SIG-006 components UNDEFINED",
         "components": {
             "sig_002_dependency_load_component":      sig_007_output["sig_002_dependency_load_component"],
@@ -258,7 +276,7 @@ def activate_cond_008(sig_008_output):
         "ckr": "CKR-012",
         "governing_signal": "SIG-008",
         "signal_state": "PARTIAL",
-        "condition_coverage_state": "partial",
+        "condition_coverage_state": "PARTIAL",   # CE.6 GAP-C-001
         "activation_state": "partial — SIG-001 and SIG-004 components activated; SIG-003 component UNDEFINED",
         "components": {
             "sig_001_coordination_pressure_component": sig_008_output["sig_001_coordination_pressure_component"],
@@ -295,13 +313,71 @@ def activate_diag(diag_id, condition):
         "diagnosis_activation_state": diag_state,
     }
 
-    if cond_state == "blocked":
+    if cond_state == "BLOCKED":
         record["blocking_inputs"] = condition.get("blocking_inputs", [])
         record["blocking_reason"] = condition.get("blocking_reason", UNDEFINED)
     else:
         record["components"] = condition.get("components", {})
 
     return record
+
+
+# ---------------------------------------------------------------------------
+# CE.5 consumption layer — consumption_state_model.md, propagation_semantics.md
+# CE.6 gaps: GAP-C-003, GAP-P-001, GAP-P-002, GAP-T-002, GAP-T-003 — CE.7 R-004, R-006
+# ---------------------------------------------------------------------------
+
+# Governed signal scope — Signal Ledger (CE.4)
+GOVERNED_SIGNAL_IDS = [
+    "SIG-001", "SIG-002", "SIG-003", "SIG-004",
+    "SIG-005", "SIG-006", "SIG-007", "SIG-008",
+]
+
+
+def produce_ce5_consumption_record(signal):
+    """CE.5 Type 1 consumption record per signal.
+    CE.5 propagation_boundary_enforcement.md §3 (PBE-2):
+    Delivers: signal_id, origin="CE.4", consumption_state, output_ref.
+    Applies consumption rules C-001 (COMPLETE→AVAILABLE), C-002 (PARTIAL→PARTIAL),
+    C-003 (BLOCKED→BLOCKED). CE.6 gaps: GAP-C-003, GAP-P-001, GAP-P-002.
+    """
+    consumption_state = CE4_TO_CE5_CONSUMPTION_STATE.get(signal.get("state"))
+    return {
+        "signal_id":         signal["signal_id"],
+        "origin":            "CE.4",
+        "consumption_state": consumption_state,
+        "output_ref":        signal.get("output"),
+    }
+
+
+def produce_ce5_traceability_records(signals):
+    """CE.5 consumption traceability records — consumption_traceability_model.md.
+    Rule T-001: Type 2 structural gap trace for expected-but-absent signals.
+    Rule T-002: Type 1 consumption traceability for all present signals.
+    CE.6 gaps: GAP-T-002, GAP-T-003.
+    """
+    records = {}
+    present_ids = set(signals.keys())
+    for sig_id in GOVERNED_SIGNAL_IDS:
+        if sig_id in present_ids:
+            consumption_state = CE4_TO_CE5_CONSUMPTION_STATE.get(
+                signals[sig_id].get("state")
+            )
+            records[sig_id] = {
+                "signal_id":         sig_id,
+                "origin":            "CE.4",
+                "consumption_state": consumption_state,
+                "record_type":       "Type 1",
+            }
+        else:
+            # T-001 — structural gap trace record
+            records[sig_id] = {
+                "signal_id":   sig_id,
+                "origin":      "CE.4",
+                "status":      "MISSING",
+                "record_type": "Type 2",
+            }
+    return records
 
 
 # ---------------------------------------------------------------------------
@@ -374,6 +450,16 @@ def activate(run_id, signal_input_path, output_path=None):
 
     signals = load_signal_output(signal_input_path)
 
+    # CE.5 consumption layer — produce consumption records per signal (GAP-C-003, GAP-P-001, GAP-P-002)
+    ce5_consumption_records = {
+        sig_id: produce_ce5_consumption_record(signals[sig_id])
+        for sig_id in GOVERNED_SIGNAL_IDS
+        if sig_id in signals
+    }
+
+    # CE.5 traceability records — Type 1 and Type 2 (GAP-T-002, GAP-T-003)
+    ce5_traceability_records = produce_ce5_traceability_records(signals)
+
     # Activate conditions — canonical order COND-001..COND-008, deterministic
     cond_001 = activate_cond_001(signals["SIG-002"]["output"])
     cond_002 = activate_cond_002(signals["SIG-004"]["output"])
@@ -401,14 +487,14 @@ def activate(run_id, signal_input_path, output_path=None):
     diagnoses = [diag_001, diag_002, diag_003, diag_004,
                  diag_005, diag_006, diag_007, diag_008]
 
-    # Summaries
-    cond_complete = [c["condition_id"] for c in conditions if c["condition_coverage_state"] == "complete"]
-    cond_partial  = [c["condition_id"] for c in conditions if c["condition_coverage_state"] == "partial"]
-    cond_blocked  = [c["condition_id"] for c in conditions if c["condition_coverage_state"] == "blocked"]
+    # Summaries — CE.5 vocabulary (AVAILABLE/PARTIAL/BLOCKED)
+    cond_available = [c["condition_id"] for c in conditions if c["condition_coverage_state"] == "AVAILABLE"]
+    cond_partial   = [c["condition_id"] for c in conditions if c["condition_coverage_state"] == "PARTIAL"]
+    cond_blocked   = [c["condition_id"] for c in conditions if c["condition_coverage_state"] == "BLOCKED"]
 
-    diag_active   = [d["diagnosis_id"] for d in diagnoses if d["diagnosis_activation_state"] == "active"]
-    diag_partial  = [d["diagnosis_id"] for d in diagnoses if d["diagnosis_activation_state"] == "partial"]
-    diag_blocked  = [d["diagnosis_id"] for d in diagnoses if d["diagnosis_activation_state"] == "blocked"]
+    diag_active   = [d["diagnosis_id"] for d in diagnoses if d["diagnosis_activation_state"] == "ACTIVE"]
+    diag_inactive = [d["diagnosis_id"] for d in diagnoses if d["diagnosis_activation_state"] == "INACTIVE"]
+    diag_blocked  = [d["diagnosis_id"] for d in diagnoses if d["diagnosis_activation_state"] == "BLOCKED"]
 
     output = {
         "run_id": run_id,
@@ -416,17 +502,19 @@ def activate(run_id, signal_input_path, output_path=None):
         "script": "activate_conditions.py",
         "derivation_run": "run_01_condition_activation",
         "upstream_signal_input": signal_input_path,
+        "ce5_consumption_records": ce5_consumption_records,
+        "ce5_traceability_records": ce5_traceability_records,
         "conditions": {c["condition_id"]: c for c in conditions},
         "diagnoses":  {d["diagnosis_id"]: d for d in diagnoses},
         "condition_summary": {
-            "complete": cond_complete,
-            "partial":  cond_partial,
-            "blocked":  cond_blocked,
+            "AVAILABLE": cond_available,
+            "PARTIAL":   cond_partial,
+            "BLOCKED":   cond_blocked,
         },
         "diagnosis_summary": {
-            "active":   diag_active,
-            "partial":  diag_partial,
-            "blocked":  diag_blocked,
+            "ACTIVE":    diag_active,
+            "INACTIVE":  diag_inactive,
+            "BLOCKED":   diag_blocked,
         },
     }
 
@@ -437,8 +525,9 @@ def activate(run_id, signal_input_path, output_path=None):
     with open(output_path, "w") as f:
         json.dump(output, f, indent=2)
 
-    print(f"conditions  — complete: {cond_complete}  partial: {cond_partial}  blocked: {cond_blocked}")
-    print(f"diagnoses   — active:   {diag_active}   partial: {diag_partial}  blocked: {diag_blocked}")
+    print(f"conditions  — AVAILABLE: {cond_available}  PARTIAL: {cond_partial}  BLOCKED: {cond_blocked}")
+    print(f"diagnoses   — ACTIVE:    {diag_active}  INACTIVE: {diag_inactive}  BLOCKED: {diag_blocked}")
+    print(f"ce5_traceability: {len(ce5_traceability_records)} records ({sum(1 for r in ce5_traceability_records.values() if r['record_type'] == 'Type 1')} Type 1, {sum(1 for r in ce5_traceability_records.values() if r['record_type'] == 'Type 2')} Type 2)")
     print(f"output: {output_path}")
 
     return output

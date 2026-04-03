@@ -100,7 +100,13 @@ def compute_sig_001(v):
         },
         "traceability": {
             "static_structural_ratio": "VAR_ST_012 / VAR_ST_016",
-            "runtime_component": "VAR_AT_005 * VAR_AT_007 (PENDING)",
+        },
+        "partiality_reasons": {
+            # CE.4 INV-005 — CE.6 GAP-E-001 — R-002
+            "runtime_component": {
+                "failure_class": "F-1b",
+                "cause": "VAR_AT_007 not present in static 40.4 telemetry; requires live pipeline execution",
+            },
         },
     }
 
@@ -144,6 +150,7 @@ def compute_sig_003(v):
             "ckr": "CKR-008",
             "state": "BLOCKED",
             "output": UNDEFINED,
+            "blocking_class": "F-1a",   # CE.4 INV-004 — CE.6 GAP-E-002 — R-001
             "blocking_inputs": ["VAR_AT_001", "VAR_AT_002"],
             "blocking_reason": (
                 "AT-001 and AT-002 require accumulated time-series data across "
@@ -157,6 +164,12 @@ def compute_sig_003(v):
         "ckr": "CKR-008",
         "state": "BLOCKED",
         "output": UNDEFINED,
+        "blocking_class": "F-1a",   # CE.4 INV-004 — CE.6 GAP-E-002 — R-001
+        "blocking_inputs": ["VAR_AT_001", "VAR_AT_002"],
+        "blocking_reason": (
+            "AT-001 and AT-002 require accumulated time-series data across "
+            "successive push-to-main intervals; not present in static 40.4 telemetry"
+        ),
     }
 
 
@@ -216,7 +229,13 @@ def compute_sig_005(v):
             "total_artifacts_per_run": "VAR_DT_001 + VAR_DT_003",
             "pipeline_stages_per_run": "VAR_AT_005",
             "throughput_rate": "total_artifacts_per_run / pipeline_stages_per_run",
-            "completion_factor": "VAR_DT_007 (PENDING)",
+        },
+        "partiality_reasons": {
+            # CE.4 INV-005 — CE.6 GAP-E-003 — R-002
+            "completion_factor": {
+                "failure_class": "F-1b",
+                "cause": "VAR_DT_007 not present in static 40.4 telemetry; requires live pipeline execution",
+            },
         },
     }
 
@@ -233,6 +252,7 @@ def compute_sig_006(v):
         "ckr": "CKR-011",
         "state": "BLOCKED",
         "output": UNDEFINED,
+        "blocking_class": "F-1a",   # CE.4 INV-004 — CE.6 GAP-E-004 — R-001
         "blocking_inputs": ["VAR_AT_007", "VAR_AT_009", "VAR_DT_007", "VAR_DT_008"],
         "blocking_reason": "All inputs event-based; require live pipeline execution",
     }
@@ -260,12 +280,20 @@ def compute_sig_007(sig_002, sig_005, sig_006):
             "sig_005_completion_factor_component": sig_005_completion_factor,
             "sig_006_stability_component": sig_006_component,
         },
-        "note": (
-            "ESI composite not computable. "
-            "SIG-006 (Execution Stability) is BLOCKED. "
-            "SIG-002 component resolved. "
-            "SIG-005 completion factor UNDEFINED (DT-007 PENDING)."
-        ),
+        "partiality_reasons": {
+            # CE.4 INV-005 — CE.6 GAP-E-005 — R-002/R-003
+            "sig_005_completion_factor_component": {
+                "failure_class": "F-4",
+                "upstream_signal": "SIG-005",
+                "upstream_field": "completion_factor",
+                "cause": "completion_factor is null in upstream SIG-005 output (VAR_DT_007 PENDING)",
+            },
+            "sig_006_stability_component": {
+                "failure_class": "F-3",
+                "upstream_signal": "SIG-006",
+                "cause": "SIG-006 is BLOCKED; no stability component available",
+            },
+        },
     }
 
 
@@ -294,12 +322,14 @@ def compute_sig_008(sig_001, sig_003, sig_004):
             "sig_004_module_density":                  sig_004_out["module_density"],
             "sig_003_change_concentration_component":  sig_003_component,
         },
-        "note": (
-            "RAG acceleration component not computable. "
-            "SIG-003 (Change Concentration) is BLOCKED (AT-001, AT-002 time-series PENDING). "
-            "SIG-001 static structural component resolved. "
-            "SIG-004 all density ratios resolved."
-        ),
+        "partiality_reasons": {
+            # CE.4 INV-005 — CE.6 GAP-E-007 — R-002/R-003
+            "sig_003_change_concentration_component": {
+                "failure_class": "F-3",
+                "upstream_signal": "SIG-003",
+                "cause": "SIG-003 is BLOCKED; no change concentration component available",
+            },
+        },
     }
 
 
