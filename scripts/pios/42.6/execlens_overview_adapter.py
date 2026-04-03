@@ -47,6 +47,20 @@ import sys
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
+# EX.3: Import PiOS bridge — live CE.4/CE.5/CE.2 governed outputs
+# ---------------------------------------------------------------------------
+
+_EX3_PATH = Path(__file__).resolve().parents[2] / "pios" / "EX.3"
+if str(_EX3_PATH) not in sys.path:
+    sys.path.insert(0, str(_EX3_PATH))
+
+try:
+    import pios_bridge as _bridge
+    _BRIDGE_AVAILABLE = True
+except ImportError:
+    _BRIDGE_AVAILABLE = False
+
+# ---------------------------------------------------------------------------
 # R1: Import 42.2 rendering path — same pattern as 42.4 adapter
 # ---------------------------------------------------------------------------
 
@@ -183,12 +197,19 @@ def get_overview_metrics() -> dict:
     """
     Load signal registry via 42.2 → 42.1, apply extraction rules,
     return four structured metrics for the landing gauge strip.
+
+    EX.3: live engine values replace static regex extraction where available.
+    Metric values sourced from CE.4 governed engine output via pios_bridge.
+    Fallback to static extraction if bridge unavailable (explicit, not silent).
     No values invented. Extraction failure → null, not default.
     """
     _r42._q41.preflight_check()
 
     # Load signal registry via 42.2 → 42.1 (R1: no direct 41.x file access)
     signal_registry = _r42._q41.load_signal_registry()
+
+    # EX.3: invoke live engine once for all metrics
+    _live_data = _bridge.get_live_pios_data() if _BRIDGE_AVAILABLE else None
 
     metrics = []
     for defn in METRIC_DEFINITIONS:
@@ -210,10 +231,32 @@ def get_overview_metrics() -> dict:
                 "threshold":            defn.get("threshold"),
                 "threshold_fill_pct":   defn.get("threshold_fill_pct"),
                 "extraction_status":    "signal_not_found",
+                "pios_emission_state":        None,
+                "pios_ce5_consumption_state": None,
+                "pios_condition_tier":        None,
+                "pios_diagnosis_state":       None,
+                "pios_run_id":                None,
+                "value_source":               "none",
             })
             continue
 
-        value = defn["extract"](sig)
+        # EX.3: prefer live engine value; fall back to static extraction
+        live_value = (_bridge.get_live_metric_value(_live_data, defn["signal_id"])
+                      if _BRIDGE_AVAILABLE else None)
+        static_value = defn["extract"](sig)
+        value = live_value if live_value is not None else static_value
+        value_source = (
+            "live_engine" if live_value is not None
+            else ("static_extraction" if static_value is not None else "none")
+        )
+
+        # EX.3: CE.4/CE.5/CE.2 context
+        pios_ctx = (_bridge.get_l3_signal_pios_context(_live_data, defn["signal_id"])
+                    if _BRIDGE_AVAILABLE else {
+                        "pios_emission_state": None, "pios_ce5_consumption_state": None,
+                        "pios_condition_tier": None, "pios_diagnosis_state": None,
+                        "pios_run_id": None,
+                    })
 
         metrics.append({
             "id":                   defn["id"],
@@ -231,6 +274,12 @@ def get_overview_metrics() -> dict:
             "threshold":            defn.get("threshold"),
             "threshold_fill_pct":   defn.get("threshold_fill_pct"),
             "extraction_status":    "ok" if value is not None else "extraction_failed",
+            "value_source":               value_source,
+            "pios_emission_state":        pios_ctx["pios_emission_state"],
+            "pios_ce5_consumption_state": pios_ctx["pios_ce5_consumption_state"],
+            "pios_condition_tier":        pios_ctx["pios_condition_tier"],
+            "pios_diagnosis_state":       pios_ctx["pios_diagnosis_state"],
+            "pios_run_id":                pios_ctx["pios_run_id"],
         })
 
     return {

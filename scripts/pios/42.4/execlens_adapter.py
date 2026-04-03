@@ -35,6 +35,20 @@ import sys
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
+# EX.3: Import PiOS bridge — live CE.4/CE.5/CE.2 governed outputs
+# ---------------------------------------------------------------------------
+
+_EX3_PATH = Path(__file__).resolve().parents[1] / "EX.3"
+if str(_EX3_PATH) not in sys.path:
+    sys.path.insert(0, str(_EX3_PATH))
+
+try:
+    import pios_bridge as _bridge
+    _BRIDGE_AVAILABLE = True
+except ImportError:
+    _BRIDGE_AVAILABLE = False
+
+# ---------------------------------------------------------------------------
 # R1: Import 42.2 rendering path — no bypass allowed
 # ---------------------------------------------------------------------------
 
@@ -88,6 +102,9 @@ def get_query_data(query_id: str) -> dict:
     # Bind navigation via 42.1
     nav_bindings = _r42._q41.bind_navigation(template_section)
 
+    # EX.3: Invoke live engine once for all signals in this query
+    _live_data = _bridge.get_live_pios_data() if _BRIDGE_AVAILABLE else None
+
     # --- Assemble signal entries ---
     signals_out = []
     for bs in bound_signals:
@@ -96,20 +113,31 @@ def get_query_data(query_id: str) -> dict:
         ev  = bs.get("evidence")
         ev_warning = bs.get("evidence_warning")
 
+        # EX.3: CE.4/CE.5/CE.2 governed context for this L3 signal
+        pios_ctx = _bridge.get_l3_signal_pios_context(_live_data, reg["signal_id"]) if _BRIDGE_AVAILABLE else {
+            "pios_emission_state": None, "pios_ce5_consumption_state": None,
+            "pios_condition_tier": None, "pios_diagnosis_state": None, "pios_run_id": None,
+        }
+
         signal_entry = {
-            "signal_id":           reg["signal_id"],
-            "relevance":           m["relevance"],
-            "title":               reg["title"],
-            "evidence_confidence": reg["evidence_confidence"],
-            "domain_id":           reg["domain_id"],
-            "domain_name":         reg["domain_name"],
-            "capability_id":       reg["capability_id"],
-            "capability_name":     reg["capability_name"],
-            "component_ids":       reg.get("component_ids", []),
-            "component_names":     reg.get("component_names", []),
-            "statement":           reg["statement"],
-            "business_impact":     reg.get("business_impact"),
-            "risk":                reg.get("risk"),
+            "signal_id":                  reg["signal_id"],
+            "relevance":                  m["relevance"],
+            "title":                      reg["title"],
+            "evidence_confidence":        reg["evidence_confidence"],
+            "domain_id":                  reg["domain_id"],
+            "domain_name":                reg["domain_name"],
+            "capability_id":              reg["capability_id"],
+            "capability_name":            reg["capability_name"],
+            "component_ids":              reg.get("component_ids", []),
+            "component_names":            reg.get("component_names", []),
+            "statement":                  reg["statement"],
+            "business_impact":            reg.get("business_impact"),
+            "risk":                       reg.get("risk"),
+            "pios_emission_state":        pios_ctx["pios_emission_state"],
+            "pios_ce5_consumption_state": pios_ctx["pios_ce5_consumption_state"],
+            "pios_condition_tier":        pios_ctx["pios_condition_tier"],
+            "pios_diagnosis_state":       pios_ctx["pios_diagnosis_state"],
+            "pios_run_id":                pios_ctx["pios_run_id"],
         }
 
         # Evidence — only from evidence_mapping_index.json; null if missing

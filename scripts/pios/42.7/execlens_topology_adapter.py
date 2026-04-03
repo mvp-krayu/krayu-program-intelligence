@@ -57,6 +57,20 @@ from pathlib import Path
 from typing import Optional
 
 # ---------------------------------------------------------------------------
+# EX.3: Import PiOS bridge — live CE.4/CE.5/CE.2 governed outputs
+# ---------------------------------------------------------------------------
+
+_EX3_PATH = Path(__file__).resolve().parents[2] / "pios" / "EX.3"
+if str(_EX3_PATH) not in sys.path:
+    sys.path.insert(0, str(_EX3_PATH))
+
+try:
+    import pios_bridge as _bridge
+    _BRIDGE_AVAILABLE = True
+except ImportError:
+    _BRIDGE_AVAILABLE = False
+
+# ---------------------------------------------------------------------------
 # R1: Import 42.2 rendering path — same pattern as 42.4 and 42.6 adapters
 # ---------------------------------------------------------------------------
 
@@ -387,6 +401,13 @@ def get_topology(highlight_query_id: Optional[str] = None) -> dict:
             for cmp in cap.get("components", []):
                 cmp["emphasis"] = emphasis_lookup.get(cmp["id"], "none")
 
+    # EX.3: append live CE.2 condition/diagnosis summary
+    _live_data   = _bridge.get_live_pios_data() if _BRIDGE_AVAILABLE else None
+    pios_summary = _bridge.get_pios_condition_summary(_live_data) if _BRIDGE_AVAILABLE else {
+        "run_id": None, "telemetry_source": None, "condition_tiers": {},
+        "diagnosis_states": {}, "blocked_condition_count": None, "blocked_diagnosis_count": None,
+    }
+
     return {
         "contract_id":        CONTRACT_ID,
         "highlight_query_id": highlight_query_id,
@@ -398,6 +419,7 @@ def get_topology(highlight_query_id: Optional[str] = None) -> dict:
             for d in topology
             for cap in d["capabilities"]
         ),
+        "pios_summary":       pios_summary,
     }
 
 
