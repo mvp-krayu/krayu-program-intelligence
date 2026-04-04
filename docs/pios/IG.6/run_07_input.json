@@ -1,0 +1,15 @@
+{
+  "stream": "IG.6",
+  "run_id": "run_07_source_profiled_ingestion",
+  "profile": {
+    "kind": "LOCAL_SNAPSHOT",
+    "admissibility": "GOVERNED",
+    "resolution": "DETERMINISTIC"
+  },
+  "output_root": "/Users/khorrix/Projects/k-pi-core/docs/pios/runs/run_07_source_profiled_ingestion",
+  "reference_run": "/Users/khorrix/Projects/k-pi-core/docs/pios/runs/run_06_orchestrated_ingestion",
+  "resolver": "scripts/pios/ig5/source_profile_resolver.sh",
+  "governance": "IG.5",
+  "run_mode": "SOURCE_PROFILED_INGESTION",
+  "execution_mode": "CREATE_ONLY"
+}
