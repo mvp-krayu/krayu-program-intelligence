@@ -1,0 +1,34 @@
+{
+  "family": "40",
+  "status": "REGISTERED",
+  "profiles": {
+    "signal_contract": {
+      "description": "Signal computation: inputs, outputs, traceability, state",
+      "required_paths": [
+        ["Q1", "run_id", "run id present"],
+        ["Q2", "signals", "signals dict present"],
+        ["Q3", "summary", "signal summary present"]
+      ],
+      "enum_paths": []
+    },
+    "condition_contract": {
+      "description": "Condition activation and CE.2 tier states",
+      "required_paths": [
+        ["Q1", "run_id", "run id present"],
+        ["Q2", "conditions", "conditions dict present"],
+        ["Q3", "diagnoses", "diagnoses dict present"],
+        ["Q4", "condition_summary", "condition summary present"]
+      ],
+      "enum_paths": []
+    },
+    "diagnosis_contract": {
+      "description": "Diagnosis activation state",
+      "required_paths": [
+        ["Q1", "run_id", "run id present"],
+        ["Q2", "diagnoses", "diagnoses present"],
+        ["Q3", "diagnosis_summary", "diagnosis summary present"]
+      ],
+      "enum_paths": []
+    }
+  }
+}

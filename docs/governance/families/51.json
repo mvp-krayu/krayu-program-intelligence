@@ -1,0 +1,39 @@
+{
+  "family": "51",
+  "status": "REGISTERED",
+  "profiles": {
+    "ui_runtime": {
+      "description": "UI surface state and binding to governed adapters",
+      "required_paths": [
+        ["Q1", "route", "route present"],
+        ["Q2", "binding_state", "binding state present"],
+        ["Q3", "adapter_source", "adapter source declared"]
+      ],
+      "enum_paths": [
+        ["Q2", "binding_state", ["READY", "DEGRADED", "BLOCKED"]]
+      ]
+    },
+    "api_runtime": {
+      "description": "API route health and dispatch state",
+      "required_paths": [
+        ["Q1", "route", "route present"],
+        ["Q2", "state", "API state present"],
+        ["Q3", "adapter", "adapter path present"]
+      ],
+      "enum_paths": [
+        ["Q2", "state", ["HEALTHY", "PARTIAL", "FAILED"]]
+      ]
+    },
+    "scenario_execution": {
+      "description": "Scenario coverage and executability",
+      "required_paths": [
+        ["Q1", "scenario_id", "scenario ID present"],
+        ["Q2", "state", "execution state present"],
+        ["Q3", "evidence_chain", "evidence chain present"]
+      ],
+      "enum_paths": [
+        ["Q2", "state", ["EXECUTABLE", "PARTIAL", "BLOCKED"]]
+      ]
+    }
+  }
+}

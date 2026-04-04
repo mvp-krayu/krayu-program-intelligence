@@ -1,0 +1,41 @@
+{
+  "family": "CAT",
+  "status": "REGISTERED",
+  "profiles": {
+    "construct_positioning": {
+      "description": "Construct state and authority alignment",
+      "required_paths": [
+        ["Q1", "construct_id", "construct ID present"],
+        ["Q2", "construct_state", "construct state present"],
+        ["Q3", "authority_state", "authority state present"],
+        ["Q4", "canonical_source", "canonical source declared"]
+      ],
+      "enum_paths": [
+        ["Q2", "construct_state", ["CANONICAL", "DERIVATIVE", "MISALIGNED"]],
+        ["Q3", "authority_state", ["ALIGNED", "PARTIAL", "DRIFTED"]]
+      ]
+    },
+    "derivative_alignment": {
+      "description": "Derivative positioning relative to canonical",
+      "required_paths": [
+        ["Q1", "derivative_id", "derivative ID present"],
+        ["Q2", "canonical_anchor", "canonical anchor declared"],
+        ["Q3", "alignment_state", "alignment state declared"]
+      ],
+      "enum_paths": [
+        ["Q3", "alignment_state", ["ALIGNED", "PARTIAL", "DRIFTED"]]
+      ]
+    },
+    "category_authority": {
+      "description": "Category-level authority state",
+      "required_paths": [
+        ["Q1", "category_id", "category ID present"],
+        ["Q2", "authority_state", "authority state present"],
+        ["Q3", "construct_count", "construct count present"]
+      ],
+      "enum_paths": [
+        ["Q2", "authority_state", ["ALIGNED", "PARTIAL", "DRIFTED"]]
+      ]
+    }
+  }
+}

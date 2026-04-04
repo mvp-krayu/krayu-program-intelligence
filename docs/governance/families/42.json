@@ -1,0 +1,38 @@
+{
+  "family": "42",
+  "status": "REGISTERED",
+  "profiles": {
+    "query_execution": {
+      "description": "Query adapter output: signals, CE.4/CE.5/CE.2 states, run ID",
+      "required_paths": [
+        ["Q1", "query_id", "query ID present"],
+        ["Q2", "signals", "signals present"],
+        ["Q3", "pios_run_id", "PiOS run ID present in first signal"]
+      ],
+      "enum_paths": []
+    },
+    "narrative_rendering": {
+      "description": "Narrative rendering completeness",
+      "required_paths": [
+        ["Q1", "query_id", "query id present"],
+        ["Q2", "narrative", "narrative present"],
+        ["Q3", "evidence_chain", "evidence chain present"],
+        ["Q4", "state", "render state present"]
+      ],
+      "enum_paths": [
+        ["Q4", "state", ["READY", "PARTIAL", "BLOCKED"]]
+      ]
+    },
+    "topology_surface": {
+      "description": "Topology adapter output: hierarchy + PiOS CE.2 summary",
+      "required_paths": [
+        ["Q1", "nodes", "topology nodes present"],
+        ["Q2", "pios_summary", "PiOS condition summary present"],
+        ["Q3", "pios_summary.run_id", "run ID in pios_summary present"],
+        ["Q4", "pios_summary.condition_tiers", "condition tiers present"],
+        ["Q5", "pios_summary.diagnosis_states", "diagnosis states present"]
+      ],
+      "enum_paths": []
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "family": "GOV",
+  "status": "REGISTERED",
+  "profiles": {
+    "canonical_integrity": {
+      "description": "Registry entry presence and authority state validation",
+      "required_paths": [
+        ["Q1", "registry_entry", "registry entry present"],
+        ["Q2", "source_state", "source state declared"],
+        ["Q3", "authority_state", "authority state declared"]
+      ],
+      "enum_paths": [
+        ["Q2", "source_state", ["CANONICAL", "DERIVATIVE", "INVALID"]],
+        ["Q3", "authority_state", ["LOCKED", "PARTIAL", "UNRESOLVED"]]
+      ]
+    },
+    "registry_integrity": {
+      "description": "Registry completeness and internal consistency",
+      "required_paths": [
+        ["Q1", "registry_id", "registry ID present"],
+        ["Q2", "entries", "entries present"],
+        ["Q3", "authority_state", "authority state present"]
+      ],
+      "enum_paths": [
+        ["Q3", "authority_state", ["LOCKED", "PARTIAL", "UNRESOLVED"]]
+      ]
+    },
+    "authority_lock": {
+      "description": "Lock state and downstream constraint declaration",
+      "required_paths": [
+        ["Q1", "lock_target", "lock target present"],
+        ["Q2", "lock_state", "lock state present"],
+        ["Q3", "downstream_implications", "downstream implications declared"]
+      ],
+      "enum_paths": [
+        ["Q2", "lock_state", ["LOCKED", "PARTIAL", "UNRESOLVED"]]
+      ]
+    }
+  }
+}

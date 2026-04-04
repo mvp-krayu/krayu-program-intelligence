@@ -1,0 +1,50 @@
+{
+  "family": "EX",
+  "status": "REGISTERED",
+  "profiles": {
+    "debug_trace": {
+      "description": "Verify debug/trace surface completeness against real adapter payload shapes",
+      "required_paths": [
+        ["Q1", "signals", "CE.4 signals dict present and non-empty"],
+        ["Q2", "signal_summary", "CE.4 signal summary present"],
+        ["Q3", "ce5_consumption_records", "CE.5 consumption records present"],
+        ["Q4", "ce5_traceability_records", "CE.5 traceability records present"],
+        ["Q5", "trace_chains", "signal→condition→diagnosis chains present"],
+        ["Q6", "conditions", "CE.2 condition states present"],
+        ["Q7", "diagnoses", "CE.2 diagnosis states present"],
+        ["Q8", "debug_run_id", "run ID present"],
+        ["Q9", "telemetry_source", "telemetry source declared"],
+        ["Q10", "condition_summary", "condition summary present"]
+      ],
+      "enum_paths": [
+        ["Q9", "telemetry_source", ["STATIC_BASELINE", "LIVE_TELEMETRY"]]
+      ]
+    },
+    "bridge_binding": {
+      "description": "Verify adapter-to-engine bridge binding state",
+      "required_paths": [
+        ["Q1", "run_id", "run ID present"],
+        ["Q2", "telemetry_source", "telemetry source declared"],
+        ["Q3", "signals", "signals present"],
+        ["Q4", "conditions", "conditions present"]
+      ],
+      "enum_paths": [
+        ["Q2", "telemetry_source", ["STATIC_BASELINE", "LIVE_TELEMETRY"]]
+      ]
+    },
+    "runtime_bridge": {
+      "description": "Verify live runtime bridge output (EX.1A adapter shape)",
+      "required_paths": [
+        ["Q1", "run_id", "run ID present"],
+        ["Q2", "telemetry_source", "telemetry source declared"],
+        ["Q3", "stream", "stream ID declared"],
+        ["Q4", "signals", "signals present"],
+        ["Q5", "conditions", "conditions present"],
+        ["Q6", "diagnoses", "diagnoses present"]
+      ],
+      "enum_paths": [
+        ["Q2", "telemetry_source", ["STATIC_BASELINE", "LIVE_TELEMETRY"]]
+      ]
+    }
+  }
+}

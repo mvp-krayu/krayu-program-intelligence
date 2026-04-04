@@ -1,0 +1,53 @@
+{
+  "family": "WEB",
+  "status": "REGISTERED",
+  "profiles": {
+    "mirror_publish": {
+      "description": "Route presence, canonical target, and publish state",
+      "required_paths": [
+        ["Q1", "route", "route present"],
+        ["Q2", "canonical_target", "canonical target present"],
+        ["Q3", "crawl_state", "crawl state present"],
+        ["Q4", "publish_state", "publish state present"]
+      ],
+      "enum_paths": [
+        ["Q3", "crawl_state", ["VALID", "DEGRADED", "BLOCKED"]],
+        ["Q4", "publish_state", ["READY", "PARTIAL", "BLOCKED"]]
+      ]
+    },
+    "crawl_surface": {
+      "description": "Crawl surface state and indexability",
+      "required_paths": [
+        ["Q1", "route", "route present"],
+        ["Q2", "crawl_state", "crawl state present"],
+        ["Q3", "index_eligible", "index eligibility declared"]
+      ],
+      "enum_paths": [
+        ["Q2", "crawl_state", ["VALID", "DEGRADED", "BLOCKED"]]
+      ]
+    },
+    "sitemap_integrity": {
+      "description": "Sitemap completeness and canonical alignment",
+      "required_paths": [
+        ["Q1", "sitemap_entries", "sitemap entries present"],
+        ["Q2", "canonical_state", "canonical state present"],
+        ["Q3", "crawl_state", "crawl state present"]
+      ],
+      "enum_paths": [
+        ["Q2", "canonical_state", ["ALIGNED", "PARTIAL", "DRIFTED"]],
+        ["Q3", "crawl_state", ["VALID", "DEGRADED", "BLOCKED"]]
+      ]
+    },
+    "canonical_projection": {
+      "description": "Canonical alignment on published surface",
+      "required_paths": [
+        ["Q1", "publish_target", "publish target present"],
+        ["Q2", "canonical_source", "canonical source declared"],
+        ["Q3", "canonical_state", "canonical state present"]
+      ],
+      "enum_paths": [
+        ["Q3", "canonical_state", ["ALIGNED", "PARTIAL", "DRIFTED"]]
+      ]
+    }
+  }
+}
