@@ -1,0 +1,14 @@
+# IG.3 Bootstrap Input Schema — run_05_bootstrap_pipeline
+# Generated: 2026-04-04
+
+run_id=run_05_bootstrap_pipeline
+baseline_anchor=pios-core-v0.4-final
+branch=work/ig-foundation
+source_path=/Users/khorrix/Projects/blueedge-program-intelligence/source-v3.23
+output_root=/Users/khorrix/Projects/k-pi-core/docs/pios/runs/run_05_bootstrap_pipeline
+reference_run=/Users/khorrix/Projects/k-pi-core/docs/pios/runs/run_04_adapter_simulation
+source.kind=LOCAL_SNAPSHOT
+github.mode=ENABLED
+jira.mode=CAPSULE
+run.mode=BOOTSTRAP_PIPELINE
+execution.mode=CREATE_ONLY
