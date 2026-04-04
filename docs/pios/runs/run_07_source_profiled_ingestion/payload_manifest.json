@@ -1,0 +1,66 @@
+{
+  "payload_schema_version": "1.0",
+  "stream": "IG.7",
+  "run_id": "run_07_source_profiled_ingestion",
+  "governance": "IG.6",
+  "date": "2026-04-04",
+  "source": {
+    "kind": "LOCAL_SNAPSHOT",
+    "admissibility": "GOVERNED",
+    "resolution": "DETERMINISTIC"
+  },
+  "baseline_anchor": "pios-core-v0.4-final",
+  "layers": {
+    "L40_2": {
+      "path": "/Users/khorrix/Projects/k-pi-core/docs/pios/runs/run_07_source_profiled_ingestion/40.2",
+      "artifact_count": 4,
+      "artifacts": [
+        "evidence_classification_map.md",
+        "evidence_surface_inventory.md",
+        "intake_validation_log.md",
+        "normalized_evidence_map.md"
+      ]
+    },
+    "L40_3": {
+      "path": "/Users/khorrix/Projects/k-pi-core/docs/pios/runs/run_07_source_profiled_ingestion/40.3",
+      "artifact_count": 6,
+      "artifacts": [
+        "dependency_map.md",
+        "entity_catalog.md",
+        "interface_map.md",
+        "program_execution_graph.md",
+        "reconstruction_validation_log.md",
+        "structural_traceability_map.md"
+      ]
+    },
+    "L40_4": {
+      "path": "/Users/khorrix/Projects/k-pi-core/docs/pios/runs/run_07_source_profiled_ingestion/40.4",
+      "artifact_count": 17,
+      "artifacts": [
+        "activity_telemetry.md",
+        "delivery_telemetry.md",
+        "dependency_telemetry.md",
+        "domain_telemetry.md",
+        "entity_telemetry.md",
+        "interface_telemetry.md",
+        "structural_telemetry.md",
+        "structure_immutability_log.md",
+        "telemetry_dimension_catalog.md",
+        "telemetry_normalization_spec.md",
+        "telemetry_schema.md",
+        "telemetry_surface_definition.md",
+        "telemetry_surface_map.md",
+        "telemetry_to_peg_mapping.md",
+        "telemetry_traceability_map.md",
+        "telemetry_validation_log.md",
+        "temporal_telemetry_series.md"
+      ]
+    }
+  },
+  "provenance": {
+    "orchestration_gate": "IG.6",
+    "admissibility": "GOVERNED",
+    "determinism": "VERIFIED",
+    "source_profile_layer": "IG.5"
+  }
+}
