@@ -320,3 +320,33 @@ Behavior:
 
 Rule:
 FAIL_SAFE_STOP is not optional. If the trigger condition is met, normal execution is blocked regardless of contract content.
+
+────────────────────────────────────
+19. PROFILE_EXTENSION <family> <profile>
+
+Trigger condition (MANDATORY — do not invoke speculatively):
+- validate_stream.py exits with FAIL and missing paths are detected, OR
+- VALIDATION_DISCOVERY reports missing profile OR incomplete coverage
+
+Actions:
+- run: python scripts/pios/validate_stream.py --suggest-extension --family <family> --profile <profile> [--input <payload.json>]
+- reads payload, compares against current profile
+- generates PROFILE_EXTENSION REPORT (stdout)
+- writes PROPOSED entry to docs/governance/families/<FAMILY>.json under proposed_extensions.<profile>
+
+PROFILE_EXTENSION REPORT structure (standard):
+- Family
+- Profile
+- Missing elements detected (failing checks)
+- Proposed additions (paths / enums from payload)
+- Payload evidence (available paths)
+- Impact assessment (existing checks vs proposed new checks)
+- Recommendation (CREATE | EXTEND | REVIEW | NO ACTION)
+- Status: PROPOSED
+
+Rules:
+- PROPOSED entry is written to the family JSON but NOT applied to the live profile
+- Proposed extension requires explicit acceptance in a follow-up governed stream
+- No implicit profile mutation — proposed_extensions.<profile> is a staging area only
+- No inline validator expansion outside this mechanism
+- FAIL_SAFE_STOP message when profile is missing must state: "Validation coverage missing — profile extension required"

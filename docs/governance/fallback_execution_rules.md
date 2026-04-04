@@ -25,6 +25,7 @@ The following conditions require fallback behavior evaluation before normal exec
 | F-05 | FAIL-SAFE RULE | missing or states "none" when PARTIAL or NONE coverage |
 | F-06 | Family file | FAMILY RESOLUTION = KNOWN but family file missing from repo |
 | F-07 | Profile file | Profile declared but not found by validate_stream.py |
+| F-08 | Profile extension | validate_stream.py exits FAIL with missing paths, or VALIDATION_DISCOVERY reports incomplete coverage |
 
 ---
 
@@ -114,6 +115,25 @@ Compressed execution (delta-only contracts, skill invocations, omitted family in
 | FAIL-SAFE RULE declared | yes |
 
 If any of these conditions is not met, the contract must switch to full narration mode or REASSESS mode. Silent compression under unresolved conditions is a structural error.
+
+---
+
+## 5a. PROFILE_EXTENSION PROTOCOL (F-08)
+
+When F-08 triggers (validation fails on missing paths, or coverage is incomplete):
+
+1. Run `PROFILE_EXTENSION <family> <profile>` (invokes `validate_stream.py --suggest-extension`)
+2. Review the PROFILE_EXTENSION REPORT
+3. The tool writes PROPOSED entry to `docs/governance/families/<FAMILY>.json` under `proposed_extensions.<profile>`
+4. Do NOT apply the proposed additions immediately
+5. Proposed extension requires explicit acceptance in a follow-up governed stream
+6. Until accepted: continue treating the profile as PARTIAL coverage
+7. FAIL_SAFE_STOP message must include: "Validation coverage missing — profile extension required"
+
+Prohibited:
+- Applying proposed_extensions to the live profile without a governed stream
+- Inline ad-hoc validation as a substitute for a proper profile
+- Silent acceptance of new payload fields without impact assessment
 
 ---
 

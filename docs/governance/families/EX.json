@@ -5,46 +5,218 @@
     "debug_trace": {
       "description": "Verify debug/trace surface completeness against real adapter payload shapes",
       "required_paths": [
-        ["Q1", "signals", "CE.4 signals dict present and non-empty"],
-        ["Q2", "signal_summary", "CE.4 signal summary present"],
-        ["Q3", "ce5_consumption_records", "CE.5 consumption records present"],
-        ["Q4", "ce5_traceability_records", "CE.5 traceability records present"],
-        ["Q5", "trace_chains", "signal→condition→diagnosis chains present"],
-        ["Q6", "conditions", "CE.2 condition states present"],
-        ["Q7", "diagnoses", "CE.2 diagnosis states present"],
-        ["Q8", "debug_run_id", "run ID present"],
-        ["Q9", "telemetry_source", "telemetry source declared"],
-        ["Q10", "condition_summary", "condition summary present"]
+        [
+          "Q1",
+          "signals",
+          "CE.4 signals dict present and non-empty"
+        ],
+        [
+          "Q2",
+          "signal_summary",
+          "CE.4 signal summary present"
+        ],
+        [
+          "Q3",
+          "ce5_consumption_records",
+          "CE.5 consumption records present"
+        ],
+        [
+          "Q4",
+          "ce5_traceability_records",
+          "CE.5 traceability records present"
+        ],
+        [
+          "Q5",
+          "trace_chains",
+          "signal\u2192condition\u2192diagnosis chains present"
+        ],
+        [
+          "Q6",
+          "conditions",
+          "CE.2 condition states present"
+        ],
+        [
+          "Q7",
+          "diagnoses",
+          "CE.2 diagnosis states present"
+        ],
+        [
+          "Q8",
+          "debug_run_id",
+          "run ID present"
+        ],
+        [
+          "Q9",
+          "telemetry_source",
+          "telemetry source declared"
+        ],
+        [
+          "Q10",
+          "condition_summary",
+          "condition summary present"
+        ]
       ],
       "enum_paths": [
-        ["Q9", "telemetry_source", ["STATIC_BASELINE", "LIVE_TELEMETRY"]]
+        [
+          "Q9",
+          "telemetry_source",
+          [
+            "STATIC_BASELINE",
+            "LIVE_TELEMETRY"
+          ]
+        ]
       ]
     },
     "bridge_binding": {
       "description": "Verify adapter-to-engine bridge binding state",
       "required_paths": [
-        ["Q1", "run_id", "run ID present"],
-        ["Q2", "telemetry_source", "telemetry source declared"],
-        ["Q3", "signals", "signals present"],
-        ["Q4", "conditions", "conditions present"]
+        [
+          "Q1",
+          "run_id",
+          "run ID present"
+        ],
+        [
+          "Q2",
+          "telemetry_source",
+          "telemetry source declared"
+        ],
+        [
+          "Q3",
+          "signals",
+          "signals present"
+        ],
+        [
+          "Q4",
+          "conditions",
+          "conditions present"
+        ]
       ],
       "enum_paths": [
-        ["Q2", "telemetry_source", ["STATIC_BASELINE", "LIVE_TELEMETRY"]]
+        [
+          "Q2",
+          "telemetry_source",
+          [
+            "STATIC_BASELINE",
+            "LIVE_TELEMETRY"
+          ]
+        ]
       ]
     },
     "runtime_bridge": {
       "description": "Verify live runtime bridge output (EX.1A adapter shape)",
       "required_paths": [
-        ["Q1", "run_id", "run ID present"],
-        ["Q2", "telemetry_source", "telemetry source declared"],
-        ["Q3", "stream", "stream ID declared"],
-        ["Q4", "signals", "signals present"],
-        ["Q5", "conditions", "conditions present"],
-        ["Q6", "diagnoses", "diagnoses present"]
+        [
+          "Q1",
+          "run_id",
+          "run ID present"
+        ],
+        [
+          "Q2",
+          "telemetry_source",
+          "telemetry source declared"
+        ],
+        [
+          "Q3",
+          "stream",
+          "stream ID declared"
+        ],
+        [
+          "Q4",
+          "signals",
+          "signals present"
+        ],
+        [
+          "Q5",
+          "conditions",
+          "conditions present"
+        ],
+        [
+          "Q6",
+          "diagnoses",
+          "diagnoses present"
+        ]
       ],
       "enum_paths": [
-        ["Q2", "telemetry_source", ["STATIC_BASELINE", "LIVE_TELEMETRY"]]
+        [
+          "Q2",
+          "telemetry_source",
+          [
+            "STATIC_BASELINE",
+            "LIVE_TELEMETRY"
+          ]
+        ]
       ]
+    }
+  },
+  "proposed_extensions": {
+    "debug_trace": {
+      "status": "PROPOSED",
+      "proposed_date": "2026-04-04",
+      "proposed_by": "validate_stream.py --suggest-extension",
+      "trigger": "PROFILE_EXTENSION mode",
+      "profile_exists": true,
+      "failing_checks": [],
+      "proposed_additions": {
+        "required_paths": [
+          {
+            "question_id": "QE11",
+            "path": "stream",
+            "description": "[proposed] stream detected in payload \u2014 review and rename"
+          },
+          {
+            "question_id": "QE12",
+            "path": "signal_output_path",
+            "description": "[proposed] signal_output_path detected in payload \u2014 review and rename"
+          },
+          {
+            "question_id": "QE13",
+            "path": "condition_output_path",
+            "description": "[proposed] condition_output_path detected in payload \u2014 review and rename"
+          },
+          {
+            "question_id": "QE14",
+            "path": "signals.SIG-001",
+            "description": "[proposed] signals.SIG-001 detected in payload \u2014 review and rename"
+          },
+          {
+            "question_id": "QE15",
+            "path": "signals.SIG-001.signal_id",
+            "description": "[proposed] signals.SIG-001.signal_id detected in payload \u2014 review and rename"
+          },
+          {
+            "question_id": "QE16",
+            "path": "signals.SIG-001.canonical_name",
+            "description": "[proposed] signals.SIG-001.canonical_name detected in payload \u2014 review and rename"
+          },
+          {
+            "question_id": "QE17",
+            "path": "signals.SIG-001.ckr",
+            "description": "[proposed] signals.SIG-001.ckr detected in payload \u2014 review and rename"
+          },
+          {
+            "question_id": "QE18",
+            "path": "signals.SIG-001.state",
+            "description": "[proposed] signals.SIG-001.state detected in payload \u2014 review and rename"
+          },
+          {
+            "question_id": "QE19",
+            "path": "signals.SIG-001.output",
+            "description": "[proposed] signals.SIG-001.output detected in payload \u2014 review and rename"
+          },
+          {
+            "question_id": "QE20",
+            "path": "signals.SIG-001.traceability",
+            "description": "[proposed] signals.SIG-001.traceability detected in payload \u2014 review and rename"
+          }
+        ],
+        "enum_paths": []
+      },
+      "impact_assessment": {
+        "existing_checks": 11,
+        "proposed_new_checks": 10,
+        "total_after_acceptance": 21
+      },
+      "acceptance_rule": "Profile extension MUST NOT be applied automatically. Move proposed_additions into profiles.<profile> only in an explicit governed stream."
     }
   }
 }
