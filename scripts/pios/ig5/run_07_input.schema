@@ -1,0 +1,17 @@
+# IG.5 Source Profile Schema — run_07_source_profiled_ingestion
+# Generated: 2026-04-04
+
+run_id=run_07_source_profiled_ingestion
+baseline_anchor=pios-core-v0.4-final
+branch=work/ig-foundation
+profile.kind=LOCAL_SNAPSHOT
+profile.admissibility=GOVERNED
+profile.resolution=DETERMINISTIC
+source_path=/Users/khorrix/Projects/blueedge-program-intelligence/source-v3.23
+output_root=/Users/khorrix/Projects/k-pi-core/docs/pios/runs/run_07_source_profiled_ingestion
+reference_run=/Users/khorrix/Projects/k-pi-core/docs/pios/runs/run_06_orchestrated_ingestion
+orchestration_launcher=/Users/khorrix/Projects/k-pi-core/scripts/pios/ig4/orchestration_launcher.sh
+github.mode=ENABLED
+jira.mode=CAPSULE
+run.mode=SOURCE_PROFILED_INGESTION
+execution.mode=CREATE_ONLY

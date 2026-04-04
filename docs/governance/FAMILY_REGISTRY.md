@@ -37,6 +37,7 @@ An unknown family must trigger FAMILY_DISCOVERY mode, not normal execution.
 | Family ID | Purpose summary | Definition file | Profile file | Status | Registered |
 |---|---|---|---|---|---|
 | EX | Execution binding, verification, bridge, trace, debug | families/EX.md | families/EX.json | REGISTERED | 2026-04-04 |
+| IG | Governed ingestion pipeline (source → verified 40.x reproduction) | families/IG.md | families/IG.json | REGISTERED | 2026-04-04 |
 | 40 | PiOS core deterministic runtime (signals → intelligence) | families/40.md | families/40.json | REGISTERED | 2026-04-04 |
 | 42 | Consumption, query, narrative, delivery, demo exposure | families/42.md | families/42.json | REGISTERED | 2026-04-04 |
 | 51 | Runtime layer: UI, API, scenario execution | families/51.md | families/51.json | REGISTERED | 2026-04-04 |

@@ -1,0 +1,29 @@
+{
+  "stream": "GOV.2",
+  "date": "2026-04-04",
+  "status": "COMPLETE",
+  "checks": [
+    {"id": "V01", "name": "validate_zero_delta.sh created and executable", "result": "PASS"},
+    {"id": "V02", "name": "validate_git_hygiene.sh created and executable", "result": "PASS"},
+    {"id": "V03", "name": "validate_contract.sh created and executable", "result": "PASS"},
+    {"id": "V04", "name": "12 per-stream validators deleted from scripts/pios/ig2-5/", "result": "PASS"},
+    {"id": "V05", "name": "No validate_*.sh remain in scripts/pios/ (global clean)", "result": "PASS"},
+    {"id": "V06", "name": "zero-delta parity: run_03 vs run_04 — PASS 44/44", "result": "PASS"},
+    {"id": "V07", "name": "zero-delta parity: run_04 vs run_05 — PASS 44/44", "result": "PASS"},
+    {"id": "V08", "name": "zero-delta parity: run_05 vs run_06 — PASS 44/44", "result": "PASS"},
+    {"id": "V09", "name": "zero-delta parity: run_06 vs run_07 — PASS 44/44", "result": "PASS"},
+    {"id": "V10", "name": "git hygiene shared: run_07 scope — PASS 9/9", "result": "PASS"},
+    {"id": "V11", "name": "contract validator shared: IG.3 — PASS 10/10", "result": "PASS"},
+    {"id": "V12", "name": "contract validator shared: IG.4 — PASS 9/9", "result": "PASS"},
+    {"id": "V13", "name": "contract validator shared: IG.5 — PASS 11/11", "result": "PASS"},
+    {"id": "V14", "name": "GOV.0 C6 promoted to hard FAIL when shared scripts present", "result": "PASS"},
+    {"id": "V15", "name": "GOV.0 C6 promotion: hard FAIL fires on contract with per-stream validator creation", "result": "PASS"},
+    {"id": "V16", "name": "GOV.0 regression: clean IG contract still PASS 20/20", "result": "PASS"},
+    {"id": "V17", "name": "GOV.1 gate: C1 VALIDATOR_DUPLICATION — PASS (0 per-stream validators remain)", "result": "PASS"},
+    {"id": "V18", "name": "GOV.1 gate: C6 BASELINE_MUTATION — PASS 6/6", "result": "PASS"},
+    {"id": "V19", "name": "GIT_DIRTY: prior-stream uncommitted work (not GOV.2 violation)", "result": "INFO"}
+  ],
+  "fail_count": 0,
+  "pass_count": 18,
+  "info_count": 1
+}

@@ -1,0 +1,58 @@
+{
+  "family": "IG",
+  "status": "REGISTERED",
+  "profiles": {
+    "zero_delta": {
+      "description": "Zero-delta comparison between run namespaces — post-normalization diff must be 0",
+      "required_paths": [
+        ["Q1", "comparison.run_a", "source run namespace declared"],
+        ["Q2", "comparison.run_b", "target run namespace declared"],
+        ["Q3", "result", "comparison result declared"],
+        ["Q4", "normalization_rules_applied", "normalization rules declared"]
+      ],
+      "enum_paths": [
+        ["result", ["NONE", "STRUCTURALLY_EQUIVALENT", "DRIFT_MINOR", "DRIFT_MAJOR", "DRIFT_CRITICAL"]]
+      ]
+    },
+    "source_profile_contract": {
+      "description": "Source profile contract — admissibility state, resolution, profile kind, source binding",
+      "required_paths": [
+        ["Q1", "profile.kind", "profile kind declared"],
+        ["Q2", "profile.admissibility", "admissibility state declared"],
+        ["Q3", "profile.resolution", "resolution state declared"],
+        ["Q4", "source.binding", "source binding declared"]
+      ],
+      "enum_paths": [
+        ["profile.kind", ["LOCAL_SNAPSHOT", "GITHUB_REPOSITORY"]],
+        ["profile.admissibility", ["GOVERNED"]],
+        ["profile.resolution", ["DETERMINISTIC"]],
+        ["source.binding", ["EXTERNAL"]]
+      ]
+    },
+    "bootstrap_contract": {
+      "description": "Bootstrap pipeline contract — CREATE-ONLY mode, delegation chain integrity",
+      "required_paths": [
+        ["Q1", "write_mode", "write mode declared"],
+        ["Q2", "target_namespace", "target namespace declared"],
+        ["Q3", "source_path", "source path declared"],
+        ["Q4", "reference_run", "reference run for zero-delta comparison declared"]
+      ],
+      "enum_paths": [
+        ["write_mode", ["CREATE_ONLY"]]
+      ]
+    },
+    "git_hygiene": {
+      "description": "Git hygiene — branch scope, baseline anchor intact, no unintended writes",
+      "required_paths": [
+        ["Q1", "branch", "branch declared"],
+        ["Q2", "baseline_anchor", "baseline anchor recorded"],
+        ["Q3", "result", "hygiene result declared"],
+        ["Q4", "baseline_mutation", "baseline mutation check result"]
+      ],
+      "enum_paths": [
+        ["result", ["PASS", "FAIL"]],
+        ["baseline_mutation", ["NONE", "DETECTED"]]
+      ]
+    }
+  }
+}
