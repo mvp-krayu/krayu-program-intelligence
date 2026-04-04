@@ -168,7 +168,7 @@ if [ -d "$TARGET_NS/40.2" ] || [ -d "$TARGET_NS/40.3" ] || [ -d "$TARGET_NS/40.4
         rel="${f#$ref/}"
         t="$TARGET_NS/$rel"
         [ ! -f "$t" ] && continue
-        diff_lines=$(diff <(normalize_file "$f") <(normalize_file "$t") 2>/dev/null | wc -l | tr -d ' ')
+        diff_lines=$(diff <(normalize_file "$f") <(normalize_file "$t") 2>/dev/null | wc -l | tr -d ' ') || true
         [ "$diff_lines" -gt 0 ] && sample_drift=$((sample_drift + diff_lines))
       done
 
@@ -234,7 +234,7 @@ if [ -d "$GOV_ARTIFACT_DIR" ] && [ "$GOV_COUNT" -gt 0 ] 2>/dev/null; then
 
   # Find the most recent peer stream's governance dir (same family prefix)
   FAMILY_PREFIX=$(echo "$STREAM_ID" | sed 's/\.[0-9]*$//')
-  PEER_DIRS=$(find "$REPO_ROOT/docs/pios" -maxdepth 1 -type d -name "${FAMILY_PREFIX}.*" ! -path "$GOV_ARTIFACT_DIR" 2>/dev/null | sort -V | tail -2)
+  PEER_DIRS=$(find "$REPO_ROOT/docs/pios" -maxdepth 1 -type d -name "${FAMILY_PREFIX}.*" ! -path "$GOV_ARTIFACT_DIR" 2>/dev/null | sort | tail -2)
 
   for peer_dir in $PEER_DIRS; do
     [ ! -d "$peer_dir" ] && continue
@@ -251,7 +251,7 @@ if [ -d "$GOV_ARTIFACT_DIR" ] && [ "$GOV_COUNT" -gt 0 ] 2>/dev/null; then
         # Normalize both (strip headers, stream IDs, dates)
         norm_self=$(normalize_file "$art_file" | sed "s/${STREAM_ID}/__STREAM__/gi; s/${STREAM_SLUG}/__STREAM__/gi")
         norm_peer=$(normalize_file "$peer_file" | sed "s/$(basename "$peer_dir")/__STREAM__/gi")
-        diff_lines=$(diff <(echo "$norm_self") <(echo "$norm_peer") 2>/dev/null | grep "^[<>]" | wc -l | tr -d ' ')
+        diff_lines=$(diff <(echo "$norm_self") <(echo "$norm_peer") 2>/dev/null | grep "^[<>]" | wc -l | tr -d ' ') || true
         total_lines=$(wc -l < "$art_file" | tr -d ' ')
         delta_pct=100
         [ "$total_lines" -gt 0 ] && delta_pct=$(( (diff_lines * 100) / total_lines ))

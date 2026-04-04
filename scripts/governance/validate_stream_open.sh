@@ -214,7 +214,8 @@ if [ "$IS_FRAMEWORK_STREAM" -eq 1 ]; then
 else
   # Check if DELTA or STREAM-SPECIFIC INSTRUCTIONS mention creating per-stream validate_ scripts
   STREAM_ID_SLUG=$(echo "$STREAM_ID" | tr '[:upper:]' '[:lower:]' | tr -cd 'a-z0-9')
-  VALIDATOR_CREATION=$(grep -iE "create.*validat|validat.*script|validate_[a-z].*\.sh|scripts/pios/[a-z0-9]+/validate_" "$CONTRACT_FILE" 2>/dev/null || echo "")
+  # Exclude lines referencing scripts/governance/ — those are shared scripts, not per-stream creation
+  VALIDATOR_CREATION=$(grep -iE "create.*validat|validat.*script|validate_[a-z].*\.sh|scripts/pios/[a-z0-9]+/validate_" "$CONTRACT_FILE" 2>/dev/null | grep -v "scripts/governance/" || echo "")
 
   if [ -n "$VALIDATOR_CREATION" ]; then
     # Check if shared parameterized equivalents exist (GOV.2 created these)
