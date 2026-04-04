@@ -37,6 +37,13 @@ FAIL-SAFE RULE
 {{FAIL_SAFE_RULE}}
 State explicitly: what condition triggers fail-safe, and what the engine must return.
 
+ARTIFACT MODE
+{{ARTIFACT_MODE}}
+Values: PRODUCE | NONE
+PRODUCE = stream must write at least one governed artifact before PASS is valid (default)
+NONE = stream produces no artifacts by design; must be declared explicitly with justification
+If omitted: treated as PRODUCE. A stream that produces no artifacts under PRODUCE mode is a GOVERNANCE_FAIL.
+
 OBJECTIVE
 {{OBJECTIVE}}
 

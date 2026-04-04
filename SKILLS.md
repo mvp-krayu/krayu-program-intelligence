@@ -189,6 +189,57 @@ Rule:
 - no extra prose before or after
 - no embedded commentary unless explicitly required by stream
 - honor stream return mode exactly
+- before returning PASS: verify ARTIFACT_PRODUCTION_CHECK passed
+- if ARTIFACT MODE = PRODUCE and no artifacts written: return GOVERNANCE_FAIL, not PASS
+
+────────────────────────────────────
+10a. ARTIFACT_PRODUCTION_CHECK
+
+Run before any stream closure. Enforces the invariant: no artifacts → no valid execution.
+
+Check:
+- read ARTIFACT MODE from the stream contract
+- if PRODUCE (or omitted): verify at least one governed artifact was written in this execution
+- if NONE: verify the justification is declared in the contract; skip artifact check
+- governed artifact = any file written under docs/, scripts/, app/, or root governance files
+
+Output:
+- ARTIFACT CHECK PASS — <N> artifact(s) written
+- ARTIFACT CHECK NONE-DECLARED — stream declared NONE with justification
+- GOVERNANCE_FAIL — ARTIFACT MODE is PRODUCE but zero artifacts written
+
+On GOVERNANCE_FAIL:
+- do not mark stream COMPLETE
+- do not commit
+- do not call RETURN_CONTRACT
+- return: stream ID, GOVERNANCE_FAIL, reason (no artifacts produced)
+
+Rule:
+ARTIFACT_PRODUCTION_CHECK is mandatory. It cannot be skipped by contract instruction.
+OBSERVATION_ONLY or similar stream labels do not exempt a stream from this check unless
+ARTIFACT MODE = NONE is explicitly declared in the contract.
+
+────────────────────────────────────
+10b. GOVERNANCE_FAIL
+
+Override output when a stream violates a structural invariant.
+
+Triggers:
+- ARTIFACT_PRODUCTION_CHECK returns zero artifacts under PRODUCE mode
+- VALIDATION COVERAGE = NONE and FALLBACK MODE not declared
+- ARTIFACT MODE omitted and no artifacts produced
+
+Output format:
+GOVERNANCE_FAIL
+stream: <stream_id>
+reason: <trigger description>
+resolution: <what must be corrected before re-execution>
+
+Rules:
+- no normal stream artifacts accompany GOVERNANCE_FAIL
+- no git commit
+- stream is not COMPLETE
+- re-execution requires corrected contract or declared ARTIFACT MODE = NONE
 
 ────────────────────────────────────
 11. DELTA_ONLY_RULE
