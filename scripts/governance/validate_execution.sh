@@ -32,6 +32,7 @@ while [[ $# -gt 0 ]]; do
     --reference-run)  REFERENCE_RUN="$2"; shift 2 ;;
     --gov-stream)     IS_GOV_STREAM=1; shift ;;
     --baseline-dirs)  BASELINE_DIRS="$2"; shift 2 ;;
+    --artifact-max)   GOVERNANCE_SLOT_MAX_OVERRIDE="$2"; shift 2 ;;
     *) shift ;;
   esac
 done
@@ -196,7 +197,7 @@ echo ""
 # ── CHECK 3: ARTIFACT INFLATION ───────────────────────────────────────────────
 echo "--- Check 3: Governance artifact inflation (ARTIFACT_INFLATION) ---"
 
-GOVERNANCE_SLOT_MAX=7   # per GOVERNANCE_PACK 7-slot standard
+GOVERNANCE_SLOT_MAX="${GOVERNANCE_SLOT_MAX_OVERRIDE:-7}"   # default 7-slot; override via --artifact-max N
 
 if [ -d "$GOV_ARTIFACT_DIR" ]; then
   GOV_COUNT=$(find "$GOV_ARTIFACT_DIR" -name "*.md" 2>/dev/null | wc -l | tr -d ' ')

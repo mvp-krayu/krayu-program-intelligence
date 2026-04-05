@@ -1,0 +1,192 @@
+{
+  "schema": "psee_v0",
+  "version": "0.1.0",
+  "date": "2026-04-05",
+  "stream": "PSEE.0",
+  "description": "Canonical extraction schema for transforming Phase A source corpus into Phase B (40.2) structured intake. Derived from BlueEdge v3.23.0 instantiation.",
+
+  "entity_definitions": {
+    "EvidenceDomain": {
+      "description": "A top-level grouping of evidence files sharing a common source directory and provenance.",
+      "fields": {
+        "domain_id": { "type": "string", "pattern": "Domain [0-9]+", "required": true },
+        "path": { "type": "string", "required": true, "description": "Canonical source path (inner path after packaging normalization)" },
+        "evidence_class": { "type": "string | string[]", "required": true, "enum": ["documentation", "code", "configuration", "structural artifact", "interface artifact", "extraction metadata", "provenance only"] },
+        "intake_status": { "type": "string", "required": true, "enum": ["ACCEPTED", "ACCEPTED-SUPPORT-ONLY", "EXISTENCE CONFIRMED - NOT INGESTED"] },
+        "restriction_note": { "type": "string", "required": false, "description": "Present when intake_status = ACCEPTED-SUPPORT-ONLY" },
+        "sub_tables": { "type": "SubTable[]", "required": false },
+        "file_count": { "type": "integer", "required": true, "minimum": 0 },
+        "overlap_status": { "type": "string", "required": false, "enum": ["NOTED", "NONE"] }
+      }
+    },
+
+    "SubTable": {
+      "description": "A typed grouping of files within an EvidenceDomain, reflecting architectural sub-units.",
+      "fields": {
+        "sub_table_id": { "type": "string", "required": true },
+        "label": { "type": "string", "required": true, "description": "Architectural role label (e.g., Infrastructure Artifacts, Domain Modules)" },
+        "file_rows": { "type": "FileRow[]", "required": true }
+      }
+    },
+
+    "FileRow": {
+      "description": "A single evidence file or pattern row within a sub-table.",
+      "fields": {
+        "name_or_pattern": { "type": "string", "required": true, "description": "Literal filename or {placeholder} pattern for repeated structures" },
+        "file_type": { "type": "string", "required": true },
+        "is_pattern": { "type": "boolean", "default": false, "description": "True if this row represents N instances of a structural pattern" },
+        "instance_count": { "type": "integer", "required": false, "description": "Number of instances when is_pattern = true" }
+      }
+    },
+
+    "CanonicalEvidenceUnit": {
+      "description": "A CEU — the normalized, canonical representation of one logical evidence source. Stable identifier shared across all 40.2 artifacts.",
+      "fields": {
+        "canonical_id": { "type": "string", "pattern": "CEU-[0-9]{2}", "required": true },
+        "canonical_path": { "type": "string", "required": true },
+        "evidence_class": { "type": "string | string[]", "required": true },
+        "evidence_subclass": { "type": "string", "required": false },
+        "intake_status": { "type": "string", "required": true, "enum": ["ACCEPTED", "ACCEPTED — support evidence only", "NOT INGESTED"] },
+        "scope": { "type": "string", "required": false, "description": "File count, technology, and role summary for large CEUs" },
+        "canonical_preference": { "type": "string", "required": false },
+        "overlap_id": { "type": "string", "required": false, "pattern": "OVL-[0-9]{2} | NONE" },
+        "unknown_space": { "type": "string", "required": false, "pattern": "US-[0-9]{2} | NONE" },
+        "authority": { "type": "string", "required": false, "description": "Authority level annotation (support-only restriction)" },
+        "sub_units": { "type": "CEUSubUnit[]", "required": false }
+      }
+    },
+
+    "CEUSubUnit": {
+      "description": "A typed functional grouping within a large CEU (R-ABS-02 pattern).",
+      "fields": {
+        "sub_unit_id": { "type": "string", "pattern": "CEU-[0-9]{2}-[A-Z]+", "required": true },
+        "path_pattern": { "type": "string", "required": true },
+        "evidence_class": { "type": "string", "required": true },
+        "overlap": { "type": "string", "required": false, "enum": ["NONE", "OVL-01", "OVL-02"] }
+      }
+    },
+
+    "OverlapDeclaration": {
+      "description": "An OVL record declaring structural similarity between two CEUs, with canonical preference assignment.",
+      "fields": {
+        "overlap_id": { "type": "string", "pattern": "OVL-[0-9]{2}", "required": true },
+        "unit_a": { "type": "string", "description": "CEU-ID of first unit", "required": true },
+        "unit_b": { "type": "string", "description": "CEU-ID of second unit", "required": true },
+        "observed_similarity": { "type": "string", "required": true },
+        "file_level_parity": { "type": "string", "required": true, "enum": ["KNOWN", "UNKNOWN"] },
+        "canonical_for_isolated_evidence": { "type": "string", "required": true, "description": "CEU-ID preferred for module-level code evidence" },
+        "canonical_for_integrated_context": { "type": "string", "required": true, "description": "CEU-ID preferred for system-level context" },
+        "resolution_status": { "type": "string", "required": true, "enum": ["RESOLVED", "UNRESOLVED"] },
+        "pipeline_impact": { "type": "string", "required": true }
+      }
+    },
+
+    "UnknownSpace": {
+      "description": "A US record declaring an explicit epistemological gap — a position where information is absent and must not be inferred.",
+      "fields": {
+        "us_id": { "type": "string", "pattern": "US-[0-9]{2}", "required": true },
+        "description": { "type": "string", "required": true },
+        "downstream_impact": { "type": "string", "required": false }
+      }
+    },
+
+    "ClassificationRecord": {
+      "description": "A single evidence unit's class assignment in the evidence_classification_map.",
+      "fields": {
+        "evidence_unit": { "type": "string", "required": true, "description": "File name, path pattern, or CEU reference" },
+        "domain": { "type": "string", "required": true },
+        "evidence_class": { "type": "string", "required": true },
+        "evidence_subclass": { "type": "string", "required": true },
+        "priority": { "type": "string", "required": true, "enum": ["PRIMARY", "SUPPORT ONLY", "OVERLAP-NOTED", "NOT INGESTED"] }
+      }
+    },
+
+    "ValidationCheck": {
+      "description": "A single validation check in the intake_validation_log.",
+      "fields": {
+        "check_number": { "type": "integer", "required": true },
+        "description": { "type": "string", "required": true },
+        "check_type": { "type": "string", "required": true, "enum": ["existence", "mapping", "exclusion-compliance", "type-compliance", "assumption-compliance", "completeness", "inference-guard"] },
+        "findings": { "type": "string | object", "required": true },
+        "result": { "type": "string", "required": true, "enum": ["PASS", "FAIL"] }
+      }
+    },
+
+    "PathNormalizationRecord": {
+      "description": "A documented path duplication classification and collapse decision.",
+      "fields": {
+        "dup_id": { "type": "string", "pattern": "DUP-[0-9]{2}", "required": true },
+        "observed_path": { "type": "string", "required": true },
+        "classification": { "type": "string", "required": true, "enum": ["EXTRACTION_ARTIFACT", "PACKAGING_BOUNDARY", "ARCHITECTURAL_STRUCTURE"] },
+        "evidence_citation": { "type": "string[]", "required": true, "description": "Phase A files supporting the classification" },
+        "canonical_reference": { "type": "string", "required": true },
+        "collapsed": { "type": "boolean", "required": true }
+      }
+    }
+  },
+
+  "rule_types": {
+    "R-GRP": "Grouping — assembles multiple evidence items into a named domain or sub-group",
+    "R-FLT": "Filtering — controls intake_status assignment and exclusion from primary evidence",
+    "R-NRM": "Normalization — resolves structural ambiguity (duplicate paths, overlaps, unknown-space)",
+    "R-ABS": "Abstraction — collapses collections or patterns into canonical named units",
+    "R-NAM": "Naming — assigns stable, systematic identifiers to CEUs and sub-units"
+  },
+
+  "rule_execution_order": [
+    "R-NRM-01 — Path normalization must precede all other rules to ensure canonical paths are used",
+    "R-FLT-01 — Provenance filtering before domain grouping",
+    "R-FLT-02 — Support-only downgrade before classification",
+    "R-FLT-03 — Exclusion list filtering before any content analysis",
+    "R-GRP-01 — Top-level domain grouping after filtering",
+    "R-GRP-02 — Sub-grouping within domains",
+    "R-GRP-03 — Platform unique/embedded separation",
+    "R-ABS-01 — CEU abstraction after domain grouping",
+    "R-ABS-02 — Pattern abstraction within CEUs",
+    "R-NRM-02 — Overlap declaration after CEU identification",
+    "R-NRM-03 — Unknown-space preservation after overlap declaration",
+    "R-NAM-01 — CEU ID assignment after all units defined",
+    "R-NAM-02 — Sub-unit ID assignment after parent CEU IDs confirmed"
+  ],
+
+  "intake_state_machine": {
+    "states": {
+      "ACCEPTED": "Full primary evidence — used for all downstream analysis",
+      "ACCEPTED-SUPPORT-ONLY": "Extraction metadata — used for context only; not primary evidence authority",
+      "EXISTENCE CONFIRMED - NOT INGESTED": "Provenance archives — existence recorded; content not ingested",
+      "NOT INGESTED": "Same as above in CEU format",
+      "EXCLUDED": "Prior analytical outputs — explicitly not in scope per evidence_boundary.md"
+    },
+    "transitions": {
+      "default_for_primary_origin_paths": "ACCEPTED",
+      "if_source_materials_note_lightweight": "ACCEPTED → ACCEPTED-SUPPORT-ONLY (R-FLT-02)",
+      "if_in_provenance_only_paths": "ACCEPTED → NOT INGESTED (R-FLT-01)",
+      "if_in_explicitly_excluded_paths": "ACCEPTED → EXCLUDED (R-FLT-03)"
+    }
+  },
+
+  "coverage_thresholds": {
+    "minimum_mapping_coverage_percent": 90,
+    "minimum_rule_type_coverage": ["R-GRP", "R-FLT", "R-NRM", "R-ABS", "R-NAM"],
+    "reconstruction_pass_threshold": "structural_equivalence = EQUIVALENT or PARTIAL"
+  },
+
+  "output_artifacts": {
+    "evidence_surface_inventory": {
+      "entities": ["EvidenceDomain", "SubTable", "FileRow"],
+      "required_sections": ["domain_records", "summary_table", "overlap_observation", "prohibited_path_compliance", "status_block"]
+    },
+    "normalized_evidence_map": {
+      "entities": ["CanonicalEvidenceUnit", "CEUSubUnit", "OverlapDeclaration", "UnknownSpace"],
+      "required_sections": ["ceu_records", "overlap_declarations", "unknown_space_records", "priority_hierarchy", "summary_table"]
+    },
+    "evidence_classification_map": {
+      "entities": ["ClassificationRecord"],
+      "required_sections": ["classification_basis", "per_domain_tables", "summary_table", "status_block"]
+    },
+    "intake_validation_log": {
+      "entities": ["ValidationCheck"],
+      "required_sections": ["8_validation_checks", "summary_table", "completeness_statement", "status_block"]
+    }
+  }
+}
