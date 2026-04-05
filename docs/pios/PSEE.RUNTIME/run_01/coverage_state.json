@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "stream": "PSEE-RUNTIME.5A",
+  "run_id": "run_01",
+  "dimension": "DIM-01",
+  "label": "Coverage",
+  "coverage_percent": 100.0,
+  "state": "COMPUTED",
+  "state_label": "FULL",
+  "required_units": 30,
+  "admissible_units": 30,
+  "method": "IG.RUNTIME admissible coverage computation",
+  "source_artifacts": [
+    "evidence_boundary.json",
+    "admissibility_log.json",
+    "normalized_intake_structure/layer_index.json",
+    "source_manifest.json"
+  ],
+  "authority": "PSEE-GAUGE.0 DP-5-02",
+  "derivation": "coverage_percent = admissible_units / required_units * 100 = 30 / 30 * 100 = 100.0"
+}

@@ -1,0 +1,6 @@
+{
+  "operator_contact": {
+    "identifier": "local-operator",
+    "escalation_channel": "manual"
+  }
+}

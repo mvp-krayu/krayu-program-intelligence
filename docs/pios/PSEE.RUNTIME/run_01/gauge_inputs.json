@@ -1,0 +1,103 @@
+{
+  "schema_version": "1.0",
+  "stream": "PSEE-RUNTIME.3A",
+  "run_id": "run_01",
+  "engine_state_source": "engine_state.json",
+  "current_state": "PRE_EXECUTION",
+  "execution_mode": "FULL",
+  "psee_engine_invoked": false,
+  "suppression_active": false,
+  "system_identity": {
+    "system_name": "blueedge-program-intelligence",
+    "system_version": "source-v3.23",
+    "baseline_anchor": "pios-core-v0.4-final"
+  },
+  "operator_inputs": {
+    "PC-03_status": "SATISFIED",
+    "PC-05_status": "SATISFIED",
+    "phase_b_target_source": "operator_inputs.json",
+    "operator_contact_source": "operator_contact.json"
+  },
+  "panel_01": {
+    "canonical_score": 0,
+    "band_label": "BLOCKED",
+    "completion_points": 0,
+    "completion_basis": "PRE_EXECUTION — engine not started; no terminal state reached; UNDEFINED_STATE guard applied (gauge_score_model.md §G.2)",
+    "coverage_points": 0,
+    "coverage_basis": "Phase 5 not reached — engine not invoked",
+    "reconstruction_points": 0,
+    "reconstruction_basis": "Phase 6 not reached — engine not invoked",
+    "projected_score": 96,
+    "projection_rule": "PR-02-CONSERVATIVE",
+    "projection_caveat": "PROJECTED — PR-02 conservative defaults applied (90% coverage minimum, full reconstruction assumed). Actual score depends on PSEE execution outcome.",
+    "confidence_lower": 0,
+    "confidence_upper": 96,
+    "variance_reduction": 0,
+    "variance_factors": []
+  },
+  "panel_02": {
+    "DIM-01": {
+      "value": 100.0,
+      "state_label": "COMPUTED",
+      "threshold_line": 90,
+      "source_field": "PSEEContext.coverage_percent",
+      "basis": "Phase 5 not reached",
+      "reason": "Coverage computed from IG.RUNTIME evidence: 30/30 admissible units",
+      "authority": "PSEE-GAUGE.0 DP-5-02 via PSEE-RUNTIME.5A"
+    },
+    "DIM-02": {
+      "value": null,
+      "state_label": "PASS",
+      "threshold_line": null,
+      "source_field": "PSEEContext.reconstruction_result",
+      "basis": "Phase 6 not reached",
+      "reason": "Reconstruction available at Phase 6 (S-12→S-13) — engine at PHASE_1_ACTIVE has not reached Phase 6",
+      "authority": "PSEE-GAUGE.0/dimension_projection_model.md §DIM-02 Unavailable conditions"
+    },
+    "DIM-03": {
+      "value": 100,
+      "state_label": "CLEAR",
+      "threshold_line": null,
+      "source_field": "PSEEContext.escalation_log",
+      "basis": "0 total escalations in IG pipeline → clearance=100 per dimension_projection_model.md §DIM-03 formula"
+    },
+    "DIM-04": {
+      "total_count": 0,
+      "state_label": "NONE",
+      "breakdown": {
+        "US-CONDITION-01": 0,
+        "US-CONDITION-02": 0,
+        "US-CONDITION-03": 0
+      },
+      "drill_down_link": "RL-01",
+      "basis": "IG pipeline produced no unknown-space events"
+    },
+    "DIM-05": {
+      "state": "COMPLETE",
+      "source_field": "PSEEContext.filter_table",
+      "basis": "30/30 artifacts ADMITTED; decision basis: IG.6 orchestration gate PASS — ORCHESTRATION_COMPLETE 26/26; IG.7 batch runner BATCH_COMPLETE 9/9"
+    },
+    "DIM-06": {
+      "state": "PASS",
+      "source_field": "PSEEContext.flags",
+      "basis": "IG pipeline completed with no heuristic STOP events (IG.6 ORCHESTRATION_COMPLETE)"
+    }
+  },
+  "panel_03": {
+    "open_escalations": 0,
+    "us_record_count": 0
+  },
+  "panel_04": {
+    "run_entry": {
+      "run_id": "run_01",
+      "system_name": "blueedge-program-intelligence",
+      "system_version": "source-v3.23",
+      "final_state": "PRE_EXECUTION",
+      "canonical_score": 0,
+      "band": "BLOCKED",
+      "coverage_percent": null,
+      "us_record_count": 0,
+      "open_escalations": 0
+    }
+  }
+}

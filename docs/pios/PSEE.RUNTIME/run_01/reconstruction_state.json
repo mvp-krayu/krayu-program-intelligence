@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "stream": "PSEE-RUNTIME.6A",
+  "run_id": "run_01",
+  "dimension": "DIM-02",
+  "label": "Reconstruction",
+  "state": "PASS",
+  "violations": [],
+  "validated_units": 30,
+  "total_units": 30,
+  "axis_results": {
+    "COMPLETENESS": "PASS",
+    "STRUCTURAL_LINK": "PASS",
+    "REFERENTIAL_INTEGRITY": "PASS",
+    "LAYER_CONSISTENCY": "PASS"
+  },
+  "method": "IG.RUNTIME structural reconstruction validation",
+  "source_artifacts": [
+    "evidence_boundary.json",
+    "admissibility_log.json",
+    "normalized_intake_structure/layer_index.json",
+    "normalized_intake_structure/provenance_chain.json",
+    "normalized_intake_structure/source_profile.json"
+  ],
+  "authority": "PSEE-GAUGE.0 DP-6-03"
+}

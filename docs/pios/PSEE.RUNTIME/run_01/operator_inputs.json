@@ -1,0 +1,8 @@
+{
+  "phase_b_target": {
+    "declaration_path": "docs/pios/PSEE.RUNTIME/run_01/operator_case_view.md",
+    "artifact_names": [
+      "operator_case_view.md"
+    ]
+  }
+}

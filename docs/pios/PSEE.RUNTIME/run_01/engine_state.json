@@ -1,0 +1,111 @@
+{
+  "schema_version": "1.0",
+  "stream": "PSEE-RUNTIME.4",
+  "run_id": "run_01",
+  "execution_status": "PHASE_1_ACTIVE",
+  "psee_engine_invoked": true,
+  "rhp_source": {
+    "run_id": "run_07_source_profiled_ingestion",
+    "governance": "IG-PSEE-HANDOFF.0",
+    "admissibility": "GOVERNED",
+    "resolution": "DETERMINISTIC",
+    "total_admitted": 30,
+    "total_excluded": 0,
+    "decision_basis": "IG.6 orchestration gate PASS — ORCHESTRATION_COMPLETE 26/26; IG.7 batch runner BATCH_COMPLETE 9/9"
+  },
+  "preconditions": {
+    "PC-01": {
+      "name": "corpus_root",
+      "status": "SATISFIED",
+      "source": "source_manifest.json",
+      "value": "GOVERNED",
+      "authority": "PSEE-OPS.0/operator_input_contract.md §source_location"
+    },
+    "PC-02": {
+      "name": "boundary_definition",
+      "status": "SATISFIED",
+      "source": "evidence_boundary.json",
+      "value": "RHP",
+      "enforcement": "STRICT",
+      "authority": "PSEE-OPS.0/operator_input_contract.md §boundary_definition"
+    },
+    "PC-03": {
+      "name": "phase_b_target",
+      "status": "SATISFIED",
+      "source": "operator_inputs.json",
+      "authority": "PSEE-OPS.0/operator_input_contract.md §phase_b_target",
+      "declaration_path": "docs/pios/PSEE.RUNTIME/run_01/operator_case_view.md",
+      "artifact_names": [
+        "operator_case_view.md"
+      ]
+    },
+    "PC-04": {
+      "name": "system_identity",
+      "status": "AVAILABLE",
+      "system_name": "blueedge-program-intelligence",
+      "version": "source-v3.23",
+      "baseline_anchor": "pios-core-v0.4-final",
+      "source": "normalized_intake_structure/source_profile.json",
+      "authority": "PSEE-OPS.0/operator_input_contract.md §system_identity"
+    },
+    "PC-05": {
+      "name": "operator_contact",
+      "status": "SATISFIED",
+      "source": "operator_contact.json",
+      "authority": "PSEE-OPS.0/operator_input_contract.md §operator_contact",
+      "identifier": "local-operator",
+      "escalation_channel": "manual"
+    }
+  },
+  "derived_state": {
+    "intake_completeness": {
+      "status": "COMPLETE",
+      "basis": "30/30 artifacts ADMITTED; decision basis: IG.6 orchestration gate PASS — ORCHESTRATION_COMPLETE 26/26; IG.7 batch runner BATCH_COMPLETE 9/9",
+      "authority": "dimension_projection_model.md §DIM-05"
+    },
+    "heuristic_compliance": {
+      "status": "PASS",
+      "basis": "IG pipeline completed with no heuristic STOP events (IG.6 ORCHESTRATION_COMPLETE)",
+      "authority": "dimension_projection_model.md §DIM-06"
+    },
+    "escalation_clearance": {
+      "value": 100,
+      "state": "CLEAR",
+      "total_escalations": 0,
+      "basis": "0 total escalations in IG pipeline → clearance=100 per dimension_projection_model.md §DIM-03 formula",
+      "authority": "dimension_projection_model.md §DIM-03"
+    },
+    "unknown_space": {
+      "total_count": 0,
+      "state": "NONE",
+      "breakdown": {
+        "US-CONDITION-01": 0,
+        "US-CONDITION-02": 0,
+        "US-CONDITION-03": 0
+      },
+      "basis": "IG pipeline produced no unknown-space events",
+      "authority": "dimension_projection_model.md §DIM-04"
+    }
+  },
+  "provenance": {
+    "chain_length": 6,
+    "invariants_confirmed": [
+      "ADMISSIBLE",
+      "INVARIANT",
+      "DETERMINISTIC",
+      "ADAPTER_INVARIANT",
+      "BOOTSTRAP_INVARIANT",
+      "ORCHESTRATION_INVARIANT",
+      "SOURCE_PROFILE_INVARIANT",
+      "PAYLOAD_NORMALIZED"
+    ],
+    "source_profile_verdict": "PASS",
+    "zero_delta_result": "NONE"
+  },
+  "transition": {
+    "previous_state": "PRE_EXECUTION",
+    "new_state": "PHASE_1_ACTIVE",
+    "trigger": "PRECONDITION_COMPLETE",
+    "timestamp": "2026-04-05T16:48:10Z"
+  }
+}
