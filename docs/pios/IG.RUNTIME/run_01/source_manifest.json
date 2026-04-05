@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0",
+  "stream": "IG-PSEE-HANDOFF.0",
+  "run_id": "run_01",
+  "date": "2026-04-05",
+  "source_run": "run_07_source_profiled_ingestion",
+  "baseline_commit": "9000f73eb1c88d2f13b19e748f065d8700d9ea72",
+  "source": {
+    "kind": "LOCAL_SNAPSHOT",
+    "version": "blueedge-program-intelligence/source-v3.23",
+    "admissibility": "GOVERNED",
+    "resolution": "DETERMINISTIC",
+    "baseline_anchor": "pios-core-v0.4-final",
+    "governance_chain": ["IG.5", "IG.6", "IG.7"],
+    "source_path": "docs/pios/runs/run_07_source_profiled_ingestion"
+  },
+  "layers": {
+    "L40_2": {
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.2",
+      "artifact_count": 4,
+      "admission_status": "ADMITTED",
+      "ingestion_decision": "GOVERNED_PASS",
+      "artifacts": [
+        "evidence_classification_map.md",
+        "evidence_surface_inventory.md",
+        "intake_validation_log.md",
+        "normalized_evidence_map.md"
+      ]
+    },
+    "L40_3": {
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.3",
+      "artifact_count": 6,
+      "admission_status": "ADMITTED",
+      "ingestion_decision": "GOVERNED_PASS",
+      "artifacts": [
+        "dependency_map.md",
+        "entity_catalog.md",
+        "interface_map.md",
+        "program_execution_graph.md",
+        "reconstruction_validation_log.md",
+        "structural_traceability_map.md"
+      ]
+    },
+    "L40_4": {
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4",
+      "artifact_count": 17,
+      "admission_status": "ADMITTED",
+      "ingestion_decision": "GOVERNED_PASS",
+      "artifacts": [
+        "activity_telemetry.md",
+        "delivery_telemetry.md",
+        "dependency_telemetry.md",
+        "domain_telemetry.md",
+        "entity_telemetry.md",
+        "interface_telemetry.md",
+        "structural_telemetry.md",
+        "structure_immutability_log.md",
+        "telemetry_dimension_catalog.md",
+        "telemetry_normalization_spec.md",
+        "telemetry_schema.md",
+        "telemetry_surface_definition.md",
+        "telemetry_surface_map.md",
+        "telemetry_to_peg_mapping.md",
+        "telemetry_traceability_map.md",
+        "telemetry_validation_log.md",
+        "temporal_telemetry_series.md"
+      ]
+    }
+  },
+  "root_artifacts": {
+    "source_path": "docs/pios/runs/run_07_source_profiled_ingestion",
+    "artifacts": [
+      "adapter_binding.md",
+      "payload_manifest.json",
+      "run_manifest.md"
+    ]
+  },
+  "total_admitted_artifacts": 30,
+  "provenance": {
+    "orchestration_gate": "IG.6",
+    "source_profile_layer": "IG.5",
+    "payload_normalization": "IG.7",
+    "admissibility_confirmed": true,
+    "determinism_confirmed": true
+  }
+}

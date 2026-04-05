@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "stream": "IG-PSEE-HANDOFF.0",
+  "run_id": "run_01",
+  "date": "2026-04-05",
+  "source_run": "run_07_source_profiled_ingestion",
+  "source_profile": {
+    "kind": "LOCAL_SNAPSHOT",
+    "version": "blueedge-program-intelligence/source-v3.23",
+    "admissibility": "GOVERNED",
+    "resolution": "DETERMINISTIC",
+    "baseline_anchor": "pios-core-v0.4-final",
+    "source_path": "/Users/khorrix/Projects/blueedge-program-intelligence/source-v3.23",
+    "github_evidence_sha": "68fe546ce95f330399c79d07fa2e5ecc3c889c12",
+    "github_output_sha": "e6948b65b28a9859849c00fd7d33247e967a5d68",
+    "github_output_branch": "work/ig-foundation"
+  },
+  "jira": {
+    "mode": "CAPSULE",
+    "project": "KRAYU",
+    "epic": "KRAYU-E001",
+    "story": "KRAYU-S010",
+    "status": "IN_PROGRESS"
+  },
+  "profile_governance": {
+    "resolver": "scripts/pios/ig5/source_profile_resolver.sh",
+    "governing_stream": "IG.5",
+    "verdict": "PASS",
+    "zero_delta_result": "NONE",
+    "determinism": "VERIFIED"
+  }
+}

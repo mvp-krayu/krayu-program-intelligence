@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0",
+  "stream": "IG-PSEE-HANDOFF.0",
+  "run_id": "run_01",
+  "date": "2026-04-05",
+  "source_run": "run_07_source_profiled_ingestion",
+  "chain": [
+    {
+      "layer": "IG.5",
+      "role": "source_profile_resolver",
+      "script": "scripts/pios/ig5/source_profile_resolver.sh",
+      "outcome": "PASS",
+      "properties": {
+        "profile_kind": "LOCAL_SNAPSHOT",
+        "admissibility": "GOVERNED",
+        "resolution": "DETERMINISTIC"
+      }
+    },
+    {
+      "layer": "IG.4",
+      "role": "orchestration_launcher",
+      "script": "scripts/pios/ig4/orchestration_launcher.sh",
+      "outcome": "PASS",
+      "properties": {
+        "source_binding": "EXTERNAL",
+        "run_mode": "ORCHESTRATED_INGESTION"
+      }
+    },
+    {
+      "layer": "IG.3",
+      "role": "bootstrap_launcher",
+      "script": "scripts/pios/ig3/bootstrap_launcher.sh",
+      "outcome": "PASS",
+      "properties": {
+        "launch_mode": "BOOTSTRAP_PIPELINE",
+        "execution_mode": "CREATE_ONLY"
+      }
+    },
+    {
+      "layer": "IG.6",
+      "role": "ingestion_orchestrator",
+      "script": "scripts/pios/ig6/ingestion_orchestrator.sh",
+      "outcome": "ORCHESTRATION_COMPLETE",
+      "checks": 26,
+      "failures": 0
+    },
+    {
+      "layer": "IG.7",
+      "role": "ingestion_batch_runner",
+      "script": "scripts/pios/ig7/ingestion_batch_runner.sh",
+      "outcome": "BATCH_COMPLETE",
+      "checks": 9,
+      "failures": 0
+    },
+    {
+      "layer": "IG-PSEE-HANDOFF.0",
+      "role": "runtime_handoff_producer",
+      "outcome": "RHP_PRODUCED",
+      "target_namespace": "docs/pios/IG.RUNTIME/run_01"
+    }
+  ],
+  "invariants_confirmed": [
+    "ADMISSIBLE",
+    "INVARIANT",
+    "DETERMINISTIC",
+    "ADAPTER_INVARIANT",
+    "BOOTSTRAP_INVARIANT",
+    "ORCHESTRATION_INVARIANT",
+    "SOURCE_PROFILE_INVARIANT",
+    "PAYLOAD_NORMALIZED"
+  ]
+}

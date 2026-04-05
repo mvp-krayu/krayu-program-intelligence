@@ -1,0 +1,175 @@
+{
+  "schema_version": "1.0",
+  "stream": "IG-PSEE-HANDOFF.0",
+  "run_id": "run_01",
+  "date": "2026-04-05",
+  "source_run": "run_07_source_profiled_ingestion",
+  "layers": [
+    {
+      "layer_id": "L40_2",
+      "role": "evidence",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.2",
+      "artifact_count": 4,
+      "artifacts": [
+        {
+          "name": "evidence_classification_map.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.2/evidence_classification_map.md",
+          "admission_status": "ADMITTED"
+        },
+        {
+          "name": "evidence_surface_inventory.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.2/evidence_surface_inventory.md",
+          "admission_status": "ADMITTED"
+        },
+        {
+          "name": "intake_validation_log.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.2/intake_validation_log.md",
+          "admission_status": "ADMITTED"
+        },
+        {
+          "name": "normalized_evidence_map.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.2/normalized_evidence_map.md",
+          "admission_status": "ADMITTED"
+        }
+      ]
+    },
+    {
+      "layer_id": "L40_3",
+      "role": "structural",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.3",
+      "artifact_count": 6,
+      "artifacts": [
+        {
+          "name": "dependency_map.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.3/dependency_map.md",
+          "admission_status": "ADMITTED"
+        },
+        {
+          "name": "entity_catalog.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.3/entity_catalog.md",
+          "admission_status": "ADMITTED"
+        },
+        {
+          "name": "interface_map.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.3/interface_map.md",
+          "admission_status": "ADMITTED"
+        },
+        {
+          "name": "program_execution_graph.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.3/program_execution_graph.md",
+          "admission_status": "ADMITTED"
+        },
+        {
+          "name": "reconstruction_validation_log.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.3/reconstruction_validation_log.md",
+          "admission_status": "ADMITTED"
+        },
+        {
+          "name": "structural_traceability_map.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.3/structural_traceability_map.md",
+          "admission_status": "ADMITTED"
+        }
+      ]
+    },
+    {
+      "layer_id": "L40_4",
+      "role": "telemetry",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4",
+      "artifact_count": 17,
+      "artifacts": [
+        {
+          "name": "activity_telemetry.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/activity_telemetry.md",
+          "admission_status": "ADMITTED"
+        },
+        {
+          "name": "delivery_telemetry.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/delivery_telemetry.md",
+          "admission_status": "ADMITTED"
+        },
+        {
+          "name": "dependency_telemetry.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/dependency_telemetry.md",
+          "admission_status": "ADMITTED"
+        },
+        {
+          "name": "domain_telemetry.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/domain_telemetry.md",
+          "admission_status": "ADMITTED"
+        },
+        {
+          "name": "entity_telemetry.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/entity_telemetry.md",
+          "admission_status": "ADMITTED"
+        },
+        {
+          "name": "interface_telemetry.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/interface_telemetry.md",
+          "admission_status": "ADMITTED"
+        },
+        {
+          "name": "structural_telemetry.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/structural_telemetry.md",
+          "admission_status": "ADMITTED"
+        },
+        {
+          "name": "structure_immutability_log.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/structure_immutability_log.md",
+          "admission_status": "ADMITTED"
+        },
+        {
+          "name": "telemetry_dimension_catalog.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/telemetry_dimension_catalog.md",
+          "admission_status": "ADMITTED"
+        },
+        {
+          "name": "telemetry_normalization_spec.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/telemetry_normalization_spec.md",
+          "admission_status": "ADMITTED"
+        },
+        {
+          "name": "telemetry_schema.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/telemetry_schema.md",
+          "admission_status": "ADMITTED"
+        },
+        {
+          "name": "telemetry_surface_definition.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/telemetry_surface_definition.md",
+          "admission_status": "ADMITTED"
+        },
+        {
+          "name": "telemetry_surface_map.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/telemetry_surface_map.md",
+          "admission_status": "ADMITTED"
+        },
+        {
+          "name": "telemetry_to_peg_mapping.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/telemetry_to_peg_mapping.md",
+          "admission_status": "ADMITTED"
+        },
+        {
+          "name": "telemetry_traceability_map.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/telemetry_traceability_map.md",
+          "admission_status": "ADMITTED"
+        },
+        {
+          "name": "telemetry_validation_log.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/telemetry_validation_log.md",
+          "admission_status": "ADMITTED"
+        },
+        {
+          "name": "temporal_telemetry_series.md",
+          "path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/temporal_telemetry_series.md",
+          "admission_status": "ADMITTED"
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "L40_2": 4,
+    "L40_3": 6,
+    "L40_4": 17,
+    "admitted": 27,
+    "excluded": 0
+  }
+}

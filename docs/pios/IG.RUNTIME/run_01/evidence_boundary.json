@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "stream": "IG-PSEE-HANDOFF.0",
+  "run_id": "run_01",
+  "date": "2026-04-05",
+  "baseline_commit": "9000f73eb1c88d2f13b19e748f065d8700d9ea72",
+  "runtime_input_class": "RHP_ONLY",
+  "rhp_definition": "Runtime Handoff Package — the only class of artifacts admitted as PSEE runtime inputs. All elements must trace to IG-governed source paths with explicit ingestion decisions.",
+  "admitted_input_class": {
+    "class": "RHP",
+    "source_run": "run_07_source_profiled_ingestion",
+    "governance": "IG-PSEE-HANDOFF.0",
+    "root": "docs/pios/IG.RUNTIME/run_01",
+    "elements": [
+      "source_manifest.json",
+      "evidence_boundary.json",
+      "admissibility_log.json",
+      "normalized_intake_structure/layer_index.json",
+      "normalized_intake_structure/source_profile.json",
+      "normalized_intake_structure/provenance_chain.json"
+    ]
+  },
+  "excluded_input_classes": [
+    {
+      "class": "PSEE_VALIDATION",
+      "reason": "Validation artifacts are governance-layer artifacts, not runtime evidence",
+      "paths": [
+        "docs/pios/PSEE.3/*",
+        "docs/pios/PSEE.3B/*",
+        "docs/pios/PSEE-GAUGE.0/*"
+      ]
+    },
+    {
+      "class": "PSEE_UI",
+      "reason": "UI/demo artifacts are L6/L7 rendering outputs, not ingestion inputs",
+      "paths": [
+        "docs/pios/PSEE.UI/*"
+      ]
+    },
+    {
+      "class": "REPLAY_ARTIFACTS",
+      "reason": "Replay artifacts are debug-mode isolates, not governed runtime inputs",
+      "pattern": "*_replay_*"
+    },
+    {
+      "class": "BEHAVIORAL_ANALYSIS",
+      "reason": "Behavioral case analysis is projection output, not ingestion-layer evidence",
+      "files": [
+        "behavioral_case_analysis.md"
+      ]
+    }
+  ],
+  "enforcement": "STRICT",
+  "boundary_authority": "IG-PSEE-HANDOFF.0",
+  "fail_safe": "Any PSEE runtime consumption of non-RHP input → FAIL_SAFE_STOP"
+}

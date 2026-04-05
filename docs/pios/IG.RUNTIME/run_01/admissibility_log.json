@@ -1,0 +1,256 @@
+{
+  "schema_version": "1.0",
+  "stream": "IG-PSEE-HANDOFF.0",
+  "run_id": "run_01",
+  "date": "2026-04-05",
+  "baseline_commit": "9000f73eb1c88d2f13b19e748f065d8700d9ea72",
+  "source_run": "run_07_source_profiled_ingestion",
+  "entries": [
+    {
+      "artifact": "adapter_binding.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/adapter_binding.md",
+      "layer": "ROOT",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.3",
+      "reason": "Bootstrap adapter binding — governed provenance chain anchor"
+    },
+    {
+      "artifact": "payload_manifest.json",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/payload_manifest.json",
+      "layer": "ROOT",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.7",
+      "reason": "Normalized payload manifest — IG.7 output, determinism-verified"
+    },
+    {
+      "artifact": "run_manifest.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/run_manifest.md",
+      "layer": "ROOT",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.3",
+      "reason": "Run manifest — bootstrap pipeline execution record"
+    },
+    {
+      "artifact": "evidence_classification_map.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.2/evidence_classification_map.md",
+      "layer": "L40_2",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Evidence layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "evidence_surface_inventory.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.2/evidence_surface_inventory.md",
+      "layer": "L40_2",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Evidence layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "intake_validation_log.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.2/intake_validation_log.md",
+      "layer": "L40_2",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Evidence layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "normalized_evidence_map.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.2/normalized_evidence_map.md",
+      "layer": "L40_2",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Evidence layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "dependency_map.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.3/dependency_map.md",
+      "layer": "L40_3",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Structural layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "entity_catalog.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.3/entity_catalog.md",
+      "layer": "L40_3",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Structural layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "interface_map.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.3/interface_map.md",
+      "layer": "L40_3",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Structural layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "program_execution_graph.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.3/program_execution_graph.md",
+      "layer": "L40_3",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Structural layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "reconstruction_validation_log.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.3/reconstruction_validation_log.md",
+      "layer": "L40_3",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Structural layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "structural_traceability_map.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.3/structural_traceability_map.md",
+      "layer": "L40_3",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Structural layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "activity_telemetry.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/activity_telemetry.md",
+      "layer": "L40_4",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Telemetry layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "delivery_telemetry.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/delivery_telemetry.md",
+      "layer": "L40_4",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Telemetry layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "dependency_telemetry.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/dependency_telemetry.md",
+      "layer": "L40_4",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Telemetry layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "domain_telemetry.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/domain_telemetry.md",
+      "layer": "L40_4",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Telemetry layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "entity_telemetry.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/entity_telemetry.md",
+      "layer": "L40_4",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Telemetry layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "interface_telemetry.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/interface_telemetry.md",
+      "layer": "L40_4",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Telemetry layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "structural_telemetry.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/structural_telemetry.md",
+      "layer": "L40_4",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Telemetry layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "structure_immutability_log.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/structure_immutability_log.md",
+      "layer": "L40_4",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Telemetry layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "telemetry_dimension_catalog.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/telemetry_dimension_catalog.md",
+      "layer": "L40_4",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Telemetry layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "telemetry_normalization_spec.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/telemetry_normalization_spec.md",
+      "layer": "L40_4",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Telemetry layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "telemetry_schema.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/telemetry_schema.md",
+      "layer": "L40_4",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Telemetry layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "telemetry_surface_definition.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/telemetry_surface_definition.md",
+      "layer": "L40_4",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Telemetry layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "telemetry_surface_map.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/telemetry_surface_map.md",
+      "layer": "L40_4",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Telemetry layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "telemetry_to_peg_mapping.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/telemetry_to_peg_mapping.md",
+      "layer": "L40_4",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Telemetry layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "telemetry_traceability_map.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/telemetry_traceability_map.md",
+      "layer": "L40_4",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Telemetry layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "telemetry_validation_log.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/telemetry_validation_log.md",
+      "layer": "L40_4",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Telemetry layer artifact — IG.6 orchestration gate PASS"
+    },
+    {
+      "artifact": "temporal_telemetry_series.md",
+      "source_path": "docs/pios/runs/run_07_source_profiled_ingestion/40.4/temporal_telemetry_series.md",
+      "layer": "L40_4",
+      "decision": "ADMITTED",
+      "governance_authority": "IG.6",
+      "reason": "Telemetry layer artifact — IG.6 orchestration gate PASS"
+    }
+  ],
+  "summary": {
+    "total": 30,
+    "admitted": 30,
+    "excluded": 0,
+    "decision_basis": "IG.6 orchestration gate PASS — ORCHESTRATION_COMPLETE 26/26; IG.7 batch runner BATCH_COMPLETE 9/9"
+  }
+}
