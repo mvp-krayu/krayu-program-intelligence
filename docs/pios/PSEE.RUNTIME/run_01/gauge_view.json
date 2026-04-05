@@ -1,0 +1,177 @@
+{
+  "schema_version": "1.0",
+  "stream": "PSEE-RUNTIME.2",
+  "run_id": "run_01",
+  "source_date": "2026-04-05",
+  "source_run": "run_07_source_profiled_ingestion",
+  "baseline_commit": "9000f73eb1c88d2f13b19e748f065d8700d9ea72",
+  "rhp_root": "docs/pios/IG.RUNTIME/run_01",
+  "rendering_state": "PENDING_PSEE_EXECUTION",
+  "suppression_active": true,
+  "suppression_rule": "PANEL-01 score display suppressed \u2014 PSEE engine not yet executed (gauge_rendering_contract.md \u00a7PANEL-01 structural rule)",
+  "panel_01": {
+    "run_id": "run_01",
+    "system_name": "blueedge-program-intelligence",
+    "system_version": "source-v3.23",
+    "score_display": {
+      "canonical_score": null,
+      "band_label": "PENDING",
+      "projected_score": null,
+      "projection_caveat": "PENDING \u2014 PSEE engine not yet executed. Scores available after PSEE execution completes.",
+      "suppressed": true,
+      "suppression_reason": "current_state=PENDING_PSEE_EXECUTION"
+    },
+    "confidence_band": {
+      "lower": null,
+      "upper": null,
+      "variance_factors": [],
+      "status": "PENDING"
+    },
+    "state_indicator": {
+      "current_state": "PENDING_PSEE_EXECUTION",
+      "state_label": "PENDING",
+      "execution_mode": "FULL",
+      "psee_engine_run": "NO"
+    }
+  },
+  "panel_02": {
+    "panel_02a": [
+      {
+        "dim_id": "DIM-01",
+        "label": "Coverage",
+        "value": null,
+        "state_label": "PENDING",
+        "threshold_line": 90,
+        "source_field": "PSEEContext.coverage_percent",
+        "authority": "DP-5-02; G-08"
+      },
+      {
+        "dim_id": "DIM-02",
+        "label": "Reconstruction",
+        "value": null,
+        "state_label": "PENDING",
+        "threshold_line": null,
+        "source_field": "PSEEContext.reconstruction_result",
+        "authority": "DP-6-01; G-09; O-07"
+      },
+      {
+        "dim_id": "DIM-03",
+        "label": "Escalation Clearance",
+        "value": null,
+        "state_label": "PENDING",
+        "threshold_line": null,
+        "source_field": "PSEEContext.escalation_log",
+        "authority": "ESC-01..06; escalation_interface_spec.md"
+      }
+    ],
+    "panel_02b": {
+      "dim_id": "DIM-04",
+      "label": "Unknown-Space",
+      "total_count": null,
+      "breakdown": {
+        "US-CONDITION-01": null,
+        "US-CONDITION-02": null,
+        "US-CONDITION-03": null
+      },
+      "state_label": "PENDING",
+      "drill_down_link": "RL-01",
+      "source_field": "PSEEContext.us_records",
+      "authority": "US-CONDITION-01..03; unknown_space_interface.md"
+    },
+    "panel_02c": [
+      {
+        "dim_id": "DIM-05",
+        "label": "Intake Completeness",
+        "state": "PENDING",
+        "source_field": "PSEEContext.filter_table",
+        "authority": "INV-04; G-05"
+      },
+      {
+        "dim_id": "DIM-06",
+        "label": "Heuristic Compliance",
+        "state": "PENDING",
+        "source_field": "PSEEContext.flags",
+        "authority": "HeuristicGuard; heuristic_guard_spec.md",
+        "note_if_fail": "Engine implementation defect \u2014 see flags"
+      }
+    ]
+  },
+  "panel_03": {
+    "panel_03a": {
+      "title": "Pending Adjudications",
+      "count": 0,
+      "message": "No pending adjudications.",
+      "adjudications": []
+    },
+    "panel_03b": {
+      "title": "Open Review Items",
+      "non_canonical_label": "NON-CANONICAL \u2014 review context only",
+      "review_counter": {
+        "us_records": null,
+        "open_escalations": 0,
+        "future_review_queue": 6,
+        "reference_patterns": 3
+      },
+      "links": [
+        {
+          "id": "RL-01",
+          "label": "Unknown-Space Inventory",
+          "target": "PSEE.X/unknown_space_inventory.md"
+        },
+        {
+          "id": "RL-02",
+          "label": "Escalated Positions",
+          "target": "PSEE.X/unknown_space_inventory.md#section-2"
+        },
+        {
+          "id": "RL-03",
+          "label": "Pattern Containment",
+          "target": "PSEE.X/pattern_containment_matrix.md"
+        },
+        {
+          "id": "RL-04",
+          "label": "Future Review Queue",
+          "target": "PSEE.X/future_review_queue.md"
+        }
+      ]
+    }
+  },
+  "panel_04": {
+    "table": [
+      {
+        "run_id": "run_01",
+        "system_name": "blueedge-program-intelligence",
+        "system_version": "source-v3.23",
+        "final_state": "PENDING_PSEE_EXECUTION",
+        "canonical_score": null,
+        "band": "PENDING",
+        "coverage_percent": null,
+        "us_record_count": null,
+        "open_escalations": 0,
+        "source_run": "run_07_source_profiled_ingestion",
+        "baseline_anchor": "pios-core-v0.4-final",
+        "admissibility": "GOVERNED",
+        "resolution": "DETERMINISTIC"
+      }
+    ],
+    "sort_options": [
+      "canonical_score",
+      "band"
+    ],
+    "note": "No aggregation or summarization of scores across rows"
+  },
+  "intake_summary": {
+    "total_admitted": 30,
+    "total_excluded": 0,
+    "admitted_input_class": "RHP",
+    "rhp_root": "docs/pios/IG.RUNTIME/run_01"
+  },
+  "gauge_authority": {
+    "score_model": "PSEE-GAUGE.0/gauge_score_model.md",
+    "dimension_model": "PSEE-GAUGE.0/dimension_projection_model.md",
+    "confidence_model": "PSEE-GAUGE.0/confidence_and_variance_model.md",
+    "projection_spec": "PSEE-GAUGE.0/projection_logic_spec.md",
+    "rendering_contract": "PSEE-GAUGE.0/gauge_rendering_contract.md",
+    "operator_visibility": "PSEE-GAUGE.0/operator_visibility_contract.md"
+  }
+}
