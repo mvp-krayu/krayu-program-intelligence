@@ -1,0 +1,26 @@
+{
+  "stream": "PSEE.0",
+  "family": "PSEE",
+  "gate": "GOV.1",
+  "date": "2026-04-05",
+  "artifact_max_override": 8,
+  "checks": [
+    { "id": "GOV1-C1", "name": "VALIDATOR_DUPLICATION", "result": "PASS", "detail": "No per-stream scripts/pios/psee0/ directory; no duplicate validators" },
+    { "id": "GOV1-C2", "name": "RUN_DUPLICATION", "result": "PASS", "detail": "No 40.x layer directories in namespace; N/A" },
+    { "id": "GOV1-C3a", "name": "ARTIFACT_INFLATION", "result": "PASS", "detail": "8 governance artifacts; max 8 (--artifact-max 8 override applied)" },
+    { "id": "GOV1-C3b", "name": "ARTIFACT_INFLATION_STRUCTURE", "result": "PASS", "detail": "No repeated H2/H3 headings >= 3 times; doctrine headings converted to H4" },
+    { "id": "GOV1-C4", "name": "NON_DELTA_OUTPUT", "result": "PASS", "detail": "Governance artifacts contain sufficient delta vs peer streams" },
+    { "id": "GOV1-C5", "name": "GIT_DIRTY", "result": "PASS", "detail": "Working tree scope-clean; 2 files within expected stream scope" },
+    { "id": "GOV1-C6a", "name": "BASELINE_MUTATION_40_2", "result": "PASS", "detail": "docs/pios/40.2 unchanged" },
+    { "id": "GOV1-C6b", "name": "BASELINE_MUTATION_40_3", "result": "PASS", "detail": "docs/pios/40.3 unchanged" },
+    { "id": "GOV1-C6c", "name": "BASELINE_MUTATION_40_4", "result": "PASS", "detail": "docs/pios/40.4 unchanged" },
+    { "id": "GOV1-C6d", "name": "BASELINE_ANCHOR_pios_core_v04_final", "result": "PASS", "detail": "Tag intact" },
+    { "id": "GOV1-C6e", "name": "BASELINE_ANCHOR_demo_execlens_v1_final", "result": "PASS", "detail": "Tag intact" },
+    { "id": "GOV1-C6f", "name": "BASELINE_ANCHOR_governance_v1_final", "result": "PASS", "detail": "Tag intact" },
+    { "id": "PSEE-RECONSTRUCTION", "name": "RECONSTRUCTION_EQUIVALENCE", "result": "PASS", "detail": "53/53 Phase B units reproduced by 13-rule simulation; 100% structural equivalence" }
+  ],
+  "total_checks": 13,
+  "passed": 13,
+  "failed": 0,
+  "verdict": "PASS"
+}

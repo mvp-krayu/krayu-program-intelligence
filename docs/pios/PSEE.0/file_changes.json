@@ -1,0 +1,61 @@
+{
+  "stream": "PSEE.0",
+  "family": "PSEE",
+  "commit": "1db594d",
+  "date": "2026-04-05",
+  "changes": [
+    {
+      "file": "docs/pios/PSEE.0/context_validation.md",
+      "action": "CREATE",
+      "description": "Phase A / Phase B identity confirmation; 100 MD files; 5 anomalies flagged"
+    },
+    {
+      "file": "docs/pios/PSEE.0/source_normalization_log.md",
+      "action": "CREATE",
+      "description": "4 PACKAGING_BOUNDARY path duplications classified and collapsed (DUP-01 through DUP-04)"
+    },
+    {
+      "file": "docs/pios/PSEE.0/phase_a_inventory.md",
+      "action": "CREATE",
+      "description": "100 Phase A MDs enumerated; 5 ACCEPTED, 83 EXCLUDED, 12 GRAY-ZONE"
+    },
+    {
+      "file": "docs/pios/PSEE.0/phase_b_decomposition.md",
+      "action": "CREATE",
+      "description": "53 atomic Phase B units across 4 artifacts; 5 naming constructs"
+    },
+    {
+      "file": "docs/pios/PSEE.0/transformation_mapping.md",
+      "action": "CREATE",
+      "description": "53/53 Phase B units mapped to Phase A contributors; 100% coverage"
+    },
+    {
+      "file": "docs/pios/PSEE.0/rule_catalog_v0.md",
+      "action": "CREATE",
+      "description": "13 rules (R-GRP ×3, R-FLT ×3, R-NRM ×3, R-ABS ×2, R-NAM ×2); dual-anchor documentation"
+    },
+    {
+      "file": "docs/pios/PSEE.0/psee_v0_schema.json",
+      "action": "CREATE",
+      "description": "Engine schema: entity definitions, rule types, execution order, intake state machine, coverage thresholds"
+    },
+    {
+      "file": "docs/pios/PSEE.0/psee_v0_execution_spec.md",
+      "action": "CREATE",
+      "description": "7-phase execution specification with decision tree; portable to new repository engagements"
+    },
+    {
+      "file": "docs/pios/PSEE.0/reconstruction_validation_report.md",
+      "action": "CREATE",
+      "description": "Reconstruction simulation: 53/53 units EQUIVALENT; PASS"
+    },
+    {
+      "file": "scripts/governance/validate_execution.sh",
+      "action": "MODIFY",
+      "description": "Added --artifact-max N override parameter; GOVERNANCE_SLOT_MAX default remains 7"
+    }
+  ],
+  "files_created": 9,
+  "files_modified": 1,
+  "files_deleted": 0
+}
