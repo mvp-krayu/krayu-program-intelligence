@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "stream": "PSEE-RUNTIME.1",
+  "run_id": "run_01",
+  "output_root": "/Users/khorrix/Projects/k-pi-core/docs/pios/PSEE.RUNTIME/run_01",
+  "files": {
+    "operator_case_view.md": {
+      "path": "/Users/khorrix/Projects/k-pi-core/docs/pios/PSEE.RUNTIME/run_01/operator_case_view.md",
+      "sha256": "01b707f74db4650abda969db2b4a68a157d5b3f53f657787b4957005cda41dc9"
+    }
+  },
+  "determinism_check_field": "operator_case_view.md"
+}
