@@ -1,0 +1,30 @@
+{
+  "gauge_version": "v1-truthful",
+  "label": "Execution Gauge \u2014 Phase-Aware",
+  "stream": "PSEE-RUNTIME.GAUGE-V1",
+  "run_id": "run_01",
+  "execution_status": "PHASE_1_ACTIVE",
+  "score_available": false,
+  "score_unavailable_reason": "Score unavailable \u2014 execution phase not reached",
+  "dimensions": {
+    "coverage": {
+      "dimension": "DIM-01",
+      "state": "BLOCKED",
+      "reason": "Coverage available at Phase 5 (S-10) \u2014 engine at PHASE_1_ACTIVE has not reached Phase 5",
+      "phase_gate": "Phase 5 (S-10)",
+      "authority": "PSEE-GAUGE.0/dimension_projection_model.md \u00a7DIM-01 Unavailable conditions"
+    },
+    "reconstruction": {
+      "dimension": "DIM-02",
+      "state": "BLOCKED",
+      "reason": "Reconstruction available at Phase 6 (S-12\u2192S-13) \u2014 engine at PHASE_1_ACTIVE has not reached Phase 6",
+      "phase_gate": "Phase 6 (S-12\u2192S-13)",
+      "authority": "PSEE-GAUGE.0/dimension_projection_model.md \u00a7DIM-02 Unavailable conditions"
+    }
+  },
+  "suppressed_fields": [
+    "canonical_score",
+    "projected_score"
+  ],
+  "suppression_reason": "DIM-01 or DIM-02 = BLOCKED \u2014 score components not derivable at current execution phase"
+}
