@@ -1,278 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Execution Gauge — Phase-Aware</title>
+  <title>Execution Gauge</title>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
-      background: #0d0d0d;
-      color: #c9c9c9;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 2rem;
-      min-height: 100vh;
-    }
-
-    .gauge-container {
-      width: 640px;
-      border: 1px solid #2a2a2a;
-      border-radius: 4px;
-      overflow: hidden;
-    }
-
-    /* ── Header ────────────────────────────────────────────────── */
-    .gauge-header {
-      background: #141414;
-      border-bottom: 1px solid #2a2a2a;
-      padding: 14px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .gauge-title {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #e2e2e2;
-      letter-spacing: 0.02em;
-    }
-
-    .gauge-version {
-      font-size: 0.7rem;
-      color: #555;
-      border: 1px solid #2a2a2a;
-      border-radius: 2px;
-      padding: 2px 8px;
-    }
-
-    /* ── Phase Status ──────────────────────────────────────────── */
-    .phase-row {
-      background: #111;
-      border-bottom: 1px solid #1e1e1e;
-      padding: 10px 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .phase-label {
-      font-size: 0.7rem;
-      color: #555;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      min-width: 130px;
-    }
-
-    .phase-badge {
-      font-size: 0.75rem;
-      color: #7eb8e0;
-      background: #0e1d2b;
-      border: 1px solid #1a3a52;
-      border-radius: 2px;
-      padding: 2px 10px;
-    }
-
-    /* ── Section ───────────────────────────────────────────────── */
-    .section-header {
-      background: #0f0f0f;
-      border-bottom: 1px solid #1e1e1e;
-      border-top: 1px solid #1e1e1e;
-      padding: 6px 20px;
-    }
-
-    .section-label {
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: #444;
-    }
-
-    /* ── Dimension Row ─────────────────────────────────────────── */
-    .dim-row {
-      padding: 12px 20px;
-      border-bottom: 1px solid #1a1a1a;
-    }
-
-    .dim-row-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 6px;
-    }
-
-    .dim-name {
-      font-size: 0.75rem;
-      color: #888;
-    }
-
-    .dim-id {
-      font-size: 0.65rem;
-      color: #444;
-      margin-left: 8px;
-    }
-
-    .dim-state {
-      font-size: 0.7rem;
-      font-weight: 600;
-      padding: 2px 10px;
-      border-radius: 2px;
-    }
-
-    .dim-state.blocked {
-      color: #a08060;
-      background: #1c1408;
-      border: 1px solid #3a2808;
-    }
-
-    .dim-gate {
-      font-size: 0.68rem;
-      color: #505050;
-      margin-bottom: 4px;
-    }
-
-    .dim-reason {
-      font-size: 0.68rem;
-      color: #4a4a4a;
-      line-height: 1.4;
-    }
-
-    /* ── Score Panel ───────────────────────────────────────────── */
-    .score-panel {
-      padding: 14px 20px;
-      background: #0d0d0d;
-    }
-
-    .score-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 6px;
-    }
-
-    .score-field-label {
-      font-size: 0.7rem;
-      color: #404040;
-      min-width: 150px;
-    }
-
-    .score-value-suppressed {
-      font-size: 0.7rem;
-      color: #333;
-      font-style: italic;
-    }
-
-    .score-unavailable-msg {
-      margin-top: 10px;
-      font-size: 0.72rem;
-      color: #6a5030;
-      background: #150f06;
-      border: 1px solid #2a1c08;
-      border-radius: 2px;
-      padding: 8px 12px;
-    }
-
-    /* ── Run Metadata ──────────────────────────────────────────── */
-    .gauge-footer {
-      border-top: 1px solid #1a1a1a;
-      padding: 8px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .footer-run {
-      font-size: 0.65rem;
-      color: #383838;
-    }
-
-    .footer-stream {
-      font-size: 0.65rem;
-      color: #333;
-    }
+    body { font-family: monospace; background:#0b0f14; color:#e6edf3; padding:20px; }
+    .box { border:1px solid #333; padding:20px; max-width:620px; }
+    .value { font-size:32px; font-weight:bold; }
+    .phase { color:#58a6ff; }
+    .label { color:#8b949e; font-size:12px; margin-top:14px; margin-bottom:2px; }
+    .band { font-size:18px; font-weight:bold; }
+    .deriv { color:#8b949e; font-size:12px; margin-top:2px; }
+    .conf-wrap { margin-top:4px; }
+    .conf-bar { background:#1f2937; height:6px; border-radius:3px; position:relative; margin-top:4px; width:100%; }
+    .conf-fill { height:6px; border-radius:3px; }
+    .conf-lower-mark { position:absolute; top:-3px; width:2px; height:12px; background:#8b949e; }
+    .caveat { color:#8b949e; font-size:11px; margin-top:6px; border-left:2px solid #333; padding-left:8px; line-height:1.5; }
+    .dim-table { width:100%; border-collapse:collapse; margin-top:14px; font-size:13px; }
+    .dim-table td { padding:5px 8px; border-bottom:1px solid #1f2937; }
+    .dim-table td:first-child { color:#8b949e; width:190px; }
+    .stream-label { color:#444; font-size:11px; margin-top:14px; }
   </style>
 </head>
 <body>
+  <div class="box">
+    <div>Run: run_01</div>
+    <div class="phase">Execution Phase: PHASE_1_ACTIVE</div>
+    <hr style="border-color:#1f2937;margin:14px 0;"/>
 
-<div class="gauge-container">
+    <div class="label">Canonical Score</div>
+    <div class="value">60 <span class="band" style="color:#d29922;">CONDITIONAL</span></div>
+    <div class="deriv">0 + 35 + 25 = 60 (completion=0 + coverage=35 + reconstruction=25)</div>
 
-  <!-- Header -->
-  <div class="gauge-header">
-    <span class="gauge-title">Execution Gauge &mdash; Phase-Aware</span>
-    <span class="gauge-version">gauge-v1-truthful</span>
-  </div>
-
-  <!-- Phase Status -->
-  <div class="phase-row">
-    <span class="phase-label">Execution Status</span>
-    <span class="phase-badge">PHASE_1_ACTIVE</span>
-  </div>
-
-  <!-- Dimensions Section -->
-  <div class="section-header">
-    <span class="section-label">Dimensions</span>
-  </div>
-
-  <!-- DIM-01 -->
-  <div class="dim-row">
-    <div class="dim-row-header">
-      <span>
-        <span class="dim-name">Coverage</span>
-        <span class="dim-id">DIM-01</span>
-      </span>
-      <span class="dim-state blocked">BLOCKED</span>
+    <div class="label">Projected Score (PR-02)</div>
+    <div class="value">100</div>
+    <div class="conf-wrap">
+      <div class="conf-bar">
+        <div class="conf-fill" style="width:100%;background:#d29922;"></div>
+        <div class="conf-lower-mark" style="left:60%;"></div>
+      </div>
     </div>
-    <div class="dim-gate">Phase gate: Phase 5 (S-10)</div>
-    <div class="dim-reason">
-      Coverage available at Phase 5 (S-10) &mdash; engine at PHASE_1_ACTIVE has not reached Phase 5
-    </div>
+    <div style="color:#8b949e;font-size:12px;margin-top:3px;">Confidence band: [60, 100]</div>
+    <div class="caveat">PROJECTED — engine at PHASE_1_ACTIVE; assumes completion to S-13 with actual materialized dimensions (DIM-01=100.0%, DIM-02=PASS). Actual score depends on PSEE engine execution outcome.</div>
+
+    <table class="dim-table">
+      <tr><td>DIM-01 Coverage</td><td>100.0% &mdash; FULL</td></tr>
+      <tr><td>DIM-02 Reconstruction</td><td style="color:#3fb950;">PASS (30/30 units)</td></tr>
+      <tr><td>DIM-03 Escalation</td><td>100% &mdash; CLEAR</td></tr>
+      <tr><td>DIM-04 Unknown-Space</td><td>0 records &mdash; NONE</td></tr>
+      <tr><td>DIM-05 Intake</td><td>COMPLETE</td></tr>
+      <tr><td>DIM-06 Heuristic</td><td>PASS</td></tr>
+    </table>
+
+    <div class="stream-label">Source: PSEE-RUNTIME.5 / gauge_state.json</div>
   </div>
-
-  <!-- DIM-02 -->
-  <div class="dim-row">
-    <div class="dim-row-header">
-      <span>
-        <span class="dim-name">Reconstruction</span>
-        <span class="dim-id">DIM-02</span>
-      </span>
-      <span class="dim-state blocked">BLOCKED</span>
-    </div>
-    <div class="dim-gate">Phase gate: Phase 6 (S-12&rarr;S-13)</div>
-    <div class="dim-reason">
-      Reconstruction available at Phase 6 (S-12&rarr;S-13) &mdash; engine at PHASE_1_ACTIVE has not reached Phase 6
-    </div>
-  </div>
-
-  <!-- Score Section -->
-  <div class="section-header">
-    <span class="section-label">Score</span>
-  </div>
-
-  <div class="score-panel">
-    <div class="score-row">
-      <span class="score-field-label">canonical_score</span>
-      <span class="score-value-suppressed">&mdash; suppressed</span>
-    </div>
-    <div class="score-row">
-      <span class="score-field-label">projected_score</span>
-      <span class="score-value-suppressed">&mdash; suppressed</span>
-    </div>
-    <div class="score-unavailable-msg">
-      Score unavailable &mdash; execution phase not reached
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <div class="gauge-footer">
-    <span class="footer-run">run: run_01 &nbsp;&bull;&nbsp; blueedge-program-intelligence</span>
-    <span class="footer-stream">PSEE-RUNTIME.GAUGE-V1</span>
-  </div>
-
-</div>
-
 </body>
 </html>
