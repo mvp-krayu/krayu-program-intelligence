@@ -44,6 +44,7 @@ An unknown family must trigger FAMILY_DISCOVERY mode, not normal execution.
 | GOV | Canonical governance, registry, authority enforcement | families/GOV.md | families/GOV.json | REGISTERED | 2026-04-04 |
 | CAT | Category authority, construct positioning | families/CAT.md | families/CAT.json | REGISTERED | 2026-04-04 |
 | WEB | Publishing, crawl, mirror, SEO, route surface | families/WEB.md | families/WEB.json | REGISTERED | 2026-04-04 |
+| PSEE | Program Surface Extraction (corpus → 40.2 extraction rule system) | families/PSEE.md | families/PSEE.json | REGISTERED | 2026-04-05 |
 
 ---
 

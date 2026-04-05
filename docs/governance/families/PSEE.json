@@ -1,0 +1,60 @@
+{
+  "family": "PSEE",
+  "status": "REGISTERED",
+  "profiles": {
+    "corpus_binding": {
+      "description": "Phase A source directory present; file count logged; no unresolved path ambiguity",
+      "required_paths": [
+        ["Q1", "corpus.root", "Phase A corpus root path declared"],
+        ["Q2", "corpus.file_count", "Phase A file count recorded"],
+        ["Q3", "corpus.classification_complete", "all files classified (structural/functional/dependency/narrative/auxiliary)"],
+        ["Q4", "path_normalization.status", "path duplication classification completed"]
+      ],
+      "enum_paths": [
+        ["corpus.classification_complete", ["true", "false"]],
+        ["path_normalization.status", ["CLEAN", "NORMALIZED", "AMBIGUOUS_FLAGGED"]]
+      ]
+    },
+    "transformation_coverage": {
+      "description": "Mapping completeness check — ≥90% of Phase B entities must be traceable to Phase A contributors",
+      "required_paths": [
+        ["Q1", "phase_b.total_units", "total Phase B atomic units counted"],
+        ["Q2", "phase_b.mapped_units", "mapped Phase B units recorded"],
+        ["Q3", "coverage.percentage", "coverage percentage calculated"],
+        ["Q4", "coverage.unmapped_documented", "all unmapped units have documented exclusion reason"]
+      ],
+      "enum_paths": [
+        ["coverage.result", ["FULL", "PARTIAL", "NONE"]],
+        ["coverage.unmapped_documented", ["true", "false"]]
+      ]
+    },
+    "rule_catalog": {
+      "description": "Rule catalog completeness — all rules have dual-anchor (theoretical + grounded application)",
+      "required_paths": [
+        ["Q1", "rule.rule_id", "rule identifier declared (R-GRP/R-FLT/R-NRM/R-ABS/R-NAM)"],
+        ["Q2", "rule.input_pattern", "input pattern declared"],
+        ["Q3", "rule.transformation_logic", "transformation logic documented"],
+        ["Q4", "rule.output_structure", "output structure declared"],
+        ["Q5", "rule.evidence_refs", "Phase A evidence references provided"],
+        ["Q6", "rule.theoretical_basis", "structural or architectural principle stated (dual-anchor)"],
+        ["Q7", "rule.grounded_application", "exact Phase A → Phase B mapping stated (dual-anchor)"]
+      ],
+      "enum_paths": [
+        ["rule.rule_id_prefix", ["R-GRP", "R-FLT", "R-NRM", "R-ABS", "R-NAM"]]
+      ]
+    },
+    "reconstruction_equivalence": {
+      "description": "Simulated reconstruction achieves structural equivalence with actual 40.2",
+      "required_paths": [
+        ["Q1", "reconstruction.entities_covered", "entity coverage count declared"],
+        ["Q2", "reconstruction.structural_match", "structural equivalence result declared"],
+        ["Q3", "reconstruction.mapping_completeness", "mapping completeness percentage declared"],
+        ["Q4", "reconstruction.verdict", "overall reconstruction verdict declared"]
+      ],
+      "enum_paths": [
+        ["reconstruction.structural_match", ["EQUIVALENT", "PARTIAL", "DIVERGENT"]],
+        ["reconstruction.verdict", ["PASS", "PARTIAL", "FAIL"]]
+      ]
+    }
+  }
+}
