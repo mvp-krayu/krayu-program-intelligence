@@ -1,9 +1,0 @@
-{
-  "pipeline_stage_count": 3,
-  "artifacts_per_run": 4,
-  "admitted_units": 30,
-  "total_units": 30,
-  "validated_units": 30,
-  "escalation_clearance": 100,
-  "unknown_space_count": 0
-}
