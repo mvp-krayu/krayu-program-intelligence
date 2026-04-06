@@ -624,27 +624,6 @@ def build_html(entry, guided, operator_view, pkg, client_uuid, run_id):
         for r in g["topology"]["relationships"]
     )
 
-    sig_rows   = "\n".join(sig_row(s) for s in g["signals"])
-    node_rows  = "\n".join(node_row(n) for n in g["topology"]["nodes"])
-    rel_rows   = "\n".join(rel_row(r) for r in g["topology"]["relationships"])
-    domain_list = ", ".join(g["topology"]["domains"])
-
-    sm = g["structural_metrics"]
-    score = g["score"]["canonical"]
-    band  = g["score"]["band_label"]
-    proj  = g["projection"]["value"]
-    conf_lo = g["confidence"]["lower"]
-    conf_hi = g["confidence"]["upper"]
-    intake  = guided["intake_mode"]
-    qs_cls  = guided["query_state"]["classification"]
-    qs_gate = guided["query_state"]["gating_state"]
-    qs_sel  = guided["query_state"]["selected_query"]
-
-    sig_sum = guided["signal_summary"]
-
-    band_color = {"CONDITIONAL": "#e67e22", "FULL": "#27ae60",
-                  "PARTIAL": "#3498db", "LOW": "#c0392b"}.get(band, "#666")
-
     return f"""<!DOCTYPE html>
 <html>
 <head>
