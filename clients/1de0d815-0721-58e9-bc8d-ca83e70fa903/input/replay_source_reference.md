@@ -2,87 +2,54 @@
 
 stream: PSEE.RECONCILE.1.WP-15.BLUEEDGE.REPLAY
 date: 2026-04-06
+status: BLOCKED
 
 ---
 
-## Baseline Evidence Source
+## Execution Outcome
 
-| Artifact | Path |
-|----------|------|
-| Entity Catalog (40.3) | docs/pios/40.3/entity_catalog.md |
-| Program Execution Graph (40.3) | docs/pios/40.3/program_execution_graph.md |
-| Dependency Map (40.3) | docs/pios/40.3/dependency_map.md |
-| Structural Telemetry (40.4) | docs/pios/40.4/structural_telemetry.md |
-| Signal Computation Spec (40.5) | docs/pios/40.5/signal_computation_specification.md |
-| Signal Traceability Map (40.5) | docs/pios/40.5/signal_traceability_map.md |
-| Signal Output Set (40.5) | docs/pios/40.5/signal_output_set.md |
-| Intelligence Signal Registry (41.4) | docs/pios/41.4/signal_registry.json |
+BLOCKED — AUTHORITATIVE_INPUT_VIOLATION
+
+No admissible BlueEdge intake package exists in the current runtime schema.
+The runtime now enforces AUTHORITATIVE_INPUT_ADMISSIBILITY_CHECK before IG_NORMALIZATION.
+All inputs lacking valid `admissibility_metadata` are rejected before execution.
 
 ---
 
-## Topology Binding
+## Admissibility Requirements (enforced in run_client_runtime.py)
 
-### Domains (3)
-- Application — CE-001 (Backend API), CE-002 (Frontend)
-- Device — SA-001 (HASI Bridge), SA-002 (Sensor Collector)
-- Infrastructure — INF-001..INF-005
+A valid `authoritative_state.json` must contain:
 
-### Nodes (9) — from entity_catalog.md
-| Node ID | Entity | Domain |
-|---------|--------|--------|
-| N-B0506103 | Blue Edge Fleet Management API (CE-001) | Application |
-| N-A707EA33 | Blue Edge Fleet Frontend (CE-002) | Application |
-| N-62339513 | HASI Bridge Agent (SA-001) | Device |
-| N-5D57CFB8 | Sensor Collector Agent (SA-002) | Device |
-| N-7AAD8D87 | PostgreSQL+TimescaleDB (INF-001) | Infrastructure |
-| N-53CF7041 | Redis (INF-002) | Infrastructure |
-| N-61E8FB24 | Monitoring — Prometheus+Grafana (INF-003) | Infrastructure |
-| N-1FFEB1AE | MQTT Broker (INF-004) | Infrastructure |
-| N-80E533AB | HASI Security System (INF-005) | Infrastructure |
-
-### Relationships (9) — from dependency_map.md
-| From | To | Type | Source |
-|------|----|------|--------|
-| CE-002 | CE-001 | DEPENDS_ON | SD-001 REST API |
-| CE-001 | INF-001 | DEPENDS_ON | SD-003 TypeORM |
-| CE-001 | INF-002 | DEPENDS_ON | SD-004 Redis cache |
-| SA-001 | INF-005 | DEPENDS_ON | SD-005 HASI SQLite |
-| SA-001 | INF-004 | DEPENDS_ON | SD-006 MQTT primary |
-| SA-001 | CE-001 | DEPENDS_ON | SD-007 REST fallback |
-| INF-003 | CE-001 | COORDINATES_WITH | SD-008 Prometheus scrape |
-| INF-003 | INF-001 | COORDINATES_WITH | SD-009 postgres-exporter |
-| INF-003 | INF-002 | COORDINATES_WITH | SD-009 redis-exporter |
+| Field | Requirement |
+|-------|-------------|
+| `admissibility_metadata.source_class` | Must be `"AUTHORITATIVE_INTAKE"` |
+| `admissibility_metadata.source_artifacts` | Non-empty list of client-scoped paths; no docs/pios/, runs/pios/, signal_registry, entity_catalog, dependency_map, signal_computation, signal_traceability, presentation, or historical paths |
+| `admissibility_metadata.construction_mode` | `"FIRST_RUN_INTAKE"` or `"REPLAY_BINDING"` |
+| `admissibility_metadata.provenance_hash` | Non-empty string |
 
 ---
 
-## Signal Binding
+## Rejected Sources
 
-| Signal | Name (40.5) | Severity Basis | Bound Count Basis |
-|--------|-------------|---------------|------------------|
-| SIG-001 | Backend Process Heap Usage | CRITICAL — runtime state unknown, no health observable | 3 — CE-001, BM-061, Prometheus endpoint |
-| SIG-002 | Cache Hit Efficiency | HIGH — performance degradation risk | 4 — CE-001, INF-002, 2 cache metrics |
-| SIG-003 | Cache Connectivity State | CRITICAL — hard infrastructure dependency | 2 — CE-001, INF-002 |
-| SIG-004 | Domain Event Emission Count | HIGH — event pipeline state unknown | 5 — CE-001/BM-063, 4 handler categories |
-| SIG-005 | Fleet Active Connection Count | HIGH — fleet real-time state unknown | 3 — CE-001/BM-062, CE-002, fleet namespace |
-| SIG-006 | Sensor Bridge Batch Throughput | MEDIUM — static known value (0.333 rec/sec) | 2 — DIM-PC-001, DIM-PC-002 (COMPLETE) |
-| SIG-007 | Vehicle Alert Severity State | CRITICAL — safety/operational alerts unknown | 6 — CE-001/BM-005, 5 severity levels |
-| SIG-008 | Driver Session Performance | HIGH — composite performance unknown | 5 — CE-001/BM-057+BM-043, 4 session dims |
+The following source classes are NOT admissible as intake origin for authoritative_state.json:
 
----
+- docs/pios/ (documentation layer)
+- runs/pios/ (historical execution layer)
+- signal_registry (presentation artifact)
+- entity_catalog (documentation artifact)
+- dependency_map (documentation artifact)
+- signal_computation_specification (documentation artifact)
+- signal_traceability_map (documentation artifact)
 
-## Computed BlueEdge Baseline Metrics
-
-| Metric | Value | Derivation |
-|--------|-------|-----------|
-| structural_density | 3.0 | 9 nodes / 3 domains |
-| dependency_load | 1.0 | 9 rels / 9 nodes |
-| coordination_pressure | 0.88 | 7 HIGH/CRITICAL / 8 signals |
-| visibility_deficit | 0.38 | 30 total_bound / 80 |
+Inputs constructed from these sources are classified as RECONSTRUCTED_TRUTH and are rejected
+with FORBIDDEN_SOURCE_CLASS / RECONSTRUCTED_TRUTH at the admissibility gate.
 
 ---
 
-## Determinism Verification
+## Unblocking Condition
 
-Run 1 gauge_state.json sha256: `436a9ad5ad4f1e1b997fc6aa0aa2d9874feaaa1c771a384a73872a3f8cb5cd16`
-Run 2 gauge_state.json sha256: `436a9ad5ad4f1e1b997fc6aa0aa2d9874feaaa1c771a384a73872a3f8cb5cd16`
-Result: MATCH — DETERMINISM VERIFIED
+WP-15 can proceed only when a real authoritative BlueEdge intake package is available:
+- Constructed from a live IG system feed or from a first-run intake of the actual BlueEdge
+  system (not documentation reconstruction)
+- Contains valid `admissibility_metadata` with client-scoped source_artifacts
+- Passes AUTHORITATIVE_INPUT_ADMISSIBILITY_CHECK
