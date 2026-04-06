@@ -4,7 +4,7 @@ PSEE Autonomous Client Runtime
 Stream: PSEE.RECONCILE.1.WP-13
 
 Single-entrypoint, fully autonomous, deterministic, replayable runtime.
-Pipeline: INPUT → IG_NORMALIZATION → PSEE_RECONSTRUCTION → PSEE_VALIDATION
+Pipeline: INPUT → AUTHORITATIVE_INPUT_ADMISSIBILITY_CHECK → IG_NORMALIZATION → PSEE_RECONSTRUCTION → PSEE_VALIDATION
         → GAUGE_ENGINE → ENVELOPE_BUILD → REPLAY_CHECK → OUTPUT_WRITE
 
 Usage:
@@ -258,6 +258,82 @@ def get_git_info(log):
         "repository_name": REPO_NAME,
         "runtime_version_tag": tag
     }
+
+
+# ── AUTHORITATIVE_INPUT_ADMISSIBILITY_CHECK ───────────────────────────────────
+# Forbidden path fragments — input derived from these layers is not admissible
+_FORBIDDEN_SOURCE_FRAGMENTS = [
+    "docs/pios", "runs/pios", "signal_registry", "entity_catalog",
+    "dependency_map", "signal_computation", "signal_traceability",
+    "presentation", "historical",
+]
+_VALID_SOURCE_CLASSES = {"AUTHORITATIVE_INTAKE"}
+_VALID_CONSTRUCTION_MODES = {"FIRST_RUN_INTAKE", "REPLAY_BINDING"}
+
+
+def check_authoritative_admissibility(raw_input, log):
+    """Enforce intake provenance before any normalization occurs.
+
+    authoritative_state.json MUST contain:
+      admissibility_metadata.source_class      = "AUTHORITATIVE_INTAKE"
+      admissibility_metadata.source_artifacts  = list of client-scoped paths
+      admissibility_metadata.construction_mode = FIRST_RUN_INTAKE | REPLAY_BINDING
+      admissibility_metadata.provenance_hash   = non-empty string
+
+    If ANY field is absent, invalid, or references a forbidden path class
+    → FAIL with AUTHORITATIVE_INPUT_VIOLATION before IG_NORMALIZATION.
+    """
+    log.emit("AUTHORITATIVE_INPUT_ADMISSIBILITY_CHECK", "START",
+             message="verifying intake provenance before normalization")
+
+    meta = raw_input.get("admissibility_metadata")
+
+    if not isinstance(meta, dict):
+        log.fail("AUTHORITATIVE_INPUT_ADMISSIBILITY_CHECK",
+                 "AUTHORITATIVE_INPUT_VIOLATION",
+                 "admissibility_metadata is absent or not an object — "
+                 "input is not admissible for runtime execution")
+
+    violations = []
+
+    # source_class
+    sc = meta.get("source_class")
+    if sc not in _VALID_SOURCE_CLASSES:
+        violations.append(
+            f"source_class={sc!r} is not in {sorted(_VALID_SOURCE_CLASSES)}")
+
+    # construction_mode
+    cm = meta.get("construction_mode")
+    if cm not in _VALID_CONSTRUCTION_MODES:
+        violations.append(
+            f"construction_mode={cm!r} is not in {sorted(_VALID_CONSTRUCTION_MODES)}")
+
+    # provenance_hash
+    ph = meta.get("provenance_hash")
+    if not isinstance(ph, str) or not ph.strip():
+        violations.append("provenance_hash is missing or empty")
+
+    # source_artifacts — must be present and contain only client-scoped paths
+    artifacts = meta.get("source_artifacts")
+    if not isinstance(artifacts, list) or len(artifacts) == 0:
+        violations.append("source_artifacts is missing or empty")
+    else:
+        for a in artifacts:
+            for frag in _FORBIDDEN_SOURCE_FRAGMENTS:
+                if frag in str(a):
+                    violations.append(
+                        f"source_artifact {a!r} references forbidden path "
+                        f"class {frag!r} — documentation/history layer not admissible")
+
+    if violations:
+        detail = "; ".join(violations)
+        log.fail("AUTHORITATIVE_INPUT_ADMISSIBILITY_CHECK",
+                 "AUTHORITATIVE_INPUT_VIOLATION",
+                 f"input rejected — {detail}")
+
+    log.emit("AUTHORITATIVE_INPUT_ADMISSIBILITY_CHECK", "ADMISSIBILITY_PASS",
+             message=(f"source_class={sc} construction_mode={cm} "
+                      f"artifacts={len(artifacts)}"))
 
 
 # ── REGISTRY ──────────────────────────────────────────────────────────────────
@@ -1042,6 +1118,9 @@ def main():
                  f"input file not found: {input_path}", artifact=input_path)
     raw_input = safe_read_json(input_path, client_uuid, log)
     log.emit("INPUT_LOAD", "PASS", message="input file loaded")
+
+    # ── AUTHORITATIVE_INPUT_ADMISSIBILITY_CHECK ───────────────────────────────
+    check_authoritative_admissibility(raw_input, log)
 
     # ── IG_NORMALIZATION ──────────────────────────────────────────────────────
     normalized, run_id = ig_normalize(raw_input, client_uuid, log)
