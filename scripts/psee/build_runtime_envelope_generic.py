@@ -401,11 +401,39 @@ blocking = []
 if d2 == "VERIFIED_FAIL":
     blocking.extend(d2_fail_reasons)
 
-# Apply decision logic (WP-07 Rules V-01 through V-04)
+# Detect bounded conditions — any of these prevents PASS_FULL (WP-12 calibration)
+# PASS_FULL requires full coverage, full reconstruction, no escalation remainder, no unknown-space
+bounded_conditions = []
+if cfg["coverage_class"] in ("PARTIAL", "LOW"):
+    bounded_conditions.append(
+        f"coverage_class={cfg['coverage_class']} — coverage scope is bounded"
+    )
+if cfg["reconstruction_status"] == "PARTIAL":
+    bounded_conditions.append(
+        "reconstruction_status=PARTIAL — bounded reconstruction validity"
+    )
+if cfg["coverage_percent"] < 100.0:
+    bounded_conditions.append(
+        f"coverage_percent={cfg['coverage_percent']}% — not full coverage"
+    )
+if cfg["unknown_space_count"] > 0:
+    bounded_conditions.append(
+        f"unknown_space_count={cfg['unknown_space_count']} — unresolved unknown-space records"
+    )
+if cfg["escalation_clearance"] < 100:
+    bounded_conditions.append(
+        f"escalation_clearance={cfg['escalation_clearance']} — escalation not fully resolved"
+    )
+is_bounded = len(bounded_conditions) > 0
+
+# Apply decision logic (WP-07 Rules V-01 through V-04; WP-12 bounded-conditions gate)
 if d5 == "VERIFIED_FAIL":
     outcome = "FAIL_STRUCTURAL"
 elif any(d == "VERIFIED_FAIL" for d in [d1, d2, d3, d4]):
     outcome = "FAIL_STRUCTURAL"
+elif is_bounded:
+    # Structurally valid but bounded — not fully authoritative (WP-12)
+    outcome = "PASS_PARTIAL"
 elif all(d == "VERIFIED_PASS" for d in [d1, d2, d3, d4, d5]):
     outcome = "PASS_FULL"
 else:
@@ -426,6 +454,7 @@ print(f"  Domain 3 (Traceability Integrity):     {d3}")
 print(f"  Domain 4 (Cross-Artifact Consistency): {d4}")
 print(f"  Domain 5 (Authority Honesty):          {d5}")
 print(f"  Blocking contradictions:               {blocking if blocking else 'none'}")
+print(f"  Bounded conditions ({len(bounded_conditions)}):              {bounded_conditions if bounded_conditions else 'none'}")
 print(f"  Outcome:                               {outcome}")
 print()
 
@@ -439,7 +468,12 @@ d2_detail = (
     else f"FAIL — {'; '.join(d2_fail_reasons)}"
 )
 
-unverified_section = "None — all domains evaluated" if outcome != "PASS_PARTIAL" else "N/A"
+if outcome == "PASS_FULL":
+    unverified_section = "None — all domains evaluated; no bounded conditions detected"
+elif outcome == "PASS_PARTIAL" and is_bounded:
+    unverified_section = "\n".join(f"- {c}" for c in bounded_conditions)
+else:
+    unverified_section = "N/A — package structurally failed"
 
 vlog = f"""Outcome: {outcome}
 
@@ -460,7 +494,7 @@ Verified Scope:
   run_id consistent across all artifacts
 - Domain 5 (Authority Honesty): {d5}
   All five domains actively evaluated; no domain declared verified without evaluation;
-  Unverified Scope is empty; no inference claimed as direct verification
+  bounded_conditions={len(bounded_conditions)} detected; no inference claimed as direct verification
 
 Unverified Scope:
 - {unverified_section}

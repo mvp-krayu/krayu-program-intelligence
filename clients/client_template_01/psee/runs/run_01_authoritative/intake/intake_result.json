@@ -1,10 +1,10 @@
 {
   "run_id": "run_01_authoritative",
   "client_id": "client_template_01",
-  "intake_timestamp": "2026-04-06T13:54:35Z",
-  "verification_outcome": "PASS_FULL",
-  "intake_mode": "AUTHORITATIVE_INTAKE",
-  "consumed_scope": "all",
+  "intake_timestamp": "2026-04-06T14:04:55Z",
+  "verification_outcome": "PASS_PARTIAL",
+  "intake_mode": "BOUNDED_INTAKE",
+  "consumed_scope": "verified_scope_only",
   "verified_domains": [
     "Domain 1 (Artifact Completeness): VERIFIED_PASS",
     "Domain 2 (State Admissibility): VERIFIED_PASS",
@@ -13,10 +13,14 @@
     "Domain 5 (Authority Honesty): VERIFIED_PASS"
   ],
   "unverified_domains": [
-    "None \u2014 all domains evaluated"
+    "coverage_class=PARTIAL \u2014 coverage scope is bounded",
+    "reconstruction_status=PARTIAL \u2014 bounded reconstruction validity",
+    "coverage_percent=73.3% \u2014 not full coverage",
+    "unknown_space_count=2 \u2014 unresolved unknown-space records",
+    "escalation_clearance=85 \u2014 escalation not fully resolved"
   ],
-  "uncertainty_propagation": "none",
-  "consumption_permission": "CONSUME AS AUTHORITATIVE",
+  "uncertainty_propagation": "required \u2014 unverified scope must be uncertainty-marked in downstream outputs",
+  "consumption_permission": "CONSUME AS BOUNDED INTELLIGENCE \u2014 unverified scope not confirmed",
   "rejected": false,
   "errors": []
 }

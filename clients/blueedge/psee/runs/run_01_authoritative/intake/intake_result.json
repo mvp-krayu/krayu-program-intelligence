@@ -1,7 +1,7 @@
 {
   "run_id": "run_01_authoritative",
   "client_id": "blueedge",
-  "intake_timestamp": "2026-04-06T13:54:20Z",
+  "intake_timestamp": "2026-04-06T14:04:53Z",
   "verification_outcome": "PASS_FULL",
   "intake_mode": "AUTHORITATIVE_INTAKE",
   "consumed_scope": "all",
@@ -13,7 +13,7 @@
     "Domain 5 (Authority Honesty): VERIFIED_PASS"
   ],
   "unverified_domains": [
-    "None \u2014 all domains evaluated"
+    "None \u2014 all domains evaluated; no bounded conditions detected"
   ],
   "uncertainty_propagation": "none",
   "consumption_permission": "CONSUME AS AUTHORITATIVE",
