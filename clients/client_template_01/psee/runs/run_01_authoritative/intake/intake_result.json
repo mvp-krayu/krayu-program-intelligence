@@ -1,7 +1,7 @@
 {
   "run_id": "run_01_authoritative",
-  "client_id": "blueedge",
-  "intake_timestamp": "2026-04-06T13:54:20Z",
+  "client_id": "client_template_01",
+  "intake_timestamp": "2026-04-06T13:54:35Z",
   "verification_outcome": "PASS_FULL",
   "intake_mode": "AUTHORITATIVE_INTAKE",
   "consumed_scope": "all",

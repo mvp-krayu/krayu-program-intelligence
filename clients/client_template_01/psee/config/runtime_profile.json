@@ -1,0 +1,28 @@
+{
+  "client_id": "client_template_01",
+  "run_id": "run_01_authoritative",
+  "package_version": "1.0",
+  "source_system": "PSEE",
+  "gauge_score": 46,
+  "gauge_projection": 71,
+  "coverage_class": "PARTIAL",
+  "coverage_percent": 73.3,
+  "coverage_required_units": 30,
+  "coverage_admissible_units": 22,
+  "reconstruction_status": "PARTIAL",
+  "reconstruction_validated_units": 22,
+  "reconstruction_total_units": 30,
+  "execution_status": "PHASE_1_ACTIVE",
+  "execution_mode": "FULL",
+  "escalation_clearance": 85,
+  "unknown_space_count": 2,
+  "evidence_basis": "client_template_01 run_01 — PSEE-GAUGE.0 authority chain; 22/30 admissible units; coverage 73.3%; reconstruction PARTIAL; 2 unknown-space records; escalation clearance 85",
+  "expected_domains": [
+    "Artifact Completeness",
+    "State Admissibility",
+    "Traceability Integrity",
+    "Cross-Artifact Consistency",
+    "Authority Honesty"
+  ],
+  "lifecycle_state": "EMITTED"
+}

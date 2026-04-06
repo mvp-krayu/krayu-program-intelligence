@@ -1,6 +1,6 @@
 {
   "run_id": "run_01_authoritative",
-  "client_id": "blueedge",
+  "client_id": "client_template_01",
   "schema_version": "1.0",
   "stream": "PSEE-RUNTIME.5",
   "state": {
@@ -11,32 +11,32 @@
   "dimensions": {
     "DIM-01": {
       "label": "Coverage",
-      "coverage_percent": 100.0,
+      "coverage_percent": 73.3,
       "state": "COMPUTED",
-      "state_label": "FULL",
+      "state_label": "PARTIAL",
       "required_units": 30,
-      "admissible_units": 30,
+      "admissible_units": 22,
       "authority": "PSEE-GAUGE.0 DP-5-02"
     },
     "DIM-02": {
       "label": "Reconstruction",
-      "state": "PASS",
-      "state_label": "PASS",
-      "validated_units": 30,
+      "state": "PARTIAL",
+      "state_label": "PARTIAL",
+      "validated_units": 22,
       "total_units": 30,
-      "reconstruction_points": 25,
+      "reconstruction_points": 13,
       "authority": "PSEE-GAUGE.0 DP-6-03"
     },
     "DIM-03": {
       "label": "Escalation Clearance",
-      "value": 100,
-      "state_label": "CLEAR",
+      "value": 85,
+      "state_label": "PARTIAL",
       "authority": "PSEE-GAUGE.0 dimension_projection_model.md \u00a7DIM-03"
     },
     "DIM-04": {
       "label": "Unknown-Space",
-      "total_count": 0,
-      "state_label": "NONE",
+      "total_count": 2,
+      "state_label": "PRESENT",
       "authority": "PSEE-GAUGE.0 dimension_projection_model.md \u00a7DIM-04"
     },
     "DIM-05": {
@@ -51,28 +51,28 @@
     }
   },
   "score": {
-    "canonical": 60,
-    "band_label": "CONDITIONAL",
-    "derivation": "0 + 35 + 25 = 60",
+    "canonical": 39,
+    "band_label": "INSUFFICIENT",
+    "derivation": "0 + 26 + 13 = 39",
     "components": {
       "completion_points": 0,
       "completion_basis": "PHASE_1_ACTIVE \u2014 in-flight state; UNDEFINED_STATE guard applied (gauge_score_model.md \u00a7G.2)",
-      "coverage_points": 35,
-      "coverage_basis": "round(100.0 \u00d7 0.35) = 35 (gauge_score_model.md \u00a7G.2 Component 2)",
-      "reconstruction_points": 25,
-      "reconstruction_basis": "DIM-02.state=PASS \u2192 no block \u2192 25 pts (PSEE-RUNTIME.5 categorical mapping)"
+      "coverage_points": 26,
+      "coverage_basis": "round(73.3 \u00d7 0.35) = 26 (gauge_score_model.md \u00a7G.2 Component 2)",
+      "reconstruction_points": 13,
+      "reconstruction_basis": "DIM-02.state=PARTIAL \u2192 partial credit \u2192 13 pts (PSEE-RUNTIME.5 categorical mapping)"
     },
     "authority": "PSEE-GAUGE.0/gauge_score_model.md \u00a7G.2\u2013G.4"
   },
   "projection": {
-    "value": 100,
+    "value": 71,
     "rule": "PR-02",
-    "caveat": "PROJECTED \u2014 engine at PHASE_1_ACTIVE; assumes completion to S-13 with actual materialized dimensions (DIM-01=100.0%, DIM-02=PASS). Actual score depends on PSEE engine execution outcome.",
+    "caveat": "PROJECTED \u2014 engine at PHASE_1_ACTIVE; assumes completion to S-13 with actual materialized dimensions (DIM-01=73.3%, DIM-02=PARTIAL). Actual score depends on PSEE engine execution outcome.",
     "authority": "PSEE-GAUGE.0/projection_logic_spec.md \u00a7PR-02"
   },
   "confidence": {
-    "lower": 60,
-    "upper": 100,
+    "lower": 18,
+    "upper": 71,
     "status": "COMPUTED",
     "authority": "PSEE-GAUGE.0/confidence_and_variance_model.md \u00a7Total Variance Computation"
   },

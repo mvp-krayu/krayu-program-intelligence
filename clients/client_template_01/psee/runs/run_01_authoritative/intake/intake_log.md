@@ -1,7 +1,7 @@
-# Intake Log — blueedge / run_01_authoritative
+# Intake Log — client_template_01 / run_01_authoritative
 
-**Timestamp:** 2026-04-06T13:54:20Z
-**Client:** blueedge
+**Timestamp:** 2026-04-06T13:54:35Z
+**Client:** client_template_01
 **Run ID:** run_01_authoritative
 
 ## Steps Executed

@@ -1,0 +1,27 @@
+{
+  "run_id": "run_01_authoritative",
+  "client_id": "client_template_01",
+  "schema_version": "1.0",
+  "stream": "PSEE-RUNTIME.5",
+  "rendering_state": "PHASE_1_ACTIVE",
+  "gauge_state_source": "gauge_state.json",
+  "engine_state_source": "engine_state.json",
+  "suppression_active": false,
+  "score_display": {
+    "canonical_score": 39,
+    "band_label": "INSUFFICIENT",
+    "projected_score": 71,
+    "projection_rule": "PR-02",
+    "suppressed": false
+  },
+  "confidence_band": {
+    "lower": 18,
+    "upper": 71,
+    "status": "COMPUTED"
+  },
+  "state_indicator": {
+    "current_state": "PHASE_1_ACTIVE",
+    "execution_mode": "FULL",
+    "psee_engine_invoked": true
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "run_id": "run_01_authoritative",
+  "client_id": "client_template_01",
+  "schema_version": "1.0",
+  "stream": "PSEE-RUNTIME.6A",
+  "dimension": "DIM-02",
+  "label": "Reconstruction",
+  "state": "PARTIAL",
+  "violations": [
+    {
+      "type": "COMPLETENESS",
+      "description": "8 units not validated \u2014 coverage below full threshold",
+      "affected_units": 8
+    }
+  ],
+  "validated_units": 22,
+  "total_units": 30,
+  "axis_results": {
+    "COMPLETENESS": "FAIL",
+    "STRUCTURAL_LINK": "PASS",
+    "REFERENTIAL_INTEGRITY": "PASS",
+    "LAYER_CONSISTENCY": "PASS"
+  },
+  "authority": "PSEE-GAUGE.0 DP-6-03"
+}

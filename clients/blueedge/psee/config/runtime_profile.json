@@ -1,0 +1,28 @@
+{
+  "client_id": "blueedge",
+  "run_id": "run_01_authoritative",
+  "package_version": "1.0",
+  "source_system": "PSEE",
+  "gauge_score": 60,
+  "gauge_projection": 100,
+  "coverage_class": "FULL",
+  "coverage_percent": 100.0,
+  "coverage_required_units": 30,
+  "coverage_admissible_units": 30,
+  "reconstruction_status": "PASS",
+  "reconstruction_validated_units": 30,
+  "reconstruction_total_units": 30,
+  "execution_status": "PHASE_1_ACTIVE",
+  "execution_mode": "FULL",
+  "escalation_clearance": 100,
+  "unknown_space_count": 0,
+  "evidence_basis": "BlueEdge run_01 — PSEE-GAUGE.0 authority chain; 30/30 admissible units; 0 violations across all four reconstruction axes",
+  "expected_domains": [
+    "Artifact Completeness",
+    "State Admissibility",
+    "Traceability Integrity",
+    "Cross-Artifact Consistency",
+    "Authority Honesty"
+  ],
+  "lifecycle_state": "EMITTED"
+}
