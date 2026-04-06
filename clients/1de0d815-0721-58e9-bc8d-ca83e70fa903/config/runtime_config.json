@@ -1,0 +1,15 @@
+{
+  "package_version": "1.0",
+  "source_system": "PSEE",
+  "lifecycle_state": "EMITTED",
+  "execution_mode": "FULL",
+  "gauge_projection": 100,
+  "evidence_basis": "WP-13 autonomous runtime — PSEE-GAUGE.0 authority chain; 30/30 admissible units; 0 violations across all four reconstruction axes",
+  "expected_domains": [
+    "Artifact Completeness",
+    "State Admissibility",
+    "Traceability Integrity",
+    "Cross-Artifact Consistency",
+    "Authority Honesty"
+  ]
+}

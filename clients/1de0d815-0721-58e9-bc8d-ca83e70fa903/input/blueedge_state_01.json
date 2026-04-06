@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "source_system": "IG",
+  "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+  "coverage": {
+    "admitted_units": 30,
+    "total_units": 30
+  },
+  "reconstruction": {
+    "validated_units": 30,
+    "total_units": 30
+  },
+  "execution_status": "PHASE_1_ACTIVE",
+  "escalation_clearance": 100,
+  "unknown_space_count": 0,
+  "signals": [],
+  "topology": {
+    "domains": [],
+    "nodes": [],
+    "relationships": [],
+    "highlighted_signal": null
+  }
+}
