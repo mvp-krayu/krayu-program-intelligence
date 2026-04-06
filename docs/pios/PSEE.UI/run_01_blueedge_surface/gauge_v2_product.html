@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Execution Gauge — Product Surface</title>
+  <style>
+    /* === BASE (from v1 / v2) === */
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: monospace; background:#0b0f14; color:#e6edf3; padding:24px; margin:0; }
+    .value { font-size:32px; font-weight:bold; }
+    .phase { color:#58a6ff; }
+
+    /* === OUTER SHELL — two-column at full width === */
+    .outer { max-width:1120px; border:1px solid #333; }
+    .top-bar { padding:20px; border-bottom:1px solid #1f2937; }
+    .cols { display:flex; align-items:flex-start; }
+    .col-left  { flex:0 0 60%; border-right:1px solid #1f2937; min-width:0; }
+    .col-right { flex:1; min-width:0; }
+
+    /* === PANELS === */
+    .panel { padding:20px; border-bottom:1px solid #1f2937; }
+    .panel:last-child { border-bottom:none; }
+    .panel-label {
+      color:#8b949e; font-size:11px; text-transform:uppercase;
+      letter-spacing:.08em; margin-bottom:14px;
+    }
+    hr { border:none; border-top:1px solid #1f2937; margin:14px 0; }
+
+    /* === HEADER === */
+    .header-top { display:flex; justify-content:space-between; align-items:flex-start; }
+    .header-run { color:#8b949e; font-size:13px; margin-bottom:4px; }
+    .header-phase { color:#58a6ff; font-size:14px; }
+    .header-tag { font-size:11px; color:#444; padding:3px 8px; border:1px solid #333; }
+    .score-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:16px; }
+    .score-cell { border:1px solid #1f2937; padding:14px; }
+    .score-cell .sc-label { color:#8b949e; font-size:12px; margin-bottom:6px; }
+    .score-cell .sc-value { font-size:32px; font-weight:bold; }
+    .score-cell .sc-sub { font-size:12px; color:#8b949e; margin-top:4px; }
+    .score-cell .sc-band { font-size:14px; font-weight:bold; color:#d29922; }
+
+    /* === DECOMPOSITION === */
+    .comp-block { margin-bottom:16px; }
+    .comp-block:last-child { margin-bottom:0; }
+    .comp-header { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px; }
+    .comp-name { font-size:14px; }
+    .comp-pts { font-size:14px; font-weight:bold; }
+    .comp-bar-bg { background:#1f2937; height:7px; border-radius:3px; }
+    .comp-bar-fill { height:7px; border-radius:3px; }
+    .comp-status { color:#8b949e; font-size:12px; margin-top:4px; }
+
+    /* === COMPONENT EXPLANATION === */
+    .exp-block { border:1px solid #1f2937; padding:14px; margin-bottom:10px; }
+    .exp-block:last-child { margin-bottom:0; }
+    .exp-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
+    .exp-title { font-size:14px; font-weight:bold; }
+    .exp-badge { font-size:11px; padding:3px 8px; border-radius:3px; font-weight:bold; white-space:nowrap; }
+    .badge-pass     { background:#0d2e1a; color:#3fb950; border:1px solid #1b5e3d; }
+    .badge-computed { background:#0d2e1a; color:#3fb950; border:1px solid #1b5e3d; }
+    .badge-not-eval { background:#1a1a1a; color:#8b949e; border:1px solid #333; }
+    .exp-row { display:flex; gap:6px; font-size:13px; margin-top:5px; line-height:1.5; }
+    .exp-row .ek { color:#8b949e; min-width:130px; flex-shrink:0; }
+    .exp-row .ev { color:#c9d1d9; }
+
+    /* === CTA BLOCK === */
+    .cta-block { margin-top:12px; border-top:1px solid #1f2937; padding-top:12px; }
+    .cta-truth {
+      font-size:12px; color:#c9d1d9; background:#0a1017; border:1px solid #1f2937;
+      padding:9px 12px; margin-bottom:10px; line-height:1.6;
+    }
+    .cta-truth strong { color:#e6edf3; }
+    .cta-sep { border-top:1px dashed #1f2937; margin:8px 0 10px; }
+    .cta-gate-label {
+      font-size:10px; color:#444; text-transform:uppercase;
+      letter-spacing:.07em; margin-bottom:7px;
+    }
+    .cta-btn {
+      font-family:monospace; font-size:13px; padding:8px 16px;
+      border:1px solid #1b3a5c; background:#0b1f31; color:#58a6ff;
+      cursor:pointer; display:inline-block;
+    }
+    .cta-btn:hover { border-color:#58a6ff; }
+
+    /* === MISSING CAPABILITIES === */
+    .cap-block { border:1px solid #1f2937; padding:12px 14px; margin-bottom:8px; }
+    .cap-block:last-child { margin-bottom:0; }
+    .cap-title { font-size:13px; margin-bottom:6px; }
+    .cap-row { display:flex; gap:6px; font-size:12px; margin-top:4px; }
+    .cap-row .ck { color:#8b949e; min-width:100px; }
+    .cap-row .cv { color:#c9d1d9; }
+    .cap-unlock { color:#58a6ff; font-size:12px; margin-top:8px; border-top:1px solid #1f2937; padding-top:6px; }
+    .cap-na-badge { display:inline-block; font-size:11px; color:#8b949e; border:1px solid #333; padding:2px 7px; margin-bottom:6px; }
+
+    /* === CONFIDENCE === */
+    .conf-text { font-size:13px; color:#c9d1d9; line-height:1.65; margin-bottom:12px; }
+    .conf-bar-wrap { background:#1f2937; height:7px; border-radius:3px; position:relative; margin:10px 0 6px; }
+    .conf-bar-fill { height:7px; border-radius:3px; background:#d29922; width:100%; }
+    .conf-lower-mark { position:absolute; top:-5px; width:2px; height:17px; background:#8b949e; left:60%; }
+    .conf-legend { display:flex; gap:20px; font-size:12px; color:#8b949e; flex-wrap:wrap; }
+    .conf-legend-item { display:flex; align-items:center; gap:6px; }
+    .conf-legend-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+    /* === OPERATOR === */
+    details.op-details { border:1px solid #1f2937; }
+    details.op-details summary {
+      padding:12px 16px; cursor:pointer; font-size:13px; color:#8b949e;
+      list-style:none; user-select:none;
+    }
+    details.op-details summary::-webkit-details-marker { display:none; }
+    details.op-details summary::before { content:"▶  "; font-size:10px; }
+    details.op-details[open] summary::before { content:"▼  "; }
+    .op-inner { padding:14px 16px; border-top:1px solid #1f2937; }
+    .op-group-label {
+      color:#444; font-size:11px; text-transform:uppercase;
+      letter-spacing:.06em; margin-bottom:8px; margin-top:12px;
+    }
+    .op-group-label:first-child { margin-top:0; }
+    .op-table { width:100%; border-collapse:collapse; font-size:12px; }
+    .op-table td { padding:4px 8px; border-bottom:1px solid #111; vertical-align:top; }
+    .op-table td:first-child { color:#8b949e; width:220px; }
+    .op-table td:last-child { color:#c9d1d9; word-break:break-all; }
+    .op-authority { color:#444; font-size:11px; margin-top:10px; line-height:1.6; }
+
+    /* === STRUCTURAL INSIGHTS BRIDGE (right col) === */
+    .si-bridge {
+      border:1px solid #1b3a5c; background:#060e17; padding:16px; margin-bottom:12px;
+    }
+    .si-bridge-title { font-size:14px; font-weight:bold; margin-bottom:6px; }
+    .si-bridge-sub {
+      font-size:12px; color:#8b949e; line-height:1.6; margin-bottom:12px;
+    }
+    .si-bridge-metrics {
+      display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px;
+    }
+    .si-metric { border:1px solid #1b3a5c; padding:10px; text-align:center; }
+    .si-metric-val { font-size:22px; font-weight:bold; color:#3fb950; }
+    .si-metric-lbl { font-size:11px; color:#8b949e; margin-top:2px; }
+    .si-bridge-btn {
+      font-family:monospace; font-size:13px; padding:9px 16px;
+      border:1px solid #1b3a5c; background:#0b1f31; color:#58a6ff;
+      cursor:pointer; width:100%; text-align:left;
+    }
+    .si-bridge-btn:hover { border-color:#58a6ff; }
+    .si-bridge-artifacts {
+      color:#444; font-size:11px; margin-top:10px; line-height:1.8;
+    }
+
+    /* === GATED QUERY DISCOVERY === */
+    .query-block { border:1px solid #1f2937; padding:12px 14px; margin-bottom:8px; }
+    .query-block:last-child { margin-bottom:0; }
+    .query-text { font-size:13px; color:#444; font-style:italic; margin-bottom:6px; }
+    .query-lock-bar { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+    .query-lock-reason { font-size:11px; color:#333; }
+    .query-lock-badge {
+      font-size:10px; padding:2px 7px; border:1px solid #1b3a5c;
+      color:#1b3a5c; text-transform:uppercase; letter-spacing:.04em; white-space:nowrap; flex-shrink:0;
+    }
+    .query-block.exec-locked .query-lock-badge {
+      border-color:#333; color:#333;
+    }
+    /* unlocked state (set by JS on valid key) */
+    .query-block.unlocked { border-color:#1b5e3d; background:#050f0a; }
+    .query-block.unlocked .query-text { color:#c9d1d9; font-style:normal; }
+    .query-block.unlocked .query-lock-badge { border-color:#1b5e3d; color:#3fb950; }
+    .query-block.unlocked .query-lock-reason { color:#8b949e; }
+
+    /* === ACCESS CHIP === */
+    .access-chip {
+      display:none; font-size:11px; padding:3px 9px;
+      border:1px solid #1b5e3d; background:#050f0a; color:#3fb950;
+      margin-left:10px; vertical-align:middle;
+    }
+
+    /* === DISCOVERY SUCCESS MESSAGE === */
+    .discovery-success {
+      display:none; font-size:12px; color:#3fb950; border:1px solid #1b5e3d;
+      background:#050f0a; padding:10px 12px; margin-bottom:12px; line-height:1.6;
+    }
+    .discovery-success-sub { color:#8b949e; font-size:11px; margin-top:4px; }
+
+    /* === STATE SUMMARY === */
+    .state-row { font-size:13px; line-height:2.1; display:flex; align-items:center; gap:8px; }
+    .state-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+    /* === MODAL === */
+    .modal-overlay {
+      display:none; position:fixed; inset:0; background:rgba(0,0,0,.8);
+      align-items:center; justify-content:center; z-index:100;
+    }
+    .modal-overlay.open { display:flex; }
+    .modal-box {
+      background:#0b0f14; border:1px solid #333; padding:24px;
+      max-width:420px; width:90%;
+    }
+    .modal-title { font-size:16px; font-weight:bold; margin-bottom:10px; }
+    .modal-truth {
+      font-size:12px; color:#d29922; border:1px solid #4c3610;
+      background:#120b02; padding:10px 12px; margin-bottom:14px; line-height:1.6;
+    }
+    .modal-sub { font-size:12px; color:#8b949e; margin-bottom:14px; line-height:1.6; }
+    .modal-input {
+      font-family:monospace; font-size:13px; width:100%; padding:8px 10px;
+      background:#060c12; border:1px solid #333; color:#e6edf3; margin-bottom:10px;
+    }
+    .modal-input:focus { outline:none; border-color:#58a6ff; }
+    .modal-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:4px; }
+    .modal-cancel {
+      font-family:monospace; font-size:12px; padding:7px 14px;
+      border:1px solid #333; background:transparent; color:#8b949e; cursor:pointer;
+    }
+    .modal-submit {
+      font-family:monospace; font-size:12px; padding:7px 14px;
+      border:1px solid #1b3a5c; background:#0b1f31; color:#58a6ff; cursor:pointer;
+    }
+    .modal-cancel:hover { border-color:#8b949e; }
+    .modal-submit:hover { border-color:#58a6ff; }
+    .modal-denied { display:none; font-size:12px; color:#f85149; margin-top:10px; line-height:1.5; }
+  </style>
+</head>
+<body>
+
+<!-- ACCESS KEY MODAL -->
+<div class="modal-overlay" id="modal-access-key">
+  <div class="modal-box">
+    <div class="modal-title">Unlock PiOS Discovery</div>
+    <div class="modal-truth">
+      This intake has not been evaluated by the execution layer.
+      Execution must be performed — this key activates the discovery session, not a cached result.
+      Structural proof is already complete and does not require this key.
+    </div>
+    <div class="modal-sub">
+      PiOS Discovery provides execution-layer activation, interactive structural query,
+      signal propagation analysis, and provenance trace for this intake.
+      Enter your access key to continue.
+    </div>
+    <input class="modal-input" type="password" id="access-key-input" placeholder="Access key" autocomplete="off"/>
+    <div class="modal-denied" id="modal-denied"></div>
+    <div class="modal-actions">
+      <button class="modal-cancel" id="modal-cancel-btn">Cancel</button>
+      <button class="modal-submit" id="modal-submit-btn">Activate</button>
+    </div>
+  </div>
+</div>
+
+<div class="outer">
+
+  <!-- ═══════════════════════════════════════════════════
+       TOP BAR — full width: run identity + score header
+  ════════════════════════════════════════════════════ -->
+  <div class="top-bar">
+    <div class="header-top">
+      <div>
+        <div class="header-run">Run: run_01</div>
+        <div class="header-phase">Execution Phase: PHASE_1_ACTIVE</div>
+      </div>
+      <div class="header-tag">gauge-v2-product</div>
+    </div>
+
+    <div class="score-grid">
+      <div class="score-cell">
+        <div class="sc-label">Canonical Score</div>
+        <div class="sc-value">60</div>
+        <div class="sc-band">CONDITIONAL</div>
+        <div class="sc-sub">Verified structural state</div>
+      </div>
+      <div class="score-cell">
+        <div class="sc-label">Projected Score</div>
+        <div class="sc-value">100</div>
+        <div class="sc-sub">If execution layer completes</div>
+      </div>
+      <div class="score-cell">
+        <div class="sc-label">Confidence Band</div>
+        <div class="sc-value" style="font-size:22px;padding-top:4px;">[60 – 100]</div>
+        <div class="sc-sub">Lower = proven / Upper = achievable</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       TWO-COLUMN BODY
+  ════════════════════════════════════════════════════ -->
+  <div class="cols">
+
+    <!-- ─────────────── LEFT COLUMN ─────────────── -->
+    <div class="col-left">
+
+      <!-- Score Decomposition -->
+      <div class="panel">
+        <div class="panel-label">Score Decomposition (60 = 0 + 35 + 25)</div>
+
+        <div class="comp-block">
+          <div class="comp-header">
+            <div class="comp-name">Completion / Execution Insight</div>
+            <div class="comp-pts" style="color:#8b949e;">0 / 40 pts</div>
+          </div>
+          <div class="comp-bar-bg"><div class="comp-bar-fill" style="width:0%;background:#8b949e;"></div></div>
+          <div class="comp-status">NOT EVALUATED — execution layer not performed</div>
+        </div>
+
+        <div class="comp-block">
+          <div class="comp-header">
+            <div class="comp-name">Coverage</div>
+            <div class="comp-pts" style="color:#3fb950;">35 / 35 pts</div>
+          </div>
+          <div class="comp-bar-bg"><div class="comp-bar-fill" style="width:100%;background:#3fb950;"></div></div>
+          <div class="comp-status" style="color:#3fb950;">COMPUTED — 100% structural coverage (30/30 units)</div>
+        </div>
+
+        <div class="comp-block">
+          <div class="comp-header">
+            <div class="comp-name">Reconstruction</div>
+            <div class="comp-pts" style="color:#3fb950;">25 / 25 pts</div>
+          </div>
+          <div class="comp-bar-bg"><div class="comp-bar-fill" style="width:100%;background:#3fb950;"></div></div>
+          <div class="comp-status" style="color:#3fb950;">PASS — 4-axis structural validation (30/30 units)</div>
+        </div>
+      </div>
+
+      <!-- Component Detail -->
+      <div class="panel">
+        <div class="panel-label">Component Detail</div>
+
+        <!-- Completion — with CTA -->
+        <div class="exp-block">
+          <div class="exp-header">
+            <div class="exp-title">Completion / Execution Insight</div>
+            <div class="exp-badge badge-not-eval">NOT EVALUATED</div>
+          </div>
+          <div class="exp-row"><span class="ek">Contribution</span><span class="ev">0 of 40 points</span></div>
+          <div class="exp-row"><span class="ek">Reason</span><span class="ev">The execution layer (PiOS engine) has not been run against this intake. Completion scoring requires terminal execution state — none exists for this run.</span></div>
+          <div class="exp-row"><span class="ek">What this means</span><span class="ev">The gauge cannot determine whether execution succeeded, partially completed, or encountered terminal conditions. This component contributes 0 until execution runs.</span></div>
+
+          <div class="cta-block">
+            <div class="cta-truth">
+              <strong>Structural proof is complete.</strong>
+              The 60-point floor is verified without execution.
+              Execution insight is a separate evaluation that has not been performed —
+              this is not a data gap, it is an unevaluated layer.
+            </div>
+            <div class="cta-sep"></div>
+            <div class="cta-gate-label">PiOS Discovery — Commercially Gated Access</div>
+            <button class="cta-btn" id="cta-unlock-btn">Unlock PiOS Discovery &#x2192;</button>
+          </div>
+        </div>
+
+        <!-- Coverage -->
+        <div class="exp-block">
+          <div class="exp-header">
+            <div class="exp-title">Coverage</div>
+            <div class="exp-badge badge-computed">COMPUTED</div>
+          </div>
+          <div class="exp-row"><span class="ek">Contribution</span><span class="ev">35 of 35 points</span></div>
+          <div class="exp-row"><span class="ek">Value</span><span class="ev">100.0% — 30/30 admissible units</span></div>
+          <div class="exp-row"><span class="ek">Method</span><span class="ev">Structural admissibility computation from IG.RUNTIME evidence boundary</span></div>
+          <div class="exp-row"><span class="ek">What this means</span><span class="ev">All required structural units in the intake package were validated as admissible. No gaps in coverage. The structural package is complete.</span></div>
+          <div class="exp-row"><span class="ek">Authority</span><span class="ev">PSEE-GAUGE.0 DP-5-02 / coverage_state.json</span></div>
+        </div>
+
+        <!-- Reconstruction -->
+        <div class="exp-block">
+          <div class="exp-header">
+            <div class="exp-title">Reconstruction</div>
+            <div class="exp-badge badge-pass">PASS</div>
+          </div>
+          <div class="exp-row"><span class="ek">Contribution</span><span class="ev">25 of 25 points</span></div>
+          <div class="exp-row"><span class="ek">Validated units</span><span class="ev">30 / 30</span></div>
+          <div class="exp-row"><span class="ek">Axes evaluated</span><span class="ev">Completeness · Structural Link · Referential Integrity · Layer Consistency</span></div>
+          <div class="exp-row"><span class="ek">Violations</span><span class="ev">0</span></div>
+          <div class="exp-row"><span class="ek">What this means</span><span class="ev">The structural reconstruction of the intake is fully validated. All units are connected, all references resolve, all layer boundaries are consistent.</span></div>
+          <div class="exp-row"><span class="ek">Authority</span><span class="ev">PSEE-GAUGE.0 DP-6-03 / reconstruction_state.json</span></div>
+        </div>
+      </div>
+
+      <!-- Missing Capabilities -->
+      <div class="panel">
+        <div class="panel-label">Capabilities Not Available</div>
+
+        <div class="cap-block">
+          <div class="cap-na-badge">NOT EVALUATED</div>
+          <div class="cap-title">Execution Validation</div>
+          <div class="cap-row"><span class="ck">Why not available</span><span class="cv">PiOS execution layer has not been run. No terminal execution state exists for this intake.</span></div>
+          <div class="cap-unlock">Unlock: run PiOS execution layer against this intake</div>
+        </div>
+
+        <div class="cap-block">
+          <div class="cap-na-badge">NOT EVALUATED</div>
+          <div class="cap-title">Signal Propagation Analysis</div>
+          <div class="cap-row"><span class="ck">Why not available</span><span class="cv">Signal propagation requires execution-layer output. No execution has occurred.</span></div>
+          <div class="cap-unlock">Unlock: complete execution layer; activate signal propagation stream</div>
+        </div>
+
+        <div class="cap-block">
+          <div class="cap-na-badge">NOT EVALUATED</div>
+          <div class="cap-title">Dynamic Failure Modeling</div>
+          <div class="cap-row"><span class="ck">Why not available</span><span class="cv">Failure modeling requires observed execution outcomes. No execution outcomes exist for this run.</span></div>
+          <div class="cap-unlock">Unlock: complete execution layer; provide failure evidence</div>
+        </div>
+
+        <div class="cap-block">
+          <div class="cap-na-badge">NOT EVALUATED</div>
+          <div class="cap-title">Completion Scoring (Runtime)</div>
+          <div class="cap-row"><span class="ck">Why not available</span><span class="cv">Completion score requires terminal execution state (S-T1, S-T2, S-T3, S-13). Current state PHASE_1_ACTIVE is in-flight — no terminal state reached.</span></div>
+          <div class="cap-unlock">Unlock: advance to terminal execution state via PiOS execution layer</div>
+        </div>
+      </div>
+
+      <!-- Confidence Band -->
+      <div class="panel">
+        <div class="panel-label">Confidence Band [60 – 100]</div>
+
+        <div class="conf-text">
+          The <strong>lower bound (60)</strong> represents the verified structural state of this intake.
+          It is a hard floor derived only from what has been computed and validated without any assumptions.
+          Coverage (35 pts) and Reconstruction (25 pts) are fully proven. Completion (0 pts) reflects the
+          absence of execution-layer evaluation — not a failure.
+        </div>
+        <div class="conf-text">
+          The <strong>upper bound (100)</strong> represents the achievable score if the execution layer
+          is performed and completes successfully to terminal state S-13. It assumes the already-proven
+          structural dimensions (Coverage 100%, Reconstruction PASS) hold through execution.
+          No new structural risks have been identified that would reduce this ceiling.
+        </div>
+        <div class="conf-text">
+          The gap between 60 and 100 is fully explained by the missing execution evaluation.
+          There are no open escalations, unknown-space records, or coverage gaps that would compress this band.
+        </div>
+
+        <div class="conf-bar-wrap">
+          <div class="conf-bar-fill"></div>
+          <div class="conf-lower-mark"></div>
+        </div>
+        <div class="conf-legend">
+          <div class="conf-legend-item">
+            <div class="conf-legend-dot" style="background:#8b949e;"></div>
+            <span>Lower = 60 — verified structural state</span>
+          </div>
+          <div class="conf-legend-item">
+            <div class="conf-legend-dot" style="background:#d29922;"></div>
+            <span>Upper = 100 — achievable if execution layer completes</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Operator Mode -->
+      <div class="panel">
+        <div class="panel-label">Operator Mode</div>
+
+        <details class="op-details">
+          <summary>Raw State Disclosure — gauge_state.json / coverage_state.json / reconstruction_state.json</summary>
+          <div class="op-inner">
+
+            <div class="op-group-label">Execution State</div>
+            <table class="op-table">
+              <tr><td>execution_status</td><td>PHASE_1_ACTIVE</td></tr>
+              <tr><td>psee_engine_invoked</td><td>true</td></tr>
+              <tr><td>execution_mode</td><td>FULL</td></tr>
+              <tr><td>run_id</td><td>run_01</td></tr>
+              <tr><td>score.stream</td><td>PSEE-RUNTIME.5</td></tr>
+            </table>
+
+            <div class="op-group-label">Score Components</div>
+            <table class="op-table">
+              <tr><td>canonical_score</td><td>60</td></tr>
+              <tr><td>band_label</td><td>CONDITIONAL</td></tr>
+              <tr><td>derivation</td><td>0 + 35 + 25 = 60</td></tr>
+              <tr><td>completion_points</td><td>0</td></tr>
+              <tr><td>completion_basis</td><td>PHASE_1_ACTIVE — in-flight; UNDEFINED_STATE guard applied</td></tr>
+              <tr><td>coverage_points</td><td>35</td></tr>
+              <tr><td>coverage_basis</td><td>round(100.0 × 0.35) = 35</td></tr>
+              <tr><td>reconstruction_points</td><td>25</td></tr>
+              <tr><td>reconstruction_basis</td><td>DIM-02.state=PASS → 25 pts</td></tr>
+              <tr><td>projected_score</td><td>100</td></tr>
+              <tr><td>projection_rule</td><td>PR-02</td></tr>
+              <tr><td>confidence_lower</td><td>60</td></tr>
+              <tr><td>confidence_upper</td><td>100</td></tr>
+              <tr><td>confidence_status</td><td>COMPUTED</td></tr>
+              <tr><td>total_variance_reduction</td><td>0</td></tr>
+            </table>
+
+            <div class="op-group-label">DIM-01 — Coverage (coverage_state.json)</div>
+            <table class="op-table">
+              <tr><td>state</td><td>COMPUTED</td></tr>
+              <tr><td>state_label</td><td>FULL</td></tr>
+              <tr><td>coverage_percent</td><td>100.0</td></tr>
+              <tr><td>required_units</td><td>30</td></tr>
+              <tr><td>admissible_units</td><td>30</td></tr>
+              <tr><td>method</td><td>IG.RUNTIME admissible coverage computation</td></tr>
+              <tr><td>authority</td><td>PSEE-GAUGE.0 DP-5-02</td></tr>
+              <tr><td>stream</td><td>PSEE-RUNTIME.5A</td></tr>
+            </table>
+
+            <div class="op-group-label">DIM-02 — Reconstruction (reconstruction_state.json)</div>
+            <table class="op-table">
+              <tr><td>state</td><td>PASS</td></tr>
+              <tr><td>validated_units</td><td>30</td></tr>
+              <tr><td>total_units</td><td>30</td></tr>
+              <tr><td>violations</td><td>0</td></tr>
+              <tr><td>axis: COMPLETENESS</td><td>PASS</td></tr>
+              <tr><td>axis: STRUCTURAL_LINK</td><td>PASS</td></tr>
+              <tr><td>axis: REFERENTIAL_INTEGRITY</td><td>PASS</td></tr>
+              <tr><td>axis: LAYER_CONSISTENCY</td><td>PASS</td></tr>
+              <tr><td>method</td><td>IG.RUNTIME structural reconstruction validation</td></tr>
+              <tr><td>authority</td><td>PSEE-GAUGE.0 DP-6-03</td></tr>
+              <tr><td>stream</td><td>PSEE-RUNTIME.6A</td></tr>
+            </table>
+
+            <div class="op-group-label">DIM-03 through DIM-06 (gauge_state.json)</div>
+            <table class="op-table">
+              <tr><td>DIM-03 Escalation Clearance</td><td>100 — CLEAR</td></tr>
+              <tr><td>DIM-04 Unknown-Space</td><td>0 records — NONE</td></tr>
+              <tr><td>DIM-05 Intake Completeness</td><td>COMPLETE</td></tr>
+              <tr><td>DIM-06 Heuristic Compliance</td><td>PASS</td></tr>
+            </table>
+
+            <div class="op-authority">
+              Authority refs: PSEE-GAUGE.0/gauge_score_model.md §G.2–G.4 ·
+              PSEE-GAUGE.0/dimension_projection_model.md §DIM-01..06 ·
+              PSEE-GAUGE.0/confidence_and_variance_model.md §Total Variance Computation ·
+              PSEE-GAUGE.0/projection_logic_spec.md §PR-02
+            </div>
+          </div>
+        </details>
+      </div>
+
+    </div><!-- /col-left -->
+
+    <!-- ─────────────── RIGHT COLUMN ─────────────── -->
+    <div class="col-right">
+
+      <!-- Structural Proof Summary -->
+      <div class="panel">
+        <div class="panel-label">Structural Proof</div>
+
+        <div id="discovery-success-msg" class="discovery-success">
+          PiOS Discovery access enabled for structural exploration.
+          <div class="discovery-success-sub">Execution-layer scenarios remain unavailable until execution runs.</div>
+        </div>
+
+        <div class="si-bridge">
+          <div class="si-bridge-title">Structural Proof Summary <span id="access-enabled-chip" class="access-chip">ACCESS ENABLED</span></div>
+          <div class="si-bridge-sub">
+            PSEE-validated reconstruction proof across 3 intake layers.
+            30 structural units validated. Provenance chain, layer integrity,
+            and case structure are governed artifacts for this run.
+            This is not yet the interactive PiOS Structural Insights surface.
+          </div>
+
+          <div class="si-bridge-metrics">
+            <div class="si-metric">
+              <div class="si-metric-val">30</div>
+              <div class="si-metric-lbl">PSEE Validated Units</div>
+            </div>
+            <div class="si-metric">
+              <div class="si-metric-val">4</div>
+              <div class="si-metric-lbl">Reconstruction Axes</div>
+            </div>
+            <div class="si-metric">
+              <div class="si-metric-val">0</div>
+              <div class="si-metric-lbl">Proof Violations</div>
+            </div>
+          </div>
+
+          <button class="si-bridge-btn" id="si-bridge-btn">
+            Unlock PiOS Discovery &#x2192;
+          </button>
+
+          <div class="si-bridge-artifacts">
+            Governed artifacts in this run:<br/>
+            operator_case_view.md &middot; operator_integrity_view.md &middot;<br/>
+            operator_trace_view.md &middot; operator_unknown_space_view.md
+          </div>
+        </div>
+
+        <div style="font-size:12px;color:#8b949e;line-height:1.6;">
+          This panel reflects validated PSEE reconstruction state.<br/>
+          Full PiOS Structural Insights mounting remains part of reconciliation.<br/>
+          Interactive discovery requires PiOS Discovery access.
+        </div>
+      </div>
+
+      <!-- Gated Query Discovery -->
+      <div class="panel">
+        <div class="panel-label">Discovery Queries</div>
+
+        <!-- Structural queries (access key only) -->
+        <div class="query-block structural-query">
+          <div class="query-text">"Which structural units carry the highest referential integrity exposure?"</div>
+          <div class="query-lock-bar">
+            <div class="query-lock-reason">Requires PiOS Discovery &middot; structural query</div>
+            <div class="query-lock-badge">LOCKED &mdash; Access Key</div>
+          </div>
+        </div>
+
+        <div class="query-block structural-query">
+          <div class="query-text">"Trace provenance chain from IG.6 orchestration to terminal intake boundary."</div>
+          <div class="query-lock-bar">
+            <div class="query-lock-reason">Requires PiOS Discovery &middot; provenance trace</div>
+            <div class="query-lock-badge">LOCKED &mdash; Access Key</div>
+          </div>
+        </div>
+
+        <div class="query-block structural-query">
+          <div class="query-text">"Show layer-by-layer structural linking across L40_2, L40_3, L40_4."</div>
+          <div class="query-lock-bar">
+            <div class="query-lock-reason">Requires PiOS Discovery &middot; layer analysis</div>
+            <div class="query-lock-badge">LOCKED &mdash; Access Key</div>
+          </div>
+        </div>
+
+        <!-- Execution queries (access key + execution layer) — remain locked regardless of discovery access -->
+        <div class="query-block exec-locked">
+          <div class="query-text">"What are the execution failure scenarios for this intake under signal degradation?"</div>
+          <div class="query-lock-bar">
+            <div class="query-lock-reason">Execution Layer Required</div>
+            <div class="query-lock-badge">LOCKED &mdash; Execution Layer + Access Key</div>
+          </div>
+        </div>
+
+        <div class="query-block exec-locked">
+          <div class="query-text">"Project signal propagation paths from coverage boundary to terminal state."</div>
+          <div class="query-lock-bar">
+            <div class="query-lock-reason">Execution Layer Required</div>
+            <div class="query-lock-badge">LOCKED &mdash; Execution Layer + Access Key</div>
+          </div>
+        </div>
+
+        <div style="font-size:12px;color:#333;margin-top:12px;border-top:1px solid #1f2937;padding-top:10px;line-height:1.7;">
+          Structural queries unlock with PiOS Discovery access key only.<br/>
+          Execution queries require the execution layer to have run, regardless of access key.
+        </div>
+      </div>
+
+      <!-- State Summary -->
+      <div class="panel">
+        <div class="panel-label">State Summary</div>
+
+        <div class="state-row"><div class="state-dot" style="background:#3fb950;"></div><span>Structural proof: <strong>COMPLETE</strong></span></div>
+        <div class="state-row"><div class="state-dot" style="background:#3fb950;"></div><span>Coverage: <strong>100% (30/30 units)</strong></span></div>
+        <div class="state-row"><div class="state-dot" style="background:#3fb950;"></div><span>Reconstruction: <strong>PASS (4-axis, 0 violations)</strong></span></div>
+        <div class="state-row"><div class="state-dot" style="background:#d29922;"></div><span>Score: <strong>60 CONDITIONAL</strong> &mdash; proven floor</span></div>
+        <div class="state-row"><div class="state-dot" style="background:#8b949e;"></div><span>Execution insight: <strong style="color:#8b949e;">NOT EVALUATED</strong></span></div>
+        <div class="state-row" id="discovery-state-row"><div class="state-dot" id="discovery-dot" style="background:#1b3a5c;"></div><span>Structural discovery: <span id="discovery-state"><strong style="color:#444;">ACCESS KEY REQUIRED</strong></span></span></div>
+        <div class="state-row"><div class="state-dot" style="background:#1f2937;"></div><span>Execution scenarios: <strong style="color:#333;">EXECUTION LAYER REQUIRED</strong></span></div>
+      </div>
+
+    </div><!-- /col-right -->
+
+  </div><!-- /cols -->
+
+</div><!-- /outer -->
+
+<script>
+(function() {
+  var VALID_KEY = 'PIOS-DISCOVERY-DEMO';
+  var discoveryEnabled = false;
+
+  function openModal() {
+    if (discoveryEnabled) return;
+    document.getElementById('modal-access-key').classList.add('open');
+    document.getElementById('access-key-input').value = '';
+    document.getElementById('modal-denied').style.display = 'none';
+    setTimeout(function() { document.getElementById('access-key-input').focus(); }, 50);
+  }
+
+  function closeModal() {
+    document.getElementById('modal-access-key').classList.remove('open');
+  }
+
+  function enableDiscovery() {
+    discoveryEnabled = true;
+
+    // CTA button in left column
+    var ctaBtn = document.getElementById('cta-unlock-btn');
+    ctaBtn.textContent = 'Discovery Access Enabled';
+    ctaBtn.style.borderColor = '#1b5e3d';
+    ctaBtn.style.color = '#3fb950';
+    ctaBtn.style.cursor = 'default';
+    ctaBtn.onclick = null;
+
+    // SI bridge button in right column
+    var siBtn = document.getElementById('si-bridge-btn');
+    siBtn.textContent = 'Discovery Access Enabled';
+    siBtn.style.borderColor = '#1b5e3d';
+    siBtn.style.color = '#3fb950';
+    siBtn.style.cursor = 'default';
+    siBtn.onclick = null;
+
+    // Access chip
+    document.getElementById('access-enabled-chip').style.display = 'inline-block';
+
+    // Success message
+    document.getElementById('discovery-success-msg').style.display = 'block';
+
+    // Unlock structural queries
+    var blocks = document.querySelectorAll('.query-block.structural-query');
+    blocks.forEach(function(block) {
+      block.classList.add('unlocked');
+      var badge = block.querySelector('.query-lock-badge');
+      badge.textContent = 'AVAILABLE';
+      var reason = block.querySelector('.query-lock-reason');
+      reason.textContent = 'PiOS Discovery access enabled';
+    });
+
+    // State summary
+    document.getElementById('discovery-dot').style.background = '#3fb950';
+    document.getElementById('discovery-state').innerHTML = '<strong style="color:#3fb950;">ACCESS ENABLED</strong>';
+  }
+
+  function handleSubmit() {
+    var key = document.getElementById('access-key-input').value.trim();
+    var denied = document.getElementById('modal-denied');
+
+    if (key.length === 0) {
+      denied.style.display = 'block';
+      denied.textContent = 'Access key required.';
+      return;
+    }
+    if (key === VALID_KEY) {
+      closeModal();
+      enableDiscovery();
+      return;
+    }
+    denied.style.display = 'block';
+    denied.textContent = 'Access key not recognized. Contact your program coordinator to obtain PiOS Discovery access.';
+  }
+
+  document.getElementById('cta-unlock-btn').addEventListener('click', openModal);
+  document.getElementById('si-bridge-btn').addEventListener('click', openModal);
+  document.getElementById('modal-cancel-btn').addEventListener('click', closeModal);
+  document.getElementById('modal-submit-btn').addEventListener('click', handleSubmit);
+
+  document.getElementById('modal-access-key').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+  document.getElementById('access-key-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') handleSubmit();
+    if (e.key === 'Escape') closeModal();
+  });
+})();
+</script>
+
+</body>
+</html>
