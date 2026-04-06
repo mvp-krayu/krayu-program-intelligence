@@ -1,0 +1,15 @@
+{
+  "run_id": "run_01_authoritative",
+  "client_id": "blueedge",
+  "schema_version": "1.0",
+  "stream": "PSEE-RUNTIME.5A",
+  "dimension": "DIM-01",
+  "label": "Coverage",
+  "state": "COMPUTED",
+  "state_label": "FULL",
+  "coverage_percent": 100.0,
+  "required_units": 30,
+  "admissible_units": 30,
+  "authority": "PSEE-GAUGE.0 DP-5-02",
+  "derivation": "coverage_percent = admissible_units / required_units * 100 = 30 / 30 * 100 = 100.0"
+}

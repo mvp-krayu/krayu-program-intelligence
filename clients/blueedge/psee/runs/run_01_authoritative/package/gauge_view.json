@@ -1,0 +1,27 @@
+{
+  "run_id": "run_01_authoritative",
+  "client_id": "blueedge",
+  "schema_version": "1.0",
+  "stream": "PSEE-RUNTIME.5",
+  "rendering_state": "PHASE_1_ACTIVE",
+  "gauge_state_source": "gauge_state.json",
+  "engine_state_source": "engine_state.json",
+  "suppression_active": false,
+  "score_display": {
+    "canonical_score": 60,
+    "band_label": "CONDITIONAL",
+    "projected_score": 100,
+    "projection_rule": "PR-02",
+    "suppressed": false
+  },
+  "confidence_band": {
+    "lower": 60,
+    "upper": 100,
+    "status": "COMPUTED"
+  },
+  "state_indicator": {
+    "current_state": "PHASE_1_ACTIVE",
+    "execution_mode": "FULL",
+    "psee_engine_invoked": true
+  }
+}

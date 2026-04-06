@@ -1,0 +1,19 @@
+{
+  "run_id": "run_01_authoritative",
+  "client_id": "blueedge",
+  "schema_version": "1.0",
+  "stream": "PSEE-RUNTIME.6A",
+  "dimension": "DIM-02",
+  "label": "Reconstruction",
+  "state": "PASS",
+  "violations": [],
+  "validated_units": 30,
+  "total_units": 30,
+  "axis_results": {
+    "COMPLETENESS": "PASS",
+    "STRUCTURAL_LINK": "PASS",
+    "REFERENTIAL_INTEGRITY": "PASS",
+    "LAYER_CONSISTENCY": "PASS"
+  },
+  "authority": "PSEE-GAUGE.0 DP-6-03"
+}

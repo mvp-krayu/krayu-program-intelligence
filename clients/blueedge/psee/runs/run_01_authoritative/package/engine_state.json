@@ -1,0 +1,10 @@
+{
+  "run_id": "run_01_authoritative",
+  "client_id": "blueedge",
+  "schema_version": "1.0",
+  "stream": "PSEE-RUNTIME.4",
+  "execution_status": "PHASE_1_ACTIVE",
+  "psee_engine_invoked": true,
+  "execution_mode": "FULL",
+  "source_system": "PSEE"
+}

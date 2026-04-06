@@ -1,0 +1,22 @@
+{
+  "run_id": "run_01_authoritative",
+  "client_id": "blueedge",
+  "intake_timestamp": "2026-04-06T13:43:34Z",
+  "verification_outcome": "PASS_FULL",
+  "intake_mode": "AUTHORITATIVE_INTAKE",
+  "consumed_scope": "all",
+  "verified_domains": [
+    "Domain 1 (Artifact Completeness): VERIFIED_PASS",
+    "Domain 2 (State Admissibility): VERIFIED_PASS",
+    "Domain 3 (Traceability Integrity): VERIFIED_PASS",
+    "Domain 4 (Cross-Artifact Consistency): VERIFIED_PASS",
+    "Domain 5 (Authority Honesty): VERIFIED_PASS"
+  ],
+  "unverified_domains": [
+    "None \u2014 all domains evaluated"
+  ],
+  "uncertainty_propagation": "none",
+  "consumption_permission": "CONSUME AS AUTHORITATIVE",
+  "rejected": false,
+  "errors": []
+}

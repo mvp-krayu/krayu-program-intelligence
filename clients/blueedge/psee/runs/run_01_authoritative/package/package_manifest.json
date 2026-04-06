@@ -1,0 +1,21 @@
+{
+  "run_id": "run_01_authoritative",
+  "client_id": "blueedge",
+  "package_version": "1.0",
+  "artifact_inventory": [
+    "package_manifest.json",
+    "verification.log",
+    "engine_state.json",
+    "gauge_state.json",
+    "gauge_view.json",
+    "coverage_state.json",
+    "reconstruction_state.json"
+  ],
+  "required_artifacts_status": "complete",
+  "verification_reference": "verification.log",
+  "lifecycle_state": "EMITTED",
+  "emission_timestamp": "2026-04-06T13:42:30Z",
+  "source_system": "PSEE",
+  "verification_hash": "b85f5a91350cb579be4f374fd78f388b0a77491e47915db9e2851a2c0e96ef24",
+  "manifest_hash": "af3c00ceb2de78a8d89fa673dbb2c948731ff193c4fcfd1b47d8b8645e918748"
+}
