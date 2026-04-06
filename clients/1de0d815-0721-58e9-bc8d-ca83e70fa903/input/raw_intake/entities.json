@@ -1,0 +1,32 @@
+[
+  {
+    "id": "N-8F8327DF",
+    "label": "Entity A",
+    "domain": "Domain Alpha",
+    "type": "service"
+  },
+  {
+    "id": "N-0E9A06C2",
+    "label": "Entity B",
+    "domain": "Domain Alpha",
+    "type": "service"
+  },
+  {
+    "id": "N-B7424B15",
+    "label": "Entity C",
+    "domain": "Domain Beta",
+    "type": "platform"
+  },
+  {
+    "id": "N-0C49466C",
+    "label": "Entity D",
+    "domain": "Domain Beta",
+    "type": "governance"
+  },
+  {
+    "id": "N-DB07E81D",
+    "label": "Entity E",
+    "domain": "Domain Gamma",
+    "type": "governance"
+  }
+]

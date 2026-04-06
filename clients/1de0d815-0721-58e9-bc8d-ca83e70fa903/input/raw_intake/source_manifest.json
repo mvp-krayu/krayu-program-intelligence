@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "stream": "PSEE.RECONCILE.1.WP-15B",
+  "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+  "generated_at": "2026-04-06T19:09:22.741497+00:00",
+  "admissibility_metadata": {
+    "source_class": "AUTHORITATIVE_INTAKE",
+    "construction_mode": "FIRST_RUN_INTAKE",
+    "source_artifacts": [
+      "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/config/runtime_config.json",
+      "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/input/raw_input.json",
+      "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/input/state_01.json"
+    ],
+    "provenance_hash": "153cd6b87e1a97836889d022892bf351ccbabe9d9d5b0e51d4288ee1d10ab592"
+  },
+  "source_artifacts": [
+    {
+      "label": "client_config",
+      "path": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/config/runtime_config.json",
+      "sha256": "a1a9d8aa0209451f08cbf02ddf381576213ff1f7c25fa0840fbe8733dda56949"
+    },
+    {
+      "label": "primary_ig",
+      "path": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/input/raw_input.json",
+      "sha256": "fc7ed0c25409f3d330413cc711b049b53818f896312b79556f44291e259e1e15"
+    },
+    {
+      "label": "secondary_state",
+      "path": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/input/state_01.json",
+      "sha256": "079f2a5efc28e18aaf47379e84cc93d2673a012b86ae08205ecf280b01cd8689"
+    }
+  ],
+  "provenance_hash": "153cd6b87e1a97836889d022892bf351ccbabe9d9d5b0e51d4288ee1d10ab592"
+}

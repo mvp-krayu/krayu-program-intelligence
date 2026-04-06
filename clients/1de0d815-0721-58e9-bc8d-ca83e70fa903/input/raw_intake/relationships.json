@@ -1,0 +1,38 @@
+[
+  {
+    "from": "N-8F8327DF",
+    "to": "N-0E9A06C2",
+    "type": "DEPENDS_ON",
+    "evidence_ref": "raw_input.json"
+  },
+  {
+    "from": "N-0E9A06C2",
+    "to": "N-B7424B15",
+    "type": "DEPENDS_ON",
+    "evidence_ref": "raw_input.json"
+  },
+  {
+    "from": "N-B7424B15",
+    "to": "N-0C49466C",
+    "type": "COORDINATES_WITH",
+    "evidence_ref": "raw_input.json"
+  },
+  {
+    "from": "N-0C49466C",
+    "to": "N-DB07E81D",
+    "type": "GOVERNANCE_CONSTRAINT",
+    "evidence_ref": "raw_input.json"
+  },
+  {
+    "from": "N-8F8327DF",
+    "to": "N-B7424B15",
+    "type": "PIPELINE",
+    "evidence_ref": "raw_input.json"
+  },
+  {
+    "from": "N-0E9A06C2",
+    "to": "N-DB07E81D",
+    "type": "COORDINATES_WITH",
+    "evidence_ref": "raw_input.json"
+  }
+]
