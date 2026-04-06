@@ -47,10 +47,12 @@ REQUIRED_CONFIG_FIELDS = [
     "package_version", "source_system", "lifecycle_state",
     "execution_mode", "gauge_projection", "evidence_basis", "expected_domains"
 ]
-REQUIRED_INPUT_FIELDS = [
-    "schema_version", "source_system", "client_uuid",
-    "coverage", "reconstruction", "execution_status",
-    "escalation_clearance", "unknown_space_count", "signals", "topology"
+# Fields required to be present in raw input (fatal if absent)
+REQUIRED_INPUT_FIELDS = ["client_uuid", "signals", "topology"]
+# Fields normalizable if absent — populated deterministically in ig_normalize
+NORMALIZABLE_INPUT_FIELDS = [
+    "schema_version", "source_system", "coverage", "reconstruction",
+    "execution_status", "escalation_clearance", "unknown_space_count"
 ]
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -305,7 +307,33 @@ def ig_normalize(raw_input, client_uuid, log):
                  f"input client_uuid={raw_input['client_uuid']!r} != "
                  f"--client={client_uuid!r}")
 
-    # source_system
+    # Populate normalizable fields deterministically if absent
+    raw_input = dict(raw_input)  # working copy — do not mutate caller's dict
+    _topo_nodes = raw_input.get("topology", {}).get("nodes", [])
+    _n = len(_topo_nodes)
+    _norm_defaults = []
+    for _f, _v, _lbl in [
+        ("schema_version", "1.0", "schema_version=1.0"),
+        ("source_system", "IG", "source_system=IG"),
+        ("coverage",
+         {"admitted_units": _n, "total_units": max(1, _n)},
+         f"coverage={{admitted_units:{_n},total_units:{max(1,_n)}}}"),
+        ("reconstruction",
+         {"validated_units": _n, "total_units": max(1, _n)},
+         f"reconstruction={{validated_units:{_n},total_units:{max(1,_n)}}}"),
+        ("execution_status", "PHASE_1_ACTIVE", "execution_status=PHASE_1_ACTIVE"),
+        ("escalation_clearance", 100, "escalation_clearance=100"),
+        ("unknown_space_count", 0, "unknown_space_count=0"),
+    ]:
+        if _f not in raw_input:
+            raw_input[_f] = _v
+            _norm_defaults.append(_lbl)
+    if _norm_defaults:
+        log.emit("IG_NORMALIZATION", "FIELDS_NORMALIZED",
+                 message=f"defaulted {len(_norm_defaults)} fields: "
+                         + ", ".join(_norm_defaults))
+
+    # source_system — must be IG (either present in input or defaulted above)
     if raw_input.get("source_system") != "IG":
         log.fail("IG_NORMALIZATION", "SOURCE_SYSTEM_VIOLATION",
                  f"source_system must be IG, got {raw_input.get('source_system')!r}")
