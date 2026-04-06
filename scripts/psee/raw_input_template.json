@@ -1,0 +1,31 @@
+{
+  "__comment": "WP-13B raw input template — replace client_uuid and populate all data fields before running build_authoritative_input.py",
+  "schema_version": "1.0",
+  "source_system": "IG",
+  "client_uuid": "00000000-0000-0000-0000-000000000000",
+  "domains": [
+    {"id": "D-01", "label": "Domain Alpha"},
+    {"id": "D-02", "label": "Domain Beta"},
+    {"id": "D-03", "label": "Domain Gamma"}
+  ],
+  "entities": [
+    {"name": "Entity A", "domain": "D-01", "type": "service"},
+    {"name": "Entity B", "domain": "D-01", "type": "service"},
+    {"name": "Entity C", "domain": "D-02", "type": "platform"},
+    {"name": "Entity D", "domain": "D-02", "type": "governance"},
+    {"name": "Entity E", "domain": "D-03", "type": "governance"}
+  ],
+  "relationships": [
+    {"from": "Entity A", "to": "Entity B", "type": "DEPENDS_ON"},
+    {"from": "Entity B", "to": "Entity C", "type": "DEPENDS_ON"},
+    {"from": "Entity C", "to": "Entity D", "type": "COORDINATES_WITH"},
+    {"from": "Entity D", "to": "Entity E", "type": "GOVERNANCE_CONSTRAINT"},
+    {"from": "Entity A", "to": "Entity C", "type": "PIPELINE"},
+    {"from": "Entity B", "to": "Entity E", "type": "COORDINATES_WITH"}
+  ],
+  "metrics": {
+    "pipeline_stage_count": 3,
+    "artifacts_per_run": 4
+  },
+  "events": []
+}

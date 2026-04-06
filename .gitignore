@@ -8,3 +8,7 @@ node_modules/
 docs/pios/41.2/pie_vault/.obsidian/
 # WP-13 runtime outputs — replayable generated state, must not be committed
 clients/*/runs/
+# WP-13B onboarding runtime artifacts — not committed, regenerated per run
+clients/*/input/raw_input.json
+clients/*/input/authoritative_state.json
+clients/*/input/construction_log.md
