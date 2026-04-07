@@ -852,6 +852,125 @@ def build_html(entry, guided, operator_view, pkg, client_uuid, run_id):
     .topo-rel     {{ font-size:11px; color:#8b949e; padding:2px 0; overflow-wrap:break-word; }}
     .topo-rel .ra {{ color:#444; margin:0 4px; }}
     .topo-rel .rt {{ color:#c9d1d9; font-size:10px; margin-left:4px; }}
+
+    /* === CXO EXECUTIVE OVERLAY === */
+    .cxo-overlay {{
+      display:none; position:fixed; inset:0; background:#070910;
+      z-index:200; overflow-y:auto;
+      font-family: system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    }}
+    .cxo-overlay.open {{ display:block; }}
+    .cxo-inner {{ max-width:1080px; margin:0 auto; padding:36px 48px 64px; }}
+
+    /* Toggle button in cockpit header */
+    .cxo-toggle-btn {{
+      font-family:system-ui,-apple-system,sans-serif; font-size:12px; font-weight:600;
+      letter-spacing:.05em; color:#818cf8; background:#0f1221;
+      border:1px solid #312e81; padding:6px 16px; cursor:pointer;
+    }}
+    .cxo-toggle-btn:hover {{ background:#1e1b4b; border-color:#6366f1; color:#a5b4fc; }}
+
+    /* CxO Header bar */
+    .cxo-header {{
+      display:flex; justify-content:space-between; align-items:center;
+      margin-bottom:44px; padding-bottom:20px; border-bottom:1px solid #13162a;
+    }}
+    .cxo-logo {{
+      font-size:12px; font-weight:700; letter-spacing:.15em;
+      color:#6366f1; text-transform:uppercase;
+    }}
+    .cxo-close {{
+      font-family:monospace; font-size:12px; color:#4b5563;
+      background:transparent; border:1px solid #1e2235; padding:6px 14px; cursor:pointer;
+    }}
+    .cxo-close:hover {{ color:#e5e7eb; border-color:#374151; }}
+
+    /* Hero grid */
+    .cxo-hero {{
+      display:grid; grid-template-columns:1fr 1fr; gap:28px; margin-bottom:52px; align-items:center;
+    }}
+    .cxo-eyebrow {{
+      font-size:11px; font-weight:600; letter-spacing:.14em;
+      color:#374151; text-transform:uppercase; margin-bottom:14px;
+    }}
+    .cxo-score-row {{ display:flex; align-items:baseline; gap:10px; margin-bottom:10px; }}
+    .cxo-score-num {{ font-size:80px; font-weight:800; color:#f59e0b; line-height:1; }}
+    .cxo-score-denom {{ font-size:26px; color:#374151; font-weight:300; }}
+    .cxo-score-band-tag {{
+      display:inline-block; font-size:12px; font-weight:700; letter-spacing:.08em;
+      color:#f59e0b; border:1px solid #78350f; background:#1c1208; padding:3px 10px;
+    }}
+    .cxo-score-desc {{ font-size:14px; color:#6b7280; margin-bottom:12px; }}
+    .cxo-score-ceiling {{ font-size:14px; color:#6366f1; font-weight:500; }}
+    .cxo-score-ceiling strong {{ color:#a5b4fc; font-size:18px; }}
+
+    /* Confidence card */
+    .cxo-conf-card {{
+      background:#0c0f1e; border:1px solid #1e2235; padding:28px;
+    }}
+    .cxo-conf-label {{
+      font-size:11px; font-weight:600; letter-spacing:.12em;
+      color:#374151; text-transform:uppercase; margin-bottom:14px;
+    }}
+    .cxo-conf-range {{
+      font-size:38px; font-weight:700; color:#e5e7eb; margin-bottom:20px; letter-spacing:-.02em;
+    }}
+    .cxo-conf-track {{
+      height:8px; background:#13162a; border-radius:4px;
+      display:flex; overflow:hidden; margin-bottom:12px;
+    }}
+    .cxo-conf-proven {{ background:#f59e0b; height:100%; }}
+    .cxo-conf-potential {{ background:#6366f1; height:100%; opacity:.45; }}
+    .cxo-conf-legend {{
+      display:flex; flex-wrap:wrap; gap:16px; font-size:12px; color:#6b7280;
+    }}
+    .cxo-conf-legend span {{ display:flex; align-items:center; gap:6px; }}
+    .cxo-legend-dot {{ width:8px; height:8px; border-radius:50%; flex-shrink:0; }}
+
+    /* Section */
+    .cxo-section {{ margin-bottom:52px; }}
+    .cxo-section-title {{
+      font-size:12px; font-weight:700; letter-spacing:.12em; color:#374151;
+      text-transform:uppercase; margin-bottom:20px; padding-bottom:10px;
+      border-bottom:1px solid #13162a;
+    }}
+
+    /* Proof cards */
+    .cxo-proof-grid {{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }}
+    .cxo-proof-card {{
+      background:#061208; border:1px solid #14532d; padding:26px;
+    }}
+    .cxo-proof-icon {{ font-size:18px; color:#10b981; margin-bottom:10px; }}
+    .cxo-proof-label {{
+      font-size:11px; color:#6b7280; text-transform:uppercase;
+      letter-spacing:.08em; margin-bottom:8px;
+    }}
+    .cxo-proof-val {{ font-size:36px; font-weight:800; color:#10b981; margin-bottom:4px; }}
+    .cxo-proof-sub {{ font-size:13px; color:#374151; }}
+
+    /* Query cards */
+    .cxo-queries-grid {{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }}
+    .cxo-query-card {{ padding:22px; border:1px solid #1e2235; background:#0a0d1a; }}
+    .cxo-query-badge {{
+      font-size:10px; font-weight:700; letter-spacing:.1em;
+      color:#6366f1; text-transform:uppercase; margin-bottom:12px;
+    }}
+    .cxo-query-text {{
+      font-size:14px; color:#d1d5db; line-height:1.55;
+      font-style:italic; margin-bottom:14px;
+    }}
+    .cxo-query-cta {{
+      font-size:12px; font-weight:600; color:#6366f1; cursor:pointer;
+      background:none; border:none; padding:0; font-family:inherit; letter-spacing:.03em;
+    }}
+    .cxo-query-cta:hover {{ color:#818cf8; }}
+    .cxo-query-card.cxo-exec {{
+      background:#09090f; border-color:#111827;
+      opacity:.55;
+    }}
+    .cxo-exec .cxo-query-badge {{ color:#374151; }}
+    .cxo-exec .cxo-query-text {{ color:#374151; font-style:italic; }}
+    .cxo-exec .cxo-query-cta {{ color:#374151; cursor:default; }}
   </style>
 </head>
 <body>
@@ -879,6 +998,104 @@ def build_html(entry, guided, operator_view, pkg, client_uuid, run_id):
   </div>
 </div>
 
+<!-- CXO EXECUTIVE OVERLAY -->
+<div class="cxo-overlay" id="cxo-overlay">
+  <div class="cxo-inner">
+
+    <div class="cxo-header">
+      <div class="cxo-logo">KRAYU &middot; Portfolio Intelligence</div>
+      <button class="cxo-close" id="cxo-close">&larr; Operator Cockpit</button>
+    </div>
+
+    <!-- HERO: Score Journey -->
+    <div class="cxo-hero">
+      <div>
+        <div class="cxo-eyebrow">Portfolio Intelligence Score</div>
+        <div class="cxo-score-row">
+          <span class="cxo-score-num">{score}</span>
+          <span class="cxo-score-denom">/ 100</span>
+          <span class="cxo-score-band-tag">{band}</span>
+        </div>
+        <div class="cxo-score-desc">Verified structural state &mdash; proven floor, no open risks</div>
+        <div class="cxo-score-ceiling">
+          Full intelligence ceiling: <strong>{proj} / 100</strong><br/>
+          <span style="font-size:13px;color:#4b5563;">Unlocks when execution layer activates</span>
+        </div>
+      </div>
+      <div class="cxo-conf-card">
+        <div class="cxo-conf-label">Intelligence Confidence Band</div>
+        <div class="cxo-conf-range">[{conf_lo} &ndash; {conf_hi}]</div>
+        <div class="cxo-conf-track">
+          <div class="cxo-conf-proven" style="width:{conf_lo}%;"></div>
+          <div class="cxo-conf-potential" style="width:{conf_hi - conf_lo}%;"></div>
+        </div>
+        <div class="cxo-conf-legend">
+          <span><span class="cxo-legend-dot" style="background:#f59e0b;"></span>{conf_lo} &mdash; proven structural floor</span>
+          <span><span class="cxo-legend-dot" style="background:#6366f1;opacity:.6;"></span>{conf_hi} &mdash; achievable ceiling</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHAT ONBOARDING DELIVERED -->
+    <div class="cxo-section">
+      <div class="cxo-section-title">What this onboarding engagement delivered</div>
+      <div class="cxo-proof-grid">
+        <div class="cxo-proof-card">
+          <div class="cxo-proof-icon">&#10003;</div>
+          <div class="cxo-proof-label">Structural Coverage</div>
+          <div class="cxo-proof-val">{cov_pct}%</div>
+          <div class="cxo-proof-sub">{cov_admitted} of {cov_total} units fully admitted</div>
+        </div>
+        <div class="cxo-proof-card">
+          <div class="cxo-proof-icon">&#10003;</div>
+          <div class="cxo-proof-label">Reconstruction Proof</div>
+          <div class="cxo-proof-val">PASS</div>
+          <div class="cxo-proof-sub">4-axis validation &middot; {len(rec["violations"])} violations</div>
+        </div>
+        <div class="cxo-proof-card">
+          <div class="cxo-proof-icon">&#10003;</div>
+          <div class="cxo-proof-label">Validated Units</div>
+          <div class="cxo-proof-val">{rec_valid}</div>
+          <div class="cxo-proof-sub">structural units verified &middot; no open risks</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GOLDEN QUERIES -->
+    <div class="cxo-section">
+      <div class="cxo-section-title">Intelligence queries you can activate</div>
+      <div class="cxo-queries-grid">
+        <div class="cxo-query-card">
+          <div class="cxo-query-badge">Structural Discovery &middot; Available Now</div>
+          <div class="cxo-query-text">&#x201C;Which structural units carry the highest referential integrity exposure?&#x201D;</div>
+          <button class="cxo-query-cta" onclick="document.getElementById('cxo-overlay').classList.remove('open');openModal('discovery');">Activate with Discovery Key &rarr;</button>
+        </div>
+        <div class="cxo-query-card">
+          <div class="cxo-query-badge">Structural Discovery &middot; Available Now</div>
+          <div class="cxo-query-text">&#x201C;Trace provenance chain from IG.6 orchestration to terminal intake boundary.&#x201D;</div>
+          <button class="cxo-query-cta" onclick="document.getElementById('cxo-overlay').classList.remove('open');openModal('discovery');">Activate with Discovery Key &rarr;</button>
+        </div>
+        <div class="cxo-query-card">
+          <div class="cxo-query-badge">Structural Discovery &middot; Available Now</div>
+          <div class="cxo-query-text">&#x201C;Show layer-by-layer structural linking across L40_2, L40_3, L40_4.&#x201D;</div>
+          <button class="cxo-query-cta" onclick="document.getElementById('cxo-overlay').classList.remove('open');openModal('discovery');">Activate with Discovery Key &rarr;</button>
+        </div>
+        <div class="cxo-query-card cxo-exec">
+          <div class="cxo-query-badge">Execution Layer Required</div>
+          <div class="cxo-query-text">&#x201C;What are the execution failure scenarios for this intake under signal degradation?&#x201D;</div>
+          <button class="cxo-query-cta">Run execution layer to unlock &rarr;</button>
+        </div>
+        <div class="cxo-query-card cxo-exec">
+          <div class="cxo-query-badge">Execution Layer Required</div>
+          <div class="cxo-query-text">&#x201C;Project signal propagation paths from coverage boundary to terminal state.&#x201D;</div>
+          <button class="cxo-query-cta">Run execution layer to unlock &rarr;</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /cxo-overlay -->
+
 <div class="outer" id="outer">
 
   <div class="top-bar">
@@ -887,7 +1104,10 @@ def build_html(entry, guided, operator_view, pkg, client_uuid, run_id):
         <div class="header-run">Run: {run_id}</div>
         <div class="header-phase">Execution Phase: {exec_status}</div>
       </div>
-      <div class="header-tag">gauge-v2-product &middot; wp-14</div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="cxo-toggle-btn" id="cxo-toggle-btn">CxO View &rarr;</button>
+        <div class="header-tag">gauge-v2-product &middot; wp-14</div>
+      </div>
     </div>
     <div class="score-grid">
       <div class="score-cell">
@@ -1265,6 +1485,8 @@ def build_html(entry, guided, operator_view, pkg, client_uuid, run_id):
 </div><!-- /outer -->
 
 <script>
+// Expose openModal globally so CxO overlay buttons can call it
+var openModal;
 (function() {{
   var VALID_KEY_DISCOVERY = 'PIOS-DISCOVERY-DEMO';
   var VALID_KEY_DEVELOP   = 'DEVELOP-DELTA-1';
@@ -1285,7 +1507,7 @@ def build_html(entry, guided, operator_view, pkg, client_uuid, run_id):
     }}
   }};
 
-  function openModal(mode) {{
+  openModal = function(mode) {{
     modalMode = mode || 'discovery';
     var c = MODAL_CONTENT[modalMode];
     document.getElementById('modal-title').textContent = c.title;
@@ -1343,6 +1565,15 @@ def build_html(entry, guided, operator_view, pkg, client_uuid, run_id):
     denied.style.display = 'block';
     denied.textContent = 'Access key not recognized. Contact your program coordinator to obtain access.';
   }}
+
+  // CxO Overlay toggle
+  document.getElementById('cxo-toggle-btn').addEventListener('click', function() {{
+    document.getElementById('cxo-overlay').classList.add('open');
+    window.scrollTo(0, 0);
+  }});
+  document.getElementById('cxo-close').addEventListener('click', function() {{
+    document.getElementById('cxo-overlay').classList.remove('open');
+  }});
 
   document.getElementById('cta-unlock-btn').addEventListener('click', function() {{ openModal('discovery'); }});
   document.getElementById('si-bridge-btn').addEventListener('click',  function() {{ openModal('discovery'); }});
