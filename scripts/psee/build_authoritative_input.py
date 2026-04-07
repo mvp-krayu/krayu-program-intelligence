@@ -31,6 +31,8 @@ import os
 import subprocess
 import sys
 
+from adapt_intake_schema import adapt_intake_to_canonical
+
 # ── CONSTANTS ─────────────────────────────────────────────────────────────────
 REPO_NAME = "k-pi-core"
 REQUIRED_BRANCH = "work/psee-runtime"
@@ -659,6 +661,15 @@ def main():
     with open(raw_input_path) as f:
         raw = json.load(f)
     log(f"INPUT_LOAD_PASS  source={input_source}  path={raw_input_path}")
+
+    # ── INTAKE SCHEMA ADAPTER (WP-15D) ─────────────────────────────────────────
+    if input_source == "AUTHORITATIVE_INTAKE":
+        log()
+        log("--- INTAKE_SCHEMA_ADAPT ---")
+        raw = adapt_intake_to_canonical(client_uuid, raw_input_path)
+        log(f"  adapter:  adapt_intake_schema.adapt_intake_to_canonical")
+        log(f"  metrics:  {len(raw['metrics'])} VAR_* keys preserved")
+        log("INTAKE_SCHEMA_ADAPT_PASS")
 
     # ── PIPELINE ───────────────────────────────────────────────────────────────
 
