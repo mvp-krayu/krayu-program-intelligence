@@ -567,31 +567,98 @@ client_uuid: {client_uuid}
     log("OUTPUT_WRITE_PASS")
 
 
+# ── INTAKE RESOLUTION (WP-15C) ────────────────────────────────────────────────
+def resolve_input_source(client_uuid, raw_input_arg):
+    """Detect AUTHORITATIVE_INTAKE before falling back to TEST_INPUT.
+
+    Priority:
+      1. clients/<uuid>/input/intake/intake_manifest.json → AUTHORITATIVE_INTAKE
+      2. --raw-input argument (or default raw_input.json)  → TEST_INPUT (fallback)
+
+    Returns (input_path, source_class).
+    """
+    log("--- INPUT_RESOLUTION ---")
+
+    manifest_rel  = os.path.join("clients", client_uuid, "input", "intake",
+                                 "intake_manifest.json")
+    manifest_path = os.path.join(REPO_ROOT, manifest_rel)
+
+    if os.path.isfile(manifest_path):
+        # Load and validate manifest
+        assert_read_allowed(manifest_path, client_uuid)
+        with open(manifest_path) as f:
+            manifest = json.load(f)
+
+        sc = manifest.get("source_class")
+        if sc != "AUTHORITATIVE_INTAKE":
+            fail("INPUT_RESOLUTION",
+                 f"intake_manifest source_class={sc!r} != 'AUTHORITATIVE_INTAKE'",
+                 "SOURCE_CLASS_VIOLATION")
+
+        # Resolve primary intake file
+        intake_file = os.path.join(
+            REPO_ROOT, "clients", client_uuid,
+            "input", "intake", "telemetry_baseline.json")
+        if not os.path.isfile(intake_file):
+            fail("INPUT_RESOLUTION",
+                 f"intake file not found: {intake_file}",
+                 "INTAKE_FILE_MISSING")
+
+        # Scope guard
+        real_file = os.path.realpath(intake_file)
+        real_client = os.path.realpath(
+            os.path.join(REPO_ROOT, "clients", client_uuid))
+        if not real_file.startswith(real_client + os.sep):
+            fail("INPUT_RESOLUTION",
+                 f"intake file path escapes client scope",
+                 "PATH_SCOPE_VIOLATION")
+
+        intake_rel = os.path.relpath(intake_file, REPO_ROOT)
+        log(f"  INPUT_SOURCE = AUTHORITATIVE_INTAKE")
+        log(f"  INPUT_PATH   = {intake_rel}")
+        log("INPUT_RESOLUTION_PASS")
+        log()
+        return intake_file, "AUTHORITATIVE_INTAKE"
+
+    # Fallback: TEST_INPUT
+    fallback = raw_input_arg or os.path.join(
+        REPO_ROOT, "clients", client_uuid, "input", "raw_input.json")
+    log(f"  intake_manifest not found — fallback to TEST_INPUT")
+    log(f"  INPUT_SOURCE = TEST_INPUT")
+    log(f"  INPUT_PATH   = {os.path.relpath(fallback, REPO_ROOT)}")
+    log("INPUT_RESOLUTION_PASS")
+    log()
+    return fallback, "TEST_INPUT"
+
+
 # ── MAIN ──────────────────────────────────────────────────────────────────────
 def main():
     parser = argparse.ArgumentParser(
         description="PSEE Authoritative Input Construction — WP-13B"
     )
     parser.add_argument("--client", required=True, help="Client UUID")
-    parser.add_argument("--raw-input", required=True, dest="raw_input",
-                        help="Path to raw_input.json")
+    parser.add_argument("--raw-input", required=False, default=None,
+                        dest="raw_input",
+                        help="Path to raw_input.json (fallback if no intake manifest)")
     args = parser.parse_args()
 
     client_uuid = args.client
-    raw_input_path = args.raw_input
 
     # ── PRE-FLIGHT ─────────────────────────────────────────────────────────────
     preflight(client_uuid)
 
+    # ── INPUT RESOLUTION (WP-15C) ──────────────────────────────────────────────
+    raw_input_path, input_source = resolve_input_source(client_uuid, args.raw_input)
+
     # ── LOAD RAW INPUT ─────────────────────────────────────────────────────────
     log("--- INPUT_LOAD ---")
     if not os.path.isfile(raw_input_path):
-        fail("INPUT_LOAD", f"raw_input not found: {raw_input_path}", "INPUT_NOT_FOUND")
+        fail("INPUT_LOAD", f"input not found: {raw_input_path}", "INPUT_NOT_FOUND")
     assert_read_allowed(raw_input_path, client_uuid)
 
     with open(raw_input_path) as f:
         raw = json.load(f)
-    log(f"INPUT_LOAD_PASS  ({raw_input_path})")
+    log(f"INPUT_LOAD_PASS  source={input_source}  path={raw_input_path}")
 
     # ── PIPELINE ───────────────────────────────────────────────────────────────
 
