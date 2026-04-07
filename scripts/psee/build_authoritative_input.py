@@ -31,7 +31,8 @@ import os
 import subprocess
 import sys
 
-from adapt_intake_schema import adapt_intake_to_canonical
+from adapt_intake_schema    import adapt_intake_to_canonical
+from adapt_intake_structure import extract_structure_from_intake
 
 # ── CONSTANTS ─────────────────────────────────────────────────────────────────
 REPO_NAME = "k-pi-core"
@@ -670,6 +671,18 @@ def main():
         log(f"  adapter:  adapt_intake_schema.adapt_intake_to_canonical")
         log(f"  metrics:  {len(raw['metrics'])} VAR_* keys preserved")
         log("INTAKE_SCHEMA_ADAPT_PASS")
+
+        # ── STRUCTURE EXTRACTION (WP-15E) ─────────────────────────────────────
+        log()
+        log("--- STRUCTURE_EXTRACTION ---")
+        extracted = extract_structure_from_intake(raw)
+        raw["domains"]       = extracted["domains"]
+        raw["entities"]      = extracted["entities"]
+        raw["relationships"] = extracted["relationships"]
+        log(f"  domains:       {len(extracted['domains'])}")
+        log(f"  entities:      {len(extracted['entities'])}")
+        log(f"  relationships: {len(extracted['relationships'])}")
+        log("STRUCTURE_EXTRACTION_PASS")
 
     # ── PIPELINE ───────────────────────────────────────────────────────────────
 
