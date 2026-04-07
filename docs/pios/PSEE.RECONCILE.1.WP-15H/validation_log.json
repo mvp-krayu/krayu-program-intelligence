@@ -1,0 +1,58 @@
+{
+  "stream": "PSEE.RECONCILE.1.WP-15H",
+  "status": "BLOCKED",
+  "exit_code": 2,
+  "exit_reason": "STRUCTURE_SOURCE_UNAVAILABLE",
+  "checks": [
+    {
+      "check": "PRECHECK_REPO",
+      "result": "PASS",
+      "detail": "repo=k-pi-core"
+    },
+    {
+      "check": "PRECHECK_BRANCH",
+      "result": "PASS",
+      "detail": "branch=work/psee-runtime"
+    },
+    {
+      "check": "PRECHECK_WORKTREE",
+      "result": "PASS",
+      "detail": "clean"
+    },
+    {
+      "check": "PRECHECK_INTAKE_DIR",
+      "result": "PASS",
+      "detail": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/input/intake/ exists"
+    },
+    {
+      "check": "SOURCE_DISCOVERY_SCAN",
+      "result": "PASS",
+      "detail": "3 json files enumerated, 3 excluded by exclusion list, 0 candidates"
+    },
+    {
+      "check": "SOURCE_DISCOVERY_RESULT",
+      "result": "NONE",
+      "detail": "no file in intake directory qualifies as AUTHORITATIVE_STRUCTURE_SOURCE"
+    },
+    {
+      "check": "EMISSION_LOG_WRITTEN",
+      "result": "PASS",
+      "detail": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/input/intake/structure_emission_log.md"
+    },
+    {
+      "check": "EVIDENCE_COMPLIANCE",
+      "result": "PASS",
+      "detail": "BLOCKED outcome consistent with WP-15F NOT_FOUND verdict and Evidence-First doctrine"
+    },
+    {
+      "check": "NO_INFERENCE_PERFORMED",
+      "result": "PASS",
+      "detail": "VAR_* prefixes not used as structural source; no inference attempted"
+    },
+    {
+      "check": "NO_SYNTHETIC_OUTPUT",
+      "result": "PASS",
+      "detail": "structure_manifest.json NOT emitted — correct; no source available"
+    }
+  ]
+}
