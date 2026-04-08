@@ -36,6 +36,15 @@ A condition at 40.7 is NOT:
 The condition object is the minimal record that a lawful formation occurred.
 It carries no meaning beyond what its constituent signals declare.
 
+A condition object is not an independent truth-bearing entity.
+
+It is a derived structural record whose validity is fully dependent on:
+- its constituent signal objects
+- its governing formation rule
+
+The condition object carries no semantic authority and must not be interpreted
+as representing meaning, diagnosis, or system state beyond lawful signal formation.
+
 ---
 
 ## 3. FORMATION ADMISSIBILITY RULES
