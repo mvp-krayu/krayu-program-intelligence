@@ -1,0 +1,76 @@
+{
+  "stream": "PI.STRUCTURAL_TOPOLOGY.RECONSTRUCTION.WP-03_TO_WP-07",
+  "work_package": "WP-05",
+  "artifact": "overlap_registry",
+  "run_id": "run_02_blueedge",
+  "source_authority": "docs/pios/40.2/normalized_evidence_map.md",
+  "layer_constraint": "<=40.4",
+  "comparison_basis": "structure_only_no_diff_performed",
+  "semantic_inference": "FORBIDDEN",
+  "generated_date": "2026-04-08",
+
+  "note": "All file_level_parity values are UNKNOWN. No diff was performed. Overlap is declared by structural observation (same directory organization, same module count) as recorded in the 40.2 normalized evidence map. Resolution status is UNRESOLVED per that map and must not be changed here.",
+
+  "overlaps": [
+    {
+      "overlap_id": "OVL-01",
+      "label": "Backend Standalone vs Platform Embedded Backend",
+      "unit_a": {
+        "ceu_id": "CEU-08",
+        "path": "source-v3.23/extracted/backend/backend/",
+        "domain_id": "DOM-03",
+        "file_count": 397
+      },
+      "unit_b": {
+        "ceu_id": "CEU-10",
+        "sub_unit_id": "CEU-10-BACKEND",
+        "path": "source-v3.23/extracted/platform/blueedge-platform/backend/",
+        "domain_id": "DOM-05",
+        "sub_domain_id": "DOM-05-C"
+      },
+      "observed_structural_similarity": "same 63-module NestJS structure, same top-level directory organization",
+      "similarity_basis": "directory structure observation — no file diff performed",
+      "file_level_parity": "UNKNOWN",
+      "resolution_status": "UNRESOLVED",
+      "must_remain_unresolved": true,
+      "canonical_for_isolated_evidence": "CEU-08",
+      "canonical_for_integrated_context": "CEU-10-BACKEND",
+      "unknown_space_id": "US-01",
+      "pipeline_impact": "downstream_streams_must_select_canonical_unit_per_evidence_type"
+    },
+    {
+      "overlap_id": "OVL-02",
+      "label": "Frontend Standalone vs Platform Embedded Frontend",
+      "unit_a": {
+        "ceu_id": "CEU-09",
+        "path": "source-v3.23/extracted/frontend/frontend/",
+        "domain_id": "DOM-04",
+        "file_count": 324
+      },
+      "unit_b": {
+        "ceu_id": "CEU-10",
+        "sub_unit_id": "CEU-10-FRONTEND",
+        "path": "source-v3.23/extracted/platform/blueedge-platform/frontend/",
+        "domain_id": "DOM-05",
+        "sub_domain_id": "DOM-05-D"
+      },
+      "observed_structural_similarity": "same page/component/API structure; platform may include public/screenshots/ not present in standalone",
+      "similarity_basis": "directory structure observation — no file diff performed",
+      "file_level_parity": "UNKNOWN",
+      "resolution_status": "UNRESOLVED",
+      "must_remain_unresolved": true,
+      "canonical_for_isolated_evidence": "CEU-09",
+      "canonical_for_integrated_context": "CEU-10-FRONTEND",
+      "unknown_space_id": "US-02",
+      "pipeline_impact": "downstream_streams_must_select_canonical_unit_per_evidence_type"
+    }
+  ],
+
+  "summary": {
+    "total_overlaps": 2,
+    "resolved": 0,
+    "unresolved": 2,
+    "file_level_parity_unknown_count": 2,
+    "diff_performed": false
+  }
+}

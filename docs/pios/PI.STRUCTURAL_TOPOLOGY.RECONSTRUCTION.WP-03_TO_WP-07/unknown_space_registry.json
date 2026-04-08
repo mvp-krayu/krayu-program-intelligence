@@ -1,0 +1,58 @@
+{
+  "stream": "PI.STRUCTURAL_TOPOLOGY.RECONSTRUCTION.WP-03_TO_WP-07",
+  "work_package": "WP-06",
+  "artifact": "unknown_space_registry",
+  "run_id": "run_02_blueedge",
+  "source_authority": "docs/pios/40.2/normalized_evidence_map.md",
+  "layer_constraint": "<=40.4",
+  "resolution_policy": "MUST_NEVER_RESOLVE",
+  "generated_date": "2026-04-08",
+
+  "governance_note": "All entries in this registry are permanently unresolved. No inference, synthesis, or assumption may resolve these positions. Missing data remains missing. Partial states are explicit. This is a structural record, not a gap to be filled.",
+
+  "unknown_space_entries": [
+    {
+      "usp_id": "USP-01",
+      "source_id": "US-01",
+      "label": "Backend file-level parity unknown",
+      "description": "Whether CEU-08 (standalone backend) and CEU-10-BACKEND (platform-embedded backend) are byte-for-byte or structurally identical at the file level is not known. No diff was performed. Directory structure and module count match, but individual file content parity is unverified.",
+      "affected_ceus": ["CEU-08", "CEU-10"],
+      "affected_overlap": "OVL-01",
+      "affected_domains": ["DOM-03", "DOM-05-C"],
+      "resolution_status": "PERMANENTLY_UNRESOLVED",
+      "resolution_method_attempted": "NONE",
+      "inference_applied": false
+    },
+    {
+      "usp_id": "USP-02",
+      "source_id": "US-02",
+      "label": "Frontend file-level parity unknown",
+      "description": "Whether CEU-09 (standalone frontend) and CEU-10-FRONTEND (platform-embedded frontend) are byte-for-byte or structurally identical at the file level is not known. No diff was performed. Platform version may contain public/screenshots/ not present in standalone.",
+      "affected_ceus": ["CEU-09", "CEU-10"],
+      "affected_overlap": "OVL-02",
+      "affected_domains": ["DOM-04", "DOM-05-D"],
+      "resolution_status": "PERMANENTLY_UNRESOLVED",
+      "resolution_method_attempted": "NONE",
+      "inference_applied": false
+    },
+    {
+      "usp_id": "USP-03",
+      "source_id": "US-03",
+      "label": "Platform-unique content scope unknown",
+      "description": "Whether the platform monorepo (CEU-10) backend and frontend sub-trees contain content not present in the standalone extracted versions (CEU-08, CEU-09) is unknown. Directory structure observation suggests potential divergence but no diff was performed.",
+      "affected_ceus": ["CEU-08", "CEU-09", "CEU-10"],
+      "affected_overlaps": ["OVL-01", "OVL-02"],
+      "affected_domains": ["DOM-03", "DOM-04", "DOM-05"],
+      "resolution_status": "PERMANENTLY_UNRESOLVED",
+      "resolution_method_attempted": "NONE",
+      "inference_applied": false
+    }
+  ],
+
+  "summary": {
+    "total_unknown_space_entries": 3,
+    "resolved": 0,
+    "permanently_unresolved": 3,
+    "inference_applied_to_any": false
+  }
+}

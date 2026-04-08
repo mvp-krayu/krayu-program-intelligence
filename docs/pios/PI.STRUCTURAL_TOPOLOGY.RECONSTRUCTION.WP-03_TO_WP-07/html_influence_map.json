@@ -1,0 +1,174 @@
+{
+  "stream": "PI.STRUCTURAL_TOPOLOGY.RECONSTRUCTION.WP-03_TO_WP-07",
+  "work_package": "WP-06",
+  "artifact": "html_influence_map",
+  "run_id": "run_02_blueedge",
+  "run_classification": "MULTI-SOURCE STRUCTURAL RECONSTRUCTION (<=40.4 COMPLIANT)",
+  "source_authority_model": "MULTI_SOURCE",
+  "provenance_sources": {
+    "NORMALIZED_EVIDENCE_MAP": "docs/pios/40.2/normalized_evidence_map.md — CEU IDs, overlap declarations, unknown-space",
+    "STRUCTURAL_CONTAINMENT": "physical directory structure of extracted source trees",
+    "HTML_DOCUMENTED": "CEU-01/CEU-02/CEU-03 HTML artifacts — documented labels and named constructs",
+    "UNKNOWN_SOURCE": "element whose derivation source cannot be traced to any of the above"
+  },
+  "classification_basis": "CEU membership and html_influence classification derived from NORMALIZED_EVIDENCE_MAP + STRUCTURAL_CONTAINMENT; influence judgments based on HTML_DOCUMENTED content visibility in CEU-01/CEU-02/CEU-03",
+  "layer_constraint": "<=40.4",
+  "semantic_inference": "FORBIDDEN",
+  "generated_date": "2026-04-08",
+
+  "classification_scheme": {
+    "DIRECT": "Structural element was explicitly named, described, or structured in HTML documentation (CEU-01, CEU-02, CEU-03). Origin is traceable to HTML artifact.",
+    "INDIRECT": "Structural element's presence is consistent with HTML content but primary structural form was derived from source code (CEU-08, CEU-09, CEU-10). HTML may have shaped framing or labels.",
+    "NONE": "Structural element has no traceability to HTML documentation. Origin is entirely from code structure or extraction metadata."
+  },
+
+  "influence_entries": [
+    {
+      "element_id": "HIM-01",
+      "element_label": "documentation_root",
+      "domain_id": "DOM-01",
+      "html_influence": "DIRECT",
+      "html_source_ceus": ["CEU-01", "CEU-02", "CEU-03"],
+      "basis": "CEU-01, CEU-02, CEU-03 are themselves HTML documentation files. DOM-01 is structurally constituted by HTML artifacts."
+    },
+    {
+      "element_id": "HIM-02",
+      "element_label": "extraction_analysis",
+      "domain_id": "DOM-02",
+      "html_influence": "INDIRECT",
+      "html_source_ceus": ["CEU-01"],
+      "basis": "Extraction analysis (CEU-04 through CEU-07) was performed against HTML-described structure. Analysis artifacts reflect structure visible in HTML but were derived by extraction process, not directly authored in HTML."
+    },
+    {
+      "element_id": "HIM-03",
+      "element_label": "backend_isolated — overall domain",
+      "domain_id": "DOM-03",
+      "html_influence": "INDIRECT",
+      "html_source_ceus": ["CEU-01"],
+      "basis": "Backend as a top-level structural unit is referenced in CEU-01 architecture documentation. However, the specific directory structure, module list, and file composition come from CEU-08 code tree, not HTML."
+    },
+    {
+      "element_id": "HIM-04",
+      "element_label": "backend_src_modules (63 modules)",
+      "domain_id": "DOM-03",
+      "sub_domain_id": "DOM-03-I",
+      "html_influence": "NONE",
+      "html_source_ceus": [],
+      "basis": "Individual NestJS module names and directory structure are derived entirely from CEU-08 source code containment. HTML documentation does not enumerate 63 individual modules."
+    },
+    {
+      "element_id": "HIM-05",
+      "element_label": "backend_src_common / config / database / events / gateways / health / migrations / test",
+      "domain_id": "DOM-03",
+      "sub_domain_ids": ["DOM-03-B", "DOM-03-C", "DOM-03-D", "DOM-03-E", "DOM-03-F", "DOM-03-G", "DOM-03-H", "DOM-03-J"],
+      "html_influence": "NONE",
+      "html_source_ceus": [],
+      "basis": "These sub-directory groupings are derived entirely from CEU-08 directory structure. No HTML artifact enumerates these sub-directories."
+    },
+    {
+      "element_id": "HIM-06",
+      "element_label": "backend_infra (Dockerfile, migrations, package.json)",
+      "domain_id": "DOM-03",
+      "sub_domain_id": "DOM-03-A",
+      "html_influence": "NONE",
+      "html_source_ceus": [],
+      "basis": "Infrastructure files are code artifacts. No HTML origin."
+    },
+    {
+      "element_id": "HIM-07",
+      "element_label": "frontend_isolated — overall domain",
+      "domain_id": "DOM-04",
+      "html_influence": "INDIRECT",
+      "html_source_ceus": ["CEU-01"],
+      "basis": "Frontend as a top-level structural unit is referenced in CEU-01. Specific directory structure comes from CEU-09 code tree."
+    },
+    {
+      "element_id": "HIM-08",
+      "element_label": "frontend_components / pages / api",
+      "domain_id": "DOM-04",
+      "sub_domain_ids": ["DOM-04-B", "DOM-04-C", "DOM-04-D"],
+      "html_influence": "INDIRECT",
+      "html_source_ceus": ["CEU-01", "CEU-03"],
+      "basis": "HTML documentation (CEU-01 architecture, CEU-03 PMO dashboard) describes frontend capability areas. Directory names come from CEU-09 source structure but framing is consistent with HTML-described surfaces."
+    },
+    {
+      "element_id": "HIM-09",
+      "element_label": "frontend_hooks / contexts / router / socket / utils / types / constants",
+      "domain_id": "DOM-04",
+      "sub_domain_ids": ["DOM-04-E", "DOM-04-F", "DOM-04-G", "DOM-04-H"],
+      "html_influence": "NONE",
+      "html_source_ceus": [],
+      "basis": "These are framework-level structural conventions (React patterns) derived entirely from CEU-09 directory containment. No HTML origin."
+    },
+    {
+      "element_id": "HIM-10",
+      "element_label": "frontend_pwa / styles / storybook / test",
+      "domain_id": "DOM-04",
+      "sub_domain_ids": ["DOM-04-I", "DOM-04-J", "DOM-04-K", "DOM-04-L"],
+      "html_influence": "NONE",
+      "html_source_ceus": [],
+      "basis": "PWA, styles, storybook, and test infrastructure are code artifacts with no HTML origin."
+    },
+    {
+      "element_id": "HIM-11",
+      "element_label": "platform_monorepo — overall",
+      "domain_id": "DOM-05",
+      "html_influence": "INDIRECT",
+      "html_source_ceus": ["CEU-01"],
+      "basis": "Platform/integrated system framing is present in CEU-01 architecture. The integrated monorepo form is from CEU-10 containment."
+    },
+    {
+      "element_id": "HIM-12",
+      "element_label": "platform_svg_agents",
+      "domain_id": "DOM-05",
+      "sub_domain_id": "DOM-05-E",
+      "html_influence": "NONE",
+      "html_source_ceus": [],
+      "basis": "svg-agents/ is a platform-unique directory in CEU-10 with no correspondence to any HTML documentation artifact. Origin is CEU-10 containment only."
+    },
+    {
+      "element_id": "HIM-13",
+      "element_label": "platform_monitoring",
+      "domain_id": "DOM-05",
+      "sub_domain_id": "DOM-05-F",
+      "html_influence": "INDIRECT",
+      "html_source_ceus": ["CEU-01"],
+      "basis": "Monitoring as a platform concern may be referenced in CEU-01 architecture. Specific monitoring/ directory is from CEU-10 containment."
+    },
+    {
+      "element_id": "HIM-14",
+      "element_label": "platform_load_tests",
+      "domain_id": "DOM-05",
+      "sub_domain_id": "DOM-05-G",
+      "html_influence": "NONE",
+      "html_source_ceus": [],
+      "basis": "load-tests/ is a code/infrastructure artifact with no HTML origin."
+    },
+    {
+      "element_id": "HIM-15",
+      "element_label": "platform_cicd",
+      "domain_id": "DOM-05",
+      "sub_domain_id": "DOM-05-B",
+      "html_influence": "NONE",
+      "html_source_ceus": [],
+      "basis": ".github/workflows/ is a CI/CD infrastructure artifact with no HTML origin."
+    },
+    {
+      "element_id": "HIM-16",
+      "element_label": "provenance_archives",
+      "domain_id": "DOM-06",
+      "html_influence": "NONE",
+      "html_source_ceus": [],
+      "basis": "Raw tar archives are provenance artifacts, not ingested. No HTML origin."
+    }
+  ],
+
+  "summary": {
+    "total_elements": 16,
+    "DIRECT": 1,
+    "INDIRECT": 7,
+    "NONE": 8,
+    "html_bearing_elements": ["HIM-01", "HIM-02", "HIM-03", "HIM-07", "HIM-08", "HIM-11", "HIM-13"],
+    "no_html_origin_elements": ["HIM-04", "HIM-05", "HIM-06", "HIM-09", "HIM-10", "HIM-12", "HIM-14", "HIM-15", "HIM-16"]
+  }
+}

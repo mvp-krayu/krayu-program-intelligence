@@ -1,0 +1,179 @@
+{
+  "stream": "PI.STRUCTURAL_TOPOLOGY.RECONSTRUCTION.WP-03_TO_WP-07",
+  "work_package": "WP-07",
+  "artifact": "structural_topology",
+  "run_id": "run_02_blueedge",
+  "run_classification": "MULTI-SOURCE STRUCTURAL RECONSTRUCTION (<=40.4 COMPLIANT)",
+  "source_authority_model": "MULTI_SOURCE",
+  "provenance_sources": {
+    "NORMALIZED_EVIDENCE_MAP": "docs/pios/40.2/normalized_evidence_map.md — CEU IDs, file counts, overlap declarations, unknown-space declarations",
+    "STRUCTURAL_CONTAINMENT": "physical directory structure of extracted source trees — top-level subdirectory enumeration",
+    "HTML_DOCUMENTED": "CEU-01/CEU-02/CEU-03 HTML artifacts — documented labels and named constructs visible in documentation",
+    "UNKNOWN_SOURCE": "element whose derivation source cannot be traced to any of the above"
+  },
+  "layer_constraint": "<=40.4",
+  "derivation_basis": "structural_containment_only",
+  "semantic_inference": "FORBIDDEN",
+  "capability_grouping": "FORBIDDEN",
+  "generated_date": "2026-04-08",
+
+  "topology_inputs": {
+    "ceu_registry": "ceu_registry.json",
+    "domain_structure": "domain_structure.json",
+    "overlap_registry": "overlap_registry.json",
+    "unknown_space_registry": "unknown_space_registry.json",
+    "html_influence_map": "html_influence_map.json"
+  },
+
+  "domains": [
+    {
+      "domain_id": "DOM-01",
+      "label": "documentation_root",
+      "ceus": ["CEU-01", "CEU-02", "CEU-03"],
+      "file_count": 3,
+      "html_influence": "DIRECT",
+      "overlap": null,
+      "unknown_space": null,
+      "source_origin": ["HTML_DOCUMENTED", "NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "NORMALIZED_EVIDENCE_MAP",
+      "documented_taxonomy_source": "HTML_DOCUMENTED",
+      "sub_domains": null
+    },
+    {
+      "domain_id": "DOM-02",
+      "label": "extraction_analysis",
+      "ceus": ["CEU-04", "CEU-05", "CEU-06", "CEU-07"],
+      "file_count": 4,
+      "html_influence": "INDIRECT",
+      "overlap": null,
+      "unknown_space": null,
+      "source_origin": ["NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "NORMALIZED_EVIDENCE_MAP",
+      "documented_taxonomy_source": "NORMALIZED_EVIDENCE_MAP",
+      "sub_domains": null,
+      "note": "support evidence only — not primary structural source"
+    },
+    {
+      "domain_id": "DOM-03",
+      "label": "backend_isolated",
+      "ceus": ["CEU-08"],
+      "file_count": 397,
+      "html_influence": "INDIRECT",
+      "overlap": "OVL-01",
+      "unknown_space": "USP-01",
+      "file_level_parity": "UNKNOWN",
+      "source_origin": ["STRUCTURAL_CONTAINMENT", "NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "STRUCTURAL_CONTAINMENT",
+      "documented_taxonomy_source": "HTML_DOCUMENTED",
+      "sub_domains": [
+        {"sub_domain_id": "DOM-03-A", "label": "backend_infra",           "html_influence": "NONE",     "overlap": null},
+        {"sub_domain_id": "DOM-03-B", "label": "backend_src_common",      "html_influence": "NONE",     "overlap": null},
+        {"sub_domain_id": "DOM-03-C", "label": "backend_src_config",      "html_influence": "NONE",     "overlap": null},
+        {"sub_domain_id": "DOM-03-D", "label": "backend_src_database",    "html_influence": "NONE",     "overlap": null},
+        {"sub_domain_id": "DOM-03-E", "label": "backend_src_events",      "html_influence": "NONE",     "overlap": null},
+        {"sub_domain_id": "DOM-03-F", "label": "backend_src_gateways",    "html_influence": "NONE",     "overlap": null},
+        {"sub_domain_id": "DOM-03-G", "label": "backend_src_health",      "html_influence": "NONE",     "overlap": null},
+        {"sub_domain_id": "DOM-03-H", "label": "backend_src_migrations",  "html_influence": "NONE",     "overlap": null},
+        {"sub_domain_id": "DOM-03-I", "label": "backend_src_modules",     "html_influence": "NONE",     "overlap": null, "observed_count": 63},
+        {"sub_domain_id": "DOM-03-J", "label": "backend_src_test",        "html_influence": "NONE",     "overlap": null}
+      ]
+    },
+    {
+      "domain_id": "DOM-04",
+      "label": "frontend_isolated",
+      "ceus": ["CEU-09"],
+      "file_count": 324,
+      "html_influence": "INDIRECT",
+      "overlap": "OVL-02",
+      "unknown_space": "USP-02",
+      "file_level_parity": "UNKNOWN",
+      "source_origin": ["STRUCTURAL_CONTAINMENT", "NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "STRUCTURAL_CONTAINMENT",
+      "documented_taxonomy_source": "HTML_DOCUMENTED",
+      "sub_domains": [
+        {"sub_domain_id": "DOM-04-A", "label": "frontend_infra",                "html_influence": "NONE",     "overlap": null},
+        {"sub_domain_id": "DOM-04-B", "label": "frontend_api",                  "html_influence": "INDIRECT", "overlap": null},
+        {"sub_domain_id": "DOM-04-C", "label": "frontend_components",           "html_influence": "INDIRECT", "overlap": null},
+        {"sub_domain_id": "DOM-04-D", "label": "frontend_pages",                "html_influence": "INDIRECT", "overlap": null},
+        {"sub_domain_id": "DOM-04-E", "label": "frontend_contexts",             "html_influence": "NONE",     "overlap": null},
+        {"sub_domain_id": "DOM-04-F", "label": "frontend_hooks",                "html_influence": "NONE",     "overlap": null},
+        {"sub_domain_id": "DOM-04-G", "label": "frontend_router_socket",        "html_influence": "NONE",     "overlap": null},
+        {"sub_domain_id": "DOM-04-H", "label": "frontend_utils_types_constants","html_influence": "NONE",     "overlap": null},
+        {"sub_domain_id": "DOM-04-I", "label": "frontend_pwa",                  "html_influence": "NONE",     "overlap": null},
+        {"sub_domain_id": "DOM-04-J", "label": "frontend_styles",               "html_influence": "NONE",     "overlap": null},
+        {"sub_domain_id": "DOM-04-K", "label": "frontend_test",                 "html_influence": "NONE",     "overlap": null},
+        {"sub_domain_id": "DOM-04-L", "label": "frontend_storybook",            "html_influence": "NONE",     "overlap": null},
+        {"sub_domain_id": "DOM-04-M", "label": "frontend_src",                  "html_influence": "NONE",     "overlap": null}
+      ]
+    },
+    {
+      "domain_id": "DOM-05",
+      "label": "platform_monorepo",
+      "ceus": ["CEU-10"],
+      "file_count": 741,
+      "html_influence": "INDIRECT",
+      "overlaps": ["OVL-01", "OVL-02"],
+      "unknown_space": ["USP-01", "USP-02", "USP-03"],
+      "source_origin": ["STRUCTURAL_CONTAINMENT", "NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "STRUCTURAL_CONTAINMENT",
+      "documented_taxonomy_source": "HTML_DOCUMENTED",
+      "sub_domains": [
+        {"sub_domain_id": "DOM-05-A", "label": "platform_root",             "html_influence": "NONE",     "overlap": null,    "platform_unique": false},
+        {"sub_domain_id": "DOM-05-B", "label": "platform_cicd",             "html_influence": "NONE",     "overlap": null,    "platform_unique": false},
+        {"sub_domain_id": "DOM-05-C", "label": "platform_backend_embedded", "html_influence": "INDIRECT", "overlap": "OVL-01","platform_unique": false, "file_level_parity": "UNKNOWN"},
+        {"sub_domain_id": "DOM-05-D", "label": "platform_frontend_embedded","html_influence": "INDIRECT", "overlap": "OVL-02","platform_unique": false, "file_level_parity": "UNKNOWN"},
+        {"sub_domain_id": "DOM-05-E", "label": "platform_svg_agents",       "html_influence": "NONE",     "overlap": null,    "platform_unique": true},
+        {"sub_domain_id": "DOM-05-F", "label": "platform_monitoring",       "html_influence": "INDIRECT", "overlap": null,    "platform_unique": true},
+        {"sub_domain_id": "DOM-05-G", "label": "platform_load_tests",       "html_influence": "NONE",     "overlap": null,    "platform_unique": true}
+      ]
+    },
+    {
+      "domain_id": "DOM-06",
+      "label": "provenance_archives",
+      "ceus": ["CEU-11", "CEU-12", "CEU-13"],
+      "file_count": null,
+      "intake_status": "NOT_INGESTED",
+      "html_influence": "NONE",
+      "overlap": null,
+      "unknown_space": null,
+      "source_origin": ["NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "NORMALIZED_EVIDENCE_MAP",
+      "documented_taxonomy_source": "NORMALIZED_EVIDENCE_MAP"
+    }
+  ],
+
+  "overlaps": [
+    {
+      "overlap_id": "OVL-01",
+      "domain_a": "DOM-03",
+      "domain_b": "DOM-05-C",
+      "file_level_parity": "UNKNOWN",
+      "resolution_status": "UNRESOLVED"
+    },
+    {
+      "overlap_id": "OVL-02",
+      "domain_a": "DOM-04",
+      "domain_b": "DOM-05-D",
+      "file_level_parity": "UNKNOWN",
+      "resolution_status": "UNRESOLVED"
+    }
+  ],
+
+  "unknown_space": [
+    {"usp_id": "USP-01", "description": "backend_file_level_parity_unknown", "permanently_unresolved": true},
+    {"usp_id": "USP-02", "description": "frontend_file_level_parity_unknown", "permanently_unresolved": true},
+    {"usp_id": "USP-03", "description": "platform_unique_content_scope_unknown", "permanently_unresolved": true}
+  ],
+
+  "summary": {
+    "total_domains": 6,
+    "total_sub_domains": 23,
+    "total_accepted_ceus": 10,
+    "total_accepted_files": 1463,
+    "overlaps": 2,
+    "unknown_space_entries": 3,
+    "html_influence_direct": 1,
+    "html_influence_indirect": 5,
+    "html_influence_none": 17
+  }
+}

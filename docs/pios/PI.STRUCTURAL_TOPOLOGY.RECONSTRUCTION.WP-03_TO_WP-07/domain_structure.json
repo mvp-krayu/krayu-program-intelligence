@@ -1,0 +1,306 @@
+{
+  "stream": "PI.STRUCTURAL_TOPOLOGY.RECONSTRUCTION.WP-03_TO_WP-07",
+  "work_package": "WP-04",
+  "artifact": "domain_structure",
+  "run_id": "run_02_blueedge",
+  "run_classification": "MULTI-SOURCE STRUCTURAL RECONSTRUCTION (<=40.4 COMPLIANT)",
+  "source_authority_model": "MULTI_SOURCE",
+  "provenance_sources": {
+    "NORMALIZED_EVIDENCE_MAP": "docs/pios/40.2/normalized_evidence_map.md — CEU IDs, file counts, overlap declarations, unknown-space declarations",
+    "STRUCTURAL_CONTAINMENT": "physical directory structure of extracted source trees — top-level subdirectory enumeration",
+    "HTML_DOCUMENTED": "CEU-01/CEU-02/CEU-03 HTML artifacts — documented labels and named constructs visible in documentation",
+    "UNKNOWN_SOURCE": "element whose derivation source cannot be traced to any of the above"
+  },
+  "layer_constraint": "<=40.4",
+  "derivation_basis": "structural_proximity_and_directory_containment_only",
+  "semantic_inference": "FORBIDDEN",
+  "capability_grouping": "FORBIDDEN",
+  "generated_date": "2026-04-08",
+
+  "note": "Domains derived from top-level directory containment in extracted source trees and CEU groupings only. No semantic inference applied. No capability labels assigned. Structural proximity = same top-level directory or CEU containment group. Each domain records source_origin (structural topology origin) and label_source (documented taxonomy origin) separately.",
+
+  "domains": [
+    {
+      "domain_id": "DOM-01",
+      "label": "documentation_root",
+      "derivation_basis": "co-location at source-v3.23/ root — all three HTML files",
+      "ceu_members": ["CEU-01", "CEU-02", "CEU-03"],
+      "structural_evidence": "flat file co-location",
+      "source_origin": ["HTML_DOCUMENTED", "NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "NORMALIZED_EVIDENCE_MAP",
+      "documented_taxonomy_source": "HTML_DOCUMENTED",
+      "label_provenance": "structural_descriptor — mirrors CEU classification in normalized_evidence_map.md; content constituted by HTML artifacts",
+      "sub_domains": null
+    },
+    {
+      "domain_id": "DOM-02",
+      "label": "extraction_analysis",
+      "derivation_basis": "directory containment — source-v3.23/analysis/",
+      "ceu_members": ["CEU-04", "CEU-05", "CEU-06", "CEU-07"],
+      "structural_evidence": "single directory containment",
+      "source_origin": ["NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "NORMALIZED_EVIDENCE_MAP",
+      "documented_taxonomy_source": "NORMALIZED_EVIDENCE_MAP",
+      "label_provenance": "structural_descriptor — path and grouping from normalized_evidence_map.md; no HTML label influence",
+      "sub_domains": null
+    },
+    {
+      "domain_id": "DOM-03",
+      "label": "backend_isolated",
+      "derivation_basis": "directory containment — source-v3.23/extracted/backend/backend/",
+      "ceu_members": ["CEU-08"],
+      "structural_evidence": "standalone directory tree",
+      "overlap_id": "OVL-01",
+      "file_level_parity": "UNKNOWN",
+      "source_origin": ["STRUCTURAL_CONTAINMENT", "NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "STRUCTURAL_CONTAINMENT",
+      "documented_taxonomy_source": "HTML_DOCUMENTED",
+      "label_provenance": "directory_name — 'backend' mirrors directory name in extracted source; concept also present in CEU-01 architecture HTML",
+      "sub_domains": [
+        {
+          "sub_domain_id": "DOM-03-A",
+          "label": "backend_infra",
+          "path_pattern": "backend/{Dockerfile,.env.example,.dockerignore,package.json,migrations/}",
+          "containment_basis": "root-level files and migrations/ directory"
+        },
+        {
+          "sub_domain_id": "DOM-03-B",
+          "label": "backend_src_common",
+          "path_pattern": "backend/src/common/",
+          "containment_basis": "directory containment"
+        },
+        {
+          "sub_domain_id": "DOM-03-C",
+          "label": "backend_src_config",
+          "path_pattern": "backend/src/config/",
+          "containment_basis": "directory containment"
+        },
+        {
+          "sub_domain_id": "DOM-03-D",
+          "label": "backend_src_database",
+          "path_pattern": "backend/src/database/",
+          "containment_basis": "directory containment"
+        },
+        {
+          "sub_domain_id": "DOM-03-E",
+          "label": "backend_src_events",
+          "path_pattern": "backend/src/events/",
+          "containment_basis": "directory containment"
+        },
+        {
+          "sub_domain_id": "DOM-03-F",
+          "label": "backend_src_gateways",
+          "path_pattern": "backend/src/gateways/",
+          "containment_basis": "directory containment"
+        },
+        {
+          "sub_domain_id": "DOM-03-G",
+          "label": "backend_src_health",
+          "path_pattern": "backend/src/health/",
+          "containment_basis": "directory containment"
+        },
+        {
+          "sub_domain_id": "DOM-03-H",
+          "label": "backend_src_migrations",
+          "path_pattern": "backend/src/migrations/",
+          "containment_basis": "directory containment"
+        },
+        {
+          "sub_domain_id": "DOM-03-I",
+          "label": "backend_src_modules",
+          "path_pattern": "backend/src/modules/",
+          "containment_basis": "directory containment",
+          "observed_count": 63
+        },
+        {
+          "sub_domain_id": "DOM-03-J",
+          "label": "backend_src_test",
+          "path_pattern": "backend/src/test/",
+          "containment_basis": "directory containment"
+        }
+      ]
+    },
+    {
+      "domain_id": "DOM-04",
+      "label": "frontend_isolated",
+      "derivation_basis": "directory containment — source-v3.23/extracted/frontend/frontend/",
+      "ceu_members": ["CEU-09"],
+      "structural_evidence": "standalone directory tree",
+      "overlap_id": "OVL-02",
+      "file_level_parity": "UNKNOWN",
+      "source_origin": ["STRUCTURAL_CONTAINMENT", "NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "STRUCTURAL_CONTAINMENT",
+      "documented_taxonomy_source": "HTML_DOCUMENTED",
+      "label_provenance": "directory_name — 'frontend' mirrors directory name in extracted source; concept also present in CEU-01 architecture HTML and CEU-03 PMO dashboard",
+      "sub_domains": [
+        {
+          "sub_domain_id": "DOM-04-A",
+          "label": "frontend_infra",
+          "path_pattern": "frontend/{Dockerfile,nginx.conf,package.json,.env.example,index.html}",
+          "containment_basis": "root-level files"
+        },
+        {
+          "sub_domain_id": "DOM-04-B",
+          "label": "frontend_api",
+          "path_pattern": "frontend/api/",
+          "containment_basis": "directory containment"
+        },
+        {
+          "sub_domain_id": "DOM-04-C",
+          "label": "frontend_components",
+          "path_pattern": "frontend/components/",
+          "containment_basis": "directory containment"
+        },
+        {
+          "sub_domain_id": "DOM-04-D",
+          "label": "frontend_pages",
+          "path_pattern": "frontend/pages/",
+          "containment_basis": "directory containment"
+        },
+        {
+          "sub_domain_id": "DOM-04-E",
+          "label": "frontend_contexts",
+          "path_pattern": "frontend/contexts/",
+          "containment_basis": "directory containment"
+        },
+        {
+          "sub_domain_id": "DOM-04-F",
+          "label": "frontend_hooks",
+          "path_pattern": "frontend/hooks/",
+          "containment_basis": "directory containment"
+        },
+        {
+          "sub_domain_id": "DOM-04-G",
+          "label": "frontend_router_socket",
+          "path_pattern": "frontend/router/, frontend/socket/",
+          "containment_basis": "directory containment"
+        },
+        {
+          "sub_domain_id": "DOM-04-H",
+          "label": "frontend_utils_types_constants",
+          "path_pattern": "frontend/utils/, frontend/types/, frontend/constants/",
+          "containment_basis": "directory containment"
+        },
+        {
+          "sub_domain_id": "DOM-04-I",
+          "label": "frontend_pwa",
+          "path_pattern": "frontend/pwa/, frontend/public/",
+          "containment_basis": "directory containment"
+        },
+        {
+          "sub_domain_id": "DOM-04-J",
+          "label": "frontend_styles",
+          "path_pattern": "frontend/styles/",
+          "containment_basis": "directory containment"
+        },
+        {
+          "sub_domain_id": "DOM-04-K",
+          "label": "frontend_test",
+          "path_pattern": "frontend/test/, frontend/cypress/",
+          "containment_basis": "directory containment"
+        },
+        {
+          "sub_domain_id": "DOM-04-L",
+          "label": "frontend_storybook",
+          "path_pattern": "frontend/stories/, frontend/.storybook/",
+          "containment_basis": "directory containment"
+        },
+        {
+          "sub_domain_id": "DOM-04-M",
+          "label": "frontend_src",
+          "path_pattern": "frontend/src/",
+          "containment_basis": "directory containment"
+        }
+      ]
+    },
+    {
+      "domain_id": "DOM-05",
+      "label": "platform_monorepo",
+      "derivation_basis": "directory containment — source-v3.23/extracted/platform/blueedge-platform/",
+      "ceu_members": ["CEU-10"],
+      "structural_evidence": "integrated monorepo directory tree",
+      "overlap_ids": ["OVL-01", "OVL-02"],
+      "source_origin": ["STRUCTURAL_CONTAINMENT", "NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "STRUCTURAL_CONTAINMENT",
+      "documented_taxonomy_source": "HTML_DOCUMENTED",
+      "label_provenance": "directory_name + normalized_evidence_map — 'platform' from extracted/platform/ path; integrated system framing also in CEU-01 architecture HTML",
+      "sub_domains": [
+        {
+          "sub_domain_id": "DOM-05-A",
+          "label": "platform_root",
+          "path_pattern": "blueedge-platform/{README.md,.env.example}",
+          "containment_basis": "root-level files",
+          "overlap": "NONE"
+        },
+        {
+          "sub_domain_id": "DOM-05-B",
+          "label": "platform_cicd",
+          "path_pattern": "blueedge-platform/.github/",
+          "containment_basis": "directory containment",
+          "overlap": "NONE"
+        },
+        {
+          "sub_domain_id": "DOM-05-C",
+          "label": "platform_backend_embedded",
+          "path_pattern": "blueedge-platform/backend/",
+          "containment_basis": "directory containment",
+          "overlap": "OVL-01",
+          "file_level_parity": "UNKNOWN"
+        },
+        {
+          "sub_domain_id": "DOM-05-D",
+          "label": "platform_frontend_embedded",
+          "path_pattern": "blueedge-platform/frontend/",
+          "containment_basis": "directory containment",
+          "overlap": "OVL-02",
+          "file_level_parity": "UNKNOWN"
+        },
+        {
+          "sub_domain_id": "DOM-05-E",
+          "label": "platform_svg_agents",
+          "path_pattern": "blueedge-platform/svg-agents/",
+          "containment_basis": "directory containment",
+          "overlap": "NONE",
+          "platform_unique": true
+        },
+        {
+          "sub_domain_id": "DOM-05-F",
+          "label": "platform_monitoring",
+          "path_pattern": "blueedge-platform/monitoring/",
+          "containment_basis": "directory containment",
+          "overlap": "NONE",
+          "platform_unique": true
+        },
+        {
+          "sub_domain_id": "DOM-05-G",
+          "label": "platform_load_tests",
+          "path_pattern": "blueedge-platform/load-tests/",
+          "containment_basis": "directory containment",
+          "overlap": "NONE",
+          "platform_unique": true
+        }
+      ]
+    },
+    {
+      "domain_id": "DOM-06",
+      "label": "provenance_archives",
+      "derivation_basis": "directory containment — source-v3.23/raw/",
+      "ceu_members": ["CEU-11", "CEU-12", "CEU-13"],
+      "structural_evidence": "archive files co-located in raw/ directory",
+      "intake_status": "NOT_INGESTED",
+      "source_origin": ["NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "NORMALIZED_EVIDENCE_MAP",
+      "documented_taxonomy_source": "NORMALIZED_EVIDENCE_MAP",
+      "label_provenance": "structural_descriptor — path and grouping from normalized_evidence_map.md; no HTML label influence"
+    }
+  ],
+
+  "summary": {
+    "total_domains": 6,
+    "domains_with_sub_domains": ["DOM-03", "DOM-04", "DOM-05"],
+    "total_sub_domains": 23,
+    "overlap_bearing_domains": ["DOM-03", "DOM-04", "DOM-05"],
+    "unknown_space_bearing_domains": ["DOM-03", "DOM-04", "DOM-05"],
+    "not_ingested_domains": ["DOM-06"]
+  }
+}
