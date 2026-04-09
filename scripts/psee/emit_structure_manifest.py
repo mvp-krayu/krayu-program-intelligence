@@ -253,29 +253,45 @@ def fail_closed_validation(client_uuid, run_id, run_base, package_dir):
 
 # ── CEU LINEAGE SCAN ──────────────────────────────────────────────────────────
 def scan_ceu_lineage(client_uuid, client_base):
-    """Scan input/raw_input.json for explicit structural CEU declarations.
+    """Scan for raw_input.json carrying explicit structural CEU declarations.
 
     CEU source must provide:
       - domains:       non-empty list of objects with 'id' and 'label'
       - entities:      non-empty list of objects with 'name', 'domain', 'type'
       - relationships: non-empty list of objects with 'from', 'to', 'type'
 
-    Scope is expanded beyond input/intake/ to include input/raw_input.json,
-    which was the WP-13B construction source and carries explicit topology.
+    Resolution order (first found wins):
+      1. input/intake/raw_input.json  — extractor output (PSEE.BLUEEDGE.CEU.LINEAGE.EXTRACTOR)
+      2. input/raw_input.json         — legacy WP-13B construction source
 
     FORBIDDEN: inferring structure from metrics (VAR_AT/DT/ST),
                inventing domains, guessing entity names.
     """
     log("--- CEU LINEAGE SCAN ---")
 
-    raw_input_path = os.path.join(client_base, "input", "raw_input.json")
+    # Resolution order: prefer extractor output in intake scope
+    candidates = [
+        (os.path.join(client_base, "input", "intake", "raw_input.json"),
+         "input/intake/raw_input.json  [extractor output]"),
+        (os.path.join(client_base, "input", "raw_input.json"),
+         "input/raw_input.json         [legacy source]"),
+    ]
 
-    if not os.path.isfile(raw_input_path):
+    raw_input_path = None
+    resolved_label = None
+    for path, label in candidates:
+        if os.path.isfile(path):
+            raw_input_path = path
+            resolved_label = label
+            break
+
+    if raw_input_path is None:
         fail("CEU_LINEAGE",
-             f"CEU lineage missing: raw_input.json not found at {raw_input_path}")
+             f"CEU lineage missing: raw_input.json not found at either "
+             f"input/intake/raw_input.json or input/raw_input.json")
 
     raw = load_json(raw_input_path, "raw_input.json")
-    log(f"  source:             raw_input.json")
+    log(f"  source:             {resolved_label}")
 
     # Validate required structural keys
     domains_raw       = raw.get("domains", [])
