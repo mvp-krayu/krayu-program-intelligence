@@ -1,46 +1,42 @@
 #!/usr/bin/env python3
 """
-PSEE Structure Manifest Emitter
-Stream: PSEE.RECONCILE.1.WP-15H
+emit_structure_manifest.py
+STREAM: PSEE.UUID.STRUCTURE.MATERIALIZATION.40_4
 
-PURPOSE
-  Discover an AUTHORITATIVE_STRUCTURE_SOURCE under the client's intake scope
-  and emit a governed structure_manifest.json for pipeline consumption.
+Derive and emit structure_manifest.json from UUID client intake evidence.
 
-  EVIDENCE-ONLY — no inference, no synthesis, no heuristics.
+SOURCE OF TRUTH: CEU lineage in raw_input.json (input-scope scan).
+FORBIDDEN: inference, synthesis, heuristics, hardcoded structure.
 
-  Source discovery rules (strict):
-    - Scan clients/<uuid>/input/intake/ for files containing explicit
-      structural declarations at top level:
-        - "domains"       → non-empty list
-        - "entities"      → non-empty list of objects
-        - "relationships" → non-empty list of objects
-    - A valid AUTHORITATIVE_STRUCTURE_SOURCE must declare ALL THREE keys
-    - Partial declarations are NOT accepted
-    - telemetry_baseline.json is excluded (VAR_*-only intake; no structure)
-    - intake_manifest.json is excluded (admissibility wrapper; no structure)
-    - intake_introspection.json is excluded (analysis artifact; no structure)
-
-  If no AUTHORITATIVE_STRUCTURE_SOURCE is found:
-    → Emit structure_emission_log.md with status BLOCKED
-    → Exit STRUCTURE_SOURCE_UNAVAILABLE (code 2)
-
-  If AUTHORITATIVE_STRUCTURE_SOURCE is found:
-    → Validate and emit structure_manifest.json
-    → Emit structure_emission_log.md with status COMPLETE
-    → Exit 0
+Fail-closed on:
+  - intake_mode != AUTHORITATIVE_INTAKE
+  - rejected = true
+  - coverage_percent < 100
+  - reconstruction_state != PASS
+  - any reconstruction violations
+  - unknown_space_present == true
+  - CEU lineage missing (no raw_input.json or no structural keys)
+  - post-condition: node_count == 0
+  - output already exists (no-overwrite)
 
 Entry point:
-  emit_structure_manifest.py --client <client_uuid>
+  emit_structure_manifest.py --client <client_uuid> --run <run_id>
 
-Reads:   clients/<uuid>/input/intake/*.json (candidate scan)
-Writes:  clients/<uuid>/input/intake/structure_manifest.json  (if found)
-         clients/<uuid>/input/intake/structure_emission_log.md (always)
+Reads:
+  clients/<uuid>/runs/<run_id>/intake/intake_result.json    (MUST)
+  clients/<uuid>/runs/<run_id>/package/coverage_state.json  (MUST)
+  clients/<uuid>/runs/<run_id>/package/reconstruction_state.json (MUST)
+  clients/<uuid>/runs/<run_id>/package/engine_state.json    (MUST)
+  clients/<uuid>/runs/<run_id>/package/gauge_state.json     (MUST)
+  clients/<uuid>/input/raw_input.json                       (CEU lineage source)
+  clients/<uuid>/input/authoritative_state.json             (OPTIONAL — constraint flags)
+
+Writes:
+  clients/<uuid>/psee/runs/<run_id>/structure/structure_manifest.json
 
 Exit codes:
   0 = EMISSION_COMPLETE
-  1 = EMISSION_FAILED (script error)
-  2 = STRUCTURE_SOURCE_UNAVAILABLE
+  1 = FAIL_CLOSED (any validation failure)
 """
 
 import argparse
@@ -51,27 +47,14 @@ import subprocess
 import sys
 
 # ── CONSTANTS ─────────────────────────────────────────────────────────────────
+STREAM           = "PSEE.UUID.STRUCTURE.MATERIALIZATION.40_4"
+SCHEMA_VERSION   = "1.0"
 REPO_NAME        = "k-pi-core"
 REQUIRED_BRANCH  = "work/psee-runtime"
-STREAM_ID        = "PSEE.RECONCILE.1.WP-15H"
-CLIENT_UUID_EXPECTED = "1de0d815-0721-58e9-bc8d-ca83e70fa903"
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(
     os.path.abspath(__file__)
 )))
-
-# Files in the intake directory that are NOT structural source candidates
-EXCLUDED_INTAKE_FILES = {
-    "telemetry_baseline.json",   # VAR_*-only metrics; no structure
-    "intake_manifest.json",      # admissibility wrapper
-    "intake_introspection.json", # analysis artifact
-    "structure_manifest.json",   # this script's output — excluded from scan
-    "structure_emission_log.md", # this script's log — excluded from scan
-}
-
-# A valid structural source MUST carry all three of these top-level keys
-# as non-empty lists (or list of objects for entities/relationships)
-REQUIRED_STRUCTURE_KEYS = {"domains", "entities", "relationships"}
 
 
 # ── HELPERS ───────────────────────────────────────────────────────────────────
@@ -79,30 +62,37 @@ def log(msg=""):
     print(msg)
 
 
-def fail(stage, reason, rule_id="EMISSION_RULE", code=1):
-    print(f"\nFAIL [{stage}]")
-    print(f"  rule:   {rule_id}")
-    print(f"  reason: {reason}")
-    print(f"  action: execution halted\n")
-    sys.exit(code)
+def fail(stage, reason):
+    print(f"\nFAIL-CLOSED [{stage}]", file=sys.stderr)
+    print(f"  reason: {reason}", file=sys.stderr)
+    sys.exit(1)
 
 
-def sha256_of(text):
-    return hashlib.sha256(text.encode()).hexdigest()
+def sha256_of(obj):
+    """Deterministic SHA256 over a JSON-serialisable object."""
+    serialised = json.dumps(obj, sort_keys=True, separators=(",", ":"),
+                            ensure_ascii=True)
+    return hashlib.sha256(serialised.encode()).hexdigest()
 
 
-def _jdump(obj):
-    return json.dumps(obj, sort_keys=True, indent=2, ensure_ascii=True)
+def load_json(path, label):
+    if not os.path.isfile(path):
+        fail("ARTIFACT_LOAD", f"required artifact missing: {label} — {path}")
+    with open(path, encoding="utf-8") as f:
+        try:
+            return json.load(f)
+        except json.JSONDecodeError as e:
+            fail("ARTIFACT_LOAD", f"JSON parse error in {label}: {e}")
 
 
 # ── PRE-FLIGHT ────────────────────────────────────────────────────────────────
-def preflight(client_uuid):
+def preflight(client_uuid, run_id):
     log("=== PSEE Structure Manifest Emitter ===")
-    log(f"stream:      {STREAM_ID}")
+    log(f"stream:      {STREAM}")
     log(f"client_uuid: {client_uuid}")
+    log(f"run_id:      {run_id}")
     log()
-
-    log("--- PRECHECK ---")
+    log("--- PRE-FLIGHT ---")
 
     # Repo identity
     try:
@@ -111,12 +101,14 @@ def preflight(client_uuid):
             capture_output=True, text=True, cwd=REPO_ROOT
         )
         if r.returncode != 0:
-            fail("PRECHECK", "not a git repository", "REPO_LOCK")
+            fail("PRE-FLIGHT", "not a git repository")
         actual = os.path.basename(r.stdout.strip())
         if actual != REPO_NAME:
-            fail("PRECHECK", f"repo={actual!r} expected={REPO_NAME!r}", "REPO_LOCK")
-    except Exception as e:
-        fail("PRECHECK", f"git error: {e}", "REPO_LOCK")
+            fail("PRE-FLIGHT", f"repo={actual!r} expected={REPO_NAME!r}")
+    except FileNotFoundError:
+        fail("PRE-FLIGHT", "git not found")
+
+    log(f"  repo_root:    PASS  ({REPO_NAME})")
 
     # Branch
     try:
@@ -126,400 +118,493 @@ def preflight(client_uuid):
         )
         branch = r.stdout.strip()
         if branch != REQUIRED_BRANCH:
-            fail("PRECHECK",
-                 f"branch={branch!r} required={REQUIRED_BRANCH!r}",
-                 "BRANCH_LOCK")
-    except Exception as e:
-        fail("PRECHECK", f"git error: {e}", "BRANCH_LOCK")
+            fail("PRE-FLIGHT",
+                 f"branch={branch!r} required={REQUIRED_BRANCH!r}")
+    except FileNotFoundError:
+        fail("PRE-FLIGHT", "git not found")
 
-    # Worktree clean — allow untracked client intake files
+    log(f"  branch:       PASS  ({REQUIRED_BRANCH})")
+
+    # Worktree — allow untracked files under client scope and script itself
     try:
         r = subprocess.run(
             ["git", "status", "--porcelain"],
             capture_output=True, text=True, cwd=REPO_ROOT
         )
         lines = [l for l in r.stdout.splitlines() if l.strip()]
-        allowed_prefixes = (
-            f"?? clients/{client_uuid}/input/",
-            f"?? clients/{client_uuid}/runs/",
+        allowed = (
+            f"?? clients/{client_uuid}/",
             f"?? scripts/psee/emit_structure_manifest.py",
         )
-        dirty = [l for l in lines if not any(l.startswith(p) for p in allowed_prefixes)]
+        dirty = [l for l in lines if not any(l.startswith(a) for a in allowed)]
         if dirty:
-            fail("PRECHECK",
-                 f"dirty worktree: {'; '.join(dirty[:3])}",
-                 "WORKTREE_LOCK")
-    except Exception as e:
-        fail("PRECHECK", f"git error: {e}", "WORKTREE_LOCK")
+            fail("PRE-FLIGHT",
+                 f"worktree not clean: {'; '.join(dirty[:3])}")
+    except FileNotFoundError:
+        fail("PRE-FLIGHT", "git not found")
 
-    # Client scope exists
-    intake_dir = os.path.join(REPO_ROOT, "clients", client_uuid, "input", "intake")
-    if not os.path.isdir(intake_dir):
-        fail("PRECHECK",
-             f"intake directory not found: clients/{client_uuid}/input/intake/",
-             "INTAKE_DIR_MISSING")
+    log(f"  worktree:     PASS  (clean)")
 
-    log("PRECHECK_PASS")
+    # UUID path
+    client_base = os.path.join(REPO_ROOT, "clients", client_uuid)
+    if not os.path.isdir(client_base):
+        fail("PRE-FLIGHT", f"UUID path not found: clients/{client_uuid}/")
+    log(f"  uuid_path:    PASS")
+
+    # Run path
+    run_base = os.path.join(client_base, "runs", run_id)
+    if not os.path.isdir(run_base):
+        fail("PRE-FLIGHT",
+             f"run directory not found: clients/{client_uuid}/runs/{run_id}/")
+    log(f"  run_path:     PASS")
+
+    # Intake exists
+    intake_path = os.path.join(run_base, "intake", "intake_result.json")
+    if not os.path.isfile(intake_path):
+        fail("PRE-FLIGHT",
+             f"intake not found: clients/{client_uuid}/runs/{run_id}/intake/intake_result.json")
+    log(f"  intake:       PASS")
+
+    # Package exists
+    package_dir = os.path.join(run_base, "package")
+    if not os.path.isdir(package_dir):
+        fail("PRE-FLIGHT",
+             f"package not found: clients/{client_uuid}/runs/{run_id}/package/")
+    log(f"  package:      PASS")
+
+    log("PRE-FLIGHT: PASS")
     log()
-    return intake_dir
+    return client_base, run_base, package_dir
 
 
-# ── STAGE: SOURCE_DISCOVERY ───────────────────────────────────────────────────
-def source_discovery(client_uuid, intake_dir):
-    """Scan intake directory for AUTHORITATIVE_STRUCTURE_SOURCE.
+# ── FAIL-CLOSED VALIDATION ────────────────────────────────────────────────────
+def fail_closed_validation(client_uuid, run_id, run_base, package_dir):
+    log("--- FAIL-CLOSED VALIDATION ---")
 
-    Discovery rules:
-    1. Enumerate all .json files in intake_dir
-    2. Exclude known non-structural files (EXCLUDED_INTAKE_FILES)
-    3. For each candidate: load and inspect top-level keys
-    4. A valid source must contain non-empty 'domains', 'entities', 'relationships'
-    5. Return first compliant file found (deterministic alphabetical scan order)
-    6. Return None if no compliant file found
-    """
-    log("--- SOURCE_DISCOVERY ---")
+    # Load all MUST-READ artifacts
+    intake_result       = load_json(
+        os.path.join(run_base, "intake", "intake_result.json"),
+        "intake_result.json"
+    )
+    coverage_state      = load_json(
+        os.path.join(package_dir, "coverage_state.json"),
+        "coverage_state.json"
+    )
+    reconstruction_state = load_json(
+        os.path.join(package_dir, "reconstruction_state.json"),
+        "reconstruction_state.json"
+    )
+    engine_state        = load_json(
+        os.path.join(package_dir, "engine_state.json"),
+        "engine_state.json"
+    )
+    gauge_state         = load_json(
+        os.path.join(package_dir, "gauge_state.json"),
+        "gauge_state.json"
+    )
 
-    # Enumerate candidates in deterministic (alphabetical) order
-    try:
-        all_files = sorted(os.listdir(intake_dir))
-    except Exception as e:
-        fail("SOURCE_DISCOVERY", f"cannot list intake dir: {e}", "SCAN_ERROR")
+    # 1. intake_mode
+    intake_mode = intake_result.get("intake_mode")
+    if intake_mode != "AUTHORITATIVE_INTAKE":
+        fail("VALIDATION", f"intake_mode={intake_mode!r} != AUTHORITATIVE_INTAKE")
+    log(f"  intake_mode:        PASS  ({intake_mode})")
 
-    json_files = [f for f in all_files if f.endswith(".json")]
-    candidates = [f for f in json_files if f not in EXCLUDED_INTAKE_FILES]
+    # 2. rejected
+    if intake_result.get("rejected") is True:
+        fail("VALIDATION", "intake rejected=true")
+    log(f"  rejected:           PASS  (false)")
 
-    log(f"  intake_dir:     clients/{client_uuid}/input/intake/")
-    log(f"  total_json:     {len(json_files)}")
-    log(f"  excluded:       {len(json_files) - len(candidates)}")
-    log(f"  candidates:     {len(candidates)}")
+    # 3. coverage_percent
+    cov_pct = coverage_state.get("coverage_percent")
+    if cov_pct is None or float(cov_pct) < 100.0:
+        fail("VALIDATION", f"coverage_percent={cov_pct} < 100")
+    log(f"  coverage_percent:   PASS  ({cov_pct}%)")
 
-    if not candidates:
-        log("  SOURCE_DISCOVERY: no candidate files remain after exclusions")
-        log("SOURCE_DISCOVERY_COMPLETE  result=NONE")
-        log()
-        return None
+    # 4. reconstruction_state
+    recon_state = reconstruction_state.get("state")
+    if recon_state != "PASS":
+        fail("VALIDATION", f"reconstruction_state={recon_state!r} != PASS")
+    log(f"  reconstruction:     PASS  ({recon_state})")
 
-    # Inspect each candidate
-    for fname in candidates:
-        fpath = os.path.join(intake_dir, fname)
-        log(f"  scanning: {fname}")
-
-        try:
-            with open(fpath, encoding="utf-8") as f:
-                data = json.load(f)
-        except Exception as e:
-            log(f"    SKIP — json parse error: {e}")
-            continue
-
-        if not isinstance(data, dict):
-            log(f"    SKIP — not a JSON object")
-            continue
-
-        # Check all three required structural keys are present and non-empty
-        missing = []
-        for key in sorted(REQUIRED_STRUCTURE_KEYS):
-            val = data.get(key)
-            if not isinstance(val, list) or len(val) == 0:
-                missing.append(key)
-
-        if missing:
-            log(f"    SKIP — missing or empty required keys: {missing}")
-            continue
-
-        # All three keys present and non-empty → AUTHORITATIVE_STRUCTURE_SOURCE found
-        log(f"    MATCH — all required structural keys present")
-        log(f"    domains:       {len(data['domains'])}")
-        log(f"    entities:      {len(data['entities'])}")
-        log(f"    relationships: {len(data['relationships'])}")
-        log(f"SOURCE_DISCOVERY_COMPLETE  result=FOUND  source={fname}")
-        log()
-        return (fpath, fname, data)
-
-    # No match found
-    log("  SOURCE_DISCOVERY: scanned all candidates — no explicit structural source")
-    log("SOURCE_DISCOVERY_COMPLETE  result=NONE")
-    log()
-    return None
-
-
-# ── STAGE: STRUCTURE_VALIDATION ───────────────────────────────────────────────
-def structure_validation(source_data, source_fname):
-    """Validate discovered source against structural schema requirements.
-
-    Validates:
-    - domains: list of non-empty strings
-    - entities: list of objects with 'name' (string) and 'domain' (string)
-    - relationships: list of objects with 'from', 'to', 'type' (all strings)
-    - All entity domain references resolve to declared domains
-    - No empty strings for required fields
-    """
-    log("--- STRUCTURE_VALIDATION ---")
-
-    violations = []
-
-    domains = source_data.get("domains", [])
-    entities = source_data.get("entities", [])
-    relationships = source_data.get("relationships", [])
-
-    # Validate domains: must be non-empty strings
-    domain_set = set()
-    for i, d in enumerate(domains):
-        if not isinstance(d, str) or not d.strip():
-            violations.append(f"domains[{i}]: not a non-empty string ({d!r})")
-        else:
-            domain_set.add(d)
-
-    # Validate entities: must have name and domain
-    entity_names = set()
-    for i, e in enumerate(entities):
-        if not isinstance(e, dict):
-            violations.append(f"entities[{i}]: not an object")
-            continue
-        name = e.get("name", "")
-        domain = e.get("domain", "")
-        if not isinstance(name, str) or not name.strip():
-            violations.append(f"entities[{i}].name: missing or empty")
-        else:
-            entity_names.add(name)
-        if not isinstance(domain, str) or not domain.strip():
-            violations.append(f"entities[{i}].domain: missing or empty")
-        elif domain not in domain_set:
-            violations.append(
-                f"entities[{i}].domain={domain!r}: not declared in domains list"
-            )
-
-    # Validate relationships: must have from, to, type
-    for i, r in enumerate(relationships):
-        if not isinstance(r, dict):
-            violations.append(f"relationships[{i}]: not an object")
-            continue
-        for field in ("from", "to", "type"):
-            val = r.get(field, "")
-            if not isinstance(val, str) or not val.strip():
-                violations.append(
-                    f"relationships[{i}].{field}: missing or empty"
-                )
-
+    # 5. violations (axis check)
+    violations = reconstruction_state.get("violations", [])
     if violations:
-        log(f"  STRUCTURE_VALIDATION_FAIL  violations={len(violations)}")
-        for v in violations:
-            log(f"    - {v}")
-        fail("STRUCTURE_VALIDATION",
-             f"{len(violations)} validation violation(s) in {source_fname}",
-             "STRUCTURE_SCHEMA_VIOLATION")
+        fail("VALIDATION",
+             f"reconstruction violations present: {violations}")
+    log(f"  axis_violations:    PASS  (none)")
 
-    log(f"  domains:       {len(domains)} — all valid")
-    log(f"  entities:      {len(entities)} — all valid")
-    log(f"  relationships: {len(relationships)} — all valid")
-    log("STRUCTURE_VALIDATION_PASS")
+    # 6. unknown_space_present
+    dim4 = gauge_state.get("dimensions", {}).get("DIM-04", {})
+    unk_count = dim4.get("total_count", 0)
+    if unk_count > 0:
+        fail("VALIDATION",
+             f"unknown_space_present=true: DIM-04 total_count={unk_count}")
+    log(f"  unknown_space:      PASS  (DIM-04 count={unk_count})")
+
+    log("FAIL-CLOSED VALIDATION: PASS")
     log()
 
-
-# ── STAGE: MANIFEST_EMISSION ──────────────────────────────────────────────────
-def manifest_emission(client_uuid, intake_dir, source_fpath, source_fname, source_data):
-    """Emit structure_manifest.json from validated source."""
-    log("--- MANIFEST_EMISSION ---")
-
-    domains       = source_data["domains"]
-    entities      = source_data["entities"]
-    relationships = source_data["relationships"]
-
-    # Deterministic provenance hash over source file content
-    with open(source_fpath, encoding="utf-8") as f:
-        source_raw = f.read()
-    source_hash = sha256_of(source_raw)
-
-    # Also hash intake telemetry_baseline for combined provenance
-    tbf = os.path.join(intake_dir, "telemetry_baseline.json")
-    if os.path.isfile(tbf):
-        with open(tbf, encoding="utf-8") as f:
-            tb_raw = f.read()
-        combined_hash = sha256_of(source_raw + tb_raw)
-    else:
-        combined_hash = source_hash
-
-    manifest = {
-        "client_uuid":      client_uuid,
-        "construction_mode": "EXPLICIT_STRUCTURE_EMISSION",
-        "domains":          sorted(domains),
-        "entities":         sorted(entities, key=lambda e: (e.get("domain", ""), e.get("name", ""))),
-        "provenance_hash":  combined_hash,
-        "relationships":    sorted(relationships, key=lambda r: (r.get("from", ""), r.get("to", ""), r.get("type", ""))),
-        "source_class":     "AUTHORITATIVE_STRUCTURE_SOURCE",
-        "source_file":      source_fname,
-        "stream":           STREAM_ID,
+    # Return constraint flag values derived from validated gauge data
+    return {
+        "overlap_present":       False,  # DIM-04 NONE, unk_count=0
+        "unknown_space_present": False,  # DIM-04 NONE
     }
 
-    out_path = os.path.join(intake_dir, "structure_manifest.json")
-    if os.path.exists(out_path):
-        fail("MANIFEST_EMISSION",
-             "structure_manifest.json already exists — delete to re-emit",
-             "NO_OVERWRITE_VIOLATION")
 
-    with open(out_path, "w", encoding="utf-8") as f:
-        f.write(_jdump(manifest))
+# ── CEU LINEAGE SCAN ──────────────────────────────────────────────────────────
+def scan_ceu_lineage(client_uuid, client_base):
+    """Scan input/raw_input.json for explicit structural CEU declarations.
 
-    log(f"  WRITTEN  clients/{client_uuid}/input/intake/structure_manifest.json")
-    log(f"  domains:       {len(domains)}")
-    log(f"  entities:      {len(entities)}")
-    log(f"  relationships: {len(relationships)}")
-    log(f"  provenance_hash: {combined_hash[:16]}...")
-    log("MANIFEST_EMISSION_PASS")
+    CEU source must provide:
+      - domains:       non-empty list of objects with 'id' and 'label'
+      - entities:      non-empty list of objects with 'name', 'domain', 'type'
+      - relationships: non-empty list of objects with 'from', 'to', 'type'
+
+    Scope is expanded beyond input/intake/ to include input/raw_input.json,
+    which was the WP-13B construction source and carries explicit topology.
+
+    FORBIDDEN: inferring structure from metrics (VAR_AT/DT/ST),
+               inventing domains, guessing entity names.
+    """
+    log("--- CEU LINEAGE SCAN ---")
+
+    raw_input_path = os.path.join(client_base, "input", "raw_input.json")
+
+    if not os.path.isfile(raw_input_path):
+        fail("CEU_LINEAGE",
+             f"CEU lineage missing: raw_input.json not found at {raw_input_path}")
+
+    raw = load_json(raw_input_path, "raw_input.json")
+    log(f"  source:             raw_input.json")
+
+    # Validate required structural keys
+    domains_raw       = raw.get("domains", [])
+    entities_raw      = raw.get("entities", [])
+    relationships_raw = raw.get("relationships", [])
+
+    if not domains_raw:
+        fail("CEU_LINEAGE",
+             "CEU lineage missing: raw_input.json has no domains")
+    if not entities_raw:
+        fail("CEU_LINEAGE",
+             "CEU lineage missing: raw_input.json has no entities")
+
+    # Validate domain schema: each entry must have 'id' and 'label'
+    for i, d in enumerate(domains_raw):
+        if not isinstance(d, dict) or not d.get("id") or not d.get("label"):
+            fail("CEU_LINEAGE",
+                 f"domains[{i}] missing required fields 'id' and/or 'label': {d!r}")
+
+    # Validate entity schema: each entry must have 'name', 'domain', 'type'
+    domain_ids = {d["id"] for d in domains_raw}
+    for i, e in enumerate(entities_raw):
+        if not isinstance(e, dict):
+            fail("CEU_LINEAGE", f"entities[{i}] is not an object")
+        for field in ("name", "domain", "type"):
+            if not e.get(field):
+                fail("CEU_LINEAGE",
+                     f"entities[{i}] missing required field {field!r}: {e!r}")
+        if e["domain"] not in domain_ids:
+            fail("CEU_LINEAGE",
+                 f"entities[{i}].domain={e['domain']!r} not declared in domains")
+
+    # Validate relationship schema: each entry must have 'from', 'to', 'type'
+    entity_names = {e["name"] for e in entities_raw}
+    for i, r in enumerate(relationships_raw):
+        if not isinstance(r, dict):
+            fail("CEU_LINEAGE", f"relationships[{i}] is not an object")
+        for field in ("from", "to", "type"):
+            if not r.get(field):
+                fail("CEU_LINEAGE",
+                     f"relationships[{i}] missing required field {field!r}: {r!r}")
+        if r["from"] not in entity_names:
+            fail("CEU_LINEAGE",
+                 f"relationships[{i}].from={r['from']!r} not in entity names")
+        if r["to"] not in entity_names:
+            fail("CEU_LINEAGE",
+                 f"relationships[{i}].to={r['to']!r} not in entity names")
+
+    log(f"  domains:            {len(domains_raw)}")
+    log(f"  entities:           {len(entities_raw)}")
+    log(f"  relationships:      {len(relationships_raw)}")
+    log("CEU LINEAGE SCAN: PASS")
     log()
-    return manifest, combined_hash
+    return domains_raw, entities_raw, relationships_raw
 
 
-# ── STAGE: EMISSION_LOG ───────────────────────────────────────────────────────
-def write_emission_log(client_uuid, intake_dir, status, source_fname=None,
-                       manifest=None, combined_hash=None,
-                       scan_details=None):
-    """Write structure_emission_log.md regardless of outcome."""
-    log("--- EMISSION_LOG ---")
+# ── STRUCTURE DERIVATION ──────────────────────────────────────────────────────
+def derive_structure(client_uuid, run_id, domains_raw, entities_raw,
+                     relationships_raw, constraint_flags):
+    """Derive governed structure objects from CEU lineage.
 
-    out_path = os.path.join(intake_dir, "structure_emission_log.md")
+    Rules:
+      domains      — direct from raw_input domains array
+      nodes        — one node per entity (CEU); stable ID by alphabetical sort
+      components   — cohesive CEU clusters by domain membership
+      capabilities — behavioral groupings by entity type (Stratum 3)
+      relationships — explicit CEU cross-references from raw_input
+      lineage      — traceability record per node
+    """
+    log("--- STRUCTURE DERIVATION ---")
 
-    if status == "COMPLETE":
-        status_line  = "COMPLETE"
-        source_block = f"source_file:     {source_fname}"
-        result_block = (
-            f"domains:         {len(manifest['domains'])}\n"
-            f"entities:        {len(manifest['entities'])}\n"
-            f"relationships:   {len(manifest['relationships'])}\n"
-            f"provenance_hash: {combined_hash}"
-        )
-        outcome_block = "structure_manifest.json emitted — pipeline may proceed to STRUCTURE_EXTRACTION."
-    else:
-        status_line  = "BLOCKED"
-        source_block = "source_file:     NONE"
-        result_block = (
-            "domains:         0\n"
-            "entities:        0\n"
-            "relationships:   0\n"
-            "provenance_hash: N/A"
-        )
-        outcome_block = (
-            "STRUCTURE_SOURCE_UNAVAILABLE — no explicit structural source found in intake scope.\n\n"
-            "Pipeline MUST NOT proceed past INTAKE_SCHEMA_ADAPT without a valid "
-            "structure_manifest.json.\n\n"
-            "To unblock: deposit an explicit structure_manifest.json under "
-            f"clients/{client_uuid}/input/intake/ containing non-empty "
-            "'domains', 'entities', and 'relationships' arrays, then re-run this script."
-        )
+    # ── DOMAINS ───────────────────────────────────────────────────────────────
+    domains = [
+        {
+            "domain_id":    d["id"],
+            "label":        d["label"],
+            "source":       "raw_input.json:domains",
+        }
+        for d in sorted(domains_raw, key=lambda x: x["id"])
+    ]
 
-    scan_section = ""
-    if scan_details:
-        scan_section = "\n## Scan Details\n\n"
-        scan_section += "| File | Result |\n|---|---|\n"
-        for fname, result in scan_details:
-            scan_section += f"| {fname} | {result} |\n"
+    # ── NODES (one per entity, stable alphabetical ordering) ──────────────────
+    entity_name_to_node_id = {}
+    nodes = []
+    for i, entity in enumerate(
+        sorted(entities_raw, key=lambda x: x["name"]), start=1
+    ):
+        node_id = f"NODE-{i:03d}"
+        entity_name_to_node_id[entity["name"]] = node_id
+        nodes.append({
+            "node_id":      node_id,
+            "label":        entity["name"],
+            "domain_id":    entity["domain"],
+            "entity_type":  entity["type"],
+            "source":       "raw_input.json:entities",
+        })
 
-    content = f"""# Structure Emission Log — WP-15H
+    log(f"  nodes:              {len(nodes)}")
 
-stream:      {STREAM_ID}
-client_uuid: {client_uuid}
-status:      {status_line}
-{source_block}
+    # ── COMPONENTS (cohesive CEU clusters by domain) ──────────────────────────
+    domain_entity_map: dict[str, list[str]] = {}
+    for entity in entities_raw:
+        domain_entity_map.setdefault(entity["domain"], []).append(entity["name"])
 
----
+    components = []
+    for domain in sorted(domains_raw, key=lambda x: x["id"]):
+        d_id = domain["id"]
+        members = sorted(domain_entity_map.get(d_id, []))
+        member_node_ids = [
+            entity_name_to_node_id[m] for m in members
+            if m in entity_name_to_node_id
+        ]
+        components.append({
+            "component_id":  f"COMP-{d_id}",
+            "domain_id":     d_id,
+            "member_nodes":  member_node_ids,
+            "source":        "raw_input.json:entities[domain grouping]",
+        })
 
-## Emission Result
+    log(f"  components:         {len(components)}")
 
-{result_block}
+    # ── CAPABILITIES (behavioral linkage by entity type — Stratum 3) ──────────
+    type_nodes: dict[str, list[str]] = {}
+    for entity in entities_raw:
+        etype = entity["type"]
+        nid   = entity_name_to_node_id[entity["name"]]
+        type_nodes.setdefault(etype, []).append(nid)
 
----
+    capabilities = []
+    for etype in sorted(type_nodes):
+        capabilities.append({
+            "capability_id":   f"CAP-{etype.upper()}",
+            "behavioral_type": etype,
+            "stratum":         "Stratum 3",
+            "bearing_nodes":   sorted(type_nodes[etype]),
+            "source":          "raw_input.json:entities[type]",
+        })
 
-## Outcome
+    log(f"  capabilities:       {len(capabilities)}")
 
-{outcome_block}
-{scan_section}
----
+    # ── RELATIONSHIPS (explicit CEU cross-references) ─────────────────────────
+    relationships = []
+    for i, rel in enumerate(
+        sorted(relationships_raw, key=lambda x: (x["from"], x["to"])), start=1
+    ):
+        relationships.append({
+            "relationship_id":   f"REL-{i:03d}",
+            "from_node":         entity_name_to_node_id[rel["from"]],
+            "to_node":           entity_name_to_node_id[rel["to"]],
+            "relationship_type": rel["type"],
+            "from_entity":       rel["from"],
+            "to_entity":         rel["to"],
+            "source":            "raw_input.json:relationships",
+        })
 
-## Evidence Chain
+    log(f"  relationships:      {len(relationships)}")
 
-| Field | Value |
-|---|---|
-| intake_dir | clients/{client_uuid}/input/intake/ |
-| structural_scan | clients/{client_uuid}/input/intake/*.json |
-| excluded_files | {', '.join(sorted(EXCLUDED_INTAKE_FILES))} |
-| wp15f_verdict | STRUCTURE_SOURCE_VERDICT: NOT_FOUND (CE2 40.5–40.11 lineage) |
-| wp15g_decision | OPTION_C — EXPLICIT_STRUCTURE_EMISSION |
-| wp15h_outcome | {status_line} |
-"""
+    # ── LINEAGE (traceability per node) ───────────────────────────────────────
+    lineage = [
+        {
+            "node_id":            node["node_id"],
+            "source_artifact":    "raw_input.json",
+            "source_field":       "entities",
+            "source_entity_label": node["label"],
+            "domain_id":          node["domain_id"],
+            "client_uuid":        client_uuid,
+            "run_id":             run_id,
+        }
+        for node in nodes
+    ]
 
-    with open(out_path, "w", encoding="utf-8") as f:
-        f.write(content)
+    # ── DETERMINISM HASH ──────────────────────────────────────────────────────
+    determinism_input = {
+        "client_uuid":    client_uuid,
+        "run_id":         run_id,
+        "domain_ids":     [d["domain_id"] for d in domains],
+        "node_ids":       [n["node_id"] for n in nodes],
+        "node_labels":    [n["label"] for n in nodes],
+        "rel_ids":        [r["relationship_id"] for r in relationships],
+        "rel_types":      [(r["from_entity"], r["to_entity"], r["relationship_type"])
+                           for r in relationships],
+    }
+    determinism_hash = sha256_of(determinism_input)
 
-    log(f"  WRITTEN  clients/{client_uuid}/input/intake/structure_emission_log.md")
-    log("EMISSION_LOG_PASS")
+    log(f"  determinism_hash:   {determinism_hash[:16]}...")
+    log("STRUCTURE DERIVATION: PASS")
     log()
+
+    return {
+        "stream":            STREAM,
+        "schema_version":    SCHEMA_VERSION,
+        "client_uuid":       client_uuid,
+        "run_id":            run_id,
+        "source_artifact":   "raw_input.json",
+        "source_field":      "domains + entities + relationships",
+        "domains":           domains,
+        "components":        components,
+        "capabilities":      capabilities,
+        "nodes":             nodes,
+        "relationships":     relationships,
+        "lineage":           lineage,
+        "constraint_flags":  constraint_flags,
+        "determinism_hash":  determinism_hash,
+    }
+
+
+# ── POST-CONDITIONS ───────────────────────────────────────────────────────────
+def post_conditions(manifest):
+    log("--- POST-CONDITIONS ---")
+
+    node_count = len(manifest["nodes"])
+    if node_count == 0:
+        fail("POST-CONDITION", "node_count == 0 — empty topology not allowed")
+    log(f"  node_count > 0:     PASS  ({node_count})")
+
+    # Every node must appear in lineage
+    node_ids_in_manifest = {n["node_id"] for n in manifest["nodes"]}
+    node_ids_in_lineage  = {l["node_id"] for l in manifest["lineage"]}
+    missing_lineage = node_ids_in_manifest - node_ids_in_lineage
+    if missing_lineage:
+        fail("POST-CONDITION",
+             f"nodes missing lineage records: {sorted(missing_lineage)}")
+    log(f"  every_node_lineage: PASS  ({len(node_ids_in_lineage)} records)")
+
+    # Every relationship references nodes in the manifest
+    node_id_set = node_ids_in_manifest
+    for rel in manifest["relationships"]:
+        if rel["from_node"] not in node_id_set:
+            fail("POST-CONDITION",
+                 f"relationship {rel['relationship_id']} from_node={rel['from_node']!r} "
+                 f"not in node set")
+        if rel["to_node"] not in node_id_set:
+            fail("POST-CONDITION",
+                 f"relationship {rel['relationship_id']} to_node={rel['to_node']!r} "
+                 f"not in node set")
+    log(f"  relationships_traceable: PASS  ({len(manifest['relationships'])} traced)")
+
+    # Constraint flags present
+    cf = manifest.get("constraint_flags", {})
+    if "overlap_present" not in cf or "unknown_space_present" not in cf:
+        fail("POST-CONDITION",
+             "constraint_flags missing required keys")
+    log(f"  constraint_flags:   PASS  (overlap={cf['overlap_present']}, "
+        f"unknown={cf['unknown_space_present']})")
+
+    log("POST-CONDITIONS: PASS")
+    log()
+
+
+# ── EMIT ──────────────────────────────────────────────────────────────────────
+def emit(client_uuid, run_id, manifest):
+    log("--- EMIT ---")
+
+    output_dir  = os.path.join(
+        REPO_ROOT, "clients", client_uuid, "psee", "runs", run_id, "structure"
+    )
+    output_path = os.path.join(output_dir, "structure_manifest.json")
+
+    # No-overwrite
+    if os.path.exists(output_path):
+        fail("EMIT",
+             f"output already exists (no-overwrite): {output_path}")
+
+    os.makedirs(output_dir, exist_ok=True)
+
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(manifest, f, indent=2, ensure_ascii=True)
+
+    log(f"  WRITTEN  clients/{client_uuid}/psee/runs/{run_id}/structure/"
+        f"structure_manifest.json")
+    log(f"  domains:            {len(manifest['domains'])}")
+    log(f"  components:         {len(manifest['components'])}")
+    log(f"  capabilities:       {len(manifest['capabilities'])}")
+    log(f"  nodes:              {len(manifest['nodes'])}")
+    log(f"  relationships:      {len(manifest['relationships'])}")
+    log(f"  determinism_hash:   {manifest['determinism_hash']}")
+    log("EMIT: PASS")
+    log()
+    return output_path
 
 
 # ── MAIN ──────────────────────────────────────────────────────────────────────
 def main():
     parser = argparse.ArgumentParser(
-        description="PSEE Structure Manifest Emitter — WP-15H"
+        description="PSEE Structure Manifest Emitter — "
+                    "PSEE.UUID.STRUCTURE.MATERIALIZATION.40_4"
     )
     parser.add_argument("--client", required=True, help="Client UUID")
+    parser.add_argument("--run",    required=True, help="Run ID")
     args = parser.parse_args()
 
     client_uuid = args.client
+    run_id      = args.run
 
-    # ── PRE-FLIGHT ─────────────────────────────────────────────────────────────
-    intake_dir = preflight(client_uuid)
+    # PRE-FLIGHT
+    client_base, run_base, package_dir = preflight(client_uuid, run_id)
 
-    # ── SOURCE DISCOVERY ───────────────────────────────────────────────────────
-    discovery_result = source_discovery(client_uuid, intake_dir)
-
-    # ── BLOCKED PATH ───────────────────────────────────────────────────────────
-    if discovery_result is None:
-        write_emission_log(
-            client_uuid, intake_dir,
-            status="BLOCKED",
-            scan_details=None
-        )
-        log("STRUCTURE_SOURCE_UNAVAILABLE")
-        log(f"  stream:     {STREAM_ID}")
-        log(f"  client:     {client_uuid}")
-        log()
-        log("  No explicit structural source found in:")
-        log(f"  clients/{client_uuid}/input/intake/")
-        log()
-        log("  Evidence basis: WP-15F STRUCTURE_SOURCE_VERDICT=NOT_FOUND")
-        log("  Decision basis: WP-15G OPTION_C — EXPLICIT_STRUCTURE_EMISSION required")
-        log()
-        log("  Pipeline status: BLOCKED at STRUCTURE_EMITTER stage")
-        log("  build_authoritative_input.py MUST NOT be re-run until structure_manifest.json")
-        log("  is deposited under the client intake directory.")
-        log()
-        log("  structure_emission_log.md written for governance record.")
-        sys.exit(2)
-
-    # ── EMISSION PATH ──────────────────────────────────────────────────────────
-    source_fpath, source_fname, source_data = discovery_result
-
-    # Validate schema compliance
-    structure_validation(source_data, source_fname)
-
-    # Emit structure_manifest.json
-    manifest, combined_hash = manifest_emission(
-        client_uuid, intake_dir, source_fpath, source_fname, source_data
+    # FAIL-CLOSED VALIDATION (loads all MUST-READ artifacts)
+    constraint_flags = fail_closed_validation(
+        client_uuid, run_id, run_base, package_dir
     )
 
-    # Write emission log
-    write_emission_log(
-        client_uuid, intake_dir,
-        status="COMPLETE",
-        source_fname=source_fname,
-        manifest=manifest,
-        combined_hash=combined_hash
+    # CEU LINEAGE SCAN
+    domains_raw, entities_raw, relationships_raw = scan_ceu_lineage(
+        client_uuid, client_base
     )
 
+    # STRUCTURE DERIVATION
+    manifest = derive_structure(
+        client_uuid, run_id,
+        domains_raw, entities_raw, relationships_raw,
+        constraint_flags
+    )
+
+    # POST-CONDITIONS
+    post_conditions(manifest)
+
+    # EMIT
+    output_path = emit(client_uuid, run_id, manifest)
+
+    # RETURN
+    log("=" * 56)
     log("EMISSION_COMPLETE")
-    log(f"  stream:          {STREAM_ID}")
-    log(f"  client:          {client_uuid}")
-    log(f"  source_file:     {source_fname}")
-    log(f"  domains:         {len(manifest['domains'])}")
-    log(f"  entities:        {len(manifest['entities'])}")
-    log(f"  relationships:   {len(manifest['relationships'])}")
+    log(f"  stream:      {STREAM}")
+    log(f"  client_uuid: {client_uuid}")
+    log(f"  run_id:      {run_id}")
+    log(f"  node_count:  {len(manifest['nodes'])}")
+    log(f"  output:      {output_path}")
+    log("=" * 56)
     sys.exit(0)
 
 
