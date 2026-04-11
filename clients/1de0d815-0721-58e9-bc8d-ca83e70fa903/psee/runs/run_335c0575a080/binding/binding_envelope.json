@@ -1,0 +1,2236 @@
+{
+  "artifact_id": "PSEE.BLUEEDGE.BINDING.CONVERGENCE.01-BINDING-ENVELOPE",
+  "authority_boundary": {
+    "back_propagation_forbidden": true,
+    "cross_projection_forbidden": true,
+    "envelope_source": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_335c0575a080/binding/binding_model.json",
+    "gauge_must_not_read_manifest_directly": true,
+    "structural_authority": "L1_AUTHORITATIVE_STRUCTURE (structure_manifest.json)",
+    "wp13b_declaration": "gauge_state.json (WP-13B, PSEE.RECONCILE.1.WP-13B) represents an ADJACENT CONSUMPTION MODEL with Application/Device/Infrastructure topology. It is NOT structural authority. It MUST NOT be used as a source for topology rendering or as an input to binding model construction."
+  },
+  "capability_surfaces": [
+    {
+      "containment_basis": "root-level files and migrations/ directory",
+      "label": "backend_infra",
+      "parent_context": "DOM-03",
+      "path_pattern": "backend/{Dockerfile,.env.example,.dockerignore,package.json,migrations/}",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-03-A]",
+        "parent_ceu": "CEU-08",
+        "parent_node": "NODE-008",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-03-A",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "backend_src_common",
+      "parent_context": "DOM-03",
+      "path_pattern": "backend/src/common/",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-03-B]",
+        "parent_ceu": "CEU-08",
+        "parent_node": "NODE-008",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-03-B",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "backend_src_config",
+      "parent_context": "DOM-03",
+      "path_pattern": "backend/src/config/",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-03-C]",
+        "parent_ceu": "CEU-08",
+        "parent_node": "NODE-008",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-03-C",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "backend_src_database",
+      "parent_context": "DOM-03",
+      "path_pattern": "backend/src/database/",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-03-D]",
+        "parent_ceu": "CEU-08",
+        "parent_node": "NODE-008",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-03-D",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "backend_src_events",
+      "parent_context": "DOM-03",
+      "path_pattern": "backend/src/events/",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-03-E]",
+        "parent_ceu": "CEU-08",
+        "parent_node": "NODE-008",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-03-E",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "backend_src_gateways",
+      "parent_context": "DOM-03",
+      "path_pattern": "backend/src/gateways/",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-03-F]",
+        "parent_ceu": "CEU-08",
+        "parent_node": "NODE-008",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-03-F",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "backend_src_health",
+      "parent_context": "DOM-03",
+      "path_pattern": "backend/src/health/",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-03-G]",
+        "parent_ceu": "CEU-08",
+        "parent_node": "NODE-008",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-03-G",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "backend_src_migrations",
+      "parent_context": "DOM-03",
+      "path_pattern": "backend/src/migrations/",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-03-H]",
+        "parent_ceu": "CEU-08",
+        "parent_node": "NODE-008",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-03-H",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "backend_src_modules",
+      "observed_count": 63,
+      "parent_context": "DOM-03",
+      "path_pattern": "backend/src/modules/",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-03-I]",
+        "parent_ceu": "CEU-08",
+        "parent_node": "NODE-008",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-03-I",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "backend_src_test",
+      "parent_context": "DOM-03",
+      "path_pattern": "backend/src/test/",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-03-J]",
+        "parent_ceu": "CEU-08",
+        "parent_node": "NODE-008",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-03-J",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "root-level files",
+      "label": "frontend_infra",
+      "parent_context": "DOM-04",
+      "path_pattern": "frontend/{Dockerfile,nginx.conf,package.json,.env.example,index.html}",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-A]",
+        "parent_ceu": "CEU-09",
+        "parent_node": "NODE-009",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-04-A",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "frontend_api",
+      "parent_context": "DOM-04",
+      "path_pattern": "frontend/api/",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-B]",
+        "parent_ceu": "CEU-09",
+        "parent_node": "NODE-009",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-04-B",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "frontend_components",
+      "parent_context": "DOM-04",
+      "path_pattern": "frontend/components/",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-C]",
+        "parent_ceu": "CEU-09",
+        "parent_node": "NODE-009",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-04-C",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "frontend_pages",
+      "parent_context": "DOM-04",
+      "path_pattern": "frontend/pages/",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-D]",
+        "parent_ceu": "CEU-09",
+        "parent_node": "NODE-009",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-04-D",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "frontend_contexts",
+      "parent_context": "DOM-04",
+      "path_pattern": "frontend/contexts/",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-E]",
+        "parent_ceu": "CEU-09",
+        "parent_node": "NODE-009",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-04-E",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "frontend_hooks",
+      "parent_context": "DOM-04",
+      "path_pattern": "frontend/hooks/",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-F]",
+        "parent_ceu": "CEU-09",
+        "parent_node": "NODE-009",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-04-F",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "frontend_router_socket",
+      "parent_context": "DOM-04",
+      "path_pattern": "frontend/router/, frontend/socket/",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-G]",
+        "parent_ceu": "CEU-09",
+        "parent_node": "NODE-009",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-04-G",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "frontend_utils_types_constants",
+      "parent_context": "DOM-04",
+      "path_pattern": "frontend/utils/, frontend/types/, frontend/constants/",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-H]",
+        "parent_ceu": "CEU-09",
+        "parent_node": "NODE-009",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-04-H",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "frontend_pwa",
+      "parent_context": "DOM-04",
+      "path_pattern": "frontend/pwa/, frontend/public/",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-I]",
+        "parent_ceu": "CEU-09",
+        "parent_node": "NODE-009",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-04-I",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "frontend_styles",
+      "parent_context": "DOM-04",
+      "path_pattern": "frontend/styles/",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-J]",
+        "parent_ceu": "CEU-09",
+        "parent_node": "NODE-009",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-04-J",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "frontend_test",
+      "parent_context": "DOM-04",
+      "path_pattern": "frontend/test/, frontend/cypress/",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-K]",
+        "parent_ceu": "CEU-09",
+        "parent_node": "NODE-009",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-04-K",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "frontend_storybook",
+      "parent_context": "DOM-04",
+      "path_pattern": "frontend/stories/, frontend/.storybook/",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-L]",
+        "parent_ceu": "CEU-09",
+        "parent_node": "NODE-009",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-04-L",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "frontend_src",
+      "parent_context": "DOM-04",
+      "path_pattern": "frontend/src/",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-M]",
+        "parent_ceu": "CEU-09",
+        "parent_node": "NODE-009",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-04-M",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "root-level files",
+      "label": "platform_root",
+      "parent_context": "DOM-05",
+      "path_pattern": "blueedge-platform/{README.md,.env.example}",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-05-A]",
+        "parent_ceu": "CEU-10",
+        "parent_node": "NODE-010",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-05-A",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "platform_cicd",
+      "parent_context": "DOM-05",
+      "path_pattern": "blueedge-platform/.github/",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-05-B]",
+        "parent_ceu": "CEU-10",
+        "parent_node": "NODE-010",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-05-B",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "file_level_parity": "UNKNOWN",
+      "label": "platform_backend_embedded",
+      "overlap": "OVL-01",
+      "parent_context": "DOM-05",
+      "path_pattern": "blueedge-platform/backend/",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-05-C]",
+        "parent_ceu": "CEU-10",
+        "parent_node": "NODE-010",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-05-C",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "file_level_parity": "UNKNOWN",
+      "label": "platform_frontend_embedded",
+      "overlap": "OVL-02",
+      "parent_context": "DOM-05",
+      "path_pattern": "blueedge-platform/frontend/",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-05-D]",
+        "parent_ceu": "CEU-10",
+        "parent_node": "NODE-010",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-05-D",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "platform_svg_agents",
+      "parent_context": "DOM-05",
+      "path_pattern": "blueedge-platform/svg-agents/",
+      "platform_unique": true,
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-05-E]",
+        "parent_ceu": "CEU-10",
+        "parent_node": "NODE-010",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-05-E",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "platform_monitoring",
+      "parent_context": "DOM-05",
+      "path_pattern": "blueedge-platform/monitoring/",
+      "platform_unique": true,
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-05-F]",
+        "parent_ceu": "CEU-10",
+        "parent_node": "NODE-010",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-05-F",
+      "temporal_classification": "STATIC"
+    },
+    {
+      "containment_basis": "directory containment",
+      "label": "platform_load_tests",
+      "parent_context": "DOM-05",
+      "path_pattern": "blueedge-platform/load-tests/",
+      "platform_unique": true,
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-05-G]",
+        "parent_ceu": "CEU-10",
+        "parent_node": "NODE-010",
+        "source_artifact": "structure_manifest.json"
+      },
+      "surface_id": "DOM-05-G",
+      "temporal_classification": "STATIC"
+    }
+  ],
+  "contract_id": "PSEE.BLUEEDGE.BINDING.CONVERGENCE.IMPLEMENT.01",
+  "delta_contract": "PSEE.BLUEEDGE.BINDING.CONVERGENCE.PROJECTION.DELTA.01",
+  "edges": [
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-03-DOM-03-A",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-03",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-03].sub_domains[sub_domain_id=DOM-03-A]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-03-A"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-03-DOM-03-B",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-03",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-03].sub_domains[sub_domain_id=DOM-03-B]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-03-B"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-03-DOM-03-C",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-03",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-03].sub_domains[sub_domain_id=DOM-03-C]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-03-C"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-03-DOM-03-D",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-03",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-03].sub_domains[sub_domain_id=DOM-03-D]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-03-D"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-03-DOM-03-E",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-03",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-03].sub_domains[sub_domain_id=DOM-03-E]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-03-E"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-03-DOM-03-F",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-03",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-03].sub_domains[sub_domain_id=DOM-03-F]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-03-F"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-03-DOM-03-G",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-03",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-03].sub_domains[sub_domain_id=DOM-03-G]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-03-G"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-03-DOM-03-H",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-03",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-03].sub_domains[sub_domain_id=DOM-03-H]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-03-H"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-03-DOM-03-I",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-03",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-03].sub_domains[sub_domain_id=DOM-03-I]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-03-I"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-03-DOM-03-J",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-03",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-03].sub_domains[sub_domain_id=DOM-03-J]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-03-J"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-04-DOM-04-A",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-04].sub_domains[sub_domain_id=DOM-04-A]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-04-A"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-04-DOM-04-B",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-04].sub_domains[sub_domain_id=DOM-04-B]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-04-B"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-04-DOM-04-C",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-04].sub_domains[sub_domain_id=DOM-04-C]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-04-C"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-04-DOM-04-D",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-04].sub_domains[sub_domain_id=DOM-04-D]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-04-D"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-04-DOM-04-E",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-04].sub_domains[sub_domain_id=DOM-04-E]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-04-E"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-04-DOM-04-F",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-04].sub_domains[sub_domain_id=DOM-04-F]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-04-F"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-04-DOM-04-G",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-04].sub_domains[sub_domain_id=DOM-04-G]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-04-G"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-04-DOM-04-H",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-04].sub_domains[sub_domain_id=DOM-04-H]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-04-H"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-04-DOM-04-I",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-04].sub_domains[sub_domain_id=DOM-04-I]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-04-I"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-04-DOM-04-J",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-04].sub_domains[sub_domain_id=DOM-04-J]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-04-J"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-04-DOM-04-K",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-04].sub_domains[sub_domain_id=DOM-04-K]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-04-K"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-04-DOM-04-L",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-04].sub_domains[sub_domain_id=DOM-04-L]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-04-L"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-04-DOM-04-M",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-04].sub_domains[sub_domain_id=DOM-04-M]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-04-M"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-05-DOM-05-A",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-05",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-05].sub_domains[sub_domain_id=DOM-05-A]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-05-A"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-05-DOM-05-B",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-05",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-05].sub_domains[sub_domain_id=DOM-05-B]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-05-B"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-05-DOM-05-C",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-05",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-05].sub_domains[sub_domain_id=DOM-05-C]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-05-C"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-05-DOM-05-D",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-05",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-05].sub_domains[sub_domain_id=DOM-05-D]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-05-D"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-05-DOM-05-E",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-05",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-05].sub_domains[sub_domain_id=DOM-05-E]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-05-E"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-05-DOM-05-F",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-05",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-05].sub_domains[sub_domain_id=DOM-05-F]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-05-F"
+    },
+    {
+      "containment_level": "domain_to_surface",
+      "edge_id": "EDGE-CONTAINS-DOM-05-DOM-05-G",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-05",
+      "provenance": {
+        "derivation_rule": "R2: domain_structure.json domain.sub_domains containment",
+        "source_artifact": "domain_structure.json",
+        "source_selector": "domains[domain_id=DOM-05].sub_domains[sub_domain_id=DOM-05-G]"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "DOM-05-G"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-03-A-NODE-008",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-03-A",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-08",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-03-A].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-008"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-03-B-NODE-008",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-03-B",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-08",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-03-B].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-008"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-03-C-NODE-008",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-03-C",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-08",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-03-C].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-008"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-03-D-NODE-008",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-03-D",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-08",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-03-D].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-008"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-03-E-NODE-008",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-03-E",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-08",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-03-E].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-008"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-03-F-NODE-008",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-03-F",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-08",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-03-F].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-008"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-03-G-NODE-008",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-03-G",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-08",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-03-G].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-008"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-03-H-NODE-008",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-03-H",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-08",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-03-H].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-008"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-03-I-NODE-008",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-03-I",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-08",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-03-I].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-008"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-03-J-NODE-008",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-03-J",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-08",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-03-J].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-008"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-04-A-NODE-009",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04-A",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-09",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-04-A].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-009"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-04-B-NODE-009",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04-B",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-09",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-04-B].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-009"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-04-C-NODE-009",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04-C",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-09",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-04-C].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-009"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-04-D-NODE-009",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04-D",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-09",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-04-D].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-009"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-04-E-NODE-009",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04-E",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-09",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-04-E].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-009"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-04-F-NODE-009",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04-F",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-09",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-04-F].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-009"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-04-G-NODE-009",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04-G",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-09",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-04-G].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-009"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-04-H-NODE-009",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04-H",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-09",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-04-H].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-009"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-04-I-NODE-009",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04-I",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-09",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-04-I].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-009"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-04-J-NODE-009",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04-J",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-09",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-04-J].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-009"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-04-K-NODE-009",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04-K",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-09",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-04-K].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-009"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-04-L-NODE-009",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04-L",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-09",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-04-L].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-009"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-04-M-NODE-009",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-04-M",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-09",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-04-M].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-009"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-05-A-NODE-010",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-05-A",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-10",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-05-A].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-010"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-05-B-NODE-010",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-05-B",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-10",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-05-B].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-010"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-05-C-NODE-010",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-05-C",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-10",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-05-C].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-010"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-05-D-NODE-010",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-05-D",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-10",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-05-D].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-010"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-05-E-NODE-010",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-05-E",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-10",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-05-E].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-010"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-05-F-NODE-010",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-05-F",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-10",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-05-F].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-010"
+    },
+    {
+      "containment_level": "surface_to_component",
+      "edge_id": "EDGE-CONTAINS-DOM-05-G-NODE-010",
+      "edge_type": "CONTAINS",
+      "from_node": "DOM-05-G",
+      "provenance": {
+        "derivation_rule": "R3: structure_manifest.json capability_surface.parent_node mapping",
+        "parent_ceu": "CEU-10",
+        "source_artifact": "structure_manifest.json",
+        "source_selector": "domains[].sub_domains[sub_domain_id=DOM-05-G].parent_node"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-010"
+    },
+    {
+      "edge_id": "REL-001",
+      "edge_type": "OVERLAP_STRUCTURAL",
+      "from_node": "NODE-008",
+      "provenance": {
+        "binding_model_ref": "binding_model.relationships[REL-001]",
+        "from_ceu": "CEU-08",
+        "source_artifact": "structure_manifest.json",
+        "to_ceu": "CEU-10"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-010"
+    },
+    {
+      "edge_id": "REL-002",
+      "edge_type": "OVERLAP_STRUCTURAL",
+      "from_node": "NODE-009",
+      "provenance": {
+        "binding_model_ref": "binding_model.relationships[REL-002]",
+        "from_ceu": "CEU-09",
+        "source_artifact": "structure_manifest.json",
+        "to_ceu": "CEU-10"
+      },
+      "temporal_classification": "STATIC",
+      "to_node": "NODE-010"
+    }
+  ],
+  "exclusions": {
+    "dom06_not_ingested": {
+      "reason": "DOM-06 CEUs (CEU-11..13) have intake_status=NOT_INGESTED"
+    },
+    "module_level_expansion": {
+      "reason": "OPTIONAL, OUT OF SCOPE \u2014 requires normalized_file_inventory.json confirmation under a separate contract"
+    },
+    "pending_runtime_signals": {
+      "reason": "SIG-001..005, SIG-007..008 require live Prometheus telemetry. NOT-YET-INSTANTIATED LAWFUL CONTRACTs. Excluded from this envelope.",
+      "signals": [
+        "SIG-001",
+        "SIG-002",
+        "SIG-003",
+        "SIG-004",
+        "SIG-005",
+        "SIG-007",
+        "SIG-008"
+      ]
+    },
+    "wp13b_runtime_topology": {
+      "reason": "ADJACENT CONSUMPTION MODEL \u2014 no structural authority"
+    }
+  },
+  "gauge_handoff_contract": {
+    "allowed_render_surfaces": [
+      "nodes",
+      "edges",
+      "signals",
+      "capability_surfaces"
+    ],
+    "back_propagation_forbidden": true,
+    "declaration": "Gauge MUST consume this envelope (binding_envelope.json) as its topology rendering source. Gauge MUST NOT read structure_manifest.json directly for rendered topology. Gauge MUST NOT treat gauge_state.json (WP-13B) as structural authority. Gauge MUST NOT back-propagate any derived projection into L1 truth (structure_manifest.json). This envelope exposes 10 component nodes, 30 capability surfaces, 2 structural overlap edges, and 4 STATIC signal seeds. All entries are traceable to L1_AUTHORITATIVE_STRUCTURE via binding_model.json.",
+    "envelope_richness_declaration": "This envelope provides richer topology than sparse L1 alone: sub-domain surfaces (30 entries across DOM-03, DOM-04, DOM-05) are included, dual-lens provenance is present on every node, structural telemetry seeds (4 STATIC metrics) are exposed. Richness is achieved exclusively through lawful transformation \u2014 no semantic inference, no WP-13B import, no capability grouping.",
+    "forbidden_direct_reads": [
+      "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_335c0575a080/structure/structure_manifest.json \u2014 FORBIDDEN for Gauge topology rendering",
+      "docs/pios/PSEE.RUNTIME/run_01/gauge_state.json \u2014 WP-13B ADJACENT MODEL ONLY"
+    ],
+    "gauge_input_source": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_335c0575a080/binding/binding_envelope.json",
+    "topology_after_delta": {
+      "capability_surfaces_count": 30,
+      "edge_types_present": [
+        "CONTAINS",
+        "OVERLAP_STRUCTURAL"
+      ],
+      "edges_count": 62,
+      "hierarchy": "binding_context \u2192 capability_surface \u2192 component_entity",
+      "nodes_count": 45
+    }
+  },
+  "generated_date": "2026-04-10",
+  "metadata": {
+    "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+    "envelope_derivation": "binding_envelope derived from binding_model.json \u2014 NOT directly from structure_manifest.json",
+    "run_id": "run_335c0575a080",
+    "source_artifact": "binding_model.json",
+    "source_stratum": "BINDING_MODEL (derived from L1_AUTHORITATIVE_STRUCTURE)"
+  },
+  "nodes": [
+    {
+      "label": "documentation_root",
+      "node_id": "DOM-01",
+      "provenance": {
+        "binding_model_ref": "binding_model.binding_contexts[DOM-01]",
+        "documented_taxonomy_source": "HTML_DOCUMENTED",
+        "source_artifact": "structure_manifest.json",
+        "source_origin": [
+          "HTML_DOCUMENTED",
+          "NORMALIZED_EVIDENCE_MAP"
+        ],
+        "structural_topology_source": "NORMALIZED_EVIDENCE_MAP"
+      },
+      "temporal_classification": "STATIC",
+      "type": "binding_context"
+    },
+    {
+      "label": "extraction_analysis",
+      "node_id": "DOM-02",
+      "provenance": {
+        "binding_model_ref": "binding_model.binding_contexts[DOM-02]",
+        "documented_taxonomy_source": "NORMALIZED_EVIDENCE_MAP",
+        "source_artifact": "structure_manifest.json",
+        "source_origin": [
+          "NORMALIZED_EVIDENCE_MAP"
+        ],
+        "structural_topology_source": "NORMALIZED_EVIDENCE_MAP"
+      },
+      "temporal_classification": "STATIC",
+      "type": "binding_context"
+    },
+    {
+      "label": "backend_isolated",
+      "node_id": "DOM-03",
+      "provenance": {
+        "binding_model_ref": "binding_model.binding_contexts[DOM-03]",
+        "documented_taxonomy_source": "HTML_DOCUMENTED",
+        "source_artifact": "structure_manifest.json",
+        "source_origin": [
+          "STRUCTURAL_CONTAINMENT",
+          "NORMALIZED_EVIDENCE_MAP"
+        ],
+        "structural_topology_source": "STRUCTURAL_CONTAINMENT"
+      },
+      "temporal_classification": "STATIC",
+      "type": "binding_context"
+    },
+    {
+      "label": "frontend_isolated",
+      "node_id": "DOM-04",
+      "provenance": {
+        "binding_model_ref": "binding_model.binding_contexts[DOM-04]",
+        "documented_taxonomy_source": "HTML_DOCUMENTED",
+        "source_artifact": "structure_manifest.json",
+        "source_origin": [
+          "STRUCTURAL_CONTAINMENT",
+          "NORMALIZED_EVIDENCE_MAP"
+        ],
+        "structural_topology_source": "STRUCTURAL_CONTAINMENT"
+      },
+      "temporal_classification": "STATIC",
+      "type": "binding_context"
+    },
+    {
+      "label": "platform_monorepo",
+      "node_id": "DOM-05",
+      "provenance": {
+        "binding_model_ref": "binding_model.binding_contexts[DOM-05]",
+        "documented_taxonomy_source": "HTML_DOCUMENTED",
+        "source_artifact": "structure_manifest.json",
+        "source_origin": [
+          "STRUCTURAL_CONTAINMENT",
+          "NORMALIZED_EVIDENCE_MAP"
+        ],
+        "structural_topology_source": "STRUCTURAL_CONTAINMENT"
+      },
+      "temporal_classification": "STATIC",
+      "type": "binding_context"
+    },
+    {
+      "label": "backend_infra",
+      "node_id": "DOM-03-A",
+      "parent_binding_context": "DOM-03",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-03-A]",
+        "containment_basis": "root-level files and migrations/ directory",
+        "path_pattern": "backend/{Dockerfile,.env.example,.dockerignore,package.json,migrations/}",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "backend_src_common",
+      "node_id": "DOM-03-B",
+      "parent_binding_context": "DOM-03",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-03-B]",
+        "containment_basis": "directory containment",
+        "path_pattern": "backend/src/common/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "backend_src_config",
+      "node_id": "DOM-03-C",
+      "parent_binding_context": "DOM-03",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-03-C]",
+        "containment_basis": "directory containment",
+        "path_pattern": "backend/src/config/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "backend_src_database",
+      "node_id": "DOM-03-D",
+      "parent_binding_context": "DOM-03",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-03-D]",
+        "containment_basis": "directory containment",
+        "path_pattern": "backend/src/database/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "backend_src_events",
+      "node_id": "DOM-03-E",
+      "parent_binding_context": "DOM-03",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-03-E]",
+        "containment_basis": "directory containment",
+        "path_pattern": "backend/src/events/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "backend_src_gateways",
+      "node_id": "DOM-03-F",
+      "parent_binding_context": "DOM-03",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-03-F]",
+        "containment_basis": "directory containment",
+        "path_pattern": "backend/src/gateways/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "backend_src_health",
+      "node_id": "DOM-03-G",
+      "parent_binding_context": "DOM-03",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-03-G]",
+        "containment_basis": "directory containment",
+        "path_pattern": "backend/src/health/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "backend_src_migrations",
+      "node_id": "DOM-03-H",
+      "parent_binding_context": "DOM-03",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-03-H]",
+        "containment_basis": "directory containment",
+        "path_pattern": "backend/src/migrations/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "backend_src_modules",
+      "node_id": "DOM-03-I",
+      "observed_count": 63,
+      "parent_binding_context": "DOM-03",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-03-I]",
+        "containment_basis": "directory containment",
+        "path_pattern": "backend/src/modules/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "backend_src_test",
+      "node_id": "DOM-03-J",
+      "parent_binding_context": "DOM-03",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-03-J]",
+        "containment_basis": "directory containment",
+        "path_pattern": "backend/src/test/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "frontend_infra",
+      "node_id": "DOM-04-A",
+      "parent_binding_context": "DOM-04",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-A]",
+        "containment_basis": "root-level files",
+        "path_pattern": "frontend/{Dockerfile,nginx.conf,package.json,.env.example,index.html}",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "frontend_api",
+      "node_id": "DOM-04-B",
+      "parent_binding_context": "DOM-04",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-B]",
+        "containment_basis": "directory containment",
+        "path_pattern": "frontend/api/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "frontend_components",
+      "node_id": "DOM-04-C",
+      "parent_binding_context": "DOM-04",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-C]",
+        "containment_basis": "directory containment",
+        "path_pattern": "frontend/components/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "frontend_pages",
+      "node_id": "DOM-04-D",
+      "parent_binding_context": "DOM-04",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-D]",
+        "containment_basis": "directory containment",
+        "path_pattern": "frontend/pages/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "frontend_contexts",
+      "node_id": "DOM-04-E",
+      "parent_binding_context": "DOM-04",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-E]",
+        "containment_basis": "directory containment",
+        "path_pattern": "frontend/contexts/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "frontend_hooks",
+      "node_id": "DOM-04-F",
+      "parent_binding_context": "DOM-04",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-F]",
+        "containment_basis": "directory containment",
+        "path_pattern": "frontend/hooks/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "frontend_router_socket",
+      "node_id": "DOM-04-G",
+      "parent_binding_context": "DOM-04",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-G]",
+        "containment_basis": "directory containment",
+        "path_pattern": "frontend/router/, frontend/socket/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "frontend_utils_types_constants",
+      "node_id": "DOM-04-H",
+      "parent_binding_context": "DOM-04",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-H]",
+        "containment_basis": "directory containment",
+        "path_pattern": "frontend/utils/, frontend/types/, frontend/constants/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "frontend_pwa",
+      "node_id": "DOM-04-I",
+      "parent_binding_context": "DOM-04",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-I]",
+        "containment_basis": "directory containment",
+        "path_pattern": "frontend/pwa/, frontend/public/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "frontend_styles",
+      "node_id": "DOM-04-J",
+      "parent_binding_context": "DOM-04",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-J]",
+        "containment_basis": "directory containment",
+        "path_pattern": "frontend/styles/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "frontend_test",
+      "node_id": "DOM-04-K",
+      "parent_binding_context": "DOM-04",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-K]",
+        "containment_basis": "directory containment",
+        "path_pattern": "frontend/test/, frontend/cypress/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "frontend_storybook",
+      "node_id": "DOM-04-L",
+      "parent_binding_context": "DOM-04",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-L]",
+        "containment_basis": "directory containment",
+        "path_pattern": "frontend/stories/, frontend/.storybook/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "frontend_src",
+      "node_id": "DOM-04-M",
+      "parent_binding_context": "DOM-04",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-04-M]",
+        "containment_basis": "directory containment",
+        "path_pattern": "frontend/src/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "platform_root",
+      "node_id": "DOM-05-A",
+      "parent_binding_context": "DOM-05",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-05-A]",
+        "containment_basis": "root-level files",
+        "path_pattern": "blueedge-platform/{README.md,.env.example}",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "platform_cicd",
+      "node_id": "DOM-05-B",
+      "parent_binding_context": "DOM-05",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-05-B]",
+        "containment_basis": "directory containment",
+        "path_pattern": "blueedge-platform/.github/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "file_level_parity": "UNKNOWN",
+      "label": "platform_backend_embedded",
+      "node_id": "DOM-05-C",
+      "overlap": "OVL-01",
+      "parent_binding_context": "DOM-05",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-05-C]",
+        "containment_basis": "directory containment",
+        "path_pattern": "blueedge-platform/backend/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "file_level_parity": "UNKNOWN",
+      "label": "platform_frontend_embedded",
+      "node_id": "DOM-05-D",
+      "overlap": "OVL-02",
+      "parent_binding_context": "DOM-05",
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-05-D]",
+        "containment_basis": "directory containment",
+        "path_pattern": "blueedge-platform/frontend/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "platform_svg_agents",
+      "node_id": "DOM-05-E",
+      "parent_binding_context": "DOM-05",
+      "platform_unique": true,
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-05-E]",
+        "containment_basis": "directory containment",
+        "path_pattern": "blueedge-platform/svg-agents/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "platform_monitoring",
+      "node_id": "DOM-05-F",
+      "parent_binding_context": "DOM-05",
+      "platform_unique": true,
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-05-F]",
+        "containment_basis": "directory containment",
+        "path_pattern": "blueedge-platform/monitoring/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "label": "platform_load_tests",
+      "node_id": "DOM-05-G",
+      "parent_binding_context": "DOM-05",
+      "platform_unique": true,
+      "provenance": {
+        "binding_model_ref": "binding_model.capability_surfaces[DOM-05-G]",
+        "containment_basis": "directory containment",
+        "path_pattern": "blueedge-platform/load-tests/",
+        "source_artifact": "structure_manifest.json"
+      },
+      "temporal_classification": "STATIC",
+      "type": "capability_surface"
+    },
+    {
+      "context": "DOM-01",
+      "label": "CEU-01",
+      "node_id": "NODE-001",
+      "provenance": {
+        "binding_model_ref": "binding_model.component_entities[NODE-001]",
+        "documented_taxonomy_source": "HTML_DOCUMENTED",
+        "source_artifact": "structure_manifest.json",
+        "source_origin": [
+          "HTML_DOCUMENTED",
+          "NORMALIZED_EVIDENCE_MAP"
+        ],
+        "structural_topology_source": "NORMALIZED_EVIDENCE_MAP"
+      },
+      "temporal_classification": "STATIC",
+      "type": "component_entity"
+    },
+    {
+      "context": "DOM-01",
+      "label": "CEU-02",
+      "node_id": "NODE-002",
+      "provenance": {
+        "binding_model_ref": "binding_model.component_entities[NODE-002]",
+        "documented_taxonomy_source": "HTML_DOCUMENTED",
+        "source_artifact": "structure_manifest.json",
+        "source_origin": [
+          "HTML_DOCUMENTED",
+          "NORMALIZED_EVIDENCE_MAP"
+        ],
+        "structural_topology_source": "NORMALIZED_EVIDENCE_MAP"
+      },
+      "temporal_classification": "STATIC",
+      "type": "component_entity"
+    },
+    {
+      "context": "DOM-01",
+      "label": "CEU-03",
+      "node_id": "NODE-003",
+      "provenance": {
+        "binding_model_ref": "binding_model.component_entities[NODE-003]",
+        "documented_taxonomy_source": "HTML_DOCUMENTED",
+        "source_artifact": "structure_manifest.json",
+        "source_origin": [
+          "HTML_DOCUMENTED",
+          "NORMALIZED_EVIDENCE_MAP"
+        ],
+        "structural_topology_source": "NORMALIZED_EVIDENCE_MAP"
+      },
+      "temporal_classification": "STATIC",
+      "type": "component_entity"
+    },
+    {
+      "context": "DOM-02",
+      "label": "CEU-04",
+      "node_id": "NODE-004",
+      "provenance": {
+        "binding_model_ref": "binding_model.component_entities[NODE-004]",
+        "documented_taxonomy_source": "NORMALIZED_EVIDENCE_MAP",
+        "source_artifact": "structure_manifest.json",
+        "source_origin": [
+          "NORMALIZED_EVIDENCE_MAP"
+        ],
+        "structural_topology_source": "NORMALIZED_EVIDENCE_MAP"
+      },
+      "temporal_classification": "STATIC",
+      "type": "component_entity"
+    },
+    {
+      "context": "DOM-02",
+      "label": "CEU-05",
+      "node_id": "NODE-005",
+      "provenance": {
+        "binding_model_ref": "binding_model.component_entities[NODE-005]",
+        "documented_taxonomy_source": "NORMALIZED_EVIDENCE_MAP",
+        "source_artifact": "structure_manifest.json",
+        "source_origin": [
+          "NORMALIZED_EVIDENCE_MAP"
+        ],
+        "structural_topology_source": "NORMALIZED_EVIDENCE_MAP"
+      },
+      "temporal_classification": "STATIC",
+      "type": "component_entity"
+    },
+    {
+      "context": "DOM-02",
+      "label": "CEU-06",
+      "node_id": "NODE-006",
+      "provenance": {
+        "binding_model_ref": "binding_model.component_entities[NODE-006]",
+        "documented_taxonomy_source": "NORMALIZED_EVIDENCE_MAP",
+        "source_artifact": "structure_manifest.json",
+        "source_origin": [
+          "NORMALIZED_EVIDENCE_MAP"
+        ],
+        "structural_topology_source": "NORMALIZED_EVIDENCE_MAP"
+      },
+      "temporal_classification": "STATIC",
+      "type": "component_entity"
+    },
+    {
+      "context": "DOM-02",
+      "label": "CEU-07",
+      "node_id": "NODE-007",
+      "provenance": {
+        "binding_model_ref": "binding_model.component_entities[NODE-007]",
+        "documented_taxonomy_source": "NORMALIZED_EVIDENCE_MAP",
+        "source_artifact": "structure_manifest.json",
+        "source_origin": [
+          "NORMALIZED_EVIDENCE_MAP"
+        ],
+        "structural_topology_source": "NORMALIZED_EVIDENCE_MAP"
+      },
+      "temporal_classification": "STATIC",
+      "type": "component_entity"
+    },
+    {
+      "context": "DOM-03",
+      "label": "CEU-08",
+      "node_id": "NODE-008",
+      "provenance": {
+        "binding_model_ref": "binding_model.component_entities[NODE-008]",
+        "documented_taxonomy_source": "STRUCTURAL_CONTAINMENT",
+        "source_artifact": "structure_manifest.json",
+        "source_origin": [
+          "STRUCTURAL_CONTAINMENT",
+          "NORMALIZED_EVIDENCE_MAP"
+        ],
+        "structural_topology_source": "NORMALIZED_EVIDENCE_MAP"
+      },
+      "temporal_classification": "STATIC",
+      "type": "component_entity"
+    },
+    {
+      "context": "DOM-04",
+      "label": "CEU-09",
+      "node_id": "NODE-009",
+      "provenance": {
+        "binding_model_ref": "binding_model.component_entities[NODE-009]",
+        "documented_taxonomy_source": "STRUCTURAL_CONTAINMENT",
+        "source_artifact": "structure_manifest.json",
+        "source_origin": [
+          "STRUCTURAL_CONTAINMENT",
+          "NORMALIZED_EVIDENCE_MAP"
+        ],
+        "structural_topology_source": "NORMALIZED_EVIDENCE_MAP"
+      },
+      "temporal_classification": "STATIC",
+      "type": "component_entity"
+    },
+    {
+      "context": "DOM-05",
+      "label": "CEU-10",
+      "node_id": "NODE-010",
+      "provenance": {
+        "binding_model_ref": "binding_model.component_entities[NODE-010]",
+        "documented_taxonomy_source": "STRUCTURAL_CONTAINMENT",
+        "source_artifact": "structure_manifest.json",
+        "source_origin": [
+          "STRUCTURAL_CONTAINMENT",
+          "NORMALIZED_EVIDENCE_MAP"
+        ],
+        "structural_topology_source": "NORMALIZED_EVIDENCE_MAP"
+      },
+      "temporal_classification": "STATIC",
+      "type": "component_entity"
+    }
+  ],
+  "provenance": {
+    "envelope_derivation_chain": [
+      {
+        "artifact": "ceu_registry.json",
+        "path": "docs/pios/PI.STRUCTURAL_TOPOLOGY.RECONSTRUCTION.WP-03_TO_WP-07/ceu_registry.json",
+        "role": "CEU structural truth \u2014 13 CEUs, 10 ACCEPTED",
+        "step": 1
+      },
+      {
+        "artifact": "domain_structure.json",
+        "path": "docs/pios/PI.STRUCTURAL_TOPOLOGY.RECONSTRUCTION.WP-03_TO_WP-07/domain_structure.json",
+        "role": "Domain topology and sub-domain projection",
+        "step": 2
+      },
+      {
+        "artifact": "raw_input.json (via extract_ceu_lineage.py)",
+        "path": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/input/intake/raw_input.json",
+        "role": "CEU lineage \u2014 domains, entities, relationships",
+        "step": 3
+      },
+      {
+        "artifact": "structure_manifest.json (via emit_structure_manifest.py)",
+        "path": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_335c0575a080/structure/structure_manifest.json",
+        "role": "L1 authoritative structure \u2014 recovered with L1 recovery contract",
+        "step": 4
+      },
+      {
+        "artifact": "binding_model.json (via build_binding_convergence.py)",
+        "path": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_335c0575a080/binding/binding_model.json",
+        "role": "Binding model \u2014 lawful transformation of L1 structure",
+        "step": 5
+      },
+      {
+        "artifact": "binding_envelope.json (this artifact)",
+        "path": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_335c0575a080/binding/binding_envelope.json",
+        "role": "Gauge handoff surface \u2014 consumption envelope",
+        "step": 6
+      }
+    ],
+    "lineage_records": [
+      {
+        "binding_context_id": "DOM-01",
+        "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+        "node_id": "NODE-001",
+        "run_id": "run_335c0575a080",
+        "source_artifact": "raw_input.json",
+        "source_entity_label": "CEU-01",
+        "source_field": "entities",
+        "transformation_rule": "TR-05"
+      },
+      {
+        "binding_context_id": "DOM-01",
+        "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+        "node_id": "NODE-002",
+        "run_id": "run_335c0575a080",
+        "source_artifact": "raw_input.json",
+        "source_entity_label": "CEU-02",
+        "source_field": "entities",
+        "transformation_rule": "TR-05"
+      },
+      {
+        "binding_context_id": "DOM-01",
+        "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+        "node_id": "NODE-003",
+        "run_id": "run_335c0575a080",
+        "source_artifact": "raw_input.json",
+        "source_entity_label": "CEU-03",
+        "source_field": "entities",
+        "transformation_rule": "TR-05"
+      },
+      {
+        "binding_context_id": "DOM-02",
+        "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+        "node_id": "NODE-004",
+        "run_id": "run_335c0575a080",
+        "source_artifact": "raw_input.json",
+        "source_entity_label": "CEU-04",
+        "source_field": "entities",
+        "transformation_rule": "TR-05"
+      },
+      {
+        "binding_context_id": "DOM-02",
+        "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+        "node_id": "NODE-005",
+        "run_id": "run_335c0575a080",
+        "source_artifact": "raw_input.json",
+        "source_entity_label": "CEU-05",
+        "source_field": "entities",
+        "transformation_rule": "TR-05"
+      },
+      {
+        "binding_context_id": "DOM-02",
+        "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+        "node_id": "NODE-006",
+        "run_id": "run_335c0575a080",
+        "source_artifact": "raw_input.json",
+        "source_entity_label": "CEU-06",
+        "source_field": "entities",
+        "transformation_rule": "TR-05"
+      },
+      {
+        "binding_context_id": "DOM-02",
+        "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+        "node_id": "NODE-007",
+        "run_id": "run_335c0575a080",
+        "source_artifact": "raw_input.json",
+        "source_entity_label": "CEU-07",
+        "source_field": "entities",
+        "transformation_rule": "TR-05"
+      },
+      {
+        "binding_context_id": "DOM-03",
+        "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+        "node_id": "NODE-008",
+        "run_id": "run_335c0575a080",
+        "source_artifact": "raw_input.json",
+        "source_entity_label": "CEU-08",
+        "source_field": "entities",
+        "transformation_rule": "TR-05"
+      },
+      {
+        "binding_context_id": "DOM-04",
+        "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+        "node_id": "NODE-009",
+        "run_id": "run_335c0575a080",
+        "source_artifact": "raw_input.json",
+        "source_entity_label": "CEU-09",
+        "source_field": "entities",
+        "transformation_rule": "TR-05"
+      },
+      {
+        "binding_context_id": "DOM-05",
+        "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+        "node_id": "NODE-010",
+        "run_id": "run_335c0575a080",
+        "source_artifact": "raw_input.json",
+        "source_entity_label": "CEU-10",
+        "source_field": "entities",
+        "transformation_rule": "TR-05"
+      }
+    ]
+  },
+  "schema_version": "1.0",
+  "signals": [
+    {
+      "metric_name": "file_count",
+      "node_id": "NODE-008",
+      "provenance": {
+        "binding_model_ref": "binding_model.signal_seeds[L1-ST-CEU-08-001]",
+        "ceu_id": "CEU-08",
+        "provenance_class": "STRUCTURAL_CONTAINMENT",
+        "source_artifact": "ceu_registry.json",
+        "source_field": "ceu_entries[ceu_id=CEU-08].observed_structure.file_count"
+      },
+      "signal_id": "L1-ST-CEU-08-001",
+      "source_basis": "STRUCTURAL_CONTAINMENT_STATIC",
+      "temporal_classification": "STATIC",
+      "unit": "count",
+      "value": 397
+    },
+    {
+      "metric_name": "module_count",
+      "node_id": "NODE-008",
+      "provenance": {
+        "binding_model_ref": "binding_model.signal_seeds[L1-ST-CEU-08-002]",
+        "ceu_id": "CEU-08",
+        "provenance_class": "STRUCTURAL_CONTAINMENT",
+        "source_artifact": "ceu_registry.json",
+        "source_field": "ceu_entries[ceu_id=CEU-08].observed_structure.module_count"
+      },
+      "signal_id": "L1-ST-CEU-08-002",
+      "source_basis": "STRUCTURAL_CONTAINMENT_STATIC",
+      "temporal_classification": "STATIC",
+      "unit": "count",
+      "value": 63
+    },
+    {
+      "metric_name": "file_count",
+      "node_id": "NODE-009",
+      "provenance": {
+        "binding_model_ref": "binding_model.signal_seeds[L1-ST-CEU-09-001]",
+        "ceu_id": "CEU-09",
+        "provenance_class": "STRUCTURAL_CONTAINMENT",
+        "source_artifact": "ceu_registry.json",
+        "source_field": "ceu_entries[ceu_id=CEU-09].observed_structure.file_count"
+      },
+      "signal_id": "L1-ST-CEU-09-001",
+      "source_basis": "STRUCTURAL_CONTAINMENT_STATIC",
+      "temporal_classification": "STATIC",
+      "unit": "count",
+      "value": 324
+    },
+    {
+      "metric_name": "file_count",
+      "node_id": "NODE-010",
+      "provenance": {
+        "binding_model_ref": "binding_model.signal_seeds[L1-ST-CEU-10-001]",
+        "ceu_id": "CEU-10",
+        "provenance_class": "STRUCTURAL_CONTAINMENT",
+        "source_artifact": "ceu_registry.json",
+        "source_field": "ceu_entries[ceu_id=CEU-10].observed_structure.file_count"
+      },
+      "signal_id": "L1-ST-CEU-10-001",
+      "source_basis": "STRUCTURAL_CONTAINMENT_STATIC",
+      "temporal_classification": "STATIC",
+      "unit": "count",
+      "value": 741
+    },
+    {
+      "signal_id": "SIG-006",
+      "metric_name": "sensor_batch_throughput_rate",
+      "node_id": "NODE-010",
+      "value": 0.333,
+      "unit": "rec/sec",
+      "computation_state": "COMPLETE",
+      "temporal_classification": "STATIC",
+      "source_basis": "STATIC_CONFIG_COMPUTED",
+      "derivation": "DIM-PC-002 / DIM-PC-001 = 10 / 30 = 0.333 rec/sec",
+      "provenance": {
+        "ceu_id": "CEU-10",
+        "parent_node": "NODE-010",
+        "source_artifact": "ceu_registry.json",
+        "source_field": "ceu_entries[ceu_id=CEU-10] hasi_bridge.py DEFAULT_CONFIG",
+        "dim_pc_001": {"variable": "VAR_HASI_001", "value": 30, "unit": "sec"},
+        "dim_pc_002": {"variable": "VAR_HASI_002", "value": 10, "unit": "records"},
+        "authority_chain": "40.5/signal_output_set.md + 40.5/signal_traceability_map.md",
+        "parity_recovery": "PSEE.BLUEEDGE.PARITY.RECOVERY.NUMERICAL.DELTA.01 A-01"
+      }
+    }
+  ],
+  "constraint_flags": {
+    "overlap_present": true,
+    "overlap_count": 2,
+    "overlap_evidence": ["OVL-01 (DOM-03↔DOM-05-C)", "OVL-02 (DOM-04↔DOM-05-D)"],
+    "overlap_source": "structural_topology.json:overlaps",
+    "unknown_space_present": true,
+    "unknown_space_count": 3,
+    "unknown_space_evidence": ["USP-01 (backend_file_level_parity_unknown)", "USP-02 (frontend_file_level_parity_unknown)", "USP-03 (platform_unique_content_scope_unknown)"],
+    "unknown_space_source": "structural_topology.json:unknown_space",
+    "parity_recovery": "PSEE.BLUEEDGE.PARITY.RECOVERY.NUMERICAL.DELTA.01 A-02+A-03"
+  },
+  "stream": "PSEE.BLUEEDGE.BINDING.CONVERGENCE.01",
+  "summary": {
+    "capability_surface_nodes_count": 30,
+    "capability_surfaces_count": 30,
+    "component_entity_nodes_count": 10,
+    "contains_edges_count": 60,
+    "domain_nodes_count": 5,
+    "edges_count": 62,
+    "nodes_count": 45,
+    "overlap_structural_edges_count": 2,
+    "signals_count": 5
+  }
+}

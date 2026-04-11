@@ -1,0 +1,764 @@
+{
+  "stream": "PSEE.UUID.STRUCTURE.MATERIALIZATION.40_4",
+  "schema_version": "1.0",
+  "recovery_contract": "PSEE.BLUEEDGE.TRUTH.RECOVERY.L1.40_4.01",
+  "stratum": "L1_AUTHORITATIVE_STRUCTURE",
+  "stratum_boundary": {
+    "this_artifact": "L1_AUTHORITATIVE_STRUCTURE",
+    "adjacent_model_artifact": "gauge_state.json",
+    "adjacent_model_authority": "ADJACENT_CONSUMPTION_MODEL",
+    "cross_projection_forbidden": true
+  },
+  "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+  "run_id": "run_335c0575a080",
+  "source_artifact": "raw_input.json",
+  "source_field": "domains + entities + relationships",
+  "temporal_classification": "STATIC",
+  "domains": [
+    {
+      "domain_id": "DOM-01",
+      "label": "documentation_root",
+      "source": "raw_input.json:domains",
+      "temporal_classification": "STATIC",
+      "source_origin": ["HTML_DOCUMENTED", "NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "NORMALIZED_EVIDENCE_MAP",
+      "documented_taxonomy_source": "HTML_DOCUMENTED",
+      "label_provenance": "structural_descriptor — mirrors CEU classification in normalized_evidence_map.md; content constituted by HTML artifacts"
+    },
+    {
+      "domain_id": "DOM-02",
+      "label": "extraction_analysis",
+      "source": "raw_input.json:domains",
+      "temporal_classification": "STATIC",
+      "source_origin": ["NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "NORMALIZED_EVIDENCE_MAP",
+      "documented_taxonomy_source": "NORMALIZED_EVIDENCE_MAP",
+      "label_provenance": "structural_descriptor — path and grouping from normalized_evidence_map.md; no HTML label influence"
+    },
+    {
+      "domain_id": "DOM-03",
+      "label": "backend_isolated",
+      "source": "raw_input.json:domains",
+      "temporal_classification": "STATIC",
+      "source_origin": ["STRUCTURAL_CONTAINMENT", "NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "STRUCTURAL_CONTAINMENT",
+      "documented_taxonomy_source": "HTML_DOCUMENTED",
+      "label_provenance": "directory_name — 'backend' mirrors directory name in extracted source; concept also present in CEU-01 architecture HTML",
+      "sub_domains": [
+        {
+          "sub_domain_id": "DOM-03-A",
+          "label": "backend_infra",
+          "path_pattern": "backend/{Dockerfile,.env.example,.dockerignore,package.json,migrations/}",
+          "containment_basis": "root-level files and migrations/ directory",
+          "parent_ceu": "CEU-08",
+          "parent_node": "NODE-008",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-03].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-03-B",
+          "label": "backend_src_common",
+          "path_pattern": "backend/src/common/",
+          "containment_basis": "directory containment",
+          "parent_ceu": "CEU-08",
+          "parent_node": "NODE-008",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-03].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-03-C",
+          "label": "backend_src_config",
+          "path_pattern": "backend/src/config/",
+          "containment_basis": "directory containment",
+          "parent_ceu": "CEU-08",
+          "parent_node": "NODE-008",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-03].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-03-D",
+          "label": "backend_src_database",
+          "path_pattern": "backend/src/database/",
+          "containment_basis": "directory containment",
+          "parent_ceu": "CEU-08",
+          "parent_node": "NODE-008",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-03].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-03-E",
+          "label": "backend_src_events",
+          "path_pattern": "backend/src/events/",
+          "containment_basis": "directory containment",
+          "parent_ceu": "CEU-08",
+          "parent_node": "NODE-008",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-03].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-03-F",
+          "label": "backend_src_gateways",
+          "path_pattern": "backend/src/gateways/",
+          "containment_basis": "directory containment",
+          "parent_ceu": "CEU-08",
+          "parent_node": "NODE-008",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-03].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-03-G",
+          "label": "backend_src_health",
+          "path_pattern": "backend/src/health/",
+          "containment_basis": "directory containment",
+          "parent_ceu": "CEU-08",
+          "parent_node": "NODE-008",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-03].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-03-H",
+          "label": "backend_src_migrations",
+          "path_pattern": "backend/src/migrations/",
+          "containment_basis": "directory containment",
+          "parent_ceu": "CEU-08",
+          "parent_node": "NODE-008",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-03].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-03-I",
+          "label": "backend_src_modules",
+          "path_pattern": "backend/src/modules/",
+          "containment_basis": "directory containment",
+          "observed_count": 63,
+          "parent_ceu": "CEU-08",
+          "parent_node": "NODE-008",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-03].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-03-J",
+          "label": "backend_src_test",
+          "path_pattern": "backend/src/test/",
+          "containment_basis": "directory containment",
+          "parent_ceu": "CEU-08",
+          "parent_node": "NODE-008",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-03].sub_domains"
+        }
+      ]
+    },
+    {
+      "domain_id": "DOM-04",
+      "label": "frontend_isolated",
+      "source": "raw_input.json:domains",
+      "temporal_classification": "STATIC",
+      "source_origin": ["STRUCTURAL_CONTAINMENT", "NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "STRUCTURAL_CONTAINMENT",
+      "documented_taxonomy_source": "HTML_DOCUMENTED",
+      "label_provenance": "directory_name — 'frontend' mirrors directory name in extracted source; concept also present in CEU-01 architecture HTML and CEU-03 PMO dashboard",
+      "sub_domains": [
+        {
+          "sub_domain_id": "DOM-04-A",
+          "label": "frontend_infra",
+          "path_pattern": "frontend/{Dockerfile,nginx.conf,package.json,.env.example,index.html}",
+          "containment_basis": "root-level files",
+          "parent_ceu": "CEU-09",
+          "parent_node": "NODE-009",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-04].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-04-B",
+          "label": "frontend_api",
+          "path_pattern": "frontend/api/",
+          "containment_basis": "directory containment",
+          "parent_ceu": "CEU-09",
+          "parent_node": "NODE-009",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-04].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-04-C",
+          "label": "frontend_components",
+          "path_pattern": "frontend/components/",
+          "containment_basis": "directory containment",
+          "parent_ceu": "CEU-09",
+          "parent_node": "NODE-009",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-04].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-04-D",
+          "label": "frontend_pages",
+          "path_pattern": "frontend/pages/",
+          "containment_basis": "directory containment",
+          "parent_ceu": "CEU-09",
+          "parent_node": "NODE-009",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-04].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-04-E",
+          "label": "frontend_contexts",
+          "path_pattern": "frontend/contexts/",
+          "containment_basis": "directory containment",
+          "parent_ceu": "CEU-09",
+          "parent_node": "NODE-009",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-04].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-04-F",
+          "label": "frontend_hooks",
+          "path_pattern": "frontend/hooks/",
+          "containment_basis": "directory containment",
+          "parent_ceu": "CEU-09",
+          "parent_node": "NODE-009",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-04].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-04-G",
+          "label": "frontend_router_socket",
+          "path_pattern": "frontend/router/, frontend/socket/",
+          "containment_basis": "directory containment",
+          "parent_ceu": "CEU-09",
+          "parent_node": "NODE-009",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-04].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-04-H",
+          "label": "frontend_utils_types_constants",
+          "path_pattern": "frontend/utils/, frontend/types/, frontend/constants/",
+          "containment_basis": "directory containment",
+          "parent_ceu": "CEU-09",
+          "parent_node": "NODE-009",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-04].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-04-I",
+          "label": "frontend_pwa",
+          "path_pattern": "frontend/pwa/, frontend/public/",
+          "containment_basis": "directory containment",
+          "parent_ceu": "CEU-09",
+          "parent_node": "NODE-009",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-04].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-04-J",
+          "label": "frontend_styles",
+          "path_pattern": "frontend/styles/",
+          "containment_basis": "directory containment",
+          "parent_ceu": "CEU-09",
+          "parent_node": "NODE-009",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-04].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-04-K",
+          "label": "frontend_test",
+          "path_pattern": "frontend/test/, frontend/cypress/",
+          "containment_basis": "directory containment",
+          "parent_ceu": "CEU-09",
+          "parent_node": "NODE-009",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-04].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-04-L",
+          "label": "frontend_storybook",
+          "path_pattern": "frontend/stories/, frontend/.storybook/",
+          "containment_basis": "directory containment",
+          "parent_ceu": "CEU-09",
+          "parent_node": "NODE-009",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-04].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-04-M",
+          "label": "frontend_src",
+          "path_pattern": "frontend/src/",
+          "containment_basis": "directory containment",
+          "parent_ceu": "CEU-09",
+          "parent_node": "NODE-009",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-04].sub_domains"
+        }
+      ]
+    },
+    {
+      "domain_id": "DOM-05",
+      "label": "platform_monorepo",
+      "source": "raw_input.json:domains",
+      "temporal_classification": "STATIC",
+      "source_origin": ["STRUCTURAL_CONTAINMENT", "NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "STRUCTURAL_CONTAINMENT",
+      "documented_taxonomy_source": "HTML_DOCUMENTED",
+      "label_provenance": "directory_name + normalized_evidence_map — 'platform' from extracted/platform/ path; integrated system framing also in CEU-01 architecture HTML",
+      "sub_domains": [
+        {
+          "sub_domain_id": "DOM-05-A",
+          "label": "platform_root",
+          "path_pattern": "blueedge-platform/{README.md,.env.example}",
+          "containment_basis": "root-level files",
+          "overlap": null,
+          "parent_ceu": "CEU-10",
+          "parent_node": "NODE-010",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-05].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-05-B",
+          "label": "platform_cicd",
+          "path_pattern": "blueedge-platform/.github/",
+          "containment_basis": "directory containment",
+          "overlap": null,
+          "parent_ceu": "CEU-10",
+          "parent_node": "NODE-010",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-05].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-05-C",
+          "label": "platform_backend_embedded",
+          "path_pattern": "blueedge-platform/backend/",
+          "containment_basis": "directory containment",
+          "overlap": "OVL-01",
+          "file_level_parity": "UNKNOWN",
+          "parent_ceu": "CEU-10",
+          "parent_node": "NODE-010",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-05].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-05-D",
+          "label": "platform_frontend_embedded",
+          "path_pattern": "blueedge-platform/frontend/",
+          "containment_basis": "directory containment",
+          "overlap": "OVL-02",
+          "file_level_parity": "UNKNOWN",
+          "parent_ceu": "CEU-10",
+          "parent_node": "NODE-010",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-05].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-05-E",
+          "label": "platform_svg_agents",
+          "path_pattern": "blueedge-platform/svg-agents/",
+          "containment_basis": "directory containment",
+          "overlap": null,
+          "platform_unique": true,
+          "parent_ceu": "CEU-10",
+          "parent_node": "NODE-010",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-05].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-05-F",
+          "label": "platform_monitoring",
+          "path_pattern": "blueedge-platform/monitoring/",
+          "containment_basis": "directory containment",
+          "overlap": null,
+          "platform_unique": true,
+          "parent_ceu": "CEU-10",
+          "parent_node": "NODE-010",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-05].sub_domains"
+        },
+        {
+          "sub_domain_id": "DOM-05-G",
+          "label": "platform_load_tests",
+          "path_pattern": "blueedge-platform/load-tests/",
+          "containment_basis": "directory containment",
+          "overlap": null,
+          "platform_unique": true,
+          "parent_ceu": "CEU-10",
+          "parent_node": "NODE-010",
+          "temporal_classification": "STATIC",
+          "source": "domain_structure.json:domains[DOM-05].sub_domains"
+        }
+      ]
+    }
+  ],
+  "components": [
+    {
+      "component_id": "COMP-DOM-01",
+      "domain_id": "DOM-01",
+      "member_nodes": ["NODE-001", "NODE-002", "NODE-003"],
+      "temporal_classification": "STATIC",
+      "source": "raw_input.json:entities[domain grouping]"
+    },
+    {
+      "component_id": "COMP-DOM-02",
+      "domain_id": "DOM-02",
+      "member_nodes": ["NODE-004", "NODE-005", "NODE-006", "NODE-007"],
+      "temporal_classification": "STATIC",
+      "source": "raw_input.json:entities[domain grouping]"
+    },
+    {
+      "component_id": "COMP-DOM-03",
+      "domain_id": "DOM-03",
+      "member_nodes": ["NODE-008"],
+      "temporal_classification": "STATIC",
+      "source": "raw_input.json:entities[domain grouping]"
+    },
+    {
+      "component_id": "COMP-DOM-04",
+      "domain_id": "DOM-04",
+      "member_nodes": ["NODE-009"],
+      "temporal_classification": "STATIC",
+      "source": "raw_input.json:entities[domain grouping]"
+    },
+    {
+      "component_id": "COMP-DOM-05",
+      "domain_id": "DOM-05",
+      "member_nodes": ["NODE-010"],
+      "temporal_classification": "STATIC",
+      "source": "raw_input.json:entities[domain grouping]"
+    }
+  ],
+  "capabilities": [
+    {
+      "capability_id": "CAP-GOVERNANCE",
+      "behavioral_type": "governance",
+      "stratum": "Stratum 3",
+      "bearing_nodes": ["NODE-001", "NODE-002", "NODE-003"],
+      "temporal_classification": "STATIC",
+      "source": "raw_input.json:entities[type]"
+    },
+    {
+      "capability_id": "CAP-PLATFORM",
+      "behavioral_type": "platform",
+      "stratum": "Stratum 3",
+      "bearing_nodes": ["NODE-004", "NODE-005", "NODE-006", "NODE-007", "NODE-010"],
+      "temporal_classification": "STATIC",
+      "source": "raw_input.json:entities[type]"
+    },
+    {
+      "capability_id": "CAP-SERVICE",
+      "behavioral_type": "service",
+      "stratum": "Stratum 3",
+      "bearing_nodes": ["NODE-008", "NODE-009"],
+      "temporal_classification": "STATIC",
+      "source": "raw_input.json:entities[type]"
+    }
+  ],
+  "nodes": [
+    {
+      "node_id": "NODE-001",
+      "label": "CEU-01",
+      "domain_id": "DOM-01",
+      "entity_type": "governance",
+      "source": "raw_input.json:entities",
+      "temporal_classification": "STATIC",
+      "source_origin": ["HTML_DOCUMENTED", "NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "NORMALIZED_EVIDENCE_MAP",
+      "documented_taxonomy_source": "HTML_DOCUMENTED"
+    },
+    {
+      "node_id": "NODE-002",
+      "label": "CEU-02",
+      "domain_id": "DOM-01",
+      "entity_type": "governance",
+      "source": "raw_input.json:entities",
+      "temporal_classification": "STATIC",
+      "source_origin": ["HTML_DOCUMENTED", "NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "NORMALIZED_EVIDENCE_MAP",
+      "documented_taxonomy_source": "HTML_DOCUMENTED"
+    },
+    {
+      "node_id": "NODE-003",
+      "label": "CEU-03",
+      "domain_id": "DOM-01",
+      "entity_type": "governance",
+      "source": "raw_input.json:entities",
+      "temporal_classification": "STATIC",
+      "source_origin": ["HTML_DOCUMENTED", "NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "NORMALIZED_EVIDENCE_MAP",
+      "documented_taxonomy_source": "HTML_DOCUMENTED"
+    },
+    {
+      "node_id": "NODE-004",
+      "label": "CEU-04",
+      "domain_id": "DOM-02",
+      "entity_type": "platform",
+      "source": "raw_input.json:entities",
+      "temporal_classification": "STATIC",
+      "source_origin": ["NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "NORMALIZED_EVIDENCE_MAP",
+      "documented_taxonomy_source": "NORMALIZED_EVIDENCE_MAP"
+    },
+    {
+      "node_id": "NODE-005",
+      "label": "CEU-05",
+      "domain_id": "DOM-02",
+      "entity_type": "platform",
+      "source": "raw_input.json:entities",
+      "temporal_classification": "STATIC",
+      "source_origin": ["NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "NORMALIZED_EVIDENCE_MAP",
+      "documented_taxonomy_source": "NORMALIZED_EVIDENCE_MAP"
+    },
+    {
+      "node_id": "NODE-006",
+      "label": "CEU-06",
+      "domain_id": "DOM-02",
+      "entity_type": "platform",
+      "source": "raw_input.json:entities",
+      "temporal_classification": "STATIC",
+      "source_origin": ["NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "NORMALIZED_EVIDENCE_MAP",
+      "documented_taxonomy_source": "NORMALIZED_EVIDENCE_MAP"
+    },
+    {
+      "node_id": "NODE-007",
+      "label": "CEU-07",
+      "domain_id": "DOM-02",
+      "entity_type": "platform",
+      "source": "raw_input.json:entities",
+      "temporal_classification": "STATIC",
+      "source_origin": ["NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "NORMALIZED_EVIDENCE_MAP",
+      "documented_taxonomy_source": "NORMALIZED_EVIDENCE_MAP"
+    },
+    {
+      "node_id": "NODE-008",
+      "label": "CEU-08",
+      "domain_id": "DOM-03",
+      "entity_type": "service",
+      "source": "raw_input.json:entities",
+      "temporal_classification": "STATIC",
+      "source_origin": ["STRUCTURAL_CONTAINMENT", "NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "NORMALIZED_EVIDENCE_MAP",
+      "documented_taxonomy_source": "STRUCTURAL_CONTAINMENT"
+    },
+    {
+      "node_id": "NODE-009",
+      "label": "CEU-09",
+      "domain_id": "DOM-04",
+      "entity_type": "service",
+      "source": "raw_input.json:entities",
+      "temporal_classification": "STATIC",
+      "source_origin": ["STRUCTURAL_CONTAINMENT", "NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "NORMALIZED_EVIDENCE_MAP",
+      "documented_taxonomy_source": "STRUCTURAL_CONTAINMENT"
+    },
+    {
+      "node_id": "NODE-010",
+      "label": "CEU-10",
+      "domain_id": "DOM-05",
+      "entity_type": "platform",
+      "source": "raw_input.json:entities",
+      "temporal_classification": "STATIC",
+      "source_origin": ["STRUCTURAL_CONTAINMENT", "NORMALIZED_EVIDENCE_MAP"],
+      "structural_topology_source": "NORMALIZED_EVIDENCE_MAP",
+      "documented_taxonomy_source": "STRUCTURAL_CONTAINMENT"
+    }
+  ],
+  "relationships": [
+    {
+      "relationship_id": "REL-001",
+      "from_node": "NODE-008",
+      "to_node": "NODE-010",
+      "relationship_type": "OVERLAP_STRUCTURAL",
+      "from_entity": "CEU-08",
+      "to_entity": "CEU-10",
+      "temporal_classification": "STATIC",
+      "source": "raw_input.json:relationships"
+    },
+    {
+      "relationship_id": "REL-002",
+      "from_node": "NODE-009",
+      "to_node": "NODE-010",
+      "relationship_type": "OVERLAP_STRUCTURAL",
+      "from_entity": "CEU-09",
+      "to_entity": "CEU-10",
+      "temporal_classification": "STATIC",
+      "source": "raw_input.json:relationships"
+    }
+  ],
+  "lineage": [
+    {
+      "node_id": "NODE-001",
+      "source_artifact": "raw_input.json",
+      "source_field": "entities",
+      "source_entity_label": "CEU-01",
+      "domain_id": "DOM-01",
+      "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+      "run_id": "run_335c0575a080"
+    },
+    {
+      "node_id": "NODE-002",
+      "source_artifact": "raw_input.json",
+      "source_field": "entities",
+      "source_entity_label": "CEU-02",
+      "domain_id": "DOM-01",
+      "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+      "run_id": "run_335c0575a080"
+    },
+    {
+      "node_id": "NODE-003",
+      "source_artifact": "raw_input.json",
+      "source_field": "entities",
+      "source_entity_label": "CEU-03",
+      "domain_id": "DOM-01",
+      "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+      "run_id": "run_335c0575a080"
+    },
+    {
+      "node_id": "NODE-004",
+      "source_artifact": "raw_input.json",
+      "source_field": "entities",
+      "source_entity_label": "CEU-04",
+      "domain_id": "DOM-02",
+      "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+      "run_id": "run_335c0575a080"
+    },
+    {
+      "node_id": "NODE-005",
+      "source_artifact": "raw_input.json",
+      "source_field": "entities",
+      "source_entity_label": "CEU-05",
+      "domain_id": "DOM-02",
+      "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+      "run_id": "run_335c0575a080"
+    },
+    {
+      "node_id": "NODE-006",
+      "source_artifact": "raw_input.json",
+      "source_field": "entities",
+      "source_entity_label": "CEU-06",
+      "domain_id": "DOM-02",
+      "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+      "run_id": "run_335c0575a080"
+    },
+    {
+      "node_id": "NODE-007",
+      "source_artifact": "raw_input.json",
+      "source_field": "entities",
+      "source_entity_label": "CEU-07",
+      "domain_id": "DOM-02",
+      "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+      "run_id": "run_335c0575a080"
+    },
+    {
+      "node_id": "NODE-008",
+      "source_artifact": "raw_input.json",
+      "source_field": "entities",
+      "source_entity_label": "CEU-08",
+      "domain_id": "DOM-03",
+      "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+      "run_id": "run_335c0575a080"
+    },
+    {
+      "node_id": "NODE-009",
+      "source_artifact": "raw_input.json",
+      "source_field": "entities",
+      "source_entity_label": "CEU-09",
+      "domain_id": "DOM-04",
+      "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+      "run_id": "run_335c0575a080"
+    },
+    {
+      "node_id": "NODE-010",
+      "source_artifact": "raw_input.json",
+      "source_field": "entities",
+      "source_entity_label": "CEU-10",
+      "domain_id": "DOM-05",
+      "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+      "run_id": "run_335c0575a080"
+    }
+  ],
+  "structural_telemetry": [
+    {
+      "telemetry_id": "L1-ST-DOM-01-001",
+      "metric_name": "file_count",
+      "domain_id": "DOM-01",
+      "value": 3,
+      "unit": "count",
+      "temporal_classification": "STATIC",
+      "source_artifact": "structural_topology.json",
+      "source_field": "domains[domain_id=DOM-01].file_count",
+      "provenance": "NORMALIZED_EVIDENCE_MAP + HTML_DOCUMENTED",
+      "parity_recovery": "PSEE.BLUEEDGE.PARITY.RECOVERY.NUMERICAL.DELTA.01 A-04"
+    },
+    {
+      "telemetry_id": "L1-ST-DOM-02-001",
+      "metric_name": "file_count",
+      "domain_id": "DOM-02",
+      "value": 4,
+      "unit": "count",
+      "temporal_classification": "STATIC",
+      "source_artifact": "structural_topology.json",
+      "source_field": "domains[domain_id=DOM-02].file_count",
+      "provenance": "NORMALIZED_EVIDENCE_MAP",
+      "parity_recovery": "PSEE.BLUEEDGE.PARITY.RECOVERY.NUMERICAL.DELTA.01 A-04"
+    },
+    {
+      "telemetry_id": "L1-ST-CEU-08-001",
+      "metric_name": "file_count",
+      "ceu_id": "CEU-08",
+      "node_id": "NODE-008",
+      "value": 397,
+      "unit": "count",
+      "temporal_classification": "STATIC",
+      "source_artifact": "ceu_registry.json",
+      "source_field": "ceu_entries[ceu_id=CEU-08].observed_structure.file_count",
+      "provenance": "STRUCTURAL_CONTAINMENT"
+    },
+    {
+      "telemetry_id": "L1-ST-CEU-08-002",
+      "metric_name": "module_count",
+      "ceu_id": "CEU-08",
+      "node_id": "NODE-008",
+      "value": 63,
+      "unit": "count",
+      "temporal_classification": "STATIC",
+      "source_artifact": "ceu_registry.json",
+      "source_field": "ceu_entries[ceu_id=CEU-08].observed_structure.module_count",
+      "provenance": "STRUCTURAL_CONTAINMENT"
+    },
+    {
+      "telemetry_id": "L1-ST-CEU-09-001",
+      "metric_name": "file_count",
+      "ceu_id": "CEU-09",
+      "node_id": "NODE-009",
+      "value": 324,
+      "unit": "count",
+      "temporal_classification": "STATIC",
+      "source_artifact": "ceu_registry.json",
+      "source_field": "ceu_entries[ceu_id=CEU-09].observed_structure.file_count",
+      "provenance": "STRUCTURAL_CONTAINMENT"
+    },
+    {
+      "telemetry_id": "L1-ST-CEU-10-001",
+      "metric_name": "file_count",
+      "ceu_id": "CEU-10",
+      "node_id": "NODE-010",
+      "value": 741,
+      "unit": "count",
+      "temporal_classification": "STATIC",
+      "source_artifact": "ceu_registry.json",
+      "source_field": "ceu_entries[ceu_id=CEU-10].observed_structure.file_count",
+      "provenance": "STRUCTURAL_CONTAINMENT"
+    }
+  ],
+  "constraint_flags": {
+    "overlap_present": true,
+    "overlap_count": 2,
+    "overlap_evidence": ["OVL-01 (DOM-03↔DOM-05-C)", "OVL-02 (DOM-04↔DOM-05-D)"],
+    "overlap_source": "structural_topology.json:overlaps",
+    "unknown_space_present": true,
+    "unknown_space_count": 3,
+    "unknown_space_evidence": ["USP-01 (backend_file_level_parity_unknown)", "USP-02 (frontend_file_level_parity_unknown)", "USP-03 (platform_unique_content_scope_unknown)"],
+    "unknown_space_source": "structural_topology.json:unknown_space",
+    "parity_recovery": "PSEE.BLUEEDGE.PARITY.RECOVERY.NUMERICAL.DELTA.01 A-02+A-03"
+  },
+  "determinism_hash": "439a48dd665aebc497c58751f3ba41851322ff803a264b4fbdd0a2de8ac5a297",
+  "determinism_hash_scope": "original CEU structure derivation — covers domains + nodes + relationships prior to L1 recovery extension"
+}
