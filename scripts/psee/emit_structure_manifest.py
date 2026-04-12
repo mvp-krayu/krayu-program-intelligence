@@ -453,13 +453,15 @@ def derive_structure(client_uuid, run_id, domains_raw, entities_raw,
     ):
         node_id = f"NODE-{i:03d}"
         entity_name_to_node_id[entity["name"]] = node_id
-        nodes.append({
+        _node = {
             "node_id":      node_id,
             "label":        entity["name"],
             "domain_id":    entity["domain"],
             "entity_type":  entity["type"],
             "source":       "raw_input.json:entities",
-        })
+        }
+        _node.update(_provenance_map.get(entity["domain"], {}))
+        nodes.append(_node)
 
     log(f"  nodes:              {len(nodes)}")
 
