@@ -342,11 +342,13 @@ def stage_01_intake(client_id, run_id, dirs, log_level, source=None):
                 sys.exit(2)
 
             # Resolve absolute paths for each layer's artifacts
+            BASE = os.path.dirname(os.path.abspath(source))
+
             def resolve_artifacts(layer_key):
                 layer = layers.get(layer_key, {})
                 layer_path = layer.get("path", "")
                 return [
-                    os.path.join(layer_path, f)
+                    os.path.abspath(os.path.join(BASE, layer_path, f))
                     for f in layer.get("artifacts", [])
                 ]
 
