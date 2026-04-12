@@ -569,6 +569,12 @@ def derive_structure(client_uuid, run_id, domains_raw, entities_raw,
     structural_telemetry = []
 
     # SOURCE A — domain-level from structural_topology.json
+    _st_path = os.path.join(
+        REPO_ROOT,
+        "docs", "pios",
+        "PI.STRUCTURAL_TOPOLOGY.RECONSTRUCTION.WP-03_TO_WP-07",
+        "structural_topology.json",
+    )
     if os.path.isfile(_st_path):
         _st_data = load_json(_st_path, "structural_topology.json")
         for _td in _st_data.get("domains", []):
