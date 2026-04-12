@@ -1,0 +1,52 @@
+{
+  "artifact_id": "PSEE.BLUEEDGE.BINDING.PACKAGE.CONSOLIDATION.01-PACKAGE-MANIFEST",
+  "canonical_consumption_artifact": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_335c0575a080/binding/binding_envelope.json",
+  "client_id": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+  "contract_id": "PSEE.BLUEEDGE.BINDING.PACKAGE.CONSOLIDATION.01",
+  "generated_at": "2026-04-12T09:42:23.850874+00:00",
+  "l1_truth_modified": false,
+  "module_level_expansion": false,
+  "package_artifacts": [
+    {
+      "artifact": "binding_transformation_spec.json",
+      "path": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_335c0575a080/binding/binding_transformation_spec.json",
+      "sha256": "ec50213132f779b8f12be6feb2784c4f8d517a9e9fa1c15f0518779e895ac02b",
+      "type": "T1_TRANSFORMATION_SPEC"
+    },
+    {
+      "artifact": "binding_model.json",
+      "path": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_335c0575a080/binding/binding_model.json",
+      "sha256": "54720389ce5f344e01630e7656be412a0ca92e5ac5f6ddfb285ce3903b93ac52",
+      "type": "T2_BINDING_MODEL"
+    },
+    {
+      "artifact": "binding_envelope.json",
+      "is_canonical_consumption_artifact": true,
+      "path": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_335c0575a080/binding/binding_envelope.json",
+      "sha256": "6a11d5494f1a934b30caacac715ae32f13142e7a417d30f30d473a4395ce2d52",
+      "type": "T3_BINDING_ENVELOPE_CANONICAL"
+    },
+    {
+      "artifact": "validation_log.json",
+      "path": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_335c0575a080/binding/validation_log.json",
+      "sha256": "ee7edb6be34f2218ef4b650c61ce248d3578c95319c5f0a2a77b85cc130a1096",
+      "type": "VALIDATION_LOG"
+    }
+  ],
+  "ready_for_targets": [
+    "upper_pios_core",
+    "gauge"
+  ],
+  "run_id": "run_335c0575a080",
+  "schema_version": "1.0",
+  "semantic_inference": false,
+  "stream": "PSEE.BLUEEDGE.BINDING.PACKAGE.CONSOLIDATION.01",
+  "target": "both",
+  "validation_summary": {
+    "checks_fail": 0,
+    "checks_pass": 15,
+    "checks_total": 15,
+    "overall_result": "PASS"
+  },
+  "wp13b_contamination": false
+}

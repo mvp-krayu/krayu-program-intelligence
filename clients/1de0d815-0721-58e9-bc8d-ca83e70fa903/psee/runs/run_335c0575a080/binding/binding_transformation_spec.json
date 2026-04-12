@@ -1,0 +1,132 @@
+{
+  "artifact_id": "PSEE.BLUEEDGE.BINDING.PACKAGE.CONSOLIDATION.01-TRANSFORMATION-SPEC",
+  "contract_id": "PSEE.BLUEEDGE.BINDING.PACKAGE.CONSOLIDATION.01",
+  "global_constraints": {
+    "back_propagation_forbidden": "No downstream consumer may mutate L1 truth",
+    "bm_expansion_forbidden": "No BM-001..BM-063 in any binding artifact",
+    "determinism": "sorted keys, stable ordering, same input \u2192 same output",
+    "dom06_excluded": "DOM-06 NOT_INGESTED \u2014 excluded",
+    "pending_runtime_excluded": "SIG-001..005, SIG-007..008 excluded (PENDING_RUNTIME)",
+    "semantic_inference_forbidden": "All labels from L1 structural truth only",
+    "wp13b_exclusion": "gauge_state.json (WP-13B) is ADJACENT_CONSUMPTION_MODEL \u2014 excluded"
+  },
+  "rules": [
+    {
+      "description": "Map each active domain to a binding_context node",
+      "exclusion_rule": "Exclude domains where intake_status=NOT_INGESTED",
+      "family": "domain_to_binding_context",
+      "input_selector": "structure_manifest.domains[]",
+      "output_type": "binding_context",
+      "provenance_required": [
+        "structural_topology_source",
+        "source_origin",
+        "documented_taxonomy_source"
+      ],
+      "rule_id": "TR-01",
+      "temporal_classification_rule": "CARRY_AS_IS \u2014 must be STATIC",
+      "transformation_type": "STRUCTURAL_PROJECTION"
+    },
+    {
+      "description": "Map each sub-domain to a capability_surface node",
+      "exclusion_rule": "Exclude sub-domains from NOT_INGESTED parent domains",
+      "family": "sub_domain_to_capability_surface",
+      "input_selector": "structure_manifest.domains[].sub_domains[]",
+      "output_type": "capability_surface",
+      "provenance_required": [
+        "parent_ceu",
+        "parent_node",
+        "containment_basis"
+      ],
+      "rule_id": "TR-02",
+      "temporal_classification_rule": "CARRY_AS_IS \u2014 must be STATIC",
+      "transformation_type": "STRUCTURAL_PROJECTION"
+    },
+    {
+      "description": "Map each CEU node to a component_entity node",
+      "family": "ceu_node_to_component_entity",
+      "input_selector": "structure_manifest.nodes[]",
+      "output_type": "component_entity",
+      "provenance_required": [
+        "structural_topology_source",
+        "source_origin",
+        "documented_taxonomy_source"
+      ],
+      "rule_id": "TR-03",
+      "temporal_classification_rule": "CARRY_AS_IS \u2014 must be STATIC",
+      "transformation_type": "DIRECT_MAPPING"
+    },
+    {
+      "description": "Map STATIC telemetry to signal_seeds (CEU-level \u2192 signals, domain-level \u2192 domain_telemetry)",
+      "exclusion_rule": "PENDING_RUNTIME excluded",
+      "family": "structural_telemetry_to_signal_seed",
+      "input_selector": "structure_manifest.structural_telemetry[]",
+      "output_type": "signal_seed | domain_telemetry",
+      "rule_id": "TR-04",
+      "temporal_classification_rule": "MUST be STATIC",
+      "transformation_type": "TELEMETRY_PROJECTION"
+    },
+    {
+      "description": "Pass lineage records through to envelope provenance",
+      "family": "lineage_to_provenance",
+      "input_selector": "structure_manifest.lineage[]",
+      "output_type": "envelope_provenance_entry",
+      "rule_id": "TR-05",
+      "transformation_type": "PASS_THROUGH"
+    },
+    {
+      "derivation_basis": "binding_model.capability_surfaces[]",
+      "description": "Promote capability_surfaces to first-class topology nodes",
+      "family": "topology_promotion",
+      "output_type": "topology_node:capability_surface",
+      "rule_id": "R1",
+      "transformation_type": "NODE_PROMOTION"
+    },
+    {
+      "derivation_basis": "capability_surface.parent_binding_context",
+      "description": "Materialize domain \u2192 capability_surface CONTAINS edges",
+      "family": "contains_domain_to_surface",
+      "output_type": "edge:CONTAINS:domain_to_surface",
+      "rule_id": "R2",
+      "transformation_type": "EDGE_MATERIALIZATION"
+    },
+    {
+      "derivation_basis": "capability_surface.parent_node",
+      "description": "Materialize capability_surface \u2192 component_entity CONTAINS edges",
+      "family": "contains_surface_to_component",
+      "output_type": "edge:CONTAINS:surface_to_component",
+      "rule_id": "R3",
+      "transformation_type": "EDGE_MATERIALIZATION"
+    },
+    {
+      "description": "Emit structural telemetry including CEU-level and domain-level",
+      "family": "structural_telemetry_emission",
+      "rule_id": "R4",
+      "transformation_type": "TELEMETRY_EMISSION"
+    },
+    {
+      "description": "Include SIG-006 static computed signal (0.333 rec/sec on NODE-010)",
+      "family": "sig006_inclusion",
+      "rule_id": "R5",
+      "source": "40.5/signal_output_set.md + 40.5/signal_traceability_map.md",
+      "transformation_type": "STATIC_SIGNAL_INCLUSION"
+    },
+    {
+      "description": "Set correct overlap_present and unknown_space_present from structure_manifest",
+      "family": "constraint_flags",
+      "rule_id": "R6",
+      "transformation_type": "CONSTRAINT_FLAG_PROPAGATION"
+    },
+    {
+      "description": "Emit target handoff declarations for gauge and/or upper-core",
+      "family": "target_handoff",
+      "rule_id": "R7",
+      "transformation_type": "HANDOFF_DECLARATION"
+    }
+  ],
+  "schema_version": "1.0",
+  "stream": "PSEE.BLUEEDGE.BINDING.PACKAGE.CONSOLIDATION.01",
+  "supersedes": [
+    "build_binding_convergence.py \u2192 binding_transformation_spec",
+    "apply_binding_convergence_projection_delta.py"
+  ]
+}
