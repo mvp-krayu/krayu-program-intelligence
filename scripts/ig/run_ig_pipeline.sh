@@ -256,7 +256,7 @@ payload = {
     "output_root":     output_root,
     "reference_run":   reference,
     "resolver":        f"{repo_root}/scripts/pios/ig5/source_profile_resolver.sh",
-    "governance":      "IG.6",
+    "governance":      "IG.5",
     "run_mode":        "SOURCE_PROFILED_INGESTION",
     "execution_mode":  "CREATE_ONLY"
 }
