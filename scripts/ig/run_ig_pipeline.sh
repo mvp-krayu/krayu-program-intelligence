@@ -150,7 +150,7 @@ for script in "$IG5" "$IG7"; do
 done
 
 # Reference run must exist (required by IG.3 CREATE_ONLY check)
-REFERENCE_RUN="$REPO_ROOT/docs/pios/runs/run_05_bootstrap_pipeline"
+REFERENCE_RUN="$REPO_ROOT/clients/$CLIENT/ig/runs/run_05_bootstrap_pipeline"
 if [ ! -d "$REFERENCE_RUN" ]; then
   echo "$LOG_PREFIX   FAIL  reference_run not found: $REFERENCE_RUN"
   PREFLIGHT_FAIL=$((PREFLIGHT_FAIL+1))
