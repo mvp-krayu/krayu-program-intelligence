@@ -407,6 +407,7 @@ def derive_structure(client_uuid, run_id, domains_raw, entities_raw,
     )
     _sub_domain_map: dict = {}
     _provenance_map: dict = {}
+    _domain_ceu_members: dict = {}   # domain_id → [ceu_id, ...]
     _PROVENANCE_FIELDS = (
         "source_origin",
         "structural_topology_source",
@@ -421,10 +422,13 @@ def derive_structure(client_uuid, run_id, domains_raw, entities_raw,
                 continue
             _sds = _d.get("sub_domains") or []
             if _sds:
-                _sub_domain_map[_did] = _sds
+                _sub_domain_map[_did] = [dict(sd) for sd in _sds]  # mutable copies
             _prov = {f: _d[f] for f in _PROVENANCE_FIELDS if f in _d}
             if _prov:
                 _provenance_map[_did] = _prov
+            _ceus = _d.get("ceu_members") or []
+            if _ceus:
+                _domain_ceu_members[_did] = _ceus
         log(f"  domain_structure:   LOADED  ({len(_sub_domain_map)} domains with sub_domains, "
             f"{len(_provenance_map)} with provenance)")
     else:
@@ -464,6 +468,27 @@ def derive_structure(client_uuid, run_id, domains_raw, entities_raw,
         nodes.append(_node)
 
     log(f"  nodes:              {len(nodes)}")
+
+    # ── SUB_DOMAIN PARENT LINKAGE (requires nodes to be built first) ──────────
+    if _sub_domain_map:
+        _domain_first_node: dict = {}
+        for _n in nodes:
+            _did = _n["domain_id"]
+            if _did not in _domain_first_node:
+                _domain_first_node[_did] = _n["node_id"]
+        for _did, _sds in _sub_domain_map.items():
+            _first_ceu  = (_domain_ceu_members.get(_did) or [None])[0]
+            _first_node = _domain_first_node.get(_did)
+            for _sd in _sds:
+                if "parent_ceu" not in _sd and _first_ceu:
+                    _sd["parent_ceu"] = _first_ceu
+                if "parent_node" not in _sd and _first_node:
+                    _sd["parent_node"] = _first_node
+        # Propagate enriched sub_domains back onto domain objects
+        for _dom_obj in domains:
+            _did = _dom_obj["domain_id"]
+            if _did in _sub_domain_map:
+                _dom_obj["sub_domains"] = _sub_domain_map[_did]
 
     # ── COMPONENTS (cohesive CEU clusters by domain) ──────────────────────────
     domain_entity_map: dict[str, list[str]] = {}
