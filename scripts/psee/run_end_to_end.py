@@ -251,10 +251,23 @@ def pre_flight(args):
         _fail_preflight(f"client is not a valid UUID: {args.client!r}")
     print(f"  client_uuid:     PASS  ({args.client})")
 
-    # source path
-    if not os.path.exists(args.source):
-        _fail_preflight(f"--source path not found: {args.source}")
-    print(f"  source_path:     PASS  ({args.source})")
+    # source path — IG mode: source is payload_manifest.json
+    if args.source.endswith("payload_manifest.json"):
+        pm = load_json(args.source, "payload_manifest.json")
+        if pm is None:
+            _fail_preflight(f"cannot load payload_manifest.json: {args.source}")
+        layers = pm.get("layers", {})
+        l40_4 = layers.get("L40_4", {})
+        if not l40_4.get("artifacts"):
+            _fail_preflight("L40_4 artifacts missing in payload_manifest.json")
+        print(f"  source_path:     PASS  (IG payload_manifest — "
+              f"L40_2:{len(layers.get('L40_2',{}).get('artifacts',[]))} "
+              f"L40_3:{len(layers.get('L40_3',{}).get('artifacts',[]))} "
+              f"L40_4:{len(l40_4.get('artifacts',[]))} artifacts)")
+    else:
+        if not os.path.exists(args.source):
+            _fail_preflight(f"--source path not found: {args.source}")
+        print(f"  source_path:     PASS  ({args.source})")
 
     # run_id
     run_id = args.run_id or generate_run_id(args.client)
@@ -301,12 +314,93 @@ def create_run_dirs(client_id, run_id):
 
 
 # ── STAGE 01: INTAKE ───────────────────────────────────────────────────────────
-def stage_01_intake(client_id, run_id, dirs, log_level):
+def stage_01_intake(client_id, run_id, dirs, log_level, source=None):
     log_path = os.path.join(dirs["logs"], "stage_01_intake.log")
     logger = StageLogger(log_path, "S01_INTAKE", client_id, run_id, log_level)
     t_start = datetime.now(timezone.utc)
     print("--- STAGE 01: INTAKE ---")
 
+    # ── IG MODE: source is payload_manifest.json ──────────────────────────────
+    if source and source.endswith("payload_manifest.json"):
+        try:
+            logger.info("IG mode: loading payload_manifest.json", source=source)
+            pm = load_json(source, "payload_manifest.json")
+            if pm is None:
+                logger.error("payload_manifest.json not found", path=source)
+                logger.close()
+                print(f"\nSTAGE 01 FAIL: payload_manifest.json not found: {source}",
+                      file=sys.stderr)
+                sys.exit(2)
+
+            layers = pm.get("layers", {})
+            l40_4 = layers.get("L40_4", {})
+            if not l40_4.get("artifacts"):
+                logger.error("L40_4 artifacts missing in payload_manifest.json")
+                logger.close()
+                print("\nSTAGE 01 FAIL: L40_4 artifacts missing in payload_manifest.json",
+                      file=sys.stderr)
+                sys.exit(2)
+
+            # Resolve absolute paths for each layer's artifacts
+            def resolve_artifacts(layer_key):
+                layer = layers.get(layer_key, {})
+                layer_path = layer.get("path", "")
+                return [
+                    os.path.join(layer_path, f)
+                    for f in layer.get("artifacts", [])
+                ]
+
+            ig_artifacts = {
+                "L40_2": resolve_artifacts("L40_2"),
+                "L40_3": resolve_artifacts("L40_3"),
+                "L40_4": resolve_artifacts("L40_4"),
+            }
+
+            for key, paths in ig_artifacts.items():
+                logger.info(f"VALIDATE {key} artifacts", count=len(paths))
+                print(f"  {key}: {len(paths)} artifacts resolved")
+
+            # Synthesize intake_result for downstream stages
+            intake_result = {
+                "run_id": run_id,
+                "client_uuid": client_id,
+                "intake_timestamp": now_iso(),
+                "verification_outcome": "PASS_FULL",
+                "intake_mode": "IG_PAYLOAD",
+                "consumed_scope": "all",
+                "source_manifest_ref": source.replace(REPO_ROOT + os.sep, ""),
+                "admissibility_metadata": {
+                    "source_class": "AUTHORITATIVE_INTAKE",
+                    "admissibility": pm.get("source", {}).get("admissibility", "GOVERNED"),
+                    "resolution": pm.get("source", {}).get("resolution", "DETERMINISTIC"),
+                    "governance": pm.get("governance", "IG.6"),
+                },
+                "ig_payload": {
+                    "payload_schema_version": pm.get("payload_schema_version"),
+                    "stream": pm.get("stream"),
+                    "baseline_anchor": pm.get("baseline_anchor"),
+                    "ig_artifacts": ig_artifacts,
+                },
+                "rejected": False,
+                "errors": [],
+                "provenance_hash": "",
+            }
+
+            write_json(os.path.join(dirs["intake"], "intake_result.json"), intake_result)
+            write_json(os.path.join(dirs["emit_intake"], "intake_result.json"), intake_result)
+
+            elapsed = (datetime.now(timezone.utc) - t_start).total_seconds()
+            logger.info("STAGE 01 COMPLETE (IG mode)", elapsed_sec=round(elapsed, 3))
+            logger.close()
+            return intake_result
+
+        except Exception as e:
+            logger.error(f"unexpected error in IG mode: {e}")
+            logger.close()
+            print(f"\nSTAGE 01 FAIL (IG mode): {e}", file=sys.stderr)
+            sys.exit(2)
+
+    # ── STANDARD MODE: call build_raw_intake_package.py ───────────────────────
     try:
         logger.info("calling build_raw_intake_package.py", script="build_raw_intake_package.py")
         rc, stdout, stderr = run_script("build_raw_intake_package.py", ["--client", client_id])
@@ -857,8 +951,11 @@ def main():
     )
     parser.add_argument("--client",           required=True,
                         help="Client UUID")
-    parser.add_argument("--source",           required=True,
-                        help="Source input path")
+    parser.add_argument("--source",           required=False, default=None,
+                        help="Source input path (raw source directory)")
+    parser.add_argument("--ig-run",           required=False, default=None,
+                        dest="ig_run",
+                        help="Path to IG run directory containing payload_manifest.json")
     parser.add_argument("--run-id",           required=False, default=None,
                         dest="run_id",
                         help="Run ID (auto-generated if not provided)")
@@ -875,6 +972,17 @@ def main():
                         help="Fail on warnings (default: false)")
     args = parser.parse_args()
 
+    # IG INPUT RESOLUTION: --ig-run sets source to payload_manifest.json
+    if args.ig_run:
+        pm_path = os.path.join(args.ig_run, "payload_manifest.json")
+        if not os.path.isfile(pm_path):
+            print(f"\nPRE-FLIGHT FAIL: payload_manifest.json not found: {pm_path}",
+                  file=sys.stderr)
+            sys.exit(1)
+        args.source = pm_path
+    elif not args.source:
+        parser.error("--source or --ig-run is required")
+
     t_start = now_iso()
     stage_durations = {}
 
@@ -888,7 +996,7 @@ def main():
 
     # STAGE 01
     t0 = datetime.now(timezone.utc)
-    stage_01_intake(args.client, run_id, dirs, args.log_level)
+    stage_01_intake(args.client, run_id, dirs, args.log_level, source=args.source)
     stage_durations["S01_INTAKE"] = round(
         (datetime.now(timezone.utc) - t0).total_seconds(), 3)
 
