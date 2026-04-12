@@ -244,10 +244,45 @@ def fail_closed_validation(client_uuid, run_id, run_base, package_dir):
     log("FAIL-CLOSED VALIDATION: PASS")
     log()
 
-    # Return constraint flag values derived from validated gauge data
+    # Derive constraint flags from structural_topology.json (authoritative source)
+    _st_path = os.path.join(
+        REPO_ROOT,
+        "docs", "pios",
+        "PI.STRUCTURAL_TOPOLOGY.RECONSTRUCTION.WP-03_TO_WP-07",
+        "structural_topology.json",
+    )
+    _overlap_present       = False
+    _unknown_space_present = False
+    _overlap_evidence      = []
+    _unknown_space_evidence = []
+    if os.path.isfile(_st_path):
+        _st = load_json(_st_path, "structural_topology.json")
+        _overlaps     = _st.get("overlaps", [])
+        _unknown_space = _st.get("unknown_space", [])
+        _overlap_present       = len(_overlaps) > 0
+        _unknown_space_present = len(_unknown_space) > 0
+        _overlap_evidence = [
+            f"{o['overlap_id']} ({o.get('domain_a','')}↔{o.get('domain_b','')})"
+            for o in _overlaps
+        ]
+        _unknown_space_evidence = [
+            f"{u['usp_id']} ({u.get('description','')})"
+            for u in _unknown_space
+        ]
+        log(f"  structural_topology: LOADED  "
+            f"(overlaps={len(_overlaps)}, unknown_space={len(_unknown_space)})")
+    else:
+        log(f"  structural_topology: NOT FOUND  (constraint flags default to false)")
+
     return {
-        "overlap_present":       False,  # DIM-04 NONE, unk_count=0
-        "unknown_space_present": False,  # DIM-04 NONE
+        "overlap_present":        _overlap_present,
+        "overlap_count":          len(_overlap_evidence),
+        "overlap_evidence":       _overlap_evidence,
+        "overlap_source":         "structural_topology.json:overlaps",
+        "unknown_space_present":  _unknown_space_present,
+        "unknown_space_count":    len(_unknown_space_evidence),
+        "unknown_space_evidence": _unknown_space_evidence,
+        "unknown_space_source":   "structural_topology.json:unknown_space",
     }
 
 
