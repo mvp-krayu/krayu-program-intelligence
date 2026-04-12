@@ -2,7 +2,7 @@
 # scripts/ig/run_ig_pipeline.sh
 # IG Pipeline Wrapper
 # Executes the full IG.5 → IG.4 → IG.3 → IG.7 → IG.6 → IG.7-normalizer chain.
-# Produces: docs/pios/runs/<run_id>/payload_manifest.json
+# Produces: clients/<uuid>/ig/runs/<run_id>/payload_manifest.json
 #
 # Usage:
 #   bash scripts/ig/run_ig_pipeline.sh \
@@ -30,7 +30,7 @@ if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
   echo "  --log-level  INFO|DEBUG     Log level (default: INFO)"
   echo "  --help                      Show this help and exit"
   echo ""
-  echo "Produces: docs/pios/runs/<run_id>/payload_manifest.json"
+  echo "Produces: clients/<uuid>/ig/runs/<run_id>/payload_manifest.json"
   exit 0
 fi
 
@@ -75,61 +75,63 @@ LOG_FILE="$LOG_DIR/${RUN_ID}.log"
 # Tee stdout+stderr to log file while preserving terminal output
 exec > >(tee -a "$LOG_FILE") 2>&1
 
-echo "=== IG Pipeline Wrapper ==="
-echo "stream:     PSEE.IG.PSEE.END_TO_END.PIPELINE.EXECUTION.01"
-echo "run_id:     $RUN_ID"
-echo "client:     $CLIENT"
-echo "source:     $SOURCE"
-echo "log_level:  $LOG_LEVEL"
-echo "log_file:   $LOG_FILE"
+LOG_PREFIX="[IG][$RUN_ID][$CLIENT]"
+
+echo "$LOG_PREFIX ==="
+echo "$LOG_PREFIX stream:     PSEE.IG.PSEE.END_TO_END.PIPELINE.EXECUTION.01"
+echo "$LOG_PREFIX run_id:     $RUN_ID"
+echo "$LOG_PREFIX client:     $CLIENT"
+echo "$LOG_PREFIX source:     $SOURCE"
+echo "$LOG_PREFIX log_level:  $LOG_LEVEL"
+echo "$LOG_PREFIX log_file:   $LOG_FILE"
 echo ""
 
 # ── PRE-FLIGHT ────────────────────────────────────────────────────────────────
-echo "--- PRE-FLIGHT ---"
+echo "$LOG_PREFIX --- PRE-FLIGHT ---"
 
 PREFLIGHT_FAIL=0
 
 # Required args
 if [ -z "$CLIENT" ]; then
-  echo "  FAIL  --client is required"
+  echo "$LOG_PREFIX   FAIL  --client is required"
   PREFLIGHT_FAIL=$((PREFLIGHT_FAIL+1))
 else
-  echo "  PASS  client: $CLIENT"
+  echo "$LOG_PREFIX   PASS  client: $CLIENT"
 fi
 
 if [ -z "$SOURCE" ]; then
-  echo "  FAIL  --source is required"
+  echo "$LOG_PREFIX   FAIL  --source is required"
   PREFLIGHT_FAIL=$((PREFLIGHT_FAIL+1))
 else
-  echo "  PASS  source arg present"
+  echo "$LOG_PREFIX   PASS  source arg present"
 fi
 
 # Validate log-level
 if [[ "$LOG_LEVEL" != "INFO" && "$LOG_LEVEL" != "DEBUG" ]]; then
-  echo "  FAIL  --log-level must be INFO or DEBUG; got: $LOG_LEVEL"
+  echo "$LOG_PREFIX   FAIL  --log-level must be INFO or DEBUG; got: $LOG_LEVEL"
   PREFLIGHT_FAIL=$((PREFLIGHT_FAIL+1))
 else
-  echo "  PASS  log_level: $LOG_LEVEL"
+  echo "$LOG_PREFIX   PASS  log_level: $LOG_LEVEL"
 fi
 
 # Branch check
 CURRENT_BRANCH="$(git branch --show-current)"
 REQUIRED_BRANCH="work/ig-foundation"
 if [ "$CURRENT_BRANCH" != "$REQUIRED_BRANCH" ]; then
-  echo "  FAIL  branch mismatch: current=$CURRENT_BRANCH required=$REQUIRED_BRANCH"
-  echo "        Run: git checkout $REQUIRED_BRANCH"
+  echo "$LOG_PREFIX   FAIL  branch mismatch: current=$CURRENT_BRANCH required=$REQUIRED_BRANCH"
+  echo "$LOG_PREFIX         Run: git checkout $REQUIRED_BRANCH"
   PREFLIGHT_FAIL=$((PREFLIGHT_FAIL+1))
 else
-  echo "  PASS  branch: $CURRENT_BRANCH"
+  echo "$LOG_PREFIX   PASS  branch: $CURRENT_BRANCH"
 fi
 
 # Resolve source path (absolute)
 [[ "$SOURCE" == /* ]] && SOURCE_ABS="$SOURCE" || SOURCE_ABS="$REPO_ROOT/$SOURCE"
 if [ ! -d "$SOURCE_ABS" ]; then
-  echo "  FAIL  source directory not found: $SOURCE_ABS"
+  echo "$LOG_PREFIX   FAIL  source directory not found: $SOURCE_ABS"
   PREFLIGHT_FAIL=$((PREFLIGHT_FAIL+1))
 else
-  echo "  PASS  source directory: $SOURCE_ABS"
+  echo "$LOG_PREFIX   PASS  source directory: $SOURCE_ABS"
 fi
 
 # Required IG scripts
@@ -137,45 +139,46 @@ IG5="$REPO_ROOT/scripts/pios/ig5/source_profile_resolver.sh"
 IG7="$REPO_ROOT/scripts/pios/ig7/ingestion_batch_runner.sh"
 for script in "$IG5" "$IG7"; do
   if [ ! -f "$script" ]; then
-    echo "  FAIL  script not found: ${script#$REPO_ROOT/}"
+    echo "$LOG_PREFIX   FAIL  script not found: ${script#$REPO_ROOT/}"
     PREFLIGHT_FAIL=$((PREFLIGHT_FAIL+1))
   elif [ ! -x "$script" ]; then
-    echo "  FAIL  script not executable: ${script#$REPO_ROOT/}"
+    echo "$LOG_PREFIX   FAIL  script not executable: ${script#$REPO_ROOT/}"
     PREFLIGHT_FAIL=$((PREFLIGHT_FAIL+1))
   else
-    echo "  PASS  ${script#$REPO_ROOT/}"
+    echo "$LOG_PREFIX   PASS  ${script#$REPO_ROOT/}"
   fi
 done
 
 # Reference run must exist (required by IG.3 CREATE_ONLY check)
 REFERENCE_RUN="$REPO_ROOT/docs/pios/runs/run_05_bootstrap_pipeline"
 if [ ! -d "$REFERENCE_RUN" ]; then
-  echo "  FAIL  reference_run not found: $REFERENCE_RUN"
+  echo "$LOG_PREFIX   FAIL  reference_run not found: $REFERENCE_RUN"
   PREFLIGHT_FAIL=$((PREFLIGHT_FAIL+1))
 else
-  echo "  PASS  reference_run: $(basename "$REFERENCE_RUN")"
+  echo "$LOG_PREFIX   PASS  reference_run: $(basename "$REFERENCE_RUN")"
 fi
 
 # Output run directory must NOT exist (CREATE_ONLY)
-OUTPUT_ROOT="$REPO_ROOT/docs/pios/runs/$RUN_ID"
+mkdir -p "$REPO_ROOT/clients/$CLIENT/ig/runs"
+OUTPUT_ROOT="$REPO_ROOT/clients/$CLIENT/ig/runs/$RUN_ID"
 if [ -d "$OUTPUT_ROOT" ]; then
-  echo "  FAIL  output_root already exists (CREATE_ONLY): $OUTPUT_ROOT"
+  echo "$LOG_PREFIX   FAIL  output_root already exists (CREATE_ONLY): $OUTPUT_ROOT"
   PREFLIGHT_FAIL=$((PREFLIGHT_FAIL+1))
 else
-  echo "  PASS  output_root is fresh: $OUTPUT_ROOT"
+  echo "$LOG_PREFIX   PASS  output_root is fresh: $OUTPUT_ROOT"
 fi
 
 if [ "$PREFLIGHT_FAIL" -gt 0 ]; then
   echo ""
-  echo "PRE-FLIGHT FAIL: $PREFLIGHT_FAIL check(s) failed"
+  echo "$LOG_PREFIX PRE-FLIGHT FAIL: $PREFLIGHT_FAIL check(s) failed"
   exit 1
 fi
 
-echo "PRE-FLIGHT: PASS"
+echo "$LOG_PREFIX PRE-FLIGHT: PASS"
 echo ""
 
 # ── STEP 1: GENERATE IG.5 SCHEMA ─────────────────────────────────────────────
-echo "--- STEP 1: Generate IG.5 input schema ---"
+echo "$LOG_PREFIX --- STEP 1: Generate IG.5 input schema ---"
 
 SCHEMA_FILE="$(mktemp /tmp/${RUN_ID}_XXXXXX.schema)"
 trap "rm -f $SCHEMA_FILE" EXIT
@@ -185,6 +188,7 @@ cat > "$SCHEMA_FILE" <<SCHEMAEOF
 # run_ig_pipeline.sh — DO NOT EDIT
 
 run_id=$RUN_ID
+client_id=$CLIENT
 baseline_anchor=baseline/pios-core-v0.4-final
 branch=work/ig-foundation
 profile.kind=LOCAL_SNAPSHOT
@@ -200,18 +204,18 @@ run.mode=SOURCE_PROFILED_INGESTION
 execution.mode=CREATE_ONLY
 SCHEMAEOF
 
-echo "  schema: $SCHEMA_FILE"
-echo "  output_root: $OUTPUT_ROOT"
-echo "  PASS  schema generated"
+echo "$LOG_PREFIX   schema: $SCHEMA_FILE"
+echo "$LOG_PREFIX   output_root: $OUTPUT_ROOT"
+echo "$LOG_PREFIX   PASS  schema generated"
 echo ""
 
 # ── STEP 2: EXECUTE IG.5 → IG.4 → IG.3 ──────────────────────────────────────
-echo "--- STEP 2: Execute IG.5 → IG.4 → IG.3 ---"
+echo "$LOG_PREFIX --- STEP 2: Execute IG.5 → IG.4 → IG.3 ---"
 echo ""
 
 if ! bash "$IG5" "$SCHEMA_FILE"; then
   echo ""
-  echo "PIPELINE FAIL: IG.5 source_profile_resolver.sh returned non-zero"
+  echo "$LOG_PREFIX PIPELINE FAIL: IG.5 source_profile_resolver.sh returned non-zero"
   exit 2
 fi
 
@@ -219,14 +223,14 @@ echo ""
 
 # Verify run directory was created
 if [ ! -d "$OUTPUT_ROOT" ]; then
-  echo "PIPELINE FAIL: output_root not created: $OUTPUT_ROOT"
+  echo "$LOG_PREFIX PIPELINE FAIL: output_root not created: $OUTPUT_ROOT"
   exit 2
 fi
-echo "  PASS  run directory created: $OUTPUT_ROOT"
+echo "$LOG_PREFIX   PASS  run directory created: $OUTPUT_ROOT"
 echo ""
 
 # ── STEP 3: GENERATE IG.7 run_input.json ─────────────────────────────────────
-echo "--- STEP 3: Generate IG.7 run_input.json ---"
+echo "$LOG_PREFIX --- STEP 3: Generate IG.7 run_input.json ---"
 
 RUN_INPUT_JSON="$(mktemp /tmp/${RUN_ID}_run_input_XXXXXX.json)"
 trap "rm -f $SCHEMA_FILE $RUN_INPUT_JSON" EXIT
@@ -263,31 +267,31 @@ with open(out_path, "w") as f:
 print(f"  run_input.json: {out_path}")
 PYEOF
 
-echo "  PASS  run_input.json generated"
+echo "$LOG_PREFIX   PASS  run_input.json generated"
 echo ""
 
 # ── STEP 4: EXECUTE IG.7 → IG.6 → IG.7 normalizer ───────────────────────────
-echo "--- STEP 4: Execute IG.7 → IG.6 → normalizer ---"
+echo "$LOG_PREFIX --- STEP 4: Execute IG.7 → IG.6 → normalizer ---"
 echo ""
 
 if ! bash "$IG7" "$RUN_INPUT_JSON"; then
   echo ""
-  echo "PAYLOAD FAIL: ingestion_batch_runner.sh returned non-zero"
+  echo "$LOG_PREFIX PAYLOAD FAIL: ingestion_batch_runner.sh returned non-zero"
   exit 3
 fi
 
 echo ""
 
 # ── STEP 5: VALIDATE OUTPUT ───────────────────────────────────────────────────
-echo "--- STEP 5: Validate payload_manifest.json ---"
+echo "$LOG_PREFIX --- STEP 5: Validate payload_manifest.json ---"
 
-PAYLOAD_MANIFEST="$OUTPUT_ROOT/payload_manifest.json"
+PAYLOAD_MANIFEST="$REPO_ROOT/clients/$CLIENT/ig/runs/$RUN_ID/payload_manifest.json"
 
 if [ ! -f "$PAYLOAD_MANIFEST" ]; then
-  echo "  FAIL  payload_manifest.json not found: $PAYLOAD_MANIFEST"
+  echo "$LOG_PREFIX   FAIL  payload_manifest.json not found: $PAYLOAD_MANIFEST"
   exit 2
 fi
-echo "  PASS  payload_manifest.json exists"
+echo "$LOG_PREFIX   PASS  payload_manifest.json exists"
 
 # Verify required keys
 python3 - "$PAYLOAD_MANIFEST" <<'PYEOF'
@@ -321,14 +325,14 @@ PYEOF
 echo ""
 
 # ── SUMMARY ───────────────────────────────────────────────────────────────────
-echo "════════════════════════════════════════════"
-echo "IG_SUCCESS"
+echo "$LOG_PREFIX ════════════════════════════════════════════"
+echo "$LOG_PREFIX IG_SUCCESS"
 echo ""
-echo "  run_id:           $RUN_ID"
-echo "  client:           $CLIENT"
-echo "  log_file:         $LOG_FILE"
-echo "  payload_manifest: $PAYLOAD_MANIFEST"
-echo "════════════════════════════════════════════"
+echo "$LOG_PREFIX   run_id:           $RUN_ID"
+echo "$LOG_PREFIX   client:           $CLIENT"
+echo "$LOG_PREFIX   log_file:         $LOG_FILE"
+echo "$LOG_PREFIX   payload_manifest: $PAYLOAD_MANIFEST"
+echo "$LOG_PREFIX ════════════════════════════════════════════"
 echo "payload_manifest=$PAYLOAD_MANIFEST"
 
 exit 0
