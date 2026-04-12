@@ -406,16 +406,29 @@ def derive_structure(client_uuid, run_id, domains_raw, entities_raw,
         "domain_structure.json",
     )
     _sub_domain_map: dict = {}
+    _provenance_map: dict = {}
+    _PROVENANCE_FIELDS = (
+        "source_origin",
+        "structural_topology_source",
+        "documented_taxonomy_source",
+        "label_provenance",
+    )
     if os.path.isfile(_ds_path):
         _ds = load_json(_ds_path, "domain_structure.json")
         for _d in _ds.get("domains", []):
             _did = _d.get("domain_id")
+            if not _did:
+                continue
             _sds = _d.get("sub_domains") or []
-            if _did and _sds:
+            if _sds:
                 _sub_domain_map[_did] = _sds
-        log(f"  domain_structure:   LOADED  ({len(_sub_domain_map)} domains with sub_domains)")
+            _prov = {f: _d[f] for f in _PROVENANCE_FIELDS if f in _d}
+            if _prov:
+                _provenance_map[_did] = _prov
+        log(f"  domain_structure:   LOADED  ({len(_sub_domain_map)} domains with sub_domains, "
+            f"{len(_provenance_map)} with provenance)")
     else:
-        log(f"  domain_structure:   NOT FOUND  (sub_domains will be empty)")
+        log(f"  domain_structure:   NOT FOUND  (sub_domains and provenance will be absent)")
 
     # ── DOMAINS ───────────────────────────────────────────────────────────────
     domains = []
@@ -425,6 +438,8 @@ def derive_structure(client_uuid, run_id, domains_raw, entities_raw,
             "label":        d["label"],
             "source":       "raw_input.json:domains",
         }
+        prov = _provenance_map.get(d["id"], {})
+        domain_obj.update(prov)
         sds = _sub_domain_map.get(d["id"])
         if sds:
             domain_obj["sub_domains"] = sds
