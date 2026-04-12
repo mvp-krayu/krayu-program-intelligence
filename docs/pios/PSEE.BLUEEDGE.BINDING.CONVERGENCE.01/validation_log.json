@@ -1,7 +1,7 @@
 {
   "artifact_hashes": {
-    "binding_envelope.json": "aedb41c579fa85148c834e1e176514c6be73234e1fe5632ffe777919bad6cb48",
-    "binding_model.json": "d6ee1505c7df3021e915ea468a00e1b600eca447650be79e33016dfe1e9d52c6",
+    "binding_envelope.json": "9e672110394c863a1d0e69430f2aa60bf9ae4d82193e0ae4947b2919d13f36f2",
+    "binding_model.json": "1f3553e0e92da490aff7c18d29fd181acb8d8849f91881ee4c8df2080f642420",
     "binding_transformation_spec.json": "371a6cd63b1f1a16c34ddc690c30b502d87bde16e6258f68db2b1ac505224704"
   },
   "artifact_id": "PSEE.BLUEEDGE.BINDING.CONVERGENCE.01-VALIDATION-LOG",
@@ -39,7 +39,7 @@
     {
       "check_id": "BC-CHECK-06",
       "description": "No module-level (BM-xxx) entities appear in binding artifact data arrays",
-      "detail": "Scanned 147 entity identifiers/labels",
+      "detail": "Scanned 139 entity identifiers/labels",
       "result": "PASS"
     },
     {
@@ -51,7 +51,7 @@
     {
       "check_id": "BC-CHECK-08",
       "description": "No WP-13B topology labels used as entity data in binding_model or binding_envelope",
-      "detail": "Scanned 89 data labels",
+      "detail": "Scanned 85 data labels",
       "result": "PASS"
     },
     {
@@ -79,15 +79,15 @@
     "temporal_classification_static": true
   },
   "contract_id": "PSEE.BLUEEDGE.BINDING.CONVERGENCE.IMPLEMENT.01",
-  "emission_timestamp": "2026-04-10T09:34:06Z",
+  "emission_timestamp": "2026-04-12T12:48:28Z",
   "output_paths": {
-    "binding_envelope": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_335c0575a080/binding/binding_envelope.json",
-    "binding_model": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_335c0575a080/binding/binding_model.json",
-    "binding_transformation_spec": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_335c0575a080/binding/binding_transformation_spec.json",
-    "gauge_input_source": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_335c0575a080/binding/binding_envelope.json"
+    "binding_envelope": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_08_full_test_06/binding/binding_envelope.json",
+    "binding_model": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_08_full_test_06/binding/binding_model.json",
+    "binding_transformation_spec": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_08_full_test_06/binding/binding_transformation_spec.json",
+    "gauge_input_source": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_08_full_test_06/binding/binding_envelope.json"
   },
   "overall_result": "PASS",
-  "run_id": "run_335c0575a080",
+  "run_id": "run_08_full_test_06",
   "schema_version": "1.0",
   "stream": "PSEE.BLUEEDGE.BINDING.CONVERGENCE.01",
   "summary": {
@@ -96,10 +96,10 @@
     "component_entities": 10,
     "envelope_edges": 2,
     "envelope_nodes": 10,
-    "envelope_signals": 4,
+    "envelope_signals": 0,
     "envelope_surfaces": 30,
     "provenance_records": 10,
     "relationships": 2,
-    "signal_seeds": 4
+    "signal_seeds": 0
   }
 }

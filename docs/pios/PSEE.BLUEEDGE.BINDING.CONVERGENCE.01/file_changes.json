@@ -1,25 +1,25 @@
 {
   "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
   "contract_id": "PSEE.BLUEEDGE.BINDING.CONVERGENCE.IMPLEMENT.01",
-  "emission_timestamp": "2026-04-10T09:34:06Z",
+  "emission_timestamp": "2026-04-12T12:48:28Z",
   "files_created": [
     {
-      "path": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_335c0575a080/binding/binding_transformation_spec.json",
+      "path": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_08_full_test_06/binding/binding_transformation_spec.json",
       "sha256": "371a6cd63b1f1a16c34ddc690c30b502d87bde16e6258f68db2b1ac505224704",
       "type": "T1_TRANSFORMATION_SPEC"
     },
     {
-      "path": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_335c0575a080/binding/binding_model.json",
-      "sha256": "d6ee1505c7df3021e915ea468a00e1b600eca447650be79e33016dfe1e9d52c6",
+      "path": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_08_full_test_06/binding/binding_model.json",
+      "sha256": "1f3553e0e92da490aff7c18d29fd181acb8d8849f91881ee4c8df2080f642420",
       "type": "T2_BINDING_MODEL"
     },
     {
-      "path": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_335c0575a080/binding/binding_envelope.json",
-      "sha256": "aedb41c579fa85148c834e1e176514c6be73234e1fe5632ffe777919bad6cb48",
+      "path": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_08_full_test_06/binding/binding_envelope.json",
+      "sha256": "9e672110394c863a1d0e69430f2aa60bf9ae4d82193e0ae4947b2919d13f36f2",
       "type": "T3_BINDING_ENVELOPE"
     },
     {
-      "path": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_335c0575a080/binding/validation_log.json",
+      "path": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_08_full_test_06/binding/validation_log.json",
       "type": "VALIDATION_LOG_RUN"
     },
     {
@@ -37,6 +37,6 @@
   ],
   "files_modified": [],
   "l1_truth_modified": false,
-  "run_id": "run_335c0575a080",
+  "run_id": "run_08_full_test_06",
   "stream": "PSEE.BLUEEDGE.BINDING.CONVERGENCE.01"
 }
