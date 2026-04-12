@@ -12,3 +12,6 @@ clients/*/runs/
 clients/*/input/raw_input.json
 clients/*/input/authoritative_state.json
 clients/*/input/construction_log.md
+clients/*/psee/runs/
+clients/*/ig/runs/
+clients/*/input/
