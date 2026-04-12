@@ -368,7 +368,7 @@ def stage_01_intake(client_id, run_id, dirs, log_level, source=None):
                 "client_uuid": client_id,
                 "intake_timestamp": now_iso(),
                 "verification_outcome": "PASS_FULL",
-                "intake_mode": "IG_PAYLOAD",
+                "intake_mode": "AUTHORITATIVE_INTAKE",
                 "consumed_scope": "all",
                 "source_manifest_ref": source.replace(REPO_ROOT + os.sep, ""),
                 "admissibility_metadata": {
