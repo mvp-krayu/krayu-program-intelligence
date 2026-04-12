@@ -66,7 +66,7 @@ REQUIRED_SCRIPTS = [
     "build_raw_intake_package.py",
     "extract_ceu_lineage.py",
     "emit_structure_manifest.py",
-    "build_binding_convergence.py",
+    "build_binding_package.py",
 ]
 
 
@@ -681,17 +681,17 @@ def stage_04_transformation(client_id, run_id, dirs, log_level):
     print("--- STAGE 04: TRANSFORMATION ---")
 
     try:
-        logger.info("calling build_binding_convergence.py",
+        logger.info("calling build_binding_package.py",
                     args=["--client", client_id, "--run-id", run_id])
         rc, stdout, stderr = run_script(
-            "build_binding_convergence.py",
+            "build_binding_package.py",
             ["--client", client_id, "--run-id", run_id]
         )
         logger.debug("script stdout", output=stdout[-2000:] if stdout else "")
         if rc != 0:
             logger.error("script failed", returncode=rc, stderr=stderr[-500:])
             logger.close()
-            print(f"\nSTAGE 04 FAIL: build_binding_convergence.py exit={rc}\n{stderr[-300:]}",
+            print(f"\nSTAGE 04 FAIL: build_binding_package.py exit={rc}\n{stderr[-300:]}",
                   file=sys.stderr)
             sys.exit(5)
         logger.info("script completed", returncode=rc)
