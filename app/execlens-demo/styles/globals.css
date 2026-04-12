@@ -1825,3 +1825,380 @@ a.topo-chip:hover {
   background: rgba(239, 68, 68, 0.12) !important;
   color: #fca5a5 !important;
 }
+
+/* ============================================================
+   ENVELOPE TOPOLOGY — PSEE.BLUEEDGE.GAUGE.HANDOFF.01
+   Derived from binding_envelope.json: nodes[], edges[],
+   signals[], constraint_flags
+   ============================================================ */
+
+/* ---- Roots grid (one column per root node) ---- */
+
+.topo-env-roots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1px;
+  background: var(--border);
+}
+
+.topo-env-root-col {
+  background: var(--bg-card);
+  padding: 10px 10px 12px;
+}
+
+/* ---- Subtree depth indentation ---- */
+
+.topo-env-subtree {
+  position: relative;
+}
+
+.topo-env-children {
+  margin-left: 10px;
+  border-left: 1px solid var(--border-dim);
+  padding-left: 8px;
+  margin-top: 4px;
+}
+
+.topo-env-depth-0 > .topo-env-node { margin-bottom: 6px; }
+.topo-env-depth-1 > .topo-env-node { margin-bottom: 3px; }
+.topo-env-depth-2 > .topo-env-node { margin-bottom: 2px; }
+.topo-env-depth-3 > .topo-env-node,
+.topo-env-depth-4 > .topo-env-node { margin-bottom: 2px; }
+
+/* ---- Node chips ---- */
+
+.topo-env-node {
+  background: var(--bg-card-deep);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 5px 8px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.topo-env-node:hover {
+  border-color: var(--accent-dim);
+}
+
+/* Node type visual variants */
+.topo-env-node-binding-context {
+  border-width: 2px;
+  border-color: var(--accent-dim);
+  background: rgba(74,158,255,0.04);
+}
+
+.topo-env-node-capability-surface {
+  border-color: var(--border);
+}
+
+.topo-env-node-component-entity {
+  border-radius: 2px;
+  border-color: var(--border-dim);
+}
+
+/* Unknown type — flagged */
+.topo-env-node:not(.topo-env-node-binding-context):not(.topo-env-node-capability-surface):not(.topo-env-node-component-entity) {
+  border-style: dashed;
+  border-color: var(--orange);
+}
+
+/* Overlap endpoint marker */
+.topo-env-overlap-endpoint-node {
+  border-color: var(--yellow) !important;
+}
+
+.topo-env-node-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.topo-env-node-id {
+  font-size: 9px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.topo-env-node-label {
+  font-size: 10px;
+  color: var(--text);
+  font-family: var(--font-mono);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.topo-env-overlap-marker {
+  font-size: 10px;
+  color: var(--yellow);
+  flex-shrink: 0;
+  cursor: default;
+}
+
+/* ---- Signal badge ---- */
+
+.topo-env-signal-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 14px;
+  padding: 0 4px;
+  border-radius: 7px;
+  font-size: 9px;
+  font-family: var(--font-mono);
+  background: var(--bg-panel);
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.topo-env-signal-badge--active {
+  background: rgba(255,214,0,0.1);
+  color: var(--yellow);
+  border-color: var(--yellow);
+}
+
+/* ---- Additional parent connectors ---- */
+
+.topo-env-addl-parents,
+.topo-env-addl-ref-list {
+  margin-top: 3px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.topo-env-addl-parent-ref,
+.topo-env-addl-ref-connector {
+  font-size: 9px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  border-left: 2px dashed var(--border-dim);
+  padding-left: 6px;
+  margin-left: 4px;
+}
+
+.topo-env-addl-ref-note {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ---- Node detail (expanded) ---- */
+
+.topo-env-node-detail {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border-dim);
+  font-size: 9px;
+  font-family: var(--font-mono);
+}
+
+.topo-env-node-meta,
+.topo-env-provenance {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+.topo-env-meta-field,
+.topo-env-prov-field {
+  color: var(--text-muted);
+  word-break: break-word;
+}
+
+/* ---- Signal list (in expanded node detail) ---- */
+
+.topo-env-signal-list {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.topo-env-signal-row {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  border-radius: 3px;
+  padding: 4px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.topo-env-signal-field {
+  font-size: 9px;
+  font-family: var(--font-mono);
+  color: var(--text-dim);
+  word-break: break-all;
+}
+
+.topo-env-signal-key {
+  color: var(--text-muted);
+}
+
+.topo-env-signal-val {
+  color: var(--text);
+}
+
+/* ---- Constraint lane ---- */
+
+.topo-env-constraint-lane {
+  border-top: 1px solid var(--border);
+  background: var(--bg-card-deep, rgba(0,0,0,0.2));
+  padding: 8px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.topo-env-constraint-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.topo-env-constraint-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  font-family: var(--font-mono);
+}
+
+.topo-env-constraint-overlap .topo-env-constraint-label {
+  color: var(--yellow);
+}
+
+.topo-env-constraint-unknown .topo-env-constraint-label {
+  color: var(--orange);
+}
+
+.topo-env-parity-banner .topo-env-constraint-label {
+  color: var(--accent);
+}
+
+.topo-env-constraint-source,
+.topo-env-constraint-note {
+  font-size: 9px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* Overlap arc rows (always visible, visually distinct from CONTAINS) */
+.topo-env-overlap-arcs {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 2px;
+}
+
+.topo-env-overlap-arc {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border: 1px dashed var(--yellow);
+  border-radius: 3px;
+  background: rgba(255,214,0,0.04);
+  font-size: 9px;
+  font-family: var(--font-mono);
+  cursor: default;
+}
+
+.topo-env-overlap-endpoint {
+  color: var(--text);
+}
+
+.topo-env-overlap-arrow {
+  color: var(--yellow);
+  font-size: 11px;
+}
+
+.topo-env-overlap-evidence {
+  color: var(--text-muted);
+  font-style: italic;
+  margin-left: 4px;
+}
+
+/* Unknown space entries */
+.topo-env-unknown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 2px;
+}
+
+.topo-env-unknown-entry {
+  font-size: 9px;
+  color: var(--orange);
+  font-family: var(--font-mono);
+  padding-left: 10px;
+}
+
+/* Parity recovery */
+.topo-env-parity-value {
+  font-size: 9px;
+  color: var(--accent);
+  font-family: var(--font-mono);
+}
+
+/* ---- Orphan lane ---- */
+
+.topo-env-orphan-lane {
+  border-top: 1px solid var(--border);
+  padding: 8px 14px 12px;
+  background: var(--bg-card-deep, rgba(0,0,0,0.15));
+}
+
+.topo-env-orphan-header {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-bottom: 6px;
+}
+
+.topo-env-orphan-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.topo-env-orphan-list .topo-env-node {
+  flex: 0 0 auto;
+  min-width: 80px;
+}
+
+/* ---- Unknown edge lane ---- */
+
+.topo-env-unknown-edge-lane {
+  border-top: 1px solid var(--border);
+  padding: 6px 14px;
+  background: rgba(255,158,74,0.04);
+}
+
+.topo-env-unknown-edge-header {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--orange);
+  font-family: var(--font-mono);
+  margin-bottom: 4px;
+}
+
+.topo-env-unknown-edge {
+  font-size: 9px;
+  color: var(--orange);
+  font-family: var(--font-mono);
+  border: 1px solid var(--orange);
+  border-radius: 3px;
+  padding: 2px 6px;
+  margin-bottom: 2px;
+  display: inline-block;
+}

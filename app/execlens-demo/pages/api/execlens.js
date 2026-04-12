@@ -22,10 +22,13 @@ const REPO_ROOT = process.env.REPO_ROOT
   || path.resolve(__dirname, '..', '..', '..', '..')
 
 // Core adapters
-const ADAPTER_42_4  = path.join(REPO_ROOT, 'scripts', 'pios', '42.4',  'execlens_adapter.py')
-const ADAPTER_42_6  = path.join(REPO_ROOT, 'scripts', 'pios', '42.6',  'execlens_overview_adapter.py')
-const ADAPTER_42_23 = path.join(REPO_ROOT, 'scripts', 'pios', '42.23', 'execlens_wowchain_adapter.py')
-const ADAPTER_42_7  = path.join(REPO_ROOT, 'scripts', 'pios', '42.7',  'execlens_topology_adapter.py')
+const ADAPTER_42_4       = path.join(REPO_ROOT, 'scripts', 'pios', '42.4',  'execlens_adapter.py')
+const ADAPTER_42_6       = path.join(REPO_ROOT, 'scripts', 'pios', '42.6',  'execlens_overview_adapter.py')
+const ADAPTER_42_23      = path.join(REPO_ROOT, 'scripts', 'pios', '42.23', 'execlens_wowchain_adapter.py')
+const ADAPTER_42_7       = path.join(REPO_ROOT, 'scripts', 'pios', '42.7',  'execlens_topology_adapter.py')
+
+// PSEE GAUGE — binding envelope render adapter (PSEE.BLUEEDGE.GAUGE.HANDOFF.01)
+const ADAPTER_PSEE_GAUGE = path.join(REPO_ROOT, 'scripts', 'psee', 'gauge_envelope_adapter.py')
 
 // ENL restoration adapters
 const ADAPTER_42_13 = path.join(REPO_ROOT, 'scripts', 'pios', '42.13', 'demo_activate.py')
@@ -71,6 +74,7 @@ export default function handler(req, res) {
     list,
     overview,
     topology,
+    envelope,
     highlight,
     enl,
     persona,
@@ -116,6 +120,11 @@ export default function handler(req, res) {
   // 42.6 overview
   if (overview === 'true') {
     return runScript(ADAPTER_42_6, [], res)
+  }
+
+  // PSEE GAUGE — binding envelope render model (PSEE.BLUEEDGE.GAUGE.HANDOFF.01)
+  if (envelope === 'true') {
+    return runScript(ADAPTER_PSEE_GAUGE, [], res)
   }
 
   // 42.7 structural topology — query-adapted highlighting (42.25 parity restoration)
