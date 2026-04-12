@@ -28,7 +28,7 @@ const ADAPTER_42_23      = path.join(REPO_ROOT, 'scripts', 'pios', '42.23', 'exe
 const ADAPTER_42_7       = path.join(REPO_ROOT, 'scripts', 'pios', '42.7',  'execlens_topology_adapter.py')
 
 // PSEE GAUGE — binding envelope render adapter (PSEE.BLUEEDGE.GAUGE.HANDOFF.01)
-const ADAPTER_PSEE_GAUGE = path.join(REPO_ROOT, 'scripts', 'psee', 'gauge_envelope_adapter.py')
+const ADAPTER_PSEE_GAUGE = path.join(REPO_ROOT, 'app', 'execlens-demo', 'lib', 'gauge', 'envelope_adapter.py')
 
 // ENL restoration adapters
 const ADAPTER_42_13 = path.join(REPO_ROOT, 'scripts', 'pios', '42.13', 'demo_activate.py')
