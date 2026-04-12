@@ -438,9 +438,10 @@ def derive_structure(client_uuid, run_id, domains_raw, entities_raw,
     domains = []
     for d in sorted(domains_raw, key=lambda x: x["id"]):
         domain_obj = {
-            "domain_id":    d["id"],
-            "label":        d["label"],
-            "source":       "raw_input.json:domains",
+            "domain_id":              d["id"],
+            "label":                  d["label"],
+            "source":                 "raw_input.json:domains",
+            "temporal_classification": "STATIC",
         }
         prov = _provenance_map.get(d["id"], {})
         domain_obj.update(prov)
@@ -458,11 +459,12 @@ def derive_structure(client_uuid, run_id, domains_raw, entities_raw,
         node_id = f"NODE-{i:03d}"
         entity_name_to_node_id[entity["name"]] = node_id
         _node = {
-            "node_id":      node_id,
-            "label":        entity["name"],
-            "domain_id":    entity["domain"],
-            "entity_type":  entity["type"],
-            "source":       "raw_input.json:entities",
+            "node_id":                node_id,
+            "label":                  entity["name"],
+            "domain_id":              entity["domain"],
+            "entity_type":            entity["type"],
+            "source":                 "raw_input.json:entities",
+            "temporal_classification": "STATIC",
         }
         _node.update(_provenance_map.get(entity["domain"], {}))
         nodes.append(_node)
@@ -537,13 +539,14 @@ def derive_structure(client_uuid, run_id, domains_raw, entities_raw,
         sorted(relationships_raw, key=lambda x: (x["from"], x["to"])), start=1
     ):
         relationships.append({
-            "relationship_id":   f"REL-{i:03d}",
-            "from_node":         entity_name_to_node_id[rel["from"]],
-            "to_node":           entity_name_to_node_id[rel["to"]],
-            "relationship_type": rel["type"],
-            "from_entity":       rel["from"],
-            "to_entity":         rel["to"],
-            "source":            "raw_input.json:relationships",
+            "relationship_id":        f"REL-{i:03d}",
+            "from_node":              entity_name_to_node_id[rel["from"]],
+            "to_node":                entity_name_to_node_id[rel["to"]],
+            "relationship_type":      rel["type"],
+            "from_entity":            rel["from"],
+            "to_entity":              rel["to"],
+            "source":                 "raw_input.json:relationships",
+            "temporal_classification": "STATIC",
         })
 
     log(f"  relationships:      {len(relationships)}")
@@ -561,6 +564,61 @@ def derive_structure(client_uuid, run_id, domains_raw, entities_raw,
         }
         for node in nodes
     ]
+
+    # ── STRUCTURAL TELEMETRY ─────────────────────────────────────────────────
+    structural_telemetry = []
+
+    # SOURCE A — domain-level from structural_topology.json
+    if os.path.isfile(_st_path):
+        _st_data = load_json(_st_path, "structural_topology.json")
+        for _td in _st_data.get("domains", []):
+            _did = _td.get("domain_id")
+            _fc  = _td.get("file_count")
+            if _did and isinstance(_fc, (int, float)):
+                structural_telemetry.append({
+                    "telemetry_id":           f"L1-ST-{_did}-001",
+                    "metric_name":            "file_count",
+                    "value":                  _fc,
+                    "domain_id":              _did,
+                    "source_artifact":        "structural_topology.json",
+                    "source_field":           f"domains[{_did}].file_count",
+                    "temporal_classification": "STATIC",
+                })
+
+    # SOURCE B — CEU-level from ceu_registry.json
+    _ceu_path = os.path.join(
+        REPO_ROOT,
+        "docs", "pios",
+        "PI.STRUCTURAL_TOPOLOGY.RECONSTRUCTION.WP-03_TO_WP-07",
+        "ceu_registry.json",
+    )
+    if os.path.isfile(_ceu_path):
+        _cr = load_json(_ceu_path, "ceu_registry.json")
+        for _ce in _cr.get("ceu_entries", []):
+            if _ce.get("intake_status") != "ACCEPTED":
+                continue
+            _ceu_id  = _ce.get("ceu_id")
+            _obs     = _ce.get("observed_structure", {})
+            _node_id = entity_name_to_node_id.get(_ceu_id)
+            if not (_ceu_id and _node_id):
+                continue
+            _counter = 1
+            for _mkey, _mval in _obs.items():
+                if not isinstance(_mval, (int, float)):
+                    continue
+                structural_telemetry.append({
+                    "telemetry_id":           f"L1-ST-{_ceu_id}-{_counter:03d}",
+                    "metric_name":            _mkey,
+                    "value":                  _mval,
+                    "ceu_id":                 _ceu_id,
+                    "node_id":                _node_id,
+                    "source_artifact":        "ceu_registry.json",
+                    "source_field":           f"ceu_entries[{_ceu_id}].observed_structure.{_mkey}",
+                    "temporal_classification": "STATIC",
+                })
+                _counter += 1
+
+    log(f"  structural_telemetry: {len(structural_telemetry)}")
 
     # ── DETERMINISM HASH ──────────────────────────────────────────────────────
     determinism_input = {
@@ -592,10 +650,11 @@ def derive_structure(client_uuid, run_id, domains_raw, entities_raw,
         "components":        components,
         "capabilities":      capabilities,
         "nodes":             nodes,
-        "relationships":     relationships,
-        "lineage":           lineage,
-        "constraint_flags":  constraint_flags,
-        "determinism_hash":  determinism_hash,
+        "relationships":        relationships,
+        "lineage":              lineage,
+        "structural_telemetry": structural_telemetry,
+        "constraint_flags":     constraint_flags,
+        "determinism_hash":     determinism_hash,
     }
 
 
