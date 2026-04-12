@@ -1004,7 +1004,19 @@ def main():
 
     # STAGE 02
     t0 = datetime.now(timezone.utc)
-    stage_02_lineage(args.client, run_id, dirs, args.log_level)
+    _ig_mode = args.ig_run is not None
+    _raw_input_path_1 = os.path.join(REPO_ROOT, "clients", args.client, "input", "intake", "raw_input.json")
+    _raw_input_path_2 = os.path.join(REPO_ROOT, "clients", args.client, "input", "raw_input.json")
+    _lineage_exists = os.path.isfile(_raw_input_path_1) or os.path.isfile(_raw_input_path_2)
+    if _ig_mode and not _lineage_exists:
+        print("\nSTAGE 02 FAIL: IG mode requires pre-existing client raw_input.json", file=sys.stderr)
+        print(f"  checked: {_raw_input_path_1}", file=sys.stderr)
+        print(f"  checked: {_raw_input_path_2}", file=sys.stderr)
+        sys.exit(1)
+    if _ig_mode and _lineage_exists:
+        print("--- STAGE 02: LINEAGE (SKIPPED — EXISTING CLIENT LINEAGE) ---")
+    else:
+        stage_02_lineage(args.client, run_id, dirs, args.log_level)
     stage_durations["S02_LINEAGE"] = round(
         (datetime.now(timezone.utc) - t0).total_seconds(), 3)
 
