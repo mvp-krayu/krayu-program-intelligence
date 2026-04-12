@@ -1,14 +1,12 @@
 /**
  * TopologyPanel.js
  * PIOS-42.23-RUN01-CONTRACT-v1
- * PSEE.BLUEEDGE.GAUGE.HANDOFF.01 — envelope render path added
- *
- * Landing-page structural topology panel.
+ * PSEE.BLUEEDGE.GAUGE.HANDOFF.01 — envelope render path (presentation recovery pass)
  *
  * Render paths (selected by topology response shape):
- *   envelope === true  → GAUGE envelope path (PSEE.BLUEEDGE.GAUGE.HANDOFF.01)
+ *   envelope === true  → GAUGE envelope path — meaning-first, detail-on-demand
  *     source: /api/execlens?envelope=true
- *     → scripts/psee/gauge_envelope_adapter.py
+ *     → app/execlens-demo/lib/gauge/envelope_adapter.py
  *     → binding_envelope.json (ONLY topology authority)
  *   wow_chain === true → WOW chain path (42.22 + 51.1 + 51.1R) — retained
  *   default            → 42.7 legacy hierarchy path — retained as fallback
@@ -16,10 +14,11 @@
  * Envelope path governing rules:
  *   R1   binding_envelope.json is the only topology source
  *   R2   structure derived from nodes[], edges[], signals[], constraint_flags
- *   R3   OVERLAP_STRUCTURAL edges always visible
- *   R4   unknown space rendered in constraint lane only — never as topology nodes
+ *   R3   OVERLAP_STRUCTURAL edges always visible (inline on component footer)
+ *   R4   unknown space in diagnostics panel only — never as topology nodes
  *   R5   deterministic layout (BFS depth from roots, stable input order)
- *   R6   orphan nodes rendered in unbound lane
+ *   R6   orphan nodes in StandaloneSection (type-grouped, human-readable)
+ *   R7   diagnostics (constraints, evidence) collapsed by default
  */
 
 import { useState, useEffect } from 'react'
@@ -30,36 +29,48 @@ const VAULT_NAME = process.env.NEXT_PUBLIC_OBSIDIAN_VAULT_NAME || null
 
 // ---------------------------------------------------------------------------
 // GAUGE Envelope rendering — PSEE.BLUEEDGE.GAUGE.HANDOFF.01
+// Presentation recovery: meaning-first default, detail on demand
 // ---------------------------------------------------------------------------
 
-// --- Signal badge ---
-// Renders a count badge on nodes that have bound signals.
-// badge is accented if any signal carries computation_state !== 'AVAILABLE'.
+// Humanize an internal label: replace underscores, title-case each word
+function humanize(label) {
+  if (!label) return ''
+  return label.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+}
 
-function SignalBadge({ signals }) {
+// --- SignalDot ---
+// Lightweight inline indicator for nodes with bound signals.
+// Full signal payload is available in the expanded component detail view.
+
+function SignalDot({ signals }) {
   if (!signals || signals.length === 0) return null
   const accented = signals.some(
     s => s.computation_state !== undefined && s.computation_state !== 'AVAILABLE'
   )
+  const label = `${signals.length} signal${signals.length > 1 ? 's' : ''} bound`
   return (
-    <span className={`topo-env-signal-badge${accented ? ' topo-env-signal-badge--active' : ''}`}>
-      {signals.length}
+    <span
+      className={`gauge-signal-dot${accented ? ' gauge-signal-dot--active' : ''}`}
+      title={label}
+    >
+      {'~'.repeat(signals.length)}
     </span>
   )
 }
 
-// --- Signal detail list (shown in expanded node view) ---
+// --- SignalDetail ---
+// Full signal payload shown only in the expanded component detail view.
 
-function SignalList({ signals }) {
+function SignalDetail({ signals }) {
   if (!signals || signals.length === 0) return null
   return (
-    <div className="topo-env-signal-list">
+    <div className="gauge-signal-detail">
       {signals.map(s => (
-        <div key={s.signal_id} className="topo-env-signal-row">
+        <div key={s.signal_id} className="gauge-signal-row">
           {Object.entries(s).map(([k, v]) => (
-            <span key={k} className="topo-env-signal-field">
-              <span className="topo-env-signal-key">{k}:</span>{' '}
-              <span className="topo-env-signal-val">
+            <span key={k} className="gauge-signal-field">
+              <span className="gauge-signal-key">{k}:</span>{' '}
+              <span className="gauge-signal-val">
                 {typeof v === 'object' ? JSON.stringify(v) : String(v)}
               </span>
             </span>
@@ -70,333 +81,387 @@ function SignalList({ signals }) {
   )
 }
 
-// --- Constraint lane ---
-// Always rendered. Surfaces overlap, unknown space, and parity recovery.
+// --- ComponentFooter ---
+// The structural component anchoring a region.
+// Default row: human-readable name + signal dot + overlap cross-references (always visible).
+// Expanded: internal id, type, provenance, full signal payload.
 
-function ConstraintLane({ constraintFlags, overlapEdges, nodeIndex }) {
-  if (!constraintFlags) return null
-  const {
-    overlap_present, overlap_count, overlap_evidence, overlap_source,
-    unknown_space_present, unknown_space_count, unknown_space_evidence, unknown_space_source,
-    parity_recovery,
-  } = constraintFlags
+function ComponentFooter({ node, overlapEdges, nodeIndex, expanded, onToggle }) {
+  const overlapsWith = overlapEdges
+    .filter(e => e.from_node === node.node_id || e.to_node === node.node_id)
+    .map(e => {
+      const otherId = e.from_node === node.node_id ? e.to_node : e.from_node
+      return nodeIndex[otherId]
+    })
+    .filter(Boolean)
 
-  return (
-    <div className="topo-env-constraint-lane">
-      {overlap_present && (
-        <div className="topo-env-constraint-item topo-env-constraint-overlap">
-          <span className="topo-env-constraint-label">
-            STRUCTURAL OVERLAPS: {overlap_count}
-          </span>
-          <div className="topo-env-overlap-arcs">
-            {overlapEdges.map(e => {
-              const fromNode = nodeIndex[e.from_node]
-              const toNode   = nodeIndex[e.to_node]
-              const evidence = (overlap_evidence || []).find(ev =>
-                ev.includes(fromNode?.label || '') || ev.includes(e.from_node)
-              )
-              return (
-                <div key={e.edge_id} className="topo-env-overlap-arc" title={evidence || e.edge_id}>
-                  <span className="topo-env-overlap-endpoint">
-                    {fromNode ? fromNode.label : e.from_node}
-                  </span>
-                  <span className="topo-env-overlap-arrow">⟷</span>
-                  <span className="topo-env-overlap-endpoint">
-                    {toNode ? toNode.label : e.to_node}
-                  </span>
-                  {evidence && (
-                    <span className="topo-env-overlap-evidence">{evidence}</span>
-                  )}
-                </div>
-              )
-            })}
-          </div>
-          {overlap_source && (
-            <span className="topo-env-constraint-source">source: {overlap_source}</span>
-          )}
-        </div>
-      )}
-
-      {unknown_space_present && (
-        <div className="topo-env-constraint-item topo-env-constraint-unknown">
-          <span className="topo-env-constraint-label">
-            UNKNOWN SPACE: {unknown_space_count}
-          </span>
-          <div className="topo-env-unknown-list">
-            {(unknown_space_evidence || []).map((ev, i) => (
-              <span key={i} className="topo-env-unknown-entry">{ev}</span>
-            ))}
-          </div>
-          <span className="topo-env-constraint-note">
-            regions not fully bounded — not rendered as topology nodes
-          </span>
-          {unknown_space_source && (
-            <span className="topo-env-constraint-source">source: {unknown_space_source}</span>
-          )}
-        </div>
-      )}
-
-      {parity_recovery && (
-        <div className="topo-env-constraint-item topo-env-parity-banner">
-          <span className="topo-env-constraint-label">PARITY RECOVERY ACTIVE</span>
-          <span className="topo-env-parity-value">{parity_recovery}</span>
-        </div>
-      )}
-    </div>
-  )
-}
-
-// --- Envelope node chip ---
-// Renders a single node. Expanded state shows signal detail.
-
-function EnvNodeChip({ node, additionalParentRefs, nodeIndex, expanded, onToggle }) {
-  const typeClass = `topo-env-node-${node.type.replace(/_/g, '-')}`
-  const overlapClass = node.is_overlap_endpoint ? ' topo-env-overlap-endpoint-node' : ''
+  const sharedCount =
+    (node.additional_parents || []).length + (node.canonical_parent ? 1 : 0)
 
   return (
     <div
-      className={`topo-env-node ${typeClass}${overlapClass}`}
+      className={`gauge-component${node.is_overlap_endpoint ? ' gauge-component--shared' : ''}`}
       onClick={onToggle}
-      title={`${node.node_id} · ${node.type} · depth:${node.depth}`}
+      title="Click to inspect"
     >
-      <div className="topo-env-node-header">
-        <span className="topo-env-node-id">{node.node_id}</span>
-        <span className="topo-env-node-label">{node.label}</span>
-        {node.is_overlap_endpoint && (
-          <span className="topo-env-overlap-marker" title="structural overlap endpoint">⊕</span>
-        )}
-        <SignalBadge signals={node.signals} />
+      <div className="gauge-component-row">
+        <span className="gauge-component-dot">●</span>
+        <span className="gauge-component-name">{humanize(node.label)}</span>
+        <SignalDot signals={node.signals} />
       </div>
 
-      {/* Additional parent connectors (multi-parent non-canonical refs) */}
-      {additionalParentRefs && additionalParentRefs.length > 0 && (
-        <div className="topo-env-addl-parents">
-          {additionalParentRefs.map(pid => {
-            const pn = nodeIndex[pid]
-            return (
-              <span key={pid} className="topo-env-addl-parent-ref">
-                ⤳ also in {pn ? pn.label : pid}
-              </span>
-            )
-          })}
+      {/* Cross-boundary references — always visible, structural truth */}
+      {overlapsWith.length > 0 && (
+        <div className="gauge-component-overlaps">
+          {overlapsWith.map(other => (
+            <span key={other.node_id} className="gauge-overlap-ref">
+              → {humanize(other.label)}
+            </span>
+          ))}
         </div>
       )}
 
+      {sharedCount > 1 && (
+        <div className="gauge-component-shared">across {sharedCount} surfaces</div>
+      )}
+
       {expanded && (
-        <div className="topo-env-node-detail">
-          <div className="topo-env-node-meta">
-            <span className="topo-env-meta-field">id: {node.node_id}</span>
-            <span className="topo-env-meta-field">type: {node.type}</span>
-            <span className="topo-env-meta-field">tc: {node.temporal_classification}</span>
-            {node.depth !== undefined && (
-              <span className="topo-env-meta-field">depth: {node.depth}</span>
-            )}
-          </div>
+        <div className="gauge-component-detail">
+          <span className="gauge-detail-id">{node.node_id}</span>
+          <span className="gauge-detail-type">{node.type}</span>
+          {node.temporal_classification && (
+            <span className="gauge-detail-tc">{node.temporal_classification}</span>
+          )}
           {node.provenance && (
-            <div className="topo-env-provenance">
+            <div className="gauge-provenance">
               {Object.entries(node.provenance).map(([k, v]) => (
-                <span key={k} className="topo-env-prov-field">
+                <span key={k} className="gauge-prov-field">
                   {k}: {typeof v === 'object' ? JSON.stringify(v) : String(v)}
                 </span>
               ))}
             </div>
           )}
-          <SignalList signals={node.signals} />
+          <SignalDetail signals={node.signals} />
         </div>
       )}
     </div>
   )
 }
 
-// --- Subtree renderer ---
-// Recursively renders containment children from the containment_tree.
-// Multi-parent children appear under their canonical parent only;
-// non-canonical references render as dashed connector stubs via additional_parent_refs.
+// --- RegionCard ---
+// Renders one structural region (non-orphan root + surfaces + component).
+// Default: region name header, surface list (up to SURFACE_PREVIEW, foldable),
+// component footer with overlap references.
 
-function SubtreeNode({ nodeId, data, expandedNodes, onToggle, depth }) {
-  const node              = data.nodeIndex[nodeId]
-  const children          = data.containmentTree[nodeId] || []
-  const addlRefs          = data.additionalParentRefs[nodeId] || []
-  const expanded          = expandedNodes.has(nodeId)
+const SURFACE_PREVIEW = 5
 
-  if (!node) return null
+function RegionCard({ rootId, treeData, overlapEdges, expandedNodes, onToggle }) {
+  const rootNode = treeData.nodeIndex[rootId]
+  if (!rootNode) return null
+
+  const surfaceIds = treeData.containmentTree[rootId] || []
+  const surfaces   = surfaceIds.map(id => treeData.nodeIndex[id]).filter(Boolean)
+
+  // Canonical components reachable from this region's surfaces
+  const componentIds = new Set()
+  for (const sid of surfaceIds) {
+    for (const cid of (treeData.containmentTree[sid] || [])) {
+      componentIds.add(cid)
+    }
+  }
+  const components = [...componentIds].map(id => treeData.nodeIndex[id]).filter(Boolean)
+
+  // Overlap edges involving this region's components
+  const regionOverlaps = overlapEdges.filter(
+    e => componentIds.has(e.from_node) || componentIds.has(e.to_node)
+  )
+
+  const surfacesKey     = `${rootId}:surfaces`
+  const showAll         = expandedNodes.has(surfacesKey)
+  const visibleSurfaces = showAll ? surfaces : surfaces.slice(0, SURFACE_PREVIEW)
+  const hiddenCount     = surfaces.length - SURFACE_PREVIEW
 
   return (
-    <div className={`topo-env-subtree topo-env-depth-${Math.min(depth, 4)}`}>
-      <EnvNodeChip
-        node={node}
-        additionalParentRefs={node.additional_parents}
-        nodeIndex={data.nodeIndex}
-        expanded={expanded}
-        onToggle={() => onToggle(nodeId)}
-      />
+    <div className="gauge-region">
+      <div className="gauge-region-header">
+        <span className="gauge-region-name">{humanize(rootNode.label)}</span>
+        {surfaces.length > 0 && (
+          <span className="gauge-region-count">{surfaces.length}</span>
+        )}
+      </div>
 
-      {/* Additional parent refs for this node's children that are non-canonical here */}
-      {addlRefs.length > 0 && (
-        <div className="topo-env-addl-ref-list">
-          {addlRefs.map(childId => {
-            const cn = data.nodeIndex[childId]
-            return (
-              <span key={childId} className="topo-env-addl-ref-connector">
-                ⤳ {cn ? cn.label : childId}
-                <span className="topo-env-addl-ref-note"> (shared component)</span>
-              </span>
-            )
-          })}
-        </div>
-      )}
-
-      {children.length > 0 && (
-        <div className="topo-env-children">
-          {children.map(childId => (
-            <SubtreeNode
-              key={childId}
-              nodeId={childId}
-              data={data}
-              expandedNodes={expandedNodes}
-              onToggle={onToggle}
-              depth={depth + 1}
-            />
+      {surfaces.length > 0 && (
+        <div className="gauge-surface-list">
+          {visibleSurfaces.map(s => (
+            <div
+              key={s.node_id}
+              className="gauge-surface-item"
+              onClick={() => onToggle(s.node_id)}
+              title={s.node_id}
+            >
+              {humanize(s.label)}
+              {expandedNodes.has(s.node_id) && (
+                <span className="gauge-surface-id"> {s.node_id}</span>
+              )}
+            </div>
           ))}
+          {hiddenCount > 0 && (
+            <button
+              className="gauge-surface-more"
+              onClick={e => { e.stopPropagation(); onToggle(surfacesKey) }}
+            >
+              {showAll ? 'show less' : `+${hiddenCount} more`}
+            </button>
+          )}
         </div>
       )}
+
+      {components.map(comp => (
+        <ComponentFooter
+          key={comp.node_id}
+          node={comp}
+          overlapEdges={regionOverlaps}
+          nodeIndex={treeData.nodeIndex}
+          expanded={expandedNodes.has(comp.node_id)}
+          onToggle={() => onToggle(comp.node_id)}
+        />
+      ))}
     </div>
   )
 }
 
-// --- Orphan lane ---
-// Renders nodes with no CONTAINS edges in a dedicated unbound lane.
+// --- StandaloneSection ---
+// Replaces raw OrphanLane. Groups nodes with no CONTAINS edges by type,
+// presented as human-readable named items. Click to reveal internal id.
 
-function OrphanLane({ orphanIds, data, expandedNodes, onToggle }) {
+const STANDALONE_TYPE_LABELS = {
+  binding_context:    'Regions without surfaces',
+  component_entity:   'Components without surface binding',
+  capability_surface: 'Unbound surfaces',
+}
+
+function StandaloneSection({ orphanIds, nodeIndex, expandedNodes, onToggle }) {
   if (!orphanIds || orphanIds.length === 0) return null
-  return (
-    <div className="topo-env-orphan-lane">
-      <div className="topo-env-orphan-header">UNBOUND NODES ({orphanIds.length})</div>
-      <div className="topo-env-orphan-list">
-        {orphanIds.map(nid => {
-          const node = data.nodeIndex[nid]
-          if (!node) return null
-          return (
-            <EnvNodeChip
-              key={nid}
-              node={node}
-              additionalParentRefs={[]}
-              nodeIndex={data.nodeIndex}
-              expanded={expandedNodes.has(nid)}
-              onToggle={() => onToggle(nid)}
-            />
-          )
-        })}
-      </div>
-    </div>
-  )
-}
 
-// --- Unknown edge lane ---
-// Renders any edge_type values outside the known set as flagged connectors.
+  const byType = {}
+  for (const id of orphanIds) {
+    const n = nodeIndex[id]
+    if (!n) continue
+    if (!byType[n.type]) byType[n.type] = []
+    byType[n.type].push(n)
+  }
 
-function UnknownEdgeLane({ unknownEdges }) {
-  if (!unknownEdges || unknownEdges.length === 0) return null
+  if (Object.keys(byType).length === 0) return null
+
   return (
-    <div className="topo-env-unknown-edge-lane">
-      <div className="topo-env-unknown-edge-header">
-        UNKNOWN EDGE TYPES ({unknownEdges.length}) — flagged
-      </div>
-      {unknownEdges.map(e => (
-        <div key={e.edge_id} className="topo-env-unknown-edge">
-          [{e.edge_type}] {e.from_node} → {e.to_node}
+    <div className="gauge-standalone">
+      <div className="gauge-standalone-header">Standalone items</div>
+      {Object.entries(byType).map(([type, nodes]) => (
+        <div key={type} className="gauge-standalone-group">
+          <span className="gauge-standalone-type">
+            {STANDALONE_TYPE_LABELS[type] || humanize(type)}
+          </span>
+          <div className="gauge-standalone-items">
+            {nodes.map(n => (
+              <span
+                key={n.node_id}
+                className="gauge-standalone-item"
+                onClick={() => onToggle(n.node_id)}
+                title={n.node_id}
+              >
+                {humanize(n.label)}
+                {expandedNodes.has(n.node_id) && (
+                  <span className="gauge-standalone-id"> ({n.node_id})</span>
+                )}
+              </span>
+            ))}
+          </div>
         </div>
       ))}
     </div>
   )
 }
 
-// --- EnvelopeTopology — top-level envelope render ---
+// --- DiagnosticsPanel ---
+// Collapsible at the bottom. Contains all constraint/structural detail:
+// overlap evidence, unknown space, parity recovery, unknown edge types.
+// Default: collapsed, showing pill-count summary only.
+
+function DiagnosticsPanel({ constraintFlags, overlapEdges, unknownEdges, nodeIndex }) {
+  const [open, setOpen] = useState(false)
+  if (!constraintFlags) return null
+
+  const cf    = constraintFlags
+  const pills = []
+  if (cf.overlap_present)                         pills.push(`${cf.overlap_count} overlap`)
+  if (cf.unknown_space_present)                   pills.push(`${cf.unknown_space_count} unknown space`)
+  if (cf.parity_recovery)                         pills.push('parity recovery')
+  if (unknownEdges && unknownEdges.length > 0)    pills.push(`${unknownEdges.length} unknown edge type`)
+
+  if (pills.length === 0) return null
+
+  return (
+    <div className="gauge-diagnostics">
+      <button className="gauge-diag-toggle" onClick={() => setOpen(o => !o)}>
+        <span className="gauge-diag-label">Structural notes</span>
+        <span className="gauge-diag-pills">
+          {pills.map((p, i) => (
+            <span key={i} className="gauge-diag-pill">{p}</span>
+          ))}
+        </span>
+        <span className="gauge-diag-caret">{open ? '▲' : '▼'}</span>
+      </button>
+
+      {open && (
+        <div className="gauge-diag-body">
+          {cf.overlap_present && (
+            <div className="gauge-diag-section">
+              <div className="gauge-diag-section-label">
+                STRUCTURAL OVERLAPS ({cf.overlap_count})
+              </div>
+              {overlapEdges.map(e => {
+                const fromNode = nodeIndex[e.from_node]
+                const toNode   = nodeIndex[e.to_node]
+                const evidence = (cf.overlap_evidence || []).find(ev =>
+                  ev.includes(fromNode?.label || '') || ev.includes(e.from_node)
+                )
+                return (
+                  <div key={e.edge_id} className="gauge-diag-overlap">
+                    <span>{fromNode ? humanize(fromNode.label) : e.from_node}</span>
+                    <span className="gauge-diag-arrow">⟷</span>
+                    <span>{toNode ? humanize(toNode.label) : e.to_node}</span>
+                    {evidence && (
+                      <span className="gauge-diag-evidence">{evidence}</span>
+                    )}
+                  </div>
+                )
+              })}
+              {cf.overlap_source && (
+                <div className="gauge-diag-source">source: {cf.overlap_source}</div>
+              )}
+            </div>
+          )}
+
+          {cf.unknown_space_present && (
+            <div className="gauge-diag-section">
+              <div className="gauge-diag-section-label">
+                UNKNOWN SPACE ({cf.unknown_space_count})
+              </div>
+              {(cf.unknown_space_evidence || []).map((ev, i) => (
+                <div key={i} className="gauge-diag-unknown">{ev}</div>
+              ))}
+              <div className="gauge-diag-note">not rendered as topology nodes</div>
+              {cf.unknown_space_source && (
+                <div className="gauge-diag-source">source: {cf.unknown_space_source}</div>
+              )}
+            </div>
+          )}
+
+          {cf.parity_recovery && (
+            <div className="gauge-diag-section">
+              <div className="gauge-diag-section-label">PARITY RECOVERY</div>
+              <div className="gauge-diag-parity">{cf.parity_recovery}</div>
+            </div>
+          )}
+
+          {unknownEdges && unknownEdges.length > 0 && (
+            <div className="gauge-diag-section">
+              <div className="gauge-diag-section-label">
+                UNKNOWN EDGE TYPES ({unknownEdges.length}) — flagged
+              </div>
+              {unknownEdges.map(e => (
+                <div key={e.edge_id} className="gauge-diag-unknown-edge">
+                  [{e.edge_type}] {e.from_node} → {e.to_node}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// --- EnvelopeTopology ---
+// Top-level envelope render. Meaning-first default surface.
 
 function EnvelopeTopology({ data }) {
   const [expandedNodes, setExpandedNodes] = useState(new Set())
 
-  const onToggle = (nodeId) => {
+  const onToggle = (key) => {
     setExpandedNodes(prev => {
       const next = new Set(prev)
-      if (next.has(nodeId)) next.delete(nodeId)
-      else next.add(nodeId)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
       return next
     })
   }
 
-  // Build node index from annotated nodes array
   const nodeIndex = {}
   for (const n of data.nodes || []) {
     nodeIndex[n.node_id] = n
   }
 
-  // Shared data context passed down to subtree renderers
   const treeData = {
     nodeIndex,
-    containmentTree:     data.containment_tree     || {},
+    containmentTree:      data.containment_tree      || {},
     additionalParentRefs: data.additional_parent_refs || {},
   }
 
   const orphanSet    = new Set(data.orphans || [])
-  // Roots rendered in the containment grid are non-orphan roots only.
-  // Orphans (no inbound AND no outbound CONTAINS) always go to the orphan lane.
-  const rootsForGrid  = (data.roots || []).filter(r => !orphanSet.has(r))
-  const orphans       = data.orphans       || []
-  const overlapEdges  = data.overlap_edges || []
-  const unknownEdges  = data.unknown_edges || []
-  const summary       = data.summary       || {}
-  const cf            = data.constraint_flags || {}
+  const rootsForGrid = (data.roots || []).filter(r => !orphanSet.has(r))
+  const orphans      = data.orphans       || []
+  const overlapEdges = data.overlap_edges || []
+  const unknownEdges = data.unknown_edges || []
+  const summary      = data.summary       || {}
+  const cf           = data.constraint_flags || {}
 
   return (
     <div className="topo-panel">
-      {/* Panel header */}
+      {/* Panel header — simplified */}
       <div className="topo-panel-header">
         <div className="topo-panel-title-row">
-          <span className="topo-panel-label">STRUCTURAL TOPOLOGY — BINDING ENVELOPE</span>
+          <span className="topo-panel-label">STRUCTURAL TOPOLOGY</span>
           <span className="topo-panel-counts">
-            {summary.nodes_count}N · {summary.edges_count}E · {summary.signals_count}S
-            {summary.orphans_count > 0 && ` · ${summary.orphans_count} unbound`}
-            {summary.overlap_edges_count > 0 && ` · ${summary.overlap_edges_count} overlap`}
+            {rootsForGrid.length} region{rootsForGrid.length !== 1 ? 's' : ''}
+            {summary.signals_count > 0 && ` · ${summary.signals_count} signals`}
+            {summary.overlap_edges_count > 0 && ` · ${summary.overlap_edges_count} cross-boundary`}
           </span>
         </div>
         <div className="topo-panel-meta">
-          source: binding_envelope.json · PSEE.BLUEEDGE.GAUGE.HANDOFF.01 · click nodes to expand
+          binding_envelope.json · click items to inspect
         </div>
       </div>
 
-      {/* Constraint lane — always rendered */}
-      <ConstraintLane
-        constraintFlags={cf}
-        overlapEdges={overlapEdges}
-        nodeIndex={nodeIndex}
-      />
-
-      {/* Containment grid — one column per non-orphan root */}
-      <div className="topo-env-roots-grid">
+      {/* Primary regions grid */}
+      <div className="gauge-regions-grid">
         {rootsForGrid.map(rootId => (
-          <div key={rootId} className="topo-env-root-col">
-            <SubtreeNode
-              nodeId={rootId}
-              data={treeData}
-              expandedNodes={expandedNodes}
-              onToggle={onToggle}
-              depth={0}
-            />
-          </div>
+          <RegionCard
+            key={rootId}
+            rootId={rootId}
+            treeData={treeData}
+            overlapEdges={overlapEdges}
+            expandedNodes={expandedNodes}
+            onToggle={onToggle}
+          />
         ))}
       </div>
 
-      {/* Orphan lane — rendered only when orphans present */}
-      <OrphanLane
+      {/* Standalone items — human-readable, grouped by type */}
+      <StandaloneSection
         orphanIds={orphans}
-        data={treeData}
+        nodeIndex={nodeIndex}
         expandedNodes={expandedNodes}
         onToggle={onToggle}
       />
 
-      {/* Unknown edge lane — rendered only when unknown edge types present */}
-      <UnknownEdgeLane unknownEdges={unknownEdges} />
+      {/* Diagnostics — collapsible, at bottom, default collapsed */}
+      <DiagnosticsPanel
+        constraintFlags={cf}
+        overlapEdges={overlapEdges}
+        unknownEdges={unknownEdges}
+        nodeIndex={nodeIndex}
+      />
     </div>
   )
 }

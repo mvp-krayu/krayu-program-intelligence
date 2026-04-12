@@ -27,7 +27,7 @@ from pathlib import Path
 CONTRACT_ID          = "PSEE.BLUEEDGE.GAUGE.HANDOFF.01"
 REQUIRED_COLLECTIONS = ("nodes", "edges", "signals", "constraint_flags")
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
+REPO_ROOT = Path(__file__).resolve().parents[4]
 
 DEFAULT_ENVELOPE = (
     REPO_ROOT
