@@ -1,0 +1,112 @@
+{
+  "artifact_hashes": {
+    "binding_envelope.json": {
+      "after": "fc7459beb29dbf1ce90884a5749475a75b645769cec722828755e7da052fe78b",
+      "before": "aedb41c579fa85148c834e1e176514c6be73234e1fe5632ffe777919bad6cb48"
+    },
+    "binding_model.json": {
+      "after": "741cfcb6940237e523ddbbc4036930d287a9b58291f738658e66cd98eb0f6c13",
+      "before": "d6ee1505c7df3021e915ea468a00e1b600eca447650be79e33016dfe1e9d52c6"
+    }
+  },
+  "artifact_id": "PSEE.BLUEEDGE.BINDING.CONVERGENCE.01-DELTA-VALIDATION-LOG",
+  "checks": [
+    {
+      "check_id": "DV-01",
+      "description": "total nodes = domains(5) + surfaces(30) + components(10) = 45",
+      "detail": "model_topology=45, envelope=45, expected=45",
+      "result": "PASS"
+    },
+    {
+      "check_id": "DV-02",
+      "description": "edges count = R2(30) + R3(30) + overlap(2) = 62",
+      "detail": "model_topology=62, envelope=62, expected=62",
+      "result": "PASS"
+    },
+    {
+      "check_id": "DV-03",
+      "description": "No node exists without provenance",
+      "detail": "nodes_without_provenance=[]",
+      "result": "PASS"
+    },
+    {
+      "check_id": "DV-04",
+      "description": "No new node types beyond ['binding_context', 'capability_surface', 'component_entity']",
+      "detail": "forbidden_types_found=[]",
+      "result": "PASS"
+    },
+    {
+      "check_id": "DV-05",
+      "description": "No module-level (BM-xxx) entities in topology nodes",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "check_id": "DV-06",
+      "description": "No WP-13B topology labels in topology nodes",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "check_id": "DV-07",
+      "description": "Only CONTAINS and OVERLAP_STRUCTURAL edge types present",
+      "detail": "unexpected_types=[]",
+      "result": "PASS"
+    },
+    {
+      "check_id": "DV-08",
+      "description": "R2 edges connect binding_context \u2192 capability_surface only",
+      "detail": "bad_r2_edges=[]",
+      "result": "PASS"
+    },
+    {
+      "check_id": "DV-09",
+      "description": "R3 edges connect capability_surface \u2192 component_entity only",
+      "detail": "bad_r3_edges=[]",
+      "result": "PASS"
+    },
+    {
+      "check_id": "DV-10",
+      "description": "All signals remain attached to component_entity nodes only",
+      "detail": "misattached_signals=[]",
+      "result": "PASS"
+    },
+    {
+      "check_id": "DV-11",
+      "description": "L1 truth unmodified \u2014 confirmed in topology.summary",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "check_id": "DV-12",
+      "description": "Edge count significantly increased from pre-delta (2 \u2192 62)",
+      "detail": "",
+      "result": "PASS"
+    }
+  ],
+  "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+  "constraint_confirmations": {
+    "authority_boundaries_unaltered": true,
+    "capability_surfaces_promoted_to_nodes": true,
+    "containment_edges_materialized": true,
+    "l1_truth_modified": false,
+    "no_forbidden_relationships_introduced": true,
+    "provenance_unaltered": true,
+    "signals_remain_on_component_entity_nodes": true
+  },
+  "contract_id": "PSEE.BLUEEDGE.BINDING.CONVERGENCE.PROJECTION.DELTA.01",
+  "delta_summary": {
+    "capability_surfaces_count": 30,
+    "contains_edges_added": 60,
+    "edges_after": 62,
+    "edges_before": 2,
+    "nodes_after": 45,
+    "nodes_before": 10,
+    "overlap_edges_preserved": 2
+  },
+  "emission_timestamp": "2026-04-10T09:49:06Z",
+  "overall_result": "PASS",
+  "run_id": "run_335c0575a080",
+  "schema_version": "1.0",
+  "stream": "PSEE.BLUEEDGE.BINDING.CONVERGENCE.01"
+}

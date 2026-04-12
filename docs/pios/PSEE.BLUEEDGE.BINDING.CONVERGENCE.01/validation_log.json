@@ -1,0 +1,105 @@
+{
+  "artifact_hashes": {
+    "binding_envelope.json": "aedb41c579fa85148c834e1e176514c6be73234e1fe5632ffe777919bad6cb48",
+    "binding_model.json": "d6ee1505c7df3021e915ea468a00e1b600eca447650be79e33016dfe1e9d52c6",
+    "binding_transformation_spec.json": "371a6cd63b1f1a16c34ddc690c30b502d87bde16e6258f68db2b1ac505224704"
+  },
+  "artifact_id": "PSEE.BLUEEDGE.BINDING.CONVERGENCE.01-VALIDATION-LOG",
+  "checks": [
+    {
+      "check_id": "BC-CHECK-01",
+      "description": "Every binding_context maps to an authoritative domain in structure_manifest",
+      "detail": "binding_context IDs: ['DOM-01', 'DOM-02', 'DOM-03', 'DOM-04', 'DOM-05'] \u2014 manifest domain IDs: ['DOM-01', 'DOM-02', 'DOM-03', 'DOM-04', 'DOM-05']",
+      "result": "PASS"
+    },
+    {
+      "check_id": "BC-CHECK-02",
+      "description": "Every capability_surface maps to an authoritative sub-domain in structure_manifest",
+      "detail": "surfaces=30, manifest_sub_domains=30, diff=set()",
+      "result": "PASS"
+    },
+    {
+      "check_id": "BC-CHECK-03",
+      "description": "Every component_entity maps to an authoritative CEU node in structure_manifest",
+      "detail": "entities=10, manifest_nodes=10, diff=set()",
+      "result": "PASS"
+    },
+    {
+      "check_id": "BC-CHECK-04",
+      "description": "Every signal_seed has lawful STATIC source basis and complete provenance",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "check_id": "BC-CHECK-05",
+      "description": "Every exposed node/edge/signal carries required provenance",
+      "detail": "bad_nodes=0, bad_edges=0, bad_signals=0",
+      "result": "PASS"
+    },
+    {
+      "check_id": "BC-CHECK-06",
+      "description": "No module-level (BM-xxx) entities appear in binding artifact data arrays",
+      "detail": "Scanned 147 entity identifiers/labels",
+      "result": "PASS"
+    },
+    {
+      "check_id": "BC-CHECK-07",
+      "description": "No BM identifiers appear in binding_model or binding_envelope entity data",
+      "detail": "BM- check applied to entity IDs and labels only (not documentation text)",
+      "result": "PASS"
+    },
+    {
+      "check_id": "BC-CHECK-08",
+      "description": "No WP-13B topology labels used as entity data in binding_model or binding_envelope",
+      "detail": "Scanned 89 data labels",
+      "result": "PASS"
+    },
+    {
+      "check_id": "BC-CHECK-09",
+      "description": "Envelope richness exceeds sparse L1 rendering (sub-domain surfaces present + dual-lens provenance)",
+      "detail": "capability_surfaces=30, dual_lens_on_all_nodes=True",
+      "result": "PASS"
+    },
+    {
+      "check_id": "BC-CHECK-10",
+      "description": "Outputs are deterministic across reruns with same inputs",
+      "detail": "",
+      "result": "PASS"
+    }
+  ],
+  "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
+  "constraint_confirmations": {
+    "dual_lens_provenance_present": true,
+    "gauge_handoff_source_explicit": true,
+    "no_l1_truth_modification": true,
+    "no_module_level_expansion": true,
+    "no_semantic_inference": true,
+    "no_wp13b_contamination": true,
+    "stratum_boundary_declared": true,
+    "temporal_classification_static": true
+  },
+  "contract_id": "PSEE.BLUEEDGE.BINDING.CONVERGENCE.IMPLEMENT.01",
+  "emission_timestamp": "2026-04-10T09:34:06Z",
+  "output_paths": {
+    "binding_envelope": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_335c0575a080/binding/binding_envelope.json",
+    "binding_model": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_335c0575a080/binding/binding_model.json",
+    "binding_transformation_spec": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_335c0575a080/binding/binding_transformation_spec.json",
+    "gauge_input_source": "clients/1de0d815-0721-58e9-bc8d-ca83e70fa903/psee/runs/run_335c0575a080/binding/binding_envelope.json"
+  },
+  "overall_result": "PASS",
+  "run_id": "run_335c0575a080",
+  "schema_version": "1.0",
+  "stream": "PSEE.BLUEEDGE.BINDING.CONVERGENCE.01",
+  "summary": {
+    "binding_contexts": 5,
+    "capability_surfaces": 30,
+    "component_entities": 10,
+    "envelope_edges": 2,
+    "envelope_nodes": 10,
+    "envelope_signals": 4,
+    "envelope_surfaces": 30,
+    "provenance_records": 10,
+    "relationships": 2,
+    "signal_seeds": 4
+  }
+}
