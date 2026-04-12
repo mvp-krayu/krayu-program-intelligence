@@ -363,15 +363,37 @@ def derive_structure(client_uuid, run_id, domains_raw, entities_raw,
     """
     log("--- STRUCTURE DERIVATION ---")
 
+    # ── DOMAIN_STRUCTURE.JSON — optional sub_domain source ────────────────────
+    _ds_path = os.path.join(
+        REPO_ROOT,
+        "docs", "pios",
+        "PI.STRUCTURAL_TOPOLOGY.RECONSTRUCTION.WP-03_TO_WP-07",
+        "domain_structure.json",
+    )
+    _sub_domain_map: dict = {}
+    if os.path.isfile(_ds_path):
+        _ds = load_json(_ds_path, "domain_structure.json")
+        for _d in _ds.get("domains", []):
+            _did = _d.get("domain_id")
+            _sds = _d.get("sub_domains") or []
+            if _did and _sds:
+                _sub_domain_map[_did] = _sds
+        log(f"  domain_structure:   LOADED  ({len(_sub_domain_map)} domains with sub_domains)")
+    else:
+        log(f"  domain_structure:   NOT FOUND  (sub_domains will be empty)")
+
     # ── DOMAINS ───────────────────────────────────────────────────────────────
-    domains = [
-        {
+    domains = []
+    for d in sorted(domains_raw, key=lambda x: x["id"]):
+        domain_obj = {
             "domain_id":    d["id"],
             "label":        d["label"],
             "source":       "raw_input.json:domains",
         }
-        for d in sorted(domains_raw, key=lambda x: x["id"])
-    ]
+        sds = _sub_domain_map.get(d["id"])
+        if sds:
+            domain_obj["sub_domains"] = sds
+        domains.append(domain_obj)
 
     # ── NODES (one per entity, stable alphabetical ordering) ──────────────────
     entity_name_to_node_id = {}
