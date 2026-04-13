@@ -1,0 +1,2481 @@
+{
+  "artifact_id": "41X-CANONICAL-TOPOLOGY-JSON",
+  "schema_version": "1.0",
+  "emission_date": "2026-04-13",
+  "source_authority": {
+    "script_path": "scripts/pios/41.1/build_semantic_layer.py",
+    "script_label": "PIOS-41.1-ADDENDUM-SCRIPT-RECOVERY-v1",
+    "source_type": "STRUCTURED_SEMANTIC_EMITTER",
+    "canonical_basis": "41.1 semantic layer",
+    "run_reference": "run_03_blueedge_derivation_validation",
+    "canonical_date": "2026-03-20",
+    "contract_id": "PIOS-41.1-RUN01-CONTRACT-v1"
+  },
+  "counts": {
+    "domains": 17,
+    "capabilities": 42,
+    "components": 89,
+    "total_nodes": 148
+  },
+  "domains": [
+    {
+      "domain_id": "DOMAIN-01",
+      "domain_name": "Edge Data Acquisition",
+      "domain_type": "FUNCTIONAL",
+      "capability_ids": [
+        "CAP-01",
+        "CAP-02",
+        "CAP-03",
+        "CAP-04"
+      ],
+      "component_ids": [
+        "COMP-72",
+        "COMP-73",
+        "COMP-74",
+        "COMP-75",
+        "COMP-76",
+        "COMP-77",
+        "COMP-78"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "domain_id": "DOMAIN-02",
+      "domain_name": "Telemetry Transport and Messaging",
+      "domain_type": "INFRASTRUCTURE",
+      "capability_ids": [
+        "CAP-05",
+        "CAP-06"
+      ],
+      "component_ids": [
+        "COMP-83",
+        "COMP-84",
+        "COMP-85"
+      ],
+      "grounding": "WEAKLY GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "domain_id": "DOMAIN-03",
+      "domain_name": "Fleet Core Operations",
+      "domain_type": "FUNCTIONAL",
+      "capability_ids": [
+        "CAP-07",
+        "CAP-08",
+        "CAP-09",
+        "CAP-10",
+        "CAP-11"
+      ],
+      "component_ids": [
+        "COMP-03",
+        "COMP-04",
+        "COMP-05",
+        "COMP-06",
+        "COMP-07",
+        "COMP-08",
+        "COMP-09",
+        "COMP-13",
+        "COMP-14",
+        "COMP-15",
+        "COMP-22"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "domain_id": "DOMAIN-04",
+      "domain_name": "Fleet Vertical Extensions",
+      "domain_type": "FUNCTIONAL",
+      "capability_ids": [
+        "CAP-12",
+        "CAP-13"
+      ],
+      "component_ids": [
+        "COMP-10",
+        "COMP-11",
+        "COMP-12",
+        "COMP-23",
+        "COMP-60",
+        "COMP-61"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "domain_id": "DOMAIN-05",
+      "domain_name": "Analytics and Intelligence",
+      "domain_type": "FUNCTIONAL",
+      "capability_ids": [
+        "CAP-14",
+        "CAP-15",
+        "CAP-16"
+      ],
+      "component_ids": [
+        "COMP-16",
+        "COMP-17",
+        "COMP-18",
+        "COMP-19",
+        "COMP-20",
+        "COMP-21",
+        "COMP-32",
+        "COMP-41",
+        "COMP-59"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "domain_id": "DOMAIN-06",
+      "domain_name": "AI/ML Intelligence Layer",
+      "domain_type": "FUNCTIONAL",
+      "capability_ids": [
+        "CAP-17",
+        "CAP-18",
+        "CAP-19"
+      ],
+      "component_ids": [
+        "COMP-33",
+        "COMP-39",
+        "COMP-44",
+        "COMP-45",
+        "COMP-46",
+        "COMP-56",
+        "COMP-58"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "domain_id": "DOMAIN-07",
+      "domain_name": "Sensor and Security Ingestion",
+      "domain_type": "FUNCTIONAL",
+      "capability_ids": [
+        "CAP-20",
+        "CAP-21"
+      ],
+      "component_ids": [
+        "COMP-62",
+        "COMP-63"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "domain_id": "DOMAIN-08",
+      "domain_name": "Real-Time Streaming and Gateway",
+      "domain_type": "OPERATIONAL",
+      "capability_ids": [
+        "CAP-22"
+      ],
+      "component_ids": [
+        "COMP-27",
+        "COMP-69"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "domain_id": "DOMAIN-09",
+      "domain_name": "Access Control and Identity",
+      "domain_type": "CROSS-CUTTING",
+      "capability_ids": [
+        "CAP-23",
+        "CAP-24",
+        "CAP-25"
+      ],
+      "component_ids": [
+        "COMP-02",
+        "COMP-67",
+        "COMP-70"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "domain_id": "DOMAIN-10",
+      "domain_name": "Platform Infrastructure and Data",
+      "domain_type": "INFRASTRUCTURE",
+      "capability_ids": [
+        "CAP-26",
+        "CAP-27",
+        "CAP-28",
+        "CAP-29"
+      ],
+      "component_ids": [
+        "COMP-01",
+        "COMP-64",
+        "COMP-79",
+        "COMP-80",
+        "COMP-81",
+        "COMP-82"
+      ],
+      "grounding": "WEAKLY GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "domain_id": "DOMAIN-11",
+      "domain_name": "Event-Driven Architecture",
+      "domain_type": "CROSS-CUTTING",
+      "capability_ids": [
+        "CAP-30"
+      ],
+      "component_ids": [
+        "COMP-65"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "domain_id": "DOMAIN-12",
+      "domain_name": "SaaS Platform Layer",
+      "domain_type": "OPERATIONAL",
+      "capability_ids": [
+        "CAP-31",
+        "CAP-32"
+      ],
+      "component_ids": [
+        "COMP-42",
+        "COMP-49",
+        "COMP-50",
+        "COMP-51"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "domain_id": "DOMAIN-13",
+      "domain_name": "External Integration",
+      "domain_type": "INTEGRATION",
+      "capability_ids": [
+        "CAP-33",
+        "CAP-34"
+      ],
+      "component_ids": [
+        "COMP-52",
+        "COMP-53",
+        "COMP-54",
+        "COMP-55"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "domain_id": "DOMAIN-14",
+      "domain_name": "Frontend Application",
+      "domain_type": "FUNCTIONAL",
+      "capability_ids": [
+        "CAP-35"
+      ],
+      "component_ids": [
+        "COMP-68",
+        "COMP-71"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "domain_id": "DOMAIN-15",
+      "domain_name": "EV and Electrification",
+      "domain_type": "FUNCTIONAL",
+      "capability_ids": [
+        "CAP-36",
+        "CAP-37",
+        "CAP-38"
+      ],
+      "component_ids": [
+        "COMP-24",
+        "COMP-25",
+        "COMP-26",
+        "COMP-30",
+        "COMP-31",
+        "COMP-43"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "domain_id": "DOMAIN-16",
+      "domain_name": "Operational Engineering",
+      "domain_type": "INFRASTRUCTURE",
+      "capability_ids": [
+        "CAP-39",
+        "CAP-40"
+      ],
+      "component_ids": [
+        "COMP-66",
+        "COMP-86",
+        "COMP-87",
+        "COMP-88",
+        "COMP-89"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "domain_id": "DOMAIN-17",
+      "domain_name": "Extended Operations and Driver Services",
+      "domain_type": "FUNCTIONAL",
+      "capability_ids": [
+        "CAP-41",
+        "CAP-42"
+      ],
+      "component_ids": [
+        "COMP-28",
+        "COMP-29",
+        "COMP-34",
+        "COMP-35",
+        "COMP-36",
+        "COMP-37",
+        "COMP-38",
+        "COMP-40",
+        "COMP-47",
+        "COMP-48",
+        "COMP-57"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    }
+  ],
+  "capabilities": [
+    {
+      "capability_id": "CAP-01",
+      "capability_name": "Vehicle Sensor Collection",
+      "capability_type": "CORE",
+      "domain_id": "DOMAIN-01",
+      "component_ids": [
+        "COMP-73",
+        "COMP-76",
+        "COMP-78"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-02",
+      "capability_name": "Network Security Intelligence Collection",
+      "capability_type": "CORE",
+      "domain_id": "DOMAIN-01",
+      "component_ids": [
+        "COMP-74",
+        "COMP-75"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-03",
+      "capability_name": "SVG Device Hardware Platform",
+      "capability_type": "INFRASTRUCTURE",
+      "domain_id": "DOMAIN-01",
+      "component_ids": [
+        "COMP-72"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-04",
+      "capability_name": "SVG Device Firmware Management",
+      "capability_type": "SUPPORTING",
+      "domain_id": "DOMAIN-01",
+      "component_ids": [
+        "COMP-77"
+      ],
+      "grounding": "WEAKLY_GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-05",
+      "capability_name": "MQTT Telemetry Transport",
+      "capability_type": "INFRASTRUCTURE",
+      "domain_id": "DOMAIN-02",
+      "component_ids": [
+        "COMP-83"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-06",
+      "capability_name": "Stream Processing Infrastructure",
+      "capability_type": "INFRASTRUCTURE",
+      "domain_id": "DOMAIN-02",
+      "component_ids": [
+        "COMP-84",
+        "COMP-85"
+      ],
+      "grounding": "WEAKLY_GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-07",
+      "capability_name": "Core Fleet Asset Management",
+      "capability_type": "CORE",
+      "domain_id": "DOMAIN-03",
+      "component_ids": [
+        "COMP-03",
+        "COMP-05",
+        "COMP-06"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-08",
+      "capability_name": "Driver Management",
+      "capability_type": "CORE",
+      "domain_id": "DOMAIN-03",
+      "component_ids": [
+        "COMP-04",
+        "COMP-22"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-09",
+      "capability_name": "Alert and Notification Management",
+      "capability_type": "CORE",
+      "domain_id": "DOMAIN-03",
+      "component_ids": [
+        "COMP-07",
+        "COMP-15"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-10",
+      "capability_name": "Maintenance and Fuel Operations",
+      "capability_type": "CORE",
+      "domain_id": "DOMAIN-03",
+      "component_ids": [
+        "COMP-08",
+        "COMP-09"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-11",
+      "capability_name": "Operational Control and Device Management",
+      "capability_type": "CORE",
+      "domain_id": "DOMAIN-03",
+      "component_ids": [
+        "COMP-13",
+        "COMP-14"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-12",
+      "capability_name": "Fleet Type Verticals",
+      "capability_type": "CORE",
+      "domain_id": "DOMAIN-04",
+      "component_ids": [
+        "COMP-10",
+        "COMP-11",
+        "COMP-12"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-13",
+      "capability_name": "Specialty Transport Extensions",
+      "capability_type": "SUPPORTING",
+      "domain_id": "DOMAIN-04",
+      "component_ids": [
+        "COMP-23",
+        "COMP-60",
+        "COMP-61"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-14",
+      "capability_name": "Fleet Analytics and Reporting",
+      "capability_type": "CORE",
+      "domain_id": "DOMAIN-05",
+      "component_ids": [
+        "COMP-16",
+        "COMP-17",
+        "COMP-18"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-15",
+      "capability_name": "Compliance, Safety, and Finance Intelligence",
+      "capability_type": "CORE",
+      "domain_id": "DOMAIN-05",
+      "component_ids": [
+        "COMP-19",
+        "COMP-20",
+        "COMP-21"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-16",
+      "capability_name": "Executive Intelligence and Data Monetization",
+      "capability_type": "SUPPORTING",
+      "domain_id": "DOMAIN-05",
+      "component_ids": [
+        "COMP-32",
+        "COMP-41",
+        "COMP-59"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-17",
+      "capability_name": "Predictive and Anomaly Intelligence",
+      "capability_type": "CORE",
+      "domain_id": "DOMAIN-06",
+      "component_ids": [
+        "COMP-33",
+        "COMP-44",
+        "COMP-45"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-18",
+      "capability_name": "Driver Intelligence",
+      "capability_type": "CORE",
+      "domain_id": "DOMAIN-06",
+      "component_ids": [
+        "COMP-39",
+        "COMP-46"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-19",
+      "capability_name": "Agentic AI and Road Intelligence",
+      "capability_type": "ENABLING",
+      "domain_id": "DOMAIN-06",
+      "component_ids": [
+        "COMP-56",
+        "COMP-58"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-20",
+      "capability_name": "Sensor Telemetry Ingestion",
+      "capability_type": "CORE",
+      "domain_id": "DOMAIN-07",
+      "component_ids": [
+        "COMP-62"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-21",
+      "capability_name": "HASI Security Intelligence Ingestion",
+      "capability_type": "CORE",
+      "domain_id": "DOMAIN-07",
+      "component_ids": [
+        "COMP-63"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-22",
+      "capability_name": "WebSocket Event Broadcasting",
+      "capability_type": "CORE",
+      "domain_id": "DOMAIN-08",
+      "component_ids": [
+        "COMP-27",
+        "COMP-69"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-23",
+      "capability_name": "JWT Authentication",
+      "capability_type": "ENABLING",
+      "domain_id": "DOMAIN-09",
+      "component_ids": [
+        "COMP-02"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-24",
+      "capability_name": "Frontend Auth State Management",
+      "capability_type": "ENABLING",
+      "domain_id": "DOMAIN-09",
+      "component_ids": [
+        "COMP-70"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-25",
+      "capability_name": "API Versioning",
+      "capability_type": "ENABLING",
+      "domain_id": "DOMAIN-09",
+      "component_ids": [
+        "COMP-67"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-26",
+      "capability_name": "Primary Data Persistence",
+      "capability_type": "INFRASTRUCTURE",
+      "domain_id": "DOMAIN-10",
+      "component_ids": [
+        "COMP-79",
+        "COMP-80"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-27",
+      "capability_name": "Caching Layer",
+      "capability_type": "INFRASTRUCTURE",
+      "domain_id": "DOMAIN-10",
+      "component_ids": [
+        "COMP-64",
+        "COMP-81"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-28",
+      "capability_name": "Object Storage",
+      "capability_type": "INFRASTRUCTURE",
+      "domain_id": "DOMAIN-10",
+      "component_ids": [
+        "COMP-82"
+      ],
+      "grounding": "WEAKLY_GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-29",
+      "capability_name": "Platform Monorepo Container",
+      "capability_type": "INFRASTRUCTURE",
+      "domain_id": "DOMAIN-10",
+      "component_ids": [
+        "COMP-01"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-30",
+      "capability_name": "Domain Event Bus",
+      "capability_type": "ENABLING",
+      "domain_id": "DOMAIN-11",
+      "component_ids": [
+        "COMP-65"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-31",
+      "capability_name": "Multi-Tenant Provisioning",
+      "capability_type": "CORE",
+      "domain_id": "DOMAIN-12",
+      "component_ids": [
+        "COMP-49",
+        "COMP-50"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-32",
+      "capability_name": "Tenant Onboarding and Branding",
+      "capability_type": "SUPPORTING",
+      "domain_id": "DOMAIN-12",
+      "component_ids": [
+        "COMP-42",
+        "COMP-51"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-33",
+      "capability_name": "Notification Delivery Channels",
+      "capability_type": "SUPPORTING",
+      "domain_id": "DOMAIN-13",
+      "component_ids": [
+        "COMP-52"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-34",
+      "capability_name": "Enterprise System Integration",
+      "capability_type": "ENABLING",
+      "domain_id": "DOMAIN-13",
+      "component_ids": [
+        "COMP-53",
+        "COMP-54",
+        "COMP-55"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-35",
+      "capability_name": "Operator Web Application",
+      "capability_type": "CORE",
+      "domain_id": "DOMAIN-14",
+      "component_ids": [
+        "COMP-68",
+        "COMP-71"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-36",
+      "capability_name": "EV Telemetry and Energy Management",
+      "capability_type": "CORE",
+      "domain_id": "DOMAIN-15",
+      "component_ids": [
+        "COMP-24",
+        "COMP-26",
+        "COMP-43"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-37",
+      "capability_name": "Fleet Electrification Planning",
+      "capability_type": "SUPPORTING",
+      "domain_id": "DOMAIN-15",
+      "component_ids": [
+        "COMP-30",
+        "COMP-31"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-38",
+      "capability_name": "Device OTA Management",
+      "capability_type": "SUPPORTING",
+      "domain_id": "DOMAIN-15",
+      "component_ids": [
+        "COMP-25"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-39",
+      "capability_name": "Platform Observability",
+      "capability_type": "ENABLING",
+      "domain_id": "DOMAIN-16",
+      "component_ids": [
+        "COMP-66",
+        "COMP-86"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-40",
+      "capability_name": "Delivery and Quality Infrastructure",
+      "capability_type": "INFRASTRUCTURE",
+      "domain_id": "DOMAIN-16",
+      "component_ids": [
+        "COMP-87",
+        "COMP-88",
+        "COMP-89"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-41",
+      "capability_name": "Commercial Operations and Dispatch Services",
+      "capability_type": "CORE",
+      "domain_id": "DOMAIN-17",
+      "component_ids": [
+        "COMP-28",
+        "COMP-29",
+        "COMP-38",
+        "COMP-47",
+        "COMP-48"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    },
+    {
+      "capability_id": "CAP-42",
+      "capability_name": "Customer and Ecosystem Services",
+      "capability_type": "SUPPORTING",
+      "domain_id": "DOMAIN-17",
+      "component_ids": [
+        "COMP-34",
+        "COMP-35",
+        "COMP-36",
+        "COMP-37",
+        "COMP-40",
+        "COMP-57"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": []
+    }
+  ],
+  "components": [
+    {
+      "component_id": "COMP-01",
+      "component_name": "blueedge-platform (Monorepo)",
+      "capability_id": "CAP-29",
+      "domain_id": "DOMAIN-10",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-02",
+      "component_name": "AuthModule",
+      "capability_id": "CAP-23",
+      "domain_id": "DOMAIN-09",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-03",
+      "component_name": "VehiclesModule",
+      "capability_id": "CAP-07",
+      "domain_id": "DOMAIN-03",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-04",
+      "component_name": "DriversModule",
+      "capability_id": "CAP-08",
+      "domain_id": "DOMAIN-03",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-05",
+      "component_name": "FleetsModule",
+      "capability_id": "CAP-07",
+      "domain_id": "DOMAIN-03",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-06",
+      "component_name": "TripsModule",
+      "capability_id": "CAP-07",
+      "domain_id": "DOMAIN-03",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-07",
+      "component_name": "AlertsModule",
+      "capability_id": "CAP-09",
+      "domain_id": "DOMAIN-03",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-08",
+      "component_name": "MaintenanceModule",
+      "capability_id": "CAP-10",
+      "domain_id": "DOMAIN-03",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-09",
+      "component_name": "FuelModule",
+      "capability_id": "CAP-10",
+      "domain_id": "DOMAIN-03",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-10",
+      "component_name": "TankerModule",
+      "capability_id": "CAP-12",
+      "domain_id": "DOMAIN-04",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-11",
+      "component_name": "BusModule",
+      "capability_id": "CAP-12",
+      "domain_id": "DOMAIN-04",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-12",
+      "component_name": "TaxiModule",
+      "capability_id": "CAP-12",
+      "domain_id": "DOMAIN-04",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-13",
+      "component_name": "OperationsModule",
+      "capability_id": "CAP-11",
+      "domain_id": "DOMAIN-03",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-14",
+      "component_name": "DevicesModule",
+      "capability_id": "CAP-11",
+      "domain_id": "DOMAIN-03",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-15",
+      "component_name": "NotificationsModule",
+      "capability_id": "CAP-09",
+      "domain_id": "DOMAIN-03",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-16",
+      "component_name": "AnalyticsModule",
+      "capability_id": "CAP-14",
+      "domain_id": "DOMAIN-05",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-17",
+      "component_name": "ReportsModule",
+      "capability_id": "CAP-14",
+      "domain_id": "DOMAIN-05",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-18",
+      "component_name": "DiagnosticsModule",
+      "capability_id": "CAP-14",
+      "domain_id": "DOMAIN-05",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-19",
+      "component_name": "ComplianceModule",
+      "capability_id": "CAP-15",
+      "domain_id": "DOMAIN-05",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-20",
+      "component_name": "SafetyModule",
+      "capability_id": "CAP-15",
+      "domain_id": "DOMAIN-05",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-21",
+      "component_name": "FinanceModule",
+      "capability_id": "CAP-15",
+      "domain_id": "DOMAIN-05",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-22",
+      "component_name": "UsersModule",
+      "capability_id": "CAP-08",
+      "domain_id": "DOMAIN-03",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-23",
+      "component_name": "ColdchainModule",
+      "capability_id": "CAP-13",
+      "domain_id": "DOMAIN-04",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-24",
+      "component_name": "EvModule",
+      "capability_id": "CAP-36",
+      "domain_id": "DOMAIN-15",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-25",
+      "component_name": "OtaModule",
+      "capability_id": "CAP-38",
+      "domain_id": "DOMAIN-15",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": true,
+      "cross_domain_ref": "DOM-01"
+    },
+    {
+      "component_id": "COMP-26",
+      "component_name": "V2gModule",
+      "capability_id": "CAP-36",
+      "domain_id": "DOMAIN-15",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-27",
+      "component_name": "GatewaysModule",
+      "capability_id": "CAP-22",
+      "domain_id": "DOMAIN-08",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-28",
+      "component_name": "SurgePricingModule",
+      "capability_id": "CAP-41",
+      "domain_id": "DOMAIN-17",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-29",
+      "component_name": "DriverIncentivesModule",
+      "capability_id": "CAP-41",
+      "domain_id": "DOMAIN-17",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-30",
+      "component_name": "ElectrificationModule",
+      "capability_id": "CAP-37",
+      "domain_id": "DOMAIN-15",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-31",
+      "component_name": "DepotChargingModule",
+      "capability_id": "CAP-37",
+      "domain_id": "DOMAIN-15",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-32",
+      "component_name": "ExecutiveModule",
+      "capability_id": "CAP-16",
+      "domain_id": "DOMAIN-05",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-33",
+      "component_name": "AnomalyDetectionModule",
+      "capability_id": "CAP-17",
+      "domain_id": "DOMAIN-06",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-34",
+      "component_name": "CrossBorderModule",
+      "capability_id": "CAP-42",
+      "domain_id": "DOMAIN-17",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-35",
+      "component_name": "PermitsModule",
+      "capability_id": "CAP-42",
+      "domain_id": "DOMAIN-17",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-36",
+      "component_name": "PartsMarketplaceModule",
+      "capability_id": "CAP-42",
+      "domain_id": "DOMAIN-17",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-37",
+      "component_name": "FleetLifecycleModule",
+      "capability_id": "CAP-42",
+      "domain_id": "DOMAIN-17",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-38",
+      "component_name": "DriverMobileModule",
+      "capability_id": "CAP-41",
+      "domain_id": "DOMAIN-17",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-39",
+      "component_name": "FatigueRiskModule",
+      "capability_id": "CAP-18",
+      "domain_id": "DOMAIN-06",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-40",
+      "component_name": "CustomerPortalModule",
+      "capability_id": "CAP-42",
+      "domain_id": "DOMAIN-17",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-41",
+      "component_name": "BlockchainModule",
+      "capability_id": "CAP-16",
+      "domain_id": "DOMAIN-05",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-42",
+      "component_name": "WhiteLabelModule",
+      "capability_id": "CAP-32",
+      "domain_id": "DOMAIN-12",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-43",
+      "component_name": "ChargingStationsModule",
+      "capability_id": "CAP-36",
+      "domain_id": "DOMAIN-15",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-44",
+      "component_name": "PredictiveMaintenanceModule",
+      "capability_id": "CAP-17",
+      "domain_id": "DOMAIN-06",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-45",
+      "component_name": "DigitalTwinModule",
+      "capability_id": "CAP-17",
+      "domain_id": "DOMAIN-06",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-46",
+      "component_name": "DriverScoringModule",
+      "capability_id": "CAP-18",
+      "domain_id": "DOMAIN-06",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-47",
+      "component_name": "GeofenceAutomationModule",
+      "capability_id": "CAP-41",
+      "domain_id": "DOMAIN-17",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-48",
+      "component_name": "MessagingModule",
+      "capability_id": "CAP-41",
+      "domain_id": "DOMAIN-17",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-49",
+      "component_name": "MultiTenantModule",
+      "capability_id": "CAP-31",
+      "domain_id": "DOMAIN-12",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-50",
+      "component_name": "BillingModule",
+      "capability_id": "CAP-31",
+      "domain_id": "DOMAIN-12",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-51",
+      "component_name": "OnboardingModule",
+      "capability_id": "CAP-32",
+      "domain_id": "DOMAIN-12",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-52",
+      "component_name": "NotificationProvidersModule",
+      "capability_id": "CAP-33",
+      "domain_id": "DOMAIN-13",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-53",
+      "component_name": "ErpConnectorsModule",
+      "capability_id": "CAP-34",
+      "domain_id": "DOMAIN-13",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-54",
+      "component_name": "ApiMarketplaceModule",
+      "capability_id": "CAP-34",
+      "domain_id": "DOMAIN-13",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-55",
+      "component_name": "IntegrationHubModule",
+      "capability_id": "CAP-34",
+      "domain_id": "DOMAIN-13",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-56",
+      "component_name": "AgenticAIModule",
+      "capability_id": "CAP-19",
+      "domain_id": "DOMAIN-06",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-57",
+      "component_name": "AftersalesModule",
+      "capability_id": "CAP-42",
+      "domain_id": "DOMAIN-17",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-58",
+      "component_name": "RoadIntelligenceModule",
+      "capability_id": "CAP-19",
+      "domain_id": "DOMAIN-06",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-59",
+      "component_name": "DataMonetizationModule",
+      "capability_id": "CAP-16",
+      "domain_id": "DOMAIN-05",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-60",
+      "component_name": "DriverSessionsModule",
+      "capability_id": "CAP-13",
+      "domain_id": "DOMAIN-04",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-61",
+      "component_name": "VehicleLifecycleModule",
+      "capability_id": "CAP-13",
+      "domain_id": "DOMAIN-04",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-62",
+      "component_name": "SensorsModule",
+      "capability_id": "CAP-20",
+      "domain_id": "DOMAIN-07",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-63",
+      "component_name": "HasiModule",
+      "capability_id": "CAP-21",
+      "domain_id": "DOMAIN-07",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-64",
+      "component_name": "RedisCacheModule",
+      "capability_id": "CAP-27",
+      "domain_id": "DOMAIN-10",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-65",
+      "component_name": "FleetEventsModule",
+      "capability_id": "CAP-30",
+      "domain_id": "DOMAIN-11",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-66",
+      "component_name": "HealthModule",
+      "capability_id": "CAP-39",
+      "domain_id": "DOMAIN-16",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-67",
+      "component_name": "V2Module (API Versioning)",
+      "capability_id": "CAP-25",
+      "domain_id": "DOMAIN-09",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-68",
+      "component_name": "Frontend Application",
+      "capability_id": "CAP-35",
+      "domain_id": "DOMAIN-14",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-69",
+      "component_name": "FleetSocket Client",
+      "capability_id": "CAP-22",
+      "domain_id": "DOMAIN-08",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-70",
+      "component_name": "AuthContext / AuthProvider",
+      "capability_id": "CAP-24",
+      "domain_id": "DOMAIN-09",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-71",
+      "component_name": "Frontend Page Modules (61 pages)",
+      "capability_id": "CAP-35",
+      "domain_id": "DOMAIN-14",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-72",
+      "component_name": "SVG 2.0 Smart Vehicle Gateway",
+      "capability_id": "CAP-03",
+      "domain_id": "DOMAIN-01",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-73",
+      "component_name": "sensor_collector.py",
+      "capability_id": "CAP-01",
+      "domain_id": "DOMAIN-01",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-74",
+      "component_name": "hasi_bridge.py",
+      "capability_id": "CAP-02",
+      "domain_id": "DOMAIN-01",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-75",
+      "component_name": "HASI v1.0.0",
+      "capability_id": "CAP-02",
+      "domain_id": "DOMAIN-01",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-76",
+      "component_name": "SVG Main Telemetry Firmware",
+      "capability_id": "CAP-01",
+      "domain_id": "DOMAIN-01",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-77",
+      "component_name": "SVG OTA Agent",
+      "capability_id": "CAP-04",
+      "domain_id": "DOMAIN-01",
+      "grounding": "WEAKLY_GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-78",
+      "component_name": "SVG Agent Configuration",
+      "capability_id": "CAP-01",
+      "domain_id": "DOMAIN-01",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-79",
+      "component_name": "PostgreSQL 15",
+      "capability_id": "CAP-26",
+      "domain_id": "DOMAIN-10",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-80",
+      "component_name": "TimescaleDB",
+      "capability_id": "CAP-26",
+      "domain_id": "DOMAIN-10",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-81",
+      "component_name": "Redis 7",
+      "capability_id": "CAP-27",
+      "domain_id": "DOMAIN-10",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-82",
+      "component_name": "S3 / MinIO Object Storage",
+      "capability_id": "CAP-28",
+      "domain_id": "DOMAIN-10",
+      "grounding": "WEAKLY_GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-83",
+      "component_name": "MQTT Broker (EMQX)",
+      "capability_id": "CAP-05",
+      "domain_id": "DOMAIN-02",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-84",
+      "component_name": "Apache Kafka",
+      "capability_id": "CAP-06",
+      "domain_id": "DOMAIN-02",
+      "grounding": "WEAKLY_GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-85",
+      "component_name": "Apache Flink",
+      "capability_id": "CAP-06",
+      "domain_id": "DOMAIN-02",
+      "grounding": "WEAKLY_GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-86",
+      "component_name": "Monitoring Stack",
+      "capability_id": "CAP-39",
+      "domain_id": "DOMAIN-16",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-87",
+      "component_name": "Load Tests",
+      "capability_id": "CAP-40",
+      "domain_id": "DOMAIN-16",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-88",
+      "component_name": "CI/CD Workflows",
+      "capability_id": "CAP-40",
+      "domain_id": "DOMAIN-16",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    },
+    {
+      "component_id": "COMP-89",
+      "component_name": "Docker Compose Orchestration",
+      "capability_id": "CAP-40",
+      "domain_id": "DOMAIN-16",
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "source_ref": null,
+      "cross_domain": false,
+      "cross_domain_ref": null
+    }
+  ],
+  "relationships": {
+    "domain_capability": [
+      {
+        "domain_id": "DOMAIN-01",
+        "capability_id": "CAP-01"
+      },
+      {
+        "domain_id": "DOMAIN-01",
+        "capability_id": "CAP-02"
+      },
+      {
+        "domain_id": "DOMAIN-01",
+        "capability_id": "CAP-03"
+      },
+      {
+        "domain_id": "DOMAIN-01",
+        "capability_id": "CAP-04"
+      },
+      {
+        "domain_id": "DOMAIN-02",
+        "capability_id": "CAP-05"
+      },
+      {
+        "domain_id": "DOMAIN-02",
+        "capability_id": "CAP-06"
+      },
+      {
+        "domain_id": "DOMAIN-03",
+        "capability_id": "CAP-07"
+      },
+      {
+        "domain_id": "DOMAIN-03",
+        "capability_id": "CAP-08"
+      },
+      {
+        "domain_id": "DOMAIN-03",
+        "capability_id": "CAP-09"
+      },
+      {
+        "domain_id": "DOMAIN-03",
+        "capability_id": "CAP-10"
+      },
+      {
+        "domain_id": "DOMAIN-03",
+        "capability_id": "CAP-11"
+      },
+      {
+        "domain_id": "DOMAIN-04",
+        "capability_id": "CAP-12"
+      },
+      {
+        "domain_id": "DOMAIN-04",
+        "capability_id": "CAP-13"
+      },
+      {
+        "domain_id": "DOMAIN-05",
+        "capability_id": "CAP-14"
+      },
+      {
+        "domain_id": "DOMAIN-05",
+        "capability_id": "CAP-15"
+      },
+      {
+        "domain_id": "DOMAIN-05",
+        "capability_id": "CAP-16"
+      },
+      {
+        "domain_id": "DOMAIN-06",
+        "capability_id": "CAP-17"
+      },
+      {
+        "domain_id": "DOMAIN-06",
+        "capability_id": "CAP-18"
+      },
+      {
+        "domain_id": "DOMAIN-06",
+        "capability_id": "CAP-19"
+      },
+      {
+        "domain_id": "DOMAIN-07",
+        "capability_id": "CAP-20"
+      },
+      {
+        "domain_id": "DOMAIN-07",
+        "capability_id": "CAP-21"
+      },
+      {
+        "domain_id": "DOMAIN-08",
+        "capability_id": "CAP-22"
+      },
+      {
+        "domain_id": "DOMAIN-09",
+        "capability_id": "CAP-23"
+      },
+      {
+        "domain_id": "DOMAIN-09",
+        "capability_id": "CAP-24"
+      },
+      {
+        "domain_id": "DOMAIN-09",
+        "capability_id": "CAP-25"
+      },
+      {
+        "domain_id": "DOMAIN-10",
+        "capability_id": "CAP-26"
+      },
+      {
+        "domain_id": "DOMAIN-10",
+        "capability_id": "CAP-27"
+      },
+      {
+        "domain_id": "DOMAIN-10",
+        "capability_id": "CAP-28"
+      },
+      {
+        "domain_id": "DOMAIN-10",
+        "capability_id": "CAP-29"
+      },
+      {
+        "domain_id": "DOMAIN-11",
+        "capability_id": "CAP-30"
+      },
+      {
+        "domain_id": "DOMAIN-12",
+        "capability_id": "CAP-31"
+      },
+      {
+        "domain_id": "DOMAIN-12",
+        "capability_id": "CAP-32"
+      },
+      {
+        "domain_id": "DOMAIN-13",
+        "capability_id": "CAP-33"
+      },
+      {
+        "domain_id": "DOMAIN-13",
+        "capability_id": "CAP-34"
+      },
+      {
+        "domain_id": "DOMAIN-14",
+        "capability_id": "CAP-35"
+      },
+      {
+        "domain_id": "DOMAIN-15",
+        "capability_id": "CAP-36"
+      },
+      {
+        "domain_id": "DOMAIN-15",
+        "capability_id": "CAP-37"
+      },
+      {
+        "domain_id": "DOMAIN-15",
+        "capability_id": "CAP-38"
+      },
+      {
+        "domain_id": "DOMAIN-16",
+        "capability_id": "CAP-39"
+      },
+      {
+        "domain_id": "DOMAIN-16",
+        "capability_id": "CAP-40"
+      },
+      {
+        "domain_id": "DOMAIN-17",
+        "capability_id": "CAP-41"
+      },
+      {
+        "domain_id": "DOMAIN-17",
+        "capability_id": "CAP-42"
+      }
+    ],
+    "capability_component": [
+      {
+        "capability_id": "CAP-29",
+        "component_id": "COMP-01"
+      },
+      {
+        "capability_id": "CAP-23",
+        "component_id": "COMP-02"
+      },
+      {
+        "capability_id": "CAP-07",
+        "component_id": "COMP-03"
+      },
+      {
+        "capability_id": "CAP-08",
+        "component_id": "COMP-04"
+      },
+      {
+        "capability_id": "CAP-07",
+        "component_id": "COMP-05"
+      },
+      {
+        "capability_id": "CAP-07",
+        "component_id": "COMP-06"
+      },
+      {
+        "capability_id": "CAP-09",
+        "component_id": "COMP-07"
+      },
+      {
+        "capability_id": "CAP-10",
+        "component_id": "COMP-08"
+      },
+      {
+        "capability_id": "CAP-10",
+        "component_id": "COMP-09"
+      },
+      {
+        "capability_id": "CAP-12",
+        "component_id": "COMP-10"
+      },
+      {
+        "capability_id": "CAP-12",
+        "component_id": "COMP-11"
+      },
+      {
+        "capability_id": "CAP-12",
+        "component_id": "COMP-12"
+      },
+      {
+        "capability_id": "CAP-11",
+        "component_id": "COMP-13"
+      },
+      {
+        "capability_id": "CAP-11",
+        "component_id": "COMP-14"
+      },
+      {
+        "capability_id": "CAP-09",
+        "component_id": "COMP-15"
+      },
+      {
+        "capability_id": "CAP-14",
+        "component_id": "COMP-16"
+      },
+      {
+        "capability_id": "CAP-14",
+        "component_id": "COMP-17"
+      },
+      {
+        "capability_id": "CAP-14",
+        "component_id": "COMP-18"
+      },
+      {
+        "capability_id": "CAP-15",
+        "component_id": "COMP-19"
+      },
+      {
+        "capability_id": "CAP-15",
+        "component_id": "COMP-20"
+      },
+      {
+        "capability_id": "CAP-15",
+        "component_id": "COMP-21"
+      },
+      {
+        "capability_id": "CAP-08",
+        "component_id": "COMP-22"
+      },
+      {
+        "capability_id": "CAP-13",
+        "component_id": "COMP-23"
+      },
+      {
+        "capability_id": "CAP-36",
+        "component_id": "COMP-24"
+      },
+      {
+        "capability_id": "CAP-38",
+        "component_id": "COMP-25"
+      },
+      {
+        "capability_id": "CAP-36",
+        "component_id": "COMP-26"
+      },
+      {
+        "capability_id": "CAP-22",
+        "component_id": "COMP-27"
+      },
+      {
+        "capability_id": "CAP-41",
+        "component_id": "COMP-28"
+      },
+      {
+        "capability_id": "CAP-41",
+        "component_id": "COMP-29"
+      },
+      {
+        "capability_id": "CAP-37",
+        "component_id": "COMP-30"
+      },
+      {
+        "capability_id": "CAP-37",
+        "component_id": "COMP-31"
+      },
+      {
+        "capability_id": "CAP-16",
+        "component_id": "COMP-32"
+      },
+      {
+        "capability_id": "CAP-17",
+        "component_id": "COMP-33"
+      },
+      {
+        "capability_id": "CAP-42",
+        "component_id": "COMP-34"
+      },
+      {
+        "capability_id": "CAP-42",
+        "component_id": "COMP-35"
+      },
+      {
+        "capability_id": "CAP-42",
+        "component_id": "COMP-36"
+      },
+      {
+        "capability_id": "CAP-42",
+        "component_id": "COMP-37"
+      },
+      {
+        "capability_id": "CAP-41",
+        "component_id": "COMP-38"
+      },
+      {
+        "capability_id": "CAP-18",
+        "component_id": "COMP-39"
+      },
+      {
+        "capability_id": "CAP-42",
+        "component_id": "COMP-40"
+      },
+      {
+        "capability_id": "CAP-16",
+        "component_id": "COMP-41"
+      },
+      {
+        "capability_id": "CAP-32",
+        "component_id": "COMP-42"
+      },
+      {
+        "capability_id": "CAP-36",
+        "component_id": "COMP-43"
+      },
+      {
+        "capability_id": "CAP-17",
+        "component_id": "COMP-44"
+      },
+      {
+        "capability_id": "CAP-17",
+        "component_id": "COMP-45"
+      },
+      {
+        "capability_id": "CAP-18",
+        "component_id": "COMP-46"
+      },
+      {
+        "capability_id": "CAP-41",
+        "component_id": "COMP-47"
+      },
+      {
+        "capability_id": "CAP-41",
+        "component_id": "COMP-48"
+      },
+      {
+        "capability_id": "CAP-31",
+        "component_id": "COMP-49"
+      },
+      {
+        "capability_id": "CAP-31",
+        "component_id": "COMP-50"
+      },
+      {
+        "capability_id": "CAP-32",
+        "component_id": "COMP-51"
+      },
+      {
+        "capability_id": "CAP-33",
+        "component_id": "COMP-52"
+      },
+      {
+        "capability_id": "CAP-34",
+        "component_id": "COMP-53"
+      },
+      {
+        "capability_id": "CAP-34",
+        "component_id": "COMP-54"
+      },
+      {
+        "capability_id": "CAP-34",
+        "component_id": "COMP-55"
+      },
+      {
+        "capability_id": "CAP-19",
+        "component_id": "COMP-56"
+      },
+      {
+        "capability_id": "CAP-42",
+        "component_id": "COMP-57"
+      },
+      {
+        "capability_id": "CAP-19",
+        "component_id": "COMP-58"
+      },
+      {
+        "capability_id": "CAP-16",
+        "component_id": "COMP-59"
+      },
+      {
+        "capability_id": "CAP-13",
+        "component_id": "COMP-60"
+      },
+      {
+        "capability_id": "CAP-13",
+        "component_id": "COMP-61"
+      },
+      {
+        "capability_id": "CAP-20",
+        "component_id": "COMP-62"
+      },
+      {
+        "capability_id": "CAP-21",
+        "component_id": "COMP-63"
+      },
+      {
+        "capability_id": "CAP-27",
+        "component_id": "COMP-64"
+      },
+      {
+        "capability_id": "CAP-30",
+        "component_id": "COMP-65"
+      },
+      {
+        "capability_id": "CAP-39",
+        "component_id": "COMP-66"
+      },
+      {
+        "capability_id": "CAP-25",
+        "component_id": "COMP-67"
+      },
+      {
+        "capability_id": "CAP-35",
+        "component_id": "COMP-68"
+      },
+      {
+        "capability_id": "CAP-22",
+        "component_id": "COMP-69"
+      },
+      {
+        "capability_id": "CAP-24",
+        "component_id": "COMP-70"
+      },
+      {
+        "capability_id": "CAP-35",
+        "component_id": "COMP-71"
+      },
+      {
+        "capability_id": "CAP-03",
+        "component_id": "COMP-72"
+      },
+      {
+        "capability_id": "CAP-01",
+        "component_id": "COMP-73"
+      },
+      {
+        "capability_id": "CAP-02",
+        "component_id": "COMP-74"
+      },
+      {
+        "capability_id": "CAP-02",
+        "component_id": "COMP-75"
+      },
+      {
+        "capability_id": "CAP-01",
+        "component_id": "COMP-76"
+      },
+      {
+        "capability_id": "CAP-04",
+        "component_id": "COMP-77"
+      },
+      {
+        "capability_id": "CAP-01",
+        "component_id": "COMP-78"
+      },
+      {
+        "capability_id": "CAP-26",
+        "component_id": "COMP-79"
+      },
+      {
+        "capability_id": "CAP-26",
+        "component_id": "COMP-80"
+      },
+      {
+        "capability_id": "CAP-27",
+        "component_id": "COMP-81"
+      },
+      {
+        "capability_id": "CAP-28",
+        "component_id": "COMP-82"
+      },
+      {
+        "capability_id": "CAP-05",
+        "component_id": "COMP-83"
+      },
+      {
+        "capability_id": "CAP-06",
+        "component_id": "COMP-84"
+      },
+      {
+        "capability_id": "CAP-06",
+        "component_id": "COMP-85"
+      },
+      {
+        "capability_id": "CAP-39",
+        "component_id": "COMP-86"
+      },
+      {
+        "capability_id": "CAP-40",
+        "component_id": "COMP-87"
+      },
+      {
+        "capability_id": "CAP-40",
+        "component_id": "COMP-88"
+      },
+      {
+        "capability_id": "CAP-40",
+        "component_id": "COMP-89"
+      }
+    ],
+    "component_component": []
+  }
+}

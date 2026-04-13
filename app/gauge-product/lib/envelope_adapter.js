@@ -289,6 +289,7 @@ function buildRenderModel(envelope, envelopePath) {
 
   return {
     envelope:               true,
+    run_id:                 envelope.metadata?.run_id || null,
     contract_id:            CONTRACT_ID,
     envelope_path:          envelopePath,
     nodes:                  annotatedNodes,

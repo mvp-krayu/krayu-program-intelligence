@@ -45,6 +45,8 @@ export default function handler(req, res) {
 
   return res.status(200).json({
     run_id:           gaugeState.run_id,
+    stream:           gaugeState.stream,
+    state:            gaugeState.state || {},
     execution_status: gaugeState.state?.execution_status,
     dimensions:       gaugeState.dimensions || {},
     score:            gaugeState.score      || {},

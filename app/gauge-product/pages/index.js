@@ -111,6 +111,7 @@ export default function GaugeProduct() {
 
   const gaugeResult = useGaugeData()
   const topoResult  = useTopologySummary()
+  const gaugeData   = gaugeResult.data
 
   const inputRef = useRef(null)
 
@@ -201,8 +202,8 @@ export default function GaugeProduct() {
         <div className="top-bar">
           <div className="header-top">
             <div>
-              <div className="header-run">Run: run_01</div>
-              <div className="header-phase">Execution Phase: PHASE_1_ACTIVE</div>
+              <div className="header-run">Run: {gaugeData?.run_id ?? 'run_01_authoritative'}</div>
+              <div className="header-phase">Execution Phase: {gaugeData?.execution_status ?? 'PHASE_1_ACTIVE'}</div>
             </div>
             <div className="header-tag">gauge-v2-product</div>
           </div>
@@ -210,18 +211,18 @@ export default function GaugeProduct() {
           <div className="score-grid">
             <div className="score-cell">
               <div className="sc-label">Canonical Score</div>
-              <div className="sc-value">60</div>
-              <div className="sc-band">CONDITIONAL</div>
+              <div className="sc-value">{gaugeData?.score?.canonical ?? 60}</div>
+              <div className="sc-band">{gaugeData?.score?.band_label ?? 'CONDITIONAL'}</div>
               <div className="sc-sub">Verified structural state</div>
             </div>
             <div className="score-cell">
               <div className="sc-label">Projected Score</div>
-              <div className="sc-value">100</div>
+              <div className="sc-value">{gaugeData?.projection?.value ?? 100}</div>
               <div className="sc-sub">If execution layer completes</div>
             </div>
             <div className="score-cell">
               <div className="sc-label">Confidence Band</div>
-              <div className="sc-value" style={{ fontSize: '22px', paddingTop: '4px' }}>[60 – 100]</div>
+              <div className="sc-value" style={{ fontSize: '22px', paddingTop: '4px' }}>[{gaugeData?.confidence?.lower ?? 60} – {gaugeData?.confidence?.upper ?? 100}]</div>
               <div className="sc-sub">Lower = proven / Upper = achievable</div>
             </div>
           </div>
@@ -237,15 +238,15 @@ export default function GaugeProduct() {
 
             {/* Score Decomposition */}
             <div className="panel">
-              <div className="panel-label">Score Decomposition (60 = 0 + 35 + 25)</div>
+              <div className="panel-label">Score Decomposition ({gaugeData?.score?.canonical ?? 60} = {gaugeData?.score?.components?.completion_points ?? 0} + {gaugeData?.score?.components?.coverage_points ?? 35} + {gaugeData?.score?.components?.reconstruction_points ?? 25})</div>
 
               <div className="comp-block">
                 <div className="comp-header">
                   <div className="comp-name">Completion / Execution Insight</div>
-                  <div className="comp-pts" style={{ color: '#8b949e' }}>0 / 40 pts</div>
+                  <div className="comp-pts" style={{ color: '#8b949e' }}>{gaugeData?.score?.components?.completion_points ?? 0} / 40 pts</div>
                 </div>
                 <div className="comp-bar-bg">
-                  <div className="comp-bar-fill" style={{ width: '0%', background: '#8b949e' }}></div>
+                  <div className="comp-bar-fill" style={{ width: `${Math.round((gaugeData?.score?.components?.completion_points ?? 0) / 40 * 100)}%`, background: '#8b949e' }}></div>
                 </div>
                 <div className="comp-status">NOT EVALUATED — execution layer not performed</div>
               </div>
@@ -253,23 +254,23 @@ export default function GaugeProduct() {
               <div className="comp-block">
                 <div className="comp-header">
                   <div className="comp-name">Coverage</div>
-                  <div className="comp-pts" style={{ color: '#3fb950' }}>35 / 35 pts</div>
+                  <div className="comp-pts" style={{ color: '#3fb950' }}>{gaugeData?.score?.components?.coverage_points ?? 35} / 35 pts</div>
                 </div>
                 <div className="comp-bar-bg">
-                  <div className="comp-bar-fill" style={{ width: '100%', background: '#3fb950' }}></div>
+                  <div className="comp-bar-fill" style={{ width: `${gaugeData?.dimensions?.['DIM-01']?.coverage_percent ?? 100}%`, background: '#3fb950' }}></div>
                 </div>
-                <div className="comp-status" style={{ color: '#3fb950' }}>COMPUTED — 100% structural coverage (30/30 units)</div>
+                <div className="comp-status" style={{ color: '#3fb950' }}>{gaugeData?.dimensions?.['DIM-01']?.state ?? 'COMPUTED'} — {gaugeData?.dimensions?.['DIM-01']?.coverage_percent ?? 100}% structural coverage ({gaugeData?.dimensions?.['DIM-01']?.admissible_units ?? 30}/{gaugeData?.dimensions?.['DIM-01']?.required_units ?? 30} units)</div>
               </div>
 
               <div className="comp-block">
                 <div className="comp-header">
                   <div className="comp-name">Reconstruction</div>
-                  <div className="comp-pts" style={{ color: '#3fb950' }}>25 / 25 pts</div>
+                  <div className="comp-pts" style={{ color: '#3fb950' }}>{gaugeData?.score?.components?.reconstruction_points ?? 25} / 25 pts</div>
                 </div>
                 <div className="comp-bar-bg">
-                  <div className="comp-bar-fill" style={{ width: '100%', background: '#3fb950' }}></div>
+                  <div className="comp-bar-fill" style={{ width: `${Math.round((gaugeData?.score?.components?.reconstruction_points ?? 25) / 25 * 100)}%`, background: '#3fb950' }}></div>
                 </div>
-                <div className="comp-status" style={{ color: '#3fb950' }}>PASS — 4-axis structural validation (30/30 units)</div>
+                <div className="comp-status" style={{ color: '#3fb950' }}>{gaugeData?.dimensions?.['DIM-02']?.state ?? 'PASS'} — {Object.keys(gaugeData?.reconstruction?.axis_results ?? {}).length || 4}-axis structural validation ({gaugeData?.reconstruction?.validated_units ?? 30}/{gaugeData?.reconstruction?.total_units ?? 30} units)</div>
               </div>
             </div>
 
@@ -283,14 +284,14 @@ export default function GaugeProduct() {
                   <div className="exp-title">Completion / Execution Insight</div>
                   <div className="exp-badge badge-not-eval">NOT EVALUATED</div>
                 </div>
-                <div className="exp-row"><span className="ek">Contribution</span><span className="ev">0 of 40 points</span></div>
+                <div className="exp-row"><span className="ek">Contribution</span><span className="ev">{gaugeData?.score?.components?.completion_points ?? 0} of 40 points</span></div>
                 <div className="exp-row"><span className="ek">Reason</span><span className="ev">The execution layer (PiOS engine) has not been run against this intake. Completion scoring requires terminal execution state — none exists for this run.</span></div>
                 <div className="exp-row"><span className="ek">What this means</span><span className="ev">The gauge cannot determine whether execution succeeded, partially completed, or encountered terminal conditions. This component contributes 0 until execution runs.</span></div>
 
                 <div className="cta-block">
                   <div className="cta-truth">
                     <strong>Structural proof is complete.</strong>{' '}
-                    The 60-point floor is verified without execution.
+                    The {gaugeData?.confidence?.lower ?? 60}-point floor is verified without execution.
                     Execution insight is a separate evaluation that has not been performed —
                     this is not a data gap, it is an unevaluated layer.
                   </div>
@@ -308,10 +309,10 @@ export default function GaugeProduct() {
               <div className="exp-block">
                 <div className="exp-header">
                   <div className="exp-title">Coverage</div>
-                  <div className="exp-badge badge-computed">COMPUTED</div>
+                  <div className="exp-badge badge-computed">{gaugeData?.dimensions?.['DIM-01']?.state ?? 'COMPUTED'}</div>
                 </div>
-                <div className="exp-row"><span className="ek">Contribution</span><span className="ev">35 of 35 points</span></div>
-                <div className="exp-row"><span className="ek">Value</span><span className="ev">100.0% — 30/30 admissible units</span></div>
+                <div className="exp-row"><span className="ek">Contribution</span><span className="ev">{gaugeData?.score?.components?.coverage_points ?? 35} of 35 points</span></div>
+                <div className="exp-row"><span className="ek">Value</span><span className="ev">{(gaugeData?.dimensions?.['DIM-01']?.coverage_percent ?? 100).toFixed(1)}% — {gaugeData?.dimensions?.['DIM-01']?.admissible_units ?? 30}/{gaugeData?.dimensions?.['DIM-01']?.required_units ?? 30} admissible units</span></div>
                 <div className="exp-row"><span className="ek">Method</span><span className="ev">Structural admissibility computation from IG.RUNTIME evidence boundary</span></div>
                 <div className="exp-row"><span className="ek">What this means</span><span className="ev">All required structural units in the intake package were validated as admissible. No gaps in coverage. The structural package is complete.</span></div>
                 <div className="exp-row"><span className="ek">Authority</span><span className="ev">PSEE-GAUGE.0 DP-5-02 / coverage_state.json</span></div>
@@ -321,12 +322,12 @@ export default function GaugeProduct() {
               <div className="exp-block">
                 <div className="exp-header">
                   <div className="exp-title">Reconstruction</div>
-                  <div className="exp-badge badge-pass">PASS</div>
+                  <div className="exp-badge badge-pass">{gaugeData?.dimensions?.['DIM-02']?.state ?? 'PASS'}</div>
                 </div>
-                <div className="exp-row"><span className="ek">Contribution</span><span className="ev">25 of 25 points</span></div>
-                <div className="exp-row"><span className="ek">Validated units</span><span className="ev">30 / 30</span></div>
+                <div className="exp-row"><span className="ek">Contribution</span><span className="ev">{gaugeData?.score?.components?.reconstruction_points ?? 25} of 25 points</span></div>
+                <div className="exp-row"><span className="ek">Validated units</span><span className="ev">{gaugeData?.reconstruction?.validated_units ?? 30} / {gaugeData?.reconstruction?.total_units ?? 30}</span></div>
                 <div className="exp-row"><span className="ek">Axes evaluated</span><span className="ev">Completeness · Structural Link · Referential Integrity · Layer Consistency</span></div>
-                <div className="exp-row"><span className="ek">Violations</span><span className="ev">0</span></div>
+                <div className="exp-row"><span className="ek">Violations</span><span className="ev">{gaugeData?.reconstruction?.violations?.length ?? 0}</span></div>
                 <div className="exp-row"><span className="ek">What this means</span><span className="ev">The structural reconstruction of the intake is fully validated. All units are connected, all references resolve, all layer boundaries are consistent.</span></div>
                 <div className="exp-row"><span className="ek">Authority</span><span className="ev">PSEE-GAUGE.0 DP-6-03 / reconstruction_state.json</span></div>
               </div>
@@ -360,29 +361,29 @@ export default function GaugeProduct() {
               <div className="cap-block">
                 <div className="cap-na-badge">NOT EVALUATED</div>
                 <div className="cap-title">Completion Scoring (Runtime)</div>
-                <div className="cap-row"><span className="ck">Why not available</span><span className="cv">Completion score requires terminal execution state (S-T1, S-T2, S-T3, S-13). Current state PHASE_1_ACTIVE is in-flight — no terminal state reached.</span></div>
+                <div className="cap-row"><span className="ck">Why not available</span><span className="cv">Completion score requires terminal execution state (S-T1, S-T2, S-T3, S-13). Current state {gaugeData?.execution_status ?? 'PHASE_1_ACTIVE'} is in-flight — no terminal state reached.</span></div>
                 <div className="cap-unlock">Unlock: advance to terminal execution state via PiOS execution layer</div>
               </div>
             </div>
 
             {/* Confidence Band */}
             <div className="panel">
-              <div className="panel-label">Confidence Band [60 – 100]</div>
+              <div className="panel-label">Confidence Band [{gaugeData?.confidence?.lower ?? 60} – {gaugeData?.confidence?.upper ?? 100}]</div>
 
               <div className="conf-text">
-                The <strong>lower bound (60)</strong> represents the verified structural state of this intake.
+                The <strong>lower bound ({gaugeData?.confidence?.lower ?? 60})</strong> represents the verified structural state of this intake.
                 It is a hard floor derived only from what has been computed and validated without any assumptions.
-                Coverage (35 pts) and Reconstruction (25 pts) are fully proven. Completion (0 pts) reflects the
+                Coverage ({gaugeData?.score?.components?.coverage_points ?? 35} pts) and Reconstruction ({gaugeData?.score?.components?.reconstruction_points ?? 25} pts) are fully proven. Completion ({gaugeData?.score?.components?.completion_points ?? 0} pts) reflects the
                 absence of execution-layer evaluation — not a failure.
               </div>
               <div className="conf-text">
-                The <strong>upper bound (100)</strong> represents the achievable score if the execution layer
+                The <strong>upper bound ({gaugeData?.projection?.value ?? 100})</strong> represents the achievable score if the execution layer
                 is performed and completes successfully to terminal state S-13. It assumes the already-proven
-                structural dimensions (Coverage 100%, Reconstruction PASS) hold through execution.
+                structural dimensions (Coverage {gaugeData?.dimensions?.['DIM-01']?.coverage_percent ?? 100}%, Reconstruction {gaugeData?.dimensions?.['DIM-02']?.state ?? 'PASS'}) hold through execution.
                 No new structural risks have been identified that would reduce this ceiling.
               </div>
               <div className="conf-text">
-                The gap between 60 and 100 is fully explained by the missing execution evaluation.
+                The gap between {gaugeData?.confidence?.lower ?? 60} and {gaugeData?.confidence?.upper ?? 100} is fully explained by the missing execution evaluation.
                 There are no open escalations, unknown-space records, or coverage gaps that would compress this band.
               </div>
 
@@ -393,11 +394,11 @@ export default function GaugeProduct() {
               <div className="conf-legend">
                 <div className="conf-legend-item">
                   <div className="conf-legend-dot" style={{ background: '#8b949e' }}></div>
-                  <span>Lower = 60 — verified structural state</span>
+                  <span>Lower = {gaugeData?.confidence?.lower ?? 60} — verified structural state</span>
                 </div>
                 <div className="conf-legend-item">
                   <div className="conf-legend-dot" style={{ background: '#d29922' }}></div>
-                  <span>Upper = 100 — achievable if execution layer completes</span>
+                  <span>Upper = {gaugeData?.confidence?.upper ?? 100} — achievable if execution layer completes</span>
                 </div>
               </div>
             </div>
@@ -413,31 +414,31 @@ export default function GaugeProduct() {
                   <div className="op-group-label">Execution State</div>
                   <table className="op-table">
                     <tbody>
-                      <tr><td>execution_status</td><td>PHASE_1_ACTIVE</td></tr>
-                      <tr><td>psee_engine_invoked</td><td>true</td></tr>
-                      <tr><td>execution_mode</td><td>FULL</td></tr>
-                      <tr><td>run_id</td><td>run_01</td></tr>
-                      <tr><td>score.stream</td><td>PSEE-RUNTIME.5</td></tr>
+                      <tr><td>execution_status</td><td>{gaugeData?.execution_status ?? 'PHASE_1_ACTIVE'}</td></tr>
+                      <tr><td>psee_engine_invoked</td><td>{String(gaugeData?.state?.psee_engine_invoked ?? true)}</td></tr>
+                      <tr><td>execution_mode</td><td>{gaugeData?.state?.execution_mode ?? 'FULL'}</td></tr>
+                      <tr><td>run_id</td><td>{gaugeData?.run_id ?? 'run_01_authoritative'}</td></tr>
+                      <tr><td>score.stream</td><td>{gaugeData?.stream ?? 'PSEE-RUNTIME.5'}</td></tr>
                     </tbody>
                   </table>
 
                   <div className="op-group-label">Score Components</div>
                   <table className="op-table">
                     <tbody>
-                      <tr><td>canonical_score</td><td>60</td></tr>
-                      <tr><td>band_label</td><td>CONDITIONAL</td></tr>
-                      <tr><td>derivation</td><td>0 + 35 + 25 = 60</td></tr>
-                      <tr><td>completion_points</td><td>0</td></tr>
+                      <tr><td>canonical_score</td><td>{gaugeData?.score?.canonical ?? 60}</td></tr>
+                      <tr><td>band_label</td><td>{gaugeData?.score?.band_label ?? 'CONDITIONAL'}</td></tr>
+                      <tr><td>derivation</td><td>{gaugeData?.score?.derivation ?? '0 + 35 + 25 = 60'}</td></tr>
+                      <tr><td>completion_points</td><td>{gaugeData?.score?.components?.completion_points ?? 0}</td></tr>
                       <tr><td>completion_basis</td><td>PHASE_1_ACTIVE — in-flight; UNDEFINED_STATE guard applied</td></tr>
-                      <tr><td>coverage_points</td><td>35</td></tr>
+                      <tr><td>coverage_points</td><td>{gaugeData?.score?.components?.coverage_points ?? 35}</td></tr>
                       <tr><td>coverage_basis</td><td>round(100.0 × 0.35) = 35</td></tr>
-                      <tr><td>reconstruction_points</td><td>25</td></tr>
+                      <tr><td>reconstruction_points</td><td>{gaugeData?.score?.components?.reconstruction_points ?? 25}</td></tr>
                       <tr><td>reconstruction_basis</td><td>DIM-02.state=PASS → 25 pts</td></tr>
-                      <tr><td>projected_score</td><td>100</td></tr>
-                      <tr><td>projection_rule</td><td>PR-02</td></tr>
-                      <tr><td>confidence_lower</td><td>60</td></tr>
-                      <tr><td>confidence_upper</td><td>100</td></tr>
-                      <tr><td>confidence_status</td><td>COMPUTED</td></tr>
+                      <tr><td>projected_score</td><td>{gaugeData?.projection?.value ?? 100}</td></tr>
+                      <tr><td>projection_rule</td><td>{gaugeData?.projection?.rule ?? 'PR-02'}</td></tr>
+                      <tr><td>confidence_lower</td><td>{gaugeData?.confidence?.lower ?? 60}</td></tr>
+                      <tr><td>confidence_upper</td><td>{gaugeData?.confidence?.upper ?? 100}</td></tr>
+                      <tr><td>confidence_status</td><td>{gaugeData?.confidence?.status ?? 'COMPUTED'}</td></tr>
                       <tr><td>total_variance_reduction</td><td>0</td></tr>
                     </tbody>
                   </table>
@@ -445,41 +446,41 @@ export default function GaugeProduct() {
                   <div className="op-group-label">DIM-01 — Coverage (coverage_state.json)</div>
                   <table className="op-table">
                     <tbody>
-                      <tr><td>state</td><td>COMPUTED</td></tr>
-                      <tr><td>state_label</td><td>FULL</td></tr>
-                      <tr><td>coverage_percent</td><td>100.0</td></tr>
-                      <tr><td>required_units</td><td>30</td></tr>
-                      <tr><td>admissible_units</td><td>30</td></tr>
+                      <tr><td>state</td><td>{gaugeData?.dimensions?.['DIM-01']?.state ?? 'COMPUTED'}</td></tr>
+                      <tr><td>state_label</td><td>{gaugeData?.dimensions?.['DIM-01']?.state_label ?? 'FULL'}</td></tr>
+                      <tr><td>coverage_percent</td><td>{(gaugeData?.dimensions?.['DIM-01']?.coverage_percent ?? 100).toFixed(1)}</td></tr>
+                      <tr><td>required_units</td><td>{gaugeData?.dimensions?.['DIM-01']?.required_units ?? 30}</td></tr>
+                      <tr><td>admissible_units</td><td>{gaugeData?.dimensions?.['DIM-01']?.admissible_units ?? 30}</td></tr>
                       <tr><td>method</td><td>IG.RUNTIME admissible coverage computation</td></tr>
-                      <tr><td>authority</td><td>PSEE-GAUGE.0 DP-5-02</td></tr>
-                      <tr><td>stream</td><td>PSEE-RUNTIME.5A</td></tr>
+                      <tr><td>authority</td><td>{gaugeData?.dimensions?.['DIM-01']?.authority ?? 'PSEE-GAUGE.0 DP-5-02'}</td></tr>
+                      <tr><td>stream</td><td>{gaugeData?.coverage?.stream ?? 'PSEE-RUNTIME.5A'}</td></tr>
                     </tbody>
                   </table>
 
                   <div className="op-group-label">DIM-02 — Reconstruction (reconstruction_state.json)</div>
                   <table className="op-table">
                     <tbody>
-                      <tr><td>state</td><td>PASS</td></tr>
-                      <tr><td>validated_units</td><td>30</td></tr>
-                      <tr><td>total_units</td><td>30</td></tr>
-                      <tr><td>violations</td><td>0</td></tr>
-                      <tr><td>axis: COMPLETENESS</td><td>PASS</td></tr>
-                      <tr><td>axis: STRUCTURAL_LINK</td><td>PASS</td></tr>
-                      <tr><td>axis: REFERENTIAL_INTEGRITY</td><td>PASS</td></tr>
-                      <tr><td>axis: LAYER_CONSISTENCY</td><td>PASS</td></tr>
+                      <tr><td>state</td><td>{gaugeData?.dimensions?.['DIM-02']?.state ?? 'PASS'}</td></tr>
+                      <tr><td>validated_units</td><td>{gaugeData?.reconstruction?.validated_units ?? 30}</td></tr>
+                      <tr><td>total_units</td><td>{gaugeData?.reconstruction?.total_units ?? 30}</td></tr>
+                      <tr><td>violations</td><td>{gaugeData?.reconstruction?.violations?.length ?? 0}</td></tr>
+                      <tr><td>axis: COMPLETENESS</td><td>{gaugeData?.reconstruction?.axis_results?.COMPLETENESS ?? 'PASS'}</td></tr>
+                      <tr><td>axis: STRUCTURAL_LINK</td><td>{gaugeData?.reconstruction?.axis_results?.STRUCTURAL_LINK ?? 'PASS'}</td></tr>
+                      <tr><td>axis: REFERENTIAL_INTEGRITY</td><td>{gaugeData?.reconstruction?.axis_results?.REFERENTIAL_INTEGRITY ?? 'PASS'}</td></tr>
+                      <tr><td>axis: LAYER_CONSISTENCY</td><td>{gaugeData?.reconstruction?.axis_results?.LAYER_CONSISTENCY ?? 'PASS'}</td></tr>
                       <tr><td>method</td><td>IG.RUNTIME structural reconstruction validation</td></tr>
-                      <tr><td>authority</td><td>PSEE-GAUGE.0 DP-6-03</td></tr>
-                      <tr><td>stream</td><td>PSEE-RUNTIME.6A</td></tr>
+                      <tr><td>authority</td><td>{gaugeData?.reconstruction?.authority ?? 'PSEE-GAUGE.0 DP-6-03'}</td></tr>
+                      <tr><td>stream</td><td>{gaugeData?.reconstruction?.stream ?? 'PSEE-RUNTIME.6A'}</td></tr>
                     </tbody>
                   </table>
 
                   <div className="op-group-label">DIM-03 through DIM-06 (gauge_state.json)</div>
                   <table className="op-table">
                     <tbody>
-                      <tr><td>DIM-03 Escalation Clearance</td><td>100 — CLEAR</td></tr>
-                      <tr><td>DIM-04 Unknown-Space</td><td>0 records — NONE</td></tr>
-                      <tr><td>DIM-05 Intake Completeness</td><td>COMPLETE</td></tr>
-                      <tr><td>DIM-06 Heuristic Compliance</td><td>PASS</td></tr>
+                      <tr><td>DIM-03 Escalation Clearance</td><td>{gaugeData?.dimensions?.['DIM-03']?.value ?? 100} — {gaugeData?.dimensions?.['DIM-03']?.state_label ?? 'CLEAR'}</td></tr>
+                      <tr><td>DIM-04 Unknown-Space</td><td>{gaugeData?.dimensions?.['DIM-04']?.total_count ?? 0} records — {gaugeData?.dimensions?.['DIM-04']?.state_label ?? 'NONE'}</td></tr>
+                      <tr><td>DIM-05 Intake Completeness</td><td>{gaugeData?.dimensions?.['DIM-05']?.state ?? 'COMPLETE'}</td></tr>
+                      <tr><td>DIM-06 Heuristic Compliance</td><td>{gaugeData?.dimensions?.['DIM-06']?.state ?? 'PASS'}</td></tr>
                     </tbody>
                   </table>
 
@@ -525,15 +526,15 @@ export default function GaugeProduct() {
 
                 <div className="si-bridge-metrics">
                   <div className="si-metric">
-                    <div className="si-metric-val">30</div>
+                    <div className="si-metric-val">{gaugeData?.reconstruction?.validated_units ?? 30}</div>
                     <div className="si-metric-lbl">PSEE Validated Units</div>
                   </div>
                   <div className="si-metric">
-                    <div className="si-metric-val">4</div>
+                    <div className="si-metric-val">{Object.keys(gaugeData?.reconstruction?.axis_results ?? {}).length || 4}</div>
                     <div className="si-metric-lbl">Reconstruction Axes</div>
                   </div>
                   <div className="si-metric">
-                    <div className="si-metric-val">0</div>
+                    <div className="si-metric-val">{gaugeData?.reconstruction?.violations?.length ?? 0}</div>
                     <div className="si-metric-lbl">Proof Violations</div>
                   </div>
                 </div>
@@ -629,9 +630,9 @@ export default function GaugeProduct() {
               <div className="panel-label">State Summary</div>
 
               <div className="state-row"><div className="state-dot" style={{ background: '#3fb950' }}></div><span>Structural proof: <strong>COMPLETE</strong></span></div>
-              <div className="state-row"><div className="state-dot" style={{ background: '#3fb950' }}></div><span>Coverage: <strong>100% (30/30 units)</strong></span></div>
-              <div className="state-row"><div className="state-dot" style={{ background: '#3fb950' }}></div><span>Reconstruction: <strong>PASS (4-axis, 0 violations)</strong></span></div>
-              <div className="state-row"><div className="state-dot" style={{ background: '#d29922' }}></div><span>Score: <strong>60 CONDITIONAL</strong> — proven floor</span></div>
+              <div className="state-row"><div className="state-dot" style={{ background: '#3fb950' }}></div><span>Coverage: <strong>{gaugeData?.dimensions?.['DIM-01']?.coverage_percent ?? 100}% ({gaugeData?.dimensions?.['DIM-01']?.admissible_units ?? 30}/{gaugeData?.dimensions?.['DIM-01']?.required_units ?? 30} units)</strong></span></div>
+              <div className="state-row"><div className="state-dot" style={{ background: '#3fb950' }}></div><span>Reconstruction: <strong>{gaugeData?.dimensions?.['DIM-02']?.state ?? 'PASS'} ({Object.keys(gaugeData?.reconstruction?.axis_results ?? {}).length || 4}-axis, {gaugeData?.reconstruction?.violations?.length ?? 0} violations)</strong></span></div>
+              <div className="state-row"><div className="state-dot" style={{ background: '#d29922' }}></div><span>Score: <strong>{gaugeData?.score?.canonical ?? 60} {gaugeData?.score?.band_label ?? 'CONDITIONAL'}</strong> — proven floor</span></div>
               <div className="state-row"><div className="state-dot" style={{ background: '#8b949e' }}></div><span>Execution insight: <strong style={{ color: '#8b949e' }}>NOT EVALUATED</strong></span></div>
               <div className="state-row">
                 <div className="state-dot" style={{ background: discoveryEnabled ? '#3fb950' : '#1b3a5c' }}></div>

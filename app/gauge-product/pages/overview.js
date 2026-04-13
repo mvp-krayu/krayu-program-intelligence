@@ -371,7 +371,7 @@ export default function OverviewPage() {
       <div className="ov-header-bar">
         <div className="ov-header-identity">
           <div className="ov-header-title">System Overview</div>
-          <div className="ov-header-sub">run_01 · gauge-v2-product · PSEE.BLUEEDGE.GAUGE.HANDOFF.01</div>
+          <div className="ov-header-sub">{gaugeData?.run_id ?? 'run_01_authoritative'} · gauge-v2-product · PSEE.BLUEEDGE.GAUGE.HANDOFF.01</div>
         </div>
         <div className="ov-nav-links">
           <Link href="/"         className="ov-nav-link">Detailed Gauge &#x2192;</Link>
