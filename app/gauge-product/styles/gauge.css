@@ -6,11 +6,12 @@ body { font-family: monospace; background:#0b0f14; color:#e6edf3; padding:24px; 
 .phase { color:#58a6ff; }
 
 /* === OUTER SHELL === */
-.outer { max-width:1120px; border:1px solid #333; }
+.outer { max-width:1400px; border:1px solid #333; }
 .top-bar { padding:20px; border-bottom:1px solid #1f2937; }
 .cols { display:flex; align-items:flex-start; }
-.col-left  { flex:0 0 60%; border-right:1px solid #1f2937; min-width:0; }
-.col-right { flex:1; min-width:0; }
+.col-left   { flex:0 0 40%; border-right:1px solid #1f2937; min-width:0; }
+.col-center { flex:0 0 32%; border-right:1px solid #1f2937; min-width:0; }
+.col-right  { flex:1; min-width:0; }
 
 /* === PANELS === */
 .panel { padding:20px; border-bottom:1px solid #1f2937; }
@@ -239,3 +240,701 @@ details.op-details[open] summary::before { content:"▼  "; }
   font-size:12px; color:#8b949e; line-height:1.7; margin-bottom:14px;
 }
 .topology-addon-note strong { color:#58a6ff; }
+
+/* === RUNTIME INTELLIGENCE (right col) === */
+.ri-section { margin-bottom:14px; }
+.ri-section:last-child { margin-bottom:0; }
+.ri-section-label {
+  font-size:10px; color:#444; text-transform:uppercase;
+  letter-spacing:.07em; margin-bottom:8px;
+}
+.ri-dim { display:flex; justify-content:space-between; align-items:baseline; padding:4px 0; border-bottom:1px solid #111; font-size:12px; }
+.ri-dim:last-child { border-bottom:none; }
+.ri-dim-label { color:#8b949e; flex:1; }
+.ri-dim-val { color:#c9d1d9; font-weight:bold; margin-left:8px; }
+.ri-dim-state { font-size:11px; margin-left:6px; }
+.ri-dim-state.pass { color:#3fb950; }
+.ri-dim-state.computed { color:#3fb950; }
+.ri-dim-state.clear { color:#3fb950; }
+.ri-dim-state.none { color:#8b949e; }
+.ri-dim-state.complete { color:#3fb950; }
+
+/* === STRUCTURAL METRICS (right col) === */
+.sm-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+.sm-metric { border:1px solid #1f2937; padding:10px; text-align:center; }
+.sm-metric-val { font-size:20px; font-weight:bold; color:#58a6ff; }
+.sm-metric-lbl { font-size:10px; color:#8b949e; margin-top:2px; text-transform:uppercase; letter-spacing:.05em; }
+
+/* === SIGNAL SET (right col) === */
+.sig-row { display:flex; justify-content:space-between; align-items:baseline; padding:4px 0; border-bottom:1px solid #111; font-size:12px; }
+.sig-row:last-child { border-bottom:none; }
+.sig-id { color:#8b949e; font-size:11px; }
+.sig-name { color:#c9d1d9; flex:1; margin:0 8px; }
+.sig-val { color:#58a6ff; font-weight:bold; white-space:nowrap; }
+
+/* === TOPOLOGY SUMMARY (right col) === */
+.ts-row { display:flex; justify-content:space-between; font-size:12px; padding:4px 0; border-bottom:1px solid #111; }
+.ts-row:last-child { border-bottom:none; }
+.ts-label { color:#8b949e; }
+.ts-value { color:#c9d1d9; font-weight:bold; }
+.ts-flag  { font-size:11px; color:#d29922; margin-left:6px; }
+
+/* === RIGHT COL LOADING / ERROR === */
+.ri-loading { font-size:12px; color:#8b949e; padding:20px; }
+.ri-error   { font-size:12px; color:#f85149; border:1px solid #3d1a1a; padding:10px; margin:10px 0; }
+
+/* =========================================================================
+   TOPOLOGY ADD-ON — ta-* (GAUGE.TOPOLOGY.ADDON.RESTORE.INSPECTOR.AND.PRESENTATION.01)
+   ========================================================================= */
+
+/* --- States --- */
+.ta-state-loading {
+  font-size:12px; color:#8b949e; padding:12px 0;
+}
+.ta-state-error {
+  font-size:12px; color:#f85149; border:1px solid #3d1a1a;
+  padding:10px 14px; margin:8px 0; line-height:1.6;
+}
+.ta-state-error-detail {
+  color:#8b949e; margin-top:6px; font-size:11px; line-height:1.7;
+}
+
+/* --- Panel header --- */
+.ta-header {
+  display:flex; align-items:baseline; justify-content:space-between;
+  padding:12px 0 10px; border-bottom:1px solid #1f2937; margin-bottom:12px;
+}
+.ta-title {
+  font-size:13px; font-weight:bold; color:#c9d1d9;
+  text-transform:uppercase; letter-spacing:.06em;
+}
+.ta-meta {
+  font-size:11px; color:#444;
+}
+
+/* --- Body layout --- */
+.ta-body {
+  display:flex; gap:0; position:relative;
+}
+.ta-tree {
+  flex:1; min-width:0; padding-right:0;
+}
+.ta-body--split .ta-tree {
+  flex:0 0 52%; border-right:1px solid #1f2937; padding-right:14px;
+}
+.ta-inspector {
+  flex:1; min-width:0; padding-left:16px; overflow-y:auto; max-height:640px;
+}
+.ta-inspector-hint {
+  font-size:11px; color:#444; padding:10px 0 0 16px; align-self:flex-start;
+}
+
+/* --- Regions --- */
+.ta-regions {
+  display:flex; flex-direction:column; gap:10px;
+}
+.ta-region {
+  border:1px solid #1f2937; background:#0b0f14;
+}
+.ta-region--selected {
+  border-color:#1b3a5c;
+}
+.ta-region-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:8px 12px; cursor:pointer; border-bottom:1px solid #1f2937;
+}
+.ta-region-header:hover { background:#0e1520; }
+.ta-region--selected .ta-region-header { background:#060e17; }
+.ta-region-name {
+  font-size:13px; color:#c9d1d9; font-weight:bold;
+}
+.ta-region-badges {
+  display:flex; gap:6px; align-items:center;
+}
+
+/* --- Badges --- */
+.ta-badge {
+  font-size:10px; padding:2px 6px; border-radius:2px;
+}
+.ta-badge--dim {
+  background:#111b26; color:#8b949e; border:1px solid #1f2937;
+}
+.ta-badge--overlap {
+  background:#1a1000; color:#d29922; border:1px solid #3a2800;
+}
+
+/* --- Surfaces --- */
+.ta-surfaces {
+  padding:4px 0 4px 12px; border-bottom:1px solid #111;
+}
+.ta-surface-row {
+  display:flex; align-items:center; gap:8px;
+  padding:4px 8px; font-size:12px; cursor:pointer;
+}
+.ta-surface-row:hover { background:#0e1520; }
+.ta-surface-row--selected { background:#060e17; border-left:2px solid #1b3a5c; }
+.ta-surface-indicator {
+  color:#444; flex-shrink:0;
+}
+.ta-surface-name {
+  color:#c9d1d9; flex:1; min-width:0;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.ta-surface-id {
+  font-size:10px; color:#444; font-family:monospace; flex-shrink:0;
+}
+.ta-show-more {
+  display:block; width:100%; font-family:monospace; font-size:11px;
+  color:#58a6ff; background:none; border:none; cursor:pointer;
+  text-align:left; padding:4px 8px; margin-left:12px;
+}
+.ta-show-more:hover { color:#79b8ff; }
+
+/* --- Components --- */
+.ta-component {
+  padding:6px 12px; font-size:12px; cursor:pointer; border-bottom:1px solid #111;
+}
+.ta-component:last-child { border-bottom:none; }
+.ta-component:hover { background:#0e1520; }
+.ta-component--overlap { border-left:2px solid #3a2800; }
+.ta-component--selected { background:#060e17; border-left:2px solid #1b3a5c; }
+.ta-component-row {
+  display:flex; align-items:center; gap:6px;
+}
+.ta-component-dot {
+  color:#3fb950; font-size:8px; flex-shrink:0;
+}
+.ta-component--overlap .ta-component-dot {
+  color:#d29922;
+}
+.ta-component-name {
+  color:#c9d1d9; flex:1; min-width:0;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.ta-signal-count {
+  font-size:10px; color:#58a6ff; flex-shrink:0;
+}
+.ta-overlap-refs {
+  display:flex; flex-wrap:wrap; gap:4px; margin-top:4px; padding-left:18px;
+}
+.ta-overlap-ref {
+  font-size:10px; color:#d29922; background:#1a1000;
+  border:1px solid #3a2800; padding:1px 5px; border-radius:2px;
+}
+
+/* --- Orphans --- */
+.ta-orphans {
+  margin-top:10px; padding:10px 12px;
+  border:1px solid #1f2937; background:#0b0f14;
+}
+.ta-orphans-header {
+  font-size:10px; color:#444; text-transform:uppercase;
+  letter-spacing:.07em; margin-bottom:6px;
+}
+.ta-orphans-list {
+  display:flex; flex-wrap:wrap; gap:6px;
+}
+.ta-orphan-item {
+  font-size:11px; color:#8b949e; padding:3px 8px;
+  border:1px solid #1f2937; cursor:pointer;
+}
+.ta-orphan-item:hover { border-color:#8b949e; color:#c9d1d9; }
+.ta-orphan-item--selected { border-color:#1b3a5c; color:#58a6ff; }
+
+/* --- Structural notes (overlaps) --- */
+.ta-notes {
+  margin-top:10px; padding:10px 12px;
+  border:1px solid #3a2800; background:#0e0a00;
+}
+.ta-notes-header {
+  font-size:10px; color:#d29922; text-transform:uppercase;
+  letter-spacing:.07em; margin-bottom:6px;
+}
+.ta-note-row {
+  display:flex; align-items:center; gap:8px;
+  font-size:11px; padding:2px 0;
+}
+.ta-note-from, .ta-note-to { color:#c9d1d9; }
+.ta-note-arrow { color:#d29922; flex-shrink:0; }
+.ta-notes-unknown {
+  margin-top:6px; font-size:11px; color:#8b949e;
+}
+
+/* --- Inspector panel --- */
+.ta-insp {
+  font-size:12px; background:#060c12;
+  border:1px solid #1f2937; padding:14px 16px;
+  display:flex; flex-direction:column; gap:0;
+}
+.ta-insp-header {
+  display:flex; align-items:flex-start; justify-content:space-between;
+  margin-bottom:4px;
+}
+.ta-insp-title {
+  font-size:14px; font-weight:bold; color:#c9d1d9; line-height:1.3;
+}
+.ta-insp-close {
+  font-family:monospace; font-size:13px; color:#8b949e;
+  background:none; border:none; cursor:pointer; padding:0 0 0 8px;
+  flex-shrink:0; line-height:1.3;
+}
+.ta-insp-close:hover { color:#c9d1d9; }
+.ta-insp-id {
+  font-size:10px; color:#444; font-family:monospace;
+  margin-bottom:8px; word-break:break-all;
+}
+.ta-insp-type-row {
+  display:flex; align-items:center; gap:6px;
+  flex-wrap:wrap; margin-bottom:12px;
+}
+.ta-insp-type {
+  font-size:10px; padding:2px 7px; border-radius:2px; font-weight:bold;
+  text-transform:uppercase; letter-spacing:.05em;
+}
+.ta-insp-type--binding_context {
+  background:#0b1f31; color:#58a6ff; border:1px solid #1b3a5c;
+}
+.ta-insp-type--capability_surface {
+  background:#0e1a0e; color:#3fb950; border:1px solid #1a3a1a;
+}
+.ta-insp-type--component_entity {
+  background:#1a1000; color:#d29922; border:1px solid #3a2800;
+}
+.ta-insp-tc {
+  font-size:10px; color:#8b949e; padding:2px 7px;
+  border:1px solid #1f2937;
+}
+.ta-insp-overlap-badge {
+  font-size:10px; color:#d29922; padding:2px 7px;
+  border:1px solid #3a2800; background:#1a1000;
+}
+
+/* --- Inspector sections --- */
+.ta-insp-section {
+  padding:8px 0; border-bottom:1px solid #111;
+}
+.ta-insp-section:last-of-type {
+  border-bottom:none;
+}
+.ta-insp-section-label {
+  font-size:10px; color:#444; text-transform:uppercase;
+  letter-spacing:.07em; margin-bottom:6px;
+}
+.ta-insp-row {
+  display:flex; gap:8px; padding:2px 0; align-items:baseline;
+}
+.ta-insp-key {
+  flex:0 0 38%; color:#8b949e; font-size:11px;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.ta-insp-val {
+  flex:1; color:#c9d1d9; font-size:12px; word-break:break-word;
+}
+.ta-insp-val--mono {
+  font-family:monospace; font-size:11px; color:#8b949e; word-break:break-all;
+}
+
+/* --- Inspector signals --- */
+.ta-insp-signal {
+  display:flex; align-items:baseline; gap:8px;
+  padding:3px 0; border-bottom:1px solid #111; font-size:11px;
+}
+.ta-insp-signal:last-child { border-bottom:none; }
+.ta-insp-sig-id {
+  font-family:monospace; color:#444; flex-shrink:0; font-size:10px;
+}
+.ta-insp-sig-metric {
+  color:#8b949e; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.ta-insp-sig-val {
+  color:#58a6ff; font-weight:bold; flex-shrink:0;
+}
+.ta-insp-sig-unit {
+  color:#8b949e; font-weight:normal; font-size:10px;
+}
+
+/* --- Inspector footer --- */
+.ta-insp-source {
+  margin-top:10px; font-size:10px; color:#444;
+  text-align:right; padding-top:8px; border-top:1px solid #111;
+}
+
+/* =========================================================================
+   TOPOLOGY PAGE — tp-* (GAUGE.TOPOLOGY.PAGE.EXTRACTION.WITH.CONTEXT.01)
+   ========================================================================= */
+
+/* --- Back navigation bar --- */
+.tp-back-bar {
+  display:flex; align-items:center; gap:16px;
+  padding:14px 20px; border-bottom:1px solid #1f2937;
+  background:#060c12;
+}
+.tp-back-link {
+  font-family:monospace; font-size:12px; color:#58a6ff;
+  text-decoration:none; white-space:nowrap; flex-shrink:0;
+  padding:5px 12px; border:1px solid #1b3a5c;
+}
+.tp-back-link:hover { border-color:#58a6ff; }
+.tp-back-identity {
+  display:flex; flex-direction:column; flex:1; min-width:0;
+}
+.tp-back-title {
+  font-size:14px; font-weight:bold; color:#c9d1d9;
+}
+.tp-back-sub {
+  font-size:11px; color:#444; margin-top:2px;
+}
+
+/* --- Context strip (compact 4-panel row) --- */
+.tp-context-strip {
+  display:grid; grid-template-columns:repeat(4, 1fr);
+  border-bottom:1px solid #1f2937;
+}
+.tp-context-block {
+  padding:16px 18px; border-right:1px solid #1f2937;
+}
+.tp-context-block:last-child { border-right:none; }
+
+/* --- Topology explorer wrapper --- */
+.tp-explorer {
+  padding:0;
+}
+
+/* --- Topology CTA (in column 3 on main page) --- */
+.tp-cta-link {
+  display:inline-block;
+  font-family:monospace; font-size:12px; color:#58a6ff;
+  text-decoration:none; padding:7px 14px;
+  border:1px solid #1b3a5c; background:#0b1f31;
+}
+.tp-cta-link:hover { border-color:#58a6ff; }
+.tp-cta-sub {
+  font-size:11px; color:#444; margin-top:6px; line-height:1.5;
+}
+
+/* =========================================================================
+   OVERVIEW PAGE — ov-* (GAUGE.MEANING.LAYER.PROJECTION.01)
+   ========================================================================= */
+
+/* --- Header bar --- */
+.ov-header-bar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 20px; border-bottom:1px solid #1f2937;
+  background:#060c12;
+}
+.ov-header-identity {
+  display:flex; flex-direction:column; gap:3px;
+}
+.ov-header-title {
+  font-size:16px; font-weight:bold; color:#c9d1d9;
+  text-transform:uppercase; letter-spacing:.06em;
+}
+.ov-header-sub {
+  font-size:11px; color:#444;
+}
+.ov-nav-links {
+  display:flex; gap:8px; align-items:center;
+}
+.ov-nav-link {
+  font-family:monospace; font-size:12px; color:#58a6ff;
+  text-decoration:none; padding:5px 12px;
+  border:1px solid #1b3a5c;
+}
+.ov-nav-link:hover { border-color:#58a6ff; }
+
+/* --- Score context bar --- */
+.ov-score-bar {
+  padding:16px 20px; border-bottom:1px solid #1f2937;
+  background:#080e15;
+  display:flex; flex-direction:column; gap:10px;
+}
+.ov-score-items {
+  display:flex; align-items:center; gap:20px;
+}
+.ov-score-item {
+  display:flex; flex-direction:column; gap:2px;
+}
+.ov-score-val {
+  font-size:28px; font-weight:bold; color:#c9d1d9; line-height:1;
+}
+.ov-score-band {
+  font-size:16px; font-weight:bold; color:#d29922; line-height:1;
+}
+.ov-score-lbl {
+  font-size:10px; color:#444; text-transform:uppercase; letter-spacing:.06em;
+}
+.ov-score-sep {
+  font-size:18px; color:#1f2937; align-self:center;
+}
+.ov-score-phrases {
+  display:flex; flex-direction:column; gap:4px;
+}
+.ov-score-phrase {
+  font-size:12px; color:#8b949e; line-height:1.5;
+}
+
+/* --- Section grid --- */
+.ov-grid {
+  display:grid; grid-template-columns:repeat(2,1fr);
+}
+
+/* --- Source attribution --- */
+.ov-source-note {
+  display:flex; gap:20px; justify-content:flex-end;
+  padding:10px 20px; border-top:1px solid #111;
+  font-size:10px; color:#333;
+}
+
+/* =========================================================================
+   MEANING LAYER — ml-* (GAUGE.MEANING.LAYER.PROJECTION.01)
+   ========================================================================= */
+
+/* --- Section container --- */
+.ml-section {
+  padding:20px; border-right:1px solid #1f2937;
+  border-bottom:1px solid #1f2937;
+}
+.ml-section:nth-child(even) { border-right:none; }
+.ml-section:nth-last-child(-n+2):nth-child(odd),
+.ml-section:last-child { border-bottom:none; }
+
+.ml-section-title {
+  font-size:10px; color:#444;
+  text-transform:uppercase; letter-spacing:.09em;
+  margin-bottom:14px; padding-bottom:8px;
+  border-bottom:1px solid #111;
+}
+
+/* --- Block container --- */
+.ml-blocks {
+  display:flex; flex-direction:column; gap:10px;
+}
+
+/* --- Individual phrase block --- */
+.ml-block {
+  padding:10px 14px;
+  border-left:2px solid #1b3a5c;
+  background:#060c12;
+}
+
+/* --- Phrase text --- */
+.ml-text {
+  font-size:14px; color:#c9d1d9;
+  line-height:1.6; margin:0 0 6px;
+}
+.ml-text--summary {
+  font-size:15px; color:#e6edf3;
+}
+.ml-text--factual {
+  font-size:13px; color:#c9d1d9;
+}
+
+/* --- Traceability metadata (visible but de-emphasized) --- */
+.ml-meta {
+  display:flex; gap:6px; align-items:center;
+  font-size:10px; color:#333;
+}
+.ml-meta-concept { font-family:monospace; }
+.ml-meta-phrase  { font-family:monospace; }
+.ml-meta-scope   { font-family:monospace; }
+.ml-meta-sep     { color:#222; }
+
+/* --- States --- */
+.ml-state-loading {
+  font-size:12px; color:#444; padding:8px 0;
+}
+.ml-state-error {
+  font-size:12px; color:#f85149;
+  border:1px solid #3d1a1a; padding:8px 12px;
+}
+
+/* =========================================================================
+   EXECUTIVE IMPACT LAYER — ei-* (GAUGE.MEANING.LAYER.EXECUTIVE.IMPACT.01)
+   ========================================================================= */
+
+/* --- Executive header (top statement) --- */
+.ei-header {
+  padding: 24px 28px;
+  background: #080e15;
+  border-bottom: 1px solid #1f2937;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ei-header-primary {
+  font-size: 18px;
+  color: #e6edf3;
+  font-weight: 500;
+  line-height: 1.5;
+  margin: 0;
+}
+.ei-header-exec {
+  font-size: 13px;
+  color: #8b949e;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* --- Status band (metrics strip) --- */
+.ei-band {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid #1f2937;
+  background: #040810;
+}
+.ei-band-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 12px;
+  border-right: 1px solid #111;
+  gap: 4px;
+}
+.ei-band-item:last-child {
+  border-right: none;
+}
+.ei-band-item--hi .ei-band-val {
+  font-size: 28px;
+  color: #f0f6fc;
+}
+.ei-band-val {
+  font-size: 22px;
+  font-weight: bold;
+  color: #c9d1d9;
+  line-height: 1;
+}
+.ei-band-lbl {
+  font-size: 10px;
+  color: #444;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+/* --- Executive sections (3-column grid) --- */
+.ei-sections {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* --- Executive section wrapper --- */
+.ei-section {
+  border-right: 1px solid #1f2937;
+}
+.ei-section:last-child {
+  border-right: none;
+}
+
+/* MeaningSection inside ei-section: remove its own borders (ei-section owns them) */
+.ei-section .ml-section {
+  border-right: none;
+  border-bottom: none;
+  height: 100%;
+}
+
+/* Hide traceability metadata in executive sections (preserved in data-* attributes) */
+.ei-section .ml-meta {
+  display: none;
+}
+
+/* Section title: elevated color for executive context */
+.ei-section .ml-section-title {
+  font-size: 11px;
+  color: #58a6ff;
+  letter-spacing: .1em;
+}
+
+/* Primary phrases: stronger weight in executive context */
+.ei-section .ml-text--summary {
+  font-size: 15px;
+  color: #e6edf3;
+}
+.ei-section .ml-text--factual {
+  font-size: 13px;
+  color: #c9d1d9;
+}
+
+/* --- Highlight and muted utilities --- */
+.ei-highlight {
+  color: #f0f6fc;
+  font-weight: 600;
+}
+.ei-muted {
+  font-size: 12px;
+  color: #8b949e;
+}
+
+/* =========================================================================
+   EXECUTIVE IMPACT LAYER v2 — ei-* extensions
+   (GAUGE.MEANING.LAYER.EXECUTIVE.IMPACT.02)
+   ========================================================================= */
+
+/* --- Header: stronger weight and inline exec phrase styling --- */
+.ei-header-primary {
+  font-size: 19px;
+  font-weight: 600;
+  color: #e6edf3;
+  line-height: 1.55;
+  margin: 0;
+}
+.ei-header-exec {
+  font-size: 14px;
+  font-weight: 400;
+  color: #8b949e;
+}
+
+/* --- Visual status coding: section top border + title color --- */
+.ei-section--good {
+  border-top: 2px solid #2ea043;
+}
+.ei-section--warn {
+  border-top: 2px solid #d29922;
+}
+.ei-section--risk {
+  border-top: 2px solid #f85149;
+}
+.ei-section--good .ml-section-title {
+  color: #3fb950;
+}
+.ei-section--warn .ml-section-title {
+  color: #d29922;
+}
+.ei-section--risk .ml-section-title {
+  color: #f85149;
+}
+
+/* --- Proportional visual bar (below status band) --- */
+.ei-bar {
+  display: flex;
+  height: 4px;
+  width: 100%;
+  border-bottom: 1px solid #1f2937;
+  overflow: hidden;
+}
+.ei-bar-seg {
+  flex-shrink: 0;
+  transition: flex-grow 0.3s ease;
+}
+.ei-bar-good { background: #2ea043; }
+.ei-bar-warn { background: #d29922; }
+.ei-bar-risk { background: #f85149; }
+
+/* --- Phrase block spacing: more breathing room in executive sections --- */
+.ei-section .ml-blocks {
+  gap: 14px;
+}
+.ei-section .ml-block {
+  padding: 12px 16px;
+}
+
+/* --- Muted secondary text utility --- */
+.ei-muted {
+  font-size: 13px;
+  color: #8b949e;
+}
+
+/* --- Highlight numbers in band --- */
+.ei-band-item--hi .ei-band-lbl {
+  color: #58a6ff;
+}

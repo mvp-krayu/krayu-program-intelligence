@@ -1,24 +1,116 @@
 /**
  * pages/index.js
- * GAUGE.STANDALONE.PRODUCT.REBUILD.01
+ * GAUGE.STANDALONE.PRODUCT.RESTORE.RICH.STATE.01
  *
- * Standalone Gauge product page.
+ * Standalone Gauge product page — three-column rich layout.
  * Authoritative baseline: docs/pios/PSEE.UI/run_01_blueedge_surface/gauge_v2_product.html
+ * Rich state: runtime intelligence / structural metrics / signal set / topology summary
  *
  * Governed by: PSEE.BLUEEDGE.GAUGE.HANDOFF.01
  */
 
 import { useState, useRef, useEffect } from 'react'
-import TopologyAddon from '../components/TopologyAddon'
+import Link from 'next/link'
+import {
+  useGaugeData,
+  useTopologySummary,
+  RuntimeIntelligence,
+  StructuralMetrics,
+  SignalSet,
+  TopologySummaryPanel,
+} from '../components/GaugeContextPanels'
 
 const VALID_KEY = 'PIOS-DISCOVERY-DEMO'
+
+function RightColumn({ gaugeResult, topoResult }) {
+  const gaugeLoading = gaugeResult.loading
+  const topoLoading  = topoResult.loading
+
+  if (gaugeLoading && topoLoading) {
+    return (
+      <div className="panel">
+        <div className="ri-loading">Loading intelligence data…</div>
+      </div>
+    )
+  }
+
+  const gaugeData = gaugeResult.data
+  const topoData  = topoResult.data
+
+  return (
+    <>
+      {/* Runtime Intelligence */}
+      <div className="panel">
+        <div className="panel-label">Runtime Intelligence</div>
+        {gaugeResult.error ? (
+          <div className="ri-error">Unavailable — {gaugeResult.error}</div>
+        ) : !gaugeData ? (
+          <div className="ri-loading">Loading…</div>
+        ) : (
+          <RuntimeIntelligence gaugeData={gaugeData} />
+        )}
+      </div>
+
+      {/* Structural Metrics */}
+      <div className="panel">
+        <div className="panel-label">Structural Metrics</div>
+        {gaugeResult.error && topoResult.error ? (
+          <div className="ri-error">Unavailable</div>
+        ) : (
+          <StructuralMetrics gaugeData={gaugeData} topoData={topoData} />
+        )}
+      </div>
+
+      {/* Signal Set */}
+      <div className="panel">
+        <div className="panel-label">Signal Set</div>
+        {topoResult.error ? (
+          <div className="ri-error">Unavailable — {topoResult.error}</div>
+        ) : topoLoading ? (
+          <div className="ri-loading">Loading…</div>
+        ) : (
+          <SignalSet topoData={topoData} />
+        )}
+      </div>
+
+      {/* Topology Summary */}
+      <div className="panel">
+        <div className="panel-label">Topology Summary</div>
+        {topoResult.error ? (
+          <div className="ri-error">Unavailable — {topoResult.error}</div>
+        ) : topoLoading ? (
+          <div className="ri-loading">Loading…</div>
+        ) : (
+          <TopologySummaryPanel topoData={topoData} />
+        )}
+      </div>
+
+      {/* Topology CTA */}
+      <div className="panel">
+        <div className="panel-label">Structural Topology</div>
+        <Link href="/topology" className="tp-cta-link">
+          View Structural Topology &#x2192;
+        </Link>
+        <div className="tp-cta-sub">
+          Full node explorer · inspector · overlap graph
+        </div>
+      </div>
+    </>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Main page
+// ---------------------------------------------------------------------------
 
 export default function GaugeProduct() {
   const [discoveryEnabled, setDiscoveryEnabled] = useState(false)
   const [modalOpen,        setModalOpen]        = useState(false)
   const [accessKeyInput,   setAccessKeyInput]   = useState('')
   const [keyDenied,        setKeyDenied]        = useState('')
-  const [showTopology,     setShowTopology]     = useState(false)
+
+  const gaugeResult = useGaugeData()
+  const topoResult  = useTopologySummary()
 
   const inputRef = useRef(null)
 
@@ -136,7 +228,7 @@ export default function GaugeProduct() {
         </div>
 
         {/* ══════════════════════════════════════════
-            TWO-COLUMN BODY
+            THREE-COLUMN BODY
         ══════════════════════════════════════════ */}
         <div className="cols">
 
@@ -403,8 +495,8 @@ export default function GaugeProduct() {
 
           </div>{/* /col-left */}
 
-          {/* ─────────── RIGHT COLUMN ─────────── */}
-          <div className="col-right">
+          {/* ─────────── CENTER COLUMN ─────────── */}
+          <div className="col-center">
 
             {/* Structural Proof Summary */}
             <div className="panel">
@@ -553,12 +645,14 @@ export default function GaugeProduct() {
               <div className="state-row"><div className="state-dot" style={{ background: '#1f2937' }}></div><span>Execution scenarios: <strong style={{ color: '#333' }}>EXECUTION LAYER REQUIRED</strong></span></div>
             </div>
 
+          </div>{/* /col-center */}
+
+          {/* ─────────── RIGHT COLUMN ─────────── */}
+          <div className="col-right">
+            <RightColumn gaugeResult={gaugeResult} topoResult={topoResult} />
           </div>{/* /col-right */}
 
         </div>{/* /cols */}
-
-        {/* ── Topology add-on — OFF by default, explicit activation ── */}
-        <TopologyAddon showTopology={showTopology} onToggle={() => setShowTopology(v => !v)} />
 
       </div>{/* /outer */}
     </>
