@@ -1,28 +1,35 @@
 /**
  * TopologyAddon.js
- * GAUGE.STANDALONE.PRODUCT.REBUILD.01
+ * GAUGE.TOPOLOGY.ADDON.RESTORE.INSPECTOR.AND.PRESENTATION.01
  *
  * Structural Topology add-on for the standalone Gauge product.
- * This component is the activation boundary and container for the topology capability.
+ * Activation boundary, tree view, and node inspector.
  *
  * Rules:
  *   - OFF by default (showTopology prop controls visibility)
  *   - Does not alter base Gauge layout when inactive
  *   - Additive only — no base Gauge component modification
+ *   - All displayed fields are direct projections of governed data
+ *   - No semantic enrichment, no ranking, no fallback labeling
  *
- * Full topology rendering (EnvelopeTopology) requires the binding_envelope.json adapter
- * from the PSEE runtime pipeline. This component renders the activation surface
- * and topology mount point.
- *
- * The topology adapter is defined in:
- *   app/execlens-demo/lib/gauge/envelope_adapter.py
- *   Governed by: PSEE.BLUEEDGE.GAUGE.HANDOFF.01
+ * Governed by: PSEE.BLUEEDGE.GAUGE.HANDOFF.01
+ * Source: binding_envelope.json via /api/topology (envelope_adapter.js)
  */
 
 import { useState, useEffect } from 'react'
 
 // ---------------------------------------------------------------------------
-// Topology data loader
+// Constants
+// ---------------------------------------------------------------------------
+
+const NODE_TYPE_LABELS = {
+  binding_context:    'Domain',
+  capability_surface: 'Capability Surface',
+  component_entity:   'Component Entity',
+}
+
+// ---------------------------------------------------------------------------
+// Data loader
 // ---------------------------------------------------------------------------
 
 function useTopologyData(active) {
@@ -47,7 +54,7 @@ function useTopologyData(active) {
 }
 
 // ---------------------------------------------------------------------------
-// TopologyAddon
+// TopologyAddon — activation boundary
 // ---------------------------------------------------------------------------
 
 export default function TopologyAddon({ showTopology, onToggle }) {
@@ -69,20 +76,18 @@ export default function TopologyAddon({ showTopology, onToggle }) {
           <div className="topology-addon-note">
             <strong>STRUCTURAL TOPOLOGY</strong> — PSEE.BLUEEDGE.GAUGE.HANDOFF.01<br/>
             Envelope-based structural topology. Governed fields: display_label, secondary_label, resolved_label.<br/>
-            Source: binding_envelope.json · adapter: envelope_adapter.py
+            Source: binding_envelope.json · adapter: envelope_adapter.js · click nodes to inspect
           </div>
 
           {loading && (
-            <div style={{ color: '#8b949e', fontSize: '13px' }}>
-              Loading structural topology…
-            </div>
+            <div className="ta-state-loading">Loading structural topology…</div>
           )}
 
           {error && (
-            <div style={{ color: '#f85149', fontSize: '13px', border: '1px solid #3d1a1a', padding: '10px' }}>
+            <div className="ta-state-error">
               Structural topology unavailable — {error}
-              <div style={{ color: '#444', fontSize: '11px', marginTop: '6px' }}>
-                Requires local governed artifact: binding_envelope.json
+              <div className="ta-state-error-detail">
+                Requires local governed artifact: binding_envelope.json<br/>
                 Source: clients/…/run_335c0575a080/binding/binding_envelope.json
               </div>
             </div>
@@ -98,21 +103,12 @@ export default function TopologyAddon({ showTopology, onToggle }) {
 }
 
 // ---------------------------------------------------------------------------
-// TopologyView — minimal faithful rendering of the envelope topology
-// Mirrors EnvelopeTopology from TopologyPanel.js (GAUGE presentation layer)
+// TopologyView — tree + inspector
 // ---------------------------------------------------------------------------
 
 function TopologyView({ data }) {
-  const [expandedNodes, setExpandedNodes] = useState(new Set())
-
-  const onToggle = key => {
-    setExpandedNodes(prev => {
-      const next = new Set(prev)
-      if (next.has(key)) next.delete(key)
-      else next.add(key)
-      return next
-    })
-  }
+  const [selectedNodeId, setSelectedNodeId] = useState(null)
+  const [showAllSurfaces, setShowAllSurfaces] = useState({})  // rootId → bool
 
   const nodes        = data.nodes        || []
   const roots        = data.roots        || []
@@ -128,166 +124,372 @@ function TopologyView({ data }) {
   const orphanSet       = new Set(orphans)
   const rootsForGrid    = roots.filter(r => !orphanSet.has(r))
 
+  const selectedNode = selectedNodeId ? nodeIndex[selectedNodeId] : null
+
+  function selectNode(nodeId) {
+    setSelectedNodeId(prev => prev === nodeId ? null : nodeId)
+  }
+
+  function toggleShowAllSurfaces(rootId) {
+    setShowAllSurfaces(prev => ({ ...prev, [rootId]: !prev[rootId] }))
+  }
+
   return (
     <div>
-      {/* Header */}
-      <div style={{ marginBottom: '14px', paddingBottom: '10px', borderBottom: '1px solid #1f2937' }}>
-        <div style={{ fontSize: '11px', color: '#8b949e', textTransform: 'uppercase', letterSpacing: '.08em', marginBottom: '4px' }}>
-          Structural Topology
-        </div>
-        <div style={{ fontSize: '12px', color: '#444' }}>
+      {/* Panel header */}
+      <div className="ta-header">
+        <div className="ta-title">Structural Topology</div>
+        <div className="ta-meta">
           {rootsForGrid.length} region{rootsForGrid.length !== 1 ? 's' : ''}
+          {summary.nodes_count && ` · ${summary.nodes_count} nodes`}
           {summary.overlap_edges_count > 0 && ` · ${summary.overlap_edges_count} cross-boundary`}
-          {' · '}binding_envelope.json · click items to inspect
+          {' · '}binding_envelope.json
         </div>
       </div>
 
-      {/* Regions */}
-      <div style={{ display: 'grid', gap: '10px' }}>
-        {rootsForGrid.map(rootId => {
-          const rootNode   = nodeIndex[rootId]
-          if (!rootNode) return null
-          const surfaceIds = containmentTree[rootId] || []
-          const surfaces   = surfaceIds.map(id => nodeIndex[id]).filter(Boolean)
-          const componentIds = new Set()
-          for (const sid of surfaceIds) {
-            for (const cid of (containmentTree[sid] || [])) componentIds.add(cid)
-          }
-          const components    = [...componentIds].map(id => nodeIndex[id]).filter(Boolean)
-          const regionOverlaps = overlapEdges.filter(
-            e => componentIds.has(e.from_node) || componentIds.has(e.to_node)
-          )
+      {/* Body: tree + inspector side by side */}
+      <div className={`ta-body${selectedNode ? ' ta-body--split' : ''}`}>
 
-          return (
-            <div key={rootId} style={{ border: '1px solid #1f2937', padding: '12px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <span style={{ fontSize: '13px', fontWeight: 'bold' }}>{rootNode.display_label}</span>
-                {surfaces.length > 0 && (
-                  <span style={{ fontSize: '11px', color: '#8b949e', border: '1px solid #1f2937', padding: '1px 6px' }}>
-                    {surfaces.length}
-                  </span>
-                )}
-              </div>
+        {/* Tree */}
+        <div className="ta-tree">
+          <div className="ta-regions">
+            {rootsForGrid.map(rootId => {
+              const rootNode   = nodeIndex[rootId]
+              if (!rootNode) return null
 
-              {surfaces.length > 0 && (
-                <div style={{ marginBottom: '8px' }}>
-                  {surfaces.slice(0, 5).map(s => (
-                    <div
-                      key={s.node_id}
-                      onClick={() => onToggle(s.node_id)}
-                      title={s.secondary_label}
-                      style={{
-                        fontSize: '12px', color: '#8b949e', padding: '2px 0',
-                        cursor: 'pointer', borderBottom: '1px solid #111'
-                      }}
-                    >
-                      {s.display_label}
-                      {expandedNodes.has(s.node_id) && (
-                        <span style={{ color: '#444', marginLeft: '8px' }}>{s.secondary_label}</span>
+              const surfaceIds   = containmentTree[rootId] || []
+              const surfaces     = surfaceIds.map(id => nodeIndex[id]).filter(Boolean)
+              const componentIds = new Set()
+              for (const sid of surfaceIds) {
+                for (const cid of (containmentTree[sid] || [])) componentIds.add(cid)
+              }
+              const components    = [...componentIds].map(id => nodeIndex[id]).filter(Boolean)
+              const regionOverlaps = overlapEdges.filter(
+                e => componentIds.has(e.from_node) || componentIds.has(e.to_node)
+              )
+
+              const SURFACE_LIMIT = 5
+              const showAll       = showAllSurfaces[rootId]
+              const visibleSurfaces = showAll ? surfaces : surfaces.slice(0, SURFACE_LIMIT)
+              const hiddenCount     = surfaces.length - SURFACE_LIMIT
+
+              const isRootSelected = selectedNodeId === rootId
+
+              return (
+                <div
+                  key={rootId}
+                  className={`ta-region${isRootSelected ? ' ta-region--selected' : ''}`}
+                >
+                  {/* Region header */}
+                  <div
+                    className="ta-region-header"
+                    onClick={() => selectNode(rootId)}
+                    title={`${rootNode.secondary_label} · ${NODE_TYPE_LABELS[rootNode.type] || rootNode.type}`}
+                  >
+                    <span className="ta-region-name">{rootNode.display_label}</span>
+                    <span className="ta-region-badges">
+                      {surfaces.length > 0 && (
+                        <span className="ta-badge ta-badge--dim">{surfaces.length} surfaces</span>
+                      )}
+                      {components.length > 0 && (
+                        <span className="ta-badge ta-badge--dim">{components.length} components</span>
+                      )}
+                    </span>
+                  </div>
+
+                  {/* Surfaces */}
+                  {visibleSurfaces.length > 0 && (
+                    <div className="ta-surfaces">
+                      {visibleSurfaces.map(s => (
+                        <div
+                          key={s.node_id}
+                          className={`ta-surface-row${selectedNodeId === s.node_id ? ' ta-surface-row--selected' : ''}`}
+                          onClick={() => selectNode(s.node_id)}
+                          title={s.secondary_label}
+                        >
+                          <span className="ta-surface-indicator">—</span>
+                          <span className="ta-surface-name">{s.display_label}</span>
+                          <span className="ta-surface-id">{s.secondary_label}</span>
+                        </div>
+                      ))}
+                      {hiddenCount > 0 && (
+                        <button
+                          className="ta-show-more"
+                          onClick={e => { e.stopPropagation(); toggleShowAllSurfaces(rootId) }}
+                        >
+                          {showAll ? '▲ show less' : `+${hiddenCount} more surfaces`}
+                        </button>
                       )}
                     </div>
-                  ))}
-                  {surfaces.length > 5 && (
-                    <div style={{ fontSize: '11px', color: '#444', marginTop: '4px' }}>
-                      +{surfaces.length - 5} more
-                    </div>
                   )}
+
+                  {/* Components */}
+                  {components.map(comp => {
+                    const overlapsWith = regionOverlaps
+                      .filter(e => e.from_node === comp.node_id || e.to_node === comp.node_id)
+                      .map(e => nodeIndex[e.from_node === comp.node_id ? e.to_node : e.from_node])
+                      .filter(Boolean)
+
+                    const isSelected = selectedNodeId === comp.node_id
+
+                    return (
+                      <div
+                        key={comp.node_id}
+                        className={`ta-component${comp.is_overlap_endpoint ? ' ta-component--overlap' : ''}${isSelected ? ' ta-component--selected' : ''}`}
+                        onClick={() => selectNode(comp.node_id)}
+                        title={comp.secondary_label}
+                      >
+                        <div className="ta-component-row">
+                          <span className="ta-component-dot">●</span>
+                          <span className="ta-component-name">{comp.display_label}</span>
+                          {comp.signal_count > 0 && (
+                            <span className="ta-signal-count">{comp.signal_count}~</span>
+                          )}
+                          {comp.is_overlap_endpoint && (
+                            <span className="ta-badge ta-badge--overlap">⟷</span>
+                          )}
+                        </div>
+                        {overlapsWith.length > 0 && (
+                          <div className="ta-overlap-refs">
+                            {overlapsWith.map(other => (
+                              <span key={other.node_id} className="ta-overlap-ref">
+                                → {other.display_label}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
                 </div>
-              )}
-
-              {components.map(comp => {
-                const overlapsWith = regionOverlaps
-                  .filter(e => e.from_node === comp.node_id || e.to_node === comp.node_id)
-                  .map(e => nodeIndex[e.from_node === comp.node_id ? e.to_node : e.from_node])
-                  .filter(Boolean)
-
-                return (
-                  <div
-                    key={comp.node_id}
-                    onClick={() => onToggle(comp.node_id)}
-                    style={{
-                      border: '1px solid #1f2937', padding: '8px',
-                      cursor: 'pointer', marginTop: '6px',
-                      borderColor: comp.is_overlap_endpoint ? '#1b3a5c' : '#1f2937'
-                    }}
-                  >
-                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                      <span style={{ color: '#58a6ff', fontSize: '11px' }}>●</span>
-                      <span style={{ fontSize: '13px' }}>{comp.display_label}</span>
-                    </div>
-                    {overlapsWith.length > 0 && (
-                      <div style={{ marginTop: '4px' }}>
-                        {overlapsWith.map(other => (
-                          <span key={other.node_id} style={{ fontSize: '11px', color: '#1b3a5c', marginRight: '8px' }}>
-                            → {other.display_label}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                    {expandedNodes.has(comp.node_id) && (
-                      <div style={{ marginTop: '8px', borderTop: '1px solid #1f2937', paddingTop: '6px' }}>
-                        <span style={{ fontSize: '11px', color: '#444', marginRight: '12px' }}>{comp.secondary_label}</span>
-                        <span style={{ fontSize: '11px', color: '#444' }}>{comp.type}</span>
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-          )
-        })}
-      </div>
-
-      {/* Orphans */}
-      {orphans.length > 0 && (
-        <div style={{ marginTop: '14px', borderTop: '1px solid #1f2937', paddingTop: '12px' }}>
-          <div style={{ fontSize: '11px', color: '#444', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: '8px' }}>
-            Standalone items
-          </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-            {orphans.map(id => {
-              const n = nodeIndex[id]
-              if (!n) return null
-              return (
-                <span
-                  key={id}
-                  onClick={() => onToggle(id)}
-                  title={n.secondary_label}
-                  style={{
-                    fontSize: '12px', color: '#8b949e', border: '1px solid #1f2937',
-                    padding: '3px 8px', cursor: 'pointer'
-                  }}
-                >
-                  {n.display_label}
-                  {expandedNodes.has(id) && (
-                    <span style={{ color: '#444', marginLeft: '6px' }}>({n.secondary_label})</span>
-                  )}
-                </span>
               )
             })}
           </div>
+
+          {/* Orphans */}
+          {orphans.length > 0 && (
+            <div className="ta-orphans">
+              <div className="ta-orphans-header">Standalone items</div>
+              <div className="ta-orphans-list">
+                {orphans.map(id => {
+                  const n = nodeIndex[id]
+                  if (!n) return null
+                  return (
+                    <span
+                      key={id}
+                      className={`ta-orphan-item${selectedNodeId === id ? ' ta-orphan-item--selected' : ''}`}
+                      onClick={() => selectNode(id)}
+                      title={n.secondary_label}
+                    >
+                      {n.display_label}
+                    </span>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Structural notes */}
+          {cf.overlap_present && (
+            <div className="ta-notes">
+              <div className="ta-notes-header">
+                Structural overlaps ({cf.overlap_count})
+              </div>
+              {overlapEdges.map(e => {
+                const from = nodeIndex[e.from_node]
+                const to   = nodeIndex[e.to_node]
+                return (
+                  <div key={e.edge_id} className="ta-note-row">
+                    <span className="ta-note-from">{from ? from.display_label : e.from_node}</span>
+                    <span className="ta-note-arrow">⟷</span>
+                    <span className="ta-note-to">{to ? to.display_label : e.to_node}</span>
+                  </div>
+                )
+              })}
+              {cf.unknown_space_present && (
+                <div className="ta-notes-unknown">
+                  Unknown space: {cf.unknown_space_count} record{cf.unknown_space_count !== 1 ? 's' : ''}
+                </div>
+              )}
+            </div>
+          )}
         </div>
+
+        {/* Inspector */}
+        {selectedNode && (
+          <div className="ta-inspector">
+            <NodeInspector
+              node={selectedNode}
+              nodeIndex={nodeIndex}
+              overlapEdges={overlapEdges}
+              containmentTree={containmentTree}
+              onClose={() => setSelectedNodeId(null)}
+            />
+          </div>
+        )}
+
+        {/* Empty inspector hint when tree is full-width */}
+        {!selectedNode && (
+          <div className="ta-inspector-hint">
+            Click any node to inspect
+          </div>
+        )}
+
+      </div>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// NodeInspector — full detail view for selected node
+// All fields are direct projections of binding_envelope.json adapter output.
+// ---------------------------------------------------------------------------
+
+function InspectorSection({ label, children }) {
+  return (
+    <div className="ta-insp-section">
+      <div className="ta-insp-section-label">{label}</div>
+      {children}
+    </div>
+  )
+}
+
+function InspRow({ label, value, mono }) {
+  if (value === undefined || value === null || value === '') return null
+  const displayVal = typeof value === 'object' ? JSON.stringify(value) : String(value)
+  return (
+    <div className="ta-insp-row">
+      <span className="ta-insp-key">{label}</span>
+      <span className={`ta-insp-val${mono ? ' ta-insp-val--mono' : ''}`}>{displayVal}</span>
+    </div>
+  )
+}
+
+function NodeInspector({ node, nodeIndex, overlapEdges, containmentTree, onClose }) {
+  const typeLabel = NODE_TYPE_LABELS[node.type] || node.type
+
+  // Overlap peers
+  const overlapPeers = overlapEdges
+    .filter(e => e.from_node === node.node_id || e.to_node === node.node_id)
+    .map(e => {
+      const peerId = e.from_node === node.node_id ? e.to_node : e.from_node
+      return { peer: nodeIndex[peerId], edge: e }
+    })
+    .filter(x => x.peer)
+
+  // Containment parent
+  const parentId = node.parent_binding_context || node.context || null
+  const parentNode = parentId ? nodeIndex[parentId] : null
+
+  // Children in containment tree
+  const children = (containmentTree[node.node_id] || [])
+    .map(id => nodeIndex[id])
+    .filter(Boolean)
+
+  // Provenance fields (all except known-structural keys)
+  const prov = node.provenance || {}
+  const SKIP_PROV = new Set([]) // show all provenance fields
+  const provEntries = Object.entries(prov).filter(([k]) => !SKIP_PROV.has(k))
+
+  // Source origins
+  const sourceOrigins = Array.isArray(prov.source_origin)
+    ? prov.source_origin.join(', ')
+    : prov.source_origin
+
+  // Signals / metrics
+  const signals = node.signals || []
+
+  return (
+    <div className="ta-insp">
+      {/* Header */}
+      <div className="ta-insp-header">
+        <div className="ta-insp-title">{node.display_label}</div>
+        <button className="ta-insp-close" onClick={onClose} title="Close inspector">✕</button>
+      </div>
+
+      <div className="ta-insp-id">{node.secondary_label}</div>
+
+      <div className="ta-insp-type-row">
+        <span className={`ta-insp-type ta-insp-type--${node.type}`}>{typeLabel}</span>
+        {node.temporal_classification && (
+          <span className="ta-insp-tc">{node.temporal_classification}</span>
+        )}
+        {node.is_overlap_endpoint && (
+          <span className="ta-insp-overlap-badge">CROSS-BOUNDARY</span>
+        )}
+      </div>
+
+      {/* Identity */}
+      <InspectorSection label="Identity">
+        <InspRow label="Display name"  value={node.display_label} />
+        <InspRow label="Canonical ID"  value={node.secondary_label} mono />
+        <InspRow label="Raw label"     value={node.label} />
+        <InspRow label="Resolved"      value={node.resolved_label} />
+      </InspectorSection>
+
+      {/* Structural Context */}
+      <InspectorSection label="Structural Context">
+        <InspRow label="Type"         value={typeLabel} />
+        <InspRow label="Depth"        value={node.depth} />
+        {parentNode && (
+          <InspRow label="Parent domain"  value={`${parentNode.display_label} (${parentNode.secondary_label})`} />
+        )}
+        {children.length > 0 && (
+          <InspRow label={`Children (${children.length})`} value={children.map(c => c.display_label).join(', ')} />
+        )}
+        {overlapPeers.length > 0 && overlapPeers.map(({ peer, edge }) => (
+          <InspRow key={edge.edge_id} label="Overlaps with" value={`${peer.display_label} (${peer.secondary_label})`} />
+        ))}
+        <InspRow label="Is root"      value={node.is_root     ? 'yes' : null} />
+        <InspRow label="Is orphan"    value={node.is_orphan   ? 'yes' : null} />
+      </InspectorSection>
+
+      {/* Provenance */}
+      {provEntries.length > 0 && (
+        <InspectorSection label="Provenance">
+          {prov.binding_model_ref && (
+            <InspRow label="Binding ref"   value={prov.binding_model_ref} mono />
+          )}
+          {prov.source_artifact && (
+            <InspRow label="Source artifact" value={prov.source_artifact} />
+          )}
+          {sourceOrigins && (
+            <InspRow label="Source origin"   value={sourceOrigins} />
+          )}
+          {prov.documented_taxonomy_source && (
+            <InspRow label="Taxonomy source" value={prov.documented_taxonomy_source} />
+          )}
+          {prov.structural_topology_source && (
+            <InspRow label="Topology source" value={prov.structural_topology_source} />
+          )}
+          {prov.containment_basis && (
+            <InspRow label="Containment"   value={prov.containment_basis} />
+          )}
+          {prov.path_pattern && (
+            <InspRow label="Path pattern"  value={prov.path_pattern} mono />
+          )}
+        </InspectorSection>
       )}
 
-      {/* Structural notes */}
-      {cf.overlap_present && (
-        <div style={{ marginTop: '14px', borderTop: '1px solid #1f2937', paddingTop: '10px' }}>
-          <div style={{ fontSize: '11px', color: '#444', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: '6px' }}>
-            Structural overlaps ({cf.overlap_count})
-          </div>
-          {overlapEdges.map(e => {
-            const from = nodeIndex[e.from_node]
-            const to   = nodeIndex[e.to_node]
-            return (
-              <div key={e.edge_id} style={{ fontSize: '12px', color: '#8b949e', marginBottom: '4px' }}>
-                {from ? from.display_label : e.from_node}
-                <span style={{ margin: '0 8px', color: '#444' }}>⟷</span>
-                {to ? to.display_label : e.to_node}
-              </div>
-            )
-          })}
-        </div>
+      {/* Signals / Metrics */}
+      {signals.length > 0 && (
+        <InspectorSection label={`Signals (${signals.length})`}>
+          {signals.map(s => (
+            <div key={s.signal_id} className="ta-insp-signal">
+              <span className="ta-insp-sig-id">{s.signal_id}</span>
+              <span className="ta-insp-sig-metric">{s.metric_name || '—'}</span>
+              <span className="ta-insp-sig-val">
+                {s.value !== undefined ? String(s.value) : '—'}
+                {s.unit && <span className="ta-insp-sig-unit"> {s.unit}</span>}
+              </span>
+            </div>
+          ))}
+        </InspectorSection>
       )}
+
+      <div className="ta-insp-source">
+        source: binding_envelope.json
+      </div>
     </div>
   )
 }
