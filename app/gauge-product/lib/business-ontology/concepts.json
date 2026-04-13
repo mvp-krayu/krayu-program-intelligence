@@ -1,0 +1,312 @@
+{
+  "version": "1.0",
+  "stream": "GAUGE.MEANING.LAYER.BUSINESS.ONTOLOGY.01",
+  "description": "Deterministic concept rules mapping explicit GAUGE states to business concepts. Each concept requires one or more input fields and a specific predicate condition. No concept is implicit or inferred.",
+
+  "concepts": [
+
+    {
+      "concept_id": "CONCEPT-01",
+      "label": "Full system visibility",
+      "input_fields": [
+        "gauge_state.dimensions.DIM-01.coverage_percent",
+        "gauge_state.dimensions.DIM-01.admissible_units"
+      ],
+      "predicate": "DIM-01.coverage_percent == 100",
+      "business_concept": "All identifiable system components are structurally mapped.",
+      "audience_scope": "shared",
+      "output_tags": ["visibility", "complete", "coverage"],
+      "gauge_source": "gauge_state.json → DIM-01",
+      "status": "active"
+    },
+
+    {
+      "concept_id": "CONCEPT-02",
+      "label": "Partial system visibility",
+      "input_fields": [
+        "gauge_state.dimensions.DIM-01.coverage_percent",
+        "gauge_state.dimensions.DIM-01.admissible_units",
+        "gauge_state.dimensions.DIM-01.required_units"
+      ],
+      "predicate": "DIM-01.coverage_percent < 100",
+      "business_concept": "A portion of expected system components are structurally mapped.",
+      "audience_scope": "shared",
+      "output_tags": ["visibility", "partial", "coverage"],
+      "gauge_source": "gauge_state.json → DIM-01",
+      "status": "active"
+    },
+
+    {
+      "concept_id": "CONCEPT-03",
+      "label": "Structural integrity confirmed",
+      "input_fields": [
+        "gauge_state.dimensions.DIM-02.state",
+        "gauge_state.dimensions.DIM-02.validated_units",
+        "gauge_state.dimensions.DIM-02.total_units"
+      ],
+      "predicate": "DIM-02.state == 'PASS'",
+      "business_concept": "Structural relationships are consistent across all mapped system components.",
+      "audience_scope": "shared",
+      "output_tags": ["integrity", "pass", "reconstruction"],
+      "gauge_source": "gauge_state.json → DIM-02",
+      "status": "active"
+    },
+
+    {
+      "concept_id": "CONCEPT-04",
+      "label": "No unmapped elements",
+      "input_fields": [
+        "gauge_state.dimensions.DIM-04.total_count",
+        "gauge_state.dimensions.DIM-04.state_label"
+      ],
+      "predicate": "DIM-04.total_count == 0",
+      "business_concept": "No elements fall outside the defined structural boundary.",
+      "audience_scope": "shared",
+      "output_tags": ["unmapped", "none", "unknown_space"],
+      "gauge_source": "gauge_state.json → DIM-04",
+      "status": "active"
+    },
+
+    {
+      "concept_id": "CONCEPT-05",
+      "label": "Unmapped elements present",
+      "input_fields": [
+        "gauge_state.dimensions.DIM-04.total_count",
+        "gauge_state.dimensions.DIM-04.state_label"
+      ],
+      "predicate": "DIM-04.total_count > 0",
+      "business_concept": "One or more elements fall outside the defined structural boundary.",
+      "audience_scope": "shared",
+      "output_tags": ["unmapped", "present", "unknown_space"],
+      "gauge_source": "gauge_state.json → DIM-04",
+      "status": "active"
+    },
+
+    {
+      "concept_id": "CONCEPT-06",
+      "label": "Execution assessment not performed",
+      "input_fields": [
+        "gauge_state.state.execution_status",
+        "gauge_state.score.components.completion_points"
+      ],
+      "predicate": "score.components.completion_points == 0 AND state.execution_status == 'PHASE_1_ACTIVE'",
+      "business_concept": "Runtime behavior has not yet been validated. Execution assessment is a separate evaluation that has not been performed.",
+      "audience_scope": "shared",
+      "output_tags": ["execution", "not_evaluated", "pending"],
+      "gauge_source": "gauge_state.json → state.execution_status / score.components.completion_points",
+      "status": "active"
+    },
+
+    {
+      "concept_id": "CONCEPT-07",
+      "label": "No operational escalation conditions",
+      "input_fields": [
+        "gauge_state.dimensions.DIM-03.state_label",
+        "gauge_state.dimensions.DIM-03.value"
+      ],
+      "predicate": "DIM-03.state_label == 'CLEAR'",
+      "business_concept": "No operational escalation conditions are present in the structural layer.",
+      "audience_scope": "shared",
+      "output_tags": ["escalation", "clear"],
+      "gauge_source": "gauge_state.json → DIM-03",
+      "status": "active"
+    },
+
+    {
+      "concept_id": "CONCEPT-08",
+      "label": "Cross-domain dependencies present",
+      "input_fields": [
+        "binding_envelope.constraint_flags.overlap_present",
+        "binding_envelope.constraint_flags.overlap_count",
+        "binding_envelope.summary.overlap_structural_edges_count"
+      ],
+      "predicate": "constraint_flags.overlap_present == true",
+      "business_concept": "One or more system components span multiple structural domains.",
+      "audience_scope": "shared",
+      "output_tags": ["overlap", "present", "cross_domain"],
+      "gauge_source": "binding_envelope.json → constraint_flags.overlap_present",
+      "status": "active"
+    },
+
+    {
+      "concept_id": "CONCEPT-09",
+      "label": "No cross-domain dependencies",
+      "input_fields": [
+        "binding_envelope.constraint_flags.overlap_present"
+      ],
+      "predicate": "constraint_flags.overlap_present == false",
+      "business_concept": "All system components are contained within a single structural domain.",
+      "audience_scope": "shared",
+      "output_tags": ["overlap", "none", "clean_boundary"],
+      "gauge_source": "binding_envelope.json → constraint_flags.overlap_present",
+      "status": "active"
+    },
+
+    {
+      "concept_id": "CONCEPT-10",
+      "label": "Behavioral signals bound",
+      "input_fields": [
+        "binding_envelope.summary.signals_count"
+      ],
+      "predicate": "summary.signals_count > 0",
+      "business_concept": "Behavioral data signals are bound to structural nodes in this model.",
+      "audience_scope": "shared",
+      "output_tags": ["signals", "bound", "behavioral_data"],
+      "gauge_source": "binding_envelope.json → summary.signals_count",
+      "status": "active"
+    },
+
+    {
+      "concept_id": "CONCEPT-11",
+      "label": "No behavioral signals bound",
+      "input_fields": [
+        "binding_envelope.summary.signals_count"
+      ],
+      "predicate": "summary.signals_count == 0",
+      "business_concept": "No behavioral data signals are bound to this structural model.",
+      "audience_scope": "shared",
+      "output_tags": ["signals", "none"],
+      "gauge_source": "binding_envelope.json → summary.signals_count",
+      "status": "active"
+    },
+
+    {
+      "concept_id": "CONCEPT-12",
+      "label": "Score is conditional",
+      "input_fields": [
+        "gauge_state.score.band_label",
+        "gauge_state.score.canonical",
+        "gauge_state.projection.value"
+      ],
+      "predicate": "score.band_label == 'CONDITIONAL'",
+      "business_concept": "The proven structural score represents the established floor. The achievable score depends on the execution layer completing.",
+      "audience_scope": "shared",
+      "output_tags": ["score", "conditional", "floor_established"],
+      "gauge_source": "gauge_state.json → score.band_label",
+      "status": "active"
+    },
+
+    {
+      "concept_id": "CONCEPT-13",
+      "label": "Source data intake complete",
+      "input_fields": [
+        "gauge_state.dimensions.DIM-05.state"
+      ],
+      "predicate": "DIM-05.state == 'COMPLETE'",
+      "business_concept": "All expected source data boundaries have been received and accepted.",
+      "audience_scope": "shared",
+      "output_tags": ["intake", "complete"],
+      "gauge_source": "gauge_state.json → DIM-05",
+      "status": "active"
+    },
+
+    {
+      "concept_id": "CONCEPT-14",
+      "label": "Structural patterns conform",
+      "input_fields": [
+        "gauge_state.dimensions.DIM-06.state"
+      ],
+      "predicate": "DIM-06.state == 'PASS'",
+      "business_concept": "Observed structural patterns conform to the expected standards for this system type.",
+      "audience_scope": "cto",
+      "output_tags": ["heuristic", "pass", "conformance"],
+      "gauge_source": "gauge_state.json → DIM-06",
+      "status": "active"
+    },
+
+    {
+      "concept_id": "CONCEPT-15",
+      "label": "Confidence range computed",
+      "input_fields": [
+        "gauge_state.confidence.lower",
+        "gauge_state.confidence.upper",
+        "gauge_state.confidence.status"
+      ],
+      "predicate": "confidence.status == 'COMPUTED'",
+      "business_concept": "The score confidence range has been computed. The proven lower bound and achievable upper bound are both defined.",
+      "audience_scope": "shared",
+      "output_tags": ["confidence", "computed", "range"],
+      "gauge_source": "gauge_state.json → confidence",
+      "status": "active"
+    },
+
+    {
+      "concept_id": "CONCEPT-16",
+      "label": "Structural model has isolated elements",
+      "input_fields": [
+        "binding_envelope.orphans"
+      ],
+      "predicate": "orphans.length > 0",
+      "business_concept": "One or more structural nodes have no containment relationship in the current model.",
+      "audience_scope": "cto",
+      "output_tags": ["orphan", "isolated", "containment_gap"],
+      "gauge_source": "binding_envelope.json → orphans",
+      "status": "active"
+    },
+
+    {
+      "concept_id": "CONCEPT-17",
+      "label": "Structural topology is multi-domain",
+      "input_fields": [
+        "binding_envelope.summary.domain_nodes_count"
+      ],
+      "predicate": "summary.domain_nodes_count > 1",
+      "business_concept": "The system structural model spans multiple structural domains.",
+      "audience_scope": "shared",
+      "output_tags": ["topology", "multi_domain"],
+      "gauge_source": "binding_envelope.json → summary.domain_nodes_count",
+      "status": "active"
+    },
+
+    {
+      "concept_id": "CONCEPT-18",
+      "label": "Structural integrity check failed",
+      "input_fields": [
+        "gauge_state.dimensions.DIM-02.state"
+      ],
+      "predicate": "DIM-02.state == 'FAIL'",
+      "business_concept": "Structural relationships are not consistent. One or more reconstruction validation axes have not passed.",
+      "audience_scope": "shared",
+      "output_tags": ["integrity", "fail", "reconstruction"],
+      "gauge_source": "gauge_state.json → DIM-02",
+      "status": "active"
+    },
+
+    {
+      "concept_id": "CONCEPT-19",
+      "label": "Unknown space present in structural topology",
+      "input_fields": [
+        "binding_envelope.constraint_flags.unknown_space_present",
+        "binding_envelope.constraint_flags.unknown_space_count"
+      ],
+      "predicate": "constraint_flags.unknown_space_present == true",
+      "business_concept": "One or more records in the structural topology fall outside the classified boundary.",
+      "audience_scope": "cto",
+      "output_tags": ["unknown_space", "topology", "unclassified"],
+      "gauge_source": "binding_envelope.json → constraint_flags.unknown_space_present",
+      "status": "active"
+    }
+
+  ],
+
+  "deferred_concepts": [
+    {
+      "concept_id": "CONCEPT-D01",
+      "label": "Reconstruction failure by axis",
+      "deferred_reason": "Requires reconstruction_state.json axis_results field mapping — deferred to a subsequent stream",
+      "status": "deferred"
+    },
+    {
+      "concept_id": "CONCEPT-D02",
+      "label": "Projected score caveat",
+      "deferred_reason": "projection.caveat is free-form text — requires controlled extraction before business mapping",
+      "status": "deferred"
+    },
+    {
+      "concept_id": "CONCEPT-D03",
+      "label": "Execution phase progression",
+      "deferred_reason": "PHASE_1_ACTIVE is the only attested state in current artifacts — multi-phase state mapping deferred",
+      "status": "deferred"
+    }
+  ]
+}

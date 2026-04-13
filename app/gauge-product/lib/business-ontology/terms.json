@@ -1,0 +1,309 @@
+{
+  "version": "1.0",
+  "stream": "GAUGE.MEANING.LAYER.BUSINESS.ONTOLOGY.01",
+  "description": "Canonical term mapping from GAUGE/PiOS technical vocabulary to business-correct vocabulary. All UI-facing language must use business_term, not source_term.",
+
+  "terms": [
+
+    {
+      "source_term": "coverage",
+      "business_term": "system visibility",
+      "aliases": ["coverage_percent", "DIM-01"],
+      "audience_scope": "shared",
+      "gauge_source": "gauge_state.json → dimensions.DIM-01",
+      "notes": "Coverage measures the proportion of expected system components that have been structurally identified and mapped.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "reconstruction",
+      "business_term": "structural integrity verification",
+      "aliases": ["DIM-02", "reconstruction_state"],
+      "audience_scope": "shared",
+      "gauge_source": "gauge_state.json → dimensions.DIM-02",
+      "notes": "Reconstruction validates that structural relationships between identified components are internally consistent across multiple validation axes.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "unknown_space",
+      "business_term": "unmapped elements",
+      "aliases": ["unknown-space", "DIM-04"],
+      "audience_scope": "shared",
+      "gauge_source": "gauge_state.json → dimensions.DIM-04",
+      "notes": "Records or elements that fall outside the defined structural boundary of the system. Not necessarily absent — may be unclassified.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "structural_unit",
+      "business_term": "system component",
+      "aliases": ["validated_unit", "admissible_unit", "required_unit"],
+      "audience_scope": "shared",
+      "gauge_source": "gauge_state.json → dimensions.DIM-01.admissible_units / DIM-02.validated_units",
+      "notes": "An atomic unit of the system that has been identified, classified, and included in the structural model.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "binding_node",
+      "business_term": "structural node",
+      "aliases": ["node", "node_id"],
+      "audience_scope": "cto",
+      "gauge_source": "binding_envelope.json → nodes[*]",
+      "notes": "A node in the structural topology model. Represents a named, typed structural element (domain, functional area, or component).",
+      "status": "active"
+    },
+
+    {
+      "source_term": "binding_context",
+      "business_term": "structural domain",
+      "aliases": ["DOM-xx", "domain"],
+      "audience_scope": "shared",
+      "gauge_source": "binding_envelope.json → nodes[*].type == 'binding_context'",
+      "notes": "A top-level structural grouping of related functional areas and system components. Corresponds to a discrete architectural region.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "component_entity",
+      "business_term": "tracked system component",
+      "aliases": ["CEU", "component_entity_unit"],
+      "audience_scope": "shared",
+      "gauge_source": "binding_envelope.json → nodes[*].type == 'component_entity'",
+      "notes": "An individually tracked system component within a structural domain. Smallest tracked unit in the structural model.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "capability_surface",
+      "business_term": "functional area",
+      "aliases": ["surface", "surface_id"],
+      "audience_scope": "shared",
+      "gauge_source": "binding_envelope.json → nodes[*].type == 'capability_surface'",
+      "notes": "A functional grouping within a structural domain, aggregating related system components by capability.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "structural_overlap",
+      "business_term": "cross-domain dependency",
+      "aliases": ["overlap", "overlap_edge", "overlap_endpoint"],
+      "audience_scope": "shared",
+      "gauge_source": "binding_envelope.json → overlap_edges / constraint_flags.overlap_present",
+      "notes": "A structural relationship where a component participates in more than one structural domain. Indicates a cross-boundary dependency.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "signal",
+      "business_term": "behavioral data signal",
+      "aliases": ["signals_by_node"],
+      "audience_scope": "shared",
+      "gauge_source": "binding_envelope.json → signals_by_node",
+      "notes": "A behavioral data measurement bound to a specific structural node. Represents runtime-observable evidence linked to the structural model.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "envelope_signal",
+      "business_term": "structurally bound signal",
+      "aliases": ["signal_id"],
+      "audience_scope": "cto",
+      "gauge_source": "binding_envelope.json → signals_by_node[*][*]",
+      "notes": "A signal that has been formally bound to a structural element in the binding envelope. Traceable to a specific node and metric.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "execution_layer",
+      "business_term": "execution assessment layer",
+      "aliases": ["execution_insight", "completion_evaluation"],
+      "audience_scope": "shared",
+      "gauge_source": "gauge_state.json → state.execution_status / score.components.completion_points",
+      "notes": "The PSEE execution engine layer responsible for evaluating runtime behavior, completion paths, and outcome scenarios. Distinct from structural proof.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "runtime_validation",
+      "business_term": "runtime behavior validation",
+      "aliases": ["runtime_assessment"],
+      "audience_scope": "shared",
+      "gauge_source": "gauge_state.json → state.execution_status",
+      "notes": "Validation of system behavior during or after execution. Requires the execution layer to have run.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "structural_proof",
+      "business_term": "structural evidence record",
+      "aliases": ["psee_validated", "proof"],
+      "audience_scope": "shared",
+      "gauge_source": "gauge_state.json → dimensions (DIM-01, DIM-02) / binding_envelope.json",
+      "notes": "The governed set of structural artifacts that collectively prove the structural state of the system. Traceable to source artifacts.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "integrity",
+      "business_term": "structural consistency",
+      "aliases": ["structural_integrity"],
+      "audience_scope": "shared",
+      "gauge_source": "gauge_state.json → dimensions.DIM-02",
+      "notes": "The property of a structural model where relationships between components are internally consistent and free of contradictions.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "escalation_clearance",
+      "business_term": "operational escalation status",
+      "aliases": ["escalation", "DIM-03"],
+      "audience_scope": "shared",
+      "gauge_source": "gauge_state.json → dimensions.DIM-03",
+      "notes": "Indicates whether any conditions requiring operational escalation have been detected in the structural layer.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "intake_completeness",
+      "business_term": "source data completeness",
+      "aliases": ["DIM-05", "intake_state"],
+      "audience_scope": "shared",
+      "gauge_source": "gauge_state.json → dimensions.DIM-05",
+      "notes": "Whether all expected source data boundaries have been received and accepted into the structural model.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "heuristic_compliance",
+      "business_term": "structural pattern conformance",
+      "aliases": ["DIM-06", "heuristic"],
+      "audience_scope": "cto",
+      "gauge_source": "gauge_state.json → dimensions.DIM-06",
+      "notes": "Whether observed structural patterns conform to the expected structural standards defined for this system type.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "canonical_score",
+      "business_term": "proven structural score",
+      "aliases": ["score.canonical", "lower_bound_score"],
+      "audience_scope": "shared",
+      "gauge_source": "gauge_state.json → score.canonical",
+      "notes": "The proven, non-speculative score derived only from completed structural evidence. Represents the floor of achievable score.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "projected_score",
+      "business_term": "achievable score",
+      "aliases": ["projection.value", "upper_bound_score"],
+      "audience_scope": "shared",
+      "gauge_source": "gauge_state.json → projection.value",
+      "notes": "The score achievable if the execution layer completes successfully, based on materialized structural dimensions. Not guaranteed.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "confidence_band",
+      "business_term": "score confidence range",
+      "aliases": ["confidence.lower", "confidence.upper"],
+      "audience_scope": "shared",
+      "gauge_source": "gauge_state.json → confidence",
+      "notes": "The computed range [lower, upper] within which the final score is expected to fall. Lower is proven; upper is achievable.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "execution_status",
+      "business_term": "execution phase status",
+      "aliases": ["state.execution_status", "PHASE_1_ACTIVE"],
+      "audience_scope": "shared",
+      "gauge_source": "gauge_state.json → state.execution_status",
+      "notes": "The current execution phase of the PSEE engine for this run. PHASE_1_ACTIVE means structural evaluation is complete; execution insight is not yet run.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "psee_validated",
+      "business_term": "governance-validated structural state",
+      "aliases": ["psee_engine_invoked"],
+      "audience_scope": "cto",
+      "gauge_source": "gauge_state.json → state.psee_engine_invoked",
+      "notes": "Structural state that has passed through the PSEE governance pipeline and is backed by traceable, auditable artifacts.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "orphan",
+      "business_term": "isolated structural element",
+      "aliases": ["orphan_node"],
+      "audience_scope": "cto",
+      "gauge_source": "binding_envelope.json → orphans",
+      "notes": "A structural node with no containment relationship — not belonging to any structural domain in the model.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "constraint_flag",
+      "business_term": "structural constraint indicator",
+      "aliases": ["constraint_flags"],
+      "audience_scope": "cto",
+      "gauge_source": "binding_envelope.json → constraint_flags",
+      "notes": "A flag indicating a structural condition of interest: overlaps, unknown space, or other boundary conditions.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "containment",
+      "business_term": "structural containment",
+      "aliases": ["containment_basis", "containment_tree"],
+      "audience_scope": "cto",
+      "gauge_source": "binding_envelope.json → nodes[*].provenance.containment_basis",
+      "notes": "The relationship that defines which structural domain or functional area a component belongs to.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "path_pattern",
+      "business_term": "structural path reference",
+      "aliases": ["path_pattern"],
+      "audience_scope": "cto",
+      "gauge_source": "binding_envelope.json → capability_surfaces[*].path_pattern",
+      "notes": "The file system path pattern that defines the source-code boundary of a functional area.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "temporal_classification",
+      "business_term": "structural temporal marker",
+      "aliases": ["STATIC", "DYNAMIC"],
+      "audience_scope": "cto",
+      "gauge_source": "binding_envelope.json → capability_surfaces[*].temporal_classification",
+      "notes": "Whether a structural element is classified as static (fixed structure) or dynamic (runtime-variable structure).",
+      "status": "active"
+    },
+
+    {
+      "source_term": "band_label",
+      "business_term": "score classification",
+      "aliases": ["score.band_label", "CONDITIONAL"],
+      "audience_scope": "shared",
+      "gauge_source": "gauge_state.json → score.band_label",
+      "notes": "Human-readable classification of the score band. CONDITIONAL means the score floor is proven but the ceiling depends on execution.",
+      "status": "active"
+    },
+
+    {
+      "source_term": "reconstruction_axis",
+      "business_term": "structural validation dimension",
+      "aliases": ["axis_results", "axis"],
+      "audience_scope": "cto",
+      "gauge_source": "reconstruction_state.json → axis_results",
+      "notes": "One of the defined axes across which structural reconstruction is validated (e.g. referential integrity, layer consistency).",
+      "status": "active"
+    }
+
+  ]
+}

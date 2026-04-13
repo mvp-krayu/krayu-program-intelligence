@@ -1,0 +1,369 @@
+{
+  "version": "1.2",
+  "stream": "GAUGE.MEANING.LAYER.EXECUTIVE.CONSISTENCY.CORRECTION.01",
+  "description": "Consistency-corrected phrase templates. Absolute claims downgraded where outside-control concepts may be active. Gauge and topology boundaries explicitly distinguished. Execution trace overstatement removed. All corrections grounded in same input fields as prior versions.",
+
+  "phrases": [
+
+    {
+      "phrase_id": "PHRASE-01-SHARED",
+      "concept_id": "CONCEPT-01",
+      "template": "Your core system architecture is structurally mapped — visibility is established across all tracked components.",
+      "placeholders": [],
+      "audience_scope": "shared",
+      "tone": "summary",
+      "status": "active"
+    },
+    {
+      "phrase_id": "PHRASE-01-CEO",
+      "concept_id": "CONCEPT-01",
+      "template": "All {component_count} identifiable system components are accounted for.",
+      "placeholders": ["component_count"],
+      "audience_scope": "ceo",
+      "tone": "summary",
+      "status": "inactive"
+    },
+    {
+      "phrase_id": "PHRASE-01-CTO",
+      "concept_id": "CONCEPT-01",
+      "template": "System visibility is 100%. All {component_count} expected structural components are mapped.",
+      "placeholders": ["component_count"],
+      "audience_scope": "cto",
+      "tone": "factual",
+      "status": "inactive"
+    },
+
+    {
+      "phrase_id": "PHRASE-02-CEO",
+      "concept_id": "CONCEPT-02",
+      "template": "{coverage_percent}% of identifiable system components are currently accounted for.",
+      "placeholders": ["coverage_percent"],
+      "audience_scope": "ceo",
+      "tone": "summary",
+      "status": "inactive"
+    },
+    {
+      "phrase_id": "PHRASE-02-CTO",
+      "concept_id": "CONCEPT-02",
+      "template": "{coverage_percent}% of your system is structurally visible — {admissible_units} of {required_units} expected components are mapped.",
+      "placeholders": ["coverage_percent", "admissible_units", "required_units"],
+      "audience_scope": "cto",
+      "tone": "factual",
+      "status": "active"
+    },
+
+    {
+      "phrase_id": "PHRASE-03-CEO",
+      "concept_id": "CONCEPT-03",
+      "template": "The system structure is internally consistent.",
+      "placeholders": [],
+      "audience_scope": "ceo",
+      "tone": "summary",
+      "status": "inactive"
+    },
+    {
+      "phrase_id": "PHRASE-03-CTO",
+      "concept_id": "CONCEPT-03",
+      "template": "Structural integrity is confirmed. {validated_units} components validated across {axis_count} reconstruction axes with {violation_count} violations.",
+      "placeholders": ["validated_units", "axis_count", "violation_count"],
+      "audience_scope": "cto",
+      "tone": "factual",
+      "status": "inactive"
+    },
+    {
+      "phrase_id": "PHRASE-03-SHARED",
+      "concept_id": "CONCEPT-03",
+      "template": "The structural foundation is solid — all mapped components pass cross-axis validation.",
+      "placeholders": [],
+      "audience_scope": "shared",
+      "tone": "summary",
+      "status": "active"
+    },
+
+    {
+      "phrase_id": "PHRASE-04-CEO",
+      "concept_id": "CONCEPT-04",
+      "template": "No unaccounted system elements are present.",
+      "placeholders": [],
+      "audience_scope": "ceo",
+      "tone": "summary",
+      "status": "inactive"
+    },
+    {
+      "phrase_id": "PHRASE-04-CTO",
+      "concept_id": "CONCEPT-04",
+      "template": "All gauge-tracked elements fall within scope — no runtime unknown-space elements detected.",
+      "placeholders": [],
+      "audience_scope": "cto",
+      "tone": "factual",
+      "status": "active"
+    },
+
+    {
+      "phrase_id": "PHRASE-05-CEO",
+      "concept_id": "CONCEPT-05",
+      "template": "{unknown_count} {element_plural} are not currently accounted for in the structural model.",
+      "placeholders": ["unknown_count", "element_plural"],
+      "audience_scope": "ceo",
+      "tone": "summary",
+      "status": "inactive"
+    },
+    {
+      "phrase_id": "PHRASE-05-CTO",
+      "concept_id": "CONCEPT-05",
+      "template": "{unknown_count} {record_plural} fall outside the defined structural boundary — these are not currently visible to the model.",
+      "placeholders": ["unknown_count", "record_plural"],
+      "audience_scope": "cto",
+      "tone": "factual",
+      "status": "active"
+    },
+
+    {
+      "phrase_id": "PHRASE-06-CEO",
+      "concept_id": "CONCEPT-06",
+      "template": "Execution assessment has not been performed. Runtime behavior is not yet validated.",
+      "placeholders": [],
+      "audience_scope": "ceo",
+      "tone": "summary",
+      "status": "inactive"
+    },
+    {
+      "phrase_id": "PHRASE-06-CTO",
+      "concept_id": "CONCEPT-06",
+      "template": "Execution layer has not run. Runtime behavior validation: NOT EVALUATED. Execution assessment is a separate evaluation — structural proof is independent.",
+      "placeholders": [],
+      "audience_scope": "cto",
+      "tone": "factual",
+      "status": "inactive"
+    },
+    {
+      "phrase_id": "PHRASE-06-SHARED",
+      "concept_id": "CONCEPT-06",
+      "template": "Runtime behavior is not yet validated — execution assessment has not been performed.",
+      "placeholders": [],
+      "audience_scope": "shared",
+      "tone": "factual",
+      "status": "active"
+    },
+
+    {
+      "phrase_id": "PHRASE-07-CEO",
+      "concept_id": "CONCEPT-07",
+      "template": "No operational alerts are present.",
+      "placeholders": [],
+      "audience_scope": "ceo",
+      "tone": "summary",
+      "status": "inactive"
+    },
+    {
+      "phrase_id": "PHRASE-07-SHARED",
+      "concept_id": "CONCEPT-07",
+      "template": "No operational escalation conditions are active — the structural layer is clear.",
+      "placeholders": [],
+      "audience_scope": "shared",
+      "tone": "factual",
+      "status": "active"
+    },
+
+    {
+      "phrase_id": "PHRASE-08-CEO",
+      "concept_id": "CONCEPT-08",
+      "template": "{overlap_count} {component_plural} are shared across structural boundaries.",
+      "placeholders": ["overlap_count", "component_plural"],
+      "audience_scope": "ceo",
+      "tone": "summary",
+      "status": "inactive"
+    },
+    {
+      "phrase_id": "PHRASE-08-CTO",
+      "concept_id": "CONCEPT-08",
+      "template": "{overlap_count} cross-domain {dependency_plural} detected — critical logic spans multiple structural domains.",
+      "placeholders": ["overlap_count", "dependency_plural"],
+      "audience_scope": "cto",
+      "tone": "factual",
+      "status": "active"
+    },
+
+    {
+      "phrase_id": "PHRASE-09-SHARED",
+      "concept_id": "CONCEPT-09",
+      "template": "All components operate within clean domain boundaries — no cross-domain coordination required.",
+      "placeholders": [],
+      "audience_scope": "shared",
+      "tone": "factual",
+      "status": "active"
+    },
+
+    {
+      "phrase_id": "PHRASE-10-CEO",
+      "concept_id": "CONCEPT-10",
+      "template": "{signal_count} behavioral data {point_plural} are linked to mapped system components.",
+      "placeholders": ["signal_count", "point_plural"],
+      "audience_scope": "ceo",
+      "tone": "summary",
+      "status": "inactive"
+    },
+    {
+      "phrase_id": "PHRASE-10-CTO",
+      "concept_id": "CONCEPT-10",
+      "template": "{signal_count} behavioral {signal_plural} are bound to mapped structural components — signal bindings are present in the structural model.",
+      "placeholders": ["signal_count", "signal_plural"],
+      "audience_scope": "cto",
+      "tone": "factual",
+      "status": "active"
+    },
+
+    {
+      "phrase_id": "PHRASE-11-SHARED",
+      "concept_id": "CONCEPT-11",
+      "template": "No behavioral signals are bound to this model — execution traces are not available.",
+      "placeholders": [],
+      "audience_scope": "shared",
+      "tone": "factual",
+      "status": "active"
+    },
+
+    {
+      "phrase_id": "PHRASE-12-CEO",
+      "concept_id": "CONCEPT-12",
+      "template": "The proven structural foundation is established at {canonical_score}. The full score of {projected_score} is achievable once execution assessment is performed.",
+      "placeholders": ["canonical_score", "projected_score"],
+      "audience_scope": "ceo",
+      "tone": "summary",
+      "status": "inactive"
+    },
+    {
+      "phrase_id": "PHRASE-12-CTO",
+      "concept_id": "CONCEPT-12",
+      "template": "Canonical score: {canonical_score} (CONDITIONAL). Score range: [{confidence_lower} – {confidence_upper}]. Lower bound is proven at the structural layer. Upper bound requires the execution layer to complete.",
+      "placeholders": ["canonical_score", "confidence_lower", "confidence_upper"],
+      "audience_scope": "cto",
+      "tone": "factual",
+      "status": "inactive"
+    },
+    {
+      "phrase_id": "PHRASE-12-SHARED",
+      "concept_id": "CONCEPT-12",
+      "template": "The structural proof floor is established — the achievable ceiling is unlocked by execution assessment.",
+      "placeholders": [],
+      "audience_scope": "shared",
+      "tone": "summary",
+      "status": "active"
+    },
+
+    {
+      "phrase_id": "PHRASE-13-SHARED",
+      "concept_id": "CONCEPT-13",
+      "template": "All expected source data has been received — the intake boundary is complete.",
+      "placeholders": [],
+      "audience_scope": "shared",
+      "tone": "factual",
+      "status": "active"
+    },
+    {
+      "phrase_id": "PHRASE-13-CTO",
+      "concept_id": "CONCEPT-13",
+      "template": "Source data completeness: COMPLETE. All expected data boundaries are satisfied.",
+      "placeholders": [],
+      "audience_scope": "cto",
+      "tone": "factual",
+      "status": "inactive"
+    },
+
+    {
+      "phrase_id": "PHRASE-14-CTO",
+      "concept_id": "CONCEPT-14",
+      "template": "Structural patterns match the expected profile — no heuristic anomalies detected.",
+      "placeholders": [],
+      "audience_scope": "cto",
+      "tone": "factual",
+      "status": "active"
+    },
+
+    {
+      "phrase_id": "PHRASE-15-CEO",
+      "concept_id": "CONCEPT-15",
+      "template": "The score range is [{confidence_lower} – {confidence_upper}].",
+      "placeholders": ["confidence_lower", "confidence_upper"],
+      "audience_scope": "ceo",
+      "tone": "summary",
+      "status": "inactive"
+    },
+    {
+      "phrase_id": "PHRASE-15-CTO",
+      "concept_id": "CONCEPT-15",
+      "template": "Score range: [{confidence_lower} – {confidence_upper}] — the floor is proven, the ceiling is conditional on execution.",
+      "placeholders": ["confidence_lower", "confidence_upper"],
+      "audience_scope": "cto",
+      "tone": "factual",
+      "status": "active"
+    },
+
+    {
+      "phrase_id": "PHRASE-16-CTO",
+      "concept_id": "CONCEPT-16",
+      "template": "{orphan_count} structural {node_plural} {have_plural} no containment relationship — isolated from the domain structure.",
+      "placeholders": ["orphan_count", "node_plural", "have_plural"],
+      "audience_scope": "cto",
+      "tone": "factual",
+      "status": "active"
+    },
+
+    {
+      "phrase_id": "PHRASE-17-CEO",
+      "concept_id": "CONCEPT-17",
+      "template": "The system spans multiple structural domains, each with distinct functional areas and components.",
+      "placeholders": [],
+      "audience_scope": "ceo",
+      "tone": "summary",
+      "status": "active"
+    },
+    {
+      "phrase_id": "PHRASE-17-CTO",
+      "concept_id": "CONCEPT-17",
+      "template": "Structural model spans {domain_count} domains with {surface_count} functional areas and {component_count} tracked system components.",
+      "placeholders": ["domain_count", "surface_count", "component_count"],
+      "audience_scope": "cto",
+      "tone": "factual",
+      "status": "inactive"
+    },
+
+    {
+      "phrase_id": "PHRASE-18-SHARED",
+      "concept_id": "CONCEPT-18",
+      "template": "The structural foundation is compromised — reconstruction validation has failed.",
+      "placeholders": [],
+      "audience_scope": "shared",
+      "tone": "factual",
+      "status": "active"
+    },
+    {
+      "phrase_id": "PHRASE-18-CTO",
+      "concept_id": "CONCEPT-18",
+      "template": "Structural integrity check: FAIL. Reconstruction validation has not passed. Review reconstruction_state.json for axis-level detail.",
+      "placeholders": [],
+      "audience_scope": "cto",
+      "tone": "factual",
+      "status": "inactive"
+    },
+
+    {
+      "phrase_id": "PHRASE-19-CTO",
+      "concept_id": "CONCEPT-19",
+      "template": "Parts of your system topology fall outside the classified structural boundary — {unknown_space_count} {record_plural} are unclassified.",
+      "placeholders": ["unknown_space_count", "record_plural"],
+      "audience_scope": "cto",
+      "tone": "factual",
+      "status": "active"
+    }
+
+  ],
+
+  "notes": {
+    "plural_placeholders": "Pluralization placeholders (element_plural, record_plural, signal_plural, etc.) must be resolved by the rendering layer based on the count value. No pluralization logic is defined in this config.",
+    "placeholder_resolution": "All placeholders must be resolved from GAUGE data fields at render time. No default or fallback values may be used. If a placeholder cannot be resolved, the phrase must not be rendered.",
+    "implication_rewrites": "Phrases rewritten to implication form in GAUGE.MEANING.LAYER.EXECUTIVE.IMPACT.02. Original factual templates preserved in git history. Deactivated redundant variants remain in this file with status: inactive for audit traceability.",
+    "redundancy_reduction": "One active phrase per concept. Shared scope preferred; CTO used where no shared variant exists. Inactive phrases retain their phrase_id and original template for auditability.",
+    "consistency_corrections": "GAUGE.MEANING.LAYER.EXECUTIVE.CONSISTENCY.CORRECTION.01: PHRASE-01-SHARED absolute visibility claim downgraded; PHRASE-04-CTO scoped explicitly to gauge runtime boundary (not topology classified boundary); PHRASE-10-CTO execution trace claim removed — structural signal binding only."
+  }
+}

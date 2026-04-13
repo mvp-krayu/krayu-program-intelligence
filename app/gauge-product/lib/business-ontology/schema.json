@@ -1,0 +1,104 @@
+{
+  "$schema": "GAUGE.MEANING.LAYER.BUSINESS.ONTOLOGY.01/schema",
+  "version": "1.0",
+  "stream": "GAUGE.MEANING.LAYER.BUSINESS.ONTOLOGY.01",
+  "description": "Validation schema for Gauge business ontology config artifacts. All UI-facing business language must be sourced from config entries validated against this schema.",
+
+  "files": {
+    "terms.json": {
+      "description": "Atomic term mappings from technical vocabulary to business vocabulary",
+      "required_root_keys": ["version", "stream", "terms"],
+      "items_key": "terms",
+      "item_required_keys": ["source_term", "business_term", "audience_scope", "status"],
+      "item_optional_keys": ["aliases", "notes", "gauge_source"]
+    },
+    "concepts.json": {
+      "description": "Deterministic concept rules mapping GAUGE states to business meaning",
+      "required_root_keys": ["version", "stream", "concepts"],
+      "items_key": "concepts",
+      "item_required_keys": [
+        "concept_id",
+        "input_fields",
+        "predicate",
+        "business_concept",
+        "audience_scope",
+        "output_tags",
+        "status"
+      ],
+      "item_optional_keys": ["notes", "gauge_source", "deferred_reason"]
+    },
+    "phrases.json": {
+      "description": "Controlled phrase templates for business-facing rendering. No open prose.",
+      "required_root_keys": ["version", "stream", "phrases"],
+      "items_key": "phrases",
+      "item_required_keys": [
+        "phrase_id",
+        "concept_id",
+        "template",
+        "placeholders",
+        "audience_scope",
+        "tone",
+        "status"
+      ],
+      "item_optional_keys": ["notes"]
+    }
+  },
+
+  "allowed_values": {
+    "status": ["active", "deferred", "unmapped"],
+    "audience_scope": ["cto", "ceo", "shared"],
+    "tone": ["factual", "summary"],
+    "predicate_operators": ["eq", "gt", "lt", "gte", "lte", "ne", "in", "not_null", "any"]
+  },
+
+  "traceability_rules": {
+    "every_phrase_concept_id_must_exist_in_concepts": true,
+    "every_concept_must_list_at_least_one_input_field": true,
+    "every_placeholder_in_template_must_appear_in_placeholders_array": true,
+    "every_placeholders_array_entry_must_appear_in_template": true,
+    "every_active_concept_must_have_at_least_one_active_phrase": true
+  },
+
+  "prohibitions": [
+    "No AI-generated narrative in phrase templates",
+    "No action recommendations in phrase templates",
+    "No risk framing beyond explicit GAUGE state",
+    "No promotional or marketing language",
+    "No inferred business impact beyond proven GAUGE state",
+    "No speculation about future system behavior",
+    "No comparison language (e.g. 'better than', 'worse than')"
+  ],
+
+  "gauge_source_fields": {
+    "description": "Canonical field paths used in concept input_fields",
+    "paths": {
+      "coverage_percent":          "gauge_state.json → dimensions.DIM-01.coverage_percent",
+      "coverage_state":            "gauge_state.json → dimensions.DIM-01.state",
+      "coverage_admissible_units": "gauge_state.json → dimensions.DIM-01.admissible_units",
+      "coverage_required_units":   "gauge_state.json → dimensions.DIM-01.required_units",
+      "reconstruction_state":      "gauge_state.json → dimensions.DIM-02.state",
+      "reconstruction_validated":  "gauge_state.json → dimensions.DIM-02.validated_units",
+      "reconstruction_total":      "gauge_state.json → dimensions.DIM-02.total_units",
+      "escalation_state":          "gauge_state.json → dimensions.DIM-03.state_label",
+      "unknown_space_count":       "gauge_state.json → dimensions.DIM-04.total_count",
+      "unknown_space_state":       "gauge_state.json → dimensions.DIM-04.state_label",
+      "intake_completeness_state": "gauge_state.json → dimensions.DIM-05.state",
+      "heuristic_state":           "gauge_state.json → dimensions.DIM-06.state",
+      "canonical_score":           "gauge_state.json → score.canonical",
+      "score_band_label":          "gauge_state.json → score.band_label",
+      "completion_points":         "gauge_state.json → score.components.completion_points",
+      "projected_score":           "gauge_state.json → projection.value",
+      "confidence_lower":          "gauge_state.json → confidence.lower",
+      "confidence_upper":          "gauge_state.json → confidence.upper",
+      "execution_status":          "gauge_state.json → state.execution_status",
+      "nodes_count":               "binding_envelope.json → summary.nodes_count",
+      "domains_count":             "binding_envelope.json → summary.domain_nodes_count",
+      "surfaces_count":            "binding_envelope.json → summary.capability_surface_nodes_count",
+      "components_count":          "binding_envelope.json → summary.component_entity_nodes_count",
+      "overlap_present":           "binding_envelope.json → constraint_flags.overlap_present",
+      "overlap_count":             "binding_envelope.json → summary.overlap_structural_edges_count",
+      "unknown_space_topo_count":  "binding_envelope.json → constraint_flags.unknown_space_count",
+      "signals_count":             "binding_envelope.json → summary.signals_count"
+    }
+  }
+}
