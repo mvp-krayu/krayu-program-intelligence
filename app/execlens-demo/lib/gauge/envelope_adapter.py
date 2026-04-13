@@ -20,6 +20,7 @@ Usage:
 """
 
 import json
+import re
 import sys
 from collections import defaultdict, deque
 from pathlib import Path
@@ -39,6 +40,87 @@ DEFAULT_ENVELOPE = (
     / "binding"
     / "binding_envelope.json"
 )
+
+
+# ---------------------------------------------------------------------------
+# PSEE.STRUCTURAL.LABEL.RESOLUTION.01 — Structural label resolution
+# Deterministic transformation grammar. No interpretation. No fallback naming.
+# ---------------------------------------------------------------------------
+
+_ABBREVIATION_REGISTER = {
+    "cfg": "Config",
+    "svc": "Service",
+    "mgr": "Manager",
+    "ctx": "Context",
+    "idx": "Index",
+    "api": "API",      # casing-only entry
+}
+
+
+def _build_product_names(nodes_list):
+    """
+    Collect original-cased tokens from node label corpus to support N-1 preservation.
+    A token qualifies when its canonical form differs from its lowercase form.
+    Returns: {lowercase_token: canonical_cased_form}
+    """
+    registry = {}
+    for n in nodes_list:
+        raw = n.get("label") or ""
+        for tok in re.split(r"[_\-]+", raw):
+            if not tok:
+                continue
+            lower = tok.lower()
+            if lower not in registry:
+                registry[lower] = tok
+            elif tok != tok.lower() and registry[lower] == registry[lower].lower():
+                registry[lower] = tok   # prefer cased form over lowercase
+    return registry
+
+
+def _tokenize(s):
+    """
+    T-1 through T-5: split snake_case, kebab-case, PascalCase, camelCase,
+    and letter–digit / digit–letter boundaries.
+    """
+    parts = re.split(r"[_\-]+", s)
+    tokens = []
+    for part in parts:
+        if not part:
+            continue
+        # T-3: PascalCase / camelCase
+        p = re.sub(r"([a-z])([A-Z])", r"\1 \2", part)
+        p = re.sub(r"([A-Z]+)([A-Z][a-z])", r"\1 \2", p)
+        # T-5: letter–digit and digit–letter
+        p = re.sub(r"([A-Za-z])([0-9])", r"\1 \2", p)
+        p = re.sub(r"([0-9])([A-Za-z])", r"\1 \2", p)
+        tokens.extend(p.split())
+    return [t for t in tokens if t]
+
+
+def _normalize(tok, product_names):
+    """N-1 through N-4 normalization for a single token."""
+    lower = tok.lower()
+    # N-1: product casing preservation (cased form present in corpus)
+    if lower in product_names and product_names[lower] != lower:
+        return product_names[lower]
+    # N-3: structural abbreviation register (closed set)
+    if lower in _ABBREVIATION_REGISTER:
+        return _ABBREVIATION_REGISTER[lower]
+    # N-2: title case
+    return (tok[0].upper() + tok[1:].lower()) if len(tok) > 1 else tok.upper()
+
+
+def resolve_label(source, product_names):
+    """
+    Apply full grammar and return resolved_label string.
+    Returns None only when source is empty — never invents content.
+    """
+    if not source:
+        return None
+    tokens = _tokenize(source)
+    if not tokens:
+        return None
+    return " ".join(_normalize(t, product_names) for t in tokens)
 
 
 # ---------------------------------------------------------------------------
@@ -184,6 +266,10 @@ def build_render_model(envelope: dict, envelope_path: str) -> dict:
         else:
             orphan_signals.append(s)
 
+    # --- Bound label fields — PSEE.STRUCTURAL.LABEL.RESOLUTION.01 + GAUGE.RUNTIME.LABEL.BINDING.01 ---
+    # Build product names corpus from label values for N-1 casing preservation rule.
+    product_names = _build_product_names(nodes_list)
+
     # --- Annotated node list (non-mutating) ---
     annotated_nodes = []
     for n in nodes_list:
@@ -200,6 +286,17 @@ def build_render_model(envelope: dict, envelope_path: str) -> dict:
             ann["additional_parents"]  = [
                 p for p in multi_parent[nid] if p != canonical_parent.get(nid)
             ]
+
+        # Bound label fields (additive — structural fields above are unchanged)
+        label_source          = n.get("label") or nid   # use node_id as UNRESOLVED fallback
+        resolved              = resolve_label(label_source, product_names) or nid
+        ann["resolved_label"] = resolved
+        ann["display_label"]  = resolved                 # display_label := resolved_label
+        ann["secondary_label"] = nid                     # secondary_label := canonical_id
+        # short_label: passthrough only when present upstream; key absent otherwise
+        if "short_label" in n:
+            ann["short_label"] = n["short_label"]
+
         annotated_nodes.append(ann)
 
     # --- Summary ---

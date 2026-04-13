@@ -106,7 +106,7 @@ function ComponentFooter({ node, overlapEdges, nodeIndex, expanded, onToggle }) 
     >
       <div className="gauge-component-row">
         <span className="gauge-component-dot">●</span>
-        <span className="gauge-component-name">{humanize(node.label)}</span>
+        <span className="gauge-component-name">{node.display_label}</span>
         <SignalDot signals={node.signals} />
       </div>
 
@@ -115,7 +115,7 @@ function ComponentFooter({ node, overlapEdges, nodeIndex, expanded, onToggle }) 
         <div className="gauge-component-overlaps">
           {overlapsWith.map(other => (
             <span key={other.node_id} className="gauge-overlap-ref">
-              → {humanize(other.label)}
+              → {other.display_label}
             </span>
           ))}
         </div>
@@ -127,7 +127,7 @@ function ComponentFooter({ node, overlapEdges, nodeIndex, expanded, onToggle }) 
 
       {expanded && (
         <div className="gauge-component-detail">
-          <span className="gauge-detail-id">{node.node_id}</span>
+          <span className="gauge-detail-id">{node.secondary_label}</span>
           <span className="gauge-detail-type">{node.type}</span>
           {node.temporal_classification && (
             <span className="gauge-detail-tc">{node.temporal_classification}</span>
@@ -184,7 +184,7 @@ function RegionCard({ rootId, treeData, overlapEdges, expandedNodes, onToggle })
   return (
     <div className="gauge-region">
       <div className="gauge-region-header">
-        <span className="gauge-region-name">{humanize(rootNode.label)}</span>
+        <span className="gauge-region-name">{rootNode.display_label}</span>
         {surfaces.length > 0 && (
           <span className="gauge-region-count">{surfaces.length}</span>
         )}
@@ -197,11 +197,11 @@ function RegionCard({ rootId, treeData, overlapEdges, expandedNodes, onToggle })
               key={s.node_id}
               className="gauge-surface-item"
               onClick={() => onToggle(s.node_id)}
-              title={s.node_id}
+              title={s.secondary_label}
             >
-              {humanize(s.label)}
+              {s.display_label}
               {expandedNodes.has(s.node_id) && (
-                <span className="gauge-surface-id"> {s.node_id}</span>
+                <span className="gauge-surface-id"> {s.secondary_label}</span>
               )}
             </div>
           ))}
@@ -267,11 +267,11 @@ function StandaloneSection({ orphanIds, nodeIndex, expandedNodes, onToggle }) {
                 key={n.node_id}
                 className="gauge-standalone-item"
                 onClick={() => onToggle(n.node_id)}
-                title={n.node_id}
+                title={n.secondary_label}
               >
-                {humanize(n.label)}
+                {n.display_label}
                 {expandedNodes.has(n.node_id) && (
-                  <span className="gauge-standalone-id"> ({n.node_id})</span>
+                  <span className="gauge-standalone-id"> ({n.secondary_label})</span>
                 )}
               </span>
             ))}
@@ -327,9 +327,9 @@ function DiagnosticsPanel({ constraintFlags, overlapEdges, unknownEdges, nodeInd
                 )
                 return (
                   <div key={e.edge_id} className="gauge-diag-overlap">
-                    <span>{fromNode ? humanize(fromNode.label) : e.from_node}</span>
+                    <span>{fromNode ? fromNode.display_label : e.from_node}</span>
                     <span className="gauge-diag-arrow">⟷</span>
-                    <span>{toNode ? humanize(toNode.label) : e.to_node}</span>
+                    <span>{toNode ? toNode.display_label : e.to_node}</span>
                     {evidence && (
                       <span className="gauge-diag-evidence">{evidence}</span>
                     )}

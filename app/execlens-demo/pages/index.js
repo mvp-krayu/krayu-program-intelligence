@@ -164,9 +164,9 @@ export default function Home() {
           <LandingGaugeStrip />
         </div>
 
-        {/* ── Structural topology panel — beneath gauges, above query selector ── */}
+        {/* ── Structural topology — DEMO presentation (42.7 signal-projection path) ── */}
         <div data-demo-section="topology">
-          <TopologyPanel selectedQuery={selectedQuery} />
+          <TopologyPanel selectedQuery={selectedQuery} mode="topology" />
         </div>
 
         {/* ── Query selector ── */}
