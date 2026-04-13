@@ -938,3 +938,451 @@ details.op-details[open] summary::before { content:"▼  "; }
 .ei-band-item--hi .ei-band-lbl {
   color: #58a6ff;
 }
+
+/* =========================================================
+   EXECUTIVE DECISION LAYER — GAUGE.EXECUTIVE.DECISION.LAYER.01
+   Status pills + composed statement derived from matchedConcepts.
+   ========================================================= */
+
+.ed-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 24px;
+  background: #0d1117;
+  border-bottom: 1px solid #21262d;
+}
+
+.ed-status-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ed-pill {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid;
+  min-width: 100px;
+}
+
+.ed-pill-label {
+  font-size: 9px;
+  font-family: monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.6;
+}
+
+.ed-pill-value {
+  font-size: 11px;
+  font-weight: 700;
+  font-family: monospace;
+  letter-spacing: 0.04em;
+}
+
+/* Pill state modifiers */
+.ed-pill--strong {
+  background: #0a1f0e;
+  border-color: #2ea043;
+  color: #3fb950;
+}
+
+.ed-pill--warn {
+  background: #1a1400;
+  border-color: #d29922;
+  color: #d29922;
+}
+
+.ed-pill--neutral {
+  background: #0d1117;
+  border-color: #30363d;
+  color: #8b949e;
+}
+
+.ed-pill--risk {
+  background: #160a0a;
+  border-color: #f85149;
+  color: #f85149;
+}
+
+.ed-statement {
+  font-size: 13px;
+  color: #c9d1d9;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   GAUGE.EXECUTIVE.VISUAL.LAYER.01
+   Visual authority upgrade: signal strip, score gauge,
+   structural graph, typography normalization.
+   ========================================================= */
+
+/* -------------------------------------------------------
+   STEP 1 — Signal strip (replaces chunky pill badges)
+   .ed-signal-* replaces .ed-pill-* in EVL.01
+   ------------------------------------------------------- */
+
+.ed-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 24px;
+  background: #080e15;
+  border-bottom: 1px solid #1a2030;
+}
+
+.ed-signal-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.ed-signal {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 18px 4px 0;
+  margin-right: 18px;
+  border-right: 1px solid #1a2030;
+}
+
+.ed-signal:last-child {
+  border-right: none;
+  margin-right: 0;
+  padding-right: 0;
+}
+
+.ed-sig-key {
+  font-size: 9px;
+  font-family: monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #4a5568;
+}
+
+.ed-sig-sep {
+  color: #2d3748;
+  font-size: 10px;
+  line-height: 1;
+}
+
+.ed-sig-val {
+  font-size: 11px;
+  font-weight: 700;
+  font-family: monospace;
+  letter-spacing: 0.05em;
+}
+
+/* Signal state modifiers — applied to .ed-signal wrapper */
+.ed-signal--strong .ed-sig-val { color: #3fb950; }
+.ed-signal--warn   .ed-sig-val { color: #d29922; }
+.ed-signal--neutral .ed-sig-val { color: #6e7681; }
+.ed-signal--risk   .ed-sig-val { color: #f85149; }
+
+/* Statement: de-emphasize to L4 weight */
+.ed-statement {
+  font-size: 12px;
+  color: #6e7681;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* -------------------------------------------------------
+   STEP 2 — Executive visual zone (gauge + graph container)
+   ------------------------------------------------------- */
+
+.ev-visual-zone {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid #1f2937;
+  background: #060c12;
+}
+
+/* -------------------------------------------------------
+   STEP 2 — Primary score gauge (eg-*)
+   ------------------------------------------------------- */
+
+.eg-container {
+  flex: 1 1 62%;
+  padding: 22px 28px;
+  border-right: 1px solid #1a2030;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.eg-label-row {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+}
+
+.eg-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: #3a4556;
+  flex: 1;
+}
+
+.eg-proven-chip,
+.eg-achievable-chip {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.eg-chip-val {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+  font-family: monospace;
+}
+
+.eg-proven-chip    .eg-chip-val { color: #58a6ff; }
+.eg-achievable-chip .eg-chip-val { color: #d29922; }
+
+.eg-chip-lbl {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: #3a4556;
+}
+
+/* Track */
+.eg-track-outer {
+  position: relative;
+  height: 10px;
+}
+
+.eg-track-bg {
+  position: absolute;
+  inset: 0;
+  background: #111827;
+  border-radius: 5px;
+}
+
+.eg-proven-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: #1c4a7a;
+  border-radius: 5px 0 0 5px;
+}
+
+.eg-gap-fill {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 4px,
+    rgba(210, 153, 34, 0.15) 4px,
+    rgba(210, 153, 34, 0.15) 8px
+  );
+  border-right: 1px solid rgba(210, 153, 34, 0.4);
+}
+
+.eg-tick-proven {
+  position: absolute;
+  top: -4px;
+  width: 2px;
+  height: calc(100% + 8px);
+  background: #58a6ff;
+  transform: translateX(-50%);
+  border-radius: 1px;
+}
+
+.eg-tick-ceil {
+  position: absolute;
+  top: -4px;
+  width: 2px;
+  height: calc(100% + 8px);
+  background: #d29922;
+  transform: translateX(-50%);
+  border-radius: 1px;
+}
+
+.eg-range-ends {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  color: #2d3748;
+  font-family: monospace;
+  letter-spacing: .03em;
+}
+
+/* -------------------------------------------------------
+   STEP 4 — Compact structural graph (sg-*)
+   ------------------------------------------------------- */
+
+.sg-container {
+  flex: 1 1 38%;
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sg-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: #3a4556;
+}
+
+.sg-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sg-lbl {
+  font-size: 9px;
+  color: #4a5568;
+  width: 108px;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.sg-track {
+  flex: 1;
+  height: 5px;
+  background: #111827;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.sg-fill {
+  height: 100%;
+  border-radius: 3px;
+  min-width: 3px;
+  transition: width 0.4s ease;
+}
+
+.sg-fill--dom { background: #2ea043; }
+.sg-fill--ovl { background: #d29922; }
+.sg-fill--unk { background: #f85149; }
+
+.sg-val {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6e7681;
+  font-family: monospace;
+  width: 22px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* -------------------------------------------------------
+   STEP 5 — Typography normalization
+   L1: dominant statement (ei-header-primary)
+   L2: section titles (ml-section-title in ei-section)
+   L3: metric labels, signal labels
+   L4: phrase body text
+   ------------------------------------------------------- */
+
+/* L1 — dominant statement */
+.ei-header-primary {
+  font-size: 20px !important;
+  font-weight: 600;
+  color: #e6edf3;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* L1 secondary (exec append) */
+.ei-header-exec {
+  font-size: 14px !important;
+  font-weight: 400;
+  color: #6e7681;
+}
+
+/* Tighten header padding now that decision row is compact */
+.ei-header {
+  padding: 20px 28px;
+}
+
+/* L2 — section headings */
+.ei-section .ml-section-title {
+  font-size: 10px !important;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+/* L3 — metric band labels */
+.ei-band-lbl {
+  font-size: 9px !important;
+  letter-spacing: .08em;
+}
+
+/* Band: tighten vertical rhythm */
+.ei-band-item {
+  padding: 12px 10px;
+}
+
+.ei-band-val {
+  font-size: 20px;
+}
+
+.ei-band-item--hi .ei-band-val {
+  font-size: 26px;
+}
+
+/* L4 — phrase body */
+.ei-section .ml-text--summary {
+  font-size: 14px;
+  line-height: 1.65;
+  color: #e6edf3;
+}
+
+.ei-section .ml-text--factual {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #b1bac4;
+}
+
+/* -------------------------------------------------------
+   STEP 6 — Section visual discipline
+   Better spacing, card rhythm, line length
+   ------------------------------------------------------- */
+
+.ei-sections {
+  border-top: 1px solid #1a2030;
+}
+
+.ei-section .ml-section {
+  padding: 0;
+}
+
+.ei-section .ml-section-title {
+  padding: 16px 20px 12px;
+  margin-bottom: 0;
+  border-bottom: 1px solid #111;
+}
+
+.ei-section .ml-blocks {
+  padding: 16px 20px;
+  gap: 12px;
+}
+
+.ei-section .ml-block {
+  padding: 11px 14px;
+  border-left: 2px solid;
+  background: #040810;
+  max-width: 520px;
+}
+
+/* Section-specific block left-border color */
+.ei-section--good .ml-block { border-left-color: #1c4a1e; }
+.ei-section--warn .ml-block { border-left-color: #4a3c00; }
+.ei-section--risk .ml-block { border-left-color: #4a0f0a; }

@@ -88,6 +88,67 @@ function useTopologyData() {
 }
 
 // ---------------------------------------------------------------------------
+// Executive Decision Layer — top-of-page status block
+// Derives STRUCTURE / COMPLEXITY / EXECUTION from already-resolved concept IDs.
+// No new data sources. No API calls. Boolean classification only.
+// Contract: GAUGE.EXECUTIVE.DECISION.LAYER.01
+// ---------------------------------------------------------------------------
+
+function ExecutiveDecisionBlock({ matchedConcepts }) {
+  // STRUCTURE: STRONG if CONCEPT-01, CONCEPT-03, CONCEPT-14 all active
+  const structure = ['CONCEPT-01', 'CONCEPT-03', 'CONCEPT-14'].every(
+    id => matchedConcepts.includes(id)
+  ) ? 'STRONG' : 'FRAGMENTED'
+
+  // COMPLEXITY: RISING if any of CONCEPT-08, CONCEPT-09, CONCEPT-16 active
+  const complexity = ['CONCEPT-08', 'CONCEPT-09', 'CONCEPT-16'].some(
+    id => matchedConcepts.includes(id)
+  ) ? 'RISING' : 'LOW'
+
+  // EXECUTION: UNKNOWN if CONCEPT-06 active, else VERIFIED
+  const execution = matchedConcepts.includes('CONCEPT-06') ? 'UNKNOWN' : 'VERIFIED'
+
+  // Statement composition — allowed clauses per contract
+  const structureClause  = structure  === 'STRONG'  ? 'System structure is solid'              : 'System structure has visible gaps'
+  const complexityClause = complexity === 'RISING'  ? 'complexity is increasing across domains' : 'complexity remains contained'
+  const executionClause  = execution  === 'UNKNOWN' ? 'Execution readiness is not yet validated' : 'Execution readiness is confirmed'
+  const statement = `${structureClause}, while ${complexityClause}. ${executionClause}.`
+
+  // Signal chip class assignment
+  const structureClass  = structure  === 'STRONG'  ? 'ed-signal--strong'  : 'ed-signal--risk'
+  const complexityClass = complexity === 'RISING'  ? 'ed-signal--warn'    : 'ed-signal--neutral'
+  const executionClass  = execution  === 'UNKNOWN' ? 'ed-signal--neutral' : 'ed-signal--strong'
+
+  return (
+    <div
+      className="ed-container"
+      data-structure={structure}
+      data-complexity={complexity}
+      data-execution={execution}
+    >
+      <div className="ed-signal-row">
+        <div className={`ed-signal ${structureClass}`}>
+          <span className="ed-sig-key">STRUCTURE</span>
+          <span className="ed-sig-sep">·</span>
+          <span className="ed-sig-val">{structure}</span>
+        </div>
+        <div className={`ed-signal ${complexityClass}`}>
+          <span className="ed-sig-key">COMPLEXITY</span>
+          <span className="ed-sig-sep">·</span>
+          <span className="ed-sig-val">{complexity}</span>
+        </div>
+        <div className={`ed-signal ${executionClass}`}>
+          <span className="ed-sig-key">EXECUTION</span>
+          <span className="ed-sig-sep">·</span>
+          <span className="ed-sig-val">{execution}</span>
+        </div>
+      </div>
+      <div className="ed-statement">{statement}</div>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Executive header — single flowing statement from matched concepts via renderer
 // Uses CONCEPT-01/02 (visibility) as primary and CONCEPT-06 (execution state)
 // as secondary, combined into one visual line for impact.
@@ -144,10 +205,9 @@ function ExecHeader({ gaugeData, topoData, matchedConcepts }) {
 }
 
 // ---------------------------------------------------------------------------
-// Status band — compact metrics strip + proportional visual bar
-// Derives domain count from topoData.nodes[] (same method as
-// GAUGE.STANDALONE.STRUCTURAL.METRICS.DERIVATION.01). No new logic.
-// Bar segment widths use flexGrow with raw counts — no normalization required.
+// Status band — compact metrics strip (GAUGE.EXECUTIVE.VISUAL.LAYER.01)
+// Multicolor bar removed. Primary gauge handles visual score representation.
+// Derives domain count from topoData.nodes[] (GAUGE.STANDALONE.STRUCTURAL.METRICS.DERIVATION.01).
 // ---------------------------------------------------------------------------
 
 function StatusBand({ gaugeData, topoData }) {
@@ -163,35 +223,116 @@ function StatusBand({ gaugeData, topoData }) {
   const ovlDisplay = topoData?.overlap_edges ? ovlCount : '—'
   const unkDisplay = gaugeData?.dimensions?.['DIM-04'] ? unkCount : '—'
 
-  // Bar flex weights — minimum 1 so each segment is always visible
-  const barDom = domCount > 0 ? domCount : 1
-  const barOvl = ovlCount > 0 ? ovlCount : 1
-  const barUnk = unkCount > 0 ? unkCount : 1
-
   const items = [
-    { lbl: 'Proven Score',  val: gaugeData?.score?.canonical  ?? '—', hi: true },
-    { lbl: 'Achievable',    val: gaugeData?.projection?.value ?? '—' },
-    { lbl: 'Domains',       val: domDisplay },
+    { lbl: 'Proven Score',    val: gaugeData?.score?.canonical  ?? '—', hi: true },
+    { lbl: 'Achievable',      val: gaugeData?.projection?.value ?? '—' },
+    { lbl: 'Domains',         val: domDisplay },
     { lbl: 'Runtime Unknown', val: unkDisplay },
-    { lbl: 'Cross-Domain',  val: ovlDisplay },
+    { lbl: 'Cross-Domain',    val: ovlDisplay },
   ]
 
   return (
-    <>
-      <div className="ei-band">
-        {items.map((m, i) => (
-          <div key={i} className={`ei-band-item${m.hi ? ' ei-band-item--hi' : ''}`}>
-            <div className="ei-band-val">{m.val}</div>
-            <div className="ei-band-lbl">{m.lbl}</div>
+    <div className="ei-band">
+      {items.map((m, i) => (
+        <div key={i} className={`ei-band-item${m.hi ? ' ei-band-item--hi' : ''}`}>
+          <div className="ei-band-val">{m.val}</div>
+          <div className="ei-band-lbl">{m.lbl}</div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Primary executive gauge — score range visual (GAUGE.EXECUTIVE.VISUAL.LAYER.01)
+// Shows proven floor, achievable ceiling, and execution gap.
+// Uses existing gaugeData values only. No new data sources.
+// ---------------------------------------------------------------------------
+
+function ScoreGauge({ gaugeData }) {
+  const proven     = typeof gaugeData?.score?.canonical  === 'number' ? gaugeData.score.canonical  : null
+  const achievable = typeof gaugeData?.projection?.value === 'number' ? gaugeData.projection.value : null
+  if (proven === null) return null
+
+  const max           = 100
+  const provenPct     = Math.min(max, Math.max(0, proven))
+  const achievablePct = achievable !== null ? Math.min(max, Math.max(0, achievable)) : provenPct
+  const gapPct        = achievablePct - provenPct
+
+  return (
+    <div className="eg-container">
+      <div className="eg-label-row">
+        <span className="eg-title">Score Range</span>
+        <span className="eg-proven-chip">
+          <span className="eg-chip-val">{proven}</span>
+          <span className="eg-chip-lbl">proven</span>
+        </span>
+        {achievable !== null && achievable !== proven && (
+          <span className="eg-achievable-chip">
+            <span className="eg-chip-val">{achievable}</span>
+            <span className="eg-chip-lbl">achievable</span>
+          </span>
+        )}
+      </div>
+      <div className="eg-track-outer">
+        <div className="eg-track-bg" />
+        <div className="eg-proven-fill" style={{ width: `${provenPct}%` }} />
+        {gapPct > 0 && (
+          <div className="eg-gap-fill" style={{ left: `${provenPct}%`, width: `${gapPct}%` }} />
+        )}
+        <div className="eg-tick-proven" style={{ left: `${provenPct}%` }} />
+        {achievable !== null && achievable !== proven && (
+          <div className="eg-tick-ceil" style={{ left: `${achievablePct}%` }} />
+        )}
+      </div>
+      <div className="eg-range-ends">
+        <span className="eg-range-zero">0</span>
+        <span className="eg-range-max">100</span>
+      </div>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Compact structural graph — domain / cross-domain / unknown distribution
+// Uses existing counts identical to StatusBand. No new data sources.
+// ---------------------------------------------------------------------------
+
+function StructuralGraph({ gaugeData, topoData }) {
+  const nodes    = topoData?.nodes || []
+  const domCount = topoData          ? nodes.filter(n => n.type === 'binding_context').length : null
+  const ovlCount = topoData?.overlap_edges !== undefined ? (topoData.overlap_edges?.length ?? 0) : null
+  const unkCount = gaugeData?.dimensions?.['DIM-04'] !== undefined
+    ? (gaugeData.dimensions['DIM-04'].total_count ?? 0) : null
+
+  if (domCount === null && ovlCount === null && unkCount === null) return null
+
+  const total = (domCount ?? 0) + (ovlCount ?? 0) + (unkCount ?? 0) || 1
+
+  const rows = [
+    { lbl: 'Domains',         val: domCount, mod: 'sg-fill--dom' },
+    { lbl: 'Cross-Domain',    val: ovlCount, mod: 'sg-fill--ovl' },
+    { lbl: 'Runtime Unknown', val: unkCount, mod: 'sg-fill--unk' },
+  ]
+
+  return (
+    <div className="sg-container">
+      <div className="sg-title">Structural Distribution</div>
+      {rows.map((r, i) => (
+        <div key={i} className="sg-row">
+          <span className="sg-lbl">{r.lbl}</span>
+          <div className="sg-track">
+            {r.val !== null && (
+              <div
+                className={`sg-fill ${r.mod}`}
+                style={{ width: `${Math.max(2, Math.round(((r.val ?? 0) / total) * 100))}%` }}
+              />
+            )}
           </div>
-        ))}
-      </div>
-      <div className="ei-bar" title="Domains (green) · Cross-domain overlaps (amber) · Unknown space (red)">
-        <div className="ei-bar-seg ei-bar-good" style={{ flexGrow: barDom }} />
-        <div className="ei-bar-seg ei-bar-warn" style={{ flexGrow: barOvl }} />
-        <div className="ei-bar-seg ei-bar-risk" style={{ flexGrow: barUnk }} />
-      </div>
-    </>
+          <span className="sg-val">{r.val ?? '—'}</span>
+        </div>
+      ))}
+    </div>
   )
 }
 
@@ -238,6 +379,11 @@ export default function OverviewPage() {
         </div>
       </div>
 
+      {/* ── EXECUTIVE DECISION LAYER ── */}
+      {!isLoading && (
+        <ExecutiveDecisionBlock matchedConcepts={matchedConcepts} />
+      )}
+
       {/* ── EXECUTIVE HEADER ── */}
       {!isLoading && (
         <ExecHeader
@@ -245,6 +391,14 @@ export default function OverviewPage() {
           topoData={topoData}
           matchedConcepts={matchedConcepts}
         />
+      )}
+
+      {/* ── VISUAL ZONE: primary gauge + structural graph ── */}
+      {!isLoading && (gaugeData || topoData) && (
+        <div className="ev-visual-zone">
+          <ScoreGauge gaugeData={gaugeData} />
+          <StructuralGraph gaugeData={gaugeData} topoData={topoData} />
+        </div>
       )}
 
       {/* ── STATUS BAND ── */}
