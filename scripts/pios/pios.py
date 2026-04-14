@@ -16,9 +16,11 @@ Usage:
     pios emit signals    --run-dir <dir> [--debug]
     pios compute gauge   --run-dir <dir> [--debug]
     pios validate freshness --run-dir <dir> [--debug]
-    pios ig materialize      --tenant <t> --intake-id <id> --run-id <id> [--debug]
-    pios structural extract  --tenant <t> --run-id <id> [--debug]
-    pios structural relate   --tenant <t> --run-id <id> [--debug]
+    pios ig materialize                  --tenant <t> --intake-id <id> --run-id <id> [--debug]
+    pios ig integrate-structural-layers  --tenant <t> --run-id <id> [--debug]
+    pios structural extract              --tenant <t> --run-id <id> [--debug]
+    pios structural relate               --tenant <t> --run-id <id> [--debug]
+    pios structural normalize            --tenant <t> --run-id <id> [--debug]
 """
 
 import argparse
@@ -3499,6 +3501,245 @@ def cmd_ig_materialize(args: argparse.Namespace) -> None:
 
 
 # ---------------------------------------------------------------------------
+# pios ig integrate-structural-layers
+# ---------------------------------------------------------------------------
+
+def cmd_ig_integrate_structural_layers(args: argparse.Namespace) -> None:
+    """
+    Register structural truth layers (L40_2, L40_3, L40_4) into the IG layer index.
+
+    Reads from:
+        clients/<tenant>/psee/runs/<run_id>/ig/normalized_intake_structure/layer_index.json
+        clients/<tenant>/psee/runs/<run_id>/40_2/structural_extraction_log.json
+        clients/<tenant>/psee/runs/<run_id>/40_3/structural_relationship_log.json
+        clients/<tenant>/psee/runs/<run_id>/40_4/structural_topology_log.json
+
+    Modifies (in-place, additive only):
+        clients/<tenant>/psee/runs/<run_id>/ig/normalized_intake_structure/layer_index.json
+
+    Adds exactly:
+        L40_2, L40_3, L40_4 layer entries — each with layer_id, source, path,
+        artifact_root, layer_index ordering, and provenance determinism reference.
+
+    Does NOT:
+        - create structural artifacts
+        - recompute structural truth
+        - add semantic/domain/capability/scoring fields
+        - modify any artifact in 40_2/, 40_3/, or 40_4/
+
+    Idempotency contract: FAIL-CLOSED — if L40_2, L40_3, or L40_4 are already present
+    in layers[], exits with exit 1 (STRUCTURAL_LAYERS_ALREADY_REGISTERED).
+
+    Authority: PRODUCTIZE.STRUCTURAL.RECONSTRUCTION.READINESS.IG.LAYER.INDEX.01
+    """
+    _configure_logging(args.debug)
+    _debug(f"ig integrate-structural-layers: tenant={args.tenant} run_id={args.run_id}")
+
+    root = _repo_root()
+    tenant = args.tenant
+    run_id = args.run_id
+
+    # -----------------------------------------------------------------------
+    # Step 1: Resolve paths
+    # -----------------------------------------------------------------------
+    run_dir = os.path.join(root, "clients", tenant, "psee", "runs", run_id)
+    nis_dir = os.path.join(run_dir, "ig", "normalized_intake_structure")
+    layer_index_path = os.path.join(nis_dir, "layer_index.json")
+    dir_40_2 = os.path.join(run_dir, "40_2")
+    dir_40_3 = os.path.join(run_dir, "40_3")
+    dir_40_4 = os.path.join(run_dir, "40_4")
+
+    _debug(f"layer_index_path={layer_index_path}")
+    _debug(f"dir_40_2={dir_40_2}")
+    _debug(f"dir_40_3={dir_40_3}")
+    _debug(f"dir_40_4={dir_40_4}")
+
+    # -----------------------------------------------------------------------
+    # Step 2: Fail-closed pre-checks — directories
+    # -----------------------------------------------------------------------
+    if not os.path.isdir(nis_dir):
+        _fail(f"ig/normalized_intake_structure/ not found: {nis_dir} — run pios ig materialize first")
+    if not os.path.isfile(layer_index_path):
+        _fail(f"layer_index.json not found: {layer_index_path} — run pios ig materialize first")
+    if not os.path.isdir(dir_40_2):
+        _fail(f"40_2/ directory not found: {dir_40_2} — run pios structural extract first")
+    if not os.path.isdir(dir_40_3):
+        _fail(f"40_3/ directory not found: {dir_40_3} — run pios structural relate first")
+    if not os.path.isdir(dir_40_4):
+        _fail(f"40_4/ directory not found: {dir_40_4} — run pios structural normalize first")
+
+    # -----------------------------------------------------------------------
+    # Step 3: Read layer_index.json — validate required fields
+    # -----------------------------------------------------------------------
+    with open(layer_index_path) as f:
+        layer_index = json.load(f)
+
+    for field in ("run_id", "intake_id", "layers"):
+        if field not in layer_index:
+            _fail(f"layer_index.json malformed: missing required field '{field}'")
+    if not isinstance(layer_index["layers"], list):
+        _fail("layer_index.json malformed: 'layers' must be an array")
+
+    li_run_id = layer_index["run_id"]
+    li_intake_id = layer_index["intake_id"]
+    _debug(f"layer_index: run_id={li_run_id} intake_id={li_intake_id} layer_count={len(layer_index['layers'])}")
+
+    if li_run_id != run_id:
+        _fail(f"run identity mismatch: layer_index.json.run_id={li_run_id} != requested run_id={run_id}")
+
+    # -----------------------------------------------------------------------
+    # Step 4: No-overwrite guard — fail closed if structural layers already present
+    # -----------------------------------------------------------------------
+    existing_layer_ids = {layer.get("layer_id") for layer in layer_index["layers"]}
+    structural_ids = {"L40_2", "L40_3", "L40_4"}
+    already_registered = existing_layer_ids & structural_ids
+    if already_registered:
+        _fail(
+            f"STRUCTURAL_LAYERS_ALREADY_REGISTERED: {sorted(already_registered)} already present "
+            f"in layer_index.json for run_id={run_id} — structural layer integration is a "
+            f"CREATE_ONLY operation; remove existing structural layer entries to re-integrate"
+        )
+    _debug("no-overwrite guard passed — structural layers not yet present")
+
+    # -----------------------------------------------------------------------
+    # Step 5: Read authoritative provenance from structural log artifacts
+    # -----------------------------------------------------------------------
+    # L40_2 provenance — structural_extraction_log.json
+    sel_path = os.path.join(dir_40_2, "structural_extraction_log.json")
+    if not os.path.isfile(sel_path):
+        _fail(f"structural_extraction_log.json not found: {sel_path} — required for L40_2 provenance")
+    with open(sel_path) as f:
+        sel = json.load(f)
+    if "determinism_hash" not in sel:
+        _fail(f"structural_extraction_log.json missing 'determinism_hash' — provenance reference unavailable")
+    if "intake_id" not in sel:
+        _fail(f"structural_extraction_log.json missing 'intake_id' — run identity cannot be verified")
+    det_hash_40_2 = sel["determinism_hash"]
+    sel_intake_id = sel["intake_id"]
+    _debug(f"L40_2 provenance: det_hash={det_hash_40_2} intake_id={sel_intake_id}")
+
+    # L40_3 provenance — structural_relationship_log.json
+    srl_path = os.path.join(dir_40_3, "structural_relationship_log.json")
+    if not os.path.isfile(srl_path):
+        _fail(f"structural_relationship_log.json not found: {srl_path} — required for L40_3 provenance")
+    with open(srl_path) as f:
+        srl = json.load(f)
+    if "determinism_hash" not in srl:
+        _fail(f"structural_relationship_log.json missing 'determinism_hash' — provenance reference unavailable")
+    if "intake_id" not in srl:
+        _fail(f"structural_relationship_log.json missing 'intake_id' — run identity cannot be verified")
+    det_hash_40_3 = srl["determinism_hash"]
+    srl_intake_id = srl["intake_id"]
+    _debug(f"L40_3 provenance: det_hash={det_hash_40_3} intake_id={srl_intake_id}")
+
+    # L40_4 provenance — structural_topology_log.json
+    stl_path = os.path.join(dir_40_4, "structural_topology_log.json")
+    if not os.path.isfile(stl_path):
+        _fail(f"structural_topology_log.json not found: {stl_path} — required for L40_4 provenance")
+    with open(stl_path) as f:
+        stl = json.load(f)
+    if "determinism_hash" not in stl:
+        _fail(f"structural_topology_log.json missing 'determinism_hash' — provenance reference unavailable")
+    if "intake_id" not in stl:
+        _fail(f"structural_topology_log.json missing 'intake_id' — run identity cannot be verified")
+    det_hash_40_4 = stl["determinism_hash"]
+    stl_intake_id = stl["intake_id"]
+    _debug(f"L40_4 provenance: det_hash={det_hash_40_4} intake_id={stl_intake_id}")
+
+    # -----------------------------------------------------------------------
+    # Step 6: Run identity consistency check across all structural logs
+    # -----------------------------------------------------------------------
+    # All structural log intake_ids must match the layer_index intake_id
+    for source_name, source_iid in [
+        ("40_2/structural_extraction_log.json", sel_intake_id),
+        ("40_3/structural_relationship_log.json", srl_intake_id),
+        ("40_4/structural_topology_log.json", stl_intake_id),
+    ]:
+        if source_iid != li_intake_id:
+            _fail(
+                f"run identity inconsistency: {source_name}.intake_id={source_iid} "
+                f"!= layer_index.json.intake_id={li_intake_id}"
+            )
+    _debug(f"run identity consistent: all intake_ids={li_intake_id}")
+
+    # -----------------------------------------------------------------------
+    # Step 7: Build structural layer entries — deterministic, no semantic content
+    # -----------------------------------------------------------------------
+    # Relative paths from repo root for portability
+    rel_run_dir = os.path.relpath(run_dir, root)
+
+    structural_layers = [
+        {
+            "layer_id": "L40_2",
+            "source": "STRUCTURAL",
+            "path": f"{rel_run_dir}/40_2",
+            "artifact_root": "40_2",
+            "layer_index": 1,
+            "provenance": {
+                "source_artifact": "40_2/structural_extraction_log.json",
+                "determinism_hash": det_hash_40_2,
+            },
+        },
+        {
+            "layer_id": "L40_3",
+            "source": "STRUCTURAL",
+            "path": f"{rel_run_dir}/40_3",
+            "artifact_root": "40_3",
+            "layer_index": 2,
+            "provenance": {
+                "source_artifact": "40_3/structural_relationship_log.json",
+                "determinism_hash": det_hash_40_3,
+            },
+        },
+        {
+            "layer_id": "L40_4",
+            "source": "STRUCTURAL",
+            "path": f"{rel_run_dir}/40_4",
+            "artifact_root": "40_4",
+            "layer_index": 3,
+            "provenance": {
+                "source_artifact": "40_4/structural_topology_log.json",
+                "determinism_hash": det_hash_40_4,
+            },
+        },
+    ]
+    _debug(f"built {len(structural_layers)} structural layer entries: L40_2, L40_3, L40_4")
+
+    # -----------------------------------------------------------------------
+    # Step 8: Append structural layers to layer_index and record integration stream
+    # -----------------------------------------------------------------------
+    # L_ROOT preserved exactly — structural layers appended in canonical order
+    layer_index["layers"].extend(structural_layers)
+    layer_index["structural_layer_integration_stream"] = (
+        "PRODUCTIZE.STRUCTURAL.RECONSTRUCTION.READINESS.IG.LAYER.INDEX.01"
+    )
+    _debug("appended L40_2, L40_3, L40_4 to layers[] — L_ROOT preserved")
+
+    # -----------------------------------------------------------------------
+    # Step 9: Write updated layer_index.json
+    # -----------------------------------------------------------------------
+    with open(layer_index_path, "w") as f:
+        json.dump(layer_index, f, indent=2)
+    _debug(f"wrote updated layer_index.json — total layers: {len(layer_index['layers'])}")
+
+    # -----------------------------------------------------------------------
+    # Completion log
+    # -----------------------------------------------------------------------
+    _log(f"IG_LAYER_INDEX_INTEGRATION_COMPLETE: {layer_index_path}")
+    _log(
+        f"tenant={tenant} run_id={run_id} intake_id={li_intake_id} "
+        f"layers_registered=L40_2,L40_3,L40_4 "
+        f"structural_outputs_unmodified=True "
+        f"reconstruction_discoverability_blocker=REMOVED"
+    )
+    _log(
+        f"provenance: L40_2.det_hash={det_hash_40_2[:16]}... "
+        f"L40_3.det_hash={det_hash_40_3[:16]}... "
+        f"L40_4.det_hash={det_hash_40_4[:16]}..."
+    )
+
+
+# ---------------------------------------------------------------------------
 # Argument parser
 # ---------------------------------------------------------------------------
 
@@ -3819,6 +4060,61 @@ def _build_parser() -> argparse.ArgumentParser:
         "aggregate_hash, output_dir, each artifact write confirmation."
     ))
     im.set_defaults(func=cmd_ig_materialize)
+
+    ii = ig_sub.add_parser(
+        "integrate-structural-layers",
+        help="Register L40_2/L40_3/L40_4 structural layers into IG layer index",
+        description=(
+            "Register structural truth layers (L40_2, L40_3, L40_4) into the IG layer index,\n"
+            "removing the structural-side discoverability blocker for reconstruction.\n\n"
+            "PURPOSE\n"
+            "Makes existing structural outputs (40_2/, 40_3/, 40_4/) discoverable through\n"
+            "ig/normalized_intake_structure/layer_index.json. Does not create or modify any\n"
+            "structural artifact.\n\n"
+            "READS (provenance only — no structural content copied):\n"
+            "  ig/normalized_intake_structure/layer_index.json   — existing IG layer index\n"
+            "  40_2/structural_extraction_log.json               — L40_2 determinism hash\n"
+            "  40_3/structural_relationship_log.json             — L40_3 determinism hash\n"
+            "  40_4/structural_topology_log.json                 — L40_4 determinism hash\n\n"
+            "MODIFIES (additive only):\n"
+            "  ig/normalized_intake_structure/layer_index.json\n"
+            "  Appends L40_2, L40_3, L40_4 layer entries in canonical order.\n"
+            "  L_ROOT entry preserved exactly — no mutation.\n\n"
+            "LAYER ENTRY FIELDS (per structural layer — no semantic content):\n"
+            "  layer_id, source=STRUCTURAL, path (relative), artifact_root,\n"
+            "  layer_index (ordering: 1/2/3), provenance.determinism_hash\n\n"
+            "LAYER ORDER CONTRACT:\n"
+            "  Position 0: L_ROOT  (existing, preserved)\n"
+            "  Position 1: L40_2\n"
+            "  Position 2: L40_3\n"
+            "  Position 3: L40_4\n\n"
+            "IDEMPOTENCY CONTRACT: FAIL-CLOSED\n"
+            "  If L40_2, L40_3, or L40_4 already present in layers[]: exit 1\n"
+            "  STRUCTURAL_LAYERS_ALREADY_REGISTERED — create-only operation\n\n"
+            "FAIL-CLOSED CONDITIONS:\n"
+            "  - ig/normalized_intake_structure/ missing\n"
+            "  - layer_index.json missing or malformed\n"
+            "  - 40_2/, 40_3/, or 40_4/ directory missing\n"
+            "  - structural_extraction_log.json, structural_relationship_log.json,\n"
+            "    or structural_topology_log.json missing\n"
+            "  - determinism_hash absent from any required log artifact\n"
+            "  - run identity mismatch across layer_index.json and structural logs\n"
+            "  - structural layers already present (STRUCTURAL_LAYERS_ALREADY_REGISTERED)\n\n"
+            "RECONSTRUCTION HANDOVER:\n"
+            "  After successful integration, L40_2/L40_3/L40_4 are discoverable.\n"
+            "  Structural-side discoverability blocker is removed.\n"
+            "  Downstream reconstruction pipeline determines remaining readiness.\n\n"
+            "Authority: PRODUCTIZE.STRUCTURAL.RECONSTRUCTION.READINESS.IG.LAYER.INDEX.01"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    ii.add_argument("--tenant", required=True, help="Tenant/client identifier (e.g., blueedge)")
+    ii.add_argument("--run-id", required=True, help="Run identifier — must have existing ig/, 40_2/, 40_3/, 40_4/ directories")
+    ii.add_argument("--debug", action="store_true", help=(
+        "Enable debug logging. Prints: resolved paths, layer_index identity, provenance hashes, "
+        "no-overwrite guard result, layer entries built, write confirmation."
+    ))
+    ii.set_defaults(func=cmd_ig_integrate_structural_layers)
 
     # --- structural ---
     structural_parser = subparsers.add_parser(
