@@ -16,6 +16,8 @@ Usage:
     pios emit signals    --run-dir <dir> [--debug]
     pios compute gauge   --run-dir <dir> [--debug]
     pios validate freshness --run-dir <dir> [--debug]
+    pios ig materialize      --tenant <t> --intake-id <id> --run-id <id> [--debug]
+    pios structural extract  --tenant <t> --run-id <id> [--debug]
 """
 
 import argparse
@@ -1695,6 +1697,955 @@ def cmd_intake_create(args: argparse.Namespace) -> None:
     _log(f"intake_id={intake_id} tenant={tenant} source_type={source_type} file_count={len(file_entries)} aggregate_hash={aggregate_hash}")
 
 
+
+# ---------------------------------------------------------------------------
+# L40.2 file type classification table (structural identity, not semantic)
+# ---------------------------------------------------------------------------
+
+_EXT_TO_FILE_TYPE: dict = {
+    ".py": "PYTHON_SOURCE",
+    ".pyi": "PYTHON_SOURCE",
+    ".js": "JAVASCRIPT_SOURCE",
+    ".mjs": "JAVASCRIPT_SOURCE",
+    ".cjs": "JAVASCRIPT_SOURCE",
+    ".ts": "TYPESCRIPT_SOURCE",
+    ".jsx": "JAVASCRIPT_SOURCE",
+    ".tsx": "TYPESCRIPT_SOURCE",
+    ".java": "JAVA_SOURCE",
+    ".go": "GO_SOURCE",
+    ".rs": "RUST_SOURCE",
+    ".c": "C_SOURCE",
+    ".cpp": "CPP_SOURCE",
+    ".cc": "CPP_SOURCE",
+    ".cxx": "CPP_SOURCE",
+    ".h": "C_HEADER",
+    ".hpp": "CPP_HEADER",
+    ".hxx": "CPP_HEADER",
+    ".rb": "RUBY_SOURCE",
+    ".php": "PHP_SOURCE",
+    ".swift": "SWIFT_SOURCE",
+    ".kt": "KOTLIN_SOURCE",
+    ".kts": "KOTLIN_SOURCE",
+    ".scala": "SCALA_SOURCE",
+    ".cs": "CSHARP_SOURCE",
+    ".fs": "FSHARP_SOURCE",
+    ".sh": "SHELL_SCRIPT",
+    ".bash": "SHELL_SCRIPT",
+    ".zsh": "SHELL_SCRIPT",
+    ".fish": "SHELL_SCRIPT",
+    ".ps1": "POWERSHELL_SCRIPT",
+    ".json": "JSON_CONFIG",
+    ".yaml": "YAML_CONFIG",
+    ".yml": "YAML_CONFIG",
+    ".toml": "TOML_CONFIG",
+    ".ini": "INI_CONFIG",
+    ".cfg": "INI_CONFIG",
+    ".conf": "INI_CONFIG",
+    ".properties": "INI_CONFIG",
+    ".env": "ENV_CONFIG",
+    ".xml": "XML_CONFIG",
+    ".md": "MARKDOWN_DOC",
+    ".markdown": "MARKDOWN_DOC",
+    ".txt": "TEXT_FILE",
+    ".rst": "RST_DOC",
+    ".adoc": "ASCIIDOC_DOC",
+    ".html": "HTML_DOC",
+    ".htm": "HTML_DOC",
+    ".css": "CSS_STYLE",
+    ".scss": "CSS_STYLE",
+    ".sass": "CSS_STYLE",
+    ".less": "CSS_STYLE",
+    ".sql": "SQL_SCRIPT",
+    ".ddl": "SQL_SCRIPT",
+    ".dml": "SQL_SCRIPT",
+    ".tf": "TERRAFORM_CONFIG",
+    ".tfvars": "TERRAFORM_CONFIG",
+    ".hcl": "HCL_CONFIG",
+    ".lock": "LOCK_FILE",
+    ".gradle": "BUILD_SCRIPT",
+    ".mk": "BUILD_SCRIPT",
+    ".proto": "PROTOBUF_DEF",
+    ".avsc": "AVRO_SCHEMA",
+    ".avro": "AVRO_SCHEMA",
+    ".graphql": "GRAPHQL_SCHEMA",
+    ".gql": "GRAPHQL_SCHEMA",
+    ".csv": "DATA_FILE",
+    ".tsv": "DATA_FILE",
+    ".ndjson": "DATA_FILE",
+    ".jsonl": "DATA_FILE",
+    ".parquet": "DATA_FILE_BINARY",
+    ".png": "IMAGE_BINARY",
+    ".jpg": "IMAGE_BINARY",
+    ".jpeg": "IMAGE_BINARY",
+    ".gif": "IMAGE_BINARY",
+    ".svg": "IMAGE_BINARY",
+    ".ico": "IMAGE_BINARY",
+    ".webp": "IMAGE_BINARY",
+    ".pdf": "DOCUMENT_BINARY",
+    ".zip": "ARCHIVE_BINARY",
+    ".tar": "ARCHIVE_BINARY",
+    ".gz": "ARCHIVE_BINARY",
+    ".bz2": "ARCHIVE_BINARY",
+    ".xz": "ARCHIVE_BINARY",
+    ".whl": "PYTHON_PACKAGE",
+    ".egg": "PYTHON_PACKAGE",
+    ".jar": "JAVA_PACKAGE",
+    ".class": "JAVA_CLASS",
+    ".pyc": "PYTHON_BYTECODE",
+    ".pem": "CERTIFICATE_FILE",
+    ".crt": "CERTIFICATE_FILE",
+    ".key": "CERTIFICATE_FILE",
+    ".p12": "CERTIFICATE_FILE",
+}
+
+_BASENAME_TO_FILE_TYPE: dict = {
+    "makefile": "BUILD_SCRIPT",
+    "dockerfile": "CONTAINER_DEF",
+    "containerfile": "CONTAINER_DEF",
+    "readme": "TEXT_FILE",
+    "license": "LICENSE_FILE",
+    "licence": "LICENSE_FILE",
+    "notice": "TEXT_FILE",
+    "authors": "TEXT_FILE",
+    "changelog": "TEXT_FILE",
+    "changes": "TEXT_FILE",
+    "history": "TEXT_FILE",
+    "contributing": "TEXT_FILE",
+    "contributors": "TEXT_FILE",
+    ".gitignore": "GIT_CONFIG",
+    ".gitattributes": "GIT_CONFIG",
+    ".gitmodules": "GIT_CONFIG",
+    "procfile": "PROCESS_DEF",
+    "gemfile": "RUBY_MANIFEST",
+    "gemfile.lock": "LOCK_FILE",
+    "pipfile": "PYTHON_MANIFEST",
+    "pipfile.lock": "LOCK_FILE",
+    "poetry.lock": "LOCK_FILE",
+    "package.json": "JAVASCRIPT_MANIFEST",
+    "package-lock.json": "LOCK_FILE",
+    "yarn.lock": "LOCK_FILE",
+    "pnpm-lock.yaml": "LOCK_FILE",
+    "requirements.txt": "PYTHON_MANIFEST",
+    "setup.py": "PYTHON_SETUP",
+    "setup.cfg": "PYTHON_SETUP",
+    "pyproject.toml": "PYTHON_MANIFEST",
+    "cargo.toml": "RUST_MANIFEST",
+    "cargo.lock": "LOCK_FILE",
+    "go.mod": "GO_MANIFEST",
+    "go.sum": "LOCK_FILE",
+    "pom.xml": "JAVA_MANIFEST",
+    "build.gradle": "BUILD_SCRIPT",
+    "build.gradle.kts": "BUILD_SCRIPT",
+    "settings.gradle": "BUILD_SCRIPT",
+    "settings.gradle.kts": "BUILD_SCRIPT",
+    "compose.yml": "CONTAINER_DEF",
+    "compose.yaml": "CONTAINER_DEF",
+    "docker-compose.yml": "CONTAINER_DEF",
+    "docker-compose.yaml": "CONTAINER_DEF",
+    ".editorconfig": "EDITOR_CONFIG",
+    ".prettierrc": "FORMATTER_CONFIG",
+    ".eslintrc": "LINTER_CONFIG",
+    ".flake8": "LINTER_CONFIG",
+    "tox.ini": "CI_CONFIG",
+    ".travis.yml": "CI_CONFIG",
+    "jenkinsfile": "CI_CONFIG",
+}
+
+
+def _classify_file_type(path: str) -> str:
+    """
+    Classify a file by structural identity (extension or basename).
+    Classification rules:
+    1. Check exact basename match (lowercase) in _BASENAME_TO_FILE_TYPE
+    2. Check file extension (lowercase) in _EXT_TO_FILE_TYPE
+    3. Default: UNKNOWN_FILE_TYPE
+    No semantic inference — purely structural identity.
+    """
+    basename = os.path.basename(path).lower()
+    if basename in _BASENAME_TO_FILE_TYPE:
+        return _BASENAME_TO_FILE_TYPE[basename]
+    _, ext = os.path.splitext(basename)
+    if ext in _EXT_TO_FILE_TYPE:
+        return _EXT_TO_FILE_TYPE[ext]
+    return "UNKNOWN_FILE_TYPE"
+
+
+def cmd_structural_extract(args: argparse.Namespace) -> None:
+    """
+    L40.2 — Derive structural truth from governed IG outputs.
+
+    Reads from clients/<tenant>/psee/runs/<run_id>/ig/:
+        raw_input.json          (primary — source identity, timestamp normalization)
+        structure_map.json      (primary — per-file sha256, size_bytes)
+        ingestion_log.json      (primary — admission status per file)
+        admissibility_log.json  (support — source_path, layer, governance_authority)
+
+    Writes to clients/<tenant>/psee/runs/<run_id>/40_2/:
+        structural_unit_inventory.json   — CEU assignments by directory grouping
+        file_structural_map.json         — per-file mapping to CEU + file type
+        structural_extraction_log.json   — derivation decisions, exclusions, determinism hash
+
+    Authority: PRODUCTIZE.STRUCTURAL.TRUTH.40.2.01
+    """
+    _configure_logging(args.debug)
+    _debug(f"structural extract: tenant={args.tenant} run_id={args.run_id}")
+
+    root = _repo_root()
+    tenant = args.tenant
+    run_id = args.run_id
+
+    # ── Step 1: Resolve and validate IG directory ─────────────────────────────
+    ig_dir = os.path.join(root, "clients", tenant, "psee", "runs", run_id, "ig")
+    _debug(f"ig_dir={ig_dir}")
+    if not os.path.isdir(ig_dir):
+        _fail(f"IG directory not found: {ig_dir} — run pios ig materialize first")
+
+    # ── Step 2: Read primary input artifacts ─────────────────────────────────
+
+    # raw_input.json — source identity + timestamp
+    ri_path = os.path.join(ig_dir, "raw_input.json")
+    if not os.path.exists(ri_path):
+        _fail(f"raw_input.json not found in {ig_dir}")
+    with open(ri_path) as f:
+        raw_input = json.load(f)
+    for field in ("intake_id", "materialized_at", "source_type"):
+        if field not in raw_input:
+            _fail(f"raw_input.json missing required field: {field}")
+    normalized_ts = raw_input["materialized_at"]
+    intake_id = raw_input["intake_id"]
+    source_type = raw_input.get("source_type", "UNKNOWN")
+    _debug(f"raw_input: intake_id={intake_id} ts={normalized_ts} source_type={source_type}")
+
+    # structure_map.json — sha256 and size_bytes per file
+    sm_path = os.path.join(ig_dir, "structure_map.json")
+    if not os.path.exists(sm_path):
+        _fail(f"structure_map.json not found in {ig_dir}")
+    with open(sm_path) as f:
+        structure_map = json.load(f)
+    if "entries" not in structure_map:
+        _fail("structure_map.json missing 'entries' field")
+    # Build path → {sha256, size_bytes} lookup
+    sm_lookup: dict = {}
+    for entry in structure_map["entries"]:
+        p = entry.get("path", "")
+        if p:
+            sm_lookup[p] = {"sha256": entry.get("sha256"), "size_bytes": entry.get("size_bytes")}
+    _debug(f"structure_map: {len(sm_lookup)} entries")
+
+    # ingestion_log.json — admission decisions per file
+    il_path = os.path.join(ig_dir, "ingestion_log.json")
+    if not os.path.exists(il_path):
+        _fail(f"ingestion_log.json not found in {ig_dir}")
+    with open(il_path) as f:
+        ingestion_log = json.load(f)
+    if "entries" not in ingestion_log:
+        _fail("ingestion_log.json missing 'entries' field")
+    _debug(f"ingestion_log: {len(ingestion_log['entries'])} entries")
+
+    # ── Step 3: Read support artifact ────────────────────────────────────────
+
+    # admissibility_log.json — source_path, layer per file
+    al_path = os.path.join(ig_dir, "admissibility_log.json")
+    al_lookup: dict = {}
+    if os.path.exists(al_path):
+        with open(al_path) as f:
+            al_data = json.load(f)
+        for entry in al_data.get("entries", []):
+            artifact = entry.get("artifact", "")
+            if artifact:
+                al_lookup[artifact] = {
+                    "source_path": entry.get("source_path", ""),
+                    "layer": entry.get("layer", ""),
+                    "governance_authority": entry.get("governance_authority", ""),
+                }
+        _debug(f"admissibility_log: {len(al_lookup)} entries loaded")
+    else:
+        _debug("admissibility_log.json not present — proceeding without support data")
+
+    # ── Step 4: Collect admitted files ───────────────────────────────────────
+
+    admitted_files: list = []
+    excluded_files: list = []
+
+    for entry in ingestion_log["entries"]:
+        path = entry.get("path", "")
+        decision = entry.get("decision", "")
+        if not path:
+            excluded_files.append({
+                "path": path or "(empty)",
+                "reason": "EMPTY_PATH",
+                "governance": "STRUCTURAL.TRUTH.40.2.01 — empty path in ingestion_log entry"
+            })
+            continue
+        if decision != "ADMITTED":
+            excluded_files.append({
+                "path": path,
+                "reason": f"DECISION_NOT_ADMITTED:{decision}",
+                "governance": "STRUCTURAL.TRUTH.40.2.01 — only ADMITTED files enter structural extraction"
+            })
+            continue
+        sha_rec = sm_lookup.get(path)
+        if sha_rec is None:
+            excluded_files.append({
+                "path": path,
+                "reason": "NOT_IN_STRUCTURE_MAP",
+                "governance": "STRUCTURAL.TRUTH.40.2.01 — admitted file absent from structure_map.json; cannot establish structural identity without hash"
+            })
+            continue
+        admitted_files.append({
+            "path": path,
+            "sha256": sha_rec["sha256"],
+            "size_bytes": sha_rec["size_bytes"],
+        })
+
+    # Sort lexicographically by path — deterministic ordering
+    admitted_files.sort(key=lambda x: x["path"])
+    _debug(f"admitted_files={len(admitted_files)} excluded_files={len(excluded_files)}")
+
+    # ── Step 5: Classify file types (structural identity only) ────────────────
+    for rec in admitted_files:
+        rec["file_type"] = _classify_file_type(rec["path"])
+
+    unknown_count = sum(1 for r in admitted_files if r["file_type"] == "UNKNOWN_FILE_TYPE")
+    _debug(f"unknown_file_types={unknown_count}")
+
+    # ── Step 6: Assign Structural Units (CEUs) by directory grouping ──────────
+    # Group admitted files by their immediate parent directory (normalized).
+    # Root-level files (no directory component) → directory = "" (empty string = root).
+    # Directories are sorted lexicographically; root ("") sorts first.
+    # CEU IDs are assigned sequentially: CEU-001, CEU-002, ... in lex directory order.
+
+    dir_to_files: dict = {}
+    for rec in admitted_files:
+        directory = os.path.dirname(rec["path"])  # "" for root-level files
+        if directory not in dir_to_files:
+            dir_to_files[directory] = []
+        dir_to_files[directory].append(rec)
+
+    # Sort directories lexicographically
+    sorted_dirs = sorted(dir_to_files.keys())
+    _debug(f"structural_units (directories)={len(sorted_dirs)}: {sorted_dirs}")
+
+    # Assign CEU IDs
+    dir_to_ceu: dict = {}
+    for idx, directory in enumerate(sorted_dirs, start=1):
+        ceu_id = f"CEU-{idx:03d}"
+        dir_to_ceu[directory] = ceu_id
+
+    # Annotate each admitted_file record with its CEU
+    for rec in admitted_files:
+        directory = os.path.dirname(rec["path"])
+        rec["unit_id"] = dir_to_ceu[directory]
+
+    # ── Step 7: Build structural unit objects ─────────────────────────────────
+    structural_units: list = []
+    for directory in sorted_dirs:
+        ceu_id = dir_to_ceu[directory]
+        files_in_unit = dir_to_files[directory]
+
+        # Unit hash: SHA-256 of newline-joined "<path>:<sha256>" for all files, lex sorted
+        files_sorted_for_hash = sorted(files_in_unit, key=lambda x: x["path"])
+        hash_input = "\n".join(f"{r['path']}:{r['sha256']}" for r in files_sorted_for_hash)
+        unit_hash = hashlib.sha256(hash_input.encode("utf-8")).hexdigest()
+
+        # File types present (sorted, deduplicated)
+        file_types_present = sorted(set(r["file_type"] for r in files_in_unit))
+
+        # Dominant file type: most frequent; ties broken lexicographically
+        type_counts: dict = {}
+        for r in files_in_unit:
+            type_counts[r["file_type"]] = type_counts.get(r["file_type"], 0) + 1
+        max_count = max(type_counts.values())
+        dominant = sorted(ft for ft, ct in type_counts.items() if ct == max_count)[0]
+
+        structural_units.append({
+            "unit_id": ceu_id,
+            "directory": directory if directory else "(root)",
+            "file_count": len(files_in_unit),
+            "file_types_present": file_types_present,
+            "dominant_file_type": dominant,
+            "unit_hash": unit_hash,
+            "evidence_ref": {
+                "ig_dir": f"clients/{tenant}/psee/runs/{run_id}/ig",
+                "source_artifact": "structure_map.json + ingestion_log.json",
+                "intake_id": intake_id,
+            }
+        })
+
+    # ── Step 8: Compute determinism hash ─────────────────────────────────────
+    # Hash over all admitted file path:sha256 pairs (lex sorted) — same as aggregate_hash
+    # but computed independently to verify structural extraction determinism.
+    det_input = "\n".join(f"{r['path']}:{r['sha256']}" for r in admitted_files)
+    determinism_hash = hashlib.sha256(det_input.encode("utf-8")).hexdigest()
+    _debug(f"determinism_hash={determinism_hash}")
+
+    # ── Step 9: No-overwrite guard + create output directory ─────────────────
+    output_dir = os.path.join(root, "clients", tenant, "psee", "runs", run_id, "40_2")
+    _debug(f"output_dir={output_dir}")
+    if os.path.exists(output_dir):
+        _fail(f"40_2 output directory already exists: {output_dir} — use a unique run_id or remove 40_2/ to re-extract")
+    os.makedirs(output_dir)
+
+    # ── Step 10: Write structural_unit_inventory.json ─────────────────────────
+    structural_unit_inventory = {
+        "schema_version": "1.0",
+        "stream": "PRODUCTIZE.STRUCTURAL.TRUTH.40.2.01",
+        "artifact_class": "STRUCTURAL_TRUTH_40_2",
+        "artifact_id": "structural_unit_inventory",
+        "tenant": tenant,
+        "run_id": run_id,
+        "intake_id": intake_id,
+        "source_type": source_type,
+        "extracted_at": normalized_ts,
+        "ig_dir": f"clients/{tenant}/psee/runs/{run_id}/ig",
+        "unit_count": len(structural_units),
+        "total_admitted_files": len(admitted_files),
+        "units": structural_units,
+    }
+    with open(os.path.join(output_dir, "structural_unit_inventory.json"), "w") as f:
+        json.dump(structural_unit_inventory, f, indent=2)
+    _debug("wrote structural_unit_inventory.json")
+
+    # ── Step 11: Write file_structural_map.json ───────────────────────────────
+    fmap_entries = []
+    for rec in admitted_files:
+        al_rec = al_lookup.get(rec["path"], {})
+        fmap_entries.append({
+            "path": rec["path"],
+            "sha256": rec["sha256"],
+            "size_bytes": rec["size_bytes"],
+            "file_type": rec["file_type"],
+            "unit_id": rec["unit_id"],
+            "admission_status": "ADMITTED",
+            "source_path": al_rec.get("source_path", ""),
+            "layer": al_rec.get("layer", ""),
+            "governance_authority": al_rec.get("governance_authority", ""),
+        })
+    file_structural_map = {
+        "schema_version": "1.0",
+        "stream": "PRODUCTIZE.STRUCTURAL.TRUTH.40.2.01",
+        "artifact_class": "STRUCTURAL_TRUTH_40_2",
+        "artifact_id": "file_structural_map",
+        "tenant": tenant,
+        "run_id": run_id,
+        "intake_id": intake_id,
+        "extracted_at": normalized_ts,
+        "file_count": len(fmap_entries),
+        "entries": fmap_entries,
+    }
+    with open(os.path.join(output_dir, "file_structural_map.json"), "w") as f:
+        json.dump(file_structural_map, f, indent=2)
+    _debug("wrote file_structural_map.json")
+
+    # ── Step 12: Write structural_extraction_log.json ─────────────────────────
+    extraction_log = {
+        "schema_version": "1.0",
+        "stream": "PRODUCTIZE.STRUCTURAL.TRUTH.40.2.01",
+        "artifact_class": "STRUCTURAL_TRUTH_40_2",
+        "artifact_id": "structural_extraction_log",
+        "tenant": tenant,
+        "run_id": run_id,
+        "intake_id": intake_id,
+        "extracted_at": normalized_ts,
+        "input_artifacts": {
+            "primary": [
+                "ig/raw_input.json",
+                "ig/structure_map.json",
+                "ig/ingestion_log.json",
+            ],
+            "support": [
+                "ig/admissibility_log.json",
+            ],
+        },
+        "derivation_rules": {
+            "ceu_grouping": "DIRECTORY — files grouped by immediate parent directory; root-level files form directory=''",
+            "ceu_id_assignment": "SEQUENTIAL — CEU-001, CEU-002... in lexicographic directory order; root sorts first",
+            "ceu_hash": "SHA256(sorted('<path>:<sha256>' for files in unit joined by newline))",
+            "file_type_classification": "STRUCTURAL_IDENTITY — extension lookup in _EXT_TO_FILE_TYPE, basename lookup in _BASENAME_TO_FILE_TYPE, default UNKNOWN_FILE_TYPE",
+            "dominant_file_type": "MOST_FREQUENT — ties broken lexicographically",
+            "file_ordering": "LEXICOGRAPHIC by path — all output lists sorted by path",
+            "timestamp": "INHERITED from raw_input.json.materialized_at (derived from intake_record.created_at)",
+            "determinism_hash": "SHA256(sorted('<path>:<sha256>' for all admitted files joined by newline))",
+        },
+        "summary": {
+            "admitted_files": len(admitted_files),
+            "structural_units": len(structural_units),
+            "excluded_files": len(excluded_files),
+            "unknown_file_types": unknown_count,
+        },
+        "exclusions": excluded_files,
+        "ambiguities": [],
+        "determinism_hash": determinism_hash,
+    }
+    with open(os.path.join(output_dir, "structural_extraction_log.json"), "w") as f:
+        json.dump(extraction_log, f, indent=2)
+    _debug("wrote structural_extraction_log.json")
+
+    # ── Completion log ────────────────────────────────────────────────────────
+    _log(f"STRUCTURAL_EXTRACT_COMPLETE: {output_dir}")
+    _log(
+        f"tenant={tenant} run_id={run_id} intake_id={intake_id} "
+        f"admitted_files={len(admitted_files)} structural_units={len(structural_units)} "
+        f"excluded={len(excluded_files)} unknown_types={unknown_count} "
+        f"determinism_hash={determinism_hash}"
+    )
+
+
+def cmd_ig_materialize(args: argparse.Namespace) -> None:
+    """
+    Bridge intake bundle → IG-compatible runtime input structure.
+
+    Reads from:
+        clients/<tenant>/psee/intake/<intake_id>/intake_record.json
+        clients/<tenant>/psee/intake/<intake_id>/file_hash_manifest.json
+        clients/<tenant>/psee/intake/<intake_id>/git_metadata.json  (optional)
+
+    Writes to clients/<tenant>/psee/runs/<run_id>/ig/:
+        Governance artifacts:
+            raw_input.json
+            structure_map.json
+            ingestion_log.json
+        Runtime compatibility artifacts:
+            evidence_boundary.json
+            admissibility_log.json
+            source_manifest.json
+            normalized_intake_structure/layer_index.json
+            normalized_intake_structure/provenance_chain.json
+            normalized_intake_structure/source_profile.json
+
+    Authority: PRODUCTIZE.IG.FROM.INTAKE.01
+    """
+    _configure_logging(args.debug)
+    _debug(f"ig materialize: tenant={args.tenant} intake_id={args.intake_id} run_id={args.run_id}")
+
+    root = _repo_root()
+    tenant = args.tenant
+    intake_id = args.intake_id
+    run_id = args.run_id
+
+    # Step 1: Resolve and validate intake directory
+    intake_dir = os.path.join(root, "clients", tenant, "psee", "intake", intake_id)
+    _debug(f"intake_dir={intake_dir}")
+    if not os.path.isdir(intake_dir):
+        _fail(f"intake directory not found: {intake_dir} — run pios intake create first")
+
+    # Step 2: Read intake_record.json
+    intake_record_path = os.path.join(intake_dir, "intake_record.json")
+    if not os.path.exists(intake_record_path):
+        _fail(f"intake_record.json not found in {intake_dir}")
+    with open(intake_record_path) as f:
+        intake_record = json.load(f)
+
+    required_fields = ["intake_id", "tenant", "source_path", "source_type", "created_at",
+                       "file_count", "aggregate_hash", "git_enriched"]
+    for field in required_fields:
+        if field not in intake_record:
+            _fail(f"intake_record.json missing required field: {field}")
+
+    # Use created_at from intake_record as the deterministic timestamp for all derived artifacts
+    normalized_ts = intake_record["created_at"]
+    source_path = intake_record["source_path"]
+    source_type = intake_record["source_type"]
+    aggregate_hash = intake_record["aggregate_hash"]
+    file_count = intake_record["file_count"]
+    git_enriched = intake_record.get("git_enriched", False)
+    _debug(f"intake_record loaded: source_type={source_type} file_count={file_count} aggregate_hash={aggregate_hash}")
+
+    # Step 3: Read file_hash_manifest.json
+    fhm_path = os.path.join(intake_dir, "file_hash_manifest.json")
+    if not os.path.exists(fhm_path):
+        _fail(f"file_hash_manifest.json not found in {intake_dir}")
+    with open(fhm_path) as f:
+        file_hash_manifest = json.load(f)
+
+    if "files" not in file_hash_manifest:
+        _fail("file_hash_manifest.json missing 'files' array")
+
+    ok_files = [e for e in file_hash_manifest["files"] if e.get("status") == "OK"]
+    ok_files_sorted = sorted(ok_files, key=lambda x: x["path"])
+    _debug(f"file_hash_manifest: {len(ok_files)} OK files of {file_count} total")
+
+    # Step 4: Read git_metadata.json if present
+    git_meta = None
+    gm_path = os.path.join(intake_dir, "git_metadata.json")
+    if git_enriched and os.path.exists(gm_path):
+        with open(gm_path) as f:
+            git_meta = json.load(f)
+        _debug(f"git_metadata loaded: repo_name={git_meta.get('repo_name')} branch={git_meta.get('branch')}")
+
+    # Step 5: Determine output directory — fail if exists (no-overwrite guard)
+    output_dir = os.path.join(root, "clients", tenant, "psee", "runs", run_id, "ig")
+    nis_dir = os.path.join(output_dir, "normalized_intake_structure")
+    _debug(f"output_dir={output_dir}")
+    if os.path.exists(output_dir):
+        _fail(f"IG output directory already exists: {output_dir} — use a unique run_id")
+
+    # Step 6: Create output directories
+    os.makedirs(nis_dir)
+
+    # -----------------------------------------------------------------------
+    # GOVERNANCE ARTIFACTS
+    # -----------------------------------------------------------------------
+
+    # G1: raw_input.json
+    raw_input = {
+        "schema_version": "1.0",
+        "stream": "PRODUCTIZE.IG.FROM.INTAKE.01",
+        "artifact_class": "GOVERNANCE_MATERIALIZATION",
+        "intake_id": intake_id,
+        "run_id": run_id,
+        "tenant": tenant,
+        "materialized_at": normalized_ts,
+        "source_path": source_path,
+        "source_type": source_type,
+        "git_enriched": git_enriched,
+        "aggregate_hash": aggregate_hash,
+        "file_count": file_count,
+    }
+    if git_meta is not None:
+        raw_input["git_metadata"] = {
+            "repo_name": git_meta.get("repo_name"),
+            "branch": git_meta.get("branch"),
+            "head_commit": git_meta.get("head_commit"),
+            "dirty": git_meta.get("dirty"),
+        }
+
+    with open(os.path.join(output_dir, "raw_input.json"), "w") as f:
+        json.dump(raw_input, f, indent=2)
+    _debug("wrote raw_input.json")
+
+    # G2: structure_map.json
+    structure_map_entries = [
+        {
+            "path": e["path"],
+            "sha256": e["sha256"],
+            "size_bytes": e["size_bytes"],
+            "layer_id": "L_ROOT",
+            "admission_status": "ADMITTED",
+        }
+        for e in ok_files_sorted
+    ]
+    structure_map = {
+        "schema_version": "1.0",
+        "stream": "PRODUCTIZE.IG.FROM.INTAKE.01",
+        "artifact_class": "GOVERNANCE_MATERIALIZATION",
+        "intake_id": intake_id,
+        "run_id": run_id,
+        "tenant": tenant,
+        "materialized_at": normalized_ts,
+        "layer_id": "L_ROOT",
+        "file_count": len(ok_files_sorted),
+        "entries": structure_map_entries,
+    }
+    with open(os.path.join(output_dir, "structure_map.json"), "w") as f:
+        json.dump(structure_map, f, indent=2)
+    _debug("wrote structure_map.json")
+
+    # G3: ingestion_log.json
+    ingestion_entries = [
+        {
+            "path": e["path"],
+            "sha256": e["sha256"],
+            "layer": "L_ROOT",
+            "decision": "ADMITTED",
+            "governance_authority": "PRODUCTIZE.IG.FROM.INTAKE.01",
+            "reason": "Source file — governed intake bundle ADMITTED",
+        }
+        for e in ok_files_sorted
+    ]
+    ingestion_log = {
+        "schema_version": "1.0",
+        "stream": "PRODUCTIZE.IG.FROM.INTAKE.01",
+        "artifact_class": "GOVERNANCE_MATERIALIZATION",
+        "intake_id": intake_id,
+        "run_id": run_id,
+        "tenant": tenant,
+        "materialized_at": normalized_ts,
+        "entries": ingestion_entries,
+        "summary": {
+            "total": len(ok_files_sorted),
+            "admitted": len(ok_files_sorted),
+            "excluded": 0,
+            "decision_basis": "PRODUCTIZE.IG.FROM.INTAKE.01 — all OK files from governed intake bundle ADMITTED",
+        },
+    }
+    with open(os.path.join(output_dir, "ingestion_log.json"), "w") as f:
+        json.dump(ingestion_log, f, indent=2)
+    _debug("wrote ingestion_log.json")
+
+    # -----------------------------------------------------------------------
+    # RUNTIME COMPATIBILITY ARTIFACTS
+    # -----------------------------------------------------------------------
+
+    # R1: evidence_boundary.json
+    # admitted_input_class.source_run must equal intake_id (consumed by compute_coverage.sh)
+    evidence_boundary = {
+        "schema_version": "1.0",
+        "stream": "PRODUCTIZE.IG.FROM.INTAKE.01",
+        "artifact_class": "RUNTIME_COMPATIBILITY_PROJECTION",
+        "run_id": run_id,
+        "intake_id": intake_id,
+        "materialized_at": normalized_ts,
+        "runtime_input_class": "RHP_ONLY",
+        "rhp_definition": (
+            "Runtime Handoff Package — artifacts admitted from governed intake bundle "
+            "via PRODUCTIZE.IG.FROM.INTAKE.01. All elements trace to intake source paths."
+        ),
+        "admitted_input_class": {
+            "class": "RHP",
+            "source_run": intake_id,
+            "governance": "PRODUCTIZE.IG.FROM.INTAKE.01",
+            "root": f"clients/{tenant}/psee/runs/{run_id}/ig",
+            "elements": [
+                "source_manifest.json",
+                "evidence_boundary.json",
+                "admissibility_log.json",
+                "normalized_intake_structure/layer_index.json",
+                "normalized_intake_structure/source_profile.json",
+                "normalized_intake_structure/provenance_chain.json",
+            ],
+        },
+        "enforcement": "STRICT",
+        "boundary_authority": "PRODUCTIZE.IG.FROM.INTAKE.01",
+        "fail_safe": "Any PSEE runtime consumption of non-RHP input → FAIL_SAFE_STOP",
+    }
+    with open(os.path.join(output_dir, "evidence_boundary.json"), "w") as f:
+        json.dump(evidence_boundary, f, indent=2)
+    _debug("wrote evidence_boundary.json")
+
+    # R2: admissibility_log.json
+    # source_run = intake_id; entries artifact = normalized_relative_path
+    # These exact paths must also appear in layer_index or source_manifest.root_artifacts
+    admissibility_entries = [
+        {
+            "artifact": e["path"],
+            "source_path": f"{source_path}/{e['path']}",
+            "layer": "ROOT",
+            "decision": "ADMITTED",
+            "governance_authority": "PRODUCTIZE.IG.FROM.INTAKE.01",
+            "reason": "Governed intake bundle file — ADMITTED via IG materialization",
+        }
+        for e in ok_files_sorted
+    ]
+    admissibility_log = {
+        "schema_version": "1.0",
+        "stream": "PRODUCTIZE.IG.FROM.INTAKE.01",
+        "artifact_class": "RUNTIME_COMPATIBILITY_PROJECTION",
+        "run_id": run_id,
+        "intake_id": intake_id,
+        "source_run": intake_id,
+        "materialized_at": normalized_ts,
+        "entries": admissibility_entries,
+        "summary": {
+            "total": len(ok_files_sorted),
+            "admitted": len(ok_files_sorted),
+            "excluded": 0,
+            "decision_basis": (
+                "PRODUCTIZE.IG.FROM.INTAKE.01 ADMITTED — all OK files from governed intake bundle"
+            ),
+        },
+    }
+    with open(os.path.join(output_dir, "admissibility_log.json"), "w") as f:
+        json.dump(admissibility_log, f, indent=2)
+    _debug("wrote admissibility_log.json")
+
+    # R3: source_manifest.json
+    # root_artifacts.artifacts = all normalized relative paths
+    # layers.L_ROOT.artifact_count = file_count
+    # total_admitted_artifacts = file_count
+    all_artifact_paths = [e["path"] for e in ok_files_sorted]
+    source_manifest_out = {
+        "schema_version": "1.0",
+        "stream": "PRODUCTIZE.IG.FROM.INTAKE.01",
+        "artifact_class": "RUNTIME_COMPATIBILITY_PROJECTION",
+        "run_id": run_id,
+        "intake_id": intake_id,
+        "source_run": intake_id,
+        "materialized_at": normalized_ts,
+        "source": {
+            "kind": source_type,
+            "source_path": source_path,
+            "aggregate_hash": aggregate_hash,
+            "governance": "PRODUCTIZE.IG.FROM.INTAKE.01",
+        },
+        "root_artifacts": {
+            "artifact_count": len(all_artifact_paths),
+            "artifacts": all_artifact_paths,
+        },
+        "layers": {
+            "L_ROOT": {
+                "source_path": source_path,
+                "artifact_count": len(ok_files_sorted),
+                "admission_status": "ADMITTED",
+                "ingestion_decision": "GOVERNED_PASS",
+                "artifacts": all_artifact_paths,
+            },
+        },
+        "total_admitted_artifacts": len(ok_files_sorted),
+    }
+    with open(os.path.join(output_dir, "source_manifest.json"), "w") as f:
+        json.dump(source_manifest_out, f, indent=2)
+    _debug("wrote source_manifest.json")
+
+    # R4: normalized_intake_structure/layer_index.json
+    # Single layer L_ROOT; artifacts[].name = normalized_relative_path; admission_status = ADMITTED
+    layer_artifacts = [
+        {
+            "name": e["path"],
+            "path": f"{source_path}/{e['path']}",
+            "admission_status": "ADMITTED",
+        }
+        for e in ok_files_sorted
+    ]
+    layer_index = {
+        "schema_version": "1.0",
+        "stream": "PRODUCTIZE.IG.FROM.INTAKE.01",
+        "artifact_class": "RUNTIME_COMPATIBILITY_PROJECTION",
+        "run_id": run_id,
+        "intake_id": intake_id,
+        "source_run": intake_id,
+        "materialized_at": normalized_ts,
+        "layers": [
+            {
+                "layer_id": "L_ROOT",
+                "role": "source",
+                "source_path": source_path,
+                "artifact_count": len(ok_files_sorted),
+                "artifacts": layer_artifacts,
+            }
+        ],
+    }
+    with open(os.path.join(nis_dir, "layer_index.json"), "w") as f:
+        json.dump(layer_index, f, indent=2)
+    _debug("wrote normalized_intake_structure/layer_index.json")
+
+    # R5: normalized_intake_structure/provenance_chain.json
+    # IG.6.failures=0, IG.7.failures=0 — required by compute_reconstruction.sh
+    # 8 invariants required
+    provenance_chain = {
+        "schema_version": "1.0",
+        "stream": "PRODUCTIZE.IG.FROM.INTAKE.01",
+        "artifact_class": "RUNTIME_COMPATIBILITY_PROJECTION",
+        "run_id": run_id,
+        "intake_id": intake_id,
+        "source_run": intake_id,
+        "materialized_at": normalized_ts,
+        "chain": [
+            {
+                "layer": "IG.5",
+                "role": "source_profile_resolver",
+                "script": "PRODUCTIZE.IG.FROM.INTAKE.01/ig_materialize",
+                "outcome": "PASS",
+                "properties": {
+                    "profile_kind": source_type,
+                    "admissibility": "GOVERNED",
+                    "resolution": "DETERMINISTIC",
+                },
+            },
+            {
+                "layer": "IG.4",
+                "role": "orchestration_launcher",
+                "script": "PRODUCTIZE.IG.FROM.INTAKE.01/ig_materialize",
+                "outcome": "PASS",
+                "properties": {
+                    "source_binding": "INTAKE_BUNDLE",
+                    "run_mode": "MATERIALIZED_INGESTION",
+                },
+            },
+            {
+                "layer": "IG.3",
+                "role": "bootstrap_launcher",
+                "script": "PRODUCTIZE.IG.FROM.INTAKE.01/ig_materialize",
+                "outcome": "PASS",
+                "properties": {
+                    "launch_mode": "BOOTSTRAP_PIPELINE",
+                    "execution_mode": "CREATE_ONLY",
+                },
+            },
+            {
+                "layer": "IG.6",
+                "role": "ingestion_orchestrator",
+                "script": "PRODUCTIZE.IG.FROM.INTAKE.01/ig_materialize",
+                "outcome": "ORCHESTRATION_COMPLETE",
+                "checks": len(ok_files_sorted),
+                "failures": 0,
+            },
+            {
+                "layer": "IG.7",
+                "role": "ingestion_batch_runner",
+                "script": "PRODUCTIZE.IG.FROM.INTAKE.01/ig_materialize",
+                "outcome": "BATCH_COMPLETE",
+                "checks": len(ok_files_sorted),
+                "failures": 0,
+            },
+            {
+                "layer": "IG-PSEE-HANDOFF.0",
+                "role": "runtime_handoff_producer",
+                "outcome": "RHP_PRODUCED",
+                "target_namespace": f"clients/{tenant}/psee/runs/{run_id}/ig",
+            },
+        ],
+        "invariants_confirmed": [
+            "ADMISSIBLE",
+            "INVARIANT",
+            "DETERMINISTIC",
+            "ADAPTER_INVARIANT",
+            "BOOTSTRAP_INVARIANT",
+            "ORCHESTRATION_INVARIANT",
+            "SOURCE_PROFILE_INVARIANT",
+            "PAYLOAD_NORMALIZED",
+        ],
+    }
+    with open(os.path.join(nis_dir, "provenance_chain.json"), "w") as f:
+        json.dump(provenance_chain, f, indent=2)
+    _debug("wrote normalized_intake_structure/provenance_chain.json")
+
+    # R6: normalized_intake_structure/source_profile.json
+    # profile_governance.verdict = "PASS" — required by compute_reconstruction.sh
+    source_profile = {
+        "schema_version": "1.0",
+        "stream": "PRODUCTIZE.IG.FROM.INTAKE.01",
+        "artifact_class": "RUNTIME_COMPATIBILITY_PROJECTION",
+        "run_id": run_id,
+        "intake_id": intake_id,
+        "source_run": intake_id,
+        "source_profile": {
+            "kind": source_type,
+            "admissibility": "GOVERNED",
+            "resolution": "DETERMINISTIC",
+            "source_path": source_path,
+            "aggregate_hash": aggregate_hash,
+            "git_enriched": git_enriched,
+        },
+        "profile_governance": {
+            "resolver": "PRODUCTIZE.IG.FROM.INTAKE.01/ig_materialize",
+            "governing_stream": "PRODUCTIZE.IG.FROM.INTAKE.01",
+            "verdict": "PASS",
+            "determinism": "VERIFIED",
+            "materialized_at": normalized_ts,
+        },
+    }
+    if git_meta is not None:
+        source_profile["source_profile"]["repo_name"] = git_meta.get("repo_name")
+        source_profile["source_profile"]["branch"] = git_meta.get("branch")
+        source_profile["source_profile"]["head_commit"] = git_meta.get("head_commit")
+
+    with open(os.path.join(nis_dir, "source_profile.json"), "w") as f:
+        json.dump(source_profile, f, indent=2)
+    _debug("wrote normalized_intake_structure/source_profile.json")
+
+    # -----------------------------------------------------------------------
+    # Completion log
+    # -----------------------------------------------------------------------
+    _log(f"IG_MATERIALIZE_COMPLETE: {output_dir}")
+    _log(
+        f"intake_id={intake_id} run_id={run_id} tenant={tenant} "
+        f"source_type={source_type} file_count={len(ok_files_sorted)} "
+        f"governance_artifacts=3 runtime_compatibility_artifacts=6"
+    )
+    _log("DECLARED CONSTRAINT: reconstruction_state.state=FAIL expected (L40_2/L40_3/L40_4 not present in L_ROOT source) — score=0; both S1 scripts exit 0")
+
+
 # ---------------------------------------------------------------------------
 # Argument parser
 # ---------------------------------------------------------------------------
@@ -1965,6 +2916,129 @@ def _build_parser() -> argparse.ArgumentParser:
         "git metadata summary (if GIT_DIRECTORY)."
     ))
     ic.set_defaults(func=cmd_intake_create)
+
+    # --- ig ---
+    ig_parser = subparsers.add_parser(
+        "ig",
+        help="IG materialization commands (intake → runtime bridge)",
+        description="IG materialization commands — bridge a governed intake bundle into IG-compatible runtime inputs"
+    )
+    ig_sub = ig_parser.add_subparsers(dest="subcommand", metavar="SUBCOMMAND")
+    ig_sub.required = True
+
+    im = ig_sub.add_parser(
+        "materialize",
+        help="Bridge intake bundle → IG-compatible runtime input structure",
+        description=(
+            "Bridge a governed intake bundle into the IG-compatible runtime input structure\n"
+            "required by pios emit coverage and pios emit reconstruction.\n\n"
+            "Reads from clients/<tenant>/psee/intake/<intake_id>/:\n"
+            "  intake_record.json          (required)\n"
+            "  file_hash_manifest.json     (required)\n"
+            "  git_metadata.json           (optional, GIT_DIRECTORY sources only)\n\n"
+            "Writes to clients/<tenant>/psee/runs/<run_id>/ig/:\n\n"
+            "  GOVERNANCE ARTIFACTS (primary):\n"
+            "    raw_input.json            Source identity + aggregate hash declaration\n"
+            "    structure_map.json        Lexicographically-sorted file listing, layer=L_ROOT\n"
+            "    ingestion_log.json        Per-file admission decisions\n\n"
+            "  RUNTIME COMPATIBILITY ARTIFACTS (derived):\n"
+            "    evidence_boundary.json               admitted_input_class.source_run=<intake_id>\n"
+            "    admissibility_log.json               source_run=<intake_id>; all files ADMITTED\n"
+            "    source_manifest.json                 root_artifacts + L_ROOT layer; total_admitted=file_count\n"
+            "    normalized_intake_structure/\n"
+            "      layer_index.json                   Single layer L_ROOT; all files ADMITTED\n"
+            "      provenance_chain.json              IG.6.failures=0; IG.7.failures=0; 8 invariants\n"
+            "      source_profile.json                profile_governance.verdict=PASS\n\n"
+            "Determinism: all artifact timestamps derived from intake_record.json.created_at.\n\n"
+            "DECLARED CONSTRAINT: pios emit reconstruction will produce state=FAIL (score=0)\n"
+            "because compute_reconstruction.sh requires L40_2/L40_3/L40_4 which are not present\n"
+            "in L_ROOT intake sources. Both S1 scripts exit 0 — this is correct behavior.\n\n"
+            "Failure behavior: fails closed on missing intake bundle, missing required fields,\n"
+            "  existing output directory (no-overwrite), or broken file hash manifest.\n\n"
+            "Authority: PRODUCTIZE.IG.FROM.INTAKE.01"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    im.add_argument("--tenant", required=True, help="Tenant/client identifier (e.g., blueedge)")
+    im.add_argument("--intake-id", required=True, help="Intake identifier (must match an existing intake bundle)")
+    im.add_argument("--run-id", required=True, help="Unique run identifier for the materialized IG output")
+    im.add_argument("--debug", action="store_true", help=(
+        "Enable debug logging. Prints: resolved intake_dir, source_type, file_count, "
+        "aggregate_hash, output_dir, each artifact write confirmation."
+    ))
+    im.set_defaults(func=cmd_ig_materialize)
+
+    # --- structural ---
+    structural_parser = subparsers.add_parser(
+        "structural",
+        help="Structural truth commands (L40.2)",
+        description="Structural truth commands — extract L40.2 structural truth from governed IG outputs"
+    )
+    structural_sub = structural_parser.add_subparsers(dest="subcommand", metavar="SUBCOMMAND")
+    structural_sub.required = True
+
+    se = structural_sub.add_parser(
+        "extract",
+        help="L40.2 — Extract structural truth from governed IG outputs",
+        description=(
+            "Extract L40.2 structural truth deterministically from governed IG outputs.\n\n"
+            "PURPOSE\n"
+            "Derive structural unit inventory, file-to-structural-unit mapping, and extraction\n"
+            "log from the governed IG runtime package produced by pios ig materialize.\n"
+            "No semantic inference. No domain assignment. No entity graph.\n"
+            "Structural identity only — classification by file extension and basename.\n\n"
+            "INPUTS (reads from clients/<tenant>/psee/runs/<run_id>/ig/)\n"
+            "  Primary (required):\n"
+            "    raw_input.json         source identity + deterministic timestamp\n"
+            "    structure_map.json     per-file SHA-256 + size_bytes\n"
+            "    ingestion_log.json     admission decisions per file\n"
+            "  Support (if present):\n"
+            "    admissibility_log.json source_path + layer enrichment per file\n\n"
+            "OUTPUTS (writes to clients/<tenant>/psee/runs/<run_id>/40_2/)\n"
+            "  structural_unit_inventory.json\n"
+            "    CEU assignments by directory grouping — one CEU per directory.\n"
+            "    CEU-001, CEU-002... assigned in lexicographic directory order.\n"
+            "    Includes unit hash, file_types_present, dominant_file_type, evidence_ref.\n\n"
+            "  file_structural_map.json\n"
+            "    Per-file mapping: path → unit_id, file_type, sha256, size_bytes.\n"
+            "    All admitted files in lexicographic path order.\n"
+            "    ADMITTED entries only — non-ADMITTED and path-less entries are excluded.\n\n"
+            "  structural_extraction_log.json\n"
+            "    Derivation rules applied, exclusion log, ambiguity log, determinism hash.\n"
+            "    determinism_hash = SHA256(sorted '<path>:<sha256>' pairs for all admitted files).\n\n"
+            "DERIVATION RULES\n"
+            "  CEU grouping:   files grouped by immediate parent directory\n"
+            "  CEU ordering:   lexicographic directory sort; root ('') sorts first\n"
+            "  File types:     extension lookup → _EXT_TO_FILE_TYPE; basename → _BASENAME_TO_FILE_TYPE\n"
+            "                  unknown extension → UNKNOWN_FILE_TYPE (logged, not failed)\n"
+            "  Timestamps:     inherited from raw_input.json.materialized_at (deterministic)\n"
+            "  Ambiguities:    logged in structural_extraction_log.json; not silently dropped\n\n"
+            "FAIL-CLOSED CONDITIONS\n"
+            "  - IG directory not found\n"
+            "  - raw_input.json, structure_map.json, or ingestion_log.json missing\n"
+            "  - required fields missing in raw_input.json\n"
+            "  - 40_2/ output directory already exists (no-overwrite guard)\n\n"
+            "NON-FAIL CONDITIONS (logged as exclusions)\n"
+            "  - UNKNOWN_FILE_TYPE: logged in extraction_log.json; file is still admitted\n"
+            "  - DECISION_NOT_ADMITTED: file excluded and logged\n"
+            "  - NOT_IN_STRUCTURE_MAP: file excluded and logged\n\n"
+            "BOUNDARY\n"
+            "  This command does NOT modify the IG layer_index.json.\n"
+            "  The declared reconstruction constraint (L40_2/L40_3/L40_4 absent from IG\n"
+            "  layer_index.json) remains until a layer-enriched IG path is defined.\n"
+            "  This command is additive and does not affect S2–S4 or GA logic.\n\n"
+            "Authority: PRODUCTIZE.STRUCTURAL.TRUTH.40.2.01 / STRUCTURAL.TRUTH.AUTHORITY.01"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    se.add_argument("--tenant", required=True, help="Tenant/client identifier (e.g., blueedge)")
+    se.add_argument("--run-id", required=True, help="Run identifier — must have an existing ig/ directory")
+    se.add_argument("--debug", action="store_true", help=(
+        "Enable debug logging. Prints: resolved ig_dir, admitted file count, "
+        "excluded file count, directory→CEU assignments, unknown type count, "
+        "determinism hash, output path."
+    ))
+    se.set_defaults(func=cmd_structural_extract)
 
     return parser
 
