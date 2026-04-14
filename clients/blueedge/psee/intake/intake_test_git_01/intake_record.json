@@ -1,0 +1,12 @@
+{
+  "intake_id": "intake_test_git_01",
+  "tenant": "blueedge",
+  "source_path": "/Users/khorrix/Projects/k-pi-core",
+  "source_type": "GIT_DIRECTORY",
+  "governed_by": "PRODUCTIZE.RAW.SOURCE.INTAKE.01",
+  "created_at": "2026-04-14T12:10:02Z",
+  "file_count": 17383,
+  "aggregate_hash": "8fc98b4061d969a4948ddfa5cb767d0a39a69eb7c5095ae13dfd2d52e0d3ab18",
+  "git_enriched": true,
+  "handover_status": "READY_FOR_BOOTSTRAP"
+}

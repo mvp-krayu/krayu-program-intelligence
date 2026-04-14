@@ -1,0 +1,17 @@
+{
+  "intake_id": "intake_test_git_01",
+  "source_path": "/Users/khorrix/Projects/k-pi-core",
+  "source_type": "GIT_DIRECTORY",
+  "repo_name": "k-pi-core",
+  "branch": "feature/raw-source-intake",
+  "head_commit": "e915c3cb61735cdfcec7494cb0337a03b4d1b2cd",
+  "dirty": true,
+  "dirty_files": [
+    "cripts/pios/pios.py",
+    "clients/blueedge/psee/intake/",
+    "docs/psee/PRODUCTIZE.RAW.SOURCE.INTAKE.01/"
+  ],
+  "extracted_at": "2026-04-14T12:10:02Z",
+  "extraction_method": "local-git-binary",
+  "remote_queries": false
+}

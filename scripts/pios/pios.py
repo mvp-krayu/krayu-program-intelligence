@@ -1494,6 +1494,208 @@ def _print_verdict(results: dict, verdict: str) -> None:
 
 
 # ---------------------------------------------------------------------------
+# pios intake create
+# ---------------------------------------------------------------------------
+
+def cmd_intake_create(args: argparse.Namespace) -> None:
+    """
+    Pre-S0 — Create a governed intake bundle from a local source directory.
+
+    Writes:
+        clients/<tenant>/psee/intake/<intake_id>/intake_record.json
+        clients/<tenant>/psee/intake/<intake_id>/source_manifest.json
+        clients/<tenant>/psee/intake/<intake_id>/file_hash_manifest.json
+        clients/<tenant>/psee/intake/<intake_id>/git_metadata.json  (GIT_DIRECTORY only)
+
+    Authority: PRODUCTIZE.RAW.SOURCE.INTAKE.01
+    """
+    _configure_logging(args.debug)
+    _debug(f"intake create: source_path={args.source_path} tenant={args.tenant} intake_id={args.intake_id}")
+
+    root = _repo_root()
+
+    # Step 2: Resolve absolute source path
+    source_path = os.path.abspath(args.source_path)
+    tenant = args.tenant
+    intake_id = args.intake_id
+
+    # Step 3: Validate source_path exists and is a directory
+    if not os.path.isdir(source_path):
+        _fail(f"source-path does not exist or is not a directory: {source_path}")
+
+    # Step 4: Detect source type
+    source_type = "GIT_DIRECTORY" if os.path.isdir(os.path.join(source_path, ".git")) else "LOCAL_DIRECTORY"
+    _debug(f"resolved source_path={source_path}")
+    _debug(f"detected source_type={source_type}")
+
+    # Step 6: Walk source directory with exclusion rules
+    all_files = []
+    excluded_count = 0
+
+    for dirpath, dirnames, filenames in os.walk(source_path, topdown=True):
+        # Exclusion: remove .git and __pycache__ from dirs in-place to prevent recursion
+        dirnames[:] = [d for d in dirnames if d not in (".git", "__pycache__")]
+
+        for filename in filenames:
+            # Exclusion: skip .pyc and .DS_Store files
+            if filename.endswith(".pyc") or filename == ".DS_Store":
+                excluded_count += 1
+                continue
+            abs_path = os.path.join(dirpath, filename)
+            rel_path = os.path.relpath(abs_path, source_path).replace(os.sep, "/")
+            all_files.append((rel_path, abs_path))
+
+    # Sort lexicographically by relative path
+    all_files.sort(key=lambda x: x[0])
+
+    _debug(f"file walk count (included)={len(all_files)} excluded_count={excluded_count}")
+
+    # Step 7: Compute SHA-256 file hashes
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    file_entries = []
+
+    for rel_path, abs_path in all_files:
+        # Resolve symlinks
+        real_path = os.path.realpath(abs_path)
+        if not os.path.exists(real_path):
+            file_entries.append({
+                "path": rel_path,
+                "sha256": None,
+                "size_bytes": None,
+                "status": "BROKEN_SYMLINK"
+            })
+            continue
+
+        h = hashlib.sha256()
+        try:
+            with open(real_path, "rb") as f:
+                for chunk in iter(lambda: f.read(65536), b""):
+                    h.update(chunk)
+            size_bytes = os.path.getsize(real_path)
+            file_entries.append({
+                "path": rel_path,
+                "sha256": h.hexdigest(),
+                "size_bytes": size_bytes,
+                "status": "OK"
+            })
+        except OSError as e:
+            _fail(f"failed to hash file {abs_path}: {e}")
+
+    # Step 8: Compute aggregate hash
+    ok_entries = [e for e in file_entries if e["status"] == "OK"]
+    aggregate_input = "\n".join(f"{e['path']}:{e['sha256']}" for e in ok_entries)
+    aggregate_hash = hashlib.sha256(aggregate_input.encode("utf-8")).hexdigest()
+
+    _debug(f"aggregate_hash={aggregate_hash}")
+
+    # Step 9: Git enrichment (GIT_DIRECTORY only)
+    git_meta = None
+    if source_type == "GIT_DIRECTORY":
+        def _git_run(cmd):
+            result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+            if result.returncode != 0:
+                _fail(f"git command failed: {cmd} — returncode={result.returncode} stderr={result.stderr.strip()}")
+            return result.stdout.strip()
+
+        toplevel = _git_run(["git", "-C", source_path, "rev-parse", "--show-toplevel"])
+        repo_name = os.path.basename(toplevel)
+        branch = _git_run(["git", "-C", source_path, "rev-parse", "--abbrev-ref", "HEAD"])
+        head_commit = _git_run(["git", "-C", source_path, "rev-parse", "HEAD"])
+        porcelain_output = _git_run(["git", "-C", source_path, "status", "--porcelain"])
+        dirty = bool(porcelain_output)
+        dirty_files = []
+        if dirty:
+            for line in porcelain_output.splitlines():
+                if len(line) > 3:
+                    dirty_files.append(line[3:].strip())
+
+        git_meta = {
+            "intake_id": intake_id,
+            "source_path": source_path,
+            "source_type": "GIT_DIRECTORY",
+            "repo_name": repo_name,
+            "branch": branch,
+            "head_commit": head_commit,
+            "dirty": dirty,
+            "dirty_files": dirty_files,
+            "extracted_at": now,
+            "extraction_method": "local-git-binary",
+            "remote_queries": False
+        }
+        _debug(f"git metadata: repo_name={repo_name} branch={branch} head_commit={head_commit} dirty={dirty}")
+
+    # Step 10: Determine output directory — fail if exists
+    output_dir = os.path.join(root, "clients", tenant, "psee", "intake", intake_id)
+    _debug(f"output_dir={output_dir}")
+
+    if os.path.exists(output_dir):
+        _fail(f"intake output directory already exists at {output_dir} — use a unique intake_id")
+
+    # Step 11: Create output directory
+    os.makedirs(output_dir)
+
+    # Step 12: Write intake_record.json
+    intake_record = {
+        "intake_id": intake_id,
+        "tenant": tenant,
+        "source_path": source_path,
+        "source_type": source_type,
+        "governed_by": "PRODUCTIZE.RAW.SOURCE.INTAKE.01",
+        "created_at": now,
+        "file_count": len(file_entries),
+        "aggregate_hash": aggregate_hash,
+        "git_enriched": source_type == "GIT_DIRECTORY",
+        "handover_status": "READY_FOR_BOOTSTRAP"
+    }
+    with open(os.path.join(output_dir, "intake_record.json"), "w") as f:
+        json.dump(intake_record, f, indent=2)
+
+    # Step 13: Write source_manifest.json
+    manifest_files = [
+        {"path": e["path"], "size_bytes": e["size_bytes"]}
+        for e in file_entries
+    ]
+    directory_count = len(set(
+        os.path.dirname(e["path"]) for e in file_entries
+    ))
+    source_manifest = {
+        "intake_id": intake_id,
+        "tenant": tenant,
+        "source_path": source_path,
+        "source_type": source_type,
+        "created_at": now,
+        "files": manifest_files,
+        "directory_count": directory_count,
+        "file_count": len(file_entries)
+    }
+    with open(os.path.join(output_dir, "source_manifest.json"), "w") as f:
+        json.dump(source_manifest, f, indent=2)
+
+    # Step 14: Write file_hash_manifest.json
+    file_hash_manifest = {
+        "intake_id": intake_id,
+        "source_path": source_path,
+        "source_type": source_type,
+        "hash_algorithm": "sha256",
+        "generated_at": now,
+        "file_count": len(file_entries),
+        "files": file_entries,
+        "aggregate_hash": aggregate_hash
+    }
+    with open(os.path.join(output_dir, "file_hash_manifest.json"), "w") as f:
+        json.dump(file_hash_manifest, f, indent=2)
+
+    # Step 15: Write git_metadata.json (GIT_DIRECTORY only)
+    if git_meta is not None:
+        with open(os.path.join(output_dir, "git_metadata.json"), "w") as f:
+            json.dump(git_meta, f, indent=2)
+
+    # Step 16: Log completion
+    _log(f"INTAKE_COMPLETE: {output_dir}")
+    _log(f"intake_id={intake_id} tenant={tenant} source_type={source_type} file_count={len(file_entries)} aggregate_hash={aggregate_hash}")
+
+
+# ---------------------------------------------------------------------------
 # Argument parser
 # ---------------------------------------------------------------------------
 
@@ -1722,6 +1924,47 @@ def _build_parser() -> argparse.ArgumentParser:
     vf.add_argument("--run-dir", required=True, help="Path to the run directory")
     vf.add_argument("--debug", action="store_true", help="Enable debug logging")
     vf.set_defaults(func=cmd_validate_freshness)
+
+    # --- intake ---
+    intake_parser = subparsers.add_parser(
+        "intake",
+        help="Source intake commands (pre-S0)",
+        description="Source intake commands — create a governed intake bundle from a local source directory"
+    )
+    intake_sub = intake_parser.add_subparsers(dest="subcommand", metavar="SUBCOMMAND")
+    intake_sub.required = True
+
+    ic = intake_sub.add_parser(
+        "create",
+        help="Create a governed intake bundle from a local source directory (pre-S0)",
+        description=(
+            "Create a governed intake bundle from a local source directory.\n"
+            "Purpose: transform a local source path into a governed intake bundle that feeds\n"
+            "         the existing S0→S4 runtime unchanged (pre-S0 layer).\n\n"
+            "Required arguments:\n"
+            "  --source-path PATH      Absolute or relative path to the local source directory\n"
+            "  --tenant TENANT         Tenant/client identifier (e.g., blueedge)\n"
+            "  --intake-id INTAKE_ID   Unique intake identifier (e.g., intake_01_myproject)\n\n"
+            "Output artifacts (written to clients/<tenant>/psee/intake/<intake_id>/):\n"
+            "  intake_record.json       Run identity and aggregate hash declaration\n"
+            "  source_manifest.json     File listing with sizes\n"
+            "  file_hash_manifest.json  Per-file SHA-256 hashes and aggregate hash\n"
+            "  git_metadata.json        Git enrichment (GIT_DIRECTORY sources only)\n\n"
+            "Failure behavior: fails closed (exit code 1) on invalid source path,\n"
+            "  existing output directory, git extraction failure, or hash failure.\n\n"
+            "Authority: PRODUCTIZE.RAW.SOURCE.INTAKE.01"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    ic.add_argument("--source-path", required=True, help="Absolute or relative path to the local source directory")
+    ic.add_argument("--tenant", required=True, help="Tenant/client identifier (e.g., blueedge)")
+    ic.add_argument("--intake-id", required=True, help="Unique intake identifier (e.g., intake_01_myproject)")
+    ic.add_argument("--debug", action="store_true", help=(
+        "Enable debug logging. Prints: resolved source path, detected source type, "
+        "file walk count, excluded file count, aggregate hash, output directory path, "
+        "git metadata summary (if GIT_DIRECTORY)."
+    ))
+    ic.set_defaults(func=cmd_intake_create)
 
     return parser
 

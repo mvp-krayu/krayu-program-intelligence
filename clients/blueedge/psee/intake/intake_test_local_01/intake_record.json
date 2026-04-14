@@ -1,0 +1,12 @@
+{
+  "intake_id": "intake_test_local_01",
+  "tenant": "blueedge",
+  "source_path": "/tmp/intake_test_local",
+  "source_type": "LOCAL_DIRECTORY",
+  "governed_by": "PRODUCTIZE.RAW.SOURCE.INTAKE.01",
+  "created_at": "2026-04-14T12:15:05Z",
+  "file_count": 2,
+  "aggregate_hash": "3bcf11bd0e544a89f69eefb3626b1d975540998011402712bac7954a9356c978",
+  "git_enriched": false,
+  "handover_status": "READY_FOR_BOOTSTRAP"
+}

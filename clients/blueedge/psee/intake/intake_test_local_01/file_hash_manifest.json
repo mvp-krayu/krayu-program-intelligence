@@ -1,0 +1,23 @@
+{
+  "intake_id": "intake_test_local_01",
+  "source_path": "/tmp/intake_test_local",
+  "source_type": "LOCAL_DIRECTORY",
+  "hash_algorithm": "sha256",
+  "generated_at": "2026-04-14T12:15:05Z",
+  "file_count": 2,
+  "files": [
+    {
+      "path": "subdir/data.txt",
+      "sha256": "bd4ef5a0775f7705a1758f3ecde220fd045cce6a3b3b816fc684aada794bc24a",
+      "size_bytes": 13,
+      "status": "OK"
+    },
+    {
+      "path": "test_file.txt",
+      "sha256": "a948904f2f0f479b8f8197694b30184b0d2ed1c1cd2a1ec0fb85d299a192a447",
+      "size_bytes": 12,
+      "status": "OK"
+    }
+  ],
+  "aggregate_hash": "3bcf11bd0e544a89f69eefb3626b1d975540998011402712bac7954a9356c978"
+}
