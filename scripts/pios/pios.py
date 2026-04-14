@@ -597,14 +597,28 @@ def cmd_compute_gauge(args: argparse.Namespace) -> None:
 
     _debug(f"terminal_state={terminal_state} execution_status={execution_status}")
 
+    # --- Execution layer evaluation ---
+    # Execution layer evidence is NOT produced by the current structural chain (S1/S2/S3).
+    # completion_points contribute ONLY when coverage_state.execution_layer_evaluated = True.
+    # For all current structural-proof-only runs: execution_layer_evaluated = False.
+    COMPLETION_WEIGHT = 40
+    execution_layer_evaluated = bool(cs.get("execution_layer_evaluated", False))
+    if not execution_layer_evaluated:
+        execution_status = "NOT_EVALUATED"
+
     # --- Section 7.4: Score computation ---
-    completion_points_table = {
-        "S-13": 40,
-        "S-T3": 20,
-        "S-T1": 0,
-        "S-T2": 0,
-    }
-    completion_points = completion_points_table.get(terminal_state, 0)
+    if execution_layer_evaluated:
+        completion_points_table = {
+            "S-13": 40,
+            "S-T3": 20,
+            "S-T1": 0,
+            "S-T2": 0,
+        }
+        completion_points = completion_points_table.get(terminal_state, 0)
+        completion_status = execution_status
+    else:
+        completion_points = 0
+        completion_status = "NOT_EVALUATED"
 
     if terminal_state == "S-T1":
         # SA-04: canonical_score = 0 unconditionally
@@ -639,10 +653,11 @@ def cmd_compute_gauge(args: argparse.Namespace) -> None:
                 reconstruction_points = 0
 
     canonical_score = completion_points + coverage_points + reconstruction_points
+    projected_score = canonical_score + COMPLETION_WEIGHT if not execution_layer_evaluated else canonical_score
     band = _band_label(canonical_score)
     derivation = f"{completion_points} + {coverage_points} + {reconstruction_points} = {canonical_score}"
 
-    _debug(f"score: {derivation} band={band}")
+    _debug(f"score: {derivation} band={band} projected={projected_score}")
 
     # --- Section 7.5: DIM-01 through DIM-06 ---
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -727,10 +742,21 @@ def cmd_compute_gauge(args: argparse.Namespace) -> None:
         }
     }
 
-    # --- Projection (PR-04 for S-13 COMPLETE) ---
-    if terminal_state == "S-13":
+    # --- Projection ---
+    if not execution_layer_evaluated:
         projection = {
-            "value": canonical_score,
+            "value": projected_score,
+            "rule": "PR-NOT-EVALUATED",
+            "note": (
+                f"Execution layer NOT evaluated. canonical_score={canonical_score} (structural proof only). "
+                f"projected_score={projected_score} = canonical + completion_weight ({COMPLETION_WEIGHT}). "
+                "Run PSEE execution engine to convert projection to canonical score."
+            ),
+            "authority": "PSEE-GAUGE.0/projection_logic_spec.md §PR-NOT-EVALUATED"
+        }
+    elif terminal_state == "S-13":
+        projection = {
+            "value": projected_score,
             "rule": "PR-04",
             "note": (
                 "COMPLETE: projection equals canonical score. No pending resolutions. "
@@ -740,25 +766,39 @@ def cmd_compute_gauge(args: argparse.Namespace) -> None:
         }
     else:
         projection = {
-            "value": canonical_score,
+            "value": projected_score,
             "rule": "PR-01",
             "note": f"Projection equals canonical score for {execution_status} state.",
             "authority": "PSEE-GAUGE.0/projection_logic_spec.md"
         }
 
     # --- Confidence ---
-    confidence = {
-        "lower": canonical_score,
-        "upper": canonical_score,
-        "status": "COMPUTED",
-        "variance_reduction": 0,
-        "variance_basis": (
-            "CRF-01: us_records not available in authorized inputs (reported as 0 with caveat); "
-            "CRF-02: N/A (S-13, coverage=100%); CRF-03: N/A (S-13, escalation clearance=100); "
-            "total_variance_reduction=0"
-        ) if terminal_state == "S-13" else "Derived from terminal state and score components",
-        "authority": "PSEE-GAUGE.0/confidence_and_variance_model.md §Total Variance Computation"
-    }
+    if not execution_layer_evaluated:
+        confidence = {
+            "lower": canonical_score,
+            "upper": projected_score,
+            "status": "SPLIT_EXECUTION_NOT_EVALUATED",
+            "variance_reduction": 0,
+            "variance_basis": (
+                f"Execution layer NOT evaluated: lower={canonical_score} (structural proof only), "
+                f"upper={projected_score} (achievable if execution engine run). "
+                f"Band is [{canonical_score}, {projected_score}] until execution evidence produced."
+            ),
+            "authority": "PSEE-GAUGE.0/confidence_and_variance_model.md §SPLIT_EXECUTION_NOT_EVALUATED"
+        }
+    else:
+        confidence = {
+            "lower": canonical_score,
+            "upper": canonical_score,
+            "status": "COMPUTED",
+            "variance_reduction": 0,
+            "variance_basis": (
+                "CRF-01: us_records not available in authorized inputs (reported as 0 with caveat); "
+                "CRF-02: N/A (S-13, coverage=100%); CRF-03: N/A (S-13, escalation clearance=100); "
+                "total_variance_reduction=0"
+            ) if terminal_state == "S-13" else "Derived from terminal state and score components",
+            "authority": "PSEE-GAUGE.0/confidence_and_variance_model.md §Total Variance Computation"
+        }
 
     # --- Traceability ---
     source_prefix = f"clients/{client_id}/psee/runs/{run_id}/package"
@@ -795,6 +835,7 @@ def cmd_compute_gauge(args: argparse.Namespace) -> None:
         f"{terminal_state} — derived per GAUGE.STATE.COMPUTATION.CONTRACT.01 §3.2: "
         f"coverage_state.json.state={cs_state} AND coverage_percent={cs_pct} >= 90 AND "
         f"reconstruction_state.json.state={rs_state}. "
+        f"execution_layer_evaluated={execution_layer_evaluated} → execution_status={execution_status}. "
         f"S1 inputs {'FRESH' if coverage_run_id == run_id else f'INHERITED-GOVERNED from {coverage_run_id} (FRESH in that run)'}. "
         f"S2/S3 inputs {'FRESH' if ct.get('emission_run_id', '') == run_id else 'INHERITED-GOVERNED'} in this run."
     )
@@ -810,18 +851,26 @@ def cmd_compute_gauge(args: argparse.Namespace) -> None:
         "computed_at": now,
         "state": {
             "execution_status": execution_status,
-            "psee_engine_invoked": True,
-            "execution_mode": "FULL",
+            "execution_layer_evaluated": execution_layer_evaluated,
+            "psee_engine_invoked": execution_layer_evaluated,
+            "execution_mode": "FULL" if execution_layer_evaluated else "STRUCTURAL_ONLY",
             "terminal_state_basis": terminal_state_basis
         },
         "dimensions": dimensions,
         "score": {
             "canonical": canonical_score,
+            "projected": projected_score,
             "band_label": band,
             "derivation": derivation,
             "components": {
                 "completion_points": completion_points,
-                "completion_basis": f"{terminal_state} ({execution_status}) lookup → {completion_points} points per gauge_score_model.md §G.2 Component 1 table",
+                "completion_status": completion_status,
+                "completion_basis": (
+                    f"execution_layer_evaluated=False → completion_points=0 (NOT_EVALUATED); "
+                    f"completion_weight={COMPLETION_WEIGHT} reflected in projected_score={projected_score}"
+                ) if not execution_layer_evaluated else (
+                    f"{terminal_state} ({execution_status}) lookup → {completion_points} points per gauge_score_model.md §G.2 Component 1 table"
+                ),
                 "coverage_points": coverage_points,
                 "coverage_basis": f"round({cs_pct} × 0.35) = {coverage_points} per gauge_score_model.md §G.2 Component 2",
                 "reconstruction_points": reconstruction_points,
@@ -842,7 +891,7 @@ def cmd_compute_gauge(args: argparse.Namespace) -> None:
         json.dump(gauge_state, f, indent=2)
 
     _log(f"GAUGE_COMPUTATION_COMPLETE: gauge_state.json written to {gauge_path}")
-    _log(f"score={canonical_score} band={band} terminal_state={terminal_state} execution_status={execution_status}")
+    _log(f"score={canonical_score} projected={projected_score} band={band} terminal_state={terminal_state} execution_status={execution_status} execution_layer_evaluated={execution_layer_evaluated}")
 
     # GC-01 through GC-10 self-check
     _validate_gc_conditions(gauge_state, run_id)
@@ -856,7 +905,7 @@ def _validate_gc_conditions(gs: dict, run_id: str) -> None:
         failures.append("GC-01: run_id mismatch")
     if gs.get("computed_by") != "GAUGE.STATE.COMPUTATION.CONTRACT.01":
         failures.append("GC-02: computed_by not declared")
-    if gs.get("state", {}).get("execution_status") not in ("COMPLETE", "PARTIAL", "ESCALATED", "STOPPED", "INDETERMINATE"):
+    if gs.get("state", {}).get("execution_status") not in ("COMPLETE", "PARTIAL", "ESCALATED", "STOPPED", "INDETERMINATE", "NOT_EVALUATED"):
         failures.append("GC-03: execution_status not in allowed set")
 
     score = gs.get("score", {})
@@ -1394,7 +1443,7 @@ def _check_gc_conditions(gauge_path: str, intake_path: str) -> dict:
     results["GC-01"] = "PASS" if gs.get("run_id") == run_id else f"FAIL — run_id mismatch: {gs.get('run_id')} vs {run_id}"
     results["GC-02"] = "PASS" if gs.get("computed_by") == "GAUGE.STATE.COMPUTATION.CONTRACT.01" else f"FAIL — computed_by={gs.get('computed_by')}"
 
-    valid_statuses = {"COMPLETE", "PARTIAL", "ESCALATED", "STOPPED", "INDETERMINATE"}
+    valid_statuses = {"COMPLETE", "PARTIAL", "ESCALATED", "STOPPED", "INDETERMINATE", "NOT_EVALUATED"}
     status = gs.get("state", {}).get("execution_status")
     results["GC-03"] = "PASS" if status in valid_statuses else f"FAIL — execution_status={status}"
 
