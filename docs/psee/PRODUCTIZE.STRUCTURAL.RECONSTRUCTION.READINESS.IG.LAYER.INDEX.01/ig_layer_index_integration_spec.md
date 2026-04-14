@@ -102,15 +102,35 @@ No other fields. No structural content. No node/edge/file bodies.
 
 Hashes are read verbatim — no recomputation.
 
-### 4.3 Top-Level Integration Marker
+### 4.3 Top-Level Integration Marker — SANCTIONED ADDITIVE METADATA
 
-`layer_index.json` receives one new top-level string field:
+`layer_index.json` receives exactly one new top-level string field:
 
 ```json
 "structural_layer_integration_stream": "PRODUCTIZE.STRUCTURAL.RECONSTRUCTION.READINESS.IG.LAYER.INDEX.01"
 ```
 
-This is the only non-layer addition. It is static text — no timestamp, no runtime data.
+**Schema status: SANCTIONED** — this field is an explicit part of the approved layer_index schema
+contract for runs that have completed structural layer integration.
+
+Basis for sanction:
+- The contract's determinism requirements explicitly acknowledge the existence of integration metadata
+  ("if command writes integration metadata, it must not break deterministic repeatability")
+  — this is a conditional sanction, met by this field
+- The field is a static constant string derived solely from the stream identity
+- It is non-semantic: no domain, capability, scoring, or functional meaning
+- It is non-timestamp: no runtime variation, no clock dependency
+- It satisfies the traceability requirement: a reader can identify which stream registered the structural layers
+- It does not embed structural content or duplicate upstream artifact data
+
+**Invariants:**
+- Value is always the constant `"PRODUCTIZE.STRUCTURAL.RECONSTRUCTION.READINESS.IG.LAYER.INDEX.01"`
+- Written once; absent before integration, present after
+- Presence implies all of L40_2/L40_3/L40_4 were successfully registered in the same operation
+- Absence implies integration has not been performed
+
+This is the only non-layer, non-structural addition to layer_index.json. No other top-level fields
+are added by this stream.
 
 ---
 

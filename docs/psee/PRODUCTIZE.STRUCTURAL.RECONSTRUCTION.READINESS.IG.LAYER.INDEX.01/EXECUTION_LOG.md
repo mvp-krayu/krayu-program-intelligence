@@ -120,12 +120,54 @@
 | Fail-closed on missing directory | CONFIRMED — exit 1 on missing ig/normalized_intake_structure/ |
 | Determinism preserved | CONFIRMED — no timestamp written; layer entries derived from static artifact content |
 | Reconstruction discoverability blocker removed | CONFIRMED — L40_2, L40_3, L40_4 discoverable in layer_index.json |
+| `structural_layer_integration_stream` field sanctioned | CONFIRMED — documented in spec Section 4.3 as SANCTIONED ADDITIVE METADATA; static constant string; non-semantic; non-timestamp; derivable from stream identity alone |
 
 ---
 
-## 6. EXECUTION STATUS
+## 7. CONTRACT-NEGATIVE TEST (POST-COMMIT ADDENDUM)
 
-Status: COMPLETE — PASS
+Performed on isolated test run `run_negative_test_01` (temporary directory, cleaned after test).
+
+| test | condition | actual error | exit |
+|------|-----------|--------------|------|
+| Missing `structural_topology_log.json` | `40_4/structural_topology_log.json` absent; `40_4/` directory present; `ig/`, `40_2/`, `40_3/` all valid | `structural_topology_log.json not found: .../40_4/structural_topology_log.json — required for L40_4 provenance` | 1 |
+| Missing `40_4/` directory | `40_4/` directory entirely absent; all other directories valid | `40_4/ directory not found: .../40_4 — run pios structural normalize first` | 1 |
+
+Both failures land specifically on the **structural-layer dependency path** (Step 2 or Step 5 of
+`cmd_ig_integrate_structural_layers`) — not on IG validation, not on 40_2/40_3 checks. The error
+messages uniquely identify the missing structural artifact and the required upstream command.
+
+No test artifact was committed — `run_negative_test_01` was created and removed within the same
+test session.
+
+---
+
+## 8. SCHEMA DECISION — `structural_layer_integration_stream`
+
+**Decision: SANCTIONED**
+
+The field is an explicit part of the approved layer_index schema contract for integrated runs.
+
+Rationale:
+- The contract's determinism requirements conditionally acknowledge integration metadata
+  ("if command writes integration metadata, it must not break deterministic repeatability")
+- The field is static constant text — identical across all executions, all runs, all tenants
+- Non-semantic: no domain/capability/scoring/functional meaning
+- Non-timestamp: no runtime or clock dependency
+- Traceability value: identifies which stream performed the integration without requiring log inspection
+
+The alternative (remove it) would leave no durable marker in layer_index.json distinguishing
+an integrated run from a non-integrated run without inspecting layer_id presence. The field
+makes integration state explicit and auditable at a glance.
+
+Spec updated: Section 4.3 of `ig_layer_index_integration_spec.md` now documents this field as
+SANCTIONED ADDITIVE METADATA with explicit invariants.
+
+---
+
+## 9. EXECUTION STATUS
+
+Status: COMPLETE — PASS (including post-commit contract-negative validation)
 
 SC-01: PASS — `pios ig integrate-structural-layers` command registered and compiled
 SC-02: PASS — layer_index.json updated with L40_2, L40_3, L40_4 in canonical order
