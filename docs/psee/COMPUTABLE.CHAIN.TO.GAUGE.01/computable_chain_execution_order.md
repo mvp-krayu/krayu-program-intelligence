@@ -42,12 +42,15 @@ Command        : bash scripts/ig/run_ig_pipeline.sh \
 
 Input          : clients/<uuid>/source/<version>/
 Output         : clients/<uuid>/ig/runs/<run_id>/payload_manifest.json
-                 Runtime Handoff Package (RHP):
+                 Runtime Handoff Package (RHP) — canonical fields (aligned with Stage Map S1):
                    docs/pios/IG.RUNTIME/run_<run_id>/source_manifest.json
                    docs/pios/IG.RUNTIME/run_<run_id>/evidence_boundary.json
                    docs/pios/IG.RUNTIME/run_<run_id>/admissibility_log.json
-                   docs/pios/IG.RUNTIME/run_<run_id>/normalized_intake_structure/
-Stop condition : exit code 0 (IG_SUCCESS); payload_manifest.json present
+                   docs/pios/IG.RUNTIME/run_<run_id>/normalized_intake_structure/layer_index.json
+                   docs/pios/IG.RUNTIME/run_<run_id>/normalized_intake_structure/source_profile.json
+                   docs/pios/IG.RUNTIME/run_<run_id>/normalized_intake_structure/provenance_chain.json
+                   (normalized_intake_structure/ may contain additional artifacts)
+Stop condition : exit code 0 (IG_SUCCESS); payload_manifest.json present; all 6 canonical RHP fields written
 Gap            : GAP-10 (IG reproducibility for new source revision unverified)
 ```
 
@@ -56,8 +59,8 @@ Gap            : GAP-10 (IG reproducibility for new source revision unverified)
 ## STEP 2 — 40.2: Evidence Classification and Inventory
 
 ```
-Execution type : python3
-Command        : python3 scripts/pios/40.2/scan_repository.sh
+Execution type : bash + python3 (mixed)
+Command        : bash scripts/pios/40.2/scan_repository.sh
                  python3 scripts/pios/40.2/classify_files.py
                  python3 scripts/pios/40.2/build_evidence_inventory.py
                  python3 scripts/pios/40.2/extract_entities.py
