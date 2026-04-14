@@ -198,19 +198,27 @@ def cmd_bootstrap(args: argparse.Namespace) -> None:
     run_dir = os.path.abspath(os.path.join(root, args.run_dir)) if not os.path.isabs(args.run_dir) else args.run_dir
     pkg_dir = os.path.join(run_dir, "package")
     intake_path = os.path.join(run_dir, "intake_record.json")
+    run_identity_path = os.path.join(run_dir, "run_identity.json")
 
     _debug(f"bootstrap: run_dir={run_dir}")
 
-    if not os.path.isfile(intake_path):
-        _fail(f"intake_record.json not found at {intake_path} — PB-07: bootstrap requires ledger first")
-
-    with open(intake_path, "r") as f:
-        intake = json.load(f)
-
-    run_id = intake.get("run_id")
-    client_id = intake.get("client_uuid")
-    if not run_id or not client_id:
-        _fail("intake_record.json missing run_id or client_uuid")
+    if os.path.isfile(intake_path):
+        with open(intake_path, "r") as f:
+            intake = json.load(f)
+        run_id = intake.get("run_id")
+        client_id = intake.get("client_uuid")
+        if not run_id or not client_id:
+            _fail("intake_record.json missing run_id or client_uuid")
+    elif os.path.isfile(run_identity_path):
+        _debug("bootstrap: intake_record.json absent — falling back to run_identity.json")
+        with open(run_identity_path, "r") as f:
+            identity = json.load(f)
+        run_id = identity.get("run_id")
+        client_id = identity.get("client_uuid")
+        if not run_id or not client_id:
+            _fail("run_identity.json missing run_id or client_uuid")
+    else:
+        _fail(f"Neither intake_record.json nor run_identity.json found at {run_dir} — PB-07: run pios ig materialize first")
 
     os.makedirs(pkg_dir, exist_ok=True)
 
@@ -519,18 +527,28 @@ def cmd_compute_gauge(args: argparse.Namespace) -> None:
     run_dir = os.path.abspath(os.path.join(root, args.run_dir)) if not os.path.isabs(args.run_dir) else args.run_dir
     pkg_dir = os.path.join(run_dir, "package")
     intake_path = os.path.join(run_dir, "intake_record.json")
+    run_identity_path = os.path.join(run_dir, "run_identity.json")
 
     _debug(f"compute gauge: pkg_dir={pkg_dir}")
 
-    # Resolve run_id from intake_record
-    if not os.path.isfile(intake_path):
-        _fail(f"intake_record.json not found at {intake_path}")
-    with open(intake_path, "r") as f:
-        intake = json.load(f)
-    run_id = intake.get("run_id")
-    client_id = intake.get("client_uuid")
-    if not run_id:
-        _fail("intake_record.json missing run_id")
+    # Resolve run_id from intake_record or run_identity fallback
+    if os.path.isfile(intake_path):
+        with open(intake_path, "r") as f:
+            intake = json.load(f)
+        run_id = intake.get("run_id")
+        client_id = intake.get("client_uuid")
+        if not run_id:
+            _fail("intake_record.json missing run_id")
+    elif os.path.isfile(run_identity_path):
+        _debug("compute gauge: intake_record.json absent — falling back to run_identity.json")
+        with open(run_identity_path, "r") as f:
+            identity = json.load(f)
+        run_id = identity.get("run_id")
+        client_id = identity.get("client_uuid")
+        if not run_id:
+            _fail("run_identity.json missing run_id")
+    else:
+        _fail(f"Neither intake_record.json nor run_identity.json found at {run_dir}")
 
     # Load four authorized inputs
     inputs = {}
@@ -965,30 +983,40 @@ def cmd_declare_coherence(args: argparse.Namespace) -> None:
     run_dir = os.path.abspath(os.path.join(root, args.run_dir)) if not os.path.isabs(args.run_dir) else args.run_dir
     pkg_dir = os.path.join(run_dir, "package")
     intake_path = os.path.join(run_dir, "intake_record.json")
+    run_identity_path = os.path.join(run_dir, "run_identity.json")
     coherence_path = os.path.join(run_dir, "coherence_record.json")
 
     _debug(f"declare coherence: run_dir={run_dir}")
     _debug(f"declare coherence: pkg_dir={pkg_dir}")
 
-    # Pre-flight: intake_record must exist
-    if not os.path.isfile(intake_path):
-        _fail(f"intake_record.json not found at {intake_path}")
+    # Pre-flight: intake_record or run_identity must exist
+    if os.path.isfile(intake_path):
+        with open(intake_path, "r") as f:
+            intake = json.load(f)
+        consuming_run_id = intake.get("run_id")
+        client_uuid = intake.get("client_uuid")
+        source_version = intake.get("source_version")
+        if not consuming_run_id:
+            _fail("intake_record.json missing run_id")
+        if not client_uuid:
+            _fail("intake_record.json missing client_uuid")
+    elif os.path.isfile(run_identity_path):
+        _debug("declare coherence: intake_record.json absent — falling back to run_identity.json")
+        with open(run_identity_path, "r") as f:
+            identity = json.load(f)
+        consuming_run_id = identity.get("run_id")
+        client_uuid = identity.get("client_uuid")
+        source_version = None
+        if not consuming_run_id:
+            _fail("run_identity.json missing run_id")
+        if not client_uuid:
+            _fail("run_identity.json missing client_uuid")
+    else:
+        _fail(f"Neither intake_record.json nor run_identity.json found at {run_dir}")
 
     # No-overwrite guard
     if os.path.exists(coherence_path):
         _fail(f"coherence_record.json already exists at {coherence_path} — no-overwrite guard")
-
-    with open(intake_path, "r") as f:
-        intake = json.load(f)
-
-    consuming_run_id = intake.get("run_id")
-    client_uuid = intake.get("client_uuid")
-    source_version = intake.get("source_version")
-
-    if not consuming_run_id:
-        _fail("intake_record.json missing run_id")
-    if not client_uuid:
-        _fail("intake_record.json missing client_uuid")
 
     _debug(f"consuming_run_id={consuming_run_id} client_uuid={client_uuid}")
 
@@ -1192,6 +1220,10 @@ def cmd_validate_freshness(args: argparse.Namespace) -> None:
 
     # --- Step 1: Bootstrap Admissibility (AC-01–AC-10) ---
     intake_path = os.path.join(run_dir, "intake_record.json")
+    run_identity_path = os.path.join(run_dir, "run_identity.json")
+    if not os.path.isfile(intake_path) and os.path.isfile(run_identity_path):
+        _debug("validate freshness: intake_record.json absent — using run_identity.json as AC intake path")
+        intake_path = run_identity_path
     ac_results = _check_ac_conditions(intake_path, pkg_dir)
     results["bootstrap"] = ac_results
 
@@ -3137,6 +3169,22 @@ def cmd_ig_materialize(args: argparse.Namespace) -> None:
     # Step 6: Create output directories
     os.makedirs(nis_dir)
 
+    # Step 6b: Write run_identity.json at run_dir root
+    # Consumed by pios bootstrap and pios compute_gauge when intake_record.json is absent
+    run_dir_path = os.path.join(root, "clients", tenant, "psee", "runs", run_id)
+    run_identity_path = os.path.join(run_dir_path, "run_identity.json")
+    if os.path.exists(run_identity_path):
+        _fail(f"run_identity.json already exists at {run_identity_path} — no-overwrite guard")
+    run_identity_doc = {
+        "run_id": run_id,
+        "client_uuid": tenant,
+        "intake_id": intake_id,
+        "stream": "PRODUCTIZE.IG.FROM.INTAKE.01"
+    }
+    with open(run_identity_path, "w") as f:
+        json.dump(run_identity_doc, f, indent=2)
+    _debug("wrote run_identity.json")
+
     # -----------------------------------------------------------------------
     # GOVERNANCE ARTIFACTS
     # -----------------------------------------------------------------------
@@ -3495,7 +3543,7 @@ def cmd_ig_materialize(args: argparse.Namespace) -> None:
     _log(
         f"intake_id={intake_id} run_id={run_id} tenant={tenant} "
         f"source_type={source_type} file_count={len(ok_files_sorted)} "
-        f"governance_artifacts=3 runtime_compatibility_artifacts=6"
+        f"governance_artifacts=3 runtime_compatibility_artifacts=6 run_identity=1"
     )
     _log("DECLARED CONSTRAINT: reconstruction_state.state=FAIL expected (L40_2/L40_3/L40_4 not present in L_ROOT source) — score=0; both S1 scripts exit 0")
 
