@@ -128,12 +128,136 @@ No changes were made to Sections 1–10 or Appendix A. The only prior-section ch
 
 ---
 
-## 7. EXECUTION STATUS
+## 7. CLI IMPLEMENTATION DETAILS
+
+**Implementation pass date:** 2026-04-14
+
+**File created:**
+- `scripts/pios/pios.py` — thin Python CLI; 8 commands; argparse subcommand groups; subprocess wiring; direct S4 and validate freshness implementations
+
+**Spec artifact updated:**
+- `docs/psee/PRODUCTIZE.EXECUTABLE.RUNTIME.SURFACE.01/runtime_surface_specification.md` — SECTION 12 added (CLI Implementation Contract; subsections 12.1–12.7)
+
+**Commands implemented:**
+
+| command | stage | delegates to |
+|---------|-------|-------------|
+| `pios ledger create` | S0 | Direct write — intake_record.json per Section 3.2 |
+| `pios bootstrap` | S0 | Direct write — engine_state.json + gauge_inputs.json per Section 4.4 |
+| `pios emit coverage` | S1 | `compute_coverage.sh` via subprocess |
+| `pios emit reconstruction` | S1 | `compute_reconstruction.sh` via subprocess; DIM-01 precondition enforced |
+| `pios emit topology` | S2 | `emit_canonical_topology.py` via subprocess |
+| `pios emit signals` | S3 | `build_signals.py` via subprocess + CC-2 correction inline |
+| `pios compute gauge` | S4 | Direct implementation per Section 7; GC-01–GC-10 self-check |
+| `pios validate freshness` | S0–S4 | Direct implementation per Section 9; AC/CA/GC/SC chain |
+
+`pios run` NOT implemented — Section 10 defines reference sequence only; no thin orchestrator authorization.
+
+**Pre-closure checks — CLI pass:**
+
+| check | result |
+|-------|--------|
+| `pios --help` | PASS |
+| `pios ledger create --help` | PASS |
+| `pios bootstrap --help` | PASS |
+| `pios emit coverage --help` | PASS |
+| `pios emit reconstruction --help` | PASS |
+| `pios emit topology --help` | PASS |
+| `pios emit signals --help` | PASS |
+| `pios compute gauge --help` | PASS |
+| `pios validate freshness --help` | PASS |
+| `--debug` on all 8 commands | PASS — 8 registrations confirmed |
+| 8 command function bindings | PASS — `set_defaults(func=...)` for all 8 |
+| No artifact schema drift | PASS — gauge_state.json fields match Section 7.7; intake_record.json fields match Section 3.2 |
+| CC-2 correction inline in emit signals | PASS — runtime_required=false; schema_correction metadata; validation after correction |
+| DIM-01 precondition enforced in emit reconstruction | PASS — fails closed if coverage_state.state ≠ COMPUTED |
+| No-overwrite guard in emit topology | PASS — delegates to emit_canonical_topology.py which carries guard |
+| No-overwrite guard in compute gauge | PASS — explicit guard before write |
+| GC-01–GC-10 self-check in compute gauge | PASS — fails closed if any condition fails before artifact write |
+| pios run not implemented | PASS — decision recorded in Section 12.2 |
+| Files outside scripts/pios/pios.py modified | spec + EXECUTION_LOG only (authorized) |
+
+---
+
+## 8. COHERENCE PRODUCTIZATION DETAILS
+
+**Productization pass date:** 2026-04-14
+
+**Real end-to-end test evidence (CA-01 failure):**
+
+Run: `clients/blueedge/psee/runs/run_cli_validation_01`
+
+```
+[pios] INFO BOOTSTRAP: VALID
+[pios] INFO COHERENCE: NON_COHERENT
+[pios] INFO   CA-01: FAIL — coherence_record.json not found
+[pios] INFO   CA-02: BLOCKED
+...
+FRESHNESS VALIDATION VERDICT: COHERENCE_NON_COHERENT
+```
+
+Cause: `coherence_record.json` was not produced by any existing CLI command. The contract required it as an authored artifact but no execution step produced it.
+
+**Productization decision:**
+Coherence declaration elevated from implicit contract requirement (Section 8: "write coherence_record.json") to an executable, auditable CLI step: `pios declare coherence`. This is a productization gap closure, not a contract redesign.
+
+**New command added:**
+- `pios declare coherence` — reads governed artifact set; determines coherence_mode (MODE_A/MODE_B); writes `coherence_record.json` per Section 8 contract
+
+**Files changed (coherence productization pass):**
+- `scripts/pios/pios.py` — `cmd_declare_coherence`, `_resolve_artifact_run_id`, `_resolve_freshness_classification` added; `declare coherence` subparser added; command count: 8 → 9
+- `docs/psee/PRODUCTIZE.EXECUTABLE.RUNTIME.SURFACE.01/runtime_surface_specification.md` — Section 9.2a (CLI surface table), Section 10 E-09 (executable step), Section 12.2 (command binding table), Section 12.3 (debug contract), Section 12.4 (precondition table), Section 12.4a (implementation model), Section 12.7 (files) amended
+
+**Post-implementation validation (real run):**
+
+```
+pios declare coherence --run-dir clients/blueedge/psee/runs/run_cli_validation_01 --debug
+
+coherence_mode=MODE_B
+coherence_verdict=COHERENT
+run_family: [run_cli_validation_01, run_03_blueedge_derivation_validation, run_01_blueedge]
+violations: 1 declared (blocking: 0) [CC-2: CORRECTED]
+COHERENCE_DECLARED
+```
+
+```
+pios validate freshness --run-dir clients/blueedge/psee/runs/run_cli_validation_01
+
+BOOTSTRAP: VALID (AC-01–AC-10 all PASS)
+COHERENCE: COHERENT (CA-01–CA-10 all PASS)  ← previously BLOCKED at CA-01
+COMPUTATION: COMPUTABLE (GC-01–GC-10 all PASS)
+SC-01–SC-10: PASS (SC-06 NOT_EVALUATED — GA-01–GA-12 implementation verification)
+VERDICT: GOVERNED AND FRESH THROUGH S4
+```
+
+CA-01 is now satisfied. Downstream CA checks execute through CA-10. Full chain passes.
+
+**Pre-closure checks — coherence productization pass:**
+
+| check | result |
+|-------|--------|
+| `git branch --show-current` | `feature/computable-chain-to-gauge` — PASS |
+| `git status --short` | `M scripts/pios/pios.py`, `M runtime_surface_specification.md`, `M EXECUTION_LOG.md`, `?? pios.py` (existing untracked) — clean scope |
+| `python3 -m py_compile scripts/pios/pios.py` | PASS — SYNTAX_OK |
+| `pios declare coherence --help` | PASS |
+| `pios declare coherence --debug` supported | PASS — prints run_dir, artifact paths, run identities, coherence_mode, violations, output path, verdict |
+| command name matches amended spec exactly | PASS — `declare coherence` in Section 9.2a, 10 E-09, 12.2 |
+| `coherence_record.json` written to correct path | PASS — `<run_dir>/coherence_record.json` |
+| `pios validate freshness` passes CA-01 after coherence declaration | PASS — full chain: AC VALID, CA COHERENT, GC COMPUTABLE |
+| No unauthorized commands added | PASS — only `declare coherence` added |
+| All prior 8 `--help` still work | PASS |
+| `--debug` coverage: 9 commands | PASS — 9 registrations |
+| No schema drift: coherence_record.json | PASS — fields match Section 8.3 schema exactly |
+| No contract drift: CONSUMPTION-COMPLETE preserved | PASS — Section 11 unchanged; GA-01–GA-12 unmodified |
+| No files outside authorized scope modified | PASS — only scripts/pios/pios.py + 2 authorized doc files |
+
+---
+
+## 9. EXECUTION STATUS
 
 Status: COMPLETE — PASS
 
-Files created: 2 (unchanged)
-Files changed: 2 (this pass)
+Files created total: 3 (runtime_surface_specification.md, EXECUTION_LOG.md, scripts/pios/pios.py)
 BASELINE GAP: RESOLVED — GA-01 through GA-12 fully specified in Section 11
 
 **Specification coverage:**
@@ -142,5 +266,6 @@ BASELINE GAP: RESOLVED — GA-01 through GA-12 fully specified in Section 11
 |---------|--------|
 | S0–S4 internal execution (AC, CA, GC layers) | EXECUTION-COMPLETE — fully specified (Sections 1–10, Appendix A) |
 | GA consumption layer (GAUGE.ADMISSIBLE.CONSUMPTION.01) | CONSUMPTION-COMPLETE — GA-01–GA-12 defined (Section 11) |
+| CLI implementation | CLI-COMPLETE — all 9 commands implemented in scripts/pios/pios.py (Section 12) |
 
-The specification is EXECUTION-COMPLETE and CONSUMPTION-COMPLETE.
+The specification is EXECUTION-COMPLETE, CONSUMPTION-COMPLETE, and CLI-COMPLETE.

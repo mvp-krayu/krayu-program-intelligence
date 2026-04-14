@@ -734,6 +734,24 @@ GA-01 through GA-12 are fully defined in **Section 11 — GA CONSUMPTION CONTRAC
 
 The admissibility chain Step 4 requires all of GA-01 through GA-12 to pass. Section 11 defines the exact condition, check, artifact fields, failure mode, and rejection behavior for each. Four narrow consistency corrections are recorded in Section 11.3 (GA-04, GA-05, GA-06, GA-07) for the GOVERNED AND FRESH THROUGH S4 baseline.
 
+### 9.2a CLI Surface for Admissibility Chain
+
+The coherence declaration step is an executable CLI step, not a manual authoring requirement. The canonical CLI surface for the S0–S4 chain is:
+
+| step | command | gate |
+|------|---------|------|
+| S0 ledger | `pios ledger create` | AC-02, AC-03, AC-04 |
+| S0 bootstrap | `pios bootstrap` | AC-07 (engine_state + gauge_inputs) |
+| S1 | `pios emit coverage` | AC-01 prerequisite for CA |
+| S1 | `pios emit reconstruction` | DIM-01 precondition enforced |
+| S2 | `pios emit topology` | SC-04 |
+| S3 | `pios emit signals` | SC-05; CC-2 applied inline |
+| S4 | `pios compute gauge` | GC-01–GC-10 |
+| S3/S4 boundary | `pios declare coherence` | **CA-01** — gates all CA conditions |
+| Validation | `pios validate freshness` | AC→CA→GC→SC chain |
+
+`pios declare coherence` must be invoked after `pios compute gauge` and before `pios validate freshness`. It reads the complete governed artifact set, determines coherence_mode, and writes `coherence_record.json`.
+
 ### 9.3 EE_ Fail Conditions and Resolution
 
 | fail condition | code | resolution |
@@ -836,9 +854,16 @@ python3 scripts/pios/41.4/build_signals.py \
 
 Apply the CC-2 post-correction procedure (Section 6.3): add `"runtime_required": false` to all 5 signal entries and add `schema_correction` metadata block. Verify correction.
 
-**Step E-09 — Write coherence_record.json**
+**Step E-09 — Declare coherence_record.json**
 
-Write `${RUN_DIR}/coherence_record.json` declaring all run identity values in the artifact set. Declare `coherence_mode` (MODE_A if all five carry current `run_id`; MODE_B if any artifact carries a prior `run_id`). Declare CC-2 in `violations` with `status: CORRECTED` and `blocking: false`. Evaluate and record CA-01 through CA-10.
+```bash
+python3 scripts/pios/pios.py declare coherence \
+  --run-dir "${RUN_DIR}"
+# Reads: all 5 package artifacts + intake_record.json
+# Determines: coherence_mode (MODE_A or MODE_B)
+# Writes: ${RUN_DIR}/coherence_record.json
+# Required before validate freshness — gates CA-01
+```
 
 **Step E-10 — Compute gauge_state.json (S4)**
 
@@ -1411,3 +1436,101 @@ Source authority: GAUGE.ADMISSIBLE.CONSUMPTION.01 §8.
 | GA-12 | No LENS behavior present — requires implementation verification |
 
 GA-01 through GA-07 are evaluable from the artifact set. GA-08 through GA-12 require implementation-time verification (GAUGE route behavior, not artifact content).
+
+---
+
+## SECTION 12 — CLI IMPLEMENTATION CONTRACT
+
+### 12.1 CLI Surface Overview
+
+The PSEE runtime is operable through `scripts/pios/pios.py` — a thin Python CLI implementing the S0–S4 command surface. Every command is a direct wiring to an authoritative script or computation model. No logic is added beyond what Sections 3–9 of this specification define.
+
+**Entrypoint:** `python3 scripts/pios/pios.py <COMMAND> <SUBCOMMAND> [args]`
+
+**Implementation date:** 2026-04-14
+**Implementation stream:** PRODUCTIZE.EXECUTABLE.RUNTIME.SURFACE.01
+
+### 12.2 Command Binding Table
+
+| command | stage | authority | delegates to |
+|---------|-------|-----------|-------------|
+| `pios ledger create` | S0 | FRESH.RUN.BOOTSTRAP.PROTOCOL.01 | Direct write — intake_record.json per Section 3.2 |
+| `pios bootstrap` | S0 | FRESH.RUN.BOOTSTRAP.PROTOCOL.01 | Direct write — engine_state.json + gauge_inputs.json per Section 4.4 |
+| `pios emit coverage` | S1 | PSEE-RUNTIME.5A | `scripts/pios/runtime/compute_coverage.sh <pkg_dir> <ig_dir>` |
+| `pios emit reconstruction` | S1 | PSEE-RUNTIME.6A | `scripts/pios/runtime/compute_reconstruction.sh <pkg_dir> <ig_dir>` (enforces DIM-01 precondition) |
+| `pios emit topology` | S2 | STRUCTURAL.TRUTH.AUTHORITY.01 | `scripts/psee/emit_canonical_topology.py --output-path <path> --run-id <run_id>` |
+| `pios emit signals` | S3 | SEMANTIC.COMPUTATION.AUTHORITY.01 | `scripts/pios/41.4/build_signals.py --output-dir <dir>` + CC-2 correction (Section 6.3) |
+| `pios compute gauge` | S4 | GAUGE.STATE.COMPUTATION.CONTRACT.01 | Direct implementation — Section 7 logic; GC-01–GC-10 self-check |
+| `pios declare coherence` | S3/S4 boundary | S3.S4.RUN.COHERENCE.CONTRACT.01 | Direct implementation — Section 8 logic; reads all 5 artifacts; writes coherence_record.json; gates CA-01 |
+| `pios validate freshness` | S0–S4 | Section 9 | Direct implementation — AC/CA/GC chain + SC-01–SC-10 evaluation |
+
+`pios run` is NOT implemented. Section 10 defines an end-to-end execution flow as a reference sequence, not as an authorized thin orchestrator command.
+
+### 12.3 Mandatory CLI Conventions
+
+Every command and subcommand supports `--help` (argparse auto-generated with exact description, arguments, and authority reference). Every command supports `--debug` (enables DEBUG-level logging to stderr via Python `logging` module). No command writes to stdout except `pios validate freshness` (verdict output).
+
+`pios declare coherence --debug` prints: command invoked, resolved run_dir, resolved artifact paths, extracted run identities, selected coherence mode, violations list, output path, final verdict/exit status.
+
+### 12.4 Precondition Enforcement
+
+| command | enforced precondition |
+|---------|-----------------------|
+| `pios bootstrap` | `intake_record.json` must exist (PB-07: bootstrap requires ledger first) |
+| `pios emit coverage` | `engine_state.json` and `gauge_inputs.json` must exist in package dir |
+| `pios emit reconstruction` | `coverage_state.json.state = "COMPUTED"` (DIM-01 precondition, Section 4.3) |
+| `pios emit topology` | Output path must not exist (no-overwrite guard, Section 5.2) |
+| `pios compute gauge` | All four input artifacts must exist; `gauge_state.json` must not exist (no-overwrite guard) |
+| `pios declare coherence` | `intake_record.json` must exist; all 5 package artifacts must exist; `coherence_record.json` must not exist (no-overwrite guard); all run identity fields must be extractable |
+| `pios ledger create` | `intake_record.json` must not exist at target path (run_id uniqueness — PB-01) |
+
+### 12.4a pios declare coherence — Implementation Model
+
+`pios declare coherence` implements the S3/S4 boundary coherence declaration directly per Section 8. The implementation:
+
+1. Reads `intake_record.json` → consuming_run_id, client_uuid, source_version
+2. Reads all five governed artifacts from the package directory (Section 2.1)
+3. Extracts run identity per artifact per the locked field rules (Section 8.3):
+   - coverage_state, reconstruction_state, gauge_state: `.run_id`
+   - canonical_topology: `.source_authority.run_reference`
+   - signal_registry: `.run_reference`
+4. Determines coherence_mode: MODE_A if all artifact run identities equal consuming_run_id; MODE_B otherwise (Section 8.2)
+5. Builds artifact_set entries, run_family (one entry per distinct run identity), violations (CC-2 declared as CORRECTED if all signals carry `runtime_required: false`; OPEN if any are missing the field)
+6. Evaluates coherence_verdict: COHERENT if all CA conditions satisfied; NON_COHERENT otherwise; fails closed if NON_COHERENT
+7. Writes `coherence_record.json` at `<run_dir>/coherence_record.json`
+
+Exit code 0 on COHERENT declaration written. Exit code 1 on any failure or NON_COHERENT verdict.
+
+### 12.5 pios compute gauge — Implementation Model
+
+`pios compute gauge` implements S4 computation directly per Section 7. No external script exists (GAP-01 in GAUGE.PROVENANCE.PROOF.01). The implementation:
+
+1. Reads four authorized inputs only (Section 7.2) — PP-04 guard enforced
+2. Classifies terminal state from coverage and reconstruction per Section 7.3
+3. Computes score components per Section 7.4 (completion + coverage + reconstruction)
+4. Derives DIM-01 through DIM-06 per Section 7.5
+5. Assembles gauge_state.json with `computed_by = "GAUGE.STATE.COMPUTATION.CONTRACT.01"`
+6. Self-checks GC-01 through GC-10 before writing artifact — fails closed if any condition fails
+
+### 12.6 pios validate freshness — Implementation Model
+
+`pios validate freshness` implements the admissibility chain evaluation per Section 9.1:
+
+- Step 1: AC-01–AC-10 (bootstrap) — reads intake_record.json
+- Step 2: CA-01–CA-10 (coherence) — reads coherence_record.json; blocked if Step 1 fails
+- Step 3: GC-01–GC-10 (computation) — reads gauge_state.json; blocked if Step 2 fails
+- Step 4: SC-01–SC-10 — reads all five artifacts; SC-06 declared NOT_EVALUATED (requires implementation verification)
+
+Verdict printed to stdout in labeled table format. Exit code 0 for all passes; exit code 1 if any admissibility step fails.
+
+### 12.7 Files Created
+
+| file | description |
+|------|-------------|
+| `scripts/pios/pios.py` | Thin CLI entrypoint — all 9 commands; argparse; subprocess wiring; direct S4 and coherence implementations |
+
+**Files NOT created (out of scope):**
+- No test scaffolding
+- No configuration files
+- No auxiliary scripts
+- `pios run` — not implemented (Section 12.2 decision record)
