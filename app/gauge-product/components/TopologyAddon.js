@@ -107,7 +107,21 @@ export default function TopologyAddon({ showTopology, onToggle }) {
 // ---------------------------------------------------------------------------
 
 function TopologyView({ data }) {
-  const [selectedNodeId, setSelectedNodeId] = useState(null)
+  // Default state: first domain open, first capability selected
+  // Lazy initializers run once — computed from data at mount time only
+  const [expandedDomainId, setExpandedDomainId] = useState(() => {
+    const roots   = data.roots   || []
+    const orphans = new Set(data.orphans || [])
+    return roots.find(r => !orphans.has(r)) || null
+  })
+  const [selectedNodeId, setSelectedNodeId] = useState(() => {
+    const roots   = data.roots   || []
+    const orphans = new Set(data.orphans || [])
+    const firstDomain = roots.find(r => !orphans.has(r))
+    if (!firstDomain) return null
+    const tree = data.containment_tree || {}
+    return tree[firstDomain]?.[0] || null   // first capability in first domain
+  })
   const [showAllSurfaces, setShowAllSurfaces] = useState({})  // rootId → bool
 
   const nodes        = data.nodes        || []
@@ -128,6 +142,11 @@ function TopologyView({ data }) {
 
   function selectNode(nodeId) {
     setSelectedNodeId(prev => prev === nodeId ? null : nodeId)
+  }
+
+  // T2 — single-focus domain expansion: opening a domain auto-collapses the previous one
+  function toggleDomain(domainId) {
+    setExpandedDomainId(prev => prev === domainId ? null : domainId)
   }
 
   function toggleShowAllSurfaces(rootId) {
@@ -174,31 +193,33 @@ function TopologyView({ data }) {
               const hiddenCount     = surfaces.length - SURFACE_LIMIT
 
               const isRootSelected = selectedNodeId === rootId
+              const isExpanded     = expandedDomainId === rootId
 
               return (
                 <div
                   key={rootId}
-                  className={`ta-region${isRootSelected ? ' ta-region--selected' : ''}`}
+                  className={`ta-region${isRootSelected ? ' ta-region--selected' : ''}${isExpanded ? ' ta-region--expanded' : ''}`}
                 >
-                  {/* Region header */}
+                  {/* Region header — T1: click expands/collapses; T2: single-focus */}
                   <div
                     className="ta-region-header"
-                    onClick={() => selectNode(rootId)}
+                    onClick={() => { toggleDomain(rootId); selectNode(rootId) }}
                     title={`${rootNode.secondary_label} · ${NODE_TYPE_LABELS[rootNode.type] || rootNode.type}`}
                   >
+                    <span className="ta-expand-arrow">{isExpanded ? '▼' : '▶'}</span>
                     <span className="ta-region-name">{rootNode.display_label}</span>
                     <span className="ta-region-badges">
                       {surfaces.length > 0 && (
-                        <span className="ta-badge ta-badge--dim">{surfaces.length} surfaces</span>
+                        <span className="ta-badge ta-badge--dim">{surfaces.length} cap</span>
                       )}
                       {components.length > 0 && (
-                        <span className="ta-badge ta-badge--dim">{components.length} components</span>
+                        <span className="ta-badge ta-badge--dim">{components.length} comp</span>
                       )}
                     </span>
                   </div>
 
-                  {/* Surfaces */}
-                  {visibleSurfaces.length > 0 && (
+                  {/* Surfaces — T1: only visible when domain is expanded */}
+                  {isExpanded && visibleSurfaces.length > 0 && (
                     <div className="ta-surfaces">
                       {visibleSurfaces.map(s => (
                         <div
@@ -223,8 +244,8 @@ function TopologyView({ data }) {
                     </div>
                   )}
 
-                  {/* Components */}
-                  {components.map(comp => {
+                  {/* Components — T1: only visible when domain is expanded */}
+                  {isExpanded && components.map(comp => {
                     const overlapsWith = regionOverlaps
                       .filter(e => e.from_node === comp.node_id || e.to_node === comp.node_id)
                       .map(e => nodeIndex[e.from_node === comp.node_id ? e.to_node : e.from_node])

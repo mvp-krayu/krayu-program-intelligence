@@ -9,9 +9,11 @@
  * Exports:
  *   - useGaugeData()         → /api/gauge
  *   - useTopologySummary()   → /api/topology
+ *   - useSignalsData()       → /api/signals
  *   - RuntimeIntelligence
  *   - StructuralMetrics
  *   - SignalSet
+ *   - SignalAvailability
  *   - TopologySummaryPanel
  *
  * Governed by: PSEE.BLUEEDGE.GAUGE.HANDOFF.01
@@ -42,6 +44,19 @@ export function useTopologySummary() {
   const [error,   setError]   = useState(null)
   useEffect(() => {
     fetch('/api/topology')
+      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() })
+      .then(d => { setData(d); setLoading(false) })
+      .catch(e => { setError(e.message); setLoading(false) })
+  }, [])
+  return { data, loading, error }
+}
+
+export function useSignalsData() {
+  const [data,    setData]    = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error,   setError]   = useState(null)
+  useEffect(() => {
+    fetch('/api/signals')
       .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() })
       .then(d => { setData(d); setLoading(false) })
       .catch(e => { setError(e.message); setLoading(false) })
@@ -137,6 +152,71 @@ export function SignalSet({ topoData }) {
           </span>
         </div>
       ))}
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Signal availability constants
+// ---------------------------------------------------------------------------
+
+const CONF_ORDER = ['STRONG', 'MODERATE', 'WEAK']
+const CONF_CLASS = { STRONG: 'strong', MODERATE: 'moderate', WEAK: 'weak' }
+
+export function SignalAvailability({ signalsData }) {
+  if (!signalsData) return null
+
+  const signals       = signalsData.signals       || []
+  const total         = signalsData.total         || 0
+  const by_confidence = signalsData.by_confidence || {}
+
+  if (total === 0) {
+    return (
+      <div>
+        <div className="sa-empty">No signal instances currently mounted for this run</div>
+        <div className="sa-empty-note">
+          Signal layer requires execution telemetry or deeper intake coverage
+        </div>
+      </div>
+    )
+  }
+
+  const visible = signals.slice(0, 5)
+
+  return (
+    <div>
+      <div className="sa-summary">
+        <span className="sa-count">{total}</span> signals detected
+      </div>
+
+      <div className="sa-dist">
+        {CONF_ORDER.filter(c => by_confidence[c]).map(c => (
+          <span key={c} className={`sa-dist-chip ${CONF_CLASS[c]}`}>
+            {c}: {by_confidence[c]}
+          </span>
+        ))}
+        {Object.keys(by_confidence).filter(c => !CONF_ORDER.includes(c)).map(c => (
+          <span key={c} className="sa-dist-chip sa-dist-chip--unknown">
+            {c}: {by_confidence[c]}
+          </span>
+        ))}
+      </div>
+
+      <div className="sa-list">
+        {visible.map(s => (
+          <div key={s.signal_id} className="sa-sig">
+            <span className="sa-sig-id">{s.signal_id}</span>
+            <span className={`sa-sig-conf ${CONF_CLASS[s.evidence_confidence] || ''}`}>
+              {s.evidence_confidence}
+            </span>
+            <span className="sa-sig-title">{s.title}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="sa-source">
+        source: {signalsData.source} &middot; registry: {signalsData.registry_id}
+      </div>
     </div>
   )
 }

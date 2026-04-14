@@ -14,9 +14,11 @@ import Link from 'next/link'
 import {
   useGaugeData,
   useTopologySummary,
+  useSignalsData,
   RuntimeIntelligence,
   StructuralMetrics,
   SignalSet,
+  SignalAvailability,
   TopologySummaryPanel,
 } from '../components/GaugeContextPanels'
 
@@ -109,9 +111,10 @@ export default function GaugeProduct() {
   const [accessKeyInput,   setAccessKeyInput]   = useState('')
   const [keyDenied,        setKeyDenied]        = useState('')
 
-  const gaugeResult = useGaugeData()
-  const topoResult  = useTopologySummary()
-  const gaugeData   = gaugeResult.data
+  const gaugeResult   = useGaugeData()
+  const topoResult    = useTopologySummary()
+  const signalsResult = useSignalsData()
+  const gaugeData     = gaugeResult.data
 
   const inputRef = useRef(null)
 
@@ -559,6 +562,18 @@ export default function GaugeProduct() {
                 Full PiOS Structural Insights mounting remains part of reconciliation.<br/>
                 Interactive discovery requires PiOS Discovery access.
               </div>
+            </div>
+
+            {/* Signal Availability */}
+            <div className="panel">
+              <div className="panel-label">Signal Availability</div>
+              {signalsResult.loading ? (
+                <div style={{ fontSize: '12px', color: '#8b949e' }}>Loading signals…</div>
+              ) : signalsResult.error ? (
+                <div style={{ fontSize: '12px', color: '#555' }}>Signal data unavailable — {signalsResult.error}</div>
+              ) : (
+                <SignalAvailability signalsData={signalsResult.data} />
+              )}
             </div>
 
             {/* Discovery Queries */}
