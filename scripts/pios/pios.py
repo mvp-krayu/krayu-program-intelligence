@@ -18,6 +18,7 @@ Usage:
     pios validate freshness --run-dir <dir> [--debug]
     pios ig materialize      --tenant <t> --intake-id <id> --run-id <id> [--debug]
     pios structural extract  --tenant <t> --run-id <id> [--debug]
+    pios structural relate   --tenant <t> --run-id <id> [--debug]
 """
 
 import argparse
@@ -1870,6 +1871,426 @@ def _classify_file_type(path: str) -> str:
     return "UNKNOWN_FILE_TYPE"
 
 
+# ---------------------------------------------------------------------------
+# L40.3 structural edge derivation helpers
+# ---------------------------------------------------------------------------
+
+def _norm_ceu_dir(directory: str) -> str:
+    """
+    Normalize CEU directory for path computation.
+    structural_unit_inventory.json stores root-level CEUs as directory="(root)".
+    This is a display sentinel; the actual path value is "".
+    Returns "" for "(root)", otherwise returns the directory unchanged.
+    """
+    return "" if directory == "(root)" else directory
+
+
+def _derive_directory_contains_edges(units: list) -> list:
+    """
+    DIRECTORY_CONTAINS: CEU-X → CEU-Y if Y's immediate parent dir equals X's normalized dir.
+    Root CEU (normalized dir = "") can be a parent.
+    No CEU is the parent of root.
+    Direction: directed, parent → child.
+    """
+    edges = []
+    # Build normalized_dir → unit_id lookup
+    norm_to_unit = {}
+    for u in units:
+        nd = _norm_ceu_dir(u["directory"])
+        norm_to_unit[nd] = u["unit_id"]
+
+    for child_unit in units:
+        child_norm = _norm_ceu_dir(child_unit["directory"])
+        if child_norm == "":
+            continue  # root has no parent
+        parent_norm = os.path.dirname(child_norm)
+        if parent_norm in norm_to_unit:
+            parent_id = norm_to_unit[parent_norm]
+            child_id = child_unit["unit_id"]
+            edges.append({
+                "edge_type": "DIRECTORY_CONTAINS",
+                "from_unit_id": parent_id,
+                "to_unit_id": child_id,
+                "direction": "DIRECTED",
+                "evidence": {
+                    "source": "structural_unit_inventory.json",
+                    "basis": "DIRECTORY_HIERARCHY",
+                    "parent_directory": parent_norm if parent_norm else "(root)",
+                    "child_directory": child_unit["directory"],
+                },
+            })
+    return edges
+
+
+def _derive_directory_sibling_edges(units: list) -> list:
+    """
+    DIRECTORY_SIBLING: CEU-X — CEU-Y if both have non-root dirs and same immediate parent.
+    Root CEU (normalized dir = "") is excluded — it has no parent, so no siblings.
+    Undirected: normalized to (lower unit_id, higher unit_id).
+    """
+    edges = []
+    non_root = [u for u in units if _norm_ceu_dir(u["directory"]) != ""]
+    for i in range(len(non_root)):
+        for j in range(i + 1, len(non_root)):
+            u1 = non_root[i]
+            u2 = non_root[j]
+            p1 = os.path.dirname(_norm_ceu_dir(u1["directory"]))
+            p2 = os.path.dirname(_norm_ceu_dir(u2["directory"]))
+            if p1 != p2:
+                continue
+            from_id, to_id = sorted([u1["unit_id"], u2["unit_id"]])
+            edges.append({
+                "edge_type": "DIRECTORY_SIBLING",
+                "from_unit_id": from_id,
+                "to_unit_id": to_id,
+                "direction": "NORMALIZED_UNDIRECTED",
+                "evidence": {
+                    "source": "structural_unit_inventory.json",
+                    "basis": "DIRECTORY_ADJACENCY",
+                    "shared_parent_directory": p1 if p1 else "(root)",
+                    "unit_a_directory": u1["directory"],
+                    "unit_b_directory": u2["directory"],
+                },
+            })
+    return edges
+
+
+def _derive_structural_type_affinity_edges(units: list) -> list:
+    """
+    STRUCTURAL_TYPE_AFFINITY: CEU-X — CEU-Y if file_types_present intersection is non-empty.
+    Structural observation only: shared file type does not imply functional relationship.
+    Undirected: normalized to (lower unit_id, higher unit_id).
+    """
+    edges = []
+    for i in range(len(units)):
+        for j in range(i + 1, len(units)):
+            u1 = units[i]
+            u2 = units[j]
+            types1 = set(u1.get("file_types_present", []))
+            types2 = set(u2.get("file_types_present", []))
+            shared = sorted(types1 & types2)
+            if not shared:
+                continue
+            from_id, to_id = sorted([u1["unit_id"], u2["unit_id"]])
+            edges.append({
+                "edge_type": "STRUCTURAL_TYPE_AFFINITY",
+                "from_unit_id": from_id,
+                "to_unit_id": to_id,
+                "direction": "NORMALIZED_UNDIRECTED",
+                "evidence": {
+                    "source": "structural_unit_inventory.json",
+                    "basis": "SHARED_FILE_TYPE",
+                    "shared_types": shared,
+                    "note": "shared structural file type — no functional relationship inferred",
+                },
+            })
+    return edges
+
+
+def _derive_content_duplicate_edges(units: list, fsm_entries: list) -> list:
+    """
+    CONTENT_DUPLICATE: CEU-X — CEU-Y if at least one file in X and one file in Y share sha256.
+    Evidence: sha256 hashes from file_structural_map.json.
+    Structural observation: hash-identical files across units.
+    Undirected: normalized to (lower unit_id, higher unit_id).
+    For each unit pair, records lex-first matching file pair per sha256.
+    """
+    # Build sha256 → {unit_id → [paths]}
+    sha_to_unit_files: dict = {}
+    for entry in fsm_entries:
+        sha = entry.get("sha256", "")
+        uid = entry.get("unit_id", "")
+        path = entry.get("path", "")
+        if not sha or not uid:
+            continue
+        sha_to_unit_files.setdefault(sha, {}).setdefault(uid, []).append(path)
+
+    # For each sha with cross-unit presence, collect unit pairs
+    pair_to_evidence: dict = {}  # (from_id, to_id) → {sha → (from_path, to_path)}
+    for sha, unit_files in sha_to_unit_files.items():
+        if len(unit_files) < 2:
+            continue
+        uid_list = sorted(unit_files.keys())
+        for i_idx in range(len(uid_list)):
+            for j_idx in range(i_idx + 1, len(uid_list)):
+                from_id = uid_list[i_idx]
+                to_id = uid_list[j_idx]
+                from_path = sorted(unit_files[from_id])[0]
+                to_path = sorted(unit_files[to_id])[0]
+                pair_to_evidence.setdefault((from_id, to_id), {})[sha] = {
+                    "file_in_from": from_path,
+                    "file_in_to": to_path,
+                }
+
+    edges = []
+    for (from_id, to_id), sha_map in sorted(pair_to_evidence.items()):
+        dup_pairs = sorted(
+            [{"sha256": sha, "file_in_from": v["file_in_from"], "file_in_to": v["file_in_to"]}
+             for sha, v in sha_map.items()],
+            key=lambda x: x["sha256"]
+        )
+        edges.append({
+            "edge_type": "CONTENT_DUPLICATE",
+            "from_unit_id": from_id,
+            "to_unit_id": to_id,
+            "direction": "NORMALIZED_UNDIRECTED",
+            "evidence": {
+                "source": "file_structural_map.json",
+                "basis": "SHA256_IDENTITY",
+                "duplicate_file_pairs": dup_pairs,
+                "note": "hash-identical files across units — no semantic relationship inferred",
+            },
+        })
+    return edges
+
+
+def cmd_structural_relate(args: argparse.Namespace) -> None:
+    """
+    L40.3 — Derive structural relationships from governed L40.2 outputs.
+
+    Reads from clients/<tenant>/psee/runs/<run_id>/40_2/:
+        structural_unit_inventory.json  (required — units, file_types, directories, hashes)
+        file_structural_map.json        (required — per-file sha256, unit_id)
+
+    Writes to clients/<tenant>/psee/runs/<run_id>/40_3/:
+        structural_relationship_inventory.json — unit summaries + edge type counts
+        structural_edge_map.json               — all edges with evidence
+        structural_relationship_log.json       — derivation rules, exclusions, determinism_hash
+
+    Edge types derived:
+        DIRECTORY_CONTAINS         — parent→child directory containment (directed)
+        DIRECTORY_SIBLING          — same-parent directories (undirected, normalized)
+        STRUCTURAL_TYPE_AFFINITY   — shared file type classes (undirected, normalized)
+        CONTENT_DUPLICATE          — identical sha256 across units (undirected, normalized)
+
+    Authority: PRODUCTIZE.STRUCTURAL.TRUTH.40.3.01
+    """
+    _configure_logging(args.debug)
+    _debug(f"structural relate: tenant={args.tenant} run_id={args.run_id}")
+
+    root = _repo_root()
+    tenant = args.tenant
+    run_id = args.run_id
+
+    # ── Step 1: Resolve and validate 40_2 directory ───────────────────────────
+    dir_40_2 = os.path.join(root, "clients", tenant, "psee", "runs", run_id, "40_2")
+    _debug(f"dir_40_2={dir_40_2}")
+    if not os.path.isdir(dir_40_2):
+        _fail(f"40_2 directory not found: {dir_40_2} — run pios structural extract first")
+
+    # ── Step 2: Read structural_unit_inventory.json ───────────────────────────
+    sui_path = os.path.join(dir_40_2, "structural_unit_inventory.json")
+    if not os.path.exists(sui_path):
+        _fail(f"structural_unit_inventory.json not found in {dir_40_2}")
+    with open(sui_path) as f:
+        sui = json.load(f)
+    for field in ("units", "intake_id", "extracted_at"):
+        if field not in sui:
+            _fail(f"structural_unit_inventory.json missing required field: {field}")
+    units = sui["units"]
+    intake_id = sui["intake_id"]
+    normalized_ts = sui["extracted_at"]
+    _debug(f"structural_unit_inventory: {len(units)} units intake_id={intake_id} ts={normalized_ts}")
+
+    # Validate each unit has required fields
+    for u in units:
+        for field in ("unit_id", "directory", "file_types_present"):
+            if field not in u:
+                _fail(f"structural_unit_inventory.json unit missing required field '{field}': {u}")
+
+    # ── Step 3: Read file_structural_map.json ─────────────────────────────────
+    fsm_path = os.path.join(dir_40_2, "file_structural_map.json")
+    if not os.path.exists(fsm_path):
+        _fail(f"file_structural_map.json not found in {dir_40_2}")
+    with open(fsm_path) as f:
+        fsm = json.load(f)
+    if "entries" not in fsm:
+        _fail("file_structural_map.json missing 'entries' field")
+    fsm_entries = fsm["entries"]
+    _debug(f"file_structural_map: {len(fsm_entries)} entries")
+
+    # ── Step 4: No-overwrite guard ────────────────────────────────────────────
+    dir_40_3 = os.path.join(root, "clients", tenant, "psee", "runs", run_id, "40_3")
+    _debug(f"dir_40_3={dir_40_3}")
+    if os.path.exists(dir_40_3):
+        _fail(f"40_3 output directory already exists: {dir_40_3} — use a unique run_id or remove 40_3/ to re-derive")
+
+    # ── Step 5: Derive all structural edges ───────────────────────────────────
+    contains_edges = _derive_directory_contains_edges(units)
+    sibling_edges = _derive_directory_sibling_edges(units)
+    affinity_edges = _derive_structural_type_affinity_edges(units)
+    dup_edges = _derive_content_duplicate_edges(units, fsm_entries)
+
+    _debug(f"DIRECTORY_CONTAINS={len(contains_edges)} DIRECTORY_SIBLING={len(sibling_edges)} "
+           f"STRUCTURAL_TYPE_AFFINITY={len(affinity_edges)} CONTENT_DUPLICATE={len(dup_edges)}")
+
+    # ── Step 6: Merge, sort, and assign deterministic edge IDs ────────────────
+    all_edges_pre = contains_edges + sibling_edges + affinity_edges + dup_edges
+    all_edges_pre.sort(key=lambda e: (e["edge_type"], e["from_unit_id"], e["to_unit_id"]))
+    all_edges = []
+    for idx, e in enumerate(all_edges_pre, start=1):
+        all_edges.append({"edge_id": f"EDGE-{idx:03d}", **e})
+
+    _debug(f"total_edges={len(all_edges)}")
+
+    # ── Step 7: Compute determinism hash ─────────────────────────────────────
+    # SHA256 over sorted "<edge_type>:<from_unit_id>:<to_unit_id>" joined by newline
+    det_input = "\n".join(
+        f"{e['edge_type']}:{e['from_unit_id']}:{e['to_unit_id']}"
+        for e in all_edges_pre  # pre-sort already sorted; use same order
+    )
+    determinism_hash = hashlib.sha256(det_input.encode("utf-8")).hexdigest()
+    _debug(f"determinism_hash={determinism_hash}")
+
+    # ── Step 8: Build unit summaries ─────────────────────────────────────────
+    from_counts: dict = {}
+    to_counts: dict = {}
+    for e in all_edges:
+        from_counts[e["from_unit_id"]] = from_counts.get(e["from_unit_id"], 0) + 1
+        to_counts[e["to_unit_id"]] = to_counts.get(e["to_unit_id"], 0) + 1
+
+    unit_summaries = []
+    for u in sorted(units, key=lambda x: x["unit_id"]):
+        uid = u["unit_id"]
+        as_source = from_counts.get(uid, 0)
+        as_target = to_counts.get(uid, 0)
+        unit_summaries.append({
+            "unit_id": uid,
+            "directory": u["directory"],
+            "edges_as_source": as_source,
+            "edges_as_target": as_target,
+            "total_edges": as_source + as_target,
+        })
+
+    edge_type_counts = {
+        "DIRECTORY_CONTAINS": len(contains_edges),
+        "DIRECTORY_SIBLING": len(sibling_edges),
+        "STRUCTURAL_TYPE_AFFINITY": len(affinity_edges),
+        "CONTENT_DUPLICATE": len(dup_edges),
+    }
+
+    # ── Step 9: Create output directory ──────────────────────────────────────
+    os.makedirs(dir_40_3)
+
+    # ── Step 10: Write structural_relationship_inventory.json ─────────────────
+    inventory = {
+        "schema_version": "1.0",
+        "stream": "PRODUCTIZE.STRUCTURAL.TRUTH.40.3.01",
+        "artifact_class": "STRUCTURAL_TRUTH_40_3",
+        "artifact_id": "structural_relationship_inventory",
+        "tenant": tenant,
+        "run_id": run_id,
+        "intake_id": intake_id,
+        "derived_at": normalized_ts,
+        "source_40_2_dir": f"clients/{tenant}/psee/runs/{run_id}/40_2",
+        "unit_count": len(units),
+        "edge_count": len(all_edges),
+        "edge_type_counts": edge_type_counts,
+        "unit_summaries": unit_summaries,
+    }
+    with open(os.path.join(dir_40_3, "structural_relationship_inventory.json"), "w") as f:
+        json.dump(inventory, f, indent=2)
+    _debug("wrote structural_relationship_inventory.json")
+
+    # ── Step 11: Write structural_edge_map.json ───────────────────────────────
+    edge_map = {
+        "schema_version": "1.0",
+        "stream": "PRODUCTIZE.STRUCTURAL.TRUTH.40.3.01",
+        "artifact_class": "STRUCTURAL_TRUTH_40_3",
+        "artifact_id": "structural_edge_map",
+        "tenant": tenant,
+        "run_id": run_id,
+        "intake_id": intake_id,
+        "derived_at": normalized_ts,
+        "edge_count": len(all_edges),
+        "edges": all_edges,
+    }
+    with open(os.path.join(dir_40_3, "structural_edge_map.json"), "w") as f:
+        json.dump(edge_map, f, indent=2)
+    _debug("wrote structural_edge_map.json")
+
+    # ── Step 12: Write structural_relationship_log.json ───────────────────────
+    rel_log = {
+        "schema_version": "1.0",
+        "stream": "PRODUCTIZE.STRUCTURAL.TRUTH.40.3.01",
+        "artifact_class": "STRUCTURAL_TRUTH_40_3",
+        "artifact_id": "structural_relationship_log",
+        "tenant": tenant,
+        "run_id": run_id,
+        "intake_id": intake_id,
+        "derived_at": normalized_ts,
+        "input_artifacts": {
+            "primary": [
+                "40_2/structural_unit_inventory.json",
+                "40_2/file_structural_map.json",
+            ],
+            "support": [],
+            "ig_artifacts_consumed": False,
+            "justification": "All 4 edge types are derivable from 40_2 outputs alone. ig/ artifacts are not consumed.",
+        },
+        "edge_types": {
+            "DIRECTORY_CONTAINS": {
+                "description": "Parent directory CEU contains child directory CEU (direct parent only, not transitive)",
+                "source": "structural_unit_inventory.json directory paths",
+                "direction": "DIRECTED (parent → child)",
+                "basis": "os.path.dirname(child_normalized_dir) == parent_normalized_dir",
+                "root_sentinel": "(root) in artifact = '' in path computation",
+            },
+            "DIRECTORY_SIBLING": {
+                "description": "Two non-root CEUs whose immediate parent directory is the same",
+                "source": "structural_unit_inventory.json directory paths",
+                "direction": "NORMALIZED_UNDIRECTED (lower unit_id = from)",
+                "exclusion": "root CEU (normalized dir = '') excluded — no parent, no siblings",
+                "basis": "dirname(X_dir) == dirname(Y_dir) and both non-root",
+            },
+            "STRUCTURAL_TYPE_AFFINITY": {
+                "description": "Two CEUs share at least one common file type in file_types_present",
+                "source": "structural_unit_inventory.json file_types_present",
+                "direction": "NORMALIZED_UNDIRECTED (lower unit_id = from)",
+                "evidence_field": "shared_types (intersection of file_types_present)",
+                "note": "structural observation only — shared file type does not imply functional relationship",
+            },
+            "CONTENT_DUPLICATE": {
+                "description": "Two CEUs contain at least one file with identical SHA-256 hash",
+                "source": "file_structural_map.json sha256 per file",
+                "direction": "NORMALIZED_UNDIRECTED (lower unit_id = from)",
+                "evidence_field": "duplicate_file_pairs (lex-first matching file per sha256 per unit pair)",
+                "note": "structural observation only — content identity does not imply functional relationship",
+            },
+        },
+        "derivation_rules": {
+            "edge_id_assignment": "SEQUENTIAL — EDGE-001, EDGE-002... after sorting by (edge_type, from_unit_id, to_unit_id)",
+            "undirected_normalization": "UNIT_ID_LEX — lower unit_id assigned to from_unit_id",
+            "deduplication": "one edge per (edge_type, from_unit_id, to_unit_id) triple",
+            "content_duplicate_per_pair": "one edge per unit pair even if multiple sha256 matches; all pairs recorded in evidence.duplicate_file_pairs",
+            "timestamp": "INHERITED from structural_unit_inventory.json.extracted_at (traces to intake_record.created_at)",
+            "determinism_hash": "SHA256(sorted('<edge_type>:<from_unit_id>:<to_unit_id>' for all edges joined by newline))",
+            "ordering": "all edge lists and evidence lists in deterministic lexicographic order",
+        },
+        "summary": {
+            "units": len(units),
+            "edges_total": len(all_edges),
+            "edges_by_type": edge_type_counts,
+        },
+        "exclusions": [],
+        "ambiguities": [],
+        "determinism_hash": determinism_hash,
+    }
+    with open(os.path.join(dir_40_3, "structural_relationship_log.json"), "w") as f:
+        json.dump(rel_log, f, indent=2)
+    _debug("wrote structural_relationship_log.json")
+
+    # ── Completion log ────────────────────────────────────────────────────────
+    _log(f"STRUCTURAL_RELATE_COMPLETE: {dir_40_3}")
+    _log(
+        f"tenant={tenant} run_id={run_id} intake_id={intake_id} "
+        f"units={len(units)} edges={len(all_edges)} "
+        f"contains={len(contains_edges)} siblings={len(sibling_edges)} "
+        f"affinity={len(affinity_edges)} duplicates={len(dup_edges)} "
+        f"determinism_hash={determinism_hash}"
+    )
+
+
 def cmd_structural_extract(args: argparse.Namespace) -> None:
     """
     L40.2 — Derive structural truth from governed IG outputs.
@@ -3039,6 +3460,74 @@ def _build_parser() -> argparse.ArgumentParser:
         "determinism hash, output path."
     ))
     se.set_defaults(func=cmd_structural_extract)
+
+    sr = structural_sub.add_parser(
+        "relate",
+        help="L40.3 — Derive structural relationships from governed L40.2 outputs",
+        description=(
+            "Derive L40.3 structural relationships deterministically from L40.2 outputs.\n\n"
+            "PURPOSE\n"
+            "Derive all structurally grounded relationships between Canonical Evidence Units\n"
+            "(CEUs) established by pios structural extract. No semantic inference.\n"
+            "No domain assignment. No capability inference. No scoring.\n\n"
+            "INPUTS (reads from clients/<tenant>/psee/runs/<run_id>/40_2/)\n"
+            "  structural_unit_inventory.json  (required — units, directories, file_types)\n"
+            "  file_structural_map.json        (required — per-file sha256, unit_id)\n"
+            "  ig/ artifacts: NOT consumed — all 4 edge types derivable from 40_2 alone.\n\n"
+            "OUTPUTS (writes to clients/<tenant>/psee/runs/<run_id>/40_3/)\n"
+            "  structural_relationship_inventory.json\n"
+            "    Unit summaries: edges_as_source, edges_as_target, total_edges per CEU.\n"
+            "    Edge type counts: DIRECTORY_CONTAINS, DIRECTORY_SIBLING,\n"
+            "                      STRUCTURAL_TYPE_AFFINITY, CONTENT_DUPLICATE.\n\n"
+            "  structural_edge_map.json\n"
+            "    All edges: edge_id, edge_type, from_unit_id, to_unit_id,\n"
+            "               direction, evidence (type-specific fields).\n"
+            "    Edges sorted by (edge_type, from_unit_id, to_unit_id); IDs EDGE-001...\n\n"
+            "  structural_relationship_log.json\n"
+            "    Derivation rules, input contract, edge type definitions, exclusions,\n"
+            "    ambiguities, determinism_hash.\n\n"
+            "EDGE TYPES\n"
+            "  DIRECTORY_CONTAINS\n"
+            "    CEU-X → CEU-Y: Y's immediate parent directory == X's directory.\n"
+            "    Directed. Root CEU can be parent. No transitive edges.\n"
+            "    Evidence: structural_unit_inventory.json directory paths.\n\n"
+            "  DIRECTORY_SIBLING\n"
+            "    CEU-X — CEU-Y: both non-root, same immediate parent directory.\n"
+            "    Root CEU excluded. Undirected, normalized (lower unit_id = from).\n"
+            "    Evidence: structural_unit_inventory.json directory paths.\n\n"
+            "  STRUCTURAL_TYPE_AFFINITY\n"
+            "    CEU-X — CEU-Y: file_types_present intersection is non-empty.\n"
+            "    Structural observation — shared file type, no functional inference.\n"
+            "    Undirected, normalized. Evidence: file_types_present.\n\n"
+            "  CONTENT_DUPLICATE\n"
+            "    CEU-X — CEU-Y: at least one file shares SHA-256 across units.\n"
+            "    Structural observation — hash identity, no semantic inference.\n"
+            "    Undirected, normalized. Evidence: sha256 from file_structural_map.json.\n\n"
+            "DETERMINISM\n"
+            "  determinism_hash = SHA256(sorted '<edge_type>:<from>:<to>' pairs)\n"
+            "  derived_at = inherited from structural_unit_inventory.json.extracted_at\n"
+            "  All lists in deterministic lexicographic order.\n\n"
+            "FAIL-CLOSED CONDITIONS\n"
+            "  - 40_2/ directory not found\n"
+            "  - structural_unit_inventory.json or file_structural_map.json missing\n"
+            "  - required fields missing in either artifact\n"
+            "  - unit missing unit_id, directory, or file_types_present fields\n"
+            "  - 40_3/ output directory already exists (no-overwrite guard)\n\n"
+            "BOUNDARY\n"
+            "  Does not modify 40_2/, ig/, or any other upstream artifact.\n"
+            "  Does not resolve reconstruction constraint.\n"
+            "  Additive only — S2–S4 and GA logic unchanged.\n\n"
+            "Authority: PRODUCTIZE.STRUCTURAL.TRUTH.40.3.01 / STRUCTURAL.TRUTH.AUTHORITY.01"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    sr.add_argument("--tenant", required=True, help="Tenant/client identifier (e.g., blueedge)")
+    sr.add_argument("--run-id", required=True, help="Run identifier — must have an existing 40_2/ directory")
+    sr.add_argument("--debug", action="store_true", help=(
+        "Enable debug logging. Prints: resolved 40_2 dir, unit count, per-edge-type counts, "
+        "total edge count, determinism_hash, output dir, each artifact write confirmation."
+    ))
+    sr.set_defaults(func=cmd_structural_relate)
 
     return parser
 
