@@ -2044,6 +2044,437 @@ def _derive_content_duplicate_edges(units: list, fsm_entries: list) -> list:
     return edges
 
 
+def cmd_structural_normalize(args: argparse.Namespace) -> None:
+    """
+    L40.4 — Normalize L40.2 structural units + L40.3 structural relationships
+    into a canonical deterministic structural topology.
+
+    Reads from clients/<tenant>/psee/runs/<run_id>/40_2/:
+        structural_unit_inventory.json   (required — nodes/CEUs)
+        file_structural_map.json         (required — per-file sha256, unit_id for validation)
+        structural_extraction_log.json   (required — timestamp cross-reference)
+
+    Reads from clients/<tenant>/psee/runs/<run_id>/40_3/:
+        structural_edge_map.json         (required — edges)
+        structural_relationship_inventory.json  (required — count cross-reference)
+        structural_relationship_log.json (required — 40.3 determinism provenance)
+
+    Writes to clients/<tenant>/psee/runs/<run_id>/40_4/:
+        normalized_structural_topology.json  — canonical graph (nodes, edges, adjacency)
+        structural_node_inventory.json       — per-node edge participation summary
+        structural_topology_log.json         — normalization audit, determinism_hash
+
+    Authority: PRODUCTIZE.STRUCTURAL.TRUTH.40.4.01
+    """
+    _configure_logging(args.debug)
+    _debug(f"structural normalize: tenant={args.tenant} run_id={args.run_id}")
+
+    root = _repo_root()
+    tenant = args.tenant
+    run_id = args.run_id
+
+    # ── Step 1: Resolve input directories ────────────────────────────────────
+    dir_40_2 = os.path.join(root, "clients", tenant, "psee", "runs", run_id, "40_2")
+    dir_40_3 = os.path.join(root, "clients", tenant, "psee", "runs", run_id, "40_3")
+    _debug(f"dir_40_2={dir_40_2}")
+    _debug(f"dir_40_3={dir_40_3}")
+
+    if not os.path.isdir(dir_40_2):
+        _fail(f"40_2 directory not found: {dir_40_2} — run pios structural extract first")
+    if not os.path.isdir(dir_40_3):
+        _fail(f"40_3 directory not found: {dir_40_3} — run pios structural relate first")
+
+    # ── Step 2: Read 40_2 artifacts ───────────────────────────────────────────
+
+    # structural_unit_inventory.json
+    sui_path = os.path.join(dir_40_2, "structural_unit_inventory.json")
+    if not os.path.exists(sui_path):
+        _fail(f"structural_unit_inventory.json not found in {dir_40_2}")
+    with open(sui_path) as f:
+        sui = json.load(f)
+    for field in ("units", "intake_id", "extracted_at", "unit_count"):
+        if field not in sui:
+            _fail(f"structural_unit_inventory.json missing required field: {field}")
+    for u in sui["units"]:
+        for field in ("unit_id", "directory", "file_count", "file_types_present",
+                      "dominant_file_type", "unit_hash"):
+            if field not in u:
+                _fail(f"structural_unit_inventory.json unit '{u.get('unit_id','?')}' missing field: {field}")
+    normalized_ts = sui["extracted_at"]
+    intake_id = sui["intake_id"]
+    units_raw = sui["units"]
+    _debug(f"sui: {len(units_raw)} units intake_id={intake_id} ts={normalized_ts}")
+
+    # file_structural_map.json — for per-unit file count validation
+    fsm_path = os.path.join(dir_40_2, "file_structural_map.json")
+    if not os.path.exists(fsm_path):
+        _fail(f"file_structural_map.json not found in {dir_40_2}")
+    with open(fsm_path) as f:
+        fsm = json.load(f)
+    if "entries" not in fsm:
+        _fail("file_structural_map.json missing 'entries' field")
+    # Build per-unit file count from actual entries
+    fsm_unit_counts: dict = {}
+    for entry in fsm["entries"]:
+        uid = entry.get("unit_id", "")
+        if uid:
+            fsm_unit_counts[uid] = fsm_unit_counts.get(uid, 0) + 1
+    _debug(f"fsm: {len(fsm['entries'])} entries; per-unit counts: {fsm_unit_counts}")
+
+    # Validate file_count for each unit against file_structural_map
+    for u in units_raw:
+        uid = u["unit_id"]
+        declared = u["file_count"]
+        actual = fsm_unit_counts.get(uid, 0)
+        if declared != actual:
+            _fail(
+                f"file_count mismatch for {uid}: "
+                f"structural_unit_inventory.json declares {declared}, "
+                f"file_structural_map.json has {actual} entries"
+            )
+
+    # structural_extraction_log.json — timestamp cross-reference + provenance
+    sel_path = os.path.join(dir_40_2, "structural_extraction_log.json")
+    if not os.path.exists(sel_path):
+        _fail(f"structural_extraction_log.json not found in {dir_40_2}")
+    with open(sel_path) as f:
+        sel = json.load(f)
+    sel_ts = sel.get("extracted_at", "")
+    sel_det_hash = sel.get("determinism_hash", "")
+    if sel_ts and sel_ts != normalized_ts:
+        _fail(
+            f"timestamp mismatch between structural_unit_inventory.json "
+            f"({normalized_ts}) and structural_extraction_log.json ({sel_ts})"
+        )
+    _debug(f"sel: extracted_at={sel_ts} det_hash_40_2={sel_det_hash}")
+
+    # ── Step 3: Read 40_3 artifacts ───────────────────────────────────────────
+
+    # structural_edge_map.json
+    sem_path = os.path.join(dir_40_3, "structural_edge_map.json")
+    if not os.path.exists(sem_path):
+        _fail(f"structural_edge_map.json not found in {dir_40_3}")
+    with open(sem_path) as f:
+        sem = json.load(f)
+    for field in ("edges", "edge_count"):
+        if field not in sem:
+            _fail(f"structural_edge_map.json missing required field: {field}")
+    edges_raw = sem["edges"]
+    for e in edges_raw:
+        for field in ("edge_id", "edge_type", "from_unit_id", "to_unit_id", "direction"):
+            if field not in e:
+                _fail(f"structural_edge_map.json edge '{e.get('edge_id','?')}' missing field: {field}")
+    _debug(f"structural_edge_map: {len(edges_raw)} edges")
+
+    # structural_relationship_inventory.json — count cross-reference
+    sri_path = os.path.join(dir_40_3, "structural_relationship_inventory.json")
+    if not os.path.exists(sri_path):
+        _fail(f"structural_relationship_inventory.json not found in {dir_40_3}")
+    with open(sri_path) as f:
+        sri = json.load(f)
+    for field in ("unit_count", "edge_count"):
+        if field not in sri:
+            _fail(f"structural_relationship_inventory.json missing required field: {field}")
+    # Cross-reference unit count
+    if sri["unit_count"] != sui["unit_count"]:
+        _fail(
+            f"unit_count mismatch: structural_unit_inventory.json={sui['unit_count']}, "
+            f"structural_relationship_inventory.json={sri['unit_count']}"
+        )
+    # Cross-reference edge count
+    if sri["edge_count"] != sem["edge_count"]:
+        _fail(
+            f"edge_count mismatch: structural_edge_map.json={sem['edge_count']}, "
+            f"structural_relationship_inventory.json={sri['edge_count']}"
+        )
+    # Verify declared edge count matches actual edge list length
+    if sem["edge_count"] != len(edges_raw):
+        _fail(
+            f"structural_edge_map.json declared edge_count={sem['edge_count']} "
+            f"but edges[] contains {len(edges_raw)} entries"
+        )
+    _debug(f"structural_relationship_inventory: unit_count={sri['unit_count']} edge_count={sri['edge_count']} — cross-reference PASS")
+
+    # structural_relationship_log.json — 40.3 determinism provenance
+    srl_path = os.path.join(dir_40_3, "structural_relationship_log.json")
+    if not os.path.exists(srl_path):
+        _fail(f"structural_relationship_log.json not found in {dir_40_3}")
+    with open(srl_path) as f:
+        srl = json.load(f)
+    det_hash_40_3 = srl.get("determinism_hash", "")
+    _debug(f"structural_relationship_log: det_hash_40_3={det_hash_40_3}")
+
+    # ── Step 4: No-overwrite guard ────────────────────────────────────────────
+    dir_40_4 = os.path.join(root, "clients", tenant, "psee", "runs", run_id, "40_4")
+    _debug(f"dir_40_4={dir_40_4}")
+    if os.path.exists(dir_40_4):
+        _fail(f"40_4 output directory already exists: {dir_40_4} — use a unique run_id or remove 40_4/ to re-normalize")
+
+    # ── Step 5: Build node set ────────────────────────────────────────────────
+    # One node per CEU; node_id = unit_id; fields are structural facts only
+    # Sorted by unit_id (canonical CEU sort = lex on "CEU-NNN")
+    nodes_sorted = sorted(units_raw, key=lambda u: u["unit_id"])
+    valid_node_ids = {u["unit_id"] for u in nodes_sorted}
+
+    normalized_nodes = []
+    for u in nodes_sorted:
+        normalized_nodes.append({
+            "node_id": u["unit_id"],
+            "directory": u["directory"],
+            "file_count": u["file_count"],
+            "file_types_present": u["file_types_present"],
+            "dominant_file_type": u["dominant_file_type"],
+            "unit_hash": u["unit_hash"],
+            "source_40_2_evidence": {
+                "unit_id": u["unit_id"],
+                "artifact": "structural_unit_inventory.json",
+            },
+        })
+    _debug(f"nodes built: {len(normalized_nodes)}")
+
+    # ── Step 6: Validate and normalize edges ──────────────────────────────────
+    # Validate endpoints, detect duplicates, preserve direction exactly
+    seen_triples: dict = {}  # (edge_type, from, to) → edge_id of first occurrence
+    duplicates_collapsed = 0
+    invalid_endpoint_errors = []
+
+    normalized_edges_pre = []
+    for e in edges_raw:
+        from_id = e["from_unit_id"]
+        to_id = e["to_unit_id"]
+        # FAIL CLOSED on invalid endpoint references
+        if from_id not in valid_node_ids:
+            invalid_endpoint_errors.append(
+                f"edge {e['edge_id']}: from_unit_id='{from_id}' not in node set"
+            )
+        if to_id not in valid_node_ids:
+            invalid_endpoint_errors.append(
+                f"edge {e['edge_id']}: to_unit_id='{to_id}' not in node set"
+            )
+        if invalid_endpoint_errors:
+            continue
+
+        # Duplicate detection: (edge_type, from, to) must be unique
+        triple = (e["edge_type"], from_id, to_id)
+        if triple in seen_triples:
+            _debug(f"DUPLICATE edge detected: {e['edge_id']} is duplicate of {seen_triples[triple]} — collapsed")
+            duplicates_collapsed += 1
+            continue
+        seen_triples[triple] = e["edge_id"]
+
+        normalized_edges_pre.append({
+            "edge_id": e["edge_id"],
+            "edge_type": e["edge_type"],
+            "from_node_id": from_id,
+            "to_node_id": to_id,
+            "direction": e["direction"],
+            "source_40_3_evidence": {
+                "edge_id": e["edge_id"],
+                "artifact": "structural_edge_map.json",
+            },
+        })
+
+    if invalid_endpoint_errors:
+        _fail(
+            "GRAPH_INTEGRITY_VIOLATION — edges reference non-existent nodes:\n"
+            + "\n".join(f"  {msg}" for msg in invalid_endpoint_errors)
+        )
+
+    # Sort edges by (edge_type, from_node_id, to_node_id) for deterministic ordering
+    normalized_edges = sorted(
+        normalized_edges_pre,
+        key=lambda e: (e["edge_type"], e["from_node_id"], e["to_node_id"])
+    )
+    _debug(f"edges normalized: {len(normalized_edges)} (collapsed {duplicates_collapsed} duplicates)")
+
+    # ── Step 7: Build adjacency (secondary — exact derivation from edge list) ─
+    # adjacency[node_id] = sorted list of incident edge_ids
+    adjacency: dict = {n["node_id"]: [] for n in normalized_nodes}
+    for e in normalized_edges:
+        adjacency[e["from_node_id"]].append(e["edge_id"])
+        if e["to_node_id"] != e["from_node_id"]:
+            adjacency[e["to_node_id"]].append(e["edge_id"])
+    # Sort each adjacency list
+    adjacency_sorted = {nid: sorted(eids) for nid, eids in adjacency.items()}
+    _debug(f"adjacency built for {len(adjacency_sorted)} nodes")
+
+    # ── Step 8: Compute determinism hash ─────────────────────────────────────
+    # Hash over both node and edge content for full graph identity
+    node_lines = sorted(f"{n['node_id']}:{n['unit_hash']}" for n in normalized_nodes)
+    edge_lines = sorted(
+        f"{e['edge_id']}:{e['edge_type']}:{e['from_node_id']}:{e['to_node_id']}"
+        for e in normalized_edges
+    )
+    det_payload = "\n".join(node_lines + edge_lines)
+    determinism_hash = hashlib.sha256(det_payload.encode("utf-8")).hexdigest()
+    _debug(f"determinism_hash={determinism_hash}")
+
+    # ── Step 9: Build node inventory ─────────────────────────────────────────
+    node_edge_stats: dict = {n["node_id"]: {"outgoing": 0, "incoming": 0, "undirected": 0} for n in normalized_nodes}
+    for e in normalized_edges:
+        d = e["direction"]
+        if d == "DIRECTED":
+            node_edge_stats[e["from_node_id"]]["outgoing"] += 1
+            node_edge_stats[e["to_node_id"]]["incoming"] += 1
+        else:  # NORMALIZED_UNDIRECTED
+            node_edge_stats[e["from_node_id"]]["undirected"] += 1
+            node_edge_stats[e["to_node_id"]]["undirected"] += 1
+
+    node_inventory_entries = []
+    isolated_count = 0
+    for n in normalized_nodes:
+        nid = n["node_id"]
+        s = node_edge_stats[nid]
+        total = s["outgoing"] + s["incoming"] + s["undirected"]
+        is_isolated = total == 0
+        if is_isolated:
+            isolated_count += 1
+        node_inventory_entries.append({
+            "node_id": nid,
+            "directory": n["directory"],
+            "file_count": n["file_count"],
+            "dominant_file_type": n["dominant_file_type"],
+            "unit_hash": n["unit_hash"],
+            "outgoing_edges": s["outgoing"],
+            "incoming_edges": s["incoming"],
+            "undirected_edges": s["undirected"],
+            "total_incident_edges": total,
+            "is_isolated": is_isolated,
+        })
+    _debug(f"isolated_count={isolated_count}")
+
+    # ── Step 10: Create output directory and write artifacts ──────────────────
+    os.makedirs(dir_40_4)
+
+    # normalized_structural_topology.json — canonical graph authority
+    topology = {
+        "schema_version": "1.0",
+        "stream": "PRODUCTIZE.STRUCTURAL.TRUTH.40.4.01",
+        "artifact_class": "STRUCTURAL_TRUTH_40_4",
+        "artifact_id": "normalized_structural_topology",
+        "tenant": tenant,
+        "run_id": run_id,
+        "intake_id": intake_id,
+        "normalized_at": normalized_ts,
+        "source_40_2_dir": f"clients/{tenant}/psee/runs/{run_id}/40_2",
+        "source_40_3_dir": f"clients/{tenant}/psee/runs/{run_id}/40_3",
+        "node_count": len(normalized_nodes),
+        "edge_count": len(normalized_edges),
+        "nodes": normalized_nodes,
+        "edges": normalized_edges,
+        "adjacency": {
+            "derivation": "secondary — computed from edges[]; reproduced by: for each node, sorted edge_ids where node is from_node_id or to_node_id",
+            "entries": adjacency_sorted,
+        },
+    }
+    with open(os.path.join(dir_40_4, "normalized_structural_topology.json"), "w") as f:
+        json.dump(topology, f, indent=2)
+    _debug("wrote normalized_structural_topology.json")
+
+    # structural_node_inventory.json — per-node edge participation summary
+    node_inv = {
+        "schema_version": "1.0",
+        "stream": "PRODUCTIZE.STRUCTURAL.TRUTH.40.4.01",
+        "artifact_class": "STRUCTURAL_TRUTH_40_4",
+        "artifact_id": "structural_node_inventory",
+        "tenant": tenant,
+        "run_id": run_id,
+        "intake_id": intake_id,
+        "normalized_at": normalized_ts,
+        "node_count": len(normalized_nodes),
+        "isolated_node_count": isolated_count,
+        "nodes": node_inventory_entries,
+    }
+    with open(os.path.join(dir_40_4, "structural_node_inventory.json"), "w") as f:
+        json.dump(node_inv, f, indent=2)
+    _debug("wrote structural_node_inventory.json")
+
+    # structural_topology_log.json — normalization audit
+    topo_log = {
+        "schema_version": "1.0",
+        "stream": "PRODUCTIZE.STRUCTURAL.TRUTH.40.4.01",
+        "artifact_class": "STRUCTURAL_TRUTH_40_4",
+        "artifact_id": "structural_topology_log",
+        "tenant": tenant,
+        "run_id": run_id,
+        "intake_id": intake_id,
+        "normalized_at": normalized_ts,
+        "input_artifacts": {
+            "from_40_2": [
+                "40_2/structural_unit_inventory.json",
+                "40_2/file_structural_map.json",
+                "40_2/structural_extraction_log.json",
+            ],
+            "from_40_3": [
+                "40_3/structural_edge_map.json",
+                "40_3/structural_relationship_inventory.json",
+                "40_3/structural_relationship_log.json",
+            ],
+            "ig_artifacts_consumed": False,
+        },
+        "normalization_rules": {
+            "node_source": "ONE_PER_CEU — one node per CEU from structural_unit_inventory.json; node_id = unit_id",
+            "node_ordering": "LEXICOGRAPHIC by unit_id",
+            "node_fields": "structural facts only: node_id, directory, file_count, file_types_present, dominant_file_type, unit_hash",
+            "edge_source": "ALL_EDGES from structural_edge_map.json — no inferred edges",
+            "edge_validation": "FAIL_CLOSED — from_unit_id and to_unit_id must exist in node set",
+            "edge_deduplication": "STRUCTURAL_IDENTITY — (edge_type, from_unit_id, to_unit_id) triple; duplicates collapsed and counted",
+            "edge_direction": "PRESERVED_EXACTLY from 40.3 — no reversal, no inferred bidirectionality",
+            "edge_ordering": "LEXICOGRAPHIC by (edge_type, from_node_id, to_node_id)",
+            "isolated_nodes": "INCLUDED — nodes with zero incident edges are valid structural truth",
+            "adjacency": "SECONDARY — computed from edges[]; derivable from edge list alone",
+            "timestamp": "INHERITED from structural_unit_inventory.json.extracted_at",
+            "determinism_hash": (
+                "SHA256(newline-joined sorted('<node_id>:<unit_hash>') + sorted('<edge_id>:<edge_type>:<from>:<to>'))"
+            ),
+        },
+        "validation_results": {
+            "unit_count_cross_reference": f"{sui['unit_count']} == {sri['unit_count']} PASS",
+            "edge_count_cross_reference": f"{sem['edge_count']} == {sri['edge_count']} PASS",
+            "edge_list_length_check": f"declared {sem['edge_count']} == actual {len(edges_raw)} PASS",
+            "file_count_per_unit_check": "PASS",
+            "timestamp_cross_reference": f"sui.extracted_at={normalized_ts} == sel.extracted_at={sel_ts} PASS" if sel_ts else "sel.extracted_at absent — SKIPPED",
+            "endpoint_validation": "PASS — all edge endpoints resolved to valid nodes",
+        },
+        "summary": {
+            "nodes": len(normalized_nodes),
+            "edges": len(normalized_edges),
+            "isolated_nodes": isolated_count,
+            "duplicates_collapsed": duplicates_collapsed,
+        },
+        "provenance": {
+            "det_hash_40_2": sel_det_hash,
+            "det_hash_40_3": det_hash_40_3,
+        },
+        "exclusions": [],
+        "determinism_hash": determinism_hash,
+        "reconstruction_readiness": {
+            "status": "BLOCKED",
+            "reason": (
+                "L40.4 produces governed structural topology artifacts but does NOT modify "
+                "clients/<tenant>/psee/runs/<run_id>/ig/normalized_intake_structure/layer_index.json. "
+                "compute_reconstruction.sh requires L40_2, L40_3, L40_4 layers in IG layer_index.json. "
+                "Those layers are still absent. Reconstruction constraint inherited from upstream "
+                "streams remains: reconstruction_state.state=FAIL, score=0."
+            ),
+            "deferred_boundary": "IG_LAYER_INDEX_INTEGRATION — explicit separate stream required to register 40.x layers in IG layer_index.json",
+            "this_stream_does_not_solve": True,
+        },
+    }
+    with open(os.path.join(dir_40_4, "structural_topology_log.json"), "w") as f:
+        json.dump(topo_log, f, indent=2)
+    _debug("wrote structural_topology_log.json")
+
+    # ── Completion log ────────────────────────────────────────────────────────
+    _log(f"STRUCTURAL_NORMALIZE_COMPLETE: {dir_40_4}")
+    _log(
+        f"tenant={tenant} run_id={run_id} intake_id={intake_id} "
+        f"nodes={len(normalized_nodes)} edges={len(normalized_edges)} "
+        f"isolated_nodes={isolated_count} duplicates_collapsed={duplicates_collapsed} "
+        f"determinism_hash={determinism_hash} structural_only_boundary=PRESERVED"
+    )
+
+
 def cmd_structural_relate(args: argparse.Namespace) -> None:
     """
     L40.3 — Derive structural relationships from governed L40.2 outputs.
@@ -3528,6 +3959,67 @@ def _build_parser() -> argparse.ArgumentParser:
         "total edge count, determinism_hash, output dir, each artifact write confirmation."
     ))
     sr.set_defaults(func=cmd_structural_relate)
+
+    sn = structural_sub.add_parser(
+        "normalize",
+        help="L40.4 — Normalize structural truth into canonical topology",
+        description=(
+            "Normalize L40.4 structural topology deterministically from L40.2 + L40.3 outputs.\n\n"
+            "PURPOSE\n"
+            "Consume all 6 governed artifacts from 40_2/ and 40_3/, cross-validate for\n"
+            "consistency, and produce a canonical structural topology with deduplicated edges,\n"
+            "normalized node identifiers, adjacency index, and node-edge statistics.\n\n"
+            "INPUTS\n"
+            "  40_2/structural_unit_inventory.json     — CEU definitions with unit_hash\n"
+            "  40_2/file_structural_map.json           — file-level sha256/type/unit mapping\n"
+            "  40_2/structural_extraction_log.json     — extracted_at timestamp, intake_id\n"
+            "  40_3/structural_edge_map.json           — edge list with direction + evidence\n"
+            "  40_3/structural_relationship_inventory.json — unit summaries, edge_type_counts\n"
+            "  40_3/structural_relationship_log.json   — relationship provenance\n\n"
+            "OUTPUTS  (written to clients/<tenant>/psee/runs/<run_id>/40_4/)\n"
+            "  normalized_structural_topology.json     — canonical nodes + edges + adjacency\n"
+            "  structural_node_inventory.json          — per-node structural fields + stats\n"
+            "  structural_topology_log.json            — provenance, cross-validation, readiness\n\n"
+            "CROSS-VALIDATION (fail-closed)\n"
+            "  unit_count(sui) == unit_count(sri)\n"
+            "  edge_count(sem) == edge_count(sri)\n"
+            "  file_count per unit(sui) == file_count per unit(fsm)\n"
+            "  timestamps: sui.extracted_at == sel.extracted_at\n"
+            "  all edge from/to endpoints must reference valid unit_ids\n\n"
+            "NORMALIZATION RULES\n"
+            "  node_id = unit_id (identity preserved)\n"
+            "  edge deduplication: collapse identical (edge_type, from_node_id, to_node_id) triples\n"
+            "  edge sort: (edge_type, from_node_id, to_node_id) lexicographic\n"
+            "  adjacency: per-node sorted list of incident edge_ids\n\n"
+            "DETERMINISM\n"
+            "  determinism_hash = SHA256(sorted 'node_id:unit_hash' lines\n"
+            "                           + sorted 'edge_id:edge_type:from:to' lines)\n"
+            "  derived_at = inherited from structural_extraction_log.json.extracted_at\n"
+            "  All lists in deterministic lexicographic order.\n\n"
+            "FAIL-CLOSED CONDITIONS\n"
+            "  - 40_2/ or 40_3/ directory not found\n"
+            "  - any of the 6 input artifacts missing\n"
+            "  - cross-validation failure (unit count, edge count, file count, timestamp mismatch)\n"
+            "  - edge endpoint references non-existent unit_id\n"
+            "  - 40_4/ output directory already exists (no-overwrite guard)\n\n"
+            "RECONSTRUCTION READINESS\n"
+            "  reconstruction_readiness.status = BLOCKED\n"
+            "  deferred_boundary = IG_LAYER_INDEX_INTEGRATION\n"
+            "  This stream does NOT modify ig/normalized_intake_structure/layer_index.json.\n\n"
+            "BOUNDARY\n"
+            "  Does not modify 40_2/, 40_3/, ig/, or any other upstream artifact.\n"
+            "  Additive only — S2–S4 and GA logic unchanged.\n\n"
+            "Authority: PRODUCTIZE.STRUCTURAL.TRUTH.40.4.01 / STRUCTURAL.TRUTH.AUTHORITY.01"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    sn.add_argument("--tenant", required=True, help="Tenant/client identifier (e.g., blueedge)")
+    sn.add_argument("--run-id", required=True, help="Run identifier — must have existing 40_2/ and 40_3/ directories")
+    sn.add_argument("--debug", action="store_true", help=(
+        "Enable debug logging. Prints: resolved input dirs, unit count, edge count (pre/post dedup), "
+        "duplicates_collapsed, determinism_hash, output dir, each artifact write confirmation."
+    ))
+    sn.set_defaults(func=cmd_structural_normalize)
 
     return parser
 
