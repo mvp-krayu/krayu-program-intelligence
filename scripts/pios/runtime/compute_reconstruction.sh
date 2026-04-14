@@ -103,7 +103,7 @@ ES_RUN_ID="$(jq -r '.run_id' "$ES_FILE")"
 echo "--- Running 4-Axis Structural Validation ---"
 
 VALIDATION_OUTPUT="$(python3 - << PYEOF
-import json, sys
+import json, os, sys
 
 def load(path):
     with open(path) as f:
@@ -169,10 +169,10 @@ axis_results["COMPLETENESS"] = "PASS" if not axis1_violations else "FAIL"
 # - source_manifest layer counts match layer_index counts
 # ─────────────────────────────────────────────────────────────────────────────
 axis2_violations = []
-required_layers = {"L40_2", "L40_3", "L40_4"}
+required_layers = ["L40_2", "L40_3", "L40_4"]  # sorted list — deterministic iteration
 
 li_layers = {layer["layer_id"]: layer for layer in li.get("layers", [])}
-missing_layers = required_layers - set(li_layers.keys())
+missing_layers = set(required_layers) - set(li_layers.keys())
 if missing_layers:
     axis2_violations.append({
         "type": "STRUCTURAL_LINK",
@@ -180,21 +180,37 @@ if missing_layers:
         "affected_units": sorted(missing_layers)
     })
 
+_repo_root = "${REPO_ROOT}"
 for lid, layer in li_layers.items():
-    if layer.get("artifact_count", 0) <= 0:
-        axis2_violations.append({
-            "type": "STRUCTURAL_LINK",
-            "description": "Layer " + lid + " has no artifacts (isolated node)",
-            "affected_units": [lid]
-        })
-    non_admitted = [a["name"] for a in layer.get("artifacts", [])
-                    if a.get("admission_status") != "ADMITTED"]
-    if non_admitted:
-        axis2_violations.append({
-            "type": "STRUCTURAL_LINK",
-            "description": "Layer " + lid + " contains non-ADMITTED artifacts",
-            "affected_units": non_admitted
-        })
+    if layer.get("source") == "STRUCTURAL":
+        # Structural layers are discoverability-only registrations (no artifact_count/artifacts[]).
+        # Verify the registered artifact_root path exists and is non-empty instead.
+        layer_path = layer.get("path", "")
+        if layer_path and not os.path.isabs(layer_path):
+            resolved = os.path.join(_repo_root, layer_path)
+        else:
+            resolved = layer_path
+        if not resolved or not os.path.isdir(resolved) or not os.listdir(resolved):
+            axis2_violations.append({
+                "type": "STRUCTURAL_LINK",
+                "description": "Structural layer " + lid + " artifact root inaccessible or empty: " + layer_path,
+                "affected_units": [lid]
+            })
+    else:
+        if layer.get("artifact_count", 0) <= 0:
+            axis2_violations.append({
+                "type": "STRUCTURAL_LINK",
+                "description": "Layer " + lid + " has no artifacts (isolated node)",
+                "affected_units": [lid]
+            })
+        non_admitted = [a["name"] for a in layer.get("artifacts", [])
+                        if a.get("admission_status") != "ADMITTED"]
+        if non_admitted:
+            axis2_violations.append({
+                "type": "STRUCTURAL_LINK",
+                "description": "Layer " + lid + " contains non-ADMITTED artifacts",
+                "affected_units": non_admitted
+            })
 
 sm_layers = sm.get("layers", {})
 for lid in required_layers:
@@ -293,21 +309,37 @@ for entry in al.get("entries", []):
         layer = entry.get("layer", "UNKNOWN")
         al_layer_counts[layer] = al_layer_counts.get(layer, 0) + 1
 
-for lid in required_layers:
-    al_count = al_layer_counts.get(lid, 0)
-    li_count = li_layers.get(lid, {}).get("artifact_count", None)
-    if li_count is None:
-        axis4_violations.append({
-            "type": "LAYER_CONSISTENCY",
-            "description": "Layer " + lid + " missing from layer_index (cannot verify count)",
-            "affected_units": [lid]
-        })
-    elif al_count != li_count:
-        axis4_violations.append({
-            "type": "LAYER_CONSISTENCY",
-            "description": "Layer " + lid + " count mismatch: admissibility_log=" + str(al_count) + " layer_index=" + str(li_count),
-            "affected_units": [lid]
-        })
+for lid in required_layers:  # already sorted list — deterministic
+    layer_entry = li_layers.get(lid, {})
+    if layer_entry.get("source") == "STRUCTURAL":
+        # Structural layers are not tracked in admissibility_log.
+        # Verify the registered path is accessible instead of checking log counts.
+        layer_path = layer_entry.get("path", "")
+        if layer_path and not os.path.isabs(layer_path):
+            resolved = os.path.join(_repo_root, layer_path)
+        else:
+            resolved = layer_path
+        if not resolved or not os.path.isdir(resolved):
+            axis4_violations.append({
+                "type": "LAYER_CONSISTENCY",
+                "description": "Structural layer " + lid + " registered path not accessible: " + layer_path,
+                "affected_units": [lid]
+            })
+    else:
+        al_count = al_layer_counts.get(lid, 0)
+        li_count = layer_entry.get("artifact_count", None)
+        if li_count is None:
+            axis4_violations.append({
+                "type": "LAYER_CONSISTENCY",
+                "description": "Layer " + lid + " missing from layer_index (cannot verify count)",
+                "affected_units": [lid]
+            })
+        elif al_count != li_count:
+            axis4_violations.append({
+                "type": "LAYER_CONSISTENCY",
+                "description": "Layer " + lid + " count mismatch: admissibility_log=" + str(al_count) + " layer_index=" + str(li_count),
+                "affected_units": [lid]
+            })
 
 sm_total_admitted = sm.get("total_admitted_artifacts", None)
 al_total_admitted = al["summary"]["admitted"]
