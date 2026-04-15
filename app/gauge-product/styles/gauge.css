@@ -1546,3 +1546,30 @@ details.op-details[open] summary::before { content:"▼  "; }
 .lens-footer-authority { font-size:10px; color:#444; letter-spacing:.05em; }
 .lens-footer-zone-lock { font-size:10px; color:#444; letter-spacing:.04em; }
 
+/* === REPORT PANEL (PRODUCTIZE.LENS.REPORT.DELIVERY.01) === */
+.lens-report-panel { border:1px solid #1f2937; padding:20px; }
+.lens-report-row { display:flex; align-items:center; gap:12px; margin:10px 0 8px; flex-wrap:wrap; }
+.lens-report-btn {
+  font-family:monospace; font-size:13px; padding:9px 18px;
+  border:1px solid #1b3a5c; background:#0b1f31; color:#58a6ff;
+  cursor:pointer; letter-spacing:.03em;
+}
+.lens-report-btn:hover:not(:disabled) { border-color:#58a6ff; }
+.lens-report-btn:disabled { opacity:.5; cursor:default; }
+.lens-report-status { font-size:12px; color:#8b949e; font-style:italic; }
+.lens-report-error { font-size:12px; color:#f85149; }
+.lens-report-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.lens-report-action-btn {
+  font-family:monospace; font-size:12px; padding:7px 14px; cursor:pointer;
+}
+.lens-report-open {
+  border:1px solid #1b5e3d; background:#050f0a; color:#3fb950;
+}
+.lens-report-open:hover { border-color:#3fb950; }
+.lens-report-download {
+  border:1px solid #1b3a5c; background:#0b1f31; color:#58a6ff;
+}
+.lens-report-download:hover { border-color:#58a6ff; }
+.lens-report-ready { font-size:10px; color:#3fb950; letter-spacing:.06em; text-transform:uppercase; }
+.lens-report-basis { font-size:10px; color:#444; margin-top:2px; letter-spacing:.03em; }
+

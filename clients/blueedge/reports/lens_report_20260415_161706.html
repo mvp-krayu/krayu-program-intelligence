@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Program Intelligence Assessment Report</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  color: #1a202c;
+  background: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+/* SOURCE NOTE */
+.source-note {
+  font-size: 11px;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  padding: 8px 14px;
+  margin-bottom: 28px;
+  letter-spacing: .01em;
+}
+
+/* PRINT */
+@media print {
+  .no-print { display: none !important; }
+  body { font-size: 13px; }
+  .cover { page-break-after: always; }
+  .section { page-break-inside: avoid; }
+}
+
+/* LAYOUT */
+.cover {
+  background: #0f1923;
+  color: #e6edf3;
+  padding: 72px 64px;
+  min-height: 320px;
+}
+.cover-eyebrow {
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #4a8fc7;
+  margin-bottom: 20px;
+}
+.cover-title {
+  font-size: 34px;
+  font-weight: 700;
+  color: #e6edf3;
+  margin: 0 0 8px;
+  letter-spacing: -.01em;
+  line-height: 1.15;
+}
+.cover-subtitle {
+  font-size: 17px;
+  color: #8ba8c3;
+  margin: 0 0 40px;
+  font-weight: 400;
+}
+.cover-meta {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  border-top: 1px solid #253444;
+  padding-top: 24px;
+  margin-top: 24px;
+}
+.cover-meta-item { }
+.cover-meta-key {
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #4a637a;
+  display: block;
+  margin-bottom: 3px;
+}
+.cover-meta-val {
+  font-size: 13px;
+  color: #a0bcd6;
+}
+.cover-zone-stmt {
+  margin-top: 28px;
+  font-size: 11px;
+  color: #2d4a62;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  border: 1px solid #1e3347;
+  display: inline-block;
+  padding: 5px 12px;
+}
+
+.report-body {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 48px 48px;
+}
+
+.section {
+  margin-bottom: 52px;
+}
+.section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #1e4d8c;
+  border-bottom: 2px solid #1e4d8c;
+  padding-bottom: 7px;
+  margin-bottom: 24px;
+}
+.section p {
+  color: #2d3748;
+  margin: 0 0 14px;
+}
+.section p:last-child { margin-bottom: 0; }
+
+/* EVIDENCE BADGES */
+.ev-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  padding: 3px 9px;
+  border-radius: 3px;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.badge-verified    { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+.badge-conditional { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+.badge-partial     { background: #ffedd5; color: #7c2d12; border: 1px solid #fed7aa; }
+.badge-blocked     { background: #fee2e2; color: #7f1d1d; border: 1px solid #fecaca; }
+
+/* CONFIDENCE BADGES */
+.conf-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  padding: 3px 9px;
+  border-radius: 3px;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.conf-strong   { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+.conf-moderate { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+.conf-weak     { background: #f3f4f6; color: #6b7280; border: 1px solid #e5e7eb; }
+
+/* STATE GRID */
+.state-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 4px;
+}
+@media (max-width: 700px) { .state-grid { grid-template-columns: 1fr; } }
+.state-card {
+  border: 1px solid #e5e7eb;
+  padding: 20px;
+  border-radius: 4px;
+}
+.state-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.state-card-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+.state-card-score {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a202c;
+  margin-bottom: 10px;
+}
+.state-card-body {
+  font-size: 13px;
+  color: #4a5568;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* KEY FINDINGS */
+.finding-card {
+  border: 1px solid #e5e7eb;
+  border-left: 4px solid #1e4d8c;
+  padding: 22px 24px;
+  margin-bottom: 16px;
+  border-radius: 0 4px 4px 0;
+}
+.finding-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+.finding-header-right {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.finding-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a202c;
+}
+.finding-statement {
+  font-size: 14px;
+  color: #2d3748;
+  line-height: 1.7;
+  margin: 0 0 14px;
+}
+.finding-row {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  margin-bottom: 7px;
+  align-items: flex-start;
+}
+.finding-key {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  min-width: 130px;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+.finding-val { color: #374151; line-height: 1.55; }
+.finding-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid #f3f4f6;
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+/* RISKS */
+.risk-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 0;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 13px;
+}
+.risk-row:last-child { border-bottom: none; }
+.risk-tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .09em;
+  color: #92400e;
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+  padding: 3px 7px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 2px;
+  border-radius: 2px;
+}
+.risk-text { color: #374151; line-height: 1.6; }
+.no-risks { color: #6b7280; font-size: 13px; }
+
+/* DECISION GUIDANCE */
+.guidance-item {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding: 18px 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+}
+.guidance-num {
+  font-size: 20px;
+  font-weight: 800;
+  color: #bfdbfe;
+  flex-shrink: 0;
+  line-height: 1;
+  padding-top: 2px;
+  min-width: 28px;
+}
+.guidance-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e4d8c;
+  margin-bottom: 6px;
+}
+.guidance-text {
+  font-size: 13px;
+  color: #4a5568;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* OBSERVABILITY */
+.obs-advantage-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 20px 0;
+}
+@media (max-width: 700px) { .obs-advantage-grid { grid-template-columns: 1fr; } }
+.obs-item {
+  padding: 18px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+}
+.obs-item-title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  color: #1e4d8c;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+.obs-item-body {
+  font-size: 12px;
+  color: #4a5568;
+  line-height: 1.6;
+  margin: 0;
+}
+.obs-access-note {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-left: 4px solid #1e4d8c;
+  padding: 14px 18px;
+  font-size: 13px;
+  color: #1e3a5f;
+  line-height: 1.6;
+  border-radius: 0 4px 4px 0;
+}
+
+/* APPENDIX */
+.appendix-sub {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin: 24px 0 10px;
+}
+.appendix-sub:first-child { margin-top: 0; }
+.app-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+.app-table th {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  text-align: left;
+  padding: 7px 10px;
+  border-bottom: 2px solid #e5e7eb;
+}
+.app-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #f3f4f6;
+  color: #374151;
+  vertical-align: top;
+}
+.app-footer {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-top: 24px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 12px;
+}
+
+/* REPORT FOOTER */
+.report-footer {
+  border-top: 1px solid #e5e7eb;
+  padding: 20px 48px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #9ca3af;
+  max-width: 920px;
+  margin: 0 auto;
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-eyebrow">Program Intelligence Assessment</div>
+  <h1 class="cover-title">Structural &amp; Operational<br>Readiness Report</h1>
+  <p class="cover-subtitle">Executive Projection — Governed Evidence Intelligence</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item">
+      <span class="cover-meta-key">Generated</span>
+      <span class="cover-meta-val">April 15, 2026 — 15:00 UTC</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="cover-meta-key">Run Reference</span>
+      <span class="cover-meta-val">run_authoritative_recomputed_01</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="cover-meta-key">Authority</span>
+      <span class="cover-meta-val">PRODUCTIZE.LENS.REPORT.01</span>
+    </div>
+  </div>
+  <div class="cover-zone-stmt">Derived from governed projection (ZONE-2) · No internal structure exposed</div>
+</div>
+
+<!-- BODY -->
+<div class="report-body">
+
+<div class="source-note">Source basis: governed projection derived from assessment run <strong>run_authoritative_recomputed_01</strong> (ZONE-2)</div>
+
+<!-- 1. EXECUTIVE SUMMARY -->
+<div class="section">
+  <div class="section-title">Executive Summary</div>
+  <p>The platform has achieved a proven structural score of <strong>Proven: 60/100</strong>, representing a verifiable evidence floor — not an estimate, but a deterministic sum of confirmed structural facts.</p>
+<p>Structural integrity is confirmed: coverage is complete, no orphaned components were identified, and no structural overlaps were detected.</p>
+<p>The achievable score ceiling is <strong>Achievable: 100/100</strong>, contingent on the completion of a single bounded additional step: runtime execution assessment.</p>
+<p>One critical operational signal has been identified — the security intelligence pathway has a structurally confirmed capacity ceiling; live performance requires measurement to confirm it is being met.</p>
+<p>The current assessment posture is decision-ready on all structural dimensions. Execution readiness requires one additional measurement step before a complete determination can be issued.</p>
+</div>
+
+<!-- 2. CURRENT STATE ASSESSMENT -->
+<div class="section">
+  <div class="section-title">Current State Assessment</div>
+  
+<div class="state-grid">
+  <div class="state-card">
+    <div class="state-card-header">
+      <span class="state-card-label">A. Structural Readiness</span>
+      <span class="ev-badge badge-verified">VERIFIED</span>
+    </div>
+    <div class="state-card-score">Proven: 60/100</div>
+    <p class="state-card-body">
+      The structural evidence base is complete and verified. Every structural component has been
+      examined and accounted for. This score represents the maximum derivable from structural
+      analysis alone and carries no qualification.
+    </p>
+  </div>
+
+  <div class="state-card">
+    <div class="state-card-header">
+      <span class="state-card-label">B. Execution Readiness</span>
+      <span class="ev-badge badge-conditional">CONDITIONAL</span>
+    </div>
+    <div class="state-card-score">Pending Assessment</div>
+    <p class="state-card-body">
+      Execution readiness has not yet been evaluated. This is not a finding of deficiency —
+      it reflects an incomplete measurement. The verdict on execution will be determined once
+      runtime evaluation is performed. The structural foundation is in place to support a
+      strong execution result.
+    </p>
+  </div>
+
+  <div class="state-card">
+    <div class="state-card-header">
+      <span class="state-card-label">C. Evidence Confidence</span>
+      <span class="ev-badge badge-conditional">CONDITIONAL</span>
+    </div>
+    <div class="state-card-score">lower=60, upper=100</div>
+    <p class="state-card-body">
+      The confidence range separates what is proven from what is achievable. The lower bound
+      is a committed, evidence-backed floor. The upper bound will be confirmed once execution
+      assessment is complete. This range is the honest and commercially useful representation
+      of current assessment state.
+    </p>
+  </div>
+</div>
+
+</div>
+
+<!-- 3. KEY FINDINGS -->
+<div class="section">
+  <div class="section-title">Key Findings</div>
+  
+<div class="finding-card">
+  <div class="finding-header">
+    <div class="finding-title">Executive Verdict</div>
+    <span class="ev-badge badge-conditional">CONDITIONAL</span>
+  </div>
+  <p class="finding-statement">
+    The three-axis verdict — covering structural completeness, structural concentration, and
+    execution readiness — is the primary output for executive decision-making.
+    Structural evidence is complete and verified. No structural concentration risks were identified.
+    Execution readiness is the critical open dimension, pending a single bounded measurement step.
+  </p>
+  <div class="finding-row">
+    <span class="finding-key">CURRENT VALUE</span>
+    <span class="finding-val">STRUCTURE: complete and verified. COMPLEXITY: no structural overlaps. EXECUTION: pending assessment.</span>
+  </div>
+  <div class="finding-row">
+    <span class="finding-key">CONSTRAINT</span>
+    <span class="finding-val">Execution verdict requires runtime assessment to confirm.</span>
+  </div>
+  <div class="finding-footer">
+    <span class="finding-id">CLM-25</span>
+    <span class="finding-trace">Trace available · L2, L3</span>
+  </div>
+</div>
+
+
+<div class="finding-card">
+  <div class="finding-header">
+    <div class="finding-title">Proven Structural Score</div>
+    <span class="ev-badge badge-verified">VERIFIED</span>
+  </div>
+  <p class="finding-statement">
+    A structural score of 60 out of 100 is the verified evidence floor — the maximum derivable
+    from structural analysis alone. This is not an estimate or a partial measurement; it is
+    a deterministic result derived from confirmed facts. For any buyer or operator, this score
+    represents a commitment backed by evidence that cannot be invalidated by execution findings.
+  </p>
+  <div class="finding-row">
+    <span class="finding-key">PROVEN VALUE</span>
+    <span class="finding-val">Proven: 60/100</span>
+  </div>
+  <div class="finding-row">
+    <span class="finding-key">BUSINESS IMPACT</span>
+    <span class="finding-val">Provides a credible, evidence-backed baseline for commercial and operational decisions.</span>
+  </div>
+  <div class="finding-footer">
+    <span class="finding-id">CLM-09</span>
+    <span class="finding-trace">Trace available · L2, L3</span>
+  </div>
+</div>
+
+
+<div class="finding-card">
+  <div class="finding-header">
+    <div class="finding-title">Security Intelligence Pipeline Signal</div>
+    <div class="finding-header-right">
+      <span class="ev-badge badge-verified">VERIFIED</span>
+      <span class="conf-badge conf-strong">STRONG</span>
+    </div>
+  </div>
+  <p class="finding-statement">
+    The security intelligence pipeline has a confirmed structural capacity ceiling.
+    The forwarding pathway that carries network security intelligence from the platform
+    to the cloud operates at a fixed, bounded rate established in configuration.
+    This capacity is structurally verified; whether it is being met under live conditions
+    requires runtime measurement.
+  </p>
+  <div class="finding-row">
+    <span class="finding-key">BUSINESS IMPACT</span>
+    <span class="finding-val">The sensor bridge is the sole forwarding pathway for HASI network security intelligence; its 0.333 rec/sec ceiling is the hard upper bound on threat data delivery to the cloud, directly constraining the security intelligence pipeline capacity for all connected SVG devices.</span>
+  </div>
+  <div class="finding-row">
+    <span class="finding-key">RISK</span>
+    <span class="finding-val">If runtime sensor bridge performance deviates from configured parameters — due to execution failures, connection errors, or configuration drift — the security intelligence pipeline will silently underperform with no currently observable indicator in the platform's operational state.</span>
+  </div>
+  <div class="finding-row">
+    <span class="finding-key">CURRENT VALUE</span>
+    <span class="finding-val">Sensor Bridge Throughput Ceiling: Configuration Confirmed, Runtime Unknown</span>
+  </div>
+  <div class="finding-footer">
+    <span class="finding-id">CLM-20</span>
+    <span class="finding-trace">Trace available · L2, L3</span>
+  </div>
+</div>
+
+
+<div class="finding-card">
+  <div class="finding-header">
+    <div class="finding-title">Score Confidence Range</div>
+    <span class="ev-badge badge-conditional">CONDITIONAL</span>
+  </div>
+  <p class="finding-statement">
+    The confidence range honestly represents the current assessment state: the lower bound
+    is proven and evidence-backed, while the upper bound is achievable upon completion of
+    runtime evaluation. Presenting a single score without this range would obscure both
+    what is already known and what remains pending. This range collapses to a single number
+    once execution assessment is complete.
+  </p>
+  <div class="finding-row">
+    <span class="finding-key">RANGE</span>
+    <span class="finding-val">lower=60, upper=100</span>
+  </div>
+  <div class="finding-row">
+    <span class="finding-key">CONSTRAINT</span>
+    <span class="finding-val">Upper bound confirmed upon completion of execution assessment.</span>
+  </div>
+  <div class="finding-footer">
+    <span class="finding-id">CLM-12</span>
+    <span class="finding-trace">Trace available · L2, L3</span>
+  </div>
+</div>
+
+
+<div class="finding-card">
+  <div class="finding-header">
+    <div class="finding-title">Achievable Score Ceiling</div>
+    <span class="ev-badge badge-conditional">CONDITIONAL</span>
+  </div>
+  <p class="finding-statement">
+    A projected score of 100 out of 100 is achievable — not as a hypothetical but as a
+    mathematically grounded ceiling derived from the current structural evidence state.
+    The proven floor of 60 and the achievable ceiling of 100 together define the assessment
+    range: the worst-case outcome is proven, the best-case outcome is bounded and reachable.
+  </p>
+  <div class="finding-row">
+    <span class="finding-key">PROJECTED CEILING</span>
+    <span class="finding-val">Achievable: 100/100</span>
+  </div>
+  <div class="finding-row">
+    <span class="finding-key">CONSTRAINT</span>
+    <span class="finding-val">Achievable upon completion of runtime execution assessment. This is the ceiling, not a current measurement.</span>
+  </div>
+  <div class="finding-footer">
+    <span class="finding-id">CLM-10</span>
+    <span class="finding-trace">Trace available · L2, L3</span>
+  </div>
+</div>
+
+</div>
+
+<!-- 4. RISKS AND CONDITIONS -->
+<div class="section">
+  <div class="section-title">Risks and Conditions</div>
+  
+<div class="risk-row">
+  <span class="risk-tag">CONDITION</span>
+  <span class="risk-text">Execution readiness verdict requires a configuration correction before it can be automatically derived. Execution status is confirmed as pending assessment.</span>
+</div>
+
+
+<div class="risk-row">
+  <span class="risk-tag">CONDITION</span>
+  <span class="risk-text">Execution readiness verdict is manually confirmed as pending assessment. This condition will resolve upon a targeted configuration update.</span>
+</div>
+
+
+<div class="risk-row">
+  <span class="risk-tag">CONDITION</span>
+  <span class="risk-text">Runtime throughput is not measured; the capacity ceiling reflects static configuration only and requires live validation to confirm operational performance.</span>
+</div>
+
+
+<div class="risk-row">
+  <span class="risk-tag">CONDITION</span>
+  <span class="risk-text">Lower bound is proven. Upper bound is achievable upon completion of runtime execution assessment.</span>
+</div>
+
+
+<div class="risk-row">
+  <span class="risk-tag">CONDITION</span>
+  <span class="risk-text">Requires runtime execution assessment. This is the achievable ceiling, not a current measurement.</span>
+</div>
+
+</div>
+
+<!-- 5. DECISION GUIDANCE -->
+<div class="section">
+  <div class="section-title">Decision Guidance</div>
+  
+<div class="guidance-item">
+  <div class="guidance-num">01</div>
+  <div class="guidance-body">
+    <div class="guidance-title">Initiate runtime execution assessment</div>
+    <p class="guidance-text">Completing this single bounded step will resolve all CONDITIONAL claims and collapse the score confidence range to a single confirmed number. All structural prerequisites are met.</p>
+  </div>
+</div>
+
+
+<div class="guidance-item">
+  <div class="guidance-num">02</div>
+  <div class="guidance-body">
+    <div class="guidance-title">Proceed with confidence on structural matters</div>
+    <p class="guidance-text">The proven structural score of 60 is an evidence-backed commitment. Structural decisions — integration planning, architecture evaluation, dependency analysis — may proceed without qualification.</p>
+  </div>
+</div>
+
+
+<div class="guidance-item">
+  <div class="guidance-num">03</div>
+  <div class="guidance-body">
+    <div class="guidance-title">Validate sensor bridge throughput under live conditions</div>
+    <p class="guidance-text">The security intelligence pipeline's capacity ceiling is structurally confirmed. Live measurement is required to confirm that runtime throughput meets this ceiling and to establish an operational baseline for ongoing monitoring.</p>
+  </div>
+</div>
+
+
+<div class="guidance-item">
+  <div class="guidance-num">04</div>
+  <div class="guidance-body">
+    <div class="guidance-title">Treat execution readiness verdict as an open item, not a deficiency</div>
+    <p class="guidance-text">The pending execution verdict reflects an incomplete measurement, not a structural failure. No blocking structural issues were identified. The assessment is in position for a strong execution outcome.</p>
+  </div>
+</div>
+
+
+<div class="guidance-item">
+  <div class="guidance-num">05</div>
+  <div class="guidance-body">
+    <div class="guidance-title">Leverage trace access for deeper operational investigation</div>
+    <p class="guidance-text">Extended trace access is available at operational and audit depth levels. For any finding requiring further examination, deeper evidence chains are accessible and fully queryable.</p>
+  </div>
+</div>
+
+</div>
+
+<!-- 6. OBSERVABILITY ADVANTAGE -->
+<div class="section">
+  <div class="section-title">Observability Advantage</div>
+  
+<p>
+  This report is produced from a governed intelligence system — not from manual review,
+  expert estimation, or documentation audits. Every statement maps to a verifiable evidence chain.
+  The proven score is not an opinion; it is a deterministic result derived from confirmed facts.
+  The acknowledged gaps are not limitations of the report; they are explicit measurements of what
+  has not yet been evaluated, distinguishing this system from assessments that omit unknowns.
+</p>
+<p>
+  <strong>Observable truth changes how decisions get made.</strong>
+  When the evidence floor is known and proven, buyers and operators can act on the structural
+  foundation with confidence. When gaps are explicit, they can be prioritized and addressed
+  rather than discovered after commitment.
+</p>
+<div class="obs-advantage-grid">
+  <div class="obs-item">
+    <div class="obs-item-title">Evidence-Backed Floor</div>
+    <p class="obs-item-body">
+      The proven score is not a range or an estimate — it is the minimum that can be guaranteed
+      from structural evidence alone. Decisions made on this floor are not exposed to structural
+      discovery risk.
+    </p>
+  </div>
+  <div class="obs-item">
+    <div class="obs-item-title">Explicit Gap Accounting</div>
+    <p class="obs-item-body">
+      Unknown dimensions are identified and labelled. An unknown execution state is not
+      hidden inside an averaged score — it is surfaced as an open item with a clear resolution path.
+    </p>
+  </div>
+  <div class="obs-item">
+    <div class="obs-item-title">Queryable Intelligence</div>
+    <p class="obs-item-body">
+      Extended trace access enables operational and audit-depth investigation of any finding.
+      Decision-makers and technical teams can query the same underlying intelligence at the
+      depth appropriate to their role.
+    </p>
+  </div>
+</div>
+<div class="obs-access-note">
+  Advanced access — including operational detail (L2) and full audit trail (L3) — is available
+  for stakeholders requiring deeper evidence interrogation, technical validation, or
+  integration planning support.
+</div>
+
+</div>
+
+<!-- 7. APPENDIX -->
+<div class="section">
+  <div class="section-title">Controlled Appendix</div>
+  
+<h3 class="appendix-sub">A. Evidence Composition</h3>
+<table class="app-table">
+  <thead><tr><th>Evidence Class</th><th>Claims</th><th>Share</th></tr></thead>
+  <tbody><tr><td>CONDITIONAL</td><td>3</td><td>60%</td></tr>
+<tr><td>VERIFIED</td><td>2</td><td>40%</td></tr>
+</tbody>
+</table>
+
+<h3 class="appendix-sub">B. Claim Registry — This Report</h3>
+<table class="app-table">
+  <thead><tr><th>ID</th><th>Label</th><th>Evidence Class</th><th>Depth Available</th></tr></thead>
+  <tbody><tr>
+  <td>CLM-25</td>
+  <td>Executive Three-Axis Verdict</td>
+  <td>CONDITIONAL</td>
+  <td>L1, L2, L3</td>
+</tr>
+<tr>
+  <td>CLM-09</td>
+  <td>Proven Structural Score</td>
+  <td>VERIFIED</td>
+  <td>L1, L2, L3</td>
+</tr>
+<tr>
+  <td>CLM-20</td>
+  <td>Sensor Bridge Throughput</td>
+  <td>VERIFIED</td>
+  <td>L1, L2, L3</td>
+</tr>
+<tr>
+  <td>CLM-12</td>
+  <td>Score Confidence Range</td>
+  <td>CONDITIONAL</td>
+  <td>L1, L2, L3</td>
+</tr>
+<tr>
+  <td>CLM-10</td>
+  <td>Achievable Score Projected</td>
+  <td>CONDITIONAL</td>
+  <td>L1, L2, L3</td>
+</tr>
+</tbody>
+</table>
+
+<p class="app-footer">
+  Run: run_authoritative_recomputed_01 &nbsp;·&nbsp; Zone: ZONE-2 &nbsp;·&nbsp; Depth: L1
+  &nbsp;·&nbsp; Authority: PRODUCTIZE.LENS.REPORT.01
+</p>
+
+</div>
+
+</div><!-- /report-body -->
+
+<div class="report-footer">
+  <span>PRODUCTIZE.LENS.REPORT.01 · ZONE-2 · L1</span>
+  <span>Generated: 2026-04-15T16:17:06Z</span>
+</div>
+
+</body>
+</html>

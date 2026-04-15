@@ -1,11 +1,12 @@
 """
 scripts/pios/lens_report_generator.py
-PRODUCTIZE.LENS.REPORT.01
+PRODUCTIZE.LENS.REPORT.01 / PRODUCTIZE.LENS.REPORT.DELIVERY.01
 
 Executive report generator for LENS v1.
 
-Produces /tmp/lens_report.html — a formal, decision-grade executive artifact
-derived exclusively from governed ZONE-2 projections.
+Produces clients/blueedge/reports/lens_report_YYYYMMDD_HHMMSS.html
+A formal, decision-grade executive artifact derived exclusively from
+governed ZONE-2 projections.
 
 Data source (in priority order):
   1. HTTP: /api/projection?claim_id=<id>&zone=ZONE-2&depth=L1 (local dev server)
@@ -19,7 +20,7 @@ Governance rules (enforced at runtime):
   - No claims invented or altered
 
 CLI:
-  python3 scripts/pios/lens_report_generator.py [--output /tmp/lens_report.html]
+  python3 scripts/pios/lens_report_generator.py [--output PATH]
 """
 
 import json
@@ -45,8 +46,12 @@ API_TIMEOUT = 3  # seconds
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 FRAGMENTS_DIR = REPO_ROOT / "clients" / "blueedge" / "vaults" / "run_01_authoritative" / "claims" / "fragments"
+REPORTS_DIR  = REPO_ROOT / "clients" / "blueedge" / "reports"
 
-OUTPUT_PATH = Path("/tmp/lens_report.html")
+
+def _default_output_path() -> Path:
+    ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    return REPORTS_DIR / f"lens_report_{ts}.html"
 
 # Forbidden substrings — must not appear in any report body text
 FORBIDDEN_SUBSTRINGS = ("SIG-", "COND-", "DIAG-", "INTEL-")
@@ -89,13 +94,12 @@ def load_payload(claim_id: str) -> Tuple[Optional[Dict], str]:
     return None, "missing"
 
 
-def load_all_payloads() -> Tuple[Dict, List[str]]:
+def load_all_payloads() -> Dict:
     """
-    Returns (payloads_by_claim_id, warnings).
+    Returns payloads_by_claim_id.
     Raises SystemExit on any missing or non-ZONE-2 or error payload.
     """
     payloads = {}
-    warnings = []
     for claim_id in LENS_CLAIMS:
         payload, source = load_payload(claim_id)
         if payload is None:
@@ -105,9 +109,7 @@ def load_all_payloads() -> Tuple[Dict, List[str]]:
         if payload.get("zone") != "ZONE-2":
             _fail(f"ZONE VIOLATION: {claim_id} returned zone={payload.get('zone')} — ZONE-2 required")
         payloads[claim_id] = payload
-        if source == "fragment":
-            warnings.append(f"{claim_id}: loaded from fragment (API not available)")
-    return payloads, warnings
+    return payloads
 
 
 # ---------------------------------------------------------------------------
@@ -677,6 +679,17 @@ body {
   padding: 0;
 }
 
+/* SOURCE NOTE */
+.source-note {
+  font-size: 11px;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  padding: 8px 14px;
+  margin-bottom: 28px;
+  letter-spacing: .01em;
+}
+
 /* PRINT */
 @media print {
   .no-print { display: none !important; }
@@ -1049,7 +1062,7 @@ body {
 """
 
 
-def build_html(payloads: dict, warnings: list[str]) -> str:
+def build_html(payloads: Dict) -> str:
     anchor = payloads[LENS_CLAIMS[0]]
     run_id = anchor.get("run_id", "—")
     generated_at_raw = anchor.get("generated_at", "")
@@ -1061,10 +1074,12 @@ def build_html(payloads: dict, warnings: list[str]) -> str:
 
     now_utc = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    warning_block = ""
-    if warnings:
-        items = "".join(f"<li>{esc(w)}</li>" for w in warnings)
-        warning_block = f'<div style="background:#fef9c3;border:1px solid #fde047;padding:10px 16px;font-size:12px;margin-bottom:20px;"><strong>Data source note:</strong><ul style="margin:4px 0 0;padding-left:18px;">{items}</ul></div>'
+    source_note = (
+        f'<div class="source-note">'
+        f'Source basis: governed projection derived from assessment run '
+        f'<strong>{esc(run_id)}</strong> (ZONE-2)'
+        f'</div>'
+    )
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -1101,7 +1116,7 @@ def build_html(payloads: dict, warnings: list[str]) -> str:
 <!-- BODY -->
 <div class="report-body">
 
-{warning_block}
+{source_note}
 
 <!-- 1. EXECUTIVE SUMMARY -->
 <div class="section">
@@ -1161,21 +1176,19 @@ def build_html(payloads: dict, warnings: list[str]) -> str:
 # Entry point
 # ---------------------------------------------------------------------------
 
-def main(output_path: Path = OUTPUT_PATH) -> None:
-    print(f"[{STREAM_ID}] Starting report generation")
-    print(f"[{STREAM_ID}] Fragment directory: {FRAGMENTS_DIR}")
+def main(output_path: Optional[Path] = None) -> None:
+    if output_path is None:
+        output_path = _default_output_path()
 
     # --- Pre-flight: fragments directory must exist ---
     if not FRAGMENTS_DIR.exists():
         _fail(f"Fragment directory not found: {FRAGMENTS_DIR}")
 
     # --- Load payloads ---
-    payloads, warnings = load_all_payloads()
-    for claim_id, p in payloads.items():
-        print(f"[{STREAM_ID}] LOADED {claim_id}: zone={p['zone']} evidence_class={p['evidence_class']}")
+    payloads = load_all_payloads()
 
     # --- Build HTML ---
-    html = build_html(payloads, warnings)
+    html = build_html(payloads)
 
     # --- Validate report body ---
     forbidden_found = validate_report_text(html)
@@ -1185,19 +1198,19 @@ def main(output_path: Path = OUTPUT_PATH) -> None:
     # --- Write output ---
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(html, encoding="utf-8")
-    print(f"[{STREAM_ID}] Report written: {output_path}")
-    print(f"[{STREAM_ID}] Size: {len(html):,} bytes")
-    print(f"[{STREAM_ID}] Status: COMPLETE")
 
-    if warnings:
-        print(f"[{STREAM_ID}] WARNINGS:")
-        for w in warnings:
-            print(f"  - {w}")
+    # Section C — clean output line consumed by API wrapper
+    print(f"[LENS REPORT] Generated: {output_path.resolve()}")
 
 
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description="LENS Executive Report Generator — PRODUCTIZE.LENS.REPORT.01")
-    parser.add_argument("--output", type=Path, default=OUTPUT_PATH, help="Output HTML path (default: /tmp/lens_report.html)")
+    parser = argparse.ArgumentParser(
+        description="LENS Executive Report Generator — PRODUCTIZE.LENS.REPORT.DELIVERY.01"
+    )
+    parser.add_argument(
+        "--output", type=Path, default=None,
+        help="Output HTML path (default: clients/blueedge/reports/lens_report_YYYYMMDD_HHMMSS.html)"
+    )
     args = parser.parse_args()
     main(output_path=args.output)

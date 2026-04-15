@@ -1,6 +1,6 @@
 /**
  * pages/lens.js
- * PRODUCTIZE.LENS.UI.01
+ * PRODUCTIZE.LENS.UI.01 / PRODUCTIZE.LENS.REPORT.DELIVERY.01
  *
  * LENS v1 — Executive intelligence surface.
  *
@@ -70,6 +70,85 @@ function LensHeader({ runId, generatedAt }) {
         <Link href="/overview" className="lens-nav-link">← Overview</Link>
         <Link href="/topology" className="lens-nav-link">Topology</Link>
       </div>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Report generation — Section E/F
+// ---------------------------------------------------------------------------
+
+// reportState: null | 'loading' | { path: string } | { error: string }
+async function generateReport() {
+  const res = await fetch('/api/report')
+  const data = await res.json()
+  if (!res.ok || data.status !== 'ok') {
+    throw new Error(data.reason || 'GENERATION_FAILED')
+  }
+  return data.report_path
+}
+
+function ReportPanel({ runId }) {
+  const [state, setState] = useState(null) // null | 'loading' | {path} | {error}
+
+  function handleGenerate() {
+    setState('loading')
+    generateReport()
+      .then(path => setState({ path }))
+      .catch(err => setState({ error: err.message || 'GENERATION_FAILED' }))
+  }
+
+  function handleOpen() {
+    if (state?.path) window.open(state.path)
+  }
+
+  function handleDownload() {
+    if (!state?.path) return
+    const a = document.createElement('a')
+    a.href = state.path
+    a.download = state.path.split('/').pop() || 'lens_report.html'
+    a.click()
+  }
+
+  return (
+    <div className="lens-report-panel">
+      <div className="lens-panel-label">EXECUTIVE REPORT</div>
+      <div className="lens-report-row">
+        {!state || state === 'loading' || state?.error ? (
+          <button
+            className="lens-report-btn"
+            onClick={handleGenerate}
+            disabled={state === 'loading'}
+          >
+            {state === 'loading' ? 'Generating…' : 'Generate Executive Report'}
+          </button>
+        ) : null}
+
+        {state === 'loading' && (
+          <span className="lens-report-status">Building governed projection report…</span>
+        )}
+
+        {state?.error && (
+          <span className="lens-report-error">{state.error}</span>
+        )}
+
+        {state?.path && (
+          <div className="lens-report-actions">
+            <button className="lens-report-action-btn lens-report-open" onClick={handleOpen}>
+              Open Report
+            </button>
+            <button className="lens-report-action-btn lens-report-download" onClick={handleDownload}>
+              Download Report
+            </button>
+            <span className="lens-report-ready">Report ready</span>
+          </div>
+        )}
+      </div>
+      {runId && (
+        <div className="lens-report-basis">
+          Derived from governed projection (ZONE-2) · Run: {runId}
+        </div>
+      )}
     </div>
   )
 }
@@ -157,8 +236,13 @@ export default function LensPage() {
         <RiskPanel payloads={allPayloads} />
       </div>
 
+      {/* Report generation band */}
+      <div className="lens-band">
+        <ReportPanel runId={runId} />
+      </div>
+
       <div className="lens-footer">
-        <span className="lens-footer-authority">PRODUCTIZE.LENS.UI.01</span>
+        <span className="lens-footer-authority">PRODUCTIZE.LENS.UI.01 / PRODUCTIZE.LENS.REPORT.DELIVERY.01</span>
         <span className="lens-footer-zone-lock">ZONE-2 ONLY · NO INTERNAL STRUCTURE EXPOSED</span>
       </div>
     </div>
