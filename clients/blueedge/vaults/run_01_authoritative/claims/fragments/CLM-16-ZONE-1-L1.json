@@ -1,0 +1,24 @@
+{
+  "projection_id": "PROJ-CLM-16-ZONE-1-L1-bf87a",
+  "claim_id": "CLM-16",
+  "zone": "ZONE-1",
+  "depth": "L1",
+  "evidence_class": "VERIFIED",
+  "persona": "shared",
+  "run_id": "run_authoritative_recomputed_01",
+  "generated_at": "2026-04-15T15:00:23.850899+00:00",
+  "trace_available": true,
+  "caveats": [],
+  "claim_label": "CLM-16 — Structural Component Count",
+  "value": {
+    "narrative": "89 components mapped",
+    "raw": "89"
+  },
+  "explanation": "Components are the leaf-level structural nodes representing individual modules, files, services, or functional units. 89 components across 42 capability surfaces across 17 domains = 148 total nodes. Components are depth=2 nodes in the topology model.",
+  "trace_depth_available": [
+    "L2",
+    "L3"
+  ],
+  "source_field": "`canonical_topology.json` → `components[]` (count=89)",
+  "transformation_summary": "pios emit topology → canonical_topology.json → components[] count"
+}

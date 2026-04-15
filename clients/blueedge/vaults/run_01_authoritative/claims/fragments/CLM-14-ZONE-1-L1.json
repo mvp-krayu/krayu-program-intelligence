@@ -1,0 +1,24 @@
+{
+  "projection_id": "PROJ-CLM-14-ZONE-1-L1-a1793",
+  "claim_id": "CLM-14",
+  "zone": "ZONE-1",
+  "depth": "L1",
+  "evidence_class": "VERIFIED",
+  "persona": "shared",
+  "run_id": "run_authoritative_recomputed_01",
+  "generated_at": "2026-04-15T15:00:23.849865+00:00",
+  "trace_available": true,
+  "caveats": [],
+  "claim_label": "CLM-14 — Structural Domain Count",
+  "value": {
+    "narrative": "17 functional areas",
+    "raw": "17"
+  },
+  "explanation": "The 17 domains are the root-level structural nodes in the canonical topology. Each domain represents a distinct functional boundary in the BlueEdge system (e.g., \"Edge Data Acquisition\", \"Platform Infrastructure and Data\", \"Operational Engineering\"). They are the binding contexts for capabilities and components. Domains are depth=0 nodes with is_root=true in the topology model.",
+  "trace_depth_available": [
+    "L2",
+    "L3"
+  ],
+  "source_field": "`canonical_topology.json` → `domains[]` (count=17)",
+  "transformation_summary": "pios emit topology → canonical_topology.json → domains[] count"
+}

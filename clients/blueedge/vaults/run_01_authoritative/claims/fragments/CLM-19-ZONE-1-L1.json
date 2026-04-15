@@ -1,0 +1,24 @@
+{
+  "projection_id": "PROJ-CLM-19-ZONE-1-L1-37244",
+  "claim_id": "CLM-19",
+  "zone": "ZONE-1",
+  "depth": "L1",
+  "evidence_class": "VERIFIED",
+  "persona": "shared",
+  "run_id": "run_authoritative_recomputed_01",
+  "generated_at": "2026-04-15T15:00:23.854128+00:00",
+  "trace_available": true,
+  "caveats": [],
+  "claim_label": "CLM-19 — Signal Evidence Quality Distribution",
+  "value": {
+    "narrative": "STRONG:2 (SIG-001, SIG-002), MODERATE:2 (SIG-003, SIG-004), WEAK:1 (SIG-005)",
+    "raw": "STRONG:2 (SIG-001, SIG-002), MODERATE:2 (SIG-003, SIG-004), WEAK:1 (SIG-005)"
+  },
+  "explanation": "Evidence confidence reflects the quality of the evidence chain supporting each signal. STRONG = complete four-layer chain (signal → condition → diagnosis → intelligence). MODERATE = deterministic computation confirmed but some conditions pending activation (Stream 75.1). WEAK = static component only; runtime component blocked or absent (AT-005, AT-007 pending for SIG-005).",
+  "trace_depth_available": [
+    "L2",
+    "L3"
+  ],
+  "source_field": "`signal_registry.json` → `signals[].evidence_confidence`",
+  "transformation_summary": "signal_registry.json → signals[].evidence_confidence → confidence tier grouping → distribution count"
+}

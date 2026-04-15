@@ -1,0 +1,22 @@
+{
+  "projection_id": "PROJ-CLM-09-ZONE-2-L1-e6e29",
+  "claim_id": "CLM-09",
+  "zone": "ZONE-2",
+  "depth": "L1",
+  "evidence_class": "VERIFIED",
+  "persona": "shared",
+  "run_id": "run_authoritative_recomputed_01",
+  "generated_at": "2026-04-15T15:00:23.847481+00:00",
+  "trace_available": true,
+  "caveats": [],
+  "claim_label": "Proven Structural Score",
+  "value": {
+    "narrative": "Proven: 60/100",
+    "unit": "out of 100"
+  },
+  "explanation": "A score of 60 is not a low score — it is the maximum provable from structural analysis alone. It means the entire structural evidence base is present, coherent, and verified. The 40-point gap is not a deficit; it is the execution assessment, which requires running the platform to measure. For a buyer or operator, 60 is the floor: a commitment backed by evidence that cannot be removed. It is not an estimate or a projection; it is a deterministic sum of verified structural facts.",
+  "trace_depth_available": [
+    "L2",
+    "L3"
+  ]
+}

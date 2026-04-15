@@ -1,0 +1,34 @@
+{
+  "projection_id": "PROJ-CLM-24-ZONE-1-L1-865f3",
+  "claim_id": "CLM-24",
+  "zone": "ZONE-1",
+  "depth": "L1",
+  "evidence_class": "PARTIAL",
+  "persona": "shared",
+  "run_id": "run_authoritative_recomputed_01",
+  "generated_at": "2026-04-15T15:00:23.858121+00:00",
+  "trace_available": true,
+  "caveats": [
+    "Static component confirmed (0.875); runtime component blocked pending AT-005 (active pipeline runs) and AT-007 (validation gate counts)",
+    "Partial evidence — static coordination structure confirms elevated sharing; runtime validation is not yet complete."
+  ],
+  "claim_label": "CLM-24 — SIG-005 Coordination Pressure Partial",
+  "value": {
+    "narrative": "Coordination Pressure: Static Interface Sharing at 87.5%; Runtime State Unresolved",
+    "raw": "Coordination Pressure: Static Interface Sharing at 87.5%; Runtime State Unresolved"
+  },
+  "explanation": "The coordination pressure signal has a resolved static component of 0.875 — 7 of 8 observable interfaces are shared. The runtime component remains pending (AT-005, AT-007 blocked). Confidence cannot be elevated above WEAK because the signal's defining runtime dimension is absent. The static ratio alone is insufficient for full condition activation.",
+  "trace_depth_available": [
+    "L2",
+    "L3"
+  ],
+  "source_field": "`COND-003`",
+  "transformation_summary": "static interface scan → shared interfaces / total observable interfaces = 0.875 (7/8)",
+  "signal": {
+    "title": "Coordination Pressure: Static Interface Sharing at 87.5%; Runtime State Unresolved",
+    "business_impact": "A static interface sharing ratio of 0.875 means virtually all observable interfaces are coordinated across multiple components, elevating the coordination cost of any platform change; when combined with dependency load (0.682) and structural volatility (1.273), the compounding coordination burden across the delivery pipeline is materially elevated.",
+    "risk": "Without the runtime component (AT-005 and AT-007), it is unknown whether validation gates are operating at a frequency sufficient to manage the high static coordination pressure; absent runtime confirmation, the 0.875 ratio represents an unvalidated coordination risk that could manifest as integration failures in the delivery pipeline.",
+    "evidence_confidence": "WEAK",
+    "signal_id": "SIG-005"
+  }
+}

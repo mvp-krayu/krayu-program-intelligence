@@ -1,0 +1,21 @@
+{
+  "projection_id": "PROJ-CLM-27-ZONE-2-L1-41946",
+  "claim_id": "CLM-27",
+  "zone": "ZONE-2",
+  "depth": "L1",
+  "evidence_class": "VERIFIED",
+  "persona": "shared",
+  "run_id": "run_authoritative_recomputed_01",
+  "generated_at": "2026-04-15T15:00:23.859878+00:00",
+  "trace_available": true,
+  "caveats": [],
+  "claim_label": "Full Node Inventory 148 Nodes",
+  "value": {
+    "narrative": "148 total nodes"
+  },
+  "explanation": "Every node has a canonical ID, name, depth, and structural type. The full 148-node set is available in the topology API response and browsable in the topology explorer page. Domain-level names are business-meaningful (e.g., \"Edge Data Acquisition\", \"Platform Infrastructure and Data\") and are ZONE-2 safe. Component-level names (e.g., \"RedisCacheModule\", \"hasi_bridge.py\") are operator-level technical identifiers.",
+  "trace_depth_available": [
+    "L2",
+    "L3"
+  ]
+}

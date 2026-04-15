@@ -1,0 +1,24 @@
+{
+  "projection_id": "PROJ-CLM-18-ZONE-1-L1-a3242",
+  "claim_id": "CLM-18",
+  "zone": "ZONE-1",
+  "depth": "L1",
+  "evidence_class": "VERIFIED",
+  "persona": "shared",
+  "run_id": "run_authoritative_recomputed_01",
+  "generated_at": "2026-04-15T15:00:23.852139+00:00",
+  "trace_available": true,
+  "caveats": [],
+  "claim_label": "CLM-18 — Governed Signal Count",
+  "value": {
+    "narrative": "5",
+    "raw": "5"
+  },
+  "explanation": "5 signals in the governed signal registry for BlueEdge run_01_blueedge. Each signal was derived from the evidence_confidence model traversing condition → diagnosis → intelligence chains from the structural artifacts. The registry is at docs/pios/41.4/signal_registry.json. Confidence distribution: STRONG:2, MODERATE:2, WEAK:1.",
+  "trace_depth_available": [
+    "L2",
+    "L3"
+  ],
+  "source_field": "`signal_registry.json` → `total_signals` = 5",
+  "transformation_summary": "pios emit signals → signal_registry.json → total_signals count"
+}

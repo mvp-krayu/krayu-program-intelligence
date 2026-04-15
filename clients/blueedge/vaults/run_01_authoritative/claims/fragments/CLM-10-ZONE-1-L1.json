@@ -1,0 +1,26 @@
+{
+  "projection_id": "PROJ-CLM-10-ZONE-1-L1-3082b",
+  "claim_id": "CLM-10",
+  "zone": "ZONE-1",
+  "depth": "L1",
+  "evidence_class": "CONDITIONAL",
+  "persona": "shared",
+  "run_id": "run_authoritative_recomputed_01",
+  "generated_at": "2026-04-15T15:00:23.847734+00:00",
+  "trace_available": true,
+  "caveats": [
+    "Requires runtime execution assessment. This is the achievable ceiling, not a current measurement."
+  ],
+  "claim_label": "CLM-10 — Achievable Score Projected",
+  "value": {
+    "narrative": "Achievable: 100/100",
+    "raw": "100",
+    "unit": "out of 100"
+  },
+  "explanation": "When execution_layer_evaluated=False, the projected score is the sum of the current canonical score plus the full COMPLETION_WEIGHT (40 points). This represents the maximum achievable score if the execution layer is subsequently evaluated and completes successfully. It is a projection, not a proven value. Must accompany [[CLM-09 Proven Structural Score]] (canonical=60). Score range [60, 100] is the confidence band.",
+  "trace_depth_available": [
+    "L2",
+    "L3"
+  ],
+  "source_field": "`gauge_state.json` → `projection.value`"
+}

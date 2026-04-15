@@ -1,0 +1,24 @@
+{
+  "projection_id": "PROJ-CLM-25-ZONE-2-L1-92ccc",
+  "claim_id": "CLM-25",
+  "zone": "ZONE-2",
+  "depth": "L1",
+  "evidence_class": "CONDITIONAL",
+  "persona": "shared",
+  "run_id": "run_authoritative_recomputed_01",
+  "generated_at": "2026-04-15T15:00:23.859180+00:00",
+  "trace_available": true,
+  "caveats": [
+    "CONCEPT-06 predicate uses PHASE_1_ACTIVE — will not match NOT_EVALUATED on recomputed run. EXECUTION verdict may not correctly show UNKNOWN on Stream 10 schema. Must be fixed before LENS surface.",
+    "CONCEPT-06 predicate mismatch (BC-01): EXECUTION verdict cannot be automatically derived until the predicate in concepts.json is updated to include NOT_EVALUATED. Manually confirmed as UNKNOWN based on execution_status=NOT_EVALUATED."
+  ],
+  "claim_label": "Executive Three-Axis Verdict",
+  "value": {
+    "narrative": "STRUCTURE: complete and verified. COMPLEXITY: no structural overlaps. EXECUTION: pending assessment."
+  },
+  "explanation": "The three-axis verdict is the highest-level summary of the assessment state and the primary output for executive decision-making. STRUCTURE=STRONG means the platform's structural evidence is complete, coherent, and verified — this is the evidence backing the 60-point floor. COMPLEXITY=LOW means no structural overlaps or orphaned components were found, which reduces integration risk. EXECUTION=UNKNOWN is the critical pending dimension: it does not mean the platform is problematic, it means the assessment is not finished until runtime evaluation completes. Together, these three verdicts answer the executive question: what do we know, what is the structural health, and what still needs to be measured?",
+  "trace_depth_available": [
+    "L2",
+    "L3"
+  ]
+}

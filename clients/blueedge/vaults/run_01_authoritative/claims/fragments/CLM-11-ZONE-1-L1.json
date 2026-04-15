@@ -1,0 +1,24 @@
+{
+  "projection_id": "PROJ-CLM-11-ZONE-1-L1-29f48",
+  "claim_id": "CLM-11",
+  "zone": "ZONE-1",
+  "depth": "L1",
+  "evidence_class": "VERIFIED",
+  "persona": "shared",
+  "run_id": "run_authoritative_recomputed_01",
+  "generated_at": "2026-04-15T15:00:23.848250+00:00",
+  "trace_available": true,
+  "caveats": [],
+  "claim_label": "CLM-11 — Score Band Classification",
+  "value": {
+    "narrative": "Floor established, ceiling defined",
+    "raw": "CONDITIONAL"
+  },
+  "explanation": "CONDITIONAL means a structural floor has been proven but the execution layer has not been evaluated. The score occupies the range [canonical, projected] = [60, 100]. Band transitions: once execution layer is evaluated, score resolves to a single canonical value and band may change to CONFIRMED or similar.",
+  "trace_depth_available": [
+    "L2",
+    "L3"
+  ],
+  "source_field": "`gauge_state.json` → `score.band_label`",
+  "transformation_summary": "Score range [60, 100] → band_label=CONDITIONAL"
+}

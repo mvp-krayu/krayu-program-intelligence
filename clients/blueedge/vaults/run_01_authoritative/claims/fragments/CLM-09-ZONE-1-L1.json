@@ -1,0 +1,25 @@
+{
+  "projection_id": "PROJ-CLM-09-ZONE-1-L1-d4e96",
+  "claim_id": "CLM-09",
+  "zone": "ZONE-1",
+  "depth": "L1",
+  "evidence_class": "VERIFIED",
+  "persona": "shared",
+  "run_id": "run_authoritative_recomputed_01",
+  "generated_at": "2026-04-15T15:00:23.847181+00:00",
+  "trace_available": true,
+  "caveats": [],
+  "claim_label": "CLM-09 — Proven Structural Score",
+  "value": {
+    "narrative": "Proven: 60/100",
+    "raw": "60",
+    "unit": "out of 100"
+  },
+  "explanation": "The canonical score is the proven floor. coverage_points=35 is derived as round(100.0 × 0.35). reconstruction_points=25 is a categorical award for a PASS verdict. completion_points=0 because the execution layer has not been evaluated (execution_layer_evaluated=False). The execution layer can award up to 40 additional points when run. This is not a partial or preliminary score — it is the maximum provable from structural evidence alone. Computed in S4 by the pios compute gauge stage.",
+  "trace_depth_available": [
+    "L2",
+    "L3"
+  ],
+  "source_field": "`gauge_state.json` → `score.canonical`",
+  "transformation_summary": "pios compute gauge (S4)"
+}

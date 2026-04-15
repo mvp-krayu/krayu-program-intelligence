@@ -1,0 +1,23 @@
+{
+  "projection_id": "PROJ-CLM-12-ZONE-2-L1-12da3",
+  "claim_id": "CLM-12",
+  "zone": "ZONE-2",
+  "depth": "L1",
+  "evidence_class": "CONDITIONAL",
+  "persona": "shared",
+  "run_id": "run_authoritative_recomputed_01",
+  "generated_at": "2026-04-15T15:00:23.849078+00:00",
+  "trace_available": true,
+  "caveats": [
+    "Lower bound is proven. Upper bound is achievable upon completion of runtime execution assessment."
+  ],
+  "claim_label": "Score Confidence Range",
+  "value": {
+    "narrative": "lower=60, upper=100, status=SPLIT_EXECUTION_NOT_EVALUATED"
+  },
+  "explanation": "The confidence range [60, 100] is the honest representation of assessment state when execution has not yet been evaluated. It tells any reviewer that there is no uncertainty about the floor — 60 is proven — and that the range will collapse to a single number once execution runs. A single score without this context understates what is already known and obscures what remains pending. The range is both transparent and commercially useful: it separates what is evidence-backed from what is achievable.",
+  "trace_depth_available": [
+    "L2",
+    "L3"
+  ]
+}

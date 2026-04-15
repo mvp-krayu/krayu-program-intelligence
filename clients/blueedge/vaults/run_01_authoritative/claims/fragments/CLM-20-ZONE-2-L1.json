@@ -1,0 +1,29 @@
+{
+  "projection_id": "PROJ-CLM-20-ZONE-2-L1-dfc09",
+  "claim_id": "CLM-20",
+  "zone": "ZONE-2",
+  "depth": "L1",
+  "evidence_class": "VERIFIED",
+  "persona": "shared",
+  "run_id": "run_authoritative_recomputed_01",
+  "generated_at": "2026-04-15T15:00:23.855327+00:00",
+  "trace_available": true,
+  "caveats": [
+    "Four-layer chain (SIG-006 → COND-006 → DIAG-006 → INTEL-001). Runtime throughput is not measured; ceiling is static configuration only."
+  ],
+  "claim_label": "SIG-001 Sensor Bridge Throughput",
+  "value": {
+    "narrative": "Sensor Bridge Throughput Ceiling: Configuration Confirmed, Runtime Unknown"
+  },
+  "explanation": "The sensor bridge is the only pathway through which HASI network security intelligence reaches the cloud. Its throughput ceiling of 0.333 records/second is a structural hard limit — not a performance degradation risk but a fixed capacity constraint confirmed in the static configuration. A buyer needs to know that the security intelligence pipeline has a measurable and bounded capacity, and that runtime performance is not yet observable. This signal establishes what is known (the ceiling) and what is not (whether actual throughput meets it under live conditions).",
+  "trace_depth_available": [
+    "L2",
+    "L3"
+  ],
+  "signal": {
+    "title": "Sensor Bridge Throughput Ceiling: Configuration Confirmed, Runtime Unknown",
+    "business_impact": "The sensor bridge is the sole forwarding pathway for HASI network security intelligence; its 0.333 rec/sec ceiling is the hard upper bound on threat data delivery to the cloud, directly constraining the security intelligence pipeline capacity for all connected SVG devices.",
+    "risk": "If runtime sensor bridge performance deviates from configured parameters — due to execution failures, connection errors, or configuration drift — the security intelligence pipeline will silently underperform with no currently observable indicator in the platform's operational state.",
+    "evidence_confidence": "STRONG"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "projection_id": "PROJ-CLM-23-ZONE-2-L1-d3170",
+  "claim_id": "CLM-23",
+  "zone": "ZONE-2",
+  "depth": "L1",
+  "evidence_class": "VERIFIED",
+  "persona": "shared",
+  "run_id": "run_authoritative_recomputed_01",
+  "generated_at": "2026-04-15T15:00:23.857736+00:00",
+  "trace_available": true,
+  "caveats": [
+    "MODERATE confidence — deterministic computation confirmed but some conditions pending activation (Stream 75.1)"
+  ],
+  "claim_label": "SIG-004 Structural Volatility Edge Density",
+  "value": {
+    "narrative": "Structural Volatility: Edge-to-Node Density Exceeds Unity"
+  },
+  "explanation": "Four computed ratios from static structural telemetry. The edge-to-node ratio exceeding 1.0 is the primary signal: the system has more relationship edges than component nodes, indicating a mesh-like rather than hierarchical dependency structure. All ratios are deterministic and reproducible from the structural artifacts.",
+  "trace_depth_available": [
+    "L2",
+    "L3"
+  ],
+  "signal": {
+    "title": "Structural Volatility: Edge-to-Node Density Exceeds Unity",
+    "business_impact": "An edge-to-node ratio exceeding 1.0 signals a mesh-like architecture where the cost and risk of structural changes grows with platform scale; with 89 components and 63 backend modules already in the monorepo, unmanaged structural growth will compound integration complexity.",
+    "risk": "As the platform grows — particularly through addition of new modules without corresponding boundary enforcement — structural volatility will continue to compound; the current containment ratio (0.545) indicates nearly half of components already operate across module boundaries, creating an environment where encapsulation failures are structurally facilitated.",
+    "evidence_confidence": "MODERATE"
+  }
+}

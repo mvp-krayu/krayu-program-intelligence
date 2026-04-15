@@ -260,3 +260,78 @@ export function TopologySummaryPanel({ topoData }) {
     </div>
   )
 }
+
+// ---------------------------------------------------------------------------
+// Projection binding — PRODUCTIZE.LENS.PROJECTION.RUNTIME.01
+//
+// GAUGE click zones map to claim IDs.  Projection requests are routed through
+// /api/projection — the ONLY legal read path to vault claim content.
+// Direct vault reads are forbidden from this layer.
+//
+// Zone is determined by the calling context (operator vs client session).
+// In V1: ZONE-1 for all GAUGE operator sessions.
+// ---------------------------------------------------------------------------
+
+/**
+ * Maps each GAUGE click zone to the primary claim IDs it projects.
+ * Matches the named claim sets in PRODUCTIZE.LENS.PROJECTION.CONTRACT.01 §4.
+ */
+export const GAUGE_CLICK_CLAIM_MAP = {
+  SCORE_ZONE:    ['CLM-09', 'CLM-10', 'CLM-12', 'CLM-11'],
+  SIGNAL_ZONE_1: ['CLM-20'],
+  SIGNAL_ZONE_2: ['CLM-21'],
+  SIGNAL_ZONE_3: ['CLM-22'],
+  SIGNAL_ZONE_4: ['CLM-23'],
+  SIGNAL_ZONE_5: ['CLM-24'],
+  VERDICT_ZONE:  ['CLM-25', 'CLM-13', 'CLM-03'],
+  TOPOLOGY_ZONE: ['CLM-27', 'CLM-14', 'CLM-15', 'CLM-16'],
+  COVERAGE_ZONE: ['CLM-01', 'CLM-13'],
+}
+
+/**
+ * useProjection(claimId, zone)
+ *
+ * Fetches an L1 projection payload from /api/projection.
+ * Returns { payload, loading, error }.
+ *
+ * - payload is null until loaded or on error
+ * - error is set on any failure; payload remains null (fail-closed)
+ * - zone must be provided by the caller from session context, not defaulted here
+ *
+ * Usage:
+ *   const { payload, loading, error } = useProjection('CLM-09', 'ZONE-1')
+ */
+export function useProjection(claimId, zone) {
+  const [payload, setPayload] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [error,   setError]   = useState(null)
+
+  useEffect(() => {
+    if (!claimId || !zone) return
+    setLoading(true)
+    setPayload(null)
+    setError(null)
+    fetch(`/api/projection?claim_id=${encodeURIComponent(claimId)}&zone=${encodeURIComponent(zone)}&depth=L1`)
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`)
+        return r.json()
+      })
+      .then(d => {
+        if (d.error_type) {
+          // Projection pipeline returned a governed error — fail-closed, no partial render
+          setError(d.reason || 'PROJECTION_ERROR')
+          setPayload(null)
+        } else {
+          setPayload(d)
+        }
+        setLoading(false)
+      })
+      .catch(e => {
+        setError(e.message)
+        setPayload(null)
+        setLoading(false)
+      })
+  }, [claimId, zone])
+
+  return { payload, loading, error }
+}

@@ -1,0 +1,23 @@
+{
+  "projection_id": "PROJ-CLM-17-ZONE-2-L1-b6b35",
+  "claim_id": "CLM-17",
+  "zone": "ZONE-2",
+  "depth": "L1",
+  "evidence_class": "CONDITIONAL",
+  "persona": "shared",
+  "run_id": "run_authoritative_recomputed_01",
+  "generated_at": "2026-04-15T15:00:23.851804+00:00",
+  "trace_available": true,
+  "caveats": [
+    "Two distinct evidence layers — canonical and binding_envelope. Values are not contradictory; scope must be explicit when surfacing either value."
+  ],
+  "claim_label": "Cross-Domain Structural Overlaps",
+  "value": {
+    "narrative": "0 cross-domain overlaps"
+  },
+  "explanation": "The canonical topology model (17/42/89) has no cross-domain overlap edges — the single cross_domain_ref on COMP-25 (\"DOM-01\") is a known source peculiarity preserved as a node field, not an edge. The binding_envelope for client run_335c0575a080 shows 2 structural overlaps: OVL-01 (DOM-03↔DOM-05-C) and OVL-02 (DOM-04↔DOM-05-D). These are different evidence layers and are not contradictory — canonical answers what is structurally present; binding_envelope answers how the client's system specifically structures that presence.",
+  "trace_depth_available": [
+    "L2",
+    "L3"
+  ]
+}

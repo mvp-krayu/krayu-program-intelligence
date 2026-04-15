@@ -1,0 +1,26 @@
+{
+  "projection_id": "PROJ-CLM-12-ZONE-1-L1-92282",
+  "claim_id": "CLM-12",
+  "zone": "ZONE-1",
+  "depth": "L1",
+  "evidence_class": "CONDITIONAL",
+  "persona": "shared",
+  "run_id": "run_authoritative_recomputed_01",
+  "generated_at": "2026-04-15T15:00:23.848729+00:00",
+  "trace_available": true,
+  "caveats": [
+    "Lower bound is proven. Upper bound is achievable upon completion of runtime execution assessment."
+  ],
+  "claim_label": "CLM-12 — Score Confidence Range",
+  "value": {
+    "narrative": "lower=60, upper=100, status=SPLIT_EXECUTION_NOT_EVALUATED",
+    "raw": "lower=60, upper=100, status=SPLIT_EXECUTION_NOT_EVALUATED"
+  },
+  "explanation": "When execution_layer_evaluated=False, confidence status is SPLIT_EXECUTION_NOT_EVALUATED. Lower bound = canonical score (proven floor). Upper bound = projected score (ceiling). When execution is evaluated, lower=upper=single resolved score and status=COMPUTED. The raw status string is operator-only; LENS phrase: \"Score confidence range: 60 to 100. Floor is proven. Ceiling is achievable upon execution assessment.\"",
+  "trace_depth_available": [
+    "L2",
+    "L3"
+  ],
+  "source_field": "`confidence.lower`",
+  "transformation_summary": "lower = canonical score (proven floor)"
+}

@@ -1,0 +1,26 @@
+{
+  "projection_id": "PROJ-CLM-13-ZONE-1-L1-c9df5",
+  "claim_id": "CLM-13",
+  "zone": "ZONE-1",
+  "depth": "L1",
+  "evidence_class": "CONDITIONAL",
+  "persona": "shared",
+  "run_id": "run_authoritative_recomputed_01",
+  "generated_at": "2026-04-15T15:00:23.849337+00:00",
+  "trace_available": true,
+  "caveats": [
+    "Legacy/current schema mismatch on execution_status value (PHASE_1_ACTIVE vs NOT_EVALUATED)"
+  ],
+  "claim_label": "CLM-13 — Execution Layer Status",
+  "value": {
+    "narrative": "Runtime execution assessment is pending",
+    "raw": "NOT_EVALUATED (Stream 10 schema) / PHASE_1_ACTIVE (legacy)"
+  },
+  "explanation": "NOT_EVALUATED means the execution engine has not yet been run against this structural model. PHASE_1_ACTIVE is the legacy pre-Stream-10 equivalent. Both mean: execution assessment is pending. This drives the completion_points gate (0 until evaluated) and the projected vs canonical score split. NOTE: CONCEPT-06 predicate uses PHASE_1_ACTIVE — will not match NOT_EVALUATED on recomputed run (known semantic gap).",
+  "trace_depth_available": [
+    "L2",
+    "L3"
+  ],
+  "source_field": "`gauge_state.json` → `state.execution_status`",
+  "transformation_summary": "execution_status=NOT_EVALUATED → completion_points=0 → score split active"
+}

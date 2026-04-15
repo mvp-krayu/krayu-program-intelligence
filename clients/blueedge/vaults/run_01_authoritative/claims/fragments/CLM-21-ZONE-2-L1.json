@@ -1,0 +1,29 @@
+{
+  "projection_id": "PROJ-CLM-21-ZONE-2-L1-a8371",
+  "claim_id": "CLM-21",
+  "zone": "ZONE-2",
+  "depth": "L1",
+  "evidence_class": "VERIFIED",
+  "persona": "shared",
+  "run_id": "run_authoritative_recomputed_01",
+  "generated_at": "2026-04-15T15:00:23.856092+00:00",
+  "trace_available": true,
+  "caveats": [
+    "All seven blocked diagnoses independently confirmed across DIAG-001..DIAG-008 with complete condition chains"
+  ],
+  "claim_label": "SIG-002 Platform Runtime State Seven Unknown Dimensions",
+  "value": {
+    "narrative": "Platform Runtime State: Seven Core Dimensions Are Currently Unknown"
+  },
+  "explanation": "This is the most commercially significant finding in this assessment. Seven dimensions that any operator would need to make decisions about platform health — cache performance, fleet connectivity, event pipeline activity, alert processing, driver session scoring — are genuinely and completely unknown from structural analysis alone. This is not a warning or an estimate; it is a hard boundary on what the structural evidence can establish. Any operational claim about platform health made without runtime assessment is operating without an evidence base. For a buyer, this defines the scope of the execution assessment phase: run the platform, measure these seven dimensions, complete the assessment.",
+  "trace_depth_available": [
+    "L2",
+    "L3"
+  ],
+  "signal": {
+    "title": "Platform Runtime State: Seven Core Dimensions Are Currently Unknown",
+    "business_impact": "The entire observable CE-001 platform runtime — cache performance, event delivery, fleet connectivity, alert processing, and driver session scoring — operates as a structural unknown; any operational decision about platform health or capacity lacks an evidence base.",
+    "risk": "If the backend is running in a degraded state (high memory pressure, disconnected cache, stalled event pipeline), the platform may be delivering incorrect or stale data to fleet operators with no observable indicator in the current intelligence output; the risk compounds across infrastructure, real-time streaming, and fleet core operations domains.",
+    "evidence_confidence": "STRONG"
+  }
+}

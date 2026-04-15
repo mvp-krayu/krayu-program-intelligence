@@ -1,0 +1,21 @@
+{
+  "projection_id": "PROJ-CLM-03-ZONE-2-L1-99351",
+  "claim_id": "CLM-03",
+  "zone": "ZONE-2",
+  "depth": "L1",
+  "evidence_class": "VERIFIED",
+  "persona": "shared",
+  "run_id": "run_authoritative_recomputed_01",
+  "generated_at": "2026-04-15T15:00:23.846944+00:00",
+  "trace_available": true,
+  "caveats": [],
+  "claim_label": "Structural Reconstruction Pass-Fail",
+  "value": {
+    "narrative": "Structural consistency confirmed"
+  },
+  "explanation": "Reconstruction tests whether the 30 admitted structural units assemble into a coherent program representation. Four axes are tested: COMPLETENESS, STRUCTURAL_LINK, REFERENTIAL_INTEGRITY, and LAYER_CONSISTENCY. All four axes return PASS. Zero violations were recorded. This verdict was emitted by the S1 pios reconstruction stage and is the authoritative basis for CONCEPT-03 and CONCEPT-18 resolution.",
+  "trace_depth_available": [
+    "L2",
+    "L3"
+  ]
+}

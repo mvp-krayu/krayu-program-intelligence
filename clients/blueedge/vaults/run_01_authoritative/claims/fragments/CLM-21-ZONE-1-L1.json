@@ -1,0 +1,33 @@
+{
+  "projection_id": "PROJ-CLM-21-ZONE-1-L1-10530",
+  "claim_id": "CLM-21",
+  "zone": "ZONE-1",
+  "depth": "L1",
+  "evidence_class": "VERIFIED",
+  "persona": "shared",
+  "run_id": "run_authoritative_recomputed_01",
+  "generated_at": "2026-04-15T15:00:23.855702+00:00",
+  "trace_available": true,
+  "caveats": [
+    "All seven blocked diagnoses independently confirmed across DIAG-001..DIAG-008 with complete condition chains"
+  ],
+  "claim_label": "CLM-21 — SIG-002 Platform Runtime State Seven Unknown Dimensions",
+  "value": {
+    "narrative": "Platform Runtime State: Seven Core Dimensions Are Currently Unknown",
+    "raw": "Platform Runtime State: Seven Core Dimensions Are Currently Unknown"
+  },
+  "explanation": "Seven operational dimensions of the BlueEdge platform are currently unknown from static analysis alone: backend memory state, cache efficiency, cache availability, event pipeline activity, fleet connection count, alert activity, and driver session performance. These cannot be inferred or approximated from structural analysis and must be declared unknown in all downstream artifacts. Runtime assessment is required to resolve these.",
+  "trace_depth_available": [
+    "L2",
+    "L3"
+  ],
+  "source_field": "`INTEL-002`",
+  "transformation_summary": "COND-001..COND-008 (excl. COND-006) → DIAG-001..DIAG-008 (excl. DIAG-006) → INTEL-002 → SIG-002",
+  "signal": {
+    "title": "Platform Runtime State: Seven Core Dimensions Are Currently Unknown",
+    "business_impact": "The entire observable CE-001 platform runtime — cache performance, event delivery, fleet connectivity, alert processing, and driver session scoring — operates as a structural unknown; any operational decision about platform health or capacity lacks an evidence base.",
+    "risk": "If the backend is running in a degraded state (high memory pressure, disconnected cache, stalled event pipeline), the platform may be delivering incorrect or stale data to fleet operators with no observable indicator in the current intelligence output; the risk compounds across infrastructure, real-time streaming, and fleet core operations domains.",
+    "evidence_confidence": "STRONG",
+    "signal_id": "SIG-002"
+  }
+}

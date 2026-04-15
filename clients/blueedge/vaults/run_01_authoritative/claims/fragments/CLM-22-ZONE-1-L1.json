@@ -1,0 +1,33 @@
+{
+  "projection_id": "PROJ-CLM-22-ZONE-1-L1-d6f11",
+  "claim_id": "CLM-22",
+  "zone": "ZONE-1",
+  "depth": "L1",
+  "evidence_class": "VERIFIED",
+  "persona": "shared",
+  "run_id": "run_authoritative_recomputed_01",
+  "generated_at": "2026-04-15T15:00:23.856486+00:00",
+  "trace_available": true,
+  "caveats": [
+    "MODERATE confidence — deterministic computation confirmed but some conditions pending activation (Stream 75.1)"
+  ],
+  "claim_label": "CLM-22 — SIG-003 Dependency Load 68 Percent",
+  "value": {
+    "narrative": "Dependency Load: 68% of Architectural Relationships Are Dependency Edges",
+    "raw": "Dependency Load: 68% of Architectural Relationships Are Dependency Edges"
+  },
+  "explanation": "The program-level dependency load is computed at 0.682 — 15 of 22 architectural relationship edges are dependency relationships. This indicates a structurally dense dependency graph where most inter-component connections are direct load-bearing dependencies rather than loose event-driven couplings. R-038 confirms all backend modules DEPENDS_ON FleetEventsModule, making it the dependency hub.",
+  "trace_depth_available": [
+    "L2",
+    "L3"
+  ],
+  "source_field": "`COND-001`",
+  "transformation_summary": "structural edge count → dependency edge count / total edge count = 0.682 (15/22)",
+  "signal": {
+    "title": "Dependency Load: 68% of Architectural Relationships Are Dependency Edges",
+    "business_impact": "A dependency load of 0.682 means most architectural connections are direct dependencies, elevating the blast radius of any component-level failure or change; deployment safety, change management, and incident containment all require accounting for this coupling density.",
+    "risk": "If any of the 15 dependency edges involves a WEAKLY GROUNDED component (such as Apache Kafka or Apache Flink) or an undocumented runtime dependency, the actual coupling may be higher than observed; unmanaged dependency concentration will increase non-linearly as new modules are added to the 63-module backend.",
+    "evidence_confidence": "MODERATE",
+    "signal_id": "SIG-003"
+  }
+}

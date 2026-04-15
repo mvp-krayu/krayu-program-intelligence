@@ -1,0 +1,27 @@
+{
+  "projection_id": "PROJ-CLM-25-ZONE-1-L1-8542a",
+  "claim_id": "CLM-25",
+  "zone": "ZONE-1",
+  "depth": "L1",
+  "evidence_class": "CONDITIONAL",
+  "persona": "shared",
+  "run_id": "run_authoritative_recomputed_01",
+  "generated_at": "2026-04-15T15:00:23.858880+00:00",
+  "trace_available": true,
+  "caveats": [
+    "CONCEPT-06 predicate uses PHASE_1_ACTIVE — will not match NOT_EVALUATED on recomputed run. EXECUTION verdict may not correctly show UNKNOWN on Stream 10 schema. Must be fixed before LENS surface.",
+    "CONCEPT-06 predicate mismatch (BC-01): EXECUTION verdict cannot be automatically derived until the predicate in concepts.json is updated to include NOT_EVALUATED. Manually confirmed as UNKNOWN based on execution_status=NOT_EVALUATED."
+  ],
+  "claim_label": "CLM-25 — Executive Three-Axis Verdict",
+  "value": {
+    "narrative": "STRUCTURE: complete and verified. COMPLEXITY: no structural overlaps. EXECUTION: pending assessment.",
+    "raw": "STRUCTURE=STRONG, COMPLEXITY=LOW, EXECUTION=UNKNOWN"
+  },
+  "explanation": "The executive verdicts are Boolean aggregations of resolved concept predicates. STRUCTURE=STRONG because CONCEPT-01 (coverage=100%), CONCEPT-03 (reconstruction PASS), and CONCEPT-14 (heuristic PASS) all resolve true. COMPLEXITY=LOW because no envelope overlap (CONCEPT-08 false) and no orphans (CONCEPT-16 false). EXECUTION=UNKNOWN because CONCEPT-06 should match (completion_points=0 AND execution pending) but the predicate uses PHASE_1_ACTIVE and will not trigger on NOT_EVALUATED. This is a known production risk documented in Known Gaps.",
+  "trace_depth_available": [
+    "L2",
+    "L3"
+  ],
+  "source_field": "STRUCTURE: `concepts.json` → CONCEPT-01 ∧ CONCEPT-03 ∧ CONCEPT-14",
+  "transformation_summary": "concepts.json predicates → resolver.js evaluation against live gauge + topology data → three-axis verdict"
+}
