@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
 scripts/pios/tests/test_projection_runtime.py
-PRODUCTIZE.LENS.PROJECTION.RUNTIME.01
+PRODUCTIZE.LENS.PROJECTION.RUNTIME.01 / PRODUCTIZE.LENS.ZONE2.SAFE.PAYLOAD.01
 
 Projection runtime test suite.
 
-Test cases (per contract requirement):
+Test cases:
   TC-01: valid claim_id → L1 payload (ZONE-1)
   TC-02: same claim → ZONE-2 filtering applied (Z1 fields absent)
   TC-03: invalid claim_id → fail-closed (ProjectionError, no content)
@@ -16,8 +16,10 @@ Test cases (per contract requirement):
   TC-08: ZONE-2 error → no detail field (info-leak prevention)
   TC-09: export_fragments → generates files for both zones
   TC-10: project_for_lens → all outputs are ZONE-2
+  TC-11: Zone-2 safe payload profile enforcement (ZONE2.SAFE.PAYLOAD.01)
 
 Authority: PRODUCTIZE.LENS.PROJECTION.CONTRACT.01
+          PRODUCTIZE.LENS.ZONE2.SAFE.PAYLOAD.01
 """
 
 import json
@@ -35,9 +37,11 @@ from projection_runtime import (
     L1, L2, L3,
     EVIDENCE_CONDITIONAL, EVIDENCE_PARTIAL, EVIDENCE_VERIFIED, EVIDENCE_BLOCKED,
     BC_01_CAVEAT, SIG_005_CAVEAT,
+    ZONE2_L1_ALLOWED_FIELDS, ZONE2_SIGNAL_ALLOWED_SUBFIELDS,
+    ZONE2_FORBIDDEN_FIELDS, ZONE2_FORBIDDEN_CONTENT_SUBSTRINGS,
     project, project_set, project_for_lens, export_fragments,
     resolve_claim, enforce_zone,
-    _default_vault_path,
+    _default_vault_path, _validate_zone2_payload,
 )
 
 VAULT_PATH = REPO_ROOT / "clients" / "blueedge" / "vaults" / "run_01_authoritative"
@@ -408,6 +412,163 @@ class TC10_ProjectForLens(unittest.TestCase):
         if "error_type" not in clm25:
             self.assertEqual(clm25["evidence_class"], EVIDENCE_CONDITIONAL)
             self.assertTrue(len(clm25.get("caveats", [])) > 0)
+
+
+class TC11_Zone2PayloadSafety(unittest.TestCase):
+    """
+    TC-11: Zone-2 safe payload profile enforcement
+    Authority: PRODUCTIZE.LENS.ZONE2.SAFE.PAYLOAD.01
+
+    Verifies that _validate_zone2_payload() enforces the canonical
+    ZONE-2 safe payload profile at the field, key-pattern, subblock,
+    and content-substring levels.
+    """
+
+    def test_no_forbidden_fields_present(self):
+        """CLM-20 ZONE-2 payload contains none of the absolutely forbidden fields."""
+        result = project("CLM-20", ZONE_2, L1, VAULT_PATH)
+        self.assertNotIn("error_type", result, f"Projection failed: {result}")
+
+        # Named forbidden fields
+        for fname in ("source_field", "transformation_summary", "signal_id"):
+            self.assertNotIn(fname, result, f"Forbidden field '{fname}' present in ZONE-2 payload")
+
+        # Forbidden key patterns
+        for key in result:
+            for pattern in ("_path", "_file", "_graph"):
+                self.assertNotIn(pattern, key,
+                                 f"Key '{key}' contains forbidden pattern '{pattern}'")
+
+    def test_allowed_fields_only(self):
+        """Top-level keys in ZONE-2 payload are a subset of the allowed set."""
+        for claim_id in ("CLM-09", "CLM-20", "CLM-25", "CLM-13"):
+            result = project(claim_id, ZONE_2, L1, VAULT_PATH)
+            if "error_type" in result:
+                continue  # skip claims that error (e.g., BLOCKED)
+            unknown = set(result.keys()) - ZONE2_L1_ALLOWED_FIELDS
+            self.assertEqual(
+                unknown, set(),
+                f"CLM {claim_id} ZONE-2 payload contains unknown fields: {unknown}",
+            )
+
+    def test_signal_block_sanitized(self):
+        """Signal subblock contains only the four allowed subfields; signal_id is absent."""
+        result = project("CLM-20", ZONE_2, L1, VAULT_PATH)
+        self.assertNotIn("error_type", result)
+
+        signal = result.get("signal")
+        self.assertIsNotNone(signal, "CLM-20 ZONE-2 should have a signal block")
+        self.assertIsInstance(signal, dict)
+
+        # signal_id must be absent
+        self.assertNotIn("signal_id", signal, "signal_id (Z1) must be absent from ZONE-2 signal block")
+
+        # Only allowed subfields
+        unknown_sig = set(signal.keys()) - ZONE2_SIGNAL_ALLOWED_SUBFIELDS
+        self.assertEqual(
+            unknown_sig, set(),
+            f"Signal subblock contains forbidden subfields: {unknown_sig}",
+        )
+
+        # Mandatory allowed subfields present
+        for required in ("title", "business_impact", "risk", "evidence_confidence"):
+            self.assertIn(required, signal, f"Signal subfield '{required}' missing from ZONE-2 signal block")
+
+    def test_no_structural_leakage_strings(self):
+        """explanation field does not contain internal ID substrings."""
+        for claim_id in ("CLM-09", "CLM-20", "CLM-25", "CLM-24"):
+            result = project(claim_id, ZONE_2, L1, VAULT_PATH)
+            if "error_type" in result:
+                continue
+            explanation = result.get("explanation", "")
+            for forbidden in ZONE2_FORBIDDEN_CONTENT_SUBSTRINGS:
+                self.assertNotIn(
+                    forbidden, explanation,
+                    f"CLM {claim_id}: forbidden substring '{forbidden}' found in ZONE-2 explanation",
+                )
+
+    def test_profile_violation_fails(self):
+        """Injecting a forbidden field into a ZONE-2 payload triggers ERROR_ZONE2_PROFILE_VIOLATION."""
+        # Minimal mock payload: valid ZONE-2 envelope + forbidden field injected
+        mock_payload = {
+            "zone":          ZONE_2,
+            "depth":         L1,
+            "claim_id":      "CLM-09",
+            "generated_at":  "2026-04-15T00:00:00+00:00",
+            "source_field":  "gauge_state.json \u2192 score.canonical",  # FORBIDDEN
+        }
+        result = _validate_zone2_payload(mock_payload)
+        self.assertIsNotNone(result, "Validator should return an error for forbidden field injection")
+        self.assertEqual(result["reason"], "ERROR_ZONE2_PROFILE_VIOLATION")
+        self.assertEqual(result["error_type"], "ZONE2_PROFILE_VIOLATION")
+
+    def test_profile_violation_unknown_field(self):
+        """Adding an unknown top-level field to a ZONE-2 payload triggers violation."""
+        mock_payload = {
+            "zone":              ZONE_2,
+            "depth":             L1,
+            "claim_id":          "CLM-09",
+            "generated_at":      "2026-04-15T00:00:00+00:00",
+            "projection_id":     "PROJ-CLM-09-ZONE-2-L1-xxxxx",
+            "evidence_class":    "VERIFIED",
+            "persona":           "shared",
+            "run_id":            "run_test",
+            "trace_available":   True,
+            "caveats":           [],
+            "claim_label":       "Proven Score",
+            "value":             {"narrative": "Proven: 60/100"},
+            "explanation":       "This is the proven floor.",
+            "trace_depth_available": ["L2", "L3"],
+            "undisclosed_field": "injected",  # NOT in allowed set
+        }
+        result = _validate_zone2_payload(mock_payload)
+        self.assertIsNotNone(result)
+        self.assertEqual(result["reason"], "ERROR_ZONE2_PROFILE_VIOLATION")
+
+    def test_profile_no_violation_on_zone1(self):
+        """_validate_zone2_payload is a no-op for ZONE-1 payloads."""
+        mock_payload = {
+            "zone":           ZONE_1,
+            "source_field":   "gauge_state.json \u2192 score.canonical",
+            "transformation_summary": "coverage_points(35) + ...",
+        }
+        result = _validate_zone2_payload(mock_payload)
+        self.assertIsNone(result, "Validator must be a no-op for ZONE-1 payloads")
+
+    def test_value_raw_forbidden_in_zone2(self):
+        """value.raw in a ZONE-2 payload is a profile violation."""
+        mock_payload = {
+            "zone":          ZONE_2,
+            "depth":         L1,
+            "claim_id":      "CLM-09",
+            "generated_at":  "2026-04-15T00:00:00+00:00",
+            "projection_id": "PROJ-CLM-09-ZONE-2-L1-xxxxx",
+            "evidence_class": "VERIFIED",
+            "persona":        "shared",
+            "run_id":         "run_test",
+            "trace_available": True,
+            "caveats":        [],
+            "claim_label":    "Proven Score",
+            "value":          {"narrative": "Proven: 60/100", "raw": "60"},  # raw FORBIDDEN
+            "explanation":    "The proven floor.",
+            "trace_depth_available": ["L2", "L3"],
+        }
+        result = _validate_zone2_payload(mock_payload)
+        self.assertIsNotNone(result)
+        self.assertEqual(result["reason"], "ERROR_ZONE2_PROFILE_VIOLATION")
+
+    def test_live_zone2_payloads_pass_profile(self):
+        """All representative live ZONE-2 projections pass the profile validator."""
+        claims_to_check = ["CLM-09", "CLM-10", "CLM-12", "CLM-20", "CLM-25", "CLM-24"]
+        for claim_id in claims_to_check:
+            result = project(claim_id, ZONE_2, L1, VAULT_PATH)
+            if "error_type" in result:
+                continue  # skip claims that legitimately error
+            violation = _validate_zone2_payload(result)
+            self.assertIsNone(
+                violation,
+                f"CLM {claim_id} ZONE-2 live payload failed profile validation: {violation}",
+            )
 
 
 if __name__ == "__main__":

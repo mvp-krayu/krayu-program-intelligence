@@ -150,10 +150,43 @@ CONDITIONAL_CLAIM_CAVEATS: Dict[str, str] = {
 }
 
 # Z1-only field names that must be absent from any ZONE-2 output payload
+# (used by Stage 5 output validator)
 Z1_ONLY_FIELDS = frozenset({
     "source_field", "transformation_summary", "stage_of_origin",
     "artifact_id", "artifact_name", "artifact_path", "producing_step",
 })
+
+# ---------------------------------------------------------------------------
+# Zone-2 Safe Payload Profile constants
+# Authority: PRODUCTIZE.LENS.ZONE2.SAFE.PAYLOAD.01
+# ---------------------------------------------------------------------------
+
+# Complete allowed top-level field set for a ZONE-2 L1 payload
+ZONE2_L1_ALLOWED_FIELDS = frozenset({
+    "projection_id", "claim_id", "zone", "depth", "evidence_class",
+    "persona", "run_id", "generated_at", "trace_available", "caveats",
+    "claim_label", "value", "explanation", "signal", "trace_depth_available",
+})
+
+# Named fields that are absolutely forbidden from any ZONE-2 payload
+ZONE2_FORBIDDEN_FIELDS = frozenset({
+    "source_field", "transformation_summary", "stage_of_origin",
+    "artifact_id", "artifact_name", "artifact_path", "producing_step",
+    "signal_id",                    # internal SIG-XXX reference
+    "full_trace", "known_gaps", "blocking_conditions",
+    "traceability_status", "audit_confirmed",
+})
+
+# Allowed subfields in the signal block (ZONE-2)
+ZONE2_SIGNAL_ALLOWED_SUBFIELDS = frozenset({
+    "title", "business_impact", "risk", "evidence_confidence",
+})
+
+# Forbidden key substring patterns — any key containing these = violation
+ZONE2_FORBIDDEN_KEY_PATTERNS = ("_path", "_file", "_graph")
+
+# Forbidden content substrings in explanation — internal ID leakage markers
+ZONE2_FORBIDDEN_CONTENT_SUBSTRINGS = ("SIG-", "COND-", "DIAG-", "INTEL-")
 
 
 # ---------------------------------------------------------------------------
@@ -757,6 +790,89 @@ def _apply_persona(
 
 
 # ---------------------------------------------------------------------------
+# Zone-2 Safe Payload Profile Validator
+# Authority: PRODUCTIZE.LENS.ZONE2.SAFE.PAYLOAD.01
+# ---------------------------------------------------------------------------
+
+def _validate_zone2_payload(payload: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """
+    Zone-2 safe payload profile enforcement gate.
+
+    Runs AFTER Stage 5, BEFORE returning any payload.
+    No-op for non-ZONE-2 payloads.
+
+    Returns None on pass.
+    Returns governed error dict (reason: ERROR_ZONE2_PROFILE_VIOLATION) on any violation.
+    No partial payload is returned on violation — fail-closed.
+
+    Six checks (applied in order; first violation terminates):
+      1. Named forbidden fields absent (ZONE2_FORBIDDEN_FIELDS)
+      2. No forbidden key patterns (_path, _file, _graph)
+      3. Top-level keys ⊆ ZONE2_L1_ALLOWED_FIELDS
+      4. Signal subblock: signal_id absent; keys ⊆ ZONE2_SIGNAL_ALLOWED_SUBFIELDS
+      5. value.raw absent
+      6. explanation free of forbidden content substrings (SIG-, COND-, DIAG-, INTEL-)
+    """
+    if payload.get("zone") != ZONE_2:
+        return None  # no-op
+
+    ts = payload.get("generated_at", datetime.now(timezone.utc).isoformat())
+
+    def _violation(detail: str) -> Dict[str, Any]:
+        # detail is stripped: zone is always ZONE-2 here (info-leak prevention)
+        return {
+            "error_type":   "ZONE2_PROFILE_VIOLATION",
+            "reason":       "ERROR_ZONE2_PROFILE_VIOLATION",
+            "stage":        "STAGE_Z2_VALIDATE",
+            "zone":         ZONE_2,
+            "depth":        payload.get("depth", ""),
+            "claim_id":     payload.get("claim_id"),
+            "generated_at": ts,
+        }
+
+    # Check 1: named forbidden fields
+    for fname in ZONE2_FORBIDDEN_FIELDS:
+        if fname in payload:
+            return _violation(f"Forbidden field '{fname}' in ZONE-2 payload.")
+
+    # Check 2: forbidden key patterns
+    for key in payload:
+        for pattern in ZONE2_FORBIDDEN_KEY_PATTERNS:
+            if pattern in key:
+                return _violation(f"Key '{key}' matches forbidden pattern '{pattern}'.")
+
+    # Check 3: unknown top-level fields
+    unknown = set(payload.keys()) - ZONE2_L1_ALLOWED_FIELDS
+    if unknown:
+        return _violation(f"Unknown fields in ZONE-2 payload: {sorted(unknown)}.")
+
+    # Check 4: signal subblock
+    signal = payload.get("signal")
+    if signal is not None and isinstance(signal, dict):
+        if "signal_id" in signal:
+            return _violation("Forbidden field 'signal_id' in signal subblock.")
+        unknown_sig = set(signal.keys()) - ZONE2_SIGNAL_ALLOWED_SUBFIELDS
+        if unknown_sig:
+            return _violation(f"Unknown signal subfields: {sorted(unknown_sig)}.")
+
+    # Check 5: value.raw absent
+    value = payload.get("value")
+    if isinstance(value, dict) and "raw" in value:
+        return _violation("Forbidden field 'value.raw' in ZONE-2 payload (Z1 only).")
+
+    # Check 6: explanation content
+    explanation = payload.get("explanation", "")
+    if isinstance(explanation, str):
+        for substr in ZONE2_FORBIDDEN_CONTENT_SUBSTRINGS:
+            if substr in explanation:
+                return _violation(
+                    f"Forbidden content substring '{substr}' in explanation field."
+                )
+
+    return None  # all checks passed
+
+
+# ---------------------------------------------------------------------------
 # Stage 5 — Output Validation
 # ---------------------------------------------------------------------------
 
@@ -894,6 +1010,11 @@ def project(
     err = _validate_output(payload, zone, depth, ts, claim_id)
     if err:
         return _error_dict(err, zone)
+
+    # Zone-2 safe payload profile gate (post-Stage-5, pre-return)
+    z2_err = _validate_zone2_payload(payload)
+    if z2_err:
+        return z2_err
 
     return payload
 
