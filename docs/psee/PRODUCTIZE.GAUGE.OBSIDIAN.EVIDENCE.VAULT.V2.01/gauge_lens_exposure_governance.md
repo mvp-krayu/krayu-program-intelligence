@@ -105,7 +105,7 @@ For every piece of information in ZONE-0 or ZONE-1, there must be a path to it f
 
 ## SECTION 6 — GAUGE vs LENS DIFFERENCE MODEL
 
-The architectural principle is: **GAUGE computes. LENS explains.**
+The architectural principle is: the execution chain computes; GAUGE renders; LENS explains.
 
 GAUGE is truthful but technical. It uses dimension IDs, execution status codes, and reconstruction axis names. It is designed for operators who understand the PSEE system.
 

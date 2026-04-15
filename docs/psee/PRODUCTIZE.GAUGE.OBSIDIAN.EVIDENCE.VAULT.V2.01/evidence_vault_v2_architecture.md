@@ -15,17 +15,19 @@ The V1 vault was a file index with path references. It answered: "where is this 
 The V2 vault is an evidence graph. It answers: "why is this value true, where does it come from, and who can see it?"
 
 **Core architectural formula:**
+
 ```
-GAUGE computes
-Vault proves
-LENS explains
+Execution chain computes
+GAUGE renders operator-facing truth
+Vault anchors evidence and traceability
+LENS renders client-safe explanation
 ```
 
-- GAUGE is the computation engine: it runs the chain, produces artifacts, scores the run.
-- The Vault is the evidence substrate: it holds the proof chains, entity inventories, claim registrations, and traceability maps.
-- LENS is the projection layer: it takes vault-backed evidence and produces client-safe, narrative explanations.
-
-This formula is admissible against actual surfaces: GAUGE currently computes. The vault (V2) will prove. LENS as a product surface does not yet exist as code — it is a design target grounded in the claims, governance policy, and entity inventories established here.
+The computation engine is the upstream execution chain (Bootstrap, IG, PSEE, PiOS).
+GAUGE does not compute the chain. It consumes governed outputs and renders them for operator-facing use.
+GAUGE reads artifacts such as gauge_state.json, topology outputs, and signal registries, and exposes them through APIs and UI surfaces.
+The Vault organizes and proves these outputs through traceable evidence chains.
+LENS consumes vault-backed truth and projects it into client-safe narrative explanations.
 
 ---
 

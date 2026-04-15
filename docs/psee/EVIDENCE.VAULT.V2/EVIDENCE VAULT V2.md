@@ -10,7 +10,11 @@ vault_root: docs/psee/EVIDENCE.VAULT.V2/
 
 Evidence-first vault for GAUGE claim verification, exposure governance, and LENS client surface preparation. This vault upgrades the V1 document-index model to an evidence graph where every surfaced claim traces backward to a verified artifact chain.
 
-**Core formula:** GAUGE computes / Vault proves / LENS explains
+Core formula:
+Execution chain computes
+GAUGE renders operator-facing truth
+Vault proves and structures evidence
+LENS explains client-facing meaning
 
 ## Locked Baseline
 
