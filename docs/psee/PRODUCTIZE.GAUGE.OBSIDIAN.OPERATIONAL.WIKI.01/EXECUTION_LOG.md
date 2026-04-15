@@ -288,7 +288,72 @@ The 23-page Obsidian wiki specification covers the complete operational chain fr
 
 ---
 
-## 11. EXECUTION STATUS
+## 11. WIKI MATERIALIZATION — PASS
+
+- Date: 2026-04-15
+- Vault path: `docs/psee/PRODUCTIZE.GAUGE.OBSIDIAN.OPERATIONAL.WIKI.01/vault/`
+
+### Nodes created
+
+| folder | count | nodes |
+|--------|-------|-------|
+| vault root | 1 | GAUGE — Operational Wiki |
+| 00 — Meta | 3 | Lock Baseline, Chain Overview, Directory Map |
+| 01 — Chain Stages | 9 | S0, IG, L40.2, L40.3, L40.4, S1, S2, S3, S4 |
+| 02 — Artifacts | 5 | Intake Artifacts, IG Artifacts, Structural Artifacts, Package Artifacts, Gauge State |
+| 03 — Governance | 2 | Contracts, Protocols |
+| 04 — Product Surface | 2 | App Routes, Dual-Run Comparison |
+| 05 — Alignment Streams | 1 | Alignment Streams Index |
+| **Total** | **23** | **matches spec §10.3** |
+
+### Folder structure created
+
+```
+vault/
+├── 00 — Meta/
+├── 01 — Chain Stages/
+├── 02 — Artifacts/
+├── 03 — Governance/
+├── 04 — Product Surface/
+└── 05 — Alignment Streams/
+```
+
+All 6 folders created. Matches spec §2.2 exactly.
+
+### Link validation result
+
+| link type | check | result |
+|-----------|-------|--------|
+| Internal Obsidian `[[]]` links | All link targets exist as notes in vault | PASS |
+| Stage transition links (← →) | All transitions reference existing nodes | PASS |
+| Artifact backlinks (Produced By / Consumed By) | All reference existing stage nodes | PASS |
+| Repo-path references | Cited as inline code only (not clickable links to missing paths) | PASS |
+| [NOT PRESENT] markers | Applied to all non-existing paths | PASS |
+
+No broken internal links. No invalid file paths presented as navigable.
+
+### Blocked mappings preserved
+
+| mapping | preservation method |
+|---------|---------------------|
+| `docs/pios/runs/run_07_source_profiled_ingestion/` | Marked `[NOT PRESENT — lineage constraint]` in: GAUGE — Operational Wiki (root), Lock Baseline, Directory Map, IG Artifacts, S0 — Intake and Bootstrap, IG — Intelligence Graph Bridge |
+| `40_2/`, `40_3/`, `40_4/` for `run_authoritative_recomputed_01` | Marked `[NOT PRESENT]` in Structural Artifacts; blocked status noted in L40.2, L40.3, L40.4 stage nodes |
+
+### No-duplication confirmation
+
+No body text was copied from any existing spec, execution log, contract, or protocol. All nodes contain only: field values, path references, authoritative value tables, and minimal descriptive text per node template (spec §4).
+
+### Node traceability confirmation
+
+All 23 nodes trace to at least one verified repo path. Verified at time of materialization against paths confirmed present in EXECUTION_LOG §3 and §4.
+
+### Materialization verdict
+
+**PASS — 23/23 nodes created, all folders present, all links valid, all blocked mappings explicitly preserved.**
+
+---
+
+## 12. EXECUTION STATUS
 
 Status: COMPLETE — GOVERNED AND FRESH (documentation layer)
 
