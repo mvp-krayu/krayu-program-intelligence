@@ -1,10 +1,10 @@
 /**
  * components/lens/ExecutiveStatusPanel.js
- * PRODUCTIZE.LENS.UI.01
+ * PRODUCTIZE.LENS.UI.01 / PRODUCTIZE.LENS.UI.POLISH.01
  *
- * Primary hero panel for LENS v1.
+ * Operational readiness hero panel.
  * Renders the executive verdict claim (CLM-25) with evidence class badge,
- * claim narrative, and caveat disclosure if CONDITIONAL.
+ * claim narrative, and condition disclosure if CONDITIONAL.
  *
  * Consumes ZONE-2 projection payloads only.
  * No vault reads. No ZONE-1 fields.
@@ -12,7 +12,7 @@
 
 const EVIDENCE_BADGE = {
   VERIFIED:    { label: 'VERIFIED',    bg: '#0d2e1a', color: '#3fb950', border: '#1b5e3d' },
-  CONDITIONAL: { label: 'CONDITIONAL', bg: '#1a1600', color: '#d29922', border: '#3d3208' },
+  CONDITIONAL: { label: 'IN PROGRESS', bg: '#1a1600', color: '#d29922', border: '#3d3208' },
   PARTIAL:     { label: 'PARTIAL',     bg: '#18100a', color: '#e07a30', border: '#4a2910' },
   BLOCKED:     { label: 'BLOCKED',     bg: '#1a0a0a', color: '#f85149', border: '#4a1212' },
 }
@@ -30,12 +30,22 @@ function EvidenceBadge({ evidenceClass }) {
   )
 }
 
+// Normalize verdict narrative: strip raw internal status codes for display
+function formatNarrative(text) {
+  if (!text) return '—'
+  // Convert "STRUCTURE: X. COMPLEXITY: Y. EXECUTION: Z." into readable form
+  return text
+    .replace(/STRUCTURE:\s*/g, 'Structural Integrity: ')
+    .replace(/COMPLEXITY:\s*/g, 'Structural Concentration: ')
+    .replace(/EXECUTION:\s*/g, 'Operational Readiness: ')
+}
+
 export default function ExecutiveStatusPanel({ payload }) {
   if (!payload) return null
   if (payload.error_type) {
     return (
       <div className="lens-status-panel lens-panel-blocked">
-        <div className="lens-panel-label">EXECUTIVE STATUS</div>
+        <div className="lens-panel-label">OPERATIONAL READINESS</div>
         <div className="lens-error-state">{payload.reason || 'UNAVAILABLE'}</div>
       </div>
     )
@@ -48,19 +58,19 @@ export default function ExecutiveStatusPanel({ payload }) {
   return (
     <div className="lens-status-panel">
       <div className="lens-panel-header">
-        <span className="lens-panel-label">EXECUTIVE STATUS</span>
+        <span className="lens-panel-label">OPERATIONAL READINESS</span>
         <EvidenceBadge evidenceClass={payload.evidence_class} />
       </div>
 
-      <div className="lens-status-claim-label">{payload.claim_label}</div>
+      <div className="lens-status-claim-label">Three-Axis Readiness Assessment</div>
 
-      <div className="lens-status-narrative">{narrative}</div>
+      <div className="lens-status-narrative">{formatNarrative(narrative)}</div>
 
       {caveats.length > 0 && (
         <div className="lens-status-caveats">
           {caveats.map((c, i) => (
             <div key={i} className="lens-caveat-row">
-              <span className="lens-caveat-marker">NOTE</span>
+              <span className="lens-caveat-marker">OPEN ITEM</span>
               <span className="lens-caveat-text">{c}</span>
             </div>
           ))}

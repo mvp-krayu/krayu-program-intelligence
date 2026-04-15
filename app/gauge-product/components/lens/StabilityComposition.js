@@ -40,7 +40,7 @@ export default function StabilityComposition({ payloads }) {
 
   return (
     <div className="lens-stability-panel">
-      <div className="lens-panel-label">EVIDENCE COMPOSITION</div>
+      <div className="lens-panel-label">CONFIDENCE DISTRIBUTION</div>
 
       <div className="lens-stability-bar">
         {segments.map(({ ec, pct }) => (
