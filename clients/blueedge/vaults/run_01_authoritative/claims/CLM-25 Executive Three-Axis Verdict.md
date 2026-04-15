@@ -43,6 +43,11 @@ STRUCTURE=STRONG, COMPLEXITY=LOW, EXECUTION=UNKNOWN
 - Status: FULL
 - Caveats: CONCEPT-06 predicate uses PHASE_1_ACTIVE — will not match NOT_EVALUATED on recomputed run. EXECUTION verdict may not correctly show UNKNOWN on Stream 10 schema. Must be fixed before LENS surface.
 
+
+## Why It Matters
+
+The three-axis verdict is the highest-level summary of the assessment state and the primary output for executive decision-making. STRUCTURE=STRONG means the platform's structural evidence is complete, coherent, and verified — this is the evidence backing the 60-point floor. COMPLEXITY=LOW means no structural overlaps or orphaned components were found, which reduces integration risk. EXECUTION=UNKNOWN is the critical pending dimension: it does not mean the platform is problematic, it means the assessment is not finished until runtime evaluation completes. Together, these three verdicts answer the executive question: what do we know, what is the structural health, and what still needs to be measured?
+
 ## Surfaces
 - ExecutiveDecisionBlock in overview.js
 - Known gap: CONCEPT-06 predicate mismatch — PHASE_1_ACTIVE vs NOT_EVALUATED. Production risk on record.

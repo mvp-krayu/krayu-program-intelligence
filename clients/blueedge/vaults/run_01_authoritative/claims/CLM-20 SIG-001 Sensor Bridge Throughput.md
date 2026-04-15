@@ -51,6 +51,11 @@ Sensor Bridge Throughput Ceiling: Configuration Confirmed, Runtime Unknown
 - Status: FULL
 - Caveats: Four-layer chain (SIG-006 → COND-006 → DIAG-006 → INTEL-001). Runtime throughput is not measured; ceiling is static configuration only.
 
+
+## Why It Matters
+
+The sensor bridge is the only pathway through which HASI network security intelligence reaches the cloud. Its throughput ceiling of 0.333 records/second is a structural hard limit — not a performance degradation risk but a fixed capacity constraint confirmed in the static configuration. A buyer needs to know that the security intelligence pipeline has a measurable and bounded capacity, and that runtime performance is not yet observable. This signal establishes what is known (the ceiling) and what is not (whether actual throughput meets it under live conditions).
+
 ## Surfaces
 - SignalAvailability panel: SIG-001, confidence chip STRONG
 - Business impact: The sensor bridge is the sole forwarding pathway for HASI network security intelligence; its 0.333 rec/sec ceiling is the hard upper bound on threat data delivery to the cloud, directly constraining the security intelligence pipeline capacity for all connected SVG devices.

@@ -38,6 +38,11 @@ canonical(60) + COMPLETION_WEIGHT(40) = 100
 - Status: FULL
 - Caveats: None
 
+
+## Why It Matters
+
+The projected score of 100 tells a buyer that the platform's structural evidence is complete enough that a perfect score is achievable — not hypothetically but by completing a defined and bounded additional step: running the execution assessment. This is a credible ceiling, not a marketing claim; it is derived arithmetically from the proven 60 plus the execution weight (40). Together, CLM-09 and CLM-10 define the assessment range: the worst case is proven at 60, the best case is achievable at 100.
+
 ## Surfaces
 - StatusBand "Achievable: 100"
 - ScoreGauge achievable chip

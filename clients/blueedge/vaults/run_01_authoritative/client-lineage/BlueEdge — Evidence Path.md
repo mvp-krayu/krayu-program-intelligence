@@ -6,6 +6,10 @@ status: ACTIVE
 stream_id: PRODUCTIZE.GAUGE.OBSIDIAN.EVIDENCE.VAULT.V3.01
 ---
 
+## Why This Page Matters
+
+This is the backbone of the BlueEdge assessment. Every claim in the vault traces back through this chain. The intake produced 30 structural units; those units drove the coverage and reconstruction results; the normalized topology became the canonical platform map; the signal registry was derived from the structural evidence chain; the gauge_state.json is the terminal product that GAUGE renders. If you want to verify any claim, follow its artifact link back to the producing stage in this chain.
+
 ## Evidence Path
 
 The complete lineage from intake source to product surface for the BlueEdge assessment.
@@ -51,6 +55,30 @@ GAUGE PRODUCT SURFACE
   → /api/signals → index.js SignalAvailability
   → overview.js (ExecutiveDecisionBlock, StatusBand, ScoreGauge, MeaningSection)
 ```
+
+
+## Key Outcomes
+
+The commercially significant outputs this chain produced:
+
+| outcome | value | claim |
+|---------|-------|-------|
+| Proven score | 60/100 | [[CLM-09 Proven Structural Score]] |
+| Achievable score | 100/100 | [[CLM-10 Achievable Score Projected]] |
+| Signal count | 5 (STRONG:2 / MODERATE:2 / WEAK:1) | [[CLM-18 Governed Signal Count]] |
+| Executive verdict | STRUCTURE=STRONG / COMPLEXITY=LOW / EXECUTION=UNKNOWN | [[CLM-25 Executive Three-Axis Verdict]] |
+| Unknown dimensions | 7 operational dimensions unresolvable from structure | [[CLM-21 SIG-002 Platform Runtime State Seven Unknown Dimensions]] |
+
+## Follow the Chain
+
+A curated path through the most important nodes:
+
+1. Start here: [[BlueEdge — Evidence Path]] (this note)
+2. Terminal artifact: [[ART-01 gauge_state.json]]
+3. Score derivation: [[TRN-03 Score Computation]]
+4. Proven score: [[CLM-09 Proven Structural Score]]
+5. Signal intelligence: [[ART-05 signal_registry.json]]
+6. Most significant signal: [[CLM-21 SIG-002 Platform Runtime State Seven Unknown Dimensions]]
 
 ## Assessment State
 

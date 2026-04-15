@@ -48,6 +48,11 @@ Dependency Load: 68% of Architectural Relationships Are Dependency Edges
 - Status: FULL
 - Caveats: MODERATE confidence — deterministic computation confirmed but some conditions pending activation (Stream 75.1)
 
+
+## Why It Matters
+
+A dependency load of 68% means that most connections in the platform's architecture are direct, load-bearing dependencies rather than loose couplings. This is not inherently wrong — many well-designed systems carry high dependency ratios — but it means the blast radius of any change or failure is structurally elevated. For a buyer planning integration, migration, or operational management, this ratio is a direct input to risk modeling: how many components are affected when one changes, and how much of the architecture must be understood before any safe modification can be made.
+
 ## Surfaces
 - SignalAvailability panel: SIG-003, confidence chip MODERATE
 - Business impact: A dependency load of 0.682 means most architectural connections are direct dependencies, elevating the blast radius of any component-level failure or change; deployment safety, change management, and incident containment all require accounting for this coupling density.

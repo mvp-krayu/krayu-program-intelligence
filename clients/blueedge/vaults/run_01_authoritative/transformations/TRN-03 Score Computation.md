@@ -27,3 +27,7 @@ Computes canonical and projected scores from coverage, reconstruction, and execu
 
 ## Claims Produced
 [[CLM-09 Proven Structural Score]] [[CLM-10 Achievable Score Projected]] [[CLM-11 Score Band Classification]] [[CLM-12 Score Confidence Range]]
+
+## Product Role
+
+Score computation is the transformation where structural evidence becomes a number. The execution chain runs this step — GAUGE renders the result. The arithmetic is deterministic and bounded: coverage contributes a maximum of 35 points, reconstruction contributes 25, execution contributes up to 40 when evaluated. The canonical score (60) and projected score (100) are the two commercial numbers that appear in StatusBand, ScoreGauge, and the executive overview. Understanding this transformation is what makes those numbers defensible: they are not estimates, they are the output of explicit rules applied to verified evidence.

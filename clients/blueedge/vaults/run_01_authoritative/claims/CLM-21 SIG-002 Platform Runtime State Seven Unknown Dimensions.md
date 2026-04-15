@@ -57,6 +57,11 @@ Platform Runtime State: Seven Core Dimensions Are Currently Unknown
 - Status: FULL
 - Caveats: All seven blocked diagnoses independently confirmed across DIAG-001..DIAG-008 with complete condition chains
 
+
+## Why It Matters
+
+This is the most commercially significant finding in this assessment. Seven dimensions that any operator would need to make decisions about platform health — cache performance, fleet connectivity, event pipeline activity, alert processing, driver session scoring — are genuinely and completely unknown from structural analysis alone. This is not a warning or an estimate; it is a hard boundary on what the structural evidence can establish. Any operational claim about platform health made without runtime assessment is operating without an evidence base. For a buyer, this defines the scope of the execution assessment phase: run the platform, measure these seven dimensions, complete the assessment.
+
 ## Surfaces
 - SignalAvailability panel: SIG-002, confidence chip STRONG
 - Business impact: The entire observable CE-001 platform runtime — cache performance, event delivery, fleet connectivity, alert processing, and driver session scoring — operates as a structural unknown; any operational decision about platform health or capacity lacks an evidence base.

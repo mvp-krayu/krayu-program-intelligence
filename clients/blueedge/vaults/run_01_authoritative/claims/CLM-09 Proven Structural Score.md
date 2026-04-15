@@ -44,6 +44,11 @@ N/A
 - Status: FULL
 - Caveats: None — derivation: completion_points(0) + coverage_points(35) + reconstruction_points(25) = 60
 
+
+## Why It Matters
+
+A score of 60 is not a low score — it is the maximum provable from structural analysis alone. It means the entire structural evidence base is present, coherent, and verified. The 40-point gap is not a deficit; it is the execution assessment, which requires running the platform to measure. For a buyer or operator, 60 is the floor: a commitment backed by evidence that cannot be removed. It is not an estimate or a projection; it is a deterministic sum of verified structural facts.
+
 ## Surfaces
 
 - StatusBand ("Proven Score: 60")

@@ -6,6 +6,10 @@ status: ACTIVE
 vault_root: docs/psee/EVIDENCE.VAULT.V2/
 ---
 
+**Primary entry point for this client instance: [[VAULT ENTRY — BlueEdge]]**
+
+---
+
 ## Purpose
 
 Evidence-first vault for GAUGE claim verification, exposure governance, and LENS client surface preparation. This vault upgrades the V1 document-index model to an evidence graph where every surfaced claim traces backward to a verified artifact chain.
@@ -39,8 +43,10 @@ EVIDENCE.VAULT.V2/
   claims/                      ← CLM-XX nodes (V3 materialization target)
   entities/                    ← ENT-XX nodes (V3 materialization target)
   artifacts/                   ← ART-XX nodes (V3 materialization target)
-  clients/
-    blueedge/                  ← BlueEdge client lineage subtree
+  client-lineage/
+    BlueEdge — Evidence Path.md  ← BlueEdge client lineage backbone
+  00 — Navigation/
+    Top Claims.md / Core Artifacts.md / Value Creation Path.md
 ```
 
 ## Governing Specification

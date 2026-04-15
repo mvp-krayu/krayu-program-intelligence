@@ -27,3 +27,7 @@ Key fields: run_id, stream, state (execution_status, execution_layer_evaluated, 
 
 ## Authoritative Path
 `clients/blueedge/psee/runs/run_authoritative_recomputed_01/package/gauge_state.json`
+
+## Product Role
+
+This is the artifact that powers the GAUGE product surface. The execution chain computes — this file is the terminal product of that computation. GAUGE renders by reading this single file through the GAUGE_PACKAGE_DIR binding: every dimension panel, score display, confidence band, and executive verdict in the product traces to a field in gauge_state.json. It is the handoff point between the execution chain and the rendering surface. When this file is updated — as happens when running the recomputed schema — GAUGE immediately reflects the new state without any recomputation of its own.

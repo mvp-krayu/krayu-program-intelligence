@@ -28,3 +28,7 @@ signal.business_impact and signal.risk fields are ZONE-2 safe but NOT currently 
 
 ## Authoritative Path
 `docs/pios/41.4/signal_registry.json`
+
+## Product Role
+
+The signal registry is the intelligence layer of the assessment product. While gauge_state.json carries the structural score, this file carries the forward-looking findings: what risks exist, what is unknown, what capacity constraints are confirmed. The five signals in this file are the most commercially differentiated content in the assessment — they go beyond counting and scoring to explain what the structural evidence means in operational terms. Currently, the GAUGE SignalAvailability panel renders only signal titles and confidence labels. The richer fields (business_impact, risk) are available in the /api/signals response but unrendered — a known V2 gap that represents significant unrealized product value.
