@@ -5,7 +5,7 @@ client: blueedge
 status: ACTIVE
 stream_id: PRODUCTIZE.GAUGE.OBSIDIAN.EVIDENCE.VAULT.V3.01
 ---
-
+^
 ## What This Vault Is
 
 This is the evidence vault for the BlueEdge Fleet Management Platform structural assessment. Every number, verdict, and signal in this vault traces backward to a specific artifact produced by the PiOS execution chain. Nothing is asserted without a traceable source. Everything a buyer, operator, or auditor might ask about this assessment — how was the score derived, what are the signals, what is not yet known — has an answer in this vault.
