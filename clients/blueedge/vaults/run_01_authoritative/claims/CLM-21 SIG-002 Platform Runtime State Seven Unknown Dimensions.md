@@ -20,23 +20,23 @@ Platform Runtime State: Seven Core Dimensions Are Currently Unknown
 - capability: Caching Layer (CAP-27)
 
 ## Source Fields
-- [[INTEL-002]]
-- [[DIAG-001]] through [[DIAG-008]] (excluding DIAG-006)
-- [[COND-001]] through [[COND-008]] (excluding COND-006)
+- `INTEL-002`
+- `DIAG-001` through `DIAG-008` (excluding DIAG-006)
+- `COND-001` through `COND-008` (excluding COND-006)
 
 ## Upstream Artifacts
-- [[INTEL-002]]
-- [[DIAG-001]]
-- [[DIAG-002]]
-- [[DIAG-003]]
-- [[DIAG-004]]
-- [[DIAG-005]]
-- [[DIAG-007]]
-- [[DIAG-008]]
-- [[RedisCacheModule]] (COMP-64)
-- [[Redis 7]] (COMP-81)
-- [[FleetEventsModule]] (COMP-65)
-- [[GatewaysModule]] (COMP-27)
+- `INTEL-002`
+- `DIAG-001`
+- `DIAG-002`
+- `DIAG-003`
+- `DIAG-004`
+- `DIAG-005`
+- `DIAG-007`
+- `DIAG-008`
+- RedisCacheModule (COMP-64)
+- Redis 7 (COMP-81)
+- FleetEventsModule (COMP-65)
+- GatewaysModule (COMP-27)
 
 ## Transformation Chain
 - COND-001..COND-008 (excl. COND-006) → DIAG-001..DIAG-008 (excl. DIAG-006) → INTEL-002 → SIG-002

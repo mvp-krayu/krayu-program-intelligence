@@ -23,7 +23,7 @@ Two schema variants coexist:
 Key fields: run_id, stream, state (execution_status, execution_layer_evaluated, execution_mode), dimensions (DIM-01..06), score (canonical, projected, components, band_label), projection (value, rule, caveat), confidence (lower, upper, status)
 
 ## Claims Grounded
-[[CLM-01]] [[CLM-02]] [[CLM-03]] [[CLM-04]] [[CLM-05]] [[CLM-06]] [[CLM-07]] [[CLM-08]] [[CLM-09]] [[CLM-10]] [[CLM-11]] [[CLM-12]] [[CLM-13]] [[CLM-25 Executive Three-Axis Verdict]]
+[[CLM-01 Structural Coverage Completeness]] [[CLM-02 Structural Unit Count]] [[CLM-03 Structural Reconstruction Pass-Fail]] [[CLM-04 Four-Axis Reconstruction Detail]] [[CLM-05 Escalation Clearance]] [[CLM-06 Runtime Unknown-Space Count]] [[CLM-07 Source Data Intake Complete]] [[CLM-08 Structural Patterns Conform]] [[CLM-09 Proven Structural Score]] [[CLM-10 Achievable Score Projected]] [[CLM-11 Score Band Classification]] [[CLM-12 Score Confidence Range]] [[CLM-13 Execution Layer Status]] [[CLM-25 Executive Three-Axis Verdict]]
 
 ## Authoritative Path
 `clients/blueedge/psee/runs/run_authoritative_recomputed_01/package/gauge_state.json`

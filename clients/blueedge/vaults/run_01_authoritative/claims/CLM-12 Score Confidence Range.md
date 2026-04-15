@@ -21,8 +21,8 @@ lower=60, upper=100, status=SPLIT_EXECUTION_NOT_EVALUATED
 - `confidence.status`
 
 ## Upstream Artifacts
-- [[gauge_state.json]]
-- [[CLM-09 Canonical Score Proven]]
+- [[ART-01 gauge_state.json]]
+- [[CLM-09 Proven Structural Score]]
 - [[CLM-10 Achievable Score Projected]]
 
 ## Transformation Chain

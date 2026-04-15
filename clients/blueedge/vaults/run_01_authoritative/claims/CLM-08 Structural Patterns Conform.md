@@ -23,12 +23,12 @@ PASS
 
 ## Upstream Artifacts
 
-- [[gauge_state.json]]
+- [[ART-01 gauge_state.json]]
 
 ## Transformation Chain
 
-- [[S-13 terminal state invariant]]
-- [[STOP-HEURISTIC event log]]
+- S-13 terminal state invariant
+- STOP-HEURISTIC event log
 
 ## Entity Links
 

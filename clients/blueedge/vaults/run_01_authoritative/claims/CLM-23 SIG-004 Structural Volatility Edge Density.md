@@ -24,13 +24,13 @@ Structural Volatility: Edge-to-Node Density Exceeds Unity
 - capability: Platform Monorepo Container (CAP-29)
 
 ## Source Fields
-- [[COND-002]]
-- [[SIG-004]]
+- `COND-002`
+- `SIG-004`
 
 ## Upstream Artifacts
-- [[COND-002]]
-- [[SIG-004]]
-- [[blueedge-platform]] (COMP-01, Monorepo)
+- `COND-002`
+- `SIG-004`
+- blueedge-platform (COMP-01, Monorepo)
 
 ## Transformation Chain
 - structural telemetry → edge count / node count = 1.273 (edge-to-node density)

@@ -26,12 +26,12 @@ Each axis probes a distinct structural consistency property. COMPLETENESS perfor
 
 ## Upstream Artifacts
 
-- [[reconstruction_state.json]]
-- [[run_authoritative_recomputed_01]]
+- [[ART-03 reconstruction_state.json]]
+- run_authoritative_recomputed_01
 
 ## Transformation Chain
 
-- [[run_authoritative_recomputed_01]]
+- run_authoritative_recomputed_01
 
 ## Entity Links
 
@@ -51,4 +51,4 @@ N/A
 ## Surfaces
 
 - StructuralMetrics panel ("Recon Axes: 4")
-- `axis_results` in [[run_authoritative_recomputed_01]] (individual axis results not rendered in current GAUGE UI)
+- `axis_results` in run_authoritative_recomputed_01 (individual axis results not rendered in current GAUGE UI)

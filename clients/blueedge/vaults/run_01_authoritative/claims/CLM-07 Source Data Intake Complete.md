@@ -23,12 +23,12 @@ COMPLETE
 
 ## Upstream Artifacts
 
-- [[gauge_state.json]]
+- [[ART-01 gauge_state.json]]
 
 ## Transformation Chain
 
-- [[PSEE.1 INV-04]]
-- [[S-13 terminal state invariant]]
+- PSEE.1 INV-04
+- S-13 terminal state invariant
 
 ## Entity Links
 

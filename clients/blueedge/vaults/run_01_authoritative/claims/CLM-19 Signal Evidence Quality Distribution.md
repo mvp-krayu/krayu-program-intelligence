@@ -19,7 +19,7 @@ STRONG:2 (SIG-001, SIG-002), MODERATE:2 (SIG-003, SIG-004), WEAK:1 (SIG-005)
 - `signal_registry.json` → `signals[].evidence_confidence`
 
 ## Upstream Artifacts
-- [[signal_registry.json]]
+- [[ART-05 signal_registry.json]]
 - [[CLM-20 SIG-001 Sensor Bridge Throughput]]
 - [[CLM-21 SIG-002 Platform Runtime State Seven Unknown Dimensions]]
 - [[CLM-22 SIG-003 Dependency Load 68 Percent]]

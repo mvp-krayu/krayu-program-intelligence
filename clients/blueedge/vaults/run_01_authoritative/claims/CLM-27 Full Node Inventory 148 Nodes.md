@@ -21,7 +21,7 @@ Every node has a canonical ID, name, depth, and structural type. The full 148-no
 - `canonical_topology.json` → `components[]` (count=89)
 
 ## Upstream Artifacts
-- [[canonical_topology.json]]
+- [[ART-04 canonical_topology.json]]
 - [[CLM-14 Structural Domain Count]]
 - [[CLM-15 Structural Capability Count]]
 - [[CLM-16 Structural Component Count]]

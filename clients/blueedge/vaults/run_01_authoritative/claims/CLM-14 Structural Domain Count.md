@@ -19,7 +19,7 @@ The 17 domains are the root-level structural nodes in the canonical topology. Ea
 - `canonical_topology.json` → `domains[]` (count=17)
 
 ## Upstream Artifacts
-- [[canonical_topology.json]]
+- [[ART-04 canonical_topology.json]]
 
 ## Transformation Chain
 - pios emit topology → canonical_topology.json → domains[] count

@@ -69,7 +69,7 @@ GAUGE PRODUCT SURFACE
 | Unknown-space records (envelope) | 3 (USP-01/02/03) |
 
 ## Claims in Evidence Path
-[[CLM-01]] [[CLM-02]] [[CLM-03]] [[CLM-04]] [[CLM-05]] [[CLM-06]] [[CLM-07]] [[CLM-08]] [[CLM-09]] [[CLM-10]] [[CLM-11]] [[CLM-12]] [[CLM-13]] [[CLM-14]] [[CLM-15]] [[CLM-16]] [[CLM-17]] [[CLM-18]] [[CLM-19]] [[CLM-20]] [[CLM-21]] [[CLM-22]] [[CLM-23]] [[CLM-24]] [[CLM-25]] [[CLM-26]] [[CLM-27]]
+[[CLM-01 Structural Coverage Completeness]] [[CLM-02 Structural Unit Count]] [[CLM-03 Structural Reconstruction Pass-Fail]] [[CLM-04 Four-Axis Reconstruction Detail]] [[CLM-05 Escalation Clearance]] [[CLM-06 Runtime Unknown-Space Count]] [[CLM-07 Source Data Intake Complete]] [[CLM-08 Structural Patterns Conform]] [[CLM-09 Proven Structural Score]] [[CLM-10 Achievable Score Projected]] [[CLM-11 Score Band Classification]] [[CLM-12 Score Confidence Range]] [[CLM-13 Execution Layer Status]] [[CLM-14 Structural Domain Count]] [[CLM-15 Structural Capability Count]] [[CLM-16 Structural Component Count]] [[CLM-17 Cross-Domain Structural Overlaps]] [[CLM-18 Governed Signal Count]] [[CLM-19 Signal Evidence Quality Distribution]] [[CLM-20 SIG-001 Sensor Bridge Throughput]] [[CLM-21 SIG-002 Platform Runtime State Seven Unknown Dimensions]] [[CLM-22 SIG-003 Dependency Load 68 Percent]] [[CLM-23 SIG-004 Structural Volatility Edge Density]] [[CLM-24 SIG-005 Coordination Pressure Partial]] [[CLM-25 Executive Three-Axis Verdict]] [[CLM-26 Executive Narrative Phrase Set]] [[CLM-27 Full Node Inventory 148 Nodes]]
 
 ## Blocked Mappings
 - `run_07_source_profiled_ingestion/` — NOT PRESENT (lineage constraint — client delivery artifact not committed)

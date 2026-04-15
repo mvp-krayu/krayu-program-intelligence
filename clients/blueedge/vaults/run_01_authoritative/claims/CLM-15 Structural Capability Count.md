@@ -19,7 +19,7 @@ Capabilities are the mid-tier structural nodes representing functional services 
 - `canonical_topology.json` → `capabilities[]` (count=42)
 
 ## Upstream Artifacts
-- [[canonical_topology.json]]
+- [[ART-04 canonical_topology.json]]
 - [[CLM-14 Structural Domain Count]]
 
 ## Transformation Chain

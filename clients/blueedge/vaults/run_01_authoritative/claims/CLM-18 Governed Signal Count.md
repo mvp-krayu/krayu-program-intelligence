@@ -19,8 +19,8 @@ stream_id: PRODUCTIZE.GAUGE.OBSIDIAN.EVIDENCE.VAULT.V3.01
 - `signal_registry.json` → `total_signals` = 5
 
 ## Upstream Artifacts
-- [[signal_registry.json]]
-- [[docs/pios/41.4/signal_registry.json]]
+- [[ART-05 signal_registry.json]]
+- `docs/pios/41.4/signal_registry.json`
 
 ## Transformation Chain
 - pios emit signals → signal_registry.json → total_signals count

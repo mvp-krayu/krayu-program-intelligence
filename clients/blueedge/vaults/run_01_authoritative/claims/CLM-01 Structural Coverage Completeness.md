@@ -24,13 +24,13 @@ stream_id: PRODUCTIZE.GAUGE.OBSIDIAN.EVIDENCE.VAULT.V3.01
 
 ## Upstream Artifacts
 
-- [[coverage_state.json]]
-- [[admissibility_log.json]]
-- [[gauge_state.json]]
+- [[ART-02 coverage_state.json]]
+- [[ART-07 admissibility_log.json]]
+- [[ART-01 gauge_state.json]]
 
 ## Transformation Chain
 
-- [[IG.RUNTIME/run_01]]
+- IG.RUNTIME/run_01
 
 ## Entity Links
 

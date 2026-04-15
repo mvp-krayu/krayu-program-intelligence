@@ -19,7 +19,7 @@ NOT_EVALUATED (Stream 10 schema) / PHASE_1_ACTIVE (legacy)
 - `gauge_state.json` → `state.execution_status`
 
 ## Upstream Artifacts
-- [[gauge_state.json]]
+- [[ART-01 gauge_state.json]]
 - [[CLM-10 Achievable Score Projected]]
 - [[CLM-12 Score Confidence Range]]
 

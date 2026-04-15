@@ -19,9 +19,9 @@ CONDITIONAL
 - `gauge_state.json` → `score.band_label`
 
 ## Upstream Artifacts
-- [[gauge_state.json]]
+- [[ART-01 gauge_state.json]]
 - [[CLM-10 Achievable Score Projected]]
-- [[CLM-09 Canonical Score Proven]]
+- [[CLM-09 Proven Structural Score]]
 
 ## Transformation Chain
 - Score range [60, 100] → band_label=CONDITIONAL

@@ -19,15 +19,15 @@ stream_id: PRODUCTIZE.GAUGE.OBSIDIAN.EVIDENCE.VAULT.V3.01
 - "Outside Visibility": CONCEPT-04, CONCEPT-05, CONCEPT-06, CONCEPT-18, CONCEPT-19
 
 ## Source Fields
-- [[concepts.json]] → predicates (19 active concepts)
-- [[resolver.js]] → predicate evaluation against live gauge + topology data
-- [[phrases.json]] (Version 1.2) → phrase templates with placeholders
+- `concepts.json` → predicates (19 active concepts)
+- `resolver.js` → predicate evaluation against live gauge + topology data
+- `phrases.json` (Version 1.2) → phrase templates with placeholders
 
 ## Upstream Artifacts
-- [[concepts.json]]
-- [[resolver.js]]
-- [[phrases.json]]
-- [[overview.js]]
+- `concepts.json`
+- `resolver.js`
+- `phrases.json`
+- `overview.js`
 - [[CLM-25 Executive Three-Axis Verdict]]
 
 ## Transformation Chain

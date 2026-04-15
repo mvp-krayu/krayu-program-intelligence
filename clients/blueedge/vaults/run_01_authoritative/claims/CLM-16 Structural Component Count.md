@@ -19,7 +19,7 @@ Components are the leaf-level structural nodes representing individual modules, 
 - `canonical_topology.json` → `components[]` (count=89)
 
 ## Upstream Artifacts
-- [[canonical_topology.json]]
+- [[ART-04 canonical_topology.json]]
 - [[CLM-14 Structural Domain Count]]
 - [[CLM-15 Structural Capability Count]]
 

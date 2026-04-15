@@ -23,11 +23,11 @@ The canonical score is the proven floor. coverage_points=35 is derived as round(
 
 ## Upstream Artifacts
 
-- [[gauge_state.json]]
+- [[ART-01 gauge_state.json]]
 
 ## Transformation Chain
 
-- [[pios compute gauge (S4)]]
+- pios compute gauge (S4)
 
 ## Entity Links
 

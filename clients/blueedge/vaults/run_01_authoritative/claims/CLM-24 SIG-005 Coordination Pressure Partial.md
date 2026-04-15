@@ -22,14 +22,14 @@ Coordination Pressure: Static Interface Sharing at 87.5%; Runtime State Unresolv
 - capability: Delivery and Quality Infrastructure (CAP-40)
 
 ## Source Fields
-- [[COND-003]]
-- [[SIG-001]]
+- `COND-003`
+- `SIG-001`
 
 ## Upstream Artifacts
-- [[COND-003]]
-- [[SIG-001]]
-- [[CI/CD Workflows]] (COMP-88)
-- [[Docker Compose Orchestration]] (COMP-89)
+- `COND-003`
+- `SIG-001`
+- CI/CD Workflows (COMP-88)
+- Docker Compose Orchestration (COMP-89)
 
 ## Transformation Chain
 - static interface scan → shared interfaces / total observable interfaces = 0.875 (7/8)

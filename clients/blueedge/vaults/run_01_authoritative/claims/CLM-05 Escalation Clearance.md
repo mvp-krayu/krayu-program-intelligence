@@ -24,11 +24,11 @@ CLEAR (value=100)
 
 ## Upstream Artifacts
 
-- [[gauge_state.json]]
+- [[ART-01 gauge_state.json]]
 
 ## Transformation Chain
 
-- [[S-13 terminal state invariant]]
+- S-13 terminal state invariant
 
 ## Entity Links
 

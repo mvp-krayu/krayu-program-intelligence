@@ -25,12 +25,12 @@ The 30 admitted units are the specific structural artifacts that passed admissib
 
 ## Upstream Artifacts
 
-- [[gauge_state.json]]
-- [[admissibility_log.json]]
+- [[ART-01 gauge_state.json]]
+- [[ART-07 admissibility_log.json]]
 
 ## Transformation Chain
 
-- [[IG.RUNTIME/run_01]]
+- IG.RUNTIME/run_01
 
 ## Entity Links
 

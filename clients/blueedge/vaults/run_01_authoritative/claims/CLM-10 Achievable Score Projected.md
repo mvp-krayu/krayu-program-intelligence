@@ -10,7 +10,7 @@ stream_id: PRODUCTIZE.GAUGE.OBSIDIAN.EVIDENCE.VAULT.V3.01
 ---
 
 ## Explanation
-When execution_layer_evaluated=False, the projected score is the sum of the current canonical score plus the full COMPLETION_WEIGHT (40 points). This represents the maximum achievable score if the execution layer is subsequently evaluated and completes successfully. It is a projection, not a proven value. Must accompany [[CLM-09 Canonical Score Proven]] (canonical=60). Score range [60, 100] is the confidence band.
+When execution_layer_evaluated=False, the projected score is the sum of the current canonical score plus the full COMPLETION_WEIGHT (40 points). This represents the maximum achievable score if the execution layer is subsequently evaluated and completes successfully. It is a projection, not a proven value. Must accompany [[CLM-09 Proven Structural Score]] (canonical=60). Score range [60, 100] is the confidence band.
 
 ## Authoritative Value
 100
@@ -20,8 +20,8 @@ When execution_layer_evaluated=False, the projected score is the sum of the curr
 - `gauge_state.json` → `score.projected`
 
 ## Upstream Artifacts
-- [[gauge_state.json]]
-- [[CLM-09 Canonical Score Proven]]
+- [[ART-01 gauge_state.json]]
+- [[CLM-09 Proven Structural Score]]
 
 ## Transformation Chain
 canonical(60) + COMPLETION_WEIGHT(40) = 100

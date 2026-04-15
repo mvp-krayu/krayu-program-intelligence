@@ -21,13 +21,13 @@ Dependency Load: 68% of Architectural Relationships Are Dependency Edges
 - capability: Domain Event Bus (CAP-30)
 
 ## Source Fields
-- [[COND-001]]
-- [[SIG-002]]
+- `COND-001`
+- `SIG-002`
 
 ## Upstream Artifacts
-- [[COND-001]]
-- [[SIG-002]]
-- [[FleetEventsModule]] (COMP-65)
+- `COND-001`
+- `SIG-002`
+- FleetEventsModule (COMP-65)
 
 ## Transformation Chain
 - structural edge count → dependency edge count / total edge count = 0.682 (15/22)

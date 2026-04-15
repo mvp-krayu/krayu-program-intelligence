@@ -20,18 +20,18 @@ Sensor Bridge Throughput Ceiling: Configuration Confirmed, Runtime Unknown
 - capability: Network Security Intelligence Collection (CAP-02)
 
 ## Source Fields
-- [[INTEL-001]]
-- [[DIAG-006]]
-- [[COND-006]]
-- [[SIG-006]]
+- `INTEL-001`
+- `DIAG-006`
+- `COND-006`
+- `SIG-006`
 
 ## Upstream Artifacts
-- [[INTEL-001]]
-- [[DIAG-006]]
-- [[COND-006]]
-- [[SIG-006]]
-- [[hasi_bridge.py]] (COMP-74)
-- [[HASI v1.0.0]] (COMP-75)
+- `INTEL-001`
+- `DIAG-006`
+- `COND-006`
+- `SIG-006`
+- hasi_bridge.py (COMP-74)
+- HASI v1.0.0 (COMP-75)
 
 ## Transformation Chain
 - SIG-006 → COND-006 → DIAG-006 → INTEL-001 (four-layer chain, STRONG)

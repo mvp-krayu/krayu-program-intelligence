@@ -23,12 +23,12 @@ PASS
 
 ## Upstream Artifacts
 
-- [[gauge_state.json]]
-- [[reconstruction_state.json]]
+- [[ART-01 gauge_state.json]]
+- [[ART-03 reconstruction_state.json]]
 
 ## Transformation Chain
 
-- [[IG.RUNTIME/run_01]]
+- IG.RUNTIME/run_01
 
 ## Entity Links
 

@@ -20,8 +20,8 @@ The canonical topology model (17/42/89) has no cross-domain overlap edges — th
 - `binding_envelope` → `constraint_flags.overlap_count` = 2 (run_335c0575a080)
 
 ## Upstream Artifacts
-- [[canonical_topology.json]]
-- [[binding_envelope run_335c0575a080]]
+- [[ART-04 canonical_topology.json]]
+- binding_envelope run_335c0575a080
 
 ## Transformation Chain
 - Canonical: topology.summary.overlap_edges_count=0

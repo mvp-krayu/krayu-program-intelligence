@@ -16,13 +16,13 @@ The executive verdicts are Boolean aggregations of resolved concept predicates. 
 STRUCTURE=STRONG, COMPLEXITY=LOW, EXECUTION=UNKNOWN
 
 ## Source Fields
-- STRUCTURE: [[concepts.json]] → CONCEPT-01 ∧ CONCEPT-03 ∧ CONCEPT-14
-- COMPLEXITY: [[concepts.json]] → any of CONCEPT-08 / CONCEPT-09 / CONCEPT-16
-- EXECUTION: [[concepts.json]] → CONCEPT-06
+- STRUCTURE: `concepts.json` → CONCEPT-01 ∧ CONCEPT-03 ∧ CONCEPT-14
+- COMPLEXITY: `concepts.json` → any of CONCEPT-08 / CONCEPT-09 / CONCEPT-16
+- EXECUTION: `concepts.json` → CONCEPT-06
 
 ## Upstream Artifacts
-- [[concepts.json]]
-- [[resolver.js]]
+- `concepts.json`
+- `resolver.js`
 - [[CLM-03 Structural Reconstruction Pass-Fail]]
 - [[CLM-09 Proven Structural Score]]
 - [[CLM-13 Execution Layer Status]]

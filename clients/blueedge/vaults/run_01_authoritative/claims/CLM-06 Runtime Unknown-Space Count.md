@@ -23,12 +23,12 @@ DIM-04 total_count=0 reflects the minimum observable state from static analysis.
 
 ## Upstream Artifacts
 
-- [[gauge_state.json]]
-- [[binding_envelope (client run_335c0575a080)]]
+- [[ART-01 gauge_state.json]]
+- binding_envelope (client run_335c0575a080)
 
 ## Transformation Chain
 
-- [[S-13 terminal state invariant]]
+- S-13 terminal state invariant
 
 ## Entity Links
 
