@@ -356,22 +356,20 @@ export default function LensPage() {
         <HeroBand scores={heroScores} />
       </div>
 
-      {/* Section B — System Intelligence Overview */}
+      {/* Section B — System Intelligence Overview (static — curated 17-domain set) */}
       <div className="lens-band">
-        <SystemIntelligenceOverview payloads={payloads} />
+        <SystemIntelligenceOverview />
       </div>
 
-      {/* Section C — Connected System View */}
+      {/* Section C — Connected System View (static — curated graph projection) */}
       <div className="lens-band">
-        <ConnectedSystemView payloads={payloads} />
+        <ConnectedSystemView />
       </div>
 
-      {/* Section D — Focus Domain (CLM-20 spotlight) */}
-      {p20 && !p20.error_type && (
-        <div className="lens-band">
-          <FocusDomainPanel payload={p20} />
-        </div>
-      )}
+      {/* Section D — Focus Domain (static — Edge Data Acquisition spotlight) */}
+      <div className="lens-band">
+        <FocusDomainPanel />
+      </div>
 
       {/* Primary band — readiness verdict + confidence distribution + depth */}
       <div className="lens-band lens-band-primary">
@@ -422,7 +420,7 @@ export default function LensPage() {
       </div>
 
       <div className="lens-footer">
-        <span className="lens-footer-authority">PRODUCTIZE.LENS.TOPOLOGY.INTELLIGENCE.01</span>
+        <span className="lens-footer-authority">PRODUCTIZE.LENS.GRAPH.RENDER.01</span>
         <span className="lens-footer-zone-lock">ZONE-2 ONLY · NO INTERNAL STRUCTURE EXPOSED</span>
       </div>
     </div>

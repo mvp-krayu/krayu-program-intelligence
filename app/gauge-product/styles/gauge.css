@@ -1834,3 +1834,161 @@ details.op-details[open] summary::before { content:"▼  "; }
 .lens-explore-link:hover { background:#0f2a42; border-color:#3373a8; }
 .lens-explore-cta-note { font-size:11px; color:#8b949e; line-height:1.55; flex:1; min-width:200px; }
 
+/* ==========================================================================
+   CONNECTED SYSTEM VIEW — v2 (17-domain clustered graph)
+   PRODUCTIZE.LENS.GRAPH.RENDER.01
+   ========================================================================== */
+.lens-csv-panel { border:1px solid #1f2937; background:#0b0f14; padding:20px; }
+.lens-csv-intro { font-size:13px; color:#8b949e; line-height:1.7; margin:8px 0 16px; }
+
+/* SVG outer wrapper: full width, horizontal scroll on small screens */
+.lens-csv-svg-outer {
+  width:100%; overflow-x:auto;
+  border:1px solid #161b22; background:#0d1117;
+  padding:8px;
+}
+.lens-csv-svg {
+  display:block;
+  min-width:600px;   /* prevents excessive squish on mobile */
+  width:100%;
+  height:auto;
+}
+
+/* Footer: legend + depth note */
+.lens-csv-footer {
+  display:flex; align-items:flex-start; flex-wrap:wrap;
+  gap:12px 24px; margin-top:14px; padding-top:10px;
+  border-top:1px solid #161b22;
+}
+.lens-csv-legend {
+  display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center;
+}
+.lens-csv-legend-item { display:flex; align-items:center; gap:5px; }
+.lens-csv-legend-dot  { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.lens-csv-legend-label { font-size:10px; color:#8b949e; letter-spacing:.03em; }
+
+/* Edge legend samples */
+.lens-csv-legend-edge-sample {
+  display:inline-block; width:22px; height:2px; border-radius:1px; flex-shrink:0;
+}
+.lens-csv-edge--informs  { background:#58a6ff; opacity:0.7; }
+.lens-csv-edge--supports { background:#3fb950; opacity:0.7; }
+
+.lens-csv-depth-note {
+  font-size:11px; color:#4a6780; line-height:1.55;
+  flex:1; min-width:220px;
+}
+
+/* ==========================================================================
+   SYSTEM INTELLIGENCE OVERVIEW — v2 (platform domain cards)
+   PRODUCTIZE.LENS.GRAPH.RENDER.01
+   ========================================================================== */
+/* Override old .lens-sio-grid with new v2 grid */
+.lens-sio-grid-v2 {
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:12px;
+}
+@media(max-width:900px){ .lens-sio-grid-v2 { grid-template-columns: repeat(2,1fr); } }
+@media(max-width:500px){ .lens-sio-grid-v2 { grid-template-columns: 1fr; } }
+
+.lens-sio-card {
+  border:1px solid #1f2937; background:#0d1117;
+  padding:14px 16px; display:flex; flex-direction:column; gap:7px;
+}
+.lens-sio-card--verified    { border-color:#1b3a27; }
+.lens-sio-card--conditional { border-color:#3d3208; }
+
+.lens-sio-card--focus {
+  border-color:#1b5e3d;
+  background:#0a1f12;
+  box-shadow:0 0 0 1px rgba(63,185,80,0.12);
+}
+
+.lens-sio-card-header {
+  display:flex; align-items:flex-start;
+  justify-content:space-between; gap:8px;
+}
+.lens-sio-card-name {
+  font-size:12px; font-weight:700; color:#e6edf3;
+  letter-spacing:.04em; line-height:1.35;
+}
+.lens-sio-card-badge {
+  font-size:9px; font-weight:700; letter-spacing:.06em;
+  padding:2px 6px; white-space:nowrap; flex-shrink:0;
+}
+.lens-sio-card-type {
+  font-size:9px; color:#8b949e; text-transform:uppercase;
+  letter-spacing:.08em; font-weight:600;
+}
+.lens-sio-card-desc {
+  font-size:11px; color:#8b949e; line-height:1.6; margin:0;
+}
+.lens-sio-card-metric {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:8px; margin-top:auto; padding-top:8px;
+  border-top:1px solid #161b22;
+}
+.lens-sio-card-metric-key  { font-size:9px; color:#8b949e; text-transform:uppercase; letter-spacing:.07em; }
+.lens-sio-card-metric-val  { font-size:11px; font-weight:700; letter-spacing:.04em; }
+
+.lens-sio-footer {
+  font-size:11px; color:#4a6780; letter-spacing:.04em;
+  padding-top:12px; margin-top:4px;
+  border-top:1px solid #161b22;
+}
+
+/* ==========================================================================
+   FOCUS DOMAIN PANEL — v2 (static Edge Data Acquisition spotlight)
+   PRODUCTIZE.LENS.GRAPH.RENDER.01
+   ========================================================================== */
+.lens-focus-panel--v2 {
+  border:1px solid #1b5e3d; background:#070f0a; padding:20px;
+}
+.lens-focus-v2-header {
+  display:flex; align-items:flex-start;
+  justify-content:space-between; gap:12px;
+  margin:10px 0 8px;
+}
+.lens-focus-v2-name {
+  font-size:20px; font-weight:700; color:#e6edf3;
+  letter-spacing:.03em; line-height:1.25;
+}
+.lens-focus-v2-type {
+  font-size:10px; color:#3fb950; text-transform:uppercase;
+  letter-spacing:.08em; font-weight:600; margin-top:4px;
+}
+.lens-focus-v2-badge {
+  font-size:10px; font-weight:700; letter-spacing:.06em;
+  color:#3fb950; background:#0d2e1a;
+  border:1px solid #1b5e3d; padding:3px 10px;
+  white-space:nowrap; flex-shrink:0;
+}
+.lens-focus-v2-tagline {
+  font-size:13px; color:#8b949e; line-height:1.7;
+  margin:0 0 16px; max-width:680px;
+}
+.lens-focus-v2-rows { display:flex; flex-direction:column; gap:0; margin-bottom:20px; }
+.lens-focus-v2-row {
+  display:grid; grid-template-columns:190px 1fr;
+  gap:12px; padding:10px 0;
+  border-bottom:1px solid #0f2318; align-items:start;
+}
+.lens-focus-v2-row:last-child { border-bottom:none; }
+.lens-focus-v2-row-key {
+  font-size:9px; color:#3fb950; text-transform:uppercase;
+  letter-spacing:.09em; font-weight:700; padding-top:2px; line-height:1.5;
+  opacity:0.75;
+}
+.lens-focus-v2-row-val { font-size:13px; color:#c9d1d9; line-height:1.65; }
+
+.lens-focus-v2-connections { border:1px solid #1b3a27; padding:14px; }
+.lens-focus-v2-conn-label {
+  font-size:9px; color:#3fb950; text-transform:uppercase;
+  letter-spacing:.09em; font-weight:700; margin-bottom:10px; opacity:0.75;
+}
+.lens-focus-v2-conn-list { display:flex; flex-direction:column; gap:7px; }
+.lens-focus-v2-conn-item { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+.lens-focus-v2-conn-name { font-size:12px; color:#58a6ff; font-weight:600; }
+.lens-focus-v2-conn-note { font-size:11px; color:#8b949e; }
+
