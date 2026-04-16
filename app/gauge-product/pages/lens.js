@@ -257,8 +257,9 @@ function ReportPanel({ runId }) {
   function handleDownload() {
     if (!state?.path) return
     const a = document.createElement('a')
-    a.href = state.path
-    a.download = state.path.split('/').pop() || 'lens_report.html'
+    a.href = state.path + '&download=1'
+    const nameMatch = state.path.match(/[?&]name=([^&]+)/)
+    a.download = nameMatch ? decodeURIComponent(nameMatch[1]) : 'lens_report.html'
     a.click()
   }
 

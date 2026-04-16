@@ -1,6 +1,6 @@
 """
 scripts/pios/lens_report_generator.py
-PRODUCTIZE.LENS.REPORT.01 / PRODUCTIZE.LENS.REPORT.DELIVERY.01
+PRODUCTIZE.LENS.REPORT.01 / PRODUCTIZE.LENS.REPORT.DELIVERY.01 / PRODUCTIZE.LENS.REPORT.TOPOLOGY.DELIVERY.01
 
 Executive report generator for LENS v1.
 
@@ -37,7 +37,7 @@ from typing import Dict, List, Optional, Tuple
 # Configuration
 # ---------------------------------------------------------------------------
 
-STREAM_ID = "PRODUCTIZE.LENS.REPORT.01"
+STREAM_ID = "PRODUCTIZE.LENS.REPORT.TOPOLOGY.DELIVERY.01"
 
 LENS_CLAIMS = ["CLM-25", "CLM-09", "CLM-20", "CLM-12", "CLM-10"]
 
@@ -664,6 +664,239 @@ def compose_appendix(payloads: dict) -> str:
 
 
 # ---------------------------------------------------------------------------
+# New section composers — PRODUCTIZE.LENS.REPORT.TOPOLOGY.DELIVERY.01
+# ---------------------------------------------------------------------------
+
+def compose_system_intelligence() -> str:
+    domains = [
+        ('Edge Data Acquisition',                   'Operational Intelligence', 'verified'),
+        ('Sensor and Security Ingestion',            'Operational Intelligence', 'verified'),
+        ('Analytics and Intelligence',               'Operational Intelligence', 'verified'),
+        ('AI/ML Intelligence Layer',                 'Operational Intelligence', 'verified'),
+        ('Fleet Core Operations',                    'Fleet Operations',         'verified'),
+        ('Fleet Vertical Extensions',                'Fleet Operations',         'verified'),
+        ('Extended Operations and Driver Services',  'Fleet Operations',         'verified'),
+        ('EV and Electrification',                   'Emerging Capabilities',    'verified'),
+        ('Operational Engineering',                  'Emerging Capabilities',    'verified'),
+        ('Platform Infrastructure and Data',         'Platform Infrastructure',  'conditional'),
+        ('Telemetry Transport and Messaging',        'Platform Infrastructure',  'conditional'),
+        ('Event-Driven Architecture',                'Platform Infrastructure',  'verified'),
+        ('Real-Time Streaming and Gateway',          'Platform Infrastructure',  'verified'),
+        ('Access Control and Identity',              'Platform Services',        'verified'),
+        ('SaaS Platform Layer',                      'Platform Services',        'verified'),
+        ('External Integration',                     'Platform Services',        'verified'),
+        ('Frontend Application',                     'Platform Services',        'verified'),
+    ]
+
+    rows = []
+    for name, cluster, status in domains:
+        if status == 'verified':
+            badge = '<span class="ev-badge badge-verified">VERIFIED</span>'
+        else:
+            badge = '<span class="ev-badge badge-conditional">IN PROGRESS</span>'
+        rows.append(f"""<div class="domain-row">
+  <span class="domain-row-name">{esc(name)}</span>
+  <span class="domain-row-cluster">{esc(cluster)}</span>
+  {badge}
+</div>""")
+
+    return f"""
+<p>
+  The platform assessment covers 17 functional domains across five capability clusters.
+  15 domains are structurally verified; 2 domains carry pending runtime dimensions.
+  This represents the complete assessed surface — no domains are unexamined.
+</p>
+<div class="domain-list">
+{"".join(rows)}
+</div>
+<div class="domain-summary">
+  17 functional domains &nbsp;·&nbsp; 42 capability surfaces &nbsp;·&nbsp; 89 components mapped
+</div>
+"""
+
+
+def compose_topology_view() -> str:
+    clusters = [
+        ('Operational Intelligence', 8,   8,   283, 205, 9, '#3fb950'),
+        ('Fleet Operations',         322, 8,   245, 205, 9, '#58a6ff'),
+        ('Emerging Capabilities',    602, 62,  190, 125, 9, '#79c0ff'),
+        ('Platform Infrastructure',  8,   248, 283, 215, 9, '#d29922'),
+        ('Platform Services',        322, 248, 295, 215, 9, '#a5d6ff'),
+    ]
+
+    # id, line1, line2, status, focus, cx, cy, r
+    nodes = [
+        ('gn-01', 'Edge Data',      'Acquisition',   'verified',    True,  88,  72,  30),
+        ('gn-02', 'Sensor &',       'Security',      'verified',    False, 218, 72,  22),
+        ('gn-03', 'Analytics &',    'Intelligence',  'verified',    False, 88,  170, 22),
+        ('gn-04', 'AI/ML',          'Intelligence',  'verified',    False, 218, 170, 22),
+        ('gn-05', 'Fleet Core',     'Operations',    'verified',    False, 404, 78,  26),
+        ('gn-06', 'Fleet Vertical', 'Extensions',    'verified',    False, 508, 98,  20),
+        ('gn-07', 'Extended',       'Operations',    'verified',    False, 435, 172, 20),
+        ('gn-08', 'EV &',           'Electrification','verified',   False, 648, 105, 20),
+        ('gn-09', 'Operational',    'Engineering',   'verified',    False, 755, 122, 20),
+        ('gn-10', 'Platform',       'Infrastructure','conditional', False, 88,  322, 26),
+        ('gn-11', 'Telemetry',      'Transport',     'conditional', False, 218, 322, 20),
+        ('gn-12', 'Event-Driven',   'Architecture',  'verified',    False, 88,  418, 20),
+        ('gn-13', 'Real-Time',      'Streaming',     'verified',    False, 218, 418, 20),
+        ('gn-14', 'Access Control', '& Identity',    'verified',    False, 398, 322, 22),
+        ('gn-15', 'SaaS',           'Platform',      'verified',    False, 540, 322, 20),
+        ('gn-16', 'External',       'Integration',   'verified',    False, 398, 418, 20),
+        ('gn-17', 'Frontend',       'Application',   'verified',    False, 540, 418, 20),
+    ]
+
+    # source, target, relation → stroke, opacity, dash
+    edges = [
+        ('gn-01', 'gn-05', '#58a6ff', 0.40, None),
+        ('gn-03', 'gn-05', '#58a6ff', 0.40, None),
+        ('gn-01', 'gn-10', '#3fb950', 0.35, None),
+        ('gn-02', 'gn-10', '#3fb950', 0.35, None),
+        ('gn-05', 'gn-14', '#d29922', 0.35, '5,4'),
+        ('gn-05', 'gn-09', '#d29922', 0.35, '5,4'),
+        ('gn-06', 'gn-08', '#8b949e', 0.30, '3,3'),
+        ('gn-11', 'gn-03', '#3fb950', 0.35, None),
+        ('gn-10', 'gn-05', '#3fb950', 0.35, None),
+        ('gn-10', 'gn-15', '#3fb950', 0.35, None),
+        ('gn-10', 'gn-09', '#3fb950', 0.35, None),
+        ('gn-14', 'gn-05', '#3fb950', 0.35, None),
+    ]
+
+    node_style = {
+        'verified':    {'fill': '#0d2e1a', 'stroke': '#3fb950', 'glow': 'rgba(63,185,80,0.22)',  'label': '#c9d1d9'},
+        'conditional': {'fill': '#1a1600', 'stroke': '#d29922', 'glow': 'rgba(210,153,34,0.22)', 'label': '#c9d1d9'},
+        'focus':       {'fill': '#0d2e1a', 'stroke': '#3fb950', 'glow': 'rgba(63,185,80,0.35)',  'label': '#e6edf3'},
+    }
+
+    # Build node position map
+    node_pos = {n[0]: (n[5], n[6]) for n in nodes}
+
+    parts = []
+
+    # Layer 1 — cluster rects
+    for label, x, y, w, h, rx, accent in clusters:
+        parts.append(
+            f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{rx}" '
+            f'fill="{accent}" fill-opacity="0.06" '
+            f'stroke="{accent}" stroke-width="1" stroke-opacity="0.35" />'
+        )
+
+    # Layer 2 — edges
+    for src, tgt, stroke, opacity, dash in edges:
+        sx, sy = node_pos[src]
+        tx, ty = node_pos[tgt]
+        attrs = f'stroke="{stroke}" stroke-opacity="{opacity}" stroke-width="1.5"'
+        if dash:
+            attrs += f' stroke-dasharray="{dash}"'
+        parts.append(f'<line x1="{sx}" y1="{sy}" x2="{tx}" y2="{ty}" {attrs} fill="none" />')
+
+    # Layer 3 — cluster labels
+    for label, x, y, w, h, rx, accent in clusters:
+        lx = x + w // 2
+        ly = y + 16
+        parts.append(
+            f'<text x="{lx}" y="{ly}" text-anchor="middle" '
+            f'font-family="monospace" font-size="9" fill="{accent}" fill-opacity="0.6" '
+            f'font-weight="600" letter-spacing="0.08em">{esc(label.upper())}</text>'
+        )
+
+    # Layer 4 — nodes
+    for nid, line1, line2, status, focus, cx, cy, r in nodes:
+        ns = node_style['focus'] if focus else node_style[status]
+        glow_r = r + (8 if focus else 5)
+        sw = '2' if focus else '1.5'
+        fw = '600' if focus else '400'
+        parts.append(f'<circle cx="{cx}" cy="{cy}" r="{glow_r}" fill="{ns["glow"]}" />')
+        parts.append(
+            f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="{ns["fill"]}" '
+            f'stroke="{ns["stroke"]}" stroke-width="{sw}" />'
+        )
+        parts.append(
+            f'<text x="{cx}" y="{cy - 5}" text-anchor="middle" '
+            f'font-family="monospace" font-size="7.5" fill="{ns["label"]}" font-weight="{fw}">'
+            f'{esc(line1)}</text>'
+        )
+        parts.append(
+            f'<text x="{cx}" y="{cy + 7}" text-anchor="middle" '
+            f'font-family="monospace" font-size="7.5" fill="{ns["label"]}" font-weight="{fw}">'
+            f'{esc(line2)}</text>'
+        )
+
+    svg_inner = '\n  '.join(parts)
+
+    return f"""
+<div class="topo-container">
+  <div class="topo-scroll-outer">
+    <svg viewBox="0 0 860 475" xmlns="http://www.w3.org/2000/svg"
+         style="width:100%;min-width:600px;background:#0d1117;border-radius:4px;display:block;">
+  {svg_inner}
+    </svg>
+  </div>
+  <div class="topo-legend">
+    <span class="topo-legend-dot" style="background:#3fb950;"></span>&nbsp;Verified
+    &nbsp;&nbsp;
+    <span class="topo-legend-dot" style="background:#d29922;"></span>&nbsp;In Progress
+    &nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;
+    <span class="topo-depth-note">17 functional domains &nbsp;&middot;&nbsp; 5 clusters &nbsp;&middot;&nbsp; 12 structural relationships &nbsp;&middot;&nbsp; Structural depth only</span>
+  </div>
+</div>
+"""
+
+
+def compose_focus_domain() -> str:
+    rows = [
+        ('DOMAIN ROLE',
+         'Primary collection surface for sensor, telemetry, and edge data from fleet nodes. '
+         'Everything that flows into the intelligence layer begins here.'),
+        ('WHAT IS VERIFIED',
+         'Structural pathway to the security intelligence layer is confirmed. '
+         'Four capability surfaces and their architectural boundaries have been assessed.'),
+        ('WHAT REQUIRES VALIDATION',
+         'Live throughput performance of the sensor bridge pathway requires runtime confirmation. '
+         'The structural ceiling is defined; operational measurement completes the picture.'),
+        ('ASSESSMENT STATUS',
+         'Structurally grounded. Contributes to the readiness score as a verified domain.'),
+    ]
+
+    connections = [
+        ('Platform Infrastructure and Data', 'Edge data sustains the infrastructure data layer'),
+        ('Sensor and Security Ingestion',    'Co-domain in the security intelligence pathway'),
+        ('Analytics and Intelligence',       'Analytics pipeline consumes edge acquisition output'),
+        ('Fleet Core Operations',            'Edge intelligence informs fleet operational context'),
+    ]
+
+    row_html = '\n'.join(f"""  <div class="focus-row">
+    <span class="focus-row-key">{esc(k)}</span>
+    <span class="focus-row-val">{esc(v)}</span>
+  </div>""" for k, v in rows)
+
+    conn_html = '\n'.join(f"""    <div class="focus-conn">
+      <span class="focus-conn-name">{esc(n)}</span>
+      <span class="focus-conn-note">{esc(note)}</span>
+    </div>""" for n, note in connections)
+
+    return f"""
+<div class="focus-panel">
+  <div class="focus-header">
+    <div>
+      <div class="focus-name">Edge Data Acquisition</div>
+      <div class="focus-type">Operational Domain &mdash; FUNCTIONAL</div>
+    </div>
+    <span class="ev-badge badge-verified">VERIFIED</span>
+  </div>
+  <p class="focus-tagline">
+    The primary source of operational intelligence. Structurally verified.
+    Live throughput confirmation is the remaining validation step.
+  </p>
+{row_html}
+  <div class="focus-connections">
+    <div class="focus-conn-label">CONNECTED DOMAINS</div>
+{conn_html}
+  </div>
+</div>
+"""
+
+
+# ---------------------------------------------------------------------------
 # HTML document assembly
 # ---------------------------------------------------------------------------
 
@@ -1059,6 +1292,155 @@ body {
   max-width: 920px;
   margin: 0 auto;
 }
+
+/* SYSTEM INTELLIGENCE — DOMAIN LIST */
+.domain-list {
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 16px 0;
+}
+.domain-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 13px;
+}
+.domain-row:last-child { border-bottom: none; }
+.domain-row:nth-child(even) { background: #f9fafb; }
+.domain-row-name {
+  flex: 1;
+  font-weight: 600;
+  color: #1a202c;
+}
+.domain-row-cluster {
+  font-size: 11px;
+  color: #6b7280;
+  min-width: 160px;
+}
+.domain-summary {
+  font-size: 11px;
+  color: #6b7280;
+  text-align: right;
+  margin-top: 6px;
+  letter-spacing: .02em;
+}
+
+/* TOPOLOGY SVG WRAPPER */
+.topo-container { margin: 8px 0; }
+.topo-scroll-outer {
+  overflow-x: auto;
+  border-radius: 4px;
+  background: #0d1117;
+}
+.topo-legend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #6b7280;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+.topo-legend-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+.topo-depth-note {
+  margin-left: auto;
+  font-size: 10px;
+  color: #9ca3af;
+  letter-spacing: .02em;
+}
+
+/* FOCUS DOMAIN PANEL */
+.focus-panel {
+  border: 1px solid #bbf7d0;
+  border-left: 4px solid #3fb950;
+  background: #f0fdf4;
+  border-radius: 0 4px 4px 0;
+  padding: 22px 24px;
+}
+.focus-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.focus-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: #14532d;
+}
+.focus-type {
+  font-size: 11px;
+  color: #166534;
+  letter-spacing: .04em;
+  margin-top: 3px;
+}
+.focus-tagline {
+  font-size: 14px;
+  color: #166534;
+  margin: 0 0 16px;
+  line-height: 1.6;
+}
+.focus-row {
+  display: flex;
+  gap: 12px;
+  font-size: 13px;
+  margin-bottom: 10px;
+  align-items: flex-start;
+}
+.focus-row-key {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #4ade80;
+  min-width: 160px;
+  flex-shrink: 0;
+  padding-top: 2px;
+  color: #166534;
+}
+.focus-row-val {
+  color: #1a202c;
+  line-height: 1.55;
+}
+.focus-connections {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #bbf7d0;
+}
+.focus-conn-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #166534;
+  margin-bottom: 10px;
+}
+.focus-conn {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  margin-bottom: 6px;
+  align-items: flex-start;
+}
+.focus-conn-name {
+  font-weight: 600;
+  color: #14532d;
+  min-width: 200px;
+}
+.focus-conn-note {
+  color: #374151;
+  line-height: 1.5;
+}
 """
 
 
@@ -1124,37 +1506,55 @@ def build_html(payloads: Dict) -> str:
   {compose_executive_summary(payloads)}
 </div>
 
-<!-- 2. CURRENT STATE ASSESSMENT -->
+<!-- 2. SYSTEM INTELLIGENCE OVERVIEW -->
+<div class="section">
+  <div class="section-title">System Intelligence Overview</div>
+  {compose_system_intelligence()}
+</div>
+
+<!-- 3. STRUCTURAL TOPOLOGY VIEW -->
+<div class="section">
+  <div class="section-title">Structural Topology View</div>
+  {compose_topology_view()}
+</div>
+
+<!-- 4. FOCUS DOMAIN — EDGE DATA ACQUISITION -->
+<div class="section">
+  <div class="section-title">Focus Domain</div>
+  {compose_focus_domain()}
+</div>
+
+<!-- 5. CURRENT STATE ASSESSMENT -->
 <div class="section">
   <div class="section-title">Current State Assessment</div>
   {compose_current_state(payloads)}
 </div>
 
-<!-- 3. KEY FINDINGS -->
+<!-- 6. KEY FINDINGS -->
 <div class="section">
   <div class="section-title">Key Findings</div>
   {compose_key_findings(payloads)}
 </div>
 
-<!-- 4. RISKS AND CONDITIONS -->
+<!-- 7. RISKS AND CONDITIONS -->
 <div class="section">
   <div class="section-title">Risks and Conditions</div>
   {compose_risks(payloads)}
 </div>
 
-<!-- 5. DECISION GUIDANCE -->
+<!-- 8. DECISION GUIDANCE -->
 <div class="section">
   <div class="section-title">Decision Guidance</div>
   {compose_decision_guidance(payloads)}
 </div>
 
-<!-- 6. OBSERVABILITY ADVANTAGE -->
+<!-- 9. OBSERVABILITY ADVANTAGE -->
 <div class="section">
   <div class="section-title">Observability Advantage</div>
   {compose_observability(payloads)}
 </div>
 
-<!-- 7. APPENDIX -->
+<!-- 10. APPENDIX -->
 <div class="section">
   <div class="section-title">Controlled Appendix</div>
   {compose_appendix(payloads)}
@@ -1206,7 +1606,7 @@ def main(output_path: Optional[Path] = None) -> None:
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(
-        description="LENS Executive Report Generator — PRODUCTIZE.LENS.REPORT.DELIVERY.01"
+        description="LENS Executive Report Generator — PRODUCTIZE.LENS.REPORT.TOPOLOGY.DELIVERY.01"
     )
     parser.add_argument(
         "--output", type=Path, default=None,

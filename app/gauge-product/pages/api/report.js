@@ -69,11 +69,14 @@ export default function handler(req, res) {
         })
       }
 
-      const report_path = parseReportPath(stdout)
-      if (!report_path) {
+      const absPath = parseReportPath(stdout)
+      if (!absPath) {
         return res.status(500).json({ status: 'error', reason: 'OUTPUT_PATH_NOT_FOUND' })
       }
 
+      // Return a web-accessible URL — not the raw filesystem path
+      const filename   = path.basename(absPath)
+      const report_path = `/api/report-file?name=${encodeURIComponent(filename)}`
       return res.status(200).json({ status: 'ok', report_path })
     }
   )
