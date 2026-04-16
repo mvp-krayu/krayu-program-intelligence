@@ -1,13 +1,18 @@
 /**
  * components/lens/ExploreGovernedDetail.js
- * PRODUCTIZE.LENS.TOPOLOGY.INTELLIGENCE.01 / PRODUCTIZE.LENS.COMMERCIAL.GATING.01
+ * PRODUCTIZE.LENS.TOPOLOGY.INTELLIGENCE.01
+ * PRODUCTIZE.LENS.COMMERCIAL.GATING.01 / PRODUCTIZE.LENS.FINAL.POLISH.01
  *
- * Explore Governed Detail — prominent CTA block.
- * Gated: "Available" rows show unlock action; CTA routes through access gate.
+ * Explore Governed Detail — governed visibility block.
+ *
+ * Gating model (FINAL.POLISH.01):
+ *   Gated rows show ONE state only:
+ *   - hasAccess=false → "Restricted" + [Unlock] button
+ *   - hasAccess=true  → "Available" (plain label, no button)
  *
  * Props:
- *   onUnlock  — () => void  — opens AccessGateModal
- *   hasAccess — boolean     — when true, CTA navigates directly to /topology
+ *   onUnlock  — () => void — opens AccessGateModal
+ *   hasAccess — boolean
  */
 
 import Link from 'next/link'
@@ -57,16 +62,14 @@ export default function ExploreGovernedDetail({ onUnlock, hasAccess }) {
           <div key={r.label} className="lens-explore-row">
             <span className="lens-explore-row-label">{r.label}</span>
 
-            {r.gated ? (
+            {r.gated && !hasAccess ? (
               <span className="lens-explore-row-value-gated">
-                <span className={`lens-explore-row-value lens-explore-row-value--${r.status}`}>
-                  {r.value}
+                <span className="lens-explore-row-value lens-explore-row-value--restricted">
+                  Restricted
                 </span>
-                {!hasAccess && (
-                  <button className="lens-unlock-btn" onClick={onUnlock}>
-                    → Unlock
-                  </button>
-                )}
+                <button className="lens-unlock-btn" onClick={onUnlock}>
+                  Unlock
+                </button>
               </span>
             ) : (
               <span className={`lens-explore-row-value lens-explore-row-value--${r.status}`}>
@@ -89,9 +92,6 @@ export default function ExploreGovernedDetail({ onUnlock, hasAccess }) {
             Unlock governed detail →
           </button>
         )}
-        <span className="lens-explore-cta-note">
-          Operational detail, evidence chains, and trace-level interrogation available in the governed topology view.
-        </span>
       </div>
     </div>
   )

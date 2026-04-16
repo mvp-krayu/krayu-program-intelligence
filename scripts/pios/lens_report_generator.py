@@ -715,7 +715,13 @@ def compose_system_intelligence() -> str:
 """
 
 
-def compose_topology_view() -> str:
+def compose_topology_view(light_mode: bool = False) -> str:
+    """Build the curated 17-domain topology SVG.
+
+    light_mode=True  → white/light background, dark labels — for executive report / print.
+    light_mode=False → dark background — for LENS dark-theme web surface.
+    """
+
     clusters = [
         ('Operational Intelligence', 8,   8,   283, 205, 9, '#3fb950'),
         ('Fleet Operations',         322, 8,   245, 205, 9, '#58a6ff'),
@@ -726,48 +732,79 @@ def compose_topology_view() -> str:
 
     # id, line1, line2, status, focus, cx, cy, r
     nodes = [
-        ('gn-01', 'Edge Data',      'Acquisition',   'verified',    True,  88,  72,  30),
-        ('gn-02', 'Sensor &',       'Security',      'verified',    False, 218, 72,  22),
-        ('gn-03', 'Analytics &',    'Intelligence',  'verified',    False, 88,  170, 22),
-        ('gn-04', 'AI/ML',          'Intelligence',  'verified',    False, 218, 170, 22),
-        ('gn-05', 'Fleet Core',     'Operations',    'verified',    False, 404, 78,  26),
-        ('gn-06', 'Fleet Vertical', 'Extensions',    'verified',    False, 508, 98,  20),
-        ('gn-07', 'Extended',       'Operations',    'verified',    False, 435, 172, 20),
-        ('gn-08', 'EV &',           'Electrification','verified',   False, 648, 105, 20),
-        ('gn-09', 'Operational',    'Engineering',   'verified',    False, 755, 122, 20),
-        ('gn-10', 'Platform',       'Infrastructure','conditional', False, 88,  322, 26),
-        ('gn-11', 'Telemetry',      'Transport',     'conditional', False, 218, 322, 20),
-        ('gn-12', 'Event-Driven',   'Architecture',  'verified',    False, 88,  418, 20),
-        ('gn-13', 'Real-Time',      'Streaming',     'verified',    False, 218, 418, 20),
-        ('gn-14', 'Access Control', '& Identity',    'verified',    False, 398, 322, 22),
-        ('gn-15', 'SaaS',           'Platform',      'verified',    False, 540, 322, 20),
-        ('gn-16', 'External',       'Integration',   'verified',    False, 398, 418, 20),
-        ('gn-17', 'Frontend',       'Application',   'verified',    False, 540, 418, 20),
+        ('gn-01', 'Edge Data',      'Acquisition',    'verified',    True,  88,  72,  30),
+        ('gn-02', 'Sensor &',       'Security',       'verified',    False, 218, 72,  22),
+        ('gn-03', 'Analytics &',    'Intelligence',   'verified',    False, 88,  170, 22),
+        ('gn-04', 'AI/ML',          'Intelligence',   'verified',    False, 218, 170, 22),
+        ('gn-05', 'Fleet Core',     'Operations',     'verified',    False, 404, 78,  26),
+        ('gn-06', 'Fleet Vertical', 'Extensions',     'verified',    False, 508, 98,  20),
+        ('gn-07', 'Extended',       'Operations',     'verified',    False, 435, 172, 20),
+        ('gn-08', 'EV &',           'Electrification','verified',    False, 648, 105, 20),
+        ('gn-09', 'Operational',    'Engineering',    'verified',    False, 755, 122, 20),
+        ('gn-10', 'Platform',       'Infrastructure', 'conditional', False, 88,  322, 26),
+        ('gn-11', 'Telemetry',      'Transport',      'conditional', False, 218, 322, 20),
+        ('gn-12', 'Event-Driven',   'Architecture',   'verified',    False, 88,  418, 20),
+        ('gn-13', 'Real-Time',      'Streaming',      'verified',    False, 218, 418, 20),
+        ('gn-14', 'Access Control', '& Identity',     'verified',    False, 398, 322, 22),
+        ('gn-15', 'SaaS',           'Platform',       'verified',    False, 540, 322, 20),
+        ('gn-16', 'External',       'Integration',    'verified',    False, 398, 418, 20),
+        ('gn-17', 'Frontend',       'Application',    'verified',    False, 540, 418, 20),
     ]
 
-    # source, target, relation → stroke, opacity, dash
-    edges = [
-        ('gn-01', 'gn-05', '#58a6ff', 0.40, None),
-        ('gn-03', 'gn-05', '#58a6ff', 0.40, None),
-        ('gn-01', 'gn-10', '#3fb950', 0.35, None),
-        ('gn-02', 'gn-10', '#3fb950', 0.35, None),
-        ('gn-05', 'gn-14', '#d29922', 0.35, '5,4'),
-        ('gn-05', 'gn-09', '#d29922', 0.35, '5,4'),
-        ('gn-06', 'gn-08', '#8b949e', 0.30, '3,3'),
-        ('gn-11', 'gn-03', '#3fb950', 0.35, None),
-        ('gn-10', 'gn-05', '#3fb950', 0.35, None),
-        ('gn-10', 'gn-15', '#3fb950', 0.35, None),
-        ('gn-10', 'gn-09', '#3fb950', 0.35, None),
-        ('gn-14', 'gn-05', '#3fb950', 0.35, None),
-    ]
+    # source, target, stroke, opacity, dash
+    if light_mode:
+        edges = [
+            ('gn-01', 'gn-05', '#1d4ed8', 0.55, None),
+            ('gn-03', 'gn-05', '#1d4ed8', 0.55, None),
+            ('gn-01', 'gn-10', '#15803d', 0.50, None),
+            ('gn-02', 'gn-10', '#15803d', 0.50, None),
+            ('gn-05', 'gn-14', '#b45309', 0.50, '5,4'),
+            ('gn-05', 'gn-09', '#b45309', 0.50, '5,4'),
+            ('gn-06', 'gn-08', '#6b7280', 0.45, '3,3'),
+            ('gn-11', 'gn-03', '#15803d', 0.50, None),
+            ('gn-10', 'gn-05', '#15803d', 0.50, None),
+            ('gn-10', 'gn-15', '#15803d', 0.50, None),
+            ('gn-10', 'gn-09', '#15803d', 0.50, None),
+            ('gn-14', 'gn-05', '#15803d', 0.50, None),
+        ]
+    else:
+        edges = [
+            ('gn-01', 'gn-05', '#58a6ff', 0.40, None),
+            ('gn-03', 'gn-05', '#58a6ff', 0.40, None),
+            ('gn-01', 'gn-10', '#3fb950', 0.35, None),
+            ('gn-02', 'gn-10', '#3fb950', 0.35, None),
+            ('gn-05', 'gn-14', '#d29922', 0.35, '5,4'),
+            ('gn-05', 'gn-09', '#d29922', 0.35, '5,4'),
+            ('gn-06', 'gn-08', '#8b949e', 0.30, '3,3'),
+            ('gn-11', 'gn-03', '#3fb950', 0.35, None),
+            ('gn-10', 'gn-05', '#3fb950', 0.35, None),
+            ('gn-10', 'gn-15', '#3fb950', 0.35, None),
+            ('gn-10', 'gn-09', '#3fb950', 0.35, None),
+            ('gn-14', 'gn-05', '#3fb950', 0.35, None),
+        ]
 
-    node_style = {
-        'verified':    {'fill': '#0d2e1a', 'stroke': '#3fb950', 'glow': 'rgba(63,185,80,0.22)',  'label': '#c9d1d9'},
-        'conditional': {'fill': '#1a1600', 'stroke': '#d29922', 'glow': 'rgba(210,153,34,0.22)', 'label': '#c9d1d9'},
-        'focus':       {'fill': '#0d2e1a', 'stroke': '#3fb950', 'glow': 'rgba(63,185,80,0.35)',  'label': '#e6edf3'},
-    }
+    if light_mode:
+        node_style = {
+            'verified':    {'fill': '#f0fdf4', 'stroke': '#22c55e', 'glow': 'rgba(34,197,94,0.12)',  'label': '#14532d'},
+            'conditional': {'fill': '#fffbeb', 'stroke': '#f59e0b', 'glow': 'rgba(245,158,11,0.12)', 'label': '#78350f'},
+            'focus':       {'fill': '#eff6ff', 'stroke': '#3b82f6', 'glow': 'rgba(59,130,246,0.15)', 'label': '#1e3a8a'},
+        }
+        svg_bg        = '#ffffff'
+        fill_opacity  = '0.10'
+        stroke_opacity = '0.50'
+        label_opacity = '0.75'
+    else:
+        node_style = {
+            'verified':    {'fill': '#0d2e1a', 'stroke': '#3fb950', 'glow': 'rgba(63,185,80,0.22)',  'label': '#c9d1d9'},
+            'conditional': {'fill': '#1a1600', 'stroke': '#d29922', 'glow': 'rgba(210,153,34,0.22)', 'label': '#c9d1d9'},
+            'focus':       {'fill': '#0d2e1a', 'stroke': '#3fb950', 'glow': 'rgba(63,185,80,0.35)',  'label': '#e6edf3'},
+        }
+        svg_bg        = '#0d1117'
+        fill_opacity  = '0.06'
+        stroke_opacity = '0.35'
+        label_opacity = '0.60'
 
-    # Build node position map
+    # Node position lookup
     node_pos = {n[0]: (n[5], n[6]) for n in nodes}
 
     parts = []
@@ -776,8 +813,8 @@ def compose_topology_view() -> str:
     for label, x, y, w, h, rx, accent in clusters:
         parts.append(
             f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{rx}" '
-            f'fill="{accent}" fill-opacity="0.06" '
-            f'stroke="{accent}" stroke-width="1" stroke-opacity="0.35" />'
+            f'fill="{accent}" fill-opacity="{fill_opacity}" '
+            f'stroke="{accent}" stroke-width="1" stroke-opacity="{stroke_opacity}" />'
         )
 
     # Layer 2 — edges
@@ -795,7 +832,7 @@ def compose_topology_view() -> str:
         ly = y + 16
         parts.append(
             f'<text x="{lx}" y="{ly}" text-anchor="middle" '
-            f'font-family="monospace" font-size="9" fill="{accent}" fill-opacity="0.6" '
+            f'font-family="monospace" font-size="9" fill="{accent}" fill-opacity="{label_opacity}" '
             f'font-weight="600" letter-spacing="0.08em">{esc(label.upper())}</text>'
         )
 
@@ -823,18 +860,28 @@ def compose_topology_view() -> str:
 
     svg_inner = '\n  '.join(parts)
 
+    if light_mode:
+        # Light / print-safe container
+        legend_verified   = '#22c55e'
+        legend_conditional = '#f59e0b'
+        container_style   = 'overflow-x:auto;border:1px solid #e5e7eb;border-radius:4px;'
+    else:
+        legend_verified   = '#3fb950'
+        legend_conditional = '#d29922'
+        container_style   = 'overflow-x:auto;border-radius:4px;background:#0d1117;'
+
     return f"""
 <div class="topo-container">
-  <div class="topo-scroll-outer">
+  <div style="{container_style}">
     <svg viewBox="0 0 860 475" xmlns="http://www.w3.org/2000/svg"
-         style="width:100%;min-width:600px;background:#0d1117;border-radius:4px;display:block;">
+         style="width:100%;min-width:600px;background:{svg_bg};border-radius:4px;display:block;">
   {svg_inner}
     </svg>
   </div>
   <div class="topo-legend">
-    <span class="topo-legend-dot" style="background:#3fb950;"></span>&nbsp;Verified
+    <span class="topo-legend-dot" style="background:{legend_verified};"></span>&nbsp;Verified
     &nbsp;&nbsp;
-    <span class="topo-legend-dot" style="background:#d29922;"></span>&nbsp;In Progress
+    <span class="topo-legend-dot" style="background:{legend_conditional};"></span>&nbsp;In Progress
     &nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;
     <span class="topo-depth-note">17 functional domains &nbsp;&middot;&nbsp; 5 clusters &nbsp;&middot;&nbsp; 12 structural relationships &nbsp;&middot;&nbsp; Structural depth only</span>
   </div>
@@ -1333,7 +1380,8 @@ body {
 .topo-scroll-outer {
   overflow-x: auto;
   border-radius: 4px;
-  background: #0d1117;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
 }
 .topo-legend {
   display: flex;
@@ -1515,7 +1563,7 @@ def build_html(payloads: Dict) -> str:
 <!-- 3. STRUCTURAL TOPOLOGY VIEW -->
 <div class="section">
   <div class="section-title">Structural Topology View</div>
-  {compose_topology_view()}
+  {compose_topology_view(light_mode=True)}
 </div>
 
 <!-- 4. FOCUS DOMAIN — EDGE DATA ACQUISITION -->

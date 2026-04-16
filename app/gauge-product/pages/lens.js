@@ -332,8 +332,8 @@ function ReportPanel({ runId }) {
         {state?.error && <span className="lens-report-error">{state.error}</span>}
         {state?.path && (
           <div className="lens-report-actions">
-            <button className="lens-report-action-btn lens-report-open" onClick={handleOpen}>Open Report</button>
-            <button className="lens-report-action-btn lens-report-download" onClick={handleDownload}>Download Report</button>
+            <button className="lens-report-action-btn lens-report-open" onClick={handleOpen}>Open HTML Report</button>
+            <button className="lens-report-action-btn lens-report-download" onClick={handleDownload}>Download HTML</button>
             <span className="lens-report-ready">Report ready</span>
           </div>
         )}
@@ -343,6 +343,9 @@ function ReportPanel({ runId }) {
           Derived from governed projection (ZONE-2) · Run: {runId}
         </div>
       )}
+      <div className="lens-report-format-note">
+        Output format: HTML &nbsp;·&nbsp; PDF export available when a PDF rendering engine is configured
+      </div>
     </div>
   )
 }

@@ -1572,6 +1572,7 @@ details.op-details[open] summary::before { content:"▼  "; }
 .lens-report-download:hover { border-color:#58a6ff; }
 .lens-report-ready { font-size:10px; color:#3fb950; letter-spacing:.06em; text-transform:uppercase; }
 .lens-report-basis { font-size:10px; color:#444; margin-top:2px; letter-spacing:.03em; }
+.lens-report-format-note { font-size:10px; color:#555; margin-top:6px; letter-spacing:.02em; }
 
 /* === LENS POLISH (PRODUCTIZE.LENS.UI.POLISH.01) === */
 
@@ -2061,6 +2062,9 @@ details.op-details[open] summary::before { content:"▼  "; }
 }
 .lens-unlock-btn:hover { border-color:#58a6ff; }
 
+/* EXPLORE: restricted status color */
+.lens-explore-row-value--restricted { color:#d29922; font-weight:600; }
+
 /* EXPLORE: gated value wrapper */
 .lens-explore-row-value-gated {
   display:inline-flex; align-items:center; gap:8px;
@@ -2100,6 +2104,8 @@ details.op-details[open] summary::before { content:"▼  "; }
 .lens-gate-cta-panel {
   border:1px solid #21262d; border-radius:6px; padding:32px 36px; background:#0d1117;
 }
+/* Section B — spacing between label and headline */
+.lens-gate-cta-panel .lens-panel-label { margin-bottom:14px; }
 .lens-gate-cta-title {
   font-size:18px; font-weight:700; color:#e6edf3; margin-bottom:8px;
 }

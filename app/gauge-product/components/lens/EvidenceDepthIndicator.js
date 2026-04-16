@@ -53,7 +53,7 @@ export default function EvidenceDepthIndicator({ payload, onUnlock, hasAccess })
                   <span className="lens-depth-avail-tag">AVAILABLE</span>
                 ) : (
                   <button className="lens-depth-avail-tag lens-depth-avail-tag--unlock" onClick={onUnlock}>
-                    AVAILABLE → UNLOCK
+                    UNLOCK
                   </button>
                 )
               )}
