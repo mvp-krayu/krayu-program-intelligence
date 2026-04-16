@@ -688,17 +688,37 @@ def compose_system_intelligence() -> str:
         ('Frontend Application',                     'Platform Services',        'verified'),
     ]
 
-    rows = []
-    for name, cluster, status in domains:
-        if status == 'verified':
-            badge = '<span class="ev-badge badge-verified">VERIFIED</span>'
-        else:
-            badge = '<span class="ev-badge badge-conditional">IN PROGRESS</span>'
-        rows.append(f"""<div class="domain-row">
-  <span class="domain-row-name">{esc(name)}</span>
-  <span class="domain-row-cluster">{esc(cluster)}</span>
-  {badge}
-</div>""")
+    def _domain_row(name: str, cluster: str, status: str) -> str:
+        badge = (
+            '<span class="ev-badge badge-verified">VERIFIED</span>'
+            if status == 'verified'
+            else '<span class="ev-badge badge-conditional">IN PROGRESS</span>'
+        )
+        return (
+            f'<div class="domain-row">'
+            f'<span class="domain-row-name">{esc(name)}</span>'
+            f'<span class="domain-row-cluster">{esc(cluster)}</span>'
+            f'{badge}'
+            f'</div>'
+        )
+
+    # Two-column layout when domain count > 10
+    if len(domains) > 10:
+        mid = (len(domains) + 1) // 2  # ceiling split: first column gets one more if odd
+        left_rows  = "".join(_domain_row(*d) for d in domains[:mid])
+        right_rows = "".join(_domain_row(*d) for d in domains[mid:])
+        list_html = (
+            f'<div class="domain-list-2col">'
+            f'<div class="domain-list">{left_rows}</div>'
+            f'<div class="domain-list">{right_rows}</div>'
+            f'</div>'
+        )
+    else:
+        list_html = (
+            f'<div class="domain-list">'
+            + "".join(_domain_row(*d) for d in domains)
+            + '</div>'
+        )
 
     return f"""
 <p>
@@ -706,9 +726,7 @@ def compose_system_intelligence() -> str:
   15 domains are structurally verified; 2 domains carry pending runtime dimensions.
   This represents the complete assessed surface — no domains are unexamined.
 </p>
-<div class="domain-list">
-{"".join(rows)}
-</div>
+{list_html}
 <div class="domain-summary">
   17 functional domains &nbsp;·&nbsp; 42 capability surfaces &nbsp;·&nbsp; 89 components mapped
 </div>
@@ -1341,6 +1359,16 @@ body {
 }
 
 /* SYSTEM INTELLIGENCE — DOMAIN LIST */
+/* Two-column domain list (used when domain count > 10) */
+.domain-list-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 16px 0;
+}
+@media (max-width: 600px) { .domain-list-2col { grid-template-columns: 1fr; } }
+.domain-list-2col .domain-list { margin: 0; }
+
 .domain-list {
   border: 1px solid #e5e7eb;
   border-radius: 4px;

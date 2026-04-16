@@ -1803,25 +1803,31 @@ details.op-details[open] summary::before { content:"▼  "; }
 .lens-explore-rows { display:flex; flex-direction:column; gap:0; margin-bottom:20px; }
 .lens-explore-row {
   display:grid;
-  grid-template-columns: 200px 120px 1fr;
-  gap:12px;
+  /* Zone 1: label  Zone 2: status/action (intrinsic width)  Zone 3: note */
+  grid-template-columns: 160px auto 1fr;
+  gap:8px 14px;
   padding:10px 0;
   border-bottom:1px solid #0e1929;
-  align-items:center;
+  align-items:baseline;
 }
-@media(max-width:600px){ .lens-explore-row { grid-template-columns: 1fr 80px; } }
+@media(max-width:640px){
+  .lens-explore-row {
+    grid-template-columns: 1fr;
+    gap:4px;
+  }
+}
 .lens-explore-row:last-child { border-bottom:none; }
-.lens-explore-row-label { font-size:12px; color:#8b949e; }
+.lens-explore-row-label { font-size:12px; color:#8b949e; padding-top:1px; }
 .lens-explore-row-value {
   font-size:11px; font-weight:700; letter-spacing:.05em; padding:2px 8px;
-  border-radius:2px; text-align:center;
+  border-radius:2px; text-align:center; white-space:nowrap;
 }
 .lens-explore-row-value--verified  { color:#3fb950; background:#0d2e1a; border:1px solid #1b5e3d; }
 .lens-explore-row-value--pending   { color:#d29922; background:#1a1600; border:1px solid #3d3208; }
 .lens-explore-row-value--available { color:#58a6ff; background:#0b1f31; border:1px solid #1b3a5c; }
 .lens-explore-row-value--locked    { color:#8b949e; background:#111318; border:1px solid #30363d; }
-.lens-explore-row-note { font-size:11px; color:#8b949e; }
-@media(max-width:600px){ .lens-explore-row-note { display:none; } }
+.lens-explore-row-note { font-size:11px; color:#8b949e; line-height:1.5; }
+@media(max-width:640px){ .lens-explore-row-note { color:#555; } }
 .lens-explore-cta {
   display:flex; align-items:center; gap:16px; flex-wrap:wrap;
   border-top:1px solid #0e1929; padding-top:16px;
@@ -2065,9 +2071,9 @@ details.op-details[open] summary::before { content:"▼  "; }
 /* EXPLORE: restricted status color */
 .lens-explore-row-value--restricted { color:#d29922; font-weight:600; }
 
-/* EXPLORE: gated value wrapper */
+/* EXPLORE: gated value wrapper — badge + button, never wraps */
 .lens-explore-row-value-gated {
-  display:inline-flex; align-items:center; gap:8px;
+  display:inline-flex; align-items:center; gap:6px; flex-shrink:0; white-space:nowrap;
 }
 
 /* EXPLORE: gated CTA link-as-button */
