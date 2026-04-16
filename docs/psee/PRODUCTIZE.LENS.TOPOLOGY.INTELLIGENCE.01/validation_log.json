@@ -1,0 +1,18 @@
+{
+  "stream": "PRODUCTIZE.LENS.TOPOLOGY.INTELLIGENCE.01",
+  "checks": [
+    { "name": "ZONE-2 payload enforcement", "result": "PASS", "note": "All components reject non-ZONE-2 payloads" },
+    { "name": "No operator-language in CLM-25 caveats", "result": "PASS", "note": "normalizeCaveat() applied in ExecutiveStatusPanel; EXACT_TRANSFORMS cover all known leaks" },
+    { "name": "No operator-language in CLM-20 caveats", "result": "PASS", "note": "normalizeCaveat() applied in FocusDomainPanel; chain notation transformed" },
+    { "name": "No SIG-/COND-/DIAG-/INTEL- in rendered output", "result": "PASS", "note": "All new components either use normalized caveats or have no caveat rendering" },
+    { "name": "ConnectedSystemView — no internal claim IDs in node labels", "result": "PASS", "note": "Node labels are business-grade titles only: Platform Architecture, Security Intelligence, etc." },
+    { "name": "SystemIntelligenceOverview — no claim IDs in card headers", "result": "PASS", "note": "Domain titles used exclusively; claim IDs are internal React keys only" },
+    { "name": "ExploreGovernedDetail — replaces ExecutionVisibilityMap", "result": "PASS", "note": "ExecutionVisibilityMap inline function removed from lens.js; ExploreGovernedDetail imported" },
+    { "name": "Page flow rebalance", "result": "PASS", "note": "SIO → CSV → Focus Domain precede readiness verdict panel" },
+    { "name": "CSS namespaces added", "result": "PASS", "note": ".lens-sio-*, .lens-domain-*, .lens-csv-*, .lens-focus-*, .lens-explore-* present in gauge.css" },
+    { "name": "No unused imports in lens.js", "result": "PASS", "note": "All 4 new component imports are consumed in JSX; traceAvailable removed" },
+    { "name": "Pure SVG — no external graph library", "result": "PASS", "note": "ConnectedSystemView uses only SVG primitives; no npm dependency added" },
+    { "name": "Fail-closed: components return null on missing/error payload", "result": "PASS", "note": "All 4 new components guard against error_type and zone mismatch" }
+  ],
+  "overall": "PASS"
+}

@@ -1,0 +1,40 @@
+{
+  "stream": "PRODUCTIZE.LENS.TOPOLOGY.INTELLIGENCE.01",
+  "changes": [
+    {
+      "file": "app/gauge-product/components/lens/ExecutiveStatusPanel.js",
+      "action": "MODIFIED",
+      "description": "Added normalizeCaveat() with EXACT_TRANSFORMS + ID_PATTERNS. Applied to caveat render block. Eliminates CONCEPT-XX, BC-XX, chain notation from CLM-25 hero panel."
+    },
+    {
+      "file": "app/gauge-product/components/lens/SystemIntelligenceOverview.js",
+      "action": "CREATED",
+      "description": "5 domain cards for CLM-09/20/25/12/10. Evidence badge, executive description, primary metric per domain."
+    },
+    {
+      "file": "app/gauge-product/components/lens/ConnectedSystemView.js",
+      "action": "CREATED",
+      "description": "Pure SVG hub-and-spoke graph. CLM-25 center hub, 4 satellites, spoke edges colored by evidence_class, focus glow on CLM-20."
+    },
+    {
+      "file": "app/gauge-product/components/lens/FocusDomainPanel.js",
+      "action": "CREATED",
+      "description": "CLM-20 spotlight: business exposure, what is known, what requires validation (normalized), cross-connections teaser."
+    },
+    {
+      "file": "app/gauge-product/components/lens/ExploreGovernedDetail.js",
+      "action": "CREATED",
+      "description": "Replaces ExecutionVisibilityMap. 4 visibility rows, prominent View governed detail CTA to /topology."
+    },
+    {
+      "file": "app/gauge-product/pages/lens.js",
+      "action": "MODIFIED",
+      "description": "Added 4 new component imports. Removed ExecutionVisibilityMap inline function and traceAvailable. Rebalanced page flow per TOPOLOGY.INTELLIGENCE.01."
+    },
+    {
+      "file": "app/gauge-product/styles/gauge.css",
+      "action": "MODIFIED",
+      "description": "Added ~200 lines for .lens-sio-*, .lens-domain-*, .lens-csv-*, .lens-focus-*, .lens-explore-* namespaces."
+    }
+  ]
+}
