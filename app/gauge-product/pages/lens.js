@@ -1,7 +1,7 @@
 /**
  * pages/lens.js
  * PRODUCTIZE.LENS.UI.01 / PRODUCTIZE.LENS.REPORT.DELIVERY.01 / PRODUCTIZE.LENS.UI.POLISH.01
- * PRODUCTIZE.LENS.TOPOLOGY.INTELLIGENCE.01
+ * PRODUCTIZE.LENS.TOPOLOGY.INTELLIGENCE.01 / PRODUCTIZE.LENS.COMMERCIAL.GATING.01
  *
  * LENS v1 — Executive intelligence surface.
  *
@@ -22,7 +22,7 @@
  *   Decision Conditions → What You Unlock → Advanced Intelligence Access →
  *   Explore Governed Detail → Report
  *
- * Authority: PRODUCTIZE.LENS.TOPOLOGY.INTELLIGENCE.01
+ * Authority: PRODUCTIZE.LENS.COMMERCIAL.GATING.01
  */
 
 import { useState, useEffect } from 'react'
@@ -37,6 +37,8 @@ import SystemIntelligenceOverview from '../components/lens/SystemIntelligenceOve
 import ConnectedSystemView from '../components/lens/ConnectedSystemView'
 import FocusDomainPanel from '../components/lens/FocusDomainPanel'
 import ExploreGovernedDetail from '../components/lens/ExploreGovernedDetail'
+import AccessGateModal from '../components/lens/AccessGateModal'
+import { useAccessGate } from '../lib/lens/useAccessGate'
 
 // LENS v1 claim set — ZONE-2 only
 const LENS_CLAIMS = ['CLM-09', 'CLM-20', 'CLM-25', 'CLM-12', 'CLM-10']
@@ -169,7 +171,7 @@ function AdvancedAccessBlock() {
 // Section E — What You Unlock
 // ---------------------------------------------------------------------------
 
-function WhatYouUnlock() {
+function WhatYouUnlock({ onUnlock }) {
   const points = [
     'Distinguish proven readiness from projected readiness — and act on each with appropriate confidence.',
     'Identify operational blind spots before they become issues — not after commitment.',
@@ -191,6 +193,54 @@ function WhatYouUnlock() {
           </li>
         ))}
       </ul>
+      <div className="lens-unlock-cta-block">
+        <span className="lens-unlock-cta-label">
+          Additional intelligence depth is available for stakeholders requiring stronger assurance.
+        </span>
+        <button className="lens-unlock-cta-btn" onClick={onUnlock}>
+          Unlock Advanced Intelligence Access
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Section F — Deeper Intelligence Access (footer conversion block)
+// ---------------------------------------------------------------------------
+
+function IntelligenceGateCTA({ onUnlock }) {
+  const gatedItems = [
+    'Full trace interrogation — evidence chain validation from raw signal to governed conclusion',
+    'Capability-level topology — structural detail beneath the domain overview layer',
+    'Operational evidence chains — signal-to-conclusion traceability at L2/L3 depth',
+    'Full audit trail — governance and verification access for technical and leadership teams',
+  ]
+
+  return (
+    <div className="lens-gate-cta-panel">
+      <div className="lens-panel-label">DEEPER INTELLIGENCE ACCESS</div>
+      <div className="lens-gate-cta-title">Extended Intelligence Layers Available</div>
+      <p className="lens-gate-cta-sub">
+        The governed intelligence system contains additional depth beyond this executive surface.
+        Entitlement-based access unlocks the full traceability and interrogation capabilities.
+      </p>
+      <ul className="lens-gate-cta-list">
+        {gatedItems.map((item, i) => (
+          <li key={i} className="lens-gate-cta-item">
+            <span className="lens-gate-cta-item-marker">→</span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+      <div className="lens-gate-cta-actions">
+        <button className="lens-gate-cta-primary" onClick={onUnlock}>
+          Unlock Access
+        </button>
+        <Link href="/plans" className="lens-gate-cta-secondary">
+          View Plans
+        </Link>
+      </div>
     </div>
   )
 }
@@ -199,7 +249,7 @@ function WhatYouUnlock() {
 // Header
 // ---------------------------------------------------------------------------
 
-function LensHeader({ runId, generatedAt }) {
+function LensHeader({ runId, generatedAt, hasAccess, onUnlock }) {
   return (
     <div className="lens-header">
       <div className="lens-header-top">
@@ -224,7 +274,13 @@ function LensHeader({ runId, generatedAt }) {
       </div>
       <div className="lens-header-nav">
         <Link href="/overview" className="lens-nav-link">← Overview</Link>
-        <Link href="/topology" className="lens-nav-link">Topology</Link>
+        {hasAccess ? (
+          <Link href="/topology" className="lens-nav-link">Topology</Link>
+        ) : (
+          <button className="lens-nav-link lens-nav-link--gated" onClick={onUnlock}>
+            Deep Access
+          </button>
+        )}
       </div>
     </div>
   )
@@ -296,6 +352,7 @@ function ReportPanel({ runId }) {
 // ---------------------------------------------------------------------------
 
 export default function LensPage() {
+  const { hasAccess, modalOpen, showModal, hideModal, grantAccess } = useAccessGate()
   const [payloads, setPayloads] = useState({})
   const [loading, setLoading]   = useState(true)
   const [error, setError]       = useState(null)
@@ -350,7 +407,9 @@ export default function LensPage() {
 
   return (
     <div className="lens-page">
-      <LensHeader runId={runId} generatedAt={generatedAt} />
+      <AccessGateModal open={modalOpen} onClose={hideModal} onGrant={grantAccess} />
+
+      <LensHeader runId={runId} generatedAt={generatedAt} hasAccess={hasAccess} onUnlock={showModal} />
 
       {/* Section A — Hero band */}
       <div className="lens-band">
@@ -379,7 +438,7 @@ export default function LensPage() {
         </div>
         <div className="lens-col lens-col-aside">
           <StabilityComposition payloads={allPayloads} />
-          <EvidenceDepthIndicator payload={p10 || p09} />
+          <EvidenceDepthIndicator payload={p10 || p09} onUnlock={showModal} hasAccess={hasAccess} />
         </div>
       </div>
 
@@ -402,7 +461,7 @@ export default function LensPage() {
 
       {/* What You Unlock */}
       <div className="lens-band">
-        <WhatYouUnlock />
+        <WhatYouUnlock onUnlock={showModal} />
       </div>
 
       {/* Advanced Intelligence Access */}
@@ -410,9 +469,14 @@ export default function LensPage() {
         <AdvancedAccessBlock />
       </div>
 
-      {/* Section E — Explore Governed Detail (replaces ExecutionVisibilityMap) */}
+      {/* Section E — Explore Governed Detail (gated) */}
       <div className="lens-band">
-        <ExploreGovernedDetail />
+        <ExploreGovernedDetail onUnlock={showModal} hasAccess={hasAccess} />
+      </div>
+
+      {/* Section F — Deeper Intelligence Access (footer conversion) */}
+      <div className="lens-band">
+        <IntelligenceGateCTA onUnlock={showModal} />
       </div>
 
       {/* Report generation */}
@@ -421,7 +485,7 @@ export default function LensPage() {
       </div>
 
       <div className="lens-footer">
-        <span className="lens-footer-authority">PRODUCTIZE.LENS.GRAPH.RENDER.01</span>
+        <span className="lens-footer-authority">PRODUCTIZE.LENS.COMMERCIAL.GATING.01</span>
         <span className="lens-footer-zone-lock">ZONE-2 ONLY · NO INTERNAL STRUCTURE EXPOSED</span>
       </div>
     </div>
