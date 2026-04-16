@@ -1,6 +1,6 @@
 /**
  * components/lens/ExecutiveStatusPanel.js
- * PRODUCTIZE.LENS.UI.01 / PRODUCTIZE.LENS.UI.POLISH.01
+ * PRODUCTIZE.LENS.UI.01 / PRODUCTIZE.LENS.UI.POLISH.01 / PRODUCTIZE.LENS.TOPOLOGY.INTELLIGENCE.01
  *
  * Operational readiness hero panel.
  * Renders the executive verdict claim (CLM-25) with evidence class badge,
@@ -8,7 +8,47 @@
  *
  * Consumes ZONE-2 projection payloads only.
  * No vault reads. No ZONE-1 fields.
+ * Caveats are normalized — no internal identifiers exposed (CONCEPT-XX, BC-XX, chain notation).
  */
+
+// ---------------------------------------------------------------------------
+// Caveat normalization — same transforms as RiskPanel and lens_report_generator
+// ---------------------------------------------------------------------------
+
+const EXACT_TRANSFORMS = {
+  'CONCEPT-06 predicate uses PHASE_1_ACTIVE — will not match NOT_EVALUATED on recomputed run. EXECUTION verdict may not correctly show UNKNOWN on Stream 10 schema. Must be fixed before LENS surface.':
+    'Execution readiness verdict requires a configuration update before it can be automatically derived. Currently confirmed as pending assessment.',
+
+  'CONCEPT-06 predicate mismatch (BC-01): EXECUTION verdict cannot be automatically derived until the predicate in concepts.json is updated to include NOT_EVALUATED. Manually confirmed as UNKNOWN based on execution_status=NOT_EVALUATED.':
+    'Execution readiness verdict is manually confirmed as pending assessment. This condition resolves upon a targeted configuration update.',
+
+  'Four-layer chain (SIG-006 → COND-006 → DIAG-006 → INTEL-001). Runtime throughput is not measured; ceiling is static configuration only.':
+    'Runtime throughput is not measured; the configured capacity ceiling requires live validation to confirm operational performance.',
+}
+
+const ID_PATTERNS = [
+  [/\bSIG-\d+\b/g,     '[signal reference]'],
+  [/\bCOND-\d+\b/g,    '[condition reference]'],
+  [/\bDIAG-\d+\b/g,    '[diagnostic reference]'],
+  [/\bINTEL-\d+\b/g,   '[intelligence reference]'],
+  [/\bCONCEPT-\d+\b/g, '[predicate condition]'],
+  [/\bBC-\d+\b/g,       '[blocking condition]'],
+  [/PHASE_\w+/g,        '[phase condition]'],
+  [/NOT_EVALUATED/g,    'pending assessment'],
+  [/execution_status=\w+/g, 'execution status'],
+  [/concepts\.json/g,   '[configuration file]'],
+  [/Stream \d+/g,       '[schema version]'],
+]
+
+function normalizeCaveat(text) {
+  const exact = EXACT_TRANSFORMS[text.trim()]
+  if (exact) return exact
+  let out = text
+  for (const [pattern, replacement] of ID_PATTERNS) {
+    out = out.replace(pattern, replacement)
+  }
+  return out
+}
 
 const EVIDENCE_BADGE = {
   VERIFIED:    { label: 'VERIFIED',    bg: '#0d2e1a', color: '#3fb950', border: '#1b5e3d' },
@@ -71,7 +111,7 @@ export default function ExecutiveStatusPanel({ payload }) {
           {caveats.map((c, i) => (
             <div key={i} className="lens-caveat-row">
               <span className="lens-caveat-marker">OPEN ITEM</span>
-              <span className="lens-caveat-text">{c}</span>
+              <span className="lens-caveat-text">{normalizeCaveat(c)}</span>
             </div>
           ))}
         </div>

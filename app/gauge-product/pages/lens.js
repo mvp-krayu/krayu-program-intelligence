@@ -1,6 +1,7 @@
 /**
  * pages/lens.js
  * PRODUCTIZE.LENS.UI.01 / PRODUCTIZE.LENS.REPORT.DELIVERY.01 / PRODUCTIZE.LENS.UI.POLISH.01
+ * PRODUCTIZE.LENS.TOPOLOGY.INTELLIGENCE.01
  *
  * LENS v1 — Executive intelligence surface.
  *
@@ -9,13 +10,19 @@
  * Fail-closed: payload.error_type → surface shows blocked state, not blank.
  *
  * Claim assembly:
- *   CLM-09 — Proven Structural Score     → CausalNarrative, StabilityComposition
- *   CLM-20 — SIG-001 Signal              → SignalCards
- *   CLM-25 — Executive Three-Axis Verdict → ExecutiveStatusPanel
- *   CLM-12 — Score Confidence Range      → StabilityComposition
- *   CLM-10 — Achievable Score Projected  → StabilityComposition, EvidenceDepthIndicator
+ *   CLM-09 — Proven Structural Score       → SystemIntelligenceOverview, ConnectedSystemView, CausalNarrative, StabilityComposition
+ *   CLM-20 — SIG-001 Signal                → SystemIntelligenceOverview, ConnectedSystemView, FocusDomainPanel, SignalCards
+ *   CLM-25 — Executive Three-Axis Verdict  → ExecutiveStatusPanel, SystemIntelligenceOverview, ConnectedSystemView
+ *   CLM-12 — Score Confidence Range        → SystemIntelligenceOverview, ConnectedSystemView, StabilityComposition
+ *   CLM-10 — Achievable Score Projected    → SystemIntelligenceOverview, ConnectedSystemView, StabilityComposition, EvidenceDepthIndicator
  *
- * Authority: PRODUCTIZE.LENS.UI.POLISH.01
+ * Page flow (rebalanced per TOPOLOGY.INTELLIGENCE.01):
+ *   Hero → System Intelligence Overview → Connected System View → Focus Domain →
+ *   [verdict + confidence + depth] → Decision Relevance → Operational Signals →
+ *   Decision Conditions → What You Unlock → Advanced Intelligence Access →
+ *   Explore Governed Detail → Report
+ *
+ * Authority: PRODUCTIZE.LENS.TOPOLOGY.INTELLIGENCE.01
  */
 
 import { useState, useEffect } from 'react'
@@ -26,6 +33,10 @@ import CausalNarrative from '../components/lens/CausalNarrative'
 import StabilityComposition from '../components/lens/StabilityComposition'
 import RiskPanel from '../components/lens/RiskPanel'
 import EvidenceDepthIndicator from '../components/lens/EvidenceDepthIndicator'
+import SystemIntelligenceOverview from '../components/lens/SystemIntelligenceOverview'
+import ConnectedSystemView from '../components/lens/ConnectedSystemView'
+import FocusDomainPanel from '../components/lens/FocusDomainPanel'
+import ExploreGovernedDetail from '../components/lens/ExploreGovernedDetail'
 
 // LENS v1 claim set — ZONE-2 only
 const LENS_CLAIMS = ['CLM-09', 'CLM-20', 'CLM-25', 'CLM-12', 'CLM-10']
@@ -185,60 +196,6 @@ function WhatYouUnlock() {
 }
 
 // ---------------------------------------------------------------------------
-// Section G — Execution Visibility Map
-// ---------------------------------------------------------------------------
-
-function ExecutionVisibilityMap({ traceAvailable }) {
-  const rows = [
-    {
-      label: 'Structural Coverage',
-      value: 'Complete',
-      status: 'verified',
-      note: 'All structural components examined and accounted for.',
-    },
-    {
-      label: 'Operational Measurement',
-      value: 'Partial',
-      status: 'pending',
-      note: 'Runtime execution assessment not yet completed.',
-    },
-    {
-      label: 'Trace Access',
-      value: traceAvailable ? 'Available' : 'Not available',
-      status: traceAvailable ? 'available' : 'locked',
-      note: traceAvailable ? 'Deeper evidence chains accessible on request.' : null,
-    },
-    {
-      label: 'Audit Depth',
-      value: 'Available',
-      status: 'available',
-      note: 'Full audit trail accessible for governance and verification.',
-    },
-  ]
-
-  return (
-    <div className="lens-vismap-panel">
-      <div className="lens-panel-label">EXECUTION VISIBILITY MAP</div>
-      <p className="lens-vismap-intro">
-        This view summarises visibility depth without exposing internal system structure.
-      </p>
-      <div className="lens-vismap-rows">
-        {rows.map(r => (
-          <div key={r.label} className="lens-vismap-row">
-            <span className="lens-vismap-label">{r.label}</span>
-            <span className={`lens-vismap-value lens-vismap-value--${r.status}`}>{r.value}</span>
-            {r.note && <span className="lens-vismap-note">{r.note}</span>}
-          </div>
-        ))}
-      </div>
-      <div className="lens-vismap-cta">
-        <a href="/topology" className="lens-vismap-link">Explore operational detail →</a>
-      </div>
-    </div>
-  )
-}
-
-// ---------------------------------------------------------------------------
 // Header
 // ---------------------------------------------------------------------------
 
@@ -390,8 +347,6 @@ export default function LensPage() {
     : null
   const heroScores = { proven: provenNarrative, achievable: achievableNarrative, rangeLabel }
 
-  const traceAvailable = anchor?.trace_available === true
-
   return (
     <div className="lens-page">
       <LensHeader runId={runId} generatedAt={generatedAt} />
@@ -400,6 +355,23 @@ export default function LensPage() {
       <div className="lens-band">
         <HeroBand scores={heroScores} />
       </div>
+
+      {/* Section B — System Intelligence Overview */}
+      <div className="lens-band">
+        <SystemIntelligenceOverview payloads={payloads} />
+      </div>
+
+      {/* Section C — Connected System View */}
+      <div className="lens-band">
+        <ConnectedSystemView payloads={payloads} />
+      </div>
+
+      {/* Section D — Focus Domain (CLM-20 spotlight) */}
+      {p20 && !p20.error_type && (
+        <div className="lens-band">
+          <FocusDomainPanel payload={p20} />
+        </div>
+      )}
 
       {/* Primary band — readiness verdict + confidence distribution + depth */}
       <div className="lens-band lens-band-primary">
@@ -412,36 +384,36 @@ export default function LensPage() {
         </div>
       </div>
 
-      {/* Section B — Decision relevance */}
+      {/* Decision Relevance */}
       <div className="lens-band">
         <CausalNarrative payload={p09} />
       </div>
 
-      {/* Section C — Operational signal */}
+      {/* Operational Signals */}
       {p20 && !p20.error_type && (
         <div className="lens-band">
           <SignalCards payloads={[p20]} />
         </div>
       )}
 
-      {/* Section D — Decision conditions */}
+      {/* Decision Conditions */}
       <div className="lens-band">
         <RiskPanel payloads={allPayloads} />
       </div>
 
-      {/* Section G — Execution Visibility Map */}
-      <div className="lens-band">
-        <ExecutionVisibilityMap traceAvailable={traceAvailable} />
-      </div>
-
-      {/* Section E — What You Unlock */}
+      {/* What You Unlock */}
       <div className="lens-band">
         <WhatYouUnlock />
       </div>
 
-      {/* Section F — Advanced Intelligence Access */}
+      {/* Advanced Intelligence Access */}
       <div className="lens-band">
         <AdvancedAccessBlock />
+      </div>
+
+      {/* Section E — Explore Governed Detail (replaces ExecutionVisibilityMap) */}
+      <div className="lens-band">
+        <ExploreGovernedDetail />
       </div>
 
       {/* Report generation */}
@@ -450,7 +422,7 @@ export default function LensPage() {
       </div>
 
       <div className="lens-footer">
-        <span className="lens-footer-authority">PRODUCTIZE.LENS.UI.POLISH.01</span>
+        <span className="lens-footer-authority">PRODUCTIZE.LENS.TOPOLOGY.INTELLIGENCE.01</span>
         <span className="lens-footer-zone-lock">ZONE-2 ONLY · NO INTERNAL STRUCTURE EXPOSED</span>
       </div>
     </div>

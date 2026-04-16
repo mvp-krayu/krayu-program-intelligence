@@ -1675,3 +1675,162 @@ details.op-details[open] summary::before { content:"▼  "; }
   white-space:nowrap; flex-shrink:0; min-width:160px; text-align:center;
 }
 
+/* ==========================================================================
+   SYSTEM INTELLIGENCE OVERVIEW
+   ========================================================================== */
+.lens-sio-panel { border:1px solid #1f2937; background:#0b0f14; padding:20px; }
+.lens-sio-intro { font-size:13px; color:#8b949e; line-height:1.7; margin:8px 0 16px; }
+.lens-sio-grid {
+  display:grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap:12px;
+}
+@media(max-width:900px){ .lens-sio-grid { grid-template-columns: repeat(2,1fr); } }
+@media(max-width:500px){ .lens-sio-grid { grid-template-columns: 1fr; } }
+
+.lens-domain-card {
+  border:1px solid #1f2937; background:#0d1117;
+  padding:14px; display:flex; flex-direction:column; gap:8px;
+  transition: border-color 0.15s;
+}
+.lens-domain-card--verified    { border-color:#1b5e3d; }
+.lens-domain-card--conditional { border-color:#3d3208; }
+.lens-domain-card--partial     { border-color:#4a2910; }
+.lens-domain-card--blocked     { border-color:#4a1212; }
+
+.lens-domain-card-header {
+  display:flex; align-items:flex-start;
+  justify-content:space-between; gap:8px;
+}
+.lens-domain-title {
+  font-size:11px; font-weight:700; letter-spacing:.06em;
+  text-transform:uppercase; color:#e6edf3; line-height:1.4;
+}
+.lens-domain-badge {
+  font-size:9px; font-weight:700; letter-spacing:.06em;
+  padding:2px 6px; border-radius:2px; white-space:nowrap; flex-shrink:0;
+}
+.lens-domain-description {
+  font-size:11px; color:#8b949e; line-height:1.6; margin:0;
+}
+.lens-domain-metric {
+  display:flex; flex-direction:column; gap:2px;
+  border-top:1px solid #1f2937; padding-top:8px; margin-top:auto;
+}
+.lens-domain-metric-key {
+  font-size:9px; color:#8b949e; text-transform:uppercase; letter-spacing:.07em;
+}
+.lens-domain-metric-val {
+  font-size:12px; color:#c9d1d9; font-weight:600; line-height:1.4;
+}
+
+/* ==========================================================================
+   CONNECTED SYSTEM VIEW
+   ========================================================================== */
+.lens-csv-panel { border:1px solid #1f2937; background:#0b0f14; padding:20px; }
+.lens-csv-intro { font-size:13px; color:#8b949e; line-height:1.7; margin:8px 0 16px; }
+.lens-csv-svg-wrap {
+  width:100%; max-width:640px; margin:0 auto;
+  border:1px solid #1f2937; background:#0d1117; padding:12px;
+}
+.lens-csv-svg { width:100%; height:auto; display:block; }
+.lens-csv-legend {
+  display:flex; flex-wrap:wrap; gap:16px;
+  margin-top:14px; padding-top:10px; border-top:1px solid #1f2937;
+}
+.lens-csv-legend-item { display:flex; align-items:center; gap:6px; }
+.lens-csv-legend-dot {
+  width:9px; height:9px; border-radius:50%; flex-shrink:0;
+}
+.lens-csv-legend-label { font-size:11px; color:#8b949e; letter-spacing:.04em; }
+
+/* ==========================================================================
+   FOCUS DOMAIN PANEL
+   ========================================================================== */
+.lens-focus-panel {
+  border:1px solid #3d3208; background:#0d1117; padding:20px;
+}
+.lens-focus-domain-title {
+  font-size:17px; font-weight:700; color:#e6edf3;
+  letter-spacing:.04em; margin:10px 0 4px;
+}
+.lens-focus-domain-sub {
+  font-size:13px; color:#8b949e; line-height:1.7; margin:0 0 16px;
+}
+.lens-focus-rows { display:flex; flex-direction:column; gap:0; margin-bottom:20px; }
+.lens-focus-row {
+  display:grid;
+  grid-template-columns: 180px 1fr;
+  gap:12px;
+  padding:10px 0;
+  border-bottom:1px solid #161b22;
+  align-items:start;
+}
+.lens-focus-row:last-child { border-bottom:none; }
+.lens-focus-row-key {
+  font-size:9px; color:#8b949e; text-transform:uppercase;
+  letter-spacing:.08em; font-weight:700; padding-top:2px; line-height:1.5;
+}
+.lens-focus-row-val {
+  font-size:13px; color:#c9d1d9; line-height:1.65;
+}
+.lens-focus-connections {
+  border:1px solid #1f2937; padding:14px;
+}
+.lens-focus-connections-label {
+  font-size:9px; color:#8b949e; text-transform:uppercase;
+  letter-spacing:.08em; font-weight:700; margin-bottom:10px;
+}
+.lens-focus-connections-list { display:flex; flex-direction:column; gap:6px; }
+.lens-focus-connection-item {
+  display:flex; align-items:baseline; gap:10px;
+}
+.lens-focus-conn-name {
+  font-size:12px; color:#58a6ff; font-weight:600; white-space:nowrap;
+}
+.lens-focus-conn-note { font-size:11px; color:#8b949e; }
+
+/* ==========================================================================
+   EXPLORE GOVERNED DETAIL
+   ========================================================================== */
+.lens-explore-panel {
+  border:1px solid #1b3a5c; background:#060e17; padding:20px;
+}
+.lens-explore-intro {
+  font-size:13px; color:#8b949e; line-height:1.7; margin:8px 0 16px;
+}
+.lens-explore-rows { display:flex; flex-direction:column; gap:0; margin-bottom:20px; }
+.lens-explore-row {
+  display:grid;
+  grid-template-columns: 200px 120px 1fr;
+  gap:12px;
+  padding:10px 0;
+  border-bottom:1px solid #0e1929;
+  align-items:center;
+}
+@media(max-width:600px){ .lens-explore-row { grid-template-columns: 1fr 80px; } }
+.lens-explore-row:last-child { border-bottom:none; }
+.lens-explore-row-label { font-size:12px; color:#8b949e; }
+.lens-explore-row-value {
+  font-size:11px; font-weight:700; letter-spacing:.05em; padding:2px 8px;
+  border-radius:2px; text-align:center;
+}
+.lens-explore-row-value--verified  { color:#3fb950; background:#0d2e1a; border:1px solid #1b5e3d; }
+.lens-explore-row-value--pending   { color:#d29922; background:#1a1600; border:1px solid #3d3208; }
+.lens-explore-row-value--available { color:#58a6ff; background:#0b1f31; border:1px solid #1b3a5c; }
+.lens-explore-row-value--locked    { color:#8b949e; background:#111318; border:1px solid #30363d; }
+.lens-explore-row-note { font-size:11px; color:#8b949e; }
+@media(max-width:600px){ .lens-explore-row-note { display:none; } }
+.lens-explore-cta {
+  display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  border-top:1px solid #0e1929; padding-top:16px;
+}
+.lens-explore-link {
+  font-size:13px; font-weight:600; color:#58a6ff;
+  text-decoration:none; padding:8px 16px;
+  border:1px solid #1b3a5c; background:#0b1f31;
+  transition: background 0.15s, border-color 0.15s;
+}
+.lens-explore-link:hover { background:#0f2a42; border-color:#3373a8; }
+.lens-explore-cta-note { font-size:11px; color:#8b949e; line-height:1.55; flex:1; min-width:200px; }
+
