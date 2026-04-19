@@ -20,6 +20,14 @@ Output: classified evidence set — all nodes assigned type, domain, and initial
 
 ---
 
+## Domain Model Position
+
+40.2 performs classification INTO an existing domain model. It does NOT define the domain model.
+
+The domain model is defined at the LENS canonical level — see [[PRODUCTIZE.LENS]]. 40.2 receives domain identifiers as part of its classification scope and assigns evidence nodes to those domains. It has no authority to create, modify, or extend the domain schema. Domain count, domain labels, and domain structure are owned upstream of 40.2.
+
+---
+
 ## Inputs
 
 - Intelligence Graph from [[PRODUCTIZE.IG.FROM.INTAKE.01]]

@@ -32,6 +32,12 @@ LENS Assessment: a structured executive intelligence view of a client's delivery
 
 ---
 
+## Domain Model Authority
+
+All domain-related claims in this product node are owned by [[../canonical/streams/PRODUCTIZE.LENS]] exclusively. 40.2 classifies into the domain model — it does not define it. No domain claim in this node derives from 40.2 canonical authority.
+
+---
+
 ## Constraints
 
 - LENS consumes ZONE-2 only — [[../canonical/04_INVARIANTS]] INV-08

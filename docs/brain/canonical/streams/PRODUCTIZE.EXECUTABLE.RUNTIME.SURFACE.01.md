@@ -46,9 +46,30 @@ Output: runtime execution surface — functional, interactive, governed
 
 ---
 
+## PiOS Core Contract Boundary
+
+PiOS Core is treated as a governed black box with explicit input/output contract. It is not omitted; it is bounded.
+
+**Inputs to PiOS Core:**
+- 40.4 validated handoff artifact (from [[PRODUCTIZE.STRUCTURAL.TRUTH.40.4.01]])
+
+**Outputs from PiOS Core (to L5 Activation):**
+- CLM-* claim set (with confidence bands)
+- Signal-derived metrics
+- Domain-level scoring inputs
+
+**Constraints:**
+- Core is deterministic — same 40.4 input produces same Core output ([[../04_INVARIANTS]] INV-06)
+- Core does not mutate 40.4 artifacts ([[../04_INVARIANTS]] INV-05)
+- Core outputs must be fully traceable to 40.4 inputs ([[../04_INVARIANTS]] INV-01)
+
+This boundary contract eliminates the implicit dependency. PiOS Core (L2–L4) is referenced by this node as a bounded upstream stage with a defined input/output contract, not as an undefined dependency.
+
+---
+
 ## Upstream Dependencies
 
-- PiOS Core (L2–L4) — all derivation
+- PiOS Core (L2–L4) — all derivation — see PiOS Core Contract Boundary above
 - Activation layer (L5) — binding and projection
 - [[PRODUCTIZE.STRUCTURAL.TRUTH.40.4.01]] — indirectly, via Core
 

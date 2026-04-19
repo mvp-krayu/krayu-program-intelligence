@@ -30,6 +30,23 @@ Python execution scripts forming the PiOS processing chain. Primary responsibili
 
 ---
 
+## Input Authority Classification
+
+Each function consumes one of two input classes. This classification is authoritative.
+
+| Function | Input Class | Source |
+|---|---|---|
+| `compose_system_intelligence()` | DYNAMIC | Normalized domain payload from 40.4 chain |
+| `compose_topology_view()` | STATIC | Curated graph fixture (projection scaffold) |
+| `compose_focus_domain()` | DYNAMIC | Focus domain record from LENS runtime payload |
+| `_domain_row()` | DYNAMIC | Individual domain tuple from 40.4 chain |
+| `build_html()` | MIXED | Section outputs (DYNAMIC) + report metadata (DYNAMIC) |
+
+**DYNAMIC** = sourced from runtime payload / 40.4 chain — authoritative for scores, confidence, domain selection.  
+**STATIC** = sourced from curated fixture — authoritative for topology layout and SVG rendering only. Not a source of truth for evidential outputs.
+
+---
+
 ## Flow Mapping
 
 Explicit consumes → governed_by → produces chain per function.
