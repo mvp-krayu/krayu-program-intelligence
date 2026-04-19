@@ -237,25 +237,30 @@
     [data-stage="404"]     .stage-artifact,
     [data-stage="404"]     .stage-layer      { animation-delay: -1368ms; }
 
-    [data-stage="core"]    .stage-dot,
-    [data-stage="core"]    .stage-name,
-    [data-stage="core"]    .stage-artifact,
-    [data-stage="core"]    .stage-layer      { animation-delay: -1680ms; }
+    [data-stage="core"]       .stage-dot,
+    [data-stage="core"]       .stage-name,
+    [data-stage="core"]       .stage-artifact,
+    [data-stage="core"]       .stage-layer      { animation-delay: -1680ms; }
 
-    [data-stage="runtime"] .stage-dot,
-    [data-stage="runtime"] .stage-name,
-    [data-stage="runtime"] .stage-artifact,
-    [data-stage="runtime"] .stage-layer      { animation-delay: -1896ms; }
+    [data-stage="activation"] .stage-dot,
+    [data-stage="activation"] .stage-name,
+    [data-stage="activation"] .stage-artifact,
+    [data-stage="activation"] .stage-layer      { animation-delay: -1880ms; }
 
-    [data-stage="lens"]    .stage-dot,
-    [data-stage="lens"]    .stage-name,
-    [data-stage="lens"]    .stage-artifact,
-    [data-stage="lens"]    .stage-layer      { animation-delay: -2088ms; }
+    [data-stage="runtime"]    .stage-dot,
+    [data-stage="runtime"]    .stage-name,
+    [data-stage="runtime"]    .stage-artifact,
+    [data-stage="runtime"]    .stage-layer      { animation-delay: -2080ms; }
 
-    [data-stage="report"]  .stage-dot,
-    [data-stage="report"]  .stage-name,
-    [data-stage="report"]  .stage-artifact,
-    [data-stage="report"]  .stage-layer      { animation-delay: -2280ms; }
+    [data-stage="lens"]       .stage-dot,
+    [data-stage="lens"]       .stage-name,
+    [data-stage="lens"]       .stage-artifact,
+    [data-stage="lens"]       .stage-layer      { animation-delay: -2200ms; }
+
+    [data-stage="report"]     .stage-dot,
+    [data-stage="report"]     .stage-name,
+    [data-stage="report"]     .stage-artifact,
+    [data-stage="report"]     .stage-layer      { animation-delay: -2320ms; }
 
     /* Sealed (Core) overrides — dim activation, no glow */
     @keyframes dot-pulse-sealed {
@@ -300,6 +305,12 @@
     .zone-core {
       background: hsla(220, 20%, 3%, 0.7);
       border: 1px solid var(--border);
+      border-radius: 5px;
+      margin: 2px 0;
+    }
+    .zone-activation {
+      background: hsla(260, 25%, 7%, 0.5);
+      border: 1px solid rgba(140, 100, 200, 0.12);
       border-radius: 5px;
       margin: 2px 0;
     }
@@ -532,7 +543,7 @@
         <div class="stage-dot"></div>
         <div class="stage-body">
           <div class="stage-name">Scan & Classify</div>
-          <div class="stage-artifact">domain map · signal candidates · type assignments</div>
+          <div class="stage-artifact">domain classification · signal candidates · type assignments</div>
         </div>
       </div>
       <div class="stage" data-stage="403">
@@ -572,7 +583,23 @@
         <div class="stage-dot"></div>
         <div class="stage-body">
           <div class="stage-name">Core Derivation</div>
-          <div class="stage-artifact">signals · conditions · ESI / RAG · semantic payloads</div>
+          <div class="stage-artifact">CLM-* claim set · signal-derived metrics · domain-level scoring inputs</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activation (L5) -->
+    <div class="zone zone-activation">
+      <div class="zone-header">
+        <div class="zone-header-spacer"></div>
+        <div class="zone-header-label">Activation · L5</div>
+      </div>
+      <div class="stage" data-stage="activation">
+        <div class="stage-layer">L5</div>
+        <div class="stage-dot"></div>
+        <div class="stage-body">
+          <div class="stage-name">Activation</div>
+          <div class="stage-artifact">binds Core outputs · projects to ZONE-2 payloads · no derivation</div>
         </div>
       </div>
     </div>
@@ -596,7 +623,7 @@
         <div class="stage-dot"></div>
         <div class="stage-body">
           <div class="stage-name">LENS Projection</div>
-          <div class="stage-artifact">domain-complete view · topology · focus domain · confidence band</div>
+          <div class="stage-artifact">runtime payload &#8594; scores · confidence · focus domain &nbsp;&#183;&nbsp; fixture &#8594; topology scaffold</div>
         </div>
       </div>
     </div>
