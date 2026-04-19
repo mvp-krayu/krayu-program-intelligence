@@ -30,6 +30,100 @@ Python execution scripts forming the PiOS processing chain. Primary responsibili
 
 ---
 
+## Flow Mapping
+
+Explicit consumes → governed_by → produces chain per function.
+
+---
+
+### compose_system_intelligence()
+
+**Consumes:**
+- Domain list: normalized domain tuples (label, score, confidence) from 40.4 output payload
+- Domain count threshold: integer (determines single vs 2-column layout)
+
+**Governed by:** [[../canonical/streams/PRODUCTIZE.STRUCTURAL.TRUTH.40.4.01]]
+
+**Produces:**
+- HTML domain overview section (17 rows or 2-column grid when count > 10)
+- Embedded in LENS executive report
+
+**Flow:**
+`compose_system_intelligence()` → consumes: normalized_domain_payload (40.4) → governed_by: PRODUCTIZE.STRUCTURAL.TRUTH.40.4.01 → produces: domain overview HTML block
+
+---
+
+### compose_topology_view(light_mode)
+
+**Consumes:**
+- Curated graph data: static governed fixture (17 nodes, 12 edges, 5 clusters — equivalent of curatedGraphData.js)
+- light_mode flag: boolean (True = print-safe, white background)
+
+**Governed by:** [[../canonical/streams/PRODUCTIZE.LENS]]
+
+**Produces:**
+- SVG topology artifact embedded in HTML report
+- White background (#ffffff), dark labels when light_mode=True
+- Dark field when light_mode=False (web surface)
+
+**Flow:**
+`compose_topology_view(light_mode=True)` → consumes: curated_graph_fixture → governed_by: PRODUCTIZE.LENS → produces: print-safe topology SVG
+
+---
+
+### compose_focus_domain()
+
+**Consumes:**
+- Focus domain selection: single domain record (label, score, rationale) — highest-leverage domain from LENS payload
+
+**Governed by:** [[../canonical/streams/PRODUCTIZE.LENS]]
+
+**Produces:**
+- Focus domain spotlight HTML section
+- Embedded as named section in LENS executive report
+
+**Flow:**
+`compose_focus_domain()` → consumes: focus_domain_record (LENS payload) → governed_by: PRODUCTIZE.LENS → produces: focus domain HTML block
+
+---
+
+### _domain_row(label, score, confidence)
+
+**Consumes:**
+- label: string — domain display name (ZONE-2 safe, no internal identifiers)
+- score: integer — 0–100
+- confidence: string — confidence band descriptor
+
+**Governed by:** [[../canonical/streams/PRODUCTIZE.STRUCTURAL.TRUTH.40.4.01]]
+
+**Produces:**
+- Single domain row HTML fragment
+- Consumed by compose_system_intelligence()
+
+**Flow:**
+`_domain_row(label, score, confidence)` → consumes: individual domain tuple → governed_by: PRODUCTIZE.STRUCTURAL.TRUTH.40.4.01 → produces: domain row HTML fragment
+
+---
+
+### build_html()
+
+**Consumes:**
+- All section outputs from: compose_system_intelligence(), compose_topology_view(), compose_focus_domain()
+- STREAM_ID constant
+- Report metadata: timestamp, client context
+
+**Governed by:** [[../canonical/streams/PRODUCTIZE.LENS]]
+
+**Produces:**
+- Complete LENS executive report (lens_report_YYYYMMDD_HHMMSS.html)
+- 10 governed sections assembled in deterministic order
+- STREAM_ID embedded in artifact
+
+**Flow:**
+`build_html()` → consumes: all section outputs + metadata → governed_by: PRODUCTIZE.LENS → produces: lens_report_YYYYMMDD_HHMMSS.html
+
+---
+
 ## Streams That Modified This Node
 
 | Stream | Change |

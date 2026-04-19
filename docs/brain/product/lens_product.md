@@ -15,7 +15,7 @@ LENS Assessment: a structured executive intelligence view of a client's delivery
 
 | LENS Component | Canonical Basis | Code Basis |
 |---|---|---|
-| 17-domain system overview | [[../canonical/streams/PRODUCTIZE.STRUCTURAL.TRUTH.40.2.01]] | [[../code/scripts_pios_py]] |
+| 17-domain system overview | [[../canonical/streams/PRODUCTIZE.LENS]] | [[../code/scripts_pios_py]] |
 | Structural topology view | [[../canonical/streams/PRODUCTIZE.LENS]] | [[../code/scripts_pios_py]] |
 | Focus domain spotlight | [[../canonical/streams/PRODUCTIZE.LENS]] | [[../code/scripts_pios_py]] |
 | Score with confidence band | [[../canonical/streams/PRODUCTIZE.EXECUTABLE.RUNTIME.SURFACE.01]] | [[../code/runtime_surface]] |

@@ -43,5 +43,5 @@ derived_from: [[../product/lens_report]]
 | "Structural topology view" | [[../product/lens_report]] | [[../canonical/streams/PRODUCTIZE.LENS]] |
 | "Focus domain spotlight" | [[../product/lens_report]] | [[../canonical/streams/PRODUCTIZE.LENS]] |
 | "Print-ready executive artifact" | [[../product/lens_report]] | [[../canonical/streams/PRODUCTIZE.LENS]] |
-| "Guided review session included" | [[../product/engagement_model]] | — |
+| "Guided review session included" | [[../product/engagement_model]] | [[../canonical/05_DECISIONS]] — DEC-07 |
 | "No instrumentation required" | [[../product/engagement_model]] | [[../canonical/streams/PRODUCTIZE.RAW.SOURCE.INTAKE.01]] |

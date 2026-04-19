@@ -76,3 +76,14 @@ Rationale: Prior implementation returned raw filesystem path, causing browser op
 Status: LOCKED
 Downstream: [[../product/lens_report]]
 Governed by: [[streams/PRODUCTIZE.EXECUTABLE.RUNTIME.SURFACE.01]]
+
+---
+
+## DEC-07 — LENS Delivery Includes Guided Review Session
+
+Decision: LENS Assessment engagements include a guided interpretation session as part of delivery. This is a delivery constraint, not a system-computed capability.
+
+Rationale: The review session is a structured delivery component included with Tier 1 (LENS Assessment). It exists to translate the structural report into actionable client decisions. It is defined at the engagement model level, not derived from system computation.
+
+Status: ACTIVE
+Downstream: [[../publish/lens_page]]
