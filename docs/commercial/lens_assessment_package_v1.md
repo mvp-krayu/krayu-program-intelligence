@@ -53,7 +53,7 @@ WHAT YOU RECEIVE
 - Identification of concentration and pressure areas
 - Print-ready executive report
 - Guided review session
-- Clear recommendation for next steps
+- A structured decision view on next steps
 
 
 ────────────────────────────────────────
@@ -66,7 +66,7 @@ A lightweight, non-intrusive intake of relevant sources and context.
 2. Analysis  
 Transformation into a structured representation of the environment.
 
-3. Output  
+3. Report  
 Generation of the LENS view and executive report.
 
 4. Review  
@@ -85,7 +85,7 @@ It provides:
 
 - a clear structural view of the environment
 - identification of key pressure and overlap areas
-- a coherent narrative of findings
+- a structured view of findings
 - a basis for discussion and decision-making
 
 Unlike traditional reports, it is not descriptive.
@@ -135,3 +135,12 @@ CALL TO ACTION
 
 Request a Signäl LENS Assessment  
 Schedule a discussion to explore applicability to your environment
+
+
+────────────────────────────────────────
+LINEAGE
+────────────────────────────────────────
+
+| Stream | Date | Change type | Summary |
+|---|---|---|---|
+| PRODUCTIZE.LENS.COMMERCIAL.PACKAGE.02 | 2026-04-19 | AMENDMENT | Corrected 3 projection drift violations: C13 "recommendation" → governed decision state language; C16 Step 3 name "Output" → "Report"; C22 "narrative" → "structured view" |
