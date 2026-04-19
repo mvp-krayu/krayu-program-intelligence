@@ -23,7 +23,7 @@ Python execution scripts forming the PiOS processing chain. Primary responsibili
 | Function | Responsibility |
 |---|---|
 | `build_html()` | Assembles full LENS report from 10 component sections |
-| `compose_system_intelligence()` | 17-domain overview; 2-col layout when domain count > 10 |
+| `compose_system_intelligence()` | full-domain overview; 2-col layout when domain count > 10 |
 | `compose_topology_view(light_mode)` | SVG topology; `light_mode=True` produces white background for print |
 | `compose_focus_domain()` | Focus domain spotlight section |
 | `_domain_row(label, score, confidence)` | Single domain row renderer |
@@ -45,7 +45,7 @@ Explicit consumes → governed_by → produces chain per function.
 **Governed by:** [[../canonical/streams/PRODUCTIZE.STRUCTURAL.TRUTH.40.4.01]]
 
 **Produces:**
-- HTML domain overview section (17 rows or 2-column grid when count > 10)
+- HTML domain overview section (n rows or 2-column grid when count > 10; n determined by client environment)
 - Embedded in LENS executive report
 
 **Flow:**
@@ -56,7 +56,7 @@ Explicit consumes → governed_by → produces chain per function.
 ### compose_topology_view(light_mode)
 
 **Consumes:**
-- Curated graph data: static governed fixture (17 nodes, 12 edges, 5 clusters — equivalent of curatedGraphData.js)
+- Curated graph data: static governed fixture (BlueEdge reference: 17 nodes, 12 edges, 5 clusters — client engagements will use client-specific fixture)
 - light_mode flag: boolean (True = print-safe, white background)
 
 **Governed by:** [[../canonical/streams/PRODUCTIZE.LENS]]

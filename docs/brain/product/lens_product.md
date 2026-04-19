@@ -15,7 +15,7 @@ LENS Assessment: a structured executive intelligence view of a client's delivery
 
 | LENS Component | Canonical Basis | Code Basis |
 |---|---|---|
-| 17-domain system overview | [[../canonical/streams/PRODUCTIZE.LENS]] | [[../code/scripts_pios_py]] |
+| Full-domain system overview | [[../canonical/streams/PRODUCTIZE.LENS]] | [[../code/scripts_pios_py]] |
 | Structural topology view | [[../canonical/streams/PRODUCTIZE.LENS]] | [[../code/scripts_pios_py]] |
 | Focus domain spotlight | [[../canonical/streams/PRODUCTIZE.LENS]] | [[../code/scripts_pios_py]] |
 | Score with confidence band | [[../canonical/streams/PRODUCTIZE.EXECUTABLE.RUNTIME.SURFACE.01]] | [[../code/runtime_surface]] |
@@ -27,7 +27,7 @@ LENS Assessment: a structured executive intelligence view of a client's delivery
 ## Evidence Supporting This Offer
 
 - 40.4 validated handoff artifact (upstream ingestion chain)
-- Governed curated graph data (17 nodes, static fixture)
+- Governed curated graph data (client-specific; BlueEdge reference case used 17 nodes)
 - ZONE-2 projection layer (client-safe, no internal identifiers)
 
 ---
@@ -44,7 +44,7 @@ LENS Assessment: a structured executive intelligence view of a client's delivery
 ## What Is Measurable
 
 - Score: 0–100 confidence band per claim
-- Domain coverage: 17 canonical domains
+- Domain coverage: complete — all domains identified in the client environment
 - Focus domain: 1 per assessment (highest-leverage)
 - Report artifact: HTML, version-stamped by timestamp (YYYYMMDD_HHMMSS)
 

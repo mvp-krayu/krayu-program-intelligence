@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signal Trace — Signäl LENS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+
+    /* ── Design tokens (signal-pi.com) ──────────── */
+    :root {
+      --bg:           hsl(220, 15%, 5%);
+      --card:         hsl(220, 12%, 8%);
+      --border:       hsl(220, 10%, 16%);
+      --fg:           hsl(40, 10%, 92%);
+      --muted:        hsl(220, 8%, 42%);
+      --muted-soft:   hsl(220, 8%, 30%);
+      --accent:       hsl(38, 70%, 55%);
+      --accent-dim:   hsla(38, 70%, 55%, 0.10);
+      --accent-glow:  hsla(38, 70%, 55%, 0.22);
+      --accent-line:  hsla(38, 70%, 55%, 0.30);
+      --blue:         #60a5fa;
+      --blue-dim:     rgba(96, 165, 250, 0.10);
+      --blue-border:  rgba(96, 165, 250, 0.22);
+      --sans:         'Inter', sans-serif;
+      --serif:        'Playfair Display', serif;
+      --mono:         'JetBrains Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 4rem 1.5rem 5rem;
+    }
+
+    /* ── Root component ─────────────────────────── */
+    .signal-trace {
+      width: 100%;
+      max-width: 580px;
+    }
+
+    /* ── Header ─────────────────────────────────── */
+    .trace-header {
+      margin-bottom: 2.75rem;
+    }
+    .trace-eyebrow {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      opacity: 0.75;
+      margin-bottom: 0.75rem;
+    }
+    .trace-title {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--fg);
+      letter-spacing: -0.015em;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+    .trace-desc {
+      font-size: 0.8125rem;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 360px;
+    }
+
+    /* ── Track container ────────────────────────── */
+    .trace-track {
+      position: relative;
+    }
+
+    /* Central vertical line */
+    .track-spine {
+      position: absolute;
+      left: 88px;
+      top: 6px;
+      bottom: 6px;
+      width: 1px;
+      background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        var(--border) 5%,
+        var(--border) 95%,
+        transparent 100%
+      );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Signal particles (positioned and animated by JS) */
+    .particle {
+      position: absolute;
+      left: 88px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow:
+        0 0 0 2px var(--accent-dim),
+        0 0 10px 3px var(--accent-glow);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 20;
+      opacity: 0;
+      will-change: top, opacity;
+    }
+
+    /* ── Zone wrappers ──────────────────────────── */
+    .zone {
+      border-radius: 5px;
+      position: relative;
+    }
+    .zone-ingestion { background: hsla(38, 70%, 55%, 0.02); }
+    .zone-core      {
+      background: hsla(220, 20%, 3%, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      margin: 2px 0;
+    }
+    .zone-surface   { background: hsla(215, 80%, 60%, 0.025); }
+    .zone-output    {
+      background: var(--accent-dim);
+      border: 1px solid var(--accent-line);
+      border-radius: 5px;
+      margin-top: 4px;
+    }
+
+    /* ── Stage row ──────────────────────────────── */
+    .stage {
+      display: flex;
+      align-items: center;
+      padding: 0.55rem 0.5rem 0.55rem 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Layer label */
+    .stage-layer {
+      flex: 0 0 88px;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.04em;
+      color: var(--muted-soft);
+      text-align: right;
+      padding-right: 18px;
+      line-height: 1.3;
+      user-select: none;
+      transition: color 0.25s ease;
+    }
+
+    /* Dot */
+    .stage-dot {
+      flex: 0 0 10px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      z-index: 2;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+      flex-shrink: 0;
+    }
+
+    /* Body */
+    .stage-body {
+      flex: 1;
+      padding-left: 14px;
+    }
+    .stage-name {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--fg);
+      line-height: 1.3;
+      transition: color 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .stage-artifact {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      color: var(--muted);
+      margin-top: 3px;
+      line-height: 1.4;
+      opacity: 0.55;
+      transition: color 0.25s ease, opacity 0.25s ease;
+    }
+
+    /* ── Active state ───────────────────────────── */
+    .stage.active .stage-dot {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-dim), 0 0 7px var(--accent-glow);
+      background: var(--accent-dim);
+    }
+    .stage.active .stage-layer { color: hsla(38, 70%, 55%, 0.6); }
+    .stage.active .stage-name  { color: #fff; }
+    .stage.active .stage-artifact { color: var(--accent); opacity: 0.8; }
+
+    /* ── Sealed (Core) ──────────────────────────── */
+    .stage.sealed .stage-dot      { border-style: dashed; opacity: 0.35; }
+    .stage.sealed .stage-name     { color: var(--muted); font-weight: 400; }
+    .stage.sealed .stage-artifact { opacity: 0.25; }
+    .stage.sealed .stage-layer    { opacity: 0.25; }
+    /* Core doesn't fully activate — just a dim pulse */
+    .stage.sealed.active .stage-dot {
+      border-color: var(--muted-soft);
+      border-style: dashed;
+      box-shadow: none;
+      background: transparent;
+    }
+    .stage.sealed.active .stage-name  { color: var(--muted); }
+    .stage.sealed.active .stage-artifact { opacity: 0.3; }
+
+    /* ── Output (Report) ────────────────────────── */
+    .stage.output .stage-dot  { border-color: var(--accent-line); background: var(--accent-dim); }
+    .stage.output .stage-name { color: var(--accent); }
+    .stage.output .stage-artifact { opacity: 0.5; }
+    .stage.output.active .stage-dot {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-dim), 0 0 16px var(--accent-glow);
+    }
+
+    /* ── Inline badges ──────────────────────────── */
+    .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 7.5px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 1px 5px;
+      border-radius: 2px;
+      line-height: 1.6;
+      vertical-align: middle;
+    }
+    .badge-blue {
+      color: var(--blue);
+      border: 1px solid var(--blue-border);
+      background: var(--blue-dim);
+    }
+    .badge-amber {
+      color: var(--accent);
+      border: 1px solid var(--accent-line);
+      background: var(--accent-dim);
+      opacity: 0.8;
+    }
+
+    /* ── Boundary separator ─────────────────────── */
+    .boundary {
+      display: flex;
+      align-items: center;
+      margin: 0.3rem 0;
+      position: relative;
+      z-index: 1;
+      padding: 0.2rem 0.5rem 0.2rem 0;
+    }
+    .boundary-spacer { flex: 0 0 88px; }
+    .boundary-node {
+      flex: 0 0 10px;
+      position: relative;
+    }
+    .boundary-node::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      border: 1px solid var(--accent);
+      box-shadow: 0 0 6px var(--accent-glow);
+      transform: translate(-50%, -50%) rotate(45deg);
+      background: var(--bg);
+    }
+    .boundary-label {
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      opacity: 0.55;
+      padding-left: 14px;
+      white-space: nowrap;
+    }
+    .boundary-rule {
+      flex: 1;
+      height: 1px;
+      margin-left: 14px;
+      background: linear-gradient(to right, var(--accent-line), transparent);
+    }
+
+    /* ── Zone header labels ─────────────────────── */
+    .zone-header {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 0.5rem 0.2rem 0;
+      position: relative;
+      z-index: 1;
+    }
+    .zone-header-spacer { flex: 0 0 98px; }
+    .zone-header-label {
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted-soft);
+      opacity: 0.5;
+    }
+
+    /* ── Footer ─────────────────────────────────── */
+    .trace-footer {
+      margin-top: 2rem;
+      padding-left: 102px;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .footer-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--muted-soft);
+      opacity: 0.3;
+      flex-shrink: 0;
+    }
+    .trace-footer-text {
+      font-family: var(--mono);
+      font-size: 8.5px;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      opacity: 0.35;
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="signal-trace">
+
+  <!-- Header -->
+  <header class="trace-header">
+    <div class="trace-eyebrow">Evidence Pipeline · Signäl LENS</div>
+    <h2 class="trace-title">From intake to intelligence</h2>
+    <p class="trace-desc">Each layer creates a governed artifact and passes it downstream unchanged. The report carries the full lineage of every stage that produced it.</p>
+  </header>
+
+  <!-- Track -->
+  <div class="trace-track" id="trace-track">
+    <div class="track-spine"></div>
+
+    <!-- Particles (JS-animated) -->
+    <div class="particle" id="pt0"></div>
+    <div class="particle" id="pt1"></div>
+    <div class="particle" id="pt2"></div>
+
+    <!-- L0 — External -->
+    <div class="zone-header">
+      <div class="zone-header-spacer"></div>
+      <div class="zone-header-label">External</div>
+    </div>
+
+    <div class="stage" data-stage="l0">
+      <div class="stage-layer">L0</div>
+      <div class="stage-dot"></div>
+      <div class="stage-body">
+        <div class="stage-name">Raw Source</div>
+        <div class="stage-artifact">external evidence bundle · Ledger Selector</div>
+      </div>
+    </div>
+
+    <!-- Ingestion zone -->
+    <div class="zone zone-ingestion">
+      <div class="zone-header">
+        <div class="zone-header-spacer"></div>
+        <div class="zone-header-label">Ingestion · L1</div>
+      </div>
+
+      <div class="stage" data-stage="intake">
+        <div class="stage-layer">L1</div>
+        <div class="stage-dot"></div>
+        <div class="stage-body">
+          <div class="stage-name">Intake</div>
+          <div class="stage-artifact">evidence boundary artifact · provenance record</div>
+        </div>
+      </div>
+
+      <div class="stage" data-stage="ig">
+        <div class="stage-layer">L1</div>
+        <div class="stage-dot"></div>
+        <div class="stage-body">
+          <div class="stage-name">Intelligence Graph</div>
+          <div class="stage-artifact">typed nodes · relationship map · immutable at creation</div>
+        </div>
+      </div>
+
+      <div class="stage" data-stage="402">
+        <div class="stage-layer">L1 · 40.2</div>
+        <div class="stage-dot"></div>
+        <div class="stage-body">
+          <div class="stage-name">Scan & Classify</div>
+          <div class="stage-artifact">domain map · signal candidates · type assignments</div>
+        </div>
+      </div>
+
+      <div class="stage" data-stage="403">
+        <div class="stage-layer">L1 · 40.3</div>
+        <div class="stage-dot"></div>
+        <div class="stage-body">
+          <div class="stage-name">Normalize</div>
+          <div class="stage-artifact">conflict-resolved evidence · structural consistency certificate</div>
+        </div>
+      </div>
+
+      <div class="stage" data-stage="404">
+        <div class="stage-layer">L1 · 40.4</div>
+        <div class="stage-dot"></div>
+        <div class="stage-body">
+          <div class="stage-name">Validated Handoff <span class="badge badge-amber">Boundary</span></div>
+          <div class="stage-artifact">domain completeness · confidence baseline · validation certificate</div>
+        </div>
+      </div>
+    </div><!-- /.zone-ingestion -->
+
+    <!-- Boundary gate -->
+    <div class="boundary">
+      <div class="boundary-spacer"></div>
+      <div class="boundary-node"></div>
+      <div class="boundary-label">Ingestion Boundary</div>
+      <div class="boundary-rule"></div>
+    </div>
+
+    <!-- Core zone (sealed) -->
+    <div class="zone zone-core">
+      <div class="zone-header">
+        <div class="zone-header-spacer"></div>
+        <div class="zone-header-label">Core · L2–L4 · sealed</div>
+      </div>
+
+      <div class="stage sealed" data-stage="core">
+        <div class="stage-layer">L2 – L4</div>
+        <div class="stage-dot"></div>
+        <div class="stage-body">
+          <div class="stage-name">Core Derivation</div>
+          <div class="stage-artifact">signals · conditions · ESI / RAG · semantic payloads</div>
+        </div>
+      </div>
+    </div><!-- /.zone-core -->
+
+    <!-- Surface zone -->
+    <div class="zone zone-surface">
+      <div class="zone-header">
+        <div class="zone-header-spacer"></div>
+        <div class="zone-header-label">Runtime · L6</div>
+      </div>
+
+      <div class="stage" data-stage="runtime">
+        <div class="stage-layer">L6</div>
+        <div class="stage-dot"></div>
+        <div class="stage-body">
+          <div class="stage-name">Runtime Surface <span class="badge badge-blue">ZONE-2</span></div>
+          <div class="stage-artifact">claim sets · confidence bands · CLM-09 · CLM-20 · CLM-25</div>
+        </div>
+      </div>
+
+      <div class="stage" data-stage="lens">
+        <div class="stage-layer">L5 – L6</div>
+        <div class="stage-dot"></div>
+        <div class="stage-body">
+          <div class="stage-name">LENS Projection</div>
+          <div class="stage-artifact">domain-complete view · topology · focus domain · confidence band</div>
+        </div>
+      </div>
+    </div><!-- /.zone-surface -->
+
+    <!-- Output -->
+    <div class="zone zone-output">
+      <div class="stage output" data-stage="report">
+        <div class="stage-layer">OUTPUT</div>
+        <div class="stage-dot"></div>
+        <div class="stage-body">
+          <div class="stage-name">Executive Report</div>
+          <div class="stage-artifact">lens_report_YYYYMMDD_HHMMSS.html</div>
+        </div>
+      </div>
+    </div><!-- /.zone-output -->
+
+  </div><!-- /#trace-track -->
+
+  <footer class="trace-footer">
+    <div class="footer-dot"></div>
+    <div class="trace-footer-text">create_only · evidence-first · deterministic · fail-closed</div>
+  </footer>
+
+</div><!-- /.signal-trace -->
+
+<script>
+(function () {
+  'use strict';
+
+  var CYCLE_MS     = 7200;   // one full pass duration
+  var N_PARTICLES  = 3;      // staggered particles
+  var ACTIVE_MS    = 550;    // node highlight duration
+  var EDGE_FADE    = 0.07;   // fraction of cycle for fade in/out
+
+  var track     = document.getElementById('trace-track');
+  var stages    = Array.from(track.querySelectorAll('.stage'));
+  var particles = [
+    document.getElementById('pt0'),
+    document.getElementById('pt1'),
+    document.getElementById('pt2'),
+  ];
+
+  var nodeYs   = [];   // dot center Y positions relative to track top
+  var trackTop = 0;
+
+  /* ── Measure node positions ───────────────────── */
+  function measure() {
+    var rect = track.getBoundingClientRect();
+    trackTop = rect.top + window.scrollY;
+    nodeYs = stages.map(function (s) {
+      var dot  = s.querySelector('.stage-dot');
+      var dr   = dot.getBoundingClientRect();
+      return (dr.top + window.scrollY) - trackTop + dr.height / 2;
+    });
+  }
+
+  /* ── Node activation ──────────────────────────── */
+  var activationTimers = [];
+
+  function activateStage(i) {
+    if (i < 0 || i >= stages.length) return;
+    stages[i].classList.add('active');
+    clearTimeout(activationTimers[i]);
+    activationTimers[i] = setTimeout(function () {
+      stages[i].classList.remove('active');
+    }, ACTIVE_MS);
+  }
+
+  /* ── Particle state ───────────────────────────── */
+  var pState = particles.map(function (_, i) {
+    return {
+      phase: i / N_PARTICLES,
+      lastIdx: -1,
+    };
+  });
+
+  /* ── Smooth easing ───────────────────────────── */
+  function ease(t) {
+    // ease-in-out cubic
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  /* ── Animation loop ───────────────────────────── */
+  var startTime = null;
+
+  function tick(ts) {
+    if (!startTime) startTime = ts;
+    var elapsed = ts - startTime;
+
+    var yTop    = nodeYs[0]                     || 0;
+    var yBottom = nodeYs[nodeYs.length - 1]     || 100;
+
+    pState.forEach(function (s, i) {
+      var p        = particles[i];
+      var progress = ((elapsed / CYCLE_MS) + s.phase) % 1;
+      var eased    = ease(progress);
+      var y        = yTop + eased * (yBottom - yTop);
+
+      p.style.top  = y + 'px';
+
+      // Edge fade
+      var opacity = 1;
+      if (progress < EDGE_FADE) {
+        opacity = progress / EDGE_FADE;
+      } else if (progress > 1 - EDGE_FADE) {
+        opacity = (1 - progress) / EDGE_FADE;
+      }
+      p.style.opacity = Math.max(0, Math.min(1, opacity)).toFixed(3);
+
+      // Nearest node activation
+      var closest = 0;
+      var minDist = Infinity;
+      nodeYs.forEach(function (ny, idx) {
+        var d = Math.abs(ny - y);
+        if (d < minDist) { minDist = d; closest = idx; }
+      });
+
+      if (closest !== s.lastIdx && minDist < 14 && opacity > 0.5) {
+        activateStage(closest);
+        s.lastIdx = closest;
+      }
+    });
+
+    requestAnimationFrame(tick);
+  }
+
+  /* ── Init ─────────────────────────────────────── */
+  function init() {
+    measure();
+    // Stagger initial particle positions along the track
+    pState.forEach(function (s, i) {
+      var p   = particles[i];
+      var y0  = nodeYs[0] || 0;
+      p.style.top     = y0 + 'px';
+      p.style.opacity = '0';
+    });
+    requestAnimationFrame(tick);
+  }
+
+  // Re-measure on resize
+  var resizeDebounce;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeDebounce);
+    resizeDebounce = setTimeout(measure, 120);
+  });
+
+  if (document.readyState === 'complete') {
+    setTimeout(init, 80);
+  } else {
+    window.addEventListener('load', function () { setTimeout(init, 80); });
+  }
+
+}());
+</script>
+
+</body>
+</html>

@@ -16,7 +16,7 @@ The LENS Executive Report: a print-ready HTML artifact produced at the end of ea
 | Report Section | Canonical Basis | Code Basis |
 |---|---|---|
 | Executive readiness summary | [[../canonical/streams/PRODUCTIZE.LENS]] | [[../code/scripts_pios_py]] |
-| System Intelligence Overview (17 domains) | [[../canonical/streams/PRODUCTIZE.STRUCTURAL.TRUTH.40.2.01]] | [[../code/scripts_pios_py]] |
+| System Intelligence Overview (full domain set) | [[../canonical/streams/PRODUCTIZE.LENS]] | [[../code/scripts_pios_py]] |
 | Structural Topology View (SVG, light mode) | [[../canonical/streams/PRODUCTIZE.LENS]] | [[../code/scripts_pios_py]] |
 | Focus Domain Spotlight | [[../canonical/streams/PRODUCTIZE.LENS]] | [[../code/scripts_pios_py]] |
 | Score with confidence band | [[../canonical/streams/PRODUCTIZE.EXECUTABLE.RUNTIME.SURFACE.01]] | [[../code/runtime_surface]] |
@@ -46,8 +46,8 @@ The LENS Executive Report: a print-ready HTML artifact produced at the end of ea
 
 - Report file present or absent (binary deliverable state)
 - Section count: 10
-- Domain count in system overview: 17
-- Topology node count: 17, edge count: 12
+- Domain count in system overview: varies by client environment
+- Topology node count: varies by client (BlueEdge reference: 17 nodes, 12 edges)
 - Timestamp precision: YYYYMMDD_HHMMSS
 
 ---

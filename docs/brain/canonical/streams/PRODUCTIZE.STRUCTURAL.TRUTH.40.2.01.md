@@ -29,7 +29,7 @@ Output: classified evidence set — all nodes assigned type, domain, and initial
 ## Outputs
 
 - Classified evidence set
-- Domain assignment table (17 canonical domains)
+- Domain assignment table (all domains identified in the Intelligence Graph)
 - Signal candidate flags
 - Type distribution summary
 
@@ -38,7 +38,7 @@ Output: classified evidence set — all nodes assigned type, domain, and initial
 ## Evidence Produced
 
 - Classification artifacts (per node, per relationship)
-- Domain map (17 canonical domains)
+- Domain map (all domains present in client environment — count varies per engagement)
 - Signal candidate index
 
 ---

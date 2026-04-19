@@ -25,7 +25,7 @@ Output: executive-facing intelligence view — scored, confidence-bounded, navig
 ## Inputs
 
 - ZONE-2 projections from [[PRODUCTIZE.EXECUTABLE.RUNTIME.SURFACE.01]]
-- Curated graph data (static, governed fixture — 17 nodes, 12 edges, 5 clusters)
+- Curated graph data (static, governed fixture — BlueEdge reference case: 17 nodes, 12 edges, 5 clusters; varies by client)
 - Claim-level scores and confidence bands
 
 ---
@@ -33,7 +33,7 @@ Output: executive-facing intelligence view — scored, confidence-bounded, navig
 ## Outputs
 
 - LENS executive view (/lens route)
-- System Intelligence Overview (17-domain coverage)
+- System Intelligence Overview (full-domain coverage — all domains identified in client environment)
 - Structural topology view (SVG, light mode for print)
 - Focus domain spotlight
 - Executive report (HTML artifact, timestamp-stamped)

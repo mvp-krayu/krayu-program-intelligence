@@ -46,7 +46,7 @@ All claims on this page must trace to a product or canonical node:
 
 | Claim | Product Basis | Canonical Basis |
 |---|---|---|
-| "17-domain system intelligence" | [[../product/lens_product]] | [[../canonical/streams/PRODUCTIZE.STRUCTURAL.TRUTH.40.2.01]] |
+| "Full-domain system intelligence" | [[../product/lens_product]] | [[../canonical/streams/PRODUCTIZE.LENS]] |
 | "Structural topology view" | [[../product/lens_report]] | [[../canonical/streams/PRODUCTIZE.LENS]] |
 | "Confidence-bounded scoring" | [[../product/lens_product]] | [[../canonical/streams/PRODUCTIZE.EXECUTABLE.RUNTIME.SURFACE.01]] |
 | "Minimal client effort, no instrumentation" | [[../product/engagement_model]] | [[../canonical/streams/PRODUCTIZE.RAW.SOURCE.INTAKE.01]] |

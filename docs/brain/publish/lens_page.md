@@ -39,7 +39,7 @@ derived_from: [[../product/lens_report]]
 
 | Claim | Product Basis | Canonical Basis |
 |---|---|---|
-| "17-domain system overview" | [[../product/lens_report]] | [[../canonical/streams/PRODUCTIZE.STRUCTURAL.TRUTH.40.2.01]] |
+| "Full-domain system overview" | [[../product/lens_report]] | [[../canonical/streams/PRODUCTIZE.LENS]] |
 | "Structural topology view" | [[../product/lens_report]] | [[../canonical/streams/PRODUCTIZE.LENS]] |
 | "Focus domain spotlight" | [[../product/lens_report]] | [[../canonical/streams/PRODUCTIZE.LENS]] |
 | "Print-ready executive artifact" | [[../product/lens_report]] | [[../canonical/streams/PRODUCTIZE.LENS]] |

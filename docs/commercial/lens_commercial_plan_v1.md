@@ -78,7 +78,7 @@ Three-tier presentation. Left to right.
 
 **Tier 1 — LENS Assessment**
 - Tag: Included
-- What you get: Executive structural view. 17-domain system intelligence. Structural topology. Focus domain spotlight. Decision guidance.
+- What you get: Executive structural view. Full-domain system intelligence. Structural topology. Focus domain spotlight. Decision guidance.
 - When to use: First engagement. Pre-transformation clarity. Scoping for investment decisions.
 
 **Tier 2 — Diagnostic Access**
@@ -120,13 +120,13 @@ Four steps. Numbered. No bullets.
 **Body:**
 > The LENS Executive Report is not descriptive. It does not summarize what teams told us.
 >
-> It is a structural artifact: a topology of how the system operates, scored against 17 domains, with confidence ranges and focus domain identification.
+> It is a structural artifact: a topology of how the system operates, scored across every domain in your environment, with confidence ranges and focus domain identification.
 >
 > It is designed to be presented to a board. It is designed to survive scrutiny.
 
 **Report components (list):**
 - Executive readiness summary with confidence band
-- 17-domain system intelligence overview
+- Full-domain system intelligence overview
 - Structural topology view — capability connections and cluster shape
 - Focus domain spotlight — highest-leverage investigation target
 - Decision guidance — proceed / investigate / escalate
@@ -335,7 +335,7 @@ Verbatim script for sales conversations and executive briefings.
 >
 > Signäl LENS gives you a structural view before that happens.
 >
-> We take your existing information — no new instrumentation, no extended access, minimal client effort — and transform it into a structured representation of how your environment actually operates. 17 domains. Topology. Pressure zones. Confidence ranges. A focus domain — the highest-leverage point for investigation.
+> We take your existing information — no new instrumentation, no extended access, minimal client effort — and transform it into a structured representation of how your environment actually operates. Every domain, mapped. Topology. Pressure zones. Confidence ranges. A focus domain — the highest-leverage point for investigation.
 >
 > The output is a print-ready executive report designed to be presented at board level. It is not descriptive. It is structural, concise, and actionable.
 >

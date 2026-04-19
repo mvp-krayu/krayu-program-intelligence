@@ -37,6 +37,6 @@ derived_from: [[../product/01_PRODUCT_MAP]]
 | Claim | Product Basis | Canonical Basis |
 |---|---|---|
 | "Structural view from validated evidence" | [[../product/engagement_model]] | [[../canonical/03_EVIDENCE_LINEAGE]] |
-| "17-domain coverage" | [[../product/lens_product]] | [[../canonical/streams/PRODUCTIZE.STRUCTURAL.TRUTH.40.2.01]] |
+| "Full-domain coverage" | [[../product/lens_product]] | [[../canonical/streams/PRODUCTIZE.LENS]] |
 | "Confidence-bounded, not point estimates" | [[../product/lens_product]] | [[../canonical/streams/PRODUCTIZE.EXECUTABLE.RUNTIME.SURFACE.01]] |
 | "Deterministic execution, not narrative synthesis" | [[../product/engagement_model]] | [[../canonical/04_INVARIANTS]] INV-06 |

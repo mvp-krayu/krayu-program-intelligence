@@ -24,7 +24,7 @@ Next.js application forming the GAUGE/LENS runtime surface. Renders the executiv
 | `components/lens/AccessGateModal.js` | Access gate modal; two modes: capability list, key entry |
 | `components/lens/ExploreGovernedDetail.js` | Detail row renderer with gating support |
 | `components/lens/EvidenceDepthIndicator.js` | Depth indicator with unlock CTA |
-| `components/lens/curatedGraphData.js` | Static governed topology fixture — 17 nodes, 12 edges, 5 clusters |
+| `components/lens/curatedGraphData.js` | Static governed topology fixture — BlueEdge reference case (17 nodes, 12 edges, 5 clusters); client engagements use client-specific fixture |
 | `styles/gauge.css` | All LENS/GAUGE styles including gate overlay, modal, report, topology |
 
 ---
