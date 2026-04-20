@@ -110,3 +110,33 @@ After any update to a publish node, append to a `## Lineage` section at the bott
 | Stream | Date | Change | Product basis |
 |---|---|---|---|
 | [STREAM_ID] | [YYYY-MM-DD] | [One sentence: what changed in this publish node] | [[../product/AFFECTED_NODE]] |
+
+---
+
+## Source Entry Control Modules
+
+The following modules govern how routes enter the governed publish system. They are stored in:
+
+`docs/brain/publish/source-entry/`
+
+| Module | File | Purpose |
+|---|---|---|
+| WEB.SOURCE.ENTRY.PATTERN | `source-entry/WEB.SOURCE.ENTRY.PATTERN.md` | Detect routes present live but absent from governance |
+| ROUTE.CLASSIFICATION.MODEL | `source-entry/ROUTE.CLASSIFICATION.MODEL.md` | Classify any detected route into exactly one governance class |
+| ENTRY.GATE.RULESET | `source-entry/ENTRY.GATE.RULESET.md` | Define conditions under which a route may enter governed status |
+
+### Mandatory Consultation Rule
+
+These modules MUST be consulted before any stream that:
+- introduces a new route to krayu.be or mirror.krayu.be
+- references or links to krayu.be routes from mirror pages
+- modifies `route_source_map.yaml`
+- proposes or evaluates a bridge page between krayu.be and signal-pi.com
+
+Consultation sequence:
+1. Run `WEB.SOURCE.ENTRY.PATTERN` — detect any ungoverned routes first
+2. Apply `ROUTE.CLASSIFICATION.MODEL` — classify each ungoverned route
+3. Apply `ENTRY.GATE.RULESET` — verify all registration preconditions are met
+4. Follow `PIPELINE.HANDOFF.MODEL` — execute through governed pipeline stages
+
+Failure to consult these modules before route-touching work is a governance violation.
