@@ -59,6 +59,22 @@ RULE P-6: ESCALATIONS THAT RESOLVE MUST UPDATE ESCALATION MODEL
   Action: If the resolution revealed a gap in FAILURE.ESCALATION.RULES, add
           the escalation condition; if the resolution introduced a new authority
           source, update MODULE.APPLICABILITY.MAP accordingly
+
+RULE P-7: MULTI-STREAM CASE BECOMES REUSABLE PATTERN
+  Condition: A solved case required more than one stream type to fully resolve,
+             AND all streams in the sequence are fully persisted with case files,
+             AND the compound sequence has not yet been recognized by MODULE.APPLICABILITY.MAP
+  Action: Extract the compound resolution sequence as a reusable pattern module;
+          create PATTERN.<CLASS>.<SUBJECT>.md in cases/;
+          update MODULE.APPLICABILITY.MAP with the compound sub-path
+  Examples: UNGOVERNED ROUTE + BRIDGE classification → 3-stream resolution
+            (GOVREC → BRIDGE → PROMOTION REVIEW)
+  Test: If a future stream facing the same compound trigger would require the
+        same sequence of stream types, the pattern is reusable. If MODULE.APPLICABILITY.MAP
+        already maps the sub-path, P-7 does not apply.
+  Note: P-7 supplements P-4. A case may satisfy P-4 at each individual stream
+        (no per-stream module update required) while still satisfying P-7 at
+        the compound level (the multi-stream sequence is a new reusable pathway).
 ```
 
 ---

@@ -26,6 +26,20 @@ TRIGGER: R-01 (UNGOVERNED ROUTE)
     4. PIPELINE.HANDOFF.MODEL      — define path to governed state
   STREAM TYPE: GOVERNANCE RECONCILIATION → or INTEGRITY (if route is invalid)
 
+  SUB-PATH: R-01 + BRIDGE classification + ESCALATION CONDITION 5
+    Condition: ROUTE.CLASSIFICATION.MODEL returns BRIDGE AND
+               FAILURE.ESCALATION.RULES CONDITION 5 fires (no Publish Brain
+               controlled claims table exists for the route)
+    Required stream sequence (3 streams, strict order):
+      1. GOVERNANCE RECONCILIATION — establish controlled claims basis;
+                                     register retrospective route authority
+      2. BRIDGE                    — create governed mirror page from
+                                     controlled claims table
+      3. PROMOTION REVIEW          — verify criteria; upgrade from
+                                     provisional/preview to allowed/live
+    Do not combine stream types. Each stream is a separate governed execution.
+    See: cases/PATTERN.BRIDGE.ROUTE.ENTRY.RESOLUTION.01.md
+
 TRIGGER: R-02 (UNMIRRORED ROUTE)
   APPLIES:
     1. ENTRY.GATE.RULESET          — verify all pre-conditions are met
