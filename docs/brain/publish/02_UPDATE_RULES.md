@@ -168,3 +168,34 @@ These modules MUST govern preflight reasoning for any publish stream touching:
 - sitemap logic
 - bridge classification
 - surface mismatch cases
+
+---
+
+## Neural Publish Loop Modules
+
+The following modules govern the full operating loop of the Publish Brain from signal detection through closure. They are stored in:
+
+`docs/brain/publish/neural-loop/`
+
+| Module | File | Purpose |
+|---|---|---|
+| NEURAL.PUBLISH.LOOP | `neural-loop/NEURAL.PUBLISH.LOOP.md` | 8-stage governed loop: DETECT → LOCATE → CROSS-CHECK → VALIDATE → CLASSIFY → APPLY → VERIFY → PERSIST |
+| LINKED.CELL.MODEL | `neural-loop/LINKED.CELL.MODEL.md` | Cell activation map — how each module fires, hands off, and stops |
+| MICRO.UPDATE.RULES | `neural-loop/MICRO.UPDATE.RULES.md` | Permitted (ALLOWED-01–07) and forbidden (FORBIDDEN-01–07) brain self-refinements |
+| CANONICAL.ESCALATION.MODEL | `neural-loop/CANONICAL.ESCALATION.MODEL.md` | 5 escalation triggers; universal loop stop condition |
+| CLOSURE.BRAIN.PERSISTENCE.MODEL | `neural-loop/CLOSURE.BRAIN.PERSISTENCE.MODEL.md` | How solved cases feed back into brain logic (P-1 through P-6) |
+| ANTI.DRIFT.GUARDRAIL | `neural-loop/ANTI.DRIFT.GUARDRAIL.md` | Hard constraint: Publish Brain may not create truth; drift detection and self-enforcement |
+
+### Mandatory Governance Rule
+
+These modules MUST govern any publish stream after retrieval/applicability has activated. They are not optional — they are the operating system for all publish execution.
+
+Execution sequence:
+1. Retrieval modules (`retrieval/`) activate the loop and load the module set
+2. `NEURAL.PUBLISH.LOOP` governs all 8 stages of execution
+3. `LINKED.CELL.MODEL` enforces cell handoff and sequencing
+4. `CANONICAL.ESCALATION.MODEL` stops the loop if truth boundary is reached
+5. `CLOSURE.BRAIN.PERSISTENCE.MODEL` governs what gets written back to the brain
+6. `ANTI.DRIFT.GUARDRAIL` enforces the truth boundary throughout all stages
+
+No stream may declare closure until Stage 8 is complete per `CLOSURE.BRAIN.PERSISTENCE.MODEL`.
