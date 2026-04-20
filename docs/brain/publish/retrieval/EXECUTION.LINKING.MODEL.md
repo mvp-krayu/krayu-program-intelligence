@@ -83,4 +83,46 @@ SEQUENCE D — Blocked route removal
 
 ---
 
+## Cross-Stream Execution Enforcement
+
+When EXECUTION.AUTHORITY.MODEL is active, sequencing rules extend across streams. These rules convert the multi-step sequence from a guideline into an enforced contract.
+
+```
+CROSS-STREAM RULE X-1: NO STEP WITHOUT PREDECESSOR CLOSURE
+  A stream at sequence position n+1 may NOT begin if the case file for
+  position n has not been persisted in docs/brain/publish/cases/.
+  Attempting to start position n+1 without n's case file → INVALID SEQUENCE.
+
+CROSS-STREAM RULE X-2: EXPLICIT INVALID CROSS-STREAM TRANSITIONS
+  The following cross-stream transitions are INVALID in all contexts:
+
+  ✗ BRIDGE without prior GOVERNANCE RECONCILIATION (when ESCALATION CONDITION 5 applies)
+    — A bridge page may not be created without a Publish Brain controlled claims
+      node. This invariant holds at the cross-stream level, not only at
+      the single-stream gate check level.
+
+  ✗ PROMOTION REVIEW without prior BRIDGE
+    — Promoting a route to live requires a governed mirror page to exist.
+      There is no valid promotion of a route with no pages/ file.
+
+  ✗ Repeating a CLOSED step in the same sequence instance
+    — Once a step's case file is persisted, that step is CLOSED. Re-executing
+      the same stream type within the same sequence instance is invalid.
+      If the closed step needs correction, a new sequence must be initiated
+      by re-entering the neural loop at Stage 1.
+
+  ✗ Changing sequence order mid-execution
+    — The sequence is locked at initiation by EXECUTION.SEQUENCE.CONTROLLER.
+      Reordering (e.g. attempting PROMOTION REVIEW before BRIDGE) is invalid.
+
+CROSS-STREAM RULE X-3: SEQUENCE POSITION EVIDENCE
+  Each stream in a sequence must declare its position in the case file:
+    sequence_position: <n> of <total>
+    pattern: <PATTERN module name>
+  Missing this declaration does not invalidate the stream, but the next step
+  may not begin until the position is confirmed in the case file.
+```
+
+---
+
 *EXECUTION.LINKING.MODEL — Publish Retrieval and Applicability System | origin: BRAIN.RETRIEVAL.APPLICABILITY.PUBLISH.01 | 2026-04-20*

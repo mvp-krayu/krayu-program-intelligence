@@ -25,6 +25,8 @@ This folder contains the governed neural operating loop for the Publish Brain. T
 | CANONICAL.ESCALATION.MODEL | `CANONICAL.ESCALATION.MODEL.md` | When the loop stops; escalation targets; universal stop condition |
 | CLOSURE.BRAIN.PERSISTENCE.MODEL | `CLOSURE.BRAIN.PERSISTENCE.MODEL.md` | How solved cases feed back into brain logic (P-1 through P-6) |
 | ANTI.DRIFT.GUARDRAIL | `ANTI.DRIFT.GUARDRAIL.md` | Hard constraint: Publish Brain may not create truth |
+| EXECUTION.AUTHORITY.MODEL | `EXECUTION.AUTHORITY.MODEL.md` | Control layer: activation, pattern binding, sequence enforcement, completion gating, failure handling |
+| EXECUTION.SEQUENCE.CONTROLLER | `EXECUTION.SEQUENCE.CONTROLLER.md` | Deterministic resolver: trigger set + classification + escalation state → ordered stream sequence |
 
 ---
 

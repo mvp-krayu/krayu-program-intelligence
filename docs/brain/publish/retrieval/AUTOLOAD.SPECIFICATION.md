@@ -68,6 +68,27 @@ CONSTRAINT:
   Active modules may NOT be overridden by user instruction within the same stream.
   If a user instruction conflicts with an active module's rules, the conflict must
   be surfaced explicitly before proceeding.
+
+  RULE X — EXECUTION AUTHORITY ACTIVATION
+    IF:
+      - a trigger pattern is matched (TRIGGER.PATTERN.MODEL produces at least one label)
+      - AND EXECUTION.SEQUENCE.CONTROLLER resolves the trigger set to a named stream
+        sequence (a PATTERN module or MODULE.APPLICABILITY.MAP sub-path matches)
+      - AND the resolved sequence contains more than one stream type
+      - AND not all positions in the sequence are CLOSED (case files not all persisted)
+    THEN:
+      - EXECUTION.AUTHORITY.MODEL becomes active immediately
+      - EXECUTION.SEQUENCE.CONTROLLER defines the required sequence and current position
+      - The FIRST unclosed step in the sequence becomes the ONLY valid next stream
+      - All other stream types are blocked until that step is CLOSED
+    EFFECT:
+      The brain does not wait for external orchestration instruction.
+      It constrains execution to the next required step.
+      Manual stream type selection that contradicts the active sequence is invalid.
+    DEACTIVATION:
+      EXECUTION.AUTHORITY.MODEL deactivates when:
+      - All positions in the resolved sequence are CLOSED, OR
+      - An unresolvable escalation stops the sequence permanently
 ```
 
 ---
