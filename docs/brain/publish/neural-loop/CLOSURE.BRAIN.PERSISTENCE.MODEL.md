@@ -75,6 +75,23 @@ RULE P-7: MULTI-STREAM CASE BECOMES REUSABLE PATTERN
   Note: P-7 supplements P-4. A case may satisfy P-4 at each individual stream
         (no per-stream module update required) while still satisfying P-7 at
         the compound level (the multi-stream sequence is a new reusable pathway).
+
+RULE P-8: AUTHORITY GRAPH PATTERN EXTRACTION
+  Condition: A solved case required inbound linking to make a governed+compiled+published
+             page reachable from root authority nodes (G-01 or G-02 trigger resolved),
+             AND the resolution path is not yet a named pattern in cases/
+  Action: Create PATTERN.AUTHORITY.GRAPH.INTEGRATION.md in cases/;
+          create AUTHORITY.GRAPH.RESOLUTION.MODEL.md in neural-loop/;
+          update MODULE.APPLICABILITY.MAP with PATTERN reference under G-01 and G-02;
+          update Full Governance Condition definition to include CONDITION 4
+  Examples: /program-intelligence-applied (G-01 ACTIVE — zero inbound links from
+            any governed pages/ file; resolved by adding contextual inbound link
+            from /program-intelligence/)
+  Test: If a future stream finds a governed page with G-01 or G-02 ACTIVE,
+        PATTERN.AUTHORITY.GRAPH.INTEGRATION.01.md provides the complete resolution path.
+        If that pattern file already exists, P-8 does not apply — only execute the pattern.
+  Note: P-8 is a one-time extraction rule. Once PATTERN.AUTHORITY.GRAPH.INTEGRATION.01.md
+        exists, future G-01/G-02 resolutions execute the pattern directly (no P-8 re-fire).
 ```
 
 ---

@@ -111,12 +111,22 @@ TRIGGER: G-01 (ISOLATED PAGE)
     (No source entry modules)
     → Publish Execution Model: AUTHORITY GRAPH stream type
   STREAM TYPE: AUTHORITY GRAPH
+  PATTERN: cases/PATTERN.AUTHORITY.GRAPH.INTEGRATION.01.md
+    Condition: G-01 ACTIVE AND route is governed + compiled + published
+    Required stream sequence (1 stream):
+      1. AUTHORITY GRAPH
+    See: cases/PATTERN.AUTHORITY.GRAPH.INTEGRATION.01.md
 
 TRIGGER: G-02 (MISSING ROOT LINK)
   APPLIES:
     (No source entry modules)
     → Publish Execution Model: AUTHORITY GRAPH stream type
   STREAM TYPE: AUTHORITY GRAPH
+  PATTERN: cases/PATTERN.AUTHORITY.GRAPH.INTEGRATION.01.md
+    Condition: G-02 ACTIVE AND route is governed + compiled + published
+    Required stream sequence (1 stream):
+      1. AUTHORITY GRAPH
+    See: cases/PATTERN.AUTHORITY.GRAPH.INTEGRATION.01.md
 
 TRIGGER: G-03 (SIGNAL ISOLATION)
   APPLIES:
