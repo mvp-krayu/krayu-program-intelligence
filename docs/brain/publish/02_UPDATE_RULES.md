@@ -140,3 +140,31 @@ Consultation sequence:
 4. Follow `PIPELINE.HANDOFF.MODEL` — execute through governed pipeline stages
 
 Failure to consult these modules before route-touching work is a governance violation.
+
+---
+
+## Publish Retrieval Modules
+
+The following modules govern preflight reasoning for all publish streams. They are stored in:
+
+`docs/brain/publish/retrieval/`
+
+| Module | File | Purpose |
+|---|---|---|
+| TRIGGER.PATTERN.MODEL | `retrieval/TRIGGER.PATTERN.MODEL.md` | Observable signals indicating a publish situation is active |
+| MODULE.APPLICABILITY.MAP | `retrieval/MODULE.APPLICABILITY.MAP.md` | Maps each trigger to applicable modules and stream type |
+| EXECUTION.LINKING.MODEL | `retrieval/EXECUTION.LINKING.MODEL.md` | Allowed and invalid sequences; required completion conditions |
+| CONTEXT.INFERENCE.RULES | `retrieval/CONTEXT.INFERENCE.RULES.md` | Surface detection, repo context, stream type inference |
+| AUTOLOAD.SPECIFICATION | `retrieval/AUTOLOAD.SPECIFICATION.md` | Module activation, deactivation, and override constraints |
+| FAILURE.ESCALATION.RULES | `retrieval/FAILURE.ESCALATION.RULES.md` | When to stop and escalate; escalation targets and pipeline effects |
+
+### Mandatory Governance Rule
+
+These modules MUST govern preflight reasoning for any publish stream touching:
+- krayu.be routes
+- mirror.krayu.be routes
+- `route_source_map.yaml`
+- `pages/`
+- sitemap logic
+- bridge classification
+- surface mismatch cases
