@@ -13,6 +13,7 @@ brain: publish
 | Program Intelligence | /program-intelligence | [[../product/01_PRODUCT_MAP]] | P1 |
 | LENS | /lens | [[../product/lens_product]] | P0 |
 | Plans | /plans | [[../product/01_PRODUCT_MAP]] | P1 |
+| Program Intelligence Applied | /program-intelligence-applied | [[../product/lens_product]], [[../product/engagement_model]] | P2 — BRIDGE |
 | CTA / Contact | /contact | [[cta_model]] | P0 |
 
 ---
@@ -30,4 +31,5 @@ brain: publish
 - [[landing_page]]
 - [[program_intelligence_page]]
 - [[lens_page]]
+- [[program_intelligence_applied_page]]
 - [[cta_model]]
