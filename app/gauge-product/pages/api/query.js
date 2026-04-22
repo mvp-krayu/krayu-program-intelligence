@@ -79,10 +79,17 @@ export default function handler(req, res) {
 
   execFile(PYTHON, args, { timeout: TIMEOUT_MS, cwd: REPO_ROOT }, (err, stdout) => {
     if (err) {
-      return res.status(500).json({
-        status: 'error',
-        reason: err.killed ? 'ENGINE_TIMEOUT' : 'ENGINE_FAILURE',
-      })
+      if (err.killed) {
+        return res.status(500).json({ status: 'error', reason: 'ENGINE_TIMEOUT' })
+      }
+      // Non-zero exit may carry a structured error payload (e.g. ZONE_NOT_FOUND).
+      // Attempt to parse stdout before falling back to ENGINE_FAILURE.
+      try {
+        const data = JSON.parse(stdout.trim())
+        return res.status(200).json(data)
+      } catch {
+        return res.status(500).json({ status: 'error', reason: 'ENGINE_FAILURE' })
+      }
     }
     try {
       const data = JSON.parse(stdout.trim())
