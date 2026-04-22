@@ -100,6 +100,8 @@ function WhyResult({ data }) {
           <span className={`ws-badge ${CONF_CLS[r.confidence] || ''}`}>{r.confidence}</span>
         </div>
       </div>
+      <UnresolvedBlock items={data.uncertainty.unresolved} />
+      <MissingBlock    items={data.evidence_basis.missing} />
       <div className="ws-result-section">
         <div className="ws-result-label">Structural Scope</div>
         <div className="ws-scope-line">
@@ -123,8 +125,6 @@ function WhyResult({ data }) {
           ))}
         </div>
       </div>
-      <UnresolvedBlock items={data.uncertainty.unresolved} />
-      <MissingBlock    items={data.evidence_basis.missing} />
     </div>
   )
 }
@@ -138,6 +138,8 @@ function EvidenceResult({ data }) {
   return (
     <div className="ws-result-panel">
       <ProhibitionBadge />
+      <UnresolvedBlock items={data.uncertainty.unresolved} />
+      <MissingBlock    items={data.evidence_basis.missing} />
       <div className="ws-result-section">
         <div className="ws-result-label">Signal Coverage</div>
         <div className="ws-badge-row">
@@ -170,8 +172,6 @@ function EvidenceResult({ data }) {
           </div>
         ))}
       </div>
-      <UnresolvedBlock items={data.uncertainty.unresolved} />
-      <MissingBlock    items={data.evidence_basis.missing} />
     </div>
   )
 }
@@ -224,6 +224,7 @@ function ZoneCard({ zone }) {
           className="ws-btn ws-btn-why"
           onClick={() => fireQuery('WHY')}
           disabled={qs?.loading}
+          title="Zone type, severity, confidence, and classification rationale"
         >
           WHY
         </button>
@@ -231,6 +232,7 @@ function ZoneCard({ zone }) {
           className="ws-btn ws-btn-evidence"
           onClick={() => fireQuery('EVIDENCE')}
           disabled={qs?.loading}
+          title="Signal coverage, trace links, and evidence gaps for this zone"
         >
           EVIDENCE
         </button>
