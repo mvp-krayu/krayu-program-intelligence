@@ -130,6 +130,64 @@ function WhyResult({ data }) {
 }
 
 // ---------------------------------------------------------------------------
+// TRACE result panel
+// ---------------------------------------------------------------------------
+
+const EVID_CLS = {
+  STRONG:   'ws-conf-strong',
+  MODERATE: 'ws-conf-partial',
+  PARTIAL:  'ws-conf-partial',
+  WEAK:     'ws-conf-weak',
+}
+
+const PATH_TYPE_CLS = {
+  FORWARD:  'ws-path-type-forward',
+  EVIDENCE: 'ws-path-type-evidence',
+}
+
+function TraceResult({ data }) {
+  const paths = data.trace || []
+  return (
+    <div className="ws-result-panel">
+      <ProhibitionBadge />
+      <UnresolvedBlock items={data.uncertainty.unresolved} />
+      <div className="ws-result-section">
+        <div className="ws-result-label">
+          Propagation Paths
+          <span className="ws-result-label-count">{paths.length}</span>
+        </div>
+        {paths.length === 0 && (
+          <div className="ws-empty-note">{data.message || 'No traceable paths.'}</div>
+        )}
+        {paths.map(p => (
+          <div key={p.path_id} className="ws-path-block">
+            <div className="ws-path-header">
+              <span className="ws-path-id">{p.path_id}</span>
+              <span className={`ws-badge ${PATH_TYPE_CLS[p.path_type] || ''}`}>{p.path_type}</span>
+              <span className={`ws-badge ${EVID_CLS[p.evidence_support] || ''}`}>
+                {p.evidence_support}
+              </span>
+            </div>
+            <div className="ws-path-chain">
+              {p.node_chain.map((node, i) => (
+                <span key={i} className="ws-path-chain-row">
+                  {i > 0 && <span className="ws-path-arrow">→</span>}
+                  <span className="ws-path-node">{node}</span>
+                </span>
+              ))}
+            </div>
+            {p.inferred_declaration && (
+              <div className="ws-path-inferred">{p.inferred_declaration}</div>
+            )}
+          </div>
+        ))}
+      </div>
+      <MissingBlock items={data.evidence_basis.missing} />
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Vault link section (EVIDENCE results only)
 // ---------------------------------------------------------------------------
 
@@ -276,6 +334,14 @@ function ZoneCard({ zone }) {
         >
           EVIDENCE
         </button>
+        <button
+          className="ws-btn ws-btn-trace"
+          onClick={() => fireQuery('TRACE')}
+          disabled={qs?.loading}
+          title="Structural propagation paths from canonical topology and signal binding"
+        >
+          TRACE
+        </button>
         {qs?.data && (
           <button className="ws-btn ws-btn-clear" onClick={() => setQs(null)}>✕ clear</button>
         )}
@@ -289,6 +355,7 @@ function ZoneCard({ zone }) {
       )}
       {qs?.data && qs.mode === 'WHY'      && <WhyResult      data={qs.data} />}
       {qs?.data && qs.mode === 'EVIDENCE' && <EvidenceResult data={qs.data} />}
+      {qs?.data && qs.mode === 'TRACE'    && <TraceResult    data={qs.data} />}
     </div>
   )
 }

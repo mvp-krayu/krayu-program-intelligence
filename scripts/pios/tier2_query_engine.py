@@ -290,6 +290,103 @@ def handle_why(zone: Dict) -> Dict:
     }
 
 # ---------------------------------------------------------------------------
+# TRACE handler
+# ---------------------------------------------------------------------------
+
+def handle_trace(zone: Dict, topology: Dict) -> Dict:
+    """Build structural propagation paths from canonical containment + signal binding.
+
+    No graph traversal engine. No invented nodes. Two path types only:
+      FORWARD  — structural containment: domain → capabilities
+      EVIDENCE — signal-backed chain: domain → signal node
+
+    Weakly-grounded capabilities carry inferred_declaration (required by contract).
+    """
+    zone_id      = zone["zone_id"]
+    did          = zone["domain_id"]
+    domain       = zone["domain"]
+    sigs         = zone["domain_sigs"]
+    cap_ids      = domain.get("capability_ids", [])
+
+    if zone["traceability"] == "NOT_TRACEABLE":
+        return {
+            "paths":   [],
+            "message": "No traceable propagation paths identified from available evidence.",
+        }
+
+    caps_by_id = {c["capability_id"]: c for c in topology.get("capabilities", [])}
+    paths: List[Dict] = []
+    n = 0
+
+    # Path: domain → grounded capabilities (structural fact, no inferred_declaration)
+    grounded = [cid for cid in cap_ids
+                if not caps_by_id.get(cid, {}).get("weakly_grounded", False)]
+    if grounded:
+        n += 1
+        paths.append({
+            "path_id":          f"{zone_id}-P{n}",
+            "node_chain":       [did] + grounded,
+            "path_type":        "FORWARD",
+            "evidence_support": "PARTIAL",
+        })
+
+    # Path: domain → weakly grounded capability (one path per; inferred_declaration required)
+    for cid in cap_ids:
+        cap = caps_by_id.get(cid, {})
+        if cap.get("weakly_grounded"):
+            n += 1
+            paths.append({
+                "path_id":    f"{zone_id}-P{n}",
+                "node_chain": [did, cid],
+                "path_type":  "FORWARD",
+                "evidence_support": "WEAK",
+                "inferred_declaration": (
+                    f"This path is inferred. {cid} ({cap.get('capability_name', cid)}) "
+                    f"is weakly grounded within {did} — structural state cannot be "
+                    "confirmed from available evidence."
+                ),
+            })
+
+    # Paths: domain → signal (one evidence path per bound signal)
+    for s in sigs:
+        n += 1
+        paths.append({
+            "path_id":          f"{zone_id}-P{n}",
+            "node_chain":       [did, s["signal_id"]],
+            "path_type":        "EVIDENCE",
+            "evidence_support": s.get("evidence_confidence", "WEAK"),
+        })
+
+    return {"paths": paths}
+
+
+def build_trace_response(zone_id: str, zone: Dict, trace_data: Dict) -> Dict:
+    unresolved = _build_unresolved(zone)
+    if not unresolved:
+        raise ValueError(
+            f"build_trace_response: unresolved is empty for {zone_id} — invariant violation"
+        )
+    response: Dict = {
+        "status":                "ok",
+        "zone_id":               zone_id,
+        "mode":                  "TRACE",
+        "run_id":                RUN_ID,
+        "inference_prohibition": "ACTIVE",
+        "trace":                 trace_data["paths"],
+        "evidence_basis": {
+            "available": _build_available(zone),
+            "missing":   _build_missing(zone),
+        },
+        "uncertainty": {
+            "unresolved": unresolved,
+        },
+    }
+    if "message" in trace_data:
+        response["message"] = trace_data["message"]
+    return response
+
+
+# ---------------------------------------------------------------------------
 # EVIDENCE handler
 # ---------------------------------------------------------------------------
 
@@ -385,15 +482,11 @@ def main() -> None:
         print(json.dumps({"status": "error", "reason": "INVALID_PARAMS", "detail": "zone_id required"}))
         sys.exit(1)
 
-    if args.mode == "TRACE":
-        print(json.dumps({"status": "error", "reason": "MODE_NOT_SUPPORTED"}))
-        return
-
-    if args.mode not in ("WHY", "EVIDENCE"):
+    if args.mode not in ("WHY", "EVIDENCE", "TRACE"):
         print(json.dumps({
             "status": "error",
             "reason": "INVALID_PARAMS",
-            "detail": f"mode must be WHY or EVIDENCE, got: {args.mode!r}",
+            "detail": f"mode must be WHY, EVIDENCE, or TRACE, got: {args.mode!r}",
         }))
         sys.exit(1)
 
@@ -410,8 +503,12 @@ def main() -> None:
         sys.exit(1)
 
     try:
-        result   = handle_why(zone) if args.mode == "WHY" else handle_evidence(zone)
-        response = build_response(args.zone, args.mode, result, zone)
+        if args.mode == "TRACE":
+            trace_data = handle_trace(zone, topology)
+            response   = build_trace_response(args.zone, zone, trace_data)
+        else:
+            result   = handle_why(zone) if args.mode == "WHY" else handle_evidence(zone)
+            response = build_response(args.zone, args.mode, result, zone)
         print(json.dumps(response))
     except Exception as e:
         print(json.dumps({"status": "error", "reason": "ENGINE_FAILURE", "detail": str(e)}))

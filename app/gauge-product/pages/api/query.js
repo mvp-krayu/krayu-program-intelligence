@@ -2,21 +2,21 @@
  * pages/api/query.js
  * TIER2.RUNTIME.QUERY.ENGINE.01
  *
- * Tier-2 zone-scoped query endpoint — WHY and EVIDENCE modes.
+ * Tier-2 zone-scoped query endpoint — WHY, EVIDENCE, and TRACE modes.
  *
  * GET /api/query?zone_id=ZONE-01&mode=WHY
  * GET /api/query?zone_id=ZONE-01&mode=EVIDENCE[&scope=FULL]
+ * GET /api/query?zone_id=ZONE-01&mode=TRACE
  *
  * Returns:
- *   { status, zone_id, mode, run_id, inference_prohibition:"ACTIVE",
- *     result, evidence_basis, uncertainty }
- *
- * TRACE returns:
- *   { status:"error", reason:"MODE_NOT_SUPPORTED" }
+ *   WHY/EVIDENCE: { status, zone_id, mode, run_id, inference_prohibition:"ACTIVE",
+ *                   result, evidence_basis, uncertainty }
+ *   TRACE:        { status, zone_id, mode, run_id, inference_prohibition:"ACTIVE",
+ *                   trace, evidence_basis, uncertainty }
  *
  * Constraints:
  *   - zone_id required, format ZONE-NN
- *   - mode required: WHY or EVIDENCE (TRACE deferred)
+ *   - mode required: WHY, EVIDENCE, or TRACE
  *   - zone_id must correspond to a derivable zone from canonical inputs
  *   - inference_prohibition:"ACTIVE" guaranteed in every success response
  *   - No ZONE-1 data; no direct vault access
@@ -36,8 +36,8 @@ const SCRIPT_PATH = path.join(REPO_ROOT, 'scripts', 'pios', 'tier2_query_engine.
 const PYTHON     = fs.existsSync('/usr/bin/python3') ? '/usr/bin/python3' : 'python3'
 const TIMEOUT_MS = 15000
 
-const VALID_ZONE     = /^ZONE-\d{2}$/
-const SUPPORTED_MODES = new Set(['WHY', 'EVIDENCE'])
+const VALID_ZONE      = /^ZONE-\d{2}$/
+const SUPPORTED_MODES = new Set(['WHY', 'EVIDENCE', 'TRACE'])
 
 export default function handler(req, res) {
   if (req.method !== 'GET') {
@@ -62,15 +62,11 @@ export default function handler(req, res) {
     })
   }
 
-  if (mode === 'TRACE') {
-    return res.status(200).json({ status: 'error', reason: 'MODE_NOT_SUPPORTED' })
-  }
-
   if (!SUPPORTED_MODES.has(mode)) {
     return res.status(400).json({
       status: 'error',
       reason: 'INVALID_PARAMS',
-      detail: 'mode must be WHY or EVIDENCE',
+      detail: 'mode must be WHY, EVIDENCE, or TRACE',
     })
   }
 

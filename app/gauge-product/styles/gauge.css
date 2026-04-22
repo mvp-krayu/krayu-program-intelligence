@@ -2286,6 +2286,21 @@ details.op-details[open] summary::before { content:"▼  "; }
 .ws-unresolved-reason,.ws-missing-impact { font-size:11px; color:#888; line-height:1.6; }
 .ws-missing-impact { color:#d4912a; }
 
+/* TRACE result panel */
+.ws-btn-trace { background:#120d18; border:1px solid #2a1a38; color:#8a6abf; }
+.ws-btn-trace:hover:not(:disabled) { border-color:#8a6abf; color:#b09adf; }
+.ws-result-label-count { margin-left:8px; font-size:10px; color:#555; font-weight:normal; letter-spacing:0; text-transform:none; }
+.ws-path-block { background:#16161a; border:1px solid #222228; border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:8px; }
+.ws-path-header { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.ws-path-id { font-size:10px; font-family:monospace; color:#555; }
+.ws-path-chain { display:flex; align-items:center; flex-wrap:wrap; gap:4px; padding:4px 0; }
+.ws-path-chain-row { display:flex; align-items:center; gap:4px; }
+.ws-path-node { font-size:11px; font-family:monospace; color:#c89b3c; padding:2px 7px; background:#0e0e12; border:1px solid #2a2a2e; border-radius:2px; white-space:nowrap; }
+.ws-path-arrow { font-size:11px; color:#444; }
+.ws-path-inferred { font-size:11px; color:#d4912a; background:rgba(212,145,42,0.06); border:1px solid rgba(212,145,42,0.2); border-left:2px solid #d4912a; padding:8px 10px; border-radius:2px; line-height:1.6; }
+.ws-path-type-forward  { background:rgba(200,155,60,0.08); color:#c89b3c; border:1px solid rgba(200,155,60,0.2); }
+.ws-path-type-evidence { background:rgba(76,175,110,0.08); color:#4caf6e; border:1px solid rgba(76,175,110,0.2); }
+
 /* Vault linkage */
 .ws-vault-links { margin-top:4px; }
 .ws-vault-target-list { display:flex; flex-direction:column; gap:4px; }
