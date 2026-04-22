@@ -9,7 +9,7 @@
  * Authority: TIER2.RUNTIME.QUERY.ENGINE.01
  */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 
 // ---------------------------------------------------------------------------
@@ -124,7 +124,7 @@ function WhyResult({ data }) {
   const r = data.result
   const { cls: typeCls, label: typeLabel } = zoneTypeMeta(r.zone_type)
   return (
-    <div className="ws-result-panel">
+    <div className="ws-result-panel ws-result-panel-why">
       <ProhibitionBadge />
 
       <div className="ws-finding-primary">
@@ -184,7 +184,7 @@ function PathBlock({ p }) {
           {p.evidence_support}
         </span>
       </div>
-      <div className="ws-path-chain">
+      <div className={`ws-path-chain ws-path-chain-${(p.path_type || '').toLowerCase()}`}>
         {p.node_chain.map((node, i) => (
           <span key={i} className="ws-path-chain-row">
             {i > 0 && <span className="ws-path-arrow">→</span>}
@@ -208,7 +208,7 @@ function TraceResult({ data }) {
   const evidencePaths= paths.filter(p => p.path_type === 'EVIDENCE')
 
   return (
-    <div className="ws-result-panel">
+    <div className="ws-result-panel ws-result-panel-trace">
       <ProhibitionBadge />
       <UnresolvedBlock items={data.uncertainty.unresolved} />
 
@@ -277,7 +277,7 @@ function VaultLinks({ targets, vaultIndex }) {
     <div className="ws-result-section ws-vault-section">
       <div className="ws-result-label ws-vault-section-label">
         Evidence Vault
-        <span className="ws-vault-section-hint">drill-through</span>
+        <span className="ws-vault-section-hint">proof source</span>
       </div>
       <div className="ws-vault-target-list">
         {targets.map(t => {
@@ -321,7 +321,7 @@ function VaultLinks({ targets, vaultIndex }) {
 function EvidenceResult({ data, vaultIndex }) {
   const r = data.result
   return (
-    <div className="ws-result-panel">
+    <div className="ws-result-panel ws-result-panel-evidence">
       <ProhibitionBadge />
       <UnresolvedBlock items={data.uncertainty.unresolved} />
       <MissingBlock    items={data.evidence_basis.missing} />
@@ -373,6 +373,13 @@ function EvidenceResult({ data, vaultIndex }) {
 
 function ZoneCard({ zone, vaultIndex }) {
   const [qs, setQs] = useState(null) // null | {loading,mode} | {mode,data} | {mode,error}
+  const resultRef = useRef(null)
+
+  useEffect(() => {
+    if (qs?.data && !qs.loading && resultRef.current) {
+      resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    }
+  }, [qs])
 
   async function fireQuery(mode) {
     setQs({ loading: true, mode })
@@ -393,7 +400,7 @@ function ZoneCard({ zone, vaultIndex }) {
   const loadingMode = qs?.loading ? qs.mode : null
 
   return (
-    <div className={`ws-zone-card ${SEV_CARD_CLS[zone.severity] || ''}`}>
+    <div className={`ws-zone-card ${SEV_CARD_CLS[zone.severity] || ''}${activeMode ? ' ws-zone-card--active' : ''}`} ref={resultRef}>
 
       <div className="ws-zone-identity">
         <span className="ws-zone-id">{zone.zone_id}</span>
