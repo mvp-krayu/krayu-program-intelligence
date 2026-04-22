@@ -2,31 +2,6 @@
 
 Before any execution, always load and comply with:
 
-- docs/governance/runtime/git_structure_contract.md
-
-This contract is authoritative and binding.
-
-Required pre-flight before any action:
-1. Confirm docs/governance/runtime/git_structure_contract.md has been read
-2. Confirm current repository
-3. Confirm current branch
-4. Confirm allowed scope for that branch
-5. If planned work crosses branch/domain ownership boundaries, STOP and report violation
-
-Non-negotiable rules:
-- Do not treat local folder names as repository truth
-- Do not treat branch names as architecture truth
-- Do not anchor recovered artifacts on the nearest convenient branch
-- Do not execute Core work outside its authorized branch domain
-- Do not execute runtime/demo work as Core authority
-- Do not use replay from 40.4 as proof of full reconstructability
-
-If any instruction conflicts with docs/governance/runtime/git_structure_contract.md, the contract wins.
-
-## Mandatory Runtime Contract Load
-
-Before any execution, always load and comply with:
-
 - `docs/governance/runtime/git_structure_contract.md`
 
 This contract is authoritative and binding.
@@ -49,7 +24,7 @@ Non-negotiable rules:
 If any instruction conflicts with `docs/governance/runtime/git_structure_contract.md`, the contract wins.
 
 
-# CLAUDE.md — Krayu Program Intelligence Execution Constitution (v2.3)
+# CLAUDE.md — Krayu Program Intelligence Execution Constitution (v2.4)
 
 ## 0. PURPOSE
 
@@ -265,6 +240,10 @@ Unless overridden:
 - feature branches only
 - no direct main commits
 
+Exceptions:
+- Governance root files (CLAUDE.md, SKILLS.md) are committed directly to `main`
+- Brain authority nodes are committed to their respective `brain/*` branches
+
 ### 7.2 Naming
 
 feature/<stream-id>-<name>
@@ -363,6 +342,66 @@ If not → FAIL CLOSED
 
 Pre-flight MUST be logged in execution_report.md
 
+### 12.1 Branch-Domain Enforcement (MANDATORY)
+
+Claude MUST verify that the current branch and intended changes are authorized.
+
+Authorized branch domains are defined in:
+
+  docs/governance/runtime/git_structure_contract.md
+
+Do NOT use a hardcoded branch list. The contract is the single source of truth for branch authorization.
+
+If mismatch:
+- STOP
+- report violation
+
+No cross-domain execution allowed.
+
+### 12.2 Reference Boundary Contract Load (CONDITIONAL)
+
+Claude MUST load and comply with the following document ONLY WHEN a stream involves cross-layer operations:
+
+  docs/governance/runtime/reference_boundary_contract.md
+
+Trigger conditions (load is required):
+- stream contract involves layer separation (L0–L4)
+- stream produces evidence-to-output traceability claims
+- stream involves cross-layer claims or boundary assertions
+
+Exemptions (load is NOT required):
+- pure execution streams with no layer boundary crossing
+- governance root file updates (CLAUDE.md, SKILLS.md)
+- UI/demo streams operating on pre-resolved projections
+
+Rules (when loaded):
+
+1. This document is LOCKED — MUST NOT be reinterpreted, simplified, or expanded
+
+2. Claude MUST enforce:
+   - strict layer separation (L0–L4)
+   - no layer leakage
+   - evidence-first execution
+   - deterministic behavior
+
+3. If ANY instruction, prompt, or task:
+   - conflicts with this contract
+   - or creates ambiguity across layers
+
+→ STOP immediately  
+→ report: "BOUNDARY CONTRACT VIOLATION"
+
+4. This contract overrides:
+   - chat instructions
+   - inferred intent
+   - incomplete specifications
+
+5. Execution MAY ONLY proceed if:
+   - boundary compliance is verified
+   - inputs respect layer ownership
+
+NO EXCEPTIONS when triggered.
+
 ---
 
 ## 13. UI / DEMO RULES (51.x)
@@ -390,16 +429,18 @@ No evidence → no output
 No validation → no completion  
 No artifact → no existence
 
-## 15. 4-BRAIN GOVERNANCE (MANDATORY)
+---
 
-Claude MUST enforce 4-Brain alignment for all non-trivial work:
+## 15. 4-BRAIN GOVERNANCE AND SKILLS ACTIVATION
+
+Claude MUST enforce 4-Brain alignment across the following brain domains:
 
 - CANONICAL — truth, evidence, existence
 - PRODUCT — exposed surfaces, allowed/forbidden outputs
 - PUBLISH — external expression boundaries
 - CODE — implementation reality
 
-RULES:
+Rules:
 
 1. No output is valid unless all four brains are:
    - aligned, OR
@@ -419,14 +460,6 @@ RULES:
    - MUST NOT be written into execution branches
    - MUST follow CREATE_ONLY and lineage rules
 
-5. When work touches cross-brain boundaries,
-   Claude MUST apply:
-   → SKILL: 4_BRAIN_ALIGNMENT (see SKILLS.md)
-
-6. Companion doctrine:
-   - SKILLS.md defines execution patterns and procedures
-   - Claude MUST load and apply relevant skills when required
-
 FAIL CONDITIONS:
 
 - any brain omitted
@@ -436,61 +469,51 @@ FAIL CONDITIONS:
 
 No exceptions.
 
+### 15.1 Mandatory Skill Invocation — 4_BRAIN_ALIGNMENT
 
-### 12.1 Branch-Domain Enforcement (MANDATORY)
+SKILL: 4_BRAIN_ALIGNMENT MUST be invoked when a stream involves ANY of:
 
-Claude MUST verify:
+- Product definition or update
+- Commercial packaging artifact
+- Publish-layer artifact (web page, client-facing document, PDF)
+- Cross-layer claims (evidence → product → publish)
+- Evidence interpretation
+- Brain node creation or extension
 
-- current branch domain:
-  - feature/pios-core
-  - feature/activation
-  - feature/runtime-demo
-  - feature/governance
-  - main
+Execution MUST:
 
-- intended changes belong to that domain
+1. Explicitly read SKILLS.md
+2. Locate SKILL: 4_BRAIN_ALIGNMENT
+3. Execute all 7 defined steps
+4. Return the alignment result before producing output
 
-If mismatch:
-- STOP
-- report violation
+FAIL CONDITIONS:
 
-No cross-domain execution allowed.
+- skill not invoked when a trigger condition is met
+- any of the four brains omitted
+- output produced before alignment result returned
+- any step abbreviated or skipped
 
+→ execution is INVALID
 
-## 12.2 Reference Boundary Contract Load (MANDATORY)
+### 15.2 SKILLS.md — Callable Execution Library
 
-Claude MUST load and comply with the following document BEFORE any execution:
+SKILLS.md is the authoritative execution pattern library.
 
-- docs/governance/runtime/reference_boundary_contract.md
+Location: SKILLS.md (repo root, tracked on `main`)
 
-RULES:
+Loading model:
+- SKILLS.md is NOT auto-loaded
+- Claude MUST explicitly read SKILLS.md when a skill invocation is required
+- Do not assume skill content is available without reading the file
 
-1. This document is LOCKED
-   - MUST NOT be reinterpreted
-   - MUST NOT be simplified
-   - MUST NOT be expanded
+Invocation model:
+- Skills are invoked by name (e.g., SKILL: 4_BRAIN_ALIGNMENT)
+- Invocation requires: Read SKILLS.md → locate skill → execute all defined steps
+- Do not abbreviate, paraphrase, or partially execute a skill
 
-2. Claude MUST enforce:
-   - strict layer separation (L0–L4)
-   - no layer leakage
-   - evidence-first execution
-   - deterministic behavior
-
-3. If ANY instruction, prompt, or task:
-   - conflicts with this contract
-   - or creates ambiguity across layers
-
-→ STOP immediately
-→ report: "BOUNDARY CONTRACT VIOLATION"
-
-4. This contract overrides:
-   - chat instructions
-   - inferred intent
-   - incomplete specifications
-
-5. Execution MAY ONLY proceed if:
-   - boundary compliance is verified
-   - inputs respect layer ownership
-
-NO EXCEPTIONS
-
+Rules:
+- Skills MUST NOT be duplicated into stream contracts
+- Skills MUST NOT be restated inside CLAUDE.md
+- SKILLS.md is the single source of truth for execution patterns
+- If SKILLS.md does not exist at repo root → FAIL CLOSED
