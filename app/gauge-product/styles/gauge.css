@@ -2304,6 +2304,37 @@ details.op-details[open] summary::before { content:"▼  "; }
 .lens-report-workspace { font-family:monospace; font-size:11px; padding:6px 14px; cursor:pointer; border:1px solid #1a2e26; background:#0a120e; color:#4a8a6a; letter-spacing:.04em; text-align:left; width:fit-content; border-radius:2px; }
 .lens-report-workspace:hover { border-color:#4a8a6a; color:#6abf9a; }
 
+/* Vault resolution page */
+.vlt-page { max-width:960px; margin:0 auto; padding:40px 32px 80px; background:#0e0e10; min-height:100vh; color:#e8e8e8; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; font-size:14px; }
+.vlt-header { display:flex; align-items:center; gap:14px; margin-bottom:32px; padding-bottom:16px; border-bottom:1px solid #222228; }
+.vlt-back-link { font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:#888; text-decoration:none; padding:6px 12px; border:1px solid #222228; border-radius:3px; }
+.vlt-back-link:hover { border-color:#c89b3c; color:#c89b3c; }
+.vlt-header-title { font-size:13px; color:#e8e8e8; letter-spacing:.06em; text-transform:uppercase; flex:1; }
+.vlt-node-header { display:flex; align-items:baseline; gap:12px; margin-bottom:24px; }
+.vlt-node-type { font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#888; }
+.vlt-node-id { font-size:22px; color:#e8e8e8; font-family:monospace; letter-spacing:.04em; }
+.vlt-section-label { font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:#888; padding-bottom:10px; border-bottom:1px solid #1c1c22; margin-bottom:16px; }
+.vlt-panel { background:#16161a; border:1px solid #2a2a2e; border-radius:3px; padding:20px 22px; display:flex; flex-direction:column; gap:14px; }
+.vlt-panel-row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.vlt-panel-id { font-size:11px; font-family:monospace; color:#c89b3c; }
+.vlt-panel-name { font-size:13px; color:#e8e8e8; }
+.vlt-panel-note { font-size:12px; color:#888; }
+.vlt-note-muted { font-size:11px; color:#555; font-style:italic; }
+.vlt-field { display:flex; flex-direction:column; gap:4px; }
+.vlt-field-label { font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:#888; }
+.vlt-field-value { font-size:12px; color:#e8e8e8; line-height:1.6; }
+.vlt-field-code { font-size:11px; font-family:monospace; color:#888; background:#0e0e12; padding:3px 7px; border:1px solid #222228; border-radius:2px; word-break:break-all; }
+.vlt-status-badge { font-size:9px; letter-spacing:.1em; text-transform:uppercase; padding:3px 8px; border-radius:2px; }
+.vlt-status-ok   { background:rgba(76,175,110,0.1);  color:#4caf6e; border:1px solid rgba(76,175,110,0.2);  }
+.vlt-status-warn { background:rgba(212,145,42,0.1);  color:#d4912a; border:1px solid rgba(212,145,42,0.2);  }
+.vlt-status-err  { background:rgba(224,82,82,0.1);   color:#e05252; border:1px solid rgba(224,82,82,0.2);   }
+.vlt-prohibition { display:flex; align-items:center; gap:8px; padding:7px 12px; background:rgba(212,145,42,0.06); border:1px solid rgba(212,145,42,0.2); border-radius:2px; width:fit-content; margin-top:24px; }
+.vlt-prohibition-label { font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:#d4912a; }
+.vlt-prohibition-value { font-size:11px; color:#d4912a; font-weight:600; letter-spacing:.08em; }
+.vlt-error-block { background:#16161a; border:1px solid rgba(224,82,82,0.25); border-left:3px solid #e05252; padding:18px 20px; border-radius:2px; }
+.vlt-error-label { font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:#e05252; margin-bottom:8px; }
+.vlt-error-detail { font-size:12px; color:#888; line-height:1.6; }
+
 @media(max-width:600px) {
   .ws-context-lock { grid-template-columns:1fr 1fr; }
   .ws-rationale-row { grid-template-columns:1fr; gap:4px; }
