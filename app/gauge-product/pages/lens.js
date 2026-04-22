@@ -346,6 +346,17 @@ function ReportPanel({ runId }) {
       <div className="lens-report-format-note">
         Output format: HTML &nbsp;·&nbsp; PDF export available when a PDF rendering engine is configured
       </div>
+      <div className="lens-report-row" style={{ marginTop: '12px' }}>
+        <button
+          className="lens-report-workspace"
+          onClick={() => window.open('/tier2/workspace')}
+        >
+          Diagnostic Workspace
+        </button>
+        <span className="lens-report-format-note">
+          Live WHY &amp; EVIDENCE interrogation · Zone-scoped · inference_prohibition: ACTIVE
+        </span>
+      </div>
     </div>
   )
 }

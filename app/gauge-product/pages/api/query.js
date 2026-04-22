@@ -1,0 +1,94 @@
+/**
+ * pages/api/query.js
+ * TIER2.RUNTIME.QUERY.ENGINE.01
+ *
+ * Tier-2 zone-scoped query endpoint — WHY and EVIDENCE modes.
+ *
+ * GET /api/query?zone_id=ZONE-01&mode=WHY
+ * GET /api/query?zone_id=ZONE-01&mode=EVIDENCE[&scope=FULL]
+ *
+ * Returns:
+ *   { status, zone_id, mode, run_id, inference_prohibition:"ACTIVE",
+ *     result, evidence_basis, uncertainty }
+ *
+ * TRACE returns:
+ *   { status:"error", reason:"MODE_NOT_SUPPORTED" }
+ *
+ * Constraints:
+ *   - zone_id required, format ZONE-NN
+ *   - mode required: WHY or EVIDENCE (TRACE deferred)
+ *   - zone_id must correspond to a derivable zone from canonical inputs
+ *   - inference_prohibition:"ACTIVE" guaranteed in every success response
+ *   - No ZONE-1 data; no direct vault access
+ */
+
+import { execFile } from 'child_process'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import fs from 'fs'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname  = path.dirname(__filename)
+
+const REPO_ROOT   = path.resolve(__dirname, '..', '..', '..', '..')
+const SCRIPT_PATH = path.join(REPO_ROOT, 'scripts', 'pios', 'tier2_query_engine.py')
+
+const PYTHON     = fs.existsSync('/usr/bin/python3') ? '/usr/bin/python3' : 'python3'
+const TIMEOUT_MS = 15000
+
+const VALID_ZONE     = /^ZONE-\d{2}$/
+const SUPPORTED_MODES = new Set(['WHY', 'EVIDENCE'])
+
+export default function handler(req, res) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ status: 'error', reason: 'METHOD_NOT_ALLOWED' })
+  }
+
+  const { zone_id, mode, scope } = req.query
+
+  if (!zone_id || !VALID_ZONE.test(zone_id)) {
+    return res.status(400).json({
+      status: 'error',
+      reason: 'INVALID_PARAMS',
+      detail: 'zone_id required; format: ZONE-NN',
+    })
+  }
+
+  if (!mode) {
+    return res.status(400).json({
+      status: 'error',
+      reason: 'INVALID_PARAMS',
+      detail: 'mode required',
+    })
+  }
+
+  if (mode === 'TRACE') {
+    return res.status(200).json({ status: 'error', reason: 'MODE_NOT_SUPPORTED' })
+  }
+
+  if (!SUPPORTED_MODES.has(mode)) {
+    return res.status(400).json({
+      status: 'error',
+      reason: 'INVALID_PARAMS',
+      detail: 'mode must be WHY or EVIDENCE',
+    })
+  }
+
+  const args = [SCRIPT_PATH, '--zone', zone_id, '--mode', mode]
+  if (mode === 'EVIDENCE' && scope) args.push('--scope', scope)
+
+  execFile(PYTHON, args, { timeout: TIMEOUT_MS, cwd: REPO_ROOT }, (err, stdout) => {
+    if (err) {
+      return res.status(500).json({
+        status: 'error',
+        reason: err.killed ? 'ENGINE_TIMEOUT' : 'ENGINE_FAILURE',
+      })
+    }
+    try {
+      const data = JSON.parse(stdout.trim())
+      return res.status(200).json(data)
+    } catch {
+      return res.status(500).json({ status: 'error', reason: 'PARSE_FAILURE' })
+    }
+  })
+}

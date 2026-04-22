@@ -2185,3 +2185,113 @@ details.op-details[open] summary::before { content:"▼  "; }
 .plans-back-link { font-size:13px; color:#58a6ff; text-decoration:none; }
 .plans-back-link:hover { text-decoration:underline; }
 
+/* === TIER-2 DIAGNOSTIC WORKSPACE (TIER2.RUNTIME.QUERY.ENGINE.01) === */
+
+/* Page shell */
+.ws-page { max-width:960px; margin:0 auto; padding:40px 32px 80px; background:#0e0e10; min-height:100vh; color:#e8e8e8; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; font-size:14px; }
+.ws-topbar { display:flex; align-items:center; gap:14px; margin-bottom:32px; padding-bottom:16px; border-bottom:1px solid #222228; }
+.ws-back-link { font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:#888; text-decoration:none; padding:6px 12px; border:1px solid #222228; border-radius:3px; }
+.ws-back-link:hover { border-color:#c89b3c; color:#c89b3c; }
+.ws-topbar-title { font-size:13px; color:#e8e8e8; letter-spacing:.04em; flex:1; }
+.ws-topbar-run { font-size:10px; color:#555; font-family:monospace; }
+.ws-page-state { font-size:13px; color:#888; padding:32px 0; }
+.ws-page-error { color:#e05252; }
+.ws-error-label { font-size:11px; letter-spacing:.1em; text-transform:uppercase; margin-bottom:6px; }
+.ws-error-detail { font-size:12px; color:#888; }
+
+/* Context lock */
+.ws-context-lock { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; background:#16161a; border:1px solid #2a2a2e; border-left:3px solid #c89b3c; padding:18px 20px; border-radius:3px; margin-bottom:28px; }
+.ws-ctx-field { display:flex; flex-direction:column; gap:3px; }
+.ws-ctx-label { font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:#888; }
+.ws-ctx-value { font-size:12px; color:#e8e8e8; }
+.ws-ctx-active { color:#d4912a; font-weight:500; }
+
+/* Zone inventory header */
+.ws-inventory-header { display:flex; align-items:baseline; gap:12px; margin-bottom:16px; }
+.ws-inventory-title { font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#e8e8e8; }
+.ws-inventory-count { font-size:11px; color:#555; }
+
+/* Zone card */
+.ws-zone-list { display:flex; flex-direction:column; gap:16px; }
+.ws-zone-card { background:#16161a; border:1px solid #2a2a2e; border-radius:3px; padding:20px 22px; }
+.ws-zone-header { margin-bottom:14px; }
+.ws-zone-id { font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#d4912a; margin-bottom:5px; }
+.ws-zone-domain { font-size:14px; color:#e8e8e8; margin-bottom:10px; }
+.ws-badge-row { display:flex; gap:6px; flex-wrap:wrap; }
+.ws-badge { display:inline-block; padding:3px 8px; font-size:10px; letter-spacing:.05em; text-transform:uppercase; border-radius:2px; }
+.ws-badge-sm { padding:2px 6px; font-size:9px; }
+.ws-type-pressure { background:rgba(212,145,42,0.12); color:#d4912a; border:1px solid rgba(212,145,42,0.25); }
+.ws-type-gap { background:rgba(136,136,136,0.1); color:#888; border:1px solid #333; }
+.ws-type-conflict { background:rgba(224,82,82,0.1); color:#e05252; border:1px solid rgba(224,82,82,0.25); }
+.ws-type-inconsistency { background:rgba(76,175,110,0.08); color:#4caf6e; border:1px solid rgba(76,175,110,0.2); }
+.ws-sev-high { background:rgba(224,82,82,0.1); color:#e05252; border:1px solid rgba(224,82,82,0.2); }
+.ws-sev-moderate { background:rgba(212,145,42,0.1); color:#d4912a; border:1px solid rgba(212,145,42,0.2); }
+.ws-sev-low { background:rgba(136,136,136,0.1); color:#888; border:1px solid #333; }
+.ws-conf-strong { background:rgba(76,175,110,0.1); color:#4caf6e; border:1px solid rgba(76,175,110,0.2); }
+.ws-conf-partial { background:rgba(200,155,60,0.1); color:#c89b3c; border:1px solid rgba(200,155,60,0.2); }
+.ws-conf-weak { background:rgba(136,136,136,0.1); color:#888; border:1px solid #333; }
+.ws-trace-full { background:rgba(76,175,110,0.08); color:#4caf6e; border:1px solid rgba(76,175,110,0.15); }
+.ws-trace-partial { background:rgba(200,155,60,0.08); color:#c89b3c; border:1px solid rgba(200,155,60,0.15); }
+.ws-trace-none { background:rgba(136,136,136,0.08); color:#666; border:1px solid #2a2a2e; }
+.ws-badge-neutral { background:#1c1c22; color:#666; border:1px solid #222228; }
+
+/* Query action buttons */
+.ws-zone-actions { display:flex; gap:8px; margin-top:4px; flex-wrap:wrap; }
+.ws-btn { font-family:monospace; font-size:11px; padding:6px 14px; cursor:pointer; letter-spacing:.06em; text-transform:uppercase; border-radius:2px; }
+.ws-btn:disabled { opacity:.5; cursor:not-allowed; }
+.ws-btn-why { background:#0a1018; border:1px solid #1a2630; color:#4a7a9b; }
+.ws-btn-why:hover:not(:disabled) { border-color:#4a7a9b; color:#6aabcf; }
+.ws-btn-evidence { background:#0d1a0d; border:1px solid #1a2e1a; color:#4a8a5a; }
+.ws-btn-evidence:hover:not(:disabled) { border-color:#4a8a5a; color:#6abf7a; }
+.ws-btn-clear { background:transparent; border:1px solid #222228; color:#555; }
+.ws-btn-clear:hover { border-color:#555; color:#888; }
+.ws-query-loading { font-size:12px; color:#888; margin-top:10px; font-family:monospace; }
+.ws-query-error { font-size:12px; color:#e05252; margin-top:10px; font-family:monospace; }
+
+/* Result panel */
+.ws-result-panel { margin-top:16px; background:#0e0e12; border:1px solid #2a2a2e; border-top:2px solid #1a2630; border-radius:0 0 3px 3px; padding:18px 20px; display:flex; flex-direction:column; gap:14px; }
+.ws-prohibition { display:flex; align-items:center; gap:8px; padding:7px 12px; background:rgba(212,145,42,0.06); border:1px solid rgba(212,145,42,0.2); border-radius:2px; width:fit-content; }
+.ws-prohibition-label { font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:#d4912a; }
+.ws-prohibition-value { font-size:11px; color:#d4912a; font-weight:600; letter-spacing:.08em; }
+.ws-result-section { display:flex; flex-direction:column; gap:8px; }
+.ws-result-label { font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:#888; padding-bottom:6px; border-bottom:1px solid #1c1c22; }
+
+/* Scope + chips */
+.ws-scope-line { display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-size:12px; color:#e8e8e8; }
+.ws-chip { font-size:10px; padding:2px 7px; background:#1c1c22; border:1px solid #2a2a2e; border-radius:2px; color:#888; font-family:monospace; }
+
+/* Rationale table */
+.ws-rationale { display:flex; flex-direction:column; gap:6px; }
+.ws-rationale-row { display:grid; grid-template-columns:160px 100px 1fr; gap:10px; padding:7px 10px; background:#16161a; border:1px solid #222228; border-radius:2px; font-size:11px; }
+.ws-rationale-factor { color:#888; font-family:monospace; }
+.ws-rationale-value { color:#c89b3c; font-family:monospace; word-break:break-all; }
+.ws-rationale-contrib { color:#e8e8e8; line-height:1.5; }
+
+/* Signal evidence */
+.ws-signal-block { background:#16161a; border:1px solid #222228; border-radius:2px; padding:10px 12px; }
+.ws-signal-header { display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
+.ws-signal-id { font-size:10px; font-family:monospace; color:#888; }
+.ws-signal-title { font-size:12px; color:#e8e8e8; }
+.ws-trace-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:3px; }
+.ws-trace-link { font-size:11px; color:#888; font-family:monospace; padding:3px 0; border-bottom:1px solid #1c1c22; }
+.ws-trace-link:last-child { border-bottom:none; }
+.ws-empty-note { font-size:11px; color:#555; font-style:italic; }
+
+/* Uncertainty + Missing */
+.ws-uncertainty { background:rgba(212,145,42,0.03); border:1px solid rgba(212,145,42,0.15); border-left:2px solid #d4912a; padding:12px 14px; border-radius:2px; }
+.ws-missing { background:rgba(136,136,136,0.03); border:1px solid #1c1c22; padding:12px 14px; border-radius:2px; }
+.ws-unresolved-row,.ws-missing-row { padding:6px 0; border-bottom:1px solid #1c1c22; }
+.ws-unresolved-row:last-child,.ws-missing-row:last-child { border-bottom:none; }
+.ws-unresolved-element,.ws-missing-item { font-size:12px; color:#e8e8e8; margin-bottom:3px; }
+.ws-unresolved-reason,.ws-missing-impact { font-size:11px; color:#888; line-height:1.6; }
+.ws-missing-impact { color:#d4912a; }
+
+/* Workspace entry button in lens.js ReportPanel */
+.lens-report-workspace { font-family:monospace; font-size:11px; padding:6px 14px; cursor:pointer; border:1px solid #1a2e26; background:#0a120e; color:#4a8a6a; letter-spacing:.04em; text-align:left; width:fit-content; border-radius:2px; }
+.lens-report-workspace:hover { border-color:#4a8a6a; color:#6abf9a; }
+
+@media(max-width:600px) {
+  .ws-context-lock { grid-template-columns:1fr 1fr; }
+  .ws-rationale-row { grid-template-columns:1fr; gap:4px; }
+}
+
