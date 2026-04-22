@@ -1,16 +1,10 @@
 /**
  * pages/tier2/workspace.js
- * TIER2.RUNTIME.QUERY.ENGINE.01
+ * TIER2.WORKSPACE.PRODUCT.POLISH.01
  *
- * Tier-2 Diagnostic Workspace — minimum viable live interrogation surface.
- *
- * Loads zone list from /api/zones on mount.
- * Renders per-zone WHY and EVIDENCE query buttons.
- * Results render inline below each zone card — no navigation required.
- *
- * TRACE mode is not implemented. Zone filtering/sorting is not implemented.
- * inference_prohibition: ACTIVE is enforced in every query response and shown
- * as the first element of every result panel.
+ * Tier-2 Diagnostic Workspace — governed investigation surface.
+ * WHY / EVIDENCE / TRACE modes live. Vault links resolve to exported pages.
+ * inference_prohibition: ACTIVE on all result panels.
  *
  * Authority: TIER2.RUNTIME.QUERY.ENGINE.01
  */
@@ -44,7 +38,7 @@ function resolveVaultLink(type, id, vi) {
 }
 
 // ---------------------------------------------------------------------------
-// Badge helpers
+// Badge / meta helpers
 // ---------------------------------------------------------------------------
 
 function zoneTypeMeta(zt) {
@@ -63,9 +57,24 @@ const TRACE_CLS = {
   PARTIALLY_TRACEABLE: 'ws-trace-partial',
   NOT_TRACEABLE:       'ws-trace-none',
 }
+const TRACE_LABELS = {
+  FULLY_TRACEABLE:     'fully traceable',
+  PARTIALLY_TRACEABLE: 'partial trace',
+  NOT_TRACEABLE:       'not traceable',
+}
+const SEV_CARD_CLS = {
+  HIGH:     'ws-zone-sev-high',
+  MODERATE: 'ws-zone-sev-moderate',
+}
+const EVID_CLS = {
+  STRONG:   'ws-conf-strong',
+  MODERATE: 'ws-conf-partial',
+  PARTIAL:  'ws-conf-partial',
+  WEAK:     'ws-conf-weak',
+}
 
 // ---------------------------------------------------------------------------
-// Sub-panels shared by WHY and EVIDENCE results
+// Shared sub-panels
 // ---------------------------------------------------------------------------
 
 function ProhibitionBadge() {
@@ -117,16 +126,23 @@ function WhyResult({ data }) {
   return (
     <div className="ws-result-panel">
       <ProhibitionBadge />
-      <div className="ws-result-section">
-        <div className="ws-result-label">Classification</div>
-        <div className="ws-badge-row">
-          <span className={`ws-badge ${typeCls}`}>{typeLabel}</span>
-          <span className={`ws-badge ${SEV_CLS[r.severity] || ''}`}>{r.severity}</span>
+
+      <div className="ws-finding-primary">
+        <div className="ws-finding-badges">
+          <span className={`ws-badge ws-badge-lg ${typeCls}`}>{typeLabel}</span>
+          <span className={`ws-badge ws-badge-lg ${SEV_CLS[r.severity] || ''}`}>{r.severity}</span>
           <span className={`ws-badge ${CONF_CLS[r.confidence] || ''}`}>{r.confidence}</span>
+          {r.traceability && (
+            <span className={`ws-badge ws-badge-sm ${TRACE_CLS[r.traceability] || ''}`}>
+              {TRACE_LABELS[r.traceability] || r.traceability.replace(/_/g, ' ')}
+            </span>
+          )}
         </div>
       </div>
+
       <UnresolvedBlock items={data.uncertainty.unresolved} />
       <MissingBlock    items={data.evidence_basis.missing} />
+
       <div className="ws-result-section">
         <div className="ws-result-label">Structural Scope</div>
         <div className="ws-scope-line">
@@ -136,6 +152,7 @@ function WhyResult({ data }) {
           ))}
         </div>
       </div>
+
       <div className="ws-result-section">
         <div className="ws-result-label">Classification Rationale</div>
         <div className="ws-rationale">
@@ -158,69 +175,110 @@ function WhyResult({ data }) {
 // TRACE result panel
 // ---------------------------------------------------------------------------
 
-const EVID_CLS = {
-  STRONG:   'ws-conf-strong',
-  MODERATE: 'ws-conf-partial',
-  PARTIAL:  'ws-conf-partial',
-  WEAK:     'ws-conf-weak',
-}
-
-const PATH_TYPE_CLS = {
-  FORWARD:  'ws-path-type-forward',
-  EVIDENCE: 'ws-path-type-evidence',
+function PathBlock({ p }) {
+  return (
+    <div className={`ws-path-block${p.inferred_declaration ? ' ws-path-block-inferred' : ''}`}>
+      <div className="ws-path-header">
+        <span className="ws-path-id">{p.path_id}</span>
+        <span className={`ws-badge ${EVID_CLS[p.evidence_support] || ''}`}>
+          {p.evidence_support}
+        </span>
+      </div>
+      <div className="ws-path-chain">
+        {p.node_chain.map((node, i) => (
+          <span key={i} className="ws-path-chain-row">
+            {i > 0 && <span className="ws-path-arrow">→</span>}
+            <span className="ws-path-node">{node}</span>
+          </span>
+        ))}
+      </div>
+      {p.inferred_declaration && (
+        <div className="ws-path-inferred">
+          <span className="ws-path-inferred-label">INFERRED</span>
+          {p.inferred_declaration}
+        </div>
+      )}
+    </div>
+  )
 }
 
 function TraceResult({ data }) {
-  const paths = data.trace || []
+  const paths        = data.trace || []
+  const forwardPaths = paths.filter(p => p.path_type === 'FORWARD')
+  const evidencePaths= paths.filter(p => p.path_type === 'EVIDENCE')
+
   return (
     <div className="ws-result-panel">
       <ProhibitionBadge />
       <UnresolvedBlock items={data.uncertainty.unresolved} />
-      <div className="ws-result-section">
-        <div className="ws-result-label">
-          Propagation Paths
-          <span className="ws-result-label-count">{paths.length}</span>
+
+      {paths.length === 0 ? (
+        <div className="ws-trace-empty">
+          <div className="ws-trace-empty-label">NOT TRACEABLE</div>
+          <div className="ws-trace-empty-detail">
+            {data.message || 'No propagation paths exist for this zone.'}
+          </div>
+          <div className="ws-trace-empty-note">
+            This zone falls outside the structural propagation model. No structural inference is available.
+          </div>
         </div>
-        {paths.length === 0 && (
-          <div className="ws-empty-note">{data.message || 'No traceable paths.'}</div>
-        )}
-        {paths.map(p => (
-          <div key={p.path_id} className="ws-path-block">
-            <div className="ws-path-header">
-              <span className="ws-path-id">{p.path_id}</span>
-              <span className={`ws-badge ${PATH_TYPE_CLS[p.path_type] || ''}`}>{p.path_type}</span>
-              <span className={`ws-badge ${EVID_CLS[p.evidence_support] || ''}`}>
-                {p.evidence_support}
-              </span>
-            </div>
-            <div className="ws-path-chain">
-              {p.node_chain.map((node, i) => (
-                <span key={i} className="ws-path-chain-row">
-                  {i > 0 && <span className="ws-path-arrow">→</span>}
-                  <span className="ws-path-node">{node}</span>
+      ) : (
+        <>
+          <div className="ws-trace-summary-row">
+            <span className="ws-trace-summary-stat">
+              {paths.length} path{paths.length !== 1 ? 's' : ''}
+            </span>
+            {forwardPaths.length > 0 && (
+              <>
+                <span className="ws-trace-summary-sep">·</span>
+                <span className="ws-trace-summary-type ws-trace-summary-forward">
+                  {forwardPaths.length} structural
                 </span>
-              ))}
-            </div>
-            {p.inferred_declaration && (
-              <div className="ws-path-inferred">{p.inferred_declaration}</div>
+              </>
+            )}
+            {evidencePaths.length > 0 && (
+              <>
+                <span className="ws-trace-summary-sep">·</span>
+                <span className="ws-trace-summary-type ws-trace-summary-evidence">
+                  {evidencePaths.length} evidence
+                </span>
+              </>
             )}
           </div>
-        ))}
-      </div>
+
+          {forwardPaths.length > 0 && (
+            <div className="ws-result-section">
+              <div className="ws-result-label ws-trace-group-forward">Structural Paths</div>
+              {forwardPaths.map(p => <PathBlock key={p.path_id} p={p} />)}
+            </div>
+          )}
+
+          {evidencePaths.length > 0 && (
+            <div className="ws-result-section">
+              <div className="ws-result-label ws-trace-group-evidence">Evidence Paths</div>
+              {evidencePaths.map(p => <PathBlock key={p.path_id} p={p} />)}
+            </div>
+          )}
+        </>
+      )}
+
       <MissingBlock items={data.evidence_basis.missing} />
     </div>
   )
 }
 
 // ---------------------------------------------------------------------------
-// Vault link section (EVIDENCE results only)
+// Vault links (EVIDENCE results only)
 // ---------------------------------------------------------------------------
 
 function VaultLinks({ targets, vaultIndex }) {
   if (!targets || targets.length === 0) return null
   return (
-    <div className="ws-result-section ws-vault-links">
-      <div className="ws-result-label">Evidence Vault</div>
+    <div className="ws-result-section ws-vault-section">
+      <div className="ws-result-label ws-vault-section-label">
+        Evidence Vault
+        <span className="ws-vault-section-hint">drill-through</span>
+      </div>
       <div className="ws-vault-target-list">
         {targets.map(t => {
           const url = resolveVaultLink(t.type, t.id, vaultIndex)
@@ -236,6 +294,7 @@ function VaultLinks({ targets, vaultIndex }) {
                 <span className="ws-vault-link-type">{t.type}</span>
                 <span className="ws-vault-link-id">{t.id}</span>
                 <span className="ws-vault-link-label">{t.label}</span>
+                <span className="ws-vault-link-arrow">↗</span>
               </a>
             )
           }
@@ -266,15 +325,19 @@ function EvidenceResult({ data, vaultIndex }) {
       <ProhibitionBadge />
       <UnresolvedBlock items={data.uncertainty.unresolved} />
       <MissingBlock    items={data.evidence_basis.missing} />
+
       <div className="ws-result-section">
         <div className="ws-result-label">Signal Coverage</div>
-        <div className="ws-badge-row">
-          <span className="ws-badge ws-badge-neutral">
-            {r.signals_total} signal{r.signals_total !== 1 ? 's' : ''} bound
-          </span>
-          <span className="ws-badge ws-badge-neutral">
-            {r.total_trace_links} trace link{r.total_trace_links !== 1 ? 's' : ''}
-          </span>
+        <div className="ws-ev-summary">
+          <div className="ws-ev-stat-block">
+            <span className="ws-ev-stat-num">{r.signals_total}</span>
+            <span className="ws-ev-stat-unit">signal{r.signals_total !== 1 ? 's' : ''} bound</span>
+          </div>
+          <div className="ws-ev-stat-sep" />
+          <div className="ws-ev-stat-block">
+            <span className="ws-ev-stat-num">{r.total_trace_links}</span>
+            <span className="ws-ev-stat-unit">trace link{r.total_trace_links !== 1 ? 's' : ''}</span>
+          </div>
         </div>
         {r.signal_coverage.length === 0 && (
           <div className="ws-empty-note">No signals bound to this zone&apos;s domain.</div>
@@ -286,8 +349,8 @@ function EvidenceResult({ data, vaultIndex }) {
               <span className={`ws-badge ${CONF_CLS[s.evidence_confidence] || ''}`}>
                 {s.evidence_confidence}
               </span>
-              <span className="ws-signal-title">{s.title}</span>
             </div>
+            <div className="ws-signal-title">{s.title}</div>
             {s.trace_links.length > 0 ? (
               <ul className="ws-trace-list">
                 {s.trace_links.map((l, i) => <li key={i} className="ws-trace-link">{l}</li>)}
@@ -298,6 +361,7 @@ function EvidenceResult({ data, vaultIndex }) {
           </div>
         ))}
       </div>
+
       <VaultLinks targets={data.vault_targets} vaultIndex={vaultIndex} />
     </div>
   )
@@ -324,80 +388,82 @@ function ZoneCard({ zone, vaultIndex }) {
   }
 
   const { cls: typeCls, label: typeLabel } = zoneTypeMeta(zone.zone_type)
+  const vaultUrl  = resolveVaultLink('domain', zone.domain_id, vaultIndex)
+  const activeMode  = (qs?.data && !qs.loading) ? qs.mode : null
+  const loadingMode = qs?.loading ? qs.mode : null
 
   return (
-    <div className="ws-zone-card">
-      <div className="ws-zone-header">
-        <div className="ws-zone-id">{zone.zone_id}</div>
-        <div className="ws-zone-domain">{zone.domain_name}</div>
-        <div className="ws-badge-row">
-          <span className={`ws-badge ${typeCls}`}>{typeLabel}</span>
-          <span className={`ws-badge ${SEV_CLS[zone.severity]  || ''}`}>{zone.severity}</span>
-          <span className={`ws-badge ${CONF_CLS[zone.confidence] || ''}`}>{zone.confidence}</span>
-          <span className={`ws-badge ${TRACE_CLS[zone.traceability] || ''} ws-badge-sm`}>
-            {zone.traceability.replace(/_/g, ' ')}
-          </span>
-          <span className="ws-badge ws-badge-neutral ws-badge-sm">
-            {zone.capability_count} cap{zone.capability_count !== 1 ? 's' : ''}
-          </span>
-          <span className="ws-badge ws-badge-neutral ws-badge-sm">
-            {zone.signal_count} sig{zone.signal_count !== 1 ? 's' : ''}
-          </span>
-        </div>
+    <div className={`ws-zone-card ${SEV_CARD_CLS[zone.severity] || ''}`}>
+
+      <div className="ws-zone-identity">
+        <span className="ws-zone-id">{zone.zone_id}</span>
+        <span className={`ws-badge ${typeCls}`}>{typeLabel}</span>
+      </div>
+
+      <div className="ws-zone-title">{zone.domain_name}</div>
+
+      <div className="ws-zone-condition">
+        <span className={`ws-badge ${SEV_CLS[zone.severity]  || ''}`}>{zone.severity}</span>
+        <span className={`ws-badge ${CONF_CLS[zone.confidence] || ''}`}>{zone.confidence}</span>
+        <span className={`ws-badge ${TRACE_CLS[zone.traceability] || ''} ws-badge-sm`}>
+          {TRACE_LABELS[zone.traceability] || zone.traceability.replace(/_/g, ' ')}
+        </span>
+        <span className="ws-zone-stat">{zone.capability_count} cap{zone.capability_count !== 1 ? 's' : ''}</span>
+        <span className="ws-zone-stat">{zone.signal_count} sig{zone.signal_count !== 1 ? 's' : ''}</span>
       </div>
 
       <div className="ws-zone-vault-row">
-        {resolveVaultLink('domain', zone.domain_id, vaultIndex)
-          ? (
-            <a
-              href={resolveVaultLink('domain', zone.domain_id, vaultIndex)}
-              target="_blank"
-              rel="noreferrer"
-              className="ws-vault-zone-link"
-            >
-              Open Vault (Zone Scope) ↗
-            </a>
-          ) : (
-            <span className="ws-vault-zone-link ws-vault-not-exported">
-              Vault not exported
-            </span>
-          )
-        }
+        {vaultUrl ? (
+          <a
+            href={vaultUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="ws-vault-zone-link"
+          >
+            Evidence Vault ↗
+          </a>
+        ) : (
+          <span className="ws-vault-zone-link ws-vault-not-exported">Vault not exported</span>
+        )}
       </div>
 
       <div className="ws-zone-actions">
         <button
-          className="ws-btn ws-btn-why"
+          className={`ws-btn ws-btn-why${activeMode === 'WHY' ? ' ws-btn-active-why' : ''}`}
           onClick={() => fireQuery('WHY')}
-          disabled={qs?.loading}
+          disabled={!!loadingMode}
           title="Zone type, severity, confidence, and classification rationale"
         >
-          WHY
+          {loadingMode === 'WHY' ? 'WHY…' : 'WHY'}
         </button>
         <button
-          className="ws-btn ws-btn-evidence"
+          className={`ws-btn ws-btn-evidence${activeMode === 'EVIDENCE' ? ' ws-btn-active-evidence' : ''}`}
           onClick={() => fireQuery('EVIDENCE')}
-          disabled={qs?.loading}
+          disabled={!!loadingMode}
           title="Signal coverage, trace links, and evidence gaps for this zone"
         >
-          EVIDENCE
+          {loadingMode === 'EVIDENCE' ? 'EVIDENCE…' : 'EVIDENCE'}
         </button>
+        <span className="ws-btn-sep" aria-hidden="true" />
         <button
-          className="ws-btn ws-btn-trace"
+          className={`ws-btn ws-btn-trace${activeMode === 'TRACE' ? ' ws-btn-active-trace' : ''}`}
           onClick={() => fireQuery('TRACE')}
-          disabled={qs?.loading}
+          disabled={!!loadingMode}
           title="Structural propagation paths from canonical topology and signal binding"
         >
-          TRACE
+          {loadingMode === 'TRACE' ? 'TRACE…' : 'TRACE'}
         </button>
-        {qs?.data && (
-          <button className="ws-btn ws-btn-clear" onClick={() => setQs(null)}>✕ clear</button>
+        {qs?.data && !loadingMode && (
+          <button
+            className="ws-btn ws-btn-clear"
+            onClick={() => setQs(null)}
+            title="Clear result"
+          >
+            ✕
+          </button>
         )}
       </div>
 
-      {qs?.loading && (
-        <div className="ws-query-loading">Querying {qs.mode}…</div>
-      )}
       {qs?.error && (
         <div className="ws-query-error">{qs.error}</div>
       )}
@@ -466,7 +532,10 @@ export default function Tier2WorkspacePage() {
             </div>
             <div className="ws-ctx-field">
               <span className="ws-ctx-label">Score</span>
-              <span className="ws-ctx-value">{zonesData.context.score} — {zonesData.context.band}</span>
+              <span className="ws-ctx-value ws-ctx-score">
+                {zonesData.context.score}
+                <span className="ws-ctx-band">{zonesData.context.band}</span>
+              </span>
             </div>
             <div className="ws-ctx-field">
               <span className="ws-ctx-label">Confidence</span>
