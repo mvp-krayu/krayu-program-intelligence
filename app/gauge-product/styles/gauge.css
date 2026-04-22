@@ -2286,6 +2286,20 @@ details.op-details[open] summary::before { content:"▼  "; }
 .ws-unresolved-reason,.ws-missing-impact { font-size:11px; color:#888; line-height:1.6; }
 .ws-missing-impact { color:#d4912a; }
 
+/* Vault linkage */
+.ws-vault-links { margin-top:4px; }
+.ws-vault-target-list { display:flex; flex-direction:column; gap:4px; }
+.ws-vault-link { display:flex; align-items:center; gap:10px; padding:7px 10px; background:#0e0e12; border:1px solid #2a2a2e; border-radius:2px; text-decoration:none; }
+.ws-vault-link:hover { border-color:#4a7a9b; }
+.ws-vault-link-type { font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#555; width:46px; flex-shrink:0; }
+.ws-vault-link-id { font-size:10px; font-family:monospace; width:56px; flex-shrink:0; }
+.ws-vault-link-label { font-size:11px; color:#888; }
+.ws-vault-link-artifact .ws-vault-link-id { color:#c89b3c; }
+.ws-vault-link-signal .ws-vault-link-id { color:#4a8a5a; }
+.ws-zone-vault-row { margin-bottom:10px; }
+.ws-vault-zone-link { font-size:10px; font-family:monospace; color:#4a7a9b; text-decoration:none; letter-spacing:.04em; }
+.ws-vault-zone-link:hover { color:#6aabcf; }
+
 /* Workspace entry button in lens.js ReportPanel */
 .lens-report-workspace { font-family:monospace; font-size:11px; padding:6px 14px; cursor:pointer; border:1px solid #1a2e26; background:#0a120e; color:#4a8a6a; letter-spacing:.04em; text-align:left; width:fit-content; border-radius:2px; }
 .lens-report-workspace:hover { border-color:#4a8a6a; color:#6abf9a; }

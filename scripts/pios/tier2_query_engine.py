@@ -103,6 +103,25 @@ _MISSING_NO_SIGNALS: List[Dict] = [
 # Response envelope builders
 # ---------------------------------------------------------------------------
 
+def _build_vault_targets(zone: Dict) -> List[Dict]:
+    """Deterministic vault node references for EVIDENCE responses.
+
+    Always includes the two source artifact nodes; adds one entry per
+    bound signal so the workspace can link directly to vault signal nodes.
+    """
+    targets: List[Dict] = [
+        {"type": "artifact", "id": "ART-04", "label": "canonical_topology.json"},
+        {"type": "artifact", "id": "ART-05", "label": "signal_registry.json"},
+    ]
+    for s in zone["domain_sigs"]:
+        targets.append({
+            "type":  "signal",
+            "id":    s["signal_id"],
+            "label": s.get("title", s["signal_id"]),
+        })
+    return targets
+
+
 def _build_available(zone: Dict) -> List[Dict]:
     result = []
     for s in zone["domain_sigs"]:
@@ -138,7 +157,7 @@ def build_response(zone_id: str, mode: str, result: Dict, zone: Dict) -> Dict:
             f"build_response: unresolved is empty for {zone_id} — "
             "invariant violation: WEAKLY GROUNDED zones must have non-empty unresolved list"
         )
-    return {
+    response: Dict = {
         "status":               "ok",
         "zone_id":              zone_id,
         "mode":                 mode,
@@ -153,6 +172,9 @@ def build_response(zone_id: str, mode: str, result: Dict, zone: Dict) -> Dict:
             "unresolved": unresolved,
         },
     }
+    if mode == "EVIDENCE":
+        response["vault_targets"] = _build_vault_targets(zone)
+    return response
 
 # ---------------------------------------------------------------------------
 # WHY handler

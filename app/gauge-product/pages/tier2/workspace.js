@@ -130,6 +130,34 @@ function WhyResult({ data }) {
 }
 
 // ---------------------------------------------------------------------------
+// Vault link section (EVIDENCE results only)
+// ---------------------------------------------------------------------------
+
+function VaultLinks({ targets }) {
+  if (!targets || targets.length === 0) return null
+  return (
+    <div className="ws-result-section ws-vault-links">
+      <div className="ws-result-label">Evidence Vault</div>
+      <div className="ws-vault-target-list">
+        {targets.map(t => (
+          <a
+            key={`${t.type}-${t.id}`}
+            href={`/vault?type=${t.type}&id=${encodeURIComponent(t.id)}`}
+            target="_blank"
+            rel="noreferrer"
+            className={`ws-vault-link ws-vault-link-${t.type}`}
+          >
+            <span className="ws-vault-link-type">{t.type}</span>
+            <span className="ws-vault-link-id">{t.id}</span>
+            <span className="ws-vault-link-label">{t.label}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // EVIDENCE result panel
 // ---------------------------------------------------------------------------
 
@@ -172,6 +200,7 @@ function EvidenceResult({ data }) {
           </div>
         ))}
       </div>
+      <VaultLinks targets={data.vault_targets} />
     </div>
   )
 }
@@ -217,6 +246,17 @@ function ZoneCard({ zone }) {
             {zone.signal_count} sig{zone.signal_count !== 1 ? 's' : ''}
           </span>
         </div>
+      </div>
+
+      <div className="ws-zone-vault-row">
+        <a
+          href={`/vault?type=domain&id=${encodeURIComponent(zone.domain_id)}`}
+          target="_blank"
+          rel="noreferrer"
+          className="ws-vault-zone-link"
+        >
+          Open Vault (Zone Scope) ↗
+        </a>
       </div>
 
       <div className="ws-zone-actions">
