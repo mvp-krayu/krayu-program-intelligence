@@ -19,6 +19,31 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
 // ---------------------------------------------------------------------------
+// Vault index resolution
+// ---------------------------------------------------------------------------
+
+const VAULT_INDEX_URL = '/vault/blueedge/run_01_authoritative_generated/vault_index.json'
+
+function resolveVaultLink(type, id, vi) {
+  if (!vi || vi.export_status !== 'EXPORTED') return null
+  let path = null
+  if (type === 'artifact') {
+    path = vi.artifacts?.[id]
+  } else if (type === 'signal') {
+    const claimId = vi.signals?.[id]
+    if (claimId) path = vi.claims?.[claimId]
+  } else if (type === 'claim') {
+    path = vi.claims?.[id]
+  } else if (type === 'domain' || type === 'zone') {
+    path = vi.domain_routing?.fallback
+  } else if (type === 'entity') {
+    path = vi.entities?.[id]
+  }
+  if (!path) return null
+  return `${vi.base_url}/${path}`
+}
+
+// ---------------------------------------------------------------------------
 // Badge helpers
 // ---------------------------------------------------------------------------
 
@@ -191,25 +216,40 @@ function TraceResult({ data }) {
 // Vault link section (EVIDENCE results only)
 // ---------------------------------------------------------------------------
 
-function VaultLinks({ targets }) {
+function VaultLinks({ targets, vaultIndex }) {
   if (!targets || targets.length === 0) return null
   return (
     <div className="ws-result-section ws-vault-links">
       <div className="ws-result-label">Evidence Vault</div>
       <div className="ws-vault-target-list">
-        {targets.map(t => (
-          <a
-            key={`${t.type}-${t.id}`}
-            href={`/vault?type=${t.type}&id=${encodeURIComponent(t.id)}`}
-            target="_blank"
-            rel="noreferrer"
-            className={`ws-vault-link ws-vault-link-${t.type}`}
-          >
-            <span className="ws-vault-link-type">{t.type}</span>
-            <span className="ws-vault-link-id">{t.id}</span>
-            <span className="ws-vault-link-label">{t.label}</span>
-          </a>
-        ))}
+        {targets.map(t => {
+          const url = resolveVaultLink(t.type, t.id, vaultIndex)
+          if (url) {
+            return (
+              <a
+                key={`${t.type}-${t.id}`}
+                href={url}
+                target="_blank"
+                rel="noreferrer"
+                className={`ws-vault-link ws-vault-link-${t.type}`}
+              >
+                <span className="ws-vault-link-type">{t.type}</span>
+                <span className="ws-vault-link-id">{t.id}</span>
+                <span className="ws-vault-link-label">{t.label}</span>
+              </a>
+            )
+          }
+          return (
+            <div
+              key={`${t.type}-${t.id}`}
+              className={`ws-vault-link ws-vault-link-${t.type} ws-vault-link-unresolved`}
+            >
+              <span className="ws-vault-link-type">{t.type}</span>
+              <span className="ws-vault-link-id">{t.id}</span>
+              <span className="ws-vault-link-label ws-vault-not-exported">NOT EXPORTED</span>
+            </div>
+          )
+        })}
       </div>
     </div>
   )
@@ -219,7 +259,7 @@ function VaultLinks({ targets }) {
 // EVIDENCE result panel
 // ---------------------------------------------------------------------------
 
-function EvidenceResult({ data }) {
+function EvidenceResult({ data, vaultIndex }) {
   const r = data.result
   return (
     <div className="ws-result-panel">
@@ -258,7 +298,7 @@ function EvidenceResult({ data }) {
           </div>
         ))}
       </div>
-      <VaultLinks targets={data.vault_targets} />
+      <VaultLinks targets={data.vault_targets} vaultIndex={vaultIndex} />
     </div>
   )
 }
@@ -267,7 +307,7 @@ function EvidenceResult({ data }) {
 // Zone card
 // ---------------------------------------------------------------------------
 
-function ZoneCard({ zone }) {
+function ZoneCard({ zone, vaultIndex }) {
   const [qs, setQs] = useState(null) // null | {loading,mode} | {mode,data} | {mode,error}
 
   async function fireQuery(mode) {
@@ -307,14 +347,22 @@ function ZoneCard({ zone }) {
       </div>
 
       <div className="ws-zone-vault-row">
-        <a
-          href={`/vault?type=domain&id=${encodeURIComponent(zone.domain_id)}`}
-          target="_blank"
-          rel="noreferrer"
-          className="ws-vault-zone-link"
-        >
-          Open Vault (Zone Scope) ↗
-        </a>
+        {resolveVaultLink('domain', zone.domain_id, vaultIndex)
+          ? (
+            <a
+              href={resolveVaultLink('domain', zone.domain_id, vaultIndex)}
+              target="_blank"
+              rel="noreferrer"
+              className="ws-vault-zone-link"
+            >
+              Open Vault (Zone Scope) ↗
+            </a>
+          ) : (
+            <span className="ws-vault-zone-link ws-vault-not-exported">
+              Vault not exported
+            </span>
+          )
+        }
       </div>
 
       <div className="ws-zone-actions">
@@ -354,7 +402,7 @@ function ZoneCard({ zone }) {
         <div className="ws-query-error">{qs.error}</div>
       )}
       {qs?.data && qs.mode === 'WHY'      && <WhyResult      data={qs.data} />}
-      {qs?.data && qs.mode === 'EVIDENCE' && <EvidenceResult data={qs.data} />}
+      {qs?.data && qs.mode === 'EVIDENCE' && <EvidenceResult data={qs.data} vaultIndex={vaultIndex} />}
       {qs?.data && qs.mode === 'TRACE'    && <TraceResult    data={qs.data} />}
     </div>
   )
@@ -367,6 +415,7 @@ function ZoneCard({ zone }) {
 export default function Tier2WorkspacePage() {
   const [pageState, setPageState] = useState('loading')
   const [zonesData, setZonesData] = useState(null)
+  const [vaultIndex, setVaultIndex] = useState(null)
 
   useEffect(() => {
     fetch('/api/zones')
@@ -380,6 +429,13 @@ export default function Tier2WorkspacePage() {
         }
       })
       .catch(() => setPageState('error'))
+  }, [])
+
+  useEffect(() => {
+    fetch(VAULT_INDEX_URL)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if (data?.export_status === 'EXPORTED') setVaultIndex(data) })
+      .catch(() => {})
   }, [])
 
   return (
@@ -431,7 +487,7 @@ export default function Tier2WorkspacePage() {
 
           <div className="ws-zone-list">
             {zonesData.zones.map(zone => (
-              <ZoneCard key={zone.zone_id} zone={zone} />
+              <ZoneCard key={zone.zone_id} zone={zone} vaultIndex={vaultIndex} />
             ))}
           </div>
         </>

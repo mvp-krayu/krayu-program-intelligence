@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Concept Resolution — Evidence Vault</title>
+<style>:root{--bg:#0a0a0a;--bg1:#111;--bg2:#1a1a1a;--border:#222;--text:#e0e0e0;--muted:#888;--dim:#666;--accent:#60a5fa;--strong:#fff}*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:"Courier New",monospace;font-size:13px;line-height:1.65;padding:2rem}.w{max-width:900px;margin:0 auto}.nav{margin-bottom:1.5rem;font-size:.8rem}.nav a{color:var(--muted);text-decoration:none}.nav a:hover{color:var(--accent)}.meta{background:var(--bg1);border:1px solid var(--border);padding:.75rem 1rem;margin-bottom:1.5rem;font-size:.8rem}.mrow{display:flex;gap:.75rem;margin-bottom:.2rem}.mk{color:var(--muted);min-width:140px;flex-shrink:0}.mv{color:var(--text)}.content h1{color:var(--strong);font-size:1rem;margin:1rem 0 .5rem}.content h2{color:var(--text);font-size:.9rem;border-bottom:1px solid var(--border);padding-bottom:.2rem;margin:1.25rem 0 .5rem}.content h3{color:var(--muted);font-size:.85rem;margin:1rem 0 .4rem}.content p{margin:.5rem 0}.content a{color:var(--accent);text-decoration:none}.content a:hover{text-decoration:underline}.content code{background:var(--bg2);padding:.1rem .3rem;font-size:.85em}.content pre{background:var(--bg1);border:1px solid var(--border);padding:.75rem;overflow-x:auto;margin:.75rem 0}.content pre code{background:none;padding:0}.content table{border-collapse:collapse;width:100%;margin:.75rem 0;font-size:.85rem}.content th,.content td{border:1px solid var(--border);padding:.35rem .6rem;text-align:left}.content th{background:var(--bg2);color:var(--muted)}.content ul{padding-left:1.25rem;margin:.5rem 0}.content li{margin-bottom:.2rem}.content strong{color:var(--strong)}.footer{margin-top:2rem;padding-top:.75rem;border-top:1px solid var(--border);font-size:.75rem;color:var(--dim)}.footer .lbl{color:#ef4444}</style>
+</head>
+<body>
+<div class="w">
+<div class="nav"><a href="../index.html">← Evidence Vault</a></div>
+<div class="meta"><div class="mrow"><span class="mk">node_class</span><span class="mv">transformation</span></div><div class="mrow"><span class="mk">transformation_id</span><span class="mv">TRN-06</span></div><div class="mrow"><span class="mk">transformation_name</span><span class="mv">Concept Resolution</span></div><div class="mrow"><span class="mk">stage</span><span class="mv">S4</span></div><div class="mrow"><span class="mk">command</span><span class="mv">GAUGE resolver.js</span></div></div>
+<div class="content"><h2>Purpose</h2>
+<p>Evaluates business concept predicates against live assessment data to produce executive narrative phrase outputs.</p>
+
+<h2>Inputs</h2>
+<ul>
+<li><a href="../artifacts/ART-01.html">ART-01 gauge_state.json</a> — score, dimensions, execution state</li>
+<li><a href="../artifacts/ART-04.html">ART-04 canonical_topology.json</a> — topology data</li>
+<li>concepts.json — 19 active concept predicate definitions</li>
+<li>phrases.json — phrase templates</li>
+</ul>
+
+<h2>Outputs</h2>
+<ul>
+<li>Resolved phrases for all active concepts</li>
+<li>Three-axis executive verdict (STRUCTURE / COMPLEXITY / EXECUTION)</li>
+</ul>
+
+<h2>Known Gap</h2>
+<p>CONCEPT-06 predicate uses <code>PHASE_1_ACTIVE</code> and will not match <code>NOT_EVALUATED</code> on Stream 10 schema. EXECUTION verdict may render as VERIFIED rather than UNKNOWN for the recomputed run. See Known Gaps.</p>
+
+<h2>Claims Produced</h2>
+<p><a href="../claims/CLM-25.html">CLM-25 Executive Three-Axis Verdict</a> <a href="../claims/CLM-26.html">CLM-26 Executive Narrative Phrase Set</a></p></div>
+<div class="footer"><span class="lbl">inference_prohibition</span> ACTIVE &mdash; Evidence Vault V3 &mdash; READ-ONLY projection</div>
+</div>
+</body>
+</html>

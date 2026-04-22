@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Executive Three-Axis Verdict — Evidence Vault</title>
+<style>:root{--bg:#0a0a0a;--bg1:#111;--bg2:#1a1a1a;--border:#222;--text:#e0e0e0;--muted:#888;--dim:#666;--accent:#60a5fa;--strong:#fff}*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:"Courier New",monospace;font-size:13px;line-height:1.65;padding:2rem}.w{max-width:900px;margin:0 auto}.nav{margin-bottom:1.5rem;font-size:.8rem}.nav a{color:var(--muted);text-decoration:none}.nav a:hover{color:var(--accent)}.meta{background:var(--bg1);border:1px solid var(--border);padding:.75rem 1rem;margin-bottom:1.5rem;font-size:.8rem}.mrow{display:flex;gap:.75rem;margin-bottom:.2rem}.mk{color:var(--muted);min-width:140px;flex-shrink:0}.mv{color:var(--text)}.content h1{color:var(--strong);font-size:1rem;margin:1rem 0 .5rem}.content h2{color:var(--text);font-size:.9rem;border-bottom:1px solid var(--border);padding-bottom:.2rem;margin:1.25rem 0 .5rem}.content h3{color:var(--muted);font-size:.85rem;margin:1rem 0 .4rem}.content p{margin:.5rem 0}.content a{color:var(--accent);text-decoration:none}.content a:hover{text-decoration:underline}.content code{background:var(--bg2);padding:.1rem .3rem;font-size:.85em}.content pre{background:var(--bg1);border:1px solid var(--border);padding:.75rem;overflow-x:auto;margin:.75rem 0}.content pre code{background:none;padding:0}.content table{border-collapse:collapse;width:100%;margin:.75rem 0;font-size:.85rem}.content th,.content td{border:1px solid var(--border);padding:.35rem .6rem;text-align:left}.content th{background:var(--bg2);color:var(--muted)}.content ul{padding-left:1.25rem;margin:.5rem 0}.content li{margin-bottom:.2rem}.content strong{color:var(--strong)}.footer{margin-top:2rem;padding-top:.75rem;border-top:1px solid var(--border);font-size:.75rem;color:var(--dim)}.footer .lbl{color:#ef4444}</style>
+</head>
+<body>
+<div class="w">
+<div class="nav"><a href="../index.html">← Evidence Vault</a></div>
+<div class="meta"><div class="mrow"><span class="mk">node_class</span><span class="mv">claim</span></div><div class="mrow"><span class="mk">claim_id</span><span class="mv">CLM-25</span></div><div class="mrow"><span class="mk">claim_label</span><span class="mv">Executive Three-Axis Verdict</span></div><div class="mrow"><span class="mk">claim_type</span><span class="mv">verdict</span></div><div class="mrow"><span class="mk">exposure</span><span class="mv">ZONE-2</span></div><div class="mrow"><span class="mk">lens_admissible</span><span class="mv">YES</span></div></div>
+<div class="content"><h2>Explanation</h2>
+
+<p>The executive verdicts are Boolean aggregations of resolved concept predicates. STRUCTURE=STRONG because coverage=100% and reconstruction=PASS. COMPLEXITY=LOW because canonical cross-domain overlaps=0. EXECUTION=UNKNOWN because execution_status=NOT_EVALUATED.</p>
+
+<p><strong>Known risk:</strong> CONCEPT-06 predicate uses <code>PHASE_1_ACTIVE</code> and will not correctly match <code>NOT_EVALUATED</code> on Stream 10 schema. EXECUTION verdict may not correctly show UNKNOWN on the recomputed run. This is a production risk documented in Known Gaps.</p>
+
+<h2>Authoritative Value</h2>
+
+<p>STRUCTURE=STRONG, COMPLEXITY=LOW, EXECUTION=UNKNOWN</p>
+
+<h2>Source Fields</h2>
+
+<ul>
+<li>STRUCTURE: <code>gauge_state.json</code> → DIM-01.coverage_percent, DIM-02.state</li>
+<li>COMPLEXITY: <code>canonical_topology.json</code> → cross-domain overlap count</li>
+<li>EXECUTION: <code>gauge_state.json</code> → state.execution_status</li>
+</ul>
+
+<h2>Upstream Artifacts</h2>
+
+<ul>
+<li><a href="../artifacts/ART-01.html">ART-01 gauge_state.json</a></li>
+<li><a href="../claims/CLM-03.html">CLM-03 Structural Reconstruction Pass-Fail</a></li>
+<li><a href="../claims/CLM-09.html">CLM-09 Proven Structural Score</a></li>
+<li><a href="../claims/CLM-13.html">CLM-13 Execution Layer Status</a></li>
+</ul>
+
+<h2>Transformation Chain</h2>
+
+<ul>
+<li>Concept predicates → resolver.js evaluation → three-axis verdict</li>
+</ul>
+
+<h2>Exposure</h2>
+
+<ul>
+<li>ZONE: ZONE-2</li>
+<li>LENS admissible: YES — primary LENS surface claim</li>
+<li>Reason: Highest-impact client-facing summary</li>
+</ul>
+
+<h2>Traceability</h2>
+
+<ul>
+<li>Status: FULL</li>
+<li>Caveats: CONCEPT-06 predicate mismatch — see Known Gaps</li>
+</ul>
+
+<h2>Why It Matters</h2>
+
+<p>The three-axis verdict is the highest-level summary of the assessment state. STRUCTURE=STRONG means the platform&#x27;s structural evidence is complete, coherent, and verified — this backs the 60-point floor. COMPLEXITY=LOW means no structural overlaps or orphaned components were found, reducing integration risk. EXECUTION=UNKNOWN is the pending dimension: it does not mean the platform is problematic; it means the assessment is incomplete until runtime evaluation runs.</p>
+
+<h2>Surfaces</h2>
+
+<ul>
+<li>ExecutiveDecisionBlock in overview.js</li>
+<li>Known gap: CONCEPT-06 predicate mismatch on record</li>
+</ul></div>
+<div class="footer"><span class="lbl">inference_prohibition</span> ACTIVE &mdash; Evidence Vault V3 &mdash; READ-ONLY projection</div>
+</div>
+</body>
+</html>

@@ -2311,6 +2311,9 @@ details.op-details[open] summary::before { content:"▼  "; }
 .ws-vault-link-label { font-size:11px; color:#888; }
 .ws-vault-link-artifact .ws-vault-link-id { color:#c89b3c; }
 .ws-vault-link-signal .ws-vault-link-id { color:#4a8a5a; }
+.ws-vault-link-unresolved { cursor:default; opacity:.5; }
+.ws-vault-link-unresolved:hover { border-color:#2a2a2e; }
+.ws-vault-not-exported { font-size:10px; color:#666; font-style:italic; }
 .ws-zone-vault-row { margin-bottom:10px; }
 .ws-vault-zone-link { font-size:10px; font-family:monospace; color:#4a7a9b; text-decoration:none; letter-spacing:.04em; }
 .ws-vault-zone-link:hover { color:#6aabcf; }

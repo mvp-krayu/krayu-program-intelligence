@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Escalation Clearance — Evidence Vault</title>
+<style>:root{--bg:#0a0a0a;--bg1:#111;--bg2:#1a1a1a;--border:#222;--text:#e0e0e0;--muted:#888;--dim:#666;--accent:#60a5fa;--strong:#fff}*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:"Courier New",monospace;font-size:13px;line-height:1.65;padding:2rem}.w{max-width:900px;margin:0 auto}.nav{margin-bottom:1.5rem;font-size:.8rem}.nav a{color:var(--muted);text-decoration:none}.nav a:hover{color:var(--accent)}.meta{background:var(--bg1);border:1px solid var(--border);padding:.75rem 1rem;margin-bottom:1.5rem;font-size:.8rem}.mrow{display:flex;gap:.75rem;margin-bottom:.2rem}.mk{color:var(--muted);min-width:140px;flex-shrink:0}.mv{color:var(--text)}.content h1{color:var(--strong);font-size:1rem;margin:1rem 0 .5rem}.content h2{color:var(--text);font-size:.9rem;border-bottom:1px solid var(--border);padding-bottom:.2rem;margin:1.25rem 0 .5rem}.content h3{color:var(--muted);font-size:.85rem;margin:1rem 0 .4rem}.content p{margin:.5rem 0}.content a{color:var(--accent);text-decoration:none}.content a:hover{text-decoration:underline}.content code{background:var(--bg2);padding:.1rem .3rem;font-size:.85em}.content pre{background:var(--bg1);border:1px solid var(--border);padding:.75rem;overflow-x:auto;margin:.75rem 0}.content pre code{background:none;padding:0}.content table{border-collapse:collapse;width:100%;margin:.75rem 0;font-size:.85rem}.content th,.content td{border:1px solid var(--border);padding:.35rem .6rem;text-align:left}.content th{background:var(--bg2);color:var(--muted)}.content ul{padding-left:1.25rem;margin:.5rem 0}.content li{margin-bottom:.2rem}.content strong{color:var(--strong)}.footer{margin-top:2rem;padding-top:.75rem;border-top:1px solid var(--border);font-size:.75rem;color:var(--dim)}.footer .lbl{color:#ef4444}</style>
+</head>
+<body>
+<div class="w">
+<div class="nav"><a href="../index.html">← Evidence Vault</a></div>
+<div class="meta"><div class="mrow"><span class="mk">node_class</span><span class="mv">claim</span></div><div class="mrow"><span class="mk">claim_id</span><span class="mv">CLM-05</span></div><div class="mrow"><span class="mk">claim_label</span><span class="mv">Escalation Clearance</span></div><div class="mrow"><span class="mk">claim_type</span><span class="mv">verdict</span></div><div class="mrow"><span class="mk">exposure</span><span class="mv">ZONE-2</span></div><div class="mrow"><span class="mk">lens_admissible</span><span class="mv">YES</span></div></div>
+<div class="content"><h2>Explanation</h2>
+
+<p>Escalation clearance is CLEAR. This is an S-13 invariant: the S-13 terminal state is unreachable if there are open escalations. Because the run reached S-13, escalation clearance is guaranteed at 100. This is a derived claim — there is no direct measurement of escalations; it is logically entailed by the terminal state.</p>
+
+<h2>Authoritative Value</h2>
+
+<p>CLEAR</p>
+
+<h2>Source Fields</h2>
+
+<ul>
+<li><code>gauge_state.json</code> → <code>dimensions.DIM-03.state_label</code></li>
+</ul>
+
+<h2>Upstream Artifacts</h2>
+
+<ul>
+<li><a href="../artifacts/ART-01.html">ART-01 gauge_state.json</a></li>
+</ul>
+
+<h2>Transformation Chain</h2>
+
+<ul>
+<li>S-13 terminal state invariant (S4)</li>
+</ul>
+
+<h2>Exposure</h2>
+
+<ul>
+<li>ZONE: ZONE-2</li>
+<li>LENS admissible: YES — &quot;no blocking conditions found&quot;</li>
+<li>Reason: Derivation rule (S-13 invariant) is ZONE-1 only</li>
+</ul>
+
+<h2>Traceability</h2>
+
+<ul>
+<li>Status: FULL</li>
+<li>Caveats: Derived claim — not directly measured; entailed by S-13 terminal state</li>
+</ul>
+
+<h2>Surfaces</h2>
+
+<ul>
+<li>RuntimeIntelligence panel</li>
+</ul></div>
+<div class="footer"><span class="lbl">inference_prohibition</span> ACTIVE &mdash; Evidence Vault V3 &mdash; READ-ONLY projection</div>
+</div>
+</body>
+</html>
