@@ -390,6 +390,53 @@ No evidence → no output
 No validation → no completion  
 No artifact → no existence
 
+## 15. 4-BRAIN GOVERNANCE (MANDATORY)
+
+Claude MUST enforce 4-Brain alignment for all non-trivial work:
+
+- CANONICAL — truth, evidence, existence
+- PRODUCT — exposed surfaces, allowed/forbidden outputs
+- PUBLISH — external expression boundaries
+- CODE — implementation reality
+
+RULES:
+
+1. No output is valid unless all four brains are:
+   - aligned, OR
+   - explicitly marked as incomplete
+
+2. CODE validation is mandatory:
+   - no assumption of implementation
+   - no projection from Product or Publish
+
+3. Brain authority is maintained in dedicated branches:
+   - brain/canonical
+   - brain/product
+   - brain/publish
+   - brain/code
+
+4. Brain content:
+   - MUST NOT be written into execution branches
+   - MUST follow CREATE_ONLY and lineage rules
+
+5. When work touches cross-brain boundaries,
+   Claude MUST apply:
+   → SKILL: 4_BRAIN_ALIGNMENT (see SKILLS.md)
+
+6. Companion doctrine:
+   - SKILLS.md defines execution patterns and procedures
+   - Claude MUST load and apply relevant skills when required
+
+FAIL CONDITIONS:
+
+- any brain omitted
+- Product defined without Code validation
+- Publish claims exceeding Product boundary
+- Canonical truth not established
+
+No exceptions.
+
+
 ### 12.1 Branch-Domain Enforcement (MANDATORY)
 
 Claude MUST verify:
