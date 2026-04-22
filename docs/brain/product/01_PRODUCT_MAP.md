@@ -10,7 +10,7 @@ brain: product
 | Tier | Name | Canonical Basis | Code Basis | Access Model |
 |---|---|---|---|---|
 | Tier 1 | LENS Assessment | [[../canonical/streams/PRODUCTIZE.LENS]] | [[../code/runtime_surface]] | Included |
-| Tier 2 | Diagnostic Access | [[../canonical/streams/PRODUCTIZE.EXECUTABLE.RUNTIME.SURFACE.01]] | [[../code/runtime_surface]] | Entitlement Required |
+| Tier 2 | Diagnostic Access | [[../canonical/streams/PRODUCTIZE.DIAGNOSTIC.ACCESS.01]] | PRODUCT-NOT-IMPLEMENTED | Entitlement Required |
 | Tier 3 | Enterprise Access | PiOS Core (L2–L4) | Not yet surfaced | Governed Contract |
 
 ---
@@ -28,3 +28,4 @@ brain: product
 - [[lens_product]] — LENS Assessment (Tier 1)
 - [[lens_report]] — Report artifact (Tier 1 deliverable)
 - [[engagement_model]] — Delivery model across tiers
+- [[diagnostic_access_product]] — Diagnostic Access (Tier 2)
