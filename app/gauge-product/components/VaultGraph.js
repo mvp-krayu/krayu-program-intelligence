@@ -52,17 +52,28 @@ const MUTED = {
 
 // ── Link appearance ───────────────────────────────────────────────────────────
 //
-// Relevant link (at least one endpoint relevant): semantic bright colour.
-// Non-relevant link: near-invisible — preserves structural silhouette only.
+// LINK_COLOR_BASE:   resting state for relevant links — visible, readable at rest.
+// LINK_COLOR_BRIGHT: hover enhancement — same hues, fully saturated.
+// LINK_COLOR_DIM:    non-relevant links — near-background, structural ghost only.
+//
+// BASE is always used for relevant links at rest. BRIGHT is reserved for hover.
+// DIM is NEVER used for relevant links.
 
-const LINK_COLOR_BRIGHT = {
-  ZONE_SIGNAL:   'rgba(80,  215, 130, 0.85)',
-  SIGNAL_CLAIM:  'rgba(100, 165, 255, 0.80)',
-  ZONE_ARTIFACT: 'rgba(225, 185,  70, 0.85)',
-  ZONE_CAP:      'rgba(170, 155, 220, 0.65)',
-  TRACE:         'rgba(190, 120, 255, 0.88)',
+const LINK_COLOR_BASE = {
+  ZONE_SIGNAL:   '#3cac64',
+  SIGNAL_CLAIM:  '#4b82d2',
+  ZONE_ARTIFACT: '#b29237',
+  ZONE_CAP:      '#8478b2',
+  TRACE:         '#965fd0',
 }
-const LINK_COLOR_DIM = 'rgba(22, 22, 26, 0.55)'
+const LINK_COLOR_BRIGHT = {
+  ZONE_SIGNAL:   '#52d97e',
+  SIGNAL_CLAIM:  '#64a5ff',
+  ZONE_ARTIFACT: '#e1b946',
+  ZONE_CAP:      '#aa9bdc',
+  TRACE:         '#be78ff',
+}
+const LINK_COLOR_DIM = '#161618'
 
 const LINK_WIDTH_BASE = {
   ZONE_SIGNAL:   2.0,
@@ -253,15 +264,23 @@ function buildGraph(zone, vi, qs, isOverview) {
     }
   }
 
-  return { nodes, links }
+  return { nodes, links, relevantIds }
 }
 
-// ── Link color (relevant = bright semantic; both muted = dim) ─────────────────
+// ── Link color — ID-based lookup, decoupled from source/target mutation state ──
+//
+// Uses relevantIds Set (node IDs) rather than link.source?.relevant so that
+// colors are correct before and after d3-force resolves source/target to objects.
+// Overview: all links use BASE (full structure visible).
+// Focus: relevant-endpoint links use BASE; both-muted links use DIM.
 
-function linkColor(link) {
-  const srcRel = link.source?.relevant ?? false
-  const tgtRel = link.target?.relevant ?? false
-  if (srcRel || tgtRel) return LINK_COLOR_BRIGHT[link.type] ?? 'rgba(120,120,120,0.5)'
+function linkColor(link, relevantIds, isOverview) {
+  if (isOverview) return LINK_COLOR_BASE[link.type] ?? '#505058'
+  const srcId = link.source?.id ?? link.source
+  const tgtId = link.target?.id ?? link.target
+  if (relevantIds.has(srcId) || relevantIds.has(tgtId)) {
+    return LINK_COLOR_BASE[link.type] ?? '#505058'
+  }
   return LINK_COLOR_DIM
 }
 
@@ -303,15 +322,21 @@ function buildHint(nodes, qs, isOverview) {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function VaultGraph({ zone, vaultIndex, qs, isOverview }) {
-  const mountRef   = useRef(null)
-  const graphRef   = useRef(null)
-  const tooltipRef = useRef(null)
+  const mountRef        = useRef(null)
+  const graphRef        = useRef(null)
+  const tooltipRef      = useRef(null)
+  const relevantIdsRef  = useRef(new Set())
+  const isOverviewRef   = useRef(false)
 
   const graphData = useMemo(
     () => buildGraph(zone, vaultIndex, qs, isOverview),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [zone.zone_id, vaultIndex, qs?.mode, qs?.data, isOverview]
   )
+
+  // Keep refs current every render so init-effect closures always see latest values
+  relevantIdsRef.current = graphData.relevantIds
+  isOverviewRef.current  = isOverview
 
   // Init renderer once per zone (browser-only, Three.js)
   useEffect(() => {
@@ -333,7 +358,7 @@ export default function VaultGraph({ zone, vaultIndex, qs, isOverview }) {
         .nodeVal(n => n.val)
         .nodeOpacity(1.0)
         .linkOpacity(1.0)
-        .linkColor(link => linkColor(link))
+        .linkColor(link => linkColor(link, relevantIdsRef.current, isOverviewRef.current))
         .linkWidth(link => baseLinkWidth(link))
         .linkDirectionalParticles(link => link.type === 'TRACE' ? 4 : 0)
         .linkDirectionalParticleWidth(1.5)
@@ -359,7 +384,7 @@ export default function VaultGraph({ zone, vaultIndex, qs, isOverview }) {
       graph.d3Force('link').distance(60)
       graph.d3AlphaDecay(0.015)
 
-      graph.graphData(graphData)
+      graph.graphData({ nodes: graphData.nodes, links: graphData.links })
       graphRef.current = graph
     })
 
@@ -377,8 +402,8 @@ export default function VaultGraph({ zone, vaultIndex, qs, isOverview }) {
   // Update data + re-apply link accessors when query or overview state changes
   useEffect(() => {
     if (!graphRef.current) return
-    graphRef.current.graphData(graphData)
-    graphRef.current.linkColor(link => linkColor(link))
+    graphRef.current.graphData({ nodes: graphData.nodes, links: graphData.links })
+    graphRef.current.linkColor(link => linkColor(link, relevantIdsRef.current, isOverviewRef.current))
     graphRef.current.linkWidth(link => baseLinkWidth(link))
   }, [graphData])
 
