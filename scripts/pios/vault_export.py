@@ -281,7 +281,7 @@ def build_html_page(title: str, meta: dict, body_html: str) -> str:
         f'<title>{esc_title} — Evidence Vault</title>\n'
         f'<style>{VAULT_CSS}</style>\n'
         f'</head>\n<body>\n<div class="w">\n'
-        f'<div class="nav"><a href="../index.html">\u2190 Evidence Vault</a></div>\n'
+        f'<div class="nav"><a href="/tier2/workspace">\u2190 Diagnostic Workspace</a></div>\n'
         f'<div class="meta">{meta_rows}</div>\n'
         f'<div class="content">{body_html}</div>\n'
         f'<div class="footer"><span class="lbl">inference_prohibition</span> ACTIVE '

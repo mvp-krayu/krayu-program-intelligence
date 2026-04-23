@@ -371,8 +371,9 @@ function EvidenceResult({ data, vaultIndex }) {
 // Zone card
 // ---------------------------------------------------------------------------
 
-function ZoneCard({ zone, vaultIndex }) {
-  const [qs, setQs] = useState(null) // null | {loading,mode} | {mode,data} | {mode,error}
+function ZoneCard({ zone, vaultIndex, defaultOpen }) {
+  const [expanded, setExpanded] = useState(defaultOpen || false)
+  const [qs, setQs] = useState(null)
   const resultRef = useRef(null)
 
   useEffect(() => {
@@ -395,88 +396,77 @@ function ZoneCard({ zone, vaultIndex }) {
   }
 
   const { cls: typeCls, label: typeLabel } = zoneTypeMeta(zone.zone_type)
-  const vaultUrl  = resolveVaultLink('domain', zone.domain_id, vaultIndex)
+  const vaultUrl    = resolveVaultLink('domain', zone.domain_id, vaultIndex)
   const activeMode  = (qs?.data && !qs.loading) ? qs.mode : null
   const loadingMode = qs?.loading ? qs.mode : null
 
   return (
-    <div className={`ws-zone-card ${SEV_CARD_CLS[zone.severity] || ''}${activeMode ? ' ws-zone-card--active' : ''}`} ref={resultRef}>
+    <div
+      className={`ws-zone-card ${SEV_CARD_CLS[zone.severity] || ''}${activeMode ? ' ws-zone-card--active' : ''}${!expanded ? ' ws-zone-card--collapsed' : ''}`}
+      ref={resultRef}
+    >
+      <button className="ws-zone-toggle" onClick={() => setExpanded(e => !e)}>
+        <div className="ws-zone-toggle-left">
+          <span className="ws-zone-id">{zone.zone_id}</span>
+          <span className={`ws-badge ${SEV_CLS[zone.severity] || ''}`}>{zone.severity}</span>
+          <span className={`ws-badge ${typeCls}`}>{typeLabel}</span>
+        </div>
+        <span className="ws-zone-toggle-title">{zone.domain_name}</span>
+        <span className="ws-zone-chevron">{expanded ? '▲' : '▼'}</span>
+      </button>
 
-      <div className="ws-zone-identity">
-        <span className="ws-zone-id">{zone.zone_id}</span>
-        <span className={`ws-badge ${typeCls}`}>{typeLabel}</span>
-      </div>
+      {expanded && (
+        <>
+          <div className="ws-zone-overview">
+            <div className="ws-zone-condition">
+              <span className={`ws-badge ${CONF_CLS[zone.confidence] || ''}`}>{zone.confidence}</span>
+              <span className={`ws-badge ${TRACE_CLS[zone.traceability] || ''} ws-badge-sm`}>
+                {TRACE_LABELS[zone.traceability] || zone.traceability.replace(/_/g, ' ')}
+              </span>
+              <span className="ws-zone-stat">{zone.capability_count} cap{zone.capability_count !== 1 ? 's' : ''}</span>
+              <span className="ws-zone-stat">{zone.signal_count} sig{zone.signal_count !== 1 ? 's' : ''}</span>
+            </div>
+          </div>
 
-      <div className="ws-zone-title">{zone.domain_name}</div>
+          <div className="ws-zone-actions">
+            <button
+              className={`ws-btn${activeMode === 'WHY' ? ' ws-btn-active-why' : ''}`}
+              onClick={() => fireQuery('WHY')}
+              disabled={!!loadingMode}
+            >
+              {loadingMode === 'WHY' ? 'WHY…' : 'WHY'}
+            </button>
+            <button
+              className={`ws-btn${activeMode === 'EVIDENCE' ? ' ws-btn-active-evidence' : ''}`}
+              onClick={() => fireQuery('EVIDENCE')}
+              disabled={!!loadingMode}
+            >
+              {loadingMode === 'EVIDENCE' ? 'EVIDENCE…' : 'EVIDENCE'}
+            </button>
+            <span className="ws-btn-sep" aria-hidden="true" />
+            <button
+              className={`ws-btn${activeMode === 'TRACE' ? ' ws-btn-active-trace' : ''}`}
+              onClick={() => fireQuery('TRACE')}
+              disabled={!!loadingMode}
+            >
+              {loadingMode === 'TRACE' ? 'TRACE…' : 'TRACE'}
+            </button>
+            {qs?.data && !loadingMode && (
+              <button className="ws-btn ws-btn-clear" onClick={() => setQs(null)}>✕</button>
+            )}
+            {vaultUrl && (
+              <a href={vaultUrl} target="_blank" rel="noreferrer" className="ws-vault-zone-link">
+                Vault ↗
+              </a>
+            )}
+          </div>
 
-      <div className="ws-zone-condition">
-        <span className={`ws-badge ${SEV_CLS[zone.severity]  || ''}`}>{zone.severity}</span>
-        <span className={`ws-badge ${CONF_CLS[zone.confidence] || ''}`}>{zone.confidence}</span>
-        <span className={`ws-badge ${TRACE_CLS[zone.traceability] || ''} ws-badge-sm`}>
-          {TRACE_LABELS[zone.traceability] || zone.traceability.replace(/_/g, ' ')}
-        </span>
-        <span className="ws-zone-stat">{zone.capability_count} cap{zone.capability_count !== 1 ? 's' : ''}</span>
-        <span className="ws-zone-stat">{zone.signal_count} sig{zone.signal_count !== 1 ? 's' : ''}</span>
-      </div>
-
-      <div className="ws-zone-vault-row">
-        {vaultUrl ? (
-          <a
-            href={vaultUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="ws-vault-zone-link"
-          >
-            Evidence Vault ↗
-          </a>
-        ) : (
-          <span className="ws-vault-zone-link ws-vault-not-exported">Vault not exported</span>
-        )}
-      </div>
-
-      <div className="ws-zone-actions">
-        <button
-          className={`ws-btn ws-btn-why${activeMode === 'WHY' ? ' ws-btn-active-why' : ''}`}
-          onClick={() => fireQuery('WHY')}
-          disabled={!!loadingMode}
-          title="Zone type, severity, confidence, and classification rationale"
-        >
-          {loadingMode === 'WHY' ? 'WHY…' : 'WHY'}
-        </button>
-        <button
-          className={`ws-btn ws-btn-evidence${activeMode === 'EVIDENCE' ? ' ws-btn-active-evidence' : ''}`}
-          onClick={() => fireQuery('EVIDENCE')}
-          disabled={!!loadingMode}
-          title="Signal coverage, trace links, and evidence gaps for this zone"
-        >
-          {loadingMode === 'EVIDENCE' ? 'EVIDENCE…' : 'EVIDENCE'}
-        </button>
-        <span className="ws-btn-sep" aria-hidden="true" />
-        <button
-          className={`ws-btn ws-btn-trace${activeMode === 'TRACE' ? ' ws-btn-active-trace' : ''}`}
-          onClick={() => fireQuery('TRACE')}
-          disabled={!!loadingMode}
-          title="Structural propagation paths from canonical topology and signal binding"
-        >
-          {loadingMode === 'TRACE' ? 'TRACE…' : 'TRACE'}
-        </button>
-        {qs?.data && !loadingMode && (
-          <button
-            className="ws-btn ws-btn-clear"
-            onClick={() => setQs(null)}
-            title="Clear result"
-          >
-            ✕
-          </button>
-        )}
-      </div>
-
-      {qs?.error && (
-        <div className="ws-query-error">{qs.error}</div>
+          {qs?.error && <div className="ws-query-error">{qs.error}</div>}
+          {qs?.data && qs.mode === 'WHY'      && <WhyResult      data={qs.data} />}
+          {qs?.data && qs.mode === 'EVIDENCE' && <EvidenceResult data={qs.data} vaultIndex={vaultIndex} />}
+          {qs?.data && qs.mode === 'TRACE'    && <TraceResult    data={qs.data} />}
+        </>
       )}
-      {qs?.data && qs.mode === 'WHY'      && <WhyResult      data={qs.data} />}
-      {qs?.data && qs.mode === 'EVIDENCE' && <EvidenceResult data={qs.data} vaultIndex={vaultIndex} />}
-      {qs?.data && qs.mode === 'TRACE'    && <TraceResult    data={qs.data} />}
     </div>
   )
 }
@@ -562,8 +552,16 @@ export default function Tier2WorkspacePage() {
           </div>
 
           <div className="ws-zone-list">
-            {zonesData.zones.map(zone => (
-              <ZoneCard key={zone.zone_id} zone={zone} vaultIndex={vaultIndex} />
+            {zonesData.zones.map((zone, i) => (
+              <ZoneCard
+                key={zone.zone_id}
+                zone={zone}
+                vaultIndex={vaultIndex}
+                defaultOpen={
+                  zone.severity === 'HIGH' ||
+                  (i === 0 && !zonesData.zones.some(z => z.severity === 'HIGH'))
+                }
+              />
             ))}
           </div>
         </>

@@ -309,54 +309,50 @@ function ReportPanel({ runId }) {
       .catch(err  => setState({ error: err.message || 'GENERATION_FAILED' }))
   }
 
-  function handleOpen()     { if (state?.path) window.open(state.path) }
-  function handleDownload() {
-    if (!state?.path) return
-    const a = document.createElement('a')
-    a.href = state.path + '&download=1'
-    const nameMatch = state.path.match(/[?&]name=([^&]+)/)
-    a.download = nameMatch ? decodeURIComponent(nameMatch[1]) : 'lens_report.html'
-    a.click()
-  }
-
   return (
     <div className="lens-report-panel">
-      <div className="lens-panel-label">EXECUTIVE REPORT</div>
-      <div className="lens-report-row">
-        {(!state || state === 'loading' || state?.error) && (
-          <button className="lens-report-btn" onClick={handleGenerate} disabled={state === 'loading'}>
-            {state === 'loading' ? 'Generating…' : 'Generate Executive Report'}
-          </button>
-        )}
-        {state === 'loading' && <span className="lens-report-status">Building governed projection report…</span>}
-        {state?.error && <span className="lens-report-error">{state.error}</span>}
-        {state?.path && (
-          <div className="lens-report-actions">
-            <button className="lens-report-action-btn lens-report-open" onClick={handleOpen}>Open HTML Report</button>
-            <button className="lens-report-action-btn lens-report-download" onClick={handleDownload}>Download HTML</button>
-            <span className="lens-report-ready">Report ready</span>
-          </div>
-        )}
+      <div className="lens-panel-label">REPORTS</div>
+
+      <div className="lens-report-tier">
+        <div className="lens-report-tier-label">Executive</div>
+        <div className="lens-report-tier-body">
+          {(!state || state === 'loading' || state?.error) && (
+            <button className="lens-report-btn" onClick={handleGenerate} disabled={state === 'loading'}>
+              {state === 'loading' ? 'Generating…' : 'Generate'}
+            </button>
+          )}
+          {state === 'loading' && <span className="lens-report-status">Building governed report…</span>}
+          {state?.error && <span className="lens-report-error">{state.error}</span>}
+          {state?.path && (
+            <button className="lens-report-action-btn lens-report-open" onClick={() => window.open(state.path)}>
+              View Report
+            </button>
+          )}
+        </div>
       </div>
+
+      <div className="lens-report-tier">
+        <div className="lens-report-tier-label">LENS</div>
+        <div className="lens-report-tier-body">
+          <span className="lens-report-tier-note">Intelligence projection — this view</span>
+        </div>
+      </div>
+
+      <div className="lens-report-tier">
+        <div className="lens-report-tier-label">Diagnostic</div>
+        <div className="lens-report-tier-body">
+          <button className="lens-report-workspace" onClick={() => window.open('/tier2/workspace')}>
+            Diagnostic Workspace
+          </button>
+          <span className="lens-report-tier-note">WHY · EVIDENCE · TRACE</span>
+        </div>
+      </div>
+
       {runId && (
         <div className="lens-report-basis">
-          Derived from governed projection (ZONE-2) · Run: {runId}
+          Governed projection (ZONE-2) · Run: {runId}
         </div>
       )}
-      <div className="lens-report-format-note">
-        Output format: HTML &nbsp;·&nbsp; PDF export available when a PDF rendering engine is configured
-      </div>
-      <div className="lens-report-row" style={{ marginTop: '12px' }}>
-        <button
-          className="lens-report-workspace"
-          onClick={() => window.open('/tier2/workspace')}
-        >
-          Diagnostic Workspace
-        </button>
-        <span className="lens-report-format-note">
-          Live WHY &amp; EVIDENCE interrogation · Zone-scoped · inference_prohibition: ACTIVE
-        </span>
-      </div>
     </div>
   )
 }
