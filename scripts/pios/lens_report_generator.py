@@ -3108,8 +3108,98 @@ def _build_t2_zone_block(zone: Dict, publish_safe: bool) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Tier-2 overview graph — canvas, Python-computed positions
+# Tier-2 overview graph — force simulation + canvas
 # ---------------------------------------------------------------------------
+
+def _run_force_layout(
+    node_ids: List[str],
+    links_s: List[int],
+    links_t: List[int],
+    cx: float,
+    cy: float,
+) -> Dict[str, Tuple[float, float]]:
+    """Velocity Verlet simulation matching workspace d3-force-3d parameters.
+
+    charge.strength(-100), link.distance(60), alphaDecay(0.015),
+    velocityDecay(0.4). Golden-angle initialisation at radius=10 (d3 default).
+    Produces force-settled asymmetric layout — same structural physics
+    as the workspace graph, no hand-placed positions.
+    """
+    CHARGE_STR  = -100.0
+    LINK_DIST   =  60.0
+    ALPHA_DECAY =   0.015
+    ALPHA_MIN   =   0.001
+    VEL_DECAY   =   0.4
+    INIT_R      =  10.0
+    GOLDEN      = math.pi * (3.0 - math.sqrt(5.0))  # ~137.5° golden angle
+
+    n   = len(node_ids)
+    pos = [[cx + INIT_R * math.cos(GOLDEN * i),
+            cy + INIT_R * math.sin(GOLDEN * i)] for i in range(n)]
+    vel = [[0.0, 0.0] for _ in range(n)]
+
+    # Degree per node — used for link strength and force bias (mirrors d3-force)
+    deg = [0] * n
+    for s, t in zip(links_s, links_t):
+        deg[s] += 1
+        deg[t] += 1
+
+    # Link strength = 1 / min(degree_s, degree_t)  (d3-force default)
+    lstr = [1.0 / max(1, min(deg[s], deg[t])) for s, t in zip(links_s, links_t)]
+
+    alpha = 1.0
+    while alpha >= ALPHA_MIN:
+        fx = [0.0] * n
+        fy = [0.0] * n
+
+        # Many-body: dv_i += (dx, dy) * strength * alpha / d²
+        # Matches d3-force: node.vx += x * strength * alpha / l  (l = d², not d)
+        # Force magnitude = |strength| * alpha / d  (decays correctly with distance)
+        for i in range(n):
+            for j in range(i + 1, n):
+                dx = pos[j][0] - pos[i][0]
+                dy = pos[j][1] - pos[i][1]
+                d2 = dx * dx + dy * dy
+                if d2 < 1.0:       # distanceMin=1 clamp (mirrors d3 default)
+                    d2 = math.sqrt(d2)
+                c  = CHARGE_STR * alpha / d2
+                fx[i] += dx * c
+                fy[i] += dy * c
+                fx[j] -= dx * c
+                fy[j] -= dy * c
+
+        # Link spring: dv = link_str * alpha * (d−dist_target)/d * displacement
+        # bias = degree_s / (degree_s + degree_t) — mirrors d3-force link bias
+        for li, (s, t) in enumerate(zip(links_s, links_t)):
+            dx  = pos[t][0] - pos[s][0]
+            dy  = pos[t][1] - pos[s][1]
+            d   = max(math.sqrt(dx * dx + dy * dy), 1e-6)
+            k   = lstr[li] * alpha * (d - LINK_DIST) / d
+            bs  = deg[s] / max(deg[s] + deg[t], 1)
+            bt  = 1.0 - bs
+            fx[t] -= dx * k * bs
+            fy[t] -= dy * k * bs
+            fx[s] += dx * k * bt
+            fy[s] += dy * k * bt
+
+        # Center force: nudge mean position toward (cx, cy)
+        mx = sum(p[0] for p in pos) / n - cx
+        my = sum(p[1] for p in pos) / n - cy
+        for i in range(n):
+            fx[i] -= mx * 0.1 * alpha
+            fy[i] -= my * 0.1 * alpha
+
+        # Integrate with velocity decay
+        for i in range(n):
+            vel[i][0] = (vel[i][0] + fx[i]) * VEL_DECAY
+            vel[i][1] = (vel[i][1] + fy[i]) * VEL_DECAY
+            pos[i][0] += vel[i][0]
+            pos[i][1] += vel[i][1]
+
+        alpha *= (1.0 - ALPHA_DECAY)
+
+    return {node_ids[i]: (pos[i][0], pos[i][1]) for i in range(n)}
+
 
 def _build_overview_graph_html(
     zones: List[Dict],
@@ -3121,8 +3211,9 @@ def _build_overview_graph_html(
 
     Mirrors buildGraph(isOverview=True) from VaultGraph.js:
       zone root → all signals → mapped claims; zone root → all artifacts.
-    All nodes use BRIGHT styling (overview = no dimming).
-    Positions pre-computed geometrically; embedded as draw-only canvas JS.
+    All nodes use BRIGHT styling. Positions produced by force simulation
+    matching workspace d3-force-3d parameters (charge=-100, linkDist=60,
+    alphaDecay=0.015) — no hand-placed or symmetrical layout.
     Falls back to _build_topology_svg if vault_index unavailable.
     """
     if not vault_index or not zones:
@@ -3130,8 +3221,8 @@ def _build_overview_graph_html(
 
     zone   = zones[0]
     hub_id = zone['zone_id']
-    ccx    = width / 2
-    ccy    = height / 2
+    cx     = width / 2
+    cy     = height / 2
 
     # Mirrors BRIGHT palette + LINK_COLOR_BASE from VaultGraph.js
     NODE_R   = {'ZONE': 9, 'SIGNAL': 6, 'CLAIM': 5, 'ARTIFACT': 5}
@@ -3139,77 +3230,65 @@ def _build_overview_graph_html(
     LINK_COL = {'ZONE_SIGNAL': '#3cac64', 'SIGNAL_CLAIM': '#4b82d2', 'ZONE_ARTIFACT': '#b29237'}
     LINK_W   = {'ZONE_SIGNAL': 2.0, 'SIGNAL_CLAIM': 2.2, 'ZONE_ARTIFACT': 2.0}
 
-    nodes: List[Dict] = []
-    links: List[Dict] = []
-    idx:   Dict[str, int] = {}
+    # ── 1. Build node list + raw link index pairs (no positions yet) ─────────
+    node_ids:  List[str]          = []
+    node_type: Dict[str, str]     = {}
+    nidx:      Dict[str, int]     = {}
+    raw_links: List[Tuple[int, int, str]] = []  # (s_idx, t_idx, link_type)
 
-    def _add_node(nid: str, ntype: str, x: float, y: float) -> None:
-        if nid in idx:
-            return
-        i = len(nodes)
-        idx[nid] = i
+    def _reg(nid: str, ntype: str) -> int:
+        if nid in nidx:
+            return nidx[nid]
+        i = len(node_ids)
+        nidx[nid] = i
+        node_ids.append(nid)
+        node_type[nid] = ntype
+        return i
+
+    def _link(src: str, tgt: str, ltype: str) -> None:
+        if src in nidx and tgt in nidx:
+            raw_links.append((nidx[src], nidx[tgt], ltype))
+
+    # Hub (sorted order mirrors JS — hub always index 0)
+    _reg(hub_id, 'ZONE')
+
+    # Signals → mapped claims (sorted, mirrors JS Object.keys().sort())
+    for sig_id, clm_id in sorted(vault_index.get('signals', {}).items()):
+        _reg(sig_id, 'SIGNAL')
+        _link(hub_id, sig_id, 'ZONE_SIGNAL')
+        if clm_id:
+            _reg(clm_id, 'CLAIM')
+            _link(sig_id, clm_id, 'SIGNAL_CLAIM')
+
+    # Artifacts (sorted)
+    for art_id in sorted(vault_index.get('artifacts', {})):
+        _reg(art_id, 'ARTIFACT')
+        _link(hub_id, art_id, 'ZONE_ARTIFACT')
+
+    # ── 2. Force simulation — same physics as workspace ──────────────────────
+    links_s = [l[0] for l in raw_links]
+    links_t = [l[1] for l in raw_links]
+    positions = _run_force_layout(node_ids, links_s, links_t, cx, cy)
+
+    # ── 3. Assemble serialisable node + link arrays ──────────────────────────
+    nodes: List[Dict] = []
+    for nid in node_ids:
+        px, py = positions[nid]
         nodes.append({
-            'x': round(x, 1), 'y': round(y, 1),
-            'r': NODE_R.get(ntype, 5),
-            'c': NODE_COL.get(ntype, '#909090'),
+            'x': round(px, 1), 'y': round(py, 1),
+            'r': NODE_R.get(node_type[nid], 5),
+            'c': NODE_COL.get(node_type[nid], '#909090'),
             'l': nid,
         })
 
-    def _add_link(src: str, tgt: str, ltype: str) -> None:
-        if src in idx and tgt in idx:
-            links.append({
-                's': idx[src], 't': idx[tgt],
-                'c': LINK_COL.get(ltype, '#404048'),
-                'w': LINK_W.get(ltype, 1.5),
-            })
-
-    # Zone root at canvas center
-    _add_node(hub_id, 'ZONE', ccx, ccy)
-
-    # Signals (sorted for determinism — mirrors JS Object.keys().sort())
-    sig_entries = sorted(vault_index.get('signals', {}).items())
-    n_sig = len(sig_entries)
-    R_sig, R_clm = 115, 200
-
-    if n_sig == 1:
-        sig_angles = [math.pi]
-    elif n_sig > 0:
-        a0 = math.radians(140)
-        a1 = math.radians(220)
-        sig_angles = [a0 + i * (a1 - a0) / (n_sig - 1) for i in range(n_sig)]
-    else:
-        sig_angles = []
-
-    for (sig_id, clm_id), ang in zip(sig_entries, sig_angles):
-        sx = ccx + R_sig * math.cos(ang)
-        sy = ccy - R_sig * math.sin(ang)
-        _add_node(sig_id, 'SIGNAL', sx, sy)
-        _add_link(hub_id, sig_id, 'ZONE_SIGNAL')
-        if clm_id:
-            _add_node(clm_id, 'CLAIM',
-                      ccx + R_clm * math.cos(ang),
-                      ccy - R_clm * math.sin(ang))
-            _add_link(sig_id, clm_id, 'SIGNAL_CLAIM')
-
-    # Artifacts (sorted)
-    art_ids = sorted(vault_index.get('artifacts', {}))
-    n_art = len(art_ids)
-    R_art = 115
-
-    if n_art == 1:
-        art_angles = [0.0]
-    elif n_art > 0:
-        a0 = math.radians(-60)
-        a1 = math.radians(60)
-        art_angles = [a0 + i * (a1 - a0) / (n_art - 1) for i in range(n_art)]
-    else:
-        art_angles = []
-
-    for art_id, ang in zip(art_ids, art_angles):
-        _add_node(art_id, 'ARTIFACT',
-                  ccx + R_art * math.cos(ang),
-                  ccy - R_art * math.sin(ang))
-        _add_link(hub_id, art_id, 'ZONE_ARTIFACT')
+    links: List[Dict] = [
+        {
+            's': s, 't': t,
+            'c': LINK_COL.get(lt, '#404048'),
+            'w': LINK_W.get(lt, 1.5),
+        }
+        for s, t, lt in raw_links
+    ]
 
     nodes_js = json.dumps(nodes, separators=(',', ':'))
     links_js = json.dumps(links, separators=(',', ':'))
