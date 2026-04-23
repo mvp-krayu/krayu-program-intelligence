@@ -2,8 +2,9 @@
 
 **Authority:** brain/code  
 **Stream:** TIER2.WORKSPACE.MODEL.01  
-**Implementation Status:** NOT IMPLEMENTED  
-**Current state:** Static HTML export only (lens_tier2_diagnostic_narrative.html via lens_report_generator.py)
+**Implementation Status:** PHASE 1 IMPLEMENTED — live query engine operational  
+**Updated:** 2026-04-23 (BRAIN.RECONCILE.LENS.TIER2.01)  
+**Current state:** Static HTML export + WHY/EVIDENCE live query via /api/query + graph state
 
 ---
 
@@ -19,6 +20,11 @@
 ### API (`app/gauge-product/pages/api/`)
 - `report.js` — invokes generator `--tier1` (which also calls `generate_tier2_reports()`); returns `{status:"ok", files:[...]}`
 - `report-file.js` — serves files from `reports/tier2/` and `reports/tier2/publish/` via `VALID_TIER2` regex
+- `query.js` — WHY and EVIDENCE mode endpoint; validates zone_id + mode; calls tier2_query_engine.py
+
+### Graph State
+- `scripts/pios/export_graph_state.mjs` — Node.js script; imports d3-force-3d from workspace node_modules; builds topology in JSON insertion order; runs simulation with workspace parameters; persists to graph_state.json with `generated_from: "workspace_runtime_positions"`
+- `clients/blueedge/reports/tier2/graph_state.json` — persisted positions; sole source of x/y for report graph
 
 ### UI (`app/gauge-product/pages/lens.js`)
 - `ReportPanel` renders "Executive Report" + "Diagnostic" buttons after generation
@@ -34,11 +40,12 @@
 - No persistent workspace state
 - No zone filtering/sorting UI
 
-### WHY / TRACE / EVIDENCE Interaction Modes
-- No `/api/query` endpoint
-- No query request/response cycle
-- No mode-specific result rendering
-- Static hook blocks in the HTML export are display-only
+### WHY / TRACE / EVIDENCE Interaction Modes — PARTIALLY IMPLEMENTED
+- **`/api/query` endpoint** — IMPLEMENTED (query.js; WHY + EVIDENCE modes)
+- **WHY mode** — IMPLEMENTED (tier2_query_engine.py; classification rationale from canonical fields)
+- **EVIDENCE mode** — IMPLEMENTED (tier2_query_engine.py; trace links + missing evidence)
+- **TRACE mode** — DEFERRED (returns MODE_NOT_SUPPORTED; traversal engine not yet built)
+- Static hook blocks in HTML export now link to live /api/query
 
 ### Traversal Engine
 - No `tier2_trace_graph.py` or equivalent

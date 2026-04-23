@@ -3,21 +3,30 @@
 
 **Authority:** TIER2.DIAGNOSTIC.NARRATIVE.STRUCTURE.01
 **Brain:** CODE
-**Status:** NOT IMPLEMENTED
+**Status:** IMPLEMENTED — Phase 1 complete
 **Alignment date:** 2026-04-22
-**Product link:** docs/brain/product/TIER2.DIAGNOSTIC.NARRATIVE.STRUCTURE.01.md
+**Updated:** 2026-04-23 (BRAIN.RECONCILE.LENS.TIER2.01)
+**Product link:** docs/brain/product/diagnostic_access_product.md
 
 ---
 
 ## IMPLEMENTATION STATUS
 
-**NOT IMPLEMENTED**
+**IMPLEMENTED — Phase 1**
 
-No code exists for the Tier-2 Diagnostic Narrative at the time of this definition.
+All Phase 1 generator units implemented. Additional work completed beyond original spec:
+- `scripts/pios/export_graph_state.mjs` — Node.js graph position export (d3-force-3d)
+- `_build_overview_graph_html()` — draw-only canvas renderer from graph_state.json
+- `clients/blueedge/reports/tier2/graph_state.json` — persisted workspace positions
+
+Implementing streams:
+- PRODUCTIZE.LENS.REPORT.TOPOLOGY.DELIVERY.01 — base generator
+- TIER2.NARRATIVE.GRAPH.INTEGRATION.01 — graph state export + rendering
+- TIER2.NARRATIVE.GRAPH.PRESENTATION.01 — executive-grade presentation refinements
 
 ---
 
-## REQUIRED IMPLEMENTATION UNITS
+## IMPLEMENTED UNITS (original spec — all complete)
 
 The following units MUST be created when the implementation stream is authorized.
 

@@ -2,12 +2,14 @@
 
 **Authority:** brain/code  
 **Stream:** TIER2.RUNTIME.QUERY.ENGINE.01  
-**Implementation Status:** NOT IMPLEMENTED  
-**Phase 1 scope:** WHY + EVIDENCE modes only
+**Implementation Status:** PHASE 1 IMPLEMENTED (WHY + EVIDENCE operational)  
+**Updated:** 2026-04-23 (BRAIN.RECONCILE.LENS.TIER2.01)  
+**Phase 1 scope:** WHY + EVIDENCE modes — complete  
+**Deferred:** TRACE mode, workspace UI interaction, traversal engine
 
 ---
 
-## Files to Create
+## Files Created (Phase 1 — implemented)
 
 ### 1. `scripts/pios/tier2_data.py`
 Shared canonical data access module. Extracted from lens_report_generator.py loaders. Imported by both the generator and the query engine.

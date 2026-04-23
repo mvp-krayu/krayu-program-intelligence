@@ -3,15 +3,24 @@
 
 **Authority:** TIER2.RUNTIME.MINIMUM.VIABLE.SURFACE.01
 **Brain:** CODE
-**Status:** NOT IMPLEMENTED
+**Status:** IMPLEMENTED — Phase 1 complete
 **Alignment date:** 2026-04-22
-**Product link:** docs/brain/product/TIER2.RUNTIME.MINIMUM.VIABLE.SURFACE.01.md
+**Updated:** 2026-04-23 (BRAIN.RECONCILE.LENS.TIER2.01)
+**Product link:** docs/brain/product/diagnostic_access_product.md
 
 ---
 
 ## IMPLEMENTATION STATUS
 
-**NOT IMPLEMENTED**
+**IMPLEMENTED — Phase 1**
+
+All Phase 1 steps (1a–1e generator, Step 2 API, Step 3 file-serve, Step 4 UI) are
+complete. Additionally implemented beyond original spec: live query engine (WHY + EVIDENCE
+via /api/query), graph state export (export_graph_state.mjs using d3-force-3d),
+structural evidence topology graph in Diagnostic Narrative.
+
+Phase 2 deferred items remain: /api/query TRACE mode, traversal engine, interactive
+workspace page, deep linking, entitlement gating at workspace level.
 
 Phase 1 implementation units are defined below. All are additive — no existing code is removed or broken.
 
