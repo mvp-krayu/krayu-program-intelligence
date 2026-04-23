@@ -334,6 +334,12 @@
     .score-val-sm { font-family:'Playfair Display',Georgia,serif; font-size:13px; font-weight:600; color:var(--text-1); letter-spacing:-.01em; line-height:1; }
     .score-sep { width:1px; height:26px; background:var(--rule); margin-right:26px; flex-shrink:0; }
 
+    /* ── CONTINUITY ── */
+    .cta-forward { flex-shrink:0; padding-top:7px; display:flex; justify-content:space-between; align-items:baseline; gap:14px; }
+    .cta-forward-text { font-size:8.5px; color:var(--text-3); font-style:italic; flex:1; }
+    .cta-forward-link { font-family:'JetBrains Mono',monospace; font-size:7.5px; letter-spacing:.06em; color:var(--gold); text-decoration:underline; text-decoration-color:var(--gold-border); white-space:nowrap; flex-shrink:0; }
+    .cta-forward-link:hover { color:var(--gold-bright); }
+
     @media print {
       html, body {
         background: #080b12 !important;
@@ -493,6 +499,11 @@
 
   <div class="quote-bar">
     <p>"The output is a <strong>structural view derived from evidence</strong> — not a narrative, not a status summary, not a recommendation."</p>
+  </div>
+
+  <div class="cta-forward">
+    <span class="cta-forward-text">Some structural conditions may require deeper inspection before decision commitment.</span>
+    <a href="lens_tier2_diagnostic_access.html" class="cta-forward-link">Investigate further →</a>
   </div>
 
   <footer class="footer">
