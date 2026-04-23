@@ -3108,73 +3108,186 @@ def _build_t2_zone_block(zone: Dict, publish_safe: bool) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Tier-2 overview graph — topology data emitted by Python, layout + draw
-# executed as self-contained in-browser JS using same force physics as workspace
+# Tier-2 overview graph — ONE authoritative simulation, persisted graph state
 # ---------------------------------------------------------------------------
 
-def _build_overview_graph_html(
+def _compute_overview_graph_state(
     zones: List[Dict],
     vault_index: Optional[Dict],
     width: int = 880,
     height: int = 380,
-) -> str:
-    """Full vault structure graph for Tier-2 Diagnostic Narrative section 01A.
+) -> Optional[Dict]:
+    """Compute overview graph positions ONCE using workspace force model.
 
-    Graph topology mirrors buildGraph(isOverview=True) from VaultGraph.js.
-    Positions are NOT pre-computed by Python. Instead, the same force
-    simulation runs in-browser JS using the exact same parameters as the
-    workspace: charge=-100, linkDist=60, alphaDecay=0.015, velDecay=0.4,
-    golden-angle init. Same JS engine, same IEEE 754, same convergence —
-    same spatial truth. Python only emits node/link topology data.
-    Falls back to _build_topology_svg if vault_index unavailable.
+    Node/link construction mirrors buildGraph(isOverview=True) in VaultGraph.js:
+      hub → signals (JSON insertion order) → mapped claims → artifacts.
+    Force simulation uses workspace parameters:
+      charge.strength(-100), link.distance(60), alphaDecay(0.015), velDecay(0.4),
+      golden-angle init at radius=10 (d3-force-3d default),
+      many-body: dv += displacement * strength * alpha / d²  (d3 forceManyBody).
+    Result is persisted to graph_state.json and used as sole render source.
+    Report never recomputes positions.
     """
     if not vault_index or not zones:
-        return _build_topology_svg(zones, width=width)
+        return None
 
     zone   = zones[0]
     hub_id = zone['zone_id']
+    cx     = width / 2
+    cy     = height / 2
 
-    # Mirrors BRIGHT palette + LINK_COLOR_BASE from VaultGraph.js
     NODE_R   = {'ZONE': 9, 'SIGNAL': 6, 'CLAIM': 5, 'ARTIFACT': 5}
     NODE_COL = {'ZONE': '#f0f0f0', 'SIGNAL': '#52d97e', 'CLAIM': '#e8b54a', 'ARTIFACT': '#6ab4e8'}
     LINK_COL = {'ZONE_SIGNAL': '#3cac64', 'SIGNAL_CLAIM': '#4b82d2', 'ZONE_ARTIFACT': '#b29237'}
     LINK_W   = {'ZONE_SIGNAL': 2.0, 'SIGNAL_CLAIM': 2.2, 'ZONE_ARTIFACT': 2.0}
 
-    # Build topology data (no positions — JS computes those via force simulation)
-    nodes: List[Dict] = []
-    links: List[Dict] = []
-    nidx:  Dict[str, int] = {}
+    # Build node/link lists in JSON insertion order (mirrors JS Object.entries/keys order)
+    node_ids:  List[str]               = []
+    node_meta: Dict[str, str]          = {}      # id → type
+    nidx:      Dict[str, int]          = {}
+    raw_links: List[Tuple[int, int, str]] = []
 
     def _reg(nid: str, ntype: str) -> None:
         if nid not in nidx:
-            nidx[nid] = len(nodes)
-            nodes.append({
-                'r': NODE_R.get(ntype, 5),
-                'c': NODE_COL.get(ntype, '#909090'),
-                'l': nid,
-            })
+            nidx[nid] = len(node_ids)
+            node_ids.append(nid)
+            node_meta[nid] = ntype
 
     def _link(src: str, tgt: str, ltype: str) -> None:
         if src in nidx and tgt in nidx:
-            links.append({
-                's': nidx[src], 't': nidx[tgt],
-                'c': LINK_COL.get(ltype, '#404048'),
-                'w': LINK_W.get(ltype, 1.5),
-            })
+            raw_links.append((nidx[src], nidx[tgt], ltype))
 
     _reg(hub_id, 'ZONE')
-    for sig_id, clm_id in sorted(vault_index.get('signals', {}).items()):
+    for sig_id, clm_id in vault_index.get('signals', {}).items():   # JSON insertion order
         _reg(sig_id, 'SIGNAL')
         _link(hub_id, sig_id, 'ZONE_SIGNAL')
         if clm_id:
             _reg(clm_id, 'CLAIM')
             _link(sig_id, clm_id, 'SIGNAL_CLAIM')
-    for art_id in sorted(vault_index.get('artifacts', {})):
+    for art_id in vault_index.get('artifacts', {}):                  # JSON insertion order
         _reg(art_id, 'ARTIFACT')
         _link(hub_id, art_id, 'ZONE_ARTIFACT')
 
-    nodes_js = json.dumps(nodes, separators=(',', ':'))
-    links_js = json.dumps(links, separators=(',', ':'))
+    # ── Force simulation ──────────────────────────────────────────────────────
+    n           = len(node_ids)
+    CHARGE_STR  = -100.0
+    LINK_DIST   =  60.0
+    ALPHA_DECAY =   0.015
+    ALPHA_MIN   =   0.001
+    VEL_DECAY   =   0.4
+    GOLDEN      = math.pi * (3.0 - math.sqrt(5.0))
+
+    pos = [[cx + 10.0 * math.cos(GOLDEN * i),
+            cy + 10.0 * math.sin(GOLDEN * i)] for i in range(n)]
+    vel = [[0.0, 0.0] for _ in range(n)]
+
+    deg  = [0] * n
+    for s, t, _ in raw_links:
+        deg[s] += 1
+        deg[t] += 1
+    lstr = [1.0 / max(1, min(deg[s], deg[t])) for s, t, _ in raw_links]
+
+    alpha = 1.0
+    while alpha >= ALPHA_MIN:
+        fx = [0.0] * n
+        fy = [0.0] * n
+
+        for i in range(n):
+            for j in range(i + 1, n):
+                dx = pos[j][0] - pos[i][0]
+                dy = pos[j][1] - pos[i][1]
+                d2 = dx * dx + dy * dy
+                if d2 < 1.0:
+                    d2 = math.sqrt(d2)
+                c = CHARGE_STR * alpha / d2
+                fx[i] += dx * c; fy[i] += dy * c
+                fx[j] -= dx * c; fy[j] -= dy * c
+
+        for li, (s, t, _) in enumerate(raw_links):
+            dx = pos[t][0] - pos[s][0]
+            dy = pos[t][1] - pos[s][1]
+            d  = max(math.sqrt(dx * dx + dy * dy), 1e-6)
+            k  = lstr[li] * alpha * (d - LINK_DIST) / d
+            bs = deg[s] / max(deg[s] + deg[t], 1)
+            bt = 1.0 - bs
+            fx[t] -= dx * k * bs; fy[t] -= dy * k * bs
+            fx[s] += dx * k * bt; fy[s] += dy * k * bt
+
+        mx = sum(p[0] for p in pos) / n - cx
+        my = sum(p[1] for p in pos) / n - cy
+        for i in range(n):
+            fx[i] -= mx * 0.1 * alpha
+            fy[i] -= my * 0.1 * alpha
+
+        for i in range(n):
+            vel[i][0] = (vel[i][0] + fx[i]) * VEL_DECAY
+            vel[i][1] = (vel[i][1] + fy[i]) * VEL_DECAY
+            pos[i][0] += vel[i][0]
+            pos[i][1] += vel[i][1]
+
+        alpha *= (1.0 - ALPHA_DECAY)
+
+    # ── Assemble graph state ──────────────────────────────────────────────────
+    nodes_out = [
+        {
+            'id':    nid,
+            'type':  node_meta[nid],
+            'x':     round(pos[i][0], 2),
+            'y':     round(pos[i][1], 2),
+            'r':     NODE_R.get(node_meta[nid], 5),
+            'color': NODE_COL.get(node_meta[nid], '#909090'),
+            'label': nid,
+        }
+        for i, nid in enumerate(node_ids)
+    ]
+    links_out = [
+        {
+            'source': node_ids[s],
+            'target': node_ids[t],
+            'color':  LINK_COL.get(lt, '#404048'),
+            'width':  LINK_W.get(lt, 1.5),
+        }
+        for s, t, lt in raw_links
+    ]
+
+    return {
+        'run_id':          'run_01_authoritative_generated',
+        'graph_mode':      'overview',
+        'generated_from':  'workspace_overview_model',
+        'canvas_width':    width,
+        'canvas_height':   height,
+        'nodes':           nodes_out,
+        'links':           links_out,
+    }
+
+
+def _build_overview_graph_html(graph_state: Optional[Dict]) -> str:
+    """Render overview graph passively from persisted graph_state.
+
+    Positions are read directly from graph_state — no simulation,
+    no re-layout, no golden-angle init. Pure draw-only canvas script.
+    """
+    if not graph_state:
+        return ''
+
+    nodes  = graph_state['nodes']
+    links  = graph_state['links']
+    width  = graph_state.get('canvas_width',  880)
+    height = graph_state.get('canvas_height', 380)
+
+    nidx = {n['id']: i for i, n in enumerate(nodes)}
+
+    nodes_js = json.dumps(
+        [{'x': n['x'], 'y': n['y'], 'r': n['r'], 'c': n['color'], 'l': n['label']}
+         for n in nodes],
+        separators=(',', ':'),
+    )
+    links_js = json.dumps(
+        [{'s': nidx.get(l['source'], 0), 't': nidx.get(l['target'], 0),
+          'c': l['color'], 'w': l['width']}
+         for l in links],
+        separators=(',', ':'),
+    )
 
     legend_html = ''.join(
         f'<span style="display:inline-flex;align-items:center;gap:5px;margin-right:18px">'
@@ -3189,48 +3302,11 @@ def _build_overview_graph_html(
         ]
     )
 
-    # In-browser force simulation — same parameters as workspace VaultGraph.js:
-    #   charge.strength(-100), link.distance(60), alphaDecay(0.015), velDecay(0.4)
-    #   golden-angle init at radius=10 (d3-force-3d default)
-    #   many-body formula: dv += displacement * strength * alpha / d²  (d3 forceManyBody)
-    # Runs synchronously to convergence; renders to canvas immediately.
-    # No CDN, no external dependencies.
-    js_sim = (
+    # Draw-only — no simulation, no golden-angle, no force loop
+    js_draw = (
         f'(function(){{\n'
-        f'  var W={width},H={height},CX=W/2,CY=H/2;\n'
-        f'  var CHARGE=-100,DIST=60,AD=0.015,VD=0.4;\n'
-        f'  var GOLDEN=Math.PI*(3-Math.sqrt(5));\n'
         f'  var N={nodes_js};\n'
         f'  var L={links_js};\n'
-        f'  N.forEach(function(n,i){{\n'
-        f'    n.x=CX+10*Math.cos(GOLDEN*i);n.y=CY+10*Math.sin(GOLDEN*i);n.vx=0;n.vy=0;\n'
-        f'  }});\n'
-        f'  var deg=N.map(function(){{return 0;}});\n'
-        f'  L.forEach(function(l){{deg[l.s]++;deg[l.t]++;}});\n'
-        f'  L.forEach(function(l){{l.k=1/Math.min(deg[l.s],deg[l.t]);}});\n'
-        f'  for(var alpha=1;alpha>=0.001;alpha*=(1-AD)){{\n'
-        f'    var fx=N.map(function(){{return 0;}}),fy=N.map(function(){{return 0;}});\n'
-        f'    for(var i=0;i<N.length;i++){{for(var j=i+1;j<N.length;j++){{\n'
-        f'      var dx=N[j].x-N[i].x,dy=N[j].y-N[i].y,d2=dx*dx+dy*dy;\n'
-        f'      if(d2<1)d2=Math.sqrt(d2);\n'
-        f'      var c=CHARGE*alpha/d2;\n'
-        f'      fx[i]+=dx*c;fy[i]+=dy*c;fx[j]-=dx*c;fy[j]-=dy*c;\n'
-        f'    }}}}\n'
-        f'    L.forEach(function(l){{\n'
-        f'      var dx=N[l.t].x-N[l.s].x,dy=N[l.t].y-N[l.s].y;\n'
-        f'      var d=Math.sqrt(dx*dx+dy*dy)||1e-6,k=l.k*alpha*(d-DIST)/d;\n'
-        f'      var bs=deg[l.s]/(deg[l.s]+deg[l.t]),bt=1-bs;\n'
-        f'      fx[l.t]-=dx*k*bs;fy[l.t]-=dy*k*bs;\n'
-        f'      fx[l.s]+=dx*k*bt;fy[l.s]+=dy*k*bt;\n'
-        f'    }});\n'
-        f'    var mx=0,my=0;\n'
-        f'    N.forEach(function(n){{mx+=n.x;my+=n.y;}});\n'
-        f'    mx=mx/N.length-CX;my=my/N.length-CY;\n'
-        f'    N.forEach(function(n,i){{fx[i]-=mx*0.1*alpha;fy[i]-=my*0.1*alpha;}});\n'
-        f'    N.forEach(function(n,i){{\n'
-        f'      n.vx=(n.vx+fx[i])*VD;n.vy=(n.vy+fy[i])*VD;n.x+=n.vx;n.y+=n.vy;\n'
-        f'    }});\n'
-        f'  }}\n'
         f'  var cv=document.getElementById("og-canvas");if(!cv)return;\n'
         f'  var ctx=cv.getContext("2d");\n'
         f'  ctx.globalAlpha=0.8;\n'
@@ -3251,7 +3327,7 @@ def _build_overview_graph_html(
         f'<canvas id="og-canvas" width="{width}" height="{height}" '
         f'style="display:block;width:100%;background:#09090d;border-radius:4px"></canvas>\n'
         f'<div style="margin-top:8px;padding-left:2px">{legend_html}</div>\n'
-        f'<script>{js_sim}</script>'
+        f'<script>{js_draw}</script>'
     )
 
 
@@ -3370,7 +3446,7 @@ def _build_topology_svg(zones: List[Dict], width: int = 880, height: int = 270) 
 
 def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict,
                                        publish_safe: bool = False,
-                                       vault_index: Optional[Dict] = None) -> str:
+                                       graph_state: Optional[Dict] = None) -> str:
     domains      = topology["domains"]
     counts       = topology["counts"]
     score        = gauge["score"]["canonical"]
@@ -3447,8 +3523,8 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
     # Per-zone blocks
     zone_blocks_html = "".join(_build_t2_zone_block(z, publish_safe) for z in zones)
 
-    # Structural evidence topology graph (section 01A) — canvas-based overview graph
-    topology_svg = _build_overview_graph_html(zones, vault_index)
+    # Structural evidence topology graph (section 01A) — renders from graph_state only
+    topology_svg = _build_overview_graph_html(graph_state)
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -3616,6 +3692,20 @@ def generate_tier2_reports(output_dir: Optional[Path] = None) -> List[Path]:
     gauge       = load_gauge_state()
     vault_index = _load_vault_index()
 
+    # Compute graph state ONCE — one authoritative simulation run, one spatial truth.
+    # Node/link order follows JSON insertion order (matches workspace buildGraph order).
+    zones_for_graph = _derive_tier2_zones(topology, signals)
+    graph_state     = _compute_overview_graph_state(zones_for_graph, vault_index)
+
+    # Persist graph state — sole source of x/y for the report graph.
+    graph_state_path = output_dir / "graph_state.json"
+    if graph_state:
+        graph_state_path.write_text(
+            json.dumps(graph_state, indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
+        print(f"[LENS REPORT] Generated: {graph_state_path.resolve()}")
+
     files: List[Path] = []
 
     artifacts = [
@@ -3626,7 +3716,7 @@ def generate_tier2_reports(output_dir: Optional[Path] = None) -> List[Path]:
     for out_path, pub_safe in artifacts:
         html = _build_tier2_diagnostic_narrative(topology, signals, gauge,
                                                   publish_safe=pub_safe,
-                                                  vault_index=vault_index)
+                                                  graph_state=graph_state)
         out_path.write_text(html, encoding="utf-8")
         print(f"[LENS REPORT] Generated: {out_path.resolve()}")
         files.append(out_path)
