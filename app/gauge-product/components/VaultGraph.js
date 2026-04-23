@@ -332,6 +332,7 @@ export default function VaultGraph({ zone, vaultIndex, qs, isOverview }) {
         .nodeColor(n => n.color)
         .nodeVal(n => n.val)
         .nodeOpacity(1.0)
+        .linkOpacity(1.0)
         .linkColor(link => linkColor(link))
         .linkWidth(link => baseLinkWidth(link))
         .linkDirectionalParticles(link => link.type === 'TRACE' ? 4 : 0)
