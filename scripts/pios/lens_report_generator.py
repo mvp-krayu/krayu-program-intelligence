@@ -24,6 +24,7 @@ CLI:
 """
 
 import json
+import math
 import os
 import re
 import sys
@@ -2661,6 +2662,8 @@ _TIER2_DIAGNOSTIC_CSS = """
   .t2-summary-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
   .t2-summary-preview{font-size:12px;color:var(--fg-muted);line-height:1.6;padding-top:8px;border-top:1px solid var(--border-subtle)}
   details.t2-zone-details > .t2-zone-block{border:none;border-top:1px solid var(--border-subtle);border-radius:0 0 3px 3px;margin-bottom:0;background:transparent}
+  .t2-topo-intro{font-size:12px;color:var(--fg-muted);margin-bottom:14px;line-height:1.7;max-width:680px}
+  .t2-topo-panel{border:1px solid var(--border);border-radius:3px;overflow:hidden;background:#09090d}
 """
 
 
@@ -3094,6 +3097,119 @@ def _build_t2_zone_block(zone: Dict, publish_safe: bool) -> str:
   </details>"""
 
 
+def _build_topology_svg(zones: List[Dict], width: int = 880, height: int = 270) -> str:
+    """Inline SVG of the zone-signal evidence topology for the narrative report.
+
+    Self-contained, no external dependencies. Dark-theme palette matched to
+    _TIER2_DIAGNOSTIC_CSS. Layout: zones spread horizontally, each zone's
+    signals radiate outward in a sector facing away from the horizontal centre.
+    """
+    if not zones:
+        return ''
+
+    C_BG      = '#09090d'
+    C_Z_HIGH  = '#b84040'
+    C_Z_MOD   = '#b07820'
+    C_Z_LOW   = '#3a7a50'
+    C_Z_GAP   = '#2a5870'
+    C_SIG_STR = '#4cc872'
+    C_SIG_PAR = '#d4912a'
+    C_SIG_WK  = '#5a90c0'
+    C_EDGE    = '#1a1e2c'
+    C_LBL_Z   = '#b8b8cc'
+    C_LBL_S   = '#505460'
+
+    n   = len(zones)
+    pad = 170
+    cy  = height // 2
+    R   = 82
+
+    zone_xs: List[int] = (
+        [width // 2] if n == 1
+        else [round(pad + i * (width - 2 * pad) / (n - 1)) for i in range(n)]
+    )
+    cx_all = width / 2
+
+    sig_xy: Dict[str, Tuple[float, float]] = {}
+    for i, z in enumerate(zones):
+        zx   = zone_xs[i]
+        sigs = z['domain_sigs']
+        if not sigs:
+            continue
+        ns     = len(sigs)
+        c_ang  = (math.pi if zx <= cx_all else 0.0) if n > 1 else -math.pi / 2
+        spread = min(2.0, 0.5 + (ns - 1) * 0.38) if ns > 1 else 0.0
+        angs   = ([c_ang] if ns == 1
+                  else [c_ang - spread / 2 + j * spread / (ns - 1) for j in range(ns)])
+        for j, sig in enumerate(sigs):
+            sig_xy[sig['signal_id']] = (
+                max(16.0, min(float(width - 16), zx + R * math.cos(angs[j]))),
+                max(16.0, min(float(height - 16), cy + R * math.sin(angs[j]))),
+            )
+
+    parts = [
+        f'<svg viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg" '
+        f'style="display:block;width:100%;background:{C_BG}">'
+    ]
+
+    for i, z in enumerate(zones):
+        zx = zone_xs[i]
+        for sig in z['domain_sigs']:
+            if sig['signal_id'] in sig_xy:
+                sx, sy = sig_xy[sig['signal_id']]
+                parts.append(
+                    f'<line x1="{zx}" y1="{cy}" x2="{sx:.1f}" y2="{sy:.1f}" '
+                    f'stroke="{C_EDGE}" stroke-width="2"/>'
+                )
+
+    for i, z in enumerate(zones):
+        for sig in z['domain_sigs']:
+            sid = sig['signal_id']
+            if sid not in sig_xy:
+                continue
+            sx, sy = sig_xy[sid]
+            conf = sig.get('evidence_confidence', 'WEAK')
+            col  = (C_SIG_STR if conf == 'STRONG'
+                    else C_SIG_PAR if conf in ('MODERATE', 'PARTIAL')
+                    else C_SIG_WK)
+            parts.append(
+                f'<circle cx="{sx:.1f}" cy="{sy:.1f}" r="7" fill="{col}" opacity="0.9"/>'
+            )
+            parts.append(
+                f'<text x="{sx:.1f}" y="{sy + 17:.1f}" text-anchor="middle" '
+                f'font-size="8" fill="{C_LBL_S}" font-family="monospace">{sid}</text>'
+            )
+
+    for i, z in enumerate(zones):
+        zx  = zone_xs[i]
+        sev = z['severity']
+        has = bool(z['domain_sigs'])
+        col = (C_Z_GAP  if not has  else
+               C_Z_HIGH if sev == 'HIGH'     else
+               C_Z_MOD  if sev == 'MODERATE' else C_Z_LOW)
+        if not has:
+            parts.append(
+                f'<circle cx="{zx}" cy="{cy}" r="22" fill="none" '
+                f'stroke="{C_Z_GAP}" stroke-width="1" stroke-dasharray="4 3" opacity="0.45"/>'
+            )
+        parts.append(f'<circle cx="{zx}" cy="{cy}" r="18" fill="{col}" opacity="0.9"/>')
+        parts.append(
+            f'<text x="{zx}" y="{cy + 5}" text-anchor="middle" '
+            f'font-size="9" fill="white" font-weight="bold" font-family="monospace">'
+            f'{z["zone_id"]}</text>'
+        )
+        ns  = len(z['domain_sigs'])
+        sub = (f'{sev} \u00b7 {ns} sig{"s" if ns != 1 else ""}' if has
+               else f'{sev} \u00b7 no signals')
+        parts.append(
+            f'<text x="{zx}" y="{cy + 31}" text-anchor="middle" '
+            f'font-size="8.5" fill="{C_LBL_Z}" font-family="monospace">{sub}</text>'
+        )
+
+    parts.append('</svg>')
+    return '\n'.join(parts)
+
+
 def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict,
                                        publish_safe: bool = False) -> str:
     domains      = topology["domains"]
@@ -3171,6 +3287,9 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
 
     # Per-zone blocks
     zone_blocks_html = "".join(_build_t2_zone_block(z, publish_safe) for z in zones)
+
+    # Structural topology SVG (section 01A)
+    topology_svg = _build_topology_svg(zones)
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -3274,6 +3393,17 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
       </div>
     </div>
     <p style="font-size:12px;color:var(--fg-muted);margin-top:14px">{esc(evidence_summary)}</p>
+  </div>
+
+  <div class="t2-section">
+    <div class="t2-section-header">
+      <span class="t2-section-num">01A</span>
+      <span class="t2-section-title">Structural Evidence Topology</span>
+    </div>
+    <p class="t2-topo-intro">This view represents the full structural evidence topology underlying the current assessment. It shows how signals and structural evidence connect across the assessed system. Diagnostic zones described below represent focused segments of this topology.</p>
+    <div class="t2-topo-panel">
+      {topology_svg}
+    </div>
   </div>
 
   <div class="t2-section">
