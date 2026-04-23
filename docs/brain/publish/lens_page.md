@@ -80,3 +80,57 @@ The following claims are forbidden in any publish surface for Diagnostic Access:
 |---|---|---|---|
 | PRODUCTIZE.LENS.COMMERCIAL.PACKAGE.05 | 2026-04-22 | Extended with Tier 2 Controlled Claims section; forbidden claims documented | [[../product/diagnostic_access_product]] |
 | BRAIN.RECONCILE.LENS.TIER2.01 | 2026-04-23 | Added delivery form note (zone-based Diagnostic Narrative = Phase 1 form); added Phase gate column; added forbidden claim for investigation-target schema framing; deferred consequence_class publish claim to Phase 2 | [[../product/diagnostic_access_product]] |
+| PUBLISH.BRAIN.GOVERNANCE.UPDATE.01 | 2026-04-23 | Appended Surface Governance section: surface ownership table, target resolution rule, canonical truth rule, publish state model, execution rule | N/A |
+
+---
+
+## Surface Governance
+
+Extension: PUBLISH.BRAIN.GOVERNANCE.UPDATE.01
+
+### 1. Surface Ownership
+
+Publish surfaces are exclusive by content role:
+
+| Surface | Repo | Permitted content |
+|---|---|---|
+| mirror.krayu.be | krayu-mirror | authority / category / discipline |
+| mirror.signal-pi.com | signal-mirror | product / commercial / LENS |
+
+Content must never cross surfaces.
+
+### 2. Target Resolution
+
+Every publish execution must declare:
+- TARGET REPO (name or path)
+- TARGET SURFACE (domain)
+
+A surface name alone is insufficient. "mirror" is not a valid execution target.
+
+If repo and surface are not both explicit → publish execution must stop.
+
+### 3. Canonical Truth
+
+Canonical must reflect existing surface reality.
+
+- If the primary page exists → canonical may point to it
+- If the primary page does not exist → the page must self-canonicalize
+
+No forward-pointing canonicals are allowed.
+
+### 4. Publish State
+
+| State | Condition |
+|---|---|
+| prepared | local change present |
+| staged in repo | committed locally |
+| deployed | pushed and built |
+| published live | reachable on target surface |
+
+Intent does not equal deployment evidence.
+
+### 5. Execution Rule
+
+PUBLISH governance is enforced by brain activation plus stream contract.
+It is not enforced by hidden memory.
+If the stream does not activate PUBLISH explicitly, PUBLISH rules are not assumed.
