@@ -11,6 +11,9 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
+
+const VaultGraph = dynamic(() => import('../../components/VaultGraph'), { ssr: false })
 
 // ---------------------------------------------------------------------------
 // Vault index resolution
@@ -374,6 +377,7 @@ function EvidenceResult({ data, vaultIndex }) {
 function ZoneCard({ zone, vaultIndex, defaultOpen }) {
   const [expanded, setExpanded] = useState(defaultOpen || false)
   const [qs, setQs] = useState(null)
+  const [graphOpen, setGraphOpen] = useState(false)
   const resultRef = useRef(null)
 
   useEffect(() => {
@@ -459,12 +463,22 @@ function ZoneCard({ zone, vaultIndex, defaultOpen }) {
                 Vault ↗
               </a>
             )}
+            <button
+              className={`ws-btn${graphOpen ? ' ws-btn-active-graph' : ''}`}
+              onClick={() => setGraphOpen(g => !g)}
+            >
+              {graphOpen ? 'GRAPH ▲' : 'GRAPH'}
+            </button>
           </div>
 
           {qs?.error && <div className="ws-query-error">{qs.error}</div>}
           {qs?.data && qs.mode === 'WHY'      && <WhyResult      data={qs.data} />}
           {qs?.data && qs.mode === 'EVIDENCE' && <EvidenceResult data={qs.data} vaultIndex={vaultIndex} />}
           {qs?.data && qs.mode === 'TRACE'    && <TraceResult    data={qs.data} />}
+
+          {graphOpen && (
+            <VaultGraph zone={zone} vaultIndex={vaultIndex} qs={qs} />
+          )}
         </>
       )}
     </div>
