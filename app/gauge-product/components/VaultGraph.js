@@ -66,6 +66,13 @@ const LINK_COLOR_BASE = {
   ZONE_CAP:      '#8478b2',
   TRACE:         '#965fd0',
 }
+const LINK_COLOR_FOCUS = {  // focused state — same hues, ~80% of BASE brightness
+  ZONE_SIGNAL:   '#2e8a50',
+  SIGNAL_CLAIM:  '#3b68a8',
+  ZONE_ARTIFACT: '#8e7328',
+  ZONE_CAP:      '#6a5e92',
+  TRACE:         '#7848a8',
+}
 const LINK_COLOR_BRIGHT = {
   ZONE_SIGNAL:   '#52d97e',
   SIGNAL_CLAIM:  '#64a5ff',
@@ -279,7 +286,7 @@ function linkColor(link, relevantIds, isOverview) {
   const srcId = link.source?.id ?? link.source
   const tgtId = link.target?.id ?? link.target
   if (relevantIds.has(srcId) || relevantIds.has(tgtId)) {
-    return LINK_COLOR_BASE[link.type] ?? '#505058'
+    return LINK_COLOR_FOCUS[link.type] ?? '#404048'
   }
   return LINK_COLOR_DIM
 }
