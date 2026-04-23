@@ -1571,13 +1571,12 @@ details.op-details[open] summary::before { content:"▼  "; }
 }
 .lens-report-download:hover { border-color:#58a6ff; }
 .lens-report-ready { font-size:10px; color:#3fb950; letter-spacing:.06em; text-transform:uppercase; }
-.lens-report-basis { font-size:10px; color:#444; margin-top:14px; padding-top:12px; border-top:1px solid #1c1c22; letter-spacing:.03em; }
-/* Report tier structure — Executive / LENS / Diagnostic */
-.lens-report-tier { display:flex; align-items:center; gap:20px; padding:11px 0; border-bottom:1px solid #161620; }
-.lens-report-tier:last-child { border-bottom:none; }
-.lens-report-tier-label { font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:#666; width:76px; flex-shrink:0; }
-.lens-report-tier-body { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
-.lens-report-tier-note { font-size:11px; color:#444; font-style:italic; }
+.lens-report-basis { font-size:10px; color:#444; margin-top:8px; letter-spacing:.03em; }
+.lens-report-artifacts { display:flex; flex-direction:row; gap:10px; flex-wrap:wrap; align-items:center; margin-top:2px; }
+.lens-report-secondary {
+  border:1px solid #1b3a5c; background:#0b1f31; color:#58a6ff;
+}
+.lens-report-secondary:hover { border-color:#58a6ff; }
 
 /* === LENS POLISH (PRODUCTIZE.LENS.UI.POLISH.01) === */
 

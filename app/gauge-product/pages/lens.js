@@ -296,7 +296,14 @@ async function generateReport() {
   if (!res.ok || data.status !== 'ok') {
     throw new Error(data.reason || 'GENERATION_FAILED')
   }
-  return data.report_path
+  // Tier-1 + Tier-2: { files: [{name, label, path}] }
+  const byName = {}
+  for (const f of data.files) byName[f.name] = f
+  return {
+    executive:  byName['lens_tier1_narrative_brief.html'],
+    lens:       byName['lens_tier1_evidence_brief.html'],
+    diagnostic: byName['lens_tier2_diagnostic_narrative.html'],
+  }
 }
 
 function ReportPanel({ runId }) {
@@ -305,49 +312,50 @@ function ReportPanel({ runId }) {
   function handleGenerate() {
     setState('loading')
     generateReport()
-      .then(path  => setState({ path }))
-      .catch(err  => setState({ error: err.message || 'GENERATION_FAILED' }))
+      .then(artifacts => setState({ artifacts }))
+      .catch(err       => setState({ error: err.message || 'GENERATION_FAILED' }))
   }
 
   return (
     <div className="lens-report-panel">
       <div className="lens-panel-label">REPORTS</div>
-
-      <div className="lens-report-tier">
-        <div className="lens-report-tier-label">Executive</div>
-        <div className="lens-report-tier-body">
-          {(!state || state === 'loading' || state?.error) && (
-            <button className="lens-report-btn" onClick={handleGenerate} disabled={state === 'loading'}>
-              {state === 'loading' ? 'Generating…' : 'Generate'}
-            </button>
-          )}
-          {state === 'loading' && <span className="lens-report-status">Building governed report…</span>}
-          {state?.error && <span className="lens-report-error">{state.error}</span>}
-          {state?.path && (
-            <button className="lens-report-action-btn lens-report-open" onClick={() => window.open(state.path)}>
-              View Report
-            </button>
-          )}
-        </div>
-      </div>
-
-      <div className="lens-report-tier">
-        <div className="lens-report-tier-label">LENS</div>
-        <div className="lens-report-tier-body">
-          <span className="lens-report-tier-note">Intelligence projection — this view</span>
-        </div>
-      </div>
-
-      <div className="lens-report-tier">
-        <div className="lens-report-tier-label">Diagnostic</div>
-        <div className="lens-report-tier-body">
-          <button className="lens-report-workspace" onClick={() => window.open('/tier2/workspace')}>
-            Diagnostic Workspace
+      <div className="lens-report-row">
+        {(!state || state === 'loading' || state?.error) && (
+          <button className="lens-report-btn" onClick={handleGenerate} disabled={state === 'loading'}>
+            {state === 'loading' ? 'Generating…' : 'Generate'}
           </button>
-          <span className="lens-report-tier-note">WHY · EVIDENCE · TRACE</span>
-        </div>
+        )}
+        {state === 'loading' && <span className="lens-report-status">Building governed reports…</span>}
+        {state?.error && <span className="lens-report-error">{state.error}</span>}
       </div>
-
+      {state?.artifacts && (
+        <div className="lens-report-artifacts">
+          {state.artifacts.executive && (
+            <button
+              className="lens-report-action-btn lens-report-primary"
+              onClick={() => window.open(state.artifacts.executive.path)}
+            >
+              Executive
+            </button>
+          )}
+          {state.artifacts.lens && (
+            <button
+              className="lens-report-action-btn lens-report-secondary"
+              onClick={() => window.open(state.artifacts.lens.path)}
+            >
+              LENS
+            </button>
+          )}
+          {state.artifacts.diagnostic && (
+            <button
+              className="lens-report-action-btn lens-report-narrative"
+              onClick={() => window.open(state.artifacts.diagnostic.path)}
+            >
+              Diagnostic
+            </button>
+          )}
+        </div>
+      )}
       {runId && (
         <div className="lens-report-basis">
           Governed projection (ZONE-2) · Run: {runId}
