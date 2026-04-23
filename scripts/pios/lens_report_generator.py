@@ -1686,6 +1686,16 @@ def load_gauge_state() -> Dict:
         return json.load(f)
 
 
+def _load_vault_index() -> Optional[Dict]:
+    """Load vault_index.json for the authoritative BlueEdge run."""
+    path = (REPO_ROOT / "app" / "gauge-product" / "public" / "vault"
+            / "blueedge" / "run_01_authoritative_generated" / "vault_index.json")
+    if not path.exists():
+        return None
+    with open(path) as f:
+        return json.load(f)
+
+
 # ---------------------------------------------------------------------------
 # Tier-1 SVG topology (BlueEdge 17-domain spatial map, contrast-corrected)
 # ---------------------------------------------------------------------------
@@ -3097,6 +3107,157 @@ def _build_t2_zone_block(zone: Dict, publish_safe: bool) -> str:
   </details>"""
 
 
+# ---------------------------------------------------------------------------
+# Tier-2 overview graph — canvas, Python-computed positions
+# ---------------------------------------------------------------------------
+
+def _build_overview_graph_html(
+    zones: List[Dict],
+    vault_index: Optional[Dict],
+    width: int = 880,
+    height: int = 380,
+) -> str:
+    """Full vault structure graph for Tier-2 Diagnostic Narrative section 01A.
+
+    Mirrors buildGraph(isOverview=True) from VaultGraph.js:
+      zone root → all signals → mapped claims; zone root → all artifacts.
+    All nodes use BRIGHT styling (overview = no dimming).
+    Positions pre-computed geometrically; embedded as draw-only canvas JS.
+    Falls back to _build_topology_svg if vault_index unavailable.
+    """
+    if not vault_index or not zones:
+        return _build_topology_svg(zones, width=width)
+
+    zone   = zones[0]
+    hub_id = zone['zone_id']
+    ccx    = width / 2
+    ccy    = height / 2
+
+    # Mirrors BRIGHT palette + LINK_COLOR_BASE from VaultGraph.js
+    NODE_R   = {'ZONE': 9, 'SIGNAL': 6, 'CLAIM': 5, 'ARTIFACT': 5}
+    NODE_COL = {'ZONE': '#f0f0f0', 'SIGNAL': '#52d97e', 'CLAIM': '#e8b54a', 'ARTIFACT': '#6ab4e8'}
+    LINK_COL = {'ZONE_SIGNAL': '#3cac64', 'SIGNAL_CLAIM': '#4b82d2', 'ZONE_ARTIFACT': '#b29237'}
+    LINK_W   = {'ZONE_SIGNAL': 2.0, 'SIGNAL_CLAIM': 2.2, 'ZONE_ARTIFACT': 2.0}
+
+    nodes: List[Dict] = []
+    links: List[Dict] = []
+    idx:   Dict[str, int] = {}
+
+    def _add_node(nid: str, ntype: str, x: float, y: float) -> None:
+        if nid in idx:
+            return
+        i = len(nodes)
+        idx[nid] = i
+        nodes.append({
+            'x': round(x, 1), 'y': round(y, 1),
+            'r': NODE_R.get(ntype, 5),
+            'c': NODE_COL.get(ntype, '#909090'),
+            'l': nid,
+        })
+
+    def _add_link(src: str, tgt: str, ltype: str) -> None:
+        if src in idx and tgt in idx:
+            links.append({
+                's': idx[src], 't': idx[tgt],
+                'c': LINK_COL.get(ltype, '#404048'),
+                'w': LINK_W.get(ltype, 1.5),
+            })
+
+    # Zone root at canvas center
+    _add_node(hub_id, 'ZONE', ccx, ccy)
+
+    # Signals (sorted for determinism — mirrors JS Object.keys().sort())
+    sig_entries = sorted(vault_index.get('signals', {}).items())
+    n_sig = len(sig_entries)
+    R_sig, R_clm = 115, 200
+
+    if n_sig == 1:
+        sig_angles = [math.pi]
+    elif n_sig > 0:
+        a0 = math.radians(140)
+        a1 = math.radians(220)
+        sig_angles = [a0 + i * (a1 - a0) / (n_sig - 1) for i in range(n_sig)]
+    else:
+        sig_angles = []
+
+    for (sig_id, clm_id), ang in zip(sig_entries, sig_angles):
+        sx = ccx + R_sig * math.cos(ang)
+        sy = ccy - R_sig * math.sin(ang)
+        _add_node(sig_id, 'SIGNAL', sx, sy)
+        _add_link(hub_id, sig_id, 'ZONE_SIGNAL')
+        if clm_id:
+            _add_node(clm_id, 'CLAIM',
+                      ccx + R_clm * math.cos(ang),
+                      ccy - R_clm * math.sin(ang))
+            _add_link(sig_id, clm_id, 'SIGNAL_CLAIM')
+
+    # Artifacts (sorted)
+    art_ids = sorted(vault_index.get('artifacts', {}))
+    n_art = len(art_ids)
+    R_art = 115
+
+    if n_art == 1:
+        art_angles = [0.0]
+    elif n_art > 0:
+        a0 = math.radians(-60)
+        a1 = math.radians(60)
+        art_angles = [a0 + i * (a1 - a0) / (n_art - 1) for i in range(n_art)]
+    else:
+        art_angles = []
+
+    for art_id, ang in zip(art_ids, art_angles):
+        _add_node(art_id, 'ARTIFACT',
+                  ccx + R_art * math.cos(ang),
+                  ccy - R_art * math.sin(ang))
+        _add_link(hub_id, art_id, 'ZONE_ARTIFACT')
+
+    nodes_js = json.dumps(nodes, separators=(',', ':'))
+    links_js = json.dumps(links, separators=(',', ':'))
+
+    legend_html = ''.join(
+        f'<span style="display:inline-flex;align-items:center;gap:5px;margin-right:18px">'
+        f'<span style="display:inline-block;width:8px;height:8px;border-radius:50%;'
+        f'background:{col}"></span>'
+        f'<span style="color:#787880;font-size:10px">{lbl}</span></span>'
+        for col, lbl in [
+            ('#f0f0f0', 'Zone root'),
+            ('#52d97e', 'Signal'),
+            ('#e8b54a', 'Mapped claim'),
+            ('#6ab4e8', 'Artifact'),
+        ]
+    )
+
+    return (
+        f'<canvas id="og-canvas" width="{width}" height="{height}" '
+        f'style="display:block;width:100%;background:#09090d;border-radius:4px"></canvas>\n'
+        f'<div style="margin-top:8px;padding-left:2px">{legend_html}</div>\n'
+        f'<script>(function(){{\n'
+        f'  var c=document.getElementById("og-canvas");\n'
+        f'  if(!c)return;\n'
+        f'  var ctx=c.getContext("2d");\n'
+        f'  var N={nodes_js};\n'
+        f'  var L={links_js};\n'
+        f'  ctx.globalAlpha=0.8;\n'
+        f'  for(var i=0;i<L.length;i++){{\n'
+        f'    var l=L[i],s=N[l.s],t=N[l.t];\n'
+        f'    ctx.strokeStyle=l.c;ctx.lineWidth=l.w;\n'
+        f'    ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(t.x,t.y);ctx.stroke();\n'
+        f'  }}\n'
+        f'  ctx.globalAlpha=1;\n'
+        f'  for(var i=0;i<N.length;i++){{\n'
+        f'    var n=N[i];\n'
+        f'    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,6.283);\n'
+        f'    ctx.fillStyle=n.c;ctx.fill();\n'
+        f'  }}\n'
+        f'  ctx.font="9px monospace";ctx.textAlign="center";ctx.fillStyle="#585860";\n'
+        f'  for(var i=0;i<N.length;i++){{\n'
+        f'    var n=N[i];\n'
+        f'    ctx.fillText(n.l,n.x,n.y+n.r+11);\n'
+        f'  }}\n'
+        f'}})();</script>'
+    )
+
+
 def _build_topology_svg(zones: List[Dict], width: int = 880, height: int = 270) -> str:
     """Inline SVG of the zone-signal evidence topology for the narrative report.
 
@@ -3211,7 +3372,8 @@ def _build_topology_svg(zones: List[Dict], width: int = 880, height: int = 270) 
 
 
 def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict,
-                                       publish_safe: bool = False) -> str:
+                                       publish_safe: bool = False,
+                                       vault_index: Optional[Dict] = None) -> str:
     domains      = topology["domains"]
     counts       = topology["counts"]
     score        = gauge["score"]["canonical"]
@@ -3288,8 +3450,8 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
     # Per-zone blocks
     zone_blocks_html = "".join(_build_t2_zone_block(z, publish_safe) for z in zones)
 
-    # Structural topology SVG (section 01A)
-    topology_svg = _build_topology_svg(zones)
+    # Structural evidence topology graph (section 01A) — canvas-based overview graph
+    topology_svg = _build_overview_graph_html(zones, vault_index)
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -3452,9 +3614,10 @@ def generate_tier2_reports(output_dir: Optional[Path] = None) -> List[Path]:
     if not CANONICAL_PKG_DIR.exists():
         _fail(f"Canonical package directory not found: {CANONICAL_PKG_DIR}")
 
-    topology = load_canonical_topology()
-    signals  = load_signal_registry()
-    gauge    = load_gauge_state()
+    topology    = load_canonical_topology()
+    signals     = load_signal_registry()
+    gauge       = load_gauge_state()
+    vault_index = _load_vault_index()
 
     files: List[Path] = []
 
@@ -3464,7 +3627,9 @@ def generate_tier2_reports(output_dir: Optional[Path] = None) -> List[Path]:
     ]
 
     for out_path, pub_safe in artifacts:
-        html = _build_tier2_diagnostic_narrative(topology, signals, gauge, publish_safe=pub_safe)
+        html = _build_tier2_diagnostic_narrative(topology, signals, gauge,
+                                                  publish_safe=pub_safe,
+                                                  vault_index=vault_index)
         out_path.write_text(html, encoding="utf-8")
         print(f"[LENS REPORT] Generated: {out_path.resolve()}")
         files.append(out_path)

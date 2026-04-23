@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LENS Assessment — Diagnostic Narrative</title>
+  <style>
+  :root{--bg:#0e0e10;--surface:#16161a;--surface-raised:#1c1c22;--border:#2a2a2e;--border-subtle:#222228;--fg:#e8e8e8;--fg-muted:#888;--fg-dim:#555;--gold:#c89b3c;--gold-muted:rgba(200,155,60,0.12);--gold-border:rgba(200,155,60,0.28);--green:#4caf6e;--amber:#d4912a;--amber-muted:rgba(212,145,42,0.1);--amber-border:rgba(212,145,42,0.25);--red:#e05252;--font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:14px;line-height:1.7;-webkit-font-smoothing:antialiased}
+  .page{max-width:960px;margin:0 auto;padding:48px 40px 80px}
+  .report-header{border-bottom:1px solid var(--border);padding-bottom:24px;margin-bottom:32px;display:flex;justify-content:space-between;align-items:flex-start}
+  .report-brand{font-size:11px;color:var(--fg-muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+  .report-title{font-size:20px;color:var(--fg);font-weight:400}
+  .report-type{font-size:11px;color:var(--fg-muted);margin-top:4px;letter-spacing:.06em}
+  .report-meta{text-align:right;font-size:12px;color:var(--fg-muted);line-height:1.8}
+  .report-meta strong{color:var(--fg);font-weight:500}
+  .nav-strip{display:flex;gap:10px;margin-bottom:36px}
+  .nav-link{display:inline-block;padding:7px 14px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border);color:var(--fg-muted);text-decoration:none;border-radius:3px}
+  .nav-link:hover{border-color:var(--gold);color:var(--gold)}
+  .nav-link.active{border-color:var(--gold-border);color:var(--gold);background:var(--gold-muted)}
+  .t2-section{margin-bottom:48px}
+  .t2-section-header{display:flex;align-items:baseline;gap:12px;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid var(--border-subtle)}
+  .t2-section-num{font-size:10px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;min-width:24px}
+  .t2-section-title{font-size:15px;color:var(--fg);font-weight:500;letter-spacing:.02em}
+  .t2-context-lock{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);padding:20px 24px;border-radius:3px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .t2-field{display:flex;flex-direction:column;gap:4px}
+  .t2-field-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted)}
+  .t2-field-value{font-size:13px;color:var(--fg)}
+  .t2-field-value.incomplete{color:var(--amber)}
+  .t2-field-value.complete{color:var(--green)}
+  .t2-overview-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+  .t2-overview-cell{background:var(--surface);border:1px solid var(--border);padding:14px 16px;border-radius:3px}
+  .t2-cell-label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:6px}
+  .t2-cell-value{font-size:18px;color:var(--fg);font-weight:300}
+  .t2-cell-sub{font-size:11px;color:var(--fg-muted);margin-top:3px}
+  .t2-pressure-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .t2-pressure-cell{background:var(--surface-raised);border:1px solid var(--border-subtle);padding:10px 12px;border-radius:3px}
+  .t2-pressure-label{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:4px}
+  .t2-pressure-count{font-size:16px;color:var(--fg-muted)}
+  .t2-zone-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .t2-zone-card{background:var(--surface);border:1px solid var(--border);padding:18px 20px;border-radius:3px;text-decoration:none;display:block;color:inherit}
+  .t2-zone-card:hover{border-color:var(--amber-border)}
+  .t2-zone-id{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:8px}
+  .t2-zone-domain{font-size:14px;color:var(--fg);margin-bottom:12px}
+  .t2-badge-row{display:flex;gap:6px;flex-wrap:wrap}
+  .t2-badge{display:inline-block;padding:3px 8px;font-size:10px;letter-spacing:.06em;border-radius:2px;text-transform:uppercase}
+  .t2-type-pressure{background:rgba(212,145,42,0.12);color:var(--amber);border:1px solid var(--amber-border)}
+  .t2-type-gap{background:rgba(136,136,136,0.1);color:#888;border:1px solid #333}
+  .t2-type-conflict{background:rgba(224,82,82,0.1);color:var(--red);border:1px solid rgba(224,82,82,0.25)}
+  .t2-type-inconsistency{background:rgba(76,175,110,0.08);color:var(--green);border:1px solid rgba(76,175,110,0.2)}
+  .t2-sev-high{background:rgba(224,82,82,0.1);color:var(--red)}
+  .t2-sev-moderate{background:rgba(212,145,42,0.1);color:var(--amber)}
+  .t2-sev-low{background:rgba(136,136,136,0.1);color:#888}
+  .t2-conf-strong{background:rgba(76,175,110,0.1);color:var(--green)}
+  .t2-conf-partial{background:rgba(200,155,60,0.1);color:var(--gold)}
+  .t2-conf-weak{background:rgba(136,136,136,0.1);color:#888}
+  .t2-zone-block{background:var(--surface);border:1px solid var(--border);padding:24px;border-radius:3px;margin-bottom:24px}
+  .t2-zone-block-header{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:16px;border-bottom:1px solid var(--border-subtle);margin-bottom:20px}
+  .t2-zone-block-id{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
+  .t2-zone-block-domain{font-size:14px;color:var(--fg);margin-top:4px}
+  .t2-zone-block-back{font-size:10px;color:var(--fg-dim);text-decoration:none;letter-spacing:.06em;text-transform:uppercase}
+  .t2-zone-block-back:hover{color:var(--fg-muted)}
+  .t2-sub-section{margin-bottom:16px;padding:16px 18px;background:var(--surface-raised);border:1px solid var(--border-subtle);border-radius:3px}
+  .t2-sub-section:last-child{margin-bottom:0}
+  .t2-sub-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .t2-sub-tag{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold-border);padding:2px 8px;border-radius:2px}
+  .t2-sub-title{font-size:12px;color:var(--fg-muted);letter-spacing:.04em;text-transform:uppercase}
+  .t2-body{font-size:13px;color:var(--fg);line-height:1.7;margin-bottom:10px}
+  .t2-body:last-child{margin-bottom:0}
+  .t2-chip-row{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+  .t2-chip{font-size:11px;padding:2px 8px;background:var(--surface);border:1px solid var(--border);border-radius:2px;color:var(--fg-muted);font-family:monospace}
+  .t2-path-block{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:12px 14px;margin:10px 0}
+  .t2-path-chain{font-size:12px;color:var(--fg);font-family:monospace;margin-bottom:6px}
+  .t2-path-meta{display:flex;gap:12px;font-size:10px;color:var(--fg-muted)}
+  .t2-path-block.t2-inferred{background:rgba(212,145,42,0.04);border-color:var(--amber-border)}
+  .t2-inferred-decl{font-size:11px;color:var(--amber);margin-top:8px;padding:6px 8px;background:var(--amber-muted);border:1px solid var(--amber-border);border-radius:2px}
+  .t2-evidence-row{display:flex;align-items:center;gap:10px;margin:8px 0}
+  .t2-ev-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted)}
+  .t2-ev-strong{color:var(--green);font-weight:500}
+  .t2-ev-partial{color:var(--gold);font-weight:500}
+  .t2-ev-weak{color:var(--amber);font-weight:500}
+  .t2-avail-list{list-style:none;padding:0;margin-top:8px}
+  .t2-avail-item{font-size:11px;color:var(--fg-muted);padding:4px 0;border-bottom:1px solid var(--border-subtle);font-family:monospace}
+  .t2-avail-item:last-child{border-bottom:none}
+  .t2-missing-list{list-style:none;padding:0;margin-top:10px}
+  .t2-missing-item{font-size:12px;padding:8px 10px;border-bottom:1px solid var(--border-subtle);display:flex;flex-direction:column;gap:3px}
+  .t2-missing-item:last-child{border-bottom:none}
+  .t2-missing-desc{color:var(--fg)}
+  .t2-missing-impact{color:var(--amber);font-size:11px}
+  .t2-uncertainty-block{background:rgba(212,145,42,0.04);border:1px solid var(--amber-border);border-left:3px solid var(--amber);padding:16px 18px;border-radius:3px}
+  .t2-inference-active{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding:8px 12px;background:rgba(212,145,42,0.1);border:1px solid var(--amber-border);border-radius:2px}
+  .t2-inference-tag{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
+  .t2-inference-value{font-size:12px;color:var(--amber);letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+  .t2-unresolved-list{list-style:none;padding:0;margin-top:8px}
+  .t2-unresolved-item{padding:8px 0;border-bottom:1px solid var(--border-subtle)}
+  .t2-unresolved-item:last-child{border-bottom:none}
+  .t2-unresolved-element{font-size:12.5px;color:var(--fg);margin-bottom:3px}
+  .t2-unresolved-reason{font-size:11px;color:var(--fg-muted)}
+  .t2-hook-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:4px}
+  .t2-hook-block{background:var(--surface);border:1px solid var(--border);padding:12px 14px;border-radius:3px}
+  .t2-hook-type{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid var(--border-subtle)}
+  .t2-hook-id{font-size:10px;color:var(--fg-dim);font-family:monospace;margin-bottom:4px}
+  .t2-hook-surface{font-size:11.5px;color:var(--fg-muted);line-height:1.5}
+  .report-footer{display:flex;justify-content:space-between;align-items:flex-end;padding-top:24px;border-top:1px solid var(--border);margin-top:48px}
+  .footer-brand{font-size:13px;color:var(--gold);letter-spacing:.08em}
+  .footer-note{font-size:11px;color:var(--fg-muted);text-align:right;line-height:1.7}
+  @media(max-width:600px){.t2-context-lock{grid-template-columns:1fr}.t2-overview-grid{grid-template-columns:1fr 1fr}.t2-pressure-row{grid-template-columns:1fr 1fr}.t2-zone-grid{grid-template-columns:1fr}.t2-hook-grid{grid-template-columns:1fr}.report-header{flex-direction:column;gap:12px}.report-meta{text-align:left}}
+  details.t2-zone-details{margin-bottom:16px;background:var(--surface);border:1px solid var(--border);border-radius:3px}
+  details.t2-zone-details[open]{border-color:var(--amber-border)}
+  details.t2-zone-details > summary{list-style:none;cursor:pointer;padding:18px 20px;position:relative;outline:none;user-select:none}
+  details.t2-zone-details > summary::-webkit-details-marker{display:none}
+  details.t2-zone-details > summary::after{content:'▸';position:absolute;right:20px;top:20px;font-size:10px;color:var(--fg-dim)}
+  details.t2-zone-details[open] > summary::after{content:'▾';color:var(--gold)}
+  .t2-summary-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .t2-summary-zone-id{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);min-width:60px}
+  .t2-summary-domain{font-size:14px;color:var(--fg)}
+  .t2-summary-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .t2-summary-preview{font-size:12px;color:var(--fg-muted);line-height:1.6;padding-top:8px;border-top:1px solid var(--border-subtle)}
+  details.t2-zone-details > .t2-zone-block{border:none;border-top:1px solid var(--border-subtle);border-radius:0 0 3px 3px;margin-bottom:0;background:transparent}
+  .t2-topo-intro{font-size:12px;color:var(--fg-muted);margin-bottom:14px;line-height:1.7;max-width:680px}
+  .t2-topo-panel{border:1px solid var(--border);border-radius:3px;overflow:hidden;background:#09090d}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="nav-strip">
+    <a href="/api/report-file?name=lens_tier1_narrative_brief.html" class="nav-link">Executive Brief</a>
+    <a href="/api/report-file?name=lens_tier1_evidence_brief.html" class="nav-link">LENS Assessment</a>
+    <span class="nav-link active">Diagnostic</span>
+  </div>
+
+  <div class="report-header">
+    <div>
+      <div class="report-brand">Signäl Program Intelligence</div>
+      <div class="report-title">LENS Assessment — Diagnostic Narrative</div>
+      <div class="report-type">Tier-2 Diagnostic Access · Evidence Interrogation Surface</div>
+    </div>
+    <div class="report-meta">
+      <div>Client: <strong>BlueEdge Fleet Management Platform</strong></div>
+      <div>Assessment score: <strong>60 — CONDITIONAL</strong></div>
+      <div>Confidence band: <strong>60 – 100</strong></div>
+      <div>Issued: <strong>April 2026</strong></div>
+    </div>
+  </div>
+
+  <div class="t2-section">
+    <div class="t2-section-header">
+      <span class="t2-section-num">00</span>
+      <span class="t2-section-title">Context Lock</span>
+    </div>
+    <div class="t2-context-lock">
+      <div class="t2-field">
+        <span class="t2-field-label">Run ID</span>
+        <span class="t2-field-value">run_authoritative_recomputed_01</span>
+      </div>
+      <div class="t2-field">
+        <span class="t2-field-label">Evidence Scope</span>
+        <span class="t2-field-value">PARTIAL</span>
+      </div>
+      <div class="t2-field">
+        <span class="t2-field-label">Structural Coverage Status</span>
+        <span class="t2-field-value incomplete">INCOMPLETE</span>
+      </div>
+      <div class="t2-field">
+        <span class="t2-field-label">Resolution Boundary</span>
+        <span class="t2-field-value" style="font-size:12px">15 of 17 domains are fully grounded. 2 domain(s) exhibit unresolved structural conditions. Runtime-dependent dimensions cannot be resolved from static evidence alone.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="t2-section">
+    <div class="t2-section-header">
+      <span class="t2-section-num">01</span>
+      <span class="t2-section-title">Diagnostic Overview</span>
+    </div>
+    <div class="t2-overview-grid">
+      <div class="t2-overview-cell">
+        <div class="t2-cell-label">Diagnostic Zones</div>
+        <div class="t2-cell-value">2</div>
+        <div class="t2-cell-sub">identified from canonical data</div>
+      </div>
+      <div class="t2-overview-cell">
+        <div class="t2-cell-label">Signal Contradiction</div>
+        <div class="t2-cell-value" style="color:var(--green)">NO</div>
+        <div class="t2-cell-sub">across zone scope</div>
+      </div>
+      <div class="t2-overview-cell">
+        <div class="t2-cell-label">Domains Grounded</div>
+        <div class="t2-cell-value">15 / 17</div>
+        <div class="t2-cell-sub">structurally confirmed</div>
+      </div>
+      <div class="t2-overview-cell">
+        <div class="t2-cell-label">Signal Coverage</div>
+        <div class="t2-cell-value">1 / 2</div>
+        <div class="t2-cell-sub">zones with signals bound</div>
+      </div>
+    </div>
+    <div class="t2-pressure-row">
+      <div class="t2-pressure-cell">
+        <div class="t2-pressure-label">Pressure Concentration</div>
+        <div class="t2-pressure-count">1</div>
+      </div>
+      <div class="t2-pressure-cell">
+        <div class="t2-pressure-label">Evidence Gap</div>
+        <div class="t2-pressure-count">1</div>
+      </div>
+      <div class="t2-pressure-cell">
+        <div class="t2-pressure-label">Signal Conflict</div>
+        <div class="t2-pressure-count">0</div>
+      </div>
+      <div class="t2-pressure-cell">
+        <div class="t2-pressure-label">Structural Inconsistency</div>
+        <div class="t2-pressure-count">0</div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--fg-muted);margin-top:14px">1 of 2 diagnostic zone(s) have bound signal coverage. 1 zone(s) have no signal coverage and cannot be structurally characterized.</p>
+  </div>
+
+  <div class="t2-section">
+    <div class="t2-section-header">
+      <span class="t2-section-num">01A</span>
+      <span class="t2-section-title">Structural Evidence Topology</span>
+    </div>
+    <p class="t2-topo-intro">This view represents the full structural evidence topology underlying the current assessment. It shows how signals and structural evidence connect across the assessed system. Diagnostic zones described below represent focused segments of this topology.</p>
+    <div class="t2-topo-panel">
+      <canvas id="og-canvas" width="880" height="380" style="display:block;width:100%;background:#09090d;border-radius:4px"></canvas>
+<div style="margin-top:8px;padding-left:2px"><span style="display:inline-flex;align-items:center;gap:5px;margin-right:18px"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#f0f0f0"></span><span style="color:#787880;font-size:10px">Zone root</span></span><span style="display:inline-flex;align-items:center;gap:5px;margin-right:18px"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#52d97e"></span><span style="color:#787880;font-size:10px">Signal</span></span><span style="display:inline-flex;align-items:center;gap:5px;margin-right:18px"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#e8b54a"></span><span style="color:#787880;font-size:10px">Mapped claim</span></span><span style="display:inline-flex;align-items:center;gap:5px;margin-right:18px"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#6ab4e8"></span><span style="color:#787880;font-size:10px">Artifact</span></span></div>
+<script>(function(){
+  var c=document.getElementById("og-canvas");
+  if(!c)return;
+  var ctx=c.getContext("2d");
+  var N=[{"x":440.0,"y":190.0,"r":9,"c":"#f0f0f0","l":"ZONE-01"},{"x":351.9,"y":116.1,"r":6,"c":"#52d97e","l":"SIG-001"},{"x":286.8,"y":61.4,"r":5,"c":"#e8b54a","l":"CLM-20"},{"x":331.9,"y":150.7,"r":6,"c":"#52d97e","l":"SIG-002"},{"x":252.1,"y":121.6,"r":5,"c":"#e8b54a","l":"CLM-21"},{"x":325.0,"y":190.0,"r":6,"c":"#52d97e","l":"SIG-003"},{"x":240.0,"y":190.0,"r":5,"c":"#e8b54a","l":"CLM-22"},{"x":331.9,"y":229.3,"r":6,"c":"#52d97e","l":"SIG-004"},{"x":252.1,"y":258.4,"r":5,"c":"#e8b54a","l":"CLM-23"},{"x":351.9,"y":263.9,"r":6,"c":"#52d97e","l":"SIG-005"},{"x":286.8,"y":318.6,"r":5,"c":"#e8b54a","l":"CLM-24"},{"x":497.5,"y":289.6,"r":5,"c":"#6ab4e8","l":"ART-01"},{"x":528.1,"y":263.9,"r":5,"c":"#6ab4e8","l":"ART-02"},{"x":548.1,"y":229.3,"r":5,"c":"#6ab4e8","l":"ART-03"},{"x":555.0,"y":190.0,"r":5,"c":"#6ab4e8","l":"ART-04"},{"x":548.1,"y":150.7,"r":5,"c":"#6ab4e8","l":"ART-05"},{"x":528.1,"y":116.1,"r":5,"c":"#6ab4e8","l":"ART-06"},{"x":497.5,"y":90.4,"r":5,"c":"#6ab4e8","l":"ART-07"}];
+  var L=[{"s":0,"t":1,"c":"#3cac64","w":2.0},{"s":1,"t":2,"c":"#4b82d2","w":2.2},{"s":0,"t":3,"c":"#3cac64","w":2.0},{"s":3,"t":4,"c":"#4b82d2","w":2.2},{"s":0,"t":5,"c":"#3cac64","w":2.0},{"s":5,"t":6,"c":"#4b82d2","w":2.2},{"s":0,"t":7,"c":"#3cac64","w":2.0},{"s":7,"t":8,"c":"#4b82d2","w":2.2},{"s":0,"t":9,"c":"#3cac64","w":2.0},{"s":9,"t":10,"c":"#4b82d2","w":2.2},{"s":0,"t":11,"c":"#b29237","w":2.0},{"s":0,"t":12,"c":"#b29237","w":2.0},{"s":0,"t":13,"c":"#b29237","w":2.0},{"s":0,"t":14,"c":"#b29237","w":2.0},{"s":0,"t":15,"c":"#b29237","w":2.0},{"s":0,"t":16,"c":"#b29237","w":2.0},{"s":0,"t":17,"c":"#b29237","w":2.0}];
+  ctx.globalAlpha=0.8;
+  for(var i=0;i<L.length;i++){
+    var l=L[i],s=N[l.s],t=N[l.t];
+    ctx.strokeStyle=l.c;ctx.lineWidth=l.w;
+    ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(t.x,t.y);ctx.stroke();
+  }
+  ctx.globalAlpha=1;
+  for(var i=0;i<N.length;i++){
+    var n=N[i];
+    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,6.283);
+    ctx.fillStyle=n.c;ctx.fill();
+  }
+  ctx.font="9px monospace";ctx.textAlign="center";ctx.fillStyle="#585860";
+  for(var i=0;i<N.length;i++){
+    var n=N[i];
+    ctx.fillText(n.l,n.x,n.y+n.r+11);
+  }
+})();</script>
+    </div>
+  </div>
+
+  <div class="t2-section">
+    <div class="t2-section-header">
+      <span class="t2-section-num">02</span>
+      <span class="t2-section-title">Diagnostic Zone Inventory</span>
+    </div>
+    <div class="t2-zone-grid">
+      
+      <a href="#zone-ZONE-01-details" class="t2-zone-card" id="zone-ZONE-01">
+        <div class="t2-zone-id">ZONE-01</div>
+        <div class="t2-zone-domain">Platform Infrastructure and Data</div>
+        <div class="t2-badge-row">
+          <span class="t2-badge t2-type-pressure">pressure concentration</span>
+          <span class="t2-badge t2-sev-high">HIGH</span>
+          <span class="t2-badge t2-conf-strong">STRONG</span>
+          <span class="t2-badge" style="background:var(--surface-raised);color:var(--fg-dim);border:1px solid var(--border-subtle)">FULLY TRACEABLE</span>
+        </div>
+      </a>
+      <a href="#zone-ZONE-02-details" class="t2-zone-card" id="zone-ZONE-02">
+        <div class="t2-zone-id">ZONE-02</div>
+        <div class="t2-zone-domain">Telemetry Transport and Messaging</div>
+        <div class="t2-badge-row">
+          <span class="t2-badge t2-type-gap">evidence gap</span>
+          <span class="t2-badge t2-sev-moderate">MODERATE</span>
+          <span class="t2-badge t2-conf-weak">WEAK</span>
+          <span class="t2-badge" style="background:var(--surface-raised);color:var(--fg-dim);border:1px solid var(--border-subtle)">NOT TRACEABLE</span>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div class="t2-section">
+    <div class="t2-section-header">
+      <span class="t2-section-num">03</span>
+      <span class="t2-section-title">Diagnostic Zones</span>
+    </div>
+    
+  <details class="t2-zone-details" id="zone-ZONE-01-details">
+    <summary class="t2-zone-summary">
+      <div class="t2-summary-top">
+        <span class="t2-summary-zone-id">ZONE-01</span>
+        <span class="t2-summary-domain">Platform Infrastructure and Data</span>
+      </div>
+      <div class="t2-summary-badges">
+        <span class="t2-badge t2-type-pressure">pressure concentration</span>
+        <span class="t2-badge" style="background:var(--surface-raised);color:var(--fg-dim);border:1px solid var(--border-subtle)">4 capability nodes</span>
+        <span class="t2-badge t2-sev-high">HIGH</span>
+        <span class="t2-badge t2-conf-strong">STRONG</span>
+        <span class="t2-badge" style="background:var(--surface-raised);color:var(--fg-dim);border:1px solid var(--border-subtle)">FULLY TRACEABLE</span>
+      </div>
+      <div class="t2-summary-preview">Platform Infrastructure and Data domain exhibits concentrated structural pressure. Seven core runtime operational dimensions are u…</div>
+    </summary>
+    <div class="t2-zone-block" id="zone-ZONE-01-block">
+      <div class="t2-zone-block-header">
+        <div>
+          <div class="t2-zone-block-id">ZONE-01 · PRESSURE CONCENTRATION</div>
+          <div class="t2-zone-block-domain">Platform Infrastructure and Data</div>
+        </div>
+        <a href="#zone-ZONE-01" class="t2-zone-block-back">↑ Zone inventory</a>
+      </div>
+      
+    <div class="t2-sub-section" id="zone-ZONE-01-block-a">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">A</span>
+        <span class="t2-sub-title">Condition Description</span>
+      </div>
+      <p class="t2-body">Platform Infrastructure and Data domain exhibits concentrated structural pressure. Seven core runtime operational dimensions are unresolvable from available static evidence: backend service memory usage, cache efficiency, cache availability, event pipeline activity, fleet connection activity, vehicle alert activity, and driver session performance. Additionally, structural volatility analysis reveals an edge-to-node density ratio of 1.273, exceeding architectural unity and indicating a tightly interconnected dependency mesh within this domain.</p>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:4px">Source signals:</div>
+      <div class="t2-chip-row"><span class="t2-chip">Platform Runtime State: Seven Core Dimensions Are Currently Unknown</span><span class="t2-chip">Structural Volatility: Edge-to-Node Density Exceeds Unity</span></div>
+      <div class="t2-chip-row">
+        <span class="t2-chip" style="color:var(--fg-dim)">derived_from: Tier-1 Evidence Brief</span>
+      </div>
+    </div>
+      
+    <div class="t2-sub-section" id="zone-ZONE-01-block-b">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">B</span>
+        <span class="t2-sub-title">Structural Drivers</span>
+      </div>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted)">Contributing nodes:</div>
+      <div class="t2-chip-row"><span class="t2-chip">DOMAIN-10</span><span class="t2-chip">CAP-26</span><span class="t2-chip">CAP-27</span><span class="t2-chip">CAP-28</span></div>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:8px">Contributing signals:</div>
+      <div class="t2-chip-row"><span class="t2-chip">SIG-002</span><span class="t2-chip">SIG-004</span></div>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:8px">
+        Dependency structure: <span style="color:var(--fg)">BRANCHING</span>
+      </div>
+      <p class="t2-body" style="margin-top:6px">Multiple capability nodes within the platform infrastructure scope exhibit independent structural conditions. Cache layer and monorepo container contribute distinct but co-located pressure vectors.</p>
+    </div>
+      
+    <div class="t2-sub-section" id="zone-ZONE-01-block-c">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">C</span>
+        <span class="t2-sub-title">Propagation Path</span>
+      </div>
+      
+      <div class="t2-path-block">
+        <div class="t2-path-chain">DOMAIN-10 → CAP-27 → CAP-29</div>
+        <div class="t2-path-meta">
+          <span>path_id: ZONE-01-P1</span>
+          <span>type: FORWARD</span>
+          <span>evidence: STRONG</span>
+        </div>
+      </div>
+      <div class="t2-path-block t2-inferred">
+        <div class="t2-path-chain">DOMAIN-10 → DOMAIN-11</div>
+        <div class="t2-path-meta">
+          <span>path_id: ZONE-01-P2</span>
+          <span>type: FORWARD</span>
+          <span>evidence: PARTIAL</span>
+        </div>
+        <div class="t2-inferred-decl">Component-confirmed connection (event module in shared scope). Cross-domain edge not explicitly declared in topology artifact.</div>
+      </div>
+    </div>
+      
+    <div class="t2-sub-section" id="zone-ZONE-01-block-d">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">D</span>
+        <span class="t2-sub-title">Evidence State</span>
+      </div>
+      <div class="t2-evidence-row">
+        <span class="t2-ev-label">Evidence strength:</span>
+        <span class="t2-ev-strong">STRONG</span>
+      </div>
+      <ul class="t2-avail-list"><li class="t2-avail-item">docs/pios/40.7/intelligence_output_set.md</li><li class="t2-avail-item">docs/pios/40.7/diagnosis_output_set.md</li><li class="t2-avail-item">docs/pios/40.6/condition_output_set.md</li><li class="t2-avail-item">docs/pios/40.6/condition_output_set.md</li><li class="t2-avail-item">docs/pios/40.6/condition_validation_report.md</li><li class="t2-avail-item">docs/pios/40.5/signal_validation_report.md</li></ul>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:12px">Missing evidence:</div>
+      
+        <ul class="t2-missing-list">
+          <li class="t2-missing-item">
+            <span class="t2-missing-desc">Live Prometheus metrics scrape</span>
+            <span class="t2-missing-impact">Backend memory, cache efficiency, and cache availability cannot be confirmed without runtime instrumentation.</span>
+          </li>
+          <li class="t2-missing-item">
+            <span class="t2-missing-desc">WebSocket and event-stream telemetry</span>
+            <span class="t2-missing-impact">Event pipeline activity, fleet connection activity, and alert processing state require live data to resolve.</span>
+          </li>
+        </ul>
+    </div>
+      
+    <div class="t2-sub-section" id="zone-ZONE-01-block-e">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">E</span>
+        <span class="t2-sub-title">Uncertainty Declaration</span>
+      </div>
+      <div class="t2-uncertainty-block">
+        <div class="t2-inference-active">
+          <span class="t2-inference-tag">inference_prohibition</span>
+          <span class="t2-inference-value">ACTIVE</span>
+        </div>
+        <ul class="t2-unresolved-list"><li class="t2-unresolved-item">
+          <div class="t2-unresolved-element">Seven runtime operational dimensions</div>
+          <div class="t2-unresolved-reason">Absence of live Prometheus scrape and WebSocket telemetry prevents resolution. Dimensions confirmed as structurally required but evidence-absent: cache performance, event pipeline activity, fleet connection activity, alert processing, session scoring, backend memory, cache availability.</div>
+        </li><li class="t2-unresolved-item">
+          <div class="t2-unresolved-element">Propagation extent to adjacent domains</div>
+          <div class="t2-unresolved-reason">Cross-domain structural connections are component-confirmed but not topology-edge-confirmed. Full propagation scope cannot be declared without live traversal data.</div>
+        </li></ul>
+      </div>
+    </div>
+      
+    <div class="t2-sub-section" id="zone-ZONE-01-block-f">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">F</span>
+        <span class="t2-sub-title">Investigation Entry Points</span>
+      </div>
+      <div class="t2-hook-grid">
+        <div class="t2-hook-block" id="zone-ZONE-01-why">
+          <div class="t2-hook-type">WHY</div>
+          <div class="t2-hook-id">ZONE-01-WHY</div>
+          <div class="t2-hook-surface">Why does Platform Infrastructure and Data exhibit pressure concentration?</div>
+        </div>
+        <div class="t2-hook-block" id="zone-ZONE-01-trace">
+          <div class="t2-hook-type">TRACE</div>
+          <div class="t2-hook-id">ZONE-01-TRACE</div>
+          <div class="t2-hook-surface">entry: DOMAIN-10 · direction: DOWNSTREAM · depth: 2</div>
+        </div>
+        <div class="t2-hook-block" id="zone-ZONE-01-ev">
+          <div class="t2-hook-type">EVIDENCE</div>
+          <div class="t2-hook-id">ZONE-01-EV</div>
+          <div class="t2-hook-surface">scope: FULL · artifact targets from zone signal set</div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </details>
+  <details class="t2-zone-details" id="zone-ZONE-02-details">
+    <summary class="t2-zone-summary">
+      <div class="t2-summary-top">
+        <span class="t2-summary-zone-id">ZONE-02</span>
+        <span class="t2-summary-domain">Telemetry Transport and Messaging</span>
+      </div>
+      <div class="t2-summary-badges">
+        <span class="t2-badge t2-type-gap">evidence gap</span>
+        <span class="t2-badge" style="background:var(--surface-raised);color:var(--fg-dim);border:1px solid var(--border-subtle)">2 capability nodes</span>
+        <span class="t2-badge t2-sev-moderate">MODERATE</span>
+        <span class="t2-badge t2-conf-weak">WEAK</span>
+        <span class="t2-badge" style="background:var(--surface-raised);color:var(--fg-dim);border:1px solid var(--border-subtle)">NOT TRACEABLE</span>
+      </div>
+      <div class="t2-summary-preview">Telemetry Transport and Messaging domain is weakly grounded. No signals are currently bound to this domain's scope in the availabl…</div>
+    </summary>
+    <div class="t2-zone-block" id="zone-ZONE-02-block">
+      <div class="t2-zone-block-header">
+        <div>
+          <div class="t2-zone-block-id">ZONE-02 · EVIDENCE GAP</div>
+          <div class="t2-zone-block-domain">Telemetry Transport and Messaging</div>
+        </div>
+        <a href="#zone-ZONE-02" class="t2-zone-block-back">↑ Zone inventory</a>
+      </div>
+      
+    <div class="t2-sub-section" id="zone-ZONE-02-block-a">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">A</span>
+        <span class="t2-sub-title">Condition Description</span>
+      </div>
+      <p class="t2-body">Telemetry Transport and Messaging domain is weakly grounded. No signals are currently bound to this domain's scope in the available evidence set. The structural state — including capability functionality and component readiness — cannot be characterized beyond the grounding classification.</p>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:4px">Source signals:</div>
+      <div class="t2-chip-row"><span class="t2-chip" style="color:var(--fg-dim)">No signals bound</span></div>
+      <div class="t2-chip-row">
+        <span class="t2-chip" style="color:var(--fg-dim)">derived_from: Tier-1 Evidence Brief</span>
+      </div>
+    </div>
+      
+    <div class="t2-sub-section" id="zone-ZONE-02-block-b">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">B</span>
+        <span class="t2-sub-title">Structural Drivers</span>
+      </div>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted)">Contributing nodes:</div>
+      <div class="t2-chip-row"><span class="t2-chip">DOMAIN-02</span><span class="t2-chip">CAP-05</span><span class="t2-chip">CAP-06</span></div>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:8px">Contributing signals:</div>
+      <div class="t2-chip-row"><span class="t2-chip" style="color:var(--fg-dim)">No contributing signals</span></div>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:8px">
+        Dependency structure: <span style="color:var(--fg)">UNKNOWN</span>
+      </div>
+      <p class="t2-body" style="margin-top:6px">No signal coverage available to characterize dependency structure within this domain.</p>
+    </div>
+      
+    <div class="t2-sub-section" id="zone-ZONE-02-block-c">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">C</span>
+        <span class="t2-sub-title">Propagation Path</span>
+      </div>
+      
+      <div class="t2-path-block t2-inferred">
+        <div class="t2-path-chain">DOMAIN-02</div>
+        <div class="t2-path-meta">
+          <span>path_id: ZONE-02-P1</span>
+          <span>type: UNKNOWN</span>
+          <span>evidence: INFERRED</span>
+        </div>
+        <div class="t2-inferred-decl">This path segment is inferred. No artifact evidence directly confirms structural connections from this domain.</div>
+      </div>
+    </div>
+      
+    <div class="t2-sub-section" id="zone-ZONE-02-block-d">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">D</span>
+        <span class="t2-sub-title">Evidence State</span>
+      </div>
+      <div class="t2-evidence-row">
+        <span class="t2-ev-label">Evidence strength:</span>
+        <span class="t2-ev-weak">WEAK</span>
+      </div>
+      <p class="t2-body" style="color:var(--fg-dim)">No artifact references available.</p>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:12px">Missing evidence:</div>
+      
+        <ul class="t2-missing-list">
+          <li class="t2-missing-item">
+            <span class="t2-missing-desc">Any signal coverage for this domain</span>
+            <span class="t2-missing-impact">Domain structural state cannot be classified beyond grounding status without at least one bound signal.</span>
+          </li>
+        </ul>
+    </div>
+      
+    <div class="t2-sub-section" id="zone-ZONE-02-block-e">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">E</span>
+        <span class="t2-sub-title">Uncertainty Declaration</span>
+      </div>
+      <div class="t2-uncertainty-block">
+        <div class="t2-inference-active">
+          <span class="t2-inference-tag">inference_prohibition</span>
+          <span class="t2-inference-value">ACTIVE</span>
+        </div>
+        <ul class="t2-unresolved-list"><li class="t2-unresolved-item">
+          <div class="t2-unresolved-element">Complete structural state of Telemetry Transport and Messaging</div>
+          <div class="t2-unresolved-reason">Absence of any signal coverage prevents characterization of capability-level or component-level structural state within this domain.</div>
+        </li></ul>
+      </div>
+    </div>
+      
+    <div class="t2-sub-section" id="zone-ZONE-02-block-f">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">F</span>
+        <span class="t2-sub-title">Investigation Entry Points</span>
+      </div>
+      <div class="t2-hook-grid">
+        <div class="t2-hook-block" id="zone-ZONE-02-why">
+          <div class="t2-hook-type">WHY</div>
+          <div class="t2-hook-id">ZONE-02-WHY</div>
+          <div class="t2-hook-surface">Why does Telemetry Transport and Messaging exhibit evidence gap?</div>
+        </div>
+        <div class="t2-hook-block" id="zone-ZONE-02-trace">
+          <div class="t2-hook-type">TRACE</div>
+          <div class="t2-hook-id">ZONE-02-TRACE</div>
+          <div class="t2-hook-surface">entry: DOMAIN-02 · direction: BOTH · depth: 2</div>
+        </div>
+        <div class="t2-hook-block" id="zone-ZONE-02-ev">
+          <div class="t2-hook-type">EVIDENCE</div>
+          <div class="t2-hook-id">ZONE-02-EV</div>
+          <div class="t2-hook-surface">scope: BOUNDED · artifact targets from zone signal set</div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </details>
+  </div>
+
+  <div class="report-footer">
+    <div class="footer-brand">Signäl</div>
+    <div class="footer-note">
+      SAMPLE — BlueEdge data used for demonstration purposes.<br>
+      Tier-2 Diagnostic Access · No advisory content · No root cause claims · inference_prohibition: ACTIVE
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
