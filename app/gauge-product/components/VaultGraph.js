@@ -1,103 +1,144 @@
 /**
  * components/VaultGraph.js
- * TIER2.WORKSPACE.VAULT.GRAPH.01
+ * TIER2.WORKSPACE.VAULT.GRAPH.02
  *
- * 3D vault graph panel for the Tier-2 Diagnostic Workspace.
- * Projection-only: sources data exclusively from vault_index.json + query responses.
- * No backend contract changes. Browser-only (Three.js). Max 150 nodes.
- * Click → vault page. Hover tooltip.
+ * 3D vault graph — projection layer only.
  *
- * Data sources (all existing runtime outputs):
- *   - vaultIndex  → node URLs, signal→claim mapping, artifact paths
- *   - qs.data.vault_targets (EVIDENCE) → zone-scoped signal + artifact nodes
- *   - qs.data.trace (TRACE) → path chain entity nodes
- *   - zone.zone_id / zone.domain_name → root node only
+ * DATA MODEL (vault_index.json is primary):
  *
- * Authority: TIER2.WORKSPACE.VAULT.GRAPH.01
+ *   Base graph (always rendered on open):
+ *     ZONE → SIGNAL[n]  (all signals from vi.signals — run-scoped, single client)
+ *     SIGNAL → CLAIM    (vi.signals[id] = claimId → vi.claims[claimId])
+ *     ZONE → ARTIFACT   (vi.artifacts — evidence source nodes for this run)
+ *
+ *   EVIDENCE enrichment (qs.data.vault_targets):
+ *     Boost size/color of signals explicitly bound to this zone.
+ *     Already in base graph; no new nodes unless vault_targets adds extras.
+ *
+ *   TRACE enrichment (qs.data.trace):
+ *     Add path-chain entity nodes not already present.
+ *     Overlay: does not replace base graph.
+ *
+ * Relationship rule: no invented edges. Every link has a source in vault_index.
+ *
+ * Authority: TIER2.WORKSPACE.VAULT.GRAPH.02
  */
 
 import { useEffect, useRef, useMemo } from 'react'
 
-const NODE_COLOR = {
-  ZONE:     '#e8e8e8',
-  SIGNAL:   '#4caf6e',
-  ARTIFACT: '#5a9fd4',
-  CLAIM:    '#c89b3c',
-  ENTITY:   '#555',
+// ── Colours ─────────────────────────────────────────────────────────────────
+
+const BASE = {
+  ZONE:     { color: '#e8e8e8', val: 10 },
+  SIGNAL:   { color: '#4caf6e', val: 4  },
+  SIGNAL_BOUND: { color: '#7fd89a', val: 6 },  // EVIDENCE-confirmed zone signal
+  CLAIM:    { color: '#c89b3c', val: 3  },
+  ARTIFACT: { color: '#5a9fd4', val: 2.5 },
+  ENTITY:   { color: '#555',   val: 2  },
+  TRACE:    { color: '#9a6abf', val: 2  },      // TRACE path-chain overlay
 }
-const NODE_VAL = {
-  ZONE:     8,
-  SIGNAL:   4,
-  ARTIFACT: 2.5,
-  CLAIM:    3,
-  ENTITY:   2,
-}
+
 const MAX_NODES = 150
 
-function resolveVaultUrl(type, id, vi) {
+// ── URL resolution ───────────────────────────────────────────────────────────
+
+function vaultUrl(type, id, vi) {
   if (!vi?.base_url) return null
-  if (type === 'artifact') return vi.artifacts?.[id] ? `${vi.base_url}/${vi.artifacts[id]}` : null
-  if (type === 'signal') {
-    const cId = vi.signals?.[id]
-    return cId && vi.claims?.[cId] ? `${vi.base_url}/${vi.claims[cId]}` : null
+  switch (type) {
+    case 'signal': {
+      const cId = vi.signals?.[id]
+      return cId && vi.claims?.[cId] ? `${vi.base_url}/${vi.claims[cId]}` : null
+    }
+    case 'claim':    return vi.claims?.[id]    ? `${vi.base_url}/${vi.claims[id]}`    : null
+    case 'artifact': return vi.artifacts?.[id] ? `${vi.base_url}/${vi.artifacts[id]}` : null
+    case 'entity':   return vi.entities?.[id]  ? `${vi.base_url}/${vi.entities[id]}`  : null
+    default:         return null
   }
-  if (type === 'claim') return vi.claims?.[id] ? `${vi.base_url}/${vi.claims[id]}` : null
-  return null
 }
 
-function buildGraph(zone, vaultIndex, qs) {
+// ── Graph construction ───────────────────────────────────────────────────────
+
+function buildGraph(zone, vi, qs) {
   const nodes = []
   const links = []
   const seen  = new Set()
-  const vi    = vaultIndex
 
   function addNode(id, type, label, url) {
-    if (seen.has(id) || nodes.length >= MAX_NODES) return
+    if (seen.has(id) || nodes.length >= MAX_NODES) return false
     seen.add(id)
-    nodes.push({ id, type, label, url, color: NODE_COLOR[type] || '#666', val: NODE_VAL[type] || 2 })
+    const { color, val } = BASE[type] || BASE.ENTITY
+    nodes.push({ id, type, label, url, color, val })
+    return true
   }
-  function addLink(source, target) {
-    if (seen.has(source) && seen.has(target)) links.push({ source, target })
+  function link(src, tgt) {
+    if (seen.has(src) && seen.has(tgt)) links.push({ source: src, target: tgt })
   }
 
-  // Root: zone node — URL from vault domain_routing fallback
-  const zoneUrl = vi?.base_url && vi?.domain_routing?.fallback
-    ? `${vi.base_url}/${vi.domain_routing.fallback}`
+  // ── 1. Zone root ──────────────────────────────────────────────────────────
+  const zoneNodeUrl = vi?.base_url && vi?.zone_routing?.fallback
+    ? `${vi.base_url}/${vi.zone_routing.fallback}`
     : null
-  addNode(zone.zone_id, 'ZONE', zone.domain_name || zone.zone_id, zoneUrl)
+  addNode(zone.zone_id, 'ZONE', zone.domain_name || zone.zone_id, zoneNodeUrl)
 
-  // EVIDENCE mode: vault_targets are scoped to this zone by the query engine
-  if (qs?.mode === 'EVIDENCE' && qs?.data?.vault_targets) {
+  // ── 2. EVIDENCE enrichment: identify zone-bound signal IDs ───────────────
+  // vault_targets from EVIDENCE response are the only authoritative source
+  // of zone-to-signal binding available in the projection layer.
+  const boundSignalIds = new Set()
+  if (qs?.mode === 'EVIDENCE' && Array.isArray(qs?.data?.vault_targets)) {
+    for (const t of qs.data.vault_targets) {
+      if (t.type === 'signal') boundSignalIds.add(t.id)
+    }
+  }
+
+  // ── 3. Signals → Claims (primary vault chain) ────────────────────────────
+  const signalMap = vi?.signals || {}
+  for (const [sigId, claimId] of Object.entries(signalMap)) {
+    if (nodes.length >= MAX_NODES) break
+
+    // Boost node style if this signal is bound to current zone
+    const sigType = boundSignalIds.has(sigId) ? 'SIGNAL_BOUND' : 'SIGNAL'
+    addNode(sigId, sigType, sigId, vaultUrl('signal', sigId, vi))
+    link(zone.zone_id, sigId)
+
+    // Claim chained from this signal
+    if (claimId && nodes.length < MAX_NODES) {
+      addNode(claimId, 'CLAIM', claimId, vaultUrl('claim', claimId, vi))
+      link(sigId, claimId)
+    }
+  }
+
+  // ── 4. Artifacts (evidence source nodes for this run) ────────────────────
+  const artifactMap = vi?.artifacts || {}
+  for (const artId of Object.keys(artifactMap)) {
+    if (nodes.length >= MAX_NODES) break
+    addNode(artId, 'ARTIFACT', artId, vaultUrl('artifact', artId, vi))
+    link(zone.zone_id, artId)
+  }
+
+  // ── 5. EVIDENCE extra vault_targets not already in graph ─────────────────
+  // (covers artifact/claim targets beyond standard signal list)
+  if (qs?.mode === 'EVIDENCE' && Array.isArray(qs?.data?.vault_targets)) {
     for (const t of qs.data.vault_targets) {
       if (nodes.length >= MAX_NODES) break
-      const nodeType = t.type === 'artifact' ? 'ARTIFACT' : t.type === 'signal' ? 'SIGNAL' : 'CLAIM'
-      const url = resolveVaultUrl(t.type, t.id, vi)
-      addNode(t.id, nodeType, t.label || t.id, url)
-      addLink(zone.zone_id, t.id)
-    }
-    // Link signal → artifact pairs via vault_index cross-reference
-    if (vi?.signals && vi?.artifacts) {
-      const sigNodes = nodes.filter(n => n.type === 'SIGNAL')
-      const artNodes = nodes.filter(n => n.type === 'ARTIFACT')
-      for (const sig of sigNodes) {
-        for (const art of artNodes) {
-          // Evidence artifacts (ART-04, ART-05) connect to all signals
-          if (art.id === 'ART-04' || art.id === 'ART-05') addLink(sig.id, art.id)
-        }
-      }
+      if (seen.has(t.id)) continue
+      const nodeType = t.type === 'artifact' ? 'ARTIFACT'
+                     : t.type === 'claim'    ? 'CLAIM'
+                     : 'SIGNAL'
+      addNode(t.id, nodeType, t.label || t.id, vaultUrl(t.type, t.id, vi))
+      link(zone.zone_id, t.id)
     }
   }
 
-  // TRACE mode: path chain nodes from trace result
-  if (qs?.mode === 'TRACE' && qs?.data?.trace) {
+  // ── 6. TRACE path-chain overlay ───────────────────────────────────────────
+  if (qs?.mode === 'TRACE' && Array.isArray(qs?.data?.trace)) {
     for (const path of qs.data.trace) {
       const chain = path.node_chain || []
       let prev = null
       for (const nodeId of chain) {
         if (nodes.length >= MAX_NODES) break
-        if (!seen.has(nodeId)) addNode(nodeId, 'ENTITY', nodeId, null)
-        if (prev) addLink(prev, nodeId)
-        else addLink(zone.zone_id, nodeId)
+        if (!seen.has(nodeId)) addNode(nodeId, 'TRACE', nodeId, null)
+        if (prev) link(prev, nodeId)
+        else      link(zone.zone_id, nodeId)
         prev = nodeId
       }
     }
@@ -105,6 +146,8 @@ function buildGraph(zone, vaultIndex, qs) {
 
   return { nodes, links }
 }
+
+// ── Component ────────────────────────────────────────────────────────────────
 
 export default function VaultGraph({ zone, vaultIndex, qs }) {
   const mountRef   = useRef(null)
@@ -117,7 +160,7 @@ export default function VaultGraph({ zone, vaultIndex, qs }) {
     [zone.zone_id, vaultIndex, qs?.mode, qs?.data]
   )
 
-  // Init graph once per zone (browser only, Three.js)
+  // Init renderer once per zone (browser-only, Three.js)
   useEffect(() => {
     if (!mountRef.current) return
     let active = true
@@ -135,8 +178,11 @@ export default function VaultGraph({ zone, vaultIndex, qs }) {
         .nodeLabel(n => `${n.type}: ${n.label}`)
         .nodeColor(n => n.color)
         .nodeVal(n => n.val)
-        .linkColor(() => '#2a2a2e')
-        .linkWidth(0.5)
+        .linkColor(() => '#333')
+        .linkWidth(0.6)
+        .linkDirectionalParticles(1)
+        .linkDirectionalParticleWidth(0.8)
+        .linkDirectionalParticleColor(() => '#444')
         .nodeThreeObject(null)
         .onNodeClick(n => { if (n.url) window.open(n.url, '_blank', 'noreferrer') })
         .onNodeHover(n => {
@@ -161,16 +207,16 @@ export default function VaultGraph({ zone, vaultIndex, qs }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [zone.zone_id])
 
-  // Update data on query change — no reinit
+  // Update data on query change — no reinit needed
   useEffect(() => {
     if (graphRef.current) graphRef.current.graphData(graphData)
   }, [graphData])
 
-  const hint = qs?.mode === 'EVIDENCE'
-    ? 'zone + evidence vault targets'
-    : qs?.mode === 'TRACE'
-    ? 'zone + trace path nodes'
-    : 'zone root · run WHY / EVIDENCE / TRACE to expand'
+  const sigCount  = Object.keys(vaultIndex?.signals  || {}).length
+  const artCount  = Object.keys(vaultIndex?.artifacts || {}).length
+  const hint      = qs?.mode === 'EVIDENCE' ? 'zone-bound signals highlighted'
+                  : qs?.mode === 'TRACE'    ? '+ trace path overlay'
+                  : `${sigCount} sig · ${artCount} artifact · click → vault`
 
   return (
     <div className="vg-wrap">
