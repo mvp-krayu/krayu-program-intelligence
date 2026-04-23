@@ -17,3 +17,4 @@ clients/*/ig/runs/
 clients/*/input/
 .obsidian/
 clients/blueedge/reports/*.html
+clients/*/reports/
