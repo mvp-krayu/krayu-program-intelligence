@@ -2663,8 +2663,17 @@ _TIER2_DIAGNOSTIC_CSS = """
   .t2-summary-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
   .t2-summary-preview{font-size:12px;color:var(--fg-muted);line-height:1.6;padding-top:8px;border-top:1px solid var(--border-subtle)}
   details.t2-zone-details > .t2-zone-block{border:none;border-top:1px solid var(--border-subtle);border-radius:0 0 3px 3px;margin-bottom:0;background:transparent}
-  .t2-topo-intro{font-size:12px;color:var(--fg-muted);margin-bottom:14px;line-height:1.7;max-width:680px}
-  .t2-topo-panel{border:1px solid var(--border);border-radius:3px;overflow:hidden;background:#09090d}
+  .t2-topo-intro{font-size:12px;color:var(--fg-muted);margin-bottom:18px;line-height:1.7;max-width:680px}
+  .t2-topo-panel{border:1px solid var(--border);border-radius:4px;background:#09090d;box-shadow:0 2px 12px rgba(0,0,0,0.35)}
+  .og-frame{padding:18px 20px 16px}
+  .og-frame-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.05)}
+  .og-frame-tag{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+  .og-frame-meta{font-size:10px;color:var(--fg-dim);letter-spacing:.03em}
+  .og-canvas-wrap{border-radius:3px;overflow:hidden}
+  .og-legend{display:flex;flex-wrap:wrap;gap:0;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.05)}
+  .og-legend-item{display:inline-flex;align-items:center;gap:6px;margin-right:24px;margin-bottom:2px}
+  .og-legend-dot{display:inline-block;width:7px;height:7px;border-radius:50%;flex-shrink:0}
+  .og-legend-lbl{font-size:10.5px;color:#686870;letter-spacing:.02em}
 """
 
 
@@ -3131,10 +3140,10 @@ def _build_overview_graph_html(graph_state: Optional[Dict]) -> str:
     )
 
     legend_html = ''.join(
-        f'<span style="display:inline-flex;align-items:center;gap:5px;margin-right:18px">'
-        f'<span style="display:inline-block;width:8px;height:8px;border-radius:50%;'
-        f'background:{col}"></span>'
-        f'<span style="color:#787880;font-size:10px">{lbl}</span></span>'
+        f'<span class="og-legend-item">'
+        f'<span class="og-legend-dot" style="background:{col}"></span>'
+        f'<span class="og-legend-lbl">{lbl}</span>'
+        f'</span>'
         for col, lbl in [
             ('#f0f0f0', 'Zone root'),
             ('#52d97e', 'Signal'),
@@ -3143,31 +3152,46 @@ def _build_overview_graph_html(graph_state: Optional[Dict]) -> str:
         ]
     )
 
+    node_ct = len(nodes)
+    link_ct = len(links)
+
     # Draw-only — no simulation, no golden-angle, no force loop
+    # Edge alpha recessed so links read as structural connectors, not primary data.
+    # Node subtle stroke adds crafted visual weight without semantic change.
     js_draw = (
         f'(function(){{\n'
         f'  var N={nodes_js};\n'
         f'  var L={links_js};\n'
         f'  var cv=document.getElementById("og-canvas");if(!cv)return;\n'
         f'  var ctx=cv.getContext("2d");\n'
-        f'  ctx.globalAlpha=0.8;\n'
+        f'  ctx.globalAlpha=0.28;\n'
         f'  L.forEach(function(l){{\n'
         f'    ctx.strokeStyle=l.c;ctx.lineWidth=l.w;\n'
         f'    ctx.beginPath();ctx.moveTo(N[l.s].x,N[l.s].y);ctx.lineTo(N[l.t].x,N[l.t].y);ctx.stroke();\n'
         f'  }});\n'
-        f'  ctx.globalAlpha=1;\n'
         f'  N.forEach(function(n){{\n'
-        f'    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,6.283);ctx.fillStyle=n.c;ctx.fill();\n'
+        f'    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,6.283);\n'
+        f'    ctx.fillStyle=n.c;ctx.globalAlpha=0.88;ctx.fill();\n'
+        f'    ctx.lineWidth=0.8;ctx.strokeStyle="rgba(255,255,255,0.1)";ctx.globalAlpha=1;ctx.stroke();\n'
         f'  }});\n'
-        f'  ctx.font="9px monospace";ctx.textAlign="center";ctx.fillStyle="#585860";\n'
-        f'  N.forEach(function(n){{ctx.fillText(n.l,n.x,n.y+n.r+11);}});\n'
+        f'  ctx.font="10px -apple-system,BlinkMacSystemFont,\'Segoe UI\',sans-serif";\n'
+        f'  ctx.textAlign="center";ctx.fillStyle="#66666e";\n'
+        f'  N.forEach(function(n){{ctx.fillText(n.l,n.x,n.y+n.r+14);}});\n'
         f'}})();'
     )
 
     return (
-        f'<canvas id="og-canvas" width="{width}" height="{height}" '
-        f'style="display:block;width:100%;background:#09090d;border-radius:4px"></canvas>\n'
-        f'<div style="margin-top:8px;padding-left:2px">{legend_html}</div>\n'
+        f'<div class="og-frame">\n'
+        f'  <div class="og-frame-header">\n'
+        f'    <span class="og-frame-tag">Overview</span>\n'
+        f'    <span class="og-frame-meta">{node_ct} nodes · {link_ct} links · full vault coverage</span>\n'
+        f'  </div>\n'
+        f'  <div class="og-canvas-wrap">\n'
+        f'    <canvas id="og-canvas" width="{width}" height="{height}" '
+        f'style="display:block;width:100%;background:#09090d"></canvas>\n'
+        f'  </div>\n'
+        f'  <div class="og-legend">{legend_html}</div>\n'
+        f'</div>\n'
         f'<script>{js_draw}</script>'
     )
 
