@@ -322,6 +322,7 @@ export default function VaultGraph({ zone, vaultIndex, qs, isOverview }) {
       if (!active || !mountRef.current) return
       const ForceGraph3D = mod.default || mod
       const el = mountRef.current
+      let initialFit = true
 
       const graph = ForceGraph3D()
         .width(el.clientWidth || 640)
@@ -343,6 +344,12 @@ export default function VaultGraph({ zone, vaultIndex, qs, isOverview }) {
             tooltipRef.current.style.display = n ? 'block' : 'none'
           }
           graph.linkWidth(link => hoverLinkWidth(link, n))
+        })
+        .onEngineStop(() => {
+          if (initialFit && active) {
+            graph.zoomToFit(400, 20)
+            initialFit = false
+          }
         })
         (el)
 
@@ -369,10 +376,10 @@ export default function VaultGraph({ zone, vaultIndex, qs, isOverview }) {
     graphRef.current.linkWidth(link => baseLinkWidth(link))
   }, [graphData])
 
-  // Recenter camera when returning to overview — gentle zoom-to-fit
+  // Recenter camera when returning to overview — gentle zoom-to-fit, tight padding
   useEffect(() => {
     if (isOverview && graphRef.current) {
-      graphRef.current.zoomToFit(600, 80)
+      graphRef.current.zoomToFit(600, 20)
     }
   }, [isOverview])
 
