@@ -56,30 +56,30 @@ const MUTED = {
 // Non-relevant link: near-invisible — preserves structural silhouette only.
 
 const LINK_COLOR_BRIGHT = {
-  ZONE_SIGNAL:   'rgba(80,  215, 130, 0.68)',
-  SIGNAL_CLAIM:  'rgba(100, 165, 255, 0.72)',
-  ZONE_ARTIFACT: 'rgba(225, 185,  70, 0.72)',
-  ZONE_CAP:      'rgba(170, 155, 220, 0.55)',
+  ZONE_SIGNAL:   'rgba(80,  215, 130, 0.85)',
+  SIGNAL_CLAIM:  'rgba(100, 165, 255, 0.80)',
+  ZONE_ARTIFACT: 'rgba(225, 185,  70, 0.85)',
+  ZONE_CAP:      'rgba(170, 155, 220, 0.65)',
   TRACE:         'rgba(190, 120, 255, 0.88)',
 }
 const LINK_COLOR_DIM = 'rgba(22, 22, 26, 0.55)'
 
 const LINK_WIDTH_BASE = {
-  ZONE_SIGNAL:   1.2,
-  SIGNAL_CLAIM:  1.8,
-  ZONE_ARTIFACT: 1.2,
-  ZONE_CAP:      1.0,
-  TRACE:         2.5,
+  ZONE_SIGNAL:   2.0,
+  SIGNAL_CLAIM:  2.2,
+  ZONE_ARTIFACT: 2.0,
+  ZONE_CAP:      1.6,
+  TRACE:         3.0,
 }
 
 function baseLinkWidth(link) {
-  return LINK_WIDTH_BASE[link.type] ?? 1.0
+  return LINK_WIDTH_BASE[link.type] ?? 1.5
 }
 function hoverLinkWidth(link, node) {
   if (!node) return baseLinkWidth(link)
   const src = link.source?.id ?? link.source
   const tgt = link.target?.id ?? link.target
-  return (src === node.id || tgt === node.id) ? 3 : baseLinkWidth(link)
+  return (src === node.id || tgt === node.id) ? 4.5 : baseLinkWidth(link)
 }
 
 const MAX_NODES = 150
