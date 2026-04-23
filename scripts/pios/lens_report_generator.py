@@ -27,6 +27,7 @@ import json
 import math
 import os
 import re
+import subprocess
 import sys
 import urllib.request
 import urllib.error
@@ -1686,16 +1687,6 @@ def load_gauge_state() -> Dict:
         return json.load(f)
 
 
-def _load_vault_index() -> Optional[Dict]:
-    """Load vault_index.json for the authoritative BlueEdge run."""
-    path = (REPO_ROOT / "app" / "gauge-product" / "public" / "vault"
-            / "blueedge" / "run_01_authoritative_generated" / "vault_index.json")
-    if not path.exists():
-        return None
-    with open(path) as f:
-        return json.load(f)
-
-
 # ---------------------------------------------------------------------------
 # Tier-1 SVG topology (BlueEdge 17-domain spatial map, contrast-corrected)
 # ---------------------------------------------------------------------------
@@ -3108,158 +3099,8 @@ def _build_t2_zone_block(zone: Dict, publish_safe: bool) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Tier-2 overview graph — ONE authoritative simulation, persisted graph state
+# Tier-2 overview graph — positions sourced from workspace runtime (d3-force-3d)
 # ---------------------------------------------------------------------------
-
-def _compute_overview_graph_state(
-    zones: List[Dict],
-    vault_index: Optional[Dict],
-    width: int = 880,
-    height: int = 380,
-) -> Optional[Dict]:
-    """Compute overview graph positions ONCE using workspace force model.
-
-    Node/link construction mirrors buildGraph(isOverview=True) in VaultGraph.js:
-      hub → signals (JSON insertion order) → mapped claims → artifacts.
-    Force simulation uses workspace parameters:
-      charge.strength(-100), link.distance(60), alphaDecay(0.015), velDecay(0.4),
-      golden-angle init at radius=10 (d3-force-3d default),
-      many-body: dv += displacement * strength * alpha / d²  (d3 forceManyBody).
-    Result is persisted to graph_state.json and used as sole render source.
-    Report never recomputes positions.
-    """
-    if not vault_index or not zones:
-        return None
-
-    zone   = zones[0]
-    hub_id = zone['zone_id']
-    cx     = width / 2
-    cy     = height / 2
-
-    NODE_R   = {'ZONE': 9, 'SIGNAL': 6, 'CLAIM': 5, 'ARTIFACT': 5}
-    NODE_COL = {'ZONE': '#f0f0f0', 'SIGNAL': '#52d97e', 'CLAIM': '#e8b54a', 'ARTIFACT': '#6ab4e8'}
-    LINK_COL = {'ZONE_SIGNAL': '#3cac64', 'SIGNAL_CLAIM': '#4b82d2', 'ZONE_ARTIFACT': '#b29237'}
-    LINK_W   = {'ZONE_SIGNAL': 2.0, 'SIGNAL_CLAIM': 2.2, 'ZONE_ARTIFACT': 2.0}
-
-    # Build node/link lists in JSON insertion order (mirrors JS Object.entries/keys order)
-    node_ids:  List[str]               = []
-    node_meta: Dict[str, str]          = {}      # id → type
-    nidx:      Dict[str, int]          = {}
-    raw_links: List[Tuple[int, int, str]] = []
-
-    def _reg(nid: str, ntype: str) -> None:
-        if nid not in nidx:
-            nidx[nid] = len(node_ids)
-            node_ids.append(nid)
-            node_meta[nid] = ntype
-
-    def _link(src: str, tgt: str, ltype: str) -> None:
-        if src in nidx and tgt in nidx:
-            raw_links.append((nidx[src], nidx[tgt], ltype))
-
-    _reg(hub_id, 'ZONE')
-    for sig_id, clm_id in vault_index.get('signals', {}).items():   # JSON insertion order
-        _reg(sig_id, 'SIGNAL')
-        _link(hub_id, sig_id, 'ZONE_SIGNAL')
-        if clm_id:
-            _reg(clm_id, 'CLAIM')
-            _link(sig_id, clm_id, 'SIGNAL_CLAIM')
-    for art_id in vault_index.get('artifacts', {}):                  # JSON insertion order
-        _reg(art_id, 'ARTIFACT')
-        _link(hub_id, art_id, 'ZONE_ARTIFACT')
-
-    # ── Force simulation ──────────────────────────────────────────────────────
-    n           = len(node_ids)
-    CHARGE_STR  = -100.0
-    LINK_DIST   =  60.0
-    ALPHA_DECAY =   0.015
-    ALPHA_MIN   =   0.001
-    VEL_DECAY   =   0.4
-    GOLDEN      = math.pi * (3.0 - math.sqrt(5.0))
-
-    pos = [[cx + 10.0 * math.cos(GOLDEN * i),
-            cy + 10.0 * math.sin(GOLDEN * i)] for i in range(n)]
-    vel = [[0.0, 0.0] for _ in range(n)]
-
-    deg  = [0] * n
-    for s, t, _ in raw_links:
-        deg[s] += 1
-        deg[t] += 1
-    lstr = [1.0 / max(1, min(deg[s], deg[t])) for s, t, _ in raw_links]
-
-    alpha = 1.0
-    while alpha >= ALPHA_MIN:
-        fx = [0.0] * n
-        fy = [0.0] * n
-
-        for i in range(n):
-            for j in range(i + 1, n):
-                dx = pos[j][0] - pos[i][0]
-                dy = pos[j][1] - pos[i][1]
-                d2 = dx * dx + dy * dy
-                if d2 < 1.0:
-                    d2 = math.sqrt(d2)
-                c = CHARGE_STR * alpha / d2
-                fx[i] += dx * c; fy[i] += dy * c
-                fx[j] -= dx * c; fy[j] -= dy * c
-
-        for li, (s, t, _) in enumerate(raw_links):
-            dx = pos[t][0] - pos[s][0]
-            dy = pos[t][1] - pos[s][1]
-            d  = max(math.sqrt(dx * dx + dy * dy), 1e-6)
-            k  = lstr[li] * alpha * (d - LINK_DIST) / d
-            bs = deg[s] / max(deg[s] + deg[t], 1)
-            bt = 1.0 - bs
-            fx[t] -= dx * k * bs; fy[t] -= dy * k * bs
-            fx[s] += dx * k * bt; fy[s] += dy * k * bt
-
-        mx = sum(p[0] for p in pos) / n - cx
-        my = sum(p[1] for p in pos) / n - cy
-        for i in range(n):
-            fx[i] -= mx * 0.1 * alpha
-            fy[i] -= my * 0.1 * alpha
-
-        for i in range(n):
-            vel[i][0] = (vel[i][0] + fx[i]) * VEL_DECAY
-            vel[i][1] = (vel[i][1] + fy[i]) * VEL_DECAY
-            pos[i][0] += vel[i][0]
-            pos[i][1] += vel[i][1]
-
-        alpha *= (1.0 - ALPHA_DECAY)
-
-    # ── Assemble graph state ──────────────────────────────────────────────────
-    nodes_out = [
-        {
-            'id':    nid,
-            'type':  node_meta[nid],
-            'x':     round(pos[i][0], 2),
-            'y':     round(pos[i][1], 2),
-            'r':     NODE_R.get(node_meta[nid], 5),
-            'color': NODE_COL.get(node_meta[nid], '#909090'),
-            'label': nid,
-        }
-        for i, nid in enumerate(node_ids)
-    ]
-    links_out = [
-        {
-            'source': node_ids[s],
-            'target': node_ids[t],
-            'color':  LINK_COL.get(lt, '#404048'),
-            'width':  LINK_W.get(lt, 1.5),
-        }
-        for s, t, lt in raw_links
-    ]
-
-    return {
-        'run_id':          'run_01_authoritative_generated',
-        'graph_mode':      'overview',
-        'generated_from':  'workspace_overview_model',
-        'canvas_width':    width,
-        'canvas_height':   height,
-        'nodes':           nodes_out,
-        'links':           links_out,
-    }
-
 
 def _build_overview_graph_html(graph_state: Optional[Dict]) -> str:
     """Render overview graph passively from persisted graph_state.
@@ -3687,24 +3528,24 @@ def generate_tier2_reports(output_dir: Optional[Path] = None) -> List[Path]:
     if not CANONICAL_PKG_DIR.exists():
         _fail(f"Canonical package directory not found: {CANONICAL_PKG_DIR}")
 
-    topology    = load_canonical_topology()
-    signals     = load_signal_registry()
-    gauge       = load_gauge_state()
-    vault_index = _load_vault_index()
+    topology = load_canonical_topology()
+    signals  = load_signal_registry()
+    gauge    = load_gauge_state()
 
-    # Compute graph state ONCE — one authoritative simulation run, one spatial truth.
-    # Node/link order follows JSON insertion order (matches workspace buildGraph order).
-    zones_for_graph = _derive_tier2_zones(topology, signals)
-    graph_state     = _compute_overview_graph_state(zones_for_graph, vault_index)
-
-    # Persist graph state — sole source of x/y for the report graph.
+    # Export graph positions from workspace runtime (d3-force-3d via Node.js).
+    # export_graph_state.js is the sole source of x/y — no Python layout math.
     graph_state_path = output_dir / "graph_state.json"
-    if graph_state:
-        graph_state_path.write_text(
-            json.dumps(graph_state, indent=2, ensure_ascii=False),
-            encoding="utf-8",
-        )
+    export_script = REPO_ROOT / "scripts" / "pios" / "export_graph_state.mjs"
+    try:
+        subprocess.run(["node", str(export_script)], check=True)
         print(f"[LENS REPORT] Generated: {graph_state_path.resolve()}")
+    except (subprocess.CalledProcessError, FileNotFoundError) as e:
+        _fail(f"export_graph_state.js failed: {e}")
+
+    graph_state: Optional[Dict] = None
+    if graph_state_path.exists():
+        with open(graph_state_path) as f:
+            graph_state = json.load(f)
 
     files: List[Path] = []
 

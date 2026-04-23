@@ -1,15 +1,15 @@
 {
   "run_id": "run_01_authoritative_generated",
   "graph_mode": "overview",
-  "generated_from": "workspace_overview_model",
+  "generated_from": "workspace_runtime_positions",
   "canvas_width": 880,
   "canvas_height": 380,
   "nodes": [
     {
       "id": "ZONE-01",
       "type": "ZONE",
-      "x": 446.44,
-      "y": 202.29,
+      "x": 439.21,
+      "y": 190.24,
       "r": 9,
       "color": "#f0f0f0",
       "label": "ZONE-01"
@@ -17,8 +17,8 @@
     {
       "id": "SIG-001",
       "type": "SIGNAL",
-      "x": 360.84,
-      "y": 214.09,
+      "x": 360.58,
+      "y": 233.84,
       "r": 6,
       "color": "#52d97e",
       "label": "SIG-001"
@@ -26,8 +26,8 @@
     {
       "id": "CLM-20",
       "type": "CLAIM",
-      "x": 288.53,
-      "y": 220.84,
+      "x": 300.48,
+      "y": 275.57,
       "r": 5,
       "color": "#e8b54a",
       "label": "CLM-20"
@@ -35,8 +35,8 @@
     {
       "id": "SIG-002",
       "type": "SIGNAL",
-      "x": 414.43,
-      "y": 289.85,
+      "x": 477.97,
+      "y": 275.47,
       "r": 6,
       "color": "#52d97e",
       "label": "SIG-002"
@@ -44,8 +44,8 @@
     {
       "id": "CLM-21",
       "type": "CLAIM",
-      "x": 378.78,
-      "y": 354.27,
+      "x": 508.7,
+      "y": 342.4,
       "r": 5,
       "color": "#e8b54a",
       "label": "CLM-21"
@@ -53,8 +53,8 @@
     {
       "id": "SIG-003",
       "type": "SIGNAL",
-      "x": 526.33,
-      "y": 149.73,
+      "x": 529.66,
+      "y": 165.77,
       "r": 6,
       "color": "#52d97e",
       "label": "SIG-003"
@@ -62,8 +62,8 @@
     {
       "id": "CLM-22",
       "type": "CLAIM",
-      "x": 577.58,
-      "y": 95.66,
+      "x": 602.07,
+      "y": 151.32,
       "r": 5,
       "color": "#e8b54a",
       "label": "CLM-22"
@@ -71,8 +71,8 @@
     {
       "id": "SIG-004",
       "type": "SIGNAL",
-      "x": 460.96,
-      "y": 114.53,
+      "x": 459.42,
+      "y": 99.91,
       "r": 6,
       "color": "#52d97e",
       "label": "SIG-004"
@@ -80,8 +80,8 @@
     {
       "id": "CLM-23",
       "type": "CLAIM",
-      "x": 482.19,
-      "y": 44.33,
+      "x": 478.09,
+      "y": 28.95,
       "r": 5,
       "color": "#e8b54a",
       "label": "CLM-23"
@@ -89,8 +89,8 @@
     {
       "id": "SIG-005",
       "type": "SIGNAL",
-      "x": 375.49,
-      "y": 151.08,
+      "x": 352.32,
+      "y": 167.2,
       "r": 6,
       "color": "#52d97e",
       "label": "SIG-005"
@@ -98,8 +98,8 @@
     {
       "id": "CLM-24",
       "type": "CLAIM",
-      "x": 322.78,
-      "y": 100.7,
+      "x": 283.46,
+      "y": 142.65,
       "r": 5,
       "color": "#e8b54a",
       "label": "CLM-24"
@@ -107,8 +107,8 @@
     {
       "id": "ART-01",
       "type": "ARTIFACT",
-      "x": 490.16,
-      "y": 258.96,
+      "x": 436.75,
+      "y": 258.04,
       "r": 5,
       "color": "#6ab4e8",
       "label": "ART-01"
@@ -116,8 +116,8 @@
     {
       "id": "ART-02",
       "type": "ARTIFACT",
-      "x": 416.41,
-      "y": 143.93,
+      "x": 420.8,
+      "y": 124.71,
       "r": 5,
       "color": "#6ab4e8",
       "label": "ART-02"
@@ -125,8 +125,8 @@
     {
       "id": "ART-03",
       "type": "ARTIFACT",
-      "x": 516.66,
-      "y": 202.29,
+      "x": 506.32,
+      "y": 199.1,
       "r": 5,
       "color": "#6ab4e8",
       "label": "ART-03"
@@ -134,8 +134,8 @@
     {
       "id": "ART-04",
       "type": "ARTIFACT",
-      "x": 458.86,
-      "y": 270.94,
+      "x": 399.94,
+      "y": 245.15,
       "r": 5,
       "color": "#6ab4e8",
       "label": "ART-04"
@@ -143,8 +143,8 @@
     {
       "id": "ART-05",
       "type": "ARTIFACT",
-      "x": 490.34,
-      "y": 154.1,
+      "x": 484.11,
+      "y": 140.33,
       "r": 5,
       "color": "#6ab4e8",
       "label": "ART-05"
@@ -152,8 +152,8 @@
     {
       "id": "ART-06",
       "type": "ARTIFACT",
-      "x": 510.46,
-      "y": 234.52,
+      "x": 491.7,
+      "y": 233.64,
       "r": 5,
       "color": "#6ab4e8",
       "label": "ART-06"
@@ -161,8 +161,8 @@
     {
       "id": "ART-07",
       "type": "ARTIFACT",
-      "x": 398.89,
-      "y": 248.83,
+      "x": 388.43,
+      "y": 145.68,
       "r": 5,
       "color": "#6ab4e8",
       "label": "ART-07"
@@ -173,7 +173,7 @@
       "source": "ZONE-01",
       "target": "SIG-001",
       "color": "#3cac64",
-      "width": 2.0
+      "width": 2
     },
     {
       "source": "SIG-001",
@@ -185,7 +185,7 @@
       "source": "ZONE-01",
       "target": "SIG-002",
       "color": "#3cac64",
-      "width": 2.0
+      "width": 2
     },
     {
       "source": "SIG-002",
@@ -197,7 +197,7 @@
       "source": "ZONE-01",
       "target": "SIG-003",
       "color": "#3cac64",
-      "width": 2.0
+      "width": 2
     },
     {
       "source": "SIG-003",
@@ -209,7 +209,7 @@
       "source": "ZONE-01",
       "target": "SIG-004",
       "color": "#3cac64",
-      "width": 2.0
+      "width": 2
     },
     {
       "source": "SIG-004",
@@ -221,7 +221,7 @@
       "source": "ZONE-01",
       "target": "SIG-005",
       "color": "#3cac64",
-      "width": 2.0
+      "width": 2
     },
     {
       "source": "SIG-005",
@@ -233,43 +233,43 @@
       "source": "ZONE-01",
       "target": "ART-01",
       "color": "#b29237",
-      "width": 2.0
+      "width": 2
     },
     {
       "source": "ZONE-01",
       "target": "ART-02",
       "color": "#b29237",
-      "width": 2.0
+      "width": 2
     },
     {
       "source": "ZONE-01",
       "target": "ART-03",
       "color": "#b29237",
-      "width": 2.0
+      "width": 2
     },
     {
       "source": "ZONE-01",
       "target": "ART-04",
       "color": "#b29237",
-      "width": 2.0
+      "width": 2
     },
     {
       "source": "ZONE-01",
       "target": "ART-05",
       "color": "#b29237",
-      "width": 2.0
+      "width": 2
     },
     {
       "source": "ZONE-01",
       "target": "ART-06",
       "color": "#b29237",
-      "width": 2.0
+      "width": 2
     },
     {
       "source": "ZONE-01",
       "target": "ART-07",
       "color": "#b29237",
-      "width": 2.0
+      "width": 2
     }
   ]
 }
