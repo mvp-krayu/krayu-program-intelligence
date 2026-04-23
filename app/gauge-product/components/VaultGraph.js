@@ -172,7 +172,7 @@ function computeRelevance(zone, vi, qs) {
 
 // ── Graph construction ────────────────────────────────────────────────────────
 
-function buildGraph(zone, vi, qs) {
+function buildGraph(zone, vi, qs, isOverview) {
   const nodes = []
   const links = []
   const seen  = new Set()
@@ -181,6 +181,10 @@ function buildGraph(zone, vi, qs) {
   relevantIds.add(zone.zone_id)  // zone root always relevant
 
   function nodeStyle(id, type) {
+    if (isOverview) {
+      const src = BRIGHT[type] ?? BRIGHT.SIGNAL
+      return { color: src.color, val: src.val, relevant: true }
+    }
     const rel = relevantIds.has(id)
     const src  = rel ? (BRIGHT[type] ?? BRIGHT.SIGNAL) : (MUTED[type] ?? MUTED.SIGNAL)
     return { color: src.color, val: src.val, relevant: rel }
@@ -263,10 +267,14 @@ function linkColor(link) {
 
 // ── Header hint ───────────────────────────────────────────────────────────────
 
-function buildHint(nodes, qs) {
-  const total   = nodes.length
-  const relevant = nodes.filter(n => n.relevant).length
+function buildHint(nodes, qs, isOverview) {
+  const total = nodes.length
 
+  if (isOverview) {
+    return `${total} nodes · full vault structure`
+  }
+
+  const relevant = nodes.filter(n => n.relevant).length
   if (!qs?.mode) {
     return `${total} nodes · ${relevant} relevant`
   }
@@ -294,15 +302,15 @@ function buildHint(nodes, qs) {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export default function VaultGraph({ zone, vaultIndex, qs }) {
+export default function VaultGraph({ zone, vaultIndex, qs, isOverview }) {
   const mountRef   = useRef(null)
   const graphRef   = useRef(null)
   const tooltipRef = useRef(null)
 
   const graphData = useMemo(
-    () => buildGraph(zone, vaultIndex, qs),
+    () => buildGraph(zone, vaultIndex, qs, isOverview),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [zone.zone_id, vaultIndex, qs?.mode, qs?.data]
+    [zone.zone_id, vaultIndex, qs?.mode, qs?.data, isOverview]
   )
 
   // Init renderer once per zone (browser-only, Three.js)
@@ -353,7 +361,7 @@ export default function VaultGraph({ zone, vaultIndex, qs }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [zone.zone_id])
 
-  // Update data + re-apply link accessors when query changes
+  // Update data + re-apply link accessors when query or overview state changes
   useEffect(() => {
     if (!graphRef.current) return
     graphRef.current.graphData(graphData)
@@ -361,7 +369,14 @@ export default function VaultGraph({ zone, vaultIndex, qs }) {
     graphRef.current.linkWidth(link => baseLinkWidth(link))
   }, [graphData])
 
-  const hint = buildHint(graphData.nodes, qs)
+  // Recenter camera when returning to overview — gentle zoom-to-fit
+  useEffect(() => {
+    if (isOverview && graphRef.current) {
+      graphRef.current.zoomToFit(600, 80)
+    }
+  }, [isOverview])
+
+  const hint = buildHint(graphData.nodes, qs, isOverview)
 
   return (
     <div className="vg-wrap">

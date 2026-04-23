@@ -567,6 +567,7 @@ export default function Tier2WorkspacePage() {
   }
 
   // Graph inputs
+  const isOverview = !activeZone && !activeMode && !activeQsData
   const graphZone  = activeZone ?? zonesData?.zones?.[0] ?? null
   const graphQs    = (activeMode && activeQsData) ? { mode: activeMode, data: activeQsData } : null
   const graphLabel = activeMode ? (GRAPH_MODE_LABEL[activeMode] ?? '') : 'full vault structure'
@@ -628,7 +629,7 @@ export default function Tier2WorkspacePage() {
                   </button>
                 )}
               </div>
-              <VaultGraph zone={graphZone} vaultIndex={vaultIndex} qs={graphQs} />
+              <VaultGraph zone={graphZone} vaultIndex={vaultIndex} qs={graphQs} isOverview={isOverview} />
             </div>
           )}
 
