@@ -414,7 +414,11 @@ function ZoneCard({ zone, vaultIndex, defaultOpen, isActive, onActivate }) {
       className={`ws-zone-card ${SEV_CARD_CLS[zone.severity] || ''}${isActive ? ' ws-zone-card--active' : ''}${!expanded ? ' ws-zone-card--collapsed' : ''}`}
       ref={resultRef}
     >
-      <button className="ws-zone-toggle" onClick={() => setExpanded(e => !e)}>
+      <button className="ws-zone-toggle" onClick={() => {
+        const next = !expanded
+        setExpanded(next)
+        if (!next && isActive && !qs?.data) onActivate(null, null, null)
+      }}>
         <div className="ws-zone-toggle-left">
           <span className="ws-zone-id">{zone.zone_id}</span>
           <span className={`ws-badge ${SEV_CLS[zone.severity] || ''}`}>{zone.severity}</span>
@@ -555,6 +559,13 @@ export default function Tier2WorkspacePage() {
     setActiveQsData(data)
   }
 
+  function handleReset() {
+    setActiveZone(null)
+    setActiveMode(null)
+    setActiveQsData(null)
+    try { sessionStorage.removeItem(WS_STATE_KEY) } catch {}
+  }
+
   // Graph inputs
   const graphZone  = activeZone ?? zonesData?.zones?.[0] ?? null
   const graphQs    = (activeMode && activeQsData) ? { mode: activeMode, data: activeQsData } : null
@@ -611,6 +622,11 @@ export default function Tier2WorkspacePage() {
                   <span className="ws-graph-panel-zone">{activeZone.zone_id}</span>
                 )}
                 <span className="ws-graph-panel-mode">{graphLabel}</span>
+                {activeZone && (
+                  <button className="ws-graph-panel-reset" onClick={handleReset}>
+                    Overview
+                  </button>
+                )}
               </div>
               <VaultGraph zone={graphZone} vaultIndex={vaultIndex} qs={graphQs} />
             </div>

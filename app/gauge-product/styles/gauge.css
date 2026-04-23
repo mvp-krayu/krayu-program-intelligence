@@ -2438,6 +2438,8 @@ details.op-details[open] summary::before { content:"▼  "; }
 .ws-graph-panel-mode { font-size:9px; color:#444; margin-left:auto; letter-spacing:.04em; }
 .ws-graph-panel .vg-wrap { margin-top:0; border:none; border-radius:0; border-top:none; }
 .ws-graph-panel .vg-canvas { height:440px; }
+.ws-graph-panel-reset { margin-left:10px; padding:2px 9px; font-size:9px; letter-spacing:.08em; text-transform:uppercase; background:none; border:1px solid #2a2a2e; border-radius:2px; color:#444; cursor:pointer; font-family:inherit; transition:border-color .15s,color .15s; }
+.ws-graph-panel-reset:hover { border-color:#3a3a52; color:#7a7aaa; }
 
 @media(max-width:600px) {
   .ws-context-lock { grid-template-columns:1fr 1fr; }
