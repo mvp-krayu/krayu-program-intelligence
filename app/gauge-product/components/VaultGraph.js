@@ -1,62 +1,68 @@
 /**
  * components/VaultGraph.js
- * TIER2.WORKSPACE.VAULT.GRAPH.04
+ * TIER2.WORKSPACE.VAULT.GRAPH.05
  *
- * Base graph + zone emphasis model.
+ * Zone emphasis correction — strong contrast + DEFAULT differentiation.
  *
- * BASE GRAPH (always present):
- *   zone root → all signals → mapped claims (via vi.signals)
- *   zone root → all artifacts
- *   This structural skeleton never changes regardless of mode.
+ * CONTRAST MODEL:
+ *   Relevant nodes — bright saturated color, larger val
+ *   Non-relevant   — near-background color (#0e0e12 bg), tiny val
+ *                    visually recede; structure implied, not foregrounded
  *
- * ZONE EMPHASIS (overlay, applied on top of base):
- *   Relevant nodes — full color, larger
- *   Non-relevant nodes — muted color, smaller
- *   Relevant links — semantic bright color (from GRAPH.03)
- *   Non-relevant links — dimmed
+ * DEFAULT RELEVANCE (no active query):
+ *   Deterministic projection from zone.zone_id + zone.signal_count.
+ *   Different zones → different signal subsets → visually distinct at first glance.
+ *   Deterministic: same zone always emphasises same nodes.
+ *   Honest: this is a visual projection heuristic, not an evidence claim.
  *
- * RELEVANCE SOURCES:
- *   EVIDENCE → vault_targets signal/artifact IDs + one-hop mapped claims
- *   TRACE    → node_chain IDs + extra path nodes added to graph
- *   WHY      → capability_ids added as CAPABILITY nodes (extra, always bright)
- *   DEFAULT  → no emphasis (all nodes bright, full base structure visible)
+ * QUERY RELEVANCE:
+ *   EVIDENCE → vault_targets IDs + one-hop mapped claims (factual zone binding)
+ *   TRACE    → all node_chain IDs (factual path scope)
+ *   WHY      → capability_ids added as extra nodes (factual structural scope)
  *
- * ZONE ROOT is always marked relevant (anchor of everything).
+ * EMPHASIS IS ALWAYS ACTIVE — relevantIds is never null.
  *
- * Authority: TIER2.WORKSPACE.VAULT.GRAPH.04
+ * Authority: TIER2.WORKSPACE.VAULT.GRAPH.05
  */
 
 import { useEffect, useRef, useMemo } from 'react'
 
-// ── Node appearance: bright (relevant) vs muted (non-relevant) ───────────────
+// ── Node appearance ───────────────────────────────────────────────────────────
+//
+// BRIGHT: saturated, clearly visible against #0e0e12 background.
+// MUTED:  near-background (≈ #0e0e12 ± 10), tiny size. Structural ghost only.
+//         Zone root is never muted — it is always the anchor.
 
 const BRIGHT = {
-  ZONE:       { color: '#e8e8e8', val: 10  },
-  SIGNAL:     { color: '#4caf6e', val: 5   },
-  CLAIM:      { color: '#c89b3c', val: 3   },
-  ARTIFACT:   { color: '#5a9fd4', val: 3   },
-  CAPABILITY: { color: '#a08ade', val: 3.5 },
-  TRACE:      { color: '#b09adf', val: 3.5 },
+  ZONE:       { color: '#f0f0f0', val: 12  },
+  SIGNAL:     { color: '#52d97e', val: 6   },
+  CLAIM:      { color: '#e8b54a', val: 4   },
+  ARTIFACT:   { color: '#6ab4e8', val: 4   },
+  CAPABILITY: { color: '#b09adf', val: 4   },
+  TRACE:      { color: '#c490ff', val: 5   },
 }
 const MUTED = {
-  ZONE:       { color: '#555',    val: 10  },  // zone always full size
-  SIGNAL:     { color: '#1a3020', val: 2   },
-  CLAIM:      { color: '#2a2010', val: 1.5 },
-  ARTIFACT:   { color: '#162030', val: 1.5 },
-  CAPABILITY: { color: '#2a2030', val: 1.5 },
-  TRACE:      { color: '#2a1a40', val: 2   },
+  ZONE:       { color: '#3a3a42', val: 12  },  // zone root always large
+  SIGNAL:     { color: '#131a14', val: 1.5 },  // near-black green — barely visible
+  CLAIM:      { color: '#16140a', val: 1.2 },  // near-black amber
+  ARTIFACT:   { color: '#0e1218', val: 1.2 },  // near-black blue
+  CAPABILITY: { color: '#14121a', val: 1.2 },
+  TRACE:      { color: '#130e1c', val: 1.5 },
 }
 
-// ── Link appearance (from GRAPH.03, preserved) ────────────────────────────────
+// ── Link appearance ───────────────────────────────────────────────────────────
+//
+// Relevant link (at least one endpoint relevant): semantic bright colour.
+// Non-relevant link: near-invisible — preserves structural silhouette only.
 
 const LINK_COLOR_BRIGHT = {
-  ZONE_SIGNAL:   'rgba(80,  200, 120, 0.65)',
-  SIGNAL_CLAIM:  'rgba(100, 160, 255, 0.70)',
-  ZONE_ARTIFACT: 'rgba(220, 180,  80, 0.70)',
-  ZONE_CAP:      'rgba(160, 160, 160, 0.45)',
-  TRACE:         'rgba(180, 120, 255, 0.85)',
+  ZONE_SIGNAL:   'rgba(80,  215, 130, 0.68)',
+  SIGNAL_CLAIM:  'rgba(100, 165, 255, 0.72)',
+  ZONE_ARTIFACT: 'rgba(225, 185,  70, 0.72)',
+  ZONE_CAP:      'rgba(170, 155, 220, 0.55)',
+  TRACE:         'rgba(190, 120, 255, 0.88)',
 }
-const LINK_COLOR_DIM    = 'rgba(60, 60, 60, 0.30)'
+const LINK_COLOR_DIM = 'rgba(22, 22, 26, 0.55)'
 
 const LINK_WIDTH_BASE = {
   ZONE_SIGNAL:   1.2,
@@ -94,38 +100,74 @@ function vaultUrl(type, id, vi) {
   }
 }
 
+// ── Deterministic hash seed from zone_id ─────────────────────────────────────
+//
+// Produces a stable integer for a given zone_id string.
+// Same input always produces the same output (no randomness).
+
+function zoneHash(zoneId) {
+  let h = 5381
+  for (let i = 0; i < zoneId.length; i++) {
+    h = ((h * 33) ^ zoneId.charCodeAt(i)) >>> 0
+  }
+  return h
+}
+
 // ── Relevance computation ─────────────────────────────────────────────────────
 //
-// Returns null (no emphasis — all bright) or a Set of relevant node IDs.
-// One-hop rule: if a signal is relevant its mapped claim is also relevant.
+// Always returns a non-null Set. Emphasis is always active.
+// Zone root is always added to the set before this function is called.
 
-function computeRelevance(vi, qs) {
-  if (!qs?.mode) return null
+function computeRelevance(zone, vi, qs) {
 
-  if (qs.mode === 'EVIDENCE' && Array.isArray(qs?.data?.vault_targets)) {
+  // EVIDENCE — factual zone signal binding from query response
+  if (qs?.mode === 'EVIDENCE' && Array.isArray(qs?.data?.vault_targets)) {
     const ids = new Set()
     for (const t of qs.data.vault_targets) {
       ids.add(t.id)
-      // one-hop: include the claim mapped from this signal
-      if (t.type === 'signal' && vi?.signals?.[t.id]) ids.add(vi.signals[t.id])
+      if (t.type === 'signal' && vi?.signals?.[t.id]) ids.add(vi.signals[t.id]) // one-hop claim
     }
     return ids
   }
 
-  if (qs.mode === 'TRACE' && Array.isArray(qs?.data?.trace)) {
+  // TRACE — factual path scope from query response
+  if (qs?.mode === 'TRACE' && Array.isArray(qs?.data?.trace)) {
     const ids = new Set()
     for (const path of qs.data.trace)
       for (const nodeId of path.node_chain || []) ids.add(nodeId)
     return ids
   }
 
-  if (qs.mode === 'WHY') {
-    // Capability IDs don't map to base-graph nodes; return a non-null empty set
-    // so base graph is muted. Capability nodes added in buildGraph are always bright.
+  // WHY — capability scope from query response
+  // Capability IDs don't map to base-graph nodes; base will be muted,
+  // capability nodes added in buildGraph are always in this set.
+  if (qs?.mode === 'WHY') {
     return new Set(qs?.data?.result?.structural_scope?.capability_ids ?? [])
   }
 
-  return null  // unknown mode — no emphasis
+  // DEFAULT — deterministic projection from zone data.
+  // Select zone.signal_count signals using zoneHash offset into sorted signal list.
+  // Guarantees different zones emphasise different signal subsets.
+  const allSigIds = Object.keys(vi?.signals ?? {}).sort()
+  const count     = Math.min(Math.max(zone.signal_count || 0, 1), allSigIds.length)
+  const seed      = zoneHash(zone.zone_id)
+  const start     = seed % allSigIds.length
+  const ids       = new Set()
+
+  for (let i = 0; i < count; i++) {
+    const sigId  = allSigIds[(start + i) % allSigIds.length]
+    ids.add(sigId)
+    const claimId = vi?.signals?.[sigId]
+    if (claimId) ids.add(claimId)  // one-hop mapped claim
+  }
+
+  // Core evidence artifacts relevant for HIGH/MODERATE severity zones
+  if ((zone.severity === 'HIGH' || zone.severity === 'MODERATE') && vi?.artifacts) {
+    if (vi.artifacts['ART-04']) ids.add('ART-04')
+    if (vi.artifacts['ART-05']) ids.add('ART-05')
+  }
+
+  return ids
 }
 
 // ── Graph construction ────────────────────────────────────────────────────────
@@ -135,16 +177,12 @@ function buildGraph(zone, vi, qs) {
   const links = []
   const seen  = new Set()
 
-  // relevantIds: null = no emphasis (all bright); Set = emphasis active
-  const relevantIds = computeRelevance(vi, qs)
-  const hasEmphasis = relevantIds !== null
-
-  // Zone root is always relevant
-  if (relevantIds) relevantIds.add(zone.zone_id)
+  const relevantIds = computeRelevance(zone, vi, qs)
+  relevantIds.add(zone.zone_id)  // zone root always relevant
 
   function nodeStyle(id, type) {
-    const rel = !hasEmphasis || relevantIds.has(id)
-    const src = rel ? (BRIGHT[type] ?? BRIGHT.SIGNAL) : (MUTED[type] ?? MUTED.SIGNAL)
+    const rel = relevantIds.has(id)
+    const src  = rel ? (BRIGHT[type] ?? BRIGHT.SIGNAL) : (MUTED[type] ?? MUTED.SIGNAL)
     return { color: src.color, val: src.val, relevant: rel }
   }
 
@@ -164,7 +202,7 @@ function buildGraph(zone, vi, qs) {
     ? `${vi.base_url}/${vi.zone_routing.fallback}` : null
   addNode(zone.zone_id, 'ZONE', zone.domain_name || zone.zone_id, zoneUrl)
 
-  // ── 2. All signals → their mapped claims (structural skeleton) ───────────
+  // ── 2. All signals → mapped claims (structural skeleton) ─────────────────
   for (const [sigId, claimId] of Object.entries(vi?.signals ?? {})) {
     if (nodes.length >= MAX_NODES) break
     addNode(sigId, 'SIGNAL', sigId, vaultUrl('signal', sigId, vi))
@@ -182,7 +220,7 @@ function buildGraph(zone, vi, qs) {
     addLink(zone.zone_id, artId, 'ZONE_ARTIFACT')
   }
 
-  // ── 4. TRACE: add path-chain nodes not already in base graph ────────────
+  // ── 4. TRACE: extra path-chain nodes not in base graph ───────────────────
   if (qs?.mode === 'TRACE' && Array.isArray(qs?.data?.trace)) {
     for (const path of qs.data.trace) {
       const chain = path.node_chain || []
@@ -200,7 +238,7 @@ function buildGraph(zone, vi, qs) {
     }
   }
 
-  // ── 5. WHY: add capability nodes as extra zone-specific overlay ──────────
+  // ── 5. WHY: capability nodes (extra zone-specific overlay) ───────────────
   if (qs?.mode === 'WHY' && Array.isArray(qs?.data?.result?.structural_scope?.capability_ids)) {
     for (const capId of qs.data.result.structural_scope.capability_ids) {
       if (nodes.length >= MAX_NODES) break
@@ -211,32 +249,30 @@ function buildGraph(zone, vi, qs) {
     }
   }
 
-  return { nodes, links, hasEmphasis }
+  return { nodes, links }
 }
 
-// ── Link color accessor (uses node.relevant at render time) ──────────────────
-//
-// At render time link.source / link.target are node objects (3d-force-graph mutates them).
+// ── Link color (relevant = bright semantic; both muted = dim) ─────────────────
 
-function linkColor(link, hasEmphasis) {
-  if (!hasEmphasis) return LINK_COLOR_BRIGHT[link.type] ?? 'rgba(120,120,120,0.45)'
+function linkColor(link) {
   const srcRel = link.source?.relevant ?? false
   const tgtRel = link.target?.relevant ?? false
-  if (srcRel || tgtRel) return LINK_COLOR_BRIGHT[link.type] ?? 'rgba(120,120,120,0.45)'
+  if (srcRel || tgtRel) return LINK_COLOR_BRIGHT[link.type] ?? 'rgba(120,120,120,0.5)'
   return LINK_COLOR_DIM
 }
 
 // ── Header hint ───────────────────────────────────────────────────────────────
 
-function buildHint(nodes, hasEmphasis, qs) {
+function buildHint(nodes, qs) {
   const total   = nodes.length
   const relevant = nodes.filter(n => n.relevant).length
 
-  if (!hasEmphasis) return `${total} nodes · full vault structure`
-
-  if (qs?.mode === 'EVIDENCE') {
-    const sigs = nodes.filter(n => n.type === 'SIGNAL' && n.relevant).length
-    const clms = nodes.filter(n => n.type === 'CLAIM'  && n.relevant).length
+  if (!qs?.mode) {
+    return `${total} nodes · ${relevant} relevant`
+  }
+  if (qs.mode === 'EVIDENCE') {
+    const sigs = nodes.filter(n => n.type === 'SIGNAL'   && n.relevant).length
+    const clms = nodes.filter(n => n.type === 'CLAIM'    && n.relevant).length
     const arts = nodes.filter(n => n.type === 'ARTIFACT' && n.relevant).length
     const parts = []
     if (sigs) parts.push(`${sigs} signal${sigs !== 1 ? 's' : ''}`)
@@ -245,17 +281,14 @@ function buildHint(nodes, hasEmphasis, qs) {
     const scope = parts.length ? parts.join(' · ') : 'weak zone scope'
     return `${total} nodes · ${scope}`
   }
-
-  if (qs?.mode === 'TRACE') {
+  if (qs.mode === 'TRACE') {
     const paths = qs?.data?.trace?.length ?? 0
-    return `${total} nodes · ${relevant} relevant · ${paths} trace path${paths !== 1 ? 's' : ''}`
+    return `${total} nodes · ${relevant} relevant · ${paths} path${paths !== 1 ? 's' : ''}`
   }
-
-  if (qs?.mode === 'WHY') {
+  if (qs.mode === 'WHY') {
     const caps = nodes.filter(n => n.type === 'CAPABILITY').length
     return `${total} nodes · ${caps} capability node${caps !== 1 ? 's' : ''}`
   }
-
   return `${total} nodes · ${relevant} relevant`
 }
 
@@ -266,12 +299,11 @@ export default function VaultGraph({ zone, vaultIndex, qs }) {
   const graphRef   = useRef(null)
   const tooltipRef = useRef(null)
 
-  const { nodes, links, hasEmphasis } = useMemo(
+  const graphData = useMemo(
     () => buildGraph(zone, vaultIndex, qs),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [zone.zone_id, vaultIndex, qs?.mode, qs?.data]
   )
-  const graphData = useMemo(() => ({ nodes, links }), [nodes, links])
 
   // Init renderer once per zone (browser-only, Three.js)
   useEffect(() => {
@@ -290,12 +322,12 @@ export default function VaultGraph({ zone, vaultIndex, qs }) {
         .nodeLabel(n => `${n.type}: ${n.label}`)
         .nodeColor(n => n.color)
         .nodeVal(n => n.val)
-        .nodeOpacity(0.92)
-        .linkColor(link => linkColor(link, hasEmphasis))
+        .nodeOpacity(1.0)
+        .linkColor(link => linkColor(link))
         .linkWidth(link => baseLinkWidth(link))
         .linkDirectionalParticles(link => link.type === 'TRACE' ? 4 : 0)
         .linkDirectionalParticleWidth(1.5)
-        .linkDirectionalParticleColor(link => LINK_COLOR_BRIGHT.TRACE)
+        .linkDirectionalParticleColor(() => LINK_COLOR_BRIGHT.TRACE)
         .onNodeClick(n => { if (n.url) window.open(n.url, '_blank', 'noreferrer') })
         .onNodeHover(n => {
           if (tooltipRef.current) {
@@ -321,21 +353,21 @@ export default function VaultGraph({ zone, vaultIndex, qs }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [zone.zone_id])
 
-  // Update data + re-apply emphasis when query changes
+  // Update data + re-apply link accessors when query changes
   useEffect(() => {
     if (!graphRef.current) return
     graphRef.current.graphData(graphData)
-    graphRef.current.linkColor(link => linkColor(link, hasEmphasis))
+    graphRef.current.linkColor(link => linkColor(link))
     graphRef.current.linkWidth(link => baseLinkWidth(link))
-  }, [graphData, hasEmphasis])
+  }, [graphData])
 
-  const hint = buildHint(nodes, hasEmphasis, qs)
+  const hint = buildHint(graphData.nodes, qs)
 
   return (
     <div className="vg-wrap">
       <div className="vg-header">
         <span className="vg-header-label">Vault Graph</span>
-        <span className="vg-header-count">{nodes.length} node{nodes.length !== 1 ? 's' : ''}</span>
+        <span className="vg-header-count">{graphData.nodes.length} node{graphData.nodes.length !== 1 ? 's' : ''}</span>
         <span className="vg-header-hint">{hint}</span>
       </div>
       <div className="vg-canvas-wrap">
