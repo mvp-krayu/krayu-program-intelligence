@@ -228,28 +228,53 @@
       <canvas id="og-canvas" width="880" height="380" style="display:block;width:100%;background:#09090d;border-radius:4px"></canvas>
 <div style="margin-top:8px;padding-left:2px"><span style="display:inline-flex;align-items:center;gap:5px;margin-right:18px"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#f0f0f0"></span><span style="color:#787880;font-size:10px">Zone root</span></span><span style="display:inline-flex;align-items:center;gap:5px;margin-right:18px"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#52d97e"></span><span style="color:#787880;font-size:10px">Signal</span></span><span style="display:inline-flex;align-items:center;gap:5px;margin-right:18px"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#e8b54a"></span><span style="color:#787880;font-size:10px">Mapped claim</span></span><span style="display:inline-flex;align-items:center;gap:5px;margin-right:18px"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#6ab4e8"></span><span style="color:#787880;font-size:10px">Artifact</span></span></div>
 <script>(function(){
-  var c=document.getElementById("og-canvas");
-  if(!c)return;
-  var ctx=c.getContext("2d");
-  var N=[{"x":446.4,"y":202.3,"r":9,"c":"#f0f0f0","l":"ZONE-01"},{"x":360.8,"y":214.1,"r":6,"c":"#52d97e","l":"SIG-001"},{"x":288.5,"y":220.8,"r":5,"c":"#e8b54a","l":"CLM-20"},{"x":414.4,"y":289.8,"r":6,"c":"#52d97e","l":"SIG-002"},{"x":378.8,"y":354.3,"r":5,"c":"#e8b54a","l":"CLM-21"},{"x":526.3,"y":149.7,"r":6,"c":"#52d97e","l":"SIG-003"},{"x":577.6,"y":95.7,"r":5,"c":"#e8b54a","l":"CLM-22"},{"x":461.0,"y":114.5,"r":6,"c":"#52d97e","l":"SIG-004"},{"x":482.2,"y":44.3,"r":5,"c":"#e8b54a","l":"CLM-23"},{"x":375.5,"y":151.1,"r":6,"c":"#52d97e","l":"SIG-005"},{"x":322.8,"y":100.7,"r":5,"c":"#e8b54a","l":"CLM-24"},{"x":490.2,"y":259.0,"r":5,"c":"#6ab4e8","l":"ART-01"},{"x":416.4,"y":143.9,"r":5,"c":"#6ab4e8","l":"ART-02"},{"x":516.7,"y":202.3,"r":5,"c":"#6ab4e8","l":"ART-03"},{"x":458.9,"y":270.9,"r":5,"c":"#6ab4e8","l":"ART-04"},{"x":490.3,"y":154.1,"r":5,"c":"#6ab4e8","l":"ART-05"},{"x":510.5,"y":234.5,"r":5,"c":"#6ab4e8","l":"ART-06"},{"x":398.9,"y":248.8,"r":5,"c":"#6ab4e8","l":"ART-07"}];
+  var W=880,H=380,CX=W/2,CY=H/2;
+  var CHARGE=-100,DIST=60,AD=0.015,VD=0.4;
+  var GOLDEN=Math.PI*(3-Math.sqrt(5));
+  var N=[{"r":9,"c":"#f0f0f0","l":"ZONE-01"},{"r":6,"c":"#52d97e","l":"SIG-001"},{"r":5,"c":"#e8b54a","l":"CLM-20"},{"r":6,"c":"#52d97e","l":"SIG-002"},{"r":5,"c":"#e8b54a","l":"CLM-21"},{"r":6,"c":"#52d97e","l":"SIG-003"},{"r":5,"c":"#e8b54a","l":"CLM-22"},{"r":6,"c":"#52d97e","l":"SIG-004"},{"r":5,"c":"#e8b54a","l":"CLM-23"},{"r":6,"c":"#52d97e","l":"SIG-005"},{"r":5,"c":"#e8b54a","l":"CLM-24"},{"r":5,"c":"#6ab4e8","l":"ART-01"},{"r":5,"c":"#6ab4e8","l":"ART-02"},{"r":5,"c":"#6ab4e8","l":"ART-03"},{"r":5,"c":"#6ab4e8","l":"ART-04"},{"r":5,"c":"#6ab4e8","l":"ART-05"},{"r":5,"c":"#6ab4e8","l":"ART-06"},{"r":5,"c":"#6ab4e8","l":"ART-07"}];
   var L=[{"s":0,"t":1,"c":"#3cac64","w":2.0},{"s":1,"t":2,"c":"#4b82d2","w":2.2},{"s":0,"t":3,"c":"#3cac64","w":2.0},{"s":3,"t":4,"c":"#4b82d2","w":2.2},{"s":0,"t":5,"c":"#3cac64","w":2.0},{"s":5,"t":6,"c":"#4b82d2","w":2.2},{"s":0,"t":7,"c":"#3cac64","w":2.0},{"s":7,"t":8,"c":"#4b82d2","w":2.2},{"s":0,"t":9,"c":"#3cac64","w":2.0},{"s":9,"t":10,"c":"#4b82d2","w":2.2},{"s":0,"t":11,"c":"#b29237","w":2.0},{"s":0,"t":12,"c":"#b29237","w":2.0},{"s":0,"t":13,"c":"#b29237","w":2.0},{"s":0,"t":14,"c":"#b29237","w":2.0},{"s":0,"t":15,"c":"#b29237","w":2.0},{"s":0,"t":16,"c":"#b29237","w":2.0},{"s":0,"t":17,"c":"#b29237","w":2.0}];
+  N.forEach(function(n,i){
+    n.x=CX+10*Math.cos(GOLDEN*i);n.y=CY+10*Math.sin(GOLDEN*i);n.vx=0;n.vy=0;
+  });
+  var deg=N.map(function(){return 0;});
+  L.forEach(function(l){deg[l.s]++;deg[l.t]++;});
+  L.forEach(function(l){l.k=1/Math.min(deg[l.s],deg[l.t]);});
+  for(var alpha=1;alpha>=0.001;alpha*=(1-AD)){
+    var fx=N.map(function(){return 0;}),fy=N.map(function(){return 0;});
+    for(var i=0;i<N.length;i++){for(var j=i+1;j<N.length;j++){
+      var dx=N[j].x-N[i].x,dy=N[j].y-N[i].y,d2=dx*dx+dy*dy;
+      if(d2<1)d2=Math.sqrt(d2);
+      var c=CHARGE*alpha/d2;
+      fx[i]+=dx*c;fy[i]+=dy*c;fx[j]-=dx*c;fy[j]-=dy*c;
+    }}
+    L.forEach(function(l){
+      var dx=N[l.t].x-N[l.s].x,dy=N[l.t].y-N[l.s].y;
+      var d=Math.sqrt(dx*dx+dy*dy)||1e-6,k=l.k*alpha*(d-DIST)/d;
+      var bs=deg[l.s]/(deg[l.s]+deg[l.t]),bt=1-bs;
+      fx[l.t]-=dx*k*bs;fy[l.t]-=dy*k*bs;
+      fx[l.s]+=dx*k*bt;fy[l.s]+=dy*k*bt;
+    });
+    var mx=0,my=0;
+    N.forEach(function(n){mx+=n.x;my+=n.y;});
+    mx=mx/N.length-CX;my=my/N.length-CY;
+    N.forEach(function(n,i){fx[i]-=mx*0.1*alpha;fy[i]-=my*0.1*alpha;});
+    N.forEach(function(n,i){
+      n.vx=(n.vx+fx[i])*VD;n.vy=(n.vy+fy[i])*VD;n.x+=n.vx;n.y+=n.vy;
+    });
+  }
+  var cv=document.getElementById("og-canvas");if(!cv)return;
+  var ctx=cv.getContext("2d");
   ctx.globalAlpha=0.8;
-  for(var i=0;i<L.length;i++){
-    var l=L[i],s=N[l.s],t=N[l.t];
+  L.forEach(function(l){
     ctx.strokeStyle=l.c;ctx.lineWidth=l.w;
-    ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(t.x,t.y);ctx.stroke();
-  }
+    ctx.beginPath();ctx.moveTo(N[l.s].x,N[l.s].y);ctx.lineTo(N[l.t].x,N[l.t].y);ctx.stroke();
+  });
   ctx.globalAlpha=1;
-  for(var i=0;i<N.length;i++){
-    var n=N[i];
-    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,6.283);
-    ctx.fillStyle=n.c;ctx.fill();
-  }
+  N.forEach(function(n){
+    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,6.283);ctx.fillStyle=n.c;ctx.fill();
+  });
   ctx.font="9px monospace";ctx.textAlign="center";ctx.fillStyle="#585860";
-  for(var i=0;i<N.length;i++){
-    var n=N[i];
-    ctx.fillText(n.l,n.x,n.y+n.r+11);
-  }
+  N.forEach(function(n){ctx.fillText(n.l,n.x,n.y+n.r+11);});
 })();</script>
     </div>
   </div>

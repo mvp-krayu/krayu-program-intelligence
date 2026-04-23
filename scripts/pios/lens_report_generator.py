@@ -3108,98 +3108,9 @@ def _build_t2_zone_block(zone: Dict, publish_safe: bool) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Tier-2 overview graph — force simulation + canvas
+# Tier-2 overview graph — topology data emitted by Python, layout + draw
+# executed as self-contained in-browser JS using same force physics as workspace
 # ---------------------------------------------------------------------------
-
-def _run_force_layout(
-    node_ids: List[str],
-    links_s: List[int],
-    links_t: List[int],
-    cx: float,
-    cy: float,
-) -> Dict[str, Tuple[float, float]]:
-    """Velocity Verlet simulation matching workspace d3-force-3d parameters.
-
-    charge.strength(-100), link.distance(60), alphaDecay(0.015),
-    velocityDecay(0.4). Golden-angle initialisation at radius=10 (d3 default).
-    Produces force-settled asymmetric layout — same structural physics
-    as the workspace graph, no hand-placed positions.
-    """
-    CHARGE_STR  = -100.0
-    LINK_DIST   =  60.0
-    ALPHA_DECAY =   0.015
-    ALPHA_MIN   =   0.001
-    VEL_DECAY   =   0.4
-    INIT_R      =  10.0
-    GOLDEN      = math.pi * (3.0 - math.sqrt(5.0))  # ~137.5° golden angle
-
-    n   = len(node_ids)
-    pos = [[cx + INIT_R * math.cos(GOLDEN * i),
-            cy + INIT_R * math.sin(GOLDEN * i)] for i in range(n)]
-    vel = [[0.0, 0.0] for _ in range(n)]
-
-    # Degree per node — used for link strength and force bias (mirrors d3-force)
-    deg = [0] * n
-    for s, t in zip(links_s, links_t):
-        deg[s] += 1
-        deg[t] += 1
-
-    # Link strength = 1 / min(degree_s, degree_t)  (d3-force default)
-    lstr = [1.0 / max(1, min(deg[s], deg[t])) for s, t in zip(links_s, links_t)]
-
-    alpha = 1.0
-    while alpha >= ALPHA_MIN:
-        fx = [0.0] * n
-        fy = [0.0] * n
-
-        # Many-body: dv_i += (dx, dy) * strength * alpha / d²
-        # Matches d3-force: node.vx += x * strength * alpha / l  (l = d², not d)
-        # Force magnitude = |strength| * alpha / d  (decays correctly with distance)
-        for i in range(n):
-            for j in range(i + 1, n):
-                dx = pos[j][0] - pos[i][0]
-                dy = pos[j][1] - pos[i][1]
-                d2 = dx * dx + dy * dy
-                if d2 < 1.0:       # distanceMin=1 clamp (mirrors d3 default)
-                    d2 = math.sqrt(d2)
-                c  = CHARGE_STR * alpha / d2
-                fx[i] += dx * c
-                fy[i] += dy * c
-                fx[j] -= dx * c
-                fy[j] -= dy * c
-
-        # Link spring: dv = link_str * alpha * (d−dist_target)/d * displacement
-        # bias = degree_s / (degree_s + degree_t) — mirrors d3-force link bias
-        for li, (s, t) in enumerate(zip(links_s, links_t)):
-            dx  = pos[t][0] - pos[s][0]
-            dy  = pos[t][1] - pos[s][1]
-            d   = max(math.sqrt(dx * dx + dy * dy), 1e-6)
-            k   = lstr[li] * alpha * (d - LINK_DIST) / d
-            bs  = deg[s] / max(deg[s] + deg[t], 1)
-            bt  = 1.0 - bs
-            fx[t] -= dx * k * bs
-            fy[t] -= dy * k * bs
-            fx[s] += dx * k * bt
-            fy[s] += dy * k * bt
-
-        # Center force: nudge mean position toward (cx, cy)
-        mx = sum(p[0] for p in pos) / n - cx
-        my = sum(p[1] for p in pos) / n - cy
-        for i in range(n):
-            fx[i] -= mx * 0.1 * alpha
-            fy[i] -= my * 0.1 * alpha
-
-        # Integrate with velocity decay
-        for i in range(n):
-            vel[i][0] = (vel[i][0] + fx[i]) * VEL_DECAY
-            vel[i][1] = (vel[i][1] + fy[i]) * VEL_DECAY
-            pos[i][0] += vel[i][0]
-            pos[i][1] += vel[i][1]
-
-        alpha *= (1.0 - ALPHA_DECAY)
-
-    return {node_ids[i]: (pos[i][0], pos[i][1]) for i in range(n)}
-
 
 def _build_overview_graph_html(
     zones: List[Dict],
@@ -3209,11 +3120,12 @@ def _build_overview_graph_html(
 ) -> str:
     """Full vault structure graph for Tier-2 Diagnostic Narrative section 01A.
 
-    Mirrors buildGraph(isOverview=True) from VaultGraph.js:
-      zone root → all signals → mapped claims; zone root → all artifacts.
-    All nodes use BRIGHT styling. Positions produced by force simulation
-    matching workspace d3-force-3d parameters (charge=-100, linkDist=60,
-    alphaDecay=0.015) — no hand-placed or symmetrical layout.
+    Graph topology mirrors buildGraph(isOverview=True) from VaultGraph.js.
+    Positions are NOT pre-computed by Python. Instead, the same force
+    simulation runs in-browser JS using the exact same parameters as the
+    workspace: charge=-100, linkDist=60, alphaDecay=0.015, velDecay=0.4,
+    golden-angle init. Same JS engine, same IEEE 754, same convergence —
+    same spatial truth. Python only emits node/link topology data.
     Falls back to _build_topology_svg if vault_index unavailable.
     """
     if not vault_index or not zones:
@@ -3221,8 +3133,6 @@ def _build_overview_graph_html(
 
     zone   = zones[0]
     hub_id = zone['zone_id']
-    cx     = width / 2
-    cy     = height / 2
 
     # Mirrors BRIGHT palette + LINK_COLOR_BASE from VaultGraph.js
     NODE_R   = {'ZONE': 9, 'SIGNAL': 6, 'CLAIM': 5, 'ARTIFACT': 5}
@@ -3230,65 +3140,38 @@ def _build_overview_graph_html(
     LINK_COL = {'ZONE_SIGNAL': '#3cac64', 'SIGNAL_CLAIM': '#4b82d2', 'ZONE_ARTIFACT': '#b29237'}
     LINK_W   = {'ZONE_SIGNAL': 2.0, 'SIGNAL_CLAIM': 2.2, 'ZONE_ARTIFACT': 2.0}
 
-    # ── 1. Build node list + raw link index pairs (no positions yet) ─────────
-    node_ids:  List[str]          = []
-    node_type: Dict[str, str]     = {}
-    nidx:      Dict[str, int]     = {}
-    raw_links: List[Tuple[int, int, str]] = []  # (s_idx, t_idx, link_type)
+    # Build topology data (no positions — JS computes those via force simulation)
+    nodes: List[Dict] = []
+    links: List[Dict] = []
+    nidx:  Dict[str, int] = {}
 
-    def _reg(nid: str, ntype: str) -> int:
-        if nid in nidx:
-            return nidx[nid]
-        i = len(node_ids)
-        nidx[nid] = i
-        node_ids.append(nid)
-        node_type[nid] = ntype
-        return i
+    def _reg(nid: str, ntype: str) -> None:
+        if nid not in nidx:
+            nidx[nid] = len(nodes)
+            nodes.append({
+                'r': NODE_R.get(ntype, 5),
+                'c': NODE_COL.get(ntype, '#909090'),
+                'l': nid,
+            })
 
     def _link(src: str, tgt: str, ltype: str) -> None:
         if src in nidx and tgt in nidx:
-            raw_links.append((nidx[src], nidx[tgt], ltype))
+            links.append({
+                's': nidx[src], 't': nidx[tgt],
+                'c': LINK_COL.get(ltype, '#404048'),
+                'w': LINK_W.get(ltype, 1.5),
+            })
 
-    # Hub (sorted order mirrors JS — hub always index 0)
     _reg(hub_id, 'ZONE')
-
-    # Signals → mapped claims (sorted, mirrors JS Object.keys().sort())
     for sig_id, clm_id in sorted(vault_index.get('signals', {}).items()):
         _reg(sig_id, 'SIGNAL')
         _link(hub_id, sig_id, 'ZONE_SIGNAL')
         if clm_id:
             _reg(clm_id, 'CLAIM')
             _link(sig_id, clm_id, 'SIGNAL_CLAIM')
-
-    # Artifacts (sorted)
     for art_id in sorted(vault_index.get('artifacts', {})):
         _reg(art_id, 'ARTIFACT')
         _link(hub_id, art_id, 'ZONE_ARTIFACT')
-
-    # ── 2. Force simulation — same physics as workspace ──────────────────────
-    links_s = [l[0] for l in raw_links]
-    links_t = [l[1] for l in raw_links]
-    positions = _run_force_layout(node_ids, links_s, links_t, cx, cy)
-
-    # ── 3. Assemble serialisable node + link arrays ──────────────────────────
-    nodes: List[Dict] = []
-    for nid in node_ids:
-        px, py = positions[nid]
-        nodes.append({
-            'x': round(px, 1), 'y': round(py, 1),
-            'r': NODE_R.get(node_type[nid], 5),
-            'c': NODE_COL.get(node_type[nid], '#909090'),
-            'l': nid,
-        })
-
-    links: List[Dict] = [
-        {
-            's': s, 't': t,
-            'c': LINK_COL.get(lt, '#404048'),
-            'w': LINK_W.get(lt, 1.5),
-        }
-        for s, t, lt in raw_links
-    ]
 
     nodes_js = json.dumps(nodes, separators=(',', ':'))
     links_js = json.dumps(links, separators=(',', ':'))
@@ -3306,34 +3189,69 @@ def _build_overview_graph_html(
         ]
     )
 
+    # In-browser force simulation — same parameters as workspace VaultGraph.js:
+    #   charge.strength(-100), link.distance(60), alphaDecay(0.015), velDecay(0.4)
+    #   golden-angle init at radius=10 (d3-force-3d default)
+    #   many-body formula: dv += displacement * strength * alpha / d²  (d3 forceManyBody)
+    # Runs synchronously to convergence; renders to canvas immediately.
+    # No CDN, no external dependencies.
+    js_sim = (
+        f'(function(){{\n'
+        f'  var W={width},H={height},CX=W/2,CY=H/2;\n'
+        f'  var CHARGE=-100,DIST=60,AD=0.015,VD=0.4;\n'
+        f'  var GOLDEN=Math.PI*(3-Math.sqrt(5));\n'
+        f'  var N={nodes_js};\n'
+        f'  var L={links_js};\n'
+        f'  N.forEach(function(n,i){{\n'
+        f'    n.x=CX+10*Math.cos(GOLDEN*i);n.y=CY+10*Math.sin(GOLDEN*i);n.vx=0;n.vy=0;\n'
+        f'  }});\n'
+        f'  var deg=N.map(function(){{return 0;}});\n'
+        f'  L.forEach(function(l){{deg[l.s]++;deg[l.t]++;}});\n'
+        f'  L.forEach(function(l){{l.k=1/Math.min(deg[l.s],deg[l.t]);}});\n'
+        f'  for(var alpha=1;alpha>=0.001;alpha*=(1-AD)){{\n'
+        f'    var fx=N.map(function(){{return 0;}}),fy=N.map(function(){{return 0;}});\n'
+        f'    for(var i=0;i<N.length;i++){{for(var j=i+1;j<N.length;j++){{\n'
+        f'      var dx=N[j].x-N[i].x,dy=N[j].y-N[i].y,d2=dx*dx+dy*dy;\n'
+        f'      if(d2<1)d2=Math.sqrt(d2);\n'
+        f'      var c=CHARGE*alpha/d2;\n'
+        f'      fx[i]+=dx*c;fy[i]+=dy*c;fx[j]-=dx*c;fy[j]-=dy*c;\n'
+        f'    }}}}\n'
+        f'    L.forEach(function(l){{\n'
+        f'      var dx=N[l.t].x-N[l.s].x,dy=N[l.t].y-N[l.s].y;\n'
+        f'      var d=Math.sqrt(dx*dx+dy*dy)||1e-6,k=l.k*alpha*(d-DIST)/d;\n'
+        f'      var bs=deg[l.s]/(deg[l.s]+deg[l.t]),bt=1-bs;\n'
+        f'      fx[l.t]-=dx*k*bs;fy[l.t]-=dy*k*bs;\n'
+        f'      fx[l.s]+=dx*k*bt;fy[l.s]+=dy*k*bt;\n'
+        f'    }});\n'
+        f'    var mx=0,my=0;\n'
+        f'    N.forEach(function(n){{mx+=n.x;my+=n.y;}});\n'
+        f'    mx=mx/N.length-CX;my=my/N.length-CY;\n'
+        f'    N.forEach(function(n,i){{fx[i]-=mx*0.1*alpha;fy[i]-=my*0.1*alpha;}});\n'
+        f'    N.forEach(function(n,i){{\n'
+        f'      n.vx=(n.vx+fx[i])*VD;n.vy=(n.vy+fy[i])*VD;n.x+=n.vx;n.y+=n.vy;\n'
+        f'    }});\n'
+        f'  }}\n'
+        f'  var cv=document.getElementById("og-canvas");if(!cv)return;\n'
+        f'  var ctx=cv.getContext("2d");\n'
+        f'  ctx.globalAlpha=0.8;\n'
+        f'  L.forEach(function(l){{\n'
+        f'    ctx.strokeStyle=l.c;ctx.lineWidth=l.w;\n'
+        f'    ctx.beginPath();ctx.moveTo(N[l.s].x,N[l.s].y);ctx.lineTo(N[l.t].x,N[l.t].y);ctx.stroke();\n'
+        f'  }});\n'
+        f'  ctx.globalAlpha=1;\n'
+        f'  N.forEach(function(n){{\n'
+        f'    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,6.283);ctx.fillStyle=n.c;ctx.fill();\n'
+        f'  }});\n'
+        f'  ctx.font="9px monospace";ctx.textAlign="center";ctx.fillStyle="#585860";\n'
+        f'  N.forEach(function(n){{ctx.fillText(n.l,n.x,n.y+n.r+11);}});\n'
+        f'}})();'
+    )
+
     return (
         f'<canvas id="og-canvas" width="{width}" height="{height}" '
         f'style="display:block;width:100%;background:#09090d;border-radius:4px"></canvas>\n'
         f'<div style="margin-top:8px;padding-left:2px">{legend_html}</div>\n'
-        f'<script>(function(){{\n'
-        f'  var c=document.getElementById("og-canvas");\n'
-        f'  if(!c)return;\n'
-        f'  var ctx=c.getContext("2d");\n'
-        f'  var N={nodes_js};\n'
-        f'  var L={links_js};\n'
-        f'  ctx.globalAlpha=0.8;\n'
-        f'  for(var i=0;i<L.length;i++){{\n'
-        f'    var l=L[i],s=N[l.s],t=N[l.t];\n'
-        f'    ctx.strokeStyle=l.c;ctx.lineWidth=l.w;\n'
-        f'    ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(t.x,t.y);ctx.stroke();\n'
-        f'  }}\n'
-        f'  ctx.globalAlpha=1;\n'
-        f'  for(var i=0;i<N.length;i++){{\n'
-        f'    var n=N[i];\n'
-        f'    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,6.283);\n'
-        f'    ctx.fillStyle=n.c;ctx.fill();\n'
-        f'  }}\n'
-        f'  ctx.font="9px monospace";ctx.textAlign="center";ctx.fillStyle="#585860";\n'
-        f'  for(var i=0;i<N.length;i++){{\n'
-        f'    var n=N[i];\n'
-        f'    ctx.fillText(n.l,n.x,n.y+n.r+11);\n'
-        f'  }}\n'
-        f'}})();</script>'
+        f'<script>{js_sim}</script>'
     )
 
 
