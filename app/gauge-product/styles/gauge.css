@@ -2431,9 +2431,18 @@ details.op-details[open] summary::before { content:"▼  "; }
 .vg-canvas { width:100%; height:360px; display:block; }
 .vg-tooltip { position:absolute; top:10px; left:10px; background:rgba(14,14,18,0.88); border:1px solid #2a2a2e; border-radius:2px; font-size:11px; color:#ccc; padding:4px 10px; pointer-events:none; font-family:monospace; white-space:nowrap; z-index:10; }
 
+.ws-graph-panel { margin-bottom:28px; border:1px solid #2a2a2e; border-radius:3px; overflow:hidden; background:#0e0e12; }
+.ws-graph-panel-header { display:flex; align-items:center; gap:12px; padding:10px 16px; border-bottom:1px solid #1c1c22; background:#16161a; }
+.ws-graph-panel-title { font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:#5a9fd4; }
+.ws-graph-panel-zone { font-size:10px; font-family:monospace; color:#d4912a; }
+.ws-graph-panel-mode { font-size:9px; color:#444; margin-left:auto; letter-spacing:.04em; }
+.ws-graph-panel .vg-wrap { margin-top:0; border:none; border-radius:0; border-top:none; }
+.ws-graph-panel .vg-canvas { height:440px; }
+
 @media(max-width:600px) {
   .ws-context-lock { grid-template-columns:1fr 1fr; }
   .ws-rationale-row { grid-template-columns:1fr; gap:4px; }
   .vg-canvas { height:260px; }
+  .ws-graph-panel .vg-canvas { height:280px; }
 }
 

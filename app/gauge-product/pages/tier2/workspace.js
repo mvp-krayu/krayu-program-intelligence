@@ -1,10 +1,14 @@
 /**
  * pages/tier2/workspace.js
- * TIER2.WORKSPACE.PRODUCT.POLISH.01
+ * TIER2.WORKSPACE.GRAPH.REPOSITION.01
  *
  * Tier-2 Diagnostic Workspace — governed investigation surface.
  * WHY / EVIDENCE / TRACE modes live. Vault links resolve to exported pages.
  * inference_prohibition: ACTIVE on all result panels.
+ *
+ * Graph repositioned: single global VaultGraph above zone list.
+ * Zone cards are investigation triggers; graph reflects active zone + mode.
+ * State persisted via sessionStorage for vault navigation continuity.
  *
  * Authority: TIER2.RUNTIME.QUERY.ENGINE.01
  */
@@ -371,14 +375,13 @@ function EvidenceResult({ data, vaultIndex }) {
 }
 
 // ---------------------------------------------------------------------------
-// Zone card
+// Zone card — investigation trigger, not graph container
 // ---------------------------------------------------------------------------
 
-function ZoneCard({ zone, vaultIndex, defaultOpen }) {
+function ZoneCard({ zone, vaultIndex, defaultOpen, isActive, onActivate }) {
   const [expanded, setExpanded] = useState(defaultOpen || false)
-  const [qs, setQs] = useState(null)
-  const [graphOpen, setGraphOpen] = useState(false)
-  const resultRef = useRef(null)
+  const [qs, setQs]             = useState(null)
+  const resultRef               = useRef(null)
 
   useEffect(() => {
     if (qs?.data && !qs.loading && resultRef.current) {
@@ -391,22 +394,24 @@ function ZoneCard({ zone, vaultIndex, defaultOpen }) {
     try {
       const res  = await fetch(`/api/query?zone_id=${zone.zone_id}&mode=${mode}`)
       const data = await res.json()
-      setQs(data.status === 'ok'
-        ? { mode, data }
-        : { mode, error: data.reason || 'QUERY_FAILED' })
+      if (data.status === 'ok') {
+        setQs({ mode, data })
+        onActivate(zone, mode, data)
+      } else {
+        setQs({ mode, error: data.reason || 'QUERY_FAILED' })
+      }
     } catch {
       setQs({ mode, error: 'NETWORK_ERROR' })
     }
   }
 
   const { cls: typeCls, label: typeLabel } = zoneTypeMeta(zone.zone_type)
-  const vaultUrl    = resolveVaultLink('domain', zone.domain_id, vaultIndex)
-  const activeMode  = (qs?.data && !qs.loading) ? qs.mode : null
+  const localMode   = (qs?.data && !qs.loading) ? qs.mode : null
   const loadingMode = qs?.loading ? qs.mode : null
 
   return (
     <div
-      className={`ws-zone-card ${SEV_CARD_CLS[zone.severity] || ''}${activeMode ? ' ws-zone-card--active' : ''}${!expanded ? ' ws-zone-card--collapsed' : ''}`}
+      className={`ws-zone-card ${SEV_CARD_CLS[zone.severity] || ''}${isActive ? ' ws-zone-card--active' : ''}${!expanded ? ' ws-zone-card--collapsed' : ''}`}
       ref={resultRef}
     >
       <button className="ws-zone-toggle" onClick={() => setExpanded(e => !e)}>
@@ -434,14 +439,14 @@ function ZoneCard({ zone, vaultIndex, defaultOpen }) {
 
           <div className="ws-zone-actions">
             <button
-              className={`ws-btn${activeMode === 'WHY' ? ' ws-btn-active-why' : ''}`}
+              className={`ws-btn${localMode === 'WHY' ? ' ws-btn-active-why' : ''}`}
               onClick={() => fireQuery('WHY')}
               disabled={!!loadingMode}
             >
               {loadingMode === 'WHY' ? 'WHY…' : 'WHY'}
             </button>
             <button
-              className={`ws-btn${activeMode === 'EVIDENCE' ? ' ws-btn-active-evidence' : ''}`}
+              className={`ws-btn${localMode === 'EVIDENCE' ? ' ws-btn-active-evidence' : ''}`}
               onClick={() => fireQuery('EVIDENCE')}
               disabled={!!loadingMode}
             >
@@ -449,36 +454,24 @@ function ZoneCard({ zone, vaultIndex, defaultOpen }) {
             </button>
             <span className="ws-btn-sep" aria-hidden="true" />
             <button
-              className={`ws-btn${activeMode === 'TRACE' ? ' ws-btn-active-trace' : ''}`}
+              className={`ws-btn${localMode === 'TRACE' ? ' ws-btn-active-trace' : ''}`}
               onClick={() => fireQuery('TRACE')}
               disabled={!!loadingMode}
             >
               {loadingMode === 'TRACE' ? 'TRACE…' : 'TRACE'}
             </button>
             {qs?.data && !loadingMode && (
-              <button className="ws-btn ws-btn-clear" onClick={() => setQs(null)}>✕</button>
+              <button
+                className="ws-btn ws-btn-clear"
+                onClick={() => { setQs(null); if (isActive) onActivate(null, null, null) }}
+              >✕</button>
             )}
-            {vaultUrl && (
-              <a href={vaultUrl} target="_blank" rel="noreferrer" className="ws-vault-zone-link">
-                Vault ↗
-              </a>
-            )}
-            <button
-              className={`ws-btn${graphOpen ? ' ws-btn-active-graph' : ''}`}
-              onClick={() => setGraphOpen(g => !g)}
-            >
-              {graphOpen ? 'GRAPH ▲' : 'GRAPH'}
-            </button>
           </div>
 
           {qs?.error && <div className="ws-query-error">{qs.error}</div>}
           {qs?.data && qs.mode === 'WHY'      && <WhyResult      data={qs.data} />}
           {qs?.data && qs.mode === 'EVIDENCE' && <EvidenceResult data={qs.data} vaultIndex={vaultIndex} />}
           {qs?.data && qs.mode === 'TRACE'    && <TraceResult    data={qs.data} />}
-
-          {graphOpen && (
-            <VaultGraph zone={zone} vaultIndex={vaultIndex} qs={qs} />
-          )}
         </>
       )}
     </div>
@@ -489,11 +482,23 @@ function ZoneCard({ zone, vaultIndex, defaultOpen }) {
 // Page
 // ---------------------------------------------------------------------------
 
-export default function Tier2WorkspacePage() {
-  const [pageState, setPageState] = useState('loading')
-  const [zonesData, setZonesData] = useState(null)
-  const [vaultIndex, setVaultIndex] = useState(null)
+const WS_STATE_KEY = 'ws_state'
 
+const GRAPH_MODE_LABEL = {
+  EVIDENCE: 'zone evidence focus',
+  TRACE:    'trace paths',
+  WHY:      'structural scope',
+}
+
+export default function Tier2WorkspacePage() {
+  const [pageState, setPageState]       = useState('loading')
+  const [zonesData, setZonesData]       = useState(null)
+  const [vaultIndex, setVaultIndex]     = useState(null)
+  const [activeZone, setActiveZone]     = useState(null)
+  const [activeMode, setActiveMode]     = useState(null)
+  const [activeQsData, setActiveQsData] = useState(null)
+
+  // Load zones
   useEffect(() => {
     fetch('/api/zones')
       .then(r => r.json())
@@ -508,12 +513,52 @@ export default function Tier2WorkspacePage() {
       .catch(() => setPageState('error'))
   }, [])
 
+  // Load vault index
   useEffect(() => {
     fetch(VAULT_INDEX_URL)
       .then(r => r.ok ? r.json() : null)
       .then(data => { if (data?.export_status === 'EXPORTED') setVaultIndex(data) })
       .catch(() => {})
   }, [])
+
+  // Restore workspace state from sessionStorage after zones load
+  useEffect(() => {
+    if (pageState !== 'ready' || !zonesData) return
+    try {
+      const saved = sessionStorage.getItem(WS_STATE_KEY)
+      if (!saved) return
+      const { zoneId, mode, qsData } = JSON.parse(saved)
+      const zone = zonesData.zones.find(z => z.zone_id === zoneId)
+      if (zone) {
+        setActiveZone(zone)
+        if (mode)   setActiveMode(mode)
+        if (qsData) setActiveQsData(qsData)
+      }
+    } catch {}
+  }, [pageState, zonesData])
+
+  // Persist workspace state to sessionStorage
+  useEffect(() => {
+    if (!activeZone) return
+    try {
+      sessionStorage.setItem(WS_STATE_KEY, JSON.stringify({
+        zoneId: activeZone.zone_id,
+        mode:   activeMode,
+        qsData: activeQsData,
+      }))
+    } catch {}
+  }, [activeZone, activeMode, activeQsData])
+
+  function handleActivate(zone, mode, data) {
+    setActiveZone(zone)
+    setActiveMode(mode)
+    setActiveQsData(data)
+  }
+
+  // Graph inputs
+  const graphZone  = activeZone ?? zonesData?.zones?.[0] ?? null
+  const graphQs    = (activeMode && activeQsData) ? { mode: activeMode, data: activeQsData } : null
+  const graphLabel = activeMode ? (GRAPH_MODE_LABEL[activeMode] ?? '') : 'full vault structure'
 
   return (
     <div className="ws-page">
@@ -558,6 +603,19 @@ export default function Tier2WorkspacePage() {
             </div>
           </div>
 
+          {graphZone && (
+            <div className="ws-graph-panel">
+              <div className="ws-graph-panel-header">
+                <span className="ws-graph-panel-title">VAULT GRAPH — GLOBAL CONTEXT</span>
+                {activeZone && (
+                  <span className="ws-graph-panel-zone">{activeZone.zone_id}</span>
+                )}
+                <span className="ws-graph-panel-mode">{graphLabel}</span>
+              </div>
+              <VaultGraph zone={graphZone} vaultIndex={vaultIndex} qs={graphQs} />
+            </div>
+          )}
+
           <div className="ws-inventory-header">
             <span className="ws-inventory-title">Diagnostic Zones</span>
             <span className="ws-inventory-count">
@@ -575,6 +633,8 @@ export default function Tier2WorkspacePage() {
                   zone.severity === 'HIGH' ||
                   (i === 0 && !zonesData.zones.some(z => z.severity === 'HIGH'))
                 }
+                isActive={activeZone?.zone_id === zone.zone_id}
+                onActivate={handleActivate}
               />
             ))}
           </div>
