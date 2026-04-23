@@ -353,6 +353,11 @@ export default function VaultGraph({ zone, vaultIndex, qs, isOverview }) {
         })
         (el)
 
+      // Open layout: more repulsion + longer link distance + slower cooling
+      graph.d3Force('charge').strength(-100)
+      graph.d3Force('link').distance(60)
+      graph.d3AlphaDecay(0.015)
+
       graph.graphData(graphData)
       graphRef.current = graph
     })
