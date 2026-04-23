@@ -50,13 +50,17 @@ derived_from: [[../product/lens_report]]
 
 Language boundary: claims MUST frame consequence statements conditionally ("if degraded"). Claims MUST NOT state advisory direction, prioritization, or inference-free derivation for consequence class outputs.
 
-| Claim | Product Basis | Canonical Basis | Derivation Class |
-|---|---|---|---|
-| "Each unknown dimension identified individually" | [[../product/diagnostic_access_product]] | [[../canonical/streams/PRODUCTIZE.DIAGNOSTIC.ACCESS.01]] | EVIDENCE-DERIVABLE |
-| "Scope gap described for each unknown dimension" | [[../product/diagnostic_access_product]] | [[../canonical/streams/PRODUCTIZE.DIAGNOSTIC.ACCESS.01]] | EVIDENCE-DERIVABLE |
-| "System area responsible for each dimension identified" | [[../product/diagnostic_access_product]] | [[../canonical/streams/PRODUCTIZE.DIAGNOSTIC.ACCESS.01]] | EVIDENCE-DERIVABLE |
-| "Consequence if each dimension is in a degraded state" | [[../product/diagnostic_access_product]] | [[../canonical/streams/PRODUCTIZE.DIAGNOSTIC.ACCESS.01]] | STRUCTURAL-INFERENCE — conditional framing required |
-| "What evidence would move each dimension from unknown to confirmed" | [[../product/diagnostic_access_product]] | [[../canonical/streams/PRODUCTIZE.DIAGNOSTIC.ACCESS.01]] | EVIDENCE-DERIVABLE |
+**Delivery form (Phase 1):** Tier-2 content is delivered as a zone-based Diagnostic Narrative HTML export. The delivery unit is a diagnostic zone (derived deterministically from canonical topology and signal registry), not the raw INVESTIGATION_TARGET schema. Publish claims must reflect this zone-based form, not the investigation-target schema framing.
+
+**Phase gate note:** The `consequence_class` claim (STRUCTURAL-INFERENCE row below) requires Phase 2 activation before it may appear in any publish surface. In Phase 1, this dimension is deferred — do not publish this claim until entitlement gating and consequence_class surface are implemented.
+
+| Claim | Product Basis | Canonical Basis | Derivation Class | Phase Gate |
+|---|---|---|---|---|
+| "Each unknown dimension identified individually" | [[../product/diagnostic_access_product]] | [[../canonical/streams/PRODUCTIZE.DIAGNOSTIC.ACCESS.01]] | EVIDENCE-DERIVABLE | Phase 1 — active |
+| "Scope gap described for each unknown dimension" | [[../product/diagnostic_access_product]] | [[../canonical/streams/PRODUCTIZE.DIAGNOSTIC.ACCESS.01]] | EVIDENCE-DERIVABLE | Phase 1 — active |
+| "System area responsible for each dimension identified" | [[../product/diagnostic_access_product]] | [[../canonical/streams/PRODUCTIZE.DIAGNOSTIC.ACCESS.01]] | EVIDENCE-DERIVABLE | Phase 1 — active |
+| "Consequence if each dimension is in a degraded state" | [[../product/diagnostic_access_product]] | [[../canonical/streams/PRODUCTIZE.DIAGNOSTIC.ACCESS.01]] | STRUCTURAL-INFERENCE — conditional framing required | Phase 2 — DEFERRED: do not publish |
+| "What evidence would move each dimension from unknown to confirmed" | [[../product/diagnostic_access_product]] | [[../canonical/streams/PRODUCTIZE.DIAGNOSTIC.ACCESS.01]] | EVIDENCE-DERIVABLE | Phase 1 — active |
 
 ### Forbidden Publish Claims (Tier 2)
 
@@ -66,6 +70,7 @@ The following claims are forbidden in any publish surface for Diagnostic Access:
 - "interrogate it, prioritize it, and act on it" — "prioritize" and "act on" are advisory verbs implying authority beyond governed output. Replace with: "investigate and understand".
 - Any claim asserting certainty about current system degradation state.
 - Any claim implying open-ended advisory guidance or consulting output.
+- Any claim describing Tier-2 delivery as "investigation target" schema output — Phase 1 delivery form is zone-based Diagnostic Narrative; INVESTIGATION_TARGET schema is the canonical concept layer only.
 
 ---
 
@@ -74,3 +79,4 @@ The following claims are forbidden in any publish surface for Diagnostic Access:
 | Stream | Date | Change | Product basis |
 |---|---|---|---|
 | PRODUCTIZE.LENS.COMMERCIAL.PACKAGE.05 | 2026-04-22 | Extended with Tier 2 Controlled Claims section; forbidden claims documented | [[../product/diagnostic_access_product]] |
+| BRAIN.RECONCILE.LENS.TIER2.01 | 2026-04-23 | Added delivery form note (zone-based Diagnostic Narrative = Phase 1 form); added Phase gate column; added forbidden claim for investigation-target schema framing; deferred consequence_class publish claim to Phase 2 | [[../product/diagnostic_access_product]] |
