@@ -356,6 +356,17 @@ function ReportPanel({ runId }) {
           )}
         </div>
       )}
+      <div className="lens-report-workspace-row">
+        <button
+          className="lens-report-workspace"
+          onClick={() => window.open('/tier2/workspace')}
+        >
+          Diagnostic Workspace
+        </button>
+        <span className="lens-report-workspace-hint">
+          Live WHY &amp; EVIDENCE &amp; TRACE · inference_prohibition: ACTIVE
+        </span>
+      </div>
       {runId && (
         <div className="lens-report-basis">
           Governed projection (ZONE-2) · Run: {runId}

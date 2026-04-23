@@ -1571,6 +1571,8 @@ details.op-details[open] summary::before { content:"▼  "; }
 }
 .lens-report-download:hover { border-color:#58a6ff; }
 .lens-report-ready { font-size:10px; color:#3fb950; letter-spacing:.06em; text-transform:uppercase; }
+.lens-report-workspace-row { display:flex; align-items:center; gap:12px; margin-top:14px; padding-top:12px; border-top:1px solid #1c1c22; }
+.lens-report-workspace-hint { font-size:10px; color:#444; letter-spacing:.02em; }
 .lens-report-basis { font-size:10px; color:#444; margin-top:8px; letter-spacing:.03em; }
 .lens-report-artifacts { display:flex; flex-direction:row; gap:10px; flex-wrap:wrap; align-items:center; margin-top:2px; }
 .lens-report-secondary {
