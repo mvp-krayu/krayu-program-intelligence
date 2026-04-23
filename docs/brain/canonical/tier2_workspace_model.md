@@ -3,13 +3,15 @@
 **Authority:** brain/canonical  
 **Stream:** TIER2.WORKSPACE.MODEL.01  
 **Status:** DEFINITION  
-**Depends on:** diagnostic_zone_construct.md, trace_graph_model.md, tier2_runtime_mvp_surface.md
+**Depends on:** diagnostic_zone_construct.md, trace_graph_model.md, tier2_runtime_mvp_surface.md  
+**Concept layer:** streams/PRODUCTIZE.DIAGNOSTIC.ACCESS.01.md  
+**Reconciliation:** tier2_reconciliation.md
 
 ---
 
 ## Canonical Role
 
-This document defines the structural facts that govern what a Tier-2 workspace is, what it can contain, and what invariants apply. Product behavior is defined in brain/product. This is the structural ground truth.
+This document defines the structural implementation model of Tier-2 Diagnostic Access. It governs what a Tier-2 workspace is, what it can contain, and what invariants apply. The capability concept for which this is the structural model is defined in `streams/PRODUCTIZE.DIAGNOSTIC.ACCESS.01.md`. Product behavior is defined in brain/product. This is the structural ground truth.
 
 ---
 

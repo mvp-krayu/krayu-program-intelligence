@@ -106,6 +106,23 @@ Consumed by: [[../../product/diagnostic_access_product]]
 
 ---
 
+## Relationship to Zone-Based Workspace Model
+
+This node defines the capability concept for Tier-2. The structural implementation model is
+defined in `tier2_workspace_model.md`. The zone-based workspace is the Phase 1 product
+realization of this capability concept.
+
+See `tier2_reconciliation.md` for the authoritative declared relationship between these nodes
+and the Phase 1 / Phase 2 scope split.
+
+The INVESTIGATION_TARGET schema defined here maps to zone workspace outputs as follows:
+- dimension_name / investigative_question → WHY mode output
+- scope_gap / resolution_path → EVIDENCE mode output
+- system_area → WHY mode structural_scope
+- consequence_class → DEFERRED (Phase 2)
+
+---
+
 ## Canonical Status
 
 ACTIVE
@@ -117,3 +134,4 @@ ACTIVE
 | Stream | Date | Change |
 |---|---|---|
 | PRODUCTIZE.LENS.COMMERCIAL.PACKAGE.05 | 2026-04-22 | Initial definition — node created to formalize Diagnostic Access canonical boundary |
+| BRAIN.RECONCILE.LENS.TIER2.01 | 2026-04-23 | Added relationship declaration to tier2_workspace_model.md; schema mapping to zone outputs documented |
