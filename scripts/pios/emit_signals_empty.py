@@ -87,12 +87,20 @@ def main() -> None:
         "run_reference": run_id,
         "client_uuid": client_uuid,
         "generated_date": str(date.today()),
-        "emission_state": "EMPTY_BY_EVIDENCE",
+        "emission_state": "NOT_EVALUATED",
         "emission_reason": (
-            "No native second-client intelligence signals computed in this run. "
-            "Signal intelligence requires PiOS 41.4 stream execution for this client, "
-            "which has not been performed. signals=[] is the accurate Evidence First "
-            "representation of this state — not a placeholder."
+            "SIG-XXX intelligence signal evaluation has not been performed for this client. "
+            "PiOS 41.4 stream execution is required to produce intelligence signals and has "
+            "not been run for this client/run. signals=[] accurately represents zero evaluated "
+            "SIG-XXX intelligence signals — not zero signals in the binding layer. "
+            "NOTE: binding_envelope.json contains 5 L1-ST structural telemetry signals "
+            "(L1-ST-CEU-XX scheme, binding layer) — these are a distinct signal layer and "
+            "do NOT map to SIG-XXX intelligence signals in signal_registry. "
+            "NOTE: binding_envelope.json also contains a SIG-006 entry with "
+            "authority_chain='40.5/signal_output_set.md' and binding_package_contract="
+            "'PSEE.BLUEEDGE.BINDING.PACKAGE.CONSOLIDATION.01' — this is confirmed BlueEdge "
+            "contamination from the build_binding_package.py cross-client write defect (CG-4). "
+            "SIG-006 is explicitly excluded from this registry."
         ),
         "total_signals": 0,
         "signals": [],
