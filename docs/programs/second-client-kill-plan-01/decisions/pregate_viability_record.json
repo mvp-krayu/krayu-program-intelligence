@@ -1,0 +1,36 @@
+{
+  "client_uuid": "e65d2f0a-dfa7-4257-9333-fcbb583f0880",
+  "classification": "PASS",
+  "checks": {
+    "bounded_source": {
+      "status": "PASS",
+      "file_count": 87
+    },
+    "reproducibility": {
+      "status": "PASS",
+      "manifest_lines": 87,
+      "source_version": "04dcdc9ae62e94d55f528cb89493a72b448845ab"
+    },
+    "structural_density": {
+      "status": "PASS",
+      "python_files": 64,
+      "import_statements": 217,
+      "test_files": 5
+    }
+  },
+  "constraints": {
+    "tier1": "ELIGIBLE",
+    "tier2": "ELIGIBLE",
+    "tier3": "ELIGIBLE",
+    "notes": "Full structural pipeline viable"
+  },
+  "evidence": {
+    "source_uri": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/source/fastapi-backend",
+    "checksum_manifest": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/manifests/fastapi-backend.manifest.sha256"
+  },
+  "governance": {
+    "step0_executed": false,
+    "runtime_execution": false
+  },
+  "_git_note": "Canonical path: clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/pregate_run_01/pregate_viability_record.json — disk-present, git-excluded by clients/*/psee/runs/ .gitignore rule. This file is the committed governance copy."
+}
