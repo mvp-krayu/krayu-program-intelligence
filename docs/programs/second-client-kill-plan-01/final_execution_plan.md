@@ -3,9 +3,10 @@
 Stream: PI.PRODUCTIZATION.SECOND-CLIENT.EXECUTION-PLAN.01
 Branch: feature/second-client-kill-plan-01
 Date: 2026-04-24
-Status: AMENDED — 4-Brain governance enforcement applied
+Status: AMENDED — 4-Brain governance enforcement + formal brain gating applied
 Inputs: gap_assessment_report.md, execution_readiness_plan.md
-Amendment: PI.PRODUCTIZATION.SECOND-CLIENT.EXECUTION-PLAN.01 — 4-Brain Amendment
+Amendment 1: PI.PRODUCTIZATION.SECOND-CLIENT.EXECUTION-PLAN.01 — 4-Brain Amendment
+Amendment 2: PI.PRODUCTIZATION.SECOND-CLIENT.EXECUTION-PLAN.01 — Brain Gating Amendment
 
 ---
 
@@ -16,6 +17,14 @@ Amendment: PI.PRODUCTIZATION.SECOND-CLIENT.EXECUTION-PLAN.01 — 4-Brain Amendme
 >
 > Each step declares which brain governs the action, what structural truth the brain asserts,
 > and what the brain does not permit. A step with no brain assignment is not a valid step.
+>
+> **BRAIN GATING ENFORCEMENT (Amendment 2)**
+>
+> A step may only execute if ALL ENTRY CONDITIONS across all 4 brains are satisfied.
+>
+> A step is only considered COMPLETE if ALL EXIT CONDITIONS across all 4 brains are satisfied.
+>
+> If any condition fails, execution must STOP and cannot proceed to the next step.
 
 ---
 
@@ -147,12 +156,41 @@ The brain emission plan defines structural categories but provides no fill templ
 
 The following is a linear execution sequence. No step may be skipped. No step may be reordered.
 All steps are governed by the 4-Brain system. No action exists outside CANONICAL, CODE, PRODUCT, or PUBLISH brain scope.
+All steps are subject to brain gating: ENTRY CONDITIONS must be satisfied before execution; EXIT CONDITIONS must be verified before proceeding.
 
 ---
 
 ### STEP 0 — BRAIN-GOVERNED ONBOARDING
 
 Resolves: ROOT BLOCKER 2
+
+---
+
+ENTRY CONDITIONS
+
+CANONICAL
+- No entry for the second client exists in `clients/registry/client_index.json`; this step is the founding act — it must not be repeated for an already-registered client
+- DECISION-01 is resolved: second-client business_client_id and UUID have been assigned by human authority
+- `clients/blueedge/` and `docs/baseline/pios_baseline_v1.0.md` are confirmed unmodified
+
+CODE
+- DECISION-01 resolved: UUID and business_client_id values are in hand
+- DECISION-02 resolved: tenant parameter mapping confirmed (whether `--tenant` = client UUID)
+- `clients/registry/client_index.json` is readable and writable
+- `clients/client_template_01/` is available as structural reference for directory scaffold
+
+PRODUCT
+- Engagement has been accepted and is active
+- Second-client evidence is committed and staged at a known local path
+- Operator has confirmed evidence is real — no synthetic or placeholder data
+
+PUBLISH
+- No external communications about the second client have been made referencing the client's identity
+- No internal documents reference the second client by name in any externally reachable artifact
+
+---
+
+EXECUTION
 
 **CANONICAL BRAIN**
 - Defines the client entity model: a client is an immutable identity unit composed of UUID (permanent), business_client_id (addressable name), and lifecycle_state (ACTIVE)
@@ -184,9 +222,55 @@ Expected outcome: Second client is registered and addressable by all PSEE comman
 
 ---
 
+EXIT CONDITIONS
+
+CANONICAL
+- `clients/registry/client_index.json` contains a new entry: UUID, business_client_id, `lifecycle_state: ACTIVE`
+- No modification to `clients/blueedge/` or any other existing client directory
+
+CODE
+- `clients/<new-client-id>/psee/config/runtime_profile.json` exists
+- Directory structure matches scaffold; no symlinks to `clients/blueedge/`
+- DECISION-02 resolution recorded (tenant mapping confirmed)
+
+PRODUCT
+- Operator checklist complete (all 5 items confirmed)
+- Time-to-onboarding value recorded for PRODUCT brain emission
+
+PUBLISH
+- No external artifact has been created or modified referencing the second-client identity
+- Client identity remains confidential
+
+---
+
 ### STEP 1 — Isolate Runtime Components from BlueEdge Defaults
 
 Resolves: ROOT BLOCKER 3
+
+---
+
+ENTRY CONDITIONS
+
+CANONICAL
+- STEP 0 EXIT CONDITIONS all satisfied; client identity is established
+- Client isolation requirement is declared in `docs/programs/second-client-kill-plan-01/execution_contract.md`
+- No second-client pipeline run has occurred yet (defaults have not been exercised for second client)
+
+CODE
+- `app/execlens-demo/lib/gauge/envelope_adapter.py` lines 36–42 confirmed readable: BlueEdge default `client_uuid` and `run_id` present
+- `scripts/pios/projection_runtime.py` line 52 confirmed readable: BlueEdge default `run_id` present
+- No other scripts depend on these defaults being present (caller survey complete)
+
+PRODUCT
+- No runtime invocations of envelope_adapter or projection_runtime have occurred for the second client
+- Client isolation is a documented product requirement
+
+PUBLISH
+- No external claims about client isolation have been made
+
+---
+
+EXECUTION
 
 **CANONICAL BRAIN**
 - Invariant: no canonical output may carry a prior client's identity or run identifier
@@ -215,9 +299,54 @@ Expected outcome: Any call omitting client/run parameters fails explicitly; no B
 
 ---
 
+EXIT CONDITIONS
+
+CANONICAL
+- Runtime isolation invariant holds: no component produces BlueEdge-scoped output when invoked without explicit parameters
+- Client identity cannot be silently inherited from a prior run
+
+CODE
+- `envelope_adapter.py`: no default `client_uuid` or `run_id` — both are required parameters
+- `projection_runtime.py`: no default `run_id` — caller must supply explicitly
+- BlueEdge execution (with explicit BlueEdge parameters) confirmed still functional
+
+PRODUCT
+- An operator invoking these components without explicit parameters receives an explicit error
+- Isolation is mechanically enforced, not reliant on operator discipline
+
+PUBLISH
+- Code prerequisite for "client data isolated at runtime boundary" is met; claim not yet activated
+
+---
+
 ### STEP 2 — Make PiOS Validators Client-Agnostic
 
 Resolves: ROOT BLOCKER 4
+
+---
+
+ENTRY CONDITIONS
+
+CANONICAL
+- STEP 1 EXIT CONDITIONS all satisfied; runtime isolation confirmed
+- PiOS validators are identified as identity-coupled (hardcoded BlueEdge run IDs confirmed in code)
+- No second-client validation run has been attempted yet
+
+CODE
+- All affected validators identified: `scripts/pios/40.2/validate_evidence_inventory.py`, `40.3/validate_reconstruction.py`, `40.4/validate_structure_immutability.py`, and all others in 40.x stream
+- `intake_record.json` schema understood: expected run ID can be read from this artifact as an alternative to CLI argument
+- BlueEdge validation baseline confirmed: all validators currently PASS against BlueEdge run with hardcoded IDs
+
+PRODUCT
+- No quality assurance runs have been executed for the second client; this is the pre-execution preparation step
+- Validation portability is a documented product quality requirement
+
+PUBLISH
+- No compliance or validation claims have been made for the second client
+
+---
+
+EXECUTION
 
 **CANONICAL BRAIN**
 - PiOS validators enforce canonical methodology compliance at stage boundaries
@@ -250,9 +379,53 @@ Expected outcome: PiOS validators accept second-client run ID and confirm struct
 
 ---
 
+EXIT CONDITIONS
+
+CANONICAL
+- PiOS validators check structural properties, not client-specific identifiers; client-agnostic validation invariant holds
+- Validators are portable: same logic, parameterized comparison target
+
+CODE
+- All affected validators accept `--expected-run-id` argument
+- Regression confirmed: all validators PASS against BlueEdge run with `--expected-run-id run_02_blueedge`
+- No validator logic has changed — only the comparison target is parameterized
+
+PRODUCT
+- Quality assurance layer is portable; validation results for second client are credible and not BlueEdge-tainted
+
+PUBLISH
+- Prerequisite established for "governed, repeatable execution" claim; not yet activated
+
+---
+
 ### STEP 3 — Parameterize LENS Report Generator
 
 Resolves: ROOT BLOCKER 1 (primary)
+
+---
+
+ENTRY CONDITIONS
+
+CANONICAL
+- STEP 2 EXIT CONDITIONS all satisfied; PiOS validation layer is client-agnostic
+- Projection boundary definition is established: external output must derive from canonical truth of the active client only
+- `lens_report_generator.py` hardcoded state confirmed: lines 44, 50–55, 731–755 contain BlueEdge-specific constants
+
+CODE
+- `scripts/pios/lens_report_generator.py` is readable; hardcoded constants at confirmed line numbers
+- `canonical_topology.json` structure is understood: domain counts and cluster names are readable from this artifact at runtime
+- No LENS report has been generated for the second client yet
+
+PRODUCT
+- LENS report portability is a documented product requirement
+- No client-facing output has been produced or promised
+
+PUBLISH
+- No LENS output has been shown externally; no report content has been communicated to the second client or any third party
+
+---
+
+EXECUTION
 
 **CANONICAL BRAIN**
 - LENS report content must be derived from canonical evidence — not from embedded constants
@@ -283,9 +456,52 @@ Expected outcome: `lens_report_generator.py` produces a report with zero BlueEdg
 
 ---
 
+EXIT CONDITIONS
+
+CANONICAL
+- LENS generator derives all topology from `canonical_topology.json` at runtime; no BlueEdge constants remain in code
+- Projection boundary is enforced in code: all content traces to canonical package of the active client
+
+CODE
+- `--client`, `--run-id`, `--fragments-dir`, `--output-dir`, `--api-base` arguments functional
+- Hardcoded `LENS_CLAIMS`, domain counts (17/42/89), and cluster names removed from source
+- BlueEdge report generation confirmed still functional when invoked with explicit BlueEdge parameters
+
+PRODUCT
+- LENS generator is portable; can produce a report for any client with a valid canonical package
+
+PUBLISH
+- Code-layer prerequisite for "system is client-agnostic" met; claim activation deferred to STEP 12 output verification
+
+---
+
 ### STEP 4 — Parameterize Tier-2 Data Layer
 
 Resolves: ROOT BLOCKER 1 (Tier-2 component)
+
+---
+
+ENTRY CONDITIONS
+
+CANONICAL
+- STEP 3 EXIT CONDITIONS all satisfied; LENS report generator is portable
+- Tier-2 query traceability requirement is established: results must trace to the active client's evidence
+- `tier2_data.py` hardcoded state confirmed: lines 18–25 contain BlueEdge-specific constants
+
+CODE
+- `scripts/pios/tier2_data.py` and `scripts/pios/tier2_query_engine.py` are readable
+- All callers of `tier2_data.py` functions identified in `tier2_query_engine.py`
+- No Tier-2 queries have been executed for the second client
+
+PRODUCT
+- Tier-2 query portability is a documented product requirement for LENS Tier-2 tier
+
+PUBLISH
+- No Tier-2 diagnostic content has been shown externally for the second client
+
+---
+
+EXECUTION
 
 **CANONICAL BRAIN**
 - Tier-2 queries must resolve against the canonical package of the active client
@@ -313,9 +529,51 @@ Expected outcome: `tier2_data.py` loads topology, signals, and GAUGE state from 
 
 ---
 
+EXIT CONDITIONS
+
+CANONICAL
+- Tier-2 query traceability invariant holds: all query results traceable to the active client's canonical package
+- Focus domain is evidence-derived, not pre-declared
+
+CODE
+- `tier2_data.py` accepts `client_id`, `run_id`, `focus_domain` as constructor parameters; `CANONICAL_PKG_DIR` derived at runtime
+- `tier2_query_engine.py` callers updated; no logic change confirmed
+
+PRODUCT
+- Tier-2 product tier is portable; any client with a canonical package can be queried
+
+PUBLISH
+- Prerequisite established for Tier-2 "diagnostic query capability" claim; not yet activated
+
+---
+
 ### STEP 5 — Parameterize Graph State Export
 
 Resolves: ROOT BLOCKER 1 (Tier-2 visual component)
+
+---
+
+ENTRY CONDITIONS
+
+CANONICAL
+- STEP 4 EXIT CONDITIONS all satisfied; Tier-2 data layer is portable
+- Topology portability invariant established: graph generation logic must produce output representative of the active client's evidence
+- `export_graph_state.mjs` hardcoded state confirmed: lines 28–35 contain BlueEdge-specific paths
+
+CODE
+- `scripts/pios/export_graph_state.mjs` is readable; hardcoded BlueEdge input and output paths confirmed at lines 28–35
+- Second-client vault structure is known (created in STEP 9, after pipeline runs — this step prepares the script before execution)
+- No graph state has been generated for the second client
+
+PRODUCT
+- Tier-2 graph snapshot portability is a documented product requirement
+
+PUBLISH
+- No topology visualization has been shown externally for the second client
+
+---
+
+EXECUTION
 
 **CANONICAL BRAIN**
 - Graph state is a topology artifact derived from the active client's canonical vault structure
@@ -343,9 +601,49 @@ Expected outcome: Graph state JSON generated from second-client vault and writte
 
 ---
 
+EXIT CONDITIONS
+
+CANONICAL
+- Topology portability invariant holds: graph generation derives input from active client vault path, not BlueEdge path
+
+CODE
+- `--client`, `--run-id`, `--output` arguments functional; BlueEdge-specific input path removed
+- BlueEdge graph export confirmed still functional when invoked with explicit BlueEdge parameters
+
+PRODUCT
+- Tier-2 graph snapshot is portable; second-client topology can be rendered without visual BlueEdge contamination
+
+PUBLISH
+- Prerequisite established for Tier-2 LENS presentation to second client; not yet activated
+
+---
+
 ### STEP 6 — Define Brain Emission Fill Template
 
 Resolves: ROOT BLOCKER 5
+
+---
+
+ENTRY CONDITIONS
+
+CANONICAL
+- STEPs 0–5 EXIT CONDITIONS all satisfied; all code parameterization is complete
+- `brain_emission_plan.md` exists in its current form; sections are present but marked "To be populated post-run" with no explicit required fields
+- No PSEE pipeline execution has occurred; brain emissions are empty
+
+CODE
+- `docs/programs/second-client-kill-plan-01/brain_emission_plan.md` is readable and writable
+- Current "To be populated post-run" sections identified for all four brain domains
+
+PRODUCT
+- PRODUCT brain section has structural categories but no minimum content standard; this must be defined before execution so post-run population is verifiable
+
+PUBLISH
+- No claims have been activated; PUBLISH brain section is empty; explicit required fields are not yet defined
+
+---
+
+EXECUTION
 
 **CANONICAL BRAIN**
 - Brain emissions are canonical acts: they propagate runtime truth to the authority record
@@ -375,9 +673,57 @@ Expected outcome: Brain emission plan has explicit PASS criteria per brain domai
 
 ---
 
+EXIT CONDITIONS
+
+CANONICAL
+- Each brain domain has explicit required fields, minimum content standards, and PASS/INCOMPLETE verdict criteria
+- The fill template is unambiguous: a reviewer can confirm PASS or INCOMPLETE without judgment calls
+
+CODE
+- `brain_emission_plan.md` contains "Required Fill Format" sections for all four brain domains
+- CODE brain section: required fields include command sequence, scripts modified, environment, failure modes, RBAC attachment points
+
+PRODUCT
+- PRODUCT brain section: required fields include time-to-output table (all rows), minimum evidence volume finding, client package requirements
+- All fields defined with minimum acceptable content
+
+PUBLISH
+- PUBLISH brain section: required fields include claim activation status for each safe claim, prohibited claims confirmation, case-study candidate status
+- Claims requiring security maturity explicitly marked DEFERRED with conditions
+
+---
+
 ### STEP 7 — Execute PSEE Pipeline (S0–S4)
 
-Resolves: all remaining upstream prerequisites satisfied; this step produces the core run artifacts
+Resolves: all upstream prerequisites satisfied; this step produces the core run artifacts
+
+---
+
+ENTRY CONDITIONS
+
+CANONICAL
+- STEPs 0–6 EXIT CONDITIONS all satisfied
+- Evidence boundary is defined: DECISION-03 resolved (evidence path, source type, coverage estimate confirmed)
+- No second-client PSEE run has been executed; no package artifacts exist yet
+
+CODE
+- Second-client evidence staged at confirmed source path
+- PSEE runtime environment confirmed: Python version and dependencies match requirements
+- Code tag for PSEE runtime recorded (required for deterministic rerun readiness)
+- DECISION-02 resolved: tenant parameter confirmed
+- All five required PSEE commands are known and ready to execute in sequence
+
+PRODUCT
+- Evidence is real — no synthetic or placeholder data; operator has confirmed
+- Engagement is active; client has provided evidence under engagement terms
+
+PUBLISH
+- No external communication about pipeline execution status
+- No premature status update to client; pipeline completion is an internal event
+
+---
+
+EXECUTION
 
 **CANONICAL BRAIN**
 - Evidence First: no canonical output may precede a valid evidence boundary
@@ -423,9 +769,55 @@ Expected outcome: PSEE exits at code 0; `clients/<new-client-id>/psee/runs/<new-
 
 ---
 
+EXIT CONDITIONS
+
+CANONICAL
+- Evidence boundary established: `intake_record.json` present with no BlueEdge source references
+- Run identity established: ledger entry present
+- All five canonical package artifacts present in `clients/<new-client-id>/psee/runs/<new-run-id>/package/`
+- PSEE exit code is 0; any non-zero exit means this step is NOT complete
+
+CODE
+- `clients/<new-client-id>/psee/runs/<new-run-id>/package/` directory exists
+- gauge_state.json, coverage_state.json, reconstruction_state.json, canonical_topology.json, signal_registry.json all present
+- Execution log started; commands and parameters recorded
+
+PRODUCT
+- Elapsed time per stage captured for PRODUCT brain emission time-to-output table
+- Evidence volume and observed domain count recorded
+
+PUBLISH
+- No external communication made; no claim activated
+
+---
+
 ### STEP 8 — Confirm PiOS Stage Compliance (Validation)
 
 Resolves: ROOT BLOCKER 4 (execution phase)
+
+---
+
+ENTRY CONDITIONS
+
+CANONICAL
+- STEP 7 EXIT CONDITIONS all satisfied; all five canonical package artifacts present; PSEE exit code 0 confirmed
+- PiOS validators have been parameterized (STEP 2 EXIT CONDITIONS satisfied)
+- Canonical methodology compliance has not yet been confirmed for this run
+
+CODE
+- All modified PiOS validators available with `--expected-run-id` argument
+- New-run-id value known
+- BlueEdge regression test completed (validators still PASS for BlueEdge run with `--expected-run-id run_02_blueedge`)
+
+PRODUCT
+- No quality assurance check results exist yet for this second-client run
+
+PUBLISH
+- No compliance claims have been made for the second client
+
+---
+
+EXECUTION
 
 **CANONICAL BRAIN**
 - PiOS validators confirm that PSEE execution complies with canonical methodology
@@ -452,9 +844,51 @@ Expected outcome: All PiOS S1–S2 validators PASS; validation matrix groups 1, 
 
 ---
 
+EXIT CONDITIONS
+
+CANONICAL
+- All PiOS S1–S2 validators PASS with second-client run ID; canonical methodology compliance confirmed
+- Any FAIL means this step is NOT complete; do not proceed
+
+CODE
+- Validator invocation log records PASS result for every validator
+- All results logged to execution record for CODE brain emission
+
+PRODUCT
+- Quality gate passed; run is confirmed product-quality
+
+PUBLISH
+- Internal validation claim earned; prerequisite for "governed execution" external claim met; not yet activated
+
+---
+
 ### STEP 9 — Build Evidence Vault
 
 Resolves: prerequisite for LENS fragment generation
+
+---
+
+ENTRY CONDITIONS
+
+CANONICAL
+- STEP 8 EXIT CONDITIONS all satisfied; PiOS compliance confirmed
+- All five canonical package artifacts confirmed present and validated
+- Evidence vault does not yet exist for this second-client run
+
+CODE
+- `scripts/psee/build_evidence_vault.py` available
+- All five required package artifacts confirmed in `clients/<new-client-id>/psee/runs/<new-run-id>/package/`
+- Second-client display name determined (for `--client-name` argument)
+
+PRODUCT
+- Client identity is confirmed and stable; no changes to registration since STEP 0
+
+PUBLISH
+- No vault content has been shared externally; vault is an internal artifact
+
+---
+
+EXECUTION
 
 **CANONICAL BRAIN**
 - The evidence vault is the canonical representation of the client's evidence-to-intelligence derivation
@@ -489,9 +923,52 @@ Expected outcome: Evidence vault produced; `clients/<new-client-id>/vaults/run_0
 
 ---
 
+EXIT CONDITIONS
+
+CANONICAL
+- Evidence vault present at `clients/<new-client-id>/vaults/run_01_authoritative_generated/`
+- Vault content is deterministically derived from canonical package; no BlueEdge content in vault
+
+CODE
+- Required vault files present (per PRODUCTIZE.EVIDENCE.VAULT.BUILDER.01 specification)
+- `claims/fragments/` directory exists within the vault
+
+PRODUCT
+- Internal evidence chain is auditable; LENS report can claim traceable evidence basis
+
+PUBLISH
+- Vault exists; "all report content is traceable to source evidence" claim prerequisite met; not yet activated
+
+---
+
 ### STEP 10 — Export Projection Fragments and Graph State
 
 Resolves: ROOT BLOCKER 1 (data supply for LENS generator)
+
+---
+
+ENTRY CONDITIONS
+
+CANONICAL
+- STEP 9 EXIT CONDITIONS all satisfied; evidence vault present
+- ZONE-2 filter boundary is defined: internal canonical truth vs. external projection surface separation is established
+- No fragment export has occurred for the second client yet
+
+CODE
+- `projection_runtime.py` has no BlueEdge default (STEP 1 EXIT CONDITIONS confirmed)
+- Vault path confirmed: `clients/<new-client-id>/vaults/run_01_authoritative_generated`
+- `export_graph_state.mjs` parameterized (STEP 5 EXIT CONDITIONS confirmed)
+- Fragment output directory path determined
+
+PRODUCT
+- Evidence vault is complete; fragment export is the serving-layer preparation step
+
+PUBLISH
+- No fragment content has been shown externally; ZONE-2 boundary has not yet been confirmed for second client's projection surface
+
+---
+
+EXECUTION
 
 **CANONICAL BRAIN**
 - Fragments are ZONE-2-governed projections of canonical vault content
@@ -531,9 +1008,52 @@ Expected outcome: ZONE-2-L1 fragment files present; second-client graph state JS
 
 ---
 
+EXIT CONDITIONS
+
+CANONICAL
+- ZONE-2-L1 fragment files present for all required claims; ZONE-2 filter confirmed applied (no SIG-, COND-, DIAG-, INTEL- identifiers present in fragment content)
+- Fragment content derives exclusively from second-client canonical vault
+
+CODE
+- Fragment files present in `claims/fragments/`
+- Graph state JSON present at `clients/<new-client-id>/reports/tier2/graph_state.json`
+
+PRODUCT
+- LENS report has a serving layer; Tier-2 visual has a second-client data source
+
+PUBLISH
+- Fragment content defines the approved external expression surface; approved for use in LENS report generation
+
+---
+
 ### STEP 11 — Generate LENS Report
 
 Resolves: ROOT BLOCKER 1 (terminal output)
+
+---
+
+ENTRY CONDITIONS
+
+CANONICAL
+- STEP 10 EXIT CONDITIONS all satisfied; fragment files present; ZONE-2 filter confirmed applied
+- LENS report generator parameterized (STEP 3 EXIT CONDITIONS confirmed)
+- No LENS report exists yet for the second client
+
+CODE
+- Fragment files confirmed present at known path
+- `canonical_topology.json` readable in second-client package directory (for domain count derivation)
+- `--client` and `--run-id` values known and confirmed
+
+PRODUCT
+- No LENS report has been generated; no candidate deliverable exists yet
+- Client has not been shown any output; no external output has been produced
+
+PUBLISH
+- No external output has been produced for the second client yet; LENS portability unverified
+
+---
+
+EXECUTION
 
 **CANONICAL BRAIN**
 - The LENS report must derive all content from canonical truth via ZONE-2 projection
@@ -567,9 +1087,51 @@ Expected outcome: LENS report HTML present in `clients/<new-client-id>/reports/`
 
 ---
 
+EXIT CONDITIONS
+
+CANONICAL
+- LENS report HTML present in second-client reports directory
+- All content derives from canonical package via ZONE-2 projection; no embedded constants from prior client
+
+CODE
+- Report file present and non-empty
+- Decision state present in report body; no empty required sections
+
+PRODUCT
+- A candidate deliverable artifact exists; subject to portability verification in STEP 12 before any client presentation
+
+PUBLISH
+- Report pending portability verification; no external distribution permitted until STEP 12 passes
+
+---
+
 ### STEP 12 — Verify LENS Projection Portability
 
 Resolves: validation matrix group 7 requirement
+
+---
+
+ENTRY CONDITIONS
+
+CANONICAL
+- STEP 11 EXIT CONDITIONS all satisfied; LENS report HTML present
+- Canonical isolation invariant has not yet been verified at the output layer
+- BlueEdge contamination patterns are known: client name "blueedge", run ID "run_authoritative_recomputed_01", domain labels "DOMAIN-10", "Fleet Operations", "Edge Data Acquisition"
+
+CODE
+- LENS report HTML file path is known and accessible
+- grep is available in execution environment
+
+PRODUCT
+- LENS report exists as a candidate deliverable; client presentation has not occurred
+- No external distribution of the report has occurred
+
+PUBLISH
+- Report has not been shown to the second client or any external party; portability is unverified
+
+---
+
+EXECUTION
 
 **CANONICAL BRAIN**
 - Canonical isolation must hold at the output layer
@@ -599,9 +1161,49 @@ Expected outcome: All three grep commands return zero matches
 
 ---
 
+EXIT CONDITIONS
+
+CANONICAL
+- Canonical isolation invariant confirmed at output layer: zero BlueEdge references in LENS report
+- Any match means this step is NOT complete; do not proceed; return to STEP 3
+
+CODE
+- All three grep commands returned zero matches; results logged
+
+PRODUCT
+- LENS report is safe for client presentation
+
+PUBLISH
+- "System is client-agnostic" claim has output-layer evidence; claim activation conditional on validation matrix group 7 ALL PASS
+
+---
+
 ### STEP 13 — Populate Brain Emissions from Run Artifacts
 
 Resolves: ROOT BLOCKER 5 (execution phase)
+
+---
+
+ENTRY CONDITIONS
+
+CANONICAL
+- STEP 12 EXIT CONDITIONS all satisfied; LENS portability verified; all run artifacts present
+- Brain emission fill template defined (STEP 6 EXIT CONDITIONS confirmed); required fields are known
+
+CODE
+- `brain_emission_plan.md` fill template is in place; required fields identified for all four brain domains
+- All run artifacts accessible for observation (package directory, execution log, vault, reports)
+- Execution log is complete: all commands and parameters recorded
+
+PRODUCT
+- All pipeline stages complete; time-to-output measurements captured; evidence volume and domain count observed
+
+PUBLISH
+- LENS report is verified clean; no claims have been activated yet; all four brain domains are empty
+
+---
+
+EXECUTION
 
 **CANONICAL BRAIN**
 - Populate CANONICAL brain sections from observed run evidence:
@@ -640,9 +1242,51 @@ Expected outcome: All four brain domains populated; each section marked PASS or 
 
 ---
 
+EXIT CONDITIONS
+
+CANONICAL
+- CANONICAL brain domain: confirmed invariants filled (≥3), broken invariants explicitly addressed, new structural definitions addressed, internal/external distinction documented
+- No section contains inference or forward projection; all entries reference specific observed artifacts
+
+CODE
+- CODE brain domain: full command sequence recorded, all modified scripts listed, environment documented, failure modes addressed, RBAC attachment points table filled
+- All entries reference specific files, line numbers, or commands actually executed
+
+PRODUCT
+- PRODUCT brain domain: time-to-output table complete (all rows filled), minimum evidence finding recorded, client package requirements documented, onboarding implications recorded
+
+PUBLISH
+- PUBLISH brain domain: each safe claim marked ACTIVATED or NOT YET with explicit basis, prohibited claims confirmation recorded, case-study candidate status recorded, security-gated claims marked DEFERRED
+
+---
+
 ### STEP 14 — Run Full Validation Matrix
 
 Resolves: final gate before declaring run authoritative
+
+---
+
+ENTRY CONDITIONS
+
+CANONICAL
+- STEP 13 EXIT CONDITIONS all satisfied; all four brain domains populated; all required fields filled
+- All run artifacts present: intake_record.json, coherence_record.json, canonical package artifacts, LENS report, evidence vault
+- All previous steps' EXIT CONDITIONS confirmed: no outstanding failures from any step
+
+CODE
+- `docs/programs/second-client-kill-plan-01/validation_matrix.md` accessible
+- All artifacts referenced by the 7 criteria groups are present and accessible
+- No outstanding validator failures or unresolved issues from STEPs 1–13
+
+PRODUCT
+- All run stages complete; all product artifacts produced (GAUGE state, LENS report, evidence vault, brain emissions)
+
+PUBLISH
+- Brain emissions complete; PUBLISH brain populated; prohibited claims confirmed absent from LENS output
+
+---
+
+EXECUTION
 
 **CANONICAL BRAIN**
 - The validation matrix is the canonical completeness check for the entire run
@@ -665,6 +1309,27 @@ Resolves: final gate before declaring run authoritative
 - Claims that require additional maturity (RBAC implementation, multi-client verification) remain DEFERRED
 
 Expected outcome: All 7 validation matrix criteria groups reach ALL PASS; BASELINE_LOCK written; run declared authoritative
+
+---
+
+EXIT CONDITIONS
+
+CANONICAL
+- All 7 validation matrix criteria groups reach ALL PASS; documented with evidence for each check
+- BASELINE_LOCK written to `clients/<new-client-id>/psee/runs/<new-run-id>/BASELINE_LOCK`
+- Run is canonically authoritative; any FAIL means this step is NOT complete
+
+CODE
+- Validation matrix filled: every check marked PASS or FAIL with specific evidence citation
+- BASELINE_LOCK file present; run_id and code tag recorded in lock
+
+PRODUCT
+- Delivery gate cleared; LENS report is the confirmed deliverable artifact
+- Engagement is complete; product is ready for client presentation
+
+PUBLISH
+- PUBLISH brain claims marked ACTIVATED may now be used in external communications
+- All deferred claims remain deferred; no claim escalation without additional maturity conditions met
 
 ---
 
@@ -727,13 +1392,23 @@ A run is authoritative when ALL of the following are true:
 7. All four brain domains populated with at least minimum required fields per STEP 6 template
 8. BASELINE_LOCK written to `clients/<new-client-id>/psee/runs/<new-run-id>/BASELINE_LOCK`
 
-### Brain Governance Validation (added by 4-Brain Amendment)
+### Brain Governance Validation
 
 Before declaring the run authoritative, confirm:
 
 - Every step in the remediation sequence was executed under brain governance: each step's CANONICAL, CODE, PRODUCT, and PUBLISH brain constraints were observed
 - No manual action occurred outside brain scope: every file modified, every command executed, every decision made has a brain owner
 - Brain emissions match execution behavior: CODE brain emission records what actually ran; CANONICAL brain emission records what was actually observed; no section contains inference or projection from expected behavior
+
+### Brain Gating Compliance
+
+The following must be confirmed before declaring the run authoritative:
+
+- Every executed step has all ENTRY CONDITIONS satisfied at the time of execution — no step was executed with an unsatisfied entry condition
+- Every completed step has all EXIT CONDITIONS verified — no step was declared complete with an unmet exit condition
+- No step was executed outside the gating sequence: steps were executed in order 0 → 14 with no skips
+- Any step that failed a gate condition was stopped and not resumed until the failure was resolved
+- The gate compliance record is part of the CODE brain emission: document any gate that was challenged and how it was resolved
 
 ---
 
