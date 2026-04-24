@@ -5,12 +5,15 @@
  * Builds the overview graph topology in the same node/link insertion order as
  * VaultGraph.js buildGraph(isOverview=true), runs d3-force-3d with the exact
  * workspace simulation parameters, and persists the settled x/y positions to
- * clients/blueedge/reports/tier2/graph_state.json.
+ * clients/<client>/reports/tier2/graph_state.json.
  *
  * This script is the sole authoritative source of x/y for the report graph.
  * No Python layout math. No custom force reimplementation.
  *
- * Usage: node scripts/pios/export_graph_state.mjs
+ * Usage:
+ *   node scripts/pios/export_graph_state.mjs
+ *   node scripts/pios/export_graph_state.mjs --client <id> --run-id <run_id>
+ *   node scripts/pios/export_graph_state.mjs --client <id> --run-id <run_id> --output <path>
  */
 
 import { createRequire } from "module";
@@ -25,14 +28,27 @@ const REPO_ROOT = resolve(__dirname, "..", "..");
 const D3_SRC = join(REPO_ROOT, "app", "gauge-product", "node_modules", "d3-force-3d", "src", "index.js");
 const { forceSimulation, forceManyBody, forceLink } = await import(D3_SRC);
 
+// ---------------------------------------------------------------------------
+// CLI args — defaults preserve BlueEdge backward-compatible invocation
+// ---------------------------------------------------------------------------
+const argv = process.argv.slice(2);
+let _client         = "blueedge";
+let _runId          = "run_01_authoritative_generated";
+let _outputOverride = null;
+for (let i = 0; i < argv.length; i++) {
+  if (argv[i] === "--client" && argv[i + 1]) _client         = argv[i + 1];
+  if (argv[i] === "--run-id" && argv[i + 1]) _runId          = argv[i + 1];
+  if (argv[i] === "--output" && argv[i + 1]) _outputOverride = argv[i + 1];
+}
+
 const VAULT_INDEX_PATH = join(
   REPO_ROOT, "app", "gauge-product", "public", "vault",
-  "blueedge", "run_01_authoritative_generated", "vault_index.json"
+  _client, _runId, "vault_index.json"
 );
 
-const OUTPUT_PATH = join(
-  REPO_ROOT, "clients", "blueedge", "reports", "tier2", "graph_state.json"
-);
+const OUTPUT_PATH = _outputOverride
+  ? resolve(_outputOverride)
+  : join(REPO_ROOT, "clients", _client, "reports", "tier2", "graph_state.json");
 
 // ---------------------------------------------------------------------------
 // Node/link appearance — mirrors VaultGraph.js BRIGHT + LINK constants
