@@ -7,6 +7,16 @@
       "client_uuid": "1de0d815-0721-58e9-bc8d-ca83e70fa903",
       "lifecycle_state": "ACTIVE",
       "active_flag": true
+    },
+    {
+      "business_client_id": "oss-fastapi-modular",
+      "client_uuid": "e65d2f0a-dfa7-4257-9333-fcbb583f0880",
+      "display_name": "OSS FastAPI Modular Monolith",
+      "lifecycle_state": "ACTIVE",
+      "active_flag": true,
+      "config_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/config/client.yaml",
+      "runtime_root": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880",
+      "source_profile": "modular_fastapi_backend"
     }
   ]
 }
