@@ -926,27 +926,30 @@ EXECUTION
 - The pipeline must produce all five required package artifacts; a run that exits at any intermediate stage has not established canonical truth
 
 **CODE BRAIN**
-- For the initial second-client run: `selector_type = local_directory`; `source_uri` is the local evidence directory path. The intake selector record resolves `source_uri` to the path passed to `--source-selector`. The intake model must not be written as local-directory-specific — the `--source-selector` argument receives the `selector_id`; the selector record holds the actual path.
+- For the initial second-client run: `selector_type = local_directory`; source directory is passed directly as `--source-path` (pios intake create) and `--source` (run_end_to_end.py). The `--source-selector` argument referenced in earlier plan drafts does not exist in the current scripts; callers pass the resolved path directly.
+- Locked execution IDs (STEP 7B reconciliation — 2026-04-24): `intake_id = intake_01_oss_fastapi`; `run_id = run_01_oss_fastapi`
 - Commands in sequence:
   ```
   python3 scripts/pios/pios.py intake create \
-      --source-selector <selector_id> \
-      --tenant <new-client-id> \
-      --intake-id <intake-id>
+      --source-path clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/source/fastapi-backend \
+      --tenant e65d2f0a-dfa7-4257-9333-fcbb583f0880 \
+      --intake-id intake_01_oss_fastapi
 
   python3 scripts/pios/pios.py ledger create \
-      --run-id <new-run-id> \
-      --client <new-client-id> \
-      --source-version <intake-id>
+      --run-id run_01_oss_fastapi \
+      --client e65d2f0a-dfa7-4257-9333-fcbb583f0880 \
+      --source-version intake_01_oss_fastapi
 
   python3 scripts/psee/run_end_to_end.py \
-      --client <new-client-uuid> \
-      --source-selector <selector_id> \
-      --run-id <new-run-id> \
-      --target gauge
+      --client e65d2f0a-dfa7-4257-9333-fcbb583f0880 \
+      --source clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/source/fastapi-backend \
+      --run-id run_01_oss_fastapi \
+      --target gauge \
+      --demo-client blueedge \
+      --demo-run-id run_01_authoritative
   ```
-- The `<selector_id>` value is the `selector_id` from the intake selector record created at STEP 0. PSEE resolves the actual source path from the selector record; callers do not pass a raw path.
-- PSEE exit code 0 = pipeline complete; any non-zero exit = stop and escalate; do not proceed
+- BRANCH BLOCKER (unresolved — recorded 2026-04-24): `run_end_to_end.py` enforces `REQUIRED_BRANCH = "work/psee-runtime"` at pre-flight. Current execution branch is `feature/second-client-kill-plan-01`. Pre-flight will fail unless this is resolved. `feature/second-client-kill-plan-01` is a pure descendant of `work/psee-runtime` (20 commits ahead, no divergence, merge-base `51aab3f3`). Resolution options: (A) fast-forward `work/psee-runtime` to current HEAD then execute from that branch; (B) amend branch guard in a dedicated code chunk to permit the feature branch; (C) block STEP 7 until branch policy is changed. Resolution must be performed in a follow-up contract before pipeline execution begins.
+- PSEE exit code 0 = pipeline complete; any non-zero exit = stop and escalate; do not proceed; exit codes 1–7 map to specific stage failures (pre-flight, intake, lineage, structure, transformation, envelope, validation)
 
 **PRODUCT BRAIN**
 - This step is the product's core execution event: client evidence is converted into governed structural intelligence
@@ -970,11 +973,11 @@ EXIT CONDITIONS
 CANONICAL
 - Evidence boundary established: `intake_record.json` present with no BlueEdge source references
 - Run identity established: ledger entry present
-- All five canonical package artifacts present in `clients/<new-client-id>/psee/runs/<new-run-id>/package/`
+- All five canonical package artifacts present in `clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/package/`
 - PSEE exit code is 0; any non-zero exit means this step is NOT complete
 
 CODE
-- `clients/<new-client-id>/psee/runs/<new-run-id>/package/` directory exists
+- `clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/package/` directory exists
 - gauge_state.json, coverage_state.json, reconstruction_state.json, canonical_topology.json, signal_registry.json all present
 - Execution log started; commands and parameters recorded
 
