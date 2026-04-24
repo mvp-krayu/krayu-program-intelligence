@@ -25,6 +25,20 @@ FOCUS_DOMAIN = "DOMAIN-10"
 RUN_ID       = "run_authoritative_recomputed_01"
 
 
+def configure(
+    client_id: Optional[str] = None,
+    run_id: Optional[str] = None,
+    focus_domain: Optional[str] = None,
+) -> None:
+    global CANONICAL_PKG_DIR, FOCUS_DOMAIN, RUN_ID
+    _client    = client_id    if client_id    is not None else "blueedge"
+    _run_id    = run_id       if run_id       is not None else "run_authoritative_recomputed_01"
+    _focus     = focus_domain if focus_domain is not None else "DOMAIN-10"
+    CANONICAL_PKG_DIR = REPO_ROOT / "clients" / _client / "psee" / "runs" / _run_id / "package"
+    FOCUS_DOMAIN      = _focus
+    RUN_ID            = _run_id
+
+
 def load_topology() -> Dict:
     return json.loads((CANONICAL_PKG_DIR / "canonical_topology.json").read_text())
 

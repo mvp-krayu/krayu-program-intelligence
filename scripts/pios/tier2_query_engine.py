@@ -26,11 +26,7 @@ from typing import Dict, List
 
 # Ensure tier2_data is importable regardless of CWD
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from tier2_data import (
-    FOCUS_DOMAIN, RUN_ID,
-    load_topology, load_signals, load_gauge,
-    derive_zones, get_zone,
-)
+import tier2_data
 
 # ---------------------------------------------------------------------------
 # Constant evidence text blocks
@@ -137,13 +133,13 @@ def _build_available(zone: Dict) -> List[Dict]:
 def _build_missing(zone: Dict) -> List[Dict]:
     if not zone["domain_sigs"]:
         return _MISSING_NO_SIGNALS
-    if zone["domain_id"] == FOCUS_DOMAIN:
+    if zone["domain_id"] == tier2_data.FOCUS_DOMAIN:
         return _MISSING_FOCUS
     return []
 
 
 def _build_unresolved(zone: Dict) -> List[Dict]:
-    if zone["domain_id"] == FOCUS_DOMAIN:
+    if zone["domain_id"] == tier2_data.FOCUS_DOMAIN:
         return _UNRESOLVED_FOCUS
     if not zone["domain_sigs"]:
         return _UNRESOLVED_NO_SIGNALS
@@ -161,7 +157,7 @@ def build_response(zone_id: str, mode: str, result: Dict, zone: Dict) -> Dict:
         "status":               "ok",
         "zone_id":              zone_id,
         "mode":                 mode,
-        "run_id":               RUN_ID,
+        "run_id":               tier2_data.RUN_ID,
         "inference_prohibition": "ACTIVE",
         "result":               result,
         "evidence_basis": {
@@ -207,7 +203,7 @@ def handle_why(zone: Dict) -> Dict:
     domain = zone["domain"]
     sigs   = zone["domain_sigs"]
     caps   = domain.get("capability_ids", [])
-    is_focus = did == FOCUS_DOMAIN
+    is_focus = did == tier2_data.FOCUS_DOMAIN
 
     rationale: List[Dict] = []
 
@@ -370,7 +366,7 @@ def build_trace_response(zone_id: str, zone: Dict, trace_data: Dict) -> Dict:
         "status":                "ok",
         "zone_id":               zone_id,
         "mode":                  "TRACE",
-        "run_id":                RUN_ID,
+        "run_id":                tier2_data.RUN_ID,
         "inference_prohibition": "ACTIVE",
         "trace":                 trace_data["paths"],
         "evidence_basis": {
@@ -422,10 +418,10 @@ def handle_evidence(zone: Dict) -> Dict:
 # ---------------------------------------------------------------------------
 
 def list_zones() -> Dict:
-    topology = load_topology()
-    signals  = load_signals()
-    gauge    = load_gauge()
-    zones    = derive_zones(topology, signals)
+    topology = tier2_data.load_topology()
+    signals  = tier2_data.load_signals()
+    gauge    = tier2_data.load_gauge()
+    zones    = tier2_data.derive_zones(topology, signals)
 
     score   = gauge["score"]["canonical"]
     band    = gauge["score"]["band_label"]
@@ -434,7 +430,7 @@ def list_zones() -> Dict:
 
     return {
         "status":               "ok",
-        "run_id":               RUN_ID,
+        "run_id":               tier2_data.RUN_ID,
         "inference_prohibition": "ACTIVE",
         "context": {
             "score":      score,
@@ -464,11 +460,23 @@ def list_zones() -> Dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Tier-2 query engine — WHY and EVIDENCE modes")
+    parser.add_argument("--client",       default="blueedge",
+                        help="Client ID for canonical package path (default: blueedge)")
+    parser.add_argument("--run-id",       default="run_authoritative_recomputed_01",
+                        help="Run ID for canonical package path (default: run_authoritative_recomputed_01)")
+    parser.add_argument("--focus-domain", default="DOMAIN-10",
+                        help="Focus domain ID for zone classification (default: DOMAIN-10)")
     parser.add_argument("--zone",       help="Zone ID (e.g. ZONE-01)")
     parser.add_argument("--mode",       help="WHY | EVIDENCE | TRACE")
     parser.add_argument("--scope",      default="FULL", help="EVIDENCE scope (default: FULL)")
     parser.add_argument("--list-zones", action="store_true", help="Output zone list as JSON")
     args = parser.parse_args()
+
+    tier2_data.configure(
+        client_id=args.client,
+        run_id=args.run_id,
+        focus_domain=args.focus_domain,
+    )
 
     if args.list_zones:
         try:
@@ -491,13 +499,13 @@ def main() -> None:
         sys.exit(1)
 
     try:
-        topology = load_topology()
-        signals  = load_signals()
+        topology = tier2_data.load_topology()
+        signals  = tier2_data.load_signals()
     except Exception as e:
         print(json.dumps({"status": "error", "reason": "CANONICAL_DATA_MISSING", "detail": str(e)}))
         sys.exit(1)
 
-    zone = get_zone(args.zone, topology, signals)
+    zone = tier2_data.get_zone(args.zone, topology, signals)
     if zone is None:
         print(json.dumps({"status": "error", "reason": "ZONE_NOT_FOUND", "zone_id": args.zone}))
         sys.exit(1)
