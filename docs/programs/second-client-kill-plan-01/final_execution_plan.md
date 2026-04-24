@@ -990,23 +990,29 @@ PUBLISH
 
 ---
 
-### STEP 8 — Confirm PiOS Stage Compliance (Validation)
+### STEP 8 — Confirm Post-Run Validation (Three Lanes)
 
 Resolves: ROOT BLOCKER 4 (execution phase)
+
+Note: STEP 8 scope reconciled by STEP 8B after STEP 7J execution.
+See: docs/programs/second-client-kill-plan-01/decisions/step8b_scope_reconciliation.md
 
 ---
 
 ENTRY CONDITIONS
 
 CANONICAL
-- STEP 7 EXIT CONDITIONS all satisfied; all five canonical package artifacts present; PSEE exit code 0 confirmed
-- PiOS validators have been parameterized (STEP 2 EXIT CONDITIONS satisfied)
-- Canonical methodology compliance has not yet been confirmed for this run
+- STEP 7 EXIT CONDITIONS all satisfied; PSEE exit code 0 confirmed; run_manifest.json final_status PASS
+- The following second-client PSEE output artifacts are present and valid:
+  - clients/<new-client-id>/psee/runs/<new-run-id>/binding/binding_envelope.json
+  - clients/<new-client-id>/psee/runs/<new-run-id>/binding/package_manifest.json
+  - clients/<new-client-id>/psee/runs/<new-run-id>/validation/run_validation.json
+  - clients/<new-client-id>/psee/runs/<new-run-id>/run_manifest.json
+- No dirty tracked cross-client artifacts present in worktree
 
 CODE
-- All modified PiOS validators available with `--expected-run-id` argument
-- New-run-id value known
-- BlueEdge regression test completed (validators still PASS for BlueEdge run with `--expected-run-id run_02_blueedge`)
+- All modified PiOS validators available with `--expected-run-id` argument (STEP 2 satisfied)
+- BlueEdge PiOS workspace (krayu-program-intelligence) accessible for regression test
 
 PRODUCT
 - No quality assurance check results exist yet for this second-client run
@@ -1016,48 +1022,69 @@ PUBLISH
 
 ---
 
-EXECUTION
+EXECUTION — THREE LANES
 
-**CANONICAL BRAIN**
-- PiOS validators confirm that PSEE execution complies with canonical methodology
-- Compliance is a canonical property: execution that passes all stage validators is canonically governed; execution that fails any validator is not governed, regardless of what artifacts it produced
-- This step separates "ran to completion" from "ran correctly"
+**Lane A — Second-client PSEE run validation**
 
-**CODE BRAIN**
-- Invoke validators from `scripts/pios/40.2/`, `40.3/`, `40.4/` with `--expected-run-id <new-run-id>` (enabled by STEP 2)
-- Record pass/fail result for each validator; any FAIL = stop
-- Log all validator invocations to execution log for CODE brain emission
+Validate that the PSEE pipeline produced a structurally complete and internally
+consistent output for run_01_oss_fastapi:
 
-**PRODUCT BRAIN**
-- A validated run is a product-quality run; an unvalidated run is not a product artifact
-- Validation results feed the CODE brain emission: "all validators PASS" or "validator FAIL at stage X"
-- Validation pass time feeds the time-to-first-validated-output metric
+- Validate run_manifest.json: final_status == PASS; all parity_indicators true
+- Validate validation/run_validation.json: exists, valid JSON, all stage statuses PASS
+- Validate binding/package_manifest.json: overall_result == PASS; checks_fail == 0
+- Validate binding/binding_envelope.json: exists; is_canonical_consumption_artifact confirmed
+- Validate binding artifact hashes are present and non-empty in package_manifest.json
+- Any FAIL = Lane A FAIL = STEP 8 INCOMPLETE
 
-**PUBLISH BRAIN**
-- Validated execution is a prerequisite for the claim "governed, repeatable pipeline execution" for the second client
-- After this step, internal validation claim is earned — external claim is not activated until validation matrix group 3 ALL PASS
+**Lane B — BlueEdge regression validation**
 
-Commands: Invoke all affected PiOS validators per STEP 2 parameterization
+Confirm that BlueEdge PiOS methodology artifacts in krayu-program-intelligence are
+intact and unaffected by the second-client PSEE run:
 
-Expected outcome: All PiOS S1–S2 validators PASS; validation matrix groups 1, 2, 3 confirmed
+```
+python3 scripts/pios/40.2/validate_evidence_inventory.py
+python3 scripts/pios/40.3/validate_reconstruction.py
+python3 scripts/pios/40.4/validate_structure_immutability.py
+```
+(All run with default `--expected-run-id run_02_blueedge`)
+
+- Any FAIL = Lane B FAIL = STEP 8 INCOMPLETE
+
+**Lane C — Second-client PiOS 40.x validation**
+
+STATUS: TO BE IMPLEMENTED
+
+Reason: The current PSEE pipeline consumes BlueEdge's proven PiOS artifacts as
+reference input via extract_ceu_lineage.py. It does not execute PiOS 40.2/40.3/40.4
+methodology work streams for the second client in krayu-program-intelligence. No
+run_01_oss_fastapi PiOS artifacts exist in that workspace. The 40.x validators
+read from krayu-program-intelligence/docs/pios/40.x/ paths and would fail with
+--expected-run-id run_01_oss_fastapi until that methodology work is executed.
+
+This lane must NOT be claimed as complete in STEP 8. It is recorded as a known
+open item.
 
 ---
 
 EXIT CONDITIONS
 
 CANONICAL
-- All PiOS S1–S2 validators PASS with second-client run ID; canonical methodology compliance confirmed
-- Any FAIL means this step is NOT complete; do not proceed
+- Lane A PASS: second-client PSEE outputs validated; run is structurally confirmed
+- Lane B PASS: BlueEdge methodology artifacts intact; regression confirmed
+- Lane C recorded as TO BE IMPLEMENTED; scope boundary documented
+- No dirty tracked cross-client artifacts in worktree
 
 CODE
-- Validator invocation log records PASS result for every validator
-- All results logged to execution record for CODE brain emission
+- Lane A and Lane B validation results logged to execution record
+- Lane C scope explicitly recorded as deferred with reason
 
 PRODUCT
-- Quality gate passed; run is confirmed product-quality
+- Quality gate passed for Lane A (run is confirmed product-quality PSEE output)
+- Lane C deferred is a known scope gap; not a product blocker for this run
 
 PUBLISH
-- Internal validation claim earned; prerequisite for "governed execution" external claim met; not yet activated
+- Internal validation claim earned for Lane A + Lane B; prerequisite for "governed execution" external claim met for PSEE output layer
+- PiOS 40.x compliance claim for second client NOT activated until Lane C is implemented
 
 ---
 
