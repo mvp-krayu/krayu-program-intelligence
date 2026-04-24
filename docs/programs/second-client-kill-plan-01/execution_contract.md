@@ -8,9 +8,13 @@ Baseline: pios-baseline-v1.0-blueedge-authoritative
 
 ## Objective
 
-Execute the full S0–S4 PiOS pipeline for a second client environment. Prove that the system
-is client-agnostic, reproducible from baseline, and produces governed output without reliance
-on any BlueEdge artifact, path, or hardcoded reference.
+Execute the full PiOS → GAUGE → LENS → sellable projection pipeline for a second client
+environment. Prove that the system is client-agnostic, reproducible from baseline, and
+produces a governed, sellable LENS artifact without reliance on any BlueEdge artifact,
+path, hardcoded reference, label, or semantic assumption.
+
+PiOS S0–S4 execution is necessary but not sufficient. The run must also demonstrate GAUGE
+portability, LENS projection portability, and must document RBAC/audit attachment points.
 
 ---
 
@@ -51,6 +55,54 @@ on any BlueEdge artifact, path, or hardcoded reference.
 
 ---
 
+### PHASE — GAUGE Portability
+
+Executed as part of S4. Confirms GAUGE state is fully client-derived.
+
+- Generate second-client GAUGE state from S2/S3 outputs
+- Confirm GAUGE score is derived exclusively from second-client artifacts
+- Confirm no BlueEdge signal registry, domain list, or scoring calibration carried forward
+- Confirm GAUGE step sequence (STEP 1–12) runs to completion on new evidence
+- Record actual GAUGE output: score, decision state, confidence band
+
+---
+
+### PHASE — LENS Projection Portability
+
+Executed after S4 report generation. Validates the produced LENS artifact is sellable.
+
+- Generate second-client LENS executive report
+- Verify no BlueEdge wording, client names, labels, paths, or screenshots present in output
+- Verify no BlueEdge-specific report structure is required by the generator
+- Verify no hardcoded BlueEdge paths in `lens_report_generator.py` or equivalent
+- Verify no BlueEdge semantic labels exposed in client-facing sections
+- Confirm the output is executive-readable and could be presented to the second client
+- Confirm the output can support future onboarding UI rendering
+- Reference: `lens_projection_portability_plan.md`
+
+---
+
+### PHASE — Security/Audit Attachment Points
+
+Executed as documentation task during and after the run. No implementation required.
+
+- Identify where RBAC applies across the pipeline:
+  - Onboarding and ledger creation
+  - Client/runtime isolation boundaries
+  - Evidence access and upload
+  - GAUGE access and state read
+  - LENS projection access and generation
+  - Report view, export, and publish actions
+- Identify where audit events must be emitted (minimum event list per `security_audit_architecture_plan.md`)
+- Document attachment points found — do not implement
+- Reference: `security_audit_architecture_plan.md`
+
+**The run cannot PASS unless:**
+1. LENS projection portability is proven (no BlueEdge content in output)
+2. RBAC/audit attachment points are documented
+
+---
+
 ## Isolation Requirements
 
 | Requirement | Rule |
@@ -72,6 +124,8 @@ This contract is a planning artifact. Execution may not begin until:
 3. `execution_contract.md` is amended with client-specific parameters
 4. Baseline comparison plan is reviewed
 5. Validation matrix criteria are confirmed
+6. `lens_projection_portability_plan.md` has been reviewed
+7. `security_audit_architecture_plan.md` has been reviewed
 
 ---
 
@@ -80,3 +134,4 @@ This contract is a planning artifact. Execution may not begin until:
 | Date | Change | Authority |
 |---|---|---|
 | 2026-04-24 | Initial draft created | PI.PRODUCTIZATION.SECOND-CLIENT.KILL-PLAN.01 |
+| 2026-04-24 | Final pre-execution governance update: scope expanded to PiOS → GAUGE → LENS → sellable projection; GAUGE Portability, LENS Projection Portability, and Security/Audit Attachment Points phases added; pass condition updated | PI.PRODUCTIZATION.SECOND-CLIENT.KILL-PLAN.01 |

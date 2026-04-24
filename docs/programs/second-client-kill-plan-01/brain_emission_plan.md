@@ -43,6 +43,31 @@ Structural facts that emerge from the second-client run that were not derivable 
 - Signal coverage variance patterns across different organizational types
 - Any new canonical topology shape not present in BlueEdge
 
+### Portable Client Definition
+
+- Minimum evidence set required to produce a governed structural output for any client
+- Definition of a "conforming evidence boundary" that does not assume BlueEdge evidence shape
+- Any domain coverage floor required for GAUGE to produce a valid score
+
+### Projection Boundary Definition
+
+- What constitutes the boundary between internal canonical truth and external projection
+- Which outputs are internal-only (evidence chain, derivation steps) vs. externally presentable
+- How LENS report content maps to the canonical layer — not as interpretation but as structural derivation
+
+### Internal Truth vs. External Projection Distinction
+
+- Internal: canonical score, domain topology, CEU computation, evidence chain
+- External: LENS executive report, GAUGE decision state, sellable projection artifact
+- Rule: external projection must be derivable from internal truth — not editorially composed
+
+### Security/Audit Boundary Principles
+
+- The boundary at which a client identity is established is the ledger/onboarding entry point
+- Evidence access is governed by client isolation — no cross-client evidence visibility
+- GAUGE state and LENS projection are client-scoped outputs — access requires role
+- Report export/publish is the final boundary — must be explicitly authorized
+
 ---
 
 ## CODE BRAIN
@@ -87,6 +112,32 @@ Known failure modes from BlueEdge execution to watch for:
 
 All failures must be recorded in the run's execution log, not silently handled.
 
+### Report Generator Portability Findings
+
+After LENS projection phase, record:
+
+- Did `lens_report_generator.py` (or equivalent) require any BlueEdge-specific inputs to run?
+- Were any hardcoded paths, labels, or BlueEdge client references found in the generator?
+- Were any report template sections BlueEdge-specific (e.g. hardcoded domain names, fixed section counts)?
+- What parameterization changes, if any, were required to produce a clean second-client output?
+
+### RBAC/Audit Attachment Points Discovered
+
+During execution, record the specific points in the code/runtime path where access control and audit events would attach:
+
+| Location | RBAC applies? | Audit event? | Notes |
+|---|---|---|---|
+| Onboarding / client creation | Yes | client_created | |
+| Ledger submission | Yes | onboarding_submitted | |
+| Evidence upload | Yes | source_artifact_uploaded | |
+| S0–S1 pipeline start | Yes | pipeline_run_started | |
+| S4 GAUGE generation | Yes | gauge_state_generated | |
+| S4 LENS report generation | Yes | lens_projection_generated | |
+| Report view | Yes | report_viewed | |
+| Report export | Yes | report_exported | |
+
+Populate the Notes column with specific function names or entry points found during the run.
+
 ---
 
 ## PRODUCT BRAIN
@@ -125,6 +176,42 @@ Record actual elapsed time for each stage:
 This populates the product claim: "time-bounded engagement." Evidence required before any
 timing claim appears in product materials.
 
+### Sellable LENS Artifact Definition
+
+After second-client run, define precisely what constitutes the sellable artifact:
+
+- Output format (HTML, PDF, both)
+- Minimum required sections for an artifact to be considered executive-ready
+- What the client receives: report only, or report + review session + export
+- Whether the second-client artifact was presented to the client — and the outcome
+
+### Onboarding Ledger Implications
+
+- What information must be recorded at onboarding for the ledger to be valid?
+- What is the minimum ledger entry that gates pipeline execution?
+- How does the onboarding record relate to client isolation in the evidence store?
+
+### Future Onboarding UI Requirements
+
+From the second-client run, identify what a future onboarding interface would need to capture:
+
+- Evidence upload fields and validation rules
+- Scope definition inputs (domain coverage, engagement type)
+- Client identity and contact information
+- Confirmation of evidence boundary before pipeline start
+
+### Role/Access Model Implications
+
+From the run, define the minimum role set required for a productized system:
+
+| Role | What they can access | What they cannot access |
+|---|---|---|
+| Platform Admin | All clients, all runs, all reports | — |
+| Krayu Operator | Assigned client runs | Other client data |
+| Client Executive Viewer | Their report, decision state | Evidence chain, derivation detail |
+| Client Technical Reviewer | Their report + topology | Other client data |
+| Auditor | Audit log | Report content |
+
 ---
 
 ## PUBLISH BRAIN
@@ -160,3 +247,17 @@ The following must never appear in publish surfaces regardless of second-client 
 - Any claim implying the second-client evidence is representative of a general population
 - Score values or domain counts from either client run
 - Any advisory claim about what the client "should do" — output is structural intelligence only
+
+### Claims Requiring Audit/Security Maturity Before Publication
+
+The following claims may only be made once RBAC and audit-log implementation is complete
+and verified — not based on planning documents alone:
+
+| Claim | Required maturity condition |
+|---|---|
+| "Client data is isolated and access-controlled" | RBAC implementation verified in production |
+| "All access to evidence and reports is logged" | Audit log implementation verified in production |
+| "Compliant with enterprise data governance requirements" | Formal audit/compliance review completed |
+| "Multi-client platform" | Client isolation verified across at least two real client runs |
+
+No such claim may appear in publish surfaces until the required maturity condition is met.

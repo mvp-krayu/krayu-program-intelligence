@@ -8,9 +8,10 @@ Baseline: pios-baseline-v1.0-blueedge-authoritative
 
 ## Purpose
 
-Define how the second-client run will be compared against the locked baseline. This plan
-establishes what to compare, what to expect to differ, and what must remain structurally
-invariant regardless of client-specific evidence.
+Define how the second-client PiOS → GAUGE → LENS → sellable projection run will be
+compared against the locked baseline. This plan establishes what to compare, what to
+expect to differ, and what must remain structurally invariant regardless of client-specific
+evidence — at both the derivation layer and the projection layer.
 
 ---
 
@@ -111,5 +112,37 @@ produce different scores — this is correct behavior, not regression.
 4. Compare intake_record.json structure (not values) against BlueEdge reference
 5. Execute S2–S4
 6. Compare GAUGE behavior (step execution, decision state derivation) against baseline model
-7. Record deviations — expected client-specific differences vs. unexpected structural deviations
-8. Pass/fail against validation_matrix.md
+7. Generate LENS projection — verify portability against `lens_projection_portability_plan.md`
+8. Record deviations — expected client-specific differences vs. unexpected structural deviations
+9. Pass/fail against validation_matrix.md
+
+---
+
+## 8. Projection-Level Comparison
+
+Comparison at the LENS output layer is behavioral, not content-matching.
+
+| Check | Baseline behavior | Second-client expectation | Rule |
+|---|---|---|---|
+| Report generated | BlueEdge report generated from BlueEdge evidence | Second-client report generated from second-client evidence | Generator must not require BlueEdge inputs |
+| No BlueEdge labels in output | N/A (BlueEdge run is the baseline) | Zero BlueEdge-specific labels, paths, or names | Hard requirement |
+| Decision state present | PROCEED / INVESTIGATE / ESCALATE | Same output vocabulary | Vocabulary is canonical — not client-specific |
+| Executive readability | BlueEdge report is executive-readable | Second-client report is executive-readable | Qualitative check by reviewer |
+| Report structure | BlueEdge report structure | Same structure produced from different evidence | Structure is portable — not evidence-bound |
+
+BlueEdge metrics are reference expectations only. Second-client output must not inherit
+BlueEdge-specific content, wording, or structural assumptions.
+
+---
+
+## 9. Security Baseline Note
+
+RBAC and audit logging are not implemented in the baseline (`pios-baseline-v1.0-blueedge-authoritative`).
+
+The second-client run must:
+- Document where RBAC roles would apply across the pipeline
+- Document where audit events would fire
+- Not implement these — only identify and document attachment points
+
+This documentation constitutes the security comparison baseline for future implementation streams.
+Reference: `security_audit_architecture_plan.md`

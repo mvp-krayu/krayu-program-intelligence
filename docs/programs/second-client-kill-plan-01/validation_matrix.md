@@ -122,6 +122,27 @@ Verifies that all four brain domains have been populated from run evidence.
 
 ---
 
+## 7. End-to-End Projection Validation
+
+Verifies that the PiOS → GAUGE → LENS → sellable projection chain is complete and portable.
+
+| Check | Pass condition | Fail condition |
+|---|---|---|
+| PiOS chain completed | S0–S4 all pass (group 3) | Any S0–S4 failure |
+| GAUGE state generated | GAUGE produces score + decision state from second-client artifacts | Missing or BlueEdge-derived |
+| LENS projection generated | LENS executive report artifact present | Missing |
+| No BlueEdge reference in LENS output | Zero BlueEdge client names, labels, paths, or screenshots in generated report | Any BlueEdge reference found |
+| No hardcoded BlueEdge generator dependency | Report generator runs without BlueEdge-specific inputs | Generator requires BlueEdge input |
+| Projection-safe language confirmed | Report is executive-readable; no internal identifiers exposed | Internal system labels visible |
+| Onboarding/ledger implications captured | Ledger and onboarding requirements documented in brain_emission_plan.md | Missing |
+| RBAC attachment points captured | All RBAC attachment points documented per security_audit_architecture_plan.md | Undocumented attachment points |
+| Audit-log events captured | All required audit events documented per security_audit_architecture_plan.md | Missing event definitions |
+| Brain emissions complete | All four brain domains populated (group 6) | Any brain domain incomplete |
+
+**Gate:** ALL must PASS. Any FAIL → productization is NOT complete.
+
+---
+
 ## Summary Gate
 
 | Criteria group | Gate |
@@ -132,7 +153,9 @@ Verifies that all four brain domains have been populated from run evidence.
 | 4. Evidence chain completeness | ALL PASS required |
 | 5. Deterministic rerun readiness | ALL PASS required |
 | 6. Brain emission completeness | ALL PASS required |
+| 7. End-to-end projection validation | ALL PASS required |
 
-**Overall gate:** ALL six criteria groups must reach ALL PASS.  
+**Overall gate:** ALL seven criteria groups must reach ALL PASS.  
 Any single FAIL in any group → run is NOT authoritative.  
-A non-authoritative run must not be used as a product reference or publish basis.
+A non-authoritative run must not be used as a product reference or publish basis.  
+A run that passes groups 1–6 but fails group 7 is a PiOS-only validation — not a productization validation.
