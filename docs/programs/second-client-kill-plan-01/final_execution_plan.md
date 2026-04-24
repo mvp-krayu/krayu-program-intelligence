@@ -3,11 +3,12 @@
 Stream: PI.PRODUCTIZATION.SECOND-CLIENT.EXECUTION-PLAN.01
 Branch: feature/second-client-kill-plan-01
 Date: 2026-04-24
-Status: AMENDED — 4-Brain governance enforcement + formal brain gating + intake selector abstraction applied
+Status: AMENDED — 4-Brain governance enforcement + formal brain gating + intake selector abstraction + PRE-GATE viability check applied
 Inputs: gap_assessment_report.md, execution_readiness_plan.md
 Amendment 1: PI.PRODUCTIZATION.SECOND-CLIENT.EXECUTION-PLAN.01 — 4-Brain Amendment
 Amendment 2: PI.PRODUCTIZATION.SECOND-CLIENT.EXECUTION-PLAN.01 — Brain Gating Amendment
 Amendment 3: PI.PRODUCTIZATION.SECOND-CLIENT.EXECUTION-PLAN.01 — Intake Selector / A3S Source Abstraction
+Amendment 4: PI.PRODUCTIZATION.SECOND-CLIENT.EXECUTION-PLAN.01 — PRE-GATE Intake Viability Check
 
 ---
 
@@ -208,6 +209,137 @@ The brain emission plan defines structural categories but provides no fill templ
 The following is a linear execution sequence. No step may be skipped. No step may be reordered.
 All steps are governed by the 4-Brain system. No action exists outside CANONICAL, CODE, PRODUCT, or PUBLISH brain scope.
 All steps are subject to brain gating: ENTRY CONDITIONS must be satisfied before execution; EXIT CONDITIONS must be verified before proceeding.
+
+---
+
+## PRE-GATE — INTAKE VIABILITY CHECK
+
+This is a classification gate, not a blocking gate. PRE-GATE runs before STEP 0 executes. It classifies the structural viability of the selected source evidence and constrains allowable downstream outputs. It does not prevent execution from proceeding.
+
+---
+
+ENTRY CONDITIONS
+
+CANONICAL
+- `intake_selector_record` is fully defined: all five required fields present (`selector_type`, `source_uri`, `source_version`, `evidence_boundary`, `checksum_manifest`)
+- DECISION-03 is resolved; evidence boundary is declared
+
+CODE
+- `source_uri` is accessible: the path or reference resolves to a readable evidence set
+- `checksum_manifest` file path is present and the manifest is readable
+
+PRODUCT
+- Engagement is active; evidence has been staged and accepted under engagement terms
+
+PUBLISH
+- No structural claims have been made externally about the second client's evidence set
+
+---
+
+### 1. Purpose
+
+Classify the structural viability of the selected source BEFORE STEP 0 execution. Determine expected signal strength and allowable LENS tier outputs. Enforce Evidence First doctrine: no structural claims may be made without sufficient evidence to support them.
+
+The classification result does not block pipeline execution. It constrains downstream interpretation and claim activation.
+
+### 2. Input
+
+- `intake_selector_record` (DECISION-03 output): fully defined selector record containing `selector_type`, `source_uri`, `source_version`, `evidence_boundary`, and `checksum_manifest`
+
+### 3. Checks
+
+The following checks are explicit and computable from the selector record and source path. Each check produces PASS or FAIL. The composite result determines the output classification.
+
+**bounded_source**
+- File count is non-zero: at least one evidence file is present at `source_uri`
+- File count is within manageable range: not so excessive as to make structural derivation non-deterministic or unreviewed (no hard upper limit defined — operator judgment applies above ~10,000 evidence files)
+
+**reproducibility**
+- `source_version` is present and non-empty: a git SHA, archive checksum, or equivalent snapshot identifier is recorded
+- `checksum_manifest` is present and accessible; manifest covers the files referenced by `source_uri`
+
+**structural_density**
+- Multiple modules, services, or components are present: more than one top-level structural unit is identifiable in the evidence set
+- Relationships are present: at least one relationship type is observable — imports, dependency declarations, test files referencing production code, router or handler registrations, configuration references, inter-service clients, or equivalent
+
+### 4. Output Classification
+
+The PRE-GATE produces exactly one of three classifications. The classification is mandatory and must be recorded before STEP 0 begins.
+
+**PASS:**
+- All three check categories (bounded_source, reproducibility, structural_density) are fully satisfied
+- Full structural pipeline is viable: STEP 0 → STEP 14 may execute without constraint
+- Eligible for Tier 1, Tier 2, and Tier 3 LENS outputs
+
+**PARTIAL:**
+- bounded_source and reproducibility are satisfied; structural_density is partially satisfied (relationships are present but module count is low, or relationship types are limited to a single category)
+- Pipeline may execute; structural inference is valid but signal confidence may be degraded
+- CANONICAL brain must note degraded confidence in structural derivation claims
+- Eligible for Tier 1 and partial Tier 2 outputs; Tier 3 output eligibility deferred to post-run observation
+
+**FAIL:**
+- bounded_source fails (empty or unresolvable source), OR reproducibility fails (no version anchor or missing manifest), OR structural_density fails entirely (single file or no relationships observable)
+- Pipeline execution is allowed but MUST NOT claim structural completeness
+- All CANONICAL invariant claims are restricted: domain topology claims are provisional; signal count claims are provisional
+- Restricted to Tier 1 outputs only; no Tier 2 or Tier 3 claim activation permitted
+
+### 5. Governance Rule
+
+- PRE-GATE result MUST NOT block execution: a PARTIAL or FAIL classification does not halt the pipeline
+- PRE-GATE result MUST constrain downstream interpretation and claims: LENS tier eligibility and CANONICAL brain claim activation are gated by the classification
+- PRE-GATE result MUST be recorded as an evidence artifact before STEP 0 begins: location `clients/<new-client-id>/psee/runs/<new-run-id>/pregate_viability_record.json` (implementation deferred — operator records result manually for first run)
+- Any downstream step that produces a structural claim must cite the PRE-GATE classification; claims made under PARTIAL or FAIL classification require explicit confidence qualification
+
+### 6. Brain Mapping
+
+**CANONICAL BRAIN**
+- Owns the viability classification model: defines what counts as bounded, reproducible, and structurally dense
+- Constrains claim activation: a FAIL or PARTIAL classification limits what the CANONICAL brain may assert as authoritative after the run
+- Invariant: no structural completeness claim may be made if PRE-GATE classification is FAIL
+- Structural claims produced under PARTIAL classification are provisional, not authoritative; they must carry a confidence qualifier in the CANONICAL brain emission
+
+**CODE BRAIN**
+- Defines how each check is computed: bounded_source is a file count check; reproducibility is a metadata presence check; structural_density is a filesystem pattern check (module count, import or test file presence, dependency declaration count)
+- Future automation allowed: a `pregate_viability_check.py` script may be implemented to automate all three check categories; for the first run, operator performs checks manually
+- Records the classification result and per-check outcomes in `pregate_viability_record.json`
+
+**PRODUCT BRAIN**
+- Maps classification to LENS tier eligibility:
+
+  | Classification | Tier 1 | Tier 2 | Tier 3 |
+  |---|---|---|---|
+  | PASS | Eligible | Eligible | Eligible |
+  | PARTIAL | Eligible | Partial | Deferred |
+  | FAIL | Eligible | Ineligible | Ineligible |
+
+- Onboarding implication: a FAIL or PARTIAL classification is a product-level signal that the client's evidence package may need augmentation before a full-tier engagement can be delivered; this must be recorded in the PRODUCT brain emission
+
+**PUBLISH BRAIN**
+- Constrains external messaging and report claims:
+  - PASS: all standard LENS claims may be activated per their individual conditions
+  - PARTIAL: structural completeness claims must be qualified; "based on available evidence" or equivalent qualifier is required in any external output
+  - FAIL: no structural completeness or topology claims may appear in external output; decision state may be included but must be qualified as provisional
+- Prohibits: claiming full structural assessment when PRE-GATE classification is PARTIAL or FAIL
+
+---
+
+EXIT CONDITIONS
+
+CANONICAL
+- Viability classification assigned: exactly one of PASS / PARTIAL / FAIL is recorded
+- Classification constraints are explicitly linked to downstream execution: tier eligibility and claim scope are documented and will govern STEP 13 brain emissions
+
+CODE
+- `pregate_viability_record.json` written (or manual record created): contains classification, per-check outcomes, and classification constraints
+- All three check categories have a recorded result (PASS or FAIL per check); no check is omitted
+
+PRODUCT
+- LENS tier eligibility is known before STEP 0 begins: operator has confirmed which tiers are eligible for the current source
+- Engagement scope can be confirmed or adjusted based on classification before pipeline execution commits resources
+
+PUBLISH
+- No external claim has been made about the second client's evidence structure; classification is an internal governance act
+- Downstream claim constraints are recorded and will gate PUBLISH brain activation at STEP 13
 
 ---
 
