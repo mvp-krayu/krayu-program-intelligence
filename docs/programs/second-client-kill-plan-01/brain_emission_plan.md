@@ -15,6 +15,35 @@ be populated from evidence after the run completes.
 
 ## CANONICAL BRAIN
 
+### Required Fill Format
+
+**Required fields:**
+- Confirmed Invariants: at least 3 entries, each with an evidence reference (file or artifact that supports it)
+- Broken Invariants: explicitly populated (empty list is acceptable if none found; placeholder "To be determined" is NOT acceptable)
+- New Structural Definitions: at least one entry, or explicit declaration "none observed"
+- Portable Client Definition: minimum evidence set stated as a concrete finding, not a question
+- Projection Boundary Definition: populated with at least one boundary rule derived from the run
+- Unresolved Canonical Gaps: declared explicitly (can be "none")
+
+**Minimum content standard:**
+- At least 3 confirmed invariants, each referencing a specific artifact or output as evidence
+- Broken Invariants section resolved with a determination, not a placeholder
+- Portable Client Definition must name specific document types or evidence categories, not describe what to watch for
+
+**PASS criteria:**
+- All required fields populated with post-run content
+- At least 3 confirmed invariants present with evidence citations
+- Broken Invariants section contains a determination (including "none found")
+- Portable Client Definition states a concrete minimum set
+
+**INCOMPLETE criteria:**
+- Fewer than 3 confirmed invariants
+- Any required field contains "To be determined" or equivalent placeholder
+- Confirmed invariants have no evidence reference
+- Broken Invariants section not resolved after run completion
+
+---
+
 ### Confirmed Invariants
 
 Structural facts that the second-client run must confirm hold across clients:
@@ -71,6 +100,38 @@ Structural facts that emerge from the second-client run that were not derivable 
 ---
 
 ## CODE BRAIN
+
+### Required Fill Format
+
+**Required fields:**
+- Commands Used: full command sequence for S0–S4, with exact parameters as executed (not template placeholders)
+- Scripts Touched: table complete with all scripts invoked; Modified? column answered yes/no for each; Change Summary populated if yes
+- Environment Assumptions: Python version confirmed, required env vars listed, directory structure under `clients/<client-id>/` confirmed
+- Failure Modes: each item in the pre-defined list assessed — resolved, triggered, or confirmed not triggered
+- RBAC Attachment Points: Notes column populated for every row with a specific function name or entry point, or "not reached" if the stage was not executed
+
+**Minimum content standard:**
+- Every command in the S0–S4 sequence recorded with the exact parameter values used (no angle-bracket placeholders)
+- Scripts table has at least one row per script invoked; "No modifications" is acceptable if correct
+- Environment section confirms or denies each pre-defined assumption with a specific observed value
+- At least one failure mode assessment present; "not triggered" counts as a valid entry
+- RBAC table Notes column has content for S0–S4 attachment rows
+
+**PASS criteria:**
+- Command sequence complete with actual parameter values
+- Scripts table has no placeholder rows
+- Environment assumptions confirmed or violated (both are valid — silence is not)
+- Failure modes section has a resolution for each item
+- RBAC table Notes column populated for all rows reachable during execution
+
+**INCOMPLETE criteria:**
+- Any command listed with angle-bracket template values, not actual values
+- Scripts table contains placeholder row(s)
+- Environment section not confirmed post-run
+- Failure modes section has any item left as "to be determined"
+- RBAC table Notes column empty for rows that were reached during execution
+
+---
 
 ### Commands Used
 
@@ -141,6 +202,34 @@ Populate the Notes column with specific function names or entry points found dur
 ---
 
 ## PRODUCT BRAIN
+
+### Required Fill Format
+
+**Required fields:**
+- Time-to-First-Output table: all five stage rows (S0–S4) and Total row populated with actual Start, End, Duration, and Notes values
+- Minimum Evidence Volume Finding: concrete statement of the minimum evidence set that produced a governed output — not a question, not a range without evidence
+- Client Package Requirements: confirmed minimum set of document types, pre-engagement checklist items, and delivery format requirements
+- Sellable LENS Artifact Definition: output format, minimum required sections, and what the client receives — as observed, not as planned
+
+**Minimum content standard:**
+- All rows in time-to-output table have Start, End, and Duration populated (blank Notes is acceptable)
+- Minimum evidence volume is a specific finding: names specific document types or evidence categories confirmed sufficient
+- Client package requirements lists at least 3 confirmed document types from the actual intake
+- Sellable artifact definition specifies output format(s) confirmed to have been produced
+
+**PASS criteria:**
+- Time-to-output table fully populated — all five stage rows and Total row complete
+- Minimum evidence volume finding stated as a concrete determination with at least one specific document type
+- Client package requirements populated from actual run observations
+- Sellable artifact definition populated with observed output format and minimum sections
+
+**INCOMPLETE criteria:**
+- Any stage row in time-to-output table is empty or still contains placeholder content
+- Minimum evidence volume remains stated as a question or "to be determined"
+- Client package requirements not derived from actual intake observations
+- Sellable artifact definition not populated after report generation phase completes
+
+---
 
 ### Onboarding Implications
 
@@ -215,6 +304,34 @@ From the run, define the minimum role set required for a productized system:
 ---
 
 ## PUBLISH BRAIN
+
+### Required Fill Format
+
+**Required fields:**
+- Safe External Claims table: each of the four pre-defined claims assigned an explicit activation status — ACTIVATED or DEFERRED — with a one-line reason
+- Prohibited Claims Confirmation: explicit yes/no confirmation that each prohibited claim category was avoided; not a general statement — each item in the pre-defined list assessed individually
+- Security-Maturity Claims: each item in the pre-defined security/audit maturity table explicitly marked DEFERRED with its required maturity condition restated
+- Case-Study Candidate Status: declared as CANDIDATE, NOT A CANDIDATE, or PENDING CLIENT CONSENT — with reasoning
+
+**Minimum content standard:**
+- All four safe claims have an activation status — silence or omission is not acceptable
+- Prohibited claims confirmation covers each of the six pre-defined prohibited claim categories explicitly
+- Security-maturity claims section confirms each item is DEFERRED (none may be ACTIVATED without completing the required maturity condition)
+- Case-study status is a concrete declaration, not a question
+
+**PASS criteria:**
+- All four safe claims have ACTIVATED or DEFERRED status with reason
+- Prohibited claims confirmation has an explicit entry for each category in the pre-defined list
+- All security-maturity claims confirmed DEFERRED
+- Case-study candidate status declared
+
+**INCOMPLETE criteria:**
+- Any safe claim has no activation status assigned after the run
+- Prohibited claims confirmation is a general statement rather than per-item confirmation
+- Any security-maturity claim has no status (DEFERRED is required; ACTIVATED requires maturity conditions met)
+- Case-study status not declared after report delivery phase
+
+---
 
 ### Safe External Claims
 
