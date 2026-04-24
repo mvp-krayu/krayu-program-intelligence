@@ -591,6 +591,8 @@ def gen_top_claims(m: VaultModel) -> str:
     for s in m.signals:
         sig_lines.append(f"- [[CLM-{20 + m.signals.index(s):02d} {_sig_clm_label(s)}]] — {s.evidence_confidence}: {s.title[:60]}")
     sig_block = "\n".join(sig_lines)
+    clm21_line = ("- [[CLM-21 SIG-002 Platform Runtime State Seven Unknown Dimensions]]"
+                  " — what cannot be determined from structural analysis alone\n") if m.total_signals > 0 else ""
 
     return f"""{fm(title="Top Claims", node_type="navigation", stream_id=VAULT_SCHEMA)}
 # Top Claims
@@ -619,8 +621,7 @@ The highest-value claims by category.
 
 - [[CLM-25 Executive Three-Axis Verdict]] — the highest-level summary
 - [[CLM-26 Executive Narrative Phrase Set]] — business-language phrase outputs
-- [[CLM-21 SIG-002 Platform Runtime State Seven Unknown Dimensions]] — what cannot be determined from structural analysis alone
-"""
+{clm21_line}"""
 
 
 def _sig_clm_label(s: SignalData) -> str:
@@ -2742,7 +2743,7 @@ def main():
     print(f"\n[COMPLETE]")
     print(f"  vault:      {output_dir}")
     print(f"  nodes:      {len(written)}")
-    print(f"  claims:     {len(CLAIM_DEFS)}")
+    print(f"  claims:     {sum(1 for p in written if p.startswith('claims/'))}")
     print(f"  broken links: {len(broken)}")
     print(f"  stream:     {STREAM_ID}")
 
