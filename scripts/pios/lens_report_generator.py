@@ -4,7 +4,7 @@ PRODUCTIZE.LENS.REPORT.01 / PRODUCTIZE.LENS.REPORT.DELIVERY.01 / PRODUCTIZE.LENS
 
 Executive report generator for LENS v1.
 
-Produces clients/blueedge/reports/lens_report_YYYYMMDD_HHMMSS.html
+Produces clients/<client>/reports/lens_report_YYYYMMDD_HHMMSS.html
 A formal, decision-grade executive artifact derived exclusively from
 governed ZONE-2 projections.
 
@@ -23,6 +23,7 @@ CLI:
   python3 scripts/pios/lens_report_generator.py [--output PATH]
 """
 
+import argparse
 import json
 import math
 import os
@@ -61,6 +62,47 @@ def _default_output_path() -> Path:
 
 # Forbidden substrings — must not appear in any report body text
 FORBIDDEN_SUBSTRINGS = ("SIG-", "COND-", "DIAG-", "INTEL-")
+
+
+# ---------------------------------------------------------------------------
+# Runtime configuration — call before execution to override BlueEdge defaults
+# ---------------------------------------------------------------------------
+
+def _configure_runtime(
+    client: str = "blueedge",
+    run_id: str = "run_authoritative_recomputed_01",
+    api_base: str = "http://localhost:3000",
+    fragments_dir: Optional[Path] = None,
+    package_dir: Optional[Path] = None,
+    claims: Optional[List[str]] = None,
+) -> None:
+    """Update module-level path and configuration globals from CLI arguments.
+
+    Must be called before any generation functions when running with non-default
+    client parameters. Has no effect on module-level defaults when imported as a module.
+    """
+    global LENS_CLAIMS, API_BASE, FRAGMENTS_DIR, REPORTS_DIR, CANONICAL_PKG_DIR
+    global TIER1_REPORTS_DIR, TIER2_REPORTS_DIR
+
+    if claims:
+        LENS_CLAIMS = claims
+
+    API_BASE = api_base
+
+    REPORTS_DIR = REPO_ROOT / "clients" / client / "reports"
+    TIER1_REPORTS_DIR = REPORTS_DIR / "tier1"
+    TIER2_REPORTS_DIR = REPORTS_DIR / "tier2"
+
+    if fragments_dir is not None:
+        FRAGMENTS_DIR = fragments_dir
+    else:
+        FRAGMENTS_DIR = REPO_ROOT / "clients" / client / "vaults" / run_id / "claims" / "fragments"
+
+    if package_dir is not None:
+        CANONICAL_PKG_DIR = package_dir
+    else:
+        CANONICAL_PKG_DIR = REPO_ROOT / "clients" / client / "psee" / "runs" / run_id / "package"
+
 
 # ---------------------------------------------------------------------------
 # Data ingestion
@@ -673,26 +715,17 @@ def compose_appendix(payloads: dict) -> str:
 # New section composers — PRODUCTIZE.LENS.REPORT.TOPOLOGY.DELIVERY.01
 # ---------------------------------------------------------------------------
 
-def compose_system_intelligence() -> str:
-    domains = [
-        ('Edge Data Acquisition',                   'Operational Intelligence', 'verified'),
-        ('Sensor and Security Ingestion',            'Operational Intelligence', 'verified'),
-        ('Analytics and Intelligence',               'Operational Intelligence', 'verified'),
-        ('AI/ML Intelligence Layer',                 'Operational Intelligence', 'verified'),
-        ('Fleet Core Operations',                    'Fleet Operations',         'verified'),
-        ('Fleet Vertical Extensions',                'Fleet Operations',         'verified'),
-        ('Extended Operations and Driver Services',  'Fleet Operations',         'verified'),
-        ('EV and Electrification',                   'Emerging Capabilities',    'verified'),
-        ('Operational Engineering',                  'Emerging Capabilities',    'verified'),
-        ('Platform Infrastructure and Data',         'Platform Infrastructure',  'conditional'),
-        ('Telemetry Transport and Messaging',        'Platform Infrastructure',  'conditional'),
-        ('Event-Driven Architecture',                'Platform Infrastructure',  'verified'),
-        ('Real-Time Streaming and Gateway',          'Platform Infrastructure',  'verified'),
-        ('Access Control and Identity',              'Platform Services',        'verified'),
-        ('SaaS Platform Layer',                      'Platform Services',        'verified'),
-        ('External Integration',                     'Platform Services',        'verified'),
-        ('Frontend Application',                     'Platform Services',        'verified'),
-    ]
+def compose_system_intelligence(topology: Optional[Dict] = None) -> str:
+    """Render the system intelligence domain coverage section.
+
+    Derives domain names and counts from canonical_topology.json.
+    topology may be passed directly or will be loaded from CANONICAL_PKG_DIR.
+    """
+    if topology is None and CANONICAL_PKG_DIR.exists():
+        try:
+            topology = load_canonical_topology()
+        except SystemExit:
+            topology = None
 
     def _domain_row(name: str, cluster: str, status: str) -> str:
         badge = (
@@ -708,43 +741,151 @@ def compose_system_intelligence() -> str:
             f'</div>'
         )
 
-    # Two-column layout when domain count > 10
-    if len(domains) > 10:
-        mid = (len(domains) + 1) // 2  # ceiling split: first column gets one more if odd
-        left_rows  = "".join(_domain_row(*d) for d in domains[:mid])
-        right_rows = "".join(_domain_row(*d) for d in domains[mid:])
-        list_html = (
-            f'<div class="domain-list-2col">'
-            f'<div class="domain-list">{left_rows}</div>'
-            f'<div class="domain-list">{right_rows}</div>'
-            f'</div>'
+    if topology is not None:
+        counts = topology["counts"]
+        dom_count  = counts.get("domains",      "?")
+        cap_count  = counts.get("capabilities", "?")
+        comp_count = counts.get("components",   "?")
+        topology_domains = topology["domains"]
+        verified_ct = sum(1 for d in topology_domains if d["grounding"] == "GROUNDED")
+        weak_ct     = sum(1 for d in topology_domains if d["grounding"] == "WEAKLY GROUNDED")
+        domains = [
+            (
+                d["domain_name"],
+                d.get("domain_type", "").replace("_", " ").title(),
+                "conditional" if d["grounding"] == "WEAKLY GROUNDED" else "verified",
+            )
+            for d in topology_domains
+        ]
+        summary_note = (
+            f"The platform assessment covers {dom_count} functional domains. "
+            f"{verified_ct} domain{'s are' if verified_ct != 1 else ' is'} structurally verified; "
+            f"{weak_ct} domain{'s carry' if weak_ct != 1 else ' carries'} pending runtime dimensions. "
+            "This represents the complete assessed surface — no domains are unexamined."
+        )
+        counts_text = (
+            f"{dom_count} functional domains &nbsp;·&nbsp; "
+            f"{cap_count} capability surfaces &nbsp;·&nbsp; "
+            f"{comp_count} components mapped"
         )
     else:
-        list_html = (
-            f'<div class="domain-list">'
-            + "".join(_domain_row(*d) for d in domains)
-            + '</div>'
+        domains = []
+        summary_note = (
+            "Domain coverage data is unavailable for this report. "
+            "Topology data was not found in the configured package directory."
         )
+        counts_text = ""
+
+    if domains:
+        if len(domains) > 10:
+            mid = (len(domains) + 1) // 2
+            left_rows  = "".join(_domain_row(*d) for d in domains[:mid])
+            right_rows = "".join(_domain_row(*d) for d in domains[mid:])
+            list_html = (
+                f'<div class="domain-list-2col">'
+                f'<div class="domain-list">{left_rows}</div>'
+                f'<div class="domain-list">{right_rows}</div>'
+                f'</div>'
+            )
+        else:
+            list_html = (
+                f'<div class="domain-list">'
+                + "".join(_domain_row(*d) for d in domains)
+                + '</div>'
+            )
+    else:
+        list_html = ''
+
+    summary_line = f'<div class="domain-summary">{counts_text}</div>' if counts_text else ''
 
     return f"""
 <p>
-  The platform assessment covers 17 functional domains across five capability clusters.
-  15 domains are structurally verified; 2 domains carry pending runtime dimensions.
-  This represents the complete assessed surface — no domains are unexamined.
+  {esc(summary_note)}
 </p>
 {list_html}
-<div class="domain-summary">
-  17 functional domains &nbsp;·&nbsp; 42 capability surfaces &nbsp;·&nbsp; 89 components mapped
+{summary_line}
+"""
+
+
+def _compose_topology_fallback(light_mode: bool, topology: Dict, domain_count: int) -> str:
+    """Fallback topology rendering for non-17-domain clients.
+
+    Shows domain list from canonical_topology.json domains[].domain_name with an
+    explicit portability notice. No hardcoded coordinates or cluster names.
+    """
+    if light_mode:
+        legend_verified    = '#22c55e'
+        legend_conditional = '#f59e0b'
+        container_style    = 'padding:16px;border:1px solid #e5e7eb;border-radius:4px;'
+        notice_color       = '#6b7280'
+    else:
+        legend_verified    = '#3fb950'
+        legend_conditional = '#d29922'
+        container_style    = 'padding:16px;border:1px solid #2a2a32;border-radius:4px;background:#0d1117;'
+        notice_color       = '#888'
+
+    domain_rows = ""
+    for d in topology["domains"]:
+        grounding = d.get("grounding", "GROUNDED")
+        dot_color = legend_conditional if grounding == "WEAKLY GROUNDED" else legend_verified
+        domain_rows += (
+            f'<div class="domain-row">'
+            f'<span class="domain-row-name">{esc(d["domain_name"])}</span>'
+            f'<span style="font-size:11px;color:{notice_color};">'
+            f'<span style="display:inline-block;width:8px;height:8px;border-radius:50%;'
+            f'background:{dot_color};margin-right:4px;vertical-align:middle;"></span>'
+            f'{"In Progress" if grounding == "WEAKLY GROUNDED" else "Verified"}'
+            f'</span>'
+            f'</div>'
+        )
+
+    counts = topology.get("counts", {})
+    depth_note = f"{domain_count} functional domains &nbsp;&middot;&nbsp; Structural depth only"
+
+    return f"""
+<div class="topo-container">
+  <div style="{container_style}">
+    <p style="font-size:12px;color:{notice_color};margin-bottom:12px;font-style:italic;">
+      Topology visualization currently optimized for reference model.
+      Dynamic topology rendering pending for this client.
+    </p>
+    <div class="domain-list">
+{domain_rows}
+    </div>
+  </div>
+  <div class="topo-legend">
+    <span class="topo-legend-dot" style="background:{legend_verified};"></span>&nbsp;Verified
+    &nbsp;&nbsp;
+    <span class="topo-legend-dot" style="background:{legend_conditional};"></span>&nbsp;In Progress
+    &nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;
+    <span class="topo-depth-note">{depth_note}</span>
+  </div>
 </div>
 """
 
 
-def compose_topology_view(light_mode: bool = False) -> str:
-    """Build the curated 17-domain topology SVG.
+def compose_topology_view(light_mode: bool = False, topology: Optional[Dict] = None) -> str:
+    """Build the topology section.
+
+    If topology domain count is 17, renders the curated reference-model SVG (unchanged logic).
+    For any other domain count, renders a domain list fallback with an explicit portability notice.
+    topology may be passed directly or will be loaded from CANONICAL_PKG_DIR.
 
     light_mode=True  → white/light background, dark labels — for executive report / print.
     light_mode=False → dark background — for LENS dark-theme web surface.
     """
+    if topology is None and CANONICAL_PKG_DIR.exists():
+        try:
+            topology = load_canonical_topology()
+        except SystemExit:
+            topology = None
+
+    domain_count = len(topology["domains"]) if topology else 17
+
+    if domain_count != 17:
+        return _compose_topology_fallback(light_mode, topology, domain_count)
+
+    # 17-domain reference model — curated SVG rendering (unchanged logic below)
 
     clusters = [
         ('Operational Intelligence', 8,   8,   283, 205, 9, '#3fb950'),
@@ -1527,6 +1668,14 @@ body {
 
 
 def build_html(payloads: Dict) -> str:
+    # Load topology for dynamic sections; graceful fallback if unavailable
+    _topology: Optional[Dict] = None
+    if CANONICAL_PKG_DIR.exists():
+        try:
+            _topology = load_canonical_topology()
+        except SystemExit:
+            pass
+
     anchor = payloads[LENS_CLAIMS[0]]
     run_id = anchor.get("run_id", "—")
     generated_at_raw = anchor.get("generated_at", "")
@@ -1591,13 +1740,13 @@ def build_html(payloads: Dict) -> str:
 <!-- 2. SYSTEM INTELLIGENCE OVERVIEW -->
 <div class="section">
   <div class="section-title">System Intelligence Overview</div>
-  {compose_system_intelligence()}
+  {compose_system_intelligence(_topology)}
 </div>
 
 <!-- 3. STRUCTURAL TOPOLOGY VIEW -->
 <div class="section">
   <div class="section-title">Structural Topology View</div>
-  {compose_topology_view(light_mode=True)}
+  {compose_topology_view(light_mode=True, topology=_topology)}
 </div>
 
 <!-- 4. FOCUS DOMAIN — EDGE DATA ACQUISITION -->
@@ -3430,7 +3579,7 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
     <div class="t2-context-lock">
       <div class="t2-field">
         <span class="t2-field-label">Run ID</span>
-        <span class="t2-field-value">run_authoritative_recomputed_01</span>
+        <span class="t2-field-value">{esc(topology.get("emission_run_id", "—"))}</span>
       </div>
       <div class="t2-field">
         <span class="t2-field-label">Evidence Scope</span>
@@ -3626,10 +3775,35 @@ def main(tier1: bool = True, output_path: Optional[Path] = None,
 
 
 if __name__ == "__main__":
-    import argparse
     parser = argparse.ArgumentParser(
         description="LENS Report Generator — default: Tier-1 set (4 artifacts). Use --legacy for single executive report."
     )
+    # Client / run parameterization
+    parser.add_argument(
+        "--client", default="blueedge",
+        help="Client ID (default: blueedge)"
+    )
+    parser.add_argument(
+        "--run-id", default="run_authoritative_recomputed_01",
+        help="Run ID for canonical package and vault paths (default: run_authoritative_recomputed_01)"
+    )
+    parser.add_argument(
+        "--api-base", default="http://localhost:3000",
+        help="API base URL for projection endpoint (default: http://localhost:3000)"
+    )
+    parser.add_argument(
+        "--fragments-dir", type=Path, default=None,
+        help="Fragment directory override (default: clients/<client>/vaults/<run-id>/claims/fragments)"
+    )
+    parser.add_argument(
+        "--package-dir", type=Path, default=None,
+        help="Canonical package directory override (default: clients/<client>/psee/runs/<run-id>/package)"
+    )
+    parser.add_argument(
+        "--claims", nargs="*", default=None,
+        help="Explicit claim IDs to include (default: derived from fragments or package)"
+    )
+    # Report mode
     parser.add_argument(
         "--tier1", action="store_true", default=True,
         help="Generate Tier-1 report set (default behavior)"
@@ -3640,11 +3814,19 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--output-dir", type=Path, default=None,
-        help="Output directory for Tier-1 artifacts (default: clients/blueedge/reports/tier1/)"
+        help="Output directory for Tier-1 artifacts (default: clients/<client>/reports/tier1/)"
     )
     parser.add_argument(
         "--output", type=Path, default=None,
         help="[Legacy only] Output HTML path"
     )
     args = parser.parse_args()
+    _configure_runtime(
+        client=args.client,
+        run_id=args.run_id,
+        api_base=args.api_base,
+        fragments_dir=args.fragments_dir,
+        package_dir=args.package_dir,
+        claims=args.claims,
+    )
     main(tier1=not args.legacy, output_path=args.output, output_dir=args.output_dir)
