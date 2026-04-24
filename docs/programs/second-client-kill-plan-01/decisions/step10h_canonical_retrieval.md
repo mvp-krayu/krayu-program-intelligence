@@ -7,16 +7,42 @@
 
 ---
 
+## CORRECTION (issued after initial commit)
+
+**C1 is SCHEMA authority only. It is NOT claim-count authority for second-client.**
+
+Original trace incorrectly implied:
+- Second-client vault must contain 27 claims (BlueEdge claim set)
+- CLM-20..CLM-24 must appear as BLOCKED when signal layer is NOT_EVALUATED
+- G1 was framed as a contamination risk requiring resolution
+
+**Corrected positions:**
+- BlueEdge vault defines claim node schema (frontmatter + section structure) — nothing else
+- Second-client claim set is evidence-derived: only claims with applicable source artifacts are included
+- CLM-20..CLM-24 are DEFERRED or omitted when `emission_state=NOT_EVALUATED`; they are not generated as BLOCKED nodes
+- Claim count for second-client vault is a derived output, not a parity target
+- G1 (below) is retired — it was predicated on forced inclusion of BlueEdge signal claims
+
+Sections 3 (dependency map), 5 (gap list), 6 (decision), and PRODUCT brain are amended below.
+
+---
+
 ## 1. CANONICAL SOURCES (with exact paths)
 
 ### C1 — Reference Vault (BlueEdge)
 
+**AUTHORITY SCOPE: SCHEMA ONLY. Not claim-count authority. Not claim-set authority.**
+
+BlueEdge vault defines the node schema and section structure for vault files.
+It does NOT define the required claim set for any other client.
+Second-client claim set is evidence-derived.
+
 **Primary vault:**
 `clients/blueedge/vaults/run_01_authoritative/`
 
-**Structure:**
+**Structure (BlueEdge instance — not a template):**
 ```
-claims/          — 27 claim files (CLM-01..CLM-27) + fragments/
+claims/          — 27 claim files (CLM-01..CLM-27) + fragments/   ← BlueEdge count only
 artifacts/       — 7 artifact nodes (ART-01..ART-07)
 governance/
 entities/
@@ -51,6 +77,9 @@ stream_id: PRODUCTIZE.GAUGE.OBSIDIAN.EVIDENCE.VAULT.V3.01
 - Transformation Chain: four-layer chain (SIG → COND → DIAG → INTEL)
 - When signal missing from registry: `status: BLOCKED — signal not present in registry`
   (lines 1558–1571: `scripts/psee/build_evidence_vault.py`)
+- **CORRECTION:** This BLOCKED behavior is BlueEdge runtime behavior when signals
+  were expected but absent. For second-client with NOT_EVALUATED signal layer,
+  CLM-20..CLM-24 are DEFERRED or omitted — not forced into BLOCKED state.
 
 **Vault builder:**
 `scripts/psee/build_evidence_vault.py`
@@ -277,8 +306,11 @@ signal_registry.json.signals[SIG-001..SIG-005]
   → if signal found → full ZONE-2 claim with business_impact, risk, etc.
 ```
 
-For second-client: all five signal claims will emit as BLOCKED.
-Claim labels (hardcoded BlueEdge names) will appear in vault.
+**CORRECTION — second-client:**
+Signal layer is NOT_EVALUATED (`emission_state=NOT_EVALUATED`, `total_signals=0`).
+CLM-20..CLM-24 are DEFERRED or omitted from second-client vault.
+They are not generated as BLOCKED nodes. BlueEdge signal names do not appear.
+Claim set is evidence-derived from available second-client artifacts only.
 
 ### projection_runtime.py dependencies
 
@@ -326,40 +358,39 @@ project() / project_set() / export_fragments()
 
 | Risk | Source | Severity |
 |---|---|---|
-| CLM-20..CLM-24 claim labels contain BlueEdge signal names | `build_evidence_vault.py` lines 496–500, 1624–1671 — hardcoded | MEDIUM — vault files will carry BlueEdge-specific labels in BLOCKED state |
-| `_find_signal_registry` BlueEdge run_id candidates | `projection_runtime.py` lines 338–343 | MEDIUM — returns None for second-client; projection signal augmentation silently disabled |
-| `run_id` default in `projection_runtime.py` | lines 963, 1037, 1108, 1134, 1189 | MEDIUM — must be overridden explicitly for second-client projections |
+| CLM-20..CLM-24 hardcoded BlueEdge signal names | `build_evidence_vault.py` lines 496–500 | NOT A RISK — claims DEFERRED/OMITTED when NOT_EVALUATED; names never emitted |
+| `_find_signal_registry` BlueEdge run_id candidates | `projection_runtime.py` lines 338–343 | MEDIUM — projection signal augmentation unavailable; projection deferred |
+| `run_id` default in `projection_runtime.py` | lines 963, 1037, 1108, 1134, 1189 | MEDIUM — must be overridden explicitly; no impact on vault build |
 
 ---
 
 ## 5. GAP LIST (FAIL-CLOSED)
 
-**G1 — Signal claim labels (CLM-20..CLM-24) hardcoded to BlueEdge signal names**
+**G1 — RETIRED**
 
-- Location: `scripts/psee/build_evidence_vault.py` lines 496–500; `gen_clm_20..gen_clm_24` (lines 1624–1671)
-- Description: Claim labels ("SIG-001 Sensor Bridge Throughput", "SIG-002 Platform Runtime State
-  Seven Unknown Dimensions", etc.) are hardcoded strings derived from BlueEdge signal content.
-  For second-client vault these will appear as BLOCKED claims with BlueEdge signal names.
-- Impact: Vault structurally valid; signal claims semantically contaminated with BlueEdge names.
-  Acceptable for internal/structural vault. Not acceptable for client-facing LENS report.
-- Resolution path: Requires parameterization of signal claim labels per client,
-  OR generic labels ("Signal 1", etc.) when signals=0, OR omission of signal claims
-  when NOT_EVALUATED.
+Original G1 described BlueEdge signal claim labels appearing in second-client vault as
+BLOCKED nodes. This was predicated on forced inclusion of CLM-20..CLM-24.
 
-**G2 — `projection_runtime.py:_find_signal_registry()` hardcoded to BlueEdge run IDs**
+**Corrected position:** CLM-20..CLM-24 are DEFERRED or omitted when
+`emission_state=NOT_EVALUATED`. They are not generated. No BlueEdge signal names
+appear in second-client vault. G1 is not a gap — it is a non-event when signal
+claims are evidence-gated.
+
+Remaining gaps renumbered below as G1 and G2 (previously G2 and G3).
+
+**G1 (prev. G2) — `projection_runtime.py:_find_signal_registry()` hardcoded to BlueEdge run IDs**
 
 - Location: `scripts/pios/projection_runtime.py` lines 333–347
 - Description: Candidates list contains only `run_authoritative_recomputed_01` and
   `run_01_authoritative`. Will return `None` for second-client vault at
   `clients/e65d2f0a-.../vaults/run_01_oss_fastapi/`. Signal augmentation in projection
   claims will be silently disabled.
-- Impact: Projection runtime will work for structural claims; signal claims will lack
-  registry augmentation. Projection claims CLM-20..CLM-24 unresolvable unless
-  `--vault-path` points to a vault where signal claims are BLOCKED.
-- Resolution path: Add `run_01_oss_fastapi` to candidates, OR accept `None` return
-  and rely on BLOCKED claim state in vault.
+- Impact: Projection runtime signal augmentation unavailable for second-client.
+  Structural claim projection unaffected. CLM-20..CLM-24 deferred — not projected.
+- Resolution path: Add `run_01_oss_fastapi` to candidates when signal layer is evaluated.
+  No action required for vault build (projection not invoked in vault builder).
 
-**G3 — `projection_runtime.py` `run_id` defaults hardcoded to BlueEdge run**
+**G2 (prev. G3) — `projection_runtime.py` `run_id` defaults hardcoded to BlueEdge run**
 
 - Location: `scripts/pios/projection_runtime.py` lines 963, 1037, 1108, 1134, 1189, 1203, 1208
 - Description: Default `run_id="run_authoritative_recomputed_01"` at all five public API
@@ -387,16 +418,16 @@ project() / project_set() / export_fragments()
    - Iterate `signals_raw.get("signals", [])` → empty list → no crash
    - `total_signals=0`, `conf_dist={}` → valid empty state
 
-3. Signal claims CLM-20..CLM-24 will emit as BLOCKED (lines 1558–1571):
-   ```
-   status: BLOCKED — signal not present in registry
-   ```
-   This is the correct governed state when signals are NOT_EVALUATED.
-   Vault builder does not crash on missing signals.
+3. Signal claims: CLM-20..CLM-24 are DEFERRED or omitted.
+   Signal layer is NOT_EVALUATED (`emission_state=NOT_EVALUATED`, `total_signals=0`).
+   These claims are not evidence-applicable for second-client at this stage.
+   They are not generated as BLOCKED nodes. No BlueEdge signal names appear.
 
-4. Structural claims (CLM-01..CLM-17) will be correctly populated from
-   second-client artifacts. CLM-18 will show `total_signals=0`. CLM-19 will
-   show empty distribution.
+4. Structural claims are evidence-derived from second-client artifacts:
+   - CLM-01..CLM-17: populated from coverage, reconstruction, topology, gauge
+   - CLM-18: `total_signals=0` — accurate, evidence-grounded
+   - CLM-19: empty distribution — accurate
+   - Claim count is a derived output, not a parity target against BlueEdge's 27
 
 5. `--package-dir` override (STEP 10C) is available to point vault builder
    at correct second-client package directory.
@@ -406,10 +437,10 @@ project() / project_set() / export_fragments()
 - Use `--client e65d2f0a-dfa7-4257-9333-fcbb583f0880`
 - Use `--run run_01_oss_fastapi`
 - Use `--output-dir clients/e65d2f0a-.../vaults/run_01_oss_fastapi`
-- G1 (BlueEdge signal names in BLOCKED claims) is a known gap — documented, not blocking
-- G2 and G3 are projection-layer gaps — do NOT affect vault build execution
+- Vault claim count is evidence-derived; difference from BlueEdge count is expected, not a gap
+- G1 and G2 (renumbered) are projection-layer gaps — do NOT affect vault build execution
 
-**Projection runtime:** NOT READY for second-client without patching G2 and G3.
+**Projection runtime:** NOT READY for second-client without patching G1 and G2 (projection).
 Vault build does not invoke `projection_runtime.py`. Projection is deferred.
 
 ---
@@ -420,10 +451,14 @@ Vault build does not invoke `projection_runtime.py`. Projection is deferred.
 Score claims (CLM-09..CLM-12), topology claims (CLM-14..CLM-17), coverage (CLM-01..CLM-02),
 and execution layer (CLM-13) will all be correctly populated and evidence-traceable.
 
-Signal claims (CLM-18..CLM-24) will reflect the accurate state:
-- CLM-18: 0 governed intelligence signals
-- CLM-19: empty distribution
-- CLM-20..CLM-24: BLOCKED (signal not evaluated)
+**Claim set is evidence-derived, not parity-based:**
+- C1 (BlueEdge vault) is schema authority only — claim count and claim selection are
+  determined by available second-client evidence, not by matching BlueEdge's 27 claims
+- Structural claims applicable: CLM-01..CLM-17 (subject to artifact availability per claim)
+- CLM-18: 0 governed intelligence signals — evidence-accurate
+- CLM-19: empty distribution — evidence-accurate
+- CLM-20..CLM-24: DEFERRED / OMITTED — signal layer NOT_EVALUATED; these claims
+  are not generated; their absence is correct, not a deficiency
 
 The vault is a **structural assessment artifact** — the full commercially differentiated
 product requires signal layer execution (NOT_EVALUATED) which is deferred.
@@ -448,5 +483,7 @@ Claims that MAY be produced from this vault (after vault is built and validated)
 
 ## STEP 10H-R Status
 
-**COMPLETE** — canonical sources retrieved; all four C-items cited with exact paths;
-schema extracted; dependency map confirmed; 3 gaps declared; vault build: ALLOWED.
+**COMPLETE (corrected)** — canonical sources retrieved; all four C-items cited with exact paths;
+schema extracted; dependency map confirmed; 2 active gaps (projection layer only);
+C1 authority scope corrected to schema-only; CLM-20..CLM-24 DEFERRED (not BLOCKED);
+claim count evidence-derived; vault build: ALLOWED.
