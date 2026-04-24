@@ -488,7 +488,7 @@ def stage_02_lineage(client_id, run_id, dirs, log_level):
             os.remove(raw_input_path)
 
         logger.info("calling extract_ceu_lineage.py")
-        rc, stdout, stderr = run_script("extract_ceu_lineage.py", [])
+        rc, stdout, stderr = run_script("extract_ceu_lineage.py", ["--target-client", client_id])
         logger.debug("script stdout", output=stdout[-2000:] if stdout else "")
         if rc != 0:
             logger.error("script failed", returncode=rc, stderr=stderr[-500:])
