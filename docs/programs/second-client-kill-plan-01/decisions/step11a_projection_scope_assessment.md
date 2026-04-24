@@ -9,8 +9,8 @@
 
 ## Status
 
-**COMPLETE** — Projection scope fully assessed. Export strategy defined.
-Safe claim sets identified. Blocked sets documented. Invocation contract specified.
+**COMPLETE — AMENDED** — Export strategy corrected per program authority direction.
+`export-fragments` command is NOT USABLE for second-client. `LENS_EXECUTIVE_OVERVIEW` is BLOCKED, not partial-executable. STEP 11B must produce success-only fragments via individual `project` calls. No error files are acceptable outputs.
 
 ---
 
@@ -59,6 +59,8 @@ all_claim_ids = sorted({
 
 The command iterates the UNION of ALL CLAIM_SETS. There is no `--claims` filter. Signal claim IDs (CLM-20..24) are included because they appear in `SIGNAL_ZONE_*`, `LENS_SIGNAL_BLOCK`, and `LENS_EXECUTIVE_OVERVIEW`. When `_find_claim_file` returns None for an absent claim, `project()` returns a `ProjectionError` dict. **The error dict is WRITTEN as a JSON file.** Exit is always 0.
 
+**`export-fragments` is NOT USABLE for second-client.** It unconditionally generates CLM-20..24 error fragment files. Error files are not acceptable outputs. STEP 11B must use individual `project` calls targeting only the 15 structural claim IDs present in the vault.
+
 **`--vault` flag:** argparse declares `default=None`. However, `_default_vault_path()` (line 947–950) raises `ValueError("vault_path must be supplied explicitly")`. This means `--vault` is **effectively required at runtime** even though argparse doesn't enforce it at parse time. Omitting `--vault` raises a runtime error.
 
 **`--run-id` flag:** argparse default is `"run_authoritative_recomputed_01"`. Silently uses wrong run ID if omitted for second-client. Must be explicitly overridden.
@@ -101,29 +103,24 @@ All of these are in the vault and resolvable. The 15 structural claims covered b
 | `LENS_VERDICT_BLOCK` | CLM-25, CLM-13 | All ACTIVE ✓ |
 | `LENS_STRUCTURAL_BLOCK` | CLM-01, CLM-14, CLM-15, CLM-16, CLM-17 | All ACTIVE ✓ |
 
-**Mixed / Partial sets (PARTIAL — some claims in vault, some absent):**
+**Fully blocked sets:**
 
-| Set name | Signal claims (absent) | Structural claims (present) | Status |
-|----------|----------------------|------------------------------|--------|
-| `LENS_EXECUTIVE_OVERVIEW` | CLM-20..24 (5 absent) | CLM-09, CLM-10, CLM-25, CLM-18, CLM-19, CLM-12, CLM-11, CLM-01, CLM-13 (9 present) | PARTIAL |
-
-**Fully blocked sets (all claims absent):**
-
-| Set name | Claims | Status |
+| Set name | Claims | Reason |
 |----------|--------|--------|
-| `SIGNAL_ZONE_1` | CLM-20 | BLOCKED |
-| `SIGNAL_ZONE_2` | CLM-21 | BLOCKED |
-| `SIGNAL_ZONE_3` | CLM-22 | BLOCKED |
-| `SIGNAL_ZONE_4` | CLM-23 | BLOCKED |
-| `SIGNAL_ZONE_5` | CLM-24 | BLOCKED |
-| `LENS_SIGNAL_BLOCK` | CLM-20..24 | BLOCKED |
+| `SIGNAL_ZONE_1` | CLM-20 | Claim absent from vault |
+| `SIGNAL_ZONE_2` | CLM-21 | Claim absent from vault |
+| `SIGNAL_ZONE_3` | CLM-22 | Claim absent from vault |
+| `SIGNAL_ZONE_4` | CLM-23 | Claim absent from vault |
+| `SIGNAL_ZONE_5` | CLM-24 | Claim absent from vault |
+| `LENS_SIGNAL_BLOCK` | CLM-20..24 | All claims absent from vault |
+| `LENS_EXECUTIVE_OVERVIEW` | CLM-20..24 mixed with structural | Contains absent signal claims; partial execution not allowed |
 
 ### PUBLISH
 
 **ZONE-2 constraints confirmed:**
 - ZONE2_FORBIDDEN_CONTENT_SUBSTRINGS includes `"SIG-"` — signal IDs stripped from any ZONE-2 payload by projection runtime
 - CLM-25 ZONE-2 narrative is sanitized (internal codes stripped, hardcoded)
-- Error payloads for absent signal claims contain NO vault content (ZONE-0 protection)
+- Signal claim fragments (CLM-20..24) must NOT be generated; error files are not acceptable outputs
 
 **Activation gates (production guards — not projection gates):**
 - CLM-25 LENS activation: BLOCKED pending GAP-01 (CONCEPT-06) resolution
@@ -149,77 +146,86 @@ All of these are in the vault and resolvable. The 15 structural claims covered b
 
 ## Blocked Claim Sets
 
-**6 fully blocked (all claims absent from vault):**
+**7 sets — fully blocked:**
 - `SIGNAL_ZONE_1`, `SIGNAL_ZONE_2`, `SIGNAL_ZONE_3`, `SIGNAL_ZONE_4`, `SIGNAL_ZONE_5`
 - `LENS_SIGNAL_BLOCK`
-
-**1 partial:**
-- `LENS_EXECUTIVE_OVERVIEW`: 9 structural claims project successfully; 5 signal claims return `ProjectionError`. MUST NOT be used as a complete export.
+- `LENS_EXECUTIVE_OVERVIEW` — contains absent CLM-20..24; partial execution not allowed; BLOCKED in full
 
 ---
 
 ## Invocation Contract
 
-**`export-fragments` (full export — SAFE for second-client):**
+**`export-fragments` — NOT USABLE for second-client.**
+Generates CLM-20..24 error fragment files unconditionally. Must not be invoked.
+
+**Correct approach: individual `project` calls per claim × per zone.**
+
+STEP 11B must invoke `project` for each of the 15 structural claim IDs covered by CLAIM_SETS, at both ZONE-1 and ZONE-2, writing stdout to individual fragment files:
 
 ```bash
-python3 scripts/pios/projection_runtime.py export-fragments \
-  --output-dir clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/fragments/run_01_oss_fastapi \
-  --run-id run_01_oss_fastapi \
-  --vault clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/vaults/run_01_oss_fastapi_fixed
+VAULT="clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/vaults/run_01_oss_fastapi_fixed"
+OUT="clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/fragments/run_01_oss_fastapi"
+RUN="run_01_oss_fastapi"
+
+# 15 structural claim IDs present in vault and covered by named CLAIM_SETS
+CLAIMS="CLM-01 CLM-03 CLM-09 CLM-10 CLM-11 CLM-12 CLM-13 CLM-14 CLM-15 CLM-16 CLM-17 CLM-18 CLM-19 CLM-25 CLM-27"
+
+for CLM in $CLAIMS; do
+  for ZONE in ZONE-1 ZONE-2; do
+    python3 scripts/pios/projection_runtime.py project "$CLM" \
+      --zone "$ZONE" --depth L1 \
+      --run-id "$RUN" \
+      --vault "$VAULT" \
+      > "${OUT}/${CLM}-${ZONE}-L1.json"
+  done
+done
 ```
 
-**`project-set` (targeted structural set — SAFE):**
-
-```bash
-python3 scripts/pios/projection_runtime.py project-set LENS_SCORE_BLOCK \
-  --run-id run_01_oss_fastapi \
-  --vault clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/vaults/run_01_oss_fastapi_fixed \
-  --zone ZONE-2 --depth L1
-```
-
-**Required flags (both invocation forms):**
+**Required flags (all invocations):**
 - `--vault <path>` — REQUIRED; raises ValueError if omitted
 - `--run-id run_01_oss_fastapi` — REQUIRED; defaults to BlueEdge run ID if omitted
+- `--zone` — REQUIRED; must be set explicitly per invocation
+- `--depth L1` — REQUIRED; specify explicitly
 
-**Optional flags:**
-- `--zone` — defaults to ZONE-1
-- `--depth` — defaults to L1
-- `--persona` — defaults to PERSONA_SHARED
+**Forbidden invocations:**
+- `export-fragments` — NOT USABLE
+- Any invocation targeting CLM-20, CLM-21, CLM-22, CLM-23, CLM-24
+- Any invocation of `LENS_EXECUTIVE_OVERVIEW`, `LENS_SIGNAL_BLOCK`, `SIGNAL_ZONE_*`
 
 ---
 
 ## Expected Output
 
-**`export-fragments` output:**
+**STEP 11B output (individual `project` calls — success only):**
 
 | File type | Count | Description |
 |-----------|-------|-------------|
 | Success fragments (ZONE-1) | 15 | CLM-01, 03, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 25, 27 |
 | Success fragments (ZONE-2) | 15 | Same 15 claims at ZONE-2 |
-| Error fragments (ZONE-1) | 5 | CLM-20..24 (NOT_FOUND; no vault content) |
-| Error fragments (ZONE-2) | 5 | CLM-20..24 (NOT_FOUND; no vault content) |
-| **Total files** | **40** | **Exit: 0** |
-| **Success count returned** | **30** | |
+| Error fragments | **0** | None — signal claims are not invoked |
+| **Total files** | **30** | **All success** |
 
-**Error files for CLM-20..24:** Correct and expected. Contain no vault content. Represent "signal layer NOT_EVALUATED — claim not generated." Not a failure condition.
+**Validation criterion:** All 30 fragment files must be free of `"error_type"` keys. Any file containing `"error_type"` is a FAIL-STOP condition.
 
-**Claims NOT exported by `export-fragments` (not in any CLAIM_SET):**
-CLM-02, CLM-04, CLM-05, CLM-06, CLM-07, CLM-08, CLM-26 — can be accessed via individual `project CLM-XX` calls if needed.
+**Claims not included in STEP 11B export (not in any CLAIM_SET):**
+CLM-02, CLM-04, CLM-05, CLM-06, CLM-07, CLM-08, CLM-26 — present in vault; accessible via individual `project CLM-XX` calls outside STEP 11B scope if needed.
 
 ---
 
 ## Export Strategy for STEP 11B
 
-Run `export-fragments` with the invocation above. The output will be:
-- 30 valid structural fragment files (ZONE-1 + ZONE-2 for 15 claims)
-- 10 error files for CLM-20..24 (correct, expected, non-contaminating)
-- Exit 0
+Run individual `project` calls for each of the 15 structural claim IDs × 2 zones, using the invocation contract above. The output will be:
+- 30 success fragment files (ZONE-1 + ZONE-2 for 15 claims)
+- 0 error files
 
-Post-export: verify success count = 30 (not 40). Presence of 10 error files is expected and must not be treated as a build failure.
+**FAIL-STOP conditions for STEP 11B:**
+- Any fragment file containing `"error_type"` → STOP
+- Any CLM-20..24 file present in output directory → STOP
+- Any fragment file count ≠ 30 → STOP
+- Any non-zero exit from any individual `project` invocation → STOP
 
-Do NOT use `LENS_EXECUTIVE_OVERVIEW` or any `SIGNAL_ZONE_*` / `LENS_SIGNAL_BLOCK` as complete projection sets for second-client.
-
+Do NOT invoke `export-fragments`.
+Do NOT invoke any SIGNAL_ZONE, LENS_SIGNAL_BLOCK, or LENS_EXECUTIVE_OVERVIEW.
 Do NOT activate CLM-25 on LENS surface until GAP-01 resolved.
 
 ---
@@ -230,8 +236,10 @@ Do NOT activate CLM-25 on LENS surface until GAP-01 resolved.
 
 ```
 MODE: CONTROLLED RUNTIME EXECUTION
-Script: scripts/pios/projection_runtime.py export-fragments
-Required flags: --vault, --run-id run_01_oss_fastapi
-Expected: exit 0, success count = 30, 40 total files
-Validation: count success files, confirm CLM-20..24 are error-only, no vault content in error files
+Script: scripts/pios/projection_runtime.py project (individual calls)
+Claims: CLM-01 CLM-03 CLM-09 CLM-10 CLM-11 CLM-12 CLM-13 CLM-14 CLM-15 CLM-16 CLM-17 CLM-18 CLM-19 CLM-25 CLM-27
+Zones: ZONE-1, ZONE-2
+Required flags: --vault, --run-id run_01_oss_fastapi, --zone (explicit), --depth L1
+Expected: 30 files, all success, 0 error files
+Validation: grep "error_type" *.json → must return empty; ls | wc -l → must equal 30
 ```
