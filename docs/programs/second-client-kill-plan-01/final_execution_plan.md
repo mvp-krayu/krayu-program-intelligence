@@ -3,10 +3,11 @@
 Stream: PI.PRODUCTIZATION.SECOND-CLIENT.EXECUTION-PLAN.01
 Branch: feature/second-client-kill-plan-01
 Date: 2026-04-24
-Status: AMENDED — 4-Brain governance enforcement + formal brain gating applied
+Status: AMENDED — 4-Brain governance enforcement + formal brain gating + intake selector abstraction applied
 Inputs: gap_assessment_report.md, execution_readiness_plan.md
 Amendment 1: PI.PRODUCTIZATION.SECOND-CLIENT.EXECUTION-PLAN.01 — 4-Brain Amendment
 Amendment 2: PI.PRODUCTIZATION.SECOND-CLIENT.EXECUTION-PLAN.01 — Brain Gating Amendment
+Amendment 3: PI.PRODUCTIZATION.SECOND-CLIENT.EXECUTION-PLAN.01 — Intake Selector / A3S Source Abstraction
 
 ---
 
@@ -59,6 +60,56 @@ The PiOS/PSEE architectural clarification resolves the following items from the 
 - **GAP-12 resolved:** `scripts/psee/run_end_to_end.py` is the authoritative production execution path.
 - **GAP-01 downgraded (methodology only):** `scripts/pios/40.2/build_evidence_inventory.py` is a PiOS methodology validator, not the PSEE intake mechanism. PSEE intake is parameterized.
 - **GAP-03 resolved:** S3 activation is covered by PSEE TRANSFORMATION/ENVELOPE stages. No 43.x/44.x scripts are required before execution.
+
+---
+
+### Intake Selector Model
+
+**INTAKE SELECTOR MODEL**
+
+The intake selector is the architectural abstraction between client evidence and the pipeline. It governs how evidence is identified, bounded, and presented to PSEE — independently of where that evidence lives. The first second-client run may use a local directory, but the intake model must not be local-directory-specific. The selector record is not deferred.
+
+**source_selector schema:**
+
+```
+source_selector:
+  selector_id:        string — unique identifier for this selector instance (e.g. "sel_001_<client-id>")
+  selector_type:      enum — one of the supported types below
+  source_uri:         string — resolvable path or URI to the evidence source
+  source_version:     string — version or snapshot identifier (e.g. git SHA, export date, archive checksum)
+  adapter_required:   boolean — true if selector_type requires a non-trivial adapter to resolve to raw artifacts
+  evidence_boundary:  object — scope declaration: {period_start, period_end, included_types[], exclusions[]}
+  checksum_manifest:  string — path to the checksum file or inline SHA-256 of root evidence set
+  allowed_runtime_mode: enum — "psee_local" | "psee_remote" | "future"
+```
+
+**Supported initial selector types:**
+
+| selector_type | Description | adapter_required | Status |
+|---|---|---|---|
+| `local_directory` | Evidence is a local filesystem directory | false | Active — initial run |
+| `git_repository` | Evidence is a git repo at a given ref | false (PSEE native) | Deferred — adapter not yet implemented |
+| `jira_export` | Evidence is a Jira issue export (XML/JSON) | true | Deferred |
+| `confluence_export` | Evidence is a Confluence space export | true | Deferred |
+| `archive_bundle` | Evidence is a compressed archive (.zip/.tar.gz) | false (unpack step) | Deferred |
+| `a3s_future` | Anything-as-a-Source — arbitrary structured or unstructured source | true | Deferred — A3S stream required |
+
+**Note:** Additional selector types are deferred. Only `local_directory` is active for the initial second-client run. The selector model itself, including the selector record and the `local_directory` resolution path, is a required artifact — it is not deferred.
+
+**Brain governance for the Intake Selector:**
+
+- **CANONICAL BRAIN** — defines what counts as valid source evidence; owns the evidence boundary declaration and selector validity. A selector without a declared evidence boundary is not a valid selector. The selector record is a canonical act: it establishes what evidence the run is derived from.
+
+- **CODE BRAIN** — implements selector resolution: maps `selector_type` to adapter or runtime input; resolves `source_uri` to the path PSEE receives as `--source`. For `local_directory`, resolution is direct. For deferred types, a resolver adapter must be registered before use.
+
+- **PRODUCT BRAIN** — owns the onboarding question model. The operator must answer:
+  - "What source are you providing?"
+  - "What system does it represent?"
+  - "What period does it cover?"
+  - "What evidence types are included?"
+  These answers populate the `evidence_boundary` and `source_version` fields of the selector record.
+
+- **PUBLISH BRAIN** — governs what source type can be claimed externally. Prohibits claiming live system integration when the actual run used a local export or filesystem copy. The `selector_type` in the selector record is the authoritative basis for any external claim about data sourcing.
 
 ---
 
@@ -172,21 +223,25 @@ CANONICAL
 - No entry for the second client exists in `clients/registry/client_index.json`; this step is the founding act — it must not be repeated for an already-registered client
 - DECISION-01 is resolved: second-client business_client_id and UUID have been assigned by human authority
 - `clients/blueedge/` and `docs/baseline/pios_baseline_v1.0.md` are confirmed unmodified
+- Intake selector has been approved by CANONICAL brain: `selector_type` is a supported type; evidence boundary is declared against the selector scope; the evidence set referenced by the selector is real (no synthetic or placeholder data)
 
 CODE
 - DECISION-01 resolved: UUID and business_client_id values are in hand
 - DECISION-02 resolved: tenant parameter mapping confirmed (whether `--tenant` = client UUID)
+- DECISION-03 resolved: `selector_type` and `source_uri` are defined and recorded; `selector_type` maps to a supported resolution mode
 - `clients/registry/client_index.json` is readable and writable
 - `clients/client_template_01/` is available as structural reference for directory scaffold
 
 PRODUCT
 - Engagement has been accepted and is active
-- Second-client evidence is committed and staged at a known local path
+- Source selector has been selected: `selector_type` and `source_uri` are defined; operator has answered the four intake selector questions (source system, represented system, period covered, evidence types included)
+- Second-client evidence is committed and staged at the location identified by the selector's `source_uri`
 - Operator has confirmed evidence is real — no synthetic or placeholder data
 
 PUBLISH
 - No external communications about the second client have been made referencing the client's identity
 - No internal documents reference the second client by name in any externally reachable artifact
+- No claim about data sourcing method (live integration, export, local copy) has been made externally
 
 ---
 
@@ -227,19 +282,24 @@ EXIT CONDITIONS
 CANONICAL
 - `clients/registry/client_index.json` contains a new entry: UUID, business_client_id, `lifecycle_state: ACTIVE`
 - No modification to `clients/blueedge/` or any other existing client directory
+- Evidence boundary is established and documented in the intake selector record; `selector_type` is recorded as the authoritative source classification for this run
 
 CODE
 - `clients/<new-client-id>/psee/config/runtime_profile.json` exists
 - Directory structure matches scaffold; no symlinks to `clients/blueedge/`
 - DECISION-02 resolution recorded (tenant mapping confirmed)
+- `intake_selector_record` created: a structured record containing `selector_id`, `selector_type`, `source_uri`, `source_version`, `evidence_boundary`, `checksum_manifest`, and `allowed_runtime_mode`; linked to the client's `business_client_id`
+- `selector_type` recorded in the intake selector record for future repeatability; the exact selector used for this run must be reproducible
 
 PRODUCT
 - Operator checklist complete (all 5 items confirmed)
 - Time-to-onboarding value recorded for PRODUCT brain emission
+- All four intake selector questions answered and recorded: source system, represented system, period covered, evidence types included
 
 PUBLISH
 - No external artifact has been created or modified referencing the second-client identity
 - Client identity remains confidential
+- Source type (`selector_type = local_directory`) recorded internally; no external claim about data sourcing made
 
 ---
 
@@ -703,11 +763,12 @@ ENTRY CONDITIONS
 
 CANONICAL
 - STEPs 0–6 EXIT CONDITIONS all satisfied
-- Evidence boundary is defined: DECISION-03 resolved (evidence path, source type, coverage estimate confirmed)
+- DECISION-03 resolved: intake selector record is present; `selector_type`, `source_uri`, `source_version`, and `evidence_boundary` are defined; evidence boundary is declared
 - No second-client PSEE run has been executed; no package artifacts exist yet
 
 CODE
-- Second-client evidence staged at confirmed source path
+- Intake selector record present (created at STEP 0 EXIT CONDITIONS); `selector_id` is known
+- `selector_type = local_directory` for this run; `source_uri` resolves to a local directory containing real evidence
 - PSEE runtime environment confirmed: Python version and dependencies match requirements
 - Code tag for PSEE runtime recorded (required for deterministic rerun readiness)
 - DECISION-02 resolved: tenant parameter confirmed
@@ -715,6 +776,7 @@ CODE
 
 PRODUCT
 - Evidence is real — no synthetic or placeholder data; operator has confirmed
+- Intake selector questions answered at STEP 0; source is confirmed as a local directory for this run
 - Engagement is active; client has provided evidence under engagement terms
 
 PUBLISH
@@ -732,10 +794,11 @@ EXECUTION
 - The pipeline must produce all five required package artifacts; a run that exits at any intermediate stage has not established canonical truth
 
 **CODE BRAIN**
+- For the initial second-client run: `selector_type = local_directory`; `source_uri` is the local evidence directory path. The intake selector record resolves `source_uri` to the path passed to `--source-selector`. The intake model must not be written as local-directory-specific — the `--source-selector` argument receives the `selector_id`; the selector record holds the actual path.
 - Commands in sequence:
   ```
   python3 scripts/pios/pios.py intake create \
-      --source-path <evidence-path> \
+      --source-selector <selector_id> \
       --tenant <new-client-id> \
       --intake-id <intake-id>
 
@@ -746,10 +809,11 @@ EXECUTION
 
   python3 scripts/psee/run_end_to_end.py \
       --client <new-client-uuid> \
-      --source <evidence-path> \
+      --source-selector <selector_id> \
       --run-id <new-run-id> \
       --target gauge
   ```
+- The `<selector_id>` value is the `selector_id` from the intake selector record created at STEP 0. PSEE resolves the actual source path from the selector record; callers do not pass a raw path.
 - PSEE exit code 0 = pipeline complete; any non-zero exit = stop and escalate; do not proceed
 
 **PRODUCT BRAIN**
@@ -1427,6 +1491,12 @@ The following are NOT required before the first second-client run and are safe t
 | Brain emission automation script (GAP-13 partial) | Manual fill sufficient for first run | CODE brain deferred |
 | 41.1 semantic layer rebuild (GAP-06) | PSEE derives topology at runtime; docs/pios/41.1/ is PiOS methodology documentation for BlueEdge | CANONICAL — post-run CODE brain emission documents the delta |
 | client_template_01 formal promotion (GAP-16) | STEP 0 scaffold is created manually; template promotion is a process improvement | PRODUCT brain deferred |
+| Git live source adapter (`git_repository` selector type) | Intake selector model declares this type; adapter implementation not required for local_directory run | CODE brain deferred |
+| Jira live source adapter (`jira_export` selector type) | Intake selector model declares this type; adapter implementation not required for initial run | CODE brain deferred |
+| Confluence live source adapter (`confluence_export` selector type) | Intake selector model declares this type; adapter implementation not required for initial run | CODE brain deferred |
+| A3S selector framework implementation (`a3s_future` selector type) | Intake selector model declares this type as a future capability; full A3S framework requires a dedicated stream | CODE brain deferred to A3S stream |
+
+**Note on intake selector deferral boundary:** The selector model itself is NOT deferred. The `intake_selector_record`, the `source_selector` schema, and the `local_directory` resolution path are required artifacts before STEP 0 executes. Only additional adapters beyond `local_directory` are deferred.
 
 ---
 
@@ -1468,10 +1538,15 @@ Required for: STEP 7 (`pios ig materialize --tenant`)
 Brain authority: CODE BRAIN (parameter resolution is an implementation question)
 What is needed: Confirm whether `--tenant` maps to client UUID or requires a separate tenant directory
 
-**DECISION-03: Second-client evidence package**
-Required for: STEP 7 (source path and intake)
-Brain authority: CANONICAL BRAIN (evidence boundary is a canonical gate)
-What is needed: Path to staged evidence; source type; minimum file count and coverage estimate
+**DECISION-03: Intake Selector**
+Required for: STEP 0 (intake_selector_record creation) and STEP 7 (pipeline execution)
+Brain authority: CANONICAL BRAIN (evidence boundary is a canonical gate); CODE BRAIN (selector_type to source resolution)
+What is needed:
+- `selector_type` — required; from supported types; `local_directory` for initial run
+- `source_uri` — required; resolvable path or URI to the evidence source
+- `source_version` — required; version or snapshot identifier for evidence reproducibility (e.g. directory snapshot date, archive checksum)
+- `evidence_boundary` — required; scope declaration including period, included evidence types, and any exclusions
+- `checksum_manifest` — required; for deterministic rerun verification; SHA-256 of root evidence set or path to manifest file
 
 If DECISION-01, DECISION-02, and DECISION-03 are resolved, there are no remaining architectural or technical decisions blocking execution.
 
