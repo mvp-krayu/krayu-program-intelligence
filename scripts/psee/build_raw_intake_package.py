@@ -87,6 +87,12 @@ FORBIDDEN_SOURCE_CLASSES = {
 
 ALLOWED_SOURCE_CLASS = "AUTHORITATIVE_INTAKE"
 
+# Directory-mode: names and extensions excluded from recursive scan
+EXCLUDED_DIR_NAMES = frozenset({
+    ".git", "__pycache__", ".venv", "venv", "node_modules", "build", "dist",
+})
+EXCLUDED_FILE_EXTENSIONS = frozenset({".pyc"})
+
 
 # ── HELPERS ───────────────────────────────────────────────────────────────────
 def log(msg):
@@ -431,11 +437,160 @@ def validate_output(out_dir):
     log("VALIDATION_PASS")
 
 
+# ── STAGE: SOURCE_SCAN_DIR (directory-mode) ──────────────────────────────────
+def source_scan_dir(source_dir, client_uuid):
+    """Recursively enumerate all non-excluded files under source_dir.
+
+    D1: directory must exist, be a real directory, and resolve to a path
+    under clients/<client_uuid>/. No FORBIDDEN_PATH_FRAGMENTS allowed.
+    """
+    log("--- SOURCE_SCAN_DIR ---")
+
+    abs_source = os.path.realpath(os.path.abspath(source_dir))
+    expected_prefix = os.path.realpath(os.path.join(REPO_ROOT, "clients", client_uuid))
+
+    if not os.path.isdir(abs_source):
+        fail("SOURCE_SCAN_DIR", "SOURCE_NOT_FOUND",
+             f"not a directory or does not exist: {source_dir}")
+
+    if not abs_source.startswith(expected_prefix + os.sep) and abs_source != expected_prefix:
+        fail("SOURCE_SCAN_DIR", "PATH_VIOLATION",
+             f"source-dir must be under clients/{client_uuid}/ — got: {source_dir}")
+
+    rel_source = os.path.relpath(abs_source, REPO_ROOT)
+    for frag in FORBIDDEN_PATH_FRAGMENTS:
+        if frag in rel_source:
+            fail("SOURCE_SCAN_DIR", "FORBIDDEN_PATH",
+                 f"source-dir contains forbidden fragment {frag!r}: {rel_source}")
+
+    files = []
+    for dirpath, dirnames, filenames in os.walk(abs_source):
+        dirnames[:] = sorted(d for d in dirnames if d not in EXCLUDED_DIR_NAMES)
+        for fname in sorted(filenames):
+            _, ext = os.path.splitext(fname)
+            if ext in EXCLUDED_FILE_EXTENSIONS:
+                continue
+            files.append(os.path.join(dirpath, fname))
+
+    if not files:
+        fail("SOURCE_SCAN_DIR", "SOURCE_UNAVAILABLE",
+             f"no files found under {rel_source} after exclusions")
+
+    log(f"  source_dir: {rel_source}")
+    log(f"  files:      {len(files)}")
+    log("SOURCE_SCAN_DIR_PASS")
+    return abs_source, files
+
+
+# ── STAGE: EXTRACTION (directory-mode) ───────────────────────────────────────
+def extract_from_source_dir(abs_source_dir, files):
+    """Minimal structural extraction from a raw source directory.
+
+    Produces a root REPOSITORY entity plus top-level PACKAGE and MODULE
+    entities derivable from the directory's immediate children. No
+    interpretation — structural enumeration only.
+    """
+    log("--- EXTRACTION (source-dir mode) ---")
+
+    dir_name = os.path.basename(abs_source_dir)
+    entities = []
+    relationships = []
+    metrics = {}
+    events = []
+
+    # Root entity — always present
+    entities.append({
+        "id":     node_id(dir_name),
+        "label":  dir_name,
+        "domain": "",
+        "type":   "REPOSITORY",
+    })
+
+    try:
+        for entry in sorted(os.listdir(abs_source_dir)):
+            entry_path = os.path.join(abs_source_dir, entry)
+            if entry in EXCLUDED_DIR_NAMES:
+                continue
+            if os.path.isdir(entry_path):
+                init_py = os.path.join(entry_path, "__init__.py")
+                if os.path.isfile(init_py):
+                    entities.append({
+                        "id":     node_id(f"{dir_name}/{entry}"),
+                        "label":  entry,
+                        "domain": dir_name,
+                        "type":   "PACKAGE",
+                    })
+            elif os.path.isfile(entry_path) and entry.endswith(".py") and entry != "__init__.py":
+                module_name = entry[:-3]
+                entities.append({
+                    "id":     node_id(f"{dir_name}/{module_name}"),
+                    "label":  module_name,
+                    "domain": dir_name,
+                    "type":   "MODULE",
+                })
+    except Exception:
+        pass
+
+    metrics["file_count"] = len(files)
+
+    log(f"  entities={len(entities)}  relationships={len(relationships)}  "
+        f"metrics={len(metrics)}  events={len(events)}")
+    log("EXTRACTION_PASS")
+    return entities, relationships, metrics, events
+
+
+# ── STAGE: MANIFEST_BUILD (directory-mode) ───────────────────────────────────
+def build_manifest_dir(abs_source_dir, files, client_uuid):
+    """Build source manifest from a directory scan result."""
+    log("--- MANIFEST_BUILD ---")
+
+    hasher = hashlib.sha256()
+    artifact_entries = []
+    for fpath in sorted(files):
+        fhash = sha256_file(fpath)
+        hasher.update(fhash.encode())
+        artifact_entries.append({
+            "path":         os.path.relpath(fpath, REPO_ROOT),
+            "source_class": ALLOWED_SOURCE_CLASS,
+            "sha256":       fhash,
+        })
+
+    provenance_hash = hasher.hexdigest()
+    rel_source_dir  = os.path.relpath(abs_source_dir, REPO_ROOT)
+
+    manifest = {
+        "schema_version": "1.0",
+        "stream":         STREAM_ID,
+        "client_uuid":    client_uuid,
+        "generated_at":   datetime.now(timezone.utc).isoformat(),
+        "admissibility_metadata": {
+            "source_class":      ALLOWED_SOURCE_CLASS,
+            "construction_mode": "FIRST_RUN_INTAKE",
+            "source_dir":        rel_source_dir,
+            "file_count":        len(files),
+            "aggregate_hash":    provenance_hash,
+            "source_artifacts":  [a["path"] for a in artifact_entries],
+            "provenance_hash":   provenance_hash,
+        },
+        "source_artifacts":  artifact_entries,
+        "provenance_hash":   provenance_hash,
+    }
+
+    log(f"  source_dir:      {rel_source_dir}")
+    log(f"  files:           {len(artifact_entries)}")
+    log(f"  provenance_hash: {provenance_hash[:16]}...")
+    log("MANIFEST_BUILD_PASS")
+    return manifest, provenance_hash
+
+
 # ── MAIN ──────────────────────────────────────────────────────────────────────
 def main():
     p = argparse.ArgumentParser(
         description="BlueEdge Raw Intake Package Builder — WP-15B")
     p.add_argument("--client", required=True, help="Client UUID")
+    p.add_argument("--source-dir", dest="source_dir", default=None,
+                   help="Source directory for directory-mode intake (optional; "
+                        "when absent, legacy scan of clients/<uuid>/input/ is used)")
     args = p.parse_args()
     client_uuid = args.client
 
@@ -443,12 +598,21 @@ def main():
     print(f"client_uuid: {client_uuid}")
     print()
 
-    candidates  = source_scan(client_uuid)
-    admissible  = source_classification(candidates, client_uuid)
-    admissible  = source_validation(admissible, client_uuid)
-    entities, rels, metrics, events = extract_all(admissible)
-    manifest, prov_hash = build_manifest(admissible, client_uuid)
-    out_dir     = output_write(client_uuid, manifest, entities, rels, metrics, events)
+    if args.source_dir:
+        # Directory-mode: explicit source directory provided
+        abs_source, files      = source_scan_dir(args.source_dir, client_uuid)
+        entities, rels, metrics, events = extract_from_source_dir(abs_source, files)
+        manifest, prov_hash    = build_manifest_dir(abs_source, files, client_uuid)
+        metrics["aggregate_hash"] = prov_hash
+    else:
+        # Legacy scan-mode: enumerate clients/<uuid>/input/ and config/ (unchanged)
+        candidates  = source_scan(client_uuid)
+        admissible  = source_classification(candidates, client_uuid)
+        admissible  = source_validation(admissible, client_uuid)
+        entities, rels, metrics, events = extract_all(admissible)
+        manifest, prov_hash = build_manifest(admissible, client_uuid)
+
+    out_dir = output_write(client_uuid, manifest, entities, rels, metrics, events)
     validate_output(out_dir)
 
     print()

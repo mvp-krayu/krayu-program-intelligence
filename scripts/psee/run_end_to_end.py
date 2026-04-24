@@ -401,7 +401,10 @@ def stage_01_intake(client_id, run_id, dirs, log_level, source=None):
     # ── STANDARD MODE: call build_raw_intake_package.py ───────────────────────
     try:
         logger.info("calling build_raw_intake_package.py", script="build_raw_intake_package.py")
-        rc, stdout, stderr = run_script("build_raw_intake_package.py", ["--client", client_id])
+        intake_args = ["--client", client_id]
+        if source:
+            intake_args += ["--source-dir", source]
+        rc, stdout, stderr = run_script("build_raw_intake_package.py", intake_args)
         logger.debug("script stdout", output=stdout[-2000:] if stdout else "")
         if rc != 0:
             logger.error("script failed", returncode=rc, stderr=stderr[-500:])
