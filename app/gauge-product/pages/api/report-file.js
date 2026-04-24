@@ -34,8 +34,7 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname  = path.dirname(__filename)
 
-const REPO_ROOT   = path.resolve(__dirname, '..', '..', '..', '..')
-const REPORTS_DIR = path.join(REPO_ROOT, 'clients', 'blueedge', 'reports')
+const REPORTS_DIR = process.env.REPORTS_DIR || null
 
 const VALID_LEGACY   = /^lens_report_\d{8}_\d{6}\.html$/
 const VALID_TIER1    = /^lens_tier1_(evidence_brief|narrative_brief)(_pub)?\.html$/
@@ -62,6 +61,10 @@ function resolveFilePath(name) {
 export default function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ status: 'error', reason: 'METHOD_NOT_ALLOWED' })
+  }
+
+  if (!REPORTS_DIR) {
+    return res.status(503).json({ status: 'error', reason: 'REPORTS_DIR_NOT_CONFIGURED' })
   }
 
   const { name, download } = req.query

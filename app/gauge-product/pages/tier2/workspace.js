@@ -23,7 +23,11 @@ const VaultGraph = dynamic(() => import('../../components/VaultGraph'), { ssr: f
 // Vault index resolution
 // ---------------------------------------------------------------------------
 
-const VAULT_INDEX_URL = '/vault/blueedge/run_01_authoritative_generated/vault_index.json'
+const _VAULT_CLIENT    = process.env.NEXT_PUBLIC_VAULT_CLIENT || null
+const _VAULT_RUN_ID    = process.env.NEXT_PUBLIC_VAULT_RUN_ID || null
+const VAULT_INDEX_URL  = (_VAULT_CLIENT && _VAULT_RUN_ID)
+  ? `/vault/${_VAULT_CLIENT}/${_VAULT_RUN_ID}/vault_index.json`
+  : null
 
 function resolveVaultLink(type, id, vi) {
   if (!vi || vi.export_status !== 'EXPORTED') return null
@@ -519,6 +523,7 @@ export default function Tier2WorkspacePage() {
 
   // Load vault index
   useEffect(() => {
+    if (!VAULT_INDEX_URL) return
     fetch(VAULT_INDEX_URL)
       .then(r => r.ok ? r.json() : null)
       .then(data => { if (data?.export_status === 'EXPORTED') setVaultIndex(data) })

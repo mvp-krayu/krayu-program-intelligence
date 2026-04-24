@@ -4,7 +4,7 @@ PSEE Runtime Envelope Builder — BlueEdge
 Stream: PSEE.RECONCILE.1.WP-10
 
 Builds a deterministic, replayable runtime package for the BlueEdge client
-under clients/blueedge/psee/runs/run_01_authoritative/package/.
+under clients/<client>/psee/runs/<run_id>/package/.
 
 Usage:
     python3 scripts/psee/build_runtime_envelope.py
@@ -14,15 +14,21 @@ Exit codes:
     1 = BUILD_FAILED
 """
 
+import argparse
 import json
 import hashlib
 import os
 import sys
 from datetime import datetime, timezone
 
+_parser = argparse.ArgumentParser(description="PSEE Runtime Envelope Builder")
+_parser.add_argument("--client", required=True, help="Client business_id or UUID")
+_parser.add_argument("--run-id", default="run_01_authoritative", dest="run_id", help="Run ID")
+_args = _parser.parse_args()
+
 # ── IDENTITY ──────────────────────────────────────────────────────────────────
-RUN_ID = "run_01_authoritative"
-CLIENT_ID = "blueedge"
+RUN_ID = _args.run_id
+CLIENT_ID = _args.client
 PACKAGE_VERSION = "1.0"
 SOURCE_SYSTEM = "PSEE"
 
@@ -295,7 +301,7 @@ Consumption Permission:
 - CONSUME AS AUTHORITATIVE
 
 Evidence Basis:
-- BlueEdge run_01_authoritative package; PSEE-GAUGE.0 authority chain;
+- PSEE runtime package; PSEE-GAUGE.0 authority chain;
   canonical score 60/CONDITIONAL; projection 100 via PR-02;
   confidence band [60, 100]; DIM-01=COMPUTED (100.0% coverage, 30/30 units);
   DIM-02=PASS (0 violations, 4/4 axes); DIM-03=CLEAR; DIM-04=NONE;

@@ -28,18 +28,6 @@ from pathlib import Path
 CONTRACT_ID          = "PSEE.BLUEEDGE.GAUGE.HANDOFF.01"
 REQUIRED_COLLECTIONS = ("nodes", "edges", "signals", "constraint_flags")
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
-
-DEFAULT_ENVELOPE = (
-    REPO_ROOT
-    / "clients"
-    / "1de0d815-0721-58e9-bc8d-ca83e70fa903"
-    / "psee"
-    / "runs"
-    / "run_335c0575a080"
-    / "binding"
-    / "binding_envelope.json"
-)
 
 
 # ---------------------------------------------------------------------------
@@ -346,8 +334,8 @@ def main():
     )
     parser.add_argument(
         "--envelope",
-        default=str(DEFAULT_ENVELOPE),
-        help="Path to binding_envelope.json (default: canonical client envelope)",
+        required=True,
+        help="Path to binding_envelope.json",
     )
     args = parser.parse_args()
 

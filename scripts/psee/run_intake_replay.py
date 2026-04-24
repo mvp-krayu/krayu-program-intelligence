@@ -4,8 +4,8 @@ PSEE Intake Replay — BlueEdge
 Stream: PSEE.RECONCILE.1.WP-10
 
 Replays PiOS intake deterministically from the built package.
-Reads from:   clients/blueedge/psee/runs/run_01_authoritative/package/
-Writes to:    clients/blueedge/psee/runs/run_01_authoritative/intake/
+Reads from:   clients/<client>/psee/runs/<run_id>/package/
+Writes to:    clients/<client>/psee/runs/<run_id>/intake/
 
 Usage:
     python3 scripts/psee/run_intake_replay.py
@@ -15,14 +15,20 @@ Exit codes:
     1 = INTAKE_FAILED
 """
 
+import argparse
 import json
 import os
 import sys
 from datetime import datetime, timezone
 
+_parser = argparse.ArgumentParser(description="PSEE Intake Replay")
+_parser.add_argument("--client", required=True, help="Client business_id or UUID")
+_parser.add_argument("--run-id", default="run_01_authoritative", dest="run_id", help="Run ID")
+_args = _parser.parse_args()
+
 # ── IDENTITY ──────────────────────────────────────────────────────────────────
-RUN_ID = "run_01_authoritative"
-CLIENT_ID = "blueedge"
+RUN_ID = _args.run_id
+CLIENT_ID = _args.client
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 BASE = os.path.join(REPO_ROOT, "clients", CLIENT_ID, "psee", "runs", RUN_ID)

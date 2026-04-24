@@ -19,11 +19,11 @@ import Link from 'next/link'
 // Vault index location (single authoritative run)
 // ---------------------------------------------------------------------------
 
-const CLIENT   = 'blueedge'
-const RUN_ID   = 'run_01_authoritative_generated'
-const INDEX_PATH = path.join(
-  process.cwd(), 'public', 'vault', CLIENT, RUN_ID, 'vault_index.json'
-)
+const CLIENT     = process.env.VAULT_CLIENT || null
+const RUN_ID     = process.env.VAULT_RUN_ID || null
+const INDEX_PATH = (CLIENT && RUN_ID)
+  ? path.join(process.cwd(), 'public', 'vault', CLIENT, RUN_ID, 'vault_index.json')
+  : null
 
 // ---------------------------------------------------------------------------
 // Resolution
@@ -65,6 +65,10 @@ export async function getServerSideProps({ query }) {
     return { props: { error: 'MISSING_PARAMS', type: type || null, id: id || null } }
   }
 
+  if (!INDEX_PATH) {
+    return { props: { error: 'VAULT_NOT_CONFIGURED', type, id } }
+  }
+
   let vi = null
   try {
     vi = JSON.parse(fs.readFileSync(INDEX_PATH, 'utf8'))
@@ -86,7 +90,8 @@ export async function getServerSideProps({ query }) {
 // ---------------------------------------------------------------------------
 
 const ERROR_MESSAGES = {
-  VAULT_INDEX_NOT_FOUND: 'Vault index not found. Run: pios vault export --client blueedge --run run_01_authoritative_generated',
+  VAULT_NOT_CONFIGURED:  'Vault client not configured. Set VAULT_CLIENT and VAULT_RUN_ID environment variables.',
+  VAULT_INDEX_NOT_FOUND: 'Vault index not found. Run: pios vault export --client <client> --run <run_id>',
   VAULT_NOT_EXPORTED:    'Vault has not been exported for this run. Export required before vault links resolve.',
   INVALID_TYPE:          'Unknown vault node type.',
   NOT_FOUND:             'Node not found in vault index.',
