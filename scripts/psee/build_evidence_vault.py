@@ -392,6 +392,22 @@ Everything visible must be traceable.
 
 def gen_vault_entry(m: VaultModel) -> str:
     sig_dist = conf_dist_str(m.signal_confidence_dist)
+    if m.total_signals > 0:
+        signal_nav_block = (
+            "**What the platform does not yet reveal:**\n"
+            "→ [[CLM-21 SIG-002 Platform Runtime State Seven Unknown Dimensions]]"
+            " — the most commercially significant finding in this assessment\n\n"
+            "**Key signal:**\n"
+            "→ [[CLM-20 SIG-001 Sensor Bridge Throughput]]"
+            " — data pathway throughput; runtime performance unknown"
+        )
+        unknown_nav_prefix = "[[CLM-21 SIG-002 Platform Runtime State Seven Unknown Dimensions]] → "
+    else:
+        signal_nav_block = (
+            "**Signal layer:** NOT_EVALUATED"
+            " — signal intelligence claims not generated pending PiOS 41.4 execution."
+        )
+        unknown_nav_prefix = ""
     return f"""{fm(title=f"VAULT ENTRY — {m.client_name}", node_type="entry", client=m.client_id, status="ACTIVE", stream_id=VAULT_SCHEMA)}
 ## What This Vault Is
 
@@ -420,11 +436,7 @@ This is the evidence vault for the {m.client_name} structural assessment. Every 
 → [[CLM-09 Proven Structural Score]] — {m.score_canonical} is the proven floor; how it was computed and what it means
 → [[CLM-10 Achievable Score Projected]] — {m.score_projected} is the ceiling when execution assessment runs
 
-**What the platform does not yet reveal:**
-→ [[CLM-21 SIG-002 Platform Runtime State Seven Unknown Dimensions]] — the most commercially significant finding in this assessment
-
-**Key signal:**
-→ [[CLM-20 SIG-001 Sensor Bridge Throughput]] — data pathway throughput; runtime performance unknown
+{signal_nav_block}
 
 **Score computation chain:**
 → [[TRN-03 Score Computation]] — the exact arithmetic behind the {m.score_canonical}
@@ -438,7 +450,7 @@ This is the evidence vault for the {m.client_name} structural assessment. Every 
 [[CLM-09 Proven Structural Score]] → [[TRN-03 Score Computation]] → [[ART-01 gauge_state.json]]
 
 **If you want to understand what is unknown:**
-[[CLM-21 SIG-002 Platform Runtime State Seven Unknown Dimensions]] → [[CLM-13 Execution Layer Status]] → [[CLM-06 Runtime Unknown-Space Count]]
+{unknown_nav_prefix}[[CLM-13 Execution Layer Status]] → [[CLM-06 Runtime Unknown-Space Count]]
 
 **If you want to understand structural confidence:**
 [[CLM-01 Structural Coverage Completeness]] → [[CLM-03 Structural Reconstruction Pass-Fail]] → [[CLM-25 Executive Three-Axis Verdict]]
@@ -507,12 +519,15 @@ CLAIM_DEFS = [
 def gen_claim_index(m: VaultModel) -> str:
     rows = []
     for cid, label, _ in CLAIM_DEFS:
-        rows.append(f"| [[{cid} {label}]] | FULL | ACTIVE |")
+        gen_fn = CLAIM_GENERATORS.get(cid)
+        if gen_fn and gen_fn(m) is not None:
+            rows.append(f"| [[{cid} {label}]] | FULL | ACTIVE |")
+    claim_count = len(rows)
     table = "\n".join(rows)
     return f"""{fm(title="Claim Index", node_type="meta", stream_id=VAULT_SCHEMA)}
 # Claim Index
 
-All {len(CLAIM_DEFS)} governed claims for run `{m.run_id}`.
+All {claim_count} governed claims for run `{m.run_id}`.
 
 | claim | traceability | status |
 |-------|-------------|--------|
@@ -706,7 +721,7 @@ How raw structural evidence becomes a scored, signal-enriched, executive-readabl
 - Distribution: {conf_dist_str(m.signal_confidence_dist)}
 
 **Key artifact:** [[ART-05 signal_registry.json]]
-**Key claims:** [[CLM-18 Governed Signal Count]], [[CLM-21 SIG-002 Platform Runtime State Seven Unknown Dimensions]]
+**Key claims:** [[CLM-18 Governed Signal Count]]{", [[CLM-21 SIG-002 Platform Runtime State Seven Unknown Dimensions]]" if m.total_signals > 0 else ""}
 
 ---
 
@@ -1553,22 +1568,10 @@ Signal confidence distribution: {dist_str}. STRONG signals are fully computed fr
 """
 
 
-def _gen_signal_claim(m: VaultModel, cid: str, label: str, sig_id: str) -> str:
+def _gen_signal_claim(m: VaultModel, cid: str, label: str, sig_id: str) -> Optional[str]:
     s = m.signal_by_id(sig_id)
     if s is None:
-        return f"""{_claim_fm(cid, label, "signal")}
-## Explanation
-
-Signal {sig_id} not found in signal_registry.json for run `{m.run_id}`.
-
-## Authoritative Value
-
-NOT_AVAILABLE
-
-## Traceability
-
-- Status: BLOCKED — signal not present in registry
-"""
+        return None
 
     weak_note = ""
     if s.evidence_confidence == "WEAK":
@@ -1929,7 +1932,7 @@ Intelligence signals are forward-looking findings derived from the four-layer ev
 
 ## Related Claims
 
-[[CLM-18 Governed Signal Count]] [[CLM-19 Signal Evidence Quality Distribution]] [[CLM-20 SIG-001 Sensor Bridge Throughput]] [[CLM-21 SIG-002 Platform Runtime State Seven Unknown Dimensions]] [[CLM-22 SIG-003 Dependency Load 68 Percent]] [[CLM-23 SIG-004 Structural Volatility Edge Density]] [[CLM-24 SIG-005 Coordination Pressure Partial]]
+[[CLM-18 Governed Signal Count]] [[CLM-19 Signal Evidence Quality Distribution]]{" [[CLM-20 SIG-001 Sensor Bridge Throughput]] [[CLM-21 SIG-002 Platform Runtime State Seven Unknown Dimensions]] [[CLM-22 SIG-003 Dependency Load 68 Percent]] [[CLM-23 SIG-004 Structural Volatility Edge Density]] [[CLM-24 SIG-005 Coordination Pressure Partial]]" if m.total_signals > 0 else ""}
 """
 
 
@@ -2121,7 +2124,7 @@ S3 signal emission
 {sig_list}
 
 ## Claims Grounded
-[[CLM-18 Governed Signal Count]] [[CLM-19 Signal Evidence Quality Distribution]] [[CLM-20 SIG-001 Sensor Bridge Throughput]] [[CLM-21 SIG-002 Platform Runtime State Seven Unknown Dimensions]] [[CLM-22 SIG-003 Dependency Load 68 Percent]] [[CLM-23 SIG-004 Structural Volatility Edge Density]] [[CLM-24 SIG-005 Coordination Pressure Partial]]
+[[CLM-18 Governed Signal Count]] [[CLM-19 Signal Evidence Quality Distribution]]{" [[CLM-20 SIG-001 Sensor Bridge Throughput]] [[CLM-21 SIG-002 Platform Runtime State Seven Unknown Dimensions]] [[CLM-22 SIG-003 Dependency Load 68 Percent]] [[CLM-23 SIG-004 Structural Volatility Edge Density]] [[CLM-24 SIG-005 Coordination Pressure Partial]]" if m.total_signals > 0 else ""}
 
 ## Authoritative Path
 `clients/{m.client_id}/psee/runs/{m.run_id}/package/signal_registry.json`
@@ -2288,7 +2291,7 @@ COND-XXX → DIAG-XXX → INTEL-XXX → SIG-XXX
 Each signal has a complete four-layer provenance chain.
 
 ## Claims Produced
-[[CLM-18 Governed Signal Count]] [[CLM-19 Signal Evidence Quality Distribution]] [[CLM-20 SIG-001 Sensor Bridge Throughput]] [[CLM-21 SIG-002 Platform Runtime State Seven Unknown Dimensions]] [[CLM-22 SIG-003 Dependency Load 68 Percent]] [[CLM-23 SIG-004 Structural Volatility Edge Density]] [[CLM-24 SIG-005 Coordination Pressure Partial]]
+[[CLM-18 Governed Signal Count]] [[CLM-19 Signal Evidence Quality Distribution]]{" [[CLM-20 SIG-001 Sensor Bridge Throughput]] [[CLM-21 SIG-002 Platform Runtime State Seven Unknown Dimensions]] [[CLM-22 SIG-003 Dependency Load 68 Percent]] [[CLM-23 SIG-004 Structural Volatility Edge Density]] [[CLM-24 SIG-005 Coordination Pressure Partial]]" if m.total_signals > 0 else ""}
 
 ## Product Role
 Signal emission is the transformation where structural evidence becomes actionable intelligence. Each signal has a `business_impact` and `risk` field that is ZONE-2 safe and directly usable in LENS surface claims.
@@ -2336,7 +2339,7 @@ This page traces the complete path from raw source artifacts to GAUGE product su
 | Coverage | {m.coverage_percent:.0f}% | CLM-01 |
 | Reconstruction | {m.reconstruction_state} (4 axes) | CLM-03, CLM-04 |
 | Topology | {m.domain_count}/{m.capability_count}/{m.component_count} ({m.total_nodes} nodes) | CLM-14–16, CLM-27 |
-| Signals | {m.total_signals} signals ({conf_dist_str(m.signal_confidence_dist)}) | CLM-18–24 |
+| Signals | {m.total_signals} signals ({conf_dist_str(m.signal_confidence_dist)}) | {"CLM-18–24" if m.total_signals > 0 else "CLM-18–19"} |
 | Score | {m.score_canonical}/{m.score_projected} | CLM-09, CLM-10 |
 | Executive Verdict | {m.executive_verdict_str} | CLM-25 |
 
@@ -2385,7 +2388,7 @@ This page traces the complete path from raw source artifacts to GAUGE product su
 
 **Result:** {m.total_signals} signals — {conf_dist_str(m.signal_confidence_dist)}
 
-**Most significant finding:** [[CLM-21 SIG-002 Platform Runtime State Seven Unknown Dimensions]]
+{"**Most significant finding:** [[CLM-21 SIG-002 Platform Runtime State Seven Unknown Dimensions]]" if m.total_signals > 0 else "**Signal layer:** NOT_EVALUATED — signal intelligence claims not generated."}
 
 ---
 
@@ -2491,6 +2494,7 @@ Documented gaps, risks, and open conditions for run `{m.run_id}`.
 
 
 def gen_lens_admissibility(m: VaultModel) -> str:
+    clm24_row = "| CLM-24 SIG-005 | CONDITIONAL | WEAK confidence must be surfaced |\n" if m.total_signals > 0 else ""
     return f"""{fm(title="LENS Admissibility", node_type="governance", stream_id=VAULT_SCHEMA)}
 # LENS Admissibility
 
@@ -2513,8 +2517,7 @@ A claim that satisfies 1–5 for ZONE-2 is LENS-admissible. A claim that satisfi
 | CLM-06 Unknown-Space Count | CONDITIONAL | "minimum observable state, not proven zero" |
 | CLM-08 Heuristic Compliance | CONDITIONAL | CTO audience only |
 | CLM-10 Projected Score | YES | "execution not yet run" must accompany |
-| CLM-24 SIG-005 | CONDITIONAL | WEAK confidence must be surfaced |
-| CLM-25 Executive Verdict | YES | CONCEPT-06 gap must be fixed before LENS surface |
+{clm24_row}| CLM-25 Executive Verdict | YES | CONCEPT-06 gap must be fixed before LENS surface |
 
 **Authority:** {VAULT_SCHEMA}
 """
@@ -2549,7 +2552,9 @@ def collect_nodes(m: VaultModel) -> List[tuple]:
         filename = f"{cid} {label}.md"
         gen_fn = CLAIM_GENERATORS.get(cid)
         if gen_fn:
-            nodes.append((f"claims/{filename}", gen_fn(m)))
+            content = gen_fn(m)
+            if content is not None:
+                nodes.append((f"claims/{filename}", content))
 
     # Entities
     nodes.append(("entities/ENT-structural-units.md", gen_ent_structural_units(m)))
