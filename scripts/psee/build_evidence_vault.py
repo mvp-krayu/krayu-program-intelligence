@@ -2637,6 +2637,7 @@ def main():
     parser.add_argument("--signal-registry", default=None, help="Override path to signal_registry.json")
     parser.add_argument("--binding-envelope", default=None, help="Path to binding_envelope.json (optional)")
     parser.add_argument("--repo-root", default=None, help="Repository root (default: auto-detected)")
+    parser.add_argument("--package-dir", default=None, help="Override package artifact directory (default: clients/<id>/psee/runs/<run>/package)")
 
     args = parser.parse_args()
 
@@ -2659,8 +2660,14 @@ def main():
     client_name = args.client_name or client_id.replace("-", " ").replace("_", " ").title()
 
     # Locate run package
-    run_dir = repo_root / "clients" / client_id / "psee" / "runs" / run_id
-    package_dir = run_dir / "package"
+    if args.package_dir:
+        package_dir = Path(args.package_dir)
+        if not package_dir.is_absolute():
+            package_dir = repo_root / package_dir
+        run_dir = package_dir.parent
+    else:
+        run_dir = repo_root / "clients" / client_id / "psee" / "runs" / run_id
+        package_dir = run_dir / "package"
 
     if not run_dir.exists():
         print(f"FAIL: Run directory not found: {run_dir}", file=sys.stderr)
