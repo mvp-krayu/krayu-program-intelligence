@@ -42,6 +42,8 @@ import { useAccessGate } from '../lib/lens/useAccessGate'
 
 // LENS v1 claim set — ZONE-2 only
 const LENS_CLAIMS = ['CLM-09', 'CLM-20', 'CLM-25', 'CLM-12', 'CLM-10']
+// GAP-01 gate — set true only after CONCEPT-06 predicate fix (concepts.json NOT_EVALUATED support)
+const GAP_01_RESOLVED = false
 const ZONE  = 'ZONE-2'
 const DEPTH = 'L1'
 
@@ -445,25 +447,22 @@ export default function LensPage() {
         <HeroBand scores={heroScores} />
       </div>
 
-      {/* Section B — System Intelligence Overview (static — curated 17-domain set) */}
-      <div className="lens-band">
-        <SystemIntelligenceOverview />
-      </div>
+      {/* Section B — System Intelligence Overview: suppressed — client-specific content not available */}
+      {null}
 
-      {/* Section C — Connected System View (static — curated graph projection) */}
-      <div className="lens-band">
-        <ConnectedSystemView />
-      </div>
+      {/* Section C — Connected System View: suppressed — client-specific content not available */}
+      {null}
 
-      {/* Section D — Focus Domain (static — Edge Data Acquisition spotlight) */}
-      <div className="lens-band">
-        <FocusDomainPanel />
-      </div>
+      {/* Section D — Focus Domain: suppressed — client-specific content not available */}
+      {null}
 
       {/* Primary band — readiness verdict + confidence distribution + depth */}
       <div className="lens-band lens-band-primary">
         <div className="lens-col lens-col-main">
-          <ExecutiveStatusPanel payload={p25} />
+          {GAP_01_RESOLVED && p25 && !p25.error_type
+            ? <ExecutiveStatusPanel payload={p25} />
+            : <div className="lens-gated-slot">Conceptual coherence not yet evaluated</div>
+          }
         </div>
         <div className="lens-col lens-col-aside">
           <StabilityComposition payloads={allPayloads} />

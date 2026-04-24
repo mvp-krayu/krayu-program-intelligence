@@ -43,6 +43,8 @@ from typing import Dict, List, Optional, Tuple
 STREAM_ID = "PRODUCTIZE.LENS.REPORT.TOPOLOGY.DELIVERY.01"
 
 LENS_CLAIMS = ["CLM-25", "CLM-09", "CLM-20", "CLM-12", "CLM-10"]
+# GAP-01 gate — set True only after CONCEPT-06 predicate fix (concepts.json NOT_EVALUATED support)
+GAP_01_RESOLVED = False
 
 API_BASE = "http://localhost:3000"
 API_TIMEOUT = 3  # seconds
@@ -307,7 +309,6 @@ def compose_executive_summary(payloads: dict) -> str:
     p10 = payloads["CLM-10"]
     p12 = payloads["CLM-12"]
     p25 = payloads["CLM-25"]
-    p20 = payloads["CLM-20"]
 
     score_proven    = p09.get("value", {}).get("narrative", "60/100")
     score_achievable = p10.get("value", {}).get("narrative", "100/100")
@@ -322,8 +323,9 @@ def compose_executive_summary(payloads: dict) -> str:
         f"The achievable score ceiling is <strong>{esc(score_achievable)}</strong>, "
         "contingent on the completion of a single bounded additional step: runtime execution assessment.",
 
-        "One critical operational signal has been identified — the security intelligence pathway has a "
-        "structurally confirmed capacity ceiling; live performance requires measurement to confirm it is being met.",
+        *(["One critical operational signal has been identified — the security intelligence pathway has a "
+           "structurally confirmed capacity ceiling; live performance requires measurement to confirm it is being met."]
+          if payloads.get("CLM-20") else []),
 
         "The current assessment posture is decision-ready on all structural dimensions. "
         "Execution readiness requires one additional measurement step before a complete determination can be issued.",
@@ -397,9 +399,10 @@ def compose_current_state(payloads: dict) -> str:
 def compose_key_findings(payloads: dict) -> str:
     items = []
 
-    # --- CLM-25 ---
-    p = payloads["CLM-25"]
-    items.append(f"""
+    # --- CLM-25 — gated until GAP-01 (CONCEPT-06) resolved ---
+    if GAP_01_RESOLVED and payloads.get("CLM-25"):
+        p = payloads["CLM-25"]
+        items.append(f"""
 <div class="finding-card">
   <div class="finding-header">
     <div class="finding-title">Executive Verdict</div>
@@ -423,6 +426,17 @@ def compose_key_findings(payloads: dict) -> str:
     <span class="finding-id">{p["claim_id"]}</span>
     <span class="finding-trace">Trace available · L2, L3</span>
   </div>
+</div>
+""")
+    else:
+        items.append("""
+<div class="finding-card finding-card-gated">
+  <div class="finding-header">
+    <div class="finding-title">Executive Verdict</div>
+  </div>
+  <p class="finding-statement">
+    Conceptual coherence not yet evaluated. Executive verdict pending configuration update.
+  </p>
 </div>
 """)
 
@@ -455,10 +469,11 @@ def compose_key_findings(payloads: dict) -> str:
 </div>
 """)
 
-    # --- CLM-20 ---
-    p = payloads["CLM-20"]
-    sig = p.get("signal", {})
-    items.append(f"""
+    # --- CLM-20 — rendered only when signal fragment is present ---
+    if payloads.get("CLM-20"):
+        p = payloads["CLM-20"]
+        sig = p.get("signal", {})
+        items.append(f"""
 <div class="finding-card">
   <div class="finding-header">
     <div class="finding-title">Security Intelligence Pipeline Signal</div>
