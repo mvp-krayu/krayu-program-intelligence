@@ -2896,7 +2896,10 @@ def _load_psee_interpretation_by_zone_class() -> Dict:
                     and item.get("binding_context") is None
                     and src.get("zone_class")
                     and src["zone_class"] not in result):
-                result[src["zone_class"]] = item.get("render_payload", {})
+                result[src["zone_class"]] = {
+                    "render_payload":        item.get("render_payload", {}),
+                    "interpretation_ref_id": item.get("interpretation_ref", {}).get("registry_entry_id"),
+                }
     except Exception:
         pass
     return result
@@ -2909,6 +2912,12 @@ _EXEC_LINE_STOP: frozenset = frozenset({
     "which", "who", "how", "where", "when", "while", "other", "another", "any",
     "each", "all", "both", "one", "has", "have", "had", "per",
 })
+
+# Presentation-only normalization overrides keyed by interpretation_ref (registry_entry_id).
+# Applied at render time; not persisted. Ensures identical INT entries yield identical lines.
+_EXEC_LINE_OVERRIDES: Dict[str, str] = {
+    "INT-007": "Multiple pressure patterns intersect in this part of the system.",
+}
 
 
 def _derive_executive_line(text: str) -> str:
@@ -3338,8 +3347,11 @@ def _build_t2_zone_block(zone: Dict, publish_safe: bool, interpretation_payload:
 
     section_g = ""
     if interpretation_payload:
-        biz_text  = interpretation_payload.get("business_expression", "")
-        exec_line = _derive_executive_line(biz_text)
+        rp        = interpretation_payload.get("render_payload", interpretation_payload)
+        ref_id    = interpretation_payload.get("interpretation_ref_id")
+        biz_text  = rp.get("business_expression", "")
+        override  = _EXEC_LINE_OVERRIDES.get(ref_id) if ref_id else None
+        exec_line = override if override is not None else _derive_executive_line(biz_text)
         biz_safe  = esc(_t2_obfuscate(biz_text)  if publish_safe else biz_text)
         exec_safe = esc(_t2_obfuscate(exec_line) if publish_safe else exec_line)
         section_g = f"""

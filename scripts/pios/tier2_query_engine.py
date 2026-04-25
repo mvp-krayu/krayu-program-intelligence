@@ -153,6 +153,12 @@ _EXEC_LINE_STOP: frozenset = frozenset({
     "each", "all", "both", "one", "has", "have", "had", "per",
 })
 
+# Presentation-only normalization overrides keyed by interpretation_ref (registry_entry_id).
+# Applied at render time; not persisted. Ensures identical INT entries yield identical lines.
+_EXEC_LINE_OVERRIDES: Dict[str, str] = {
+    "INT-007": "Multiple pressure patterns intersect in this part of the system.",
+}
+
 
 def _derive_executive_line(text: str) -> str:
     """Derive a deterministic executive summary line from interpretation text.
@@ -190,14 +196,17 @@ def _make_interpretation(exp_item) -> Dict:
     """
     if exp_item is None:
         return None
-    rp  = exp_item.get("render_payload", {})
-    biz = rp.get("business_expression", "")
+    rp     = exp_item.get("render_payload", {})
+    biz    = rp.get("business_expression", "")
+    ref_id = exp_item.get("interpretation_ref", {}).get("registry_entry_id")
+    exec_line = (_EXEC_LINE_OVERRIDES.get(ref_id)
+                 if ref_id else None) or _derive_executive_line(biz)
     return {
         "behavioral_meaning":            rp.get("behavioral_meaning", ""),
         "system_expression":             rp.get("system_expression", ""),
         "business_expression":           biz,
-        "executive_interpretation_line": _derive_executive_line(biz),
-        "interpretation_ref":            exp_item.get("interpretation_ref", {}).get("registry_entry_id"),
+        "executive_interpretation_line": exec_line,
+        "interpretation_ref":            ref_id,
         "binding_id":                    exp_item.get("binding_id"),
         "exposure_id":                   exp_item.get("exposure_id"),
     }
