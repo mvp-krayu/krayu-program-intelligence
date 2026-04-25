@@ -1,0 +1,127 @@
+{
+  "schema_version": "1.0",
+  "schema_contract": "PI.41X.INTERPRETATION-REGISTRY.01",
+  "description": "Canonical schema for interpretation registry entries. Each entry maps a structural construct (signal, zone class, condition, or composite) to governed behavioral meaning. Entries are global and client-independent.",
+
+  "entry_type_values": ["signal", "zone", "condition", "composite"],
+
+  "entry_schema": {
+    "id": {
+      "type": "string",
+      "pattern": "^INT-\\d{3}$",
+      "description": "Stable registry identifier. Monotonically assigned. Never reused."
+    },
+    "entry_type": {
+      "type": "string",
+      "enum": ["signal", "zone", "condition", "composite"],
+      "description": "Structural layer this entry interprets."
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable entry label. Not a semantic authority — the output fields are authoritative."
+    },
+    "source_authority": {
+      "type": "string",
+      "description": "The governed document or contract from which this entry's structural facts are derived."
+    },
+    "inputs": {
+      "type": "object",
+      "description": "The structural identifier(s) this entry interprets. Exactly one primary input must be non-null; remaining fields are null.",
+      "properties": {
+        "signal_id": {
+          "type": ["string", "null"],
+          "description": "PSIG-XXX signal identifier, if this entry interprets a signal. Null otherwise."
+        },
+        "condition_id": {
+          "type": ["string", "null"],
+          "description": "COND-PSIG-XXX condition type identifier, if this entry interprets a condition. Null otherwise."
+        },
+        "zone_class": {
+          "type": ["string", "null"],
+          "description": "Zone class identifier (e.g. COMPOUND_ZONE), if this entry interprets a zone class. Null otherwise."
+        }
+      },
+      "required": ["signal_id", "condition_id", "zone_class"]
+    },
+    "output": {
+      "type": "object",
+      "description": "Three-layer interpretation output. All layers are required. No layer may contain prediction, recommendation, prioritization, or severity language.",
+      "properties": {
+        "behavioral_meaning": {
+          "type": "string",
+          "description": "What the construct structurally indicates about system behavior. Factual and deterministic. Uses controlled verbs: indicates, reflects, reveals, is structured as, is isolated from, is dependent on."
+        },
+        "system_expression": {
+          "type": "string",
+          "description": "How the construct manifests at the technical/architectural level. Describes structural mechanics without interpretation beyond the field values."
+        },
+        "business_expression": {
+          "type": "string",
+          "description": "How a non-technical stakeholder would understand the construct. Plain language. No causal claims. No recommendations."
+        }
+      },
+      "required": ["behavioral_meaning", "system_expression", "business_expression"]
+    },
+    "constraints": {
+      "type": "object",
+      "description": "Governance constraints that apply to ALL output fields in this entry. These are invariants, not optional flags.",
+      "properties": {
+        "no_prediction": {
+          "type": "boolean",
+          "const": true,
+          "description": "Output must not contain predictive claims ('will cause', 'will result in')."
+        },
+        "no_recommendation": {
+          "type": "boolean",
+          "const": true,
+          "description": "Output must not contain recommendation language ('should', 'must address', 'recommend')."
+        },
+        "no_prioritization": {
+          "type": "boolean",
+          "const": true,
+          "description": "Output must not assign or imply priority, ranking, or ordering between entries."
+        },
+        "no_severity": {
+          "type": "boolean",
+          "const": true,
+          "description": "Output must not assign severity labels ('high risk', 'critical', 'urgent')."
+        }
+      },
+      "required": ["no_prediction", "no_recommendation", "no_prioritization", "no_severity"]
+    }
+  },
+
+  "language_constraints": {
+    "allowed_verbs": [
+      "indicates",
+      "reflects",
+      "reveals",
+      "is structured as",
+      "is isolated from",
+      "is dependent on",
+      "records",
+      "shows",
+      "is active",
+      "is co-present",
+      "is attributed to"
+    ],
+    "forbidden_content": [
+      "will cause",
+      "should",
+      "high risk",
+      "critical",
+      "urgent",
+      "recommend",
+      "must fix",
+      "needs to",
+      "requires action"
+    ]
+  },
+
+  "extension_rules": {
+    "new_entry": "New entries must be appended with the next INT-XXX ID. IDs must not be reused or recycled.",
+    "update_entry": "Existing entries may be updated only via a new contract that explicitly references the INT-XXX ID and declares the supersession.",
+    "deletion": "Entries must not be deleted. Deprecated entries must be marked with a deprecation note and the superseding INT-XXX ID.",
+    "client_specificity": "No entry may reference a client ID, run ID, or client-specific artifact. Entries are global and deterministic."
+  }
+}
