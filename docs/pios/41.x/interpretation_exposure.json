@@ -15,6 +15,7 @@
       "exposure_id": "EXP-001",
       "binding_id": "BIND-001",
       "source_type": "zone",
+      "binding_context": null,
       "source_ref": {
         "zone_id": "PZ-001",
         "zone_class": "COMPOUND_ZONE",
@@ -94,6 +95,7 @@
       "exposure_id": "EXP-002",
       "binding_id": "BIND-002",
       "source_type": "zone",
+      "binding_context": null,
       "source_ref": {
         "zone_id": "PZ-002",
         "zone_class": "COMPOUND_ZONE",
@@ -173,6 +175,7 @@
       "exposure_id": "EXP-003",
       "binding_id": "BIND-003",
       "source_type": "zone",
+      "binding_context": null,
       "source_ref": {
         "zone_id": "PZ-003",
         "zone_class": "COMPOUND_ZONE",
@@ -252,6 +255,7 @@
       "exposure_id": "EXP-004",
       "binding_id": "BIND-004",
       "source_type": "zone",
+      "binding_context": "embedded_pair_rule",
       "source_ref": {
         "zone_id": "PZ-001",
         "zone_class": "COUPLING_ZONE",
@@ -331,6 +335,7 @@
       "exposure_id": "EXP-005",
       "binding_id": "BIND-005",
       "source_type": "zone",
+      "binding_context": "embedded_pair_rule",
       "source_ref": {
         "zone_id": "PZ-001",
         "zone_class": "PROPAGATION_ZONE",
@@ -410,6 +415,7 @@
       "exposure_id": "EXP-006",
       "binding_id": "BIND-006",
       "source_type": "zone",
+      "binding_context": "embedded_pair_rule",
       "source_ref": {
         "zone_id": "PZ-001",
         "zone_class": "RESPONSIBILITY_ZONE",
@@ -489,6 +495,7 @@
       "exposure_id": "EXP-007",
       "binding_id": "BIND-007",
       "source_type": "zone",
+      "binding_context": "embedded_pair_rule",
       "source_ref": {
         "zone_id": "PZ-002",
         "zone_class": "COUPLING_ZONE",
@@ -568,6 +575,7 @@
       "exposure_id": "EXP-008",
       "binding_id": "BIND-008",
       "source_type": "zone",
+      "binding_context": "embedded_pair_rule",
       "source_ref": {
         "zone_id": "PZ-002",
         "zone_class": "PROPAGATION_ZONE",
@@ -647,6 +655,7 @@
       "exposure_id": "EXP-009",
       "binding_id": "BIND-009",
       "source_type": "zone",
+      "binding_context": "embedded_pair_rule",
       "source_ref": {
         "zone_id": "PZ-002",
         "zone_class": "RESPONSIBILITY_ZONE",
@@ -726,6 +735,7 @@
       "exposure_id": "EXP-010",
       "binding_id": "BIND-010",
       "source_type": "zone",
+      "binding_context": "embedded_pair_rule",
       "source_ref": {
         "zone_id": "PZ-003",
         "zone_class": "COUPLING_ZONE",
@@ -805,6 +815,7 @@
       "exposure_id": "EXP-011",
       "binding_id": "BIND-011",
       "source_type": "zone",
+      "binding_context": "embedded_pair_rule",
       "source_ref": {
         "zone_id": "PZ-003",
         "zone_class": "PROPAGATION_ZONE",
@@ -884,6 +895,7 @@
       "exposure_id": "EXP-012",
       "binding_id": "BIND-012",
       "source_type": "zone",
+      "binding_context": "embedded_pair_rule",
       "source_ref": {
         "zone_id": "PZ-003",
         "zone_class": "RESPONSIBILITY_ZONE",
@@ -963,6 +975,7 @@
       "exposure_id": "EXP-013",
       "binding_id": "BIND-013",
       "source_type": "signal",
+      "binding_context": null,
       "source_ref": {
         "zone_id": null,
         "zone_class": null,
@@ -1042,6 +1055,7 @@
       "exposure_id": "EXP-014",
       "binding_id": "BIND-014",
       "source_type": "signal",
+      "binding_context": null,
       "source_ref": {
         "zone_id": null,
         "zone_class": null,
@@ -1121,6 +1135,7 @@
       "exposure_id": "EXP-015",
       "binding_id": "BIND-015",
       "source_type": "signal",
+      "binding_context": null,
       "source_ref": {
         "zone_id": null,
         "zone_class": null,
@@ -1200,6 +1215,7 @@
       "exposure_id": "EXP-016",
       "binding_id": "BIND-016",
       "source_type": "signal",
+      "binding_context": null,
       "source_ref": {
         "zone_id": null,
         "zone_class": null,
@@ -1279,6 +1295,7 @@
       "exposure_id": "EXP-017",
       "binding_id": "BIND-017",
       "source_type": "condition",
+      "binding_context": null,
       "source_ref": {
         "zone_id": null,
         "zone_class": null,
@@ -1358,6 +1375,7 @@
       "exposure_id": "EXP-018",
       "binding_id": "BIND-018",
       "source_type": "condition",
+      "binding_context": null,
       "source_ref": {
         "zone_id": null,
         "zone_class": null,
@@ -1437,6 +1455,7 @@
       "exposure_id": "EXP-019",
       "binding_id": "BIND-019",
       "source_type": "condition",
+      "binding_context": null,
       "source_ref": {
         "zone_id": null,
         "zone_class": null,
@@ -1516,6 +1535,7 @@
       "exposure_id": "EXP-020",
       "binding_id": "BIND-020",
       "source_type": "condition",
+      "binding_context": null,
       "source_ref": {
         "zone_id": null,
         "zone_class": null,

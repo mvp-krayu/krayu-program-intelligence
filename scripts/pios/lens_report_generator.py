@@ -2876,6 +2876,32 @@ _TIER2_DIAGNOSTIC_CSS = """
 """
 
 
+def _load_psee_interpretation_by_zone_class() -> Dict:
+    """Load interpretation_exposure.json and index EXP items by zone_class.
+
+    Used by LENS report to attach business_expression to PSEE zone blocks.
+    Returns empty dict if file absent — report generation is unaffected.
+    Each zone_class maps to the first primary zone-class EXP item found
+    (binding_context=None, source_type='zone'); applicable for global classes.
+    """
+    exposure_path = REPO_ROOT / "docs" / "pios" / "41.x" / "interpretation_exposure.json"
+    result: Dict = {}
+    if not exposure_path.exists():
+        return result
+    try:
+        exp = json.loads(exposure_path.read_text())
+        for item in exp.get("exposure_items", []):
+            src  = item.get("source_ref", {})
+            if (item.get("source_type") == "zone"
+                    and item.get("binding_context") is None
+                    and src.get("zone_class")
+                    and src["zone_class"] not in result):
+                result[src["zone_class"]] = item.get("render_payload", {}).get("business_expression")
+    except Exception:
+        pass
+    return result
+
+
 def _t2_obfuscate(text: str) -> str:
     return (text
         .replace("BlueEdge Fleet Management Platform", "Client Environment")
@@ -2992,7 +3018,7 @@ def _t2_ev_css(strength: str) -> str:
     return {"STRONG": "t2-ev-strong", "PARTIAL": "t2-ev-partial", "WEAK": "t2-ev-weak"}.get(strength, "t2-ev-weak")
 
 
-def _build_t2_zone_block(zone: Dict, publish_safe: bool) -> str:
+def _build_t2_zone_block(zone: Dict, publish_safe: bool, interpretation_text: Optional[str] = None) -> str:
     zone_id   = zone["zone_id"]
     did       = zone["domain_id"]
     dname     = zone["domain_name"]
@@ -3272,6 +3298,21 @@ def _build_t2_zone_block(zone: Dict, publish_safe: bool) -> str:
     zt_label     = zt.replace("_", " ")
     trace_label  = trace_st.replace("_", " ")
 
+    section_g = ""
+    if interpretation_text:
+        interp_safe = esc(_t2_obfuscate(interpretation_text) if publish_safe else interpretation_text)
+        section_g = f"""
+    <div class="t2-sub-section" id="zone-{zone_id}-block-g">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">G</span>
+        <span class="t2-sub-title">Structural Interpretation</span>
+      </div>
+      <p class="t2-body" style="font-size:12px;color:#9a9aaa;line-height:1.65;border-left:2px solid #3a3a5a;padding-left:12px;margin:0">{interp_safe}</p>
+      <div class="t2-chip-row" style="margin-top:6px">
+        <span class="t2-chip" style="color:var(--fg-dim)">source: interpretation_exposure.json · render_target: lens_report · field: business_expression</span>
+      </div>
+    </div>"""
+
     return f"""
   <details class="t2-zone-details" id="zone-{zone_id}-details">
     <summary class="t2-zone-summary">
@@ -3301,7 +3342,7 @@ def _build_t2_zone_block(zone: Dict, publish_safe: bool) -> str:
       {section_c}
       {section_d}
       {section_e}
-      {section_f}
+      {section_f}{section_g}
     </div>
   </details>"""
 
@@ -3584,8 +3625,12 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
         </div>
       </a>"""
 
-    # Per-zone blocks
-    zone_blocks_html = "".join(_build_t2_zone_block(z, publish_safe) for z in zones)
+    # Per-zone blocks — attach business_expression from interpretation exposure if available
+    interp_by_class = _load_psee_interpretation_by_zone_class()
+    zone_blocks_html = "".join(
+        _build_t2_zone_block(z, publish_safe, interp_by_class.get(z.get("zone_class")))
+        for z in zones
+    )
 
     # Structural evidence topology graph (section 01A) — renders from graph_state only
     topology_svg = _build_overview_graph_html(graph_state)

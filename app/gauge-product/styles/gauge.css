@@ -2366,6 +2366,19 @@ details.op-details[open] summary::before { content:"▼  "; }
 .ws-trace-empty-detail { font-size:13px; color:#aaa; margin-bottom:8px; line-height:1.5; }
 .ws-trace-empty-note { font-size:11px; color:#555; font-style:italic; line-height:1.5; }
 
+/* Interpretation injection — behavioral_meaning / trace metadata */
+.ws-interp-section { border-top:1px solid #1e1e24; padding-top:10px; }
+.ws-interp-label { display:flex; align-items:center; gap:8px; }
+.ws-interp-ref { font-family:monospace; font-size:10px; color:#4a4a6a; letter-spacing:.04em; }
+.ws-interp-text { font-size:12px; color:#9a9aaa; line-height:1.65; padding:10px 12px; background:#0f0f14; border:1px solid #1e1e28; border-left:2px solid #3a3a5a; border-radius:2px; }
+.ws-interp-cond { margin-top:4px; }
+.ws-interp-trace-section { background:#0d0d12; border:1px solid #1e1e24; border-radius:2px; padding:10px 12px; display:flex; flex-direction:column; gap:5px; }
+.ws-interp-trace-row { display:flex; gap:10px; font-size:11px; }
+.ws-interp-trace-label { color:#4a4a6a; font-family:monospace; width:64px; flex-shrink:0; }
+.ws-interp-trace-val { color:#6a6a8a; font-family:monospace; word-break:break-all; }
+.ws-path-interp { display:flex; align-items:center; gap:8px; font-size:11px; padding:4px 0; }
+.ws-path-interp-ref { font-family:monospace; font-size:10px; color:#4a4a6a; }
+
 /* Vault linkage — in-result drill-through */
 .ws-vault-section { }
 .ws-vault-target-list { display:flex; flex-direction:column; gap:5px; }

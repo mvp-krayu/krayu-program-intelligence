@@ -96,6 +96,74 @@ _MISSING_NO_SIGNALS: List[Dict] = [
 ]
 
 # ---------------------------------------------------------------------------
+# Interpretation exposure — loaded once per process, indexes built on demand
+# ---------------------------------------------------------------------------
+
+_EXPOSURE_INDEX: Dict = {}
+
+
+def _load_exposure_index() -> Dict:
+    """Load interpretation_exposure.json and return lookup indexes.
+
+    Indexes:
+      by_zone_id:  zone_id  → primary EXP item (source_type='zone', binding_context=None)
+      by_signal_id: signal_id → EXP item (source_type='signal')
+      by_cond_id:  condition_id → EXP item (source_type='condition')
+
+    Returns empty dicts if file is absent — interpretation is optional.
+    Caches result on first call; never reloads within a process.
+    """
+    global _EXPOSURE_INDEX
+    if _EXPOSURE_INDEX:
+        return _EXPOSURE_INDEX
+
+    exposure_path = (
+        tier2_data.REPO_ROOT / "docs" / "pios" / "41.x" / "interpretation_exposure.json"
+    )
+    result: Dict = {"by_zone_id": {}, "by_signal_id": {}, "by_cond_id": {}}
+
+    if not exposure_path.exists():
+        _EXPOSURE_INDEX = result
+        return _EXPOSURE_INDEX
+
+    try:
+        exp = json.loads(exposure_path.read_text())
+        for item in exp.get("exposure_items", []):
+            src   = item.get("source_ref", {})
+            stype = item.get("source_type")
+            ctx   = item.get("binding_context")
+            if stype == "zone" and ctx is None and src.get("zone_id"):
+                result["by_zone_id"][src["zone_id"]] = item
+            elif stype == "signal" and src.get("signal_id"):
+                result["by_signal_id"][src["signal_id"]] = item
+            elif stype == "condition" and src.get("condition_id"):
+                result["by_cond_id"][src["condition_id"]] = item
+    except Exception:
+        pass
+
+    _EXPOSURE_INDEX = result
+    return _EXPOSURE_INDEX
+
+
+def _make_interpretation(exp_item) -> Dict:
+    """Extract the standard interpretation attachment dict from an exposure item.
+
+    Returns None if exp_item is None — callers must guard before attaching.
+    """
+    if exp_item is None:
+        return None
+    rp = exp_item.get("render_payload", {})
+    return {
+        "behavioral_meaning":  rp.get("behavioral_meaning", ""),
+        "system_expression":   rp.get("system_expression", ""),
+        "business_expression": rp.get("business_expression", ""),
+        "interpretation_ref":  exp_item.get("interpretation_ref", {}).get("registry_entry_id"),
+        "binding_id":          exp_item.get("binding_id"),
+        "exposure_id":         exp_item.get("exposure_id"),
+    }
+
+
+# ---------------------------------------------------------------------------
 # Response envelope builders
 # ---------------------------------------------------------------------------
 
@@ -577,7 +645,7 @@ def handle_projection_why(zone: Dict, sig_by_cond: Dict) -> Dict:
             "contribution": "Activated structural condition contributing to zone class",
         })
 
-    return {
+    result: Dict = {
         "zone_class":        zone["zone_class"],
         "zone_type":         zone["zone_type"],
         "anchor": {
@@ -595,6 +663,10 @@ def handle_projection_why(zone: Dict, sig_by_cond: Dict) -> Dict:
         },
         "classification_rationale": rationale,
     }
+    interp = _make_interpretation(_load_exposure_index()["by_zone_id"].get(zone["zone_id"]))
+    if interp:
+        result["interpretation"] = interp
+    return result
 
 
 def handle_projection_evidence(zone: Dict, sig_by_cond: Dict, combo_sig: Dict) -> Dict:
@@ -603,10 +675,11 @@ def handle_projection_evidence(zone: Dict, sig_by_cond: Dict, combo_sig: Dict) -
     Returns PSIG condition records from 41.x signal_projection only.
     No canonical_topology usage. No signal_registry usage.
     """
+    idx             = _load_exposure_index()
     signal_coverage: List[Dict] = []
     for cond_id in zone.get("conditions", []):
         cond = sig_by_cond.get(cond_id, {})
-        signal_coverage.append({
+        entry: Dict = {
             "condition_id":     cond_id,
             "signal_id":        cond.get("signal_id", "UNKNOWN"),
             "signal_authority": cond.get("signal_authority", "PROVISIONAL_CKR_CANDIDATE"),
@@ -615,14 +688,26 @@ def handle_projection_evidence(zone: Dict, sig_by_cond: Dict, combo_sig: Dict) -
             "activation_method": cond.get("activation_method"),
             "attribution_role": zone.get("attribution_profile"),
             "source":           f"41.x/signal_projection.json: condition_id={cond_id}",
-        })
+        }
+        cond_interp = _make_interpretation(idx["by_cond_id"].get(cond_id))
+        if cond_interp:
+            entry["interpretation"] = cond_interp
+        signal_coverage.append(entry)
 
-    return {
+    result: Dict = {
         "signal_coverage":      signal_coverage,
         "total_conditions":     len(signal_coverage),
         "combination_signature": combo_sig.get("primary", ""),
         "source":               "41.x projection only — no canonical_topology or signal_registry used",
     }
+    zone_exp = idx["by_zone_id"].get(zone["zone_id"])
+    if zone_exp:
+        result["interpretation_trace"] = {
+            "registry_path":  "docs/pios/41.x/interpretation_registry.json",
+            "binding_path":   "docs/pios/41.x/interpretation_binding.json",
+            "evidence_status": "registry_bound",
+        }
+    return result
 
 
 def handle_projection_trace(zone: Dict, sig_by_cond: Dict) -> List[Dict]:
@@ -632,19 +717,25 @@ def handle_projection_trace(zone: Dict, sig_by_cond: Dict) -> List[Dict]:
     No traversal outside projection data.
     """
     zone_id = zone["zone_id"]
+    idx     = _load_exposure_index()
     paths: List[Dict] = []
 
     for i, cond_id in enumerate(zone.get("conditions", []), 1):
         cond   = sig_by_cond.get(cond_id, {})
         sig_id = cond.get("signal_id", "UNKNOWN")
-        paths.append({
+        path: Dict = {
             "path_id":          f"{zone_id}-P{i}",
             "node_chain":       [zone_id, sig_id, cond_id],
             "path_type":        "EVIDENCE",
             "evidence_support": cond.get("activation_state", "UNKNOWN"),
             "activation_method": cond.get("activation_method"),
             "source":           "41.x/pressure_zone_projection.json + signal_projection.json",
-        })
+        }
+        sig_exp = idx["by_signal_id"].get(sig_id)
+        if sig_exp:
+            path["interpretation_ref"] = sig_exp["interpretation_ref"]["registry_entry_id"]
+            path["binding_id"]         = sig_exp["binding_id"]
+        paths.append(path)
 
     return paths
 

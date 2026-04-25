@@ -203,6 +203,17 @@ function WhyResult({ data }) {
           ))}
         </div>
       </div>
+
+      {r.interpretation && (
+        <div className="ws-result-section ws-interp-section">
+          <div className="ws-result-label ws-interp-label">
+            Behavioral Meaning
+            <span className="ws-interp-ref">{r.interpretation.interpretation_ref}</span>
+            {r.interpretation.binding_id && <span className="ws-interp-ref">{r.interpretation.binding_id}</span>}
+          </div>
+          <div className="ws-interp-text">{r.interpretation.behavioral_meaning}</div>
+        </div>
+      )}
     </div>
   )
 }
@@ -232,6 +243,12 @@ function PathBlock({ p }) {
         <div className="ws-path-inferred">
           <span className="ws-path-inferred-label">INFERRED</span>
           {p.inferred_declaration}
+        </div>
+      )}
+      {p.interpretation_ref && (
+        <div className="ws-path-interp">
+          <span className="ws-path-interp-ref">{p.interpretation_ref}</span>
+          {p.binding_id && <span className="ws-chip">{p.binding_id}</span>}
         </div>
       )}
     </div>
@@ -403,6 +420,9 @@ function EvidenceResult({ data, vaultIndex }) {
             {s.activation_method && (
               <div className="ws-signal-title">{s.activation_method.replace(/_/g, ' ').toLowerCase()}</div>
             )}
+            {s.interpretation && (
+              <div className="ws-interp-text ws-interp-cond">{s.interpretation.behavioral_meaning}</div>
+            )}
             {(s.trace_links?.length > 0) ? (
               <ul className="ws-trace-list">
                 {s.trace_links.map((l, i) => <li key={i} className="ws-trace-link">{l}</li>)}
@@ -415,6 +435,26 @@ function EvidenceResult({ data, vaultIndex }) {
       </div>
 
       <VaultLinks targets={data.vault_targets} vaultIndex={vaultIndex} />
+
+      {r.interpretation_trace && (
+        <div className="ws-result-section">
+          <div className="ws-result-label">Interpretation Trace</div>
+          <div className="ws-interp-trace-section">
+            <div className="ws-interp-trace-row">
+              <span className="ws-interp-trace-label">registry</span>
+              <span className="ws-interp-trace-val">{r.interpretation_trace.registry_path}</span>
+            </div>
+            <div className="ws-interp-trace-row">
+              <span className="ws-interp-trace-label">binding</span>
+              <span className="ws-interp-trace-val">{r.interpretation_trace.binding_path}</span>
+            </div>
+            <div className="ws-interp-trace-row">
+              <span className="ws-interp-trace-label">status</span>
+              <span className="ws-badge ws-conf-strong">{r.interpretation_trace.evidence_status}</span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
