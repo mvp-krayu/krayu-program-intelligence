@@ -6,6 +6,11 @@
  * Used by the Tier-2 workspace page to populate the zone inventory on load.
  *
  * GET /api/zones
+ *   → BlueEdge canonical zones (default, no params required)
+ *
+ * GET /api/zones?client=<client_id>&runId=<run_id>
+ *   → 41.x projection zones for the specified client/run
+ *   → 404 NOT_AVAILABLE if 41.x artifacts are absent (no BlueEdge fallback)
  *
  * Returns:
  *   { status, run_id, inference_prohibition:"ACTIVE", context, zones:[...], total_zones }
@@ -32,9 +37,16 @@ export default function handler(req, res) {
     return res.status(405).json({ status: 'error', reason: 'METHOD_NOT_ALLOWED' })
   }
 
+  const { client: clientId, runId } = req.query
+  const useProjection = clientId && runId
+
+  const args = useProjection
+    ? [SCRIPT_PATH, '--list-zones', '--projection', '--client', clientId, '--run-id', runId]
+    : [SCRIPT_PATH, '--list-zones']
+
   execFile(
     PYTHON,
-    [SCRIPT_PATH, '--list-zones'],
+    args,
     { timeout: TIMEOUT_MS, cwd: REPO_ROOT },
     (err, stdout) => {
       if (err) {
@@ -44,7 +56,11 @@ export default function handler(req, res) {
         })
       }
       try {
-        return res.status(200).json(JSON.parse(stdout.trim()))
+        const data = JSON.parse(stdout.trim())
+        if (data.status === 'NOT_AVAILABLE') {
+          return res.status(404).json(data)
+        }
+        return res.status(200).json(data)
       } catch {
         return res.status(500).json({ status: 'error', reason: 'PARSE_FAILURE' })
       }
