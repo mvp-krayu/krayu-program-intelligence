@@ -205,14 +205,22 @@ function WhyResult({ data }) {
       </div>
 
       {r.interpretation && (
-        <div className="ws-result-section ws-interp-section">
-          <div className="ws-result-label ws-interp-label">
-            Behavioral Meaning
-            <span className="ws-interp-ref">{r.interpretation.interpretation_ref}</span>
-            {r.interpretation.binding_id && <span className="ws-interp-ref">{r.interpretation.binding_id}</span>}
+        <>
+          {r.interpretation.executive_interpretation_line && (
+            <div className="ws-result-section ws-exec-interp-section">
+              <div className="ws-result-label ws-exec-interp-label">EXECUTIVE INTERPRETATION</div>
+              <div className="ws-exec-interp-line">{r.interpretation.executive_interpretation_line}</div>
+            </div>
+          )}
+          <div className="ws-result-section ws-interp-section">
+            <div className="ws-result-label ws-interp-label">
+              Behavioral Meaning
+              <span className="ws-interp-ref">{r.interpretation.interpretation_ref}</span>
+              {r.interpretation.binding_id && <span className="ws-interp-ref">{r.interpretation.binding_id}</span>}
+            </div>
+            <div className="ws-interp-text">{r.interpretation.behavioral_meaning}</div>
           </div>
-          <div className="ws-interp-text">{r.interpretation.behavioral_meaning}</div>
-        </div>
+        </>
       )}
     </div>
   )

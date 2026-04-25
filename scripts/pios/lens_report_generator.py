@@ -2877,12 +2877,12 @@ _TIER2_DIAGNOSTIC_CSS = """
 
 
 def _load_psee_interpretation_by_zone_class() -> Dict:
-    """Load interpretation_exposure.json and index EXP items by zone_class.
+    """Load interpretation_exposure.json and index EXP render_payloads by zone_class.
 
-    Used by LENS report to attach business_expression to PSEE zone blocks.
+    Used by LENS report to attach interpretation to PSEE zone blocks.
     Returns empty dict if file absent — report generation is unaffected.
-    Each zone_class maps to the first primary zone-class EXP item found
-    (binding_context=None, source_type='zone'); applicable for global classes.
+    Each zone_class maps to the render_payload dict of the first primary zone-class
+    EXP item found (binding_context=None, source_type='zone').
     """
     exposure_path = REPO_ROOT / "docs" / "pios" / "41.x" / "interpretation_exposure.json"
     result: Dict = {}
@@ -2896,10 +2896,27 @@ def _load_psee_interpretation_by_zone_class() -> Dict:
                     and item.get("binding_context") is None
                     and src.get("zone_class")
                     and src["zone_class"] not in result):
-                result[src["zone_class"]] = item.get("render_payload", {}).get("business_expression")
+                result[src["zone_class"]] = item.get("render_payload", {})
     except Exception:
         pass
     return result
+
+
+def _derive_executive_line(text: str) -> str:
+    """Derive a deterministic executive summary line from interpretation text at render time.
+
+    Rule: take first sentence; truncate at subordinate clause markers (; — :);
+    no new terms added. Same input always yields same output.
+    """
+    if not text:
+        return text
+    dot = text.find(". ")
+    first = text[:dot] if dot != -1 else text
+    for marker in ["; ", " \u2014 ", ": "]:
+        pos = first.find(marker)
+        if pos != -1:
+            first = first[:pos]
+    return first.strip()
 
 
 def _t2_obfuscate(text: str) -> str:
@@ -3018,7 +3035,7 @@ def _t2_ev_css(strength: str) -> str:
     return {"STRONG": "t2-ev-strong", "PARTIAL": "t2-ev-partial", "WEAK": "t2-ev-weak"}.get(strength, "t2-ev-weak")
 
 
-def _build_t2_zone_block(zone: Dict, publish_safe: bool, interpretation_text: Optional[str] = None) -> str:
+def _build_t2_zone_block(zone: Dict, publish_safe: bool, interpretation_payload: Optional[Dict] = None) -> str:
     zone_id   = zone["zone_id"]
     did       = zone["domain_id"]
     dname     = zone["domain_name"]
@@ -3299,15 +3316,22 @@ def _build_t2_zone_block(zone: Dict, publish_safe: bool, interpretation_text: Op
     trace_label  = trace_st.replace("_", " ")
 
     section_g = ""
-    if interpretation_text:
-        interp_safe = esc(_t2_obfuscate(interpretation_text) if publish_safe else interpretation_text)
+    if interpretation_payload:
+        biz_text  = interpretation_payload.get("business_expression", "")
+        exec_line = _derive_executive_line(biz_text)
+        biz_safe  = esc(_t2_obfuscate(biz_text)  if publish_safe else biz_text)
+        exec_safe = esc(_t2_obfuscate(exec_line) if publish_safe else exec_line)
         section_g = f"""
     <div class="t2-sub-section" id="zone-{zone_id}-block-g">
       <div class="t2-sub-header">
         <span class="t2-sub-tag">G</span>
         <span class="t2-sub-title">Structural Interpretation</span>
       </div>
-      <p class="t2-body" style="font-size:12px;color:#9a9aaa;line-height:1.65;border-left:2px solid #3a3a5a;padding-left:12px;margin:0">{interp_safe}</p>
+      <p style="font-size:14px;color:#c8c8d4;font-weight:500;line-height:1.4;padding:10px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid #5a5a80;border-radius:2px;margin:0 0 8px 0">{exec_safe}</p>
+      <div class="t2-chip-row" style="margin-bottom:8px">
+        <span class="t2-chip" style="color:var(--fg-dim)">executive interpretation</span>
+      </div>
+      <p class="t2-body" style="font-size:12px;color:#9a9aaa;line-height:1.65;border-left:2px solid #3a3a5a;padding-left:12px;margin:0">{biz_safe}</p>
       <div class="t2-chip-row" style="margin-top:6px">
         <span class="t2-chip" style="color:var(--fg-dim)">source: interpretation_exposure.json · render_target: lens_report · field: business_expression</span>
       </div>

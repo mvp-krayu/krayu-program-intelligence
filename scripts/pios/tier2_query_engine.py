@@ -145,6 +145,24 @@ def _load_exposure_index() -> Dict:
     return _EXPOSURE_INDEX
 
 
+def _derive_executive_line(text: str) -> str:
+    """Derive a deterministic executive summary line from interpretation text.
+
+    Rule: take first sentence; truncate at subordinate clause markers (; — :);
+    no new terms added; no word-count truncation (avoids meaning loss).
+    Deterministic: same input always yields same output.
+    """
+    if not text:
+        return text
+    dot = text.find(". ")
+    first = text[:dot] if dot != -1 else text
+    for marker in ["; ", " \u2014 ", ": "]:
+        pos = first.find(marker)
+        if pos != -1:
+            first = first[:pos]
+    return first.strip()
+
+
 def _make_interpretation(exp_item) -> Dict:
     """Extract the standard interpretation attachment dict from an exposure item.
 
@@ -152,14 +170,16 @@ def _make_interpretation(exp_item) -> Dict:
     """
     if exp_item is None:
         return None
-    rp = exp_item.get("render_payload", {})
+    rp  = exp_item.get("render_payload", {})
+    biz = rp.get("business_expression", "")
     return {
-        "behavioral_meaning":  rp.get("behavioral_meaning", ""),
-        "system_expression":   rp.get("system_expression", ""),
-        "business_expression": rp.get("business_expression", ""),
-        "interpretation_ref":  exp_item.get("interpretation_ref", {}).get("registry_entry_id"),
-        "binding_id":          exp_item.get("binding_id"),
-        "exposure_id":         exp_item.get("exposure_id"),
+        "behavioral_meaning":            rp.get("behavioral_meaning", ""),
+        "system_expression":             rp.get("system_expression", ""),
+        "business_expression":           biz,
+        "executive_interpretation_line": _derive_executive_line(biz),
+        "interpretation_ref":            exp_item.get("interpretation_ref", {}).get("registry_entry_id"),
+        "binding_id":                    exp_item.get("binding_id"),
+        "exposure_id":                   exp_item.get("exposure_id"),
     }
 
 
