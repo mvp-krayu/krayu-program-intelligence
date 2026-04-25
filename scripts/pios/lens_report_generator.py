@@ -2219,11 +2219,53 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
     signals_html = "\n".join(signal_cards)
 
     # Focus domain block
-    focus_domain = next(d for d in domains if d["domain_id"] == FOCUS_DOMAIN)
-    focus_caps = len(focus_domain.get("capability_ids", []))
-    focus_comps = len(focus_domain.get("component_ids", []))
+    focus_domain = next((d for d in domains if d["domain_id"] == FOCUS_DOMAIN), None)
+    focus_caps = len(focus_domain.get("capability_ids", [])) if focus_domain else 0
+    focus_comps = len(focus_domain.get("component_ids", [])) if focus_domain else 0
     connectivity_word = "platform connectivity" if publish_safe else "fleet connectivity"
     gateway_word = "platform gateway" if publish_safe else "fleet gateway"
+
+    if focus_domain is None:
+        focus_block_html = """  <h2 style="margin-top:36px">Pressure Zones</h2>
+  <div class="focus-domain-block">
+    <div class="focus-domain-header">
+      <div>
+        <div class="focus-domain-label">Pressure Zones</div>
+        <div class="focus-domain-name" style="color:var(--fg-muted)">Not yet evaluated</div>
+        <div class="focus-domain-sub">No focus domain has been designated for this client.</div>
+      </div>
+    </div>
+    <div class="focus-finding">
+      Pressure zones not yet evaluated. No focus domain has been designated for this client.
+      Signal derivation (PiOS 41.x) has not been executed. Zone analysis requires signal evidence.
+    </div>
+  </div>"""
+    else:
+        focus_block_html = f"""  <h2 style="margin-top:36px">Focus Domain</h2>
+  <div class="focus-domain-block">
+    <div class="focus-domain-header">
+      <div>
+        <div class="focus-domain-label">Focus Domain</div>
+        <div class="focus-domain-name">Platform Infrastructure and Data</div>
+        <div class="focus-domain-sub">Weakly Grounded · {focus_caps} capabilities · {focus_comps} components</div>
+      </div>
+      <div class="focus-badge">Focus Domain</div>
+    </div>
+    <div class="focus-summary-grid">
+      <div class="focus-stat"><div class="focus-stat-label">Signals Converging</div><div class="focus-stat-value">2 independent signals</div></div>
+      <div class="focus-stat"><div class="focus-stat-label">Grounding State</div><div class="focus-stat-value">Weakly Grounded</div></div>
+      <div class="focus-stat"><div class="focus-stat-label">Operational Dimensions Outside Scope</div><div class="focus-stat-value">7 of 7</div></div>
+    </div>
+    <div class="focus-finding">
+      <strong>What the LENS confirms:</strong> This domain is the structural hub through which cache performance, event delivery,
+      {connectivity_word}, alert processing, and driver session scoring are coordinated. All seven observable runtime dimensions
+      are currently outside evidence scope — not because the platform is instrumented and showing healthy values,
+      but because the evidence required to evaluate them is absent from the current assessment boundary.
+      The domain is structurally mapped and weakly grounded.<br><br>
+      <strong>What is not known:</strong> Whether the cache, event pipeline, {gateway_word}, and session systems
+      are operating normally or in a degraded state. This is a confirmed unknown, not an assumed healthy state.
+    </div>
+  </div>"""
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -2308,31 +2350,7 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
 {signals_html}
   </div>
 
-  <h2 style="margin-top:36px">Focus Domain</h2>
-  <div class="focus-domain-block">
-    <div class="focus-domain-header">
-      <div>
-        <div class="focus-domain-label">Focus Domain</div>
-        <div class="focus-domain-name">Platform Infrastructure and Data</div>
-        <div class="focus-domain-sub">Weakly Grounded · {focus_caps} capabilities · {focus_comps} components</div>
-      </div>
-      <div class="focus-badge">Focus Domain</div>
-    </div>
-    <div class="focus-summary-grid">
-      <div class="focus-stat"><div class="focus-stat-label">Signals Converging</div><div class="focus-stat-value">2 independent signals</div></div>
-      <div class="focus-stat"><div class="focus-stat-label">Grounding State</div><div class="focus-stat-value">Weakly Grounded</div></div>
-      <div class="focus-stat"><div class="focus-stat-label">Operational Dimensions Outside Scope</div><div class="focus-stat-value">7 of 7</div></div>
-    </div>
-    <div class="focus-finding">
-      <strong>What the LENS confirms:</strong> This domain is the structural hub through which cache performance, event delivery,
-      {connectivity_word}, alert processing, and driver session scoring are coordinated. All seven observable runtime dimensions
-      are currently outside evidence scope — not because the platform is instrumented and showing healthy values,
-      but because the evidence required to evaluate them is absent from the current assessment boundary.
-      The domain is structurally mapped and weakly grounded.<br><br>
-      <strong>What is not known:</strong> Whether the cache, event pipeline, {gateway_word}, and session systems
-      are operating normally or in a degraded state. This is a confirmed unknown, not an assumed healthy state.
-    </div>
-  </div>
+{focus_block_html}
 
   <div class="tier2-handoff">
     <div class="tier2-handoff-label">Next Proposed Actions — Outside This Assessment</div>
@@ -2468,6 +2486,49 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
     driver_session = "Session performance" if publish_safe else "Driver session performance"
     client_ref = "the Client Environment" if publish_safe else "the BlueEdge\n      Fleet Management Platform"
 
+    focus_domain = next((d for d in domains if d["domain_id"] == "DOMAIN-10"), None)
+
+    if focus_domain is None:
+        focus_section_html = """  <div class="section">
+    <div class="section-header"><span class="section-num">03</span><span class="section-title">Pressure Zones</span></div>
+    <div class="focus-block">
+      <div class="focus-block-label">Pressure Zones</div>
+      <div class="focus-block-name" style="color:var(--fg-muted)">Not yet evaluated</div>
+      <div class="focus-block-sub">No focus domain has been designated for this client.</div>
+      <p class="body-text" style="font-size:13px;color:var(--fg-muted)">
+        Pressure zones not yet evaluated. Signal derivation (PiOS 41.x) has not been executed.
+        Zone analysis requires signal evidence to designate a focus domain.</p>
+    </div>
+  </div>"""
+    else:
+        focus_section_html = f"""  <div class="section">
+    <div class="section-header"><span class="section-num">03</span><span class="section-title">Focus Domain Narrative</span></div>
+    <div class="focus-block">
+      <div class="focus-block-label">Focus Domain</div>
+      <div class="focus-block-name">Platform Infrastructure and Data</div>
+      <div class="focus-block-sub">Weakly Grounded &nbsp;·&nbsp; 4 capabilities &nbsp;·&nbsp; 6 components</div>
+      <p class="body-text" style="font-size:13px;color:var(--fg-muted)">
+        This domain is the structural hub through which the platform's core runtime services are coordinated —
+        including caching, event delivery, {connectivity_word}, alert processing, and session performance infrastructure.
+        Two independent structural signals converge here.</p>
+      <div class="focus-stats">
+        <div class="focus-stat-item"><div class="focus-stat-label">Signals Converging</div><div class="focus-stat-value">2 independent</div></div>
+        <div class="focus-stat-item"><div class="focus-stat-label">Grounding State</div><div class="focus-stat-value">Weakly Grounded</div></div>
+        <div class="focus-stat-item"><div class="focus-stat-label">Runtime Dimensions Outside Scope</div><div class="focus-stat-value">7 of 7</div></div>
+      </div>
+    </div>
+    <p class="body-text"><strong>Structural volatility signal (edge-to-node density: 1.273).</strong> The platform has more
+      architectural relationship edges than structural nodes — meaning most components are interconnected
+      rather than isolated. A containment depth ratio of 0.545 indicates that nearly half of all components
+      operate across module boundaries, not within them. This structural condition means the cost and risk
+      of change grows non-linearly as the platform scales.</p>
+    <p class="body-text"><strong>Platform runtime state signal.</strong> Seven operational dimensions of this domain cannot
+      be determined from the available evidence. This is the complete set of observable runtime states for
+      the core platform — not a partial gap. The evidence required to evaluate them was not present within
+      the assessment boundary.</p>
+    <p class="body-text">The domain is structurally mapped and weakly grounded. Its topology is confirmed. Its runtime state is not.</p>
+  </div>"""
+
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2559,33 +2620,7 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
     </table>
   </div>
 
-  <div class="section">
-    <div class="section-header"><span class="section-num">03</span><span class="section-title">Focus Domain Narrative</span></div>
-    <div class="focus-block">
-      <div class="focus-block-label">Focus Domain</div>
-      <div class="focus-block-name">Platform Infrastructure and Data</div>
-      <div class="focus-block-sub">Weakly Grounded &nbsp;·&nbsp; 4 capabilities &nbsp;·&nbsp; 6 components</div>
-      <p class="body-text" style="font-size:13px;color:var(--fg-muted)">
-        This domain is the structural hub through which the platform's core runtime services are coordinated —
-        including caching, event delivery, {connectivity_word}, alert processing, and session performance infrastructure.
-        Two independent structural signals converge here.</p>
-      <div class="focus-stats">
-        <div class="focus-stat-item"><div class="focus-stat-label">Signals Converging</div><div class="focus-stat-value">2 independent</div></div>
-        <div class="focus-stat-item"><div class="focus-stat-label">Grounding State</div><div class="focus-stat-value">Weakly Grounded</div></div>
-        <div class="focus-stat-item"><div class="focus-stat-label">Runtime Dimensions Outside Scope</div><div class="focus-stat-value">7 of 7</div></div>
-      </div>
-    </div>
-    <p class="body-text"><strong>Structural volatility signal (edge-to-node density: 1.273).</strong> The platform has more
-      architectural relationship edges than structural nodes — meaning most components are interconnected
-      rather than isolated. A containment depth ratio of 0.545 indicates that nearly half of all components
-      operate across module boundaries, not within them. This structural condition means the cost and risk
-      of change grows non-linearly as the platform scales.</p>
-    <p class="body-text"><strong>Platform runtime state signal.</strong> Seven operational dimensions of this domain cannot
-      be determined from the available evidence. This is the complete set of observable runtime states for
-      the core platform — not a partial gap. The evidence required to evaluate them was not present within
-      the assessment boundary.</p>
-    <p class="body-text">The domain is structurally mapped and weakly grounded. Its topology is confirmed. Its runtime state is not.</p>
-  </div>
+{focus_section_html}
 
   <div class="section">
     <div class="section-header"><span class="section-num">04</span><span class="section-title">Known vs Unknown Boundary</span></div>
