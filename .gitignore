@@ -18,3 +18,6 @@ clients/*/input/
 .obsidian/
 clients/blueedge/reports/*.html
 clients/*/reports/
+.env.local
+clients/*/psee/runs/*/fragments/
+clients/*/vaults/
