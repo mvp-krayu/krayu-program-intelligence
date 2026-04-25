@@ -19,9 +19,12 @@
  */
 
 import { execFile } from 'child_process'
+import { promisify } from 'util'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import fs from 'fs'
+
+const execFileAsync = promisify(execFile)
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname  = path.dirname(__filename)
@@ -32,7 +35,7 @@ const SCRIPT_PATH = path.join(REPO_ROOT, 'scripts', 'pios', 'tier2_query_engine.
 const PYTHON     = fs.existsSync('/usr/bin/python3') ? '/usr/bin/python3' : 'python3'
 const TIMEOUT_MS = 10000
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ status: 'error', reason: 'METHOD_NOT_ALLOWED' })
   }
@@ -44,26 +47,27 @@ export default function handler(req, res) {
     ? [SCRIPT_PATH, '--list-zones', '--projection', '--client', clientId, '--run-id', runId]
     : [SCRIPT_PATH, '--list-zones']
 
-  execFile(
-    PYTHON,
-    args,
-    { timeout: TIMEOUT_MS, cwd: REPO_ROOT },
-    (err, stdout) => {
-      if (err) {
-        return res.status(500).json({
-          status: 'error',
-          reason: err.killed ? 'ENGINE_TIMEOUT' : 'ENGINE_FAILURE',
-        })
-      }
+  try {
+    const { stdout } = await execFileAsync(PYTHON, args, { timeout: TIMEOUT_MS, cwd: REPO_ROOT })
+    const data = JSON.parse(stdout.trim())
+    if (data.status === 'NOT_AVAILABLE') {
+      return res.status(404).json(data)
+    }
+    return res.status(200).json(data)
+  } catch (err) {
+    // When Python exits non-zero (e.g. NOT_AVAILABLE), err.stdout holds the printed JSON
+    if (!err.killed && err.stdout) {
       try {
-        const data = JSON.parse(stdout.trim())
+        const data = JSON.parse(err.stdout.trim())
         if (data.status === 'NOT_AVAILABLE') {
           return res.status(404).json(data)
         }
-        return res.status(200).json(data)
-      } catch {
-        return res.status(500).json({ status: 'error', reason: 'PARSE_FAILURE' })
-      }
+        return res.status(500).json(data)
+      } catch {}
     }
-  )
+    return res.status(500).json({
+      status: 'error',
+      reason: err.killed ? 'ENGINE_TIMEOUT' : 'ENGINE_FAILURE',
+    })
+  }
 }
