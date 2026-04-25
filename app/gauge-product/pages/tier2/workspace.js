@@ -141,8 +141,8 @@ function WhyResult({ data }) {
       <div className="ws-finding-primary">
         <div className="ws-finding-badges">
           <span className={`ws-badge ws-badge-lg ${typeCls}`}>{typeLabel}</span>
-          <span className={`ws-badge ws-badge-lg ${SEV_CLS[r.severity] || ''}`}>{r.severity}</span>
-          <span className={`ws-badge ${CONF_CLS[r.confidence] || ''}`}>{r.confidence}</span>
+          {r.severity && <span className={`ws-badge ws-badge-lg ${SEV_CLS[r.severity] || ''}`}>{r.severity}</span>}
+          {r.confidence && <span className={`ws-badge ${CONF_CLS[r.confidence] || ''}`}>{r.confidence}</span>}
           {r.traceability && (
             <span className={`ws-badge ws-badge-sm ${TRACE_CLS[r.traceability] || ''}`}>
               {TRACE_LABELS[r.traceability] || r.traceability.replace(/_/g, ' ')}
@@ -157,8 +157,8 @@ function WhyResult({ data }) {
       <div className="ws-result-section">
         <div className="ws-result-label">Structural Scope</div>
         <div className="ws-scope-line">
-          {r.structural_scope.capability_count} capability node{r.structural_scope.capability_count !== 1 ? 's' : ''}
-          {r.structural_scope.capability_ids.map(c => (
+          {r.structural_scope.capability_count ?? 0} capability node{(r.structural_scope.capability_count ?? 0) !== 1 ? 's' : ''}
+          {(r.structural_scope.capability_ids || []).map(c => (
             <span key={c} className="ws-chip">{c}</span>
           ))}
         </div>
@@ -341,13 +341,13 @@ function EvidenceResult({ data, vaultIndex }) {
         <div className="ws-result-label">Signal Coverage</div>
         <div className="ws-ev-summary">
           <div className="ws-ev-stat-block">
-            <span className="ws-ev-stat-num">{r.signals_total}</span>
-            <span className="ws-ev-stat-unit">signal{r.signals_total !== 1 ? 's' : ''} bound</span>
+            <span className="ws-ev-stat-num">{r.signals_total ?? r.total_conditions ?? 0}</span>
+            <span className="ws-ev-stat-unit">signal{(r.signals_total ?? r.total_conditions ?? 0) !== 1 ? 's' : ''} bound</span>
           </div>
           <div className="ws-ev-stat-sep" />
           <div className="ws-ev-stat-block">
-            <span className="ws-ev-stat-num">{r.total_trace_links}</span>
-            <span className="ws-ev-stat-unit">trace link{r.total_trace_links !== 1 ? 's' : ''}</span>
+            <span className="ws-ev-stat-num">{r.total_trace_links ?? 0}</span>
+            <span className="ws-ev-stat-unit">trace link{(r.total_trace_links ?? 0) !== 1 ? 's' : ''}</span>
           </div>
         </div>
         {r.signal_coverage.length === 0 && (
@@ -362,7 +362,7 @@ function EvidenceResult({ data, vaultIndex }) {
               </span>
             </div>
             <div className="ws-signal-title">{s.title}</div>
-            {s.trace_links.length > 0 ? (
+            {(s.trace_links?.length > 0) ? (
               <ul className="ws-trace-list">
                 {s.trace_links.map((l, i) => <li key={i} className="ws-trace-link">{l}</li>)}
               </ul>
@@ -396,7 +396,11 @@ function ZoneCard({ zone, vaultIndex, defaultOpen, isActive, onActivate }) {
   async function fireQuery(mode) {
     setQs({ loading: true, mode })
     try {
-      const res  = await fetch(`/api/query?zone_id=${zone.zone_id}&mode=${mode}`)
+      const isPzZone = zone.zone_id?.startsWith('PZ-')
+      const queryUrl = (isPzZone && USE_SECOND_CLIENT)
+        ? `/api/query?zone_id=${zone.zone_id}&mode=${mode}&client=${_SC_CLIENT_ID}&runId=${_SC_RUN_ID}`
+        : `/api/query?zone_id=${zone.zone_id}&mode=${mode}`
+      const res  = await fetch(queryUrl)
       const data = await res.json()
       if (data.status === 'ok') {
         setQs({ mode, data })

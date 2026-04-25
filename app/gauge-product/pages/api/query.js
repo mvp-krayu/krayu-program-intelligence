@@ -23,9 +23,12 @@
  */
 
 import { execFile } from 'child_process'
+import { promisify } from 'util'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import fs from 'fs'
+
+const execFileAsync = promisify(execFile)
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname  = path.dirname(__filename)
@@ -36,30 +39,30 @@ const SCRIPT_PATH = path.join(REPO_ROOT, 'scripts', 'pios', 'tier2_query_engine.
 const PYTHON     = fs.existsSync('/usr/bin/python3') ? '/usr/bin/python3' : 'python3'
 const TIMEOUT_MS = 15000
 
-const VALID_ZONE      = /^ZONE-\d{2}$/
-const SUPPORTED_MODES = new Set(['WHY', 'EVIDENCE', 'TRACE'])
+const VALID_ZONE            = /^ZONE-\d{2}$/
+const VALID_PROJECTION_ZONE = /^PZ-\d{3}$/
+const SUPPORTED_MODES       = new Set(['WHY', 'EVIDENCE', 'TRACE'])
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ status: 'error', reason: 'METHOD_NOT_ALLOWED' })
   }
 
-  const { zone_id, mode, scope } = req.query
+  const { zone_id, mode, scope, client: clientId, runId } = req.query
 
-  if (!zone_id || !VALID_ZONE.test(zone_id)) {
+  const isProjectionZone = zone_id && VALID_PROJECTION_ZONE.test(zone_id)
+  const isCanonicalZone  = zone_id && VALID_ZONE.test(zone_id)
+
+  if (!zone_id || (!isProjectionZone && !isCanonicalZone)) {
     return res.status(400).json({
       status: 'error',
       reason: 'INVALID_PARAMS',
-      detail: 'zone_id required; format: ZONE-NN',
+      detail: 'zone_id required; format: ZONE-NN (canonical) or PZ-NNN (projection)',
     })
   }
 
   if (!mode) {
-    return res.status(400).json({
-      status: 'error',
-      reason: 'INVALID_PARAMS',
-      detail: 'mode required',
-    })
+    return res.status(400).json({ status: 'error', reason: 'INVALID_PARAMS', detail: 'mode required' })
   }
 
   if (!SUPPORTED_MODES.has(mode)) {
@@ -70,28 +73,33 @@ export default function handler(req, res) {
     })
   }
 
-  const args = [SCRIPT_PATH, '--zone', zone_id, '--mode', mode]
+  if (isProjectionZone && (!clientId || !runId)) {
+    return res.status(400).json({
+      status: 'error',
+      reason: 'INVALID_PARAMS',
+      detail: 'client and runId required for projection zone queries',
+    })
+  }
+
+  const args = isProjectionZone
+    ? [SCRIPT_PATH, '--zone', zone_id, '--mode', mode,
+       '--projection', '--client', clientId, '--run-id', runId]
+    : [SCRIPT_PATH, '--zone', zone_id, '--mode', mode]
   if (mode === 'EVIDENCE' && scope) args.push('--scope', scope)
 
-  execFile(PYTHON, args, { timeout: TIMEOUT_MS, cwd: REPO_ROOT }, (err, stdout) => {
-    if (err) {
-      if (err.killed) {
-        return res.status(500).json({ status: 'error', reason: 'ENGINE_TIMEOUT' })
-      }
-      // Non-zero exit may carry a structured error payload (e.g. ZONE_NOT_FOUND).
-      // Attempt to parse stdout before falling back to ENGINE_FAILURE.
+  try {
+    const { stdout } = await execFileAsync(PYTHON, args, { timeout: TIMEOUT_MS, cwd: REPO_ROOT })
+    return res.status(200).json(JSON.parse(stdout.trim()))
+  } catch (err) {
+    if (err.killed) {
+      return res.status(500).json({ status: 'error', reason: 'ENGINE_TIMEOUT' })
+    }
+    // Non-zero exit may carry a structured payload (e.g. ZONE_NOT_FOUND, NOT_AVAILABLE)
+    if (err.stdout) {
       try {
-        const data = JSON.parse(stdout.trim())
-        return res.status(200).json(data)
-      } catch {
-        return res.status(500).json({ status: 'error', reason: 'ENGINE_FAILURE' })
-      }
+        return res.status(200).json(JSON.parse(err.stdout.trim()))
+      } catch {}
     }
-    try {
-      const data = JSON.parse(stdout.trim())
-      return res.status(200).json(data)
-    } catch {
-      return res.status(500).json({ status: 'error', reason: 'PARSE_FAILURE' })
-    }
-  })
+    return res.status(500).json({ status: 'error', reason: 'ENGINE_FAILURE' })
+  }
 }

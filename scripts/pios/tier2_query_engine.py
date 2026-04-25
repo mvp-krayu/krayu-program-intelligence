@@ -487,6 +487,194 @@ def list_zones_from_projection(client_id: str, run_id: str) -> Dict:
 
 
 # ---------------------------------------------------------------------------
+# 41.x projection zone query handlers (WHY / EVIDENCE / TRACE)
+# ---------------------------------------------------------------------------
+
+_PROJECTION_UNRESOLVED = [
+    {
+        "element": "focus domain selection",
+        "reason": "No focus domain has been selected; pressure zones are not ranked",
+    },
+    {
+        "element": "canonical topology",
+        "reason": "Projection data is structural only; no canonical_topology used",
+    },
+]
+
+_PROJECTION_CLASS_CONTRIBUTION = {
+    "COMPOUND_ZONE":      "condition_count >= 3 — three structural conditions co-present",
+    "COUPLING_ZONE":      "PSIG-001 + PSIG-002 co-present — coupling condition pair",
+    "PROPAGATION_ZONE":   "PSIG-002 + PSIG-004 co-present — propagation condition pair",
+    "RESPONSIBILITY_ZONE":"PSIG-001 + PSIG-004 co-present — responsibility condition pair",
+    "FRAGMENTATION_ZONE": "PSIG-006 present — structural blind-spot activated",
+}
+
+
+def get_projection_zone_data(zone_id: str, client_id: str, run_id: str):
+    """Load a single zone and its condition records from the 41.x projection package.
+
+    Returns (zone_record, sig_by_cond, combo_sig).
+    zone_record is None if zone_id is not found.
+    Raises FileNotFoundError if 41.x artifacts are absent.
+    """
+    projection = _load_projection_artifact(client_id, run_id, "pressure_zone_projection.json")
+    signals    = _load_projection_artifact(client_id, run_id, "signal_projection.json")
+
+    zone_record = next(
+        (z for z in projection.get("zone_projection", []) if z["zone_id"] == zone_id),
+        None,
+    )
+    sig_by_cond = {
+        s["condition_id"]: s
+        for s in signals.get("active_conditions_in_scope", [])
+    }
+    combo_sig = signals.get("combination_signature", {})
+
+    return zone_record, sig_by_cond, combo_sig
+
+
+def handle_projection_why(zone: Dict, sig_by_cond: Dict) -> Dict:
+    """WHY mode for a 41.x projection zone.
+
+    Derives classification rationale solely from 41.x projection artifacts.
+    No canonical_topology usage. No signal_registry usage.
+    """
+    rationale: List[Dict] = [
+        {
+            "factor":      "zone_class_trigger",
+            "value":       zone["zone_class"],
+            "source":      "41.x/pressure_zone_projection.json: zone_class",
+            "contribution": _PROJECTION_CLASS_CONTRIBUTION.get(zone["zone_class"], zone["zone_class"]),
+        },
+        {
+            "factor":      "attribution_profile",
+            "value":       zone.get("attribution_profile"),
+            "source":      "41.x/pressure_zone_projection.json: attribution_profile",
+            "contribution": (
+                "Zone carries primary attribution — anchor domain is the highest-signal entity"
+                if zone.get("attribution_profile") == "primary"
+                else "Zone carries secondary attribution — conditions attributed via co-located entity"
+            ),
+        },
+        {
+            "factor":      "embedded_pair_rules",
+            "value":       zone.get("embedded_pair_rules", []),
+            "source":      "41.x/pressure_zone_projection.json: embedded_pair_rules",
+            "contribution": "Pair-wise structural rules embedded in this compound zone",
+        },
+    ]
+
+    for cond_id in zone.get("conditions", []):
+        cond = sig_by_cond.get(cond_id, {})
+        rationale.append({
+            "factor": f"condition_{cond_id}",
+            "value": {
+                "signal_id":        cond.get("signal_id"),
+                "activation_state": cond.get("activation_state"),
+                "signal_value":     cond.get("signal_value"),
+            },
+            "source":      f"41.x/signal_projection.json: condition_id={cond_id}",
+            "contribution": "Activated structural condition contributing to zone class",
+        })
+
+    return {
+        "zone_class":        zone["zone_class"],
+        "zone_type":         zone["zone_type"],
+        "anchor": {
+            "anchor_id":   zone["anchor_id"],
+            "anchor_name": zone["anchor_name"],
+        },
+        "attribution_profile": zone.get("attribution_profile"),
+        "condition_count":     zone["condition_count"],
+        "structural_scope": {
+            "capability_count":  0,
+            "capability_ids":    [],
+            "member_entity_ids": zone.get("member_entity_ids", []),
+            "candidate_ids":     zone.get("candidate_ids", []),
+            "source":            "41.x/pressure_zone_projection.json: member_entity_ids, candidate_ids",
+        },
+        "classification_rationale": rationale,
+    }
+
+
+def handle_projection_evidence(zone: Dict, sig_by_cond: Dict, combo_sig: Dict) -> Dict:
+    """EVIDENCE mode for a 41.x projection zone.
+
+    Returns PSIG condition records from 41.x signal_projection only.
+    No canonical_topology usage. No signal_registry usage.
+    """
+    signal_coverage: List[Dict] = []
+    for cond_id in zone.get("conditions", []):
+        cond = sig_by_cond.get(cond_id, {})
+        signal_coverage.append({
+            "condition_id":     cond_id,
+            "signal_id":        cond.get("signal_id", "UNKNOWN"),
+            "signal_authority": cond.get("signal_authority", "PROVISIONAL_CKR_CANDIDATE"),
+            "activation_state": cond.get("activation_state", "UNKNOWN"),
+            "signal_value":     cond.get("signal_value"),
+            "activation_method": cond.get("activation_method"),
+            "attribution_role": zone.get("attribution_profile"),
+            "source":           f"41.x/signal_projection.json: condition_id={cond_id}",
+        })
+
+    return {
+        "signal_coverage":      signal_coverage,
+        "total_conditions":     len(signal_coverage),
+        "combination_signature": combo_sig.get("primary", ""),
+        "source":               "41.x projection only — no canonical_topology or signal_registry used",
+    }
+
+
+def handle_projection_trace(zone: Dict, sig_by_cond: Dict) -> List[Dict]:
+    """TRACE mode for a 41.x projection zone.
+
+    Returns PZ → PSIG → condition origin chains.
+    No traversal outside projection data.
+    """
+    zone_id = zone["zone_id"]
+    paths: List[Dict] = []
+
+    for i, cond_id in enumerate(zone.get("conditions", []), 1):
+        cond   = sig_by_cond.get(cond_id, {})
+        sig_id = cond.get("signal_id", "UNKNOWN")
+        paths.append({
+            "path_id":          f"{zone_id}-P{i}",
+            "node_chain":       [zone_id, sig_id, cond_id],
+            "path_type":        "EVIDENCE",
+            "evidence_support": cond.get("activation_state", "UNKNOWN"),
+            "activation_method": cond.get("activation_method"),
+            "source":           "41.x/pressure_zone_projection.json + signal_projection.json",
+        })
+
+    return paths
+
+
+def build_projection_query_response(
+    zone_id: str, mode: str, result, run_id: str
+) -> Dict:
+    response: Dict = {
+        "status":                "ok",
+        "zone_id":               zone_id,
+        "mode":                  mode,
+        "run_id":                run_id,
+        "inference_prohibition": "ACTIVE",
+        "evidence_basis": {
+            "source":                   "41.x projection only",
+            "canonical_topology_used":  False,
+            "signal_registry_used":     False,
+        },
+        "uncertainty": {
+            "unresolved": _PROJECTION_UNRESOLVED,
+        },
+    }
+    if mode == "TRACE":
+        response["trace"] = result
+    else:
+        response["result"] = result
+    return response
+
+
+# ---------------------------------------------------------------------------
 # Zone list (--list-zones)
 # ---------------------------------------------------------------------------
 
@@ -568,15 +756,67 @@ def main() -> None:
                 }))
                 sys.exit(1)
             return
-        # WHY / EVIDENCE / TRACE for projection zones require a separate contract
-        print(json.dumps({
-            "status": "NOT_SUPPORTED",
-            "reason": "PROJECTION_ZONE_QUERY_NOT_SUPPORTED",
-            "detail": (
-                "WHY/EVIDENCE/TRACE modes for 41.x projection zones "
-                "require a separate contract"
-            ),
-        }))
+        # Zone query (WHY / EVIDENCE / TRACE) for projection zones
+        if not args.zone:
+            print(json.dumps({
+                "status": "error",
+                "reason": "INVALID_PARAMS",
+                "detail": "zone_id required for zone query",
+            }))
+            sys.exit(1)
+
+        if args.mode not in ("WHY", "EVIDENCE", "TRACE"):
+            print(json.dumps({
+                "status": "error",
+                "reason": "INVALID_PARAMS",
+                "detail": f"mode must be WHY, EVIDENCE, or TRACE, got: {args.mode!r}",
+            }))
+            sys.exit(1)
+
+        try:
+            zone_record, sig_by_cond, combo_sig = get_projection_zone_data(
+                args.zone, args.client, args.run_id
+            )
+        except FileNotFoundError as e:
+            print(json.dumps({
+                "status": "NOT_AVAILABLE",
+                "reason": "41X_ARTIFACT_MISSING",
+                "detail": str(e),
+            }))
+            sys.exit(1)
+        except Exception as e:
+            print(json.dumps({
+                "status": "error",
+                "reason": "PROJECTION_ENGINE_FAILURE",
+                "detail": str(e),
+            }))
+            sys.exit(1)
+
+        if zone_record is None:
+            print(json.dumps({
+                "status": "error",
+                "reason": "ZONE_NOT_FOUND",
+                "zone_id": args.zone,
+            }))
+            sys.exit(1)
+
+        try:
+            if args.mode == "WHY":
+                result = handle_projection_why(zone_record, sig_by_cond)
+            elif args.mode == "EVIDENCE":
+                result = handle_projection_evidence(zone_record, sig_by_cond, combo_sig)
+            else:
+                result = handle_projection_trace(zone_record, sig_by_cond)
+            print(json.dumps(
+                build_projection_query_response(args.zone, args.mode, result, args.run_id)
+            ))
+        except Exception as e:
+            print(json.dumps({
+                "status": "error",
+                "reason": "PROJECTION_ENGINE_FAILURE",
+                "detail": str(e),
+            }))
+            sys.exit(1)
         return
 
     tier2_data.configure(
