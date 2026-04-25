@@ -1,0 +1,237 @@
+{
+  "schema_version": "1.0",
+  "run_id": "run_01_oss_fastapi",
+  "client_id": "e65d2f0a-dfa7-4257-9333-fcbb583f0880",
+  "source_contract": "PI.CONDITION-CORRELATION.ANALYSIS.75X.03",
+  "source_files": [
+    "pressure_candidate_set.md"
+  ],
+  "candidate_count": 6,
+  "entity_level_candidate_count": 3,
+  "domain_attribution_candidate_count": 3,
+  "candidate_rule": "activation_count >= 2",
+  "candidates": [
+    {
+      "candidate_id": "PC-001",
+      "entity_id": "NODE-009",
+      "entity_alias": "CEU-09",
+      "entity_type": "CEU",
+      "domain_id": "DOM-04",
+      "domain_name": "frontend_isolated",
+      "active_conditions": ["PSIG-001", "PSIG-004"],
+      "activation_count": 2,
+      "combination_signature": "PSIG-001|PSIG-004",
+      "psig_006_flag": "NOT",
+      "candidate_level": "entity",
+      "evidence_trace": {
+        "PSIG-001": {
+          "st_source": "ST-030",
+          "psig_signal_value": 9.43,
+          "condition_id": "COND-PSIG-001-01",
+          "condition_state": "HIGH",
+          "attribution_role": "primary",
+          "node_fan_in": 13,
+          "node_ratio": 9.43
+        },
+        "PSIG-004": {
+          "st_sources": ["ST-033", "ST-034"],
+          "psig_signal_value": 4.33,
+          "condition_id": "COND-PSIG-004-01",
+          "condition_state": "HIGH",
+          "attribution_role": "primary",
+          "node_surface_count": 13,
+          "node_ratio": 4.33
+        }
+      }
+    },
+    {
+      "candidate_id": "PC-002",
+      "entity_id": "NODE-008",
+      "entity_alias": "CEU-08",
+      "entity_type": "CEU",
+      "domain_id": "DOM-03",
+      "domain_name": "backend_isolated",
+      "active_conditions": ["PSIG-001", "PSIG-004"],
+      "activation_count": 2,
+      "combination_signature": "PSIG-001|PSIG-004",
+      "psig_006_flag": "NOT",
+      "candidate_level": "entity",
+      "evidence_trace": {
+        "PSIG-001": {
+          "st_source": "ST-030",
+          "psig_signal_value": 9.43,
+          "condition_id": "COND-PSIG-001-01",
+          "condition_state": "HIGH",
+          "attribution_role": "secondary",
+          "node_fan_in": 10,
+          "node_ratio": 7.26
+        },
+        "PSIG-004": {
+          "st_sources": ["ST-033", "ST-034"],
+          "psig_signal_value": 4.33,
+          "condition_id": "COND-PSIG-004-01",
+          "condition_state": "HIGH",
+          "attribution_role": "secondary_outlier_above_threshold",
+          "node_surface_count": 10,
+          "node_ratio": 3.33
+        }
+      }
+    },
+    {
+      "candidate_id": "PC-003",
+      "entity_id": "NODE-010",
+      "entity_alias": "CEU-10",
+      "entity_type": "CEU",
+      "domain_id": "DOM-05",
+      "domain_name": "platform_monorepo",
+      "active_conditions": ["PSIG-001", "PSIG-004"],
+      "activation_count": 2,
+      "combination_signature": "PSIG-001|PSIG-004",
+      "psig_006_flag": "NOT",
+      "candidate_level": "entity",
+      "evidence_trace": {
+        "PSIG-001": {
+          "st_source": "ST-030",
+          "psig_signal_value": 9.43,
+          "condition_id": "COND-PSIG-001-01",
+          "condition_state": "HIGH",
+          "attribution_role": "secondary",
+          "node_fan_in": 9,
+          "node_ratio": 6.53
+        },
+        "PSIG-004": {
+          "st_sources": ["ST-033", "ST-034"],
+          "psig_signal_value": 4.33,
+          "condition_id": "COND-PSIG-004-01",
+          "condition_state": "HIGH",
+          "attribution_role": "secondary_outlier_above_threshold",
+          "node_surface_count": 7,
+          "node_ratio": 2.33
+        }
+      }
+    },
+    {
+      "candidate_id": "PC-004",
+      "entity_id": "DOM-04",
+      "entity_type": "DOMAIN",
+      "domain_id": "DOM-04",
+      "domain_name": "frontend_isolated",
+      "active_conditions": ["PSIG-001", "PSIG-002", "PSIG-004"],
+      "activation_count": 3,
+      "combination_signature": "PSIG-001|PSIG-002|PSIG-004",
+      "psig_006_flag": "NOT",
+      "candidate_level": "domain_attribution",
+      "evidence_trace": {
+        "PSIG-001": {
+          "st_source": "ST-030",
+          "psig_signal_value": 9.43,
+          "condition_id": "COND-PSIG-001-01",
+          "condition_state": "HIGH",
+          "attribution_type": "domain_attribution",
+          "via_entity": "NODE-009",
+          "attribution_role": "zone_domain_primary"
+        },
+        "PSIG-002": {
+          "st_source": "ST-031",
+          "psig_signal_value": 9.43,
+          "condition_id": "COND-PSIG-002-01",
+          "condition_state": "HIGH",
+          "attribution_type": "direct",
+          "domain_fan_out": 13,
+          "domain_ratio": 9.43
+        },
+        "PSIG-004": {
+          "st_sources": ["ST-033", "ST-034"],
+          "psig_signal_value": 4.33,
+          "condition_id": "COND-PSIG-004-01",
+          "condition_state": "HIGH",
+          "attribution_type": "domain_attribution",
+          "via_entity": "NODE-009",
+          "attribution_role": "zone_domain_primary"
+        }
+      }
+    },
+    {
+      "candidate_id": "PC-005",
+      "entity_id": "DOM-03",
+      "entity_type": "DOMAIN",
+      "domain_id": "DOM-03",
+      "domain_name": "backend_isolated",
+      "active_conditions": ["PSIG-001", "PSIG-002", "PSIG-004"],
+      "activation_count": 3,
+      "combination_signature": "PSIG-001|PSIG-002|PSIG-004",
+      "psig_006_flag": "NOT",
+      "candidate_level": "domain_attribution",
+      "evidence_trace": {
+        "PSIG-001": {
+          "st_source": "ST-030",
+          "psig_signal_value": 9.43,
+          "condition_id": "COND-PSIG-001-01",
+          "condition_state": "HIGH",
+          "attribution_type": "domain_attribution",
+          "via_entity": "NODE-008",
+          "attribution_role": "zone_domain_secondary"
+        },
+        "PSIG-002": {
+          "st_source": "ST-031",
+          "psig_signal_value": 9.43,
+          "condition_id": "COND-PSIG-002-01",
+          "condition_state": "HIGH",
+          "attribution_type": "direct",
+          "domain_fan_out": 10,
+          "domain_ratio": 7.26
+        },
+        "PSIG-004": {
+          "st_sources": ["ST-033", "ST-034"],
+          "psig_signal_value": 4.33,
+          "condition_id": "COND-PSIG-004-01",
+          "condition_state": "HIGH",
+          "attribution_type": "domain_attribution",
+          "via_entity": "NODE-008",
+          "attribution_role": "zone_domain_secondary"
+        }
+      }
+    },
+    {
+      "candidate_id": "PC-006",
+      "entity_id": "DOM-05",
+      "entity_type": "DOMAIN",
+      "domain_id": "DOM-05",
+      "domain_name": "platform_monorepo",
+      "active_conditions": ["PSIG-001", "PSIG-002", "PSIG-004"],
+      "activation_count": 3,
+      "combination_signature": "PSIG-001|PSIG-002|PSIG-004",
+      "psig_006_flag": "NOT",
+      "candidate_level": "domain_attribution",
+      "evidence_trace": {
+        "PSIG-001": {
+          "st_source": "ST-030",
+          "psig_signal_value": 9.43,
+          "condition_id": "COND-PSIG-001-01",
+          "condition_state": "HIGH",
+          "attribution_type": "domain_attribution",
+          "via_entity": "NODE-010",
+          "attribution_role": "zone_domain_secondary"
+        },
+        "PSIG-002": {
+          "st_source": "ST-031",
+          "psig_signal_value": 9.43,
+          "condition_id": "COND-PSIG-002-01",
+          "condition_state": "HIGH",
+          "attribution_type": "direct",
+          "domain_fan_out": 7,
+          "domain_ratio": 5.08
+        },
+        "PSIG-004": {
+          "st_sources": ["ST-033", "ST-034"],
+          "psig_signal_value": 4.33,
+          "condition_id": "COND-PSIG-004-01",
+          "condition_state": "HIGH",
+          "attribution_type": "domain_attribution",
+          "via_entity": "NODE-010",
+          "attribution_role": "zone_domain_secondary"
+        }
+      }
+    }
+  ]
+}
