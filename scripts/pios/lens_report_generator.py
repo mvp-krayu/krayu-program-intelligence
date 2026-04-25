@@ -3781,12 +3781,19 @@ def _main_legacy(output_path: Optional[Path] = None) -> None:
 # ---------------------------------------------------------------------------
 
 def main(tier1: bool = True, output_path: Optional[Path] = None,
-         output_dir: Optional[Path] = None) -> None:
-    if tier1:
+         output_dir: Optional[Path] = None,
+         deliverable: Optional[str] = None) -> None:
+    if not tier1:
+        _main_legacy(output_path=output_path)
+        return
+    if deliverable == "tier1":
         generate_tier1_reports(output_dir=output_dir)
+    elif deliverable == "diagnostic":
         generate_tier2_reports()
     else:
-        _main_legacy(output_path=output_path)
+        # "all" or None (no --deliverable flag) — preserves existing default behaviour
+        generate_tier1_reports(output_dir=output_dir)
+        generate_tier2_reports()
 
 
 if __name__ == "__main__":
@@ -3820,6 +3827,18 @@ if __name__ == "__main__":
     )
     # Report mode
     parser.add_argument(
+        "--deliverable",
+        choices=["tier1", "diagnostic", "all"],
+        default=None,
+        help=(
+            "Select which deliverable(s) to generate: "
+            "tier1 = EXEC+LENS only (no Tier-2 subprocess), "
+            "diagnostic = DIAGNOSTIC only, "
+            "all = EXEC+LENS+DIAGNOSTIC. "
+            "Omitting this flag preserves existing default behaviour (all)."
+        ),
+    )
+    parser.add_argument(
         "--tier1", action="store_true", default=True,
         help="Generate Tier-1 report set (default behavior)"
     )
@@ -3844,4 +3863,5 @@ if __name__ == "__main__":
         package_dir=args.package_dir,
         claims=args.claims,
     )
-    main(tier1=not args.legacy, output_path=args.output, output_dir=args.output_dir)
+    main(tier1=not args.legacy, output_path=args.output, output_dir=args.output_dir,
+         deliverable=args.deliverable)
