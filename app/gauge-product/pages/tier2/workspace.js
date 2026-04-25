@@ -617,13 +617,13 @@ export default function Tier2WorkspacePage() {
             <div className="ws-ctx-field">
               <span className="ws-ctx-label">Score</span>
               <span className="ws-ctx-value ws-ctx-score">
-                {zonesData.context.score}
-                <span className="ws-ctx-band">{zonesData.context.band}</span>
+                {zonesData.context?.score ?? '—'}
+                <span className="ws-ctx-band">{zonesData.context?.band ?? 'Not available'}</span>
               </span>
             </div>
             <div className="ws-ctx-field">
               <span className="ws-ctx-label">Confidence</span>
-              <span className="ws-ctx-value">{zonesData.context.confidence}</span>
+              <span className="ws-ctx-value">{zonesData.context?.confidence ?? '—'}</span>
             </div>
             <div className="ws-ctx-field">
               <span className="ws-ctx-label">inference_prohibition</span>
