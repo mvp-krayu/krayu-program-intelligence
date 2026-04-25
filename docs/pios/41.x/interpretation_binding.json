@@ -1,0 +1,682 @@
+{
+  "binding_version": "1.0",
+  "binding_contract": "PI.41X.INTERPRETATION-BINDING.01",
+  "schema_ref": "docs/pios/41.x/interpretation_binding_schema.json",
+  "source_registry_path": "docs/pios/41.x/interpretation_registry.json",
+  "source_registry_version": "1.0",
+  "source_projection_reference": {
+    "run_id": "run_01_oss_fastapi",
+    "client_id": "e65d2f0a-dfa7-4257-9333-fcbb583f0880",
+    "pressure_zone_projection": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/41.x/pressure_zone_projection.json",
+    "signal_projection": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/41.x/signal_projection.json"
+  },
+  "generated_at": "2026-04-25",
+  "inference_prohibition": "ACTIVE",
+  "authority_note": "All attached_interpretation content is copied verbatim from interpretation_registry.json. No content was generated, inferred, or modified at binding time. No recommendation, severity, prediction, or prioritization was introduced.",
+  "total_bindings": 20,
+  "binding_scope_note": "BIND-001..012 are zone instance bindings — zone_id references are specific to run_01_oss_fastapi. BIND-013..020 are signal and condition bindings — signal_id and condition type references are global and reusable across future clients.",
+
+  "bindings": [
+
+    {
+      "binding_id": "BIND-001",
+      "source_type": "zone",
+      "binding_context": null,
+      "source_ref": {
+        "zone_id": "PZ-001",
+        "zone_class": "COMPOUND_ZONE",
+        "signal_id": null,
+        "condition_id": null
+      },
+      "interpretation_ref": {
+        "registry_entry_id": "INT-007",
+        "registry_version": "1.0"
+      },
+      "attached_interpretation": {
+        "behavioral_meaning": "A structural location where conditions from two or more distinct pressure families are simultaneously active. The compound designation reflects co-presence of multiple activated conditions — from any combination of coupling, propagation, responsibility, surface exposure, or coordination pressure classes — on the same anchor domain.",
+        "system_expression": "The anchor domain's condition scope intersects two or more active pressure condition types concurrently. Embedded pair rules record which pairwise pressure class combinations are present. The compound zone is not ranked against single-class zones; it records structural co-presence across pressure families.",
+        "business_expression": "This part of the codebase is the structural intersection of multiple structural pressure patterns. More than one type of structural concentration is simultaneously active in its scope. The compound designation records co-presence — not priority, not severity."
+      },
+      "trace": {
+        "registry_path": "docs/pios/41.x/interpretation_registry.json",
+        "source_artifact_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/41.x/pressure_zone_projection.json",
+        "evidence_status": "registry_bound"
+      },
+      "constraints": {
+        "truth_mutation": false,
+        "runtime_computation": false,
+        "recommendation": false,
+        "severity": false,
+        "prediction": false
+      }
+    },
+
+    {
+      "binding_id": "BIND-002",
+      "source_type": "zone",
+      "binding_context": null,
+      "source_ref": {
+        "zone_id": "PZ-002",
+        "zone_class": "COMPOUND_ZONE",
+        "signal_id": null,
+        "condition_id": null
+      },
+      "interpretation_ref": {
+        "registry_entry_id": "INT-007",
+        "registry_version": "1.0"
+      },
+      "attached_interpretation": {
+        "behavioral_meaning": "A structural location where conditions from two or more distinct pressure families are simultaneously active. The compound designation reflects co-presence of multiple activated conditions — from any combination of coupling, propagation, responsibility, surface exposure, or coordination pressure classes — on the same anchor domain.",
+        "system_expression": "The anchor domain's condition scope intersects two or more active pressure condition types concurrently. Embedded pair rules record which pairwise pressure class combinations are present. The compound zone is not ranked against single-class zones; it records structural co-presence across pressure families.",
+        "business_expression": "This part of the codebase is the structural intersection of multiple structural pressure patterns. More than one type of structural concentration is simultaneously active in its scope. The compound designation records co-presence — not priority, not severity."
+      },
+      "trace": {
+        "registry_path": "docs/pios/41.x/interpretation_registry.json",
+        "source_artifact_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/41.x/pressure_zone_projection.json",
+        "evidence_status": "registry_bound"
+      },
+      "constraints": {
+        "truth_mutation": false,
+        "runtime_computation": false,
+        "recommendation": false,
+        "severity": false,
+        "prediction": false
+      }
+    },
+
+    {
+      "binding_id": "BIND-003",
+      "source_type": "zone",
+      "binding_context": null,
+      "source_ref": {
+        "zone_id": "PZ-003",
+        "zone_class": "COMPOUND_ZONE",
+        "signal_id": null,
+        "condition_id": null
+      },
+      "interpretation_ref": {
+        "registry_entry_id": "INT-007",
+        "registry_version": "1.0"
+      },
+      "attached_interpretation": {
+        "behavioral_meaning": "A structural location where conditions from two or more distinct pressure families are simultaneously active. The compound designation reflects co-presence of multiple activated conditions — from any combination of coupling, propagation, responsibility, surface exposure, or coordination pressure classes — on the same anchor domain.",
+        "system_expression": "The anchor domain's condition scope intersects two or more active pressure condition types concurrently. Embedded pair rules record which pairwise pressure class combinations are present. The compound zone is not ranked against single-class zones; it records structural co-presence across pressure families.",
+        "business_expression": "This part of the codebase is the structural intersection of multiple structural pressure patterns. More than one type of structural concentration is simultaneously active in its scope. The compound designation records co-presence — not priority, not severity."
+      },
+      "trace": {
+        "registry_path": "docs/pios/41.x/interpretation_registry.json",
+        "source_artifact_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/41.x/pressure_zone_projection.json",
+        "evidence_status": "registry_bound"
+      },
+      "constraints": {
+        "truth_mutation": false,
+        "runtime_computation": false,
+        "recommendation": false,
+        "severity": false,
+        "prediction": false
+      }
+    },
+
+    {
+      "binding_id": "BIND-004",
+      "source_type": "zone",
+      "binding_context": "embedded_pair_rule",
+      "source_ref": {
+        "zone_id": "PZ-001",
+        "zone_class": "COUPLING_ZONE",
+        "signal_id": null,
+        "condition_id": null
+      },
+      "interpretation_ref": {
+        "registry_entry_id": "INT-001",
+        "registry_version": "1.0"
+      },
+      "attached_interpretation": {
+        "behavioral_meaning": "A structural location where incoming dependency concentration is active. The zone reflects that one or more nodes within the anchor domain receive dependencies from a disproportionate share of source nodes relative to the run baseline.",
+        "system_expression": "The anchor domain contains a node with elevated fan-in count. PSIG-001 condition is active within this zone's scope. Structural paths entering this domain are concentrated at a single node or small node set. Attribution entity is the max-fan-in node; parent domain is the zone anchor.",
+        "business_expression": "This part of the codebase is a dependency target for many other parts. Its incoming structural connections are concentrated beyond the typical pattern for this run."
+      },
+      "trace": {
+        "registry_path": "docs/pios/41.x/interpretation_registry.json",
+        "source_artifact_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/41.x/pressure_zone_projection.json",
+        "evidence_status": "registry_bound"
+      },
+      "constraints": {
+        "truth_mutation": false,
+        "runtime_computation": false,
+        "recommendation": false,
+        "severity": false,
+        "prediction": false
+      }
+    },
+
+    {
+      "binding_id": "BIND-005",
+      "source_type": "zone",
+      "binding_context": "embedded_pair_rule",
+      "source_ref": {
+        "zone_id": "PZ-001",
+        "zone_class": "PROPAGATION_ZONE",
+        "signal_id": null,
+        "condition_id": null
+      },
+      "interpretation_ref": {
+        "registry_entry_id": "INT-002",
+        "registry_version": "1.0"
+      },
+      "attached_interpretation": {
+        "behavioral_meaning": "A structural location where outgoing dependency concentration is active. The zone reflects that one or more nodes within the anchor domain hold dependencies on a disproportionate share of target nodes relative to the run baseline.",
+        "system_expression": "The anchor domain contains a node with elevated fan-out count. PSIG-002 condition is active within this zone's scope. Structural paths leaving this domain are concentrated at a single node or small node set. Attribution entity is the max-fan-out node; parent domain is the zone anchor.",
+        "business_expression": "This part of the codebase depends on many other parts. Its outgoing structural connections are concentrated beyond the typical pattern for this run."
+      },
+      "trace": {
+        "registry_path": "docs/pios/41.x/interpretation_registry.json",
+        "source_artifact_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/41.x/pressure_zone_projection.json",
+        "evidence_status": "registry_bound"
+      },
+      "constraints": {
+        "truth_mutation": false,
+        "runtime_computation": false,
+        "recommendation": false,
+        "severity": false,
+        "prediction": false
+      }
+    },
+
+    {
+      "binding_id": "BIND-006",
+      "source_type": "zone",
+      "binding_context": "embedded_pair_rule",
+      "source_ref": {
+        "zone_id": "PZ-001",
+        "zone_class": "RESPONSIBILITY_ZONE",
+        "signal_id": null,
+        "condition_id": null
+      },
+      "interpretation_ref": {
+        "registry_entry_id": "INT-003",
+        "registry_version": "1.0"
+      },
+      "attached_interpretation": {
+        "behavioral_meaning": "A structural location where surface ownership concentration is active. The zone reflects that one or more component entities within the anchor domain hold ownership of a disproportionate share of exposed interfaces relative to the run baseline.",
+        "system_expression": "The anchor domain contains a component entity with elevated surface ownership count. PSIG-004 condition is active within this zone's scope. Surface ownership is concentrated at a single component entity within the domain. Attribution entity is the max-responsibility component entity.",
+        "business_expression": "This part of the codebase owns a disproportionate share of exposed interfaces. One component within this domain is responsible for far more surfaces than is typical for this run."
+      },
+      "trace": {
+        "registry_path": "docs/pios/41.x/interpretation_registry.json",
+        "source_artifact_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/41.x/pressure_zone_projection.json",
+        "evidence_status": "registry_bound"
+      },
+      "constraints": {
+        "truth_mutation": false,
+        "runtime_computation": false,
+        "recommendation": false,
+        "severity": false,
+        "prediction": false
+      }
+    },
+
+    {
+      "binding_id": "BIND-007",
+      "source_type": "zone",
+      "binding_context": "embedded_pair_rule",
+      "source_ref": {
+        "zone_id": "PZ-002",
+        "zone_class": "COUPLING_ZONE",
+        "signal_id": null,
+        "condition_id": null
+      },
+      "interpretation_ref": {
+        "registry_entry_id": "INT-001",
+        "registry_version": "1.0"
+      },
+      "attached_interpretation": {
+        "behavioral_meaning": "A structural location where incoming dependency concentration is active. The zone reflects that one or more nodes within the anchor domain receive dependencies from a disproportionate share of source nodes relative to the run baseline.",
+        "system_expression": "The anchor domain contains a node with elevated fan-in count. PSIG-001 condition is active within this zone's scope. Structural paths entering this domain are concentrated at a single node or small node set. Attribution entity is the max-fan-in node; parent domain is the zone anchor.",
+        "business_expression": "This part of the codebase is a dependency target for many other parts. Its incoming structural connections are concentrated beyond the typical pattern for this run."
+      },
+      "trace": {
+        "registry_path": "docs/pios/41.x/interpretation_registry.json",
+        "source_artifact_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/41.x/pressure_zone_projection.json",
+        "evidence_status": "registry_bound"
+      },
+      "constraints": {
+        "truth_mutation": false,
+        "runtime_computation": false,
+        "recommendation": false,
+        "severity": false,
+        "prediction": false
+      }
+    },
+
+    {
+      "binding_id": "BIND-008",
+      "source_type": "zone",
+      "binding_context": "embedded_pair_rule",
+      "source_ref": {
+        "zone_id": "PZ-002",
+        "zone_class": "PROPAGATION_ZONE",
+        "signal_id": null,
+        "condition_id": null
+      },
+      "interpretation_ref": {
+        "registry_entry_id": "INT-002",
+        "registry_version": "1.0"
+      },
+      "attached_interpretation": {
+        "behavioral_meaning": "A structural location where outgoing dependency concentration is active. The zone reflects that one or more nodes within the anchor domain hold dependencies on a disproportionate share of target nodes relative to the run baseline.",
+        "system_expression": "The anchor domain contains a node with elevated fan-out count. PSIG-002 condition is active within this zone's scope. Structural paths leaving this domain are concentrated at a single node or small node set. Attribution entity is the max-fan-out node; parent domain is the zone anchor.",
+        "business_expression": "This part of the codebase depends on many other parts. Its outgoing structural connections are concentrated beyond the typical pattern for this run."
+      },
+      "trace": {
+        "registry_path": "docs/pios/41.x/interpretation_registry.json",
+        "source_artifact_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/41.x/pressure_zone_projection.json",
+        "evidence_status": "registry_bound"
+      },
+      "constraints": {
+        "truth_mutation": false,
+        "runtime_computation": false,
+        "recommendation": false,
+        "severity": false,
+        "prediction": false
+      }
+    },
+
+    {
+      "binding_id": "BIND-009",
+      "source_type": "zone",
+      "binding_context": "embedded_pair_rule",
+      "source_ref": {
+        "zone_id": "PZ-002",
+        "zone_class": "RESPONSIBILITY_ZONE",
+        "signal_id": null,
+        "condition_id": null
+      },
+      "interpretation_ref": {
+        "registry_entry_id": "INT-003",
+        "registry_version": "1.0"
+      },
+      "attached_interpretation": {
+        "behavioral_meaning": "A structural location where surface ownership concentration is active. The zone reflects that one or more component entities within the anchor domain hold ownership of a disproportionate share of exposed interfaces relative to the run baseline.",
+        "system_expression": "The anchor domain contains a component entity with elevated surface ownership count. PSIG-004 condition is active within this zone's scope. Surface ownership is concentrated at a single component entity within the domain. Attribution entity is the max-responsibility component entity.",
+        "business_expression": "This part of the codebase owns a disproportionate share of exposed interfaces. One component within this domain is responsible for far more surfaces than is typical for this run."
+      },
+      "trace": {
+        "registry_path": "docs/pios/41.x/interpretation_registry.json",
+        "source_artifact_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/41.x/pressure_zone_projection.json",
+        "evidence_status": "registry_bound"
+      },
+      "constraints": {
+        "truth_mutation": false,
+        "runtime_computation": false,
+        "recommendation": false,
+        "severity": false,
+        "prediction": false
+      }
+    },
+
+    {
+      "binding_id": "BIND-010",
+      "source_type": "zone",
+      "binding_context": "embedded_pair_rule",
+      "source_ref": {
+        "zone_id": "PZ-003",
+        "zone_class": "COUPLING_ZONE",
+        "signal_id": null,
+        "condition_id": null
+      },
+      "interpretation_ref": {
+        "registry_entry_id": "INT-001",
+        "registry_version": "1.0"
+      },
+      "attached_interpretation": {
+        "behavioral_meaning": "A structural location where incoming dependency concentration is active. The zone reflects that one or more nodes within the anchor domain receive dependencies from a disproportionate share of source nodes relative to the run baseline.",
+        "system_expression": "The anchor domain contains a node with elevated fan-in count. PSIG-001 condition is active within this zone's scope. Structural paths entering this domain are concentrated at a single node or small node set. Attribution entity is the max-fan-in node; parent domain is the zone anchor.",
+        "business_expression": "This part of the codebase is a dependency target for many other parts. Its incoming structural connections are concentrated beyond the typical pattern for this run."
+      },
+      "trace": {
+        "registry_path": "docs/pios/41.x/interpretation_registry.json",
+        "source_artifact_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/41.x/pressure_zone_projection.json",
+        "evidence_status": "registry_bound"
+      },
+      "constraints": {
+        "truth_mutation": false,
+        "runtime_computation": false,
+        "recommendation": false,
+        "severity": false,
+        "prediction": false
+      }
+    },
+
+    {
+      "binding_id": "BIND-011",
+      "source_type": "zone",
+      "binding_context": "embedded_pair_rule",
+      "source_ref": {
+        "zone_id": "PZ-003",
+        "zone_class": "PROPAGATION_ZONE",
+        "signal_id": null,
+        "condition_id": null
+      },
+      "interpretation_ref": {
+        "registry_entry_id": "INT-002",
+        "registry_version": "1.0"
+      },
+      "attached_interpretation": {
+        "behavioral_meaning": "A structural location where outgoing dependency concentration is active. The zone reflects that one or more nodes within the anchor domain hold dependencies on a disproportionate share of target nodes relative to the run baseline.",
+        "system_expression": "The anchor domain contains a node with elevated fan-out count. PSIG-002 condition is active within this zone's scope. Structural paths leaving this domain are concentrated at a single node or small node set. Attribution entity is the max-fan-out node; parent domain is the zone anchor.",
+        "business_expression": "This part of the codebase depends on many other parts. Its outgoing structural connections are concentrated beyond the typical pattern for this run."
+      },
+      "trace": {
+        "registry_path": "docs/pios/41.x/interpretation_registry.json",
+        "source_artifact_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/41.x/pressure_zone_projection.json",
+        "evidence_status": "registry_bound"
+      },
+      "constraints": {
+        "truth_mutation": false,
+        "runtime_computation": false,
+        "recommendation": false,
+        "severity": false,
+        "prediction": false
+      }
+    },
+
+    {
+      "binding_id": "BIND-012",
+      "source_type": "zone",
+      "binding_context": "embedded_pair_rule",
+      "source_ref": {
+        "zone_id": "PZ-003",
+        "zone_class": "RESPONSIBILITY_ZONE",
+        "signal_id": null,
+        "condition_id": null
+      },
+      "interpretation_ref": {
+        "registry_entry_id": "INT-003",
+        "registry_version": "1.0"
+      },
+      "attached_interpretation": {
+        "behavioral_meaning": "A structural location where surface ownership concentration is active. The zone reflects that one or more component entities within the anchor domain hold ownership of a disproportionate share of exposed interfaces relative to the run baseline.",
+        "system_expression": "The anchor domain contains a component entity with elevated surface ownership count. PSIG-004 condition is active within this zone's scope. Surface ownership is concentrated at a single component entity within the domain. Attribution entity is the max-responsibility component entity.",
+        "business_expression": "This part of the codebase owns a disproportionate share of exposed interfaces. One component within this domain is responsible for far more surfaces than is typical for this run."
+      },
+      "trace": {
+        "registry_path": "docs/pios/41.x/interpretation_registry.json",
+        "source_artifact_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/41.x/pressure_zone_projection.json",
+        "evidence_status": "registry_bound"
+      },
+      "constraints": {
+        "truth_mutation": false,
+        "runtime_computation": false,
+        "recommendation": false,
+        "severity": false,
+        "prediction": false
+      }
+    },
+
+    {
+      "binding_id": "BIND-013",
+      "source_type": "signal",
+      "binding_context": null,
+      "source_ref": {
+        "zone_id": null,
+        "zone_class": null,
+        "signal_id": "PSIG-001",
+        "condition_id": null
+      },
+      "interpretation_ref": {
+        "registry_entry_id": "INT-008",
+        "registry_version": "1.0"
+      },
+      "attached_interpretation": {
+        "behavioral_meaning": "Indicates that the maximum incoming dependency count (fan-in) within the run scope is a statistical outlier relative to the run distribution. The signal reflects structurally disproportionate incoming dependency concentration at one or more component nodes.",
+        "system_expression": "Computed via RUN_RELATIVE_OUTLIER method. The signal value represents the standardized outlier score for the max-fan-in node in the run. Attribution is recorded at the node and parent domain levels. Condition COND-PSIG-001 is activated when the value exceeds threshold.",
+        "business_expression": "One component in the codebase receives dependencies from far more other components than is typical for this run. The signal records the structural disproportion — not a judgment about whether this is acceptable."
+      },
+      "trace": {
+        "registry_path": "docs/pios/41.x/interpretation_registry.json",
+        "source_artifact_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/41.x/signal_projection.json",
+        "evidence_status": "registry_bound"
+      },
+      "constraints": {
+        "truth_mutation": false,
+        "runtime_computation": false,
+        "recommendation": false,
+        "severity": false,
+        "prediction": false
+      }
+    },
+
+    {
+      "binding_id": "BIND-014",
+      "source_type": "signal",
+      "binding_context": null,
+      "source_ref": {
+        "zone_id": null,
+        "zone_class": null,
+        "signal_id": "PSIG-002",
+        "condition_id": null
+      },
+      "interpretation_ref": {
+        "registry_entry_id": "INT-009",
+        "registry_version": "1.0"
+      },
+      "attached_interpretation": {
+        "behavioral_meaning": "Indicates that the maximum outgoing dependency count (fan-out) within the run scope is a statistical outlier relative to the run distribution. The signal reflects structurally disproportionate outgoing dependency concentration at one or more component nodes.",
+        "system_expression": "Computed via RUN_RELATIVE_OUTLIER method. The signal value represents the standardized outlier score for the max-fan-out node in the run. When no single max-fan-out entity is identifiable, attribution distributes across the domain scope. Condition COND-PSIG-002 is activated when the value exceeds threshold.",
+        "business_expression": "One component in the codebase depends on far more other components than is typical for this run. The signal records the structural disproportion — not a judgment about whether this dependency pattern is acceptable."
+      },
+      "trace": {
+        "registry_path": "docs/pios/41.x/interpretation_registry.json",
+        "source_artifact_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/41.x/signal_projection.json",
+        "evidence_status": "registry_bound"
+      },
+      "constraints": {
+        "truth_mutation": false,
+        "runtime_computation": false,
+        "recommendation": false,
+        "severity": false,
+        "prediction": false
+      }
+    },
+
+    {
+      "binding_id": "BIND-015",
+      "source_type": "signal",
+      "binding_context": null,
+      "source_ref": {
+        "zone_id": null,
+        "zone_class": null,
+        "signal_id": "PSIG-004",
+        "condition_id": null
+      },
+      "interpretation_ref": {
+        "registry_entry_id": "INT-011",
+        "registry_version": "1.0"
+      },
+      "attached_interpretation": {
+        "behavioral_meaning": "Indicates that the maximum surface ownership count for a single component entity exceeds the run-relative threshold. The signal reflects structurally disproportionate ownership of exposed interfaces at one or more component entities.",
+        "system_expression": "Computed via RUN_RELATIVE_OUTLIER method. The signal value represents the standardized outlier score for the max-responsibility-surface component entity in the run. Attribution is recorded at the entity and parent domain levels. Condition COND-PSIG-004 is activated when the value exceeds threshold.",
+        "business_expression": "One component in the codebase owns far more exposed interfaces than is typical for this run. The signal records the structural disproportion of surface ownership — not a judgment about the design quality of that component."
+      },
+      "trace": {
+        "registry_path": "docs/pios/41.x/interpretation_registry.json",
+        "source_artifact_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/41.x/signal_projection.json",
+        "evidence_status": "registry_bound"
+      },
+      "constraints": {
+        "truth_mutation": false,
+        "runtime_computation": false,
+        "recommendation": false,
+        "severity": false,
+        "prediction": false
+      }
+    },
+
+    {
+      "binding_id": "BIND-016",
+      "source_type": "signal",
+      "binding_context": null,
+      "source_ref": {
+        "zone_id": null,
+        "zone_class": null,
+        "signal_id": "PSIG-006",
+        "condition_id": null
+      },
+      "interpretation_ref": {
+        "registry_entry_id": "INT-013",
+        "registry_version": "1.0"
+      },
+      "attached_interpretation": {
+        "behavioral_meaning": "Indicates that the proportion of structurally observable entities falls below the theoretical baseline threshold within the run scope. The signal reflects incomplete structural observability across a declared set of domains and nodes.",
+        "system_expression": "Activated via THEORETICAL_BASELINE method when the fraction of entities with adequate structural coverage falls below the binary threshold. Affected entities are recorded in the signal's entity scope. PSIG-006 is not attributed to a pressure zone — it is a structural observability boundary record.",
+        "business_expression": "A set of parts of the codebase lacks full structural observability in this run. The signal records the structural blind-spot boundary and its affected entity scope — not a cause or a consequence."
+      },
+      "trace": {
+        "registry_path": "docs/pios/41.x/interpretation_registry.json",
+        "source_artifact_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/41.x/signal_projection.json",
+        "evidence_status": "registry_bound"
+      },
+      "constraints": {
+        "truth_mutation": false,
+        "runtime_computation": false,
+        "recommendation": false,
+        "severity": false,
+        "prediction": false
+      }
+    },
+
+    {
+      "binding_id": "BIND-017",
+      "source_type": "condition",
+      "binding_context": null,
+      "source_ref": {
+        "zone_id": null,
+        "zone_class": null,
+        "signal_id": "PSIG-001",
+        "condition_id": "COND-PSIG-001-01"
+      },
+      "interpretation_ref": {
+        "registry_entry_id": "INT-014",
+        "registry_version": "1.0"
+      },
+      "attached_interpretation": {
+        "behavioral_meaning": "A PSIG-001 condition is active when the fan-in concentration signal value exceeds the run-relative outlier threshold. Activation records that incoming dependency concentration is statistically disproportionate for at least one node. The activation event binds the max-fan-in node and its parent domain as attribution entities.",
+        "system_expression": "Activated when PSIG-001 value exceeds the RUN_RELATIVE_OUTLIER boundary. Attribution entity (max fan-in node) and parent domain are recorded at activation time. Secondary attribution entities are nodes in the same disproportionate scope. Condition state is HIGH when active.",
+        "business_expression": "The structural measurement for incoming dependency concentration has crossed the threshold for this run. The condition records the activation state and attribution — it is a structural fact, not a severity judgment."
+      },
+      "trace": {
+        "registry_path": "docs/pios/41.x/interpretation_registry.json",
+        "source_artifact_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/41.x/signal_projection.json",
+        "evidence_status": "registry_bound"
+      },
+      "constraints": {
+        "truth_mutation": false,
+        "runtime_computation": false,
+        "recommendation": false,
+        "severity": false,
+        "prediction": false
+      }
+    },
+
+    {
+      "binding_id": "BIND-018",
+      "source_type": "condition",
+      "binding_context": null,
+      "source_ref": {
+        "zone_id": null,
+        "zone_class": null,
+        "signal_id": "PSIG-002",
+        "condition_id": "COND-PSIG-002-01"
+      },
+      "interpretation_ref": {
+        "registry_entry_id": "INT-015",
+        "registry_version": "1.0"
+      },
+      "attached_interpretation": {
+        "behavioral_meaning": "A PSIG-002 condition is active when the fan-out propagation signal value exceeds the run-relative outlier threshold. Activation records that outgoing dependency concentration is statistically disproportionate for at least one node. When no single primary attribution entity exists, attribution distributes across the affected domain scope.",
+        "system_expression": "Activated when PSIG-002 value exceeds the RUN_RELATIVE_OUTLIER boundary. When no single max-fan-out entity is identifiable, attribution distributes across domain scope without a primary attribution entity. Condition state is HIGH when active.",
+        "business_expression": "The structural measurement for outgoing dependency concentration has crossed the threshold for this run. The condition records the activation state and attribution scope — it is a structural fact, not a severity judgment."
+      },
+      "trace": {
+        "registry_path": "docs/pios/41.x/interpretation_registry.json",
+        "source_artifact_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/41.x/signal_projection.json",
+        "evidence_status": "registry_bound"
+      },
+      "constraints": {
+        "truth_mutation": false,
+        "runtime_computation": false,
+        "recommendation": false,
+        "severity": false,
+        "prediction": false
+      }
+    },
+
+    {
+      "binding_id": "BIND-019",
+      "source_type": "condition",
+      "binding_context": null,
+      "source_ref": {
+        "zone_id": null,
+        "zone_class": null,
+        "signal_id": "PSIG-004",
+        "condition_id": "COND-PSIG-004-01"
+      },
+      "interpretation_ref": {
+        "registry_entry_id": "INT-017",
+        "registry_version": "1.0"
+      },
+      "attached_interpretation": {
+        "behavioral_meaning": "A PSIG-004 condition is active when the responsibility concentration signal value exceeds the run-relative outlier threshold. Activation records that surface ownership is statistically disproportionate for at least one component entity. The activation event binds the max-responsibility-surface component entity and its parent domain.",
+        "system_expression": "Activated when PSIG-004 value exceeds the RUN_RELATIVE_OUTLIER boundary. Attribution entity (max responsibility surface component entity) and parent domain are recorded at activation time. Condition state is HIGH when active.",
+        "business_expression": "The structural measurement for surface ownership concentration has crossed the threshold for this run. The condition records the activation state and attribution — it is a structural fact, not a severity judgment."
+      },
+      "trace": {
+        "registry_path": "docs/pios/41.x/interpretation_registry.json",
+        "source_artifact_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/41.x/signal_projection.json",
+        "evidence_status": "registry_bound"
+      },
+      "constraints": {
+        "truth_mutation": false,
+        "runtime_computation": false,
+        "recommendation": false,
+        "severity": false,
+        "prediction": false
+      }
+    },
+
+    {
+      "binding_id": "BIND-020",
+      "source_type": "condition",
+      "binding_context": null,
+      "source_ref": {
+        "zone_id": null,
+        "zone_class": null,
+        "signal_id": "PSIG-006",
+        "condition_id": "COND-PSIG-006-01"
+      },
+      "interpretation_ref": {
+        "registry_entry_id": "INT-019",
+        "registry_version": "1.0"
+      },
+      "attached_interpretation": {
+        "behavioral_meaning": "A PSIG-006 condition is active when the theoretical baseline threshold for structural observability is crossed. Activation records the set of entities that fall outside the observable structural scope. The blind-spot condition is not attributed to any pressure zone.",
+        "system_expression": "Activated via THEORETICAL_BASELINE method when the binary threshold is reached (PSIG-006 value ≥ threshold). Affected entity scope is recorded. PSIG-006 condition does not contribute to pressure zone designation — it is recorded separately as a structural observability boundary. Condition state is ACTIVATED when active.",
+        "business_expression": "The structural blind-spot threshold has been crossed for this run. The condition records the presence of an observability gap and its affected entity scope — it is not a pressure zone designation and carries no severity."
+      },
+      "trace": {
+        "registry_path": "docs/pios/41.x/interpretation_registry.json",
+        "source_artifact_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/41.x/signal_projection.json",
+        "evidence_status": "registry_bound"
+      },
+      "constraints": {
+        "truth_mutation": false,
+        "runtime_computation": false,
+        "recommendation": false,
+        "severity": false,
+        "prediction": false
+      }
+    }
+
+  ]
+}
