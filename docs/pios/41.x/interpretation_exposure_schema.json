@@ -1,0 +1,200 @@
+{
+  "schema_version": "1.0",
+  "schema_contract": "PI.41X.INTERPRETATION-EXPOSURE.01",
+  "description": "Schema for interpretation exposure items. Each item packages a governed binding (BIND-NNN) into a render-ready form for downstream surfaces. No interpretation is created at exposure time — render_payload is copied verbatim from the binding's attached_interpretation.",
+
+  "exposure_id_pattern": "^EXP-\\d{3}$",
+
+  "exposure_mode_values": ["render_only"],
+
+  "exposure_item_schema": {
+    "exposure_id": {
+      "type": "string",
+      "pattern": "^EXP-\\d{3}$",
+      "description": "Stable exposure identifier. Corresponds 1:1 to the BIND-NNN binding it packages. Never reused."
+    },
+    "binding_id": {
+      "type": "string",
+      "pattern": "^BIND-\\d{3}$",
+      "description": "The BIND-NNN identifier from interpretation_binding.json that this exposure item packages."
+    },
+    "source_type": {
+      "type": "string",
+      "enum": ["zone", "signal", "condition", "composite"],
+      "description": "Propagated from the binding source_type. Describes the structural layer of the construct."
+    },
+    "source_ref": {
+      "type": "object",
+      "description": "Propagated verbatim from the binding source_ref. Identifies the structural construct.",
+      "properties": {
+        "zone_id":      {"type": ["string", "null"]},
+        "zone_class":   {"type": ["string", "null"]},
+        "signal_id":    {"type": ["string", "null"]},
+        "condition_id": {"type": ["string", "null"]}
+      },
+      "required": ["zone_id", "zone_class", "signal_id", "condition_id"]
+    },
+    "interpretation_ref": {
+      "type": "object",
+      "description": "Propagated from the binding interpretation_ref. Points to the INT-XXX entry providing governed meaning.",
+      "properties": {
+        "registry_entry_id": {"type": "string", "pattern": "^INT-\\d{3}$"},
+        "registry_version":  {"type": "string"}
+      },
+      "required": ["registry_entry_id", "registry_version"]
+    },
+    "render_payload": {
+      "type": "object",
+      "description": "Interpretation content ready for surface rendering. Copied verbatim from the binding's attached_interpretation. Must be identical to the binding source. Consumers must not modify this content at render time.",
+      "properties": {
+        "behavioral_meaning": {
+          "type": "string",
+          "description": "Verbatim copy of behavioral_meaning from the binding's attached_interpretation. For workspace_why and future_ui surfaces."
+        },
+        "system_expression": {
+          "type": "string",
+          "description": "Verbatim copy of system_expression from the binding's attached_interpretation. For future_ui surfaces."
+        },
+        "business_expression": {
+          "type": "string",
+          "description": "Verbatim copy of business_expression from the binding's attached_interpretation. For lens_report and future_ui surfaces."
+        }
+      },
+      "required": ["behavioral_meaning", "system_expression", "business_expression"]
+    },
+    "render_targets": {
+      "type": "object",
+      "description": "Declares which downstream surfaces may render this item and which render_payload fields each surface is permitted to display. Presence here does not activate any surface — it defines the permission boundary.",
+      "properties": {
+        "workspace_why": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "permitted_fields": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "Fields from render_payload and source_ref/interpretation_ref that workspace_why may display."
+            }
+          },
+          "required": ["enabled", "permitted_fields"]
+        },
+        "workspace_evidence": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "permitted_fields": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "Fields workspace_evidence may display. Restricted to trace metadata — not render_payload fields."
+            }
+          },
+          "required": ["enabled", "permitted_fields"]
+        },
+        "workspace_trace": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "permitted_fields": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "Fields workspace_trace may display. Restricted to identifier and source_ref fields."
+            }
+          },
+          "required": ["enabled", "permitted_fields"]
+        },
+        "lens_report": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "permitted_fields": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "Fields lens_report may display. Restricted to business_expression for non-technical narrative."
+            }
+          },
+          "required": ["enabled", "permitted_fields"]
+        },
+        "future_ui": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "permitted_fields": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "Fields future_ui may display. Permitted to display all three render_payload fields plus trace metadata."
+            }
+          },
+          "required": ["enabled", "permitted_fields"]
+        }
+      },
+      "required": ["workspace_why", "workspace_evidence", "workspace_trace", "lens_report", "future_ui"]
+    },
+    "trace": {
+      "type": "object",
+      "description": "Traceability record linking this exposure item back through the binding to the registry source.",
+      "properties": {
+        "registry_entry_id": {
+          "type": "string",
+          "pattern": "^INT-\\d{3}$",
+          "description": "The INT-XXX registry entry providing the governed meaning for this item."
+        },
+        "binding_id": {
+          "type": "string",
+          "pattern": "^BIND-\\d{3}$",
+          "description": "The BIND-NNN binding this exposure item is derived from."
+        },
+        "registry_path": {
+          "type": "string",
+          "description": "Path to the interpretation registry file."
+        },
+        "binding_path": {
+          "type": "string",
+          "description": "Path to the interpretation binding file."
+        },
+        "evidence_status": {
+          "type": "string",
+          "const": "registry_bound",
+          "description": "Fixed status confirming interpretation originates from registry only. Propagated from binding trace."
+        }
+      },
+      "required": ["registry_entry_id", "binding_id", "registry_path", "binding_path", "evidence_status"]
+    },
+    "constraints": {
+      "type": "object",
+      "description": "Invariant constraint flags. All must be false — none of these operations were performed in producing this exposure item.",
+      "properties": {
+        "truth_mutation":      {"type": "boolean", "const": false},
+        "runtime_computation": {"type": "boolean", "const": false},
+        "recommendation":      {"type": "boolean", "const": false},
+        "severity":            {"type": "boolean", "const": false},
+        "prediction":          {"type": "boolean", "const": false},
+        "prioritization":      {"type": "boolean", "const": false}
+      },
+      "required": ["truth_mutation", "runtime_computation", "recommendation", "severity", "prediction", "prioritization"]
+    }
+  },
+
+  "render_target_permission_summary": {
+    "workspace_why":      ["behavioral_meaning", "source_ref", "interpretation_ref"],
+    "workspace_evidence": ["registry_path", "binding_path", "evidence_status"],
+    "workspace_trace":    ["registry_entry_id", "binding_id", "source_ref"],
+    "lens_report":        ["business_expression"],
+    "future_ui":          ["behavioral_meaning", "system_expression", "business_expression", "registry_entry_id", "binding_id", "source_ref", "evidence_status"]
+  },
+
+  "prohibited_transformations": [
+    "Combining multiple render_payload fields into a synthesized claim",
+    "Summarizing or paraphrasing render_payload content",
+    "Adding severity, risk, priority, or urgency labels",
+    "Adding recommendation or action directive language",
+    "Adding predictive statements about runtime behavior",
+    "Adding client-specific wording or domain names not present in source_ref",
+    "Reordering or filtering exposure items to imply relative importance"
+  ],
+
+  "extension_rules": {
+    "new_item": "New exposure items must match a new BIND-NNN entry. EXP-NNN and BIND-NNN must correspond 1:1.",
+    "update_item": "Exposure items may be updated only if the underlying binding is updated. render_payload must be re-copied verbatim from the updated binding.",
+    "deletion": "Exposure items must not be deleted. Deprecated items must be marked with a deprecation note."
+  }
+}
