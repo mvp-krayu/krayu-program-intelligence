@@ -414,6 +414,79 @@ def handle_evidence(zone: Dict) -> Dict:
     }
 
 # ---------------------------------------------------------------------------
+# 41.x projection data loading
+# ---------------------------------------------------------------------------
+
+def _load_projection_artifact(client_id: str, run_id: str, filename: str) -> Dict:
+    """Load one artifact from the run-scoped 41.x projection package.
+
+    Fails closed — raises FileNotFoundError if artifact is absent.
+    No fallback to BlueEdge or any other client.
+    """
+    path = (
+        tier2_data.REPO_ROOT
+        / "clients" / client_id / "psee" / "runs" / run_id / "41.x"
+        / filename
+    )
+    if not path.exists():
+        raise FileNotFoundError(
+            f"41.x artifact not found — expected: "
+            f"clients/{client_id}/psee/runs/{run_id}/41.x/{filename}"
+        )
+    return json.loads(path.read_text())
+
+
+def list_zones_from_projection(client_id: str, run_id: str) -> Dict:
+    """Build zone list from run-scoped 41.x pressure_zone_projection.json.
+
+    Source: clients/<client>/psee/runs/<run_id>/41.x/
+    No derivation from canonical_topology or signal_registry.
+    No fallback to BlueEdge.
+    Fails closed if 41.x artifacts are absent.
+    """
+    projection = _load_projection_artifact(client_id, run_id, "pressure_zone_projection.json")
+    signals    = _load_projection_artifact(client_id, run_id, "signal_projection.json")
+
+    sig_by_cond = {s["condition_id"]: s for s in signals.get("active_conditions_in_scope", [])}
+
+    zones = []
+    for z in projection.get("zone_projection", []):
+        conditions = [
+            {
+                "condition_id":     c,
+                "signal_id":        sig_by_cond.get(c, {}).get("signal_id", "UNKNOWN"),
+                "activation_state": sig_by_cond.get(c, {}).get("activation_state", "UNKNOWN"),
+            }
+            for c in z.get("conditions", [])
+        ]
+        zones.append({
+            "zone_id":             z["zone_id"],
+            "zone_type":           z["zone_type"],
+            "zone_class":          z["zone_class"],
+            "anchor_id":           z["anchor_id"],
+            "anchor_name":         z["anchor_name"],
+            "attribution_profile": z.get("attribution_profile"),
+            "condition_count":     z["condition_count"],
+            "conditions":          conditions,
+            "member_entity_ids":   z.get("member_entity_ids", []),
+        })
+
+    return {
+        "status":                "ok",
+        "run_id":                run_id,
+        "client_id":             client_id,
+        "projection_source":     "41.x",
+        "projection_contract":   projection.get("projection_contract"),
+        "inference_prohibition": "ACTIVE",
+        "focus_domain_selected": projection.get("focus_domain_selected", False),
+        "ranking_applied":       projection.get("ranking_applied", False),
+        "combination_signature": signals.get("combination_signature", {}),
+        "zones":                 zones,
+        "total_zones":           len(zones),
+    }
+
+
+# ---------------------------------------------------------------------------
 # Zone list (--list-zones)
 # ---------------------------------------------------------------------------
 
@@ -469,8 +542,42 @@ def main() -> None:
     parser.add_argument("--zone",       help="Zone ID (e.g. ZONE-01)")
     parser.add_argument("--mode",       help="WHY | EVIDENCE | TRACE")
     parser.add_argument("--scope",      default="FULL", help="EVIDENCE scope (default: FULL)")
-    parser.add_argument("--list-zones", action="store_true", help="Output zone list as JSON")
+    parser.add_argument("--list-zones",  action="store_true", help="Output zone list as JSON")
+    parser.add_argument("--projection",  action="store_true",
+                        help="Use run-scoped 41.x projection artifacts (no BlueEdge fallback)")
     args = parser.parse_args()
+
+    # 41.x projection mode — short-circuits before canonical data loading.
+    # No tier2_data.configure() call; no BlueEdge package is touched.
+    if args.projection:
+        if args.list_zones:
+            try:
+                print(json.dumps(list_zones_from_projection(args.client, args.run_id)))
+            except FileNotFoundError as e:
+                print(json.dumps({
+                    "status": "NOT_AVAILABLE",
+                    "reason": "41X_ARTIFACT_MISSING",
+                    "detail": str(e),
+                }))
+                sys.exit(1)
+            except Exception as e:
+                print(json.dumps({
+                    "status": "error",
+                    "reason": "PROJECTION_ENGINE_FAILURE",
+                    "detail": str(e),
+                }))
+                sys.exit(1)
+            return
+        # WHY / EVIDENCE / TRACE for projection zones require a separate contract
+        print(json.dumps({
+            "status": "NOT_SUPPORTED",
+            "reason": "PROJECTION_ZONE_QUERY_NOT_SUPPORTED",
+            "detail": (
+                "WHY/EVIDENCE/TRACE modes for 41.x projection zones "
+                "require a separate contract"
+            ),
+        }))
+        return
 
     tier2_data.configure(
         client_id=args.client,
