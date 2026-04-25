@@ -58,7 +58,13 @@ function zoneTypeMeta(zt) {
     evidence_gap:             { label: 'evidence gap',            cls: 'ws-type-gap'           },
     signal_conflict:          { label: 'signal conflict',         cls: 'ws-type-conflict'      },
     structural_inconsistency: { label: 'structural inconsistency',cls: 'ws-type-inconsistency' },
-  }[zt] || { label: zt, cls: '' }
+    DOMAIN_ZONE:              { label: 'domain zone',             cls: 'ws-type-pressure'      },
+    COMPOUND_ZONE:            { label: 'compound pressure zone',  cls: 'ws-type-pressure'      },
+    COUPLING_ZONE:            { label: 'coupling zone',           cls: 'ws-type-conflict'      },
+    PROPAGATION_ZONE:         { label: 'propagation zone',        cls: 'ws-type-inconsistency' },
+    RESPONSIBILITY_ZONE:      { label: 'responsibility zone',     cls: 'ws-type-gap'           },
+    FRAGMENTATION_ZONE:       { label: 'fragmentation zone',      cls: 'ws-type-gap'           },
+  }[zt] || { label: zt ? String(zt).replace(/_/g, ' ').toLowerCase() : zt, cls: '' }
 }
 
 const SEV_CLS  = { HIGH: 'ws-sev-high', MODERATE: 'ws-sev-moderate', LOW: 'ws-sev-low' }
@@ -78,10 +84,21 @@ const SEV_CARD_CLS = {
   MODERATE: 'ws-zone-sev-moderate',
 }
 const EVID_CLS = {
-  STRONG:   'ws-conf-strong',
-  MODERATE: 'ws-conf-partial',
-  PARTIAL:  'ws-conf-partial',
-  WEAK:     'ws-conf-weak',
+  STRONG:    'ws-conf-strong',
+  MODERATE:  'ws-conf-partial',
+  PARTIAL:   'ws-conf-partial',
+  WEAK:      'ws-conf-weak',
+  HIGH:      'ws-conf-partial',
+  ACTIVATED: 'ws-conf-weak',
+}
+
+const PAIR_RULE_LABELS = {
+  COMPOUND_ZONE:       'compound pressure zone',
+  COUPLING_ZONE:       'coupling zone',
+  PROPAGATION_ZONE:    'propagation zone',
+  RESPONSIBILITY_ZONE: 'responsibility zone',
+  FRAGMENTATION_ZONE:  'fragmentation zone',
+  DOMAIN_ZONE:         'domain zone',
 }
 
 // ---------------------------------------------------------------------------
@@ -97,11 +114,11 @@ function ProhibitionBadge() {
   )
 }
 
-function UnresolvedBlock({ items }) {
+function UnresolvedBlock({ items, label = 'Unresolved Elements' }) {
   if (!items || items.length === 0) return null
   return (
     <div className="ws-result-section ws-uncertainty">
-      <div className="ws-result-label">Unresolved Elements</div>
+      <div className="ws-result-label">{label}</div>
       {items.map((u, i) => (
         <div key={i} className="ws-unresolved-row">
           <div className="ws-unresolved-element">{u.element}</div>
@@ -133,7 +150,8 @@ function MissingBlock({ items }) {
 
 function WhyResult({ data }) {
   const r = data.result
-  const { cls: typeCls, label: typeLabel } = zoneTypeMeta(r.zone_type)
+  const { cls: typeCls, label: typeLabel } = zoneTypeMeta(r.zone_class || r.zone_type)
+  const isProjection = data.evidence_basis?.canonical_topology_used === false
   return (
     <div className="ws-result-panel ws-result-panel-why">
       <ProhibitionBadge />
@@ -151,7 +169,10 @@ function WhyResult({ data }) {
         </div>
       </div>
 
-      <UnresolvedBlock items={data.uncertainty.unresolved} />
+      <UnresolvedBlock
+        items={data.uncertainty.unresolved}
+        label={isProjection ? 'Scope — not yet resolved' : undefined}
+      />
       <MissingBlock    items={data.evidence_basis.missing} />
 
       <div className="ws-result-section">
@@ -171,7 +192,11 @@ function WhyResult({ data }) {
             <div key={i} className="ws-rationale-row">
               <span className="ws-rationale-factor">{f.factor.replace(/_/g, ' ')}</span>
               <span className="ws-rationale-value">
-                {typeof f.value === 'object' ? JSON.stringify(f.value) : String(f.value)}
+                {Array.isArray(f.value)
+                  ? f.value.map(v => PAIR_RULE_LABELS[v] || String(v).replace(/_/g, ' ').toLowerCase()).join(' · ')
+                  : typeof f.value === 'object' && f.value !== null
+                    ? [f.value.signal_id, f.value.activation_state, f.value.signal_value].filter(v => v != null).join(' · ')
+                    : String(f.value ?? '')}
               </span>
               <span className="ws-rationale-contrib">{f.contribution}</span>
             </div>
@@ -217,11 +242,15 @@ function TraceResult({ data }) {
   const paths        = data.trace || []
   const forwardPaths = paths.filter(p => p.path_type === 'FORWARD')
   const evidencePaths= paths.filter(p => p.path_type === 'EVIDENCE')
+  const isProjection = data.evidence_basis?.canonical_topology_used === false
 
   return (
     <div className="ws-result-panel ws-result-panel-trace">
       <ProhibitionBadge />
-      <UnresolvedBlock items={data.uncertainty.unresolved} />
+      <UnresolvedBlock
+        items={data.uncertainty.unresolved}
+        label={isProjection ? 'Scope — not yet resolved' : undefined}
+      />
 
       {paths.length === 0 ? (
         <div className="ws-trace-empty">
@@ -331,10 +360,14 @@ function VaultLinks({ targets, vaultIndex }) {
 
 function EvidenceResult({ data, vaultIndex }) {
   const r = data.result
+  const isProjection = data.evidence_basis?.canonical_topology_used === false
   return (
     <div className="ws-result-panel ws-result-panel-evidence">
       <ProhibitionBadge />
-      <UnresolvedBlock items={data.uncertainty.unresolved} />
+      <UnresolvedBlock
+        items={data.uncertainty.unresolved}
+        label={isProjection ? 'Scope — not yet resolved' : undefined}
+      />
       <MissingBlock    items={data.evidence_basis.missing} />
 
       <div className="ws-result-section">
@@ -354,19 +387,27 @@ function EvidenceResult({ data, vaultIndex }) {
           <div className="ws-empty-note">No signals bound to this zone&apos;s domain.</div>
         )}
         {r.signal_coverage.map(s => (
-          <div key={s.signal_id} className="ws-signal-block">
+          <div key={s.condition_id || s.signal_id} className="ws-signal-block">
             <div className="ws-signal-header">
               <span className="ws-signal-id">{s.signal_id}</span>
+              {s.condition_id && <span className="ws-chip">{s.condition_id}</span>}
               <span className={`ws-badge ${CONF_CLS[s.evidence_confidence] || ''}`}>
-                {s.evidence_confidence}
+                {s.evidence_confidence || s.activation_state}
               </span>
             </div>
-            <div className="ws-signal-title">{s.title}</div>
+            {(s.title || s.signal_value !== undefined) && (
+              <div className="ws-signal-title">
+                {s.title || `value: ${s.signal_value}`}
+              </div>
+            )}
+            {s.activation_method && (
+              <div className="ws-signal-title">{s.activation_method.replace(/_/g, ' ').toLowerCase()}</div>
+            )}
             {(s.trace_links?.length > 0) ? (
               <ul className="ws-trace-list">
                 {s.trace_links.map((l, i) => <li key={i} className="ws-trace-link">{l}</li>)}
               </ul>
-            ) : (
+            ) : (s.trace_links !== undefined) && (
               <div className="ws-empty-note">No trace links.</div>
             )}
           </div>
@@ -413,7 +454,7 @@ function ZoneCard({ zone, vaultIndex, defaultOpen, isActive, onActivate }) {
     }
   }
 
-  const { cls: typeCls, label: typeLabel } = zoneTypeMeta(zone.zone_type)
+  const { cls: typeCls, label: typeLabel } = zoneTypeMeta(zone.zone_class || zone.zone_type)
   const localMode   = (qs?.data && !qs.loading) ? qs.mode : null
   const loadingMode = qs?.loading ? qs.mode : null
 
@@ -429,24 +470,38 @@ function ZoneCard({ zone, vaultIndex, defaultOpen, isActive, onActivate }) {
       }}>
         <div className="ws-zone-toggle-left">
           <span className="ws-zone-id">{zone.zone_id}</span>
-          <span className={`ws-badge ${SEV_CLS[zone.severity] || ''}`}>{zone.severity}</span>
+          {zone.severity && <span className={`ws-badge ${SEV_CLS[zone.severity] || ''}`}>{zone.severity}</span>}
           <span className={`ws-badge ${typeCls}`}>{typeLabel}</span>
         </div>
-        <span className="ws-zone-toggle-title">{zone.domain_name}</span>
+        <span className="ws-zone-toggle-title">{zone.anchor_name || zone.domain_name || zone.zone_id}</span>
         <span className="ws-zone-chevron">{expanded ? '▲' : '▼'}</span>
       </button>
 
       {expanded && (
         <>
           <div className="ws-zone-overview">
-            <div className="ws-zone-condition">
-              <span className={`ws-badge ${CONF_CLS[zone.confidence] || ''}`}>{zone.confidence}</span>
-              <span className={`ws-badge ${TRACE_CLS[zone.traceability] || ''} ws-badge-sm`}>
-                {TRACE_LABELS[zone.traceability] || (zone.traceability ? zone.traceability.replace(/_/g, ' ') : '—')}
-              </span>
-              <span className="ws-zone-stat">{zone.capability_count} cap{zone.capability_count !== 1 ? 's' : ''}</span>
-              <span className="ws-zone-stat">{zone.signal_count} sig{zone.signal_count !== 1 ? 's' : ''}</span>
-            </div>
+            {zone.condition_count !== undefined ? (
+              <div className="ws-zone-condition">
+                <span className="ws-zone-stat">{zone.condition_count} condition{zone.condition_count !== 1 ? 's' : ''}</span>
+                {zone.attribution_profile && (
+                  <span className="ws-badge ws-badge-sm">{zone.attribution_profile}</span>
+                )}
+                {zone.zone_class && (
+                  <span className={`ws-badge ws-badge-sm ${zoneTypeMeta(zone.zone_class).cls}`}>
+                    {zoneTypeMeta(zone.zone_class).label}
+                  </span>
+                )}
+              </div>
+            ) : (
+              <div className="ws-zone-condition">
+                <span className={`ws-badge ${CONF_CLS[zone.confidence] || ''}`}>{zone.confidence}</span>
+                <span className={`ws-badge ${TRACE_CLS[zone.traceability] || ''} ws-badge-sm`}>
+                  {TRACE_LABELS[zone.traceability] || (zone.traceability ? zone.traceability.replace(/_/g, ' ') : '—')}
+                </span>
+                <span className="ws-zone-stat">{zone.capability_count} cap{zone.capability_count !== 1 ? 's' : ''}</span>
+                <span className="ws-zone-stat">{zone.signal_count} sig{zone.signal_count !== 1 ? 's' : ''}</span>
+              </div>
+            )}
           </div>
 
           <div className="ws-zone-actions">
