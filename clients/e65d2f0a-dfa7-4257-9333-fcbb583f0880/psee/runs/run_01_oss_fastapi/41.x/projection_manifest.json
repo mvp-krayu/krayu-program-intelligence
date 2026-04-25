@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "projection_stage": "41.x",
+  "source_stage": "75.x",
+  "projection_contract": "PI.41X.PRESSURE-ZONE.PROJECTION.01",
+  "run_id": "run_01_oss_fastapi",
+  "client_id": "e65d2f0a-dfa7-4257-9333-fcbb583f0880",
+  "generated_at": "2026-04-25",
+  "artifacts": [
+    {
+      "filename": "pressure_zone_projection.json",
+      "description": "Normalized flat-schema projection of 75.x pressure zone designations",
+      "source": "pressure_zone_state.json",
+      "source_contract": "PI.PRESSURE-ZONE.DESIGNATION.75X.04"
+    },
+    {
+      "filename": "signal_projection.json",
+      "description": "41.x-normalized signal condition projection from 75.x correlation state",
+      "source": "condition_correlation_state.json",
+      "source_contract": "PI.CONDITION-CORRELATION.ANALYSIS.75X.03"
+    },
+    {
+      "filename": "projection_manifest.json",
+      "description": "Manifest for this 41.x projection package",
+      "source": "75x_runtime_manifest.json",
+      "source_contract": "PI.41X.PRESSURE-ZONE.PROJECTION.01"
+    }
+  ],
+  "source_artifacts": [
+    "75.x/pressure_zone_state.json",
+    "75.x/pressure_candidate_state.json",
+    "75.x/condition_correlation_state.json",
+    "75.x/75x_runtime_manifest.json"
+  ],
+  "reinjection_analysis": {
+    "nearest_consumer_zone": {
+      "path": "app/gauge-product/pages/api/zones.js",
+      "entry_point": "zones.js:25",
+      "invokes": "scripts/pios/tier2_query_engine.py --list-zones",
+      "contract": "TIER2.RUNTIME.QUERY.ENGINE.01",
+      "status": "AVAILABLE — pressure_zone_projection.json not yet wired; requires tier2_query_engine.py extension"
+    },
+    "nearest_consumer_signal": {
+      "path": "app/gauge-product/pages/api/signals.js",
+      "entry_point": "signals.js:35",
+      "reads": "docs/pios/41.4/signal_registry.json",
+      "contract": "GAUGE.RUNTIME.SIGNAL.VISIBILITY.01",
+      "status": "AVAILABLE — signal_projection.json is a parallel artifact; does not replace signal_registry.json"
+    },
+    "direct_consumer_pressure_zone_projection": "NONE — no existing code path reads pressure_zone_projection.json by name",
+    "safe_to_proceed": true,
+    "blockers": []
+  },
+  "projection_status": "PROJECTION_PACKAGE_READY",
+  "focus_domain_selected": false,
+  "ranking_applied": false,
+  "downstream_ready_for": [
+    "tier2_query_engine.py extension",
+    "41.x semantic shaping",
+    "agentic AI read-only consumption"
+  ]
+}
