@@ -210,6 +210,9 @@ function WhyResult({ data }) {
             <div className="ws-result-section ws-exec-interp-section">
               <div className="ws-result-label ws-exec-interp-label">EXECUTIVE INTERPRETATION</div>
               <div className="ws-exec-interp-line">{r.interpretation.executive_interpretation_line}</div>
+              {r.attribution_profile && (
+                <span className="ws-exec-attr-label">{r.attribution_profile.toUpperCase()} ZONE</span>
+              )}
             </div>
           )}
           <div className="ws-result-section ws-interp-section">

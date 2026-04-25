@@ -2288,7 +2288,7 @@ details.op-details[open] summary::before { content:"▼  "; }
 /* WHY: primary finding */
 .ws-finding-primary { padding:14px 16px; background:#16161a; border:1px solid #222228; border-radius:2px; }
 .ws-finding-badges { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-.ws-badge-lg { padding:4px 11px; font-size:11px; }
+.ws-badge-lg { padding:3px 9px; font-size:10.5px; }
 
 /* Scope + chips */
 .ws-scope-line { display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-size:12px; color:#e8e8e8; }
@@ -2296,10 +2296,10 @@ details.op-details[open] summary::before { content:"▼  "; }
 
 /* Rationale table */
 .ws-rationale { display:flex; flex-direction:column; gap:5px; }
-.ws-rationale-row { display:grid; grid-template-columns:160px 100px 1fr; gap:10px; padding:7px 10px; background:#16161a; border:1px solid #222228; border-radius:2px; font-size:11px; }
-.ws-rationale-factor { color:#666; font-family:monospace; }
-.ws-rationale-value { color:#c89b3c; font-family:monospace; word-break:break-all; }
-.ws-rationale-contrib { color:#ccc; line-height:1.5; }
+.ws-rationale-row { display:grid; grid-template-columns:160px 100px 1fr; gap:10px; padding:6px 10px; background:#16161a; border:1px solid #222228; border-radius:2px; font-size:10.5px; }
+.ws-rationale-factor { color:#555; font-family:monospace; }
+.ws-rationale-value { color:#a07f30; font-family:monospace; word-break:break-all; font-size:10px; }
+.ws-rationale-contrib { color:#6a6a6a; line-height:1.5; }
 
 /* EVIDENCE: signal summary */
 .ws-ev-summary { display:flex; align-items:center; gap:16px; padding:12px 16px; background:#16161a; border:1px solid #222228; border-radius:2px; }
@@ -2369,7 +2369,8 @@ details.op-details[open] summary::before { content:"▼  "; }
 /* Executive interpretation line — dominant presentation layer */
 .ws-exec-interp-section { border-top:1px solid #1e1e24; padding-top:10px; }
 .ws-exec-interp-label { font-size:10px; font-family:monospace; color:#4a4a6a; letter-spacing:.08em; margin-bottom:6px; }
-.ws-exec-interp-line { font-size:15px; color:#c8c8d4; font-weight:500; line-height:1.4; padding:12px 14px; background:#0f0f14; border:1px solid #2a2a38; border-left:3px solid #5a5a80; border-radius:2px; }
+.ws-exec-interp-line { font-size:16px; color:#d4d4e0; font-weight:600; line-height:1.38; padding:12px 14px; background:#0f0f14; border:1px solid #2a2a38; border-left:3px solid #5a5a80; border-radius:2px; }
+.ws-exec-attr-label { display:inline-block; margin-top:8px; font-size:10px; font-family:monospace; color:#6a6a8e; letter-spacing:.1em; padding:3px 9px; border:1px solid #252535; border-radius:2px; background:#0d0d16; }
 
 /* Interpretation injection — behavioral_meaning / trace metadata */
 .ws-interp-section { border-top:1px solid #1e1e24; padding-top:10px; }

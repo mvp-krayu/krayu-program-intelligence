@@ -2902,11 +2902,22 @@ def _load_psee_interpretation_by_zone_class() -> Dict:
     return result
 
 
+_EXEC_LINE_STOP: frozenset = frozenset({
+    "a", "an", "the", "of", "in", "on", "at", "to", "for", "from", "by", "with",
+    "this", "that", "it", "its", "is", "are", "was", "were", "be", "been", "being",
+    "and", "or", "but", "not", "no", "as", "than", "more", "many", "much", "far",
+    "which", "who", "how", "where", "when", "while", "other", "another", "any",
+    "each", "all", "both", "one", "has", "have", "had", "per",
+})
+
+
 def _derive_executive_line(text: str) -> str:
     """Derive a deterministic executive summary line from interpretation text at render time.
 
-    Rule: take first sentence; truncate at subordinate clause markers (; — :);
-    no new terms added. Same input always yields same output.
+    Steps:
+    1. Take first sentence (up to ". "); truncate at subordinate markers (; — :)
+    2. Remove duplicate content tokens (keep last occurrence; skip stop words)
+    Deterministic: same input always yields same output. No new terms added.
     """
     if not text:
         return text
@@ -2916,7 +2927,17 @@ def _derive_executive_line(text: str) -> str:
         pos = first.find(marker)
         if pos != -1:
             first = first[:pos]
-    return first.strip()
+    first = first.strip()
+
+    words = first.split()
+    seen: dict = {}
+    for i, w in enumerate(words):
+        key = w.lower().rstrip(".,;!?")
+        if key not in _EXEC_LINE_STOP:
+            seen.setdefault(key, []).append(i)
+
+    remove = {idx for indices in seen.values() if len(indices) > 1 for idx in indices[:-1]}
+    return " ".join(w for i, w in enumerate(words) if i not in remove)
 
 
 def _t2_obfuscate(text: str) -> str:
