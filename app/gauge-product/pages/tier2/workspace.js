@@ -438,7 +438,7 @@ function ZoneCard({ zone, vaultIndex, defaultOpen, isActive, onActivate }) {
             <div className="ws-zone-condition">
               <span className={`ws-badge ${CONF_CLS[zone.confidence] || ''}`}>{zone.confidence}</span>
               <span className={`ws-badge ${TRACE_CLS[zone.traceability] || ''} ws-badge-sm`}>
-                {TRACE_LABELS[zone.traceability] || zone.traceability.replace(/_/g, ' ')}
+                {TRACE_LABELS[zone.traceability] || (zone.traceability ? zone.traceability.replace(/_/g, ' ') : '—')}
               </span>
               <span className="ws-zone-stat">{zone.capability_count} cap{zone.capability_count !== 1 ? 's' : ''}</span>
               <span className="ws-zone-stat">{zone.signal_count} sig{zone.signal_count !== 1 ? 's' : ''}</span>
@@ -487,6 +487,14 @@ function ZoneCard({ zone, vaultIndex, defaultOpen, isActive, onActivate }) {
 }
 
 // ---------------------------------------------------------------------------
+// Second-client projection config
+// ---------------------------------------------------------------------------
+
+const USE_SECOND_CLIENT = true
+const _SC_CLIENT_ID     = 'e65d2f0a-dfa7-4257-9333-fcbb583f0880'
+const _SC_RUN_ID        = 'run_01_oss_fastapi'
+
+// ---------------------------------------------------------------------------
 // Page
 // ---------------------------------------------------------------------------
 
@@ -508,7 +516,10 @@ export default function Tier2WorkspacePage() {
 
   // Load zones
   useEffect(() => {
-    fetch('/api/zones')
+    const zonesUrl = USE_SECOND_CLIENT
+      ? `/api/zones?client=${_SC_CLIENT_ID}&runId=${_SC_RUN_ID}`
+      : '/api/zones'
+    fetch(zonesUrl)
       .then(r => r.json())
       .then(data => {
         if (data.status === 'ok') {
