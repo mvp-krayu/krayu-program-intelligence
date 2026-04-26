@@ -39,7 +39,7 @@ VAULT_SECTIONS = {
 
 NAV_FOLDER = '00 — Navigation'
 
-ID_RE = re.compile(r'\b(ART-\d+|CLM-\d+|ENT-[\w-]+|TRN-\d+|SIG-\d+)\b')
+ID_RE = re.compile(r'\b(ART-\d+|CLM-\d+|ENT-[\w-]+|TRN-\d+|(?:PSIG-|SIG-)\d+)\b')
 
 SECTION_BY_PREFIX = {
     'ART': 'artifacts',
@@ -338,7 +338,7 @@ def scan_vault(vault_dir: Path):
                 'source_path': str(md_file.relative_to(vault_dir)),
             })
             if folder == 'claims' and meta.get('claim_type') == 'signal':
-                sig_m = re.search(r'SIG-\d+', meta.get('claim_label', ''))
+                sig_m = re.search(r'(?:PSIG-|SIG-)\d+', meta.get('claim_label', ''))
                 if sig_m:
                     signal_to_claim[sig_m.group(0)] = node_id
                     log.debug(f'signal mapping: {sig_m.group(0)} → {node_id}')
