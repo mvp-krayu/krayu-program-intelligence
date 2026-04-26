@@ -328,12 +328,13 @@ function buildHint(nodes, qs, isOverview) {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export default function VaultGraph({ zone, vaultIndex, qs, isOverview }) {
+export default function VaultGraph({ zone, vaultIndex, qs, isOverview, onNodeSelect }) {
   const mountRef        = useRef(null)
   const graphRef        = useRef(null)
   const tooltipRef      = useRef(null)
   const relevantIdsRef  = useRef(new Set())
   const isOverviewRef   = useRef(false)
+  const onNodeSelectRef = useRef(null)
 
   const graphData = useMemo(
     () => buildGraph(zone, vaultIndex, qs, isOverview),
@@ -344,6 +345,7 @@ export default function VaultGraph({ zone, vaultIndex, qs, isOverview }) {
   // Keep refs current every render so init-effect closures always see latest values
   relevantIdsRef.current = graphData.relevantIds
   isOverviewRef.current  = isOverview
+  onNodeSelectRef.current = onNodeSelect ?? null
 
   // Init renderer once per zone (browser-only, Three.js)
   useEffect(() => {
@@ -370,7 +372,21 @@ export default function VaultGraph({ zone, vaultIndex, qs, isOverview }) {
         .linkDirectionalParticles(link => link.type === 'TRACE' ? 4 : 0)
         .linkDirectionalParticleWidth(1.5)
         .linkDirectionalParticleColor(() => LINK_COLOR_BRIGHT.TRACE)
-        .onNodeClick(n => { if (n.url) window.open(n.url, '_blank', 'noreferrer') })
+        .onNodeClick(n => {
+          if (n.type === 'SIGNAL') {
+            // Workspace update: fire EVIDENCE query for containing zone
+            onNodeSelectRef.current?.({ type: 'signal', id: n.id, zoneId: zone.zone_id })
+            // Secondary vault navigation: open mapped CLM HTML
+            if (n.url) window.open(n.url, '_blank', 'noreferrer')
+          } else if (n.type === 'ZONE') {
+            // Workspace update: push aggregated PSIG list via EVIDENCE query
+            onNodeSelectRef.current?.({ type: 'zone', id: n.id })
+            if (n.url) window.open(n.url, '_blank', 'noreferrer')
+          } else {
+            // CLAIM / ARTIFACT: deterministic vault navigation only
+            if (n.url) window.open(n.url, '_blank', 'noreferrer')
+          }
+        })
         .onNodeHover(n => {
           if (tooltipRef.current) {
             tooltipRef.current.textContent = n ? `${n.type} · ${n.label}` : ''

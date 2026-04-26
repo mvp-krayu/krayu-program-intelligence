@@ -617,12 +617,13 @@ const GRAPH_MODE_LABEL = {
 }
 
 export default function Tier2WorkspacePage() {
-  const [pageState, setPageState]       = useState('loading')
-  const [zonesData, setZonesData]       = useState(null)
-  const [vaultIndex, setVaultIndex]     = useState(null)
-  const [activeZone, setActiveZone]     = useState(null)
-  const [activeMode, setActiveMode]     = useState(null)
-  const [activeQsData, setActiveQsData] = useState(null)
+  const [pageState, setPageState]           = useState('loading')
+  const [zonesData, setZonesData]           = useState(null)
+  const [vaultIndex, setVaultIndex]         = useState(null)
+  const [activeZone, setActiveZone]         = useState(null)
+  const [activeMode, setActiveMode]         = useState(null)
+  const [activeQsData, setActiveQsData]     = useState(null)
+  const [graphPanelQuery, setGraphPanelQuery] = useState(null)
 
   // Load zones
   useEffect(() => {
@@ -689,7 +690,46 @@ export default function Tier2WorkspacePage() {
     setActiveZone(null)
     setActiveMode(null)
     setActiveQsData(null)
+    setGraphPanelQuery(null)
     try { sessionStorage.removeItem(WS_STATE_KEY) } catch {}
+  }
+
+  // Graph-initiated query: fires zone query and surfaces result in graph panel
+  async function handleGraphQuery(zoneId, mode) {
+    if (!zonesData) return
+    setGraphPanelQuery({ loading: true, mode, zoneId })
+    const isPzZone = zoneId.startsWith('PZ-')
+    const queryUrl = (isPzZone && USE_SECOND_CLIENT)
+      ? `/api/query?zone_id=${zoneId}&mode=${mode}&client=${_SC_CLIENT_ID}&runId=${_SC_RUN_ID}`
+      : `/api/query?zone_id=${zoneId}&mode=${mode}`
+    try {
+      const res  = await fetch(queryUrl)
+      const data = await res.json()
+      if (data.status === 'ok') {
+        setGraphPanelQuery({ mode, zoneId, data })
+        const zone = zonesData.zones.find(z => z.zone_id === zoneId)
+        if (zone) {
+          setActiveZone(zone)
+          setActiveMode(mode)
+          setActiveQsData(data)
+        }
+      } else {
+        setGraphPanelQuery({ mode, zoneId, error: data.reason || 'QUERY_FAILED' })
+      }
+    } catch {
+      setGraphPanelQuery({ mode, zoneId, error: 'NETWORK_ERROR' })
+    }
+  }
+
+  function handleGraphNodeSelect({ type, id, zoneId }) {
+    if (type === 'signal') {
+      // PSIG click: fire EVIDENCE query for the containing zone
+      handleGraphQuery(zoneId, 'EVIDENCE')
+    } else if (type === 'zone') {
+      // ZONE click: fire EVIDENCE query to push aggregated PSIG list
+      const targetZoneId = id.startsWith('PZ-') ? id : (zonesData?.zones?.[0]?.zone_id ?? id)
+      handleGraphQuery(targetZoneId, 'EVIDENCE')
+    }
   }
 
   // Graph inputs
@@ -755,7 +795,40 @@ export default function Tier2WorkspacePage() {
                   </button>
                 )}
               </div>
-              <VaultGraph zone={graphZone} vaultIndex={vaultIndex} qs={graphQs} isOverview={isOverview} />
+              <VaultGraph
+                zone={graphZone}
+                vaultIndex={vaultIndex}
+                qs={graphQs}
+                isOverview={isOverview}
+                onNodeSelect={handleGraphNodeSelect}
+              />
+              {graphPanelQuery && (
+                <div className="ws-graph-query-panel">
+                  <div className="ws-graph-query-header">
+                    <span className="ws-graph-query-zone">{graphPanelQuery.zoneId}</span>
+                    <span className="ws-graph-query-mode">{graphPanelQuery.mode}</span>
+                    <button
+                      className="ws-btn ws-btn-clear"
+                      onClick={() => setGraphPanelQuery(null)}
+                    >✕</button>
+                  </div>
+                  {graphPanelQuery.loading && (
+                    <div className="ws-graph-query-loading">{graphPanelQuery.mode}…</div>
+                  )}
+                  {graphPanelQuery.error && (
+                    <div className="ws-query-error">{graphPanelQuery.error}</div>
+                  )}
+                  {graphPanelQuery.data && graphPanelQuery.mode === 'EVIDENCE' && (
+                    <EvidenceResult data={graphPanelQuery.data} vaultIndex={vaultIndex} />
+                  )}
+                  {graphPanelQuery.data && graphPanelQuery.mode === 'WHY' && (
+                    <WhyResult data={graphPanelQuery.data} />
+                  )}
+                  {graphPanelQuery.data && graphPanelQuery.mode === 'TRACE' && (
+                    <TraceResult data={graphPanelQuery.data} />
+                  )}
+                </div>
+              )}
             </div>
           )}
 
