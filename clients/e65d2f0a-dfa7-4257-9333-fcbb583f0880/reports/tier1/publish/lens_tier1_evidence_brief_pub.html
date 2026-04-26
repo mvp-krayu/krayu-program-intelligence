@@ -117,7 +117,7 @@
   </div>
 
   <div class="nav-strip">
-    <a href="/api/report-file?name=lens_tier1_narrative_brief_pub.html" class="nav-link">Executive Brief</a>
+    <a href="/api/report-file?name=lens_tier1_narrative_brief_pub.html&client=e65d2f0a-dfa7-4257-9333-fcbb583f0880&runId=run_01_oss_fastapi" class="nav-link">Executive Brief</a>
     <span class="nav-link active">LENS Assessment</span>
     <a href="/api/report-file?name=lens_tier2_diagnostic_narrative_pub.html" class="nav-link">Diagnostic</a>
   </div>
@@ -230,7 +230,7 @@
       <div class="domain-dot grounded"></div>
       <div>
         <div class="domain-name">documentation_root</div>
-        <div class="domain-sub">0 capabilities · 0 components</div>
+        <div class="domain-sub">Structural scope: evidence boundary</div>
         <div class="domain-tag grounded">Grounded</div>
       </div>
     </div>
@@ -238,7 +238,7 @@
       <div class="domain-dot grounded"></div>
       <div>
         <div class="domain-name">extraction_analysis</div>
-        <div class="domain-sub">0 capabilities · 0 components</div>
+        <div class="domain-sub">Structural scope: evidence boundary</div>
         <div class="domain-tag grounded">Grounded</div>
       </div>
     </div>
@@ -270,7 +270,7 @@
   <div class="domain-legend">
     <div class="domain-legend-item"><div class="legend-dot" style="background:var(--green)"></div> Grounded (5 domains — evidence-backed)</div>
     <div class="domain-legend-item"><div class="legend-dot" style="background:var(--amber)"></div> Weakly Grounded (0 domains — partial evidence)</div>
-    <div class="domain-legend-item"><div class="legend-dot" style="background:var(--gold)"></div> Focus Domain</div>
+    <div class="domain-legend-item"><div class="legend-dot" style="background:var(--gold)"></div> Primary Pressure Zone</div>
   </div>
 
   <h2>Active Structural Signals</h2>
@@ -344,44 +344,36 @@
   </div>
 
   <h2 style="margin-top:36px">Pressure Zones</h2>
+  <p style="font-size:12.5px;color:var(--fg-muted);margin-bottom:16px">All zones share the same active condition set: PSIG-001 · PSIG-002 · PSIG-004. Zone class: COMPOUND_ZONE (3 conditions ≥ threshold).</p>
   <div class="focus-domain-block" style="margin-bottom:12px">
     <div class="focus-domain-header">
       <div>
         <div class="focus-domain-label">PZ-001 — backend_isolated · secondary</div>
-        <div class="focus-domain-name">COMPOUND_ZONE · 3 conditions co-present</div>
         <div class="focus-domain-sub">PSIG-001 · PSIG-002 · PSIG-004</div>
       </div>
       <div class="focus-badge">secondary</div>
     </div>
-    <div class="focus-finding">
-      PZ-001 (backend_isolated) carries secondary attribution. 3 structural conditions simultaneously co-present: PSIG-001 · PSIG-002 · PSIG-004. Zone class: COMPOUND_ZONE (condition count = 3 ≥ 3).
-    </div>
+    <div class="focus-finding">PZ-001 (backend_isolated): secondary attribution.</div>
   </div>
   <div class="focus-domain-block" style="margin-bottom:12px">
     <div class="focus-domain-header">
       <div>
         <div class="focus-domain-label">PZ-002 — frontend_isolated · PRIMARY</div>
-        <div class="focus-domain-name">COMPOUND_ZONE · 3 conditions co-present</div>
         <div class="focus-domain-sub">PSIG-001 · PSIG-002 · PSIG-004</div>
       </div>
       <div class="focus-badge">PRIMARY</div>
     </div>
-    <div class="focus-finding">
-      PZ-002 (frontend_isolated) carries primary attribution. 3 structural conditions simultaneously co-present: PSIG-001 · PSIG-002 · PSIG-004. Zone class: COMPOUND_ZONE (condition count = 3 ≥ 3).
-    </div>
+    <div class="focus-finding">PZ-002 (frontend_isolated): primary attribution.</div>
   </div>
   <div class="focus-domain-block" style="margin-bottom:12px">
     <div class="focus-domain-header">
       <div>
         <div class="focus-domain-label">PZ-003 — platform_monorepo · secondary</div>
-        <div class="focus-domain-name">COMPOUND_ZONE · 3 conditions co-present</div>
         <div class="focus-domain-sub">PSIG-001 · PSIG-002 · PSIG-004</div>
       </div>
       <div class="focus-badge">secondary</div>
     </div>
-    <div class="focus-finding">
-      PZ-003 (platform_monorepo) carries secondary attribution. 3 structural conditions simultaneously co-present: PSIG-001 · PSIG-002 · PSIG-004. Zone class: COMPOUND_ZONE (condition count = 3 ≥ 3).
-    </div>
+    <div class="focus-finding">PZ-003 (platform_monorepo): secondary attribution.</div>
   </div>
   <div class="tier2-handoff" style="margin-top:8px"><div class="tier2-handoff-label">Structural Blind Spot — PSIG-006</div><div class="tier2-handoff-text">9 entities outside pressure zone scope. PSIG-006 activated at THEORETICAL_BASELINE — coverage gap, not zone candidate.</div></div>
 
@@ -400,7 +392,7 @@
       <div style="margin-top:4px">Program Intelligence — LENS Assessment</div>
     </div>
     <div class="footer-note">
-      SAMPLE — All structural values are derived from verified execution evidence.<br>
+      SAMPLE — Client Environment.<br>
       Client environments, scores, and findings will vary.<br>
       All structural values are derived from verified execution evidence.
     </div>

@@ -74,6 +74,10 @@
   .report-footer{display:flex;justify-content:space-between;align-items:flex-end;padding-top:24px;border-top:1px solid var(--border);margin-top:48px}
   .footer-brand{font-size:13px;color:var(--gold);letter-spacing:.08em}
   .footer-note{font-size:11px;color:var(--fg-muted);text-align:right;line-height:1.7}
+  .conclusion-block{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--green);padding:20px 24px;border-radius:3px;margin-top:20px}
+  .conclusion-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:12px}
+  .conclusion-text{font-size:15px;color:var(--fg);font-weight:500;margin-bottom:10px}
+  .conclusion-body{font-size:13px;color:var(--fg-muted);line-height:1.7;margin-bottom:8px}
   @media(max-width:600px){.score-row{grid-template-columns:1fr 1fr}.grounding-row{grid-template-columns:1fr}.boundary-grid{grid-template-columns:1fr}.posture-row{grid-template-columns:1fr}.report-header{flex-direction:column;gap:12px}.report-meta{text-align:left}}
 </style>
 </head>
@@ -94,7 +98,7 @@
 
   <div class="nav-strip">
     <span class="nav-link active">Executive Brief</span>
-    <a href="/api/report-file?name=lens_tier1_evidence_brief.html" class="nav-link">LENS Assessment</a>
+    <a href="/api/report-file?name=lens_tier1_evidence_brief.html&client=e65d2f0a-dfa7-4257-9333-fcbb583f0880&runId=run_01_oss_fastapi" class="nav-link">LENS Assessment</a>
     <a href="/api/report-file?name=lens_tier2_diagnostic_narrative.html" class="nav-link">Diagnostic</a>
   </div>
 
@@ -243,6 +247,13 @@
       <div><div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:4px">Decision</div><div style="font-size:14px;color:var(--gold)">INVESTIGATE</div></div>
     </div>
     <p class="body-text">The assessment does not specify what action to take. It establishes the structural state from which any decision must be made. Structural risk is LOW — the codebase topology does not present elevated dependency or density risk. The INVESTIGATE designation is driven by evidence gaps: execution layer not evaluated, blind spot coverage active, and signals not activated in this run. Resolving these gaps moves evidence completeness from PARTIAL to HIGH.</p>
+    <div class="conclusion-block">
+      <div class="conclusion-label">Structural Conclusion</div>
+      <p class="conclusion-text">The system is structurally stable.</p>
+      <p class="conclusion-body">Structural analysis shows low dependency load, controlled density, and no system-wide pressure propagation detected.</p>
+      <p class="conclusion-body">The INVESTIGATE posture is driven by evidence incompleteness, not by structural instability.</p>
+      <p class="conclusion-body">Execution-layer behavior remains outside the current evidence scope.</p>
+    </div>
   </div>
 
   <div class="report-footer">
@@ -251,7 +262,7 @@
       <div style="margin-top:4px;font-size:11px;color:var(--fg-muted)">Program Intelligence — LENS Assessment</div>
     </div>
     <div class="footer-note">
-      SAMPLE — All structural values are derived from verified execution evidence.<br>
+      SAMPLE — OSS FastAPI Codebase.<br>
       All structural values are derived from verified execution evidence.
     </div>
   </div>

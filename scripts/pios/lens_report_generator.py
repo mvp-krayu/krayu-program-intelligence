@@ -72,6 +72,11 @@ def _get_client_display_name(publish_safe: bool = False) -> str:
     return _CLIENT_DISPLAY_NAMES.get(_ACTIVE_CLIENT, "Client Environment")
 
 
+def _scoped_report_url(name: str) -> str:
+    return (f"/api/report-file?name={name}"
+            f"&client={_ACTIVE_CLIENT}&runId={_ACTIVE_VAULT_RUN_ID}")
+
+
 def _default_output_path() -> Path:
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     return REPORTS_DIR / f"lens_report_{ts}.html"
@@ -2327,13 +2332,12 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
 
     use_psig = psig_proj is not None
     client_name = _get_client_display_name(publish_safe)
-    narr_link = ("/api/report-file?name=lens_tier1_narrative_brief_pub.html"
-                 if publish_safe else
-                 "/api/report-file?name=lens_tier1_narrative_brief.html")
-    t2_link   = ("/api/report-file?name=lens_tier2_diagnostic_narrative_pub.html"
-                 if publish_safe else
-                 "/api/report-file?name=lens_tier2_diagnostic_narrative.html")
-    footer_note = ("SAMPLE — All structural values are derived from verified execution evidence."
+    _narr_name = "lens_tier1_narrative_brief_pub.html" if publish_safe else "lens_tier1_narrative_brief.html"
+    narr_link  = _scoped_report_url(_narr_name) if use_psig else f"/api/report-file?name={_narr_name}"
+    t2_link    = ("/api/report-file?name=lens_tier2_diagnostic_narrative_pub.html"
+                  if publish_safe else
+                  "/api/report-file?name=lens_tier2_diagnostic_narrative.html")
+    footer_note = (f"SAMPLE — {client_name}."
                    if use_psig else
                    ("SAMPLE — Client data used for demonstration purposes." if publish_safe
                     else "SAMPLE — BlueEdge data used for demonstration purposes."))
@@ -2379,11 +2383,15 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
         else:
             cls = "grounded"
             tag_label = "Grounded"
+        if use_psig and ncaps == 0 and ncomps == 0:
+            sub_text = "Structural scope: evidence boundary"
+        else:
+            sub_text = f'{ncaps} capabilit{"y" if ncaps==1 else "ies"} · {ncomps} component{"" if ncomps==1 else "s"}'
         domain_cards.append(f"""    <div class="domain-card {cls}">
       <div class="domain-dot {cls}"></div>
       <div>
         <div class="domain-name">{esc(name_raw)}</div>
-        <div class="domain-sub">{ncaps} capabilit{"y" if ncaps==1 else "ies"} · {ncomps} component{"" if ncomps==1 else "s"}</div>
+        <div class="domain-sub">{sub_text}</div>
         <div class="domain-tag {cls}">{tag_label}</div>
       </div>
     </div>""")
@@ -2584,31 +2592,36 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
     if use_psig and pz_proj:
         zone_list = pz_proj.get("zone_projection", [])
         pz_blocks = []
+        # Shared condition set across all zones (de-duplicate repetition)
+        _all_sigs = zone_list[0].get("signals", []) if zone_list else []
+        _shared_sigs_str = " · ".join(_all_sigs)
+        _shared_ccount   = zone_list[0].get("condition_count", len(_all_sigs)) if zone_list else 0
+        _shared_zclass   = zone_list[0].get("zone_class", "COMPOUND_ZONE") if zone_list else "COMPOUND_ZONE"
+        _shared_header = (
+            f'  <p style="font-size:12.5px;color:var(--fg-muted);margin-bottom:16px">'
+            f'All zones share the same active condition set: {esc(_shared_sigs_str)}. '
+            f'Zone class: {esc(_shared_zclass)} ({_shared_ccount} conditions ≥ threshold).</p>\n'
+        ) if zone_list else ""
         for z in zone_list:
             zid   = z["zone_id"]
             zname = z.get("anchor_name", z.get("anchor_id", zid))
-            zclass = z.get("zone_class", "COMPOUND_ZONE")
             profile = z.get("attribution_profile", "secondary")
-            sigs_in_zone = z.get("signals", [])
-            sigs_str = " · ".join(sigs_in_zone)
-            ccount = z.get("condition_count", len(sigs_in_zone))
             is_prim = profile == "primary"
             badge = "PRIMARY" if is_prim else profile
+            sigs_in_zone = z.get("signals", [])
+            sigs_str = " · ".join(sigs_in_zone)
             pz_blocks.append(
                 f'  <div class="focus-domain-block" style="margin-bottom:12px">\n'
                 f'    <div class="focus-domain-header">\n'
                 f'      <div>\n'
                 f'        <div class="focus-domain-label">{esc(zid)} — {esc(zname)} · {esc(badge)}</div>\n'
-                f'        <div class="focus-domain-name">{esc(zclass)} · {ccount} conditions co-present</div>\n'
                 f'        <div class="focus-domain-sub">{esc(sigs_str)}</div>\n'
                 f'      </div>\n'
                 f'      <div class="focus-badge">{esc(badge)}</div>\n'
                 f'    </div>\n'
-                f'    <div class="focus-finding">\n'
-                f'      {esc(zid)} ({esc(zname)}) carries {esc(profile)} attribution. '
-                f'{ccount} structural conditions simultaneously co-present: {esc(sigs_str)}. '
-                f'Zone class: {esc(zclass)} (condition count = {ccount} ≥ 3).\n'
-                f'    </div>\n'
+                f'    <div class="focus-finding">'
+                f'{esc(zid)} ({esc(zname)}): {esc(profile)} attribution.'
+                f'</div>\n'
                 f'  </div>'
             )
         blind_spot_count = pz_proj.get("structural_blind_spot_entity_count", 0)
@@ -2623,6 +2636,7 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
         )
         focus_block_html = (
             f'  <h2 style="margin-top:36px">Pressure Zones</h2>\n'
+            + _shared_header
             + "\n".join(pz_blocks)
             + blind_note
         )
@@ -2750,7 +2764,7 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
   <div class="domain-legend">
     <div class="domain-legend-item"><div class="legend-dot" style="background:var(--green)"></div> Grounded ({grounded_count} domains — evidence-backed)</div>
     <div class="domain-legend-item"><div class="legend-dot" style="background:var(--amber)"></div> Weakly Grounded ({weak_count} domains — partial evidence)</div>
-    <div class="domain-legend-item"><div class="legend-dot" style="background:var(--gold)"></div> Focus Domain</div>
+    {'<div class="domain-legend-item"><div class="legend-dot" style="background:var(--gold)"></div> Primary Pressure Zone</div>' if use_psig else '<div class="domain-legend-item"><div class="legend-dot" style="background:var(--gold)"></div> Focus Domain</div>'}
   </div>
 
   <h2>Active Structural Signals</h2>
@@ -2860,6 +2874,10 @@ _TIER1_NARRATIVE_CSS = """
   .report-footer{display:flex;justify-content:space-between;align-items:flex-end;padding-top:24px;border-top:1px solid var(--border);margin-top:48px}
   .footer-brand{font-size:13px;color:var(--gold);letter-spacing:.08em}
   .footer-note{font-size:11px;color:var(--fg-muted);text-align:right;line-height:1.7}
+  .conclusion-block{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--green);padding:20px 24px;border-radius:3px;margin-top:20px}
+  .conclusion-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:12px}
+  .conclusion-text{font-size:15px;color:var(--fg);font-weight:500;margin-bottom:10px}
+  .conclusion-body{font-size:13px;color:var(--fg-muted);line-height:1.7;margin-bottom:8px}
   @media(max-width:600px){.score-row{grid-template-columns:1fr 1fr}.grounding-row{grid-template-columns:1fr}.boundary-grid{grid-template-columns:1fr}.posture-row{grid-template-columns:1fr}.report-header{flex-direction:column;gap:12px}.report-meta{text-align:left}}
 """
 
@@ -2879,14 +2897,13 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
 
     use_psig = psig_proj is not None
     client_name = _get_client_display_name(publish_safe)
-    ev_link = ("/api/report-file?name=lens_tier1_evidence_brief_pub.html"
-               if publish_safe else
-               "/api/report-file?name=lens_tier1_evidence_brief.html")
-    t2_link = ("/api/report-file?name=lens_tier2_diagnostic_narrative_pub.html"
-               if publish_safe else
-               "/api/report-file?name=lens_tier2_diagnostic_narrative.html")
+    _ev_name    = "lens_tier1_evidence_brief_pub.html" if publish_safe else "lens_tier1_evidence_brief.html"
+    ev_link     = _scoped_report_url(_ev_name) if use_psig else f"/api/report-file?name={_ev_name}"
+    t2_link     = ("/api/report-file?name=lens_tier2_diagnostic_narrative_pub.html"
+                   if publish_safe else
+                   "/api/report-file?name=lens_tier2_diagnostic_narrative.html")
     title_suffix = " (Publish)" if publish_safe else ""
-    footer_note = ("SAMPLE — All structural values are derived from verified execution evidence."
+    footer_note = (f"SAMPLE — {client_name}."
                    if use_psig else
                    ("SAMPLE — Illustrative client environment. All structural values represent actual assessment outputs."
                     if publish_safe else
@@ -3206,6 +3223,15 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
             'or density risk. The INVESTIGATE designation is driven by evidence gaps: '
             'execution layer not evaluated, blind spot coverage active, and signals not activated '
             'in this run. Resolving these gaps moves evidence completeness from PARTIAL to HIGH.</p>\n'
+            '    <div class="conclusion-block">\n'
+            '      <div class="conclusion-label">Structural Conclusion</div>\n'
+            '      <p class="conclusion-text">The system is structurally stable.</p>\n'
+            '      <p class="conclusion-body">Structural analysis shows low dependency load, '
+            'controlled density, and no system-wide pressure propagation detected.</p>\n'
+            '      <p class="conclusion-body">The INVESTIGATE posture is driven by evidence incompleteness, '
+            'not by structural instability.</p>\n'
+            '      <p class="conclusion-body">Execution-layer behavior remains outside the current evidence scope.</p>\n'
+            '    </div>\n'
             '  </div>'
         )
     else:
