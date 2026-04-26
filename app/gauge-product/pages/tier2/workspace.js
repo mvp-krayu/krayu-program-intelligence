@@ -698,12 +698,40 @@ export default function Tier2WorkspacePage() {
   async function handleGraphQuery(zoneId, mode) {
     if (!zonesData) return
     setGraphPanelQuery({ loading: true, mode, zoneId })
-    const isPzZone = zoneId.startsWith('PZ-')
-    const queryUrl = (isPzZone && USE_SECOND_CLIENT)
-      ? `/api/query?zone_id=${zoneId}&mode=${mode}&client=${_SC_CLIENT_ID}&runId=${_SC_RUN_ID}`
-      : `/api/query?zone_id=${zoneId}&mode=${mode}`
+
+    const buildUrl = m => {
+      const isPzZone = zoneId.startsWith('PZ-')
+      return (isPzZone && USE_SECOND_CLIENT)
+        ? `/api/query?zone_id=${zoneId}&mode=${m}&client=${_SC_CLIENT_ID}&runId=${_SC_RUN_ID}`
+        : `/api/query?zone_id=${zoneId}&mode=${m}`
+    }
+
+    // FULL_EXPLANATION: fire WHY + EVIDENCE + TRACE in parallel, render all three panels
+    if (mode === 'FULL_EXPLANATION') {
+      try {
+        const [whyRes, evRes, traceRes] = await Promise.all([
+          fetch(buildUrl('WHY')).then(r => r.json()).catch(() => null),
+          fetch(buildUrl('EVIDENCE')).then(r => r.json()).catch(() => null),
+          fetch(buildUrl('TRACE')).then(r => r.json()).catch(() => null),
+        ])
+        const why      = whyRes?.status   === 'ok' ? whyRes   : null
+        const evidence = evRes?.status    === 'ok' ? evRes    : null
+        const trace    = traceRes?.status === 'ok' ? traceRes : null
+        setGraphPanelQuery({ mode: 'FULL_EXPLANATION', zoneId, why, evidence, trace })
+        const zone = zonesData.zones.find(z => z.zone_id === zoneId)
+        if (zone && evidence) {
+          setActiveZone(zone)
+          setActiveMode('EVIDENCE')
+          setActiveQsData(evidence)
+        }
+      } catch {
+        setGraphPanelQuery({ mode: 'FULL_EXPLANATION', zoneId, error: 'NETWORK_ERROR' })
+      }
+      return
+    }
+
     try {
-      const res  = await fetch(queryUrl)
+      const res  = await fetch(buildUrl(mode))
       const data = await res.json()
       if (data.status === 'ok') {
         setGraphPanelQuery({ mode, zoneId, data })
@@ -723,10 +751,10 @@ export default function Tier2WorkspacePage() {
 
   function handleGraphNodeSelect({ type, id, zoneId }) {
     if (type === 'signal') {
-      // PSIG click: fire EVIDENCE query for the containing zone
-      handleGraphQuery(zoneId, 'EVIDENCE')
+      // PSIG click: full explanation — WHY + EVIDENCE + TRACE, no vault navigation
+      handleGraphQuery(zoneId, 'FULL_EXPLANATION')
     } else if (type === 'zone') {
-      // ZONE click: fire EVIDENCE query to push aggregated PSIG list
+      // ZONE click: EVIDENCE query to push aggregated PSIG list
       const targetZoneId = id.startsWith('PZ-') ? id : (zonesData?.zones?.[0]?.zone_id ?? id)
       handleGraphQuery(targetZoneId, 'EVIDENCE')
     }
@@ -813,10 +841,39 @@ export default function Tier2WorkspacePage() {
                     >✕</button>
                   </div>
                   {graphPanelQuery.loading && (
-                    <div className="ws-graph-query-loading">{graphPanelQuery.mode}…</div>
+                    <div className="ws-graph-query-loading">
+                      {graphPanelQuery.mode === 'FULL_EXPLANATION'
+                        ? 'WHY · EVIDENCE · TRACE…'
+                        : `${graphPanelQuery.mode}…`}
+                    </div>
                   )}
                   {graphPanelQuery.error && (
                     <div className="ws-query-error">{graphPanelQuery.error}</div>
+                  )}
+                  {graphPanelQuery.mode === 'FULL_EXPLANATION' && !graphPanelQuery.loading && (
+                    <>
+                      {graphPanelQuery.why && (
+                        <div className="ws-graph-query-section">
+                          <div className="ws-graph-query-section-label">WHY</div>
+                          <WhyResult data={graphPanelQuery.why} />
+                        </div>
+                      )}
+                      {graphPanelQuery.evidence && (
+                        <div className="ws-graph-query-section">
+                          <div className="ws-graph-query-section-label">EVIDENCE</div>
+                          <EvidenceResult data={graphPanelQuery.evidence} vaultIndex={vaultIndex} />
+                        </div>
+                      )}
+                      {graphPanelQuery.trace && (
+                        <div className="ws-graph-query-section">
+                          <div className="ws-graph-query-section-label">TRACE</div>
+                          <TraceResult data={graphPanelQuery.trace} />
+                        </div>
+                      )}
+                      {!graphPanelQuery.why && !graphPanelQuery.evidence && !graphPanelQuery.trace && (
+                        <div className="ws-query-error">ALL_QUERIES_FAILED</div>
+                      )}
+                    </>
                   )}
                   {graphPanelQuery.data && graphPanelQuery.mode === 'EVIDENCE' && (
                     <EvidenceResult data={graphPanelQuery.data} vaultIndex={vaultIndex} />

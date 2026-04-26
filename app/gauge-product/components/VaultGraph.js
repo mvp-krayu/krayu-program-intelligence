@@ -374,10 +374,8 @@ export default function VaultGraph({ zone, vaultIndex, qs, isOverview, onNodeSel
         .linkDirectionalParticleColor(() => LINK_COLOR_BRIGHT.TRACE)
         .onNodeClick(n => {
           if (n.type === 'SIGNAL') {
-            // Workspace update: fire EVIDENCE query for containing zone
+            // Workspace update only — no vault navigation on PSIG click
             onNodeSelectRef.current?.({ type: 'signal', id: n.id, zoneId: zone.zone_id })
-            // Secondary vault navigation: open mapped CLM HTML
-            if (n.url) window.open(n.url, '_blank', 'noreferrer')
           } else if (n.type === 'ZONE') {
             // Workspace update: push aggregated PSIG list via EVIDENCE query
             onNodeSelectRef.current?.({ type: 'zone', id: n.id })
