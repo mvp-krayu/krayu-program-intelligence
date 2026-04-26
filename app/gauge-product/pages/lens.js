@@ -289,8 +289,12 @@ function LensHeader({ runId, generatedAt, hasAccess, onUnlock }) {
 }
 
 // ---------------------------------------------------------------------------
-// Report panel (unchanged logic)
+// Report panel
 // ---------------------------------------------------------------------------
+
+// Second-client scoping — mirrors workspace.js pattern
+const _SC_CLIENT_ID = 'e65d2f0a-dfa7-4257-9333-fcbb583f0880'
+const _SC_RUN_ID    = 'run_01_oss_fastapi'
 
 async function generateReport() {
   const res  = await fetch('/api/report')
@@ -301,9 +305,13 @@ async function generateReport() {
   // Tier-1 + Tier-2: { files: [{name, label, path}] }
   const byName = {}
   for (const f of data.files) byName[f.name] = f
+  const scope  = `&client=${_SC_CLIENT_ID}&runId=${_SC_RUN_ID}`
+  const scoped = name => byName[name]
+    ? { ...byName[name], path: byName[name].path + scope }
+    : undefined
   return {
-    executive:  byName['lens_tier1_narrative_brief.html'],
-    lens:       byName['lens_tier1_evidence_brief.html'],
+    executive:  scoped('lens_tier1_narrative_brief.html'),
+    lens:       scoped('lens_tier1_evidence_brief.html'),
     diagnostic: byName['lens_tier2_diagnostic_narrative.html'],
   }
 }
