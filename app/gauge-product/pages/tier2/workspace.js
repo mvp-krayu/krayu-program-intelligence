@@ -233,7 +233,13 @@ function WhyResult({ data }) {
 // TRACE result panel
 // ---------------------------------------------------------------------------
 
-function PathBlock({ p }) {
+function PathBlock({ p, vaultIndex }) {
+  // Resolve CLM vault URL from path fields (projection traces only)
+  const clmUrl = (p.vault_resolved && p.clm_html_path && vaultIndex?.base_url)
+    ? `${vaultIndex.base_url}/${p.clm_html_path}`
+    : null
+  const lastIdx = (p.node_chain?.length ?? 0) - 1
+
   return (
     <div className={`ws-path-block${p.inferred_declaration ? ' ws-path-block-inferred' : ''}`}>
       <div className="ws-path-header">
@@ -243,13 +249,49 @@ function PathBlock({ p }) {
         </span>
       </div>
       <div className={`ws-path-chain ws-path-chain-${(p.path_type || '').toLowerCase()}`}>
-        {p.node_chain.map((node, i) => (
-          <span key={i} className="ws-path-chain-row">
-            {i > 0 && <span className="ws-path-arrow">→</span>}
-            <span className="ws-path-node">{node}</span>
-          </span>
-        ))}
+        {p.node_chain.map((node, i) => {
+          const isClmNode = clmUrl && i === lastIdx
+          return (
+            <span key={i} className="ws-path-chain-row">
+              {i > 0 && <span className="ws-path-arrow">→</span>}
+              {isClmNode
+                ? (
+                  <a
+                    href={clmUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="ws-path-node ws-path-node-link"
+                  >{node}</a>
+                )
+                : <span className="ws-path-node">{node}</span>
+              }
+            </span>
+          )
+        })}
       </div>
+      {p.vault_resolved && p.linked_artifacts?.length > 0 && vaultIndex?.base_url && (
+        <div className="ws-path-artifacts">
+          {p.linked_artifacts.map(art => {
+            const artPath = vaultIndex.artifacts?.[art.id]
+            const artUrl  = artPath ? `${vaultIndex.base_url}/${artPath}` : null
+            return artUrl ? (
+              <a
+                key={art.id}
+                href={artUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="ws-vault-link ws-vault-link-artifact"
+                style={{ fontSize: '11px' }}
+              >
+                <span className="ws-vault-link-type">artifact</span>
+                <span className="ws-vault-link-id">{art.id}</span>
+                <span className="ws-vault-link-label">{art.label}</span>
+                <span className="ws-vault-link-arrow">↗</span>
+              </a>
+            ) : null
+          })}
+        </div>
+      )}
       {p.inferred_declaration && (
         <div className="ws-path-inferred">
           <span className="ws-path-inferred-label">INFERRED</span>
@@ -266,7 +308,7 @@ function PathBlock({ p }) {
   )
 }
 
-function TraceResult({ data }) {
+function TraceResult({ data, vaultIndex }) {
   const paths        = data.trace || []
   const forwardPaths = paths.filter(p => p.path_type === 'FORWARD')
   const evidencePaths= paths.filter(p => p.path_type === 'EVIDENCE')
@@ -317,14 +359,14 @@ function TraceResult({ data }) {
           {forwardPaths.length > 0 && (
             <div className="ws-result-section">
               <div className="ws-result-label ws-trace-group-forward">Structural Paths</div>
-              {forwardPaths.map(p => <PathBlock key={p.path_id} p={p} />)}
+              {forwardPaths.map(p => <PathBlock key={p.path_id} p={p} vaultIndex={vaultIndex} />)}
             </div>
           )}
 
           {evidencePaths.length > 0 && (
             <div className="ws-result-section">
               <div className="ws-result-label ws-trace-group-evidence">Evidence Paths</div>
-              {evidencePaths.map(p => <PathBlock key={p.path_id} p={p} />)}
+              {evidencePaths.map(p => <PathBlock key={p.path_id} p={p} vaultIndex={vaultIndex} />)}
             </div>
           )}
         </>
@@ -589,7 +631,7 @@ function ZoneCard({ zone, vaultIndex, defaultOpen, isActive, onActivate }) {
           {qs?.error && <div className="ws-query-error">{qs.error}</div>}
           {qs?.data && qs.mode === 'WHY'      && <WhyResult      data={qs.data} />}
           {qs?.data && qs.mode === 'EVIDENCE' && <EvidenceResult data={qs.data} vaultIndex={vaultIndex} />}
-          {qs?.data && qs.mode === 'TRACE'    && <TraceResult    data={qs.data} />}
+          {qs?.data && qs.mode === 'TRACE'    && <TraceResult    data={qs.data} vaultIndex={vaultIndex} />}
         </>
       )}
     </div>
@@ -867,7 +909,7 @@ export default function Tier2WorkspacePage() {
                       {graphPanelQuery.trace && (
                         <div className="ws-graph-query-section">
                           <div className="ws-graph-query-section-label">TRACE</div>
-                          <TraceResult data={graphPanelQuery.trace} />
+                          <TraceResult data={graphPanelQuery.trace} vaultIndex={vaultIndex} />
                         </div>
                       )}
                       {!graphPanelQuery.why && !graphPanelQuery.evidence && !graphPanelQuery.trace && (
@@ -882,7 +924,7 @@ export default function Tier2WorkspacePage() {
                     <WhyResult data={graphPanelQuery.data} />
                   )}
                   {graphPanelQuery.data && graphPanelQuery.mode === 'TRACE' && (
-                    <TraceResult data={graphPanelQuery.data} />
+                    <TraceResult data={graphPanelQuery.data} vaultIndex={vaultIndex} />
                   )}
                 </div>
               )}
