@@ -4297,17 +4297,16 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
     band_lo      = gauge["confidence"]["lower"]
     band_hi      = gauge["confidence"]["upper"]
 
-    client_name  = "Client Environment" if publish_safe else "BlueEdge Fleet Management Platform"
-    ev_link      = ("/api/report-file?name=lens_tier1_evidence_brief_pub.html"
-                    if publish_safe else
-                    "/api/report-file?name=lens_tier1_evidence_brief.html")
-    narr_link    = ("/api/report-file?name=lens_tier1_narrative_brief_pub.html"
-                    if publish_safe else
-                    "/api/report-file?name=lens_tier1_narrative_brief.html")
+    client_name  = _get_client_display_name(publish_safe)
+    _use_psig    = _ACTIVE_CLIENT != "blueedge"
+    _ev_name     = "lens_tier1_evidence_brief_pub.html" if publish_safe else "lens_tier1_evidence_brief.html"
+    _narr_name   = "lens_tier1_narrative_brief_pub.html" if publish_safe else "lens_tier1_narrative_brief.html"
+    ev_link      = _scoped_report_url(_ev_name) if _use_psig else f"/api/report-file?name={_ev_name}"
+    narr_link    = _scoped_report_url(_narr_name) if _use_psig else f"/api/report-file?name={_narr_name}"
     title_suffix = " (Publish)" if publish_safe else ""
     footer_note  = ("SAMPLE — Illustrative client environment. All structural values represent actual assessment outputs."
                     if publish_safe else
-                    "SAMPLE — BlueEdge data used for demonstration purposes.")
+                    f"SAMPLE — {client_name}.")
 
     zones = _derive_tier2_zones(topology, signals)
 

@@ -12,7 +12,8 @@
  *   → 200 text/html with Content-Disposition: attachment (triggers download)
  *
  * GET /api/report-file?name=<filename>&client=<client>&runId=<run_id>
- *   → client-aware routing: clients/<client>/reports/tier1/<name>
+ *   → client-aware routing: clients/<client>/reports/tier1/<name> (tier1)
+ *   →                       clients/<client>/reports/tier2/<name> (tier2)
  *   → no fallback to BlueEdge when client/runId provided
  *
  * Accepted filename patterns:
@@ -29,7 +30,7 @@
  *   - path.basename() applied — no path traversal possible
  *   - Client/runId validated against path.basename() — no traversal
  *   - Served only from approved reports subdirectories
- *   - Client-aware path confirmed within clients/<client>/reports/tier1/
+ *   - Client-aware path confirmed within clients/<client>/reports/tier1/ or tier2/
  *
  * Authority: PRODUCTIZE.GAUGE.TIER1.REPORT.GENERATOR.UPGRADE.02
  *            PI.SECOND-CLIENT.STEP14H.REPORT-API-BINDING.01
@@ -70,22 +71,23 @@ function resolveFilePath(name) {
 
 // Resolve the filesystem path for a client-aware request.
 // Returns null if any parameter fails validation.
-// runId is accepted (required by API contract) but not included in tier1 path —
-// tier1 reports are per-client, not per-run.
+// Supports tier1 and tier2 filenames.
 function resolveClientFilePath(client, runId, name) {
   // Reject path traversal in client/runId — no slashes allowed
   if (path.basename(client) !== client || path.basename(runId) !== runId) {
     return null
   }
-  // Only tier1 files supported via client-aware routing
-  if (!VALID_TIER1.test(name)) {
+  const isTier1 = VALID_TIER1.test(name)
+  const isTier2 = VALID_TIER2.test(name)
+  if (!isTier1 && !isTier2) {
     return null
   }
+  const tier      = isTier1 ? 'tier1' : 'tier2'
   const isPublish = name.endsWith('_pub.html')
-  const subdir    = isPublish ? path.join('tier1', 'publish') : 'tier1'
+  const subdir    = isPublish ? path.join(tier, 'publish') : tier
   const filePath  = path.join(REPO_ROOT, 'clients', client, 'reports', subdir, path.basename(name))
-  // Guard: resolved path must be under clients/<client>/reports/tier1/
-  const allowed   = path.join(REPO_ROOT, 'clients', client, 'reports', 'tier1')
+  // Guard: resolved path must be under clients/<client>/reports/<tier>/
+  const allowed   = path.join(REPO_ROOT, 'clients', client, 'reports', tier)
   if (!filePath.startsWith(allowed + path.sep)) {
     return null
   }

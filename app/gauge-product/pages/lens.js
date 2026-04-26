@@ -301,21 +301,26 @@ function reportUrl(name) {
 }
 
 async function generateReport() {
-  const res  = await fetch('/api/report')
-  const data = await res.json()
-  if (!res.ok || data.status !== 'ok') {
-    throw new Error(data.reason || 'GENERATION_FAILED')
+  const [res1, res2] = await Promise.all([
+    fetch('/api/report'),
+    fetch(`/api/report?client=${_SC_CLIENT_ID}&runId=${_SC_RUN_ID}&deliverable=diagnostic`),
+  ])
+  const [data1, data2] = await Promise.all([res1.json(), res2.json()])
+  if (!res1.ok || data1.status !== 'ok') {
+    throw new Error(data1.reason || 'GENERATION_FAILED')
   }
-  // Tier-1 + Tier-2: { files: [{name, label, path}] }
-  const byName  = {}
-  for (const f of data.files) byName[f.name] = f
+  const byName = {}
+  for (const f of data1.files) byName[f.name] = f
+  if (res2.ok && data2.status === 'ok') {
+    for (const f of data2.files) byName[f.name] = f
+  }
   const withUrl = name => byName[name]
     ? { ...byName[name], path: reportUrl(name) }
     : undefined
   return {
     executive:  withUrl('lens_tier1_narrative_brief.html'),
     lens:       withUrl('lens_tier1_evidence_brief.html'),
-    diagnostic: byName['lens_tier2_diagnostic_narrative.html'],
+    diagnostic: withUrl('lens_tier2_diagnostic_narrative.html'),
   }
 }
 
