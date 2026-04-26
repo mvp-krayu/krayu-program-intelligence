@@ -553,6 +553,23 @@ def _load_projection_artifact(client_id: str, run_id: str, filename: str) -> Dic
     return json.loads(path.read_text())
 
 
+def _load_client_gauge_state(client_id: str, run_id: str):
+    """Load gauge_state.json from the run-scoped package directory.
+
+    Returns parsed dict on success, None if absent — callers must handle None
+    without assuming any score values.
+    Source: clients/<client>/psee/runs/<run_id>/package/gauge_state.json
+    """
+    path = (
+        tier2_data.REPO_ROOT
+        / "clients" / client_id / "psee" / "runs" / run_id / "package"
+        / "gauge_state.json"
+    )
+    if not path.exists():
+        return None
+    return json.loads(path.read_text())
+
+
 def list_zones_from_projection(client_id: str, run_id: str) -> Dict:
     """Build zone list from run-scoped 41.x pressure_zone_projection.json.
 
@@ -560,9 +577,11 @@ def list_zones_from_projection(client_id: str, run_id: str) -> Dict:
     No derivation from canonical_topology or signal_registry.
     No fallback to BlueEdge.
     Fails closed if 41.x artifacts are absent.
+    Score context added from package/gauge_state.json when present.
     """
     projection = _load_projection_artifact(client_id, run_id, "pressure_zone_projection.json")
     signals    = _load_projection_artifact(client_id, run_id, "signal_projection.json")
+    gauge      = _load_client_gauge_state(client_id, run_id)
 
     sig_by_cond = {s["condition_id"]: s for s in signals.get("active_conditions_in_scope", [])}
 
@@ -588,7 +607,23 @@ def list_zones_from_projection(client_id: str, run_id: str) -> Dict:
             "member_entity_ids":   z.get("member_entity_ids", []),
         })
 
-    return {
+    # Score context: sourced from gauge_state.json — same authority used by Tier-1 report.
+    # Only populated when gauge_state.json is present; absent = no score (explicit, not fallback).
+    context = None
+    if gauge is not None:
+        score   = gauge["score"]["canonical"]
+        band    = gauge["score"]["band_label"]
+        conf_lo = gauge["confidence"]["lower"]
+        conf_hi = gauge["confidence"]["upper"]
+        context = {
+            "score":      score,
+            "band":       band,
+            "confidence": f"{conf_lo}–{conf_hi}",
+            "score_source":      "gauge_state.json",
+            "confidence_source": "gauge_state.json",
+        }
+
+    result = {
         "status":                "ok",
         "run_id":                run_id,
         "client_id":             client_id,
@@ -601,6 +636,9 @@ def list_zones_from_projection(client_id: str, run_id: str) -> Dict:
         "zones":                 zones,
         "total_zones":           len(zones),
     }
+    if context is not None:
+        result["context"] = context
+    return result
 
 
 # ---------------------------------------------------------------------------
