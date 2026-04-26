@@ -1,6 +1,7 @@
 /**
  * pages/api/report-file.js
  * PRODUCTIZE.GAUGE.TIER1.REPORT.GENERATOR.UPGRADE.02
+ * PI.SECOND-CLIENT.STEP14H.REPORT-API-BINDING.01
  *
  * Serves generated lens report HTML files by name.
  *
@@ -9,6 +10,10 @@
  *
  * GET /api/report-file?name=<filename>&download=1
  *   → 200 text/html with Content-Disposition: attachment (triggers download)
+ *
+ * GET /api/report-file?name=<filename>&client=<client>&runId=<run_id>
+ *   → client-aware routing: clients/<client>/reports/tier1/<name>
+ *   → no fallback to BlueEdge when client/runId provided
  *
  * Accepted filename patterns:
  *   - lens_tier1_evidence_brief.html          → reports/tier1/
@@ -22,9 +27,12 @@
  * Security:
  *   - Filename validated against whitelist before any FS access
  *   - path.basename() applied — no path traversal possible
+ *   - Client/runId validated against path.basename() — no traversal
  *   - Served only from approved reports subdirectories
+ *   - Client-aware path confirmed within clients/<client>/reports/tier1/
  *
  * Authority: PRODUCTIZE.GAUGE.TIER1.REPORT.GENERATOR.UPGRADE.02
+ *            PI.SECOND-CLIENT.STEP14H.REPORT-API-BINDING.01
  */
 
 import path from 'path'
@@ -34,13 +42,15 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname  = path.dirname(__filename)
 
+// Repo root: pages/api → pages → app → gauge-product → repo root
+const REPO_ROOT   = path.join(__dirname, '..', '..', '..', '..')
 const REPORTS_DIR = process.env.REPORTS_DIR || null
 
 const VALID_LEGACY   = /^lens_report_\d{8}_\d{6}\.html$/
 const VALID_TIER1    = /^lens_tier1_(evidence_brief|narrative_brief)(_pub)?\.html$/
 const VALID_TIER2    = /^lens_tier2_diagnostic_narrative(_pub)?\.html$/
 
-// Resolve the filesystem path for a validated filename
+// Resolve the filesystem path for a validated filename (BlueEdge / default routing)
 function resolveFilePath(name) {
   if (VALID_LEGACY.test(name)) {
     return path.join(REPORTS_DIR, path.basename(name))
@@ -58,19 +68,72 @@ function resolveFilePath(name) {
   return null
 }
 
+// Resolve the filesystem path for a client-aware request.
+// Returns null if any parameter fails validation.
+// runId is accepted (required by API contract) but not included in tier1 path —
+// tier1 reports are per-client, not per-run.
+function resolveClientFilePath(client, runId, name) {
+  // Reject path traversal in client/runId — no slashes allowed
+  if (path.basename(client) !== client || path.basename(runId) !== runId) {
+    return null
+  }
+  // Only tier1 files supported via client-aware routing
+  if (!VALID_TIER1.test(name)) {
+    return null
+  }
+  const isPublish = name.endsWith('_pub.html')
+  const subdir    = isPublish ? path.join('tier1', 'publish') : 'tier1'
+  const filePath  = path.join(REPO_ROOT, 'clients', client, 'reports', subdir, path.basename(name))
+  // Guard: resolved path must be under clients/<client>/reports/tier1/
+  const allowed   = path.join(REPO_ROOT, 'clients', client, 'reports', 'tier1')
+  if (!filePath.startsWith(allowed + path.sep)) {
+    return null
+  }
+  return filePath
+}
+
+function serveHtml(res, filePath, name, download) {
+  const html = fs.readFileSync(filePath, 'utf-8')
+  res.setHeader('Content-Type', 'text/html; charset=utf-8')
+  res.setHeader('Cache-Control', 'no-store')
+  if (download === '1') {
+    res.setHeader('Content-Disposition', `attachment; filename="${name}"`)
+  } else {
+    res.setHeader('Content-Disposition', `inline; filename="${name}"`)
+  }
+  return res.status(200).send(html)
+}
+
 export default function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ status: 'error', reason: 'METHOD_NOT_ALLOWED' })
   }
 
-  if (!REPORTS_DIR) {
-    return res.status(503).json({ status: 'error', reason: 'REPORTS_DIR_NOT_CONFIGURED' })
-  }
-
-  const { name, download } = req.query
+  const { name, download, client, runId } = req.query
 
   if (!name || typeof name !== 'string') {
     return res.status(400).json({ status: 'error', reason: 'INVALID_FILENAME' })
+  }
+
+  // ── Client-aware routing ──────────────────────────────────────────────────
+  // Activated when client or runId is present — no fallback to BlueEdge.
+  if (client || runId) {
+    if (!client || !runId) {
+      return res.status(400).json({ status: 'error', reason: 'CLIENT_AND_RUN_ID_REQUIRED' })
+    }
+    const filePath = resolveClientFilePath(client, runId, name)
+    if (!filePath) {
+      return res.status(400).json({ status: 'error', reason: 'INVALID_FILENAME' })
+    }
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ status: 'error', reason: 'REPORT_NOT_FOUND' })
+    }
+    return serveHtml(res, filePath, name, download)
+  }
+
+  // ── BlueEdge / default routing (existing behavior — unchanged) ────────────
+  if (!REPORTS_DIR) {
+    return res.status(503).json({ status: 'error', reason: 'REPORTS_DIR_NOT_CONFIGURED' })
   }
 
   const filePath = resolveFilePath(name)
@@ -82,16 +145,5 @@ export default function handler(req, res) {
     return res.status(404).json({ status: 'error', reason: 'REPORT_NOT_FOUND' })
   }
 
-  const html = fs.readFileSync(filePath, 'utf-8')
-
-  res.setHeader('Content-Type', 'text/html; charset=utf-8')
-  res.setHeader('Cache-Control', 'no-store')
-
-  if (download === '1') {
-    res.setHeader('Content-Disposition', `attachment; filename="${name}"`)
-  } else {
-    res.setHeader('Content-Disposition', `inline; filename="${name}"`)
-  }
-
-  res.status(200).send(html)
+  return serveHtml(res, filePath, name, download)
 }
