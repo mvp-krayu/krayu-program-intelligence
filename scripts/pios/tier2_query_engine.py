@@ -759,27 +759,81 @@ def handle_projection_evidence(zone: Dict, sig_by_cond: Dict, combo_sig: Dict) -
     return result
 
 
-def handle_projection_trace(zone: Dict, sig_by_cond: Dict) -> List[Dict]:
+def _load_vault_index(client_id: str, run_id: str) -> Dict:
+    """Load vault_index.json for the given client/run.
+
+    Returns empty dict if absent — callers must check 'signals' key presence.
+    Vault is optional for TRACE; absence is explicitly represented, not silently skipped.
+    """
+    path = (
+        tier2_data.REPO_ROOT
+        / "app" / "gauge-product" / "public" / "vault"
+        / client_id / run_id / "vault_index.json"
+    )
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text())
+    except Exception:
+        return {}
+
+
+# Evidence artifact IDs always applicable to activated PSIG conditions.
+# Source: _build_vault_targets() uses these two for every zone.
+_PSIG_LINKED_ARTIFACTS = [
+    {"id": "ART-04", "label": "canonical_topology.json"},
+    {"id": "ART-05", "label": "signal_registry.json"},
+]
+
+
+def handle_projection_trace(
+    zone: Dict, sig_by_cond: Dict, client_id: str, run_id: str
+) -> List[Dict]:
     """TRACE mode for a 41.x projection zone.
 
-    Returns PZ → PSIG → condition origin chains.
-    No traversal outside projection data.
+    Returns PZ → PSIG → CLM chains resolved from vault_index.
+    Condition ID retained as separate field; not used in node_chain.
+    Linked artifacts (ART-04, ART-05) included per path when vault_index resolves.
+    Fails closed on vault absence: vault_resolved=False, node_chain stops at PSIG.
+    No synthetic fallback.
     """
     zone_id = zone["zone_id"]
     idx     = _load_exposure_index()
+    vi      = _load_vault_index(client_id, run_id)
+    vi_signals = vi.get("signals", {})
+    vi_claims  = vi.get("claims", {})
+    vault_available = bool(vi_signals)
+
     paths: List[Dict] = []
 
     for i, cond_id in enumerate(zone.get("conditions", []), 1):
         cond   = sig_by_cond.get(cond_id, {})
         sig_id = cond.get("signal_id", "UNKNOWN")
+
+        # Resolve CLM from vault_index: PSIG → CLM → HTML path
+        clm_id         = vi_signals.get(sig_id) if vault_available else None
+        clm_html_path  = vi_claims.get(clm_id) if clm_id else None
+        vault_resolved = bool(clm_id and clm_html_path)
+
+        node_chain = (
+            [zone_id, sig_id, clm_id]
+            if vault_resolved
+            else [zone_id, sig_id]
+        )
+
         path: Dict = {
             "path_id":          f"{zone_id}-P{i}",
-            "node_chain":       [zone_id, sig_id, cond_id],
+            "node_chain":       node_chain,
             "path_type":        "EVIDENCE",
             "evidence_support": cond.get("activation_state", "UNKNOWN"),
             "activation_method": cond.get("activation_method"),
+            "condition_id":     cond_id,
+            "vault_resolved":   vault_resolved,
             "source":           "41.x/pressure_zone_projection.json + signal_projection.json",
         }
+        if vault_resolved:
+            path["clm_html_path"]     = clm_html_path
+            path["linked_artifacts"]  = _PSIG_LINKED_ARTIFACTS
         sig_exp = idx["by_signal_id"].get(sig_id)
         if sig_exp:
             path["interpretation_ref"] = sig_exp["interpretation_ref"]["registry_entry_id"]
@@ -946,7 +1000,9 @@ def main() -> None:
             elif args.mode == "EVIDENCE":
                 result = handle_projection_evidence(zone_record, sig_by_cond, combo_sig)
             else:
-                result = handle_projection_trace(zone_record, sig_by_cond)
+                result = handle_projection_trace(
+                    zone_record, sig_by_cond, args.client, args.run_id
+                )
             print(json.dumps(
                 build_projection_query_response(args.zone, args.mode, result, args.run_id)
             ))
