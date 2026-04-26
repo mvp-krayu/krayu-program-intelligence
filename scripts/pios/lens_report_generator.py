@@ -77,6 +77,25 @@ def _scoped_report_url(name: str) -> str:
             f"&client={_ACTIVE_CLIENT}&runId={_ACTIVE_VAULT_RUN_ID}")
 
 
+# Language Layer — executive phrases for structural terms (Task 1 / STEP 16G)
+_METHOD_EXEC: Dict = {
+    "RUN_RELATIVE_OUTLIER":  "Statistically abnormal concentration",
+    "THEORETICAL_BASELINE":  "Baseline condition without runtime validation",
+}
+_ZONE_CLASS_EXEC: Dict = {
+    "COMPOUND_ZONE":       "Multiple structural pressures acting together",
+    "DOMAIN_ZONE":         "Structural domain zone",
+    "COUPLING_ZONE":       "Structural coupling zone",
+    "PROPAGATION_ZONE":    "Structural propagation zone",
+    "RESPONSIBILITY_ZONE": "Responsibility concentration zone",
+    "FRAGMENTATION_ZONE":  "Structural fragmentation zone",
+}
+_ATTRIBUTION_EXEC: Dict = {
+    "primary":   "Primary pressure anchor",
+    "secondary": "Secondary affected zone",
+}
+
+
 def _default_output_path() -> Path:
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     return REPORTS_DIR / f"lens_report_{ts}.html"
@@ -2275,8 +2294,10 @@ _TIER1_EVIDENCE_CSS = """
   .signal-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
   .signal-card{background:var(--bg-card);border:1px solid var(--border);border-radius:3px;padding:14px 16px;display:grid;grid-template-columns:36px 1fr auto;gap:16px;align-items:start}
   .signal-num{font-size:16px;color:var(--fg);line-height:1;padding-top:2px}
-  .signal-title{font-size:13px;color:var(--fg);margin-bottom:5px}
+  .signal-title{font-size:13px;color:var(--fg);margin-bottom:3px}
+  .signal-trace{font-size:10px;color:var(--fg-muted);letter-spacing:.04em;margin-bottom:5px}
   .signal-statement{font-size:12px;color:var(--fg-muted);line-height:1.5}
+  .exec-state-lead{font-size:13px;font-weight:600;color:#c8c8d4;letter-spacing:.02em;margin-bottom:12px;padding:8px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid var(--green);border-radius:2px}
   .signal-meta{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
   .signal-domain-tag{font-size:10px;color:var(--fg-muted);text-align:right}
   .confidence-badge{font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:2px;border:1px solid}
@@ -2421,20 +2442,22 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
             dom_scope = c.get("domain_attribution_scope", [])
             entity_scope = c.get("entity_level_scope", [])
 
+            _meth_exec = _METHOD_EXEC.get(method, method)
+            _zclass_exec = _ZONE_CLASS_EXEC.get("COMPOUND_ZONE", "Multiple structural pressures acting together")
             if sid == "PSIG-001":
-                title = f"Fan-In Concentration ({sid}): {state} — {method} — Value {val}"
+                title = f"Fan-In Concentration ({sid}): {state} — {_meth_exec} — Value {val}"
                 stmt = (
-                    f"Inbound dependency concentration is {val} — a {method} condition. "
+                    f"Inbound dependency concentration is {val} — {_meth_exec} (trace: {method}). "
                     f"Primary attribution entity: {prim_ent} in {prim_dom}. "
                     f"Domain scope: {', '.join(dom_scope)}. "
                     f"Co-present with PSIG-002 and PSIG-004 across all three pressure zones "
-                    f"(PZ-001, PZ-002, PZ-003) — contributes to COMPOUND_ZONE designation in each."
+                    f"(PZ-001, PZ-002, PZ-003) — contributes to {_zclass_exec} (trace: COMPOUND_ZONE) in each."
                 )
                 dom_tag, conf = prim_dom or "Multi-domain", "strong"
             elif sid == "PSIG-002":
-                title = f"Fan-Out Propagation ({sid}): {state} — {method} — Value {val}"
+                title = f"Fan-Out Propagation ({sid}): {state} — {_meth_exec} — Value {val}"
                 stmt = (
-                    f"Outbound dependency propagation is {val} — {method} condition. "
+                    f"Outbound dependency propagation is {val} — {_meth_exec} (trace: {method}). "
                     f"Distributes across {', '.join(dom_scope)} with no single primary entity. "
                     f"Co-presence with PSIG-001 at the same value ({val}) indicates bidirectional "
                     f"concentration pressure — not a single directed flow. Present in all three zones."
@@ -2442,34 +2465,36 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
                 dom_tag = " · ".join(dom_scope[:3]) if dom_scope else "Multi-domain"
                 conf = "strong"
             elif sid == "PSIG-004":
-                title = f"Responsibility Concentration ({sid}): {state} — {method} — Value {val}"
+                title = f"Responsibility Concentration ({sid}): {state} — {_meth_exec} — Value {val}"
                 stmt = (
-                    f"Structural responsibility concentration is {val} — {method}. "
+                    f"Structural responsibility concentration is {val} — {_meth_exec} (trace: {method}). "
                     f"Primary attribution entity: {prim_ent} in {prim_dom}. "
-                    f"Convergence of PSIG-001 and PSIG-004 at {prim_ent} defines the PRIMARY designation "
-                    f"for PZ-002 ({prim_dom}). Secondary attribution covers all three zone domains."
+                    f"Convergence of PSIG-001 and PSIG-004 at {prim_ent} defines the Primary pressure anchor "
+                    f"(trace: PRIMARY) for PZ-002 ({prim_dom}). Secondary affected zones (trace: SECONDARY) "
+                    f"cover all three zone domains."
                 )
                 dom_tag, conf = prim_dom or "Multi-domain", "strong"
             elif sid == "PSIG-006":
                 ent_preview = ", ".join(entity_scope[:4]) + ("…" if len(entity_scope) > 4 else "")
-                title = f"Structural Blind Spot ({sid}): ACTIVATED — {method} — Value {val}"
+                title = f"Structural Blind Spot ({sid}): ACTIVATED — {_meth_exec} — Value {val}"
                 stmt = (
-                    f"PSIG-006 activated at {method} (value {val}). "
+                    f"PSIG-006 activated at {_meth_exec} (trace: {method}, value {val}). "
                     f"Covers {len(entity_scope)} structural entities: {ent_preview}. "
                     f"These entities are outside pressure zone scope (PZ-001/PZ-002/PZ-003). "
-                    f"THEORETICAL_BASELINE indicates structural basis is present but execution evidence "
+                    f"{_meth_exec} means structural basis is present but execution evidence "
                     f"is insufficient for an empirical pressure value. Represents a coverage gap."
                 )
                 dom_tag = " · ".join(entity_scope[:2]) if entity_scope else "Multi-domain"
                 conf = "weak"
             else:
                 title = f"{sid}: {state} — Value {val}"
-                stmt  = f"Signal {sid} activated at {val} ({state}, {method})."
+                stmt  = f"Signal {sid} activated at {val} ({state}, {_meth_exec})."
                 dom_tag, conf = prim_dom or "Structural", "moderate"
 
             tier1_signals.append({
                 "num": str(len(tier1_signals) + 1).zfill(2),
                 "title": title, "statement": stmt, "domain": dom_tag, "confidence": conf,
+                "trace": method,
             })
 
         # Add PSIG-003 as not-activated entry
@@ -2574,10 +2599,13 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
         ]
     signal_cards = []
     for s in tier1_signals:
+        _trace_div = (f'<div class="signal-trace">trace: {esc(s["trace"])}</div>'
+                      if s.get("trace") else "")
         signal_cards.append(f"""    <div class="signal-card">
       <div class="signal-num">{s["num"]}</div>
       <div class="signal-body">
         <div class="signal-title">{esc(s["title"])}</div>
+        {_trace_div}
         <div class="signal-statement">{esc(s["statement"])}</div>
       </div>
       <div class="signal-meta">
@@ -2606,20 +2634,24 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
             zname = z.get("anchor_name", z.get("anchor_id", zid))
             profile = z.get("attribution_profile", "secondary")
             is_prim = profile == "primary"
-            badge = "PRIMARY" if is_prim else profile
+            badge = "PRIMARY" if is_prim else profile.upper()
+            _attr_exec = _ATTRIBUTION_EXEC.get(profile, profile)
             sigs_in_zone = z.get("signals", [])
             sigs_str = " · ".join(sigs_in_zone)
             pz_blocks.append(
                 f'  <div class="focus-domain-block" style="margin-bottom:12px">\n'
                 f'    <div class="focus-domain-header">\n'
                 f'      <div>\n'
-                f'        <div class="focus-domain-label">{esc(zid)} — {esc(zname)} · {esc(badge)}</div>\n'
+                f'        <div class="focus-domain-label">{esc(zid)} — {esc(zname)}</div>\n'
                 f'        <div class="focus-domain-sub">{esc(sigs_str)}</div>\n'
                 f'      </div>\n'
-                f'      <div class="focus-badge">{esc(badge)}</div>\n'
+                f'      <div class="focus-badge">{esc(_attr_exec)}'
+                f'<span style="display:block;font-size:9px;opacity:.6;margin-top:2px">trace: {esc(badge)}</span>'
+                f'</div>\n'
                 f'    </div>\n'
                 f'    <div class="focus-finding">'
-                f'{esc(zid)} ({esc(zname)}): {esc(profile)} attribution.'
+                f'{esc(zid)} ({esc(zname)}): {esc(_attr_exec)} — '
+                f'<span style="font-size:11px;opacity:.7">trace: {esc(profile)} attribution</span>.'
                 f'</div>\n'
                 f'  </div>'
             )
@@ -2718,6 +2750,7 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
   </div>
 
   <h2>Assessment Score</h2>
+  <p class="exec-state-lead">Structurally verified. Execution not yet validated.</p>
   <div class="gauge-block">
     <div class="gauge-score-circle">
       <div class="gauge-score-number">{score}</div>
@@ -2751,7 +2784,7 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
     <div class="topo-legend">
       <span class="topo-leg-item"><span class="topo-leg-dot tl-grounded"></span>Grounded ({grounded_count} {"domain" if grounded_count == 1 else "domains"})</span>
       <span class="topo-leg-item"><span class="topo-leg-dot tl-weak"></span>Weakly Grounded ({weak_count} {"domain" if weak_count == 1 else "domains"})</span>
-      {'<span class="topo-leg-item"><span class="topo-leg-dot tl-focus"></span>Primary Pressure Zone — 3 conditions co-present (COMPOUND_ZONE)</span>' if use_psig else '<span class="topo-leg-item"><span class="topo-leg-dot tl-focus"></span>Focus Domain — 2 signal convergence (also Weakly Grounded)</span>'}
+      {'<span class="topo-leg-item"><span class="topo-leg-dot tl-focus"></span>Primary Pressure Zone — Multiple structural pressures acting together &nbsp;<span style="font-size:10px;opacity:.6">trace: COMPOUND_ZONE</span></span>' if use_psig else '<span class="topo-leg-item"><span class="topo-leg-dot tl-focus"></span>Focus Domain — 2 signal convergence (also Weakly Grounded)</span>'}
       <span class="topo-leg-note">Relationships shown are structural co-membership. No direction implied.</span>
     </div>
   </div>
@@ -2863,6 +2896,9 @@ _TIER1_NARRATIVE_CSS = """
   .boundary-list li:last-child{border-bottom:none}
   .boundary-list li::before{content:'—';color:var(--fg-dim);flex-shrink:0;margin-top:1px}
   .boundary-note{margin-top:14px;padding:10px 14px;background:var(--amber-muted);border:1px solid var(--amber-border);border-radius:3px;font-size:12px;color:var(--fg-muted);line-height:1.6}
+  .boundary-lead{font-size:13px;color:#c8c8d4;font-weight:500;margin-bottom:14px;padding:10px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid var(--gold);border-radius:2px}
+  .exec-state-lead{font-size:13px;font-weight:600;color:#c8c8d4;letter-spacing:.02em;margin-bottom:12px;padding:8px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid var(--green);border-radius:2px}
+  .narr-trace{font-size:10px;color:var(--fg-dim)}
   .resolution-block{background:var(--surface-raised);border:1px solid var(--border);border-left:3px solid var(--fg-dim);padding:20px 22px;margin:20px 0;border-radius:3px}
   .resolution-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:10px}
   .resolution-text{font-size:13px;color:var(--fg-muted);line-height:1.7}
@@ -2931,24 +2967,31 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
             sigs_str = " · ".join(sigs_in_zone)
             ccount = z.get("condition_count", len(sigs_in_zone))
             is_prim = profile == "primary"
-            badge = "PRIMARY" if is_prim else profile
+            _attr_exec  = _ATTRIBUTION_EXEC.get(profile, profile)
+            _zclass_exec = _ZONE_CLASS_EXEC.get(zclass, zclass.replace("_", " "))
             pz_items.append(
                 f'    <div class="focus-block">\n'
-                f'      <div class="focus-block-label">{esc(zid)} — {esc(zname)} · {esc(badge)}</div>\n'
-                f'      <div class="focus-block-name">{esc(zclass)} · {ccount} conditions co-present</div>\n'
+                f'      <div class="focus-block-label">{esc(zid)} — {esc(zname)}</div>\n'
+                f'      <div class="focus-block-name">{esc(_zclass_exec)}'
+                f' <span style="font-size:10px;opacity:.6">trace: {esc(zclass)}</span>'
+                f' · {ccount} conditions co-present</div>\n'
                 f'      <div class="focus-block-sub">{esc(sigs_str)}</div>\n'
                 f'      <p class="body-text" style="font-size:13px">\n'
-                f'        {esc(zid)} ({esc(zname)}) carries {esc(profile)} attribution for all three '
-                f'co-present conditions ({esc(sigs_str)}). {ccount} simultaneous conditions satisfy '
-                f'the COMPOUND_ZONE threshold. Zone class: {esc(zclass)}.</p>\n'
+                f'        {esc(zid)} ({esc(zname)}) is a {esc(_attr_exec)}'
+                f' <span style="font-size:11px;opacity:.7">(trace: {esc(profile)} attribution)</span> '
+                f'for all three co-present conditions ({esc(sigs_str)}). '
+                f'{ccount} simultaneous conditions satisfy the {esc(_zclass_exec)}'
+                f' <span style="font-size:11px;opacity:.7">(trace: {esc(zclass)})</span> threshold.</p>\n'
                 f'    </div>'
             )
         blind_count = pz_proj.get("structural_blind_spot_entity_count", 0)
         blind_sig   = pz_proj.get("structural_blind_spot_signal", "PSIG-006")
+        _bs_exec = _METHOD_EXEC.get("THEORETICAL_BASELINE", "Baseline condition without runtime validation")
         blind_note = (
             f'\n    <p class="body-text" style="font-size:12.5px;color:var(--fg-muted)">'
-            f'Structural blind spot: {esc(blind_sig)} covers {blind_count} entities outside zone scope '
-            f'(THEORETICAL_BASELINE — coverage gap, not pressure candidate).</p>'
+            f'Structural blind spot: {esc(blind_sig)} covers {blind_count} entities outside zone scope — '
+            f'{esc(_bs_exec)} <span style="font-size:10px;opacity:.6">(trace: THEORETICAL_BASELINE)</span>'
+            f' — coverage gap, not pressure candidate.</p>'
             if blind_count > 0 else ""
         )
         focus_section_html = (
@@ -3021,10 +3064,13 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
                 _cc, _cl = "conf-strong", "Strong"
             else:
                 _cc, _cl = "conf-moderate", "Moderate"
-            _cv = f"{_val} — {_meth}" if _meth else str(_val)
+            _exec_meth = _METHOD_EXEC.get(_meth, _meth)
+            _trace_span = (f'<br><span style="font-size:10px;color:var(--fg-dim)">'
+                           f'trace: {esc(_meth)}</span>') if _meth else ""
+            _val_cell = f'{esc(str(_val))} — {esc(_exec_meth)}{_trace_span}'
             _sig_rows.append(
                 f'        <tr><td>{esc(_sname)} ({esc(_sid)})</td>'
-                f'<td>{esc(str(_cv))}</td>'
+                f'<td>{_val_cell}</td>'
                 f'<td><span class="conf-badge {_cc}">{esc(_cl)}</span></td></tr>'
             )
         _dl  = metrics.get("dep_load", "—")
@@ -3091,8 +3137,10 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
             )
         if _blind:
             _unk_items.append(
-                "<li>Structural blind spot entity behavior "
-                "(THEORETICAL_BASELINE — coverage gap, not execution-derived)</li>"
+                f"<li>Structural blind spot entity behavior — "
+                f"{_METHOD_EXEC['THEORETICAL_BASELINE']} "
+                f"<span style='font-size:10px;opacity:.6'>(trace: THEORETICAL_BASELINE)</span>"
+                f" — coverage gap, not execution-derived</li>"
             )
         _unk_items += [
             "<li>Memory and resource utilization under load</li>",
@@ -3120,11 +3168,16 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
             "Any decision that depends on these dimensions operating within expected parameters "
             "currently lacks an evidence base."
         )
+        _boundary_lead = (
+            "These unknowns do not indicate failure. "
+            "They define the evidence boundary that must be resolved before execution confidence can be claimed."
+        )
         boundary_section_html = (
             '  <div class="section">\n'
             '    <div class="section-header">'
             '<span class="section-num">04</span>'
             '<span class="section-title">Known vs Unknown Boundary</span></div>\n'
+            f'    <p class="boundary-lead">{esc(_boundary_lead)}</p>\n'
             '    <div class="boundary-grid">\n'
             '      <div class="boundary-block known">\n'
             '        <div class="boundary-block-label">Confirmed</div>\n'
@@ -3311,6 +3364,7 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
         <div class="score-cell-sub">Before committing</div>
       </div>
     </div>
+    <p class="exec-state-lead">Structurally verified. Execution not yet validated.</p>
     <p class="body-text">The score of {score} reflects a complete structural proof — full coverage and reconstruction confirmed —
       but an unevaluated execution layer. The score is derived deterministically from evidence; it is not
       an assessment of quality or performance. The upper band of {band_hi} represents the achievable state
@@ -3507,6 +3561,10 @@ _TIER2_DIAGNOSTIC_CSS = """
   .t2-avail-item{font-size:11px;color:var(--fg-muted);padding:4px 0;border-bottom:1px solid var(--border-subtle);font-family:monospace}
   .t2-avail-item:last-child{border-bottom:none}
   .t2-avail-decode{font-family:var(--font);font-size:10px;color:var(--fg-dim);margin-left:8px;font-style:italic}
+  .t2-pattern-summary{background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid var(--gold);padding:18px 22px;border-radius:2px}
+  .t2-reading-guide-prose{margin-bottom:14px}
+  .t2-reading-guide-prose p{margin-bottom:10px}
+  .t2-reading-guide-prose p:last-child{margin-bottom:0}
   .t2-ll-table{display:flex;flex-direction:column;gap:0;border:1px solid var(--border);border-radius:3px;overflow:hidden}
   .t2-ll-row{display:grid;grid-template-columns:180px 160px 1fr;gap:0;padding:8px 12px;border-bottom:1px solid var(--border-subtle);align-items:start}
   .t2-ll-row:last-child{border-bottom:none}
@@ -4196,11 +4254,12 @@ def _build_t2_psig_zone_block(zone: Dict, publish_safe: bool,
     # ── Section A: Condition Description ──────────────────────────────────
     cond_chips = "".join(f'<span class="t2-chip">{esc(c)}</span>' for c in conditions)
     psig_chips = "".join(f'<span class="t2-chip">{esc(s)}</span>' for s in psig_ids)
+    _zclass_exec_a = _ZONE_CLASS_EXEC.get(zone_class, zone_class.replace("_", " "))
+    _attr_exec_a   = _ATTRIBUTION_EXEC.get(attr.lower(), attr)
     raw_cond = (
-        f"{dname} domain is a {zone_class.replace('_', ' ')} with "
-        f"{len(conditions)} active condition{'s' if len(conditions) != 1 else ''}. "
-        f"Attribution profile: {attr}. "
-        "All conditions are active at zone scope."
+        f"{dname} domain: {_zclass_exec_a} — "
+        f"{len(conditions)} active condition{'s' if len(conditions) != 1 else ''} at zone scope. "
+        f"{_attr_exec_a} — all conditions active."
     )
     cond_text = esc(_t2_obfuscate(raw_cond) if publish_safe else raw_cond)
     section_a = f"""
@@ -4215,8 +4274,8 @@ def _build_t2_psig_zone_block(zone: Dict, publish_safe: bool,
       <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:4px">Source signals:</div>
       <div class="t2-chip-row">{psig_chips}</div>
       <div class="t2-chip-row">
-        <span class="t2-chip" style="color:var(--fg-dim)">zone_class: {esc(zone_class)}</span>
-        <span class="t2-chip" style="color:var(--fg-dim)">attribution: {esc(attr)}</span>
+        <span class="t2-chip" style="color:var(--fg-dim)">{esc(_zclass_exec_a)} <span style="opacity:.6;font-size:9px">trace: {esc(zone_class)}</span></span>
+        <span class="t2-chip" style="color:var(--fg-dim)">{esc(_attr_exec_a)} <span style="opacity:.6;font-size:9px">trace: {esc(attr)}</span></span>
         <span class="t2-chip" style="color:var(--fg-dim)">source: pressure_zone_projection.json</span>
       </div>
     </div>"""
@@ -4754,10 +4813,12 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
     # Structural evidence topology graph (section 01A) — renders from graph_state only
     topology_svg = _build_overview_graph_html(graph_state)
 
-    # Language Layer reading guide (section 01B) — omitted in publish_safe mode
+    # Language Layer reading guide (section 01B) and Pattern Summary (section 02) — omitted in publish_safe
     _ll = ll or {}
     reading_guide_html = ""
-    if _ll and not publish_safe:
+    pattern_summary_html = ""
+    if not publish_safe:
+        # 01B: How to Read Diagnostic Terms
         _guide_terms = [
             "COMPOUND_ZONE", "PRESSURE_ZONE", "RUN_RELATIVE_OUTLIER",
             "THEORETICAL_BASELINE", "CONFIDENCE_BAND", "EVIDENCE_SCOPE",
@@ -4765,29 +4826,74 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
             "INFERENCE_PROHIBITION",
         ]
         _guide_rows = ""
-        for _t in _guide_terms:
-            _e = _ll.get(_t)
-            if _e:
-                _guide_rows += (
-                    f'<div class="t2-ll-row">'
-                    f'<span class="t2-ll-term">{esc(_e["canonical_label"])}</span>'
-                    f'<span class="t2-ll-exec">{esc(_e["executive_label"])}</span>'
-                    f'<span class="t2-ll-decode">{esc(_e["short_decode"])}</span>'
-                    f'</div>'
-                )
-        if _guide_rows:
-            reading_guide_html = f"""
+        if _ll:
+            for _t in _guide_terms:
+                _e = _ll.get(_t)
+                if _e:
+                    _guide_rows += (
+                        f'<div class="t2-ll-row">'
+                        f'<span class="t2-ll-term">{esc(_e["canonical_label"])}</span>'
+                        f'<span class="t2-ll-exec">{esc(_e["executive_label"])}</span>'
+                        f'<span class="t2-ll-decode">{esc(_e["short_decode"])}</span>'
+                        f'</div>'
+                    )
+        _table_block = f'<div class="t2-ll-table">\n      {_guide_rows}\n    </div>' if _guide_rows else ""
+        reading_guide_html = f"""
   <div class="t2-section">
     <div class="t2-section-header">
       <span class="t2-section-num">01B</span>
-      <span class="t2-section-title">Reading Guide — Structural Term Decodes</span>
+      <span class="t2-section-title">How to Read Diagnostic Terms</span>
     </div>
-    <p style="font-size:12px;color:var(--fg-muted);margin-bottom:10px">
-      The following terms appear in this report. Decodes are descriptive only.
-      inference_prohibition: ACTIVE — no advisory or causal content may be derived.
-    </p>
-    <div class="t2-ll-table">
-      {_guide_rows}
+    <div class="t2-reading-guide-prose">
+      <p class="t2-body"><strong>What is a pressure zone?</strong> A pressure zone is a governed diagnostic unit identifying a domain segment where one or more active conditions create concentrated structural pressure. Zones are derived from the projection layer — they are not inferred from topology alone.</p>
+      <p class="t2-body"><strong>Why do compound zones matter?</strong> A compound zone is not a single intense condition — it is multiple structurally independent conditions active simultaneously in the same domain. This indicates multi-dimensional pressure convergence. That multiple pressures are co-present is a structural observation; it is not a causal claim about what caused them or what will happen.</p>
+      <p class="t2-body"><strong>Why do three zones share the same signal set?</strong> The three zones in this run (PZ-001, PZ-002, PZ-003) share the same three active signals because those signals are domain-spanning — they are not isolated to a single domain. The zones differ in attribution: which domain carries primary pressure origin versus which domains are secondary recipients. Same signal family, different structural role.</p>
+      <p class="t2-body"><strong>What does primary vs secondary attribution mean?</strong> Primary attribution means the conditions originated within that domain. Secondary attribution means the conditions are present but originated from another domain — the secondary zone is a structural recipient, not the source. Attribution is determined by the projection layer, not inferred here.</p>
+      <p class="t2-body" style="color:var(--fg-dim);font-size:11px">inference_prohibition: ACTIVE — all data on this surface is structural and evidential only. No advisory content, causal inference, or remediation guidance may be derived.</p>
+    </div>
+    {_table_block}
+  </div>"""
+
+        # 02: Diagnostic Pattern Summary (PSIG path only)
+        if _use_psig and pz_proj is not None and total_zones > 0:
+            _pz_list = pz_proj.get("zone_projection", [])
+            _zone_names = ", ".join(z["zone_id"] for z in zones)
+            _prim_zone  = next((z for z in _pz_list if z.get("attribution_profile") == "primary"), None)
+            _prim_name  = _prim_zone.get("anchor_name", _prim_zone.get("anchor_id", "")) if _prim_zone else ""
+            _shared_sigs = _pz_list[0].get("signals", []) if _pz_list else []
+            _shared_sigs_str = " · ".join(_shared_sigs)
+            _zclass_shared = _pz_list[0].get("zone_class", "COMPOUND_ZONE") if _pz_list else "COMPOUND_ZONE"
+            _zclass_exec_s = _ZONE_CLASS_EXEC.get(_zclass_shared, _zclass_shared.replace("_", " "))
+            _exec_phrase = _METHOD_EXEC.get("RUN_RELATIVE_OUTLIER", "Statistically abnormal concentration")
+            pattern_summary_html = f"""
+  <div class="t2-section">
+    <div class="t2-section-header">
+      <span class="t2-section-num">02</span>
+      <span class="t2-section-title">Diagnostic Pattern Summary</span>
+    </div>
+    <div class="t2-pattern-summary">
+      <p class="t2-body" style="font-size:14px;color:#c8c8d4;font-weight:500;line-height:1.5">
+        This run shows one structural pressure pattern appearing across {total_zones} domains.
+        The same {len(_shared_sigs)} signal{'s' if len(_shared_sigs) != 1 else ''} ({esc(_shared_sigs_str)}) are active in each pressure zone;
+        the difference is attribution, not a different signal family.
+      </p>
+      <p class="t2-body">
+        All {total_zones} zones are classified as {esc(_zclass_exec_s)}
+        <span style="font-size:10px;opacity:.6">(trace: {esc(_zclass_shared)})</span>.
+        Each zone carries {esc(_exec_phrase)}
+        <span style="font-size:10px;opacity:.6">(trace: RUN_RELATIVE_OUTLIER)</span>
+        conditions — statistically elevated values relative to the rest of the run's entity set.
+        {("Primary pressure anchor "
+          '<span style="font-size:10px;opacity:.6">(trace: PRIMARY attribution)</span>: '
+          + esc(_prim_name) + ".") if _prim_name else ""}
+        Remaining zones are secondary affected zones
+        <span style="font-size:10px;opacity:.6">(trace: SECONDARY attribution)</span> —
+        structurally exposed to the same signals but not the pressure origin.
+      </p>
+      <p class="t2-body" style="font-size:11px;color:var(--fg-muted)">
+        This pattern describes structural co-presence. It is not a causal proof and does not constitute
+        a root-cause determination. inference_prohibition: ACTIVE.
+      </p>
     </div>
   </div>"""
 
@@ -4908,9 +5014,11 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
 
   {reading_guide_html}
 
+  {pattern_summary_html}
+
   <div class="t2-section">
     <div class="t2-section-header">
-      <span class="t2-section-num">02</span>
+      <span class="t2-section-num">03</span>
       <span class="t2-section-title">Diagnostic Zone Inventory</span>
     </div>
     <div class="t2-zone-grid">
@@ -4920,10 +5028,84 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
 
   <div class="t2-section">
     <div class="t2-section-header">
-      <span class="t2-section-num">03</span>
-      <span class="t2-section-title">Diagnostic Zones</span>
+      <span class="t2-section-num">04</span>
+      <span class="t2-section-title">Zone Details</span>
     </div>
     {zone_blocks_html}
+  </div>
+
+  <div class="t2-section">
+    <div class="t2-section-header">
+      <span class="t2-section-num">05</span>
+      <span class="t2-section-title">Trace and Evidence Continuity</span>
+    </div>
+    <p class="t2-body" style="font-size:12px;color:var(--fg-muted);margin-bottom:12px">
+      This section records the authoritative source for each data element used in this report.
+      All structural values are deterministically derived — no computation or inference occurs in the report layer.
+    </p>
+    <div class="t2-ll-table">
+      <div class="t2-ll-row">
+        <span class="t2-ll-term">Assessment score</span>
+        <span class="t2-ll-exec">{score} — {esc(band_label)}</span>
+        <span class="t2-ll-decode">Source: gauge_state.json · authority: GAUGE.STATE.COMPUTATION.CONTRACT.01</span>
+      </div>
+      <div class="t2-ll-row">
+        <span class="t2-ll-term">Confidence band</span>
+        <span class="t2-ll-exec">{band_lo} – {band_hi}</span>
+        <span class="t2-ll-decode">Source: gauge_state.json · authority: GAUGE.STATE.COMPUTATION.CONTRACT.01</span>
+      </div>
+      <div class="t2-ll-row">
+        <span class="t2-ll-term">Zone derivation</span>
+        <span class="t2-ll-exec">{total_zones} zone{'s' if total_zones != 1 else ''}</span>
+        <span class="t2-ll-decode">Source: pressure_zone_projection.json · authority: PSEE.ZONE.PROJECTION.01</span>
+      </div>
+      <div class="t2-ll-row">
+        <span class="t2-ll-term">Signal activation</span>
+        <span class="t2-ll-exec">{sig_count} signal{'s' if sig_count != 1 else ''} bound</span>
+        <span class="t2-ll-decode">Source: signal_projection.json · authority: PSEE.SIGNAL.ACTIVATION.CONTRACT.01</span>
+      </div>
+      <div class="t2-ll-row">
+        <span class="t2-ll-term">Structural topology</span>
+        <span class="t2-ll-exec">{grounded_ct} / {total_domains} domains grounded</span>
+        <span class="t2-ll-decode">Source: canonical topology package · authority: PSEE topology emission run</span>
+      </div>
+      <div class="t2-ll-row">
+        <span class="t2-ll-term">Language layer</span>
+        <span class="t2-ll-exec">term decodes active</span>
+        <span class="t2-ll-decode">Source: language_layer_registry.json · authority: LANGUAGE_LAYER_REGISTRY.01</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="t2-section">
+    <div class="t2-section-header">
+      <span class="t2-section-num">06</span>
+      <span class="t2-section-title">Uncertainty Declaration</span>
+    </div>
+    <div class="t2-uncertainty-block">
+      <div class="t2-inference-active">
+        <span class="t2-inference-tag">inference_prohibition</span>
+        <span class="t2-inference-value">ACTIVE</span>
+      </div>
+      <p class="t2-body" style="margin-top:10px;font-size:13px;color:#c8c8d4;font-weight:500">
+        These unknowns do not indicate failure.
+        They define the evidence boundary that must be resolved before execution confidence can be claimed.
+      </p>
+      <ul class="t2-unresolved-list">
+        <li class="t2-unresolved-item">
+          <div class="t2-unresolved-element">Execution-layer behavioral state</div>
+          <div class="t2-unresolved-reason">Structural conditions are confirmed from static evidence. Runtime execution dimensions are outside the current evidence scope and cannot be resolved from structural analysis alone.</div>
+        </li>
+        <li class="t2-unresolved-item">
+          <div class="t2-unresolved-element">Causal relationships between structural conditions</div>
+          <div class="t2-unresolved-reason">Co-presence of conditions across zones is a structural observation. No causal chain has been established and none is implied by this assessment.</div>
+        </li>
+        <li class="t2-unresolved-item">
+          <div class="t2-unresolved-element">Zone severity under runtime load</div>
+          <div class="t2-unresolved-reason">Zone severity classifications are derived from structural evidence. How these conditions express under actual execution load is outside the current evidence scope.</div>
+        </li>
+      </ul>
+    </div>
   </div>
 
   <div class="report-footer">
