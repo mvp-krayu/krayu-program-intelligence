@@ -60,6 +60,17 @@ TIER1_REPORTS_DIR = REPORTS_DIR / "tier1"
 _ACTIVE_CLIENT       = "blueedge"
 _ACTIVE_VAULT_RUN_ID = "run_01_authoritative_generated"
 
+_CLIENT_DISPLAY_NAMES: Dict = {
+    "blueedge": "BlueEdge Fleet Management Platform",
+    "e65d2f0a-dfa7-4257-9333-fcbb583f0880": "OSS FastAPI Codebase",
+}
+
+
+def _get_client_display_name(publish_safe: bool = False) -> str:
+    if publish_safe:
+        return "Client Environment"
+    return _CLIENT_DISPLAY_NAMES.get(_ACTIVE_CLIENT, "Client Environment")
+
 
 def _default_output_path() -> Path:
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
@@ -1859,6 +1870,96 @@ def load_gauge_state() -> Dict:
         return json.load(f)
 
 
+def _load_psig_projection() -> Optional[Dict]:
+    path = CANONICAL_PKG_DIR.parent / "41.x" / "signal_projection.json"
+    if not path.exists():
+        return None
+    with open(path) as f:
+        return json.load(f)
+
+
+def _load_pressure_zone_projection() -> Optional[Dict]:
+    path = CANONICAL_PKG_DIR.parent / "41.x" / "pressure_zone_projection.json"
+    if not path.exists():
+        return None
+    with open(path) as f:
+        return json.load(f)
+
+
+def _load_binding_envelope() -> Optional[Dict]:
+    path = CANONICAL_PKG_DIR.parent / "binding" / "binding_envelope.json"
+    if not path.exists():
+        return None
+    with open(path) as f:
+        return json.load(f)
+
+
+def _compute_structural_metrics(binding: Optional[Dict]) -> Dict:
+    NIS = "NOT_IN_SCOPE"
+    empty = {k: NIS for k in ["dep_load", "dep_edges", "dep_nodes", "edge_to_node",
+                               "containment_density", "edges_count", "contains_count", "nodes_count"]}
+    if binding is None:
+        return empty
+    s = binding.get("summary", {})
+    nodes = s.get("nodes_count", 0)
+    if nodes == 0:
+        return empty
+    overlap  = s.get("overlap_structural_edges_count", 0)
+    edges    = s.get("edges_count", 0)
+    contains = s.get("contains_edges_count", 0)
+    return {
+        "dep_load":            round(overlap / nodes, 3),
+        "dep_edges":           overlap,
+        "dep_nodes":           nodes,
+        "edge_to_node":        round(edges / nodes, 3),
+        "containment_density": round(contains / nodes, 3),
+        "edges_count":         edges,
+        "contains_count":      contains,
+        "nodes_count":         nodes,
+    }
+
+
+def _compute_decision_model(metrics: Dict, psig_proj: Optional[Dict], gauge: Dict) -> Dict:
+    NIS = "NOT_IN_SCOPE"
+    dep_load = metrics.get("dep_load", NIS)
+    etn      = metrics.get("edge_to_node", NIS)
+
+    if dep_load == NIS or etn == NIS:
+        structural_risk = "MODERATE"
+    else:
+        dep_r = "HIGH" if dep_load > 0.4 else ("MODERATE" if dep_load > 0.15 else "LOW")
+        etn_r = "HIGH" if etn > 2.5 else ("MODERATE" if etn > 1.5 else "LOW")
+        order = {"LOW": 0, "MODERATE": 1, "HIGH": 2}
+        structural_risk = max([dep_r, etn_r], key=lambda x: order[x])
+
+    exec_evaluated = gauge.get("state", {}).get("execution_layer_evaluated", False)
+    not_activated: list = []
+    blind_spot_active = False
+    if psig_proj:
+        not_activated = psig_proj.get("signals_not_activated", [])
+        for c in psig_proj.get("active_conditions_in_scope", []):
+            if c.get("activation_method") == "THEORETICAL_BASELINE":
+                blind_spot_active = True
+
+    gap_count = len(not_activated) + (1 if blind_spot_active else 0) + (0 if exec_evaluated else 1)
+    evidence_completeness = "HIGH" if (exec_evaluated and gap_count == 0) else "PARTIAL"
+
+    order2 = {"LOW": 0, "MODERATE": 1, "HIGH": 2}
+    decision = ("ESCALATE" if order2.get(structural_risk, 1) >= 2
+                else "INVESTIGATE" if evidence_completeness in ("PARTIAL", "LOW")
+                else "PROCEED")
+
+    return {
+        "structural_risk":       structural_risk,
+        "evidence_completeness": evidence_completeness,
+        "decision":              decision,
+        "exec_evaluated":        exec_evaluated,
+        "not_activated":         not_activated,
+        "blind_spot_active":     blind_spot_active,
+        "gap_count":             gap_count,
+    }
+
+
 # ---------------------------------------------------------------------------
 # Tier-1 SVG topology (BlueEdge 17-domain spatial map, contrast-corrected)
 # ---------------------------------------------------------------------------
@@ -1984,6 +2085,131 @@ def _build_tier1_topology_svg(topology_domains: list, publish_safe: bool = False
 
 
 # ---------------------------------------------------------------------------
+# Tier-1 generic topology SVG (non-BlueEdge: N-domain structural layout)
+# ---------------------------------------------------------------------------
+
+def _build_tier1_topology_svg_generic(
+    topology_domains: list,
+    pz_proj: Optional[Dict] = None,
+) -> str:
+    zones_by_anchor: Dict[str, Dict] = {}
+    primary_anchor: Optional[str] = None
+    blind_spot_domains: set = set()
+
+    if pz_proj:
+        for z in pz_proj.get("zone_projection", []):
+            aid = z.get("anchor_id")
+            if aid:
+                zones_by_anchor[aid] = z
+                if z.get("attribution_profile") == "primary":
+                    primary_anchor = aid
+        zoned = set(zones_by_anchor.keys())
+        for d in topology_domains:
+            if d["domain_id"] not in zoned:
+                blind_spot_domains.add(d["domain_id"])
+
+    n = len(topology_domains)
+    if n == 0:
+        return '<svg viewBox="0 0 880 400" xmlns="http://www.w3.org/2000/svg"><rect width="880" height="400" fill="#0e0e10"/></svg>'
+
+    MARGIN, GAP, TOTAL_W, SVG_H = 28, 12, 880, 400
+    col_w = (TOTAL_W - 2 * MARGIN - (n - 1) * GAP) // n
+
+    def _tile(x: int, y: int, w: int, h: int, fill: str, stroke: str, sw: str, filt: str = "") -> str:
+        return (f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="3"'
+                f' fill="{fill}" stroke="{stroke}" stroke-width="{sw}"{filt}/>')
+
+    def _txt(cx: int, y: int, text: str, size: float, color: str, spacing: str = "0") -> str:
+        return (f'<text x="{cx}" y="{y}" text-anchor="middle" font-size="{size}"'
+                f' fill="{color}" letter-spacing="{spacing}" font-family="Georgia,serif">{text}</text>')
+
+    parts: list = [
+        f'<svg viewBox="0 0 {TOTAL_W} {SVG_H}" xmlns="http://www.w3.org/2000/svg"'
+        ' style="width:100%;display:block;border-radius:4px">',
+        '<defs><filter id="gf" x="-40%" y="-40%" width="180%" height="180%">'
+        '<feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/>'
+        '<feComposite in="SourceGraphic" in2="b" operator="over"/>'
+        '</filter></defs>',
+        f'<rect width="{TOTAL_W}" height="{SVG_H}" fill="#0e0e10"/>',
+    ]
+
+    for i, d in enumerate(topology_domains):
+        did   = d["domain_id"]
+        name  = d.get("anchor_name", d.get("domain_name", did))
+        caps  = len(d.get("capability_ids", []))
+        comps = len(d.get("component_ids", []))
+        x  = MARGIN + i * (col_w + GAP)
+        cx = x + col_w // 2
+
+        zone      = zones_by_anchor.get(did)
+        is_blind  = did in blind_spot_domains
+        is_primary = (did == primary_anchor)
+
+        if is_primary:
+            bfill, bstroke, bsw, bfilt = "#221f0d", "#c89b3c", "1.5", ' filter="url(#gf)"'
+            lbl_c, txt_c = "#c8a040", "#e0ca78"
+            box_y, box_h = 60, 316
+            zone_tag = f"{zone['zone_id']} PRIMARY" if zone else did
+        elif zone:
+            bfill, bstroke, bsw, bfilt = "#141b16", "#2a4030", "1.5", ""
+            lbl_c, txt_c = "#4a6050", "#dcdce0"
+            box_y, box_h = 72, 288
+            zone_tag = f"{zone['zone_id']} {zone.get('attribution_profile','secondary')}"
+        elif is_blind:
+            bfill, bstroke, bsw, bfilt = "#141418", "#282830", "0.5", ""
+            lbl_c, txt_c = "#505068", "#dcdce0"
+            box_y, box_h = 72, 230
+            zone_tag = did
+        else:
+            bfill, bstroke, bsw, bfilt = "#141b16", "#1e2820", "0.5", ""
+            lbl_c, txt_c = "#505068", "#dcdce0"
+            box_y, box_h = 72, 200
+            zone_tag = did
+
+        parts.append(
+            f'<rect x="{x}" y="{box_y}" width="{col_w}" height="{box_h}" rx="5"'
+            f' fill="{bfill}" stroke="{bstroke}" stroke-width="{bsw}"{bfilt}/>'
+        )
+        parts.append(_txt(cx, box_y + 14, zone_tag, 6.5, lbl_c, "0.10em"))
+
+        # Domain name tile
+        ty = box_y + 20
+        ts = bstroke if is_primary else "#4a9e6a"
+        parts.append(_tile(x + 8, ty, col_w - 16, 34, "#1c1c22", ts, "1"))
+        name_lines = [name[:16], name[16:]] if len(name) > 16 else [name]
+        if len(name_lines) == 1:
+            parts.append(_txt(cx, ty + 22, esc(name_lines[0]), 8.5, txt_c))
+        else:
+            parts.append(_txt(cx, ty + 14, esc(name_lines[0]), 8, txt_c))
+            parts.append(_txt(cx, ty + 27, esc(name_lines[1]), 8, txt_c))
+
+        cy = ty + 43
+        if caps > 0:
+            parts.append(_tile(x + 8, cy, col_w - 16, 26, "#1c1c22", "#4a9e6a", "0.8"))
+            parts.append(_txt(cx, cy + 17, f"{caps} capabilit{'y' if caps == 1 else 'ies'}", 7.5, "#9cbc9c"))
+            cy += 34
+        if comps > 0:
+            parts.append(_tile(x + 8, cy, col_w - 16, 26, "#1c1c22", "#4a9e6a", "0.8"))
+            parts.append(_txt(cx, cy + 17, f"{comps} component{'s' if comps != 1 else ''}", 7.5, "#9cbc9c"))
+            cy += 34
+        if zone:
+            for sig in zone.get("signals", [])[:3]:
+                parts.append(_tile(x + 8, cy, col_w - 16, 22, "#141c22", "#304050", "0.5"))
+                parts.append(_txt(cx, cy + 15, sig, 7, "#5090a8"))
+                cy += 28
+        if is_blind:
+            parts.append(
+                f'<rect x="{x+8}" y="{cy}" width="{col_w-16}" height="30" rx="3"'
+                f' fill="#18181e" stroke="#38384a" stroke-width="0.5" stroke-dasharray="3,2"/>'
+            )
+            parts.append(_txt(cx, cy + 13, "PSIG-006 blind spot", 7.5, "#58586a"))
+            parts.append(_txt(cx, cy + 24, "coverage", 7, "#48485a"))
+
+    parts.append("</svg>")
+    return "\n".join(parts)
+
+
+# ---------------------------------------------------------------------------
 # Tier-1 Evidence Brief HTML builder
 # ---------------------------------------------------------------------------
 
@@ -2086,7 +2312,11 @@ _TIER1_EVIDENCE_CSS = """
 
 
 def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
-                                 publish_safe: bool = False) -> str:
+                                 publish_safe: bool = False,
+                                 psig_proj: Optional[Dict] = None,
+                                 pz_proj: Optional[Dict] = None,
+                                 metrics: Optional[Dict] = None,
+                                 decision_model: Optional[Dict] = None) -> str:
     domains = topology["domains"]
     counts = topology["counts"]
     sigs = signals["signals"]
@@ -2095,22 +2325,38 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
     band_lo = gauge["confidence"]["lower"]
     band_hi = gauge["confidence"]["upper"]
 
-    client_name = "Client Environment" if publish_safe else "BlueEdge Fleet Management Platform"
+    use_psig = psig_proj is not None
+    client_name = _get_client_display_name(publish_safe)
     narr_link = ("/api/report-file?name=lens_tier1_narrative_brief_pub.html"
                  if publish_safe else
                  "/api/report-file?name=lens_tier1_narrative_brief.html")
     t2_link   = ("/api/report-file?name=lens_tier2_diagnostic_narrative_pub.html"
                  if publish_safe else
                  "/api/report-file?name=lens_tier2_diagnostic_narrative.html")
-    footer_note = "SAMPLE — Client data used for demonstration purposes." if publish_safe else "SAMPLE — BlueEdge data used for demonstration purposes."
+    footer_note = ("SAMPLE — All structural values are derived from verified execution evidence."
+                   if use_psig else
+                   ("SAMPLE — Client data used for demonstration purposes." if publish_safe
+                    else "SAMPLE — BlueEdge data used for demonstration purposes."))
 
     grounded_count = sum(1 for d in domains if d["grounding"] == "GROUNDED")
     weak_count = sum(1 for d in domains if d["grounding"] == "WEAKLY GROUNDED")
 
-    svg_html = _build_tier1_topology_svg(domains, publish_safe=publish_safe)
+    if use_psig:
+        svg_html = _build_tier1_topology_svg_generic(domains, pz_proj=pz_proj)
+    else:
+        svg_html = _build_tier1_topology_svg(domains, publish_safe=publish_safe)
 
-    # Domain grid cards
-    FOCUS_DOMAIN = "DOMAIN-10"
+    # Domain grid cards — FOCUS_DOMAIN is PRIMARY zone anchor for psig, DOMAIN-10 for BlueEdge
+    if use_psig and pz_proj:
+        primary_zone = next(
+            (z for z in pz_proj.get("zone_projection", []) if z.get("attribution_profile") == "primary"),
+            None,
+        )
+        FOCUS_DOMAIN = primary_zone["anchor_id"] if primary_zone else None
+        _focus_tag = f"Pressure Zone — {primary_zone['anchor_name']} PRIMARY" if primary_zone else ""
+    else:
+        FOCUS_DOMAIN = "DOMAIN-10"
+        _focus_tag = "Focus Domain — Investigate"
     domain_cards = []
     for d in domains:
         did = d["domain_id"]
@@ -2124,9 +2370,9 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
                 .replace("Extended Operations & Driver Services", "Extended Operations"))
         ncaps = len(d.get("capability_ids", []))
         ncomps = len(d.get("component_ids", []))
-        if did == FOCUS_DOMAIN:
+        if did == FOCUS_DOMAIN and FOCUS_DOMAIN is not None:
             cls = "focus"
-            tag_label = "Focus Domain — Investigate"
+            tag_label = _focus_tag
         elif d["grounding"] == "WEAKLY GROUNDED":
             cls = "weak"
             tag_label = "Weakly Grounded"
@@ -2145,72 +2391,180 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
 
     # Signal cards
     CONF_CLASS = {"STRONG": "strong", "MODERATE": "moderate", "WEAK": "weak"}
-    # Curated Tier-1 signal content (publish-safe obfuscation applied inline)
-    tier1_signals = [
-        {
-            "num": "01",
-            "title": "Security Intelligence Pipeline: Throughput Ceiling Confirmed, Runtime State Unverified",
-            "statement": (
-                "The security intelligence collection pathway operates under a configured throughput ceiling derived from "
-                "static configuration. This ceiling bounds the rate at which threat data reaches the cloud platform. "
-                "Actual performance under live conditions is outside current evidence scope and cannot be confirmed "
-                "without a live execution environment."
-            ),
-            "domain": "Edge Data Acquisition",
-            "confidence": "strong",
-        },
-        {
-            "num": "02",
-            "title": "Platform Runtime State: Seven Core Operational Dimensions Are Outside Current Evidence Scope",
-            "statement": (
-                "Seven operational dimensions cannot be determined from available evidence: backend service health, "
-                "cache layer efficiency, cache layer availability, event pipeline activity, "
-                + ("platform" if publish_safe else "fleet") + " connection activity, "
-                + ("operational" if publish_safe else "vehicle") + " alert activity, and "
-                + ("session" if publish_safe else "driver session") + " performance. "
-                "These represent the complete observable runtime state of the core platform. "
-                "Any operational decision about platform health or capacity currently lacks an evidence base."
-            ),
-            "domain": "Platform Infrastructure",
-            "confidence": "strong",
-        },
-        {
-            "num": "03",
-            "title": "Dependency Structure: Most Architectural Connections Are Load-Bearing",
-            "statement": (
-                "Dependency load is concentrated across the observed architectural scope — most inter-component "
-                "connections are direct dependencies rather than loose couplings (load ratio: 0.682). "
-                "This elevates the blast radius for any component-level failure and increases integration "
-                "complexity as the platform scales."
-            ),
-            "domain": "Event-Driven Architecture",
-            "confidence": "moderate",
-        },
-        {
-            "num": "04",
-            "title": "Structural Volatility: Relationship Density Exceeds Component Count",
-            "statement": (
-                "Edge-to-node density: 1.273 — the platform has more relationship edges than structural nodes, "
-                "indicating a tightly interconnected architecture. Containment depth ratio: 0.545 — nearly half "
-                "of components operate across module boundaries. Structural growth without boundary enforcement "
-                "compounds this pressure at an accelerating rate."
-            ),
-            "domain": "Platform Infrastructure",
-            "confidence": "moderate",
-        },
-        {
-            "num": "05",
-            "title": "Coordination Pressure: Interface Surface Is Predominantly Shared",
-            "statement": (
-                "Nearly all observable interface surface is shared across multiple components (sharing ratio: 0.875). "
-                "Combined with dependency load (0.682) and structural density (1.273), the compounding coordination "
-                "burden across the delivery pipeline is materially elevated. The runtime component of this signal "
-                "remains outside current evidence scope."
-            ),
-            "domain": "Operational Engineering",
-            "confidence": "weak",
-        },
-    ]
+
+    if use_psig:
+        # PSIG path: build from signal_projection + structural metrics
+        active_conds = psig_proj.get("active_conditions_in_scope", [])
+        not_activated = psig_proj.get("signals_not_activated", [])
+        m = metrics or {}
+        dep_load = m.get("dep_load", "NOT_IN_SCOPE")
+        dep_edges = m.get("dep_edges", "N/A")
+        dep_nodes = m.get("dep_nodes", "N/A")
+        etn = m.get("edge_to_node", "NOT_IN_SCOPE")
+        cont = m.get("containment_density", "NOT_IN_SCOPE")
+
+        tier1_signals = []
+        for c in active_conds:
+            sid   = c["signal_id"]
+            val   = c["signal_value"]
+            state = c["activation_state"]
+            method = c.get("activation_method", "")
+            prim_ent = c.get("primary_attribution_entity")
+            prim_dom = c.get("primary_attribution_domain", "")
+            dom_scope = c.get("domain_attribution_scope", [])
+            entity_scope = c.get("entity_level_scope", [])
+
+            if sid == "PSIG-001":
+                title = f"Fan-In Concentration ({sid}): {state} — {method} — Value {val}"
+                stmt = (
+                    f"Inbound dependency concentration is {val} — a {method} condition. "
+                    f"Primary attribution entity: {prim_ent} in {prim_dom}. "
+                    f"Domain scope: {', '.join(dom_scope)}. "
+                    f"Co-present with PSIG-002 and PSIG-004 across all three pressure zones "
+                    f"(PZ-001, PZ-002, PZ-003) — contributes to COMPOUND_ZONE designation in each."
+                )
+                dom_tag, conf = prim_dom or "Multi-domain", "strong"
+            elif sid == "PSIG-002":
+                title = f"Fan-Out Propagation ({sid}): {state} — {method} — Value {val}"
+                stmt = (
+                    f"Outbound dependency propagation is {val} — {method} condition. "
+                    f"Distributes across {', '.join(dom_scope)} with no single primary entity. "
+                    f"Co-presence with PSIG-001 at the same value ({val}) indicates bidirectional "
+                    f"concentration pressure — not a single directed flow. Present in all three zones."
+                )
+                dom_tag = " · ".join(dom_scope[:3]) if dom_scope else "Multi-domain"
+                conf = "strong"
+            elif sid == "PSIG-004":
+                title = f"Responsibility Concentration ({sid}): {state} — {method} — Value {val}"
+                stmt = (
+                    f"Structural responsibility concentration is {val} — {method}. "
+                    f"Primary attribution entity: {prim_ent} in {prim_dom}. "
+                    f"Convergence of PSIG-001 and PSIG-004 at {prim_ent} defines the PRIMARY designation "
+                    f"for PZ-002 ({prim_dom}). Secondary attribution covers all three zone domains."
+                )
+                dom_tag, conf = prim_dom or "Multi-domain", "strong"
+            elif sid == "PSIG-006":
+                ent_preview = ", ".join(entity_scope[:4]) + ("…" if len(entity_scope) > 4 else "")
+                title = f"Structural Blind Spot ({sid}): ACTIVATED — {method} — Value {val}"
+                stmt = (
+                    f"PSIG-006 activated at {method} (value {val}). "
+                    f"Covers {len(entity_scope)} structural entities: {ent_preview}. "
+                    f"These entities are outside pressure zone scope (PZ-001/PZ-002/PZ-003). "
+                    f"THEORETICAL_BASELINE indicates structural basis is present but execution evidence "
+                    f"is insufficient for an empirical pressure value. Represents a coverage gap."
+                )
+                dom_tag = " · ".join(entity_scope[:2]) if entity_scope else "Multi-domain"
+                conf = "weak"
+            else:
+                title = f"{sid}: {state} — Value {val}"
+                stmt  = f"Signal {sid} activated at {val} ({state}, {method})."
+                dom_tag, conf = prim_dom or "Structural", "moderate"
+
+            tier1_signals.append({
+                "num": str(len(tier1_signals) + 1).zfill(2),
+                "title": title, "statement": stmt, "domain": dom_tag, "confidence": conf,
+            })
+
+        # Add PSIG-003 as not-activated entry
+        if "PSIG-003" in not_activated:
+            tier1_signals.append({
+                "num": str(len(tier1_signals) + 1).zfill(2),
+                "title": "Inbound Coupling (PSIG-003): NOT_ACTIVATED — Below threshold",
+                "statement": (
+                    "PSIG-003 evaluated inbound coupling ratio and did not reach the activation threshold "
+                    "for this run. This is a confirmed structural observation, not a gap in evaluation."
+                ),
+                "domain": "Structural analysis", "confidence": "strong",
+            })
+
+        # Add structural metrics card
+        if dep_load != "NOT_IN_SCOPE":
+            tier1_signals.append({
+                "num": str(len(tier1_signals) + 1).zfill(2),
+                "title": (f"Structural Metrics: Dependency Load {dep_load} · "
+                          f"Edge-to-Node {etn} · Containment {cont}"),
+                "statement": (
+                    f"Dependency load ratio: {dep_load} ({dep_edges} of {dep_nodes} edges are "
+                    f"load-bearing overlap edges). Edge-to-node density: {etn} "
+                    f"({m.get('edges_count')} edges / {dep_nodes} nodes). "
+                    f"Containment density: {cont} ({m.get('contains_count')} containment edges / "
+                    f"{dep_nodes} nodes). Low dependency load with dense containment indicates "
+                    f"a topology dominated by hierarchical nesting rather than direct coupling."
+                ),
+                "domain": "Structural topology", "confidence": "strong",
+            })
+
+        # Renumber after assembly
+        for idx, s in enumerate(tier1_signals):
+            s["num"] = str(idx + 1).zfill(2)
+
+    else:
+        # BlueEdge path — unchanged curated content
+        tier1_signals = [
+            {
+                "num": "01",
+                "title": "Security Intelligence Pipeline: Throughput Ceiling Confirmed, Runtime State Unverified",
+                "statement": (
+                    "The security intelligence collection pathway operates under a configured throughput ceiling derived from "
+                    "static configuration. This ceiling bounds the rate at which threat data reaches the cloud platform. "
+                    "Actual performance under live conditions is outside current evidence scope and cannot be confirmed "
+                    "without a live execution environment."
+                ),
+                "domain": "Edge Data Acquisition",
+                "confidence": "strong",
+            },
+            {
+                "num": "02",
+                "title": "Platform Runtime State: Seven Core Operational Dimensions Are Outside Current Evidence Scope",
+                "statement": (
+                    "Seven operational dimensions cannot be determined from available evidence: backend service health, "
+                    "cache layer efficiency, cache layer availability, event pipeline activity, "
+                    + ("platform" if publish_safe else "fleet") + " connection activity, "
+                    + ("operational" if publish_safe else "vehicle") + " alert activity, and "
+                    + ("session" if publish_safe else "driver session") + " performance. "
+                    "These represent the complete observable runtime state of the core platform. "
+                    "Any operational decision about platform health or capacity currently lacks an evidence base."
+                ),
+                "domain": "Platform Infrastructure",
+                "confidence": "strong",
+            },
+            {
+                "num": "03",
+                "title": "Dependency Structure: Most Architectural Connections Are Load-Bearing",
+                "statement": (
+                    "Dependency load is concentrated across the observed architectural scope — most inter-component "
+                    "connections are direct dependencies rather than loose couplings (load ratio: 0.682). "
+                    "This elevates the blast radius for any component-level failure and increases integration "
+                    "complexity as the platform scales."
+                ),
+                "domain": "Event-Driven Architecture",
+                "confidence": "moderate",
+            },
+            {
+                "num": "04",
+                "title": "Structural Volatility: Relationship Density Exceeds Component Count",
+                "statement": (
+                    "Edge-to-node density: 1.273 — the platform has more relationship edges than structural nodes, "
+                    "indicating a tightly interconnected architecture. Containment depth ratio: 0.545 — nearly half "
+                    "of components operate across module boundaries. Structural growth without boundary enforcement "
+                    "compounds this pressure at an accelerating rate."
+                ),
+                "domain": "Platform Infrastructure",
+                "confidence": "moderate",
+            },
+            {
+                "num": "05",
+                "title": "Coordination Pressure: Interface Surface Is Predominantly Shared",
+                "statement": (
+                    "Nearly all observable interface surface is shared across multiple components (sharing ratio: 0.875). "
+                    "Combined with dependency load (0.682) and structural density (1.273), the compounding coordination "
+                    "burden across the delivery pipeline is materially elevated. The runtime component of this signal "
+                    "remains outside current evidence scope."
+                ),
+                "domain": "Operational Engineering",
+                "confidence": "weak",
+            },
+        ]
     signal_cards = []
     for s in tier1_signals:
         signal_cards.append(f"""    <div class="signal-card">
@@ -2226,15 +2580,61 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
     </div>""")
     signals_html = "\n".join(signal_cards)
 
-    # Focus domain block
-    focus_domain = next((d for d in domains if d["domain_id"] == FOCUS_DOMAIN), None)
-    focus_caps = len(focus_domain.get("capability_ids", [])) if focus_domain else 0
-    focus_comps = len(focus_domain.get("component_ids", [])) if focus_domain else 0
-    connectivity_word = "platform connectivity" if publish_safe else "fleet connectivity"
-    gateway_word = "platform gateway" if publish_safe else "fleet gateway"
+    # Pressure zones / focus domain block
+    if use_psig and pz_proj:
+        zone_list = pz_proj.get("zone_projection", [])
+        pz_blocks = []
+        for z in zone_list:
+            zid   = z["zone_id"]
+            zname = z.get("anchor_name", z.get("anchor_id", zid))
+            zclass = z.get("zone_class", "COMPOUND_ZONE")
+            profile = z.get("attribution_profile", "secondary")
+            sigs_in_zone = z.get("signals", [])
+            sigs_str = " · ".join(sigs_in_zone)
+            ccount = z.get("condition_count", len(sigs_in_zone))
+            is_prim = profile == "primary"
+            badge = "PRIMARY" if is_prim else profile
+            pz_blocks.append(
+                f'  <div class="focus-domain-block" style="margin-bottom:12px">\n'
+                f'    <div class="focus-domain-header">\n'
+                f'      <div>\n'
+                f'        <div class="focus-domain-label">{esc(zid)} — {esc(zname)} · {esc(badge)}</div>\n'
+                f'        <div class="focus-domain-name">{esc(zclass)} · {ccount} conditions co-present</div>\n'
+                f'        <div class="focus-domain-sub">{esc(sigs_str)}</div>\n'
+                f'      </div>\n'
+                f'      <div class="focus-badge">{esc(badge)}</div>\n'
+                f'    </div>\n'
+                f'    <div class="focus-finding">\n'
+                f'      {esc(zid)} ({esc(zname)}) carries {esc(profile)} attribution. '
+                f'{ccount} structural conditions simultaneously co-present: {esc(sigs_str)}. '
+                f'Zone class: {esc(zclass)} (condition count = {ccount} ≥ 3).\n'
+                f'    </div>\n'
+                f'  </div>'
+            )
+        blind_spot_count = pz_proj.get("structural_blind_spot_entity_count", 0)
+        blind_spot_sig   = pz_proj.get("structural_blind_spot_signal", "PSIG-006")
+        blind_note = (
+            f'\n  <div class="tier2-handoff" style="margin-top:8px">'
+            f'<div class="tier2-handoff-label">Structural Blind Spot — {esc(blind_spot_sig)}</div>'
+            f'<div class="tier2-handoff-text">{blind_spot_count} entities outside pressure zone scope. '
+            f'{esc(blind_spot_sig)} activated at THEORETICAL_BASELINE — coverage gap, not zone candidate.'
+            f'</div></div>'
+            if blind_spot_count > 0 else ""
+        )
+        focus_block_html = (
+            f'  <h2 style="margin-top:36px">Pressure Zones</h2>\n'
+            + "\n".join(pz_blocks)
+            + blind_note
+        )
+    else:
+        focus_domain = next((d for d in domains if d["domain_id"] == FOCUS_DOMAIN), None)
+        focus_caps = len(focus_domain.get("capability_ids", [])) if focus_domain else 0
+        focus_comps = len(focus_domain.get("component_ids", [])) if focus_domain else 0
+        connectivity_word = "platform connectivity" if publish_safe else "fleet connectivity"
+        gateway_word = "platform gateway" if publish_safe else "fleet gateway"
 
-    if focus_domain is None:
-        focus_block_html = """  <h2 style="margin-top:36px">Pressure Zones</h2>
+        if focus_domain is None:
+            focus_block_html = """  <h2 style="margin-top:36px">Pressure Zones</h2>
   <div class="focus-domain-block">
     <div class="focus-domain-header">
       <div>
@@ -2248,8 +2648,8 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
       Signal derivation (PiOS 41.x) has not been executed. Zone analysis requires signal evidence.
     </div>
   </div>"""
-    else:
-        focus_block_html = f"""  <h2 style="margin-top:36px">Focus Domain</h2>
+        else:
+            focus_block_html = f"""  <h2 style="margin-top:36px">Focus Domain</h2>
   <div class="focus-domain-block">
     <div class="focus-domain-header">
       <div>
@@ -2336,10 +2736,10 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
   <div class="topo-view">
     {svg_html}
     <div class="topo-legend">
-      <span class="topo-leg-item"><span class="topo-leg-dot tl-grounded"></span>Grounded ({grounded_count} domains)</span>
-      <span class="topo-leg-item"><span class="topo-leg-dot tl-weak"></span>Weakly Grounded ({weak_count} domains)</span>
-      <span class="topo-leg-item"><span class="topo-leg-dot tl-focus"></span>Focus Domain — 2 signal convergence (also Weakly Grounded)</span>
-      <span class="topo-leg-note">Lines show structural co-membership. No direction implied.</span>
+      <span class="topo-leg-item"><span class="topo-leg-dot tl-grounded"></span>Grounded ({grounded_count} {"domain" if grounded_count == 1 else "domains"})</span>
+      <span class="topo-leg-item"><span class="topo-leg-dot tl-weak"></span>Weakly Grounded ({weak_count} {"domain" if weak_count == 1 else "domains"})</span>
+      {'<span class="topo-leg-item"><span class="topo-leg-dot tl-focus"></span>Primary Pressure Zone — 3 conditions co-present (COMPOUND_ZONE)</span>' if use_psig else '<span class="topo-leg-item"><span class="topo-leg-dot tl-focus"></span>Focus Domain — 2 signal convergence (also Weakly Grounded)</span>'}
+      <span class="topo-leg-note">Relationships shown are structural co-membership. No direction implied.</span>
     </div>
   </div>
 
@@ -2465,7 +2865,11 @@ _TIER1_NARRATIVE_CSS = """
 
 
 def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
-                                  publish_safe: bool = False) -> str:
+                                  publish_safe: bool = False,
+                                  psig_proj: Optional[Dict] = None,
+                                  pz_proj: Optional[Dict] = None,
+                                  metrics: Optional[Dict] = None,
+                                  decision_model: Optional[Dict] = None) -> str:
     domains = topology["domains"]
     counts = topology["counts"]
     score = gauge["score"]["canonical"]
@@ -2473,7 +2877,8 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
     band_lo = gauge["confidence"]["lower"]
     band_hi = gauge["confidence"]["upper"]
 
-    client_name = "Client Environment" if publish_safe else "BlueEdge Fleet Management Platform"
+    use_psig = psig_proj is not None
+    client_name = _get_client_display_name(publish_safe)
     ev_link = ("/api/report-file?name=lens_tier1_evidence_brief_pub.html"
                if publish_safe else
                "/api/report-file?name=lens_tier1_evidence_brief.html")
@@ -2481,22 +2886,64 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
                if publish_safe else
                "/api/report-file?name=lens_tier2_diagnostic_narrative.html")
     title_suffix = " (Publish)" if publish_safe else ""
-    footer_note = ("SAMPLE — Illustrative client environment. All structural values represent actual assessment outputs."
-                   if publish_safe else
-                   "SAMPLE — BlueEdge data used for demonstration purposes.")
+    footer_note = ("SAMPLE — All structural values are derived from verified execution evidence."
+                   if use_psig else
+                   ("SAMPLE — Illustrative client environment. All structural values represent actual assessment outputs."
+                    if publish_safe else
+                    "SAMPLE — BlueEdge data used for demonstration purposes."))
 
     grounded_count = sum(1 for d in domains if d["grounding"] == "GROUNDED")
     weak_count = sum(1 for d in domains if d["grounding"] == "WEAKLY GROUNDED")
+    client_ref = f"the {esc(client_name)}"
 
-    connectivity_word = "platform connectivity" if publish_safe else "fleet connectivity"
-    fleet_conn = "Platform connection activity" if publish_safe else "Fleet connection activity"
-    vehicle_alert = "Operational alert activity" if publish_safe else "Vehicle alert activity"
-    driver_session = "Session performance" if publish_safe else "Driver session performance"
-    client_ref = "the Client Environment" if publish_safe else "the BlueEdge\n      Fleet Management Platform"
+    if not use_psig:
+        connectivity_word = "platform connectivity" if publish_safe else "fleet connectivity"
+        fleet_conn = "Platform connection activity" if publish_safe else "Fleet connection activity"
+        vehicle_alert = "Operational alert activity" if publish_safe else "Vehicle alert activity"
+        driver_session = "Session performance" if publish_safe else "Driver session performance"
 
     focus_domain = next((d for d in domains if d["domain_id"] == "DOMAIN-10"), None)
 
-    if focus_domain is None:
+    if use_psig and pz_proj:
+        zone_list = pz_proj.get("zone_projection", [])
+        pz_items = []
+        for z in zone_list:
+            zid    = z["zone_id"]
+            zname  = z.get("anchor_name", z.get("anchor_id", zid))
+            zclass = z.get("zone_class", "COMPOUND_ZONE")
+            profile = z.get("attribution_profile", "secondary")
+            sigs_in_zone = z.get("signals", [])
+            sigs_str = " · ".join(sigs_in_zone)
+            ccount = z.get("condition_count", len(sigs_in_zone))
+            is_prim = profile == "primary"
+            badge = "PRIMARY" if is_prim else profile
+            pz_items.append(
+                f'    <div class="focus-block">\n'
+                f'      <div class="focus-block-label">{esc(zid)} — {esc(zname)} · {esc(badge)}</div>\n'
+                f'      <div class="focus-block-name">{esc(zclass)} · {ccount} conditions co-present</div>\n'
+                f'      <div class="focus-block-sub">{esc(sigs_str)}</div>\n'
+                f'      <p class="body-text" style="font-size:13px">\n'
+                f'        {esc(zid)} ({esc(zname)}) carries {esc(profile)} attribution for all three '
+                f'co-present conditions ({esc(sigs_str)}). {ccount} simultaneous conditions satisfy '
+                f'the COMPOUND_ZONE threshold. Zone class: {esc(zclass)}.</p>\n'
+                f'    </div>'
+            )
+        blind_count = pz_proj.get("structural_blind_spot_entity_count", 0)
+        blind_sig   = pz_proj.get("structural_blind_spot_signal", "PSIG-006")
+        blind_note = (
+            f'\n    <p class="body-text" style="font-size:12.5px;color:var(--fg-muted)">'
+            f'Structural blind spot: {esc(blind_sig)} covers {blind_count} entities outside zone scope '
+            f'(THEORETICAL_BASELINE — coverage gap, not pressure candidate).</p>'
+            if blind_count > 0 else ""
+        )
+        focus_section_html = (
+            '  <div class="section">\n'
+            '    <div class="section-header"><span class="section-num">03</span>'
+            '<span class="section-title">Pressure Zones</span></div>\n'
+            + "\n".join(pz_items)
+            + blind_note + "\n  </div>"
+        )
+    elif focus_domain is None:
         focus_section_html = """  <div class="section">
     <div class="section-header"><span class="section-num">03</span><span class="section-title">Pressure Zones</span></div>
     <div class="focus-block">
@@ -2536,6 +2983,250 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
       the assessment boundary.</p>
     <p class="body-text">The domain is structurally mapped and weakly grounded. Its topology is confirmed. Its runtime state is not.</p>
   </div>"""
+
+    # --- Pre-compute conditional HTML blocks for narrative brief ---
+    if use_psig and psig_proj and metrics:
+        _sig_disp = {
+            "PSIG-001": "Fan-in structural concentration",
+            "PSIG-002": "Fan-out structural concentration",
+            "PSIG-003": "Node depth concentration",
+            "PSIG-004": "Responsibility concentration",
+            "PSIG-005": "Scope coupling",
+            "PSIG-006": "Structural blind spot coverage",
+        }
+        _sig_rows = []
+        for _c in psig_proj.get("active_conditions_in_scope", []):
+            _sid  = _c.get("signal_id", "")
+            _sname = _sig_disp.get(_sid, _sid)
+            _val  = _c.get("signal_value", "—")
+            _meth = _c.get("activation_method", "")
+            if _meth == "THEORETICAL_BASELINE":
+                _cc, _cl = "conf-weak", "Theoretical baseline"
+            elif _meth == "RUN_RELATIVE_OUTLIER":
+                _cc, _cl = "conf-strong", "Strong"
+            else:
+                _cc, _cl = "conf-moderate", "Moderate"
+            _cv = f"{_val} — {_meth}" if _meth else str(_val)
+            _sig_rows.append(
+                f'        <tr><td>{esc(_sname)} ({esc(_sid)})</td>'
+                f'<td>{esc(str(_cv))}</td>'
+                f'<td><span class="conf-badge {_cc}">{esc(_cl)}</span></td></tr>'
+            )
+        _dl  = metrics.get("dep_load", "—")
+        _de  = metrics.get("dep_edges", "—")
+        _dn  = metrics.get("dep_nodes", "—")
+        _etn = metrics.get("edge_to_node", "—")
+        _cd  = metrics.get("containment_density", "—")
+        _sig_rows.append(
+            f'        <tr><td>Dependency load ratio</td>'
+            f'<td>{_dl} — {_de} of {_dn} edges overlap</td>'
+            f'<td><span class="conf-badge conf-moderate">Moderate</span></td></tr>'
+        )
+        _sig_rows.append(
+            f'        <tr><td>Structural density — edge-to-node</td>'
+            f'<td>{_etn}&nbsp;·&nbsp;Containment: {_cd}</td>'
+            f'<td><span class="conf-badge conf-moderate">Moderate</span></td></tr>'
+        )
+        signal_table_html = (
+            '    <table class="signal-table">\n'
+            '      <thead><tr><th style="width:40%">Signal</th>'
+            '<th style="width:30%">Computed Value</th>'
+            '<th style="width:30%">Confidence</th></tr></thead>\n'
+            '      <tbody>\n' + "\n".join(_sig_rows) + "\n"
+            '      </tbody>\n    </table>'
+        )
+    else:
+        signal_table_html = (
+            '    <table class="signal-table">\n'
+            '      <thead><tr><th style="width:40%">Signal</th>'
+            '<th style="width:30%">Computed Value</th>'
+            '<th style="width:30%">Confidence</th></tr></thead>\n'
+            '      <tbody>\n'
+            '        <tr><td>Security intelligence throughput ceiling</td>'
+            '<td>Configured — static constant</td>'
+            '<td><span class="conf-badge conf-strong">Strong</span></td></tr>\n'
+            '        <tr><td>Platform runtime dimensions outside scope</td>'
+            '<td>7 of 7 unresolvable</td>'
+            '<td><span class="conf-badge conf-strong">Strong</span></td></tr>\n'
+            '        <tr><td>Dependency load ratio</td>'
+            '<td>0.682 — 15 of 22 edges load-bearing</td>'
+            '<td><span class="conf-badge conf-moderate">Moderate</span></td></tr>\n'
+            '        <tr><td>Structural volatility — edge-to-node density</td>'
+            '<td>1.273 &nbsp;&middot;&nbsp; Containment: 0.545</td>'
+            '<td><span class="conf-badge conf-moderate">Moderate</span></td></tr>\n'
+            '        <tr><td>Coordination pressure — interface sharing</td>'
+            '<td>0.875 — 7 of 8 interfaces shared</td>'
+            '<td><span class="conf-badge conf-weak">Weak (static only)</span></td></tr>\n'
+            '      </tbody>\n    </table>'
+        )
+
+    if use_psig:
+        _dm = decision_model or {}
+        _na_sigs  = _dm.get("not_activated", [])
+        _blind    = _dm.get("blind_spot_active", False)
+        _actv_cnt = len(psig_proj.get("active_conditions_in_scope", [])) if psig_proj else 0
+        _na_labels = {
+            "PSIG-003": "Node depth concentration signal — not activated in this run",
+            "PSIG-005": "Scope coupling signal — not activated in this run",
+        }
+        _unk_items = ["<li>Runtime execution behavior (execution layer not evaluated)</li>"]
+        for _s in _na_sigs:
+            _unk_items.append(
+                f'<li>{esc(_na_labels.get(_s, f"{_s} — not activated in this run"))}</li>'
+            )
+        if _blind:
+            _unk_items.append(
+                "<li>Structural blind spot entity behavior "
+                "(THEORETICAL_BASELINE — coverage gap, not execution-derived)</li>"
+            )
+        _unk_items += [
+            "<li>Memory and resource utilization under load</li>",
+            "<li>Live service interaction and latency profiles</li>",
+        ]
+        _unk_n = len(_unk_items)
+        _conf_items = [
+            f'<li>Full structural topology — {counts["domains"]} domains, '
+            f'{counts["capabilities"]} capabilities, {counts["components"]} components</li>',
+            "<li>Grounding classification for every domain</li>",
+            f"<li>{_actv_cnt} active structural signals with computed values</li>",
+            "<li>Dependency load, structural density, and containment density ratios</li>",
+            "<li>Pressure zone classification across all detected zones</li>",
+        ]
+        if _blind and pz_proj:
+            _bcnt = pz_proj.get("structural_blind_spot_entity_count", 0)
+            _bsig = pz_proj.get("structural_blind_spot_signal", "PSIG-006")
+            _conf_items.append(
+                f"<li>Structural blind spot scope — {_bcnt} entities ({esc(_bsig)}, THEORETICAL_BASELINE)</li>"
+            )
+        _dim_note = (
+            f"These {_unk_n} dimensions are confirmed unknowns — not assumed healthy states. "
+            f"The codebase may operate normally in all {_unk_n} dimensions, or it may not. "
+            "The current evidence scope does not resolve this. "
+            "Any decision that depends on these dimensions operating within expected parameters "
+            "currently lacks an evidence base."
+        )
+        boundary_section_html = (
+            '  <div class="section">\n'
+            '    <div class="section-header">'
+            '<span class="section-num">04</span>'
+            '<span class="section-title">Known vs Unknown Boundary</span></div>\n'
+            '    <div class="boundary-grid">\n'
+            '      <div class="boundary-block known">\n'
+            '        <div class="boundary-block-label">Confirmed</div>\n'
+            '        <ul class="boundary-list">\n'
+            + "".join(f"          {li}\n" for li in _conf_items)
+            + '        </ul>\n      </div>\n'
+            '      <div class="boundary-block unknown">\n'
+            '        <div class="boundary-block-label">Outside Evidence Scope</div>\n'
+            '        <ul class="boundary-list">\n'
+            + "".join(f"          {li}\n" for li in _unk_items)
+            + '        </ul>\n      </div>\n'
+            '    </div>\n'
+            f'    <div class="boundary-note">\n      {esc(_dim_note)}\n    </div>\n'
+            '  </div>'
+        )
+    else:
+        boundary_section_html = (
+            '  <div class="section">\n'
+            '    <div class="section-header">'
+            '<span class="section-num">04</span>'
+            '<span class="section-title">Known vs Unknown Boundary</span></div>\n'
+            '    <div class="boundary-grid">\n'
+            '      <div class="boundary-block known">\n'
+            '        <div class="boundary-block-label">Confirmed</div>\n'
+            f'        <ul class="boundary-list">\n'
+            f'          <li>Full structural topology — {counts["domains"]} domains, '
+            f'{counts["capabilities"]} capabilities, {counts["components"]} components</li>\n'
+            '          <li>Grounding classification for every domain</li>\n'
+            '          <li>5 structural signals with computed values</li>\n'
+            '          <li>Dependency load, structural density, and coordination pressure ratios</li>\n'
+            '          <li>Count and domain location of unresolvable runtime dimensions</li>\n'
+            '        </ul>\n      </div>\n'
+            '      <div class="boundary-block unknown">\n'
+            '        <div class="boundary-block-label">Outside Evidence Scope</div>\n'
+            '        <ul class="boundary-list">\n'
+            '          <li>Backend service memory and resource utilization</li>\n'
+            '          <li>Cache layer efficiency</li>\n'
+            '          <li>Cache layer availability and connectivity</li>\n'
+            '          <li>Event pipeline activity and throughput</li>\n'
+            f'          <li>{fleet_conn}</li>\n'
+            f'          <li>{vehicle_alert}</li>\n'
+            f'          <li>{driver_session}</li>\n'
+            '        </ul>\n      </div>\n'
+            '    </div>\n'
+            '    <div class="boundary-note">\n'
+            '      These seven dimensions are confirmed unknowns — not assumed healthy states. '
+            'The platform may be\n'
+            '      operating normally in all seven dimensions, or it may not be. '
+            'The current evidence scope does not\n'
+            '      resolve this. Any operational decision that depends on these dimensions operating '
+            'within normal\n'
+            '      parameters currently lacks an evidence base.\n'
+            '    </div>\n  </div>'
+        )
+
+    if use_psig and decision_model:
+        _risk   = decision_model.get("structural_risk", "MODERATE")
+        _evcomp = decision_model.get("evidence_completeness", "PARTIAL")
+        _dec    = decision_model.get("decision", "INVESTIGATE")
+        _risk_color = {
+            "LOW": "var(--green)", "MODERATE": "var(--amber)", "HIGH": "var(--red)"
+        }.get(_risk, "var(--fg-muted)")
+        _evc_color = {
+            "HIGH": "var(--green)", "PARTIAL": "var(--amber)"
+        }.get(_evcomp, "var(--fg-muted)")
+        decision_posture_html = (
+            '  <div class="section">\n'
+            '    <div class="section-header">'
+            '<span class="section-num">06</span>'
+            '<span class="section-title">Decision Posture</span></div>\n'
+            '    <div class="posture-row">\n'
+            f'      <div class="posture-badge">{esc(_dec)}</div>\n'
+            '      <div class="posture-text">The INVESTIGATE posture reflects evidence incompleteness, '
+            'not structural instability. Structural metrics are below risk thresholds. '
+            'The execution layer has not been evaluated in this run. '
+            'A commitment made at this state carries evidence gaps, not confirmed structural risk.</div>\n'
+            '    </div>\n'
+            '    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:16px 0;'
+            'background:var(--surface);border:1px solid var(--border);'
+            'border-left:3px solid var(--gold);padding:16px 20px;border-radius:3px">\n'
+            f'      <div><div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;'
+            f'color:var(--fg-muted);margin-bottom:4px">Structural Risk</div>'
+            f'<div style="font-size:14px;color:{_risk_color}">{esc(_risk)}</div></div>\n'
+            f'      <div><div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;'
+            f'color:var(--fg-muted);margin-bottom:4px">Evidence Completeness</div>'
+            f'<div style="font-size:14px;color:{_evc_color}">{esc(_evcomp)}</div></div>\n'
+            f'      <div><div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;'
+            f'color:var(--fg-muted);margin-bottom:4px">Decision</div>'
+            f'<div style="font-size:14px;color:var(--gold)">{esc(_dec)}</div></div>\n'
+            '    </div>\n'
+            '    <p class="body-text">The assessment does not specify what action to take. '
+            'It establishes the structural state from which any decision must be made. '
+            'Structural risk is LOW — the codebase topology does not present elevated dependency '
+            'or density risk. The INVESTIGATE designation is driven by evidence gaps: '
+            'execution layer not evaluated, blind spot coverage active, and signals not activated '
+            'in this run. Resolving these gaps moves evidence completeness from PARTIAL to HIGH.</p>\n'
+            '  </div>'
+        )
+    else:
+        decision_posture_html = (
+            '  <div class="section">\n'
+            '    <div class="section-header">'
+            '<span class="section-num">06</span>'
+            '<span class="section-title">Decision Posture</span></div>\n'
+            '    <div class="posture-row">\n'
+            '      <div class="posture-badge">INVESTIGATE</div>\n'
+            f'      <div class="posture-text">The {esc(band_label)} state means the structural foundation is confirmed, '
+            f'but the execution layer has not been evaluated. '
+            f'The gap between {band_lo} and {band_hi} will not close without execution evidence. '
+            'A commitment made at this state carries unresolved structural risk.</div>\n'
+            '    </div>\n'
+            '    <p class="body-text">The assessment does not specify what action to take. '
+            'It establishes the structural state from which any decision must be made. '
+            'Proceeding without resolving the known unknowns transfers structural risk '
+            'into the commitment. Deferring does not make the unknowns disappear — it carries them forward.</p>\n'
+            '  </div>'
+        )
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -2616,53 +3307,12 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
         <div><div class="grounding-cell-text">Weakly Grounded</div><div class="grounding-cell-count">{weak_count} of {counts["domains"]} domains — partial evidence</div></div>
       </div>
     </div>
-    <table class="signal-table">
-      <thead><tr><th style="width:40%">Signal</th><th style="width:30%">Computed Value</th><th style="width:30%">Confidence</th></tr></thead>
-      <tbody>
-        <tr><td>Security intelligence throughput ceiling</td><td>Configured — static constant</td><td><span class="conf-badge conf-strong">Strong</span></td></tr>
-        <tr><td>Platform runtime dimensions outside scope</td><td>7 of 7 unresolvable</td><td><span class="conf-badge conf-strong">Strong</span></td></tr>
-        <tr><td>Dependency load ratio</td><td>0.682 — 15 of 22 edges load-bearing</td><td><span class="conf-badge conf-moderate">Moderate</span></td></tr>
-        <tr><td>Structural volatility — edge-to-node density</td><td>1.273 &nbsp;&middot;&nbsp; Containment: 0.545</td><td><span class="conf-badge conf-moderate">Moderate</span></td></tr>
-        <tr><td>Coordination pressure — interface sharing</td><td>0.875 — 7 of 8 interfaces shared</td><td><span class="conf-badge conf-weak">Weak (static only)</span></td></tr>
-      </tbody>
-    </table>
+{signal_table_html}
   </div>
 
 {focus_section_html}
 
-  <div class="section">
-    <div class="section-header"><span class="section-num">04</span><span class="section-title">Known vs Unknown Boundary</span></div>
-    <div class="boundary-grid">
-      <div class="boundary-block known">
-        <div class="boundary-block-label">Confirmed</div>
-        <ul class="boundary-list">
-          <li>Full structural topology — {counts["domains"]} domains, {counts["capabilities"]} capabilities, {counts["components"]} components</li>
-          <li>Grounding classification for every domain</li>
-          <li>5 structural signals with computed values</li>
-          <li>Dependency load, structural density, and coordination pressure ratios</li>
-          <li>Count and domain location of unresolvable runtime dimensions</li>
-        </ul>
-      </div>
-      <div class="boundary-block unknown">
-        <div class="boundary-block-label">Outside Evidence Scope</div>
-        <ul class="boundary-list">
-          <li>Backend service memory and resource utilization</li>
-          <li>Cache layer efficiency</li>
-          <li>Cache layer availability and connectivity</li>
-          <li>Event pipeline activity and throughput</li>
-          <li>{fleet_conn}</li>
-          <li>{vehicle_alert}</li>
-          <li>{driver_session}</li>
-        </ul>
-      </div>
-    </div>
-    <div class="boundary-note">
-      These seven dimensions are confirmed unknowns — not assumed healthy states. The platform may be
-      operating normally in all seven dimensions, or it may not be. The current evidence scope does not
-      resolve this. Any operational decision that depends on these dimensions operating within normal
-      parameters currently lacks an evidence base.
-    </div>
-  </div>
+{boundary_section_html}
 
   <div class="section">
     <div class="section-header"><span class="section-num">05</span><span class="section-title">Next Proposed Actions</span></div>
@@ -2677,18 +3327,7 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
     </div>
   </div>
 
-  <div class="section">
-    <div class="section-header"><span class="section-num">06</span><span class="section-title">Decision Posture</span></div>
-    <div class="posture-row">
-      <div class="posture-badge">INVESTIGATE</div>
-      <div class="posture-text">The {esc(band_label)} state means the structural foundation is confirmed, but the execution layer has not
-        been evaluated. The gap between {band_lo} and {band_hi} will not close without execution evidence.
-        A commitment made at this state carries unresolved structural risk.</div>
-    </div>
-    <p class="body-text">The assessment does not specify what action to take. It establishes the structural state from which
-      any decision must be made. Proceeding without resolving the known unknowns transfers structural risk
-      into the commitment. Deferring does not make the unknowns disappear — it carries them forward.</p>
-  </div>
+{decision_posture_html}
 
   <div class="report-footer">
     <div>
@@ -2730,6 +3369,12 @@ def generate_tier1_reports(output_dir: Optional[Path] = None) -> List[Path]:
     signals = load_signal_registry()
     gauge = load_gauge_state()
 
+    psig_proj      = _load_psig_projection()
+    pz_proj        = _load_pressure_zone_projection()
+    binding        = _load_binding_envelope()
+    metrics        = _compute_structural_metrics(binding)
+    decision_model = _compute_decision_model(metrics, psig_proj, gauge)
+
     files: List[Path] = []
 
     artifacts = [
@@ -2740,7 +3385,9 @@ def generate_tier1_reports(output_dir: Optional[Path] = None) -> List[Path]:
     ]
 
     for out_path, builder, pub_safe in artifacts:
-        html = builder(topology, signals, gauge, publish_safe=pub_safe)
+        html = builder(topology, signals, gauge, publish_safe=pub_safe,
+                       psig_proj=psig_proj, pz_proj=pz_proj,
+                       metrics=metrics, decision_model=decision_model)
         out_path.write_text(html, encoding="utf-8")
         print(f"[LENS REPORT] Generated: {out_path.resolve()}")
         files.append(out_path)

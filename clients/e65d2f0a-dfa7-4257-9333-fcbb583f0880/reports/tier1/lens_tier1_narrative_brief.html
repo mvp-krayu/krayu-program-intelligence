@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LENS Assessment — Narrative Brief</title>
+  <style>
+  :root{--bg:#0e0e10;--surface:#16161a;--surface-raised:#1c1c22;--border:#2a2a2e;--border-subtle:#222228;--fg:#e8e8e8;--fg-muted:#888;--fg-dim:#555;--gold:#c89b3c;--gold-muted:rgba(200,155,60,0.12);--gold-border:rgba(200,155,60,0.28);--green:#4caf6e;--amber:#d4912a;--amber-muted:rgba(212,145,42,0.1);--amber-border:rgba(212,145,42,0.25);--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:14px;line-height:1.7;-webkit-font-smoothing:antialiased}
+  .page{max-width:960px;margin:0 auto;padding:48px 40px 80px}
+  .report-header{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:24px;border-bottom:1px solid var(--border);margin-bottom:32px}
+  .report-brand{font-size:11px;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;margin-bottom:6px}
+  .report-title{font-size:20px;color:var(--fg);font-weight:400}
+  .report-type{font-size:11px;color:var(--fg-muted);margin-top:4px;letter-spacing:.06em}
+  .report-meta{text-align:right;font-size:12px;color:var(--fg-muted);line-height:1.8}
+  .report-meta strong{color:var(--fg);font-weight:500}
+  .nav-strip{display:flex;gap:10px;margin-bottom:36px}
+  .nav-link{display:inline-block;padding:7px 14px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border);color:var(--fg-muted);text-decoration:none;border-radius:3px}
+  .nav-link:hover{border-color:var(--gold);color:var(--gold)}
+  .nav-link.active{border-color:var(--gold-border);color:var(--gold);background:var(--gold-muted)}
+  .section{margin-bottom:48px}
+  .section-header{display:flex;align-items:baseline;gap:12px;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid var(--border-subtle)}
+  .section-num{font-size:10px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;min-width:24px}
+  .section-title{font-size:15px;color:var(--fg);font-weight:500;letter-spacing:.02em}
+  .body-text{font-size:13.5px;color:var(--fg);line-height:1.75;margin-bottom:16px}
+  .body-text:last-child{margin-bottom:0}
+  .score-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+  .score-cell{background:var(--surface);border:1px solid var(--border);padding:14px 16px;border-radius:3px}
+  .score-cell-label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:6px}
+  .score-cell-value{font-size:18px;color:var(--gold);font-weight:300}
+  .score-cell-sub{font-size:11px;color:var(--fg-muted);margin-top:3px}
+  .signal-table{width:100%;border-collapse:collapse;margin:20px 0;font-size:12.5px}
+  .signal-table th{text-align:left;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);border-bottom:1px solid var(--border);padding:8px 10px;font-weight:400}
+  .signal-table td{padding:10px 10px;border-bottom:1px solid var(--border-subtle);vertical-align:top;color:var(--fg)}
+  .signal-table tr:last-child td{border-bottom:none}
+  .conf-badge{display:inline-block;padding:2px 7px;border-radius:2px;font-size:10px;letter-spacing:.06em}
+  .conf-strong{background:rgba(76,175,110,.12);color:#4caf6e}
+  .conf-moderate{background:rgba(200,155,60,.12);color:#c89b3c}
+  .conf-weak{background:rgba(136,136,136,.12);color:#888}
+  .grounding-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+  .grounding-cell{background:var(--surface);border:1px solid var(--border);padding:14px 16px;border-radius:3px;display:flex;align-items:center;gap:12px}
+  .grounding-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+  .dot-grounded{background:#4caf6e}
+  .dot-weak{background:var(--amber)}
+  .grounding-cell-text{font-size:12.5px;color:var(--fg)}
+  .grounding-cell-count{font-size:11px;color:var(--fg-muted);margin-top:2px}
+  .focus-block{background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--amber);padding:20px 22px;margin:20px 0;border-radius:3px}
+  .focus-block-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin-bottom:8px}
+  .focus-block-name{font-size:17px;color:var(--fg);margin-bottom:4px}
+  .focus-block-sub{font-size:12px;color:var(--fg-muted);margin-bottom:16px}
+  .focus-stats{display:flex;gap:24px;padding-top:14px;border-top:1px solid var(--border-subtle);margin-top:14px}
+  .focus-stat-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:4px}
+  .focus-stat-value{font-size:14px;color:var(--fg)}
+  .boundary-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+  .boundary-block{background:var(--surface);border:1px solid var(--border);padding:16px 18px;border-radius:3px}
+  .boundary-block.known{border-top:2px solid var(--green)}
+  .boundary-block.unknown{border-top:2px solid var(--amber)}
+  .boundary-block-label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+  .boundary-block.known .boundary-block-label{color:var(--green)}
+  .boundary-block.unknown .boundary-block-label{color:var(--amber)}
+  .boundary-list{list-style:none;padding:0}
+  .boundary-list li{font-size:12.5px;color:var(--fg);padding:5px 0;border-bottom:1px solid var(--border-subtle);display:flex;align-items:flex-start;gap:8px}
+  .boundary-list li:last-child{border-bottom:none}
+  .boundary-list li::before{content:'—';color:var(--fg-dim);flex-shrink:0;margin-top:1px}
+  .boundary-note{margin-top:14px;padding:10px 14px;background:var(--amber-muted);border:1px solid var(--amber-border);border-radius:3px;font-size:12px;color:var(--fg-muted);line-height:1.6}
+  .resolution-block{background:var(--surface-raised);border:1px solid var(--border);border-left:3px solid var(--fg-dim);padding:20px 22px;margin:20px 0;border-radius:3px}
+  .resolution-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:10px}
+  .resolution-text{font-size:13px;color:var(--fg-muted);line-height:1.7}
+  .resolution-text+.resolution-text{margin-top:10px}
+  .posture-row{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center;background:var(--surface);border:1px solid var(--border);padding:18px 20px;margin:20px 0;border-radius:3px}
+  .posture-badge{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold-border);padding:8px 16px;border-radius:3px;background:var(--gold-muted);white-space:nowrap}
+  .posture-text{font-size:13px;color:var(--fg-muted);line-height:1.65}
+  .report-footer{display:flex;justify-content:space-between;align-items:flex-end;padding-top:24px;border-top:1px solid var(--border);margin-top:48px}
+  .footer-brand{font-size:13px;color:var(--gold);letter-spacing:.08em}
+  .footer-note{font-size:11px;color:var(--fg-muted);text-align:right;line-height:1.7}
+  @media(max-width:600px){.score-row{grid-template-columns:1fr 1fr}.grounding-row{grid-template-columns:1fr}.boundary-grid{grid-template-columns:1fr}.posture-row{grid-template-columns:1fr}.report-header{flex-direction:column;gap:12px}.report-meta{text-align:left}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="report-header">
+    <div>
+      <div class="report-brand">Signäl Program Intelligence</div>
+      <div class="report-title">LENS Assessment — Narrative Brief</div>
+      <div class="report-type">Tier-1 Interpretation Layer</div>
+    </div>
+    <div class="report-meta">
+      <div>Client: <strong>OSS FastAPI Codebase</strong></div>
+      <div>Issued: <strong>April 2026</strong></div>
+    </div>
+  </div>
+
+  <div class="nav-strip">
+    <span class="nav-link active">Executive Brief</span>
+    <a href="/api/report-file?name=lens_tier1_evidence_brief.html" class="nav-link">LENS Assessment</a>
+    <a href="/api/report-file?name=lens_tier2_diagnostic_narrative.html" class="nav-link">Diagnostic</a>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">01</span><span class="section-title">Executive Context</span></div>
+    <p class="body-text">A LENS Assessment is a bounded structural analysis of a delivery environment. It derives its outputs
+      exclusively from execution evidence — source artifacts, structural telemetry, and system configuration
+      observable within the assessment scope. It does not produce recommendations, prognosis, or remediation content.</p>
+    <p class="body-text">This Narrative Brief provides a governed interpretation of the Tier-1 Evidence Brief for the OSS FastAPI Codebase.
+      All statements in this document are traceable to the underlying execution evidence. No claim is made beyond what the evidence supports.</p>
+    <p class="body-text">The Evidence Brief is the authoritative product surface. This document provides context for reading
+      and acting on the evidence it contains.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">02</span><span class="section-title">Structural State Overview</span></div>
+    <div class="score-row">
+      <div class="score-cell">
+        <div class="score-cell-label">Assessment Score</div>
+        <div class="score-cell-value">60</div>
+        <div class="score-cell-sub">CONDITIONAL</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-cell-label">Confidence Band</div>
+        <div class="score-cell-value">60 – 100</div>
+        <div class="score-cell-sub">Unresolved</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-cell-label">Decision Guidance</div>
+        <div class="score-cell-value" style="font-size:14px;letter-spacing:.05em">INVESTIGATE</div>
+        <div class="score-cell-sub">Before committing</div>
+      </div>
+    </div>
+    <p class="body-text">The score of 60 reflects a complete structural proof — full coverage and reconstruction confirmed —
+      but an unevaluated execution layer. The score is derived deterministically from evidence; it is not
+      an assessment of quality or performance. The upper band of 100 represents the achievable state
+      if execution evidence is produced.</p>
+    <p class="body-text">The CONDITIONAL band means variance has not been resolved. The current score is a confirmed floor,
+      not a final number. Any commitment that depends on the execution layer operating within expected
+      parameters carries structural risk that this assessment does not resolve.</p>
+    <p class="body-text" style="font-size:12.5px;color:var(--fg-muted)">
+      Structural composition: 5 domains &nbsp;·&nbsp; 30 capabilities &nbsp;·&nbsp; 10 components &nbsp;·&nbsp; 45 total nodes
+    </p>
+    <div class="grounding-row">
+      <div class="grounding-cell">
+        <div class="grounding-dot dot-grounded"></div>
+        <div><div class="grounding-cell-text">Grounded</div><div class="grounding-cell-count">5 of 5 domains — evidence-backed</div></div>
+      </div>
+      <div class="grounding-cell">
+        <div class="grounding-dot dot-weak"></div>
+        <div><div class="grounding-cell-text">Weakly Grounded</div><div class="grounding-cell-count">0 of 5 domains — partial evidence</div></div>
+      </div>
+    </div>
+    <table class="signal-table">
+      <thead><tr><th style="width:40%">Signal</th><th style="width:30%">Computed Value</th><th style="width:30%">Confidence</th></tr></thead>
+      <tbody>
+        <tr><td>Fan-in structural concentration (PSIG-001)</td><td>9.43 — RUN_RELATIVE_OUTLIER</td><td><span class="conf-badge conf-strong">Strong</span></td></tr>
+        <tr><td>Fan-out structural concentration (PSIG-002)</td><td>9.43 — RUN_RELATIVE_OUTLIER</td><td><span class="conf-badge conf-strong">Strong</span></td></tr>
+        <tr><td>Responsibility concentration (PSIG-004)</td><td>4.33 — RUN_RELATIVE_OUTLIER</td><td><span class="conf-badge conf-strong">Strong</span></td></tr>
+        <tr><td>Structural blind spot coverage (PSIG-006)</td><td>0.2 — THEORETICAL_BASELINE</td><td><span class="conf-badge conf-weak">Theoretical baseline</span></td></tr>
+        <tr><td>Dependency load ratio</td><td>0.044 — 2 of 45 edges overlap</td><td><span class="conf-badge conf-moderate">Moderate</span></td></tr>
+        <tr><td>Structural density — edge-to-node</td><td>1.378&nbsp;·&nbsp;Containment: 1.333</td><td><span class="conf-badge conf-moderate">Moderate</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">03</span><span class="section-title">Pressure Zones</span></div>
+    <div class="focus-block">
+      <div class="focus-block-label">PZ-001 — backend_isolated · secondary</div>
+      <div class="focus-block-name">COMPOUND_ZONE · 3 conditions co-present</div>
+      <div class="focus-block-sub">PSIG-001 · PSIG-002 · PSIG-004</div>
+      <p class="body-text" style="font-size:13px">
+        PZ-001 (backend_isolated) carries secondary attribution for all three co-present conditions (PSIG-001 · PSIG-002 · PSIG-004). 3 simultaneous conditions satisfy the COMPOUND_ZONE threshold. Zone class: COMPOUND_ZONE.</p>
+    </div>
+    <div class="focus-block">
+      <div class="focus-block-label">PZ-002 — frontend_isolated · PRIMARY</div>
+      <div class="focus-block-name">COMPOUND_ZONE · 3 conditions co-present</div>
+      <div class="focus-block-sub">PSIG-001 · PSIG-002 · PSIG-004</div>
+      <p class="body-text" style="font-size:13px">
+        PZ-002 (frontend_isolated) carries primary attribution for all three co-present conditions (PSIG-001 · PSIG-002 · PSIG-004). 3 simultaneous conditions satisfy the COMPOUND_ZONE threshold. Zone class: COMPOUND_ZONE.</p>
+    </div>
+    <div class="focus-block">
+      <div class="focus-block-label">PZ-003 — platform_monorepo · secondary</div>
+      <div class="focus-block-name">COMPOUND_ZONE · 3 conditions co-present</div>
+      <div class="focus-block-sub">PSIG-001 · PSIG-002 · PSIG-004</div>
+      <p class="body-text" style="font-size:13px">
+        PZ-003 (platform_monorepo) carries secondary attribution for all three co-present conditions (PSIG-001 · PSIG-002 · PSIG-004). 3 simultaneous conditions satisfy the COMPOUND_ZONE threshold. Zone class: COMPOUND_ZONE.</p>
+    </div>
+    <p class="body-text" style="font-size:12.5px;color:var(--fg-muted)">Structural blind spot: PSIG-006 covers 9 entities outside zone scope (THEORETICAL_BASELINE — coverage gap, not pressure candidate).</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">04</span><span class="section-title">Known vs Unknown Boundary</span></div>
+    <div class="boundary-grid">
+      <div class="boundary-block known">
+        <div class="boundary-block-label">Confirmed</div>
+        <ul class="boundary-list">
+          <li>Full structural topology — 5 domains, 30 capabilities, 10 components</li>
+          <li>Grounding classification for every domain</li>
+          <li>4 active structural signals with computed values</li>
+          <li>Dependency load, structural density, and containment density ratios</li>
+          <li>Pressure zone classification across all detected zones</li>
+          <li>Structural blind spot scope — 9 entities (PSIG-006, THEORETICAL_BASELINE)</li>
+        </ul>
+      </div>
+      <div class="boundary-block unknown">
+        <div class="boundary-block-label">Outside Evidence Scope</div>
+        <ul class="boundary-list">
+          <li>Runtime execution behavior (execution layer not evaluated)</li>
+          <li>Node depth concentration signal — not activated in this run</li>
+          <li>Scope coupling signal — not activated in this run</li>
+          <li>Structural blind spot entity behavior (THEORETICAL_BASELINE — coverage gap, not execution-derived)</li>
+          <li>Memory and resource utilization under load</li>
+          <li>Live service interaction and latency profiles</li>
+        </ul>
+      </div>
+    </div>
+    <div class="boundary-note">
+      These 6 dimensions are confirmed unknowns — not assumed healthy states. The codebase may operate normally in all 6 dimensions, or it may not. The current evidence scope does not resolve this. Any decision that depends on these dimensions operating within expected parameters currently lacks an evidence base.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">05</span><span class="section-title">Next Proposed Actions</span></div>
+    <div class="resolution-block">
+      <div class="resolution-label">Outside Tier-1 Scope</div>
+      <p class="resolution-text">This assessment establishes what is structurally confirmed, what falls outside the evidence boundary,
+        and what the structure of that gap looks like.</p>
+      <p class="resolution-text">What happens next — whether to investigate further, which structural unknowns to prioritize, what
+        diagnostic scope is required — is a separate matter. It is not produced by this assessment, and no
+        direction is implied by what is or is not confirmed here.</p>
+      <p class="resolution-text">Any proposed action layer requires a separate scope and is issued independently of this Tier-1 artifact.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">06</span><span class="section-title">Decision Posture</span></div>
+    <div class="posture-row">
+      <div class="posture-badge">INVESTIGATE</div>
+      <div class="posture-text">The INVESTIGATE posture reflects evidence incompleteness, not structural instability. Structural metrics are below risk thresholds. The execution layer has not been evaluated in this run. A commitment made at this state carries evidence gaps, not confirmed structural risk.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:16px 0;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);padding:16px 20px;border-radius:3px">
+      <div><div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:4px">Structural Risk</div><div style="font-size:14px;color:var(--green)">LOW</div></div>
+      <div><div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:4px">Evidence Completeness</div><div style="font-size:14px;color:var(--amber)">PARTIAL</div></div>
+      <div><div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:4px">Decision</div><div style="font-size:14px;color:var(--gold)">INVESTIGATE</div></div>
+    </div>
+    <p class="body-text">The assessment does not specify what action to take. It establishes the structural state from which any decision must be made. Structural risk is LOW — the codebase topology does not present elevated dependency or density risk. The INVESTIGATE designation is driven by evidence gaps: execution layer not evaluated, blind spot coverage active, and signals not activated in this run. Resolving these gaps moves evidence completeness from PARTIAL to HIGH.</p>
+  </div>
+
+  <div class="report-footer">
+    <div>
+      <div class="footer-brand">Signäl</div>
+      <div style="margin-top:4px;font-size:11px;color:var(--fg-muted)">Program Intelligence — LENS Assessment</div>
+    </div>
+    <div class="footer-note">
+      SAMPLE — All structural values are derived from verified execution evidence.<br>
+      All structural values are derived from verified execution evidence.
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
