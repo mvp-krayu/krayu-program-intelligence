@@ -3725,6 +3725,60 @@ def _derive_tier2_zones(topology: Dict, signals: Dict) -> List[Dict]:
     return zones
 
 
+def _derive_tier2_zones_from_projection(
+    pz_proj: Dict, psig_proj: Optional[Dict], topology: Dict
+) -> List[Dict]:
+    """Build tier-2 zones from pressure_zone_projection for PSIG clients.
+
+    Returns zone dicts with projection-native fields compatible with
+    _build_t2_psig_zone_block() (zone_class, conditions, condition_signals,
+    attribution_profile, embedded_pair_rules). BlueEdge path unaffected.
+    """
+    zone_projection = pz_proj.get("zone_projection", [])
+    domains_by_id   = {d["domain_id"]: d for d in topology.get("domains", [])}
+
+    cond_by_id: Dict = {}
+    if psig_proj:
+        for c in psig_proj.get("active_conditions_in_scope", []):
+            cond_by_id[c["condition_id"]] = c
+
+    zones = []
+    for pz in zone_projection:
+        anchor_id    = pz.get("anchor_id", "")
+        anchor_name  = pz.get("anchor_name", anchor_id)
+        domain       = domains_by_id.get(anchor_id, {
+            "domain_id":      anchor_id,
+            "domain_name":    anchor_name,
+            "capability_ids": [],
+        })
+        conditions       = pz.get("conditions", [])
+        condition_signals = [cond_by_id[c] for c in conditions if c in cond_by_id]
+        attr             = pz.get("attribution_profile", "secondary")
+        zone_class       = pz.get("zone_class", "COMPOUND_ZONE")
+        severity         = "HIGH"     if attr == "primary"    else "MODERATE"
+        confidence       = "STRONG"   if condition_signals    else "PARTIAL"
+        traceability     = "FULLY_TRACEABLE" if condition_signals else "PARTIALLY_TRACEABLE"
+        zones.append({
+            "zone_id":             pz.get("zone_id", ""),
+            "domain_id":           anchor_id,
+            "domain_name":         domain.get("domain_name", anchor_name),
+            "domain":              domain,
+            "domain_sigs":         [],
+            "zone_type":           "pressure_concentration",
+            "severity":            severity,
+            "confidence":          confidence,
+            "traceability":        traceability,
+            "zone_class":          zone_class,
+            "conditions":          conditions,
+            "condition_signals":   condition_signals,
+            "attribution_profile": attr,
+            "embedded_pair_rules": pz.get("embedded_pair_rules", []),
+            "member_entity_ids":   pz.get("member_entity_ids", []),
+            "psig_signals":        pz.get("signals", []),
+        })
+    return zones
+
+
 def _t2_type_css(zone_type: str) -> str:
     return {
         "pressure_concentration": "t2-type-pressure",
@@ -4085,6 +4139,281 @@ def _build_t2_zone_block(zone: Dict, publish_safe: bool, interpretation_payload:
   </details>"""
 
 
+def _build_t2_psig_zone_block(zone: Dict, publish_safe: bool,
+                               interpretation_payload: Optional[Dict] = None) -> str:
+    """Render a Tier-2 zone detail block for PSIG clients using projection data.
+
+    Replaces _build_t2_zone_block() for zones derived from
+    _derive_tier2_zones_from_projection(). BlueEdge path unaffected.
+    """
+    zone_id    = zone["zone_id"]
+    did        = zone["domain_id"]
+    dname      = zone["domain_name"]
+    domain     = zone["domain"]
+    zt         = zone["zone_type"]
+    sev        = zone["severity"]
+    conf       = zone["confidence"]
+    trace_st   = zone["traceability"]
+    zone_class = zone.get("zone_class", "COMPOUND_ZONE")
+    conditions = zone.get("conditions", [])
+    cond_sigs  = zone.get("condition_signals", [])
+    attr       = zone.get("attribution_profile", "secondary")
+    pair_rules = zone.get("embedded_pair_rules", [])
+    members    = zone.get("member_entity_ids", [])
+    psig_ids   = zone.get("psig_signals", [])
+    caps       = domain.get("capability_ids", [])
+
+    display_name = esc(_t2_obfuscate(dname) if publish_safe else dname)
+
+    # ── Section A: Condition Description ──────────────────────────────────
+    cond_chips = "".join(f'<span class="t2-chip">{esc(c)}</span>' for c in conditions)
+    psig_chips = "".join(f'<span class="t2-chip">{esc(s)}</span>' for s in psig_ids)
+    raw_cond = (
+        f"{dname} domain is a {zone_class.replace('_', ' ')} with "
+        f"{len(conditions)} active condition{'s' if len(conditions) != 1 else ''}. "
+        f"Attribution profile: {attr}. "
+        "All conditions are active at zone scope."
+    )
+    cond_text = esc(_t2_obfuscate(raw_cond) if publish_safe else raw_cond)
+    section_a = f"""
+    <div class="t2-sub-section" id="zone-{zone_id}-block-a">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">A</span>
+        <span class="t2-sub-title">Condition Description</span>
+      </div>
+      <p class="t2-body">{cond_text}</p>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:4px">Active conditions:</div>
+      <div class="t2-chip-row">{cond_chips}</div>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:4px">Source signals:</div>
+      <div class="t2-chip-row">{psig_chips}</div>
+      <div class="t2-chip-row">
+        <span class="t2-chip" style="color:var(--fg-dim)">zone_class: {esc(zone_class)}</span>
+        <span class="t2-chip" style="color:var(--fg-dim)">attribution: {esc(attr)}</span>
+        <span class="t2-chip" style="color:var(--fg-dim)">source: pressure_zone_projection.json</span>
+      </div>
+    </div>"""
+
+    # ── Section B: Structural Drivers ─────────────────────────────────────
+    member_chips = "".join(f'<span class="t2-chip">{esc(m)}</span>' for m in members)
+    sig_chips    = "".join(f'<span class="t2-chip">{esc(s)}</span>' for s in psig_ids)
+    rule_chips   = "".join(
+        f'<span class="t2-chip">{esc(r.replace("_", " "))}</span>' for r in pair_rules
+    )
+    dep_type = "COMPOUND" if len(psig_ids) > 1 else "LINEAR"
+    dep_desc = (
+        f"Zone exhibits {len(pair_rules)} structural rule intersection(s): "
+        + (", ".join(r.replace("_", " ") for r in pair_rules) + ". " if pair_rules else "")
+        + "All conditions share domain attribution scope across zone membership."
+    )
+    dep_desc_safe = esc(_t2_obfuscate(dep_desc) if publish_safe else dep_desc)
+    section_b = f"""
+    <div class="t2-sub-section" id="zone-{zone_id}-block-b">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">B</span>
+        <span class="t2-sub-title">Structural Drivers</span>
+      </div>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted)">Member entities:</div>
+      <div class="t2-chip-row">{member_chips}</div>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:8px">Contributing signals:</div>
+      <div class="t2-chip-row">{sig_chips}</div>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:8px">Embedded pair rules:</div>
+      <div class="t2-chip-row">{rule_chips}</div>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:8px">
+        Dependency structure: <span style="color:var(--fg)">{dep_type}</span>
+      </div>
+      <p class="t2-body" style="margin-top:6px">{dep_desc_safe}</p>
+    </div>"""
+
+    # ── Section C: Propagation Path ────────────────────────────────────────
+    if pair_rules:
+        paths_html = "".join(f"""
+      <div class="t2-path-block">
+        <div class="t2-path-chain">{did} — {esc(r.replace("_", " "))}</div>
+        <div class="t2-path-meta">
+          <span>rule: {esc(r)}</span>
+          <span>type: STRUCTURAL</span>
+          <span>evidence: STRONG</span>
+        </div>
+      </div>""" for r in pair_rules)
+    else:
+        paths_html = f"""
+      <div class="t2-path-block t2-inferred">
+        <div class="t2-path-chain">{did}</div>
+        <div class="t2-path-meta">
+          <span>path_id: {zone_id}-P1</span>
+          <span>type: UNKNOWN</span>
+          <span>evidence: PARTIAL</span>
+        </div>
+      </div>"""
+    section_c = f"""
+    <div class="t2-sub-section" id="zone-{zone_id}-block-c">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">C</span>
+        <span class="t2-sub-title">Propagation Path</span>
+      </div>
+      {paths_html}
+    </div>"""
+
+    # ── Section D: Evidence State ──────────────────────────────────────────
+    ev_strength = "STRONG" if cond_sigs else "PARTIAL"
+    if cond_sigs and not publish_safe:
+        cond_items = "".join(
+            f'<li class="t2-avail-item">'
+            f'{esc(c["condition_id"])} · {esc(c["signal_id"])} · '
+            f'value: {c.get("signal_value", "—")} · '
+            f'state: {esc(c.get("activation_state", "—"))} · '
+            f'method: {esc(c.get("activation_method", "—"))}'
+            f'</li>'
+            for c in cond_sigs
+        )
+        avail_html = f'<ul class="t2-avail-list">{cond_items}</ul>'
+    elif cond_sigs and publish_safe:
+        avail_html = (
+            f'<p class="t2-body" style="font-size:11px;color:var(--fg-muted)">'
+            f'{len(cond_sigs)} condition(s) active at zone scope.</p>'
+        )
+    else:
+        avail_html = '<p class="t2-body" style="color:var(--fg-dim)">No condition evidence available.</p>'
+    missing_html = """
+        <ul class="t2-missing-list">
+          <li class="t2-missing-item">
+            <span class="t2-missing-desc">Execution-layer validation</span>
+            <span class="t2-missing-impact">Runtime behavior and live operational dimensions are outside the current evidence scope.</span>
+          </li>
+        </ul>"""
+    ev_css = _t2_ev_css(ev_strength)
+    section_d = f"""
+    <div class="t2-sub-section" id="zone-{zone_id}-block-d">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">D</span>
+        <span class="t2-sub-title">Evidence State</span>
+      </div>
+      <div class="t2-evidence-row">
+        <span class="t2-ev-label">Evidence strength:</span>
+        <span class="{ev_css}">{ev_strength}</span>
+      </div>
+      {avail_html}
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:12px">Missing evidence:</div>
+      {missing_html}
+    </div>"""
+
+    # ── Section E: Uncertainty Declaration ────────────────────────────────
+    unresolved_items = f"""<li class="t2-unresolved-item">
+          <div class="t2-unresolved-element">Execution-layer behavioral state</div>
+          <div class="t2-unresolved-reason">Structural conditions are confirmed from static evidence. Runtime execution dimensions cannot be resolved from static analysis alone.</div>
+        </li>"""
+    section_e = f"""
+    <div class="t2-sub-section" id="zone-{zone_id}-block-e">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">E</span>
+        <span class="t2-sub-title">Uncertainty Declaration</span>
+      </div>
+      <div class="t2-uncertainty-block">
+        <div class="t2-inference-active">
+          <span class="t2-inference-tag">inference_prohibition</span>
+          <span class="t2-inference-value">ACTIVE</span>
+        </div>
+        <ul class="t2-unresolved-list">{unresolved_items}</ul>
+      </div>
+    </div>"""
+
+    # ── Section F: Investigation Entry Points ──────────────────────────────
+    why_surface = esc(f"Why does {_t2_obfuscate(dname) if publish_safe else dname} exhibit {zt.replace('_', ' ')}?")
+    section_f = f"""
+    <div class="t2-sub-section" id="zone-{zone_id}-block-f">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">F</span>
+        <span class="t2-sub-title">Investigation Entry Points</span>
+      </div>
+      <div class="t2-hook-grid">
+        <div class="t2-hook-block" id="zone-{zone_id}-why">
+          <div class="t2-hook-type">WHY</div>
+          <div class="t2-hook-id">{zone_id}-WHY</div>
+          <div class="t2-hook-surface">{why_surface}</div>
+        </div>
+        <div class="t2-hook-block" id="zone-{zone_id}-trace">
+          <div class="t2-hook-type">TRACE</div>
+          <div class="t2-hook-id">{zone_id}-TRACE</div>
+          <div class="t2-hook-surface">entry: {did} · direction: DOWNSTREAM · depth: 2</div>
+        </div>
+        <div class="t2-hook-block" id="zone-{zone_id}-ev">
+          <div class="t2-hook-type">EVIDENCE</div>
+          <div class="t2-hook-id">{zone_id}-EV</div>
+          <div class="t2-hook-surface">scope: BOUNDED · conditions: {len(conditions)} · source: projection</div>
+        </div>
+      </div>
+    </div>"""
+
+    # ── Section G: Structural Interpretation (from interpretation_exposure) ─
+    section_g = ""
+    if interpretation_payload:
+        rp        = interpretation_payload.get("render_payload", interpretation_payload)
+        ref_id    = interpretation_payload.get("interpretation_ref_id")
+        biz_text  = rp.get("business_expression", "")
+        override  = _EXEC_LINE_OVERRIDES.get(ref_id) if ref_id else None
+        exec_line = override if override is not None else _derive_executive_line(biz_text)
+        biz_safe  = esc(_t2_obfuscate(biz_text)  if publish_safe else biz_text)
+        exec_safe = esc(_t2_obfuscate(exec_line) if publish_safe else exec_line)
+        section_g = f"""
+    <div class="t2-sub-section" id="zone-{zone_id}-block-g">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">G</span>
+        <span class="t2-sub-title">Structural Interpretation</span>
+      </div>
+      <p style="font-size:14px;color:#c8c8d4;font-weight:500;line-height:1.4;padding:10px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid #5a5a80;border-radius:2px;margin:0 0 8px 0">{exec_safe}</p>
+      <div class="t2-chip-row" style="margin-bottom:8px">
+        <span class="t2-chip" style="color:var(--fg-dim)">executive interpretation</span>
+      </div>
+      <p class="t2-body" style="font-size:12px;color:#9a9aaa;line-height:1.65;border-left:2px solid #3a3a5a;padding-left:12px;margin:0">{biz_safe}</p>
+      <div class="t2-chip-row" style="margin-top:6px">
+        <span class="t2-chip" style="color:var(--fg-dim)">source: interpretation_exposure.json · render_target: lens_report · field: business_expression</span>
+      </div>
+    </div>"""
+
+    type_css  = _t2_type_css(zt)
+    sev_css   = _t2_sev_css(sev)
+    conf_css  = _t2_conf_css(conf)
+    cap_count    = len(caps)
+    scope_label  = f"{cap_count} capability node{'s' if cap_count != 1 else ''}" if cap_count else "no capability nodes"
+    preview_raw  = raw_cond[:130] + ("…" if len(raw_cond) > 130 else "")
+    preview_text = esc(_t2_obfuscate(preview_raw) if publish_safe else preview_raw)
+    zt_label     = zt.replace("_", " ")
+    trace_label  = trace_st.replace("_", " ")
+
+    return f"""
+  <details class="t2-zone-details" id="zone-{zone_id}-details">
+    <summary class="t2-zone-summary">
+      <div class="t2-summary-top">
+        <span class="t2-summary-zone-id">{zone_id}</span>
+        <span class="t2-summary-domain">{display_name}</span>
+      </div>
+      <div class="t2-summary-badges">
+        <span class="t2-badge {type_css}">{zt_label}</span>
+        <span class="t2-badge" style="background:var(--surface-raised);color:var(--fg-dim);border:1px solid var(--border-subtle)">{scope_label}</span>
+        <span class="t2-badge {sev_css}">{sev}</span>
+        <span class="t2-badge {conf_css}">{conf}</span>
+        <span class="t2-badge" style="background:var(--surface-raised);color:var(--fg-dim);border:1px solid var(--border-subtle)">{trace_label}</span>
+      </div>
+      <div class="t2-summary-preview">{preview_text}</div>
+    </summary>
+    <div class="t2-zone-block" id="zone-{zone_id}-block">
+      <div class="t2-zone-block-header">
+        <div>
+          <div class="t2-zone-block-id">{zone_id} · {zt.replace("_", " ").upper()}</div>
+          <div class="t2-zone-block-domain">{display_name}</div>
+        </div>
+        <a href="#zone-{zone_id}" class="t2-zone-block-back">↑ Zone inventory</a>
+      </div>
+      {section_a}
+      {section_b}
+      {section_c}
+      {section_d}
+      {section_e}
+      {section_f}{section_g}
+    </div>
+  </details>"""
+
+
 # ---------------------------------------------------------------------------
 # Tier-2 overview graph — positions sourced from workspace runtime (d3-force-3d)
 # ---------------------------------------------------------------------------
@@ -4289,7 +4618,9 @@ def _build_topology_svg(zones: List[Dict], width: int = 880, height: int = 270) 
 
 def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict,
                                        publish_safe: bool = False,
-                                       graph_state: Optional[Dict] = None) -> str:
+                                       graph_state: Optional[Dict] = None,
+                                       pz_proj: Optional[Dict] = None,
+                                       psig_proj: Optional[Dict] = None) -> str:
     domains      = topology["domains"]
     counts       = topology["counts"]
     score        = gauge["score"]["canonical"]
@@ -4308,7 +4639,11 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
                     if publish_safe else
                     f"SAMPLE — {client_name}.")
 
-    zones = _derive_tier2_zones(topology, signals)
+    # Zone derivation: projection path for PSIG clients, topology path for BlueEdge
+    if _use_psig and pz_proj is not None:
+        zones = _derive_tier2_zones_from_projection(pz_proj, psig_proj, topology)
+    else:
+        zones = _derive_tier2_zones(topology, signals)
 
     total_zones   = len(zones)
     grounded_ct   = sum(1 for d in domains if d["grounding"] == "GROUNDED")
@@ -4333,12 +4668,16 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
         pd[z["zone_type"]] += 1
 
     has_contradiction = any(z["zone_type"] == "signal_conflict" for z in zones)
-    all_sigs = signals["signals"]
-    sig_count = sum(1 for z in zones if z["domain_sigs"])
+    # sig_count: PSIG path uses condition_signals; BlueEdge path uses domain_sigs
+    if _use_psig and pz_proj is not None:
+        sig_count = sum(1 for z in zones if z.get("condition_signals"))
+    else:
+        sig_count = sum(1 for z in zones if z["domain_sigs"])
     evidence_summary = (
         f"{sig_count} of {total_zones} diagnostic zone(s) have bound signal coverage. "
         f"{total_zones - sig_count} zone(s) have no signal coverage and cannot be structurally characterized."
     )
+    zones_source_label = "identified from projection" if (_use_psig and pz_proj is not None) else "identified from canonical data"
 
     # Zone inventory cards
     zone_cards_html = ""
@@ -4362,12 +4701,18 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
         </div>
       </a>"""
 
-    # Per-zone blocks — attach business_expression from interpretation exposure if available
+    # Per-zone blocks — PSIG path uses projection-aware builder
     interp_by_class = _load_psee_interpretation_by_zone_class()
-    zone_blocks_html = "".join(
-        _build_t2_zone_block(z, publish_safe, interp_by_class.get(z.get("zone_class")))
-        for z in zones
-    )
+    if _use_psig and pz_proj is not None:
+        zone_blocks_html = "".join(
+            _build_t2_psig_zone_block(z, publish_safe, interp_by_class.get(z.get("zone_class")))
+            for z in zones
+        )
+    else:
+        zone_blocks_html = "".join(
+            _build_t2_zone_block(z, publish_safe, interp_by_class.get(z.get("zone_class")))
+            for z in zones
+        )
 
     # Structural evidence topology graph (section 01A) — renders from graph_state only
     topology_svg = _build_overview_graph_html(graph_state)
@@ -4437,7 +4782,7 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
       <div class="t2-overview-cell">
         <div class="t2-cell-label">Diagnostic Zones</div>
         <div class="t2-cell-value">{total_zones}</div>
-        <div class="t2-cell-sub">identified from canonical data</div>
+        <div class="t2-cell-sub">{zones_source_label}</div>
       </div>
       <div class="t2-overview-cell">
         <div class="t2-cell-label">Signal Contradiction</div>
@@ -4533,9 +4878,11 @@ def generate_tier2_reports(output_dir: Optional[Path] = None) -> List[Path]:
     if not CANONICAL_PKG_DIR.exists():
         _fail(f"Canonical package directory not found: {CANONICAL_PKG_DIR}")
 
-    topology = load_canonical_topology()
-    signals  = load_signal_registry()
-    gauge    = load_gauge_state()
+    topology  = load_canonical_topology()
+    signals   = load_signal_registry()
+    gauge     = load_gauge_state()
+    psig_proj = _load_psig_projection()
+    pz_proj   = _load_pressure_zone_projection()
 
     # Export graph positions from workspace runtime (d3-force-3d via Node.js).
     # export_graph_state.js is the sole source of x/y — no Python layout math.
@@ -4564,7 +4911,9 @@ def generate_tier2_reports(output_dir: Optional[Path] = None) -> List[Path]:
     for out_path, pub_safe in artifacts:
         html = _build_tier2_diagnostic_narrative(topology, signals, gauge,
                                                   publish_safe=pub_safe,
-                                                  graph_state=graph_state)
+                                                  graph_state=graph_state,
+                                                  pz_proj=pz_proj,
+                                                  psig_proj=psig_proj)
         out_path.write_text(html, encoding="utf-8")
         print(f"[LENS REPORT] Generated: {out_path.resolve()}")
         files.append(out_path)
