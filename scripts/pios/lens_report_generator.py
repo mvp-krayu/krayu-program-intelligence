@@ -95,6 +95,147 @@ _ATTRIBUTION_EXEC: Dict = {
     "secondary": "Secondary affected zone",
 }
 
+# ---------------------------------------------------------------------------
+# Rendering Contract — PI.SECOND-CLIENT.STEP16H
+# Governs HOW content is rendered; does not alter data or truth layers.
+# ---------------------------------------------------------------------------
+
+# Section-level rendering rules (applied by RC.render_section)
+_RC_RULES: Dict = {
+    "zones":    frozenset({"exec_first", "no_repetition", "expandable"}),
+    "signals":  frozenset({"exec_first"}),
+    "unknowns": frozenset({"exec_first"}),
+    "score":    frozenset({"exec_first", "anchor_first"}),
+}
+
+# Canonical terms that must NOT appear as the first word of a rendered string
+_RC_RAW_FIRST_GUARD = (
+    "PSIG-", "COND-",
+    "RUN_RELATIVE_OUTLIER", "COMPOUND_ZONE",
+    "THEORETICAL_BASELINE", "PRIMARY", "SECONDARY",
+)
+
+
+class _RenderingContract:
+    """Rendering Contract for LENS report surfaces.
+
+    Controls display ordering, trace-label placement, and pattern collapse.
+    All inputs come from the Language Layer and projection data.
+    No synthetic values; no truth mutation.
+    """
+
+    @staticmethod
+    def apply_language(term: str) -> str:
+        """Return executive phrase for a canonical term, or term itself if no mapping."""
+        return (
+            _METHOD_EXEC.get(term)
+            or _ZONE_CLASS_EXEC.get(term)
+            or _ATTRIBUTION_EXEC.get(term.lower())
+            or term
+        )
+
+    @staticmethod
+    def render_term(term: str) -> str:
+        """Return exec-first HTML: exec phrase + trace label.
+
+        If term has no mapping, returns esc(term) with no trace label.
+        Never removes the canonical term.
+        """
+        exec_phrase = _RenderingContract.apply_language(term)
+        if exec_phrase == term:
+            return esc(term)
+        return (
+            f'{esc(exec_phrase)} '
+            f'<span class="rc-trace">trace: {esc(term)}</span>'
+        )
+
+    @staticmethod
+    def render_section(section_id: str, content: str,
+                       rules: frozenset = frozenset()) -> str:
+        """Wrap section content with rendering rules.
+
+        no_empty:   return empty string when content has no visible text.
+        exec_first: preserve content (enforcement is at build time, not post-hoc).
+        expandable: content handled by block builders; rule acknowledged here.
+        """
+        if "no_empty" in rules:
+            if not content or not content.strip():
+                return ""
+        return content
+
+    @staticmethod
+    def collapse_patterns(zones: list,
+                          pz_proj: Optional[Dict],
+                          publish_safe: bool = False) -> Optional[Dict]:
+        """Detect identical signal sets across zones.
+
+        Returns a dict with pattern metadata if all zones share the same PSIG set,
+        else None. Caller is responsible for rendering.
+
+        Dict keys: n_zones, shared_sigs, sigs_str, prim_name, zclass, zclass_exec.
+        """
+        if len(zones) < 2 or pz_proj is None:
+            return None
+        zone_list = pz_proj.get("zone_projection", [])
+        if len(zone_list) < 2:
+            return None
+        signal_sets = [frozenset(z.get("signals", [])) for z in zone_list]
+        if len(set(signal_sets)) != 1:
+            return None
+        shared_sigs   = sorted(signal_sets[0])
+        zclass        = zone_list[0].get("zone_class", "COMPOUND_ZONE")
+        prim_zone     = next((z for z in zone_list
+                              if z.get("attribution_profile") == "primary"), None)
+        prim_name_raw = (prim_zone.get("anchor_name", prim_zone.get("anchor_id", ""))
+                         if prim_zone else "")
+        if publish_safe:
+            prim_name = ""
+        else:
+            prim_name = prim_name_raw
+        return {
+            "n_zones":    len(zones),
+            "shared_sigs": shared_sigs,
+            "sigs_str":   " · ".join(shared_sigs),
+            "prim_name":  prim_name,
+            "zclass":     zclass,
+            "zclass_exec": _RenderingContract.apply_language(zclass),
+        }
+
+    @staticmethod
+    def enforce_exec_first(text: str) -> bool:
+        """Return False if text starts with a raw canonical term (guard check).
+
+        Called at key rendering points. Does not modify text; caller decides
+        whether to raise or log when this returns False.
+        """
+        stripped = text.strip()
+        return not any(stripped.startswith(p) for p in _RC_RAW_FIRST_GUARD)
+
+    @staticmethod
+    def anchor_block(score: int, band_label: str,
+                     band_lo: int, band_hi: int,
+                     decision: str = "INVESTIGATE") -> str:
+        """Return top-anchor HTML for all three report surfaces.
+
+        One-line structural state + score + decision. No commentary.
+        Implements rule: anchor_first.
+        """
+        return (
+            f'<div class="rc-anchor-block">'
+            f'<span class="rc-anchor-state">'
+            f'Structurally verified. Execution not yet validated.</span>'
+            f'<span class="rc-anchor-sep">·</span>'
+            f'<span class="rc-anchor-score">{score} — {esc(band_label)}</span>'
+            f'<span class="rc-anchor-sep">·</span>'
+            f'<span class="rc-anchor-band">{band_lo}\u2013{band_hi}</span>'
+            f'<span class="rc-anchor-sep">·</span>'
+            f'<span class="rc-anchor-decision">{esc(decision)}</span>'
+            f'</div>'
+        )
+
+
+RC = _RenderingContract
+
 
 def _default_output_path() -> Path:
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
@@ -2334,6 +2475,13 @@ _TIER1_EVIDENCE_CSS = """
   .tl-weak{background:var(--amber)}
   .tl-focus{background:var(--gold)}
   .topo-leg-note{margin-left:auto;font-size:10px;font-style:italic;color:var(--fg-muted)}
+  .rc-trace{font-size:10px;color:var(--fg-muted);opacity:.7;font-style:normal}
+  .rc-anchor-block{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid var(--green);border-radius:2px;margin-bottom:16px;font-size:12px;flex-wrap:wrap}
+  .rc-anchor-state{color:#c8c8d4;font-weight:600;letter-spacing:.02em}
+  .rc-anchor-score{color:var(--green);font-weight:600}
+  .rc-anchor-band{color:var(--fg-muted)}
+  .rc-anchor-decision{color:var(--amber);letter-spacing:.05em;text-transform:uppercase}
+  .rc-anchor-sep{color:#333}
 """
 
 
@@ -2442,8 +2590,8 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
             dom_scope = c.get("domain_attribution_scope", [])
             entity_scope = c.get("entity_level_scope", [])
 
-            _meth_exec = _METHOD_EXEC.get(method, method)
-            _zclass_exec = _ZONE_CLASS_EXEC.get("COMPOUND_ZONE", "Multiple structural pressures acting together")
+            _meth_exec   = RC.apply_language(method)
+            _zclass_exec = RC.apply_language("COMPOUND_ZONE")
             if sid == "PSIG-001":
                 title = f"Fan-In Concentration ({sid}): {state} — {_meth_exec} — Value {val}"
                 stmt = (
@@ -2635,7 +2783,7 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
             profile = z.get("attribution_profile", "secondary")
             is_prim = profile == "primary"
             badge = "PRIMARY" if is_prim else profile.upper()
-            _attr_exec = _ATTRIBUTION_EXEC.get(profile, profile)
+            _attr_exec = RC.apply_language(profile)
             sigs_in_zone = z.get("signals", [])
             sigs_str = " · ".join(sigs_in_zone)
             pz_blocks.append(
@@ -2748,6 +2896,8 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
     <span class="nav-link active">LENS Assessment</span>
     <a href="{t2_link}" class="nav-link">Diagnostic</a>
   </div>
+
+  {RC.anchor_block(score, band_label, band_lo, band_hi)}
 
   <h2>Assessment Score</h2>
   <p class="exec-state-lead">Structurally verified. Execution not yet validated.</p>
@@ -2913,6 +3063,13 @@ _TIER1_NARRATIVE_CSS = """
   .conclusion-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:12px}
   .conclusion-text{font-size:15px;color:var(--fg);font-weight:500;margin-bottom:10px}
   .conclusion-body{font-size:13px;color:var(--fg-muted);line-height:1.7;margin-bottom:8px}
+  .rc-trace{font-size:10px;color:var(--fg-dim);opacity:.7;font-style:normal}
+  .rc-anchor-block{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid var(--green);border-radius:2px;margin-bottom:16px;font-size:12px;flex-wrap:wrap}
+  .rc-anchor-state{color:#c8c8d4;font-weight:600;letter-spacing:.02em}
+  .rc-anchor-score{color:var(--green);font-weight:600}
+  .rc-anchor-band{color:var(--fg-muted)}
+  .rc-anchor-decision{color:var(--amber);letter-spacing:.05em;text-transform:uppercase}
+  .rc-anchor-sep{color:#333}
   @media(max-width:600px){.score-row{grid-template-columns:1fr 1fr}.grounding-row{grid-template-columns:1fr}.boundary-grid{grid-template-columns:1fr}.posture-row{grid-template-columns:1fr}.report-header{flex-direction:column;gap:12px}.report-meta{text-align:left}}
 """
 
@@ -2967,8 +3124,8 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
             sigs_str = " · ".join(sigs_in_zone)
             ccount = z.get("condition_count", len(sigs_in_zone))
             is_prim = profile == "primary"
-            _attr_exec  = _ATTRIBUTION_EXEC.get(profile, profile)
-            _zclass_exec = _ZONE_CLASS_EXEC.get(zclass, zclass.replace("_", " "))
+            _attr_exec   = RC.apply_language(profile)
+            _zclass_exec = RC.apply_language(zclass)
             pz_items.append(
                 f'    <div class="focus-block">\n'
                 f'      <div class="focus-block-label">{esc(zid)} — {esc(zname)}</div>\n'
@@ -2986,7 +3143,7 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
             )
         blind_count = pz_proj.get("structural_blind_spot_entity_count", 0)
         blind_sig   = pz_proj.get("structural_blind_spot_signal", "PSIG-006")
-        _bs_exec = _METHOD_EXEC.get("THEORETICAL_BASELINE", "Baseline condition without runtime validation")
+        _bs_exec = RC.apply_language("THEORETICAL_BASELINE")
         blind_note = (
             f'\n    <p class="body-text" style="font-size:12.5px;color:var(--fg-muted)">'
             f'Structural blind spot: {esc(blind_sig)} covers {blind_count} entities outside zone scope — '
@@ -3064,7 +3221,7 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
                 _cc, _cl = "conf-strong", "Strong"
             else:
                 _cc, _cl = "conf-moderate", "Moderate"
-            _exec_meth = _METHOD_EXEC.get(_meth, _meth)
+            _exec_meth = RC.apply_language(_meth)
             _trace_span = (f'<br><span style="font-size:10px;color:var(--fg-dim)">'
                            f'trace: {esc(_meth)}</span>') if _meth else ""
             _val_cell = f'{esc(str(_val))} — {esc(_exec_meth)}{_trace_span}'
@@ -3138,7 +3295,7 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
         if _blind:
             _unk_items.append(
                 f"<li>Structural blind spot entity behavior — "
-                f"{_METHOD_EXEC['THEORETICAL_BASELINE']} "
+                f"{RC.apply_language('THEORETICAL_BASELINE')} "
                 f"<span style='font-size:10px;opacity:.6'>(trace: THEORETICAL_BASELINE)</span>"
                 f" — coverage gap, not execution-derived</li>"
             )
@@ -3333,6 +3490,8 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
     <a href="{ev_link}" class="nav-link">LENS Assessment</a>
     <a href="{t2_link}" class="nav-link">Diagnostic</a>
   </div>
+
+  {RC.anchor_block(score, band_label, band_lo, band_hi)}
 
   <div class="section">
     <div class="section-header"><span class="section-num">01</span><span class="section-title">Executive Context</span></div>
@@ -3618,6 +3777,13 @@ _TIER2_DIAGNOSTIC_CSS = """
   .og-legend-item{display:inline-flex;align-items:center;gap:6px;margin-right:24px;margin-bottom:2px}
   .og-legend-dot{display:inline-block;width:7px;height:7px;border-radius:50%;flex-shrink:0}
   .og-legend-lbl{font-size:10.5px;color:#686870;letter-spacing:.02em}
+  .rc-trace{font-size:10px;color:var(--fg-dim);opacity:.7;font-style:normal}
+  .rc-anchor-block{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid var(--green);border-radius:2px;margin-bottom:16px;font-size:12px;flex-wrap:wrap}
+  .rc-anchor-state{color:#c8c8d4;font-weight:600;letter-spacing:.02em}
+  .rc-anchor-score{color:var(--green);font-weight:600}
+  .rc-anchor-band{color:var(--fg-muted)}
+  .rc-anchor-decision{color:var(--amber);letter-spacing:.05em;text-transform:uppercase}
+  .rc-anchor-sep{color:#333}
 """
 
 
@@ -4254,8 +4420,8 @@ def _build_t2_psig_zone_block(zone: Dict, publish_safe: bool,
     # ── Section A: Condition Description ──────────────────────────────────
     cond_chips = "".join(f'<span class="t2-chip">{esc(c)}</span>' for c in conditions)
     psig_chips = "".join(f'<span class="t2-chip">{esc(s)}</span>' for s in psig_ids)
-    _zclass_exec_a = _ZONE_CLASS_EXEC.get(zone_class, zone_class.replace("_", " "))
-    _attr_exec_a   = _ATTRIBUTION_EXEC.get(attr.lower(), attr)
+    _zclass_exec_a = RC.apply_language(zone_class)
+    _attr_exec_a   = RC.apply_language(attr.lower())
     raw_cond = (
         f"{dname} domain: {_zclass_exec_a} — "
         f"{len(conditions)} active condition{'s' if len(conditions) != 1 else ''} at zone scope. "
@@ -4856,15 +5022,14 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
 
         # 02: Diagnostic Pattern Summary (PSIG path only)
         if _use_psig and pz_proj is not None and total_zones > 0:
-            _pz_list = pz_proj.get("zone_projection", [])
-            _zone_names = ", ".join(z["zone_id"] for z in zones)
-            _prim_zone  = next((z for z in _pz_list if z.get("attribution_profile") == "primary"), None)
-            _prim_name  = _prim_zone.get("anchor_name", _prim_zone.get("anchor_id", "")) if _prim_zone else ""
-            _shared_sigs = _pz_list[0].get("signals", []) if _pz_list else []
-            _shared_sigs_str = " · ".join(_shared_sigs)
-            _zclass_shared = _pz_list[0].get("zone_class", "COMPOUND_ZONE") if _pz_list else "COMPOUND_ZONE"
-            _zclass_exec_s = _ZONE_CLASS_EXEC.get(_zclass_shared, _zclass_shared.replace("_", " "))
-            _exec_phrase = _METHOD_EXEC.get("RUN_RELATIVE_OUTLIER", "Statistically abnormal concentration")
+            _cp          = RC.collapse_patterns(zones, pz_proj, publish_safe)
+            _zone_names  = ", ".join(z["zone_id"] for z in zones)
+            _shared_sigs     = _cp["shared_sigs"] if _cp else []
+            _shared_sigs_str = _cp["sigs_str"]    if _cp else "—"
+            _prim_name       = _cp["prim_name"]   if _cp else ""
+            _zclass_shared   = _cp["zclass"]      if _cp else "COMPOUND_ZONE"
+            _zclass_exec_s   = _cp["zclass_exec"] if _cp else RC.apply_language("COMPOUND_ZONE")
+            _exec_phrase     = RC.apply_language("RUN_RELATIVE_OUTLIER")
             pattern_summary_html = f"""
   <div class="t2-section">
     <div class="t2-section-header">
@@ -4913,6 +5078,8 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
     <a href="{ev_link}" class="nav-link">LENS Assessment</a>
     <span class="nav-link active">Diagnostic</span>
   </div>
+
+  {RC.anchor_block(score, band_label, band_lo, band_hi)}
 
   <div class="report-header">
     <div>
