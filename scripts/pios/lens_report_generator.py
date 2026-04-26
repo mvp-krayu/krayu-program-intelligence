@@ -55,7 +55,8 @@ REPORTS_DIR  = REPO_ROOT / "clients" / "blueedge" / "reports"
 
 # Tier-1 canonical sources
 CANONICAL_PKG_DIR = REPO_ROOT / "clients" / "blueedge" / "psee" / "runs" / "run_authoritative_recomputed_01" / "package"
-TIER1_REPORTS_DIR = REPORTS_DIR / "tier1"
+TIER1_REPORTS_DIR    = REPORTS_DIR / "tier1"
+DECISION_REPORTS_DIR = REPORTS_DIR / "decision"
 
 _ACTIVE_CLIENT       = "blueedge"
 _ACTIVE_VAULT_RUN_ID = "run_01_authoritative_generated"
@@ -263,7 +264,7 @@ def _configure_runtime(
     client parameters. Has no effect on module-level defaults when imported as a module.
     """
     global LENS_CLAIMS, API_BASE, FRAGMENTS_DIR, REPORTS_DIR, CANONICAL_PKG_DIR
-    global TIER1_REPORTS_DIR, TIER2_REPORTS_DIR
+    global TIER1_REPORTS_DIR, TIER2_REPORTS_DIR, DECISION_REPORTS_DIR
     global _ACTIVE_CLIENT, _ACTIVE_VAULT_RUN_ID
 
     _ACTIVE_CLIENT = client
@@ -275,9 +276,10 @@ def _configure_runtime(
 
     API_BASE = api_base
 
-    REPORTS_DIR = REPO_ROOT / "clients" / client / "reports"
-    TIER1_REPORTS_DIR = REPORTS_DIR / "tier1"
-    TIER2_REPORTS_DIR = REPORTS_DIR / "tier2"
+    REPORTS_DIR          = REPO_ROOT / "clients" / client / "reports"
+    TIER1_REPORTS_DIR    = REPORTS_DIR / "tier1"
+    TIER2_REPORTS_DIR    = REPORTS_DIR / "tier2"
+    DECISION_REPORTS_DIR = REPORTS_DIR / "decision"
 
     if fragments_dir is not None:
         FRAGMENTS_DIR = fragments_dir
@@ -2505,6 +2507,8 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
     narr_link  = _scoped_report_url(_narr_name) if use_psig else f"/api/report-file?name={_narr_name}"
     _t2_name   = "lens_tier2_diagnostic_narrative_pub.html" if publish_safe else "lens_tier2_diagnostic_narrative.html"
     t2_link    = _scoped_report_url(_t2_name) if use_psig else f"/api/report-file?name={_t2_name}"
+    _ds_name   = "lens_decision_surface_pub.html" if publish_safe else "lens_decision_surface.html"
+    ds_link    = _scoped_report_url(_ds_name) if use_psig else f"/api/report-file?name={_ds_name}"
     footer_note = (f"SAMPLE — {client_name}."
                    if use_psig else
                    ("SAMPLE — Client data used for demonstration purposes." if publish_safe
@@ -2892,6 +2896,7 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
   </div>
 
   <div class="nav-strip">
+    <a href="{ds_link}" class="nav-link">Decision</a>
     <a href="{narr_link}" class="nav-link">Executive Brief</a>
     <span class="nav-link active">LENS Assessment</span>
     <a href="{t2_link}" class="nav-link">Diagnostic</a>
@@ -3093,6 +3098,8 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
     ev_link     = _scoped_report_url(_ev_name) if use_psig else f"/api/report-file?name={_ev_name}"
     _t2_name    = "lens_tier2_diagnostic_narrative_pub.html" if publish_safe else "lens_tier2_diagnostic_narrative.html"
     t2_link     = _scoped_report_url(_t2_name) if use_psig else f"/api/report-file?name={_t2_name}"
+    _ds_name    = "lens_decision_surface_pub.html" if publish_safe else "lens_decision_surface.html"
+    ds_link     = _scoped_report_url(_ds_name) if use_psig else f"/api/report-file?name={_ds_name}"
     title_suffix = " (Publish)" if publish_safe else ""
     footer_note = (f"SAMPLE — {client_name}."
                    if use_psig else
@@ -3486,6 +3493,7 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
   </div>
 
   <div class="nav-strip">
+    <a href="{ds_link}" class="nav-link">Decision</a>
     <span class="nav-link active">Executive Brief</span>
     <a href="{ev_link}" class="nav-link">LENS Assessment</a>
     <a href="{t2_link}" class="nav-link">Diagnostic</a>
@@ -4896,6 +4904,8 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
     _narr_name   = "lens_tier1_narrative_brief_pub.html" if publish_safe else "lens_tier1_narrative_brief.html"
     ev_link      = _scoped_report_url(_ev_name) if _use_psig else f"/api/report-file?name={_ev_name}"
     narr_link    = _scoped_report_url(_narr_name) if _use_psig else f"/api/report-file?name={_narr_name}"
+    _ds_name     = "lens_decision_surface_pub.html" if publish_safe else "lens_decision_surface.html"
+    ds_link      = _scoped_report_url(_ds_name) if _use_psig else f"/api/report-file?name={_ds_name}"
     title_suffix = " (Publish)" if publish_safe else ""
     footer_note  = ("SAMPLE — Illustrative client environment. All structural values represent actual assessment outputs."
                     if publish_safe else
@@ -5074,6 +5084,7 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
 <div class="page">
 
   <div class="nav-strip">
+    <a href="{ds_link}" class="nav-link">Decision</a>
     <a href="{narr_link}" class="nav-link">Executive Brief</a>
     <a href="{ev_link}" class="nav-link">LENS Assessment</a>
     <span class="nav-link active">Diagnostic</span>
@@ -5349,6 +5360,516 @@ def generate_tier2_reports(output_dir: Optional[Path] = None) -> List[Path]:
 
 
 # ---------------------------------------------------------------------------
+# Decision Surface
+# PI.SECOND-CLIENT.STEP16I.DECISION-SURFACE-GENERATOR.01
+# ---------------------------------------------------------------------------
+
+_DECISION_SURFACE_CSS = """
+  :root{--bg:#0e0e10;--surface:#16161a;--surface-raised:#1c1c22;--border:#2a2a2e;--border-subtle:#222228;--fg:#e8e8e8;--fg-muted:#888;--fg-dim:#555;--gold:#c89b3c;--gold-muted:rgba(200,155,60,0.12);--gold-border:rgba(200,155,60,0.28);--green:#4caf6e;--green-muted:rgba(76,175,110,0.12);--green-border:rgba(76,175,110,0.28);--amber:#d4912a;--amber-muted:rgba(212,145,42,0.1);--amber-border:rgba(212,145,42,0.25);--red:#e05252;--red-muted:rgba(224,82,82,0.1);--red-border:rgba(224,82,82,0.25);--font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:14px;line-height:1.7;-webkit-font-smoothing:antialiased}
+  .page{max-width:960px;margin:0 auto;padding:48px 40px 80px}
+  .report-header{border-bottom:1px solid var(--border);padding-bottom:24px;margin-bottom:32px;display:flex;justify-content:space-between;align-items:flex-start}
+  .report-brand{font-size:11px;color:var(--fg-muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+  .report-title{font-size:20px;color:var(--fg);font-weight:400}
+  .report-type{font-size:11px;color:var(--fg-muted);margin-top:4px;letter-spacing:.06em}
+  .report-meta{text-align:right;font-size:12px;color:var(--fg-muted);line-height:1.8}
+  .report-meta strong{color:var(--fg);font-weight:500}
+  .nav-strip{display:flex;gap:10px;margin-bottom:36px;flex-wrap:wrap}
+  .nav-link{display:inline-block;padding:7px 14px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border);color:var(--fg-muted);text-decoration:none;border-radius:3px}
+  .nav-link:hover{border-color:var(--gold);color:var(--gold)}
+  .nav-link.active{border-color:var(--gold-border);color:var(--gold);background:var(--gold-muted)}
+  .verdict-block{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:28px}
+  .verdict-cell{padding:20px 22px;border:1px solid var(--border);border-radius:4px;background:var(--surface)}
+  .verdict-cell-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:8px}
+  .verdict-cell-value{font-size:22px;font-weight:300;letter-spacing:.04em}
+  .verdict-cell-sub{font-size:11px;color:var(--fg-muted);margin-top:4px}
+  .vstate-stable{border-top:3px solid var(--green)}.vstate-stable .verdict-cell-value{color:var(--green)}
+  .vstate-conditional{border-top:3px solid var(--amber)}.vstate-conditional .verdict-cell-value{color:var(--amber)}
+  .vstate-unresolved{border-top:3px solid var(--amber)}.vstate-unresolved .verdict-cell-value{color:var(--amber)}
+  .vstate-escalated{border-top:3px solid var(--red)}.vstate-escalated .verdict-cell-value{color:var(--red)}
+  .vev-high{border-top:3px solid var(--green)}.vev-high .verdict-cell-value{color:var(--green)}
+  .vev-partial{border-top:3px solid var(--amber)}.vev-partial .verdict-cell-value{color:var(--amber)}
+  .vev-low{border-top:3px solid var(--red)}.vev-low .verdict-cell-value{color:var(--red)}
+  .vpos-proceed{border-top:3px solid var(--green)}.vpos-proceed .verdict-cell-value{color:var(--green)}
+  .vpos-investigate{border-top:3px solid var(--amber)}.vpos-investigate .verdict-cell-value{color:var(--amber)}
+  .vpos-escalate{border-top:3px solid var(--red)}.vpos-escalate .verdict-cell-value{color:var(--red)}
+  .score-row{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);padding:16px 20px;border-radius:3px;margin-bottom:28px}
+  .score-num{font-size:36px;color:var(--gold);font-weight:300;min-width:60px;text-align:center}
+  .score-detail-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:4px}
+  .score-detail-band{font-size:15px;color:var(--gold)}
+  .score-detail-sub{font-size:11px;color:var(--fg-muted);margin-top:3px}
+  .ds-section{margin-bottom:40px}
+  .ds-section-header{display:flex;align-items:baseline;gap:12px;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border-subtle)}
+  .ds-section-num{font-size:10px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;min-width:24px}
+  .ds-section-title{font-size:14px;color:var(--fg);font-weight:500;letter-spacing:.02em}
+  .fact-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .fact-cell{background:var(--surface);border:1px solid var(--border);padding:12px 14px;border-radius:3px}
+  .fact-cell-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:4px}
+  .fact-cell-value{font-size:13px;color:var(--fg)}
+  .unknown-list{list-style:none;padding:0}
+  .unknown-item{padding:10px 0;border-bottom:1px solid var(--border-subtle);font-size:13px;color:var(--fg-muted);display:flex;align-items:flex-start;gap:10px}
+  .unknown-item:last-child{border-bottom:none}
+  .unknown-item::before{content:'○';color:var(--amber);font-size:10px;margin-top:4px;flex-shrink:0}
+  .posture-block{background:var(--surface);border:1px solid var(--border);padding:18px 20px;border-radius:3px}
+  .posture-block p{font-size:13px;color:var(--fg-muted);line-height:1.7;margin-bottom:10px}
+  .posture-block p:last-child{margin-bottom:0}
+  .pressure-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+  .pressure-cell{background:var(--surface);border:1px solid var(--border);border-top:2px solid var(--amber);padding:12px 14px;border-radius:3px}
+  .pressure-cell-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:4px}
+  .pressure-cell-value{font-size:14px;color:var(--fg)}
+  .pressure-cell-sub{font-size:11px;color:var(--fg-muted);margin-top:3px}
+  .ll-rows{margin-bottom:4px}
+  .ll-row{display:grid;grid-template-columns:1fr 1fr 2fr;gap:12px;padding:10px 0;border-bottom:1px solid var(--border-subtle);align-items:start}
+  .ll-row:last-child{border-bottom:none}
+  .ll-term{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-dim);font-family:monospace}
+  .ll-exec{font-size:13px;color:var(--fg)}
+  .ll-decode{font-size:12px;color:var(--fg-muted);line-height:1.5}
+  .nav-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .nav-card{display:block;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:16px 18px;text-decoration:none}
+  .nav-card:hover{border-color:var(--gold-border)}
+  .nav-card-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:6px}
+  .nav-card-title{font-size:14px;color:var(--fg)}
+  .nav-card-desc{font-size:11px;color:var(--fg-muted);margin-top:4px;line-height:1.4}
+  .inference-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(0,0,0,0.2);border:1px solid var(--border-subtle);border-radius:3px;margin-bottom:16px;font-size:11px;color:var(--fg-muted)}
+  .inference-tag{font-size:9px;letter-spacing:.12em;text-transform:uppercase;background:var(--red-muted);color:var(--red);padding:3px 8px;border-radius:2px;border:1px solid var(--red-border)}
+  .report-footer{display:flex;justify-content:space-between;align-items:flex-end;padding-top:24px;border-top:1px solid var(--border);margin-top:48px}
+  .footer-brand{font-size:13px;color:var(--gold);letter-spacing:.08em}
+  .footer-note{font-size:11px;color:var(--fg-muted);text-align:right;line-height:1.7}
+  .rc-trace{font-size:10px;color:var(--fg-dim);opacity:.7;font-style:normal}
+  .rc-anchor-block{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid var(--green);border-radius:2px;margin-bottom:16px;font-size:12px;flex-wrap:wrap}
+  .rc-anchor-state{color:#c8c8d4;font-weight:600;letter-spacing:.02em}
+  .rc-anchor-score{color:var(--green);font-weight:600}
+  .rc-anchor-band{color:var(--fg-muted)}
+  .rc-anchor-decision{color:var(--amber);letter-spacing:.05em;text-transform:uppercase}
+  .rc-anchor-sep{color:#333}
+  @media(max-width:640px){.verdict-block{grid-template-columns:1fr}.fact-grid{grid-template-columns:1fr}.pressure-row{grid-template-columns:1fr 1fr}.nav-grid{grid-template-columns:1fr}.score-row{grid-template-columns:1fr}.report-header{flex-direction:column;gap:12px}.report-meta{text-align:left}.ll-row{grid-template-columns:1fr 1fr}}
+"""
+
+
+def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
+                              publish_safe: bool = False,
+                              psig_proj: Optional[Dict] = None,
+                              pz_proj: Optional[Dict] = None,
+                              metrics: Optional[Dict] = None,
+                              decision_model: Optional[Dict] = None,
+                              ll: Optional[Dict] = None) -> str:
+    # ── Core state derivation ──────────────────────────────────────────
+    dm        = decision_model or {}
+    risk      = dm.get("structural_risk", "MODERATE")
+    ev_comp   = dm.get("evidence_completeness", "PARTIAL")
+    posture   = dm.get("decision", "INVESTIGATE")
+    not_activated = dm.get("not_activated", [])
+    blind_spot    = dm.get("blind_spot_active", False)
+    exec_eval     = dm.get("exec_evaluated", False)
+
+    score      = gauge["score"]["canonical"]
+    band_label = gauge["score"]["band_label"]
+    band_lo    = gauge["confidence"]["lower"]
+    band_hi    = gauge["confidence"]["upper"]
+
+    counts     = topology["counts"]
+    domains    = topology["domains"]
+    grounded_ct = sum(1 for d in domains if d["grounding"] == "GROUNDED")
+    weak_ct     = sum(1 for d in domains if d["grounding"] == "WEAKLY GROUNDED")
+    total_doms  = counts.get("domains", len(domains))
+
+    _use_psig   = _ACTIVE_CLIENT != "blueedge"
+    client_name = _get_client_display_name(publish_safe)
+    title_suffix = " (Publish)" if publish_safe else ""
+    footer_note = (f"SAMPLE — {client_name}."
+                   if _use_psig else
+                   ("SAMPLE — Illustrative client environment." if publish_safe
+                    else "SAMPLE — BlueEdge data used for demonstration purposes."))
+
+    # Structural state: derived from risk + evidence completeness — not hardcoded per client
+    _order = {"LOW": 0, "MODERATE": 1, "HIGH": 2}
+    _risk_n = _order.get(risk, 1)
+    if _risk_n >= 2:
+        structural_state = "ESCALATED"
+    elif _risk_n == 1 or ev_comp != "HIGH":
+        structural_state = "UNRESOLVED"
+    elif _risk_n == 0 and ev_comp == "HIGH":
+        structural_state = "STABLE"
+    else:
+        structural_state = "CONDITIONAL"
+
+    _state_cls   = {"STABLE": "vstate-stable", "CONDITIONAL": "vstate-conditional",
+                    "UNRESOLVED": "vstate-unresolved", "ESCALATED": "vstate-escalated"}.get(structural_state, "vstate-unresolved")
+    _ev_cls      = {"HIGH": "vev-high", "PARTIAL": "vev-partial", "LOW": "vev-low"}.get(ev_comp, "vev-partial")
+    _posture_cls = {"PROCEED": "vpos-proceed", "INVESTIGATE": "vpos-investigate",
+                    "ESCALATE": "vpos-escalate"}.get(posture, "vpos-investigate")
+    _ev_label    = {"HIGH": "Complete", "PARTIAL": "Partial", "LOW": "Limited"}.get(ev_comp, ev_comp)
+
+    # Navigation links — client/run scoped
+    _ev_name   = "lens_tier1_evidence_brief_pub.html" if publish_safe else "lens_tier1_evidence_brief.html"
+    _narr_name = "lens_tier1_narrative_brief_pub.html" if publish_safe else "lens_tier1_narrative_brief.html"
+    _t2_name   = "lens_tier2_diagnostic_narrative_pub.html" if publish_safe else "lens_tier2_diagnostic_narrative.html"
+    if _use_psig:
+        ev_link   = _scoped_report_url(_ev_name)
+        narr_link = _scoped_report_url(_narr_name)
+        t2_link   = _scoped_report_url(_t2_name)
+        ws_link   = f"/tier2/workspace?client={_ACTIVE_CLIENT}&runId={_ACTIVE_VAULT_RUN_ID}"
+    else:
+        ev_link   = f"/api/report-file?name={_ev_name}"
+        narr_link = f"/api/report-file?name={_narr_name}"
+        t2_link   = f"/api/report-file?name={_t2_name}"
+        ws_link   = None
+
+    # ── Section 01: Structural truth facts ────────────────────────────
+    sigs       = signals["signals"]
+    sig_count  = sum(1 for s in sigs if s.get("state") == "ACTIVE")
+    dep_load   = (metrics.get("dep_load", "—") if metrics else "—")
+    etn        = (metrics.get("edge_to_node", "—") if metrics else "—")
+
+    zone_count = 0
+    zone_class = "COMPOUND_ZONE"
+    if pz_proj:
+        _pz_list_f = pz_proj.get("zone_projection", [])
+        zone_count = len(_pz_list_f)
+        if _pz_list_f:
+            zone_class = _pz_list_f[0].get("zone_class", "COMPOUND_ZONE")
+
+    fact_rows: list = [
+        ("Structural topology",
+         f"{total_doms} domains — {grounded_ct} grounded, {weak_ct} weakly grounded"),
+        ("Node coverage",
+         f"{counts.get('total_nodes', '—')} total nodes — "
+         f"{counts.get('capabilities', '—')} capabilities, "
+         f"{counts.get('components', '—')} components"),
+    ]
+    if metrics and dep_load != "—" and dep_load != "NOT_IN_SCOPE":
+        fact_rows.append(("Dependency load ratio", str(dep_load)))
+        fact_rows.append(("Edge-to-node density", str(etn)))
+    if _use_psig and sig_count > 0:
+        fact_rows.append(("Active signals",
+                          f"{sig_count} signal{'s' if sig_count != 1 else ''} bound"))
+    if _use_psig and zone_count > 0:
+        fact_rows.append(("Diagnostic zones",
+                          f"{zone_count} pressure zone{'s' if zone_count != 1 else ''} — "
+                          f"{RC.apply_language(zone_class)}"))
+
+    fact_html = "".join(
+        f'<div class="fact-cell">'
+        f'<div class="fact-cell-label">{esc(label)}</div>'
+        f'<div class="fact-cell-value">{value}</div>'
+        f'</div>'
+        for label, value in fact_rows
+    )
+
+    # ── Section 02: Unknown boundary ─────────────────────────────────
+    unknowns: list = []
+    if not exec_eval:
+        unknowns.append("Execution-layer behavioral state — outside current evidence scope.")
+    if not_activated:
+        _n = len(not_activated)
+        unknowns.append(
+            f"{_n} structural signal{'s' if _n != 1 else ''} not activated in this run "
+            f"— cannot be structurally characterized."
+        )
+    if blind_spot:
+        unknowns.append(
+            f"{RC.apply_language('THEORETICAL_BASELINE')} — "
+            f"structural blind spot coverage active. "
+            f"Entities outside zone scope are not characterized."
+        )
+    unknowns += [
+        "Causal relationships between structural conditions — co-presence is not causality.",
+        "Execution behavior under runtime load — outside current evidence scope.",
+    ]
+    unknown_items_html = "".join(
+        f'<li class="unknown-item">{esc(u)}</li>' for u in unknowns
+    )
+
+    # ── Section 03: Why this posture ─────────────────────────────────
+    posture_prose = "".join([
+        f"<p>Structural risk: {esc(risk)}. "
+        f"Derived from dependency load and edge-to-node density metrics.</p>",
+        f"<p>Evidence completeness: {esc(ev_comp)}. "
+        f"Derived from gap count across execution evaluation, signal activation state, "
+        f"and blind spot coverage.</p>",
+        f"<p>Decision posture: {esc(posture)}. "
+        f"No advisory content. This posture reflects structural evidence state, not a recommendation.</p>",
+    ])
+
+    # ── Section 04: Pressure pattern (psig path only) ─────────────────
+    pattern_html = ""
+    if _use_psig and pz_proj is not None and zone_count > 0:
+        _pz_list_s  = pz_proj.get("zone_projection", [])
+        _cp         = RC.collapse_patterns(_pz_list_s, pz_proj, publish_safe)
+        _prim_count = sum(1 for z in _pz_list_s if z.get("attribution_profile") == "primary")
+        _sec_count  = zone_count - _prim_count
+        _sig_set    = (_cp["shared_sigs"] if _cp
+                       else _pz_list_s[0].get("signals", []) if _pz_list_s else [])
+        _sig_str    = " · ".join(_sig_set)
+        _sig_n      = len(_sig_set)
+
+        _pressure_cells_html = (
+            f'<div class="pressure-cell">'
+            f'<div class="pressure-cell-label">Zone count</div>'
+            f'<div class="pressure-cell-value">{zone_count}</div>'
+            f'<div class="pressure-cell-sub">{RC.apply_language(zone_class)} '
+            f'<span class="rc-trace">trace: {esc(zone_class)}</span></div>'
+            f'</div>'
+            + (
+                f'<div class="pressure-cell">'
+                f'<div class="pressure-cell-label">Signal set</div>'
+                f'<div class="pressure-cell-value">{_sig_n} active signal{"s" if _sig_n != 1 else ""}</div>'
+                f'<div class="pressure-cell-sub">{esc(_sig_str)}</div>'
+                f'</div>'
+                if _sig_n > 0 else ""
+            ) +
+            f'<div class="pressure-cell">'
+            f'<div class="pressure-cell-label">Attribution</div>'
+            f'<div class="pressure-cell-value">{_prim_count} primary · {_sec_count} secondary</div>'
+            f'<div class="pressure-cell-sub">'
+            f'{RC.render_term("PRIMARY")} / {RC.render_term("SECONDARY")}'
+            f'</div>'
+            f'</div>'
+        )
+        _collapse_note = ""
+        if _cp:
+            _collapse_note = (
+                f'<p style="font-size:12px;color:var(--fg-muted);margin-top:12px">'
+                f'All {zone_count} zones share the same {len(_cp["shared_sigs"])} signal'
+                f'{"s" if len(_cp["shared_sigs"]) != 1 else ""} '
+                f'({esc(_cp["sigs_str"])}). Attribution varies — one zone carries primary pressure '
+                f'origin; remaining zones are secondary recipients. '
+                f'<span class="rc-trace">inference_prohibition: ACTIVE — co-presence, not causality.</span>'
+                f'</p>'
+            )
+        pattern_html = (
+            f'\n  <div class="ds-section">'
+            f'\n    <div class="ds-section-header">'
+            f'<span class="ds-section-num">04</span>'
+            f'<span class="ds-section-title">Where Pressure Exists</span></div>'
+            f'\n    <div class="pressure-row">{_pressure_cells_html}</div>'
+            f'\n    {_collapse_note}'
+            f'\n  </div>'
+        )
+
+    # ── Section 05: Language Layer term decodes ───────────────────────
+    _ll_terms = (
+        ["RUN_RELATIVE_OUTLIER", "COMPOUND_ZONE", "PRIMARY", "SECONDARY", "PRESSURE_ZONE"]
+        if _use_psig else
+        ["CONFIDENCE_BAND", "EVIDENCE_SCOPE", "STRUCTURAL_COVERAGE"]
+    )
+    _ll_rows_html = ""
+    if ll:
+        for _t in _ll_terms:
+            _e = ll.get(_t)
+            if _e:
+                _ll_rows_html += (
+                    f'<div class="ll-row">'
+                    f'<span class="ll-term">{esc(_e["canonical_label"])}</span>'
+                    f'<span class="ll-exec">{esc(_e["executive_label"])}</span>'
+                    f'<span class="ll-decode">{esc(_e["short_decode"])}</span>'
+                    f'</div>'
+                )
+
+    _ll_section_html = ""
+    if _ll_rows_html:
+        _ll_section_html = (
+            f'\n  <div class="ds-section">'
+            f'\n    <div class="ds-section-header">'
+            f'<span class="ds-section-num">05</span>'
+            f'<span class="ds-section-title">What This Means</span></div>'
+            f'\n    <div class="inference-bar">'
+            f'<span class="inference-tag">inference_prohibition</span>'
+            f'<span>ACTIVE — all data on this surface is structural and evidential only. '
+            f'No advisory content, causal inference, or remediation guidance may be derived.</span>'
+            f'</div>'
+            f'\n    <div class="ll-rows">{_ll_rows_html}</div>'
+            f'\n  </div>'
+        )
+
+    # ── Section 06: Navigation ────────────────────────────────────────
+    _nav_cards: list = [
+        (narr_link, "Executive Brief",
+         "Narrative interpretation layer — structural state and decision posture"),
+        (ev_link,   "Structural Evidence Brief",
+         "Tier-1 evidence surface — signals, topology, gauge"),
+        (t2_link,   "Diagnostic Narrative",
+         "Tier-2 interrogation surface — pressure zones, trace, uncertainty"),
+    ]
+    if _use_psig and ws_link:
+        _nav_cards.append((ws_link, "Workspace",
+                           "Live diagnostic workspace — signal detail, zone exploration"))
+    nav_html = "".join(
+        f'<a href="{href}" class="nav-card">'
+        f'<div class="nav-card-label">Open</div>'
+        f'<div class="nav-card-title">{esc(title)}</div>'
+        f'<div class="nav-card-desc">{esc(desc)}</div>'
+        f'</a>'
+        for href, title, desc in _nav_cards
+    )
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LENS Assessment — Decision Surface{title_suffix}</title>
+  <style>{_DECISION_SURFACE_CSS}</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="nav-strip">
+    <span class="nav-link active">Decision</span>
+    <a href="{narr_link}" class="nav-link">Executive Brief</a>
+    <a href="{ev_link}" class="nav-link">LENS Assessment</a>
+    <a href="{t2_link}" class="nav-link">Diagnostic</a>
+  </div>
+
+  {RC.anchor_block(score, band_label, band_lo, band_hi, posture)}
+
+  <div class="report-header">
+    <div>
+      <div class="report-brand">Signäl Program Intelligence</div>
+      <div class="report-title">LENS Assessment — Decision Surface{title_suffix}</div>
+      <div class="report-type">Executive Entry · Structural Verdict Layer</div>
+    </div>
+    <div class="report-meta">
+      <div>Client: <strong>{esc(client_name)}</strong></div>
+      <div>Score: <strong>{score} — {esc(band_label)}</strong></div>
+      <div>Issued: <strong>April 2026</strong></div>
+    </div>
+  </div>
+
+  <div class="ds-section">
+    <div class="ds-section-header">
+      <span class="ds-section-num">00</span>
+      <span class="ds-section-title">Structural Verdict</span>
+    </div>
+    <div class="verdict-block">
+      <div class="verdict-cell {_state_cls}">
+        <div class="verdict-cell-label">Structural State</div>
+        <div class="verdict-cell-value">{esc(structural_state)}</div>
+        <div class="verdict-cell-sub">Risk: {esc(risk)}</div>
+      </div>
+      <div class="verdict-cell {_ev_cls}">
+        <div class="verdict-cell-label">Evidence Completeness</div>
+        <div class="verdict-cell-value">{esc(_ev_label)}</div>
+        <div class="verdict-cell-sub">Gap count: {dm.get("gap_count", "—")}</div>
+      </div>
+      <div class="verdict-cell {_posture_cls}">
+        <div class="verdict-cell-label">Decision Posture</div>
+        <div class="verdict-cell-value">{esc(posture)}</div>
+        <div class="verdict-cell-sub">Band: {band_lo}–{band_hi}</div>
+      </div>
+    </div>
+    <div class="score-row">
+      <div class="score-num">{score}</div>
+      <div>
+        <div class="score-detail-label">Assessment Score</div>
+        <div class="score-detail-band">{esc(band_label)}</div>
+        <div class="score-detail-sub">
+          Confidence band: {band_lo} – {band_hi} · Run: {esc(_ACTIVE_VAULT_RUN_ID)}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ds-section">
+    <div class="ds-section-header">
+      <span class="ds-section-num">01</span>
+      <span class="ds-section-title">What Is Structurally True</span>
+    </div>
+    <div class="fact-grid">{fact_html}</div>
+  </div>
+
+  <div class="ds-section">
+    <div class="ds-section-header">
+      <span class="ds-section-num">02</span>
+      <span class="ds-section-title">What Is Not Known</span>
+    </div>
+    <ul class="unknown-list">{unknown_items_html}</ul>
+  </div>
+
+  <div class="ds-section">
+    <div class="ds-section-header">
+      <span class="ds-section-num">03</span>
+      <span class="ds-section-title">Why This Posture</span>
+    </div>
+    <div class="posture-block">{posture_prose}</div>
+  </div>
+
+  {pattern_html}
+
+  {_ll_section_html}
+
+  <div class="ds-section">
+    <div class="ds-section-header">
+      <span class="ds-section-num">06</span>
+      <span class="ds-section-title">Open the Evidence</span>
+    </div>
+    <div class="nav-grid">{nav_html}</div>
+  </div>
+
+  <div class="report-footer">
+    <div class="footer-brand">Signäl</div>
+    <div class="footer-note">
+      {esc(footer_note)}<br>
+      Decision Surface · No advisory content · No root cause claims · inference_prohibition: ACTIVE
+    </div>
+  </div>
+
+</div>
+</body>
+</html>"""
+
+
+def generate_decision_surface(output_dir: Optional[Path] = None) -> List[Path]:
+    """Generate the Decision Surface: internal + publish-safe.
+
+    Derives all content from canonical package, projection artifacts, gauge state,
+    and language layer registry. No client-specific hardcoding.
+    Returns list of written file paths (2 files).
+    """
+    if output_dir is None:
+        output_dir = DECISION_REPORTS_DIR
+
+    pub_dir = output_dir / "publish"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    pub_dir.mkdir(parents=True, exist_ok=True)
+
+    if not CANONICAL_PKG_DIR.exists():
+        _fail(f"Canonical package directory not found: {CANONICAL_PKG_DIR}")
+
+    topology  = load_canonical_topology()
+    signals   = load_signal_registry()
+    gauge     = load_gauge_state()
+    psig_proj = _load_psig_projection()
+    pz_proj   = _load_pressure_zone_projection()
+    binding   = _load_binding_envelope()
+    metrics   = _compute_structural_metrics(binding)
+    dm        = _compute_decision_model(metrics, psig_proj, gauge)
+    ll        = _load_language_layer()
+
+    files: List[Path] = []
+    artifacts = [
+        (output_dir / "lens_decision_surface.html",         False),
+        (pub_dir    / "lens_decision_surface_pub.html",     True),
+    ]
+    for out_path, pub_safe in artifacts:
+        html = _build_decision_surface(
+            topology, signals, gauge,
+            publish_safe=pub_safe,
+            psig_proj=psig_proj,
+            pz_proj=pz_proj,
+            metrics=metrics,
+            decision_model=dm,
+            ll=ll,
+        )
+        out_path.write_text(html, encoding="utf-8")
+        print(f"[LENS REPORT] Generated: {out_path.resolve()}")
+        files.append(out_path)
+
+    return files
+
+
+# ---------------------------------------------------------------------------
 # Legacy entry point (preserved, not default)
 # ---------------------------------------------------------------------------
 
@@ -5385,10 +5906,13 @@ def main(tier1: bool = True, output_path: Optional[Path] = None,
         generate_tier1_reports(output_dir=output_dir)
     elif deliverable == "diagnostic":
         generate_tier2_reports()
+    elif deliverable == "decision":
+        generate_decision_surface()
     else:
-        # "all" or None (no --deliverable flag) — preserves existing default behaviour
+        # "all" or None (no --deliverable flag) — generates all surfaces
         generate_tier1_reports(output_dir=output_dir)
         generate_tier2_reports()
+        generate_decision_surface()
 
 
 if __name__ == "__main__":
@@ -5423,14 +5947,15 @@ if __name__ == "__main__":
     # Report mode
     parser.add_argument(
         "--deliverable",
-        choices=["tier1", "diagnostic", "all"],
+        choices=["tier1", "diagnostic", "decision", "all"],
         default=None,
         help=(
             "Select which deliverable(s) to generate: "
-            "tier1 = EXEC+LENS only (no Tier-2 subprocess), "
-            "diagnostic = DIAGNOSTIC only, "
-            "all = EXEC+LENS+DIAGNOSTIC. "
-            "Omitting this flag preserves existing default behaviour (all)."
+            "tier1 = Evidence Brief + Narrative Brief, "
+            "diagnostic = Tier-2 Diagnostic Narrative, "
+            "decision = Decision Surface only, "
+            "all = all surfaces. "
+            "Omitting this flag generates all surfaces."
         ),
     )
     parser.add_argument(
