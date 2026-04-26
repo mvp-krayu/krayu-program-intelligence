@@ -2334,9 +2334,8 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
     client_name = _get_client_display_name(publish_safe)
     _narr_name = "lens_tier1_narrative_brief_pub.html" if publish_safe else "lens_tier1_narrative_brief.html"
     narr_link  = _scoped_report_url(_narr_name) if use_psig else f"/api/report-file?name={_narr_name}"
-    t2_link    = ("/api/report-file?name=lens_tier2_diagnostic_narrative_pub.html"
-                  if publish_safe else
-                  "/api/report-file?name=lens_tier2_diagnostic_narrative.html")
+    _t2_name   = "lens_tier2_diagnostic_narrative_pub.html" if publish_safe else "lens_tier2_diagnostic_narrative.html"
+    t2_link    = _scoped_report_url(_t2_name) if use_psig else f"/api/report-file?name={_t2_name}"
     footer_note = (f"SAMPLE — {client_name}."
                    if use_psig else
                    ("SAMPLE — Client data used for demonstration purposes." if publish_safe
@@ -2899,9 +2898,8 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
     client_name = _get_client_display_name(publish_safe)
     _ev_name    = "lens_tier1_evidence_brief_pub.html" if publish_safe else "lens_tier1_evidence_brief.html"
     ev_link     = _scoped_report_url(_ev_name) if use_psig else f"/api/report-file?name={_ev_name}"
-    t2_link     = ("/api/report-file?name=lens_tier2_diagnostic_narrative_pub.html"
-                   if publish_safe else
-                   "/api/report-file?name=lens_tier2_diagnostic_narrative.html")
+    _t2_name    = "lens_tier2_diagnostic_narrative_pub.html" if publish_safe else "lens_tier2_diagnostic_narrative.html"
+    t2_link     = _scoped_report_url(_t2_name) if use_psig else f"/api/report-file?name={_t2_name}"
     title_suffix = " (Publish)" if publish_safe else ""
     footer_note = (f"SAMPLE — {client_name}."
                    if use_psig else
