@@ -428,7 +428,7 @@ function VaultLinks({ targets, vaultIndex }) {
 // EVIDENCE result panel
 // ---------------------------------------------------------------------------
 
-function EvidenceResult({ data, vaultIndex }) {
+function EvidenceResult({ data, vaultIndex, langLayer = {} }) {
   const r = data.result
   const isProjection = data.evidence_basis?.canonical_topology_used === false
   return (
@@ -471,7 +471,12 @@ function EvidenceResult({ data, vaultIndex }) {
               </div>
             )}
             {s.activation_method && (
-              <div className="ws-signal-title">{s.activation_method.replace(/_/g, ' ').toLowerCase()}</div>
+              <div className="ws-signal-title">
+                {s.activation_method.replace(/_/g, ' ').toLowerCase()}
+                {langLayer[s.activation_method]?.short_decode && (
+                  <span className="ws-ll-decode"> — {langLayer[s.activation_method].short_decode}</span>
+                )}
+              </div>
             )}
             {s.interpretation && (
               <div className="ws-interp-text ws-interp-cond">{s.interpretation.behavioral_meaning}</div>
@@ -516,7 +521,7 @@ function EvidenceResult({ data, vaultIndex }) {
 // Zone card — investigation trigger, not graph container
 // ---------------------------------------------------------------------------
 
-function ZoneCard({ zone, vaultIndex, defaultOpen, isActive, onActivate }) {
+function ZoneCard({ zone, vaultIndex, defaultOpen, isActive, onActivate, langLayer = {} }) {
   const [expanded, setExpanded] = useState(defaultOpen || false)
   const [qs, setQs]             = useState(null)
   const resultRef               = useRef(null)
@@ -577,7 +582,14 @@ function ZoneCard({ zone, vaultIndex, defaultOpen, isActive, onActivate }) {
               <div className="ws-zone-condition">
                 <span className="ws-zone-stat">{zone.condition_count} condition{zone.condition_count !== 1 ? 's' : ''}</span>
                 {zone.attribution_profile && (
-                  <span className="ws-badge ws-badge-sm">{zone.attribution_profile}</span>
+                  <>
+                    <span className="ws-badge ws-badge-sm">{zone.attribution_profile}</span>
+                    {langLayer[zone.attribution_profile?.toUpperCase()]?.executive_label && (
+                      <span className="ws-ll-attr-label">
+                        {langLayer[zone.attribution_profile.toUpperCase()].executive_label}
+                      </span>
+                    )}
+                  </>
                 )}
                 {zone.zone_class && (
                   <span className={`ws-badge ws-badge-sm ${zoneTypeMeta(zone.zone_class).cls}`}>
@@ -630,7 +642,7 @@ function ZoneCard({ zone, vaultIndex, defaultOpen, isActive, onActivate }) {
 
           {qs?.error && <div className="ws-query-error">{qs.error}</div>}
           {qs?.data && qs.mode === 'WHY'      && <WhyResult      data={qs.data} />}
-          {qs?.data && qs.mode === 'EVIDENCE' && <EvidenceResult data={qs.data} vaultIndex={vaultIndex} />}
+          {qs?.data && qs.mode === 'EVIDENCE' && <EvidenceResult data={qs.data} vaultIndex={vaultIndex} langLayer={langLayer} />}
           {qs?.data && qs.mode === 'TRACE'    && <TraceResult    data={qs.data} vaultIndex={vaultIndex} />}
         </>
       )}
@@ -666,6 +678,21 @@ export default function Tier2WorkspacePage() {
   const [activeMode, setActiveMode]         = useState(null)
   const [activeQsData, setActiveQsData]     = useState(null)
   const [graphPanelQuery, setGraphPanelQuery] = useState(null)
+  const [langLayer, setLangLayer]           = useState({})
+
+  // Load language layer
+  useEffect(() => {
+    fetch('/api/language')
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data?.status === 'ok' && data.entries?.length) {
+          const byLabel = {}
+          data.entries.forEach(e => { byLabel[e.canonical_label] = e })
+          setLangLayer(byLabel)
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   // Load zones
   useEffect(() => {
@@ -903,7 +930,7 @@ export default function Tier2WorkspacePage() {
                       {graphPanelQuery.evidence && (
                         <div className="ws-graph-query-section">
                           <div className="ws-graph-query-section-label">EVIDENCE</div>
-                          <EvidenceResult data={graphPanelQuery.evidence} vaultIndex={vaultIndex} />
+                          <EvidenceResult data={graphPanelQuery.evidence} vaultIndex={vaultIndex} langLayer={langLayer} />
                         </div>
                       )}
                       {graphPanelQuery.trace && (
@@ -918,7 +945,7 @@ export default function Tier2WorkspacePage() {
                     </>
                   )}
                   {graphPanelQuery.data && graphPanelQuery.mode === 'EVIDENCE' && (
-                    <EvidenceResult data={graphPanelQuery.data} vaultIndex={vaultIndex} />
+                    <EvidenceResult data={graphPanelQuery.data} vaultIndex={vaultIndex} langLayer={langLayer} />
                   )}
                   {graphPanelQuery.data && graphPanelQuery.mode === 'WHY' && (
                     <WhyResult data={graphPanelQuery.data} />
@@ -950,6 +977,7 @@ export default function Tier2WorkspacePage() {
                 }
                 isActive={activeZone?.zone_id === zone.zone_id}
                 onActivate={handleActivate}
+                langLayer={langLayer}
               />
             ))}
           </div>

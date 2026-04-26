@@ -3506,6 +3506,14 @@ _TIER2_DIAGNOSTIC_CSS = """
   .t2-avail-list{list-style:none;padding:0;margin-top:8px}
   .t2-avail-item{font-size:11px;color:var(--fg-muted);padding:4px 0;border-bottom:1px solid var(--border-subtle);font-family:monospace}
   .t2-avail-item:last-child{border-bottom:none}
+  .t2-avail-decode{font-family:var(--font);font-size:10px;color:var(--fg-dim);margin-left:8px;font-style:italic}
+  .t2-ll-table{display:flex;flex-direction:column;gap:0;border:1px solid var(--border);border-radius:3px;overflow:hidden}
+  .t2-ll-row{display:grid;grid-template-columns:180px 160px 1fr;gap:0;padding:8px 12px;border-bottom:1px solid var(--border-subtle);align-items:start}
+  .t2-ll-row:last-child{border-bottom:none}
+  .t2-ll-row:nth-child(even){background:rgba(255,255,255,0.02)}
+  .t2-ll-term{font-size:10px;font-family:monospace;color:var(--fg-dim);letter-spacing:.04em;padding-right:8px}
+  .t2-ll-exec{font-size:11px;color:var(--fg);font-weight:500;padding-right:8px}
+  .t2-ll-decode{font-size:11px;color:var(--fg-muted)}
   .t2-missing-list{list-style:none;padding:0;margin-top:10px}
   .t2-missing-item{font-size:12px;padding:8px 10px;border-bottom:1px solid var(--border-subtle);display:flex;flex-direction:column;gap:3px}
   .t2-missing-item:last-child{border-bottom:none}
@@ -3579,6 +3587,27 @@ def _load_psee_interpretation_by_zone_class() -> Dict:
                     "render_payload":        item.get("render_payload", {}),
                     "interpretation_ref_id": item.get("interpretation_ref", {}).get("registry_entry_id"),
                 }
+    except Exception:
+        pass
+    return result
+
+
+def _load_language_layer() -> Dict:
+    """Load language_layer_registry.json and index entries by canonical_label.
+
+    Returns empty dict if file absent — report generation is unaffected.
+    Callers use: ll.get("RUN_RELATIVE_OUTLIER", {}).get("short_decode", "")
+    """
+    registry_path = REPO_ROOT / "docs" / "pios" / "41.x" / "language_layer_registry.json"
+    result: Dict = {}
+    if not registry_path.exists():
+        return result
+    try:
+        reg = json.loads(registry_path.read_text())
+        for entry in reg.get("entries", []):
+            label = entry.get("canonical_label")
+            if label:
+                result[label] = entry
     except Exception:
         pass
     return result
@@ -4138,7 +4167,8 @@ def _build_t2_zone_block(zone: Dict, publish_safe: bool, interpretation_payload:
 
 
 def _build_t2_psig_zone_block(zone: Dict, publish_safe: bool,
-                               interpretation_payload: Optional[Dict] = None) -> str:
+                               interpretation_payload: Optional[Dict] = None,
+                               ll: Optional[Dict] = None) -> str:
     """Render a Tier-2 zone detail block for PSIG clients using projection data.
 
     Replaces _build_t2_zone_block() for zones derived from
@@ -4255,12 +4285,20 @@ def _build_t2_psig_zone_block(zone: Dict, publish_safe: bool,
     # ── Section D: Evidence State ──────────────────────────────────────────
     ev_strength = "STRONG" if cond_sigs else "PARTIAL"
     if cond_sigs and not publish_safe:
+        _ll = ll or {}
+        def _method_decode(method: str) -> str:
+            entry = _ll.get(method, {})
+            decode = entry.get("short_decode", "")
+            if decode:
+                return f' <span class="t2-avail-decode">{esc(decode)}</span>'
+            return ""
         cond_items = "".join(
             f'<li class="t2-avail-item">'
             f'{esc(c["condition_id"])} · {esc(c["signal_id"])} · '
             f'value: {c.get("signal_value", "—")} · '
             f'state: {esc(c.get("activation_state", "—"))} · '
             f'method: {esc(c.get("activation_method", "—"))}'
+            f'{_method_decode(c.get("activation_method", ""))}'
             f'</li>'
             for c in cond_sigs
         )
@@ -4618,7 +4656,8 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
                                        publish_safe: bool = False,
                                        graph_state: Optional[Dict] = None,
                                        pz_proj: Optional[Dict] = None,
-                                       psig_proj: Optional[Dict] = None) -> str:
+                                       psig_proj: Optional[Dict] = None,
+                                       ll: Optional[Dict] = None) -> str:
     domains      = topology["domains"]
     counts       = topology["counts"]
     score        = gauge["score"]["canonical"]
@@ -4703,7 +4742,7 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
     interp_by_class = _load_psee_interpretation_by_zone_class()
     if _use_psig and pz_proj is not None:
         zone_blocks_html = "".join(
-            _build_t2_psig_zone_block(z, publish_safe, interp_by_class.get(z.get("zone_class")))
+            _build_t2_psig_zone_block(z, publish_safe, interp_by_class.get(z.get("zone_class")), ll)
             for z in zones
         )
     else:
@@ -4714,6 +4753,43 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
 
     # Structural evidence topology graph (section 01A) — renders from graph_state only
     topology_svg = _build_overview_graph_html(graph_state)
+
+    # Language Layer reading guide (section 01B) — omitted in publish_safe mode
+    _ll = ll or {}
+    reading_guide_html = ""
+    if _ll and not publish_safe:
+        _guide_terms = [
+            "COMPOUND_ZONE", "PRESSURE_ZONE", "RUN_RELATIVE_OUTLIER",
+            "THEORETICAL_BASELINE", "CONFIDENCE_BAND", "EVIDENCE_SCOPE",
+            "SIGNAL_COVERAGE", "STRUCTURAL_COVERAGE", "TRACE_CONTINUITY",
+            "INFERENCE_PROHIBITION",
+        ]
+        _guide_rows = ""
+        for _t in _guide_terms:
+            _e = _ll.get(_t)
+            if _e:
+                _guide_rows += (
+                    f'<div class="t2-ll-row">'
+                    f'<span class="t2-ll-term">{esc(_e["canonical_label"])}</span>'
+                    f'<span class="t2-ll-exec">{esc(_e["executive_label"])}</span>'
+                    f'<span class="t2-ll-decode">{esc(_e["short_decode"])}</span>'
+                    f'</div>'
+                )
+        if _guide_rows:
+            reading_guide_html = f"""
+  <div class="t2-section">
+    <div class="t2-section-header">
+      <span class="t2-section-num">01B</span>
+      <span class="t2-section-title">Reading Guide — Structural Term Decodes</span>
+    </div>
+    <p style="font-size:12px;color:var(--fg-muted);margin-bottom:10px">
+      The following terms appear in this report. Decodes are descriptive only.
+      inference_prohibition: ACTIVE — no advisory or causal content may be derived.
+    </p>
+    <div class="t2-ll-table">
+      {_guide_rows}
+    </div>
+  </div>"""
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -4830,6 +4906,8 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
     </div>
   </div>
 
+  {reading_guide_html}
+
   <div class="t2-section">
     <div class="t2-section-header">
       <span class="t2-section-num">02</span>
@@ -4881,6 +4959,7 @@ def generate_tier2_reports(output_dir: Optional[Path] = None) -> List[Path]:
     gauge     = load_gauge_state()
     psig_proj = _load_psig_projection()
     pz_proj   = _load_pressure_zone_projection()
+    ll        = _load_language_layer()
 
     # Export graph positions from workspace runtime (d3-force-3d via Node.js).
     # export_graph_state.js is the sole source of x/y — no Python layout math.
@@ -4911,7 +4990,8 @@ def generate_tier2_reports(output_dir: Optional[Path] = None) -> List[Path]:
                                                   publish_safe=pub_safe,
                                                   graph_state=graph_state,
                                                   pz_proj=pz_proj,
-                                                  psig_proj=psig_proj)
+                                                  psig_proj=psig_proj,
+                                                  ll=ll)
         out_path.write_text(html, encoding="utf-8")
         print(f"[LENS REPORT] Generated: {out_path.resolve()}")
         files.append(out_path)
