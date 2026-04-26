@@ -1,0 +1,275 @@
+{
+  "run_id": "run_01_oss_fastapi",
+  "graph_mode": "overview",
+  "generated_from": "workspace_runtime_positions",
+  "canvas_width": 880,
+  "canvas_height": 380,
+  "nodes": [
+    {
+      "id": "ZONE-01",
+      "type": "ZONE",
+      "x": 439.21,
+      "y": 190.24,
+      "r": 9,
+      "color": "#f0f0f0",
+      "label": "ZONE-01"
+    },
+    {
+      "id": "PSIG-001",
+      "type": "SIGNAL",
+      "x": 360.58,
+      "y": 233.84,
+      "r": 6,
+      "color": "#52d97e",
+      "label": "PSIG-001"
+    },
+    {
+      "id": "CLM-20",
+      "type": "CLAIM",
+      "x": 300.48,
+      "y": 275.57,
+      "r": 5,
+      "color": "#e8b54a",
+      "label": "CLM-20"
+    },
+    {
+      "id": "PSIG-002",
+      "type": "SIGNAL",
+      "x": 477.97,
+      "y": 275.47,
+      "r": 6,
+      "color": "#52d97e",
+      "label": "PSIG-002"
+    },
+    {
+      "id": "CLM-21",
+      "type": "CLAIM",
+      "x": 508.7,
+      "y": 342.4,
+      "r": 5,
+      "color": "#e8b54a",
+      "label": "CLM-21"
+    },
+    {
+      "id": "PSIG-004",
+      "type": "SIGNAL",
+      "x": 529.66,
+      "y": 165.77,
+      "r": 6,
+      "color": "#52d97e",
+      "label": "PSIG-004"
+    },
+    {
+      "id": "CLM-22",
+      "type": "CLAIM",
+      "x": 602.07,
+      "y": 151.32,
+      "r": 5,
+      "color": "#e8b54a",
+      "label": "CLM-22"
+    },
+    {
+      "id": "PSIG-006",
+      "type": "SIGNAL",
+      "x": 459.42,
+      "y": 99.91,
+      "r": 6,
+      "color": "#52d97e",
+      "label": "PSIG-006"
+    },
+    {
+      "id": "CLM-23",
+      "type": "CLAIM",
+      "x": 478.09,
+      "y": 28.95,
+      "r": 5,
+      "color": "#e8b54a",
+      "label": "CLM-23"
+    },
+    {
+      "id": "PSIG-003",
+      "type": "SIGNAL",
+      "x": 352.32,
+      "y": 167.2,
+      "r": 6,
+      "color": "#52d97e",
+      "label": "PSIG-003"
+    },
+    {
+      "id": "CLM-24",
+      "type": "CLAIM",
+      "x": 283.46,
+      "y": 142.65,
+      "r": 5,
+      "color": "#e8b54a",
+      "label": "CLM-24"
+    },
+    {
+      "id": "ART-01",
+      "type": "ARTIFACT",
+      "x": 436.75,
+      "y": 258.04,
+      "r": 5,
+      "color": "#6ab4e8",
+      "label": "ART-01"
+    },
+    {
+      "id": "ART-02",
+      "type": "ARTIFACT",
+      "x": 420.8,
+      "y": 124.71,
+      "r": 5,
+      "color": "#6ab4e8",
+      "label": "ART-02"
+    },
+    {
+      "id": "ART-03",
+      "type": "ARTIFACT",
+      "x": 506.32,
+      "y": 199.1,
+      "r": 5,
+      "color": "#6ab4e8",
+      "label": "ART-03"
+    },
+    {
+      "id": "ART-04",
+      "type": "ARTIFACT",
+      "x": 399.94,
+      "y": 245.15,
+      "r": 5,
+      "color": "#6ab4e8",
+      "label": "ART-04"
+    },
+    {
+      "id": "ART-05",
+      "type": "ARTIFACT",
+      "x": 484.11,
+      "y": 140.33,
+      "r": 5,
+      "color": "#6ab4e8",
+      "label": "ART-05"
+    },
+    {
+      "id": "ART-06",
+      "type": "ARTIFACT",
+      "x": 491.7,
+      "y": 233.64,
+      "r": 5,
+      "color": "#6ab4e8",
+      "label": "ART-06"
+    },
+    {
+      "id": "ART-07",
+      "type": "ARTIFACT",
+      "x": 388.43,
+      "y": 145.68,
+      "r": 5,
+      "color": "#6ab4e8",
+      "label": "ART-07"
+    }
+  ],
+  "links": [
+    {
+      "source": "ZONE-01",
+      "target": "PSIG-001",
+      "color": "#3cac64",
+      "width": 2
+    },
+    {
+      "source": "PSIG-001",
+      "target": "CLM-20",
+      "color": "#4b82d2",
+      "width": 2.2
+    },
+    {
+      "source": "ZONE-01",
+      "target": "PSIG-002",
+      "color": "#3cac64",
+      "width": 2
+    },
+    {
+      "source": "PSIG-002",
+      "target": "CLM-21",
+      "color": "#4b82d2",
+      "width": 2.2
+    },
+    {
+      "source": "ZONE-01",
+      "target": "PSIG-004",
+      "color": "#3cac64",
+      "width": 2
+    },
+    {
+      "source": "PSIG-004",
+      "target": "CLM-22",
+      "color": "#4b82d2",
+      "width": 2.2
+    },
+    {
+      "source": "ZONE-01",
+      "target": "PSIG-006",
+      "color": "#3cac64",
+      "width": 2
+    },
+    {
+      "source": "PSIG-006",
+      "target": "CLM-23",
+      "color": "#4b82d2",
+      "width": 2.2
+    },
+    {
+      "source": "ZONE-01",
+      "target": "PSIG-003",
+      "color": "#3cac64",
+      "width": 2
+    },
+    {
+      "source": "PSIG-003",
+      "target": "CLM-24",
+      "color": "#4b82d2",
+      "width": 2.2
+    },
+    {
+      "source": "ZONE-01",
+      "target": "ART-01",
+      "color": "#b29237",
+      "width": 2
+    },
+    {
+      "source": "ZONE-01",
+      "target": "ART-02",
+      "color": "#b29237",
+      "width": 2
+    },
+    {
+      "source": "ZONE-01",
+      "target": "ART-03",
+      "color": "#b29237",
+      "width": 2
+    },
+    {
+      "source": "ZONE-01",
+      "target": "ART-04",
+      "color": "#b29237",
+      "width": 2
+    },
+    {
+      "source": "ZONE-01",
+      "target": "ART-05",
+      "color": "#b29237",
+      "width": 2
+    },
+    {
+      "source": "ZONE-01",
+      "target": "ART-06",
+      "color": "#b29237",
+      "width": 2
+    },
+    {
+      "source": "ZONE-01",
+      "target": "ART-07",
+      "color": "#b29237",
+      "width": 2
+    }
+  ]
+}

@@ -57,6 +57,9 @@ REPORTS_DIR  = REPO_ROOT / "clients" / "blueedge" / "reports"
 CANONICAL_PKG_DIR = REPO_ROOT / "clients" / "blueedge" / "psee" / "runs" / "run_authoritative_recomputed_01" / "package"
 TIER1_REPORTS_DIR = REPORTS_DIR / "tier1"
 
+_ACTIVE_CLIENT       = "blueedge"
+_ACTIVE_VAULT_RUN_ID = "run_01_authoritative_generated"
+
 
 def _default_output_path() -> Path:
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
@@ -85,6 +88,11 @@ def _configure_runtime(
     """
     global LENS_CLAIMS, API_BASE, FRAGMENTS_DIR, REPORTS_DIR, CANONICAL_PKG_DIR
     global TIER1_REPORTS_DIR, TIER2_REPORTS_DIR
+    global _ACTIVE_CLIENT, _ACTIVE_VAULT_RUN_ID
+
+    _ACTIVE_CLIENT = client
+    if client != "blueedge":
+        _ACTIVE_VAULT_RUN_ID = run_id
 
     if claims:
         LENS_CLAIMS = claims
@@ -3862,7 +3870,9 @@ def generate_tier2_reports(output_dir: Optional[Path] = None) -> List[Path]:
     graph_state_path = output_dir / "graph_state.json"
     export_script = REPO_ROOT / "scripts" / "pios" / "export_graph_state.mjs"
     try:
-        subprocess.run(["node", str(export_script)], check=True)
+        subprocess.run(["node", str(export_script),
+                        "--client", _ACTIVE_CLIENT,
+                        "--run-id", _ACTIVE_VAULT_RUN_ID], check=True)
         print(f"[LENS REPORT] Generated: {graph_state_path.resolve()}")
     except (subprocess.CalledProcessError, FileNotFoundError) as e:
         _fail(f"export_graph_state.js failed: {e}")
