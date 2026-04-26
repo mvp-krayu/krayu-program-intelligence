@@ -296,6 +296,10 @@ function LensHeader({ runId, generatedAt, hasAccess, onUnlock }) {
 const _SC_CLIENT_ID = 'e65d2f0a-dfa7-4257-9333-fcbb583f0880'
 const _SC_RUN_ID    = 'run_01_oss_fastapi'
 
+function reportUrl(name) {
+  return `/api/report-file?name=${encodeURIComponent(name)}&client=${_SC_CLIENT_ID}&runId=${_SC_RUN_ID}`
+}
+
 async function generateReport() {
   const res  = await fetch('/api/report')
   const data = await res.json()
@@ -303,15 +307,14 @@ async function generateReport() {
     throw new Error(data.reason || 'GENERATION_FAILED')
   }
   // Tier-1 + Tier-2: { files: [{name, label, path}] }
-  const byName = {}
+  const byName  = {}
   for (const f of data.files) byName[f.name] = f
-  const scope  = `&client=${_SC_CLIENT_ID}&runId=${_SC_RUN_ID}`
-  const scoped = name => byName[name]
-    ? { ...byName[name], path: byName[name].path + scope }
+  const withUrl = name => byName[name]
+    ? { ...byName[name], path: reportUrl(name) }
     : undefined
   return {
-    executive:  scoped('lens_tier1_narrative_brief.html'),
-    lens:       scoped('lens_tier1_evidence_brief.html'),
+    executive:  withUrl('lens_tier1_narrative_brief.html'),
+    lens:       withUrl('lens_tier1_evidence_brief.html'),
     diagnostic: byName['lens_tier2_diagnostic_narrative.html'],
   }
 }
