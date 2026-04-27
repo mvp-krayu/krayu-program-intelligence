@@ -5587,15 +5587,17 @@ _DECISION_SURFACE_CSS = """
   .ds-gap-item:last-child{border-bottom:none}
   .ds-gap-item::before{content:'○';color:var(--amber);font-size:10px;margin-top:3px;flex-shrink:0}
   .ds-pressure{margin-bottom:32px}
+  .ds-pressure-grid{display:grid;grid-template-columns:45% 55%;gap:32px;align-items:stretch;margin-bottom:20px}
+  .ds-pressure-left{display:flex;flex-direction:column;justify-content:center;height:100%}
+  .ds-pressure-right{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%}
   .ds-pressure-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:16px}
-  .ds-pressure-grid{display:grid;grid-template-columns:45% 55%;gap:32px;align-items:center;margin-bottom:20px}
   .ds-pressure-cell{background:var(--surface);border:1px solid var(--border);border-top:2px solid var(--gold);padding:16px 18px;border-radius:3px}
   .ds-pressure-cell-value{font-size:13px;color:var(--fg);line-height:1.6}
   .ds-pressure-cell-sub{font-size:11px;color:var(--fg-muted);margin-top:6px}
-  .ds-pressure-col-right .ds-trace-preview{margin-bottom:0}
-  .ds-pressure-col-right .ds-trace-preview-wrap{width:100%}
-  .ds-pressure-col-right .ds-trace-preview-label{text-align:center}
-  .ds-pressure-col-right .ds-trace-preview-text{font-size:10px}
+  .ds-pressure-right .ds-trace-preview{margin-bottom:0;width:100%}
+  .ds-pressure-right .ds-trace-preview-wrap{width:100%}
+  .ds-pressure-right .ds-trace-preview-label{text-align:center}
+  .ds-pressure-right .ds-trace-preview-text{font-size:10px}
   .ds-pressure-note{font-size:11px;color:var(--fg-muted);padding:10px 14px;background:rgba(0,0,0,.2);border-radius:2px}
   .ds-inference{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(0,0,0,.2);border:1px solid var(--border-subtle);border-radius:3px;margin-bottom:24px;font-size:11px;color:var(--fg-dim)}
   .ds-inference-tag{font-size:9px;letter-spacing:.12em;text-transform:uppercase;background:var(--red-muted);color:var(--red);padding:3px 8px;border-radius:2px;border:1px solid var(--red-border);flex-shrink:0}
@@ -5777,10 +5779,12 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
 
         pressure_html = (
             f'\n  <div class="ds-pressure">'
-            f'\n    <div class="ds-pressure-label">Where pressure exists</div>'
             f'\n    <div class="ds-pressure-grid">'
-            f'\n      <div class="ds-pressure-col-left">{_cells_html}</div>'
-            f'\n      <div class="ds-pressure-col-right">'
+            f'\n      <div class="ds-pressure-left">'
+            f'\n        <div class="ds-pressure-label">Where pressure exists</div>'
+            f'\n        {_cells_html}'
+            f'\n      </div>'
+            f'\n      <div class="ds-pressure-right">'
             f'{_render_signal_trace_preview(graph_state)}'
             f'</div>'
             f'\n    </div>'
