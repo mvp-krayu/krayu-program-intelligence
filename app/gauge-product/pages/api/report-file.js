@@ -23,6 +23,8 @@
  *   - lens_tier1_narrative_brief_pub.html      → reports/tier1/publish/
  *   - lens_tier2_diagnostic_narrative.html     → reports/tier2/
  *   - lens_tier2_diagnostic_narrative_pub.html → reports/tier2/publish/
+ *   - lens_decision_surface.html               → reports/decision/
+ *   - lens_decision_surface_pub.html           → reports/decision/publish/
  *   - lens_report_YYYYMMDD_HHMMSS.html        → reports/ (legacy)
  *
  * Security:
@@ -30,10 +32,11 @@
  *   - path.basename() applied — no path traversal possible
  *   - Client/runId validated against path.basename() — no traversal
  *   - Served only from approved reports subdirectories
- *   - Client-aware path confirmed within clients/<client>/reports/tier1/ or tier2/
+ *   - Client-aware path confirmed within clients/<client>/reports/tier1/, tier2/, or decision/
  *
  * Authority: PRODUCTIZE.GAUGE.TIER1.REPORT.GENERATOR.UPGRADE.02
  *            PI.SECOND-CLIENT.STEP14H.REPORT-API-BINDING.01
+ *            PI.SECOND-CLIENT.STEP16K.DECISION-SURFACE-ROUTE-FIX.01
  */
 
 import path from 'path'
@@ -47,9 +50,10 @@ const __dirname  = path.dirname(__filename)
 const REPO_ROOT   = path.join(__dirname, '..', '..', '..', '..')
 const REPORTS_DIR = process.env.REPORTS_DIR || null
 
-const VALID_LEGACY   = /^lens_report_\d{8}_\d{6}\.html$/
-const VALID_TIER1    = /^lens_tier1_(evidence_brief|narrative_brief)(_pub)?\.html$/
-const VALID_TIER2    = /^lens_tier2_diagnostic_narrative(_pub)?\.html$/
+const VALID_LEGACY    = /^lens_report_\d{8}_\d{6}\.html$/
+const VALID_TIER1     = /^lens_tier1_(evidence_brief|narrative_brief)(_pub)?\.html$/
+const VALID_TIER2     = /^lens_tier2_diagnostic_narrative(_pub)?\.html$/
+const VALID_DECISION  = /^lens_decision_surface(_pub)?\.html$/
 
 // Resolve the filesystem path for a validated filename (BlueEdge / default routing)
 function resolveFilePath(name) {
@@ -66,6 +70,11 @@ function resolveFilePath(name) {
     const subdir    = isPublish ? path.join('tier2', 'publish') : 'tier2'
     return path.join(REPORTS_DIR, subdir, path.basename(name))
   }
+  if (VALID_DECISION.test(name)) {
+    const isPublish = name.endsWith('_pub.html')
+    const subdir    = isPublish ? path.join('decision', 'publish') : 'decision'
+    return path.join(REPORTS_DIR, subdir, path.basename(name))
+  }
   return null
 }
 
@@ -77,12 +86,13 @@ function resolveClientFilePath(client, runId, name) {
   if (path.basename(client) !== client || path.basename(runId) !== runId) {
     return null
   }
-  const isTier1 = VALID_TIER1.test(name)
-  const isTier2 = VALID_TIER2.test(name)
-  if (!isTier1 && !isTier2) {
+  const isTier1    = VALID_TIER1.test(name)
+  const isTier2    = VALID_TIER2.test(name)
+  const isDecision = VALID_DECISION.test(name)
+  if (!isTier1 && !isTier2 && !isDecision) {
     return null
   }
-  const tier      = isTier1 ? 'tier1' : 'tier2'
+  const tier      = isTier1 ? 'tier1' : isTier2 ? 'tier2' : 'decision'
   const isPublish = name.endsWith('_pub.html')
   const subdir    = isPublish ? path.join(tier, 'publish') : tier
   const filePath  = path.join(REPO_ROOT, 'clients', client, 'reports', subdir, path.basename(name))
