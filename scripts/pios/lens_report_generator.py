@@ -5588,13 +5588,13 @@ _DECISION_SURFACE_CSS = """
   .ds-gap-item::before{content:'○';color:var(--amber);font-size:10px;margin-top:3px;flex-shrink:0}
   .ds-pressure{margin-bottom:32px}
   .ds-pressure-grid{display:grid;grid-template-columns:45% 55%;gap:32px;align-items:stretch;margin-bottom:20px}
-  .ds-pressure-left{display:flex;flex-direction:column;justify-content:center;height:100%}
-  .ds-pressure-right{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%}
+  .ds-pressure-left{display:flex;flex-direction:column}
+  .ds-pressure-right{display:flex;flex-direction:column}
   .ds-pressure-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:16px}
-  .ds-pressure-cell{background:var(--surface);border:1px solid var(--border);border-top:2px solid var(--gold);padding:16px 18px;border-radius:3px}
+  .ds-pressure-cell{flex:1;display:flex;flex-direction:column;justify-content:center;background:var(--surface);border:1px solid var(--border);border-top:2px solid var(--gold);padding:16px 18px;border-radius:3px}
   .ds-pressure-cell-value{font-size:13px;color:var(--fg);line-height:1.6}
   .ds-pressure-cell-sub{font-size:11px;color:var(--fg-muted);margin-top:6px}
-  .ds-pressure-right .ds-trace-preview{margin-bottom:0;width:100%}
+  .ds-pressure-right .ds-trace-preview{flex:1;display:flex;flex-direction:column;margin-bottom:0;width:100%}
   .ds-pressure-right .ds-trace-preview-wrap{width:100%}
   .ds-pressure-right .ds-trace-preview-label{text-align:center}
   .ds-pressure-right .ds-trace-preview-text{font-size:10px}
