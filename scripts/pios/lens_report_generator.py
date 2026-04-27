@@ -243,6 +243,7 @@ class _RenderingContract:
         supporting_visual: str,
         synthesis: str,
         trace: str,
+        attrs: Optional[list] = None,
     ) -> str:
         """RC v2 — reusable Evidence Block Pattern.
 
@@ -256,15 +257,34 @@ class _RenderingContract:
             supporting_visual: Pre-rendered HTML — canvas or SVG only.
             synthesis:         Pre-formed HTML for the synthesis block.
             trace:             Muted trace string (ignored if signals provided).
+            attrs:             Optional list of (key, value) attribute pairs.
 
         Governance: inference_prohibition ACTIVE — no advisory content.
         Caller must ensure synthesis contains no causal or advisory language.
         """
-        _sig_trace = esc(" · ".join(signals)) if signals else esc(trace)
-        _trace_row = (
-            f'<div class="ds-epb-card-trace">{_sig_trace}</div>'
-            if _sig_trace else ""
-        )
+        if signals:
+            _sig_rows = "".join(
+                f'<div class="ds-epb-signal-row">'
+                f'<span class="ds-epb-signal-dot"></span>'
+                f'<span class="ds-epb-signal-id">{esc(s)}</span>'
+                f'</div>'
+                for s in signals
+            )
+            _signals_block = f'<div class="ds-epb-signal-list">{_sig_rows}</div>'
+        elif trace:
+            _signals_block = f'<div class="ds-epb-card-trace">{esc(trace)}</div>'
+        else:
+            _signals_block = ""
+        _attrs_html = ""
+        if attrs:
+            _rows = "".join(
+                f'<div class="ds-epb-card-attr-row">'
+                f'<span class="ds-epb-card-attr-key">{esc(k)}</span>'
+                f'<span class="ds-epb-card-attr-val">{esc(v)}</span>'
+                f'</div>'
+                for k, v in attrs
+            )
+            _attrs_html = f'<div class="ds-epb-card-attrs">{_rows}</div>'
         return (
             f'<div class="ds-epb">'
             f'<div class="ds-epb-section-title">{esc(title)}</div>'
@@ -273,16 +293,20 @@ class _RenderingContract:
             f'<div>'
             f'<div class="ds-epb-card-title">Structural Pressure Signals</div>'
             f'<div class="ds-epb-card-main">{esc(insight)}</div>'
-            f'{_trace_row}'
+            f'{_signals_block}'
             f'<div class="ds-epb-card-support">'
-            f'All active pressure signals share the same affected domain scope.'
+            f'All signals act across the same structural scope.'
             f'</div>'
             f'</div>'
             f'<div class="ds-epb-card-close">'
-            f'This indicates a shared structural pressure pattern.'
+            f'This indicates a shared pressure pattern spanning multiple domains.'
             f'</div>'
+            f'{_attrs_html}'
             f'</div>'
-            f'<div class="ds-epb-visual">{supporting_visual}</div>'
+            f'<div class="ds-epb-visual">'
+            f'<div class="ds-epb-visual-label">Signal Trace Preview</div>'
+            f'{supporting_visual}'
+            f'</div>'
             f'</div>'
             f'<div class="ds-epb-connector"></div>'
             f'<div class="ds-epb-synthesis">{synthesis}</div>'
@@ -301,7 +325,7 @@ def _render_radial_gauge(score: int, band_min: int, band_max: int, label: str) -
     Returns a self-contained <svg> string suitable for inline HTML embedding.
     """
     CX, CY, R        = 80, 72, 58
-    W_TRACK, W_BAND, W_SCORE = 7, 11, 8
+    W_TRACK, W_BAND, W_SCORE = 9, 13, 10
     START_DEG, SWEEP_DEG     = 225.0, 270.0
 
     def _pt(deg: float) -> Tuple[float, float]:
@@ -331,21 +355,21 @@ def _render_radial_gauge(score: int, band_min: int, band_max: int, label: str) -
     score_d = _arc(START_DEG, a_score)
     sx, sy  = _pt(a_score)
 
-    _band_path  = (f'<path d="{band_d}" fill="none" stroke="rgba(200,155,60,.18)" '
+    _band_path  = (f'<path d="{band_d}" fill="none" stroke="rgba(200,155,60,.35)" '
                    f'stroke-width="{W_BAND}" stroke-linecap="round"/>') if band_d else ""
     _score_path = (f'<path d="{score_d}" fill="none" stroke="#c89b3c" '
                    f'stroke-width="{W_SCORE}" stroke-linecap="round"/>') if score_d else ""
     _score_dot  = (
-        f'<circle cx="{sx:.2f}" cy="{sy:.2f}" r="6.5" fill="#d4a84b"/>'
-        f'<circle cx="{sx:.2f}" cy="{sy:.2f}" r="3.5" fill="#ffe0a0"/>'
+        f'<circle cx="{sx:.2f}" cy="{sy:.2f}" r="7.5" fill="#d4a84b"/>'
+        f'<circle cx="{sx:.2f}" cy="{sy:.2f}" r="4" fill="#ffe0a0"/>'
     ) if score_d else ""
 
     _font = "-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
     return (
         f'<svg viewBox="0 0 160 145" width="160" height="145" '
         f'xmlns="http://www.w3.org/2000/svg" style="display:block;overflow:visible">'
-        f'<path d="{track_d}" fill="none" stroke="#242428" '
-        f'stroke-width="{W_TRACK}" stroke-linecap="round" opacity="0.85"/>'
+        f'<path d="{track_d}" fill="none" stroke="#2e2e36" '
+        f'stroke-width="{W_TRACK}" stroke-linecap="round"/>'
         f'{_band_path}'
         f'{_score_path}'
         f'{_score_dot}'
@@ -353,10 +377,10 @@ def _render_radial_gauge(score: int, band_min: int, band_max: int, label: str) -
         f'font-family="{_font}" font-size="44" font-weight="600" fill="#c89b3c" '
         f'letter-spacing="-.01em">{_s}</text>'
         f'<text x="{CX}" y="100" text-anchor="middle" '
-        f'font-family="{_font}" font-size="8" fill="#888" letter-spacing=".18em" opacity="0.65">'
+        f'font-family="{_font}" font-size="9" fill="#999" letter-spacing=".18em" opacity="0.9">'
         f'{esc(label.upper())}</text>'
-        f'<text x="{CX}" y="113" text-anchor="middle" '
-        f'font-family="{_font}" font-size="7" fill="#666" letter-spacing=".06em" opacity="0.45">'
+        f'<text x="{CX}" y="114" text-anchor="middle" '
+        f'font-family="{_font}" font-size="8" fill="#777" letter-spacing=".06em" opacity="0.75">'
         f'{_blo}\u2013{_bhi}</text>'
         f'</svg>'
     )
@@ -469,7 +493,7 @@ def _render_signal_trace_preview(graph_state: Optional[Dict]) -> str:
         f'  <div class="ds-trace-preview-text">'
         f'This pattern reflects how structural signals connect across the system.'
         f'<br>'
-        f'Detailed trace available in interactive workspace.'
+        f'Signal trace reflects structural co-presence across the system.'
         f'</div>\n'
         f'</div>\n'
         f'<script>{js_draw}</script>'
@@ -504,34 +528,53 @@ def _render_signal_trace_canvas(graph_state: Optional[Dict]) -> str:
         separators=(',', ':'),
     )
 
-    # Edge α 0.22: structure readable. Node α 0.85: solid.
-    # Central node (max radius) drawn at full α with stronger stroke ring.
+    # DPR-aware rendering: buffer = display × devicePixelRatio → crisp on retina.
+    # Coordinates are remapped from original canvas space to display space via
+    # bounding-box centering + spread factor (~32% of container width).
     js_draw = (
         f'(function(){{\n'
         f'  var N={nodes_js};\n'
         f'  var L={links_js};\n'
         f'  var cv=document.getElementById("ds-signal-trace");if(!cv)return;\n'
+        f'  var dpr=window.devicePixelRatio||1;\n'
+        f'  var cssW=cv.offsetWidth>10?cv.offsetWidth:540;\n'
+        f'  var cssH=260;\n'
+        f'  cv.width=Math.round(cssW*dpr);\n'
+        f'  cv.height=Math.round(cssH*dpr);\n'
         f'  var ctx=cv.getContext("2d");\n'
-        f'  ctx.globalAlpha=0.22;\n'
-        f'  L.forEach(function(l){{\n'
-        f'    ctx.strokeStyle=l.c;ctx.lineWidth=l.w;\n'
-        f'    ctx.beginPath();ctx.moveTo(N[l.s].x,N[l.s].y);ctx.lineTo(N[l.t].x,N[l.t].y);ctx.stroke();\n'
-        f'  }});\n'
-        f'  var mR=0;N.forEach(function(n){{if(n.r>mR)mR=n.r;}});\n'
+        f'  ctx.scale(dpr,dpr);\n'
+        f'  var minX=1e9,maxX=-1e9,minY=1e9,maxY=-1e9;\n'
         f'  N.forEach(function(n){{\n'
-        f'    var c=n.r===mR;\n'
-        f'    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,6.283);\n'
-        f'    ctx.fillStyle=n.c;ctx.globalAlpha=c?1.0:0.85;ctx.fill();\n'
-        f'    ctx.lineWidth=c?1.5:0.6;\n'
-        f'    ctx.strokeStyle=c?"rgba(255,255,255,0.2)":"rgba(255,255,255,0.08)";\n'
+        f'    if(n.x<minX)minX=n.x;if(n.x>maxX)maxX=n.x;\n'
+        f'    if(n.y<minY)minY=n.y;if(n.y>maxY)maxY=n.y;\n'
+        f'  }});\n'
+        f'  var cx0=(minX+maxX)/2,cy0=(minY+maxY)/2;\n'
+        f'  var span=Math.max(maxX-minX,maxY-minY)||1;\n'
+        f'  var sc=(cssW*0.64)/span;\n'
+        f'  var ocx=cssW/2,ocy=cssH/2;\n'
+        f'  function px(x){{return ocx+(x-cx0)*sc;}}\n'
+        f'  function py(y){{return ocy+(y-cy0)*sc;}}\n'
+        f'  var mR=0;N.forEach(function(n){{if(n.r>mR)mR=n.r;}});\n'
+        f'  ctx.globalAlpha=0.80;\n'
+        f'  L.forEach(function(l){{\n'
+        f'    ctx.strokeStyle=l.c;ctx.lineWidth=1.6;\n'
+        f'    ctx.beginPath();ctx.moveTo(px(N[l.s].x),py(N[l.s].y));ctx.lineTo(px(N[l.t].x),py(N[l.t].y));ctx.stroke();\n'
+        f'  }});\n'
+        f'  N.forEach(function(n){{\n'
+        f'    var isc=n.r===mR;\n'
+        f'    var r=isc?6.5:4.5;\n'
+        f'    ctx.beginPath();ctx.arc(px(n.x),py(n.y),r,0,6.283);\n'
+        f'    ctx.fillStyle=n.c;ctx.globalAlpha=isc?1.0:0.88;ctx.fill();\n'
+        f'    ctx.lineWidth=isc?1.5:0.8;\n'
+        f'    ctx.strokeStyle=isc?"rgba(255,255,255,0.25)":"rgba(255,255,255,0.12)";\n'
         f'    ctx.globalAlpha=1;ctx.stroke();\n'
         f'  }});\n'
         f'}})();'
     )
 
     return (
-        f'<canvas id="ds-signal-trace" width="{width}" height="{height}" '
-        f'style="display:block;width:90%;height:220px;margin:0 auto;border-radius:3px;background:#09090d"></canvas>\n'
+        f'<canvas id="ds-signal-trace"'
+        f' style="display:block;width:100%;height:275px;margin:0 auto"></canvas>\n'
         f'<script>{js_draw}</script>'
     )
 
@@ -5665,7 +5708,7 @@ def generate_tier2_reports(output_dir: Optional[Path] = None) -> List[Path]:
 _DECISION_SURFACE_CSS = """
   :root{--bg:#0e0e10;--surface:#16161a;--surface-raised:#1c1c22;--border:#2a2a2e;--border-subtle:#222228;--fg:#e8e8e8;--fg-muted:#888;--fg-dim:#555;--gold:#c89b3c;--gold-muted:rgba(200,155,60,0.12);--gold-border:rgba(200,155,60,0.28);--green:#4caf6e;--green-muted:rgba(76,175,110,0.12);--green-border:rgba(76,175,110,0.28);--amber:#d4912a;--amber-muted:rgba(212,145,42,0.1);--amber-border:rgba(212,145,42,0.25);--red:#e05252;--red-muted:rgba(224,82,82,0.1);--red-border:rgba(224,82,82,0.25);--font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
   *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:14px;line-height:1.7;-webkit-font-smoothing:antialiased}
+  body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
   .page{max-width:760px;margin:0 auto;padding:36px 32px 72px}
   .ds-identity{display:flex;align-items:center;gap:8px;margin-bottom:28px;padding-bottom:14px;border-bottom:1px solid var(--border-subtle);font-size:12px;flex-wrap:wrap}
   .ds-brand{color:var(--gold);font-weight:500;letter-spacing:.06em}
@@ -5675,22 +5718,19 @@ _DECISION_SURFACE_CSS = """
   .ds-nav{margin-left:auto;display:flex;gap:14px}
   .ds-nav-link{font-size:11px;color:var(--fg-dim);text-decoration:none;letter-spacing:.04em}
   .ds-nav-link:hover{color:var(--fg-muted)}
-  .ds-hero{display:flex;justify-content:space-between;align-items:flex-start;padding:24px 28px;border:1px solid var(--border);border-left:4px solid var(--amber);border-radius:4px;background:var(--surface);margin-bottom:28px;gap:20px}
-  .ds-hero.posture-proceed{border-left-color:var(--green)}
-  .ds-hero.posture-investigate{border-left-color:var(--amber)}
-  .ds-hero.posture-escalate{border-left-color:var(--red)}
-  .ds-hero-posture{font-size:28px;font-weight:300;letter-spacing:.04em;margin-bottom:8px}
-  .ds-hero.posture-proceed .ds-hero-posture{color:var(--green)}
-  .ds-hero.posture-investigate .ds-hero-posture{color:var(--amber)}
-  .ds-hero.posture-escalate .ds-hero-posture{color:var(--red)}
-  .ds-hero-rationale{font-size:13px;color:var(--fg-muted);line-height:1.6;max-width:420px;margin-bottom:12px}
+  .ds-hero{position:relative;display:block;border:1px solid var(--border);border-radius:4px;background:var(--surface);margin-bottom:28px;overflow:hidden}
+  .ds-hero::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,#c89b3c 0%,rgba(200,155,60,.16) 100%)}
+  .ds-hero-verdict{font-size:64px;font-weight:700;letter-spacing:0;line-height:1;padding:28px 32px 22px 40px;border-bottom:1px solid var(--border-subtle)}
+  .ds-hero.posture-proceed .ds-hero-verdict{color:var(--green)}
+  .ds-hero.posture-investigate .ds-hero-verdict{color:var(--amber)}
+  .ds-hero.posture-escalate .ds-hero-verdict{color:var(--red)}
+  .ds-hero-body{display:flex;justify-content:space-between;align-items:flex-start;padding:20px 28px 24px 40px;gap:24px}
+  .ds-hero-rationale{font-size:13px;color:var(--fg-muted);line-height:1.6;max-width:380px;margin-bottom:6px}
+  .ds-hero-secondary{font-size:12px;color:var(--fg-dim);line-height:1.5;max-width:380px;margin-bottom:12px}
+  .ds-hero-scan-strip{font-size:11px;letter-spacing:.06em;color:var(--fg-muted);margin-top:14px;padding-top:12px;border-top:1px solid var(--border-subtle)}
   .ds-hero-context{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .ds-ctx-sep{color:var(--fg-dim)}
   .ds-ctx-badge{font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:var(--surface-raised);color:var(--fg-muted);padding:3px 8px;border-radius:2px;border:1px solid var(--border)}
-  .ds-hero-score-block{text-align:right;flex-shrink:0}
-  .ds-hero-score{font-size:40px;font-weight:300;color:var(--gold);line-height:1}
-  .ds-hero-band{font-size:12px;color:var(--gold);margin-top:4px;letter-spacing:.02em}
-  .ds-hero-range{font-size:11px;color:var(--fg-dim);margin-top:2px}
   .ds-split{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
   .ds-split-col{padding:16px 18px;border:1px solid var(--border);border-radius:3px;background:var(--surface)}
   .ds-split-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px;font-weight:600}
@@ -5707,13 +5747,22 @@ _DECISION_SURFACE_CSS = """
   .ds-epb-card{display:flex;flex-direction:column;justify-content:space-between;background:var(--surface);border:1px solid var(--border);border-top:2px solid var(--gold);padding:20px 22px;border-radius:3px}
   .ds-epb-card-title{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;font-weight:600}
   .ds-epb-card-main{font-size:14px;font-weight:300;color:var(--fg);line-height:1.5;margin-bottom:10px}
-  .ds-epb-card-trace{font-size:10px;color:var(--fg-dim);font-family:monospace;opacity:.6;margin-bottom:12px;word-break:break-all}
+  .ds-epb-card-trace{font-size:10px;color:var(--fg-dim);font-family:monospace;opacity:.8;margin-bottom:12px;word-break:break-all}
+  .ds-epb-signal-list{margin:10px 0 12px;display:flex;flex-direction:column;gap:5px}
+  .ds-epb-signal-row{display:flex;align-items:center;gap:8px}
+  .ds-epb-signal-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0;opacity:.7}
+  .ds-epb-signal-id{font-size:11px;color:var(--fg-muted);font-family:monospace;letter-spacing:.04em}
   .ds-epb-card-support{font-size:11px;color:var(--fg-muted);line-height:1.6;margin-bottom:10px}
   .ds-epb-card-close{font-size:11px;color:var(--fg-muted);font-style:italic}
-  .ds-epb-visual{display:flex;flex-direction:column}
-  .ds-epb-connector{height:1px;background:linear-gradient(90deg,transparent,rgba(200,155,60,.2),transparent);margin:20px 0}
+  .ds-epb-visual{display:flex;flex-direction:column;justify-content:flex-start}
+  .ds-epb-visual-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:10px}
+  .ds-epb-connector{height:1px;background:linear-gradient(90deg,transparent,rgba(200,155,60,.2),transparent);margin:12px 0}
   .ds-epb-synthesis{font-size:11px;color:var(--fg-muted);line-height:1.8;padding:14px 18px;background:rgba(0,0,0,.15);border-radius:2px}
   .ds-epb-synthesis strong{color:var(--fg);font-weight:500}
+  .ds-epb-card-attrs{margin-top:14px;padding-top:12px;border-top:1px solid var(--border-subtle)}
+  .ds-epb-card-attr-row{display:flex;justify-content:space-between;align-items:baseline;padding:3px 0}
+  .ds-epb-card-attr-key{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-dim)}
+  .ds-epb-card-attr-val{font-size:11px;color:var(--fg-muted);text-align:right}
   .ds-inference{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(0,0,0,.2);border:1px solid var(--border-subtle);border-radius:3px;margin-bottom:24px;font-size:11px;color:var(--fg-dim)}
   .ds-inference-tag{font-size:9px;letter-spacing:.12em;text-transform:uppercase;background:var(--red-muted);color:var(--red);padding:3px 8px;border-radius:2px;border:1px solid var(--red-border);flex-shrink:0}
   .ds-explore{margin-bottom:32px}
@@ -5723,13 +5772,29 @@ _DECISION_SURFACE_CSS = """
   .ds-explore-link:hover{border-color:var(--gold-border);color:var(--gold)}
   .ds-explore-link.primary{border-color:var(--gold-border);color:var(--gold);background:var(--gold-muted)}
   .ds-footer{display:flex;justify-content:space-between;align-items:center;padding-top:20px;border-top:1px solid var(--border-subtle);margin-top:40px;font-size:11px;color:var(--fg-dim)}
-  .ds-footer-brand{color:var(--gold);letter-spacing:.06em;font-size:13px}
+  .ds-footer-brand{color:var(--gold);letter-spacing:.06em;font-size:13px;font-weight:500}
+  .ds-footer-doc{color:var(--fg-muted);font-size:11px;letter-spacing:.08em}
   .rc-trace{font-size:10px;color:var(--fg-dim);opacity:.7;font-style:normal}
   .ds-trace-preview{margin-bottom:32px}
   .ds-trace-preview-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:12px}
   .ds-trace-preview-wrap{width:67%;margin:0 auto;border-radius:3px;overflow:hidden}
   .ds-trace-preview-text{font-size:11px;color:var(--fg-dim);margin-top:12px;text-align:center;line-height:1.7}
-  @media(max-width:600px){.ds-hero{flex-direction:column}.ds-hero-score-block{text-align:left}.ds-split{grid-template-columns:1fr}.ds-epb-grid{grid-template-columns:1fr}.ds-nav{margin-left:0;margin-top:6px}}
+  @media print{
+    html,body{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}
+    @page{margin:0}
+    .page{max-width:920px!important;padding:40px 40px 56px!important}
+    .ds-nav{display:none!important}
+    .ds-hero{page-break-inside:avoid;margin-bottom:36px}
+    .ds-split{page-break-inside:avoid;margin-bottom:40px}
+    .ds-epb{page-break-inside:avoid;margin-bottom:36px}
+    .ds-epb-grid{page-break-inside:avoid}
+    .ds-inference{page-break-inside:avoid}
+    .ds-explore{page-break-inside:avoid}
+    .ds-footer{margin-top:56px;page-break-inside:avoid}
+    .ds-epb-visual canvas{width:340px!important;max-width:340px!important;height:240px!important}
+    .ds-epb-connector{background:rgba(200,155,60,.35)!important}
+  }
+  @media(max-width:600px){.ds-hero-body{flex-direction:column}.ds-split{grid-template-columns:1fr}.ds-epb-grid{grid-template-columns:1fr}.ds-nav{margin-left:0;margin-top:6px}}
 """
 
 
@@ -5793,6 +5858,15 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
                           if not exec_eval
                           else "Execution evidence is present.")
     _hero_rationale = f"{_struct_sentence} {_evidence_sentence}"
+    _hero_secondary = (
+        "Structural state is confirmed. Decision is constrained by evidence gaps."
+        if posture == "INVESTIGATE" and not exec_eval
+        else "Structural state is confirmed. Diagnostic layer required for resolution."
+        if posture == "INVESTIGATE"
+        else "Structural state is degraded. Escalation warranted."
+        if posture == "ESCALATE"
+        else "Structural state is confirmed. Evidence base supports the assessment."
+    )
 
     # Hero context tags — labeled structural / evidence / risk (no internal state label)
     _struct_tag = "STABLE" if (weak_ct == 0 and grounded_ct >= total_doms) else "DEGRADED"
@@ -5825,6 +5899,32 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
         zone_count = len(_pz_list_f)
         if _pz_list_f:
             zone_class = _pz_list_f[0].get("zone_class", "COMPOUND_ZONE")
+
+    # ── Pre-compute collapse/signals — reused by scan strip and EPB ───
+    _cp: Optional[Dict]  = None
+    _sig_set: list       = []
+    _sig_n: int          = 0
+    if _use_psig and pz_proj is not None and zone_count > 0:
+        _pz_pre  = pz_proj.get("zone_projection", [])
+        _cp      = RC.collapse_patterns(_pz_pre, pz_proj, publish_safe)
+        _sig_set = (_cp["shared_sigs"] if _cp and _cp.get("shared_sigs")
+                    else _pz_pre[0].get("signals", []) if _pz_pre else [])
+        _sig_n   = len(_sig_set)
+
+    # ── Hero scan strip — one-line data summary for executive scan ─────
+    _scan_parts: list = []
+    if _sig_n > 0:
+        _scan_parts.append(f"{_sig_n} signal{'s' if _sig_n != 1 else ''} active")
+    if zone_count > 1:
+        _scan_parts.append("system-wide scope")
+    elif zone_count == 1:
+        _scan_parts.append("single zone scope")
+    if _cp is not None:
+        _scan_parts.append("1 structural pattern")
+    _hero_scan_strip_html = (
+        f'<div class="ds-hero-scan-strip">{esc(" · ".join(_scan_parts))}</div>'
+        if _scan_parts else ""
+    )
 
     # ── Confirmed card — prose sentences, no metric dumps ─────────────
     _truth_sentences: list = []
@@ -5862,21 +5962,24 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
     # ── Pressure section — RC.evidence_pair_block (psig path only) ────
     pressure_html = ""
     if _use_psig and pz_proj is not None and zone_count > 0:
-        _pz_list_s  = pz_proj.get("zone_projection", [])
-        _cp         = RC.collapse_patterns(_pz_list_s, pz_proj, publish_safe)
-        _sig_set    = (_cp["shared_sigs"] if _cp
-                       else _pz_list_s[0].get("signals", []) if _pz_list_s else [])
-        _sig_n      = len(_sig_set)
-
         _insight = (
-            f"{_sig_n} signal{'s are' if _sig_n != 1 else ' is'} "
+            f"{_sig_n} structural signal{'s are' if _sig_n != 1 else ' is'} "
             f"simultaneously active across the system."
         )
+        _attr_scope     = "System-wide" if zone_count > 1 else "Shared zone scope"
+        _attr_coherence = "High" if _cp is not None else "Confirmed"
+        _epb_attrs = [
+            ("Pattern type",     "Shared structural pressure"),
+            ("Scope",            _attr_scope),
+            ("Signal coherence", _attr_coherence),
+        ]
         _synthesis_html = (
             f'<strong>A single structural pressure pattern spans multiple domains.</strong>'
             f'<br><br>'
             f'The same signals are present in each zone.<br>'
-            f'The pattern reflects structural co-presence across domains.'
+            f'The difference lies in where pressure originates.'
+            f'<br><br>'
+            f'This reflects structural co-presence across the system.'
             f'<br><br>'
             f'This is not a causal determination.'
         )
@@ -5889,6 +5992,7 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
                 supporting_visual=_render_signal_trace_canvas(graph_state),
                 synthesis=_synthesis_html,
                 trace="",
+                attrs=_epb_attrs,
             )
         )
 
@@ -5911,6 +6015,7 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
   <title>LENS — Decision Surface{title_suffix}</title>
   <style>{_DECISION_SURFACE_CSS}</style>
 </head>
@@ -5931,18 +6036,22 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
   </div>
 
   <div class="ds-hero {_posture_hero_cls}">
-    <div>
-      <div class="ds-hero-posture">{esc(posture)}</div>
-      <div class="ds-hero-rationale">{esc(_hero_rationale)}</div>
-      <div class="ds-hero-context">
-        <span class="ds-ctx-badge">STRUCTURE: {esc(_struct_tag)}</span>
-        <span class="ds-ctx-sep">·</span>
-        <span class="ds-ctx-badge">EVIDENCE: {esc(ev_comp)}</span>
-        <span class="ds-ctx-sep">·</span>
-        <span class="ds-ctx-badge">RISK: {esc(risk)}</span>
+    <div class="ds-hero-verdict">{esc(posture)}</div>
+    <div class="ds-hero-body">
+      <div>
+        <div class="ds-hero-rationale">{esc(_hero_rationale)}</div>
+        <div class="ds-hero-secondary">{esc(_hero_secondary)}</div>
+        <div class="ds-hero-context">
+          <span class="ds-ctx-badge">STRUCTURE: {esc(_struct_tag)}</span>
+          <span class="ds-ctx-sep">·</span>
+          <span class="ds-ctx-badge">EVIDENCE: {esc(ev_comp)}</span>
+          <span class="ds-ctx-sep">·</span>
+          <span class="ds-ctx-badge">RISK: {esc(risk)}</span>
+        </div>
+        {_hero_scan_strip_html}
       </div>
+      {_render_radial_gauge(score, band_lo, band_hi, band_label)}
     </div>
-    {_render_radial_gauge(score, band_lo, band_hi, band_label)}
   </div>
 
   <div class="ds-split">
@@ -5970,8 +6079,9 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
   </div>
 
   <div class="ds-footer">
-    <span class="ds-footer-brand">Signäl</span>
-    <span>{esc(footer_note)} · Decision Surface · No advisory content</span>
+    <span class="ds-footer-brand">Signäl · LENS</span>
+    <span class="ds-footer-doc">Decision Surface · Stage 1 of 3</span>
+    <span>{esc(footer_note)} · Inference Prohibition Active</span>
   </div>
 
 </div>
