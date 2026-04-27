@@ -307,6 +307,55 @@ def _render_radial_gauge(score: int, band_min: int, band_max: int, label: str) -
     )
 
 
+def _render_pressure_strip(zone_count: int) -> str:
+    """Horizontal strip of identical nodes — one per diagnostic zone.
+
+    Communicates count and shared presence only.
+    No attribution, hierarchy, intensity, or directionality.
+    """
+    if zone_count <= 0:
+        return ""
+
+    W, NY, R = 400, 40, 6
+    H        = 82
+
+    spacing    = min(72, 300 // max(zone_count - 1, 1)) if zone_count > 1 else 0
+    total_span = spacing * (zone_count - 1)
+    x_start    = W // 2 - total_span // 2
+    xs         = [x_start + i * spacing for i in range(zone_count)]
+
+    _font  = "-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+    _color = "#c89b3c"
+
+    _line = (
+        f'<line x1="{xs[0]}" y1="{NY}" x2="{xs[-1]}" y2="{NY}" '
+        f'stroke="{_color}" stroke-width="1" opacity="0.18"/>'
+    ) if zone_count > 1 else ""
+
+    _nodes = "".join(
+        f'<circle cx="{x}" cy="{NY}" r="{R}" fill="{_color}"/>'
+        for x in xs
+    )
+
+    _n_word  = "1 domain" if zone_count == 1 else f"{zone_count} domains"
+    _verb    = "exhibits" if zone_count == 1 else "exhibit"
+    _shared  = "" if zone_count == 1 else "a shared "
+    _label   = f"{_n_word} {_verb} {_shared}structural pressure pattern"
+
+    return (
+        f'<svg viewBox="0 0 {W} {H}" width="{W}" height="{H}" '
+        f'xmlns="http://www.w3.org/2000/svg" '
+        f'style="display:block;margin:12px auto 4px;overflow:visible">'
+        f'{_line}'
+        f'{_nodes}'
+        f'<text x="{W // 2}" y="{NY + 28}" text-anchor="middle" '
+        f'font-family="{_font}" font-size="10" fill="#666" letter-spacing=".04em">'
+        f'{esc(_label)}'
+        f'</text>'
+        f'</svg>'
+    )
+
+
 def _default_output_path() -> Path:
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     return REPORTS_DIR / f"lens_report_{ts}.html"
@@ -5666,6 +5715,7 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
         pressure_html = (
             f'\n  <div class="ds-pressure">'
             f'\n    <div class="ds-pressure-label">Where pressure exists</div>'
+            f'\n    {_render_pressure_strip(zone_count)}'
             f'\n    <div class="ds-pressure-row">{_cells_html}</div>'
             f'\n    {_note_html}'
             f'\n  </div>'
