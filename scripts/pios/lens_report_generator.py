@@ -356,6 +356,71 @@ def _render_pressure_strip(zone_count: int) -> str:
     )
 
 
+def _render_signal_trace_preview(graph_state: Optional[Dict]) -> str:
+    """Signal Trace Preview — Decision Surface teaser graph.
+
+    Renders the Tier-2 evidence graph at 67% width, labels and legend stripped.
+    Edges recessed (α=0.12), nodes softened (α=0.72). Identical structure.
+    Returns empty string when graph_state is absent.
+    """
+    if not graph_state:
+        return ''
+
+    nodes  = graph_state['nodes']
+    links  = graph_state['links']
+    width  = graph_state.get('canvas_width',  880)
+    height = graph_state.get('canvas_height', 380)
+
+    nidx = {n['id']: i for i, n in enumerate(nodes)}
+
+    nodes_js = json.dumps(
+        [{'x': n['x'], 'y': n['y'], 'r': n['r'], 'c': n['color']}
+         for n in nodes],
+        separators=(',', ':'),
+    )
+    links_js = json.dumps(
+        [{'s': nidx.get(l['source'], 0), 't': nidx.get(l['target'], 0),
+          'c': l['color'], 'w': l['width']}
+         for l in links],
+        separators=(',', ':'),
+    )
+
+    js_draw = (
+        f'(function(){{\n'
+        f'  var N={nodes_js};\n'
+        f'  var L={links_js};\n'
+        f'  var cv=document.getElementById("ds-signal-trace");if(!cv)return;\n'
+        f'  var ctx=cv.getContext("2d");\n'
+        f'  ctx.globalAlpha=0.12;\n'
+        f'  L.forEach(function(l){{\n'
+        f'    ctx.strokeStyle=l.c;ctx.lineWidth=l.w;\n'
+        f'    ctx.beginPath();ctx.moveTo(N[l.s].x,N[l.s].y);ctx.lineTo(N[l.t].x,N[l.t].y);ctx.stroke();\n'
+        f'  }});\n'
+        f'  N.forEach(function(n){{\n'
+        f'    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,6.283);\n'
+        f'    ctx.fillStyle=n.c;ctx.globalAlpha=0.72;ctx.fill();\n'
+        f'    ctx.lineWidth=0.6;ctx.strokeStyle="rgba(255,255,255,0.07)";ctx.globalAlpha=1;ctx.stroke();\n'
+        f'  }});\n'
+        f'}})();'
+    )
+
+    return (
+        f'<div class="ds-trace-preview">\n'
+        f'  <div class="ds-trace-preview-label">Signal Trace Preview</div>\n'
+        f'  <div class="ds-trace-preview-wrap">\n'
+        f'    <canvas id="ds-signal-trace" width="{width}" height="{height}" '
+        f'style="display:block;width:100%;background:#09090d"></canvas>\n'
+        f'  </div>\n'
+        f'  <div class="ds-trace-preview-text">'
+        f'This pattern reflects how structural signals connect across the system.'
+        f'<br>'
+        f'Detailed trace available in interactive workspace.'
+        f'</div>\n'
+        f'</div>\n'
+        f'<script>{js_draw}</script>'
+    )
+
+
 def _default_output_path() -> Path:
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     return REPORTS_DIR / f"lens_report_{ts}.html"
@@ -5545,16 +5610,10 @@ _DECISION_SURFACE_CSS = """
   .ds-footer{display:flex;justify-content:space-between;align-items:center;padding-top:20px;border-top:1px solid var(--border-subtle);margin-top:40px;font-size:11px;color:var(--fg-dim)}
   .ds-footer-brand{color:var(--gold);letter-spacing:.06em;font-size:13px}
   .rc-trace{font-size:10px;color:var(--fg-dim);opacity:.7;font-style:normal}
-  .ds-trace-view{margin-bottom:32px}
-  .ds-trace-view summary{font-size:11px;color:var(--fg-dim);cursor:pointer;padding:8px 12px;border:1px solid var(--border-subtle);border-radius:3px;list-style:none;display:flex;align-items:center;gap:8px;user-select:none}
-  .ds-trace-view summary::-webkit-details-marker{display:none}
-  .ds-trace-view summary::before{content:'›';font-size:13px;color:var(--fg-dim);transition:transform .15s}
-  .ds-trace-view[open] summary::before{transform:rotate(90deg)}
-  .ds-trace-view summary:hover{border-color:var(--border);color:var(--fg-muted)}
-  .ds-trace-view-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:10px}
-  .ds-trace-body{padding:16px 0 0}
-  .ds-trace-intro{font-size:11px;color:var(--fg-dim);margin-bottom:14px;line-height:1.6}
-  .ds-trace-footnote{font-size:10px;color:var(--fg-dim);margin-top:12px;padding-top:10px;border-top:1px solid var(--border-subtle)}
+  .ds-trace-preview{margin-bottom:32px}
+  .ds-trace-preview-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:12px}
+  .ds-trace-preview-wrap{width:67%;margin:0 auto;border-radius:3px;overflow:hidden}
+  .ds-trace-preview-text{font-size:11px;color:var(--fg-dim);margin-top:12px;text-align:center;line-height:1.7}
   @media(max-width:600px){.ds-hero{flex-direction:column}.ds-hero-score-block{text-align:left}.ds-split{grid-template-columns:1fr}.ds-pressure-row{grid-template-columns:1fr 1fr}.ds-nav{margin-left:0;margin-top:6px}}
 """
 
@@ -5565,7 +5624,8 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
                               pz_proj: Optional[Dict] = None,
                               metrics: Optional[Dict] = None,
                               decision_model: Optional[Dict] = None,
-                              ll: Optional[Dict] = None) -> str:
+                              ll: Optional[Dict] = None,
+                              graph_state: Optional[Dict] = None) -> str:
     # ── Core state derivation ──────────────────────────────────────────
     dm        = decision_model or {}
     risk      = dm.get("structural_risk", "MODERATE")
@@ -5745,28 +5805,8 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
         for href, label, primary in _explore_links
     )
 
-    # ── Structural Trace View (collapsible) ────────────────────────────
-    _topo_svg = (
-        _build_tier1_topology_svg_generic(domains, pz_proj=pz_proj)
-        if _use_psig else
-        _build_tier1_topology_svg(domains, publish_safe=publish_safe)
-    )
-    _trace_view_html = (
-        f'<details class="ds-trace-view">'
-        f'<summary>View underlying structural connections</summary>'
-        f'<div class="ds-trace-body">'
-        f'<div class="ds-trace-label">Structural Trace View</div>'
-        f'<p class="ds-trace-intro">'
-        f'This view shows how structural signals, claims, and artifacts connect '
-        f'across the assessed system.'
-        f'</p>'
-        f'{_topo_svg}'
-        f'<div class="ds-trace-footnote">'
-        f'Full trace continuity available in interactive workspace.'
-        f'</div>'
-        f'</div>'
-        f'</details>'
-    )
+    # ── Signal Trace Preview ────────────────────────────────────────
+    _trace_view_html = _render_signal_trace_preview(graph_state)
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -5870,6 +5910,12 @@ def generate_decision_surface(output_dir: Optional[Path] = None) -> List[Path]:
     dm        = _compute_decision_model(metrics, psig_proj, gauge)
     ll        = _load_language_layer()
 
+    graph_state: Optional[Dict] = None
+    _gs_path = TIER2_REPORTS_DIR / "graph_state.json"
+    if _gs_path.exists():
+        with open(_gs_path) as f:
+            graph_state = json.load(f)
+
     files: List[Path] = []
     artifacts = [
         (output_dir / "lens_decision_surface.html",         False),
@@ -5884,6 +5930,7 @@ def generate_decision_surface(output_dir: Optional[Path] = None) -> List[Path]:
             metrics=metrics,
             decision_model=dm,
             ll=ll,
+            graph_state=graph_state,
         )
         out_path.write_text(html, encoding="utf-8")
         print(f"[LENS REPORT] Generated: {out_path.resolve()}")
