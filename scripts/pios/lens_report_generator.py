@@ -235,6 +235,61 @@ class _RenderingContract:
         )
 
 
+    @staticmethod
+    def evidence_pair_block(
+        title: str,
+        insight: str,
+        signals: list,
+        supporting_visual: str,
+        synthesis: str,
+        trace: str,
+    ) -> str:
+        """RC v2 — reusable Evidence Block Pattern.
+
+        Pairs a concise insight card (left) with a supporting visual (right)
+        and a full-width synthesis statement below a connector line.
+
+        Args:
+            title:             Section title rendered above the pair.
+            insight:           One-sentence signal state description.
+            signals:           Ordered signal ID list for the trace line.
+            supporting_visual: Pre-rendered HTML — canvas or SVG only.
+            synthesis:         Pre-formed HTML for the synthesis block.
+            trace:             Muted trace string (ignored if signals provided).
+
+        Governance: inference_prohibition ACTIVE — no advisory content.
+        Caller must ensure synthesis contains no causal or advisory language.
+        """
+        _sig_trace = esc(" · ".join(signals)) if signals else esc(trace)
+        _trace_row = (
+            f'<div class="ds-epb-card-trace">{_sig_trace}</div>'
+            if _sig_trace else ""
+        )
+        return (
+            f'<div class="ds-epb">'
+            f'<div class="ds-epb-section-title">{esc(title)}</div>'
+            f'<div class="ds-epb-grid">'
+            f'<div class="ds-epb-card">'
+            f'<div>'
+            f'<div class="ds-epb-card-title">Structural Pressure Signals</div>'
+            f'<div class="ds-epb-card-main">{esc(insight)}</div>'
+            f'{_trace_row}'
+            f'<div class="ds-epb-card-support">'
+            f'All active pressure signals share the same affected domain scope.'
+            f'</div>'
+            f'</div>'
+            f'<div class="ds-epb-card-close">'
+            f'This indicates a shared structural pressure pattern.'
+            f'</div>'
+            f'</div>'
+            f'<div class="ds-epb-visual">{supporting_visual}</div>'
+            f'</div>'
+            f'<div class="ds-epb-connector"></div>'
+            f'<div class="ds-epb-synthesis">{synthesis}</div>'
+            f'</div>'
+        )
+
+
 RC = _RenderingContract
 
 
@@ -449,33 +504,34 @@ def _render_signal_trace_canvas(graph_state: Optional[Dict]) -> str:
         separators=(',', ':'),
     )
 
+    # Edge α 0.22: structure readable. Node α 0.85: solid.
+    # Central node (max radius) drawn at full α with stronger stroke ring.
     js_draw = (
         f'(function(){{\n'
         f'  var N={nodes_js};\n'
         f'  var L={links_js};\n'
         f'  var cv=document.getElementById("ds-signal-trace");if(!cv)return;\n'
         f'  var ctx=cv.getContext("2d");\n'
-        f'  ctx.globalAlpha=0.12;\n'
+        f'  ctx.globalAlpha=0.22;\n'
         f'  L.forEach(function(l){{\n'
         f'    ctx.strokeStyle=l.c;ctx.lineWidth=l.w;\n'
         f'    ctx.beginPath();ctx.moveTo(N[l.s].x,N[l.s].y);ctx.lineTo(N[l.t].x,N[l.t].y);ctx.stroke();\n'
         f'  }});\n'
+        f'  var mR=0;N.forEach(function(n){{if(n.r>mR)mR=n.r;}});\n'
         f'  N.forEach(function(n){{\n'
+        f'    var c=n.r===mR;\n'
         f'    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,6.283);\n'
-        f'    ctx.fillStyle=n.c;ctx.globalAlpha=0.72;ctx.fill();\n'
-        f'    ctx.lineWidth=0.6;ctx.strokeStyle="rgba(255,255,255,0.07)";ctx.globalAlpha=1;ctx.stroke();\n'
+        f'    ctx.fillStyle=n.c;ctx.globalAlpha=c?1.0:0.85;ctx.fill();\n'
+        f'    ctx.lineWidth=c?1.5:0.6;\n'
+        f'    ctx.strokeStyle=c?"rgba(255,255,255,0.2)":"rgba(255,255,255,0.08)";\n'
+        f'    ctx.globalAlpha=1;ctx.stroke();\n'
         f'  }});\n'
         f'}})();'
     )
 
     return (
         f'<canvas id="ds-signal-trace" width="{width}" height="{height}" '
-        f'style="display:block;width:100%;background:#09090d"></canvas>\n'
-        f'<div class="ds-trace-preview-text">'
-        f'This pattern reflects how structural signals connect across the system.'
-        f'<br>'
-        f'Detailed trace available in interactive workspace.'
-        f'</div>\n'
+        f'style="display:block;width:100%;border-radius:3px;background:#09090d"></canvas>\n'
         f'<script>{js_draw}</script>'
     )
 
@@ -5645,15 +5701,19 @@ _DECISION_SURFACE_CSS = """
   .ds-gap-item{font-size:12px;color:var(--fg-muted);padding:5px 0;border-bottom:1px solid var(--border-subtle);display:flex;gap:8px;align-items:flex-start}
   .ds-gap-item:last-child{border-bottom:none}
   .ds-gap-item::before{content:'○';color:var(--amber);font-size:10px;margin-top:3px;flex-shrink:0}
-  .ds-pressure{margin-bottom:32px}
-  .ds-pressure-grid{display:grid;grid-template-columns:45% 55%;grid-template-rows:auto 1fr;column-gap:32px;row-gap:12px;align-items:stretch;margin-bottom:20px}
-  .ds-pressure-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim)}
-  .ds-pressure-cell{display:flex;flex-direction:column;justify-content:center;background:var(--surface);border:1px solid var(--border);border-top:2px solid var(--gold);padding:16px 18px;border-radius:3px}
-  .ds-pressure-cell-value{font-size:13px;color:var(--fg);line-height:1.6}
-  .ds-pressure-cell-sub{font-size:11px;color:var(--fg-muted);margin-top:6px}
-  .ds-pressure-graph-col{display:flex;flex-direction:column}
-  .ds-pressure-graph-col .ds-trace-preview-text{font-size:10px;text-align:center;margin-top:10px}
-  .ds-pressure-note{font-size:11px;color:var(--fg-muted);padding:10px 14px;background:rgba(0,0,0,.2);border-radius:2px}
+  .ds-epb{margin-bottom:32px}
+  .ds-epb-section-title{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:16px}
+  .ds-epb-grid{display:grid;grid-template-columns:45% 55%;gap:32px;align-items:stretch}
+  .ds-epb-card{display:flex;flex-direction:column;justify-content:space-between;background:var(--surface);border:1px solid var(--border);border-top:2px solid var(--gold);padding:20px 22px;border-radius:3px}
+  .ds-epb-card-title{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;font-weight:600}
+  .ds-epb-card-main{font-size:14px;font-weight:300;color:var(--fg);line-height:1.5;margin-bottom:10px}
+  .ds-epb-card-trace{font-size:10px;color:var(--fg-dim);font-family:monospace;opacity:.6;margin-bottom:12px;word-break:break-all}
+  .ds-epb-card-support{font-size:11px;color:var(--fg-muted);line-height:1.6;margin-bottom:10px}
+  .ds-epb-card-close{font-size:11px;color:var(--fg-muted);font-style:italic}
+  .ds-epb-visual{display:flex;flex-direction:column}
+  .ds-epb-connector{height:1px;background:linear-gradient(90deg,transparent,rgba(200,155,60,.2),transparent);margin:20px 0}
+  .ds-epb-synthesis{font-size:11px;color:var(--fg-muted);line-height:1.8;padding:14px 18px;background:rgba(0,0,0,.15);border-radius:2px}
+  .ds-epb-synthesis strong{color:var(--fg);font-weight:500}
   .ds-inference{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(0,0,0,.2);border:1px solid var(--border-subtle);border-radius:3px;margin-bottom:24px;font-size:11px;color:var(--fg-dim)}
   .ds-inference-tag{font-size:9px;letter-spacing:.12em;text-transform:uppercase;background:var(--red-muted);color:var(--red);padding:3px 8px;border-radius:2px;border:1px solid var(--red-border);flex-shrink:0}
   .ds-explore{margin-bottom:32px}
@@ -5669,7 +5729,7 @@ _DECISION_SURFACE_CSS = """
   .ds-trace-preview-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:12px}
   .ds-trace-preview-wrap{width:67%;margin:0 auto;border-radius:3px;overflow:hidden}
   .ds-trace-preview-text{font-size:11px;color:var(--fg-dim);margin-top:12px;text-align:center;line-height:1.7}
-  @media(max-width:600px){.ds-hero{flex-direction:column}.ds-hero-score-block{text-align:left}.ds-split{grid-template-columns:1fr}.ds-pressure-grid{grid-template-columns:1fr;grid-template-rows:auto auto auto auto}.ds-nav{margin-left:0;margin-top:6px}}
+  @media(max-width:600px){.ds-hero{flex-direction:column}.ds-hero-score-block{text-align:left}.ds-split{grid-template-columns:1fr}.ds-epb-grid{grid-template-columns:1fr}.ds-nav{margin-left:0;margin-top:6px}}
 """
 
 
@@ -5799,50 +5859,37 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
         f'<li class="ds-gap-item">{esc(g)}</li>' for g in gap_items
     )
 
-    # ── Pressure section (psig path only) ─────────────────────────────
+    # ── Pressure section — RC.evidence_pair_block (psig path only) ────
     pressure_html = ""
     if _use_psig and pz_proj is not None and zone_count > 0:
         _pz_list_s  = pz_proj.get("zone_projection", [])
         _cp         = RC.collapse_patterns(_pz_list_s, pz_proj, publish_safe)
-        _prim_count = sum(1 for z in _pz_list_s if z.get("attribution_profile") == "primary")
-        _sec_count  = zone_count - _prim_count
         _sig_set    = (_cp["shared_sigs"] if _cp
                        else _pz_list_s[0].get("signals", []) if _pz_list_s else [])
-        _sig_str    = " · ".join(_sig_set)
         _sig_n      = len(_sig_set)
 
-        _cells_html = (
-            f'<div class="ds-pressure-cell">'
-            f'<div class="ds-pressure-cell-value">'
-            f'Pressure is driven by {_sig_n} structural signal{"s" if _sig_n != 1 else ""}'
-            f'</div>'
-            f'<div class="ds-pressure-cell-sub">'
-            f'The same signals act across all affected domains.'
-            f'</div>'
-            f'</div>'
+        _insight = (
+            f"{_sig_n} signal{'s are' if _sig_n != 1 else ' is'} "
+            f"simultaneously active across the system."
         )
-        _note_html = (
-            f'<div class="ds-pressure-note">'
-            f'<strong>One structural pressure pattern appears across multiple domains.</strong>'
+        _synthesis_html = (
+            f'<strong>A single structural pressure pattern spans multiple domains.</strong>'
             f'<br><br>'
-            f'The same signals are active in each zone.<br>'
-            f'The pattern reflects co-presence across domains.'
+            f'The same signals are present in each zone.<br>'
+            f'The pattern reflects structural co-presence across domains.'
             f'<br><br>'
-            f'This is structural co-presence, not causality.'
-            f'</div>'
-        ) if zone_count > 0 else ""
-
-        _canvas_html = _render_signal_trace_canvas(graph_state)
+            f'This is not a causal determination.'
+        )
         pressure_html = (
-            f'\n  <div class="ds-pressure">'
-            f'\n    <div class="ds-pressure-grid">'
-            f'\n      <div class="ds-pressure-label">Where pressure exists</div>'
-            f'\n      <div class="ds-pressure-label">Signal Trace Preview</div>'
-            f'\n      {_cells_html}'
-            f'\n      <div class="ds-pressure-graph-col">{_canvas_html}</div>'
-            f'\n    </div>'
-            f'\n    {_note_html}'
-            f'\n  </div>'
+            '\n  '
+            + RC.evidence_pair_block(
+                title="Where pressure exists",
+                insight=_insight,
+                signals=list(_sig_set),
+                supporting_visual=_render_signal_trace_canvas(graph_state),
+                synthesis=_synthesis_html,
+                trace="",
+            )
         )
 
     # ── Explore nav strip ──────────────────────────────────────────────
