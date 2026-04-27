@@ -5368,82 +5368,66 @@ _DECISION_SURFACE_CSS = """
   :root{--bg:#0e0e10;--surface:#16161a;--surface-raised:#1c1c22;--border:#2a2a2e;--border-subtle:#222228;--fg:#e8e8e8;--fg-muted:#888;--fg-dim:#555;--gold:#c89b3c;--gold-muted:rgba(200,155,60,0.12);--gold-border:rgba(200,155,60,0.28);--green:#4caf6e;--green-muted:rgba(76,175,110,0.12);--green-border:rgba(76,175,110,0.28);--amber:#d4912a;--amber-muted:rgba(212,145,42,0.1);--amber-border:rgba(212,145,42,0.25);--red:#e05252;--red-muted:rgba(224,82,82,0.1);--red-border:rgba(224,82,82,0.25);--font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:14px;line-height:1.7;-webkit-font-smoothing:antialiased}
-  .page{max-width:960px;margin:0 auto;padding:48px 40px 80px}
-  .report-header{border-bottom:1px solid var(--border);padding-bottom:24px;margin-bottom:32px;display:flex;justify-content:space-between;align-items:flex-start}
-  .report-brand{font-size:11px;color:var(--fg-muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
-  .report-title{font-size:20px;color:var(--fg);font-weight:400}
-  .report-type{font-size:11px;color:var(--fg-muted);margin-top:4px;letter-spacing:.06em}
-  .report-meta{text-align:right;font-size:12px;color:var(--fg-muted);line-height:1.8}
-  .report-meta strong{color:var(--fg);font-weight:500}
-  .nav-strip{display:flex;gap:10px;margin-bottom:36px;flex-wrap:wrap}
-  .nav-link{display:inline-block;padding:7px 14px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border);color:var(--fg-muted);text-decoration:none;border-radius:3px}
-  .nav-link:hover{border-color:var(--gold);color:var(--gold)}
-  .nav-link.active{border-color:var(--gold-border);color:var(--gold);background:var(--gold-muted)}
-  .verdict-block{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:28px}
-  .verdict-cell{padding:20px 22px;border:1px solid var(--border);border-radius:4px;background:var(--surface)}
-  .verdict-cell-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:8px}
-  .verdict-cell-value{font-size:22px;font-weight:300;letter-spacing:.04em}
-  .verdict-cell-sub{font-size:11px;color:var(--fg-muted);margin-top:4px}
-  .vstate-stable{border-top:3px solid var(--green)}.vstate-stable .verdict-cell-value{color:var(--green)}
-  .vstate-conditional{border-top:3px solid var(--amber)}.vstate-conditional .verdict-cell-value{color:var(--amber)}
-  .vstate-unresolved{border-top:3px solid var(--amber)}.vstate-unresolved .verdict-cell-value{color:var(--amber)}
-  .vstate-escalated{border-top:3px solid var(--red)}.vstate-escalated .verdict-cell-value{color:var(--red)}
-  .vev-high{border-top:3px solid var(--green)}.vev-high .verdict-cell-value{color:var(--green)}
-  .vev-partial{border-top:3px solid var(--amber)}.vev-partial .verdict-cell-value{color:var(--amber)}
-  .vev-low{border-top:3px solid var(--red)}.vev-low .verdict-cell-value{color:var(--red)}
-  .vpos-proceed{border-top:3px solid var(--green)}.vpos-proceed .verdict-cell-value{color:var(--green)}
-  .vpos-investigate{border-top:3px solid var(--amber)}.vpos-investigate .verdict-cell-value{color:var(--amber)}
-  .vpos-escalate{border-top:3px solid var(--red)}.vpos-escalate .verdict-cell-value{color:var(--red)}
-  .score-row{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);padding:16px 20px;border-radius:3px;margin-bottom:28px}
-  .score-num{font-size:36px;color:var(--gold);font-weight:300;min-width:60px;text-align:center}
-  .score-detail-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:4px}
-  .score-detail-band{font-size:15px;color:var(--gold)}
-  .score-detail-sub{font-size:11px;color:var(--fg-muted);margin-top:3px}
-  .ds-section{margin-bottom:40px}
-  .ds-section-header{display:flex;align-items:baseline;gap:12px;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border-subtle)}
-  .ds-section-num{font-size:10px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;min-width:24px}
-  .ds-section-title{font-size:14px;color:var(--fg);font-weight:500;letter-spacing:.02em}
-  .fact-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .fact-cell{background:var(--surface);border:1px solid var(--border);padding:12px 14px;border-radius:3px}
-  .fact-cell-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:4px}
-  .fact-cell-value{font-size:13px;color:var(--fg)}
-  .unknown-list{list-style:none;padding:0}
-  .unknown-item{padding:10px 0;border-bottom:1px solid var(--border-subtle);font-size:13px;color:var(--fg-muted);display:flex;align-items:flex-start;gap:10px}
-  .unknown-item:last-child{border-bottom:none}
-  .unknown-item::before{content:'○';color:var(--amber);font-size:10px;margin-top:4px;flex-shrink:0}
-  .posture-block{background:var(--surface);border:1px solid var(--border);padding:18px 20px;border-radius:3px}
-  .posture-block p{font-size:13px;color:var(--fg-muted);line-height:1.7;margin-bottom:10px}
-  .posture-block p:last-child{margin-bottom:0}
-  .pressure-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
-  .pressure-cell{background:var(--surface);border:1px solid var(--border);border-top:2px solid var(--amber);padding:12px 14px;border-radius:3px}
-  .pressure-cell-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:4px}
-  .pressure-cell-value{font-size:14px;color:var(--fg)}
-  .pressure-cell-sub{font-size:11px;color:var(--fg-muted);margin-top:3px}
-  .ll-rows{margin-bottom:4px}
-  .ll-row{display:grid;grid-template-columns:1fr 1fr 2fr;gap:12px;padding:10px 0;border-bottom:1px solid var(--border-subtle);align-items:start}
-  .ll-row:last-child{border-bottom:none}
-  .ll-term{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-dim);font-family:monospace}
-  .ll-exec{font-size:13px;color:var(--fg)}
-  .ll-decode{font-size:12px;color:var(--fg-muted);line-height:1.5}
-  .nav-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-  .nav-card{display:block;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:16px 18px;text-decoration:none}
-  .nav-card:hover{border-color:var(--gold-border)}
-  .nav-card-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:6px}
-  .nav-card-title{font-size:14px;color:var(--fg)}
-  .nav-card-desc{font-size:11px;color:var(--fg-muted);margin-top:4px;line-height:1.4}
-  .inference-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(0,0,0,0.2);border:1px solid var(--border-subtle);border-radius:3px;margin-bottom:16px;font-size:11px;color:var(--fg-muted)}
-  .inference-tag{font-size:9px;letter-spacing:.12em;text-transform:uppercase;background:var(--red-muted);color:var(--red);padding:3px 8px;border-radius:2px;border:1px solid var(--red-border)}
-  .report-footer{display:flex;justify-content:space-between;align-items:flex-end;padding-top:24px;border-top:1px solid var(--border);margin-top:48px}
-  .footer-brand{font-size:13px;color:var(--gold);letter-spacing:.08em}
-  .footer-note{font-size:11px;color:var(--fg-muted);text-align:right;line-height:1.7}
+  .page{max-width:760px;margin:0 auto;padding:36px 32px 72px}
+  .ds-identity{display:flex;align-items:center;gap:8px;margin-bottom:28px;padding-bottom:14px;border-bottom:1px solid var(--border-subtle);font-size:12px;flex-wrap:wrap}
+  .ds-brand{color:var(--gold);font-weight:500;letter-spacing:.06em}
+  .ds-sep{color:var(--fg-dim)}
+  .ds-client{color:var(--fg-muted)}
+  .ds-run{color:var(--fg-dim);font-family:monospace;font-size:11px}
+  .ds-nav{margin-left:auto;display:flex;gap:14px}
+  .ds-nav-link{font-size:11px;color:var(--fg-dim);text-decoration:none;letter-spacing:.04em}
+  .ds-nav-link:hover{color:var(--fg-muted)}
+  .ds-hero{display:flex;justify-content:space-between;align-items:flex-start;padding:24px 28px;border:1px solid var(--border);border-left:4px solid var(--amber);border-radius:4px;background:var(--surface);margin-bottom:28px;gap:20px}
+  .ds-hero.posture-proceed{border-left-color:var(--green)}
+  .ds-hero.posture-investigate{border-left-color:var(--amber)}
+  .ds-hero.posture-escalate{border-left-color:var(--red)}
+  .ds-hero-posture{font-size:28px;font-weight:300;letter-spacing:.04em;margin-bottom:8px}
+  .ds-hero.posture-proceed .ds-hero-posture{color:var(--green)}
+  .ds-hero.posture-investigate .ds-hero-posture{color:var(--amber)}
+  .ds-hero.posture-escalate .ds-hero-posture{color:var(--red)}
+  .ds-hero-rationale{font-size:13px;color:var(--fg-muted);line-height:1.6;max-width:420px;margin-bottom:12px}
+  .ds-hero-context{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .ds-ctx-sep{color:var(--fg-dim)}
+  .ds-ctx-badge{font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:var(--surface-raised);color:var(--fg-muted);padding:3px 8px;border-radius:2px;border:1px solid var(--border)}
+  .ds-hero-score-block{text-align:right;flex-shrink:0}
+  .ds-hero-score{font-size:40px;font-weight:300;color:var(--gold);line-height:1}
+  .ds-hero-band{font-size:12px;color:var(--gold);margin-top:4px;letter-spacing:.02em}
+  .ds-hero-range{font-size:11px;color:var(--fg-dim);margin-top:2px}
+  .ds-split{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
+  .ds-split-col{padding:16px 18px;border:1px solid var(--border);border-radius:3px;background:var(--surface)}
+  .ds-split-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px;font-weight:600}
+  .ds-split-col.confirmed .ds-split-label{color:var(--green)}
+  .ds-split-col.unknown .ds-split-label{color:var(--amber)}
+  .ds-truth-text{font-size:12px;color:var(--fg-muted);line-height:1.8}
+  .ds-gap-items{list-style:none;padding:0}
+  .ds-gap-item{font-size:12px;color:var(--fg-muted);padding:5px 0;border-bottom:1px solid var(--border-subtle);display:flex;gap:8px;align-items:flex-start}
+  .ds-gap-item:last-child{border-bottom:none}
+  .ds-gap-item::before{content:'○';color:var(--amber);font-size:10px;margin-top:3px;flex-shrink:0}
+  .ds-pressure{margin-bottom:32px}
+  .ds-pressure-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:12px}
+  .ds-pressure-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}
+  .ds-pressure-cell{background:var(--surface);border:1px solid var(--border);border-top:2px solid var(--border);padding:12px 14px;border-radius:3px}
+  .ds-pressure-cell-zone{border-top-color:var(--amber)}
+  .ds-pressure-cell-sigs{border-top-color:var(--gold)}
+  .ds-pressure-cell-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:4px}
+  .ds-pressure-cell-value{font-size:13px;color:var(--fg)}
+  .ds-pressure-cell-sub{font-size:11px;color:var(--fg-muted);margin-top:3px}
+  .ds-pressure-note{font-size:11px;color:var(--fg-muted);margin-top:6px;padding:8px 12px;background:rgba(0,0,0,.2);border-radius:2px}
+  .ds-pressure-ll{margin-top:12px;font-size:11px;color:var(--fg-dim);line-height:1.9}
+  .ds-pressure-ll-item{display:inline;margin-right:16px}
+  .ds-pressure-ll-item strong{color:var(--fg-muted);font-weight:500}
+  .ds-inference{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(0,0,0,.2);border:1px solid var(--border-subtle);border-radius:3px;margin-bottom:24px;font-size:11px;color:var(--fg-dim)}
+  .ds-inference-tag{font-size:9px;letter-spacing:.12em;text-transform:uppercase;background:var(--red-muted);color:var(--red);padding:3px 8px;border-radius:2px;border:1px solid var(--red-border);flex-shrink:0}
+  .ds-explore{margin-bottom:32px}
+  .ds-explore-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:10px}
+  .ds-explore-strip{display:flex;gap:10px;flex-wrap:wrap}
+  .ds-explore-link{display:inline-block;padding:8px 16px;font-size:12px;letter-spacing:.04em;border:1px solid var(--border);color:var(--fg-muted);text-decoration:none;border-radius:3px}
+  .ds-explore-link:hover{border-color:var(--gold-border);color:var(--gold)}
+  .ds-explore-link.primary{border-color:var(--gold-border);color:var(--gold);background:var(--gold-muted)}
+  .ds-footer{display:flex;justify-content:space-between;align-items:center;padding-top:20px;border-top:1px solid var(--border-subtle);margin-top:40px;font-size:11px;color:var(--fg-dim)}
+  .ds-footer-brand{color:var(--gold);letter-spacing:.06em;font-size:13px}
   .rc-trace{font-size:10px;color:var(--fg-dim);opacity:.7;font-style:normal}
-  .rc-anchor-block{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid var(--green);border-radius:2px;margin-bottom:16px;font-size:12px;flex-wrap:wrap}
-  .rc-anchor-state{color:#c8c8d4;font-weight:600;letter-spacing:.02em}
-  .rc-anchor-score{color:var(--green);font-weight:600}
-  .rc-anchor-band{color:var(--fg-muted)}
-  .rc-anchor-decision{color:var(--amber);letter-spacing:.05em;text-transform:uppercase}
-  .rc-anchor-sep{color:#333}
-  @media(max-width:640px){.verdict-block{grid-template-columns:1fr}.fact-grid{grid-template-columns:1fr}.pressure-row{grid-template-columns:1fr 1fr}.nav-grid{grid-template-columns:1fr}.score-row{grid-template-columns:1fr}.report-header{flex-direction:column;gap:12px}.report-meta{text-align:left}.ll-row{grid-template-columns:1fr 1fr}}
+  @media(max-width:600px){.ds-hero{flex-direction:column}.ds-hero-score-block{text-align:left}.ds-split{grid-template-columns:1fr}.ds-pressure-row{grid-template-columns:1fr 1fr}.ds-nav{margin-left:0;margin-top:6px}}
 """
 
 
@@ -5494,12 +5478,53 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
     else:
         structural_state = "CONDITIONAL"
 
-    _state_cls   = {"STABLE": "vstate-stable", "CONDITIONAL": "vstate-conditional",
-                    "UNRESOLVED": "vstate-unresolved", "ESCALATED": "vstate-escalated"}.get(structural_state, "vstate-unresolved")
-    _ev_cls      = {"HIGH": "vev-high", "PARTIAL": "vev-partial", "LOW": "vev-low"}.get(ev_comp, "vev-partial")
-    _posture_cls = {"PROCEED": "vpos-proceed", "INVESTIGATE": "vpos-investigate",
-                    "ESCALATE": "vpos-escalate"}.get(posture, "vpos-investigate")
-    _ev_label    = {"HIGH": "Complete", "PARTIAL": "Partial", "LOW": "Limited"}.get(ev_comp, ev_comp)
+    _ev_label = {"HIGH": "Complete", "PARTIAL": "Partial", "LOW": "Limited"}.get(ev_comp, ev_comp)
+    _posture_hero_cls = {"PROCEED": "posture-proceed", "INVESTIGATE": "posture-investigate",
+                         "ESCALATE": "posture-escalate"}.get(posture, "posture-investigate")
+
+    # Hero rationale: single data-driven sentence from (structural_state, ev_comp)
+    _rationale_map = {
+        ("ESCALATED", "HIGH"):     (
+            "Structural evidence is complete and confirms elevated risk. "
+            "Active conditions are concentrated and originate within assessed domains."),
+        ("ESCALATED", "PARTIAL"):  (
+            "Structural evidence is partial. Active conditions confirm elevated structural risk — "
+            "coverage gaps may understate the full scope."),
+        ("ESCALATED", "LOW"):      (
+            "Evidence is limited. Risk indicators are active but structural coverage is insufficient "
+            "to characterize the full scope."),
+        ("UNRESOLVED", "HIGH"):    (
+            "Structural evidence is complete. Risk indicators are present but the pattern is not "
+            "fully characterized — pressure zones require further diagnostic interrogation."),
+        ("UNRESOLVED", "PARTIAL"): (
+            "Structural evidence is partial. Active risk indicators are present — "
+            "coverage gaps prevent full structural characterization."),
+        ("UNRESOLVED", "LOW"):     (
+            "Evidence coverage is limited. Risk indicators are active — "
+            "the structural state cannot be fully resolved from available evidence."),
+        ("STABLE", "HIGH"):        (
+            "Structural evidence is complete and no elevated risk indicators are active. "
+            "Assessed domains are grounded and signal activation is below threshold."),
+        ("STABLE", "PARTIAL"):     (
+            "Risk indicators are not elevated. Evidence is partial — "
+            "this classification may change as coverage improves."),
+        ("STABLE", "LOW"):         (
+            "No elevated risk indicators detected. Evidence coverage is limited — "
+            "structural characterization remains incomplete."),
+        ("CONDITIONAL", "HIGH"):   (
+            "Structural evidence is complete. Conditions do not meet escalation threshold "
+            "but structural ambiguity is present."),
+        ("CONDITIONAL", "PARTIAL"): (
+            "Structural state is conditional pending additional evidence. "
+            "Current evidence is insufficient for a definitive assessment."),
+        ("CONDITIONAL", "LOW"):    (
+            "Evidence is limited. Structural state is conditional and cannot be "
+            "definitively classified from available evidence."),
+    }
+    _hero_rationale = _rationale_map.get(
+        (structural_state, ev_comp),
+        f"Structural state: {structural_state}. Evidence: {ev_comp}. Posture: {posture}."
+    )
 
     # Navigation links — client/run scoped
     _ev_name   = "lens_tier1_evidence_brief_pub.html" if publish_safe else "lens_tier1_evidence_brief.html"
@@ -5516,7 +5541,7 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
         t2_link   = f"/api/report-file?name={_t2_name}"
         ws_link   = None
 
-    # ── Section 01: Structural truth facts ────────────────────────────
+    # ── Zone / signal counts ───────────────────────────────────────────
     sigs       = signals["signals"]
     sig_count  = sum(1 for s in sigs if s.get("state") == "ACTIVE")
     dep_load   = (metrics.get("dep_load", "—") if metrics else "—")
@@ -5530,70 +5555,43 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
         if _pz_list_f:
             zone_class = _pz_list_f[0].get("zone_class", "COMPOUND_ZONE")
 
-    fact_rows: list = [
-        ("Structural topology",
-         f"{total_doms} domains — {grounded_ct} grounded, {weak_ct} weakly grounded"),
-        ("Node coverage",
-         f"{counts.get('total_nodes', '—')} total nodes — "
-         f"{counts.get('capabilities', '—')} capabilities, "
-         f"{counts.get('components', '—')} components"),
+    # ── Confirmed facts — compressed into prose sentence ──────────────
+    _truth_parts: list = [
+        f"{total_doms} domains — {grounded_ct} grounded, {weak_ct} weakly grounded"
     ]
-    if metrics and dep_load != "—" and dep_load != "NOT_IN_SCOPE":
-        fact_rows.append(("Dependency load ratio", str(dep_load)))
-        fact_rows.append(("Edge-to-node density", str(etn)))
+    _node_ct = counts.get("total_nodes")
+    if _node_ct:
+        _truth_parts.append(f"{_node_ct} nodes assessed")
+    if metrics and dep_load not in ("—", "NOT_IN_SCOPE"):
+        _truth_parts.append(f"dep load {dep_load} · edge density {etn}")
     if _use_psig and sig_count > 0:
-        fact_rows.append(("Active signals",
-                          f"{sig_count} signal{'s' if sig_count != 1 else ''} bound"))
+        _truth_parts.append(f"{sig_count} active signal{'s' if sig_count != 1 else ''}")
     if _use_psig and zone_count > 0:
-        fact_rows.append(("Diagnostic zones",
-                          f"{zone_count} pressure zone{'s' if zone_count != 1 else ''} — "
-                          f"{RC.apply_language(zone_class)}"))
+        _truth_parts.append(
+            f"{zone_count} pressure zone{'s' if zone_count != 1 else ''} "
+            f"({RC.apply_language(zone_class)})"
+        )
+    truth_text = " · ".join(_truth_parts) + "."
 
-    fact_html = "".join(
-        f'<div class="fact-cell">'
-        f'<div class="fact-cell-label">{esc(label)}</div>'
-        f'<div class="fact-cell-value">{value}</div>'
-        f'</div>'
-        for label, value in fact_rows
-    )
-
-    # ── Section 02: Unknown boundary ─────────────────────────────────
-    unknowns: list = []
+    # ── Gap items — compressed to short phrases ────────────────────────
+    gap_items: list = []
     if not exec_eval:
-        unknowns.append("Execution-layer behavioral state — outside current evidence scope.")
+        gap_items.append("Execution-layer behavioral state")
     if not_activated:
         _n = len(not_activated)
-        unknowns.append(
-            f"{_n} structural signal{'s' if _n != 1 else ''} not activated in this run "
-            f"— cannot be structurally characterized."
-        )
+        gap_items.append(f"{_n} signal{'s' if _n != 1 else ''} not activated this run")
     if blind_spot:
-        unknowns.append(
-            f"{RC.apply_language('THEORETICAL_BASELINE')} — "
-            f"structural blind spot coverage active. "
-            f"Entities outside zone scope are not characterized."
-        )
-    unknowns += [
-        "Causal relationships between structural conditions — co-presence is not causality.",
-        "Execution behavior under runtime load — outside current evidence scope.",
+        gap_items.append("Blind spot coverage active — entities outside zone scope not characterized")
+    gap_items += [
+        "Causal relationships between conditions",
+        "Runtime behavior under load",
     ]
-    unknown_items_html = "".join(
-        f'<li class="unknown-item">{esc(u)}</li>' for u in unknowns
+    gap_items_html = "".join(
+        f'<li class="ds-gap-item">{esc(g)}</li>' for g in gap_items
     )
 
-    # ── Section 03: Why this posture ─────────────────────────────────
-    posture_prose = "".join([
-        f"<p>Structural risk: {esc(risk)}. "
-        f"Derived from dependency load and edge-to-node density metrics.</p>",
-        f"<p>Evidence completeness: {esc(ev_comp)}. "
-        f"Derived from gap count across execution evaluation, signal activation state, "
-        f"and blind spot coverage.</p>",
-        f"<p>Decision posture: {esc(posture)}. "
-        f"No advisory content. This posture reflects structural evidence state, not a recommendation.</p>",
-    ])
-
-    # ── Section 04: Pressure pattern (psig path only) ─────────────────
-    pattern_html = ""
+    # ── Pressure section (psig path only) ─────────────────────────────
+    pressure_html = ""
     if _use_psig and pz_proj is not None and zone_count > 0:
         _pz_list_s  = pz_proj.get("zone_projection", [])
         _cp         = RC.collapse_patterns(_pz_list_s, pz_proj, publish_safe)
@@ -5604,104 +5602,105 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
         _sig_str    = " · ".join(_sig_set)
         _sig_n      = len(_sig_set)
 
-        _pressure_cells_html = (
-            f'<div class="pressure-cell">'
-            f'<div class="pressure-cell-label">Zone count</div>'
-            f'<div class="pressure-cell-value">{zone_count}</div>'
-            f'<div class="pressure-cell-sub">{RC.apply_language(zone_class)} '
-            f'<span class="rc-trace">trace: {esc(zone_class)}</span></div>'
+        _cells_html = (
+            f'<div class="ds-pressure-cell ds-pressure-cell-zone">'
+            f'<div class="ds-pressure-cell-label">Zone count</div>'
+            f'<div class="ds-pressure-cell-value">{zone_count}</div>'
+            f'<div class="ds-pressure-cell-sub">'
+            f'{RC.apply_language(zone_class)} '
+            f'<span class="rc-trace">trace: {esc(zone_class)}</span>'
+            f'</div>'
             f'</div>'
             + (
-                f'<div class="pressure-cell">'
-                f'<div class="pressure-cell-label">Signal set</div>'
-                f'<div class="pressure-cell-value">{_sig_n} active signal{"s" if _sig_n != 1 else ""}</div>'
-                f'<div class="pressure-cell-sub">{esc(_sig_str)}</div>'
+                f'<div class="ds-pressure-cell ds-pressure-cell-sigs">'
+                f'<div class="ds-pressure-cell-label">Signal set</div>'
+                f'<div class="ds-pressure-cell-value">'
+                f'{_sig_n} active signal{"s" if _sig_n != 1 else ""}'
+                f'</div>'
+                f'<div class="ds-pressure-cell-sub">{esc(_sig_str)}</div>'
                 f'</div>'
                 if _sig_n > 0 else ""
             ) +
-            f'<div class="pressure-cell">'
-            f'<div class="pressure-cell-label">Attribution</div>'
-            f'<div class="pressure-cell-value">{_prim_count} primary · {_sec_count} secondary</div>'
-            f'<div class="pressure-cell-sub">'
+            f'<div class="ds-pressure-cell">'
+            f'<div class="ds-pressure-cell-label">Attribution</div>'
+            f'<div class="ds-pressure-cell-value">'
+            f'{_prim_count} primary · {_sec_count} secondary'
+            f'</div>'
+            f'<div class="ds-pressure-cell-sub">'
             f'{RC.render_term("PRIMARY")} / {RC.render_term("SECONDARY")}'
             f'</div>'
             f'</div>'
         )
-        _collapse_note = ""
+        _note_html = ""
         if _cp:
-            _collapse_note = (
-                f'<p style="font-size:12px;color:var(--fg-muted);margin-top:12px">'
+            _note_html = (
+                f'<div class="ds-pressure-note">'
                 f'All {zone_count} zones share the same {len(_cp["shared_sigs"])} signal'
                 f'{"s" if len(_cp["shared_sigs"]) != 1 else ""} '
-                f'({esc(_cp["sigs_str"])}). Attribution varies — one zone carries primary pressure '
-                f'origin; remaining zones are secondary recipients. '
+                f'({esc(_cp["sigs_str"])}). Attribution varies — one zone carries primary '
+                f'pressure origin; remaining zones are secondary recipients. '
                 f'<span class="rc-trace">inference_prohibition: ACTIVE — co-presence, not causality.</span>'
-                f'</p>'
+                f'</div>'
             )
-        pattern_html = (
-            f'\n  <div class="ds-section">'
-            f'\n    <div class="ds-section-header">'
-            f'<span class="ds-section-num">04</span>'
-            f'<span class="ds-section-title">Where Pressure Exists</span></div>'
-            f'\n    <div class="pressure-row">{_pressure_cells_html}</div>'
-            f'\n    {_collapse_note}'
-            f'\n  </div>'
+
+        # Inline LL decodes after pressure cells (no separate glossary section)
+        _ll_inline_parts: list = []
+        _ll_terms_inline = ["RUN_RELATIVE_OUTLIER", "COMPOUND_ZONE", "PRIMARY", "SECONDARY"]
+        if ll:
+            for _t in _ll_terms_inline:
+                _e = ll.get(_t)
+                if _e:
+                    _ll_inline_parts.append(
+                        f'<span class="ds-pressure-ll-item">'
+                        f'<strong>{esc(_e["executive_label"])}</strong> — '
+                        f'{esc(_e["short_decode"])}'
+                        f'</span>'
+                    )
+        _ll_inline_html = (
+            f'<div class="ds-pressure-ll">{"".join(_ll_inline_parts)}</div>'
+            if _ll_inline_parts else ""
         )
 
-    # ── Section 05: Language Layer term decodes ───────────────────────
-    _ll_terms = (
-        ["RUN_RELATIVE_OUTLIER", "COMPOUND_ZONE", "PRIMARY", "SECONDARY", "PRESSURE_ZONE"]
-        if _use_psig else
-        ["CONFIDENCE_BAND", "EVIDENCE_SCOPE", "STRUCTURAL_COVERAGE"]
-    )
-    _ll_rows_html = ""
-    if ll:
-        for _t in _ll_terms:
+        pressure_html = (
+            f'\n  <div class="ds-pressure">'
+            f'\n    <div class="ds-pressure-label">Where pressure exists</div>'
+            f'\n    <div class="ds-pressure-row">{_cells_html}</div>'
+            f'\n    {_note_html}'
+            f'\n    {_ll_inline_html}'
+            f'\n  </div>'
+        )
+    elif not _use_psig and ll:
+        # BlueEdge path: LL inline for non-psig terms
+        _ll_inline_parts_b: list = []
+        for _t in ["CONFIDENCE_BAND", "EVIDENCE_SCOPE", "STRUCTURAL_COVERAGE"]:
             _e = ll.get(_t)
             if _e:
-                _ll_rows_html += (
-                    f'<div class="ll-row">'
-                    f'<span class="ll-term">{esc(_e["canonical_label"])}</span>'
-                    f'<span class="ll-exec">{esc(_e["executive_label"])}</span>'
-                    f'<span class="ll-decode">{esc(_e["short_decode"])}</span>'
-                    f'</div>'
+                _ll_inline_parts_b.append(
+                    f'<span class="ds-pressure-ll-item">'
+                    f'<strong>{esc(_e["executive_label"])}</strong> — '
+                    f'{esc(_e["short_decode"])}'
+                    f'</span>'
                 )
+        if _ll_inline_parts_b:
+            pressure_html = (
+                f'\n  <div class="ds-pressure">'
+                f'\n    <div class="ds-pressure-label">Term decodes</div>'
+                f'\n    <div class="ds-pressure-ll">{"".join(_ll_inline_parts_b)}</div>'
+                f'\n  </div>'
+            )
 
-    _ll_section_html = ""
-    if _ll_rows_html:
-        _ll_section_html = (
-            f'\n  <div class="ds-section">'
-            f'\n    <div class="ds-section-header">'
-            f'<span class="ds-section-num">05</span>'
-            f'<span class="ds-section-title">What This Means</span></div>'
-            f'\n    <div class="inference-bar">'
-            f'<span class="inference-tag">inference_prohibition</span>'
-            f'<span>ACTIVE — all data on this surface is structural and evidential only. '
-            f'No advisory content, causal inference, or remediation guidance may be derived.</span>'
-            f'</div>'
-            f'\n    <div class="ll-rows">{_ll_rows_html}</div>'
-            f'\n  </div>'
-        )
-
-    # ── Section 06: Navigation ────────────────────────────────────────
-    _nav_cards: list = [
-        (narr_link, "Executive Brief",
-         "Narrative interpretation layer — structural state and decision posture"),
-        (ev_link,   "Structural Evidence Brief",
-         "Tier-1 evidence surface — signals, topology, gauge"),
-        (t2_link,   "Diagnostic Narrative",
-         "Tier-2 interrogation surface — pressure zones, trace, uncertainty"),
+    # ── Explore nav strip ──────────────────────────────────────────────
+    _explore_links: list = [
+        (narr_link, "Executive Brief",  True),
+        (ev_link,   "Structural Evidence", False),
+        (t2_link,   "Diagnostic",       False),
     ]
     if _use_psig and ws_link:
-        _nav_cards.append((ws_link, "Workspace",
-                           "Live diagnostic workspace — signal detail, zone exploration"))
-    nav_html = "".join(
-        f'<a href="{href}" class="nav-card">'
-        f'<div class="nav-card-label">Open</div>'
-        f'<div class="nav-card-title">{esc(title)}</div>'
-        f'<div class="nav-card-desc">{esc(desc)}</div>'
-        f'</a>'
-        for href, title, desc in _nav_cards
+        _explore_links.append((ws_link, "Workspace", False))
+    explore_html = "".join(
+        f'<a href="{href}" class="ds-explore-link{"  primary" if primary else ""}">'
+        f'{esc(label)}</a>'
+        for href, label, primary in _explore_links
     )
 
     return f"""<!DOCTYPE html>
@@ -5709,110 +5708,71 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LENS Assessment — Decision Surface{title_suffix}</title>
+  <title>LENS — Decision Surface{title_suffix}</title>
   <style>{_DECISION_SURFACE_CSS}</style>
 </head>
 <body>
 <div class="page">
 
-  <div class="nav-strip">
-    <span class="nav-link active">Decision</span>
-    <a href="{narr_link}" class="nav-link">Executive Brief</a>
-    <a href="{ev_link}" class="nav-link">LENS Assessment</a>
-    <a href="{t2_link}" class="nav-link">Diagnostic</a>
+  <div class="ds-identity">
+    <span class="ds-brand">Signäl</span>
+    <span class="ds-sep">·</span>
+    <span class="ds-client">{esc(client_name)}</span>
+    <span class="ds-sep">·</span>
+    <span class="ds-run">{esc(_ACTIVE_VAULT_RUN_ID)}</span>
+    <nav class="ds-nav">
+      <a href="{narr_link}" class="ds-nav-link">Executive Brief</a>
+      <a href="{ev_link}" class="ds-nav-link">Assessment</a>
+      <a href="{t2_link}" class="ds-nav-link">Diagnostic</a>
+    </nav>
   </div>
 
-  {RC.anchor_block(score, band_label, band_lo, band_hi, posture)}
-
-  <div class="report-header">
+  <div class="ds-hero {_posture_hero_cls}">
     <div>
-      <div class="report-brand">Signäl Program Intelligence</div>
-      <div class="report-title">LENS Assessment — Decision Surface{title_suffix}</div>
-      <div class="report-type">Executive Entry · Structural Verdict Layer</div>
-    </div>
-    <div class="report-meta">
-      <div>Client: <strong>{esc(client_name)}</strong></div>
-      <div>Score: <strong>{score} — {esc(band_label)}</strong></div>
-      <div>Issued: <strong>April 2026</strong></div>
-    </div>
-  </div>
-
-  <div class="ds-section">
-    <div class="ds-section-header">
-      <span class="ds-section-num">00</span>
-      <span class="ds-section-title">Structural Verdict</span>
-    </div>
-    <div class="verdict-block">
-      <div class="verdict-cell {_state_cls}">
-        <div class="verdict-cell-label">Structural State</div>
-        <div class="verdict-cell-value">{esc(structural_state)}</div>
-        <div class="verdict-cell-sub">Risk: {esc(risk)}</div>
-      </div>
-      <div class="verdict-cell {_ev_cls}">
-        <div class="verdict-cell-label">Evidence Completeness</div>
-        <div class="verdict-cell-value">{esc(_ev_label)}</div>
-        <div class="verdict-cell-sub">Gap count: {dm.get("gap_count", "—")}</div>
-      </div>
-      <div class="verdict-cell {_posture_cls}">
-        <div class="verdict-cell-label">Decision Posture</div>
-        <div class="verdict-cell-value">{esc(posture)}</div>
-        <div class="verdict-cell-sub">Band: {band_lo}–{band_hi}</div>
+      <div class="ds-hero-posture">{esc(posture)}</div>
+      <div class="ds-hero-rationale">{esc(_hero_rationale)}</div>
+      <div class="ds-hero-context">
+        <span class="ds-ctx-badge">{esc(structural_state)}</span>
+        <span class="ds-ctx-sep">·</span>
+        <span class="ds-ctx-badge">{esc(_ev_label)} evidence</span>
+        <span class="ds-ctx-sep">·</span>
+        <span class="ds-ctx-badge">Risk: {esc(risk)}</span>
       </div>
     </div>
-    <div class="score-row">
-      <div class="score-num">{score}</div>
-      <div>
-        <div class="score-detail-label">Assessment Score</div>
-        <div class="score-detail-band">{esc(band_label)}</div>
-        <div class="score-detail-sub">
-          Confidence band: {band_lo} – {band_hi} · Run: {esc(_ACTIVE_VAULT_RUN_ID)}
-        </div>
-      </div>
+    <div class="ds-hero-score-block">
+      <div class="ds-hero-score">{score}</div>
+      <div class="ds-hero-band">{esc(band_label)}</div>
+      <div class="ds-hero-range">{band_lo}–{band_hi}</div>
     </div>
   </div>
 
-  <div class="ds-section">
-    <div class="ds-section-header">
-      <span class="ds-section-num">01</span>
-      <span class="ds-section-title">What Is Structurally True</span>
+  <div class="ds-split">
+    <div class="ds-split-col confirmed">
+      <div class="ds-split-label">Structurally confirmed</div>
+      <div class="ds-truth-text">{esc(truth_text)}</div>
     </div>
-    <div class="fact-grid">{fact_html}</div>
+    <div class="ds-split-col unknown">
+      <div class="ds-split-label">Not known</div>
+      <ul class="ds-gap-items">{gap_items_html}</ul>
+    </div>
   </div>
 
-  <div class="ds-section">
-    <div class="ds-section-header">
-      <span class="ds-section-num">02</span>
-      <span class="ds-section-title">What Is Not Known</span>
-    </div>
-    <ul class="unknown-list">{unknown_items_html}</ul>
+  {pressure_html}
+
+  <div class="ds-inference">
+    <span class="ds-inference-tag">inference_prohibition</span>
+    ACTIVE — all data on this surface is structural and evidential only.
+    No advisory content, causal inference, or remediation guidance may be derived.
   </div>
 
-  <div class="ds-section">
-    <div class="ds-section-header">
-      <span class="ds-section-num">03</span>
-      <span class="ds-section-title">Why This Posture</span>
-    </div>
-    <div class="posture-block">{posture_prose}</div>
+  <div class="ds-explore">
+    <div class="ds-explore-label">Open the evidence</div>
+    <div class="ds-explore-strip">{explore_html}</div>
   </div>
 
-  {pattern_html}
-
-  {_ll_section_html}
-
-  <div class="ds-section">
-    <div class="ds-section-header">
-      <span class="ds-section-num">06</span>
-      <span class="ds-section-title">Open the Evidence</span>
-    </div>
-    <div class="nav-grid">{nav_html}</div>
-  </div>
-
-  <div class="report-footer">
-    <div class="footer-brand">Signäl</div>
-    <div class="footer-note">
-      {esc(footer_note)}<br>
-      Decision Surface · No advisory content · No root cause claims · inference_prohibition: ACTIVE
-    </div>
+  <div class="ds-footer">
+    <span class="ds-footer-brand">Signäl</span>
+    <span>{esc(footer_note)} · Decision Surface · No advisory content</span>
   </div>
 
 </div>

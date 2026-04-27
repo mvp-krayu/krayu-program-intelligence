@@ -64,6 +64,9 @@
   .boundary-list li:last-child{border-bottom:none}
   .boundary-list li::before{content:'—';color:var(--fg-dim);flex-shrink:0;margin-top:1px}
   .boundary-note{margin-top:14px;padding:10px 14px;background:var(--amber-muted);border:1px solid var(--amber-border);border-radius:3px;font-size:12px;color:var(--fg-muted);line-height:1.6}
+  .boundary-lead{font-size:13px;color:#c8c8d4;font-weight:500;margin-bottom:14px;padding:10px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid var(--gold);border-radius:2px}
+  .exec-state-lead{font-size:13px;font-weight:600;color:#c8c8d4;letter-spacing:.02em;margin-bottom:12px;padding:8px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid var(--green);border-radius:2px}
+  .narr-trace{font-size:10px;color:var(--fg-dim)}
   .resolution-block{background:var(--surface-raised);border:1px solid var(--border);border-left:3px solid var(--fg-dim);padding:20px 22px;margin:20px 0;border-radius:3px}
   .resolution-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:10px}
   .resolution-text{font-size:13px;color:var(--fg-muted);line-height:1.7}
@@ -78,6 +81,13 @@
   .conclusion-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:12px}
   .conclusion-text{font-size:15px;color:var(--fg);font-weight:500;margin-bottom:10px}
   .conclusion-body{font-size:13px;color:var(--fg-muted);line-height:1.7;margin-bottom:8px}
+  .rc-trace{font-size:10px;color:var(--fg-dim);opacity:.7;font-style:normal}
+  .rc-anchor-block{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid var(--green);border-radius:2px;margin-bottom:16px;font-size:12px;flex-wrap:wrap}
+  .rc-anchor-state{color:#c8c8d4;font-weight:600;letter-spacing:.02em}
+  .rc-anchor-score{color:var(--green);font-weight:600}
+  .rc-anchor-band{color:var(--fg-muted)}
+  .rc-anchor-decision{color:var(--amber);letter-spacing:.05em;text-transform:uppercase}
+  .rc-anchor-sep{color:#333}
   @media(max-width:600px){.score-row{grid-template-columns:1fr 1fr}.grounding-row{grid-template-columns:1fr}.boundary-grid{grid-template-columns:1fr}.posture-row{grid-template-columns:1fr}.report-header{flex-direction:column;gap:12px}.report-meta{text-align:left}}
 </style>
 </head>
@@ -97,10 +107,13 @@
   </div>
 
   <div class="nav-strip">
+    <a href="/api/report-file?name=lens_decision_surface_pub.html&client=e65d2f0a-dfa7-4257-9333-fcbb583f0880&runId=run_01_oss_fastapi" class="nav-link">Decision</a>
     <span class="nav-link active">Executive Brief</span>
     <a href="/api/report-file?name=lens_tier1_evidence_brief_pub.html&client=e65d2f0a-dfa7-4257-9333-fcbb583f0880&runId=run_01_oss_fastapi" class="nav-link">LENS Assessment</a>
-    <a href="/api/report-file?name=lens_tier2_diagnostic_narrative_pub.html" class="nav-link">Diagnostic</a>
+    <a href="/api/report-file?name=lens_tier2_diagnostic_narrative_pub.html&client=e65d2f0a-dfa7-4257-9333-fcbb583f0880&runId=run_01_oss_fastapi" class="nav-link">Diagnostic</a>
   </div>
+
+  <div class="rc-anchor-block"><span class="rc-anchor-state">Structurally verified. Execution not yet validated.</span><span class="rc-anchor-sep">·</span><span class="rc-anchor-score">60 — CONDITIONAL</span><span class="rc-anchor-sep">·</span><span class="rc-anchor-band">60–100</span><span class="rc-anchor-sep">·</span><span class="rc-anchor-decision">INVESTIGATE</span></div>
 
   <div class="section">
     <div class="section-header"><span class="section-num">01</span><span class="section-title">Executive Context</span></div>
@@ -132,6 +145,7 @@
         <div class="score-cell-sub">Before committing</div>
       </div>
     </div>
+    <p class="exec-state-lead">Structurally verified. Execution not yet validated.</p>
     <p class="body-text">The score of 60 reflects a complete structural proof — full coverage and reconstruction confirmed —
       but an unevaluated execution layer. The score is derived deterministically from evidence; it is not
       an assessment of quality or performance. The upper band of 100 represents the achievable state
@@ -155,10 +169,10 @@
     <table class="signal-table">
       <thead><tr><th style="width:40%">Signal</th><th style="width:30%">Computed Value</th><th style="width:30%">Confidence</th></tr></thead>
       <tbody>
-        <tr><td>Fan-in structural concentration (PSIG-001)</td><td>9.43 — RUN_RELATIVE_OUTLIER</td><td><span class="conf-badge conf-strong">Strong</span></td></tr>
-        <tr><td>Fan-out structural concentration (PSIG-002)</td><td>9.43 — RUN_RELATIVE_OUTLIER</td><td><span class="conf-badge conf-strong">Strong</span></td></tr>
-        <tr><td>Responsibility concentration (PSIG-004)</td><td>4.33 — RUN_RELATIVE_OUTLIER</td><td><span class="conf-badge conf-strong">Strong</span></td></tr>
-        <tr><td>Structural blind spot coverage (PSIG-006)</td><td>0.2 — THEORETICAL_BASELINE</td><td><span class="conf-badge conf-weak">Theoretical baseline</span></td></tr>
+        <tr><td>Fan-in structural concentration (PSIG-001)</td><td>9.43 — Statistically abnormal concentration<br><span style="font-size:10px;color:var(--fg-dim)">trace: RUN_RELATIVE_OUTLIER</span></td><td><span class="conf-badge conf-strong">Strong</span></td></tr>
+        <tr><td>Fan-out structural concentration (PSIG-002)</td><td>9.43 — Statistically abnormal concentration<br><span style="font-size:10px;color:var(--fg-dim)">trace: RUN_RELATIVE_OUTLIER</span></td><td><span class="conf-badge conf-strong">Strong</span></td></tr>
+        <tr><td>Responsibility concentration (PSIG-004)</td><td>4.33 — Statistically abnormal concentration<br><span style="font-size:10px;color:var(--fg-dim)">trace: RUN_RELATIVE_OUTLIER</span></td><td><span class="conf-badge conf-strong">Strong</span></td></tr>
+        <tr><td>Structural blind spot coverage (PSIG-006)</td><td>0.2 — Baseline condition without runtime validation<br><span style="font-size:10px;color:var(--fg-dim)">trace: THEORETICAL_BASELINE</span></td><td><span class="conf-badge conf-weak">Theoretical baseline</span></td></tr>
         <tr><td>Dependency load ratio</td><td>0.044 — 2 of 45 edges overlap</td><td><span class="conf-badge conf-moderate">Moderate</span></td></tr>
         <tr><td>Structural density — edge-to-node</td><td>1.378&nbsp;·&nbsp;Containment: 1.333</td><td><span class="conf-badge conf-moderate">Moderate</span></td></tr>
       </tbody>
@@ -168,31 +182,32 @@
   <div class="section">
     <div class="section-header"><span class="section-num">03</span><span class="section-title">Pressure Zones</span></div>
     <div class="focus-block">
-      <div class="focus-block-label">PZ-001 — backend_isolated · secondary</div>
-      <div class="focus-block-name">COMPOUND_ZONE · 3 conditions co-present</div>
+      <div class="focus-block-label">PZ-001 — backend_isolated</div>
+      <div class="focus-block-name">Multiple structural pressures acting together <span style="font-size:10px;opacity:.6">trace: COMPOUND_ZONE</span> · 3 conditions co-present</div>
       <div class="focus-block-sub">PSIG-001 · PSIG-002 · PSIG-004</div>
       <p class="body-text" style="font-size:13px">
-        PZ-001 (backend_isolated) carries secondary attribution for all three co-present conditions (PSIG-001 · PSIG-002 · PSIG-004). 3 simultaneous conditions satisfy the COMPOUND_ZONE threshold. Zone class: COMPOUND_ZONE.</p>
+        PZ-001 (backend_isolated) is a Secondary affected zone <span style="font-size:11px;opacity:.7">(trace: secondary attribution)</span> for all three co-present conditions (PSIG-001 · PSIG-002 · PSIG-004). 3 simultaneous conditions satisfy the Multiple structural pressures acting together <span style="font-size:11px;opacity:.7">(trace: COMPOUND_ZONE)</span> threshold.</p>
     </div>
     <div class="focus-block">
-      <div class="focus-block-label">PZ-002 — frontend_isolated · PRIMARY</div>
-      <div class="focus-block-name">COMPOUND_ZONE · 3 conditions co-present</div>
+      <div class="focus-block-label">PZ-002 — frontend_isolated</div>
+      <div class="focus-block-name">Multiple structural pressures acting together <span style="font-size:10px;opacity:.6">trace: COMPOUND_ZONE</span> · 3 conditions co-present</div>
       <div class="focus-block-sub">PSIG-001 · PSIG-002 · PSIG-004</div>
       <p class="body-text" style="font-size:13px">
-        PZ-002 (frontend_isolated) carries primary attribution for all three co-present conditions (PSIG-001 · PSIG-002 · PSIG-004). 3 simultaneous conditions satisfy the COMPOUND_ZONE threshold. Zone class: COMPOUND_ZONE.</p>
+        PZ-002 (frontend_isolated) is a Primary pressure anchor <span style="font-size:11px;opacity:.7">(trace: primary attribution)</span> for all three co-present conditions (PSIG-001 · PSIG-002 · PSIG-004). 3 simultaneous conditions satisfy the Multiple structural pressures acting together <span style="font-size:11px;opacity:.7">(trace: COMPOUND_ZONE)</span> threshold.</p>
     </div>
     <div class="focus-block">
-      <div class="focus-block-label">PZ-003 — platform_monorepo · secondary</div>
-      <div class="focus-block-name">COMPOUND_ZONE · 3 conditions co-present</div>
+      <div class="focus-block-label">PZ-003 — platform_monorepo</div>
+      <div class="focus-block-name">Multiple structural pressures acting together <span style="font-size:10px;opacity:.6">trace: COMPOUND_ZONE</span> · 3 conditions co-present</div>
       <div class="focus-block-sub">PSIG-001 · PSIG-002 · PSIG-004</div>
       <p class="body-text" style="font-size:13px">
-        PZ-003 (platform_monorepo) carries secondary attribution for all three co-present conditions (PSIG-001 · PSIG-002 · PSIG-004). 3 simultaneous conditions satisfy the COMPOUND_ZONE threshold. Zone class: COMPOUND_ZONE.</p>
+        PZ-003 (platform_monorepo) is a Secondary affected zone <span style="font-size:11px;opacity:.7">(trace: secondary attribution)</span> for all three co-present conditions (PSIG-001 · PSIG-002 · PSIG-004). 3 simultaneous conditions satisfy the Multiple structural pressures acting together <span style="font-size:11px;opacity:.7">(trace: COMPOUND_ZONE)</span> threshold.</p>
     </div>
-    <p class="body-text" style="font-size:12.5px;color:var(--fg-muted)">Structural blind spot: PSIG-006 covers 9 entities outside zone scope (THEORETICAL_BASELINE — coverage gap, not pressure candidate).</p>
+    <p class="body-text" style="font-size:12.5px;color:var(--fg-muted)">Structural blind spot: PSIG-006 covers 9 entities outside zone scope — Baseline condition without runtime validation <span style="font-size:10px;opacity:.6">(trace: THEORETICAL_BASELINE)</span> — coverage gap, not pressure candidate.</p>
   </div>
 
   <div class="section">
     <div class="section-header"><span class="section-num">04</span><span class="section-title">Known vs Unknown Boundary</span></div>
+    <p class="boundary-lead">These unknowns do not indicate failure. They define the evidence boundary that must be resolved before execution confidence can be claimed.</p>
     <div class="boundary-grid">
       <div class="boundary-block known">
         <div class="boundary-block-label">Confirmed</div>
@@ -211,7 +226,7 @@
           <li>Runtime execution behavior (execution layer not evaluated)</li>
           <li>Node depth concentration signal — not activated in this run</li>
           <li>Scope coupling signal — not activated in this run</li>
-          <li>Structural blind spot entity behavior (THEORETICAL_BASELINE — coverage gap, not execution-derived)</li>
+          <li>Structural blind spot entity behavior — Baseline condition without runtime validation <span style='font-size:10px;opacity:.6'>(trace: THEORETICAL_BASELINE)</span> — coverage gap, not execution-derived</li>
           <li>Memory and resource utilization under load</li>
           <li>Live service interaction and latency profiles</li>
         </ul>

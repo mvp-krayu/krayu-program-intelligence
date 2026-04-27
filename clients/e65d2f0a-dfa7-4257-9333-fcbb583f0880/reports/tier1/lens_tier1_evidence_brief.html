@@ -61,8 +61,10 @@
   .signal-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
   .signal-card{background:var(--bg-card);border:1px solid var(--border);border-radius:3px;padding:14px 16px;display:grid;grid-template-columns:36px 1fr auto;gap:16px;align-items:start}
   .signal-num{font-size:16px;color:var(--fg);line-height:1;padding-top:2px}
-  .signal-title{font-size:13px;color:var(--fg);margin-bottom:5px}
+  .signal-title{font-size:13px;color:var(--fg);margin-bottom:3px}
+  .signal-trace{font-size:10px;color:var(--fg-muted);letter-spacing:.04em;margin-bottom:5px}
   .signal-statement{font-size:12px;color:var(--fg-muted);line-height:1.5}
+  .exec-state-lead{font-size:13px;font-weight:600;color:#c8c8d4;letter-spacing:.02em;margin-bottom:12px;padding:8px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid var(--green);border-radius:2px}
   .signal-meta{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
   .signal-domain-tag{font-size:10px;color:var(--fg-muted);text-align:right}
   .confidence-badge{font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:2px;border:1px solid}
@@ -99,6 +101,13 @@
   .tl-weak{background:var(--amber)}
   .tl-focus{background:var(--gold)}
   .topo-leg-note{margin-left:auto;font-size:10px;font-style:italic;color:var(--fg-muted)}
+  .rc-trace{font-size:10px;color:var(--fg-muted);opacity:.7;font-style:normal}
+  .rc-anchor-block{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid var(--green);border-radius:2px;margin-bottom:16px;font-size:12px;flex-wrap:wrap}
+  .rc-anchor-state{color:#c8c8d4;font-weight:600;letter-spacing:.02em}
+  .rc-anchor-score{color:var(--green);font-weight:600}
+  .rc-anchor-band{color:var(--fg-muted)}
+  .rc-anchor-decision{color:var(--amber);letter-spacing:.05em;text-transform:uppercase}
+  .rc-anchor-sep{color:#333}
 </style>
 </head>
 <body>
@@ -117,12 +126,16 @@
   </div>
 
   <div class="nav-strip">
+    <a href="/api/report-file?name=lens_decision_surface.html&client=e65d2f0a-dfa7-4257-9333-fcbb583f0880&runId=run_01_oss_fastapi" class="nav-link">Decision</a>
     <a href="/api/report-file?name=lens_tier1_narrative_brief.html&client=e65d2f0a-dfa7-4257-9333-fcbb583f0880&runId=run_01_oss_fastapi" class="nav-link">Executive Brief</a>
     <span class="nav-link active">LENS Assessment</span>
-    <a href="/api/report-file?name=lens_tier2_diagnostic_narrative.html" class="nav-link">Diagnostic</a>
+    <a href="/api/report-file?name=lens_tier2_diagnostic_narrative.html&client=e65d2f0a-dfa7-4257-9333-fcbb583f0880&runId=run_01_oss_fastapi" class="nav-link">Diagnostic</a>
   </div>
 
+  <div class="rc-anchor-block"><span class="rc-anchor-state">Structurally verified. Execution not yet validated.</span><span class="rc-anchor-sep">·</span><span class="rc-anchor-score">60 — CONDITIONAL</span><span class="rc-anchor-sep">·</span><span class="rc-anchor-band">60–100</span><span class="rc-anchor-sep">·</span><span class="rc-anchor-decision">INVESTIGATE</span></div>
+
   <h2>Assessment Score</h2>
+  <p class="exec-state-lead">Structurally verified. Execution not yet validated.</p>
   <div class="gauge-block">
     <div class="gauge-score-circle">
       <div class="gauge-score-number">60</div>
@@ -219,7 +232,7 @@
     <div class="topo-legend">
       <span class="topo-leg-item"><span class="topo-leg-dot tl-grounded"></span>Grounded (5 domains)</span>
       <span class="topo-leg-item"><span class="topo-leg-dot tl-weak"></span>Weakly Grounded (0 domains)</span>
-      <span class="topo-leg-item"><span class="topo-leg-dot tl-focus"></span>Primary Pressure Zone — 3 conditions co-present (COMPOUND_ZONE)</span>
+      <span class="topo-leg-item"><span class="topo-leg-dot tl-focus"></span>Primary Pressure Zone — Multiple structural pressures acting together &nbsp;<span style="font-size:10px;opacity:.6">trace: COMPOUND_ZONE</span></span>
       <span class="topo-leg-note">Relationships shown are structural co-membership. No direction implied.</span>
     </div>
   </div>
@@ -278,8 +291,9 @@
     <div class="signal-card">
       <div class="signal-num">01</div>
       <div class="signal-body">
-        <div class="signal-title">Fan-In Concentration (PSIG-001): HIGH — RUN_RELATIVE_OUTLIER — Value 9.43</div>
-        <div class="signal-statement">Inbound dependency concentration is 9.43 — a RUN_RELATIVE_OUTLIER condition. Primary attribution entity: NODE-009 in DOM-04. Domain scope: DOM-03, DOM-04, DOM-05. Co-present with PSIG-002 and PSIG-004 across all three pressure zones (PZ-001, PZ-002, PZ-003) — contributes to COMPOUND_ZONE designation in each.</div>
+        <div class="signal-title">Fan-In Concentration (PSIG-001): HIGH — Statistically abnormal concentration — Value 9.43</div>
+        <div class="signal-trace">trace: RUN_RELATIVE_OUTLIER</div>
+        <div class="signal-statement">Inbound dependency concentration is 9.43 — Statistically abnormal concentration (trace: RUN_RELATIVE_OUTLIER). Primary attribution entity: NODE-009 in DOM-04. Domain scope: DOM-03, DOM-04, DOM-05. Co-present with PSIG-002 and PSIG-004 across all three pressure zones (PZ-001, PZ-002, PZ-003) — contributes to Multiple structural pressures acting together (trace: COMPOUND_ZONE) in each.</div>
       </div>
       <div class="signal-meta">
         <div class="signal-domain-tag">DOM-04</div>
@@ -289,8 +303,9 @@
     <div class="signal-card">
       <div class="signal-num">02</div>
       <div class="signal-body">
-        <div class="signal-title">Fan-Out Propagation (PSIG-002): HIGH — RUN_RELATIVE_OUTLIER — Value 9.43</div>
-        <div class="signal-statement">Outbound dependency propagation is 9.43 — RUN_RELATIVE_OUTLIER condition. Distributes across DOM-03, DOM-04, DOM-05 with no single primary entity. Co-presence with PSIG-001 at the same value (9.43) indicates bidirectional concentration pressure — not a single directed flow. Present in all three zones.</div>
+        <div class="signal-title">Fan-Out Propagation (PSIG-002): HIGH — Statistically abnormal concentration — Value 9.43</div>
+        <div class="signal-trace">trace: RUN_RELATIVE_OUTLIER</div>
+        <div class="signal-statement">Outbound dependency propagation is 9.43 — Statistically abnormal concentration (trace: RUN_RELATIVE_OUTLIER). Distributes across DOM-03, DOM-04, DOM-05 with no single primary entity. Co-presence with PSIG-001 at the same value (9.43) indicates bidirectional concentration pressure — not a single directed flow. Present in all three zones.</div>
       </div>
       <div class="signal-meta">
         <div class="signal-domain-tag">DOM-03 · DOM-04 · DOM-05</div>
@@ -300,8 +315,9 @@
     <div class="signal-card">
       <div class="signal-num">03</div>
       <div class="signal-body">
-        <div class="signal-title">Responsibility Concentration (PSIG-004): HIGH — RUN_RELATIVE_OUTLIER — Value 4.33</div>
-        <div class="signal-statement">Structural responsibility concentration is 4.33 — RUN_RELATIVE_OUTLIER. Primary attribution entity: NODE-009 in DOM-04. Convergence of PSIG-001 and PSIG-004 at NODE-009 defines the PRIMARY designation for PZ-002 (DOM-04). Secondary attribution covers all three zone domains.</div>
+        <div class="signal-title">Responsibility Concentration (PSIG-004): HIGH — Statistically abnormal concentration — Value 4.33</div>
+        <div class="signal-trace">trace: RUN_RELATIVE_OUTLIER</div>
+        <div class="signal-statement">Structural responsibility concentration is 4.33 — Statistically abnormal concentration (trace: RUN_RELATIVE_OUTLIER). Primary attribution entity: NODE-009 in DOM-04. Convergence of PSIG-001 and PSIG-004 at NODE-009 defines the Primary pressure anchor (trace: PRIMARY) for PZ-002 (DOM-04). Secondary affected zones (trace: SECONDARY) cover all three zone domains.</div>
       </div>
       <div class="signal-meta">
         <div class="signal-domain-tag">DOM-04</div>
@@ -311,8 +327,9 @@
     <div class="signal-card">
       <div class="signal-num">04</div>
       <div class="signal-body">
-        <div class="signal-title">Structural Blind Spot (PSIG-006): ACTIVATED — THEORETICAL_BASELINE — Value 0.2</div>
-        <div class="signal-statement">PSIG-006 activated at THEORETICAL_BASELINE (value 0.2). Covers 9 structural entities: DOM-01, DOM-02, NODE-001, NODE-002…. These entities are outside pressure zone scope (PZ-001/PZ-002/PZ-003). THEORETICAL_BASELINE indicates structural basis is present but execution evidence is insufficient for an empirical pressure value. Represents a coverage gap.</div>
+        <div class="signal-title">Structural Blind Spot (PSIG-006): ACTIVATED — Baseline condition without runtime validation — Value 0.2</div>
+        <div class="signal-trace">trace: THEORETICAL_BASELINE</div>
+        <div class="signal-statement">PSIG-006 activated at Baseline condition without runtime validation (trace: THEORETICAL_BASELINE, value 0.2). Covers 9 structural entities: DOM-01, DOM-02, NODE-001, NODE-002…. These entities are outside pressure zone scope (PZ-001/PZ-002/PZ-003). Baseline condition without runtime validation means structural basis is present but execution evidence is insufficient for an empirical pressure value. Represents a coverage gap.</div>
       </div>
       <div class="signal-meta">
         <div class="signal-domain-tag">DOM-01 · DOM-02</div>
@@ -323,6 +340,7 @@
       <div class="signal-num">05</div>
       <div class="signal-body">
         <div class="signal-title">Inbound Coupling (PSIG-003): NOT_ACTIVATED — Below threshold</div>
+        
         <div class="signal-statement">PSIG-003 evaluated inbound coupling ratio and did not reach the activation threshold for this run. This is a confirmed structural observation, not a gap in evaluation.</div>
       </div>
       <div class="signal-meta">
@@ -334,6 +352,7 @@
       <div class="signal-num">06</div>
       <div class="signal-body">
         <div class="signal-title">Structural Metrics: Dependency Load 0.044 · Edge-to-Node 1.378 · Containment 1.333</div>
+        
         <div class="signal-statement">Dependency load ratio: 0.044 (2 of 45 edges are load-bearing overlap edges). Edge-to-node density: 1.378 (62 edges / 45 nodes). Containment density: 1.333 (60 containment edges / 45 nodes). Low dependency load with dense containment indicates a topology dominated by hierarchical nesting rather than direct coupling.</div>
       </div>
       <div class="signal-meta">
@@ -348,32 +367,32 @@
   <div class="focus-domain-block" style="margin-bottom:12px">
     <div class="focus-domain-header">
       <div>
-        <div class="focus-domain-label">PZ-001 — backend_isolated · secondary</div>
+        <div class="focus-domain-label">PZ-001 — backend_isolated</div>
         <div class="focus-domain-sub">PSIG-001 · PSIG-002 · PSIG-004</div>
       </div>
-      <div class="focus-badge">secondary</div>
+      <div class="focus-badge">Secondary affected zone<span style="display:block;font-size:9px;opacity:.6;margin-top:2px">trace: SECONDARY</span></div>
     </div>
-    <div class="focus-finding">PZ-001 (backend_isolated): secondary attribution.</div>
+    <div class="focus-finding">PZ-001 (backend_isolated): Secondary affected zone — <span style="font-size:11px;opacity:.7">trace: secondary attribution</span>.</div>
   </div>
   <div class="focus-domain-block" style="margin-bottom:12px">
     <div class="focus-domain-header">
       <div>
-        <div class="focus-domain-label">PZ-002 — frontend_isolated · PRIMARY</div>
+        <div class="focus-domain-label">PZ-002 — frontend_isolated</div>
         <div class="focus-domain-sub">PSIG-001 · PSIG-002 · PSIG-004</div>
       </div>
-      <div class="focus-badge">PRIMARY</div>
+      <div class="focus-badge">Primary pressure anchor<span style="display:block;font-size:9px;opacity:.6;margin-top:2px">trace: PRIMARY</span></div>
     </div>
-    <div class="focus-finding">PZ-002 (frontend_isolated): primary attribution.</div>
+    <div class="focus-finding">PZ-002 (frontend_isolated): Primary pressure anchor — <span style="font-size:11px;opacity:.7">trace: primary attribution</span>.</div>
   </div>
   <div class="focus-domain-block" style="margin-bottom:12px">
     <div class="focus-domain-header">
       <div>
-        <div class="focus-domain-label">PZ-003 — platform_monorepo · secondary</div>
+        <div class="focus-domain-label">PZ-003 — platform_monorepo</div>
         <div class="focus-domain-sub">PSIG-001 · PSIG-002 · PSIG-004</div>
       </div>
-      <div class="focus-badge">secondary</div>
+      <div class="focus-badge">Secondary affected zone<span style="display:block;font-size:9px;opacity:.6;margin-top:2px">trace: SECONDARY</span></div>
     </div>
-    <div class="focus-finding">PZ-003 (platform_monorepo): secondary attribution.</div>
+    <div class="focus-finding">PZ-003 (platform_monorepo): Secondary affected zone — <span style="font-size:11px;opacity:.7">trace: secondary attribution</span>.</div>
   </div>
   <div class="tier2-handoff" style="margin-top:8px"><div class="tier2-handoff-label">Structural Blind Spot — PSIG-006</div><div class="tier2-handoff-text">9 entities outside pressure zone scope. PSIG-006 activated at THEORETICAL_BASELINE — coverage gap, not zone candidate.</div></div>
 
