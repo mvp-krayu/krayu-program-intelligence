@@ -5601,11 +5601,8 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
         _truth_sentences.append(
             "Dependency and structural density remain within controlled bounds.")
     if _use_psig and zone_count > 0:
-        _pcount = "One" if zone_count == 1 else str(zone_count)
         _truth_sentences.append(
-            f"{_pcount} structural pressure pattern"
-            f"{'s' if zone_count != 1 else ''} "
-            f"{'is' if zone_count == 1 else 'are'} present across the system.")
+            "A single structural pressure pattern appears across the system.")
     truth_html = "<br><br>".join(esc(s) for s in _truth_sentences) if _truth_sentences else "—"
 
     # ── Gap items — compressed to short phrases ────────────────────────
@@ -5614,7 +5611,7 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
         gap_items.append("Execution-layer behavioral state")
     if not_activated:
         _n = len(not_activated)
-        gap_items.append(f"{_n} signal{'s' if _n != 1 else ''} not activated this run")
+        gap_items.append(f"{_n} structural signal{'s' if _n != 1 else ''} not activated")
     if blind_spot:
         gap_items.append("Blind spot coverage active — entities outside zone scope not characterized")
     gap_items += [
@@ -5641,7 +5638,10 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
         _cells_html = (
             f'<div class="ds-pressure-cell ds-pressure-cell-sigs">'
             f'<div class="ds-pressure-cell-value">'
-            f'{_sig_n} structural signal{"s" if _sig_n != 1 else ""} active'
+            f'Pressure is driven by {_sig_n} structural signal{"s" if _sig_n != 1 else ""}'
+            f'</div>'
+            f'<div class="ds-pressure-cell-sub">'
+            f'The same signals act across all affected domains.'
             f'</div>'
             + (
                 f'<div class="ds-pressure-cell-sub rc-trace">trace: {esc(_sig_ids_trace)}</div>'
@@ -5651,10 +5651,12 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
         )
         _note_html = (
             f'<div class="ds-pressure-note">'
-            f'One structural pressure pattern appears across multiple domains. '
-            f'The same signals are present in each zone. '
-            f'The difference is where pressure originates. '
-            f'This reflects co-presence, not causality.'
+            f'<strong>One structural pressure pattern appears across multiple domains.</strong>'
+            f'<br><br>'
+            f'The same signals are active in each zone.<br>'
+            f'The difference is not the signal \u2014 it is where the pressure originates.'
+            f'<br><br>'
+            f'This is structural co-presence, not causality.'
             f'</div>'
         ) if zone_count > 0 else ""
 
