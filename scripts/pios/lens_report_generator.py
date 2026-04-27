@@ -531,7 +531,7 @@ def _render_signal_trace_canvas(graph_state: Optional[Dict]) -> str:
 
     return (
         f'<canvas id="ds-signal-trace" width="{width}" height="{height}" '
-        f'style="display:block;width:100%;border-radius:3px;background:#09090d"></canvas>\n'
+        f'style="display:block;width:90%;height:220px;margin:0 auto;border-radius:3px;background:#09090d"></canvas>\n'
         f'<script>{js_draw}</script>'
     )
 
