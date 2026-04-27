@@ -5545,6 +5545,16 @@ _DECISION_SURFACE_CSS = """
   .ds-footer{display:flex;justify-content:space-between;align-items:center;padding-top:20px;border-top:1px solid var(--border-subtle);margin-top:40px;font-size:11px;color:var(--fg-dim)}
   .ds-footer-brand{color:var(--gold);letter-spacing:.06em;font-size:13px}
   .rc-trace{font-size:10px;color:var(--fg-dim);opacity:.7;font-style:normal}
+  .ds-trace-view{margin-bottom:32px}
+  .ds-trace-view summary{font-size:11px;color:var(--fg-dim);cursor:pointer;padding:8px 12px;border:1px solid var(--border-subtle);border-radius:3px;list-style:none;display:flex;align-items:center;gap:8px;user-select:none}
+  .ds-trace-view summary::-webkit-details-marker{display:none}
+  .ds-trace-view summary::before{content:'›';font-size:13px;color:var(--fg-dim);transition:transform .15s}
+  .ds-trace-view[open] summary::before{transform:rotate(90deg)}
+  .ds-trace-view summary:hover{border-color:var(--border);color:var(--fg-muted)}
+  .ds-trace-view-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:10px}
+  .ds-trace-body{padding:16px 0 0}
+  .ds-trace-intro{font-size:11px;color:var(--fg-dim);margin-bottom:14px;line-height:1.6}
+  .ds-trace-footnote{font-size:10px;color:var(--fg-dim);margin-top:12px;padding-top:10px;border-top:1px solid var(--border-subtle)}
   @media(max-width:600px){.ds-hero{flex-direction:column}.ds-hero-score-block{text-align:left}.ds-split{grid-template-columns:1fr}.ds-pressure-row{grid-template-columns:1fr 1fr}.ds-nav{margin-left:0;margin-top:6px}}
 """
 
@@ -5735,6 +5745,29 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
         for href, label, primary in _explore_links
     )
 
+    # ── Structural Trace View (collapsible) ────────────────────────────
+    _topo_svg = (
+        _build_tier1_topology_svg_generic(domains, pz_proj=pz_proj)
+        if _use_psig else
+        _build_tier1_topology_svg(domains, publish_safe=publish_safe)
+    )
+    _trace_view_html = (
+        f'<details class="ds-trace-view">'
+        f'<summary>View underlying structural connections</summary>'
+        f'<div class="ds-trace-body">'
+        f'<div class="ds-trace-label">Structural Trace View</div>'
+        f'<p class="ds-trace-intro">'
+        f'This view shows how structural signals, claims, and artifacts connect '
+        f'across the assessed system.'
+        f'</p>'
+        f'{_topo_svg}'
+        f'<div class="ds-trace-footnote">'
+        f'Full trace continuity available in interactive workspace.'
+        f'</div>'
+        f'</div>'
+        f'</details>'
+    )
+
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5786,6 +5819,8 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
   </div>
 
   {pressure_html}
+
+  {_trace_view_html}
 
   <div class="ds-inference">
     <span class="ds-inference-tag">inference_prohibition</span>
