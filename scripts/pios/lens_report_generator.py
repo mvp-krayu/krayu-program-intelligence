@@ -245,8 +245,8 @@ def _render_radial_gauge(score: int, band_min: int, band_max: int, label: str) -
     Dark theme; colors match report CSS variables.
     Returns a self-contained <svg> string suitable for inline HTML embedding.
     """
-    CX, CY, R        = 80, 75, 58
-    W_TRACK, W_BAND, W_SCORE = 7, 10, 7
+    CX, CY, R        = 80, 72, 58
+    W_TRACK, W_BAND, W_SCORE = 7, 11, 8
     START_DEG, SWEEP_DEG     = 225.0, 270.0
 
     def _pt(deg: float) -> Tuple[float, float]:
@@ -266,7 +266,7 @@ def _render_radial_gauge(score: int, band_min: int, band_max: int, label: str) -
     _blo = max(0, min(100, band_min))
     _bhi = max(0, min(100, band_max))
 
-    a_end     = START_DEG + SWEEP_DEG             # 135° (5 o'clock)
+    a_end     = START_DEG + SWEEP_DEG
     a_score   = START_DEG + (_s   / 100.0) * SWEEP_DEG
     a_band_lo = START_DEG + (_blo / 100.0) * SWEEP_DEG
     a_band_hi = START_DEG + (_bhi / 100.0) * SWEEP_DEG
@@ -276,29 +276,32 @@ def _render_radial_gauge(score: int, band_min: int, band_max: int, label: str) -
     score_d = _arc(START_DEG, a_score)
     sx, sy  = _pt(a_score)
 
-    _band_path  = (f'<path d="{band_d}" fill="none" stroke="rgba(200,155,60,.22)" '
+    _band_path  = (f'<path d="{band_d}" fill="none" stroke="rgba(200,155,60,.18)" '
                    f'stroke-width="{W_BAND}" stroke-linecap="round"/>') if band_d else ""
     _score_path = (f'<path d="{score_d}" fill="none" stroke="#c89b3c" '
                    f'stroke-width="{W_SCORE}" stroke-linecap="round"/>') if score_d else ""
-    _score_dot  = (f'<circle cx="{sx:.2f}" cy="{sy:.2f}" r="5.5" fill="#c89b3c"/>') if score_d else ""
+    _score_dot  = (
+        f'<circle cx="{sx:.2f}" cy="{sy:.2f}" r="6.5" fill="#d4a84b"/>'
+        f'<circle cx="{sx:.2f}" cy="{sy:.2f}" r="3.5" fill="#ffe0a0"/>'
+    ) if score_d else ""
 
     _font = "-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
     return (
         f'<svg viewBox="0 0 160 145" width="160" height="145" '
         f'xmlns="http://www.w3.org/2000/svg" style="display:block;overflow:visible">'
-        f'<path d="{track_d}" fill="none" stroke="#2a2a2e" '
-        f'stroke-width="{W_TRACK}" stroke-linecap="round"/>'
+        f'<path d="{track_d}" fill="none" stroke="#242428" '
+        f'stroke-width="{W_TRACK}" stroke-linecap="round" opacity="0.85"/>'
         f'{_band_path}'
         f'{_score_path}'
         f'{_score_dot}'
-        f'<text x="{CX}" y="80" text-anchor="middle" dominant-baseline="middle" '
-        f'font-family="{_font}" font-size="30" font-weight="300" fill="#c89b3c" '
-        f'letter-spacing=".02em">{_s}</text>'
-        f'<text x="{CX}" y="97" text-anchor="middle" '
-        f'font-family="{_font}" font-size="9" fill="#888" letter-spacing=".12em">'
+        f'<text x="{CX}" y="76" text-anchor="middle" dominant-baseline="middle" '
+        f'font-family="{_font}" font-size="44" font-weight="600" fill="#c89b3c" '
+        f'letter-spacing="-.01em">{_s}</text>'
+        f'<text x="{CX}" y="100" text-anchor="middle" '
+        f'font-family="{_font}" font-size="8" fill="#888" letter-spacing=".18em" opacity="0.65">'
         f'{esc(label.upper())}</text>'
-        f'<text x="{CX}" y="110" text-anchor="middle" '
-        f'font-family="{_font}" font-size="8" fill="#555">'
+        f'<text x="{CX}" y="113" text-anchor="middle" '
+        f'font-family="{_font}" font-size="7" fill="#666" letter-spacing=".06em" opacity="0.45">'
         f'{_blo}\u2013{_bhi}</text>'
         f'</svg>'
     )
