@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <title>LENS — Decision Surface</title>
+  <style>
+  :root{--bg:#0e0e10;--surface:#16161a;--surface-raised:#1c1c22;--border:#2a2a2e;--border-subtle:#222228;--fg:#e8e8e8;--fg-muted:#888;--fg-dim:#555;--gold:#c89b3c;--gold-muted:rgba(200,155,60,0.12);--gold-border:rgba(200,155,60,0.28);--green:#4caf6e;--green-muted:rgba(76,175,110,0.12);--green-border:rgba(76,175,110,0.28);--amber:#d4912a;--amber-muted:rgba(212,145,42,0.1);--amber-border:rgba(212,145,42,0.25);--red:#e05252;--red-muted:rgba(224,82,82,0.1);--red-border:rgba(224,82,82,0.25);--font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+  .page{max-width:760px;margin:0 auto;padding:36px 32px 72px}
+  .ds-identity{display:flex;align-items:center;gap:8px;margin-bottom:28px;padding-bottom:14px;border-bottom:1px solid var(--border-subtle);font-size:12px;flex-wrap:wrap}
+  .ds-brand{color:var(--gold);font-weight:500;letter-spacing:.06em}
+  .ds-sep{color:var(--fg-dim)}
+  .ds-client{color:var(--fg-muted)}
+  .ds-run{color:var(--fg-dim);font-family:monospace;font-size:11px}
+  .ds-nav{margin-left:auto;display:flex;gap:14px}
+  .ds-nav-link{font-size:11px;color:var(--fg-dim);text-decoration:none;letter-spacing:.04em}
+  .ds-nav-link:hover{color:var(--fg-muted)}
+  .ds-hero{position:relative;display:block;border:1px solid var(--border);border-radius:4px;background:var(--surface);margin-bottom:28px;overflow:hidden}
+  .ds-hero::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,#c89b3c 0%,rgba(200,155,60,.16) 100%)}
+  .ds-hero-verdict{font-size:64px;font-weight:700;letter-spacing:0;line-height:1;padding:28px 32px 22px 40px;border-bottom:1px solid var(--border-subtle)}
+  .ds-hero.posture-proceed .ds-hero-verdict{color:var(--green)}
+  .ds-hero.posture-investigate .ds-hero-verdict{color:var(--amber)}
+  .ds-hero.posture-escalate .ds-hero-verdict{color:var(--red)}
+  .ds-hero-body{display:flex;justify-content:space-between;align-items:flex-start;padding:20px 28px 24px 40px;gap:24px}
+  .ds-hero-rationale{font-size:13px;color:var(--fg-muted);line-height:1.6;max-width:380px;margin-bottom:6px}
+  .ds-hero-secondary{font-size:12px;color:var(--fg-dim);line-height:1.5;max-width:380px;margin-bottom:12px}
+  .ds-hero-scan-strip{font-size:11px;letter-spacing:.06em;color:var(--fg-muted);margin-top:14px;padding-top:12px;border-top:1px solid var(--border-subtle)}
+  .ds-hero-context{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .ds-ctx-sep{color:var(--fg-dim)}
+  .ds-ctx-badge{font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:var(--surface-raised);color:var(--fg-muted);padding:3px 8px;border-radius:2px;border:1px solid var(--border)}
+  .ds-split{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
+  .ds-split-col{padding:16px 18px;border:1px solid var(--border);border-radius:3px;background:var(--surface)}
+  .ds-split-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px;font-weight:600}
+  .ds-split-col.confirmed .ds-split-label{color:var(--green)}
+  .ds-split-col.unknown .ds-split-label{color:var(--amber)}
+  .ds-truth-text{font-size:12px;color:var(--fg-muted);line-height:1.8}
+  .ds-gap-items{list-style:none;padding:0}
+  .ds-gap-item{font-size:12px;color:var(--fg-muted);padding:5px 0;border-bottom:1px solid var(--border-subtle);display:flex;gap:8px;align-items:flex-start}
+  .ds-gap-item:last-child{border-bottom:none}
+  .ds-gap-item::before{content:'○';color:var(--amber);font-size:10px;margin-top:3px;flex-shrink:0}
+  .ds-epb{margin-bottom:32px}
+  .ds-epb-section-title{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:16px}
+  .ds-epb-grid{display:grid;grid-template-columns:45% 55%;gap:32px;align-items:stretch}
+  .ds-epb-card{display:flex;flex-direction:column;justify-content:space-between;background:var(--surface);border:1px solid var(--border);border-top:2px solid var(--gold);padding:20px 22px;border-radius:3px}
+  .ds-epb-card-title{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;font-weight:600}
+  .ds-epb-card-main{font-size:14px;font-weight:300;color:var(--fg);line-height:1.5;margin-bottom:10px}
+  .ds-epb-card-trace{font-size:10px;color:var(--fg-dim);font-family:monospace;opacity:.8;margin-bottom:12px;word-break:break-all}
+  .ds-epb-signal-list{margin:10px 0 12px;display:flex;flex-direction:column;gap:5px}
+  .ds-epb-signal-row{display:flex;align-items:center;gap:8px}
+  .ds-epb-signal-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0;opacity:.7}
+  .ds-epb-signal-id{font-size:11px;color:var(--fg-muted);font-family:monospace;letter-spacing:.04em}
+  .ds-epb-card-support{font-size:11px;color:var(--fg-muted);line-height:1.6;margin-bottom:10px}
+  .ds-epb-card-close{font-size:11px;color:var(--fg-muted);font-style:italic}
+  .ds-epb-visual{display:flex;flex-direction:column;justify-content:flex-start}
+  .ds-epb-visual-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:10px}
+  .ds-epb-connector{height:1px;background:linear-gradient(90deg,transparent,rgba(200,155,60,.2),transparent);margin:12px 0}
+  .ds-epb-synthesis{font-size:11px;color:var(--fg-muted);line-height:1.8;padding:14px 18px;background:rgba(0,0,0,.15);border-radius:2px}
+  .ds-epb-synthesis strong{color:var(--fg);font-weight:500}
+  .ds-epb-card-attrs{margin-top:14px;padding-top:12px;border-top:1px solid var(--border-subtle)}
+  .ds-epb-card-attr-row{display:flex;justify-content:space-between;align-items:baseline;padding:3px 0}
+  .ds-epb-card-attr-key{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-dim)}
+  .ds-epb-card-attr-val{font-size:11px;color:var(--fg-muted);text-align:right}
+  .ds-inference{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(0,0,0,.2);border:1px solid var(--border-subtle);border-radius:3px;margin-bottom:24px;font-size:11px;color:var(--fg-dim)}
+  .ds-inference-tag{font-size:9px;letter-spacing:.12em;text-transform:uppercase;background:var(--red-muted);color:var(--red);padding:3px 8px;border-radius:2px;border:1px solid var(--red-border);flex-shrink:0}
+  .ds-explore{margin-bottom:32px}
+  .ds-explore-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:10px}
+  .ds-explore-strip{display:flex;gap:10px;flex-wrap:wrap}
+  .ds-explore-link{display:inline-block;padding:8px 16px;font-size:12px;letter-spacing:.04em;border:1px solid var(--border);color:var(--fg-muted);text-decoration:none;border-radius:3px}
+  .ds-explore-link:hover{border-color:var(--gold-border);color:var(--gold)}
+  .ds-explore-link.primary{border-color:var(--gold-border);color:var(--gold);background:var(--gold-muted)}
+  .ds-footer{display:flex;justify-content:space-between;align-items:center;padding-top:20px;border-top:1px solid var(--border-subtle);margin-top:40px;font-size:11px;color:var(--fg-dim)}
+  .ds-footer-brand{color:var(--gold);letter-spacing:.06em;font-size:13px;font-weight:500}
+  .ds-footer-doc{color:var(--fg-muted);font-size:11px;letter-spacing:.08em}
+  .rc-trace{font-size:10px;color:var(--fg-dim);opacity:.7;font-style:normal}
+  .ds-trace-preview{margin-bottom:32px}
+  .ds-trace-preview-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:12px}
+  .ds-trace-preview-wrap{width:67%;margin:0 auto;border-radius:3px;overflow:hidden}
+  .ds-trace-preview-text{font-size:11px;color:var(--fg-dim);margin-top:12px;text-align:center;line-height:1.7}
+  @media print{
+    html,body{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}
+    @page{margin:0}
+    .page{max-width:920px!important;padding:40px 40px 56px!important}
+    .ds-nav{display:none!important}
+    .ds-hero{page-break-inside:avoid;margin-bottom:36px}
+    .ds-split{page-break-inside:avoid;margin-bottom:40px}
+    .ds-epb{page-break-inside:avoid;margin-bottom:36px}
+    .ds-epb-grid{page-break-inside:avoid}
+    .ds-inference{page-break-inside:avoid}
+    .ds-explore{page-break-inside:avoid}
+    .ds-footer{margin-top:56px;page-break-inside:avoid}
+    .ds-epb-visual canvas{width:340px!important;max-width:340px!important;height:240px!important}
+    .ds-epb-connector{background:rgba(200,155,60,.35)!important}
+  }
+  @media(max-width:600px){.ds-hero-body{flex-direction:column}.ds-split{grid-template-columns:1fr}.ds-epb-grid{grid-template-columns:1fr}.ds-nav{margin-left:0;margin-top:6px}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="ds-identity">
+    <span class="ds-brand">Signäl</span>
+    <span class="ds-sep">·</span>
+    <span class="ds-client">OSS FastAPI Codebase</span>
+    <span class="ds-sep">·</span>
+    <span class="ds-run">run_01_oss_fastapi</span>
+    <nav class="ds-nav">
+      <a href="/api/report-file?name=lens_tier1_narrative_brief.html&client=e65d2f0a-dfa7-4257-9333-fcbb583f0880&runId=run_01_oss_fastapi" class="ds-nav-link">Executive Brief</a>
+      <a href="/api/report-file?name=lens_tier1_evidence_brief.html&client=e65d2f0a-dfa7-4257-9333-fcbb583f0880&runId=run_01_oss_fastapi" class="ds-nav-link">Assessment</a>
+      <a href="/api/report-file?name=lens_tier2_diagnostic_narrative.html&client=e65d2f0a-dfa7-4257-9333-fcbb583f0880&runId=run_01_oss_fastapi" class="ds-nav-link">Diagnostic</a>
+    </nav>
+  </div>
+
+  <div class="ds-hero posture-investigate">
+    <div class="ds-hero-verdict">INVESTIGATE</div>
+    <div class="ds-hero-body">
+      <div>
+        <div class="ds-hero-rationale">Structure is verified. Execution evidence is incomplete.</div>
+        <div class="ds-hero-secondary">Structural state is confirmed. Decision is constrained by evidence gaps.</div>
+        <div class="ds-hero-context">
+          <span class="ds-ctx-badge">STRUCTURE: STABLE</span>
+          <span class="ds-ctx-sep">·</span>
+          <span class="ds-ctx-badge">EVIDENCE: PARTIAL</span>
+          <span class="ds-ctx-sep">·</span>
+          <span class="ds-ctx-badge">RISK: LOW</span>
+        </div>
+        <div class="ds-hero-scan-strip">3 signals active · system-wide scope · 1 structural pattern</div>
+      </div>
+      <svg viewBox="0 0 160 145" width="160" height="145" xmlns="http://www.w3.org/2000/svg" style="display:block;overflow:visible"><path d="M 38.99,30.99 A 58,58 0 1,1 38.99,113.01" fill="none" stroke="#2e2e36" stroke-width="9" stroke-linecap="round"/><path d="M 131.68,98.33 A 58,58 0 0,1 38.99,113.01" fill="none" stroke="rgba(200,155,60,.35)" stroke-width="13" stroke-linecap="round"/><path d="M 38.99,30.99 A 58,58 0 0,1 131.68,98.33" fill="none" stroke="#c89b3c" stroke-width="10" stroke-linecap="round"/><circle cx="131.68" cy="98.33" r="7.5" fill="#d4a84b"/><circle cx="131.68" cy="98.33" r="4" fill="#ffe0a0"/><text x="80" y="76" text-anchor="middle" dominant-baseline="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="44" font-weight="600" fill="#c89b3c" letter-spacing="-.01em">60</text><text x="80" y="100" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="9" fill="#999" letter-spacing=".18em" opacity="0.9">CONDITIONAL</text><text x="80" y="114" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="8" fill="#777" letter-spacing=".06em" opacity="0.75">60–100</text></svg>
+    </div>
+  </div>
+
+  <div class="ds-split">
+    <div class="ds-split-col confirmed">
+      <div class="ds-split-label">Structurally confirmed</div>
+      <div class="ds-truth-text">All domains are structurally grounded.<br><br>No incomplete structural areas detected.<br><br>Dependency and structural density remain within controlled bounds.<br><br>A single structural pressure pattern appears across the system.</div>
+    </div>
+    <div class="ds-split-col unknown">
+      <div class="ds-split-label">Not known</div>
+      <ul class="ds-gap-items"><li class="ds-gap-item">Execution-layer behavioral state</li><li class="ds-gap-item">2 structural signals not activated</li><li class="ds-gap-item">Blind spot coverage active — entities outside zone scope not characterized</li><li class="ds-gap-item">Causal relationships between conditions</li><li class="ds-gap-item">Runtime behavior under load</li></ul>
+    </div>
+  </div>
+
+  
+  <div class="ds-epb"><div class="ds-epb-section-title">Where pressure exists</div><div class="ds-epb-grid"><div class="ds-epb-card"><div><div class="ds-epb-card-title">Structural Pressure Signals</div><div class="ds-epb-card-main">3 structural signals are simultaneously active across the system.</div><div class="ds-epb-signal-list"><div class="ds-epb-signal-row"><span class="ds-epb-signal-dot"></span><span class="ds-epb-signal-id">PSIG-001</span></div><div class="ds-epb-signal-row"><span class="ds-epb-signal-dot"></span><span class="ds-epb-signal-id">PSIG-002</span></div><div class="ds-epb-signal-row"><span class="ds-epb-signal-dot"></span><span class="ds-epb-signal-id">PSIG-004</span></div></div><div class="ds-epb-card-support">All signals act across the same structural scope.</div></div><div class="ds-epb-card-close">This indicates a shared pressure pattern spanning multiple domains.</div><div class="ds-epb-card-attrs"><div class="ds-epb-card-attr-row"><span class="ds-epb-card-attr-key">Pattern type</span><span class="ds-epb-card-attr-val">Shared structural pressure</span></div><div class="ds-epb-card-attr-row"><span class="ds-epb-card-attr-key">Scope</span><span class="ds-epb-card-attr-val">System-wide</span></div><div class="ds-epb-card-attr-row"><span class="ds-epb-card-attr-key">Signal coherence</span><span class="ds-epb-card-attr-val">High</span></div></div></div><div class="ds-epb-visual"><div class="ds-epb-visual-label">Signal Trace Preview</div><canvas id="ds-signal-trace" style="display:block;width:100%;height:275px;margin:0 auto"></canvas>
+<script>(function(){
+  var N=[{"x":439.21,"y":190.24,"r":9,"c":"#f0f0f0"},{"x":360.58,"y":233.84,"r":6,"c":"#52d97e"},{"x":300.48,"y":275.57,"r":5,"c":"#e8b54a"},{"x":477.97,"y":275.47,"r":6,"c":"#52d97e"},{"x":508.7,"y":342.4,"r":5,"c":"#e8b54a"},{"x":529.66,"y":165.77,"r":6,"c":"#52d97e"},{"x":602.07,"y":151.32,"r":5,"c":"#e8b54a"},{"x":459.42,"y":99.91,"r":6,"c":"#52d97e"},{"x":478.09,"y":28.95,"r":5,"c":"#e8b54a"},{"x":352.32,"y":167.2,"r":6,"c":"#52d97e"},{"x":283.46,"y":142.65,"r":5,"c":"#e8b54a"},{"x":436.75,"y":258.04,"r":5,"c":"#6ab4e8"},{"x":420.8,"y":124.71,"r":5,"c":"#6ab4e8"},{"x":506.32,"y":199.1,"r":5,"c":"#6ab4e8"},{"x":399.94,"y":245.15,"r":5,"c":"#6ab4e8"},{"x":484.11,"y":140.33,"r":5,"c":"#6ab4e8"},{"x":491.7,"y":233.64,"r":5,"c":"#6ab4e8"},{"x":388.43,"y":145.68,"r":5,"c":"#6ab4e8"}];
+  var L=[{"s":0,"t":1,"c":"#3cac64","w":2},{"s":1,"t":2,"c":"#4b82d2","w":2.2},{"s":0,"t":3,"c":"#3cac64","w":2},{"s":3,"t":4,"c":"#4b82d2","w":2.2},{"s":0,"t":5,"c":"#3cac64","w":2},{"s":5,"t":6,"c":"#4b82d2","w":2.2},{"s":0,"t":7,"c":"#3cac64","w":2},{"s":7,"t":8,"c":"#4b82d2","w":2.2},{"s":0,"t":9,"c":"#3cac64","w":2},{"s":9,"t":10,"c":"#4b82d2","w":2.2},{"s":0,"t":11,"c":"#b29237","w":2},{"s":0,"t":12,"c":"#b29237","w":2},{"s":0,"t":13,"c":"#b29237","w":2},{"s":0,"t":14,"c":"#b29237","w":2},{"s":0,"t":15,"c":"#b29237","w":2},{"s":0,"t":16,"c":"#b29237","w":2},{"s":0,"t":17,"c":"#b29237","w":2}];
+  var cv=document.getElementById("ds-signal-trace");if(!cv)return;
+  var dpr=window.devicePixelRatio||1;
+  var cssW=cv.offsetWidth>10?cv.offsetWidth:540;
+  var cssH=260;
+  cv.width=Math.round(cssW*dpr);
+  cv.height=Math.round(cssH*dpr);
+  var ctx=cv.getContext("2d");
+  ctx.scale(dpr,dpr);
+  var minX=1e9,maxX=-1e9,minY=1e9,maxY=-1e9;
+  N.forEach(function(n){
+    if(n.x<minX)minX=n.x;if(n.x>maxX)maxX=n.x;
+    if(n.y<minY)minY=n.y;if(n.y>maxY)maxY=n.y;
+  });
+  var cx0=(minX+maxX)/2,cy0=(minY+maxY)/2;
+  var span=Math.max(maxX-minX,maxY-minY)||1;
+  var sc=(cssW*0.64)/span;
+  var ocx=cssW/2,ocy=cssH/2;
+  function px(x){return ocx+(x-cx0)*sc;}
+  function py(y){return ocy+(y-cy0)*sc;}
+  var mR=0;N.forEach(function(n){if(n.r>mR)mR=n.r;});
+  ctx.globalAlpha=0.80;
+  L.forEach(function(l){
+    ctx.strokeStyle=l.c;ctx.lineWidth=1.6;
+    ctx.beginPath();ctx.moveTo(px(N[l.s].x),py(N[l.s].y));ctx.lineTo(px(N[l.t].x),py(N[l.t].y));ctx.stroke();
+  });
+  N.forEach(function(n){
+    var isc=n.r===mR;
+    var r=isc?6.5:4.5;
+    ctx.beginPath();ctx.arc(px(n.x),py(n.y),r,0,6.283);
+    ctx.fillStyle=n.c;ctx.globalAlpha=isc?1.0:0.88;ctx.fill();
+    ctx.lineWidth=isc?1.5:0.8;
+    ctx.strokeStyle=isc?"rgba(255,255,255,0.25)":"rgba(255,255,255,0.12)";
+    ctx.globalAlpha=1;ctx.stroke();
+  });
+})();</script></div></div><div class="ds-epb-connector"></div><div class="ds-epb-synthesis"><strong>A single structural pressure pattern spans multiple domains.</strong><br><br>The same signals are present in each zone.<br>The difference lies in where pressure originates.<br><br>This reflects structural co-presence across the system.<br><br>This is not a causal determination.</div></div>
+
+  <div class="ds-inference">
+    <span class="ds-inference-tag">inference_prohibition</span>
+    ACTIVE — all data on this surface is structural and evidential only.
+    No advisory content, causal inference, or remediation guidance may be derived.
+  </div>
+
+  <div class="ds-explore">
+    <div class="ds-explore-label">Open the evidence</div>
+    <div class="ds-explore-strip"><a href="/api/report-file?name=lens_tier1_narrative_brief.html&client=e65d2f0a-dfa7-4257-9333-fcbb583f0880&runId=run_01_oss_fastapi" class="ds-explore-link  primary">Executive Brief</a><a href="/api/report-file?name=lens_tier1_evidence_brief.html&client=e65d2f0a-dfa7-4257-9333-fcbb583f0880&runId=run_01_oss_fastapi" class="ds-explore-link">Structural Evidence</a><a href="/api/report-file?name=lens_tier2_diagnostic_narrative.html&client=e65d2f0a-dfa7-4257-9333-fcbb583f0880&runId=run_01_oss_fastapi" class="ds-explore-link">Diagnostic</a><a href="/tier2/workspace?client=e65d2f0a-dfa7-4257-9333-fcbb583f0880&runId=run_01_oss_fastapi" class="ds-explore-link">Workspace</a></div>
+  </div>
+
+  <div class="ds-footer">
+    <span class="ds-footer-brand">Signäl · LENS</span>
+    <span class="ds-footer-doc">Decision Surface · Stage 1 of 3</span>
+    <span>SAMPLE — OSS FastAPI Codebase. · Inference Prohibition Active</span>
+  </div>
+
+</div>
+</body>
+</html>
