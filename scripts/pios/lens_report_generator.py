@@ -5548,49 +5548,17 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
     _posture_hero_cls = {"PROCEED": "posture-proceed", "INVESTIGATE": "posture-investigate",
                          "ESCALATE": "posture-escalate"}.get(posture, "posture-investigate")
 
-    # Hero rationale: single data-driven sentence from (structural_state, ev_comp)
-    _rationale_map = {
-        ("ESCALATED", "HIGH"):     (
-            "Structural evidence is complete and confirms elevated risk. "
-            "Active conditions are concentrated and originate within assessed domains."),
-        ("ESCALATED", "PARTIAL"):  (
-            "Structural evidence is partial. Active conditions confirm elevated structural risk — "
-            "coverage gaps may understate the full scope."),
-        ("ESCALATED", "LOW"):      (
-            "Evidence is limited. Risk indicators are active but structural coverage is insufficient "
-            "to characterize the full scope."),
-        ("UNRESOLVED", "HIGH"):    (
-            "Structural evidence is complete. Risk indicators are present but the pattern is not "
-            "fully characterized — pressure zones require further diagnostic interrogation."),
-        ("UNRESOLVED", "PARTIAL"): (
-            "Structural evidence is partial. Active risk indicators are present — "
-            "coverage gaps prevent full structural characterization."),
-        ("UNRESOLVED", "LOW"):     (
-            "Evidence coverage is limited. Risk indicators are active — "
-            "the structural state cannot be fully resolved from available evidence."),
-        ("STABLE", "HIGH"):        (
-            "Structural evidence is complete and no elevated risk indicators are active. "
-            "Assessed domains are grounded and signal activation is below threshold."),
-        ("STABLE", "PARTIAL"):     (
-            "Risk indicators are not elevated. Evidence is partial — "
-            "this classification may change as coverage improves."),
-        ("STABLE", "LOW"):         (
-            "No elevated risk indicators detected. Evidence coverage is limited — "
-            "structural characterization remains incomplete."),
-        ("CONDITIONAL", "HIGH"):   (
-            "Structural evidence is complete. Conditions do not meet escalation threshold "
-            "but structural ambiguity is present."),
-        ("CONDITIONAL", "PARTIAL"): (
-            "Structural state is conditional pending additional evidence. "
-            "Current evidence is insufficient for a definitive assessment."),
-        ("CONDITIONAL", "LOW"):    (
-            "Evidence is limited. Structural state is conditional and cannot be "
-            "definitively classified from available evidence."),
-    }
-    _hero_rationale = _rationale_map.get(
-        (structural_state, ev_comp),
-        f"Structural state: {structural_state}. Evidence: {ev_comp}. Posture: {posture}."
-    )
+    # Hero rationale — two sentences derived from structural coverage state and evidence state
+    _struct_sentence   = ("Structure is verified."
+                          if weak_ct == 0 and grounded_ct >= total_doms
+                          else "Structural coverage has gaps.")
+    _evidence_sentence = ("Execution evidence is incomplete."
+                          if not exec_eval
+                          else "Execution evidence is present.")
+    _hero_rationale = f"{_struct_sentence} {_evidence_sentence}"
+
+    # Hero context tags — labeled structural / evidence / risk (no internal state label)
+    _struct_tag = "STABLE" if (weak_ct == 0 and grounded_ct >= total_doms) else "DEGRADED"
 
     # Navigation links — client/run scoped
     _ev_name   = "lens_tier1_evidence_brief_pub.html" if publish_safe else "lens_tier1_evidence_brief.html"
@@ -5621,23 +5589,24 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
         if _pz_list_f:
             zone_class = _pz_list_f[0].get("zone_class", "COMPOUND_ZONE")
 
-    # ── Confirmed facts — compressed into prose sentence ──────────────
-    _truth_parts: list = [
-        f"{total_doms} domains — {grounded_ct} grounded, {weak_ct} weakly grounded"
-    ]
-    _node_ct = counts.get("total_nodes")
-    if _node_ct:
-        _truth_parts.append(f"{_node_ct} nodes assessed")
+    # ── Confirmed card — prose sentences, no metric dumps ─────────────
+    _truth_sentences: list = []
+    if weak_ct == 0 and grounded_ct >= total_doms:
+        _truth_sentences.append("All domains are structurally grounded.")
+        _truth_sentences.append("No incomplete structural areas detected.")
+    else:
+        _truth_sentences.append(
+            f"{grounded_ct} of {total_doms} domains are structurally grounded.")
     if metrics and dep_load not in ("—", "NOT_IN_SCOPE"):
-        _truth_parts.append(f"dep load {dep_load} · edge density {etn}")
-    if _use_psig and sig_count > 0:
-        _truth_parts.append(f"{sig_count} active signal{'s' if sig_count != 1 else ''}")
+        _truth_sentences.append(
+            "Dependency and structural density remain within controlled bounds.")
     if _use_psig and zone_count > 0:
-        _truth_parts.append(
-            f"{zone_count} pressure zone{'s' if zone_count != 1 else ''} "
-            f"({RC.apply_language(zone_class)})"
-        )
-    truth_text = " · ".join(_truth_parts) + "."
+        _pcount = "One" if zone_count == 1 else str(zone_count)
+        _truth_sentences.append(
+            f"{_pcount} structural pressure pattern"
+            f"{'s' if zone_count != 1 else ''} "
+            f"{'is' if zone_count == 1 else 'are'} present across the system.")
+    truth_html = "<br><br>".join(esc(s) for s in _truth_sentences) if _truth_sentences else "—"
 
     # ── Gap items — compressed to short phrases ────────────────────────
     gap_items: list = []
@@ -5668,92 +5637,34 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
         _sig_str    = " · ".join(_sig_set)
         _sig_n      = len(_sig_set)
 
+        _sig_ids_trace = " · ".join(_sig_set) if _sig_set else ""
         _cells_html = (
-            f'<div class="ds-pressure-cell ds-pressure-cell-zone">'
-            f'<div class="ds-pressure-cell-label">Zone count</div>'
-            f'<div class="ds-pressure-cell-value">{zone_count}</div>'
-            f'<div class="ds-pressure-cell-sub">'
-            f'{RC.apply_language(zone_class)} '
-            f'<span class="rc-trace">trace: {esc(zone_class)}</span>'
-            f'</div>'
+            f'<div class="ds-pressure-cell ds-pressure-cell-sigs">'
+            f'<div class="ds-pressure-cell-value">'
+            f'{_sig_n} structural signal{"s" if _sig_n != 1 else ""} active'
             f'</div>'
             + (
-                f'<div class="ds-pressure-cell ds-pressure-cell-sigs">'
-                f'<div class="ds-pressure-cell-label">Signal set</div>'
-                f'<div class="ds-pressure-cell-value">'
-                f'{_sig_n} active signal{"s" if _sig_n != 1 else ""}'
-                f'</div>'
-                f'<div class="ds-pressure-cell-sub">{esc(_sig_str)}</div>'
-                f'</div>'
-                if _sig_n > 0 else ""
+                f'<div class="ds-pressure-cell-sub rc-trace">trace: {esc(_sig_ids_trace)}</div>'
+                if _sig_ids_trace else ""
             ) +
-            f'<div class="ds-pressure-cell">'
-            f'<div class="ds-pressure-cell-label">Attribution</div>'
-            f'<div class="ds-pressure-cell-value">'
-            f'{_prim_count} primary · {_sec_count} secondary'
-            f'</div>'
-            f'<div class="ds-pressure-cell-sub">'
-            f'{RC.render_term("PRIMARY")} / {RC.render_term("SECONDARY")}'
-            f'</div>'
             f'</div>'
         )
-        _note_html = ""
-        if _cp:
-            _note_html = (
-                f'<div class="ds-pressure-note">'
-                f'All {zone_count} zones share the same {len(_cp["shared_sigs"])} signal'
-                f'{"s" if len(_cp["shared_sigs"]) != 1 else ""} '
-                f'({esc(_cp["sigs_str"])}). Attribution varies — one zone carries primary '
-                f'pressure origin; remaining zones are secondary recipients. '
-                f'<span class="rc-trace">inference_prohibition: ACTIVE — co-presence, not causality.</span>'
-                f'</div>'
-            )
-
-        # Inline LL decodes after pressure cells (no separate glossary section)
-        _ll_inline_parts: list = []
-        _ll_terms_inline = ["RUN_RELATIVE_OUTLIER", "COMPOUND_ZONE", "PRIMARY", "SECONDARY"]
-        if ll:
-            for _t in _ll_terms_inline:
-                _e = ll.get(_t)
-                if _e:
-                    _ll_inline_parts.append(
-                        f'<span class="ds-pressure-ll-item">'
-                        f'<strong>{esc(_e["executive_label"])}</strong> — '
-                        f'{esc(_e["short_decode"])}'
-                        f'</span>'
-                    )
-        _ll_inline_html = (
-            f'<div class="ds-pressure-ll">{"".join(_ll_inline_parts)}</div>'
-            if _ll_inline_parts else ""
-        )
+        _note_html = (
+            f'<div class="ds-pressure-note">'
+            f'One structural pressure pattern appears across multiple domains. '
+            f'The same signals are present in each zone. '
+            f'The difference is where pressure originates. '
+            f'This reflects co-presence, not causality.'
+            f'</div>'
+        ) if zone_count > 0 else ""
 
         pressure_html = (
             f'\n  <div class="ds-pressure">'
             f'\n    <div class="ds-pressure-label">Where pressure exists</div>'
             f'\n    <div class="ds-pressure-row">{_cells_html}</div>'
             f'\n    {_note_html}'
-            f'\n    {_ll_inline_html}'
             f'\n  </div>'
         )
-    elif not _use_psig and ll:
-        # BlueEdge path: LL inline for non-psig terms
-        _ll_inline_parts_b: list = []
-        for _t in ["CONFIDENCE_BAND", "EVIDENCE_SCOPE", "STRUCTURAL_COVERAGE"]:
-            _e = ll.get(_t)
-            if _e:
-                _ll_inline_parts_b.append(
-                    f'<span class="ds-pressure-ll-item">'
-                    f'<strong>{esc(_e["executive_label"])}</strong> — '
-                    f'{esc(_e["short_decode"])}'
-                    f'</span>'
-                )
-        if _ll_inline_parts_b:
-            pressure_html = (
-                f'\n  <div class="ds-pressure">'
-                f'\n    <div class="ds-pressure-label">Term decodes</div>'
-                f'\n    <div class="ds-pressure-ll">{"".join(_ll_inline_parts_b)}</div>'
-                f'\n  </div>'
-            )
 
     # ── Explore nav strip ──────────────────────────────────────────────
     _explore_links: list = [
@@ -5798,24 +5709,20 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
       <div class="ds-hero-posture">{esc(posture)}</div>
       <div class="ds-hero-rationale">{esc(_hero_rationale)}</div>
       <div class="ds-hero-context">
-        <span class="ds-ctx-badge">{esc(structural_state)}</span>
+        <span class="ds-ctx-badge">STRUCTURE: {esc(_struct_tag)}</span>
         <span class="ds-ctx-sep">·</span>
-        <span class="ds-ctx-badge">{esc(_ev_label)} evidence</span>
+        <span class="ds-ctx-badge">EVIDENCE: {esc(ev_comp)}</span>
         <span class="ds-ctx-sep">·</span>
-        <span class="ds-ctx-badge">Risk: {esc(risk)}</span>
+        <span class="ds-ctx-badge">RISK: {esc(risk)}</span>
       </div>
     </div>
-    <div class="ds-hero-score-block">
-      <div class="ds-hero-score">{score}</div>
-      <div class="ds-hero-band">{esc(band_label)}</div>
-      <div class="ds-hero-range">{band_lo}–{band_hi}</div>
-    </div>
+    {_render_radial_gauge(score, band_lo, band_hi, band_label)}
   </div>
 
   <div class="ds-split">
     <div class="ds-split-col confirmed">
       <div class="ds-split-label">Structurally confirmed</div>
-      <div class="ds-truth-text">{esc(truth_text)}</div>
+      <div class="ds-truth-text">{truth_html}</div>
     </div>
     <div class="ds-split-col unknown">
       <div class="ds-split-label">Not known</div>
