@@ -5587,18 +5587,16 @@ _DECISION_SURFACE_CSS = """
   .ds-gap-item:last-child{border-bottom:none}
   .ds-gap-item::before{content:'○';color:var(--amber);font-size:10px;margin-top:3px;flex-shrink:0}
   .ds-pressure{margin-bottom:32px}
-  .ds-pressure-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:12px}
-  .ds-pressure-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}
-  .ds-pressure-cell{background:var(--surface);border:1px solid var(--border);border-top:2px solid var(--border);padding:12px 14px;border-radius:3px}
-  .ds-pressure-cell-zone{border-top-color:var(--amber)}
-  .ds-pressure-cell-sigs{border-top-color:var(--gold)}
-  .ds-pressure-cell-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:4px}
-  .ds-pressure-cell-value{font-size:13px;color:var(--fg)}
-  .ds-pressure-cell-sub{font-size:11px;color:var(--fg-muted);margin-top:3px}
-  .ds-pressure-note{font-size:11px;color:var(--fg-muted);margin-top:6px;padding:8px 12px;background:rgba(0,0,0,.2);border-radius:2px}
-  .ds-pressure-ll{margin-top:12px;font-size:11px;color:var(--fg-dim);line-height:1.9}
-  .ds-pressure-ll-item{display:inline;margin-right:16px}
-  .ds-pressure-ll-item strong{color:var(--fg-muted);font-weight:500}
+  .ds-pressure-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:16px}
+  .ds-pressure-grid{display:grid;grid-template-columns:45% 55%;gap:32px;align-items:center;margin-bottom:20px}
+  .ds-pressure-cell{background:var(--surface);border:1px solid var(--border);border-top:2px solid var(--gold);padding:16px 18px;border-radius:3px}
+  .ds-pressure-cell-value{font-size:13px;color:var(--fg);line-height:1.6}
+  .ds-pressure-cell-sub{font-size:11px;color:var(--fg-muted);margin-top:6px}
+  .ds-pressure-col-right .ds-trace-preview{margin-bottom:0}
+  .ds-pressure-col-right .ds-trace-preview-wrap{width:100%}
+  .ds-pressure-col-right .ds-trace-preview-label{text-align:center}
+  .ds-pressure-col-right .ds-trace-preview-text{font-size:10px}
+  .ds-pressure-note{font-size:11px;color:var(--fg-muted);padding:10px 14px;background:rgba(0,0,0,.2);border-radius:2px}
   .ds-inference{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(0,0,0,.2);border:1px solid var(--border-subtle);border-radius:3px;margin-bottom:24px;font-size:11px;color:var(--fg-dim)}
   .ds-inference-tag{font-size:9px;letter-spacing:.12em;text-transform:uppercase;background:var(--red-muted);color:var(--red);padding:3px 8px;border-radius:2px;border:1px solid var(--red-border);flex-shrink:0}
   .ds-explore{margin-bottom:32px}
@@ -5614,7 +5612,7 @@ _DECISION_SURFACE_CSS = """
   .ds-trace-preview-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:12px}
   .ds-trace-preview-wrap{width:67%;margin:0 auto;border-radius:3px;overflow:hidden}
   .ds-trace-preview-text{font-size:11px;color:var(--fg-dim);margin-top:12px;text-align:center;line-height:1.7}
-  @media(max-width:600px){.ds-hero{flex-direction:column}.ds-hero-score-block{text-align:left}.ds-split{grid-template-columns:1fr}.ds-pressure-row{grid-template-columns:1fr 1fr}.ds-nav{margin-left:0;margin-top:6px}}
+  @media(max-width:600px){.ds-hero{flex-direction:column}.ds-hero-score-block{text-align:left}.ds-split{grid-template-columns:1fr}.ds-pressure-grid{grid-template-columns:1fr}.ds-nav{margin-left:0;margin-top:6px}}
 """
 
 
@@ -5756,19 +5754,14 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
         _sig_str    = " · ".join(_sig_set)
         _sig_n      = len(_sig_set)
 
-        _sig_ids_trace = " · ".join(_sig_set) if _sig_set else ""
         _cells_html = (
-            f'<div class="ds-pressure-cell ds-pressure-cell-sigs">'
+            f'<div class="ds-pressure-cell">'
             f'<div class="ds-pressure-cell-value">'
             f'Pressure is driven by {_sig_n} structural signal{"s" if _sig_n != 1 else ""}'
             f'</div>'
             f'<div class="ds-pressure-cell-sub">'
             f'The same signals act across all affected domains.'
             f'</div>'
-            + (
-                f'<div class="ds-pressure-cell-sub rc-trace">trace: {esc(_sig_ids_trace)}</div>'
-                if _sig_ids_trace else ""
-            ) +
             f'</div>'
         )
         _note_html = (
@@ -5776,7 +5769,7 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
             f'<strong>One structural pressure pattern appears across multiple domains.</strong>'
             f'<br><br>'
             f'The same signals are active in each zone.<br>'
-            f'The difference is not the signal \u2014 it is where the pressure originates.'
+            f'The pattern reflects co-presence across domains.'
             f'<br><br>'
             f'This is structural co-presence, not causality.'
             f'</div>'
@@ -5785,8 +5778,12 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
         pressure_html = (
             f'\n  <div class="ds-pressure">'
             f'\n    <div class="ds-pressure-label">Where pressure exists</div>'
-            f'\n    {_render_pressure_strip(zone_count)}'
-            f'\n    <div class="ds-pressure-row">{_cells_html}</div>'
+            f'\n    <div class="ds-pressure-grid">'
+            f'\n      <div class="ds-pressure-col-left">{_cells_html}</div>'
+            f'\n      <div class="ds-pressure-col-right">'
+            f'{_render_signal_trace_preview(graph_state)}'
+            f'</div>'
+            f'\n    </div>'
             f'\n    {_note_html}'
             f'\n  </div>'
         )
@@ -5804,9 +5801,6 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
         f'{esc(label)}</a>'
         for href, label, primary in _explore_links
     )
-
-    # ── Signal Trace Preview ────────────────────────────────────────
-    _trace_view_html = _render_signal_trace_preview(graph_state)
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -5859,8 +5853,6 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
   </div>
 
   {pressure_html}
-
-  {_trace_view_html}
 
   <div class="ds-inference">
     <span class="ds-inference-tag">inference_prohibition</span>
