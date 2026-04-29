@@ -534,23 +534,43 @@ def handle_evidence(zone: Dict) -> Dict:
 # 41.x projection data loading
 # ---------------------------------------------------------------------------
 
-def _load_projection_artifact(client_id: str, run_id: str, filename: str) -> Dict:
-    """Load one artifact from the run-scoped 41.x projection package.
+def _resolve_41x_artifact_path(client_id: str, run_id: str, filename: str):
+    """Resolve 41.x artifact path with grounded precedence.
 
-    Fails closed — raises FileNotFoundError if artifact is absent.
-    No fallback to BlueEdge or any other client.
+    Returns (resolved_path, source_mode) where source_mode is GROUNDED or LEGACY.
+    Grounded artifact at 41.x/grounded/<filename> takes precedence when present.
     """
-    path = (
+    grounded = (
+        tier2_data.REPO_ROOT
+        / "clients" / client_id / "psee" / "runs" / run_id / "41.x" / "grounded"
+        / filename
+    )
+    legacy = (
         tier2_data.REPO_ROOT
         / "clients" / client_id / "psee" / "runs" / run_id / "41.x"
         / filename
     )
+    if grounded.exists():
+        print(f"  [GROUNDED] {filename} → 41.x/grounded/{filename}", file=sys.stderr)
+        return grounded, "GROUNDED"
+    print(f"  [LEGACY] {filename} → 41.x/{filename}", file=sys.stderr)
+    return legacy, "LEGACY"
+
+
+def _load_projection_artifact(client_id: str, run_id: str, filename: str):
+    """Load one 41.x artifact with grounded precedence.
+
+    Returns (dict, source_mode). source_mode is GROUNDED if grounded artifact was
+    used, LEGACY otherwise. Fails closed if neither path exists.
+    No fallback to BlueEdge or any other client.
+    """
+    path, source_mode = _resolve_41x_artifact_path(client_id, run_id, filename)
     if not path.exists():
         raise FileNotFoundError(
             f"41.x artifact not found — expected: "
             f"clients/{client_id}/psee/runs/{run_id}/41.x/{filename}"
         )
-    return json.loads(path.read_text())
+    return json.loads(path.read_text()), source_mode
 
 
 def _load_client_gauge_state(client_id: str, run_id: str):
@@ -579,9 +599,13 @@ def list_zones_from_projection(client_id: str, run_id: str) -> Dict:
     Fails closed if 41.x artifacts are absent.
     Score context added from package/gauge_state.json when present.
     """
-    projection = _load_projection_artifact(client_id, run_id, "pressure_zone_projection.json")
-    signals    = _load_projection_artifact(client_id, run_id, "signal_projection.json")
-    gauge      = _load_client_gauge_state(client_id, run_id)
+    projection, pz_mode = _load_projection_artifact(client_id, run_id, "pressure_zone_projection.json")
+    signals, sp_mode    = _load_projection_artifact(client_id, run_id, "signal_projection.json")
+    gauge               = _load_client_gauge_state(client_id, run_id)
+
+    # Mixed-artifact guard: both artifacts must originate from the same resolution tier.
+    modes = {pz_mode, sp_mode}
+    source_mode = "MIXED_ARTIFACT_STATE" if len(modes) > 1 else pz_mode
 
     sig_by_cond = {s["condition_id"]: s for s in signals.get("active_conditions_in_scope", [])}
 
@@ -627,7 +651,8 @@ def list_zones_from_projection(client_id: str, run_id: str) -> Dict:
         "status":                "ok",
         "run_id":                run_id,
         "client_id":             client_id,
-        "projection_source":     "41.x",
+        "projection_source":     "41.x/grounded" if source_mode == "GROUNDED" else "41.x",
+        "source_mode":           source_mode,
         "projection_contract":   projection.get("projection_contract"),
         "inference_prohibition": "ACTIVE",
         "focus_domain_selected": projection.get("focus_domain_selected", False),
@@ -672,8 +697,11 @@ def get_projection_zone_data(zone_id: str, client_id: str, run_id: str):
     zone_record is None if zone_id is not found.
     Raises FileNotFoundError if 41.x artifacts are absent.
     """
-    projection = _load_projection_artifact(client_id, run_id, "pressure_zone_projection.json")
-    signals    = _load_projection_artifact(client_id, run_id, "signal_projection.json")
+    projection, pz_mode = _load_projection_artifact(client_id, run_id, "pressure_zone_projection.json")
+    signals, sp_mode    = _load_projection_artifact(client_id, run_id, "signal_projection.json")
+
+    modes = {pz_mode, sp_mode}
+    source_mode = "MIXED_ARTIFACT_STATE" if len(modes) > 1 else pz_mode
 
     zone_record = next(
         (z for z in projection.get("zone_projection", []) if z["zone_id"] == zone_id),
@@ -685,7 +713,7 @@ def get_projection_zone_data(zone_id: str, client_id: str, run_id: str):
     }
     combo_sig = signals.get("combination_signature", {})
 
-    return zone_record, sig_by_cond, combo_sig
+    return zone_record, sig_by_cond, combo_sig, source_mode
 
 
 def handle_projection_why(zone: Dict, sig_by_cond: Dict) -> Dict:
@@ -882,7 +910,7 @@ def handle_projection_trace(
 
 
 def build_projection_query_response(
-    zone_id: str, mode: str, result, run_id: str
+    zone_id: str, mode: str, result, run_id: str, source_mode: str = "LEGACY"
 ) -> Dict:
     response: Dict = {
         "status":                "ok",
@@ -891,7 +919,8 @@ def build_projection_query_response(
         "run_id":                run_id,
         "inference_prohibition": "ACTIVE",
         "evidence_basis": {
-            "source":                   "41.x projection only",
+            "source":                   "41.x/grounded projection" if source_mode == "GROUNDED" else "41.x projection only",
+            "source_mode":              source_mode,
             "canonical_topology_used":  False,
             "signal_registry_used":     False,
         },
@@ -1006,7 +1035,7 @@ def main() -> None:
             sys.exit(1)
 
         try:
-            zone_record, sig_by_cond, combo_sig = get_projection_zone_data(
+            zone_record, sig_by_cond, combo_sig, source_mode = get_projection_zone_data(
                 args.zone, args.client, args.run_id
             )
         except FileNotFoundError as e:
@@ -1042,7 +1071,7 @@ def main() -> None:
                     zone_record, sig_by_cond, args.client, args.run_id
                 )
             print(json.dumps(
-                build_projection_query_response(args.zone, args.mode, result, args.run_id)
+                build_projection_query_response(args.zone, args.mode, result, args.run_id, source_mode)
             ))
         except Exception as e:
             print(json.dumps({

@@ -656,7 +656,7 @@ function ZoneCard({ zone, vaultIndex, defaultOpen, isActive, onActivate, langLay
 
 const USE_SECOND_CLIENT = true
 const _SC_CLIENT_ID     = 'e65d2f0a-dfa7-4257-9333-fcbb583f0880'
-const _SC_RUN_ID        = 'run_01_oss_fastapi'
+const _SC_RUN_ID        = 'run_02_oss_fastapi'
 
 // ---------------------------------------------------------------------------
 // Page
