@@ -60,6 +60,7 @@ DECISION_REPORTS_DIR = REPORTS_DIR / "decision"
 
 _ACTIVE_CLIENT       = "blueedge"
 _ACTIVE_VAULT_RUN_ID = "run_01_authoritative_generated"
+_SEMANTIC_CROSSWALK: Optional[Dict] = None
 
 _CLIENT_DISPLAY_NAMES: Dict = {
     "blueedge": "BlueEdge Fleet Management Platform",
@@ -548,6 +549,26 @@ FORBIDDEN_SUBSTRINGS = ("SIG-", "COND-", "DIAG-", "INTEL-")
 # Runtime configuration — call before execution to override BlueEdge defaults
 # ---------------------------------------------------------------------------
 
+def _load_semantic_crosswalk(path: Path) -> None:
+    global _SEMANTIC_CROSSWALK
+    if path.exists():
+        with open(path) as f:
+            _SEMANTIC_CROSSWALK = json.load(f)
+
+
+def _resolve_domain_display_label(
+    domain_id: str, technical_label: str, min_confidence: float = 0.60
+) -> str:
+    if _SEMANTIC_CROSSWALK is None:
+        return technical_label
+    for entry in _SEMANTIC_CROSSWALK.get("entities", []):
+        if entry.get("current_entity_id") == domain_id and not entry.get("fallback_used", True):
+            biz = entry.get("business_label")
+            if biz and entry.get("confidence_score", 0.0) >= min_confidence:
+                return biz
+    return technical_label
+
+
 def _configure_runtime(
     client: str = "blueedge",
     run_id: str = "run_authoritative_recomputed_01",
@@ -555,6 +576,7 @@ def _configure_runtime(
     fragments_dir: Optional[Path] = None,
     package_dir: Optional[Path] = None,
     claims: Optional[List[str]] = None,
+    crosswalk_path: Optional[Path] = None,
 ) -> None:
     """Update module-level path and configuration globals from CLI arguments.
 
@@ -563,7 +585,7 @@ def _configure_runtime(
     """
     global LENS_CLAIMS, API_BASE, FRAGMENTS_DIR, REPORTS_DIR, CANONICAL_PKG_DIR
     global TIER1_REPORTS_DIR, TIER2_REPORTS_DIR, DECISION_REPORTS_DIR
-    global _ACTIVE_CLIENT, _ACTIVE_VAULT_RUN_ID
+    global _ACTIVE_CLIENT, _ACTIVE_VAULT_RUN_ID, _SEMANTIC_CROSSWALK
 
     _ACTIVE_CLIENT = client
     if client != "blueedge":
@@ -588,6 +610,9 @@ def _configure_runtime(
         CANONICAL_PKG_DIR = package_dir
     else:
         CANONICAL_PKG_DIR = REPO_ROOT / "clients" / client / "psee" / "runs" / run_id / "package"
+
+    if crosswalk_path is not None:
+        _load_semantic_crosswalk(crosswalk_path)
 
 
 # ---------------------------------------------------------------------------
@@ -2335,8 +2360,18 @@ def load_gauge_state() -> Dict:
         return json.load(f)
 
 
+def _resolve_41x_path(filename: str) -> Path:
+    grounded = CANONICAL_PKG_DIR.parent / "41.x" / "grounded" / filename
+    legacy   = CANONICAL_PKG_DIR.parent / "41.x" / filename
+    if grounded.exists():
+        print(f"  [GROUNDED] {filename} → 41.x/grounded/{filename}")
+        return grounded
+    print(f"  [LEGACY] {filename} → 41.x/{filename}")
+    return legacy
+
+
 def _load_psig_projection() -> Optional[Dict]:
-    path = CANONICAL_PKG_DIR.parent / "41.x" / "signal_projection.json"
+    path = _resolve_41x_path("signal_projection.json")
     if not path.exists():
         return None
     with open(path) as f:
@@ -2344,7 +2379,7 @@ def _load_psig_projection() -> Optional[Dict]:
 
 
 def _load_pressure_zone_projection() -> Optional[Dict]:
-    path = CANONICAL_PKG_DIR.parent / "41.x" / "pressure_zone_projection.json"
+    path = _resolve_41x_path("pressure_zone_projection.json")
     if not path.exists():
         return None
     with open(path) as f:
@@ -4318,7 +4353,7 @@ def _derive_tier2_zones_from_projection(
         zones.append({
             "zone_id":             pz.get("zone_id", ""),
             "domain_id":           anchor_id,
-            "domain_name":         domain.get("domain_name", anchor_name),
+            "domain_name":         _resolve_domain_display_label(anchor_id, domain.get("domain_name", anchor_name)),
             "domain":              domain,
             "domain_sigs":         [],
             "zone_type":           "pressure_concentration",
@@ -5197,7 +5232,7 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
     band_hi      = gauge["confidence"]["upper"]
 
     client_name  = _get_client_display_name(publish_safe)
-    _use_psig    = _ACTIVE_CLIENT != "blueedge"
+    _use_psig    = True
     _ev_name     = "lens_tier1_evidence_brief_pub.html" if publish_safe else "lens_tier1_evidence_brief.html"
     _narr_name   = "lens_tier1_narrative_brief_pub.html" if publish_safe else "lens_tier1_narrative_brief.html"
     ev_link      = _scoped_report_url(_ev_name) if _use_psig else f"/api/report-file?name={_ev_name}"
@@ -5761,7 +5796,7 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
     weak_ct     = sum(1 for d in domains if d["grounding"] == "WEAKLY GROUNDED")
     total_doms  = counts.get("domains", len(domains))
 
-    _use_psig   = _ACTIVE_CLIENT != "blueedge"
+    _use_psig   = True
     client_name = _get_client_display_name(publish_safe)
     title_suffix = " (Publish)" if publish_safe else ""
     footer_note = (f"SAMPLE — {client_name}."
@@ -6140,6 +6175,10 @@ if __name__ == "__main__":
         "--output", type=Path, default=None,
         help="[Legacy only] Output HTML path"
     )
+    parser.add_argument(
+        "--crosswalk-path", type=Path, default=None,
+        help="Optional path to semantic_continuity_crosswalk.json for business label resolution"
+    )
     args = parser.parse_args()
     _configure_runtime(
         client=args.client,
@@ -6148,6 +6187,7 @@ if __name__ == "__main__":
         fragments_dir=args.fragments_dir,
         package_dir=args.package_dir,
         claims=args.claims,
+        crosswalk_path=args.crosswalk_path,
     )
     main(tier1=not args.legacy, output_path=args.output, output_dir=args.output_dir,
          deliverable=args.deliverable)
