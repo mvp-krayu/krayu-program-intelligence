@@ -60,7 +60,9 @@ DECISION_REPORTS_DIR = REPORTS_DIR / "decision"
 
 _ACTIVE_CLIENT       = "blueedge"
 _ACTIVE_VAULT_RUN_ID = "run_01_authoritative_generated"
-_SEMANTIC_CROSSWALK: Optional[Dict] = None
+_SEMANTIC_CROSSWALK:       Optional[Dict] = None
+_SEMANTIC_TOPOLOGY_MODEL:  Optional[Dict] = None
+_SEMANTIC_TOPOLOGY_LAYOUT: Optional[Dict] = None
 
 _CLIENT_DISPLAY_NAMES: Dict = {
     "blueedge": "BlueEdge Fleet Management Platform",
@@ -556,17 +558,333 @@ def _load_semantic_crosswalk(path: Path) -> None:
             _SEMANTIC_CROSSWALK = json.load(f)
 
 
+def _load_semantic_topology(dir_path: Path) -> None:
+    global _SEMANTIC_TOPOLOGY_MODEL, _SEMANTIC_TOPOLOGY_LAYOUT
+    model_path  = dir_path / "semantic_topology_model.json"
+    layout_path = dir_path / "semantic_topology_layout.json"
+    if model_path.exists() and layout_path.exists():
+        with open(model_path) as f:
+            _SEMANTIC_TOPOLOGY_MODEL = json.load(f)
+        with open(layout_path) as f:
+            _SEMANTIC_TOPOLOGY_LAYOUT = json.load(f)
+
+
 def _resolve_domain_display_label(
     domain_id: str, technical_label: str, min_confidence: float = 0.60
 ) -> str:
-    if _SEMANTIC_CROSSWALK is None:
-        return technical_label
-    for entry in _SEMANTIC_CROSSWALK.get("entities", []):
-        if entry.get("current_entity_id") == domain_id and not entry.get("fallback_used", True):
-            biz = entry.get("business_label")
-            if biz and entry.get("confidence_score", 0.0) >= min_confidence:
-                return biz
+    # Check semantic topology model first (DOMAIN-NN format)
+    if _SEMANTIC_TOPOLOGY_MODEL is not None:
+        for d in _SEMANTIC_TOPOLOGY_MODEL.get("domains", []):
+            if d.get("domain_id") == domain_id:
+                bl = d.get("business_label")
+                ls = d.get("lineage_status", "NONE")
+                if bl and ls in ("EXACT", "STRONG", "PARTIAL"):
+                    return bl
+    # Check crosswalk (DOM-XX format)
+    if _SEMANTIC_CROSSWALK is not None:
+        for entry in _SEMANTIC_CROSSWALK.get("entities", []):
+            if entry.get("current_entity_id") == domain_id and not entry.get("fallback_used", True):
+                biz = entry.get("business_label")
+                if biz and entry.get("confidence_score", 0.0) >= min_confidence:
+                    return biz
     return technical_label
+
+
+def _render_semantic_topology_svg(light_mode: bool = False) -> str:
+    """Render semantic topology SVG from loaded model/layout globals.
+
+    Returns empty string when semantic globals are not loaded (fallback signal).
+    """
+    if _SEMANTIC_TOPOLOGY_MODEL is None or _SEMANTIC_TOPOLOGY_LAYOUT is None:
+        return ""
+
+    model  = _SEMANTIC_TOPOLOGY_MODEL
+    layout = _SEMANTIC_TOPOLOGY_LAYOUT
+
+    node_pos    = {n["domain_id"]: n for n in layout["node_positions"]}
+    cluster_box = {c["cluster_id"]: c for c in layout["cluster_bounding_boxes"]}
+    cluster_mdl = {c["cluster_id"]: c for c in model["clusters"]}
+    domain_mdl  = {d["domain_id"]: d for d in model["domains"]}
+
+    def _edge_attrs(edge: Dict):
+        rtype = edge.get("relationship_type", "flow")
+        if rtype == "inferred_semantic":
+            return "#d29922", "5,4", 0.55
+        if rtype == "structural_co_membership":
+            return "#8b949e", "3,3", 0.45
+        src_d = domain_mdl.get(edge.get("source_domain", ""), {})
+        tgt_d = domain_mdl.get(edge.get("target_domain", ""), {})
+        if src_d.get("zone_anchor") or tgt_d.get("zone_anchor"):
+            return "#3fb950", None, 0.55
+        if tgt_d.get("lineage_status") in ("EXACT", "STRONG"):
+            return "#3fb950", None, 0.50
+        tgt_clu = cluster_mdl.get(tgt_d.get("cluster_id", ""), {})
+        color = tgt_clu.get("color_accent", "#58a6ff")
+        if color in ("#a5d6ff", "#79c0ff"):
+            color = "#58a6ff"
+        return color, None, 0.45
+
+    def _node_style(domain: Dict):
+        ls = domain.get("lineage_status", "NONE")
+        orig = domain.get("original_status", "verified")
+        if light_mode:
+            if ls == "EXACT":    return "#dcfce7", "#22c55e", "2", None
+            if ls == "STRONG":   return "#dbeafe", "#3b82f6", "2", None
+            if ls == "PARTIAL":  return "#fef9c3", "#d97706", "1.5", None
+            stroke = "#9ca3af" if orig == "verified" else "#6b7280"
+            return "none", stroke, "1.2", "4,3"
+        else:
+            if ls == "EXACT":    return "#0d2e1a", "#3fb950", "2", None
+            if ls == "STRONG":   return "#0d1f3c", "#58a6ff", "2", None
+            if ls == "PARTIAL":  return "#1c1600", "#d29922", "1.5", None
+            stroke = "#8b949e" if orig == "verified" else "#6e7681"
+            return "#0d1117", stroke, "1.2", "4,3"
+
+    def _arrow_id(color: str) -> str:
+        mapping = {"#3fb950": "arr-green", "#58a6ff": "arr-blue",
+                   "#d29922": "arr-amber",  "#8b949e": "arr-gray"}
+        return mapping.get(color, "arr-gray")
+
+    svg_bg     = "#ffffff" if light_mode else "#0d1117"
+    fill_op    = "0.10"   if light_mode else "0.06"
+    stroke_op  = "0.50"   if light_mode else "0.35"
+    label_op   = "0.75"   if light_mode else "0.60"
+    text_color = "#1e293b" if light_mode else "#c9d1d9"
+
+    parts: List[str] = []
+
+    # defs — arrowhead markers
+    def _marker(mid: str, color: str) -> str:
+        return (f'<marker id="{mid}" markerWidth="8" markerHeight="8" '
+                f'refX="6" refY="3" orient="auto">'
+                f'<path d="M0,0 L0,6 L8,3 z" fill="{color}" /></marker>')
+
+    parts.append("<defs>")
+    parts.append(_marker("arr-green", "#3fb950"))
+    parts.append(_marker("arr-blue",  "#58a6ff"))
+    parts.append(_marker("arr-amber", "#d29922"))
+    parts.append(_marker("arr-gray",  "#8b949e"))
+    parts.append("</defs>")
+
+    # Layer 1 — cluster bounding boxes
+    for cid, cbox in cluster_box.items():
+        accent = cbox["color_accent"]
+        parts.append(
+            f'<rect x="{cbox["x"]}" y="{cbox["y"]}" '
+            f'width="{cbox["width"]}" height="{cbox["height"]}" '
+            f'rx="{cbox["border_radius"]}" '
+            f'fill="{accent}" fill-opacity="{fill_op}" '
+            f'stroke="{accent}" stroke-width="1" stroke-opacity="{stroke_op}" />'
+        )
+
+    # Layer 2 — edges with arrowheads
+    import math as _math
+    for edge in model["edges"]:
+        src_id = edge.get("source_domain", "")
+        tgt_id = edge.get("target_domain", "")
+        sp = node_pos.get(src_id)
+        tp = node_pos.get(tgt_id)
+        if not sp or not tp:
+            continue
+        sx, sy = sp["cx"], sp["cy"]
+        tx, ty = tp["cx"], tp["cy"]
+        sr, tr = sp["radius"], tp["radius"]
+        dx = tx - sx
+        dy = ty - sy
+        dist = _math.hypot(dx, dy) or 1.0
+        # boundary-adjusted endpoints
+        x1 = sx + sr * dx / dist
+        y1 = sy + sr * dy / dist
+        x2 = tx - tr * dx / dist
+        y2 = ty - tr * dy / dist
+        color, dash, opacity = _edge_attrs(edge)
+        marker_ref = _arrow_id(color)
+        attrs = (f'stroke="{color}" stroke-opacity="{opacity}" stroke-width="1.4" '
+                 f'marker-end="url(#{marker_ref})" fill="none"')
+        if dash:
+            attrs += f' stroke-dasharray="{dash}"'
+        parts.append(f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" {attrs} />')
+
+    # Layer 3 — cluster labels
+    for cid, cbox in cluster_box.items():
+        accent = cbox["color_accent"]
+        lx = cbox["x"] + cbox["width"] // 2
+        ly = cbox["y"] + 16
+        label = cbox.get("cluster_label", cid)
+        parts.append(
+            f'<text x="{lx}" y="{ly}" text-anchor="middle" '
+            f'font-family="monospace" font-size="9" fill="{accent}" fill-opacity="{label_op}" '
+            f'font-weight="600" letter-spacing="0.08em">{esc(label.upper())}</text>'
+        )
+
+    # Layer 4 — nodes
+    for domain in model["domains"]:
+        did  = domain["domain_id"]
+        pos  = node_pos.get(did)
+        if not pos:
+            continue
+        cx, cy, r = pos["cx"], pos["cy"], pos["radius"]
+        l1, l2 = pos["label_line1"], pos["label_line2"]
+        fill, stroke, sw, dash = _node_style(domain)
+
+        # zone anchor ring
+        if domain.get("zone_anchor"):
+            parts.append(
+                f'<circle cx="{cx}" cy="{cy}" r="{r + 7}" '
+                f'fill="none" stroke="#ff7b72" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.7" />'
+            )
+
+        glow_color = stroke if stroke != "#8b949e" else "rgba(139,148,158,0.18)"
+        if not light_mode:
+            parts.append(f'<circle cx="{cx}" cy="{cy}" r="{r + 5}" fill="{glow_color}" fill-opacity="0.18" />')
+        circ_attrs = f'fill="{fill}" stroke="{stroke}" stroke-width="{sw}"'
+        if dash:
+            circ_attrs += f' stroke-dasharray="{dash}"'
+        parts.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" {circ_attrs} />')
+        parts.append(
+            f'<text x="{cx}" y="{cy - 5}" text-anchor="middle" '
+            f'font-family="monospace" font-size="7.5" fill="{text_color}" font-weight="400">'
+            f'{esc(l1)}</text>'
+        )
+        parts.append(
+            f'<text x="{cx}" y="{cy + 7}" text-anchor="middle" '
+            f'font-family="monospace" font-size="7.5" fill="{text_color}" font-weight="400">'
+            f'{esc(l2)}</text>'
+        )
+
+        # confidence badge for grounded nodes
+        ls = domain.get("lineage_status", "NONE")
+        if ls in ("EXACT", "STRONG", "PARTIAL"):
+            conf = domain.get("confidence", 0.0)
+            badge_color = {"EXACT": "#3fb950", "STRONG": "#58a6ff", "PARTIAL": "#d29922"}[ls]
+            badge_y = cy - r - 4
+            parts.append(
+                f'<text x="{cx}" y="{badge_y}" text-anchor="middle" '
+                f'font-family="monospace" font-size="7" fill="{badge_color}" font-weight="600">'
+                f'{conf:.2f}</text>'
+            )
+
+    # Metrics from model
+    m = model.get("metrics", {})
+    total_d  = m.get("total_domains", 17)
+    total_c  = m.get("total_clusters", 5)
+    total_e  = m.get("total_edges", 12)
+    grounded = m.get("domains_with_structural_evidence", 5)
+
+    svg_inner = '\n  '.join(parts)
+
+    if light_mode:
+        container_style = "overflow-x:auto;border:1px solid #e5e7eb;border-radius:4px;"
+    else:
+        container_style = "overflow-x:auto;border-radius:4px;background:#0d1117;"
+
+    return f"""
+<div class="topo-container">
+  <div style="{container_style}">
+    <svg viewBox="0 0 820 480" xmlns="http://www.w3.org/2000/svg"
+         style="width:100%;min-width:600px;background:{svg_bg};border-radius:4px;display:block;">
+  {svg_inner}
+    </svg>
+  </div>
+</div>
+"""
+
+
+def _build_semantic_report_context() -> Dict:
+    """Build normalized semantic report context from loaded model globals.
+
+    Returns a dict with fallback_available=False and empty fields when globals not loaded.
+    All numeric/textual report statements should consume this context instead of inline constants.
+    """
+    _empty: Dict = {
+        "fallback_available": False,
+        "total_semantic_domains": 0,
+        "structurally_backed_domains": 0,
+        "semantic_only_domains": 0,
+        "partial_domains": 0,
+        "unmapped_domains": 0,
+        "semantic_coverage_ratio": 0.0,
+        "clusters": [],
+        "domain_records": [],
+        "domain_to_dom_bindings": [],
+        "active_zone_semantic_label": None,
+        "active_zone_dom_label": None,
+        "active_zone_dom_id": None,
+        "active_zone_confidence": None,
+        "active_psig_signals": [],
+        "render_verdict": "FALLBACK",
+    }
+    if _SEMANTIC_TOPOLOGY_MODEL is None:
+        return _empty
+
+    model   = _SEMANTIC_TOPOLOGY_MODEL
+    domains = model.get("domains", [])
+    clusters = model.get("clusters", [])
+
+    total   = len(domains)
+    backed  = sum(1 for d in domains if d.get("lineage_status") in ("EXACT", "STRONG", "PARTIAL"))
+    sem_only = sum(1 for d in domains if d.get("lineage_status") == "NONE")
+    partial  = sum(1 for d in domains if d.get("lineage_status") == "PARTIAL")
+    unmapped = sem_only
+
+    # Active zone anchor
+    zone_d = next((d for d in domains if d.get("zone_anchor")), None)
+    az_sem_label = az_dom_label = az_dom_id = None
+    az_conf: Optional[float] = None
+    if zone_d:
+        az_sem_label = zone_d.get("business_label") or zone_d.get("domain_id")
+        az_dom_id    = zone_d.get("dominant_dom_id")
+        az_conf      = zone_d.get("confidence")
+        az_dom_label = az_dom_id  # default to ID
+        if _SEMANTIC_CROSSWALK and az_dom_id:
+            for entry in _SEMANTIC_CROSSWALK.get("entities", []):
+                if entry.get("current_entity_id") == az_dom_id:
+                    az_dom_label = entry.get("technical_label", az_dom_id)
+                    break
+
+    ratio = backed / total if total > 0 else 0.0
+    render_verdict = "PARTIAL_RENDER_READY" if backed > 0 else "NO_STRUCTURAL_EVIDENCE"
+
+    # DOMAIN → DOM bindings from model dom_bindings_summary if present
+    bindings = model.get("dom_bindings_summary", [])
+
+    return {
+        "fallback_available": True,
+        "total_semantic_domains": total,
+        "structurally_backed_domains": backed,
+        "semantic_only_domains": sem_only,
+        "partial_domains": partial,
+        "unmapped_domains": unmapped,
+        "semantic_coverage_ratio": ratio,
+        "clusters": clusters,
+        "domain_records": domains,
+        "domain_to_dom_bindings": bindings,
+        "active_zone_semantic_label": az_sem_label,
+        "active_zone_dom_label": az_dom_label,
+        "active_zone_dom_id": az_dom_id,
+        "active_zone_confidence": az_conf,
+        "active_psig_signals": [],
+        "render_verdict": render_verdict,
+    }
+
+
+def _resolve_dom_to_semantic_context(dom_id: str) -> Dict:
+    """Reverse-map a DOM-XX id to its semantic domain context.
+
+    Searches semantic model for the domain whose dominant_dom_id matches dom_id.
+    Returns empty fields (with domain_id="") when no backing found — callers must
+    render 'NO SEMANTIC BACKING' per RULE-07 when domain_id is empty.
+    """
+    if _SEMANTIC_TOPOLOGY_MODEL is not None:
+        for d in _SEMANTIC_TOPOLOGY_MODEL.get("domains", []):
+            if d.get("dominant_dom_id") == dom_id:
+                return {
+                    "domain_id":      d.get("domain_id", ""),
+                    "business_label": d.get("business_label", ""),
+                    "lineage_status": d.get("lineage_status", "NONE"),
+                    "confidence":     d.get("confidence", 0.0),
+                }
+    return {"domain_id": "", "business_label": "", "lineage_status": "NONE", "confidence": 0.0}
 
 
 def _configure_runtime(
@@ -577,6 +895,7 @@ def _configure_runtime(
     package_dir: Optional[Path] = None,
     claims: Optional[List[str]] = None,
     crosswalk_path: Optional[Path] = None,
+    semantic_topology_dir: Optional[Path] = None,
 ) -> None:
     """Update module-level path and configuration globals from CLI arguments.
 
@@ -586,6 +905,7 @@ def _configure_runtime(
     global LENS_CLAIMS, API_BASE, FRAGMENTS_DIR, REPORTS_DIR, CANONICAL_PKG_DIR
     global TIER1_REPORTS_DIR, TIER2_REPORTS_DIR, DECISION_REPORTS_DIR
     global _ACTIVE_CLIENT, _ACTIVE_VAULT_RUN_ID, _SEMANTIC_CROSSWALK
+    global _SEMANTIC_TOPOLOGY_MODEL, _SEMANTIC_TOPOLOGY_LAYOUT
 
     _ACTIVE_CLIENT = client
     if client != "blueedge":
@@ -613,6 +933,9 @@ def _configure_runtime(
 
     if crosswalk_path is not None:
         _load_semantic_crosswalk(crosswalk_path)
+
+    if semantic_topology_dir is not None:
+        _load_semantic_topology(semantic_topology_dir)
 
 
 # ---------------------------------------------------------------------------
@@ -1405,6 +1728,10 @@ def compose_topology_view(light_mode: bool = False, topology: Optional[Dict] = N
             topology = None
 
     domain_count = len(topology["domains"]) if topology else 17
+
+    # Semantic topology — if loaded, use artifact-driven renderer
+    if _SEMANTIC_TOPOLOGY_MODEL is not None and _SEMANTIC_TOPOLOGY_LAYOUT is not None:
+        return _render_semantic_topology_svg(light_mode=light_mode)
 
     if domain_count != 17:
         return _compose_topology_fallback(light_mode, topology, domain_count)
@@ -2850,7 +3177,9 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
     grounded_count = sum(1 for d in domains if d["grounding"] == "GROUNDED")
     weak_count = sum(1 for d in domains if d["grounding"] == "WEAKLY GROUNDED")
 
-    if use_psig:
+    if _SEMANTIC_TOPOLOGY_MODEL is not None and _SEMANTIC_TOPOLOGY_LAYOUT is not None:
+        svg_html = _render_semantic_topology_svg(light_mode=False)
+    elif use_psig:
         svg_html = _build_tier1_topology_svg_generic(domains, pz_proj=pz_proj)
     else:
         svg_html = _build_tier1_topology_svg(domains, publish_safe=publish_safe)
@@ -2861,8 +3190,17 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
             (z for z in pz_proj.get("zone_projection", []) if z.get("attribution_profile") == "primary"),
             None,
         )
-        FOCUS_DOMAIN = primary_zone["anchor_id"] if primary_zone else None
-        _focus_tag = f"Pressure Zone — {primary_zone['anchor_name']} PRIMARY" if primary_zone else ""
+        if primary_zone:
+            _pz_anchor_id = primary_zone.get("anchor_id", "")
+            _pz_sem_ctx   = _resolve_dom_to_semantic_context(_pz_anchor_id)
+            _pz_sem_label = _pz_sem_ctx.get("business_label") if _pz_sem_ctx.get("domain_id") else None
+            _pz_sem_id    = _pz_sem_ctx.get("domain_id")
+            FOCUS_DOMAIN  = _pz_sem_id or _pz_anchor_id
+            _pz_display   = _pz_sem_label or primary_zone.get("anchor_name", _pz_anchor_id)
+            _focus_tag    = f"Pressure Zone — {_pz_display} PRIMARY"
+        else:
+            FOCUS_DOMAIN = None
+            _focus_tag   = ""
     else:
         FOCUS_DOMAIN = "DOMAIN-10"
         _focus_tag = "Focus Domain — Investigate"
@@ -2902,6 +3240,76 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
     </div>""")
     domain_grid_html = "\n".join(domain_cards)
 
+    # Semantic context for tier1 — computed from globals when loaded
+    _sem_ctx = _build_semantic_report_context()
+    if _sem_ctx["fallback_available"]:
+        _t1_sem_total    = _sem_ctx["total_semantic_domains"]
+        _t1_sem_backed   = _sem_ctx["structurally_backed_domains"]
+        _t1_sem_only     = _sem_ctx["semantic_only_domains"]
+        _t1_sem_clusters = len(_sem_ctx["clusters"])
+        _sem_coverage_stmt = (
+            f'{_t1_sem_backed} of {_t1_sem_total} semantic domains have current structural backing. '
+            f'{_t1_sem_only} remain semantic-only and are shown as projection-layer coverage.'
+        )
+        _sem_cards = []
+        for _d in _sem_ctx["domain_records"]:
+            _ls  = _d.get("lineage_status", "NONE")
+            _cls = {"EXACT": "grounded", "STRONG": "grounded", "PARTIAL": "weak"}.get(_ls, "")
+            _conf_val = _d.get("confidence", 0.0)
+            _conf_str = f"{_conf_val:.2f}" if _ls != "NONE" else ""
+            _tag = {
+                "EXACT":   f"EXACT {_conf_str}",
+                "STRONG":  f"STRONG {_conf_str}",
+                "PARTIAL": f"PARTIAL {_conf_str}",
+            }.get(_ls, "Semantic-only")
+            _dom_id   = _d.get("dominant_dom_id") or ""
+            _dom_back = f" · {_dom_id}" if _dom_id else ""
+            _zone_mk  = " · Zone Anchor" if _d.get("zone_anchor") else ""
+            _clu_id   = _d.get("cluster_id", "")
+            _sem_cards.append(
+                f'    <div class="domain-card {_cls}">\n'
+                f'      <div class="domain-dot {_cls}"></div>\n'
+                f'      <div>\n'
+                f'        <div class="domain-name">{esc(_d.get("business_label", _d["domain_id"]))}</div>\n'
+                f'        <div class="domain-sub">{esc(_clu_id)}{esc(_dom_back)}{esc(_zone_mk)}</div>\n'
+                f'        <div class="domain-tag {_cls}">{_tag}</div>\n'
+                f'      </div>\n'
+                f'    </div>'
+            )
+        _semantic_domain_grid_html = "\n".join(_sem_cards)
+        _t1_counts_html = (
+            f'    <div class="count-card"><div class="count-value">{_t1_sem_total}</div>'
+            f'<div class="count-label">Semantic Domains</div></div>\n'
+            f'    <div class="count-card"><div class="count-value">{_t1_sem_backed}</div>'
+            f'<div class="count-label">Structurally Backed</div></div>\n'
+            f'    <div class="count-card"><div class="count-value">{_t1_sem_only}</div>'
+            f'<div class="count-label">Semantic-Only</div></div>'
+        )
+        _t1_domain_header        = "Semantic Domain Coverage"
+        _t1_domain_legend_grnd   = f"Structurally Backed ({_t1_sem_backed} domains — EXACT/STRONG/PARTIAL evidence)"
+        _t1_domain_legend_weak   = f"Semantic-Only ({_t1_sem_only} domains — projection layer, no current structural backing)"
+    else:
+        _sem_coverage_stmt = ""
+        _semantic_domain_grid_html = domain_grid_html
+        _t1_counts_html = (
+            f'    <div class="count-card"><div class="count-value">{counts["domains"]}</div>'
+            f'<div class="count-label">Domains</div></div>\n'
+            f'    <div class="count-card"><div class="count-value">{counts["capabilities"]}</div>'
+            f'<div class="count-label">Capabilities</div></div>\n'
+            f'    <div class="count-card"><div class="count-value">{counts["components"]}</div>'
+            f'<div class="count-label">Components</div></div>\n'
+            f'    <div class="count-card"><div class="count-value">{counts["total_nodes"]}</div>'
+            f'<div class="count-label">Total Nodes</div></div>'
+        )
+        _t1_domain_header        = "Domain Topology"
+        _t1_domain_legend_grnd   = f"Grounded ({grounded_count} structural evidence groups — evidence-backed)"
+        _t1_domain_legend_weak   = f"Weakly Grounded ({weak_count} structural evidence groups — partial evidence)"
+    _sem_coverage_html = (
+        f'<p style="color:var(--amber);font-size:12px;margin-bottom:8px;margin-top:-4px">'
+        f'{esc(_sem_coverage_stmt)}</p>'
+        if _sem_coverage_stmt else ""
+    )
+
     # Signal cards
     CONF_CLASS = {"STRONG": "strong", "MODERATE": "moderate", "WEAK": "weak"}
 
@@ -2933,10 +3341,10 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
                 title = f"Fan-In Concentration ({sid}): {state} — {_meth_exec} — Value {val}"
                 stmt = (
                     f"Inbound dependency concentration is {val} — {_meth_exec} (trace: {method}). "
-                    f"Primary attribution entity: {prim_ent} in {prim_dom}. "
+                    f"Primary attribution within structural domain {prim_dom}. "
                     f"Domain scope: {', '.join(dom_scope)}. "
-                    f"Co-present with PSIG-002 and PSIG-004 across all three pressure zones "
-                    f"(PZ-001, PZ-002, PZ-003) — contributes to {_zclass_exec} (trace: COMPOUND_ZONE) in each."
+                    f"Co-present with PSIG-002 and PSIG-004 within the identified pressure zone — "
+                    f"contributes to {_zclass_exec} (trace: COMPOUND_ZONE)."
                 )
                 dom_tag, conf = prim_dom or "Multi-domain", "strong"
             elif sid == "PSIG-002":
@@ -2945,7 +3353,8 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
                     f"Outbound dependency propagation is {val} — {_meth_exec} (trace: {method}). "
                     f"Distributes across {', '.join(dom_scope)} with no single primary entity. "
                     f"Co-presence with PSIG-001 at the same value ({val}) indicates bidirectional "
-                    f"concentration pressure — not a single directed flow. Present in all three zones."
+                    f"concentration pressure — not a single directed flow. "
+                    f"Present within the identified pressure zone."
                 )
                 dom_tag = " · ".join(dom_scope[:3]) if dom_scope else "Multi-domain"
                 conf = "strong"
@@ -2953,23 +3362,21 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
                 title = f"Responsibility Concentration ({sid}): {state} — {_meth_exec} — Value {val}"
                 stmt = (
                     f"Structural responsibility concentration is {val} — {_meth_exec} (trace: {method}). "
-                    f"Primary attribution entity: {prim_ent} in {prim_dom}. "
-                    f"Convergence of PSIG-001 and PSIG-004 at {prim_ent} defines the Primary pressure anchor "
-                    f"(trace: PRIMARY) for PZ-002 ({prim_dom}). Secondary affected zones (trace: SECONDARY) "
-                    f"cover all three zone domains."
+                    f"Primary attribution within structural domain {prim_dom}. "
+                    f"Convergence of PSIG-001 and PSIG-004 within structural domain {prim_dom} defines "
+                    f"the primary pressure anchor (trace: PRIMARY)."
                 )
                 dom_tag, conf = prim_dom or "Multi-domain", "strong"
             elif sid == "PSIG-006":
-                ent_preview = ", ".join(entity_scope[:4]) + ("…" if len(entity_scope) > 4 else "")
-                title = f"Structural Blind Spot ({sid}): ACTIVATED — {_meth_exec} — Value {val}"
+                title = f"Structural Blind Spot ({sid}): BASELINE — theoretical baseline condition (not activated) — Value {val}"
                 stmt = (
-                    f"PSIG-006 activated at {_meth_exec} (trace: {method}, value {val}). "
-                    f"Covers {len(entity_scope)} structural entities: {ent_preview}. "
-                    f"These entities are outside pressure zone scope (PZ-001/PZ-002/PZ-003). "
-                    f"{_meth_exec} means structural basis is present but execution evidence "
-                    f"is insufficient for an empirical pressure value. Represents a coverage gap."
+                    f"PSIG-006 is a theoretical baseline condition (trace: {method}, value {val}). "
+                    f"Covers {len(entity_scope)} structural entities outside pressure zone scope. "
+                    f"This condition was not independently activated — it represents a structural "
+                    f"baseline used for blind spot coverage, not a detected pressure signal. "
+                    f"Represents a coverage gap, not a pressure candidate."
                 )
-                dom_tag = " · ".join(entity_scope[:2]) if entity_scope else "Multi-domain"
+                dom_tag = "Scope: cross-domain baseline"
                 conf = "weak"
             else:
                 title = f"{sid}: {state} — Value {val}"
@@ -2982,15 +3389,32 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
                 "trace": method,
             })
 
-        # Add PSIG-003 as not-activated entry
-        if "PSIG-003" in not_activated:
+        # Add not-activated signal cards — all signals in signals_not_activated list
+        _evb_na_labels = {
+            "PSIG-003": (
+                "Inbound Coupling (PSIG-003): NOT_ACTIVATED — Below threshold",
+                "PSIG-003 evaluated inbound coupling ratio and did not reach the activation threshold "
+                "for this run. This is a confirmed structural observation, not a gap in evaluation."
+            ),
+            "PSIG-005": (
+                "Scope Coupling (PSIG-005): NOT_ACTIVATED — Below threshold",
+                "PSIG-005 evaluated scope coupling and did not reach the activation threshold "
+                "for this run. This is a confirmed structural observation, not a gap in evaluation."
+            ),
+        }
+        for _na_sid in not_activated:
+            _na_pair = _evb_na_labels.get(
+                _na_sid,
+                (
+                    f"{_na_sid}: NOT_ACTIVATED — Below threshold",
+                    f"{_na_sid} evaluated a structural dimension and did not reach the activation threshold "
+                    "for this run. This is a confirmed structural observation, not a gap in evaluation.",
+                )
+            )
             tier1_signals.append({
                 "num": str(len(tier1_signals) + 1).zfill(2),
-                "title": "Inbound Coupling (PSIG-003): NOT_ACTIVATED — Below threshold",
-                "statement": (
-                    "PSIG-003 evaluated inbound coupling ratio and did not reach the activation threshold "
-                    "for this run. This is a confirmed structural observation, not a gap in evaluation."
-                ),
+                "title": _na_pair[0],
+                "statement": _na_pair[1],
                 "domain": "Structural analysis", "confidence": "strong",
             })
 
@@ -3113,10 +3537,18 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
             f'  <p style="font-size:12.5px;color:var(--fg-muted);margin-bottom:16px">'
             f'All zones share the same active condition set: {esc(_shared_sigs_str)}. '
             f'Zone class: {esc(_shared_zclass)} ({_shared_ccount} conditions ≥ threshold).</p>\n'
+            if len(zone_list) > 1 else
+            f'  <p style="font-size:12.5px;color:var(--fg-muted);margin-bottom:16px">'
+            f'Active conditions within the pressure zone: {esc(_shared_sigs_str)}. '
+            f'Zone class: {esc(_shared_zclass)} ({_shared_ccount} conditions ≥ threshold).</p>\n'
         ) if zone_list else ""
         for z in zone_list:
-            zid   = z["zone_id"]
-            zname = z.get("anchor_name", z.get("anchor_id", zid))
+            zid         = z["zone_id"]
+            _z_anch_id  = z.get("anchor_id", zid)
+            _z_sem_ctx_ev  = _resolve_dom_to_semantic_context(_z_anch_id)
+            _z_sem_lbl_ev  = _z_sem_ctx_ev.get("business_label") if _z_sem_ctx_ev.get("domain_id") else None
+            _z_anch_name   = z.get("anchor_name", _z_anch_id)
+            zname       = _z_sem_lbl_ev or _z_anch_name
             profile = z.get("attribution_profile", "secondary")
             is_prim = profile == "primary"
             badge = "PRIMARY" if is_prim else profile.upper()
@@ -3146,7 +3578,7 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
             f'\n  <div class="tier2-handoff" style="margin-top:8px">'
             f'<div class="tier2-handoff-label">Structural Blind Spot — {esc(blind_spot_sig)}</div>'
             f'<div class="tier2-handoff-text">{blind_spot_count} entities outside pressure zone scope. '
-            f'{esc(blind_spot_sig)} activated at THEORETICAL_BASELINE — coverage gap, not zone candidate.'
+            f'{esc(blind_spot_sig)} — theoretical baseline condition (not activated) — coverage gap, not zone candidate.'
             f'</div></div>'
             if blind_spot_count > 0 else ""
         )
@@ -3259,31 +3691,29 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
   </div>
 
   <h2>Structural Composition</h2>
+  {_sem_coverage_html}
   <div class="counts-row">
-    <div class="count-card"><div class="count-value">{counts["domains"]}</div><div class="count-label">Domains</div></div>
-    <div class="count-card"><div class="count-value">{counts["capabilities"]}</div><div class="count-label">Capabilities</div></div>
-    <div class="count-card"><div class="count-value">{counts["components"]}</div><div class="count-label">Components</div></div>
-    <div class="count-card"><div class="count-value">{counts["total_nodes"]}</div><div class="count-label">Total Nodes</div></div>
+    {_t1_counts_html}
   </div>
 
-  <h2>Structural Topology View</h2>
+  <h2>Semantic Domain Topology (with Structural Backing)</h2>
   <div class="topo-view">
     {svg_html}
     <div class="topo-legend">
-      <span class="topo-leg-item"><span class="topo-leg-dot tl-grounded"></span>Grounded ({grounded_count} {"domain" if grounded_count == 1 else "domains"})</span>
-      <span class="topo-leg-item"><span class="topo-leg-dot tl-weak"></span>Weakly Grounded ({weak_count} {"domain" if weak_count == 1 else "domains"})</span>
+      <span class="topo-leg-item"><span class="topo-leg-dot tl-grounded"></span>Grounded ({grounded_count} structural evidence group{"" if grounded_count == 1 else "s"})</span>
+      <span class="topo-leg-item"><span class="topo-leg-dot tl-weak"></span>Weakly Grounded ({weak_count} structural evidence group{"" if weak_count == 1 else "s"})</span>
       {'<span class="topo-leg-item"><span class="topo-leg-dot tl-focus"></span>Primary Pressure Zone — Multiple structural pressures acting together &nbsp;<span style="font-size:10px;opacity:.6">trace: COMPOUND_ZONE</span></span>' if use_psig else '<span class="topo-leg-item"><span class="topo-leg-dot tl-focus"></span>Focus Domain — 2 signal convergence (also Weakly Grounded)</span>'}
       <span class="topo-leg-note">Relationships shown are structural co-membership. No direction implied.</span>
     </div>
   </div>
 
-  <h2>Domain Topology</h2>
+  <h2>{_t1_domain_header}</h2>
   <div class="domain-grid">
-{domain_grid_html}
+{_semantic_domain_grid_html}
   </div>
   <div class="domain-legend">
-    <div class="domain-legend-item"><div class="legend-dot" style="background:var(--green)"></div> Grounded ({grounded_count} domains — evidence-backed)</div>
-    <div class="domain-legend-item"><div class="legend-dot" style="background:var(--amber)"></div> Weakly Grounded ({weak_count} domains — partial evidence)</div>
+    <div class="domain-legend-item"><div class="legend-dot" style="background:var(--green)"></div> {_t1_domain_legend_grnd}</div>
+    <div class="domain-legend-item"><div class="legend-dot" style="background:var(--amber)"></div> {_t1_domain_legend_weak}</div>
     {'<div class="domain-legend-item"><div class="legend-dot" style="background:var(--gold)"></div> Primary Pressure Zone</div>' if use_psig else '<div class="domain-legend-item"><div class="legend-dot" style="background:var(--gold)"></div> Focus Domain</div>'}
   </div>
 
@@ -3457,7 +3887,12 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
         pz_items = []
         for z in zone_list:
             zid    = z["zone_id"]
-            zname  = z.get("anchor_name", z.get("anchor_id", zid))
+            _z_anchor_id   = z.get("anchor_id", zid)
+            _z_anchor_name = z.get("anchor_name", _z_anchor_id)
+            _z_sem_ctx  = _resolve_dom_to_semantic_context(_z_anchor_id)
+            _z_sem_label = _z_sem_ctx.get("business_label") if _z_sem_ctx.get("domain_id") else None
+            zname  = _z_sem_label or _z_anchor_name
+            _z_dom_backing = f"DOM backing: {esc(_z_anchor_id)}{' / ' + esc(_z_anchor_name) if _z_anchor_name and _z_anchor_name != _z_anchor_id else ''}"
             zclass = z.get("zone_class", "COMPOUND_ZONE")
             profile = z.get("attribution_profile", "secondary")
             sigs_in_zone = z.get("signals", [])
@@ -3466,9 +3901,11 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
             is_prim = profile == "primary"
             _attr_exec   = RC.apply_language(profile)
             _zclass_exec = RC.apply_language(zclass)
+            _cond_word = f"{ccount} co-present condition{'s' if ccount != 1 else ''}"
             pz_items.append(
                 f'    <div class="focus-block">\n'
                 f'      <div class="focus-block-label">{esc(zid)} — {esc(zname)}</div>\n'
+                f'      <div class="focus-block-name" style="font-size:11px;color:var(--fg-muted)">{_z_dom_backing}</div>\n'
                 f'      <div class="focus-block-name">{esc(_zclass_exec)}'
                 f' <span style="font-size:10px;opacity:.6">trace: {esc(zclass)}</span>'
                 f' · {ccount} conditions co-present</div>\n'
@@ -3476,8 +3913,8 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
                 f'      <p class="body-text" style="font-size:13px">\n'
                 f'        {esc(zid)} ({esc(zname)}) is a {esc(_attr_exec)}'
                 f' <span style="font-size:11px;opacity:.7">(trace: {esc(profile)} attribution)</span> '
-                f'for all three co-present conditions ({esc(sigs_str)}). '
-                f'{ccount} simultaneous conditions satisfy the {esc(_zclass_exec)}'
+                f'for {_cond_word} ({esc(sigs_str)}). '
+                f'These conditions satisfy the {esc(_zclass_exec)}'
                 f' <span style="font-size:11px;opacity:.7">(trace: {esc(zclass)})</span> threshold.</p>\n'
                 f'    </div>'
             )
@@ -3570,6 +4007,13 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
                 f'<td>{_val_cell}</td>'
                 f'<td><span class="conf-badge {_cc}">{esc(_cl)}</span></td></tr>'
             )
+        # Separate RUN_RELATIVE_OUTLIER (active structural) from THEORETICAL_BASELINE
+        _active_struct_sigs = [c for c in psig_proj.get("active_conditions_in_scope", [])
+                               if c.get("activation_method") == "RUN_RELATIVE_OUTLIER"]
+        _baseline_sigs = [c for c in psig_proj.get("active_conditions_in_scope", [])
+                          if c.get("activation_method") == "THEORETICAL_BASELINE"]
+        _active_struct_ids = " · ".join(sorted({c["signal_id"] for c in _active_struct_sigs}))
+        _baseline_ids = " · ".join(sorted({c["signal_id"] for c in _baseline_sigs}))
         _dl  = metrics.get("dep_load", "—")
         _de  = metrics.get("dep_edges", "—")
         _dn  = metrics.get("dep_nodes", "—")
@@ -3624,13 +4068,13 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
         _blind    = _dm.get("blind_spot_active", False)
         _actv_cnt = len(psig_proj.get("active_conditions_in_scope", [])) if psig_proj else 0
         _na_labels = {
-            "PSIG-003": "Node depth concentration signal — not activated in this run",
-            "PSIG-005": "Scope coupling signal — not activated in this run",
+            "PSIG-003": "Node depth concentration signal — additional signal, not activated in this run",
+            "PSIG-005": "Scope coupling signal — additional signal, not activated in this run",
         }
         _unk_items = ["<li>Runtime execution behavior (execution layer not evaluated)</li>"]
         for _s in _na_sigs:
             _unk_items.append(
-                f'<li>{esc(_na_labels.get(_s, f"{_s} — not activated in this run"))}</li>'
+                f'<li>{esc(_na_labels.get(_s, f"{_s} — additional signal, not activated in this run"))}</li>'
             )
         if _blind:
             _unk_items.append(
@@ -3644,14 +4088,22 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
             "<li>Live service interaction and latency profiles</li>",
         ]
         _unk_n = len(_unk_items)
+        _struct_sig_count = len(_active_struct_sigs)
+        _base_sig_count   = len(_baseline_sigs)
+        _struct_sig_label = (f"{_struct_sig_count} active structural signal{'s' if _struct_sig_count != 1 else ''}"
+                             + (f" ({_active_struct_ids})" if _active_struct_ids else ""))
+        _base_sig_label   = (f"{_base_sig_count} baseline signal{'s' if _base_sig_count != 1 else ''}"
+                             + (f" ({_baseline_ids} — theoretical baseline)" if _baseline_ids else ""))
+        _cap_part = (f', {counts["capabilities"]} capabilities' if counts["capabilities"] > 0 else '')
         _conf_items = [
-            f'<li>Full structural topology — {counts["domains"]} domains, '
-            f'{counts["capabilities"]} capabilities, {counts["components"]} components</li>',
-            "<li>Grounding classification for every domain</li>",
-            f"<li>{_actv_cnt} active structural signals with computed values</li>",
-            "<li>Dependency load, structural density, and containment density ratios</li>",
+            f'<li>Full structural topology within assessment scope — {counts["domains"]} structural evidence groups (DOM)'
+            f'{_cap_part}, {counts["components"]} components</li>',
+            "<li>Grounding classification for every structural evidence group</li>",
+            f"<li>{_struct_sig_label} with computed values</li>",
+            f"<li>{_base_sig_label}</li>" if _base_sig_count > 0 else "",
             "<li>Pressure zone classification across all detected zones</li>",
         ]
+        _conf_items = [x for x in _conf_items if x]
         if _blind and pz_proj:
             _bcnt = pz_proj.get("structural_blind_spot_entity_count", 0)
             _bsig = pz_proj.get("structural_blind_spot_signal", "PSIG-006")
@@ -3700,7 +4152,7 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
             '      <div class="boundary-block known">\n'
             '        <div class="boundary-block-label">Confirmed</div>\n'
             f'        <ul class="boundary-list">\n'
-            f'          <li>Full structural topology — {counts["domains"]} domains, '
+            f'          <li>Full structural topology within assessment scope — {counts["domains"]} domains, '
             f'{counts["capabilities"]} capabilities, {counts["components"]} components</li>\n'
             '          <li>Grounding classification for every domain</li>\n'
             '          <li>5 structural signals with computed values</li>\n'
@@ -3734,12 +4186,20 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
         _risk   = decision_model.get("structural_risk", "MODERATE")
         _evcomp = decision_model.get("evidence_completeness", "PARTIAL")
         _dec    = decision_model.get("decision", "INVESTIGATE")
+        # BLOCK_F: when structural_risk is MODERATE solely because dep_load/etn are NOT_IN_SCOPE
+        # (no metric elevation detected from signals), enforce LOW as consistent display value
+        if _risk == "MODERATE" and (metrics is None or metrics.get("dep_load") in (None, "NOT_IN_SCOPE")):
+            _risk = "LOW"
         _risk_color = {
             "LOW": "var(--green)", "MODERATE": "var(--amber)", "HIGH": "var(--red)"
         }.get(_risk, "var(--fg-muted)")
         _evc_color = {
             "HIGH": "var(--green)", "PARTIAL": "var(--amber)"
         }.get(_evcomp, "var(--fg-muted)")
+        _conc_dom_anchor = (
+            pz_proj.get("zone_projection", [{}])[0].get("anchor_id", "")
+            if pz_proj and pz_proj.get("zone_projection") else ""
+        )
         decision_posture_html = (
             '  <div class="section">\n'
             '    <div class="section-header">'
@@ -3767,15 +4227,17 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
             '    </div>\n'
             '    <p class="body-text">The assessment does not specify what action to take. '
             'It establishes the structural state from which any decision must be made. '
-            'Structural risk is LOW — the codebase topology does not present elevated dependency '
-            'or density risk. The INVESTIGATE designation is driven by evidence gaps: '
-            'execution layer not evaluated, blind spot coverage active, and signals not activated '
+            'Structural risk is LOW — no structural instability patterns detected within evaluated dimensions. '
+            'Dependency load and density metrics were not evaluated within the current evidence scope. '
+            'The INVESTIGATE designation is driven by evidence gaps: '
+            'execution layer not evaluated, blind spot coverage active, and additional signals not activated '
             'in this run. Resolving these gaps moves evidence completeness from PARTIAL to HIGH.</p>\n'
             '    <div class="conclusion-block">\n'
             '      <div class="conclusion-label">Structural Conclusion</div>\n'
             '      <p class="conclusion-text">The system is structurally stable.</p>\n'
-            '      <p class="conclusion-body">Structural analysis shows low dependency load, '
-            'controlled density, and no system-wide pressure propagation detected.</p>\n'
+            f'      <p class="conclusion-body">Dependency load not evaluated within current evidence scope. '
+            f'No system-wide propagation across multiple domains detected. '
+            f'Propagation is localized within a single structural domain ({esc(_conc_dom_anchor)}).</p>\n'
             '      <p class="conclusion-body">The INVESTIGATE posture is driven by evidence incompleteness, '
             'not by structural instability.</p>\n'
             '      <p class="conclusion-body">Execution-layer behavior remains outside the current evidence scope.</p>\n'
@@ -3873,16 +4335,16 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
       not a final number. Any commitment that depends on the execution layer operating within expected
       parameters carries structural risk that this assessment does not resolve.</p>
     <p class="body-text" style="font-size:12.5px;color:var(--fg-muted)">
-      Structural composition: {counts["domains"]} domains &nbsp;·&nbsp; {counts["capabilities"]} capabilities &nbsp;·&nbsp; {counts["components"]} components &nbsp;·&nbsp; {counts["total_nodes"]} total nodes
+      Structural composition: {counts["domains"]} structural evidence groups (DOM) &nbsp;·&nbsp; {"Capabilities not modeled in current evidence scope" if counts["capabilities"] == 0 else str(counts["capabilities"]) + " capabilities"} &nbsp;·&nbsp; {counts["components"]} components &nbsp;·&nbsp; {counts["total_nodes"]} total nodes
     </p>
     <div class="grounding-row">
       <div class="grounding-cell">
         <div class="grounding-dot dot-grounded"></div>
-        <div><div class="grounding-cell-text">Grounded</div><div class="grounding-cell-count">{grounded_count} of {counts["domains"]} domains — evidence-backed</div></div>
+        <div><div class="grounding-cell-text">Grounded</div><div class="grounding-cell-count">{grounded_count} of {counts["domains"]} structural evidence groups — evidence-backed</div></div>
       </div>
       <div class="grounding-cell">
         <div class="grounding-dot dot-weak"></div>
-        <div><div class="grounding-cell-text">Weakly Grounded</div><div class="grounding-cell-count">{weak_count} of {counts["domains"]} domains — partial evidence</div></div>
+        <div><div class="grounding-cell-text">Weakly Grounded</div><div class="grounding-cell-count">{weak_count} of {counts["domains"]} structural evidence groups — partial evidence</div></div>
       </div>
     </div>
 {signal_table_html}
@@ -4350,10 +4812,15 @@ def _derive_tier2_zones_from_projection(
         severity         = "HIGH"     if attr == "primary"    else "MODERATE"
         confidence       = "STRONG"   if condition_signals    else "PARTIAL"
         traceability     = "FULLY_TRACEABLE" if condition_signals else "PARTIALLY_TRACEABLE"
+        # Resolve semantic domain label: DOM-XX anchor → DOMAIN-NN business label
+        _z_sem_ctx  = _resolve_dom_to_semantic_context(anchor_id)
+        _z_sem_label = _z_sem_ctx.get("business_label") if _z_sem_ctx.get("domain_id") else None
+        _z_display_name = _z_sem_label or _resolve_domain_display_label(anchor_id, domain.get("domain_name", anchor_name))
         zones.append({
             "zone_id":             pz.get("zone_id", ""),
             "domain_id":           anchor_id,
-            "domain_name":         _resolve_domain_display_label(anchor_id, domain.get("domain_name", anchor_name)),
+            "domain_name":         _z_display_name,
+            "anchor_name":         anchor_name,
             "domain":              domain,
             "domain_sigs":         [],
             "zone_type":           "pressure_concentration",
@@ -4666,7 +5133,7 @@ def _build_t2_zone_block(zone: Dict, publish_safe: bool, interpretation_payload:
     conf_css = _t2_conf_css(conf)
 
     cap_count    = len(caps)
-    scope_label  = f"{cap_count} capability node{'s' if cap_count != 1 else ''}" if cap_count else "no capability nodes"
+    scope_label  = f"{cap_count} capability node{'s' if cap_count != 1 else ''}" if cap_count else "NO SEMANTIC CAPABILITY MAPPING AVAILABLE"
     preview_raw  = raw_cond[:130] + ("…" if len(raw_cond) > 130 else "")
     preview_text = esc(_t2_obfuscate(preview_raw) if publish_safe else preview_raw)
     zt_label     = zt.replace("_", " ")
@@ -4758,13 +5225,45 @@ def _build_t2_psig_zone_block(zone: Dict, publish_safe: bool,
 
     display_name = esc(_t2_obfuscate(dname) if publish_safe else dname)
 
+    # Semantic context: reverse-map DOM anchor → semantic domain
+    _sem_ctx_zone = _resolve_dom_to_semantic_context(did)
+    _sem_has_backing = bool(_sem_ctx_zone.get("domain_id"))
+    # DOM technical label from crosswalk
+    _dom_tech_label = ""
+    if _SEMANTIC_CROSSWALK is not None:
+        for _xentry in _SEMANTIC_CROSSWALK.get("entities", []):
+            if _xentry.get("current_entity_id") == did:
+                _dom_tech_label = _xentry.get("technical_label", "")
+                break
+    _dom_backing_str = f"{esc(did)}{' / ' + esc(_dom_tech_label) if _dom_tech_label else ''}"
+    if _sem_has_backing:
+        _sem_domain_id    = _sem_ctx_zone["domain_id"]
+        _sem_domain_label = _sem_ctx_zone["business_label"] or _sem_domain_id
+        _sem_lineage      = _sem_ctx_zone["lineage_status"]
+        _sem_conf_str     = f"{_sem_ctx_zone['confidence']:.2f}"
+        _sem_lineage_color = {"EXACT": "#3fb950", "STRONG": "#58a6ff", "PARTIAL": "#d29922"}.get(_sem_lineage, "#8b949e")
+        _sem_ctx_block = f"""
+    <div style="background:#0c0c14;border:1px solid #2a2a40;border-left:3px solid {_sem_lineage_color};border-radius:2px;padding:8px 12px;margin-bottom:10px;font-size:12px">
+      <div style="font-size:10px;font-weight:600;color:var(--fg-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Semantic Context</div>
+      <div style="color:var(--fg-main)">Domain: <strong>{esc(_sem_domain_label)}</strong> <span style="color:var(--fg-muted)">({esc(_sem_domain_id)})</span></div>
+      <div style="color:var(--fg-dim);margin-top:3px">Structural backing: <span style="font-family:monospace">{_dom_backing_str}</span></div>
+      <div style="color:var(--fg-dim);margin-top:3px">Confidence: {_sem_conf_str} · Lineage status: <span style="color:{_sem_lineage_color}">{_sem_lineage}</span></div>
+    </div>"""
+    else:
+        _sem_ctx_block = f"""
+    <div style="background:#0c0c14;border:1px solid #2a2a40;border-left:3px solid #8b949e;border-radius:2px;padding:8px 12px;margin-bottom:10px;font-size:12px">
+      <div style="font-size:10px;font-weight:600;color:var(--fg-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Semantic Context</div>
+      <div style="color:#8b949e">NO SEMANTIC BACKING — DOM anchor {_dom_backing_str} has no semantic domain mapping in the current topology model.</div>
+    </div>"""
+
     # ── Section A: Condition Description ──────────────────────────────────
     cond_chips = "".join(f'<span class="t2-chip">{esc(c)}</span>' for c in conditions)
     psig_chips = "".join(f'<span class="t2-chip">{esc(s)}</span>' for s in psig_ids)
     _zclass_exec_a = RC.apply_language(zone_class)
     _attr_exec_a   = RC.apply_language(attr.lower())
+    _primary_label = _sem_domain_label if _sem_has_backing else dname
     raw_cond = (
-        f"{dname} domain: {_zclass_exec_a} — "
+        f"{_primary_label} domain: {_zclass_exec_a} — "
         f"{len(conditions)} active condition{'s' if len(conditions) != 1 else ''} at zone scope. "
         f"{_attr_exec_a} — all conditions active."
     )
@@ -4956,12 +5455,19 @@ def _build_t2_psig_zone_block(zone: Dict, publish_safe: bool,
         exec_line = override if override is not None else _derive_executive_line(biz_text)
         biz_safe  = esc(_t2_obfuscate(biz_text)  if publish_safe else biz_text)
         exec_safe = esc(_t2_obfuscate(exec_line) if publish_safe else exec_line)
+        _g_dom_line = (
+            f'<div style="font-size:11px;color:var(--fg-muted);margin-bottom:8px">'
+            f'Domain: <strong>{esc(_sem_domain_label if _sem_has_backing else dname)}</strong>'
+            f'{(" · " + esc(_sem_domain_id) + " → " + esc(did)) if _sem_has_backing else ""}'
+            f'</div>'
+        )
         section_g = f"""
     <div class="t2-sub-section" id="zone-{zone_id}-block-g">
       <div class="t2-sub-header">
         <span class="t2-sub-tag">G</span>
-        <span class="t2-sub-title">Structural Interpretation</span>
+        <span class="t2-sub-title">Structural Interpretation (Executive)</span>
       </div>
+      {_g_dom_line}
       <p style="font-size:14px;color:#c8c8d4;font-weight:500;line-height:1.4;padding:10px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid #5a5a80;border-radius:2px;margin:0 0 8px 0">{exec_safe}</p>
       <div class="t2-chip-row" style="margin-bottom:8px">
         <span class="t2-chip" style="color:var(--fg-dim)">executive interpretation</span>
@@ -4976,7 +5482,12 @@ def _build_t2_psig_zone_block(zone: Dict, publish_safe: bool,
     sev_css   = _t2_sev_css(sev)
     conf_css  = _t2_conf_css(conf)
     cap_count    = len(caps)
-    scope_label  = f"{cap_count} capability node{'s' if cap_count != 1 else ''}" if cap_count else "no capability nodes"
+    if cap_count:
+        scope_label = f"{cap_count} capability node{'s' if cap_count != 1 else ''}"
+    elif _sem_has_backing:
+        scope_label = f"Semantic domain: {esc(_sem_domain_label)} ({_sem_lineage} · {_sem_conf_str})"
+    else:
+        scope_label = "NO SEMANTIC DOMAIN BACKING AVAILABLE"
     preview_raw  = raw_cond[:130] + ("…" if len(raw_cond) > 130 else "")
     preview_text = esc(_t2_obfuscate(preview_raw) if publish_safe else preview_raw)
     zt_label     = zt.replace("_", " ")
@@ -5006,12 +5517,14 @@ def _build_t2_psig_zone_block(zone: Dict, publish_safe: bool,
         </div>
         <a href="#zone-{zone_id}" class="t2-zone-block-back">↑ Zone inventory</a>
       </div>
+      {_sem_ctx_block}
+      {section_g}
       {section_a}
       {section_b}
       {section_c}
       {section_d}
       {section_e}
-      {section_f}{section_g}
+      {section_f}
     </div>
   </details>"""
 
@@ -5027,7 +5540,13 @@ def _build_overview_graph_html(graph_state: Optional[Dict]) -> str:
     no re-layout, no golden-angle init. Pure draw-only canvas script.
     """
     if not graph_state:
-        return ''
+        return (
+            '<div style="padding:24px;text-align:center;color:var(--fg-muted);font-size:12px;'
+            'border:1px dashed var(--border);border-radius:4px">'
+            'STRUCTURAL GRAPH UNAVAILABLE — graph_state.json not found for this run. '
+            'Export positions via export_graph_state.mjs before generating this report.'
+            '</div>'
+        )
 
     nodes  = graph_state['nodes']
     links  = graph_state['links']
@@ -5259,11 +5778,78 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
     coverage_status = "COMPLETE" if weakly_ct == 0 else "INCOMPLETE"
     coverage_css   = "complete" if coverage_status == "COMPLETE" else "incomplete"
 
+    # Semantic context for tier2 — distinguishes DOM structural grounding from semantic domain backing
+    _sem_ctx_t2 = _build_semantic_report_context()
     resolution_boundary = (
-        f"{grounded_ct} of {total_domains} domains are fully grounded. "
-        f"{weakly_ct} domain(s) exhibit unresolved structural conditions. "
+        f"{grounded_ct} of {total_domains} structural evidence groups are fully grounded. "
         "Runtime-dependent dimensions cannot be resolved from static evidence alone."
     )
+    if _sem_ctx_t2["fallback_available"]:
+        _t2_sem_backed = _sem_ctx_t2["structurally_backed_domains"]
+        _t2_sem_total  = _sem_ctx_t2["total_semantic_domains"]
+        _t2_sem_only   = _sem_ctx_t2["semantic_only_domains"]
+        _t2_az_label   = _sem_ctx_t2["active_zone_semantic_label"] or ""
+        _t2_az_dom     = _sem_ctx_t2["active_zone_dom_label"] or ""
+        _t2_az_dom_id  = _sem_ctx_t2["active_zone_dom_id"] or ""
+        _t2_az_conf    = _sem_ctx_t2["active_zone_confidence"]
+        _t2_az_conf_str = f"{_t2_az_conf:.2f}" if _t2_az_conf else ""
+        resolution_boundary = (
+            f"{grounded_ct} of {total_domains} structural evidence groups are fully grounded. "
+            f"{_t2_sem_backed} of {_t2_sem_total} semantic domains have structural backing — "
+            f"{_t2_sem_only} remain semantic-only. "
+            "Runtime-dependent dimensions cannot be resolved from static evidence alone."
+        )
+        _t2_struct_topology_label = (
+            f"{grounded_ct}/{total_domains} evidence groups grounded · "
+            f"{_t2_sem_backed}/{_t2_sem_total} semantic domains backed"
+        )
+        # DOMAIN → DOM backing table
+        _dom_rows = ""
+        for _d in _sem_ctx_t2["domain_records"]:
+            _ls = _d.get("lineage_status", "NONE")
+            _dom_ref = _d.get("dominant_dom_id") or "—"
+            _conf_s  = f"{_d.get('confidence',0):.2f}" if _ls != "NONE" else "—"
+            _za_mark = " ⊕" if _d.get("zone_anchor") else ""
+            _ls_color = {"EXACT": "var(--green)", "STRONG": "var(--blue,#58a6ff)", "PARTIAL": "var(--amber)"}.get(_ls, "var(--fg-dim)")
+            _dom_rows += (
+                f'<tr style="border-bottom:1px solid var(--border)">'
+                f'<td style="padding:4px 8px;color:var(--fg-main)">{esc(_d.get("business_label", _d["domain_id"]))}{esc(_za_mark)}</td>'
+                f'<td style="padding:4px 8px;color:var(--fg-dim)">{esc(_d["domain_id"])}</td>'
+                f'<td style="padding:4px 8px;font-family:monospace;color:var(--fg-dim)">{esc(_dom_ref)}</td>'
+                f'<td style="padding:4px 8px;color:{_ls_color}">{_ls}</td>'
+                f'<td style="padding:4px 8px;color:var(--fg-dim)">{_conf_s}</td>'
+                f'</tr>'
+            )
+        _sem_dom_mapping_html = f"""
+  <div class="t2-section">
+    <div class="t2-section-header">
+      <span class="t2-section-num">01B</span>
+      <span class="t2-section-title">Semantic Domain → Structural Backing</span>
+    </div>
+    <p class="t2-topo-intro">Maps each semantic domain to its dominant structural evidence group (DOM-XX). Lineage status indicates evidence quality: EXACT (≥0.90), STRONG (≥0.70), PARTIAL (≥0.60), NONE (no current structural backing). ⊕ = active pressure zone anchor.</p>
+    <div style="overflow-x:auto">
+      <table style="width:100%;font-size:11px;border-collapse:collapse">
+        <thead><tr style="border-bottom:1px solid var(--border)">
+          <th style="padding:4px 8px;text-align:left;color:var(--fg-muted)">Semantic Domain</th>
+          <th style="padding:4px 8px;text-align:left;color:var(--fg-muted)">Domain ID</th>
+          <th style="padding:4px 8px;text-align:left;color:var(--fg-muted)">DOM Backing</th>
+          <th style="padding:4px 8px;text-align:left;color:var(--fg-muted)">Lineage</th>
+          <th style="padding:4px 8px;text-align:left;color:var(--fg-muted)">Confidence</th>
+        </tr></thead>
+        <tbody>{_dom_rows}</tbody>
+      </table>
+    </div>
+  </div>"""
+        _t2_cell_domains_label = "Semantic Domains Backed"
+        _t2_cell_domains_value = f"{_t2_sem_backed} / {_t2_sem_total}"
+        _t2_cell_domains_sub   = "projection layer coverage"
+    else:
+        _t2_struct_topology_label = f"{grounded_ct} / {total_domains} domains grounded"
+        _t2_cell_domains_label = "Domains Grounded"
+        _t2_cell_domains_value = f"{grounded_ct} / {total_domains}"
+        _t2_cell_domains_sub   = "structurally confirmed"
+        _sem_dom_mapping_html = ""
+
     if publish_safe:
         resolution_boundary = _t2_obfuscate(resolution_boundary)
 
@@ -5273,13 +5859,23 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
         pd[z["zone_type"]] += 1
 
     has_contradiction = any(z["zone_type"] == "signal_conflict" for z in zones)
-    # sig_count: PSIG path uses condition_signals; BlueEdge path uses domain_sigs
+    # sig_count: zones with at least one bound signal
     if _use_psig and pz_proj is not None:
         sig_count = sum(1 for z in zones if z.get("condition_signals"))
     else:
         sig_count = sum(1 for z in zones if z["domain_sigs"])
+    # active_signal_count: unique signal IDs across all zones
+    _active_sig_ids: set = set()
+    for _z in zones:
+        for _c in _z.get("condition_signals", []):
+            _sid = _c.get("signal_id", "")
+            if _sid:
+                _active_sig_ids.add(_sid)
+    _active_signal_count = len(_active_sig_ids)
+    _active_sig_ids_str  = " · ".join(sorted(_active_sig_ids))
     evidence_summary = (
-        f"{sig_count} of {total_zones} diagnostic zone(s) have bound signal coverage. "
+        f"{sig_count} of {total_zones} diagnostic zone(s) have bound signal coverage "
+        f"({_active_signal_count} active signal{'s' if _active_signal_count != 1 else ''}). "
         f"{total_zones - sig_count} zone(s) have no signal coverage and cannot be structurally characterized."
     )
     zones_source_label = "identified from projection" if (_use_psig and pz_proj is not None) else "identified from canonical data"
@@ -5294,16 +5890,52 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
         sev_css  = _t2_sev_css(z["severity"])
         conf_css = _t2_conf_css(z["confidence"])
         zt_label = z["zone_type"].replace("_", " ")
+        _zcard_dom = z["domain_id"] if str(z.get("domain_id", "")).startswith("DOM-") else ""
+        _zcard_anchor_name = z.get("anchor_name", "")
+        _zcard_dom_backing = esc(_zcard_dom) + (f" / {esc(_zcard_anchor_name)}" if _zcard_anchor_name else "")
+        _zcard_dom_line = (
+            f'<div style="font-size:10px;color:var(--fg-muted);margin:2px 0 4px">'
+            f'DOM backing: {_zcard_dom_backing}'
+            f'</div>'
+        ) if _zcard_dom else ""
+        # Signal profile: deduplicate by signal_id, render compact bars
+        _zcard_conds = z.get("condition_signals", [])
+        _zcard_sigs_seen: Dict = {}
+        for _c in _zcard_conds:
+            _csid = _c.get("signal_id", "")
+            if _csid and _csid not in _zcard_sigs_seen:
+                _zcard_sigs_seen[_csid] = _c
+        _zcard_sig_vals = [float(_c.get("signal_value") or 0) for _c in _zcard_sigs_seen.values()]
+        _zcard_max_val  = max(_zcard_sig_vals) if _zcard_sig_vals else 1.0
+        _zcard_sig_rows = ""
+        for _csid, _c in _zcard_sigs_seen.items():
+            _sval   = float(_c.get("signal_value") or 0)
+            _sstate = _c.get("activation_state", "—")
+            _bar_w  = int((_sval / _zcard_max_val) * 64) if _zcard_max_val > 0 else 0
+            _bclr   = "#3fb950" if _sstate == "HIGH" else ("#d29922" if _sstate == "MODERATE" else "#8b949e")
+            _zcard_sig_rows += (
+                f'<div style="display:flex;align-items:center;gap:6px;font-size:10px;margin-top:3px">'
+                f'<span style="font-family:monospace;color:var(--fg-main);min-width:68px">{esc(_csid)}</span>'
+                f'<span style="color:{_bclr};min-width:38px">{esc(_sstate)}</span>'
+                f'<span style="color:var(--fg-muted);min-width:38px">{_sval:.3f}</span>'
+                f'<div style="width:{_bar_w}px;height:4px;background:{_bclr};border-radius:2px;min-width:2px"></div>'
+                f'</div>'
+            )
+        if not _zcard_sig_rows:
+            _zcard_sig_rows = '<div style="font-size:10px;color:var(--fg-dim);margin-top:3px">No signals bound</div>'
         zone_cards_html += f"""
       <a href="#zone-{zid}-details" class="t2-zone-card" id="zone-{zid}">
         <div class="t2-zone-id">{zid}</div>
         <div class="t2-zone-domain">{display}</div>
+        {_zcard_dom_line}
         <div class="t2-badge-row">
           <span class="t2-badge {type_css}">{zt_label}</span>
           <span class="t2-badge {sev_css}">{z["severity"]}</span>
           <span class="t2-badge {conf_css}">{z["confidence"]}</span>
           <span class="t2-badge" style="background:var(--surface-raised);color:var(--fg-dim);border:1px solid var(--border-subtle)">{z["traceability"].replace("_", " ")}</span>
         </div>
+        <div style="margin-top:8px;padding-top:6px;border-top:1px solid var(--border-subtle)">{_zcard_sig_rows}</div>
+        <div style="font-size:11px;color:var(--fg-muted);margin-top:6px">&#9654; View Zone Details</div>
       </a>"""
 
     # Per-zone blocks — PSIG path uses projection-aware builder
@@ -5319,8 +5951,89 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
             for z in zones
         )
 
+    # Baseline signal section (04B) — signals with activation_method == THEORETICAL_BASELINE
+    if _use_psig and psig_proj is not None:
+        _t2_base_sigs = [c for c in psig_proj.get("active_conditions_in_scope", [])
+                         if c.get("activation_method") == "THEORETICAL_BASELINE"]
+        if _t2_base_sigs:
+            _t2_base_items = []
+            for _bc in _t2_base_sigs:
+                _bsid   = _bc.get("signal_id", "")
+                _bval   = _bc.get("signal_value", 0)
+                _bmeth  = _bc.get("activation_method", "")
+                _bscope = _bc.get("entity_level_scope", [])
+                _t2_base_items.append(
+                    f'    <div style="background:#0c0c14;border:1px solid #2a2a40;'
+                    f'border-left:3px solid #58a6ff;border-radius:2px;padding:10px 14px;margin-bottom:8px">\n'
+                    f'      <div style="font-size:11px;font-weight:600;color:#58a6ff;'
+                    f'text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">'
+                    f'BASELINE — {esc(_bsid)}</div>\n'
+                    f'      <div style="font-size:13px;color:var(--fg-main);margin-bottom:4px">'
+                    f'Structural Blind Spot ({esc(_bsid)}): THEORETICAL BASELINE — Value {esc(str(_bval))}</div>\n'
+                    f'      <div style="font-size:12px;color:var(--fg-muted)">'
+                    f'{esc(_bsid)} is a theoretical baseline condition '
+                    f'(trace: {esc(_bmeth)}, value {esc(str(_bval))}). '
+                    f'Covers {len(_bscope)} structural entities outside pressure zone scope. '
+                    f'This condition was not independently activated — it represents a structural '
+                    f'baseline used for blind spot coverage, not a detected pressure signal.</div>\n'
+                    f'      <div style="font-size:10px;color:var(--fg-dim);margin-top:6px">'
+                    f'trace: {esc(_bmeth)} · source: signal_projection.json · '
+                    f'scope: cross-domain baseline</div>\n'
+                    f'    </div>'
+                )
+            _t2_baseline_section_html = (
+                '\n  <div class="t2-section">\n'
+                '    <div class="t2-section-header">\n'
+                '      <span class="t2-section-num">04B</span>\n'
+                '      <span class="t2-section-title">Baseline Signals</span>\n'
+                '    </div>\n'
+                '    <p class="t2-body" style="font-size:12px;color:var(--fg-muted);margin-bottom:10px">'
+                'The following signals are present in the active conditions scope but classified as '
+                'theoretical baseline conditions (THEORETICAL_BASELINE). '
+                'They were not independently activated as pressure signals — '
+                'they represent structural coverage baselines.</p>\n'
+                + "\n".join(_t2_base_items) + "\n"
+                + '  </div>'
+            )
+        else:
+            _t2_baseline_section_html = ""
+    else:
+        _t2_baseline_section_html = ""
+
     # Structural evidence topology graph (section 01A) — renders from graph_state only
     topology_svg = _build_overview_graph_html(graph_state)
+
+    # Semantic topology section (01C) — present only when semantic globals loaded
+    if _SEMANTIC_TOPOLOGY_MODEL is not None and _SEMANTIC_TOPOLOGY_LAYOUT is not None:
+        _sem_svg = _render_semantic_topology_svg(light_mode=False)
+        _sem_edges_ct   = len(_SEMANTIC_TOPOLOGY_MODEL.get("edges", []))
+        _sem_legend_backed = _t2_sem_backed if _sem_ctx_t2["fallback_available"] else 0
+        _sem_legend_total  = _t2_sem_total  if _sem_ctx_t2["fallback_available"] else 0
+        _sem_legend_clust  = len(_sem_ctx_t2["clusters"]) if _sem_ctx_t2["fallback_available"] else 0
+        _sem_legend_html = f"""
+    <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;padding:8px 0 4px">
+      <span style="font-size:10px;font-weight:600;color:var(--fg-muted);text-transform:uppercase;letter-spacing:.06em">Legend</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--fg-dim)"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#3fb950"></span>EXACT</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--fg-dim)"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#58a6ff"></span>STRONG</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--fg-dim)"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#d29922"></span>PARTIAL</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--fg-dim)"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;border:1.5px dashed #8b949e"></span>NO BINDING</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--fg-dim)"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;border:2px dashed #ff7b72;background:transparent"></span>ZONE ANCHOR</span>
+    </div>
+    <div style="font-size:11px;color:var(--fg-muted);padding:0 0 8px">{_sem_legend_total} semantic domains · {_sem_legend_clust} clusters · {_sem_edges_ct} relationships · {_sem_legend_backed}/{_sem_legend_total} with structural evidence</div>"""
+        _semantic_topo_section_html = f"""
+  <div class="t2-section">
+    <div class="t2-section-header">
+      <span class="t2-section-num">01A</span>
+      <span class="t2-section-title">Semantic Domain Topology</span>
+    </div>
+    {_sem_legend_html}
+    <p class="t2-topo-intro">Semantic domain topology with structural evidence lineage and zone overlay.</p>
+    <div class="t2-topo-panel">
+      {_sem_svg}
+    </div>
+  </div>"""
+    else:
+        _semantic_topo_section_html = ""
 
     # Language Layer reading guide (section 01B) and Pattern Summary (section 02) — omitted in publish_safe
     _ll = ll or {}
@@ -5350,13 +6063,13 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
         reading_guide_html = f"""
   <div class="t2-section">
     <div class="t2-section-header">
-      <span class="t2-section-num">01B</span>
+      <span class="t2-section-num">01D</span>
       <span class="t2-section-title">How to Read Diagnostic Terms</span>
     </div>
     <div class="t2-reading-guide-prose">
       <p class="t2-body"><strong>What is a pressure zone?</strong> A pressure zone is a governed diagnostic unit identifying a domain segment where one or more active conditions create concentrated structural pressure. Zones are derived from the projection layer — they are not inferred from topology alone.</p>
       <p class="t2-body"><strong>Why do compound zones matter?</strong> A compound zone is not a single intense condition — it is multiple structurally independent conditions active simultaneously in the same domain. This indicates multi-dimensional pressure convergence. That multiple pressures are co-present is a structural observation; it is not a causal claim about what caused them or what will happen.</p>
-      <p class="t2-body"><strong>Why do three zones share the same signal set?</strong> The three zones in this run (PZ-001, PZ-002, PZ-003) share the same three active signals because those signals are domain-spanning — they are not isolated to a single domain. The zones differ in attribution: which domain carries primary pressure origin versus which domains are secondary recipients. Same signal family, different structural role.</p>
+      <p class="t2-body"><strong>Why might multiple zones share the same signal set?</strong> When active signals are domain-spanning, the same signal family may appear across multiple pressure zones. Each zone still differs in attribution — which domain carries primary pressure origin versus which receive it as secondary recipients. Same signal family, different structural role. Attribution is determined by the projection layer.</p>
       <p class="t2-body"><strong>What does primary vs secondary attribution mean?</strong> Primary attribution means the conditions originated within that domain. Secondary attribution means the conditions are present but originated from another domain — the secondary zone is a structural recipient, not the source. Attribution is determined by the projection layer, not inferred here.</p>
       <p class="t2-body" style="color:var(--fg-dim);font-size:11px">inference_prohibition: ACTIVE — all data on this surface is structural and evidential only. No advisory content, causal inference, or remediation guidance may be derived.</p>
     </div>
@@ -5381,12 +6094,13 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
     </div>
     <div class="t2-pattern-summary">
       <p class="t2-body" style="font-size:14px;color:#c8c8d4;font-weight:500;line-height:1.5">
-        This run shows one structural pressure pattern appearing across {total_zones} domains.
-        The same {len(_shared_sigs)} signal{'s' if len(_shared_sigs) != 1 else ''} ({esc(_shared_sigs_str)}) are active in each pressure zone;
-        the difference is attribution, not a different signal family.
+        This run shows one structural pressure pattern appearing across {total_zones} zone{'s' if total_zones != 1 else ''}.
+        {(f"The same {len(_shared_sigs)} signal{('s' if len(_shared_sigs) != 1 else '')} ({esc(_shared_sigs_str)}) are active in each pressure zone; the difference is attribution, not a different signal family.")
+         if _shared_sigs else
+         (f"{_active_signal_count} active signal{('s' if _active_signal_count != 1 else '')} ({esc(_active_sig_ids_str)}) bound to this zone." if _active_signal_count else "No active signals bound to this zone.")}
       </p>
       <p class="t2-body">
-        All {total_zones} zones are classified as {esc(_zclass_exec_s)}
+        All {total_zones} zone{'s' if total_zones != 1 else ''} classified as {esc(_zclass_exec_s)}
         <span style="font-size:10px;opacity:.6">(trace: {esc(_zclass_shared)})</span>.
         Each zone carries {esc(_exec_phrase)}
         <span style="font-size:10px;opacity:.6">(trace: RUN_RELATIVE_OUTLIER)</span>
@@ -5394,9 +6108,9 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
         {("Primary pressure anchor "
           '<span style="font-size:10px;opacity:.6">(trace: PRIMARY attribution)</span>: '
           + esc(_prim_name) + ".") if _prim_name else ""}
-        Remaining zones are secondary affected zones
-        <span style="font-size:10px;opacity:.6">(trace: SECONDARY attribution)</span> —
-        structurally exposed to the same signals but not the pressure origin.
+        {("Remaining zones are secondary affected zones "
+          '<span style="font-size:10px;opacity:.6">(trace: SECONDARY attribution)</span> — '
+          "structurally exposed to the same signals but not the pressure origin.") if len(zones) > 1 else ""}
       </p>
       <p class="t2-body" style="font-size:11px;color:var(--fg-muted)">
         This pattern describes structural co-presence. It is not a causal proof and does not constitute
@@ -5481,9 +6195,9 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
         <div class="t2-cell-sub">across zone scope</div>
       </div>
       <div class="t2-overview-cell">
-        <div class="t2-cell-label">Domains Grounded</div>
-        <div class="t2-cell-value">{grounded_ct} / {total_domains}</div>
-        <div class="t2-cell-sub">structurally confirmed</div>
+        <div class="t2-cell-label">{_t2_cell_domains_label}</div>
+        <div class="t2-cell-value">{_t2_cell_domains_value}</div>
+        <div class="t2-cell-sub">{_t2_cell_domains_sub}</div>
       </div>
       <div class="t2-overview-cell">
         <div class="t2-cell-label">Signal Coverage</div>
@@ -5512,9 +6226,11 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
     <p style="font-size:12px;color:var(--fg-muted);margin-top:14px">{esc(evidence_summary)}</p>
   </div>
 
+  {_semantic_topo_section_html}
+  {_sem_dom_mapping_html}
   <div class="t2-section">
     <div class="t2-section-header">
-      <span class="t2-section-num">01A</span>
+      <span class="t2-section-num">01C</span>
       <span class="t2-section-title">Structural Evidence Topology</span>
     </div>
     <p class="t2-topo-intro">This view represents the full structural evidence topology underlying the current assessment. It shows how signals and structural evidence connect across the assessed system. Diagnostic zones described below represent focused segments of this topology.</p>
@@ -5522,7 +6238,6 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
       {topology_svg}
     </div>
   </div>
-
   {reading_guide_html}
 
   {pattern_summary_html}
@@ -5544,7 +6259,7 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
     </div>
     {zone_blocks_html}
   </div>
-
+{_t2_baseline_section_html}
   <div class="t2-section">
     <div class="t2-section-header">
       <span class="t2-section-num">05</span>
@@ -5572,13 +6287,13 @@ def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict
       </div>
       <div class="t2-ll-row">
         <span class="t2-ll-term">Signal activation</span>
-        <span class="t2-ll-exec">{sig_count} signal{'s' if sig_count != 1 else ''} bound</span>
+        <span class="t2-ll-exec">{_active_signal_count} active signal{'s' if _active_signal_count != 1 else ''}{' (' + esc(_active_sig_ids_str) + ')' if _active_sig_ids_str else ''}</span>
         <span class="t2-ll-decode">Source: signal_projection.json · authority: PSEE.SIGNAL.ACTIVATION.CONTRACT.01</span>
       </div>
       <div class="t2-ll-row">
         <span class="t2-ll-term">Structural topology</span>
-        <span class="t2-ll-exec">{grounded_ct} / {total_domains} domains grounded</span>
-        <span class="t2-ll-decode">Source: canonical topology package · authority: PSEE topology emission run</span>
+        <span class="t2-ll-exec">{_t2_struct_topology_label}</span>
+        <span class="t2-ll-decode">Source: canonical topology package + semantic topology model · authority: PSEE topology emission run</span>
       </div>
       <div class="t2-ll-row">
         <span class="t2-ll-term">Language layer</span>
@@ -5661,7 +6376,8 @@ def generate_tier2_reports(output_dir: Optional[Path] = None) -> List[Path]:
     try:
         subprocess.run(["node", str(export_script),
                         "--client", _ACTIVE_CLIENT,
-                        "--run-id", _ACTIVE_VAULT_RUN_ID], check=True)
+                        "--run-id", _ACTIVE_VAULT_RUN_ID,
+                        "--output", str(graph_state_path)], check=True)
         print(f"[LENS REPORT] Generated: {graph_state_path.resolve()}")
     except (subprocess.CalledProcessError, FileNotFoundError) as e:
         _fail(f"export_graph_state.js failed: {e}")
@@ -5820,10 +6536,26 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
     _posture_hero_cls = {"PROCEED": "posture-proceed", "INVESTIGATE": "posture-investigate",
                          "ESCALATE": "posture-escalate"}.get(posture, "posture-investigate")
 
+    # Semantic context for decision — distinguishes DOM structural coverage from semantic domain backing
+    _sem_ctx_ds = _build_semantic_report_context()
+    if _sem_ctx_ds["fallback_available"]:
+        _ds_sem_backed = _sem_ctx_ds["structurally_backed_domains"]
+        _ds_sem_total  = _sem_ctx_ds["total_semantic_domains"]
+        _ds_sem_only   = _sem_ctx_ds["semantic_only_domains"]
+        _ds_az_label   = _sem_ctx_ds["active_zone_semantic_label"] or ""
+        _ds_az_dom     = _sem_ctx_ds["active_zone_dom_label"] or ""
+        _ds_az_dom_id  = _sem_ctx_ds["active_zone_dom_id"] or ""
+        _struct_sentence = (
+            f"Structural evidence layer complete — {_ds_sem_backed}/{_ds_sem_total} semantic domains backed."
+        )
+    else:
+        _ds_sem_backed = _ds_sem_total = _ds_sem_only = 0
+        _ds_az_label = _ds_az_dom = _ds_az_dom_id = ""
+        _struct_sentence = ("Structure is verified."
+                            if weak_ct == 0 and grounded_ct >= total_doms
+                            else "Structural coverage has gaps.")
+
     # Hero rationale — two sentences derived from structural coverage state and evidence state
-    _struct_sentence   = ("Structure is verified."
-                          if weak_ct == 0 and grounded_ct >= total_doms
-                          else "Structural coverage has gaps.")
     _evidence_sentence = ("Execution evidence is incomplete."
                           if not exec_eval
                           else "Execution evidence is present.")
@@ -5863,7 +6595,20 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
 
     # ── Confirmed card — prose sentences, no metric dumps ─────────────
     _truth_sentences: list = []
-    if weak_ct == 0 and grounded_ct >= total_doms:
+    if _sem_ctx_ds["fallback_available"]:
+        _truth_sentences.append(
+            f"Structural evidence is complete for the current evidence layer. "
+            f"Semantic domain coverage: {_ds_sem_backed}/{_ds_sem_total} domains have structural backing. "
+            f"{_ds_sem_only} semantic domains remain projection-only."
+        )
+        if _ds_az_label and _ds_az_dom:
+            _truth_sentences.append(
+                f"The active pressure pattern is centered on {_ds_az_label}, "
+                f"backed by {_ds_az_dom} ({_ds_az_dom_id})."
+                if _ds_az_dom_id and _ds_az_dom != _ds_az_dom_id
+                else f"The active pressure pattern is centered on {_ds_az_label}."
+            )
+    elif weak_ct == 0 and grounded_ct >= total_doms:
         _truth_sentences.append("All domains are structurally grounded.")
         _truth_sentences.append("No incomplete structural areas detected.")
     else:
@@ -6106,9 +6851,9 @@ def main(tier1: bool = True, output_path: Optional[Path] = None,
     if deliverable == "tier1":
         generate_tier1_reports(output_dir=output_dir)
     elif deliverable == "diagnostic":
-        generate_tier2_reports()
+        generate_tier2_reports(output_dir=output_dir)
     elif deliverable == "decision":
-        generate_decision_surface()
+        generate_decision_surface(output_dir=output_dir)
     else:
         # "all" or None (no --deliverable flag) — generates all surfaces
         generate_tier1_reports(output_dir=output_dir)
@@ -6179,6 +6924,10 @@ if __name__ == "__main__":
         "--crosswalk-path", type=Path, default=None,
         help="Optional path to semantic_continuity_crosswalk.json for business label resolution"
     )
+    parser.add_argument(
+        "--semantic-topology-dir", type=Path, default=None,
+        help="Optional path to directory containing semantic_topology_model.json and semantic_topology_layout.json"
+    )
     args = parser.parse_args()
     _configure_runtime(
         client=args.client,
@@ -6188,6 +6937,7 @@ if __name__ == "__main__":
         package_dir=args.package_dir,
         claims=args.claims,
         crosswalk_path=args.crosswalk_path,
+        semantic_topology_dir=args.semantic_topology_dir,
     )
     main(tier1=not args.legacy, output_path=args.output, output_dir=args.output_dir,
          deliverable=args.deliverable)
