@@ -1,0 +1,105 @@
+{
+  "contract_id": "PI.LENS.BLUEEDGE-CHAIN-RECONSTRUCTION.01",
+  "generated_date": "2026-05-01",
+  "target_run": "clients/blueedge/psee/runs/run_be_chain_reconstruction_01/",
+
+  "artifacts": [
+    {
+      "id": "ACM-01",
+      "target_path": "clients/blueedge/psee/runs/run_be_chain_reconstruction_01/intake/intake_manifest.json",
+      "source_path": "clients/blueedge/sources/source_01/source_manifest.json",
+      "source_type": "REFERENCE_METADATA",
+      "action": "CREATE",
+      "traceable": true,
+      "trace_authority": "source_manifest.json (archive_path, sha256, intake_contract)",
+      "status": "CREATED",
+      "notes": "Reference intake manifest derived from source_manifest — documents archive location and intake contract; no source extraction performed"
+    },
+    {
+      "id": "ACM-02",
+      "target_path": "clients/blueedge/psee/runs/run_be_chain_reconstruction_01/structure/40.2/structural_node_inventory.json",
+      "source_path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/structure/40.2/structural_node_inventory.json",
+      "source_type": "STRUCTURAL_SCANNER_OUTPUT",
+      "action": "BLOCKED",
+      "traceable": false,
+      "trace_authority": "NONE — source_path does not exist; requires canonical_repo extraction + 40.x scanner",
+      "status": "NOT_CREATED",
+      "blocker": "BLOCKER-01 (canonical_repo absent) + BLOCKER-02 (structure_path absent)"
+    },
+    {
+      "id": "ACM-03",
+      "target_path": "clients/blueedge/psee/runs/run_be_chain_reconstruction_01/structure/40.3/structural_topology_log.json",
+      "source_path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/structure/40.3/structural_topology_log.json",
+      "source_type": "STRUCTURAL_SCANNER_OUTPUT",
+      "action": "BLOCKED",
+      "traceable": false,
+      "trace_authority": "NONE — source_path does not exist",
+      "status": "NOT_CREATED",
+      "blocker": "BLOCKER-01 + BLOCKER-02"
+    },
+    {
+      "id": "ACM-04",
+      "target_path": "clients/blueedge/psee/runs/run_be_chain_reconstruction_01/structure/40.4/canonical_topology.json",
+      "source_path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/canonical_topology.json",
+      "source_type": "VAULT_ARTIFACT",
+      "action": "COPY",
+      "traceable": true,
+      "trace_authority": "Named baseline vault — derived from dom_path_domain_layer.json (PATH_EVIDENCE_ONLY); 35 nodes / 13 domains confirmed",
+      "status": "CREATED",
+      "notes": "vault canonical_topology uses FastAPI domains[] schema, not native 40.4 cluster_topology schema — schema_adaptation_note preserved in file"
+    },
+    {
+      "id": "ACM-05",
+      "target_path": "clients/blueedge/psee/runs/run_be_chain_reconstruction_01/ceu/grounding_state_v3.json",
+      "source_path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/grounding_state_v3.json",
+      "source_type": "UUID_RUN_ARTIFACT",
+      "action": "COPY",
+      "traceable": true,
+      "trace_authority": "UUID integrated run — grounding_ratio=1.0, readiness_gate=PASS, total_ceu=10",
+      "status": "CREATED",
+      "notes": "Exact copy — no modification. This path is preferred by Phase 4 run_dir fallback"
+    },
+    {
+      "id": "ACM-06",
+      "target_path": "clients/blueedge/psee/runs/run_be_chain_reconstruction_01/dom/dom_layer.json",
+      "source_path": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01/recomputed/dom_path_domain_layer.json",
+      "source_type": "DOCS_PSEE_ARTIFACT",
+      "action": "BLOCKED",
+      "traceable": false,
+      "trace_authority": "NONE — source_path does not exist in repo",
+      "status": "NOT_CREATED",
+      "blocker": "BLOCKER-03 (dom_layer_path absent)"
+    },
+    {
+      "id": "ACM-07",
+      "target_path": "clients/blueedge/psee/runs/run_be_chain_reconstruction_01/binding/binding_envelope.json",
+      "source_path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/binding/binding_envelope.json",
+      "source_type": "NAMED_RUN_ARTIFACT",
+      "action": "COPY",
+      "traceable": true,
+      "trace_authority": "Named baseline run binding/ — pre-generic schema (bindings/domain_telemetry/pressure_zone_designations); produced by PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01",
+      "status": "CREATED",
+      "notes": "Exact copy — no modification. Schema is pre-generic (BLOCK_C), not the generic nodes/edges/capability_surfaces schema"
+    },
+    {
+      "id": "ACM-08",
+      "target_path": "clients/blueedge/psee/runs/run_be_chain_reconstruction_01/integration/integration_validation.json",
+      "source_path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/integration_validation.json",
+      "source_type": "UUID_RUN_ARTIFACT",
+      "action": "COPY",
+      "traceable": true,
+      "trace_authority": "UUID integrated run — 9/9 checks PASS; summary.status=PASS",
+      "status": "CREATED",
+      "notes": "Exact copy — no modification. KNOWN: uses summary.status field, not validation_status field — VR-09 will FAIL if Phase 8b is reached"
+    }
+  ],
+
+  "summary": {
+    "total_artifacts": 8,
+    "created": 4,
+    "blocked": 3,
+    "created_reference": 1,
+    "created_list": ["ACM-01 (intake_manifest)", "ACM-04 (canonical_topology)", "ACM-05 (grounding_state_v3)", "ACM-07 (binding_envelope)", "ACM-08 (integration_validation)"],
+    "blocked_list": ["ACM-02 (40.2 inventory)", "ACM-03 (40.3 topology)", "ACM-06 (dom_layer)"]
+  }
+}

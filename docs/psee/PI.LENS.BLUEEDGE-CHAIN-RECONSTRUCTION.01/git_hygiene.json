@@ -1,0 +1,40 @@
+{
+  "contract_id": "PI.LENS.BLUEEDGE-CHAIN-RECONSTRUCTION.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-01",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+  "working_tree_at_start": "CLEAN",
+  "working_tree_at_end": "MODIFIED — clients/blueedge/psee/runs/run_be_chain_reconstruction_01/ (new) + docs/psee/PI.LENS.BLUEEDGE-CHAIN-RECONSTRUCTION.01/ (untracked evidence)",
+  "baseline_commit": "6a93a56",
+
+  "files_created_this_contract": [
+    "clients/blueedge/psee/runs/run_be_chain_reconstruction_01/intake/intake_manifest.json",
+    "clients/blueedge/psee/runs/run_be_chain_reconstruction_01/structure/40.4/canonical_topology.json",
+    "clients/blueedge/psee/runs/run_be_chain_reconstruction_01/ceu/grounding_state_v3.json",
+    "clients/blueedge/psee/runs/run_be_chain_reconstruction_01/binding/binding_envelope.json",
+    "clients/blueedge/psee/runs/run_be_chain_reconstruction_01/integration/integration_validation.json",
+    "docs/psee/PI.LENS.BLUEEDGE-CHAIN-RECONSTRUCTION.01/reconstruction_plan.md",
+    "docs/psee/PI.LENS.BLUEEDGE-CHAIN-RECONSTRUCTION.01/artifact_copy_matrix.json",
+    "docs/psee/PI.LENS.BLUEEDGE-CHAIN-RECONSTRUCTION.01/pipeline_execution_result.json",
+    "docs/psee/PI.LENS.BLUEEDGE-CHAIN-RECONSTRUCTION.01/metric_validation_against_baseline.json",
+    "docs/psee/PI.LENS.BLUEEDGE-CHAIN-RECONSTRUCTION.01/divergence_log.md",
+    "docs/psee/PI.LENS.BLUEEDGE-CHAIN-RECONSTRUCTION.01/no_mutation_attestation.md",
+    "docs/psee/PI.LENS.BLUEEDGE-CHAIN-RECONSTRUCTION.01/git_hygiene.json"
+  ],
+  "files_modified_this_contract": [],
+  "files_deleted_this_contract": [],
+
+  "blueedge_baseline_mutation_check": "PASS — no files under clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/ modified",
+  "uuid_run_mutation_check": "PASS — no files under clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/ modified",
+  "pipeline_mutation_check": "PASS — scripts/pios/run_client_pipeline.py not modified",
+
+  "runtime_artifacts_created": "YES — clients/blueedge/psee/runs/run_be_chain_reconstruction_01/ (5 files: copies + intake_manifest reference)",
+  "pipeline_run_result": "FAIL — Phase 1 PASS, Phase 2 FAIL (canonical_repo absent), FAIL-CLOSED",
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[RECON] PI.LENS.BLUEEDGE-CHAIN-RECONSTRUCTION.01 — Partial chain reconstruction: 5 artifacts placed, 4 blockers documented, pipeline FAIL-CLOSED at Phase 2",
+
+  "git_hygiene_status": "COMPLETE"
+}
