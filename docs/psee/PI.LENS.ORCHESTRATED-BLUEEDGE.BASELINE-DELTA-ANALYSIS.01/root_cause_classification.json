@@ -1,0 +1,70 @@
+{
+  "contract_id": "PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01",
+  "artifact": "root_cause_classification",
+  "block": "BLOCK_I",
+  "generated_date": "2026-05-01",
+  "mode": "FORENSIC / READ_ONLY",
+
+  "final_verdict": "STRUCTURAL_TOPOLOGY_DELTA",
+
+  "primary_root_cause": {
+    "class": "STRUCTURAL_TOPOLOGY_DELTA",
+    "description": "Baseline and orchestrated signal computations use fundamentally different input graphs. Baseline: 40.3 structural import topology (35 real nodes, 1937 IMPORTS relations, manual computation, NODE-0021 IMPORTS=69 as outlier). Orchestrated: synthetic CEU-DOM binding_envelope (33 nodes, 29 edges, GROUNDS/EXPOSES relations, CE-04 fan_in=4 as outlier). These are not equivalent topologies. Signal values, primary entities, and pressure zone assignments all differ as a direct result.",
+    "evidence": [
+      "structural_topology_comparison.json — BLOCK_C: verdict STRUCTURAL_DELTA, total_edges 1937 vs 0 in canonical_topology, binding_envelope nodes 0 vs 33",
+      "41x_artifact_comparison.json — BLOCK_E: baseline_uses_manual_forensic_conformance=true, orchestrated_uses_pios_compute_scripts=true",
+      "75x_signal_condition_comparison.json — BLOCK_F: all 4 signals show value delta, population_type differs for every signal"
+    ],
+    "affected_signals": ["PSIG-001", "PSIG-002", "PSIG-004", "PSIG-006"],
+    "affected_zones": ["PZ-001", "PZ-002", "PZ-003", "PZ-004"],
+    "is_pipeline_bug": false,
+    "is_data_corruption": false,
+    "is_expected_delta_for_different_pathway": true,
+    "remediation": "Rebuild orchestrated 41.x signals using real structural import topology (40.3 import graph, per_node_outbound_imports, NODE population=35) instead of synthetic binding_envelope. This requires a fixup contract to correct the signal computation input in run_end_to_end.py / compute_condition_correlation.py."
+  },
+
+  "secondary_root_cause": {
+    "class": "SCHEMA_BRIDGE_BUG",
+    "description": "Phase 8a of orchestrator (phase_08a_vault in run_client_pipeline.py line ~645) uses active_count = sum(1 for s in vault_signals if s.get('activation_state') in ('HIGH', 'ACTIVATED', 'ACTIVE')). This incorrectly includes PSIG-006 (activation_method=THEORETICAL_BASELINE, activation_state=ACTIVATED) in the active_pressure_signals count. Result: vault/signal_registry.json shows active_pressure_signals=4, correct value is 3.",
+    "evidence": [
+      "schema_bridge_analysis.json — BLOCK_G: verdict SCHEMA_BRIDGE_BUG, correct_logic defined",
+      "41.x/signal_projection.json note field: 'PSIG-006 activated; structural blind-spot condition only; NOT a pressure candidate; no zone assigned'",
+      "signal_registry_fastapi_compatible.json (baseline): active_pressure_signals=3, telemetry_signals=1 — correct separation"
+    ],
+    "affected_vault_field": "vault/signal_registry.json active_pressure_signals",
+    "incorrect_value": 4,
+    "correct_value": 3,
+    "visible_in_report": false,
+    "remediation": "Fix active_count in phase_08a_vault: exclude signals where activation_method=='THEORETICAL_BASELINE'. Correct filter: active_count = sum(1 for s in vault_signals if s.get('activation_state') == 'HIGH' or (s.get('activation_state') in ('ACTIVATED', 'ACTIVE') and s.get('activation_method') != 'THEORETICAL_BASELINE'))"
+  },
+
+  "tertiary_observation": {
+    "class": "STRUCTURAL_TOPOLOGY_DELTA",
+    "description": "PSIG-006 value delta (0 → 0.1515). Baseline value=0 because 40.3 graph has no isolated nodes (35 nodes, all interconnected via 1937 import edges). Orchestrated value=0.1515 because binding_envelope synthetic graph has ~5 isolated nodes in connected component analysis. This is a secondary consequence of the different topology, not an independent bug.",
+    "is_independent_bug": false,
+    "is_consequence_of_primary_root_cause": true
+  },
+
+  "delta_classification_table": [
+    {"delta": "PSIG-001 value 5.663 → 4.55", "class": "STRUCTURAL_TOPOLOGY_DELTA", "cause": "Different outlier: NODE-0021 IMPORTS=69 (real) vs CE-04 fan_in=4 (synthetic). Different population sizes: 35 vs 33."},
+    {"delta": "PSIG-001 domain DOM-04 → DOM-05", "class": "STRUCTURAL_TOPOLOGY_DELTA", "cause": "CE-04 (api_layer) maps to DOM-05 in CEU-DOM binding; NODE-0021 maps to DOM-04 in real topology."},
+    {"delta": "PSIG-002 value 3.2098 → 4.55", "class": "STRUCTURAL_TOPOLOGY_DELTA", "cause": "Baseline measures per_dom_aggregated_imports (DOM-level z-score, 13 DOMs). Orchestrated measures per_node_outbound_exports (33 synthetic nodes, fan_out)."},
+    {"delta": "PSIG-002 label domain_coupling_pressure → export_pressure", "class": "STRUCTURAL_TOPOLOGY_DELTA", "cause": "Different signal definition triggered by different computation input. Same PSIG-002 slot, different semantic measurement."},
+    {"delta": "PSIG-004 value 2.1822 → 1.0", "class": "STRUCTURAL_TOPOLOGY_DELTA", "cause": "Baseline measures zone_coverage_concentration (per_zone_node_fraction, PZ-001). Orchestrated measures cluster_fragmentation (cluster_membership)."},
+    {"delta": "PSIG-006 value 0 → 0.1515", "class": "STRUCTURAL_TOPOLOGY_DELTA", "cause": "Isolated nodes count: 0 in real 40.3 import graph; ~5 in binding_envelope connected component analysis."},
+    {"delta": "active_pressure_signals 3 → 4", "class": "SCHEMA_BRIDGE_BUG", "cause": "Phase 8a active_count filter does not exclude THEORETICAL_BASELINE signals."},
+    {"delta": "Pressure zones 1 → 4", "class": "STRUCTURAL_TOPOLOGY_DELTA", "cause": "binding_envelope creates 4 domain-level activation candidates; real 40.3 topology produced 1 compound zone."},
+    {"delta": "Primary zone anchor DOM-04 → DOM-05", "class": "STRUCTURAL_TOPOLOGY_DELTA", "cause": "CE-04 (api_layer) in DOM-05 is the binding_envelope outlier, not NODE-0021 in DOM-04."}
+  ],
+
+  "parity_question_answer": {
+    "question": "Is the orchestrated run semantically equivalent to the baseline?",
+    "answer": false,
+    "reason": "The signal computation graphs are fundamentally different (real import topology vs synthetic binding topology). The orchestrated run produces structurally correct output from its own input, but the input itself is not the canonical signal computation basis established by the FastAPI conformance contracts. Until the orchestrator computes signals from the real 40.3 structural import graph, the orchestrated run cannot be declared semantically equivalent to the baseline."
+  },
+
+  "blocking_status": "BLOCKED",
+  "blocking_reason": "STRUCTURAL_TOPOLOGY_DELTA is a fundamental pipeline pathway mismatch, not a minor schema difference. The orchestrated run cannot be promoted as canonical or equivalent. FastAPI integration using this run's signal values would produce incorrect pressure attributions.",
+
+  "next_step": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.FIXUP.01 — correct signal computation input to use real structural import topology"
+}

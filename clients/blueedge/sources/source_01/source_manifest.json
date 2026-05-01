@@ -1,0 +1,19 @@
+{
+  "source_id": "source_01",
+  "client_id": "blueedge",
+  "archive_type": "ARCH-PL",
+  "archive_filename": "blueedge-platform-v3_23_0-COMPLETE.tar",
+  "archive_path": "/Users/khorrix/Projects/blueedge-clean-run/source-raw/raw/blueedge-platform-v3_23_0-COMPLETE.tar",
+  "archive_path_note": "Archive is in raw/ subdirectory, not at source-raw root. Verified 2026-05-01.",
+  "sha256": "672a841277541921bf8ade69a467d35d9f105a1525c754fa4b750f0aa50e9c80",
+  "intake_contract": "PI.BLUEEDGE.CLEAN-INTAKE.01",
+  "extracted_path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/intake/canonical_repo",
+  "structural_contract": "PI.BLUEEDGE.STRUCTURAL-PIPELINE.40X.01",
+  "structure_path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/structure",
+  "ceu_grounding_path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/ceu_grounding",
+  "dom_layer_path": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01/recomputed/dom_path_domain_layer.json",
+  "grounding_state_path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/grounding_state_v3.json",
+  "integration_validation_path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/integration_validation.json",
+  "fastapi_conformance_path": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed",
+  "fastapi_conformance_note": "Pre-computed canonical signal values from 4 FastAPI conformance contracts. Signal computation pathway is STAGE_NOT_AUTOMATED — orchestrator uses these artifacts directly. PSIG-001=5.663, PSIG-002=3.2098, PSIG-004=2.1822, PSIG-006=THEORETICAL_BASELINE. Authority: PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01."
+}

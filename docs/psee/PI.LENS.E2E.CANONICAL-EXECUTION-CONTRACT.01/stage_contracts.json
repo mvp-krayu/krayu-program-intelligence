@@ -1,0 +1,291 @@
+{
+  "contract_id": "PI.LENS.E2E.CANONICAL-EXECUTION-CONTRACT.01",
+  "artifact": "stage_contracts",
+  "block": "BLOCK_B",
+  "generated_date": "2026-05-01",
+  "mode": "DOCUMENTATION_ONLY / CONTRACT_LOCK",
+  "anchor_run": "run_be_orchestrated_fixup_01",
+  "stage_count": 14,
+
+  "stages": [
+    {
+      "stage_id": "S01",
+      "name": "CLIENT_MANIFEST_LOAD",
+      "caller_id": "CALLER-02",
+      "function": "parse_yaml_simple(client_yaml_path)",
+      "phase": "pre-phase (main() init)",
+      "automation_status": "AUTOMATED",
+      "inputs": ["clients/<client_id>/client.yaml"],
+      "outputs": ["client_cfg dict (memory only)"],
+      "fail_closed": ["client.yaml not found → sys.exit(1)"],
+      "format_note": "Minimal key:value YAML parser — no external YAML library dependency",
+      "key_fields_loaded": [
+        "client_id", "uuid", "display_name", "source_type",
+        "pipeline_mode", "ceu_model", "ceu_count", "dom_group_count",
+        "structural_node_count", "default_source"
+      ]
+    },
+    {
+      "stage_id": "S02",
+      "name": "SOURCE_MANIFEST_LOAD",
+      "caller_id": "CALLER-03",
+      "function": "load_source_manifest(source_manifest_path)",
+      "phase": "pre-phase (main() init)",
+      "automation_status": "AUTOMATED",
+      "inputs": ["clients/<client_id>/sources/<source_id>/source_manifest.json"],
+      "outputs": ["source_manifest dict (memory only)"],
+      "fail_closed": ["source_manifest.json not found → sys.exit(1)"],
+      "format_note": "JSON",
+      "key_fields_loaded": [
+        "source_id", "client_id", "archive_type", "archive_filename",
+        "archive_path", "sha256", "extracted_path", "structure_path",
+        "ceu_grounding_path", "dom_layer_path", "grounding_state_path",
+        "integration_validation_path",
+        "fastapi_conformance_path (OPTIONAL — routes Phase 5/6+7/8a to pre-computed conformance artifacts)"
+      ]
+    },
+    {
+      "stage_id": "S03",
+      "name": "SOURCE_BOUNDARY_VALIDATION",
+      "caller_id": "CALLER-04",
+      "function": "phase_01_source_boundary(source_manifest)",
+      "phase": "Phase 1",
+      "automation_status": "AUTOMATED",
+      "inputs": [
+        "source_manifest['archive_path'] (absolute path)",
+        "source_manifest['sha256']"
+      ],
+      "outputs": ["PASS bool"],
+      "fail_closed": [
+        "archive file not found at absolute path → pipeline halt",
+        "SHA256 mismatch → pipeline halt"
+      ],
+      "note": "archive_path sourced from source_manifest; no hardcoded paths in orchestrator"
+    },
+    {
+      "stage_id": "S04",
+      "name": "INTAKE_VERIFICATION",
+      "caller_id": "CALLER-05",
+      "function": "phase_02_intake(source_manifest)",
+      "phase": "Phase 2",
+      "automation_status": "AUTOMATED",
+      "inputs": ["source_manifest['extracted_path'] (relative to REPO_ROOT)"],
+      "outputs": ["PASS bool", "file count log"],
+      "fail_closed": ["canonical_repo directory not found at extracted_path → pipeline halt"]
+    },
+    {
+      "stage_id": "S05",
+      "name": "STRUCTURAL_VERIFICATION",
+      "caller_id": "CALLER-06",
+      "function": "phase_03_40x_structural(source_manifest)",
+      "phase": "Phase 3",
+      "automation_status": "AUTOMATED",
+      "inputs": [
+        "source_manifest['structure_path']/40.2/structural_node_inventory.json",
+        "source_manifest['structure_path']/40.3/structural_topology_log.json",
+        "source_manifest['structure_path']/40.4/canonical_topology.json"
+      ],
+      "outputs": ["PASS bool"],
+      "fail_closed": ["any required 40.x artifact missing → pipeline halt"]
+    },
+    {
+      "stage_id": "S06",
+      "name": "CEU_GROUNDING_VERIFICATION",
+      "caller_id": "CALLER-07",
+      "function": "phase_04_ceu_grounding(source_manifest)",
+      "phase": "Phase 4",
+      "automation_status": "AUTOMATED",
+      "inputs": ["source_manifest['grounding_state_path']/grounding_state_v3.json"],
+      "outputs": ["PASS bool"],
+      "fail_closed": [
+        "grounding_state_v3.json not found → pipeline halt",
+        "readiness_gate.status != PASS → pipeline halt"
+      ],
+      "note": "readiness_gate may be string 'PASS' or dict {'status': 'PASS', ...}; both forms handled by orchestrator"
+    },
+    {
+      "stage_id": "S07",
+      "name": "BINDING_ENVELOPE_BUILD",
+      "caller_id": "CALLER-08",
+      "function": "phase_05_build_binding_envelope(run_dir, client_id, source_manifest)",
+      "phase": "Phase 5",
+      "automation_status": "CONDITIONAL",
+      "automation_detail": {
+        "conformance_path_set": "STAGE_NOT_AUTOMATED — loads pre-computed binding_envelope_fastapi_compatible.json from fastapi_conformance_path; synthetic topology builder bypassed",
+        "conformance_path_absent": "AUTOMATED — builds synthetic CEU-DOM binding_envelope from ceu_grounding_registry + dom_layer (33-node GROUNDS/EXPOSES topology)"
+      },
+      "inputs": {
+        "conformance_path": ["<fastapi_conformance_path>/binding_envelope_fastapi_compatible.json"],
+        "synthetic_path": [
+          "source_manifest['ceu_grounding_path']/registry/ceu_grounding_registry.json",
+          "source_manifest['dom_layer_path']"
+        ]
+      },
+      "outputs": ["clients/<client_id>/psee/runs/<run_id>/binding/binding_envelope.json"],
+      "fail_closed": [
+        "fastapi_conformance_path set but binding_envelope_fastapi_compatible.json not found → pipeline halt",
+        "CEU registry or DOM layer missing on synthetic path → pipeline halt"
+      ],
+      "critical_note": "BlueEdge: STAGE_NOT_AUTOMATED. Canonical signal computation requires real 40.3 structural import topology (35 nodes, 1937 IMPORTS relations). Synthetic binding_envelope (33 nodes, GROUNDS/EXPOSES only) produces different z-scores. Root cause documented in PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01."
+    },
+    {
+      "stage_id": "S08",
+      "name": "SIGNAL_ACTIVATION",
+      "caller_id": "CALLER-09",
+      "function": "phase_06_and_07_e2e(run_dir, source_manifest)",
+      "phase": "Phase 6+7",
+      "automation_status": "CONDITIONAL",
+      "automation_detail": {
+        "conformance_path_set": "STAGE_NOT_AUTOMATED — loads all 41.x and 75.x artifacts from fastapi_conformance_path; run_end_to_end.py bypassed",
+        "conformance_path_absent": "AUTOMATED — runs scripts/pios/run_end_to_end.py on binding_envelope.json"
+      },
+      "inputs": {
+        "conformance_path": [
+          "<fastapi_conformance_path>/signal_projection_fastapi_compatible.json",
+          "<fastapi_conformance_path>/pressure_zone_state_fastapi_compatible.json",
+          "<fastapi_conformance_path>/condition_correlation_state_fastapi_compatible.json"
+        ],
+        "synthetic_path": ["clients/<client_id>/psee/runs/<run_id>/binding/binding_envelope.json"]
+      },
+      "outputs": [
+        "clients/<client_id>/psee/runs/<run_id>/75.x/condition_correlation_state.json",
+        "clients/<client_id>/psee/runs/<run_id>/75.x/pressure_candidate_state.json",
+        "clients/<client_id>/psee/runs/<run_id>/75.x/pressure_zone_state.json",
+        "clients/<client_id>/psee/runs/<run_id>/41.x/signal_projection.json",
+        "clients/<client_id>/psee/runs/<run_id>/41.x/pressure_zone_projection.json"
+      ],
+      "fail_closed": [
+        "signal_projection_fastapi_compatible.json missing when conformance path set → pipeline halt",
+        "run_end_to_end.py non-zero exit on synthetic path → pipeline halt"
+      ]
+    },
+    {
+      "stage_id": "S09",
+      "name": "VAULT_CONSTRUCTION",
+      "caller_id": "CALLER-10",
+      "function": "phase_08a_vault(run_dir, client_id, uuid, source_manifest, run_id)",
+      "phase": "Phase 8a",
+      "automation_status": "AUTOMATED",
+      "inputs": {
+        "all_paths": [
+          "source_manifest['grounding_state_path']",
+          "source_manifest['dom_layer_path']",
+          "source_manifest['integration_validation_path']"
+        ],
+        "conformance_path": ["<fastapi_conformance_path>/signal_registry_fastapi_compatible.json"],
+        "synthetic_path": ["clients/<client_id>/psee/runs/<run_id>/41.x/signal_projection.json"]
+      },
+      "outputs": [
+        "vault/coverage_state.json",
+        "vault/reconstruction_state.json",
+        "vault/gauge_state.json",
+        "vault/canonical_topology.json",
+        "vault/signal_registry.json",
+        "vault/binding_envelope.json",
+        "vault/admissibility_log.json",
+        "vault/evidence_trace.json",
+        "vault/vault_manifest.json"
+      ],
+      "fail_closed": ["signal_registry source artifact missing → pipeline halt"],
+      "schema_bridge_fix": "active_count excludes activation_method=THEORETICAL_BASELINE from active_pressure_signals count — applied in both conformance and synthetic code paths. Fix documented in PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.FIXUP.01 BLOCK_C.",
+      "output_vault_dir": "clients/<client_id>/psee/runs/<run_id>/vault/"
+    },
+    {
+      "stage_id": "S10",
+      "name": "LENS_REPORT_GENERATION",
+      "caller_id": "CALLER-12",
+      "function": "phase_08b_lens_reports(run_dir, client_id, run_id)",
+      "phase": "Phase 8b",
+      "automation_status": "AUTOMATED",
+      "inputs": [
+        "clients/<client_id>/psee/runs/<run_id>/vault/canonical_topology.json",
+        "clients/<client_id>/psee/runs/<run_id>/vault/signal_registry.json",
+        "clients/<client_id>/psee/runs/<run_id>/vault/gauge_state.json",
+        "clients/<client_id>/psee/runs/<run_id>/vault/binding_envelope.json (optional — binding context)",
+        "clients/<client_id>/psee/runs/<run_id>/41.x/signal_projection.json (signal trace preview)"
+      ],
+      "outputs": [
+        "clients/<client_id>/lens/runs/<run_id>/reports/tier1/lens_tier1_evidence_brief.html",
+        "clients/<client_id>/lens/runs/<run_id>/reports/tier1/publish/lens_tier1_evidence_brief_pub.html",
+        "clients/<client_id>/lens/runs/<run_id>/reports/tier1/lens_tier1_narrative_brief.html",
+        "clients/<client_id>/lens/runs/<run_id>/reports/tier1/publish/lens_tier1_narrative_brief_pub.html",
+        "clients/<client_id>/lens/runs/<run_id>/reports/tier2/lens_tier2_diagnostic_narrative.html",
+        "clients/<client_id>/lens/runs/<run_id>/reports/tier2/publish/lens_tier2_diagnostic_narrative_pub.html",
+        "clients/<client_id>/lens/runs/<run_id>/reports/tier2/graph_state.json",
+        "clients/<client_id>/lens/runs/<run_id>/reports/decision/lens_decision_surface.html",
+        "clients/<client_id>/lens/runs/<run_id>/reports/decision/publish/lens_decision_surface_pub.html"
+      ],
+      "fail_closed": [
+        "vault/canonical_topology.json missing → phase fail",
+        "vault/signal_registry.json missing → phase fail",
+        "export_graph_state.mjs non-zero exit → phase fail"
+      ],
+      "invocation": "python3 scripts/pios/lens_report_generator.py --client <client_id> --run-id <run_id> --package-dir clients/<client_id>/psee/runs/<run_id>/vault --output-root clients/<client_id>/lens/runs/<run_id>",
+      "sub_stages": ["S11 (GRAPH_STATE_EXPORT runs as subprocess during Tier-2 generation)", "S13 (RUN_METADATA_WRITE runs after all reports written)", "S14 (CURRENT_RUN_MIRROR is final step)"]
+    },
+    {
+      "stage_id": "S11",
+      "name": "GRAPH_STATE_EXPORT",
+      "caller_id": "CALLER-11",
+      "function": "export_graph_state.mjs (subprocess via lens_report_generator.py generate_tier2_reports())",
+      "phase": "Phase 8b sub-stage — Tier-2 graph layout",
+      "automation_status": "AUTOMATED",
+      "inputs": [
+        "app/gauge-product/public/vault/<client_id>/<run_id>/vault_index.json (default) OR --vault-index-path override",
+        "app/gauge-product/node_modules/d3-force-3d"
+      ],
+      "outputs": ["clients/<client_id>/lens/runs/<run_id>/reports/tier2/graph_state.json"],
+      "fail_closed": [
+        "d3-force-3d not available → graph_state.json not written → S10 fail",
+        "vault_index.json missing → S10 fail"
+      ],
+      "invocation": "node scripts/pios/export_graph_state.mjs --client <client_id> --run-id <run_id> --output <path>",
+      "note": "Sole authoritative source of x/y node positions for Tier-2 graph. Uses identical force parameters as VaultGraph.js app component. No Python layout math."
+    },
+    {
+      "stage_id": "S12",
+      "name": "SELECTOR_UPDATE",
+      "caller_id": "CALLER-13",
+      "function": "phase_09_selector_update(client_id, run_id)",
+      "phase": "Phase 9",
+      "automation_status": "AUTOMATED",
+      "inputs": ["clients/<client_id>/lens/selector/ (directory created if missing)"],
+      "outputs": [
+        "clients/<client_id>/lens/selector/selector.json (current_run set to run_id)",
+        "clients/<client_id>/lens/selector/available_runs.json (run_id appended as list entry)"
+      ],
+      "fail_closed": [],
+      "format_note": "Orchestrator writes available_runs.json as a JSON list. Generator (S13) normalizes list to dict {'client': ..., 'runs': [...]} on read. Both forms coexist; generator is authoritative on write.",
+      "note": "selector.json is also overwritten by S13 (generator's _write_canonical_run_metadata). Generator write is authoritative for run_status classification."
+    },
+    {
+      "stage_id": "S13",
+      "name": "RUN_METADATA_WRITE",
+      "caller_id": "CALLER-14",
+      "function": "_write_canonical_run_metadata(output_root, client_id, run_id, client_cfg)",
+      "phase": "Phase 8b sub-stage — post-report metadata",
+      "automation_status": "AUTOMATED",
+      "inputs": ["output_root path", "all generated report files under output_root/reports/"],
+      "outputs": [
+        "clients/<client_id>/lens/runs/<run_id>/index.json",
+        "clients/<client_id>/lens/runs/<run_id>/manifest.json",
+        "clients/<client_id>/lens/selector/selector.json (overwrites S12 output)",
+        "clients/<client_id>/lens/selector/available_runs.json (appends to S12 output)"
+      ],
+      "fail_closed": [],
+      "format_note": "available_runs.json normalization: if file contains a list, normalized to {'client': client, 'runs': list} before appending. Bug fixed in PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.FIXUP.01 BLOCK_E."
+    },
+    {
+      "stage_id": "S14",
+      "name": "CURRENT_RUN_MIRROR",
+      "caller_id": "CALLER-14",
+      "function": "_write_canonical_run_metadata() — shutil.copytree(reports/, current/)",
+      "phase": "Phase 8b sub-stage — final step",
+      "automation_status": "AUTOMATED",
+      "inputs": ["clients/<client_id>/lens/runs/<run_id>/reports/ (complete report family)"],
+      "outputs": ["clients/<client_id>/lens/current/ (full mirror of reports/ directory tree)"],
+      "fail_closed": [],
+      "note": "clients/<client_id>/lens/current/ always reflects the most recently generated run's complete report family. Overwritten on each pipeline execution. Provides stable path for downstream consumers."
+    }
+  ]
+}

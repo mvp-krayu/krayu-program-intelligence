@@ -1,0 +1,10 @@
+client_id: blueedge
+uuid: 6a6fcdbc-41b6-4e0e-99b9-37394f6c870d
+display_name: BlueEdge Platform v3
+source_type: external_archive
+pipeline_mode: multi_contract
+ceu_model: dynamic
+ceu_count: 10
+dom_group_count: 13
+structural_node_count: 35
+default_source: source_01

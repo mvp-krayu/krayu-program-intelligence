@@ -1,0 +1,115 @@
+{
+  "contract_id": "PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01",
+  "artifact": "run_inventory",
+  "block": "BLOCK_A",
+  "generated_date": "2026-05-01",
+  "mode": "FORENSIC / READ_ONLY",
+
+  "baseline_run": {
+    "lens_run_id": "run_blueedge_rerun_01",
+    "lens_path": "clients/blueedge/lens/runs/run_blueedge_rerun_01/",
+    "source_vault": "clients/blueedge/psee/runs/run_blueedge_productized_01/vault/",
+    "generated_at": "2026-04-30T13:46:13.870191+00:00",
+    "validation_status": "PENDING",
+    "reports": {
+      "tier1_evb": "reports/tier1/lens_tier1_evidence_brief.html",
+      "tier1_nar": "reports/tier1/lens_tier1_narrative_brief.html",
+      "tier2_dia": "reports/tier2/lens_tier2_diagnostic_narrative.html",
+      "decision": "reports/decision/lens_decision_surface.html"
+    },
+    "report_md5s": {
+      "decision": "3b9ec463514a745c170419ee17b02337",
+      "tier1_evb": "6378723455b7811dc44b20c5f7041ff2",
+      "tier1_nar": "36d6ea7f849e5dd011ed10cf418f9a3e",
+      "tier2_dia": "4f7d2b7ac6d90cd75f5758b8c98b108f"
+    },
+    "vault_artifacts": [
+      "admissibility_log.json",
+      "binding_envelope.json",
+      "canonical_topology.json",
+      "coverage_state.json",
+      "evidence_trace.json",
+      "gauge_state.json",
+      "reconstruction_state.json",
+      "signal_registry.json",
+      "vault_manifest.json"
+    ],
+    "signal_artifacts": {
+      "signal_registry_path": "clients/blueedge/psee/runs/run_blueedge_productized_01/vault/signal_registry.json",
+      "signal_source": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/signal_registry_fastapi_compatible.json",
+      "pipeline_artifacts_41x": "NONE — no PIOS 41.x pipeline run for baseline",
+      "pipeline_artifacts_75x": "NONE — no PIOS 75.x pipeline run for baseline"
+    },
+    "topology_artifacts": {
+      "canonical_topology": "clients/blueedge/psee/runs/run_blueedge_productized_01/vault/canonical_topology.json",
+      "topology_source": "dom_path_domain_layer.json adapted (PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01)",
+      "structural_input": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/structure/40.3/structural_topology_log.json"
+    },
+    "binding_envelope": {
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01/vault/binding_envelope.json",
+      "nodes": 0,
+      "edges": 0,
+      "capability_surfaces": 0,
+      "note": "Baseline binding_envelope.json in vault is effectively empty (0 nodes, 0 edges). Source: PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01"
+    },
+    "selector_state": "run_blueedge_rerun_01 was current_run until overwritten by orchestrated run"
+  },
+
+  "orchestrated_run": {
+    "lens_run_id": "run_be_orchestrated_01",
+    "lens_path": "clients/blueedge/lens/runs/run_be_orchestrated_01/",
+    "pipeline_run_path": "clients/blueedge/psee/runs/run_be_orchestrated_01/",
+    "source_vault": "clients/blueedge/psee/runs/run_be_orchestrated_01/vault/",
+    "generated_at": "2026-05-01T08:32:09.345485+00:00",
+    "validation_status": "PENDING",
+    "orchestrator": "scripts/pios/run_client_pipeline.py",
+    "source_contract": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.BLUEEDGE.01",
+    "reports": {
+      "tier1_evb": "reports/tier1/lens_tier1_evidence_brief.html",
+      "tier1_nar": "reports/tier1/lens_tier1_narrative_brief.html",
+      "tier2_dia": "reports/tier2/lens_tier2_diagnostic_narrative.html",
+      "decision": "reports/decision/lens_decision_surface.html"
+    },
+    "report_md5s": {
+      "decision": "ddbeddacd1fc044fba938e0f6fd63ec9",
+      "tier1_evb": "fd919ee3e786ba9f7fa0cae3af97d157"
+    },
+    "vault_artifacts": [
+      "admissibility_log.json",
+      "binding_envelope.json",
+      "canonical_topology.json",
+      "coverage_state.json",
+      "evidence_trace.json",
+      "gauge_state.json",
+      "reconstruction_state.json",
+      "signal_registry.json",
+      "vault_manifest.json"
+    ],
+    "signal_artifacts": {
+      "signal_registry_path": "clients/blueedge/psee/runs/run_be_orchestrated_01/vault/signal_registry.json",
+      "signal_source": "clients/blueedge/psee/runs/run_be_orchestrated_01/41.x/signal_projection.json",
+      "pipeline_artifacts_41x": [
+        "41.x/signal_projection.json",
+        "41.x/pressure_zone_projection.json",
+        "41.x/projection_manifest.json"
+      ],
+      "pipeline_artifacts_75x": [
+        "75.x/condition_correlation_state.json",
+        "75.x/pressure_candidate_state.json",
+        "75.x/pressure_zone_state.json"
+      ]
+    },
+    "topology_artifacts": {
+      "canonical_topology": "clients/blueedge/psee/runs/run_be_orchestrated_01/vault/canonical_topology.json",
+      "topology_source": "dom_path_domain_layer.json adapted (same DOM layer as baseline)"
+    },
+    "binding_envelope": {
+      "path": "clients/blueedge/psee/runs/run_be_orchestrated_01/vault/binding_envelope.json",
+      "nodes": 33,
+      "edges": 29,
+      "capability_surfaces": 10,
+      "note": "Orchestrated binding_envelope built by Phase 5 of orchestrator from CEU grounding registry + DOM path domain layer"
+    },
+    "selector_state": "run_be_orchestrated_01 is current_run (set by Phase 9)"
+  }
+}

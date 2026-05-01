@@ -1,0 +1,185 @@
+{
+  "contract_id": "PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01",
+  "artifact": "75x_signal_condition_comparison",
+  "block": "BLOCK_F",
+  "generated_date": "2026-05-01",
+  "mode": "FORENSIC / READ_ONLY",
+
+  "verdict": "SIGNAL_VALUE_DELTA",
+
+  "signal_comparison": [
+    {
+      "signal_id": "PSIG-001",
+      "baseline": {
+        "value": 5.663,
+        "activation_state": "HIGH",
+        "activation_method": "RUN_RELATIVE_OUTLIER",
+        "threshold": 2.0,
+        "population_type": "per_node_outbound_imports",
+        "population_size": 35,
+        "primary_entity": "NODE-0021",
+        "primary_domain": "DOM-04",
+        "zone_id": "PZ-001",
+        "zone_class": "COMPOUND_ZONE",
+        "signal_label": "coupling_pressure",
+        "source_field": "clients/blueedge/psee/runs/run_blueedge_productized_01/vault/signal_registry.json signals[0]"
+      },
+      "orchestrated": {
+        "value": 4.55,
+        "activation_state": "HIGH",
+        "activation_method": "RUN_RELATIVE_OUTLIER",
+        "threshold": 2.0,
+        "population_type": "per_node_inbound_coupling",
+        "population_size": 33,
+        "primary_entity": "CE-04",
+        "primary_domain": "DOM-05",
+        "zone_id": "PZ-001",
+        "zone_class": "COMPOUND_ZONE",
+        "signal_label": "coupling_pressure",
+        "source_field": "clients/blueedge/psee/runs/run_be_orchestrated_01/vault/signal_registry.json signals[0]"
+      },
+      "delta_class": "SIGNAL_VALUE_DELTA",
+      "status_same": true,
+      "value_same": false,
+      "population_type_same": false,
+      "primary_entity_same": false,
+      "explanation": "Baseline uses per_node_outbound_imports (actual IMPORTS count from 40.3, NODE-0021 IMPORTS=69). Orchestrated uses per_node_inbound_coupling (fan_in from binding_envelope DOM→CE edges, CE-04 receives 4 domain edges). Semantically different metrics on different graphs."
+    },
+    {
+      "signal_id": "PSIG-002",
+      "baseline": {
+        "value": 3.2098,
+        "activation_state": "HIGH",
+        "activation_method": "RUN_RELATIVE_OUTLIER",
+        "threshold": 2.0,
+        "population_type": "per_dom_aggregated_imports",
+        "population_size": 13,
+        "primary_entity": null,
+        "primary_domain": null,
+        "zone_id": "PZ-001",
+        "signal_label": "domain_coupling_pressure",
+        "source_field": "clients/blueedge/psee/runs/run_blueedge_productized_01/vault/signal_registry.json signals[1]"
+      },
+      "orchestrated": {
+        "value": 4.55,
+        "activation_state": "HIGH",
+        "activation_method": "RUN_RELATIVE_OUTLIER",
+        "threshold": 2.0,
+        "population_type": "per_node_outbound_exports",
+        "population_size": 33,
+        "primary_entity": null,
+        "primary_domain": "DOM-05",
+        "zone_id": "PZ-001",
+        "signal_label": "export_pressure",
+        "source_field": "clients/blueedge/psee/runs/run_be_orchestrated_01/vault/signal_registry.json signals[1]"
+      },
+      "delta_class": "SIGNAL_VALUE_DELTA",
+      "status_same": true,
+      "value_same": false,
+      "signal_label_same": false,
+      "population_type_same": false,
+      "explanation": "PSIG-002 has different signal_label (domain_coupling_pressure vs export_pressure) and different population_type (per_dom_aggregated_imports vs per_node_outbound_exports). These are semantically different signals despite sharing the same signal_id. Baseline measures aggregated DOM-level imports; orchestrated measures fan_out from binding_envelope."
+    },
+    {
+      "signal_id": "PSIG-004",
+      "baseline": {
+        "value": 2.1822,
+        "activation_state": "HIGH",
+        "activation_method": "RUN_RELATIVE_OUTLIER",
+        "threshold": 2.0,
+        "population_type": "per_zone_node_fraction",
+        "population_size": 7,
+        "primary_entity": "NODE-0021",
+        "primary_domain": "DOM-04",
+        "zone_id": "PZ-001",
+        "signal_label": "zone_coverage_concentration",
+        "source_field": "clients/blueedge/psee/runs/run_blueedge_productized_01/vault/signal_registry.json signals[2]"
+      },
+      "orchestrated": {
+        "value": 1.0,
+        "activation_state": "HIGH",
+        "activation_method": "RUN_RELATIVE_OUTLIER",
+        "threshold": 2.0,
+        "population_type": "cluster_membership",
+        "population_size": 33,
+        "primary_entity": "CE-04",
+        "primary_domain": "DOM-05",
+        "zone_id": "PZ-001",
+        "signal_label": "cluster_fragmentation",
+        "source_field": "clients/blueedge/psee/runs/run_be_orchestrated_01/vault/signal_registry.json signals[2]"
+      },
+      "delta_class": "SIGNAL_VALUE_DELTA",
+      "status_same": true,
+      "value_same": false,
+      "signal_label_same": false,
+      "population_type_same": false,
+      "explanation": "PSIG-004 has different signal_label (zone_coverage_concentration vs cluster_fragmentation) and different population_type. Baseline measures zone node fraction; orchestrated measures cluster membership from binding_envelope connected components. Semantically different."
+    },
+    {
+      "signal_id": "PSIG-006",
+      "baseline": {
+        "value": 0,
+        "activation_state": "ACTIVATED",
+        "activation_method": "THEORETICAL_BASELINE",
+        "threshold": 1,
+        "threshold_type": "binary",
+        "primary_entity": null,
+        "zone_id": null,
+        "signal_label": "unanchored_nodes",
+        "counted_as": "telemetry_signals (1)",
+        "active_pressure_signal": false,
+        "source_field": "clients/blueedge/psee/runs/run_blueedge_productized_01/vault/signal_registry.json signals[3]",
+        "source_note": "THEORETICAL_BASELINE — value=0 means no structural blind spots in 40.3 topology. ACTIVATED only because the condition is checked as a binary gate."
+      },
+      "orchestrated": {
+        "value": 0.15151515151515152,
+        "activation_state": "ACTIVATED",
+        "activation_method": "THEORETICAL_BASELINE",
+        "threshold": 1,
+        "threshold_type": "binary",
+        "primary_entity": "",
+        "zone_id": "",
+        "signal_label": "isolation_pressure",
+        "counted_as": "active_pressure_signals (incorrectly counted — schema bridge bug)",
+        "active_pressure_signal": false,
+        "source_field": "clients/blueedge/psee/runs/run_be_orchestrated_01/vault/signal_registry.json signals[3]",
+        "source_note": "compute_signal_projection.py note: 'PSIG-006 activated; structural blind-spot condition only; NOT a pressure candidate; no zone assigned'. Value=0.15 means ~5 nodes isolated in binding_envelope topology."
+      },
+      "delta_class": "SIGNAL_VALUE_DELTA",
+      "status_same": true,
+      "value_same": false,
+      "signal_label_same": false,
+      "schema_bridge_bug_present": true,
+      "schema_bridge_bug_explanation": "Phase 8a orchestrator counts active_pressure_signals using activation_state in ('HIGH', 'ACTIVATED', 'ACTIVE'). This incorrectly includes PSIG-006 (ACTIVATED/THEORETICAL_BASELINE) in the pressure count. Baseline correctly counts active_pressure_signals=3 (excludes PSIG-006). Orchestrated incorrectly counts active_pressure_signals=4 (includes PSIG-006).",
+      "psig006_correct_count": "telemetry_signals, NOT active_pressure_signals"
+    }
+  ],
+
+  "pressure_zone_comparison": {
+    "baseline_zone_count": 1,
+    "baseline_zones": ["PZ-001 — DOM-04 (backend_app_root) anchor, COMPOUND_ZONE"],
+    "orchestrated_zone_count": 4,
+    "orchestrated_zones": [
+      "PZ-001 — DOM-04 (backend_app_root) anchor, COMPOUND_ZONE",
+      "PZ-002 — DOM-05 (backend_common) anchor, COMPOUND_ZONE",
+      "PZ-003 — DOM-08 (backend_health) anchor, COMPOUND_ZONE",
+      "PZ-004 — DOM-09 (backend_modules) anchor, COMPOUND_ZONE"
+    ],
+    "zone_count_delta": "1 vs 4",
+    "explanation": "PIOS compute_pressure_zones.py finds pressure zones based on domain-level activation counts in the binding_envelope topology. With 4 domains having activation counts >= threshold, 4 zones are created. Baseline had only 1 zone (PZ-001) because the manual conformance analysis found a single compound zone in the 40.3 structural topology."
+  },
+
+  "active_pressure_signals_comparison": {
+    "baseline": 3,
+    "orchestrated": 4,
+    "delta": 1,
+    "delta_cause": "SCHEMA_BRIDGE_BUG in orchestrator Phase 8a"
+  },
+
+  "summary_table": [
+    {"signal": "PSIG-001", "baseline_value": 5.663, "orch_value": 4.55, "baseline_state": "HIGH", "orch_state": "HIGH", "match": "STATUS_MATCH_VALUE_DELTA"},
+    {"signal": "PSIG-002", "baseline_value": 3.2098, "orch_value": 4.55, "baseline_state": "HIGH", "orch_state": "HIGH", "match": "STATUS_MATCH_VALUE_DELTA"},
+    {"signal": "PSIG-004", "baseline_value": 2.1822, "orch_value": 1.0, "baseline_state": "HIGH", "orch_state": "HIGH", "match": "STATUS_MATCH_VALUE_DELTA"},
+    {"signal": "PSIG-006", "baseline_value": 0, "orch_value": 0.15, "baseline_state": "ACTIVATED", "orch_state": "ACTIVATED", "match": "STATUS_MATCH_VALUE_DELTA", "pressure_count_match": false}
+  ]
+}

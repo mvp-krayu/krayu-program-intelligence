@@ -1,0 +1,32 @@
+{
+  "contract_id": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.FIXUP.01",
+  "artifact": "fastapi_gate_decision",
+  "block": "BLOCK_J",
+  "generated_date": "2026-05-01",
+
+  "parity_status": "PARITY_PASS",
+  "fastapi_status": "ALLOWED_AFTER_OPERATOR_APPROVAL",
+
+  "basis": "run_be_orchestrated_fixup_01 achieves full parity with canonical baseline (run_blueedge_rerun_01 / vault run_blueedge_productized_01). All 14 parity checks PASS. Signal values, zone count, zone anchor, score, and PSIG-006 classification all match canonical.",
+
+  "conditions_met": [
+    "PSIG-001 = 5.663 HIGH (canonical match)",
+    "PSIG-002 = 3.2098 HIGH (canonical match)",
+    "PSIG-004 = 2.1822 HIGH (canonical match)",
+    "PSIG-006 = BASELINE / THEORETICAL_BASELINE / value=0 / NOT active pressure signal (canonical match)",
+    "active_pressure_signals = 3 (schema bridge bug fixed)",
+    "pressure_zone_count = 1 / PZ-001 / DOM-04 / COMPOUND_ZONE (canonical match)",
+    "score = 60 / CONDITIONAL / INVESTIGATE (canonical match)",
+    "all 4 reports generated without manual patches"
+  ],
+
+  "operator_approval_required_for": [
+    "Confirming run_be_orchestrated_fixup_01 as the production-bound orchestrated run",
+    "Proceeding to PI.LENS.END-TO-END-RERUN.FASTAPI.01",
+    "Any FastAPI endpoint binding to run_be_orchestrated_fixup_01 vault artifacts"
+  ],
+
+  "next_required_contract": "PI.LENS.END-TO-END-RERUN.FASTAPI.01",
+
+  "remaining_staged_notes": "STAGE_NOT_AUTOMATED is declared for BlueEdge signal computation. The orchestrator uses pre-computed FastAPI conformance artifacts for signal values. This is architecturally correct given the manual conformance computation chain. Future clients may require their own fastapi_conformance_path or a fully automated signal computation pathway."
+}

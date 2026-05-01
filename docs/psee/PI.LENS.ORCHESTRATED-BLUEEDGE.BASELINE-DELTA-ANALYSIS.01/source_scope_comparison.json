@@ -1,0 +1,41 @@
+{
+  "contract_id": "PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01",
+  "artifact": "source_scope_comparison",
+  "block": "BLOCK_B",
+  "generated_date": "2026-05-01",
+  "mode": "FORENSIC / READ_ONLY",
+
+  "verdict": "SOURCE_SCOPE_MATCH",
+
+  "baseline_source": {
+    "archive": "blueedge-platform-v3_23_0-COMPLETE.tar",
+    "archive_path": "/Users/khorrix/Projects/blueedge-clean-run/source-raw/raw/blueedge-platform-v3_23_0-COMPLETE.tar",
+    "sha256": "672a841277541921bf8ade69a467d35d9f105a1525c754fa4b750f0aa50e9c80",
+    "intake_contract": "PI.BLUEEDGE.CLEAN-INTAKE.01",
+    "extracted_path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/intake/canonical_repo",
+    "extracted_file_count": 741,
+    "source_evidence": "run_initialization_manifest.json source_roots.INPUT_BLUEEDGE_ROOT"
+  },
+
+  "orchestrated_source": {
+    "archive": "blueedge-platform-v3_23_0-COMPLETE.tar",
+    "archive_path": "/Users/khorrix/Projects/blueedge-clean-run/source-raw/raw/blueedge-platform-v3_23_0-COMPLETE.tar",
+    "sha256": "672a841277541921bf8ade69a467d35d9f105a1525c754fa4b750f0aa50e9c80",
+    "intake_contract": "PI.BLUEEDGE.CLEAN-INTAKE.01",
+    "extracted_path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/intake/canonical_repo",
+    "extracted_file_count": 741,
+    "source_evidence": "clients/blueedge/sources/source_01/source_manifest.json + Phase 1 SHA256 verification at runtime"
+  },
+
+  "comparison": {
+    "archive_filename_match": true,
+    "archive_path_match": true,
+    "sha256_match": true,
+    "extracted_path_match": true,
+    "extracted_file_count_match": true,
+    "ceu_grounding_source_match": true,
+    "ceu_grounding_note": "Both runs reference clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/grounding_state_v3.json as the CEU grounding authority. grounding_ratio=1.0, 10/10 CEUs at SOURCE_TRUTH."
+  },
+
+  "finding": "Source scope is identical. The same archive (SHA256 verified), same extracted canonical_repo (741 files), same CEU grounding state. SOURCE_SCOPE_DELTA is NOT the cause of signal delta. Delta originates downstream of source in the signal computation pathway."
+}

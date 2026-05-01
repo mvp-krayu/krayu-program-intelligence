@@ -32,19 +32,20 @@ const { forceSimulation, forceManyBody, forceLink } = await import(D3_SRC);
 // CLI args — defaults preserve BlueEdge backward-compatible invocation
 // ---------------------------------------------------------------------------
 const argv = process.argv.slice(2);
-let _client         = "blueedge";
-let _runId          = "run_01_authoritative_generated";
-let _outputOverride = null;
+let _client                 = "blueedge";
+let _runId                  = "run_01_authoritative_generated";
+let _outputOverride         = null;
+let _vaultIndexPathOverride = null;
 for (let i = 0; i < argv.length; i++) {
-  if (argv[i] === "--client" && argv[i + 1]) _client         = argv[i + 1];
-  if (argv[i] === "--run-id" && argv[i + 1]) _runId          = argv[i + 1];
-  if (argv[i] === "--output" && argv[i + 1]) _outputOverride = argv[i + 1];
+  if (argv[i] === "--client"           && argv[i + 1]) _client                 = argv[i + 1];
+  if (argv[i] === "--run-id"           && argv[i + 1]) _runId                  = argv[i + 1];
+  if (argv[i] === "--output"           && argv[i + 1]) _outputOverride         = argv[i + 1];
+  if (argv[i] === "--vault-index-path" && argv[i + 1]) _vaultIndexPathOverride = argv[i + 1];
 }
 
-const VAULT_INDEX_PATH = join(
-  REPO_ROOT, "app", "gauge-product", "public", "vault",
-  _client, _runId, "vault_index.json"
-);
+const VAULT_INDEX_PATH = _vaultIndexPathOverride
+  ? resolve(_vaultIndexPathOverride)
+  : join(REPO_ROOT, "app", "gauge-product", "public", "vault", _client, _runId, "vault_index.json");
 
 const OUTPUT_PATH = _outputOverride
   ? resolve(_outputOverride)

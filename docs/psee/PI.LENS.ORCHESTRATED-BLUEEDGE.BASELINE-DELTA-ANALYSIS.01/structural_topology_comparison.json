@@ -1,0 +1,87 @@
+{
+  "contract_id": "PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01",
+  "artifact": "structural_topology_comparison",
+  "block": "BLOCK_C",
+  "generated_date": "2026-05-01",
+  "mode": "FORENSIC / READ_ONLY",
+
+  "verdict": "STRUCTURAL_DELTA",
+
+  "baseline_topology": {
+    "canonical_topology_path": "clients/blueedge/psee/runs/run_blueedge_productized_01/vault/canonical_topology.json",
+    "canonical_topology_counts": {
+      "total_nodes": 35,
+      "domains": 13,
+      "capabilities": 0,
+      "components": 35,
+      "total_edges": 1937,
+      "coverage_percent": 100.0
+    },
+    "canonical_topology_source": "40.3/structural_topology_log.json (1937 edges) + ceu_node_map.json",
+    "dom_group_count": 13,
+    "dom_layer_source": "dom_path_domain_layer.json (PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01)",
+    "dom_04_membership": ["NODE-0021", "NODE-0022"],
+    "node_0021_presence": true,
+    "node_0021_role": "backend_app_root primary node — IMPORTS=69 in 40.3, highest fan-out in structural topology",
+    "signal_computation_input": {
+      "type": "40.3 structural import topology",
+      "node_count": 35,
+      "edge_count": 1937,
+      "computation_basis": "per_node_outbound_imports from structural_topology_log.json IMPORTS relations",
+      "outlier_node": "NODE-0021",
+      "outlier_value": 69
+    },
+    "binding_envelope_vault": {
+      "nodes": 0,
+      "edges": 0,
+      "capability_surfaces": 0,
+      "note": "Baseline binding_envelope.json in vault is empty — signals NOT computed from binding_envelope"
+    }
+  },
+
+  "orchestrated_topology": {
+    "canonical_topology_path": "clients/blueedge/psee/runs/run_be_orchestrated_01/vault/canonical_topology.json",
+    "canonical_topology_counts": {
+      "total_nodes": 35,
+      "domains": 13,
+      "capabilities": 0,
+      "components": 35,
+      "total_edges": 0,
+      "coverage_percent": 100.0
+    },
+    "canonical_topology_source": "dom_path_domain_layer.json adapted (same DOM layer as baseline)",
+    "dom_group_count": 13,
+    "dom_layer_source": "dom_path_domain_layer.json (same source as baseline)",
+    "dom_04_membership": ["NODE-0021", "NODE-0022"],
+    "node_0021_presence": true,
+    "node_0021_role": "NODE-0021 is in DOM-04 (binding_context) — but signal computation did NOT use NODE-0021 directly; used CE-04 (component entity) as proxy",
+    "signal_computation_input": {
+      "type": "Synthetic binding_envelope (CEU-DOM topology)",
+      "node_count": 33,
+      "edge_count": 29,
+      "computation_basis": "per_node fan_in/fan_out from CEU→DOM binding topology edges (GROUNDS/EXPOSES relations)",
+      "outlier_node": "CE-04 (api_layer)",
+      "outlier_reason": "CE-04 receives edges from DOM-08, DOM-09, DOM-04, DOM-05 (4 domains — highest fan_in in binding_envelope)"
+    },
+    "binding_envelope_vault": {
+      "nodes": 33,
+      "edges": 29,
+      "capability_surfaces": 10,
+      "note": "Orchestrated binding_envelope built by Phase 5 from CEU+DOM derivation. This is the actual signal computation input."
+    }
+  },
+
+  "critical_delta": {
+    "canonical_topology_counts_match": false,
+    "total_edges_differ": "baseline total_edges=1937 (real import graph); orchestrated total_edges=0 (canonical_topology does not include PIOS edges)",
+    "signal_computation_graph_differs": true,
+    "signal_computation_explanation": [
+      "BASELINE: Signals computed from 40.3 structural import graph (35 nodes, 1937 IMPORTS relations). PSIG-001 z-score based on NODE-0021 IMPORTS=69 as the outlier against a population of 35 nodes. This is REAL import topology.",
+      "ORCHESTRATED: Signals computed by PIOS compute_condition_correlation.py using binding_envelope.json (33 synthetic nodes, 29 synthetic edges). Fan_in counts reflect DOM→CE binding topology, NOT actual import counts. Population=33 nodes. CE-04 is the outlier with fan_in=4 (4 DOMs ground it)."
+    ],
+    "these_are_not_equivalent": true,
+    "delta_is_fundamental": "The two signal computation graphs use different edge semantics (IMPORTS vs GROUNDS/EXPOSES), different populations (35 real structural nodes vs 33 synthetic binding nodes), and different outlier detection bases."
+  },
+
+  "dom_04_note": "dom_04_membership matches (NODE-0021, NODE-0022) in both canonical_topology.json files, but the DOM layers are not used as signal computation input — the binding_envelope graph is."
+}

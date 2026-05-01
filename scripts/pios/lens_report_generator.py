@@ -58,8 +58,9 @@ CANONICAL_PKG_DIR = REPO_ROOT / "clients" / "blueedge" / "psee" / "runs" / "run_
 TIER1_REPORTS_DIR    = REPORTS_DIR / "tier1"
 DECISION_REPORTS_DIR = REPORTS_DIR / "decision"
 
-_ACTIVE_CLIENT       = "blueedge"
-_ACTIVE_VAULT_RUN_ID = "run_01_authoritative_generated"
+_ACTIVE_CLIENT          = "blueedge"
+_ACTIVE_VAULT_RUN_ID    = "run_01_authoritative_generated"
+_CANONICAL_OUTPUT_ROOT: Optional[Path] = None
 _SEMANTIC_CROSSWALK:       Optional[Dict] = None
 _SEMANTIC_TOPOLOGY_MODEL:  Optional[Dict] = None
 _SEMANTIC_TOPOLOGY_LAYOUT: Optional[Dict] = None
@@ -246,6 +247,7 @@ class _RenderingContract:
         supporting_visual: str,
         synthesis: str,
         trace: str,
+        support_text: Optional[str] = None,
     ) -> str:
         """RC v2 — reusable Evidence Block Pattern.
 
@@ -268,6 +270,8 @@ class _RenderingContract:
             f'<div class="ds-epb-card-trace">{_sig_trace}</div>'
             if _sig_trace else ""
         )
+        _support_line = (support_text if support_text is not None
+                         else 'All active pressure signals share the same affected domain scope.')
         return (
             f'<div class="ds-epb">'
             f'<div class="ds-epb-section-title">{esc(title)}</div>'
@@ -278,7 +282,7 @@ class _RenderingContract:
             f'<div class="ds-epb-card-main">{esc(insight)}</div>'
             f'{_trace_row}'
             f'<div class="ds-epb-card-support">'
-            f'All active pressure signals share the same affected domain scope.'
+            f'{_support_line}'
             f'</div>'
             f'</div>'
             f'<div class="ds-epb-card-close">'
@@ -896,6 +900,7 @@ def _configure_runtime(
     claims: Optional[List[str]] = None,
     crosswalk_path: Optional[Path] = None,
     semantic_topology_dir: Optional[Path] = None,
+    output_root: Optional[Path] = None,
 ) -> None:
     """Update module-level path and configuration globals from CLI arguments.
 
@@ -904,12 +909,12 @@ def _configure_runtime(
     """
     global LENS_CLAIMS, API_BASE, FRAGMENTS_DIR, REPORTS_DIR, CANONICAL_PKG_DIR
     global TIER1_REPORTS_DIR, TIER2_REPORTS_DIR, DECISION_REPORTS_DIR
-    global _ACTIVE_CLIENT, _ACTIVE_VAULT_RUN_ID, _SEMANTIC_CROSSWALK
-    global _SEMANTIC_TOPOLOGY_MODEL, _SEMANTIC_TOPOLOGY_LAYOUT
+    global _ACTIVE_CLIENT, _ACTIVE_VAULT_RUN_ID, _CANONICAL_OUTPUT_ROOT
+    global _SEMANTIC_CROSSWALK, _SEMANTIC_TOPOLOGY_MODEL, _SEMANTIC_TOPOLOGY_LAYOUT
 
     _ACTIVE_CLIENT = client
-    if client != "blueedge":
-        _ACTIVE_VAULT_RUN_ID = run_id
+    _ACTIVE_VAULT_RUN_ID = run_id
+    _CANONICAL_OUTPUT_ROOT = output_root
 
     if claims:
         LENS_CLAIMS = claims
@@ -4441,6 +4446,26 @@ def generate_tier1_reports(output_dir: Optional[Path] = None) -> List[Path]:
 
 TIER2_REPORTS_DIR = REPORTS_DIR / "tier2"
 
+
+def _resolve_vault_index_for_graph() -> Optional[Path]:
+    """Resolve vault_index.json path for export_graph_state.mjs.
+
+    Tries exact app vault path for the active run ID first.
+    Falls back to the first available vault for the client so T2 generation
+    succeeds even when the canonical run has not yet been deployed to the app vault.
+    """
+    exact = (REPO_ROOT / "app" / "gauge-product" / "public" / "vault"
+             / _ACTIVE_CLIENT / _ACTIVE_VAULT_RUN_ID / "vault_index.json")
+    if exact.exists():
+        return exact
+    vault_base = REPO_ROOT / "app" / "gauge-product" / "public" / "vault" / _ACTIVE_CLIENT
+    if vault_base.is_dir():
+        for entry in sorted(vault_base.iterdir()):
+            vi = entry / "vault_index.json"
+            if vi.exists():
+                return vi
+    return None
+
 FOCUS_DOMAIN_T2 = "DOMAIN-10"
 
 _TIER2_DIAGNOSTIC_CSS = """
@@ -6373,11 +6398,15 @@ def generate_tier2_reports(output_dir: Optional[Path] = None) -> List[Path]:
     # export_graph_state.js is the sole source of x/y — no Python layout math.
     graph_state_path = output_dir / "graph_state.json"
     export_script = REPO_ROOT / "scripts" / "pios" / "export_graph_state.mjs"
+    _vault_vi = _resolve_vault_index_for_graph()
+    if _vault_vi is None:
+        _fail(f"No vault_index.json found for client {_ACTIVE_CLIENT!r} in app vault")
     try:
         subprocess.run(["node", str(export_script),
-                        "--client", _ACTIVE_CLIENT,
-                        "--run-id", _ACTIVE_VAULT_RUN_ID,
-                        "--output", str(graph_state_path)], check=True)
+                        "--client",           _ACTIVE_CLIENT,
+                        "--run-id",           _ACTIVE_VAULT_RUN_ID,
+                        "--vault-index-path", str(_vault_vi),
+                        "--output",           str(graph_state_path)], check=True)
         print(f"[LENS REPORT] Generated: {graph_state_path.resolve()}")
     except (subprocess.CalledProcessError, FileNotFoundError) as e:
         _fail(f"export_graph_state.js failed: {e}")
@@ -6520,6 +6549,21 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
                    ("SAMPLE — Illustrative client environment." if publish_safe
                     else "SAMPLE — BlueEdge data used for demonstration purposes."))
 
+    # Signal separation — active structural vs theoretical baseline vs not-activated
+    _ds_active_struct_sigs = []
+    _ds_baseline_sigs = []
+    _ds_na_sigs: list = []
+    if _use_psig and psig_proj:
+        _ds_active_struct_sigs = [c for c in psig_proj.get("active_conditions_in_scope", [])
+                                   if c.get("activation_method") == "RUN_RELATIVE_OUTLIER"]
+        _ds_baseline_sigs = [c for c in psig_proj.get("active_conditions_in_scope", [])
+                              if c.get("activation_method") == "THEORETICAL_BASELINE"]
+        _ds_na_sigs = psig_proj.get("signals_not_activated", [])
+    _ds_active_count   = len(_ds_active_struct_sigs)
+    _ds_baseline_count = len(_ds_baseline_sigs)
+    _ds_active_ids   = " · ".join(sorted({c["signal_id"] for c in _ds_active_struct_sigs}))
+    _ds_baseline_ids = " · ".join(sorted({c["signal_id"] for c in _ds_baseline_sigs}))
+
     # Structural state: derived from risk + evidence completeness — not hardcoded per client
     _order = {"LOW": 0, "MODERATE": 1, "HIGH": 2}
     _risk_n = _order.get(risk, 1)
@@ -6546,14 +6590,19 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
         _ds_az_dom     = _sem_ctx_ds["active_zone_dom_label"] or ""
         _ds_az_dom_id  = _sem_ctx_ds["active_zone_dom_id"] or ""
         _struct_sentence = (
-            f"Structural evidence layer complete — {_ds_sem_backed}/{_ds_sem_total} semantic domains backed."
+            f"Structural evidence complete within the current evidence scope: "
+            f"{grounded_ct} of {total_doms} structural evidence groups are grounded. "
+            f"Semantic domain coverage is partial: "
+            f"{_ds_sem_backed} of {_ds_sem_total} semantic domains have structural backing; "
+            f"{_ds_sem_only} remain semantic-only."
         )
     else:
         _ds_sem_backed = _ds_sem_total = _ds_sem_only = 0
         _ds_az_label = _ds_az_dom = _ds_az_dom_id = ""
-        _struct_sentence = ("Structure is verified."
-                            if weak_ct == 0 and grounded_ct >= total_doms
-                            else "Structural coverage has gaps.")
+        _struct_sentence = (
+            f"{grounded_ct} of {total_doms} structural evidence groups are grounded. "
+            + (f"{weak_ct} weakly grounded." if weak_ct > 0 else "Structural grounding complete within evidence scope.")
+        )
 
     # Hero rationale — two sentences derived from structural coverage state and evidence state
     _evidence_sentence = ("Execution evidence is incomplete."
@@ -6562,7 +6611,9 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
     _hero_rationale = f"{_struct_sentence} {_evidence_sentence}"
 
     # Hero context tags — labeled structural / evidence / risk (no internal state label)
-    _struct_tag = "STABLE" if (weak_ct == 0 and grounded_ct >= total_doms) else "DEGRADED"
+    _struct_tag = ("STABLE within structural evidence scope"
+                   if (weak_ct == 0 and grounded_ct >= total_doms)
+                   else "DEGRADED")
 
     # Navigation links — client/run scoped
     _ev_name   = "lens_tier1_evidence_brief_pub.html" if publish_safe else "lens_tier1_evidence_brief.html"
@@ -6593,42 +6644,64 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
         if _pz_list_f:
             zone_class = _pz_list_f[0].get("zone_class", "COMPOUND_ZONE")
 
+    # Risk label — qualified when evidence is incomplete and structural pressure is concentrated
+    _risk_explanation = (
+        "driven by evidence incompleteness and concentrated structural pressure"
+        if (risk == "MODERATE" and not exec_eval and zone_count > 0)
+        else ""
+    )
+    _risk_label = f"{risk} — {_risk_explanation}" if _risk_explanation else risk
+
     # ── Confirmed card — prose sentences, no metric dumps ─────────────
     _truth_sentences: list = []
+    _pz_first_f = (pz_proj.get("zone_projection", [{}]) or [{}])[0] if pz_proj else {}
+    _pz_first_zid = _pz_first_f.get("zone_id", "")
+    _pz_first_zcls = _pz_first_f.get("zone_class", "COMPOUND_ZONE")
+    _pz_first_zcls_exec = RC.apply_language(_pz_first_zcls)
     if _sem_ctx_ds["fallback_available"]:
-        _truth_sentences.append(
-            f"Structural evidence is complete for the current evidence layer. "
-            f"Semantic domain coverage: {_ds_sem_backed}/{_ds_sem_total} domains have structural backing. "
-            f"{_ds_sem_only} semantic domains remain projection-only."
-        )
-        if _ds_az_label and _ds_az_dom:
-            _truth_sentences.append(
-                f"The active pressure pattern is centered on {_ds_az_label}, "
-                f"backed by {_ds_az_dom} ({_ds_az_dom_id})."
-                if _ds_az_dom_id and _ds_az_dom != _ds_az_dom_id
-                else f"The active pressure pattern is centered on {_ds_az_label}."
+        if _ds_az_label:
+            _dom_backing_part = (
+                f"backed by {_ds_az_dom_id} / {_ds_az_dom}"
+                if _ds_az_dom_id and _ds_az_dom and _ds_az_dom != _ds_az_dom_id
+                else (f"backed by {_ds_az_dom_id}" if _ds_az_dom_id else "")
             )
-    elif weak_ct == 0 and grounded_ct >= total_doms:
-        _truth_sentences.append("All domains are structurally grounded.")
-        _truth_sentences.append("No incomplete structural areas detected.")
+            _truth_sentences.append(
+                f"The active pressure pattern is centered on {_ds_az_label}"
+                + (f", {_dom_backing_part}." if _dom_backing_part else ".")
+                + f" Expressed as {_pz_first_zcls_exec} with "
+                f"{_ds_active_count} active structural signal{'s' if _ds_active_count != 1 else ''}."
+            )
     else:
+        _truth_sentences.append(_struct_sentence)
+    if _use_psig and _ds_active_count > 0:
         _truth_sentences.append(
-            f"{grounded_ct} of {total_doms} domains are structurally grounded.")
-    if metrics and dep_load not in ("—", "NOT_IN_SCOPE"):
+            f"Active structural signal{'s' if _ds_active_count != 1 else ''}: "
+            f"{_ds_active_ids}."
+        )
+    if _use_psig and _ds_baseline_count > 0:
         _truth_sentences.append(
-            "Dependency and structural density remain within controlled bounds.")
-    if _use_psig and zone_count > 0:
+            f"Baseline signal{'s' if _ds_baseline_count != 1 else ''}: "
+            f"{_ds_baseline_ids} — theoretical baseline condition, not an activated pressure signal."
+        )
+    if _use_psig and zone_count == 1 and _pz_first_zid:
         _truth_sentences.append(
-            "A single structural pressure pattern appears across the system.")
+            f"1 pressure zone identified: {_pz_first_zid}"
+            + (f" — {_ds_az_label}" if _ds_az_label else "") + "."
+        )
+    elif _use_psig and zone_count > 1:
+        _truth_sentences.append(f"{zone_count} pressure zones identified.")
     truth_html = "<br><br>".join(esc(s) for s in _truth_sentences) if _truth_sentences else "—"
 
     # ── Gap items — compressed to short phrases ────────────────────────
     gap_items: list = []
     if not exec_eval:
         gap_items.append("Execution-layer behavioral state")
-    if not_activated:
+    if _ds_na_sigs:
+        _na_ids = " · ".join(str(s) for s in sorted(_ds_na_sigs))
+        gap_items.append(f"Not-activated signals: {_na_ids}")
+    elif not_activated:
         _n = len(not_activated)
-        gap_items.append(f"{_n} structural signal{'s' if _n != 1 else ''} not activated")
+        gap_items.append(f"Not-activated signals: {_n} structural signal{'s' if _n != 1 else ''}")
     if blind_spot:
         gap_items.append("Blind spot coverage active — entities outside zone scope not characterized")
     gap_items += [
@@ -6649,16 +6722,57 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
         _sig_n      = len(_sig_set)
 
         _insight = (
-            f"{_sig_n} signal{'s are' if _sig_n != 1 else ' is'} "
-            f"simultaneously active across the system."
+            f"{_sig_n} structural signal{'s are' if _sig_n != 1 else ' is'} "
+            f"active within the pressure zone."
         )
-        _synthesis_html = (
-            f'<strong>A single structural pressure pattern spans multiple domains.</strong>'
-            f'<br><br>'
-            f'The same signals are present in each zone.<br>'
-            f'The pattern reflects structural co-presence across domains.'
-            f'<br><br>'
-            f'This is not a causal determination.'
+        if _cp:
+            _synthesis_html = (
+                f'<strong>A structural pressure pattern spans {_cp["n_zones"]} zones.</strong>'
+                f'<br><br>'
+                f'The same signals are present in each zone.<br>'
+                f'The pattern reflects structural co-presence across zones.'
+                f'<br><br>'
+                f'This is not a causal determination.'
+            )
+        else:
+            _pz0 = _pz_list_s[0] if _pz_list_s else {}
+            _pz0_anchor      = _pz0.get("anchor_id", "")
+            _pz0_anchor_name = _pz0.get("anchor_name", "")
+            _pz0_zone_id     = _pz0.get("zone_id", "")
+            _pz0_zone_cls    = _pz0.get("zone_class", "COMPOUND_ZONE")
+            _pz0_zone_cls_exec = RC.apply_language(_pz0_zone_cls)
+            _pz0_sem_ctx  = _resolve_dom_to_semantic_context(_pz0_anchor)
+            _pz0_label    = (_pz0_sem_ctx.get("business_label") if _pz0_sem_ctx.get("domain_id")
+                             else _pz0.get("anchor_name", _pz0_anchor))
+            # DOM backing: use technical anchor_name (e.g. backend_app_root), not semantic label
+            _pz0_dom_bk   = (f' / {_pz0_anchor_name}'
+                             if _pz0_anchor_name and _pz0_anchor_name != _pz0_anchor
+                             else "")
+            # Confidence: derive from semantic DOM binding via semantic topology model
+            _pz0_conf_raw = _pz0_sem_ctx.get("confidence", 0.0) if _pz0_sem_ctx.get("domain_id") else None
+            _pz0_lin_stat = _pz0_sem_ctx.get("lineage_status", "") if _pz0_sem_ctx.get("domain_id") else ""
+            _pz0_confidence_str = (
+                f"{_pz0_conf_raw:.2f} — {_pz0_lin_stat}"
+                if (_pz0_conf_raw is not None and _pz0_lin_stat and _pz0_conf_raw > 0)
+                else str(_pz0.get("zone_confidence", "—"))
+            )
+            _synthesis_html = (
+                f'<strong>{esc(_pz0_zone_id)} — {esc(_pz0_label)}</strong>'
+                f'<br><br>'
+                f'DOM backing: {esc(_pz0_anchor)}{_pz0_dom_bk}<br>'
+                f'Signals: {esc(" · ".join(sorted(str(s) for s in _sig_set)))}<br>'
+                f'Zone class: {esc(_pz0_zone_cls_exec)} '
+                f'<span class="rc-trace">(trace: {esc(_pz0_zone_cls)})</span><br>'
+                f'Confidence: {esc(_pz0_confidence_str)}'
+                f'<br><br>'
+                f'This is not a causal determination.'
+            )
+        # Signal convergence support text — derives DOM ID and semantic domain dynamically
+        _signal_support_text = (
+            f"All active signals converge on the same structural domain ({_ds_az_dom_id}), "
+            f"indicating concentrated structural pressure within a single semantic domain."
+            if _ds_az_dom_id
+            else "All active pressure signals share the same affected domain scope."
         )
         pressure_html = (
             '\n  '
@@ -6669,6 +6783,7 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
                 supporting_visual=_render_signal_trace_canvas(graph_state),
                 synthesis=_synthesis_html,
                 trace="",
+                support_text=_signal_support_text,
             )
         )
 
@@ -6719,7 +6834,7 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
         <span class="ds-ctx-sep">·</span>
         <span class="ds-ctx-badge">EVIDENCE: {esc(ev_comp)}</span>
         <span class="ds-ctx-sep">·</span>
-        <span class="ds-ctx-badge">RISK: {esc(risk)}</span>
+        <span class="ds-ctx-badge">RISK: {esc(_risk_label)}</span>
       </div>
     </div>
     {_render_radial_gauge(score, band_lo, band_hi, band_label)}
@@ -6759,11 +6874,13 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
 </html>"""
 
 
-def generate_decision_surface(output_dir: Optional[Path] = None) -> List[Path]:
+def generate_decision_surface(output_dir: Optional[Path] = None,
+                              graph_state_path: Optional[Path] = None) -> List[Path]:
     """Generate the Decision Surface: internal + publish-safe.
 
     Derives all content from canonical package, projection artifacts, gauge state,
     and language layer registry. No client-specific hardcoding.
+    graph_state_path: explicit path to graph_state.json; falls back to TIER2_REPORTS_DIR.
     Returns list of written file paths (2 files).
     """
     if output_dir is None:
@@ -6787,7 +6904,7 @@ def generate_decision_surface(output_dir: Optional[Path] = None) -> List[Path]:
     ll        = _load_language_layer()
 
     graph_state: Optional[Dict] = None
-    _gs_path = TIER2_REPORTS_DIR / "graph_state.json"
+    _gs_path = graph_state_path if graph_state_path is not None else TIER2_REPORTS_DIR / "graph_state.json"
     if _gs_path.exists():
         with open(_gs_path) as f:
             graph_state = json.load(f)
@@ -6842,23 +6959,131 @@ def _main_legacy(output_path: Optional[Path] = None) -> None:
 # Entry point
 # ---------------------------------------------------------------------------
 
+def _write_canonical_run_metadata(output_root: Path) -> None:
+    """Write index.json, manifest.json, selector, and current/ for a canonical run output."""
+    import hashlib
+    import datetime
+
+    run_id = _ACTIVE_VAULT_RUN_ID
+    client = _ACTIVE_CLIENT
+    now_iso = datetime.datetime.now(datetime.timezone.utc).isoformat()
+
+    # Collect all generated report files
+    report_files: List[Path] = []
+    for sub in ("tier1", "tier2", "decision"):
+        rd = output_root / "reports" / sub
+        if rd.exists():
+            report_files.extend(sorted(rd.rglob("*.html")))
+        gs = output_root / "reports" / "tier2" / "graph_state.json"
+        if gs.exists() and gs not in report_files:
+            report_files.append(gs)
+
+    def _file_md5(p: Path) -> str:
+        return hashlib.md5(p.read_bytes()).hexdigest()
+
+    manifest_entries = []
+    for fp in sorted(set(report_files)):
+        if fp.exists():
+            rel = fp.relative_to(output_root)
+            manifest_entries.append({"path": str(rel), "md5": _file_md5(fp), "size": fp.stat().st_size})
+
+    index = {
+        "client": client,
+        "run_id": run_id,
+        "generated_at": now_iso,
+        "source_vault": str(CANONICAL_PKG_DIR),
+        "output_root": str(output_root),
+        "validation_status": "PENDING",
+        "reports": {
+            "tier1_evb": f"reports/tier1/lens_tier1_evidence_brief.html",
+            "tier1_nar": f"reports/tier1/lens_tier1_narrative_brief.html",
+            "tier2_dia": f"reports/tier2/lens_tier2_diagnostic_narrative.html",
+            "decision":  f"reports/decision/lens_decision_surface.html",
+        },
+    }
+    (output_root / "index.json").write_text(
+        json.dumps(index, indent=2), encoding="utf-8")
+    print(f"[LENS REPORT] Generated: {(output_root / 'index.json').resolve()}")
+
+    manifest = {"run_id": run_id, "generated_at": now_iso, "files": manifest_entries}
+    (output_root / "manifest.json").write_text(
+        json.dumps(manifest, indent=2), encoding="utf-8")
+    print(f"[LENS REPORT] Generated: {(output_root / 'manifest.json').resolve()}")
+
+    # Selector files
+    lens_root = output_root.parent.parent  # clients/<client>/lens/
+    selector_dir = lens_root / "selector"
+    selector_dir.mkdir(parents=True, exist_ok=True)
+
+    selector = {
+        "client": client,
+        "current_run": run_id,
+        "updated_at": now_iso,
+        "output_root": str(lens_root),
+        "navigation_base": "/api/report-file",
+    }
+    (selector_dir / "selector.json").write_text(
+        json.dumps(selector, indent=2), encoding="utf-8")
+    print(f"[LENS REPORT] Generated: {(selector_dir / 'selector.json').resolve()}")
+
+    # Update available_runs.json (append-only per run)
+    avail_path = selector_dir / "available_runs.json"
+    if avail_path.exists():
+        avail = json.loads(avail_path.read_text(encoding="utf-8"))
+    else:
+        avail = {"client": client, "runs": []}
+    # Handle list format written by orchestrator (available_runs.json may be a list or dict)
+    if isinstance(avail, list):
+        avail = {"client": client, "runs": avail}
+    existing_ids = {r["run_id"] for r in avail.get("runs", [])}
+    if run_id not in existing_ids:
+        avail["runs"].append({
+            "run_id": run_id,
+            "generated_at": now_iso,
+            "source_vault": str(CANONICAL_PKG_DIR),
+            "validation_status": "PENDING",
+            "reports": index["reports"],
+        })
+    avail_path.write_text(json.dumps(avail, indent=2), encoding="utf-8")
+    print(f"[LENS REPORT] Generated: {avail_path.resolve()}")
+
+    # current/ — mirror of this run's reports
+    import shutil
+    current_dir = lens_root / "current"
+    reports_src = output_root / "reports"
+    if current_dir.exists():
+        shutil.rmtree(current_dir)
+    shutil.copytree(reports_src, current_dir)
+    print(f"[LENS REPORT] Updated: {current_dir.resolve()}")
+
+
 def main(tier1: bool = True, output_path: Optional[Path] = None,
          output_dir: Optional[Path] = None,
-         deliverable: Optional[str] = None) -> None:
+         deliverable: Optional[str] = None,
+         output_root: Optional[Path] = None) -> None:
     if not tier1:
         _main_legacy(output_path=output_path)
         return
+
+    t1_dir  = (output_root / "reports" / "tier1")    if output_root else output_dir
+    t2_dir  = (output_root / "reports" / "tier2")    if output_root else output_dir
+    ds_dir  = (output_root / "reports" / "decision") if output_root else output_dir
+    gs_path = (output_root / "reports" / "tier2" / "graph_state.json") if output_root else None
+
     if deliverable == "tier1":
-        generate_tier1_reports(output_dir=output_dir)
+        generate_tier1_reports(output_dir=t1_dir)
     elif deliverable == "diagnostic":
-        generate_tier2_reports(output_dir=output_dir)
+        generate_tier2_reports(output_dir=t2_dir)
     elif deliverable == "decision":
-        generate_decision_surface(output_dir=output_dir)
+        generate_decision_surface(output_dir=ds_dir, graph_state_path=gs_path)
     else:
         # "all" or None (no --deliverable flag) — generates all surfaces
-        generate_tier1_reports(output_dir=output_dir)
-        generate_tier2_reports()
-        generate_decision_surface()
+        generate_tier1_reports(output_dir=t1_dir)
+        generate_tier2_reports(output_dir=t2_dir)
+        generate_decision_surface(output_dir=ds_dir, graph_state_path=gs_path)
+
+    if output_root:
+        _write_canonical_run_metadata(output_root)
 
 
 if __name__ == "__main__":
@@ -6928,6 +7153,14 @@ if __name__ == "__main__":
         "--semantic-topology-dir", type=Path, default=None,
         help="Optional path to directory containing semantic_topology_model.json and semantic_topology_layout.json"
     )
+    parser.add_argument(
+        "--output-root", type=Path, default=None,
+        help=(
+            "Canonical output root: clients/<client>/lens/runs/<run_id>. "
+            "When provided, derives all report subpaths automatically and generates all surfaces. "
+            "Also writes index.json, manifest.json, selector/, and current/."
+        )
+    )
     args = parser.parse_args()
     _configure_runtime(
         client=args.client,
@@ -6938,6 +7171,7 @@ if __name__ == "__main__":
         claims=args.claims,
         crosswalk_path=args.crosswalk_path,
         semantic_topology_dir=args.semantic_topology_dir,
+        output_root=args.output_root,
     )
     main(tier1=not args.legacy, output_path=args.output, output_dir=args.output_dir,
-         deliverable=args.deliverable)
+         deliverable=args.deliverable, output_root=args.output_root)
