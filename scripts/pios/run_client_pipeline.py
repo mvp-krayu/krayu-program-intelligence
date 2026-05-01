@@ -721,7 +721,7 @@ def phase_08a_vault(
             "grounding": "GROUNDED",
             "confidence": None,
             "cross_domain": False,
-            "evidence_refs": dg["evidence_paths"],
+            "evidence_refs": dg.get("evidence_paths", dg.get("path_patterns", [])),
         })
 
     determinism_hash = hashlib.md5(

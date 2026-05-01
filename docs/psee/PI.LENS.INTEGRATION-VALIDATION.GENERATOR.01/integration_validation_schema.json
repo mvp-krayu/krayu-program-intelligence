@@ -1,0 +1,69 @@
+{
+  "contract_id": "PI.LENS.INTEGRATION-VALIDATION.GENERATOR.01",
+  "artifact": "integration_validation_schema",
+  "generated_date": "2026-05-01",
+  "output_file": "integration/integration_validation.json",
+
+  "schema": {
+    "contract_id":        "string — always PI.LENS.INTEGRATION-VALIDATION.GENERATOR.01",
+    "client":             "string — from CLI --client argument",
+    "run_id":             "string — from CLI --run-id argument",
+    "generated_at":       "string — ISO 8601 UTC timestamp",
+    "validation_status":  "string — PASS | PARTIAL | FAIL",
+    "checks":             "array[CheckRecord]",
+    "summary":            "object — total_checks, passed, failed"
+  },
+
+  "check_record_schema": {
+    "check_id":  "string — IV-NN (zero-padded to 2 digits)",
+    "name":      "string — snake_case check name",
+    "status":    "string — PASS | FAIL",
+    "evidence":  "array[string] — artifact paths or metric values observed",
+    "notes":     "string — human-readable result summary"
+  },
+
+  "summary_schema": {
+    "total_checks": "integer — total number of checks run",
+    "passed":       "integer — number of checks with status PASS",
+    "failed":       "integer — number of checks with status FAIL"
+  },
+
+  "validation_status_values": {
+    "PASS":    "All 12 checks passed",
+    "PARTIAL": "Some checks failed (at least 1 pass, at least 1 fail)",
+    "FAIL":    "All checks failed"
+  },
+
+  "output_path_template": "clients/<client_id>/psee/runs/<run_id>/integration/integration_validation.json",
+
+  "required_checks": [
+    {"check_id": "IV-01", "name": "intake_manifest_exists",                 "type": "existence"},
+    {"check_id": "IV-02", "name": "source_inventory_exists",                 "type": "existence"},
+    {"check_id": "IV-03", "name": "structural_node_inventory_exists",        "type": "existence"},
+    {"check_id": "IV-04", "name": "structural_topology_log_exists",          "type": "existence"},
+    {"check_id": "IV-05", "name": "canonical_topology_exists",               "type": "existence"},
+    {"check_id": "IV-06", "name": "grounding_state_exists",                  "type": "existence"},
+    {"check_id": "IV-07", "name": "dom_layer_exists",                        "type": "existence"},
+    {"check_id": "IV-08", "name": "binding_envelope_exists",                 "type": "existence"},
+    {"check_id": "IV-09", "name": "node_count_consistency",                  "type": "consistency"},
+    {"check_id": "IV-10", "name": "ceu_count_consistency",                   "type": "consistency"},
+    {"check_id": "IV-11", "name": "dom_node_coverage",                       "type": "coverage"},
+    {"check_id": "IV-12", "name": "no_blueedge_contamination_for_fastapi",   "type": "isolation"}
+  ],
+
+  "fastapi_example": {
+    "validation_status": "PASS",
+    "summary": {"total_checks": 12, "passed": 12, "failed": 0},
+    "sample_checks": [
+      {"check_id": "IV-09", "name": "node_count_consistency", "status": "PASS",
+       "evidence": ["structural_node_inventory: 123 nodes", "dom_layer total_nodes: 123"],
+       "notes": "Node counts match: 123"},
+      {"check_id": "IV-10", "name": "ceu_count_consistency", "status": "PASS",
+       "evidence": ["grounding_state total_ceu: 10", "binding_envelope component_entity_count: 10"],
+       "notes": "CEU counts match: 10"},
+      {"check_id": "IV-11", "name": "dom_node_coverage", "status": "PASS",
+       "evidence": ["123 nodes in inventory", "123 nodes in dom_layer node_to_domain_map"],
+       "notes": "All 123 structural nodes covered by DOM layer"}
+    ]
+  }
+}
