@@ -1,0 +1,29 @@
+{
+  "contract_id": "PI.LENS.BLUEEDGE-CANONICAL-REPORT-PATHS.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-01",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+  "working_tree_at_start": "CLEAN",
+  "working_tree_at_end": "MODIFIED — docs/psee/PI.LENS.BLUEEDGE-CANONICAL-REPORT-PATHS.01/ (untracked evidence only)",
+  "baseline_commit": "116dca3",
+
+  "files_created_this_contract": [
+    "docs/psee/PI.LENS.BLUEEDGE-CANONICAL-REPORT-PATHS.01/canonical_report_paths.json",
+    "docs/psee/PI.LENS.BLUEEDGE-CANONICAL-REPORT-PATHS.01/canonical_report_paths.md",
+    "docs/psee/PI.LENS.BLUEEDGE-CANONICAL-REPORT-PATHS.01/no_mutation_attestation.md",
+    "docs/psee/PI.LENS.BLUEEDGE-CANONICAL-REPORT-PATHS.01/git_hygiene.json"
+  ],
+  "files_modified_this_contract": [],
+  "files_deleted_this_contract": [],
+
+  "canonical_reports_mutation_check": "PASS — all four report files read-only, not modified",
+  "search_performed": false,
+  "generation_performed": false,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[LOCK] PI.LENS.BLUEEDGE-CANONICAL-REPORT-PATHS.01 — Canonical BlueEdge report paths locked by operator confirmation",
+
+  "git_hygiene_status": "COMPLETE"
+}
