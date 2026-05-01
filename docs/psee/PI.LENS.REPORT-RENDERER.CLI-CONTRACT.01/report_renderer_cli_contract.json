@@ -1,0 +1,93 @@
+{
+  "contract_id": "PI.LENS.REPORT-RENDERER.CLI-CONTRACT.01",
+  "generated_date": "2026-05-01",
+  "status": "LOCKED",
+
+  "script": "scripts/pios/lens_report_generator.py",
+  "client": "blueedge",
+  "canonical_run_id": "run_blueedge_productized_01_fixed",
+  "data_source_run": "run_be_orchestrated_fixup_01",
+  "package_dir": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault",
+
+  "canonical_command": {
+    "interpreter": "python3",
+    "script": "scripts/pios/lens_report_generator.py",
+    "flags": [
+      {"flag": "--client",      "value": "blueedge"},
+      {"flag": "--run-id",      "value": "run_blueedge_productized_01_fixed"},
+      {"flag": "--package-dir", "value": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault"},
+      {"flag": "--output-dir",  "value": "<output_directory>"}
+    ],
+    "shell_form": "python3 scripts/pios/lens_report_generator.py --client blueedge --run-id run_blueedge_productized_01_fixed --package-dir clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault --output-dir <output_directory>"
+  },
+
+  "required_inputs": [
+    {
+      "name": "canonical_topology.json",
+      "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/canonical_topology.json",
+      "status": "EXISTS"
+    },
+    {
+      "name": "signal_registry.json",
+      "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/signal_registry.json",
+      "status": "EXISTS"
+    },
+    {
+      "name": "gauge_state.json",
+      "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/gauge_state.json",
+      "status": "EXISTS"
+    },
+    {
+      "name": "signal_projection.json",
+      "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/41.x/signal_projection.json",
+      "status": "EXISTS"
+    },
+    {
+      "name": "pressure_zone_projection.json",
+      "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/41.x/pressure_zone_projection.json",
+      "status": "EXISTS"
+    },
+    {
+      "name": "binding_envelope.json",
+      "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/binding/binding_envelope.json",
+      "status": "EXISTS"
+    }
+  ],
+
+  "deliverable_dependencies": {
+    "tier1": {
+      "requires_api": false,
+      "requires_nodejs": false,
+      "requires_fragments_dir": false,
+      "inputs": "CANONICAL_PKG_DIR and CANONICAL_PKG_DIR.parent only"
+    },
+    "tier2_diagnostic": {
+      "requires_api": false,
+      "requires_nodejs": true,
+      "requires_fragments_dir": false,
+      "additional_dependency": "export_graph_state.mjs + vault_index.json for graph state export"
+    },
+    "decision": {
+      "requires_api": false,
+      "requires_nodejs": false,
+      "requires_fragments_dir": false,
+      "inputs": "CANONICAL_PKG_DIR only"
+    }
+  },
+
+  "package_dir_resolution": {
+    "default_behavior": "clients/{client}/psee/runs/{run_id}/package",
+    "override_flag": "--package-dir",
+    "override_required": true,
+    "reason": "run_be_orchestrated_fixup_01 vault is at .../vault not .../package"
+  },
+
+  "run_id_rationale": {
+    "flag_used": "--run-id run_blueedge_productized_01_fixed",
+    "effect": "Sets _ACTIVE_VAULT_RUN_ID, embedded in HTML nav links via _scoped_report_url()",
+    "note": "Decoupled from --package-dir; --package-dir controls data source, --run-id controls report identity"
+  },
+
+  "prior_fail_reference": "PI.LENS.BLUEEDGE-REPORT-PARITY-ENFORCEMENT.01",
+  "prior_fail_cause": "Missing --package-dir flag; script defaulted to non-existent .../package path"
+}
