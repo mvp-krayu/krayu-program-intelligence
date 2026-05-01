@@ -21,3 +21,12 @@ clients/*/reports/
 .env.local
 clients/*/psee/runs/*/fragments/
 clients/*/vaults/
+# Runtime pipeline outputs
+clients/*/psee/runs/
+clients/*/lens/
+clients/*/fragments/
+app/gauge-product/public/vault/
+# Local intake artifacts
+clients/*/psee/intake/
+# Brain (until governed)
+docs/brain/
