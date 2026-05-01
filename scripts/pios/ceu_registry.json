@@ -1,0 +1,170 @@
+{
+  "registry_id": "GENERIC-CEU-REGISTRY-V1",
+  "version": "1.0",
+  "contract_id": "PI.LENS.CEU-GROUNDING.GENERIC.01",
+  "semantic_inference": "FORBIDDEN",
+  "detection_basis": "structural_pattern_matching_only",
+  "description": "Generic CEU registry for structural-only CEU grounding. All detection is deterministic — no filesystem scanning, no content reading, no semantic inference. Rules are evaluated against 40.2 structural node paths only.",
+
+  "rule_types": {
+    "path_prefix":          "node.path.startswith(value)",
+    "path_contains":        "value in node.path  (substring match, case-sensitive)",
+    "filename_equals":      "Path(node.path).name == value",
+    "extension_equals":     "Path(node.path).suffix.lower() == value",
+    "dir_component_equals": "value in Path(node.path).parts  (any path component, exact match)"
+  },
+
+  "activation_classes": {
+    "FULL":            "Present → grounded = true",
+    "LIMITED":         "Present AND node_count >= 2 → grounded = true; else grounded = false",
+    "STRUCTURAL_ONLY": "Present → grounded = false (structural evidence, not grounded capability)",
+    "NONE":            "Not present → grounded = false (set at runtime, not in registry)"
+  },
+
+  "ceus": [
+    {
+      "ceu_id": "CEU-01",
+      "name": "APPLICATION_CORE",
+      "description": "Primary application source code tree",
+      "default_activation_class": "FULL",
+      "detection_rules": [
+        {"type": "path_prefix",           "value": "src/"},
+        {"type": "dir_component_equals",  "value": "app"},
+        {"type": "dir_component_equals",  "value": "lib"},
+        {"type": "dir_component_equals",  "value": "pkg"}
+      ]
+    },
+    {
+      "ceu_id": "CEU-02",
+      "name": "SERVICE_LAYER",
+      "description": "Service modules or microservice directories",
+      "default_activation_class": "FULL",
+      "detection_rules": [
+        {"type": "dir_component_equals",  "value": "services"},
+        {"type": "path_contains",         "value": "_service/"},
+        {"type": "path_contains",         "value": "microservice"}
+      ]
+    },
+    {
+      "ceu_id": "CEU-03",
+      "name": "DATA_LAYER",
+      "description": "Data models, ORM definitions, and database access",
+      "default_activation_class": "FULL",
+      "detection_rules": [
+        {"type": "path_contains",         "value": "model"},
+        {"type": "path_contains",         "value": "database"},
+        {"type": "path_contains",         "value": "migration"},
+        {"type": "path_contains",         "value": ".sqlite"},
+        {"type": "filename_equals",       "value": "schema.py"}
+      ]
+    },
+    {
+      "ceu_id": "CEU-04",
+      "name": "API_ROUTING",
+      "description": "API route handlers, routers, and endpoint definitions",
+      "default_activation_class": "FULL",
+      "detection_rules": [
+        {"type": "dir_component_equals",  "value": "routers"},
+        {"type": "dir_component_equals",  "value": "routes"},
+        {"type": "dir_component_equals",  "value": "endpoints"},
+        {"type": "dir_component_equals",  "value": "views"},
+        {"type": "filename_equals",       "value": "router.py"},
+        {"type": "filename_equals",       "value": "routes.py"}
+      ]
+    },
+    {
+      "ceu_id": "CEU-05",
+      "name": "CONFIGURATION",
+      "description": "Project configuration files and environment definitions",
+      "default_activation_class": "FULL",
+      "detection_rules": [
+        {"type": "filename_equals",       "value": "pyproject.toml"},
+        {"type": "filename_equals",       "value": "config.yaml"},
+        {"type": "filename_equals",       "value": "config.yml"},
+        {"type": "filename_equals",       "value": "config.json"},
+        {"type": "filename_equals",       "value": "settings.py"},
+        {"type": "filename_equals",       "value": "Dockerfile"},
+        {"type": "filename_equals",       "value": "docker-compose.yml"},
+        {"type": "filename_equals",       "value": "docker-compose.yaml"},
+        {"type": "extension_equals",      "value": ".env"},
+        {"type": "filename_equals",       "value": "requirements.txt"},
+        {"type": "filename_equals",       "value": "package.json"}
+      ]
+    },
+    {
+      "ceu_id": "CEU-06",
+      "name": "TESTING",
+      "description": "Test suite, test files, and test infrastructure",
+      "default_activation_class": "FULL",
+      "detection_rules": [
+        {"type": "dir_component_equals",  "value": "tests"},
+        {"type": "dir_component_equals",  "value": "test"},
+        {"type": "dir_component_equals",  "value": "__tests__"},
+        {"type": "dir_component_equals",  "value": "spec"},
+        {"type": "path_contains",         "value": "test_"},
+        {"type": "path_contains",         "value": "_test."}
+      ]
+    },
+    {
+      "ceu_id": "CEU-07",
+      "name": "CI_CD",
+      "description": "Continuous integration and deployment pipelines",
+      "default_activation_class": "FULL",
+      "detection_rules": [
+        {"type": "path_prefix",           "value": ".github/"},
+        {"type": "path_prefix",           "value": ".gitlab/"},
+        {"type": "filename_equals",       "value": "Makefile"},
+        {"type": "filename_equals",       "value": "Jenkinsfile"},
+        {"type": "filename_equals",       "value": ".travis.yml"},
+        {"type": "path_contains",         "value": "workflow"},
+        {"type": "path_contains",         "value": "pipeline"}
+      ]
+    },
+    {
+      "ceu_id": "CEU-08",
+      "name": "GENERATED_ARTIFACTS",
+      "description": "Generated code, API specifications, and build outputs — structural presence only",
+      "default_activation_class": "STRUCTURAL_ONLY",
+      "detection_rules": [
+        {"type": "dir_component_equals",  "value": "generated"},
+        {"type": "path_contains",         "value": "openapi"},
+        {"type": "dir_component_equals",  "value": "dist"},
+        {"type": "dir_component_equals",  "value": "build"},
+        {"type": "dir_component_equals",  "value": "output"}
+      ]
+    },
+    {
+      "ceu_id": "CEU-09",
+      "name": "LOGGING_OBSERVABILITY",
+      "description": "Logging infrastructure, middleware, and observability tooling",
+      "default_activation_class": "FULL",
+      "detection_rules": [
+        {"type": "dir_component_equals",  "value": "logging"},
+        {"type": "dir_component_equals",  "value": "middleware"},
+        {"type": "filename_equals",       "value": "log_config.json"},
+        {"type": "path_contains",         "value": "log_config"},
+        {"type": "path_contains",         "value": "observabilit"},
+        {"type": "path_contains",         "value": "getLogger"}
+      ]
+    },
+    {
+      "ceu_id": "CEU-10",
+      "name": "DEPENDENCY_MANAGEMENT",
+      "description": "Package management and dependency lock files",
+      "default_activation_class": "FULL",
+      "detection_rules": [
+        {"type": "filename_equals",       "value": "pyproject.toml"},
+        {"type": "filename_equals",       "value": "uv.lock"},
+        {"type": "extension_equals",      "value": ".lock"},
+        {"type": "filename_equals",       "value": "Pipfile"},
+        {"type": "filename_equals",       "value": "Pipfile.lock"},
+        {"type": "filename_equals",       "value": "poetry.lock"},
+        {"type": "filename_equals",       "value": "go.sum"},
+        {"type": "filename_equals",       "value": "go.mod"},
+        {"type": "filename_equals",       "value": "package-lock.json"},
+        {"type": "filename_equals",       "value": "yarn.lock"},
+        {"type": "filename_equals",       "value": "Gemfile.lock"}
+      ]
+    }
+  ]
+}

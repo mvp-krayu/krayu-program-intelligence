@@ -1,0 +1,89 @@
+{
+  "contract_id": "PI.LENS.CEU-GROUNDING.GENERIC.01",
+  "artifact": "validation_result",
+  "generated_date": "2026-05-01",
+  "client": "fastapi",
+  "run_id": "run_02_oss_fastapi_pipeline",
+
+  "validate_only_run": {
+    "command": "python3 scripts/pios/ceu_grounding.py --client fastapi --run-id run_02_oss_fastapi_pipeline --validate-only",
+    "exit_code": 0,
+    "result": "PASS",
+    "inputs_valid": true,
+    "files_written": []
+  },
+
+  "dry_run": {
+    "command": "python3 scripts/pios/ceu_grounding.py --client fastapi --run-id run_02_oss_fastapi_pipeline --dry-run",
+    "exit_code": 0,
+    "result": "PASS",
+    "grounded_count": 9,
+    "total_ceu": 10,
+    "grounding_ratio": 0.9,
+    "validation_status": "PASS",
+    "files_written": []
+  },
+
+  "write_run": {
+    "command": "python3 scripts/pios/ceu_grounding.py --client fastapi --run-id run_02_oss_fastapi_pipeline",
+    "exit_code": 0,
+    "result": "PASS",
+    "grounded_count": 9,
+    "total_ceu": 10,
+    "grounding_ratio": 0.9,
+    "coverage_classification": "HIGH",
+    "validation_status": "PASS",
+    "files_written": [
+      "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/ceu/grounding_state_v3.json"
+    ]
+  },
+
+  "create_only_guard_test": {
+    "command": "python3 scripts/pios/ceu_grounding.py --client fastapi --run-id run_02_oss_fastapi_pipeline (re-run)",
+    "exit_code": 1,
+    "result": "FAIL-CLOSED",
+    "error": "CREATE_ONLY violation — output already exists: clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/ceu/grounding_state_v3.json",
+    "guard_status": "PASS — correctly blocked overwrite"
+  },
+
+  "artifact_checks": {
+    "grounding_state_v3_exists": true,
+    "grounding_state_v3_valid_json": true,
+    "path": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/ceu/grounding_state_v3.json"
+  },
+
+  "schema_checks": {
+    "contract_id_field": "PRESENT — PI.LENS.CEU-GROUNDING.GENERIC.01",
+    "total_ceu_field": "PRESENT — 10",
+    "grounded_count_field": "PRESENT — 9",
+    "grounding_ratio_field": "PRESENT — 0.9",
+    "coverage_classification_field": "PRESENT — HIGH",
+    "validation_status_field": "PRESENT — PASS",
+    "ceus_array": "PRESENT — 10 records",
+    "ceu_required_fields": "PASS — all records have ceu_id, present, grounded, activation_class, evidence_paths, node_count"
+  },
+
+  "ceu_evaluation": {
+    "CEU-01_APPLICATION_CORE":    {"grounded": true,  "node_count": 64},
+    "CEU-02_SERVICE_LAYER":       {"grounded": true,  "node_count": 44},
+    "CEU-03_DATA_LAYER":          {"grounded": true,  "node_count":  8},
+    "CEU-04_API_ROUTING":         {"grounded": true,  "node_count":  8},
+    "CEU-05_CONFIGURATION":       {"grounded": true,  "node_count":  2},
+    "CEU-06_TESTING":             {"grounded": true,  "node_count": 11},
+    "CEU-07_CI_CD":               {"grounded": true,  "node_count":  2},
+    "CEU-08_GENERATED_ARTIFACTS": {"grounded": false, "node_count":  5, "reason": "STRUCTURAL_ONLY activation class"},
+    "CEU-09_LOGGING_OBSERVABILITY":{"grounded": true, "node_count":  9},
+    "CEU-10_DEPENDENCY_MANAGEMENT":{"grounded": true, "node_count":  2}
+  },
+
+  "scope_guards": {
+    "semantic_inference_performed": false,
+    "blueedge_artifacts_modified": false,
+    "fastapi_source_files_modified": false,
+    "dom_41x_75x_performed": false,
+    "previous_run_artifacts_read": false,
+    "filesystem_scanning_outside_structure": false
+  },
+
+  "overall_validation": "PASS"
+}
