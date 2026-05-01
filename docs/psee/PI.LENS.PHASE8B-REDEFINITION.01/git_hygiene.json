@@ -1,0 +1,53 @@
+{
+  "contract_id": "PI.LENS.PHASE8B-REDEFINITION.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-01",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+  "working_tree_at_start": "CLEAN",
+  "working_tree_at_end": "MODIFIED — scripts/pios/run_client_pipeline.py (1 file, staged for commit)",
+  "baseline_commit": "ccf0721",
+
+  "files_created_this_contract": [
+    "docs/psee/PI.LENS.PHASE8B-REDEFINITION.01/phase8b_redefinition_decision.md",
+    "docs/psee/PI.LENS.PHASE8B-REDEFINITION.01/vault_readiness_schema.json",
+    "docs/psee/PI.LENS.PHASE8B-REDEFINITION.01/implementation_summary.md",
+    "docs/psee/PI.LENS.PHASE8B-REDEFINITION.01/pipeline_validation_result.json",
+    "docs/psee/PI.LENS.PHASE8B-REDEFINITION.01/architectural_boundary_confirmation.md",
+    "docs/psee/PI.LENS.PHASE8B-REDEFINITION.01/git_hygiene.json"
+  ],
+  "files_modified_this_contract": [
+    "scripts/pios/run_client_pipeline.py"
+  ],
+  "files_deleted_this_contract": [],
+
+  "diff_stats": {
+    "file": "scripts/pios/run_client_pipeline.py",
+    "insertions": 89,
+    "deletions": 21,
+    "net": "+68"
+  },
+
+  "changes_in_run_client_pipeline": [
+    {"location": "line 14 (docstring)",    "change": "Phase 8b label: Lens Reports → Vault Readiness Validation"},
+    {"location": "lines 969–995 (func)",   "change": "Removed phase_08b_lens_reports(); added phase_08b_vault_readiness()"},
+    {"location": "lines 1150–1151 (list)", "change": "Phase label + lambda updated to new function"}
+  ],
+
+  "lens_report_generator_references_remaining": 0,
+
+  "runtime_artifacts_created": {
+    "vault_readiness": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/vault/vault_readiness.json",
+    "status": "READY",
+    "note": "clients/*/lens/ and clients/*/reports/ are gitignored — pipeline itself generated no HTML this run"
+  },
+
+  "blueedge_mutation_check": "PASS — no files under clients/blueedge/ were created or modified by this contract",
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[ARCH] PI.LENS.PHASE8B-REDEFINITION.01 — Phase 8b redefined as vault readiness validation; report generation removed from pipeline",
+  "commit_note": "Commits are operator action per CLAUDE.md Section 7.1. Two paths to commit: (1) scripts/pios/run_client_pipeline.py + (2) docs/psee/PI.LENS.PHASE8B-REDEFINITION.01/. Runtime vault_readiness.json is gitignored.",
+
+  "git_hygiene_status": "COMPLETE"
+}

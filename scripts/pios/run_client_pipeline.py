@@ -11,7 +11,7 @@ Multi-client E2E pipeline orchestrator. Executes 9 phases:
   Phase 5  — Build Binding Envelope (CEU + DOM → FastAPI PIOS schema)
   Phase 6+7 — 75.x Activation + 41.x Projection (run_end_to_end.py)
   Phase 8a — Vault Construction (coverage/gauge/signals/topology)
-  Phase 8b — Lens Reports (lens_report_generator.py)
+  Phase 8b — Vault Readiness Validation (vault_readiness.json)
   Phase 9  — Selector Update (selector.json + available_runs.json)
 
 Usage:
@@ -966,32 +966,100 @@ def phase_08a_vault(
     return True
 
 
-# ── Phase 8b: Lens Reports ────────────────────────────────────────────────────
+# ── Phase 8b: Vault Readiness Validation ─────────────────────────────────────
 
-def phase_08b_lens_reports(client_cfg: dict, run_id: str) -> bool:
+def phase_08b_vault_readiness(client_cfg: dict, run_dir: Path, run_id: str) -> bool:
     alias = client_cfg.get("client_id", "")
-    vault_dir = f"clients/{alias}/psee/runs/{run_id}/vault"
-    output_root = f"clients/{alias}/lens/runs/{run_id}"
+    vault_dir = run_dir / "vault"
+    vault_dir.mkdir(parents=True, exist_ok=True)
 
-    script = SCRIPTS_DIR / "lens_report_generator.py"
-    if not script.exists():
-        print(f"  FAIL: lens_report_generator.py not found at {script}")
+    readiness_path = vault_dir / "vault_readiness.json"
+    if readiness_path.exists():
+        print(f"  FAIL: vault_readiness.json already exists (CREATE_ONLY)")
         return False
 
-    cmd = [
-        sys.executable, str(script),
-        "--client", alias,
-        "--run-id", run_id,
-        "--package-dir", vault_dir,
-        "--output-root", output_root,
+    required_artifacts = [
+        ("VR-01", "intake/intake_manifest.json"),
+        ("VR-02", "structure/40.2/structural_node_inventory.json"),
+        ("VR-03", "structure/40.3/structural_topology_log.json"),
+        ("VR-04", "structure/40.4/canonical_topology.json"),
+        ("VR-05", "ceu/grounding_state_v3.json"),
+        ("VR-06", "dom/dom_layer.json"),
+        ("VR-07", "binding/binding_envelope.json"),
+        ("VR-08", "integration/integration_validation.json"),
     ]
-    print(f"  Running: lens_report_generator.py --client {alias} --run-id {run_id}")
-    result = subprocess.run(cmd, cwd=str(REPO_ROOT))
-    if result.returncode != 0:
-        print(f"  FAIL: lens_report_generator.py exited with code {result.returncode}")
+
+    checks = []
+    all_pass = True
+
+    for check_id, rel_path in required_artifacts:
+        artifact_path = run_dir / rel_path
+        if not artifact_path.exists():
+            checks.append({
+                "check_id": check_id,
+                "status": "FAIL",
+                "path": str(artifact_path.relative_to(REPO_ROOT)),
+                "reason": "FILE_NOT_FOUND",
+            })
+            all_pass = False
+            continue
+        try:
+            load_json(artifact_path)
+            checks.append({
+                "check_id": check_id,
+                "status": "PASS",
+                "path": str(artifact_path.relative_to(REPO_ROOT)),
+            })
+        except Exception as exc:
+            checks.append({
+                "check_id": check_id,
+                "status": "FAIL",
+                "path": str(artifact_path.relative_to(REPO_ROOT)),
+                "reason": f"INVALID_JSON: {exc}",
+            })
+            all_pass = False
+
+    # VR-09: integration_validation_status = PASS
+    iv_path = run_dir / "integration/integration_validation.json"
+    iv_check: dict = {
+        "check_id": "VR-09",
+        "path": str(iv_path.relative_to(REPO_ROOT)),
+    }
+    if iv_path.exists():
+        try:
+            iv = load_json(iv_path)
+            iv_status = iv.get("validation_status", "")
+            if iv_status == "PASS":
+                iv_check["status"] = "PASS"
+            else:
+                iv_check["status"] = "FAIL"
+                iv_check["reason"] = f"validation_status={iv_status!r} (expected PASS)"
+                all_pass = False
+        except Exception as exc:
+            iv_check["status"] = "FAIL"
+            iv_check["reason"] = f"INVALID_JSON: {exc}"
+            all_pass = False
+    else:
+        iv_check["status"] = "FAIL"
+        iv_check["reason"] = "FILE_NOT_FOUND"
+        all_pass = False
+    checks.append(iv_check)
+
+    overall = "READY" if all_pass else "FAIL"
+    save_json(readiness_path, {
+        "client": alias,
+        "run_id": run_id,
+        "status": overall,
+        "checks": checks,
+        "validation_timestamp": datetime.now(timezone.utc).isoformat(),
+    })
+
+    if not all_pass:
+        fail_count = sum(1 for c in checks if c["status"] == "FAIL")
+        print(f"  FAIL: Vault readiness check failed — {fail_count} check(s) FAIL")
         return False
 
-    print(f"  PASS: Lens reports generated at {output_root}")
+    print(f"  PASS: Vault is READY — {len(checks)} checks PASS — {readiness_path.relative_to(REPO_ROOT)}")
     return True
 
 
@@ -1079,8 +1147,8 @@ def main() -> int:
          lambda: phase_06_and_07_e2e(run_dir, source_manifest)),
         ("Phase 8a — Vault Construction",
          lambda: phase_08a_vault(client_cfg, source_manifest, run_dir, run_id)),
-        ("Phase 8b — Lens Reports",
-         lambda: phase_08b_lens_reports(client_cfg, run_id)),
+        ("Phase 8b — Vault Readiness",
+         lambda: phase_08b_vault_readiness(client_cfg, run_dir, run_id)),
         ("Phase 9  — Selector Update",
          lambda: phase_09_selector_update(client_cfg, run_id)),
     ]
