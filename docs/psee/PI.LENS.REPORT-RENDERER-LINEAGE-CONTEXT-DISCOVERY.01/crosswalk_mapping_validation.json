@@ -1,0 +1,41 @@
+{
+  "contract_id": "PI.LENS.REPORT-RENDERER-LINEAGE-CONTEXT-DISCOVERY.01",
+  "generated_date": "2026-05-01",
+
+  "crosswalk_file": "clients/blueedge/psee/runs/run_blueedge_productized_01_dom_lineage_validation/language_layer/semantic_continuity_crosswalk.json",
+  "crosswalk_version": "2.0",
+  "continuity_model_version": "2.0",
+  "source_contract": "PI.CLIENT-LANGUAGE-LAYER.DOM-REDERIVATION-WITH-LINEAGE.01",
+
+  "target_mapping_validated": {
+    "entity_id": "DOM-04",
+    "technical_label": "backend_app_root",
+    "business_label": "Platform Infrastructure and Data",
+    "capability_group": "Platform Infrastructure",
+    "historical_entity_ref": "DOMAIN-10",
+    "lineage_status": "STRONG",
+    "confidence_score": 0.78,
+    "is_active_zone_anchor": true,
+    "zone_id": "PZ-001",
+    "fallback_used": false,
+    "rendering_note": "Confidence 0.78 >= 0.60 threshold. Zone PZ-001 will render 'Platform Infrastructure and Data' as domain label.",
+    "mapping_valid": true
+  },
+
+  "known_drift_resolution": {
+    "drift_described_in_contract": "backend_app_root (generated) vs Platform Infrastructure and Data (canonical)",
+    "crosswalk_resolves_this": true,
+    "mechanism": "_resolve_domain_display_label('DOM-04', 'backend_app_root') returns 'Platform Infrastructure and Data' when crosswalk is loaded with fallback_used=false and confidence>=0.60"
+  },
+
+  "coverage_summary": {
+    "total_entities": 13,
+    "with_business_label": 9,
+    "fallback_to_technical": 4,
+    "coverage_percent": 69.2,
+    "irresolvable": ["DOM-09 (3-domain merge, irresolvable permanently)"],
+    "below_threshold": ["DOM-01 (0.45)", "DOM-03 (0.50)", "DOM-05 (0.45)"]
+  },
+
+  "crosswalk_valid": true
+}

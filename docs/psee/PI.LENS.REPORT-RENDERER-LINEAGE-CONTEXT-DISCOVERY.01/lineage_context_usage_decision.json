@@ -1,0 +1,27 @@
+{
+  "contract_id": "PI.LENS.REPORT-RENDERER-LINEAGE-CONTEXT-DISCOVERY.01",
+  "generated_date": "2026-05-01",
+
+  "lineage_context_found": true,
+  "crosswalk_valid": true,
+  "topology_lineage_valid": true,
+  "renderer_supports_lineage": true,
+  "correct_usage_identified": false,
+
+  "partial_usage_identified": {
+    "crosswalk_invocation": "python3 scripts/pios/lens_report_generator.py --client blueedge --package-dir clients/blueedge/psee/runs/run_blueedge_productized_01/vault --crosswalk-path clients/blueedge/psee/runs/run_blueedge_productized_01_dom_lineage_validation/language_layer/semantic_continuity_crosswalk.json --output-dir <output_directory>",
+    "resolves": ["DOM-04 business label (backend_app_root → Platform Infrastructure and Data)", "PZ-001 zone label in tier1_narrative focus block", "DOM anchor text in conclusion"],
+    "does_not_resolve": ["17-domain count cards (Semantic Domains / Structurally Backed / Semantic-Only)", "Semantic domain topology SVG with curated 17-node layout", "5/17 structural backing annotation in tier1_evidence and tier2_diagnostic"]
+  },
+
+  "full_canonical_invocation": "CANNOT BE DETERMINED — semantic_topology_model.json and semantic_topology_layout.json required for --semantic-topology-dir do not exist in repository",
+
+  "blocked_reason": "semantic_topology_model.json and semantic_topology_layout.json are absent from all blueedge paths in the repository. These files are required by _load_semantic_topology() to populate _SEMANTIC_TOPOLOGY_MODEL and _SEMANTIC_TOPOLOGY_LAYOUT globals. Without them: (1) _build_semantic_report_context() returns fallback with total_semantic_domains=0, structurally_backed_domains=0; (2) count cards show structural counts (13 Domains, 35 Components) not semantic counts (17 Semantic Domains, 5 Backed, 12 Semantic-Only); (3) _render_topology_section() cannot route to _render_semantic_topology_svg(); (4) hardcoded 17-domain SVG does not fire because domain_count=13 with vault canonical_topology.json.",
+
+  "additional_finding_run_id": "The canonical decision_surface was generated without --run-id (nav links show run_01_authoritative_generated = module default). Full canonical parity also requires omitting --run-id flag.",
+
+  "additional_finding_vault_run_field": "Canonical tier2 shows run_blueedge_productized_01 in t2-field-value (from vault_index.json). This field reads from the app vault_index.json, not from _ACTIVE_VAULT_RUN_ID. Cannot be controlled via CLI flag.",
+
+  "renderer_supports_lineage": true,
+  "note_on_renderer_support": "Renderer fully supports --crosswalk-path and --semantic-topology-dir flags. The blockage is DATA (missing semantic topology model files), not a renderer capability gap."
+}

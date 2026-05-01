@@ -1,0 +1,76 @@
+{
+  "contract_id": "PI.LENS.REPORT-RENDERER-LINEAGE-CONTEXT-DISCOVERY.01",
+  "generated_date": "2026-05-01",
+
+  "lineage_run": "run_blueedge_productized_01_dom_lineage_validation",
+  "base_run": "run_blueedge_productized_01",
+
+  "artifacts_checked": [
+    {
+      "artifact": "canonical_topology_with_lineage.json",
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01_dom_lineage_validation/vault/canonical_topology_with_lineage.json",
+      "present": true,
+      "note": "Contains 13 structural domains (DOM-01 through DOM-13) with semantic_lineage annotations added per domain"
+    },
+    {
+      "artifact": "semantic_continuity_crosswalk.json",
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01_dom_lineage_validation/language_layer/semantic_continuity_crosswalk.json",
+      "present": true,
+      "note": "Version 2.0 crosswalk. 13 entities. 9 with business_label. 4 fallback to technical label. DOM-04 resolved."
+    },
+    {
+      "artifact": "vault_compatibility_manifest.json",
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01_dom_lineage_validation/manifests/vault_compatibility_manifest.json",
+      "present": true,
+      "note": "COMPATIBLE verdict — lineage enrichment is purely additive. All COMPAT-01 through COMPAT-08 pass."
+    },
+    {
+      "artifact": "canonical_topology.json (base run)",
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01/vault/canonical_topology.json",
+      "present": true,
+      "note": "13 structural domains, 35 nodes. Required input for renderer via --package-dir."
+    },
+    {
+      "artifact": "signal_registry.json (base run)",
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01/vault/signal_registry.json",
+      "present": true
+    },
+    {
+      "artifact": "gauge_state.json (base run)",
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01/vault/gauge_state.json",
+      "present": true
+    },
+    {
+      "artifact": "signal_projection.json (base run)",
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01/41.x/grounded/signal_projection.json",
+      "present": true,
+      "note": "_resolve_41x_path() checks grounded/ first — this path resolves correctly"
+    },
+    {
+      "artifact": "pressure_zone_projection.json (base run)",
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01/41.x/grounded/pressure_zone_projection.json",
+      "present": true,
+      "note": "_resolve_41x_path() checks grounded/ first — this path resolves correctly"
+    },
+    {
+      "artifact": "binding_envelope.json (base run)",
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01/binding/binding_envelope.json",
+      "present": true,
+      "note": "Contains PZ-001 COMPOUND_ZONE with anchor DOM-04 backend_app_root (technical label, not yet business label)"
+    },
+    {
+      "artifact": "semantic_topology_model.json",
+      "path": "NOT FOUND — searched all blueedge paths",
+      "present": false,
+      "note": "MISSING — required for --semantic-topology-dir. Enables 17-domain count cards and semantic SVG rendering."
+    },
+    {
+      "artifact": "semantic_topology_layout.json",
+      "path": "NOT FOUND — searched all blueedge paths",
+      "present": false,
+      "note": "MISSING — required for --semantic-topology-dir alongside semantic_topology_model.json."
+    }
+  ],
+
+  "overall_status": "PARTIAL — all structural vault inputs present; semantic topology model/layout absent"
+}

@@ -1,0 +1,32 @@
+{
+  "contract_id": "PI.LENS.REPORT-RENDERER-LINEAGE-CONTEXT-DISCOVERY.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-01",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+  "working_tree_at_start": "CLEAN — confirmed via git status --short (empty output)",
+  "working_tree_at_end": "DIRTY — ?? docs/psee/PI.LENS.REPORT-RENDERER-LINEAGE-CONTEXT-DISCOVERY.01/ (untracked evidence only)",
+  "baseline_commit": "3cb571e9cbe620d8d51a55f2e482953f62a5e953",
+
+  "files_created_this_contract": [
+    "docs/psee/PI.LENS.REPORT-RENDERER-LINEAGE-CONTEXT-DISCOVERY.01/lineage_artifact_presence.json",
+    "docs/psee/PI.LENS.REPORT-RENDERER-LINEAGE-CONTEXT-DISCOVERY.01/crosswalk_mapping_validation.json",
+    "docs/psee/PI.LENS.REPORT-RENDERER-LINEAGE-CONTEXT-DISCOVERY.01/topology_lineage_validation.json",
+    "docs/psee/PI.LENS.REPORT-RENDERER-LINEAGE-CONTEXT-DISCOVERY.01/renderer_capability_analysis.md",
+    "docs/psee/PI.LENS.REPORT-RENDERER-LINEAGE-CONTEXT-DISCOVERY.01/lineage_context_usage_decision.json",
+    "docs/psee/PI.LENS.REPORT-RENDERER-LINEAGE-CONTEXT-DISCOVERY.01/no_mutation_attestation.md",
+    "docs/psee/PI.LENS.REPORT-RENDERER-LINEAGE-CONTEXT-DISCOVERY.01/git_hygiene.json"
+  ],
+  "files_modified_this_contract": [],
+  "files_deleted_this_contract": [],
+
+  "canonical_reports_mutation_check": "PASS — canonical reports not accessed",
+  "lineage_artifact_mutation_check": "PASS — all lineage artifacts read-only",
+  "script_mutation_check": "PASS — lens_report_generator.py not modified",
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[DISCOVERY] PI.LENS.REPORT-RENDERER-LINEAGE-CONTEXT-DISCOVERY.01 — crosswalk found/valid; renderer supports --crosswalk-path; semantic_topology_model.json MISSING — full canonical blocked",
+
+  "git_hygiene_status": "COMPLETE"
+}

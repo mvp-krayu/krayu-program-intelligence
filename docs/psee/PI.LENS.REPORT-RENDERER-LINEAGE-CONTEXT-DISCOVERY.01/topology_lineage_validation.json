@@ -1,0 +1,45 @@
+{
+  "contract_id": "PI.LENS.REPORT-RENDERER-LINEAGE-CONTEXT-DISCOVERY.01",
+  "generated_date": "2026-05-01",
+
+  "topology_file": "clients/blueedge/psee/runs/run_blueedge_productized_01_dom_lineage_validation/vault/canonical_topology_with_lineage.json",
+  "artifact_id": "canonical_topology_blueedge_productized_01_with_lineage",
+  "emission_run_id": "run_blueedge_productized_01_dom_lineage_validation",
+  "base_run": "run_blueedge_productized_01",
+
+  "dom_04_entry": {
+    "domain_id": "DOM-04",
+    "domain_name": "backend_app_root",
+    "domain_type": "STRUCTURAL",
+    "pressure_note": "PRIMARY PRESSURE ZONE ANCHOR — PZ-001 COMPOUND_ZONE anchored here. All 3 active PSIG signals bind to this domain.",
+    "semantic_lineage": {
+      "lineage_status": "STRONG",
+      "business_label": "Platform Infrastructure and Data",
+      "capability_group": "Platform Infrastructure",
+      "dominant_source_domain_id": "DOMAIN-10",
+      "confidence_score": 0.78,
+      "historical_entity_ref": "DOMAIN-10",
+      "note": "KEY FINDING: Confidence 0.78 >= 0.60 threshold. Zone PZ-001 can render 'Platform Infrastructure and Data' as the business label."
+    }
+  },
+
+  "dom_04_verified": true,
+  "pz_001_linkage_verified": true,
+  "semantic_label_linkage_verified": true,
+
+  "lineage_summary": {
+    "total_domains": 13,
+    "active_zone_anchor_label_status": "Platform Infrastructure and Data (DOM-04, confidence=0.78 — RENDERS)",
+    "with_business_label": 9,
+    "fallback_to_technical": 4,
+    "coverage_percent": 69.2
+  },
+
+  "renderer_usability": {
+    "can_be_used_as_package_dir": false,
+    "reason": "Lineage vault contains only canonical_topology_with_lineage.json — NOT canonical_topology.json. load_canonical_topology() calls _fail() if canonical_topology.json is missing. Lineage vault cannot be used as --package-dir.",
+    "correct_usage": "Load crosswalk separately via --crosswalk-path; use base run vault as --package-dir"
+  },
+
+  "topology_lineage_valid": true
+}
