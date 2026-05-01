@@ -1,0 +1,150 @@
+{
+  "contract_id": "PI.LENS.PIPELINE-ORCHESTRATOR-BLUEEDGE-REFERENCE.01",
+  "artifact": "blueedge_dependency_graph",
+  "generated_date": "2026-05-01",
+  "reference_run": "run_be_orchestrated_fixup_01",
+  "client": "blueedge",
+
+  "graph_format": "directed_acyclic; edge = required_by; nodes = artifacts; source = BE-00",
+
+  "nodes": [
+    {"id": "BE-00", "label": "BlueEdge source archive", "owner": "EXTERNAL"},
+    {"id": "BE-01", "label": "canonical_repo directory", "owner": "EXTERNAL"},
+    {"id": "BE-02", "label": "intake_manifest.json", "owner": "EXTERNAL"},
+    {"id": "BE-03", "label": "source_boundary_doc", "owner": "EXTERNAL"},
+    {"id": "BE-04", "label": "intake_record.json", "owner": "EXTERNAL"},
+    {"id": "BE-05", "label": "archive_extraction_log.json", "owner": "EXTERNAL"},
+    {"id": "BE-06", "label": "structural_node_inventory.json (40.2)", "owner": "EXTERNAL"},
+    {"id": "BE-07", "label": "structural_topology_log.json (40.3)", "owner": "EXTERNAL"},
+    {"id": "BE-08", "label": "canonical_topology.json (40.4)", "owner": "EXTERNAL"},
+    {"id": "BE-09", "label": "perm_entity_registry.json (40.3)", "owner": "EXTERNAL"},
+    {"id": "BE-10", "label": "telemetry_artifact_summary.json (40.4)", "owner": "EXTERNAL"},
+    {"id": "BE-11", "label": "ceu_grounding_registry.json", "owner": "EXTERNAL"},
+    {"id": "BE-12", "label": "grounding_state_v3.json", "owner": "EXTERNAL"},
+    {"id": "BE-13", "label": "integration_validation.json", "owner": "EXTERNAL"},
+    {"id": "BE-14", "label": "dom_path_domain_layer.json", "owner": "EXTERNAL"},
+    {"id": "BE-C1", "label": "conformance_binding_envelope.json", "owner": "EXTERNAL_CONFORMANCE"},
+    {"id": "BE-C2", "label": "conformance_signal_registry.json (75.x)", "owner": "EXTERNAL_CONFORMANCE"},
+    {"id": "BE-C3", "label": "conformance_ceu_alignment.json (41.x)", "owner": "EXTERNAL_CONFORMANCE"},
+    {"id": "BE-C4", "label": "conformance_pipeline_log.json", "owner": "EXTERNAL_CONFORMANCE"},
+    {"id": "BE-C5", "label": "conformance_canonical_signal_registry.json (final)", "owner": "EXTERNAL_CONFORMANCE"},
+    {"id": "BE-15", "label": "binding_envelope.json", "owner": "ORCHESTRATOR"},
+    {"id": "BE-16", "label": "signal_registry.json (75.x)", "owner": "ORCHESTRATOR"},
+    {"id": "BE-17", "label": "ceu_alignment.json (41.x)", "owner": "ORCHESTRATOR"},
+    {"id": "BE-18", "label": "pipeline_execution_log.json", "owner": "ORCHESTRATOR"},
+    {"id": "BE-19", "label": "e2e_output_manifest.json", "owner": "ORCHESTRATOR"},
+    {"id": "BE-20", "label": "run_summary.json", "owner": "ORCHESTRATOR"},
+    {"id": "BE-21", "label": "vault_index.json", "owner": "ORCHESTRATOR"},
+    {"id": "BE-22", "label": "evidence_chain.json", "owner": "ORCHESTRATOR"},
+    {"id": "BE-23", "label": "coverage_map.json", "owner": "ORCHESTRATOR"},
+    {"id": "BE-24", "label": "ceu_registry_vault.json", "owner": "ORCHESTRATOR"},
+    {"id": "BE-25", "label": "signal_activation_summary.json", "owner": "ORCHESTRATOR"},
+    {"id": "BE-26", "label": "canonical_topology_domains.json", "owner": "ORCHESTRATOR"},
+    {"id": "BE-27", "label": "domain_signal_matrix.json", "owner": "ORCHESTRATOR"},
+    {"id": "BE-28", "label": "admissibility_record.json", "owner": "ORCHESTRATOR"},
+    {"id": "BE-29", "label": "vault_validation_log.json", "owner": "ORCHESTRATOR"},
+    {"id": "BE-30", "label": "lens_report_executive.pdf", "owner": "ORCHESTRATOR"},
+    {"id": "BE-31", "label": "lens_report_technical.pdf", "owner": "ORCHESTRATOR"},
+    {"id": "BE-32", "label": "lens_report_signal_detail.pdf", "owner": "ORCHESTRATOR"},
+    {"id": "BE-33", "label": "graph_state.json", "owner": "ORCHESTRATOR"},
+    {"id": "BE-34", "label": "report_manifest.json", "owner": "ORCHESTRATOR"},
+    {"id": "BE-35", "label": "graph_export.png", "owner": "ORCHESTRATOR"},
+    {"id": "BE-36", "label": "lens_report_generation_log.json", "owner": "ORCHESTRATOR"},
+    {"id": "BE-37", "label": "selector_current.json", "owner": "ORCHESTRATOR"},
+    {"id": "BE-38", "label": "selector_history_entry.json", "owner": "ORCHESTRATOR"},
+    {"id": "BE-39", "label": "selector_update_log.json", "owner": "ORCHESTRATOR"}
+  ],
+
+  "edges": [
+    {"from": "BE-00", "to": "BE-01", "label": "extracted_by_PROD-02", "phase_gate": "phase_01"},
+    {"from": "BE-00", "to": "BE-02", "label": "extracted_by_PROD-02", "phase_gate": "phase_01"},
+    {"from": "BE-00", "to": "BE-03", "label": "extracted_by_PROD-02", "phase_gate": "phase_01"},
+    {"from": "BE-00", "to": "BE-04", "label": "extracted_by_PROD-02", "phase_gate": "phase_01"},
+    {"from": "BE-00", "to": "BE-05", "label": "extracted_by_PROD-02", "phase_gate": "phase_01"},
+
+    {"from": "BE-01", "to": "BE-06", "label": "scanned_by_PROD-03", "phase_gate": "phase_03"},
+    {"from": "BE-01", "to": "BE-07", "label": "scanned_by_PROD-03", "phase_gate": "phase_03"},
+    {"from": "BE-01", "to": "BE-08", "label": "scanned_by_PROD-03", "phase_gate": "phase_03"},
+    {"from": "BE-01", "to": "BE-09", "label": "scanned_by_PROD-03", "phase_gate": "phase_03"},
+    {"from": "BE-01", "to": "BE-10", "label": "scanned_by_PROD-03", "phase_gate": "phase_03"},
+
+    {"from": "BE-01", "to": "BE-11", "label": "grounded_by_PROD-04", "phase_gate": "phase_05_native"},
+    {"from": "BE-01", "to": "BE-12", "label": "grounded_by_PROD-05", "phase_gate": "phase_04"},
+    {"from": "BE-01", "to": "BE-13", "label": "validated_by_PROD-05", "phase_gate": "phase_08a"},
+
+    {"from": "BE-11", "to": "BE-15", "label": "native_path_input", "phase_gate": "phase_05"},
+    {"from": "BE-14", "to": "BE-15", "label": "native_path_input", "phase_gate": "phase_05"},
+    {"from": "BE-C1", "to": "BE-15", "label": "conformance_path_input", "phase_gate": "phase_05"},
+
+    {"from": "BE-15", "to": "BE-16", "label": "e2e_native_input", "phase_gate": "phase_06_07"},
+    {"from": "BE-C2", "to": "BE-16", "label": "conformance_path_copy", "phase_gate": "phase_06_07"},
+    {"from": "BE-C3", "to": "BE-17", "label": "conformance_path_copy", "phase_gate": "phase_06_07"},
+    {"from": "BE-C4", "to": "BE-18", "label": "conformance_path_copy", "phase_gate": "phase_06_07"},
+
+    {"from": "BE-12", "to": "BE-21", "label": "vault_input_evidence", "phase_gate": "phase_08a"},
+    {"from": "BE-12", "to": "BE-22", "label": "vault_input_evidence", "phase_gate": "phase_08a"},
+    {"from": "BE-12", "to": "BE-23", "label": "vault_input_coverage", "phase_gate": "phase_08a"},
+    {"from": "BE-13", "to": "BE-28", "label": "vault_admissibility_proxy", "phase_gate": "phase_08a"},
+    {"from": "BE-14", "to": "BE-26", "label": "vault_topology_domains", "phase_gate": "phase_08a"},
+    {"from": "BE-C5", "to": "BE-24", "label": "vault_signal_registry", "phase_gate": "phase_08a"},
+    {"from": "BE-C5", "to": "BE-25", "label": "vault_activation_summary", "phase_gate": "phase_08a"},
+
+    {"from": "BE-21", "to": "BE-30", "label": "report_source", "phase_gate": "phase_08b"},
+    {"from": "BE-22", "to": "BE-30", "label": "report_source", "phase_gate": "phase_08b"},
+    {"from": "BE-23", "to": "BE-30", "label": "report_source", "phase_gate": "phase_08b"},
+    {"from": "BE-24", "to": "BE-30", "label": "report_source", "phase_gate": "phase_08b"},
+    {"from": "BE-25", "to": "BE-30", "label": "report_source", "phase_gate": "phase_08b"},
+    {"from": "BE-26", "to": "BE-30", "label": "report_source", "phase_gate": "phase_08b"},
+    {"from": "BE-27", "to": "BE-30", "label": "report_source", "phase_gate": "phase_08b"},
+
+    {"from": "BE-30", "to": "BE-37", "label": "selector_source", "phase_gate": "phase_09"},
+    {"from": "BE-33", "to": "BE-37", "label": "selector_graph_state", "phase_gate": "phase_09"}
+  ],
+
+  "critical_paths": [
+    {
+      "path_id": "CP-01",
+      "label": "External-to-Structural",
+      "chain": ["BE-00", "BE-01", "BE-06", "BE-07", "BE-08"],
+      "owners": ["EXTERNAL", "EXTERNAL", "EXTERNAL"],
+      "orchestrator_owned": false,
+      "note": "Archive → canonical_repo → 40.x structural artifacts. All steps external to run_client_pipeline.py."
+    },
+    {
+      "path_id": "CP-02",
+      "label": "Grounding-to-Vault (native path)",
+      "chain": ["BE-01", "BE-11", "BE-12", "BE-15", "BE-21", "BE-22", "BE-23"],
+      "owners": ["EXTERNAL", "EXTERNAL", "EXTERNAL", "ORCHESTRATOR", "ORCHESTRATOR"],
+      "orchestrator_owned": false,
+      "note": "CEU grounding registry + grounding_state_v3 + dom_layer are all external. Orchestrator takes over at BE-15."
+    },
+    {
+      "path_id": "CP-03",
+      "label": "Conformance bypass (BlueEdge production path)",
+      "chain": ["BE-C1", "BE-15", "BE-C2", "BE-16", "BE-C5", "BE-21", "BE-30", "BE-37"],
+      "owners": ["EXTERNAL_CONFORMANCE", "ORCHESTRATOR", "EXTERNAL_CONFORMANCE", "ORCHESTRATOR", "EXTERNAL_CONFORMANCE", "ORCHESTRATOR", "ORCHESTRATOR", "ORCHESTRATOR"],
+      "orchestrator_owned": "PARTIAL",
+      "note": "BlueEdge production path. Conformance artifacts inject at phases 5, 6+7, 8a. Orchestrator generates BE-15, BE-16..20, BE-21..29, BE-30..36, BE-37..39."
+    }
+  ],
+
+  "unreachable_artifacts_from_orchestrator": {
+    "definition": "Artifacts with no generation path within run_client_pipeline.py when absent",
+    "artifacts": ["BE-00", "BE-01", "BE-02", "BE-03", "BE-04", "BE-05", "BE-06", "BE-07", "BE-08", "BE-09", "BE-10", "BE-11", "BE-12", "BE-13", "BE-14"],
+    "count": 15,
+    "note": "Phases 1-4 validate these artifacts but cannot generate them. No fallback generation invocation exists in run_client_pipeline.py."
+  },
+
+  "orphaned_scripts": {
+    "definition": "Scripts existing in repo that participate in the dependency chain but are never invoked by run_client_pipeline.py",
+    "scripts": [
+      "scripts/pios/40.2/scan_repository.sh",
+      "scripts/pios/40.2/extract_entities.py",
+      "scripts/pios/40.2/classify_files.py",
+      "scripts/pios/40.3/extract_perm_entities.py",
+      "scripts/pios/40.4/build_telemetry_artifacts.py"
+    ],
+    "artifacts_they_produce": ["BE-06", "BE-07", "BE-08", "BE-09", "BE-10"],
+    "note": "These scripts would close the CP-01 gap but are structurally disconnected from the orchestrator. They are invocable manually but have no orchestrator invocation contract."
+  }
+}

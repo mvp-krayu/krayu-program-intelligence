@@ -1,0 +1,35 @@
+{
+  "contract_id": "PI.LENS.PIPELINE-CONFORMANCE.FASTAPI.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-01",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+
+  "files_created_this_contract": [
+    "docs/psee/PI.LENS.PIPELINE-CONFORMANCE.FASTAPI.01/pipeline_conformance_findings.md",
+    "docs/psee/PI.LENS.PIPELINE-CONFORMANCE.FASTAPI.01/phase_ownership_map.json",
+    "docs/psee/PI.LENS.PIPELINE-CONFORMANCE.FASTAPI.01/artifact_lifecycle_matrix.json",
+    "docs/psee/PI.LENS.PIPELINE-CONFORMANCE.FASTAPI.01/canonical_contract_alignment.md",
+    "docs/psee/PI.LENS.PIPELINE-CONFORMANCE.FASTAPI.01/drift_risk_assessment.md",
+    "docs/psee/PI.LENS.PIPELINE-CONFORMANCE.FASTAPI.01/conformance_decision.json",
+    "docs/psee/PI.LENS.PIPELINE-CONFORMANCE.FASTAPI.01/git_hygiene.json"
+  ],
+  "files_modified_this_contract": [],
+  "files_deleted_this_contract": [],
+
+  "runtime_artifacts_created": "NONE",
+  "ceu_artifacts_created": "NONE",
+  "41x_artifacts_created": "NONE",
+  "75x_artifacts_created": "NONE",
+  "reports_created": "NONE",
+  "pipeline_remediation_code_created": "NONE",
+  "blueedge_artifacts_modified": "NONE",
+  "create_only_violations": "NONE — all 7 evidence files are net-new; evidence directory did not exist before this contract",
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[CONFORMANCE] PI.LENS.PIPELINE-CONFORMANCE.FASTAPI.01 — INCOMPLETE_ORCHESTRATOR classification + 7 evidence artifacts",
+  "commit_note": "Commits are operator action per CLAUDE.md Section 7.1.",
+
+  "git_hygiene_status": "COMPLETE"
+}

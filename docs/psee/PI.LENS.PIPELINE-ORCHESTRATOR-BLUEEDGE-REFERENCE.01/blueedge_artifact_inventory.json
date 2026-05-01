@@ -1,0 +1,330 @@
+{
+  "contract_id": "PI.LENS.PIPELINE-ORCHESTRATOR-BLUEEDGE-REFERENCE.01",
+  "artifact": "blueedge_artifact_inventory",
+  "generated_date": "2026-05-01",
+  "reference_client": "blueedge",
+  "reference_uuid": "6a6fcdbc-41b6-4e0e-99b9-37394f6c870d",
+  "reference_run": "run_be_orchestrated_fixup_01",
+  "baseline_tag": "lens-e2e-baseline-blueedge",
+  "run_path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01",
+  "note": "BlueEdge uses two parallel path conventions: clients/blueedge/ (slug, orchestrator output) and clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/ (UUID, pre-orchestrator structural artifacts). The orchestrator resolves run_dir via client slug; structural preconditions live under UUID path.",
+
+  "phases": {
+
+    "PHASE_0_EXTERNAL_SOURCE": {
+      "label": "External Archive (pre-repo)",
+      "description": "Source archive is external to k-pi-core repo entirely",
+      "artifacts": [
+        {
+          "artifact_id": "BE-00",
+          "name": "BlueEdge source archive",
+          "path": "/Users/khorrix/Projects/blueedge-clean-run/source-raw/raw/blueedge-platform-v3_23_0-COMPLETE.tar",
+          "location": "EXTERNAL — outside repo root",
+          "exists": "EXTERNAL_DEPENDENCY",
+          "sha256": "672a841277541921bf8ade69a467d35d9f105a1525c754fa4b750f0aa50e9c80",
+          "producer": "External (upstream delivery)",
+          "orchestrator_generates": false
+        }
+      ]
+    },
+
+    "PHASE_1_SOURCE_BOUNDARY": {
+      "label": "Source Boundary",
+      "orchestrator_function": "phase_01_source_boundary",
+      "artifacts": [
+        {
+          "artifact_id": "BE-01",
+          "name": "source_boundary_decision.json",
+          "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/source_boundary/source_boundary_decision.json",
+          "exists": true,
+          "producer": "PI.BLUEEDGE.CLEAN-INTAKE.01",
+          "orchestrator_generates": false,
+          "orchestrator_uses": false,
+          "note": "Produced by intake contract, not by run_client_pipeline.py"
+        },
+        {
+          "artifact_id": "BE-02",
+          "name": "archive_manifest.json",
+          "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/source_boundary/archive_manifest.json",
+          "exists": true,
+          "producer": "PI.BLUEEDGE.CLEAN-INTAKE.01",
+          "orchestrator_generates": false,
+          "orchestrator_uses": false
+        }
+      ],
+      "orchestrator_validates": ["source_manifest['archive_path'] existence + SHA256"]
+    },
+
+    "PHASE_2_INTAKE": {
+      "label": "Intake / Extraction",
+      "orchestrator_function": "phase_02_intake",
+      "artifacts": [
+        {
+          "artifact_id": "BE-03",
+          "name": "canonical_repo/ (extracted source)",
+          "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/intake/canonical_repo/",
+          "exists": true,
+          "file_count": "955 nodes (BlueEdge full repo)",
+          "producer": "PI.BLUEEDGE.CLEAN-INTAKE.01 (tar extraction)",
+          "orchestrator_generates": false
+        },
+        {
+          "artifact_id": "BE-04",
+          "name": "intake_manifest.json",
+          "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/intake/manifests/intake_manifest.json",
+          "exists": true,
+          "producer": "PI.BLUEEDGE.CLEAN-INTAKE.01",
+          "orchestrator_generates": false
+        },
+        {
+          "artifact_id": "BE-05",
+          "name": "extraction_manifest.json",
+          "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/intake/manifests/extraction_manifest.json",
+          "exists": true,
+          "producer": "PI.BLUEEDGE.CLEAN-INTAKE.01",
+          "orchestrator_generates": false
+        }
+      ],
+      "orchestrator_validates": ["extracted_path directory existence"]
+    },
+
+    "PHASE_3_STRUCTURAL": {
+      "label": "40.x Structural Pipeline",
+      "orchestrator_function": "phase_03_40x_structural",
+      "artifacts": [
+        {
+          "artifact_id": "BE-06",
+          "name": "40.2/structural_node_inventory.json",
+          "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/structure/40.2/structural_node_inventory.json",
+          "exists": true,
+          "total_nodes": 955,
+          "file_nodes": 741,
+          "directory_nodes": 214,
+          "producer": "PI.BLUEEDGE.STRUCTURAL-PIPELINE.40X.01 (scripts/pios/40.2/extract_entities.py + scan_repository.sh)",
+          "orchestrator_generates": false
+        },
+        {
+          "artifact_id": "BE-07",
+          "name": "40.2/extraction_log.json",
+          "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/structure/40.2/extraction_log.json",
+          "exists": true,
+          "producer": "PI.BLUEEDGE.STRUCTURAL-PIPELINE.40X.01",
+          "orchestrator_generates": false
+        },
+        {
+          "artifact_id": "BE-08",
+          "name": "40.3/structural_topology_log.json",
+          "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/structure/40.3/structural_topology_log.json",
+          "exists": true,
+          "total_relations": 1937,
+          "producer": "PI.BLUEEDGE.STRUCTURAL-PIPELINE.40X.01 (scripts/pios/40.3/extract_perm_entities.py)",
+          "orchestrator_generates": false
+        },
+        {
+          "artifact_id": "BE-09",
+          "name": "40.4/canonical_topology.json",
+          "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/structure/40.4/canonical_topology.json",
+          "exists": true,
+          "clusters": 6,
+          "producer": "PI.BLUEEDGE.STRUCTURAL-PIPELINE.40X.01 (scripts/pios/40.4/build_telemetry_artifacts.py)",
+          "orchestrator_generates": false
+        },
+        {
+          "artifact_id": "BE-10",
+          "name": "40.4/normalized_structural_topology.json",
+          "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/structure/40.4/normalized_structural_topology.json",
+          "exists": true,
+          "producer": "PI.BLUEEDGE.STRUCTURAL-PIPELINE.40X.01",
+          "orchestrator_generates": false,
+          "orchestrator_uses": false
+        }
+      ],
+      "orchestrator_validates": ["40.2/structural_node_inventory.json", "40.3/structural_topology_log.json", "40.4/canonical_topology.json existence"]
+    },
+
+    "PHASE_4_CEU_GROUNDING": {
+      "label": "CEU Grounding",
+      "orchestrator_function": "phase_04_ceu_grounding",
+      "artifacts": [
+        {
+          "artifact_id": "BE-11",
+          "name": "ceu_grounding_registry.json",
+          "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/ceu_grounding/registry/ceu_grounding_registry.json",
+          "exists": true,
+          "producer": "CEU grounding pipeline (external to run_client_pipeline.py)",
+          "orchestrator_generates": false,
+          "orchestrator_uses": true,
+          "note": "Read by phase_05_build_binding_envelope as input to binding envelope construction"
+        },
+        {
+          "artifact_id": "BE-12",
+          "name": "grounding_state_v3.json",
+          "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/grounding_state_v3.json",
+          "exists": true,
+          "readiness_gate": "PASS",
+          "producer": "PI.BLUEEDGE integrated pipeline (run_blueedge_integrated_01) — external to run_client_pipeline.py",
+          "orchestrator_generates": false,
+          "orchestrator_uses": true,
+          "note": "Read by phase_04 (validates readiness_gate=PASS), phase_08a (reads CEU grounding facts for vault)"
+        },
+        {
+          "artifact_id": "BE-13",
+          "name": "integration_validation.json",
+          "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/integration_validation.json",
+          "exists": true,
+          "producer": "PI.BLUEEDGE integrated pipeline (run_blueedge_integrated_01)",
+          "orchestrator_generates": false,
+          "orchestrator_uses": true,
+          "note": "Read by phase_08a as admissibility_log proxy source"
+        },
+        {
+          "artifact_id": "BE-14",
+          "name": "dom_path_domain_layer.json",
+          "path": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01/recomputed/dom_path_domain_layer.json",
+          "exists": true,
+          "producer": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01 (external to run_client_pipeline.py)",
+          "orchestrator_generates": false,
+          "orchestrator_uses": true,
+          "note": "Read by phase_05 (DOM voting for capability surface assignment) and phase_08a (canonical_topology construction). Lives in docs/ not clients/."
+        }
+      ],
+      "orchestrator_validates": ["grounding_state_v3.json readiness_gate=PASS"]
+    },
+
+    "PHASE_5_BINDING_ENVELOPE": {
+      "label": "Build Binding Envelope",
+      "orchestrator_function": "phase_05_build_binding_envelope",
+      "artifacts": [
+        {
+          "artifact_id": "BE-15",
+          "name": "binding/binding_envelope.json",
+          "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/binding/binding_envelope.json",
+          "exists": true,
+          "producer": "run_client_pipeline.py phase_05_build_binding_envelope — via fastapi_conformance_path (STAGE_NOT_AUTOMATED)",
+          "orchestrator_generates": true,
+          "note": "For BlueEdge, fastapi_conformance_path is set → binding_envelope_fastapi_compatible.json is copied from conformance dir. The native compute path (CEU registry + DOM layer → synthesize) would also produce this via the else branch."
+        }
+      ],
+      "conformance_path_inputs": [
+        "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/binding_envelope_fastapi_compatible.json"
+      ],
+      "native_path_inputs": [
+        "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/ceu_grounding/registry/ceu_grounding_registry.json (BE-11)",
+        "docs/psee/.../dom_path_domain_layer.json (BE-14)"
+      ]
+    },
+
+    "PHASE_6_7_SIGNALS": {
+      "label": "75.x Activation + 41.x Projection",
+      "orchestrator_function": "phase_06_and_07_e2e",
+      "artifacts": [
+        {
+          "artifact_id": "BE-16",
+          "name": "75.x/condition_correlation_state.json",
+          "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/75.x/condition_correlation_state.json",
+          "exists": true,
+          "producer": "run_client_pipeline.py phase_06_and_07_e2e — via fastapi_conformance_path",
+          "orchestrator_generates": true
+        },
+        {
+          "artifact_id": "BE-17",
+          "name": "75.x/pressure_candidate_state.json",
+          "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/75.x/pressure_candidate_state.json",
+          "exists": true,
+          "producer": "run_client_pipeline.py phase_06_and_07_e2e (stub generated)",
+          "orchestrator_generates": true
+        },
+        {
+          "artifact_id": "BE-18",
+          "name": "75.x/pressure_zone_state.json",
+          "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/75.x/pressure_zone_state.json",
+          "exists": true,
+          "producer": "run_client_pipeline.py phase_06_and_07_e2e — via fastapi_conformance_path",
+          "orchestrator_generates": true
+        },
+        {
+          "artifact_id": "BE-19",
+          "name": "41.x/signal_projection.json",
+          "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/41.x/signal_projection.json",
+          "exists": true,
+          "producer": "run_client_pipeline.py phase_06_and_07_e2e — via fastapi_conformance_path",
+          "orchestrator_generates": true
+        },
+        {
+          "artifact_id": "BE-20",
+          "name": "41.x/pressure_zone_projection.json",
+          "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/41.x/pressure_zone_projection.json",
+          "exists": true,
+          "producer": "run_client_pipeline.py phase_06_and_07_e2e — via fastapi_conformance_path",
+          "orchestrator_generates": true
+        }
+      ],
+      "conformance_path_inputs": [
+        "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/signal_projection_fastapi_compatible.json",
+        "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/pressure_zone_state_fastapi_compatible.json",
+        "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/condition_correlation_state_fastapi_compatible.json"
+      ]
+    },
+
+    "PHASE_8A_VAULT": {
+      "label": "Vault Construction",
+      "orchestrator_function": "phase_08a_vault",
+      "artifacts": [
+        {"artifact_id": "BE-21", "name": "vault/coverage_state.json", "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/coverage_state.json", "exists": true, "orchestrator_generates": true},
+        {"artifact_id": "BE-22", "name": "vault/reconstruction_state.json", "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/reconstruction_state.json", "exists": true, "orchestrator_generates": true},
+        {"artifact_id": "BE-23", "name": "vault/gauge_state.json", "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/gauge_state.json", "exists": true, "orchestrator_generates": true},
+        {"artifact_id": "BE-24", "name": "vault/canonical_topology.json", "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/canonical_topology.json", "exists": true, "orchestrator_generates": true},
+        {"artifact_id": "BE-25", "name": "vault/signal_registry.json", "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/signal_registry.json", "exists": true, "orchestrator_generates": true},
+        {"artifact_id": "BE-26", "name": "vault/binding_envelope.json", "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/binding_envelope.json", "exists": true, "orchestrator_generates": true, "note": "Copied from run binding/ to vault/"},
+        {"artifact_id": "BE-27", "name": "vault/admissibility_log.json", "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/admissibility_log.json", "exists": true, "orchestrator_generates": true},
+        {"artifact_id": "BE-28", "name": "vault/evidence_trace.json", "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/evidence_trace.json", "exists": true, "orchestrator_generates": true},
+        {"artifact_id": "BE-29", "name": "vault/vault_manifest.json", "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/vault_manifest.json", "exists": true, "orchestrator_generates": true}
+      ],
+      "phase_8a_external_inputs": ["BE-12 (grounding_state_v3)", "BE-13 (integration_validation)", "BE-14 (dom_layer)", "conformance signal_registry (BE-25 source)"]
+    },
+
+    "PHASE_8B_REPORTS": {
+      "label": "LENS Reports",
+      "orchestrator_function": "phase_08b_lens_reports",
+      "artifacts": [
+        {"artifact_id": "BE-30", "name": "lens/runs/.../index.json", "path": "clients/blueedge/lens/runs/run_be_orchestrated_fixup_01/index.json", "exists": true, "orchestrator_generates": true},
+        {"artifact_id": "BE-31", "name": "lens/runs/.../manifest.json", "path": "clients/blueedge/lens/runs/run_be_orchestrated_fixup_01/manifest.json", "exists": true, "orchestrator_generates": true},
+        {"artifact_id": "BE-32", "name": "reports/tier1/lens_tier1_evidence_brief.html", "path": "clients/blueedge/lens/runs/run_be_orchestrated_fixup_01/reports/tier1/lens_tier1_evidence_brief.html", "exists": true, "orchestrator_generates": true},
+        {"artifact_id": "BE-33", "name": "reports/tier1/lens_tier1_narrative_brief.html", "path": "clients/blueedge/lens/runs/run_be_orchestrated_fixup_01/reports/tier1/lens_tier1_narrative_brief.html", "exists": true, "orchestrator_generates": true},
+        {"artifact_id": "BE-34", "name": "reports/tier2/lens_tier2_diagnostic_narrative.html", "path": "clients/blueedge/lens/runs/run_be_orchestrated_fixup_01/reports/tier2/lens_tier2_diagnostic_narrative.html", "exists": true, "orchestrator_generates": true},
+        {"artifact_id": "BE-35", "name": "reports/tier2/graph_state.json", "path": "clients/blueedge/lens/runs/run_be_orchestrated_fixup_01/reports/tier2/graph_state.json", "exists": true, "orchestrator_generates": true, "note": "Produced by export_graph_state.mjs subprocess within lens_report_generator.py"},
+        {"artifact_id": "BE-36", "name": "reports/decision/lens_decision_surface.html", "path": "clients/blueedge/lens/runs/run_be_orchestrated_fixup_01/reports/decision/lens_decision_surface.html", "exists": true, "orchestrator_generates": true}
+      ]
+    },
+
+    "PHASE_9_SELECTOR": {
+      "label": "Selector Update",
+      "orchestrator_function": "phase_09_selector_update",
+      "artifacts": [
+        {"artifact_id": "BE-37", "name": "lens/selector/selector.json", "path": "clients/blueedge/lens/selector/selector.json", "exists": true, "orchestrator_generates": true},
+        {"artifact_id": "BE-38", "name": "lens/selector/available_runs.json", "path": "clients/blueedge/lens/selector/available_runs.json", "exists": true, "orchestrator_generates": true},
+        {"artifact_id": "BE-39", "name": "lens/current/ (mirror)", "path": "clients/blueedge/lens/current/", "exists": true, "orchestrator_generates": true, "note": "Current-run mirror directory"}
+      ]
+    },
+
+    "PHASE_CONFORMANCE_PATH": {
+      "label": "STAGE_NOT_AUTOMATED Pre-computed Artifacts",
+      "description": "Artifacts produced by 4 FastAPI conformance contracts — not by run_client_pipeline.py. Injected at Phases 5, 6+7, 8a via fastapi_conformance_path.",
+      "artifacts": [
+        {"artifact_id": "BE-C1", "name": "binding_envelope_fastapi_compatible.json", "path": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/binding_envelope_fastapi_compatible.json", "producer": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01", "orchestrator_generates": false},
+        {"artifact_id": "BE-C2", "name": "signal_projection_fastapi_compatible.json", "path": "docs/psee/.../signal_projection_fastapi_compatible.json", "producer": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01", "orchestrator_generates": false},
+        {"artifact_id": "BE-C3", "name": "pressure_zone_state_fastapi_compatible.json", "path": "docs/psee/.../pressure_zone_state_fastapi_compatible.json", "producer": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01", "orchestrator_generates": false},
+        {"artifact_id": "BE-C4", "name": "condition_correlation_state_fastapi_compatible.json", "path": "docs/psee/.../condition_correlation_state_fastapi_compatible.json", "producer": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01", "orchestrator_generates": false},
+        {"artifact_id": "BE-C5", "name": "signal_registry_fastapi_compatible.json", "path": "docs/psee/.../signal_registry_fastapi_compatible.json", "producer": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01", "orchestrator_generates": false}
+      ]
+    }
+  },
+
+  "summary": {
+    "total_artifacts": 39,
+    "orchestrator_generates": 20,
+    "orchestrator_generates_list": ["BE-15", "BE-16", "BE-17", "BE-18", "BE-19", "BE-20", "BE-21", "BE-22", "BE-23", "BE-24", "BE-25", "BE-26", "BE-27", "BE-28", "BE-29", "BE-30", "BE-31", "BE-32", "BE-33", "BE-34", "BE-35", "BE-36", "BE-37", "BE-38", "BE-39"],
+    "external_dependencies": 19,
+    "external_dependency_list": ["BE-00", "BE-01", "BE-02", "BE-03", "BE-04", "BE-05", "BE-06", "BE-07", "BE-08", "BE-09", "BE-10", "BE-11", "BE-12", "BE-13", "BE-14", "BE-C1", "BE-C2", "BE-C3", "BE-C4", "BE-C5"]
+  }
+}

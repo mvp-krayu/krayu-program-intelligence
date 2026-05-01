@@ -1,0 +1,44 @@
+{
+  "contract_id": "PI.LENS.PIPELINE-ORCHESTRATOR-BLUEEDGE-REFERENCE.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-01",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+
+  "files_created_this_contract": [
+    "docs/psee/PI.LENS.PIPELINE-ORCHESTRATOR-BLUEEDGE-REFERENCE.01/blueedge_artifact_inventory.json",
+    "docs/psee/PI.LENS.PIPELINE-ORCHESTRATOR-BLUEEDGE-REFERENCE.01/blueedge_producer_map.json",
+    "docs/psee/PI.LENS.PIPELINE-ORCHESTRATOR-BLUEEDGE-REFERENCE.01/blueedge_dependency_graph.json",
+    "docs/psee/PI.LENS.PIPELINE-ORCHESTRATOR-BLUEEDGE-REFERENCE.01/orchestrator_gap_map.json",
+    "docs/psee/PI.LENS.PIPELINE-ORCHESTRATOR-BLUEEDGE-REFERENCE.01/minimum_orchestration_chain.md",
+    "docs/psee/PI.LENS.PIPELINE-ORCHESTRATOR-BLUEEDGE-REFERENCE.01/canonical_contract_violations.md",
+    "docs/psee/PI.LENS.PIPELINE-ORCHESTRATOR-BLUEEDGE-REFERENCE.01/git_hygiene.json"
+  ],
+  "files_modified_this_contract": [],
+  "files_deleted_this_contract": [],
+
+  "blueedge_client_mutation_check": {
+    "status": "PASS",
+    "details": "No files under clients/blueedge/ or clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/ were created, modified, or deleted. BlueEdge is reference-only."
+  },
+  "blueedge_docs_mutation_check": {
+    "status": "PASS",
+    "details": "No files under docs/psee/PI.BLUEEDGE.*/ were created, modified, or deleted."
+  },
+
+  "runtime_artifacts_created": "NONE",
+  "ceu_artifacts_created": "NONE",
+  "41x_artifacts_created": "NONE",
+  "75x_artifacts_created": "NONE",
+  "reports_created": "NONE",
+  "pipeline_code_created": "NONE",
+  "run_client_pipeline_modified": "NONE",
+  "create_only_violations": "NONE — all 7 evidence files are net-new under new contract directory",
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[BLUEEDGE-REF] PI.LENS.PIPELINE-ORCHESTRATOR-BLUEEDGE-REFERENCE.01 — full lifecycle reconstruction + 7 evidence artifacts",
+  "commit_note": "Commits are operator action per CLAUDE.md Section 7.1.",
+
+  "git_hygiene_status": "COMPLETE"
+}

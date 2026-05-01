@@ -1,0 +1,143 @@
+{
+  "contract_id": "PI.LENS.PIPELINE-ORCHESTRATOR-BLUEEDGE-REFERENCE.01",
+  "artifact": "blueedge_producer_map",
+  "generated_date": "2026-05-01",
+
+  "producers": [
+    {
+      "producer_id": "PROD-01",
+      "producer_name": "External Source Delivery",
+      "producer_type": "EXTERNAL",
+      "script": null,
+      "invoked_by_orchestrator": false,
+      "artifacts_produced": ["BE-00"],
+      "description": "BlueEdge source archive. Delivered externally. Not a repo artifact."
+    },
+    {
+      "producer_id": "PROD-02",
+      "producer_name": "PI.BLUEEDGE.CLEAN-INTAKE.01",
+      "producer_type": "EXTERNAL_CONTRACT",
+      "script": "Unknown — intake contract scripts (not in scripts/pios/40.2/ scope)",
+      "invoked_by_orchestrator": false,
+      "artifacts_produced": ["BE-01", "BE-02", "BE-03", "BE-04", "BE-05"],
+      "description": "Archive extraction, canonical_repo population, intake manifests, source boundary documents. Consumed by Phase 1 (SHA256 check on archive) and Phase 2 (canonical_repo existence check)."
+    },
+    {
+      "producer_id": "PROD-03",
+      "producer_name": "PI.BLUEEDGE.STRUCTURAL-PIPELINE.40X.01",
+      "producer_type": "EXTERNAL_CONTRACT",
+      "script_dir": "scripts/pios/40.2/, scripts/pios/40.3/, scripts/pios/40.4/",
+      "scripts": [
+        "scripts/pios/40.2/scan_repository.sh",
+        "scripts/pios/40.2/extract_entities.py",
+        "scripts/pios/40.2/classify_files.py",
+        "scripts/pios/40.3/extract_perm_entities.py",
+        "scripts/pios/40.4/build_telemetry_artifacts.py"
+      ],
+      "invoked_by_orchestrator": false,
+      "artifacts_produced": ["BE-06", "BE-07", "BE-08", "BE-09", "BE-10"],
+      "description": "Scripts exist in scripts/pios/40.x/ but are NOT invoked by run_client_pipeline.py. The orchestrator only verifies their outputs at Phase 3. Must be run externally before orchestrator invocation."
+    },
+    {
+      "producer_id": "PROD-04",
+      "producer_name": "CEU Grounding Pipeline",
+      "producer_type": "EXTERNAL_CONTRACT",
+      "script": "Unknown — grounding pipeline scripts not in scope of current inspection",
+      "invoked_by_orchestrator": false,
+      "artifacts_produced": ["BE-11"],
+      "description": "ceu_grounding_registry.json. Required as input by phase_05_build_binding_envelope when fastapi_conformance_path is not set. Not validated by any orchestrator phase — assumed present."
+    },
+    {
+      "producer_id": "PROD-05",
+      "producer_name": "PI.BLUEEDGE Integrated Pipeline (run_blueedge_integrated_01)",
+      "producer_type": "EXTERNAL_CONTRACT",
+      "script": "Unknown — integrated pipeline (run_end_to_end.py or equivalent, executed under different run context)",
+      "invoked_by_orchestrator": false,
+      "artifacts_produced": ["BE-12", "BE-13"],
+      "description": "grounding_state_v3.json + integration_validation.json. grounding_state_v3 is read by Phase 4 (readiness gate validation) and Phase 8a (evidence/coverage derivation). integration_validation is read by Phase 8a (admissibility proxy). Both must pre-exist."
+    },
+    {
+      "producer_id": "PROD-06",
+      "producer_name": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01",
+      "producer_type": "EXTERNAL_CONTRACT",
+      "script": "Conformance recompute contract scripts (external to run_client_pipeline.py scope)",
+      "invoked_by_orchestrator": false,
+      "artifacts_produced": ["BE-14"],
+      "description": "dom_path_domain_layer.json. Located in docs/ not clients/. Read by phase_05 (DOM majority-vote for CE node assignment) and phase_08a (canonical_topology domains[] construction). Not validated by any dedicated phase — assumed present."
+    },
+    {
+      "producer_id": "PROD-07",
+      "producer_name": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01",
+      "producer_type": "EXTERNAL_CONTRACT",
+      "script": "4 FastAPI conformance contracts (STAGE_NOT_AUTOMATED)",
+      "invoked_by_orchestrator": false,
+      "artifacts_produced": ["BE-C1", "BE-C2", "BE-C3", "BE-C4", "BE-C5"],
+      "description": "Pre-computed canonical signal artifacts injected at Phases 5, 6+7, 8a via fastapi_conformance_path. This is the STAGE_NOT_AUTOMATED bypass for BlueEdge. Must be produced before orchestrator invocation."
+    },
+    {
+      "producer_id": "PROD-08",
+      "producer_name": "run_client_pipeline.py — phase_05_build_binding_envelope",
+      "producer_type": "ORCHESTRATOR",
+      "function": "phase_05_build_binding_envelope",
+      "lines": "217-426",
+      "invoked_by_orchestrator": true,
+      "artifacts_produced": ["BE-15"],
+      "description": "Generates binding_envelope.json from CEU registry + DOM layer (native path) or from conformance artifact (conformance path). BlueEdge uses conformance path."
+    },
+    {
+      "producer_id": "PROD-09",
+      "producer_name": "run_client_pipeline.py — phase_06_and_07_e2e",
+      "producer_type": "ORCHESTRATOR",
+      "function": "phase_06_and_07_e2e",
+      "lines": "431-507",
+      "invoked_by_orchestrator": true,
+      "artifacts_produced": ["BE-16", "BE-17", "BE-18", "BE-19", "BE-20"],
+      "description": "Generates 75.x/ and 41.x/ artifacts via run_end_to_end.py (native) or conformance path copy. BlueEdge uses conformance path.",
+      "external_scripts": ["scripts/pios/run_end_to_end.py (native path only)"]
+    },
+    {
+      "producer_id": "PROD-10",
+      "producer_name": "run_client_pipeline.py — phase_08a_vault",
+      "producer_type": "ORCHESTRATOR",
+      "function": "phase_08a_vault",
+      "lines": "512-892",
+      "invoked_by_orchestrator": true,
+      "artifacts_produced": ["BE-21", "BE-22", "BE-23", "BE-24", "BE-25", "BE-26", "BE-27", "BE-28", "BE-29"],
+      "description": "Generates all 9 vault artifacts. Reads grounding_state_v3 (BE-12), dom_layer (BE-14), integration_validation (BE-13), and conformance signal_registry (BE-C5)."
+    },
+    {
+      "producer_id": "PROD-11",
+      "producer_name": "run_client_pipeline.py — phase_08b_lens_reports",
+      "producer_type": "ORCHESTRATOR",
+      "function": "phase_08b_lens_reports",
+      "lines": "896-921",
+      "invoked_by_orchestrator": true,
+      "artifacts_produced": ["BE-30", "BE-31", "BE-32", "BE-33", "BE-34", "BE-35", "BE-36"],
+      "external_scripts": ["scripts/pios/lens_report_generator.py (subprocess)", "scripts/pios/export_graph_state.mjs (sub-subprocess via lens_report_generator.py)"]
+    },
+    {
+      "producer_id": "PROD-12",
+      "producer_name": "run_client_pipeline.py — phase_09_selector_update",
+      "producer_type": "ORCHESTRATOR",
+      "function": "phase_09_selector_update",
+      "lines": "926-971",
+      "invoked_by_orchestrator": true,
+      "artifacts_produced": ["BE-37", "BE-38", "BE-39"]
+    }
+  ],
+
+  "summary": {
+    "total_producers": 12,
+    "orchestrator_producers": 5,
+    "external_producers": 7,
+    "orchestrator_producer_list": ["PROD-08", "PROD-09", "PROD-10", "PROD-11", "PROD-12"],
+    "external_producer_list": ["PROD-01", "PROD-02", "PROD-03", "PROD-04", "PROD-05", "PROD-06", "PROD-07"],
+    "scripts_existing_but_not_invoked": [
+      "scripts/pios/40.2/scan_repository.sh",
+      "scripts/pios/40.2/extract_entities.py",
+      "scripts/pios/40.2/classify_files.py",
+      "scripts/pios/40.3/extract_perm_entities.py",
+      "scripts/pios/40.4/build_telemetry_artifacts.py"
+    ]
+  }
+}

@@ -1,0 +1,164 @@
+{
+  "contract_id": "PI.LENS.E2E-PIPELINE-REALITY-LOCK.01",
+  "artifact": "step_classification",
+  "generated_date": "2026-05-01",
+
+  "classification_legend": {
+    "FULLY_OPERATIONAL": "Step executes deterministically from registered inputs; producer callable; outputs verified",
+    "PARTIAL": "Step completes for at least one client OR completes with a non-generic workaround; has identified gaps",
+    "NON_EXISTENT": "Step has no callable producer in the repo; required output cannot be produced from registered source"
+  },
+
+  "steps": [
+    {
+      "step": "Step 1 — Client Registration",
+      "classification": "FULLY_OPERATIONAL",
+      "blocking_issues": [],
+      "depends_on_blueedge_only": false,
+      "notes": "Manual operator step. client.yaml and source_manifest.json created for both BlueEdge and FastAPI. FastAPI source_manifest missing dom_layer_path and integration_validation_path but registration step itself is complete."
+    },
+    {
+      "step": "Step 2 — Source Intake",
+      "classification": "PARTIAL",
+      "blocking_issues": [
+        "No intake contract scripts exist in repo — all intake is via external contracts",
+        "BlueEdge archive at external filesystem path (~/Projects/blueedge-clean-run/source-raw/) — not re-runnable from repo",
+        "FastAPI uses MANIFEST_FILE_PROXY — not a true archive extraction; underlying source is a pre-existing local directory",
+        "Orchestrator has no invocation path for intake when extracted_path is absent"
+      ],
+      "depends_on_blueedge_only": false,
+      "notes": "Both clients have extracted source present, so Phase 1+2 currently pass. But the step cannot be re-run from scratch using repo artifacts alone."
+    },
+    {
+      "step": "Step 3 — Phase 1: Source Boundary Validation",
+      "classification": "FULLY_OPERATIONAL",
+      "blocking_issues": [],
+      "depends_on_blueedge_only": false,
+      "notes": "Passes for both BlueEdge and FastAPI. BlueEdge: SHA256 of canonical_repo manifest. FastAPI: MANIFEST_FILE_PROXY SHA256. Orchestrator callable, deterministic."
+    },
+    {
+      "step": "Step 4 — Phase 2: Intake Verification",
+      "classification": "FULLY_OPERATIONAL",
+      "blocking_issues": [],
+      "depends_on_blueedge_only": false,
+      "notes": "Passes for both clients. extracted_path directories exist. Orchestrator callable, deterministic."
+    },
+    {
+      "step": "Step 5 — Structural Analysis (40.x Generation)",
+      "classification": "PARTIAL",
+      "blocking_issues": [
+        "No generic client-agnostic structural scanner exists in repo",
+        "scripts/pios/40.x/ scripts are k-pi-core self-analysis tools — not usable for client source structural analysis",
+        "BlueEdge: structural scripts from PI.BLUEEDGE.STRUCTURAL-PIPELINE.40X.01 are external — not present in this repo",
+        "FastAPI: bootstrap_fastapi_40x.py exists and produced Phase 3 artifacts, but is FastAPI-specific and not wired into orchestrator",
+        "For any new client (Client C), no structural analysis script is available"
+      ],
+      "depends_on_blueedge_only": false,
+      "notes": "Both existing clients have 40.x artifacts. But the step is non-repeatable for new clients and non-automated within the orchestrator."
+    },
+    {
+      "step": "Step 6 — Phase 3: Structural Verification",
+      "classification": "FULLY_OPERATIONAL",
+      "blocking_issues": [],
+      "depends_on_blueedge_only": false,
+      "notes": "Passes for both BlueEdge and FastAPI (after bootstrap). Orchestrator callable. Validates existence and reads total_nodes."
+    },
+    {
+      "step": "Step 7 — CEU Grounding and Integration Pipeline",
+      "classification": "PARTIAL",
+      "blocking_issues": [
+        "No CEU grounding pipeline scripts exist in repo",
+        "No integrated pipeline scripts exist in repo",
+        "FastAPI: grounding_state_v3.json absent (GAP-REG-02) — only v2 exists",
+        "FastAPI: integration_validation.json absent",
+        "FastAPI: grounding_state_v3 generation is an unresolved future contract (PI.LENS.FASTAPI.CEU-GROUNDING-BOOTSTRAP.01)"
+      ],
+      "depends_on_blueedge_only": false,
+      "notes": "BlueEdge: complete — artifacts exist at clients/6a6fcdbc.../psee/runs/run_blueedge_integrated_01/. FastAPI: BLOCKED."
+    },
+    {
+      "step": "Step 8 — Phase 4: CEU Grounding Verification",
+      "classification": "PARTIAL",
+      "blocking_issues": [
+        "FastAPI: grounding_state_v3.json absent — phase fails with FileNotFoundError",
+        "GAP-REG-02 unresolved for FastAPI"
+      ],
+      "depends_on_blueedge_only": false,
+      "notes": "BlueEdge: PASS. FastAPI: BLOCKED. Orchestrator callable but FastAPI cannot reach PASS gate."
+    },
+    {
+      "step": "Step 9 — DOM Layer Construction",
+      "classification": "PARTIAL",
+      "blocking_issues": [
+        "No generic DOM layer generation script exists in repo",
+        "BlueEdge dom_layer stored in docs/ not clients/ — not client-scoped",
+        "FastAPI: dom_layer_path field absent from source_manifest.json — no artifact and no path registered",
+        "No orchestrator phase validates dom_layer existence before Phase 5/8a read it — assumed present without gate"
+      ],
+      "depends_on_blueedge_only": true,
+      "notes": "BlueEdge: artifact exists but via a BlueEdge-specific recompute contract. FastAPI and new clients: no path to DOM layer construction defined."
+    },
+    {
+      "step": "Step 10 — Phase 5: Binding Envelope Construction",
+      "classification": "PARTIAL",
+      "blocking_issues": [
+        "Native path requires dom_layer_path and ceu_grounding_registry — no generic producer for either",
+        "FastAPI: NOT REACHED (blocked at Phase 4)",
+        "FastAPI source_manifest.json missing dom_layer_path — would KeyError on native path"
+      ],
+      "depends_on_blueedge_only": false,
+      "notes": "BlueEdge: COMPLETE via conformance path. Native path not tested end-to-end for any client. FastAPI: NOT REACHED."
+    },
+    {
+      "step": "Step 11 — Phase 6+7: E2E Signal Pipeline",
+      "classification": "PARTIAL",
+      "blocking_issues": [
+        "FastAPI: NOT REACHED",
+        "BlueEdge: native path (run_end_to_end.py) not tested in production — conformance path used exclusively",
+        "run_end_to_end.py exists and is callable, but its behavior on a new client run has not been validated"
+      ],
+      "depends_on_blueedge_only": false,
+      "notes": "BlueEdge: COMPLETE via conformance path. run_end_to_end.py exists — native path structurally available. FastAPI: NOT REACHED."
+    },
+    {
+      "step": "Step 12 — Phase 8a: Vault Construction",
+      "classification": "PARTIAL",
+      "blocking_issues": [
+        "FastAPI: NOT REACHED",
+        "integration_validation_path not validated before Phase 8a reads it — no gate",
+        "dom_layer_path not validated before Phase 8a reads it — no gate",
+        "FastAPI source_manifest missing both fields"
+      ],
+      "depends_on_blueedge_only": false,
+      "notes": "BlueEdge: COMPLETE via conformance path. FastAPI: NOT REACHED."
+    },
+    {
+      "step": "Step 13 — Phase 8b: Lens Report Generation",
+      "classification": "PARTIAL",
+      "blocking_issues": [
+        "FastAPI: NOT REACHED",
+        "Requires all vault artifacts from Phase 8a"
+      ],
+      "depends_on_blueedge_only": false,
+      "notes": "BlueEdge: COMPLETE. lens_report_generator.py exists and callable. FastAPI: NOT REACHED."
+    },
+    {
+      "step": "Step 14 — Phase 9: Selector Update",
+      "classification": "PARTIAL",
+      "blocking_issues": [
+        "FastAPI: NOT REACHED"
+      ],
+      "depends_on_blueedge_only": false,
+      "notes": "BlueEdge: COMPLETE. Orchestrator callable. Creates directory if absent — never fails closed. FastAPI: NOT REACHED."
+    }
+  ],
+
+  "summary": {
+    "FULLY_OPERATIONAL": ["Step 1", "Step 3", "Step 4", "Step 6"],
+    "PARTIAL": ["Step 2", "Step 5", "Step 7", "Step 8", "Step 9", "Step 10", "Step 11", "Step 12", "Step 13", "Step 14"],
+    "NON_EXISTENT": [],
+    "blueedge_only_dependency": ["Step 9"],
+    "fastapi_blocked_at": "Step 8 (Phase 4 — grounding_state_v3.json absent, GAP-REG-02)",
+    "note": "No step is NON_EXISTENT because BlueEdge artifacts provide operational evidence for all steps. The PARTIAL classification reflects gaps that prevent full generalization to new clients."
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "contract_id": "PI.LENS.FASTAPI.40X-STRUCTURAL-BOOTSTRAP.01",
+  "artifact": "structural_artifact_requirements",
+  "generated_date": "2026-05-01",
+
+  "phase_03_requirements": {
+    "source": "scripts/pios/run_client_pipeline.py — phase_03_40x_structural (lines 168-185)",
+    "structure_path_field": "source_manifest['structure_path']",
+    "fastapi_structure_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/structure",
+    "required_artifacts": [
+      {
+        "relative_path": "40.2/structural_node_inventory.json",
+        "absolute_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/structure/40.2/structural_node_inventory.json",
+        "orchestrator_description": "955-node inventory (BlueEdge label — not validated against FastAPI)",
+        "required_fields": ["total_nodes OR node_count"],
+        "validation_method": "existence_check + json.load + inv.get('total_nodes', inv.get('node_count', '?'))"
+      },
+      {
+        "relative_path": "40.3/structural_topology_log.json",
+        "absolute_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/structure/40.3/structural_topology_log.json",
+        "orchestrator_description": "1937-relation topology (BlueEdge label — not validated against FastAPI)",
+        "required_fields": [],
+        "validation_method": "existence_check only"
+      },
+      {
+        "relative_path": "40.4/canonical_topology.json",
+        "absolute_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/structure/40.4/canonical_topology.json",
+        "orchestrator_description": "6-cluster normalization (BlueEdge label — not validated against FastAPI)",
+        "required_fields": [],
+        "validation_method": "existence_check only"
+      }
+    ],
+    "phase_03_pass_condition": "All 3 files exist AND 40.2 is valid JSON",
+    "path_resolution_note": "Orchestrator resolves structure_path as REPO_ROOT / source_manifest['structure_path']. UUID path is authoritative — no client slug path involved for structure."
+  },
+
+  "generation_approach": {
+    "generator_script": "scripts/pios/40.2/bootstrap_fastapi_40x.py",
+    "source": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/source/fastapi-backend/",
+    "method": "static_filesystem_scan_no_execution",
+    "existing_scripts_evaluated": [
+      {
+        "script": "scripts/pios/40.2/extract_entities.py",
+        "compatible": false,
+        "reason": "BlueEdge-specific — searches for CKR entries, Stream references, Krayu/PiOS/Signäl named components"
+      },
+      {
+        "script": "scripts/pios/40.2/classify_files.py",
+        "compatible": false,
+        "reason": "BlueEdge-specific — expects 106-file repo with .sh/yml/.gitignore patterns from CLAUDE.md repo"
+      },
+      {
+        "script": "scripts/pios/40.2/scan_repository.sh",
+        "compatible": false,
+        "reason": "BlueEdge-specific — validates 106-file count from INT-03 baseline"
+      }
+    ],
+    "new_script_required": true,
+    "new_script_rationale": "FastAPI is a Python microservice repo. No existing 40.x script handles Python source. bootstrap_fastapi_40x.py is a generic filesystem scanner — deterministic and source-agnostic."
+  },
+
+  "artifacts_produced": {
+    "40_2": {
+      "path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/structure/40.2/structural_node_inventory.json",
+      "total_nodes": 124,
+      "file_nodes": 87,
+      "directory_nodes": 37,
+      "size_bytes": 40057,
+      "valid_json": true,
+      "blueedge_contamination": false
+    },
+    "40_3": {
+      "path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/structure/40.3/structural_topology_log.json",
+      "total_relations": 123,
+      "relation_type": "CONTAINS",
+      "parsing_method": "static_source_analysis_no_execution",
+      "size_bytes": 36036,
+      "valid_json": true,
+      "blueedge_contamination": false
+    },
+    "40_4": {
+      "path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/structure/40.4/canonical_topology.json",
+      "platform": "OSS FastAPI Modular Monolith",
+      "cluster_count": 14,
+      "size_bytes": 3603,
+      "valid_json": true,
+      "blueedge_contamination": false,
+      "taxonomy_note": "Minor edge case: src/services/__init__.py assigned to cluster 'src_services___init__.py' instead of 'src_services'. Does not affect orchestrator Phase 3 validation."
+    }
+  }
+}

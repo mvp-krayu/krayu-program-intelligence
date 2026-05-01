@@ -1,0 +1,211 @@
+{
+  "contract_id": "PI.LENS.PIPELINE-CONFORMANCE.FASTAPI.01",
+  "artifact": "phase_ownership_map",
+  "generated_date": "2026-05-01",
+  "source_inspected": "scripts/pios/run_client_pipeline.py",
+
+  "phases": [
+    {
+      "phase": "Phase 1",
+      "label": "Source Boundary",
+      "function": "phase_01_source_boundary",
+      "lines": "125-149",
+      "inputs_required": [
+        "source_manifest['archive_path'] — must be a readable binary file",
+        "source_manifest['sha256'] — expected SHA256 of archive_path file"
+      ],
+      "artifacts_checked": [
+        "archive_path (existence + SHA256 hash match)"
+      ],
+      "artifacts_generated": [],
+      "external_scripts_invoked": [],
+      "classification": "VALIDATES_EXISTING_ARTIFACTS",
+      "fail_closed_on": "archive_path missing OR sha256 mismatch",
+      "generator_when_absent": "NONE — orchestrator has no mechanism to produce archive_path",
+      "fastapi_note": "FastAPI uses MANIFEST_FILE_PROXY — not a true archive. Phase 1 passes with boundary proxy, but the underlying source intake is not governed by this phase."
+    },
+    {
+      "phase": "Phase 2",
+      "label": "Intake Verification",
+      "function": "phase_02_intake",
+      "lines": "154-163",
+      "inputs_required": [
+        "source_manifest['extracted_path'] — must be an existing directory"
+      ],
+      "artifacts_checked": [
+        "extracted_path directory (existence + rglob file count)"
+      ],
+      "artifacts_generated": [],
+      "external_scripts_invoked": [],
+      "classification": "VALIDATES_EXISTING_ARTIFACTS",
+      "fail_closed_on": "extracted_path directory missing",
+      "generator_when_absent": "NONE — orchestrator prints 'Re-execute PI.BLUEEDGE.CLEAN-INTAKE.01' but does not invoke it"
+    },
+    {
+      "phase": "Phase 3",
+      "label": "40.x Structural Verification",
+      "function": "phase_03_40x_structural",
+      "lines": "168-185",
+      "inputs_required": [
+        "source_manifest['structure_path'] — must contain 40.2/structural_node_inventory.json",
+        "source_manifest['structure_path']/40.3/structural_topology_log.json",
+        "source_manifest['structure_path']/40.4/canonical_topology.json"
+      ],
+      "artifacts_checked": [
+        "structure_path/40.2/structural_node_inventory.json (existence + json.load)",
+        "structure_path/40.3/structural_topology_log.json (existence only)",
+        "structure_path/40.4/canonical_topology.json (existence only)"
+      ],
+      "artifacts_generated": [],
+      "external_scripts_invoked": [],
+      "classification": "VALIDATES_EXISTING_ARTIFACTS",
+      "fail_closed_on": "any of 3 artifact files missing",
+      "generator_when_absent": "NONE — orchestrator prints 'Re-execute PI.BLUEEDGE.STRUCTURAL-PIPELINE.40X.01' but does not invoke it",
+      "fastapi_note": "GAP-REG-01 was resolved by external contract PI.LENS.FASTAPI.40X-STRUCTURAL-BOOTSTRAP.01 via bootstrap_fastapi_40x.py — a script not owned by or invoked by run_client_pipeline.py"
+    },
+    {
+      "phase": "Phase 4",
+      "label": "CEU Grounding Verification",
+      "function": "phase_04_ceu_grounding",
+      "lines": "190-213",
+      "inputs_required": [
+        "source_manifest['grounding_state_path'] — must exist with readiness_gate=PASS"
+      ],
+      "artifacts_checked": [
+        "grounding_state_path file (existence + readiness_gate.status == 'PASS' + grounding_ratio + source_mode)"
+      ],
+      "artifacts_generated": [],
+      "external_scripts_invoked": [],
+      "classification": "VALIDATES_EXISTING_ARTIFACTS",
+      "fail_closed_on": "grounding_state_path missing OR readiness_gate != PASS",
+      "generator_when_absent": "NONE — no script invoked",
+      "fastapi_note": "GAP-REG-02 — grounding_state_v3.json does not exist for FastAPI. Only v2 exists. Phase 4 currently blocked. No orchestrator-owned generation path."
+    },
+    {
+      "phase": "Phase 5",
+      "label": "Build Binding Envelope",
+      "function": "phase_05_build_binding_envelope",
+      "lines": "217-426",
+      "inputs_required": [
+        "source_manifest['fastapi_conformance_path'] (optional) — if set, copies pre-computed binding_envelope_fastapi_compatible.json",
+        "IF conformance_path NOT set: source_manifest['ceu_grounding_path']/registry/ceu_grounding_registry.json",
+        "IF conformance_path NOT set: source_manifest['dom_layer_path'] (field NOT defined in FastAPI source_manifest)"
+      ],
+      "artifacts_checked": [
+        "conformance binding_envelope_fastapi_compatible.json OR ceu_grounding_registry.json + dom_layer_path"
+      ],
+      "artifacts_generated": [
+        "run_dir/binding/binding_envelope.json — generated from CEU registry + DOM layer data"
+      ],
+      "external_scripts_invoked": [],
+      "classification": "MIXED",
+      "fail_closed_on": "missing registry OR missing dom_layer_path OR (conformance path set but conformance file missing)",
+      "generator_when_absent": "NONE for inputs — orchestrator generates the output binding_envelope.json but CANNOT generate its required inputs",
+      "fastapi_note": "FastAPI source_manifest.json is missing 'dom_layer_path' and 'integration_validation_path' fields. Phase 5 would KeyError without fastapi_conformance_path set. Neither missing field is generated by any prior pipeline phase."
+    },
+    {
+      "phase": "Phase 6+7",
+      "label": "75.x Activation + 41.x Projection",
+      "function": "phase_06_and_07_e2e",
+      "lines": "431-507",
+      "inputs_required": [
+        "source_manifest['fastapi_conformance_path'] (optional) — if set, copies pre-computed signal/pressure artifacts",
+        "IF conformance_path NOT set: scripts/pios/run_end_to_end.py + run_dir/binding/binding_envelope.json"
+      ],
+      "artifacts_checked": [
+        "conformance signal_projection_fastapi_compatible.json (if conformance path set)",
+        "run_end_to_end.py script existence (if synthetic path)"
+      ],
+      "artifacts_generated": [
+        "run_dir/41.x/signal_projection.json",
+        "run_dir/41.x/pressure_zone_projection.json",
+        "run_dir/75.x/condition_correlation_state.json",
+        "run_dir/75.x/pressure_zone_state.json",
+        "run_dir/75.x/pressure_candidate_state.json"
+      ],
+      "external_scripts_invoked": [
+        "scripts/pios/run_end_to_end.py (synthetic path only)"
+      ],
+      "classification": "GENERATES_ARTIFACTS",
+      "fail_closed_on": "run_end_to_end.py missing OR subprocess non-zero exit OR expected outputs absent"
+    },
+    {
+      "phase": "Phase 8a",
+      "label": "Vault Construction",
+      "function": "phase_08a_vault",
+      "lines": "512-892",
+      "inputs_required": [
+        "source_manifest['grounding_state_path'] — must exist (v3 expected by schema refs in code)",
+        "source_manifest['dom_layer_path'] — field NOT defined in FastAPI source_manifest",
+        "source_manifest['integration_validation_path'] — field NOT defined in FastAPI source_manifest",
+        "source_manifest['fastapi_conformance_path'] (optional) — if set, loads canonical signal_registry + signal_projection"
+      ],
+      "artifacts_checked": [
+        "grounding_state_path file",
+        "dom_layer_path file",
+        "integration_validation_path file",
+        "conformance signal_registry_fastapi_compatible.json (if conformance path)"
+      ],
+      "artifacts_generated": [
+        "run_dir/vault/coverage_state.json",
+        "run_dir/vault/reconstruction_state.json",
+        "run_dir/vault/gauge_state.json",
+        "run_dir/vault/canonical_topology.json",
+        "run_dir/vault/signal_registry.json",
+        "run_dir/vault/binding_envelope.json",
+        "run_dir/vault/admissibility_log.json",
+        "run_dir/vault/evidence_trace.json",
+        "run_dir/vault/vault_manifest.json"
+      ],
+      "external_scripts_invoked": [],
+      "classification": "MIXED",
+      "fail_closed_on": "grounding_state_path missing OR dom_layer_path missing OR integration_validation_path missing",
+      "fastapi_note": "FastAPI source_manifest.json missing 'dom_layer_path' and 'integration_validation_path'. Phase 8a would fail with KeyError for non-conformance path runs."
+    },
+    {
+      "phase": "Phase 8b",
+      "label": "Lens Reports",
+      "function": "phase_08b_lens_reports",
+      "lines": "896-921",
+      "inputs_required": [
+        "scripts/pios/lens_report_generator.py — must exist",
+        "vault artifacts from Phase 8a"
+      ],
+      "artifacts_checked": [
+        "lens_report_generator.py script existence"
+      ],
+      "artifacts_generated": [
+        "clients/<alias>/lens/runs/<run_id>/ — full report tree (index, manifest, reports, graph_state)"
+      ],
+      "external_scripts_invoked": [
+        "scripts/pios/lens_report_generator.py (subprocess)"
+      ],
+      "classification": "GENERATES_ARTIFACTS",
+      "fail_closed_on": "lens_report_generator.py missing OR subprocess non-zero exit"
+    },
+    {
+      "phase": "Phase 9",
+      "label": "Selector Update",
+      "function": "phase_09_selector_update",
+      "lines": "926-971",
+      "inputs_required": [
+        "clients/<alias>/lens/selector/ directory (created if absent)"
+      ],
+      "artifacts_checked": [],
+      "artifacts_generated": [
+        "clients/<alias>/lens/selector/selector.json",
+        "clients/<alias>/lens/selector/available_runs.json"
+      ],
+      "external_scripts_invoked": [],
+      "classification": "GENERATES_ARTIFACTS",
+      "fail_closed_on": "never — creates selector dir if absent"
+    }
+  ],
+
+  "summary": {
+    "generates_artifacts": ["Phase 6+7", "Phase 8b", "Phase 9"],
+    "validates_existing_artifacts": ["Phase 1", "Phase 2", "Phase 3", "Phase 4"],
+    "mixed": ["Phase 5", "Phase 8a"],
+    "unknown": []
+  }
+}
