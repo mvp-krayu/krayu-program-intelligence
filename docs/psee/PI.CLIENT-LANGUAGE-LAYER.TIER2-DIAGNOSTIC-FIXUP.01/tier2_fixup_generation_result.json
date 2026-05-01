@@ -1,0 +1,49 @@
+{
+  "contract_id": "PI.CLIENT-LANGUAGE-LAYER.TIER2-DIAGNOSTIC-FIXUP.01",
+  "artifact": "tier2_fixup_generation_result",
+  "captured_date": "2026-04-30",
+
+  "generation_command": "python3 scripts/pios/lens_report_generator.py --client blueedge --run-id run_blueedge_productized_01 --package-dir clients/blueedge/psee/runs/run_blueedge_productized_01/vault --semantic-topology-dir docs/psee/PI.CLIENT-LANGUAGE-LAYER.SEMANTIC-TOPOLOGY-REBUILD.01 --crosswalk-path docs/psee/PI.CLIENT-LANGUAGE-LAYER.SEMANTIC-CONTINUITY.01/semantic_continuity_crosswalk.json --deliverable diagnostic --output-dir clients/blueedge/psee/runs/run_blueedge_productized_01_tier2_fixup/reports/tier2",
+
+  "exit_code": 0,
+
+  "outputs_generated": [
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_tier2_fixup/reports/tier2/graph_state.json",
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_tier2_fixup/reports/tier2/lens_tier2_diagnostic_narrative.html",
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_tier2_fixup/reports/tier2/publish/lens_tier2_diagnostic_narrative_pub.html"
+  ],
+
+  "report_stats": {
+    "lens_tier2_diagnostic_narrative.html": {
+      "lines": 775,
+      "size_kb": 68
+    },
+    "graph_state.json": {
+      "nodes": 18,
+      "links": 17,
+      "ticks": 458,
+      "size_kb": 5
+    }
+  },
+
+  "graph_state": "GENERATED — export_graph_state.mjs wrote directly to TARGET_RUN via --output flag. Visual structural graph renders in section 01C.",
+
+  "semantic_topology": "LOADED — 17 domains, 5 clusters, 12 edges from docs/psee/PI.CLIENT-LANGUAGE-LAYER.SEMANTIC-TOPOLOGY-REBUILD.01/",
+
+  "crosswalk": "LOADED — docs/psee/PI.CLIENT-LANGUAGE-LAYER.SEMANTIC-CONTINUITY.01/semantic_continuity_crosswalk.json",
+
+  "tier1_files_generated": false,
+
+  "zone_label_resolution": {
+    "PZ-001": {
+      "anchor_id": "DOM-04",
+      "anchor_name": "backend_app_root",
+      "semantic_domain_id": "DOMAIN-10",
+      "semantic_domain_label": "Platform Infrastructure and Data",
+      "primary_display": "Platform Infrastructure and Data",
+      "dom_backing_display": "DOM-04 / backend_app_root"
+    }
+  },
+
+  "verdict": "GENERATION_SUCCESS"
+}

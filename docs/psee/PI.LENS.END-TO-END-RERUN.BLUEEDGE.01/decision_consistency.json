@@ -1,0 +1,65 @@
+{
+  "contract_id": "PI.LENS.END-TO-END-RERUN.BLUEEDGE.01",
+  "artifact": "decision_consistency",
+  "captured_date": "2026-04-30",
+
+  "source": "clients/blueedge/psee/runs/run_blueedge_productized_01/vault/gauge_state.json",
+
+  "checks": [
+    {
+      "id": "DC-01",
+      "fact": "score",
+      "expected": 60,
+      "actual": 60,
+      "source": "gauge_state.json score.canonical",
+      "result": "PASS"
+    },
+    {
+      "id": "DC-02",
+      "fact": "band",
+      "expected": "CONDITIONAL",
+      "actual": "CONDITIONAL",
+      "source": "gauge_state.json score.band_label",
+      "result": "PASS"
+    },
+    {
+      "id": "DC-03",
+      "fact": "posture",
+      "expected": "INVESTIGATE",
+      "actual": "INVESTIGATE",
+      "source": "gauge_state.json / band CONDITIONAL → posture INVESTIGATE per gauge scoring model",
+      "result": "PASS"
+    },
+    {
+      "id": "DC-04",
+      "fact": "execution_layer_evaluated",
+      "expected": false,
+      "actual": false,
+      "source": "gauge_state.json execution_layer_evaluated",
+      "result": "PASS"
+    },
+    {
+      "id": "DC-05",
+      "fact": "evidence_completeness",
+      "expected": "PARTIAL",
+      "actual": "PARTIAL",
+      "source": "gauge_state.json (execution not evaluated → evidence_completeness=PARTIAL)",
+      "result": "PASS"
+    }
+  ],
+
+  "report_content_verification": {
+    "score_60_in_all_reports": "PASS",
+    "CONDITIONAL_in_all_reports": "PASS",
+    "INVESTIGATE_in_all_reports": "PASS",
+    "method": "grep of content values confirmed in Block D checks"
+  },
+
+  "summary": {
+    "total": 5,
+    "passed": 5,
+    "failed": 0
+  },
+
+  "verdict": "DECISION_CONSISTENCY_PASS — score=60/CONDITIONAL/INVESTIGATE matches baseline exactly"
+}

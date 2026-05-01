@@ -1,0 +1,33 @@
+{
+  "contract_id": "PI.LENS.END-TO-END-RERUN.BLUEEDGE.01",
+  "artifact": "selector_update",
+  "captured_date": "2026-04-30",
+
+  "selector_file": "clients/blueedge/lens/selector/selector.json",
+  "available_runs_file": "clients/blueedge/lens/selector/available_runs.json",
+  "current_dir": "clients/blueedge/lens/current/",
+
+  "selector_state": {
+    "client": "blueedge",
+    "current_run": "run_blueedge_rerun_01",
+    "updated_at": "2026-04-30T13:46:13.870191+00:00",
+    "output_root": "clients/blueedge/lens",
+    "navigation_base": "/api/report-file"
+  },
+
+  "available_runs": [
+    "run_blueedge_productized_01_fixed",
+    "run_blueedge_rerun_01"
+  ],
+
+  "current_dir_state": "Updated to clients/blueedge/lens/current/ — full report tree mirrored from run_blueedge_rerun_01",
+
+  "checks": {
+    "selector_current_run_updated": "PASS — current_run = run_blueedge_rerun_01",
+    "available_runs_appended": "PASS — run_blueedge_rerun_01 added; run_blueedge_productized_01_fixed preserved",
+    "current_dir_updated": "PASS — current/ mirrors run_blueedge_rerun_01 reports",
+    "no_prior_run_removed": "PASS — run_blueedge_productized_01_fixed still in available_runs and runs/"
+  },
+
+  "verdict": "SELECTOR_UPDATED — current_run=run_blueedge_rerun_01; 2 runs in available_runs"
+}

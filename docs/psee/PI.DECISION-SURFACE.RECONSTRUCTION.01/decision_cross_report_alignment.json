@@ -1,0 +1,111 @@
+{
+  "contract_id": "PI.DECISION-SURFACE.RECONSTRUCTION.01",
+  "artifact": "decision_cross_report_alignment",
+  "captured_date": "2026-04-30",
+
+  "reference_run": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/",
+  "decision_run": "clients/blueedge/psee/runs/run_blueedge_productized_01_decision_reconstructed/",
+
+  "alignment_checks": [
+    {
+      "fact": "Score",
+      "T1_EVB": "60",
+      "T1_NAR": "60",
+      "T2_DIA": "60",
+      "DS": "60",
+      "aligned": true
+    },
+    {
+      "fact": "Band",
+      "T1_EVB": "CONDITIONAL",
+      "T1_NAR": "CONDITIONAL",
+      "T2_DIA": "CONDITIONAL",
+      "DS": "CONDITIONAL",
+      "aligned": true
+    },
+    {
+      "fact": "Posture",
+      "T1_EVB": "INVESTIGATE",
+      "T1_NAR": "INVESTIGATE",
+      "T2_DIA": "INVESTIGATE",
+      "DS": "INVESTIGATE",
+      "aligned": true
+    },
+    {
+      "fact": "Semantic domain count",
+      "T1_EVB": "17",
+      "T1_NAR": "17",
+      "T2_DIA": "17",
+      "DS": "17",
+      "aligned": true
+    },
+    {
+      "fact": "Structurally backed semantic domains",
+      "T1_EVB": "5",
+      "T1_NAR": "5",
+      "T2_DIA": "5",
+      "DS": "5",
+      "aligned": true
+    },
+    {
+      "fact": "Structural evidence group count",
+      "T1_EVB": "13",
+      "T1_NAR": "13",
+      "T2_DIA": "13",
+      "DS": "13",
+      "aligned": true
+    },
+    {
+      "fact": "Pressure zone ID",
+      "T1_EVB": "PZ-001",
+      "T1_NAR": "PZ-001",
+      "T2_DIA": "PZ-001",
+      "DS": "PZ-001",
+      "aligned": true
+    },
+    {
+      "fact": "Semantic zone label",
+      "T1_EVB": "Platform Infrastructure and Data",
+      "T1_NAR": "Platform Infrastructure and Data",
+      "T2_DIA": "Platform Infrastructure and Data",
+      "DS": "Platform Infrastructure and Data",
+      "aligned": true
+    },
+    {
+      "fact": "DOM backing",
+      "T1_EVB": "DOM-04",
+      "T1_NAR": "DOM-04",
+      "T2_DIA": "DOM-04",
+      "DS": "DOM-04",
+      "aligned": true
+    },
+    {
+      "fact": "Active signal IDs",
+      "T1_EVB": "PSIG-001, PSIG-002, PSIG-004",
+      "T1_NAR": "PSIG-001, PSIG-002, PSIG-004",
+      "T2_DIA": "PSIG-001, PSIG-002, PSIG-004",
+      "DS": "PSIG-001, PSIG-002, PSIG-004",
+      "aligned": true
+    },
+    {
+      "fact": "Baseline signal IDs",
+      "T1_EVB": "PSIG-006 (BASELINE card)",
+      "T1_NAR": "PSIG-006 (signal table row)",
+      "T2_DIA": "PSIG-006 (section 04B)",
+      "DS": "PSIG-006 (baseline signal line)",
+      "aligned": true,
+      "note": "All four reports now show PSIG-006 by ID with BASELINE/theoretical baseline designation"
+    },
+    {
+      "fact": "Evidence boundary — runtime gap",
+      "T1_EVB": "PARTIAL evidence — execution not evaluated",
+      "T1_NAR": "execution not evaluated",
+      "T2_DIA": "Execution-layer behavioral state (uncertainty)",
+      "DS": "Execution evidence is incomplete / Execution-layer behavioral state",
+      "aligned": true
+    }
+  ],
+
+  "status": "ALIGNED",
+  "verdict": "All 12 core facts consistent across T1_EVB, T1_NAR, T2_DIA, and Decision Surface."
+}

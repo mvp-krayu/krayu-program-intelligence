@@ -1,0 +1,53 @@
+{
+  "contract_id": "PI.LENS.END-TO-END-RERUN.BLUEEDGE.01",
+  "artifact": "git_hygiene",
+  "captured_date": "2026-04-30",
+
+  "branch": "work/psee-runtime",
+
+  "tracked_modifications_from_this_contract": [],
+
+  "tracked_modifications_from_prior_contracts": [
+    {
+      "file": "scripts/pios/export_graph_state.mjs",
+      "type": "M",
+      "from": "PI.LENS.CLIENT-RUN-SELECTOR.AND-OUTPUT-CONTRACT.01"
+    },
+    {
+      "file": "scripts/pios/lens_report_generator.py",
+      "type": "M",
+      "from": "PI.LENS.CLIENT-RUN-SELECTOR.AND-OUTPUT-CONTRACT.01"
+    }
+  ],
+
+  "pre_existing_deletions": [
+    "clients/blueedge/psee/runs/run_01_authoritative/ (D — pre-existing; not from this contract)"
+  ],
+
+  "this_contract_file_changes": "NONE — this contract executed the generator (which wrote untracked output files); no tracked files were modified",
+
+  "new_untracked_output": [
+    "clients/blueedge/lens/runs/run_blueedge_rerun_01/ (canonical run output — untracked)",
+    "clients/blueedge/lens/current/ (updated — untracked)",
+    "clients/blueedge/lens/selector/ (updated — untracked)",
+    "docs/psee/PI.LENS.END-TO-END-RERUN.BLUEEDGE.01/ (control docs — untracked)"
+  ],
+
+  "vault_artifacts_modified": false,
+  "semantic_artifacts_modified": false,
+  "psee_runs_modified": false,
+  "unexpected_directories": false,
+
+  "diff_stat": "2 files changed, 297 insertions(+), 65 deletions(-) in scripts/pios/ (from prior contract)",
+  "diff_check": "PASS — no whitespace errors",
+
+  "rule_checks": {
+    "no_vault_mutation": "PASS",
+    "no_semantic_artifact_mutation": "PASS",
+    "no_psee_runs_writes": "PASS — RULE-04 satisfied",
+    "no_unexpected_directories": "PASS",
+    "canonical_output_untracked": "PASS"
+  },
+
+  "verdict": "GIT_HYGIENE_CLEAN"
+}

@@ -1,0 +1,29 @@
+{
+  "contract_id": "PI.CLIENT-LANGUAGE-LAYER.TIER2-DIAGNOSTIC-FIXUP.01",
+  "artifact": "validation_log",
+  "captured_date": "2026-04-30",
+
+  "checks": [
+    { "name": "VF-01_graph_root_cause_documented",         "result": "PASS", "detail": "structural_graph_root_cause.md documents exact missing --output flag, path mismatch, and fix" },
+    { "name": "VF-02_graph_state_in_target_run",           "result": "PASS", "detail": "clients/blueedge/psee/runs/run_blueedge_productized_01_tier2_fixup/reports/tier2/graph_state.json exists — 18 nodes, 17 links, 458 ticks" },
+    { "name": "VF-03_structural_graph_renders",            "result": "PASS", "detail": "'STRUCTURAL GRAPH UNAVAILABLE' absent from report; visual graph SVG/canvas present in section 01C" },
+    { "name": "VF-04_no_not_found_fallback",               "result": "PASS", "detail": "'graph_state.json not found' absent from report" },
+    { "name": "VF-05_zone_inventory_semantic_label",       "result": "PASS", "detail": "t2-zone-domain content = 'Platform Infrastructure and Data'; semantic label is primary display" },
+    { "name": "VF-06_dom_as_backing_only",                 "result": "PASS", "detail": "'DOM backing: DOM-04 / backend_app_root' present — DOM shown only as structural trace" },
+    { "name": "VF-07_zone_detail_semantic_label",          "result": "PASS", "detail": "'Platform Infrastructure and Data domain:' present in zone detail Section A primary text" },
+    { "name": "VF-08_no_backend_primary_title",            "result": "PASS", "detail": "zone-domain div contents = ['Platform Infrastructure and Data'] — backend_app_root not primary" },
+    { "name": "VF-09_no_misleading_capability_msg",        "result": "PASS", "detail": "'NO SEMANTIC CAPABILITY MAPPING AVAILABLE' absent; 'Semantic domain: Platform Infrastructure and Data (STRONG · 0.78)' present" },
+    { "name": "VF-10_no_hardcoded_labels",                 "result": "PASS", "detail": "All labels resolved from semantic_topology_model.json, semantic_dom_binding.json, crosswalk at runtime; no inline client values" },
+    { "name": "VF-11_no_vault_mutation",                   "result": "PASS", "detail": "vault/ binding_envelope signal_registry canonical_topology not modified; signal_projection.json and pressure_zone_projection.json read-only" },
+    { "name": "VF-12_create_only_output",                  "result": "PASS", "detail": "TARGET_RUN was new (run_blueedge_productized_01_tier2_fixup/); no existing reports overwritten" }
+  ],
+
+  "checks_total": 12,
+  "checks_passed": 12,
+  "checks_partial": 0,
+  "checks_failed": 0,
+
+  "generator_syntax": "PASS — python3 -m py_compile exit 0",
+
+  "verdict": "PASS"
+}

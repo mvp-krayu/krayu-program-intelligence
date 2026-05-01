@@ -1,0 +1,99 @@
+{
+  "contract_id": "PI.DECISION-SURFACE.RECONSTRUCTION.01",
+  "artifact": "validation_log",
+  "captured_date": "2026-04-30",
+
+  "checks": [
+    {
+      "id": "VF-01",
+      "name": "score/band/posture artifact-derived",
+      "result": "PASS",
+      "detail": "60/CONDITIONAL/INVESTIGATE confirmed in DS. All from gauge_state.json and decision_model."
+    },
+    {
+      "id": "VF-02",
+      "name": "no 'all domains grounded'",
+      "result": "PASS",
+      "detail": "0 matches. Non-semantic fallback now uses 'X of Y structural evidence groups are grounded.' Semantic path never emits this phrase."
+    },
+    {
+      "id": "VF-03",
+      "name": "no '13 domains' misuse",
+      "result": "PASS",
+      "detail": "0 matches for '13 domains'. Correct form '13 of 13 structural evidence groups' used."
+    },
+    {
+      "id": "VF-04",
+      "name": "semantic coverage displayed",
+      "result": "PASS",
+      "detail": "'5 of 17 semantic domains have structural backing; 12 remain semantic-only.' confirmed in output."
+    },
+    {
+      "id": "VF-05",
+      "name": "active zone with semantic label",
+      "result": "PASS",
+      "detail": "Zone displayed as 'Platform Infrastructure and Data' (semantic business label) in both confirmed section and pressure block."
+    },
+    {
+      "id": "VF-06",
+      "name": "DOM backing as trace only",
+      "result": "PASS",
+      "detail": "DOM-04 appears only in 'backed by DOM-04 / backend_app_root' (confirmed) and 'DOM backing: DOM-04 / Platform Infrastructure and Data' (pressure block). Not primary label."
+    },
+    {
+      "id": "VF-07",
+      "name": "active signals = PSIG-001/002/004",
+      "result": "PASS",
+      "detail": "Signal chips: PSIG-001, PSIG-002, PSIG-004 (3 each). Derived from active_conditions_in_scope filtered by RUN_RELATIVE_OUTLIER."
+    },
+    {
+      "id": "VF-08",
+      "name": "PSIG-006 baseline not active pressure signal",
+      "result": "PASS",
+      "detail": "'Baseline signal: PSIG-006 — theoretical baseline condition, not an activated pressure signal.' PSIG-006 not in zone signals list or active signal chips."
+    },
+    {
+      "id": "VF-09",
+      "name": "unsupported metrics not classified",
+      "result": "PASS",
+      "detail": "dep_load NOT_IN_SCOPE → structural density sentence suppressed. 0 matches for 'dep_load|density remain|dependency.*low|dependency.*high'."
+    },
+    {
+      "id": "VF-10",
+      "name": "runtime boundary visible",
+      "result": "PASS",
+      "detail": "'Execution evidence is incomplete.' in hero rationale. 'Execution-layer behavioral state' in gap items. Inference prohibition banner active."
+    },
+    {
+      "id": "VF-11",
+      "name": "no recommendations/remediation",
+      "result": "PASS",
+      "detail": "'remediation' appears only in prohibition disclaimer text ('No advisory content, causal inference, or remediation guidance may be derived.'). No prescriptive language."
+    },
+    {
+      "id": "VF-12",
+      "name": "no PZ-002/PZ-003",
+      "result": "PASS",
+      "detail": "0 matches. Only PZ-001 in artifact, only PZ-001 in output."
+    },
+    {
+      "id": "VF-13",
+      "name": "no backend_app_root primary label",
+      "result": "PASS",
+      "detail": "backend_app_root appears once as backing trace: 'backed by DOM-04 / backend_app_root'. Not used as zone title or primary identifier."
+    },
+    {
+      "id": "VF-14",
+      "name": "client-agnostic",
+      "result": "PASS",
+      "detail": "Client name resolved from _CLIENT_DISPLAY_NAMES[_ACTIVE_CLIENT] via _get_client_display_name(). Navigation URLs use _ACTIVE_CLIENT runtime config. No BlueEdge literals in new rendering logic."
+    }
+  ],
+
+  "summary": {
+    "total_checks": 14,
+    "passed": 14,
+    "failed": 0,
+    "verdict": "ALL_PASS"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "contract_id": "PI.DECISION-SURFACE.RECONSTRUCTION.FIXUP.01",
+  "artifact": "decision_fixup_git_hygiene",
+  "captured_date": "2026-04-30",
+
+  "tracked_modified_files": [
+    "scripts/pios/lens_report_generator.py (all contracts combined: 164 lines changed — 126 insertions, 38 deletions from baseline)"
+  ],
+
+  "this_contract_generator_patches": [
+    "FIX-01: removed BlueEdge-specific if client != 'blueedge' guard from configure_runtime()",
+    "FIX-02: added semantic confidence derivation via _pz0_conf_raw / _pz0_lin_stat",
+    "FIX-03: replaced _pz0_dom_bk from business_label to anchor_name",
+    "FIX-04: replaced count-only gap item with Not-activated signals: ID list",
+    "FIX-05: qualified _struct_tag to 'STABLE within structural evidence scope'",
+    "FIX-06: added _risk_label with evidence incompleteness / pressure rationale",
+    "FIX-07: removed duplicate structural coverage paragraph from _truth_sentences",
+    "FIX-08: added support_text param to RC.evidence_pair_block; dynamic convergence text in DS call site"
+  ],
+
+  "decision_output_files_overwritten": [
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_decision_reconstructed/reports/decision/lens_decision_surface.html",
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_decision_reconstructed/reports/decision/publish/lens_decision_surface_pub.html"
+  ],
+
+  "new_run_directory_created": false,
+  "diff_check": "PASS — no whitespace errors",
+
+  "rule_checks": {
+    "no_new_run_directory": "PASS — existing decision_reconstructed run overwritten in place",
+    "no_tier1_tier2_modification": "PASS — T1/T2 output files not touched",
+    "no_vault_mutation": "PASS — vault files not modified",
+    "no_signal_recompute": "PASS — signal values unchanged",
+    "no_binding_change": "PASS — binding envelope not modified",
+    "generator_only_tracked_change": "PASS — only generator modified among tracked files",
+    "no_commit": "PASS — no commit executed per RULE-08"
+  },
+
+  "verdict": "POSTFLIGHT_CLEAN"
+}

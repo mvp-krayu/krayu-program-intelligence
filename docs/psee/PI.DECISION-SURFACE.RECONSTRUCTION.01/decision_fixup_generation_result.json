@@ -1,0 +1,47 @@
+{
+  "contract_id": "PI.DECISION-SURFACE.RECONSTRUCTION.FIXUP.01",
+  "artifact": "decision_fixup_generation_result",
+  "captured_date": "2026-04-30",
+
+  "mode": "OVERWRITE_EXISTING_DECISION_OUTPUT_ONLY",
+
+  "overwritten_files": [
+    {
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01_decision_reconstructed/reports/decision/lens_decision_surface.html",
+      "status": "OVERWRITTEN"
+    },
+    {
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01_decision_reconstructed/reports/decision/publish/lens_decision_surface_pub.html",
+      "status": "OVERWRITTEN"
+    }
+  ],
+
+  "generation_command": {
+    "script": "scripts/pios/lens_report_generator.py",
+    "flags": [
+      "--client blueedge",
+      "--run-id run_blueedge_productized_01_fixed",
+      "--package-dir clients/blueedge/psee/runs/run_blueedge_productized_01/vault",
+      "--deliverable decision",
+      "--output-dir clients/blueedge/psee/runs/run_blueedge_productized_01_decision_reconstructed/reports/decision",
+      "--crosswalk-path docs/psee/PI.CLIENT-LANGUAGE-LAYER.SEMANTIC-CONTINUITY.01/semantic_continuity_crosswalk.json",
+      "--semantic-topology-dir docs/psee/PI.CLIENT-LANGUAGE-LAYER.SEMANTIC-TOPOLOGY-REBUILD.01"
+    ]
+  },
+
+  "source_artifacts": {
+    "package_dir": "clients/blueedge/psee/runs/run_blueedge_productized_01/vault",
+    "signal_projection": "41.x/grounded/signal_projection.json",
+    "pressure_zone_projection": "41.x/grounded/pressure_zone_projection.json",
+    "semantic_topology_model": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.SEMANTIC-TOPOLOGY-REBUILD.01/semantic_topology_model.json",
+    "crosswalk": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.SEMANTIC-CONTINUITY.01/semantic_continuity_crosswalk.json"
+  },
+
+  "new_run_directory_created": false,
+  "tier1_files_modified": false,
+  "tier2_files_modified": false,
+  "vault_files_modified": false,
+
+  "generation_status": "SUCCESS",
+  "verdict": "DECISION_OUTPUT_OVERWRITTEN_IN_PLACE"
+}

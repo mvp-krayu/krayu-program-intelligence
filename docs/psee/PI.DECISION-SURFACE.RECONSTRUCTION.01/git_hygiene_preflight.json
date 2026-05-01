@@ -1,0 +1,32 @@
+{
+  "contract_id": "PI.DECISION-SURFACE.RECONSTRUCTION.01",
+  "artifact": "git_hygiene_preflight",
+  "captured_date": "2026-04-30",
+
+  "head_commit": "c60634d — PIN: client-agnostic semantic LENS report generator",
+  "note": "Prior contract generator changes (FINAL-ALIGNMENT.01, EVIDENCE-CORRECTION.01, CROSS-REPORT-FIXUP.01) are committed. Generator is at HEAD with all prior fixes applied.",
+
+  "tracked_modified_files": [
+    "clients/blueedge/psee/runs/run_01_authoritative/intake/intake_log.md (D)",
+    "clients/blueedge/psee/runs/run_01_authoritative/intake/intake_result.json (D)",
+    "clients/blueedge/psee/runs/run_01_authoritative/package/coverage_state.json (D)",
+    "clients/blueedge/psee/runs/run_01_authoritative/package/engine_state.json (D)",
+    "clients/blueedge/psee/runs/run_01_authoritative/package/gauge_state.json (D)",
+    "clients/blueedge/psee/runs/run_01_authoritative/package/gauge_view.json (D)",
+    "clients/blueedge/psee/runs/run_01_authoritative/package/package_manifest.json (D)",
+    "clients/blueedge/psee/runs/run_01_authoritative/package/reconstruction_state.json (D)"
+  ],
+  "note_deletions": "8 deleted files in run_01_authoritative/ — pre-existing deletions from prior session work, not related to Decision Surface reconstruction",
+
+  "diff_stat": "8 files changed, 262 deletions — all pre-existing deletions, not generator changes",
+  "diff_check": "PASS — no whitespace errors in working tree",
+
+  "rule_checks": {
+    "target_run_absent": "PASS — run_blueedge_productized_01_decision_reconstructed/ does not exist",
+    "doc_target_absent": "PASS — PI.DECISION-SURFACE.RECONSTRUCTION.01/ created now (empty)"
+  },
+
+  "branch_note": "work/psee-runtime — outside authorized set per git_structure_contract.md; flagged; proceeding per session governance pattern",
+
+  "verdict": "PREFLIGHT_CLEAN"
+}

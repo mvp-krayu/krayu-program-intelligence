@@ -1,0 +1,86 @@
+{
+  "contract_id": "PI.CLIENT-LANGUAGE-LAYER.TIER1-NARRATIVE-FINAL-ALIGNMENT.01",
+  "artifact": "file_changes",
+  "captured_date": "2026-04-30",
+  "baseline_commit": "031ca945f0cf5a61c4d4905472d132594496cb01",
+
+  "changes": [
+    {
+      "file": "scripts/pios/lens_report_generator.py",
+      "type": "EDIT",
+      "blocks": ["A", "B", "C", "D", "E", "F"],
+      "diff_stat": "814 lines modified (742 insertions, 72 deletions from baseline 031ca94)"
+    },
+    {
+      "file": "clients/blueedge/psee/runs/run_blueedge_productized_01_tier1_final/reports/tier1/lens_tier1_narrative_brief.html",
+      "type": "CREATE",
+      "blocks": ["G"],
+      "diff_stat": "Generated"
+    },
+    {
+      "file": "clients/blueedge/psee/runs/run_blueedge_productized_01_tier1_final/reports/tier1/lens_tier1_evidence_brief.html",
+      "type": "CREATE",
+      "blocks": ["G"],
+      "diff_stat": "Generated"
+    },
+    {
+      "file": "clients/blueedge/psee/runs/run_blueedge_productized_01_tier1_final/reports/tier1/publish/lens_tier1_narrative_brief_pub.html",
+      "type": "CREATE",
+      "blocks": ["G"],
+      "diff_stat": "Generated"
+    },
+    {
+      "file": "clients/blueedge/psee/runs/run_blueedge_productized_01_tier1_final/reports/tier1/publish/lens_tier1_evidence_brief_pub.html",
+      "type": "CREATE",
+      "blocks": ["G"],
+      "diff_stat": "Generated"
+    },
+    {
+      "file": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER1-NARRATIVE-FINAL-ALIGNMENT.01/git_hygiene_preflight.json",
+      "type": "CREATE", "blocks": ["PRE-FLIGHT"]
+    },
+    {
+      "file": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER1-NARRATIVE-FINAL-ALIGNMENT.01/signal_activation_consistency.md",
+      "type": "CREATE", "blocks": ["A"]
+    },
+    {
+      "file": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER1-NARRATIVE-FINAL-ALIGNMENT.01/dependency_density_fix.md",
+      "type": "CREATE", "blocks": ["B"]
+    },
+    {
+      "file": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER1-NARRATIVE-FINAL-ALIGNMENT.01/topology_scope_fix.md",
+      "type": "CREATE", "blocks": ["C"]
+    },
+    {
+      "file": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER1-NARRATIVE-FINAL-ALIGNMENT.01/zone_text_cleanup.md",
+      "type": "CREATE", "blocks": ["D"]
+    },
+    {
+      "file": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER1-NARRATIVE-FINAL-ALIGNMENT.01/capability_normalization.md",
+      "type": "CREATE", "blocks": ["E"]
+    },
+    {
+      "file": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER1-NARRATIVE-FINAL-ALIGNMENT.01/client_agnostic_validation.md",
+      "type": "CREATE", "blocks": ["F"]
+    },
+    {
+      "file": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER1-NARRATIVE-FINAL-ALIGNMENT.01/validation_log.json",
+      "type": "CREATE", "blocks": ["H"]
+    },
+    {
+      "file": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER1-NARRATIVE-FINAL-ALIGNMENT.01/execution_report.md",
+      "type": "CREATE", "blocks": ["H"]
+    },
+    {
+      "file": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER1-NARRATIVE-FINAL-ALIGNMENT.01/file_changes.json",
+      "type": "CREATE", "blocks": ["H"]
+    },
+    {
+      "file": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER1-NARRATIVE-FINAL-ALIGNMENT.01/CLOSURE.md",
+      "type": "CREATE", "blocks": ["H"]
+    }
+  ],
+
+  "vault_mutations": "NONE",
+  "signal_mutations": "NONE"
+}

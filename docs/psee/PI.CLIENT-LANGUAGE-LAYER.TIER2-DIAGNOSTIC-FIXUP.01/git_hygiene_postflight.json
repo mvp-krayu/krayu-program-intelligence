@@ -1,0 +1,44 @@
+{
+  "contract_id": "PI.CLIENT-LANGUAGE-LAYER.TIER2-DIAGNOSTIC-FIXUP.01",
+  "artifact": "git_hygiene_postflight",
+  "captured_date": "2026-04-30",
+
+  "baseline_commit": "031ca94",
+
+  "git_diff_stat": [
+    "scripts/pios/lens_report_generator.py | 742 +++ (690 insertions, 52 deletions from HEAD 031ca94)"
+  ],
+
+  "files_modified": [
+    "scripts/pios/lens_report_generator.py"
+  ],
+
+  "files_created": [
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_tier2_fixup/reports/tier2/graph_state.json",
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_tier2_fixup/reports/tier2/lens_tier2_diagnostic_narrative.html",
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_tier2_fixup/reports/tier2/publish/lens_tier2_diagnostic_narrative_pub.html",
+    "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER2-DIAGNOSTIC-FIXUP.01/git_hygiene_preflight.json",
+    "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER2-DIAGNOSTIC-FIXUP.01/structural_graph_root_cause.md",
+    "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER2-DIAGNOSTIC-FIXUP.01/structural_graph_export_fix.md",
+    "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER2-DIAGNOSTIC-FIXUP.01/domain_first_zone_label_fix.md",
+    "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER2-DIAGNOSTIC-FIXUP.01/semantic_capability_label_fix.md",
+    "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER2-DIAGNOSTIC-FIXUP.01/tier2_fixup_generation_result.json",
+    "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER2-DIAGNOSTIC-FIXUP.01/git_hygiene_postflight.json",
+    "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER2-DIAGNOSTIC-FIXUP.01/validation_log.json",
+    "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER2-DIAGNOSTIC-FIXUP.01/execution_report.md",
+    "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER2-DIAGNOSTIC-FIXUP.01/tier2_fixup_summary.md"
+  ],
+
+  "vault_mutation": "NONE",
+  "signal_mutation": "NONE",
+  "binding_mutation": "NONE",
+
+  "notes": {
+    "generator_changes": "scripts/pios/lens_report_generator.py — CORRECTION.01 + REFINEMENT.01 + FIXUP.01 cumulative from HEAD 031ca94",
+    "graph_state_default_path": "clients/blueedge/reports/tier2/graph_state.json — NO LONGER written; export now directed to output_dir via --output flag",
+    "tier1_files": "NOT generated — --deliverable diagnostic flag used",
+    "target_run_new": "clients/blueedge/psee/runs/run_blueedge_productized_01_tier2_fixup/ is a new directory; no existing reports overwritten"
+  },
+
+  "postflight_verdict": "CLEAN — graph rendering fixed; DOMAIN-first labeling restored; no vault/signal/binding changes"
+}

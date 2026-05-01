@@ -1,0 +1,65 @@
+{
+  "contract_id": "PI.LENS.END-TO-END-RERUN.BLUEEDGE.01",
+  "artifact": "navigation_validation",
+  "captured_date": "2026-04-30",
+
+  "run_id": "run_blueedge_rerun_01",
+
+  "checks": [
+    {
+      "id": "NV-01",
+      "fact": "T1_EVB navigation hrefs — correct run_id",
+      "stale_count": 0,
+      "correct_count": 3,
+      "result": "PASS"
+    },
+    {
+      "id": "NV-02",
+      "fact": "T1_NAR navigation hrefs — correct run_id",
+      "stale_count": 0,
+      "correct_count": 3,
+      "result": "PASS"
+    },
+    {
+      "id": "NV-03",
+      "fact": "T2_DIA navigation hrefs — correct run_id",
+      "stale_count": 0,
+      "correct_count": 3,
+      "result": "PASS"
+    },
+    {
+      "id": "NV-04",
+      "fact": "DS navigation hrefs — correct run_id",
+      "stale_count": 0,
+      "correct_count": 8,
+      "result": "PASS"
+    },
+    {
+      "id": "NV-05",
+      "fact": "Publish variants — correct run_id",
+      "stale_count": 0,
+      "correct_count": "3 per pub file",
+      "result": "PASS"
+    },
+    {
+      "id": "NV-06",
+      "fact": "No selector context required for navigation",
+      "result": "PASS",
+      "detail": "Navigation hrefs embed runId=run_blueedge_rerun_01 directly. API resolves from canonical path without reading selector.json."
+    },
+    {
+      "id": "NV-07",
+      "fact": "No stale run IDs from prior runs (run_01_authoritative_generated, run_blueedge_productized_01_fixed)",
+      "result": "PASS",
+      "detail": "Zero occurrences of any prior run ID in any generated HTML file."
+    }
+  ],
+
+  "summary": {
+    "total": 7,
+    "passed": 7,
+    "failed": 0
+  },
+
+  "verdict": "NAVIGATION_VALID — all hrefs correct for run_blueedge_rerun_01; no stale IDs; no selector dependency"
+}
