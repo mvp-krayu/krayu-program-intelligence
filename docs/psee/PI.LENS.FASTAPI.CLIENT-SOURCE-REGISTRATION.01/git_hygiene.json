@@ -1,0 +1,44 @@
+{
+  "contract_id": "PI.LENS.FASTAPI.CLIENT-SOURCE-REGISTRATION.01",
+  "artifact": "git_hygiene",
+  "step": "STEP_7",
+  "generated_date": "2026-05-01",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per memory: work/psee-runtime is outside authorized set. Proceeding per prior operator authorization pattern for this branch.",
+
+  "files_created_this_contract": [
+    "clients/fastapi/client.yaml",
+    "clients/fastapi/sources/source_01/source_manifest.json",
+    "docs/psee/PI.LENS.FASTAPI.CLIENT-SOURCE-REGISTRATION.01/fastapi_source_discovery.json",
+    "docs/psee/PI.LENS.FASTAPI.CLIENT-SOURCE-REGISTRATION.01/source_selection_decision.json",
+    "docs/psee/PI.LENS.FASTAPI.CLIENT-SOURCE-REGISTRATION.01/client_manifest_result.json",
+    "docs/psee/PI.LENS.FASTAPI.CLIENT-SOURCE-REGISTRATION.01/source_manifest_result.json",
+    "docs/psee/PI.LENS.FASTAPI.CLIENT-SOURCE-REGISTRATION.01/registration_validation.json",
+    "docs/psee/PI.LENS.FASTAPI.CLIENT-SOURCE-REGISTRATION.01/fastapi_registration_gap_register.md",
+    "docs/psee/PI.LENS.FASTAPI.CLIENT-SOURCE-REGISTRATION.01/git_hygiene.json"
+  ],
+  "files_modified_this_contract": [],
+  "files_deleted_this_contract": [],
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[FASTAPI-REGISTRATION] PI.LENS.FASTAPI.CLIENT-SOURCE-REGISTRATION.01 — client.yaml + source_manifest.json + 7 contract artifacts",
+  "commit_scope": "clients/fastapi/ + docs/psee/PI.LENS.FASTAPI.CLIENT-SOURCE-REGISTRATION.01/",
+  "commit_note": "Per CLAUDE.md Section 7.1 and RULE-10 pattern — commits are operator action. Claude does not auto-commit.",
+
+  "no_overwrite_violations": "NONE — all files are net-new CREATE_ONLY",
+  "forbidden_paths_touched": "NONE",
+  "legacy_output_mutations": "NONE — clients/fastapi/lens/ and clients/fastapi/reports/ not touched",
+  "vault_mutations": "NONE",
+  "pipeline_executed": false,
+
+  "pre_commit_checklist": [
+    "Verify clients/fastapi/client.yaml is correct",
+    "Verify clients/fastapi/sources/source_01/source_manifest.json is correct",
+    "Verify 9 docs artifacts are all present in PI.LENS.FASTAPI.CLIENT-SOURCE-REGISTRATION.01/",
+    "Confirm no unintended files included in staging area",
+    "Confirm branch is work/psee-runtime"
+  ],
+
+  "git_hygiene_status": "COMPLETE"
+}

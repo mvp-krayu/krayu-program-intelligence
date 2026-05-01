@@ -1,0 +1,109 @@
+{
+  "contract_id": "PI.LENS.FASTAPI.CLIENT-SOURCE-REGISTRATION.01",
+  "artifact": "registration_validation",
+  "step": "STEP_5",
+  "generated_date": "2026-05-01",
+
+  "checks": [
+    {
+      "id": "RV-01",
+      "name": "clients/fastapi/client.yaml exists",
+      "result": "PASS",
+      "evidence": "File written at clients/fastapi/client.yaml. Verified with filesystem check."
+    },
+    {
+      "id": "RV-02",
+      "name": "client.yaml has all 10 required fields",
+      "result": "PASS",
+      "evidence": "client_id, uuid, display_name, source_type, pipeline_mode, ceu_model, ceu_count, dom_group_count, structural_node_count, default_source — all present."
+    },
+    {
+      "id": "RV-03",
+      "name": "client_id in client.yaml matches pipeline slug 'fastapi'",
+      "result": "PASS",
+      "evidence": "client_id: fastapi"
+    },
+    {
+      "id": "RV-04",
+      "name": "uuid in client.yaml matches authoritative UUID e65d2f0a-dfa7-4257-9333-fcbb583f0880",
+      "result": "PASS",
+      "evidence": "uuid: e65d2f0a-dfa7-4257-9333-fcbb583f0880 — matches clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/config/client.yaml"
+    },
+    {
+      "id": "RV-05",
+      "name": "clients/fastapi/sources/source_01/source_manifest.json exists",
+      "result": "PASS",
+      "evidence": "File written at clients/fastapi/sources/source_01/source_manifest.json. Verified with filesystem check."
+    },
+    {
+      "id": "RV-06",
+      "name": "source_manifest.json archive_path is a readable file (not a directory)",
+      "result": "PASS",
+      "evidence": "archive_path: clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/manifests/fastapi-backend.manifest.sha256 — file exists, readable, non-directory. Verified with filesystem check."
+    },
+    {
+      "id": "RV-07",
+      "name": "source_manifest.json sha256 matches known manifest file hash",
+      "result": "PASS",
+      "evidence": "sha256: b93be45319f28dfb04269c42c0b14f6288f8b2328d9490962e83c4941ced86bb — established from fastapi_source_discovery.json C-03."
+    },
+    {
+      "id": "RV-08",
+      "name": "source_manifest.json source_dir points to authoritative intake directory",
+      "result": "PASS",
+      "evidence": "source_dir: clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/source/fastapi-backend — 87-file AUTHORITATIVE_INTAKE, governed by PRODUCTIZE.RAW.SOURCE.INTAKE.01."
+    },
+    {
+      "id": "RV-09",
+      "name": "source_manifest.json structural_reference_run points to run_02_oss_fastapi (not run_01)",
+      "result": "PASS",
+      "evidence": "structural_reference_run: run_02_oss_fastapi — selected per fastapi_source_discovery.json C-04 selection logic."
+    },
+    {
+      "id": "RV-10",
+      "name": "GAP-REG-01 documented — 40.x subdirs absent confirmed by filesystem check",
+      "result": "PASS",
+      "evidence": "Checked clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/structure/40.2 — MISSING. Gap documented in source_manifest.json pipeline_gap_register."
+    },
+    {
+      "id": "RV-11",
+      "name": "GAP-REG-02 documented — grounding_state_v3.json absent confirmed by structural artifact inventory",
+      "result": "PASS",
+      "evidence": "fastapi_source_discovery.json structural_artifact_inventory: grounding_state_v3 = NOT_EXISTS. grounding_state_v2.json exists. Gap documented in source_manifest.json pipeline_gap_register."
+    },
+    {
+      "id": "RV-12",
+      "name": "No forbidden sources used — C-06, C-07, C-08 not referenced in output files",
+      "result": "PASS",
+      "evidence": "client.yaml and source_manifest.json reference only C-01 (source), C-03 (boundary proxy), C-04 (structural reference). C-06, C-07, C-08 excluded."
+    },
+    {
+      "id": "RV-13",
+      "name": "No pipeline execution performed — DOCUMENTATION_ONLY compliant",
+      "result": "PASS",
+      "evidence": "run_client_pipeline.py not invoked. No psee/runs/run_02_oss_fastapi_pipeline output directories created. No lens output generated."
+    },
+    {
+      "id": "RV-14",
+      "name": "No legacy output mutation — clients/fastapi/lens/ and clients/fastapi/reports/ not touched",
+      "result": "PASS",
+      "evidence": "Only clients/fastapi/client.yaml and clients/fastapi/sources/source_01/source_manifest.json written. No existing directories mutated."
+    },
+    {
+      "id": "RV-15",
+      "name": "Pipeline invocation command is valid after registration",
+      "result": "PASS_WITH_KNOWN_GAPS",
+      "evidence": "python3 scripts/pios/run_client_pipeline.py --client fastapi --source source_01 --run-id run_02_oss_fastapi_pipeline will pass phase_01 (boundary proxy), will pass phase_02 (intake), will FAIL at phase_03 (GAP-REG-01) and phase_04 (GAP-REG-02). Registration is complete; pipeline execution requires gap closure contracts before full run is possible."
+    }
+  ],
+
+  "summary": {
+    "total_checks": 15,
+    "passed": 14,
+    "passed_with_known_gaps": 1,
+    "failed": 0,
+    "result": "REGISTRATION_COMPLETE",
+    "pipeline_ready": false,
+    "pipeline_ready_note": "Registration artifacts complete. Pipeline blocked at phase_03 (GAP-REG-01) and phase_04 (GAP-REG-02). Gap closure contracts required before PI.LENS.END-TO-END-RERUN.FASTAPI.01 can execute successfully."
+  }
+}

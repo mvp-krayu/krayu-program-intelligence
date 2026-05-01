@@ -1,0 +1,117 @@
+{
+  "contract_id": "PI.LENS.FASTAPI.CLIENT-SOURCE-REGISTRATION.01",
+  "artifact": "fastapi_source_discovery",
+  "step": "STEP_1",
+  "generated_date": "2026-05-01",
+
+  "candidates": [
+    {
+      "candidate_id": "C-01",
+      "path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/source/fastapi-backend/",
+      "classification": "RAW_SOURCE",
+      "sub_classification": "AUTHORITATIVE_INTAKE",
+      "description": "Real FastAPI Python source code repository — 87 files, 3 services (pet_service, template_service, user_service). Ingested via PRODUCTIZE.RAW.SOURCE.INTAKE.01.",
+      "file_count": 87,
+      "aggregate_hash": "5a1a19d95665a650bf544cd3bf585ec7ac0d3ba0dfa886de9418c1aca4303082",
+      "source_version": "04dcdc9ae62e94d55f528cb89493a72b448845ab",
+      "intake_governed_by": "PRODUCTIZE.RAW.SOURCE.INTAKE.01",
+      "usable_as_source": true,
+      "selection_priority": 1,
+      "notes": "PRIORITY 1 — This is the canonical raw source. Already extracted (local directory, no zip archive)."
+    },
+    {
+      "candidate_id": "C-02",
+      "path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/intake/intake_01_oss_fastapi/",
+      "classification": "INTAKE_SOURCE",
+      "description": "Governed intake record for intake_01_oss_fastapi. Contains intake_record.json, source_manifest.json, file_hash_manifest.json. handover_status: READY_FOR_BOOTSTRAP.",
+      "file_count": 3,
+      "governed_by": "PRODUCTIZE.RAW.SOURCE.INTAKE.01",
+      "handover_status": "READY_FOR_BOOTSTRAP",
+      "points_to": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/source/fastapi-backend",
+      "usable_as_source": true,
+      "selection_priority": 2,
+      "notes": "PRIORITY 2 — Governed intake record that points to C-01."
+    },
+    {
+      "candidate_id": "C-03",
+      "path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/manifests/fastapi-backend.manifest.sha256",
+      "classification": "RAW_SOURCE",
+      "sub_classification": "INTAKE_CHECKSUM_MANIFEST",
+      "description": "SHA256 checksum manifest for the FastAPI source. Lists per-file SHA256 hashes. Produced during intake. Usable as archive_path boundary file for orchestrator phase_01.",
+      "sha256_of_this_file": "b93be45319f28dfb04269c42c0b14f6288f8b2328d9490962e83c4941ced86bb",
+      "usable_as_source": true,
+      "usable_as_archive_boundary": true,
+      "selection_priority": "boundary_proxy",
+      "notes": "Used as archive_path in source_manifest.json because orchestrator phase_01 requires a readable file (not a directory). The SHA256 of this manifest file provides a stable boundary check."
+    },
+    {
+      "candidate_id": "C-04",
+      "path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/",
+      "classification": "DERIVED_ARTIFACT",
+      "description": "Full run_02_oss_fastapi pipeline output — binding, 41.x, 75.x, package, validation, structure, lineage. 13 CEUs, 5 DOMs, 45 nodes.",
+      "runs_available": ["run_01_oss_fastapi", "run_02_oss_fastapi"],
+      "selected_run": "run_02_oss_fastapi",
+      "usable_as_source": false,
+      "usable_as_structural_reference": true,
+      "selection_priority": "structural_reference_only",
+      "notes": "NOT a source. Contains derived pipeline artifacts. Used as structural_reference for structure_path, ceu_grounding_path, etc."
+    },
+    {
+      "candidate_id": "C-05",
+      "path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/raw_intake/",
+      "classification": "UNKNOWN",
+      "description": "Contains entities.json, events.json, metrics.json, relationships.json, source_manifest.json — possibly an intermediate pipeline data layer.",
+      "usable_as_source": false,
+      "selection_priority": "not_selected",
+      "notes": "Schema and provenance unclear. Not selected."
+    },
+    {
+      "candidate_id": "C-06",
+      "path": "app/gauge-product/public/vault/e65d2f0a-dfa7-4257-9333-fcbb583f0880/",
+      "classification": "VAULT_OUTPUT",
+      "description": "HTML artifacts, claim pages, entity pages for run_01_oss_fastapi. gauge-product public vault.",
+      "usable_as_source": false,
+      "selection_priority": "not_selected",
+      "notes": "FORBIDDEN — vault output, not source."
+    },
+    {
+      "candidate_id": "C-07",
+      "path": "clients/fastapi/lens/",
+      "classification": "REPORT_REPLAY_OUTPUT",
+      "description": "Prior non-canonical lens replay output (run_fastapi_rerun_01). Reports, selector, current/ mirror.",
+      "usable_as_source": false,
+      "selection_priority": "not_selected",
+      "notes": "FORBIDDEN per contract RULE-7 — legacy replay output, not source."
+    },
+    {
+      "candidate_id": "C-08",
+      "path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/fragments/",
+      "classification": "DERIVED_ARTIFACT",
+      "description": "CLM-* claim fragments for run_01 and run_02. Report-layer artifacts.",
+      "usable_as_source": false,
+      "selection_priority": "not_selected",
+      "notes": "DERIVED — claim fragments."
+    }
+  ],
+
+  "structural_artifact_inventory": {
+    "canonical_topology": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/package/canonical_topology.json",
+    "structure_manifest": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/structure/structure_manifest.json",
+    "ceu_registry": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/lineage/ceu_registry.json",
+    "grounding_state_v2": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/binding/provenance/grounding_state_v2.json",
+    "grounding_state_v3": "NOT_EXISTS",
+    "binding_envelope": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/binding/binding_envelope.json",
+    "40x_subdir_format": "NOT_EXISTS — no 40.2/40.3/40.4 subdirectories",
+    "run_validation": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/validation/run_validation.json"
+  },
+
+  "key_dimensions": {
+    "dom_count": 5,
+    "doms": ["DOM-01 (documentation_root)", "DOM-02 (extraction_analysis)", "DOM-03 (backend_isolated)", "DOM-04 (platform_integration)", "DOM-05 (platform_monorepo)"],
+    "ceu_count": 13,
+    "structural_node_count": 45,
+    "pressure_zones": ["PZ-001 (DOM-03)", "PZ-003 (DOM-05)"],
+    "gauge_score": 60,
+    "gauge_verdict": "CONDITIONAL/INVESTIGATE"
+  }
+}
