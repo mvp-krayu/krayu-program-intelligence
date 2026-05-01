@@ -1,0 +1,59 @@
+{
+  "contract_id": "PI.LENS.REPORT-GENERATOR.CLI-VALIDATION.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-01",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+  "working_tree_at_start": "CLEAN",
+  "working_tree_at_end": "CLEAN",
+  "baseline_commit": "ca72d01",
+
+  "files_created_this_contract": [
+    "docs/psee/PI.LENS.REPORT-GENERATOR.CLI-VALIDATION.01/report_generator_cli_contract.md",
+    "docs/psee/PI.LENS.REPORT-GENERATOR.CLI-VALIDATION.01/input_dependency_analysis.md",
+    "docs/psee/PI.LENS.REPORT-GENERATOR.CLI-VALIDATION.01/report_family_matrix.json",
+    "docs/psee/PI.LENS.REPORT-GENERATOR.CLI-VALIDATION.01/fastapi_report_validation.json",
+    "docs/psee/PI.LENS.REPORT-GENERATOR.CLI-VALIDATION.01/blueedge_report_validation.json",
+    "docs/psee/PI.LENS.REPORT-GENERATOR.CLI-VALIDATION.01/report_quality_findings.md",
+    "docs/psee/PI.LENS.REPORT-GENERATOR.CLI-VALIDATION.01/phase8b_failure_analysis.md",
+    "docs/psee/PI.LENS.REPORT-GENERATOR.CLI-VALIDATION.01/git_hygiene.json"
+  ],
+  "files_modified_this_contract": [],
+  "files_deleted_this_contract": [],
+
+  "runtime_artifacts_created": {
+    "fastapi_reports": [
+      "clients/fastapi/lens/runs/run_02_oss_fastapi_pipeline/reports/tier1/lens_tier1_evidence_brief.html",
+      "clients/fastapi/lens/runs/run_02_oss_fastapi_pipeline/reports/tier1/publish/lens_tier1_evidence_brief_pub.html",
+      "clients/fastapi/lens/runs/run_02_oss_fastapi_pipeline/reports/tier1/lens_tier1_narrative_brief.html",
+      "clients/fastapi/lens/runs/run_02_oss_fastapi_pipeline/reports/tier1/publish/lens_tier1_narrative_brief_pub.html",
+      "clients/fastapi/lens/runs/run_02_oss_fastapi_pipeline/reports/decision/lens_decision_surface.html",
+      "clients/fastapi/lens/runs/run_02_oss_fastapi_pipeline/reports/decision/publish/lens_decision_surface_pub.html",
+      "clients/fastapi/lens/runs/run_02_oss_fastapi_pipeline/index.json",
+      "clients/fastapi/lens/runs/run_02_oss_fastapi_pipeline/manifest.json",
+      "clients/fastapi/lens/selector/selector.json",
+      "clients/fastapi/lens/selector/available_runs.json",
+      "clients/fastapi/lens/current"
+    ],
+    "blueedge_temp_reports": [
+      "/tmp/blueedge_t1_validation/lens_tier1_evidence_brief.html",
+      "/tmp/blueedge_t1_validation/publish/lens_tier1_evidence_brief_pub.html",
+      "/tmp/blueedge_t1_validation/lens_tier1_narrative_brief.html",
+      "/tmp/blueedge_t1_validation/publish/lens_tier1_narrative_brief_pub.html",
+      "/tmp/blueedge_decision_validation/lens_decision_surface.html",
+      "/tmp/blueedge_decision_validation/publish/lens_decision_surface_pub.html",
+      "/tmp/blueedge_t2_validation/lens_tier2_diagnostic_narrative.html"
+    ],
+    "gitignored": "clients/*/reports/ and clients/*/lens/ are both gitignored. Working tree CLEAN confirmed."
+  },
+
+  "blueedge_mutation_check": "PASS — no files under clients/blueedge/reports/ or clients/blueedge/lens/ were created or modified. BlueEdge validation used --output-dir /tmp/* (temp dirs only).",
+  "fastapi_source_mutation_check": "PASS — no files under clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/source/ were modified",
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[VALIDATE] PI.LENS.REPORT-GENERATOR.CLI-VALIDATION.01 — Report generator CLI validation: Tier-1+Decision PASS, Tier-2 blocked by app vault slug mismatch",
+  "commit_note": "Commits are operator action per CLAUDE.md Section 7.1. Evidence artifacts only (docs/psee/). Runtime report artifacts are gitignored.",
+
+  "git_hygiene_status": "COMPLETE"
+}

@@ -1,0 +1,84 @@
+{
+  "contract_id": "PI.LENS.REPORT-GENERATOR.CLI-VALIDATION.01",
+  "artifact": "blueedge_report_validation",
+  "generated_date": "2026-05-01",
+
+  "client": "blueedge",
+  "run_id": "run_be_orchestrated_fixup_01",
+  "package_dir": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault",
+  "validation_mode": "TEMP_DIR_OUTPUT — no baseline mutation",
+
+  "mutation_guard": {
+    "baseline_reports_path": "clients/blueedge/reports/",
+    "baseline_protected": true,
+    "method": "--output-dir /tmp/blueedge_<deliverable>_validation (no --output-root)",
+    "selector_write_skipped": true,
+    "note": "Using --output-dir without --output-root prevents _write_canonical_run_metadata() from writing selector/current to clients/blueedge/lens/"
+  },
+
+  "cli_commands_executed": [
+    {
+      "command": "python3 scripts/pios/lens_report_generator.py --client blueedge --run-id run_be_orchestrated_fixup_01 --package-dir clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault --output-dir /tmp/blueedge_t1_validation --deliverable tier1",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "python3 scripts/pios/lens_report_generator.py --client blueedge --run-id run_be_orchestrated_fixup_01 --package-dir clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault --output-dir /tmp/blueedge_decision_validation --deliverable decision",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "python3 scripts/pios/lens_report_generator.py --client blueedge --run-id run_be_orchestrated_fixup_01 --package-dir clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault --output-dir /tmp/blueedge_t2_validation --deliverable diagnostic",
+      "exit_code": 0,
+      "result": "PASS"
+    }
+  ],
+
+  "vault_index_resolution": {
+    "exact_path_tried": "app/gauge-product/public/vault/blueedge/run_be_orchestrated_fixup_01/vault_index.json",
+    "exact_found": false,
+    "fallback_path_found": "app/gauge-product/public/vault/blueedge/run_01_authoritative_generated/vault_index.json",
+    "fallback_found": true,
+    "note": "Fallback to first available vault for client. Tier-2 graph positions derive from run_01_authoritative_generated topology (18 nodes, 17 links). This is layout-layer, not data truth."
+  },
+
+  "reports_generated": [
+    {
+      "file": "/tmp/blueedge_t1_validation/lens_tier1_evidence_brief.html",
+      "status": "GENERATED",
+      "lines": 514
+    },
+    {
+      "file": "/tmp/blueedge_t1_validation/lens_tier1_narrative_brief.html",
+      "status": "GENERATED",
+      "lines": 265
+    },
+    {
+      "file": "/tmp/blueedge_decision_validation/lens_decision_surface.html",
+      "status": "GENERATED",
+      "lines": 138
+    },
+    {
+      "file": "/tmp/blueedge_t2_validation/lens_tier2_diagnostic_narrative.html",
+      "status": "GENERATED",
+      "lines": null
+    }
+  ],
+
+  "baseline_consistency": {
+    "existing_baseline_reports": [
+      "clients/blueedge/reports/tier1/lens_tier1_evidence_brief.html",
+      "clients/blueedge/reports/tier1/lens_tier1_narrative_brief.html",
+      "clients/blueedge/reports/tier2/lens_tier2_diagnostic_narrative.html",
+      "clients/blueedge/reports/decision/lens_decision_surface.html"
+    ],
+    "baseline_mutated": false,
+    "validation_reports_in_temp": true,
+    "cross_client_report_structure_consistent": true,
+    "note": "BlueEdge generates all 4 report surfaces successfully. FastAPI generates 3/4. Structure is consistent — same templates, same HTML shape, different data."
+  },
+
+  "overall_result": "PASS",
+  "surfaces_pass": ["tier1_evidence_brief", "tier1_narrative_brief", "tier2_diagnostic_narrative", "decision_surface"],
+  "surfaces_fail": []
+}

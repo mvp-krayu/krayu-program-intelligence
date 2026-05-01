@@ -1,0 +1,99 @@
+{
+  "contract_id": "PI.LENS.REPORT-GENERATOR.CLI-VALIDATION.01",
+  "artifact": "fastapi_report_validation",
+  "generated_date": "2026-05-01",
+
+  "client": "fastapi",
+  "run_id": "run_02_oss_fastapi_pipeline",
+  "package_dir": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/vault",
+  "output_root": "clients/fastapi/lens/runs/run_02_oss_fastapi_pipeline",
+
+  "cli_commands_executed": [
+    {
+      "command": "python3 scripts/pios/lens_report_generator.py --client fastapi --run-id run_02_oss_fastapi_pipeline --package-dir clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/vault --output-root clients/fastapi/lens/runs/run_02_oss_fastapi_pipeline --deliverable tier1",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "python3 scripts/pios/lens_report_generator.py --client fastapi --run-id run_02_oss_fastapi_pipeline --package-dir clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/vault --output-root clients/fastapi/lens/runs/run_02_oss_fastapi_pipeline --deliverable decision",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "python3 scripts/pios/lens_report_generator.py --client fastapi --run-id run_02_oss_fastapi_pipeline --package-dir clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/vault --output-root clients/fastapi/lens/runs/run_02_oss_fastapi_pipeline --deliverable diagnostic",
+      "exit_code": 1,
+      "result": "FAIL",
+      "error": "No vault_index.json found for client 'fastapi' in app vault"
+    }
+  ],
+
+  "reports_generated": [
+    {
+      "file": "reports/tier1/lens_tier1_evidence_brief.html",
+      "status": "GENERATED",
+      "lines": 484,
+      "blueedge_contamination": false
+    },
+    {
+      "file": "reports/tier1/publish/lens_tier1_evidence_brief_pub.html",
+      "status": "GENERATED",
+      "lines": null,
+      "blueedge_contamination": false
+    },
+    {
+      "file": "reports/tier1/lens_tier1_narrative_brief.html",
+      "status": "GENERATED",
+      "lines": 289,
+      "blueedge_contamination": false
+    },
+    {
+      "file": "reports/tier1/publish/lens_tier1_narrative_brief_pub.html",
+      "status": "GENERATED",
+      "lines": null,
+      "blueedge_contamination": false
+    },
+    {
+      "file": "reports/decision/lens_decision_surface.html",
+      "status": "GENERATED",
+      "lines": 139,
+      "blueedge_contamination": false
+    },
+    {
+      "file": "reports/decision/publish/lens_decision_surface_pub.html",
+      "status": "GENERATED",
+      "lines": null,
+      "blueedge_contamination": false
+    },
+    {
+      "file": "reports/tier2/lens_tier2_diagnostic_narrative.html",
+      "status": "NOT_GENERATED",
+      "reason": "vault_index.json not found under slug 'fastapi' in app vault"
+    }
+  ],
+
+  "contamination_checks": {
+    "blueedge_string_occurrences": 0,
+    "blueedge_uuid_occurrences": 0,
+    "blueedge_run_id_occurrences": 0,
+    "client_alias_in_evidence_brief": "fastapi",
+    "run_id_in_index_json": "run_02_oss_fastapi_pipeline",
+    "verdict": "NO_CONTAMINATION"
+  },
+
+  "vault_data_driving_reports": {
+    "signal_registry_total_signals": 4,
+    "signal_registry_active_pressure": 3,
+    "gauge_score_canonical": 60,
+    "gauge_score_projected": 100,
+    "canonical_topology_domains": 9
+  },
+
+  "phase_8b_behavior": {
+    "note": "Phase 8b invokes without --deliverable flag, causing all surfaces to be generated. Tier-1 PASS. Decision PASS. Tier-2 FAIL blocks Phase 8b exit code.",
+    "fix_required": "Phase 8b should pass --deliverable tier1 OR the FastAPI app vault must be published under slug 'fastapi'"
+  },
+
+  "overall_result": "PARTIAL",
+  "surfaces_pass": ["tier1_evidence_brief", "tier1_narrative_brief", "decision_surface"],
+  "surfaces_fail": ["tier2_diagnostic_narrative"]
+}
