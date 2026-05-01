@@ -1,0 +1,70 @@
+{
+  "contract_id": "PI.LENS.DOM-LAYER.GENERATOR.01",
+  "artifact": "dom_layer_schema",
+  "generated_date": "2026-05-01",
+  "output_file": "dom/dom_layer.json",
+
+  "schema": {
+    "contract_id":        "string — always PI.LENS.DOM-LAYER.GENERATOR.01",
+    "client":             "string — from CLI --client argument",
+    "run_id":             "string — from CLI --run-id argument",
+    "generated_at":       "string — ISO 8601 UTC timestamp",
+    "domain_count":       "integer — number of distinct domains assigned",
+    "total_nodes":        "integer — total nodes mapped across all domains",
+    "domains":            "array[DomainRecord] — contract-specified format",
+    "dom_groups":         "array[DomGroupRecord] — Phase 5 orchestrator-compatible format",
+    "node_to_domain_map": "object — {node_id: domain_id} for every assigned node",
+    "generation_rules":   "object — method, version, rule_count, evaluation, basis",
+    "validation_status":  "string — PASS | PARTIAL | FAIL"
+  },
+
+  "domain_record_schema": {
+    "domain_id":  "string — DOM-NN (zero-padded to 2 digits; sorted alphabetically by domain name)",
+    "name":       "string — UPPER_SNAKE_CASE domain label",
+    "node_ids":   "array[string] — sorted list of NODE-NNNN IDs in this domain",
+    "node_count": "integer — len(node_ids)"
+  },
+
+  "dom_group_record_schema": {
+    "dom_id":          "string — same as domain_id",
+    "dom_label":       "string — same as name",
+    "included_nodes":  "array[string] — same as node_ids (Phase 5 compatibility field)",
+    "derivation_rule": "string — rule_id from DOMAIN_RULES that matched this cluster set",
+    "path_patterns":   "array[string] — sorted list of cluster names that mapped to this domain"
+  },
+
+  "generation_rules_schema": {
+    "method":    "string — always 'cluster_name_pattern_matching'",
+    "version":   "string — always '1.0'",
+    "rule_count": "integer — number of derivation rules in DOMAIN_RULES",
+    "evaluation": "string — always 'first_match_wins'",
+    "basis":     "string — always 'canonical_topology_clusters_from_40.4'"
+  },
+
+  "validation_status_values": {
+    "PASS":    "All nodes from canonical_topology assigned to a domain",
+    "PARTIAL": "Some nodes unassigned (should not occur with default catch-all rule)",
+    "FAIL":    "Reserved — not currently emitted"
+  },
+
+  "output_path_template": "clients/<client_id>/psee/runs/<run_id>/dom/dom_layer.json",
+
+  "dual_format_note": "dom_groups is included alongside domains for Phase 5 (phase_05_build_binding_envelope) compatibility. Both represent the same domain assignment. dom_groups uses dom_id, dom_label, included_nodes, derivation_rule, path_patterns; domains uses domain_id, name, node_ids, node_count.",
+
+  "fastapi_example": {
+    "domain_count": 9,
+    "total_nodes": 123,
+    "validation_status": "PASS",
+    "domains_summary": [
+      {"domain_id": "DOM-01", "name": "APPLICATION",   "node_count": 89},
+      {"domain_id": "DOM-02", "name": "CI_INFRA",      "node_count":  6},
+      {"domain_id": "DOM-03", "name": "CONFIGURATION", "node_count":  4},
+      {"domain_id": "DOM-04", "name": "DEPENDENCY",    "node_count":  1},
+      {"domain_id": "DOM-05", "name": "DOCUMENTATION", "node_count":  2},
+      {"domain_id": "DOM-06", "name": "GENERATED",     "node_count":  7},
+      {"domain_id": "DOM-07", "name": "INFRA",         "node_count":  1},
+      {"domain_id": "DOM-08", "name": "TESTING",       "node_count":  2},
+      {"domain_id": "DOM-09", "name": "TOOLING",       "node_count": 11}
+    ]
+  }
+}

@@ -14,11 +14,11 @@
   "extracted_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/source/fastapi-backend",
   "structural_contract": "PI.LENS.FASTAPI.CLIENT-SOURCE-REGISTRATION.01",
   "structure_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/structure",
-  "structure_path_note": "GAP-REG-01 — No 40.2/40.3/40.4 structural subdirectory format exists. Existing structure_manifest.json at run_02_oss_fastapi/structure/ is in flat format. phase_03_40x_structural will FAIL until resolved.",
+  "structure_path_note": "GAP-REG-01 \u2014 No 40.2/40.3/40.4 structural subdirectory format exists. Existing structure_manifest.json at run_02_oss_fastapi/structure/ is in flat format. phase_03_40x_structural will FAIL until resolved.",
   "ceu_grounding_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/binding",
   "ceu_grounding_path_note": "CEU grounding evidence at run_02_oss_fastapi/binding/. 13 CEUs, 5 DOMs (DOM-01 through DOM-05), 45 structural nodes.",
   "grounding_state_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/binding/provenance/grounding_state_v2.json",
-  "grounding_state_path_note": "GAP-REG-02 — grounding_state_v3.json does not exist for FastAPI. Only v2 available. phase_04_ceu_grounding expects v3 format. phase_04 will FAIL until resolved.",
+  "grounding_state_path_note": "GAP-REG-02 \u2014 grounding_state_v3.json does not exist for FastAPI. Only v2 available. phase_04_ceu_grounding expects v3 format. phase_04 will FAIL until resolved.",
   "structural_reference_run": "run_02_oss_fastapi",
   "canonical_topology": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/package/canonical_topology.json",
   "binding_envelope": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/binding/binding_envelope.json",
@@ -39,5 +39,6 @@
     }
   },
   "registration_contract": "PI.LENS.FASTAPI.CLIENT-SOURCE-REGISTRATION.01",
-  "registration_date": "2026-05-01"
+  "registration_date": "2026-05-01",
+  "dom_layer_path": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/dom/dom_layer.json"
 }

@@ -1,0 +1,102 @@
+{
+  "contract_id": "PI.LENS.DOM-LAYER.GENERATOR.01",
+  "artifact": "validation_result",
+  "generated_date": "2026-05-01",
+
+  "target_client": "fastapi",
+  "target_run_id": "run_02_oss_fastapi_pipeline",
+
+  "validation_checks": [
+    {
+      "check_id": "VC-01",
+      "name": "validate_only_mode_exits_clean",
+      "description": "Script exits 0 in --validate-only mode when inputs are present",
+      "result": "PASS",
+      "detail": "Exit 0. Inputs validated: 19 clusters, 10 CEUs grounded=9, PASS."
+    },
+    {
+      "check_id": "VC-02",
+      "name": "dry_run_produces_correct_domain_count",
+      "description": "Dry-run computes 9 domains from 19 clusters, 123 nodes assigned",
+      "result": "PASS",
+      "detail": "9 domains, 123/123 nodes assigned, validation_status=PASS. No files written."
+    },
+    {
+      "check_id": "VC-03",
+      "name": "write_mode_creates_dom_layer_json",
+      "description": "Write mode creates dom/dom_layer.json at expected path",
+      "result": "PASS",
+      "detail": "File created: clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/dom/dom_layer.json"
+    },
+    {
+      "check_id": "VC-04",
+      "name": "dom_layer_json_is_valid_json",
+      "description": "Output file parses as valid JSON",
+      "result": "PASS",
+      "detail": "python3 -m json.tool exits 0 without error"
+    },
+    {
+      "check_id": "VC-05",
+      "name": "domain_count_correct",
+      "description": "dom_layer.json contains exactly 9 distinct domains",
+      "result": "PASS",
+      "detail": "domain_count=9. Domains: APPLICATION, CI_INFRA, CONFIGURATION, DEPENDENCY, DOCUMENTATION, GENERATED, INFRA, TESTING, TOOLING"
+    },
+    {
+      "check_id": "VC-06",
+      "name": "total_nodes_assigned",
+      "description": "All 123 nodes from canonical_topology assigned — no ROOT domain",
+      "result": "PASS",
+      "detail": "total_nodes=123, validation_status=PASS, ROOT domain absent"
+    },
+    {
+      "check_id": "VC-07",
+      "name": "dual_format_output_present",
+      "description": "dom_layer.json contains both domains array and dom_groups array",
+      "result": "PASS",
+      "detail": "Both arrays present with same 9 domains, 123 nodes. dom_groups uses Phase 5 field names (dom_id, dom_label, included_nodes, derivation_rule, path_patterns)."
+    },
+    {
+      "check_id": "VC-08",
+      "name": "create_only_guard",
+      "description": "Re-run in write mode exits 1 (FAIL-CLOSED) when dom_layer.json already exists",
+      "result": "PASS",
+      "detail": "Exit 1. Message: CREATE_ONLY violation — dom_layer.json already exists."
+    },
+    {
+      "check_id": "VC-09",
+      "name": "manifest_updated_with_dom_layer_path",
+      "description": "source_manifest.json contains dom_layer_path field with correct value",
+      "result": "PASS",
+      "detail": "dom_layer_path: clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/dom/dom_layer.json"
+    },
+    {
+      "check_id": "VC-10",
+      "name": "manifest_idempotent_rerun",
+      "description": "Re-run does not overwrite existing dom_layer_path if already set to correct value",
+      "result": "PASS",
+      "detail": "Exit 0. Log: dom_layer_path already set to correct value (skipped)."
+    },
+    {
+      "check_id": "VC-11",
+      "name": "no_semantic_inference",
+      "description": "Domain assignment uses only cluster name pattern matching — no content analysis",
+      "result": "PASS",
+      "detail": "All 10 DOMAIN_RULES are syntactic predicates (startswith, endswith, set membership). No file reads of source content."
+    },
+    {
+      "check_id": "VC-12",
+      "name": "domain_id_assignment_deterministic",
+      "description": "DOM-NN IDs assigned by alphabetical sort of domain names",
+      "result": "PASS",
+      "detail": "DOM-01=APPLICATION, DOM-02=CI_INFRA, DOM-03=CONFIGURATION, DOM-04=DEPENDENCY, DOM-05=DOCUMENTATION, DOM-06=GENERATED, DOM-07=INFRA, DOM-08=TESTING, DOM-09=TOOLING. Alphabetical order confirmed."
+    }
+  ],
+
+  "checks_total": 12,
+  "checks_passed": 12,
+  "checks_failed": 0,
+
+  "overall_result": "PASS",
+  "validation_status": "COMPLETE"
+}
