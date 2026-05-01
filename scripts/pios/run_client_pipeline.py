@@ -230,6 +230,49 @@ def phase_04_ceu_grounding(source_manifest: dict, run_dir: Path) -> bool:
 
 # ── Phase 5: Build Binding Envelope ──────────────────────────────────────────
 
+def _synthesize_ceu_registry(run_dir: Path, global_registry_path: Path):
+    """
+    Build Phase 5's ceu_grounding_registry format from generic pipeline outputs.
+    Reads grounding_state_v3.json (grounding results), the global ceu_registry.json
+    (CEU names), and structural_node_inventory.json (path→NODE-ID map).
+    Returns {"ceu": [...]} or None if any required input is missing.
+    PI.LENS.CEU-REGISTRY-PATH-ALIGNMENT.01
+    """
+    grounding_path   = run_dir / "ceu" / "grounding_state_v3.json"
+    node_inv_path    = run_dir / "structure" / "40.2" / "structural_node_inventory.json"
+
+    if not grounding_path.exists() or not global_registry_path.exists() or not node_inv_path.exists():
+        return None
+
+    grounding_state  = load_json(grounding_path)
+    global_registry  = load_json(global_registry_path)
+    node_inventory   = load_json(node_inv_path)
+
+    path_to_node: dict[str, str] = {
+        n["path"]: n["node_id"] for n in node_inventory.get("nodes", [])
+    }
+    ceu_id_to_name: dict[str, str] = {
+        c["ceu_id"]: c["name"] for c in global_registry.get("ceus", [])
+    }
+
+    ceu_entries = []
+    for ceu in grounding_state.get("ceus", []):
+        ceu_id          = ceu["ceu_id"]
+        grounding_status = "GROUNDED" if ceu.get("grounded") else "UNGROUNDED"
+        evidence_refs   = [
+            {"node_id": path_to_node.get(p, ""), "value": p}
+            for p in ceu.get("evidence_paths", [])
+        ]
+        ceu_entries.append({
+            "ceu_id":          ceu_id,
+            "name":            ceu_id_to_name.get(ceu_id, ceu_id),
+            "grounding_status": grounding_status,
+            "evidence_refs":   evidence_refs,
+        })
+
+    return {"ceu": ceu_entries}
+
+
 def phase_05_build_binding_envelope(
     client_cfg: dict, source_manifest: dict, run_dir: Path
 ) -> bool:
@@ -250,19 +293,34 @@ def phase_05_build_binding_envelope(
         print(f"  NOTE: STAGE_NOT_AUTOMATED — signal computation uses pre-computed conformance artifacts; synthetic topology builder bypassed")
         return True
 
-    registry_path = (
-        REPO_ROOT / source_manifest["ceu_grounding_path"] / "registry" / "ceu_grounding_registry.json"
-    )
+    # Generic pipeline path: synthesize registry from grounding_state_v3 + global ceu_registry.
+    # Preferred over legacy ceu_grounding_path/registry/ceu_grounding_registry.json when the
+    # generic grounding output exists. PI.LENS.CEU-REGISTRY-PATH-ALIGNMENT.01
     dom_path = REPO_ROOT / source_manifest["dom_layer_path"]
+    generic_grounding = run_dir / "ceu" / "grounding_state_v3.json"
 
-    if not registry_path.exists():
-        print(f"  FAIL: CEU registry not found at {registry_path}")
-        return False
+    if generic_grounding.exists():
+        global_reg_rel = source_manifest.get("ceu_registry_path", "scripts/pios/ceu_registry.json")
+        registry = _synthesize_ceu_registry(run_dir, REPO_ROOT / global_reg_rel)
+        if registry is None:
+            print(f"  FAIL: Generic CEU registry synthesis failed — missing grounding_state_v3.json, "
+                  f"ceu_registry.json, or structural_node_inventory.json")
+            return False
+        print(f"  INFO: CEU registry synthesized from generic pipeline outputs "
+              f"({len(registry['ceu'])} CEUs) — PI.LENS.CEU-REGISTRY-PATH-ALIGNMENT.01")
+    else:
+        registry_path = (
+            REPO_ROOT / source_manifest["ceu_grounding_path"] / "registry" / "ceu_grounding_registry.json"
+        )
+        if not registry_path.exists():
+            print(f"  FAIL: CEU registry not found at {registry_path}")
+            return False
+        registry = load_json(registry_path)
+
     if not dom_path.exists():
         print(f"  FAIL: DOM layer not found at {dom_path}")
         return False
 
-    registry = load_json(registry_path)
     dom_layer = load_json(dom_path)
     ceus = registry["ceu"]
     dom_groups = dom_layer["dom_groups"]

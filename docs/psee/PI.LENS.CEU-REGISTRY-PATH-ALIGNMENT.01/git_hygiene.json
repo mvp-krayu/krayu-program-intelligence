@@ -1,0 +1,40 @@
+{
+  "contract_id": "PI.LENS.CEU-REGISTRY-PATH-ALIGNMENT.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-01",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+  "working_tree_at_start": "CLEAN",
+  "baseline_commit": "0d5561c3e18c9bc24e89e531c6a4d7748a6b78ce",
+
+  "files_created_this_contract": [
+    "docs/psee/PI.LENS.CEU-REGISTRY-PATH-ALIGNMENT.01/ceu_registry_path_decision.md",
+    "docs/psee/PI.LENS.CEU-REGISTRY-PATH-ALIGNMENT.01/path_reference_analysis.md",
+    "docs/psee/PI.LENS.CEU-REGISTRY-PATH-ALIGNMENT.01/implementation_summary.md",
+    "docs/psee/PI.LENS.CEU-REGISTRY-PATH-ALIGNMENT.01/validation_result.json",
+    "docs/psee/PI.LENS.CEU-REGISTRY-PATH-ALIGNMENT.01/git_hygiene.json",
+    "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/binding/binding_envelope.json"
+  ],
+  "files_modified_this_contract": [
+    "scripts/pios/run_client_pipeline.py",
+    "clients/fastapi/sources/source_01/source_manifest.json"
+  ],
+  "files_deleted_this_contract": [],
+
+  "diff_summary": "run_client_pipeline.py: added _synthesize_ceu_registry() helper (~40 lines) + patched phase_05 to try generic path first (~15 lines changed). source_manifest.json: 2 fields added (ceu_registry_path, ceu_registry_path_note).",
+
+  "blueedge_mutation_check": "PASS — no files under clients/blueedge/ or clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/ were created, modified, or deleted",
+  "fastapi_source_mutation_check": "PASS — no files under clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/source/ were modified",
+  "ceu_rules_modified": "NO — scripts/pios/ceu_registry.json not modified; scripts/pios/ceu_grounding.py not modified",
+  "dom_logic_modified": "NO — scripts/pios/dom_layer_generator.py not modified",
+  "structural_scanner_modified": "NO — scripts/pios/structural_scanner.py not modified",
+
+  "runtime_artifact_created": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/binding/binding_envelope.json (Phase 5 output — incidental to validation run)",
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[ALIGN] PI.LENS.CEU-REGISTRY-PATH-ALIGNMENT.01 — Phase 5 CEU registry synthesis: generic pipeline path via _synthesize_ceu_registry()",
+  "commit_note": "Commits are operator action per CLAUDE.md Section 7.1.",
+
+  "git_hygiene_status": "COMPLETE"
+}

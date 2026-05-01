@@ -1,0 +1,101 @@
+{
+  "contract_id": "PI.LENS.CEU-REGISTRY-PATH-ALIGNMENT.01",
+  "artifact": "validation_result",
+  "generated_date": "2026-05-01",
+
+  "target_client": "fastapi",
+  "target_run_id": "run_02_oss_fastapi_pipeline",
+
+  "validation_checks": [
+    {
+      "check_id": "VC-01",
+      "name": "phase_5_advances_past_ceu_registry_error",
+      "description": "Phase 5 no longer fails with 'CEU registry not found' error",
+      "result": "PASS",
+      "detail": "INFO: CEU registry synthesized from generic pipeline outputs (10 CEUs). Phase 5 PASS."
+    },
+    {
+      "check_id": "VC-02",
+      "name": "binding_envelope_produced",
+      "description": "binding_envelope.json created at expected path",
+      "result": "PASS",
+      "detail": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/binding/binding_envelope.json — 29 nodes (bc=9, ce=10, cs=10), 25 edges, 10 surfaces"
+    },
+    {
+      "check_id": "VC-03",
+      "name": "ceu_synthesis_count_correct",
+      "description": "10 CEUs synthesized matching ceu_registry.json count",
+      "result": "PASS",
+      "detail": "ceu_registry.json has 10 CEUs; grounding_state_v3.json has 10 CEUs; synthesis produced 10 entries"
+    },
+    {
+      "check_id": "VC-04",
+      "name": "phase_6_7_pass",
+      "description": "75.x + 41.x pipeline completes after Phase 5 PASS",
+      "result": "PASS",
+      "detail": "5 artifacts produced: condition_correlation_state.json, pressure_candidate_state.json, pressure_zone_state.json, signal_projection.json, pressure_zone_projection.json"
+    },
+    {
+      "check_id": "VC-05",
+      "name": "pipeline_advances_to_phase_8a",
+      "description": "Pipeline fails at Phase 8a (integration_validation_path), not Phase 5",
+      "result": "PASS",
+      "detail": "Phase 8a fails with KeyError: 'integration_validation_path'. This is a separate pre-existing gap per contract acceptable outcome."
+    },
+    {
+      "check_id": "VC-06",
+      "name": "no_ceu_rules_changed",
+      "description": "ceu_registry.json and ceu_grounding.py unmodified",
+      "result": "PASS",
+      "detail": "git status shows neither file modified"
+    },
+    {
+      "check_id": "VC-07",
+      "name": "no_blueedge_mutation",
+      "description": "No files under clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/ or clients/blueedge/ modified",
+      "result": "PASS",
+      "detail": "git status shows only source_manifest.json (fastapi) and run_client_pipeline.py modified"
+    },
+    {
+      "check_id": "VC-08",
+      "name": "global_registry_preserved",
+      "description": "scripts/pios/ceu_registry.json remains sole canonical CEU definition registry",
+      "result": "PASS",
+      "detail": "No run-local ceu_grounding_registry.json created. _synthesize_ceu_registry() reads global registry at synthesis time."
+    },
+    {
+      "check_id": "VC-09",
+      "name": "manifest_fields_intact",
+      "description": "Existing source_manifest.json fields not overwritten; ceu_registry_path added as new field",
+      "result": "PASS",
+      "detail": "ceu_grounding_path, grounding_state_path, ceu_registry all preserved. ceu_registry_path added as net-new field."
+    },
+    {
+      "check_id": "VC-10",
+      "name": "validation_result_json_valid",
+      "description": "This file parses as valid JSON",
+      "result": "PASS",
+      "detail": "python3 -m json.tool exits 0"
+    }
+  ],
+
+  "checks_total": 10,
+  "checks_passed": 10,
+  "checks_failed": 0,
+
+  "overall_result": "PASS",
+  "validation_status": "COMPLETE",
+
+  "phase_outcomes": {
+    "phase_05": "PASS",
+    "phase_06_07": "PASS",
+    "phase_08a": "FAIL — integration_validation_path KeyError (pre-existing gap, out of scope)"
+  },
+
+  "next_blocker": {
+    "phase": "Phase 8a — Vault Construction",
+    "error": "KeyError: 'integration_validation_path'",
+    "field_missing": "integration_validation_path in source_manifest.json",
+    "recommended_stream": "PI.LENS.INTEGRATION-VALIDATION.GENERATOR.01"
+  }
+}

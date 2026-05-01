@@ -40,5 +40,7 @@
   },
   "registration_contract": "PI.LENS.FASTAPI.CLIENT-SOURCE-REGISTRATION.01",
   "registration_date": "2026-05-01",
-  "dom_layer_path": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/dom/dom_layer.json"
+  "dom_layer_path": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/dom/dom_layer.json",
+  "ceu_registry_path": "scripts/pios/ceu_registry.json",
+  "ceu_registry_path_note": "Global canonical CEU registry. Phase 5 synthesizes ceu_grounding_registry format from this + ceu/grounding_state_v3.json + 40.2/structural_node_inventory.json. PI.LENS.CEU-REGISTRY-PATH-ALIGNMENT.01"
 }
