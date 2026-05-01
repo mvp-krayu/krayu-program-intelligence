@@ -1,0 +1,82 @@
+{
+  "contract_id": "PI.LENS.SOURCE-INTAKE.GENERIC.01",
+  "artifact": "source_manifest_contract",
+  "generated_date": "2026-05-01",
+  "purpose": "Defines the minimum source_manifest.json field contract required for source_intake.py to execute successfully",
+
+  "required_fields": [
+    {
+      "field": "archive_path",
+      "type": "string",
+      "description": "Relative path (from REPO_ROOT) to a binary-readable file used as source boundary identity. May be a true archive (.tar, .zip) or a MANIFEST_FILE_PROXY (e.g., a SHA256 manifest file standing in for a local directory source). Must be readable as binary.",
+      "example_blueedge": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/...",
+      "example_fastapi": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/manifests/fastapi-backend.manifest.sha256",
+      "validation": "file must exist; SHA256 must match sha256 field"
+    },
+    {
+      "field": "sha256",
+      "type": "string",
+      "description": "Expected SHA256 hexdigest of the file at archive_path. Used to verify boundary integrity.",
+      "example_fastapi": "b93be45319f28dfb04269c42c0b14f6288f8b2328d9490962e83c4941ced86bb",
+      "validation": "64-character lowercase hex string; must match computed hash of archive_path"
+    },
+    {
+      "field": "extracted_path",
+      "type": "string",
+      "description": "Relative path (from REPO_ROOT) to the root directory containing the client source files. Used for file inventory and Phase 2 validation.",
+      "example_fastapi": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/source/fastapi-backend",
+      "validation": "directory must exist; must contain at least 1 file"
+    }
+  ],
+
+  "optional_fields": [
+    {
+      "field": "file_count",
+      "type": "integer",
+      "description": "Expected number of files in extracted_path. If present, inventory result validates actual count against this value.",
+      "example_fastapi": 87,
+      "validation": "optional; if present, actual rglob file count must match"
+    },
+    {
+      "field": "aggregate_hash",
+      "type": "string",
+      "description": "Pre-computed aggregate hash of the entire source directory. Recorded in intake_manifest.json for traceability but not recomputed by source_intake.py.",
+      "example_fastapi": "5a1a19d95665a650bf544cd3bf585ec7ac0d3ba0dfa886de9418c1aca4303082",
+      "validation": "not validated by source_intake.py — recorded as-is from source_manifest"
+    },
+    {
+      "field": "source_version",
+      "type": "string",
+      "description": "Source version identifier (e.g., git commit hash of the client source). Recorded in intake_manifest.json for traceability.",
+      "example_fastapi": "04dcdc9ae62e94d55f528cb89493a72b448845ab",
+      "validation": "not validated — recorded as-is"
+    }
+  ],
+
+  "fields_not_consumed_by_source_intake": [
+    "structure_path",
+    "grounding_state_path",
+    "ceu_grounding_path",
+    "dom_layer_path",
+    "integration_validation_path",
+    "fastapi_conformance_path",
+    "binding_envelope",
+    "canonical_topology",
+    "ceu_registry",
+    "run_validation",
+    "pipeline_gap_register"
+  ],
+
+  "manifest_file_proxy_pattern": {
+    "description": "When source_type is LOCAL_DIRECTORY, the source is not a true archive. A SHA256 manifest file (e.g., fastapi-backend.manifest.sha256) is used as archive_path to satisfy Phase 1's binary-readable file requirement.",
+    "how_it_works": "The manifest file is hashed (SHA256 of the manifest file itself) and compared to source_manifest['sha256']. This provides stable boundary identity without requiring a true archive.",
+    "clients_using_this_pattern": ["fastapi"],
+    "clients_using_true_archive": ["blueedge"]
+  },
+
+  "compatibility_with_run_client_pipeline": {
+    "phase_01": "source_intake.py boundary validation is equivalent to phase_01_source_boundary. Both compute SHA256 of archive_path and compare to source_manifest['sha256']. Outputs are more detailed (boundary result JSON vs. print).",
+    "phase_02": "source_intake.py inventory is equivalent to phase_02_intake. Both check extracted_path exists and count files via rglob. Outputs are more detailed (file list JSON vs. print).",
+    "contract_alignment": "source_intake.py is designed to be run before run_client_pipeline.py, producing durable intake artifacts that persist in the run directory. It does not replace Phase 1 or Phase 2 — it supplements them."
+  }
+}

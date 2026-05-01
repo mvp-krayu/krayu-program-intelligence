@@ -1,0 +1,67 @@
+{
+  "contract_id": "PI.LENS.SOURCE-INTAKE.GENERIC.01",
+  "artifact": "source_intake_validation_result",
+  "generated_date": "2026-05-01",
+  "client": "fastapi",
+  "source": "source_01",
+  "run_id": "run_02_oss_fastapi_pipeline",
+
+  "validate_only_run": {
+    "command": "python3 scripts/pios/source_intake.py --client fastapi --source source_01 --run-id run_02_oss_fastapi_pipeline --validate-only",
+    "exit_code": 0,
+    "result": "PASS",
+    "archive_path_exists": true,
+    "sha256_match": true,
+    "boundary_result": "PASS",
+    "source_root_exists": true,
+    "files_found": 87,
+    "registered_file_count": 87,
+    "file_count_match": true,
+    "inventory_result": "PASS",
+    "files_written": []
+  },
+
+  "write_run": {
+    "command": "python3 scripts/pios/source_intake.py --client fastapi --source source_01 --run-id run_02_oss_fastapi_pipeline",
+    "exit_code": 0,
+    "result": "PASS",
+    "files_written": [
+      "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/intake/source_boundary_validation.json",
+      "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/intake/source_checksum_validation.json",
+      "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/intake/source_inventory.json",
+      "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/intake/intake_manifest.json"
+    ]
+  },
+
+  "create_only_guard_test": {
+    "command": "python3 scripts/pios/source_intake.py --client fastapi --source source_01 --run-id run_02_oss_fastapi_pipeline (re-run)",
+    "exit_code": 1,
+    "result": "FAIL-CLOSED",
+    "error": "CREATE_ONLY violation — target files already exist in clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/intake: all 4 output files",
+    "guard_status": "PASS — correctly blocked overwrite"
+  },
+
+  "scope_guards": {
+    "structural_scanning_performed": false,
+    "ceu_dom_41x_75x_performed": false,
+    "blueedge_artifacts_modified": false,
+    "fastapi_source_files_modified": false,
+    "output_path_correct": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/intake/"
+  },
+
+  "intake_manifest_summary": {
+    "contract_id": "PI.LENS.SOURCE-INTAKE.GENERIC.01",
+    "client_id": "fastapi",
+    "source_id": "source_01",
+    "run_id": "run_02_oss_fastapi_pipeline",
+    "client_display_name": "OSS FastAPI Modular Monolith",
+    "source_type": "LOCAL_DIRECTORY",
+    "file_count": 87,
+    "boundary_result": "PASS",
+    "inventory_result": "PASS",
+    "intake_result": "PASS",
+    "generated_at": "2026-05-01T13:47:10Z"
+  },
+
+  "overall_validation": "PASS"
+}

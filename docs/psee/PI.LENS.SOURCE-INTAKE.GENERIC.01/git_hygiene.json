@@ -1,0 +1,41 @@
+{
+  "contract_id": "PI.LENS.SOURCE-INTAKE.GENERIC.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-01",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+  "working_tree_at_start": "CLEAN",
+  "baseline_commit": "8dbea2c",
+
+  "files_created_this_contract": [
+    "scripts/pios/source_intake.py",
+    "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/intake/source_boundary_validation.json",
+    "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/intake/source_checksum_validation.json",
+    "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/intake/source_inventory.json",
+    "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/intake/intake_manifest.json",
+    "docs/psee/PI.LENS.SOURCE-INTAKE.GENERIC.01/source_intake_findings.md",
+    "docs/psee/PI.LENS.SOURCE-INTAKE.GENERIC.01/source_manifest_contract.json",
+    "docs/psee/PI.LENS.SOURCE-INTAKE.GENERIC.01/source_intake_output_schema.json",
+    "docs/psee/PI.LENS.SOURCE-INTAKE.GENERIC.01/source_intake_validation_result.json",
+    "docs/psee/PI.LENS.SOURCE-INTAKE.GENERIC.01/implementation_summary.md",
+    "docs/psee/PI.LENS.SOURCE-INTAKE.GENERIC.01/git_hygiene.json"
+  ],
+  "files_modified_this_contract": [],
+  "files_deleted_this_contract": [],
+
+  "blueedge_mutation_check": "PASS — no files under clients/blueedge/ or clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/ were created, modified, or deleted",
+  "fastapi_source_mutation_check": "PASS — no files under clients/e65d2f0a.../input/intake/source/ were modified",
+  "run_client_pipeline_modified": "NO",
+  "out_of_scope_guard": "PASS — no structural scanning, CEU/DOM/41.x/75.x, or report generation performed",
+
+  "runtime_artifacts_category": "intake",
+  "runtime_artifacts_path": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/intake/",
+  "runtime_artifacts_count": 4,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[INTAKE] PI.LENS.SOURCE-INTAKE.GENERIC.01 — generic source_intake.py + FastAPI intake artifacts (PASS)",
+  "commit_note": "Commits are operator action per CLAUDE.md Section 7.1.",
+
+  "git_hygiene_status": "COMPLETE"
+}

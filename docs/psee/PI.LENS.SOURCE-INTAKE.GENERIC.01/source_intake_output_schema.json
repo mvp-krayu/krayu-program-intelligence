@@ -1,0 +1,99 @@
+{
+  "contract_id": "PI.LENS.SOURCE-INTAKE.GENERIC.01",
+  "artifact": "source_intake_output_schema",
+  "generated_date": "2026-05-01",
+  "output_root": "clients/<client_id>/psee/runs/<run_id>/intake/",
+
+  "outputs": [
+    {
+      "filename": "source_boundary_validation.json",
+      "description": "Result of archive_path existence check and SHA256 validation",
+      "schema": {
+        "archive_path": "string — relative path of archive_path from source_manifest",
+        "archive_path_exists": "boolean — whether the file exists at REPO_ROOT / archive_path",
+        "sha256_expected": "string — expected SHA256 from source_manifest",
+        "sha256_actual": "string | null — computed SHA256 of archive_path file; null if file missing",
+        "sha256_match": "boolean — true if sha256_actual == sha256_expected",
+        "boundary_result": "string — PASS | FAIL",
+        "notes": "array[string] — human-readable validation notes"
+      },
+      "pass_condition": "archive_path_exists=true AND sha256_match=true",
+      "example_fastapi": {
+        "archive_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/manifests/fastapi-backend.manifest.sha256",
+        "archive_path_exists": true,
+        "sha256_expected": "b93be45319f28dfb04269c42c0b14f6288f8b2328d9490962e83c4941ced86bb",
+        "sha256_actual": "b93be45319f28dfb04269c42c0b14f6288f8b2328d9490962e83c4941ced86bb",
+        "sha256_match": true,
+        "boundary_result": "PASS",
+        "notes": ["archive_path present; SHA256 verified"]
+      }
+    },
+    {
+      "filename": "source_checksum_validation.json",
+      "description": "Focused SHA256 checksum record with file size",
+      "schema": {
+        "archive_path": "string",
+        "sha256_expected": "string",
+        "sha256_actual": "string | null",
+        "sha256_match": "boolean",
+        "checksum_result": "string — PASS | FAIL",
+        "algorithm": "string — always 'sha256'",
+        "file_size_bytes": "integer | null — size of archive_path file; null if missing"
+      },
+      "pass_condition": "sha256_match=true"
+    },
+    {
+      "filename": "source_inventory.json",
+      "description": "Complete deterministic file inventory of extracted_path",
+      "schema": {
+        "source_root": "string — extracted_path from source_manifest",
+        "source_root_exists": "boolean",
+        "file_count": "integer — actual number of files found via rglob",
+        "registered_file_count": "integer | null — file_count from source_manifest if declared",
+        "file_count_match": "boolean — true if file_count == registered_file_count (or if no registered count)",
+        "files": "array[{path: string, size_bytes: integer}] — sorted list of all files relative to source_root",
+        "inventory_result": "string — PASS | FAIL",
+        "notes": "array[string]"
+      },
+      "pass_condition": "source_root_exists=true AND file_count > 0 AND file_count_match=true",
+      "sort_order": "lexicographic by path (rglob + sorted())",
+      "example_fastapi_summary": {
+        "source_root": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/source/fastapi-backend",
+        "file_count": 87,
+        "registered_file_count": 87,
+        "file_count_match": true,
+        "inventory_result": "PASS"
+      }
+    },
+    {
+      "filename": "intake_manifest.json",
+      "description": "Summary manifest for the intake run — overall result and all key metadata",
+      "schema": {
+        "contract_id": "string",
+        "client_id": "string",
+        "source_id": "string",
+        "run_id": "string",
+        "client_display_name": "string",
+        "source_type": "string — from source_manifest archive_type",
+        "archive_path": "string",
+        "extracted_path": "string",
+        "file_count": "integer",
+        "boundary_result": "string — PASS | FAIL",
+        "inventory_result": "string — PASS | FAIL",
+        "intake_result": "string — PASS | FAIL (PASS only if both boundary and inventory PASS)",
+        "mode": "string — write | dry_run | validate_only",
+        "generated_at": "string — ISO 8601 UTC timestamp"
+      },
+      "pass_condition": "boundary_result=PASS AND inventory_result=PASS"
+    }
+  ],
+
+  "create_only_rule": "In write mode, all 4 output files are checked for existence before any write. If any file already exists, script exits with FAIL-CLOSED. Existing intake artifacts are never overwritten.",
+
+  "path_conventions": {
+    "output_root_template": "clients/<client_id>/psee/runs/<run_id>/intake/",
+    "client_id_source": "client_id CLI argument — must match clients/<client_id>/client.yaml",
+    "no_uuid_path_for_output": "Outputs are written to the slug path (clients/<client_id>/...), consistent with run_client_pipeline.py conventions. Source artifacts (archive_path, extracted_path) may reference UUID paths as registered in source_manifest.json.",
+    "no_filesystem_search": "All paths resolved deterministically from client_id, source_id, run_id arguments and source_manifest.json fields. No glob or filesystem discovery for path resolution."
+  }
+}
