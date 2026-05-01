@@ -187,28 +187,44 @@ def phase_03_40x_structural(source_manifest: dict) -> bool:
 
 # ── Phase 4: CEU Grounding Verification ──────────────────────────────────────
 
-def phase_04_ceu_grounding(source_manifest: dict) -> bool:
-    grounding_path = REPO_ROOT / source_manifest["grounding_state_path"]
-    if not grounding_path.exists():
-        print(f"  FAIL: grounding_state_v3.json not found at {grounding_path}")
+def phase_04_ceu_grounding(source_manifest: dict, run_dir: Path) -> bool:
+    # Prefer run-derived generic path (ceu_grounding.py output).
+    # Fall back to manifest-registered path for legacy/BlueEdge runs.
+    generic_path  = run_dir / "ceu" / "grounding_state_v3.json"
+    manifest_path_str = source_manifest.get("grounding_state_path", "")
+    manifest_path = (REPO_ROOT / manifest_path_str) if manifest_path_str else None
+
+    if generic_path.exists():
+        grounding_path = generic_path
+    elif manifest_path and manifest_path.exists():
+        grounding_path = manifest_path
+    else:
+        checked = [str(generic_path.relative_to(REPO_ROOT))]
+        if manifest_path:
+            checked.append(str(manifest_path.relative_to(REPO_ROOT)))
+        print(f"  FAIL: grounding_state_v3.json not found. Checked:")
+        for p in checked:
+            print(f"    {p}")
         return False
 
     gs = load_json(grounding_path)
-    gate = gs.get("readiness_gate", "")
     ratio = gs.get("grounding_ratio", 0)
-    source_mode = gs.get("source_mode", "")
 
-    # readiness_gate may be a string "PASS" or a dict with a "status" key
-    if isinstance(gate, dict):
-        gate_status = gate.get("status", "")
+    # Generic format (ceu_grounding.py): validation_status field.
+    # Legacy/BlueEdge format: readiness_gate field (string or dict).
+    if gs.get("validation_status") == "PASS":
+        gate_status = "PASS"
     else:
-        gate_status = gate
+        gate = gs.get("readiness_gate", "")
+        gate_status = gate.get("status", "") if isinstance(gate, dict) else gate
+
+    source_mode = gs.get("source_mode", gs.get("coverage_classification", ""))
 
     if gate_status != "PASS":
-        print(f"  FAIL: readiness_gate.status={gate_status} (expected PASS), ratio={ratio}")
+        print(f"  FAIL: grounding gate={gate_status!r} (expected PASS), ratio={ratio}")
         return False
 
-    print(f"  PASS: readiness_gate=PASS, grounding_ratio={ratio}, source_mode={source_mode}")
+    print(f"  PASS: grounding PASS, grounding_ratio={ratio}, coverage={source_mode}")
     return True
 
 
@@ -998,7 +1014,7 @@ def main() -> int:
         ("Phase 3  — 40.x Structural Verification",
          lambda: phase_03_40x_structural(source_manifest)),
         ("Phase 4  — CEU Grounding Verification",
-         lambda: phase_04_ceu_grounding(source_manifest)),
+         lambda: phase_04_ceu_grounding(source_manifest, run_dir)),
         ("Phase 5  — Build Binding Envelope",
          lambda: phase_05_build_binding_envelope(client_cfg, source_manifest, run_dir)),
         ("Phase 6+7 — 75.x Activation + 41.x Projection",
