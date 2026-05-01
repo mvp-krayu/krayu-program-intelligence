@@ -1,0 +1,20 @@
+{
+  "contract_id": "PI.LENS.BLUEEDGE-REPORT-PARITY-ENFORCEMENT.01",
+  "generated_date": "2026-05-01",
+  "source": "GENERATION_ATTEMPT",
+  "target_run": "run_be_orchestrated_fixup_01",
+  "output_dir": "/tmp/blueedge_parity_check",
+
+  "generation_result": "FAIL",
+  "exit_code": 1,
+  "error": "PRODUCTIZE.LENS.REPORT.TOPOLOGY.DELIVERY.01 — Canonical package directory not found: /Users/khorrix/Projects/k-pi-core/clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/package",
+
+  "command_executed": "python3 scripts/pios/lens_report_generator.py --client blueedge --run-id run_be_orchestrated_fixup_01 --output-dir /tmp/blueedge_parity_check",
+  "flags_used": ["--client blueedge", "--run-id run_be_orchestrated_fixup_01", "--output-dir /tmp/blueedge_parity_check"],
+  "additional_flags": "NONE — per contract NO OTHER FLAGS",
+
+  "root_cause": "Generator requires --package-dir to resolve the vault artifact root. Without it, the script defaults to looking for a 'package/' subdirectory under the run directory, which does not exist for run_be_orchestrated_fixup_01.",
+
+  "metrics": null,
+  "note": "No reports generated. No metrics extractable."
+}

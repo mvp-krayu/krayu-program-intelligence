@@ -1,0 +1,67 @@
+{
+  "contract_id": "PI.LENS.BLUEEDGE-REPORT-PARITY-ENFORCEMENT.01",
+  "generated_date": "2026-05-01",
+  "source": "CANONICAL_REPORTS",
+  "canonical_run": "run_blueedge_productized_01_fixed",
+  "report_root": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/",
+
+  "extraction_sources": {
+    "tier1_evidence": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/tier1/lens_tier1_evidence_brief.html",
+    "tier1_narrative": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/tier1/lens_tier1_narrative_brief.html",
+    "tier2_diagnostic": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/tier2/lens_tier2_diagnostic_narrative.html",
+    "decision": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/decision/lens_decision_surface.html"
+  },
+
+  "gauge": {
+    "score": 60,
+    "band": "CONDITIONAL",
+    "range": "60–100",
+    "projected": 100,
+    "source_reports": ["tier1_evidence", "tier1_narrative", "tier2_diagnostic", "decision"]
+  },
+
+  "decision": {
+    "classification": "INVESTIGATE",
+    "state": "Structurally verified. Execution not yet validated.",
+    "source_reports": ["tier1_evidence", "tier1_narrative", "decision"]
+  },
+
+  "signals": {
+    "total_evaluated": 6,
+    "active_high": 3,
+    "baseline": 1,
+    "not_activated": 2,
+    "active_ids": ["PSIG-001", "PSIG-002", "PSIG-004"],
+    "active_values": {
+      "PSIG-001": 5.663,
+      "PSIG-002": 3.2098,
+      "PSIG-004": 2.1822
+    },
+    "baseline_ids": ["PSIG-006"],
+    "baseline_values": {
+      "PSIG-006": 0
+    },
+    "not_activated_ids": ["PSIG-003", "PSIG-005"],
+    "pressure_zone": "PZ-001",
+    "zone_class": "COMPOUND_ZONE",
+    "zone_anchor_domain": "DOM-04",
+    "source_reports": ["tier1_evidence", "tier1_narrative", "tier2_diagnostic", "decision"]
+  },
+
+  "topology": {
+    "structural_nodes": 35,
+    "dom_groups": 13,
+    "semantic_domains_total": 17,
+    "semantic_domains_backed": 5,
+    "semantic_domains_only": 12,
+    "graph_nodes": 18,
+    "graph_links": 17,
+    "source_reports": ["tier1_narrative", "tier1_evidence", "tier2_diagnostic"]
+  },
+
+  "ceu_count": {
+    "value": "NOT_RENDERED_IN_HTML",
+    "note": "CEU count is not explicitly labeled in any of the 4 report HTML files. Reports abstract CEU into DOM groups and components. Signal values (PSIG-001=5.663, PSIG-002=3.2098, PSIG-004=2.1822) match run_be_orchestrated_fixup_01 vault signal_registry.json exactly — CEU=10 inferred from shared vault origin.",
+    "inferred_value": 10
+  }
+}

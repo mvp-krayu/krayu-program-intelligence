@@ -1,0 +1,31 @@
+{
+  "contract_id": "PI.LENS.BLUEEDGE-REPORT-PARITY-ENFORCEMENT.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-01",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+  "working_tree_at_start": "DIRTY — ?? docs/psee/PI.LENS.BLUEEDGE-REPORT-LOCK-FINAL.01/ (untracked, from interrupted prior contract). Operator proceeded under override.",
+  "working_tree_at_end": "DIRTY — ?? docs/psee/PI.LENS.BLUEEDGE-REPORT-LOCK-FINAL.01/ + ?? docs/psee/PI.LENS.BLUEEDGE-REPORT-PARITY-ENFORCEMENT.01/",
+  "baseline_commit": "5338c68",
+
+  "files_created_this_contract": [
+    "docs/psee/PI.LENS.BLUEEDGE-REPORT-PARITY-ENFORCEMENT.01/canonical_metrics.json",
+    "docs/psee/PI.LENS.BLUEEDGE-REPORT-PARITY-ENFORCEMENT.01/generated_metrics.json",
+    "docs/psee/PI.LENS.BLUEEDGE-REPORT-PARITY-ENFORCEMENT.01/parity_result.json",
+    "docs/psee/PI.LENS.BLUEEDGE-REPORT-PARITY-ENFORCEMENT.01/difference_log.md",
+    "docs/psee/PI.LENS.BLUEEDGE-REPORT-PARITY-ENFORCEMENT.01/no_mutation_attestation.md",
+    "docs/psee/PI.LENS.BLUEEDGE-REPORT-PARITY-ENFORCEMENT.01/git_hygiene.json"
+  ],
+  "files_modified_this_contract": [],
+  "files_deleted_this_contract": [],
+
+  "canonical_reports_mutation_check": "PASS — no canonical report files modified",
+  "baseline_run_mutation_check": "PASS — run_be_orchestrated_fixup_01 artifacts not modified",
+  "generator_output": "NONE — generator failed at exit code 1, /tmp/blueedge_parity_check not created",
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[FORENSIC] PI.LENS.BLUEEDGE-REPORT-PARITY-ENFORCEMENT.01 — FAIL-CLOSED: generator requires --package-dir flag not in contract command",
+
+  "git_hygiene_status": "COMPLETE"
+}

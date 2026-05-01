@@ -1,0 +1,25 @@
+{
+  "contract_id": "PI.LENS.BLUEEDGE-REPORT-PARITY-ENFORCEMENT.01",
+  "generated_date": "2026-05-01",
+
+  "parity_result": "FAIL-CLOSED",
+  "reason": "Generation step failed — script exited with code 1 before producing any reports. Parity comparison could not be performed.",
+
+  "step_1_extract_canonical": "COMPLETE",
+  "step_2_generate": "FAIL",
+  "step_3_extract_generated": "BLOCKED",
+  "step_4_compare": "BLOCKED",
+
+  "metric_checks": [],
+  "differences": [
+    {
+      "type": "GENERATOR_FAILURE",
+      "detail": "lens_report_generator.py failed: 'package' directory not found at clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/package. Generator requires --package-dir flag to locate vault artifacts. Contract command did not include --package-dir."
+    }
+  ],
+
+  "fail_closed_condition_triggered": "script fails",
+  "no_re_run": true,
+  "no_patch": true,
+  "no_workaround": true
+}
