@@ -1,0 +1,33 @@
+{
+  "contract_id": "PI.LENS.BLUEEDGE-BASELINE-RECONCILIATION.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-01",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+  "working_tree_at_start": "CLEAN",
+  "working_tree_at_end": "MODIFIED — docs/psee/PI.LENS.BLUEEDGE-BASELINE-RECONCILIATION.01/ (untracked evidence only)",
+  "baseline_commit": "4383791",
+
+  "files_created_this_contract": [
+    "docs/psee/PI.LENS.BLUEEDGE-BASELINE-RECONCILIATION.01/baseline_fact_extraction.md",
+    "docs/psee/PI.LENS.BLUEEDGE-BASELINE-RECONCILIATION.01/artifact_mapping_matrix.json",
+    "docs/psee/PI.LENS.BLUEEDGE-BASELINE-RECONCILIATION.01/reconciliation_classification.json",
+    "docs/psee/PI.LENS.BLUEEDGE-BASELINE-RECONCILIATION.01/critical_metric_validation.json",
+    "docs/psee/PI.LENS.BLUEEDGE-BASELINE-RECONCILIATION.01/divergence_root_cause.md",
+    "docs/psee/PI.LENS.BLUEEDGE-BASELINE-RECONCILIATION.01/reconciliation_verdict.md",
+    "docs/psee/PI.LENS.BLUEEDGE-BASELINE-RECONCILIATION.01/no_mutation_attestation.md",
+    "docs/psee/PI.LENS.BLUEEDGE-BASELINE-RECONCILIATION.01/git_hygiene.json"
+  ],
+  "files_modified_this_contract": [],
+  "files_deleted_this_contract": [],
+
+  "blueedge_mutation_check": "PASS — no files under clients/blueedge/ or clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/ were modified",
+  "pipeline_mutation_check": "PASS — scripts/pios/run_client_pipeline.py not modified",
+  "runtime_artifacts_created": "NONE — no pipeline run executed",
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[FORENSIC] PI.LENS.BLUEEDGE-BASELINE-RECONCILIATION.01 — BlueEdge baseline reconciliation: PIPELINE_DIVERGENCE, no violations, divergence is architectural (path gaps, not value mismatch)",
+
+  "git_hygiene_status": "COMPLETE"
+}

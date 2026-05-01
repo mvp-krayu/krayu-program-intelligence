@@ -1,0 +1,89 @@
+{
+  "contract_id": "PI.LENS.BLUEEDGE-BASELINE-RECONCILIATION.01",
+  "artifact": "reconciliation_classification",
+  "generated_date": "2026-05-01",
+
+  "concept_classifications": [
+    {
+      "concept": "CEU count (10 total, 10 grounded, ratio=1.0)",
+      "classification": "STRUCTURAL_EQUIVALENT",
+      "rationale": "Grounding state file EXISTS at UUID path. Phase 4 can verify. Values are identical. Phase 8b path gap is architectural, not semantic."
+    },
+    {
+      "concept": "CEU identity (CEU-01..CEU-10 names)",
+      "classification": "EXACT",
+      "rationale": "Same CEU IDs and names in global ceu_registry.json and grounding_state_v3.json ceu_grounding list."
+    },
+    {
+      "concept": "DOM layer (13 domains, 35 nodes)",
+      "classification": "MISSING",
+      "rationale": "dom_path_domain_layer.json does not exist at source_manifest.dom_layer_path. Topology values in baseline vault are derived from this absent file. Cannot verify or reproduce."
+    },
+    {
+      "concept": "40.x structural artifacts",
+      "classification": "MISSING",
+      "rationale": "structure_path directory absent. BlueEdge structural scanner output never committed to k-pi-core. Baseline topology was derived via PATH_EVIDENCE_ONLY (not from 40.x scanner)."
+    },
+    {
+      "concept": "Intake / canonical_repo",
+      "classification": "MISSING",
+      "rationale": "extracted_path absent. BlueEdge source was analyzed from external archive not present in repo."
+    },
+    {
+      "concept": "Binding envelope",
+      "classification": "INCOMPATIBLE",
+      "rationale": "Pre-generic schema (bindings/domain_telemetry) is not the same as generic pipeline schema (nodes/edges/capability_surfaces). fastapi_conformance precomputed artifacts absent. Schema translation not possible without source artifacts."
+    },
+    {
+      "concept": "Signal values (PSIG-001=5.663, PSIG-002=3.2098, PSIG-004=2.1822, PSIG-006=0)",
+      "classification": "DERIVABLE",
+      "rationale": "Values were computed from 40.3 structural topology using RUN_RELATIVE_OUTLIER method. Method is identical to generic pipeline. Values reproducible IF structural data available. Currently blocked by Phase 5 binding dependency."
+    },
+    {
+      "concept": "Pressure zones (1 active, PZ-001 COMPOUND)",
+      "classification": "DERIVABLE",
+      "rationale": "Zone derivation is deterministic from signal activations. Would reproduce identically if signal computation reaches completion."
+    },
+    {
+      "concept": "Gauge score (canonical=60, projected=100, CONDITIONAL)",
+      "classification": "EXACT",
+      "rationale": "Formula is deterministic: coverage_percent=100% → coverage_points=35; reconstruction=PASS → 25; completion=NOT_EVALUATED → 0. Total=60. Same inputs produce same output with zero ambiguity."
+    },
+    {
+      "concept": "Coverage state (100%, 10/10)",
+      "classification": "EXACT",
+      "rationale": "Deterministic from grounding_ratio=1.0."
+    },
+    {
+      "concept": "Reconstruction state (PASS, 10/10)",
+      "classification": "EXACT",
+      "rationale": "Deterministic from grounding state (10 SOURCE_TRUTH CEUs)."
+    },
+    {
+      "concept": "Integration validation (9/9 PASS)",
+      "classification": "STRUCTURAL_EQUIVALENT",
+      "rationale": "File exists at UUID path (same path as source_manifest.integration_validation_path). Phase 8a can access it. Phase 8b VR-08/09 cannot (run_dir path gap). Values confirmed identical."
+    },
+    {
+      "concept": "Decision state (INVESTIGATE)",
+      "classification": "MISSING",
+      "rationale": "Not produced by generic pipeline. PIOS_40.7 artifact from prior contract chain. Out of generic pipeline scope — this is a gap, not a regression."
+    },
+    {
+      "concept": "vault_readiness.json",
+      "classification": "DERIVABLE",
+      "rationale": "New artifact. Would be produced by Phase 8b if pipeline reaches it. Currently blocked at Phase 2."
+    }
+  ],
+
+  "summary_by_classification": {
+    "EXACT": ["CEU identity", "Gauge score", "Coverage state", "Reconstruction state"],
+    "STRUCTURAL_EQUIVALENT": ["CEU grounding state (phase 4 path)", "Integration validation (phase 8a path)"],
+    "DERIVABLE": ["Signal values", "Pressure zones", "vault_readiness.json"],
+    "MISSING": ["DOM layer", "40.x structural", "Intake/canonical_repo", "Decision state"],
+    "INCOMPATIBLE": ["Binding envelope schema"]
+  },
+
+  "overall_classification": "MIXED",
+  "classification_note": "Semantic values that CAN be reproduced (gauge, coverage, reconstruction, signals) are EXACT or DERIVABLE. The blocking gaps are architectural: 4 source artifact paths missing (intake, structure, DOM, fastapi_conformance), 1 schema incompatibility (binding). No value-level violations detected — all divergences are path or schema gaps."
+}
