@@ -1,0 +1,53 @@
+{
+  "contract_id": "PI.LENS.BLUEEDGE-REPORT-DIFF.01",
+  "generated_date": "2026-05-01",
+  "reports": [
+    {
+      "report_type": "TIER1_NARRATIVE",
+      "hash_match": false,
+      "classification": "MIXED",
+      "primary_cause": "DATA_DRIFT — binding_envelope/pressure_zone_projection does not contain PZ-001 with DOM-04 anchor; focus-block absent; conclusion domain text empty",
+      "secondary_cause": "none — run_id in nav links is identical between canonical and generated",
+      "requires_code_fix": false,
+      "requires_canonical_update": false,
+      "requires_data_source_correction": true
+    },
+    {
+      "report_type": "TIER1_EVIDENCE",
+      "hash_match": false,
+      "classification": "MIXED",
+      "primary_cause": "DATA_DRIFT — domain schema mismatch: canonical shows 17 semantic domains / 5 backed / 12 semantic-only; generated shows 13 structural groups / 35 components / 0 capabilities",
+      "secondary_cause": "TEMPLATE_DRIFT — count card labels differ based on schema type (semantic vs structural)",
+      "requires_code_fix": false,
+      "requires_canonical_update": false,
+      "requires_data_source_correction": true
+    },
+    {
+      "report_type": "TIER2_DIAGNOSTIC",
+      "hash_match": false,
+      "classification": "MIXED",
+      "primary_cause": "DATA_DRIFT — pressure zones absent (0 of 0 vs 1 of 1); semantic domain section 01A absent; domain coverage counts differ; file size 33,579 vs canonical 71,008 bytes",
+      "secondary_cause": "VOLATILE_METADATA — vault run_id field reads from vault_index.json: canonical shows run_blueedge_productized_01, generated shows run_be_orchestrated_fixup_01",
+      "requires_code_fix": false,
+      "requires_canonical_update": false,
+      "requires_data_source_correction": true
+    },
+    {
+      "report_type": "DECISION_SURFACE",
+      "hash_match": false,
+      "classification": "MIXED",
+      "primary_cause": "DATA_DRIFT — hero rationale, truth text, status badge, gap items differ; active signals listed: 3 in canonical vs 6 in generated; graph node coordinates differ (non-deterministic force simulation)",
+      "secondary_cause": "VOLATILE_METADATA — run_id in nav links: canonical has run_01_authoritative_generated (default, no --run-id flag used); generated has run_blueedge_productized_01_fixed",
+      "requires_code_fix": false,
+      "requires_canonical_update": false,
+      "requires_data_source_correction": true
+    }
+  ],
+  "overall_classification": "MIXED",
+  "core_metrics_agreement": {
+    "gauge_score": "MATCH — 60 in both",
+    "decision_classification": "MATCH — INVESTIGATE in both",
+    "confidence_band": "MATCH — CONDITIONAL in both"
+  },
+  "recommended_next_action": "REMEDIATION_REQUIRED — identify the exact data source (vault/binding/package) used to generate canonical reports; run_be_orchestrated_fixup_01/vault + binding contain structurally different data than what produced canonical"
+}
