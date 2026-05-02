@@ -1,0 +1,35 @@
+{
+  "contract_id": "PI.LENS.GENERATE.WRAPPER.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-02",
+
+  "branch": "work/psee-runtime",
+  "baseline_commit": "e0d668b1dfc08f7060b23b9937479344ad615659",
+  "baseline_commit_message": "[CLOSE] BlueEdge report renderer parity closed — deterministic reproduction achieved",
+
+  "working_tree_before": "CLEAN",
+  "working_tree_after": "wrapper + evidence files untracked",
+
+  "files_created_tracked": [
+    "scripts/pios/lens_generate.sh",
+    "docs/psee/PI.LENS.GENERATE.WRAPPER.01/wrapper_contract.md",
+    "docs/psee/PI.LENS.GENERATE.WRAPPER.01/execution_log.md",
+    "docs/psee/PI.LENS.GENERATE.WRAPPER.01/validation_result.json",
+    "docs/psee/PI.LENS.GENERATE.WRAPPER.01/git_hygiene.json"
+  ],
+  "files_modified_tracked": [],
+  "files_modified_gitignored": [
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/vault (symlink created)"
+  ],
+
+  "canonical_reports_modified": false,
+  "renderer_modified": false,
+  "pipeline_executed": false,
+  "fastapi_involved": false,
+  "vault_modified": false,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[WRAPPER] PI.LENS.GENERATE.WRAPPER.01 — lens_generate.sh created; blueedge validation pass (4 reports)",
+
+  "git_hygiene_status": "COMPLETE"
+}

@@ -1,0 +1,9 @@
+{
+  "contract_id": "PI.LENS.GENERATE.WRAPPER.01",
+  "generated_date": "2026-05-02",
+  "wrapper_created": true,
+  "execution_success": true,
+  "reports_generated": 4,
+  "output_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports",
+  "errors": false
+}
