@@ -1,0 +1,37 @@
+{
+  "contract_id": "PI.LENS.REPORT-RENDERER.PARITY-STABILIZATION.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-02",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+  "working_tree_at_start": "CLEAN — confirmed via git status (empty output)",
+  "working_tree_at_end": "DIRTY — ?? docs/psee/PI.LENS.REPORT-RENDERER.PARITY-STABILIZATION.01/ (untracked evidence); /tmp/blueedge_report_parity_semantic_bundle_01/ is outside repo and not tracked",
+  "baseline_commit": "d9605f5",
+  "baseline_commit_message": "[RENDERER] consume BlueEdge semantic bundle for report generation",
+
+  "files_created_this_contract": [
+    "docs/psee/PI.LENS.REPORT-RENDERER.PARITY-STABILIZATION.01/parity_stabilization_summary.md",
+    "docs/psee/PI.LENS.REPORT-RENDERER.PARITY-STABILIZATION.01/hash_comparison.json",
+    "docs/psee/PI.LENS.REPORT-RENDERER.PARITY-STABILIZATION.01/normalized_diff_result.json",
+    "docs/psee/PI.LENS.REPORT-RENDERER.PARITY-STABILIZATION.01/semantic_fact_comparison.json",
+    "docs/psee/PI.LENS.REPORT-RENDERER.PARITY-STABILIZATION.01/remaining_drift_classification.json",
+    "docs/psee/PI.LENS.REPORT-RENDERER.PARITY-STABILIZATION.01/generation_log.md",
+    "docs/psee/PI.LENS.REPORT-RENDERER.PARITY-STABILIZATION.01/no_mutation_attestation.md",
+    "docs/psee/PI.LENS.REPORT-RENDERER.PARITY-STABILIZATION.01/git_hygiene.json"
+  ],
+  "files_modified_this_contract": [],
+  "files_deleted_this_contract": [],
+
+  "canonical_reports_modified": false,
+  "renderer_modified": false,
+  "vault_modified": false,
+  "pipeline_executed": false,
+
+  "json_validation": "PASS — hash_comparison.json, normalized_diff_result.json, semantic_fact_comparison.json, remaining_drift_classification.json, git_hygiene.json all valid",
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[PARITY] PI.LENS.REPORT-RENDERER.PARITY-STABILIZATION.01 — 438 non-allowed diffs classified; 4 root causes identified; tier1_narrative byte match",
+
+  "git_hygiene_status": "COMPLETE"
+}

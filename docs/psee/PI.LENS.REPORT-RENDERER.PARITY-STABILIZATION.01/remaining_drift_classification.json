@@ -1,0 +1,69 @@
+{
+  "contract_id": "PI.LENS.REPORT-RENDERER.PARITY-STABILIZATION.01",
+  "generated_date": "2026-05-02",
+
+  "byte_parity": "FAIL",
+  "normalized_parity": "FAIL",
+  "semantic_fact_parity": "FAIL",
+
+  "classification": "MIXED",
+
+  "per_report_classification": [
+    {
+      "report_type": "TIER1_NARRATIVE",
+      "classification": "NO_DIFF",
+      "note": "Byte-identical match. No drift."
+    },
+    {
+      "report_type": "TIER1_EVIDENCE",
+      "classification": "MIXED",
+      "drift_types": ["TEMPLATE_DRIFT", "DATA_DRIFT"],
+      "note": "192 SVG coordinate lines (TEMPLATE_DRIFT: reconstruction layout coordinates differ from original); 34 cluster_id naming lines (DATA_DRIFT: CLU-FUNCTIONAL vs original CLU-01 format); 4 lineage_status lines (DATA_DRIFT: DOMAIN-01/16 STRONG vs original EXACT)"
+    },
+    {
+      "report_type": "TIER2_DIAGNOSTIC",
+      "classification": "MIXED",
+      "drift_types": ["TEMPLATE_DRIFT", "DATA_DRIFT"],
+      "note": "192 SVG coordinate lines (TEMPLATE_DRIFT: same as tier1_evidence); 2 lineage table lines (DATA_DRIFT: DOMAIN-01 EXACT→STRONG, DOMAIN-16 EXACT→STRONG)"
+    },
+    {
+      "report_type": "DECISION_SURFACE",
+      "classification": "CONTENT_DRIFT",
+      "drift_types": ["CONTENT_DRIFT"],
+      "note": "14 content lines. Hero rationale uses structural path (13/13 structural) instead of semantic path (5/17 backed). Badge text, truth text, synthesis text all differ. Root cause: decision surface builder hero rationale text generation uses a different semantic context path than tier1/tier2 builders."
+    }
+  ],
+
+  "root_causes": [
+    {
+      "id": "RC-01",
+      "type": "TEMPLATE_DRIFT",
+      "description": "Semantic topology SVG coordinates differ: DETERMINISTIC_RECONSTRUCTION layout has different node positions and cluster bounding boxes than original semantic_topology_layout.json. Affects 192 diff lines in tier1_evidence and tier2_diagnostic.",
+      "remediable": true,
+      "remediation_path": "Extract original SVG coordinates from canonical report HTML (inline SVG visible in canonical), reconstruct semantic_topology_layout.json from canonical report."
+    },
+    {
+      "id": "RC-02",
+      "type": "DATA_DRIFT",
+      "description": "Cluster ID naming convention mismatch. Original model used CLU-01..CLU-05 (numeric); reconstruction used CLU-FUNCTIONAL..CLU-INTEGRATION (descriptive). Affects domain card subtitles in tier1_evidence (34 lines).",
+      "remediable": true,
+      "remediation_path": "Update semantic_topology_model.json cluster_ids to CLU-01..CLU-05 format matching original. Map: CLU-01=FUNCTIONAL, CLU-02=?, CLU-03=INFRASTRUCTURE, CLU-04=INFRASTRUCTURE/OPERATIONAL, CLU-05=CROSS-CUTTING/INTEGRATION."
+    },
+    {
+      "id": "RC-03",
+      "type": "DATA_DRIFT",
+      "description": "lineage_status mismatch for DOMAIN-01 and DOMAIN-16. Original: EXACT for both. Reconstruction: STRONG for both. Affects domain cards and lineage table (4+2 lines).",
+      "remediable": true,
+      "remediation_path": "Set DOMAIN-01 lineage_status=EXACT and DOMAIN-16 lineage_status=EXACT in semantic_topology_model.json."
+    },
+    {
+      "id": "RC-04",
+      "type": "CONTENT_DRIFT",
+      "description": "Decision surface hero rationale and truth text use structural rendering path instead of semantic path. Canonical shows '5/17 semantic domains backed'; generated shows '13 of 13 structural evidence groups'. Root cause: decision surface builder conditional logic for semantic vs structural hero rationale differs from canonical generation session.",
+      "remediable": true,
+      "remediation_path": "Investigate _build_decision_surface() semantic context consumption. Identify which code path produces the '5/17 semantic' text in canonical and ensure semantic_context from _build_semantic_report_context() is consumed for hero rationale."
+    }
+  ],
+
+  "recommended_next_action": "PI.LENS.REPORT-RENDERER.DRIFT-REMEDIATION.01 — remediate RC-02 (cluster_ids), RC-03 (lineage_status) in semantic_topology_model.json; extract canonical SVG coordinates from canonical reports for RC-01; investigate decision surface builder semantic context path for RC-04."
+}

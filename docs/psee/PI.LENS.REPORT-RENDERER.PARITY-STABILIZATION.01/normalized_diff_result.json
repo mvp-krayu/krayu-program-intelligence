@@ -1,0 +1,55 @@
+{
+  "contract_id": "PI.LENS.REPORT-RENDERER.PARITY-STABILIZATION.01",
+  "generated_date": "2026-05-02",
+
+  "normalization_rules": [
+    "run_id_navigation_href",
+    "generated_timestamp",
+    "absolute_temp_path"
+  ],
+
+  "normalization_note": "run-id normalization applied to both run_blueedge_productized_01_fixed and run_01_authoritative_generated (canonical was generated with different run-id). ISO timestamps normalized. /tmp absolute paths normalized.",
+
+  "per_report": [
+    {
+      "report_type": "TIER1_NARRATIVE",
+      "normalized_diff_lines": 0,
+      "status": "PASS"
+    },
+    {
+      "report_type": "TIER1_EVIDENCE",
+      "normalized_diff_lines": 230,
+      "diff_breakdown": {
+        "svg_coordinate_lines": 192,
+        "cluster_id_naming_lines": 34,
+        "lineage_status_lines": 4
+      },
+      "status": "FAIL"
+    },
+    {
+      "report_type": "TIER2_DIAGNOSTIC",
+      "normalized_diff_lines": 194,
+      "diff_breakdown": {
+        "svg_coordinate_lines": 192,
+        "lineage_table_lines": 2
+      },
+      "status": "FAIL"
+    },
+    {
+      "report_type": "DECISION_SURFACE",
+      "normalized_diff_lines": 14,
+      "diff_breakdown": {
+        "hero_rationale_lines": 2,
+        "badge_text_lines": 4,
+        "truth_text_lines": 2,
+        "gap_items_lines": 2,
+        "synthesis_lines": 2,
+        "epb_card_lines": 2
+      },
+      "status": "FAIL"
+    }
+  ],
+
+  "non_allowed_diffs": 438,
+  "status": "FAIL"
+}
