@@ -6626,16 +6626,25 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
             + (f"{weak_ct} weakly grounded." if weak_ct > 0 else "Structural grounding complete within evidence scope.")
         )
 
-    # Hero rationale — two sentences derived from structural coverage state and evidence state
+    # Hero rationale — semantic path when context available, structural fallback otherwise
     _evidence_sentence = ("Execution evidence is incomplete."
                           if not exec_eval
                           else "Execution evidence is present.")
-    _hero_rationale = f"{_struct_sentence} {_evidence_sentence}"
+    if _sem_ctx_ds["fallback_available"]:
+        _sem_complete_prefix = ("Structural evidence layer complete — "
+                                if weak_ct == 0 and grounded_ct >= total_doms
+                                else "")
+        _hero_rationale = f"{_sem_complete_prefix}{_ds_sem_backed}/{_ds_sem_total} semantic domains backed. {_evidence_sentence}"
+    else:
+        _hero_rationale = f"{_struct_sentence} {_evidence_sentence}"
 
     # Hero context tags — labeled structural / evidence / risk (no internal state label)
-    _struct_tag = ("STABLE within structural evidence scope"
-                   if (weak_ct == 0 and grounded_ct >= total_doms)
-                   else "DEGRADED")
+    if _sem_ctx_ds["fallback_available"] and weak_ct == 0 and grounded_ct >= total_doms:
+        _struct_tag = "STABLE"
+    elif weak_ct == 0 and grounded_ct >= total_doms:
+        _struct_tag = "STABLE within structural evidence scope"
+    else:
+        _struct_tag = "DEGRADED"
 
     # Navigation links — client/run scoped
     _ev_name   = "lens_tier1_evidence_brief_pub.html" if publish_safe else "lens_tier1_evidence_brief.html"
@@ -6667,9 +6676,11 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
             zone_class = _pz_list_f[0].get("zone_class", "COMPOUND_ZONE")
 
     # Risk label — qualified when evidence is incomplete and structural pressure is concentrated
+    # Semantic path uses unqualified risk label (canonical format)
     _risk_explanation = (
         "driven by evidence incompleteness and concentrated structural pressure"
-        if (risk == "MODERATE" and not exec_eval and zone_count > 0)
+        if (risk == "MODERATE" and not exec_eval and zone_count > 0
+            and not _sem_ctx_ds["fallback_available"])
         else ""
     )
     _risk_label = f"{risk} — {_risk_explanation}" if _risk_explanation else risk
@@ -6681,44 +6692,52 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
     _pz_first_zcls = _pz_first_f.get("zone_class", "COMPOUND_ZONE")
     _pz_first_zcls_exec = RC.apply_language(_pz_first_zcls)
     if _sem_ctx_ds["fallback_available"]:
+        _truth_sentences.append(
+            f"Structural evidence is complete for the current evidence layer. "
+            f"Semantic domain coverage: {_ds_sem_backed}/{_ds_sem_total} domains have structural backing. "
+            f"{_ds_sem_only} semantic domains remain projection-only."
+        )
         if _ds_az_label:
-            _dom_backing_part = (
-                f"backed by {_ds_az_dom_id} / {_ds_az_dom}"
-                if _ds_az_dom_id and _ds_az_dom and _ds_az_dom != _ds_az_dom_id
+            _dom_bk_str = (
+                f"backed by {_ds_az_dom} ({_ds_az_dom_id})"
+                if _ds_az_dom and _ds_az_dom_id and _ds_az_dom != _ds_az_dom_id
                 else (f"backed by {_ds_az_dom_id}" if _ds_az_dom_id else "")
             )
             _truth_sentences.append(
                 f"The active pressure pattern is centered on {_ds_az_label}"
-                + (f", {_dom_backing_part}." if _dom_backing_part else ".")
-                + f" Expressed as {_pz_first_zcls_exec} with "
-                f"{_ds_active_count} active structural signal{'s' if _ds_active_count != 1 else ''}."
+                + (f", {_dom_bk_str}." if _dom_bk_str else ".")
             )
+        if _use_psig and zone_count >= 1:
+            _truth_sentences.append("A single structural pressure pattern appears across the system.")
     else:
         _truth_sentences.append(_struct_sentence)
-    if _use_psig and _ds_active_count > 0:
-        _truth_sentences.append(
-            f"Active structural signal{'s' if _ds_active_count != 1 else ''}: "
-            f"{_ds_active_ids}."
-        )
-    if _use_psig and _ds_baseline_count > 0:
-        _truth_sentences.append(
-            f"Baseline signal{'s' if _ds_baseline_count != 1 else ''}: "
-            f"{_ds_baseline_ids} — theoretical baseline condition, not an activated pressure signal."
-        )
-    if _use_psig and zone_count == 1 and _pz_first_zid:
-        _truth_sentences.append(
-            f"1 pressure zone identified: {_pz_first_zid}"
-            + (f" — {_ds_az_label}" if _ds_az_label else "") + "."
-        )
-    elif _use_psig and zone_count > 1:
-        _truth_sentences.append(f"{zone_count} pressure zones identified.")
+        if _use_psig and _ds_active_count > 0:
+            _truth_sentences.append(
+                f"Active structural signal{'s' if _ds_active_count != 1 else ''}: "
+                f"{_ds_active_ids}."
+            )
+        if _use_psig and _ds_baseline_count > 0:
+            _truth_sentences.append(
+                f"Baseline signal{'s' if _ds_baseline_count != 1 else ''}: "
+                f"{_ds_baseline_ids} — theoretical baseline condition, not an activated pressure signal."
+            )
+        if _use_psig and zone_count == 1 and _pz_first_zid:
+            _truth_sentences.append(
+                f"1 pressure zone identified: {_pz_first_zid}"
+                + (f" — {_ds_az_label}" if _ds_az_label else "") + "."
+            )
+        elif _use_psig and zone_count > 1:
+            _truth_sentences.append(f"{zone_count} pressure zones identified.")
     truth_html = "<br><br>".join(esc(s) for s in _truth_sentences) if _truth_sentences else "—"
 
     # ── Gap items — compressed to short phrases ────────────────────────
     gap_items: list = []
     if not exec_eval:
         gap_items.append("Execution-layer behavioral state")
-    if _ds_na_sigs:
+    if _sem_ctx_ds["fallback_available"] and not_activated:
+        _n = len(not_activated)
+        gap_items.append(f"{_n} structural signal{'s' if _n != 1 else ''} not activated")
+    elif _ds_na_sigs:
         _na_ids = " · ".join(str(s) for s in sorted(_ds_na_sigs))
         gap_items.append(f"Not-activated signals: {_na_ids}")
     elif not_activated:
@@ -6743,11 +6762,23 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
                        else _pz_list_s[0].get("signals", []) if _pz_list_s else [])
         _sig_n      = len(_sig_set)
 
-        _insight = (
-            f"{_sig_n} structural signal{'s are' if _sig_n != 1 else ' is'} "
-            f"active within the pressure zone."
-        )
-        if _cp:
+        if _sem_ctx_ds["fallback_available"]:
+            _insight = f"{_sig_n} signal{'s are' if _sig_n != 1 else ' is'} simultaneously active across the system."
+        else:
+            _insight = (
+                f"{_sig_n} structural signal{'s are' if _sig_n != 1 else ' is'} "
+                f"active within the pressure zone."
+            )
+        if _sem_ctx_ds["fallback_available"]:
+            _synthesis_html = (
+                f'<strong>A single structural pressure pattern spans multiple domains.</strong>'
+                f'<br><br>'
+                f'The same signals are present in each zone.<br>'
+                f'The pattern reflects structural co-presence across domains.'
+                f'<br><br>'
+                f'This is not a causal determination.'
+            )
+        elif _cp:
             _synthesis_html = (
                 f'<strong>A structural pressure pattern spans {_cp["n_zones"]} zones.</strong>'
                 f'<br><br>'
@@ -6789,13 +6820,16 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
                 f'<br><br>'
                 f'This is not a causal determination.'
             )
-        # Signal convergence support text — derives DOM ID and semantic domain dynamically
-        _signal_support_text = (
-            f"All active signals converge on the same structural domain ({_ds_az_dom_id}), "
-            f"indicating concentrated structural pressure within a single semantic domain."
-            if _ds_az_dom_id
-            else "All active pressure signals share the same affected domain scope."
-        )
+        # Signal convergence support text — semantic path uses canonical generic form
+        if _sem_ctx_ds["fallback_available"]:
+            _signal_support_text = "All active pressure signals share the same affected domain scope."
+        else:
+            _signal_support_text = (
+                f"All active signals converge on the same structural domain ({_ds_az_dom_id}), "
+                f"indicating concentrated structural pressure within a single semantic domain."
+                if _ds_az_dom_id
+                else "All active pressure signals share the same affected domain scope."
+            )
         pressure_html = (
             '\n  '
             + RC.evidence_pair_block(
