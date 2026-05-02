@@ -1,0 +1,39 @@
+{
+  "contract_id": "PI.LENS.SEMANTIC-TOPOLOGY-REBUILD.02",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-02",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+  "baseline_commit": "25c992a",
+  "baseline_commit_message": "[PARTIAL] PI.LENS.SEMANTIC-LAYER-PROMOTION.01 — semantic bundle promoted, topology artifacts missing",
+
+  "files_created_this_contract": [
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/semantic_topology_model.json",
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/semantic_topology_layout.json",
+    "docs/psee/PI.LENS.SEMANTIC-TOPOLOGY-REBUILD.02/execution_report.md",
+    "docs/psee/PI.LENS.SEMANTIC-TOPOLOGY-REBUILD.02/validation_log.json",
+    "docs/psee/PI.LENS.SEMANTIC-TOPOLOGY-REBUILD.02/file_changes.json",
+    "docs/psee/PI.LENS.SEMANTIC-TOPOLOGY-REBUILD.02/reconstruction_methodology.md",
+    "docs/psee/PI.LENS.SEMANTIC-TOPOLOGY-REBUILD.02/git_hygiene.json",
+    "docs/psee/PI.LENS.SEMANTIC-TOPOLOGY-REBUILD.02/CLOSURE.md"
+  ],
+  "files_modified_this_contract": [
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/semantic_bundle_manifest.json"
+  ],
+  "files_deleted_this_contract": [],
+
+  "gitignore_note": "clients/*/psee/runs/ is gitignored per .gitignore:25. semantic_topology_model.json and semantic_topology_layout.json exist on disk but will not appear in git status. Evidence files under docs/psee/PI.LENS.SEMANTIC-TOPOLOGY-REBUILD.02/ are tracked.",
+
+  "canonical_reports_modified": false,
+  "renderer_modified": false,
+  "vault_modified": false,
+  "pipeline_executed": false,
+
+  "json_validation": "PASS — semantic_topology_model.json, semantic_topology_layout.json, semantic_bundle_manifest.json, validation_log.json, file_changes.json, git_hygiene.json all valid",
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[SEMANTIC-TOPOLOGY] PI.LENS.SEMANTIC-TOPOLOGY-REBUILD.02 — reconstruct SEM-004/SEM-005 via DETERMINISTIC_RECONSTRUCTION; semantic bundle now 16/16 COMPLETE",
+
+  "git_hygiene_status": "COMPLETE"
+}

@@ -1,0 +1,85 @@
+{
+  "contract_id": "PI.LENS.SEMANTIC-TOPOLOGY-REBUILD.02",
+  "generated_date": "2026-05-02",
+
+  "files_created": [
+    {
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/semantic_topology_model.json",
+      "action": "CREATED",
+      "basis": "DETERMINISTIC_RECONSTRUCTION",
+      "sha256": "805ee7d98cf42478579f49a91959c6b2eb6c3163c198b352dc7ecc9b2451ad66",
+      "note": "17-domain semantic topology model. Resolves SEM-004 blocking status."
+    },
+    {
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/semantic_topology_layout.json",
+      "action": "CREATED",
+      "basis": "DETERMINISTIC_RECONSTRUCTION",
+      "sha256": "8af7e9c253189678fb91e5915a89f6001d3da222c96efa0bcdc33bccb7d8a8eb",
+      "note": "SVG layout for 17 nodes and 5 cluster bounding boxes. Resolves SEM-005 blocking status."
+    },
+    {
+      "path": "docs/psee/PI.LENS.SEMANTIC-TOPOLOGY-REBUILD.02/execution_report.md",
+      "action": "CREATED",
+      "basis": "CONTRACT_EVIDENCE",
+      "sha256": null,
+      "note": "Contract execution evidence"
+    },
+    {
+      "path": "docs/psee/PI.LENS.SEMANTIC-TOPOLOGY-REBUILD.02/validation_log.json",
+      "action": "CREATED",
+      "basis": "CONTRACT_EVIDENCE",
+      "sha256": null,
+      "note": "20-check validation log, all PASS"
+    },
+    {
+      "path": "docs/psee/PI.LENS.SEMANTIC-TOPOLOGY-REBUILD.02/file_changes.json",
+      "action": "CREATED",
+      "basis": "CONTRACT_EVIDENCE",
+      "sha256": null,
+      "note": "This file"
+    },
+    {
+      "path": "docs/psee/PI.LENS.SEMANTIC-TOPOLOGY-REBUILD.02/reconstruction_methodology.md",
+      "action": "CREATED",
+      "basis": "CONTRACT_EVIDENCE",
+      "sha256": null,
+      "note": "Reconstruction methodology and source evidence inventory"
+    },
+    {
+      "path": "docs/psee/PI.LENS.SEMANTIC-TOPOLOGY-REBUILD.02/git_hygiene.json",
+      "action": "CREATED",
+      "basis": "CONTRACT_EVIDENCE",
+      "sha256": null,
+      "note": "Git hygiene record"
+    },
+    {
+      "path": "docs/psee/PI.LENS.SEMANTIC-TOPOLOGY-REBUILD.02/CLOSURE.md",
+      "action": "CREATED",
+      "basis": "CONTRACT_EVIDENCE",
+      "sha256": null,
+      "note": "Contract closure record"
+    }
+  ],
+
+  "files_modified": [
+    {
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/semantic_bundle_manifest.json",
+      "action": "MODIFIED",
+      "changes": [
+        "SEM-004 status: MISSING → RECONSTRUCTED; sha256 populated",
+        "SEM-005 status: MISSING → RECONSTRUCTED; sha256 populated",
+        "SEM-004 source_path updated to reconstruction contract reference",
+        "SEM-005 source_path updated to reconstruction contract reference",
+        "missing_artifacts array cleared (was 2 entries)",
+        "validation_status: PARTIAL → COMPLETE",
+        "validation_note updated"
+      ]
+    }
+  ],
+
+  "files_deleted": [],
+
+  "canonical_reports_modified": false,
+  "renderer_modified": false,
+  "vault_modified": false
+}

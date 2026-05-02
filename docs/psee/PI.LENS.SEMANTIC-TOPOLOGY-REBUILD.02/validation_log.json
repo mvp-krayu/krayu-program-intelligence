@@ -1,0 +1,131 @@
+{
+  "contract_id": "PI.LENS.SEMANTIC-TOPOLOGY-REBUILD.02",
+  "generated_date": "2026-05-02",
+  "overall_status": "PASS",
+
+  "checks": [
+    {
+      "check_id": "V-01",
+      "name": "semantic_topology_model.json — JSON valid",
+      "status": "PASS",
+      "detail": "python3 json.load: no parse errors"
+    },
+    {
+      "check_id": "V-02",
+      "name": "semantic_topology_layout.json — JSON valid",
+      "status": "PASS",
+      "detail": "python3 json.load: no parse errors"
+    },
+    {
+      "check_id": "V-03",
+      "name": "domains count == 17",
+      "status": "PASS",
+      "detail": "len(model['domains']) == 17; matches build_semantic_layer.py and runtime attestation"
+    },
+    {
+      "check_id": "V-04",
+      "name": "clusters count == 5",
+      "status": "PASS",
+      "detail": "len(model['clusters']) == 5; matches runtime attestation from tier2_fixup_generation_result.json"
+    },
+    {
+      "check_id": "V-05",
+      "name": "edges count == 12",
+      "status": "PASS",
+      "detail": "len(model['edges']) == 12; matches runtime attestation"
+    },
+    {
+      "check_id": "V-06",
+      "name": "structurally backed domains == 5",
+      "status": "PASS",
+      "detail": "sum(lineage_status in EXACT/STRONG/PARTIAL) == 5; matches canonical_topology_with_lineage.json evidence"
+    },
+    {
+      "check_id": "V-07",
+      "name": "zone_anchor on exactly one domain (DOMAIN-10)",
+      "status": "PASS",
+      "detail": "zone_anchor=True only on DOMAIN-10; confirmed from canonical_topology_with_lineage.json DOM-04 entry"
+    },
+    {
+      "check_id": "V-08",
+      "name": "layout node_positions count == 17",
+      "status": "PASS",
+      "detail": "len(layout['node_positions']) == 17"
+    },
+    {
+      "check_id": "V-09",
+      "name": "layout cluster_bounding_boxes count == 5",
+      "status": "PASS",
+      "detail": "len(layout['cluster_bounding_boxes']) == 5"
+    },
+    {
+      "check_id": "V-10",
+      "name": "model domain_ids == layout domain_ids (exact set match)",
+      "status": "PASS",
+      "detail": "model_ids == layout_ids: True; no orphan nodes, no missing positions"
+    },
+    {
+      "check_id": "V-11",
+      "name": "all cluster_ids in layout present in model clusters",
+      "status": "PASS",
+      "detail": "layout cluster_ids: CLU-FUNCTIONAL, CLU-INFRASTRUCTURE, CLU-OPERATIONAL, CLU-CROSS-CUTTING, CLU-INTEGRATION all present in model['clusters']"
+    },
+    {
+      "check_id": "V-12",
+      "name": "all edge source/target domain_ids exist in model domains",
+      "status": "PASS",
+      "detail": "All 12 edge source_domain and target_domain values reference valid DOMAIN-NN entries"
+    },
+    {
+      "check_id": "V-13",
+      "name": "metrics block correct",
+      "status": "PASS",
+      "detail": "total_domains=17, total_clusters=5, total_edges=12, domains_with_structural_evidence=5 — all consistent"
+    },
+    {
+      "check_id": "V-14",
+      "name": "bundle manifest updated: SEM-004 RECONSTRUCTED with sha256",
+      "status": "PASS",
+      "detail": "sha256=805ee7d98cf42478579f49a91959c6b2eb6c3163c198b352dc7ecc9b2451ad66"
+    },
+    {
+      "check_id": "V-15",
+      "name": "bundle manifest updated: SEM-005 RECONSTRUCTED with sha256",
+      "status": "PASS",
+      "detail": "sha256=8af7e9c253189678fb91e5915a89f6001d3da222c96efa0bcdc33bccb7d8a8eb"
+    },
+    {
+      "check_id": "V-16",
+      "name": "bundle manifest validation_status == COMPLETE",
+      "status": "PASS",
+      "detail": "missing_artifacts=[], validation_status=COMPLETE"
+    },
+    {
+      "check_id": "V-17",
+      "name": "no canonical reports modified",
+      "status": "PASS",
+      "detail": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/ — NOT TOUCHED"
+    },
+    {
+      "check_id": "V-18",
+      "name": "no renderer code modified",
+      "status": "PASS",
+      "detail": "scripts/pios/lens_report_generator.py — NOT TOUCHED (read-only)"
+    },
+    {
+      "check_id": "V-19",
+      "name": "no vault files modified",
+      "status": "PASS",
+      "detail": "clients/blueedge/psee/runs/run_blueedge_productized_01/vault/ — NOT TOUCHED"
+    },
+    {
+      "check_id": "V-20",
+      "name": "generation_basis field present and correct",
+      "status": "PASS",
+      "detail": "Both files declare generation_basis=DETERMINISTIC_RECONSTRUCTION as authorized by contract"
+    }
+  ],
+
+  "fail_count": 0,
+  "pass_count": 20
+}
