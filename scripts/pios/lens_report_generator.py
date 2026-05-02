@@ -573,6 +573,22 @@ def _load_semantic_topology(dir_path: Path) -> None:
             _SEMANTIC_TOPOLOGY_LAYOUT = json.load(f)
 
 
+def load_semantic_bundle(bundle_dir: Path) -> None:
+    """Load semantic runtime bundle from canonical bundle directory layout.
+
+    Loads crosswalk and topology model/layout from the first-class bundle
+    structure promoted by PI.LENS.SEMANTIC-LAYER-PROMOTION.01. Existing
+    --crosswalk-path / --semantic-topology-dir values are overwritten when
+    both paths are present in the bundle.
+    """
+    crosswalk_path = bundle_dir / "crosswalk" / "semantic_continuity_crosswalk.json"
+    topology_dir   = bundle_dir / "topology"
+    if crosswalk_path.exists():
+        _load_semantic_crosswalk(crosswalk_path)
+    if topology_dir.exists():
+        _load_semantic_topology(topology_dir)
+
+
 def _resolve_domain_display_label(
     domain_id: str, technical_label: str, min_confidence: float = 0.60
 ) -> str:
@@ -900,6 +916,7 @@ def _configure_runtime(
     claims: Optional[List[str]] = None,
     crosswalk_path: Optional[Path] = None,
     semantic_topology_dir: Optional[Path] = None,
+    semantic_bundle_dir: Optional[Path] = None,
     output_root: Optional[Path] = None,
 ) -> None:
     """Update module-level path and configuration globals from CLI arguments.
@@ -941,6 +958,9 @@ def _configure_runtime(
 
     if semantic_topology_dir is not None:
         _load_semantic_topology(semantic_topology_dir)
+
+    if semantic_bundle_dir is not None:
+        load_semantic_bundle(semantic_bundle_dir)
 
 
 # ---------------------------------------------------------------------------
@@ -3201,7 +3221,9 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
             _pz_sem_label = _pz_sem_ctx.get("business_label") if _pz_sem_ctx.get("domain_id") else None
             _pz_sem_id    = _pz_sem_ctx.get("domain_id")
             FOCUS_DOMAIN  = _pz_sem_id or _pz_anchor_id
-            _pz_display   = _pz_sem_label or primary_zone.get("anchor_name", _pz_anchor_id)
+            _pz_display   = _pz_sem_label or _resolve_domain_display_label(
+                _pz_anchor_id, primary_zone.get("anchor_name", _pz_anchor_id)
+            )
             _focus_tag    = f"Pressure Zone — {_pz_display} PRIMARY"
         else:
             FOCUS_DOMAIN = None
@@ -3553,7 +3575,7 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
             _z_sem_ctx_ev  = _resolve_dom_to_semantic_context(_z_anch_id)
             _z_sem_lbl_ev  = _z_sem_ctx_ev.get("business_label") if _z_sem_ctx_ev.get("domain_id") else None
             _z_anch_name   = z.get("anchor_name", _z_anch_id)
-            zname       = _z_sem_lbl_ev or _z_anch_name
+            zname       = _z_sem_lbl_ev or _resolve_domain_display_label(_z_anch_id, _z_anch_name)
             profile = z.get("attribution_profile", "secondary")
             is_prim = profile == "primary"
             badge = "PRIMARY" if is_prim else profile.upper()
@@ -3896,7 +3918,7 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
             _z_anchor_name = z.get("anchor_name", _z_anchor_id)
             _z_sem_ctx  = _resolve_dom_to_semantic_context(_z_anchor_id)
             _z_sem_label = _z_sem_ctx.get("business_label") if _z_sem_ctx.get("domain_id") else None
-            zname  = _z_sem_label or _z_anchor_name
+            zname  = _z_sem_label or _resolve_domain_display_label(_z_anchor_id, _z_anchor_name)
             _z_dom_backing = f"DOM backing: {esc(_z_anchor_id)}{' / ' + esc(_z_anchor_name) if _z_anchor_name and _z_anchor_name != _z_anchor_id else ''}"
             zclass = z.get("zone_class", "COMPOUND_ZONE")
             profile = z.get("attribution_profile", "secondary")
@@ -7154,6 +7176,14 @@ if __name__ == "__main__":
         help="Optional path to directory containing semantic_topology_model.json and semantic_topology_layout.json"
     )
     parser.add_argument(
+        "--semantic-bundle-dir", type=Path, default=None,
+        help=(
+            "Path to semantic runtime bundle directory (e.g. .../semantic/). "
+            "Loads crosswalk from bundle/crosswalk/ and topology from bundle/topology/. "
+            "Takes precedence over --crosswalk-path and --semantic-topology-dir when both provided."
+        )
+    )
+    parser.add_argument(
         "--output-root", type=Path, default=None,
         help=(
             "Canonical output root: clients/<client>/lens/runs/<run_id>. "
@@ -7171,6 +7201,7 @@ if __name__ == "__main__":
         claims=args.claims,
         crosswalk_path=args.crosswalk_path,
         semantic_topology_dir=args.semantic_topology_dir,
+        semantic_bundle_dir=args.semantic_bundle_dir,
         output_root=args.output_root,
     )
     main(tier1=not args.legacy, output_path=args.output, output_dir=args.output_dir,

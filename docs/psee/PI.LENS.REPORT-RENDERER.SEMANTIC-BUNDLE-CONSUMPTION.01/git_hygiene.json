@@ -1,0 +1,42 @@
+{
+  "contract_id": "PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-02",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+  "working_tree_at_start": "CLEAN — confirmed via git status (empty output)",
+  "working_tree_at_end": "DIRTY — M scripts/pios/lens_report_generator.py (renderer modified); ?? docs/psee/PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01/ (untracked evidence); /tmp/blueedge_semantic_bundle_render_01/ is outside repo and not tracked",
+  "baseline_commit": "7388e2a",
+  "baseline_commit_message": "[REBUILD] PI.LENS.SEMANTIC-TOPOLOGY-REBUILD.02 — semantic topology artifacts reconstructed",
+
+  "files_created_this_contract": [
+    "docs/psee/PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01/semantic_bundle_loading_trace.md",
+    "docs/psee/PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01/renderer_integration_summary.md",
+    "docs/psee/PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01/semantic_resolution_validation.json",
+    "docs/psee/PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01/topology_render_validation.json",
+    "docs/psee/PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01/execution_log.md",
+    "docs/psee/PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01/no_pipeline_attestation.md",
+    "docs/psee/PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01/git_hygiene.json",
+    "docs/psee/PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01/execution_report.md",
+    "docs/psee/PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01/validation_log.json",
+    "docs/psee/PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01/file_changes.json",
+    "docs/psee/PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01/CLOSURE.md"
+  ],
+  "files_modified_this_contract": [
+    "scripts/pios/lens_report_generator.py"
+  ],
+  "files_deleted_this_contract": [],
+
+  "canonical_reports_modified": false,
+  "renderer_modified": true,
+  "vault_modified": false,
+  "pipeline_executed": false,
+
+  "json_validation": "PASS — semantic_resolution_validation.json, topology_render_validation.json, git_hygiene.json, validation_log.json, file_changes.json all valid",
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[RENDERER] PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01 — add --semantic-bundle-dir flag, load_semantic_bundle(), fix 3 PROPAGATED_NOT_USED breakpoints",
+
+  "git_hygiene_status": "COMPLETE"
+}

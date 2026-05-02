@@ -1,0 +1,34 @@
+{
+  "contract_id": "PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01",
+  "generated_date": "2026-05-02",
+  "overall_status": "PASS",
+
+  "checks": [
+    {"check_id": "V-01", "name": "Branch == work/psee-runtime", "status": "PASS", "detail": "git branch --show-current confirmed"},
+    {"check_id": "V-02", "name": "Working tree clean at start", "status": "PASS", "detail": "git status empty output"},
+    {"check_id": "V-03", "name": "Semantic bundle present (16/16 COMPLETE)", "status": "PASS", "detail": "semantic_bundle_manifest.json validation_status=COMPLETE, missing_artifacts=0"},
+    {"check_id": "V-04", "name": "Vault present at run_blueedge_productized_01/vault/", "status": "PASS", "detail": "vault_manifest.json and 8 vault files confirmed present"},
+    {"check_id": "V-05", "name": "load_semantic_bundle() function added", "status": "PASS", "detail": "grep: line 576 — function definition present"},
+    {"check_id": "V-06", "name": "_configure_runtime() accepts semantic_bundle_dir param", "status": "PASS", "detail": "grep: line 919 — parameter present"},
+    {"check_id": "V-07", "name": "--semantic-bundle-dir CLI flag present", "status": "PASS", "detail": "grep: line 7179 — add_argument present"},
+    {"check_id": "V-08", "name": "args.semantic_bundle_dir wired to _configure_runtime()", "status": "PASS", "detail": "grep: line 7204 — wired correctly"},
+    {"check_id": "V-09", "name": "Renderer imports cleanly", "status": "PASS", "detail": "python3 -c import scripts.pios.lens_report_generator: IMPORT OK"},
+    {"check_id": "V-10", "name": "Breakpoint 1 fixed (_build_tier1_evidence_brief focus pressure)", "status": "PASS", "detail": "git diff confirms _resolve_domain_display_label used instead of raw anchor_name"},
+    {"check_id": "V-11", "name": "Breakpoint 2 fixed (_build_tier1_evidence_brief zone list)", "status": "PASS", "detail": "git diff confirms _resolve_domain_display_label used"},
+    {"check_id": "V-12", "name": "Breakpoint 3 fixed (_build_tier1_narrative_brief zone list)", "status": "PASS", "detail": "git diff confirms _resolve_domain_display_label used"},
+    {"check_id": "V-13", "name": "Renderer exit code 0", "status": "PASS", "detail": "Test run completed without crash"},
+    {"check_id": "V-14", "name": "All 4 reports generated", "status": "PASS", "detail": "tier1_evidence, tier1_narrative, tier2_diagnostic, decision_surface all present in /tmp/"},
+    {"check_id": "V-15", "name": "Platform Infrastructure and Data in all 4 reports", "status": "PASS", "detail": "grep confirmed: tier1_ev(1), tier1_narr(2), tier2(6), decision(4)"},
+    {"check_id": "V-16", "name": "17 semantic domains count confirmed", "status": "PASS", "detail": "tier1_evidence: 1 hit; tier2: 3 hits"},
+    {"check_id": "V-17", "name": "5 backed domains confirmed", "status": "PASS", "detail": "tier2: '5/17 semantic domains backed' and 'Backed (5' confirmed"},
+    {"check_id": "V-18", "name": "DOM-04 anchor preserved", "status": "PASS", "detail": "DOM-04 present in tier1_evidence and tier2 (technical backing context)"},
+    {"check_id": "V-19", "name": "Semantic topology SVG rendered (topo-container)", "status": "PASS", "detail": "topo-container in tier1_evidence and tier2 confirmed"},
+    {"check_id": "V-20", "name": "Canonical reports NOT modified", "status": "PASS", "detail": "run_blueedge_productized_01_fixed/reports/ not touched; git status confirms only lens_report_generator.py modified"},
+    {"check_id": "V-21", "name": "semantic_resolution_validation.json valid JSON", "status": "PASS", "detail": "python3 -m json.tool: OK"},
+    {"check_id": "V-22", "name": "topology_render_validation.json valid JSON", "status": "PASS", "detail": "python3 -m json.tool: OK"},
+    {"check_id": "V-23", "name": "git_hygiene.json valid JSON", "status": "PASS", "detail": "python3 -m json.tool: OK"}
+  ],
+
+  "fail_count": 0,
+  "pass_count": 23
+}
