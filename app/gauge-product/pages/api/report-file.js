@@ -116,15 +116,51 @@ function serveHtml(res, filePath, name, download) {
   return res.status(200).send(html)
 }
 
+// Resolve path for a psee run flat reports directory.
+// source=psee routes to clients/<client>/psee/runs/<runId>/reports/<name> (no tier subdirs).
+// Supports HTML reports and graph_state.json.
+function resolvePseeRunFilePath(client, runId, name) {
+  if (path.basename(client) !== client || path.basename(runId) !== runId) return null
+  const safeName  = path.basename(name)
+  const isHtml    = VALID_TIER1.test(safeName) || VALID_TIER2.test(safeName) || VALID_DECISION.test(safeName)
+  const isJson    = safeName === 'graph_state.json'
+  if (!isHtml && !isJson) return null
+  const filePath = path.join(REPO_ROOT, 'clients', client, 'psee', 'runs', runId, 'reports', safeName)
+  const allowed  = path.join(REPO_ROOT, 'clients', client, 'psee', 'runs', runId, 'reports')
+  if (!filePath.startsWith(allowed + path.sep) && filePath !== path.join(allowed, safeName)) return null
+  return { filePath, isJson }
+}
+
 export default function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ status: 'error', reason: 'METHOD_NOT_ALLOWED' })
   }
 
-  const { name, download, client, runId } = req.query
+  const { name, download, client, runId, source } = req.query
 
   if (!name || typeof name !== 'string') {
     return res.status(400).json({ status: 'error', reason: 'INVALID_FILENAME' })
+  }
+
+  // ── PSEE run routing (source=psee) ────────────────────────────────────────
+  if (source === 'psee') {
+    if (!client || !runId) {
+      return res.status(400).json({ status: 'error', reason: 'CLIENT_AND_RUN_ID_REQUIRED' })
+    }
+    const resolved = resolvePseeRunFilePath(client, runId, name)
+    if (!resolved) {
+      return res.status(400).json({ status: 'error', reason: 'INVALID_FILENAME' })
+    }
+    if (!fs.existsSync(resolved.filePath)) {
+      return res.status(404).json({ status: 'error', reason: 'REPORT_NOT_FOUND' })
+    }
+    const content = fs.readFileSync(resolved.filePath, 'utf-8')
+    if (resolved.isJson) {
+      res.setHeader('Content-Type', 'application/json')
+      res.setHeader('Cache-Control', 'no-store')
+      return res.status(200).send(content)
+    }
+    return serveHtml(res, resolved.filePath, path.basename(name), download)
   }
 
   // ── Client-aware routing ──────────────────────────────────────────────────

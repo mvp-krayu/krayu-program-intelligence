@@ -292,6 +292,114 @@ function LensHeader({ runId, generatedAt, hasAccess, onUnlock }) {
 // Report panel
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Runtime Selector + Generate
+// ---------------------------------------------------------------------------
+
+function RuntimeSelector() {
+  const [runtimes,  setRuntimes]  = useState([])
+  const [selected,  setSelected]  = useState('')
+  const [genState,  setGenState]  = useState(null) // null | 'loading' | {urls} | {error}
+
+  useEffect(() => {
+    fetch('/api/runtime-list')
+      .then(r => r.json())
+      .then(data => {
+        const list = Array.isArray(data) ? data : []
+        setRuntimes(list)
+        if (list.length > 0) setSelected(`${list[0].client}||${list[0].run}`)
+      })
+      .catch(() => {})
+  }, [])
+
+  const rt = runtimes.find(r => `${r.client}||${r.run}` === selected)
+
+  function handleGenerate() {
+    if (!rt) return
+    setGenState('loading')
+    fetch(`/api/generate-report?client=${encodeURIComponent(rt.client)}&run=${encodeURIComponent(rt.run)}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.status === 'success') setGenState({ urls: data.report_urls })
+        else setGenState({ error: data.reason || 'GENERATION_FAILED' })
+      })
+      .catch(err => setGenState({ error: err.message || 'FETCH_ERROR' }))
+  }
+
+  const selectStyle = {
+    background: '#16161a', color: '#e8e8e8', border: '1px solid #2a2a2e',
+    borderRadius: '3px', padding: '6px 10px', fontSize: '12px',
+    marginRight: '10px', minWidth: '260px',
+  }
+
+  return (
+    <div className="lens-report-panel">
+      <div className="lens-panel-label">RUNTIME REPORTS</div>
+      <div className="lens-report-row" style={{ alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+        <select
+          value={selected}
+          onChange={e => { setSelected(e.target.value); setGenState(null) }}
+          style={selectStyle}
+          disabled={runtimes.length === 0}
+        >
+          {runtimes.length === 0 && <option value="">Loading…</option>}
+          {runtimes.map(r => (
+            <option key={`${r.client}||${r.run}`} value={`${r.client}||${r.run}`}>
+              {r.client} / {r.run}
+            </option>
+          ))}
+        </select>
+        <button
+          className="lens-report-btn"
+          onClick={handleGenerate}
+          disabled={genState === 'loading' || !rt}
+        >
+          {genState === 'loading' ? 'Generating…' : 'Generate'}
+        </button>
+      </div>
+      {genState === 'loading' && (
+        <span className="lens-report-status" style={{ marginTop: '8px', display: 'block' }}>
+          Building reports…
+        </span>
+      )}
+      {genState?.error && (
+        <span className="lens-report-error" style={{ marginTop: '8px', display: 'block' }}>
+          {genState.error}
+        </span>
+      )}
+      {genState?.urls && (
+        <div className="lens-report-artifacts" style={{ marginTop: '12px' }}>
+          {genState.urls.tier1_narrative && (
+            <button className="lens-report-action-btn lens-report-primary"
+              onClick={() => window.open(genState.urls.tier1_narrative)}>
+              Executive Brief
+            </button>
+          )}
+          {genState.urls.tier1_evidence && (
+            <button className="lens-report-action-btn lens-report-secondary"
+              onClick={() => window.open(genState.urls.tier1_evidence)}>
+              Structural Evidence
+            </button>
+          )}
+          {genState.urls.tier2_diagnostic && (
+            <button className="lens-report-action-btn lens-report-narrative"
+              onClick={() => window.open(genState.urls.tier2_diagnostic)}>
+              Diagnostic
+            </button>
+          )}
+          {genState.urls.decision && (
+            <button className="lens-report-action-btn lens-report-primary"
+              onClick={() => window.open(genState.urls.decision)}
+              style={{ marginLeft: '4px' }}>
+              Decision Surface
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
 // Second-client scoping — mirrors workspace.js pattern
 const _SC_CLIENT_ID = 'e65d2f0a-dfa7-4257-9333-fcbb583f0880'
 const _SC_RUN_ID    = 'run_01_oss_fastapi'
@@ -521,6 +629,11 @@ export default function LensPage() {
       {/* Section F — Deeper Intelligence Access (footer conversion) */}
       <div className="lens-band">
         <IntelligenceGateCTA onUnlock={showModal} />
+      </div>
+
+      {/* Runtime selector + generate */}
+      <div className="lens-band">
+        <RuntimeSelector />
       </div>
 
       {/* Report generation */}

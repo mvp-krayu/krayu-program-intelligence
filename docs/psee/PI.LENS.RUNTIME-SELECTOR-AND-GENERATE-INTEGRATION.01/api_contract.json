@@ -1,0 +1,18 @@
+{
+  "contract_id": "PI.LENS.RUNTIME-SELECTOR-AND-GENERATE-INTEGRATION.01",
+  "generated_date": "2026-05-02",
+  "runtime_list_endpoint": "/api/runtime-list",
+  "generate_endpoint": "/api/generate-report",
+  "inputs": ["client", "run"],
+  "invokes": "scripts/pios/lens_generate.sh",
+  "returns": ["reports paths", "graph_state", "report_urls"],
+  "security": "client and run validated against [A-Za-z0-9._-]+ before execFile",
+  "file_serving_endpoint": "/api/report-file?source=psee&client=<client>&runId=<run>&name=<file>",
+  "supported_files": [
+    "lens_tier1_narrative_brief.html",
+    "lens_tier1_evidence_brief.html",
+    "lens_tier2_diagnostic_narrative.html",
+    "lens_decision_surface.html",
+    "graph_state.json"
+  ]
+}
