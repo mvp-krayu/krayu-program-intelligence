@@ -1,0 +1,35 @@
+{
+  "contract_id": "PI.LENS.GENERATE.WRAPPER-PATH-ALIGNMENT.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-02",
+
+  "branch": "work/psee-runtime",
+  "baseline_commit": "0697af0a2ae5218c555670e7ad32d07e5ea64e58",
+  "baseline_commit_message": "[DIAG] Decision parity reopened — wrapper symlink path hides 41x projections",
+
+  "working_tree_before": "CLEAN",
+  "working_tree_after": "scripts/pios/lens_generate.sh modified; evidence files untracked",
+
+  "files_modified_tracked": [
+    "scripts/pios/lens_generate.sh"
+  ],
+  "files_modified_gitignored": [],
+  "files_created_tracked": [
+    "docs/psee/PI.LENS.GENERATE.WRAPPER-PATH-ALIGNMENT.01/wrapper_path_alignment_summary.md",
+    "docs/psee/PI.LENS.GENERATE.WRAPPER-PATH-ALIGNMENT.01/implementation_summary.md",
+    "docs/psee/PI.LENS.GENERATE.WRAPPER-PATH-ALIGNMENT.01/validation_result.json",
+    "docs/psee/PI.LENS.GENERATE.WRAPPER-PATH-ALIGNMENT.01/decision_section_recheck.json",
+    "docs/psee/PI.LENS.GENERATE.WRAPPER-PATH-ALIGNMENT.01/no_renderer_change_attestation.md",
+    "docs/psee/PI.LENS.GENERATE.WRAPPER-PATH-ALIGNMENT.01/git_hygiene.json"
+  ],
+
+  "canonical_reports_modified": false,
+  "renderer_modified": false,
+  "pipeline_executed": false,
+  "fastapi_involved": false,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[WRAPPER] PI.LENS.GENERATE.WRAPPER-PATH-ALIGNMENT.01 — resolve vault symlink before --package-dir; Decision Surface EPB restored; normalized parity PASS",
+
+  "git_hygiene_status": "COMPLETE"
+}

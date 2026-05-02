@@ -33,6 +33,13 @@ if [[ ! -d "$VAULT_DIR" ]]; then
   exit 1
 fi
 
+# Resolve symlink so renderer's Path.parent finds sibling 41.x/ correctly
+if [[ -L "$VAULT_DIR" ]]; then
+  PACKAGE_DIR="$(realpath "$VAULT_DIR")"
+else
+  PACKAGE_DIR="$VAULT_DIR"
+fi
+
 if [[ ! -d "$SEMANTIC_DIR" ]]; then
   echo "ERROR: semantic bundle not found: ${SEMANTIC_DIR}" >&2
   exit 1
@@ -46,7 +53,7 @@ fi
 python3 "$RENDERER" \
   --client "$CLIENT" \
   --run-id "$RUN" \
-  --package-dir "$VAULT_DIR" \
+  --package-dir "$PACKAGE_DIR" \
   --semantic-bundle-dir "$SEMANTIC_DIR" \
   --output-dir "$OUTPUT_DIR"
 
