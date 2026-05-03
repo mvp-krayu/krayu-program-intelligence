@@ -1,0 +1,14 @@
+{
+  "contract_id": "PI.LENS.RENDERER.PRESSURE-ZONE-SCHEMA-COMPAT.01",
+  "artifact": "validation_result",
+  "generated_date": "2026-05-03",
+  "wrapper_modified": false,
+  "renderer_modified": true,
+  "renderer_change_scope": "schema compat only — 11 zone_projection reads updated to accept both zone_projection and zones keys",
+  "producer_artifacts_modified": false,
+  "decision_regenerated": true,
+  "decision_section_restored": true,
+  "canonical_artifacts_mutated": false,
+  "zone_projection_schema_backward_compatible": true,
+  "validation_status": "PASS"
+}

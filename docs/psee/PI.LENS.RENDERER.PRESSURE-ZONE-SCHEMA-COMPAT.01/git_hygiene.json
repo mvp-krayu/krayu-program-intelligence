@@ -1,0 +1,29 @@
+{
+  "contract_id": "PI.LENS.RENDERER.PRESSURE-ZONE-SCHEMA-COMPAT.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-03",
+  "baseline_commit": "1c1db91",
+  "baseline_message": "[COMPLETE] LENS real E2E pipeline executes end-to-end",
+  "branch": "work/psee-runtime",
+  "files_modified": [
+    "scripts/pios/lens_report_generator.py"
+  ],
+  "files_created": [
+    "docs/psee/PI.LENS.RENDERER.PRESSURE-ZONE-SCHEMA-COMPAT.01/schema_compat_summary.md",
+    "docs/psee/PI.LENS.RENDERER.PRESSURE-ZONE-SCHEMA-COMPAT.01/validation_result.json",
+    "docs/psee/PI.LENS.RENDERER.PRESSURE-ZONE-SCHEMA-COMPAT.01/decision_section_check.json",
+    "docs/psee/PI.LENS.RENDERER.PRESSURE-ZONE-SCHEMA-COMPAT.01/no_producer_change_attestation.md",
+    "docs/psee/PI.LENS.RENDERER.PRESSURE-ZONE-SCHEMA-COMPAT.01/git_hygiene.json"
+  ],
+  "producer_files_modified": false,
+  "wrapper_modified": false,
+  "renderer_modified": true,
+  "renderer_change_type": "schema_compat_only",
+  "renderer_lines_changed": 11,
+  "commit_recommendation": "pending — commit after RETURN issued",
+  "untracked_dirs": [
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.DECISION-PATH-FIX.01/",
+    "docs/psee/PI.LENS.RENDERER.PRESSURE-ZONE-SCHEMA-COMPAT.01/"
+  ],
+  "status": "CLEAN_PENDING_COMMIT"
+}

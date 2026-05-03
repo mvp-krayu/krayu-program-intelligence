@@ -181,7 +181,7 @@ class _RenderingContract:
         """
         if len(zones) < 2 or pz_proj is None:
             return None
-        zone_list = pz_proj.get("zone_projection", [])
+        zone_list = pz_proj.get("zone_projection") or pz_proj.get("zones") or []
         if len(zone_list) < 2:
             return None
         signal_sets = [frozenset(z.get("signals", [])) for z in zone_list]
@@ -2949,7 +2949,7 @@ def _build_tier1_topology_svg_generic(
     blind_spot_domains: set = set()
 
     if pz_proj:
-        for z in pz_proj.get("zone_projection", []):
+        for z in pz_proj.get("zone_projection") or pz_proj.get("zones") or []:
             aid = z.get("anchor_id")
             if aid:
                 zones_by_anchor[aid] = z
@@ -3212,7 +3212,7 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
     # Domain grid cards — FOCUS_DOMAIN is PRIMARY zone anchor for psig, DOMAIN-10 for BlueEdge
     if use_psig and pz_proj:
         primary_zone = next(
-            (z for z in pz_proj.get("zone_projection", []) if z.get("attribution_profile") == "primary"),
+            (z for z in pz_proj.get("zone_projection") or pz_proj.get("zones") or [] if z.get("attribution_profile") == "primary"),
             None,
         )
         if primary_zone:
@@ -3553,7 +3553,7 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
 
     # Pressure zones / focus domain block
     if use_psig and pz_proj:
-        zone_list = pz_proj.get("zone_projection", [])
+        zone_list = pz_proj.get("zone_projection") or pz_proj.get("zones") or []
         pz_blocks = []
         # Shared condition set across all zones (de-duplicate repetition)
         _all_sigs = zone_list[0].get("signals", []) if zone_list else []
@@ -3910,7 +3910,7 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
     focus_domain = next((d for d in domains if d["domain_id"] == "DOMAIN-10"), None)
 
     if use_psig and pz_proj:
-        zone_list = pz_proj.get("zone_projection", [])
+        zone_list = pz_proj.get("zone_projection") or pz_proj.get("zones") or []
         pz_items = []
         for z in zone_list:
             zid    = z["zone_id"]
@@ -4224,8 +4224,8 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
             "HIGH": "var(--green)", "PARTIAL": "var(--amber)"
         }.get(_evcomp, "var(--fg-muted)")
         _conc_dom_anchor = (
-            pz_proj.get("zone_projection", [{}])[0].get("anchor_id", "")
-            if pz_proj and pz_proj.get("zone_projection") else ""
+            (pz_proj.get("zone_projection") or pz_proj.get("zones") or [{}])[0].get("anchor_id", "")
+            if pz_proj and (pz_proj.get("zone_projection") or pz_proj.get("zones")) else ""
         )
         decision_posture_html = (
             '  <div class="section">\n'
@@ -4835,7 +4835,7 @@ def _derive_tier2_zones_from_projection(
     _build_t2_psig_zone_block() (zone_class, conditions, condition_signals,
     attribution_profile, embedded_pair_rules). BlueEdge path unaffected.
     """
-    zone_projection = pz_proj.get("zone_projection", [])
+    zone_projection = pz_proj.get("zone_projection") or pz_proj.get("zones") or []
     domains_by_id   = {d["domain_id"]: d for d in topology.get("domains", [])}
 
     cond_by_id: Dict = {}
@@ -6670,7 +6670,7 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
     zone_count = 0
     zone_class = "COMPOUND_ZONE"
     if pz_proj:
-        _pz_list_f = pz_proj.get("zone_projection", [])
+        _pz_list_f = pz_proj.get("zone_projection") or pz_proj.get("zones") or []
         zone_count = len(_pz_list_f)
         if _pz_list_f:
             zone_class = _pz_list_f[0].get("zone_class", "COMPOUND_ZONE")
@@ -6687,7 +6687,7 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
 
     # ── Confirmed card — prose sentences, no metric dumps ─────────────
     _truth_sentences: list = []
-    _pz_first_f = (pz_proj.get("zone_projection", [{}]) or [{}])[0] if pz_proj else {}
+    _pz_first_f = (pz_proj.get("zone_projection") or pz_proj.get("zones") or [{}])[0] if pz_proj else {}
     _pz_first_zid = _pz_first_f.get("zone_id", "")
     _pz_first_zcls = _pz_first_f.get("zone_class", "COMPOUND_ZONE")
     _pz_first_zcls_exec = RC.apply_language(_pz_first_zcls)
@@ -6756,7 +6756,7 @@ def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
     # ── Pressure section — RC.evidence_pair_block (psig path only) ────
     pressure_html = ""
     if _use_psig and pz_proj is not None and zone_count > 0:
-        _pz_list_s  = pz_proj.get("zone_projection", [])
+        _pz_list_s  = pz_proj.get("zone_projection") or pz_proj.get("zones") or []
         _cp         = RC.collapse_patterns(_pz_list_s, pz_proj, publish_safe)
         _sig_set    = (_cp["shared_sigs"] if _cp
                        else _pz_list_s[0].get("signals", []) if _pz_list_s else [])

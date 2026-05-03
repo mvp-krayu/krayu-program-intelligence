@@ -1,0 +1,13 @@
+{
+  "contract_id": "PI.LENS.RENDERER.PRESSURE-ZONE-SCHEMA-COMPAT.01",
+  "artifact": "decision_section_check",
+  "generated_date": "2026-05-03",
+  "decision_file": "clients/blueedge/psee/runs/run_blueedge_e2e_execute_01/reports/lens_decision_surface.html",
+  "file_size_bytes_before": 11917,
+  "file_size_bytes_after": 15076,
+  "where_pressure_exists": true,
+  "structural_pressure_signals": true,
+  "investigate": true,
+  "score_60": true,
+  "status": "PASS"
+}
