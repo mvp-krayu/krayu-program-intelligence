@@ -1,0 +1,13 @@
+{
+  "client": "blueedge",
+  "display_run": "run_blueedge_productized_01_fixed",
+  "report_run": "run_blueedge_productized_01_fixed",
+  "vault_run": "run_blueedge_productized_01",
+  "semantic_run": "run_blueedge_productized_01_fixed",
+  "status": "DEMO_LOCKED",
+  "locked_date": "2026-05-03",
+  "contract": "PI.LENS.PRODUCT-DEMO-PACKAGE.01",
+  "entrypoint": "scripts/pios/lens_demo.sh",
+  "ui_url": "http://localhost:3001/lens",
+  "workspace_url": "http://localhost:3001/tier2/workspace?client=blueedge&displayRun=run_blueedge_productized_01_fixed&vaultRun=run_blueedge_productized_01&reportRun=run_blueedge_productized_01_fixed"
+}

@@ -1,0 +1,80 @@
+{
+  "contract_id": "PI.LENS.PRODUCT-DEMO-PACKAGE.01",
+  "generated_date": "2026-05-03",
+  "demo_script_runs": true,
+  "reports_generate": true,
+  "workspace_loads": true,
+  "overview_graph_correct": true,
+  "evidence_graph_correct": true,
+  "decision_surface_correct": true,
+  "pipeline_executed": false,
+  "renderer_modified": false,
+  "checks": [
+    {
+      "name": "demo_script_syntax",
+      "status": "PASS",
+      "detail": "bash -n scripts/pios/lens_demo.sh → no syntax errors"
+    },
+    {
+      "name": "reports_path_exists",
+      "status": "PASS",
+      "detail": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/ — present"
+    },
+    {
+      "name": "vault_path_exists",
+      "status": "PASS",
+      "detail": "clients/blueedge/psee/runs/run_blueedge_productized_01/vault/ — present"
+    },
+    {
+      "name": "lens_generate_sh_interface",
+      "status": "PASS",
+      "detail": "lens_generate.sh --client <client> --run <run> — confirmed from script header"
+    },
+    {
+      "name": "workspace_http_200",
+      "status": "PASS",
+      "detail": "GET /tier2/workspace?client=blueedge&displayRun=...&vaultRun=...&reportRun=... → 200"
+    },
+    {
+      "name": "lens_http_200",
+      "status": "PASS",
+      "detail": "GET /lens → 200"
+    },
+    {
+      "name": "tier1_report_exists",
+      "status": "PASS",
+      "detail": "lens_tier1_evidence_brief.html present in reports dir"
+    },
+    {
+      "name": "decision_surface_exists",
+      "status": "PASS",
+      "detail": "lens_decision_surface.html present in reports/decision/"
+    },
+    {
+      "name": "overview_graph",
+      "status": "PASS",
+      "detail": "isOverview=true on load; vaultIndex from graph_state.json; 18 nodes BRIGHT; label OVERVIEW"
+    },
+    {
+      "name": "evidence_graph_psig_strip",
+      "status": "PASS",
+      "detail": "psigSignals from signal_coverage; visible strip PSIG-001/002/004; graphVaultIndex PSIG-keyed; graphQsForVault synthesizes vault_targets"
+    },
+    {
+      "name": "demo_lock_json_valid",
+      "status": "PASS",
+      "detail": "python3 -m json.tool demo_lock.json → no errors"
+    },
+    {
+      "name": "no_pipeline_executed",
+      "status": "PASS",
+      "detail": "lens_demo.sh created but not executed in this stream"
+    },
+    {
+      "name": "no_renderer_modified",
+      "status": "PASS",
+      "detail": "scripts/pios/lens_report_generator.py NOT modified"
+    }
+  ],
+  "validation_status": "PASS"
+}
