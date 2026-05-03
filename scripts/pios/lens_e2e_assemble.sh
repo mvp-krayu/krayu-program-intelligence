@@ -186,12 +186,20 @@ fi
 # Execution run is isolated from canonical demo run to protect canonical reports.
 # Stage 00 (source_extract.py) extracts archive to canonical_repo before intake.
 #   PI.LENS.REAL-E2E-PIPELINE.BLOCKER-07-CLOSURE.01 — BLOCKER-07 closed.
-# Stage 08 (lens_generate.sh) requires vault AND semantic co-located in same run.
-#   With stage 06 blocked, vault is absent in execution run; classified BLOCKED_STAGE_FAILURE.
+# Stage 08 uses explicit vault/semantic/report mapping via lens_report_generator.py.
+#   semantic = LOCKED_REFERENCE_INPUT from run_blueedge_productized_01_fixed (never copied).
 
 EXECUTE_RUN_ID="run_blueedge_e2e_execute_01"
 EXEC_RUN_DIR="$REPO_ROOT/clients/$CLIENT/psee/runs/$EXECUTE_RUN_ID"
 CANONICAL_RUN_DIR="$REPO_ROOT/clients/$CLIENT/psee/runs/$RUN"
+
+# ── RUNTIME MAPPING (PI.LENS.REAL-E2E-PIPELINE.FINAL-IDEMPOTENCY-AND-RUNTIME-MAPPING.01) ──
+# vault_run  = EXECUTE_RUN_ID (produced by this E2E run)
+# semantic   = LOCKED_REFERENCE_INPUT from productized fixed run (read-only, never copied)
+# report_run = EXECUTE_RUN_ID (reports written here, not to canonical)
+SEMANTIC_RUN_ID="run_blueedge_productized_01_fixed"
+EXEC_SEMANTIC_DIR="$REPO_ROOT/clients/$CLIENT/psee/runs/$SEMANTIC_RUN_ID/semantic"
+EXEC_REPORT_DIR="$EXEC_RUN_DIR/reports"
 
 declare -A EXEC_STATUS
 declare -A EXEC_EXIT
@@ -321,16 +329,24 @@ if [[ ${EXEC_EXIT[03]} -ne 0 ]]; then
 else
   echo ""
   echo "  [STAGE 04] CEU grounding — ceu_grounding.py"
-  EXEC_EXIT[04]=0
-  python3 "$SCRIPTS_DIR/ceu_grounding.py" \
-    --client "$CLIENT" --run-id "$EXECUTE_RUN_ID" \
-    || EXEC_EXIT[04]=$?
-  if [[ ${EXEC_EXIT[04]} -eq 0 ]]; then
-    EXEC_STATUS[04]="EXECUTED"
-    EXEC_NOTES[04]="ceu_grounding.py exited 0; ceu/grounding_state_v3.json written"
+  EXEC_CEU_GROUNDING="$EXEC_RUN_DIR/ceu/grounding_state_v3.json"
+  if [[ -f "$EXEC_CEU_GROUNDING" ]]; then
+    EXEC_STATUS[04]="VALIDATED_ONLY"
+    EXEC_EXIT[04]=0
+    EXEC_NOTES[04]="ceu/grounding_state_v3.json present — skipping WRITE; CREATE_ONLY respected"
+    echo "  [IDEMPOTENT] CEU grounding present — skipping WRITE"
   else
-    EXEC_STATUS[04]="BLOCKED_STAGE_FAILURE"
-    EXEC_NOTES[04]="ceu_grounding.py exited ${EXEC_EXIT[04]}"
+    EXEC_EXIT[04]=0
+    python3 "$SCRIPTS_DIR/ceu_grounding.py" \
+      --client "$CLIENT" --run-id "$EXECUTE_RUN_ID" \
+      || EXEC_EXIT[04]=$?
+    if [[ ${EXEC_EXIT[04]} -eq 0 ]]; then
+      EXEC_STATUS[04]="EXECUTED"
+      EXEC_NOTES[04]="ceu_grounding.py exited 0; ceu/grounding_state_v3.json written"
+    else
+      EXEC_STATUS[04]="BLOCKED_STAGE_FAILURE"
+      EXEC_NOTES[04]="ceu_grounding.py exited ${EXEC_EXIT[04]}"
+    fi
   fi
 fi
 
@@ -383,69 +399,74 @@ fi
 # ── EXECUTE STAGE 07: Semantic Bundle (locked reference) ──────────────────────
 echo ""
 echo "  [STAGE 07] Semantic bundle — READY_LOCKED_REFERENCE"
-S07_MANIFEST="$CANONICAL_RUN_DIR/semantic/semantic_bundle_manifest.json"
+S07_MANIFEST="$EXEC_SEMANTIC_DIR/semantic_bundle_manifest.json"
 if [[ -f "$S07_MANIFEST" ]]; then
   EXEC_STATUS[07]="READY_LOCKED_REFERENCE"
   EXEC_EXIT[07]=0
-  EXEC_NOTES[07]="semantic_bundle_manifest.json present in $RUN; validate-only; no rebuild"
+  EXEC_NOTES[07]="semantic_bundle_manifest.json present in $SEMANTIC_RUN_ID; LOCKED_REFERENCE_INPUT; no copy"
+  echo "  [LOCKED_REFERENCE] semantic bundle from $SEMANTIC_RUN_ID"
 else
   EXEC_STATUS[07]="BLOCKED_STAGE_FAILURE"
   EXEC_EXIT[07]=1
-  EXEC_NOTES[07]="semantic_bundle_manifest.json absent in $RUN"
+  EXEC_NOTES[07]="semantic_bundle_manifest.json absent in $SEMANTIC_RUN_ID ($EXEC_SEMANTIC_DIR)"
 fi
 
 # ── EXECUTE STAGE 08: Reports ─────────────────────────────────────────────────
-# lens_generate.sh requires vault AND semantic in same BASE_DIR (same --run).
-# vault is absent from execution run (stage 06 blocked).
-# semantic is in canonical run only (READY_LOCKED_REFERENCE, no copy).
-# → BLOCKED_STAGE_FAILURE: co-location requirement unmet.
+# lens_report_generator.py called with explicit vault/semantic/report mapping.
+# vault = EXEC_RUN_DIR/vault (produced by stage 06)
+# semantic = EXEC_SEMANTIC_DIR (LOCKED_REFERENCE_INPUT from productized fixed run, read-only)
+# reports written to EXEC_REPORT_DIR (execution run only; canonical reports untouched)
 echo ""
-echo "  [STAGE 08] Reports — lens_generate.sh"
+echo "  [STAGE 08] Reports — lens_report_generator.py (explicit mapping)"
 EXEC_VAULT_FOR_EXEC="$EXEC_RUN_DIR/vault"
-EXEC_SEMANTIC_FOR_EXEC="$EXEC_RUN_DIR/semantic"
-if [[ -d "$EXEC_VAULT_FOR_EXEC" && -d "$EXEC_SEMANTIC_FOR_EXEC" ]]; then
+if [[ ${EXEC_EXIT[07]} -ne 0 ]]; then
+  EXEC_STATUS[08]="NOT_ATTEMPTED"
+  EXEC_EXIT[08]=-1
+  EXEC_NOTES[08]="skipped — stage 07 (semantic locked reference) failed"
+elif [[ ! -d "$EXEC_VAULT_FOR_EXEC" ]]; then
+  EXEC_STATUS[08]="BLOCKED_STAGE_FAILURE"
+  EXEC_EXIT[08]=-1
+  EXEC_NOTES[08]="vault absent from $EXECUTE_RUN_ID — stage 06 must succeed first"
+else
   EXEC_EXIT[08]=0
-  bash "$SCRIPTS_DIR/lens_generate.sh" \
-    --client "$CLIENT" --run "$EXECUTE_RUN_ID" \
+  python3 "$SCRIPTS_DIR/lens_report_generator.py" \
+    --client "$CLIENT" \
+    --run-id "$EXECUTE_RUN_ID" \
+    --package-dir "$EXEC_VAULT_FOR_EXEC" \
+    --semantic-bundle-dir "$EXEC_SEMANTIC_DIR" \
+    --output-dir "$EXEC_REPORT_DIR" \
     || EXEC_EXIT[08]=$?
   if [[ ${EXEC_EXIT[08]} -eq 0 ]]; then
     EXEC_STATUS[08]="EXECUTED"
-    EXEC_NOTES[08]="lens_generate.sh exited 0; reports written to $EXECUTE_RUN_ID/reports/"
+    EXEC_NOTES[08]="lens_report_generator.py exited 0; reports written to $EXECUTE_RUN_ID/reports/ using semantic from $SEMANTIC_RUN_ID"
   else
     EXEC_STATUS[08]="BLOCKED_STAGE_FAILURE"
-    EXEC_NOTES[08]="lens_generate.sh exited ${EXEC_EXIT[08]}"
-  fi
-else
-  EXEC_STATUS[08]="BLOCKED_STAGE_FAILURE"
-  EXEC_EXIT[08]=-1
-  if [[ ! -d "$EXEC_VAULT_FOR_EXEC" && ! -d "$EXEC_SEMANTIC_FOR_EXEC" ]]; then
-    EXEC_NOTES[08]="vault and semantic both absent from execution run $EXECUTE_RUN_ID; stage 06 blocked; semantic is READY_LOCKED_REFERENCE in $RUN only — copy not authorized"
-  elif [[ ! -d "$EXEC_VAULT_FOR_EXEC" ]]; then
-    EXEC_NOTES[08]="vault absent from $EXECUTE_RUN_ID (stage 06 blocked); lens_generate.sh requires vault in same run"
-  else
-    EXEC_NOTES[08]="semantic absent from $EXECUTE_RUN_ID; semantic is READY_LOCKED_REFERENCE in $RUN only"
+    EXEC_NOTES[08]="lens_report_generator.py exited ${EXEC_EXIT[08]}; renderer/data mismatch — renderer NOT patched"
   fi
 fi
 
 # ── EXECUTE STAGE 09: Runtime Package Validation ──────────────────────────────
+# vault from execution run; semantic from locked reference run; reports from execution run.
 echo ""
 echo "  [STAGE 09] Runtime package — validate"
 S09_LENS="$REPO_ROOT/app/gauge-product/pages/lens.js"
 S09_WS="$REPO_ROOT/app/gauge-product/pages/tier2/workspace.js"
 S09_DEMO="$SCRIPTS_DIR/lens_demo.sh"
-S09_REPORTS_DIR="$CANONICAL_RUN_DIR/reports"
-S09_SEMANTIC_DIR="$CANONICAL_RUN_DIR/semantic"
 S09_PASS=true
 S09_NOTES=()
-[[ -f "$S09_LENS" ]]       || { S09_PASS=false; S09_NOTES+=("lens.js absent"); }
-[[ -f "$S09_WS" ]]         || { S09_PASS=false; S09_NOTES+=("workspace.js absent"); }
-[[ -f "$S09_DEMO" ]]       || { S09_PASS=false; S09_NOTES+=("lens_demo.sh absent"); }
-[[ -d "$S09_REPORTS_DIR" ]] || { S09_PASS=false; S09_NOTES+=("reports/ absent in $RUN"); }
-[[ -d "$S09_SEMANTIC_DIR" ]] || { S09_PASS=false; S09_NOTES+=("semantic/ absent in $RUN"); }
+[[ -f "$S09_LENS" ]]                      || { S09_PASS=false; S09_NOTES+=("lens.js absent"); }
+[[ -f "$S09_WS" ]]                        || { S09_PASS=false; S09_NOTES+=("workspace.js absent"); }
+[[ -f "$S09_DEMO" ]]                      || { S09_PASS=false; S09_NOTES+=("lens_demo.sh absent"); }
+[[ -d "$EXEC_VAULT_FOR_EXEC" ]]           || { S09_PASS=false; S09_NOTES+=("vault/ absent in $EXECUTE_RUN_ID"); }
+[[ -d "$EXEC_SEMANTIC_DIR" ]]             || { S09_PASS=false; S09_NOTES+=("semantic/ absent in $SEMANTIC_RUN_ID"); }
+[[ -f "$EXEC_REPORT_DIR/lens_tier1_evidence_brief.html" ]]      || { S09_PASS=false; S09_NOTES+=("lens_tier1_evidence_brief.html absent"); }
+[[ -f "$EXEC_REPORT_DIR/lens_tier1_narrative_brief.html" ]]     || { S09_PASS=false; S09_NOTES+=("lens_tier1_narrative_brief.html absent"); }
+[[ -f "$EXEC_REPORT_DIR/lens_tier2_diagnostic_narrative.html" ]] || { S09_PASS=false; S09_NOTES+=("lens_tier2_diagnostic_narrative.html absent"); }
+[[ -f "$EXEC_REPORT_DIR/lens_decision_surface.html" ]]          || { S09_PASS=false; S09_NOTES+=("lens_decision_surface.html absent"); }
 if $S09_PASS; then
-  EXEC_STATUS[09]="VALIDATED_ONLY"
+  EXEC_STATUS[09]="VALIDATED"
   EXEC_EXIT[09]=0
-  EXEC_NOTES[09]="lens.js, workspace.js, lens_demo.sh, reports/, semantic/ all present; runtime package validated"
+  EXEC_NOTES[09]="lens.js, workspace.js, lens_demo.sh, vault, semantic (locked ref), and all 4 HTML reports present; runtime package validated"
 else
   EXEC_STATUS[09]="BLOCKED_STAGE_FAILURE"
   EXEC_EXIT[09]=1

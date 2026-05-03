@@ -1,0 +1,19 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE.FINAL-IDEMPOTENCY-AND-RUNTIME-MAPPING.01",
+  "artifact": "stage_execution_result",
+  "generated_date": "2026-05-03",
+  "client": "blueedge",
+  "vault_run": "run_blueedge_e2e_execute_01",
+  "semantic_run": "run_blueedge_productized_01_fixed",
+  "report_run": "run_blueedge_e2e_execute_01",
+  "stage_04": "VALIDATED_ONLY",
+  "stage_04_detail": "ceu/grounding_state_v3.json present — skipping WRITE; CREATE_ONLY respected",
+  "stage_07": "READY_LOCKED_REFERENCE",
+  "stage_07_detail": "semantic_bundle_manifest.json present in run_blueedge_productized_01_fixed; LOCKED_REFERENCE_INPUT; no copy",
+  "stage_08": "EXECUTED",
+  "stage_08_detail": "lens_report_generator.py exited 0; 4 HTML reports + graph_state.json written to run_blueedge_e2e_execute_01/reports/",
+  "stage_09": "VALIDATED",
+  "stage_09_detail": "vault, semantic (locked ref), and all 4 HTML reports present; runtime package validated",
+  "overall_status": "COMPLETE",
+  "overall_detail": "All 10 stages exit 0; first COMPLETE execution of full E2E wrapper"
+}
