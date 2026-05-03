@@ -1,0 +1,40 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE.EXECUTION-MODE.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-03",
+
+  "branch": "work/psee-runtime",
+  "baseline_commit": "f0fcb7a96987f0b909c8a51d3bfff3f1037087d9",
+  "baseline_commit_message": "[ASSEMBLY] LENS real E2E pipeline validate-mode assembly map",
+
+  "working_tree_before": "CLEAN",
+  "working_tree_after": "1 file modified (tracked), 1 evidence directory created",
+
+  "files_modified_tracked": [
+    "scripts/pios/lens_e2e_assemble.sh"
+  ],
+  "files_created_tracked": [
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-MODE.01/execution_mode_summary.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-MODE.01/stage_execution_result.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-MODE.01/blocked_stage_log.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-MODE.01/execution_command_log.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-MODE.01/no_free_patching_attestation.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-MODE.01/git_hygiene.json"
+  ],
+  "files_modified_gitignored": [],
+
+  "execution_run_created": false,
+  "canonical_data_mutated": false,
+  "pipeline_executed": false,
+  "producer_scripts_modified": ["scripts/pios/lens_e2e_assemble.sh"],
+  "renderer_modified": false,
+  "semantic_bundle_modified": false,
+  "ui_modified": false,
+  "api_modified": false,
+  "fastapi_involved": false,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[EXECUTION-MODE] PI.LENS.REAL-E2E-PIPELINE.EXECUTION-MODE.01 — execute mode added to lens_e2e_assemble.sh; stage 01 BLOCKED (external archive path); stage 06 BLOCKED_STAGE_06 (UUID path contract mismatch); PARTIAL",
+
+  "git_hygiene_status": "COMPLETE"
+}

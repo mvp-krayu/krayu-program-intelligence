@@ -1,0 +1,74 @@
+{
+  "client": "blueedge",
+  "source": "source_01",
+  "run": "run_blueedge_productized_01_fixed",
+  "execute_run": "run_blueedge_e2e_execute_01",
+  "mode": "execute",
+  "producer_scripts_modified": [],
+  "stages": [
+    {
+      "stage": "01_SOURCE_REGISTRATION",
+      "action": "python3 scripts/pios/source_intake.py --client blueedge --source source_01 --run-id run_blueedge_e2e_execute_01 --validate-only",
+      "status": "BLOCKED_STAGE_FAILURE",
+      "exit_code": 1,
+      "notes": "source_intake.py step_boundary calls archive_path.relative_to(REPO_ROOT); archive_path is external absolute path (/Users/khorrix/Projects/blueedge-clean-run/...); raises ValueError; do not patch source_intake.py per stream rules"
+    },
+    {
+      "stage": "02_INTAKE",
+      "action": "python3 scripts/pios/source_intake.py --client blueedge --source source_01 --run-id run_blueedge_e2e_execute_01",
+      "status": "NOT_ATTEMPTED",
+      "exit_code": null,
+      "notes": "skipped — stage 01 BLOCKED_STAGE_FAILURE; cascade applies"
+    },
+    {
+      "stage": "03_STRUCTURE_40X",
+      "action": "python3 scripts/pios/structural_scanner.py --client blueedge --source source_01 --run-id run_blueedge_e2e_execute_01",
+      "status": "NOT_ATTEMPTED",
+      "exit_code": null,
+      "notes": "skipped — stage 02 NOT_ATTEMPTED; cascade applies"
+    },
+    {
+      "stage": "04_CEU_GROUNDING",
+      "action": "python3 scripts/pios/ceu_grounding.py --client blueedge --run-id run_blueedge_e2e_execute_01",
+      "status": "NOT_ATTEMPTED",
+      "exit_code": null,
+      "notes": "skipped — stage 03 NOT_ATTEMPTED; cascade applies"
+    },
+    {
+      "stage": "05_DOM_LAYER",
+      "action": "python3 scripts/pios/dom_layer_generator.py --client blueedge --source source_01 --run-id run_blueedge_e2e_execute_01",
+      "status": "NOT_ATTEMPTED",
+      "exit_code": null,
+      "notes": "skipped — stage 03 and 04 NOT_ATTEMPTED; cascade applies"
+    },
+    {
+      "stage": "06_75X_41X_PIPELINE",
+      "action": "python3 scripts/pios/run_client_pipeline.py --client blueedge --source source_01 --run-id run_blueedge_e2e_execute_01",
+      "status": "BLOCKED_STAGE_06",
+      "exit_code": 1,
+      "notes": "Phase 1 PASS (archive + SHA256 verified). Phase 2 FAIL: source_manifest[extracted_path]=clients/6a6fcdbc.../intake/canonical_repo is absent; path contract mismatch; generic stage 02 output path not recognized by run_client_pipeline.py phase 2. Do not patch run_client_pipeline.py."
+    },
+    {
+      "stage": "07_SEMANTIC_BUNDLE",
+      "action": "validate semantic_bundle_manifest.json exists in run_blueedge_productized_01_fixed",
+      "status": "READY_LOCKED_REFERENCE",
+      "exit_code": 0,
+      "notes": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/semantic_bundle_manifest.json present; no rebuild; no mutation"
+    },
+    {
+      "stage": "08_REPORT_RENDER",
+      "action": "bash scripts/pios/lens_generate.sh --client blueedge --run run_blueedge_e2e_execute_01",
+      "status": "BLOCKED_STAGE_FAILURE",
+      "exit_code": null,
+      "notes": "lens_generate.sh requires vault AND semantic co-located in same --run; vault absent from run_blueedge_e2e_execute_01 (stage 06 blocked); semantic is READY_LOCKED_REFERENCE in run_blueedge_productized_01_fixed only; copy not authorized; not executed"
+    },
+    {
+      "stage": "09_LENS_RUNTIME_PACKAGE",
+      "action": "validate lens.js, workspace.js, lens_demo.sh, reports/, semantic/ in canonical run",
+      "status": "VALIDATED_ONLY",
+      "exit_code": 0,
+      "notes": "lens.js, workspace.js, lens_demo.sh, reports/, semantic/ all present; runtime package validated; no UI changes"
+    }
+  ],
+  "overall_status": "PARTIAL"
+}
