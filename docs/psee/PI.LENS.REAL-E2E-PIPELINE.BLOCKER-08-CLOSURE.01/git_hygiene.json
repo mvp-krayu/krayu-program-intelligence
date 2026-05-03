@@ -1,0 +1,44 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE.BLOCKER-08-CLOSURE.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-03",
+
+  "branch": "work/psee-runtime",
+  "baseline_commit": "0341c6ba56e57584ef3105e9f6d7c18c95d38c12",
+  "baseline_commit_message": "[FIX] PI.LENS.REAL-E2E-PIPELINE.BLOCKER-07-CLOSURE.01 — source_extract.py extraction producer; lens_e2e_assemble.sh Stage 00; BLOCKER-07 closed; stages 01-04 executing",
+
+  "working_tree_before": "1 tracked file modified (lens_e2e_assemble.sh from BLOCKER-07 work)",
+  "working_tree_after": "2 tracked files modified (dom_layer_generator.py, lens_e2e_assemble.sh); 1 evidence directory untracked; run artifacts gitignored",
+
+  "files_modified_tracked": [
+    "scripts/pios/dom_layer_generator.py",
+    "scripts/pios/lens_e2e_assemble.sh"
+  ],
+  "files_created_untracked_scripts": [],
+  "files_created_tracked": [
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-08-CLOSURE.01/dom_layer_path_contract.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-08-CLOSURE.01/implementation_summary.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-08-CLOSURE.01/dom_validation_result.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-08-CLOSURE.01/execution_mode_after_dom_fix.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-08-CLOSURE.01/no_free_patching_attestation.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-08-CLOSURE.01/git_hygiene.json"
+  ],
+  "files_gitignored_written_by_run": [
+    "clients/blueedge/psee/runs/run_blueedge_e2e_execute_01/ (run artifacts from prior run; no new artifacts written by this contract)"
+  ],
+
+  "pipeline_executed": true,
+  "canonical_artifacts_mutated": false,
+  "producer_scripts_modified": ["scripts/pios/dom_layer_generator.py", "scripts/pios/lens_e2e_assemble.sh"],
+  "producer_scripts_created": [],
+  "renderer_modified": false,
+  "semantic_bundle_modified": false,
+  "ui_modified": false,
+  "api_modified": false,
+  "fastapi_involved": false,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[FIX] PI.LENS.REAL-E2E-PIPELINE.BLOCKER-08-CLOSURE.01 — dom_layer_generator.py LEGACY skip; lens_e2e_assemble.sh Stage 05 idempotent check; BLOCKER-08 closed",
+
+  "git_hygiene_status": "COMPLETE"
+}

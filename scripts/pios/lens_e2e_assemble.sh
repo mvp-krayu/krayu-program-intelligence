@@ -313,24 +313,31 @@ if [[ ${EXEC_EXIT[03]} -ne 0 || ${EXEC_EXIT[04]} -ne 0 ]]; then
 else
   echo ""
   echo "  [STAGE 05] DOM layer — dom_layer_generator.py"
-  EXEC_EXIT[05]=0
-  python3 "$SCRIPTS_DIR/dom_layer_generator.py" \
-    --client "$CLIENT" --source "$SOURCE" --run-id "$EXECUTE_RUN_ID" \
-    || EXEC_EXIT[05]=$?
-  if [[ ${EXEC_EXIT[05]} -eq 0 ]]; then
-    EXEC_STATUS[05]="EXECUTED"
-    EXEC_NOTES[05]="dom_layer_generator.py exited 0; dom/dom_layer.json written"
+  EXEC_DOM_LAYER="$EXEC_RUN_DIR/dom/dom_layer.json"
+  if [[ -f "$EXEC_DOM_LAYER" ]]; then
+    EXEC_STATUS[05]="VALIDATED_ONLY"
+    EXEC_EXIT[05]=0
+    EXEC_NOTES[05]="dom_layer.json already present at $EXECUTE_RUN_ID/dom/dom_layer.json; generation skipped"
+    echo "  dom_layer.json already present — skipping generation"
   else
-    EXEC_STATUS[05]="BLOCKED_STAGE_FAILURE"
-    EXEC_NOTES[05]="dom_layer_generator.py exited ${EXEC_EXIT[05]}"
+    EXEC_EXIT[05]=0
+    python3 "$SCRIPTS_DIR/dom_layer_generator.py" \
+      --client "$CLIENT" --source "$SOURCE" --run-id "$EXECUTE_RUN_ID" \
+      || EXEC_EXIT[05]=$?
+    if [[ ${EXEC_EXIT[05]} -eq 0 ]]; then
+      EXEC_STATUS[05]="EXECUTED"
+      EXEC_NOTES[05]="dom_layer_generator.py exited 0; dom/dom_layer.json written"
+    else
+      EXEC_STATUS[05]="BLOCKED_STAGE_FAILURE"
+      EXEC_NOTES[05]="dom_layer_generator.py exited ${EXEC_EXIT[05]}"
+    fi
   fi
 fi
 
 # ── EXECUTE STAGE 06: 75.x / 41.x Pipeline ────────────────────────────────────
-# KNOWN BLOCKED: run_client_pipeline.py Phase 2 requires source_manifest["extracted_path"]
-# (clients/6a6fcdbc.../psee/intake/canonical_repo) which is absent.
-# Path contract mismatch: generic pipeline writes to new run dir; orchestrator
-# expects UUID canonical path from source_manifest. Will fail at phase 2.
+# BLOCKER-02 resolved: run_client_pipeline.py phases 2-4 now use CLIENT_RUN path fallback.
+# Current known blocker: Phase 5 requires binding_envelope_fastapi_compatible.json
+# at fastapi_conformance_path — artifact absent (BLOCKER-09).
 echo ""
 echo "  [STAGE 06] Pipeline — run_client_pipeline.py (KNOWN BLOCKED_STAGE_06)"
 EXEC_EXIT[06]=0

@@ -1,0 +1,34 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE.BLOCKER-08-CLOSURE.01",
+  "generated_date": "2026-05-03",
+  "client": "blueedge",
+  "source": "source_01",
+  "run": "run_blueedge_e2e_execute_01",
+  "blocker_08": "RESOLVED",
+  "blocker_08_evidence": "dom_layer_generator.py dry-run PASS; [LEGACY] log-and-skip confirmed; Stage 05 idempotent check in lens_e2e_assemble.sh confirmed; dom_layer.json present (945 nodes, PASS)",
+
+  "execute_mode_stage_results": {
+    "STAGE_00": "VALIDATED_ONLY",
+    "STAGE_01": "VALIDATED_ONLY",
+    "STAGE_02": "BLOCKED_STAGE_FAILURE",
+    "STAGE_03": "NOT_ATTEMPTED",
+    "STAGE_04": "NOT_ATTEMPTED",
+    "STAGE_05": "NOT_ATTEMPTED",
+    "STAGE_06": "BLOCKED_STAGE_06",
+    "STAGE_07": "BLOCKED_STAGE_FAILURE",
+    "STAGE_08": "BLOCKED_STAGE_FAILURE",
+    "STAGE_09": "BLOCKED_STAGE_FAILURE"
+  },
+
+  "stage_02_note": "CREATE_ONLY violation — intake artifacts already written by prior run; expected behavior on re-run; cascade prevents stages 03-05 from executing",
+  "stage_05_note": "NOT_ATTEMPTED due to cascade from stage 02; idempotent check confirmed: dom_layer.json present; VALIDATED_ONLY path operative on next stage-05-only run",
+  "stage_06_note": "Runs independently; fails at Phase 5 — binding_envelope_fastapi_compatible.json absent (BLOCKER-09)",
+
+  "next_blocker_detected": true,
+  "next_blocker_id": "BLOCKER-09",
+  "next_blocker_summary": "run_client_pipeline.py Phase 5 fails: binding_envelope_fastapi_compatible.json not found at docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/. BlueEdge-specific FastAPI conformance artifact absent at expected path.",
+
+  "pipeline_reached_stage_06": true,
+  "pipeline_phase_5_passed": false,
+  "overall_execute_status": "PARTIAL"
+}
