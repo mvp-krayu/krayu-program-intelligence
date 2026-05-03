@@ -1,0 +1,62 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE.STAGE-CONTRACT-CLOSURE.01",
+  "generated_date": "2026-05-03",
+  "source_stream": "PI.LENS.REAL-E2E-PIPELINE.EXECUTION-MODE.01",
+  "blockers": [
+    {
+      "id": "BLOCKER-01",
+      "stage": "01_SOURCE_REGISTRATION (cascades to 02–05)",
+      "owner": "scripts/pios/source_intake.py",
+      "current_failure": "step_boundary() calls archive_path.relative_to(REPO_ROOT) for logging; archive_path is absolute external path outside REPO_ROOT; Python raises ValueError; exit 1",
+      "contract_decision_required": "A) require archive within REPO_ROOT OR B) support external archive_path safely without .relative_to() assumption",
+      "recommended_decision": "Option B — support external archive paths; fix scope is single .relative_to() call in print statement; business logic unaffected",
+      "allowed_fix_boundary": "Modify only path rendering in source_intake.py::step_boundary(); guard or remove .relative_to() call; no output schema change; no SHA256 logic change; no inventory step change",
+      "forbidden_workaround": "Moving archive into repo; symlinking in-repo path to external archive; changing source_manifest.json archive_path to relative; bare try/except without design fix",
+      "next_stream": "PI.LENS.SOURCE-INTAKE.CONTRACT-CLOSURE.01"
+    },
+    {
+      "id": "BLOCKER-02",
+      "stage": "06_75X_41X_PIPELINE",
+      "owner": "scripts/pios/run_client_pipeline.py",
+      "current_failure": "phase_02_intake() checks source_manifest[extracted_path] (UUID canonical_repo, absent); phase_03_40x_structural() checks source_manifest[structure_path] (UUID, absent); generic producers write to name-keyed run paths not recognized by orchestrator phases 2 and 3",
+      "contract_decision_required": "A) canonicalize all stages by client slug (name-keyed) OR B) canonicalize by UUID OR C) introduce explicit runtime_bundle_mapping manifest",
+      "recommended_decision": "Option A — name-keyed paths everywhere; phases 2 and 3 should check run_dir/intake/ and run_dir/structure/40.x/ as primary, UUID path as fallback; mirrors existing phase_04 hybrid pattern",
+      "allowed_fix_boundary": "Update run_client_pipeline.py::phase_02_intake() and phase_03_40x_structural() only; add run-dir based path as primary check; retain UUID path as fallback; no change to phases 1, 4, 5, 6, 7, 8, 9; no output schema change",
+      "forbidden_workaround": "Restoring UUID artifacts via PI.BLUEEDGE.CLEAN-INTAKE.01 re-execution; symlinking UUID path to name-keyed run path; changing source_manifest fields to name-keyed values; bypassing phase 2 or 3 verification",
+      "next_stream": "PI.LENS.RUNTIME-BUNDLE-MAPPING.CONTRACT.01"
+    },
+    {
+      "id": "BLOCKER-03",
+      "stage": "08_REPORT_RENDER",
+      "owner": "scripts/pios/lens_generate.sh",
+      "current_failure": "lens_generate.sh derives VAULT_DIR and SEMANTIC_DIR from single --run BASE_DIR; BlueEdge vault_run != semantic_run; no single --run value satisfies both; co-location assumption fails for multi-run pipeline designs",
+      "contract_decision_required": "lens_generate.sh must accept explicit run-role parameters: --run (report_run), --vault-run (vault_run), --semantic-run (semantic_run); defaults to --run when not provided",
+      "recommended_decision": "Add --vault-run and --semantic-run optional parameters; derive VAULT_DIR and SEMANTIC_DIR from these when provided; pass resolved paths to lens_report_generator.py via existing --package-dir and --semantic-bundle-dir args",
+      "allowed_fix_boundary": "Modify only lens_generate.sh parameter parsing and VAULT_DIR/SEMANTIC_DIR derivation; no changes to lens_report_generator.py; no report template changes; no semantic content changes",
+      "forbidden_workaround": "Copying semantic bundle to execution run; symlinking vault into display_run; assuming single-run co-location for all clients; adding co-location enforcement at wrapper level",
+      "next_stream": "PI.LENS.RUNTIME-BUNDLE-MAPPING.CONTRACT.01"
+    },
+    {
+      "id": "BLOCKER-04",
+      "stage": "07_SEMANTIC_BUNDLE",
+      "owner": "future: semantic_bundle_generator.py (does not yet exist)",
+      "current_failure": "No generic semantic bundle producer exists; BlueEdge semantic bundle is READY_LOCKED_REFERENCE only; pipeline cannot produce semantic bundle for new clients",
+      "contract_decision_required": "Stage 07 must either declare LOCKED_REFERENCE_INPUT (BlueEdge) with formal attestation OR have a callable semantic_bundle_generator.py producer (future clients)",
+      "recommended_decision": "BlueEdge: formally declare LOCKED_REFERENCE_INPUT in lens_e2e_assemble.sh stage 07 logic; Future clients: define semantic_bundle_generator.py in PI.LENS.SEMANTIC-BUNDLE.PRODUCER.01 with inputs (vault, 41.x grounded signals, CEU grounding state) and output (semantic_bundle_manifest.json + semantic/ subtree)",
+      "allowed_fix_boundary": "BlueEdge: add LOCKED_REFERENCE_INPUT classification and bundle presence check to wrapper stage 07 in execute mode; Future: new producer stream only; no BlueEdge semantic content changes",
+      "forbidden_workaround": "Treating READY_LOCKED_REFERENCE as permanent valid classification for new clients; generating semantic bundles from partial/unvalidated stage outputs; copying BlueEdge bundle to new client runs",
+      "next_stream": "PI.LENS.SEMANTIC-BUNDLE.PRODUCER.01"
+    },
+    {
+      "id": "BLOCKER-05",
+      "stage": "08_REPORT_RENDER (downstream)",
+      "owner": "scripts/pios/lens_generate.sh",
+      "current_failure": "Downstream of BLOCKER-03; reports cannot render when vault and semantic are not co-located; lens_generate.sh is otherwise correct and validated",
+      "contract_decision_required": "No independent decision required; BLOCKER-05 resolves automatically once BLOCKER-03 is implemented; lens_generate.sh runtime contract is CLOSED for single-run use case",
+      "recommended_decision": "Resolve BLOCKER-03; no additional stream required for BLOCKER-05",
+      "allowed_fix_boundary": "No changes beyond those required for BLOCKER-03; renderer (lens_report_generator.py) must not be reopened; report template structure must not change; output file names must not change",
+      "forbidden_workaround": "Reopening lens_report_generator.py; changing report template structure; modifying semantic bundle content schema; renaming output HTML files",
+      "next_stream": "Resolved by PI.LENS.RUNTIME-BUNDLE-MAPPING.CONTRACT.01 (same stream as BLOCKER-03)"
+    }
+  ]
+}
