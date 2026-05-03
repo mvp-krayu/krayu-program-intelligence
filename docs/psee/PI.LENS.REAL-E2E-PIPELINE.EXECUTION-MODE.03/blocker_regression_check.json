@@ -1,0 +1,16 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE.EXECUTION-MODE.03",
+  "generated_date": "2026-05-03",
+  "blocker_01_source_intake_external_path": "RESOLVED",
+  "blocker_01_evidence": "Stage 01 output: 'Computing SHA256 of .../blueedge-platform-v3_23_0-COMPLETE.tar [EXTERNAL_ABSOLUTE]' — no ValueError; boundary PASS. run_client_pipeline.py Phase 1: 'PASS: Archive present, SHA256 verified'. classify_path() working correctly.",
+  "blocker_02_run_path_identity": "RESOLVED",
+  "blocker_02_evidence": "Stage 06 Phase 2: '[PATH-RESOLUTION] FAIL: intake path not found. Checked: clients/blueedge/psee/runs/run_blueedge_e2e_execute_01/intake / clients/6a6fcdbc.../psee/intake/canonical_repo' — no KeyError; no crash; hybrid fallback working. FAIL is expected (stage 02 never populated CLIENT_RUN path).",
+  "blocker_06_inventory_path": "RESOLVED",
+  "blocker_06_evidence": "Stage 01 inventory: '[PATH-RESOLUTION] mode: MISSING / checked: clients/blueedge/psee/runs/run_blueedge_e2e_execute_01/intake/canonical_repo / checked: clients/6a6fcdbc.../psee/intake/canonical_repo' — no crash; no UUID-only exclusive check; MISSING_INPUT_FAIL_CLOSED result; resolve_inventory_source_path() hybrid logic confirmed working.",
+  "new_blocker_detected": true,
+  "new_blocker_id": "BLOCKER-07",
+  "new_blocker_summary": "Source archive not extracted. The archive blueedge-platform-v3_23_0-COMPLETE.tar exists at external absolute path (SHA256 verified) but has never been unpacked to a canonical_repo directory in any candidate intake path. source_intake.py validates and inventories an existing extraction — it does not perform extraction. Neither CLIENT_RUN (run_blueedge_e2e_execute_01/intake/canonical_repo) nor EXTRACTED_PATH (clients/6a6fcdbc.../psee/intake/canonical_repo) exists. This is a genuine MISSING_INPUT prerequisite, not a script bug. The generic E2E execute chain has no extraction stage. For BlueEdge, extraction was a historical one-time manual operation (PI.BLUEEDGE.CLEAN-INTAKE.01). A source extraction producer is absent from the execute pipeline.",
+  "new_blocker_affected_script": "scripts/pios/lens_e2e_assemble.sh (missing extraction stage) — or: a new extraction producer required",
+  "new_blocker_root_cause": "No extraction stage in execute chain; archive exists at /Users/khorrix/Projects/blueedge-clean-run/source-raw/raw/blueedge-platform-v3_23_0-COMPLETE.tar but contents have never been unpacked to a run-local canonical_repo path for run_blueedge_e2e_execute_01",
+  "cascade_path": "BLOCKER-07 (source not extracted) → stage 01 MISSING_INPUT_FAIL_CLOSED → stage 02-05 NOT_ATTEMPTED → stage 06 intake path absent → BLOCKED_STAGE_06"
+}
