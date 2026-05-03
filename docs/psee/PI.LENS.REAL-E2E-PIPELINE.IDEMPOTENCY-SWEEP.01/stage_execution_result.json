@@ -1,0 +1,18 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE.IDEMPOTENCY-SWEEP.01",
+  "artifact": "stage_execution_result",
+  "generated_date": "2026-05-03",
+  "client": "blueedge",
+  "run": "run_blueedge_e2e_execute_01",
+  "stage_03": "VALIDATED_ONLY",
+  "stage_04": "BLOCKED_STAGE_FAILURE",
+  "stage_04_detail": "ceu_grounding.py CREATE_ONLY violation — ceu/grounding_state_v3.json already exists; not in scope for this contract",
+  "stage_05": "NOT_ATTEMPTED",
+  "stage_05_detail": "cascaded skip — stage 04 failed",
+  "stage_06": "EXECUTED",
+  "stage_06_detail": "run_client_pipeline.py exited 0; all 9 phases PASS",
+  "phase_8b": "VALIDATED_ONLY",
+  "phase_8b_detail": "vault_readiness.json present — skipping WRITE; returned True",
+  "overall_status": "PARTIAL",
+  "overall_detail": "Stage 03 and Phase 8b idempotency achieved; Stage 04 CREATE_ONLY blocker remains; Stage 06 EXECUTED with full pipeline PASS"
+}

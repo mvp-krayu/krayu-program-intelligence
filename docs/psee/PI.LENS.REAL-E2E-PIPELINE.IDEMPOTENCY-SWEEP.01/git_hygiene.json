@@ -1,0 +1,48 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE.IDEMPOTENCY-SWEEP.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-03",
+
+  "branch": "work/psee-runtime",
+  "baseline_commit": "e05a4f7",
+  "baseline_commit_message": "[RECOVER] FastAPI conformance artifact sweep from stash",
+
+  "working_tree_before": "CLEAN",
+  "working_tree_after": "3 modified tracked files + 1 new untracked evidence directory",
+
+  "files_modified_tracked": [
+    "scripts/pios/lens_e2e_assemble.sh",
+    "scripts/pios/run_client_pipeline.py",
+    "clients/blueedge/lens/selector/selector.json"
+  ],
+  "files_created_untracked": [
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.IDEMPOTENCY-SWEEP.01/idempotency_changes.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.IDEMPOTENCY-SWEEP.01/stage_execution_result.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.IDEMPOTENCY-SWEEP.01/validation_result.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.IDEMPOTENCY-SWEEP.01/phase8b_idempotency_log.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.IDEMPOTENCY-SWEEP.01/no_producer_modification_attestation.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.IDEMPOTENCY-SWEEP.01/git_hygiene.json"
+  ],
+
+  "lens_e2e_assemble_sh_changes": [
+    "Stage 03 idempotency check added",
+    "Stage 06 stale BLOCKER-09 comment removed",
+    "Stage 06 echo KNOWN_BLOCKED_STAGE_06 suffix removed",
+    "Stage 06 failure classification changed from BLOCKED_STAGE_06 to BLOCKED_STAGE_FAILURE",
+    "Stage 06 EXEC_NOTES stale BLOCKER-09 text removed"
+  ],
+  "run_client_pipeline_py_changes": [
+    "Phase 8b vault_readiness.json CREATE_ONLY guard changed to VALIDATED_ONLY (return True)"
+  ],
+
+  "pipeline_executed": true,
+  "pipeline_exit_code": 0,
+  "pipeline_all_phases_pass": true,
+  "canonical_artifacts_mutated": false,
+  "producer_scripts_modified": false,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[FIX] PI.LENS.REAL-E2E-PIPELINE.IDEMPOTENCY-SWEEP.01 — Stage 03 + Phase 8b idempotent; BLOCKER-09 stale text removed; run_client_pipeline.py all phases PASS",
+
+  "git_hygiene_status": "COMPLETE"
+}

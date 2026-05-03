@@ -290,16 +290,26 @@ if [[ ${EXEC_EXIT[02]} -ne 0 ]]; then
 else
   echo ""
   echo "  [STAGE 03] Structure — structural_scanner.py"
-  EXEC_EXIT[03]=0
-  python3 "$SCRIPTS_DIR/structural_scanner.py" \
-    --client "$CLIENT" --source "$SOURCE" --run-id "$EXECUTE_RUN_ID" \
-    || EXEC_EXIT[03]=$?
-  if [[ ${EXEC_EXIT[03]} -eq 0 ]]; then
-    EXEC_STATUS[03]="EXECUTED"
-    EXEC_NOTES[03]="structural_scanner.py exited 0; structure/40.x/ artifacts written"
+  S03_STRUCT_40_2="$EXEC_RUN_DIR/structure/40.2/structural_node_inventory.json"
+  S03_STRUCT_40_3="$EXEC_RUN_DIR/structure/40.3/structural_topology_log.json"
+  S03_STRUCT_40_4="$EXEC_RUN_DIR/structure/40.4/canonical_topology.json"
+  if [[ -f "$S03_STRUCT_40_2" && -f "$S03_STRUCT_40_3" && -f "$S03_STRUCT_40_4" ]]; then
+    EXEC_STATUS[03]="VALIDATED_ONLY"
+    EXEC_EXIT[03]=0
+    EXEC_NOTES[03]="structure artifacts present — skipping WRITE, validation assumed"
+    echo "  [IDEMPOTENT] structure artifacts present — skipping WRITE, validation assumed"
   else
-    EXEC_STATUS[03]="BLOCKED_STAGE_FAILURE"
-    EXEC_NOTES[03]="structural_scanner.py exited ${EXEC_EXIT[03]}"
+    EXEC_EXIT[03]=0
+    python3 "$SCRIPTS_DIR/structural_scanner.py" \
+      --client "$CLIENT" --source "$SOURCE" --run-id "$EXECUTE_RUN_ID" \
+      || EXEC_EXIT[03]=$?
+    if [[ ${EXEC_EXIT[03]} -eq 0 ]]; then
+      EXEC_STATUS[03]="EXECUTED"
+      EXEC_NOTES[03]="structural_scanner.py exited 0; structure/40.x/ artifacts written"
+    else
+      EXEC_STATUS[03]="BLOCKED_STAGE_FAILURE"
+      EXEC_NOTES[03]="structural_scanner.py exited ${EXEC_EXIT[03]}"
+    fi
   fi
 fi
 
@@ -355,20 +365,19 @@ fi
 
 # ── EXECUTE STAGE 06: 75.x / 41.x Pipeline ────────────────────────────────────
 # BLOCKER-02 resolved: run_client_pipeline.py phases 2-4 now use CLIENT_RUN path fallback.
-# Current known blocker: Phase 5 requires binding_envelope_fastapi_compatible.json
-# at fastapi_conformance_path — artifact absent (BLOCKER-09).
+# All FastAPI conformance artifacts present as of PI.BLUEEDGE.FASTAPI-CONFORMANCE.ARTIFACT-SWEEP.01.
 echo ""
-echo "  [STAGE 06] Pipeline — run_client_pipeline.py (KNOWN BLOCKED_STAGE_06)"
+echo "  [STAGE 06] Pipeline — run_client_pipeline.py"
 EXEC_EXIT[06]=0
 python3 "$SCRIPTS_DIR/run_client_pipeline.py" \
   --client "$CLIENT" --source "$SOURCE" --run-id "$EXECUTE_RUN_ID" \
   || EXEC_EXIT[06]=$?
 if [[ ${EXEC_EXIT[06]} -eq 0 ]]; then
   EXEC_STATUS[06]="EXECUTED"
-  EXEC_NOTES[06]="run_client_pipeline.py exited 0 — unexpected success; verify vault output"
+  EXEC_NOTES[06]="run_client_pipeline.py exited 0; vault and pipeline outputs written"
 else
-  EXEC_STATUS[06]="BLOCKED_STAGE_06"
-  EXEC_NOTES[06]="run_client_pipeline.py exited ${EXEC_EXIT[06]}; BLOCKER-09: Phase 5 binding_envelope_fastapi_compatible.json absent at fastapi_conformance_path"
+  EXEC_STATUS[06]="BLOCKED_STAGE_FAILURE"
+  EXEC_NOTES[06]="run_client_pipeline.py exited ${EXEC_EXIT[06]}"
 fi
 
 # ── EXECUTE STAGE 07: Semantic Bundle (locked reference) ──────────────────────

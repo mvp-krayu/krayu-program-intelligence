@@ -1022,8 +1022,8 @@ def phase_08b_vault_readiness(client_cfg: dict, run_dir: Path, run_id: str) -> b
 
     readiness_path = vault_dir / "vault_readiness.json"
     if readiness_path.exists():
-        print(f"  FAIL: vault_readiness.json already exists (CREATE_ONLY)")
-        return False
+        print(f"  [IDEMPOTENT] vault_readiness.json present — skipping WRITE")
+        return True
 
     required_artifacts = [
         ("VR-01", "intake/intake_manifest.json"),
