@@ -1,0 +1,39 @@
+{
+  "contract_id": "PI.LENS.RUNTIME-BUNDLE-MAPPING.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-03",
+
+  "branch": "work/psee-runtime",
+  "baseline_commit": "47c5b21",
+  "baseline_commit_message": "[CLEANUP] LENS runtime selector cleanup and workspace link routing",
+
+  "working_tree_before": "CLEAN",
+  "working_tree_after": "4 files modified, 1 evidence directory created",
+
+  "files_modified_tracked": [
+    "app/gauge-product/pages/api/runtime-list.js",
+    "app/gauge-product/pages/api/generate-report.js",
+    "app/gauge-product/pages/lens.js",
+    "app/gauge-product/pages/tier2/workspace.js"
+  ],
+  "files_created_tracked": [
+    "docs/psee/PI.LENS.RUNTIME-BUNDLE-MAPPING.01/runtime_bundle_mapping_summary.md",
+    "docs/psee/PI.LENS.RUNTIME-BUNDLE-MAPPING.01/api_contract.json",
+    "docs/psee/PI.LENS.RUNTIME-BUNDLE-MAPPING.01/workspace_binding_summary.md",
+    "docs/psee/PI.LENS.RUNTIME-BUNDLE-MAPPING.01/validation_result.json",
+    "docs/psee/PI.LENS.RUNTIME-BUNDLE-MAPPING.01/no_pipeline_attestation.md",
+    "docs/psee/PI.LENS.RUNTIME-BUNDLE-MAPPING.01/git_hygiene.json"
+  ],
+  "files_modified_gitignored": [],
+
+  "renderer_modified": false,
+  "pipeline_executed": false,
+  "canonical_reports_modified": false,
+  "semantic_bundle_modified": false,
+  "fastapi_involved": false,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[BINDING] PI.LENS.RUNTIME-BUNDLE-MAPPING.01 — runtime bundle mapping; vault_run distinct from display_run; workspace uses vaultRun for API calls",
+
+  "git_hygiene_status": "COMPLETE"
+}

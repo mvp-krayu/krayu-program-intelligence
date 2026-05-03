@@ -303,20 +303,20 @@ function RuntimeSelector() {
       .then(data => {
         const list = Array.isArray(data) ? data : []
         setRuntimes(list)
-        if (list.length > 0) setSelected(`${list[0].client}||${list[0].run}`)
+        if (list.length > 0) setSelected(`${list[0].client}||${list[0].display_run}`)
       })
       .catch(() => {})
   }, [])
 
-  const rt = runtimes.find(r => `${r.client}||${r.run}` === selected)
+  const rt = runtimes.find(r => `${r.client}||${r.display_run}` === selected)
 
   function handleGenerate() {
     if (!rt) return
     setGenState('loading')
-    fetch(`/api/generate-report?client=${encodeURIComponent(rt.client)}&run=${encodeURIComponent(rt.run)}`)
+    fetch(`/api/generate-report?client=${encodeURIComponent(rt.client)}&run=${encodeURIComponent(rt.display_run)}`)
       .then(r => r.json())
       .then(data => {
-        if (data.status === 'success') setGenState({ urls: data.report_urls })
+        if (data.status === 'success') setGenState({ urls: data.report_urls, workspaceUrl: data.workspace_url })
         else setGenState({ error: data.reason || 'GENERATION_FAILED' })
       })
       .catch(err => setGenState({ error: err.message || 'FETCH_ERROR' }))
@@ -340,8 +340,8 @@ function RuntimeSelector() {
         >
           {runtimes.length === 0 && <option value="">Loading…</option>}
           {runtimes.map(r => (
-            <option key={`${r.client}||${r.run}`} value={`${r.client}||${r.run}`}>
-              {r.client} / {r.run}
+            <option key={`${r.client}||${r.display_run}`} value={`${r.client}||${r.display_run}`}>
+              {r.client} / {r.display_run}
             </option>
           ))}
         </select>
@@ -396,9 +396,16 @@ function RuntimeSelector() {
         <button
           className="lens-report-workspace"
           disabled={!rt}
-          onClick={() => rt && window.open(
-            `/tier2/workspace?client=${encodeURIComponent(rt.client)}&run=${encodeURIComponent(rt.run)}`
-          )}
+          onClick={() => {
+            if (!rt) return
+            const url = genState?.workspaceUrl || (
+              `/tier2/workspace?client=${encodeURIComponent(rt.client)}` +
+              `&displayRun=${encodeURIComponent(rt.display_run)}` +
+              `&vaultRun=${encodeURIComponent(rt.vault_run)}` +
+              `&reportRun=${encodeURIComponent(rt.report_run)}`
+            )
+            window.open(url)
+          }}
         >
           Diagnostic Workspace
         </button>

@@ -14,6 +14,7 @@
  */
 
 import { useState, useEffect, useRef } from 'react'
+import { useRouter } from 'next/router'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 
@@ -521,7 +522,7 @@ function EvidenceResult({ data, vaultIndex, langLayer = {} }) {
 // Zone card — investigation trigger, not graph container
 // ---------------------------------------------------------------------------
 
-function ZoneCard({ zone, vaultIndex, defaultOpen, isActive, onActivate, langLayer = {} }) {
+function ZoneCard({ zone, vaultIndex, defaultOpen, isActive, onActivate, langLayer = {}, effectiveClient, effectiveVaultRun }) {
   const [expanded, setExpanded] = useState(defaultOpen || false)
   const [qs, setQs]             = useState(null)
   const resultRef               = useRef(null)
@@ -535,9 +536,8 @@ function ZoneCard({ zone, vaultIndex, defaultOpen, isActive, onActivate, langLay
   async function fireQuery(mode) {
     setQs({ loading: true, mode })
     try {
-      const isPzZone = zone.zone_id?.startsWith('PZ-')
-      const queryUrl = (isPzZone && USE_SECOND_CLIENT)
-        ? `/api/query?zone_id=${zone.zone_id}&mode=${mode}&client=${_SC_CLIENT_ID}&runId=${_SC_RUN_ID}`
+      const queryUrl = (effectiveClient && effectiveVaultRun)
+        ? `/api/query?zone_id=${zone.zone_id}&mode=${mode}&client=${effectiveClient}&runId=${effectiveVaultRun}`
         : `/api/query?zone_id=${zone.zone_id}&mode=${mode}`
       const res  = await fetch(queryUrl)
       const data = await res.json()
@@ -651,14 +651,6 @@ function ZoneCard({ zone, vaultIndex, defaultOpen, isActive, onActivate, langLay
 }
 
 // ---------------------------------------------------------------------------
-// Second-client projection config
-// ---------------------------------------------------------------------------
-
-const USE_SECOND_CLIENT = true
-const _SC_CLIENT_ID     = 'e65d2f0a-dfa7-4257-9333-fcbb583f0880'
-const _SC_RUN_ID        = 'run_02_oss_fastapi'
-
-// ---------------------------------------------------------------------------
 // Page
 // ---------------------------------------------------------------------------
 
@@ -671,6 +663,13 @@ const GRAPH_MODE_LABEL = {
 }
 
 export default function Tier2WorkspacePage() {
+  const router = useRouter()
+  // Bundle params: vaultRun drives all API calls; displayRun is UI label; reportRun is report context.
+  // Tolerate legacy runId param as fallback for backward compat.
+  const effectiveClient   = router.query.client     || null
+  const effectiveVaultRun = router.query.vaultRun   || router.query.runId || null
+  const effectiveDisplayRun = router.query.displayRun || router.query.runId || null
+
   const [pageState, setPageState]           = useState('loading')
   const [zonesData, setZonesData]           = useState(null)
   const [vaultIndex, setVaultIndex]         = useState(null)
@@ -694,10 +693,11 @@ export default function Tier2WorkspacePage() {
       .catch(() => {})
   }, [])
 
-  // Load zones
+  // Load zones — wait for router hydration so vaultRun is available
   useEffect(() => {
-    const zonesUrl = USE_SECOND_CLIENT
-      ? `/api/zones?client=${_SC_CLIENT_ID}&runId=${_SC_RUN_ID}`
+    if (!router.isReady) return
+    const zonesUrl = (effectiveClient && effectiveVaultRun)
+      ? `/api/zones?client=${effectiveClient}&runId=${effectiveVaultRun}`
       : '/api/zones'
     fetch(zonesUrl)
       .then(r => r.json())
@@ -710,7 +710,7 @@ export default function Tier2WorkspacePage() {
         }
       })
       .catch(() => setPageState('error'))
-  }, [])
+  }, [router.isReady, effectiveClient, effectiveVaultRun])
 
   // Load vault index
   useEffect(() => {
@@ -768,12 +768,9 @@ export default function Tier2WorkspacePage() {
     if (!zonesData) return
     setGraphPanelQuery({ loading: true, mode, zoneId })
 
-    const buildUrl = m => {
-      const isPzZone = zoneId.startsWith('PZ-')
-      return (isPzZone && USE_SECOND_CLIENT)
-        ? `/api/query?zone_id=${zoneId}&mode=${m}&client=${_SC_CLIENT_ID}&runId=${_SC_RUN_ID}`
-        : `/api/query?zone_id=${zoneId}&mode=${m}`
-    }
+    const buildUrl = m => (effectiveClient && effectiveVaultRun)
+      ? `/api/query?zone_id=${zoneId}&mode=${m}&client=${effectiveClient}&runId=${effectiveVaultRun}`
+      : `/api/query?zone_id=${zoneId}&mode=${m}`
 
     // FULL_EXPLANATION: fire WHY + EVIDENCE + TRACE in parallel, render all three panels
     if (mode === 'FULL_EXPLANATION') {
@@ -840,7 +837,9 @@ export default function Tier2WorkspacePage() {
       <div className="ws-topbar">
         <Link href="/" className="ws-back-link">← LENS</Link>
         <span className="ws-topbar-title">Tier-2 Diagnostic Workspace</span>
-        {zonesData && <span className="ws-topbar-run">{zonesData.run_id}</span>}
+        {(effectiveDisplayRun || zonesData) && (
+          <span className="ws-topbar-run">{effectiveDisplayRun || zonesData?.run_id}</span>
+        )}
       </div>
 
       {pageState === 'loading' && (
@@ -978,6 +977,8 @@ export default function Tier2WorkspacePage() {
                 isActive={activeZone?.zone_id === zone.zone_id}
                 onActivate={handleActivate}
                 langLayer={langLayer}
+                effectiveClient={effectiveClient}
+                effectiveVaultRun={effectiveVaultRun}
               />
             ))}
           </div>

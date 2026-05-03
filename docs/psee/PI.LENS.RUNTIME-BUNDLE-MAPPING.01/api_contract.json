@@ -1,0 +1,32 @@
+{
+  "contract_id": "PI.LENS.RUNTIME-BUNDLE-MAPPING.01",
+  "generated_date": "2026-05-03",
+  "runtime_list_endpoint": "/api/runtime-list",
+  "generate_endpoint": "/api/generate-report",
+  "bundle_fields": [
+    "client",
+    "display_run",
+    "report_run",
+    "vault_run",
+    "semantic_run",
+    "reports_path",
+    "vault_path",
+    "semantic_path",
+    "graph_state_path"
+  ],
+  "bundle_override_key_format": "<client>::<display_run>",
+  "known_overrides": [
+    {
+      "key": "blueedge::run_blueedge_productized_01_fixed",
+      "vault_run": "run_blueedge_productized_01",
+      "semantic_run": "run_blueedge_productized_01_fixed"
+    }
+  ],
+  "workspace_url_params": {
+    "client": "client identifier",
+    "displayRun": "display_run — used for UI labels",
+    "vaultRun": "vault_run — used for all API calls (zones, query, topology, signals)",
+    "reportRun": "report_run — used for report context",
+    "runId": "legacy fallback — tolerated if bundle params absent"
+  }
+}
