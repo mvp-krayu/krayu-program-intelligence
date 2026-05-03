@@ -1,0 +1,37 @@
+{
+  "contract_id": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01.RECOVERY",
+  "generated_date": "2026-05-03",
+
+  "target_artifact": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01/recomputed/dom_path_domain_layer.json",
+  "artifact_recovered": true,
+  "recovery_mode": "DIRECT_RESTORE",
+  "source_known": true,
+  "source_ref": "stash@{0}^3",
+  "source_stash_description": "WIP on work/psee-runtime: 40a5db1 lens: lock e2e pipeline reality and conformance evidence",
+  "source_path": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01/recomputed/dom_path_domain_layer.json (in stash)",
+  "sha256": "f5e2a0dfeedeab8f2450b2dc6894fc63d70ed28cf8429eaed7e229f898ca29a6",
+
+  "json_valid": true,
+  "source_contract_id": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01",
+  "source_artifact_field": "dom_path_domain_layer",
+  "dom_groups_count": 13,
+  "total_nodes": 35,
+  "content_modified": false,
+
+  "phase8a_status": "PARTIAL",
+  "phase8a_command": "python3 scripts/pios/run_client_pipeline.py --client blueedge --source source_01 --run-id run_blueedge_e2e_execute_01 --phase 7",
+  "phase8a_dom_artifact_consumed": true,
+  "phase8a_vault_artifacts_written": [
+    "clients/blueedge/psee/runs/run_blueedge_e2e_execute_01/vault/coverage_state.json",
+    "clients/blueedge/psee/runs/run_blueedge_e2e_execute_01/vault/reconstruction_state.json",
+    "clients/blueedge/psee/runs/run_blueedge_e2e_execute_01/vault/gauge_state.json",
+    "clients/blueedge/psee/runs/run_blueedge_e2e_execute_01/vault/canonical_topology.json"
+  ],
+  "phase8a_next_blocker": "signal_registry_fastapi_compatible.json absent at docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/",
+  "phase8a_next_blocker_in_stash": true,
+
+  "artifact_fabricated": false,
+  "pipeline_full_execution": false,
+  "canonical_artifacts_mutated": false,
+  "validation_status": "PASS"
+}

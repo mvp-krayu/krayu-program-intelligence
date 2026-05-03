@@ -1,0 +1,187 @@
+{
+  "contract_id": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01",
+  "artifact": "dom_path_domain_layer",
+  "block": "BLOCK_D",
+  "generated_date": "2026-04-29",
+
+  "derivation_basis": "PATH_EVIDENCE_ONLY",
+  "evidence_source": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/ceu_node_map.json",
+  "ceu_role_used_as": "SUPPORTING_CONTEXT_ONLY — CEU IDs referenced for cross-reference only; CEU functional roles did NOT define DOM group boundaries",
+  "total_nodes": 35,
+  "total_dom_groups": 13,
+
+  "derivation_rule": "Group nodes by longest common path prefix that represents a meaningful structural boundary. Boundaries determined by: directory level changes, distinct functional path segments, and path prefix uniqueness. No semantic invention — groupings emerge from path structure alone.",
+
+  "dom_groups": [
+
+    {
+      "dom_id": "DOM-01",
+      "dom_label": "root_configuration",
+      "path_patterns": ["*.env.example", "docker-compose*.yml"],
+      "derivation_rule": "Root-level configuration and orchestration files. No subdirectory prefix — identified by file extension patterns at repo root.",
+      "included_nodes": ["NODE-0001", "NODE-0003", "NODE-0004"],
+      "evidence_paths": [".env.example", "docker-compose.monitoring.yml", "docker-compose.yml"],
+      "node_count": 3,
+      "confidence": "HIGH — unambiguous root-level path grouping"
+    },
+
+    {
+      "dom_id": "DOM-02",
+      "dom_label": "ci_cd_workflows",
+      "path_patterns": [".github/workflows/"],
+      "derivation_rule": "All files under .github/workflows/ path prefix.",
+      "included_nodes": ["NODE-0007", "NODE-0008"],
+      "evidence_paths": [".github/workflows/ci.yml", ".github/workflows/deploy.yml"],
+      "node_count": 2,
+      "confidence": "HIGH — distinct path prefix .github/workflows/"
+    },
+
+    {
+      "dom_id": "DOM-03",
+      "dom_label": "backend_migrations",
+      "path_patterns": ["backend/migrations/"],
+      "derivation_rule": "All files under backend/migrations/ path prefix.",
+      "included_nodes": ["NODE-0015", "NODE-0016", "NODE-0018"],
+      "evidence_paths": ["backend/migrations", "backend/migrations/init.sql", "backend/migrations/seeds/seed-driver-sessions.sql"],
+      "node_count": 3,
+      "confidence": "HIGH — distinct path prefix backend/migrations/"
+    },
+
+    {
+      "dom_id": "DOM-04",
+      "dom_label": "backend_app_root",
+      "path_patterns": ["backend/src/app.module.ts", "backend/src/main.ts"],
+      "derivation_rule": "Files at backend/src/ root level (not in subdirectory). These are the application entry points.",
+      "included_nodes": ["NODE-0021", "NODE-0022"],
+      "evidence_paths": ["backend/src/app.module.ts", "backend/src/main.ts"],
+      "node_count": 2,
+      "multi_boundary_note": "NODE-0021 is MULTI_BOUNDARY in CEU model — path-wise it belongs to backend/src/ root; CEU dual-assignment does not affect path-based DOM grouping",
+      "confidence": "HIGH — backend/src/ root level files"
+    },
+
+    {
+      "dom_id": "DOM-05",
+      "dom_label": "backend_common",
+      "path_patterns": ["backend/src/common/"],
+      "derivation_rule": "All files under backend/src/common/ path prefix (cache, guards, versioning subdirectories).",
+      "included_nodes": ["NODE-0027", "NODE-0030", "NODE-0039", "NODE-0040", "NODE-0053"],
+      "evidence_paths": [
+        "backend/src/common/cache/cache.module.ts",
+        "backend/src/common/cache/index.ts",
+        "backend/src/common/guards/jwt-auth.guard.ts",
+        "backend/src/common/guards/roles.guard.spec.ts",
+        "backend/src/common/versioning/api-versioning.spec.ts"
+      ],
+      "node_count": 5,
+      "confidence": "HIGH — distinct path prefix backend/src/common/"
+    },
+
+    {
+      "dom_id": "DOM-06",
+      "dom_label": "backend_config",
+      "path_patterns": ["backend/src/config/"],
+      "derivation_rule": "All files under backend/src/config/ path prefix.",
+      "included_nodes": ["NODE-0060", "NODE-0061"],
+      "evidence_paths": ["backend/src/config/data-source.ts", "backend/src/config/database.config.ts"],
+      "node_count": 2,
+      "confidence": "HIGH — distinct path prefix backend/src/config/"
+    },
+
+    {
+      "dom_id": "DOM-07",
+      "dom_label": "backend_events",
+      "path_patterns": ["backend/src/events/"],
+      "derivation_rule": "All files under backend/src/events/ path prefix.",
+      "included_nodes": ["NODE-0071"],
+      "evidence_paths": ["backend/src/events/fleet-events.spec.ts"],
+      "node_count": 1,
+      "confidence": "MEDIUM — single node; path prefix is distinct but group has minimal coverage"
+    },
+
+    {
+      "dom_id": "DOM-08",
+      "dom_label": "backend_health",
+      "path_patterns": ["backend/src/health/"],
+      "derivation_rule": "All files under backend/src/health/ path prefix.",
+      "included_nodes": ["NODE-0084", "NODE-0088"],
+      "evidence_paths": ["backend/src/health/health.controller.ts", "backend/src/health/prometheus.service.ts"],
+      "node_count": 2,
+      "confidence": "HIGH — distinct path prefix backend/src/health/"
+    },
+
+    {
+      "dom_id": "DOM-09",
+      "dom_label": "backend_modules",
+      "path_patterns": ["backend/src/modules/"],
+      "derivation_rule": "All files under backend/src/modules/ path prefix (all subdirectories: aftersales, agentic-ai, auth).",
+      "included_nodes": ["NODE-0098", "NODE-0105", "NODE-0136", "NODE-0137", "NODE-0138", "NODE-0139"],
+      "evidence_paths": [
+        "backend/src/modules/aftersales/aftersales.controller.ts",
+        "backend/src/modules/agentic-ai/agentic-ai.controller.ts",
+        "backend/src/modules/auth/auth.controller.ts",
+        "backend/src/modules/auth/auth.module.ts",
+        "backend/src/modules/auth/auth.service.ts",
+        "backend/src/modules/auth/auth.spec.ts"
+      ],
+      "node_count": 6,
+      "confidence": "HIGH — distinct path prefix backend/src/modules/"
+    },
+
+    {
+      "dom_id": "DOM-10",
+      "dom_label": "frontend",
+      "path_patterns": ["frontend/"],
+      "derivation_rule": "All files under frontend/ path prefix.",
+      "included_nodes": ["NODE-0562", "NODE-0565", "NODE-0566"],
+      "evidence_paths": ["frontend/App.tsx", "frontend/index.html", "frontend/main.tsx"],
+      "node_count": 3,
+      "confidence": "HIGH — distinct path prefix frontend/"
+    },
+
+    {
+      "dom_id": "DOM-11",
+      "dom_label": "load_tests",
+      "path_patterns": ["load-tests/"],
+      "derivation_rule": "All files under load-tests/ path prefix.",
+      "included_nodes": ["NODE-0929", "NODE-0930"],
+      "evidence_paths": ["load-tests/api-load.js", "load-tests/run.sh"],
+      "node_count": 2,
+      "confidence": "HIGH — distinct path prefix load-tests/"
+    },
+
+    {
+      "dom_id": "DOM-12",
+      "dom_label": "monitoring",
+      "path_patterns": ["monitoring/"],
+      "derivation_rule": "All files under monitoring/ path prefix.",
+      "included_nodes": ["NODE-0935", "NODE-0938"],
+      "evidence_paths": ["monitoring/grafana/dashboards/fleet-operations.json", "monitoring/grafana/provisioning/dashboards/default.yml"],
+      "node_count": 2,
+      "confidence": "HIGH — distinct path prefix monitoring/"
+    },
+
+    {
+      "dom_id": "DOM-13",
+      "dom_label": "svg_agents",
+      "path_patterns": ["svg-agents/"],
+      "derivation_rule": "All files under svg-agents/ path prefix.",
+      "included_nodes": ["NODE-0950", "NODE-0952"],
+      "evidence_paths": ["svg-agents/hasi-bridge/hasi_bridge.py", "svg-agents/sensor-collector/sensor_collector.py"],
+      "node_count": 2,
+      "confidence": "HIGH — distinct path prefix svg-agents/"
+    }
+
+  ],
+
+  "node_coverage": {
+    "total_nodes": 35,
+    "nodes_assigned": 35,
+    "unassigned_nodes": 0,
+    "coverage_complete": true
+  },
+
+  "dom_layer_status": "COMPLETE",
+  "bi_03_status": "RESOLVED — DOM/path-domain layer successfully derived from path evidence. All 35 nodes assigned to 13 DOM groups. No CEU functional roles used to define group boundaries.",
+
+  "downstream_use_note": "DOM layer provides anchor_id values for FastAPI-compatible pressure_zone_state (DOMAIN_ZONE type). Zone-to-DOM mapping requires additional cross-referencing: each zone's node set intersects with DOM groups to determine zone anchor domain. This mapping is available from node_map and zone unique_nodes data. See binding_envelope prerequisites."
+}
