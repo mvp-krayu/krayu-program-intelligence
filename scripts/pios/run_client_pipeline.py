@@ -62,6 +62,7 @@ def parse_args():
     p.add_argument("--client", required=True, help="Client ID (e.g. blueedge)")
     p.add_argument("--source", required=True, help="Source ID (e.g. source_01)")
     p.add_argument("--run-id", required=True, help="Run identifier (e.g. run_be_orchestrated_01)")
+    p.add_argument("--phase", type=int, default=None, help="Execute single phase only (1-9)")
     return p.parse_args()
 
 
@@ -151,22 +152,68 @@ def phase_01_source_boundary(source_manifest: dict) -> bool:
 
 # ── Phase 2: Intake Verification ─────────────────────────────────────────────
 
-def phase_02_intake(source_manifest: dict) -> bool:
-    extracted = REPO_ROOT / source_manifest["extracted_path"]
-    if not extracted.exists():
-        print(f"  FAIL: canonical_repo not found at {extracted}")
-        print(f"  REMEDIATION: Re-execute PI.BLUEEDGE.CLEAN-INTAKE.01 to extract the archive.")
+def phase_02_intake(source_manifest: dict, run_dir: Path) -> bool:
+    # Prefer run-derived generic path (source_intake.py output).
+    # Fall back to manifest-registered UUID path for legacy/BlueEdge runs.
+    # PI.LENS.RUN-PATH-IDENTITY.CONTRACT-CLOSURE.01
+    generic_path = run_dir / "intake"
+    manifest_path_str = source_manifest.get("extracted_path", "")
+    manifest_path = (REPO_ROOT / manifest_path_str) if manifest_path_str else None
+
+    if generic_path.exists():
+        intake_base = generic_path
+        mode = "CLIENT_RUN"
+        resolved = str(generic_path.relative_to(REPO_ROOT))
+    elif manifest_path and manifest_path.exists():
+        intake_base = manifest_path
+        mode = "EXTRACTED_PATH"
+        resolved = str(manifest_path.relative_to(REPO_ROOT))
+    else:
+        checked = [str(generic_path.relative_to(REPO_ROOT))]
+        if manifest_path:
+            checked.append(str(manifest_path.relative_to(REPO_ROOT)))
+        print(f"  [PATH-RESOLUTION] FAIL: intake path not found. Checked:")
+        for p in checked:
+            print(f"    {p}")
+        print(f"  REMEDIATION: Re-execute source_intake.py to populate intake directory.")
         return False
 
-    file_count = sum(1 for _ in extracted.rglob("*") if _.is_file())
-    print(f"  PASS: canonical_repo present ({file_count} files at {extracted.relative_to(REPO_ROOT)})")
+    print(f"  [PATH-RESOLUTION] mode: {mode}; resolved_path: {resolved}")
+    file_count = sum(1 for _ in intake_base.rglob("*") if _.is_file())
+    print(f"  PASS: intake present ({file_count} files at {resolved})")
     return True
 
 
 # ── Phase 3: 40.x Structural Verification ────────────────────────────────────
 
-def phase_03_40x_structural(source_manifest: dict) -> bool:
-    struct_path = REPO_ROOT / source_manifest["structure_path"]
+def phase_03_40x_structural(source_manifest: dict, run_dir: Path) -> bool:
+    # Prefer run-derived generic path (structural_scanner.py output).
+    # Fall back to manifest-registered UUID path for legacy/BlueEdge runs.
+    # PI.LENS.RUN-PATH-IDENTITY.CONTRACT-CLOSURE.01
+    generic_path = run_dir / "structure"
+    manifest_path_str = source_manifest.get("structure_path", "")
+    manifest_path = (REPO_ROOT / manifest_path_str) if manifest_path_str else None
+
+    if generic_path.exists():
+        struct_path = generic_path
+        mode = "CLIENT_RUN"
+        resolved = str(generic_path.relative_to(REPO_ROOT))
+    elif manifest_path and manifest_path.exists():
+        struct_path = manifest_path
+        mode = "EXTRACTED_PATH"
+        resolved = str(manifest_path.relative_to(REPO_ROOT))
+    else:
+        checked = [str(generic_path.relative_to(REPO_ROOT))]
+        if manifest_path:
+            checked.append(str(manifest_path.relative_to(REPO_ROOT)))
+        print(f"  [PATH-RESOLUTION] FAIL: structure path not found. Checked:")
+        for p in checked:
+            print(f"    {p}")
+        print(f"  REMEDIATION: Re-execute structural_scanner.py to populate structure directory.")
+        return False
+
+    print(f"  [PATH-RESOLUTION] mode: {mode}; resolved_path: {resolved}")
+
     required = {
         "40.2/structural_node_inventory.json": "955-node inventory",
         "40.3/structural_topology_log.json": "1937-relation topology",
@@ -175,7 +222,7 @@ def phase_03_40x_structural(source_manifest: dict) -> bool:
     for rel, desc in required.items():
         p = struct_path / rel
         if not p.exists():
-            print(f"  FAIL: Missing {p}")
+            print(f"  FAIL: Missing {p.relative_to(REPO_ROOT)}")
             print(f"  REMEDIATION: Re-execute PI.BLUEEDGE.STRUCTURAL-PIPELINE.40X.01")
             return False
 
@@ -1136,9 +1183,9 @@ def main() -> int:
         ("Phase 1  — Source Boundary",
          lambda: phase_01_source_boundary(source_manifest)),
         ("Phase 2  — Intake Verification",
-         lambda: phase_02_intake(source_manifest)),
+         lambda: phase_02_intake(source_manifest, run_dir)),
         ("Phase 3  — 40.x Structural Verification",
-         lambda: phase_03_40x_structural(source_manifest)),
+         lambda: phase_03_40x_structural(source_manifest, run_dir)),
         ("Phase 4  — CEU Grounding Verification",
          lambda: phase_04_ceu_grounding(source_manifest, run_dir)),
         ("Phase 5  — Build Binding Envelope",
@@ -1152,6 +1199,13 @@ def main() -> int:
         ("Phase 9  — Selector Update",
          lambda: phase_09_selector_update(client_cfg, run_id)),
     ]
+
+    if args.phase is not None:
+        if args.phase < 1 or args.phase > len(phases):
+            print(f"  ERROR: --phase {args.phase} out of range (valid: 1-{len(phases)})")
+            return 1
+        phases = [phases[args.phase - 1]]
+        print(f"  mode: single-phase ({args.phase})")
 
     results: dict[str, str] = {}
     for phase_name, fn in phases:

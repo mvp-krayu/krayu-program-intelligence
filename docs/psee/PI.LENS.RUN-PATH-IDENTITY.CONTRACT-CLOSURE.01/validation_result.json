@@ -1,0 +1,22 @@
+{
+  "contract_id": "PI.LENS.RUN-PATH-IDENTITY.CONTRACT-CLOSURE.01",
+  "generated_date": "2026-05-03",
+  "run_client_pipeline_py_modified": true,
+  "syntax_validation": "PASS",
+  "phase_arg_added": true,
+  "phase_02_hybrid_path_implemented": true,
+  "phase_03_hybrid_path_implemented": true,
+  "path_resolution_logging_present": true,
+  "crash_on_missing_extracted_path": false,
+  "validation_run_exit_code": 1,
+  "pipeline_executed": false,
+  "canonical_artifacts_mutated": false,
+  "notes": [
+    "exit code 1 is expected and correct: neither CLIENT_RUN nor EXTRACTED_PATH intake path exists for run_blueedge_intake_contract_closure_01",
+    "[PATH-RESOLUTION] block printed with both checked paths listed",
+    "no KeyError or unhandled exception — clean FAIL CLOSED",
+    "mode: single-phase (2) printed confirming --phase argument functional",
+    "BLOCKER-02 closed: run_client_pipeline.py phases 2+3 no longer crash on absent UUID manifest keys"
+  ],
+  "validation_status": "PASS"
+}
