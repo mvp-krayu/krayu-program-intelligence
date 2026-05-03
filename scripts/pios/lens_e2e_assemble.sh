@@ -184,9 +184,8 @@ fi
 # ── EXECUTE MODE ──────────────────────────────────────────────────────────────
 #
 # Execution run is isolated from canonical demo run to protect canonical reports.
-# Stage 06 (run_client_pipeline.py) is a known BLOCKED_STAGE_06:
-#   source_manifest["extracted_path"] (UUID canonical_repo) is absent;
-#   run_client_pipeline.py Phase 2 requires it — path contract mismatch.
+# Stage 00 (source_extract.py) extracts archive to canonical_repo before intake.
+#   PI.LENS.REAL-E2E-PIPELINE.BLOCKER-07-CLOSURE.01 — BLOCKER-07 closed.
 # Stage 08 (lens_generate.sh) requires vault AND semantic co-located in same run.
 #   With stage 06 blocked, vault is absent in execution run; classified BLOCKED_STAGE_FAILURE.
 
@@ -198,20 +197,49 @@ declare -A EXEC_STATUS
 declare -A EXEC_EXIT
 declare -A EXEC_NOTES
 
-# ── EXECUTE STAGE 01: Source Registration (validate-only) ─────────────────────
+# ── EXECUTE STAGE 00: Source Extraction ───────────────────────────────────────
+# Extract archive to canonical_repo if not already present (idempotent via --allow-existing).
 echo ""
-echo "  [STAGE 01] Source registration — validate-only"
-EXEC_EXIT[01]=0
-python3 "$SCRIPTS_DIR/source_intake.py" \
-  --client "$CLIENT" --source "$SOURCE" --run-id "$EXECUTE_RUN_ID" \
-  --validate-only \
-  || EXEC_EXIT[01]=$?
-if [[ ${EXEC_EXIT[01]} -eq 0 ]]; then
-  EXEC_STATUS[01]="VALIDATED_ONLY"
-  EXEC_NOTES[01]="source_intake.py --validate-only exited 0; source boundary confirmed"
+echo "  [STAGE 00] Source extraction — source_extract.py"
+EXEC_EXIT[00]=0
+EXEC_CANONICAL_REPO="$EXEC_RUN_DIR/intake/canonical_repo"
+if [[ -d "$EXEC_CANONICAL_REPO" ]]; then
+  EXEC_STATUS[00]="VALIDATED_ONLY"
+  EXEC_NOTES[00]="canonical_repo already present at $EXECUTE_RUN_ID/intake/canonical_repo; extraction skipped"
+  echo "  canonical_repo already present — skipping extraction"
 else
-  EXEC_STATUS[01]="BLOCKED_STAGE_FAILURE"
-  EXEC_NOTES[01]="source_intake.py --validate-only exited ${EXEC_EXIT[01]}"
+  python3 "$SCRIPTS_DIR/source_extract.py" \
+    --client "$CLIENT" --source "$SOURCE" --run-id "$EXECUTE_RUN_ID" \
+    || EXEC_EXIT[00]=$?
+  if [[ ${EXEC_EXIT[00]} -eq 0 ]]; then
+    EXEC_STATUS[00]="EXECUTED"
+    EXEC_NOTES[00]="source_extract.py exited 0; canonical_repo written to $EXECUTE_RUN_ID/intake/canonical_repo"
+  else
+    EXEC_STATUS[00]="BLOCKED_STAGE_FAILURE"
+    EXEC_NOTES[00]="source_extract.py exited ${EXEC_EXIT[00]}; extraction failed"
+  fi
+fi
+
+# ── EXECUTE STAGE 01: Source Registration (validate-only) ─────────────────────
+if [[ ${EXEC_EXIT[00]} -ne 0 ]]; then
+  EXEC_STATUS[01]="NOT_ATTEMPTED"
+  EXEC_EXIT[01]=-1
+  EXEC_NOTES[01]="skipped — stage 00 (extraction) failed"
+else
+  echo ""
+  echo "  [STAGE 01] Source registration — validate-only"
+  EXEC_EXIT[01]=0
+  python3 "$SCRIPTS_DIR/source_intake.py" \
+    --client "$CLIENT" --source "$SOURCE" --run-id "$EXECUTE_RUN_ID" \
+    --validate-only \
+    || EXEC_EXIT[01]=$?
+  if [[ ${EXEC_EXIT[01]} -eq 0 ]]; then
+    EXEC_STATUS[01]="VALIDATED_ONLY"
+    EXEC_NOTES[01]="source_intake.py --validate-only exited 0; source boundary and inventory confirmed"
+  else
+    EXEC_STATUS[01]="BLOCKED_STAGE_FAILURE"
+    EXEC_NOTES[01]="source_intake.py --validate-only exited ${EXEC_EXIT[01]}"
+  fi
 fi
 
 # ── EXECUTE STAGE 02: Intake ───────────────────────────────────────────────────
@@ -391,7 +419,7 @@ fi
 
 # ── EXECUTE OVERALL STATUS ─────────────────────────────────────────────────────
 EXEC_OVERALL="COMPLETE"
-for STAGE in 01 02 03 04 05 06 07 08 09; do
+for STAGE in 00 01 02 03 04 05 06 07 08 09; do
   S="${EXEC_STATUS[$STAGE]}"
   if [[ "$S" == "BLOCKED_STAGE_06" || "$S" == "BLOCKED_STAGE_FAILURE" ]]; then
     EXEC_OVERALL="PARTIAL"
@@ -412,7 +440,7 @@ echo "  execute run:  $EXECUTE_RUN_ID"
 echo ""
 printf "  %-8s %-40s %-6s %s\n" "STAGE" "STATUS" "EXIT" "NOTES"
 printf "  %-8s %-40s %-6s %s\n" "-----" "------" "----" "-----"
-for STAGE in 01 02 03 04 05 06 07 08 09; do
+for STAGE in 00 01 02 03 04 05 06 07 08 09; do
   printf "  STAGE %s  %-40s %-6s %s\n" "$STAGE" "${EXEC_STATUS[$STAGE]}" "${EXEC_EXIT[$STAGE]}" "${EXEC_NOTES[$STAGE]}"
 done
 echo ""

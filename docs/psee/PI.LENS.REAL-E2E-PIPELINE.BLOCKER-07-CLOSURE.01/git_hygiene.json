@@ -1,0 +1,45 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE.BLOCKER-07-CLOSURE.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-03",
+
+  "branch": "work/psee-runtime",
+  "baseline_commit": "a816368dfc6b1187c853a7e27c20b6b128e7b637",
+  "baseline_commit_message": "[DIAG] E2E execution mode 03 — source extraction blocker identified",
+
+  "working_tree_before": "CLEAN",
+  "working_tree_after": "1 tracked file modified (lens_e2e_assemble.sh); 1 new untracked script (source_extract.py); 1 evidence directory untracked; run artifacts gitignored",
+
+  "files_modified_tracked": [
+    "scripts/pios/lens_e2e_assemble.sh"
+  ],
+  "files_created_untracked_scripts": [
+    "scripts/pios/source_extract.py"
+  ],
+  "files_created_tracked": [
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-07-CLOSURE.01/source_extraction_contract.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-07-CLOSURE.01/implementation_summary.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-07-CLOSURE.01/extraction_validation_result.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-07-CLOSURE.01/execution_mode_after_extraction.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-07-CLOSURE.01/no_free_patching_attestation.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-07-CLOSURE.01/git_hygiene.json"
+  ],
+  "files_gitignored_written_by_run": [
+    "clients/blueedge/psee/runs/run_blueedge_e2e_execute_01/ (all run artifacts)"
+  ],
+
+  "pipeline_executed": false,
+  "canonical_artifacts_mutated": false,
+  "producer_scripts_modified": ["scripts/pios/lens_e2e_assemble.sh"],
+  "producer_scripts_created": ["scripts/pios/source_extract.py"],
+  "renderer_modified": false,
+  "semantic_bundle_modified": false,
+  "ui_modified": false,
+  "api_modified": false,
+  "fastapi_involved": false,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[FIX] PI.LENS.REAL-E2E-PIPELINE.BLOCKER-07-CLOSURE.01 — source_extract.py extraction producer; lens_e2e_assemble.sh Stage 00; BLOCKER-07 closed; stages 01-04 executing",
+
+  "git_hygiene_status": "COMPLETE"
+}
