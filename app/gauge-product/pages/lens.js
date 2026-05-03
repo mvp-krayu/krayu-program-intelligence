@@ -289,10 +289,6 @@ function LensHeader({ runId, generatedAt, hasAccess, onUnlock }) {
 }
 
 // ---------------------------------------------------------------------------
-// Report panel
-// ---------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------
 // Runtime Selector + Generate
 // ---------------------------------------------------------------------------
 
@@ -396,96 +392,13 @@ function RuntimeSelector() {
           )}
         </div>
       )}
-    </div>
-  )
-}
-
-// Second-client scoping — mirrors workspace.js pattern
-const _SC_CLIENT_ID = 'e65d2f0a-dfa7-4257-9333-fcbb583f0880'
-const _SC_RUN_ID    = 'run_01_oss_fastapi'
-
-function reportUrl(name) {
-  return `/api/report-file?name=${encodeURIComponent(name)}&client=${_SC_CLIENT_ID}&runId=${_SC_RUN_ID}`
-}
-
-async function generateReport() {
-  const [res1, res2] = await Promise.all([
-    fetch('/api/report'),
-    fetch(`/api/report?client=${_SC_CLIENT_ID}&runId=${_SC_RUN_ID}&deliverable=diagnostic`),
-  ])
-  const [data1, data2] = await Promise.all([res1.json(), res2.json()])
-  if (!res1.ok || data1.status !== 'ok') {
-    throw new Error(data1.reason || 'GENERATION_FAILED')
-  }
-  const byName = {}
-  for (const f of data1.files) byName[f.name] = f
-  if (res2.ok && data2.status === 'ok') {
-    for (const f of data2.files) byName[f.name] = f
-  }
-  const withUrl = name => byName[name]
-    ? { ...byName[name], path: reportUrl(name) }
-    : undefined
-  return {
-    executive:  withUrl('lens_tier1_narrative_brief.html'),
-    lens:       withUrl('lens_tier1_evidence_brief.html'),
-    diagnostic: withUrl('lens_tier2_diagnostic_narrative.html'),
-  }
-}
-
-function ReportPanel({ runId }) {
-  const [state, setState] = useState(null)
-
-  function handleGenerate() {
-    setState('loading')
-    generateReport()
-      .then(artifacts => setState({ artifacts }))
-      .catch(err       => setState({ error: err.message || 'GENERATION_FAILED' }))
-  }
-
-  return (
-    <div className="lens-report-panel">
-      <div className="lens-panel-label">REPORTS</div>
-      <div className="lens-report-row">
-        {(!state || state === 'loading' || state?.error) && (
-          <button className="lens-report-btn" onClick={handleGenerate} disabled={state === 'loading'}>
-            {state === 'loading' ? 'Generating…' : 'Generate'}
-          </button>
-        )}
-        {state === 'loading' && <span className="lens-report-status">Building governed reports…</span>}
-        {state?.error && <span className="lens-report-error">{state.error}</span>}
-      </div>
-      {state?.artifacts && (
-        <div className="lens-report-artifacts">
-          {state.artifacts.executive && (
-            <button
-              className="lens-report-action-btn lens-report-primary"
-              onClick={() => window.open(state.artifacts.executive.path)}
-            >
-              Executive
-            </button>
-          )}
-          {state.artifacts.lens && (
-            <button
-              className="lens-report-action-btn lens-report-secondary"
-              onClick={() => window.open(state.artifacts.lens.path)}
-            >
-              LENS
-            </button>
-          )}
-          {state.artifacts.diagnostic && (
-            <button
-              className="lens-report-action-btn lens-report-narrative"
-              onClick={() => window.open(state.artifacts.diagnostic.path)}
-            >
-              Diagnostic
-            </button>
-          )}
-        </div>
-      )}
       <div className="lens-report-workspace-row">
         <button
           className="lens-report-workspace"
-          onClick={() => window.open('/tier2/workspace')}
+          disabled={!rt}
+          onClick={() => rt && window.open(
+            `/tier2/workspace?client=${encodeURIComponent(rt.client)}&run=${encodeURIComponent(rt.run)}`
+          )}
         >
           Diagnostic Workspace
         </button>
@@ -493,14 +406,10 @@ function ReportPanel({ runId }) {
           Live WHY &amp; EVIDENCE &amp; TRACE · inference_prohibition: ACTIVE
         </span>
       </div>
-      {runId && (
-        <div className="lens-report-basis">
-          Governed projection (ZONE-2) · Run: {runId}
-        </div>
-      )}
     </div>
   )
 }
+
 
 // ---------------------------------------------------------------------------
 // Page
@@ -631,14 +540,9 @@ export default function LensPage() {
         <IntelligenceGateCTA onUnlock={showModal} />
       </div>
 
-      {/* Runtime selector + generate */}
+      {/* Runtime selector + generate + workspace */}
       <div className="lens-band">
         <RuntimeSelector />
-      </div>
-
-      {/* Report generation */}
-      <div className="lens-band">
-        <ReportPanel runId={runId} />
       </div>
 
       <div className="lens-footer">

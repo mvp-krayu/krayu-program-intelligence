@@ -1,0 +1,22 @@
+{
+  "contract_id": "PI.LENS.RUNTIME-SELECTOR-CLEANUP-AND-WORKSPACE-BINDING.01",
+  "generated_date": "2026-05-03",
+  "decision_file": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/lens_decision_surface.html",
+  "served_via": "/api/report-file?source=psee&client=blueedge&runId=run_blueedge_productized_01_fixed&name=lens_decision_surface.html",
+  "cross_navigation_working": true,
+  "cross_navigation_note": "All href links rewritten to source=psee; Executive Brief cross-link returns HTTP 200",
+  "where_pressure_exists": true,
+  "sections_validated": [
+    { "marker": "ds-epb-section-title", "present": true },
+    { "marker": "ds-signal-trace",      "present": true },
+    { "marker": "ds-hero-posture",      "present": true },
+    { "marker": "inference_prohibition","present": true }
+  ],
+  "internal_links_rewritten": [
+    "/api/report-file?source=psee&client=blueedge&runId=run_blueedge_productized_01_fixed&name=lens_tier1_narrative_brief.html",
+    "/api/report-file?source=psee&client=blueedge&runId=run_blueedge_productized_01_fixed&name=lens_tier1_evidence_brief.html",
+    "/api/report-file?source=psee&client=blueedge&runId=run_blueedge_productized_01_fixed&name=lens_tier2_diagnostic_narrative.html"
+  ],
+  "workspace_link_preserved": "/tier2/workspace?client=blueedge&runId=run_blueedge_productized_01_fixed",
+  "status": "PASS"
+}

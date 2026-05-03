@@ -104,6 +104,23 @@ function resolveClientFilePath(client, runId, name) {
   return filePath
 }
 
+// Rewrites internal report navigation links to use source=psee routing.
+// Handles both relative (href="lens_*.html") and full API URL forms.
+function rewritePseeLinks(html, client, runId) {
+  const pseeBase = `/api/report-file?source=psee&client=${encodeURIComponent(client)}&runId=${encodeURIComponent(runId)}&name=`
+  // 1. Relative: href="lens_*.html"
+  let out = html.replace(
+    /href="(lens_[a-z0-9_]+\.html)"/g,
+    (_, fname) => `href="${pseeBase}${encodeURIComponent(fname)}"`
+  )
+  // 2. Existing /api/report-file?name=lens_*.html links (client-aware routing, no source=psee)
+  out = out.replace(
+    /href="\/api\/report-file\?name=(lens_[a-z0-9_]+\.html)[^"]*"/g,
+    (_, fname) => `href="${pseeBase}${encodeURIComponent(fname)}"`
+  )
+  return out
+}
+
 function serveHtml(res, filePath, name, download) {
   const html = fs.readFileSync(filePath, 'utf-8')
   res.setHeader('Content-Type', 'text/html; charset=utf-8')
@@ -160,7 +177,11 @@ export default function handler(req, res) {
       res.setHeader('Cache-Control', 'no-store')
       return res.status(200).send(content)
     }
-    return serveHtml(res, resolved.filePath, path.basename(name), download)
+    const rewritten = rewritePseeLinks(content, client, runId)
+    res.setHeader('Content-Type', 'text/html; charset=utf-8')
+    res.setHeader('Cache-Control', 'no-store')
+    res.setHeader('Content-Disposition', `inline; filename="${path.basename(name)}"`)
+    return res.status(200).send(rewritten)
   }
 
   // ── Client-aware routing ──────────────────────────────────────────────────
