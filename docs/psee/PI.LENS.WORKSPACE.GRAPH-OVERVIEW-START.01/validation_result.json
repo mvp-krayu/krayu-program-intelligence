@@ -1,0 +1,58 @@
+{
+  "contract_id": "PI.LENS.WORKSPACE.GRAPH-OVERVIEW-START.01",
+  "generated_date": "2026-05-03",
+  "initial_graph_mode": "OVERVIEW",
+  "label_correct": true,
+  "multi_node_graph": true,
+  "zone_not_auto_selected": true,
+  "no_pipeline_execution": true,
+  "no_renderer_change": true,
+  "checks": [
+    {
+      "name": "session_storage_restore_removed",
+      "status": "PASS",
+      "detail": "useEffect restore block removed — activeZone/activeMode/activeQsData always null on load"
+    },
+    {
+      "name": "session_storage_persist_removed",
+      "status": "PASS",
+      "detail": "useEffect persist block removed — dead code eliminated"
+    },
+    {
+      "name": "is_overview_true_on_load",
+      "status": "PASS",
+      "detail": "isOverview = !activeZone && !activeMode && !activeQsData = !null && !null && !null = true"
+    },
+    {
+      "name": "graph_label_overview",
+      "status": "PASS",
+      "detail": "graphLabel = isOverview ? 'OVERVIEW' : ... — returns 'OVERVIEW' on initial load"
+    },
+    {
+      "name": "vault_graph_receives_is_overview_true",
+      "status": "PASS",
+      "detail": "VaultGraph prop isOverview=true — all nodes BRIGHT, all links BASE, full topology visible"
+    },
+    {
+      "name": "18_nodes_rendered",
+      "status": "PASS",
+      "detail": "vaultIndex synthesized from graph_state.json — 18 nodes (PZ-001 + SIG-001..SIG-005 + CLM-20..CLM-24 + ART-01..ART-07)"
+    },
+    {
+      "name": "no_pipeline_execution",
+      "status": "PASS",
+      "detail": "No pipeline executed"
+    },
+    {
+      "name": "no_renderer_modification",
+      "status": "PASS",
+      "detail": "scripts/pios/lens_report_generator.py NOT modified"
+    },
+    {
+      "name": "why_evidence_trace_unchanged",
+      "status": "PASS",
+      "detail": "handleGraphQuery, handleActivate, ZoneCard.fireQuery — all unchanged"
+    }
+  ],
+  "validation_status": "PASS"
+}

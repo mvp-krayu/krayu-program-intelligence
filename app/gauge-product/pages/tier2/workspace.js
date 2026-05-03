@@ -645,8 +645,6 @@ function ZoneCard({ zone, vaultIndex, defaultOpen, isActive, onActivate, langLay
 // Page
 // ---------------------------------------------------------------------------
 
-const WS_STATE_KEY = 'ws_state'
-
 const GRAPH_MODE_LABEL = {
   EVIDENCE: 'zone evidence focus',
   TRACE:    'trace paths',
@@ -733,34 +731,6 @@ export default function Tier2WorkspacePage() {
       .catch(() => {})
   }, [router.isReady, effectiveClient, effectiveReportRun])
 
-  // Restore workspace state from sessionStorage after zones load
-  useEffect(() => {
-    if (pageState !== 'ready' || !zonesData) return
-    try {
-      const saved = sessionStorage.getItem(WS_STATE_KEY)
-      if (!saved) return
-      const { zoneId, mode, qsData } = JSON.parse(saved)
-      const zone = zonesData.zones.find(z => z.zone_id === zoneId)
-      if (zone) {
-        setActiveZone(zone)
-        if (mode)   setActiveMode(mode)
-        if (qsData) setActiveQsData(qsData)
-      }
-    } catch {}
-  }, [pageState, zonesData])
-
-  // Persist workspace state to sessionStorage
-  useEffect(() => {
-    if (!activeZone) return
-    try {
-      sessionStorage.setItem(WS_STATE_KEY, JSON.stringify({
-        zoneId: activeZone.zone_id,
-        mode:   activeMode,
-        qsData: activeQsData,
-      }))
-    } catch {}
-  }, [activeZone, activeMode, activeQsData])
-
   function handleActivate(zone, mode, data) {
     setActiveZone(zone)
     setActiveMode(mode)
@@ -772,7 +742,6 @@ export default function Tier2WorkspacePage() {
     setActiveMode(null)
     setActiveQsData(null)
     setGraphPanelQuery(null)
-    try { sessionStorage.removeItem(WS_STATE_KEY) } catch {}
   }
 
   // Graph-initiated query: fires zone query and surfaces result in graph panel
@@ -842,7 +811,9 @@ export default function Tier2WorkspacePage() {
   const isOverview = !activeZone && !activeMode && !activeQsData
   const graphZone  = activeZone ?? zonesData?.zones?.[0] ?? null
   const graphQs    = (activeMode && activeQsData) ? { mode: activeMode, data: activeQsData } : null
-  const graphLabel = activeMode ? (GRAPH_MODE_LABEL[activeMode] ?? '') : 'full vault structure'
+  const graphLabel = isOverview
+    ? 'OVERVIEW'
+    : activeMode ? (GRAPH_MODE_LABEL[activeMode] ?? '') : 'full vault structure'
 
   return (
     <div className="ws-page">
