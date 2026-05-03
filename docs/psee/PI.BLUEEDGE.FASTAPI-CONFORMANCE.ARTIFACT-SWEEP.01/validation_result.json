@@ -1,0 +1,71 @@
+{
+  "contract_id": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.ARTIFACT-SWEEP.01",
+  "artifact": "validation_result",
+  "generated_date": "2026-05-03",
+
+  "checks": [
+    {
+      "name": "in_scope_artifact_count",
+      "expected": 12,
+      "actual": 12,
+      "result": "PASS"
+    },
+    {
+      "name": "restored_artifact_count",
+      "expected": 9,
+      "actual": 9,
+      "result": "PASS"
+    },
+    {
+      "name": "already_present_count",
+      "expected": 3,
+      "actual": 3,
+      "result": "PASS"
+    },
+    {
+      "name": "missing_artifact_count",
+      "expected": 0,
+      "actual": 0,
+      "result": "PASS"
+    },
+    {
+      "name": "json_valid_all_restored",
+      "description": "All 9 restored artifacts are valid JSON",
+      "result": "PASS"
+    },
+    {
+      "name": "json_valid_already_present",
+      "description": "All 3 already-present artifacts are valid JSON",
+      "result": "PASS"
+    },
+    {
+      "name": "sha256_verified_restored",
+      "description": "SHA256 source == destination for all 9 restored artifacts",
+      "result": "PASS"
+    },
+    {
+      "name": "sha256_verified_already_present",
+      "description": "SHA256 stash == destination for all 3 already-present artifacts",
+      "result": "PASS"
+    },
+    {
+      "name": "no_fabrication",
+      "description": "All artifacts sourced from stash@{0}^3 — no content invented or synthesized",
+      "result": "PASS"
+    },
+    {
+      "name": "no_canonical_mutation",
+      "description": "No governed run directories modified",
+      "result": "PASS"
+    },
+    {
+      "name": "evidence_files_complete",
+      "description": "All 8 required evidence files created in sweep directory",
+      "result": "PASS"
+    }
+  ],
+
+  "overall_result": "PASS",
+  "fail_count": 0,
+  "pass_count": 11
+}

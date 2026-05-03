@@ -1,0 +1,165 @@
+{
+  "contract_id": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01",
+  "artifact": "vault_input_manifest_fastapi_compatible",
+  "block": "BLOCK_D",
+  "generated_date": "2026-04-29",
+  "supersedes": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01/recomputed/vault_input_manifest_fastapi_compatible.json",
+
+  "vault_artifacts": [
+
+    {
+      "vault_artifact_id": "ART-01",
+      "artifact": "gauge_state.json",
+      "status": "READY_RECOMPUTED",
+      "source": "grounding_state_v3.json — 10/10 CEUs SOURCE_TRUTH → coverage=100%, reconstruction=PASS → GAUGE terminal state S-13",
+      "projected_values": {
+        "DIM-01_coverage_percent": 100.0,
+        "DIM-02_reconstruction": "PASS",
+        "DIM-03_escalation_clearance": 100,
+        "execution_status": "NOT_EVALUATED",
+        "execution_layer_evaluated": false
+      },
+      "prior_status": "READY_RECOMPUTED — unchanged",
+      "ready_for_implementation": true
+    },
+
+    {
+      "vault_artifact_id": "ART-02",
+      "artifact": "coverage_state.json",
+      "status": "READY_RECOMPUTED",
+      "source": "grounding_state_v3.json — 10/10 CEUs SOURCE_TRUTH → coverage_percent=100.0",
+      "projected_values": {
+        "coverage_percent": 100.0,
+        "state": "COMPUTED",
+        "required_units": 10,
+        "admissible_units": 10
+      },
+      "prior_status": "READY_RECOMPUTED — unchanged",
+      "ready_for_implementation": true
+    },
+
+    {
+      "vault_artifact_id": "ART-03",
+      "artifact": "reconstruction_state.json",
+      "status": "READY_RECOMPUTED",
+      "source": "grounding_state_v3.json — 10/10 CEUs SOURCE_TRUTH → all 4 reconstruction axes PASS",
+      "projected_values": {
+        "state": "PASS",
+        "validated_units": 10,
+        "total_units": 10,
+        "axis_results": {"COMPLETENESS": "PASS", "STRUCTURAL_LINK": "PASS", "REFERENTIAL_INTEGRITY": "PASS", "LAYER_CONSISTENCY": "PASS"}
+      },
+      "prior_status": "READY_RECOMPUTED — unchanged",
+      "ready_for_implementation": true
+    },
+
+    {
+      "vault_artifact_id": "ART-04",
+      "artifact": "canonical_topology.json",
+      "status": "READY",
+      "source": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/structure/40.4/canonical_topology.json",
+      "note": "Path remapping required. Schema compatibility unverified — may require verification before use.",
+      "prior_status": "READY — unchanged",
+      "ready_for_implementation": true,
+      "caveat": "Schema compatibility not verified against FastAPI package/canonical_topology.json schema"
+    },
+
+    {
+      "vault_artifact_id": "ART-05",
+      "artifact": "signal_registry.json",
+      "status": "READY_RECOMPUTED",
+      "source": "recomputed/signal_registry_fastapi_compatible.json — 4 signals (PSIG-001:5.663 HIGH, PSIG-002:3.210 HIGH, PSIG-004:2.182 HIGH, PSIG-006:0 ACTIVATED)",
+      "prior_status": "BLOCKED — UNBLOCKED by BI-02 resolution (NODE-RELATIONSHIP-RECOVERY contract)",
+      "blocker_resolved": "BI-02",
+      "ready_for_implementation": true,
+      "signal_summary": {
+        "PSIG-001": {"value": 5.6630, "state": "HIGH", "method": "RUN_RELATIVE_OUTLIER"},
+        "PSIG-002": {"value": 3.2098, "state": "HIGH", "method": "RUN_RELATIVE_OUTLIER"},
+        "PSIG-004": {"value": 2.1822, "state": "HIGH", "method": "RUN_RELATIVE_OUTLIER"},
+        "PSIG-006": {"value": 0, "state": "ACTIVATED", "method": "THEORETICAL_BASELINE"}
+      }
+    },
+
+    {
+      "vault_artifact_id": "ART-06",
+      "artifact": "binding_envelope.json",
+      "status": "READY_RECOMPUTED",
+      "source": "recomputed/binding_envelope_fastapi_compatible.json — PSIG-001/002/004 bound to DOM-04/PZ-001; 13 DOM groups; domain telemetry",
+      "prior_status": "BLOCKED — UNBLOCKED by BI-01+BI-02 resolution (DOM layer from RECOMPUTE, signal values from RECOVERY)",
+      "blockers_resolved": ["BI-01", "BI-02"],
+      "ready_for_implementation": true,
+      "binding_summary": {
+        "primary_outlier_dom": "DOM-04",
+        "active_pressure_zone": "PZ-001",
+        "zone_class": "COMPOUND_ZONE",
+        "signals_bound": ["PSIG-001", "PSIG-002", "PSIG-004", "PSIG-006"]
+      }
+    },
+
+    {
+      "vault_artifact_id": "ART-07",
+      "artifact": "admissibility_log.json",
+      "status": "READY_RECOMPUTED",
+      "source": "integration_validation.json — FINAL_STATUS=PASS → admissibility proxy",
+      "semantic_caveat": "Check scope differs (CEU integration checks vs structural admissibility). Vault consumers validating check names will detect the difference.",
+      "prior_status": "READY_RECOMPUTED — unchanged",
+      "ready_for_implementation": true
+    },
+
+    {
+      "vault_artifact_id": "ART-08",
+      "artifact": "signal_projection.json (FastAPI 41.x compatible)",
+      "status": "READY_RECOMPUTED",
+      "source": "recomputed/signal_projection_fastapi_compatible.json",
+      "note": "Added in this contract. Required by tier2 diagnostic narrative and decision surface.",
+      "prior_status": "NOT_PRESENT — produced in this contract",
+      "ready_for_implementation": true
+    },
+
+    {
+      "vault_artifact_id": "ART-09",
+      "artifact": "pressure_zone_state.json (DOMAIN_ZONE schema)",
+      "status": "READY_RECOMPUTED",
+      "source": "recomputed/pressure_zone_state_fastapi_compatible.json — PZ-001 COMPOUND_ZONE anchored at DOM-04; DOMAIN_ZONE type",
+      "note": "Added in this contract. Required by tier2 diagnostic narrative. BI-03 fully resolved — DOMAIN_ZONE schema with DOM-XX anchor_id.",
+      "prior_status": "BLOCKED (BI-03) — UNBLOCKED by DOM layer (RECOMPUTE) + signal values (RECOVERY) + this contract",
+      "blockers_resolved": ["BI-02", "BI-03"],
+      "ready_for_implementation": true
+    },
+
+    {
+      "vault_artifact_id": "ART-10",
+      "artifact": "condition_correlation_state.json (COND-PSIG-XXX namespace)",
+      "status": "READY_RECOMPUTED",
+      "source": "recomputed/condition_correlation_state_fastapi_compatible.json — 4 conditions in COND-PSIG-XXX-YY format",
+      "note": "Added in this contract. Required by tier2 for COND-PSIG-XXX condition namespace.",
+      "prior_status": "BLOCKED — UNBLOCKED by signal computation in this contract",
+      "ready_for_implementation": true
+    }
+
+  ],
+
+  "vault_manifest_summary": {
+    "status_READY": ["ART-04 canonical_topology"],
+    "status_READY_RECOMPUTED": [
+      "ART-01 gauge_state",
+      "ART-02 coverage_state",
+      "ART-03 reconstruction_state",
+      "ART-05 signal_registry",
+      "ART-06 binding_envelope",
+      "ART-07 admissibility_log",
+      "ART-08 signal_projection",
+      "ART-09 pressure_zone_state (DOMAIN_ZONE)",
+      "ART-10 condition_correlation_state (COND-PSIG-XXX)"
+    ],
+    "status_BLOCKED": [],
+    "ready_count": 10,
+    "blocked_count": 0,
+    "overall_vault_readiness": "READY — all vault artifacts available. Blockers BI-01, BI-02, BI-03 all resolved.",
+    "blocker_resolution_summary": {
+      "BI-01": "RESOLVED — binding_envelope.json produced (DOM layer + signal values both available)",
+      "BI-02": "RESOLVED — PSIG-001 (5.663 HIGH) and PSIG-002 (3.210 HIGH) recovered from 40.3 per-node data",
+      "BI-03": "RESOLVED — pressure_zone_state DOMAIN_ZONE schema produced with DOM-XX anchor_ids"
+    }
+  }
+}

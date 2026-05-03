@@ -1,0 +1,99 @@
+{
+  "contract_id": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01",
+  "artifact": "signal_registry_fastapi_compatible",
+  "schema_version": "1.0",
+  "block": "BLOCK_D",
+  "generated_date": "2026-04-29",
+  "client_uuid": "6a6fcdbc-41b6-4e0e-99b9-37394f6c870d",
+  "run_id": "run_blueedge_integrated_01",
+  "signal_authority": "PROVISIONAL_CKR_CANDIDATE",
+
+  "registry_basis": "Assembled from signal_projection_fastapi_compatible.json. Provides the signal registry format for vault consumption and tier1 narrative signal section. PSIG-XXX signals are structural telemetry candidates, not SIG-XXX intelligence signals.",
+
+  "total_signals": 4,
+  "active_pressure_signals": 3,
+  "telemetry_signals": 1,
+
+  "signals": [
+
+    {
+      "signal_id": "PSIG-001",
+      "signal_label": "coupling_pressure",
+      "signal_authority": "PROVISIONAL_CKR_CANDIDATE",
+      "condition_id": "COND-PSIG-001-01",
+      "activation_state": "HIGH",
+      "signal_value": 5.6630,
+      "activation_method": "RUN_RELATIVE_OUTLIER",
+      "threshold": 2.0,
+      "population_type": "per_node_outbound_imports",
+      "population_size": 35,
+      "primary_entity": "NODE-0021",
+      "primary_domain": "DOM-04",
+      "zone_id": "PZ-001",
+      "zone_class": "COMPOUND_ZONE",
+      "source_traceability": "40.3/structural_topology_log.json → NODE-0021 IMPORTS=69 → z-score=5.663",
+      "runtime_required": false
+    },
+
+    {
+      "signal_id": "PSIG-002",
+      "signal_label": "domain_coupling_pressure",
+      "signal_authority": "PROVISIONAL_CKR_CANDIDATE",
+      "condition_id": "COND-PSIG-002-01",
+      "activation_state": "HIGH",
+      "signal_value": 3.2098,
+      "activation_method": "RUN_RELATIVE_OUTLIER",
+      "threshold": 2.0,
+      "population_type": "per_dom_aggregated_imports",
+      "population_size": 13,
+      "primary_entity": null,
+      "primary_domain": "DOM-04",
+      "zone_id": "PZ-001",
+      "zone_class": "COMPOUND_ZONE",
+      "source_traceability": "40.3/structural_topology_log.json → DOM-04 IMPORTS_total=71 → z-score=3.210",
+      "runtime_required": false
+    },
+
+    {
+      "signal_id": "PSIG-004",
+      "signal_label": "zone_coverage_concentration",
+      "signal_authority": "PROVISIONAL_CKR_CANDIDATE",
+      "condition_id": "COND-PSIG-004-01",
+      "activation_state": "HIGH",
+      "signal_value": 2.1822,
+      "activation_method": "RUN_RELATIVE_OUTLIER",
+      "threshold": 2.0,
+      "population_type": "per_zone_node_fraction",
+      "population_size": 7,
+      "primary_entity": "NODE-0021",
+      "primary_domain": "DOM-04",
+      "zone_id": "PZ-001",
+      "zone_class": "COMPOUND_ZONE",
+      "source_traceability": "pressure_zone_state.json → PZ-001 node_fraction=0.4286 → z-score=2.182",
+      "runtime_required": false
+    },
+
+    {
+      "signal_id": "PSIG-006",
+      "signal_label": "unanchored_nodes",
+      "signal_authority": "PROVISIONAL_CKR_CANDIDATE",
+      "condition_id": "COND-PSIG-006-01",
+      "activation_state": "ACTIVATED",
+      "signal_value": 0,
+      "activation_method": "THEORETICAL_BASELINE",
+      "threshold": 1,
+      "threshold_type": "binary",
+      "primary_entity": null,
+      "primary_domain": null,
+      "zone_id": null,
+      "source_traceability": "ceu_node_map.json → unanchored_count=0",
+      "runtime_required": false,
+      "note": "Structural telemetry marker. ACTIVATED but not pressure — no zone assigned."
+    }
+
+  ],
+
+  "signals_not_activated": ["PSIG-003", "PSIG-005"],
+  "combination_signature": "PSIG-001|PSIG-002|PSIG-004|PSIG-006",
+  "primary_combination": "PSIG-001|PSIG-002|PSIG-004"
+}
