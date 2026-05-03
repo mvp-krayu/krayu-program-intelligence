@@ -243,6 +243,7 @@ else
 fi
 
 # ── EXECUTE STAGE 02: Intake ───────────────────────────────────────────────────
+# Idempotent: if intake artifacts already present, run validate-only; do not rerun write mode.
 if [[ ${EXEC_EXIT[01]} -ne 0 ]]; then
   EXEC_STATUS[02]="NOT_ATTEMPTED"
   EXEC_EXIT[02]=-1
@@ -250,16 +251,34 @@ if [[ ${EXEC_EXIT[01]} -ne 0 ]]; then
 else
   echo ""
   echo "  [STAGE 02] Intake — source_intake.py"
-  EXEC_EXIT[02]=0
-  python3 "$SCRIPTS_DIR/source_intake.py" \
-    --client "$CLIENT" --source "$SOURCE" --run-id "$EXECUTE_RUN_ID" \
-    || EXEC_EXIT[02]=$?
-  if [[ ${EXEC_EXIT[02]} -eq 0 ]]; then
-    EXEC_STATUS[02]="EXECUTED"
-    EXEC_NOTES[02]="source_intake.py exited 0; intake artifacts written to $EXECUTE_RUN_ID/intake/"
+  EXEC_INTAKE_MANIFEST="$EXEC_RUN_DIR/intake/intake_manifest.json"
+  EXEC_INTAKE_INVENTORY="$EXEC_RUN_DIR/intake/source_inventory.json"
+  EXEC_INTAKE_BOUNDARY="$EXEC_RUN_DIR/intake/source_boundary_validation.json"
+  if [[ -f "$EXEC_INTAKE_MANIFEST" && -f "$EXEC_INTAKE_INVENTORY" && -f "$EXEC_INTAKE_BOUNDARY" ]]; then
+    EXEC_EXIT[02]=0
+    python3 "$SCRIPTS_DIR/source_intake.py" \
+      --client "$CLIENT" --source "$SOURCE" --run-id "$EXECUTE_RUN_ID" \
+      --validate-only \
+      || EXEC_EXIT[02]=$?
+    if [[ ${EXEC_EXIT[02]} -eq 0 ]]; then
+      EXEC_STATUS[02]="VALIDATED_ONLY"
+      EXEC_NOTES[02]="intake artifacts already present; validate-only PASS; CREATE_ONLY respected"
+    else
+      EXEC_STATUS[02]="BLOCKED_STAGE_FAILURE"
+      EXEC_NOTES[02]="intake artifacts present but validate-only exited ${EXEC_EXIT[02]}"
+    fi
   else
-    EXEC_STATUS[02]="BLOCKED_STAGE_FAILURE"
-    EXEC_NOTES[02]="source_intake.py exited ${EXEC_EXIT[02]}"
+    EXEC_EXIT[02]=0
+    python3 "$SCRIPTS_DIR/source_intake.py" \
+      --client "$CLIENT" --source "$SOURCE" --run-id "$EXECUTE_RUN_ID" \
+      || EXEC_EXIT[02]=$?
+    if [[ ${EXEC_EXIT[02]} -eq 0 ]]; then
+      EXEC_STATUS[02]="EXECUTED"
+      EXEC_NOTES[02]="source_intake.py exited 0; intake artifacts written to $EXECUTE_RUN_ID/intake/"
+    else
+      EXEC_STATUS[02]="BLOCKED_STAGE_FAILURE"
+      EXEC_NOTES[02]="source_intake.py exited ${EXEC_EXIT[02]}"
+    fi
   fi
 fi
 
@@ -349,7 +368,7 @@ if [[ ${EXEC_EXIT[06]} -eq 0 ]]; then
   EXEC_NOTES[06]="run_client_pipeline.py exited 0 — unexpected success; verify vault output"
 else
   EXEC_STATUS[06]="BLOCKED_STAGE_06"
-  EXEC_NOTES[06]="run_client_pipeline.py exited ${EXEC_EXIT[06]}; path contract mismatch: source_manifest[extracted_path] (UUID) absent; generic stage 02 output not recognized by phase 2"
+  EXEC_NOTES[06]="run_client_pipeline.py exited ${EXEC_EXIT[06]}; BLOCKER-09: Phase 5 binding_envelope_fastapi_compatible.json absent at fastapi_conformance_path"
 fi
 
 # ── EXECUTE STAGE 07: Semantic Bundle (locked reference) ──────────────────────
