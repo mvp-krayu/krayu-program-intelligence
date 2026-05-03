@@ -37,7 +37,6 @@ CONTRACT_ID = "PI.LENS.SOURCE-INTAKE.GENERIC.01"
 REQUIRED_MANIFEST_FIELDS = [
     "archive_path",
     "sha256",
-    "extracted_path",
 ]
 
 
@@ -107,6 +106,41 @@ def classify_path(path: Path, repo_root: Path) -> dict:
         return {"path": str(rel), "path_type": "REPO_RELATIVE", "inside_repo": True}
     except ValueError:
         return {"path": str(path), "path_type": "EXTERNAL_ABSOLUTE", "inside_repo": False}
+
+
+def resolve_inventory_source_path(client_id: str, run_id: str, manifest: dict) -> dict:
+    """Hybrid inventory source path resolution — CLIENT_RUN first, EXTRACTED_PATH fallback.
+    PI.LENS.SOURCE-INTAKE.INVENTORY-PATH.CONTRACT-CLOSURE.01"""
+    client_run_path = (
+        REPO_ROOT / "clients" / client_id / "psee" / "runs" / run_id / "intake" / "canonical_repo"
+    )
+    manifest_path_str = manifest.get("extracted_path", "")
+    manifest_path = (REPO_ROOT / manifest_path_str) if manifest_path_str else None
+
+    candidates = [str(client_run_path.relative_to(REPO_ROOT))]
+    if manifest_path:
+        candidates.append(str(manifest_path.relative_to(REPO_ROOT)))
+
+    if client_run_path.exists():
+        return {
+            "resolution_mode": "CLIENT_RUN",
+            "resolved_path": str(client_run_path.relative_to(REPO_ROOT)),
+            "resolved_path_abs": client_run_path,
+            "candidate_paths": candidates,
+        }
+    if manifest_path and manifest_path.exists():
+        return {
+            "resolution_mode": "EXTRACTED_PATH",
+            "resolved_path": str(manifest_path.relative_to(REPO_ROOT)),
+            "resolved_path_abs": manifest_path,
+            "candidate_paths": candidates,
+        }
+    return {
+        "resolution_mode": "MISSING",
+        "resolved_path": None,
+        "resolved_path_abs": None,
+        "candidate_paths": candidates,
+    }
 
 
 # ── Load Config ────────────────────────────────────────────────────────────────
@@ -216,27 +250,37 @@ def step_checksum(manifest: dict, boundary: dict) -> dict:
     }
 
 
-def step_inventory(manifest: dict) -> dict:
+def step_inventory(manifest: dict, client_id: str, run_id: str) -> dict:
     """
-    Enumerate all files in extracted_path deterministically.
+    Enumerate all files in extracted source deterministically.
+    Hybrid path resolution: CLIENT_RUN first, EXTRACTED_PATH fallback.
     Returns structured file inventory.
+    PI.LENS.SOURCE-INTAKE.INVENTORY-PATH.CONTRACT-CLOSURE.01
     """
-    source_root = REPO_ROOT / manifest["extracted_path"]
-    source_exists = source_root.exists()
+    resolution = resolve_inventory_source_path(client_id, run_id, manifest)
+    mode = resolution["resolution_mode"]
+    candidates = resolution["candidate_paths"]
 
-    if not source_exists:
+    print(f"  [PATH-RESOLUTION] mode: {mode}")
+    for p in candidates:
+        print(f"    checked: {p}")
+
+    if mode == "MISSING":
         return {
-            "source_root": manifest["extracted_path"],
+            "resolution_mode": mode,
+            "candidate_paths": candidates,
+            "source_root": None,
             "source_root_exists": False,
             "file_count": 0,
             "files": [],
-            "inventory_result": "FAIL",
-            "notes": [f"extracted_path not found: {manifest['extracted_path']}"],
+            "inventory_result": "MISSING_INPUT_FAIL_CLOSED",
+            "notes": ["source not found at any candidate path; re-run extraction before intake"],
         }
 
-    files = sorted(
-        p for p in source_root.rglob("*") if p.is_file()
-    )
+    source_root = resolution["resolved_path_abs"]
+    source_root_rel = resolution["resolved_path"]
+
+    files = sorted(p for p in source_root.rglob("*") if p.is_file())
     entries = []
     for f in files:
         rel = str(f.relative_to(source_root))
@@ -257,7 +301,9 @@ def step_inventory(manifest: dict) -> dict:
             )
 
     return {
-        "source_root": manifest["extracted_path"],
+        "resolution_mode": mode,
+        "candidate_paths": candidates,
+        "source_root": source_root_rel,
         "source_root_exists": True,
         "file_count": file_count,
         "registered_file_count": registered_count,
@@ -291,7 +337,7 @@ def build_intake_manifest(
         "client_display_name": client_config.get("display_name", client_id),
         "source_type": manifest.get("archive_type", "UNKNOWN"),
         "archive_path": manifest["archive_path"],
-        "extracted_path": manifest["extracted_path"],
+        "extracted_path": manifest.get("extracted_path", ""),
         "file_count": inventory["file_count"],
         "boundary_result": boundary["boundary_result"],
         "inventory_result": inventory["inventory_result"],
@@ -353,7 +399,7 @@ def main() -> None:
 
     # Step B: Source inventory
     print("\n[4] Source inventory ...")
-    inventory = step_inventory(manifest)
+    inventory = step_inventory(manifest, client_id, run_id)
     inv_status = inventory["inventory_result"]
     print(f"  source_root exists: {inventory['source_root_exists']}")
     print(f"  files found: {inventory['file_count']}")
