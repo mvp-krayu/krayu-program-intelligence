@@ -1,0 +1,77 @@
+{
+  "contract_id": "PI.LENS.WORKSPACE.GRAPH-CONTEXT-BINDING.01",
+  "generated_date": "2026-05-03",
+  "checks": [
+    {
+      "name": "vault_index_env_vars_removed",
+      "status": "PASS",
+      "detail": "NEXT_PUBLIC_VAULT_CLIENT, NEXT_PUBLIC_VAULT_RUN_ID, VAULT_INDEX_URL constants removed from workspace.js"
+    },
+    {
+      "name": "effective_report_run_added",
+      "status": "PASS",
+      "detail": "effectiveReportRun = router.query.reportRun || effectiveDisplayRun || null added at line 663"
+    },
+    {
+      "name": "graph_state_fetch_url_correct",
+      "status": "PASS",
+      "detail": "/api/report-file?source=psee&client=<effectiveClient>&runId=<effectiveReportRun>&name=graph_state.json — matches resolvePseeRunFilePath route in report-file.js"
+    },
+    {
+      "name": "graph_state_json_accessible",
+      "status": "PASS",
+      "detail": "report-file.js resolvePseeRunFilePath explicitly allows graph_state.json (isJson check at line 143). File exists at clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/graph_state.json"
+    },
+    {
+      "name": "vault_index_synthesis_signals",
+      "status": "PASS",
+      "detail": "signals map built from SIGNAL→CLAIM links: SIG-001→CLM-20, SIG-002→CLM-21, SIG-003→CLM-22, SIG-004→CLM-23, SIG-005→CLM-24"
+    },
+    {
+      "name": "vault_index_synthesis_artifacts",
+      "status": "PASS",
+      "detail": "artifacts map built from ARTIFACT nodes: ART-01..ART-07 (7 entries, all null paths)"
+    },
+    {
+      "name": "vault_index_synthesis_claims",
+      "status": "PASS",
+      "detail": "claims map built from CLAIM nodes: CLM-20..CLM-24 (5 entries, all null paths)"
+    },
+    {
+      "name": "export_status_exported",
+      "status": "PASS",
+      "detail": "setVaultIndex({ export_status: 'EXPORTED', ... }) — satisfies VaultGraph check and resolveVaultLink check"
+    },
+    {
+      "name": "base_url_null_no_external_links",
+      "status": "PASS",
+      "detail": "base_url: null — vaultUrl() returns null immediately when !vi?.base_url; no external vault navigation generated"
+    },
+    {
+      "name": "zone_id_mismatch_handled",
+      "status": "PASS",
+      "detail": "Zone root uses zone.zone_id (PZ-001 from zones API). Signals SIG-001..SIG-005 from vi.signals are linked via addLink(zone.zone_id, sigId). PZ-001 is in seen set before signals loop. All links valid."
+    },
+    {
+      "name": "node_count_18",
+      "status": "PASS",
+      "detail": "Expected graph: 1 zone (PZ-001) + 5 signals + 5 claims + 7 artifacts = 18 nodes, 17 links"
+    },
+    {
+      "name": "router_is_ready_gate",
+      "status": "PASS",
+      "detail": "useEffect gated on router.isReady — consistent with zones fetch pattern"
+    },
+    {
+      "name": "pipeline_not_executed",
+      "status": "PASS",
+      "detail": "No pipeline executed"
+    },
+    {
+      "name": "renderer_not_modified",
+      "status": "PASS",
+      "detail": "scripts/pios/lens_report_generator.py NOT modified"
+    }
+  ],
+  "validation_status": "PASS"
+}

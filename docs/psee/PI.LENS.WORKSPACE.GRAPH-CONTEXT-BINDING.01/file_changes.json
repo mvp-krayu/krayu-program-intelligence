@@ -1,0 +1,28 @@
+{
+  "contract_id": "PI.LENS.WORKSPACE.GRAPH-CONTEXT-BINDING.01",
+  "generated_date": "2026-05-03",
+  "baseline_commit": "bc6cdeceb42eac215c532be21bfada9ff471bb14",
+  "files_modified": [
+    {
+      "file": "app/gauge-product/pages/tier2/workspace.js",
+      "changes": [
+        "Removed static vault index resolution block (NEXT_PUBLIC_VAULT_CLIENT, NEXT_PUBLIC_VAULT_RUN_ID, VAULT_INDEX_URL)",
+        "Added effectiveReportRun derived from router.query.reportRun || effectiveDisplayRun",
+        "Replaced static VAULT_INDEX_URL useEffect with dynamic graph_state.json fetch via /api/report-file?source=psee",
+        "Synthesizes vaultIndex from graph_state.json: signals map, artifacts map, claims map, export_status EXPORTED, base_url null"
+      ]
+    }
+  ],
+  "files_created": [
+    "docs/psee/PI.LENS.WORKSPACE.GRAPH-CONTEXT-BINDING.01/graph_context_binding_summary.md",
+    "docs/psee/PI.LENS.WORKSPACE.GRAPH-CONTEXT-BINDING.01/file_changes.json",
+    "docs/psee/PI.LENS.WORKSPACE.GRAPH-CONTEXT-BINDING.01/validation_log.json",
+    "docs/psee/PI.LENS.WORKSPACE.GRAPH-CONTEXT-BINDING.01/execution_report.md",
+    "docs/psee/PI.LENS.WORKSPACE.GRAPH-CONTEXT-BINDING.01/git_hygiene.json",
+    "docs/psee/PI.LENS.WORKSPACE.GRAPH-CONTEXT-BINDING.01/CLOSURE.md"
+  ],
+  "pipeline_executed": false,
+  "renderer_modified": false,
+  "canonical_data_modified": false,
+  "fastapi_involved": false
+}

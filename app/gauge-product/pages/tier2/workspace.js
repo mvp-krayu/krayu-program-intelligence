@@ -20,15 +20,6 @@ import dynamic from 'next/dynamic'
 
 const VaultGraph = dynamic(() => import('../../components/VaultGraph'), { ssr: false })
 
-// ---------------------------------------------------------------------------
-// Vault index resolution
-// ---------------------------------------------------------------------------
-
-const _VAULT_CLIENT    = process.env.NEXT_PUBLIC_VAULT_CLIENT || null
-const _VAULT_RUN_ID    = process.env.NEXT_PUBLIC_VAULT_RUN_ID || null
-const VAULT_INDEX_URL  = (_VAULT_CLIENT && _VAULT_RUN_ID)
-  ? `/vault/${_VAULT_CLIENT}/${_VAULT_RUN_ID}/vault_index.json`
-  : null
 
 function resolveVaultLink(type, id, vi) {
   if (!vi || vi.export_status !== 'EXPORTED') return null
@@ -666,9 +657,10 @@ export default function Tier2WorkspacePage() {
   const router = useRouter()
   // Bundle params: vaultRun drives all API calls; displayRun is UI label; reportRun is report context.
   // Tolerate legacy runId param as fallback for backward compat.
-  const effectiveClient   = router.query.client     || null
-  const effectiveVaultRun = router.query.vaultRun   || router.query.runId || null
+  const effectiveClient     = router.query.client     || null
+  const effectiveVaultRun   = router.query.vaultRun   || router.query.runId || null
   const effectiveDisplayRun = router.query.displayRun || router.query.runId || null
+  const effectiveReportRun  = router.query.reportRun  || effectiveDisplayRun || null
 
   const [pageState, setPageState]           = useState('loading')
   const [zonesData, setZonesData]           = useState(null)
@@ -712,14 +704,34 @@ export default function Tier2WorkspacePage() {
       .catch(() => setPageState('error'))
   }, [router.isReady, effectiveClient, effectiveVaultRun])
 
-  // Load vault index
+  // Load vault index from graph_state.json (bundle-aware, no env vars required)
   useEffect(() => {
-    if (!VAULT_INDEX_URL) return
-    fetch(VAULT_INDEX_URL)
+    if (!router.isReady || !effectiveClient || !effectiveReportRun) return
+    const gsUrl = `/api/report-file?source=psee&client=${encodeURIComponent(effectiveClient)}&runId=${encodeURIComponent(effectiveReportRun)}&name=graph_state.json`
+    fetch(gsUrl)
       .then(r => r.ok ? r.json() : null)
-      .then(data => { if (data?.export_status === 'EXPORTED') setVaultIndex(data) })
+      .then(gs => {
+        if (!gs || !Array.isArray(gs.nodes)) return
+        const signals = {}
+        const artifacts = {}
+        const claims = {}
+        for (const link of gs.links || []) {
+          const srcNode = gs.nodes.find(n => n.id === link.source)
+          const tgtNode = gs.nodes.find(n => n.id === link.target)
+          if (srcNode?.type === 'SIGNAL' && tgtNode?.type === 'CLAIM') {
+            signals[srcNode.id] = tgtNode.id
+            claims[tgtNode.id] = null
+          }
+        }
+        for (const node of gs.nodes) {
+          if (node.type === 'ARTIFACT') artifacts[node.id] = null
+          if (node.type === 'SIGNAL' && !(node.id in signals)) signals[node.id] = null
+          if (node.type === 'CLAIM'  && !(node.id in claims))  claims[node.id]  = null
+        }
+        setVaultIndex({ export_status: 'EXPORTED', base_url: null, signals, artifacts, claims })
+      })
       .catch(() => {})
-  }, [])
+  }, [router.isReady, effectiveClient, effectiveReportRun])
 
   // Restore workspace state from sessionStorage after zones load
   useEffect(() => {
