@@ -1,0 +1,27 @@
+{
+  "contract_id": "PI.LENS.WORKSPACE.EVIDENCE-GRAPH-PSIG-BINDING.02",
+  "generated_date": "2026-05-03",
+  "evidence_mode": "PASS",
+  "visible_psig_001": true,
+  "visible_psig_002": true,
+  "visible_psig_004": true,
+  "header_signal_count": 3,
+  "overview_unchanged": true,
+  "pipeline_executed": false,
+  "renderer_modified": false,
+  "api_confirmed": {
+    "endpoint": "/api/query?zone_id=PZ-001&mode=EVIDENCE&client=blueedge&runId=run_blueedge_productized_01",
+    "status": "ok",
+    "signal_coverage_count": 3,
+    "signal_coverage_ids": ["PSIG-001", "PSIG-002", "PSIG-004"],
+    "vault_targets_count": 0,
+    "note": "vault_targets empty in live response — synthesized from signal_coverage in graphQsForVault"
+  },
+  "ui_surfaces": {
+    "signal_strip": "active signals [PSIG-001] [PSIG-002] [PSIG-004] — direct text render of signal_id",
+    "vault_graph_header": "4 nodes · 3 signals",
+    "graph_mode_label": "zone evidence focus",
+    "graph_nodes": ["PZ-001 (BRIGHT)", "PSIG-001 (BRIGHT)", "PSIG-002 (BRIGHT)", "PSIG-004 (BRIGHT)"]
+  },
+  "validation_status": "PASS"
+}

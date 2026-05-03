@@ -815,6 +815,34 @@ export default function Tier2WorkspacePage() {
     ? 'OVERVIEW'
     : activeMode ? (GRAPH_MODE_LABEL[activeMode] ?? '') : 'full vault structure'
 
+  // EVIDENCE mode: extract PSIG list from signal_coverage (same data shown in evidence panel).
+  // vault_targets may be empty in the live response; signal_coverage is the authoritative source.
+  const psigSignals = (graphQs?.mode === 'EVIDENCE')
+    ? (graphQs.data?.result?.signal_coverage || []).filter(s => s.signal_id)
+    : []
+
+  // In EVIDENCE mode, build a PSIG-keyed vaultIndex so VaultGraph constructs PSIG nodes
+  // (graph_state synthesis has keys SIG-001..SIG-005 which never match PSIG-001/002/004).
+  const graphVaultIndex = psigSignals.length > 0
+    ? (() => {
+        const signals = {}
+        psigSignals.forEach(s => { signals[s.signal_id] = null })
+        return { export_status: 'EXPORTED', base_url: null, signals, artifacts: {}, claims: {} }
+      })()
+    : vaultIndex
+
+  // In EVIDENCE mode, synthesize vault_targets from signal_coverage so computeRelevance
+  // marks PSIG nodes relevant (BRIGHT). vault_targets is empty in the live response.
+  const graphQsForVault = (graphQs?.mode === 'EVIDENCE' && psigSignals.length > 0)
+    ? {
+        mode: 'EVIDENCE',
+        data: {
+          ...graphQs.data,
+          vault_targets: psigSignals.map(s => ({ type: 'signal', id: s.signal_id })),
+        },
+      }
+    : graphQs
+
   return (
     <div className="ws-page">
       <div className="ws-topbar">
@@ -874,10 +902,20 @@ export default function Tier2WorkspacePage() {
                   </button>
                 )}
               </div>
+              {psigSignals.length > 0 && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px', background: '#131318', borderBottom: '1px solid #23232b', fontSize: '11px', fontFamily: 'monospace' }}>
+                  <span style={{ color: '#6b6b7a', textTransform: 'uppercase', letterSpacing: '0.06em', marginRight: '4px' }}>active signals</span>
+                  {psigSignals.map(s => (
+                    <span key={s.signal_id} style={{ background: '#0d1f15', color: '#52d97e', border: '1px solid #2e6b40', borderRadius: '3px', padding: '2px 8px', fontWeight: 600 }}>
+                      {s.signal_id}
+                    </span>
+                  ))}
+                </div>
+              )}
               <VaultGraph
                 zone={graphZone}
-                vaultIndex={vaultIndex}
-                qs={graphQs}
+                vaultIndex={graphVaultIndex}
+                qs={graphQsForVault}
                 isOverview={isOverview}
                 onNodeSelect={handleGraphNodeSelect}
               />

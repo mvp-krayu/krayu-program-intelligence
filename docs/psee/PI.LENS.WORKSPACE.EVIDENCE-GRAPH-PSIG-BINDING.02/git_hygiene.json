@@ -1,0 +1,35 @@
+{
+  "contract_id": "PI.LENS.WORKSPACE.EVIDENCE-GRAPH-PSIG-BINDING.02",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-03",
+
+  "branch": "work/psee-runtime",
+  "baseline_commit": "bc6cdeceb42eac215c532be21bfada9ff471bb14",
+  "baseline_commit_message": "[BINDING] PI.LENS.RUNTIME-BUNDLE-MAPPING.01 — runtime bundle mapping; vault_run distinct from display_run; workspace uses vaultRun for API calls",
+
+  "working_tree_before": "CLEAN",
+  "working_tree_after": "1 file modified, 1 evidence directory created",
+
+  "files_modified_tracked": [
+    "app/gauge-product/pages/tier2/workspace.js"
+  ],
+  "files_created_tracked": [
+    "docs/psee/PI.LENS.WORKSPACE.EVIDENCE-GRAPH-PSIG-BINDING.02/evidence_graph_binding_summary.md",
+    "docs/psee/PI.LENS.WORKSPACE.EVIDENCE-GRAPH-PSIG-BINDING.02/ui_visible_validation.md",
+    "docs/psee/PI.LENS.WORKSPACE.EVIDENCE-GRAPH-PSIG-BINDING.02/validation_result.json",
+    "docs/psee/PI.LENS.WORKSPACE.EVIDENCE-GRAPH-PSIG-BINDING.02/no_pipeline_attestation.md",
+    "docs/psee/PI.LENS.WORKSPACE.EVIDENCE-GRAPH-PSIG-BINDING.02/git_hygiene.json"
+  ],
+  "files_modified_gitignored": [],
+
+  "renderer_modified": false,
+  "pipeline_executed": false,
+  "canonical_reports_modified": false,
+  "semantic_bundle_modified": false,
+  "fastapi_involved": false,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[BINDING] PI.LENS.WORKSPACE.EVIDENCE-GRAPH-PSIG-BINDING.02 — visible PSIG signal strip + PSIG-keyed vaultIndex + synthesized vault_targets; EVIDENCE graph shows PSIG-001/002/004 bright with strip label",
+
+  "git_hygiene_status": "COMPLETE"
+}
