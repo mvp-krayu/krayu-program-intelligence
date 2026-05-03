@@ -190,7 +190,9 @@ def update_manifest(
 ) -> None:
     """
     Add dom_layer_path to source_manifest.json if not already present.
-    Fail-closed if the field exists with a conflicting value.
+    If field exists with a conflicting value, treat as legacy reference metadata
+    and skip manifest update — do not fail run-specific execution.
+    PI.LENS.REAL-E2E-PIPELINE.BLOCKER-08-CLOSURE.01
     """
     manifest = load_json(manifest_path)
     existing = manifest.get("dom_layer_path")
@@ -199,11 +201,11 @@ def update_manifest(
         if existing == dom_layer_path_rel:
             print(f"  [SKIP]    dom_layer_path already set to correct value")
             return
-        fail_closed(
-            f"dom_layer_path already set to a conflicting value:\n"
-            f"  existing: {existing}\n"
-            f"  expected: {dom_layer_path_rel}"
-        )
+        print(f"  [LEGACY]  dom_layer_path in manifest refers to a legacy/reference path:")
+        print(f"            existing: {existing}")
+        print(f"            run-path: {dom_layer_path_rel}")
+        print(f"  [LEGACY]  manifest not updated — run-specific output path used for this run")
+        return
 
     manifest["dom_layer_path"] = dom_layer_path_rel
 
