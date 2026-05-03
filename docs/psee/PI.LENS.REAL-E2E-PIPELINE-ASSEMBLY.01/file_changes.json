@@ -1,0 +1,25 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE-ASSEMBLY.01",
+  "generated_date": "2026-05-03",
+  "baseline_commit": "fa6b62dc5242af9b21c691d94d99e3c8019258ca",
+
+  "files_created": [
+    "scripts/pios/lens_e2e_assemble.sh",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE-ASSEMBLY.01/stage_map.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE-ASSEMBLY.01/validation_result.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE-ASSEMBLY.01/file_changes.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE-ASSEMBLY.01/execution_report.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE-ASSEMBLY.01/validation_log.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE-ASSEMBLY.01/git_hygiene.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE-ASSEMBLY.01/CLOSURE.md"
+  ],
+  "files_modified": [],
+  "files_deleted": [],
+
+  "pipeline_executed": false,
+  "canonical_data_mutated": false,
+  "renderer_modified": false,
+  "semantic_bundle_modified": false,
+  "ui_modified": false,
+  "api_modified": false
+}

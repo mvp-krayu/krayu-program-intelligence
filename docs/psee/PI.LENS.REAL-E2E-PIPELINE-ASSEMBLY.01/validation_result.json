@@ -1,0 +1,92 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE-ASSEMBLY.01",
+  "generated_date": "2026-05-03",
+  "mode": "validate",
+  "pipeline_executed": false,
+  "artifacts_mutated": false,
+
+  "checks": [
+    {
+      "name": "assembly_script_syntax",
+      "status": "PASS",
+      "detail": "bash -n scripts/pios/lens_e2e_assemble.sh → no syntax errors"
+    },
+    {
+      "name": "assembly_script_executable",
+      "status": "PASS",
+      "detail": "scripts/pios/lens_e2e_assemble.sh — chmod +x applied"
+    },
+    {
+      "name": "validate_mode_exits_zero",
+      "status": "PASS",
+      "detail": "lens_e2e_assemble.sh --mode validate → exit 0"
+    },
+    {
+      "name": "stage_01_source_manifest",
+      "status": "PASS",
+      "detail": "clients/blueedge/sources/source_01/source_manifest.json — READY_CALLABLE"
+    },
+    {
+      "name": "stage_02_intake_classified",
+      "status": "PASS",
+      "detail": "intake/ absent for run_blueedge_productized_01_fixed — correctly classified MISSING_INPUT"
+    },
+    {
+      "name": "stage_03_structure_present",
+      "status": "PASS",
+      "detail": "canonical_topology.json in semantic/topology/ — READY_LOCKED_REFERENCE"
+    },
+    {
+      "name": "stage_04_ceu_classified",
+      "status": "PASS",
+      "detail": "ceu/ absent for run_blueedge_productized_01_fixed — correctly classified MISSING_INPUT"
+    },
+    {
+      "name": "stage_05_dom_classified",
+      "status": "PASS",
+      "detail": "dom_layer.json absent — correctly classified MISSING_INPUT"
+    },
+    {
+      "name": "stage_06_vault_locked_reference",
+      "status": "PASS",
+      "detail": "vault/ in run_blueedge_productized_01 — correctly classified READY_LOCKED_REFERENCE"
+    },
+    {
+      "name": "stage_07_semantic_bundle",
+      "status": "PASS",
+      "detail": "semantic_bundle_manifest.json present — READY_LOCKED_REFERENCE"
+    },
+    {
+      "name": "stage_08_reports_ready",
+      "status": "PASS",
+      "detail": "all 4 HTML reports + lens_generate.sh present — READY_CALLABLE"
+    },
+    {
+      "name": "stage_09_runtime_ready",
+      "status": "PASS",
+      "detail": "lens.js + workspace.js present — READY_CALLABLE"
+    },
+    {
+      "name": "all_producers_present",
+      "status": "PASS",
+      "detail": "All 8 declared producers present: source_intake.py, structural_scanner.py, ceu_grounding.py, dom_layer_generator.py, run_client_pipeline.py, lens_generate.sh, lens_demo.sh, lens_report_generator.py"
+    },
+    {
+      "name": "no_pipeline_executed",
+      "status": "PASS",
+      "detail": "validate mode only — no pipeline execution occurred"
+    },
+    {
+      "name": "no_artifacts_mutated",
+      "status": "PASS",
+      "detail": "no canonical data modified; no vault or semantic mutations"
+    },
+    {
+      "name": "overall_status_partial",
+      "status": "PASS",
+      "detail": "PARTIAL correctly derived — stages 02, 04, 05 are MISSING_INPUT; stages 01, 03, 06, 07, 08, 09 are READY"
+    }
+  ],
+
+  "validation_status": "PASS"
+}
