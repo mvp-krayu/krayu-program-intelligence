@@ -1,0 +1,39 @@
+{
+  "contract_id": "PI.LENS.SOURCE-INTAKE.CONTRACT-CLOSURE.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-03",
+
+  "branch": "work/psee-runtime",
+  "baseline_commit": "49f3b688edcce879b66c25a1384b33b2693693e2",
+  "baseline_commit_message": "[CONTRACT] LENS E2E stage blockers closed into implementation backlog",
+
+  "working_tree_before": "CLEAN",
+  "working_tree_after": "1 producer script modified (tracked), 1 evidence directory created (untracked)",
+
+  "files_modified_tracked": [
+    "scripts/pios/source_intake.py"
+  ],
+  "files_created_tracked": [
+    "docs/psee/PI.LENS.SOURCE-INTAKE.CONTRACT-CLOSURE.01/source_intake_contract_decision.md",
+    "docs/psee/PI.LENS.SOURCE-INTAKE.CONTRACT-CLOSURE.01/implementation_summary.md",
+    "docs/psee/PI.LENS.SOURCE-INTAKE.CONTRACT-CLOSURE.01/validation_result.json",
+    "docs/psee/PI.LENS.SOURCE-INTAKE.CONTRACT-CLOSURE.01/external_path_classification.json",
+    "docs/psee/PI.LENS.SOURCE-INTAKE.CONTRACT-CLOSURE.01/no_pipeline_attestation.md",
+    "docs/psee/PI.LENS.SOURCE-INTAKE.CONTRACT-CLOSURE.01/git_hygiene.json"
+  ],
+  "files_modified_gitignored": [],
+
+  "pipeline_executed": false,
+  "canonical_artifacts_mutated": false,
+  "producer_scripts_modified": ["scripts/pios/source_intake.py"],
+  "renderer_modified": false,
+  "semantic_bundle_modified": false,
+  "ui_modified": false,
+  "api_modified": false,
+  "fastapi_involved": false,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[FIX] PI.LENS.SOURCE-INTAKE.CONTRACT-CLOSURE.01 — source_intake.py supports external archive_path; classify_path() helper; BLOCKER-01 closed",
+
+  "git_hygiene_status": "COMPLETE"
+}

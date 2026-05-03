@@ -1,0 +1,17 @@
+{
+  "contract_id": "PI.LENS.SOURCE-INTAKE.CONTRACT-CLOSURE.01",
+  "generated_date": "2026-05-03",
+  "client": "blueedge",
+  "source": "source_01",
+  "archive_path_raw": "/Users/khorrix/Projects/blueedge-clean-run/source-raw/raw/blueedge-platform-v3_23_0-COMPLETE.tar",
+  "archive_path_type": "EXTERNAL_ABSOLUTE",
+  "inside_repo": false,
+  "archive_exists": true,
+  "sha256_match": true,
+  "classify_path_output": {
+    "path": "/Users/khorrix/Projects/blueedge-clean-run/source-raw/raw/blueedge-platform-v3_23_0-COMPLETE.tar",
+    "path_type": "EXTERNAL_ABSOLUTE",
+    "inside_repo": false
+  },
+  "classification_status": "PASS"
+}
