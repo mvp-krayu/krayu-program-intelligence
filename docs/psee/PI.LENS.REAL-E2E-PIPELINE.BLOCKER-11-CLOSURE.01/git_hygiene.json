@@ -1,0 +1,31 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE.BLOCKER-11-CLOSURE.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-03",
+
+  "branch": "work/psee-runtime",
+  "baseline_commit": "aaf7859ccda006d0b84173ec6063984b11c6da67",
+  "baseline_commit_message": "[FIX] E2E Phase 6 signal projection conformance artifact restored",
+
+  "working_tree_before": "CLEAN",
+  "working_tree_after": "1 evidence directory untracked; no artifacts created; no files modified",
+
+  "files_modified_tracked": [],
+  "files_created_untracked": [
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-11-CLOSURE.01/dom_layer_source_trace.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-11-CLOSURE.01/implementation_summary.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-11-CLOSURE.01/validation_result.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-11-CLOSURE.01/phase8a_execution_log.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-11-CLOSURE.01/no_free_patching_attestation.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-11-CLOSURE.01/git_hygiene.json"
+  ],
+
+  "dom_artifact_created": false,
+  "fail_closed_reason": "NO_GOVERNED_SOURCE",
+  "pipeline_executed": false,
+  "wrapper_executed": false,
+  "canonical_artifacts_mutated": false,
+  "producer_scripts_modified": false,
+
+  "git_hygiene_status": "COMPLETE"
+}

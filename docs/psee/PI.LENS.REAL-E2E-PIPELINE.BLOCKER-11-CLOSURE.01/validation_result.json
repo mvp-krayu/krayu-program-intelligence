@@ -1,0 +1,32 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE.BLOCKER-11-CLOSURE.01",
+  "generated_date": "2026-05-03",
+
+  "dom_path_domain_layer_artifact_present": false,
+  "dom_path_domain_layer_source_known": false,
+  "source_shape_valid": false,
+  "phase8a_status": "FAIL",
+  "blocker_11_resolved": false,
+  "reason": "NO_GOVERNED_SOURCE",
+
+  "search_locations_checked": [
+    "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/ — 15 files, none match",
+    "clients/blueedge/psee/runs/run_blueedge_e2e_execute_01/dom/dom_layer.json — wrong contract (PI.LENS.DOM-LAYER.GENERATOR.01), wrong topology (945 nodes, 1 domain)",
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01/ — directory absent",
+    "docs/psee named DOM/domain artifacts — documentation only, no data artifact"
+  ],
+
+  "candidate_found": "clients/blueedge/psee/runs/run_blueedge_e2e_execute_01/dom/dom_layer.json",
+  "candidate_rejected_reason": "Wrong contract identity (PI.LENS.DOM-LAYER.GENERATOR.01 not FastAPI conformance), wrong topology (945 nodes/1 domain vs expected 35 nodes/13 domains). Content would produce incorrect vault canonical_topology.",
+
+  "remediation_options": [
+    "A: Authorize replay of PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01 to regenerate dom_path_domain_layer.json",
+    "B: Authorize explicit derivation from vault canonical_topology.json + binding envelope dom_groups data",
+    "C: Authorize source_manifest dom_layer_path update to point to run-specific dom_layer.json (incompatible topology)"
+  ],
+
+  "producer_scripts_modified": false,
+  "pipeline_full_execution": false,
+  "canonical_artifacts_mutated": false,
+  "validation_status": "FAIL"
+}
