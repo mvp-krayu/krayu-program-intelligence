@@ -1,0 +1,81 @@
+{
+  "schema_version": "1.0",
+  "stream": "PI.PSEE-PIOS.ENRICHMENT-PARTICIPATION-ADVISORY.IMPLEMENTATION.01",
+  "design_ref": "docs/psee/PI.PSEE-PIOS.ENRICHED-CONDITION-PARTICIPATION.DESIGN.01/ENRICHED_CONDITION_PARTICIPATION.md",
+  "gate_design_ref": "docs/psee/PI.PSEE-PIOS.PSEE-CONDITION-ACTIVATION-GATE.DESIGN.01/PSEE_CONDITION_ACTIVATION_GATE.md",
+  "evaluated_at": "2026-05-06T13:40:47.661713+00:00",
+  "client_id": "fastapi",
+  "run_id": "run_02_oss_fastapi_pipeline",
+  "lane_scope": [
+    "A",
+    "D"
+  ],
+  "advisory_mode": "ADVISORY_ONLY_MODE",
+  "participation_mode": "OBSERVATIONAL_ONLY",
+  "activation_state": "ENRICHMENT_READY",
+  "bp_01_status": "NOT_RESOLVED",
+  "bp_02_status": "RESOLVED",
+  "activation_authorized": false,
+  "enriched_participation": "NOT_ACTIVE",
+  "enrichment_inputs_present": [
+    "psee_context",
+    "psee_context.grounding_ratio",
+    "ceu_topology",
+    "structural_overlap",
+    "selector_context",
+    "evidence_state"
+  ],
+  "enrichment_inputs_missing": [
+    "selector_context.selector_confidence",
+    "evidence_state.evidence_confidence"
+  ],
+  "degradation_state": "CONTEXT_INCOMPLETE",
+  "advisory_count": 2,
+  "advisories": [
+    {
+      "advisory_id": "ADV-001",
+      "advisory_type": "confidence_downgrade",
+      "advisory_state": "CONTEXT_INCOMPLETE",
+      "advisory_reason": "evidence_state.evidence_confidence is null \u2014 derivation not yet implemented. Enrichment confidence context is partially available. Grounding ratio is within nominal range; this is not a hard downgrade.",
+      "enrichment_inputs_used": [
+        "evidence_state.evidence_confidence"
+      ],
+      "emitted_at": "2026-05-06T13:40:47.661713+00:00",
+      "note": "CONTEXT_INCOMPLETE: grounding_ratio is nominal but evidence_confidence derivation is pending. Full enrichment confidence context requires evidence_confidence to be non-null. Participation mode remains OBSERVATIONAL_ONLY."
+    },
+    {
+      "advisory_id": "ADV-002",
+      "advisory_type": "evidence_insufficiency",
+      "advisory_state": "PENDING_DERIVATION",
+      "advisory_reason": "evidence_state.evidence_confidence is null \u2014 required for SUPPRESSION_ADVISORY (MODE-03) quality checks and ENRICHED_PARTICIPATION (MODE-05) | structural_overlap.edge_count is 0 (placeholder) despite cluster_count=19. OVERLAP_STRUCTURAL derivation is not yet implemented. ESCALATION_ADVISORY (MODE-04) structural trigger is unavailable. | selector_context.selector_confidence is null \u2014 selector execution not yet authorized. ENRICHED_PARTICIPATION (MODE-05) requires non-null selector_confidence.",
+      "enrichment_inputs_used": [
+        "evidence_state.evidence_confidence",
+        "structural_overlap.edge_count",
+        "selector_context.selector_confidence"
+      ],
+      "emitted_at": "2026-05-06T13:40:47.661713+00:00",
+      "note": "PENDING_DERIVATION: these inputs will be available after upstream derivation streams are issued and implemented. Current state: OBSERVATIONAL_ONLY."
+    }
+  ],
+  "observability_status": {
+    "gate_evaluation_present": true,
+    "psee_binding_envelope_present": true,
+    "obs_01_participation_reason_log": true,
+    "obs_02_enrichment_source_trace": true,
+    "obs_03_degradation_logged": true,
+    "obs_04_activation_state_visible": true,
+    "obs_05_advisory_artifact_written": true
+  },
+  "runtime_impact": "NONE",
+  "evaluator_authority": "OBSERVATIONAL_ONLY",
+  "zero_impact_guarantee": {
+    "runtime_artifacts_modified": false,
+    "75x_behavior_changed": false,
+    "41x_behavior_changed": false,
+    "signal_values_changed": false,
+    "reports_changed": false,
+    "binding_envelope_modified": false,
+    "psee_binding_envelope_modified": false,
+    "thresholds_modified": false
+  }
+}
