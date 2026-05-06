@@ -1,0 +1,108 @@
+{
+  "schema_version": "1.0",
+  "stream": "PI.PSEE-PIOS.PSEE-GATE-EVALUATOR.IMPLEMENTATION.01",
+  "gate_design_ref": "docs/psee/PI.PSEE-PIOS.PSEE-CONDITION-ACTIVATION-GATE.DESIGN.01/PSEE_CONDITION_ACTIVATION_GATE.md",
+  "evaluated_at": "2026-05-06T13:18:53.080209+00:00",
+  "client_id": "fastapi",
+  "run_id": "run_02_oss_fastapi_pipeline",
+  "lane_scope": [
+    "A",
+    "D"
+  ],
+  "activation_state": "ENRICHMENT_READY",
+  "bp_01_resolved": false,
+  "bp_02_resolved": true,
+  "readiness_status": "READY",
+  "grounding_ratio": 0.9,
+  "cluster_count": 19,
+  "activation_authorized": false,
+  "degradation_reason": "G-07: BP-01: bp_01_resolved = true | G-08: activation_authorized = true (explicit governance flag) | G-09: sidecar present and READY (psee_40_5_input.json)",
+  "enrichment_inputs_present": [
+    "psee_binding_envelope.json",
+    "vault_readiness.json",
+    "canonical_topology.json",
+    "grounding_state_v3.json"
+  ],
+  "gate_results": [
+    {
+      "gate_id": "G-01",
+      "description": "vault_readiness.status = READY",
+      "result": "PASS",
+      "observed_value": "READY",
+      "required_value": "READY"
+    },
+    {
+      "gate_id": "G-02",
+      "description": "canonical_topology.cluster_count > 0 (BP-02)",
+      "result": "PASS",
+      "observed_value": 19,
+      "required_value": "> 0"
+    },
+    {
+      "gate_id": "G-03",
+      "description": "grounding_ratio >= 0.5",
+      "result": "PASS",
+      "observed_value": 0.9,
+      "required_value": ">= 0.5"
+    },
+    {
+      "gate_id": "G-04",
+      "description": "grounding_state_v3.validation_status = PASS",
+      "result": "PASS",
+      "observed_value": "PASS",
+      "required_value": "PASS"
+    },
+    {
+      "gate_id": "G-05",
+      "description": "psee_context.readiness = READY",
+      "result": "PASS",
+      "observed_value": "READY",
+      "required_value": "READY"
+    },
+    {
+      "gate_id": "G-06",
+      "description": "ceu_topology.cluster_count consistent with canonical_topology",
+      "result": "PASS",
+      "observed_value": 19,
+      "required_value": "19"
+    },
+    {
+      "gate_id": "G-07",
+      "description": "BP-01: bp_01_resolved = true",
+      "result": "FAIL",
+      "observed_value": false,
+      "required_value": true,
+      "note": "Authorization gate \u2014 requires psig_computation.json (40x.04 contract)"
+    },
+    {
+      "gate_id": "G-08",
+      "description": "activation_authorized = true (explicit governance flag)",
+      "result": "FAIL",
+      "observed_value": false,
+      "required_value": true,
+      "note": "Never implicit \u2014 must be set by governance authority"
+    },
+    {
+      "gate_id": "G-09",
+      "description": "sidecar present and READY (psee_40_5_input.json)",
+      "result": "FAIL",
+      "observed_value": {
+        "present": false,
+        "readiness": null,
+        "handoff_mode": null,
+        "st_030_present": false,
+        "st_031_present": false
+      },
+      "required_value": "present, readiness=READY, handoff_mode=PSEE_HANDOFF, st_030/031 non-null",
+      "note": "Sidecar not yet produced \u2014 Step C (build_psee_handoff_sidecar.py) not yet implemented"
+    }
+  ],
+  "evaluator_authority": "OBSERVATIONAL_ONLY",
+  "zero_impact_guarantee": {
+    "runtime_artifacts_modified": false,
+    "75x_behavior_changed": false,
+    "41x_behavior_changed": false,
+    "reports_changed": false,
+    "signal_values_changed": false
+  }
+}
