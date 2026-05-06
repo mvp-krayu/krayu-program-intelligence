@@ -1,0 +1,142 @@
+{
+  "version": "1.0",
+  "status": "ACTIVE_RESERVED_NAMESPACE",
+  "generated": "2026-05-06",
+  "lane_scope": ["A", "D"],
+  "authority": {
+    "consumption_contract": "docs/psee/PI.PSEE-PIOS.BINDING-ENVELOPE-CONSUMPTION-CONTRACT.01/BINDING_ENVELOPE_CONSUMPTION_CONTRACT.md",
+    "stream": "PI.PSEE-PIOS.BINDING-ENVELOPE-ENRICHMENT-METADATA.IMPLEMENTATION.01"
+  },
+  "note": "These fields are reserved PSEE enrichment keys for binding/binding_envelope.json. Current 75.x runtime ignores them (Guarantee G-02). Future Lane D condition activation MAY consume them when BP-01 and BP-02 are resolved.",
+  "additive_only_rule": "All fields below are additive. No existing field in binding_envelope.json may be renamed or removed to accommodate these.",
+  "enrichment_keys": {
+    "psee_context": {
+      "purpose": "Overall PSEE pipeline readiness and activation gate",
+      "consumed_by_lane_a_runtime": false,
+      "schema": {
+        "readiness": {
+          "type": "string",
+          "allowed_values": ["READY", "NOT_READY"],
+          "source": "vault/vault_readiness.json$.status"
+        },
+        "disable_reason": {
+          "type": "string_or_null",
+          "description": "Populated when readiness is NOT_READY; null otherwise"
+        },
+        "cluster_count": {
+          "type": "integer",
+          "source": "structure/40.4/canonical_topology.json$.cluster_count",
+          "note": "0 means PSEE topology is trivial; BP-02 requires > 0"
+        },
+        "grounding_ratio": {
+          "type": "number_or_null",
+          "source": "ceu/grounding_state_v3.json$.grounding_ratio",
+          "note": "Ratio of grounded CEUs; >= 0.5 required for PSEE mode"
+        },
+        "bp_01_resolved": {
+          "type": "boolean",
+          "description": "true when psig_computation.json authorization (40x.04 contract) is issued",
+          "current_value": false
+        },
+        "bp_02_resolved": {
+          "type": "boolean",
+          "description": "true when cluster_count > 0",
+          "derivation": "cluster_count > 0"
+        }
+      }
+    },
+    "ceu_topology": {
+      "purpose": "PSEE-specific CEU cluster membership and cross-cluster relational structure",
+      "consumed_by_lane_a_runtime": false,
+      "schema": {
+        "cluster_count": {
+          "type": "integer",
+          "source": "structure/40.4/canonical_topology.json$.cluster_count"
+        },
+        "clusters": {
+          "type": "array",
+          "item_schema": {
+            "cluster_id": "string",
+            "name": "string",
+            "node_count": "integer",
+            "node_ids": "array_of_string"
+          },
+          "source": "structure/40.4/canonical_topology.json$.clusters"
+        },
+        "cross_cluster_edges": {
+          "type": "array",
+          "description": "Edges connecting nodes in different clusters; placeholder until OVERLAP_STRUCTURAL derivation is implemented",
+          "current_value": []
+        }
+      }
+    },
+    "structural_overlap": {
+      "purpose": "OVERLAP_STRUCTURAL edges between CEUs in different clusters",
+      "consumed_by_lane_a_runtime": false,
+      "note": "ST-032 (CROSS_DOMAIN_EDGE_COUNT) will derive from this field. Not populated until Lane C OVERLAP_STRUCTURAL edge derivation is promoted to Lane A.",
+      "schema": {
+        "edges": {
+          "type": "array",
+          "item_schema": {
+            "from_node": "string",
+            "to_node": "string",
+            "overlap_type": "string",
+            "cluster_from": "string",
+            "cluster_to": "string"
+          },
+          "current_value": []
+        },
+        "edge_count": {
+          "type": "integer",
+          "current_value": 0
+        }
+      }
+    },
+    "selector_context": {
+      "purpose": "Selector-phase output identifying active PSEE selector and its confidence",
+      "consumed_by_lane_a_runtime": false,
+      "note": "Not populated until selector execution is authorized. Not a direct input to condition activation.",
+      "schema": {
+        "active_selector": {
+          "type": "string_or_null",
+          "current_value": null
+        },
+        "selector_confidence": {
+          "type": "number_or_null",
+          "current_value": null
+        },
+        "suppression_flags": {
+          "type": "array",
+          "current_value": []
+        }
+      }
+    },
+    "evidence_state": {
+      "purpose": "Evidence confidence digest and grounding state for PSEE enrichment gating",
+      "consumed_by_lane_a_runtime": false,
+      "schema": {
+        "grounding_ratio": {
+          "type": "number_or_null",
+          "source": "ceu/grounding_state_v3.json$.grounding_ratio"
+        },
+        "total_ceu": {
+          "type": "integer",
+          "source": "ceu/grounding_state_v3.json$.total_ceu"
+        },
+        "grounded_count": {
+          "type": "integer",
+          "source": "ceu/grounding_state_v3.json$.grounded_count"
+        },
+        "vault_readiness_status": {
+          "type": "string",
+          "source": "vault/vault_readiness.json$.status"
+        },
+        "evidence_confidence": {
+          "type": "number_or_null",
+          "description": "Aggregate evidence confidence score; not yet computed",
+          "current_value": null
+        }
+      }
+    }
+  }
+}
