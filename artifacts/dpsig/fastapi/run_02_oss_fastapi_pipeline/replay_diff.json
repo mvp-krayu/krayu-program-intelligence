@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "stream": "PI.PSEE-PIOS.DPSIG-RUNTIME-NORMALIZATION.IMPLEMENTATION.01",
+  "generated_at": "2026-05-07T10:36:17.758957+00:00",
+  "client_id": "fastapi",
+  "run_id": "run_02_oss_fastapi_pipeline",
+  "replay_run_1_generated_at": "2026-05-07T10:34:45.268820+00:00",
+  "replay_run_2_generated_at": "2026-05-07T10:35:10.722096+00:00",
+  "topology_snapshot_hash": "08480c17c6fbfdccd4c304aee1ade1677dec748c40f779d5667ec61e02c3987c",
+  "overall_verdict": "IDENTICAL",
+  "taxonomy_01_fields_checked": 32,
+  "taxonomy_01_identical": 32,
+  "taxonomy_01_diverged": 0,
+  "taxonomy_02_fields_confirmed_varying": 1,
+  "signal_verdicts": [
+    {
+      "signal_id": "DPSIG-031",
+      "verdict": "IDENTICAL",
+      "signal_value_run1": 5.6126,
+      "signal_value_run2": 5.6126,
+      "activation_state_run1": "CLUSTER_PRESSURE_HIGH",
+      "activation_state_run2": "CLUSTER_PRESSURE_HIGH",
+      "signal_stable_key_match": true,
+      "derivation_hash_match": true,
+      "signal_stable_key": "b70663c865b168b5",
+      "derivation_hash": "68da13a4d0bbea368d927b34e4b33d6a961d948759fb141c19b52a24e0b58571"
+    },
+    {
+      "signal_id": "DPSIG-032",
+      "verdict": "IDENTICAL",
+      "signal_value_run1": 0.7236,
+      "signal_value_run2": 0.7236,
+      "activation_state_run1": "DOMINANT_CLUSTER",
+      "activation_state_run2": "DOMINANT_CLUSTER",
+      "signal_stable_key_match": true,
+      "derivation_hash_match": true,
+      "signal_stable_key": "2358e0b083acda90",
+      "derivation_hash": "cb3c5a6d0194f78d6e6f004d7c4b778fb0afa4eda26e3305f99d49300b98c87a"
+    }
+  ],
+  "field_diffs": [],
+  "governance_assertions": {
+    "lane_a_impact": "NONE",
+    "signal_registry_modified": false,
+    "psig_activation_modified": false,
+    "threshold_modified": false,
+    "client_specific_logic": false,
+    "forbidden_traversal": false
+  }
+}
