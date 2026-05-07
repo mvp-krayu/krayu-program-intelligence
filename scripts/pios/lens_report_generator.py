@@ -2753,6 +2753,18 @@ def _load_binding_envelope() -> Optional[Dict]:
 # Lane A sovereign — no modification of signal_registry.json or 75.x artifacts
 # ---------------------------------------------------------------------------
 
+# Executive Readiness Gate — false-positive container sets
+# PI.PSEE-PIOS.DPSIG-EXECUTIVE-READINESS-GATE.01 Rule C-01/C-02
+_DPSIG_DIAGNOSTIC_ONLY_CONTAINERS: frozenset = frozenset({
+    "src", "app", "lib", "utils", "common", "core", "main", "pkg", "packages",
+})
+_DPSIG_SUPPRESSED_CONTAINERS: frozenset = frozenset({
+    "generated", "proto", "build", "dist", "__generated__",
+    "vendor", "node_modules", "third_party", "external",
+    "test", "tests", "spec", "docs", "fixtures", "mocks",
+})
+
+
 def load_dpsig_signal_set() -> Optional[Dict]:
     """Load DPSIG signal set for active client/run. Returns None if absent — graceful fallback."""
     path = REPO_ROOT / "artifacts" / "dpsig" / _ACTIVE_CLIENT / _ACTIVE_VAULT_RUN_ID / "dpsig_signal_set.json"
@@ -2889,11 +2901,113 @@ def _compute_dpsig_weights(dpsig: Optional[Dict]) -> Optional[Dict]:
     }
 
 
-def _render_dpsig_cluster_pressure_html(dpsig: Optional[Dict], weights: Optional[Dict]) -> str:
+def _classify_dpsig_readiness_state(
+    dpsig: Optional[Dict], weights: Optional[Dict]
+) -> Optional[Dict]:
+    """Classify DPSIG executive readiness state.
+    Returns None if dpsig/weights absent. Deterministic, client-agnostic.
+    Implements PI.PSEE-PIOS.DPSIG-EXECUTIVE-READINESS-GATE.01 Rules C-01..C-04.
+    """
+    if dpsig is None or weights is None or weights.get("null_topology"):
+        return None
+
+    max_name = (weights.get("max_cluster_name") or "").strip().lower()
+    fp_flags: list = []
+
+    # Rule C-02 — suppressed containers (generated/vendor/test)
+    if max_name in _DPSIG_SUPPRESSED_CONTAINERS:
+        return {
+            "readiness_state":              "SUPPRESSED_FROM_EXECUTIVE",
+            "readiness_reason":             f"Dominant cluster '{max_name}' is a generated/vendor/test container (Rule C-02)",
+            "grounding_status":             "NOT_APPLICABLE",
+            "executive_rendering_allowed":  False,
+            "diagnostic_rendering_allowed": False,
+            "false_positive_flags":         ["GENERATED_OR_VENDOR_CONTAINER"],
+            "domain_grounding_required":    False,
+            "render_surface":               "INTERNAL_AUDIT_ONLY",
+        }
+
+    # Rule C-01 — filesystem container check
+    is_fs_container = max_name in _DPSIG_DIAGNOSTIC_ONLY_CONTAINERS
+    if is_fs_container:
+        fp_flags.append("FILESYSTEM_CONTAINER_DOMINANCE")
+
+    # Check domain grounding via semantic context (reads loaded global _SEMANTIC_TOPOLOGY_MODEL)
+    sem_ctx = _build_semantic_report_context()
+    backed  = sem_ctx.get("structurally_backed_domains", 0)
+    total   = sem_ctx.get("total_semantic_domains", 0)
+    all_ungrounded = (backed == 0)
+
+    if is_fs_container:
+        if not all_ungrounded:
+            # Rule C-04 override: domain grounding present → elevate to WITH_QUALIFIER
+            return {
+                "readiness_state":              "EXECUTIVE_READY_WITH_QUALIFIER",
+                "readiness_reason":             f"Dominant cluster '{max_name}' is a filesystem container; partial domain grounding present (Rule C-04)",
+                "grounding_status":             "PARTIAL",
+                "executive_rendering_allowed":  True,
+                "diagnostic_rendering_allowed": True,
+                "false_positive_flags":         fp_flags,
+                "domain_grounding_required":    False,
+                "render_surface":               "TIER1_WITH_QUALIFIER",
+            }
+        else:
+            return {
+                "readiness_state":              "DIAGNOSTIC_ONLY",
+                "readiness_reason":             f"Dominant cluster '{max_name}' is an ungrounded filesystem container (Rule C-01)",
+                "grounding_status":             "NONE",
+                "executive_rendering_allowed":  False,
+                "diagnostic_rendering_allowed": True,
+                "false_positive_flags":         fp_flags,
+                "domain_grounding_required":    True,
+                "render_surface":               "DIAGNOSTIC_AND_ENGINEERING_ONLY",
+            }
+
+    # Not a container — check grounding level
+    if all_ungrounded:
+        return {
+            "readiness_state":              "BLOCKED_PENDING_DOMAIN_GROUNDING",
+            "readiness_reason":             "No domain grounding available for any domain in this topology",
+            "grounding_status":             "NONE",
+            "executive_rendering_allowed":  False,
+            "diagnostic_rendering_allowed": False,
+            "false_positive_flags":         fp_flags,
+            "domain_grounding_required":    True,
+            "render_surface":               "ENGINEERING_INTERNAL_ONLY",
+        }
+
+    grounding_ratio = backed / total if total > 0 else 0.0
+    if grounding_ratio >= 0.5:
+        return {
+            "readiness_state":              "EXECUTIVE_READY",
+            "readiness_reason":             f"Domain grounding confirmed ({backed}/{total} domains structurally backed)",
+            "grounding_status":             "GROUNDED",
+            "executive_rendering_allowed":  True,
+            "diagnostic_rendering_allowed": True,
+            "false_positive_flags":         fp_flags,
+            "domain_grounding_required":    False,
+            "render_surface":               "ALL_SURFACES",
+        }
+    return {
+        "readiness_state":              "EXECUTIVE_READY_WITH_QUALIFIER",
+        "readiness_reason":             f"Domain grounding partially present ({backed}/{total} domains backed)",
+        "grounding_status":             "PARTIAL",
+        "executive_rendering_allowed":  True,
+        "diagnostic_rendering_allowed": True,
+        "false_positive_flags":         fp_flags,
+        "domain_grounding_required":    False,
+        "render_surface":               "TIER1_WITH_QUALIFIER",
+    }
+
+
+def _render_dpsig_cluster_pressure_html(
+    dpsig: Optional[Dict], weights: Optional[Dict], readiness: Optional[Dict] = None
+) -> str:
     """Render DPSIG cluster pressure block for TIER-1 injection.
     Returns empty string if dpsig/weights absent or NULL_TOPOLOGY.
     All rendered text derives exclusively from TAXONOMY-01-stable fields. No inference.
     Implements DPSIG_PROJECTION_INTEGRATION.md Sections 4, 5, 6, 7, 8.
+    Implements DPSIG_EXECUTIVE_READINESS_GATE.IMPLEMENTATION.01 rendering rules.
     """
     if dpsig is None or weights is None or weights.get("null_topology"):
         return ""
@@ -2988,16 +3102,71 @@ def _render_dpsig_cluster_pressure_html(dpsig: Optional[Dict], weights: Optional
             f'<td style="padding:8px 10px"></td></tr>'
         )
 
+    # Executive Readiness Gate — compute rendering variables
+    # PI.PSEE-PIOS.DPSIG-EXECUTIVE-READINESS-GATE.IMPLEMENTATION.01
+    _rs        = (readiness or {}).get("readiness_state", "EXECUTIVE_READY")
+    _fp_flags  = (readiness or {}).get("false_positive_flags", [])
+    _diag_only = _rs in ("DIAGNOSTIC_ONLY", "SUPPRESSED_FROM_EXECUTIVE", "BLOCKED_PENDING_DOMAIN_GROUNDING")
+    _with_qual = _rs == "EXECUTIVE_READY_WITH_QUALIFIER"
+
+    if _diag_only:
+        _render_callout_label = "STRUCTURAL DIAGNOSTIC — CLUSTER CONCENTRATION"
+        _render_border        = "border-left:3px solid var(--fg-muted)"
+        _render_label_color   = "var(--fg-muted)"
+        _render_main_line_1   = eng_031
+        _render_main_line_2   = eng_032
+        _render_qualifier_html = ""
+        _render_diag_notice   = (
+            '<div style="font-size:11px;color:var(--amber);margin-top:10px;padding-top:10px;'
+            'border-top:1px solid var(--border-subtle)">'
+            f'Readiness: {esc(_rs)} — Cluster is ungrounded. Structural diagnostic data only. '
+            'Not attributed to a named business capability. Engineering use only.</div>'
+        )
+    elif _with_qual:
+        _render_callout_label = callout_label
+        _render_border        = border_style
+        _render_label_color   = sev_color
+        _render_main_line_1   = exec_031
+        _render_main_line_2   = exec_032
+        _render_diag_notice   = ""
+        _render_qualifier_html = (
+            '<div style="font-size:11px;color:var(--amber);background:rgba(212,145,42,0.08);'
+            'border:1px solid rgba(212,145,42,0.25);padding:8px 12px;margin-bottom:10px;border-radius:2px">'
+            'QUALIFIER: Domain grounding is partial — interpretation confidence is limited. '
+            f'Validate with engineering before treating as strategic signal. [{esc(_rs)}]</div>'
+        )
+    else:
+        _render_callout_label = callout_label
+        _render_border        = border_style
+        _render_label_color   = sev_color
+        _render_main_line_1   = exec_031
+        _render_main_line_2   = exec_032
+        _render_diag_notice   = ""
+        _render_qualifier_html = ""
+
+    _readiness_metadata_html = ""
+    if readiness:
+        _rm_exec = "YES" if readiness.get("executive_rendering_allowed") else "NO"
+        _rm_diag = "YES" if readiness.get("diagnostic_rendering_allowed") else "NO"
+        _fp_str  = ", ".join(_fp_flags) if _fp_flags else "NONE"
+        _readiness_metadata_html = (
+            f'<div style="font-size:9px;color:var(--fg-dim);opacity:.5;margin-top:2px">'
+            f'readiness_state={esc(_rs)} · executive_rendering={_rm_exec} · '
+            f'diagnostic_rendering={_rm_diag} · false_positive_flags=[{_fp_str}] · '
+            f'grounding_status={esc(readiness.get("grounding_status", "—"))}'
+            f'</div>'
+        )
+
     return f"""
   <h2 style="margin-top:36px">Cluster Topology Intelligence
-    <span style="font-size:11px;font-weight:400;color:{sev_color};letter-spacing:.08em;margin-left:10px">{esc(sev_band)}</span>
+    <span style="font-size:11px;font-weight:400;color:{_render_label_color};letter-spacing:.08em;margin-left:10px">{esc(sev_band)}</span>
   </h2>
 
-  <div style="background:var(--surface);border:1px solid var(--border);{border_style};padding:18px 22px;margin:16px 0;border-radius:3px">
-    <div style="font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:{sev_color};margin-bottom:10px">{esc(callout_label)}</div>
-    <div style="font-size:14px;color:var(--fg);margin-bottom:8px">{esc(exec_031)}</div>
-    <div style="font-size:13px;color:var(--fg-muted);margin-bottom:6px">{esc(exec_032)}</div>
-    <div style="font-size:11px;color:var(--fg-dim);margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle)">{amp_stmt}</div>
+  <div style="background:var(--surface);border:1px solid var(--border);{_render_border};padding:18px 22px;margin:16px 0;border-radius:3px">
+    {_render_qualifier_html}<div style="font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:{_render_label_color};margin-bottom:10px">{esc(_render_callout_label)}</div>
+    <div style="font-size:14px;color:var(--fg);margin-bottom:8px">{esc(_render_main_line_1)}</div>
+    <div style="font-size:13px;color:var(--fg-muted);margin-bottom:6px">{esc(_render_main_line_2)}</div>
+    <div style="font-size:11px;color:var(--fg-dim);margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle)">{amp_stmt}</div>{_render_diag_notice}
   </div>
 
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:12px 0">
@@ -3049,7 +3218,7 @@ def _render_dpsig_cluster_pressure_html(dpsig: Optional[Dict], weights: Optional
     {esc(deriv_031)} &middot; {esc(deriv_032)} &middot; salience={cs_score} &middot; render_id={render_id}<br>
     Source: DPSIG Class 4 &middot; topology-native &middot; PI.PSEE-PIOS.DPSIG-PROJECTION-INTEGRATION.01
   </p>
-"""
+{_readiness_metadata_html}"""
 
 
 def _compute_structural_metrics(binding: Optional[Dict]) -> Dict:
@@ -3493,10 +3662,12 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
     band_lo = gauge["confidence"]["lower"]
     band_hi = gauge["confidence"]["upper"]
 
-    _dpsig_weights = _compute_dpsig_weights(dpsig)
-    _dpsig_html    = _render_dpsig_cluster_pressure_html(dpsig, _dpsig_weights)
-    _dpsig_apex    = _dpsig_html if (_dpsig_weights and _dpsig_weights.get("render_apex")) else ""
-    _dpsig_below   = _dpsig_html if (_dpsig_weights and not _dpsig_weights.get("render_apex")) else ""
+    _dpsig_weights   = _compute_dpsig_weights(dpsig)
+    _dpsig_readiness = _classify_dpsig_readiness_state(dpsig, _dpsig_weights)
+    _dpsig_html      = _render_dpsig_cluster_pressure_html(dpsig, _dpsig_weights, _dpsig_readiness)
+    _exec_ok         = (_dpsig_readiness or {}).get("executive_rendering_allowed", True)
+    _dpsig_apex      = _dpsig_html if (_dpsig_weights and _dpsig_weights.get("render_apex") and _exec_ok) else ""
+    _dpsig_below     = _dpsig_html if (_dpsig_weights and (not _dpsig_weights.get("render_apex") or not _exec_ok)) else ""
 
     use_psig = psig_proj is not None
     client_name = _get_client_display_name(publish_safe)
@@ -4197,7 +4368,8 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
     band_hi = gauge["confidence"]["upper"]
 
     _dpsig_weights   = _compute_dpsig_weights(dpsig)
-    _dpsig_narr_html = _render_dpsig_cluster_pressure_html(dpsig, _dpsig_weights)
+    _dpsig_readiness = _classify_dpsig_readiness_state(dpsig, _dpsig_weights)
+    _dpsig_narr_html = _render_dpsig_cluster_pressure_html(dpsig, _dpsig_weights, _dpsig_readiness)
 
     use_psig = psig_proj is not None
     client_name = _get_client_display_name(publish_safe)
