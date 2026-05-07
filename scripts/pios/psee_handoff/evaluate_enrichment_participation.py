@@ -14,6 +14,7 @@ Usage:
 
 import sys
 import json
+import hashlib
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -35,6 +36,7 @@ CLUSTER_ESCALATION_THRESHOLD = 10    # ADV-02: cluster_count above this + overla
 
 PARTICIPATION_MODE = "OBSERVATIONAL_ONLY"
 ADVISORY_MODE = "ADVISORY_ONLY_MODE"
+SCRIPT_VERSION = "2.0"
 
 
 def parse_args():
@@ -60,14 +62,30 @@ def load_json_optional(path: Path):
         return {"_load_error": str(exc)}, False
 
 
-def make_advisory(adv_id, adv_type, adv_state, reason, inputs_used, now_iso, note=None):
+def advisory_stable_key(adv_type: str, adv_state: str, inputs_used: list) -> str:
+    """Deterministic identity key: survives advisory_id resequencing (MDT-01)."""
+    canonical = f"{adv_type}|{adv_state}|{','.join(sorted(inputs_used))}"
+    return hashlib.sha256(canonical.encode()).hexdigest()[:16]
+
+
+def make_advisory(adv_id, adv_type, adv_state, reason, inputs_used, now_iso,
+                  note=None, participation_mode=PARTICIPATION_MODE,
+                  degradation_state=None, originating_artifact=None):
+    stable_key = advisory_stable_key(adv_type, adv_state, inputs_used)
     entry = {
-        "advisory_id": adv_id,
-        "advisory_type": adv_type,
-        "advisory_state": adv_state,
-        "advisory_reason": reason,
+        "advisory_id":           adv_id,
+        "advisory_stable_key":   stable_key,
+        "advisory_type":         adv_type,
+        "advisory_state":        adv_state,
+        "advisory_reason":       reason,
         "enrichment_inputs_used": inputs_used,
-        "emitted_at": now_iso,
+        "emitted_at":            now_iso,
+        # AL-01: originating_artifact (artifact advisory was derived from)
+        "originating_artifact":  originating_artifact or "binding/psee_binding_envelope.json",
+        # AL-04: participation_mode at emission
+        "participation_mode_at_emission": participation_mode,
+        # AL-05: degradation_state at emission (filled post-hoc via update)
+        "degradation_state_at_emission": degradation_state,
     }
     if note:
         entry["note"] = note
@@ -75,7 +93,8 @@ def make_advisory(adv_id, adv_type, adv_state, reason, inputs_used, now_iso, not
 
 
 def evaluate_advisories(psee_context, ceu_topology, structural_overlap,
-                         selector_context, evidence_state, now_iso):
+                         selector_context, evidence_state, now_iso,
+                         activation_authorized=False):
     advisories = []
     adv_seq = [0]
 
@@ -240,6 +259,7 @@ def evaluate_advisories(psee_context, ceu_topology, structural_overlap,
             f"ESCALATION_ADVISORY (MODE-04) structural trigger is unavailable."
         )
         insufficiency_inputs.append("structural_overlap.edge_count")
+        insufficiency_inputs.append("ceu_topology.cluster_count")
 
     if selector_confidence is None:
         insufficiency_reasons.append(
@@ -257,6 +277,26 @@ def evaluate_advisories(psee_context, ceu_topology, structural_overlap,
             note=(
                 "PENDING_DERIVATION: these inputs will be available after upstream derivation "
                 "streams are issued and implemented. Current state: OBSERVATIONAL_ONLY."
+            ),
+        ))
+
+    # ── ADV-05: Activation not authorized (MDT-07) ───────────────────────────────
+
+    if not activation_authorized:
+        advisories.append(make_advisory(
+            next_id(), "activation_not_authorized", "GOVERNANCE_BLOCKED",
+            (
+                "activation_authorized is false — explicit governance authorization has not been "
+                "issued. G-08 (gate_evaluation.json) must be set by governance authority before "
+                "any enriched participation mode can proceed."
+            ),
+            ["activation_authorized"],
+            now_iso,
+            originating_artifact="artifacts/psee_gate/<client>/<run_id>/gate_evaluation.json",
+            note=(
+                "GOVERNANCE_BLOCKED: no enriched participation mode is accessible until "
+                "activation_authorized is explicitly set to true by governance action. "
+                "This is not a data gap — it is an authorization gap."
             ),
         ))
 
@@ -309,11 +349,13 @@ def main():
         bp_01_status        = "UNKNOWN"
         bp_02_status        = "UNKNOWN"
         activation_authorized = False
+        gate_session_id     = None
     else:
         activation_state      = (gate_eval or {}).get("activation_state",      "UNKNOWN")
         bp_01_status          = "RESOLVED" if (gate_eval or {}).get("bp_01_resolved") else "NOT_RESOLVED"
         bp_02_status          = "RESOLVED" if (gate_eval or {}).get("bp_02_resolved") else "NOT_RESOLVED"
         activation_authorized = (gate_eval or {}).get("activation_authorized", False)
+        gate_session_id       = (gate_eval or {}).get("session_id")
 
     # ── Load psee_binding_envelope ───────────────────────────────────────────────
 
@@ -333,7 +375,12 @@ def main():
     advisories, inputs_present, inputs_missing, degradation_state = evaluate_advisories(
         psee_context, ceu_topology, structural_overlap,
         selector_context, evidence_state, now_iso,
+        activation_authorized=activation_authorized,
     )
+    # AL-05: back-fill degradation_state_at_emission now that it is known
+    for adv in advisories:
+        if adv.get("degradation_state_at_emission") is None:
+            adv["degradation_state_at_emission"] = degradation_state
 
     # ── Observability status ─────────────────────────────────────────────────────
 
@@ -360,8 +407,14 @@ def main():
         "design_ref": DESIGN_REF,
         "gate_design_ref": GATE_DESIGN_REF,
         "evaluated_at": now_iso,
+        "gate_session_id": gate_session_id,
         "client_id": client_id,
         "run_id": run_id,
+        "evaluation_context": {
+            "script_version": SCRIPT_VERSION,
+            "evaluated_at": now_iso,
+            "gate_session_id": gate_session_id,
+        },
         "lane_scope": ["A", "D"],
         "advisory_mode": ADVISORY_MODE,
         "participation_mode": PARTICIPATION_MODE,

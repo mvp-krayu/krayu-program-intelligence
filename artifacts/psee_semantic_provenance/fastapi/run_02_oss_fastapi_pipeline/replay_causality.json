@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "captured_at": "2026-05-07T07:47:47.602866+00:00",
+  "gate_session_id": "8149e858d47767c352525a66b78f8ac45b9ee037dbcb510f3462d84e310ee0be",
+  "client_id": "fastapi",
+  "run_id": "run_02_oss_fastapi_pipeline",
+  "advisory_stable_keys": [
+    {
+      "advisory_id": "ADV-001",
+      "advisory_stable_key": "49042e2375fc7279",
+      "advisory_type": "confidence_downgrade",
+      "advisory_state": "CONTEXT_INCOMPLETE"
+    },
+    {
+      "advisory_id": "ADV-002",
+      "advisory_stable_key": "863cb12ba0e1d008",
+      "advisory_type": "evidence_insufficiency",
+      "advisory_state": "PENDING_DERIVATION"
+    },
+    {
+      "advisory_id": "ADV-003",
+      "advisory_stable_key": "eea81500636255d1",
+      "advisory_type": "activation_not_authorized",
+      "advisory_state": "GOVERNANCE_BLOCKED"
+    }
+  ],
+  "degradation_stable_keys": [
+    {
+      "event_id": "DEG-001",
+      "degradation_stable_key": "688b2d21bc53bc58",
+      "event_type": "EVIDENCE_INCOMPLETE",
+      "affected_field": "evidence_state.evidence_confidence"
+    },
+    {
+      "event_id": "DEG-002",
+      "degradation_stable_key": "e001bd69c4dc5e4d",
+      "event_type": "STRUCTURAL_OVERLAP_PENDING",
+      "affected_field": "structural_overlap.edge_count"
+    },
+    {
+      "event_id": "DEG-003",
+      "degradation_stable_key": "6bdc373ea03c05ee",
+      "event_type": "SELECTOR_NOT_AUTHORIZED",
+      "affected_field": "selector_context.selector_confidence"
+    },
+    {
+      "event_id": "DEG-004",
+      "degradation_stable_key": "b6d5ccea403ca176",
+      "event_type": "ACTIVATION_NOT_AUTHORIZED",
+      "affected_field": "activation_authorized"
+    }
+  ],
+  "replay_supported": "PARTIAL",
+  "input_artifact_hashes": {
+    "gate_evaluation.json": "3fad5b3990117d2ac3c8349e97d322dcb59eba7001eaed3168148a3b5f38ffe1",
+    "participation_advisory.json": "5ae76e2de0221805f82a534b85881a179731bb1b014448a5f4740ac8d82dc23f",
+    "psee_binding_envelope.json": "481e46a30b88c9d76f77d58f3535f9b8986a6bc6f5fc6fc70f5a39fc506b7741"
+  }
+}

@@ -17,6 +17,7 @@ Usage:
 
 import sys
 import json
+import hashlib
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -28,6 +29,17 @@ STREAM_ID = "PI.PSEE-PIOS.BINDING-ENVELOPE-ENRICHMENT-METADATA.IMPLEMENTATION.01
 ENRICHMENT_SCHEMA_REF = "docs/governance/psee_enrichment_schema.json"
 
 BP_01_RESOLVED = False
+SCRIPT_VERSION = "2.0"
+
+
+def sha256_file(path: Path) -> str:
+    if not path.exists():
+        return "ABSENT"
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(65536), b""):
+            h.update(chunk)
+    return h.hexdigest()
 
 
 def parse_args():
@@ -114,6 +126,7 @@ def build_structural_overlap() -> dict:
     return {
         "edges": [],
         "edge_count": 0,
+        "edge_count_derivation_status": "PLACEHOLDER",
     }
 
 
@@ -174,10 +187,43 @@ def main():
     enriched["structural_overlap"] = structural_overlap
     enriched["selector_context"] = selector_context
     enriched["evidence_state"] = evidence_state
+
+    ct_path  = run_dir / "structure" / "40.4" / "canonical_topology.json"
+    gs_path  = run_dir / "ceu" / "grounding_state_v3.json"
+    vr_path  = run_dir / "vault" / "vault_readiness.json"
+    be_path  = run_dir / "binding" / "binding_envelope.json"
+
     enriched["psee_enrichment_meta"] = {
         "schema_version": SCHEMA_VERSION,
+        "script_version": SCRIPT_VERSION,
         "stream": STREAM_ID,
         "schema_ref": ENRICHMENT_SCHEMA_REF,
+        "source_artifacts": {
+            "binding_envelope.json":      sha256_file(be_path),
+            "canonical_topology.json":    sha256_file(ct_path),
+            "grounding_state_v3.json":    sha256_file(gs_path),
+            "vault_readiness.json":       sha256_file(vr_path),
+        },
+        "source_map": {
+            "psee_context.readiness":              "vault/vault_readiness.json$.status",
+            "psee_context.cluster_count":          "structure/40.4/canonical_topology.json$.cluster_count",
+            "psee_context.grounding_ratio":        "ceu/grounding_state_v3.json$.grounding_ratio",
+            "psee_context.bp_01_resolved":         "hardcoded:BP_01_RESOLVED=false",
+            "psee_context.bp_02_resolved":         "derived:cluster_count>0",
+            "ceu_topology.cluster_count":          "structure/40.4/canonical_topology.json$.cluster_count",
+            "ceu_topology.clusters":               "structure/40.4/canonical_topology.json$.clusters",
+            "ceu_topology.cross_cluster_edges":    "PLACEHOLDER:OVERLAP_STRUCTURAL_pending",
+            "structural_overlap.edges":            "PLACEHOLDER:OVERLAP_STRUCTURAL_pending",
+            "structural_overlap.edge_count":       "PLACEHOLDER:OVERLAP_STRUCTURAL_pending",
+            "selector_context.active_selector":    "NOT_AUTHORIZED:selector_execution_pending",
+            "selector_context.selector_confidence":"NOT_AUTHORIZED:selector_execution_pending",
+            "selector_context.suppression_flags":  "NOT_AUTHORIZED:selector_execution_pending",
+            "evidence_state.grounding_ratio":      "ceu/grounding_state_v3.json$.grounding_ratio",
+            "evidence_state.total_ceu":            "ceu/grounding_state_v3.json$.total_ceu",
+            "evidence_state.grounded_count":       "ceu/grounding_state_v3.json$.grounded_count",
+            "evidence_state.vault_readiness_status": "vault/vault_readiness.json$.status",
+            "evidence_state.evidence_confidence":  "PENDING_DERIVATION:evidence_confidence_formula_pending",
+        },
         "note": (
             "Additive PSEE enrichment stubs. Lane A runtime reads binding_envelope.json "
             "and ignores these keys (Guarantee G-02). Future Lane D activation will "

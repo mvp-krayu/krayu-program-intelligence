@@ -9,6 +9,25 @@
   },
   "note": "These fields are reserved PSEE enrichment keys for binding/binding_envelope.json. Current 75.x runtime ignores them (Guarantee G-02). Future Lane D condition activation MAY consume them when BP-01 and BP-02 are resolved.",
   "additive_only_rule": "All fields below are additive. No existing field in binding_envelope.json may be renamed or removed to accommodate these.",
+  "replay_field_taxonomy": {
+    "note": "MDT-02: explicit field replay taxonomy prevents incorrect diff comparison",
+    "TAXONOMY_01_REPLAY_STABLE": [
+      "psee_context.readiness", "psee_context.cluster_count", "psee_context.grounding_ratio",
+      "psee_context.bp_01_resolved", "psee_context.bp_02_resolved",
+      "ceu_topology.cluster_count", "ceu_topology.clusters",
+      "structural_overlap.edges", "structural_overlap.edge_count", "structural_overlap.edge_count_derivation_status",
+      "selector_context.active_selector", "selector_context.selector_confidence", "selector_context.suppression_flags",
+      "evidence_state.grounding_ratio", "evidence_state.total_ceu", "evidence_state.grounded_count",
+      "evidence_state.vault_readiness_status", "evidence_state.evidence_confidence"
+    ],
+    "TAXONOMY_02_TIME_VARYING": [
+      "psee_enrichment_meta.generated_at"
+    ],
+    "TAXONOMY_03_VERSION_DEPENDENT": [
+      "psee_enrichment_meta.schema_version", "psee_enrichment_meta.script_version",
+      "psee_enrichment_meta.source_map"
+    ]
+  },
   "enrichment_keys": {
     "psee_context": {
       "purpose": "Overall PSEE pipeline readiness and activation gate",
@@ -89,6 +108,12 @@
         "edge_count": {
           "type": "integer",
           "current_value": 0
+        },
+        "edge_count_derivation_status": {
+          "type": "string",
+          "allowed_values": ["PLACEHOLDER", "DERIVED"],
+          "current_value": "PLACEHOLDER",
+          "note": "MDT-08: explicit derivation status prevents replay ambiguity when edge_count=0"
         }
       }
     },

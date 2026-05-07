@@ -2,9 +2,22 @@
   "schema_version": "1.0",
   "stream": "PI.PSEE-PIOS.PSEE-GATE-EVALUATOR.IMPLEMENTATION.01",
   "gate_design_ref": "docs/psee/PI.PSEE-PIOS.PSEE-CONDITION-ACTIVATION-GATE.DESIGN.01/PSEE_CONDITION_ACTIVATION_GATE.md",
-  "evaluated_at": "2026-05-06T13:18:53.080209+00:00",
+  "evaluated_at": "2026-05-07T07:47:47.522004+00:00",
+  "session_id": "8149e858d47767c352525a66b78f8ac45b9ee037dbcb510f3462d84e310ee0be",
   "client_id": "fastapi",
   "run_id": "run_02_oss_fastapi_pipeline",
+  "evaluation_context": {
+    "session_id": "8149e858d47767c352525a66b78f8ac45b9ee037dbcb510f3462d84e310ee0be",
+    "script_version": "2.0",
+    "evaluated_at": "2026-05-07T07:47:47.522004+00:00",
+    "input_artifact_hashes": {
+      "psee_binding_envelope.json": "481e46a30b88c9d76f77d58f3535f9b8986a6bc6f5fc6fc70f5a39fc506b7741",
+      "vault_readiness.json": "e63e7f88507c190d0bfda3930fe7137f361663b6fe250c08b155a901f7cb49a3",
+      "canonical_topology.json": "08480c17c6fbfdccd4c304aee1ade1677dec748c40f779d5667ec61e02c3987c",
+      "grounding_state_v3.json": "d0f441ef8c2350b46e37552be2db97659108559017d747208300b40445c7e817",
+      "psee_40_5_input.json": "ABSENT"
+    }
+  },
   "lane_scope": [
     "A",
     "D"

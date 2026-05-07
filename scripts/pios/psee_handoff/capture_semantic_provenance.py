@@ -15,20 +15,21 @@ Usage:
 
 import sys
 import json
+import hashlib
 from datetime import datetime, timezone
 from pathlib import Path
 
-SCHEMA_VERSION = "1.0"
+SCHEMA_VERSION = "2.0"
 STREAM_ID = "PI.PSEE-PIOS.SEMANTIC-PROVENANCE-INSTRUMENTATION.IMPLEMENTATION.01"
+SCRIPT_VERSION = "2.0"
 DESIGN_REF = (
     "docs/psee/PI.PSEE-PIOS.SEMANTIC-TRACEABILITY-OBSERVABILITY.DESIGN.01/"
     "SEMANTIC_TRACEABILITY_OBSERVABILITY.md"
 )
 
-# Authoritative field-level source map for all enrichment keys.
-# Maps enrichment_inputs_used field paths to their source artifacts.
-# Derived from docs/governance/psee_enrichment_schema.json + design record.
-ENRICHMENT_SOURCE_MAP = {
+# Fallback field-level source map used only when psee_enrichment_meta.source_map
+# is absent from the artifact (PND-03: if present in artifact, artifact takes precedence).
+ENRICHMENT_SOURCE_MAP_FALLBACK = {
     "psee_context": {
         "source_artifact": "binding/psee_binding_envelope.json",
         "ultimate_source": "vault/vault_readiness.json + structure/40.4/canonical_topology.json + ceu/grounding_state_v3.json",
@@ -91,16 +92,50 @@ ENRICHMENT_SOURCE_MAP = {
     },
 }
 
-# Known advisory lineage gaps in the current participation_advisory.json format.
-# These gaps prevent full cold reconstruction from the advisory artifact alone.
-ADVISORY_FORMAT_LINEAGE_GAPS = [
-    "AL-02: originating_artifact absent from participation_advisory.json advisory records",
-    "AL-03: advisory_reason_structured absent — text reason only; structured trigger object missing",
-    "AL-04: participation_mode_at_emission absent from individual advisory records",
-    "AL-05: degradation_state_at_emission absent from individual advisory records",
-    "AL-07: governance_gate_state snapshot absent from participation_advisory.json",
-    "AL-08: provenance_chain absent from participation_advisory.json",
-]
+def sha256_file(path: Path) -> str:
+    if not path.exists():
+        return "ABSENT"
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(65536), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def degradation_stable_key(event_type: str, affected_field: str) -> str:
+    canonical = f"{event_type}|{affected_field}"
+    return hashlib.sha256(canonical.encode()).hexdigest()[:16]
+
+
+def resolve_source_map(psee_be: dict) -> dict:
+    """Return artifact-bound source_map if present; fall back to compile-time map."""
+    artifact_map = (psee_be or {}).get("psee_enrichment_meta", {}).get("source_map")
+    if artifact_map and isinstance(artifact_map, dict):
+        return artifact_map, "ARTIFACT_BOUND"
+    return ENRICHMENT_SOURCE_MAP_FALLBACK, "FALLBACK_COMPILE_TIME"
+
+
+def compute_advisory_lineage_gaps(adv: dict) -> list:
+    """Dynamically assess which AL gaps remain for this advisory record (MDT-05/PND-05)."""
+    gaps = []
+    if not adv.get("originating_artifact"):
+        gaps.append("AL-02: originating_artifact absent from advisory record")
+    if not adv.get("advisory_reason_structured"):
+        gaps.append("AL-03: advisory_reason_structured absent — text reason only")
+    if adv.get("participation_mode_at_emission") is None:
+        gaps.append("AL-04: participation_mode_at_emission absent")
+    if adv.get("degradation_state_at_emission") is None:
+        gaps.append("AL-05: degradation_state_at_emission absent")
+    return gaps
+
+
+def compute_observability_state(adv: dict, gaps: list) -> str:
+    """Dynamically determine observability state from gap count (MDT-06/PND-04)."""
+    if not gaps:
+        return "FULL"
+    if len(gaps) <= 2:
+        return "PARTIAL"
+    return "DEGRADED"
 
 
 def parse_args():
@@ -160,38 +195,55 @@ def build_advisory_lineage(advisories, psee_be, gate_eval, adv_top):
     activation_state   = (gate_eval or {}).get("activation_state", "UNKNOWN")
     degradation_state  = (adv_top or {}).get("degradation_state", "UNKNOWN")
 
+    source_map, source_map_origin = resolve_source_map(psee_be)
+
     for adv in (advisories or []):
         inputs_used = adv.get("enrichment_inputs_used", [])
+        stable_key  = adv.get("advisory_stable_key")
 
         # Resolve observed value and source attribution for each input
         originating_inputs = []
         for field_path in inputs_used:
             observed_val = get_nested_value(psee_be or {}, field_path)
-            source_info  = ENRICHMENT_SOURCE_MAP.get(field_path, {
-                "source_artifact": "binding/psee_binding_envelope.json",
-                "ultimate_source": "UNKNOWN",
-                "derivation_status": "UNKNOWN",
-            })
+            # source_map entries from artifact are flat strings; fallback entries are dicts
+            raw = source_map.get(field_path)
+            if isinstance(raw, dict):
+                source_artifact    = raw.get("source_artifact", "binding/psee_binding_envelope.json")
+                ultimate_source    = raw.get("ultimate_source", "UNKNOWN")
+                derivation_status  = raw.get("derivation_status", "UNKNOWN")
+            elif isinstance(raw, str):
+                source_artifact    = "binding/psee_binding_envelope.json"
+                ultimate_source    = raw
+                derivation_status  = "DERIVED" if not raw.startswith(("PLACEHOLDER", "NOT_AUTHORIZED", "PENDING")) else raw.split(":")[0]
+            else:
+                source_artifact    = "binding/psee_binding_envelope.json"
+                ultimate_source    = "UNKNOWN"
+                derivation_status  = "UNKNOWN"
             originating_inputs.append({
-                "field": field_path,
-                "observed_value": observed_val,
-                "source_artifact": source_info["source_artifact"],
-                "ultimate_source": source_info["ultimate_source"],
-                "derivation_status": source_info["derivation_status"],
+                "field":              field_path,
+                "observed_value":     observed_val,
+                "source_artifact":    source_artifact,
+                "ultimate_source":    ultimate_source,
+                "derivation_status":  derivation_status,
             })
 
+        lineage_gaps       = compute_advisory_lineage_gaps(adv)
+        observability_state = compute_observability_state(adv, lineage_gaps)
+
         lineage.append({
-            "advisory_id":                adv.get("advisory_id"),
-            "advisory_type":              adv.get("advisory_type"),
-            "advisory_state":             adv.get("advisory_state"),
-            "originating_enrichment_inputs": originating_inputs,
-            "participation_mode":         participation_mode,
-            "activation_state":           activation_state,
-            "degradation_state":          degradation_state,
-            "advisory_reason":            adv.get("advisory_reason"),
-            "governance_gate_state":      governance_snapshot,
-            "observability_state":        "PARTIAL",
-            "lineage_gaps":               list(ADVISORY_FORMAT_LINEAGE_GAPS),
+            "advisory_id":                    adv.get("advisory_id"),
+            "advisory_stable_key":            stable_key,
+            "advisory_type":                  adv.get("advisory_type"),
+            "advisory_state":                 adv.get("advisory_state"),
+            "originating_enrichment_inputs":  originating_inputs,
+            "participation_mode":             participation_mode,
+            "activation_state":               activation_state,
+            "degradation_state":              degradation_state,
+            "advisory_reason":                adv.get("advisory_reason"),
+            "governance_gate_state":          governance_snapshot,
+            "observability_state":            observability_state,
+            "lineage_gaps":                   lineage_gaps,
+            "source_map_origin":              source_map_origin,
         })
 
     return lineage
@@ -220,18 +272,29 @@ def build_degradation_lineage(psee_be, gate_eval, advisories, now_iso):
     activation_authorized = (gate_eval or {}).get("activation_authorized", False)
     cluster_count         = (psee_be or {}).get("ceu_topology", {}).get("cluster_count", 0)
 
-    # Helper: find advisory_ids referencing a field
-    def advisory_refs_for(field):
+    # Helper: find advisory_ids referencing a field or advisory_type
+    def advisory_refs_for(field=None, adv_type=None):
         refs = []
         for a in (advisories or []):
-            if field in a.get("enrichment_inputs_used", []):
+            if field and field in a.get("enrichment_inputs_used", []):
+                refs.append(a.get("advisory_id"))
+            elif adv_type and a.get("advisory_type") == adv_type:
                 refs.append(a.get("advisory_id"))
         return refs
+
+    source_map, _ = resolve_source_map(psee_be)
+
+    def get_ultimate_source(field):
+        raw = source_map.get(field)
+        if isinstance(raw, dict):
+            return raw.get("ultimate_source", "UNKNOWN")
+        return raw or "UNKNOWN"
 
     # DEG: Evidence incomplete
     if evidence_confidence is None:
         lineage.append({
             "event_id":               next_deg_id(),
+            "degradation_stable_key": degradation_stable_key("EVIDENCE_INCOMPLETE", "evidence_state.evidence_confidence"),
             "event_type":             "EVIDENCE_INCOMPLETE",
             "degradation_reason":     (
                 "evidence_state.evidence_confidence is null — "
@@ -243,8 +306,8 @@ def build_degradation_lineage(psee_be, gate_eval, advisories, now_iso):
             "source_artifact":        "binding/psee_binding_envelope.json",
             "affected_field":         "evidence_state.evidence_confidence",
             "observed_value":         None,
-            "advisory_refs":          advisory_refs_for("evidence_state.evidence_confidence"),
-            "ultimate_source":        ENRICHMENT_SOURCE_MAP["evidence_state.evidence_confidence"]["ultimate_source"],
+            "advisory_refs":          advisory_refs_for(field="evidence_state.evidence_confidence"),
+            "ultimate_source":        get_ultimate_source("evidence_state.evidence_confidence"),
             "modes_blocked":          ["SUPPRESSION_ADVISORY (MODE-03)", "ENRICHED_PARTICIPATION (MODE-05)"],
             "captured_at":            now_iso,
         })
@@ -253,6 +316,7 @@ def build_degradation_lineage(psee_be, gate_eval, advisories, now_iso):
     if overlap_edge_count == 0 and cluster_count > 0:
         lineage.append({
             "event_id":               next_deg_id(),
+            "degradation_stable_key": degradation_stable_key("STRUCTURAL_OVERLAP_PENDING", "structural_overlap.edge_count"),
             "event_type":             "STRUCTURAL_OVERLAP_PENDING",
             "degradation_reason":     (
                 f"structural_overlap.edge_count is 0 (placeholder) despite cluster_count={cluster_count}. "
@@ -264,8 +328,8 @@ def build_degradation_lineage(psee_be, gate_eval, advisories, now_iso):
             "source_artifact":        "binding/psee_binding_envelope.json",
             "affected_field":         "structural_overlap.edge_count",
             "observed_value":         0,
-            "advisory_refs":          advisory_refs_for("structural_overlap.edge_count"),
-            "ultimate_source":        ENRICHMENT_SOURCE_MAP["structural_overlap.edge_count"]["ultimate_source"],
+            "advisory_refs":          advisory_refs_for(field="structural_overlap.edge_count"),
+            "ultimate_source":        get_ultimate_source("structural_overlap.edge_count"),
             "modes_blocked":          ["ESCALATION_ADVISORY structural trigger (MODE-04)"],
             "captured_at":            now_iso,
         })
@@ -274,6 +338,7 @@ def build_degradation_lineage(psee_be, gate_eval, advisories, now_iso):
     if selector_confidence is None:
         lineage.append({
             "event_id":               next_deg_id(),
+            "degradation_stable_key": degradation_stable_key("SELECTOR_NOT_AUTHORIZED", "selector_context.selector_confidence"),
             "event_type":             "SELECTOR_NOT_AUTHORIZED",
             "degradation_reason":     (
                 "selector_context.selector_confidence is null — "
@@ -285,8 +350,8 @@ def build_degradation_lineage(psee_be, gate_eval, advisories, now_iso):
             "source_artifact":        "binding/psee_binding_envelope.json",
             "affected_field":         "selector_context.selector_confidence",
             "observed_value":         None,
-            "advisory_refs":          advisory_refs_for("selector_context.selector_confidence"),
-            "ultimate_source":        ENRICHMENT_SOURCE_MAP["selector_context.selector_confidence"]["ultimate_source"],
+            "advisory_refs":          advisory_refs_for(field="selector_context.selector_confidence"),
+            "ultimate_source":        get_ultimate_source("selector_context.selector_confidence"),
             "modes_blocked":          ["ENRICHED_PARTICIPATION (MODE-05)"],
             "captured_at":            now_iso,
         })
@@ -295,6 +360,7 @@ def build_degradation_lineage(psee_be, gate_eval, advisories, now_iso):
     if not activation_authorized:
         lineage.append({
             "event_id":               next_deg_id(),
+            "degradation_stable_key": degradation_stable_key("ACTIVATION_NOT_AUTHORIZED", "activation_authorized"),
             "event_type":             "ACTIVATION_NOT_AUTHORIZED",
             "degradation_reason":     (
                 "activation_authorized is false — explicit governance authorization "
@@ -306,7 +372,7 @@ def build_degradation_lineage(psee_be, gate_eval, advisories, now_iso):
             "source_artifact":        "artifacts/psee_gate/<client>/<run_id>/gate_evaluation.json",
             "affected_field":         "activation_authorized",
             "observed_value":         False,
-            "advisory_refs":          [],
+            "advisory_refs":          advisory_refs_for(adv_type="activation_not_authorized"),
             "ultimate_source":        "gate_evaluation.json G-08 — governance authority action required",
             "modes_blocked":          ["ENRICHMENT_ACTIVE gate state", "ENRICHED_PARTICIPATION (MODE-05)"],
             "captured_at":            now_iso,
@@ -316,7 +382,8 @@ def build_degradation_lineage(psee_be, gate_eval, advisories, now_iso):
 
 
 def build_provenance_chain(run_dir, repo_root, gate_eval_path, psee_be_path,
-                            adv_path, gate_present, psee_be_present, adv_present):
+                            adv_path, gate_present, psee_be_present, adv_present,
+                            psee_be=None):
     def rel(p):
         try:
             return str(p.relative_to(repo_root))
@@ -345,8 +412,10 @@ def build_provenance_chain(run_dir, repo_root, gate_eval_path, psee_be_path,
                 "psee_context", "ceu_topology", "structural_overlap",
                 "selector_context", "evidence_state",
             ],
-            "source_map_present": False,
-            "gap": "PT-02: psee_enrichment_meta.source_map absent — field-level source attribution not in artifact",
+            "source_map_present": bool(
+                psee_be_present and
+                (psee_be or {}).get("psee_enrichment_meta", {}).get("source_map")
+            ),
         },
         {
             "step":          3,
@@ -387,8 +456,10 @@ def assess_replay_readiness(advisory_lineage, degradation_lineage,
     )
 
     replay_gaps = []
-    if advisory_reconstructable != "FULL":
-        replay_gaps += [g for g in ADVISORY_FORMAT_LINEAGE_GAPS]
+    # Collect dynamic advisory lineage gaps across all advisory lineage records
+    for al in (advisory_lineage or []):
+        for gap in al.get("lineage_gaps", []):
+            replay_gaps.append(gap)
     if not (psee_be or {}).get("psee_enrichment_meta", {}).get("source_map"):
         replay_gaps.append(
             "PT-02: psee_enrichment_meta.source_map absent from psee_binding_envelope.json"
@@ -525,6 +596,7 @@ def main():
     advisories = (adv_data or {}).get("advisories", []) if adv_present else []
     activation_state   = (gate_eval or {}).get("activation_state", "UNKNOWN")
     participation_mode = (adv_data or {}).get("participation_mode", "OBSERVATIONAL_ONLY")
+    gate_session_id    = (gate_eval or {}).get("session_id")
 
     # ── Build provenance components ──────────────────────────────────────────────
 
@@ -533,6 +605,7 @@ def main():
     provenance_chain    = build_provenance_chain(
         run_dir, repo_root, gate_eval_path, psee_be_path, adv_path,
         gate_present, psee_be_present, adv_present,
+        psee_be=psee_be,
     )
     replay_result       = assess_replay_readiness(
         advisory_lineage, degradation_lineage,
@@ -542,6 +615,27 @@ def main():
         psee_be_present, gate_present, adv_present, run_dir, client_id, run_id,
     )
 
+    # ── Provenance health (MDT-12 proxy) ─────────────────────────────────────────
+
+    source_map_present = bool(
+        psee_be_present and (psee_be or {}).get("psee_enrichment_meta", {}).get("source_map")
+    )
+    total_lineage_gaps = sum(len(r.get("lineage_gaps", [])) for r in advisory_lineage)
+    provenance_health = {
+        "gate_session_id_present":    gate_session_id is not None,
+        "source_map_artifact_bound":  source_map_present,
+        "advisory_stable_keys_present": all(
+            a.get("advisory_stable_key") for a in advisories
+        ),
+        "degradation_stable_keys_present": all(
+            d.get("degradation_stable_key") for d in degradation_lineage
+        ),
+        "total_advisory_lineage_gaps": total_lineage_gaps,
+        "activation_not_authorized_advisory_present": any(
+            a.get("advisory_type") == "activation_not_authorized" for a in advisories
+        ),
+    }
+
     # ── Assemble output ──────────────────────────────────────────────────────────
 
     result = {
@@ -549,8 +643,21 @@ def main():
         "stream": STREAM_ID,
         "design_ref": DESIGN_REF,
         "captured_at": now_iso,
+        "gate_session_id": gate_session_id,
         "client_id": client_id,
         "run_id": run_id,
+        "capture_context": {
+            "script_version": SCRIPT_VERSION,
+            "captured_at": now_iso,
+            "gate_session_id": gate_session_id,
+            "input_artifact_hashes": {
+                "gate_evaluation.json":         sha256_file(gate_eval_path),
+                "participation_advisory.json":  sha256_file(adv_path),
+                "psee_binding_envelope.json":   sha256_file(psee_be_path),
+            },
+            "source_map_origin": resolve_source_map(psee_be)[1],
+        },
+        "provenance_health": provenance_health,
         "lane_scope": ["A", "D"],
         "activation_state": activation_state,
         "participation_mode": participation_mode,
@@ -577,13 +684,46 @@ def main():
         },
     }
 
-    # ── Write artifact ───────────────────────────────────────────────────────────
+    # ── Write artifacts ──────────────────────────────────────────────────────────
 
     out_dir  = repo_root / "artifacts" / "psee_semantic_provenance" / client_id / run_id
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / "semantic_provenance.json"
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2)
+        f.write("\n")
+
+    # replay_causality.json (MDT-10): stable identity index for replay diff
+    replay_causality = {
+        "schema_version": "1.0",
+        "captured_at": now_iso,
+        "gate_session_id": gate_session_id,
+        "client_id": client_id,
+        "run_id": run_id,
+        "advisory_stable_keys": [
+            {
+                "advisory_id": a.get("advisory_id"),
+                "advisory_stable_key": a.get("advisory_stable_key"),
+                "advisory_type": a.get("advisory_type"),
+                "advisory_state": a.get("advisory_state"),
+            }
+            for a in advisories
+        ],
+        "degradation_stable_keys": [
+            {
+                "event_id": d.get("event_id"),
+                "degradation_stable_key": d.get("degradation_stable_key"),
+                "event_type": d.get("event_type"),
+                "affected_field": d.get("affected_field"),
+            }
+            for d in degradation_lineage
+        ],
+        "replay_supported": replay_result["replay_supported"],
+        "input_artifact_hashes": result["capture_context"]["input_artifact_hashes"],
+    }
+    causality_path = out_dir / "replay_causality.json"
+    with open(causality_path, "w", encoding="utf-8") as f:
+        json.dump(replay_causality, f, indent=2)
         f.write("\n")
 
     # ── Summary ──────────────────────────────────────────────────────────────────
@@ -606,6 +746,7 @@ def main():
     print()
     print(f"  runtime_impact: NONE")
     print(f"  Written: {out_path}")
+    print(f"  Written: {causality_path}")
     print(f"  IMPORTANT: No runtime artifacts modified. No semantic authority granted.")
     print(f"  Status: COMPLETE")
 

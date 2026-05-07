@@ -14,6 +14,7 @@ Usage:
 
 import sys
 import json
+import hashlib
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -25,6 +26,22 @@ GATE_DESIGN_REF = (
 )
 
 GROUNDING_THRESHOLD = 0.5
+SCRIPT_VERSION = "2.0"
+
+
+def sha256_file(path: Path) -> str:
+    if not path.exists():
+        return "ABSENT"
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(65536), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def compute_session_id(client_id: str, run_id: str, evaluated_at: str) -> str:
+    raw = f"{client_id}|{run_id}|{evaluated_at}"
+    return hashlib.sha256(raw.encode()).hexdigest()
 
 
 def parse_args():
@@ -71,6 +88,7 @@ def evaluate_gate(run_dir: Path) -> dict:
     client_id = run_dir.parent.parent.parent.name
 
     repo_root = Path(__file__).resolve().parents[3]
+    session_id = compute_session_id(client_id, run_id, now_iso)
 
     # ── Load artifacts ──────────────────────────────────────────────────────────
 
@@ -90,6 +108,20 @@ def evaluate_gate(run_dir: Path) -> dict:
     if ct_present:          enrichment_inputs_present.append("canonical_topology.json")
     if gs_present:          enrichment_inputs_present.append("grounding_state_v3.json")
     if sidecar_present:     enrichment_inputs_present.append("psee_40_5_input.json")
+
+    # ── Evaluation context (DEP-04-REQ: stable identity + input hashes) ─────────
+    evaluation_context = {
+        "session_id": session_id,
+        "script_version": SCRIPT_VERSION,
+        "evaluated_at": now_iso,
+        "input_artifact_hashes": {
+            "psee_binding_envelope.json":  sha256_file(run_dir / "binding" / "psee_binding_envelope.json"),
+            "vault_readiness.json":        sha256_file(run_dir / "vault"   / "vault_readiness.json"),
+            "canonical_topology.json":     sha256_file(run_dir / "structure" / "40.4" / "canonical_topology.json"),
+            "grounding_state_v3.json":     sha256_file(run_dir / "ceu"     / "grounding_state_v3.json"),
+            "psee_40_5_input.json":        sha256_file(sidecar_path),
+        },
+    }
 
     # ── Extract gate input values ───────────────────────────────────────────────
 
@@ -236,8 +268,10 @@ def evaluate_gate(run_dir: Path) -> dict:
         "stream": STREAM_ID,
         "gate_design_ref": GATE_DESIGN_REF,
         "evaluated_at": now_iso,
+        "session_id": session_id,
         "client_id": client_id,
         "run_id": run_id,
+        "evaluation_context": evaluation_context,
         "lane_scope": ["A", "D"],
         "activation_state": activation_state,
         "bp_01_resolved": bp_01_resolved,
