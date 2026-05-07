@@ -24,6 +24,7 @@ CLI:
 """
 
 import argparse
+import hashlib
 import json
 import math
 import os
@@ -2746,6 +2747,311 @@ def _load_binding_envelope() -> Optional[Dict]:
         return json.load(f)
 
 
+# ---------------------------------------------------------------------------
+# DPSIG Projection Weighting — PI.PSEE-PIOS.DPSIG-PROJECTION-WEIGHTING.IMPLEMENTATION.01
+# Additive sidecar: reads artifacts/dpsig/<client>/<run>/dpsig_signal_set.json
+# Lane A sovereign — no modification of signal_registry.json or 75.x artifacts
+# ---------------------------------------------------------------------------
+
+def load_dpsig_signal_set() -> Optional[Dict]:
+    """Load DPSIG signal set for active client/run. Returns None if absent — graceful fallback."""
+    path = REPO_ROOT / "artifacts" / "dpsig" / _ACTIVE_CLIENT / _ACTIVE_VAULT_RUN_ID / "dpsig_signal_set.json"
+    if not path.exists():
+        print(f"  [DPSIG] No dpsig_signal_set.json at {path} — DPSIG projection sections omitted")
+        return None
+    with open(path) as f:
+        data = json.load(f)
+    sev = data.get("derivation_summary", {}).get("severity_band", "—")
+    print(f"  [DPSIG] Loaded dpsig_signal_set.json (severity_band={sev})")
+    return data
+
+
+def _compute_dpsig_weights(dpsig: Optional[Dict]) -> Optional[Dict]:
+    """Compute all projection weighting values from dpsig_signal_set.
+    Returns None if dpsig is None. Implements DPSIG_PROJECTION_INTEGRATION.md Section 6.
+    All weights are TAXONOMY-01 stable — deterministic from signal_value/activation inputs.
+    """
+    if dpsig is None:
+        return None
+    ds = dpsig.get("derivation_summary", {})
+    sev_band = ds.get("severity_band", "NOMINAL")
+    _sev_mult = {"CRITICAL": 2.0, "HIGH": 1.5, "ELEVATED": 1.2, "NOMINAL": 1.0, "NULL_TOPOLOGY": 0.0}
+    sm = _sev_mult.get(sev_band, 1.0)
+
+    entries = {e["signal_id"]: e for e in dpsig.get("signal_entries", [])}
+    cpi_entry = entries.get("DPSIG-031")
+    cfa_entry = entries.get("DPSIG-032")
+    if cpi_entry is None or cfa_entry is None:
+        return None
+
+    cpi = cpi_entry.get("signal_value")
+    cfa = cfa_entry.get("signal_value")
+    nb  = dpsig.get("normalization_basis", {})
+
+    sev_color = {
+        "CRITICAL": "var(--red)", "HIGH": "var(--amber)",
+        "ELEVATED": "var(--gold)", "NOMINAL": "var(--green)", "NULL_TOPOLOGY": "var(--fg-dim)"
+    }.get(sev_band, "var(--fg-muted)")
+
+    if cpi is None or cfa is None:
+        return {
+            "severity_band": sev_band, "severity_multiplier": 0.0, "null_topology": True,
+            "sev_color": sev_color, "cluster_salience_score": 0.0,
+            "amplification_factor": 0.0, "cluster_mass_emphasis": 0.0,
+            "fragility_score": 0.0, "fragility_tier": "NULL_TOPOLOGY",
+            "amplification_label": "NULL", "render_apex": False, "projection_render_id": "",
+            "max_cluster_id": nb.get("max_cluster_id", "—"),
+            "max_cluster_name": nb.get("max_cluster_name", "—"),
+        }
+
+    CPI_HIGH_THRESHOLD             = 5.0
+    cpi_weight                     = round(cpi / CPI_HIGH_THRESHOLD, 4)
+    cluster_salience_score         = round(cpi_weight * sm * cfa, 4)
+    amplification_factor           = cluster_salience_score
+    cluster_mass_emphasis          = round(cfa * sm, 4)
+    fragility_score                = round(min(cpi_weight, 2.0) * cfa, 4)
+
+    if fragility_score > 0.50:
+        fragility_tier = "HIGH_STRUCTURAL_FRAGILITY"
+    elif fragility_score > 0.25:
+        fragility_tier = "ELEVATED_STRUCTURAL_FRAGILITY"
+    else:
+        fragility_tier = "NOMINAL_STRUCTURAL_FRAGILITY"
+
+    if amplification_factor >= 1.5:
+        amplification_label = "HIGH AMPLIFICATION"
+    elif amplification_factor >= 1.0:
+        amplification_label = "ELEVATED AMPLIFICATION"
+    elif amplification_factor > 0.0:
+        amplification_label = "BASELINE"
+    else:
+        amplification_label = "NULL"
+
+    raw_id = "|".join([
+        dpsig.get("schema_version", ""),
+        dpsig.get("client_id", ""),
+        dpsig.get("run_id", ""),
+        cpi_entry.get("signal_stable_key", ""),
+        cfa_entry.get("signal_stable_key", ""),
+        sev_band,
+    ])
+    projection_render_id = hashlib.sha256(raw_id.encode()).hexdigest()[:16]
+
+    dt = cpi_entry.get("derivation_trace", {})
+    denom_cluster_ids = dt.get("denominator_cluster_ids", [])
+
+    # Load per-cluster sizes from the DPSIG structural topology (authorized Tier-1 read surface)
+    _dpsig_client = dpsig.get("client_id", "")
+    _dpsig_run    = dpsig.get("run_id", "")
+    _topo_path    = REPO_ROOT / "clients" / _dpsig_client / "psee" / "runs" / _dpsig_run / "structure" / "40.4" / "canonical_topology.json"
+    cluster_size_map: Dict[str, int] = {}
+    if _topo_path.exists():
+        with open(_topo_path) as _f:
+            for _c in json.load(_f).get("clusters", []):
+                cluster_size_map[_c["cluster_id"]] = _c["node_count"]
+
+    max_node_count = nb.get("max_cluster_node_count", 1) or 1
+    non_singleton_sizes = [cluster_size_map.get(cid, 0) for cid in denom_cluster_ids]
+    heat_weights: Dict[str, float] = {
+        cid: round(sz / max_node_count, 4)
+        for cid, sz in zip(denom_cluster_ids, non_singleton_sizes)
+        if sz > 0
+    }
+
+    return {
+        "severity_band":           sev_band,
+        "severity_multiplier":     sm,
+        "sev_color":               sev_color,
+        "null_topology":           False,
+        "cpi":                     cpi,
+        "cfa":                     cfa,
+        "cpi_weight":              cpi_weight,
+        "cluster_salience_score":  cluster_salience_score,
+        "amplification_factor":    amplification_factor,
+        "cluster_mass_emphasis":   cluster_mass_emphasis,
+        "fragility_score":         fragility_score,
+        "fragility_tier":          fragility_tier,
+        "amplification_label":     amplification_label,
+        "render_apex":             cluster_salience_score >= 1.0,
+        "projection_render_id":    projection_render_id,
+        "max_cluster_id":          nb.get("max_cluster_id", "—"),
+        "max_cluster_name":        nb.get("max_cluster_name", "—"),
+        "max_cluster_node_count":  nb.get("max_cluster_node_count", 0),
+        "total_structural_nodes":  nb.get("total_structural_node_count", 0),
+        "non_singleton_count":     nb.get("non_singleton_cluster_count", 0),
+        "singleton_count":         nb.get("singleton_cluster_count", 0),
+        "mean_non_singleton_size": nb.get("mean_non_singleton_cluster_size", 0.0),
+        "heat_weights":            heat_weights,
+        "denom_cluster_ids":       denom_cluster_ids,
+        "non_singleton_sizes":     non_singleton_sizes,
+        "cpi_entry":               cpi_entry,
+        "cfa_entry":               cfa_entry,
+    }
+
+
+def _render_dpsig_cluster_pressure_html(dpsig: Optional[Dict], weights: Optional[Dict]) -> str:
+    """Render DPSIG cluster pressure block for TIER-1 injection.
+    Returns empty string if dpsig/weights absent or NULL_TOPOLOGY.
+    All rendered text derives exclusively from TAXONOMY-01-stable fields. No inference.
+    Implements DPSIG_PROJECTION_INTEGRATION.md Sections 4, 5, 6, 7, 8.
+    """
+    if dpsig is None or weights is None or weights.get("null_topology"):
+        return ""
+
+    w              = weights
+    cpi_entry      = w["cpi_entry"]
+    cfa_entry      = w["cfa_entry"]
+    sev_band       = w["severity_band"]
+    sev_color      = w["sev_color"]
+    callout_labels = {
+        "CRITICAL": "CLUSTER CONCENTRATION ALERT",
+        "HIGH":     "STRUCTURAL PRESSURE WARNING",
+        "ELEVATED": "STRUCTURAL CONCENTRATION — ELEVATED",
+        "NOMINAL":  "STRUCTURAL DISTRIBUTION — NOMINAL",
+    }
+    callout_label = callout_labels.get(sev_band, sev_band)
+    border_style  = {
+        "CRITICAL": "border-left:3px solid var(--red)",
+        "HIGH":     "border-left:3px solid var(--amber)",
+        "ELEVATED": "border-left:3px solid var(--gold)",
+        "NOMINAL":  "border-left:3px solid var(--green)",
+    }.get(sev_band, "border-left:3px solid var(--border)")
+
+    cs_score      = w["cluster_salience_score"]
+    amp_factor    = w["amplification_factor"]
+    amp_label     = w["amplification_label"]
+    frag_score    = w["fragility_score"]
+    frag_tier     = w["fragility_tier"]
+    mass_pct      = round(w["cfa"] * 100, 2)
+    max_name      = w["max_cluster_name"]
+    max_id        = w["max_cluster_id"]
+    max_nodes     = w["max_cluster_node_count"]
+    total_nodes   = w["total_structural_nodes"]
+    non_singletons = w["non_singleton_count"]
+    singletons    = w["singleton_count"]
+    mean_ns       = w["mean_non_singleton_size"]
+    render_id     = w["projection_render_id"]
+
+    exec_031 = cpi_entry.get("executive_summary", "")
+    exec_032 = cfa_entry.get("executive_summary", "")
+    eng_031  = cpi_entry.get("engineering_summary", "")
+    eng_032  = cfa_entry.get("engineering_summary", "")
+    deriv_031 = cpi_entry.get("derivation_summary", "")
+    deriv_032 = cfa_entry.get("derivation_summary", "")
+
+    amp_stmt = (
+        f"{esc(max_name)} ({esc(max_id)}) structural mass is {w['cpi']}x the average non-singleton "
+        f"cluster size — amplification factor {amp_factor} above expected distribution baseline."
+    )
+
+    frag_color = {
+        "HIGH_STRUCTURAL_FRAGILITY":     "var(--red)",
+        "ELEVATED_STRUCTURAL_FRAGILITY": "var(--amber)",
+        "NOMINAL_STRUCTURAL_FRAGILITY":  "var(--green)",
+    }.get(frag_tier, "var(--fg-muted)")
+
+    frag_label = frag_tier.replace("_STRUCTURAL_FRAGILITY", "").replace("_", " ")
+
+    heat_weights   = w["heat_weights"]
+    denom_ids      = w["denom_cluster_ids"]
+    ns_sizes       = w["non_singleton_sizes"]
+    cluster_rows   = ""
+    if ns_sizes and len(ns_sizes) == len(denom_ids):
+        sorted_pairs = sorted(zip(denom_ids, ns_sizes), key=lambda x: (-x[1], x[0]))
+        for cid, sz in sorted_pairs:
+            hw    = heat_weights.get(cid, 0.0)
+            pct   = round(sz / total_nodes * 100, 1) if total_nodes else 0.0
+            is_max = (cid == max_id)
+            row_bg = "background:rgba(224,82,82,0.05)" if is_max else ""
+            marker = (f' <span style="font-size:9px;color:{sev_color};letter-spacing:.08em">'
+                      f'&#9650; DOMINANT</span>') if is_max else ""
+            bar_color = sev_color if is_max else "var(--fg-dim)"
+            cluster_rows += (
+                f'<tr style="{row_bg}">'
+                f'<td style="padding:8px 10px;border-bottom:1px solid var(--border-subtle);color:var(--fg)">'
+                f'{esc(cid)}{marker}</td>'
+                f'<td style="padding:8px 10px;border-bottom:1px solid var(--border-subtle);'
+                f'color:var(--fg);font-variant-numeric:tabular-nums">{sz}</td>'
+                f'<td style="padding:8px 10px;border-bottom:1px solid var(--border-subtle);'
+                f'color:var(--fg-muted)">{pct}%</td>'
+                f'<td style="padding:8px 10px;border-bottom:1px solid var(--border-subtle)">'
+                f'<div style="height:6px;width:{round(hw * 100)}%;background:{bar_color};'
+                f'border-radius:2px;min-width:2px"></div></td>'
+                f'</tr>'
+            )
+        cluster_rows += (
+            f'<tr><td style="padding:8px 10px;color:var(--fg-dim)">'
+            f'{singletons} singletons</td>'
+            f'<td style="padding:8px 10px;color:var(--fg-dim)">1 each</td>'
+            f'<td style="padding:8px 10px;color:var(--fg-dim)">'
+            f'{round(singletons / total_nodes * 100, 1) if total_nodes else 0.0}%</td>'
+            f'<td style="padding:8px 10px"></td></tr>'
+        )
+
+    return f"""
+  <h2 style="margin-top:36px">Cluster Topology Intelligence
+    <span style="font-size:11px;font-weight:400;color:{sev_color};letter-spacing:.08em;margin-left:10px">{esc(sev_band)}</span>
+  </h2>
+
+  <div style="background:var(--surface);border:1px solid var(--border);{border_style};padding:18px 22px;margin:16px 0;border-radius:3px">
+    <div style="font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:{sev_color};margin-bottom:10px">{esc(callout_label)}</div>
+    <div style="font-size:14px;color:var(--fg);margin-bottom:8px">{esc(exec_031)}</div>
+    <div style="font-size:13px;color:var(--fg-muted);margin-bottom:6px">{esc(exec_032)}</div>
+    <div style="font-size:11px;color:var(--fg-dim);margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle)">{amp_stmt}</div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:12px 0">
+    <div style="background:var(--surface);border:1px solid var(--border);padding:12px 14px;border-radius:3px">
+      <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:4px">Salience Score</div>
+      <div style="font-size:18px;color:{sev_color};font-weight:300">{cs_score}</div>
+      <div style="font-size:10px;color:var(--fg-dim);margin-top:2px">{esc(amp_label)}</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);padding:12px 14px;border-radius:3px">
+      <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:4px">Structural Fragility</div>
+      <div style="font-size:18px;color:{frag_color};font-weight:300">{frag_score}</div>
+      <div style="font-size:10px;color:var(--fg-dim);margin-top:2px">{esc(frag_label)}</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);padding:12px 14px;border-radius:3px">
+      <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:4px">Mass Concentration</div>
+      <div style="font-size:18px;color:{sev_color};font-weight:300">{mass_pct}%</div>
+      <div style="font-size:10px;color:var(--fg-dim);margin-top:2px">{esc(max_name)} ({esc(max_id)})</div>
+    </div>
+  </div>
+
+  <p style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);margin:20px 0 8px">Cluster Distribution</p>
+  <table style="width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:8px">
+    <thead>
+      <tr>
+        <th style="text-align:left;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-dim);border-bottom:1px solid var(--border);padding:6px 10px;font-weight:400">Cluster</th>
+        <th style="text-align:left;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-dim);border-bottom:1px solid var(--border);padding:6px 10px;font-weight:400">Nodes</th>
+        <th style="text-align:left;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-dim);border-bottom:1px solid var(--border);padding:6px 10px;font-weight:400">Mass %</th>
+        <th style="text-align:left;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-dim);border-bottom:1px solid var(--border);padding:6px 10px;font-weight:400">Heat</th>
+      </tr>
+    </thead>
+    <tbody>{cluster_rows}</tbody>
+  </table>
+  <p style="font-size:11px;color:var(--fg-dim);margin-bottom:16px">
+    {non_singletons} non-singleton clusters &middot; {singletons} singletons &middot; {total_nodes} total structural nodes &middot; mean non-singleton: {mean_ns} nodes
+  </p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0">
+    <div style="background:var(--surface);border:1px solid var(--border-subtle);padding:12px 14px;border-radius:3px">
+      <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:6px">DPSIG-031 — Cluster Pressure Index</div>
+      <div style="font-size:12px;color:var(--fg-muted)">{esc(eng_031)}</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border-subtle);padding:12px 14px;border-radius:3px">
+      <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:6px">DPSIG-032 — Cluster Fan Asymmetry</div>
+      <div style="font-size:12px;color:var(--fg-muted)">{esc(eng_032)}</div>
+    </div>
+  </div>
+
+  <p style="font-size:10px;color:var(--fg-dim);opacity:.6;margin-top:4px">
+    {esc(deriv_031)} &middot; {esc(deriv_032)} &middot; salience={cs_score} &middot; render_id={render_id}<br>
+    Source: DPSIG Class 4 &middot; topology-native &middot; PI.PSEE-PIOS.DPSIG-PROJECTION-INTEGRATION.01
+  </p>
+"""
+
+
 def _compute_structural_metrics(binding: Optional[Dict]) -> Dict:
     NIS = "NOT_IN_SCOPE"
     empty = {k: NIS for k in ["dep_load", "dep_edges", "dep_nodes", "edge_to_node",
@@ -3177,7 +3483,8 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
                                  psig_proj: Optional[Dict] = None,
                                  pz_proj: Optional[Dict] = None,
                                  metrics: Optional[Dict] = None,
-                                 decision_model: Optional[Dict] = None) -> str:
+                                 decision_model: Optional[Dict] = None,
+                                 dpsig: Optional[Dict] = None) -> str:
     domains = topology["domains"]
     counts = topology["counts"]
     sigs = signals["signals"]
@@ -3185,6 +3492,11 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
     band_label = gauge["score"]["band_label"]
     band_lo = gauge["confidence"]["lower"]
     band_hi = gauge["confidence"]["upper"]
+
+    _dpsig_weights = _compute_dpsig_weights(dpsig)
+    _dpsig_html    = _render_dpsig_cluster_pressure_html(dpsig, _dpsig_weights)
+    _dpsig_apex    = _dpsig_html if (_dpsig_weights and _dpsig_weights.get("render_apex")) else ""
+    _dpsig_below   = _dpsig_html if (_dpsig_weights and not _dpsig_weights.get("render_apex")) else ""
 
     use_psig = psig_proj is not None
     client_name = _get_client_display_name(publish_safe)
@@ -3744,13 +4056,14 @@ def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
     {'<div class="domain-legend-item"><div class="legend-dot" style="background:var(--gold)"></div> Primary Pressure Zone</div>' if use_psig else '<div class="domain-legend-item"><div class="legend-dot" style="background:var(--gold)"></div> Focus Domain</div>'}
   </div>
 
+{_dpsig_apex}
   <h2>Active Structural Signals</h2>
   <div class="signal-grid">
 {signals_html}
   </div>
 
 {focus_block_html}
-
+{_dpsig_below}
   <div class="tier2-handoff">
     <div class="tier2-handoff-label">Next Proposed Actions — Outside This Assessment</div>
     <div class="tier2-handoff-text">
@@ -3874,13 +4187,17 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
                                   psig_proj: Optional[Dict] = None,
                                   pz_proj: Optional[Dict] = None,
                                   metrics: Optional[Dict] = None,
-                                  decision_model: Optional[Dict] = None) -> str:
+                                  decision_model: Optional[Dict] = None,
+                                  dpsig: Optional[Dict] = None) -> str:
     domains = topology["domains"]
     counts = topology["counts"]
     score = gauge["score"]["canonical"]
     band_label = gauge["score"]["band_label"]
     band_lo = gauge["confidence"]["lower"]
     band_hi = gauge["confidence"]["upper"]
+
+    _dpsig_weights   = _compute_dpsig_weights(dpsig)
+    _dpsig_narr_html = _render_dpsig_cluster_pressure_html(dpsig, _dpsig_weights)
 
     use_psig = psig_proj is not None
     client_name = _get_client_display_name(publish_safe)
@@ -4377,6 +4694,8 @@ def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
 {signal_table_html}
   </div>
 
+{_dpsig_narr_html}
+
 {focus_section_html}
 
 {boundary_section_html}
@@ -4441,6 +4760,7 @@ def generate_tier1_reports(output_dir: Optional[Path] = None) -> List[Path]:
     binding        = _load_binding_envelope()
     metrics        = _compute_structural_metrics(binding)
     decision_model = _compute_decision_model(metrics, psig_proj, gauge)
+    dpsig          = load_dpsig_signal_set()
 
     files: List[Path] = []
 
@@ -4454,7 +4774,7 @@ def generate_tier1_reports(output_dir: Optional[Path] = None) -> List[Path]:
     for out_path, builder, pub_safe in artifacts:
         html = builder(topology, signals, gauge, publish_safe=pub_safe,
                        psig_proj=psig_proj, pz_proj=pz_proj,
-                       metrics=metrics, decision_model=decision_model)
+                       metrics=metrics, decision_model=decision_model, dpsig=dpsig)
         out_path.write_text(html, encoding="utf-8")
         print(f"[LENS REPORT] Generated: {out_path.resolve()}")
         files.append(out_path)
