@@ -1,0 +1,48 @@
+{
+  "stream": "PI.PSEE-PIOS.DPSIG-SEVERITY-TAXONOMY-ALIGNMENT.01",
+  "generated": "2026-05-08",
+  "client": "fastapi",
+  "run": "run_02_oss_fastapi_pipeline",
+  "headline_alignment_matrix": {
+    "EXECUTIVE_READY":                  "sev_band (CRITICAL/HIGH/ELEVATED/NOMINAL)",
+    "EXECUTIVE_READY_WITH_QUALIFIER":   "sev_band (CRITICAL/HIGH/ELEVATED/NOMINAL)",
+    "DIAGNOSTIC_ONLY":                  "STRUCTURAL DIAGNOSTIC",
+    "SUPPRESSED_FROM_EXECUTIVE":        "SUPPRESSED",
+    "BLOCKED_PENDING_DOMAIN_GROUNDING": "GROUNDING REQUIRED"
+  },
+  "fastapi_classification": {
+    "readiness_state": "DIAGNOSTIC_ONLY",
+    "dpsig_severity_band": "CRITICAL",
+    "headline_rendered": "STRUCTURAL DIAGNOSTIC",
+    "critical_in_headline": false,
+    "critical_suppressed_correctly": true
+  },
+  "validation_checks": [
+    { "id": "TAX-01", "check": "STRUCTURAL DIAGNOSTIC in h2 (evidence brief)", "result": "PASS", "count": 2 },
+    { "id": "TAX-02", "check": "CRITICAL absent from h2 headline (evidence brief)", "result": "PASS", "critical_in_h2": false },
+    { "id": "TAX-03", "check": "readiness_state=DIAGNOSTIC_ONLY preserved", "result": "PASS", "count": 1 },
+    { "id": "TAX-04", "check": "STRUCTURAL DIAGNOSTIC callout in body", "result": "PASS", "count": 1 },
+    { "id": "TAX-05", "check": "CPI=5.6126 engineering summary visible", "result": "PASS", "count": 2 },
+    { "id": "TAX-06", "check": "DPSIG-031 evidence preserved", "result": "PASS", "count": 1 },
+    { "id": "TAX-07", "check": "render_id=44a820d0ea720f01 preserved", "result": "PASS", "count": 1 },
+    { "id": "TAX-08", "check": "salience=1.6245 preserved", "result": "PASS", "count": 3 },
+    { "id": "TAX-09", "check": "STRUCTURAL DIAGNOSTIC in narrative brief", "result": "PASS", "count": 2 },
+    { "id": "TAX-10", "check": "CRITICAL absent from narrative h2 headline", "result": "PASS", "critical_in_h2": false },
+    { "id": "TAX-11", "check": "Coherent reading chain: headline → readiness → diagnostic", "result": "PASS" },
+    { "id": "TAX-12", "check": "lens_generate.sh FastAPI EXIT 0", "result": "PASS" },
+    { "id": "TAX-13", "check": "BlueEdge lens_generate.sh EXIT 0", "result": "PASS" },
+    { "id": "TAX-14", "check": "BlueEdge STRUCTURAL DIAGNOSTIC absent (no DPSIG)", "result": "PASS", "count": 0 },
+    { "id": "TAX-15", "check": "No client-specific logic introduced", "result": "PASS" },
+    { "id": "TAX-16", "check": "No selector/API/report-contract changes", "result": "PASS" },
+    { "id": "TAX-17", "check": "No DPSIG recomputation", "result": "PASS" },
+    { "id": "TAX-18", "check": "Readiness classifier logic unchanged", "result": "PASS" }
+  ],
+  "overall_verdict": "PASS — 18/18 checks PASS",
+  "semantic_contradiction_resolved": true,
+  "change_summary": {
+    "file": "scripts/pios/lens_report_generator.py",
+    "insertions": 6,
+    "deletions": 0,
+    "change": "Added _render_sev_label computation per readiness state; replaced {esc(sev_band)} with {esc(_render_sev_label)} in h2 span"
+  }
+}

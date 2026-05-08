@@ -3110,6 +3110,11 @@ def _render_dpsig_cluster_pressure_html(
     _with_qual = _rs == "EXECUTIVE_READY_WITH_QUALIFIER"
 
     if _diag_only:
+        _render_sev_label     = {
+            "DIAGNOSTIC_ONLY":                   "STRUCTURAL DIAGNOSTIC",
+            "SUPPRESSED_FROM_EXECUTIVE":         "SUPPRESSED",
+            "BLOCKED_PENDING_DOMAIN_GROUNDING":  "GROUNDING REQUIRED",
+        }.get(_rs, "DIAGNOSTIC")
         _render_callout_label = "STRUCTURAL DIAGNOSTIC — CLUSTER CONCENTRATION"
         _render_border        = "border-left:3px solid var(--fg-muted)"
         _render_label_color   = "var(--fg-muted)"
@@ -3123,6 +3128,7 @@ def _render_dpsig_cluster_pressure_html(
             'Not attributed to a named business capability. Engineering use only.</div>'
         )
     elif _with_qual:
+        _render_sev_label     = sev_band
         _render_callout_label = callout_label
         _render_border        = border_style
         _render_label_color   = sev_color
@@ -3136,6 +3142,7 @@ def _render_dpsig_cluster_pressure_html(
             f'Validate with engineering before treating as strategic signal. [{esc(_rs)}]</div>'
         )
     else:
+        _render_sev_label     = sev_band
         _render_callout_label = callout_label
         _render_border        = border_style
         _render_label_color   = sev_color
@@ -3159,7 +3166,7 @@ def _render_dpsig_cluster_pressure_html(
 
     return f"""
   <h2 style="margin-top:36px">Cluster Topology Intelligence
-    <span style="font-size:11px;font-weight:400;color:{_render_label_color};letter-spacing:.08em;margin-left:10px">{esc(sev_band)}</span>
+    <span style="font-size:11px;font-weight:400;color:{_render_label_color};letter-spacing:.08em;margin-left:10px">{esc(_render_sev_label)}</span>
   </h2>
 
   <div style="background:var(--surface);border:1px solid var(--border);{_render_border};padding:18px 22px;margin:16px 0;border-radius:3px">
