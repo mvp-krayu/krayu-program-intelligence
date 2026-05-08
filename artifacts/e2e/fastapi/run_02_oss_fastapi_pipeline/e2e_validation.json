@@ -1,0 +1,146 @@
+{
+  "stream": "PI.LENS.END-TO-END-RERUN.FASTAPI.01",
+  "generated": "2026-05-08",
+  "client": "fastapi",
+  "run": "run_02_oss_fastapi_pipeline",
+  "execution_mode": "VALIDATION_MODE",
+  "baseline_commit": "93098cb",
+  "implementation_commits": ["94747af", "9da0c26"],
+  "branch": "feature/psee-pios-integration-productized",
+  "pre_run_snapshot": {
+    "branch": "feature/psee-pios-integration-productized",
+    "commit": "9da0c26",
+    "git_status": "clean",
+    "selector_current_run": "run_02_oss_fastapi_pipeline",
+    "reports_present": 9,
+    "dpsig_artifacts_present": 5
+  },
+  "pipeline_inputs": {
+    "binding_envelope": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/binding/binding_envelope.json",
+    "dpsig_signal_set": "artifacts/dpsig/fastapi/run_02_oss_fastapi_pipeline/dpsig_signal_set.json",
+    "selector": "clients/fastapi/psee/selector.json",
+    "selector_current_run": "run_02_oss_fastapi_pipeline"
+  },
+  "lens_generate_result": {
+    "exit_code": 0,
+    "reports_generated": 9,
+    "dpsig_loaded": true,
+    "dpsig_severity_band_loaded": "CRITICAL",
+    "graph_state_nodes": 5,
+    "graph_state_links": 4
+  },
+  "report_contract": {
+    "path": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/reports/",
+    "reports": {
+      "lens_tier1_evidence_brief.html": {"size_bytes": 45143, "non_empty": true},
+      "lens_tier1_narrative_brief.html": {"size_bytes": 34590, "non_empty": true},
+      "lens_tier2_diagnostic_narrative.html": {"size_bytes": 90147, "non_empty": true},
+      "lens_decision_surface.html": {"size_bytes": 12742, "non_empty": true},
+      "graph_state.json": {"size_bytes": 1469, "non_empty": true},
+      "publish/lens_tier1_evidence_brief_pub.html": {"size_bytes": 45155, "non_empty": true},
+      "publish/lens_tier1_narrative_brief_pub.html": {"size_bytes": 34622, "non_empty": true},
+      "publish/lens_tier2_diagnostic_narrative_pub.html": {"size_bytes": 81860, "non_empty": true},
+      "publish/lens_decision_surface_pub.html": {"size_bytes": 12776, "non_empty": true}
+    },
+    "all_timestamps": "2026-05-08 10:38:52",
+    "flat_path_contract": "PSEE_FLAT_COMPLIANT"
+  },
+  "dpsig_content_validation": {
+    "dpsig_031_present": true,
+    "dpsig_032_present": true,
+    "cpi_value": "5.6126",
+    "cfa_value": "0.7236",
+    "readiness_state_diagnostic_only_count_evidence_brief": 2,
+    "executive_rendering_no_count": 1,
+    "false_positive_flag_filesystem_container_dominance": true,
+    "salience_1_6245_count": 3,
+    "render_id_44a820d0ea720f01_count": 1
+  },
+  "severity_taxonomy_validation": {
+    "critical_in_h2_evidence_brief": false,
+    "critical_in_h2_narrative_brief": false,
+    "structural_diagnostic_in_h2_evidence_brief": true,
+    "structural_diagnostic_in_h2_narrative_brief": true
+  },
+  "api_validation": {
+    "endpoint": "GET /api/generate-report?client=fastapi&run=run_02_oss_fastapi_pipeline",
+    "port": 3001,
+    "http_status": 200,
+    "response_status": "success",
+    "report_urls_count": 4,
+    "workspace_url_present": true
+  },
+  "report_file_routing": {
+    "tier1_evidence_brief": {"url": "/api/report-file?source=psee&client=fastapi&runId=run_02_oss_fastapi_pipeline&name=lens_tier1_evidence_brief.html", "http_status": 200},
+    "tier1_narrative_brief": {"url": "/api/report-file?source=psee&client=fastapi&runId=run_02_oss_fastapi_pipeline&name=lens_tier1_narrative_brief.html", "http_status": 200},
+    "tier2_diagnostic": {"url": "/api/report-file?source=psee&client=fastapi&runId=run_02_oss_fastapi_pipeline&name=lens_tier2_diagnostic_narrative.html", "http_status": 200},
+    "decision_surface": {"url": "/api/report-file?source=psee&client=fastapi&runId=run_02_oss_fastapi_pipeline&name=lens_decision_surface.html", "http_status": 200}
+  },
+  "lens_app_experience": {
+    "fastapi_in_runtime_list": true,
+    "run_02_in_runtime_list": true,
+    "has_reports": true,
+    "has_vault": true,
+    "has_semantic": true,
+    "served_report_dpsig_diagnostic_block_present": true
+  },
+  "governance_safety": {
+    "75x_mutation": "NONE",
+    "41x_mutation": "NONE",
+    "run_client_pipeline_mutation": "NONE",
+    "binding_envelope_mutation": "NONE",
+    "api_route_mutation": "NONE",
+    "selector_mutation": "NONE",
+    "client_specific_logic": "NONE",
+    "dpsig_recomputation": "NONE",
+    "threshold_mutation": "NONE"
+  },
+  "replay_determinism": {
+    "run_1_checksums": {
+      "lens_tier1_evidence_brief.html": "a3d5b9eb7708ef4317b848587a47458630d2ba9c",
+      "lens_tier1_narrative_brief.html": "3517b385d736fa92f444e925e0cee199f813dac1",
+      "lens_tier2_diagnostic_narrative.html": "d36011175d21b3d0ea8ca6dd454c0a5e7aa12a08",
+      "lens_decision_surface.html": "ebbc2b226af6eebb3f518d6df7fbc6e1722301d5"
+    },
+    "run_2_checksums": {
+      "lens_tier1_evidence_brief.html": "a3d5b9eb7708ef4317b848587a47458630d2ba9c",
+      "lens_tier1_narrative_brief.html": "3517b385d736fa92f444e925e0cee199f813dac1",
+      "lens_tier2_diagnostic_narrative.html": "d36011175d21b3d0ea8ca6dd454c0a5e7aa12a08",
+      "lens_decision_surface.html": "ebbc2b226af6eebb3f518d6df7fbc6e1722301d5"
+    },
+    "checksums_match": true,
+    "determinism_confirmed": true
+  },
+  "validation_checks": [
+    {"id": "E2E-01", "check": "pipeline_execution_manifest.json loaded, baseline=93098cb", "result": "PASS"},
+    {"id": "E2E-02", "check": "Pre-run state snapshot: branch, commit, selector, reports, DPSIG artifacts", "result": "PASS"},
+    {"id": "E2E-03", "check": "Selector current_run=run_02_oss_fastapi_pipeline, no stale run", "result": "PASS"},
+    {"id": "E2E-04", "check": "lens_generate.sh EXIT 0", "result": "PASS"},
+    {"id": "E2E-05", "check": "9 reports at PSEE flat path, all non-empty, timestamped post-rerun", "result": "PASS"},
+    {"id": "E2E-06a", "check": "DPSIG-031/032 present in tier-1 reports", "result": "PASS"},
+    {"id": "E2E-06b", "check": "CPI=5.6126 visible in reports", "result": "PASS"},
+    {"id": "E2E-06c", "check": "CFA=0.7236 visible in reports", "result": "PASS"},
+    {"id": "E2E-06d", "check": "readiness_state=DIAGNOSTIC_ONLY in reports (x2)", "result": "PASS"},
+    {"id": "E2E-06e", "check": "executive_rendering=NO in report metadata", "result": "PASS"},
+    {"id": "E2E-06f", "check": "FILESYSTEM_CONTAINER_DOMINANCE false_positive_flag present", "result": "PASS"},
+    {"id": "E2E-07a", "check": "CRITICAL absent from h2 headline (evidence brief)", "result": "PASS"},
+    {"id": "E2E-07b", "check": "CRITICAL absent from h2 headline (narrative brief)", "result": "PASS"},
+    {"id": "E2E-07c", "check": "STRUCTURAL DIAGNOSTIC in h2 headline (evidence brief)", "result": "PASS"},
+    {"id": "E2E-07d", "check": "STRUCTURAL DIAGNOSTIC in h2 headline (narrative brief)", "result": "PASS"},
+    {"id": "E2E-08", "check": "GET /api/generate-report HTTP 200 with 4 report_urls", "result": "PASS"},
+    {"id": "E2E-09a", "check": "report-file tier1_evidence HTTP 200", "result": "PASS"},
+    {"id": "E2E-09b", "check": "report-file tier1_narrative HTTP 200", "result": "PASS"},
+    {"id": "E2E-09c", "check": "report-file tier2_diagnostic HTTP 200", "result": "PASS"},
+    {"id": "E2E-09d", "check": "report-file decision_surface HTTP 200", "result": "PASS"},
+    {"id": "E2E-10a", "check": "fastapi/run_02 in runtime-list (has_reports=true)", "result": "PASS"},
+    {"id": "E2E-10b", "check": "Served report contains DPSIG diagnostic block", "result": "PASS"},
+    {"id": "E2E-11a", "check": "No 75x/41x mutation", "result": "PASS"},
+    {"id": "E2E-11b", "check": "No binding_envelope mutation", "result": "PASS"},
+    {"id": "E2E-11c", "check": "No API route mutation", "result": "PASS"},
+    {"id": "E2E-11d", "check": "No selector mutation", "result": "PASS"},
+    {"id": "E2E-12", "check": "Second rerun produces identical checksums — determinism confirmed", "result": "PASS"}
+  ],
+  "overall_verdict": "E2E_PASS_WITH_DIAGNOSTIC_ONLY_DPSIG",
+  "overall_check_count": "27/27 PASS",
+  "next_stream": "PI.PSEE-PIOS.PRODUCTIZED-E2E-LENS-FASTAPI-BLUEEDGE.VALIDATION.01"
+}
