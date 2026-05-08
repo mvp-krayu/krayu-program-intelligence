@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "registry_authority": "PI.PSEE-PIOS.GOVERNED-INTELLIGENCE-EXTENSION-MODEL.BASELINE.01",
+  "issued": "2026-05-08",
+  "note": "Add new entries below active_baseline when a new freeze stream is completed. Never remove entries — superseded baselines are retained for forensic comparison.",
+
+  "active_baseline": "governed-dpsig-baseline-v1",
+
+  "baselines": [
+    {
+      "baseline_tag": "governed-dpsig-baseline-v1",
+      "commit": "092e251",
+      "status": "ACTIVE",
+      "issued": "2026-05-08",
+      "freeze_stream": "PI.PSEE-PIOS.GOVERNED-DPSIG-BASELINE.FREEZE.01",
+      "baseline_type": "governed_intelligence_extension_model",
+      "mandatory_loads": [
+        "docs/governance/GOVERNED_INTELLIGENCE_EXTENSION_MODEL.md",
+        "docs/governance/pipeline_execution_manifest.json",
+        "docs/governance/STREAM_GOVERNANCE_LOAD_TEMPLATE.md"
+      ],
+      "frozen_doctrines": [
+        "manifest_authority",
+        "additive_lane_isolation",
+        "replay_safe_integration",
+        "executive_readiness_gating",
+        "e2e_certification",
+        "executive_cognitive_stabilization"
+      ],
+      "certified_clients": [
+        {
+          "client_id": "fastapi",
+          "run_id": "run_02_oss_fastapi_pipeline",
+          "readiness_state": "DIAGNOSTIC_ONLY",
+          "e2e_verdict": "E2E_PASS_WITH_DIAGNOSTIC_ONLY_DPSIG",
+          "e2e_checks": 27,
+          "e2e_artifact": "artifacts/e2e/fastapi/run_02_oss_fastapi_pipeline/e2e_validation.json"
+        },
+        {
+          "client_id": "blueedge",
+          "run_id": "run_blueedge_productized_01_fixed",
+          "readiness_state": "EXECUTIVE_READY",
+          "e2e_verdict": "EXECUTIVE_READY — 25/25 PASS",
+          "e2e_checks": 25,
+          "e2e_artifact": "artifacts/e2e/blueedge/run_blueedge_productized_01_fixed/dpsig_blueedge_projection_validation.json"
+        }
+      ],
+      "path_b_readiness": "CONFIRMED",
+      "path_b_prerequisite_for": "PI.AGENTIC-SEMANTIC-ORCHESTRATION.01",
+      "supersedes": "productized-pios-lens-baseline-93098cb"
+    },
+    {
+      "baseline_tag": "productized-pios-lens-baseline-93098cb",
+      "commit": "93098cb",
+      "status": "SUPERSEDED",
+      "issued": "2026-05-07",
+      "freeze_stream": null,
+      "baseline_type": "generic_pipeline_baseline",
+      "note": "Pre-DPSIG baseline. Valid for forensic comparison only. Not the active baseline for any new stream."
+    }
+  ]
+}
