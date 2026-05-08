@@ -1,0 +1,95 @@
+{
+  "stream": "PI.PSEE-PIOS.EXECUTIVE-COGNITIVE-PROJECTION.STABILIZATION.01",
+  "generated": "2026-05-08",
+  "status": "DESIGN — IMPLEMENTATION NOT YET AUTHORIZED",
+  "baseline_commit": "93098cb",
+
+  "aliasing_rules": [
+    {"rule_id": "ALI-01", "condition": "cluster has business label AND readiness IN [EXECUTIVE_READY, EXECUTIVE_READY_WITH_QUALIFIER]", "action": "render as '{label} ({raw_id})'"},
+    {"rule_id": "ALI-02", "condition": "domain lineage=EXACT AND readiness IN [EXECUTIVE_READY, EXECUTIVE_READY_WITH_QUALIFIER]", "action": "render as '{business_label} ({dom_id})' — no qualifier"},
+    {"rule_id": "ALI-03", "condition": "domain lineage=STRONG AND readiness IN [EXECUTIVE_READY, EXECUTIVE_READY_WITH_QUALIFIER]", "action": "render as '{business_label} ({dom_id})' — soft qualifier"},
+    {"rule_id": "ALI-04", "condition": "domain lineage=PARTIAL AND readiness IN [EXECUTIVE_READY, EXECUTIVE_READY_WITH_QUALIFIER]", "action": "render as '{business_label} ({dom_id}) †' — explicit qualifier"},
+    {"rule_id": "ALI-05", "condition": "domain lineage=NONE", "action": "render structural label only — no business attribution"},
+    {"rule_id": "ALI-06", "condition": "readiness IN [DIAGNOSTIC_ONLY, SUPPRESSED_FROM_EXECUTIVE, BLOCKED_PENDING_DOMAIN_GROUNDING]", "action": "render raw identifier only — no aliasing"},
+    {"rule_id": "ALI-07", "condition": "inference_prohibition=True", "action": "aliasing BLOCKED regardless of other conditions"}
+  ],
+
+  "cluster_aliases": {
+    "blueedge": {
+      "CLU-01": {"alias": "Operational Intelligence",      "source": "semantic_topology_model.json"},
+      "CLU-02": {"alias": "Fleet Operations",              "source": "semantic_topology_model.json"},
+      "CLU-03": {"alias": "Emerging Capabilities",        "source": "semantic_topology_model.json"},
+      "CLU-04": {"alias": "Platform Infrastructure",      "source": "semantic_topology_model.json"},
+      "CLU-05": {"alias": "Platform Services",            "source": "semantic_topology_model.json"}
+    },
+    "fastapi": "BLOCKED — inference_prohibition=True, DIAGNOSTIC_ONLY"
+  },
+
+  "domain_aliases": {
+    "blueedge": {
+      "DOMAIN-01": {"alias": "Edge Data Acquisition",             "lineage": "EXACT",    "confidence": 0.95, "alias_permitted": true,  "qualifier": "none"},
+      "DOMAIN-10": {"alias": "Platform Infrastructure and Data",  "lineage": "STRONG",   "confidence": 0.78, "alias_permitted": true,  "qualifier": "soft"},
+      "DOMAIN-11": {"alias": "Event-Driven Architecture",         "lineage": "PARTIAL",  "confidence": 0.65, "alias_permitted": true,  "qualifier": "explicit — validate with engineering"},
+      "DOMAIN-14": {"alias": "Frontend Application",              "lineage": "EXACT",    "confidence": 0.92, "alias_permitted": true,  "qualifier": "none"},
+      "DOMAIN-16": {"alias": "Operational Engineering",           "lineage": "EXACT",    "confidence": 0.93, "alias_permitted": true,  "qualifier": "none"},
+      "DOMAIN-02": {"alias": "Telemetry Transport and Messaging", "lineage": "NONE",     "confidence": 0.0,  "alias_permitted": false, "qualifier": "structural label only"},
+      "DOMAIN-03": {"alias": "Fleet Core Operations",             "lineage": "NONE",     "confidence": 0.0,  "alias_permitted": false, "qualifier": "structural label only"},
+      "DOMAIN-04": {"alias": "Fleet Vertical Extensions",         "lineage": "NONE",     "confidence": 0.0,  "alias_permitted": false, "qualifier": "structural label only"},
+      "DOMAIN-05": {"alias": "Analytics and Intelligence",        "lineage": "NONE",     "confidence": 0.0,  "alias_permitted": false, "qualifier": "structural label only"},
+      "DOMAIN-06": {"alias": "AI/ML Intelligence Layer",          "lineage": "NONE",     "confidence": 0.0,  "alias_permitted": false, "qualifier": "structural label only"},
+      "DOMAIN-07": {"alias": "Sensor and Security Ingestion",     "lineage": "NONE",     "confidence": 0.0,  "alias_permitted": false, "qualifier": "structural label only"},
+      "DOMAIN-08": {"alias": "Real-Time Streaming and Gateway",   "lineage": "NONE",     "confidence": 0.0,  "alias_permitted": false, "qualifier": "structural label only"},
+      "DOMAIN-09": {"alias": "Access Control and Identity",       "lineage": "NONE",     "confidence": 0.0,  "alias_permitted": false, "qualifier": "structural label only"},
+      "DOMAIN-12": {"alias": "SaaS Platform Layer",               "lineage": "NONE",     "confidence": 0.0,  "alias_permitted": false, "qualifier": "structural label only"},
+      "DOMAIN-13": {"alias": "External Integration",              "lineage": "NONE",     "confidence": 0.0,  "alias_permitted": false, "qualifier": "structural label only"},
+      "DOMAIN-15": {"alias": "EV and Electrification",            "lineage": "NONE",     "confidence": 0.0,  "alias_permitted": false, "qualifier": "structural label only"},
+      "DOMAIN-17": {"alias": "Extended Operations and Driver Services", "lineage": "NONE", "confidence": 0.0, "alias_permitted": false, "qualifier": "structural label only"}
+    },
+    "fastapi": "BLOCKED — inference_prohibition=True, DIAGNOSTIC_ONLY"
+  },
+
+  "terminology_normalization": [
+    {"raw": "CLUSTER_PRESSURE_HIGH",      "normalized": "High Structural Concentration",            "layer": "L3_prose_only"},
+    {"raw": "CLUSTER_PRESSURE_ELEVATED",  "normalized": "Elevated Structural Concentration",        "layer": "L3_prose_only"},
+    {"raw": "CLUSTER_PRESSURE_NOMINAL",   "normalized": "Normal Distribution",                      "layer": "L3_prose_only"},
+    {"raw": "DOMINANT_CLUSTER",           "normalized": "Dominant Structural Mass",                 "layer": "L3_prose_only"},
+    {"raw": "CLUSTER_BALANCED",           "normalized": "Balanced Distribution",                    "layer": "L3_prose_only"},
+    {"raw": "CLUSTER_ASYMMETRIC",         "normalized": "Asymmetric Distribution",                  "layer": "L3_prose_only"},
+    {"raw": "cluster fan asymmetry",      "normalized": "structural mass distribution asymmetry",   "layer": "L3_prose_only"},
+    {"raw": "Cluster Pressure Index",     "normalized": "Structural Concentration Index",           "layer": "L3_prose_only"},
+    {"raw": "Cluster Fan Asymmetry",      "normalized": "Structural Distribution Ratio",            "layer": "L3_prose_only"},
+    {"raw": "COMPOUND_ZONE",              "normalized": "Compound Pressure Zone",                   "layer": "L3_prose_only"},
+    {"raw": "COUPLING_ZONE",              "normalized": "Coupling Pressure Zone",                   "layer": "L3_prose_only"},
+    {"raw": "PROPAGATION_ZONE",           "normalized": "Propagation Risk Zone",                    "layer": "L3_prose_only"},
+    {"raw": "RESPONSIBILITY_ZONE",        "normalized": "Concentration of Responsibility",          "layer": "L3_prose_only"},
+    {"raw": "NULL_TOPOLOGY",              "normalized": "No Cluster Concentration Detected",        "layer": "L3_prose_only"},
+    {"raw": "FILESYSTEM_CONTAINER_DOMINANCE", "normalized": "Ungrounded Container Concentration",  "layer": "L2_diagnostic_notice"},
+    {"raw": "EXECUTIVE_READY_WITH_QUALIFIER", "normalized": "Qualified Executive View",            "layer": "L2_qualifier_banner"},
+    {"raw": "BLOCKED_PENDING_DOMAIN_GROUNDING", "normalized": "Domain Verification Required",     "layer": "L2_qualifier_banner"}
+  ],
+
+  "qualifier_taxonomy": [
+    {"id": "Q-00", "state": "EXECUTIVE_READY",                    "banner": null,                                                              "language_authority": "Full executive attribution permitted"},
+    {"id": "Q-01", "state": "EXECUTIVE_READY_WITH_QUALIFIER",     "banner": "Partial domain grounding — validate with engineering",           "language_authority": "Qualified attribution; no absolute claims"},
+    {"id": "Q-02", "state": "DIAGNOSTIC_ONLY",                    "banner": "Structural Diagnostic Mode — engineering use only",             "language_authority": "No executive attribution"},
+    {"id": "Q-03", "state": "SUPPRESSED_FROM_EXECUTIVE",          "banner": "Suppressed from executive view",                                "language_authority": "No executive rendering"},
+    {"id": "Q-04", "state": "BLOCKED_PENDING_DOMAIN_GROUNDING",   "banner": "Domain verification required before executive projection",      "language_authority": "Pending; no executive rendering"}
+  ],
+
+  "surface_classification": {
+    "KEEP_RAW":              ["PZ-001", "readiness_state=*", "executive_rendering=*", "EXACT/STRONG/PARTIAL/NONE markers", "derivation hashes", "signal_stable_key", "source_artifact hashes"],
+    "EXECUTIVE_ALIASABLE":   ["CLU-XX (when alias exists)", "DOM-XX (when lineage>=PARTIAL)", "CLUSTER_PRESSURE_ELEVATED", "CLUSTER_BALANCED", "COMPOUND_ZONE", "cluster fan asymmetry"],
+    "ENGINEERING_ONLY":      ["DPSIG-031", "DPSIG-032", "CPI=*", "CFA=*", "z-score", "activation_state machine codes", "derivation_trace.*"],
+    "DIAGNOSTIC_ONLY_ONLY":  ["any surface when readiness=DIAGNOSTIC_ONLY or SUPPRESSED"],
+    "ALREADY_EXECUTIVE":     ["Platform Infrastructure", "Primary Pressure Zone — Multiple structural pressures acting together", "Structural investment in this cluster has system-wide impact", "EXACT/STRONG/PARTIAL confidence banners"]
+  },
+
+  "governance_gate": {
+    "aliasing_requires": ["executive_rendering_allowed = true"],
+    "terminology_normalization_requires": ["executive_rendering_allowed = true"],
+    "cognitive_compression_requires": ["executive_rendering_allowed = true"],
+    "fastapi_override": "BLOCKED — inference_prohibition=True overrides all",
+    "replay_safe_fields_excluded": true,
+    "structural_truth_immutable": true
+  }
+}
