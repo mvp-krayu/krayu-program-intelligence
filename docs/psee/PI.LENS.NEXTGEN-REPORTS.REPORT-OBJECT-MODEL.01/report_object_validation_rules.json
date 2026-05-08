@@ -1,0 +1,272 @@
+{
+  "schema_version": "1.0",
+  "stream": "PI.LENS.NEXTGEN-REPORTS.REPORT-OBJECT-MODEL.01",
+  "authority": "GEIOS_LENS_PRODUCTIZATION_BRIDGE.md §5, §12",
+  "baseline_ref": "governed-dpsig-baseline-v1",
+  "issued": "2026-05-08",
+  "description": "Machine-readable validation rules for the LENS NextGen Report Object. Rules govern BridgeValidator pre-render checks, qualifier preservation, interaction activation, and governance enforcement.",
+
+  "validation_rules": [
+    {
+      "rule_id": "ROM-VAL-01",
+      "name": "report_id present and immutable",
+      "check": "report_id is present, non-empty string",
+      "fail_action": "BLOCKED",
+      "fail_message": "Report object missing stable identifier — rendering blocked",
+      "immutability": "LENS rendering layer must not modify report_id",
+      "phase": "ALL"
+    },
+    {
+      "rule_id": "ROM-VAL-02",
+      "name": "baseline_ref present",
+      "check": "baseline_ref is present and matches an entry in governance_baselines.json",
+      "fail_action": "BLOCKED",
+      "fail_message": "Report object does not reference a valid governance baseline — rendering blocked",
+      "immutability": "LENS rendering layer must not modify baseline_ref",
+      "phase": "ALL"
+    },
+    {
+      "rule_id": "ROM-VAL-03",
+      "name": "evidence_object_hash present",
+      "check": "evidence_object_hash is present and non-empty string",
+      "fail_action": "BLOCKED",
+      "fail_message": "Evidence seal missing — rendering blocked. No evidence panel may render without a sealed evidence envelope.",
+      "immutability": "LENS rendering layer must not modify or verify-bypass evidence_object_hash",
+      "phase": "ALL"
+    },
+    {
+      "rule_id": "ROM-VAL-04",
+      "name": "derivation_hash present",
+      "check": "derivation_hash is present and non-empty string",
+      "fail_action": "BLOCKED",
+      "fail_message": "Derivation provenance missing — rendering blocked",
+      "immutability": "derivation_hash is AUDIT ONLY — never displayed in executive surface",
+      "phase": "ALL"
+    },
+    {
+      "rule_id": "ROM-VAL-05",
+      "name": "governance_verdict present and valid",
+      "check": "governance_verdict is present and one of: PASS, FAIL",
+      "fail_action": "BLOCKED",
+      "fail_message": "Governance verdict absent or invalid — rendering blocked",
+      "conditional": "If governance_verdict = FAIL: render BLOCKED module with reason. Never render intelligence content.",
+      "immutability": "governance_verdict must never be overridden by LENS layer",
+      "phase": "ALL"
+    },
+    {
+      "rule_id": "ROM-VAL-06",
+      "name": "readiness_state present and valid",
+      "check": "readiness_state is present and one of: EXECUTIVE_READY, EXECUTIVE_READY_WITH_QUALIFIER, DIAGNOSTIC_ONLY, SUPPRESSED_FROM_EXECUTIVE, BLOCKED_PENDING_DOMAIN_GROUNDING",
+      "fail_action": "BLOCKED",
+      "fail_message": "Executive readiness state absent or invalid — rendering blocked",
+      "immutability": "readiness_state must never be re-classified at LENS layer",
+      "phase": "ALL"
+    },
+    {
+      "rule_id": "ROM-VAL-07",
+      "name": "qualifier_class present and valid",
+      "check": "qualifier_class is present and one of: Q-00, Q-01, Q-02, Q-03, Q-04",
+      "fail_action": "BLOCKED",
+      "fail_message": "Qualifier class absent or invalid — qualifier preservation cannot be guaranteed — rendering blocked",
+      "immutability": "qualifier_class must never be upgraded (Q-01 may not be rendered as Q-00) or suppressed",
+      "enforcement": "qualifier_label must be rendered in ReadinessBadge for Q-01..Q-04. Q-04 triggers suppression notice, not silent absence.",
+      "phase": "ALL"
+    },
+    {
+      "rule_id": "ROM-VAL-08",
+      "name": "topology_scope present",
+      "check": "topology_scope is present with domain_count, cluster_count, grounded_domain_count, grounding_label",
+      "fail_action": "DIAGNOSTIC",
+      "fail_message": "Topology scope metadata incomplete — scope indicator cannot render accurately",
+      "read_only_enforcement": "topology_scope fields are display metadata only — LENS must not derive signals from these values",
+      "phase": "ALL"
+    },
+    {
+      "rule_id": "ROM-VAL-09",
+      "name": "narrative_block present",
+      "check": "narrative_block is present with executive_summary, why_section, structural_summary all non-empty",
+      "fail_action": "BLOCKED",
+      "fail_message": "Narrative content absent — intelligence module cannot render",
+      "normalization_check": "If rendering_metadata.ali_rules_applied is empty: render DIAGNOSTIC notice on narrative block",
+      "phase": "ALL"
+    },
+    {
+      "rule_id": "ROM-VAL-10",
+      "name": "evidence_blocks array present and non-empty",
+      "check": "evidence_blocks is present, is array, has minItems 1",
+      "fail_action": "BLOCKED",
+      "fail_message": "Evidence blocks absent — no domain evidence to render — rendering blocked",
+      "phase": "ALL"
+    },
+    {
+      "rule_id": "ROM-VAL-11",
+      "name": "trace_block present",
+      "check": "trace_block is present with propagation_path, propagation_summary, derivation_lineage_ref, baseline_ref",
+      "fail_action": "DIAGNOSTIC",
+      "fail_message": "Trace block incomplete — trace panel will render with degraded content",
+      "enforcement": "No TAXONOMY-01 raw field values may appear in trace_block fields",
+      "phase": "ALL"
+    },
+    {
+      "rule_id": "ROM-VAL-12",
+      "name": "explainability_bundle contains exactly seven panels",
+      "check": "explainability_bundle contains all of: why_panel, evidence_panel, trace_panel, qualifiers_panel, lineage_panel, confidence_panel, readiness_state_panel",
+      "fail_action": "BLOCKED",
+      "fail_message": "Explainability bundle incomplete — seven panels required — rendering blocked",
+      "enforcement": "All seven panels must be present with valid panel_id, content_blocks, audience, and available_in_phase",
+      "phase": "ALL"
+    },
+    {
+      "rule_id": "ROM-VAL-13",
+      "name": "module_registry present and deterministic",
+      "check": "module_registry.entries is present, is array, has minItems 1; all entries have module_id, module_type, report_id, evidence_ref, active, phase_gate, registered_at",
+      "fail_action": "BLOCKED",
+      "fail_message": "Module registry absent or malformed — workspace compatibility cannot be guaranteed — rendering blocked",
+      "enforcement": "module_id values must be stable and deterministic — same report_object always produces same module_id values",
+      "phase": "ALL"
+    },
+    {
+      "rule_id": "ROM-VAL-14",
+      "name": "interaction_registry phase restrictions enforced",
+      "check": "In Phase 2 deployment: for all InteractionEntry objects, if interaction_type is not EXPAND_COLLAPSE then active must be false",
+      "fail_action": "WARN_AND_DEACTIVATE",
+      "fail_message": "Phase-restricted interaction active in Phase 2 — deactivating; governance gate not yet passed",
+      "enforcement": "EVIDENCE_DRAWER, INVESTIGATION_ENTRY, COPILOT_ENTRY must have active: false until their respective phase gates are passed",
+      "phase_map": {
+        "EXPAND_COLLAPSE": 2,
+        "EVIDENCE_DRAWER": 3,
+        "INVESTIGATION_ENTRY": 4,
+        "COPILOT_ENTRY": 5
+      },
+      "phase": "2"
+    },
+    {
+      "rule_id": "ROM-VAL-15",
+      "name": "rendering_metadata present",
+      "check": "rendering_metadata is present with normalization_version, surface_mode, evidence_hash_verified, rendered_at, lens_version",
+      "fail_action": "DIAGNOSTIC",
+      "fail_message": "Rendering metadata incomplete — provenance tracking degraded",
+      "enforcement": "If normalization_version is absent or ali_rules_applied is empty: render DIAGNOSTIC notice on narrative block",
+      "phase": "ALL"
+    },
+    {
+      "rule_id": "ROM-VAL-16",
+      "name": "no forbidden GEIOS internals exposed",
+      "check": "No field in the rendered executive surface contains: TAXONOMY-01 raw field names (signal_value, activation_state, signal_stable_key, derivation_hash as visible label), GEIOS safety rule IDs (AS-01, N-SAF-01, etc.), agent identifiers, orchestration task IDs, RAG chunk IDs, vector similarity scores, LLM model identifiers, prompt template references",
+      "fail_action": "BLOCKED",
+      "fail_message": "GEIOS internal identifiers detected in executive surface — rendering blocked — governance violation",
+      "enforcement": "Rendering adapters must filter all GEIOS-internal terminology before executive surface output",
+      "phase": "ALL"
+    },
+    {
+      "rule_id": "ROM-VAL-17",
+      "name": "Q-04 suppression handled with explicit absence notice",
+      "check": "If qualifier_class = Q-04 or any EvidenceBlock.grounding_status = Q-04: suppressed content must render an explicit absence notice, not a blank section or silent omission",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_message": "Q-04 suppression rendered silently — explicit absence notice is mandatory — governance violation",
+      "enforcement": "Absence notice text: 'Signal intelligence withheld from this view'. Section is visibly marked absent.",
+      "phase": "ALL"
+    },
+    {
+      "rule_id": "ROM-VAL-18",
+      "name": "Phase 2 contains no live AI interaction",
+      "check": "Phase 2 rendering: no text input fields connected to AI generation; no conversational AI response surfaces; no LLM response rendering at interaction time; all panel content sourced from committed report_object only",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_message": "Live AI interaction detected in Phase 2 — governance violation — Phase 5 gate required for conversational surfaces",
+      "enforcement": "All explainability panel content pre-rendered at generation time. Expand/collapse is pure display state — no computation at interaction time.",
+      "phase": "2"
+    },
+    {
+      "rule_id": "ROM-VAL-19",
+      "name": "topology objects are read-only display objects",
+      "check": "No LENS interaction writes to topology_scope fields; no workspace action produces a topology update request; topology display object is generated from canonical_topology.json at report generation time — not at LENS render time",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_message": "Topology mutation attempted via LENS — governance violation — TP-BRIDGE-01..05 violated",
+      "enforcement": "TopologyDisplayObject is part of the committed report_object. LENS cannot request topology updates. canonical_topology.json is READ-ONLY to all LENS layers.",
+      "phase": "ALL"
+    },
+    {
+      "rule_id": "ROM-VAL-20",
+      "name": "same report_object must render deterministically",
+      "check": "Given identical report_object input: rendering produces identical ExecutiveIntelligenceModule output on every invocation",
+      "fail_action": "NON_DETERMINISM_VIOLATION",
+      "fail_message": "Non-deterministic rendering detected — governance violation — same report_object must always produce same rendered output",
+      "enforcement": "Rendering adapters are pure transformation functions. No random state, no time-varying behavior, no AI generation at render time.",
+      "phase": "ALL"
+    }
+  ],
+
+  "fail_conditions_summary": {
+    "BLOCKED": [
+      "ROM-VAL-01: report_id absent",
+      "ROM-VAL-02: baseline_ref absent or invalid",
+      "ROM-VAL-03: evidence_object_hash absent",
+      "ROM-VAL-04: derivation_hash absent",
+      "ROM-VAL-05: governance_verdict absent, invalid, or FAIL",
+      "ROM-VAL-06: readiness_state absent or invalid",
+      "ROM-VAL-07: qualifier_class absent or invalid",
+      "ROM-VAL-09: narrative_block absent or empty",
+      "ROM-VAL-10: evidence_blocks absent or empty",
+      "ROM-VAL-12: explainability_bundle missing any of 7 panels",
+      "ROM-VAL-13: module_registry absent or malformed",
+      "ROM-VAL-16: GEIOS internals detected in executive surface"
+    ],
+    "DIAGNOSTIC": [
+      "ROM-VAL-08: topology_scope incomplete",
+      "ROM-VAL-11: trace_block incomplete",
+      "ROM-VAL-15: rendering_metadata incomplete or normalization_version absent"
+    ],
+    "GOVERNANCE_VIOLATION": [
+      "ROM-VAL-17: Q-04 suppression silent",
+      "ROM-VAL-18: live AI interaction in Phase 2",
+      "ROM-VAL-19: topology mutation via LENS",
+      "ROM-VAL-20: non-deterministic rendering"
+    ],
+    "WARN_AND_DEACTIVATE": [
+      "ROM-VAL-14: phase-restricted interaction active before gate"
+    ]
+  },
+
+  "qualifier_preservation_checks": {
+    "QP-01": "qualifier_class is present and non-null in all rendering contexts",
+    "QP-02": "qualifier_class may not be upgraded — Q-01 renders as Q-01; never renders as Q-00",
+    "QP-03": "qualifier chip is mandatory for Q-01, Q-02, Q-03 — never hidden for aesthetic reasons",
+    "QP-04": "Q-04 renders explicit absence notice — never a blank section",
+    "QP-05": "All active qualifiers enumerated in QUALIFIERS explainability panel",
+    "QP-06": "Qualifier tooltip content sourced from Q-taxonomy definition — LENS cannot override"
+  },
+
+  "topology_read_only_checks": {
+    "TP-01": "LENS never writes to canonical_topology.json",
+    "TP-02": "topology_scope fields are display metadata — no signal derivation from these values",
+    "TP-03": "No workspace interaction produces a topology update request",
+    "TP-04": "TopologyDisplayObject (Phase 3+) uses aliases only — no raw topology keys",
+    "TP-05": "Topology edge representation never exposes edge weights or topology metrics"
+  },
+
+  "audience_visibility_checks": {
+    "EXECUTIVE": "Sees: narrative, evidence summaries, signal cards, qualifier chips, readiness badge, propagation summary, WHY/EVIDENCE/QUALIFIERS/CONFIDENCE/READINESS_STATE panels. Does not see by default: TRACE collapsed, LINEAGE hidden, derivation_hash hidden.",
+    "ADVISORY": "Sees all EXECUTIVE content plus: TRACE expanded, LINEAGE panel, full propagation path, evidence_object_hash as reference ID.",
+    "AUDIT": "Sees all ADVISORY content plus: full trace_linkage, evidence_object_hash full, derivation_hash as reference ID, stream and run identifiers."
+  },
+
+  "interaction_activation_checks": {
+    "phase_2_permitted": ["EXPAND_COLLAPSE"],
+    "phase_3_permitted": ["EXPAND_COLLAPSE", "EVIDENCE_DRAWER"],
+    "phase_4_permitted": ["EXPAND_COLLAPSE", "EVIDENCE_DRAWER", "INVESTIGATION_ENTRY"],
+    "phase_5_permitted": ["EXPAND_COLLAPSE", "EVIDENCE_DRAWER", "INVESTIGATION_ENTRY", "COPILOT_ENTRY"]
+  },
+
+  "phase_2_restrictions": {
+    "no_live_ai_interaction": true,
+    "no_free_form_text_input": true,
+    "no_conversational_surfaces": true,
+    "no_agent_invocation": true,
+    "no_rag_retrieval_at_render_time": true,
+    "no_memory_layer_activation": true,
+    "no_copilot_surfaces": true,
+    "allowed_interactions": ["EXPAND_COLLAPSE"],
+    "all_panel_content_pre_rendered": true,
+    "rendering_is_deterministic": true
+  }
+}
