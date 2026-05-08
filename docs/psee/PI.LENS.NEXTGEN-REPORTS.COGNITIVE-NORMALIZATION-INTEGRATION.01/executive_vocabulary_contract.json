@@ -1,0 +1,291 @@
+{
+  "schema_version": "1.0",
+  "stream": "PI.LENS.NEXTGEN-REPORTS.COGNITIVE-NORMALIZATION-INTEGRATION.01",
+  "contract_version": "1.0",
+  "authority": "COGNITIVE_NORMALIZATION_INTEGRATION.md §6, §10",
+  "baseline_ref": "governed-dpsig-baseline-v1",
+  "issued": "2026-05-08",
+  "description": "Formal executive-facing vocabulary contract for LENS NextGen reports. Defines approved executive terminology and permanently forbidden vocabulary categories.",
+
+  "readiness_vocabulary": {
+    "description": "Approved executive labels for readiness states. Raw enum values are forbidden in executive surface.",
+    "approved_terms": [
+      {"source": "EXECUTIVE_READY",                      "executive_label": "Executive Ready",               "qualifier": null},
+      {"source": "EXECUTIVE_READY_WITH_QUALIFIER",       "executive_label": "Executive Ready — Qualified",   "qualifier": "Q-01 or Q-02 context"},
+      {"source": "DIAGNOSTIC_ONLY",                      "executive_label": "Under Structural Review",       "qualifier": "Q-03 context"},
+      {"source": "SUPPRESSED_FROM_EXECUTIVE",            "executive_label": "Not Available",                 "qualifier": "Q-04 context"},
+      {"source": "BLOCKED_PENDING_DOMAIN_GROUNDING",     "executive_label": "Pending Grounding",             "qualifier": "grounding scope note"}
+    ],
+    "forbidden_raw_values": [
+      "EXECUTIVE_READY",
+      "EXECUTIVE_READY_WITH_QUALIFIER",
+      "DIAGNOSTIC_ONLY",
+      "SUPPRESSED_FROM_EXECUTIVE",
+      "BLOCKED_PENDING_DOMAIN_GROUNDING"
+    ]
+  },
+
+  "qualifier_vocabulary": {
+    "description": "Approved executive labels for qualifier states. Q-class enum values forbidden in executive surface.",
+    "approved_terms": [
+      {"source": "Q-00", "chip_label": null,               "tooltip": null,                                                                       "scope_note": null},
+      {"source": "Q-01", "chip_label": "Partial Grounding","tooltip": "Analysis based on {n} of {total} grounded domains.",                       "scope_note": "Coverage note at end of executive summary"},
+      {"source": "Q-02", "chip_label": "Structural View",  "tooltip": "Structural topology confirmed. Semantic depth reflects available grounding.","scope_note": "In CONFIDENCE panel"},
+      {"source": "Q-03", "chip_label": "Under Review",     "tooltip": "Advisory confirmation recommended before executive action.",                "scope_note": "Diagnostic frame applied to narrative"},
+      {"source": "Q-04", "chip_label": null,               "tooltip": null,                                                                       "scope_note": "Absence notice: Signal intelligence withheld from this view"}
+    ],
+    "forbidden_raw_values": ["Q-00", "Q-01", "Q-02", "Q-03", "Q-04"],
+    "suppression_prohibited": true
+  },
+
+  "signal_vocabulary": {
+    "description": "Approved executive labels for signal types. Raw signal keys forbidden.",
+    "approved_terms": [
+      {"source": "cpi_score",           "executive_label": "Cluster Pressure Level",       "configurable": true,  "ali_rule": "NORM-ALI-01"},
+      {"source": "cfa_score",           "executive_label": "Fan Distribution Asymmetry",   "configurable": true,  "ali_rule": "NORM-ALI-02"},
+      {"source": "HIGH pressure_tier",  "executive_label": "High execution pressure",       "configurable": false, "ali_rule": "NORM-PROP-01"},
+      {"source": "ELEVATED",            "executive_label": "Elevated pressure",             "configurable": false, "ali_rule": "NORM-PROP-01"},
+      {"source": "MODERATE",            "executive_label": "Moderate pressure",             "configurable": false, "ali_rule": "NORM-PROP-01"},
+      {"source": "LOW",                 "executive_label": "Stable / low pressure",         "configurable": false, "ali_rule": "NORM-PROP-01"}
+    ],
+    "forbidden_raw_values": [
+      "cpi_score", "cfa_score", "signal_value", "activation_state",
+      "signal_stable_key", "derivation_hash", "CPI", "CFA",
+      "cluster_pressure_index", "cluster_fan_asymmetry"
+    ],
+    "forbidden_numerical_values": true,
+    "forbidden_threshold_values": true
+  },
+
+  "propagation_vocabulary": {
+    "description": "Approved phrasing for structural pressure propagation descriptions.",
+    "origin_phrases": [
+      "originates in",
+      "is concentrated in",
+      "emanates from",
+      "is the source of execution pressure"
+    ],
+    "flow_phrases": [
+      "flows through",
+      "passes through",
+      "channels through",
+      "propagates through"
+    ],
+    "destination_phrases": [
+      "reaches",
+      "affects",
+      "places load on",
+      "contributes pressure to"
+    ],
+    "isolation_phrases": [
+      "shows independent pressure pattern",
+      "is structurally isolated from",
+      "does not propagate into"
+    ],
+    "structural_pattern_phrases": {
+      "bottleneck": "structural concentration — concentrated load with constrained distribution",
+      "cascade": "cascading pressure from [origin] through [path]",
+      "balanced": "balanced structural load distribution",
+      "asymmetric": "uneven downstream distribution pattern"
+    },
+    "forbidden_phrases": [
+      "will cascade",
+      "will spread",
+      "is spreading",
+      "accelerating",
+      "growing",
+      "deteriorating",
+      "worsening"
+    ]
+  },
+
+  "evidence_vocabulary": {
+    "description": "Approved vocabulary for evidence presentation in panels and drawers.",
+    "grounding_labels": {
+      "full": "Full Grounding",
+      "partial": "Partial Coverage ({n} of {total} domains)",
+      "structural_only": "Structural View",
+      "diagnostic": "Under Review",
+      "suppressed": "Signal intelligence withheld from this view"
+    },
+    "propagation_role_labels": {
+      "ORIGIN": "Origin of Pressure",
+      "RECEIVER": "Pressure Receiver",
+      "PASS_THROUGH": "Pressure Pass-through",
+      "ISOLATED": "Independent Domain"
+    },
+    "approved_evidence_terms": [
+      "structural evidence",
+      "confirmed topology",
+      "pressure analysis",
+      "domain analysis",
+      "cluster analysis",
+      "distribution pattern",
+      "concentration pattern"
+    ],
+    "forbidden_terms": [
+      "AI evidence",
+      "machine learning output",
+      "model output",
+      "inferred evidence",
+      "predicted evidence",
+      "generated insight"
+    ]
+  },
+
+  "explainability_vocabulary": {
+    "description": "Approved panel labels and terminology for explainability surfaces.",
+    "panel_titles": {
+      "WHY": "Why This Readiness State",
+      "EVIDENCE": "Structural Evidence",
+      "TRACE": "Analysis Trace",
+      "QUALIFIERS": "Evidence Scope",
+      "LINEAGE": "Analysis Provenance",
+      "CONFIDENCE": "Coverage Confidence",
+      "READINESS_STATE": "Readiness Classification Detail"
+    },
+    "interaction_labels": {
+      "expand_evidence": "View Evidence",
+      "collapse_evidence": "Collapse",
+      "view_trace": "View Analysis Trace",
+      "view_scope": "View Coverage Details"
+    },
+    "forbidden_labels": [
+      "AI explanation",
+      "Ask AI",
+      "AI insights",
+      "Model reasoning",
+      "How the AI decided"
+    ]
+  },
+
+  "structural_vocabulary": {
+    "description": "Approved terminology for structural topology descriptions.",
+    "approved_terms": {
+      "execution topology": "The structural organization of execution domains and clusters",
+      "execution domain": "[Domain alias] — a named structural boundary",
+      "execution cluster": "[Cluster alias] — a structural unit within a domain",
+      "pressure concentration": "High cluster pressure in a localized structural area",
+      "distribution pattern": "How execution load distributes across downstream clusters",
+      "structural bottleneck": "A structural constraint limiting distribution",
+      "structural isolation": "A domain with independent pressure patterns"
+    },
+    "forbidden_terms": [
+      "microservice",
+      "API",
+      "service mesh",
+      "repository",
+      "codebase",
+      "GitHub",
+      "JIRA",
+      "ticket",
+      "sprint",
+      "velocity",
+      "throughput"
+    ],
+    "note": "Structural vocabulary must be topology-neutral. Platform-specific terms are forbidden unless they are the client-configured ALI alias."
+  },
+
+  "forbidden_vocabulary": {
+    "description": "Permanently forbidden vocabulary categories in LENS executive surfaces.",
+
+    "category_A_geios_internals": {
+      "description": "GEIOS internal identifiers — never in executive surface",
+      "forbidden": [
+        "TAXONOMY-01", "signal_value", "activation_state", "signal_stable_key",
+        "derivation_hash", "evidence_object_hash",
+        "CPI", "CFA", "cpi_score", "cfa_score",
+        "DPSIG", "EXSIG", "ORGSIG", "FLOWSIG", "RISKSIG", "TIMSIG", "RUNSIG", "OPSIG",
+        "Lane A", "Lane B", "Lane C", "Lane D",
+        "L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9",
+        "AS-01", "N-SAF-01", "E-SAF-01", "C-SAF-01", "ES-01", "OS-01",
+        "GEIOS", "GEIOS substrate", "GEIOS architecture",
+        "canonical_topology.json",
+        "governed-dpsig-baseline-v1"
+      ]
+    },
+
+    "category_B_ai_llm_terms": {
+      "description": "AI and LLM internal terminology — never in executive surface",
+      "forbidden": [
+        "AI", "artificial intelligence", "machine learning", "ML",
+        "LLM", "large language model", "language model",
+        "prompt", "prompt engineering", "system prompt",
+        "token", "context window", "embedding", "vector", "similarity score",
+        "RAG", "retrieval-augmented generation", "retrieval",
+        "hallucination", "confabulation", "AI error",
+        "agent", "multi-agent", "orchestration", "orchestrator",
+        "Claude", "GPT", "model name",
+        "copilot"
+      ],
+      "note": "'copilot' is reserved for Phase 5 product terminology — forbidden in Phase 2 executive surface"
+    },
+
+    "category_C_predictive_language": {
+      "description": "Predictive language — no predictive authority in governed structural derivation",
+      "forbidden": [
+        "will result in", "will cause", "will lead to",
+        "will degrade", "will improve", "will spread",
+        "is expected to", "is likely to", "is anticipated to",
+        "predicts", "forecasts", "projected", "projection",
+        "anticipated outcome", "expected impact"
+      ]
+    },
+
+    "category_D_recommendation_language": {
+      "description": "Recommendation language — reports provide intelligence, not prescriptions",
+      "forbidden": [
+        "we recommend", "recommendation:", "action item:",
+        "you should", "the team should", "they should",
+        "must be addressed", "requires immediate attention",
+        "action required", "urgent action",
+        "please", "fix this", "resolve this", "address this"
+      ]
+    },
+
+    "category_E_speculative_language": {
+      "description": "Speculative language — uncertainty expressed through Q-taxonomy qualifiers only",
+      "forbidden": [
+        "possibly", "perhaps", "maybe",
+        "might indicate", "could suggest", "may represent",
+        "our analysis suggests", "we believe", "we think",
+        "confidence: [percentage]", "[number]% confidence",
+        "unclear", "uncertain", "ambiguous"
+      ]
+    },
+
+    "category_F_emotional_apologetic_language": {
+      "description": "Emotional and apologetic language — scope is factual, not apologetic",
+      "forbidden": [
+        "unfortunately", "regrettably", "sadly",
+        "we apologize", "we're sorry", "we're unable to provide",
+        "good news", "bad news", "concerning",
+        "alarming", "encouraging", "disappointing"
+      ]
+    },
+
+    "category_G_consumer_ai_phrasing": {
+      "description": "Consumer AI / chatbot phrasing — wrong product category",
+      "forbidden": [
+        "Sure!", "Certainly!", "Of course!", "Absolutely!",
+        "Great question!", "Happy to help!",
+        "Let me explain", "Let me tell you",
+        "I think", "I believe", "I found", "I see",
+        "As an AI", "As a language model",
+        "Based on my analysis", "Based on what I know",
+        "I'm unable to", "I don't have access to"
+      ]
+    },
+
+    "category_H_platform_specific_terms": {
+      "description": "Platform-specific operational terms — topology is neutral unless client-aliased",
+      "forbidden_unless_client_aliased": [
+        "microservice", "service", "API endpoint",
+        "repository", "repo", "codebase",
+        "GitHub", "GitLab", "Jira", "Confluence",
+        "sprint", "ticket", "story", "epic",
+        "pipeline", "CI/CD", "deployment"
+      ]
+    }
+  }
+}
