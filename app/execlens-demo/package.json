@@ -13,7 +13,8 @@
     "test:badge": "node --test components/readiness-badge-system/tests/readinessBadgeSystem.test.js",
     "test:narrative": "node --test components/executive-narrative-rendering/tests/executiveNarrativeRendering.test.js",
     "test:propagation": "node --test components/propagation-explainability/tests/propagationExplainability.test.js",
-    "test": "node --test validation/tests/*.test.js adapters/tests/adapters.test.js components/core-report-container/tests/coreReportContainer.test.js components/readiness-badge-system/tests/readinessBadgeSystem.test.js components/executive-narrative-rendering/tests/executiveNarrativeRendering.test.js components/propagation-explainability/tests/propagationExplainability.test.js"
+    "test:experiential": "node --test components/experiential-realization/tests/executiveExperienceSurface.test.js",
+    "test": "node --test validation/tests/*.test.js adapters/tests/adapters.test.js components/core-report-container/tests/coreReportContainer.test.js components/readiness-badge-system/tests/readinessBadgeSystem.test.js components/executive-narrative-rendering/tests/executiveNarrativeRendering.test.js components/propagation-explainability/tests/propagationExplainability.test.js components/experiential-realization/tests/executiveExperienceSurface.test.js"
   },
   "dependencies": {
     "next": "14.0.4",
