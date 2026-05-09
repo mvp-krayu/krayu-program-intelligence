@@ -11,7 +11,8 @@
     "test:adapters": "node --test adapters/tests/adapters.test.js",
     "test:container": "node --test components/core-report-container/tests/coreReportContainer.test.js",
     "test:badge": "node --test components/readiness-badge-system/tests/readinessBadgeSystem.test.js",
-    "test": "node --test validation/tests/*.test.js adapters/tests/adapters.test.js components/core-report-container/tests/coreReportContainer.test.js components/readiness-badge-system/tests/readinessBadgeSystem.test.js"
+    "test:narrative": "node --test components/executive-narrative-rendering/tests/executiveNarrativeRendering.test.js",
+    "test": "node --test validation/tests/*.test.js adapters/tests/adapters.test.js components/core-report-container/tests/coreReportContainer.test.js components/readiness-badge-system/tests/readinessBadgeSystem.test.js components/executive-narrative-rendering/tests/executiveNarrativeRendering.test.js"
   },
   "dependencies": {
     "next": "14.0.4",
