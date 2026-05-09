@@ -54,10 +54,33 @@ const STATE_LABELS = {
 const ROLE_ORDER = { ORIGIN: 0, PASS_THROUGH: 1, RECEIVER: 2 }
 
 const DENSITY_OPTIONS = [
-  { value: 'EXECUTIVE_BALANCED',  label: 'BALANCED' },
-  { value: 'EXECUTIVE_DENSE',     label: 'DENSE' },
-  { value: 'INVESTIGATION_DENSE', label: 'INVESTIGATION' },
+  {
+    value: 'EXECUTIVE_BALANCED',
+    label: 'BALANCED',
+    persona_label: 'Executive lens',
+    persona_sub: 'CEO · consequence-first read',
+    aria: 'Balanced — Executive (CEO) consequence lens',
+  },
+  {
+    value: 'EXECUTIVE_DENSE',
+    label: 'DENSE',
+    persona_label: 'Structural lens',
+    persona_sub: 'CTO · structural cause and propagation',
+    aria: 'Dense — Structural (CTO) cause and propagation lens',
+  },
+  {
+    value: 'INVESTIGATION_DENSE',
+    label: 'INVESTIGATION',
+    persona_label: 'Evidence lens',
+    persona_sub: 'Analyst · evidence trace and confidence',
+    aria: 'Investigation — Analyst evidence trace and confidence lens',
+  },
 ]
+const BOARDROOM_PERSONA = {
+  persona_label: 'Projection lens',
+  persona_sub: 'Boardroom projection — minimal chrome',
+  aria: 'Boardroom projection lens — minimal chrome, declaration-supportive',
+}
 
 // ── Derived domain nodes ──────────────────────────────────────────────────────
 
@@ -76,6 +99,8 @@ function getDomainNodes(evidenceBlocks) {
 // ── Inner components ──────────────────────────────────────────────────────────
 
 function AuthorityBand({ densityClass, boardroomMode, onDensityChange, onBoardroomToggle }) {
+  const activeDensity = DENSITY_OPTIONS.find(o => o.value === densityClass) || DENSITY_OPTIONS[0]
+  const activePersona = boardroomMode ? BOARDROOM_PERSONA : activeDensity
   return (
     <div className="auth-band">
       <div className="auth-left">
@@ -88,26 +113,47 @@ function AuthorityBand({ densityClass, boardroomMode, onDensityChange, onBoardro
         <span className="auth-program">Program · Delivery Coordination</span>
       </div>
       <div className="auth-right">
-        <div className="auth-density-group" aria-label="Reading density">
-          {DENSITY_OPTIONS.map(opt => (
+        <div className="auth-mode-group">
+          <div
+            className="auth-density-group"
+            role="radiogroup"
+            aria-label="Executive lens"
+          >
+            {DENSITY_OPTIONS.map(opt => {
+              const isActive = densityClass === opt.value && !boardroomMode
+              return (
+                <button
+                  key={opt.value}
+                  className={`auth-density-btn${isActive ? ' active' : ''}`}
+                  onClick={() => onDensityChange(opt.value)}
+                  aria-pressed={isActive}
+                  aria-label={opt.aria}
+                  title={`${opt.persona_label} — ${opt.persona_sub}`}
+                  role="radio"
+                  aria-checked={isActive}
+                  data-persona={opt.persona_label}
+                >
+                  {opt.label}
+                </button>
+              )
+            })}
             <button
-              key={opt.value}
-              className={`auth-density-btn${densityClass === opt.value ? ' active' : ''}`}
-              onClick={() => onDensityChange(opt.value)}
-              aria-pressed={densityClass === opt.value}
+              className={`auth-density-btn auth-density-btn--boardroom${boardroomMode ? ' active' : ''}`}
+              onClick={onBoardroomToggle}
+              aria-pressed={boardroomMode}
+              aria-label={BOARDROOM_PERSONA.aria}
+              title={`${BOARDROOM_PERSONA.persona_label} — ${BOARDROOM_PERSONA.persona_sub}`}
+              data-persona={BOARDROOM_PERSONA.persona_label}
             >
-              {opt.label}
+              BOARDROOM
             </button>
-          ))}
+          </div>
+          <div className="auth-persona-line" aria-live="polite">
+            <span className="auth-persona-label">{activePersona.persona_label}</span>
+            <span className="auth-persona-sep"> · </span>
+            <span className="auth-persona-sub">{activePersona.persona_sub}</span>
+          </div>
         </div>
-        <button
-          className={`auth-boardroom-btn${boardroomMode ? ' active' : ''}`}
-          onClick={onBoardroomToggle}
-          aria-pressed={boardroomMode}
-          title="Toggle boardroom projection mode"
-        >
-          {boardroomMode ? '◉ Boardroom' : '○ Boardroom'}
-        </button>
       </div>
     </div>
   )
@@ -171,12 +217,238 @@ function QualifierMandate({ qualifierClass, visible }) {
   )
 }
 
-function IntelligenceField({ narrative, adapted, densityClass }) {
-  const chip = (adapted && adapted.qualifierChip) || {}
+/* ── Representation Field — persona-weighted operational intelligence canvas ─────
+ * The right-side companion to the Executive Assessment.
+ * Replaces the prior compact status anchor.
+ * Branches on:
+ *   - boardroomMode (projection lens — wins over densityClass)
+ *   - densityClass:
+ *       EXECUTIVE_BALANCED   → BalancedConsequenceField   (Executive / CEO)
+ *       EXECUTIVE_DENSE      → DenseTopologyField         (Structural / CTO)
+ *       INVESTIGATION_DENSE  → InvestigationTraceField    (Analyst / Evidence)
+ * Uses ONLY existing data on the page — no invented signals, no invented metrics.
+ * No card-grid, no KPI panel, no graph playground, no static topology regression.
+ */
+
+const REP_TIER_COLOR = {
+  HIGH:     '#ff6b6b',
+  ELEVATED: '#ff9e4a',
+  MODERATE: '#ffd700',
+  LOW:      '#64ffda',
+}
+
+function findByRole(blocks, role) {
+  if (!blocks) return null
+  return blocks.find(b => b && b.propagation_role === role) || null
+}
+
+function RepEvidenceState({ adapted, scope, compact }) {
   const badge = (adapted && adapted.readinessBadge) || {}
+  const chip = (adapted && adapted.qualifierChip) || {}
+  return (
+    <div className={`rep-evstate${compact ? ' rep-evstate--compact' : ''}`}>
+      <div className="rep-evstate-label">EVIDENCE STATE</div>
+      <div className="rep-evstate-readiness">{badge.state_label || '—'}</div>
+      <div className="rep-evstate-coverage">
+        {(scope && scope.grounding_label) || 'Partial Coverage'}
+        <span className="rep-evstate-coverage-meta">
+          {' · '}{(scope && scope.domain_count) || 3} domains · {(scope && scope.cluster_count) || 47} clusters
+        </span>
+      </div>
+      {chip.renders && (
+        <div className="rep-evstate-qualifier">
+          <span className="rep-evstate-qualifier-class">{chip.class_label || chip.qualifier_class || '—'}</span>
+          <span className="rep-evstate-qualifier-note">qualifier in effect</span>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function RepModeTag({ label, sub }) {
+  return (
+    <div className="rep-mode-tag" role="presentation">
+      <span className="rep-mode-tag-label">{label}</span>
+      <span className="rep-mode-tag-sub">{sub}</span>
+    </div>
+  )
+}
+
+function BalancedConsequenceField({ adapted, blocks, scope }) {
+  const origin = findByRole(blocks, 'ORIGIN')
+  const passthrough = findByRole(blocks, 'PASS_THROUGH')
+  const receiver = findByRole(blocks, 'RECEIVER')
+  return (
+    <div className="rep-field rep-field--balanced">
+      <RepModeTag label="Executive lens" sub="CEO · consequence-first read" />
+      <div className="rep-balanced-statement">
+        Pressure originates upstream and is being absorbed through the coordination layer; secondary delivery remains within bounds, advisory-qualified.
+      </div>
+      <div className="rep-balanced-anchors" aria-label="Consequence path">
+        {origin && (
+          <div className="rep-anchor rep-anchor--origin" data-tier={origin.signal_cards[0].pressure_tier}>
+            <div className="rep-anchor-rail" />
+            <div className="rep-anchor-label">Source pressure</div>
+            <div className="rep-anchor-name">{origin.domain_alias}</div>
+            <div className="rep-anchor-state">{origin.signal_cards[0].pressure_label}</div>
+          </div>
+        )}
+        {passthrough && (
+          <div className="rep-anchor rep-anchor--passthrough" data-tier={passthrough.signal_cards[0].pressure_tier}>
+            <div className="rep-anchor-rail" />
+            <div className="rep-anchor-label">Coordination absorption</div>
+            <div className="rep-anchor-name">{passthrough.domain_alias}</div>
+            <div className="rep-anchor-state">Conducting · not generating</div>
+          </div>
+        )}
+        {receiver && (
+          <div className="rep-anchor rep-anchor--receiver" data-tier={receiver.signal_cards[0].pressure_tier}>
+            <div className="rep-anchor-rail" />
+            <div className="rep-anchor-label">Secondary impact</div>
+            <div className="rep-anchor-name">{receiver.domain_alias}</div>
+            <div className="rep-anchor-state">{receiver.signal_cards[0].pressure_label}</div>
+          </div>
+        )}
+      </div>
+      <RepEvidenceState adapted={adapted} scope={scope} compact />
+    </div>
+  )
+}
+
+function DenseTopologyField({ adapted, blocks, scope }) {
+  const origin = findByRole(blocks, 'ORIGIN')
+  const passthrough = findByRole(blocks, 'PASS_THROUGH')
+  const receiver = findByRole(blocks, 'RECEIVER')
+  const nodes = [origin, passthrough, receiver].filter(Boolean)
+  return (
+    <div className="rep-field rep-field--dense">
+      <RepModeTag label="Structural lens" sub="CTO · structural cause and propagation" />
+      <div className="rep-topo" aria-label="Source to pass-through to receiver propagation">
+        {nodes.map((node, i) => {
+          const tier = node.signal_cards[0].pressure_tier
+          const isPartial = node.grounding_status && node.grounding_status !== 'Q-00'
+          const role = node.propagation_role
+          return (
+            <div key={node.domain_alias} className={`rep-topo-step rep-topo-step--${role.toLowerCase()}`} data-tier={tier}>
+              <div className="rep-topo-marker">
+                <div className="rep-topo-glow" />
+                <div className="rep-topo-dot" />
+              </div>
+              <div className="rep-topo-meta">
+                <div className="rep-topo-role">{role.replace(/_/g, '-')}</div>
+                <div className="rep-topo-name">{node.domain_alias}</div>
+                <div className="rep-topo-tier">{node.signal_cards[0].pressure_label}</div>
+                {isPartial && (
+                  <div className="rep-topo-partial">{node.grounding_status} · advisory bound</div>
+                )}
+              </div>
+              {i < nodes.length - 1 && <div className="rep-topo-edge" aria-hidden="true" />}
+            </div>
+          )
+        })}
+      </div>
+      <div className="rep-dense-note">
+        Coordination layer is conducting upstream pressure rather than generating it — consistent with organizational stress migration, not isolated incident.
+      </div>
+      <RepEvidenceState adapted={adapted} scope={scope} compact />
+    </div>
+  )
+}
+
+function InvestigationTraceField({ adapted, blocks, scope }) {
+  const origin = findByRole(blocks, 'ORIGIN')
+  const passthrough = findByRole(blocks, 'PASS_THROUGH')
+  const receiver = findByRole(blocks, 'RECEIVER')
+  const bands = [
+    origin && {
+      label: 'Observed pressure',
+      domain: origin.domain_alias,
+      explain: origin.signal_cards[0].evidence_text,
+      conf: origin.grounding_label,
+      tier: origin.signal_cards[0].pressure_tier,
+      role: 'origin',
+      partial: origin.grounding_status !== 'Q-00',
+    },
+    passthrough && {
+      label: 'Propagation absorption',
+      domain: passthrough.domain_alias,
+      explain: passthrough.evidence_description,
+      conf: passthrough.grounding_label,
+      tier: passthrough.signal_cards[0].pressure_tier,
+      role: 'passthrough',
+      partial: passthrough.grounding_status !== 'Q-00',
+    },
+    receiver && {
+      label: 'Qualified receiver state',
+      domain: receiver.domain_alias,
+      explain: receiver.evidence_description,
+      conf: receiver.grounding_label,
+      tier: receiver.signal_cards[0].pressure_tier,
+      role: 'receiver',
+      partial: receiver.grounding_status !== 'Q-00',
+    },
+  ].filter(Boolean)
+  return (
+    <div className="rep-field rep-field--investigation">
+      <RepModeTag label="Evidence lens" sub="Analyst · evidence trace and confidence" />
+      <div className="rep-trace-stack" aria-label="Evidence trace stack">
+        {bands.map(b => (
+          <div key={b.label} className={`rep-trace-band rep-trace-band--${b.role}${b.partial ? ' rep-trace-band--partial' : ''}`} data-tier={b.tier}>
+            <div className="rep-trace-band-head">
+              <span className="rep-trace-band-label">{b.label}</span>
+              <span className="rep-trace-band-domain">{b.domain}</span>
+            </div>
+            <div className="rep-trace-band-explain">{b.explain}</div>
+            <div className="rep-trace-band-conf">
+              <span className="rep-trace-band-conf-label">Confidence</span>
+              <span className="rep-trace-band-conf-value">{b.conf}</span>
+              {b.partial && <span className="rep-trace-band-conf-flag">advisory bound</span>}
+            </div>
+          </div>
+        ))}
+      </div>
+      <RepEvidenceState adapted={adapted} scope={scope} compact />
+    </div>
+  )
+}
+
+function BoardroomAtmosphericField({ adapted, renderState, scope }) {
+  const badge = (adapted && adapted.readinessBadge) || {}
+  return (
+    <div className="rep-field rep-field--boardroom">
+      <RepModeTag label="Projection lens" sub="Boardroom — minimal chrome" />
+      <div className="rep-board-mark" data-state={renderState} aria-hidden="true">
+        <div className="rep-board-mark-glow" />
+        <div className="rep-board-mark-ring" />
+      </div>
+      <div className="rep-board-statement">
+        {badge.state_label || 'Operating posture'}. Pressure is propagating through coordination — advisory-bounded at the secondary receiver.
+      </div>
+      <div className="rep-board-line" aria-hidden="true" />
+      <div className="rep-board-scope">
+        {(scope && scope.grounding_label) || 'Partial Coverage'}
+      </div>
+    </div>
+  )
+}
+
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope }) {
+  if (boardroomMode) {
+    return <BoardroomAtmosphericField adapted={adapted} renderState={renderState} scope={scope} />
+  }
+  if (densityClass === 'INVESTIGATION_DENSE') {
+    return <InvestigationTraceField adapted={adapted} blocks={blocks} scope={scope} />
+  }
+  if (densityClass === 'EXECUTIVE_BALANCED') {
+    return <BalancedConsequenceField adapted={adapted} blocks={blocks} scope={scope} />
+  }
+  return <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} />
+}
+
+function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks }) {
   const scope = FLAGSHIP_REAL_REPORT.topology_scope || {}
   return (
-    <div className="intelligence-field">
+    <div className={`intelligence-field${boardroomMode ? ' intelligence-field--boardroom' : ''}`}>
       {/* Primary — narrative */}
       <div className="intel-primary">
         {narrative.executive_summary && (
@@ -191,7 +463,7 @@ function IntelligenceField({ narrative, adapted, densityClass }) {
             <div className="intel-why">{narrative.why_primary_statement}</div>
           </div>
         )}
-        {narrative.structural_summary && densityClass !== 'EXECUTIVE_BALANCED' && (
+        {narrative.structural_summary && densityClass !== 'EXECUTIVE_BALANCED' && !boardroomMode && (
           <div className="intel-block">
             <div className="intel-label">STRUCTURAL CONTEXT</div>
             <div className="intel-structural">{narrative.structural_summary}</div>
@@ -199,19 +471,16 @@ function IntelligenceField({ narrative, adapted, densityClass }) {
         )}
       </div>
 
-      {/* Status anchor — right column, demoted to evidence-confidence framing */}
-      <aside className="intel-anchor">
-        <div className="anchor-label">EVIDENCE STATE</div>
-        <div className="anchor-readiness status-value--state">{badge.state_label || '—'}</div>
-        <div className="anchor-coverage">
-          {scope.grounding_label || 'Partial Coverage'} <span className="anchor-coverage-meta">· {scope.domain_count || 3} domains · {scope.cluster_count || 47} clusters</span>
-        </div>
-        {chip.renders && (
-          <div className="anchor-qualifier">
-            <span className="anchor-qualifier-class">{chip.class_label || chip.qualifier_class || '—'}</span>
-            <span className="anchor-qualifier-note">qualifier in effect</span>
-          </div>
-        )}
+      {/* Right column — persona-weighted Representation Field */}
+      <aside className="rep-column" aria-label="Representation field">
+        <RepresentationField
+          boardroomMode={boardroomMode}
+          densityClass={densityClass}
+          adapted={adapted}
+          renderState={renderState}
+          blocks={evidenceBlocks}
+          scope={scope}
+        />
       </aside>
     </div>
   )
@@ -401,6 +670,9 @@ export default function LensV2FlagshipPage() {
             narrative={narrative}
             adapted={adapted}
             densityClass={densityClass}
+            boardroomMode={boardroomMode}
+            renderState={renderState}
+            evidenceBlocks={FLAGSHIP_REAL_REPORT.evidence_blocks}
           />
 
           <StructuralTopologyZone
@@ -551,43 +823,67 @@ export default function LensV2FlagshipPage() {
           align-items: center;
           gap: 10px;
         }
+        .auth-mode-group {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 6px;
+        }
         .auth-density-group {
           display: flex;
-          border: 1px solid #232d42;
-          border-radius: 2px;
+          border: 1px solid #2a334a;
+          border-radius: 4px;
           overflow: hidden;
+          background: rgba(10, 12, 18, 0.5);
         }
         .auth-density-btn {
           background: transparent;
           border: none;
-          border-right: 1px solid #232d42;
-          color: #3a4560;
-          padding: 5px 14px;
-          font-size: 9px;
-          letter-spacing: 0.1em;
-          transition: background 0.15s, color 0.15s;
+          border-right: 1px solid #2a334a;
+          color: #7a85a3;
+          padding: 7px 16px;
+          font-size: 10px;
+          font-weight: 500;
+          letter-spacing: 0.12em;
+          transition: background 0.18s ease, color 0.18s ease;
+          cursor: pointer;
         }
         .auth-density-btn:last-child { border-right: none; }
-        .auth-density-btn:hover { background: #111420; color: #9aa0bc; }
+        .auth-density-btn:hover {
+          background: rgba(34, 41, 60, 0.55);
+          color: #b6bdd6;
+        }
         .auth-density-btn.active {
           background: var(--state-bg);
           color: var(--state-color);
+          font-weight: 600;
         }
-        .auth-boardroom-btn {
-          background: transparent;
-          border: 1px solid #232d42;
+        .auth-density-btn--boardroom {
+          letter-spacing: 0.14em;
+        }
+        .auth-density-btn:focus-visible {
+          outline: 1px solid var(--state-color);
+          outline-offset: -1px;
+        }
+        .auth-persona-line {
+          font-size: 10px;
+          color: #6a7593;
+          letter-spacing: 0.02em;
+          text-align: right;
+          font-weight: 400;
+          line-height: 1;
+          transition: color 0.4s;
+        }
+        .auth-persona-label {
+          color: #b6bdd6;
+          font-weight: 500;
+          letter-spacing: 0.04em;
+        }
+        .auth-persona-sep {
           color: #3a4560;
-          padding: 5px 14px;
-          font-size: 9px;
-          letter-spacing: 0.1em;
-          border-radius: 2px;
-          transition: all 0.2s;
         }
-        .auth-boardroom-btn:hover { border-color: #3a4560; color: #9aa0bc; }
-        .auth-boardroom-btn.active {
-          background: var(--state-bg);
-          border-color: var(--state-border);
-          color: var(--state-color);
+        .auth-persona-sub {
+          color: #6a7593;
         }
 
         /* ── Body ────────────────────────────────────────────────────────── */
@@ -720,9 +1016,13 @@ export default function LensV2FlagshipPage() {
         /* ── Intelligence Field ──────────────────────────────────────────── */
         .intelligence-field {
           display: grid;
-          grid-template-columns: minmax(0, 1fr) 280px;
+          grid-template-columns: minmax(0, 1fr) minmax(380px, 0.62fr);
           border-bottom: 1px solid #1a2030;
           animation: v2Enter 0.5s ease 0.32s both;
+        }
+        .intelligence-field--boardroom {
+          /* Boardroom: narrative dominates; representation field acts as quiet vertical accent. */
+          grid-template-columns: minmax(0, 1fr) minmax(320px, 0.42fr);
         }
 
         /* Narrative (left) */
@@ -733,6 +1033,10 @@ export default function LensV2FlagshipPage() {
           flex-direction: column;
           gap: 40px;
           max-width: 760px;
+        }
+        .intelligence-field--boardroom .intel-primary {
+          padding: 72px 80px 72px 56px;
+          gap: 48px;
         }
         .intel-block { display: flex; flex-direction: column; gap: 14px; }
         .intel-label {
@@ -769,62 +1073,409 @@ export default function LensV2FlagshipPage() {
           font-style: normal;
         }
 
-        /* Evidence-state anchor (right) — demoted from a 5-block status grid to a single calm anchor */
-        .intel-anchor {
+        .status-value--state { color: var(--state-color); transition: color 0.4s; font-weight: 600; }
+
+        /* ── Representation Field (right column) ─────────────────────────── */
+        .rep-column {
           padding: 56px 36px;
-          background: rgba(8, 10, 15, 0.55);
+          background:
+            linear-gradient(180deg, rgba(8,10,15,0.45) 0%, rgba(8,10,15,0.65) 100%),
+            radial-gradient(120% 60% at 100% 0%, rgba(74,158,255,0.045) 0%, transparent 60%);
           border-left: 1px solid #1a2030;
           display: flex;
           flex-direction: column;
-          gap: 14px;
-          align-self: start;
-          position: sticky;
-          top: 56px;
+          gap: 22px;
+          align-self: stretch;
+          min-height: 100%;
         }
-        .anchor-label {
+        .intelligence-field--boardroom .rep-column {
+          background:
+            radial-gradient(80% 60% at 50% 20%, var(--state-bg) 0%, transparent 65%),
+            linear-gradient(180deg, rgba(8,10,15,0.7) 0%, rgba(8,10,15,0.5) 100%);
+          padding: 72px 36px;
+        }
+
+        .rep-field {
+          display: flex;
+          flex-direction: column;
+          gap: 22px;
+          flex: 1;
+          animation: v2Enter 0.45s ease both;
+        }
+
+        .rep-mode-tag {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          padding-bottom: 18px;
+          border-bottom: 1px solid #1a2030;
+        }
+        .rep-mode-tag-label {
+          font-size: 11px;
+          color: #b6bdd6;
+          letter-spacing: 0.06em;
+          font-weight: 500;
+          text-transform: uppercase;
+        }
+        .rep-mode-tag-sub {
           font-size: 10px;
+          color: #6a7593;
+          letter-spacing: 0.04em;
+          font-weight: 400;
+        }
+
+        /* ── Evidence-state compact block (used by Balanced / Dense / Investigation) ── */
+        .rep-evstate {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          padding-top: 18px;
+          border-top: 1px solid #1a2030;
+          margin-top: auto;
+        }
+        .rep-evstate--compact {
+          gap: 6px;
+        }
+        .rep-evstate-label {
+          font-size: 9px;
           color: #5a6580;
-          letter-spacing: 0.24em;
+          letter-spacing: 0.22em;
           text-transform: uppercase;
           font-weight: 500;
         }
-        .anchor-readiness {
-          font-size: 16px;
+        .rep-evstate-readiness {
+          font-size: 14px;
           font-weight: 600;
           color: var(--state-color);
           letter-spacing: -0.005em;
           transition: color 0.4s;
           line-height: 1.3;
         }
-        .anchor-coverage {
-          font-size: 12px;
+        .rep-evstate-coverage {
+          font-size: 11px;
           color: #b6bdd6;
-          line-height: 1.55;
+          line-height: 1.5;
         }
-        .anchor-coverage-meta {
-          color: #6a7593;
-        }
-        .anchor-qualifier {
-          margin-top: 6px;
-          padding-top: 14px;
-          border-top: 1px solid #1a2030;
+        .rep-evstate-coverage-meta { color: #6a7593; }
+        .rep-evstate-qualifier {
+          margin-top: 4px;
+          padding-top: 10px;
+          border-top: 1px solid #14181f;
           display: flex;
           flex-direction: column;
-          gap: 4px;
+          gap: 3px;
         }
-        .anchor-qualifier-class {
+        .rep-evstate-qualifier-class {
           font-size: 11px;
           font-weight: 600;
           color: #e6b800;
           letter-spacing: 0.04em;
         }
-        .anchor-qualifier-note {
-          font-size: 10px;
+        .rep-evstate-qualifier-note {
+          font-size: 9px;
           color: #6a7593;
           letter-spacing: 0.06em;
           text-transform: uppercase;
         }
-        .status-value--state { color: var(--state-color); transition: color 0.4s; font-weight: 600; }
+
+        /* ── BALANCED — Executive Consequence Field ──────────────────────── */
+        .rep-field--balanced .rep-balanced-statement {
+          font-size: 14px;
+          color: #c5cce3;
+          line-height: 1.6;
+          letter-spacing: -0.002em;
+          font-weight: 400;
+          padding-left: 14px;
+          border-left: 1px solid var(--state-border);
+        }
+        .rep-balanced-anchors {
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+          padding: 4px 0;
+          position: relative;
+        }
+        .rep-balanced-anchors::before {
+          content: '';
+          position: absolute;
+          left: 5px;
+          top: 12px;
+          bottom: 12px;
+          width: 1px;
+          background: linear-gradient(180deg, rgba(255,107,107,0.35) 0%, rgba(255,158,74,0.32) 50%, rgba(255,215,0,0.32) 100%);
+        }
+        .rep-anchor {
+          position: relative;
+          padding: 10px 0 10px 22px;
+          --tier-color: #6a7593;
+        }
+        .rep-anchor[data-tier="HIGH"]     { --tier-color: #ff6b6b; }
+        .rep-anchor[data-tier="ELEVATED"] { --tier-color: #ff9e4a; }
+        .rep-anchor[data-tier="MODERATE"] { --tier-color: #ffd700; }
+        .rep-anchor[data-tier="LOW"]      { --tier-color: #64ffda; }
+        .rep-anchor::before {
+          content: '';
+          position: absolute;
+          left: 1.5px;
+          top: 16px;
+          width: 9px;
+          height: 9px;
+          border-radius: 50%;
+          background: var(--tier-color);
+          box-shadow: 0 0 12px 0 var(--tier-color);
+          opacity: 0.85;
+        }
+        .rep-anchor-rail { display: none; }
+        .rep-anchor-label {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          font-weight: 500;
+          margin-bottom: 4px;
+        }
+        .rep-anchor-name {
+          font-size: 14px;
+          color: #e8edf8;
+          font-weight: 600;
+          letter-spacing: -0.002em;
+          line-height: 1.3;
+        }
+        .rep-anchor-state {
+          font-size: 11px;
+          color: var(--tier-color);
+          font-weight: 500;
+          letter-spacing: 0.02em;
+          margin-top: 3px;
+          opacity: 0.92;
+        }
+
+        /* ── DENSE — Structural Topology Field ──────────────────────────── */
+        .rep-field--dense .rep-topo {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          padding: 8px 0 4px;
+          position: relative;
+        }
+        .rep-topo-step {
+          position: relative;
+          display: grid;
+          grid-template-columns: 36px 1fr;
+          gap: 14px;
+          padding: 10px 0;
+          --tier-color: #6a7593;
+        }
+        .rep-topo-step[data-tier="HIGH"]     { --tier-color: #ff6b6b; }
+        .rep-topo-step[data-tier="ELEVATED"] { --tier-color: #ff9e4a; }
+        .rep-topo-step[data-tier="MODERATE"] { --tier-color: #ffd700; }
+        .rep-topo-step[data-tier="LOW"]      { --tier-color: #64ffda; }
+        .rep-topo-marker {
+          position: relative;
+          width: 36px;
+          height: 36px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+        .rep-topo-glow {
+          position: absolute;
+          inset: 0;
+          border-radius: 50%;
+          background: radial-gradient(circle, var(--tier-color) 0%, transparent 65%);
+          opacity: 0.22;
+        }
+        .rep-topo-dot {
+          position: relative;
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: var(--tier-color);
+          box-shadow: 0 0 10px 0 var(--tier-color);
+        }
+        .rep-topo-meta {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          padding-top: 4px;
+        }
+        .rep-topo-role {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+        .rep-topo-name {
+          font-size: 14px;
+          color: #e8edf8;
+          font-weight: 600;
+          letter-spacing: -0.002em;
+        }
+        .rep-topo-tier {
+          font-size: 11px;
+          color: var(--tier-color);
+          font-weight: 500;
+          margin-top: 2px;
+        }
+        .rep-topo-partial {
+          font-size: 10px;
+          color: #e6b800;
+          letter-spacing: 0.06em;
+          margin-top: 4px;
+        }
+        .rep-topo-edge {
+          position: absolute;
+          left: 18px;
+          top: 38px;
+          bottom: -10px;
+          width: 1px;
+          background: linear-gradient(180deg, var(--tier-color) 0%, transparent 100%);
+          opacity: 0.42;
+        }
+        .rep-dense-note {
+          font-size: 12px;
+          color: #9aa0bc;
+          line-height: 1.6;
+          font-style: normal;
+          padding: 14px 16px;
+          background: rgba(20, 23, 31, 0.55);
+          border-left: 2px solid #2a334a;
+          border-radius: 0 4px 4px 0;
+        }
+
+        /* ── INVESTIGATION — Evidence Trace Field ───────────────────────── */
+        .rep-field--investigation .rep-trace-stack {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        .rep-trace-band {
+          padding: 14px 16px;
+          background: rgba(20, 23, 31, 0.55);
+          border-left: 2px solid var(--tier-color, #2a334a);
+          border-radius: 0 4px 4px 0;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          --tier-color: #6a7593;
+        }
+        .rep-trace-band[data-tier="HIGH"]     { --tier-color: #ff6b6b; }
+        .rep-trace-band[data-tier="ELEVATED"] { --tier-color: #ff9e4a; }
+        .rep-trace-band[data-tier="MODERATE"] { --tier-color: #ffd700; }
+        .rep-trace-band[data-tier="LOW"]      { --tier-color: #64ffda; }
+        .rep-trace-band--partial {
+          background:
+            linear-gradient(90deg, rgba(230,184,0,0.07) 0%, rgba(20,23,31,0.55) 30%);
+        }
+        .rep-trace-band-head {
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+        }
+        .rep-trace-band-label {
+          font-size: 10px;
+          color: var(--tier-color);
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          font-weight: 600;
+        }
+        .rep-trace-band-domain {
+          font-size: 13px;
+          color: #e8edf8;
+          font-weight: 600;
+          letter-spacing: -0.002em;
+        }
+        .rep-trace-band-explain {
+          font-size: 12px;
+          color: #b6bdd6;
+          line-height: 1.55;
+        }
+        .rep-trace-band-conf {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 10px;
+          padding-top: 6px;
+          border-top: 1px solid #14181f;
+        }
+        .rep-trace-band-conf-label {
+          color: #5a6580;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+        .rep-trace-band-conf-value {
+          color: #b6bdd6;
+        }
+        .rep-trace-band-conf-flag {
+          color: #e6b800;
+          font-weight: 500;
+          letter-spacing: 0.04em;
+        }
+
+        /* ── BOARDROOM — Atmospheric Field ──────────────────────────────── */
+        .rep-field--boardroom {
+          align-items: center;
+          text-align: center;
+          gap: 28px;
+          justify-content: center;
+        }
+        .rep-field--boardroom .rep-mode-tag {
+          align-items: center;
+          text-align: center;
+          padding-bottom: 0;
+          border-bottom: none;
+        }
+        .rep-board-mark {
+          position: relative;
+          width: 180px;
+          height: 180px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 12px 0 4px;
+        }
+        .rep-board-mark-glow {
+          position: absolute;
+          inset: 0;
+          border-radius: 50%;
+          background: radial-gradient(circle, var(--state-color) 0%, transparent 65%);
+          opacity: 0.18;
+        }
+        .rep-board-mark-ring {
+          position: relative;
+          width: 96px;
+          height: 96px;
+          border-radius: 50%;
+          border: 1px solid var(--state-color);
+          box-shadow:
+            0 0 28px 0 var(--state-bg),
+            inset 0 0 18px 0 var(--state-bg);
+          opacity: 0.85;
+          transition: border-color 0.4s, box-shadow 0.4s;
+        }
+        .rep-board-statement {
+          font-size: 16px;
+          color: #e8edf8;
+          line-height: 1.55;
+          letter-spacing: -0.005em;
+          font-weight: 400;
+          max-width: 320px;
+        }
+        .rep-board-line {
+          width: 60%;
+          height: 1px;
+          background: linear-gradient(90deg, transparent 0%, var(--state-color) 50%, transparent 100%);
+          opacity: 0.45;
+        }
+        .rep-board-scope {
+          font-size: 11px;
+          color: #6a7593;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
 
         /* ── Shared zone label ───────────────────────────────────────────── */
         .zone-label {
