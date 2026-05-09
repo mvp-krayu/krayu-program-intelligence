@@ -7,7 +7,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test:validation": "node --test validation/tests/*.test.js"
+    "test:validation": "node --test validation/tests/*.test.js",
+    "test:adapters": "node --test adapters/tests/adapters.test.js",
+    "test": "node --test validation/tests/*.test.js adapters/tests/adapters.test.js"
   },
   "dependencies": {
     "next": "14.0.4",
