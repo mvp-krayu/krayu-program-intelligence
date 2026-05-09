@@ -1,0 +1,530 @@
+{
+  "schema_version": "1.0",
+  "stream": "PI.LENS.NEXTGEN-REPORTS.FRONTEND-IMPLEMENTATION-PLANNING.01",
+  "authority": "FRONTEND_IMPLEMENTATION_PLAN.md; PROFESSIONAL_UI_ARCHITECTURE.md; EVIDENCE_PANEL_ARCHITECTURE.md",
+  "baseline_ref": "governed-dpsig-baseline-v1",
+  "issued": "2026-05-08",
+  "description": "Machine-readable component boundary model for LENS NextGen frontend implementation. Defines 16 component families with allowed inputs, forbidden inputs, allowed state, forbidden state, and governance constraints.",
+  "governance_note": "All components receive adapter output only. No component may receive raw report_object fields directly. No component may call AI, RAG, or any external intelligence service. Display state only.",
+
+  "universal_forbidden_behaviors": [
+    "call_ai_service",
+    "call_rag_service",
+    "recompute_readiness_state",
+    "reinterpret_qualifier_class",
+    "supplement_missing_evidence",
+    "modify_report_object_fields",
+    "expose_raw_geios_identifiers",
+    "expose_raw_signal_keys",
+    "expose_raw_topology_ids",
+    "render_free_form_input",
+    "render_ai_assistant_avatar",
+    "render_probabilistic_confidence_gauge",
+    "suppress_qualifier_when_active",
+    "silently_degrade_blocked_state",
+    "silently_degrade_diagnostic_state",
+    "mutate_topology",
+    "elevate_audience_tier_at_runtime"
+  ],
+
+  "component_families": {
+
+    "ReportContainer": {
+      "family": "ReportContainer",
+      "purpose": "Root container. Validates report_object, routes to blocked/diagnostic/normal path, composes all rendering regions from adapter outputs.",
+      "file_path": "app/execlens-demo/components/nextgen/ReportContainer.jsx",
+      "allowed_inputs": {
+        "report_object": "validated report_object (post-schema validation)",
+        "audience_tier": "EXECUTIVE | ADVISORY | AUDIT (from session — immutable after init)",
+        "validation_result": "output of ReportObjectValidator"
+      },
+      "forbidden_inputs": [
+        "raw API response without validation",
+        "AI-generated content",
+        "user-modified report fields"
+      ],
+      "allowed_state": [
+        "density_class (derived from audience_tier; immutable after init)",
+        "render_route (NORMAL | BLOCKED | DIAGNOSTIC — derived from validation_result)"
+      ],
+      "forbidden_state": [
+        "computed readiness state",
+        "modified qualifier",
+        "supplemented evidence"
+      ],
+      "governance_routing": {
+        "if_hash_fail": "render BlockedState for all intelligence regions",
+        "if_governance_verdict_fail": "render BlockedState for readiness module",
+        "if_diagnostic": "render DiagnosticState banner + normal module tree",
+        "if_valid": "render normal module tree"
+      },
+      "rendering_dependencies": ["ExecutiveHeader", "DiagnosticState", "IntelligenceSummary", "EvidencePanel", "TopologySummary", "AuditLineage"],
+      "phase_2_status": "ACTIVE",
+      "governance_constraints": ["FIP-GOV-01", "FIP-GOV-02", "FIP-GOV-06", "FIP-GOV-10"]
+    },
+
+    "ExecutiveHeader": {
+      "family": "ExecutiveHeader",
+      "purpose": "Renders REGION_EXECUTIVE_HEADER. Contains readiness badge, qualifier chip, scope indicator, report identity, timestamp. Always visible; never collapsible.",
+      "file_path": "app/execlens-demo/components/nextgen/ExecutiveHeader.jsx",
+      "allowed_inputs": {
+        "readiness_badge_display": "output of ReadinessBadgeAdapter",
+        "qualifier_chip_display": "output of QualifierChipAdapter",
+        "scope_indicator": "pre-rendered scope indicator from header_block",
+        "report_metadata": "report identity and timestamp from header_block.report_metadata"
+      },
+      "forbidden_inputs": [
+        "raw readiness_state enum",
+        "raw qualifier_class enum",
+        "raw evidence_object_hash",
+        "GEIOS internal identifiers"
+      ],
+      "allowed_state": "NONE — this component has no mutable state",
+      "forbidden_state": ["computed readiness", "user-modified header fields"],
+      "governance": {
+        "readiness_badge_always_first": true,
+        "qualifier_chip_always_visible_if_active": true,
+        "cannot_be_collapsed": true,
+        "raw_enum_values_forbidden": true
+      },
+      "rendering_dependencies": ["ReadinessBadge", "QualifierChip"],
+      "phase_2_status": "ACTIVE",
+      "governance_constraints": ["VIS-READY-01", "VIS-READY-02", "VIS-QUAL-01", "VIS-QUAL-02"]
+    },
+
+    "ReadinessBadge": {
+      "family": "ReadinessBadge",
+      "purpose": "Renders the readiness badge with ALI-03 executive label and design token. Highest visual priority element.",
+      "file_path": "app/execlens-demo/components/nextgen/ReadinessBadge.jsx",
+      "allowed_inputs": {
+        "readiness_label": "ALI-03 normalized executive label (string)",
+        "badge_token": "design token identifier (string — from VIS-READY-01 mapping)",
+        "governance_status_label": "executive-visible status label (string)",
+        "report_scope_label": "scope note for badge sub-label (optional string)"
+      },
+      "forbidden_inputs": [
+        "raw ReadinessState enum values (EXECUTIVE_READY, DIAGNOSTIC_ONLY, etc.)",
+        "readiness_state field directly from report_object",
+        "numerical readiness scores",
+        "custom color values outside token system"
+      ],
+      "allowed_state": "NONE",
+      "forbidden_state": ["computed readiness", "cached readiness from prior session"],
+      "governance": {
+        "always_visible": true,
+        "label_from_ali_03_mapping_only": true,
+        "token_from_governance_mapping_only": true,
+        "token_override_prohibited": true
+      },
+      "rendering_dependencies": [],
+      "phase_2_status": "ACTIVE",
+      "governance_constraints": ["VIS-READY-01", "VIS-READY-02", "PUI-GOV-03"]
+    },
+
+    "QualifierChip": {
+      "family": "QualifierChip",
+      "purpose": "Renders qualifier chip with Q-taxonomy label and tooltip. Mandatory when qualifier active. Never suppressed. Q-04 renders absence notice.",
+      "file_path": "app/execlens-demo/components/nextgen/QualifierChip.jsx",
+      "allowed_inputs": {
+        "chip_label": "Q-taxonomy chip label (string or null for Q-00)",
+        "chip_token": "design token for chip color (string or 'NONE')",
+        "tooltip_text": "pre-rendered Q-taxonomy tooltip (string or null)",
+        "absence_notice": "absence notice text for Q-04 (string or null)",
+        "renders": "boolean — whether chip renders (false for Q-00)"
+      },
+      "forbidden_inputs": [
+        "raw qualifier_class enum (Q-00, Q-01, etc.)",
+        "qualifier_class field directly from report_object"
+      ],
+      "allowed_state": ["tooltip_visible (boolean — hover/focus state)"],
+      "forbidden_state": ["modified qualifier class", "suppressed qualifier"],
+      "governance": {
+        "suppression_prohibited": true,
+        "chip_renders_if_renders_is_true": true,
+        "q04_absence_notice_mandatory": true,
+        "chip_token_from_governance_only": true,
+        "tooltip_from_pre_rendered_text_only": true
+      },
+      "rendering_dependencies": [],
+      "phase_2_status": "ACTIVE",
+      "governance_constraints": ["VIS-QUAL-01", "VIS-QUAL-02", "EXP-QUAL-01", "EXP-QUAL-02", "EXP-QUAL-03"]
+    },
+
+    "IntelligenceSummary": {
+      "family": "IntelligenceSummary",
+      "purpose": "Renders REGION_INTELLIGENCE_SUMMARY. Contains full executive summary, WHY primary statement, domain evidence summary, propagation summary.",
+      "file_path": "app/execlens-demo/components/nextgen/IntelligenceSummary.jsx",
+      "allowed_inputs": {
+        "executive_summary": "pre-rendered narrative text from NarrativeAdapter",
+        "why_primary_statement": "pre-rendered WHY causal statement from NarrativeAdapter",
+        "domain_evidence_summary": "summary list from EvidencePanelAdapter",
+        "propagation_summary": "pre-rendered propagation text from TracePanelAdapter"
+      },
+      "forbidden_inputs": [
+        "raw narrative_block fields directly",
+        "raw signal keys",
+        "GEIOS internal identifiers",
+        "AI-generated supplement text"
+      ],
+      "allowed_state": "NONE — content is static; display-state managed by ProgressiveDisclosureController",
+      "forbidden_state": ["generated text", "computed summary"],
+      "governance": {
+        "text_from_report_object_only": true,
+        "vocabulary_contract_enforced_in_adapter": true,
+        "no_truncation": true,
+        "cannot_be_collapsed": true
+      },
+      "rendering_dependencies": ["NarrativeBlock"],
+      "phase_2_status": "ACTIVE",
+      "governance_constraints": ["FIP-GOV-01", "FIP-GOV-04", "EXP-WHY-01"]
+    },
+
+    "NarrativeBlock": {
+      "family": "NarrativeBlock",
+      "purpose": "Renders individual narrative text blocks (executive summary, WHY section, structural summary). Applies inverted pyramid structure.",
+      "file_path": "app/execlens-demo/components/nextgen/NarrativeBlock.jsx",
+      "allowed_inputs": {
+        "text_content": "pre-rendered, normalized narrative text (string)",
+        "block_type": "EXECUTIVE_SUMMARY | WHY | STRUCTURAL_SUMMARY",
+        "qualifier_notice": "pre-rendered qualifier scope notice (string or null)"
+      },
+      "forbidden_inputs": [
+        "raw LLM output",
+        "un-normalized text",
+        "GEIOS internal terms",
+        "predictive language",
+        "recommendation language"
+      ],
+      "allowed_state": "NONE",
+      "forbidden_state": ["generated text supplements"],
+      "governance": {
+        "text_immutable_from_report_object": true,
+        "vocabulary_contract_enforced": true,
+        "no_ai_supplement": true
+      },
+      "rendering_dependencies": [],
+      "phase_2_status": "ACTIVE",
+      "governance_constraints": ["EXP-WHY-01", "EXP-WHY-02", "EXP-WHY-03"]
+    },
+
+    "EvidencePanel": {
+      "family": "EvidencePanel",
+      "purpose": "Renders REGION_EXPLAINABILITY evidence surface. Contains ExplainabilityBundle. Coordinates all 7 panels.",
+      "file_path": "app/execlens-demo/components/nextgen/EvidencePanel.jsx",
+      "allowed_inputs": {
+        "explainability_bundle": "output of ExplainabilityBundleAdapter",
+        "evidence_drawers": "array of EvidenceDrawerAdapter outputs",
+        "panel_states": "display state map from ProgressiveDisclosureController"
+      },
+      "forbidden_inputs": [
+        "raw evidence_blocks[] directly",
+        "raw explainability_bundle from report_object directly"
+      ],
+      "allowed_state": "panel_states managed by ProgressiveDisclosureController (not this component)",
+      "forbidden_state": ["computed evidence", "evidence supplements"],
+      "governance": {
+        "evidence_from_committed_source_only": true,
+        "no_computation_at_expand": true,
+        "panels_pre_rendered": true
+      },
+      "rendering_dependencies": ["ExplainabilityBundle", "EvidenceDrawer", "ProgressiveDisclosureController"],
+      "phase_2_status": "ACTIVE",
+      "governance_constraints": ["EXP-EVID-01", "EXP-EVID-02", "EXP-PROG-02"]
+    },
+
+    "EvidenceDrawer": {
+      "family": "EvidenceDrawer",
+      "purpose": "Per-domain evidence drawer. Renders domain alias, grounding chip, propagation role, signal cards, evidence summary. Expands/collapses via display state.",
+      "file_path": "app/execlens-demo/components/nextgen/EvidenceDrawer.jsx",
+      "allowed_inputs": {
+        "domain_alias": "ALI-04 alias (string — never raw domain ID)",
+        "grounding_scope": "GroundingScope enum value (for token mapping)",
+        "grounding_label": "normalized grounding label (string)",
+        "propagation_role_label": "normalized role label (string — never raw enum)",
+        "signal_cards": "array of SignalCardAdapter outputs",
+        "evidence_summary": "pre-rendered evidence description (string)",
+        "default_state": "COLLAPSED | EXPANDED",
+        "is_suppressed": "boolean — Q-04 suppression for this domain"
+      },
+      "forbidden_inputs": [
+        "raw domain IDs",
+        "raw cluster keys",
+        "raw PropagationRole enum",
+        "raw grounding_status enum"
+      ],
+      "allowed_state": ["expanded (boolean — managed by ProgressiveDisclosureController)"],
+      "forbidden_state": ["computed evidence", "fetched evidence at expand time"],
+      "governance": {
+        "domain_alias_from_ali04_only": true,
+        "no_data_fetch_at_expand": true,
+        "grounding_chip_visible_when_collapsed": true,
+        "suppressed_domains_no_expand": true
+      },
+      "rendering_dependencies": ["SignalCard"],
+      "phase_2_status": "ACTIVE",
+      "governance_constraints": ["EXP-EVID-01", "EXP-EVID-02", "EXP-EVID-03", "EXP-PROG-02"]
+    },
+
+    "SignalCard": {
+      "family": "SignalCard",
+      "purpose": "Renders a single signal entry. Shows normalized signal label, pressure label, qualifier chip, evidence text.",
+      "file_path": "app/execlens-demo/components/nextgen/SignalCard.jsx",
+      "allowed_inputs": {
+        "signal_label": "ALI-01 or ALI-02 normalized label (string)",
+        "pressure_label": "NORM-PROP-01 tier label (string)",
+        "pressure_token": "pressure tier design token (string)",
+        "qualifier_label": "Q-taxonomy label (string or empty string for Q-00)",
+        "evidence_text": "normalized evidence text (string)"
+      },
+      "forbidden_inputs": [
+        "raw signal keys (cpi_score, cfa_score, CPI, CFA)",
+        "raw PressureTier enum",
+        "numerical signal values",
+        "threshold values",
+        "raw qualifier_class enum"
+      ],
+      "allowed_state": "NONE",
+      "forbidden_state": ["computed pressure", "AI-generated evidence text"],
+      "governance": {
+        "no_raw_signal_keys": true,
+        "no_numerical_values": true,
+        "pressure_token_from_governance_only": true,
+        "no_trend_arrows_without_evidence": true
+      },
+      "rendering_dependencies": [],
+      "phase_2_status": "ACTIVE",
+      "governance_constraints": ["VIS-PRESS-01", "VIS-PRESS-02", "EXP-EVID-02"]
+    },
+
+    "TracePanel": {
+      "family": "TracePanel",
+      "purpose": "Renders TRACE panel. Shows propagation path (ALI-04 aliases), propagation summary, baseline reference, abbreviated derivation reference.",
+      "file_path": "app/execlens-demo/components/nextgen/TracePanel.jsx",
+      "allowed_inputs": {
+        "propagation_path": "array of ALI-04 domain alias strings",
+        "propagation_summary": "normalized propagation text (string)",
+        "baseline_ref_label": "readable baseline label (string)",
+        "stream_ref_label": "stream reference label (string — Advisory only)",
+        "derivation_ref_abbreviated": "first 8 chars + '...' (string — Advisory only)",
+        "audience_tier": "ADVISORY | AUDIT"
+      },
+      "forbidden_inputs": [
+        "raw cluster keys",
+        "raw domain IDs",
+        "full hash values for Advisory tier",
+        "decoded hash interpretation"
+      ],
+      "allowed_state": ["expanded (boolean — managed by ProgressiveDisclosureController)"],
+      "forbidden_state": ["decoded derivation values", "fetched lineage at render time"],
+      "governance": {
+        "collapsed_by_default_for_executive": true,
+        "ali04_aliases_only": true,
+        "no_hash_decode": true,
+        "advisory_minimum_audience": true
+      },
+      "rendering_dependencies": [],
+      "phase_2_status": "ACTIVE",
+      "governance_constraints": ["EXP-TRACE-01", "EXP-TRACE-02", "EXP-TRACE-03"]
+    },
+
+    "ExplainabilityBundle": {
+      "family": "ExplainabilityBundle",
+      "purpose": "Renders all 7 explainability panels as a coordinated bundle. Each panel receives its pre-rendered content. Coordinates with ProgressiveDisclosureController.",
+      "file_path": "app/execlens-demo/components/nextgen/ExplainabilityBundle.jsx",
+      "allowed_inputs": {
+        "panels": "map of panel_id → ExplainabilityBundleAdapter panel outputs (all 7 required)",
+        "panel_states": "display state map from ProgressiveDisclosureController",
+        "audience_tier": "EXECUTIVE | ADVISORY | AUDIT"
+      },
+      "forbidden_inputs": [
+        "raw explainability_bundle from report_object",
+        "AI-generated panel content",
+        "supplemented panel content"
+      ],
+      "allowed_state": "panel_states passed from ProgressiveDisclosureController — not owned by this component",
+      "forbidden_state": ["generated panel content", "fetched panel content at open time"],
+      "governance": {
+        "all_7_panels_required": true,
+        "panels_pre_rendered_at_generation": true,
+        "no_live_generation_at_panel_open": true,
+        "blocked_panels_explicit": true,
+        "diagnostic_panels_explicit": true,
+        "qualifier_suppression_prohibited": true
+      },
+      "rendering_dependencies": ["TracePanel", "QualifierChip", "ProgressiveDisclosureController"],
+      "phase_2_status": "ACTIVE",
+      "governance_constraints": ["EXP-WHY-01", "EXP-QUAL-01", "EXP-BLOCK-01", "EXP-BLOCK-02", "EXP-FORBID-01", "EXP-FORBID-02"]
+    },
+
+    "TopologySummary": {
+      "family": "TopologySummary",
+      "purpose": "Renders topology region. Phase 2: placeholder only. Phase 3+: read-only topology display using ALI-04/05 aliases.",
+      "file_path": "app/execlens-demo/components/nextgen/TopologySummary.jsx",
+      "allowed_inputs": {
+        "topology_display_object": "read-only topology display object (Phase 3+; null in Phase 2)",
+        "phase": "Phase 2 | Phase 3+"
+      },
+      "forbidden_inputs": [
+        "raw canonical_topology.json content",
+        "raw cluster keys",
+        "raw domain IDs",
+        "numerical topology metrics"
+      ],
+      "allowed_state": ["node_selected (display navigation only — Phase 3+)"],
+      "forbidden_state": ["topology modifications", "flagged nodes", "corrected edges"],
+      "governance": {
+        "read_only": true,
+        "no_edit_affordances": true,
+        "ali04_aliases_only": true,
+        "phase_2_renders_placeholder": true,
+        "topology_mutation_prohibited": true
+      },
+      "rendering_dependencies": [],
+      "phase_2_status": "PLACEHOLDER",
+      "phase_3_status": "ACTIVE",
+      "governance_constraints": ["VIS-TOPO-01", "VIS-TOPO-02", "EPA-GOV-09"]
+    },
+
+    "DiagnosticState": {
+      "family": "DiagnosticState",
+      "purpose": "Renders diagnostic banner and panel indicators. Renders alongside normal module tree, not instead of it.",
+      "file_path": "app/execlens-demo/components/nextgen/DiagnosticState.jsx",
+      "allowed_inputs": {
+        "diagnostic_reason": "normalized diagnostic reason (string)",
+        "affected_panel_ids": "array of panel IDs with diagnostic state",
+        "advisory_notice": "pre-rendered advisory notice text (string)"
+      },
+      "forbidden_inputs": [
+        "GEIOS internal diagnostic codes",
+        "raw normalization error details"
+      ],
+      "allowed_state": "NONE — diagnostic state is governance-driven, not togglable",
+      "forbidden_state": ["hidden diagnostic state", "silently-cleared diagnostic"],
+      "governance": {
+        "explicit_notice_required": true,
+        "cannot_be_hidden_or_dismissed": true,
+        "advisory_word_required_in_notice": true,
+        "renders_alongside_content_not_instead_of": true
+      },
+      "rendering_dependencies": [],
+      "phase_2_status": "ACTIVE",
+      "governance_constraints": ["VIS-DIAG-01", "VIS-DIAG-02", "EXP-DIAG-01"]
+    },
+
+    "BlockedState": {
+      "family": "BlockedState",
+      "purpose": "Renders blocked notice for all intelligence regions when evidence_object_hash fails or governance_verdict = FAIL. Explicit; never silent.",
+      "file_path": "app/execlens-demo/components/nextgen/BlockedState.jsx",
+      "allowed_inputs": {
+        "blocked_reason": "HASH_FAILURE | GOVERNANCE_FAIL",
+        "blocked_headline": "pre-defined blocked notice headline (string)",
+        "audit_access_available": "boolean (true if audience_tier >= ADVISORY)"
+      },
+      "forbidden_inputs": [
+        "partial intelligence content from failed report_object",
+        "estimated readiness state",
+        "fallback content"
+      ],
+      "allowed_state": "NONE — blocked state is governance-driven, not togglable",
+      "forbidden_state": ["partial intelligence display", "silently-degraded state"],
+      "governance": {
+        "explicit_notice_required": true,
+        "no_intelligence_content_rendered": true,
+        "no_retry_affordance_in_phase_2": true,
+        "no_silent_degradation": true,
+        "audit_trace_access_advisory_plus": true
+      },
+      "rendering_dependencies": [],
+      "phase_2_status": "ACTIVE",
+      "governance_constraints": ["VIS-BLOCK-01", "VIS-BLOCK-02", "EXP-BLOCK-01", "EXP-BLOCK-02"]
+    },
+
+    "AuditLineage": {
+      "family": "AuditLineage",
+      "purpose": "Renders REGION_LINEAGE and REGION_AUDIT. Audience-gated. Renders lineage references as opaque identifiers; never decoded.",
+      "file_path": "app/execlens-demo/components/nextgen/AuditLineage.jsx",
+      "allowed_inputs": {
+        "baseline_anchor_label": "readable baseline label (string)",
+        "evidence_hash_display": "abbreviated hash for Advisory; full hash for Audit (string)",
+        "stream_anchor_display": "reference label for Advisory; full value for Audit (string)",
+        "run_id": "run identifier (Audit tier only — string or null)",
+        "generated_at": "generation timestamp (string)",
+        "audience_tier": "ADVISORY | AUDIT"
+      },
+      "forbidden_inputs": [
+        "hash values decoded or interpreted",
+        "GEIOS internal mechanics",
+        "EXECUTIVE tier access to lineage"
+      ],
+      "allowed_state": ["expanded (boolean — ProgressiveDisclosureController)"],
+      "forbidden_state": ["decoded hash values", "interpreted lineage"],
+      "governance": {
+        "audit_tier_for_full_values": true,
+        "advisory_tier_for_abbreviated": true,
+        "executive_tier_hidden": true,
+        "no_hash_decode_in_any_tier": true,
+        "monospace_typography_for_references": true
+      },
+      "rendering_dependencies": [],
+      "phase_2_status": "ACTIVE",
+      "governance_constraints": ["VIS-AUDIT-01", "VIS-AUDIT-02", "EXP-LINEAGE-01", "EXP-LINEAGE-02"]
+    },
+
+    "ProgressiveDisclosureController": {
+      "family": "ProgressiveDisclosureController",
+      "purpose": "Pure display-state manager. Maintains panel and drawer open/closed states. Initializes from density class defaults. Ephemeral (no session persistence in Phase 2).",
+      "file_path": "app/execlens-demo/components/nextgen/ProgressiveDisclosureController.jsx",
+      "allowed_inputs": {
+        "density_class": "EXECUTIVE_DENSE | INVESTIGATION_DENSE | AUDIT_DENSE (from audience_tier)",
+        "initial_panel_states": "default states from density class (from executive_rendering_system.json)",
+        "blocked_panel_ids": "list of panel IDs in BLOCKED state (these cannot be expanded)"
+      },
+      "forbidden_inputs": [
+        "report_object fields",
+        "intelligence content",
+        "evidence data"
+      ],
+      "allowed_state": [
+        "panel_states (map of panel_id → COLLAPSED | EXPANDED)",
+        "drawer_states (map of domain_alias → COLLAPSED | EXPANDED)"
+      ],
+      "forbidden_state": [
+        "session-persisted state (Phase 2)",
+        "intelligence state",
+        "readiness state",
+        "evidence content"
+      ],
+      "governance": {
+        "display_state_only": true,
+        "no_session_persistence_phase_2": true,
+        "blocked_panels_cannot_expand": true,
+        "content_unchanged_on_toggle": true,
+        "no_report_object_access": true
+      },
+      "rendering_dependencies": [],
+      "phase_2_status": "ACTIVE",
+      "governance_constraints": ["EXP-PROG-01", "EXP-PROG-02", "EXP-DET-01", "EXP-DET-02"]
+    }
+  },
+
+  "component_families_summary": {
+    "total_families": 16,
+    "phase_2_active": 15,
+    "phase_2_placeholder": 1,
+    "requires_adapter_input": 15,
+    "manages_display_state": 2
+  },
+
+  "phase_2_restrictions": {
+    "no_ai_calls_in_any_component": true,
+    "no_rag_calls_in_any_component": true,
+    "no_free_form_input_in_any_component": true,
+    "no_conversational_ui_in_any_component": true,
+    "no_topology_editing_affordances": true,
+    "no_evidence_mutation_in_any_component": true,
+    "no_qualifier_suppression_in_any_component": true,
+    "no_readiness_recomputation_in_any_component": true,
+    "all_components_receive_adapter_output_only": true,
+    "all_display_state_ephemeral": true
+  }
+}
