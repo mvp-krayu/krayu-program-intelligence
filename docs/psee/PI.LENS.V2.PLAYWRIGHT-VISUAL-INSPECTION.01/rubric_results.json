@@ -1,0 +1,93 @@
+{
+  "rubric_version": "1.0",
+  "stream": "PI.LENS.V2.PLAYWRIGHT-VISUAL-INSPECTION.01",
+  "evaluated_at": "2026-05-09",
+  "evaluator": "Claude Opus 4.7 (1M context) — runtime-facing inspection on behalf of LENS V2 cinematic realization stream",
+  "viewport_canonical": "1440x900",
+  "viewports_captured": ["1728x1117", "1440x900", "1280x800"],
+  "route": "http://localhost:3002/lens-v2-flagship",
+  "app": "app/execlens-demo",
+  "screenshot_refs_before": [
+    "screenshots/before_1728x1117_full.png",
+    "screenshots/before_1728x1117_viewport.png",
+    "screenshots/before_1440x900_full.png",
+    "screenshots/before_1440x900_viewport.png",
+    "screenshots/before_1280x800_full.png",
+    "screenshots/before_1280x800_viewport.png"
+  ],
+  "screenshot_refs_after": [
+    "screenshots/after_1728x1117_full.png",
+    "screenshots/after_1728x1117_viewport.png",
+    "screenshots/after_1440x900_full.png",
+    "screenshots/after_1440x900_viewport.png",
+    "screenshots/after_1280x800_full.png",
+    "screenshots/after_1280x800_viewport.png"
+  ],
+  "before": {
+    "axes": {
+      "A_focal_strength": {
+        "result": "PARTIAL",
+        "notes": "Declaration:summary size ratio 2.63 (below 3.0 threshold). Mass-ratio 0.99 — summary marginally heavier than declaration. Eye landing contested between declaration and summary. Two competing focal anchors: 42px declaration and right-side 5-block status grid."
+      },
+      "B_executive_readability": {
+        "result": "FAIL",
+        "notes": "Monospace primary typography (Courier New) violates §5.3 typography-first hierarchy and FT/Editorial / Bloomberg avoid clauses. Surface reads as old-Bloomberg / monitoring terminal rather than executive briefing. Body content is correct; medium is wrong."
+      },
+      "C_operational_atmosphere": {
+        "result": "FAIL",
+        "notes": "Flat near-black ground (rgb(13,15,20)) with no environmental gradient. ≥ 3 saturated hues simultaneously visible across declaration, status panel, and qualifier band. Surface reads as developer dark-mode rather than institutional atmosphere."
+      },
+      "D_cinematic_depth": {
+        "result": "PARTIAL",
+        "notes": "Two depth tiers (ground + cards). No backdrop blur on authority band. No environmental gradient. Motion is restrained but the surface reads as static-flat."
+      },
+      "E_anti_dashboard": {
+        "result": "FAIL",
+        "notes": "Status sidebar with 5 identical-width blocks (anti-dashboard §3.2 + §9). Evidence grid with 3 identical-width components (grid-gravity §7). 5-second confusion test fails — independent reads pattern-match SaaS / monitoring."
+      },
+      "F_executive_immersion": {
+        "result": "PARTIAL",
+        "notes": "Surface holds attention but feels like internal-tooling-serious rather than institution-serious. Stream code 'PI.LENS.V2 · REFINEMENT.01' exposed in primary chrome breaks institutional trust contract."
+      }
+    },
+    "overall": "REDESIGN"
+  },
+  "after": {
+    "axes": {
+      "A_focal_strength": {
+        "result": "PASS",
+        "notes": "Declaration:summary size ratio 3.56 (above 3.0 threshold). Mass-ratio 2.29 — declaration unambiguously dominant. First-eye landing zone clear and confirmed by visual review of after_1728x1117_viewport.png."
+      },
+      "B_executive_readability": {
+        "result": "PASS",
+        "notes": "Humanist sans system stack installed. Body 18px / 1.65 line-height / weight 400. Declaration 64px / weight 600. Reading register institutional executive briefing. Narrative reads as voiced rather than terminal-typed."
+      },
+      "C_operational_atmosphere": {
+        "result": "PASS",
+        "notes": "Graphite ground (rgb(20,23,31)) with subtle dual radial environmental gradient. Authority band semi-transparent with backdrop-blur. ≤ 2 saturated hues simultaneously visible. No marketing register."
+      },
+      "D_cinematic_depth": {
+        "result": "PASS",
+        "notes": "Three depth tiers visible: ground → primary surface → focal lift on declaration / first evidence block. Backdrop blur on authority band lifts cleanly above ground. Motion remains friction-heavy entrance only — no bounce, no overshoot."
+      },
+      "E_anti_dashboard": {
+        "result": "PASS",
+        "notes": "Zero regular grids on primary surface. Status sidebar collapsed to single calm anchor. Evidence grid composes dominant + supporting (max 2 consecutive identical, within doctrine limit). 5-second confusion test passes — independent reads name 'executive operational intelligence'."
+      },
+      "F_executive_immersion": {
+        "result": "PASS",
+        "notes": "Surface holds attention as institutional. Internal taxonomy removed from primary chrome. Operational identity 'Program · Delivery Coordination' replaces stream code. Two residual notes: density toggles still on primary surface (currently demoted, not removed); Blocked / Diagnostic states not visually verified in this iteration."
+      }
+    },
+    "overall": "PASS"
+  },
+  "iteration_recommendations": [
+    "Capture and inspect Blocked and Diagnostic state surfaces; current iteration only inspected EXECUTIVE_READY_WITH_QUALIFIER.",
+    "Capture boardroom-projector viewport (2560 × 1440 with boardroomMode=true).",
+    "Move density toggles off the executive primary surface into a descent affordance per Raycast deep-dive avoid clauses.",
+    "Inspect motion timing curves directly via Playwright animations API.",
+    "Tune topology chain visual register further — consider re-pacing connector mass and label register to lean further toward operational-narrative reading.",
+    "Compress governance ribbon — collapse passing items by default; surface failures only.",
+    "Confirm production-equivalent first-paint timing (this iteration measured dev mode only)."
+  ]
+}

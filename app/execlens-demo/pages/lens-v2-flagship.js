@@ -82,13 +82,13 @@ function AuthorityBand({ densityClass, boardroomMode, onDensityChange, onBoardro
         <span className="auth-wordmark">LENS</span>
         <span className="auth-version">v2</span>
         <span className="auth-sep" />
-        <span className="auth-descriptor">Executive Intelligence Surface</span>
+        <span className="auth-descriptor">Executive Operational Intelligence</span>
       </div>
       <div className="auth-center">
-        <span className="auth-stream">PI.LENS.V2 · REFINEMENT.01</span>
+        <span className="auth-program">Program · Delivery Coordination</span>
       </div>
       <div className="auth-right">
-        <div className="auth-density-group">
+        <div className="auth-density-group" aria-label="Reading density">
           {DENSITY_OPTIONS.map(opt => (
             <button
               key={opt.value}
@@ -104,8 +104,9 @@ function AuthorityBand({ densityClass, boardroomMode, onDensityChange, onBoardro
           className={`auth-boardroom-btn${boardroomMode ? ' active' : ''}`}
           onClick={onBoardroomToggle}
           aria-pressed={boardroomMode}
+          title="Toggle boardroom projection mode"
         >
-          {boardroomMode ? '◉ BOARDROOM' : '○ BOARDROOM'}
+          {boardroomMode ? '◉ Boardroom' : '○ Boardroom'}
         </button>
       </div>
     </div>
@@ -198,35 +199,20 @@ function IntelligenceField({ narrative, adapted, densityClass }) {
         )}
       </div>
 
-      {/* Status panel — right column */}
-      <div className="intel-status">
-        <div className="status-block">
-          <div className="status-label">READINESS</div>
-          <div className="status-value status-value--state">{badge.state_label || '—'}</div>
+      {/* Status anchor — right column, demoted to evidence-confidence framing */}
+      <aside className="intel-anchor">
+        <div className="anchor-label">EVIDENCE STATE</div>
+        <div className="anchor-readiness status-value--state">{badge.state_label || '—'}</div>
+        <div className="anchor-coverage">
+          {scope.grounding_label || 'Partial Coverage'} <span className="anchor-coverage-meta">· {scope.domain_count || 3} domains · {scope.cluster_count || 47} clusters</span>
         </div>
         {chip.renders && (
-          <div className="status-block">
-            <div className="status-label">QUALIFIER</div>
-            <div className="status-value status-value--qualifier">
-              {chip.class_label || chip.qualifier_class || '—'}
-            </div>
+          <div className="anchor-qualifier">
+            <span className="anchor-qualifier-class">{chip.class_label || chip.qualifier_class || '—'}</span>
+            <span className="anchor-qualifier-note">qualifier in effect</span>
           </div>
         )}
-        <div className="status-block">
-          <div className="status-label">DOMAINS</div>
-          <div className="status-value">{scope.domain_count || 3} analyzed</div>
-        </div>
-        <div className="status-block">
-          <div className="status-label">COVERAGE</div>
-          <div className="status-value status-value--advisory">
-            {scope.grounding_label || 'Partial Coverage'}
-          </div>
-        </div>
-        <div className="status-block">
-          <div className="status-label">CLUSTERS</div>
-          <div className="status-value">{scope.cluster_count || 47} monitored</div>
-        </div>
-      </div>
+      </aside>
     </div>
   )
 }
@@ -349,7 +335,7 @@ function GovernanceRibbon({ governance }) {
           </span>
         ))}
       </div>
-      <a href="/" className="gov-back">← 42.x demo</a>
+      <a href="/" className="gov-back" title="Return to executive overview">← Overview</a>
     </div>
   )
 }
@@ -461,11 +447,19 @@ export default function LensV2FlagshipPage() {
          */
         .v2-canvas {
           min-height: 100vh;
-          background: #0d0f14;
+          /* Graphite ground with subtle environmental gradient — replaces near-black flat surface */
+          background:
+            radial-gradient(120% 80% at 18% 0%, rgba(74,158,255,0.04) 0%, transparent 55%),
+            radial-gradient(140% 90% at 88% 110%, rgba(255,158,74,0.025) 0%, transparent 60%),
+            #14171f;
           color: #e8edf8;
-          font-family: 'Courier New', Courier, monospace;
-          font-size: 13px;
-          line-height: 1.6;
+          /* Humanist sans system stack — replaces monospace primary per cinematic doctrine */
+          font-family: -apple-system, BlinkMacSystemFont, "Inter", "Helvetica Neue", "SF Pro Text", system-ui, "Segoe UI", Roboto, sans-serif;
+          font-feature-settings: "ss01", "cv11", "cv02";
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          font-size: 14px;
+          line-height: 1.55;
           display: flex;
           flex-direction: column;
           --state-color:  #4a9eff;
@@ -498,9 +492,11 @@ export default function LensV2FlagshipPage() {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 13px 48px;
-          background: #080a0f;
-          border-bottom: 1px solid #232d42;
+          padding: 14px 56px;
+          background: rgba(11, 13, 18, 0.78);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          border-bottom: 1px solid #1a2030;
           position: sticky;
           top: 0;
           z-index: 100;
@@ -512,29 +508,31 @@ export default function LensV2FlagshipPage() {
           gap: 10px;
         }
         .auth-wordmark {
-          font-size: 15px;
-          font-weight: 700;
+          font-size: 14px;
+          font-weight: 600;
           color: var(--state-color);
-          letter-spacing: 0.3em;
+          letter-spacing: 0.32em;
           transition: color 0.4s;
         }
         .auth-version {
           font-size: 10px;
-          color: #3a4560;
+          color: #5a6580;
           letter-spacing: 0.08em;
+          font-weight: 500;
         }
         .auth-sep {
           display: inline-block;
           width: 1px;
           height: 11px;
           background: #232d42;
-          margin: 0 2px;
+          margin: 0 6px;
           vertical-align: middle;
         }
         .auth-descriptor {
-          font-size: 10px;
-          color: #3a4560;
-          letter-spacing: 0.1em;
+          font-size: 11px;
+          color: #6a7593;
+          letter-spacing: 0.07em;
+          font-weight: 400;
         }
         .auth-center {
           position: absolute;
@@ -542,10 +540,11 @@ export default function LensV2FlagshipPage() {
           transform: translateX(-50%);
           pointer-events: none;
         }
-        .auth-stream {
-          font-size: 9px;
-          color: #232d42;
-          letter-spacing: 0.12em;
+        .auth-program {
+          font-size: 11px;
+          color: #6a7593;
+          letter-spacing: 0.04em;
+          font-weight: 400;
         }
         .auth-right {
           display: flex;
@@ -635,39 +634,43 @@ export default function LensV2FlagshipPage() {
 
         /* ── Declaration Zone ────────────────────────────────────────────── */
         .declaration-zone {
-          padding: 56px 48px 48px;
+          padding: 80px 56px 56px;
           border-bottom: 1px solid #1a2030;
           border-left: 4px solid var(--state-color);
-          background: linear-gradient(90deg, var(--state-bg) 0%, transparent 60%);
+          background:
+            radial-gradient(120% 80% at 12% 50%, var(--state-bg) 0%, transparent 55%),
+            linear-gradient(90deg, rgba(20,23,31,0.55) 0%, transparent 70%);
           animation: v2Enter 0.5s ease 0.12s both;
           transition: border-color 0.4s, background 0.4s;
         }
         .declaration-pre-label {
           font-size: 10px;
-          color: #3a4560;
-          letter-spacing: 0.22em;
+          color: #5a6580;
+          letter-spacing: 0.28em;
           text-transform: uppercase;
-          margin-bottom: 16px;
-          font-weight: 400;
+          margin-bottom: 22px;
+          font-weight: 500;
         }
         .declaration-state {
-          font-size: 42px;
-          font-weight: 700;
+          font-size: 64px;
+          font-weight: 600;
           color: var(--state-color);
-          letter-spacing: 0.04em;
-          line-height: 1.05;
+          letter-spacing: -0.012em;
+          line-height: 1.04;
           transition: color 0.4s;
+          max-width: 1100px;
         }
         .declaration-scope {
           display: flex;
           align-items: center;
-          gap: 10px;
-          margin-top: 14px;
+          gap: 12px;
+          margin-top: 22px;
         }
         .declaration-scope-item {
-          font-size: 11px;
-          color: #5a6580;
-          letter-spacing: 0.06em;
+          font-size: 12px;
+          color: #6a7593;
+          letter-spacing: 0.04em;
+          font-weight: 400;
         }
         .declaration-scope-sep { color: #3a4560; }
 
@@ -675,11 +678,11 @@ export default function LensV2FlagshipPage() {
         .qualifier-mandate {
           display: flex;
           align-items: flex-start;
-          gap: 24px;
-          padding: 18px 48px;
-          background: rgba(230,184,0,0.07);
-          border-top: 1px solid rgba(230,184,0,0.2);
-          border-bottom: 1px solid rgba(230,184,0,0.2);
+          gap: 28px;
+          padding: 20px 56px;
+          background: rgba(230,184,0,0.05);
+          border-top: 1px solid rgba(230,184,0,0.16);
+          border-bottom: 1px solid rgba(230,184,0,0.16);
           animation: v2Enter 0.5s ease 0.22s both;
         }
         .qualifier-mandate-left {
@@ -706,86 +709,122 @@ export default function LensV2FlagshipPage() {
           text-align: center;
         }
         .qualifier-mandate-text {
-          font-size: 13px;
-          color: rgba(230,184,0,0.75);
-          line-height: 1.65;
-          letter-spacing: 0.02em;
+          font-size: 13.5px;
+          color: rgba(230,184,0,0.82);
+          line-height: 1.6;
+          letter-spacing: 0;
           padding-top: 2px;
+          font-weight: 400;
         }
 
         /* ── Intelligence Field ──────────────────────────────────────────── */
         .intelligence-field {
           display: grid;
-          grid-template-columns: 1fr 240px;
+          grid-template-columns: minmax(0, 1fr) 280px;
           border-bottom: 1px solid #1a2030;
           animation: v2Enter 0.5s ease 0.32s both;
         }
 
         /* Narrative (left) */
         .intel-primary {
-          padding: 44px 52px;
+          padding: 56px 64px 56px 56px;
           border-right: 1px solid #1a2030;
           display: flex;
           flex-direction: column;
-          gap: 36px;
+          gap: 40px;
+          max-width: 760px;
         }
-        .intel-block { display: flex; flex-direction: column; gap: 12px; }
+        .intel-block { display: flex; flex-direction: column; gap: 14px; }
         .intel-label {
-          font-size: 9px;
-          color: #3a4560;
-          letter-spacing: 0.2em;
+          font-size: 10px;
+          color: #5a6580;
+          letter-spacing: 0.24em;
           text-transform: uppercase;
-          font-weight: 400;
+          font-weight: 500;
         }
         .intel-summary {
-          font-size: 16px;
+          font-size: 18px;
           color: #e8edf8;
-          line-height: 1.85;
-          letter-spacing: 0.02em;
+          line-height: 1.65;
+          letter-spacing: -0.005em;
+          font-weight: 400;
           border-left: 2px solid var(--state-color);
-          padding-left: 20px;
+          padding-left: 22px;
           transition: border-color 0.4s;
         }
         .intel-why {
-          font-size: 14px;
-          color: #9aa0bc;
-          line-height: 1.85;
-          letter-spacing: 0.02em;
-          padding-left: 22px;
+          font-size: 15px;
+          color: #b6bdd6;
+          line-height: 1.7;
+          letter-spacing: -0.002em;
+          padding-left: 24px;
+          font-weight: 400;
         }
         .intel-structural {
-          font-size: 12px;
-          color: #5a6580;
-          line-height: 1.75;
-          letter-spacing: 0.02em;
-          padding-left: 22px;
-          font-style: italic;
+          font-size: 13px;
+          color: #7a85a3;
+          line-height: 1.65;
+          letter-spacing: 0;
+          padding-left: 24px;
+          font-style: normal;
         }
 
-        /* Status panel (right) */
-        .intel-status {
-          padding: 44px 28px;
-          background: #080a0f;
+        /* Evidence-state anchor (right) — demoted from a 5-block status grid to a single calm anchor */
+        .intel-anchor {
+          padding: 56px 36px;
+          background: rgba(8, 10, 15, 0.55);
+          border-left: 1px solid #1a2030;
           display: flex;
           flex-direction: column;
-          gap: 26px;
+          gap: 14px;
+          align-self: start;
+          position: sticky;
+          top: 56px;
         }
-        .status-block { display: flex; flex-direction: column; gap: 5px; }
-        .status-label {
-          font-size: 8px;
-          color: #3a4560;
-          letter-spacing: 0.2em;
+        .anchor-label {
+          font-size: 10px;
+          color: #5a6580;
+          letter-spacing: 0.24em;
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+        .anchor-readiness {
+          font-size: 16px;
+          font-weight: 600;
+          color: var(--state-color);
+          letter-spacing: -0.005em;
+          transition: color 0.4s;
+          line-height: 1.3;
+        }
+        .anchor-coverage {
+          font-size: 12px;
+          color: #b6bdd6;
+          line-height: 1.55;
+        }
+        .anchor-coverage-meta {
+          color: #6a7593;
+        }
+        .anchor-qualifier {
+          margin-top: 6px;
+          padding-top: 14px;
+          border-top: 1px solid #1a2030;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .anchor-qualifier-class {
+          font-size: 11px;
+          font-weight: 600;
+          color: #e6b800;
+          letter-spacing: 0.04em;
+        }
+        .anchor-qualifier-note {
+          font-size: 10px;
+          color: #6a7593;
+          letter-spacing: 0.06em;
           text-transform: uppercase;
         }
-        .status-value {
-          font-size: 12px;
-          color: #9aa0bc;
-          letter-spacing: 0.05em;
-          line-height: 1.4;
-        }
         .status-value--state { color: var(--state-color); transition: color 0.4s; font-weight: 600; }
-        .status-value--qualifier { color: #e6b800; }
-        .status-value--advisory { color: #e6b800; font-size: 11px; }
 
         /* ── Shared zone label ───────────────────────────────────────────── */
         .zone-label {
@@ -798,7 +837,7 @@ export default function LensV2FlagshipPage() {
 
         /* ── Structural Topology Zone ────────────────────────────────────── */
         .topology-zone {
-          padding: 44px 48px;
+          padding: 56px 56px;
           border-bottom: 1px solid #1a2030;
           animation: v2Enter 0.5s ease 0.48s both;
         }
@@ -902,28 +941,46 @@ export default function LensV2FlagshipPage() {
 
         /* ── Evidence Layer ──────────────────────────────────────────────── */
         .evidence-layer {
-          padding: 44px 48px;
+          padding: 56px 56px 64px;
           border-bottom: 1px solid #1a2030;
           animation: v2Enter 0.5s ease 0.62s both;
         }
+        /*
+         * Evidence layer composition:
+         *   First block reads as the dominant evidence anchor.
+         *   Subsequent blocks read as supporting evidence, visibly demoted.
+         *   This breaks the 3-equal-card grid gravity that read as dashboard.
+         */
         .evidence-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-          gap: 12px;
+          grid-template-columns: minmax(0, 2.1fr) minmax(0, 1fr) minmax(0, 1fr);
+          gap: 14px;
+          align-items: stretch;
+        }
+        @media (max-width: 1100px) {
+          .evidence-grid { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); }
+          .evidence-grid > .evidence-block:nth-child(n+3) { grid-column: span 2; }
         }
         .evidence-block {
-          background: #080a0f;
+          background: rgba(8, 10, 15, 0.55);
           border: 1px solid #232d42;
-          border-radius: 3px;
-          padding: 20px 22px;
+          border-radius: 4px;
+          padding: 22px 26px;
           display: flex;
           flex-direction: column;
-          gap: 10px;
-          transition: border-color 0.2s;
+          gap: 11px;
+          transition: border-color 0.2s, background 0.2s;
+        }
+        .evidence-block:first-child {
+          background: rgba(20, 23, 31, 0.78);
+          border-color: #2a334a;
+          padding: 28px 32px;
         }
         .evidence-block:hover { border-color: #3a4560; }
         .evidence-block--partial { border-color: rgba(230,184,0,0.18); }
         .evidence-block--partial:hover { border-color: rgba(230,184,0,0.35); }
+        .evidence-block:first-child .eb-domain { font-size: 16px; }
+        .evidence-block:first-child .eb-description { font-size: 13.5px; color: #b6bdd6; }
         .eb-header {
           display: flex;
           align-items: flex-start;
