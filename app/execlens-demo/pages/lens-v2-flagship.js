@@ -321,31 +321,95 @@ const REPORT_PACK_ARTIFACTS = [
 ]
 
 function ReportPackBand() {
+  // Retained for backwards-reference but no longer rendered as a horizontal band.
+  // Report Pack is now part of the SupportRail (right column of IntelligenceField).
+  return null
+}
+
+/* SupportRail — compact right column of the IntelligenceField.
+ * Carries: evidence state · qualifier state · Report Pack access.
+ * Replaces the prior horizontal Report Pack band.
+ */
+function SupportRail({ adapted, scope, boardroomMode }) {
+  const badge = (adapted && adapted.readinessBadge) || {}
+  const chip = (adapted && adapted.qualifierChip) || {}
   return (
-    <section className="report-pack" aria-label="Report Pack — official Tier-1 / Tier-2 deliverables (binding pending)">
-      <div className="report-pack-head">
-        <span className="report-pack-label">REPORT PACK</span>
-        <span className="report-pack-sub">Official generated Tier-1 / Tier-2 deliverables — interactive layer above static artifacts</span>
+    <aside className="intel-support" aria-label="Support rail — evidence, confidence, report pack">
+      <div className="support-block">
+        <div className="support-label">EVIDENCE STATE</div>
+        <div className="support-readiness">{badge.state_label || '—'}</div>
+        <div className="support-coverage">
+          {(scope && scope.grounding_label) || 'Partial Coverage'}
+        </div>
+        <div className="support-coverage-meta">
+          {(scope && scope.domain_count) || 3} domains · {(scope && scope.cluster_count) || 47} clusters
+        </div>
       </div>
-      <div className="report-pack-list">
-        {REPORT_PACK_ARTIFACTS.map(a => (
-          <div
-            key={a.id}
-            className="report-pack-item"
-            aria-disabled="true"
-            title={`Future binding: ${a.binding_path} · file ${a.file} · pending real client/run integration`}
-            data-binding="pending"
-          >
-            <div className="report-pack-tier">{a.tier}</div>
-            <div className="report-pack-name">{a.name}</div>
-            <div className="report-pack-state">
-              <span className="report-pack-state-dot" aria-hidden="true" />
-              binding pending
+
+      {chip.renders && (
+        <div className="support-block support-block--qualifier">
+          <div className="support-label">QUALIFIER</div>
+          <div className="support-qualifier-class">{chip.class_label || chip.qualifier_class || '—'}</div>
+          <div className="support-qualifier-note">advisory bound</div>
+        </div>
+      )}
+
+      <div className="support-block support-block--reports">
+        <div className="support-label">REPORT PACK</div>
+        <div className="support-reports-sub">Official Tier-1 / Tier-2 deliverables</div>
+        <div className="support-reports-list">
+          {REPORT_PACK_ARTIFACTS.map(a => (
+            <div
+              key={a.id}
+              className="support-report-item"
+              aria-disabled="true"
+              title={`Future binding: ${a.binding_path} · file ${a.file} · pending real client/run integration`}
+              data-binding="pending"
+            >
+              <span className="support-report-tier">{a.tier}</span>
+              <span className="support-report-name">{a.name}</span>
             </div>
+          ))}
+          <div className="support-reports-state" aria-live="polite">
+            <span className="support-reports-state-dot" aria-hidden="true" />
+            binding pending — live client/run integration not yet active
           </div>
-        ))}
+        </div>
       </div>
-    </section>
+    </aside>
+  )
+}
+
+/* ExecutiveInterpretation — compressed left column.
+ * Companion to the SemanticCanvas; not the dominant element on the surface.
+ */
+function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted }) {
+  const badge = (adapted && adapted.readinessBadge) || {}
+  return (
+    <aside className="intel-interp" aria-label="Executive interpretation layer">
+      <div className="interp-tag">
+        <span className="interp-tag-label">EXECUTIVE INTERPRETATION</span>
+        <span className="interp-tag-state">{badge.state_label || '—'}</span>
+      </div>
+      {narrative.executive_summary && (
+        <div className="interp-block interp-block--lead">
+          <div className="interp-section-label">Assessment</div>
+          <div className="interp-summary">{narrative.executive_summary}</div>
+        </div>
+      )}
+      {narrative.why_primary_statement && !boardroomMode && (
+        <div className="interp-block">
+          <div className="interp-section-label">Why this matters</div>
+          <div className="interp-why">{narrative.why_primary_statement}</div>
+        </div>
+      )}
+      {narrative.structural_summary && densityClass === 'INVESTIGATION_DENSE' && !boardroomMode && (
+        <div className="interp-block">
+          <div className="interp-section-label">Structural context</div>
+          <div className="interp-structural">{narrative.structural_summary}</div>
+        </div>
+      )}
+    </aside>
   )
 }
 
@@ -393,7 +457,6 @@ function BalancedConsequenceField({ adapted, blocks, scope }) {
           </div>
         )}
       </div>
-      <RepEvidenceState adapted={adapted} scope={scope} compact />
     </div>
   )
 }
@@ -455,7 +518,6 @@ function DenseTopologyField({ adapted, blocks, scope }) {
           </div>
         </div>
       )}
-      <RepEvidenceState adapted={adapted} scope={scope} compact />
     </div>
   )
 }
@@ -520,7 +582,6 @@ function InvestigationTraceField({ adapted, blocks, scope }) {
           </div>
         ))}
       </div>
-      <RepEvidenceState adapted={adapted} scope={scope} compact />
     </div>
   )
 }
@@ -568,31 +629,17 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
 function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks }) {
   const scope = FLAGSHIP_REAL_REPORT.topology_scope || {}
   return (
-    <div className={`intelligence-field${boardroomMode ? ' intelligence-field--boardroom' : ''}`}>
-      {/* Primary — narrative */}
-      <div className="intel-primary">
-        {narrative.executive_summary && (
-          <div className="intel-block intel-block--lead">
-            <div className="intel-label">EXECUTIVE ASSESSMENT</div>
-            <div className="intel-summary">{narrative.executive_summary}</div>
-          </div>
-        )}
-        {narrative.why_primary_statement && (
-          <div className="intel-block">
-            <div className="intel-label">WHY THIS MATTERS</div>
-            <div className="intel-why">{narrative.why_primary_statement}</div>
-          </div>
-        )}
-        {narrative.structural_summary && densityClass !== 'EXECUTIVE_BALANCED' && !boardroomMode && (
-          <div className="intel-block">
-            <div className="intel-label">STRUCTURAL CONTEXT</div>
-            <div className="intel-structural">{narrative.structural_summary}</div>
-          </div>
-        )}
-      </div>
+    <div className={`intelligence-field intelligence-field--three-col${boardroomMode ? ' intelligence-field--boardroom' : ''}`}>
+      {/* LEFT — Executive Interpretation Layer (compressed companion) */}
+      <ExecutiveInterpretation
+        narrative={narrative}
+        densityClass={densityClass}
+        boardroomMode={boardroomMode}
+        adapted={adapted}
+      />
 
-      {/* Right column — persona-weighted Representation Field */}
-      <aside className="rep-column" aria-label="Representation field">
+      {/* CENTER — Semantic Operational Canvas (primary cognition surface) */}
+      <main className="intel-canvas" role="region" aria-label="Semantic operational canvas">
         <RepresentationField
           boardroomMode={boardroomMode}
           densityClass={densityClass}
@@ -601,7 +648,14 @@ function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, re
           blocks={evidenceBlocks}
           scope={scope}
         />
-      </aside>
+      </main>
+
+      {/* RIGHT — Support Rail (evidence state · qualifier · Report Pack access) */}
+      <SupportRail
+        adapted={adapted}
+        scope={scope}
+        boardroomMode={boardroomMode}
+      />
     </div>
   )
 }
@@ -804,8 +858,6 @@ export default function LensV2FlagshipPage() {
             evidenceBlocks={FLAGSHIP_REAL_REPORT.evidence_blocks}
             densityClass={densityClass}
           />
-
-          <ReportPackBand />
         </div>
 
         <GovernanceRibbon governance={governance} />
@@ -1135,94 +1187,239 @@ export default function LensV2FlagshipPage() {
           font-weight: 400;
         }
 
-        /* ── Intelligence Field ──────────────────────────────────────────── */
+        /* ── Intelligence Field — three-column operational surface ───────── */
         .intelligence-field {
           display: grid;
-          grid-template-columns: minmax(0, 1fr) minmax(380px, 0.62fr);
+          grid-template-columns: minmax(260px, 0.85fr) minmax(0, 2.2fr) minmax(280px, 0.8fr);
           border-bottom: 1px solid #1a2030;
           animation: v2Enter 0.5s ease 0.32s both;
+          align-items: stretch;
         }
         .intelligence-field--boardroom {
-          /* Boardroom: narrative dominates; representation field acts as quiet vertical accent. */
-          grid-template-columns: minmax(0, 1fr) minmax(320px, 0.42fr);
+          grid-template-columns: minmax(240px, 0.7fr) minmax(0, 2.6fr) minmax(260px, 0.7fr);
+        }
+        @media (max-width: 1280px) {
+          .intelligence-field {
+            grid-template-columns: minmax(240px, 0.9fr) minmax(0, 1.8fr) minmax(240px, 0.7fr);
+          }
         }
 
-        /* Narrative (left) */
-        .intel-primary {
-          padding: 56px 64px 56px 56px;
+        /* LEFT — Executive Interpretation Layer (compressed companion) */
+        .intel-interp {
+          padding: 48px 32px 48px 56px;
           border-right: 1px solid #1a2030;
           display: flex;
           flex-direction: column;
-          gap: 40px;
-          max-width: 760px;
+          gap: 24px;
+          background: rgba(8, 10, 15, 0.32);
         }
-        .intelligence-field--boardroom .intel-primary {
-          padding: 72px 80px 72px 56px;
-          gap: 48px;
+        .intel-interp[aria-label] { /* selector boost */ }
+        .interp-tag {
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+          padding-bottom: 16px;
+          border-bottom: 1px solid #1a2030;
         }
-        .intel-block { display: flex; flex-direction: column; gap: 14px; }
-        .intel-label {
-          font-size: 10px;
+        .interp-tag-label {
+          font-size: 9px;
           color: #5a6580;
-          letter-spacing: 0.24em;
+          letter-spacing: 0.22em;
           text-transform: uppercase;
           font-weight: 500;
         }
-        .intel-summary {
-          font-size: 18px;
-          color: #e8edf8;
-          line-height: 1.65;
-          letter-spacing: -0.005em;
+        .interp-tag-state {
+          font-size: 13px;
+          font-weight: 600;
+          color: var(--state-color);
+          letter-spacing: -0.003em;
+          line-height: 1.3;
+          transition: color 0.4s;
+        }
+        .interp-block { display: flex; flex-direction: column; gap: 8px; }
+        .interp-section-label {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+        .interp-summary {
+          font-size: 13px;
+          color: #c5cce3;
+          line-height: 1.6;
+          letter-spacing: -0.002em;
           font-weight: 400;
           border-left: 2px solid var(--state-color);
-          padding-left: 22px;
+          padding-left: 14px;
           transition: border-color 0.4s;
         }
-        .intel-why {
-          font-size: 15px;
-          color: #b6bdd6;
-          line-height: 1.7;
-          letter-spacing: -0.002em;
-          padding-left: 24px;
+        .interp-why {
+          font-size: 12px;
+          color: #9aa0bc;
+          line-height: 1.6;
+          letter-spacing: 0;
+          padding-left: 16px;
           font-weight: 400;
         }
-        .intel-structural {
-          font-size: 13px;
+        .interp-structural {
+          font-size: 11px;
           color: #7a85a3;
-          line-height: 1.65;
-          letter-spacing: 0;
-          padding-left: 24px;
-          font-style: normal;
+          line-height: 1.55;
+          padding-left: 16px;
+        }
+
+        /* CENTER — Semantic Operational Canvas (primary cognition surface) */
+        .intel-canvas {
+          padding: 56px 56px 64px;
+          display: flex;
+          flex-direction: column;
+          background:
+            radial-gradient(110% 70% at 50% 0%, rgba(74,158,255,0.04) 0%, transparent 60%),
+            radial-gradient(70% 50% at 50% 100%, rgba(255,158,74,0.025) 0%, transparent 70%);
+          min-height: 620px;
+        }
+        .intelligence-field--boardroom .intel-canvas {
+          padding: 72px 64px 80px;
+          background:
+            radial-gradient(80% 60% at 50% 35%, var(--state-bg) 0%, transparent 70%);
+          min-height: 680px;
+        }
+
+        /* RIGHT — Support Rail (compact) */
+        .intel-support {
+          padding: 48px 32px 48px 28px;
+          border-left: 1px solid #1a2030;
+          background: rgba(8, 10, 15, 0.42);
+          display: flex;
+          flex-direction: column;
+          gap: 26px;
+        }
+        .intelligence-field--boardroom .intel-support {
+          padding: 64px 32px 64px 28px;
+        }
+        .support-block {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+        .support-label {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+        .support-readiness {
+          font-size: 13px;
+          font-weight: 600;
+          color: var(--state-color);
+          letter-spacing: -0.002em;
+          line-height: 1.3;
+          transition: color 0.4s;
+        }
+        .support-coverage {
+          font-size: 11px;
+          color: #b6bdd6;
+          line-height: 1.5;
+        }
+        .support-coverage-meta {
+          font-size: 10px;
+          color: #6a7593;
+          letter-spacing: 0.02em;
+        }
+        .support-block--qualifier {
+          padding-top: 18px;
+          border-top: 1px solid #1a2030;
+        }
+        .support-qualifier-class {
+          font-size: 13px;
+          font-weight: 600;
+          color: #e6b800;
+          letter-spacing: 0.04em;
+        }
+        .support-qualifier-note {
+          font-size: 9px;
+          color: #6a7593;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+        }
+        .support-block--reports {
+          margin-top: auto;
+          padding-top: 22px;
+          border-top: 1px solid #1a2030;
+          gap: 10px;
+        }
+        .support-reports-sub {
+          font-size: 10px;
+          color: #6a7593;
+          line-height: 1.5;
+          margin-bottom: 4px;
+        }
+        .support-reports-list {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+        .support-report-item {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          padding: 8px 10px;
+          background: rgba(20, 23, 31, 0.4);
+          border: 1px solid #1a2030;
+          border-radius: 3px;
+          cursor: not-allowed;
+          transition: border-color 0.18s ease;
+        }
+        .support-report-item:hover {
+          border-color: #2a334a;
+        }
+        .support-report-tier {
+          font-size: 8px;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: #5a6580;
+          font-weight: 500;
+        }
+        .support-report-name {
+          font-size: 11px;
+          color: #c5cce3;
+          font-weight: 500;
+          letter-spacing: -0.002em;
+          line-height: 1.3;
+        }
+        .support-reports-state {
+          margin-top: 4px;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 9px;
+          color: #6a7593;
+          letter-spacing: 0.04em;
+          line-height: 1.5;
+        }
+        .support-reports-state-dot {
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: #6a7593;
+          opacity: 0.55;
+          flex-shrink: 0;
         }
 
         .status-value--state { color: var(--state-color); transition: color 0.4s; font-weight: 600; }
 
-        /* ── Representation Field (right column) ─────────────────────────── */
-        .rep-column {
-          padding: 56px 36px;
-          background:
-            linear-gradient(180deg, rgba(8,10,15,0.45) 0%, rgba(8,10,15,0.65) 100%),
-            radial-gradient(120% 60% at 100% 0%, rgba(74,158,255,0.045) 0%, transparent 60%);
-          border-left: 1px solid #1a2030;
-          display: flex;
-          flex-direction: column;
-          gap: 22px;
-          align-self: stretch;
-          min-height: 100%;
-        }
-        .intelligence-field--boardroom .rep-column {
-          background:
-            radial-gradient(80% 60% at 50% 20%, var(--state-bg) 0%, transparent 65%),
-            linear-gradient(180deg, rgba(8,10,15,0.7) 0%, rgba(8,10,15,0.5) 100%);
-          padding: 72px 36px;
-        }
-
+        /* ── Representation Field — primary semantic operational canvas ─── */
         .rep-field {
           display: flex;
           flex-direction: column;
-          gap: 22px;
+          gap: 28px;
           flex: 1;
           animation: v2Enter 0.45s ease both;
+          width: 100%;
+          max-width: 920px;
+          margin: 0 auto;
         }
 
         .rep-mode-tag {
@@ -1319,99 +1516,7 @@ export default function LensV2FlagshipPage() {
           line-height: 1.5;
         }
 
-        /* ── Report Pack — premium artifact access band ─────────────────── */
-        .report-pack {
-          padding: 28px 56px 32px;
-          background:
-            linear-gradient(180deg, rgba(8,10,15,0.45) 0%, rgba(8,10,15,0.65) 100%);
-          border-bottom: 1px solid #1a2030;
-          display: flex;
-          align-items: stretch;
-          gap: 32px;
-          animation: v2Enter 0.5s ease 0.78s both;
-        }
-        .report-pack-head {
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
-          flex-shrink: 0;
-          min-width: 220px;
-          padding-top: 4px;
-        }
-        .report-pack-label {
-          font-size: 10px;
-          color: #b6bdd6;
-          letter-spacing: 0.24em;
-          text-transform: uppercase;
-          font-weight: 600;
-        }
-        .report-pack-sub {
-          font-size: 11px;
-          color: #6a7593;
-          letter-spacing: 0.02em;
-          line-height: 1.5;
-          max-width: 220px;
-        }
-        .report-pack-list {
-          display: grid;
-          grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
-          gap: 14px;
-          flex: 1;
-          align-items: stretch;
-        }
-        @media (max-width: 1280px) {
-          .report-pack-list {
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-          }
-        }
-        .report-pack-item {
-          padding: 12px 14px;
-          background: rgba(20, 23, 31, 0.45);
-          border: 1px solid #1a2030;
-          border-radius: 4px;
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-          cursor: not-allowed;
-          transition: border-color 0.18s ease, background 0.18s ease;
-        }
-        .report-pack-item:hover {
-          border-color: #2a334a;
-          background: rgba(20, 23, 31, 0.65);
-        }
-        .report-pack-item[data-binding="pending"] { opacity: 0.86; }
-        .report-pack-tier {
-          font-size: 8px;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          color: #5a6580;
-          font-weight: 500;
-        }
-        .report-pack-name {
-          font-size: 13px;
-          color: #e8edf8;
-          font-weight: 500;
-          letter-spacing: -0.002em;
-          line-height: 1.3;
-        }
-        .report-pack-state {
-          margin-top: 4px;
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          font-size: 9px;
-          color: #6a7593;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-        }
-        .report-pack-state-dot {
-          width: 5px;
-          height: 5px;
-          border-radius: 50%;
-          background: #6a7593;
-          opacity: 0.6;
-        }
+        /* (Report Pack horizontal band removed — Report Pack lives inside the SupportRail now.) */
 
         /* ── Evidence-state compact block (used by Balanced / Dense / Investigation) ── */
         .rep-evstate {
@@ -1467,35 +1572,41 @@ export default function LensV2FlagshipPage() {
           text-transform: uppercase;
         }
 
-        /* ── BALANCED — Executive Consequence Field ──────────────────────── */
+        /* ── BALANCED — Executive Consequence Canvas (horizontal flow) ──── */
         .rep-field--balanced .rep-balanced-statement {
-          font-size: 14px;
-          color: #c5cce3;
-          line-height: 1.6;
-          letter-spacing: -0.002em;
+          font-size: 17px;
+          color: #d6dceb;
+          line-height: 1.55;
+          letter-spacing: -0.005em;
           font-weight: 400;
-          padding-left: 14px;
-          border-left: 1px solid var(--state-border);
+          padding-left: 18px;
+          border-left: 2px solid var(--state-border);
+          max-width: 720px;
         }
         .rep-balanced-anchors {
-          display: flex;
-          flex-direction: column;
-          gap: 14px;
-          padding: 4px 0;
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 24px;
+          padding: 24px 0 8px;
           position: relative;
         }
         .rep-balanced-anchors::before {
           content: '';
           position: absolute;
-          left: 5px;
-          top: 12px;
-          bottom: 12px;
-          width: 1px;
-          background: linear-gradient(180deg, rgba(255,107,107,0.35) 0%, rgba(255,158,74,0.32) 50%, rgba(255,215,0,0.32) 100%);
+          left: 12%;
+          right: 12%;
+          top: 56px;
+          height: 2px;
+          background: linear-gradient(90deg, rgba(255,107,107,0.42) 0%, rgba(255,158,74,0.38) 50%, rgba(255,215,0,0.38) 100%);
+          opacity: 0.85;
         }
         .rep-anchor {
           position: relative;
-          padding: 10px 0 10px 22px;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 6px;
           --tier-color: #6a7593;
         }
         .rep-anchor[data-tier="HIGH"]     { --tier-color: #ff6b6b; }
@@ -1504,56 +1615,93 @@ export default function LensV2FlagshipPage() {
         .rep-anchor[data-tier="LOW"]      { --tier-color: #64ffda; }
         .rep-anchor::before {
           content: '';
+          position: relative;
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          background: radial-gradient(circle, var(--tier-color) 0%, transparent 70%);
+          opacity: 0.32;
+          margin-bottom: 4px;
+        }
+        .rep-anchor::after {
+          content: '';
           position: absolute;
-          left: 1.5px;
-          top: 16px;
-          width: 9px;
-          height: 9px;
+          left: 12px;
+          top: 12px;
+          width: 12px;
+          height: 12px;
           border-radius: 50%;
           background: var(--tier-color);
-          box-shadow: 0 0 12px 0 var(--tier-color);
-          opacity: 0.85;
+          box-shadow: 0 0 14px 1px var(--tier-color);
+          opacity: 0.95;
         }
         .rep-anchor-rail { display: none; }
         .rep-anchor-label {
           font-size: 9px;
           color: #5a6580;
-          letter-spacing: 0.18em;
+          letter-spacing: 0.2em;
           text-transform: uppercase;
           font-weight: 500;
-          margin-bottom: 4px;
+          margin-top: 6px;
         }
         .rep-anchor-name {
-          font-size: 14px;
+          font-size: 15px;
           color: #e8edf8;
           font-weight: 600;
-          letter-spacing: -0.002em;
+          letter-spacing: -0.003em;
           line-height: 1.3;
         }
         .rep-anchor-state {
-          font-size: 11px;
+          font-size: 12px;
           color: var(--tier-color);
           font-weight: 500;
           letter-spacing: 0.02em;
-          margin-top: 3px;
-          opacity: 0.92;
+          opacity: 0.95;
         }
 
-        /* ── DENSE — Structural Topology Field ──────────────────────────── */
+        /* ── DENSE — Semantic Topology Canvas (spatial composition) ────── */
         .rep-field--dense .rep-topo {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-          padding: 8px 0 4px;
+          display: grid;
+          grid-template-columns: 1fr 1.3fr 1fr;
+          gap: 0;
+          padding: 36px 0 16px;
           position: relative;
+          align-items: center;
+          min-height: 280px;
+        }
+        .rep-field--dense .rep-topo::before {
+          content: '';
+          position: absolute;
+          left: 22%;
+          right: 22%;
+          top: 50%;
+          height: 1px;
+          background: linear-gradient(90deg, var(--high-c, #ff6b6b) 0%, var(--elev-c, #ff9e4a) 50%, var(--mod-c, #ffd700) 100%);
+          --high-c: rgba(255,107,107,0.55);
+          --elev-c: rgba(255,158,74,0.55);
+          --mod-c: rgba(255,215,0,0.55);
+          opacity: 0.5;
+          transform: translateY(-1px);
         }
         .rep-topo-step {
           position: relative;
-          display: grid;
-          grid-template-columns: 36px 1fr;
-          gap: 14px;
-          padding: 10px 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+          padding: 16px 12px;
           --tier-color: #6a7593;
+        }
+        .rep-topo-step--pass_through {
+          background: rgba(20, 23, 31, 0.6);
+          border: 1px solid rgba(255, 158, 74, 0.18);
+          border-radius: 6px;
+          padding: 24px 18px;
+          z-index: 2;
+        }
+        .rep-topo-step--origin .rep-topo-marker,
+        .rep-topo-step--receiver .rep-topo-marker {
+          align-self: center;
         }
         .rep-topo-step[data-tier="HIGH"]     { --tier-color: #ff6b6b; }
         .rep-topo-step[data-tier="ELEVATED"] { --tier-color: #ff9e4a; }
@@ -1561,33 +1709,43 @@ export default function LensV2FlagshipPage() {
         .rep-topo-step[data-tier="LOW"]      { --tier-color: #64ffda; }
         .rep-topo-marker {
           position: relative;
-          width: 36px;
-          height: 36px;
+          width: 56px;
+          height: 56px;
           display: flex;
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
         }
+        .rep-topo-step--pass_through .rep-topo-marker {
+          width: 72px;
+          height: 72px;
+        }
         .rep-topo-glow {
           position: absolute;
-          inset: 0;
+          inset: -8px;
           border-radius: 50%;
-          background: radial-gradient(circle, var(--tier-color) 0%, transparent 65%);
-          opacity: 0.22;
+          background: radial-gradient(circle, var(--tier-color) 0%, transparent 60%);
+          opacity: 0.32;
         }
         .rep-topo-dot {
           position: relative;
-          width: 12px;
-          height: 12px;
+          width: 16px;
+          height: 16px;
           border-radius: 50%;
           background: var(--tier-color);
-          box-shadow: 0 0 10px 0 var(--tier-color);
+          box-shadow: 0 0 18px 1px var(--tier-color);
+        }
+        .rep-topo-step--pass_through .rep-topo-dot {
+          width: 22px;
+          height: 22px;
+          box-shadow: 0 0 24px 2px var(--tier-color);
         }
         .rep-topo-meta {
           display: flex;
           flex-direction: column;
-          gap: 2px;
-          padding-top: 4px;
+          gap: 3px;
+          align-items: center;
+          text-align: center;
         }
         .rep-topo-role {
           font-size: 9px;
@@ -1602,6 +1760,9 @@ export default function LensV2FlagshipPage() {
           font-weight: 600;
           letter-spacing: -0.002em;
         }
+        .rep-topo-step--pass_through .rep-topo-name {
+          font-size: 16px;
+        }
         .rep-topo-tier {
           font-size: 11px;
           color: var(--tier-color);
@@ -1612,17 +1773,9 @@ export default function LensV2FlagshipPage() {
           font-size: 10px;
           color: #e6b800;
           letter-spacing: 0.06em;
-          margin-top: 4px;
+          margin-top: 2px;
         }
-        .rep-topo-edge {
-          position: absolute;
-          left: 18px;
-          top: 38px;
-          bottom: -10px;
-          width: 1px;
-          background: linear-gradient(180deg, var(--tier-color) 0%, transparent 100%);
-          opacity: 0.42;
-        }
+        .rep-topo-edge { display: none; } /* spatial layout uses ::before line */
         .rep-dense-note {
           font-size: 12px;
           color: #9aa0bc;
@@ -1719,50 +1872,59 @@ export default function LensV2FlagshipPage() {
         }
         .rep-board-mark {
           position: relative;
-          width: 180px;
-          height: 180px;
+          width: 320px;
+          height: 320px;
           display: flex;
           align-items: center;
           justify-content: center;
-          margin: 12px 0 4px;
+          margin: 24px 0 12px;
         }
         .rep-board-mark-glow {
           position: absolute;
           inset: 0;
           border-radius: 50%;
-          background: radial-gradient(circle, var(--state-color) 0%, transparent 65%);
-          opacity: 0.18;
+          background: radial-gradient(circle, var(--state-color) 0%, transparent 60%);
+          opacity: 0.22;
         }
         .rep-board-mark-ring {
           position: relative;
-          width: 96px;
-          height: 96px;
+          width: 168px;
+          height: 168px;
           border-radius: 50%;
           border: 1px solid var(--state-color);
           box-shadow:
-            0 0 28px 0 var(--state-bg),
-            inset 0 0 18px 0 var(--state-bg);
-          opacity: 0.85;
+            0 0 48px 0 var(--state-bg),
+            inset 0 0 32px 0 var(--state-bg);
+          opacity: 0.92;
           transition: border-color 0.4s, box-shadow 0.4s;
         }
+        .rep-board-mark-ring::before {
+          content: '';
+          position: absolute;
+          inset: -22px;
+          border-radius: 50%;
+          border: 1px solid var(--state-border);
+          opacity: 0.6;
+        }
         .rep-board-statement {
-          font-size: 16px;
+          font-size: 19px;
           color: #e8edf8;
-          line-height: 1.55;
-          letter-spacing: -0.005em;
+          line-height: 1.5;
+          letter-spacing: -0.008em;
           font-weight: 400;
-          max-width: 320px;
+          max-width: 520px;
         }
         .rep-board-line {
-          width: 60%;
+          width: 56%;
+          max-width: 320px;
           height: 1px;
           background: linear-gradient(90deg, transparent 0%, var(--state-color) 50%, transparent 100%);
-          opacity: 0.45;
+          opacity: 0.5;
         }
         .rep-board-scope {
           font-size: 11px;
           color: #6a7593;
-          letter-spacing: 0.08em;
+          letter-spacing: 0.18em;
           text-transform: uppercase;
         }
 
