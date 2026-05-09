@@ -1,0 +1,115 @@
+{
+  "stream_id": "PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01",
+  "branch": "work/lens-v2-productization",
+  "baseline_commit": "76939e7",
+  "summary": {
+    "files_created": 18,
+    "files_modified": 1,
+    "files_deleted": 0
+  },
+  "files": [
+    {
+      "path": "app/execlens-demo/lib/lens-v2/SemanticArtifactLoader.js",
+      "change": "created",
+      "purpose": "REPO_ROOT-anchored, traversal-safe JSON / text reads"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/SemanticCrosswalkMapper.js",
+      "change": "created",
+      "purpose": "DOM-XX → business label translation via semantic_continuity_crosswalk"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/DPSIGSignalMapper.js",
+      "change": "created",
+      "purpose": "Projects DPSIG TAXONOMY-01 signals into LENS V2 signal stack"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/SemanticActorHydrator.js",
+      "change": "created",
+      "purpose": "Hydrates 15 LENS V2 semantic actors with explicit binding-status disclosure"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/BlueEdgePayloadResolver.js",
+      "change": "created",
+      "purpose": "Top-level orchestrator: gating, artifact resolution, payload assembly"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/index.js",
+      "change": "created",
+      "purpose": "Barrel export for the lens-v2 lib namespace"
+    },
+    {
+      "path": "app/execlens-demo/pages/api/lens-payload.js",
+      "change": "created",
+      "purpose": "GET /api/lens-payload — JSON live payload endpoint"
+    },
+    {
+      "path": "app/execlens-demo/pages/api/report-pack.js",
+      "change": "created",
+      "purpose": "GET /api/report-pack — static HTML report streaming endpoint"
+    },
+    {
+      "path": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "change": "modified",
+      "purpose": "Removed fixture import; added getServerSideProps live binding; added LIVE SUBSTRATE banner + LIVE_BINDING_FAILED visible state"
+    },
+    {
+      "path": "app/execlens-demo/flagship-experience/tests/live-binding.test.js",
+      "change": "created",
+      "purpose": "37-case live-binding regression suite"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01/BLUEEDGE_LIVE_BINDING_IMPLEMENTATION.md",
+      "change": "created",
+      "purpose": "Implementation deliverable"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01/BLUEEDGE_LIVE_BINDING_VALIDATION.md",
+      "change": "created",
+      "purpose": "Validation deliverable"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01/blueedge_live_binding_manifest.json",
+      "change": "created",
+      "purpose": "Binding manifest with allowed reads, hydration map, validation outcomes"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01/screenshots/balanced_1440x900_live.png",
+      "change": "created",
+      "purpose": "BALANCED mode live screenshot, 1440×900"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01/screenshots/dense_1440x900_live.png",
+      "change": "created",
+      "purpose": "DENSE mode live screenshot, 1440×900"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01/screenshots/investigation_1440x900_live.png",
+      "change": "created",
+      "purpose": "INVESTIGATION mode live screenshot, 1440×900"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01/screenshots/boardroom_1440x900_live.png",
+      "change": "created",
+      "purpose": "BOARDROOM mode live screenshot, 1440×900"
+    },
+    {
+      "path": "docs/pios/PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01/execution_report.md",
+      "change": "created",
+      "purpose": "Governance execution report"
+    },
+    {
+      "path": "docs/pios/PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01/file_changes.json",
+      "change": "created",
+      "purpose": "Governance file-changes manifest"
+    },
+    {
+      "path": "docs/pios/PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01/CLOSURE.md",
+      "change": "created",
+      "purpose": "Governance closure document"
+    }
+  ],
+  "validators_changed": [],
+  "topology_mutations": [],
+  "evidence_mutations": []
+}

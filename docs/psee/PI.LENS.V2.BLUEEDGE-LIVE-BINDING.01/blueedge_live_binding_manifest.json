@@ -1,0 +1,191 @@
+{
+  "stream_id": "PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01",
+  "schema_version": "1.0",
+  "branch": "work/lens-v2-productization",
+  "baseline_commit": "76939e7",
+  "baseline_run": {
+    "client": "blueedge",
+    "run_id": "run_blueedge_productized_01_fixed",
+    "run_root": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed",
+    "canonical_topology_hash": "4ea34f80660d06013fdec4ac32f77d64b7715fb1828f610598468a909e0a2e09",
+    "dpsig_baseline_commit": "93098cb"
+  },
+  "binding": {
+    "binding_status": "LIVE",
+    "fixture_fallback_disabled": true,
+    "allowed_clients": ["blueedge"],
+    "allowed_runs": {
+      "blueedge": ["run_blueedge_productized_01_fixed"]
+    },
+    "page_route": "/lens-v2-flagship",
+    "api_routes": [
+      "/api/lens-payload",
+      "/api/report-pack"
+    ]
+  },
+  "allowed_reads": {
+    "required": [
+      "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/semantic_topology_model.json",
+      "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/decision/decision_validation.json",
+      "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/report_inputs/reproducibility_verdict.json",
+      "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/crosswalk/semantic_continuity_crosswalk.json",
+      "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/structure/40.4/canonical_topology.json",
+      "artifacts/dpsig/blueedge/run_blueedge_productized_01_fixed/dpsig_signal_set.json"
+    ],
+    "optional": [
+      "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/signal/signal_registry.json",
+      "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/evidence/evidence_trace.json",
+      "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/bundle/semantic_bundle_manifest.json",
+      "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/structure/40.3/structural_topology_log.json",
+      "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/vault/vault_readiness.json"
+    ],
+    "report_pack": {
+      "decision-surface":  "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reporting/report_pack/decision_surface.html",
+      "tier1-narrative":   "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reporting/report_pack/tier1_narrative.html",
+      "tier1-evidence":    "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reporting/report_pack/tier1_evidence.html",
+      "tier2-diagnostic":  "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reporting/report_pack/tier2_diagnostic.html"
+    }
+  },
+  "allowed_writes": [
+    "app/execlens-demo/lib/lens-v2/",
+    "app/execlens-demo/pages/api/lens-payload.js",
+    "app/execlens-demo/pages/api/report-pack.js",
+    "app/execlens-demo/pages/lens-v2-flagship.js",
+    "app/execlens-demo/flagship-experience/tests/live-binding.test.js",
+    "docs/psee/PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01/",
+    "docs/pios/PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01/"
+  ],
+  "components": [
+    {
+      "path": "app/execlens-demo/lib/lens-v2/SemanticArtifactLoader.js",
+      "role": "REPO_ROOT-anchored, traversal-safe JSON / text reads"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/SemanticCrosswalkMapper.js",
+      "role": "DOM-XX → business label translation via semantic_continuity_crosswalk"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/DPSIGSignalMapper.js",
+      "role": "Projects DPSIG TAXONOMY-01 signals into LENS V2 signal stack"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/SemanticActorHydrator.js",
+      "role": "Hydrates 15 LENS V2 semantic actors with explicit binding-status"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/BlueEdgePayloadResolver.js",
+      "role": "Top-level orchestrator: gating, artifact resolution, payload assembly"
+    },
+    {
+      "path": "app/execlens-demo/pages/api/lens-payload.js",
+      "role": "GET /api/lens-payload — JSON live payload"
+    },
+    {
+      "path": "app/execlens-demo/pages/api/report-pack.js",
+      "role": "GET /api/report-pack — static HTML report streaming"
+    }
+  ],
+  "actor_hydration": {
+    "total": 15,
+    "distribution": {
+      "HYDRATED": 11,
+      "HYDRATED_WITH_DERIVATION": 2,
+      "PLACEHOLDER_BINDING_PENDING": 1,
+      "PRESENTATION_LAYER_DERIVED": 1
+    },
+    "actors": [
+      { "code": "DP", "name": "Decision Posture",       "status": "HYDRATED" },
+      { "code": "CB", "name": "Confidence Boundary",    "status": "HYDRATED_WITH_DERIVATION" },
+      { "code": "PA", "name": "Pressure Anchor",        "status": "HYDRATED" },
+      { "code": "PP", "name": "Propagation Path",       "status": "HYDRATED" },
+      { "code": "AL", "name": "Absorption Load",        "status": "HYDRATED" },
+      { "code": "RE", "name": "Receiver Exposure",      "status": "HYDRATED" },
+      { "code": "ST", "name": "Semantic Topology",      "status": "HYDRATED" },
+      { "code": "SB", "name": "Structural Backing",     "status": "HYDRATED" },
+      { "code": "SO", "name": "Semantic-Only Exposure", "status": "HYDRATED" },
+      { "code": "CC", "name": "Cluster Concentration",  "status": "HYDRATED" },
+      { "code": "SS", "name": "Signal Stack",           "status": "HYDRATED" },
+      { "code": "ET", "name": "Evidence Trace",         "status": "HYDRATED" },
+      { "code": "RB", "name": "Resolution Boundary",    "status": "HYDRATED_WITH_DERIVATION" },
+      { "code": "IP", "name": "Inference Prohibition",  "status": "PLACEHOLDER_BINDING_PENDING" },
+      { "code": "RA", "name": "Report Artifact Access", "status": "PRESENTATION_LAYER_DERIVED" }
+    ]
+  },
+  "qualifier": {
+    "qualifier_class": "Q-01",
+    "derived_qualifier_class": "Q-02",
+    "derivation_inputs": {
+      "backed_count": 4,
+      "total_count": 17,
+      "ratio": 0.23529411764705882
+    },
+    "derivation_rule": "ratio == 1.0 → Q-00; otherwise → Q-01 (current governance). Exploratory Q-02 candidate emitted as derived_qualifier_class when ratio < 0.6 — pending governance amendment."
+  },
+  "readiness": {
+    "render_state": "EXECUTIVE_READY_WITH_QUALIFIER",
+    "score": 60,
+    "band": "CONDITIONAL",
+    "posture": "INVESTIGATE",
+    "decision_validation_passed": 14,
+    "decision_validation_total": 14,
+    "governance_verdict": "PASS"
+  },
+  "topology": {
+    "semantic_domain_count": 17,
+    "structurally_backed_count": 4,
+    "semantic_only_count": 12,
+    "cluster_count": 13,
+    "grounding_ratio": 0.23529411764705882,
+    "coverage_classification": "MEDIUM"
+  },
+  "explainability_panels": [
+    "why_panel",
+    "evidence_panel",
+    "trace_panel",
+    "qualifiers_panel",
+    "lineage_panel",
+    "confidence_panel",
+    "readiness_state_panel"
+  ],
+  "unresolved_gaps": [
+    {
+      "code": "STRUCTURAL_TOPOLOGY_LOG_40_3",
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/structure/40.3/structural_topology_log.json",
+      "reason": "ARTIFACT_ABSENT",
+      "impact": "NON_BLOCKING"
+    },
+    {
+      "code": "VAULT_READINESS",
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/vault/vault_readiness.json",
+      "reason": "ARTIFACT_ABSENT",
+      "impact": "NON_BLOCKING"
+    },
+    {
+      "code": "IP_RENDERING_METADATA",
+      "path": "rendering_metadata vault artifact (not yet specified)",
+      "reason": "rendering_metadata not yet exposed as a per-run vault artifact",
+      "impact": "INFERENCE_PROHIBITION_PLACEHOLDER"
+    }
+  ],
+  "validation_outcomes": {
+    "authority_gating": "PASS",
+    "required_source_artifacts": "PASS",
+    "resolver_payload_contract": "PASS",
+    "actor_registry_15": "PASS",
+    "dpsig_provenance": "PASS",
+    "adapter_pipeline": "PASS",
+    "orchestration_parity": "PASS",
+    "governance_invariants": "PASS",
+    "explainability_panels": "PASS",
+    "regression_suite_execlens_demo": "PASS (684/684)",
+    "live_binding_test_suite": "PASS (37/37)",
+    "visual_inspection_4_modes": "PASS",
+    "fixture_fallback_disabled": "PASS"
+  },
+  "screenshots": [
+    "docs/psee/PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01/screenshots/balanced_1440x900_live.png",
+    "docs/psee/PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01/screenshots/dense_1440x900_live.png",
+    "docs/psee/PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01/screenshots/investigation_1440x900_live.png",
+    "docs/psee/PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01/screenshots/boardroom_1440x900_live.png"
+  ]
+}

@@ -24,10 +24,13 @@ const {
   resolvePresenceToken,
 } = require('../flagship-experience/flagshipOrchestration')
 
-const {
-  FLAGSHIP_REAL_REPORT,
-  FLAGSHIP_PROPAGATION_CHAINS,
-} = require('../flagship-experience/fixtures/flagship_real_report.fixture')
+/* Live binding migration — PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01
+ * The flagship route now hydrates from a real governed BlueEdge productized
+ * substrate via getServerSideProps. The previous in-memory fixture import
+ * has been removed. Resolver: app/execlens-demo/lib/lens-v2/BlueEdgePayloadResolver
+ */
+const LIVE_BINDING_CLIENT = 'blueedge'
+const LIVE_BINDING_RUN = 'run_blueedge_productized_01_fixed'
 
 // ── Visual constants ──────────────────────────────────────────────────────────
 
@@ -312,10 +315,10 @@ function RepModeTag({ label, sub, zones }) {
   )
 }
 
-/* Static report artifacts — recognized as official generated Tier-1 / Tier-2 deliverables.
- * NOTE: live binding to a real client/run pipeline is not yet implemented at this surface.
- * These entries are guarded placeholders documented in
- * docs/psee/PI.LENS.V2.PREMIUM-INTERACTIVE-EXECUTIVE-LAYER.01/FUTURE_CLIENT_RUN_BINDING_CONTRACT.md
+/* Static report artifacts — live-bound to BlueEdge productized run via /api/report-pack.
+ * Default registry binds to LIVE_BINDING_CLIENT / LIVE_BINDING_RUN. The page may
+ * override with payload.report_pack.artifacts (which carries per-artifact
+ * binding_status from the resolver).
  */
 const REPORT_PACK_ARTIFACTS = [
   {
@@ -323,28 +326,28 @@ const REPORT_PACK_ARTIFACTS = [
     name: 'Decision Surface',
     tier: 'DECISION',
     file: 'lens_decision_surface.html',
-    binding_path: '/api/report-pack?artifact=decision-surface&client=<client_id>&run=<run_id>',
+    binding_path: `/api/report-pack?artifact=decision-surface&client=${LIVE_BINDING_CLIENT}&run=${LIVE_BINDING_RUN}`,
   },
   {
     id: 'tier1-narrative',
     name: 'Tier-1 Narrative Brief',
     tier: 'TIER-1',
     file: 'lens_tier1_narrative_brief.html',
-    binding_path: '/api/report-pack?artifact=tier1-narrative&client=<client_id>&run=<run_id>',
+    binding_path: `/api/report-pack?artifact=tier1-narrative&client=${LIVE_BINDING_CLIENT}&run=${LIVE_BINDING_RUN}`,
   },
   {
     id: 'tier1-evidence',
     name: 'Tier-1 Evidence Brief',
     tier: 'TIER-1',
     file: 'lens_tier1_evidence_brief.html',
-    binding_path: '/api/report-pack?artifact=tier1-evidence&client=<client_id>&run=<run_id>',
+    binding_path: `/api/report-pack?artifact=tier1-evidence&client=${LIVE_BINDING_CLIENT}&run=${LIVE_BINDING_RUN}`,
   },
   {
     id: 'tier2-diagnostic',
     name: 'Tier-2 Diagnostic Narrative',
     tier: 'TIER-2',
     file: 'lens_tier2_diagnostic_narrative.html',
-    binding_path: '/api/report-pack?artifact=tier2-diagnostic&client=<client_id>&run=<run_id>',
+    binding_path: `/api/report-pack?artifact=tier2-diagnostic&client=${LIVE_BINDING_CLIENT}&run=${LIVE_BINDING_RUN}`,
   },
 ]
 
@@ -861,8 +864,8 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   return <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} />
 }
 
-function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks }) {
-  const scope = FLAGSHIP_REAL_REPORT.topology_scope || {}
+function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport }) {
+  const scope = (fullReport && fullReport.topology_scope) || {}
   return (
     <div
       className={`intelligence-field intelligence-field--three-col${boardroomMode ? ' intelligence-field--boardroom' : ''}`}
@@ -885,7 +888,7 @@ function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, re
           renderState={renderState}
           blocks={evidenceBlocks}
           scope={scope}
-          fullReport={FLAGSHIP_REAL_REPORT}
+          fullReport={fullReport}
         />
       </main>
 
@@ -1021,18 +1024,129 @@ function GovernanceRibbon({ governance }) {
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
-export default function LensV2FlagshipPage() {
+/* getServerSideProps — invoked per request server-side.
+ * Reads the live BlueEdge productized substrate via BlueEdgePayloadResolver and
+ * returns props for the page. No fixture fallback per contract.
+ */
+export async function getServerSideProps() {
+  // require server-side only — these modules use Node `fs` and must not ship to client
+  const { resolveBlueEdgePayload } = require('../lib/lens-v2/BlueEdgePayloadResolver')
+  let payload = null
+  let error = null
+  try {
+    payload = resolveBlueEdgePayload(LIVE_BINDING_CLIENT, LIVE_BINDING_RUN)
+  } catch (e) {
+    error = { kind: 'RESOLVER_THREW', message: (e && e.message) || String(e) }
+  }
+  if (!payload) {
+    return {
+      props: {
+        livePayload: null,
+        livePropagationChains: [],
+        liveBindingError: error || { kind: 'PAYLOAD_NULL' },
+      },
+    }
+  }
+  if (!payload.ok) {
+    return {
+      props: {
+        livePayload: null,
+        livePropagationChains: [],
+        liveBindingError: {
+          kind: payload.error || 'PAYLOAD_NOT_OK',
+          missing: payload.missing || null,
+          binding_status: payload.binding_status || 'REJECTED',
+        },
+      },
+    }
+  }
+  // Build a propagation_chains shape compatible with StructuralTopologyZone:
+  //   [{ path: [domain_alias, ...], pressure_tier, propagation_role, origin_domain }]
+  const propagationChains = []
+  if (payload.evidence_blocks && payload.evidence_blocks.length >= 2) {
+    propagationChains.push({
+      path: payload.evidence_blocks.map((b) => b.domain_alias).filter(Boolean),
+      pressure_tier:
+        (payload.evidence_blocks[0] &&
+          payload.evidence_blocks[0].signal_cards &&
+          payload.evidence_blocks[0].signal_cards[0] &&
+          payload.evidence_blocks[0].signal_cards[0].pressure_tier) || 'HIGH',
+      propagation_role: 'ORIGIN',
+      origin_domain: payload.evidence_blocks[0] ? payload.evidence_blocks[0].domain_alias : null,
+    })
+  }
+  return {
+    props: {
+      livePayload: payload,
+      livePropagationChains: propagationChains,
+      liveBindingError: null,
+    },
+  }
+}
+
+export default function LensV2FlagshipPage({ livePayload, livePropagationChains, liveBindingError }) {
   const [densityClass, setDensityClass] = useState('EXECUTIVE_DENSE')
   const [boardroomMode, setBoardroomMode] = useState(false)
   const [investigationStage, setInvestigationStage] = useState('SUMMARY')
 
-  const result = useMemo(() => orchestrateFlagshipExperience(
-    FLAGSHIP_REAL_REPORT,
-    'EXECUTIVE',
-    densityClass,
-    boardroomMode,
-    investigationStage,
-  ), [densityClass, boardroomMode, investigationStage])
+  const reportObject = livePayload || null
+
+  const result = useMemo(() => {
+    if (!reportObject) return null
+    return orchestrateFlagshipExperience(
+      reportObject,
+      'EXECUTIVE',
+      densityClass,
+      boardroomMode,
+      investigationStage,
+    )
+  }, [reportObject, densityClass, boardroomMode, investigationStage])
+
+  // Live binding failure surface — fixture fallback DISABLED per contract
+  if (!reportObject || !result) {
+    return (
+      <>
+        <Head>
+          <title>LENS v2 — Live binding failure</title>
+        </Head>
+        <div style={{
+          minHeight: '100vh',
+          background: '#14171f',
+          color: '#e8edf8',
+          fontFamily: '-apple-system, "system-ui", Inter, "Helvetica Neue", system-ui, sans-serif',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '64px 32px',
+          textAlign: 'center',
+          gap: '24px',
+        }}>
+          <div style={{ fontSize: '11px', letterSpacing: '0.32em', color: '#ff6b6b' }}>LIVE_BINDING_FAILED</div>
+          <div style={{ fontSize: '24px', fontWeight: 600, color: '#e8edf8', maxWidth: '720px', lineHeight: 1.3 }}>
+            LENS V2 could not bind to the BlueEdge productized substrate.
+          </div>
+          <div style={{ fontSize: '13px', color: '#9aa0bc', maxWidth: '640px', lineHeight: 1.6 }}>
+            Fixture fallback is disabled by contract (FIXTURE_FALLBACK_DISABLED).
+            The flagship surface refuses to display synthetic semantics.
+          </div>
+          {liveBindingError && (
+            <pre style={{
+              fontSize: '11px',
+              color: '#7a85a3',
+              background: 'rgba(20,23,31,0.6)',
+              padding: '14px 18px',
+              borderRadius: 4,
+              maxWidth: '720px',
+              overflow: 'auto',
+              fontFamily: 'ui-monospace, "SF Mono", Menlo, monospace',
+              textAlign: 'left',
+            }}>{JSON.stringify(liveBindingError, null, 2)}</pre>
+          )}
+        </div>
+      </>
+    )
+  }
 
   const { renderState, adapted, motionProfile, urgencyFrame, densityLayout, governance } = result
   const gravityToken = resolveGravityToken(renderState)
@@ -1042,6 +1156,12 @@ export default function LensV2FlagshipPage() {
 
   const isBlocked = renderState === 'BLOCKED'
   const isDiagnostic = renderState === 'DIAGNOSTIC_ONLY'
+
+  // Live binding visible indicators — per contract requirements
+  const ipPlaceholderActive =
+    !!(reportObject.actor_registry &&
+       reportObject.actor_registry.inference_prohibition &&
+       reportObject.actor_registry.inference_prohibition.status === 'PLACEHOLDER_BINDING_PENDING')
 
   return (
     <>
@@ -1057,7 +1177,26 @@ export default function LensV2FlagshipPage() {
         data-presence-token={presenceToken}
         data-boardroom={String(boardroomMode)}
         data-density={densityClass}
+        data-binding-status={reportObject.binding_status || 'UNKNOWN'}
+        data-binding-client={reportObject.client_name || ''}
+        data-binding-run={reportObject.run_id || ''}
       >
+        {/* Live substrate banner — visible governance affordance */}
+        <div className="v2-live-banner" role="status" aria-live="polite">
+          <span className="v2-live-banner-dot" />
+          <span className="v2-live-banner-label">LIVE SUBSTRATE</span>
+          <span className="v2-live-banner-sep">·</span>
+          <span className="v2-live-banner-detail">
+            BlueEdge productized · {reportObject.run_id} · baseline {reportObject.baseline_commit}
+          </span>
+          {ipPlaceholderActive && (
+            <>
+              <span className="v2-live-banner-sep">·</span>
+              <span className="v2-live-banner-warn">INFERENCE PROHIBITION: BINDING PENDING</span>
+            </>
+          )}
+        </div>
+
         <AuthorityBand
           densityClass={densityClass}
           boardroomMode={boardroomMode}
@@ -1072,7 +1211,7 @@ export default function LensV2FlagshipPage() {
           {!isBlocked && <DeclarationZone renderState={renderState} adapted={adapted} />}
 
           <QualifierMandate
-            qualifierClass={FLAGSHIP_REAL_REPORT.qualifier_class}
+            qualifierClass={reportObject.qualifier_class}
             visible={qualifierVisible}
           />
 
@@ -1082,21 +1221,19 @@ export default function LensV2FlagshipPage() {
             densityClass={densityClass}
             boardroomMode={boardroomMode}
             renderState={renderState}
-            evidenceBlocks={FLAGSHIP_REAL_REPORT.evidence_blocks}
+            evidenceBlocks={reportObject.evidence_blocks}
+            fullReport={reportObject}
           />
 
           <StructuralTopologyZone
-            evidenceBlocks={FLAGSHIP_REAL_REPORT.evidence_blocks}
-            propagationChains={FLAGSHIP_PROPAGATION_CHAINS}
+            evidenceBlocks={reportObject.evidence_blocks}
+            propagationChains={livePropagationChains || []}
           />
 
-          {/* Evidence Layer is gated to INVESTIGATION mode only — in BALANCED, DENSE,
-              and BOARDROOM the per-block evidence cards repeated content already
-              represented as semantic actors in the center canvas, and read as crushed
-              footer cards. INVESTIGATION mode keeps the contextual evidence drawer. */}
+          {/* Evidence Layer is gated to INVESTIGATION mode only. */}
           {densityClass === 'INVESTIGATION_DENSE' && !boardroomMode && (
             <EvidenceDepthLayer
-              evidenceBlocks={FLAGSHIP_REAL_REPORT.evidence_blocks}
+              evidenceBlocks={reportObject.evidence_blocks}
               densityClass={densityClass}
             />
           )}
@@ -1173,6 +1310,48 @@ export default function LensV2FlagshipPage() {
           --state-color:  #ff6b6b;
           --state-bg:     rgba(255,107,107,0.06);
           --state-border: rgba(255,107,107,0.22);
+        }
+
+        /* ── Live Substrate Banner ───────────────────────────────────────── */
+        .v2-live-banner {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 7px 56px;
+          background:
+            linear-gradient(90deg, rgba(74,158,255,0.08) 0%, rgba(74,158,255,0.02) 50%, rgba(230,184,0,0.04) 100%);
+          border-bottom: 1px solid rgba(74,158,255,0.18);
+          font-size: 9px;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: #b6bdd6;
+          flex-wrap: wrap;
+        }
+        .v2-live-banner-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: rgba(74,158,255,0.8);
+          box-shadow: 0 0 8px 0 rgba(74,158,255,0.6);
+          flex-shrink: 0;
+        }
+        .v2-live-banner-label {
+          color: #6a8cd6;
+          font-weight: 600;
+          letter-spacing: 0.2em;
+        }
+        .v2-live-banner-sep { color: #3a4560; }
+        .v2-live-banner-detail {
+          color: #9aa0bc;
+          letter-spacing: 0.04em;
+          text-transform: none;
+          font-family: ui-monospace, "SF Mono", Menlo, monospace;
+          font-size: 10px;
+        }
+        .v2-live-banner-warn {
+          color: #e6b800;
+          font-weight: 600;
+          letter-spacing: 0.16em;
         }
 
         /* ── Authority Band ──────────────────────────────────────────────── */
