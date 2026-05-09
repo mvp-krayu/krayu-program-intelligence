@@ -1,0 +1,281 @@
+{
+  "stream": "PI.LENS.V2.BLUEEDGE-PRODUCTIZED-BINDING-RECONCILIATION.01",
+  "generated": "2026-05-09",
+  "target_run": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed",
+  "dpsig_path": "artifacts/dpsig/blueedge/run_blueedge_productized_01_fixed",
+  "baseline_governance": "governed-dpsig-baseline-v1",
+  "baseline_pipeline_manifest": "93098cb",
+  "artifacts": [
+    {
+      "artifact_path": "artifacts/dpsig/blueedge/run_blueedge_productized_01_fixed/dpsig_signal_set.json",
+      "artifact_type": "DPSIG_SIGNAL_SET",
+      "exists": true,
+      "DPSIG_related": true,
+      "semantic_related": false,
+      "hydration_relevant": true,
+      "governance_status": "GOVERNED — TAXONOMY-01 replay-safe, provenance to baseline 93098cb, Lane A impact NONE, client-agnostic, topology-native",
+      "notes": "DPSIG-031 Cluster Pressure Index Class 4: signal_value 2.1176, severity ELEVATED, activation CLUSTER_PRESSURE_ELEVATED. 2 signals derived, 1 activated. lens_tier [TIER-1, TIER-2, TIER-3]. Provenance chain to PI.PSEE-PIOS.DPSIG-RUNTIME-NORMALIZATION.IMPLEMENTATION.01."
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/semantic_bundle_manifest.json",
+      "artifact_type": "SEMANTIC_BUNDLE_MANIFEST",
+      "exists": true,
+      "DPSIG_related": false,
+      "semantic_related": true,
+      "hydration_relevant": true,
+      "governance_status": "GOVERNED — PI.LENS.SEMANTIC-LAYER-PROMOTION.01; created_from_existing_artifacts_only=true",
+      "notes": "Aggregates 7+ semantic artifacts (continuity_crosswalk, canonical_topology_with_lineage, vault_compatibility_manifest, semantic_topology_model, semantic_topology_layout, canonical_topology_json, graph_state) into the fixed run."
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/semantic_topology_model.json",
+      "artifact_type": "SEMANTIC_TOPOLOGY_MODEL_17_DOMAIN",
+      "exists": true,
+      "DPSIG_related": false,
+      "semantic_related": true,
+      "hydration_relevant": true,
+      "governance_status": "GOVERNED — PI.LENS.SEMANTIC-TOPOLOGY-REBUILD.02 generation; PI.LENS.REPORT-RENDERER.DRIFT-REMEDIATION.01 amendment",
+      "notes": "17 DOMAIN entries with business_labels, lineage_status (EXACT/NONE/STRONG/WEAK), confidence per domain, cluster_id mapping (CLU-01..CLU-05), domain_type (FUNCTIONAL/INFRASTRUCTURE), zone_anchor flag, dominant_dom_id linkage. THIS IS THE 17-DOMAIN REGISTRY THAT PATH A.5 REFERENCES."
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/semantic_topology_layout.json",
+      "artifact_type": "SEMANTIC_TOPOLOGY_SVG_LAYOUT",
+      "exists": true,
+      "DPSIG_related": false,
+      "semantic_related": true,
+      "hydration_relevant": false,
+      "governance_status": "GOVERNED — PI.LENS.SEMANTIC-TOPOLOGY-REBUILD.02; DETERMINISTIC_RECONSTRUCTION basis",
+      "notes": "SVG layout coordinates for 17 semantic domain nodes and 5 cluster bounding boxes within 820x480 viewBox. Used by lens_report_generator HTML renderer; NOT directly required by LENS V2 cinematic surface but available."
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/canonical_topology.json",
+      "artifact_type": "CANONICAL_TOPOLOGY_41_1_EMISSION",
+      "exists": true,
+      "DPSIG_related": false,
+      "semantic_related": true,
+      "hydration_relevant": true,
+      "governance_status": "GOVERNED — 41X.CANONICAL.TOPOLOGY.JSON.EMISSION.01",
+      "notes": "17 domains, 42 capabilities, 89 components, 148 total nodes. Generated from build_semantic_layer.py. Distinct from vault canonical_topology (13 structural groups)."
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/lineage/canonical_topology_with_lineage.json",
+      "artifact_type": "CANONICAL_TOPOLOGY_WITH_LINEAGE",
+      "exists": true,
+      "DPSIG_related": false,
+      "semantic_related": true,
+      "hydration_relevant": true,
+      "governance_status": "GOVERNED — PI.LENS.REPORT-RENDERER-LINEAGE-CONTEXT-DISCOVERY.01",
+      "notes": "13 structural domains augmented with semantic lineage annotations: DOM-to-DOMAIN mapping with lineage_status, confidence, pressure_note per domain."
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/crosswalk/semantic_continuity_crosswalk.json",
+      "artifact_type": "SEMANTIC_CONTINUITY_CROSSWALK_V2",
+      "exists": true,
+      "DPSIG_related": false,
+      "semantic_related": true,
+      "hydration_relevant": true,
+      "governance_status": "GOVERNED — PI.CLIENT-LANGUAGE-LAYER.DOM-REDERIVATION-WITH-LINEAGE.01; supersedes v1.0",
+      "notes": "Maps DOM-XX technical labels to business labels via build_semantic_layer.py COMP-NN → CAP-NN → DOMAIN-NN derivation chain. Coverage 9/13 (69.2%). Required by _resolve_domain_display_label() in lens_report_generator.py via --crosswalk-path flag."
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/decision/decision_validation.json",
+      "artifact_type": "DECISION_VALIDATION",
+      "exists": true,
+      "DPSIG_related": false,
+      "semantic_related": true,
+      "hydration_relevant": true,
+      "governance_status": "GOVERNED — PI.DECISION-SURFACE.RECONSTRUCTION.01",
+      "notes": "8+ verification checks (VF-01..VF-08) all PASS. VF-04 confirms '5 of 17 semantic domains have structural backing; 12 remain semantic-only.' VF-07 confirms PSIG-001/002/004 active."
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/decision/decision_cross_report_alignment.json",
+      "artifact_type": "DECISION_CROSS_REPORT_ALIGNMENT",
+      "exists": true,
+      "DPSIG_related": false,
+      "semantic_related": true,
+      "hydration_relevant": true,
+      "governance_status": "GOVERNED",
+      "notes": "Decision Surface alignment with Tier-1/Tier-2 reports — supports semantic continuity between report layers."
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/decision/decision_fixup_generation_result.json",
+      "artifact_type": "DECISION_FIXUP_GENERATION_RESULT",
+      "exists": true,
+      "DPSIG_related": false,
+      "semantic_related": true,
+      "hydration_relevant": false,
+      "governance_status": "GOVERNED",
+      "notes": "Decision Surface fixup generation log (process artifact)."
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/report_inputs/reproducibility_verdict.json",
+      "artifact_type": "REPRODUCIBILITY_VERDICT",
+      "exists": true,
+      "DPSIG_related": false,
+      "semantic_related": true,
+      "hydration_relevant": true,
+      "governance_status": "GOVERNED — PI.LENS.END-TO-END-RERUN.BLUEEDGE.01",
+      "notes": "verdict: FULL_REPRODUCIBILITY. 13/13 structural checks PASS, decision_match PASS (60/CONDITIONAL/INVESTIGATE), all 9 reports generated cleanly, content bit-for-bit identical modulo run_id."
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/lineage/vault_compatibility_manifest.json",
+      "artifact_type": "VAULT_COMPATIBILITY_MANIFEST",
+      "exists": true,
+      "DPSIG_related": false,
+      "semantic_related": true,
+      "hydration_relevant": false,
+      "governance_status": "GOVERNED",
+      "notes": "Records compatibility between lineage validation vault and base productized vault. Confirms lineage artifacts are anchored to run_blueedge_productized_01 baseline."
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/graph/graph_state.json",
+      "artifact_type": "FORCE_DIRECTED_GRAPH_STATE",
+      "exists": true,
+      "DPSIG_related": false,
+      "semantic_related": true,
+      "hydration_relevant": false,
+      "governance_status": "GOVERNED — PI.LENS.BLUEEDGE-CANONICAL-REPORT-PATHS.01",
+      "notes": "Force-directed graph state for tier2 diagnostic structural topology visualization. 18 nodes, 17 links, 458 simulation ticks. Required by lens_tier2_diagnostic_narrative.html section 01C."
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/tier1/validation_log.json",
+      "artifact_type": "SEMANTIC_TIER1_VALIDATION_LOG",
+      "exists": true,
+      "DPSIG_related": false,
+      "semantic_related": true,
+      "hydration_relevant": false,
+      "governance_status": "GOVERNED",
+      "notes": "Tier-1 semantic rendering validation log."
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/tier2/validation_log.json",
+      "artifact_type": "SEMANTIC_TIER2_VALIDATION_LOG",
+      "exists": true,
+      "DPSIG_related": false,
+      "semantic_related": true,
+      "hydration_relevant": false,
+      "governance_status": "GOVERNED",
+      "notes": "Tier-2 semantic rendering validation log."
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/tier2/tier2_fixup_generation_result.json",
+      "artifact_type": "TIER2_FIXUP_GENERATION_RESULT",
+      "exists": true,
+      "DPSIG_related": false,
+      "semantic_related": true,
+      "hydration_relevant": false,
+      "governance_status": "GOVERNED",
+      "notes": "Tier-2 fixup generation log (process artifact)."
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/validation/signal_derivation_rules.md",
+      "artifact_type": "SIGNAL_DERIVATION_RULES_DOC",
+      "exists": true,
+      "DPSIG_related": false,
+      "semantic_related": true,
+      "hydration_relevant": false,
+      "governance_status": "GOVERNED — documentation reference",
+      "notes": "Documentation of signal derivation rules for the productization."
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/validation/semantic_validation_rules.md",
+      "artifact_type": "SEMANTIC_VALIDATION_RULES_DOC",
+      "exists": true,
+      "DPSIG_related": false,
+      "semantic_related": true,
+      "hydration_relevant": false,
+      "governance_status": "GOVERNED — documentation reference",
+      "notes": "Documentation of semantic validation rules for the productization."
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/structure/40.4/canonical_topology.json",
+      "artifact_type": "CANONICAL_TOPOLOGY_STRUCTURAL_40_4",
+      "exists": true,
+      "DPSIG_related": true,
+      "semantic_related": false,
+      "hydration_relevant": true,
+      "governance_status": "GOVERNED — PI.PSEE-PIOS.DPSIG-BLUEEDGE-PROJECTION.VALIDATION.01; pure format translation",
+      "notes": "13 structural DOMs (DOM-01..DOM-13), 35 nodes, 1937 edges, 100% coverage. Adapter from vault/canonical_topology.json domains to DPSIG cluster schema. Required by derive_relational_signals.py resolve_paths(). hash 4ea34f80660d06... matches DPSIG canonical_topology_hash."
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/lens_decision_surface.html",
+      "artifact_type": "LENS_DECISION_SURFACE_HTML",
+      "exists": true,
+      "DPSIG_related": false,
+      "semantic_related": true,
+      "hydration_relevant": true,
+      "governance_status": "GOVERNED — generated via lens_report_generator.py",
+      "notes": "Decision Surface HTML — surfaces score=60, band=CONDITIONAL, posture=INVESTIGATE; 5/17 backed / 12 semantic-only; PZ-001 zone anchor 'Platform Infrastructure and Data'."
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/lens_tier1_narrative_brief.html",
+      "artifact_type": "LENS_TIER1_NARRATIVE_HTML",
+      "exists": true,
+      "DPSIG_related": false,
+      "semantic_related": true,
+      "hydration_relevant": true,
+      "governance_status": "GOVERNED — generated via lens_report_generator.py",
+      "notes": "Tier-1 Narrative Brief HTML."
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/lens_tier1_evidence_brief.html",
+      "artifact_type": "LENS_TIER1_EVIDENCE_HTML",
+      "exists": true,
+      "DPSIG_related": false,
+      "semantic_related": true,
+      "hydration_relevant": true,
+      "governance_status": "GOVERNED — generated via lens_report_generator.py",
+      "notes": "Tier-1 Evidence Brief HTML."
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/lens_tier2_diagnostic_narrative.html",
+      "artifact_type": "LENS_TIER2_DIAGNOSTIC_HTML",
+      "exists": true,
+      "DPSIG_related": false,
+      "semantic_related": true,
+      "hydration_relevant": true,
+      "governance_status": "GOVERNED — generated via lens_report_generator.py",
+      "notes": "Tier-2 Diagnostic Narrative HTML."
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/publish/*",
+      "artifact_type": "LENS_PUBLISH_VARIANTS",
+      "exists": true,
+      "DPSIG_related": false,
+      "semantic_related": true,
+      "hydration_relevant": false,
+      "governance_status": "GOVERNED",
+      "notes": "Publish-tier variants of all four canonical reports (lens_*_pub.html). Useful for Report Pack support-rail access."
+    }
+  ],
+  "absent_but_unblocking": [
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/vault/",
+      "expected_files": ["signal_registry.json", "vault_readiness.json", "evidence_trace.json", "binding_envelope.json", "canonical_topology.json"],
+      "absence_reason": "By design — fixed run is a downstream aggregate built on top of run_blueedge_productized_01 base. Vault artifacts live in the upstream run; semantic productization aggregates only the semantic/, structure/40.4/, and reports/ outputs.",
+      "blocking_for_lens_v2": false
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/binding/",
+      "expected_files": ["binding_envelope.json"],
+      "absence_reason": "By design — see vault note. DPSIG signal set declares binding_envelope_hash: ABSENT (Class 4 derivation only requires canonical_topology).",
+      "blocking_for_lens_v2": false
+    },
+    {
+      "artifact_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/ceu/",
+      "expected_files": ["grounding_state_v3.json"],
+      "absence_reason": "By design — see vault note. The 17-domain semantic registry (semantic_topology_model.json) is the productization-grade grounding source; generic 10-CEU grounding belongs to the upstream run.",
+      "blocking_for_lens_v2": false
+    }
+  ],
+  "summary": {
+    "total_artifacts_inspected": 23,
+    "dpsig_artifacts": 1,
+    "semantic_artifacts": 19,
+    "lens_report_artifacts": 4,
+    "publish_variants": 4,
+    "structural_artifacts": 1,
+    "hydration_relevant_count": 13,
+    "governed_count": 23,
+    "ungoverned_count": 0
+  }
+}
