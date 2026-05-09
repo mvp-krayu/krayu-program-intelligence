@@ -1,0 +1,114 @@
+{
+  "stream": "PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01",
+  "validated_at": "2026-05-09",
+  "scope": "Semantic field transition — actors render as fields, not cards; per-mode atmospheric signatures; mode-reactive interpretation; monumental BOARDROOM ring",
+  "runtime_url_inspected": "http://localhost:3002/lens-v2-flagship",
+  "app": "app/execlens-demo",
+  "page": "app/execlens-demo/pages/lens-v2-flagship.js",
+  "checks": [
+    {
+      "name": "semantic_field_transition_realized",
+      "description": "The .actor shared shell lost its border, background, and border-radius. Actors are now zones inside an atmospheric field, identifiable by top resonance lines and tags rather than enclosing rectangles.",
+      "result": "PASS",
+      "notes": "Visible across all four lens captures. Resolution Boundary cells, Topology cells, Signal Stack rows all dissolved their per-cell borders."
+    },
+    {
+      "name": "dashboard_regression_absent",
+      "description": "Zero regular grids of identical-width components on the primary surface. No KPI tiles. No charts. No filter rows. No tab strips.",
+      "result": "PASS",
+      "notes": "Verified per lens. Resolution / Topology / Signal compositions use rails + glow dots, not enclosing tiles."
+    },
+    {
+      "name": "boxed_panel_dominance_reduced",
+      "description": ".actor border and background removed; cells/rows use rails and gradient backing instead of full enclosing rectangles.",
+      "result": "PASS",
+      "notes": "CSS verified — `.actor { background: transparent; border: none; }` and `.actor::before` thin top resonance line only. Resolution cells / Topology cells / Signal rows all use rails not borders."
+    },
+    {
+      "name": "balanced_mode_semantically_densified",
+      "description": "BALANCED field carries Decision Posture + Resolution Boundary 3-zone + Confidence Boundary bar + single Pressure Anchor — no longer empty, no longer boxed.",
+      "result": "PASS",
+      "notes": "Field gradient (state-color upper-left, warm lower-right, blue bottom) provides the confidence-landscape backing. Four semantic actors compose the field."
+    },
+    {
+      "name": "dense_mode_topology_multidimensional",
+      "description": "DENSE field encodes three pressure-tier glow centers in the gradient signature (HIGH upper-left, ELEVATED center, MODERATE lower-right) — same evidence ground, three encoded centers, no linear chain.",
+      "result": "PASS",
+      "notes": "Field gradient verified in CSS. Topology cells dissolve into the gradient. Cluster Concentration headline + Absorption Load left-rail panel preserved."
+    },
+    {
+      "name": "investigation_mode_forensicized",
+      "description": "INVESTIGATION field is a vertical blue→yellow corridor with descending lineage chain, individual signal rows with tier rails and between-row resonance, and Inference Prohibition with governance contour extending behind the statement.",
+      "result": "PASS",
+      "notes": "Mode-reactive 'FORENSIC INTERPRETATION' label with yellow accent. Inference Prohibition `::after` governance contour adds atmospheric rule-presence."
+    },
+    {
+      "name": "boardroom_mode_projectionized",
+      "description": "BOARDROOM ring grew from 220px to 320px with 168px inner ring + 22px mask + outer ring at -36px + far outer dashed ring at -88px. Center label grew from 36px to 48px. Single state-color radial field gradient.",
+      "result": "PASS",
+      "notes": "CSS verified. Visual register confirmed projection-grade ceremony in boardroom_1440x900_viewport.png capture."
+    },
+    {
+      "name": "left_interpretation_mode_reactive",
+      "description": "Executive Interpretation column now adapts label, tone, section labels, and accent color per active lens via INTERP_MODE_FRAMING + data-tone attribute styling.",
+      "result": "PASS",
+      "notes": "Four distinct framings: EXECUTIVE / STRUCTURAL / FORENSIC / PROJECTION. Tonal accent colors per mode. Section labels reframed per cognition register."
+    },
+    {
+      "name": "semantic_spatial_composition_present",
+      "description": "Visual elements compose as fields, zones, sub-zones, glow dots, resonance lines, field rails, atmospheric rings — per `SEMANTIC_SPATIAL_COMPOSITION_GUIDE.md`.",
+      "result": "PASS",
+      "notes": "Vocabulary documented; usage verified across all four lenses."
+    },
+    {
+      "name": "vault_substrate_visually_implied",
+      "description": "Surface visibly implies substrate hydration via lineage hashes (INVESTIGATION), applied-rule chips (INVESTIGATION), backing-state differentiation (DENSE), and per-mode field gradients — without fake live-binding affordances.",
+      "result": "PASS",
+      "notes": "Documented in `VAULT_SUBSTRATE_VISUALIZATION_MODEL.md`. Honest 'binding pending' caption preserved in Report Pack."
+    },
+    {
+      "name": "semantic_actor_redundancy_reduced",
+      "description": "Compact RepEvidenceState removed from rep field bottoms in prior stream; canonical evidence state lives once in the SupportRail. No actor appears more than once on the surface.",
+      "result": "PASS",
+      "notes": "Verified — Report Pack appears once (in SupportRail), evidence state appears once, qualifier state appears once."
+    },
+    {
+      "name": "no_static_html_injection",
+      "description": "No paragraphs from any static report HTML inlined.",
+      "result": "PASS",
+      "notes": "Authored prose preserved; no static report scraping. Lineage hashes drawn from in-memory fixture's `trace_linkage`, not from any HTML."
+    },
+    {
+      "name": "no_fake_runtime_binding",
+      "description": "Report Pack remains aria-disabled with 'binding pending' caption. No 'live' / 'real-time' / 'loading' affordances. No client / run identifiers in chrome.",
+      "result": "PASS",
+      "notes": "Honest binding state preserved across the field transition."
+    },
+    {
+      "name": "no_governance_mutation",
+      "description": "No changes to docs/governance/, validators, or any governance contract.",
+      "result": "PASS",
+      "notes": "git diff confirms changes scoped to docs/psee/PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01/, docs/pios/PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01/, and app/execlens-demo/pages/lens-v2-flagship.js."
+    },
+    {
+      "name": "no_evidence_semantic_mutation",
+      "description": "No changes to evidence semantics, signal interpretation, render-state vocabulary, qualifier-class semantics, propagation logic, or governance ribbon pass/fail logic.",
+      "result": "PASS",
+      "notes": "Render-state vocabulary preserved. Qualifier semantics preserved. Orchestration module untouched. Fixture untouched."
+    },
+    {
+      "name": "no_cyberpunk_regression",
+      "description": "No lens flares, particle effects, neon palettes, holographic shimmer, or 3D transforms.",
+      "result": "PASS",
+      "notes": "All atmospheric effects use bounded radial gradients or static concentric rings. No animation. No saturated multi-hue mixes."
+    },
+    {
+      "name": "no_chart_library_aesthetic",
+      "description": "No use of mix-blend-mode, gradient-border-with-multi-hue-mix, axes / labels / legends in chart sense, or any visual register typical of D3 / Chart.js / Recharts compositions.",
+      "result": "PASS",
+      "notes": "Confidence Envelope ring uses CSS conic-gradient — semantic visualization, not a chart-library register."
+    }
+  ],
+  "verdict": "PASS",
+  "fail_count": 0
+}

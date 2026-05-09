@@ -411,29 +411,42 @@ function SupportRail({ adapted, scope, boardroomMode }) {
 /* ExecutiveInterpretation — compressed left column.
  * Companion to the SemanticCanvas; not the dominant element on the surface.
  */
+/* Mode-reactive interpretation. The left companion shifts tone, label register,
+ * and section emphasis to match the active cognition mode. The narrative content
+ * does not change — only how it is framed. */
+const INTERP_MODE_FRAMING = {
+  EXECUTIVE_BALANCED:  { label: 'EXECUTIVE INTERPRETATION', tone: 'posture',    assessmentLabel: 'Assessment',          whyLabel: 'Why this matters',         structuralLabel: 'Structural context' },
+  EXECUTIVE_DENSE:     { label: 'STRUCTURAL INTERPRETATION', tone: 'structural', assessmentLabel: 'Structural reading',  whyLabel: 'Cause and propagation',    structuralLabel: 'Structural context' },
+  INVESTIGATION_DENSE: { label: 'FORENSIC INTERPRETATION',   tone: 'forensic',   assessmentLabel: 'Evidence reading',    whyLabel: 'What the evidence shows',  structuralLabel: 'Structural lineage' },
+  BOARDROOM:           { label: 'PROJECTION INTERPRETATION', tone: 'projection', assessmentLabel: 'Posture',             whyLabel: '',                         structuralLabel: '' },
+}
+
 function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted }) {
   const badge = (adapted && adapted.readinessBadge) || {}
+  const framing = boardroomMode
+    ? INTERP_MODE_FRAMING.BOARDROOM
+    : (INTERP_MODE_FRAMING[densityClass] || INTERP_MODE_FRAMING.EXECUTIVE_DENSE)
   return (
-    <aside className="intel-interp" aria-label="Executive interpretation layer">
+    <aside className="intel-interp" data-tone={framing.tone} aria-label="Executive interpretation layer">
       <div className="interp-tag">
-        <span className="interp-tag-label">EXECUTIVE INTERPRETATION</span>
+        <span className="interp-tag-label">{framing.label}</span>
         <span className="interp-tag-state">{badge.state_label || '—'}</span>
       </div>
       {narrative.executive_summary && (
         <div className="interp-block interp-block--lead">
-          <div className="interp-section-label">Assessment</div>
+          <div className="interp-section-label">{framing.assessmentLabel}</div>
           <div className="interp-summary">{narrative.executive_summary}</div>
         </div>
       )}
-      {narrative.why_primary_statement && !boardroomMode && (
+      {narrative.why_primary_statement && !boardroomMode && framing.whyLabel && (
         <div className="interp-block">
-          <div className="interp-section-label">Why this matters</div>
+          <div className="interp-section-label">{framing.whyLabel}</div>
           <div className="interp-why">{narrative.why_primary_statement}</div>
         </div>
       )}
-      {narrative.structural_summary && densityClass === 'INVESTIGATION_DENSE' && !boardroomMode && (
+      {narrative.structural_summary && densityClass === 'INVESTIGATION_DENSE' && !boardroomMode && framing.structuralLabel && (
         <div className="interp-block">
-          <div className="interp-section-label">Structural context</div>
+          <div className="interp-section-label">{framing.structuralLabel}</div>
           <div className="interp-structural">{narrative.structural_summary}</div>
         </div>
       )}
@@ -851,7 +864,10 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
 function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks }) {
   const scope = FLAGSHIP_REAL_REPORT.topology_scope || {}
   return (
-    <div className={`intelligence-field intelligence-field--three-col${boardroomMode ? ' intelligence-field--boardroom' : ''}`}>
+    <div
+      className={`intelligence-field intelligence-field--three-col${boardroomMode ? ' intelligence-field--boardroom' : ''}`}
+      data-mode={boardroomMode ? 'BOARDROOM' : densityClass}
+    >
       {/* LEFT — Executive Interpretation Layer (compressed companion) */}
       <ExecutiveInterpretation
         narrative={narrative}
@@ -1478,8 +1494,16 @@ export default function LensV2FlagshipPage() {
           font-weight: 400;
           border-left: 2px solid var(--state-color);
           padding-left: 14px;
-          transition: border-color 0.4s;
+          transition: border-color 0.4s, color 0.3s;
         }
+        /* Mode-reactive interpretation tonal shifts — same content, different register. */
+        .intel-interp[data-tone="posture"]    .interp-summary { color: #d6dceb; }
+        .intel-interp[data-tone="structural"] .interp-summary { color: #c5cce3; border-left-color: rgba(255,158,74,0.6); }
+        .intel-interp[data-tone="forensic"]   .interp-summary { color: #c5cce3; border-left-color: rgba(230,184,0,0.6); }
+        .intel-interp[data-tone="projection"] .interp-summary { color: #e8edf8; font-size: 14px; line-height: 1.55; }
+        .intel-interp[data-tone="forensic"]   .interp-tag-label { color: #b08c00; }
+        .intel-interp[data-tone="structural"] .interp-tag-label { color: #b87632; }
+        .intel-interp[data-tone="projection"] .interp-tag-label { color: #5a6580; }
         .interp-why {
           font-size: 12px;
           color: #9aa0bc;
@@ -1636,16 +1660,49 @@ export default function LensV2FlagshipPage() {
 
         .status-value--state { color: var(--state-color); transition: color 0.4s; font-weight: 600; }
 
-        /* ── Representation Field — primary semantic operational canvas ─── */
+        /* ── Representation Field — primary semantic operational canvas ───
+         * Each lens mode renders the field as an atmospheric environment, not as
+         * a stack of cards. The field provides ambient gradient backing; actors
+         * provide semantic zones inside it. */
         .rep-field {
           display: flex;
           flex-direction: column;
-          gap: 28px;
+          gap: 18px;
           flex: 1;
           animation: v2Enter 0.45s ease both;
           width: 100%;
           max-width: 920px;
           margin: 0 auto;
+          position: relative;
+          padding: 18px 0;
+        }
+        .rep-field::after {
+          /* Mode-specific atmospheric backing layer — set per-mode below. */
+          content: '';
+          position: absolute;
+          inset: -16px -24px;
+          z-index: -1;
+          pointer-events: none;
+        }
+        .rep-field--balanced::after {
+          background:
+            radial-gradient(60% 50% at 22% 28%, var(--state-bg) 0%, transparent 65%),
+            radial-gradient(45% 40% at 78% 78%, rgba(230,184,0,0.05) 0%, transparent 70%),
+            radial-gradient(80% 60% at 50% 100%, rgba(74,158,255,0.025) 0%, transparent 80%);
+        }
+        .rep-field--dense::after {
+          background:
+            radial-gradient(38% 32% at 22% 30%, rgba(255,107,107,0.07) 0%, transparent 60%),
+            radial-gradient(55% 42% at 50% 55%, rgba(255,158,74,0.06) 0%, transparent 72%),
+            radial-gradient(34% 28% at 80% 80%, rgba(230,184,0,0.06) 0%, transparent 65%);
+        }
+        .rep-field--investigation::after {
+          background:
+            linear-gradient(180deg, rgba(74,158,255,0.04) 0%, transparent 30%, rgba(230,184,0,0.04) 100%);
+        }
+        .rep-field--boardroom::after {
+          background:
+            radial-gradient(70% 60% at 50% 42%, var(--state-bg) 0%, transparent 75%);
         }
 
         .rep-mode-tag {
@@ -2455,21 +2512,37 @@ export default function LensV2FlagshipPage() {
          * the four lens modes. Replaces the prior mode-specific panels.
          * ════════════════════════════════════════════════════════════════ */
 
+        /* Actors are no longer cards. They are semantic zones inside an atmospheric field.
+         * The shared shell is invisible by default; per-mode field gradients provide the
+         * atmospheric backing. Each actor reveals only via a subtle top resonance line
+         * and the actor-tag — there is no enclosing rectangle. */
         .actor {
           display: flex;
           flex-direction: column;
-          gap: 12px;
-          padding: 22px 24px;
-          background: rgba(20, 23, 31, 0.55);
-          border: 1px solid #1a2030;
-          border-radius: 6px;
+          gap: 14px;
+          padding: 18px 22px 22px;
+          background: transparent;
+          border: none;
+          border-radius: 0;
+          position: relative;
         }
+        .actor::before {
+          content: '';
+          position: absolute;
+          left: 22px;
+          right: 22px;
+          top: 0;
+          height: 1px;
+          background: linear-gradient(90deg, transparent 0%, rgba(74,158,255,0.22) 22%, rgba(74,158,255,0.22) 78%, transparent 100%);
+          opacity: 0.6;
+        }
+        .rep-field > .actor:first-of-type::before { display: none; }
         .actor-tag {
           display: flex;
           align-items: baseline;
           gap: 12px;
-          padding-bottom: 10px;
-          border-bottom: 1px solid #1a2030;
+          padding-bottom: 0;
+          border-bottom: none;
         }
         .actor-code {
           font-size: 9px;
@@ -2524,17 +2597,40 @@ export default function LensV2FlagshipPage() {
           gap: 10px;
         }
         .actor-resolution-cell {
-          padding: 12px 14px;
-          background: rgba(8, 10, 15, 0.45);
-          border-left: 2px solid #2a334a;
-          border-radius: 0 4px 4px 0;
+          padding: 14px 16px 14px 18px;
+          background: linear-gradient(180deg, rgba(8,10,15,0.32) 0%, transparent 100%);
+          border: none;
+          border-radius: 0;
           display: flex;
           flex-direction: column;
           gap: 4px;
+          position: relative;
         }
-        .actor-resolution-cell--known    { border-left-color: rgba(74,158,255,0.55); }
-        .actor-resolution-cell--partial  { border-left-color: rgba(230,184,0,0.55); }
-        .actor-resolution-cell--unknown  { border-left-color: rgba(122,133,163,0.55); }
+        .actor-resolution-cell::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 8px;
+          bottom: 8px;
+          width: 2px;
+          border-radius: 1px;
+          background: var(--cell-rail, rgba(122,133,163,0.55));
+          filter: blur(0.4px);
+        }
+        .actor-resolution-cell::after {
+          content: '';
+          position: absolute;
+          left: 2px;
+          top: 8px;
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: radial-gradient(circle, var(--cell-rail, rgba(122,133,163,0.55)) 0%, transparent 70%);
+          opacity: 0.55;
+        }
+        .actor-resolution-cell--known    { --cell-rail: rgba(74,158,255,0.6); }
+        .actor-resolution-cell--partial  { --cell-rail: rgba(230,184,0,0.6); }
+        .actor-resolution-cell--unknown  { --cell-rail: rgba(122,133,163,0.55); }
         .actor-resolution-cell-label {
           font-size: 9px;
           color: #5a6580;
@@ -2643,21 +2739,41 @@ export default function LensV2FlagshipPage() {
           gap: 10px;
         }
         .actor-topo-cell {
-          padding: 14px 16px;
-          background: rgba(8, 10, 15, 0.55);
-          border: 1px solid #1a2030;
-          border-radius: 4px;
+          padding: 18px 16px 16px;
+          background:
+            radial-gradient(80% 90% at 50% 0%, rgba(20,23,31,0.55) 0%, transparent 80%),
+            radial-gradient(60% 60% at 50% 50%, var(--cell-tier-glow, transparent) 0%, transparent 70%);
+          border: none;
+          border-radius: 0;
           display: flex;
           flex-direction: column;
           gap: 6px;
           --tier-color: #6a7593;
+          --cell-tier-glow: transparent;
+          position: relative;
         }
-        .actor-topo-cell[data-tier="HIGH"]     { --tier-color: #ff6b6b; }
-        .actor-topo-cell[data-tier="ELEVATED"] { --tier-color: #ff9e4a; }
-        .actor-topo-cell[data-tier="MODERATE"] { --tier-color: #ffd700; }
-        .actor-topo-cell[data-tier="LOW"]      { --tier-color: #64ffda; }
-        .actor-topo-cell--grounded     { border-color: rgba(74,158,255,0.28); }
-        .actor-topo-cell--semantic-only { border-color: rgba(230,184,0,0.32); background: rgba(20,23,31,0.7); }
+        .actor-topo-cell::before {
+          content: '';
+          position: absolute;
+          left: 50%;
+          top: 0;
+          width: 36%;
+          height: 1px;
+          transform: translateX(-50%);
+          background: linear-gradient(90deg, transparent 0%, var(--tier-color) 50%, transparent 100%);
+          opacity: 0.65;
+        }
+        .actor-topo-cell[data-tier="HIGH"]     { --tier-color: #ff6b6b; --cell-tier-glow: rgba(255,107,107,0.06); }
+        .actor-topo-cell[data-tier="ELEVATED"] { --tier-color: #ff9e4a; --cell-tier-glow: rgba(255,158,74,0.06); }
+        .actor-topo-cell[data-tier="MODERATE"] { --tier-color: #ffd700; --cell-tier-glow: rgba(255,215,0,0.05); }
+        .actor-topo-cell[data-tier="LOW"]      { --tier-color: #64ffda; --cell-tier-glow: rgba(100,255,218,0.05); }
+        .actor-topo-cell--grounded::before     { background: linear-gradient(90deg, transparent 0%, rgba(74,158,255,0.5) 50%, transparent 100%); }
+        .actor-topo-cell--semantic-only        {
+          background:
+            radial-gradient(80% 90% at 50% 0%, rgba(28,32,40,0.7) 0%, transparent 85%),
+            repeating-linear-gradient(45deg, rgba(230,184,0,0.04) 0, rgba(230,184,0,0.04) 4px, transparent 4px, transparent 8px);
+        }
+        .actor-topo-cell--semantic-only::before { background: linear-gradient(90deg, transparent 0%, rgba(230,184,0,0.55) 50%, transparent 100%); }
         .actor-topo-cell-role {
           font-size: 9px;
           color: #5a6580;
@@ -2750,6 +2866,19 @@ export default function LensV2FlagshipPage() {
           display: flex;
           flex-direction: column;
           gap: 10px;
+          padding: 12px 14px 12px 16px;
+          background: linear-gradient(90deg, rgba(255,158,74,0.04) 0%, transparent 70%);
+          position: relative;
+        }
+        .actor-absorption-panel::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 12px;
+          bottom: 12px;
+          width: 2px;
+          background: rgba(255,158,74,0.55);
+          filter: blur(0.4px);
         }
         .actor-absorption-domain {
           font-size: 14px;
@@ -2862,11 +2991,33 @@ export default function LensV2FlagshipPage() {
           display: grid;
           grid-template-columns: 84px 1fr;
           gap: 14px;
-          padding: 12px 14px;
-          background: rgba(8, 10, 15, 0.5);
-          border: 1px solid #1a2030;
-          border-radius: 4px;
+          padding: 14px 16px;
+          background:
+            linear-gradient(180deg, rgba(8,10,15,0.4) 0%, rgba(8,10,15,0.18) 100%);
+          border: none;
+          border-radius: 0;
           --tier-color: #6a7593;
+          position: relative;
+        }
+        .actor-signal-row::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 14px;
+          bottom: 14px;
+          width: 2px;
+          background: var(--tier-color);
+          filter: blur(0.4px);
+          opacity: 0.85;
+        }
+        .actor-signal-row + .actor-signal-row::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 16px;
+          right: 16px;
+          height: 1px;
+          background: linear-gradient(90deg, transparent 0%, rgba(74,158,255,0.12) 50%, transparent 100%);
         }
         .actor-signal-row[data-tier="HIGH"]     { --tier-color: #ff6b6b; }
         .actor-signal-row[data-tier="ELEVATED"] { --tier-color: #ff9e4a; }
@@ -2957,10 +3108,31 @@ export default function LensV2FlagshipPage() {
           font-size: 13px;
           color: #c5cce3;
           line-height: 1.6;
-          padding: 14px 16px;
-          background: rgba(230,184,0,0.05);
-          border-left: 2px solid rgba(230,184,0,0.4);
-          border-radius: 0 4px 4px 0;
+          padding: 14px 16px 14px 18px;
+          background:
+            linear-gradient(90deg, rgba(230,184,0,0.07) 0%, rgba(230,184,0,0.02) 35%, transparent 80%);
+          border: none;
+          border-radius: 0;
+          position: relative;
+        }
+        .actor-inference-statement::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 14px;
+          bottom: 14px;
+          width: 2px;
+          background: rgba(230,184,0,0.55);
+          filter: blur(0.5px);
+        }
+        .actor-inference-statement::after {
+          /* governance contour — broader band that extends behind the statement */
+          content: '';
+          position: absolute;
+          inset: -8px -16px;
+          background:
+            radial-gradient(70% 100% at 0% 50%, rgba(230,184,0,0.04) 0%, transparent 70%);
+          z-index: -1;
         }
         .actor-inference-rules {
           display: grid;
@@ -3006,11 +3178,29 @@ export default function LensV2FlagshipPage() {
         }
         .rep-board-envelope {
           position: relative;
-          width: 220px;
-          height: 220px;
+          width: 320px;
+          height: 320px;
           display: flex;
           align-items: center;
           justify-content: center;
+        }
+        .rep-board-envelope::before {
+          /* Outer atmospheric ring — projection-grade halo */
+          content: '';
+          position: absolute;
+          inset: -36px;
+          border-radius: 50%;
+          border: 1px solid var(--state-border);
+          opacity: 0.42;
+        }
+        .rep-board-envelope::after {
+          /* Far outer atmospheric ring — barely visible, projection ceremony */
+          content: '';
+          position: absolute;
+          inset: -88px;
+          border-radius: 50%;
+          border: 1px dashed var(--state-border);
+          opacity: 0.18;
         }
         .rep-board-envelope-arc {
           position: absolute;
@@ -3021,9 +3211,9 @@ export default function LensV2FlagshipPage() {
         }
         .rep-board-envelope-mask {
           position: absolute;
-          inset: 14px;
+          inset: 22px;
           border-radius: 50%;
-          background: rgba(11, 13, 18, 0.92);
+          background: rgba(11, 13, 18, 0.94);
         }
         .rep-board-envelope-center {
           position: relative;
@@ -3033,10 +3223,10 @@ export default function LensV2FlagshipPage() {
           gap: 4px;
         }
         .rep-board-envelope-state {
-          font-size: 36px;
+          font-size: 48px;
           font-weight: 600;
           color: var(--state-color);
-          letter-spacing: -0.012em;
+          letter-spacing: -0.014em;
           line-height: 1;
           transition: color 0.4s;
         }

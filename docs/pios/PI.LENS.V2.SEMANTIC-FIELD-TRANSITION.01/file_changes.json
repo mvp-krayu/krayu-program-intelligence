@@ -1,0 +1,38 @@
+{
+  "stream": "PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01",
+  "branch": "work/lens-v2-productization",
+  "created": [
+    "docs/psee/PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01/SEMANTIC_FIELD_TRANSITION_MODEL.md",
+    "docs/psee/PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01/SEMANTIC_SPATIAL_COMPOSITION_GUIDE.md",
+    "docs/psee/PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01/BALANCED_FIELD_EVOLUTION.md",
+    "docs/psee/PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01/DENSE_TOPOLOGY_FIELD_EVOLUTION.md",
+    "docs/psee/PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01/INVESTIGATION_TRACE_FIELD_EVOLUTION.md",
+    "docs/psee/PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01/BOARDROOM_PROJECTION_FIELD_EVOLUTION.md",
+    "docs/psee/PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01/SEMANTIC_ATMOSPHERIC_LAYERING.md",
+    "docs/psee/PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01/VAULT_SUBSTRATE_VISUALIZATION_MODEL.md",
+    "docs/psee/PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01/SEMANTIC_FIELD_ANTI_PATTERNS.md",
+    "docs/psee/PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01/PLAYWRIGHT_SEMANTIC_FIELD_AUDIT.md",
+    "docs/psee/PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01/validation_log.json",
+    "docs/psee/PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01/screenshots/balanced_1440x900_full.png",
+    "docs/psee/PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01/screenshots/balanced_1440x900_viewport.png",
+    "docs/psee/PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01/screenshots/dense_1440x900_full.png",
+    "docs/psee/PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01/screenshots/dense_1440x900_viewport.png",
+    "docs/psee/PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01/screenshots/investigation_1440x900_full.png",
+    "docs/psee/PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01/screenshots/investigation_1440x900_viewport.png",
+    "docs/psee/PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01/screenshots/boardroom_1440x900_full.png",
+    "docs/psee/PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01/screenshots/boardroom_1440x900_viewport.png",
+    "docs/pios/PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01/execution_report.md",
+    "docs/pios/PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01/file_changes.json",
+    "docs/pios/PI.LENS.V2.SEMANTIC-FIELD-TRANSITION.01/CLOSURE.md"
+  ],
+  "modified": [
+    "app/execlens-demo/pages/lens-v2-flagship.js"
+  ],
+  "deleted": [],
+  "validators_changed": [],
+  "code_paths_touched": [
+    "app/execlens-demo/pages/lens-v2-flagship.js"
+  ],
+  "runtime_impact": "Visual evolution. The .actor shared shell loses its border/background/border-radius — actors render as zones in an atmospheric field rather than as cards. Per-mode .rep-field gradients add atmospheric signatures (BALANCED state-color landscape, DENSE three pressure-tier glow centers, INVESTIGATION blue-to-yellow corridor, BOARDROOM single central radial). Resolution Boundary cells, Topology cells, Signal Stack rows all dissolve their borders into rails-and-glow zones. Inference Prohibition gains a governance contour. BOARDROOM Confidence Envelope ring grows from 220px to 320px with two additional outer atmospheric rings. ExecutiveInterpretation becomes mode-reactive (label / tone / section labels / accent color per lens). No behavior change to render-state vocabulary, qualifier semantics, propagation logic, governance pass/fail, evidence-block content. No new API endpoints. Route compiles and renders cleanly at HTTP 200 across all four lenses.",
+  "notes": "Single source-file change. Adds INTERP_MODE_FRAMING constant. Modifies .actor shell, .rep-field per-mode gradients, .actor-resolution-cell, .actor-topo-cell, .actor-signal-row, .actor-inference-statement, .actor-absorption-panel, .rep-board-envelope, .rep-board-envelope-state. 8 Playwright screenshots produced as visual evidence. No new dependencies. Static report artifacts continue as named references only — no HTML body inlined. Substrate hydration is visually implied via lineage hashes / applied-rule chips / backing-state differentiation / field gradients."
+}
