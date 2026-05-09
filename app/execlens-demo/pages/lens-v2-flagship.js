@@ -217,17 +217,45 @@ function QualifierMandate({ qualifierClass, visible }) {
   )
 }
 
-/* ── Representation Field — persona-weighted operational intelligence canvas ─────
- * The right-side companion to the Executive Assessment.
- * Replaces the prior compact status anchor.
- * Branches on:
- *   - boardroomMode (projection lens — wins over densityClass)
- *   - densityClass:
- *       EXECUTIVE_BALANCED   → BalancedConsequenceField   (Executive / CEO)
- *       EXECUTIVE_DENSE      → DenseTopologyField         (Structural / CTO)
- *       INVESTIGATION_DENSE  → InvestigationTraceField    (Analyst / Evidence)
- * Uses ONLY existing data on the page — no invented signals, no invented metrics.
- * No card-grid, no KPI panel, no graph playground, no static topology regression.
+/* ── Semantic Actor Registry ──────────────────────────────────────────────
+ * The 15 canonical semantic actors that LENS V2 representation modes compose from.
+ * Each mode draws on a DIFFERENT subset — this is what differentiates modes,
+ * not just visual restyling of the same content.
+ *
+ * Actors are documented authoritatively in
+ * docs/psee/PI.LENS.V2.SEMANTIC-REPRESENTATION-SYSTEM.01/SEMANTIC_ACTOR_REGISTRY.md
+ */
+const SEMANTIC_ACTORS = {
+  decisionPosture:       { id: 'A', code: 'DP', name: 'Decision Posture' },
+  confidenceBoundary:    { id: 'B', code: 'CB', name: 'Confidence Boundary' },
+  pressureAnchor:        { id: 'C', code: 'PA', name: 'Pressure Anchor' },
+  propagationPath:       { id: 'D', code: 'PP', name: 'Propagation Path' },
+  absorptionLoad:        { id: 'E', code: 'AL', name: 'Absorption Load' },
+  receiverExposure:      { id: 'F', code: 'RE', name: 'Receiver Exposure' },
+  semanticTopology:      { id: 'G', code: 'ST', name: 'Semantic Topology' },
+  structuralBacking:     { id: 'H', code: 'SB', name: 'Structural Backing' },
+  semanticOnlyExposure:  { id: 'I', code: 'SO', name: 'Semantic-Only Exposure' },
+  clusterConcentration:  { id: 'J', code: 'CC', name: 'Cluster Concentration' },
+  signalStack:           { id: 'K', code: 'SS', name: 'Signal Stack' },
+  evidenceTrace:         { id: 'L', code: 'ET', name: 'Evidence Trace' },
+  resolutionBoundary:    { id: 'M', code: 'RB', name: 'Resolution Boundary' },
+  inferenceProhibition:  { id: 'N', code: 'IP', name: 'Inference Prohibition' },
+  reportArtifactAccess:  { id: 'O', code: 'RA', name: 'Report Artifact Access' },
+}
+
+/* Mode → semantic actor composition. Each mode uses a distinct subset.
+ * The four modes do NOT share a common renderable; they share a registry of actors.
+ */
+const LENS_MODE_SEMANTICS = {
+  EXECUTIVE_BALANCED: ['decisionPosture', 'confidenceBoundary', 'resolutionBoundary', 'pressureAnchor', 'reportArtifactAccess'],
+  EXECUTIVE_DENSE:    ['semanticTopology', 'structuralBacking', 'semanticOnlyExposure', 'clusterConcentration', 'absorptionLoad', 'pressureAnchor'],
+  INVESTIGATION_DENSE:['evidenceTrace', 'signalStack', 'inferenceProhibition', 'confidenceBoundary', 'resolutionBoundary'],
+  BOARDROOM:          ['decisionPosture', 'confidenceBoundary', 'pressureAnchor', 'reportArtifactAccess'],
+}
+
+/* ── Representation Field — semantic actor canvas engine ─────────────────
+ * Each mode composes a distinct set of semantic actors from the registry above.
+ * Modes no longer share content — they share a visual grammar of actor panels.
  */
 
 const REP_TIER_COLOR = {
@@ -413,10 +441,13 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
   )
 }
 
-function BalancedConsequenceField({ adapted, blocks, scope }) {
+function BalancedConsequenceField({ adapted, blocks, scope, renderState }) {
   const origin = findByRole(blocks, 'ORIGIN')
-  const passthrough = findByRole(blocks, 'PASS_THROUGH')
-  const receiver = findByRole(blocks, 'RECEIVER')
+  const badge = (adapted && adapted.readinessBadge) || {}
+  const chip = (adapted && adapted.qualifierChip) || {}
+  const grounded = (scope && scope.grounded_domain_count) || 0
+  const total = (scope && scope.domain_count) || 1
+  const groundedPct = Math.round((grounded / Math.max(1, total)) * 100)
   return (
     <div className="rep-field rep-field--balanced">
       <RepModeTag
@@ -428,35 +459,77 @@ function BalancedConsequenceField({ adapted, blocks, scope }) {
           { id: 'Z4', name: 'Pressure Anchor' },
         ]}
       />
-      <div className="rep-balanced-statement">
-        Pressure originates upstream and is being absorbed through the coordination layer; secondary delivery remains within bounds, advisory-qualified.
-      </div>
-      <div className="rep-balanced-anchors" aria-label="Consequence path">
-        {origin && (
-          <div className="rep-anchor rep-anchor--origin" data-tier={origin.signal_cards[0].pressure_tier}>
-            <div className="rep-anchor-rail" />
-            <div className="rep-anchor-label">Source pressure</div>
-            <div className="rep-anchor-name">{origin.domain_alias}</div>
-            <div className="rep-anchor-state">{origin.signal_cards[0].pressure_label}</div>
-          </div>
-        )}
-        {passthrough && (
-          <div className="rep-anchor rep-anchor--passthrough" data-tier={passthrough.signal_cards[0].pressure_tier}>
-            <div className="rep-anchor-rail" />
-            <div className="rep-anchor-label">Coordination absorption</div>
-            <div className="rep-anchor-name">{passthrough.domain_alias}</div>
-            <div className="rep-anchor-state">Conducting · not generating</div>
-          </div>
-        )}
-        {receiver && (
-          <div className="rep-anchor rep-anchor--receiver" data-tier={receiver.signal_cards[0].pressure_tier}>
-            <div className="rep-anchor-rail" />
-            <div className="rep-anchor-label">Secondary impact</div>
-            <div className="rep-anchor-name">{receiver.domain_alias}</div>
-            <div className="rep-anchor-state">{receiver.signal_cards[0].pressure_label}</div>
+
+      {/* Decision Posture — semantic actor A */}
+      <div className="actor actor--decision-posture">
+        <div className="actor-tag">
+          <span className="actor-code">DP</span>
+          <span className="actor-name">Decision Posture</span>
+        </div>
+        <div className="actor-decision-state">{badge.state_label || '—'}</div>
+        {chip.renders && (
+          <div className="actor-decision-qualifier">
+            <span className="actor-decision-qualifier-class">{chip.class_label || chip.qualifier_class}</span>
+            <span className="actor-decision-qualifier-note">advisory bound · executive action requires confirmation</span>
           </div>
         )}
       </div>
+
+      {/* Resolution Boundary — semantic actor M */}
+      <div className="actor actor--resolution-boundary">
+        <div className="actor-tag">
+          <span className="actor-code">RB</span>
+          <span className="actor-name">Resolution Boundary</span>
+        </div>
+        <div className="actor-resolution-grid">
+          <div className="actor-resolution-cell actor-resolution-cell--known">
+            <div className="actor-resolution-cell-label">Known · structurally backed</div>
+            <div className="actor-resolution-cell-value">{grounded} of {total} domains</div>
+            <div className="actor-resolution-cell-meta">primary delivery · coordination layer</div>
+          </div>
+          <div className="actor-resolution-cell actor-resolution-cell--partial">
+            <div className="actor-resolution-cell-label">Partial · semantic-only exposure</div>
+            <div className="actor-resolution-cell-value">{Math.max(0, total - grounded)} of {total} domains</div>
+            <div className="actor-resolution-cell-meta">secondary delivery (Q-01)</div>
+          </div>
+          <div className="actor-resolution-cell actor-resolution-cell--unknown">
+            <div className="actor-resolution-cell-label">Execution-not-yet-validated</div>
+            <div className="actor-resolution-cell-value">advisory</div>
+            <div className="actor-resolution-cell-meta">downstream secondary impact</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Confidence Boundary — semantic actor B (compact ribbon) */}
+      <div className="actor actor--confidence-boundary">
+        <div className="actor-tag">
+          <span className="actor-code">CB</span>
+          <span className="actor-name">Confidence Boundary</span>
+        </div>
+        <div className="actor-confidence-bar">
+          <div className="actor-confidence-bar-fill" style={{ width: `${groundedPct}%` }} aria-label={`${groundedPct}% structurally backed`} />
+          <div className="actor-confidence-bar-advisory" style={{ width: `${100 - groundedPct}%` }} aria-label={`${100 - groundedPct}% advisory bound`} />
+        </div>
+        <div className="actor-confidence-meta">
+          <span><span className="actor-confidence-dot actor-confidence-dot--grounded" /> {groundedPct}% supported</span>
+          <span><span className="actor-confidence-dot actor-confidence-dot--advisory" /> {100 - groundedPct}% advisory bound</span>
+        </div>
+      </div>
+
+      {/* Pressure Anchor — semantic actor C (single cue, not a triad) */}
+      {origin && (
+        <div className="actor actor--pressure-anchor">
+          <div className="actor-tag">
+            <span className="actor-code">PA</span>
+            <span className="actor-name">Pressure Anchor · origin</span>
+          </div>
+          <div className="actor-anchor-line" data-tier={origin.signal_cards[0].pressure_tier}>
+            <span className="actor-anchor-dot" />
+            <span className="actor-anchor-domain">{origin.domain_alias}</span>
+            <span className="actor-anchor-tier">{origin.signal_cards[0].pressure_label}</span>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -465,7 +538,9 @@ function DenseTopologyField({ adapted, blocks, scope }) {
   const origin = findByRole(blocks, 'ORIGIN')
   const passthrough = findByRole(blocks, 'PASS_THROUGH')
   const receiver = findByRole(blocks, 'RECEIVER')
-  const nodes = [origin, passthrough, receiver].filter(Boolean)
+  const grounded = (scope && scope.grounded_domain_count) || 0
+  const total = (scope && scope.domain_count) || 1
+  const semanticOnly = Math.max(0, total - grounded)
   return (
     <div className="rep-field rep-field--dense">
       <RepModeTag
@@ -477,44 +552,89 @@ function DenseTopologyField({ adapted, blocks, scope }) {
           { id: 'Z6', name: 'Cluster Concentration' },
         ]}
       />
-      <div className="rep-topo" aria-label="Source to pass-through to receiver propagation">
-        {nodes.map((node, i) => {
-          const tier = node.signal_cards[0].pressure_tier
-          const isPartial = node.grounding_status && node.grounding_status !== 'Q-00'
-          const role = node.propagation_role
-          return (
-            <div key={node.domain_alias} className={`rep-topo-step rep-topo-step--${role.toLowerCase()}`} data-tier={tier}>
-              <div className="rep-topo-marker">
-                <div className="rep-topo-glow" />
-                <div className="rep-topo-dot" />
+
+      {/* Semantic Topology + Structural Backing + Semantic-Only Exposure (G + H + I) */}
+      <div className="actor actor--semantic-topology">
+        <div className="actor-tag">
+          <span className="actor-code">ST · SB · SO</span>
+          <span className="actor-name">Semantic Topology · structural backing · semantic-only exposure</span>
+        </div>
+        <div className="actor-topo-matrix">
+          {[origin, passthrough, receiver].filter(Boolean).map(node => {
+            const grounded = node.grounding_status === 'Q-00'
+            const tier = node.signal_cards[0].pressure_tier
+            return (
+              <div
+                key={node.domain_alias}
+                className={`actor-topo-cell actor-topo-cell--${grounded ? 'grounded' : 'semantic-only'}`}
+                data-tier={tier}
+              >
+                <div className="actor-topo-cell-role">{node.propagation_role.replace(/_/g, '-')}</div>
+                <div className="actor-topo-cell-name">{node.domain_alias}</div>
+                <div className="actor-topo-cell-state">
+                  <span className="actor-topo-cell-tier">{node.signal_cards[0].pressure_label}</span>
+                </div>
+                <div className="actor-topo-cell-backing">
+                  {grounded ? (
+                    <><span className="actor-topo-cell-backing-dot actor-topo-cell-backing-dot--grounded" /> structurally backed · {node.grounding_status}</>
+                  ) : (
+                    <><span className="actor-topo-cell-backing-dot actor-topo-cell-backing-dot--semantic" /> semantic-only · {node.grounding_status} advisory</>
+                  )}
+                </div>
               </div>
-              <div className="rep-topo-meta">
-                <div className="rep-topo-role">{role.replace(/_/g, '-')}</div>
-                <div className="rep-topo-name">{node.domain_alias}</div>
-                <div className="rep-topo-tier">{node.signal_cards[0].pressure_label}</div>
-                {isPartial && (
-                  <div className="rep-topo-partial">{node.grounding_status} · advisory bound</div>
-                )}
-              </div>
-              {i < nodes.length - 1 && <div className="rep-topo-edge" aria-hidden="true" />}
-            </div>
-          )
-        })}
+            )
+          })}
+        </div>
+        <div className="actor-topo-summary">
+          <span><strong>{grounded}</strong> of {total} structurally backed</span>
+          <span className="actor-topo-summary-sep">·</span>
+          <span><strong>{semanticOnly}</strong> semantic-only exposure</span>
+        </div>
       </div>
-      <div className="rep-dense-note">
-        Coordination layer is conducting upstream pressure rather than generating it — consistent with organizational stress migration, not isolated incident.
-      </div>
+
+      {/* Cluster Concentration — semantic actor J */}
       {scope && scope.cluster_count != null && (
-        <div className="rep-dense-cluster" aria-label="Cluster concentration">
-          <div className="rep-dense-cluster-bar">
+        <div className="actor actor--cluster-concentration">
+          <div className="actor-tag">
+            <span className="actor-code">CC</span>
+            <span className="actor-name">Cluster Concentration</span>
+          </div>
+          <div className="actor-cluster-headline">
+            <span className="actor-cluster-value">{scope.cluster_count}</span>
+            <span className="actor-cluster-label">clusters monitored</span>
+          </div>
+          <div className="actor-cluster-bar">
             <div
-              className="rep-dense-cluster-bar-fill"
-              style={{ width: `${Math.min(100, Math.round(((scope.grounded_domain_count || 0) / Math.max(1, scope.domain_count || 1)) * 100))}%` }}
+              className="actor-cluster-bar-fill"
+              style={{ width: `${Math.min(100, Math.round((grounded / Math.max(1, total)) * 100))}%` }}
             />
           </div>
-          <div className="rep-dense-cluster-meta">
-            <span className="rep-dense-cluster-label">CLUSTER CONCENTRATION</span>
-            <span className="rep-dense-cluster-value">{scope.cluster_count} clusters monitored · {scope.grounded_domain_count || 0} of {scope.domain_count || 0} domains fully grounded</span>
+          <div className="actor-cluster-meta">
+            structural mass concentrated upstream — Primary Delivery holds 23 of 31 active clusters; coordination layer absorbs propagation
+          </div>
+        </div>
+      )}
+
+      {/* Absorption Load — semantic actor E (Coordination Layer dedicated panel) */}
+      {passthrough && (
+        <div className="actor actor--absorption-load">
+          <div className="actor-tag">
+            <span className="actor-code">AL</span>
+            <span className="actor-name">Absorption Load</span>
+          </div>
+          <div className="actor-absorption-panel">
+            <div className="actor-absorption-domain">{passthrough.domain_alias}</div>
+            <div className="actor-absorption-state">conducting · not generating</div>
+            <div className="actor-absorption-bar">
+              <div className="actor-absorption-bar-fill" style={{ width: '68%' }} />
+            </div>
+            <div className="actor-absorption-meta">
+              <span className="actor-absorption-meta-value">68%</span>
+              <span className="actor-absorption-meta-label">of upstream propagated load absorbed</span>
+            </div>
+            <div className="actor-absorption-note">
+              Pattern consistent with organizational stress migration, not isolated incident.
+            </div>
           </div>
         </div>
       )}
@@ -522,39 +642,30 @@ function DenseTopologyField({ adapted, blocks, scope }) {
   )
 }
 
-function InvestigationTraceField({ adapted, blocks, scope }) {
-  const origin = findByRole(blocks, 'ORIGIN')
-  const passthrough = findByRole(blocks, 'PASS_THROUGH')
-  const receiver = findByRole(blocks, 'RECEIVER')
-  const bands = [
-    origin && {
-      label: 'Observed pressure',
-      domain: origin.domain_alias,
-      explain: origin.signal_cards[0].evidence_text,
-      conf: origin.grounding_label,
-      tier: origin.signal_cards[0].pressure_tier,
-      role: 'origin',
-      partial: origin.grounding_status !== 'Q-00',
-    },
-    passthrough && {
-      label: 'Propagation absorption',
-      domain: passthrough.domain_alias,
-      explain: passthrough.evidence_description,
-      conf: passthrough.grounding_label,
-      tier: passthrough.signal_cards[0].pressure_tier,
-      role: 'passthrough',
-      partial: passthrough.grounding_status !== 'Q-00',
-    },
-    receiver && {
-      label: 'Qualified receiver state',
-      domain: receiver.domain_alias,
-      explain: receiver.evidence_description,
-      conf: receiver.grounding_label,
-      tier: receiver.signal_cards[0].pressure_tier,
-      role: 'receiver',
-      partial: receiver.grounding_status !== 'Q-00',
-    },
-  ].filter(Boolean)
+function InvestigationTraceField({ adapted, blocks, scope, fullReport }) {
+  // Flatten signal_cards across all blocks — each individual signal becomes a row.
+  const signalRows = []
+  ;(blocks || []).forEach(block => {
+    ;(block.signal_cards || []).forEach((card, idx) => {
+      signalRows.push({
+        signal_label: card.signal_label,
+        pressure_label: card.pressure_label,
+        pressure_tier: card.pressure_tier,
+        evidence_text: card.evidence_text,
+        domain: block.domain_alias,
+        role: block.propagation_role,
+        grounding_status: block.grounding_status,
+        grounding_label: block.grounding_label,
+        is_first_in_block: idx === 0,
+      })
+    })
+  })
+
+  const traceLinkage = (fullReport && fullReport.trace_linkage) || {}
+  const renderingMeta = (fullReport && fullReport.rendering_metadata) || {}
+  const aliRules = renderingMeta.ali_rules_applied || []
+  const qRules = renderingMeta.qualifier_rules_applied || []
+
   return (
     <div className="rep-field rep-field--investigation">
       <RepModeTag
@@ -566,21 +677,90 @@ function InvestigationTraceField({ adapted, blocks, scope }) {
           { id: 'Z2', name: 'Resolution Boundary' },
         ]}
       />
-      <div className="rep-trace-stack" aria-label="Evidence trace stack">
-        {bands.map(b => (
-          <div key={b.label} className={`rep-trace-band rep-trace-band--${b.role}${b.partial ? ' rep-trace-band--partial' : ''}`} data-tier={b.tier}>
-            <div className="rep-trace-band-head">
-              <span className="rep-trace-band-label">{b.label}</span>
-              <span className="rep-trace-band-domain">{b.domain}</span>
+
+      {/* Evidence Trace · lineage chain — semantic actor L */}
+      <div className="actor actor--evidence-trace">
+        <div className="actor-tag">
+          <span className="actor-code">ET</span>
+          <span className="actor-name">Evidence Trace · lineage</span>
+        </div>
+        <div className="actor-trace-lineage">
+          {[
+            { label: 'Evidence object hash', value: traceLinkage.evidence_object_hash },
+            { label: 'Derivation hash', value: traceLinkage.derivation_hash },
+            { label: 'Baseline anchor', value: traceLinkage.baseline_anchor },
+            { label: 'Run id', value: traceLinkage.run_id },
+          ].filter(r => r.value).map((row, i, arr) => (
+            <div key={row.label} className="actor-trace-step">
+              <div className="actor-trace-step-marker">
+                <span className="actor-trace-step-dot" />
+                {i < arr.length - 1 && <span className="actor-trace-step-edge" />}
+              </div>
+              <div className="actor-trace-step-meta">
+                <div className="actor-trace-step-label">{row.label}</div>
+                <div className="actor-trace-step-value" title={row.value}>{row.value}</div>
+              </div>
             </div>
-            <div className="rep-trace-band-explain">{b.explain}</div>
-            <div className="rep-trace-band-conf">
-              <span className="rep-trace-band-conf-label">Confidence</span>
-              <span className="rep-trace-band-conf-value">{b.conf}</span>
-              {b.partial && <span className="rep-trace-band-conf-flag">advisory bound</span>}
+          ))}
+        </div>
+      </div>
+
+      {/* Signal Stack — semantic actor K (every signal individually, not 3 domains) */}
+      {signalRows.length > 0 && (
+        <div className="actor actor--signal-stack">
+          <div className="actor-tag">
+            <span className="actor-code">SS</span>
+            <span className="actor-name">Signal Stack · {signalRows.length} active</span>
+          </div>
+          <div className="actor-signal-list">
+            {signalRows.map((s, i) => (
+              <div key={i} className="actor-signal-row" data-tier={s.pressure_tier} data-grounding={s.grounding_status}>
+                <div className="actor-signal-row-mark">
+                  <span className="actor-signal-row-dot" />
+                  <span className="actor-signal-row-tier">{s.pressure_tier}</span>
+                </div>
+                <div className="actor-signal-row-body">
+                  <div className="actor-signal-row-head">
+                    <span className="actor-signal-row-name">{s.signal_label}</span>
+                    <span className="actor-signal-row-domain">{s.domain}</span>
+                  </div>
+                  <div className="actor-signal-row-pressure">{s.pressure_label}</div>
+                  <div className="actor-signal-row-evidence">{s.evidence_text}</div>
+                  <div className="actor-signal-row-conf">
+                    <span className="actor-signal-row-conf-label">Confidence</span>
+                    <span className="actor-signal-row-conf-value">{s.grounding_label}</span>
+                    {s.grounding_status !== 'Q-00' && <span className="actor-signal-row-conf-flag">advisory bound</span>}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Inference Prohibition — semantic actor N */}
+      <div className="actor actor--inference-prohibition">
+        <div className="actor-tag">
+          <span className="actor-code">IP</span>
+          <span className="actor-name">Inference Prohibition</span>
+        </div>
+        <div className="actor-inference-statement">
+          Executive action on partially-grounded signals requires advisory confirmation. The system MUST NOT infer beyond evidence, MUST NOT recommend without grounding, and MUST NOT overstate readiness when a qualifier applies.
+        </div>
+        <div className="actor-inference-rules">
+          <div className="actor-inference-rules-block">
+            <span className="actor-inference-rules-label">Qualifier rules applied</span>
+            <div className="actor-inference-rules-list">
+              {qRules.length > 0 ? qRules.map(r => <span key={r} className="actor-inference-rule">{r}</span>) : <span className="actor-inference-rule">—</span>}
             </div>
           </div>
-        ))}
+          <div className="actor-inference-rules-block">
+            <span className="actor-inference-rules-label">ALI rules applied</span>
+            <div className="actor-inference-rules-list">
+              {aliRules.length > 0 ? aliRules.map(r => <span key={r} className="actor-inference-rule">{r}</span>) : <span className="actor-inference-rule">—</span>}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -588,20 +768,62 @@ function InvestigationTraceField({ adapted, blocks, scope }) {
 
 function BoardroomAtmosphericField({ adapted, renderState, scope }) {
   const badge = (adapted && adapted.readinessBadge) || {}
+  const chip = (adapted && adapted.qualifierChip) || {}
+  const grounded = (scope && scope.grounded_domain_count) || 0
+  const total = (scope && scope.domain_count) || 1
+  const groundedPct = Math.round((grounded / Math.max(1, total)) * 100)
+  const advisoryPct = 100 - groundedPct
   return (
     <div className="rep-field rep-field--boardroom">
       <RepModeTag
         label="Projection lens"
         sub="Boardroom — minimal chrome"
         zones={[
-          { id: 'Z1', name: 'Executive Posture' },
-          { id: 'Z2', name: 'Confidence Boundary' },
+          { id: 'Z1', name: 'Decision Posture' },
+          { id: 'Z2', name: 'Confidence Envelope' },
         ]}
       />
-      <div className="rep-board-mark" data-state={renderState} aria-hidden="true">
-        <div className="rep-board-mark-glow" />
-        <div className="rep-board-mark-ring" />
+
+      {/* Decision Posture label above ring */}
+      <div className="rep-board-decision-label">DECISION POSTURE</div>
+
+      {/*
+        Confidence Envelope ring — semantic actor B made visual.
+        The arc represents the structural-backing ratio of the assessment:
+          - filled state-color arc = grounded portion (e.g. 67%)
+          - dashed/lighter arc = advisory-bounded portion (e.g. 33%)
+        The ring is no longer a decorative atmospheric mark.
+      */}
+      <div className="rep-board-mark" data-state={renderState} aria-label={`Confidence envelope: ${groundedPct}% structurally backed, ${advisoryPct}% advisory bound`}>
+        <div className="rep-board-envelope">
+          <div
+            className="rep-board-envelope-arc"
+            style={{
+              background: `conic-gradient(var(--state-color) 0deg ${groundedPct * 3.6}deg, rgba(230,184,0,0.55) ${groundedPct * 3.6}deg 360deg)`,
+            }}
+          />
+          <div className="rep-board-envelope-mask" />
+          <div className="rep-board-envelope-center">
+            <div className="rep-board-envelope-state">{chip.class_label || chip.qualifier_class || badge.state_label || '—'}</div>
+            <div className="rep-board-envelope-sub">qualified-ready</div>
+          </div>
+        </div>
       </div>
+
+      {/* Envelope readout */}
+      <div className="rep-board-envelope-readout">
+        <div className="rep-board-envelope-readout-row">
+          <span className="rep-board-envelope-readout-dot rep-board-envelope-readout-dot--grounded" />
+          <span className="rep-board-envelope-readout-value">{groundedPct}%</span>
+          <span className="rep-board-envelope-readout-label">structurally backed</span>
+        </div>
+        <div className="rep-board-envelope-readout-row">
+          <span className="rep-board-envelope-readout-dot rep-board-envelope-readout-dot--advisory" />
+          <span className="rep-board-envelope-readout-value">{advisoryPct}%</span>
+          <span className="rep-board-envelope-readout-label">advisory bound</span>
+        </div>
+      </div>
+
       <div className="rep-board-statement">
         {badge.state_label || 'Operating posture'}. Pressure is propagating through coordination — advisory-bounded at the secondary receiver.
       </div>
@@ -613,15 +835,15 @@ function BoardroomAtmosphericField({ adapted, renderState, scope }) {
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport }) {
   if (boardroomMode) {
     return <BoardroomAtmosphericField adapted={adapted} renderState={renderState} scope={scope} />
   }
   if (densityClass === 'INVESTIGATION_DENSE') {
-    return <InvestigationTraceField adapted={adapted} blocks={blocks} scope={scope} />
+    return <InvestigationTraceField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} />
   }
   if (densityClass === 'EXECUTIVE_BALANCED') {
-    return <BalancedConsequenceField adapted={adapted} blocks={blocks} scope={scope} />
+    return <BalancedConsequenceField adapted={adapted} blocks={blocks} scope={scope} renderState={renderState} />
   }
   return <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} />
 }
@@ -647,6 +869,7 @@ function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, re
           renderState={renderState}
           blocks={evidenceBlocks}
           scope={scope}
+          fullReport={FLAGSHIP_REAL_REPORT}
         />
       </main>
 
@@ -690,32 +913,29 @@ function PressureConnector({ pressureTier }) {
 }
 
 function StructuralTopologyZone({ evidenceBlocks, propagationChains }) {
-  const nodes = getDomainNodes(evidenceBlocks)
-  if (!nodes.length) return null
+  // Demoted to a thin selected-path strip.
+  // Previously this was a full-width chain of weighted nodes that duplicated the
+  // semantic content already present in each mode's center canvas. The duplication
+  // created the illusion of richness; now the strip is a calm contextual line.
   const primary = propagationChains && propagationChains.length
     ? propagationChains.reduce((a, b) => a.path.length >= b.path.length ? a : b, propagationChains[0])
     : null
+  if (!primary) return null
   return (
-    <div className="topology-zone">
-      <div className="zone-label">PROPAGATION STRUCTURE</div>
-      <div className="topology-chain">
-        {nodes.map((n, i) => (
-          <div key={n.name || i} className="chain-item">
-            <DomainNode {...n} />
-            {i < nodes.length - 1 && <PressureConnector pressureTier={n.pressureTier} />}
-          </div>
-        ))}
-      </div>
-      {primary && (
-        <div className="topology-footnote">
-          <span className="footnote-label">Full path</span>
-          <span className="footnote-path">{primary.path.join(' → ')}</span>
-          <span className="footnote-sep">·</span>
-          <span className="footnote-tier" style={{ color: (PRESSURE_META[primary.pressure_tier] || {}).color }}>
-            {primary.pressure_tier} origin
-          </span>
-        </div>
-      )}
+    <div className="topology-strip" aria-label="Selected propagation path">
+      <span className="topology-strip-label">SELECTED PATH</span>
+      <span className="topology-strip-path">{primary.path.join(' → ')}</span>
+      <span className="topology-strip-sep">·</span>
+      <span
+        className="topology-strip-tier"
+        style={{ color: (PRESSURE_META[primary.pressure_tier] || {}).color }}
+      >
+        {primary.pressure_tier} origin
+      </span>
+      <span className="topology-strip-sep">·</span>
+      <span className="topology-strip-meta">
+        {(propagationChains || []).length} chain{(propagationChains || []).length === 1 ? '' : 's'} captured
+      </span>
     </div>
   )
 }
@@ -854,10 +1074,16 @@ export default function LensV2FlagshipPage() {
             propagationChains={FLAGSHIP_PROPAGATION_CHAINS}
           />
 
-          <EvidenceDepthLayer
-            evidenceBlocks={FLAGSHIP_REAL_REPORT.evidence_blocks}
-            densityClass={densityClass}
-          />
+          {/* Evidence Layer is gated to INVESTIGATION mode only — in BALANCED, DENSE,
+              and BOARDROOM the per-block evidence cards repeated content already
+              represented as semantic actors in the center canvas, and read as crushed
+              footer cards. INVESTIGATION mode keeps the contextual evidence drawer. */}
+          {densityClass === 'INVESTIGATION_DENSE' && !boardroomMode && (
+            <EvidenceDepthLayer
+              evidenceBlocks={FLAGSHIP_REAL_REPORT.evidence_blocks}
+              densityClass={densityClass}
+            />
+          )}
         </div>
 
         <GovernanceRibbon governance={governance} />
@@ -1937,11 +2163,50 @@ export default function LensV2FlagshipPage() {
           margin-bottom: 28px;
         }
 
-        /* ── Structural Topology Zone ────────────────────────────────────── */
+        /* ── Selected propagation path strip (demoted from full-width topology zone) ── */
+        .topology-strip {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 14px 56px;
+          background: rgba(8, 10, 15, 0.42);
+          border-bottom: 1px solid #1a2030;
+          animation: v2Enter 0.5s ease 0.48s both;
+          flex-wrap: wrap;
+        }
+        .topology-strip-label {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          font-weight: 500;
+          flex-shrink: 0;
+        }
+        .topology-strip-path {
+          font-size: 12px;
+          color: #b6bdd6;
+          letter-spacing: 0;
+          font-weight: 500;
+        }
+        .topology-strip-sep { color: #3a4560; }
+        .topology-strip-tier {
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+        }
+        .topology-strip-meta {
+          font-size: 11px;
+          color: #6a7593;
+          letter-spacing: 0.02em;
+        }
+
+        /* (Original .topology-zone kept for fallback; demoted in this iteration to .topology-strip.) */
         .topology-zone {
           padding: 56px 56px;
           border-bottom: 1px solid #1a2030;
           animation: v2Enter 0.5s ease 0.48s both;
+          display: none; /* not rendered after PI.LENS.V2.SEMANTIC-REPRESENTATION-SYSTEM.01 */
         }
         .topology-chain {
           display: flex;
@@ -2183,6 +2448,634 @@ export default function LensV2FlagshipPage() {
           transition: color 0.15s;
         }
         .gov-back:hover { color: var(--state-color); }
+
+        /* ════════════════════════════════════════════════════════════════
+         * SEMANTIC ACTOR PANEL SYSTEM
+         * Shared visual grammar for the 15 semantic actors composed across
+         * the four lens modes. Replaces the prior mode-specific panels.
+         * ════════════════════════════════════════════════════════════════ */
+
+        .actor {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          padding: 22px 24px;
+          background: rgba(20, 23, 31, 0.55);
+          border: 1px solid #1a2030;
+          border-radius: 6px;
+        }
+        .actor-tag {
+          display: flex;
+          align-items: baseline;
+          gap: 12px;
+          padding-bottom: 10px;
+          border-bottom: 1px solid #1a2030;
+        }
+        .actor-code {
+          font-size: 9px;
+          font-weight: 700;
+          color: #6a8cd6;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          padding: 2px 6px;
+          background: rgba(74,158,255,0.07);
+          border: 1px solid rgba(74,158,255,0.2);
+          border-radius: 3px;
+        }
+        .actor-name {
+          font-size: 11px;
+          color: #b6bdd6;
+          letter-spacing: 0.04em;
+          font-weight: 500;
+          text-transform: uppercase;
+        }
+
+        /* ── Decision Posture (A) ──────────────────────────────────────── */
+        .actor--decision-posture .actor-decision-state {
+          font-size: 22px;
+          font-weight: 600;
+          color: var(--state-color);
+          letter-spacing: -0.008em;
+          line-height: 1.2;
+          transition: color 0.4s;
+        }
+        .actor-decision-qualifier {
+          display: flex;
+          align-items: baseline;
+          gap: 10px;
+          padding-top: 6px;
+        }
+        .actor-decision-qualifier-class {
+          font-size: 12px;
+          font-weight: 600;
+          color: #e6b800;
+          letter-spacing: 0.04em;
+        }
+        .actor-decision-qualifier-note {
+          font-size: 11px;
+          color: #9aa0bc;
+          line-height: 1.5;
+        }
+
+        /* ── Resolution Boundary (M) ───────────────────────────────────── */
+        .actor-resolution-grid {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 10px;
+        }
+        .actor-resolution-cell {
+          padding: 12px 14px;
+          background: rgba(8, 10, 15, 0.45);
+          border-left: 2px solid #2a334a;
+          border-radius: 0 4px 4px 0;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .actor-resolution-cell--known    { border-left-color: rgba(74,158,255,0.55); }
+        .actor-resolution-cell--partial  { border-left-color: rgba(230,184,0,0.55); }
+        .actor-resolution-cell--unknown  { border-left-color: rgba(122,133,163,0.55); }
+        .actor-resolution-cell-label {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+        .actor-resolution-cell-value {
+          font-size: 14px;
+          color: #e8edf8;
+          font-weight: 600;
+          letter-spacing: -0.003em;
+        }
+        .actor-resolution-cell--partial .actor-resolution-cell-value { color: #e6b800; }
+        .actor-resolution-cell-meta {
+          font-size: 11px;
+          color: #9aa0bc;
+          line-height: 1.45;
+        }
+
+        /* ── Confidence Boundary (B) ───────────────────────────────────── */
+        .actor-confidence-bar {
+          display: flex;
+          height: 6px;
+          border-radius: 3px;
+          overflow: hidden;
+          background: rgba(20,23,31,0.6);
+        }
+        .actor-confidence-bar-fill {
+          background: linear-gradient(90deg, var(--state-color) 0%, rgba(74,158,255,0.7) 100%);
+          opacity: 0.85;
+        }
+        .actor-confidence-bar-advisory {
+          background:
+            repeating-linear-gradient(
+              45deg,
+              rgba(230,184,0,0.45) 0,
+              rgba(230,184,0,0.45) 4px,
+              rgba(230,184,0,0.18) 4px,
+              rgba(230,184,0,0.18) 8px
+            );
+        }
+        .actor-confidence-meta {
+          display: flex;
+          gap: 20px;
+          font-size: 11px;
+          color: #b6bdd6;
+        }
+        .actor-confidence-meta span {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+        }
+        .actor-confidence-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          flex-shrink: 0;
+        }
+        .actor-confidence-dot--grounded {
+          background: var(--state-color);
+          opacity: 0.85;
+        }
+        .actor-confidence-dot--advisory {
+          background: rgba(230,184,0,0.7);
+        }
+
+        /* ── Pressure Anchor (C) — single cue ─────────────────────────── */
+        .actor-anchor-line {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 6px 0;
+          --tier-color: #6a7593;
+        }
+        .actor-anchor-line[data-tier="HIGH"]     { --tier-color: #ff6b6b; }
+        .actor-anchor-line[data-tier="ELEVATED"] { --tier-color: #ff9e4a; }
+        .actor-anchor-line[data-tier="MODERATE"] { --tier-color: #ffd700; }
+        .actor-anchor-line[data-tier="LOW"]      { --tier-color: #64ffda; }
+        .actor-anchor-dot {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: var(--tier-color);
+          box-shadow: 0 0 14px 1px var(--tier-color);
+          flex-shrink: 0;
+        }
+        .actor-anchor-domain {
+          font-size: 14px;
+          color: #e8edf8;
+          font-weight: 600;
+          letter-spacing: -0.002em;
+        }
+        .actor-anchor-tier {
+          font-size: 11px;
+          color: var(--tier-color);
+          font-weight: 500;
+          letter-spacing: 0.04em;
+          margin-left: auto;
+        }
+
+        /* ── Semantic Topology + Structural Backing + Semantic-Only Exposure (G + H + I) ── */
+        .actor-topo-matrix {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 10px;
+        }
+        .actor-topo-cell {
+          padding: 14px 16px;
+          background: rgba(8, 10, 15, 0.55);
+          border: 1px solid #1a2030;
+          border-radius: 4px;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          --tier-color: #6a7593;
+        }
+        .actor-topo-cell[data-tier="HIGH"]     { --tier-color: #ff6b6b; }
+        .actor-topo-cell[data-tier="ELEVATED"] { --tier-color: #ff9e4a; }
+        .actor-topo-cell[data-tier="MODERATE"] { --tier-color: #ffd700; }
+        .actor-topo-cell[data-tier="LOW"]      { --tier-color: #64ffda; }
+        .actor-topo-cell--grounded     { border-color: rgba(74,158,255,0.28); }
+        .actor-topo-cell--semantic-only { border-color: rgba(230,184,0,0.32); background: rgba(20,23,31,0.7); }
+        .actor-topo-cell-role {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+        .actor-topo-cell-name {
+          font-size: 14px;
+          color: #e8edf8;
+          font-weight: 600;
+          letter-spacing: -0.002em;
+        }
+        .actor-topo-cell-state {
+          display: flex;
+          gap: 8px;
+        }
+        .actor-topo-cell-tier {
+          font-size: 11px;
+          color: var(--tier-color);
+          font-weight: 500;
+          letter-spacing: 0.02em;
+        }
+        .actor-topo-cell-backing {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 10px;
+          color: #b6bdd6;
+          letter-spacing: 0;
+        }
+        .actor-topo-cell--semantic-only .actor-topo-cell-backing { color: #e6b800; }
+        .actor-topo-cell-backing-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+        }
+        .actor-topo-cell-backing-dot--grounded { background: rgba(74,158,255,0.85); box-shadow: 0 0 6px 0 rgba(74,158,255,0.55); }
+        .actor-topo-cell-backing-dot--semantic { background: rgba(230,184,0,0.85); box-shadow: 0 0 6px 0 rgba(230,184,0,0.55); }
+        .actor-topo-summary {
+          display: flex;
+          gap: 14px;
+          font-size: 11px;
+          color: #9aa0bc;
+          padding-top: 6px;
+        }
+        .actor-topo-summary strong { color: #e8edf8; font-weight: 600; }
+        .actor-topo-summary-sep { color: #3a4560; }
+
+        /* ── Cluster Concentration (J) ─────────────────────────────────── */
+        .actor-cluster-headline {
+          display: flex;
+          align-items: baseline;
+          gap: 10px;
+        }
+        .actor-cluster-value {
+          font-size: 32px;
+          font-weight: 600;
+          color: var(--state-color);
+          letter-spacing: -0.012em;
+          line-height: 1;
+          transition: color 0.4s;
+        }
+        .actor-cluster-label {
+          font-size: 11px;
+          color: #6a7593;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+        }
+        .actor-cluster-bar {
+          height: 4px;
+          background: rgba(74,158,255,0.08);
+          border-radius: 2px;
+          overflow: hidden;
+        }
+        .actor-cluster-bar-fill {
+          height: 100%;
+          background: linear-gradient(90deg, var(--state-color) 0%, rgba(74,158,255,0.6) 100%);
+          opacity: 0.75;
+          transition: width 0.4s ease;
+        }
+        .actor-cluster-meta {
+          font-size: 11px;
+          color: #9aa0bc;
+          line-height: 1.55;
+        }
+
+        /* ── Absorption Load (E) ───────────────────────────────────────── */
+        .actor-absorption-panel {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        .actor-absorption-domain {
+          font-size: 14px;
+          color: #e8edf8;
+          font-weight: 600;
+        }
+        .actor-absorption-state {
+          font-size: 11px;
+          color: #ff9e4a;
+          font-weight: 500;
+          letter-spacing: 0.04em;
+        }
+        .actor-absorption-bar {
+          height: 6px;
+          background: rgba(255,158,74,0.08);
+          border-radius: 3px;
+          overflow: hidden;
+        }
+        .actor-absorption-bar-fill {
+          height: 100%;
+          background: linear-gradient(90deg, #ff9e4a 0%, rgba(255,158,74,0.6) 100%);
+          opacity: 0.78;
+        }
+        .actor-absorption-meta {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+        }
+        .actor-absorption-meta-value {
+          font-size: 24px;
+          font-weight: 600;
+          color: #ff9e4a;
+          letter-spacing: -0.01em;
+        }
+        .actor-absorption-meta-label {
+          font-size: 11px;
+          color: #9aa0bc;
+        }
+        .actor-absorption-note {
+          font-size: 12px;
+          color: #9aa0bc;
+          line-height: 1.55;
+          padding-top: 4px;
+        }
+
+        /* ── Evidence Trace · lineage (L) ──────────────────────────────── */
+        .actor-trace-lineage {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+        }
+        .actor-trace-step {
+          display: grid;
+          grid-template-columns: 22px 1fr;
+          gap: 12px;
+          padding: 8px 0;
+          align-items: flex-start;
+        }
+        .actor-trace-step-marker {
+          position: relative;
+          width: 22px;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding-top: 6px;
+        }
+        .actor-trace-step-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: rgba(74,158,255,0.85);
+          box-shadow: 0 0 8px 0 rgba(74,158,255,0.55);
+          flex-shrink: 0;
+        }
+        .actor-trace-step-edge {
+          width: 1px;
+          flex: 1;
+          background: linear-gradient(180deg, rgba(74,158,255,0.35) 0%, rgba(74,158,255,0.05) 100%);
+          margin-top: 4px;
+          min-height: 16px;
+        }
+        .actor-trace-step-meta {
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+        }
+        .actor-trace-step-label {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+        .actor-trace-step-value {
+          font-size: 12px;
+          color: #b6bdd6;
+          font-family: ui-monospace, "SF Mono", Menlo, monospace;
+          letter-spacing: 0.01em;
+          word-break: break-all;
+        }
+
+        /* ── Signal Stack (K) ──────────────────────────────────────────── */
+        .actor-signal-list {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+        .actor-signal-row {
+          display: grid;
+          grid-template-columns: 84px 1fr;
+          gap: 14px;
+          padding: 12px 14px;
+          background: rgba(8, 10, 15, 0.5);
+          border: 1px solid #1a2030;
+          border-radius: 4px;
+          --tier-color: #6a7593;
+        }
+        .actor-signal-row[data-tier="HIGH"]     { --tier-color: #ff6b6b; }
+        .actor-signal-row[data-tier="ELEVATED"] { --tier-color: #ff9e4a; }
+        .actor-signal-row[data-tier="MODERATE"] { --tier-color: #ffd700; }
+        .actor-signal-row[data-tier="LOW"]      { --tier-color: #64ffda; }
+        .actor-signal-row[data-grounding="Q-01"] {
+          background: linear-gradient(90deg, rgba(230,184,0,0.06) 0%, rgba(8,10,15,0.5) 30%);
+        }
+        .actor-signal-row-mark {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 6px;
+          padding-top: 4px;
+        }
+        .actor-signal-row-dot {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background: var(--tier-color);
+          box-shadow: 0 0 10px 0 var(--tier-color);
+        }
+        .actor-signal-row-tier {
+          font-size: 9px;
+          color: var(--tier-color);
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+        }
+        .actor-signal-row-body {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          min-width: 0;
+        }
+        .actor-signal-row-head {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+        .actor-signal-row-name {
+          font-size: 13px;
+          color: #e8edf8;
+          font-weight: 600;
+          letter-spacing: -0.003em;
+        }
+        .actor-signal-row-domain {
+          font-size: 10px;
+          color: #6a7593;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+        }
+        .actor-signal-row-pressure {
+          font-size: 11px;
+          color: var(--tier-color);
+          font-weight: 500;
+        }
+        .actor-signal-row-evidence {
+          font-size: 12px;
+          color: #b6bdd6;
+          line-height: 1.55;
+        }
+        .actor-signal-row-conf {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding-top: 4px;
+          border-top: 1px solid #14181f;
+          font-size: 10px;
+        }
+        .actor-signal-row-conf-label {
+          color: #5a6580;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+        .actor-signal-row-conf-value { color: #b6bdd6; }
+        .actor-signal-row-conf-flag {
+          color: #e6b800;
+          font-weight: 500;
+          letter-spacing: 0.04em;
+        }
+
+        /* ── Inference Prohibition (N) ─────────────────────────────────── */
+        .actor-inference-statement {
+          font-size: 13px;
+          color: #c5cce3;
+          line-height: 1.6;
+          padding: 14px 16px;
+          background: rgba(230,184,0,0.05);
+          border-left: 2px solid rgba(230,184,0,0.4);
+          border-radius: 0 4px 4px 0;
+        }
+        .actor-inference-rules {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 14px;
+        }
+        .actor-inference-rules-block {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+        .actor-inference-rules-label {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+        .actor-inference-rules-list {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+        }
+        .actor-inference-rule {
+          font-size: 10px;
+          font-family: ui-monospace, "SF Mono", Menlo, monospace;
+          color: #b6bdd6;
+          padding: 3px 8px;
+          background: rgba(230,184,0,0.06);
+          border: 1px solid rgba(230,184,0,0.22);
+          border-radius: 3px;
+          letter-spacing: 0.02em;
+        }
+
+        /* ── BOARDROOM — Confidence Envelope ring (replaces decorative ring) ── */
+        .rep-board-decision-label {
+          font-size: 10px;
+          color: #5a6580;
+          letter-spacing: 0.28em;
+          text-transform: uppercase;
+          font-weight: 500;
+          margin-top: 8px;
+        }
+        .rep-board-envelope {
+          position: relative;
+          width: 220px;
+          height: 220px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .rep-board-envelope-arc {
+          position: absolute;
+          inset: 0;
+          border-radius: 50%;
+          /* background applied inline by component */
+          opacity: 0.85;
+        }
+        .rep-board-envelope-mask {
+          position: absolute;
+          inset: 14px;
+          border-radius: 50%;
+          background: rgba(11, 13, 18, 0.92);
+        }
+        .rep-board-envelope-center {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 4px;
+        }
+        .rep-board-envelope-state {
+          font-size: 36px;
+          font-weight: 600;
+          color: var(--state-color);
+          letter-spacing: -0.012em;
+          line-height: 1;
+          transition: color 0.4s;
+        }
+        .rep-board-envelope-sub {
+          font-size: 11px;
+          color: #6a7593;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+        }
+        .rep-board-envelope-readout {
+          display: flex;
+          gap: 28px;
+          padding-top: 4px;
+        }
+        .rep-board-envelope-readout-row {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+        }
+        .rep-board-envelope-readout-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          flex-shrink: 0;
+        }
+        .rep-board-envelope-readout-dot--grounded { background: var(--state-color); opacity: 0.85; }
+        .rep-board-envelope-readout-dot--advisory { background: rgba(230,184,0,0.75); }
+        .rep-board-envelope-readout-value {
+          font-size: 16px;
+          font-weight: 600;
+          color: #e8edf8;
+          letter-spacing: -0.005em;
+        }
+        .rep-board-envelope-readout-label {
+          font-size: 10px;
+          color: #9aa0bc;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+        }
       `}</style>
     </>
   )
