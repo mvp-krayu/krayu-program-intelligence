@@ -3,7 +3,7 @@
 1. **Status:** COMPLETE
 
 2. **Scope:**
-   Operationalize the visual doctrine established in `PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01` through nine cinematic reference deep-dives, a Playwright-driven inspection framework, a cross-reference comparison matrix, and a dashboard syndrome detection guide. Scope is L7 (51.x) demo / narrative layer only.
+   Operationalize the visual doctrine established in `PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01` through nine cinematic reference deep-dives, a Playwright-driven inspection framework, a cross-reference comparison matrix, and a dashboard syndrome detection guide. Scope is the cinematic realization layer of the LENS V2 flagship executive experience only.
 
 3. **Change log:**
    - Created 9 reference deep-dives (Palantir, Bloomberg, visionOS, Linear, Raycast, Arc, Stripe/Vercel, NASA/SpaceX, FT/Editorial), each ~10 sections covering positioning, what to borrow, what to avoid, typography / color / motion / chrome reads, and inspection cues.
@@ -31,7 +31,7 @@
    - No new API calls.
    - No mutation of Brain authority.
    - No cross-layer execution.
-   - L7 / 51.x scope only.
+   - Cinematic realization layer scope only (LENS V2 flagship executive experience).
    - 4_BRAIN_ALIGNMENT not triggered.
    - Branch `work/lens-v2-productization` flagged as outside §3 authorized set; established LENS V2 session pattern; proceeded with note.
 

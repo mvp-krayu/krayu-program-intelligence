@@ -1,0 +1,208 @@
+{
+  "stream": "PI.LENS.V2.TERMINOLOGY-NORMALIZATION.01",
+  "branch": "work/lens-v2-productization",
+  "applied_at": "2026-05-09",
+  "replacement_classes": {
+    "scope_phrase": {
+      "from_examples": [
+        "L7 LENS flagship executive surface (51.x demo/narrative layer)",
+        "L7 (51.x) demo/narrative layer",
+        "L7 (51.x) demo / narrative layer"
+      ],
+      "to": "cinematic realization layer of the LENS V2 flagship executive experience"
+    },
+    "scope_string_short": {
+      "from_examples": [
+        "L7 / 51.x scope only",
+        "L7-only doctrine",
+        "L7-only"
+      ],
+      "to": "Cinematic realization layer scope only (LENS V2 flagship executive experience)"
+    },
+    "json_scope_field": {
+      "from_examples": [
+        "L7 LENS visual doctrine",
+        "L7 LENS reference mapping and Playwright inspection framework"
+      ],
+      "to_examples": [
+        "LENS V2 flagship cinematic realization doctrine",
+        "LENS V2 flagship cinematic reference mapping and Playwright inspection framework"
+      ]
+    },
+    "doctrine_kind": {
+      "from_examples": [
+        "L7 visual doctrine",
+        "L7 visual direction"
+      ],
+      "to_examples": [
+        "cinematic realization doctrine",
+        "cinematic realization"
+      ]
+    }
+  },
+  "occurrences": [
+    {
+      "id": 1,
+      "file": "docs/psee/PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01/VISUAL_DIRECTION_DOCTRINE.md",
+      "context": "front-matter Scope line",
+      "from": "**Scope:** L7 LENS flagship executive surface (51.x demo/narrative layer)",
+      "to": "**Scope:** LENS V2 flagship executive experience — cinematic realization layer",
+      "class": "scope_phrase"
+    },
+    {
+      "id": 2,
+      "file": "docs/psee/PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01/VISUAL_DIRECTION_DOCTRINE.md",
+      "context": "§14 GOVERNANCE AND BOUNDARY — boundary clause + addition of explicit Brain-authority exclusions",
+      "from": "It operates entirely within the L7 demo/narrative layer (51.x). It MUST NOT mutate upstream truth or claim authority over Product, Canonical, Publish, or Code brain content.",
+      "to": "It operates entirely within the cinematic realization layer of the LENS V2 flagship executive experience. (Followed by explicit enumerated NOT-mutation list and explicit ONLY-governs list per contract MANDATORY BOUNDARY CLARIFICATION.)",
+      "class": "scope_phrase + boundary_clarification_addition"
+    },
+    {
+      "id": 3,
+      "file": "docs/psee/PI.LENS.V2.CINEMATIC-REFERENCE-MAPPING.01/PLAYWRIGHT_VISUAL_INSPECTION_FRAMEWORK.md",
+      "context": "§13 BOUNDARIES — bullet",
+      "from": "- operates within L7 (51.x) demo / narrative layer",
+      "to": "- operates within the cinematic realization layer of the LENS V2 flagship executive experience",
+      "class": "scope_phrase"
+    },
+    {
+      "id": 4,
+      "file": "docs/pios/PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01/validation_log.json",
+      "context": "scope field",
+      "from": "\"scope\": \"L7 LENS visual doctrine\",",
+      "to": "\"scope\": \"LENS V2 flagship cinematic realization doctrine\",",
+      "class": "json_scope_field"
+    },
+    {
+      "id": 5,
+      "file": "docs/pios/PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01/validation_log.json",
+      "context": "non_conflict_with_governance check notes",
+      "from": "Doctrine scope is explicitly L7 (51.x); no claim of upstream authority. Doctrine §14 names governance precedence.",
+      "to": "Doctrine scope is explicitly the cinematic realization layer of the LENS V2 flagship executive experience; no claim of upstream authority. Doctrine §14 names governance precedence.",
+      "class": "scope_phrase"
+    },
+    {
+      "id": 6,
+      "file": "docs/pios/PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01/CLOSURE.md",
+      "context": "item 2 Scope",
+      "from": "Scope is L7 (51.x) demo / narrative layer only.",
+      "to": "Scope is the cinematic realization layer of the LENS V2 flagship executive experience only.",
+      "class": "scope_phrase"
+    },
+    {
+      "id": 7,
+      "file": "docs/pios/PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01/CLOSURE.md",
+      "context": "item 6 Governance bullet",
+      "from": "- L7 / 51.x scope only.",
+      "to": "- Cinematic realization layer scope only (LENS V2 flagship executive experience).",
+      "class": "scope_string_short"
+    },
+    {
+      "id": 8,
+      "file": "docs/pios/PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01/execution_report.md",
+      "context": "pre-flight table — Boundary violation row",
+      "from": "NO — work scoped to L7 (51.x) demo / narrative layer only",
+      "to": "NO — work scoped to the cinematic realization layer of the LENS V2 flagship executive experience only",
+      "class": "scope_phrase"
+    },
+    {
+      "id": 9,
+      "file": "docs/pios/PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01/execution_report.md",
+      "context": "pre-flight table — 4_BRAIN_ALIGNMENT row",
+      "from": "scope is L7 visual doctrine only",
+      "to": "scope is cinematic realization doctrine only",
+      "class": "doctrine_kind"
+    },
+    {
+      "id": 10,
+      "file": "docs/pios/PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01/execution_report.md",
+      "context": "pre-flight table — Reference Boundary Contract row",
+      "from": "no cross-layer claims; L7-only doctrine",
+      "to": "no cross-layer claims; cinematic realization layer doctrine only",
+      "class": "scope_string_short"
+    },
+    {
+      "id": 11,
+      "file": "docs/pios/PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01/execution_report.md",
+      "context": "§7 Method bullet",
+      "from": "doctrine governs L7 visual direction only and never claims authority over upstream truth.",
+      "to": "doctrine governs cinematic realization only and never claims authority over upstream truth.",
+      "class": "doctrine_kind"
+    },
+    {
+      "id": 12,
+      "file": "docs/pios/PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01/execution_report.md",
+      "context": "§10 Governance confirmation bullet",
+      "from": "- L7 / 51.x scope only",
+      "to": "- Cinematic realization layer scope only (LENS V2 flagship executive experience)",
+      "class": "scope_string_short"
+    },
+    {
+      "id": 13,
+      "file": "docs/pios/PI.LENS.V2.CINEMATIC-REFERENCE-MAPPING.01/validation_log.json",
+      "context": "scope field",
+      "from": "\"scope\": \"L7 LENS reference mapping and Playwright inspection framework\",",
+      "to": "\"scope\": \"LENS V2 flagship cinematic reference mapping and Playwright inspection framework\",",
+      "class": "json_scope_field"
+    },
+    {
+      "id": 14,
+      "file": "docs/pios/PI.LENS.V2.CINEMATIC-REFERENCE-MAPPING.01/CLOSURE.md",
+      "context": "item 2 Scope",
+      "from": "Scope is L7 (51.x) demo / narrative layer only.",
+      "to": "Scope is the cinematic realization layer of the LENS V2 flagship executive experience only.",
+      "class": "scope_phrase"
+    },
+    {
+      "id": 15,
+      "file": "docs/pios/PI.LENS.V2.CINEMATIC-REFERENCE-MAPPING.01/CLOSURE.md",
+      "context": "item 6 Governance bullet",
+      "from": "- L7 / 51.x scope only.",
+      "to": "- Cinematic realization layer scope only (LENS V2 flagship executive experience).",
+      "class": "scope_string_short"
+    },
+    {
+      "id": 16,
+      "file": "docs/pios/PI.LENS.V2.CINEMATIC-REFERENCE-MAPPING.01/execution_report.md",
+      "context": "pre-flight table — Boundary violation row",
+      "from": "NO — work scoped to L7 (51.x) demo / narrative layer only",
+      "to": "NO — work scoped to the cinematic realization layer of the LENS V2 flagship executive experience only",
+      "class": "scope_phrase"
+    },
+    {
+      "id": 17,
+      "file": "docs/pios/PI.LENS.V2.CINEMATIC-REFERENCE-MAPPING.01/execution_report.md",
+      "context": "pre-flight table — Reference Boundary Contract row",
+      "from": "no cross-layer claims; L7-only",
+      "to": "no cross-layer claims; cinematic realization layer only",
+      "class": "scope_string_short"
+    },
+    {
+      "id": 18,
+      "file": "docs/pios/PI.LENS.V2.CINEMATIC-REFERENCE-MAPPING.01/execution_report.md",
+      "context": "§11 Governance confirmation bullet",
+      "from": "- L7 / 51.x scope only",
+      "to": "- Cinematic realization layer scope only (LENS V2 flagship executive experience)",
+      "class": "scope_string_short"
+    }
+  ],
+  "totals": {
+    "occurrences": 18,
+    "files_modified": 9,
+    "by_target_term": {
+      "L7": 18,
+      "51.x": 13,
+      "demo/narrative": 5
+    }
+  },
+  "preservation": {
+    "cinematic_direction_preserved": true,
+    "playwright_framework_preserved": true,
+    "executive_cognition_preserved": true,
+    "anti_dashboard_enforcement_preserved": true,
+    "reference_deep_dives_preserved": true,
+    "rubric_axes_preserved": true,
+    "thresholds_preserved": true,
+    "section_structure_preserved": true
+  }
+}

@@ -1,7 +1,7 @@
 {
   "stream": "PI.LENS.V2.CINEMATIC-REFERENCE-MAPPING.01",
   "validated_at": "2026-05-09",
-  "scope": "L7 LENS reference mapping and Playwright inspection framework",
+  "scope": "LENS V2 flagship cinematic reference mapping and Playwright inspection framework",
   "checks": [
     {
       "name": "alignment_with_visual_direction_doctrine",

@@ -265,7 +265,7 @@ The Playwright workflow runs:
 
 This workflow:
 
-- operates within L7 (51.x) demo / narrative layer
+- operates within the cinematic realization layer of the LENS V2 flagship executive experience
 - inspects rendered LENS surfaces only
 - does not test functional correctness of underlying data pipelines
 - does not validate evidence semantics

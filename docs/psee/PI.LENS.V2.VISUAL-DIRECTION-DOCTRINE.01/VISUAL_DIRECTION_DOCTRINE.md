@@ -3,7 +3,7 @@
 **Stream:** PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01
 **Authority:** PI.LENS.V2.CINEMATIC-DESIGN-DIRECTION.01
 **Status:** AUTHORITATIVE — binds all future LENS visual evolution
-**Scope:** L7 LENS flagship executive surface (51.x demo/narrative layer)
+**Scope:** LENS V2 flagship executive experience — cinematic realization layer
 
 ---
 
@@ -388,7 +388,30 @@ This doctrine does **not** govern:
 - Brain authority structure
 - Core / Activation / Runtime branch ownership
 
-It operates entirely within the L7 demo/narrative layer (51.x). It MUST NOT mutate upstream truth or claim authority over Product, Canonical, Publish, or Code brain content.
+It operates entirely within the cinematic realization layer of the LENS V2 flagship executive experience.
+
+This stream:
+
+- does NOT mutate Brain authority
+- does NOT redefine PiOS governance
+- does NOT redefine Product Brain ownership
+- does NOT redefine Canonical Brain authority
+- does NOT redefine Publish Brain authority
+- does NOT redefine Code Brain ownership
+- does NOT redefine evidence semantics
+- does NOT alter upstream truth, structural meaning, or any non-visual contract
+
+This stream ONLY governs:
+
+- cinematic realization
+- visual direction
+- executive experience
+- motion systems
+- typography systems
+- atmospheric composition
+- executive cognition
+- anti-dashboard enforcement
+- screenshot evaluation doctrine
 
 If a future contract attempts to use this doctrine to override structural meaning, the doctrine refuses authority and the boundary contract wins.
 

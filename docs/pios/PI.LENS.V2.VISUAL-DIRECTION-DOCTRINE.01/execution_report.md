@@ -17,11 +17,11 @@ work/lens-v2-productization
 | Current repository                                | krayu-program-intelligence                                             |
 | Current branch                                    | work/lens-v2-productization                                            |
 | Branch in authorized set                          | NO — `work/*` not in §3 authorized list                                |
-| Boundary violation (planned)                      | NO — work scoped to L7 (51.x) demo / narrative layer only              |
+| Boundary violation (planned)                      | NO — work scoped to the cinematic realization layer of the LENS V2 flagship executive experience only |
 | Branch-domain note                                | LENS V2 productization stream pattern; canonically belongs to feature/runtime-demo. Flagged per protocol; proceeding under established session pattern. |
 | Inputs present                                    | YES — contract text, prior LENS V2 streams, doctrine references        |
-| 4_BRAIN_ALIGNMENT trigger evaluation              | NOT TRIGGERED — contract explicitly excludes mutation of Canonical / Product / Publish / Code brain content; scope is L7 visual doctrine only |
-| Reference Boundary Contract trigger               | NOT TRIGGERED — no cross-layer claims; L7-only doctrine                 |
+| 4_BRAIN_ALIGNMENT trigger evaluation              | NOT TRIGGERED — contract explicitly excludes mutation of Canonical / Product / Publish / Code brain content; scope is cinematic realization doctrine only |
+| Reference Boundary Contract trigger               | NOT TRIGGERED — no cross-layer claims; cinematic realization layer doctrine only |
 | ARTIFACT MODE                                     | PRODUCE                                                                |
 
 ## 5. Scope
@@ -69,7 +69,7 @@ The five doctrine documents were composed as an integrated cinematic doctrine, n
 
 - Anchor references back to `VISUAL_DIRECTION_DOCTRINE.md` from the four supporting documents.
 - A consistent vocabulary for focal dominance, structural seriousness, anti-dashboard, and executive cognition.
-- A consistent boundary statement — doctrine governs L7 visual direction only and never claims authority over upstream truth.
+- A consistent boundary statement — doctrine governs cinematic realization only and never claims authority over upstream truth.
 
 Cross-checks performed:
 - Coherence — each clause in the doctrine traces to support in at least one of the supporting documents.
@@ -108,7 +108,7 @@ No existing files modified. No code paths touched. No runtime impact.
 - No new API calls
 - No mutation of Brain authority
 - No cross-layer execution
-- L7 / 51.x scope only
+- Cinematic realization layer scope only (LENS V2 flagship executive experience)
 
 ## 11. Notes
 

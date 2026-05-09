@@ -3,7 +3,7 @@
 1. **Status:** COMPLETE
 
 2. **Scope:**
-   Establish the authoritative cinematic visual doctrine for the LENS flagship executive intelligence surface. Scope is L7 (51.x) demo / narrative layer only. No upstream truth, governance, or Brain authority is mutated.
+   Establish the authoritative cinematic visual doctrine for the LENS flagship executive intelligence surface. Scope is the cinematic realization layer of the LENS V2 flagship executive experience only. No upstream truth, governance, or Brain authority is mutated.
 
 3. **Change log:**
    - Created `VISUAL_DIRECTION_DOCTRINE.md` (16 sections) — authoritative visual constitution.
@@ -32,7 +32,7 @@
    - No new API calls.
    - No mutation of Brain authority (Canonical / Product / Publish / Code).
    - No cross-layer execution.
-   - L7 / 51.x scope only.
+   - Cinematic realization layer scope only (LENS V2 flagship executive experience).
    - 4_BRAIN_ALIGNMENT not triggered (contract explicitly excludes Brain mutation).
    - Branch `work/lens-v2-productization` flagged as outside §3 authorized set; established LENS V2 session pattern; proceeded with branch-violation note recorded above.
 

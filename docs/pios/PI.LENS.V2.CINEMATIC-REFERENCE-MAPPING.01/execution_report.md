@@ -21,10 +21,10 @@ work/lens-v2-productization
 | Current repository                                | krayu-program-intelligence                                             |
 | Current branch                                    | work/lens-v2-productization                                            |
 | Branch in authorized set                          | NO — `work/*` not in §3 authorized list (same flag as companion)       |
-| Boundary violation (planned)                      | NO — work scoped to L7 (51.x) demo / narrative layer only              |
+| Boundary violation (planned)                      | NO — work scoped to the cinematic realization layer of the LENS V2 flagship executive experience only |
 | Inputs present                                    | YES — contract text, doctrine deliverables, reference system knowledge |
 | 4_BRAIN_ALIGNMENT trigger evaluation              | NOT TRIGGERED — visual reference deep-dives only; no Brain mutation     |
-| Reference Boundary Contract trigger               | NOT TRIGGERED — no cross-layer claims; L7-only                         |
+| Reference Boundary Contract trigger               | NOT TRIGGERED — no cross-layer claims; cinematic realization layer only |
 | ARTIFACT MODE                                     | PRODUCE                                                                |
 
 ## 6. Scope
@@ -125,7 +125,7 @@ No existing files modified. No code paths touched. No runtime impact.
 - No new API calls
 - No mutation of Brain authority
 - No cross-layer execution
-- L7 / 51.x scope only
+- Cinematic realization layer scope only (LENS V2 flagship executive experience)
 
 ## 12. Notes
 

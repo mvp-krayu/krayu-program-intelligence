@@ -1,7 +1,7 @@
 {
   "stream": "PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01",
   "validated_at": "2026-05-09",
-  "scope": "L7 LENS visual doctrine",
+  "scope": "LENS V2 flagship cinematic realization doctrine",
   "checks": [
     {
       "name": "doctrine_coherence",
@@ -13,7 +13,7 @@
       "name": "non_conflict_with_governance",
       "description": "No doctrine clause contradicts git_structure_contract.md or reference_boundary_contract.md.",
       "result": "PASS",
-      "notes": "Doctrine scope is explicitly L7 (51.x); no claim of upstream authority. Doctrine §14 names governance precedence."
+      "notes": "Doctrine scope is explicitly the cinematic realization layer of the LENS V2 flagship executive experience; no claim of upstream authority. Doctrine §14 names governance precedence."
     },
     {
       "name": "compatibility_with_lens_v2_flagship_architecture",
