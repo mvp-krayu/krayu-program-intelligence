@@ -265,12 +265,87 @@ function RepEvidenceState({ adapted, scope, compact }) {
   )
 }
 
-function RepModeTag({ label, sub }) {
+function RepModeTag({ label, sub, zones }) {
   return (
     <div className="rep-mode-tag" role="presentation">
       <span className="rep-mode-tag-label">{label}</span>
       <span className="rep-mode-tag-sub">{sub}</span>
+      {zones && zones.length > 0 && (
+        <div className="rep-mode-tag-zones" aria-label="Active semantic zones">
+          {zones.map(z => (
+            <span key={z.id} className="rep-zone-chip" title={`Semantic zone: ${z.name}`}>
+              <span className="rep-zone-chip-id">{z.id}</span>
+              <span className="rep-zone-chip-name">{z.name}</span>
+            </span>
+          ))}
+        </div>
+      )}
     </div>
+  )
+}
+
+/* Static report artifacts — recognized as official generated Tier-1 / Tier-2 deliverables.
+ * NOTE: live binding to a real client/run pipeline is not yet implemented at this surface.
+ * These entries are guarded placeholders documented in
+ * docs/psee/PI.LENS.V2.PREMIUM-INTERACTIVE-EXECUTIVE-LAYER.01/FUTURE_CLIENT_RUN_BINDING_CONTRACT.md
+ */
+const REPORT_PACK_ARTIFACTS = [
+  {
+    id: 'decision-surface',
+    name: 'Decision Surface',
+    tier: 'DECISION',
+    file: 'lens_decision_surface.html',
+    binding_path: '/api/report-pack?artifact=decision-surface&client=<client_id>&run=<run_id>',
+  },
+  {
+    id: 'tier1-narrative',
+    name: 'Tier-1 Narrative Brief',
+    tier: 'TIER-1',
+    file: 'lens_tier1_narrative_brief.html',
+    binding_path: '/api/report-pack?artifact=tier1-narrative&client=<client_id>&run=<run_id>',
+  },
+  {
+    id: 'tier1-evidence',
+    name: 'Tier-1 Evidence Brief',
+    tier: 'TIER-1',
+    file: 'lens_tier1_evidence_brief.html',
+    binding_path: '/api/report-pack?artifact=tier1-evidence&client=<client_id>&run=<run_id>',
+  },
+  {
+    id: 'tier2-diagnostic',
+    name: 'Tier-2 Diagnostic Narrative',
+    tier: 'TIER-2',
+    file: 'lens_tier2_diagnostic_narrative.html',
+    binding_path: '/api/report-pack?artifact=tier2-diagnostic&client=<client_id>&run=<run_id>',
+  },
+]
+
+function ReportPackBand() {
+  return (
+    <section className="report-pack" aria-label="Report Pack — official Tier-1 / Tier-2 deliverables (binding pending)">
+      <div className="report-pack-head">
+        <span className="report-pack-label">REPORT PACK</span>
+        <span className="report-pack-sub">Official generated Tier-1 / Tier-2 deliverables — interactive layer above static artifacts</span>
+      </div>
+      <div className="report-pack-list">
+        {REPORT_PACK_ARTIFACTS.map(a => (
+          <div
+            key={a.id}
+            className="report-pack-item"
+            aria-disabled="true"
+            title={`Future binding: ${a.binding_path} · file ${a.file} · pending real client/run integration`}
+            data-binding="pending"
+          >
+            <div className="report-pack-tier">{a.tier}</div>
+            <div className="report-pack-name">{a.name}</div>
+            <div className="report-pack-state">
+              <span className="report-pack-state-dot" aria-hidden="true" />
+              binding pending
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
   )
 }
 
@@ -280,7 +355,15 @@ function BalancedConsequenceField({ adapted, blocks, scope }) {
   const receiver = findByRole(blocks, 'RECEIVER')
   return (
     <div className="rep-field rep-field--balanced">
-      <RepModeTag label="Executive lens" sub="CEO · consequence-first read" />
+      <RepModeTag
+        label="Executive lens"
+        sub="CEO · consequence-first read"
+        zones={[
+          { id: 'Z1', name: 'Executive Posture' },
+          { id: 'Z2', name: 'Resolution Boundary' },
+          { id: 'Z4', name: 'Pressure Anchor' },
+        ]}
+      />
       <div className="rep-balanced-statement">
         Pressure originates upstream and is being absorbed through the coordination layer; secondary delivery remains within bounds, advisory-qualified.
       </div>
@@ -322,7 +405,15 @@ function DenseTopologyField({ adapted, blocks, scope }) {
   const nodes = [origin, passthrough, receiver].filter(Boolean)
   return (
     <div className="rep-field rep-field--dense">
-      <RepModeTag label="Structural lens" sub="CTO · structural cause and propagation" />
+      <RepModeTag
+        label="Structural lens"
+        sub="CTO · structural cause and propagation"
+        zones={[
+          { id: 'Z3', name: 'Semantic Topology' },
+          { id: 'Z4', name: 'Pressure Anchor' },
+          { id: 'Z6', name: 'Cluster Concentration' },
+        ]}
+      />
       <div className="rep-topo" aria-label="Source to pass-through to receiver propagation">
         {nodes.map((node, i) => {
           const tier = node.signal_cards[0].pressure_tier
@@ -350,6 +441,20 @@ function DenseTopologyField({ adapted, blocks, scope }) {
       <div className="rep-dense-note">
         Coordination layer is conducting upstream pressure rather than generating it — consistent with organizational stress migration, not isolated incident.
       </div>
+      {scope && scope.cluster_count != null && (
+        <div className="rep-dense-cluster" aria-label="Cluster concentration">
+          <div className="rep-dense-cluster-bar">
+            <div
+              className="rep-dense-cluster-bar-fill"
+              style={{ width: `${Math.min(100, Math.round(((scope.grounded_domain_count || 0) / Math.max(1, scope.domain_count || 1)) * 100))}%` }}
+            />
+          </div>
+          <div className="rep-dense-cluster-meta">
+            <span className="rep-dense-cluster-label">CLUSTER CONCENTRATION</span>
+            <span className="rep-dense-cluster-value">{scope.cluster_count} clusters monitored · {scope.grounded_domain_count || 0} of {scope.domain_count || 0} domains fully grounded</span>
+          </div>
+        </div>
+      )}
       <RepEvidenceState adapted={adapted} scope={scope} compact />
     </div>
   )
@@ -390,7 +495,15 @@ function InvestigationTraceField({ adapted, blocks, scope }) {
   ].filter(Boolean)
   return (
     <div className="rep-field rep-field--investigation">
-      <RepModeTag label="Evidence lens" sub="Analyst · evidence trace and confidence" />
+      <RepModeTag
+        label="Evidence lens"
+        sub="Analyst · evidence trace and confidence"
+        zones={[
+          { id: 'Z7', name: 'Evidence Trace' },
+          { id: 'Z5', name: 'Signal Stack' },
+          { id: 'Z2', name: 'Resolution Boundary' },
+        ]}
+      />
       <div className="rep-trace-stack" aria-label="Evidence trace stack">
         {bands.map(b => (
           <div key={b.label} className={`rep-trace-band rep-trace-band--${b.role}${b.partial ? ' rep-trace-band--partial' : ''}`} data-tier={b.tier}>
@@ -416,7 +529,14 @@ function BoardroomAtmosphericField({ adapted, renderState, scope }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   return (
     <div className="rep-field rep-field--boardroom">
-      <RepModeTag label="Projection lens" sub="Boardroom — minimal chrome" />
+      <RepModeTag
+        label="Projection lens"
+        sub="Boardroom — minimal chrome"
+        zones={[
+          { id: 'Z1', name: 'Executive Posture' },
+          { id: 'Z2', name: 'Confidence Boundary' },
+        ]}
+      />
       <div className="rep-board-mark" data-state={renderState} aria-hidden="true">
         <div className="rep-board-mark-glow" />
         <div className="rep-board-mark-ring" />
@@ -684,6 +804,8 @@ export default function LensV2FlagshipPage() {
             evidenceBlocks={FLAGSHIP_REAL_REPORT.evidence_blocks}
             densityClass={densityClass}
           />
+
+          <ReportPackBand />
         </div>
 
         <GovernanceRibbon governance={governance} />
@@ -1122,6 +1244,173 @@ export default function LensV2FlagshipPage() {
           color: #6a7593;
           letter-spacing: 0.04em;
           font-weight: 400;
+        }
+        .rep-mode-tag-zones {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px 8px;
+          margin-top: 10px;
+        }
+        .rep-zone-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 3px 8px 3px 6px;
+          background: rgba(74, 158, 255, 0.06);
+          border: 1px solid rgba(74, 158, 255, 0.18);
+          border-radius: 11px;
+          font-size: 9px;
+          letter-spacing: 0.06em;
+          color: #b6bdd6;
+          line-height: 1;
+        }
+        .rep-zone-chip-id {
+          font-weight: 600;
+          color: #6a8cd6;
+          letter-spacing: 0.08em;
+        }
+        .rep-zone-chip-name {
+          color: #9aa0bc;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+        }
+        .rep-field--boardroom .rep-mode-tag-zones {
+          justify-content: center;
+        }
+
+        /* Dense — cluster concentration panel */
+        .rep-dense-cluster {
+          padding: 14px 16px;
+          background: rgba(20, 23, 31, 0.55);
+          border-left: 2px solid rgba(74, 158, 255, 0.32);
+          border-radius: 0 4px 4px 0;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        .rep-dense-cluster-bar {
+          width: 100%;
+          height: 4px;
+          background: rgba(74, 158, 255, 0.08);
+          border-radius: 2px;
+          overflow: hidden;
+        }
+        .rep-dense-cluster-bar-fill {
+          height: 100%;
+          background: linear-gradient(90deg, var(--state-color) 0%, rgba(74,158,255,0.6) 100%);
+          opacity: 0.75;
+          transition: width 0.4s ease;
+        }
+        .rep-dense-cluster-meta {
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+        }
+        .rep-dense-cluster-label {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+        .rep-dense-cluster-value {
+          font-size: 11px;
+          color: #b6bdd6;
+          line-height: 1.5;
+        }
+
+        /* ── Report Pack — premium artifact access band ─────────────────── */
+        .report-pack {
+          padding: 28px 56px 32px;
+          background:
+            linear-gradient(180deg, rgba(8,10,15,0.45) 0%, rgba(8,10,15,0.65) 100%);
+          border-bottom: 1px solid #1a2030;
+          display: flex;
+          align-items: stretch;
+          gap: 32px;
+          animation: v2Enter 0.5s ease 0.78s both;
+        }
+        .report-pack-head {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          flex-shrink: 0;
+          min-width: 220px;
+          padding-top: 4px;
+        }
+        .report-pack-label {
+          font-size: 10px;
+          color: #b6bdd6;
+          letter-spacing: 0.24em;
+          text-transform: uppercase;
+          font-weight: 600;
+        }
+        .report-pack-sub {
+          font-size: 11px;
+          color: #6a7593;
+          letter-spacing: 0.02em;
+          line-height: 1.5;
+          max-width: 220px;
+        }
+        .report-pack-list {
+          display: grid;
+          grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+          gap: 14px;
+          flex: 1;
+          align-items: stretch;
+        }
+        @media (max-width: 1280px) {
+          .report-pack-list {
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+          }
+        }
+        .report-pack-item {
+          padding: 12px 14px;
+          background: rgba(20, 23, 31, 0.45);
+          border: 1px solid #1a2030;
+          border-radius: 4px;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          cursor: not-allowed;
+          transition: border-color 0.18s ease, background 0.18s ease;
+        }
+        .report-pack-item:hover {
+          border-color: #2a334a;
+          background: rgba(20, 23, 31, 0.65);
+        }
+        .report-pack-item[data-binding="pending"] { opacity: 0.86; }
+        .report-pack-tier {
+          font-size: 8px;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: #5a6580;
+          font-weight: 500;
+        }
+        .report-pack-name {
+          font-size: 13px;
+          color: #e8edf8;
+          font-weight: 500;
+          letter-spacing: -0.002em;
+          line-height: 1.3;
+        }
+        .report-pack-state {
+          margin-top: 4px;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 9px;
+          color: #6a7593;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+        .report-pack-state-dot {
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: #6a7593;
+          opacity: 0.6;
         }
 
         /* ── Evidence-state compact block (used by Balanced / Dense / Investigation) ── */
