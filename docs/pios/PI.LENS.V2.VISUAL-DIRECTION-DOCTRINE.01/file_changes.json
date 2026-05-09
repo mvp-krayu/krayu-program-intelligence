@@ -1,0 +1,21 @@
+{
+  "stream": "PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01",
+  "branch": "work/lens-v2-productization",
+  "created": [
+    "docs/psee/PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01/VISUAL_DIRECTION_DOCTRINE.md",
+    "docs/psee/PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01/EXECUTIVE_COGNITION_MODEL.md",
+    "docs/psee/PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01/CINEMATIC_REFERENCE_MAPPING.md",
+    "docs/psee/PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01/ANTI_DASHBOARD_ENFORCEMENT.md",
+    "docs/psee/PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01/VISUAL_EVALUATION_RUBRIC.md",
+    "docs/pios/PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01/execution_report.md",
+    "docs/pios/PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01/validation_log.json",
+    "docs/pios/PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01/file_changes.json",
+    "docs/pios/PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01/CLOSURE.md"
+  ],
+  "modified": [],
+  "deleted": [],
+  "validators_changed": [],
+  "code_paths_touched": [],
+  "runtime_impact": "none",
+  "notes": "Doctrine-only stream. No code changes. No runtime impact."
+}
