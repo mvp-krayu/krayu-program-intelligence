@@ -4107,3 +4107,14 @@ a.topo-chip:hover {
 .sqo-check--unmet { color: var(--text-muted); }
 .sqo-check--expected { color: var(--orange); }
 .sqo-check--existing { color: var(--text-dim); }
+
+/* ── Workspace Panel Transitions ─────────────────────────────────────── */
+
+.sqo-workspace-panel {
+  animation: sqo-panel-enter 0.15s ease-out;
+}
+
+@keyframes sqo-panel-enter {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

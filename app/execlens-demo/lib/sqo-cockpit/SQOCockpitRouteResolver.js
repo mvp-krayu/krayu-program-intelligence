@@ -60,6 +60,12 @@ function resolveClientList() {
   return listAllowedClientRuns();
 }
 
+function deriveSectionFromPath(urlPath) {
+  const segments = urlPath.split('/').filter(Boolean);
+  const last = segments[segments.length - 1];
+  return COCKPIT_SECTIONS.includes(last) ? last : 'overview';
+}
+
 module.exports = {
   COCKPIT_SECTIONS,
   SECTION_ROUTES,
@@ -69,4 +75,5 @@ module.exports = {
   buildSectionPath,
   buildNavigationItems,
   resolveClientList,
+  deriveSectionFromPath,
 };

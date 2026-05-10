@@ -1,47 +1,11 @@
-import SQONavigation from '../../../../../../components/sqo-cockpit/SQONavigation';
-import SQODegradedState from '../../../../../../components/sqo-cockpit/SQODegradedState';
-import MaturityProfilePanel from '../../../../../../components/sqo-cockpit/MaturityProfilePanel';
+import SQOWorkspaceShell from '../../../../../../components/sqo-cockpit/SQOWorkspaceShell';
 
 export async function getServerSideProps(context) {
-  const { resolveCockpitState } = require('../../../../../../lib/sqo-cockpit/SQOCockpitStateResolver');
-  const { validateRouteParams, buildNavigationItems } = require('../../../../../../lib/sqo-cockpit/SQOCockpitRouteResolver');
-  const { formatMaturitySection } = require('../../../../../../lib/sqo-cockpit/SQOCockpitFormatter');
-  const { buildDegradedNotice } = require('../../../../../../lib/sqo-cockpit/SQOCockpitDegradationHandler');
-
+  const { resolveWorkspaceData } = require('../../../../../../lib/sqo-cockpit/SQOWorkspaceDataResolver');
   const { client, run } = context.params;
-  const validation = validateRouteParams(client, run);
-
-  if (!validation.valid) {
-    return { props: { client, runId: run, error: validation.error, maturityData: null, navigation: null, degradation: null, degradedNotice: null } };
-  }
-
-  const state = resolveCockpitState(client, run);
-  const navigation = buildNavigationItems(client, run, 'maturity');
-  const maturityData = state.artifacts ? formatMaturitySection(state.artifacts) : null;
-  const degradedNotice = state.degradation ? buildDegradedNotice(state.degradation) : null;
-
-  return {
-    props: { client, runId: run, error: null, maturityData, navigation, degradation: state.degradation, degradedNotice },
-  };
+  return { props: resolveWorkspaceData(client, run, 'maturity') };
 }
 
-export default function SQOMaturityPage({ client, runId, error, maturityData, navigation, degradation, degradedNotice }) {
-  if (error) {
-    return (
-      <div className="sqo-cockpit sqo-cockpit--error">
-        <SQODegradedState degradation={{ state: error, reason: `Route validation failed: ${error}` }} />
-      </div>
-    );
-  }
-
-  return (
-    <div className="sqo-cockpit">
-      <SQONavigation client={client} runId={runId} activeSection="maturity" sections={navigation} degradation={degradation} />
-      <main className="sqo-cockpit__content">
-        {degradedNotice && <div className={`sqo-cockpit__notice sqo-cockpit__notice--${degradedNotice.severity.toLowerCase()}`}>{degradedNotice.message}</div>}
-        <MaturityProfilePanel maturityData={maturityData} />
-      </main>
-      <footer className="sqo-cockpit__governance">Read-only artifact consumption · No AI interpretation · Deterministic display</footer>
-    </div>
-  );
+export default function SQOMaturityPage(props) {
+  return <SQOWorkspaceShell {...props} />;
 }

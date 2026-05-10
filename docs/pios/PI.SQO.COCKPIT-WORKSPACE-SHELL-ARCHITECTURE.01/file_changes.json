@@ -1,0 +1,86 @@
+{
+  "stream": "PI.SQO.COCKPIT-WORKSPACE-SHELL-ARCHITECTURE.01",
+  "changes": [
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/SQOWorkspaceDataResolver.js",
+      "action": "CREATED",
+      "description": "Unified workspace data resolver: loads all section data in a single call, consolidating overview resolvers and all 6 section formatters"
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/SQOCockpitRouteResolver.js",
+      "action": "MODIFIED",
+      "description": "Added deriveSectionFromPath utility for URL-to-section resolution"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/SQOWorkspaceShell.jsx",
+      "action": "CREATED",
+      "description": "Persistent workspace shell component: manages activeSection state, shallow routing, panel switching, and URL synchronization"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/SQOWorkspacePanel.jsx",
+      "action": "CREATED",
+      "description": "Panel dispatcher mapping section identifiers to existing panel components"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/SQONavigation.jsx",
+      "action": "MODIFIED",
+      "description": "Added onNavigate callback prop for state-driven navigation, with Link fallback for backward compatibility"
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/index.js",
+      "action": "MODIFIED",
+      "description": "Refactored to delegate to SQOWorkspaceShell with resolveWorkspaceData"
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/debt.js",
+      "action": "MODIFIED",
+      "description": "Refactored to delegate to SQOWorkspaceShell with initialSection='debt'"
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/continuity.js",
+      "action": "MODIFIED",
+      "description": "Refactored to delegate to SQOWorkspaceShell with initialSection='continuity'"
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/maturity.js",
+      "action": "MODIFIED",
+      "description": "Refactored to delegate to SQOWorkspaceShell with initialSection='maturity'"
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/progression.js",
+      "action": "MODIFIED",
+      "description": "Refactored to delegate to SQOWorkspaceShell with initialSection='progression'"
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/evidence.js",
+      "action": "MODIFIED",
+      "description": "Refactored to delegate to SQOWorkspaceShell with initialSection='evidence'"
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/handoff.js",
+      "action": "MODIFIED",
+      "description": "Refactored to delegate to SQOWorkspaceShell with initialSection='handoff'"
+    },
+    {
+      "file": "app/execlens-demo/styles/globals.css",
+      "action": "MODIFIED",
+      "description": "Added workspace panel transition animation (sqo-panel-enter)"
+    },
+    {
+      "file": "app/execlens-demo/flagship-experience/tests/sqo-workspace-shell-architecture.test.js",
+      "action": "CREATED",
+      "description": "37 tests in 7 suites covering workspace data resolution, section equivalence, path derivation, deep-linking, navigation, governance"
+    },
+    {
+      "file": "app/execlens-demo/package.json",
+      "action": "MODIFIED",
+      "description": "Added test:sqo-workspace script and included in aggregate test"
+    }
+  ],
+  "summary": {
+    "created": 4,
+    "modified": 11,
+    "deleted": 0,
+    "total": 15
+  }
+}

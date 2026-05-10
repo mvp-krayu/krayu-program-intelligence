@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export default function SQONavigation({ client, runId, activeSection, sections, degradation }) {
+export default function SQONavigation({ client, runId, activeSection, sections, degradation, onNavigate }) {
   if (!sections || sections.length === 0) return null;
 
   const degradedSet = new Set((degradation?.degraded_sections) || []);
@@ -19,7 +19,23 @@ export default function SQONavigation({ client, runId, activeSection, sections, 
           const statusClass = isUnavailable ? 'sqo-cockpit-nav__item--unavailable'
             : isDegraded ? 'sqo-cockpit-nav__item--degraded'
             : '';
-          const activeClass = item.active ? 'sqo-cockpit-nav__item--active' : '';
+          const isActive = activeSection ? item.section === activeSection : item.active;
+          const activeClass = isActive ? 'sqo-cockpit-nav__item--active' : '';
+
+          if (onNavigate) {
+            return (
+              <li key={item.section} className={`sqo-cockpit-nav__item ${statusClass} ${activeClass}`}>
+                <a
+                  href={item.path}
+                  onClick={(e) => { e.preventDefault(); onNavigate(item.section); }}
+                >
+                  <span className="sqo-cockpit-nav__label">{item.label}</span>
+                  {isDegraded && <span className="sqo-cockpit-nav__status" title="Partial data available">⚠</span>}
+                  {isUnavailable && <span className="sqo-cockpit-nav__status" title="No data available">✕</span>}
+                </a>
+              </li>
+            );
+          }
 
           return (
             <li key={item.section} className={`sqo-cockpit-nav__item ${statusClass} ${activeClass}`}>
