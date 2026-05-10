@@ -21,6 +21,9 @@ const REGISTRY = {
   blueedge: {
     run_blueedge_productized_01_fixed: 'blueedge.run_blueedge_productized_01_fixed.json',
   },
+  fastapi: {
+    run_02_oss_fastapi_pipeline: 'fastapi.run_02_oss_fastapi_pipeline.json',
+  },
 };
 
 function resolveRepoRoot() {

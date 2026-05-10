@@ -1,0 +1,47 @@
+{
+  "manifest_version": "1.0",
+  "client": "fastapi",
+  "run_id": "run_02_oss_fastapi_pipeline",
+  "stream_anchor": "PI.LENS.V2.FASTAPI-RUNTIME-ONBOARDING.01",
+  "amendment_anchor": "docs/governance/Q02_GOVERNANCE_AMENDMENT.md",
+  "labels": {
+    "client_display_name": "FastAPI",
+    "run_display_name": "FastAPI OSS pipeline · run_02_oss_fastapi_pipeline"
+  },
+  "baseline": {
+    "governance_tag": "governed-dpsig-baseline-v1",
+    "pipeline_commit": "93098cb"
+  },
+  "artifacts": {
+    "required": {
+      "semantic_topology_model": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/semantic/topology/semantic_topology_model.json",
+      "decision_validation": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/semantic/decision/decision_validation.json",
+      "reproducibility_verdict": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/semantic/report_inputs/reproducibility_verdict.json",
+      "semantic_continuity_crosswalk": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/semantic/crosswalk/semantic_continuity_crosswalk.json",
+      "canonical_topology_40_4": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/structure/40.4/canonical_topology.json",
+      "dpsig_signal_set": "artifacts/dpsig/fastapi/run_02_oss_fastapi_pipeline/dpsig_signal_set.json"
+    },
+    "optional": {
+      "structural_topology_log_40_3": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/structure/40.3/structural_topology_log.json",
+      "signal_registry": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/vault/signal_registry.json",
+      "evidence_trace": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/vault/evidence_trace.json",
+      "vault_readiness": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/vault/vault_readiness.json",
+      "semantic_bundle_manifest": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/semantic/semantic_bundle_manifest.json",
+      "rendering_metadata": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/vault/rendering_metadata.json"
+    }
+  },
+  "report_pack": {
+    "decision-surface": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/reports/lens_decision_surface.html",
+    "tier1-narrative": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/reports/lens_tier1_narrative_brief.html",
+    "tier1-evidence": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/reports/lens_tier1_evidence_brief.html",
+    "tier2-diagnostic": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/reports/lens_tier2_diagnostic_narrative.html"
+  },
+  "governance": {
+    "lane_a_read_only": true,
+    "lane_d_dpsig_read_only": true,
+    "additive_only": true,
+    "no_ai_inference": true,
+    "no_topology_mutation": true,
+    "no_synthetic_telemetry": true
+  }
+}
