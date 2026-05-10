@@ -1,0 +1,47 @@
+{
+  "manifest_version": "1.0",
+  "client": "blueedge",
+  "run_id": "run_blueedge_productized_01_fixed",
+  "stream_anchor": "PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01",
+  "amendment_anchor": "docs/governance/Q02_GOVERNANCE_AMENDMENT.md",
+  "labels": {
+    "client_display_name": "BlueEdge",
+    "run_display_name": "BlueEdge productized · run_blueedge_productized_01_fixed"
+  },
+  "baseline": {
+    "governance_tag": "governed-dpsig-baseline-v1",
+    "pipeline_commit": "93098cb"
+  },
+  "artifacts": {
+    "required": {
+      "semantic_topology_model": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/semantic_topology_model.json",
+      "decision_validation": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/decision/decision_validation.json",
+      "reproducibility_verdict": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/report_inputs/reproducibility_verdict.json",
+      "semantic_continuity_crosswalk": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/crosswalk/semantic_continuity_crosswalk.json",
+      "canonical_topology_40_4": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/structure/40.4/canonical_topology.json",
+      "dpsig_signal_set": "artifacts/dpsig/blueedge/run_blueedge_productized_01_fixed/dpsig_signal_set.json"
+    },
+    "optional": {
+      "structural_topology_log_40_3": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/structure/40.3/structural_topology_log.json",
+      "signal_registry": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/vault/signal_registry.json",
+      "evidence_trace": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/vault/evidence_trace.json",
+      "vault_readiness": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/vault/vault_readiness.json",
+      "semantic_bundle_manifest": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/semantic_bundle_manifest.json",
+      "rendering_metadata": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/vault/rendering_metadata.json"
+    }
+  },
+  "report_pack": {
+    "decision-surface": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/lens_decision_surface.html",
+    "tier1-narrative":  "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/lens_tier1_narrative_brief.html",
+    "tier1-evidence":   "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/lens_tier1_evidence_brief.html",
+    "tier2-diagnostic": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/lens_tier2_diagnostic_narrative.html"
+  },
+  "governance": {
+    "lane_a_read_only": true,
+    "lane_d_dpsig_read_only": true,
+    "additive_only": true,
+    "no_ai_inference": true,
+    "no_topology_mutation": true,
+    "no_synthetic_telemetry": true
+  }
+}

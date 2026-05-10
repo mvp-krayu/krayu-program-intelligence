@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://krayu.local/schemas/client_run_manifest.schema.json",
+  "title": "ClientRunManifest",
+  "description": "Per-client/run declaration of the artifact paths the LENS V2 generic semantic payload resolver is allowed to read. The resolver MUST NOT infer arbitrary filesystem structure — it reads only declared paths. Stream: PI.LENS.V2.GENERIC-SEMANTIC-PAYLOAD-RESOLVER.01.",
+  "type": "object",
+  "required": [
+    "manifest_version",
+    "client",
+    "run_id",
+    "stream_anchor",
+    "baseline",
+    "artifacts",
+    "report_pack",
+    "governance"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "manifest_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+    },
+    "client": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[A-Za-z0-9_\\-]+$" },
+    "run_id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9_\\-]+$" },
+    "stream_anchor": { "type": "string" },
+    "amendment_anchor": { "type": "string" },
+    "baseline": {
+      "type": "object",
+      "required": ["governance_tag", "pipeline_commit"],
+      "properties": {
+        "governance_tag": { "type": "string" },
+        "pipeline_commit": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "artifacts": {
+      "type": "object",
+      "required": ["required", "optional"],
+      "properties": {
+        "required": {
+          "type": "object",
+          "description": "Map of canonical artifact id (semantic_topology_model, decision_validation, reproducibility_verdict, semantic_continuity_crosswalk, canonical_topology_40_4, dpsig_signal_set) to repo-relative path.",
+          "additionalProperties": { "type": "string", "minLength": 1 }
+        },
+        "optional": {
+          "type": "object",
+          "description": "Map of optional artifact id to repo-relative path. Missing optionals surface as unresolved_gaps.",
+          "additionalProperties": { "type": "string", "minLength": 1 }
+        }
+      },
+      "additionalProperties": false
+    },
+    "report_pack": {
+      "type": "object",
+      "description": "Map of artifact id to repo-relative HTML report path.",
+      "patternProperties": {
+        "^[A-Za-z0-9_\\-]+$": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "governance": {
+      "type": "object",
+      "required": ["lane_a_read_only", "lane_d_dpsig_read_only", "additive_only"],
+      "properties": {
+        "lane_a_read_only": { "type": "boolean", "const": true },
+        "lane_d_dpsig_read_only": { "type": "boolean", "const": true },
+        "additive_only": { "type": "boolean", "const": true },
+        "no_ai_inference": { "type": "boolean" },
+        "no_topology_mutation": { "type": "boolean" },
+        "no_synthetic_telemetry": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "labels": {
+      "type": "object",
+      "description": "Optional human-friendly labels for executive surface display.",
+      "properties": {
+        "client_display_name": { "type": "string" },
+        "run_display_name": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  }
+}
