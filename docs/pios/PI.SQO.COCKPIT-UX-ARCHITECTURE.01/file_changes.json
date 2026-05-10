@@ -1,0 +1,65 @@
+{
+  "stream": "PI.SQO.COCKPIT-UX-ARCHITECTURE.01",
+  "changes": [
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT-UX-ARCHITECTURE.01/SQO_COCKPIT_PRODUCT_BOUNDARY.md",
+      "action": "CREATED",
+      "description": "LENS vs SQO Cockpit product distinction. Consumption boundary definition. Shared infrastructure identification. Future PATH B bridge model."
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT-UX-ARCHITECTURE.01/SQO_COCKPIT_INFORMATION_ARCHITECTURE.md",
+      "action": "CREATED",
+      "description": "9-section cockpit structure: Overview, Debt, Continuity, Maturity, Remediation, Evidence, Replay, History, Handoff. Per-section: purpose, artifacts, fields, decisions, governance, empty states, forbidden behavior."
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT-UX-ARCHITECTURE.01/SQO_COCKPIT_PERSONAS_AND_JOBS.md",
+      "action": "CREATED",
+      "description": "5 personas: Semantic Onboarding Operator, Client Implementation Architect, Governance Reviewer, Delivery/Transformation Lead, Internal Product Operator. Per-persona: jobs, decisions, artifacts, forbidden actions, handoff."
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT-UX-ARCHITECTURE.01/SQO_COCKPIT_OBJECT_MODEL.md",
+      "action": "CREATED",
+      "description": "10 cockpit objects: Qualification Case, Semantic Debt Item, Continuity Gap, Maturity Dimension, Remediation Pathway, Source Material Requirement, Evidence Chain, Replay Certification, Progression Step, PATH B Handoff Package."
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT-UX-ARCHITECTURE.01/SQO_COCKPIT_ACTION_MODEL.md",
+      "action": "CREATED",
+      "description": "10 allowed actions (inspect, mark, prepare, compare, export). 9 forbidden actions (edit, override, fabricate, bypass, push). Detailed descriptions per action."
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT-UX-ARCHITECTURE.01/SQO_COCKPIT_STATE_MODEL.md",
+      "action": "CREATED",
+      "description": "10 cockpit states with visual posture, primary action, governance warning, and next operational step. Covers NO_CLIENT through HANDOFF_BLOCKED."
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT-UX-ARCHITECTURE.01/FASTAPI_MATURATION_WORKFLOW.md",
+      "action": "CREATED",
+      "description": "9-step S1→S2 maturation workflow grounded in FastAPI reference data. Current state, blockers, R2 pathway, source material, checklist, expected outputs, validation gates, success criteria, remaining S2→S3 work."
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT-UX-ARCHITECTURE.01/BLUEEDGE_MATURATION_WORKFLOW.md",
+      "action": "CREATED",
+      "description": "7-step S2→S3 maturation workflow grounded in BlueEdge reference data. S2 stability, ungrounded domains, grounding debt, R4 pathway, evidence needs, S3 criteria, PATH B handoff conditions."
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT-UX-ARCHITECTURE.01/PATH_B_HANDOFF_MODEL.md",
+      "action": "CREATED",
+      "description": "Canonical handoff flow, package contents, minimum readiness criteria, blocked conditions, certification requirements, audit trail, PATH B processing model."
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT-UX-ARCHITECTURE.01/SQO_COCKPIT_ARTIFACT_CONSUMPTION.md",
+      "action": "CREATED",
+      "description": "Read-only consumption model for 12 SQO artifact types. Per-artifact: cockpit sections, fields consumed, governance. Additive-only cockpit artifact rules."
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT-UX-ARCHITECTURE.01/SQO_COCKPIT_GOVERNANCE_RULES.md",
+      "action": "CREATED",
+      "description": "14 governance rules: read-only consumption, no SQO→LENS, no AI, no fabrication, deterministic display, fail-visible, governance-classified, no chatbot, PATH B authority, additive-only, no override, forbidden language, evidence-linked."
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT-UX-ARCHITECTURE.01/IMPLEMENTATION_PHASE_PLAN.md",
+      "action": "CREATED",
+      "description": "7 implementation phases: static reader, FastAPI workflow, debt navigation, evidence/replay viewer, handoff builder, source material planner, re-run preparation. Per-phase: objective, UI scope, artifact scope, risk, success condition. Dependency graph."
+    }
+  ]
+}
