@@ -16,49 +16,67 @@
 
 'use strict';
 
+const { resolveQClass, governanceToLegacy } = require('./QClassResolver');
+
 /**
  * Compute qualifier_class from grounding_ratio.
  *
- * NOTE on governance: only Q-00 and Q-01 are currently amended in governance.
- * Q-02 is an exploratory class (proposed for ratio < 0.6) but requires
- * a separate governance amendment before it can be rendered in the executive
- * surface. Until then we map all partial-grounding states to Q-01 to remain
- * compatible with the existing rendering orchestrator and Path A.5.
+ * Per docs/governance/Q02_GOVERNANCE_AMENDMENT.md (LOCKED, 2026-05-10) the
+ * four-class governance model is:
  *
- *   ratio == 1.0   → Q-00 (Full Grounding)
- *   [0.0, 1.0)     → Q-01 (Partial Grounding · advisory bound)
+ *   Q-01  FULL_GROUNDING
+ *   Q-02  PARTIAL_GROUNDING_WITH_STRUCTURAL_CONTINUITY
+ *   Q-03  SEMANTIC_ONLY
+ *   Q-04  UNAVAILABLE
  *
- * The richer Q-02 derivation is exposed in the `derived_qualifier_class`
- * field for consumers that have governance authority to use it.
+ * The legacy fixture-era adapters still use Q-00..Q-04 with different
+ * semantics (per amendment §6 compat table). To preserve backward
+ * compatibility while emitting the new governance class on live surfaces,
+ * this function returns BOTH:
+ *
+ *   - qualifier_class                — NEW governance class (Q-01..Q-04)
+ *   - qualifier_class_compat         — LEGACY adapter class (Q-00..Q-04)
+ *   - derived_qualifier_class        — alias of governance class (kept for
+ *                                      backward-compatibility with the
+ *                                      first live binding)
+ *
+ * The caller decides which field to surface where: the live executive
+ * surface MUST use the governance class with contract-mandated language;
+ * legacy adapters consume the compat class.
  */
-function deriveQualifierClass(groundedCount, totalCount) {
-  const total = Math.max(1, totalCount || 0);
-  const ratio = (groundedCount || 0) / total;
-  if (ratio >= 1.0) {
-    return {
-      qualifier_class: 'Q-00',
-      qualifier_label: 'Full Grounding',
-      qualifier_note: 'All semantic domains structurally backed.',
-      ratio,
-      derived_qualifier_class: 'Q-00',
-    };
-  }
-  // Q-02 candidate (exploratory, not yet amended in governance)
-  const exploratoryQ02 = ratio < 0.6;
+function deriveQualifierClass(groundedCount, totalCount, opts) {
+  const semanticContinuityStatus =
+    opts && opts.semantic_continuity_status === 'ABSENT' ? 'ABSENT' : 'VALIDATED';
+  const evidenceAvailability =
+    opts && opts.evidence_availability === 'ABSENT' ? 'ABSENT' : 'AVAILABLE';
+  const q = resolveQClass({
+    backed_count: groundedCount || 0,
+    total_count: totalCount || 0,
+    semantic_continuity_status: semanticContinuityStatus,
+    evidence_availability: evidenceAvailability,
+  });
   return {
-    qualifier_class: 'Q-01',
-    qualifier_label: 'Partial Grounding · advisory bound',
-    qualifier_note:
-      exploratoryQ02
-        ? 'Most semantic domains are semantic-only. Executive action requires advisory confirmation. (Exploratory: would map to Q-02 under proposed governance amendment.)'
-        : 'Some semantic domains lack structural backing. Advisory confirmation recommended.',
-    ratio,
-    derived_qualifier_class: exploratoryQ02 ? 'Q-02' : 'Q-01',
+    qualifier_class: q.qualifier_class,
+    qualifier_label: q.qualifier_label,
+    qualifier_note: q.qualifier_note,
+    ratio: q.derivation_inputs.grounding_ratio,
+    derived_qualifier_class: q.qualifier_class,
+    qualifier_class_compat: q.compat_legacy_class,
+    semantic_projection_class: q.semantic_projection_class,
+    derivation_rule_id: q.derivation_rule_id,
+    derivation_rule_version: q.derivation_rule_version,
+    derivation_rule_text: q.derivation_rule_text,
+    derivation_inputs: q.derivation_inputs,
   };
 }
 
 /**
  * Derive render_state from decision_validation band + posture.
+ *
+ * Note: under the Q02 amendment, the EXECUTIVE_READY_WITH_QUALIFIER state
+ * is the correct render state for both Q-02 and Q-03. The legacy
+ * `Q-02 + INVESTIGATE → DIAGNOSTIC_ONLY` heuristic is preserved for the
+ * legacy-compat path only (where Q-02 still meant "Structural View Only").
  */
 function deriveRenderState(band, posture, qualifierClass) {
   const b = (band || '').toUpperCase();
@@ -72,7 +90,7 @@ function deriveRenderState(band, posture, qualifierClass) {
   if (b === 'ESCALATED' && p === 'HALT') {
     return 'BLOCKED';
   }
-  if (b === 'DIAGNOSTIC' || (qualifierClass === 'Q-02' && p === 'INVESTIGATE')) {
+  if (b === 'DIAGNOSTIC') {
     return 'DIAGNOSTIC_ONLY';
   }
   return 'EXECUTIVE_READY_WITH_QUALIFIER';
@@ -116,6 +134,7 @@ function hydrateActors({
   vaultReadiness,
   dpsigSummary,
   unresolvedGaps,
+  renderingMetadata,
 }) {
   // 17-domain registry summary
   const domains = (semanticTopologyModel && semanticTopologyModel.domains) || [];
@@ -130,8 +149,17 @@ function hydrateActors({
   // Decision posture from validation
   const posture = extractDecisionPosture(decisionValidation);
 
-  // Qualifier from grounding ratio
-  const qualifier = deriveQualifierClass(backedDomains.length, totalDomains);
+  // Semantic continuity is treated as VALIDATED whenever the crosswalk
+  // artifact is present; ABSENT otherwise. Evidence availability is
+  // VALIDATED whenever decision_validation is present.
+  const semanticContinuityStatus = semanticCrosswalk ? 'VALIDATED' : 'ABSENT';
+  const evidenceAvailability = decisionValidation ? 'AVAILABLE' : 'ABSENT';
+
+  // Qualifier from grounding ratio (new four-class model)
+  const qualifier = deriveQualifierClass(backedDomains.length, totalDomains, {
+    semantic_continuity_status: semanticContinuityStatus,
+    evidence_availability: evidenceAvailability,
+  });
 
   // Render state
   const renderState = deriveRenderState(posture.band, posture.posture, qualifier.qualifier_class);
@@ -339,18 +367,39 @@ function hydrateActors({
         contract_id: decisionValidation ? decisionValidation.contract_id : null,
       },
     },
-    inference_prohibition: {
-      code: 'IP',
-      name: 'Inference Prohibition',
-      status: 'PLACEHOLDER_BINDING_PENDING',
-      source: 'rendering_metadata not yet vault-written',
-      value: {
-        binding_pending_reason:
-          'rendering_metadata.qualifier_rules_applied / ali_rules_applied are not yet exposed as a per-run vault artifact. First binding ships with placeholder + caption for IP.',
-        placeholder_qualifier_rules: [qualifier.qualifier_class],
-        placeholder_ali_rules: [],
-      },
-    },
+    inference_prohibition: renderingMetadata
+      ? {
+          code: 'IP',
+          name: 'Inference Prohibition',
+          status: 'HYDRATED',
+          source: 'vault/rendering_metadata.json (PI.LENS.V2.Q02-AND-IP-GOVERNANCE-CLEANUP.01)',
+          value: {
+            inference_prohibition_status: renderingMetadata.inference_prohibition_status,
+            grounding_class: renderingMetadata.grounding_class,
+            semantic_projection_class: renderingMetadata.semantic_projection_class,
+            semantic_continuity_status: renderingMetadata.semantic_continuity_status,
+            qualifier_rules_applied: renderingMetadata.qualifier_rules_applied || [],
+            ali_rules_applied: renderingMetadata.ali_rules_applied || [],
+            disclosure_requirements: renderingMetadata.disclosure_requirements || [],
+            unresolved_semantic_gaps_count: Array.isArray(renderingMetadata.unresolved_semantic_gaps)
+              ? renderingMetadata.unresolved_semantic_gaps.length
+              : 0,
+            rendering_metadata_hash: renderingMetadata.rendering_metadata_hash || null,
+            governance_assertions: renderingMetadata.governance_assertions || {},
+          },
+        }
+      : {
+          code: 'IP',
+          name: 'Inference Prohibition',
+          status: 'PLACEHOLDER_BINDING_PENDING',
+          source: 'rendering_metadata not yet vault-written',
+          value: {
+            binding_pending_reason:
+              'rendering_metadata.qualifier_rules_applied / ali_rules_applied are not yet exposed as a per-run vault artifact.',
+            placeholder_qualifier_rules: [qualifier.qualifier_class],
+            placeholder_ali_rules: [],
+          },
+        },
     report_artifact_access: {
       code: 'RA',
       name: 'Report Artifact Access',
@@ -374,10 +423,21 @@ function hydrateActors({
       qualifier_label: qualifier.qualifier_label,
       qualifier_note: qualifier.qualifier_note,
       derived_qualifier_class: qualifier.derived_qualifier_class || qualifier.qualifier_class,
+      qualifier_class_compat: qualifier.qualifier_class_compat
+        || governanceToLegacy(qualifier.qualifier_class)
+        || qualifier.qualifier_class,
+      semantic_projection_class: qualifier.semantic_projection_class,
+      semantic_continuity_status: semanticContinuityStatus,
+      evidence_availability: evidenceAvailability,
+      derivation_rule_id: qualifier.derivation_rule_id,
+      derivation_rule_version: qualifier.derivation_rule_version,
+      derivation_rule_text: qualifier.derivation_rule_text,
+      derivation_inputs: qualifier.derivation_inputs,
       score: posture.score,
       band: posture.band,
       posture: posture.posture,
       render_state: renderState,
+      ip_hydrated: !!renderingMetadata,
     },
   };
 }

@@ -124,11 +124,19 @@ describe('BlueEdge live binding — resolver payload', () => {
     assert.equal(t.semantic_only_count, 12);
   });
 
-  it('qualifier class is Q-01 with derived_qualifier_class Q-02', () => {
+  it('qualifier_summary.qualifier_class is Q-02 (governance) with legacy compat Q-01', () => {
+    // Per docs/governance/Q02_GOVERNANCE_AMENDMENT.md (2026-05-10), the
+    // governance class for partial grounding with structural continuity
+    // is Q-02. The legacy fixture-era adapter compat class is Q-01.
     const q = payload.qualifier_summary;
     assert.ok(q);
-    assert.equal(q.qualifier_class, 'Q-01');
-    assert.equal(q.derived_qualifier_class, 'Q-02');
+    assert.equal(q.qualifier_class, 'Q-02');
+    assert.equal(q.qualifier_class_compat, 'Q-01');
+    assert.equal(q.semantic_projection_class, 'PARTIAL_GROUNDING_WITH_STRUCTURAL_CONTINUITY');
+    // The legacy top-level qualifier_class continues to carry Q-01 so
+    // the legacy chip / readiness-badge adapters keep working unchanged.
+    assert.equal(payload.qualifier_class, 'Q-01');
+    assert.equal(payload.qualifier_class_governance, 'Q-02');
   });
 
   it('governance_verdict is PASS', () => {
@@ -157,10 +165,13 @@ describe('BlueEdge live binding — required source artifacts', () => {
     assert.ok(sa.canonical_topology_40_4.hash.length >= 16);
   });
 
-  it('IP_RENDERING_METADATA is exposed as a known unresolved gap', () => {
+  it('IP_RENDERING_METADATA is no longer an unresolved gap (vault artifact present)', () => {
+    // Per PI.LENS.V2.Q02-AND-IP-GOVERNANCE-CLEANUP.01, rendering_metadata
+    // is now vault-written and the resolver consumes it; the IP gap must
+    // not be present on the payload.
     const gaps = payload.unresolved_gaps || [];
     const ip = gaps.find(g => g.code === 'IP_RENDERING_METADATA');
-    assert.ok(ip, 'IP_RENDERING_METADATA gap must be visible on the payload');
+    assert.ok(!ip, 'IP_RENDERING_METADATA gap must NOT be present once rendering_metadata is vault-written');
   });
 
   it('non-blocking gaps are surfaced (structural_topology_log_40_3, vault_readiness)', () => {
@@ -169,10 +180,8 @@ describe('BlueEdge live binding — required source artifacts', () => {
     assert.ok(codes.has('STRUCTURAL_TOPOLOGY_LOG_40_3'));
     assert.ok(codes.has('VAULT_READINESS'));
     gaps.forEach(g => {
-      if (g.code !== 'IP_RENDERING_METADATA') {
-        assert.equal(g.impact, 'NON_BLOCKING',
-          `gap ${g.code} must be NON_BLOCKING; got ${g.impact}`);
-      }
+      assert.equal(g.impact, 'NON_BLOCKING',
+        `gap ${g.code} must be NON_BLOCKING; got ${g.impact}`);
     });
   });
 });
@@ -203,21 +212,27 @@ describe('BlueEdge live binding — actor registry', () => {
     });
   });
 
-  it('status distribution matches the productized run', () => {
+  it('status distribution matches the productized run (post-Q02-amendment)', () => {
+    // After PI.LENS.V2.Q02-AND-IP-GOVERNANCE-CLEANUP.01, IP transitions
+    // from PLACEHOLDER_BINDING_PENDING → HYDRATED, raising the HYDRATED
+    // count by one.
     const counts = actors.reduce((acc, a) => {
       acc[a.status] = (acc[a.status] || 0) + 1;
       return acc;
     }, {});
-    assert.equal(counts.HYDRATED, 11, `HYDRATED count off: ${JSON.stringify(counts)}`);
+    assert.equal(counts.HYDRATED, 12, `HYDRATED count off: ${JSON.stringify(counts)}`);
     assert.equal(counts.HYDRATED_WITH_DERIVATION, 2);
-    assert.equal(counts.PLACEHOLDER_BINDING_PENDING, 1);
+    assert.equal(counts.PLACEHOLDER_BINDING_PENDING || 0, 0);
     assert.equal(counts.PRESENTATION_LAYER_DERIVED, 1);
   });
 
-  it('IP actor is exposed as PLACEHOLDER_BINDING_PENDING (binding gap)', () => {
+  it('IP actor is HYDRATED with INFERENCE_PROHIBITION_STATUS=ENFORCED', () => {
     const ip = actors.find(a => a.code === 'IP');
     assert.ok(ip);
-    assert.equal(ip.status, 'PLACEHOLDER_BINDING_PENDING');
+    assert.equal(ip.status, 'HYDRATED');
+    assert.ok(ip.value);
+    assert.equal(ip.value.inference_prohibition_status, 'ENFORCED');
+    assert.equal(ip.value.grounding_class, 'Q-02');
   });
 });
 

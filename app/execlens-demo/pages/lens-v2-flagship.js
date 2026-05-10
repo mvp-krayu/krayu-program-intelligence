@@ -204,18 +204,32 @@ function DeclarationZone({ renderState, adapted }) {
   )
 }
 
-function QualifierMandate({ qualifierClass, visible }) {
-  if (!visible || !qualifierClass || qualifierClass === 'Q-00') return null
+function QualifierMandate({ qualifierClass, qualifierLabel, qualifierNote, visible }) {
+  if (!visible || !qualifierClass) return null
+  // Per docs/governance/Q02_GOVERNANCE_AMENDMENT.md:
+  //   Q-01 (FULL_GROUNDING)  → no chip rendered
+  //   Q-04 (UNAVAILABLE)     → handled by absence-notice path
+  //   Q-02 / Q-03            → render with contract-mandated language
+  if (qualifierClass === 'Q-01' || qualifierClass === 'Q-04') return null
+  // Legacy Q-00 (full grounding under fixture-era adapters) is also a no-op.
+  if (qualifierClass === 'Q-00') return null
+  const label = qualifierLabel
+    || (qualifierClass === 'Q-02' ? 'Partial Grounding · Structural Continuity'
+       : qualifierClass === 'Q-03' ? 'Semantic Continuity Only'
+       : 'Partial Signal Grounding')
+  const note = qualifierNote
+    || (qualifierClass === 'Q-02'
+        ? 'Semantic continuity is validated. Some semantic domains lack structural backing; advisory confirmation is mandatory before executive commitment.'
+        : qualifierClass === 'Q-03'
+        ? 'Structural backing is absent. Only semantic continuity supports the projection. Executive caution mandatory.'
+        : 'Signal grounding is partial. Advisory review is mandatory before executive commitment on qualified signals.')
   return (
     <div className="qualifier-mandate" role="alert" aria-atomic="true">
       <div className="qualifier-mandate-left">
         <span className="qualifier-mandate-class">QUALIFIER {qualifierClass}</span>
-        <span className="qualifier-mandate-sublabel">Partial Signal Grounding</span>
+        <span className="qualifier-mandate-sublabel">{label}</span>
       </div>
-      <div className="qualifier-mandate-text">
-        Signal confidence is partial. This assessment reflects available grounding only.
-        Advisory review is mandatory before executive commitment on qualified signals.
-      </div>
+      <div className="qualifier-mandate-text">{note}</div>
     </div>
   )
 }
@@ -1158,10 +1172,48 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
   const isDiagnostic = renderState === 'DIAGNOSTIC_ONLY'
 
   // Live binding visible indicators — per contract requirements
-  const ipPlaceholderActive =
-    !!(reportObject.actor_registry &&
-       reportObject.actor_registry.inference_prohibition &&
-       reportObject.actor_registry.inference_prohibition.status === 'PLACEHOLDER_BINDING_PENDING')
+  const ipActor =
+    reportObject.actor_registry && reportObject.actor_registry.inference_prohibition
+  const ipPlaceholderActive = !!(ipActor && ipActor.status === 'PLACEHOLDER_BINDING_PENDING')
+  const ipEnforced = !!(
+    ipActor && ipActor.status === 'HYDRATED'
+    && ipActor.value && ipActor.value.inference_prohibition_status === 'ENFORCED'
+  )
+
+  // Q-class governance disclosure (Q02 amendment, 2026-05-10)
+  const governanceQualifier = (reportObject.qualifier_summary && reportObject.qualifier_summary.qualifier_class)
+    || reportObject.qualifier_class_governance
+    || reportObject.qualifier_class
+  const governanceQualifierLabel = (reportObject.qualifier_summary && reportObject.qualifier_summary.qualifier_label)
+    || ''
+  const governanceQualifierNote = (reportObject.qualifier_summary && reportObject.qualifier_summary.qualifier_note)
+    || ''
+
+  // Override the legacy chip with the governance-true class and label so
+  // every downstream consumer (RepEvidenceState, SupportRail, ActorCard,
+  // BoardroomCard) displays the Q02-amendment language without touching
+  // the legacy QualifierChipAdapter (which retains its fixture-era tests).
+  const adaptedDisplay = useMemo(() => {
+    if (!adapted) return adapted
+    const origChip = (adapted && adapted.qualifierChip) || {}
+    const renders =
+      governanceQualifier === 'Q-02' || governanceQualifier === 'Q-03'
+        ? true
+        : (governanceQualifier === 'Q-01' || governanceQualifier === 'Q-04')
+        ? false
+        : !!origChip.renders
+    return {
+      ...adapted,
+      qualifierChip: {
+        ...origChip,
+        renders,
+        qualifier_class: governanceQualifier || origChip.qualifier_class,
+        class_label: governanceQualifierLabel || origChip.class_label || origChip.chip_label,
+        chip_label: governanceQualifierLabel || origChip.chip_label,
+        tooltip_text: governanceQualifierNote || origChip.tooltip_text,
+      },
+    }
+  }, [adapted, governanceQualifier, governanceQualifierLabel, governanceQualifierNote])
 
   return (
     <>
@@ -1195,6 +1247,18 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
               <span className="v2-live-banner-warn">INFERENCE PROHIBITION: BINDING PENDING</span>
             </>
           )}
+          {ipEnforced && (
+            <>
+              <span className="v2-live-banner-sep">·</span>
+              <span className="v2-live-banner-ok">INFERENCE PROHIBITION: ENFORCED</span>
+            </>
+          )}
+          {governanceQualifier && governanceQualifier !== 'Q-01' && (
+            <>
+              <span className="v2-live-banner-sep">·</span>
+              <span className="v2-live-banner-qclass">QUALIFIER {governanceQualifier}</span>
+            </>
+          )}
         </div>
 
         <AuthorityBand
@@ -1205,19 +1269,21 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         />
 
         <div className="v2-body">
-          {isBlocked && <BlockedDeclaration adapted={adapted} />}
+          {isBlocked && <BlockedDeclaration adapted={adaptedDisplay} />}
           {isDiagnostic && !isBlocked && <DiagnosticDeclaration />}
 
-          {!isBlocked && <DeclarationZone renderState={renderState} adapted={adapted} />}
+          {!isBlocked && <DeclarationZone renderState={renderState} adapted={adaptedDisplay} />}
 
           <QualifierMandate
-            qualifierClass={reportObject.qualifier_class}
+            qualifierClass={governanceQualifier}
+            qualifierLabel={governanceQualifierLabel}
+            qualifierNote={governanceQualifierNote}
             visible={qualifierVisible}
           />
 
           <IntelligenceField
             narrative={narrative}
-            adapted={adapted}
+            adapted={adaptedDisplay}
             densityClass={densityClass}
             boardroomMode={boardroomMode}
             renderState={renderState}
@@ -1352,6 +1418,16 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #e6b800;
           font-weight: 600;
           letter-spacing: 0.16em;
+        }
+        .v2-live-banner-ok {
+          color: #5dd29f;
+          font-weight: 600;
+          letter-spacing: 0.16em;
+        }
+        .v2-live-banner-qclass {
+          color: #d8e0f0;
+          font-weight: 600;
+          letter-spacing: 0.18em;
         }
 
         /* ── Authority Band ──────────────────────────────────────────────── */

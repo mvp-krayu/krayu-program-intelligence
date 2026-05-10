@@ -20,6 +20,8 @@ const { loadJSON, artifactExists } = require('./SemanticArtifactLoader');
 const { buildCrosswalkIndex, resolveDisplayLabel, resolveCanonicalCluster } = require('./SemanticCrosswalkMapper');
 const { projectDPSIGSignalSet, projectPSIGSignals } = require('./DPSIGSignalMapper');
 const { hydrateActors } = require('./SemanticActorHydrator');
+const { validateRenderingMetadata } = require('./RenderingMetadataSchema');
+const { governanceToLegacy } = require('./QClassResolver');
 
 const BASELINE_GOVERNANCE_TAG = 'governed-dpsig-baseline-v1';
 const BASELINE_PIPELINE_COMMIT = '93098cb';
@@ -48,6 +50,7 @@ function buildPaths(client, runId) {
     evidence_trace: path.posix.join(runRoot, 'vault/evidence_trace.json'),
     vault_readiness: path.posix.join(runRoot, 'vault/vault_readiness.json'),
     semantic_bundle_manifest: path.posix.join(runRoot, 'semantic/semantic_bundle_manifest.json'),
+    rendering_metadata: path.posix.join(runRoot, 'vault/rendering_metadata.json'),
     dpsig_signal_set: path.posix.join(dpsigRoot, 'dpsig_signal_set.json'),
     reports: {
       'decision-surface': path.posix.join(runRoot, 'reports/lens_decision_surface.html'),
@@ -106,6 +109,7 @@ function resolveBlueEdgePayload(client, runId) {
     evidence_trace: loadJSON(paths.evidence_trace),
     vault_readiness: loadJSON(paths.vault_readiness),
     semantic_bundle_manifest: loadJSON(paths.semantic_bundle_manifest),
+    rendering_metadata: loadJSON(paths.rendering_metadata),
     dpsig_signal_set: loadJSON(paths.dpsig_signal_set),
   };
 
@@ -150,13 +154,33 @@ function resolveBlueEdgePayload(client, runId) {
     }
   }
 
-  // Always-known unresolved gap: Inference Prohibition
-  unresolvedGaps.push({
-    code: 'IP_RENDERING_METADATA',
-    path: 'rendering_metadata vault artifact (not yet specified)',
-    reason: 'rendering_metadata not yet exposed as a per-run vault artifact',
-    impact: 'INFERENCE_PROHIBITION_PLACEHOLDER',
-  });
+  // Validate rendering_metadata when present, then attach to hydration.
+  // When ABSENT: surface IP_RENDERING_METADATA as unresolved (legacy
+  // pre-amendment behaviour). When INVALID: surface a distinct gap so
+  // we never silently project a bad authority artifact.
+  let renderingMetadata = null;
+  let renderingMetadataValidation = null;
+  if (sources.rendering_metadata.ok) {
+    renderingMetadataValidation = validateRenderingMetadata(sources.rendering_metadata.data);
+    if (renderingMetadataValidation.ok) {
+      renderingMetadata = sources.rendering_metadata.data;
+    } else {
+      unresolvedGaps.push({
+        code: 'IP_RENDERING_METADATA_INVALID',
+        path: paths.rendering_metadata,
+        reason: 'rendering_metadata.json present but failed schema validation',
+        impact: 'ADVISORY_REQUIRED',
+        detail: renderingMetadataValidation.errors,
+      });
+    }
+  } else {
+    unresolvedGaps.push({
+      code: 'IP_RENDERING_METADATA',
+      path: paths.rendering_metadata,
+      reason: 'rendering_metadata not yet exposed as a per-run vault artifact',
+      impact: 'INFERENCE_PROHIBITION_PLACEHOLDER',
+    });
+  }
 
   // Project DPSIG signal set
   const dpsigSummary = projectDPSIGSignalSet(sources.dpsig_signal_set.data);
@@ -181,6 +205,7 @@ function resolveBlueEdgePayload(client, runId) {
     vaultReadiness: sources.vault_readiness.ok ? sources.vault_readiness.data : null,
     dpsigSummary,
     unresolvedGaps,
+    renderingMetadata,
   });
 
   const derived = hydrated.derived;
@@ -282,13 +307,14 @@ function resolveBlueEdgePayload(client, runId) {
   // Construct narrative honestly from real artifacts.
   // Governance: GEIOS internals (e.g. system signal class names, signal-value field
   // names, raw hashes) MUST NOT appear in executive prose. Per VAL-GOV-02.
-  // Use executive register only.
+  // Use executive register only. Q-class language follows the locked
+  // Q02 amendment (docs/governance/Q02_GOVERNANCE_AMENDMENT.md).
   const narrative = {
     executive_summary:
       `Decision Surface (Score ${derived.score}, ${derived.band} band, ${derived.posture} posture) confirms a qualified-ready operating posture. ` +
       `${derived.backed_count} of ${derived.total_domains} semantic domains are structurally backed; ${derived.semantic_only_count} remain semantic-only. ` +
       `The active pressure zone anchors on "${zoneAnchorBusinessLabel}". ` +
-      `Executive action under qualifier ${derived.qualifier_class} requires advisory confirmation before commitment.`,
+      `Under qualifier ${derived.qualifier_class} (partial grounding with validated semantic continuity), advisory confirmation is mandatory before executive commitment.`,
     why_section:
       `Reproducibility verdict for this run: ${(sources.reproducibility_verdict.data || {}).verdict || 'UNKNOWN'}. ` +
       `${derived.backed_count} structurally-backed domains are anchored to the canonical topology. ` +
@@ -338,18 +364,24 @@ function resolveBlueEdgePayload(client, runId) {
     run_id: runId,
   };
 
-  // Construct fixture-compat rendering_metadata (with placeholder for IP)
-  const renderingMetadata = {
+  // Construct fixture-compat rendering_metadata block. When the vault
+  // artifact is present we surface the live rendering_metadata directly
+  // alongside the legacy-shape fields the existing adapter expects.
+  const renderingMetadataCompat = {
     normalization_version: 'NORM-v1.0',
-    ali_rules_applied: [],
-    qualifier_rules_applied: [derived.qualifier_class],
+    ali_rules_applied: renderingMetadata ? (renderingMetadata.ali_rules_applied || []) : [],
+    qualifier_rules_applied: renderingMetadata
+      ? (renderingMetadata.qualifier_rules_applied || [derived.qualifier_class_compat])
+      : [derived.qualifier_class_compat],
     surface_mode: derived.render_state,
     explainability_panels_rendered: ['WHY', 'EVIDENCE', 'TRACE', 'QUALIFIERS', 'LINEAGE', 'CONFIDENCE', 'READINESS_STATE'],
     topology_scope_verified: true,
     evidence_hash_verified: true,
     rendered_at: new Date().toISOString(),
     lens_version: '2.0.0',
-    binding_status: 'INFERENCE_PROHIBITION_PLACEHOLDER_PENDING',
+    binding_status: renderingMetadata ? 'INFERENCE_PROHIBITION_ENFORCED' : 'INFERENCE_PROHIBITION_PLACEHOLDER_PENDING',
+    // Live vault rendering_metadata (full object) when present:
+    rendering_metadata_live: renderingMetadata,
   };
 
   // Construct fixture-compat topology_scope (uses 17-domain semantic level)
@@ -358,10 +390,12 @@ function resolveBlueEdgePayload(client, runId) {
     cluster_count: (canonicalTopology.clusters || []).length,
     grounded_domain_count: derived.backed_count,
     grounding_label:
-      derived.qualifier_class === 'Q-00'
+      derived.qualifier_class === 'Q-01'
         ? 'Full Coverage'
-        : derived.qualifier_class === 'Q-01'
+        : derived.qualifier_class === 'Q-02'
         ? 'Partial Coverage'
+        : derived.qualifier_class === 'Q-03'
+        ? 'Semantic Continuity Only'
         : 'Insufficient Coverage',
   };
 
@@ -407,7 +441,11 @@ function resolveBlueEdgePayload(client, runId) {
       structurally_backed_count: derived.backed_count,
       semantic_only_count: derived.semantic_only_count,
       grounding_ratio: derived.grounding_ratio,
-      coverage_classification: derived.qualifier_class === 'Q-00' ? 'HIGH' : derived.qualifier_class === 'Q-01' ? 'MEDIUM' : 'LOW',
+      coverage_classification:
+        derived.qualifier_class === 'Q-01' ? 'HIGH'
+          : derived.qualifier_class === 'Q-02' ? 'MEDIUM'
+          : derived.qualifier_class === 'Q-03' ? 'LOW'
+          : 'NONE',
     },
     propagation_summary: {
       active_psig_evidence: (decisionValidation.checks || []).find((c) => c.id === 'VF-07') ?
@@ -439,13 +477,20 @@ function resolveBlueEdgePayload(client, runId) {
       qualifier_label: derived.qualifier_label,
       qualifier_note: derived.qualifier_note,
       derived_qualifier_class: derived.derived_qualifier_class || derived.qualifier_class,
-      derivation_inputs: {
+      qualifier_class_compat: derived.qualifier_class_compat,
+      semantic_projection_class: derived.semantic_projection_class,
+      semantic_continuity_status: derived.semantic_continuity_status,
+      evidence_availability: derived.evidence_availability,
+      derivation_inputs: derived.derivation_inputs || {
         backed_count: derived.backed_count,
         total_count: derived.total_domains,
         ratio: derived.grounding_ratio,
       },
-      derivation_rule:
-        'ratio == 1.0 → Q-00; otherwise → Q-01 (current governance). Exploratory Q-02 candidate emitted as derived_qualifier_class when ratio < 0.6 — pending governance amendment.',
+      derivation_rule_id: derived.derivation_rule_id,
+      derivation_rule_version: derived.derivation_rule_version,
+      derivation_rule: derived.derivation_rule_text
+        || 'evidence_availability!=AVAILABLE → Q-04; ratio==1.0 → Q-01; ratio==0 → semantic_continuity_status==VALIDATED ? Q-03 : Q-04; 0<ratio<1.0 → semantic_continuity_status==VALIDATED ? Q-02 : Q-03',
+      amendment_anchor: 'docs/governance/Q02_GOVERNANCE_AMENDMENT.md',
     },
     trace_summary: {
       canonical_topology_hash:
@@ -490,6 +535,12 @@ function resolveBlueEdgePayload(client, runId) {
       evidence_trace: { path: paths.evidence_trace, ok: sources.evidence_trace.ok },
       vault_readiness: { path: paths.vault_readiness, ok: sources.vault_readiness.ok },
       semantic_bundle_manifest: { path: paths.semantic_bundle_manifest, ok: sources.semantic_bundle_manifest.ok },
+      rendering_metadata: {
+        path: paths.rendering_metadata,
+        ok: sources.rendering_metadata.ok,
+        valid: renderingMetadataValidation ? renderingMetadataValidation.ok : false,
+        hash: renderingMetadata ? renderingMetadata.rendering_metadata_hash || null : null,
+      },
       dpsig_signal_set: { path: paths.dpsig_signal_set, ok: sources.dpsig_signal_set.ok },
     },
 
@@ -501,14 +552,19 @@ function resolveBlueEdgePayload(client, runId) {
     derivation_hash: traceLinkage.derivation_hash,
     governance_verdict: 'PASS',
     readiness_state: derived.render_state,
-    qualifier_class: derived.qualifier_class,
+    // Top-level qualifier_class carries the LEGACY adapter class so the
+    // existing chip / readiness-badge adapters keep working unchanged.
+    // The governance-true class is at qualifier_summary.qualifier_class.
+    // See docs/governance/Q02_GOVERNANCE_AMENDMENT.md §6.
+    qualifier_class: derived.qualifier_class_compat || governanceToLegacy(derived.qualifier_class) || derived.qualifier_class,
+    qualifier_class_governance: derived.qualifier_class,
     topology_scope: topologyScope,
     header_block: headerBlock,
     narrative_block: narrative,
     evidence_blocks: evidenceBlocks,
     trace_block: traceBlock,
     trace_linkage: traceLinkage,
-    rendering_metadata: renderingMetadata,
+    rendering_metadata: renderingMetadataCompat,
     explainability_bundle: buildExplainabilityBundle(client, runId),
     interaction_registry: { interactions: [] },
     module_registry: {
