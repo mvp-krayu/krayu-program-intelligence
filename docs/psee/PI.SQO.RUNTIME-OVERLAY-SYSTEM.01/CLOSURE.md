@@ -1,4 +1,13 @@
-1. Status: COMPLETE
+CLASSIFICATION: EXPERIMENTAL_PROTOTYPE / NON_CANONICAL_RUNTIME_PATH
+RECLASSIFIED BY: PI.SQO.RUNTIME-OVERLAY-BOUNDARY-CORRECTION.01
+
+Direct SQO→LENS runtime rendering reverted. Overlay modules retained as
+prototype evidence. Runtime files (flagshipBinding.js, lens-v2-flagship.js)
+restored to pre-SQO state. See boundary correction contract for details.
+
+---
+
+1. Status: RECLASSIFIED (was COMPLETE — now experimental prototype only)
 
 2. Scope:
    Additive SQO overlay integration into LENS v2 runtime.
