@@ -1,0 +1,185 @@
+{
+  "stream_id": "PI.SQO.MATURITY-SCORING-ENGINE.01",
+  "branch": "work/lens-v2-productization",
+  "baseline_commit": "de4ccf5",
+  "baseline_pipeline_commit": "93098cb",
+  "summary": {
+    "files_created": 28,
+    "files_modified": 0,
+    "files_deleted": 0
+  },
+  "files": [
+    {
+      "path": "app/execlens-demo/lib/lens-v2/sqo/MaturityScoringEngine.js",
+      "change": "created",
+      "purpose": "Core 8-dimension maturity scoring engine (D1-D8)"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/sqo/SemanticGravityEngine.js",
+      "change": "created",
+      "purpose": "Semantic gravity computation: avg(D1,D2,D3,D5,D7)"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/sqo/QualificationStabilityEngine.js",
+      "change": "created",
+      "purpose": "Qualification stability computation: avg(D1,D3,D4,D5)"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/sqo/ProgressionReadinessEngine.js",
+      "change": "created",
+      "purpose": "Progression readiness: 1 - (blocking/total), next S-state target"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/sqo/MaturityReplayVerifier.js",
+      "change": "created",
+      "purpose": "3-check replay verification for maturity artifacts"
+    },
+    {
+      "path": "app/execlens-demo/flagship-experience/tests/sqo-maturity-scoring.test.js",
+      "change": "created",
+      "purpose": "37 tests across 11 suites certifying maturity scoring engine"
+    },
+    {
+      "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/semantic_maturity_profile.v1.json",
+      "change": "created",
+      "purpose": "BlueEdge maturity profile (overall 0.625 STABLE)"
+    },
+    {
+      "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/semantic_gravity_assessment.v1.json",
+      "change": "created",
+      "purpose": "BlueEdge semantic gravity (0.45 EMERGING)"
+    },
+    {
+      "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/qualification_stability.v1.json",
+      "change": "created",
+      "purpose": "BlueEdge qualification stability (0.692 STABLE)"
+    },
+    {
+      "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/progression_readiness.v1.json",
+      "change": "created",
+      "purpose": "BlueEdge progression readiness (0.133, target S3)"
+    },
+    {
+      "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/maturity_replay_verification.v1.json",
+      "change": "created",
+      "purpose": "BlueEdge maturity replay verification (PASS)"
+    },
+    {
+      "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/maturity_certification.v1.json",
+      "change": "created",
+      "purpose": "BlueEdge maturity certification (CERTIFIED)"
+    },
+    {
+      "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/maturity_dimension_breakdown.v1.json",
+      "change": "created",
+      "purpose": "BlueEdge dimension breakdown (8 dimensions)"
+    },
+    {
+      "path": "artifacts/sqo/fastapi/run_02_oss_fastapi_pipeline/semantic_maturity_profile.v1.json",
+      "change": "created",
+      "purpose": "FastAPI maturity profile (overall 0.208 LOW)"
+    },
+    {
+      "path": "artifacts/sqo/fastapi/run_02_oss_fastapi_pipeline/semantic_gravity_assessment.v1.json",
+      "change": "created",
+      "purpose": "FastAPI semantic gravity (0.082 FRAGMENTED)"
+    },
+    {
+      "path": "artifacts/sqo/fastapi/run_02_oss_fastapi_pipeline/qualification_stability.v1.json",
+      "change": "created",
+      "purpose": "FastAPI qualification stability (0.063 UNSTABLE)"
+    },
+    {
+      "path": "artifacts/sqo/fastapi/run_02_oss_fastapi_pipeline/progression_readiness.v1.json",
+      "change": "created",
+      "purpose": "FastAPI progression readiness (0.52, target S2)"
+    },
+    {
+      "path": "artifacts/sqo/fastapi/run_02_oss_fastapi_pipeline/maturity_replay_verification.v1.json",
+      "change": "created",
+      "purpose": "FastAPI maturity replay verification (PASS)"
+    },
+    {
+      "path": "artifacts/sqo/fastapi/run_02_oss_fastapi_pipeline/maturity_certification.v1.json",
+      "change": "created",
+      "purpose": "FastAPI maturity certification (CERTIFIED)"
+    },
+    {
+      "path": "artifacts/sqo/fastapi/run_02_oss_fastapi_pipeline/maturity_dimension_breakdown.v1.json",
+      "change": "created",
+      "purpose": "FastAPI dimension breakdown (8 dimensions)"
+    },
+    {
+      "path": "docs/psee/PI.SQO.MATURITY-SCORING-ENGINE.01/MATURITY_SCORING_ENGINE_IMPLEMENTATION.md",
+      "change": "created",
+      "purpose": "Implementation documentation"
+    },
+    {
+      "path": "docs/psee/PI.SQO.MATURITY-SCORING-ENGINE.01/DIMENSION_SCORING_SPECIFICATION.md",
+      "change": "created",
+      "purpose": "D1-D8 formula specification"
+    },
+    {
+      "path": "docs/psee/PI.SQO.MATURITY-SCORING-ENGINE.01/SEMANTIC_GRAVITY_MODEL_REPORT.md",
+      "change": "created",
+      "purpose": "Semantic gravity model report"
+    },
+    {
+      "path": "docs/psee/PI.SQO.MATURITY-SCORING-ENGINE.01/QUALIFICATION_STABILITY_REPORT.md",
+      "change": "created",
+      "purpose": "Qualification stability report"
+    },
+    {
+      "path": "docs/psee/PI.SQO.MATURITY-SCORING-ENGINE.01/BLUEEDGE_FASTAPI_MATURITY_CERTIFICATION.md",
+      "change": "created",
+      "purpose": "Certification results"
+    },
+    {
+      "path": "docs/psee/PI.SQO.MATURITY-SCORING-ENGINE.01/REPLAY_VERIFICATION_REPORT.md",
+      "change": "created",
+      "purpose": "Replay verification report"
+    },
+    {
+      "path": "docs/psee/PI.SQO.MATURITY-SCORING-ENGINE.01/GOVERNANCE_BOUNDARY_VALIDATION.md",
+      "change": "created",
+      "purpose": "Governance boundary validation"
+    },
+    {
+      "path": "docs/psee/PI.SQO.MATURITY-SCORING-ENGINE.01/PROGRESSION_READINESS_REPORT.md",
+      "change": "created",
+      "purpose": "Progression readiness report"
+    },
+    {
+      "path": "docs/psee/PI.SQO.MATURITY-SCORING-ENGINE.01/MATURITY_ARTIFACT_SPEC.md",
+      "change": "created",
+      "purpose": "Output artifact specification"
+    },
+    {
+      "path": "docs/psee/PI.SQO.MATURITY-SCORING-ENGINE.01/DIMENSION_BREAKDOWN_REPORT.md",
+      "change": "created",
+      "purpose": "Detailed dimension analysis"
+    },
+    {
+      "path": "docs/pios/PI.SQO.MATURITY-SCORING-ENGINE.01/execution_report.md",
+      "change": "created",
+      "purpose": "Governance execution report"
+    },
+    {
+      "path": "docs/pios/PI.SQO.MATURITY-SCORING-ENGINE.01/file_changes.json",
+      "change": "created",
+      "purpose": "Governance file-changes manifest"
+    },
+    {
+      "path": "docs/pios/PI.SQO.MATURITY-SCORING-ENGINE.01/CLOSURE.md",
+      "change": "created",
+      "purpose": "Governance closure document"
+    }
+  ],
+  "validators_changed": [],
+  "topology_mutations": [],
+  "evidence_mutations": [],
+  "lane_a_artifacts_touched": [],
+  "lane_d_dpsig_artifacts_touched": [],
+  "api_routes_modified": [],
+  "page_routes_modified": []
+}

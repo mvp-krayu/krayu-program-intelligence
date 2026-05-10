@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "client": "fastapi",
+  "run_id": "run_02_oss_fastapi_pipeline",
+  "timestamp": "2026-05-10T13:57:16.133Z",
+  "certification_status": "CERTIFIED",
+  "overall_maturity_score": 0.208,
+  "overall_classification": "LOW",
+  "semantic_gravity": {
+    "score": 0.082,
+    "classification": "FRAGMENTED"
+  },
+  "qualification_stability": {
+    "score": 0.063,
+    "classification": "UNSTABLE"
+  },
+  "progression_readiness": 0.52,
+  "dimension_count": 8,
+  "checks": [
+    {
+      "name": "maturity_scoring",
+      "pass": true
+    },
+    {
+      "name": "semantic_gravity",
+      "pass": true
+    },
+    {
+      "name": "qualification_stability",
+      "pass": true
+    },
+    {
+      "name": "progression_readiness",
+      "pass": true
+    },
+    {
+      "name": "replay_verification",
+      "pass": true
+    },
+    {
+      "name": "deterministic",
+      "pass": true
+    }
+  ],
+  "governance": {
+    "fail_closed": true,
+    "client_agnostic": true,
+    "no_semantic_fabrication": true,
+    "no_source_mutation": true,
+    "sqo_advisory_only": true,
+    "deterministic": true
+  },
+  "provenance": {
+    "source_commit": "de4ccf5b1b0c",
+    "operation": "certify_maturity_scoring",
+    "operation_version": "1.0",
+    "output_hash": "sha256:d92b350133ff8b85461bc4e0b2aa5f6e15953b82d4c4163908a5b7589d694896"
+  }
+}

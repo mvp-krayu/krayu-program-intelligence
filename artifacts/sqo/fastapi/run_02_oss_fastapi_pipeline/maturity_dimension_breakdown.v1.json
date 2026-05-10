@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "client": "fastapi",
+  "run_id": "run_02_oss_fastapi_pipeline",
+  "timestamp": "2026-05-10T13:57:16.133Z",
+  "overall_maturity_score": 0.208,
+  "overall_classification": "LOW",
+  "dimension_breakdown": {
+    "D1": {
+      "label": "STRUCTURAL_CONTINUITY",
+      "score": 0,
+      "classification": "LOW"
+    },
+    "D2": {
+      "label": "SEMANTIC_GROUNDING",
+      "score": 0,
+      "classification": "LOW"
+    },
+    "D3": {
+      "label": "LINEAGE_STRENGTH",
+      "score": 0,
+      "classification": "LOW"
+    },
+    "D4": {
+      "label": "REPRODUCIBILITY",
+      "score": 0,
+      "classification": "LOW"
+    },
+    "D5": {
+      "label": "GOVERNANCE_COMPLETENESS",
+      "score": 0.25,
+      "classification": "PARTIAL"
+    },
+    "D6": {
+      "label": "PROJECTION_READINESS",
+      "score": 0.25,
+      "classification": "PARTIAL"
+    },
+    "D7": {
+      "label": "SEMANTIC_COHERENCE",
+      "score": 0.16,
+      "classification": "LOW"
+    },
+    "D8": {
+      "label": "ENRICHMENT_READINESS",
+      "score": 1,
+      "classification": "STRONG"
+    }
+  },
+  "governance": {
+    "fail_closed": true,
+    "client_agnostic": true,
+    "no_semantic_fabrication": true,
+    "deterministic": true
+  },
+  "provenance": {
+    "source_commit": "de4ccf5b1b0c",
+    "operation": "compute_dimension_breakdown",
+    "operation_version": "1.0",
+    "output_hash": "sha256:e89953621ec086631bdf754e13a841c6359879758039caf98e94139eda4afc4d"
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "schema_version": "1.0",
+  "client": "fastapi",
+  "run_id": "run_02_oss_fastapi_pipeline",
+  "timestamp": "2026-05-10T13:57:16.130Z",
+  "s_state": "S1",
+  "overall_maturity_score": 0.208,
+  "overall_classification": "LOW",
+  "dimensions": {
+    "D1": {
+      "id": "D1",
+      "label": "STRUCTURAL_CONTINUITY",
+      "score": 0,
+      "classification": "LOW"
+    },
+    "D2": {
+      "id": "D2",
+      "label": "SEMANTIC_GROUNDING",
+      "score": 0,
+      "classification": "LOW"
+    },
+    "D3": {
+      "id": "D3",
+      "label": "LINEAGE_STRENGTH",
+      "score": 0,
+      "classification": "LOW"
+    },
+    "D4": {
+      "id": "D4",
+      "label": "REPRODUCIBILITY",
+      "score": 0,
+      "classification": "LOW"
+    },
+    "D5": {
+      "id": "D5",
+      "label": "GOVERNANCE_COMPLETENESS",
+      "score": 0.25,
+      "classification": "PARTIAL"
+    },
+    "D6": {
+      "id": "D6",
+      "label": "PROJECTION_READINESS",
+      "score": 0.25,
+      "classification": "PARTIAL"
+    },
+    "D7": {
+      "id": "D7",
+      "label": "SEMANTIC_COHERENCE",
+      "score": 0.16,
+      "classification": "LOW"
+    },
+    "D8": {
+      "id": "D8",
+      "label": "ENRICHMENT_READINESS",
+      "score": 1,
+      "classification": "STRONG"
+    }
+  },
+  "governance": {
+    "fail_closed": true,
+    "client_agnostic": true,
+    "no_semantic_fabrication": true,
+    "no_source_mutation": true,
+    "sqo_advisory_only": true,
+    "no_hidden_weights": true,
+    "deterministic": true
+  },
+  "provenance": {
+    "source_commit": "de4ccf5b1b0c",
+    "input_hashes": {
+      "semantic_topology_model": "present",
+      "decision_validation": "absent",
+      "reproducibility_verdict": "absent",
+      "semantic_continuity_crosswalk": "absent",
+      "canonical_topology_40_4": "present",
+      "dpsig_signal_set": "present",
+      "structural_topology_log_40_3": "present",
+      "signal_registry": "present",
+      "evidence_trace": "present",
+      "vault_readiness": "present",
+      "semantic_bundle_manifest": "present",
+      "rendering_metadata": "absent",
+      "sqo_qualification_state_replay": "present",
+      "sqo_semantic_debt_inventory": "present"
+    },
+    "operation": "compute_maturity_profile",
+    "operation_version": "1.0",
+    "output_hash": "sha256:87c150ed341a19b5ca100980cd9b4b17f316a672979d8febabda9d65fa06409a"
+  }
+}

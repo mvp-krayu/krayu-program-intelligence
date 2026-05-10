@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "client": "fastapi",
+  "run_id": "run_02_oss_fastapi_pipeline",
+  "timestamp": "2026-05-10T13:57:16.130Z",
+  "qualification_stability_score": 0.063,
+  "classification": "UNSTABLE",
+  "contributing_dimensions": {
+    "D1": {
+      "label": "STRUCTURAL_CONTINUITY",
+      "score": 0,
+      "classification": "LOW"
+    },
+    "D3": {
+      "label": "LINEAGE_STRENGTH",
+      "score": 0,
+      "classification": "LOW"
+    },
+    "D4": {
+      "label": "REPRODUCIBILITY",
+      "score": 0,
+      "classification": "LOW"
+    },
+    "D5": {
+      "label": "GOVERNANCE_COMPLETENESS",
+      "score": 0.25,
+      "classification": "PARTIAL"
+    }
+  },
+  "governance": {
+    "fail_closed": true,
+    "client_agnostic": true,
+    "no_semantic_fabrication": true,
+    "deterministic": true
+  },
+  "provenance": {
+    "source_commit": "de4ccf5b1b0c",
+    "operation": "compute_qualification_stability",
+    "operation_version": "1.0",
+    "output_hash": "sha256:125f1fc251b6085334da931eaab3330217d84f122a69de62424b7cb55b69d4f6"
+  }
+}

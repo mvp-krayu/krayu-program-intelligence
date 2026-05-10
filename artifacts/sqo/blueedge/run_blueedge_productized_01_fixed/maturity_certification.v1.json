@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "client": "blueedge",
+  "run_id": "run_blueedge_productized_01_fixed",
+  "timestamp": "2026-05-10T13:57:16.125Z",
+  "certification_status": "CERTIFIED",
+  "overall_maturity_score": 0.625,
+  "overall_classification": "STABLE",
+  "semantic_gravity": {
+    "score": 0.45,
+    "classification": "EMERGING"
+  },
+  "qualification_stability": {
+    "score": 0.692,
+    "classification": "STABLE"
+  },
+  "progression_readiness": 0.133,
+  "dimension_count": 8,
+  "checks": [
+    {
+      "name": "maturity_scoring",
+      "pass": true
+    },
+    {
+      "name": "semantic_gravity",
+      "pass": true
+    },
+    {
+      "name": "qualification_stability",
+      "pass": true
+    },
+    {
+      "name": "progression_readiness",
+      "pass": true
+    },
+    {
+      "name": "replay_verification",
+      "pass": true
+    },
+    {
+      "name": "deterministic",
+      "pass": true
+    }
+  ],
+  "governance": {
+    "fail_closed": true,
+    "client_agnostic": true,
+    "no_semantic_fabrication": true,
+    "no_source_mutation": true,
+    "sqo_advisory_only": true,
+    "deterministic": true
+  },
+  "provenance": {
+    "source_commit": "de4ccf5b1b0c",
+    "operation": "certify_maturity_scoring",
+    "operation_version": "1.0",
+    "output_hash": "sha256:c9a194225006273a6b0b455d349c6a1a072ae5e6de9c0abad70b862641c18398"
+  }
+}
