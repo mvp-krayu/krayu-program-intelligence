@@ -2,12 +2,12 @@ import SQONavigation from '../../../../../../components/sqo-cockpit/SQONavigatio
 import SQODegradedState from '../../../../../../components/sqo-cockpit/SQODegradedState';
 import ContinuityAssessmentPanel from '../../../../../../components/sqo-cockpit/ContinuityAssessmentPanel';
 
-const { resolveCockpitState } = require('../../../../../../lib/sqo-cockpit/SQOCockpitStateResolver');
-const { validateRouteParams, buildNavigationItems } = require('../../../../../../lib/sqo-cockpit/SQOCockpitRouteResolver');
-const { formatContinuitySection } = require('../../../../../../lib/sqo-cockpit/SQOCockpitFormatter');
-const { buildDegradedNotice } = require('../../../../../../lib/sqo-cockpit/SQOCockpitDegradationHandler');
-
 export async function getServerSideProps(context) {
+  const { resolveCockpitState } = require('../../../../../../lib/sqo-cockpit/SQOCockpitStateResolver');
+  const { validateRouteParams, buildNavigationItems } = require('../../../../../../lib/sqo-cockpit/SQOCockpitRouteResolver');
+  const { formatContinuitySection } = require('../../../../../../lib/sqo-cockpit/SQOCockpitFormatter');
+  const { buildDegradedNotice } = require('../../../../../../lib/sqo-cockpit/SQOCockpitDegradationHandler');
+
   const { client, run } = context.params;
   const validation = validateRouteParams(client, run);
 

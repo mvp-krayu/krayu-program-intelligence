@@ -1,8 +1,7 @@
 import Link from 'next/link';
 
-const { isClientRunAllowed, listAllowedClientRuns } = require('../../../../lib/lens-v2/manifests');
-
 export async function getServerSideProps(context) {
+  const { listAllowedClientRuns } = require('../../../../lib/lens-v2/manifests');
   const { client } = context.params;
   const allRuns = listAllowedClientRuns().filter(cr => cr.client === client);
 

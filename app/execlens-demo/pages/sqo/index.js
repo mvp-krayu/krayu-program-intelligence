@@ -1,8 +1,7 @@
 import Link from 'next/link';
 
-const { resolveClientList } = require('../../lib/sqo-cockpit/SQOCockpitRouteResolver');
-
 export async function getServerSideProps() {
+  const { resolveClientList } = require('../../lib/sqo-cockpit/SQOCockpitRouteResolver');
   const clientRuns = resolveClientList();
 
   return {

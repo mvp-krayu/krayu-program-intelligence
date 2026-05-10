@@ -2,12 +2,12 @@ import SQONavigation from '../../../../../../components/sqo-cockpit/SQONavigatio
 import SQODegradedState from '../../../../../../components/sqo-cockpit/SQODegradedState';
 import QualificationOverviewPanel from '../../../../../../components/sqo-cockpit/QualificationOverviewPanel';
 
-const { resolveCockpitState, COCKPIT_STATES } = require('../../../../../../lib/sqo-cockpit/SQOCockpitStateResolver');
-const { validateRouteParams, buildNavigationItems } = require('../../../../../../lib/sqo-cockpit/SQOCockpitRouteResolver');
-const { formatOverview } = require('../../../../../../lib/sqo-cockpit/SQOCockpitFormatter');
-const { buildDegradedNotice } = require('../../../../../../lib/sqo-cockpit/SQOCockpitDegradationHandler');
-
 export async function getServerSideProps(context) {
+  const { resolveCockpitState } = require('../../../../../../lib/sqo-cockpit/SQOCockpitStateResolver');
+  const { validateRouteParams, buildNavigationItems } = require('../../../../../../lib/sqo-cockpit/SQOCockpitRouteResolver');
+  const { formatOverview } = require('../../../../../../lib/sqo-cockpit/SQOCockpitFormatter');
+  const { buildDegradedNotice } = require('../../../../../../lib/sqo-cockpit/SQOCockpitDegradationHandler');
+
   const { client, run } = context.params;
   const validation = validateRouteParams(client, run);
 
@@ -21,6 +21,8 @@ export async function getServerSideProps(context) {
         overview: null,
         navigation: null,
         degradedNotice: null,
+        degradation: null,
+        isCritical: false,
       },
     };
   }
@@ -29,6 +31,9 @@ export async function getServerSideProps(context) {
   const navigation = buildNavigationItems(client, run, 'overview');
   const overview = state.artifacts ? formatOverview(state.artifacts) : null;
   const degradedNotice = state.degradation ? buildDegradedNotice(state.degradation) : null;
+
+  const isCritical = state.cockpit_state === 'NO_CLIENT_SELECTED' ||
+    state.cockpit_state === 'CLIENT_REGISTERED_NO_SQO';
 
   return {
     props: {
@@ -44,11 +49,12 @@ export async function getServerSideProps(context) {
       navigation,
       degradation: state.degradation,
       degradedNotice,
+      isCritical,
     },
   };
 }
 
-export default function SQOOverviewPage({ client, runId, error, cockpitState, overview, navigation, degradation, degradedNotice }) {
+export default function SQOOverviewPage({ client, runId, error, cockpitState, overview, navigation, degradation, degradedNotice, isCritical }) {
   if (error) {
     return (
       <div className="sqo-cockpit sqo-cockpit--error">
@@ -57,9 +63,6 @@ export default function SQOOverviewPage({ client, runId, error, cockpitState, ov
       </div>
     );
   }
-
-  const isCritical = cockpitState &&
-    [COCKPIT_STATES.NO_CLIENT_SELECTED, COCKPIT_STATES.CLIENT_REGISTERED_NO_SQO].includes(cockpitState.state);
 
   return (
     <div className="sqo-cockpit">
