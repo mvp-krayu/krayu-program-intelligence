@@ -1,12 +1,22 @@
 import SQONavigation from '../../../../../../components/sqo-cockpit/SQONavigation';
 import SQODegradedState from '../../../../../../components/sqo-cockpit/SQODegradedState';
 import QualificationOverviewPanel from '../../../../../../components/sqo-cockpit/QualificationOverviewPanel';
+import QualificationJourneyBanner from '../../../../../../components/sqo-cockpit/QualificationJourneyBanner';
+import ImmediateBlockerPanel from '../../../../../../components/sqo-cockpit/ImmediateBlockerPanel';
+import RemediationWorkflowPanel from '../../../../../../components/sqo-cockpit/RemediationWorkflowPanel';
+import SemanticProgressionTimeline from '../../../../../../components/sqo-cockpit/SemanticProgressionTimeline';
+import SourceMaterialGuidancePanel from '../../../../../../components/sqo-cockpit/SourceMaterialGuidancePanel';
+import RerunPreparationChecklist from '../../../../../../components/sqo-cockpit/RerunPreparationChecklist';
+import ValidationGatePanel from '../../../../../../components/sqo-cockpit/ValidationGatePanel';
+import DeferredDebtPanel from '../../../../../../components/sqo-cockpit/DeferredDebtPanel';
+import SemanticMaturationStrip from '../../../../../../components/sqo-cockpit/SemanticMaturationStrip';
 
 export async function getServerSideProps(context) {
   const { resolveCockpitState } = require('../../../../../../lib/sqo-cockpit/SQOCockpitStateResolver');
   const { validateRouteParams, buildNavigationItems } = require('../../../../../../lib/sqo-cockpit/SQOCockpitRouteResolver');
   const { formatOverview } = require('../../../../../../lib/sqo-cockpit/SQOCockpitFormatter');
   const { buildDegradedNotice } = require('../../../../../../lib/sqo-cockpit/SQOCockpitDegradationHandler');
+  const { resolveQualificationJourney } = require('../../../../../../lib/sqo-cockpit/QualificationJourneyResolver');
 
   const { client, run } = context.params;
   const validation = validateRouteParams(client, run);
@@ -23,6 +33,7 @@ export async function getServerSideProps(context) {
         degradedNotice: null,
         degradation: null,
         isCritical: false,
+        journey: null,
       },
     };
   }
@@ -34,6 +45,15 @@ export async function getServerSideProps(context) {
 
   const isCritical = state.cockpit_state === 'NO_CLIENT_SELECTED' ||
     state.cockpit_state === 'CLIENT_REGISTERED_NO_SQO';
+
+  let journey = null;
+  if (state.artifacts && state.artifacts.ok) {
+    try {
+      journey = resolveQualificationJourney(state.artifacts);
+    } catch (_e) {
+      journey = { available: false, reason: 'JOURNEY_RESOLUTION_ERROR' };
+    }
+  }
 
   return {
     props: {
@@ -50,11 +70,12 @@ export async function getServerSideProps(context) {
       degradation: state.degradation,
       degradedNotice,
       isCritical,
+      journey,
     },
   };
 }
 
-export default function SQOOverviewPage({ client, runId, error, cockpitState, overview, navigation, degradation, degradedNotice, isCritical }) {
+export default function SQOOverviewPage({ client, runId, error, cockpitState, overview, navigation, degradation, degradedNotice, isCritical, journey }) {
   if (error) {
     return (
       <div className="sqo-cockpit sqo-cockpit--error">
@@ -84,7 +105,47 @@ export default function SQOOverviewPage({ client, runId, error, cockpitState, ov
         {isCritical ? (
           <SQODegradedState degradation={degradation} />
         ) : (
-          <QualificationOverviewPanel overview={overview} cockpitState={cockpitState} />
+          <>
+            {journey && journey.available && (
+              <SemanticMaturationStrip journey={journey} />
+            )}
+
+            <QualificationJourneyBanner banner={journey && journey.available ? journey.banner : null} />
+
+            <QualificationOverviewPanel overview={overview} cockpitState={cockpitState} />
+
+            {journey && journey.available && (
+              <>
+                <ImmediateBlockerPanel
+                  blockers={journey.immediateBlockers}
+                  debtCounts={journey.debtCounts}
+                />
+
+                <RemediationWorkflowPanel
+                  stages={journey.remediationStages}
+                  currentStage={journey.currentStage}
+                />
+
+                <SemanticProgressionTimeline
+                  progression={journey.progression}
+                  maturity={journey.maturity}
+                  continuity={journey.continuity}
+                  narratives={journey.narratives}
+                />
+
+                <SourceMaterialGuidancePanel guidance={journey.sourceGuidance} />
+
+                <RerunPreparationChecklist checklist={journey.rerunChecklist} />
+
+                <ValidationGatePanel gates={journey.validationGates} />
+
+                <DeferredDebtPanel
+                  deferred={journey.deferredDebt}
+                  active={journey.activeDebt}
+                />
+              </>
+            )}
+          </>
         )}
       </main>
 

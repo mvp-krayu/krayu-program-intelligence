@@ -1,0 +1,35 @@
+{
+  "stream": "PI.SQO.FASTAPI-MATURATION-WORKFLOW.01",
+  "timestamp": "2026-05-10T00:00:00Z",
+  "checks": [
+    { "name": "DeferredDebtClassifier — classifies IMMEDIATE/ACTIVE/DEFERRED", "result": "PASS" },
+    { "name": "DeferredDebtClassifier — S2-blocking as IMMEDIATE for S1", "result": "PASS" },
+    { "name": "DeferredDebtClassifier — S3-blocking as DEFERRED for S1", "result": "PASS" },
+    { "name": "DeferredDebtClassifier — S-state progression", "result": "PASS" },
+    { "name": "RemediationStageResolver — resolves stages", "result": "PASS" },
+    { "name": "RemediationStageResolver — Stage 1 missing_artifact blockers", "result": "PASS" },
+    { "name": "RemediationStageResolver — Stage 5 grounding_gap", "result": "PASS" },
+    { "name": "RemediationStageResolver — current stage resolution", "result": "PASS" },
+    { "name": "QualificationJourneyResolver — full journey for FastAPI", "result": "PASS" },
+    { "name": "QualificationJourneyResolver — S1 banner state", "result": "PASS" },
+    { "name": "QualificationJourneyResolver — source material guidance", "result": "PASS" },
+    { "name": "QualificationJourneyResolver — S1→S2 validation gates", "result": "PASS" },
+    { "name": "QualificationJourneyResolver — rerun checklist", "result": "PASS" },
+    { "name": "QualificationJourneyResolver — insufficient data", "result": "PASS" },
+    { "name": "WorkflowPrioritizationEngine — priority sorting", "result": "PASS" },
+    { "name": "WorkflowPrioritizationEngine — CRITICAL_BLOCKER assignment", "result": "PASS" },
+    { "name": "WorkflowPrioritizationEngine — workflow summary", "result": "PASS" },
+    { "name": "Governance — no AI language in narratives", "result": "PASS" },
+    { "name": "Governance — no mutation during resolution", "result": "PASS" },
+    { "name": "Governance — no pipeline execution", "result": "PASS" },
+    { "name": "Governance — no PATH B or LENS coupling", "result": "PASS" },
+    { "name": "Governance — existing SQO cockpit routes functional", "result": "PASS" },
+    { "name": "Build verification — next build SUCCESS", "result": "PASS" },
+    { "name": "Full regression — 706/706 PASS", "result": "PASS" }
+  ],
+  "summary": {
+    "total": 24,
+    "pass": 24,
+    "fail": 0
+  }
+}
