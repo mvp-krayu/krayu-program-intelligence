@@ -25,12 +25,26 @@ const {
 } = require('../flagship-experience/flagshipOrchestration')
 
 /* Live binding migration — PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01
- * The flagship route now hydrates from a real governed BlueEdge productized
- * substrate via getServerSideProps. The previous in-memory fixture import
- * has been removed. Resolver: app/execlens-demo/lib/lens-v2/BlueEdgePayloadResolver
+ * Productized — PI.LENS.V2.GENERIC-SEMANTIC-PAYLOAD-RESOLVER.01
+ * Parameterized — PI.LENS.V2.RUNTIME-PARAMETERIZATION-AND-REGISTRY-UNIFICATION.01
+ *
+ * The flagship route now hydrates from a real governed substrate via the
+ * generic, manifest-driven resolver. The page accepts ?client and ?run
+ * query parameters; without them it defaults to the canonical BlueEdge
+ * productized run. Unknown client/run pairs fail closed (no fixture
+ * fallback, no synthetic semantics).
  */
-const LIVE_BINDING_CLIENT = 'blueedge'
-const LIVE_BINDING_RUN = 'run_blueedge_productized_01_fixed'
+const DEFAULT_BINDING_CLIENT = 'blueedge'
+const DEFAULT_BINDING_RUN = 'run_blueedge_productized_01_fixed'
+
+// Param-safety: alphanumerics, underscore, hyphen; reject empty / >200 / `..`.
+function paramSafe(value) {
+  if (typeof value !== 'string') return false
+  if (value.length === 0 || value.length > 200) return false
+  if (!/^[A-Za-z0-9_\-]+$/.test(value)) return false
+  if (value.includes('..')) return false
+  return true
+}
 
 // ── Visual constants ──────────────────────────────────────────────────────────
 
@@ -329,41 +343,42 @@ function RepModeTag({ label, sub, zones }) {
   )
 }
 
-/* Static report artifacts — live-bound to BlueEdge productized run via /api/report-pack.
- * Default registry binds to LIVE_BINDING_CLIENT / LIVE_BINDING_RUN. The page may
- * override with payload.report_pack.artifacts (which carries per-artifact
- * binding_status from the resolver).
+/* Static report artifacts — live-bound via /api/report-pack. The page
+ * builds the registry from the active (client, run) at render time so
+ * the URLs always reflect the resolved manifest pair.
  */
-const REPORT_PACK_ARTIFACTS = [
-  {
-    id: 'decision-surface',
-    name: 'Decision Surface',
-    tier: 'DECISION',
-    file: 'lens_decision_surface.html',
-    binding_path: `/api/report-pack?artifact=decision-surface&client=${LIVE_BINDING_CLIENT}&run=${LIVE_BINDING_RUN}`,
-  },
-  {
-    id: 'tier1-narrative',
-    name: 'Tier-1 Narrative Brief',
-    tier: 'TIER-1',
-    file: 'lens_tier1_narrative_brief.html',
-    binding_path: `/api/report-pack?artifact=tier1-narrative&client=${LIVE_BINDING_CLIENT}&run=${LIVE_BINDING_RUN}`,
-  },
-  {
-    id: 'tier1-evidence',
-    name: 'Tier-1 Evidence Brief',
-    tier: 'TIER-1',
-    file: 'lens_tier1_evidence_brief.html',
-    binding_path: `/api/report-pack?artifact=tier1-evidence&client=${LIVE_BINDING_CLIENT}&run=${LIVE_BINDING_RUN}`,
-  },
-  {
-    id: 'tier2-diagnostic',
-    name: 'Tier-2 Diagnostic Narrative',
-    tier: 'TIER-2',
-    file: 'lens_tier2_diagnostic_narrative.html',
-    binding_path: `/api/report-pack?artifact=tier2-diagnostic&client=${LIVE_BINDING_CLIENT}&run=${LIVE_BINDING_RUN}`,
-  },
-]
+function buildReportPackRegistry(client, run) {
+  return [
+    {
+      id: 'decision-surface',
+      name: 'Decision Surface',
+      tier: 'DECISION',
+      file: 'lens_decision_surface.html',
+      binding_path: `/api/report-pack?artifact=decision-surface&client=${client}&run=${run}`,
+    },
+    {
+      id: 'tier1-narrative',
+      name: 'Tier-1 Narrative Brief',
+      tier: 'TIER-1',
+      file: 'lens_tier1_narrative_brief.html',
+      binding_path: `/api/report-pack?artifact=tier1-narrative&client=${client}&run=${run}`,
+    },
+    {
+      id: 'tier1-evidence',
+      name: 'Tier-1 Evidence Brief',
+      tier: 'TIER-1',
+      file: 'lens_tier1_evidence_brief.html',
+      binding_path: `/api/report-pack?artifact=tier1-evidence&client=${client}&run=${run}`,
+    },
+    {
+      id: 'tier2-diagnostic',
+      name: 'Tier-2 Diagnostic Narrative',
+      tier: 'TIER-2',
+      file: 'lens_tier2_diagnostic_narrative.html',
+      binding_path: `/api/report-pack?artifact=tier2-diagnostic&client=${client}&run=${run}`,
+    },
+  ]
+}
 
 function ReportPackBand() {
   // Retained for backwards-reference but no longer rendered as a horizontal band.
@@ -375,9 +390,12 @@ function ReportPackBand() {
  * Carries: evidence state · qualifier state · Report Pack access.
  * Replaces the prior horizontal Report Pack band.
  */
-function SupportRail({ adapted, scope, boardroomMode }) {
+function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const chip = (adapted && adapted.qualifierChip) || {}
+  const artifacts = (reportPackArtifacts && reportPackArtifacts.length > 0)
+    ? reportPackArtifacts
+    : buildReportPackRegistry(DEFAULT_BINDING_CLIENT, DEFAULT_BINDING_RUN)
   return (
     <aside className="intel-support" aria-label="Support rail — evidence, confidence, report pack">
       <div className="support-block">
@@ -403,7 +421,7 @@ function SupportRail({ adapted, scope, boardroomMode }) {
         <div className="support-label">REPORT PACK</div>
         <div className="support-reports-sub">Official Tier-1 / Tier-2 deliverables</div>
         <div className="support-reports-list">
-          {REPORT_PACK_ARTIFACTS.map(a => (
+          {artifacts.map(a => (
             <div
               key={a.id}
               className="support-report-item"
@@ -878,7 +896,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   return <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} />
 }
 
-function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport }) {
+function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, reportPackArtifacts }) {
   const scope = (fullReport && fullReport.topology_scope) || {}
   return (
     <div
@@ -911,6 +929,7 @@ function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, re
         adapted={adapted}
         scope={scope}
         boardroomMode={boardroomMode}
+        reportPackArtifacts={reportPackArtifacts}
       />
     </div>
   )
@@ -1039,66 +1058,30 @@ function GovernanceRibbon({ governance }) {
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 /* getServerSideProps — invoked per request server-side.
- * Reads the live BlueEdge productized substrate via BlueEdgePayloadResolver and
- * returns props for the page. No fixture fallback per contract.
+ *
+ * Delegates to the shared flagship binding module which:
+ *   - reads ?client and ?run from the query (defaulting to BlueEdge),
+ *   - validates the pair via the manifest registry (single source of
+ *     truth for allow-list),
+ *   - resolves the canonical semantic payload via the generic resolver,
+ *   - sets the appropriate HTTP status code on failure.
+ *
+ * No fixture fallback. The shared module is exercised directly by
+ * `flagship-experience/tests/runtime-parameterization.test.js`.
  */
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
   // require server-side only — these modules use Node `fs` and must not ship to client
-  const { resolveBlueEdgePayload } = require('../lib/lens-v2/BlueEdgePayloadResolver')
-  let payload = null
-  let error = null
-  try {
-    payload = resolveBlueEdgePayload(LIVE_BINDING_CLIENT, LIVE_BINDING_RUN)
-  } catch (e) {
-    error = { kind: 'RESOLVER_THREW', message: (e && e.message) || String(e) }
-  }
-  if (!payload) {
-    return {
-      props: {
-        livePayload: null,
-        livePropagationChains: [],
-        liveBindingError: error || { kind: 'PAYLOAD_NULL' },
-      },
-    }
-  }
-  if (!payload.ok) {
-    return {
-      props: {
-        livePayload: null,
-        livePropagationChains: [],
-        liveBindingError: {
-          kind: payload.error || 'PAYLOAD_NOT_OK',
-          missing: payload.missing || null,
-          binding_status: payload.binding_status || 'REJECTED',
-        },
-      },
-    }
-  }
-  // Build a propagation_chains shape compatible with StructuralTopologyZone:
-  //   [{ path: [domain_alias, ...], pressure_tier, propagation_role, origin_domain }]
-  const propagationChains = []
-  if (payload.evidence_blocks && payload.evidence_blocks.length >= 2) {
-    propagationChains.push({
-      path: payload.evidence_blocks.map((b) => b.domain_alias).filter(Boolean),
-      pressure_tier:
-        (payload.evidence_blocks[0] &&
-          payload.evidence_blocks[0].signal_cards &&
-          payload.evidence_blocks[0].signal_cards[0] &&
-          payload.evidence_blocks[0].signal_cards[0].pressure_tier) || 'HIGH',
-      propagation_role: 'ORIGIN',
-      origin_domain: payload.evidence_blocks[0] ? payload.evidence_blocks[0].domain_alias : null,
-    })
-  }
-  return {
-    props: {
-      livePayload: payload,
-      livePropagationChains: propagationChains,
-      liveBindingError: null,
-    },
-  }
+  const { resolveFlagshipBinding } = require('../lib/lens-v2/flagshipBinding')
+  // Next.js getServerSideProps only accepts { props, ... } at the top level.
+  // Strip statusCode (already applied to context.res) before returning.
+  const result = resolveFlagshipBinding({
+    query: (context && context.query) || {},
+    res: (context && context.res) || null,
+  })
+  return { props: result.props }
 }
 
-export default function LensV2FlagshipPage({ livePayload, livePropagationChains, liveBindingError }) {
+export default function LensV2FlagshipPage({ livePayload, livePropagationChains, liveBindingError, bindingClient, bindingRun }) {
   const [densityClass, setDensityClass] = useState('EXECUTIVE_DENSE')
   const [boardroomMode, setBoardroomMode] = useState(false)
   const [investigationStage, setInvestigationStage] = useState('SUMMARY')
@@ -1215,6 +1198,15 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
     }
   }, [adapted, governanceQualifier, governanceQualifierLabel, governanceQualifierNote])
 
+  // Active client/run for the rendered report-pack registry. Defaults to
+  // the canonical BlueEdge productized run when query-bound.
+  const activeBindingClient = bindingClient || (reportObject && reportObject.client) || DEFAULT_BINDING_CLIENT
+  const activeBindingRun    = bindingRun    || (reportObject && reportObject.run_id) || DEFAULT_BINDING_RUN
+  const reportPackArtifactsForRender = useMemo(
+    () => buildReportPackRegistry(activeBindingClient, activeBindingRun),
+    [activeBindingClient, activeBindingRun]
+  )
+
   return (
     <>
       <Head>
@@ -1239,7 +1231,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           <span className="v2-live-banner-label">LIVE SUBSTRATE</span>
           <span className="v2-live-banner-sep">·</span>
           <span className="v2-live-banner-detail">
-            BlueEdge productized · {reportObject.run_id} · baseline {reportObject.baseline_commit}
+            {(reportObject.client_name || reportObject.client || activeBindingClient)} · {reportObject.run_id || activeBindingRun} · baseline {reportObject.baseline_commit}
           </span>
           {ipPlaceholderActive && (
             <>
@@ -1289,6 +1281,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             renderState={renderState}
             evidenceBlocks={reportObject.evidence_blocks}
             fullReport={reportObject}
+            reportPackArtifacts={reportPackArtifactsForRender}
           />
 
           <StructuralTopologyZone

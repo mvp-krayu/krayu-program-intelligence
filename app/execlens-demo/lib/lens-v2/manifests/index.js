@@ -107,9 +107,34 @@ function loadManifest(client, runId) {
   return { ok: true, manifest, manifestPath };
 }
 
+/**
+ * Public, contract-named API (PI.LENS.V2.RUNTIME-PARAMETERIZATION-AND-
+ * REGISTRY-UNIFICATION.01). These are aliases of the existing helpers,
+ * exposed under the names the contract requires so both the runtime
+ * page and the rendering_metadata writer consume a single source of
+ * truth for allow-list behaviour.
+ */
+
+function listAllowedClientRuns() {
+  return listKnownPairs();
+}
+
+function isClientRunAllowed(client, runId) {
+  return isAllowedPair(client, runId);
+}
+
+function resolveClientRunManifest(client, runId) {
+  return loadManifest(client, runId);
+}
+
 module.exports = {
   REGISTRY,
+  // Legacy named exports — preserved for backward-compat consumers
   listKnownPairs,
   isAllowedPair,
   loadManifest,
+  // Contract-named aliases (single source of truth for allow-list)
+  listAllowedClientRuns,
+  isClientRunAllowed,
+  resolveClientRunManifest,
 };

@@ -46,10 +46,25 @@ const libDir = path.join(repoRoot, 'app', 'execlens-demo', 'lib', 'lens-v2');
 const { resolveQClass, governanceToLegacy } = require(path.join(libDir, 'QClassResolver'));
 const { buildRenderingMetadata, validateRenderingMetadata } = require(path.join(libDir, 'RenderingMetadataSchema'));
 
-const ALLOWED_CLIENTS = new Set(['blueedge']);
-const ALLOWED_RUNS = {
-  blueedge: new Set(['run_blueedge_productized_01_fixed']),
-};
+// PI.LENS.V2.RUNTIME-PARAMETERIZATION-AND-REGISTRY-UNIFICATION.01:
+// the writer's allow-list is now sourced from the manifest registry,
+// the same source of truth used by /api/lens-payload, /api/report-pack,
+// and pages/lens-v2-flagship.js. Adding a new client/run requires no
+// change to this script.
+const manifestsDir = path.join(libDir, 'manifests');
+const {
+  isClientRunAllowed,
+  listAllowedClientRuns,
+} = require(path.join(manifestsDir));
+
+// Legacy named exports — kept for backward-compatibility consumers that
+// imported these directly from the script. Computed from the registry.
+const ALLOWED_CLIENTS = new Set(listAllowedClientRuns().map((p) => p.client));
+const ALLOWED_RUNS = listAllowedClientRuns().reduce((acc, p) => {
+  if (!acc[p.client]) acc[p.client] = new Set();
+  acc[p.client].add(p.run);
+  return acc;
+}, {});
 
 const ACTOR_CODES = ['DP', 'CB', 'PA', 'PP', 'AL', 'RE', 'ST', 'SB', 'SO', 'CC', 'SS', 'ET', 'RB', 'IP', 'RA'];
 
@@ -188,12 +203,17 @@ function main(argv) {
     process.stdout.write('usage: emit_rendering_metadata.js --client <client> --run <run> [--dry-run]\n');
     return 0;
   }
-  if (!paramSafe(args.client) || !ALLOWED_CLIENTS.has(args.client)) {
-    process.stderr.write(`CLIENT_NOT_ALLOWED: ${args.client}\n`);
+  if (!paramSafe(args.client) || !paramSafe(args.run)) {
+    process.stderr.write(`INVALID_PARAM: ${args.client} / ${args.run}\n`);
     return 64;
   }
-  if (!paramSafe(args.run) || !((ALLOWED_RUNS[args.client] || new Set()).has(args.run))) {
-    process.stderr.write(`RUN_NOT_ALLOWED: ${args.client} / ${args.run}\n`);
+  // Single source of truth: the manifest registry.
+  if (!isClientRunAllowed(args.client, args.run)) {
+    if (!ALLOWED_CLIENTS.has(args.client)) {
+      process.stderr.write(`CLIENT_NOT_ALLOWED: ${args.client}\n`);
+    } else {
+      process.stderr.write(`RUN_NOT_ALLOWED: ${args.client} / ${args.run}\n`);
+    }
     return 64;
   }
 
