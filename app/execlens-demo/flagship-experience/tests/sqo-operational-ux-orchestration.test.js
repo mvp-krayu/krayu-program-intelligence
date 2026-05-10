@@ -53,22 +53,26 @@ describe('QualificationVisualStateResolver', () => {
     assert.equal(vs.intensity, 'governed');
   });
 
-  it('critical blockers override posture to critical', () => {
+  it('projection blockers override posture to critical', () => {
     const vs = resolveVisualState('S1', 'MISSING_QUALIFICATION_ARTIFACTS');
     assert.equal(vs.posture, 'critical');
+    assert.equal(vs.is_projection_blocked, true);
     assert.equal(vs.is_blocked, true);
     assert.equal(vs.blocker_class, 'sqo-blocker--critical');
   });
 
-  it('FastAPI visual state is blocked amber', () => {
+  it('FastAPI visual state is projection-blocked amber', () => {
     const vs = resolveVisualState(faJourney.banner.s_state, faJourney.banner.blocker_class);
     assert.equal(vs.palette, 'amber');
+    assert.equal(vs.is_projection_blocked, true);
     assert.equal(vs.is_blocked, true);
   });
 
-  it('BlueEdge visual state is stabilized blue', () => {
+  it('BlueEdge visual state is expansion-constrained blue', () => {
     const vs = resolveVisualState(beJourney.banner.s_state, beJourney.banner.blocker_class);
     assert.equal(vs.palette, 'blue');
+    assert.equal(vs.is_expansion_constrained, true);
+    assert.equal(vs.is_blocked, false);
   });
 });
 
@@ -77,14 +81,16 @@ describe('QualificationVisualStateResolver', () => {
 // ────────────────────────────────────────────────────────────────────────────
 
 describe('OperationalAttentionResolver', () => {
-  it('FastAPI attention focuses on blockers', () => {
-    const attn = resolveAttentionHierarchy(faJourney);
+  it('FastAPI attention focuses on blockers with projection visual', () => {
+    const faVs = resolveVisualState(faJourney.banner.s_state, faJourney.banner.blocker_class);
+    const attn = resolveAttentionHierarchy(faJourney, faVs);
     assert.equal(attn.primary_focus, 'blockers');
     assert.ok(attn.zones.length >= 6);
   });
 
   it('attention hierarchy renders 6 zones', () => {
-    const attn = resolveAttentionHierarchy(faJourney);
+    const faVs = resolveVisualState(faJourney.banner.s_state, faJourney.banner.blocker_class);
+    const attn = resolveAttentionHierarchy(faJourney, faVs);
     assert.equal(attn.zones.length, 6);
     assert.equal(attn.zones[0].id, 'current_state');
     assert.equal(attn.zones[1].id, 'blockers');
@@ -92,14 +98,15 @@ describe('OperationalAttentionResolver', () => {
   });
 
   it('empty journey returns minimal hierarchy', () => {
-    const attn = resolveAttentionHierarchy(null);
+    const attn = resolveAttentionHierarchy(null, null);
     assert.equal(attn.primary_focus, null);
     assert.equal(attn.cognitive_load, 'minimal');
   });
 
   it('attention resolver is deterministic', () => {
-    const a1 = resolveAttentionHierarchy(faJourney);
-    const a2 = resolveAttentionHierarchy(faJourney);
+    const faVs = resolveVisualState(faJourney.banner.s_state, faJourney.banner.blocker_class);
+    const a1 = resolveAttentionHierarchy(faJourney, faVs);
+    const a2 = resolveAttentionHierarchy(faJourney, faVs);
     assert.deepStrictEqual(a1, a2);
   });
 });
@@ -148,28 +155,32 @@ describe('WorkflowDominanceResolver', () => {
 
 describe('CognitiveGroupingResolver', () => {
   it('resolves cognitive groups for FastAPI', () => {
-    const attn = resolveAttentionHierarchy(faJourney);
+    const faVs = resolveVisualState(faJourney.banner.s_state, faJourney.banner.blocker_class);
+    const attn = resolveAttentionHierarchy(faJourney, faVs);
     const groups = resolveCognitiveGroups(faJourney, attn);
     assert.ok(groups.groups.length >= 6);
     assert.ok(groups.activeGroup);
   });
 
   it('deferred context group is collapsed by default', () => {
-    const attn = resolveAttentionHierarchy(faJourney);
+    const faVs = resolveVisualState(faJourney.banner.s_state, faJourney.banner.blocker_class);
+    const attn = resolveAttentionHierarchy(faJourney, faVs);
     const groups = resolveCognitiveGroups(faJourney, attn);
     const deferred = groups.groups.find(g => g.id === 'deferred_context');
     assert.equal(deferred.collapsed, true);
   });
 
   it('forensic exploration group is collapsed by default', () => {
-    const attn = resolveAttentionHierarchy(faJourney);
+    const faVs = resolveVisualState(faJourney.banner.s_state, faJourney.banner.blocker_class);
+    const attn = resolveAttentionHierarchy(faJourney, faVs);
     const groups = resolveCognitiveGroups(faJourney, attn);
     const forensic = groups.groups.find(g => g.id === 'forensic_exploration');
     assert.equal(forensic.collapsed, true);
   });
 
   it('groups are deterministic', () => {
-    const attn = resolveAttentionHierarchy(faJourney);
+    const faVs = resolveVisualState(faJourney.banner.s_state, faJourney.banner.blocker_class);
+    const attn = resolveAttentionHierarchy(faJourney, faVs);
     const g1 = resolveCognitiveGroups(faJourney, attn);
     const g2 = resolveCognitiveGroups(faJourney, attn);
     assert.deepStrictEqual(g1, g2);
@@ -261,8 +272,8 @@ describe('Governance Compliance — Operational UX', () => {
     const faLoad = loadAllCockpitArtifacts(FA_CLIENT, FA_RUN);
     const origCount = faLoad.loaded_count;
     const journey = resolveQualificationJourney(faLoad);
-    resolveVisualState(journey.banner.s_state, journey.banner.blocker_class);
-    resolveAttentionHierarchy(journey);
+    const vs = resolveVisualState(journey.banner.s_state, journey.banner.blocker_class);
+    resolveAttentionHierarchy(journey, vs);
     resolveWorkflowDominance(journey.remediationStages, journey.currentStage);
     resolveDeferredVisibility(journey);
     assert.equal(faLoad.loaded_count, origCount);

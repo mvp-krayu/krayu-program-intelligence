@@ -1,0 +1,66 @@
+{
+  "stream": "PI.SQO.OPERATIONAL-STATE-SEVERITY-CORRECTION.01",
+  "changes": [
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/QualificationVisualStateResolver.js",
+      "action": "MODIFIED",
+      "description": "Three-class blocker severity (projection/qualification/expansion), is_projection_blocked/is_expansion_constrained split"
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/OperationalAttentionResolver.js",
+      "action": "MODIFIED",
+      "description": "Accepts visualState parameter, differentiates escalated vs constrained blocker emphasis"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/QualificationHeroRegion.jsx",
+      "action": "MODIFIED",
+      "description": "Distinct blockage frames: projection/expansion/remediation with appropriate labels"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/BlockerDominanceLayer.jsx",
+      "action": "MODIFIED",
+      "description": "Severity-aware header/subtitle/items; expansion gaps not labeled as critical"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/ProgressionRail.jsx",
+      "action": "MODIFIED",
+      "description": "Readiness label function replaces percentage display for state-transition framing"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/SemanticMaturationStrip.jsx",
+      "action": "MODIFIED",
+      "description": "Severity-differentiated constraint labels (projection/expansion/generic)"
+    },
+    {
+      "file": "app/execlens-demo/styles/globals.css",
+      "action": "MODIFIED",
+      "description": "Added constrained/operational blocker classes, hero blockage variants, dominance severity frames"
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/index.js",
+      "action": "MODIFIED",
+      "description": "Pass visualState to resolveAttentionHierarchy"
+    },
+    {
+      "file": "app/execlens-demo/flagship-experience/tests/sqo-operational-ux-orchestration.test.js",
+      "action": "MODIFIED",
+      "description": "Updated assertions for new visual state API and attention resolver signature"
+    },
+    {
+      "file": "app/execlens-demo/flagship-experience/tests/sqo-operational-severity-correction.test.js",
+      "action": "CREATED",
+      "description": "22 tests in 5 suites covering severity normalization and governance"
+    },
+    {
+      "file": "app/execlens-demo/package.json",
+      "action": "MODIFIED",
+      "description": "Added test:sqo-severity script and included in aggregate test"
+    }
+  ],
+  "summary": {
+    "created": 1,
+    "modified": 10,
+    "deleted": 0,
+    "total": 11
+  }
+}

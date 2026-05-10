@@ -1,4 +1,6 @@
 export default function ProgressionRail({ progression, validationGates, visualState }) {
+  const isExpansion = visualState && visualState.severity_class === 'expansion';
+
   return (
     <div className={`sqo-progression-rail ${visualState ? visualState.chromatic_class : ''}`}>
       <h2 className="sqo-progression-rail__title">Progression Pathway</h2>
@@ -17,11 +19,13 @@ export default function ProgressionRail({ progression, validationGates, visualSt
                 style={{ width: `${(progression.readiness * 100).toFixed(1)}%` }}
               />
             </div>
-            <span className="sqo-progression-rail__pct">{(progression.readiness * 100).toFixed(1)}%</span>
+            <span className="sqo-progression-rail__readiness-label">
+              {resolveReadinessLabel(progression, isExpansion)}
+            </span>
           </div>
           <div className="sqo-progression-rail__stats">
-            <span>{progression.blocking_count} blocking</span>
-            <span>{progression.total} total debt</span>
+            <span>{progression.blocking_count} progression constraints</span>
+            <span>{progression.total} total debt items</span>
           </div>
         </div>
       ) : (
@@ -50,4 +54,26 @@ export default function ProgressionRail({ progression, validationGates, visualSt
       )}
     </div>
   );
+}
+
+function resolveReadinessLabel(progression, isExpansion) {
+  const pct = progression.readiness * 100;
+  if (pct === 0) {
+    return isExpansion
+      ? `${progression.target} grounding readiness not yet established`
+      : `${progression.target} qualification prerequisites incomplete`;
+  }
+  if (pct < 25) {
+    return isExpansion
+      ? `${progression.target} grounding readiness emerging`
+      : `${progression.target} qualification prerequisites incomplete`;
+  }
+  if (pct < 75) {
+    return isExpansion
+      ? `${progression.target} grounding readiness progressing`
+      : `${progression.target} qualification readiness progressing`;
+  }
+  return isExpansion
+    ? `${progression.target} grounding readiness approaching`
+    : `${progression.target} qualification readiness approaching`;
 }

@@ -15,9 +15,23 @@ export default function QualificationHeroRegion({ banner, visualState, narrative
         <div className="sqo-hero__state-label">{visualState.state_label}</div>
       </div>
 
-      {visualState.is_blocked && (
-        <div className="sqo-hero__blockage">
-          <div className="sqo-hero__blockage-label">BLOCKED</div>
+      {visualState.is_projection_blocked && (
+        <div className="sqo-hero__blockage sqo-hero__blockage--projection">
+          <div className="sqo-hero__blockage-label">QUALIFICATION INCOMPLETE</div>
+          <div className="sqo-hero__blockage-reason">{visualState.blocker_label}</div>
+        </div>
+      )}
+
+      {visualState.is_expansion_constrained && (
+        <div className="sqo-hero__blockage sqo-hero__blockage--expansion">
+          <div className="sqo-hero__blockage-label">EXPANSION CONSTRAINED</div>
+          <div className="sqo-hero__blockage-reason">{visualState.blocker_label}</div>
+        </div>
+      )}
+
+      {!visualState.is_projection_blocked && !visualState.is_expansion_constrained && visualState.has_constraints && (
+        <div className="sqo-hero__blockage sqo-hero__blockage--remediation">
+          <div className="sqo-hero__blockage-label">{visualState.operational_label}</div>
           <div className="sqo-hero__blockage-reason">{visualState.blocker_label}</div>
         </div>
       )}

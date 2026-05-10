@@ -65,7 +65,7 @@ export async function getServerSideProps(context) {
           journey.banner.s_state,
           journey.banner.blocker_class
         );
-        attentionHierarchy = resolveAttentionHierarchy(journey);
+        attentionHierarchy = resolveAttentionHierarchy(journey, visualState);
         workflowDominance = resolveWorkflowDominance(
           journey.remediationStages,
           journey.currentStage

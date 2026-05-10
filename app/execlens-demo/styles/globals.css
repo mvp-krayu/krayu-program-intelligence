@@ -2640,9 +2640,10 @@ a.topo-chip:hover {
 .sqo-state--blue     { --sqo-accent: var(--accent);     --sqo-accent-bg: rgba(74,158,255,0.08); --sqo-border: rgba(74,158,255,0.25); }
 .sqo-state--green    { --sqo-accent: var(--green);      --sqo-accent-bg: rgba(100,255,218,0.08); --sqo-border: rgba(100,255,218,0.25); }
 
-.sqo-blocker--critical { --sqo-blocker-accent: var(--red);    --sqo-blocker-bg: rgba(255,107,107,0.06); }
-.sqo-blocker--high     { --sqo-blocker-accent: var(--orange); --sqo-blocker-bg: rgba(255,158,74,0.06); }
-.sqo-blocker--clear    { --sqo-blocker-accent: var(--green);  --sqo-blocker-bg: transparent; }
+.sqo-blocker--critical    { --sqo-blocker-accent: var(--red);       --sqo-blocker-bg: rgba(255,107,107,0.06); }
+.sqo-blocker--operational { --sqo-blocker-accent: var(--orange);    --sqo-blocker-bg: rgba(255,158,74,0.04); }
+.sqo-blocker--constrained { --sqo-blocker-accent: var(--accent);    --sqo-blocker-bg: rgba(74,158,255,0.04); }
+.sqo-blocker--clear       { --sqo-blocker-accent: var(--green);     --sqo-blocker-bg: transparent; }
 
 /* ── Cockpit Shell ────────────────────────────────────────────────────── */
 
@@ -2844,19 +2845,35 @@ a.topo-chip:hover {
 .sqo-hero__blockage {
   margin: 16px 0;
   padding: 12px 16px;
+  border-radius: 4px;
+}
+
+.sqo-hero__blockage--projection {
   background: rgba(255,107,107,0.06);
   border: 1px solid rgba(255,107,107,0.2);
-  border-radius: 4px;
+}
+
+.sqo-hero__blockage--expansion {
+  background: rgba(74,158,255,0.04);
+  border: 1px solid rgba(74,158,255,0.15);
+}
+
+.sqo-hero__blockage--remediation {
+  background: rgba(255,158,74,0.04);
+  border: 1px solid rgba(255,158,74,0.15);
 }
 
 .sqo-hero__blockage-label {
   font-size: 11px;
   font-weight: 700;
-  color: var(--red);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-bottom: 4px;
 }
+
+.sqo-hero__blockage--projection .sqo-hero__blockage-label { color: var(--red); }
+.sqo-hero__blockage--expansion .sqo-hero__blockage-label  { color: var(--accent); }
+.sqo-hero__blockage--remediation .sqo-hero__blockage-label { color: var(--orange); }
 
 .sqo-hero__blockage-reason {
   color: var(--text);
@@ -2927,12 +2944,32 @@ a.topo-chip:hover {
   gap: 12px;
 }
 
+.sqo-blocker-dominance--projection .sqo-blocker-dominance__title { color: var(--red); }
+.sqo-blocker-dominance--expansion .sqo-blocker-dominance__title  { color: var(--accent); }
+.sqo-blocker-dominance--qualification .sqo-blocker-dominance__title { color: var(--orange); }
+
 .sqo-blocker-dominance__item {
   padding: 12px 16px;
   background: var(--bg-card);
-  border: 1px solid rgba(255,107,107,0.2);
-  border-left: 3px solid var(--red);
+  border: 1px solid var(--border-dim);
+  border-left: 3px solid var(--sqo-blocker-accent, var(--text-muted));
   border-radius: 4px;
+}
+
+.sqo-blocker-dominance--projection .sqo-blocker-dominance__item {
+  border-color: rgba(255,107,107,0.2);
+  border-left-color: var(--red);
+}
+
+.sqo-blocker-dominance--expansion .sqo-blocker-dominance__item,
+.sqo-blocker-dominance__item--expansion {
+  border-color: rgba(74,158,255,0.15);
+  border-left-color: var(--accent);
+}
+
+.sqo-blocker-dominance--qualification .sqo-blocker-dominance__item {
+  border-color: rgba(255,158,74,0.15);
+  border-left-color: var(--orange);
 }
 
 .sqo-blocker-dominance__item-header {
@@ -2944,11 +2981,14 @@ a.topo-chip:hover {
 }
 
 .sqo-blocker-dominance__item-severity {
-  color: var(--red);
   font-weight: 700;
   font-size: 10px;
   text-transform: uppercase;
 }
+
+.sqo-blocker-dominance--projection .sqo-blocker-dominance__item-severity { color: var(--red); }
+.sqo-blocker-dominance--expansion .sqo-blocker-dominance__item-severity  { color: var(--accent); }
+.sqo-blocker-dominance--qualification .sqo-blocker-dominance__item-severity { color: var(--orange); }
 
 .sqo-blocker-dominance__item-id {
   color: var(--text);
@@ -3362,6 +3402,30 @@ a.topo-chip:hover {
   color: var(--text);
   min-width: 50px;
   text-align: right;
+}
+
+.sqo-progression-rail__readiness-label {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 6px;
+}
+
+.sqo-maturation-strip__count--projection {
+  background: rgba(255,107,107,0.15);
+  color: var(--red);
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.sqo-maturation-strip__count--expansion {
+  background: rgba(74,158,255,0.1);
+  color: var(--accent);
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
 }
 
 .sqo-progression-rail__stats {

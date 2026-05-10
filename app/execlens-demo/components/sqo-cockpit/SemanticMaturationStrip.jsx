@@ -1,12 +1,20 @@
-export default function SemanticMaturationStrip({ journey }) {
+export default function SemanticMaturationStrip({ journey, visualState }) {
   if (!journey || !journey.available) {
     return null;
   }
 
   const { banner, debtCounts, immediateBlockers, remediationStages } = journey;
+  const isProjection = visualState && visualState.severity_class === 'projection';
+  const isExpansion = visualState && visualState.severity_class === 'expansion';
+
+  const constraintLabel = isProjection
+    ? `${debtCounts.immediate} qualification blockers`
+    : isExpansion
+      ? `${debtCounts.immediate} expansion gaps`
+      : `${debtCounts.immediate} constraints`;
 
   return (
-    <div className="sqo-maturation-strip">
+    <div className={`sqo-maturation-strip ${visualState ? visualState.chromatic_class : ''}`}>
       <div className="sqo-maturation-strip__state">
         <span className="sqo-maturation-strip__s-state">{banner.s_state}</span>
         {banner.next_reachable && (
@@ -19,8 +27,8 @@ export default function SemanticMaturationStrip({ journey }) {
 
       <div className="sqo-maturation-strip__counts">
         {debtCounts.immediate > 0 && (
-          <span className="sqo-maturation-strip__count sqo-maturation-strip__count--immediate">
-            {debtCounts.immediate} blockers
+          <span className={`sqo-maturation-strip__count sqo-maturation-strip__count--${isProjection ? 'projection' : isExpansion ? 'expansion' : 'immediate'}`}>
+            {constraintLabel}
           </span>
         )}
         <span className="sqo-maturation-strip__count sqo-maturation-strip__count--total">
