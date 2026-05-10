@@ -1,22 +1,24 @@
 import SQONavigation from '../../../../../../components/sqo-cockpit/SQONavigation';
 import SQODegradedState from '../../../../../../components/sqo-cockpit/SQODegradedState';
-import QualificationOverviewPanel from '../../../../../../components/sqo-cockpit/QualificationOverviewPanel';
-import QualificationJourneyBanner from '../../../../../../components/sqo-cockpit/QualificationJourneyBanner';
-import ImmediateBlockerPanel from '../../../../../../components/sqo-cockpit/ImmediateBlockerPanel';
-import RemediationWorkflowPanel from '../../../../../../components/sqo-cockpit/RemediationWorkflowPanel';
-import SemanticProgressionTimeline from '../../../../../../components/sqo-cockpit/SemanticProgressionTimeline';
-import SourceMaterialGuidancePanel from '../../../../../../components/sqo-cockpit/SourceMaterialGuidancePanel';
-import RerunPreparationChecklist from '../../../../../../components/sqo-cockpit/RerunPreparationChecklist';
-import ValidationGatePanel from '../../../../../../components/sqo-cockpit/ValidationGatePanel';
-import DeferredDebtPanel from '../../../../../../components/sqo-cockpit/DeferredDebtPanel';
-import SemanticMaturationStrip from '../../../../../../components/sqo-cockpit/SemanticMaturationStrip';
+import SQOCognitiveLayoutShell from '../../../../../../components/sqo-cockpit/SQOCognitiveLayoutShell';
+import QualificationHeroRegion from '../../../../../../components/sqo-cockpit/QualificationHeroRegion';
+import QualificationStateRibbon from '../../../../../../components/sqo-cockpit/QualificationStateRibbon';
+import BlockerDominanceLayer from '../../../../../../components/sqo-cockpit/BlockerDominanceLayer';
+import OperationalWorkflowSpine from '../../../../../../components/sqo-cockpit/OperationalWorkflowSpine';
+import WorkflowStageCluster from '../../../../../../components/sqo-cockpit/WorkflowStageCluster';
+import ProgressionRail from '../../../../../../components/sqo-cockpit/ProgressionRail';
+import DeferredDebtCollapseZone from '../../../../../../components/sqo-cockpit/DeferredDebtCollapseZone';
+import OperationalAttentionLayout from '../../../../../../components/sqo-cockpit/OperationalAttentionLayout';
 
 export async function getServerSideProps(context) {
   const { resolveCockpitState } = require('../../../../../../lib/sqo-cockpit/SQOCockpitStateResolver');
   const { validateRouteParams, buildNavigationItems } = require('../../../../../../lib/sqo-cockpit/SQOCockpitRouteResolver');
-  const { formatOverview } = require('../../../../../../lib/sqo-cockpit/SQOCockpitFormatter');
   const { buildDegradedNotice } = require('../../../../../../lib/sqo-cockpit/SQOCockpitDegradationHandler');
   const { resolveQualificationJourney } = require('../../../../../../lib/sqo-cockpit/QualificationJourneyResolver');
+  const { resolveVisualState } = require('../../../../../../lib/sqo-cockpit/QualificationVisualStateResolver');
+  const { resolveAttentionHierarchy } = require('../../../../../../lib/sqo-cockpit/OperationalAttentionResolver');
+  const { resolveWorkflowDominance } = require('../../../../../../lib/sqo-cockpit/WorkflowDominanceResolver');
+  const { resolveDeferredVisibility } = require('../../../../../../lib/sqo-cockpit/DeferredVisibilityResolver');
 
   const { client, run } = context.params;
   const validation = validateRouteParams(client, run);
@@ -28,28 +30,48 @@ export async function getServerSideProps(context) {
         runId: run,
         error: validation.error,
         cockpitState: null,
-        overview: null,
         navigation: null,
         degradedNotice: null,
         degradation: null,
         isCritical: false,
         journey: null,
+        visualState: null,
+        attentionHierarchy: null,
+        workflowDominance: null,
+        deferredVisibility: null,
       },
     };
   }
 
   const state = resolveCockpitState(client, run);
   const navigation = buildNavigationItems(client, run, 'overview');
-  const overview = state.artifacts ? formatOverview(state.artifacts) : null;
   const degradedNotice = state.degradation ? buildDegradedNotice(state.degradation) : null;
 
   const isCritical = state.cockpit_state === 'NO_CLIENT_SELECTED' ||
     state.cockpit_state === 'CLIENT_REGISTERED_NO_SQO';
 
   let journey = null;
+  let visualState = null;
+  let attentionHierarchy = null;
+  let workflowDominance = null;
+  let deferredVisibility = null;
+
   if (state.artifacts && state.artifacts.ok) {
     try {
       journey = resolveQualificationJourney(state.artifacts);
+
+      if (journey && journey.available) {
+        visualState = resolveVisualState(
+          journey.banner.s_state,
+          journey.banner.blocker_class
+        );
+        attentionHierarchy = resolveAttentionHierarchy(journey);
+        workflowDominance = resolveWorkflowDominance(
+          journey.remediationStages,
+          journey.currentStage
+        );
+        deferredVisibility = resolveDeferredVisibility(journey);
+      }
     } catch (_e) {
       journey = { available: false, reason: 'JOURNEY_RESOLUTION_ERROR' };
     }
@@ -65,17 +87,24 @@ export async function getServerSideProps(context) {
         label: state.label,
         visual_posture: state.visual_posture,
       },
-      overview,
       navigation,
       degradation: state.degradation,
       degradedNotice,
       isCritical,
       journey,
+      visualState,
+      attentionHierarchy,
+      workflowDominance,
+      deferredVisibility,
     },
   };
 }
 
-export default function SQOOverviewPage({ client, runId, error, cockpitState, overview, navigation, degradation, degradedNotice, isCritical, journey }) {
+export default function SQOOverviewPage({
+  client, runId, error, cockpitState, navigation,
+  degradation, degradedNotice, isCritical,
+  journey, visualState, attentionHierarchy, workflowDominance, deferredVisibility,
+}) {
   if (error) {
     return (
       <div className="sqo-cockpit sqo-cockpit--error">
@@ -85,8 +114,10 @@ export default function SQOOverviewPage({ client, runId, error, cockpitState, ov
     );
   }
 
+  const hasJourney = journey && journey.available;
+
   return (
-    <div className="sqo-cockpit">
+    <div className={`sqo-cockpit ${visualState ? visualState.chromatic_class : ''}`}>
       <SQONavigation
         client={client}
         runId={runId}
@@ -104,54 +135,95 @@ export default function SQOOverviewPage({ client, runId, error, cockpitState, ov
 
         {isCritical ? (
           <SQODegradedState degradation={degradation} />
-        ) : (
-          <>
-            {journey && journey.available && (
-              <SemanticMaturationStrip journey={journey} />
-            )}
-
-            <QualificationJourneyBanner banner={journey && journey.available ? journey.banner : null} />
-
-            <QualificationOverviewPanel overview={overview} cockpitState={cockpitState} />
-
-            {journey && journey.available && (
-              <>
-                <ImmediateBlockerPanel
-                  blockers={journey.immediateBlockers}
+        ) : hasJourney ? (
+          <OperationalAttentionLayout attentionHierarchy={attentionHierarchy}>
+            <SQOCognitiveLayoutShell
+              visualState={visualState}
+              ribbon={
+                <QualificationStateRibbon
+                  banner={journey.banner}
+                  visualState={visualState}
                   debtCounts={journey.debtCounts}
-                />
-
-                <RemediationWorkflowPanel
-                  stages={journey.remediationStages}
-                  currentStage={journey.currentStage}
-                />
-
-                <SemanticProgressionTimeline
-                  progression={journey.progression}
                   maturity={journey.maturity}
                   continuity={journey.continuity}
+                />
+              }
+              heroRegion={
+                <QualificationHeroRegion
+                  banner={journey.banner}
+                  visualState={visualState}
                   narratives={journey.narratives}
                 />
-
-                <SourceMaterialGuidancePanel guidance={journey.sourceGuidance} />
-
-                <RerunPreparationChecklist checklist={journey.rerunChecklist} />
-
-                <ValidationGatePanel gates={journey.validationGates} />
-
-                <DeferredDebtPanel
+              }
+              blockerLayer={
+                journey.immediateBlockers && journey.immediateBlockers.length > 0 ? (
+                  <BlockerDominanceLayer
+                    blockers={journey.immediateBlockers}
+                    debtCounts={journey.debtCounts}
+                    visualState={visualState}
+                  />
+                ) : null
+              }
+              spine={
+                workflowDominance && workflowDominance.spineNodes.length > 0 ? (
+                  <OperationalWorkflowSpine
+                    spineNodes={workflowDominance.spineNodes}
+                    sState={journey.banner.s_state}
+                    nextState={journey.banner.next_reachable}
+                  />
+                ) : null
+              }
+              workflowCluster={
+                workflowDominance && workflowDominance.stages.length > 0 ? (
+                  <WorkflowStageCluster
+                    stages={workflowDominance.stages}
+                    currentStage={journey.currentStage}
+                    sourceGuidance={journey.sourceGuidance}
+                    rerunChecklist={journey.rerunChecklist}
+                  />
+                ) : null
+              }
+              progressionRail={
+                <ProgressionRail
+                  progression={journey.progression}
+                  validationGates={journey.validationGates}
+                  visualState={visualState}
+                />
+              }
+              deferredZone={
+                <DeferredDebtCollapseZone
                   deferred={journey.deferredDebt}
                   active={journey.activeDebt}
+                  visibility={deferredVisibility}
                 />
-              </>
-            )}
-          </>
+              }
+              forensicLink={
+                <div className="sqo-forensic-link">
+                  <span className="sqo-forensic-link__label">Detailed exploration</span>
+                  <nav className="sqo-forensic-link__nav">
+                    {navigation && navigation.filter(n => n.id !== 'overview').map(nav => (
+                      <a
+                        key={nav.id}
+                        href={nav.path}
+                        className={`sqo-forensic-link__item ${nav.degraded ? 'sqo-forensic-link__item--degraded' : ''}`}
+                      >
+                        {nav.label}
+                      </a>
+                    ))}
+                  </nav>
+                </div>
+              }
+              governance={
+                <span>Read-only artifact consumption · No AI interpretation · Deterministic display</span>
+              }
+            />
+          </OperationalAttentionLayout>
+        ) : (
+          <div className="sqo-cockpit__no-journey">
+            <p>Qualification journey could not be resolved. Use section navigation for detailed artifact exploration.</p>
+          </div>
         )}
       </main>
-
-      <footer className="sqo-cockpit__governance">
-        Read-only artifact consumption · No AI interpretation · Deterministic display
-      </footer>
     </div>
   );
 }

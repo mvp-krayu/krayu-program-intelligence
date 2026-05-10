@@ -1,0 +1,106 @@
+{
+  "stream": "PI.SQO.COCKPIT-OPERATIONAL-UX-ORCHESTRATION.01",
+  "changes": [
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/QualificationVisualStateResolver.js",
+      "action": "CREATED",
+      "description": "S-state chromatic palette, blocker visual framing, debt visual weight"
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/OperationalAttentionResolver.js",
+      "action": "CREATED",
+      "description": "6-zone attention hierarchy with primary focus and cognitive load"
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/WorkflowDominanceResolver.js",
+      "action": "CREATED",
+      "description": "Stage prominence resolution and spine node generation"
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/CognitiveGroupingResolver.js",
+      "action": "CREATED",
+      "description": "6 cognitive groups with deterministic sequencing and collapse rules"
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/DeferredVisibilityResolver.js",
+      "action": "CREATED",
+      "description": "15 panel visibility defaults with collapse and escalation rules"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/QualificationHeroRegion.jsx",
+      "action": "CREATED",
+      "description": "Large operational qualification hero display"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/QualificationStateRibbon.jsx",
+      "action": "CREATED",
+      "description": "Compact horizontal state ribbon bar"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/BlockerDominanceLayer.jsx",
+      "action": "CREATED",
+      "description": "Critical blocker isolation with escalation framing"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/OperationalWorkflowSpine.jsx",
+      "action": "CREATED",
+      "description": "Vertical workflow navigation rail"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/WorkflowStageCluster.jsx",
+      "action": "CREATED",
+      "description": "Active remediation stage with guidance and checklist"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/ProgressionRail.jsx",
+      "action": "CREATED",
+      "description": "S-state transition display with readiness bar and validation gates"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/DeferredDebtCollapseZone.jsx",
+      "action": "CREATED",
+      "description": "Collapsible deferred debt sections by target S-state"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/SemanticRemediationZone.jsx",
+      "action": "CREATED",
+      "description": "Source material guidance grid and rerun checklist"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/OperationalAttentionLayout.jsx",
+      "action": "CREATED",
+      "description": "Focus and cognitive load CSS class wrapper"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/SQOCognitiveLayoutShell.jsx",
+      "action": "CREATED",
+      "description": "Full-page cognitive layout orchestrator with zone composition"
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/index.js",
+      "action": "MODIFIED",
+      "description": "Refactored from stacked panels to cognitive layout shell with orchestration"
+    },
+    {
+      "file": "app/execlens-demo/styles/globals.css",
+      "action": "MODIFIED",
+      "description": "Added ~500 lines: chromatic system, hero, ribbon, spine, stage cluster, progression rail, collapse zone, forensic link, remediation zone styles"
+    },
+    {
+      "file": "app/execlens-demo/flagship-experience/tests/sqo-operational-ux-orchestration.test.js",
+      "action": "CREATED",
+      "description": "31 tests in 7 suites covering all orchestration modules and governance"
+    },
+    {
+      "file": "app/execlens-demo/package.json",
+      "action": "MODIFIED",
+      "description": "Added test:sqo-ux script and included in aggregate test"
+    }
+  ],
+  "summary": {
+    "created": 16,
+    "modified": 3,
+    "deleted": 0,
+    "total": 19
+  }
+}
