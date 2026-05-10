@@ -1,0 +1,47 @@
+import SQONavigation from '../../../../../../components/sqo-cockpit/SQONavigation';
+import SQODegradedState from '../../../../../../components/sqo-cockpit/SQODegradedState';
+import ContinuityAssessmentPanel from '../../../../../../components/sqo-cockpit/ContinuityAssessmentPanel';
+
+const { resolveCockpitState } = require('../../../../../../lib/sqo-cockpit/SQOCockpitStateResolver');
+const { validateRouteParams, buildNavigationItems } = require('../../../../../../lib/sqo-cockpit/SQOCockpitRouteResolver');
+const { formatContinuitySection } = require('../../../../../../lib/sqo-cockpit/SQOCockpitFormatter');
+const { buildDegradedNotice } = require('../../../../../../lib/sqo-cockpit/SQOCockpitDegradationHandler');
+
+export async function getServerSideProps(context) {
+  const { client, run } = context.params;
+  const validation = validateRouteParams(client, run);
+
+  if (!validation.valid) {
+    return { props: { client, runId: run, error: validation.error, continuityData: null, navigation: null, degradation: null, degradedNotice: null } };
+  }
+
+  const state = resolveCockpitState(client, run);
+  const navigation = buildNavigationItems(client, run, 'continuity');
+  const continuityData = state.artifacts ? formatContinuitySection(state.artifacts) : null;
+  const degradedNotice = state.degradation ? buildDegradedNotice(state.degradation) : null;
+
+  return {
+    props: { client, runId: run, error: null, continuityData, navigation, degradation: state.degradation, degradedNotice },
+  };
+}
+
+export default function SQOContinuityPage({ client, runId, error, continuityData, navigation, degradation, degradedNotice }) {
+  if (error) {
+    return (
+      <div className="sqo-cockpit sqo-cockpit--error">
+        <SQODegradedState degradation={{ state: error, reason: `Route validation failed: ${error}` }} />
+      </div>
+    );
+  }
+
+  return (
+    <div className="sqo-cockpit">
+      <SQONavigation client={client} runId={runId} activeSection="continuity" sections={navigation} degradation={degradation} />
+      <main className="sqo-cockpit__content">
+        {degradedNotice && <div className={`sqo-cockpit__notice sqo-cockpit__notice--${degradedNotice.severity.toLowerCase()}`}>{degradedNotice.message}</div>}
+        <ContinuityAssessmentPanel continuityData={continuityData} />
+      </main>
+      <footer className="sqo-cockpit__governance">Read-only artifact consumption · No AI interpretation · Deterministic display</footer>
+    </div>
+  );
+}

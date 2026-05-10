@@ -1,0 +1,175 @@
+{
+  "stream": "PI.SQO.COCKPIT-STATIC-ARTIFACT-READER.01",
+  "changes": [
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/SQOCockpitArtifactLoader.js",
+      "action": "CREATED",
+      "description": "Backend module: loads all 15 SQO artifact types, section-specific loading, critical artifact detection."
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/SQOCockpitStateResolver.js",
+      "action": "CREATED",
+      "description": "Backend module: orchestrates artifact loading and resolves 10 cockpit states with handoff readiness."
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/SQOCockpitDegradationHandler.js",
+      "action": "CREATED",
+      "description": "Backend module: fail-visible degradation with 7 states, section availability, replay status."
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/SQOCockpitRouteResolver.js",
+      "action": "CREATED",
+      "description": "Backend module: route validation, section paths, navigation builder for 7 cockpit sections."
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/SQOCockpitFormatter.js",
+      "action": "CREATED",
+      "description": "Backend module: 8 deterministic formatters for cockpit sections with classification lookups."
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/SQONavigation.jsx",
+      "action": "CREATED",
+      "description": "React component: cockpit navigation sidebar with degradation indicators and governance footer."
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/SQODegradedState.jsx",
+      "action": "CREATED",
+      "description": "React component: explicit degradation display with state-specific messages."
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/QualificationOverviewPanel.jsx",
+      "action": "CREATED",
+      "description": "React component: qualification overview with S-state, maturity, gravity, stability, progression, debt."
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/SemanticDebtPanel.jsx",
+      "action": "CREATED",
+      "description": "React component: debt items grouped by category/severity with remediation pathways."
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/ContinuityAssessmentPanel.jsx",
+      "action": "CREATED",
+      "description": "React component: continuity metrics, coverage/fidelity/lineage bars, and continuity gaps."
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/MaturityProfilePanel.jsx",
+      "action": "CREATED",
+      "description": "React component: 8-dimension maturity profile with gravity and stability composites."
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/ProgressionReadinessPanel.jsx",
+      "action": "CREATED",
+      "description": "React component: S-state progression with readiness bar, missing artifacts, blocking debts by pathway."
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/EvidenceReplayPanel.jsx",
+      "action": "CREATED",
+      "description": "React component: replay verifications and certifications with per-check pass/fail indicators."
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/HandoffReadinessPanel.jsx",
+      "action": "CREATED",
+      "description": "React component: PATH B handoff READY/BLOCKED status, blocking conditions, package summary."
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/index.js",
+      "action": "CREATED",
+      "description": "Page: client/run selector listing all registered pairs from manifest."
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/index.js",
+      "action": "CREATED",
+      "description": "Page: run selector for a specific client."
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/index.js",
+      "action": "CREATED",
+      "description": "Page: qualification overview (default cockpit view)."
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/debt.js",
+      "action": "CREATED",
+      "description": "Page: semantic debt exploration."
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/continuity.js",
+      "action": "CREATED",
+      "description": "Page: continuity assessment view."
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/maturity.js",
+      "action": "CREATED",
+      "description": "Page: maturity profile view."
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/progression.js",
+      "action": "CREATED",
+      "description": "Page: progression readiness view."
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/evidence.js",
+      "action": "CREATED",
+      "description": "Page: evidence and replay verification view."
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/handoff.js",
+      "action": "CREATED",
+      "description": "Page: PATH B handoff readiness view."
+    },
+    {
+      "file": "app/execlens-demo/flagship-experience/tests/sqo-cockpit-static-reader.test.js",
+      "action": "CREATED",
+      "description": "Test file: 37 tests across 6 suites covering loader, state, degradation, routing, formatting, governance."
+    },
+    {
+      "file": "app/execlens-demo/package.json",
+      "action": "MODIFIED",
+      "description": "Added test:sqo-cockpit script and included cockpit tests in main test suite."
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT-STATIC-ARTIFACT-READER.01/SQO_COCKPIT_ARTIFACT_LOADER_SPEC.md",
+      "action": "CREATED",
+      "description": "Documentation: artifact loader specification with 15 keys and section mapping."
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT-STATIC-ARTIFACT-READER.01/SQO_COCKPIT_STATE_RESOLVER_SPEC.md",
+      "action": "CREATED",
+      "description": "Documentation: state resolver specification with 10 cockpit states."
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT-STATIC-ARTIFACT-READER.01/SQO_COCKPIT_DEGRADATION_SPEC.md",
+      "action": "CREATED",
+      "description": "Documentation: degradation handler specification with 7 degradation states."
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT-STATIC-ARTIFACT-READER.01/SQO_COCKPIT_ROUTE_RESOLVER_SPEC.md",
+      "action": "CREATED",
+      "description": "Documentation: route resolver specification with 7 sections."
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT-STATIC-ARTIFACT-READER.01/SQO_COCKPIT_FORMATTER_SPEC.md",
+      "action": "CREATED",
+      "description": "Documentation: formatter specification with 8 formatters and classification labels."
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT-STATIC-ARTIFACT-READER.01/SQO_COCKPIT_COMPONENT_SPEC.md",
+      "action": "CREATED",
+      "description": "Documentation: 9 React component specifications."
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT-STATIC-ARTIFACT-READER.01/SQO_COCKPIT_PAGE_SPEC.md",
+      "action": "CREATED",
+      "description": "Documentation: 9 page specifications with route structure."
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT-STATIC-ARTIFACT-READER.01/SQO_COCKPIT_GOVERNANCE_COMPLIANCE.md",
+      "action": "CREATED",
+      "description": "Documentation: 15-rule governance compliance matrix and boundary enforcement."
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT-STATIC-ARTIFACT-READER.01/SQO_COCKPIT_TEST_SPEC.md",
+      "action": "CREATED",
+      "description": "Documentation: 37-test specification across 6 suites."
+    }
+  ]
+}
