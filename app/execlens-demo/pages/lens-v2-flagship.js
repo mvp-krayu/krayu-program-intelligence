@@ -1081,7 +1081,172 @@ export async function getServerSideProps(context) {
   return { props: result.props }
 }
 
-export default function LensV2FlagshipPage({ livePayload, livePropagationChains, liveBindingError, bindingClient, bindingRun }) {
+/* ── SQO Runtime Overlays ────────────────────────────────────────────────────
+ * PI.SQO.RUNTIME-OVERLAY-SYSTEM.01
+ * Advisory overlays — no PATH B mutation, no projection override.
+ */
+
+function SQOQualificationBanner({ overlay }) {
+  if (!overlay || !overlay.available || !overlay.qualification_banner) return null
+  const b = overlay.qualification_banner
+  return (
+    <div className="sqo-qual-banner" role="status">
+      <div className="sqo-qual-banner-state">
+        <span className="sqo-qual-banner-sstate">{b.s_state}</span>
+        <span className="sqo-qual-banner-sep">—</span>
+        <span className="sqo-qual-banner-auth">{b.authorization_tier}</span>
+      </div>
+      <div className="sqo-qual-banner-boardroom">{b.boardroom_readiness}</div>
+      <div className="sqo-qual-banner-projection">{b.projection_permission}</div>
+    </div>
+  )
+}
+
+function SQOMaturityPanel({ overlay }) {
+  if (!overlay || !overlay.available || !overlay.maturity_panel) return null
+  const m = overlay.maturity_panel
+  const ds = m.dimension_summary || {}
+  return (
+    <div className="sqo-maturity-panel">
+      <div className="sqo-panel-label">SEMANTIC MATURITY</div>
+      <div className="sqo-maturity-score">
+        <span className="sqo-maturity-value">{m.overall_score}</span>
+        <span className="sqo-maturity-class">{m.overall_classification}</span>
+      </div>
+      <div className="sqo-maturity-dims">
+        {Object.keys(m.dimensions).map(id => {
+          const d = m.dimensions[id]
+          return (
+            <div key={id} className={`sqo-dim sqo-dim--${d.classification.toLowerCase()}`}>
+              <span className="sqo-dim-id">{id}</span>
+              <span className="sqo-dim-score">{d.score}</span>
+              <span className="sqo-dim-class">{d.classification}</span>
+            </div>
+          )
+        })}
+      </div>
+      <div className="sqo-maturity-counts">
+        {ds.strong > 0 && <span className="sqo-count sqo-count--strong">{ds.strong} STRONG</span>}
+        {ds.stable > 0 && <span className="sqo-count sqo-count--stable">{ds.stable} STABLE</span>}
+        {ds.partial > 0 && <span className="sqo-count sqo-count--partial">{ds.partial} PARTIAL</span>}
+        {ds.low > 0 && <span className="sqo-count sqo-count--low">{ds.low} LOW</span>}
+      </div>
+    </div>
+  )
+}
+
+function SQOGravityStabilityPanel({ overlay }) {
+  if (!overlay || !overlay.available) return null
+  const g = overlay.gravity_indicator
+  const s = overlay.stability_indicator
+  if (!g && !s) return null
+  return (
+    <div className="sqo-gs-panel">
+      {g && (
+        <div className="sqo-gs-block">
+          <div className="sqo-panel-label">SEMANTIC GRAVITY</div>
+          <div className="sqo-gs-score">
+            <span className="sqo-gs-value">{g.score}</span>
+            <span className="sqo-gs-class">{g.classification}</span>
+          </div>
+          <div className="sqo-gs-desc">{g.description}</div>
+        </div>
+      )}
+      {s && (
+        <div className="sqo-gs-block">
+          <div className="sqo-panel-label">QUALIFICATION STABILITY</div>
+          <div className="sqo-gs-score">
+            <span className="sqo-gs-value">{s.score}</span>
+            <span className="sqo-gs-class">{s.classification}</span>
+          </div>
+          <div className="sqo-gs-desc">{s.description}</div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function SQODebtProgressionPanel({ overlay }) {
+  if (!overlay || !overlay.available) return null
+  const d = overlay.debt_summary
+  const p = overlay.progression_summary
+  if (!d && !p) return null
+  return (
+    <div className="sqo-dp-panel">
+      {d && (
+        <div className="sqo-dp-block">
+          <div className="sqo-panel-label">SEMANTIC DEBT</div>
+          <div className="sqo-dp-counts">
+            <span className="sqo-dp-total">{d.total_debt_items} items</span>
+            {d.critical_count > 0 && <span className="sqo-dp-critical">{d.critical_count} critical</span>}
+            {d.high_count > 0 && <span className="sqo-dp-high">{d.high_count} high</span>}
+            {d.blocking_count > 0 && <span className="sqo-dp-blocking">{d.blocking_count} blocking</span>}
+          </div>
+          {d.highest_priority_pathway && (
+            <div className="sqo-dp-pathway">Primary pathway: {d.highest_priority_pathway}</div>
+          )}
+        </div>
+      )}
+      {p && (
+        <div className="sqo-dp-block">
+          <div className="sqo-panel-label">PROGRESSION READINESS</div>
+          <div className="sqo-dp-progression">
+            <span className="sqo-dp-current">{p.current_s_state}</span>
+            <span className="sqo-dp-arrow">→</span>
+            <span className="sqo-dp-next">{p.next_s_state}</span>
+          </div>
+          <div className="sqo-dp-readiness">Readiness: {p.readiness_score}</div>
+          {p.required_pathways.length > 0 && (
+            <div className="sqo-dp-pathways">Required: {p.required_pathways.join(', ')}</div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function SQOGovernanceStrip({ overlay }) {
+  const disc = (overlay && overlay.governance_disclosure) || {
+    sqo_advisory_only: true,
+    deterministic_scoring: true,
+    no_ai_inference: true,
+    no_substrate_mutation: true,
+    qualification_disclosures_active: true,
+  }
+  return (
+    <div className="sqo-gov-strip">
+      <span className="sqo-gov-strip-label">SQO GOVERNANCE</span>
+      <span className="sqo-gov-strip-item">Advisory only</span>
+      <span className="sqo-gov-strip-sep">·</span>
+      <span className="sqo-gov-strip-item">Deterministic scoring</span>
+      <span className="sqo-gov-strip-sep">·</span>
+      <span className="sqo-gov-strip-item">No AI inference</span>
+      <span className="sqo-gov-strip-sep">·</span>
+      <span className="sqo-gov-strip-item">No substrate mutation</span>
+      {overlay && overlay.available && (
+        <>
+          <span className="sqo-gov-strip-sep">·</span>
+          <span className="sqo-gov-strip-item sqo-gov-strip-item--active">Qualification disclosures active</span>
+        </>
+      )}
+    </div>
+  )
+}
+
+function SQORuntimeWarnings({ overlay }) {
+  if (!overlay || !overlay.warnings || overlay.warnings.length === 0) return null
+  return (
+    <div className="sqo-warnings">
+      {overlay.warnings.map((w, i) => (
+        <div key={i} className={`sqo-warning sqo-warning--${w.s_state.toLowerCase()}`} role="alert">
+          <span className="sqo-warning-text">{w.text}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+export default function LensV2FlagshipPage({ livePayload, livePropagationChains, liveBindingError, bindingClient, bindingRun, sqoOverlays }) {
   const [densityClass, setDensityClass] = useState('EXECUTIVE_DENSE')
   const [boardroomMode, setBoardroomMode] = useState(false)
   const [investigationStage, setInvestigationStage] = useState('SUMMARY')
@@ -1273,6 +1438,9 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             visible={qualifierVisible}
           />
 
+          <SQOQualificationBanner overlay={sqoOverlays} />
+          <SQORuntimeWarnings overlay={sqoOverlays} />
+
           <IntelligenceField
             narrative={narrative}
             adapted={adaptedDisplay}
@@ -1296,9 +1464,14 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
               densityClass={densityClass}
             />
           )}
+
+          <SQOMaturityPanel overlay={sqoOverlays} />
+          <SQOGravityStabilityPanel overlay={sqoOverlays} />
+          <SQODebtProgressionPanel overlay={sqoOverlays} />
         </div>
 
         <GovernanceRibbon governance={governance} />
+        <SQOGovernanceStrip overlay={sqoOverlays} />
       </div>
 
       <style jsx global>{`
@@ -3514,6 +3687,219 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           letter-spacing: 0.06em;
           text-transform: uppercase;
         }
+
+        /* ── SQO Runtime Overlays ────────────────────────────────── */
+        .sqo-qual-banner {
+          margin: 0 40px 16px;
+          padding: 14px 20px;
+          background: rgba(74,158,255,0.06);
+          border: 1px solid rgba(74,158,255,0.18);
+          border-radius: 6px;
+          animation: v2Enter 0.4s ease both;
+        }
+        .sqo-qual-banner-state {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          margin-bottom: 4px;
+        }
+        .sqo-qual-banner-sstate {
+          font-size: 13px;
+          font-weight: 600;
+          color: #4a9eff;
+          letter-spacing: 0.04em;
+        }
+        .sqo-qual-banner-sep { color: #3a4560; }
+        .sqo-qual-banner-auth {
+          font-size: 11px;
+          color: #e8edf8;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+        }
+        .sqo-qual-banner-boardroom {
+          font-size: 10px;
+          color: #9aa0bc;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+        .sqo-qual-banner-projection {
+          font-size: 12px;
+          color: #7a85a3;
+          margin-top: 4px;
+          line-height: 1.4;
+        }
+
+        .sqo-warnings {
+          margin: 0 40px 12px;
+        }
+        .sqo-warning {
+          padding: 8px 16px;
+          font-size: 11px;
+          color: #9aa0bc;
+          letter-spacing: 0.04em;
+          border-left: 2px solid #3a4560;
+          margin-bottom: 4px;
+        }
+        .sqo-warning--s1 { border-left-color: #ff6b6b; color: #ff9e4a; }
+        .sqo-warning--s2 { border-left-color: #4a9eff; }
+        .sqo-warning--s3 { border-left-color: #64ffda; color: #64ffda; }
+
+        .sqo-panel-label {
+          font-size: 9px;
+          letter-spacing: 0.14em;
+          color: #5a6580;
+          text-transform: uppercase;
+          margin-bottom: 8px;
+        }
+
+        .sqo-maturity-panel,
+        .sqo-gs-panel,
+        .sqo-dp-panel {
+          margin: 16px 40px;
+          padding: 16px 20px;
+          background: #111420;
+          border: 1px solid #1e2436;
+          border-radius: 6px;
+        }
+        .sqo-maturity-score {
+          display: flex;
+          align-items: baseline;
+          gap: 10px;
+          margin-bottom: 12px;
+        }
+        .sqo-maturity-value {
+          font-size: 28px;
+          font-weight: 600;
+          color: #e8edf8;
+          font-variant-numeric: tabular-nums;
+        }
+        .sqo-maturity-class {
+          font-size: 11px;
+          color: #9aa0bc;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+        .sqo-maturity-dims {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          margin-bottom: 10px;
+        }
+        .sqo-dim {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          padding: 3px 8px;
+          border-radius: 3px;
+          font-size: 10px;
+          background: rgba(255,255,255,0.03);
+          border: 1px solid #1e2436;
+        }
+        .sqo-dim-id { color: #5a6580; font-weight: 600; }
+        .sqo-dim-score { color: #9aa0bc; font-variant-numeric: tabular-nums; }
+        .sqo-dim-class { color: #5a6580; font-size: 9px; text-transform: uppercase; }
+        .sqo-dim--strong { border-color: rgba(100,255,218,0.2); }
+        .sqo-dim--strong .sqo-dim-score { color: #64ffda; }
+        .sqo-dim--stable { border-color: rgba(74,158,255,0.2); }
+        .sqo-dim--stable .sqo-dim-score { color: #4a9eff; }
+        .sqo-dim--partial { border-color: rgba(255,214,0,0.15); }
+        .sqo-dim--partial .sqo-dim-score { color: #ffd700; }
+        .sqo-dim--low { border-color: rgba(255,107,107,0.15); }
+        .sqo-dim--low .sqo-dim-score { color: #ff6b6b; }
+
+        .sqo-maturity-counts {
+          display: flex;
+          gap: 10px;
+          font-size: 10px;
+          letter-spacing: 0.06em;
+        }
+        .sqo-count--strong { color: #64ffda; }
+        .sqo-count--stable { color: #4a9eff; }
+        .sqo-count--partial { color: #ffd700; }
+        .sqo-count--low { color: #ff6b6b; }
+
+        .sqo-gs-panel { display: flex; gap: 24px; }
+        .sqo-gs-block { flex: 1; }
+        .sqo-gs-score {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          margin-bottom: 6px;
+        }
+        .sqo-gs-value {
+          font-size: 20px;
+          font-weight: 600;
+          color: #e8edf8;
+          font-variant-numeric: tabular-nums;
+        }
+        .sqo-gs-class {
+          font-size: 10px;
+          color: #9aa0bc;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+        .sqo-gs-desc {
+          font-size: 11px;
+          color: #7a85a3;
+          line-height: 1.5;
+        }
+
+        .sqo-dp-panel { display: flex; gap: 24px; }
+        .sqo-dp-block { flex: 1; }
+        .sqo-dp-counts {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          font-size: 12px;
+          margin-bottom: 6px;
+        }
+        .sqo-dp-total { color: #e8edf8; }
+        .sqo-dp-critical { color: #ff6b6b; }
+        .sqo-dp-high { color: #ff9e4a; }
+        .sqo-dp-blocking { color: #ffd700; }
+        .sqo-dp-pathway {
+          font-size: 11px;
+          color: #7a85a3;
+        }
+        .sqo-dp-progression {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 14px;
+          margin-bottom: 6px;
+        }
+        .sqo-dp-current { color: #9aa0bc; font-weight: 600; }
+        .sqo-dp-arrow { color: #3a4560; }
+        .sqo-dp-next { color: #4a9eff; font-weight: 600; }
+        .sqo-dp-readiness {
+          font-size: 12px;
+          color: #9aa0bc;
+          font-variant-numeric: tabular-nums;
+        }
+        .sqo-dp-pathways {
+          font-size: 11px;
+          color: #7a85a3;
+          margin-top: 2px;
+        }
+
+        .sqo-gov-strip {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 6px 40px;
+          background: #0a0c10;
+          font-size: 9px;
+          letter-spacing: 0.1em;
+          color: #3a4560;
+          text-transform: uppercase;
+        }
+        .sqo-gov-strip-label {
+          color: #5a6580;
+          font-weight: 600;
+          margin-right: 4px;
+        }
+        .sqo-gov-strip-sep { color: #232d42; }
+        .sqo-gov-strip-item--active { color: #4a9eff; }
       `}</style>
     </>
   )

@@ -24,6 +24,7 @@
 
 const { resolveBlueEdgePayload } = require('./BlueEdgePayloadResolver');
 const { isClientRunAllowed } = require('./manifests');
+const { resolveSQOOverlays } = require('./sqo/SQOOverlayStateResolver');
 
 const DEFAULT_BINDING_CLIENT = 'blueedge';
 const DEFAULT_BINDING_RUN = 'run_blueedge_productized_01_fixed';
@@ -43,6 +44,7 @@ function emptyPropsShape(extra) {
     liveBindingError: null,
     bindingClient: null,
     bindingRun: null,
+    sqoOverlays: null,
   }, extra || {});
 }
 
@@ -110,6 +112,14 @@ function resolveFlagshipBinding(input) {
     };
   }
 
+  // Step 5: Load SQO overlays additively — fail-safe, never affects payload resolution
+  let sqoOverlays = null;
+  try {
+    sqoOverlays = resolveSQOOverlays(requestedClient, requestedRun);
+  } catch (_) {
+    // SQO overlay failure must not affect normal runtime operation
+  }
+
   let payload = null;
   let resolverError = null;
   try {
@@ -124,6 +134,7 @@ function resolveFlagshipBinding(input) {
         liveBindingError: resolverError || { kind: 'PAYLOAD_NULL' },
         bindingClient: requestedClient,
         bindingRun: requestedRun,
+        sqoOverlays,
       }),
       statusCode: 502,
     };
@@ -139,6 +150,7 @@ function resolveFlagshipBinding(input) {
         },
         bindingClient: requestedClient,
         bindingRun: requestedRun,
+        sqoOverlays,
       }),
       statusCode: 502,
     };
@@ -151,6 +163,7 @@ function resolveFlagshipBinding(input) {
       liveBindingError: null,
       bindingClient: requestedClient,
       bindingRun: requestedRun,
+      sqoOverlays,
     },
     statusCode: 200,
   };
