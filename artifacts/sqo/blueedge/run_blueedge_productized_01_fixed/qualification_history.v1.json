@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "client": "blueedge",
+  "run_id": "run_blueedge_productized_01_fixed",
+  "current_state": "S2",
+  "prior_state": null,
+  "history_entries": [
+    {
+      "timestamp": "2026-05-10T11:42:27.098Z",
+      "s_state": "S2",
+      "state_label": "PARTIAL_GROUNDING_WITH_CONTINUITY",
+      "prior_state": null,
+      "transition_type": "INITIAL",
+      "transition_cause": "Partial grounding with validated semantic continuity",
+      "evidence_snapshot": {
+        "loader_status": "OK",
+        "binding_status": "LIVE",
+        "q_class": "Q-02",
+        "required_artifacts_present_count": 6,
+        "required_artifacts_missing_count": 0
+      },
+      "governance": {
+        "fail_closed": true,
+        "client_agnostic": true,
+        "no_semantic_fabrication": true
+      },
+      "provenance": {
+        "source_commit": "9fdf308df8fa",
+        "operation": "record_qualification_history",
+        "operation_version": "1.0"
+      }
+    }
+  ],
+  "governance": {
+    "append_only": true,
+    "no_rewrite": true,
+    "fail_closed": true
+  },
+  "provenance": {
+    "source_commit": "9fdf308df8fa",
+    "operation": "emit_qualification_history",
+    "operation_version": "1.0"
+  }
+}

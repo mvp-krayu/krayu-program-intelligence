@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0",
+  "certification_type": "sqo_state_detection_e2e",
+  "timestamp": "2026-05-10T11:42:27.102Z",
+  "cases": [
+    {
+      "case_id": "CASE-1",
+      "label": "BlueEdge default registered run",
+      "client": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "expected_s_state": "S2",
+      "actual_s_state": "S2",
+      "expected_q_class": "Q-02",
+      "actual_q_class": "Q-02",
+      "expected_auth": "AUTHORIZED_WITH_QUALIFICATION",
+      "actual_auth": "AUTHORIZED_WITH_QUALIFICATION",
+      "pass": true
+    },
+    {
+      "case_id": "CASE-2",
+      "label": "FastAPI registered run",
+      "client": "fastapi",
+      "run_id": "run_02_oss_fastapi_pipeline",
+      "expected_s_state": "S1",
+      "actual_s_state": "S1",
+      "expected_loader": "REQUIRED_ARTIFACT_MISSING",
+      "actual_loader": "REQUIRED_ARTIFACT_MISSING",
+      "expected_auth": "NOT_AUTHORIZED",
+      "actual_auth": "NOT_AUTHORIZED",
+      "pass": true
+    },
+    {
+      "case_id": "CASE-3",
+      "label": "Unknown client/run",
+      "pass": true,
+      "note": "Verified by test suite — fails closed with CLIENT_RUN_NOT_REGISTERED"
+    },
+    {
+      "case_id": "CASE-4",
+      "label": "Determinism",
+      "blueedge_replay": "PASS",
+      "fastapi_replay": "PASS",
+      "pass": true
+    },
+    {
+      "case_id": "CASE-5",
+      "label": "Governance boundary",
+      "pass": true,
+      "note": "Verified by test suite — no Lane A/D/PATH B mutation, no Q-class resolver mutation"
+    }
+  ],
+  "overall_verdict": "CERTIFIED",
+  "governance": {
+    "no_lane_a_mutation": true,
+    "no_lane_d_mutation": true,
+    "no_path_b_mutation": true,
+    "no_q_class_mutation": true,
+    "no_runtime_page_mutation": true
+  }
+}
