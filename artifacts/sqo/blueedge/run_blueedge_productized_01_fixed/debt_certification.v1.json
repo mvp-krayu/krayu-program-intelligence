@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "client": "blueedge",
+  "run_id": "run_blueedge_productized_01_fixed",
+  "timestamp": "2026-05-10T13:34:25.295Z",
+  "certification_cases": [
+    {
+      "name": "debt_detection_complete",
+      "pass": true,
+      "detail": {
+        "total": 15
+      }
+    },
+    {
+      "name": "deterministic_recomputation",
+      "pass": true,
+      "detail": {}
+    },
+    {
+      "name": "replay_verification",
+      "pass": true,
+      "detail": {}
+    },
+    {
+      "name": "governance_boundary",
+      "pass": true,
+      "detail": {}
+    }
+  ],
+  "overall_verdict": "CERTIFIED",
+  "provenance": {
+    "source_commit": "096c906c7ba1",
+    "operation": "debt_certification",
+    "operation_version": "1.0"
+  }
+}

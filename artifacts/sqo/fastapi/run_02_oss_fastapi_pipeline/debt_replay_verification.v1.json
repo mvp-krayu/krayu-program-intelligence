@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "client": "fastapi",
+  "run_id": "run_02_oss_fastapi_pipeline",
+  "verification_timestamp": "2026-05-10T13:34:25.301Z",
+  "checks": {
+    "input_integrity": {
+      "pass": true,
+      "mismatches": []
+    },
+    "deterministic_recomputation": {
+      "pass": true,
+      "stored": {
+        "total_debt_items": 25,
+        "summary": {
+          "critical_count": 3,
+          "high_count": 10,
+          "medium_high_count": 1,
+          "medium_count": 11,
+          "s_state_blocking_count": 12
+        }
+      },
+      "recomputed": {
+        "total_debt_items": 25,
+        "summary": {
+          "critical_count": 3,
+          "high_count": 10,
+          "medium_high_count": 1,
+          "medium_count": 11,
+          "s_state_blocking_count": 12
+        }
+      }
+    },
+    "output_hash": {
+      "pass": true,
+      "stored_hash": "sha256:1cfa52b19057bea36845d8a7219ecdad893c87ff8311f6bd9f9f685b138161e8",
+      "recomputed_hash": "sha256:1cfa52b19057bea36845d8a7219ecdad893c87ff8311f6bd9f9f685b138161e8"
+    }
+  },
+  "overall_verdict": "PASS",
+  "governance": {
+    "operation": "debt_replay_verification",
+    "operation_version": "1.0"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0",
+  "client": "blueedge",
+  "run_id": "run_blueedge_productized_01_fixed",
+  "timestamp": "2026-05-10T13:34:25.291Z",
+  "overall_status": "PARTIAL",
+  "coverage_ratio": 0.371,
+  "label_fidelity_ratio": 0.692,
+  "lineage_strength": 0.235,
+  "metrics": {
+    "entity_count": 13,
+    "topology_node_count": 35,
+    "domain_count": 17,
+    "entities_with_business_label": 9,
+    "entities_without_business_label": 4,
+    "domains_grounded": 4,
+    "domains_ungrounded": 13
+  },
+  "gaps": [
+    {
+      "gap_type": "entity_coverage",
+      "description": "22 structural topology nodes without semantic crosswalk mapping (13/35 covered)",
+      "structural_reference": "canonical_topology_40_4",
+      "semantic_reference": "semantic_continuity_crosswalk.entities",
+      "severity": "MEDIUM",
+      "remediation_pathway": "R1"
+    },
+    {
+      "gap_type": "label_fidelity",
+      "description": "4 crosswalk entities without business labels (label fidelity 69%)",
+      "structural_reference": "semantic_continuity_crosswalk.entities",
+      "semantic_reference": "entities[].business_label",
+      "severity": "MEDIUM",
+      "remediation_pathway": "R1"
+    },
+    {
+      "gap_type": "lineage",
+      "description": "13 domains without structural grounding (lineage strength 24%)",
+      "structural_reference": "semantic_topology_model.domains",
+      "semantic_reference": "domains[].lineage_status",
+      "severity": "HIGH",
+      "remediation_pathway": "R4"
+    }
+  ],
+  "governance": {
+    "fail_closed": true,
+    "client_agnostic": true,
+    "no_semantic_fabrication": true,
+    "no_source_mutation": true
+  },
+  "provenance": {
+    "source_commit": "096c906c7ba1",
+    "operation": "assess_continuity",
+    "operation_version": "1.0",
+    "output_hash": "sha256:cec8a8c1dbdfe68f1d8d49b548fb39485eef257a8ed122319d1b90e475c1268b"
+  }
+}

@@ -1,0 +1,745 @@
+{
+  "schema_version": "1.0",
+  "client": "fastapi",
+  "run_id": "run_02_oss_fastapi_pipeline",
+  "timestamp": "2026-05-10T13:34:25.300Z",
+  "s_state": "S1",
+  "total_debt_items": 25,
+  "debt_items": [
+    {
+      "id": "DEBT-MISSING_ARTIFACT-01",
+      "category": "missing_artifact",
+      "severity": "CRITICAL",
+      "description": "Required artifact 'decision_validation' is not present on disk",
+      "evidence": {
+        "artifact_key": "decision_validation",
+        "field_path": "artifacts.required.decision_validation",
+        "current_value": "ABSENT",
+        "required_value": "PRESENT"
+      },
+      "blocks_s_state": "S2",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Verify source material sufficiency, re-run semantic bundle producer to produce missing or corrected artifacts.",
+        "source_material_needed": "Sufficient source material for semantic pipeline to produce the missing artifact",
+        "enrichment_pathway": "R2",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D1",
+            "D2",
+            "D3"
+          ],
+          "s_state_progression": "S1_TO_S2"
+        }
+      },
+      "priority_score": 8,
+      "priority": 1
+    },
+    {
+      "id": "DEBT-MISSING_ARTIFACT-02",
+      "category": "missing_artifact",
+      "severity": "CRITICAL",
+      "description": "Required artifact 'reproducibility_verdict' is not present on disk",
+      "evidence": {
+        "artifact_key": "reproducibility_verdict",
+        "field_path": "artifacts.required.reproducibility_verdict",
+        "current_value": "ABSENT",
+        "required_value": "PRESENT"
+      },
+      "blocks_s_state": "S2",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Verify source material sufficiency, re-run semantic bundle producer to produce missing or corrected artifacts.",
+        "source_material_needed": "Sufficient source material for semantic pipeline to produce the missing artifact",
+        "enrichment_pathway": "R2",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D1",
+            "D2",
+            "D3"
+          ],
+          "s_state_progression": "S1_TO_S2"
+        }
+      },
+      "priority_score": 8,
+      "priority": 2
+    },
+    {
+      "id": "DEBT-MISSING_ARTIFACT-03",
+      "category": "missing_artifact",
+      "severity": "CRITICAL",
+      "description": "Required artifact 'semantic_continuity_crosswalk' is not present on disk",
+      "evidence": {
+        "artifact_key": "semantic_continuity_crosswalk",
+        "field_path": "artifacts.required.semantic_continuity_crosswalk",
+        "current_value": "ABSENT",
+        "required_value": "PRESENT"
+      },
+      "blocks_s_state": "S2",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Verify source material sufficiency, re-run semantic bundle producer to produce missing or corrected artifacts.",
+        "source_material_needed": "Sufficient source material for semantic pipeline to produce the missing artifact",
+        "enrichment_pathway": "R2",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D1",
+            "D2",
+            "D3"
+          ],
+          "s_state_progression": "S1_TO_S2"
+        }
+      },
+      "priority_score": 8,
+      "priority": 3
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-01",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "description": "Domain 'DOM-01' has lineage_status 'NONE' (requires EXACT or STRONG)",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOM-01].lineage_status",
+        "current_value": "NONE",
+        "required_value": "EXACT or STRONG"
+      },
+      "blocks_s_state": "S3",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides evidence mapping each domain to structural components. Re-run semantic pipeline with evidence-enriched inputs.",
+        "source_material_needed": "Evidence mapping each ungrounded domain to structural components",
+        "enrichment_pathway": "R4",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D2",
+            "D4"
+          ],
+          "s_state_progression": "S2_TO_S3"
+        }
+      },
+      "priority_score": 6,
+      "priority": 4
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-02",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "description": "Domain 'DOM-02' has lineage_status 'NONE' (requires EXACT or STRONG)",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOM-02].lineage_status",
+        "current_value": "NONE",
+        "required_value": "EXACT or STRONG"
+      },
+      "blocks_s_state": "S3",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides evidence mapping each domain to structural components. Re-run semantic pipeline with evidence-enriched inputs.",
+        "source_material_needed": "Evidence mapping each ungrounded domain to structural components",
+        "enrichment_pathway": "R4",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D2",
+            "D4"
+          ],
+          "s_state_progression": "S2_TO_S3"
+        }
+      },
+      "priority_score": 6,
+      "priority": 5
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-03",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "description": "Domain 'DOM-03' has lineage_status 'NONE' (requires EXACT or STRONG)",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOM-03].lineage_status",
+        "current_value": "NONE",
+        "required_value": "EXACT or STRONG"
+      },
+      "blocks_s_state": "S3",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides evidence mapping each domain to structural components. Re-run semantic pipeline with evidence-enriched inputs.",
+        "source_material_needed": "Evidence mapping each ungrounded domain to structural components",
+        "enrichment_pathway": "R4",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D2",
+            "D4"
+          ],
+          "s_state_progression": "S2_TO_S3"
+        }
+      },
+      "priority_score": 6,
+      "priority": 6
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-04",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "description": "Domain 'DOM-04' has lineage_status 'NONE' (requires EXACT or STRONG)",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOM-04].lineage_status",
+        "current_value": "NONE",
+        "required_value": "EXACT or STRONG"
+      },
+      "blocks_s_state": "S3",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides evidence mapping each domain to structural components. Re-run semantic pipeline with evidence-enriched inputs.",
+        "source_material_needed": "Evidence mapping each ungrounded domain to structural components",
+        "enrichment_pathway": "R4",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D2",
+            "D4"
+          ],
+          "s_state_progression": "S2_TO_S3"
+        }
+      },
+      "priority_score": 6,
+      "priority": 7
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-05",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "description": "Domain 'DOM-05' has lineage_status 'NONE' (requires EXACT or STRONG)",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOM-05].lineage_status",
+        "current_value": "NONE",
+        "required_value": "EXACT or STRONG"
+      },
+      "blocks_s_state": "S3",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides evidence mapping each domain to structural components. Re-run semantic pipeline with evidence-enriched inputs.",
+        "source_material_needed": "Evidence mapping each ungrounded domain to structural components",
+        "enrichment_pathway": "R4",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D2",
+            "D4"
+          ],
+          "s_state_progression": "S2_TO_S3"
+        }
+      },
+      "priority_score": 6,
+      "priority": 8
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-06",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "description": "Domain 'DOM-06' has lineage_status 'NONE' (requires EXACT or STRONG)",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOM-06].lineage_status",
+        "current_value": "NONE",
+        "required_value": "EXACT or STRONG"
+      },
+      "blocks_s_state": "S3",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides evidence mapping each domain to structural components. Re-run semantic pipeline with evidence-enriched inputs.",
+        "source_material_needed": "Evidence mapping each ungrounded domain to structural components",
+        "enrichment_pathway": "R4",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D2",
+            "D4"
+          ],
+          "s_state_progression": "S2_TO_S3"
+        }
+      },
+      "priority_score": 6,
+      "priority": 9
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-07",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "description": "Domain 'DOM-07' has lineage_status 'NONE' (requires EXACT or STRONG)",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOM-07].lineage_status",
+        "current_value": "NONE",
+        "required_value": "EXACT or STRONG"
+      },
+      "blocks_s_state": "S3",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides evidence mapping each domain to structural components. Re-run semantic pipeline with evidence-enriched inputs.",
+        "source_material_needed": "Evidence mapping each ungrounded domain to structural components",
+        "enrichment_pathway": "R4",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D2",
+            "D4"
+          ],
+          "s_state_progression": "S2_TO_S3"
+        }
+      },
+      "priority_score": 6,
+      "priority": 10
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-08",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "description": "Domain 'DOM-08' has lineage_status 'NONE' (requires EXACT or STRONG)",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOM-08].lineage_status",
+        "current_value": "NONE",
+        "required_value": "EXACT or STRONG"
+      },
+      "blocks_s_state": "S3",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides evidence mapping each domain to structural components. Re-run semantic pipeline with evidence-enriched inputs.",
+        "source_material_needed": "Evidence mapping each ungrounded domain to structural components",
+        "enrichment_pathway": "R4",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D2",
+            "D4"
+          ],
+          "s_state_progression": "S2_TO_S3"
+        }
+      },
+      "priority_score": 6,
+      "priority": 11
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-09",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "description": "Domain 'DOM-09' has lineage_status 'NONE' (requires EXACT or STRONG)",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOM-09].lineage_status",
+        "current_value": "NONE",
+        "required_value": "EXACT or STRONG"
+      },
+      "blocks_s_state": "S3",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides evidence mapping each domain to structural components. Re-run semantic pipeline with evidence-enriched inputs.",
+        "source_material_needed": "Evidence mapping each ungrounded domain to structural components",
+        "enrichment_pathway": "R4",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D2",
+            "D4"
+          ],
+          "s_state_progression": "S2_TO_S3"
+        }
+      },
+      "priority_score": 6,
+      "priority": 12
+    },
+    {
+      "id": "DEBT-VALIDATION-01",
+      "category": "validation",
+      "severity": "HIGH",
+      "description": "Decision validation artifact absent — no quality assurance on semantic derivation",
+      "evidence": {
+        "artifact_key": "decision_validation",
+        "field_path": "decision_validation",
+        "current_value": "ABSENT",
+        "required_value": "PRESENT with ALL_PASS"
+      },
+      "blocks_s_state": "none",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Verify source material sufficiency, re-run semantic bundle producer to produce missing or corrected artifacts.",
+        "source_material_needed": "Sufficient source material for passing decision validation",
+        "enrichment_pathway": "R2",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D1",
+            "D7"
+          ],
+          "s_state_progression": "none"
+        }
+      },
+      "priority_score": 3,
+      "priority": 13
+    },
+    {
+      "id": "DEBT-REPRODUCIBILITY-01",
+      "category": "reproducibility",
+      "severity": "MEDIUM-HIGH",
+      "description": "Reproducibility verdict artifact absent — cannot certify semantic derivation is fully reproducible",
+      "evidence": {
+        "artifact_key": "reproducibility_verdict",
+        "field_path": "reproducibility_verdict",
+        "current_value": "ABSENT",
+        "required_value": "PRESENT with FULL_REPRODUCIBILITY"
+      },
+      "blocks_s_state": "none",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Verify source material sufficiency, re-run semantic bundle producer to produce missing or corrected artifacts.",
+        "source_material_needed": "Complete source material for fully reproducible semantic derivation",
+        "enrichment_pathway": "R2",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D7"
+          ],
+          "s_state_progression": "none"
+        }
+      },
+      "priority_score": 2,
+      "priority": 14
+    },
+    {
+      "id": "DEBT-LABEL-01",
+      "category": "label",
+      "severity": "MEDIUM",
+      "description": "Domain 'DOM-01' carries structural identifier instead of business-meaningful label",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOM-01].domain_name",
+        "current_value": "DOM-01",
+        "required_value": "business-meaningful label"
+      },
+      "blocks_s_state": "none",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides additional source material (ADRs, capability models, domain glossaries). Semantic pipeline re-processes with enriched inputs.",
+        "source_material_needed": "Business vocabulary documentation (capability models, domain glossaries)",
+        "enrichment_pathway": "R1",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D5",
+            "D6"
+          ],
+          "s_state_progression": "none"
+        }
+      },
+      "priority_score": 1,
+      "priority": 15
+    },
+    {
+      "id": "DEBT-LABEL-02",
+      "category": "label",
+      "severity": "MEDIUM",
+      "description": "Domain 'DOM-02' carries structural identifier instead of business-meaningful label",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOM-02].domain_name",
+        "current_value": "DOM-02",
+        "required_value": "business-meaningful label"
+      },
+      "blocks_s_state": "none",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides additional source material (ADRs, capability models, domain glossaries). Semantic pipeline re-processes with enriched inputs.",
+        "source_material_needed": "Business vocabulary documentation (capability models, domain glossaries)",
+        "enrichment_pathway": "R1",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D5",
+            "D6"
+          ],
+          "s_state_progression": "none"
+        }
+      },
+      "priority_score": 1,
+      "priority": 16
+    },
+    {
+      "id": "DEBT-LABEL-03",
+      "category": "label",
+      "severity": "MEDIUM",
+      "description": "Domain 'DOM-03' carries structural identifier instead of business-meaningful label",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOM-03].domain_name",
+        "current_value": "DOM-03",
+        "required_value": "business-meaningful label"
+      },
+      "blocks_s_state": "none",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides additional source material (ADRs, capability models, domain glossaries). Semantic pipeline re-processes with enriched inputs.",
+        "source_material_needed": "Business vocabulary documentation (capability models, domain glossaries)",
+        "enrichment_pathway": "R1",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D5",
+            "D6"
+          ],
+          "s_state_progression": "none"
+        }
+      },
+      "priority_score": 1,
+      "priority": 17
+    },
+    {
+      "id": "DEBT-LABEL-04",
+      "category": "label",
+      "severity": "MEDIUM",
+      "description": "Domain 'DOM-04' carries structural identifier instead of business-meaningful label",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOM-04].domain_name",
+        "current_value": "DOM-04",
+        "required_value": "business-meaningful label"
+      },
+      "blocks_s_state": "none",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides additional source material (ADRs, capability models, domain glossaries). Semantic pipeline re-processes with enriched inputs.",
+        "source_material_needed": "Business vocabulary documentation (capability models, domain glossaries)",
+        "enrichment_pathway": "R1",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D5",
+            "D6"
+          ],
+          "s_state_progression": "none"
+        }
+      },
+      "priority_score": 1,
+      "priority": 18
+    },
+    {
+      "id": "DEBT-LABEL-05",
+      "category": "label",
+      "severity": "MEDIUM",
+      "description": "Domain 'DOM-05' carries structural identifier instead of business-meaningful label",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOM-05].domain_name",
+        "current_value": "DOM-05",
+        "required_value": "business-meaningful label"
+      },
+      "blocks_s_state": "none",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides additional source material (ADRs, capability models, domain glossaries). Semantic pipeline re-processes with enriched inputs.",
+        "source_material_needed": "Business vocabulary documentation (capability models, domain glossaries)",
+        "enrichment_pathway": "R1",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D5",
+            "D6"
+          ],
+          "s_state_progression": "none"
+        }
+      },
+      "priority_score": 1,
+      "priority": 19
+    },
+    {
+      "id": "DEBT-LABEL-06",
+      "category": "label",
+      "severity": "MEDIUM",
+      "description": "Domain 'DOM-06' carries structural identifier instead of business-meaningful label",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOM-06].domain_name",
+        "current_value": "DOM-06",
+        "required_value": "business-meaningful label"
+      },
+      "blocks_s_state": "none",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides additional source material (ADRs, capability models, domain glossaries). Semantic pipeline re-processes with enriched inputs.",
+        "source_material_needed": "Business vocabulary documentation (capability models, domain glossaries)",
+        "enrichment_pathway": "R1",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D5",
+            "D6"
+          ],
+          "s_state_progression": "none"
+        }
+      },
+      "priority_score": 1,
+      "priority": 20
+    },
+    {
+      "id": "DEBT-LABEL-07",
+      "category": "label",
+      "severity": "MEDIUM",
+      "description": "Domain 'DOM-07' carries structural identifier instead of business-meaningful label",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOM-07].domain_name",
+        "current_value": "DOM-07",
+        "required_value": "business-meaningful label"
+      },
+      "blocks_s_state": "none",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides additional source material (ADRs, capability models, domain glossaries). Semantic pipeline re-processes with enriched inputs.",
+        "source_material_needed": "Business vocabulary documentation (capability models, domain glossaries)",
+        "enrichment_pathway": "R1",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D5",
+            "D6"
+          ],
+          "s_state_progression": "none"
+        }
+      },
+      "priority_score": 1,
+      "priority": 21
+    },
+    {
+      "id": "DEBT-LABEL-08",
+      "category": "label",
+      "severity": "MEDIUM",
+      "description": "Domain 'DOM-08' carries structural identifier instead of business-meaningful label",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOM-08].domain_name",
+        "current_value": "DOM-08",
+        "required_value": "business-meaningful label"
+      },
+      "blocks_s_state": "none",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides additional source material (ADRs, capability models, domain glossaries). Semantic pipeline re-processes with enriched inputs.",
+        "source_material_needed": "Business vocabulary documentation (capability models, domain glossaries)",
+        "enrichment_pathway": "R1",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D5",
+            "D6"
+          ],
+          "s_state_progression": "none"
+        }
+      },
+      "priority_score": 1,
+      "priority": 22
+    },
+    {
+      "id": "DEBT-LABEL-09",
+      "category": "label",
+      "severity": "MEDIUM",
+      "description": "Domain 'DOM-09' carries structural identifier instead of business-meaningful label",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOM-09].domain_name",
+        "current_value": "DOM-09",
+        "required_value": "business-meaningful label"
+      },
+      "blocks_s_state": "none",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides additional source material (ADRs, capability models, domain glossaries). Semantic pipeline re-processes with enriched inputs.",
+        "source_material_needed": "Business vocabulary documentation (capability models, domain glossaries)",
+        "enrichment_pathway": "R1",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D5",
+            "D6"
+          ],
+          "s_state_progression": "none"
+        }
+      },
+      "priority_score": 1,
+      "priority": 23
+    },
+    {
+      "id": "DEBT-CONTINUITY_GAP-01",
+      "category": "continuity_gap",
+      "severity": "MEDIUM",
+      "description": "Semantic continuity crosswalk absent — no continuity assessment possible",
+      "evidence": {
+        "artifact_key": "semantic_continuity_crosswalk",
+        "field_path": "semantic_continuity_crosswalk",
+        "current_value": "ABSENT",
+        "required_value": "PRESENT"
+      },
+      "blocks_s_state": "none",
+      "has_upstream_dependency": true,
+      "remediation": {
+        "action": "Client provides additional source material (ADRs, capability models, domain glossaries). Semantic pipeline re-processes with enriched inputs.",
+        "source_material_needed": "Domain glossaries and capability models for richer crosswalk production",
+        "enrichment_pathway": "R1",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D3",
+            "D5"
+          ],
+          "s_state_progression": "none"
+        }
+      },
+      "priority_score": 0.5,
+      "priority": 24
+    },
+    {
+      "id": "DEBT-RENDERING_METADATA-01",
+      "category": "rendering_metadata",
+      "severity": "MEDIUM",
+      "description": "Rendering metadata artifact absent — IP status degraded, no integrity assurance",
+      "evidence": {
+        "artifact_key": "rendering_metadata",
+        "field_path": "rendering_metadata",
+        "current_value": "ABSENT",
+        "required_value": "PRESENT with integrity hash"
+      },
+      "blocks_s_state": "none",
+      "has_upstream_dependency": true,
+      "remediation": {
+        "action": "Verify upstream dependencies resolved (decision_validation, crosswalk present), run emit_rendering_metadata vault writer.",
+        "source_material_needed": "Resolved upstream dependencies (decision_validation, crosswalk)",
+        "enrichment_pathway": "R3",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D6"
+          ],
+          "s_state_progression": "none"
+        }
+      },
+      "priority_score": 0.5,
+      "priority": 25
+    }
+  ],
+  "summary": {
+    "critical_count": 3,
+    "high_count": 10,
+    "medium_high_count": 1,
+    "medium_count": 11,
+    "s_state_blocking_count": 12
+  },
+  "governance": {
+    "fail_closed": true,
+    "client_agnostic": true,
+    "no_semantic_fabrication": true,
+    "no_source_mutation": true,
+    "sqo_advisory_only": true
+  },
+  "provenance": {
+    "source_commit": "096c906c7ba1",
+    "input_hashes": {
+      "semantic_topology_model": "present",
+      "decision_validation": "absent",
+      "reproducibility_verdict": "absent",
+      "semantic_continuity_crosswalk": "absent",
+      "canonical_topology_40_4": "present",
+      "dpsig_signal_set": "present",
+      "structural_topology_log_40_3": "present",
+      "signal_registry": "present",
+      "evidence_trace": "present",
+      "vault_readiness": "present",
+      "semantic_bundle_manifest": "present",
+      "rendering_metadata": "absent"
+    },
+    "operation": "detect_semantic_debt",
+    "operation_version": "1.0",
+    "output_hash": "sha256:1cfa52b19057bea36845d8a7219ecdad893c87ff8311f6bd9f9f685b138161e8"
+  }
+}
