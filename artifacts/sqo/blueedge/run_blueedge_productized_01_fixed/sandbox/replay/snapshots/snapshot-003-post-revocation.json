@@ -1,0 +1,30 @@
+{
+  "snapshot_id": "snapshot-003-post-revocation",
+  "timestamp": "2026-05-11T22:00:09.000Z",
+  "snapshot_type": "POST_REVOCATION",
+  "trigger": "SEP-blueedge-run01-001 REVOKED — rollback proof",
+  "inputs": {
+    "substrate_hash": "fb04994af180d9428c6845c357ce8de466d3d5093cb49bf241e3f43b5ba013d1",
+    "baseline_hash": "e7fd21c49a4e7d1585147326f17df1c7ab8dc13889cea613d4eb27251cebe10c",
+    "package_set_hash": "sha256:empty_set",
+    "activation_profile_hash": "sha256:no_active_packages",
+    "framework_version": "1.0",
+    "sandbox_id": "sandbox-blueedge-run01-micro-001"
+  },
+  "composite_hash": "e7fd21c49a4e7d1585147326f17df1c7ab8dc13889cea613d4eb27251cebe10c",
+  "composite_summary": {
+    "s_state": "S2",
+    "q_class": "Q-02",
+    "backed_count": { "static": 4, "overlay": 0, "composite": 4 },
+    "overlay_count": 0,
+    "conflict_count": 0
+  },
+  "verification": "MATCH",
+  "verification_details": "Post-revocation composite hash matches baseline snapshot hash exactly — independent removability confirmed",
+  "rollback_proof": {
+    "pre_activation_hash": "e7fd21c49a4e7d1585147326f17df1c7ab8dc13889cea613d4eb27251cebe10c",
+    "post_revocation_hash": "e7fd21c49a4e7d1585147326f17df1c7ab8dc13889cea613d4eb27251cebe10c",
+    "hashes_match": true,
+    "conclusion": "Revocation restores qualification state to exactly the certified baseline — overlay was independently removable"
+  }
+}

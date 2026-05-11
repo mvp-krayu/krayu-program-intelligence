@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "package_id": "SEP-blueedge-run01-001",
+  "package_version": 1,
+  "client": "blueedge",
+  "run_id": "run_blueedge_productized_01_fixed",
+  "created_at": "2026-05-11T22:00:01.000Z",
+  "provenance": {
+    "source_authority": "semantic_topology_model",
+    "source_type": "ARCHITECTURE_RECORD",
+    "source_hash": "fb04994af180d9428c6845c357ce8de466d3d5093cb49bf241e3f43b5ba013d1",
+    "source_description": "BlueEdge semantic topology model — DOMAIN-11 structural correspondence via DOM-07"
+  },
+  "semantic_class_authorizations": ["DOMAIN", "TECHNICAL"],
+  "evidence_entries": [
+    {
+      "entry_id": "E-001",
+      "claim_type": "LINEAGE_UPGRADE",
+      "target_domain": "DOMAIN-11",
+      "target_domain_name": "Event-Driven Architecture",
+      "prior_lineage_status": "PARTIAL",
+      "proposed_lineage_status": "STRONG",
+      "confidence_basis": "STRONG_INFERENCE",
+      "evidence_basis": "DOMAIN-11 (Event-Driven Architecture) has existing structural correspondence via dominant_dom_id DOM-07 at confidence 0.65. The semantic topology model records this as PARTIAL lineage with a verified structural node reference. The structural correspondence is established by cluster membership (CLU-04, Platform Infrastructure) and the dominant component mapping. Upgrading from PARTIAL to STRONG reflects the structural relationship already recorded in the certified topology model, strengthening confidence from 0.65 to the STRONG threshold.",
+      "semantic_class": "TECHNICAL",
+      "replay_safe": true,
+      "source_hash": "fb04994af180d9428c6845c357ce8de466d3d5093cb49bf241e3f43b5ba013d1"
+    }
+  ],
+  "overlay_metadata": {
+    "scope": "MICRO_ACTIVATION_PROOF",
+    "entry_count": 1,
+    "target_domains": ["DOMAIN-11"],
+    "claim_types": ["LINEAGE_UPGRADE"],
+    "expected_qualification_impact": {
+      "backed_count_delta": 1,
+      "backed_count_before": 4,
+      "backed_count_after": 5,
+      "s_state_impact": "NONE (remains S2)",
+      "q_class_impact": "NONE (remains Q-02)"
+    }
+  },
+  "governance_assertions": {
+    "no_substrate_mutation": true,
+    "no_semantic_fabrication": true,
+    "additive_only": true,
+    "replay_safe": true,
+    "independently_removable": true
+  },
+  "package_hash": "sha256:micro_overlay_001_v1"
+}

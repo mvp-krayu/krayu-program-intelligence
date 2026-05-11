@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "sandbox_id": "sandbox-blueedge-run01-micro-001",
+  "packages": [
+    {
+      "package_id": "SEP-blueedge-run01-001",
+      "package_version": 1,
+      "status": "REVOKED",
+      "registered_at": "2026-05-11T22:00:01.000Z",
+      "activated_at": "2026-05-11T22:00:05.000Z",
+      "revoked_at": "2026-05-11T22:00:08.000Z",
+      "revocation_reason": "Micro-activation proof complete — demonstrating deterministic rollback",
+      "package_hash": "sha256:micro_overlay_001_v1",
+      "entry_count": 1,
+      "target_domains": ["DOMAIN-11"]
+    }
+  ],
+  "summary": {
+    "total": 1,
+    "staged": 0,
+    "activated": 0,
+    "revoked": 1,
+    "superseded": 0
+  }
+}

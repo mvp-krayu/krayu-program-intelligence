@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "sandbox_id": "sandbox-blueedge-run01-micro-001",
+  "verifications": [
+    {
+      "verification_id": "RV-001",
+      "timestamp": "2026-05-11T22:00:06.000Z",
+      "type": "POST_ACTIVATION",
+      "snapshot_id": "snapshot-002-post-activation",
+      "result": "MATCH",
+      "details": "Independent reconstruction from 6 inputs produced identical composite state"
+    },
+    {
+      "verification_id": "RV-002",
+      "timestamp": "2026-05-11T22:00:09.000Z",
+      "type": "POST_REVOCATION",
+      "snapshot_id": "snapshot-003-post-revocation",
+      "result": "MATCH",
+      "details": "Post-revocation composite matches baseline snapshot — independent removability confirmed"
+    },
+    {
+      "verification_id": "RV-003",
+      "timestamp": "2026-05-11T22:00:09.500Z",
+      "type": "BASELINE_IDENTITY",
+      "snapshot_id": "snapshot-001-baseline",
+      "result": "MATCH",
+      "details": "Post-revocation composite hash equals baseline snapshot hash — mount count zero property verified"
+    }
+  ],
+  "summary": {
+    "total_verifications": 3,
+    "passed": 3,
+    "failed": 0,
+    "divergences": 0
+  }
+}

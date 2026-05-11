@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "sandbox_id": "sandbox-blueedge-run01-micro-001",
+  "computed_at": "2026-05-11T22:00:09.000Z",
+  "computation_note": "Post-revocation composite — equals certified baseline (mount count = 0)",
+  "certification_status": {
+    "pipeline_certified_component": {
+      "s_state": "S2",
+      "q_class": "Q-02",
+      "backed_count": 4,
+      "total_count": 17,
+      "certification_source": "PIPELINE",
+      "certification_hash": "e7fd21c49a4e7d1585147326f17df1c7ab8dc13889cea613d4eb27251cebe10c"
+    },
+    "overlay_component": {
+      "overlay_backed_count": 0,
+      "certification_source": "SANDBOX",
+      "certification_level": "OVERLAY_VERIFIED",
+      "packages_contributing": 0
+    },
+    "composite": {
+      "s_state": "S2",
+      "q_class": "Q-02",
+      "backed_count": 4,
+      "total_count": 17,
+      "grounding_ratio": 0.235,
+      "certification_source": "COMPOSITE",
+      "certification_level": "SANDBOX_COMPUTED",
+      "disclosure": "No active overlays — composite equals certified baseline"
+    }
+  },
+  "overlay_contributions": [],
+  "mount_count": 0,
+  "composite_hash": "e7fd21c49a4e7d1585147326f17df1c7ab8dc13889cea613d4eb27251cebe10c",
+  "composite_equals_baseline": true
+}
