@@ -4279,3 +4279,505 @@ a.topo-chip:hover {
   from { opacity: 0; transform: translateY(4px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SQO RUNTIME CORRIDOR — BLUEEDGE CORRIDOR PANEL
+   PI.SQO.BLUEEDGE.RUNTIME-CORRIDOR-IMPLEMENTATION.01
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.corridor-panel {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.corridor-panel--unavailable {
+  max-width: 640px;
+  margin: 80px auto;
+  text-align: center;
+}
+
+.corridor-panel__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.corridor-panel__header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.corridor-panel__header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.corridor-panel__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+}
+
+.corridor-panel__subtitle {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.corridor-panel__artifact-count {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.corridor-panel__error {
+  color: var(--text-dim);
+  font-size: 13px;
+  font-family: var(--font-ui);
+  margin-top: 12px;
+}
+
+.corridor-panel__governance-notice {
+  background: var(--bg-card-deep);
+  border: 1px solid var(--border-dim);
+  border-left: 2px solid var(--accent-dim);
+  padding: 10px 14px;
+  margin-bottom: 24px;
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+}
+
+.corridor-panel__sections {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.corridor-panel__footer {
+  margin-top: 28px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-dim);
+}
+
+.corridor-panel__footer-text {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+}
+
+/* ── Corridor Section ─────────────────────────────────────────────────── */
+
+.corridor-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 18px 20px;
+  animation: sqo-panel-enter 0.2s ease;
+}
+
+.corridor-section--unavailable {
+  background: var(--bg-card-deep);
+  border-color: var(--border-dim);
+}
+
+.corridor-section__title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  margin: 0 0 14px 0;
+  font-family: var(--font-mono);
+}
+
+.corridor-section__empty {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: var(--font-ui);
+  margin: 0;
+}
+
+.corridor-section__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 24px;
+}
+
+.corridor-section__sub {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-dim);
+}
+
+.corridor-section__sub-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  font-family: var(--font-mono);
+}
+
+/* ── Key-Value Pairs ──────────────────────────────────────────────────── */
+
+.corridor-kv {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.corridor-kv__key {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.corridor-kv__value {
+  font-size: 12px;
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+  line-height: 1.4;
+}
+
+.corridor-kv__value--mono {
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+/* ── Badges ───────────────────────────────────────────────────────────── */
+
+.corridor-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-card-deep);
+  color: var(--text-dim);
+}
+
+.corridor-badge--safe {
+  color: var(--green);
+  border-color: rgba(100,255,218,0.25);
+  background: rgba(100,255,218,0.06);
+}
+
+.corridor-badge--active {
+  color: var(--accent);
+  border-color: rgba(74,158,255,0.25);
+  background: rgba(74,158,255,0.06);
+}
+
+.corridor-badge--warn {
+  color: var(--orange);
+  border-color: rgba(255,158,74,0.25);
+  background: rgba(255,158,74,0.06);
+}
+
+.corridor-badge--danger {
+  color: var(--red);
+  border-color: rgba(255,107,107,0.25);
+  background: rgba(255,107,107,0.06);
+}
+
+.corridor-badge--critical {
+  color: var(--red);
+  border-color: rgba(255,107,107,0.35);
+  background: rgba(255,107,107,0.1);
+}
+
+.corridor-badge--blocked {
+  color: var(--text-muted);
+  border-color: var(--border-dim);
+  background: transparent;
+}
+
+.corridor-badge--neutral {
+  color: var(--text-dim);
+  border-color: var(--border);
+}
+
+.corridor-badge--state {
+  color: var(--accent);
+  border-color: rgba(74,158,255,0.2);
+  background: rgba(74,158,255,0.04);
+}
+
+/* ── Overlay List ─────────────────────────────────────────────────────── */
+
+.corridor-overlay-list {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.corridor-overlay-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--bg-card-deep);
+  border: 1px solid var(--border-dim);
+}
+
+.corridor-overlay-item__order {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  width: 16px;
+  text-align: center;
+}
+
+.corridor-overlay-item__detail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.corridor-overlay-item__id {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+.corridor-overlay-item__meta {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* ── State Chain (Replay T0–T6) ───────────────────────────────────────── */
+
+.corridor-state-chain {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.corridor-state-chain__node {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 4px 10px;
+  background: var(--bg-card-deep);
+  border-left: 2px solid var(--border-dim);
+}
+
+.corridor-state-chain__label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  min-width: 180px;
+}
+
+.corridor-state-chain__value {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* ── Gate List (Certification Blocking) ───────────────────────────────── */
+
+.corridor-gate-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.corridor-gate-list__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 11px;
+  font-family: var(--font-ui);
+  line-height: 1.4;
+}
+
+.corridor-gate-list__item--blocked {
+  color: var(--text-dim);
+}
+
+.corridor-gate-list__indicator {
+  color: var(--orange);
+  font-size: 6px;
+  line-height: 2;
+}
+
+.corridor-gate-list__text {
+  flex: 1;
+}
+
+/* ── Metric Bars (Governance Zone) ────────────────────────────────────── */
+
+.corridor-metric-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.corridor-metric-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.corridor-metric-item__label {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  text-transform: capitalize;
+  min-width: 140px;
+}
+
+.corridor-metric-item__bar-container {
+  flex: 1;
+  height: 6px;
+  background: var(--bg-card-deep);
+  border: 1px solid var(--border-dim);
+  overflow: hidden;
+}
+
+.corridor-metric-item__bar {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.corridor-metric-item__bar--safe {
+  background: var(--green);
+  opacity: 0.5;
+}
+
+.corridor-metric-item__bar--pressure {
+  background: var(--orange);
+  opacity: 0.6;
+}
+
+.corridor-metric-item__bar--risk {
+  background: var(--red);
+  opacity: 0.6;
+}
+
+.corridor-metric-item__value {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  min-width: 30px;
+  text-align: right;
+}
+
+/* ── Authority Boundary Chain ─────────────────────────────────────────── */
+
+.corridor-boundary-chain {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.corridor-boundary-chain__node {
+  padding: 10px 14px;
+  background: var(--bg-card-deep);
+  border: 1px solid var(--border-dim);
+  border-bottom: none;
+}
+
+.corridor-boundary-chain__node:last-child {
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.corridor-boundary-chain__node--terminal {
+  border-left: 2px solid var(--accent-dim);
+}
+
+.corridor-boundary-chain__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.corridor-boundary-chain__label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+.corridor-boundary-chain__desc {
+  display: block;
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-ui);
+  margin-top: 2px;
+}
+
+.corridor-boundary-chain__separator {
+  text-align: center;
+  color: var(--border);
+  font-size: 10px;
+  line-height: 1;
+  padding: 2px 0;
+}
+
+/* ── Lineage List ─────────────────────────────────────────────────────── */
+
+.corridor-lineage-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.corridor-lineage-item {
+  padding: 10px 14px;
+  background: var(--bg-card-deep);
+  border: 1px solid var(--border-dim);
+}
+
+.corridor-lineage-item__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.corridor-lineage-item__label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+.corridor-lineage-item__detail {
+  display: block;
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-top: 2px;
+}

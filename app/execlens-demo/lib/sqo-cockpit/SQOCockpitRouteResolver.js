@@ -2,7 +2,7 @@
 
 const { isClientRunAllowed, listAllowedClientRuns } = require('../lens-v2/manifests');
 
-const COCKPIT_SECTIONS = ['overview', 'debt', 'continuity', 'maturity', 'progression', 'evidence', 'handoff'];
+const COCKPIT_SECTIONS = ['overview', 'debt', 'continuity', 'maturity', 'progression', 'evidence', 'handoff', 'corridor'];
 
 const SECTION_ROUTES = {
   overview: '',
@@ -12,6 +12,7 @@ const SECTION_ROUTES = {
   progression: '/progression',
   evidence: '/evidence',
   handoff: '/handoff',
+  corridor: '/corridor',
 };
 
 const SECTION_LABELS = {
@@ -22,6 +23,7 @@ const SECTION_LABELS = {
   progression: 'Progression',
   evidence: 'Evidence & Replay',
   handoff: 'PATH B Handoff',
+  corridor: 'Runtime Corridor',
 };
 
 function validateRouteParams(client, runId) {

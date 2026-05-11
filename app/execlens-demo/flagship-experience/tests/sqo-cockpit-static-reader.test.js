@@ -288,10 +288,12 @@ describe('Governance Compliance', () => {
     const artifactDir = path.join(process.env.REPO_ROOT, 'artifacts', 'sqo', BE_CLIENT, BE_RUN);
     const before = {};
     for (const f of fs.readdirSync(artifactDir)) {
-      before[f] = fs.readFileSync(path.join(artifactDir, f), 'utf8');
+      const full = path.join(artifactDir, f);
+      if (!fs.statSync(full).isFile()) continue;
+      before[f] = fs.readFileSync(full, 'utf8');
     }
     loadAllCockpitArtifacts(BE_CLIENT, BE_RUN);
-    for (const f of fs.readdirSync(artifactDir)) {
+    for (const f of Object.keys(before)) {
       assert.equal(fs.readFileSync(path.join(artifactDir, f), 'utf8'), before[f]);
     }
   });
