@@ -1,0 +1,86 @@
+{
+  "stream": "PI.SQO.DYNAMIC-CEU.RE-GOVERNANCE-AND-CLASSIFICATION.01.REVISED",
+  "changes": [
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU.RE-GOVERNANCE-AND-CLASSIFICATION.01.REVISED/HISTORICAL_AUTHORITY_LOAD_REPORT.md",
+      "action": "CREATED",
+      "description": "Cross-era historical authority loading report: 53 documents, 12 tiers, 3 eras, 6 authority gaps identified"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU.RE-GOVERNANCE-AND-CLASSIFICATION.01.REVISED/DYNAMIC_CEU_CONCEPTUAL_LINEAGE.md",
+      "action": "CREATED",
+      "description": "8-phase conceptual lineage from signal enrichment through governed maturation to SEP formalization"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU.RE-GOVERNANCE-AND-CLASSIFICATION.01.REVISED/CROSS_ERA_RECONCILIATION_MODEL.md",
+      "action": "CREATED",
+      "description": "Terminology, governance rule, replay safety, and behavioral boundary reconciliation across 3 eras"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU.RE-GOVERNANCE-AND-CLASSIFICATION.01.REVISED/HISTORICAL_GOVERNANCE_TENSIONS.md",
+      "action": "CREATED",
+      "description": "8 governance tensions identified across eras: 7 resolved, 1 partially resolved"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU.RE-GOVERNANCE-AND-CLASSIFICATION.01.REVISED/SIGNAL_LAYER_AND_SEMANTIC_CONTINUITY_RELATIONSHIP.md",
+      "action": "CREATED",
+      "description": "DPSIG independence, semantic continuity bridge model, signal-to-qualification pathway"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU.RE-GOVERNANCE-AND-CLASSIFICATION.01.REVISED/PROTO_DYNAMIC_CEU_CLASSIFICATION.md",
+      "action": "CREATED",
+      "description": "17 proto-concepts classified: 9 canonical, 6 re-governable, 1 prohibited, 1 obsolete"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU.RE-GOVERNANCE-AND-CLASSIFICATION.01.REVISED/CANONICAL_DYNAMIC_CEU_REINTERPRETATION.md",
+      "action": "CREATED",
+      "description": "Canonical definition, IS/IS-NOT tables, 4 historical reinterpretations, architecture summary"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU.RE-GOVERNANCE-AND-CLASSIFICATION.01.REVISED/PRESERVED_VS_PROHIBITED_CONCEPTS.md",
+      "action": "CREATED",
+      "description": "Definitive registry: 9 preserved, 6 reformulated, 1 prohibited, 1 obsolete; 5 integrity rules"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU.RE-GOVERNANCE-AND-CLASSIFICATION.01.REVISED/REPLAY_SAFE_DYNAMIC_CEU_REINTERPRETATION.md",
+      "action": "CREATED",
+      "description": "Replay safety evolution across eras, 6 canonical properties, R1-R5 mapping, verification process"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU.RE-GOVERNANCE-AND-CLASSIFICATION.01.REVISED/ADDITIVE_SEMANTIC_LANE_EVOLUTION.md",
+      "action": "CREATED",
+      "description": "Lane evolution from implicit to formal, additive semantics principle, lane isolation model"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU.RE-GOVERNANCE-AND-CLASSIFICATION.01.REVISED/DYNAMIC_CEU_MIGRATION_TO_SQO.md",
+      "action": "CREATED",
+      "description": "Migration map: governance model, replay safety, evaluation model, boundary model; completeness verified"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU.RE-GOVERNANCE-AND-CLASSIFICATION.01.REVISED/GOVERNANCE_BOUNDARY_VALIDATION.md",
+      "action": "CREATED",
+      "description": "6-dimension compliance validation: contract, strategic, historical, classification, reconciliation, output"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU.RE-GOVERNANCE-AND-CLASSIFICATION.01.REVISED/execution_report.md",
+      "action": "CREATED",
+      "description": "Pre-flight, scope, upstream references, 12 execution steps, governance compliance"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU.RE-GOVERNANCE-AND-CLASSIFICATION.01.REVISED/file_changes.json",
+      "action": "CREATED",
+      "description": "File change manifest for this stream"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU.RE-GOVERNANCE-AND-CLASSIFICATION.01.REVISED/CLOSURE.md",
+      "action": "CREATED",
+      "description": "Stream closure record"
+    }
+  ],
+  "summary": {
+    "created": 15,
+    "modified": 0,
+    "deleted": 0,
+    "total": 15
+  }
+}
