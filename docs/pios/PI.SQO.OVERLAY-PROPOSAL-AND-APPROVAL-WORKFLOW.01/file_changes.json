@@ -1,0 +1,78 @@
+{
+  "stream": "PI.SQO.OVERLAY-PROPOSAL-AND-APPROVAL-WORKFLOW.01",
+  "phase": "O1",
+  "date": "2026-05-11",
+  "total_files": 14,
+  "changes": [
+    {
+      "file": "docs/pios/PI.SQO.OVERLAY-PROPOSAL-AND-APPROVAL-WORKFLOW.01/OVERLAY_PROPOSAL_WORKFLOW.md",
+      "action": "CREATE",
+      "purpose": "Master 8-phase overlay proposal pipeline with 12 proposal states"
+    },
+    {
+      "file": "docs/pios/PI.SQO.OVERLAY-PROPOSAL-AND-APPROVAL-WORKFLOW.01/OVERLAY_CLASSIFICATION_AND_TRUST_MODEL.md",
+      "action": "CREATE",
+      "purpose": "8 overlay types, 3 sensitivity levels, 7 trust states, certification impact"
+    },
+    {
+      "file": "docs/pios/PI.SQO.OVERLAY-PROPOSAL-AND-APPROVAL-WORKFLOW.01/OVERLAY_REVIEW_AND_APPROVAL_MODEL.md",
+      "action": "CREATE",
+      "purpose": "4-stage review pipeline (governance, qualification, safety, authorization)"
+    },
+    {
+      "file": "docs/pios/PI.SQO.OVERLAY-PROPOSAL-AND-APPROVAL-WORKFLOW.01/OVERLAY_REPLAY_AND_ROLLBACK_REVIEW.md",
+      "action": "CREATE",
+      "purpose": "6 replay safety checks, 7 rollback safety checks, sensitivity-specific review"
+    },
+    {
+      "file": "docs/pios/PI.SQO.OVERLAY-PROPOSAL-AND-APPROVAL-WORKFLOW.01/OVERLAY_REJECTION_AND_QUARANTINE_MODEL.md",
+      "action": "CREATE",
+      "purpose": "6 rejection types, quarantine model, investigation protocol, re-entry workflow"
+    },
+    {
+      "file": "docs/pios/PI.SQO.OVERLAY-PROPOSAL-AND-APPROVAL-WORKFLOW.01/OVERLAY_SUPERSESSION_AND_REVOCATION.md",
+      "action": "CREATE",
+      "purpose": "Supersession, revocation, cascade, de-authorization, retirement models"
+    },
+    {
+      "file": "docs/pios/PI.SQO.OVERLAY-PROPOSAL-AND-APPROVAL-WORKFLOW.01/GOVERNANCE_ZONE_INTEGRATION.md",
+      "action": "CREATE",
+      "purpose": "Zone-phase interaction for proposal and approval, zone-aware operations"
+    },
+    {
+      "file": "docs/pios/PI.SQO.OVERLAY-PROPOSAL-AND-APPROVAL-WORKFLOW.01/OPERATOR_AND_GOVERNANCE_RESPONSIBILITY_MODEL.md",
+      "action": "CREATE",
+      "purpose": "4 authority domains, per-phase authority, decision matrix, automation boundaries"
+    },
+    {
+      "file": "docs/pios/PI.SQO.OVERLAY-PROPOSAL-AND-APPROVAL-WORKFLOW.01/OVERLAY_OBSERVABILITY_MODEL.md",
+      "action": "CREATE",
+      "purpose": "8 observability dimensions, governance dashboard, 24 event types, health indicators"
+    },
+    {
+      "file": "docs/pios/PI.SQO.OVERLAY-PROPOSAL-AND-APPROVAL-WORKFLOW.01/OVERLAY_RECOVERABILITY_AND_ESCALATION.md",
+      "action": "CREATE",
+      "purpose": "Failure categories, recovery mechanisms, 10 fail-closed conditions, escalation"
+    },
+    {
+      "file": "docs/pios/PI.SQO.OVERLAY-PROPOSAL-AND-APPROVAL-WORKFLOW.01/PATH_BOUNDARY_VALIDATION.md",
+      "action": "CREATE",
+      "purpose": "9-point path boundary compliance, NOT PATH A/B/LENS confirmation"
+    },
+    {
+      "file": "docs/pios/PI.SQO.OVERLAY-PROPOSAL-AND-APPROVAL-WORKFLOW.01/execution_report.md",
+      "action": "CREATE",
+      "purpose": "Execution report with pre-flight, steps, artifacts, governance confirmation"
+    },
+    {
+      "file": "docs/pios/PI.SQO.OVERLAY-PROPOSAL-AND-APPROVAL-WORKFLOW.01/file_changes.json",
+      "action": "CREATE",
+      "purpose": "File change manifest for stream"
+    },
+    {
+      "file": "docs/pios/PI.SQO.OVERLAY-PROPOSAL-AND-APPROVAL-WORKFLOW.01/CLOSURE.md",
+      "action": "CREATE",
+      "purpose": "Stream closure with mandatory 9-section format"
+    }
+  ]
+}
