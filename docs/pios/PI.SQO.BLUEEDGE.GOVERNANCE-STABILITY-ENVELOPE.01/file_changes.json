@@ -1,0 +1,31 @@
+{
+  "stream": "PI.SQO.BLUEEDGE.GOVERNANCE-STABILITY-ENVELOPE.01",
+  "date": "2026-05-11",
+  "summary": {
+    "created": 15,
+    "modified": 0,
+    "deleted": 0
+  },
+  "categories": {
+    "documentation": 15
+  },
+  "documentation_files": [
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.GOVERNANCE-STABILITY-ENVELOPE.01/GOVERNANCE_STABILITY_ENVELOPE_REPORT.md", "action": "CREATED", "description": "Executive summary, 8 envelope dimensions, 10 design questions, 10 success conditions, key findings" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.GOVERNANCE-STABILITY-ENVELOPE.01/OVERLAY_SATURATION_ANALYSIS.md", "action": "CREATED", "description": "Overlay count scaling, coexistence quadratic growth, domain/entry/cluster saturation, saturation governance rules" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.GOVERNANCE-STABILITY-ENVELOPE.01/REPLAY_CHAIN_PRESSURE_ANALYSIS.md", "action": "CREATED", "description": "Replay chain depth scaling, determinism guarantee, clarity thresholds, dependency-driven complexity, failure scenarios" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.GOVERNANCE-STABILITY-ENVELOPE.01/ROLLBACK_COMPLEXITY_ANALYSIS.md", "action": "CREATED", "description": "Rollback chain scaling, cascade complexity, selective revocation, S-state regression risk, determinism guarantee" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.GOVERNANCE-STABILITY-ENVELOPE.01/ORCHESTRATION_DEPTH_ANALYSIS.md", "action": "CREATED", "description": "Orchestration depth tolerance, re-evaluation queue ceiling, governance decision density, depth interaction effects" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.GOVERNANCE-STABILITY-ENVELOPE.01/OBSERVABILITY_DEGRADATION_THRESHOLDS.md", "action": "CREATED", "description": "Per-dimension degradation thresholds for 7 observability dimensions, compound degradation, collapse definition" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.GOVERNANCE-STABILITY-ENVELOPE.01/GOVERNANCE_OVERLOAD_DETECTION_MODEL.md", "action": "CREATED", "description": "8 primary + 4 compound overload indicators, detection algorithm, response protocol, BlueEdge scenarios" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.GOVERNANCE-STABILITY-ENVELOPE.01/OPERATIONAL_ENTROPY_INDICATORS.md", "action": "CREATED", "description": "12 entropy indicators (5 structural, 5 behavioral, 2 governance), resistance mechanisms, monitoring protocol" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.GOVERNANCE-STABILITY-ENVELOPE.01/SAFE_VS_RISK_ZONE_CLASSIFICATION.md", "action": "CREATED", "description": "4-zone model (SAFE/PRESSURE/RISK/PROHIBITED), entry/exit criteria, zone-specific governance rules" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.GOVERNANCE-STABILITY-ENVELOPE.01/GOVERNANCE_RECOVERABILITY_MODEL.md", "action": "CREATED", "description": "5-level recovery mechanism hierarchy, recovery cost/time models, decision algorithm, recovery verification" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.GOVERNANCE-STABILITY-ENVELOPE.01/ADVANCED_GOVERNANCE_ESCALATION_RULES.md", "action": "CREATED", "description": "5 escalation levels (G-0 through G-4), triggers, response protocols, de-escalation, BlueEdge profile" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.GOVERNANCE-STABILITY-ENVELOPE.01/PATH_BOUNDARY_VALIDATION.md", "action": "CREATED", "description": "9-point boundary compliance, governance confirmation" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.GOVERNANCE-STABILITY-ENVELOPE.01/execution_report.md", "action": "CREATED", "description": "Pre-flight, scope, 12 execution steps, 15 artifacts, governance" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.GOVERNANCE-STABILITY-ENVELOPE.01/file_changes.json", "action": "CREATED", "description": "File change manifest" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.GOVERNANCE-STABILITY-ENVELOPE.01/CLOSURE.md", "action": "CREATED", "description": "Stream closure with governance stability envelope verdict" }
+  ],
+  "validators_affected": [],
+  "governance_notes": "Governance-boundary exploration only. No sandbox artifacts created. No certified baseline artifacts modified. All analysis source-derived from upstream specifications. 8 pressure dimensions characterized, 4 governance zones defined, 12 entropy indicators formalized, 5 escalation levels established."
+}
