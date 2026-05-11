@@ -1,0 +1,78 @@
+{
+  "stream": "PI.SQO.COCKPIT.SANDBOX-SESSION-MANAGEMENT.01",
+  "phase": "O2",
+  "date": "2026-05-11",
+  "total_files": 14,
+  "changes": [
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.SANDBOX-SESSION-MANAGEMENT.01/SANDBOX_SESSION_ARCHITECTURE.md",
+      "action": "CREATE",
+      "purpose": "Master session architecture: 5 layers, 8 capabilities, 6 integrity properties"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.SANDBOX-SESSION-MANAGEMENT.01/SESSION_LIFECYCLE_AND_NAMESPACE_MODEL.md",
+      "action": "CREATE",
+      "purpose": "10 session lifecycle states, 7 namespace isolation rules, 5 namespace bindings"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.SANDBOX-SESSION-MANAGEMENT.01/SESSION_OVERLAY_CHAIN_GOVERNANCE.md",
+      "action": "CREATE",
+      "purpose": "Overlay chain model, activation governance, rollback, revocation, supersession"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.SANDBOX-SESSION-MANAGEMENT.01/SESSION_REPLAY_AND_ROLLBACK_MODEL.md",
+      "action": "CREATE",
+      "purpose": "Session replay/rollback state, divergence detection, ambiguity detection"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.SANDBOX-SESSION-MANAGEMENT.01/SESSION_AUTHORITY_BOUNDARY_MODEL.md",
+      "action": "CREATE",
+      "purpose": "5 authority states, 4 transition gates, 6 anti-leakage rules"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.SANDBOX-SESSION-MANAGEMENT.01/GOVERNANCE_ZONE_INTEGRATION.md",
+      "action": "CREATE",
+      "purpose": "Zone-session operation matrix, transition impacts, 8 escalation triggers"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.SANDBOX-SESSION-MANAGEMENT.01/SESSION_COEXISTENCE_AND_RECOVERABILITY.md",
+      "action": "CREATE",
+      "purpose": "7 coexistence rules, supersession model, 5 recovery levels, 7 failure modes"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.SANDBOX-SESSION-MANAGEMENT.01/OPERATOR_AND_GOVERNANCE_RESPONSIBILITY_MODEL.md",
+      "action": "CREATE",
+      "purpose": "22 session actions, authorization matrix, operator/governance responsibilities"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.SANDBOX-SESSION-MANAGEMENT.01/SESSION_OBSERVABILITY_MODEL.md",
+      "action": "CREATE",
+      "purpose": "9 observability dimensions, 32 event types, 4-level health, session dashboard"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.SANDBOX-SESSION-MANAGEMENT.01/OPERATIONAL_SESSION_NAVIGATION_MODEL.md",
+      "action": "CREATE",
+      "purpose": "Navigation hierarchy, 8 detail panels, cross-session comparison, deep-links"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.SANDBOX-SESSION-MANAGEMENT.01/PATH_BOUNDARY_VALIDATION.md",
+      "action": "CREATE",
+      "purpose": "9-point path boundary compliance, NOT PATH A/B/LENS confirmation"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.SANDBOX-SESSION-MANAGEMENT.01/execution_report.md",
+      "action": "CREATE",
+      "purpose": "Execution report with pre-flight, steps, artifacts, governance confirmation"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.SANDBOX-SESSION-MANAGEMENT.01/file_changes.json",
+      "action": "CREATE",
+      "purpose": "File change manifest for stream"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.SANDBOX-SESSION-MANAGEMENT.01/CLOSURE.md",
+      "action": "CREATE",
+      "purpose": "Stream closure with mandatory 9-section format"
+    }
+  ]
+}
