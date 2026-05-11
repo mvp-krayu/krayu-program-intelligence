@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "sandbox_id": "sandbox-blueedge-run01-multi-001",
+  "replay_model": "6-INPUT_SANDBOX_REPLAY",
+  "inputs": {
+    "I-1_substrate_version": {
+      "artifact": "semantic_topology_model.json",
+      "hash": "fb04994af180d9428c6845c357ce8de466d3d5093cb49bf241e3f43b5ba013d1",
+      "domain_count": 17,
+      "cluster_count": 5
+    },
+    "I-2_qualification_baseline_version": {
+      "artifact": "qualification_state.v1.json",
+      "hash": "e7fd21c49a4e7d1585147326f17df1c7ab8dc13889cea613d4eb27251cebe10c",
+      "s_state": "S2",
+      "q_class": "Q-02",
+      "backed_count": 4
+    },
+    "I-3_overlay_package_set": {
+      "packages": [
+        { "package_id": "SEP-multi-001", "version": 1, "entry_count": 1, "target": "DOMAIN-11" },
+        { "package_id": "SEP-multi-002", "version": 1, "entry_count": 1, "target": "DOMAIN-02" },
+        { "package_id": "SEP-multi-003", "version": 1, "entry_count": 1, "target": "DOMAIN-08" }
+      ],
+      "total_packages": 3,
+      "total_entries": 3
+    },
+    "I-4_activation_profile": {
+      "activation_order": ["SEP-multi-001", "SEP-multi-002", "SEP-multi-003"],
+      "orchestration_strategy": "SEQUENTIAL_INDEPENDENT",
+      "dependency_depth": 0
+    },
+    "I-5_evaluation_framework_version": {
+      "version": "1.0",
+      "q_class_formula": "f(backed_count, total_count, continuity_status, evidence_availability)",
+      "s_state_gates": "S3 requires backed_count == total_count"
+    },
+    "I-6_sandbox_manifest": {
+      "sandbox_id": "sandbox-blueedge-run01-multi-001",
+      "sandbox_type": "MULTI_OVERLAY_ORCHESTRATION",
+      "substrate_hash": "fb04994af180d9428c6845c357ce8de466d3d5093cb49bf241e3f43b5ba013d1",
+      "baseline_hash": "e7fd21c49a4e7d1585147326f17df1c7ab8dc13889cea613d4eb27251cebe10c"
+    }
+  },
+  "determinism_guarantees": {
+    "same_inputs_same_output": true,
+    "overlay_application_order_fixed": true,
+    "entry_application_order_fixed": true,
+    "conflict_resolution_deterministic": true,
+    "hash_verification_at_each_step": true
+  }
+}

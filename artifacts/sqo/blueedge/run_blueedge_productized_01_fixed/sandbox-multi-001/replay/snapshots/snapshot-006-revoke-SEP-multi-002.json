@@ -1,0 +1,16 @@
+{
+  "snapshot_id": "snapshot-006-revoke-SEP-multi-002",
+  "timestamp": "2026-05-11T23:22:00.000Z",
+  "sandbox_id": "sandbox-blueedge-run01-multi-001",
+  "snapshot_type": "POST_REVOCATION",
+  "active_overlays": ["SEP-multi-001"],
+  "revoked_package": "SEP-multi-002",
+  "composite_summary": {
+    "s_state": "S2", "q_class": "Q-02", "backed_count": 5,
+    "grounding_ratio": 0.294, "overlay_count": 1
+  },
+  "certification_level": "SANDBOX_COMPUTED",
+  "verification": "MATCH",
+  "matches_prior_snapshot": "snapshot-002-post-SEP-multi-001",
+  "independent_removability": true
+}

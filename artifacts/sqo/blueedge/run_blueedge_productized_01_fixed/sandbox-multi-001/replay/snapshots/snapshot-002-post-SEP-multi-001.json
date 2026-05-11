@@ -1,0 +1,14 @@
+{
+  "snapshot_id": "snapshot-002-post-SEP-multi-001",
+  "timestamp": "2026-05-11T23:03:30.000Z",
+  "sandbox_id": "sandbox-blueedge-run01-multi-001",
+  "snapshot_type": "POST_ACTIVATION",
+  "active_overlays": ["SEP-multi-001"],
+  "composite_summary": {
+    "s_state": "S2", "q_class": "Q-02", "backed_count": 5,
+    "grounding_ratio": 0.294, "overlay_count": 1
+  },
+  "certification_level": "SANDBOX_COMPUTED",
+  "verification": "MATCH",
+  "attribution": { "certified": 4, "overlay": 1, "overlay_percentage": 20.0 }
+}

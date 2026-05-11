@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "sandbox_id": "sandbox-blueedge-run01-multi-001",
+  "last_updated": "2026-05-11T23:25:00.000Z",
+  "mounts": [
+    {
+      "mount_id": "mount-001",
+      "package_id": "SEP-multi-001",
+      "status": "UNMOUNTED",
+      "mounted_at": "2026-05-11T23:03:00.000Z",
+      "unmounted_at": "2026-05-11T23:25:00.000Z",
+      "domains_affected": ["DOMAIN-11"],
+      "mount_order": 1
+    },
+    {
+      "mount_id": "mount-002",
+      "package_id": "SEP-multi-002",
+      "status": "UNMOUNTED",
+      "mounted_at": "2026-05-11T23:07:00.000Z",
+      "unmounted_at": "2026-05-11T23:22:00.000Z",
+      "domains_affected": ["DOMAIN-02"],
+      "mount_order": 2
+    },
+    {
+      "mount_id": "mount-003",
+      "package_id": "SEP-multi-003",
+      "status": "UNMOUNTED",
+      "mounted_at": "2026-05-11T23:11:00.000Z",
+      "unmounted_at": "2026-05-11T23:19:00.000Z",
+      "domains_affected": ["DOMAIN-08"],
+      "mount_order": 3
+    }
+  ],
+  "active_mount_count": 0,
+  "mount_count_zero_property": {
+    "verified": true,
+    "composite_equals_baseline": true,
+    "verification_note": "Zero active mounts — composite state equals certified baseline"
+  }
+}

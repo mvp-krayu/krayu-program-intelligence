@@ -1,0 +1,24 @@
+{
+  "snapshot_id": "snapshot-007-revoke-SEP-multi-001",
+  "timestamp": "2026-05-11T23:25:00.000Z",
+  "sandbox_id": "sandbox-blueedge-run01-multi-001",
+  "snapshot_type": "POST_REVOCATION",
+  "active_overlays": [],
+  "revoked_package": "SEP-multi-001",
+  "composite_summary": {
+    "s_state": "S2", "q_class": "Q-02", "backed_count": 4,
+    "grounding_ratio": 0.235, "overlay_count": 0
+  },
+  "certification_level": "PIPELINE_CERTIFIED",
+  "verification": "MATCH",
+  "matches_prior_snapshot": "snapshot-001-baseline",
+  "independent_removability": true,
+  "round_trip_complete": true,
+  "round_trip_proof": {
+    "baseline_snapshot": "snapshot-001-baseline",
+    "final_snapshot": "snapshot-007-revoke-SEP-multi-001",
+    "states_match": true,
+    "overlays_traversed": 3,
+    "conclusion": "Full multi-overlay round-trip: T0 = T6"
+  }
+}

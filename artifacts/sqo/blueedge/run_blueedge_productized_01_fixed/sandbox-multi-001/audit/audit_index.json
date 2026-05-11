@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "sandbox_id": "sandbox-blueedge-run01-multi-001",
+  "event_count": 18,
+  "events": [
+    { "event_id": "EVT-001", "event_type": "SANDBOX_CREATED", "timestamp": "2026-05-11T23:00:00.000Z" },
+    { "event_id": "EVT-002", "event_type": "PACKAGE_REGISTERED", "timestamp": "2026-05-11T23:01:00.000Z", "package_id": "SEP-multi-001" },
+    { "event_id": "EVT-003", "event_type": "ACTIVATION_COMPLETED", "timestamp": "2026-05-11T23:03:00.000Z", "package_id": "SEP-multi-001" },
+    { "event_id": "EVT-004", "event_type": "OVERLAY_MOUNTED", "timestamp": "2026-05-11T23:03:00.000Z", "package_id": "SEP-multi-001" },
+    { "event_id": "EVT-005", "event_type": "REEVALUATION_COMPLETED", "timestamp": "2026-05-11T23:03:30.000Z", "detail": "backed 4→5" },
+    { "event_id": "EVT-006", "event_type": "PACKAGE_REGISTERED", "timestamp": "2026-05-11T23:05:00.000Z", "package_id": "SEP-multi-002" },
+    { "event_id": "EVT-007", "event_type": "ACTIVATION_COMPLETED", "timestamp": "2026-05-11T23:07:00.000Z", "package_id": "SEP-multi-002" },
+    { "event_id": "EVT-008", "event_type": "OVERLAY_MOUNTED", "timestamp": "2026-05-11T23:07:00.000Z", "package_id": "SEP-multi-002" },
+    { "event_id": "EVT-009", "event_type": "REEVALUATION_COMPLETED", "timestamp": "2026-05-11T23:07:30.000Z", "detail": "backed 5→6" },
+    { "event_id": "EVT-010", "event_type": "PACKAGE_REGISTERED", "timestamp": "2026-05-11T23:09:00.000Z", "package_id": "SEP-multi-003" },
+    { "event_id": "EVT-011", "event_type": "ACTIVATION_COMPLETED", "timestamp": "2026-05-11T23:11:00.000Z", "package_id": "SEP-multi-003" },
+    { "event_id": "EVT-012", "event_type": "OVERLAY_MOUNTED", "timestamp": "2026-05-11T23:11:00.000Z", "package_id": "SEP-multi-003" },
+    { "event_id": "EVT-013", "event_type": "REEVALUATION_COMPLETED", "timestamp": "2026-05-11T23:11:30.000Z", "detail": "backed 6→7 (peak)" },
+    { "event_id": "EVT-014", "event_type": "OVERLAY_UNMOUNTED", "timestamp": "2026-05-11T23:19:00.000Z", "package_id": "SEP-multi-003" },
+    { "event_id": "EVT-015", "event_type": "OVERLAY_UNMOUNTED", "timestamp": "2026-05-11T23:22:00.000Z", "package_id": "SEP-multi-002" },
+    { "event_id": "EVT-016", "event_type": "OVERLAY_UNMOUNTED", "timestamp": "2026-05-11T23:25:00.000Z", "package_id": "SEP-multi-001" },
+    { "event_id": "EVT-017", "event_type": "REPLAY_VERIFIED", "timestamp": "2026-05-11T23:25:30.000Z", "detail": "7/7 MATCH" },
+    { "event_id": "EVT-018", "event_type": "SANDBOX_CLOSED", "timestamp": "2026-05-11T23:30:00.000Z", "disposition": "MULTI_OVERLAY_ORCHESTRATION_PROOF_COMPLETE" }
+  ]
+}

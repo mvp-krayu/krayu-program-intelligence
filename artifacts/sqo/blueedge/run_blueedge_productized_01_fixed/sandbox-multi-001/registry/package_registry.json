@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "sandbox_id": "sandbox-blueedge-run01-multi-001",
+  "last_updated": "2026-05-11T23:25:00.000Z",
+  "packages": [
+    {
+      "package_id": "SEP-multi-001",
+      "version": 1,
+      "status": "REVOKED",
+      "registered_at": "2026-05-11T23:01:00.000Z",
+      "activated_at": "2026-05-11T23:03:00.000Z",
+      "revoked_at": "2026-05-11T23:25:00.000Z",
+      "entry_count": 1,
+      "domains_targeted": ["DOMAIN-11"],
+      "semantic_class": "TECHNICAL",
+      "orchestration_sequence": 1
+    },
+    {
+      "package_id": "SEP-multi-002",
+      "version": 1,
+      "status": "REVOKED",
+      "registered_at": "2026-05-11T23:05:00.000Z",
+      "activated_at": "2026-05-11T23:07:00.000Z",
+      "revoked_at": "2026-05-11T23:22:00.000Z",
+      "entry_count": 1,
+      "domains_targeted": ["DOMAIN-02"],
+      "semantic_class": "TECHNICAL",
+      "orchestration_sequence": 2
+    },
+    {
+      "package_id": "SEP-multi-003",
+      "version": 1,
+      "status": "REVOKED",
+      "registered_at": "2026-05-11T23:09:00.000Z",
+      "activated_at": "2026-05-11T23:11:00.000Z",
+      "revoked_at": "2026-05-11T23:19:00.000Z",
+      "entry_count": 1,
+      "domains_targeted": ["DOMAIN-08"],
+      "semantic_class": "TECHNICAL",
+      "orchestration_sequence": 3
+    }
+  ],
+  "summary": {
+    "total": 3,
+    "activated": 0,
+    "staged": 0,
+    "revoked": 3,
+    "superseded": 0
+  }
+}
