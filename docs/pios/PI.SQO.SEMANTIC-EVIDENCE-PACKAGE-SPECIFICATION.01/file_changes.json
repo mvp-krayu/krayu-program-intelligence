@@ -1,0 +1,76 @@
+{
+  "stream": "PI.SQO.SEMANTIC-EVIDENCE-PACKAGE-SPECIFICATION.01",
+  "changes": [
+    {
+      "file": "docs/pios/PI.SQO.SEMANTIC-EVIDENCE-PACKAGE-SPECIFICATION.01/SEMANTIC_EVIDENCE_PACKAGE_MODEL.md",
+      "action": "CREATED",
+      "description": "SEP structure definition: schema, lifecycle, persistence, claim types, mandatory constraints"
+    },
+    {
+      "file": "docs/pios/PI.SQO.SEMANTIC-EVIDENCE-PACKAGE-SPECIFICATION.01/STATIC_VS_DYNAMIC_CEU_MODEL.md",
+      "action": "CREATED",
+      "description": "Static vs Dynamic CEU separation boundary, resolution model, protected elements, composite evaluation"
+    },
+    {
+      "file": "docs/pios/PI.SQO.SEMANTIC-EVIDENCE-PACKAGE-SPECIFICATION.01/SEMANTIC_CLASS_AUTHORIZATION_MODEL.md",
+      "action": "CREATED",
+      "description": "7 semantic classes, source-to-class authorization mapping, enforcement rules, cross-class prohibition"
+    },
+    {
+      "file": "docs/pios/PI.SQO.SEMANTIC-EVIDENCE-PACKAGE-SPECIFICATION.01/REPLAY_SAFE_OVERLAY_ARCHITECTURE.md",
+      "action": "CREATED",
+      "description": "Layered overlay application, conflict resolution, substrate isolation, composite state construction, replay verification"
+    },
+    {
+      "file": "docs/pios/PI.SQO.SEMANTIC-EVIDENCE-PACKAGE-SPECIFICATION.01/QUALIFICATION_REEVALUATION_MODEL.md",
+      "action": "CREATED",
+      "description": "Re-evaluation triggers, 8-step process, S-state gate model under composite evaluation, re-evaluation artifact schema"
+    },
+    {
+      "file": "docs/pios/PI.SQO.SEMANTIC-EVIDENCE-PACKAGE-SPECIFICATION.01/OVERLAY_VERSIONING_AND_ROLLBACK.md",
+      "action": "CREATED",
+      "description": "Monotonic versioning, revocation model, version rollback, full overlay reset, dependency declaration, retention policy"
+    },
+    {
+      "file": "docs/pios/PI.SQO.SEMANTIC-EVIDENCE-PACKAGE-SPECIFICATION.01/EVIDENCE_PROVENANCE_REQUIREMENTS.md",
+      "action": "CREATED",
+      "description": "Provenance chain structure, source authority requirements, 3-tier confidence basis, 8 verification checks, audit model"
+    },
+    {
+      "file": "docs/pios/PI.SQO.SEMANTIC-EVIDENCE-PACKAGE-SPECIFICATION.01/MULTI_PACKAGE_COHABITATION_RULES.md",
+      "action": "CREATED",
+      "description": "Cohabitation scenarios, conflict resolution, package interaction rules, aggregate limits, consolidation model"
+    },
+    {
+      "file": "docs/pios/PI.SQO.SEMANTIC-EVIDENCE-PACKAGE-SPECIFICATION.01/DYNAMIC_CEU_ACTIVATION_BOUNDARIES.md",
+      "action": "CREATED",
+      "description": "Pre-activation requirements, 5 activation boundaries, grounding evidence standards, activation/deactivation process"
+    },
+    {
+      "file": "docs/pios/PI.SQO.SEMANTIC-EVIDENCE-PACKAGE-SPECIFICATION.01/GOVERNANCE_BOUNDARY_VALIDATION.md",
+      "action": "CREATED",
+      "description": "11 contract compliance checks, strategic boundary validation, design question coverage, upstream alignment, Wave 4 readiness"
+    },
+    {
+      "file": "docs/pios/PI.SQO.SEMANTIC-EVIDENCE-PACKAGE-SPECIFICATION.01/execution_report.md",
+      "action": "CREATED",
+      "description": "Pre-flight, scope, upstream references, 10 execution steps, governance compliance"
+    },
+    {
+      "file": "docs/pios/PI.SQO.SEMANTIC-EVIDENCE-PACKAGE-SPECIFICATION.01/file_changes.json",
+      "action": "CREATED",
+      "description": "File change manifest for this stream"
+    },
+    {
+      "file": "docs/pios/PI.SQO.SEMANTIC-EVIDENCE-PACKAGE-SPECIFICATION.01/CLOSURE.md",
+      "action": "CREATED",
+      "description": "Stream closure record"
+    }
+  ],
+  "summary": {
+    "created": 13,
+    "modified": 0,
+    "deleted": 0,
+    "total": 13
+  }
+}
