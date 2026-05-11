@@ -1,0 +1,30 @@
+{
+  "stream": "PI.SQO.BLUEEDGE.OVERLAY-OBSERVABILITY-AND-EVOLUTION-TRACE.01",
+  "date": "2026-05-11",
+  "summary": {
+    "created": 14,
+    "modified": 0,
+    "deleted": 0
+  },
+  "categories": {
+    "documentation": 14
+  },
+  "documentation_files": [
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.OVERLAY-OBSERVABILITY-AND-EVOLUTION-TRACE.01/SEMANTIC_EVOLUTION_TRACE_MODEL.md", "action": "CREATED", "description": "Evolution trace model: transition records, timeline, epochs, trace queries, chain verification" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.OVERLAY-OBSERVABILITY-AND-EVOLUTION-TRACE.01/OVERLAY_ACTIVATION_CAUSALITY_MODEL.md", "action": "CREATED", "description": "5-level causal chain (L0-L4), forward/backward causality, impact projection, multi-overlay causality" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.OVERLAY-OBSERVABILITY-AND-EVOLUTION-TRACE.01/QUALIFICATION_DELTA_LINEAGE_MODEL.md", "action": "CREATED", "description": "Per-metric lineage for backed_count, grounding_ratio, domain lineage, S-state, Q-class; composite delta records" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.OVERLAY-OBSERVABILITY-AND-EVOLUTION-TRACE.01/REPLAY_AND_ROLLBACK_LINEAGE_OBSERVABILITY.md", "action": "CREATED", "description": "Replay/rollback trace records, linked verification pairs, round-trip proof observability" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.OVERLAY-OBSERVABILITY-AND-EVOLUTION-TRACE.01/SANDBOX_OPERATIONAL_STATE_VISIBILITY.md", "action": "CREATED", "description": "5-dimension state model, sandbox status card, health dashboard, failure board, governance posture" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.OVERLAY-OBSERVABILITY-AND-EVOLUTION-TRACE.01/OPERATIONAL_SEMANTIC_AUDIT_TRAIL.md", "action": "CREATED", "description": "Operational narrative model, 6 narrative types, trail ordering, completeness verification" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.OVERLAY-OBSERVABILITY-AND-EVOLUTION-TRACE.01/PROVISIONAL_VS_CERTIFIED_STATE_MODEL.md", "action": "CREATED", "description": "3 state classes, per-metric classification, mandatory disclosure, promotion path, stability assessment" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.OVERLAY-OBSERVABILITY-AND-EVOLUTION-TRACE.01/OVERLAY_COEXISTENCE_OBSERVABILITY.md", "action": "CREATED", "description": "Coverage map, overlap detection, conflict classification, attribution breakdown, dependency graph, cascade risk" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.OVERLAY-OBSERVABILITY-AND-EVOLUTION-TRACE.01/OPERATOR_SEMANTIC_GOVERNANCE_WORKSPACE.md", "action": "CREATED", "description": "5-zone workspace, impact previews, governance actions, evolution timeline, health monitoring" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.OVERLAY-OBSERVABILITY-AND-EVOLUTION-TRACE.01/COCKPIT_INTEGRATION_BOUNDARIES.md", "action": "CREATED", "description": "Read-only cockpit data contracts, certification display rules, integration safety rules" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.OVERLAY-OBSERVABILITY-AND-EVOLUTION-TRACE.01/PATH_BOUNDARY_VALIDATION.md", "action": "CREATED", "description": "9-point boundary compliance, 10 design questions answered, governance confirmation" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.OVERLAY-OBSERVABILITY-AND-EVOLUTION-TRACE.01/execution_report.md", "action": "CREATED", "description": "Pre-flight, scope, 10 execution steps, 14 artifacts produced, governance" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.OVERLAY-OBSERVABILITY-AND-EVOLUTION-TRACE.01/file_changes.json", "action": "CREATED", "description": "File change manifest" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.OVERLAY-OBSERVABILITY-AND-EVOLUTION-TRACE.01/CLOSURE.md", "action": "CREATED", "description": "Stream closure with completion status" }
+  ],
+  "validators_affected": [],
+  "governance_notes": "Specification-only stream. No runtime implementation. No sandbox artifacts created. No certified baseline artifacts modified. All 10 observability outputs produced as architecture specifications."
+}
