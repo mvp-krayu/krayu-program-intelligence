@@ -1,7 +1,7 @@
 'use strict';
 
 const { resolveCockpitState } = require('./SQOCockpitStateResolver');
-const { validateRouteParams, buildNavigationItems, COCKPIT_SECTIONS } = require('./SQOCockpitRouteResolver');
+const { validateRouteParams, buildNavigationItems, resolveClientList, COCKPIT_SECTIONS } = require('./SQOCockpitRouteResolver');
 const { buildDegradedNotice } = require('./SQOCockpitDegradationHandler');
 const { resolveQualificationJourney } = require('./QualificationJourneyResolver');
 const { resolveVisualState } = require('./QualificationVisualStateResolver');
@@ -27,6 +27,7 @@ function resolveWorkspaceData(client, runId, initialSection) {
       error: validation.error,
       cockpitState: null,
       navigation: null,
+      clientRuns: resolveClientList(),
       degradedNotice: null,
       degradation: null,
       isCritical: false,
@@ -94,6 +95,7 @@ function resolveWorkspaceData(client, runId, initialSection) {
       visual_posture: state.visual_posture,
     },
     navigation,
+    clientRuns: resolveClientList(),
     degradation: state.degradation,
     degradedNotice,
     isCritical,

@@ -1,0 +1,46 @@
+{
+  "stream": "PI.SQO.COCKPIT-FINAL-UX-STABILIZATION.01",
+  "changes": [
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/SQONavigation.jsx",
+      "action": "MODIFIED",
+      "description": "Fixed header overflow with stacked CLIENT/RUN labels, added client/run switcher with toggle panel"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/SQOWorkspacePanel.jsx",
+      "action": "MODIFIED",
+      "description": "Added SECTION_CONTEXT map and contextual framing header with title, purpose, focus, type, and back-to-overview button"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/SQOWorkspaceShell.jsx",
+      "action": "MODIFIED",
+      "description": "Added clientRuns prop passthrough to SQONavigation, added onNavigateOverview prop to SQOWorkspacePanel"
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/SQOWorkspaceDataResolver.js",
+      "action": "MODIFIED",
+      "description": "Added resolveClientList import, included clientRuns in both success and error return paths"
+    },
+    {
+      "file": "app/execlens-demo/styles/globals.css",
+      "action": "MODIFIED",
+      "description": "Added CSS for identity layout, switcher, panel header framing; replaced single-line client class"
+    },
+    {
+      "file": "app/execlens-demo/flagship-experience/tests/sqo-cockpit-final-stabilization.test.js",
+      "action": "CREATED",
+      "description": "23 tests in 7 suites covering header overflow, switcher, overview anchor, framing, navigation, governance"
+    },
+    {
+      "file": "app/execlens-demo/package.json",
+      "action": "MODIFIED",
+      "description": "Added test:sqo-stabilization script and included in aggregate test"
+    }
+  ],
+  "summary": {
+    "created": 1,
+    "modified": 6,
+    "deleted": 0,
+    "total": 7
+  }
+}

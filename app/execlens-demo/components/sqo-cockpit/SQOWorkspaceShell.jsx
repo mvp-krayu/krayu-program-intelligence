@@ -14,7 +14,7 @@ import OperationalAttentionLayout from './OperationalAttentionLayout';
 import SQOWorkspacePanel from './SQOWorkspacePanel';
 
 export default function SQOWorkspaceShell({
-  client, runId, error, cockpitState, navigation,
+  client, runId, error, cockpitState, navigation, clientRuns,
   degradation, degradedNotice, isCritical,
   journey, visualState, attentionHierarchy, workflowDominance, deferredVisibility,
   sectionData, initialSection,
@@ -59,6 +59,7 @@ export default function SQOWorkspaceShell({
         runId={runId}
         activeSection={activeSection}
         sections={navigation}
+        clientRuns={clientRuns}
         degradation={degradation}
         onNavigate={navigateSection}
       />
@@ -166,6 +167,7 @@ export default function SQOWorkspaceShell({
           <SQOWorkspacePanel
             section={activeSection}
             sectionData={sectionData}
+            onNavigateOverview={() => navigateSection('overview')}
           />
         )}
       </main>
