@@ -406,6 +406,102 @@ Rules:
 
 ────────────────────────────────────
 
+## SKILL: INCOMING_CONTRACT_VALIDATION
+
+**Authority:** PI.PIOS.AMOPS-CONTRACT-TEMPLATE-SYSTEM-AND-RUNTIME-VALIDATION.01
+**Date:** 2026-05-12
+
+Purpose:
+Validate any incoming contract (typically drafted by ChatGPT) for AMOps compliance before execution. Claude is the enforcement layer — ChatGPT drafts, Claude validates.
+
+Trigger condition (MANDATORY):
+- A stream contract is received for execution
+- Contract was drafted externally (ChatGPT or operator)
+
+──────────────────────────────────────────────────
+
+### STEP 1 — CLASSIFICATION CHECK
+
+Verify the contract declares a stream classification (G1/G2/G3).
+
+If missing:
+- Infer classification from contract content using STREAM_CLASSIFICATION criteria
+- Report inferred classification to operator before proceeding
+
+──────────────────────────────────────────────────
+
+### STEP 2 — STRUCTURAL COMPLETENESS
+
+Check contract contains minimum required elements:
+
+| Element | Required |
+|---|---|
+| Stream ID | YES |
+| Classification (G1/G2/G3) or inferable | YES |
+| Mission / purpose | YES |
+| Scope or deliverables | YES |
+| Closure verdict defined | RECOMMENDED |
+
+Missing elements are not blocking — Claude can execute with mission + scope.
+Report any gaps to operator as informational.
+
+──────────────────────────────────────────────────
+
+### STEP 3 — TERMINOLOGY CHECK
+
+Scan contract for architectural terms.
+Compare against TERMINOLOGY_LOCK.md.
+
+Flag:
+- Terms used with wrong definitions
+- New terms that may need locking (G1 indicator)
+- Potential classification upgrade (contract says G2 but introduces new terms → likely G1)
+
+──────────────────────────────────────────────────
+
+### STEP 4 — SCOPE ASSESSMENT
+
+Check whether contract scope matches declared classification:
+- G1 contract that only consumes architecture → suggest G2
+- G2 contract that introduces new concepts → flag as likely G1
+- G3 contract that references architectural concepts → flag as likely G2
+
+──────────────────────────────────────────────────
+
+### STEP 5 — VALIDATION REPORT
+
+Output to operator before execution:
+
+```
+INCOMING CONTRACT VALIDATION
+Stream: [stream-id]
+Declared classification: [G1/G2/G3 or MISSING]
+Validated classification: [G1/G2/G3]
+Classification match: YES / UPGRADED / DOWNGRADED
+
+Structural completeness: COMPLETE / GAPS [list]
+Terminology compliance: CLEAR / FLAGS [list]
+Scope-classification alignment: ALIGNED / MISMATCHED [details]
+
+RECOMMENDATION: EXECUTE / EXECUTE WITH NOTES / RETURN TO DRAFTER
+```
+
+If RETURN TO DRAFTER: explain what needs to change.
+If EXECUTE WITH NOTES: list what Claude will handle automatically.
+If EXECUTE: proceed with AMOps lifecycle.
+
+──────────────────────────────────────────────────
+
+Rules:
+- This skill runs BEFORE AMOps preflight
+- This skill does NOT block execution for missing AMOps boilerplate — Claude adds that
+- This skill DOES flag classification errors that would cause wrong lifecycle
+- Operator may override classification after seeing validation report
+
+──────────────────────────────────────────────────
+
+────────────────────────────────────
+
 ## SKILL: ARCHITECTURE_MEMORY_SYNC
 
 **Authority:** PI.PIOS.AMOPS-RUNTIME-SELF-APPLICATION-AND-CLAUDE-OPERATING-MODEL-MIGRATION.01

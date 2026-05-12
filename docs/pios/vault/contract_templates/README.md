@@ -1,18 +1,38 @@
 # AMOps-Native Contract Template System
 
-> **Canonical templates for every stream classification. Use these. Do not improvise.**
+> **Claude's internal enforcement templates + ChatGPT's single-page bootstrap.**
 
 ---
 
-## Purpose
+## Operating Model
 
-This directory contains reusable contract templates that structurally force AMOps compliance. Every future stream begins by selecting the correct template and filling in the delta.
+**ChatGPT** drafts contracts using [[CHATGPT_CONTRACT_BOOTSTRAP]] — a single paste-able document with current state, key terms, classification rules, and one contract skeleton.
 
-Templates exist because:
-- AMOps preflight must be unavoidable, not optional
-- Mutation tracking must be embedded in contract shape, not remembered ad hoc
-- Vault propagation must be structurally required at closure, not hoped for
-- Fail-closed behavior must be wired into the contract, not added as afterthought
+**Claude** validates incoming contracts (SKILL: INCOMING_CONTRACT_VALIDATION), classifies them, and executes with full AMOps lifecycle automatically. Claude's internal templates below define what Claude enforces — they are NOT for ChatGPT to use.
+
+**The operator** pastes the bootstrap into ChatGPT, gets a contract, hands it to Claude. Claude flags any issues before executing.
+
+---
+
+## ChatGPT Bootstrap (START HERE)
+
+**[[CHATGPT_CONTRACT_BOOTSTRAP]]** — paste this into every new ChatGPT session that will produce a stream contract. One document, one skeleton, one set of terms. ChatGPT fills in mission + classification + deliverables. Claude handles the rest.
+
+---
+
+## Claude's Internal Templates (Reference Only)
+
+These templates define Claude's enforcement behavior. They are not contract-drafting aids for ChatGPT.
+
+| Template | Claude Uses When |
+|---|---|
+| [[G1_ARCHITECTURE_MUTATION_CONTRACT_TEMPLATE]] | Stream classified as G1 — full AMOps lifecycle |
+| [[G2_ARCHITECTURE_CONSUMPTION_CONTRACT_TEMPLATE]] | Stream classified as G2 — reduced AMOps |
+| [[G3_STANDARD_EXECUTION_CONTRACT_TEMPLATE]] | Stream classified as G3 — standard execution |
+| [[GOVERNANCE_REPAIR_CONTRACT_TEMPLATE]] | Drift correction or vault repair |
+| [[CANONICAL_PROMOTION_AND_SUPERSESSION_CONTRACT_TEMPLATE]] | Status transitions |
+| [[VAULT_SYNC_AND_DRIFT_AUDIT_CONTRACT_TEMPLATE]] | Vault health audit |
+| [[EMERGENCY_FAIL_CLOSED_RECOVERY_CONTRACT_TEMPLATE]] | Fail-closed recovery |
 
 ---
 
