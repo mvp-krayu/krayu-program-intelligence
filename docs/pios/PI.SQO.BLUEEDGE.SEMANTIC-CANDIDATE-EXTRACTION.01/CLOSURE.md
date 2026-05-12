@@ -25,11 +25,15 @@ First deterministic semantic candidate extraction corridor for the SQO Cockpit. 
 - Modified SQOWorkspaceShell.jsx — added semantic-candidates to known sections
 - Modified globals.css — added semantic candidate corridor CSS
 - Created 63-test test file — extractor, determinism, hashes, spans, domains, unmapped, authority, gate, governance, PATH, fs, LENS, route
+- [DOCUMENTATION CORRECTION] Created SEMANTIC_EXTRACTION_GRAMMAR.md — reusable doctrine for 6 extraction methods, domain keyword map, prohibited behavior, extension rules
+- [DOCUMENTATION CORRECTION] Created SEMANTIC_CANDIDATE_MODEL.md — reusable doctrine for 13-field candidate schema, authority state, confidence classes, domain targeting
+- [DOCUMENTATION CORRECTION] Created EVIDENCE_TO_DOMAIN_MAPPING_RULES.md — reusable doctrine for 3 resolution methods, fail-visible rules, fabrication avoidance
+- [DOCUMENTATION CORRECTION] Created CANDIDATE_EXTRACTION_GOVERNANCE_BOUNDARY.md — reusable doctrine for candidate governance boundary, governance flags, pipeline position
 
 ## 4. Files Impacted
 
 11 implementation files (8 created, 3 modified)
-4 documentation files created in `docs/pios/PI.SQO.BLUEEDGE.SEMANTIC-CANDIDATE-EXTRACTION.01/`
+8 documentation files in `docs/pios/PI.SQO.BLUEEDGE.SEMANTIC-CANDIDATE-EXTRACTION.01/`
 
 ## 5. Validation
 
@@ -59,7 +63,7 @@ First deterministic semantic candidate extraction corridor for the SQO Cockpit. 
 | No LENS coupling | VERIFIED |
 | Server/client boundary | ENFORCED |
 
-Verdict: **SQO_BLUEEDGE_SEMANTIC_CANDIDATE_EXTRACTION_CERTIFIED**
+Verdict: **SQO_SEMANTIC_CANDIDATE_EXTRACTION_DOCUMENTATION_CORRECTED**
 
 ## 6. Governance
 
@@ -91,6 +95,10 @@ Verdict: **SQO_BLUEEDGE_SEMANTIC_CANDIDATE_EXTRACTION_CERTIFIED**
 - Lineage validation: `CANDIDATE_LINEAGE_AND_AUTHORITY_VALIDATION.md`
 - Execution report: `execution_report.md`
 - Closure: `CLOSURE.md`
+- Doctrine — Extraction grammar: `SEMANTIC_EXTRACTION_GRAMMAR.md`
+- Doctrine — Candidate model: `SEMANTIC_CANDIDATE_MODEL.md`
+- Doctrine — Domain mapping rules: `EVIDENCE_TO_DOMAIN_MAPPING_RULES.md`
+- Doctrine — Governance boundary: `CANDIDATE_EXTRACTION_GOVERNANCE_BOUNDARY.md`
 
 ## 9. Ready State
 

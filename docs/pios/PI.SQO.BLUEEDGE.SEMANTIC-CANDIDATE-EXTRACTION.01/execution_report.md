@@ -88,3 +88,39 @@ First deterministic semantic candidate extraction from registered BlueEdge evide
 - Server/client boundary enforced (fs/crypto only in getServerSideProps)
 - Authority boundary notice explicitly rendered
 - Governance notice and footer present in corridor view
+
+## 6. Documentation Correction — PI.SQO.BLUEEDGE.SEMANTIC-CANDIDATE-EXTRACTION.DOCUMENTATION-CORRECTION.01
+
+### 6.1 Reason
+
+Stream AK execution optimized documentation too aggressively. Four reusable doctrine artifacts were not persisted. The semantic candidate extraction corridor introduced reusable primitives (extraction grammar, candidate model, domain mapping rules, governance boundary) that MUST be persisted as doctrine per governance policy.
+
+### 6.2 Correction Scope
+
+Documentation only. No runtime files modified. No logic changes. No test changes.
+
+### 6.3 Doctrine Artifacts Created
+
+| Artifact | Path | Content |
+|----------|------|---------|
+| Semantic Extraction Grammar | `SEMANTIC_EXTRACTION_GRAMMAR.md` | 6 extraction methods, domain keyword map, source span requirements, unmapped handling, prohibited behavior, deterministic rule, extension rules |
+| Semantic Candidate Model | `SEMANTIC_CANDIDATE_MODEL.md` | 13-field candidate schema, authority state and transitions, confidence classes, conflict status, source hash linkage, evidence lineage, domain targeting, candidate type taxonomy, ID format |
+| Evidence-to-Domain Mapping Rules | `EVIDENCE_TO_DOMAIN_MAPPING_RULES.md` | 3 resolution methods (keyword map, direct chip text, evidence registry scope), NONE/PARTIAL domain targeting, fail-visible requirements, semantic fabrication avoidance, Dynamic CEU preparation, mapping stability |
+| Candidate Extraction Governance Boundary | `CANDIDATE_EXTRACTION_GOVERNANCE_BOUNDARY.md` | What candidates are/are not, Dynamic CEU gate, 8 governance flags, server/client boundary, pipeline position diagram |
+
+### 6.4 Verification
+
+| Check | Result |
+|-------|--------|
+| SEMANTIC_EXTRACTION_GRAMMAR.md exists | PASS |
+| SEMANTIC_CANDIDATE_MODEL.md exists | PASS |
+| EVIDENCE_TO_DOMAIN_MAPPING_RULES.md exists | PASS |
+| CANDIDATE_EXTRACTION_GOVERNANCE_BOUNDARY.md exists | PASS |
+| No runtime files modified | VERIFIED |
+| No test files modified | VERIFIED |
+| No logic changes | VERIFIED |
+| All doctrine matches implementation | VERIFIED |
+
+### 6.5 Corrected Verdict
+
+SQO_SEMANTIC_CANDIDATE_EXTRACTION_DOCUMENTATION_CORRECTED
