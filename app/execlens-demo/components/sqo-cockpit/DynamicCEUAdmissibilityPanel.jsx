@@ -29,6 +29,32 @@ export default function DynamicCEUAdmissibilityPanel({ admissibility }) {
         </div>
       </div>
 
+      {admissibility.source_status && (
+        <div className="admissibility-panel__source-status">
+          <div className="admissibility-panel__source-status-row">
+            <span className="admissibility-panel__source-label">Evidence Set</span>
+            <span className="admissibility-panel__source-value">{admissibility.evidence_set_id}</span>
+          </div>
+          <div className="admissibility-panel__source-status-row">
+            <span className="admissibility-panel__source-label">Source Status</span>
+            <span className="corridor-badge corridor-badge--ok">{admissibility.source_status}</span>
+          </div>
+          <div className="admissibility-panel__source-status-row">
+            <span className="admissibility-panel__source-label">Source Class</span>
+            <span className="admissibility-panel__source-value">{admissibility.source_class}</span>
+          </div>
+          {admissibility.evidence_files && admissibility.evidence_files.length > 0 && (
+            <div className="admissibility-panel__source-status-row">
+              <span className="admissibility-panel__source-label">Source Files</span>
+              <span className="admissibility-panel__source-value">{admissibility.evidence_files.join(', ')}</span>
+            </div>
+          )}
+          <div className="admissibility-panel__source-warning">
+            Tier-1/Tier-2/LENS/gauge outputs are not admissible primary SQO semantic evidence. Only evidence listed in evidence_sources.yaml is valid for SQO semantic analysis.
+          </div>
+        </div>
+      )}
+
       <div className="admissibility-panel__notice">
         <div className="admissibility-panel__notice-header">
           <span className="admissibility-panel__notice-title">ADMISSIBILITY GOVERNANCE BOUNDARY</span>

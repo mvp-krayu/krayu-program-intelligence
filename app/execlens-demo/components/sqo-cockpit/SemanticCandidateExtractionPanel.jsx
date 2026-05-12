@@ -34,6 +34,32 @@ export default function SemanticCandidateExtractionPanel({ extraction }) {
         </div>
       </div>
 
+      {extraction.source_status && (
+        <div className="candidate-panel__source-status">
+          <div className="candidate-panel__source-status-row">
+            <span className="candidate-panel__source-label">Evidence Set</span>
+            <span className="candidate-panel__source-value">{extraction.evidence_set_id}</span>
+          </div>
+          <div className="candidate-panel__source-status-row">
+            <span className="candidate-panel__source-label">Source Status</span>
+            <span className="corridor-badge corridor-badge--ok">{extraction.source_status}</span>
+          </div>
+          <div className="candidate-panel__source-status-row">
+            <span className="candidate-panel__source-label">Source Class</span>
+            <span className="candidate-panel__source-value">{extraction.source_class}</span>
+          </div>
+          {extraction.evidence_files && extraction.evidence_files.length > 0 && (
+            <div className="candidate-panel__source-status-row">
+              <span className="candidate-panel__source-label">Source Files</span>
+              <span className="candidate-panel__source-value">{extraction.evidence_files.join(', ')}</span>
+            </div>
+          )}
+          <div className="candidate-panel__source-warning">
+            Tier-1/Tier-2/LENS/gauge outputs are not admissible primary SQO semantic evidence. Only evidence listed in evidence_sources.yaml is valid for SQO semantic analysis.
+          </div>
+        </div>
+      )}
+
       <div className="candidate-panel__governance-notice">
         <span>Semantic Candidate Extraction Corridor · Candidate semantic signals are NOT qualified semantic truth · Extraction does not mutate grounding, overlays, qualification, or authority · All candidates require Dynamic CEU admissibility evaluation</span>
       </div>

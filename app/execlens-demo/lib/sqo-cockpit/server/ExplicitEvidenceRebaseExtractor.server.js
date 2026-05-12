@@ -587,4 +587,120 @@ function loadExplicitEvidenceRebaseData() {
   };
 }
 
-module.exports = { loadExplicitEvidenceRebaseData, parseEvidenceSources, isFileAllowed, CLIENT, RUN, DOMAIN_KEYWORD_MAP };
+function loadRebasedCandidateData() {
+  const rebase = loadExplicitEvidenceRebaseData();
+  if (!rebase.ok) {
+    return { ok: false, error: rebase.error };
+  }
+
+  const candidates = rebase.candidates;
+  const unmappedCount = candidates.filter(c => c.candidate_domain === 'UNMAPPED_CANDIDATE').length;
+  const domainCounts = {};
+  for (const c of candidates) {
+    if (c.candidate_domain !== 'UNMAPPED_CANDIDATE') {
+      domainCounts[c.candidate_domain] = (domainCounts[c.candidate_domain] || 0) + 1;
+    }
+  }
+
+  return {
+    ok: true,
+    client: CLIENT,
+    run_id: RUN,
+    evidence_registry_id: rebase.evidence_set_id,
+    source_status: rebase.source_status,
+    previous_chain_status: rebase.previous_chain_status,
+    evidence_set_id: rebase.evidence_set_id,
+    evidence_files: rebase.summary.evidence_files,
+    source_class: rebase.manifest.source_class,
+    candidates,
+    candidate_count: candidates.length,
+    extraction_log: rebase.extraction_log,
+    summary: {
+      total_candidates: candidates.length,
+      mapped_candidates: candidates.length - unmappedCount,
+      unmapped_candidates: unmappedCount,
+      domains_referenced: Object.keys(domainCounts).length,
+      domain_counts: domainCounts,
+      extraction_methods_used: [...new Set(candidates.map(c => c.extraction_method))],
+      confidence_distribution: {
+        STRONG: candidates.filter(c => c.confidence_class === 'STRONG').length,
+        MODERATE: candidates.filter(c => c.confidence_class === 'MODERATE').length,
+        WEAK: candidates.filter(c => c.confidence_class === 'WEAK').length,
+      },
+      all_non_authoritative: candidates.every(c => c.authority_state === 'NON_AUTHORITATIVE_SEMANTIC_CANDIDATE'),
+      all_gated: candidates.every(c => c.next_required_gate === 'DYNAMIC_CEU_ADMISSIBILITY_REQUIRED'),
+    },
+    governance: rebase.governance,
+  };
+}
+
+function loadRebasedAdmissibilityData() {
+  const rebase = loadExplicitEvidenceRebaseData();
+  if (!rebase.ok) {
+    return { ok: false, error: rebase.error };
+  }
+
+  const evaluations = rebase.evaluations;
+  const admissibleCount = evaluations.filter(e => e.admissibility_state === 'ADMISSIBLE').length;
+  const quarantinedCount = evaluations.filter(e => e.admissibility_state === 'QUARANTINED').length;
+  const rejectedCount = evaluations.filter(e => e.admissibility_state === 'REJECTED').length;
+  const unresolvedCount = evaluations.filter(e => e.admissibility_state === 'UNRESOLVED').length;
+
+  const admissibleDomains = [...new Set(
+    evaluations.filter(e => e.admissibility_state === 'ADMISSIBLE').map(e => e.candidate_domain)
+  )];
+  const quarantinedDomains = [...new Set(
+    evaluations.filter(e => e.admissibility_state === 'QUARANTINED' && e.candidate_domain !== 'UNMAPPED_CANDIDATE').map(e => e.candidate_domain)
+  )];
+
+  const evaluationLog = evaluations.map(e => ({
+    candidate_id: e.candidate_id,
+    candidate_domain: e.candidate_domain,
+    admissibility_state: e.admissibility_state,
+    structural_compatibility: e.structural_compatibility,
+    replay_compatibility: e.replay_compatibility,
+    conflict_status: e.conflict_status,
+  }));
+
+  return {
+    ok: true,
+    client: CLIENT,
+    run_id: RUN,
+    upstream_registry_id: rebase.evidence_set_id,
+    upstream_candidate_count: rebase.candidate_count,
+    source_status: rebase.source_status,
+    previous_chain_status: rebase.previous_chain_status,
+    evidence_set_id: rebase.evidence_set_id,
+    evidence_files: rebase.summary.evidence_files,
+    source_class: rebase.manifest.source_class,
+    evaluations,
+    evaluation_count: evaluations.length,
+    evaluation_log: evaluationLog,
+    summary: {
+      total_evaluated: evaluations.length,
+      admissible: admissibleCount,
+      quarantined: quarantinedCount,
+      rejected: rejectedCount,
+      unresolved: unresolvedCount,
+      admissible_domains: admissibleDomains,
+      quarantined_domains: quarantinedDomains,
+      none_domains_with_admissible: [],
+      structural_compatibility_distribution: {
+        HIGH: evaluations.filter(e => e.structural_compatibility === 'HIGH').length,
+        MODERATE: evaluations.filter(e => e.structural_compatibility === 'MODERATE').length,
+        LOW: evaluations.filter(e => e.structural_compatibility === 'LOW').length,
+        NONE: evaluations.filter(e => e.structural_compatibility === 'NONE').length,
+      },
+      replay_compatibility_distribution: {
+        COMPATIBLE: evaluations.filter(e => e.replay_compatibility === 'COMPATIBLE').length,
+        UNCERTAIN: evaluations.filter(e => e.replay_compatibility === 'UNCERTAIN').length,
+        INCOMPATIBLE: evaluations.filter(e => e.replay_compatibility === 'INCOMPATIBLE').length,
+      },
+      conflict_count: 0,
+      all_non_authoritative: evaluations.every(e => e.authority_state === 'NON_AUTHORITATIVE_ADMISSIBILITY_RESULT'),
+    },
+    governance: rebase.governance,
+  };
+}
+
+module.exports = { loadExplicitEvidenceRebaseData, loadRebasedCandidateData, loadRebasedAdmissibilityData, parseEvidenceSources, isFileAllowed, CLIENT, RUN, DOMAIN_KEYWORD_MAP };

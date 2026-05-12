@@ -2,7 +2,7 @@ import SQONavigation from '../../../../../../components/sqo-cockpit/SQONavigatio
 import DynamicCEUAdmissibilityPanel from '../../../../../../components/sqo-cockpit/DynamicCEUAdmissibilityPanel';
 
 export async function getServerSideProps(context) {
-  const { loadDynamicCEUAdmissibilityData } = require('../../../../../../lib/sqo-cockpit/server/DynamicCEUAdmissibilityEvaluator.server');
+  const { loadRebasedAdmissibilityData } = require('../../../../../../lib/sqo-cockpit/server/ExplicitEvidenceRebaseExtractor.server');
   const { buildDynamicCEUAdmissibilityViewModel } = require('../../../../../../lib/sqo-cockpit/client/DynamicCEUAdmissibilityViewModel');
   const { validateRouteParams, buildNavigationItems } = require('../../../../../../lib/sqo-cockpit/SQOCockpitRouteResolver');
   const { listAllowedClientRuns } = require('../../../../../../lib/lens-v2/manifests');
@@ -14,8 +14,16 @@ export async function getServerSideProps(context) {
     return { props: { client, runId: run, error: routeCheck.error, admissibility: null, navigation: [], clientRuns: [] } };
   }
 
-  const admissibilityData = loadDynamicCEUAdmissibilityData();
+  const admissibilityData = loadRebasedAdmissibilityData();
   const admissibility = buildDynamicCEUAdmissibilityViewModel(admissibilityData);
+
+  if (admissibility.available) {
+    admissibility.source_status = admissibilityData.source_status || null;
+    admissibility.previous_chain_status = admissibilityData.previous_chain_status || null;
+    admissibility.evidence_set_id = admissibilityData.evidence_set_id || null;
+    admissibility.evidence_files = admissibilityData.evidence_files || [];
+    admissibility.source_class = admissibilityData.source_class || null;
+  }
 
   const navigation = buildNavigationItems(client, run, 'ceu-admissibility');
   const clientRuns = listAllowedClientRuns();

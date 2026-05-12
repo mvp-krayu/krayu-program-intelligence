@@ -2,7 +2,7 @@ import SQONavigation from '../../../../../../components/sqo-cockpit/SQONavigatio
 import SemanticCandidateExtractionPanel from '../../../../../../components/sqo-cockpit/SemanticCandidateExtractionPanel';
 
 export async function getServerSideProps(context) {
-  const { loadSemanticCandidateData } = require('../../../../../../lib/sqo-cockpit/server/BlueEdgeSemanticCandidateExtractor.server');
+  const { loadRebasedCandidateData } = require('../../../../../../lib/sqo-cockpit/server/ExplicitEvidenceRebaseExtractor.server');
   const { buildSemanticCandidateViewModel } = require('../../../../../../lib/sqo-cockpit/client/BlueEdgeSemanticCandidateViewModel');
   const { validateRouteParams, buildNavigationItems } = require('../../../../../../lib/sqo-cockpit/SQOCockpitRouteResolver');
   const { listAllowedClientRuns } = require('../../../../../../lib/lens-v2/manifests');
@@ -14,8 +14,16 @@ export async function getServerSideProps(context) {
     return { props: { client, runId: run, error: routeCheck.error, extraction: null, navigation: [], clientRuns: [] } };
   }
 
-  const candidateData = loadSemanticCandidateData();
+  const candidateData = loadRebasedCandidateData();
   const extraction = buildSemanticCandidateViewModel(candidateData);
+
+  if (extraction.available) {
+    extraction.source_status = candidateData.source_status || null;
+    extraction.previous_chain_status = candidateData.previous_chain_status || null;
+    extraction.evidence_set_id = candidateData.evidence_set_id || null;
+    extraction.evidence_files = candidateData.evidence_files || [];
+    extraction.source_class = candidateData.source_class || null;
+  }
 
   const navigation = buildNavigationItems(client, run, 'semantic-candidates');
   const clientRuns = listAllowedClientRuns();
