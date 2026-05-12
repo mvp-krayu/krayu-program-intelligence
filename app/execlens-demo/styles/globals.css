@@ -4781,3 +4781,486 @@ a.topo-chip:hover {
   font-family: var(--font-mono);
   margin-top: 2px;
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   EVIDENCE INGESTION CORRIDOR
+   ═══════════════════════════════════════════════════════════════════ */
+
+.evidence-corridor {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.evidence-corridor--unavailable {
+  padding: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.evidence-corridor__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.evidence-corridor__header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.evidence-corridor__header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.evidence-corridor__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.evidence-corridor__subtitle {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.evidence-corridor__item-count {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.evidence-corridor__error {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  margin: 8px 0 0;
+}
+
+.evidence-corridor__governance-notice {
+  padding: 10px 16px;
+  background: var(--bg-card-deep);
+  border: 1px solid var(--border-dim);
+  border-radius: 3px;
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+  line-height: 1.6;
+}
+
+.evidence-corridor__sections {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.evidence-corridor__footer {
+  padding: 10px 16px;
+  border-top: 1px solid var(--border-dim);
+}
+
+.evidence-corridor__footer-text {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+}
+
+/* --- Evidence Authority Boundary Notice --- */
+
+.evidence-boundary-notice {
+  padding: 16px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--semantic-yellow);
+  border-radius: 4px;
+}
+
+.evidence-boundary-notice__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.evidence-boundary-notice__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+.evidence-boundary-notice__rules {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.evidence-boundary-notice__rule {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.evidence-boundary-notice__separator {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.evidence-boundary-notice__flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-dim);
+}
+
+.evidence-boundary-notice__flag {
+  font-size: 9px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  padding: 2px 8px;
+  background: var(--bg-card-deep);
+  border: 1px solid var(--border-dim);
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* --- Evidence Registry Table --- */
+
+.evidence-registry-table {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.evidence-registry-table--empty {
+  padding: 16px 20px;
+}
+
+.evidence-registry-table__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.evidence-registry-table__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  margin: 0;
+}
+
+.evidence-registry-table__header-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.evidence-registry-table__count {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.evidence-registry-table__empty-msg {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  margin: 8px 0 0;
+}
+
+.evidence-registry-table__grid {
+  overflow-x: auto;
+}
+
+.evidence-registry-table__row {
+  display: grid;
+  grid-template-columns: 90px 1fr 180px 80px 200px 80px;
+  align-items: center;
+  padding: 8px 20px;
+  border-bottom: 1px solid var(--border-dim);
+  transition: background 0.15s ease;
+}
+
+.evidence-registry-table__row:last-child {
+  border-bottom: none;
+}
+
+.evidence-registry-table__row:not(.evidence-registry-table__row--header):hover {
+  background: var(--bg-card-deep);
+}
+
+.evidence-registry-table__row--header {
+  background: var(--bg-card-deep);
+  border-bottom: 1px solid var(--border);
+}
+
+.evidence-registry-table__row--header .evidence-registry-table__cell {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+
+.evidence-registry-table__cell {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.evidence-registry-table__cell--id {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.evidence-registry-table__cell--hash {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.evidence-registry-table__cell--authority .corridor-badge {
+  font-size: 8px;
+}
+
+/* --- Evidence Registry Item Details --- */
+
+.evidence-registry-table__item-details {
+  border-top: 1px solid var(--border);
+  padding: 12px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.evidence-registry-table__detail {
+  background: var(--bg-card-deep);
+  border: 1px solid var(--border-dim);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.evidence-registry-table__detail-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.evidence-registry-table__detail-id {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+.evidence-registry-table__detail-type {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.evidence-registry-table__detail-body {
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.evidence-registry-table__detail-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.evidence-registry-table__detail-label {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+  min-width: 100px;
+  padding-top: 2px;
+}
+
+.evidence-registry-table__detail-value {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  word-break: break-all;
+}
+
+.evidence-registry-table__detail-value--domains {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.evidence-registry-table__domain-chip {
+  font-size: 9px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  padding: 1px 6px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: 2px;
+}
+
+/* --- Evidence Provenance Summary --- */
+
+.evidence-provenance {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.evidence-provenance--empty {
+  padding: 16px 20px;
+}
+
+.evidence-provenance__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.evidence-provenance__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  margin: 0;
+}
+
+.evidence-provenance__empty-msg {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  margin: 8px 0 0;
+}
+
+.evidence-provenance__meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1px;
+  background: var(--border-dim);
+}
+
+.evidence-provenance__meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 16px;
+  background: var(--bg-card);
+}
+
+.evidence-provenance__meta-label {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+}
+
+.evidence-provenance__meta-value {
+  font-size: 12px;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+.evidence-provenance__source-types {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border-dim);
+}
+
+.evidence-provenance__source-label {
+  display: block;
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+  margin-bottom: 8px;
+}
+
+.evidence-provenance__source-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.evidence-provenance__source-chip {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  padding: 3px 10px;
+  background: var(--bg-card-deep);
+  border: 1px solid var(--border-dim);
+  border-radius: 2px;
+}
+
+.evidence-provenance__flags {
+  display: flex;
+  gap: 1px;
+  background: var(--border-dim);
+  border-top: 1px solid var(--border-dim);
+}
+
+.evidence-provenance__flag {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background: var(--bg-card);
+}
+
+.evidence-provenance__flag--safe .evidence-provenance__flag-value {
+  color: var(--semantic-green);
+}
+
+.evidence-provenance__flag--warn .evidence-provenance__flag-value {
+  color: var(--semantic-yellow);
+}
+
+.evidence-provenance__flag-label {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.evidence-provenance__flag-value {
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
