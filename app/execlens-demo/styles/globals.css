@@ -5860,3 +5860,596 @@ a.topo-chip:hover {
   font-family: var(--font-mono);
   word-break: break-all;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   DYNAMIC CEU ADMISSIBILITY CORRIDOR
+   ═══════════════════════════════════════════════════════════════ */
+
+.admissibility-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+}
+
+.admissibility-panel--unavailable {
+  padding: 24px;
+}
+
+.admissibility-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.admissibility-panel__header-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admissibility-panel__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  margin: 0;
+}
+
+.admissibility-panel__subtitle {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.admissibility-panel__header-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admissibility-panel__count {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.admissibility-panel__empty {
+  color: var(--text-dim);
+  font-size: 12px;
+  font-family: var(--font-mono);
+}
+
+.admissibility-panel__notice {
+  background: var(--card-deep);
+  border: 1px solid var(--border-dim);
+  border-left: 3px solid var(--accent-yellow);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admissibility-panel__notice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admissibility-panel__notice-title {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--accent-yellow);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-family: var(--font-mono);
+}
+
+.admissibility-panel__notice-rules p {
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin: 0;
+  font-family: var(--font-ui);
+}
+
+.admissibility-panel__governance-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-dim);
+}
+
+.admissibility-panel__flag {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+  padding: 2px 6px;
+  background: rgba(74, 158, 255, 0.06);
+  border: 1px solid var(--border-dim);
+}
+
+.admissibility-panel__sections {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.admissibility-panel__footer {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-align: center;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-dim);
+  font-family: var(--font-mono);
+}
+
+/* Compatibility Summary */
+
+.admissibility-summary {
+  background: var(--card);
+  border: 1px solid var(--border-color);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.admissibility-summary--empty {
+  padding: 16px;
+}
+
+.admissibility-summary__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admissibility-summary__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  margin: 0;
+}
+
+.admissibility-summary__registry-id {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.admissibility-summary__stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.admissibility-summary__stat {
+  background: var(--card-deep);
+  border: 1px solid var(--border-dim);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: center;
+}
+
+.admissibility-summary__stat--admissible {
+  border-left: 2px solid var(--accent-green);
+}
+
+.admissibility-summary__stat--quarantined {
+  border-left: 2px solid var(--accent-yellow);
+}
+
+.admissibility-summary__stat--rejected {
+  border-left: 2px solid var(--accent-red);
+}
+
+.admissibility-summary__stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+.admissibility-summary__stat--admissible .admissibility-summary__stat-value {
+  color: var(--accent-green);
+}
+
+.admissibility-summary__stat--quarantined .admissibility-summary__stat-value {
+  color: var(--accent-yellow);
+}
+
+.admissibility-summary__stat--rejected .admissibility-summary__stat-value {
+  color: var(--accent-red);
+}
+
+.admissibility-summary__stat-label {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+}
+
+.admissibility-summary__distributions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.admissibility-summary__distribution {
+  background: var(--card-deep);
+  border: 1px solid var(--border-dim);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admissibility-summary__dist-title {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+}
+
+.admissibility-summary__dist-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.admissibility-summary__dist-item {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--text-dim);
+}
+
+.admissibility-summary__dist-item--high {
+  color: var(--accent-green);
+}
+
+.admissibility-summary__dist-item--moderate {
+  color: var(--accent-yellow);
+}
+
+.admissibility-summary__dist-item--low {
+  color: var(--accent-orange);
+}
+
+.admissibility-summary__dist-item--none {
+  color: var(--accent-red);
+}
+
+.admissibility-summary__domains {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admissibility-summary__domains-title {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+}
+
+.admissibility-summary__domain-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.admissibility-summary__domain-chip {
+  font-size: 9px;
+  color: var(--accent-blue);
+  font-family: var(--font-mono);
+  padding: 2px 6px;
+  background: rgba(74, 158, 255, 0.08);
+  border: 1px solid rgba(74, 158, 255, 0.2);
+}
+
+.admissibility-summary__domain-chip--none {
+  color: var(--accent-orange);
+  background: rgba(255, 158, 74, 0.08);
+  border-color: rgba(255, 158, 74, 0.2);
+}
+
+.admissibility-summary__conflict-notice {
+  padding-top: 6px;
+}
+
+.admissibility-summary__authority {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-dim);
+}
+
+.admissibility-summary__authority-label {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+}
+
+.admissibility-summary__authority-value {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+/* Quarantine Summary */
+
+.admissibility-quarantine {
+  background: var(--card);
+  border: 1px solid var(--border-color);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admissibility-quarantine__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admissibility-quarantine__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  margin: 0;
+}
+
+.admissibility-quarantine__badges {
+  display: flex;
+  gap: 6px;
+}
+
+.admissibility-quarantine__section {
+  border: 1px solid var(--border-dim);
+  background: var(--card-deep);
+}
+
+.admissibility-quarantine__section-trigger {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.admissibility-quarantine__section-trigger:hover {
+  background: rgba(74, 158, 255, 0.04);
+}
+
+.admissibility-quarantine__section-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.admissibility-quarantine__section-toggle {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.admissibility-quarantine__details {
+  padding: 8px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid var(--border-dim);
+}
+
+.admissibility-quarantine__reason-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admissibility-quarantine__reason-text {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--font-ui);
+  line-height: 1.4;
+}
+
+.admissibility-quarantine__reason-candidates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.admissibility-quarantine__candidate-chip {
+  font-size: 9px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  padding: 1px 5px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-dim);
+}
+
+.admissibility-quarantine__footer {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  padding-top: 8px;
+  border-top: 1px solid var(--border-dim);
+  line-height: 1.5;
+}
+
+/* Admissibility Registry Table */
+
+.admissibility-table {
+  background: var(--card);
+  border: 1px solid var(--border-color);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.admissibility-table--empty {
+  padding: 16px;
+}
+
+.admissibility-table__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admissibility-table__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  margin: 0;
+}
+
+.admissibility-table__total {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.admissibility-table__section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admissibility-table__section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.admissibility-table__section-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.admissibility-table__section-count {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-left: auto;
+}
+
+.admissibility-table__grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.admissibility-table__grid-header {
+  display: grid;
+  grid-template-columns: 120px 110px 100px 90px 80px 1fr;
+  gap: 8px;
+  padding: 6px 10px;
+  background: var(--card-deep);
+  border: 1px solid var(--border-dim);
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+}
+
+.admissibility-table__grid-row {
+  display: grid;
+  grid-template-columns: 120px 110px 100px 90px 80px 1fr;
+  gap: 8px;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border-dim);
+  font-size: 10px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: background 0.15s ease;
+  align-items: center;
+}
+
+.admissibility-table__grid-row:hover {
+  background: rgba(74, 158, 255, 0.04);
+}
+
+.admissibility-table__cell-id {
+  color: var(--accent-blue);
+  font-size: 10px;
+}
+
+.admissibility-table__cell-domain {
+  color: var(--text-primary);
+  font-size: 10px;
+}
+
+.admissibility-table__cell-confidence {
+  font-size: 10px;
+}
+
+.admissibility-table__cell-next {
+  font-size: 9px;
+  color: var(--text-muted);
+}
+
+.admissibility-table__detail-card {
+  background: var(--card-deep);
+  border: 1px solid var(--border-dim);
+  border-left: 3px solid var(--accent-blue);
+  padding: 10px 14px;
+  margin: 4px 0 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admissibility-table__detail-row {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.admissibility-table__detail-label {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+  min-width: 120px;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.admissibility-table__detail-value {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  word-break: break-all;
+}
