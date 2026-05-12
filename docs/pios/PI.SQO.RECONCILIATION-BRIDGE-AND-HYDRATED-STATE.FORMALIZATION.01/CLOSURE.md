@@ -69,9 +69,9 @@ Verdict: **PI_SQO_RECONCILIATION_BRIDGE_AND_HYDRATED_STATE_FORMALIZATION_COMPLET
 
 ## 8. Artifacts
 
-- Reconciliation architecture: docs/pios/reconciliation/ (6 documents)
-- Execution report: docs/pios/reconciliation/execution_report.md
-- Closure: docs/pios/reconciliation/CLOSURE.md
+- Reconciliation architecture: docs/pios/PI.SQO.RECONCILIATION-BRIDGE-AND-HYDRATED-STATE.FORMALIZATION.01/ (6 documents)
+- Execution report: docs/pios/PI.SQO.RECONCILIATION-BRIDGE-AND-HYDRATED-STATE.FORMALIZATION.01/execution_report.md
+- Closure: docs/pios/PI.SQO.RECONCILIATION-BRIDGE-AND-HYDRATED-STATE.FORMALIZATION.01/CLOSURE.md
 
 ## 9. Ready State
 
@@ -119,7 +119,7 @@ G1
 - None
 
 #### Git Lineage
-- docs/pios/reconciliation/ — new directory, all files in this commit
+- docs/pios/PI.SQO.RECONCILIATION-BRIDGE-AND-HYDRATED-STATE.FORMALIZATION.01/ — stream container, all files in this commit
 
 ### Vault Files Requiring Update
 
