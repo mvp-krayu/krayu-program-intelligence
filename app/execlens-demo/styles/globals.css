@@ -5264,3 +5264,599 @@ a.topo-chip:hover {
   font-weight: 600;
   font-family: var(--font-mono);
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   SEMANTIC CANDIDATE EXTRACTION CORRIDOR
+   ═══════════════════════════════════════════════════════════════════ */
+
+.candidate-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.candidate-panel--unavailable {
+  padding: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.candidate-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.candidate-panel__header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.candidate-panel__header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.candidate-panel__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.candidate-panel__subtitle {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.candidate-panel__count {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.candidate-panel__error {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  margin: 8px 0 0;
+}
+
+.candidate-panel__governance-notice {
+  padding: 10px 16px;
+  background: var(--bg-card-deep);
+  border: 1px solid var(--border-dim);
+  border-radius: 3px;
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+  line-height: 1.6;
+}
+
+.candidate-panel__sections {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.candidate-panel__footer {
+  padding: 10px 16px;
+  border-top: 1px solid var(--border-dim);
+}
+
+.candidate-panel__footer-text {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+}
+
+/* --- Candidate Authority Boundary Notice --- */
+
+.candidate-boundary-notice {
+  padding: 16px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--semantic-yellow);
+  border-radius: 4px;
+}
+
+.candidate-boundary-notice__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.candidate-boundary-notice__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+.candidate-boundary-notice__rules {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.candidate-boundary-notice__rule {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.candidate-boundary-notice__separator {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.candidate-boundary-notice__flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-dim);
+}
+
+.candidate-boundary-notice__flag {
+  font-size: 9px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  padding: 2px 8px;
+  background: var(--bg-card-deep);
+  border: 1px solid var(--border-dim);
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* --- Candidate Evidence Lineage Summary --- */
+
+.candidate-lineage {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.candidate-lineage--empty {
+  padding: 16px 20px;
+}
+
+.candidate-lineage__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.candidate-lineage__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  margin: 0;
+}
+
+.candidate-lineage__registry-id {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.candidate-lineage__empty-msg {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  margin: 8px 0 0;
+}
+
+.candidate-lineage__summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border-dim);
+}
+
+.candidate-lineage__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 16px;
+  background: var(--bg-card);
+}
+
+.candidate-lineage__stat-label {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+}
+
+.candidate-lineage__stat-value {
+  font-size: 14px;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.candidate-lineage__stat-value--unmapped {
+  color: var(--semantic-yellow);
+}
+
+.candidate-lineage__methods {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border-dim);
+}
+
+.candidate-lineage__methods-label {
+  display: block;
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+  margin-bottom: 8px;
+}
+
+.candidate-lineage__method-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.candidate-lineage__method-chip {
+  font-size: 9px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  padding: 2px 8px;
+  background: var(--bg-card-deep);
+  border: 1px solid var(--border-dim);
+  border-radius: 2px;
+}
+
+.candidate-lineage__confidence {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border-dim);
+}
+
+.candidate-lineage__confidence-label {
+  display: block;
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+  margin-bottom: 8px;
+}
+
+.candidate-lineage__confidence-row {
+  display: flex;
+  gap: 16px;
+}
+
+.candidate-lineage__confidence-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.candidate-lineage__confidence-count {
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+.candidate-lineage__confidence-class {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+}
+
+.candidate-lineage__confidence-item--strong .candidate-lineage__confidence-count {
+  color: var(--semantic-green);
+}
+
+.candidate-lineage__confidence-item--strong .candidate-lineage__confidence-class {
+  color: var(--semantic-green);
+}
+
+.candidate-lineage__confidence-item--moderate .candidate-lineage__confidence-count {
+  color: var(--semantic-yellow);
+}
+
+.candidate-lineage__confidence-item--moderate .candidate-lineage__confidence-class {
+  color: var(--semantic-yellow);
+}
+
+.candidate-lineage__confidence-item--weak .candidate-lineage__confidence-count {
+  color: var(--semantic-orange);
+}
+
+.candidate-lineage__confidence-item--weak .candidate-lineage__confidence-class {
+  color: var(--semantic-orange);
+}
+
+.candidate-lineage__log {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border-dim);
+}
+
+.candidate-lineage__log-label {
+  display: block;
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+  margin-bottom: 8px;
+}
+
+.candidate-lineage__log-entry {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.candidate-lineage__log-entry:last-child {
+  border-bottom: none;
+}
+
+.candidate-lineage__log-id {
+  font-size: 11px;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  min-width: 80px;
+}
+
+.candidate-lineage__log-type {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  flex: 1;
+}
+
+.candidate-lineage__log-count {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+/* --- Semantic Candidate Registry Table --- */
+
+.candidate-registry {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.candidate-registry--empty {
+  padding: 16px 20px;
+}
+
+.candidate-registry__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.candidate-registry__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  margin: 0;
+}
+
+.candidate-registry__header-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.candidate-registry__count {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.candidate-registry__empty-msg {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  margin: 8px 0 0;
+}
+
+.candidate-registry__grid {
+  overflow-x: auto;
+}
+
+.candidate-registry__row {
+  display: grid;
+  grid-template-columns: 120px 1fr 100px 90px 180px 100px;
+  align-items: center;
+  padding: 8px 20px;
+  border-bottom: 1px solid var(--border-dim);
+  transition: background 0.15s ease;
+}
+
+.candidate-registry__row:last-child {
+  border-bottom: none;
+}
+
+.candidate-registry__row:not(.candidate-registry__row--header):hover {
+  background: var(--bg-card-deep);
+}
+
+.candidate-registry__row--header {
+  background: var(--bg-card-deep);
+  border-bottom: 1px solid var(--border);
+}
+
+.candidate-registry__row--header .candidate-registry__cell {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+
+.candidate-registry__row--unmapped {
+  background: rgba(255, 215, 0, 0.02);
+}
+
+.candidate-registry__cell {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.candidate-registry__cell--id {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.candidate-registry__cell--label {
+  font-size: 10px;
+}
+
+.candidate-registry__cell--method {
+  font-size: 9px;
+  color: var(--text-muted);
+}
+
+.candidate-registry__cell--gate .corridor-badge {
+  font-size: 8px;
+}
+
+/* --- Unmapped Section --- */
+
+.candidate-registry__unmapped {
+  border-top: 1px solid var(--border);
+}
+
+.candidate-registry__unmapped-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background: rgba(255, 215, 0, 0.03);
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.candidate-registry__unmapped-title {
+  font-size: 11px;
+  color: var(--semantic-yellow);
+  font-family: var(--font-mono);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.candidate-registry__unmapped-count {
+  font-size: 10px;
+  color: var(--semantic-yellow);
+  font-family: var(--font-mono);
+}
+
+/* --- Candidate Details --- */
+
+.candidate-registry__details {
+  border-top: 1px solid var(--border);
+  padding: 12px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.candidate-registry__detail {
+  background: var(--bg-card-deep);
+  border: 1px solid var(--border-dim);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.candidate-registry__detail--unmapped {
+  border-left: 2px solid var(--semantic-yellow);
+}
+
+.candidate-registry__detail-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.candidate-registry__detail-id {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+.candidate-registry__detail-type {
+  font-size: 9px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.candidate-registry__detail-body {
+  padding: 8px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.candidate-registry__detail-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.candidate-registry__detail-key {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+  min-width: 90px;
+  padding-top: 2px;
+}
+
+.candidate-registry__detail-val {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  word-break: break-all;
+}
