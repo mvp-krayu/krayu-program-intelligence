@@ -85,7 +85,7 @@ function resolveWorkspaceData(client, runId, initialSection) {
     };
   }
 
-  return {
+  return normalizeSSRProps({
     client,
     runId,
     error: null,
@@ -106,7 +106,18 @@ function resolveWorkspaceData(client, runId, initialSection) {
     deferredVisibility,
     sectionData,
     initialSection: initialSection || 'overview',
-  };
+  });
+}
+
+function normalizeSSRProps(obj) {
+  if (obj === null || obj === undefined) return null;
+  if (typeof obj !== 'object') return obj;
+  if (Array.isArray(obj)) return obj.map(item => normalizeSSRProps(item));
+  const result = {};
+  for (const [key, value] of Object.entries(obj)) {
+    result[key] = value === undefined ? null : normalizeSSRProps(value);
+  }
+  return result;
 }
 
 module.exports = { resolveWorkspaceData };

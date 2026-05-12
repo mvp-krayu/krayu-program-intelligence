@@ -98,16 +98,30 @@ function loadSQOCockpitArtifact(client, runId, artifactName) {
 
 function loadAllCockpitArtifacts(client, runId) {
   if (!isClientRunAllowed(client, runId)) {
-    return { ok: false, error: 'CLIENT_RUN_NOT_REGISTERED', client, run_id: runId, artifacts: {} };
+    return { ok: false, error: 'CLIENT_RUN_NOT_REGISTERED', client, run_id: runId, artifacts: {}, diagnostics: null };
   }
 
   const artifacts = {};
   let loadedCount = 0;
+  const missingArtifacts = [];
+  const presentArtifacts = [];
 
   for (const key of SQO_COCKPIT_ARTIFACT_KEYS) {
     const result = loadSQOCockpitArtifact(client, runId, key);
     artifacts[key] = result;
-    if (result && result.ok) loadedCount++;
+    if (result && result.ok) {
+      loadedCount++;
+      presentArtifacts.push({ key, path: result.path, status: 'PRESENT' });
+    } else {
+      const expectedPath = path.join('artifacts', 'sqo', client, runId, `${key}.v1.json`);
+      const isCritical = CRITICAL_ARTIFACTS.includes(key);
+      missingArtifacts.push({
+        key,
+        path: expectedPath,
+        status: isCritical ? 'MISSING_REQUIRED' : 'MISSING_OPTIONAL',
+        error: result ? result.error || null : null,
+      });
+    }
   }
 
   return {
@@ -117,6 +131,16 @@ function loadAllCockpitArtifacts(client, runId) {
     artifacts,
     loaded_count: loadedCount,
     total_count: SQO_COCKPIT_ARTIFACT_KEYS.length,
+    diagnostics: {
+      client,
+      run_id: runId,
+      artifact_root: path.join('artifacts', 'sqo', client, runId),
+      present: presentArtifacts,
+      missing: missingArtifacts,
+      present_count: presentArtifacts.length,
+      missing_count: missingArtifacts.length,
+      has_required_missing: missingArtifacts.some(m => m.status === 'MISSING_REQUIRED'),
+    },
   };
 }
 

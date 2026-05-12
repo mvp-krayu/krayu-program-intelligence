@@ -40,6 +40,7 @@ function assessDegradation(loadResult) {
       available_sections: [],
       degraded_sections: [],
       unavailable_sections: ['overview', 'debt', 'continuity', 'maturity', 'progression', 'evidence', 'handoff'],
+      diagnostics: loadResult.diagnostics || null,
     };
   }
 

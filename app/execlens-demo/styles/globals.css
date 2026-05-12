@@ -6934,3 +6934,135 @@ a.topo-chip:hover {
   font-family: var(--font-mono);
   letter-spacing: 0.02em;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   SQO DEGRADED STATE & DIAGNOSTICS
+   ═══════════════════════════════════════════════════════════════ */
+
+.sqo-degraded {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sqo-degraded--critical {
+  border-left: 3px solid var(--accent-red);
+}
+
+.sqo-degraded--warning {
+  border-left: 3px solid var(--accent-yellow);
+}
+
+.sqo-degraded__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  margin: 0;
+}
+
+.sqo-degraded__section {
+  font-weight: 400;
+  color: var(--text-dim);
+}
+
+.sqo-degraded__message {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.sqo-degraded__diagnostics {
+  background: var(--card-deep);
+  border: 1px solid var(--border-dim);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.sqo-degraded__diag-header {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-family: var(--font-mono);
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.sqo-degraded__diag-row {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.sqo-degraded__diag-key {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.sqo-degraded__diag-value {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.sqo-degraded__diag-missing {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border-dim);
+}
+
+.sqo-degraded__diag-missing-item {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.sqo-degraded__diag-status {
+  font-size: 8px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 1px 6px;
+  border: 1px solid var(--border-dim);
+  flex-shrink: 0;
+}
+
+.sqo-degraded__diag-status--required {
+  color: var(--accent-red);
+  border-color: var(--accent-red);
+}
+
+.sqo-degraded__diag-status--optional {
+  color: var(--text-muted);
+}
+
+.sqo-degraded__diag-path {
+  font-size: 9px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  word-break: break-all;
+}
+
+.sqo-degraded__governance {
+  font-size: 9px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  padding-top: 8px;
+  border-top: 1px solid var(--border-dim);
+}
