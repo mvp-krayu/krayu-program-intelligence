@@ -404,6 +404,277 @@ Rules:
 
 ────────────────────────────────────
 
+────────────────────────────────────
+
+## SKILL: ARCHITECTURE_MEMORY_SYNC
+
+**Authority:** PI.PIOS.AMOPS-RUNTIME-SELF-APPLICATION-AND-CLAUDE-OPERATING-MODEL-MIGRATION.01
+**Date:** 2026-05-12
+
+Purpose:
+Synchronize architecture mutations from a G1 stream to the canonical vault.
+
+──────────────────────────────────────────────────
+
+### STEP 1 — MUTATION LOG REVIEW
+
+Review the architecture mutation log maintained during execution.
+
+Check:
+- all architectural changes captured
+- new concepts identified with status
+- status changes recorded with old → new
+- terminology additions/changes identified
+- supersessions documented
+
+Output:
+- mutation log verified: YES/NO
+- missing entries identified: [list or NONE]
+
+──────────────────────────────────────────────────
+
+### STEP 2 — MUTATION DELTA FORMALIZATION
+
+Produce the Architecture Mutation Delta:
+
+```
+### New Concepts
+- [concept] — [vault section] — [status]
+
+### Status Changes
+- [concept] — [old] → [new]
+
+### Terminology
+- [term] — [action] — [definition] — [collision check]
+
+### Chronology
+- [commit] — [date] — [event] — [stratum]
+
+### Supersessions
+- [old concept] → [new concept]
+
+### Git Lineage
+- [concept] — new commits: [hash list]
+```
+
+──────────────────────────────────────────────────
+
+### STEP 3 — TERMINOLOGY COLLISION CHECK
+
+For each new or changed term:
+- check against TERMINOLOGY_LOCK.md
+- check against SEMANTIC_COLLISIONS.md
+- classify: CLEAR / COLLISION
+
+If COLLISION → STOP → resolve before propagation.
+
+──────────────────────────────────────────────────
+
+### STEP 4 — VAULT PROPAGATION
+
+Update vault files in order:
+1. TERMINOLOGY_LOCK.md
+2. SEMANTIC_COLLISIONS.md (if needed)
+3. Lineage sections (vault/01-05)
+4. PIOS_CURRENT_CANONICAL_STATE.md
+5. Chronology tables
+6. Git lineage sections (vault/09)
+7. Runtime state sections (vault/10)
+8. Archive sections (vault/12)
+
+──────────────────────────────────────────────────
+
+### STEP 5 — PROPAGATION VERIFICATION
+
+Verify:
+- all delta entries mapped to vault files
+- no orphan vault updates
+- cross-references intact
+- terminology consistent
+- canonical state updated
+
+Output:
+- SYNC PASS — all mutations propagated
+- SYNC PARTIAL — [list unpropagated items]
+- SYNC FAIL — [reason]
+
+──────────────────────────────────────────────────
+
+### STEP 6 — CLOSURE SECTION 10
+
+Produce CLOSURE.md Section 10 content with:
+- stream classification
+- full mutation delta
+- vault files updated
+- propagation verification
+- propagation status
+
+──────────────────────────────────────────────────
+
+FAIL CONDITIONS:
+- mutation log not reviewed
+- collision check skipped
+- propagation order violated
+- verification not performed
+- CLOSURE Section 10 omitted for G1 stream
+
+──────────────────────────────────────────────────
+
+────────────────────────────────────
+
+## SKILL: VAULT_DRIFT_AUDIT
+
+**Authority:** PI.PIOS.AMOPS-RUNTIME-SELF-APPLICATION-AND-CLAUDE-OPERATING-MODEL-MIGRATION.01
+**Date:** 2026-05-12
+
+Purpose:
+Detect drift between vault state and architectural reality.
+
+──────────────────────────────────────────────────
+
+### STEP 1 — LOAD CANONICAL STATE
+
+Read PIOS_CURRENT_CANONICAL_STATE.md.
+Record all concepts listed as CANONICAL or PROVISIONAL.
+
+──────────────────────────────────────────────────
+
+### STEP 2 — CONTENT DRIFT CHECK
+
+For each tracked concept:
+- verify concept exists in codebase
+- verify status matches actual usage
+- verify terminology matches TERMINOLOGY_LOCK.md definitions
+- verify git lineage is current
+
+──────────────────────────────────────────────────
+
+### STEP 3 — STRUCTURAL DRIFT CHECK
+
+- scan vault for concepts NOT in PIOS_CURRENT_CANONICAL_STATE.md
+- scan codebase for architectural patterns NOT in vault
+- verify all wiki-links resolve
+
+──────────────────────────────────────────────────
+
+### STEP 4 — TEMPORAL DRIFT CHECK
+
+- compare canonical state dates against recent G1 stream closures
+- compare stream closures against chronology entries
+- identify terms in use not in TERMINOLOGY_LOCK.md
+
+──────────────────────────────────────────────────
+
+### STEP 5 — DRIFT REPORT
+
+Produce:
+
+```
+## Vault Drift Report
+### Date: [date]
+
+### Content Drift
+| Concept | Vault State | Actual State | Severity |
+
+### Structural Drift
+| Issue | Location | Severity |
+
+### Temporal Drift
+| Indicator | Last Updated | Gap | Severity |
+
+### Summary
+- Total: [count], HIGH: [count]
+- Action: SYNC / GOVERNANCE_REVIEW / ACCEPTABLE
+```
+
+──────────────────────────────────────────────────
+
+FAIL CONDITIONS:
+- canonical state not loaded before audit
+- concepts not verified against codebase
+- drift report not produced
+
+──────────────────────────────────────────────────
+
+────────────────────────────────────
+
+## SKILL: STREAM_CLASSIFICATION
+
+**Authority:** PI.PIOS.AMOPS-RUNTIME-SELF-APPLICATION-AND-CLAUDE-OPERATING-MODEL-MIGRATION.01
+**Date:** 2026-05-12
+
+Purpose:
+Classify a stream as G1, G2, or G3 before execution begins.
+
+──────────────────────────────────────────────────
+
+### STEP 1 — READ CONTRACT
+
+Read the stream contract. Identify:
+- what the stream produces
+- what concepts it touches
+- whether it introduces, modifies, or deprecates architectural state
+
+──────────────────────────────────────────────────
+
+### STEP 2 — APPLY CLASSIFICATION CRITERIA
+
+**G1 indicators (any = G1):**
+- introduces a new named concept
+- changes an existing concept's status
+- deprecates or supersedes an existing concept
+- modifies terminology definitions
+- changes layer ownership or boundaries
+- creates new branch patterns or runtime surfaces
+- modifies vault, AMOps, CLAUDE.md, or SKILLS.md
+
+**G2 indicators (all of these, none of G1):**
+- implements within existing architectural boundaries
+- adds features to existing surfaces
+- fixes bugs within existing components
+- extends existing patterns without renaming
+
+**G3 indicators:**
+- CSS/UI with no architectural implication
+- documentation rewording without semantic change
+- test additions for existing behavior
+
+──────────────────────────────────────────────────
+
+### STEP 3 — DECLARE CLASSIFICATION
+
+Output:
+```
+STREAM CLASSIFICATION
+Stream: [stream-id]
+Classification: G1 / G2 / G3
+Evidence: [why this classification]
+Vault obligation: MANDATORY / LOAD-ONLY / NONE
+```
+
+Record in execution_report.md preflight section.
+
+──────────────────────────────────────────────────
+
+### STEP 4 — RECLASSIFICATION WATCH
+
+If during execution a G2 stream begins mutating architecture:
+- STOP
+- reclassify as G1
+- run full preflight compatibility check
+- log reclassification in execution_report.md
+
+──────────────────────────────────────────────────
+
+FAIL CONDITIONS:
+- classification not performed before execution
+- G1 stream classified as G2 to avoid vault obligations
+- reclassification not logged
+
+──────────────────────────────────────────────────
+
+────────────────────────────────────
+
 ## SKILL: 4_BRAIN_ALIGNMENT
 
 **Authority:** PRODUCTIZE.LENS.COMMERCIAL.PACKAGE.05
