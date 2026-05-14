@@ -4,6 +4,8 @@ import MaturityProfilePanel from './MaturityProfilePanel';
 import ProgressionReadinessPanel from './ProgressionReadinessPanel';
 import EvidenceReplayPanel from './EvidenceReplayPanel';
 import HandoffReadinessPanel from './HandoffReadinessPanel';
+import ReconciliationCorrespondencePanel from './ReconciliationCorrespondencePanel';
+import ReconciliationLoopWorkflowPanel from './ReconciliationLoopWorkflowPanel';
 
 const SECTION_PANELS = {
   debt: (data) => <SemanticDebtPanel debtData={data} />,
@@ -12,6 +14,8 @@ const SECTION_PANELS = {
   progression: (data) => <ProgressionReadinessPanel progressionData={data} />,
   evidence: (data) => <EvidenceReplayPanel evidenceData={data} />,
   handoff: (data) => <HandoffReadinessPanel handoffData={data} />,
+  reconciliation: (data) => <ReconciliationCorrespondencePanel reconciliationData={data} />,
+  'reconciliation-loop': (data) => <ReconciliationLoopWorkflowPanel loopData={data} />,
 };
 
 const SECTION_CONTEXT = {
@@ -49,6 +53,18 @@ const SECTION_CONTEXT = {
     title: 'PATH B Handoff',
     purpose: 'PATH B handoff readiness and activation boundary inspection.',
     focus: 'Verify that all qualification prerequisites for PATH B activation are satisfied.',
+    type: 'operational guidance',
+  },
+  reconciliation: {
+    title: 'Reconciliation Correspondence',
+    purpose: 'PATH A ↔ PATH B reconciliation: per-domain correspondence with graduated confidence.',
+    focus: 'Inspect which semantic domains have structural backing, the confidence level of each correspondence, and what remains unmapped.',
+    type: 'forensic detail',
+  },
+  'reconciliation-loop': {
+    title: 'Reconciliation Loop',
+    purpose: 'Operational workflow for the semantic reconciliation improvement loop.',
+    focus: 'See current loop state, phase completion, next required action, blocked reasons, rerun chain, and propagation status.',
     type: 'operational guidance',
   },
 };

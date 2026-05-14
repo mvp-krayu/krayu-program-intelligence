@@ -24,6 +24,9 @@
 
 const { resolveBlueEdgePayload } = require('./BlueEdgePayloadResolver');
 const { isClientRunAllowed } = require('./manifests');
+const { loadReconciliationLifecycle, buildReconciliationAwareness, loadDomainEnrichmentRationale, buildDomainTraceability } = require('./LensReconciliationConsumptionLayer');
+const { buildLensSubstrateBinding } = require('./LensSQOSubstrateConsumer');
+const { buildNextGenReportBinding } = require('./NextGenReportReconciliationBinding');
 
 const DEFAULT_BINDING_CLIENT = 'blueedge';
 const DEFAULT_BINDING_RUN = 'run_blueedge_productized_01_fixed';
@@ -43,6 +46,10 @@ function emptyPropsShape(extra) {
     liveBindingError: null,
     bindingClient: null,
     bindingRun: null,
+    reconciliationAwareness: null,
+    domainTraceability: null,
+    substrateBinding: null,
+    reportBinding: null,
   }, extra || {});
 }
 
@@ -144,6 +151,15 @@ function resolveFlagshipBinding(input) {
     };
   }
 
+  const lifecycleProjection = loadReconciliationLifecycle(requestedClient, requestedRun);
+  const reconciliationAwareness = buildReconciliationAwareness(payload, lifecycleProjection);
+  const rationaleMap = loadDomainEnrichmentRationale(requestedClient, requestedRun);
+  const domainTraceability = reconciliationAwareness && reconciliationAwareness.available
+    ? buildDomainTraceability(reconciliationAwareness.per_domain, rationaleMap)
+    : null;
+  const substrateBinding = buildLensSubstrateBinding(requestedClient, requestedRun);
+  const reportBinding = buildNextGenReportBinding(substrateBinding);
+
   return {
     props: {
       livePayload: payload,
@@ -151,6 +167,10 @@ function resolveFlagshipBinding(input) {
       liveBindingError: null,
       bindingClient: requestedClient,
       bindingRun: requestedRun,
+      reconciliationAwareness: reconciliationAwareness || null,
+      domainTraceability: domainTraceability || null,
+      substrateBinding: substrateBinding || null,
+      reportBinding: reportBinding || null,
     },
     statusCode: 200,
   };

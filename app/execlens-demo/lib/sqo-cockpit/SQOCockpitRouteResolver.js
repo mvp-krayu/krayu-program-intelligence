@@ -2,7 +2,7 @@
 
 const { isClientRunAllowed, listAllowedClientRuns } = require('../lens-v2/manifests');
 
-const COCKPIT_SECTIONS = ['overview', 'debt', 'continuity', 'maturity', 'progression', 'evidence', 'handoff', 'corridor', 'evidence-ingestion', 'semantic-candidates', 'ceu-admissibility', 'evidence-rebase'];
+const COCKPIT_SECTIONS = ['overview', 'debt', 'continuity', 'maturity', 'progression', 'evidence', 'reconciliation', 'reconciliation-loop', 'handoff', 'corridor', 'evidence-ingestion', 'semantic-candidates', 'ceu-admissibility', 'evidence-rebase'];
 
 const SECTION_ROUTES = {
   overview: '',
@@ -11,12 +11,14 @@ const SECTION_ROUTES = {
   maturity: '/maturity',
   progression: '/progression',
   evidence: '/evidence',
+  reconciliation: '/reconciliation',
   handoff: '/handoff',
   corridor: '/corridor',
   'evidence-ingestion': '/evidence-ingestion',
   'semantic-candidates': '/semantic-candidates',
   'ceu-admissibility': '/ceu-admissibility',
   'evidence-rebase': '/evidence-rebase',
+  'reconciliation-loop': '/reconciliation-loop',
 };
 
 const SECTION_LABELS = {
@@ -26,12 +28,14 @@ const SECTION_LABELS = {
   maturity: 'Maturity Profile',
   progression: 'Progression',
   evidence: 'Evidence & Replay',
+  reconciliation: 'Reconciliation',
   handoff: 'PATH B Handoff',
   corridor: 'Runtime Corridor',
   'evidence-ingestion': 'Evidence Ingestion',
   'semantic-candidates': 'Semantic Candidates',
   'ceu-admissibility': 'CEU Admissibility',
   'evidence-rebase': 'Evidence Rebase',
+  'reconciliation-loop': 'Reconciliation Loop',
 };
 
 function validateRouteParams(client, runId) {

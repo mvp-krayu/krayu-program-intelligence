@@ -15,6 +15,8 @@ const {
   formatProgressionSection,
   formatEvidenceReplaySection,
   formatHandoffSection,
+  formatReconciliationSection,
+  formatReconciliationLoopSection,
 } = require('./SQOCockpitFormatter');
 
 function resolveWorkspaceData(client, runId, initialSection) {
@@ -82,6 +84,8 @@ function resolveWorkspaceData(client, runId, initialSection) {
       progression: formatProgressionSection(state.artifacts),
       evidence: formatEvidenceReplaySection(state.artifacts),
       handoff: formatHandoffSection(state.artifacts, state.handoff_status),
+      reconciliation: formatReconciliationSection(state.artifacts),
+      'reconciliation-loop': formatReconciliationLoopSection(state.artifacts),
     };
   }
 

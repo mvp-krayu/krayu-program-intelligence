@@ -12,9 +12,9 @@ import DiagnosticReportState from './DiagnosticReportState';
  * Routes render state to the appropriate display component.
  * Unknown or absent routes fail closed to BlockedReportState.
  */
-export default function SurfaceModeRouter({ route, adaptedProps, orchestrationError }) {
+export default function SurfaceModeRouter({ route, adaptedProps, orchestrationError, reportBinding }) {
   if (route === 'EXECUTIVE_READY' || route === 'EXECUTIVE_READY_WITH_QUALIFIER') {
-    return <ReportModuleShell adaptedProps={adaptedProps} />;
+    return <ReportModuleShell adaptedProps={adaptedProps} reportBinding={reportBinding} />;
   }
 
   if (route === 'DIAGNOSTIC_ONLY') {

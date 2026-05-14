@@ -32,9 +32,27 @@ Nothing in the snapshot era addressed these needs. SQO was a wholly new concept.
 | Component | Count | Role |
 |---|---|---|
 | SQO engines | 18 | Debt, maturity, continuity, progression, gravity, replay, etc. |
+| SQO compilers | 4 | Debt index, temporal analytics, evidence intake, qualification projection |
+| Operational substrate | 1 | RuntimeSemanticOperationsSubstrate — unified semantic operations |
+| Reconciliation loop orchestrator | 1 | ReconciliationLoopOrchestrator — operational lifecycle loop |
 | Cockpit sections | 12 | Overview, debt, continuity, maturity, progression, evidence, etc. |
+| Runtime projections | 7 | Lifecycle, debt index, temporal, intake, qualification, operations, loop |
 | UI components | 51 | Cockpit rendering |
 | State resolver | 1 | SQOCockpitStateResolver — deterministic S-state detection |
+| Registered artifacts | 23 | Full SQO artifact registry |
+
+## SQO Ownership Domains (as of 2026-05-13)
+
+| Domain | Artifacts | Authority |
+|---|---|---|
+| qualification_core | 7 | SQO_ENGINES |
+| semantic_debt | 2 | DEBT_ENGINES |
+| reconciliation | 3 | RECONCILIATION_COMPILERS |
+| temporal_analytics | 1 | TEMPORAL_COMPILER |
+| evidence_intake | 1 | INTAKE_LOOP |
+| replay_and_certification | 6 | VERIFIERS |
+| qualification_projection | 1 | PROJECTION_COMPILER |
+| reconciliation_loop | 1 | LOOP_ORCHESTRATOR |
 
 ## Creation Timeline
 

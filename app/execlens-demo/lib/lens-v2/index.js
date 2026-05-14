@@ -11,4 +11,5 @@ module.exports = {
   ...require('./DPSIGSignalMapper'),
   ...require('./SemanticActorHydrator'),
   ...require('./BlueEdgePayloadResolver'),
+  ...require('./reconciliation'),
 };

@@ -1,6 +1,13 @@
 'use strict';
 
 const { getArtifactData, isArtifactAvailable } = require('./SQOCockpitArtifactLoader');
+const { projectLifecycleForRuntime } = require('./ReconciliationLifecycleProjection');
+const { projectDebtIndexForRuntime } = require('./SemanticDebtIndexProjection');
+const { projectTemporalAnalyticsForRuntime } = require('./TemporalAnalyticsProjection');
+const { projectEvidenceIntakeForRuntime } = require('./EvidenceIntakeProjection');
+const { projectQualificationForRuntime } = require('./RuntimeQualificationProjection');
+const { projectSemanticOperationsForRuntime } = require('./SemanticOperationsProjection');
+const { projectReconciliationLoopForRuntime } = require('./ReconciliationLoopProjection');
 
 const S_STATE_LABELS = {
   S0: 'Structural Only',
@@ -74,6 +81,18 @@ function formatOverview(loadResult) {
       total_items: debt.total_debt_items,
       s_state: debt.s_state,
     } : null,
+    qualificationProjection: (() => {
+      const projData = getArtifactData(loadResult, 'runtime_qualification_projection');
+      return projData ? projectQualificationForRuntime(projData) : null;
+    })(),
+    semanticOperations: (() => {
+      const substrateData = getArtifactData(loadResult, 'runtime_semantic_operations_substrate');
+      return substrateData ? projectSemanticOperationsForRuntime(substrateData) : null;
+    })(),
+    reconciliationLoop: (() => {
+      const loopData = getArtifactData(loadResult, 'reconciliation_loop_state');
+      return loopData ? projectReconciliationLoopForRuntime(loopData) : null;
+    })(),
   };
 }
 
@@ -116,12 +135,16 @@ function formatDebtSection(loadResult) {
     bySeverity[item.severity].push(item);
   }
 
+  const debtIndex = getArtifactData(loadResult, 'semantic_debt_index');
+  const debtIndexProjection = debtIndex ? projectDebtIndexForRuntime(debtIndex) : null;
+
   return {
     total_items: debt.total_debt_items,
     items,
     by_category: byCategory,
     by_severity: bySeverity,
     blocking_count: items.filter(i => i.blocks_s_state).length,
+    debtIndex: debtIndexProjection,
   };
 }
 
@@ -271,11 +294,15 @@ function formatEvidenceReplaySection(loadResult) {
     };
   });
 
+  const intakeData = getArtifactData(loadResult, 'semantic_evidence_intake');
+  const evidenceIntake = intakeData ? projectEvidenceIntakeForRuntime(intakeData) : null;
+
   return {
     replays,
     certifications,
     all_replays_passed: replays.filter(r => r.available).every(r => r.verdict === 'PASS'),
     all_certifications_passed: certifications.filter(c => c.available).every(c => c.status === 'CERTIFIED'),
+    evidenceIntake,
   };
 }
 
@@ -323,6 +350,150 @@ function formatHistorySection(loadResult) {
   };
 }
 
+function formatReconciliationSection(loadResult) {
+  const recon = getArtifactData(loadResult, 'reconciliation_correspondence');
+  if (!recon) return null;
+
+  const lifecycle = getArtifactData(loadResult, 'reconciliation_lifecycle');
+  const lifecycleProjection = lifecycle ? projectLifecycleForRuntime(lifecycle) : null;
+
+  return {
+    summary: recon.summary,
+    correspondences: (recon.correspondences || []).map(c => ({
+      semantic_domain_id: c.semantic_domain_id,
+      semantic_domain_name: c.semantic_domain_name,
+      confidence_level: c.confidence_level,
+      confidence_label: c.confidence_label,
+      reconciliation_status: c.reconciliation_status,
+      structural_dom_id: c.structural_dom_id,
+      structural_domain_name: c.structural_domain_name,
+      correspondence_basis: c.correspondence_basis,
+      crosswalk_business_label: c.crosswalk_business_label,
+    })),
+    unmatched_structural: (recon.unmatched_structural || []).map(u => ({
+      structural_dom_id: u.structural_dom_id,
+      structural_domain_name: u.structural_domain_name,
+      component_count: u.component_count,
+    })),
+    lifecycle: lifecycleProjection,
+    temporalAnalytics: (() => {
+      const analytics = getArtifactData(loadResult, 'reconciliation_temporal_analytics');
+      return analytics ? projectTemporalAnalyticsForRuntime(analytics) : null;
+    })(),
+  };
+}
+
+const LOOP_PHASE_LABELS = {
+  EVIDENCE_INTAKE: 'Evidence Intake',
+  ENRICHMENT_ELIGIBILITY: 'Enrichment Eligibility',
+  RECONCILIATION_RERUN: 'Reconciliation Rerun',
+  DEBT_RECALCULATION: 'Debt Recalculation',
+  QUALIFICATION_REPROJECTION: 'Qualification Reprojection',
+  LIFECYCLE_PROGRESSION: 'Lifecycle Progression',
+  TEMPORAL_ANALYTICS_UPDATE: 'Temporal Analytics Update',
+  RUNTIME_PROPAGATION: 'Runtime Propagation',
+};
+
+const LOOP_PHASE_ACTIONS = {
+  EVIDENCE_INTAKE: 'Upload evidence to evidence-ingestion directory, then run compile_blueedge_evidence_intake.js',
+  ENRICHMENT_ELIGIBILITY: 'Check intake results for enrichment-eligible items. Run enrichment if applicable.',
+  RECONCILIATION_RERUN: 'Run compile_blueedge_correspondence.js and compile_blueedge_lifecycle.js',
+  DEBT_RECALCULATION: 'Run compile_blueedge_debt_index.js',
+  QUALIFICATION_REPROJECTION: 'Run compile_blueedge_qualification_projection.js',
+  LIFECYCLE_PROGRESSION: 'Assess S-state transition readiness from qualification projection',
+  TEMPORAL_ANALYTICS_UPDATE: 'Run compile_blueedge_temporal_analytics.js',
+  RUNTIME_PROPAGATION: 'Run compile_blueedge_semantic_operations.js',
+};
+
+const LOOP_STATE_NEXT_ACTIONS = {
+  IDLE: 'Upload new semantic evidence to begin an improvement cycle.',
+  EVIDENCE_SUBMITTED: 'Run evidence intake loop to register and classify submitted evidence.',
+  INTAKE_REGISTERED: 'Assess enrichment eligibility for accepted evidence items.',
+  INTAKE_REJECTED: 'Review rejection reasons. Submit corrected evidence to restart.',
+  ENRICHMENT_ELIGIBLE: 'Run AI-assisted enrichment on eligible evidence items.',
+  ENRICHMENT_NOT_REQUIRED: 'Proceed to reconciliation rerun — enrichment not required.',
+  ENRICHMENT_COMPLETE: 'Proceed to reconciliation rerun with enriched evidence.',
+  RECONCILIATION_PENDING: 'Run reconciliation correspondence and lifecycle compilers.',
+  RECONCILIATION_COMPLETE: 'Run semantic debt index recompilation.',
+  DEBT_UPDATED: 'Run qualification projection recompilation.',
+  QUALIFICATION_REPROJECTED: 'Run runtime substrate and operations compilation for propagation.',
+  PROPAGATED: 'Improvement cycle complete. System is fully propagated.',
+};
+
+function formatReconciliationLoopSection(loadResult) {
+  const loopData = getArtifactData(loadResult, 'reconciliation_loop_state');
+  if (!loopData) {
+    return {
+      available: false,
+      reason: 'NO_LOOP_STATE_ARTIFACT',
+      diagnostic: 'Run compile_blueedge_reconciliation_loop.js to generate the loop state artifact.',
+    };
+  }
+
+  const projection = projectReconciliationLoopForRuntime(loopData);
+  if (!projection) {
+    return {
+      available: false,
+      reason: 'LOOP_PROJECTION_FAILED',
+      diagnostic: 'Loop state artifact present but projection failed.',
+    };
+  }
+
+  const lifecycle = projection.lifecycle || {};
+  const phaseAssessment = projection.phaseAssessment || {};
+  const rerunChain = projection.rerunChain;
+
+  const phaseWorkflow = (phaseAssessment.phases || []).map(p => ({
+    id: p.id,
+    phase: p.phase,
+    label: LOOP_PHASE_LABELS[p.id] || p.id,
+    complete: p.complete,
+    inputs_satisfied: p.inputs_satisfied,
+    outputs_present: p.outputs_present,
+    action: LOOP_PHASE_ACTIONS[p.id] || null,
+    status: p.complete ? 'COMPLETE' : (p.inputs_satisfied ? 'READY' : 'BLOCKED'),
+  }));
+
+  const blocked = (phaseAssessment.blocked || []);
+  const pending = (phaseAssessment.pending || []);
+
+  const firstIncomplete = phaseWorkflow.find(p => !p.complete);
+
+  return {
+    available: true,
+    lifecycle: {
+      state: lifecycle.state,
+      description: lifecycle.description,
+      terminal: lifecycle.terminal,
+      next_action: LOOP_STATE_NEXT_ACTIONS[lifecycle.state] || null,
+    },
+    completion: {
+      total: phaseAssessment.total,
+      completed: phaseAssessment.completed,
+      ratio: phaseAssessment.completion_ratio,
+      all_complete: phaseAssessment.all_complete,
+    },
+    phaseWorkflow,
+    currentPhase: firstIncomplete ? {
+      id: firstIncomplete.id,
+      label: firstIncomplete.label,
+      action: firstIncomplete.action,
+      status: firstIncomplete.status,
+    } : null,
+    blockedPhases: blocked,
+    pendingPhases: pending,
+    rerunChain: rerunChain ? {
+      id: rerunChain.id,
+      description: rerunChain.description,
+      script_count: rerunChain.script_count,
+      scripts: rerunChain.scripts,
+    } : null,
+    progressionReadiness: projection.progressionReadiness,
+    propagationChain: projection.propagationChain,
+    provenance: projection.provenance,
+  };
+}
+
 module.exports = {
   S_STATE_LABELS,
   MATURITY_CLASSIFICATIONS,
@@ -336,4 +507,6 @@ module.exports = {
   formatEvidenceReplaySection,
   formatHandoffSection,
   formatHistorySection,
+  formatReconciliationSection,
+  formatReconciliationLoopSection,
 };

@@ -201,6 +201,44 @@ CLOSURE.md MUST follow EXACT structure:
 
 NO deviation allowed
 
+### 5.5 Implementation-Semantic Artifact (CONDITIONAL)
+
+When a stream creates reusable code primitives, it SHOULD produce:
+
+docs/pios/<stream>/IMPLEMENTATION_SEMANTICS.md
+
+Trigger criteria (ANY of):
+- module intended for consumption by other modules or future streams
+- functions with defined input/output contracts
+- configurable parameters or extension points
+- infrastructure intended for multi-client use
+
+NOT required for:
+- bug fixes within existing modules
+- CSS/UI refinements with no new logic
+- configuration or manifest changes
+- test improvements
+- documentation-only or assessment-only streams
+
+Required sections:
+1. Primitive Inventory (name, module, purpose, reuse status)
+2. Input Contracts (expected artifact shapes and consumed fields)
+3. Output Contracts (what is produced and where)
+4. Calibration Assumptions (constants that are tuned vs governed)
+5. Extension Points (where parameterization is possible)
+6. Module Responsibility Map (which file owns which concern)
+
+When produced, CLOSURE.md Section 10 references this artifact:
+
+```
+## 10. Implementation Semantics
+See: IMPLEMENTATION_SEMANTICS.md
+```
+
+This does not conflict with §16.4 (G1 Architecture Memory Propagation) because G1 and G2 are mutually exclusive classifications.
+
+Origin: PI.PIOS.AMOPS-VAULT.IMPLEMENTATION-SEMANTICS-EXTENSION.ASSESSMENT.01
+
 ---
 
 ## 6. RETURN CONTRACT

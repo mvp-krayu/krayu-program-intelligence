@@ -32,6 +32,7 @@ const {
 const { validateRenderingMetadata } = require('../RenderingMetadataSchema');
 const { governanceToLegacy } = require('../QClassResolver');
 const { PAYLOAD_VERSION } = require('./LensSemanticPayloadSchema');
+const { compileCorrespondence } = require('../reconciliation/ReconciliationCorrespondenceCompiler');
 
 const REPORT_NAMES = {
   'decision-surface':  'Decision Surface',
@@ -111,6 +112,49 @@ function clusterToEvidenceBlock(cluster, role, displayResolution, zoneAnchorBusi
           : `Receiver group operates under partial-grounding advisory bound.`,
     propagation_role: role,
   };
+}
+
+function buildSignalInterpretations(dpsigSummary, evidenceBlocks, derived, zoneAnchorBusinessLabel) {
+  if (!dpsigSummary || !dpsigSummary.ok || !dpsigSummary.signals) return [];
+  const signals = dpsigSummary.signals;
+  const nb = dpsigSummary.normalization_basis || {};
+  const activatedSignals = signals.filter(s => s.activation_state && s.activation_state !== 'NOMINAL' && s.activation_state !== 'CLUSTER_BALANCED');
+  const nominalSignals = signals.filter(s => s.activation_state === 'NOMINAL' || s.activation_state === 'CLUSTER_BALANCED');
+
+  const coPresenceNote = signals.length > 1
+    ? `${activatedSignals.length} of ${signals.length} signals are structurally activated. ` +
+      (activatedSignals.length > 1
+        ? `Co-presence of activated signals indicates compound structural pressure.`
+        : activatedSignals.length === 1
+          ? `Single activated signal with ${nominalSignals.length} nominal — pressure is concentrated, not distributed.`
+          : `No activated signals — structural pressure is within normal parameters.`)
+    : null;
+
+  const compoundNarrative = activatedSignals.length > 0
+    ? `Compound pressure zone centers on "${zoneAnchorBusinessLabel}". ` +
+      `${nb.max_cluster_name ? `The "${nb.max_cluster_name}" group (${nb.max_cluster_node_count || '?'} of ${nb.total_structural_node_count || '?'} structural nodes)` : 'The dominant structural group'} ` +
+      `concentrates the primary structural mass. ` +
+      `${derived.backed_count} of ${derived.total_domains} semantic domains are structurally backed; ${derived.semantic_only_count} remain advisory-bound.`
+    : null;
+
+  return signals.map(sig => ({
+    signal_id: sig.signal_id,
+    signal_name: sig.signal_name,
+    signal_value: sig.signal_value,
+    severity: sig.severity,
+    activation_state: sig.activation_state,
+    interpretation: sig.executive_summary || null,
+    engineering_detail: sig.engineering_summary || null,
+    concentration: nb.max_cluster_name
+      ? `Concentrated in "${nb.max_cluster_name}" (${nb.max_cluster_id}), ${nb.max_cluster_node_count || '?'} of ${nb.total_structural_node_count || '?'} structural nodes.`
+      : null,
+    co_presence: coPresenceNote,
+    compound_narrative: compoundNarrative,
+    confidence: derived.qualifier_class === 'Q-01' ? 'FULL' : derived.qualifier_class === 'Q-02' ? 'PARTIAL' : 'ADVISORY',
+    confidence_note: derived.qualifier_class !== 'Q-01'
+      ? `Signal derived under ${derived.qualifier_label || derived.qualifier_class}. Advisory confirmation required.`
+      : 'Signal derived from fully grounded structural evidence.',
+  }));
 }
 
 /**
@@ -372,6 +416,17 @@ function resolveSemanticPayload(manifest) {
     // Canonical contract fields
     dpsig_signal_summary: dpsigSummary,
     semantic_domain_registry: semanticDomainRegistry,
+    semantic_cluster_registry: (semanticTopology.clusters || []).map(c => ({
+      cluster_id: c.cluster_id,
+      cluster_label: c.cluster_label,
+      color_accent: c.color_accent,
+      domain_count: c.domain_count,
+    })),
+    semantic_topology_edges: (semanticTopology.edges || []).map(e => ({
+      source_domain: e.source_domain,
+      target_domain: e.target_domain,
+      relationship_type: e.relationship_type,
+    })),
     semantic_crosswalk: semanticCrosswalk,
     topology_summary: {
       semantic_domain_count: derived.total_domains,
@@ -478,10 +533,40 @@ function resolveSemanticPayload(manifest) {
     header_block: headerBlock,
     narrative_block: narrative,
     evidence_blocks: evidenceBlocks,
+    signal_interpretations: buildSignalInterpretations(dpsigSummary, evidenceBlocks, derived, zoneAnchorBusinessLabel),
     trace_block: traceBlock,
     trace_linkage: traceLinkage,
     rendering_metadata: renderingMetadataCompat,
     explainability_bundle: buildExplainabilityBundle(client, runId),
+    reconciliation_summary: (() => {
+      const recon = compileCorrespondence({
+        semanticTopologyModel: semanticTopology,
+        canonicalTopology,
+        semanticCrosswalk: sources.semantic_continuity_crosswalk.data,
+        signalRegistry: sources.signal_registry && sources.signal_registry.ok ? sources.signal_registry.data : null,
+        evidenceTrace: sources.evidence_trace && sources.evidence_trace.ok ? sources.evidence_trace.data : null,
+      });
+      if (!recon.ok) return { available: false, error: recon.error };
+      return {
+        available: true,
+        reconciliation_ratio: recon.summary.reconciliation_ratio,
+        reconciled_count: recon.summary.reconciled_count,
+        unreconciled_count: recon.summary.unreconciled_count,
+        total_semantic_domains: recon.summary.total_semantic_domains,
+        weighted_confidence_score: recon.summary.weighted_confidence_score,
+        confidence_distribution: recon.summary.confidence_distribution,
+        unmatched_structural_count: recon.summary.unmatched_structural_count,
+        per_domain: recon.correspondences.map(c => ({
+          domain_id: c.semantic_domain_id,
+          domain_name: c.semantic_domain_name,
+          confidence_level: c.confidence_level,
+          confidence_label: c.confidence_label,
+          reconciliation_status: c.reconciliation_status,
+          structural_dom_id: c.structural_dom_id,
+          correspondence_basis: c.correspondence_basis,
+        })),
+      };
+    })(),
     interaction_registry: { interactions: [] },
     module_registry: {
       entries: [

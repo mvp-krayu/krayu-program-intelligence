@@ -19,6 +19,7 @@ export default function CoreReportContainer({
   reportObject,
   audienceTier = 'EXECUTIVE',
   phase = 2,
+  reportBinding = null,
 }) {
   const orchestration = orchestrateReport(reportObject, audienceTier, phase);
 
@@ -33,6 +34,7 @@ export default function CoreReportContainer({
           route={orchestration.route}
           adaptedProps={orchestration.adaptedProps}
           orchestrationError={orchestration.orchestrationError}
+          reportBinding={reportBinding}
         />
       </div>
     </ReportContainerErrorBoundary>

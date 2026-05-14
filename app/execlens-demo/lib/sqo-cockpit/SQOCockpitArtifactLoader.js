@@ -20,6 +20,14 @@ const SQO_COCKPIT_ARTIFACT_KEYS = [
   'debt_certification',
   'debt_replay_verification',
   'maturity_replay_verification',
+  'reconciliation_correspondence',
+  'reconciliation_lifecycle',
+  'semantic_debt_index',
+  'reconciliation_temporal_analytics',
+  'semantic_evidence_intake',
+  'runtime_qualification_projection',
+  'runtime_semantic_operations_substrate',
+  'reconciliation_loop_state',
 ];
 
 const CRITICAL_ARTIFACTS = [
@@ -34,16 +42,24 @@ const OVERVIEW_ARTIFACTS = [
   'qualification_stability',
   'progression_readiness',
   'semantic_debt_inventory',
+  'reconciliation_correspondence',
+  'reconciliation_lifecycle',
+  'semantic_debt_index',
+  'runtime_qualification_projection',
+  'runtime_semantic_operations_substrate',
+  'reconciliation_loop_state',
 ];
 
 const DEBT_ARTIFACTS = [
   'semantic_debt_inventory',
+  'semantic_debt_index',
   'continuity_assessment',
   'progression_readiness',
 ];
 
 const CONTINUITY_ARTIFACTS = [
   'continuity_assessment',
+  'reconciliation_correspondence',
 ];
 
 const MATURITY_ARTIFACTS = [
@@ -67,6 +83,7 @@ const EVIDENCE_REPLAY_ARTIFACTS = [
   'qualification_state_certification',
   'debt_certification',
   'maturity_dimension_breakdown',
+  'semantic_evidence_intake',
 ];
 
 const HANDOFF_ARTIFACTS = [
@@ -81,6 +98,14 @@ const HANDOFF_ARTIFACTS = [
   'qualification_state_replay_verification',
 ];
 
+const RECONCILIATION_ARTIFACTS = [
+  'reconciliation_correspondence',
+  'reconciliation_lifecycle',
+  'semantic_debt_index',
+  'reconciliation_temporal_analytics',
+  'runtime_qualification_projection',
+];
+
 const SECTION_ARTIFACT_MAP = {
   overview: OVERVIEW_ARTIFACTS,
   debt: DEBT_ARTIFACTS,
@@ -89,6 +114,7 @@ const SECTION_ARTIFACT_MAP = {
   progression: PROGRESSION_ARTIFACTS,
   evidence: EVIDENCE_REPLAY_ARTIFACTS,
   handoff: HANDOFF_ARTIFACTS,
+  reconciliation: RECONCILIATION_ARTIFACTS,
 };
 
 function loadSQOCockpitArtifact(client, runId, artifactName) {
