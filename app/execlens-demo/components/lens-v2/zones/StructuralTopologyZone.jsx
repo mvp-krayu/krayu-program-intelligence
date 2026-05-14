@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState, useCallback, useEffect } from 'react'
 import { PRESSURE_META } from './constants'
 
 const LINEAGE_LABELS = {
@@ -101,13 +101,54 @@ function confColor(d) {
   return '#8b949e'
 }
 
+function tooltipOffsetY(cy, row0Y) {
+  return cy > row0Y + 60 ? 60 : -30
+}
+
 function TopologyGraph({ domains, clusters, edges, pressureZoneLabel }) {
+  const [hoveredNode, setHoveredNode] = useState(null)
+  const [selectedAnchor, setSelectedAnchor] = useState(null)
+
   const clusterMap = useMemo(() => {
     const map = {}
     ;(clusters || []).forEach(c => { map[c.cluster_id] = { ...c, domains: [] } })
     ;(domains || []).forEach(d => { if (map[d.cluster_id]) map[d.cluster_id].domains.push(d) })
     return map
   }, [domains, clusters])
+
+  const connectedTo = useMemo(() => {
+    const map = {}
+    ;(edges || []).forEach(e => {
+      if (!map[e.source_domain]) map[e.source_domain] = new Set()
+      if (!map[e.target_domain]) map[e.target_domain] = new Set()
+      map[e.source_domain].add(e.target_domain)
+      map[e.target_domain].add(e.source_domain)
+    })
+    return map
+  }, [edges])
+
+  const handleNodeEnter = useCallback((domainId) => { setHoveredNode(domainId) }, [])
+  const handleNodeLeave = useCallback(() => { setHoveredNode(null) }, [])
+  const handleNodeClick = useCallback((d) => {
+    if (d.zone_anchor) {
+      setSelectedAnchor(prev => prev === d.domain_id ? null : d.domain_id)
+    }
+  }, [])
+  const handleBgClick = useCallback(() => { setSelectedAnchor(null) }, [])
+
+  useEffect(() => {
+    function onKey(e) { if (e.key === 'Escape') setSelectedAnchor(null) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [])
+
+  const highlightSet = useMemo(() => {
+    if (!selectedAnchor) return null
+    const set = new Set([selectedAnchor])
+    const conn = connectedTo[selectedAnchor]
+    if (conn) conn.forEach(id => set.add(id))
+    return set
+  }, [selectedAnchor, connectedTo])
 
   const clusterIds = Object.keys(clusterMap).sort()
   if (clusterIds.length === 0) return null
@@ -162,17 +203,23 @@ function TopologyGraph({ domains, clusters, edges, pressureZoneLabel }) {
   })
 
   const svgH = row1Y + row1H + legendH
+  const tooltipH = 52
+
+  const hoveredDomain = hoveredNode && (domains || []).find(d => d.domain_id === hoveredNode)
+  const hoveredPos = hoveredNode && allPos[hoveredNode]
 
   return (
     <div className="topo-graph-wrap">
       <div className="topo-graph-heading">SEMANTIC DOMAIN TOPOLOGY (WITH STRUCTURAL BACKING)</div>
-      <svg viewBox={`0 0 ${W} ${svgH}`} className="topo-graph-svg" role="img" aria-label="Semantic domain topology graph">
+      <svg viewBox={`0 0 ${W} ${svgH}`} className="topo-graph-svg" role="img" aria-label="Semantic domain topology graph — click zone anchors to highlight connections">
         <defs>
           <marker id="arr-green" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L0,8 L10,4 z" fill="#3fb950" /></marker>
           <marker id="arr-blue" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L0,8 L10,4 z" fill="#58a6ff" /></marker>
           <marker id="arr-amber" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L0,8 L10,4 z" fill="#d29922" /></marker>
           <marker id="arr-gray" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L0,8 L10,4 z" fill="#8b949e" /></marker>
         </defs>
+
+        <rect x="0" y="0" width={W} height={svgH} fill="transparent" onClick={handleBgClick} />
 
         {Object.entries(layouts).map(([cid, lay]) => {
           const cl = clusterMap[cid]
@@ -204,13 +251,18 @@ function TopologyGraph({ domains, clusters, edges, pressureZoneLabel }) {
           const tD = (domains || []).find(dd => dd.domain_id === e.target_domain)
           const sR = (sD && (sD.structurally_backed || sD.lineage_status === 'PARTIAL')) ? 18 : 14
           const tR = (tD && (tD.structurally_backed || tD.lineage_status === 'PARTIAL')) ? 18 : 14
+
+          const dimmed = highlightSet && !highlightSet.has(e.source_domain) && !highlightSet.has(e.target_domain)
+          const bright = highlightSet && highlightSet.has(e.source_domain) && highlightSet.has(e.target_domain)
+
           return (
             <line key={`e-${i}`}
               x1={from.cx + ux * sR} y1={from.cy + uy * sR}
               x2={to.cx - ux * (tR + 4)} y2={to.cy - uy * (tR + 4)}
-              stroke={color} strokeOpacity={0.6} strokeWidth={1.5}
+              stroke={color} strokeOpacity={dimmed ? 0.12 : bright ? 0.95 : 0.6} strokeWidth={bright ? 2 : 1.5}
               markerEnd={`url(#arr-${markerKey})`}
               strokeDasharray={dash}
+              style={{ transition: 'stroke-opacity 0.2s, stroke-width 0.2s' }}
             />
           )
         })}
@@ -234,11 +286,23 @@ function TopologyGraph({ domains, clusters, edges, pressureZoneLabel }) {
           const glowR = backed ? 22 : 17
           const lines = splitLabel(d.business_label || d.domain_name, 15)
           const crowdedAbove = (incomingAbove[d.domain_id] || 0) > 1
+
+          const dimmed = highlightSet && !highlightSet.has(d.domain_id)
+          const nodeOpacity = dimmed ? 0.25 : 1
+          const isSelected = selectedAnchor === d.domain_id
+
           return (
-            <g key={d.domain_id}>
+            <g key={d.domain_id}
+               opacity={nodeOpacity}
+               style={{ transition: 'opacity 0.2s', cursor: isPZ ? 'pointer' : 'default' }}
+               onMouseEnter={() => handleNodeEnter(d.domain_id)}
+               onMouseLeave={handleNodeLeave}
+               onClick={(e) => { e.stopPropagation(); handleNodeClick(d) }}
+            >
               {isPZ && (
                 <circle cx={pos.cx} cy={pos.cy} r={24}
-                  fill="none" stroke="#ff7b72" strokeWidth={1.3} strokeDasharray="3,2" opacity={0.7} />
+                  fill="none" stroke={isSelected ? '#ffd700' : '#ff7b72'} strokeWidth={isSelected ? 2 : 1.3} strokeDasharray={isSelected ? undefined : '3,2'} opacity={isSelected ? 1 : 0.7}
+                  style={{ transition: 'stroke 0.2s, stroke-width 0.2s' }} />
               )}
               <circle cx={pos.cx} cy={pos.cy} r={glowR}
                 fill={st.glow} fillOpacity={st.glowOp} />
@@ -264,6 +328,32 @@ function TopologyGraph({ domains, clusters, edges, pressureZoneLabel }) {
           )
         })})()}
 
+        {hoveredDomain && hoveredPos && (
+          <g className="topo-tooltip" style={{ pointerEvents: 'none' }}>
+            <rect
+              x={Math.min(hoveredPos.cx - 90, W - 188)} y={hoveredPos.cy - tooltipOffsetY(hoveredPos.cy, row0Y)}
+              width={180} height={tooltipH} rx={4}
+              fill="#141720" stroke="#2a2f40" strokeWidth={1} fillOpacity={0.96}
+            />
+            <text x={Math.min(hoveredPos.cx - 84, W - 182)} y={hoveredPos.cy - tooltipOffsetY(hoveredPos.cy, row0Y) + 14}
+              fontSize={6.5} fontWeight={600} fill="#ccd6f6" fontFamily="ui-monospace, 'SF Mono', Menlo, monospace">
+              {hoveredDomain.business_label || hoveredDomain.domain_name}
+            </text>
+            <text x={Math.min(hoveredPos.cx - 84, W - 182)} y={hoveredPos.cy - tooltipOffsetY(hoveredPos.cy, row0Y) + 25}
+              fontSize={5.5} fill="#7a8aaa" fontFamily="-apple-system, sans-serif">
+              {hoveredDomain.cluster_id} · {(LINEAGE_LABELS[hoveredDomain.lineage_status] || 'SEMANTIC-ONLY')} · conf {hoveredDomain.confidence != null ? hoveredDomain.confidence.toFixed(2) : '—'}
+            </text>
+            <text x={Math.min(hoveredPos.cx - 84, W - 182)} y={hoveredPos.cy - tooltipOffsetY(hoveredPos.cy, row0Y) + 36}
+              fontSize={5.5} fill={hoveredDomain.zone_anchor ? '#ffd700' : '#5a6580'} fontFamily="-apple-system, sans-serif">
+              {hoveredDomain.zone_anchor ? 'Zone Anchor — click to highlight connections' : hoveredDomain.structurally_backed ? 'Structurally backed' : 'Semantic-only'}
+            </text>
+            <text x={Math.min(hoveredPos.cx - 84, W - 182)} y={hoveredPos.cy - tooltipOffsetY(hoveredPos.cy, row0Y) + 47}
+              fontSize={5} fill="#4a5570" fontFamily="-apple-system, sans-serif">
+              {hoveredDomain.dominant_dom_id || hoveredDomain.domain_id}
+            </text>
+          </g>
+        )}
+
         {(() => {
           const ly = svgH - legendH + 8
           return (
@@ -277,7 +367,7 @@ function TopologyGraph({ domains, clusters, edges, pressureZoneLabel }) {
                 Primary Pressure Zone{pressureZoneLabel ? ` — ${pressureZoneLabel}` : ''}
               </text>
               <text x={14} y={ly + 28} fontSize={4.6} fill="#4a5570" fontStyle="italic" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
-                Relationships shown are structural co-membership. No direction implied.
+                Hover nodes for details · click zone anchors to highlight connections · Escape to reset
               </text>
             </g>
           )
@@ -286,6 +376,7 @@ function TopologyGraph({ domains, clusters, edges, pressureZoneLabel }) {
     </div>
   )
 }
+
 
 function DomainCoverageGrid({ domains }) {
   if (!domains || domains.length === 0) return null

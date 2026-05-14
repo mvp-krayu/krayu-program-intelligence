@@ -1625,6 +1625,119 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-style: italic;
         }
 
+        /* Pressure Zone Focus Block */
+        .pressure-zone-focus {
+          padding: 24px 56px 20px;
+          border-bottom: 1px solid #1a2030;
+          border-left: 3px solid rgba(255, 158, 74, 0.35);
+          margin-left: 56px;
+          margin-right: 56px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+        .pressure-zone-focus[data-tier="HIGH"] { border-left-color: rgba(255, 107, 107, 0.5); }
+        .pressure-zone-focus[data-tier="ELEVATED"] { border-left-color: rgba(255, 158, 74, 0.45); }
+        .pressure-zone-focus[data-tier="NOMINAL"] { border-left-color: rgba(100, 255, 218, 0.3); }
+        .pressure-zone-focus-label {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+        .pressure-zone-focus-name {
+          font-size: 15px;
+          font-weight: 600;
+          color: #ccd6f6;
+          letter-spacing: -0.005em;
+        }
+        .pressure-zone-focus-classification {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 10px;
+          color: #7a8aaa;
+        }
+        .pressure-zone-focus-class-tag {
+          font-weight: 600;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: #9aa0bc;
+        }
+        .pressure-zone-focus-class-sep { color: #2a2f40; }
+        .pressure-zone-focus-class-count { color: #7a8aaa; }
+        .pressure-zone-focus-narrative {
+          font-size: 12px;
+          color: #9aa0bc;
+          line-height: 1.6;
+          max-width: 780px;
+          margin-top: 4px;
+        }
+
+        /* Tier Handoff Statement */
+        .tier-handoff {
+          padding: 20px 56px 28px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+        .tier-handoff-rule {
+          height: 1px;
+          background: linear-gradient(90deg, rgba(42, 47, 64, 0.5) 0%, rgba(42, 47, 64, 0.15) 60%, transparent 100%);
+        }
+        .tier-handoff-text {
+          font-size: 10px;
+          color: #4a5570;
+          line-height: 1.6;
+          letter-spacing: 0.02em;
+          max-width: 680px;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* Cockpit Evidence Boundary (compact, BOARDROOM) */
+        .cockpit-evidence-boundary {
+          padding: 16px 24px;
+          border-top: 1px solid #1a2030;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+        .cockpit-evidence-boundary-label {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+        .cockpit-evidence-boundary-row {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          font-size: 11px;
+        }
+        .cockpit-evidence-boundary-stat {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          color: #b6bdd6;
+        }
+        .cockpit-evidence-boundary-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          flex-shrink: 0;
+        }
+        .cockpit-evidence-boundary-dot--backed { background: #64ffda; }
+        .cockpit-evidence-boundary-dot--advisory { background: #7a8aaa; }
+        .cockpit-evidence-boundary-sep { color: #2a2f40; }
+        .cockpit-evidence-boundary-note {
+          font-size: 10px;
+          color: #5a6580;
+          font-style: italic;
+          line-height: 1.4;
+        }
+
         /* CENTER — Semantic Operational Canvas (primary cognition surface) */
         .intel-canvas {
           padding: 56px 56px 64px;

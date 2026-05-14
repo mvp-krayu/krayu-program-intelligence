@@ -328,6 +328,46 @@ function StructuralConclusionBlock({ fullReport }) {
   )
 }
 
+function PressureZoneFocusBlock({ fullReport }) {
+  const ps = (fullReport && fullReport.propagation_summary) || {}
+  const sigs = (fullReport && fullReport.signal_interpretations) || []
+  const zoneName = ps.primary_zone_business_label
+  if (!zoneName) return null
+
+  const activated = sigs.filter(s => s.severity !== 'NOMINAL')
+  const severityTier = activated.length > 0
+    ? (activated.some(s => s.severity === 'CRITICAL' || s.severity === 'HIGH') ? 'HIGH' : 'ELEVATED')
+    : 'NOMINAL'
+  const compound = sigs[0] && sigs[0].compound_narrative
+  const zoneClassification = ps.zone_classification || (activated.length > 1 ? 'COMPOUND' : 'SINGLE')
+
+  return (
+    <div className="pressure-zone-focus" data-tier={severityTier} aria-label="Pressure zone focus">
+      <div className="pressure-zone-focus-label">PRESSURE ZONE FOCUS</div>
+      <div className="pressure-zone-focus-name">{zoneName}</div>
+      <div className="pressure-zone-focus-classification">
+        <span className="pressure-zone-focus-class-tag">{zoneClassification}</span>
+        <span className="pressure-zone-focus-class-sep">·</span>
+        <span className="pressure-zone-focus-class-count">{activated.length} activated signal{activated.length !== 1 ? 's' : ''}</span>
+      </div>
+      {compound && (
+        <div className="pressure-zone-focus-narrative">{compound}</div>
+      )}
+    </div>
+  )
+}
+
+function TierHandoffStatement() {
+  return (
+    <div className="tier-handoff" aria-label="Governance handoff">
+      <div className="tier-handoff-rule" />
+      <div className="tier-handoff-text">
+        This surface presents structurally derived evidence only. All outputs are deterministic, traceable, and bound by the governance framework. No inference, ranking, or AI-generated assessment has been applied.
+      </div>
+    </div>
+  )
+}
+
 function QualifierNarrativeLine({ qualifierClass }) {
   if (!qualifierClass) return null
   if (qualifierClass === 'Q-01' || qualifierClass === 'Q-04' || qualifierClass === 'Q-00') return null
@@ -396,7 +436,15 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
 
       <QualifierNarrativeLine qualifierClass={qualifierClass} />
 
+      <EvidenceBoundarySection scope={scope} fullReport={fullReport} />
+
       <SignalNarrativeBlock fullReport={fullReport} />
+
+      <PressureZoneFocusBlock fullReport={fullReport} />
+
+      <StructuralConclusionBlock fullReport={fullReport} />
+
+      <TierHandoffStatement />
     </div>
   )
 }
@@ -570,6 +618,8 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport }) {
           </div>
         </div>
       )}
+
+      <PressureZoneFocusBlock fullReport={fullReport} />
     </div>
   )
 }
@@ -693,6 +743,7 @@ function InvestigationTraceField({ adapted, blocks, scope, fullReport }) {
         </div>
       </div>
 
+      <TierHandoffStatement />
     </div>
   )
 }
@@ -865,6 +916,24 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
               </div>
             ))}
           </div>
+        )}
+      </div>
+
+      <div className="cockpit-evidence-boundary">
+        <div className="cockpit-evidence-boundary-label">EVIDENCE BOUNDARY</div>
+        <div className="cockpit-evidence-boundary-row">
+          <span className="cockpit-evidence-boundary-stat cockpit-evidence-boundary-stat--backed">
+            <span className="cockpit-evidence-boundary-dot cockpit-evidence-boundary-dot--backed" />
+            {backedCount} structurally backed
+          </span>
+          <span className="cockpit-evidence-boundary-sep">·</span>
+          <span className="cockpit-evidence-boundary-stat cockpit-evidence-boundary-stat--advisory">
+            <span className="cockpit-evidence-boundary-dot cockpit-evidence-boundary-dot--advisory" />
+            {semanticOnlyCount} advisory bound
+          </span>
+        </div>
+        {semanticOnlyCount > 0 && (
+          <div className="cockpit-evidence-boundary-note">Advisory-bound domains are confirmed unknowns — not assumed healthy states</div>
         )}
       </div>
 
