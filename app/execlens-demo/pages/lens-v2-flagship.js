@@ -224,7 +224,7 @@ export async function getServerSideProps(context) {
   }
 }
 
-export default function LensV2FlagshipPage({ livePayload, livePropagationChains, liveBindingError, bindingClient, bindingRun, reconciliationAwareness, domainTraceability, substrateBinding, reportBinding, correspondenceData, evidenceIntakeData }) {
+export default function LensV2FlagshipPage({ livePayload, livePropagationChains, liveBindingError, bindingClient, bindingRun, reconciliationAwareness, domainTraceability, substrateBinding, reportBinding, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData }) {
   const [densityClass, setDensityClass] = useState('EXECUTIVE_DENSE')
   const [boardroomMode, setBoardroomMode] = useState(false)
   const [investigationStage, setInvestigationStage] = useState('SUMMARY')
@@ -427,6 +427,9 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             propagationChains={livePropagationChains || []}
             correspondenceData={correspondenceData}
             evidenceIntakeData={evidenceIntakeData}
+            debtIndexData={debtIndexData}
+            progressionData={progressionData}
+            maturityData={maturityData}
           />
         </div>
       </div>
@@ -1388,6 +1391,138 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .topo-modal-trace-origin:hover {
           opacity: 1;
           border-color: #4a9eff;
+        }
+
+        /* ── Blockage posture summary (5A.3) ─────────────────────────────── */
+        .blockage-posture {
+          background: #0d0f14;
+          border: 1px solid #1e2330;
+          border-radius: 3px;
+          padding: 10px 14px;
+          margin: 12px 0 0 0;
+        }
+        .blockage-posture-label {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          font-weight: 500;
+          margin-bottom: 8px;
+          border-bottom: 1px solid #1e2330;
+          padding-bottom: 4px;
+        }
+        .blockage-posture-row {
+          display: flex;
+          gap: 20px;
+          margin-bottom: 8px;
+        }
+        .blockage-posture-metric {
+          display: flex;
+          flex-direction: column;
+          gap: 1px;
+        }
+        .blockage-posture-metric-value {
+          font-family: 'Courier New', monospace;
+          font-size: 13px;
+          color: #ccd6f6;
+          font-weight: 500;
+        }
+        .blockage-posture-metric-label {
+          font-size: 9px;
+          color: #4a5570;
+          letter-spacing: 0.05em;
+        }
+        .blockage-posture-dims {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr 1fr;
+          gap: 4px 12px;
+          margin-bottom: 6px;
+        }
+        .blockage-posture-dim {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+        }
+        .blockage-posture-dim-id {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          color: #5a6580;
+          min-width: 18px;
+        }
+        .blockage-posture-dim-bar-track {
+          width: 40px;
+          height: 3px;
+          background: #1e2330;
+          border-radius: 1px;
+          overflow: hidden;
+        }
+        .blockage-posture-dim-bar-fill {
+          display: block;
+          height: 100%;
+          border-radius: 1px;
+        }
+        .blockage-posture-dim-score {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          min-width: 28px;
+          text-align: right;
+        }
+        .blockage-posture-continuity {
+          font-size: 10px;
+          color: #4a5570;
+          line-height: 1.4;
+          margin-top: 4px;
+        }
+
+        /* ── Domain debt section (5A.3) ──────────────────────────────────── */
+        .dsp-debt-status--active { color: #ff9e4a; }
+        .dsp-debt-status--partial { color: #ffd700; }
+        .dsp-debt-items {
+          margin-top: 8px;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .dsp-debt-item {
+          background: #0d0f14;
+          border: 1px solid #1e2330;
+          border-radius: 3px;
+          padding: 6px 10px;
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+        .dsp-debt-item-id {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          color: #7a8aaa;
+        }
+        .dsp-debt-item-severity {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          font-weight: 600;
+          letter-spacing: 0.05em;
+        }
+        .dsp-debt-item-cat {
+          font-size: 10px;
+          color: #4a5570;
+        }
+        .dsp-debt-item-blocks {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          color: #ff6b6b;
+          letter-spacing: 0.03em;
+        }
+        .dsp-exposure {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          font-weight: 600;
+        }
+        .dsp-reducibility {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          font-weight: 500;
         }
 
         .cockpit-impact {

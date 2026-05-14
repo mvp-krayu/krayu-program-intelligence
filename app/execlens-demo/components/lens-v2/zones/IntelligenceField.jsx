@@ -811,7 +811,188 @@ const CONFIDENCE_COLORS = {
   1: '#ff6b6b',
 }
 
-function DomainStructuralPanel({ domainId, correspondenceData, evidenceIntakeData }) {
+function DomainDebtSection({ domainId, debtIndexData, progressionData }) {
+  if (!debtIndexData) {
+    return (
+      <div className="dsp-section">
+        <div className="dsp-section-label">STRUCTURAL DEBT</div>
+        <div className="dsp-grid">
+          <div className="dsp-row"><span className="dsp-val dsp-dim" style={{ fontStyle: 'italic' }}>Structural debt data unavailable</span></div>
+        </div>
+      </div>
+    )
+  }
+  const postures = debtIndexData.domain_postures || []
+  const posture = postures.find(d => d.domain_id === domainId)
+  if (!posture) {
+    return (
+      <div className="dsp-section">
+        <div className="dsp-section-label">STRUCTURAL DEBT</div>
+        <div className="dsp-grid">
+          <div className="dsp-row"><span className="dsp-val dsp-dim">No debt posture registered for {domainId}</span></div>
+        </div>
+      </div>
+    )
+  }
+  if (posture.debt_status === 'CLEAR') {
+    return (
+      <div className="dsp-section">
+        <div className="dsp-section-label">STRUCTURAL DEBT</div>
+        <div className="dsp-grid">
+          <div className="dsp-row"><span className="dsp-val" style={{ color: '#64ffda' }}>No structural debt — domain is clear</span></div>
+        </div>
+      </div>
+    )
+  }
+
+  const blockingIds = progressionData && progressionData.blocking_debts
+    ? progressionData.blocking_debts.map(d => d.id)
+    : []
+  const domainBlocksS3 = posture.debt_item_ids.some(id => blockingIds.includes(id))
+
+  const statusClass = posture.debt_status === 'ACTIVE' ? 'active' : 'partial'
+  const exposureColors = { HIGH: '#ff6b6b', MEDIUM: '#ff9e4a', LOW: '#ffd700', NONE: '#4a5570' }
+  const reducibilityColors = {
+    IRREDUCIBLE_STRUCTURAL_ABSENCE: '#ff6b6b',
+    REDUCED_BY_ENRICHMENT: '#ffd700',
+    REDUCIBLE_BY_EVIDENCE: '#4a9eff',
+    NOT_APPLICABLE: '#4a5570',
+  }
+
+  const blockingDebtsLookup = progressionData && progressionData.blocking_debts
+    ? Object.fromEntries(progressionData.blocking_debts.map(d => [d.id, d]))
+    : {}
+
+  return (
+    <div className="dsp-section">
+      <div className="dsp-section-label">STRUCTURAL DEBT</div>
+      <div className="dsp-grid">
+        <div className="dsp-row">
+          <span className="dsp-key">Debt status</span>
+          <span className="dsp-val">
+            <span className={`dsp-badge dsp-debt-status dsp-debt-status--${statusClass}`}>{posture.debt_status}</span>
+          </span>
+        </div>
+        <div className="dsp-row">
+          <span className="dsp-key">Operational exposure</span>
+          <span className="dsp-val">
+            <span className="dsp-badge dsp-exposure" style={{ color: exposureColors[posture.operational_exposure] || '#4a5570' }}>
+              {posture.operational_exposure}
+            </span>
+          </span>
+        </div>
+        <div className="dsp-row">
+          <span className="dsp-key">Blocks S3</span>
+          <span className="dsp-val">
+            <span className="dsp-badge" style={{ color: domainBlocksS3 ? '#ff6b6b' : '#64ffda' }}>
+              {domainBlocksS3 ? 'YES' : 'NO'}
+            </span>
+          </span>
+        </div>
+        <div className="dsp-row">
+          <span className="dsp-key">Reducibility</span>
+          <span className="dsp-val">
+            <span className="dsp-badge dsp-reducibility" style={{ color: reducibilityColors[posture.reducibility] || '#4a5570' }}>
+              {posture.reducibility}
+            </span>
+          </span>
+        </div>
+        <div className="dsp-row">
+          <span className="dsp-key">Origin type</span>
+          <span className="dsp-val dsp-mono dsp-dim">{posture.origin_type}</span>
+        </div>
+      </div>
+      {posture.debt_item_ids.length > 0 && (
+        <div className="dsp-debt-items">
+          {posture.debt_item_ids.map(id => {
+            const detail = blockingDebtsLookup[id]
+            return (
+              <div key={id} className="dsp-debt-item">
+                <span className="dsp-debt-item-id">{id}</span>
+                {detail && (
+                  <>
+                    <span className="dsp-debt-item-severity" style={{ color: detail.severity === 'CRITICAL' ? '#ff6b6b' : detail.severity === 'HIGH' ? '#ff9e4a' : '#ffd700' }}>
+                      {detail.severity}
+                    </span>
+                    <span className="dsp-debt-item-cat">{detail.category}</span>
+                  </>
+                )}
+                {detail && detail.blocks_s_state && (
+                  <span className="dsp-debt-item-blocks">blocks {detail.blocks_s_state}</span>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}
+
+const MATURITY_DIM_COLORS = {
+  STRONG: '#64ffda',
+  STABLE: '#4a9eff',
+  PARTIAL: '#ffd700',
+  LOW: '#ff6b6b',
+}
+
+function BlockagePostureSummary({ debtIndexData, progressionData, maturityData }) {
+  if (!debtIndexData && !progressionData && !maturityData) return null
+
+  const agg = debtIndexData && debtIndexData.aggregate_posture
+  const dims = maturityData && maturityData.dimension_breakdown
+  const contDebt = debtIndexData && debtIndexData.continuity_debt
+
+  return (
+    <div className="blockage-posture">
+      <div className="blockage-posture-label">STRUCTURAL BLOCKAGE</div>
+      <div className="blockage-posture-row">
+        {progressionData && (
+          <div className="blockage-posture-metric">
+            <div className="blockage-posture-metric-value">{progressionData.current_s_state} → {progressionData.next_s_state_target}</div>
+            <div className="blockage-posture-metric-label">S-state position</div>
+          </div>
+        )}
+        {progressionData && (
+          <div className="blockage-posture-metric">
+            <div className="blockage-posture-metric-value">{progressionData.blocking_debt_count} of {progressionData.total_debt_items}</div>
+            <div className="blockage-posture-metric-label">blocking</div>
+          </div>
+        )}
+        {agg && (
+          <div className="blockage-posture-metric">
+            <div className="blockage-posture-metric-value">{agg.domains_with_debt} / {agg.domains_clear}</div>
+            <div className="blockage-posture-metric-label">unresolved / clear</div>
+          </div>
+        )}
+      </div>
+      {dims && (
+        <div className="blockage-posture-dims">
+          {Object.entries(dims).map(([key, dim]) => {
+            const color = MATURITY_DIM_COLORS[dim.classification] || '#4a5570'
+            const pct = Math.round(dim.score * 100)
+            return (
+              <div key={key} className="blockage-posture-dim">
+                <span className="blockage-posture-dim-id">{key}</span>
+                <span className="blockage-posture-dim-bar-track">
+                  <span className="blockage-posture-dim-bar-fill" style={{ width: `${pct}%`, background: color }} />
+                </span>
+                <span className="blockage-posture-dim-score" style={{ color }}>{dim.score.toFixed(2)}</span>
+              </div>
+            )
+          })}
+        </div>
+      )}
+      {contDebt && contDebt.length > 0 && (
+        <div className="blockage-posture-continuity">
+          {contDebt.map(d => d.description).join(' · ')}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function DomainStructuralPanel({ domainId, correspondenceData, evidenceIntakeData, debtIndexData, progressionData }) {
   if (!correspondenceData || !domainId) return null
   const correspondences = correspondenceData.correspondences || []
   const corr = correspondences.find(c => c.semantic_domain_id === domainId)
@@ -819,6 +1000,7 @@ function DomainStructuralPanel({ domainId, correspondenceData, evidenceIntakeDat
     return (
       <div className="dsp-panel">
         <div className="dsp-unavailable">Correspondence data unavailable for {domainId}</div>
+        <DomainDebtSection domainId={domainId} debtIndexData={debtIndexData} progressionData={progressionData} />
         <EvidenceSourcesSection domainId={domainId} evidenceIntakeData={evidenceIntakeData} />
       </div>
     )
@@ -957,6 +1139,8 @@ function DomainStructuralPanel({ domainId, correspondenceData, evidenceIntakeDat
         </div>
       </div>
 
+      <DomainDebtSection domainId={domainId} debtIndexData={debtIndexData} progressionData={progressionData} />
+
       <EvidenceSourcesSection domainId={domainId} evidenceIntakeData={evidenceIntakeData} />
     </div>
   )
@@ -1039,7 +1223,7 @@ function EvidenceSourcesSection({ domainId, evidenceIntakeData }) {
   )
 }
 
-function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntakeData, initialSignalTrace, onSignalTraceConsumed }) {
+function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, initialSignalTrace, onSignalTraceConsumed }) {
   const [focusedDomain, setFocusedDomain] = useState(null)
   const [traceResolution, setTraceResolution] = useState(null)
   const domainRegistry = (fullReport && fullReport.semantic_domain_registry) || []
@@ -1109,7 +1293,7 @@ function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntake
             </div>
           )}
           {focusedDomain && (
-            <DomainStructuralPanel domainId={focusedDomain} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} />
+            <DomainStructuralPanel domainId={focusedDomain} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} />
           )}
           <div className="topo-modal-domains">
             <div className="topo-modal-domains-heading">DOMAIN REGISTRY</div>
@@ -1137,13 +1321,14 @@ function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntake
               })}
             </div>
           </div>
+          <BlockagePostureSummary debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} />
         </div>
       </div>
     </div>
   )
 }
 
-function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, narrative, evidenceBlocks, correspondenceData, evidenceIntakeData }) {
+function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, narrative, evidenceBlocks, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData }) {
   const [topoModalOpen, setTopoModalOpen] = useState(false)
   const [signalTraceId, setSignalTraceId] = useState(null)
   const openTopoModal = useCallback(() => setTopoModalOpen(true), [])
@@ -1262,7 +1447,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
         </div>
       )}
 
-      {topoModalOpen && <TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} initialSignalTrace={signalTraceId} onSignalTraceConsumed={() => setSignalTraceId(null)} />}
+      {topoModalOpen && <TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} initialSignalTrace={signalTraceId} onSignalTraceConsumed={() => setSignalTraceId(null)} />}
 
       <div className="cockpit-impact">
         <div className="cockpit-impact-label">ORGANIZATIONAL IMPACT</div>
@@ -1317,9 +1502,9 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, qualifierClass, narrative, correspondenceData, evidenceIntakeData }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData }) {
   if (boardroomMode) {
-    return <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} />
+    return <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} />
   }
   if (densityClass === 'INVESTIGATION_DENSE') {
     return <InvestigationTraceField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} />
@@ -1330,7 +1515,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   return <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} />
 }
 
-export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData }) {
+export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData }) {
   const scope = (fullReport && fullReport.topology_scope) || {}
 
   return (
@@ -1358,6 +1543,9 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           narrative={narrative}
           correspondenceData={correspondenceData}
           evidenceIntakeData={evidenceIntakeData}
+          debtIndexData={debtIndexData}
+          progressionData={progressionData}
+          maturityData={maturityData}
         />
       </main>
 

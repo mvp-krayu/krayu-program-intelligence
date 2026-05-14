@@ -33,7 +33,16 @@ export async function getServerSideProps(context) {
   const intakePath = `artifacts/sqo/${client}/${run}/semantic_evidence_intake.v1.json`
   const intakeResult = loadJSON(intakePath)
   const evidenceIntakeData = intakeResult.ok ? intakeResult.data : null
-  return { props: { ...result.props, correspondenceData, evidenceIntakeData } }
+  const debtPath = `artifacts/sqo/${client}/${run}/semantic_debt_index.v1.json`
+  const debtResult = loadJSON(debtPath)
+  const debtIndexData = debtResult.ok ? debtResult.data : null
+  const progPath = `artifacts/sqo/${client}/${run}/progression_readiness.v1.json`
+  const progResult = loadJSON(progPath)
+  const progressionData = progResult.ok ? progResult.data : null
+  const matPath = `artifacts/sqo/${client}/${run}/maturity_dimension_breakdown.v1.json`
+  const matResult = loadJSON(matPath)
+  const maturityData = matResult.ok ? matResult.data : null
+  return { props: { ...result.props, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData } }
 }
 
 export default LensV2FlagshipPage
