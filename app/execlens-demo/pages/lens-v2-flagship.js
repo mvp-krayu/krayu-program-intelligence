@@ -995,6 +995,193 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .cockpit-coverage-dot--backed { background: #64ffda; }
         .cockpit-coverage-dot--advisory { background: #ffd700; opacity: 0.6; }
 
+        /* Cockpit Topology Preview (compact, clickable) */
+        .cockpit-topology-preview {
+          padding: 12px 0;
+          border-top: 1px solid #1e2330;
+          border-bottom: 1px solid #1e2330;
+          cursor: pointer;
+          position: relative;
+          transition: background 0.2s;
+        }
+        .cockpit-topology-preview:hover {
+          background: rgba(74, 158, 255, 0.03);
+        }
+        .cockpit-topology-preview .topo-graph-wrap {
+          margin-bottom: 0;
+        }
+        .cockpit-topology-preview .topo-graph-heading {
+          font-size: 9px;
+          text-align: center;
+        }
+        .cockpit-topology-preview .topo-graph-svg {
+          pointer-events: none;
+        }
+        .cockpit-topology-hint {
+          text-align: center;
+          font-size: 9px;
+          color: #4a5570;
+          letter-spacing: 0.08em;
+          margin-top: 4px;
+          transition: color 0.2s;
+        }
+        .cockpit-topology-preview:hover .cockpit-topology-hint {
+          color: #4a9eff;
+        }
+
+        /* Topology Modal (full-screen overlay) */
+        .topo-modal-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 9000;
+          background: rgba(0, 0, 0, 0.88);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          backdrop-filter: blur(6px);
+        }
+        .topo-modal {
+          width: 96vw;
+          height: 94vh;
+          max-width: 1800px;
+          background: #0d0f14;
+          border: 1px solid #2a2f40;
+          border-radius: 10px;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+        }
+        .topo-modal-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 14px 28px;
+          border-bottom: 1px solid #1e2330;
+          flex-shrink: 0;
+        }
+        .topo-modal-title {
+          font-size: 12px;
+          color: #7a8aaa;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          font-weight: 500;
+          font-family: 'Courier New', monospace;
+        }
+        .topo-modal-close {
+          background: none;
+          border: 1px solid #2a2f40;
+          color: #7a8aaa;
+          font-size: 16px;
+          width: 36px;
+          height: 36px;
+          border-radius: 6px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.15s;
+        }
+        .topo-modal-close:hover {
+          background: rgba(74, 158, 255, 0.1);
+          border-color: #4a9eff;
+          color: #ccd6f6;
+        }
+        .topo-modal-body {
+          padding: 0;
+          overflow-y: auto;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          min-height: 0;
+        }
+        .topo-modal-graph {
+          padding: 16px 28px 8px;
+          flex-shrink: 0;
+        }
+        .topo-modal-graph .topo-graph-heading {
+          font-size: 11px;
+          margin-bottom: 10px;
+        }
+        .topo-modal-graph .topo-graph-svg {
+          pointer-events: auto;
+          width: 100%;
+          height: auto;
+        }
+        .topo-modal-meta {
+          font-size: 11px;
+          color: #5a6580;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.06em;
+        }
+        .topo-modal-domains {
+          padding: 12px 28px 24px;
+          border-top: 1px solid #1e2330;
+        }
+        .topo-modal-domains-heading {
+          font-size: 10px;
+          color: #5a6580;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          font-weight: 500;
+          margin-bottom: 10px;
+          font-family: 'Courier New', monospace;
+        }
+        .topo-modal-domains-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+          gap: 8px;
+        }
+        .topo-modal-domain-card {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 7px 12px;
+          background: #141720;
+          border: 1px solid #1e2330;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: all 0.15s;
+        }
+        .topo-modal-domain-card:hover {
+          border-color: #3a4560;
+          background: #1a1e2b;
+        }
+        .topo-modal-domain-card--focused {
+          border-color: #4a9eff;
+          background: rgba(74, 158, 255, 0.08);
+          box-shadow: 0 0 0 1px rgba(74, 158, 255, 0.2);
+        }
+        .topo-modal-domain-card--pz {
+          border-left: 2px solid rgba(255, 215, 0, 0.45);
+        }
+        .topo-modal-domain-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          flex-shrink: 0;
+        }
+        .topo-modal-domain-name {
+          font-size: 12px;
+          color: #ccd6f6;
+          font-weight: 500;
+          flex: 1;
+          min-width: 0;
+        }
+        .topo-modal-domain-meta {
+          font-size: 9px;
+          color: #4a5570;
+          font-family: 'Courier New', monospace;
+          flex-shrink: 0;
+        }
+        .topo-modal-domain-lineage {
+          font-size: 9px;
+          font-weight: 600;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.04em;
+          flex-shrink: 0;
+        }
+
         .cockpit-impact {
           padding: 18px 0;
           border-bottom: 1px solid #1e2330;
@@ -2443,7 +2630,14 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           background: linear-gradient(180deg, rgba(8,10,15,0.4) 0%, rgba(13,15,20,0.2) 100%);
         }
         .topo-executive--boardroom {
-          padding: 16px 40px;
+          padding: 24px 0;
+          max-width: 720px;
+          margin: 0 auto;
+          background: none;
+          border-bottom: none;
+        }
+        .topo-executive--boardroom .topo-graph-heading {
+          text-align: center;
         }
         .topo-executive-header {
           margin-bottom: 8px;
@@ -2589,6 +2783,11 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           transition: border-color 0.15s ease;
         }
         .topo-coverage-card:hover { border-color: #3a4560; }
+        .topo-coverage-card--focused {
+          border-color: #4a9eff;
+          background: rgba(74, 158, 255, 0.06);
+          box-shadow: 0 0 0 1px rgba(74, 158, 255, 0.2);
+        }
         .topo-coverage-card--backed { border-left: 2px solid rgba(100,255,218,0.35); }
         .topo-coverage-card--pz { border-left: 2px solid rgba(255,215,0,0.45); }
         .topo-coverage-card-header {

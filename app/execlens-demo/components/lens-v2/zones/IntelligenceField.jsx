@@ -1,5 +1,7 @@
+import { useState, useCallback, useEffect } from 'react'
 import { PRESSURE_META, ROLE_META, DEFAULT_BINDING_CLIENT, DEFAULT_BINDING_RUN } from './constants'
 import InvestigationReadingGuide, { TermHint } from './InvestigationReadingGuide'
+import { TopologyGraph } from './StructuralTopologyZone'
 
 const SEMANTIC_ACTORS = {
   decisionPosture:       { id: 'A', code: 'DP', name: 'Decision Posture' },
@@ -801,7 +803,80 @@ function CockpitSignalBar({ signal }) {
   )
 }
 
+function TopologyModal({ fullReport, onClose }) {
+  const [focusedDomain, setFocusedDomain] = useState(null)
+  const domainRegistry = (fullReport && fullReport.semantic_domain_registry) || []
+  const clusterRegistry = (fullReport && fullReport.semantic_cluster_registry) || []
+  const topologyEdges = (fullReport && fullReport.semantic_topology_edges) || []
+  const ps = (fullReport && fullReport.propagation_summary) || {}
+  const zoneName = ps.primary_zone_business_label || ''
+
+  useEffect(() => {
+    function onKey(e) { if (e.key === 'Escape') { setFocusedDomain(null); onClose() } }
+    document.addEventListener('keydown', onKey)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.body.style.overflow = ''
+    }
+  }, [onClose])
+
+  return (
+    <div className="topo-modal-overlay" onClick={onClose}>
+      <div className="topo-modal" onClick={e => e.stopPropagation()}>
+        <div className="topo-modal-header">
+          <div className="topo-modal-title">SEMANTIC DOMAIN TOPOLOGY</div>
+          <div className="topo-modal-meta">{domainRegistry.length} domains · {clusterRegistry.length} clusters</div>
+          <button className="topo-modal-close" onClick={onClose} aria-label="Close topology">✕</button>
+        </div>
+        <div className="topo-modal-body">
+          <div className="topo-modal-graph">
+            <TopologyGraph
+              domains={domainRegistry}
+              clusters={clusterRegistry}
+              edges={topologyEdges}
+              pressureZoneLabel={zoneName}
+              focusedDomain={focusedDomain}
+              onNodeSelect={setFocusedDomain}
+            />
+          </div>
+          <div className="topo-modal-domains">
+            <div className="topo-modal-domains-heading">DOMAIN REGISTRY</div>
+            <div className="topo-modal-domains-grid">
+              {domainRegistry.map(d => {
+                const backed = d.structurally_backed
+                const partial = d.lineage_status === 'PARTIAL'
+                const isPZ = d.zone_anchor
+                const isFocused = focusedDomain === d.domain_id
+                const lineageColor = backed ? (d.lineage_status === 'EXACT' ? '#64ffda' : d.lineage_status === 'STRONG' ? '#64ffda' : '#ffd700') : '#4a5570'
+                return (
+                  <div
+                    key={d.domain_id}
+                    className={`topo-modal-domain-card${isFocused ? ' topo-modal-domain-card--focused' : ''}${isPZ ? ' topo-modal-domain-card--pz' : ''}`}
+                    onClick={() => setFocusedDomain(isFocused ? null : d.domain_id)}
+                  >
+                    {(backed || partial) && <span className="topo-modal-domain-dot" style={{ background: lineageColor }} />}
+                    <span className="topo-modal-domain-name">{d.business_label || d.domain_name}</span>
+                    <span className="topo-modal-domain-meta">{d.cluster_id}</span>
+                    <span className="topo-modal-domain-lineage" style={{ color: lineageColor }}>
+                      {d.lineage_status === 'NONE' || !d.lineage_status ? 'SEMANTIC-ONLY' : d.lineage_status}{d.confidence > 0 ? ` ${d.confidence.toFixed(2)}` : ''}
+                    </span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, narrative, evidenceBlocks }) {
+  const [topoModalOpen, setTopoModalOpen] = useState(false)
+  const openTopoModal = useCallback(() => setTopoModalOpen(true), [])
+  const closeTopoModal = useCallback(() => setTopoModalOpen(false), [])
+
   const rs = (fullReport && fullReport.readiness_summary) || {}
   const ts = (fullReport && fullReport.topology_summary) || {}
   const qs = (fullReport && fullReport.qualifier_summary) || {}
@@ -902,6 +977,20 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
           </div>
         </div>
       </div>
+
+      {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (
+        <div className="cockpit-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
+          <TopologyGraph
+            domains={fullReport.semantic_domain_registry}
+            clusters={fullReport.semantic_cluster_registry || []}
+            edges={fullReport.semantic_topology_edges || []}
+            pressureZoneLabel={pressureZone || ''}
+          />
+          <div className="cockpit-topology-hint">Click to explore topology</div>
+        </div>
+      )}
+
+      {topoModalOpen && <TopologyModal fullReport={fullReport} onClose={closeTopoModal} />}
 
       <div className="cockpit-impact">
         <div className="cockpit-impact-label">ORGANIZATIONAL IMPACT</div>
