@@ -16,6 +16,8 @@
 
 import Head from 'next/head'
 import { useState, useMemo } from 'react'
+import LensDisclosureShell from '../components/lens-v2/LensDisclosureShell'
+
 
 const {
   orchestrateFlagshipExperience,
@@ -46,29 +48,6 @@ function paramSafe(value) {
   return true
 }
 
-// ── Visual constants ──────────────────────────────────────────────────────────
-
-const PRESSURE_META = {
-  HIGH:     { color: '#ff6b6b', label: 'HIGH',     symbol: '▲' },
-  ELEVATED: { color: '#ff9e4a', label: 'ELEVATED', symbol: '△' },
-  MODERATE: { color: '#ffd700', label: 'MODERATE', symbol: '◇' },
-  LOW:      { color: '#64ffda', label: 'LOW',      symbol: '○' },
-}
-
-const ROLE_META = {
-  ORIGIN:       { label: 'ORIGIN',       symbol: '◉', color: '#ff6b6b' },
-  PASS_THROUGH: { label: 'PASS-THROUGH', symbol: '→', color: '#ff9e4a' },
-  RECEIVER:     { label: 'RECEIVER',     symbol: '◎', color: '#ffd700' },
-}
-
-const STATE_LABELS = {
-  EXECUTIVE_READY:                'EXECUTIVE READY',
-  EXECUTIVE_READY_WITH_QUALIFIER: 'EXECUTIVE READY — QUALIFIED',
-  DIAGNOSTIC_ONLY:                'DIAGNOSTIC ONLY',
-  BLOCKED:                        'BLOCKED',
-}
-
-const ROLE_ORDER = { ORIGIN: 0, PASS_THROUGH: 1, RECEIVER: 2 }
 
 const DENSITY_OPTIONS = [
   {
@@ -97,20 +76,6 @@ const BOARDROOM_PERSONA = {
   persona_label: 'Projection lens',
   persona_sub: 'Boardroom projection — minimal chrome',
   aria: 'Boardroom projection lens — minimal chrome, declaration-supportive',
-}
-
-// ── Derived domain nodes ──────────────────────────────────────────────────────
-
-function getDomainNodes(evidenceBlocks) {
-  if (!evidenceBlocks || !evidenceBlocks.length) return []
-  return [...evidenceBlocks]
-    .sort((a, b) => (ROLE_ORDER[a.propagation_role] || 0) - (ROLE_ORDER[b.propagation_role] || 0))
-    .map(block => ({
-      name: block.domain_alias,
-      pressureTier: (block.signal_cards && block.signal_cards[0] && block.signal_cards[0].pressure_tier) || 'MODERATE',
-      role: block.propagation_role,
-      groundingStatus: block.grounding_status,
-    }))
 }
 
 // ── Inner components ──────────────────────────────────────────────────────────
@@ -201,152 +166,6 @@ function DiagnosticDeclaration() {
   )
 }
 
-function DeclarationZone({ renderState, adapted }) {
-  const label = STATE_LABELS[renderState] || renderState.replace(/_/g, ' ')
-  return (
-    <div className="declaration-zone">
-      <div className="declaration-pre-label">OPERATIONAL POSTURE</div>
-      <div className="declaration-state">{label}</div>
-      <div className="declaration-scope">
-        <span className="declaration-scope-item">3 Domains</span>
-        <span className="declaration-scope-sep">·</span>
-        <span className="declaration-scope-item">47 Clusters</span>
-        <span className="declaration-scope-sep">·</span>
-        <span className="declaration-scope-item">Partial Coverage</span>
-      </div>
-    </div>
-  )
-}
-
-function QualifierMandate({ qualifierClass, qualifierLabel, qualifierNote, visible }) {
-  if (!visible || !qualifierClass) return null
-  // Per docs/governance/Q02_GOVERNANCE_AMENDMENT.md:
-  //   Q-01 (FULL_GROUNDING)  → no chip rendered
-  //   Q-04 (UNAVAILABLE)     → handled by absence-notice path
-  //   Q-02 / Q-03            → render with contract-mandated language
-  if (qualifierClass === 'Q-01' || qualifierClass === 'Q-04') return null
-  // Legacy Q-00 (full grounding under fixture-era adapters) is also a no-op.
-  if (qualifierClass === 'Q-00') return null
-  const label = qualifierLabel
-    || (qualifierClass === 'Q-02' ? 'Partial Grounding · Structural Continuity'
-       : qualifierClass === 'Q-03' ? 'Semantic Continuity Only'
-       : 'Partial Signal Grounding')
-  const note = qualifierNote
-    || (qualifierClass === 'Q-02'
-        ? 'Semantic continuity is validated. Some semantic domains lack structural backing; advisory confirmation is mandatory before executive commitment.'
-        : qualifierClass === 'Q-03'
-        ? 'Structural backing is absent. Only semantic continuity supports the projection. Executive caution mandatory.'
-        : 'Signal grounding is partial. Advisory review is mandatory before executive commitment on qualified signals.')
-  return (
-    <div className="qualifier-mandate" role="alert" aria-atomic="true">
-      <div className="qualifier-mandate-left">
-        <span className="qualifier-mandate-class">QUALIFIER {qualifierClass}</span>
-        <span className="qualifier-mandate-sublabel">{label}</span>
-      </div>
-      <div className="qualifier-mandate-text">{note}</div>
-    </div>
-  )
-}
-
-/* ── Semantic Actor Registry ──────────────────────────────────────────────
- * The 15 canonical semantic actors that LENS V2 representation modes compose from.
- * Each mode draws on a DIFFERENT subset — this is what differentiates modes,
- * not just visual restyling of the same content.
- *
- * Actors are documented authoritatively in
- * docs/psee/PI.LENS.V2.SEMANTIC-REPRESENTATION-SYSTEM.01/SEMANTIC_ACTOR_REGISTRY.md
- */
-const SEMANTIC_ACTORS = {
-  decisionPosture:       { id: 'A', code: 'DP', name: 'Decision Posture' },
-  confidenceBoundary:    { id: 'B', code: 'CB', name: 'Confidence Boundary' },
-  pressureAnchor:        { id: 'C', code: 'PA', name: 'Pressure Anchor' },
-  propagationPath:       { id: 'D', code: 'PP', name: 'Propagation Path' },
-  absorptionLoad:        { id: 'E', code: 'AL', name: 'Absorption Load' },
-  receiverExposure:      { id: 'F', code: 'RE', name: 'Receiver Exposure' },
-  semanticTopology:      { id: 'G', code: 'ST', name: 'Semantic Topology' },
-  structuralBacking:     { id: 'H', code: 'SB', name: 'Structural Backing' },
-  semanticOnlyExposure:  { id: 'I', code: 'SO', name: 'Semantic-Only Exposure' },
-  clusterConcentration:  { id: 'J', code: 'CC', name: 'Cluster Concentration' },
-  signalStack:           { id: 'K', code: 'SS', name: 'Signal Stack' },
-  evidenceTrace:         { id: 'L', code: 'ET', name: 'Evidence Trace' },
-  resolutionBoundary:    { id: 'M', code: 'RB', name: 'Resolution Boundary' },
-  inferenceProhibition:  { id: 'N', code: 'IP', name: 'Inference Prohibition' },
-  reportArtifactAccess:  { id: 'O', code: 'RA', name: 'Report Artifact Access' },
-}
-
-/* Mode → semantic actor composition. Each mode uses a distinct subset.
- * The four modes do NOT share a common renderable; they share a registry of actors.
- */
-const LENS_MODE_SEMANTICS = {
-  EXECUTIVE_BALANCED: ['decisionPosture', 'confidenceBoundary', 'resolutionBoundary', 'pressureAnchor', 'reportArtifactAccess'],
-  EXECUTIVE_DENSE:    ['semanticTopology', 'structuralBacking', 'semanticOnlyExposure', 'clusterConcentration', 'absorptionLoad', 'pressureAnchor'],
-  INVESTIGATION_DENSE:['evidenceTrace', 'signalStack', 'inferenceProhibition', 'confidenceBoundary', 'resolutionBoundary'],
-  BOARDROOM:          ['decisionPosture', 'confidenceBoundary', 'pressureAnchor', 'reportArtifactAccess'],
-}
-
-/* ── Representation Field — semantic actor canvas engine ─────────────────
- * Each mode composes a distinct set of semantic actors from the registry above.
- * Modes no longer share content — they share a visual grammar of actor panels.
- */
-
-const REP_TIER_COLOR = {
-  HIGH:     '#ff6b6b',
-  ELEVATED: '#ff9e4a',
-  MODERATE: '#ffd700',
-  LOW:      '#64ffda',
-}
-
-function findByRole(blocks, role) {
-  if (!blocks) return null
-  return blocks.find(b => b && b.propagation_role === role) || null
-}
-
-function RepEvidenceState({ adapted, scope, compact }) {
-  const badge = (adapted && adapted.readinessBadge) || {}
-  const chip = (adapted && adapted.qualifierChip) || {}
-  return (
-    <div className={`rep-evstate${compact ? ' rep-evstate--compact' : ''}`}>
-      <div className="rep-evstate-label">EVIDENCE STATE</div>
-      <div className="rep-evstate-readiness">{badge.state_label || '—'}</div>
-      <div className="rep-evstate-coverage">
-        {(scope && scope.grounding_label) || 'Partial Coverage'}
-        <span className="rep-evstate-coverage-meta">
-          {' · '}{(scope && scope.domain_count) || 3} domains · {(scope && scope.cluster_count) || 47} clusters
-        </span>
-      </div>
-      {chip.renders && (
-        <div className="rep-evstate-qualifier">
-          <span className="rep-evstate-qualifier-class">{chip.class_label || chip.qualifier_class || '—'}</span>
-          <span className="rep-evstate-qualifier-note">qualifier in effect</span>
-        </div>
-      )}
-    </div>
-  )
-}
-
-function RepModeTag({ label, sub, zones }) {
-  return (
-    <div className="rep-mode-tag" role="presentation">
-      <span className="rep-mode-tag-label">{label}</span>
-      <span className="rep-mode-tag-sub">{sub}</span>
-      {zones && zones.length > 0 && (
-        <div className="rep-mode-tag-zones" aria-label="Active semantic zones">
-          {zones.map(z => (
-            <span key={z.id} className="rep-zone-chip" title={`Semantic zone: ${z.name}`}>
-              <span className="rep-zone-chip-id">{z.id}</span>
-              <span className="rep-zone-chip-name">{z.name}</span>
-            </span>
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}
-
-/* Static report artifacts — live-bound via /api/report-pack. The page
- * builds the registry from the active (client, run) at render time so
- * the URLs always reflect the resolved manifest pair.
- */
 function buildReportPackRegistry(client, run) {
   return [
     {
@@ -380,708 +199,32 @@ function buildReportPackRegistry(client, run) {
   ]
 }
 
-function ReportPackBand() {
-  // Retained for backwards-reference but no longer rendered as a horizontal band.
-  // Report Pack is now part of the SupportRail (right column of IntelligenceField).
-  return null
-}
-
-/* SupportRail — compact right column of the IntelligenceField.
- * Carries: evidence state · qualifier state · Report Pack access.
- * Replaces the prior horizontal Report Pack band.
- */
-function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts }) {
-  const badge = (adapted && adapted.readinessBadge) || {}
-  const chip = (adapted && adapted.qualifierChip) || {}
-  const artifacts = (reportPackArtifacts && reportPackArtifacts.length > 0)
-    ? reportPackArtifacts
-    : buildReportPackRegistry(DEFAULT_BINDING_CLIENT, DEFAULT_BINDING_RUN)
-  return (
-    <aside className="intel-support" aria-label="Support rail — evidence, confidence, report pack">
-      <div className="support-block">
-        <div className="support-label">EVIDENCE STATE</div>
-        <div className="support-readiness">{badge.state_label || '—'}</div>
-        <div className="support-coverage">
-          {(scope && scope.grounding_label) || 'Partial Coverage'}
-        </div>
-        <div className="support-coverage-meta">
-          {(scope && scope.domain_count) || 3} domains · {(scope && scope.cluster_count) || 47} clusters
-        </div>
-      </div>
-
-      {chip.renders && (
-        <div className="support-block support-block--qualifier">
-          <div className="support-label">QUALIFIER</div>
-          <div className="support-qualifier-class">{chip.class_label || chip.qualifier_class || '—'}</div>
-          <div className="support-qualifier-note">advisory bound</div>
-        </div>
-      )}
-
-      <div className="support-block support-block--reports">
-        <div className="support-label">REPORT PACK</div>
-        <div className="support-reports-sub">Official Tier-1 / Tier-2 deliverables</div>
-        <div className="support-reports-list">
-          {artifacts.map(a => (
-            <div
-              key={a.id}
-              className="support-report-item"
-              aria-disabled="true"
-              title={`Future binding: ${a.binding_path} · file ${a.file} · pending real client/run integration`}
-              data-binding="pending"
-            >
-              <span className="support-report-tier">{a.tier}</span>
-              <span className="support-report-name">{a.name}</span>
-            </div>
-          ))}
-          <div className="support-reports-state" aria-live="polite">
-            <span className="support-reports-state-dot" aria-hidden="true" />
-            binding pending — live client/run integration not yet active
-          </div>
-        </div>
-      </div>
-    </aside>
-  )
-}
-
-/* ExecutiveInterpretation — compressed left column.
- * Companion to the SemanticCanvas; not the dominant element on the surface.
- */
-/* Mode-reactive interpretation. The left companion shifts tone, label register,
- * and section emphasis to match the active cognition mode. The narrative content
- * does not change — only how it is framed. */
-const INTERP_MODE_FRAMING = {
-  EXECUTIVE_BALANCED:  { label: 'EXECUTIVE INTERPRETATION', tone: 'posture',    assessmentLabel: 'Assessment',          whyLabel: 'Why this matters',         structuralLabel: 'Structural context' },
-  EXECUTIVE_DENSE:     { label: 'STRUCTURAL INTERPRETATION', tone: 'structural', assessmentLabel: 'Structural reading',  whyLabel: 'Cause and propagation',    structuralLabel: 'Structural context' },
-  INVESTIGATION_DENSE: { label: 'FORENSIC INTERPRETATION',   tone: 'forensic',   assessmentLabel: 'Evidence reading',    whyLabel: 'What the evidence shows',  structuralLabel: 'Structural lineage' },
-  BOARDROOM:           { label: 'PROJECTION INTERPRETATION', tone: 'projection', assessmentLabel: 'Posture',             whyLabel: '',                         structuralLabel: '' },
-}
-
-function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted }) {
-  const badge = (adapted && adapted.readinessBadge) || {}
-  const framing = boardroomMode
-    ? INTERP_MODE_FRAMING.BOARDROOM
-    : (INTERP_MODE_FRAMING[densityClass] || INTERP_MODE_FRAMING.EXECUTIVE_DENSE)
-  return (
-    <aside className="intel-interp" data-tone={framing.tone} aria-label="Executive interpretation layer">
-      <div className="interp-tag">
-        <span className="interp-tag-label">{framing.label}</span>
-        <span className="interp-tag-state">{badge.state_label || '—'}</span>
-      </div>
-      {narrative.executive_summary && (
-        <div className="interp-block interp-block--lead">
-          <div className="interp-section-label">{framing.assessmentLabel}</div>
-          <div className="interp-summary">{narrative.executive_summary}</div>
-        </div>
-      )}
-      {narrative.why_primary_statement && !boardroomMode && framing.whyLabel && (
-        <div className="interp-block">
-          <div className="interp-section-label">{framing.whyLabel}</div>
-          <div className="interp-why">{narrative.why_primary_statement}</div>
-        </div>
-      )}
-      {narrative.structural_summary && densityClass === 'INVESTIGATION_DENSE' && !boardroomMode && framing.structuralLabel && (
-        <div className="interp-block">
-          <div className="interp-section-label">{framing.structuralLabel}</div>
-          <div className="interp-structural">{narrative.structural_summary}</div>
-        </div>
-      )}
-    </aside>
-  )
-}
-
-function BalancedConsequenceField({ adapted, blocks, scope, renderState }) {
-  const origin = findByRole(blocks, 'ORIGIN')
-  const badge = (adapted && adapted.readinessBadge) || {}
-  const chip = (adapted && adapted.qualifierChip) || {}
-  const grounded = (scope && scope.grounded_domain_count) || 0
-  const total = (scope && scope.domain_count) || 1
-  const groundedPct = Math.round((grounded / Math.max(1, total)) * 100)
-  return (
-    <div className="rep-field rep-field--balanced">
-      <RepModeTag
-        label="Executive lens"
-        sub="CEO · consequence-first read"
-        zones={[
-          { id: 'Z1', name: 'Executive Posture' },
-          { id: 'Z2', name: 'Resolution Boundary' },
-          { id: 'Z4', name: 'Pressure Anchor' },
-        ]}
-      />
-
-      {/* Decision Posture — semantic actor A */}
-      <div className="actor actor--decision-posture">
-        <div className="actor-tag">
-          <span className="actor-code">DP</span>
-          <span className="actor-name">Decision Posture</span>
-        </div>
-        <div className="actor-decision-state">{badge.state_label || '—'}</div>
-        {chip.renders && (
-          <div className="actor-decision-qualifier">
-            <span className="actor-decision-qualifier-class">{chip.class_label || chip.qualifier_class}</span>
-            <span className="actor-decision-qualifier-note">advisory bound · executive action requires confirmation</span>
-          </div>
-        )}
-      </div>
-
-      {/* Resolution Boundary — semantic actor M */}
-      <div className="actor actor--resolution-boundary">
-        <div className="actor-tag">
-          <span className="actor-code">RB</span>
-          <span className="actor-name">Resolution Boundary</span>
-        </div>
-        <div className="actor-resolution-grid">
-          <div className="actor-resolution-cell actor-resolution-cell--known">
-            <div className="actor-resolution-cell-label">Known · structurally backed</div>
-            <div className="actor-resolution-cell-value">{grounded} of {total} domains</div>
-            <div className="actor-resolution-cell-meta">primary delivery · coordination layer</div>
-          </div>
-          <div className="actor-resolution-cell actor-resolution-cell--partial">
-            <div className="actor-resolution-cell-label">Partial · semantic-only exposure</div>
-            <div className="actor-resolution-cell-value">{Math.max(0, total - grounded)} of {total} domains</div>
-            <div className="actor-resolution-cell-meta">secondary delivery (Q-01)</div>
-          </div>
-          <div className="actor-resolution-cell actor-resolution-cell--unknown">
-            <div className="actor-resolution-cell-label">Execution-not-yet-validated</div>
-            <div className="actor-resolution-cell-value">advisory</div>
-            <div className="actor-resolution-cell-meta">downstream secondary impact</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Confidence Boundary — semantic actor B (compact ribbon) */}
-      <div className="actor actor--confidence-boundary">
-        <div className="actor-tag">
-          <span className="actor-code">CB</span>
-          <span className="actor-name">Confidence Boundary</span>
-        </div>
-        <div className="actor-confidence-bar">
-          <div className="actor-confidence-bar-fill" style={{ width: `${groundedPct}%` }} aria-label={`${groundedPct}% structurally backed`} />
-          <div className="actor-confidence-bar-advisory" style={{ width: `${100 - groundedPct}%` }} aria-label={`${100 - groundedPct}% advisory bound`} />
-        </div>
-        <div className="actor-confidence-meta">
-          <span><span className="actor-confidence-dot actor-confidence-dot--grounded" /> {groundedPct}% supported</span>
-          <span><span className="actor-confidence-dot actor-confidence-dot--advisory" /> {100 - groundedPct}% advisory bound</span>
-        </div>
-      </div>
-
-      {/* Pressure Anchor — semantic actor C (single cue, not a triad) */}
-      {origin && (
-        <div className="actor actor--pressure-anchor">
-          <div className="actor-tag">
-            <span className="actor-code">PA</span>
-            <span className="actor-name">Pressure Anchor · origin</span>
-          </div>
-          <div className="actor-anchor-line" data-tier={origin.signal_cards[0].pressure_tier}>
-            <span className="actor-anchor-dot" />
-            <span className="actor-anchor-domain">{origin.domain_alias}</span>
-            <span className="actor-anchor-tier">{origin.signal_cards[0].pressure_label}</span>
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
-
-function DenseTopologyField({ adapted, blocks, scope }) {
-  const origin = findByRole(blocks, 'ORIGIN')
-  const passthrough = findByRole(blocks, 'PASS_THROUGH')
-  const receiver = findByRole(blocks, 'RECEIVER')
-  const grounded = (scope && scope.grounded_domain_count) || 0
-  const total = (scope && scope.domain_count) || 1
-  const semanticOnly = Math.max(0, total - grounded)
-  return (
-    <div className="rep-field rep-field--dense">
-      <RepModeTag
-        label="Structural lens"
-        sub="CTO · structural cause and propagation"
-        zones={[
-          { id: 'Z3', name: 'Semantic Topology' },
-          { id: 'Z4', name: 'Pressure Anchor' },
-          { id: 'Z6', name: 'Cluster Concentration' },
-        ]}
-      />
-
-      {/* Semantic Topology + Structural Backing + Semantic-Only Exposure (G + H + I) */}
-      <div className="actor actor--semantic-topology">
-        <div className="actor-tag">
-          <span className="actor-code">ST · SB · SO</span>
-          <span className="actor-name">Semantic Topology · structural backing · semantic-only exposure</span>
-        </div>
-        <div className="actor-topo-matrix">
-          {[origin, passthrough, receiver].filter(Boolean).map(node => {
-            const grounded = node.grounding_status === 'Q-00'
-            const tier = node.signal_cards[0].pressure_tier
-            return (
-              <div
-                key={node.domain_alias}
-                className={`actor-topo-cell actor-topo-cell--${grounded ? 'grounded' : 'semantic-only'}`}
-                data-tier={tier}
-              >
-                <div className="actor-topo-cell-role">{node.propagation_role.replace(/_/g, '-')}</div>
-                <div className="actor-topo-cell-name">{node.domain_alias}</div>
-                <div className="actor-topo-cell-state">
-                  <span className="actor-topo-cell-tier">{node.signal_cards[0].pressure_label}</span>
-                </div>
-                <div className="actor-topo-cell-backing">
-                  {grounded ? (
-                    <><span className="actor-topo-cell-backing-dot actor-topo-cell-backing-dot--grounded" /> structurally backed · {node.grounding_status}</>
-                  ) : (
-                    <><span className="actor-topo-cell-backing-dot actor-topo-cell-backing-dot--semantic" /> semantic-only · {node.grounding_status} advisory</>
-                  )}
-                </div>
-              </div>
-            )
-          })}
-        </div>
-        <div className="actor-topo-summary">
-          <span><strong>{grounded}</strong> of {total} structurally backed</span>
-          <span className="actor-topo-summary-sep">·</span>
-          <span><strong>{semanticOnly}</strong> semantic-only exposure</span>
-        </div>
-      </div>
-
-      {/* Cluster Concentration — semantic actor J */}
-      {scope && scope.cluster_count != null && (
-        <div className="actor actor--cluster-concentration">
-          <div className="actor-tag">
-            <span className="actor-code">CC</span>
-            <span className="actor-name">Cluster Concentration</span>
-          </div>
-          <div className="actor-cluster-headline">
-            <span className="actor-cluster-value">{scope.cluster_count}</span>
-            <span className="actor-cluster-label">clusters monitored</span>
-          </div>
-          <div className="actor-cluster-bar">
-            <div
-              className="actor-cluster-bar-fill"
-              style={{ width: `${Math.min(100, Math.round((grounded / Math.max(1, total)) * 100))}%` }}
-            />
-          </div>
-          <div className="actor-cluster-meta">
-            structural mass concentrated upstream — Primary Delivery holds 23 of 31 active clusters; coordination layer absorbs propagation
-          </div>
-        </div>
-      )}
-
-      {/* Absorption Load — semantic actor E (Coordination Layer dedicated panel) */}
-      {passthrough && (
-        <div className="actor actor--absorption-load">
-          <div className="actor-tag">
-            <span className="actor-code">AL</span>
-            <span className="actor-name">Absorption Load</span>
-          </div>
-          <div className="actor-absorption-panel">
-            <div className="actor-absorption-domain">{passthrough.domain_alias}</div>
-            <div className="actor-absorption-state">conducting · not generating</div>
-            <div className="actor-absorption-bar">
-              <div className="actor-absorption-bar-fill" style={{ width: '68%' }} />
-            </div>
-            <div className="actor-absorption-meta">
-              <span className="actor-absorption-meta-value">68%</span>
-              <span className="actor-absorption-meta-label">of upstream propagated load absorbed</span>
-            </div>
-            <div className="actor-absorption-note">
-              Pattern consistent with organizational stress migration, not isolated incident.
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
-
-function InvestigationTraceField({ adapted, blocks, scope, fullReport }) {
-  // Flatten signal_cards across all blocks — each individual signal becomes a row.
-  const signalRows = []
-  ;(blocks || []).forEach(block => {
-    ;(block.signal_cards || []).forEach((card, idx) => {
-      signalRows.push({
-        signal_label: card.signal_label,
-        pressure_label: card.pressure_label,
-        pressure_tier: card.pressure_tier,
-        evidence_text: card.evidence_text,
-        domain: block.domain_alias,
-        role: block.propagation_role,
-        grounding_status: block.grounding_status,
-        grounding_label: block.grounding_label,
-        is_first_in_block: idx === 0,
-      })
-    })
-  })
-
-  const traceLinkage = (fullReport && fullReport.trace_linkage) || {}
-  const renderingMeta = (fullReport && fullReport.rendering_metadata) || {}
-  const aliRules = renderingMeta.ali_rules_applied || []
-  const qRules = renderingMeta.qualifier_rules_applied || []
-
-  return (
-    <div className="rep-field rep-field--investigation">
-      <RepModeTag
-        label="Evidence lens"
-        sub="Analyst · evidence trace and confidence"
-        zones={[
-          { id: 'Z7', name: 'Evidence Trace' },
-          { id: 'Z5', name: 'Signal Stack' },
-          { id: 'Z2', name: 'Resolution Boundary' },
-        ]}
-      />
-
-      {/* Evidence Trace · lineage chain — semantic actor L */}
-      <div className="actor actor--evidence-trace">
-        <div className="actor-tag">
-          <span className="actor-code">ET</span>
-          <span className="actor-name">Evidence Trace · lineage</span>
-        </div>
-        <div className="actor-trace-lineage">
-          {[
-            { label: 'Evidence object hash', value: traceLinkage.evidence_object_hash },
-            { label: 'Derivation hash', value: traceLinkage.derivation_hash },
-            { label: 'Baseline anchor', value: traceLinkage.baseline_anchor },
-            { label: 'Run id', value: traceLinkage.run_id },
-          ].filter(r => r.value).map((row, i, arr) => (
-            <div key={row.label} className="actor-trace-step">
-              <div className="actor-trace-step-marker">
-                <span className="actor-trace-step-dot" />
-                {i < arr.length - 1 && <span className="actor-trace-step-edge" />}
-              </div>
-              <div className="actor-trace-step-meta">
-                <div className="actor-trace-step-label">{row.label}</div>
-                <div className="actor-trace-step-value" title={row.value}>{row.value}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Signal Stack — semantic actor K (every signal individually, not 3 domains) */}
-      {signalRows.length > 0 && (
-        <div className="actor actor--signal-stack">
-          <div className="actor-tag">
-            <span className="actor-code">SS</span>
-            <span className="actor-name">Signal Stack · {signalRows.length} active</span>
-          </div>
-          <div className="actor-signal-list">
-            {signalRows.map((s, i) => (
-              <div key={i} className="actor-signal-row" data-tier={s.pressure_tier} data-grounding={s.grounding_status}>
-                <div className="actor-signal-row-mark">
-                  <span className="actor-signal-row-dot" />
-                  <span className="actor-signal-row-tier">{s.pressure_tier}</span>
-                </div>
-                <div className="actor-signal-row-body">
-                  <div className="actor-signal-row-head">
-                    <span className="actor-signal-row-name">{s.signal_label}</span>
-                    <span className="actor-signal-row-domain">{s.domain}</span>
-                  </div>
-                  <div className="actor-signal-row-pressure">{s.pressure_label}</div>
-                  <div className="actor-signal-row-evidence">{s.evidence_text}</div>
-                  <div className="actor-signal-row-conf">
-                    <span className="actor-signal-row-conf-label">Confidence</span>
-                    <span className="actor-signal-row-conf-value">{s.grounding_label}</span>
-                    {s.grounding_status !== 'Q-00' && <span className="actor-signal-row-conf-flag">advisory bound</span>}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Inference Prohibition — semantic actor N */}
-      <div className="actor actor--inference-prohibition">
-        <div className="actor-tag">
-          <span className="actor-code">IP</span>
-          <span className="actor-name">Inference Prohibition</span>
-        </div>
-        <div className="actor-inference-statement">
-          Executive action on partially-grounded signals requires advisory confirmation. The system MUST NOT infer beyond evidence, MUST NOT recommend without grounding, and MUST NOT overstate readiness when a qualifier applies.
-        </div>
-        <div className="actor-inference-rules">
-          <div className="actor-inference-rules-block">
-            <span className="actor-inference-rules-label">Qualifier rules applied</span>
-            <div className="actor-inference-rules-list">
-              {qRules.length > 0 ? qRules.map(r => <span key={r} className="actor-inference-rule">{r}</span>) : <span className="actor-inference-rule">—</span>}
-            </div>
-          </div>
-          <div className="actor-inference-rules-block">
-            <span className="actor-inference-rules-label">ALI rules applied</span>
-            <div className="actor-inference-rules-list">
-              {aliRules.length > 0 ? aliRules.map(r => <span key={r} className="actor-inference-rule">{r}</span>) : <span className="actor-inference-rule">—</span>}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function BoardroomAtmosphericField({ adapted, renderState, scope }) {
-  const badge = (adapted && adapted.readinessBadge) || {}
-  const chip = (adapted && adapted.qualifierChip) || {}
-  const grounded = (scope && scope.grounded_domain_count) || 0
-  const total = (scope && scope.domain_count) || 1
-  const groundedPct = Math.round((grounded / Math.max(1, total)) * 100)
-  const advisoryPct = 100 - groundedPct
-  return (
-    <div className="rep-field rep-field--boardroom">
-      <RepModeTag
-        label="Projection lens"
-        sub="Boardroom — minimal chrome"
-        zones={[
-          { id: 'Z1', name: 'Decision Posture' },
-          { id: 'Z2', name: 'Confidence Envelope' },
-        ]}
-      />
-
-      {/* Decision Posture label above ring */}
-      <div className="rep-board-decision-label">DECISION POSTURE</div>
-
-      {/*
-        Confidence Envelope ring — semantic actor B made visual.
-        The arc represents the structural-backing ratio of the assessment:
-          - filled state-color arc = grounded portion (e.g. 67%)
-          - dashed/lighter arc = advisory-bounded portion (e.g. 33%)
-        The ring is no longer a decorative atmospheric mark.
-      */}
-      <div className="rep-board-mark" data-state={renderState} aria-label={`Confidence envelope: ${groundedPct}% structurally backed, ${advisoryPct}% advisory bound`}>
-        <div className="rep-board-envelope">
-          <div
-            className="rep-board-envelope-arc"
-            style={{
-              background: `conic-gradient(var(--state-color) 0deg ${groundedPct * 3.6}deg, rgba(230,184,0,0.55) ${groundedPct * 3.6}deg 360deg)`,
-            }}
-          />
-          <div className="rep-board-envelope-mask" />
-          <div className="rep-board-envelope-center">
-            <div className="rep-board-envelope-state">{chip.class_label || chip.qualifier_class || badge.state_label || '—'}</div>
-            <div className="rep-board-envelope-sub">qualified-ready</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Envelope readout */}
-      <div className="rep-board-envelope-readout">
-        <div className="rep-board-envelope-readout-row">
-          <span className="rep-board-envelope-readout-dot rep-board-envelope-readout-dot--grounded" />
-          <span className="rep-board-envelope-readout-value">{groundedPct}%</span>
-          <span className="rep-board-envelope-readout-label">structurally backed</span>
-        </div>
-        <div className="rep-board-envelope-readout-row">
-          <span className="rep-board-envelope-readout-dot rep-board-envelope-readout-dot--advisory" />
-          <span className="rep-board-envelope-readout-value">{advisoryPct}%</span>
-          <span className="rep-board-envelope-readout-label">advisory bound</span>
-        </div>
-      </div>
-
-      <div className="rep-board-statement">
-        {badge.state_label || 'Operating posture'}. Pressure is propagating through coordination — advisory-bounded at the secondary receiver.
-      </div>
-      <div className="rep-board-line" aria-hidden="true" />
-      <div className="rep-board-scope">
-        {(scope && scope.grounding_label) || 'Partial Coverage'}
-      </div>
-    </div>
-  )
-}
-
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport }) {
-  if (boardroomMode) {
-    return <BoardroomAtmosphericField adapted={adapted} renderState={renderState} scope={scope} />
-  }
-  if (densityClass === 'INVESTIGATION_DENSE') {
-    return <InvestigationTraceField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} />
-  }
-  if (densityClass === 'EXECUTIVE_BALANCED') {
-    return <BalancedConsequenceField adapted={adapted} blocks={blocks} scope={scope} renderState={renderState} />
-  }
-  return <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} />
-}
-
-function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, reportPackArtifacts }) {
-  const scope = (fullReport && fullReport.topology_scope) || {}
-  return (
-    <div
-      className={`intelligence-field intelligence-field--three-col${boardroomMode ? ' intelligence-field--boardroom' : ''}`}
-      data-mode={boardroomMode ? 'BOARDROOM' : densityClass}
-    >
-      {/* LEFT — Executive Interpretation Layer (compressed companion) */}
-      <ExecutiveInterpretation
-        narrative={narrative}
-        densityClass={densityClass}
-        boardroomMode={boardroomMode}
-        adapted={adapted}
-      />
-
-      {/* CENTER — Semantic Operational Canvas (primary cognition surface) */}
-      <main className="intel-canvas" role="region" aria-label="Semantic operational canvas">
-        <RepresentationField
-          boardroomMode={boardroomMode}
-          densityClass={densityClass}
-          adapted={adapted}
-          renderState={renderState}
-          blocks={evidenceBlocks}
-          scope={scope}
-          fullReport={fullReport}
-        />
-      </main>
-
-      {/* RIGHT — Support Rail (evidence state · qualifier · Report Pack access) */}
-      <SupportRail
-        adapted={adapted}
-        scope={scope}
-        boardroomMode={boardroomMode}
-        reportPackArtifacts={reportPackArtifacts}
-      />
-    </div>
-  )
-}
-
-function DomainNode({ name, pressureTier, role, groundingStatus }) {
-  const pm = PRESSURE_META[pressureTier] || PRESSURE_META.MODERATE
-  const rm = ROLE_META[role] || { label: role, symbol: '·', color: '#5a6580' }
-  const isPartial = groundingStatus && groundingStatus !== 'Q-00'
-  return (
-    <div className="domain-node" style={{ '--pcolor': pm.color }}>
-      <div className="domain-node-top">
-        <span className="domain-role-sym" style={{ color: rm.color }}>{rm.symbol}</span>
-        <span className="domain-role-lbl">{rm.label}</span>
-        {isPartial && <span className="domain-partial">Q-01</span>}
-      </div>
-      <div className="domain-name">{name}</div>
-      <div className="domain-pressure" style={{ color: pm.color }}>
-        {pm.symbol} {pm.label}
-      </div>
-    </div>
-  )
-}
-
-function PressureConnector({ pressureTier }) {
-  const pm = PRESSURE_META[pressureTier] || PRESSURE_META.MODERATE
-  return (
-    <div className="pressure-connector" style={{ '--pcolor': pm.color }}>
-      <div className="connector-line" />
-      <div className="connector-head">›</div>
-    </div>
-  )
-}
-
-function StructuralTopologyZone({ evidenceBlocks, propagationChains }) {
-  // Demoted to a thin selected-path strip.
-  // Previously this was a full-width chain of weighted nodes that duplicated the
-  // semantic content already present in each mode's center canvas. The duplication
-  // created the illusion of richness; now the strip is a calm contextual line.
-  const primary = propagationChains && propagationChains.length
-    ? propagationChains.reduce((a, b) => a.path.length >= b.path.length ? a : b, propagationChains[0])
-    : null
-  if (!primary) return null
-  return (
-    <div className="topology-strip" aria-label="Selected propagation path">
-      <span className="topology-strip-label">SELECTED PATH</span>
-      <span className="topology-strip-path">{primary.path.join(' → ')}</span>
-      <span className="topology-strip-sep">·</span>
-      <span
-        className="topology-strip-tier"
-        style={{ color: (PRESSURE_META[primary.pressure_tier] || {}).color }}
-      >
-        {primary.pressure_tier} origin
-      </span>
-      <span className="topology-strip-sep">·</span>
-      <span className="topology-strip-meta">
-        {(propagationChains || []).length} chain{(propagationChains || []).length === 1 ? '' : 's'} captured
-      </span>
-    </div>
-  )
-}
-
-function EvidenceBlock({ block }) {
-  const firstCard = block.signal_cards && block.signal_cards[0]
-  const pm = firstCard ? (PRESSURE_META[firstCard.pressure_tier] || PRESSURE_META.MODERATE) : null
-  const rm = ROLE_META[block.propagation_role] || null
-  const isPartial = block.grounding_status && block.grounding_status !== 'Q-00'
-  return (
-    <div className={`evidence-block${isPartial ? ' evidence-block--partial' : ''}`}>
-      <div className="eb-header">
-        <div className="eb-domain">{block.domain_alias}</div>
-        <div className="eb-tags">
-          {rm && <span className="eb-tag" style={{ color: rm.color }}>{rm.symbol} {rm.label}</span>}
-          {pm && <span className="eb-tag" style={{ color: pm.color }}>{pm.symbol} {pm.label}</span>}
-          {isPartial && <span className="eb-tag eb-tag--partial">PARTIAL</span>}
-        </div>
-      </div>
-      {block.evidence_description && (
-        <div className="eb-description">{block.evidence_description}</div>
-      )}
-      {firstCard && firstCard.evidence_text && (
-        <div className="eb-signal">{firstCard.evidence_text}</div>
-      )}
-    </div>
-  )
-}
-
-function EvidenceDepthLayer({ evidenceBlocks, densityClass }) {
-  if (!evidenceBlocks || !evidenceBlocks.length) return null
-  const showAll = densityClass !== 'EXECUTIVE_BALANCED'
-  const visible = showAll ? evidenceBlocks : evidenceBlocks.slice(0, 2)
-  return (
-    <div className="evidence-layer">
-      <div className="zone-label">SIGNAL EVIDENCE</div>
-      <div className="evidence-grid">
-        {visible.map((b, i) => <EvidenceBlock key={b.domain_alias || i} block={b} />)}
-      </div>
-      {!showAll && evidenceBlocks.length > 2 && (
-        <div className="evidence-more">
-          +{evidenceBlocks.length - 2} additional domains visible in Dense and Investigation views
-        </div>
-      )}
-    </div>
-  )
-}
-
-function GovernanceRibbon({ governance }) {
-  const entries = Object.entries(governance)
-  const allPass = entries.every(([, v]) => v === true)
-  return (
-    <div className={`gov-ribbon${allPass ? '' : ' gov-ribbon--fail'}`}>
-      <span className="gov-label">GOVERNANCE</span>
-      <div className="gov-items">
-        {entries.map(([key, val]) => (
-          <span key={key} className={`gov-item${val ? ' gov-pass' : ' gov-fail'}`}>
-            <span className="gov-dot">{val ? '✓' : '✗'}</span>
-            <span className="gov-key">{key.replace(/_/g, ' ')}</span>
-          </span>
-        ))}
-      </div>
-      <a href="/" className="gov-back" title="Return to executive overview">← Overview</a>
-    </div>
-  )
-}
-
 // ── Page ──────────────────────────────────────────────────────────────────────
 
-/* getServerSideProps — invoked per request server-side.
+/* getServerSideProps — backward-compatible redirect.
  *
- * Delegates to the shared flagship binding module which:
- *   - reads ?client and ?run from the query (defaulting to BlueEdge),
- *   - validates the pair via the manifest registry (single source of
- *     truth for allow-list),
- *   - resolves the canonical semantic payload via the generic resolver,
- *   - sets the appropriate HTTP status code on failure.
+ * PI.LENS.V2.PHASE3.URL-SEPARATION.01
  *
- * No fixture fallback. The shared module is exercised directly by
- * `flagship-experience/tests/runtime-parameterization.test.js`.
+ * The canonical LENS v2 executive route is now /lens/[client]/[run].
+ * This legacy entry point redirects to the canonical route, preserving
+ * any ?client and ?run query parameters in the path.
+ *
+ * The component is still exported as the default for import by the
+ * canonical route page — do not remove it.
  */
 export async function getServerSideProps(context) {
-  // require server-side only — these modules use Node `fs` and must not ship to client
-  const { resolveFlagshipBinding } = require('../lib/lens-v2/flagshipBinding')
-  // Next.js getServerSideProps only accepts { props, ... } at the top level.
-  // Strip statusCode (already applied to context.res) before returning.
-  const result = resolveFlagshipBinding({
-    query: (context && context.query) || {},
-    res: (context && context.res) || null,
-  })
-  return { props: result.props }
+  const query = (context && context.query) || {};
+  const client = (typeof query.client === 'string' && query.client) || 'blueedge';
+  const run = (typeof query.run === 'string' && query.run) || 'run_blueedge_productized_01_fixed';
+  return {
+    redirect: {
+      destination: `/lens/${encodeURIComponent(client)}/${encodeURIComponent(run)}`,
+      permanent: false,
+    },
+  }
 }
 
-export default function LensV2FlagshipPage({ livePayload, livePropagationChains, liveBindingError, bindingClient, bindingRun }) {
+export default function LensV2FlagshipPage({ livePayload, livePropagationChains, liveBindingError, bindingClient, bindingRun, reconciliationAwareness, domainTraceability, substrateBinding, reportBinding }) {
   const [densityClass, setDensityClass] = useState('EXECUTIVE_DENSE')
   const [boardroomMode, setBoardroomMode] = useState(false)
   const [investigationStage, setInvestigationStage] = useState('SUMMARY')
@@ -1264,41 +407,26 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           {isBlocked && <BlockedDeclaration adapted={adaptedDisplay} />}
           {isDiagnostic && !isBlocked && <DiagnosticDeclaration />}
 
-          {!isBlocked && <DeclarationZone renderState={renderState} adapted={adaptedDisplay} />}
-
-          <QualifierMandate
-            qualifierClass={governanceQualifier}
-            qualifierLabel={governanceQualifierLabel}
-            qualifierNote={governanceQualifierNote}
-            visible={qualifierVisible}
-          />
-
-          <IntelligenceField
-            narrative={narrative}
-            adapted={adaptedDisplay}
+          <LensDisclosureShell
+            renderState={renderState}
             densityClass={densityClass}
             boardroomMode={boardroomMode}
-            renderState={renderState}
+            substrateBinding={substrateBinding}
+            reconciliationAwareness={reconciliationAwareness}
+            qualifierClass={governanceQualifier}
+            qualifierVisible={qualifierVisible}
+            adapted={adaptedDisplay}
+            governance={governance}
+            qualifierLabel={governanceQualifierLabel}
+            qualifierNote={governanceQualifierNote}
+            domainTraceability={domainTraceability}
+            narrative={narrative}
             evidenceBlocks={reportObject.evidence_blocks}
             fullReport={reportObject}
             reportPackArtifacts={reportPackArtifactsForRender}
-          />
-
-          <StructuralTopologyZone
-            evidenceBlocks={reportObject.evidence_blocks}
             propagationChains={livePropagationChains || []}
           />
-
-          {/* Evidence Layer is gated to INVESTIGATION mode only. */}
-          {densityClass === 'INVESTIGATION_DENSE' && !boardroomMode && (
-            <EvidenceDepthLayer
-              evidenceBlocks={reportObject.evidence_blocks}
-              densityClass={densityClass}
-            />
-          )}
         </div>
-
-        <GovernanceRibbon governance={governance} />
       </div>
 
       <style jsx global>{`
@@ -1600,7 +728,6 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           background:
             radial-gradient(120% 80% at 12% 50%, var(--state-bg) 0%, transparent 55%),
             linear-gradient(90deg, rgba(20,23,31,0.55) 0%, transparent 70%);
-          animation: v2Enter 0.5s ease 0.12s both;
           transition: border-color 0.4s, background 0.4s;
         }
         .declaration-pre-label {
@@ -1634,6 +761,328 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .declaration-scope-sep { color: #3a4560; }
 
+        /* ── Boardroom Decision View (Phase 3B) ─────────────────────────── */
+        .declaration-zone--boardroom {
+          padding: 72px 56px 48px;
+          border-left: 4px solid var(--state-color);
+          background:
+            radial-gradient(100% 70% at 8% 40%, var(--state-bg) 0%, transparent 50%),
+            linear-gradient(90deg, rgba(20,23,31,0.55) 0%, transparent 60%);
+        }
+        .declaration-boardroom-pre {
+          font-size: 10px;
+          color: #5a6580;
+          letter-spacing: 0.3em;
+          text-transform: uppercase;
+          font-weight: 500;
+          margin-bottom: 16px;
+        }
+        .declaration-boardroom-posture {
+          font-size: 72px;
+          font-weight: 700;
+          color: var(--state-color);
+          letter-spacing: -0.02em;
+          line-height: 1;
+          transition: color 0.4s;
+        }
+        .declaration-boardroom-rationale {
+          font-size: 14px;
+          color: #8a95b0;
+          line-height: 1.5;
+          margin-top: 16px;
+          max-width: 640px;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .declaration-boardroom-badges {
+          display: flex;
+          gap: 12px;
+          margin-top: 24px;
+        }
+        .declaration-badge {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          padding: 8px 16px;
+          border: 1px solid #2a2f40;
+          border-radius: 4px;
+          background: rgba(20,23,32,0.6);
+        }
+        .declaration-badge[data-status="COMPLETE"],
+        .declaration-badge[data-status="FULL"],
+        .declaration-badge[data-status="LOW"] {
+          border-color: rgba(100,255,218,0.25);
+        }
+        .declaration-badge[data-status="PARTIAL"],
+        .declaration-badge[data-status="MODERATE"] {
+          border-color: rgba(255,215,0,0.25);
+        }
+        .declaration-badge[data-status="ELEVATED"],
+        .declaration-badge[data-status="HIGH"] {
+          border-color: rgba(255,107,107,0.25);
+        }
+        .declaration-badge-label {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+        .declaration-badge-value {
+          font-size: 12px;
+          color: #ccd6f6;
+          letter-spacing: 0.02em;
+        }
+
+        /* ── Decision Surface — Score Gauge + Boundary ──────────────────── */
+        /* ── Boardroom Cockpit ────────────────────────────────────────── */
+        .rep-field--cockpit {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+          text-align: left;
+        }
+        .rep-field--cockpit .rep-mode-tag {
+          border-bottom: 1px solid #1e2330;
+          text-align: left;
+        }
+        .cockpit-finding {
+          padding: 20px 0;
+          border-bottom: 1px solid #1e2330;
+        }
+        .cockpit-finding-verdict {
+          font-size: 11px;
+          letter-spacing: 0.2em;
+          font-weight: 700;
+          margin-bottom: 8px;
+        }
+        .cockpit-finding[data-found="true"] .cockpit-finding-verdict {
+          color: #ff9e4a;
+        }
+        .cockpit-finding[data-found="false"] .cockpit-finding-verdict {
+          color: #64ffda;
+        }
+        .cockpit-finding-summary {
+          font-size: 12px;
+          color: #9aa4c0;
+          line-height: 1.6;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .cockpit-instruments {
+          display: grid;
+          grid-template-columns: auto 1fr auto;
+          gap: 24px;
+          padding: 20px 0;
+          border-bottom: 1px solid #1e2330;
+          align-items: start;
+        }
+        .cockpit-gauge-panel {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 4px;
+        }
+        .cockpit-gauge-svg {
+          width: 160px;
+          height: 96px;
+        }
+        .cockpit-gauge-meta {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 10px;
+          color: #5a6580;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+        .cockpit-gauge-sep {
+          color: #2a2f40;
+        }
+
+        .cockpit-signal-panel {
+          min-width: 0;
+        }
+        .cockpit-signal-label,
+        .cockpit-coverage-label {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          font-weight: 500;
+          margin-bottom: 10px;
+        }
+        .cockpit-signal {
+          display: flex;
+          align-items: flex-start;
+          gap: 10px;
+          padding: 6px 0;
+        }
+        .cockpit-signal + .cockpit-signal {
+          border-top: 1px solid #12151f;
+        }
+        .cockpit-signal-bar {
+          width: 3px;
+          min-height: 28px;
+          border-radius: 2px;
+          flex-shrink: 0;
+          margin-top: 2px;
+          opacity: 0.35;
+        }
+        .cockpit-signal--active .cockpit-signal-bar {
+          opacity: 1;
+        }
+        .cockpit-signal-body {
+          min-width: 0;
+        }
+        .cockpit-signal-name {
+          font-size: 11px;
+          color: #7a8aaa;
+          font-weight: 500;
+          margin-bottom: 2px;
+        }
+        .cockpit-signal--active .cockpit-signal-name {
+          color: #ccd6f6;
+        }
+        .cockpit-signal-reading {
+          font-size: 11px;
+          color: #5a6580;
+          line-height: 1.5;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .cockpit-signal--active .cockpit-signal-reading {
+          color: #7a8aaa;
+        }
+        .cockpit-signal-tally {
+          font-size: 10px;
+          color: #4a5570;
+          margin-top: 8px;
+          letter-spacing: 0.06em;
+        }
+
+        .cockpit-coverage-panel {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        .cockpit-coverage-ring {
+          width: 88px;
+          height: 88px;
+        }
+        .cockpit-coverage-svg {
+          width: 100%;
+          height: 100%;
+        }
+        .cockpit-coverage-meta {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          margin-top: 8px;
+        }
+        .cockpit-coverage-row {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 10px;
+          color: #5a6580;
+          white-space: nowrap;
+        }
+        .cockpit-coverage-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          flex-shrink: 0;
+        }
+        .cockpit-coverage-dot--backed { background: #64ffda; }
+        .cockpit-coverage-dot--advisory { background: #ffd700; opacity: 0.6; }
+
+        .cockpit-impact {
+          padding: 18px 0;
+          border-bottom: 1px solid #1e2330;
+        }
+        .cockpit-impact-label,
+        .cockpit-action-label {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          font-weight: 500;
+          margin-bottom: 10px;
+        }
+        .cockpit-impact-assessment {
+          font-size: 12px;
+          color: #9aa4c0;
+          line-height: 1.6;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .cockpit-impact-flow {
+          display: flex;
+          align-items: center;
+          gap: 0;
+          margin-top: 14px;
+          padding: 10px 14px;
+          background: #12151f;
+          border-radius: 4px;
+          border: 1px solid #1e2330;
+        }
+        .cockpit-impact-node {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+        .cockpit-impact-arrow {
+          color: #4a5570;
+          font-size: 14px;
+          margin: 0 8px;
+        }
+        .cockpit-impact-domain {
+          font-size: 11px;
+          color: #ccd6f6;
+          font-weight: 500;
+        }
+        .cockpit-impact-role {
+          font-size: 9px;
+          color: #4a5570;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+        }
+
+        .cockpit-action {
+          padding: 18px 0;
+        }
+        .cockpit-action-items {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+        .cockpit-action-item {
+          display: flex;
+          align-items: flex-start;
+          gap: 10px;
+        }
+        .cockpit-action-marker {
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: #4a9eff;
+          flex-shrink: 0;
+          margin-top: 5px;
+        }
+        .cockpit-action-text {
+          font-size: 12px;
+          color: #9aa4c0;
+          line-height: 1.5;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .cockpit-footer {
+          font-size: 10px;
+          color: #3a4560;
+          font-style: italic;
+          padding-top: 12px;
+          border-top: 1px solid #12151f;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
         /* ── Qualifier Mandate ───────────────────────────────────────────── */
         .qualifier-mandate {
           display: flex;
@@ -1643,7 +1092,6 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           background: rgba(230,184,0,0.05);
           border-top: 1px solid rgba(230,184,0,0.16);
           border-bottom: 1px solid rgba(230,184,0,0.16);
-          animation: v2Enter 0.5s ease 0.22s both;
         }
         .qualifier-mandate-left {
           flex-shrink: 0;
@@ -1677,12 +1125,35 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-weight: 400;
         }
 
+        /* ── Qualifier Narrative (inline) ────────────────────────────────── */
+        .qualifier-narrative {
+          display: flex;
+          align-items: flex-start;
+          gap: 10px;
+          padding: 14px 56px;
+          border-bottom: 1px solid #1a2030;
+        }
+        .qualifier-narrative-dot {
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: rgba(230,184,0,0.6);
+          flex-shrink: 0;
+          margin-top: 6px;
+        }
+        .qualifier-narrative-text {
+          font-size: 12.5px;
+          color: rgba(230,184,0,0.65);
+          line-height: 1.55;
+          font-style: italic;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
         /* ── Intelligence Field — three-column operational surface ───────── */
         .intelligence-field {
           display: grid;
           grid-template-columns: minmax(260px, 0.85fr) minmax(0, 2.2fr) minmax(280px, 0.8fr);
           border-bottom: 1px solid #1a2030;
-          animation: v2Enter 0.5s ease 0.32s both;
           align-items: stretch;
         }
         .intelligence-field--boardroom {
@@ -1765,6 +1236,393 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #7a85a3;
           line-height: 1.55;
           padding-left: 16px;
+        }
+
+        /* ── BALANCED — Narrative-First Vertical Layout ──────────────── */
+        .intelligence-field--narrative-first {
+          display: flex;
+          flex-direction: column;
+          border-bottom: 1px solid #1a2030;
+        }
+        .intelligence-field--narrative-first .intel-interp {
+          padding: 48px 56px 36px;
+          border-right: none;
+          border-bottom: 1px solid #1a2030;
+          background: rgba(8, 10, 15, 0.32);
+        }
+        .intelligence-field--narrative-first .interp-summary {
+          font-size: 14px;
+          line-height: 1.65;
+          max-width: 820px;
+        }
+        .intelligence-field--narrative-first .interp-why {
+          max-width: 780px;
+        }
+        .intelligence-field--narrative-first .interp-structural {
+          max-width: 780px;
+        }
+
+        .balanced-indicators {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          border-bottom: 1px solid #1a2030;
+        }
+        .balanced-indicator {
+          padding: 24px 56px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+        .balanced-indicator--dp {
+          border-right: 1px solid #1a2030;
+        }
+        .balanced-indicator-tag {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .balanced-indicator-state {
+          font-size: 15px;
+          font-weight: 600;
+          color: var(--state-color);
+          letter-spacing: -0.005em;
+          line-height: 1.3;
+        }
+        .balanced-indicator-qualifier {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-top: 2px;
+        }
+        .balanced-indicator-qualifier-class {
+          font-size: 11px;
+          font-weight: 600;
+          color: #e6b800;
+          letter-spacing: 0.04em;
+        }
+        .balanced-indicator-qualifier-note {
+          font-size: 9px;
+          color: #6a7593;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+        }
+        .balanced-indicator-anchor {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .balanced-indicator-anchor[data-tier="HIGH"]     { --tier-color: #ff6b6b; }
+        .balanced-indicator-anchor[data-tier="ELEVATED"] { --tier-color: #ff9e4a; }
+        .balanced-indicator-anchor[data-tier="MODERATE"] { --tier-color: #ffd700; }
+        .balanced-indicator-anchor[data-tier="LOW"]      { --tier-color: #64ffda; }
+
+        .signal-narrative {
+          padding: 28px 56px 24px;
+          border-bottom: 1px solid #1a2030;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+        .signal-narrative-label {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+        .signal-narrative-lead {
+          font-size: 13px;
+          color: #ccd6f6;
+          line-height: 1.6;
+          font-weight: 500;
+          max-width: 780px;
+        }
+        .signal-narrative-findings {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          max-width: 780px;
+        }
+        .signal-narrative-finding {
+          padding-left: 14px;
+          border-left: 2px solid rgba(255, 158, 74, 0.35);
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .signal-narrative-finding--nominal {
+          border-left-color: rgba(100, 255, 218, 0.25);
+        }
+        .signal-narrative-finding-text {
+          font-size: 12px;
+          color: #b6bdd6;
+          line-height: 1.6;
+        }
+        .signal-narrative-finding-where {
+          font-size: 11px;
+          color: #7a8aaa;
+          line-height: 1.5;
+        }
+        .signal-narrative-compound {
+          font-size: 12px;
+          color: #9aa0bc;
+          line-height: 1.6;
+          max-width: 780px;
+        }
+        .signal-narrative-confidence {
+          font-size: 11px;
+          color: #5a6580;
+          line-height: 1.5;
+          font-style: italic;
+        }
+
+        /* Dense Signal Assessment (CTO register) */
+        .actor--signal-assessment {
+          margin-top: 12px;
+        }
+        .dense-signal-entry {
+          padding: 10px 0;
+          border-bottom: 1px solid #1a1e2b;
+        }
+        .dense-signal-entry:last-of-type {
+          border-bottom: none;
+        }
+        .dense-signal-header {
+          display: flex;
+          align-items: baseline;
+          gap: 10px;
+          margin-bottom: 4px;
+        }
+        .dense-signal-name {
+          font-family: 'Courier New', monospace;
+          font-size: 12px;
+          color: #ccd6f6;
+          font-weight: 600;
+        }
+        .dense-signal-badge {
+          font-size: 9px;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          padding: 1px 6px;
+          border-radius: 2px;
+          border: 1px solid;
+          font-weight: 500;
+        }
+        .dense-signal-badge[data-severity="CRITICAL"] { color: #ff6b6b; background: rgba(255, 107, 107, 0.08); border-color: rgba(255, 107, 107, 0.2); }
+        .dense-signal-badge[data-severity="HIGH"] { color: #ff6b6b; background: rgba(255, 107, 107, 0.08); border-color: rgba(255, 107, 107, 0.2); }
+        .dense-signal-badge[data-severity="ELEVATED"] { color: #ff9e4a; background: rgba(255, 158, 74, 0.08); border-color: rgba(255, 158, 74, 0.2); }
+        .dense-signal-badge[data-severity="MODERATE"] { color: #ffd700; background: rgba(255, 215, 0, 0.08); border-color: rgba(255, 215, 0, 0.2); }
+        .dense-signal-badge[data-severity="NOMINAL"] { color: #64ffda; background: rgba(100, 255, 218, 0.08); border-color: rgba(100, 255, 218, 0.2); }
+        .dense-signal-val {
+          font-family: 'Courier New', monospace;
+          font-size: 12px;
+          color: #7a8aaa;
+          letter-spacing: 0.02em;
+        }
+        .dense-signal-prose {
+          font-size: 12px;
+          color: #8a94b0;
+          line-height: 1.55;
+          padding-left: 2px;
+        }
+        .dense-signal-where {
+          font-size: 11px;
+          color: #5a6580;
+          line-height: 1.45;
+          margin-top: 3px;
+          padding-left: 2px;
+        }
+        .dense-signal-compound {
+          font-size: 11px;
+          color: #7a8aaa;
+          line-height: 1.5;
+          margin-top: 8px;
+          padding: 8px 10px;
+          border-left: 2px solid rgba(255, 158, 74, 0.3);
+          font-style: italic;
+        }
+        .dense-signal-confidence {
+          font-size: 10px;
+          color: #5a6580;
+          line-height: 1.45;
+          margin-top: 6px;
+          font-style: italic;
+        }
+
+        .actor--propagation-flow {
+          margin-top: 12px;
+          padding: 20px 0 8px;
+          border-top: 1px solid #1a2030;
+        }
+        .propagation-flow-strip {
+          display: flex;
+          align-items: stretch;
+          gap: 0;
+          margin-top: 14px;
+        }
+        .propagation-flow-node {
+          display: flex;
+          align-items: center;
+          gap: 0;
+          flex: 1;
+          min-width: 0;
+        }
+        .propagation-flow-arrow {
+          font-size: 18px;
+          color: #4a5570;
+          padding: 0 8px;
+          flex-shrink: 0;
+          line-height: 1;
+        }
+        .propagation-flow-card {
+          background: #12151f;
+          border: 1px solid #1e2330;
+          border-radius: 4px;
+          padding: 12px 14px;
+          flex: 1;
+          min-width: 0;
+        }
+        .propagation-flow-role {
+          font-size: 9px;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: #5a6580;
+          font-weight: 600;
+          margin-bottom: 4px;
+        }
+        .propagation-flow-domain {
+          font-size: 12px;
+          color: #ccd6f6;
+          font-weight: 500;
+          margin-bottom: 6px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .propagation-flow-pressure {
+          font-size: 10px;
+          color: #7a8aaa;
+          margin-bottom: 4px;
+        }
+        .propagation-flow-backing {
+          font-size: 9px;
+          color: #4a5570;
+        }
+        .propagation-flow-backing--grounded {
+          color: #64ffda;
+        }
+        .propagation-flow-narrative {
+          font-size: 10px;
+          color: #4a5570;
+          margin-top: 10px;
+          font-style: italic;
+          line-height: 1.5;
+        }
+        [data-tier="HIGH"] .propagation-flow-card,
+        [data-tier="CRITICAL"] .propagation-flow-card {
+          border-color: rgba(255, 107, 107, 0.2);
+        }
+        [data-tier="ELEVATED"] .propagation-flow-card {
+          border-color: rgba(255, 158, 74, 0.2);
+        }
+        [data-tier="MODERATE"] .propagation-flow-card {
+          border-color: rgba(255, 215, 0, 0.15);
+        }
+
+        .evidence-boundary {
+          padding: 32px 56px 28px;
+          border-bottom: 1px solid #1a2030;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+        .evidence-boundary-label {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+        .evidence-boundary-grid {
+          display: grid;
+          grid-template-columns: 1fr auto 1fr;
+          gap: 0;
+          align-items: stretch;
+        }
+        .evidence-boundary-col {
+          padding: 20px 28px;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+        .evidence-boundary-col--confirmed {
+          background: rgba(100, 255, 218, 0.04);
+          border: 1px solid rgba(100, 255, 218, 0.12);
+          border-radius: 4px 0 0 4px;
+        }
+        .evidence-boundary-col--unknown {
+          background: rgba(122, 138, 170, 0.04);
+          border: 1px solid rgba(122, 138, 170, 0.12);
+          border-radius: 0 4px 4px 0;
+        }
+        .evidence-boundary-divider {
+          width: 1px;
+          background: #2a2f40;
+        }
+        .evidence-boundary-heading {
+          font-size: 10px;
+          color: #7a8aaa;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+        .evidence-boundary-col--confirmed .evidence-boundary-heading { color: #64ffda; }
+        .evidence-boundary-col--unknown .evidence-boundary-heading { color: #7a8aaa; }
+        .evidence-boundary-count {
+          font-size: 28px;
+          font-weight: 600;
+          color: #ccd6f6;
+          letter-spacing: -0.02em;
+          line-height: 1.1;
+        }
+        .evidence-boundary-col--confirmed .evidence-boundary-count { color: #64ffda; }
+        .evidence-boundary-detail {
+          font-size: 11px;
+          color: #9aa0bc;
+          line-height: 1.4;
+        }
+        .evidence-boundary-meta {
+          font-size: 10px;
+          color: #5a6580;
+          line-height: 1.4;
+        }
+        .evidence-boundary-note {
+          font-size: 11px;
+          color: #7a8aaa;
+          font-style: italic;
+          letter-spacing: 0.01em;
+          line-height: 1.5;
+          padding-left: 14px;
+          border-left: 2px solid rgba(122, 138, 170, 0.25);
+        }
+
+        .structural-conclusion {
+          padding: 28px 56px 36px;
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+        }
+        .structural-conclusion-rule {
+          height: 1px;
+          background: linear-gradient(90deg, rgba(74, 158, 255, 0.2) 0%, rgba(74, 158, 255, 0.06) 60%, transparent 100%);
+        }
+        .structural-conclusion-text {
+          font-size: 13px;
+          color: #9aa0bc;
+          line-height: 1.6;
+          letter-spacing: 0.005em;
+          max-width: 780px;
+          font-style: italic;
         }
 
         /* CENTER — Semantic Operational Canvas (primary cognition surface) */
@@ -1917,7 +1775,6 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           flex-direction: column;
           gap: 18px;
           flex: 1;
-          animation: v2Enter 0.45s ease both;
           width: 100%;
           max-width: 920px;
           margin: 0 auto;
@@ -1949,8 +1806,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             linear-gradient(180deg, rgba(74,158,255,0.04) 0%, transparent 30%, rgba(230,184,0,0.04) 100%);
         }
         .rep-field--boardroom::after {
-          background:
-            radial-gradient(70% 60% at 50% 42%, var(--state-bg) 0%, transparent 75%);
+          display: none;
         }
 
         .rep-mode-tag {
@@ -2003,7 +1859,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           text-transform: uppercase;
         }
         .rep-field--boardroom .rep-mode-tag-zones {
-          justify-content: center;
+          justify-content: flex-start;
         }
 
         /* Dense — cluster concentration panel */
@@ -2390,16 +2246,14 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
 
         /* ── BOARDROOM — Atmospheric Field ──────────────────────────────── */
         .rep-field--boardroom {
-          align-items: center;
-          text-align: center;
-          gap: 28px;
-          justify-content: center;
+          align-items: stretch;
+          text-align: left;
+          gap: 0;
+          justify-content: flex-start;
         }
         .rep-field--boardroom .rep-mode-tag {
-          align-items: center;
-          text-align: center;
-          padding-bottom: 0;
-          border-bottom: none;
+          align-items: flex-start;
+          text-align: left;
         }
         .rep-board-mark {
           position: relative;
@@ -2469,50 +2323,317 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
 
         /* ── Selected propagation path strip (demoted from full-width topology zone) ── */
-        .topology-strip {
+        /* ── Executive Topology Surface (Phase 3B) ─────────────────────── */
+        .topo-executive {
+          padding: 20px 40px;
+          border-bottom: 1px solid #1a2030;
+          background: linear-gradient(180deg, rgba(8,10,15,0.4) 0%, rgba(13,15,20,0.2) 100%);
+        }
+        .topo-executive--boardroom {
+          padding: 16px 40px;
+        }
+        .topo-executive-header {
+          margin-bottom: 8px;
+        }
+        .topo-executive-pre {
+          font-size: 10px;
+          color: #5a6580;
+          letter-spacing: 0.28em;
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+
+        /* Structural Composition stat cards */
+        .topo-composition {
+          margin-bottom: 14px;
+        }
+        .topo-composition-summary {
+          font-size: 11px;
+          color: #d29922;
+          line-height: 1.4;
+          margin-bottom: 10px;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .topo-composition-stats {
+          display: flex;
+          gap: 8px;
+        }
+        .topo-stat-card {
+          flex: 1;
+          padding: 10px 14px;
+          border: 1px solid #2a2f40;
+          border-radius: 3px;
+          background: rgba(20,23,32,0.5);
+          text-align: center;
+        }
+        .topo-stat-value {
+          font-size: 22px;
+          font-weight: 600;
+          color: #e0e6f4;
+          line-height: 1.1;
+          font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        }
+        .topo-stat-label {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          margin-top: 4px;
+        }
+
+        /* Evidence Card Panel */
+        .topo-evidence-panel {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 8px;
+          margin-bottom: 16px;
+        }
+        .topo-evidence-card {
+          padding: 10px 14px;
+          border: 1px solid #2a2f40;
+          border-radius: 3px;
+          background: rgba(20,23,32,0.5);
+          border-top: 2px solid #4a5570;
+        }
+        .topo-evidence-card[data-tier="HIGH"]     { border-top-color: #ff6b6b; }
+        .topo-evidence-card[data-tier="ELEVATED"] { border-top-color: #ff9e4a; }
+        .topo-evidence-card[data-tier="MODERATE"] { border-top-color: #ffd700; }
+        .topo-evidence-card[data-tier="LOW"]      { border-top-color: #64ffda; }
+        .topo-evidence-card-role {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          margin-bottom: 4px;
+        }
+        .topo-evidence-card-name {
+          font-size: 12px;
+          font-weight: 600;
+          color: #ccd6f6;
+          font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+          margin-bottom: 4px;
+        }
+        .topo-evidence-card-ground {
+          font-size: 10px;
+          color: #64ffda;
+          font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+          margin-bottom: 6px;
+        }
+        .topo-evidence-card-signal {
+          font-size: 10px;
+          color: #7a8aaa;
+          margin-bottom: 4px;
+        }
+        .topo-evidence-card-text {
+          font-size: 10px;
+          color: #4a5570;
+          line-height: 1.4;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .topo-executive--boardroom .topo-evidence-panel { display: none; }
+
+        /* Topology Graph SVG */
+        .topo-graph-wrap {
+          margin-bottom: 14px;
+        }
+        .topo-graph-heading {
+          font-size: 10px;
+          color: #5a6580;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          font-weight: 500;
+          margin-bottom: 8px;
+        }
+        .topo-graph-svg {
+          width: 100%;
+          height: auto;
+          display: block;
+        }
+        .topo-executive--boardroom .topo-graph-wrap { margin-bottom: 12px; }
+
+        /* Domain Coverage Grid */
+        .topo-coverage {
+          margin-top: 4px;
+        }
+        .topo-coverage-heading {
+          font-size: 10px;
+          color: #5a6580;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          font-weight: 500;
+          margin-bottom: 8px;
+        }
+        .topo-coverage-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 5px;
+        }
+        .topo-coverage-card {
+          padding: 8px 10px;
+          border: 1px solid #2a2f40;
+          border-radius: 3px;
+          background: rgba(20,23,32,0.4);
+          transition: border-color 0.15s ease;
+        }
+        .topo-coverage-card:hover { border-color: #3a4560; }
+        .topo-coverage-card--backed { border-left: 2px solid rgba(100,255,218,0.35); }
+        .topo-coverage-card--pz { border-left: 2px solid rgba(255,215,0,0.45); }
+        .topo-coverage-card-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 4px;
+        }
+        .topo-coverage-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          flex-shrink: 0;
+          display: inline-block;
+        }
+        .topo-coverage-card-name {
+          font-size: 11px;
+          font-weight: 600;
+          color: #ccd6f6;
+          line-height: 1.2;
+          font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        }
+        .topo-coverage-card-meta {
+          font-size: 9px;
+          color: #4a5570;
+          margin-bottom: 2px;
+        }
+        .topo-coverage-card-lineage {
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.04em;
+          font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        }
+        .topo-coverage-legend {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 14px;
+          margin-top: 10px;
+          padding-top: 8px;
+          border-top: 1px solid #1e2330;
+        }
+        .topo-coverage-legend-item {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          font-size: 9px;
+          color: #6a7593;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* BOARDROOM: show composition + graph, hide coverage grid */
+        .topo-executive--boardroom .topo-coverage { display: none; }
+
+        /* ── SQO Intelligence Zone — qualification narrative ────────── */
+        .sqo-intelligence {
+          padding: 28px 56px 24px;
+          border-bottom: 1px solid #1a2030;
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+          background: rgba(8, 10, 15, 0.25);
+        }
+        .sqo-intelligence-header {
           display: flex;
           align-items: center;
           gap: 12px;
-          padding: 14px 56px;
-          background: rgba(8, 10, 15, 0.42);
-          border-bottom: 1px solid #1a2030;
-          animation: v2Enter 0.5s ease 0.48s both;
-          flex-wrap: wrap;
         }
-        .topology-strip-label {
+        .sqo-intelligence-label {
           font-size: 9px;
           color: #5a6580;
           letter-spacing: 0.22em;
           text-transform: uppercase;
           font-weight: 500;
-          flex-shrink: 0;
         }
-        .topology-strip-path {
+        .sqo-intelligence-narrative {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          max-width: 780px;
+        }
+        .sqo-intelligence-state {
+          display: flex;
+          align-items: baseline;
+          gap: 10px;
+        }
+        .sqo-intelligence-state-badge {
+          font-size: 13px;
+          font-weight: 700;
+          color: var(--state-color, #4a9eff);
+          letter-spacing: 0.06em;
+          padding: 2px 8px;
+          background: rgba(74, 158, 255, 0.08);
+          border: 1px solid rgba(74, 158, 255, 0.2);
+          border-radius: 3px;
+        }
+        .sqo-intelligence[data-s-state="S3"] .sqo-intelligence-state-badge {
+          color: #64ffda;
+          background: rgba(100, 255, 218, 0.08);
+          border-color: rgba(100, 255, 218, 0.2);
+        }
+        .sqo-intelligence[data-s-state="S1"] .sqo-intelligence-state-badge,
+        .sqo-intelligence[data-s-state="S0"] .sqo-intelligence-state-badge {
+          color: #ff9e4a;
+          background: rgba(255, 158, 74, 0.08);
+          border-color: rgba(255, 158, 74, 0.2);
+        }
+        .sqo-intelligence-state-text {
+          font-size: 13px;
+          color: #ccd6f6;
+          font-weight: 500;
+          letter-spacing: -0.005em;
+        }
+        .sqo-intelligence-description {
           font-size: 12px;
+          color: #9aa0bc;
+          line-height: 1.55;
+          padding-left: 14px;
+          border-left: 2px solid rgba(74, 158, 255, 0.15);
+        }
+        .sqo-intelligence-line {
+          font-size: 12px;
+          color: #9aa0bc;
+          line-height: 1.55;
+        }
+        .sqo-intelligence-line--debt {
           color: #b6bdd6;
-          letter-spacing: 0;
           font-weight: 500;
         }
-        .topology-strip-sep { color: #3a4560; }
-        .topology-strip-tier {
+        .sqo-intelligence-line--condition {
+          color: #e6b800;
           font-size: 11px;
-          font-weight: 700;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
         }
-        .topology-strip-meta {
+        .sqo-intelligence-line--resolution {
+          color: #7a8aaa;
+          font-style: italic;
+        }
+        .sqo-intelligence-line--progression {
+          color: #7a8aaa;
           font-size: 11px;
-          color: #6a7593;
+        }
+        .sqo-intelligence-footer {
+          padding-top: 8px;
+        }
+        .sqo-intelligence-link {
+          font-size: 11px;
+          color: #4a9eff;
+          text-decoration: none;
           letter-spacing: 0.02em;
+          transition: color 0.15s ease;
+        }
+        .sqo-intelligence-link:hover {
+          color: #6fb4ff;
+          text-decoration: underline;
         }
 
-        /* (Original .topology-zone kept for fallback; demoted in this iteration to .topology-strip.) */
-        .topology-zone {
-          padding: 56px 56px;
-          border-bottom: 1px solid #1a2030;
-          animation: v2Enter 0.5s ease 0.48s both;
-          display: none; /* not rendered after PI.LENS.V2.SEMANTIC-REPRESENTATION-SYSTEM.01 */
-        }
+        /* Legacy topology-strip and topology-zone (deprecated) */
+        .topology-strip { display: none; }
+        .topology-zone { display: none; }
         .topology-chain {
           display: flex;
           align-items: center;
@@ -2615,7 +2736,6 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .evidence-layer {
           padding: 56px 56px 64px;
           border-bottom: 1px solid #1a2030;
-          animation: v2Enter 0.5s ease 0.62s both;
         }
         /*
          * Evidence layer composition:
@@ -2707,6 +2827,103 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-style: italic;
         }
 
+        /* ── Signal Interpretation Section ─────────────────────────────── */
+        .signal-interp-section {
+          margin-top: 28px;
+          padding-top: 24px;
+          border-top: 1px solid #1a2030;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+        .signal-interp-label {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+        .signal-interp-block {
+          padding: 16px 20px;
+          background: rgba(8, 10, 15, 0.45);
+          border: 1px solid #1e2330;
+          border-radius: 4px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          border-left: 3px solid #5a6580;
+        }
+        .signal-interp-block[data-severity="HIGH"] { border-left-color: #ff6b6b; }
+        .signal-interp-block[data-severity="ELEVATED"] { border-left-color: #ff9e4a; }
+        .signal-interp-block[data-severity="MODERATE"] { border-left-color: #ffd700; }
+        .signal-interp-block[data-severity="NOMINAL"] { border-left-color: #64ffda; }
+        .signal-interp-header {
+          display: flex;
+          align-items: baseline;
+          gap: 10px;
+          flex-wrap: wrap;
+        }
+        .signal-interp-name {
+          font-size: 12px;
+          font-weight: 600;
+          color: #ccd6f6;
+          letter-spacing: 0.02em;
+        }
+        .signal-interp-value {
+          font-size: 12px;
+          color: #7a8aaa;
+          font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        }
+        .signal-interp-severity {
+          font-size: 8px;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          font-weight: 600;
+          padding: 1px 6px;
+          border-radius: 2px;
+          color: #5a6580;
+          background: rgba(90, 101, 128, 0.1);
+          border: 1px solid rgba(90, 101, 128, 0.2);
+        }
+        .signal-interp-severity[data-severity="HIGH"] { color: #ff6b6b; background: rgba(255, 107, 107, 0.08); border-color: rgba(255, 107, 107, 0.2); }
+        .signal-interp-severity[data-severity="ELEVATED"] { color: #ff9e4a; background: rgba(255, 158, 74, 0.08); border-color: rgba(255, 158, 74, 0.2); }
+        .signal-interp-severity[data-severity="MODERATE"] { color: #ffd700; background: rgba(255, 215, 0, 0.08); border-color: rgba(255, 215, 0, 0.2); }
+        .signal-interp-severity[data-severity="NOMINAL"] { color: #64ffda; background: rgba(100, 255, 218, 0.08); border-color: rgba(100, 255, 218, 0.2); }
+        .signal-interp-prose {
+          font-size: 12px;
+          color: #b6bdd6;
+          line-height: 1.6;
+          letter-spacing: 0.005em;
+        }
+        .signal-interp-concentration {
+          font-size: 11px;
+          color: #7a8aaa;
+          line-height: 1.5;
+        }
+        .signal-interp-confidence {
+          font-size: 10px;
+          color: #5a6580;
+          line-height: 1.5;
+          font-style: italic;
+        }
+        .signal-interp-copresence {
+          font-size: 11px;
+          color: #9aa0bc;
+          line-height: 1.55;
+          padding: 12px 16px;
+          background: rgba(74, 158, 255, 0.04);
+          border: 1px solid rgba(74, 158, 255, 0.1);
+          border-radius: 3px;
+        }
+        .signal-interp-compound {
+          font-size: 12px;
+          color: #b6bdd6;
+          line-height: 1.6;
+          padding-left: 14px;
+          border-left: 2px solid rgba(255, 158, 74, 0.3);
+          font-style: italic;
+        }
+
         /* ── Governance Ribbon ───────────────────────────────────────────── */
         .gov-ribbon {
           display: flex;
@@ -2753,6 +2970,1110 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           transition: color 0.15s;
         }
         .gov-back:hover { color: var(--state-color); }
+
+        /* ════════════════════════════════════════════════════════════════
+         * DISCLOSURE SHELL — CINEMATIC VISUAL DOCTRINE
+         * PI.LENS.V2.PHASE3.CINEMATIC-VISUAL-DOCTRINE.01
+         *
+         * Tier semantics:
+         *   tier0 — command declaration: calm, undeniable, minimal density
+         *   tier1 — operational context: stable rhythm, low-friction scan
+         *   tier2 — exploratory depth: recessed, lower interruption
+         *   tier3 — investigation immersion: isolated, intentionally deep
+         * ════════════════════════════════════════════════════════════════ */
+
+        .disclosure-shell {
+          display: flex;
+          flex-direction: column;
+          --tier-gap-0: 0px;
+          --tier-gap-1: 1px;
+          --tier-gap-2: 12px;
+          --tier-gap-3: 24px;
+        }
+
+        /* ── Tier structure ─────────────────────────────────────────── */
+        .disclosure-tier {
+          display: flex;
+          flex-direction: column;
+          position: relative;
+        }
+
+        /* Tier 0 — command declaration layer
+         * Full opacity, full contrast. The executive reads this first
+         * and may read nothing else. */
+        .disclosure-tier--0 {
+          animation: v2Enter 0.4s ease 0.08s both;
+        }
+
+        /* Tier 1 — operational intelligence layer
+         * Slightly softened entry. Readable without competing with tier0.
+         * Subtle top separator creates cognitive breathing room. */
+        .disclosure-tier--1 {
+          margin-top: var(--tier-gap-1);
+          animation: v2Enter 0.45s ease 0.18s both;
+          border-top: 1px solid rgba(42, 51, 74, 0.4);
+        }
+        .disclosure-tier--1::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 56px;
+          right: 56px;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(74,158,255,0.08) 30%, rgba(74,158,255,0.08) 70%, transparent);
+          pointer-events: none;
+        }
+
+        /* Tier 2 — exploratory depth layer
+         * Visually recessed. Lower contrast background signals
+         * "you chose to go deeper." Content is available but
+         * does not demand attention. */
+        .disclosure-tier--2 {
+          margin-top: var(--tier-gap-2);
+          animation: v2Enter 0.5s ease 0.28s both;
+          background:
+            linear-gradient(180deg, rgba(8,10,15,0.25) 0%, transparent 40%);
+          position: relative;
+        }
+        .disclosure-tier--2::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 40px;
+          right: 40px;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(42,51,74,0.5) 20%, rgba(42,51,74,0.5) 80%, transparent);
+          pointer-events: none;
+        }
+        .disclosure-tier--2 .declaration-zone,
+        .disclosure-tier--2 .qualifier-mandate,
+        .disclosure-tier--2 .trust-zone,
+        .disclosure-tier--2 .recon-zone {
+          opacity: 0.88;
+        }
+
+        /* Tier 3 — investigation immersion layer
+         * Isolated from the executive flow. Darker atmospheric
+         * ground signals forensic depth. The reader has
+         * intentionally entered investigation territory. */
+        .disclosure-tier--3 {
+          margin-top: var(--tier-gap-3);
+          animation: v2Enter 0.55s ease 0.38s both;
+          background:
+            linear-gradient(180deg, rgba(8,10,15,0.45) 0%, rgba(8,10,15,0.2) 60%, transparent);
+          border-top: 1px solid rgba(42, 51, 74, 0.35);
+          padding-top: 8px;
+          position: relative;
+        }
+        .disclosure-tier--3::before {
+          content: '';
+          position: absolute;
+          top: -1px;
+          left: 56px;
+          right: 56px;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(230,184,0,0.12) 30%, rgba(230,184,0,0.12) 70%, transparent);
+          pointer-events: none;
+        }
+        .disclosure-tier--3::after {
+          content: 'INVESTIGATION DEPTH';
+          position: absolute;
+          top: -8px;
+          left: 56px;
+          font-size: 8px;
+          letter-spacing: 0.28em;
+          color: rgba(230,184,0,0.35);
+          background: #14171f;
+          padding: 0 12px 0 0;
+          pointer-events: none;
+        }
+
+        /* ── Zone wrappers ──────────────────────────────────────────── */
+        .disclosure-zone {
+          transition: opacity 0.3s ease;
+        }
+
+        /* Promoted zones: zones elevated from a lower tier due to
+         * CRITICAL severity. Subtle left-edge marker signals
+         * "this was promoted for your attention" without alarm. */
+        .disclosure-zone--promoted {
+          position: relative;
+        }
+        .disclosure-zone--promoted::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 8px;
+          bottom: 8px;
+          width: 2px;
+          background: linear-gradient(180deg, var(--state-color) 0%, transparent 100%);
+          opacity: 0.5;
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        /* Severity-aware zone atmosphere */
+        .disclosure-zone[data-severity="CRITICAL"] {
+          position: relative;
+        }
+        .disclosure-zone[data-severity="CRITICAL"]::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(90deg, rgba(255,107,107,0.03) 0%, transparent 40%);
+          pointer-events: none;
+          z-index: 0;
+        }
+        .disclosure-zone[data-severity="ELEVATED"] {
+          position: relative;
+        }
+        .disclosure-zone[data-severity="ELEVATED"]::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(90deg, rgba(230,184,0,0.02) 0%, transparent 30%);
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        /* ── Escalation banner ──────────────────────────────────────── */
+        /* Consequence interruption without chaos. The banner announces
+         * critical conditions with calm authority — no flashing, no
+         * alarm aesthetic, no dashboard panic. */
+        .disclosure-escalation {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 10px 56px;
+          background:
+            linear-gradient(90deg, rgba(255,107,107,0.06) 0%, rgba(255,107,107,0.02) 40%, transparent 100%);
+          border-bottom: 1px solid rgba(255,107,107,0.12);
+          animation: v2Enter 0.35s ease both;
+        }
+        .disclosure-escalation-count {
+          font-size: 15px;
+          font-weight: 600;
+          color: #ff6b6b;
+          line-height: 1;
+          min-width: 18px;
+          text-align: center;
+        }
+        .disclosure-escalation-label {
+          font-size: 10px;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: rgba(255,107,107,0.7);
+          font-weight: 500;
+        }
+        .disclosure-escalation-zones {
+          font-size: 9px;
+          color: rgba(154,112,112,0.7);
+          font-family: ui-monospace, "SF Mono", Menlo, monospace;
+          letter-spacing: 0.04em;
+          margin-left: auto;
+        }
+
+        /* ── Persona-atmospheric separation ─────────────────────────── */
+        /* Boardroom persona: maximum cognitive compression.
+         * Suppress tier gaps, flatten hierarchy, reduce chrome. */
+        .disclosure-shell[data-persona="BOARDROOM"] {
+          --tier-gap-1: 0px;
+          --tier-gap-2: 0px;
+          --tier-gap-3: 0px;
+        }
+        .disclosure-shell[data-persona="BOARDROOM"] .disclosure-tier--2::before,
+        .disclosure-shell[data-persona="BOARDROOM"] .disclosure-tier--3::before,
+        .disclosure-shell[data-persona="BOARDROOM"] .disclosure-tier--3::after {
+          display: none;
+        }
+        .disclosure-shell[data-persona="BOARDROOM"] .disclosure-tier--2,
+        .disclosure-shell[data-persona="BOARDROOM"] .disclosure-tier--3 {
+          background: none;
+          border-top: none;
+          padding-top: 0;
+        }
+
+        /* Investigation persona: deepen tier3 immersion further. */
+        .disclosure-shell[data-persona="INVESTIGATION_DENSE"] {
+          --tier-gap-3: 32px;
+        }
+        .disclosure-shell[data-persona="INVESTIGATION_DENSE"] .disclosure-tier--3 {
+          background:
+            linear-gradient(180deg, rgba(8,10,15,0.55) 0%, rgba(8,10,15,0.3) 50%, transparent);
+          padding: 16px 0 0;
+        }
+
+        /* ── Collapsed tier summary ── */
+        .disclosure-collapsed {
+          margin: 8px 64px;
+          padding: 0;
+          opacity: 0;
+          animation: v2Enter 0.3s ease forwards;
+          animation-delay: 0.32s;
+        }
+        .disclosure-collapsed-inner {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 6px 14px;
+          border-left: 2px solid rgba(74,158,255,0.10);
+          background: linear-gradient(90deg, rgba(20,23,32,0.35) 0%, transparent 60%);
+        }
+        .disclosure-collapsed-zones {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          flex: 1;
+          min-width: 0;
+        }
+        .disclosure-collapsed-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          font-family: var(--font-ui);
+          font-size: 11px;
+          color: var(--text-dim);
+          letter-spacing: 0.02em;
+        }
+        .disclosure-collapsed-chip[data-severity="CRITICAL"] {
+          color: var(--semantic-red);
+        }
+        .disclosure-collapsed-chip[data-severity="ELEVATED"] {
+          color: var(--semantic-yellow);
+        }
+        .disclosure-collapsed-chip-dot {
+          font-size: 8px;
+          line-height: 1;
+        }
+        .disclosure-collapsed-chip-name {
+          white-space: nowrap;
+        }
+        .disclosure-collapsed-expand {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          background: none;
+          border: 1px solid rgba(42,47,64,0.4);
+          border-radius: 2px;
+          padding: 3px 10px;
+          cursor: pointer;
+          color: var(--text-dim);
+          font-family: var(--font-ui);
+          font-size: 10px;
+          letter-spacing: 0.03em;
+          text-transform: uppercase;
+          transition: border-color 0.15s ease, color 0.15s ease;
+          flex-shrink: 0;
+        }
+        .disclosure-collapsed-expand:hover {
+          border-color: rgba(74,158,255,0.3);
+          color: var(--text-primary);
+        }
+        .disclosure-collapsed-expand:focus-visible {
+          outline: 1px solid rgba(74,158,255,0.5);
+          outline-offset: 1px;
+        }
+        .disclosure-collapsed-expand-caret {
+          font-size: 10px;
+          line-height: 1;
+        }
+
+        /* ── Tier collapse button (visible on expanded collapsible tiers) ── */
+        .disclosure-tier-collapse {
+          display: flex;
+          justify-content: flex-end;
+          padding: 0 64px;
+          margin-bottom: 4px;
+        }
+        .disclosure-tier-collapse-label {
+          font-family: var(--font-ui);
+          font-size: 10px;
+          letter-spacing: 0.03em;
+          text-transform: uppercase;
+          color: var(--text-muted);
+          cursor: pointer;
+          background: none;
+          border: none;
+          padding: 2px 8px;
+          transition: color 0.15s ease;
+        }
+        .disclosure-tier-collapse:hover .disclosure-tier-collapse-label {
+          color: var(--text-dim);
+        }
+
+        /* ── Disclosure footer — inference prohibition & qualifier note ── */
+        .disclosure-footer {
+          padding: 16px 56px 20px;
+          border-top: 1px solid #1a2030;
+        }
+        .disclosure-footer-inner {
+          display: flex;
+          align-items: baseline;
+          gap: 16px;
+          flex-wrap: wrap;
+        }
+        .disclosure-footer-prohibition {
+          font-size: 10px;
+          color: #4a5570;
+          letter-spacing: 0.03em;
+          font-style: italic;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .disclosure-footer-qualifier {
+          font-size: 9px;
+          color: rgba(230,184,0,0.45);
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+
+        /* ════════════════════════════════════════════════════════════════
+         * SEMANTIC TRUST POSTURE ZONE
+         * PI.LENS.V2.RECONCILIATION-CONSUMPTION-LAYER.01
+         * ════════════════════════════════════════════════════════════════ */
+
+        .trust-zone {
+          margin: 0 64px;
+          padding: 18px 24px;
+          border: 1px solid rgba(74,158,255,0.12);
+          background: rgba(20,23,31,0.6);
+          border-radius: 2px;
+          margin-bottom: 12px;
+        }
+        .trust-zone--boardroom {
+          padding: 8px 20px;
+          border: none;
+          background: transparent;
+          border-bottom: 1px solid rgba(42,47,64,0.5);
+          margin: 0 64px;
+          border-radius: 0;
+        }
+        .trust-zone--simplified {
+          padding: 10px 56px;
+          border: none;
+          background: transparent;
+          border-bottom: 1px solid #1a2030;
+          margin: 0;
+          border-radius: 0;
+        }
+        .trust-zone-compact {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-family: 'Courier New', monospace;
+          font-size: 12px;
+          letter-spacing: 0.04em;
+          color: #7a8aaa;
+        }
+        .trust-zone-compact-level {
+          font-weight: 700;
+          letter-spacing: 0.06em;
+        }
+        .trust-zone-compact-sep {
+          color: #3a4560;
+          user-select: none;
+        }
+        .trust-zone-compact-state {
+          color: #9aa0bc;
+          font-weight: 600;
+        }
+        .trust-zone-compact-grounding {
+          color: #7a8aaa;
+        }
+        .trust-zone-compact-maturity {
+          color: #5a6580;
+          font-size: 11px;
+        }
+        .trust-zone-strip {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-family: 'Courier New', monospace;
+          font-size: 12px;
+          letter-spacing: 0.04em;
+          color: #7a8aaa;
+        }
+        .trust-zone-level {
+          font-weight: 700;
+          letter-spacing: 0.06em;
+        }
+        .trust-zone-sep {
+          color: #4a5570;
+          user-select: none;
+        }
+        .trust-zone-s-state {
+          color: #ccd6f6;
+          font-weight: 600;
+        }
+        .trust-zone-q-class {
+          color: #7a8aaa;
+        }
+        .trust-zone-trend {
+          font-weight: 600;
+        }
+        .trust-zone-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 14px;
+        }
+        .trust-zone-header-label {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: #4a5570;
+          font-weight: 600;
+        }
+        .trust-zone-header-level {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          padding: 2px 10px;
+          border: 1px solid;
+          border-radius: 2px;
+          background: rgba(0,0,0,0.2);
+        }
+
+        .trust-zone-qualification {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 20px;
+        }
+        .trust-zone-qual-primary {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+        }
+        .trust-zone-qual-badge {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 6px 14px;
+          border: 1px solid;
+          border-radius: 2px;
+          background: rgba(0,0,0,0.2);
+          min-width: 56px;
+        }
+        .trust-zone-qual-s-state {
+          font-family: 'Courier New', monospace;
+          font-size: 18px;
+          font-weight: 700;
+          color: #ccd6f6;
+          letter-spacing: 0.04em;
+          line-height: 1.2;
+        }
+        .trust-zone-qual-q-class {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #7a8aaa;
+          letter-spacing: 0.06em;
+          line-height: 1.2;
+        }
+        .trust-zone-qual-detail {
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+        }
+        .trust-zone-qual-grounding {
+          font-family: 'Courier New', monospace;
+          font-size: 12px;
+          color: #ccd6f6;
+        }
+        .trust-zone-qual-maturity {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          color: #7a8aaa;
+        }
+        .trust-zone-progression {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-shrink: 0;
+        }
+        .trust-zone-progression-label {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          color: #7a8aaa;
+          white-space: nowrap;
+        }
+        .trust-zone-progression-bar-wrap {
+          width: 80px;
+          height: 6px;
+          background: rgba(42,47,64,0.6);
+          border-radius: 1px;
+          overflow: hidden;
+        }
+        .trust-zone-progression-bar {
+          height: 100%;
+          background: #4a9eff;
+          border-radius: 1px;
+          transition: width 0.3s ease;
+        }
+        .trust-zone-progression-pct {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          color: #ccd6f6;
+          min-width: 42px;
+          text-align: right;
+        }
+
+        .trust-zone-metrics {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 10px;
+          margin-top: 14px;
+        }
+        .trust-zone-metric-card {
+          padding: 10px 12px;
+          background: rgba(13,15,20,0.5);
+          border: 1px solid rgba(42,47,64,0.5);
+          border-radius: 2px;
+        }
+        .trust-zone-metric-label {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: #4a5570;
+          margin-bottom: 4px;
+        }
+        .trust-zone-metric-value {
+          font-family: 'Courier New', monospace;
+          font-size: 16px;
+          font-weight: 700;
+          letter-spacing: 0.04em;
+          margin-bottom: 4px;
+        }
+        .trust-zone-metric-sub {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #7a8aaa;
+          line-height: 1.4;
+        }
+        .trust-zone-metric-detail {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #4a5570;
+          margin-top: 3px;
+          display: flex;
+          gap: 4px;
+          flex-wrap: wrap;
+        }
+        .trust-zone-metric-detail--warn {
+          color: #ff9e4a;
+        }
+        .trust-zone-metric-detail-sep {
+          color: #4a5570;
+        }
+
+        .trust-zone-structural {
+          margin-top: 14px;
+          padding-top: 12px;
+          border-top: 1px solid rgba(42,47,64,0.4);
+        }
+        .trust-zone-structural-label {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: #4a5570;
+          margin-bottom: 8px;
+        }
+        .trust-zone-structural-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 10px;
+        }
+        .trust-zone-structural-cell {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+        .trust-zone-structural-value {
+          font-family: 'Courier New', monospace;
+          font-size: 14px;
+          font-weight: 700;
+          color: #ccd6f6;
+        }
+        .trust-zone-structural-key {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #4a5570;
+        }
+
+        .trust-zone-unresolved-disclosure {
+          margin-top: 10px;
+          padding-top: 8px;
+          border-top: 1px solid rgba(42,47,64,0.3);
+        }
+        .trust-zone-unresolved-label {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: #ff9e4a;
+          margin-bottom: 6px;
+        }
+        .trust-zone-unresolved-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 3px 0;
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+        }
+        .trust-zone-unresolved-id {
+          color: #ccd6f6;
+          font-weight: 600;
+          min-width: 40px;
+        }
+        .trust-zone-unresolved-name {
+          color: #7a8aaa;
+        }
+        .trust-zone-unresolved-type {
+          color: #4a5570;
+          font-size: 10px;
+        }
+
+        /* ════════════════════════════════════════════════════════════════
+         * RECONCILIATION AWARENESS ZONE
+         * PI.LENS.V2.RECONCILIATION-RUNTIME-CONSUMPTION.01
+         * ════════════════════════════════════════════════════════════════ */
+
+        .recon-zone {
+          margin: 0 64px;
+          padding: 18px 24px;
+          border: 1px solid rgba(74,158,255,0.12);
+          background: rgba(20,23,31,0.6);
+        }
+
+        .recon-zone--boardroom {
+          margin: 0 120px;
+          padding: 10px 24px;
+          border: none;
+          border-bottom: 1px solid rgba(90,101,128,0.15);
+          background: transparent;
+        }
+
+        .recon-zone-header {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: 14px;
+        }
+
+        .recon-zone-label {
+          font-size: 9px;
+          letter-spacing: 0.28em;
+          color: #5a6580;
+          text-transform: uppercase;
+        }
+
+        .recon-zone-posture-tag {
+          font-size: 9px;
+          letter-spacing: 0.06em;
+          padding: 2px 8px;
+          border: 1px solid;
+        }
+
+        .recon-zone-trend {
+          font-size: 9px;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          margin-left: auto;
+        }
+        .recon-zone-trend--improving { color: #64ffda; }
+        .recon-zone-trend--degrading { color: #ff6b6b; }
+        .recon-zone-trend--stable { color: #5a6580; }
+        .recon-zone-trend--insufficient_data { color: #3a4560; }
+
+        .recon-zone-posture-strip {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+        }
+        .recon-zone-posture-symbol { font-size: 14px; }
+        .recon-zone-posture-label {
+          font-size: 11px;
+          color: #9aa0bc;
+          letter-spacing: 0.06em;
+        }
+        .recon-zone-posture-confidence {
+          font-size: 14px;
+          color: #e8edf8;
+          font-weight: 600;
+          letter-spacing: -0.01em;
+        }
+
+        .recon-zone-metrics {
+          display: flex;
+          gap: 24px;
+          margin-bottom: 14px;
+        }
+
+        .recon-zone-metric {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+
+        .recon-zone-metric--primary .recon-zone-metric-value {
+          font-size: 20px;
+          font-weight: 600;
+        }
+
+        .recon-zone-metric-value {
+          font-size: 14px;
+          color: #e8edf8;
+          letter-spacing: -0.01em;
+        }
+
+        .recon-zone-metric-label {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+        }
+
+        /* Trajectory */
+        .recon-trajectory {
+          padding: 12px 0;
+          border-top: 1px solid rgba(90,101,128,0.15);
+        }
+
+        .recon-trajectory-header {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: 8px;
+        }
+
+        .recon-trajectory-label {
+          font-size: 9px;
+          letter-spacing: 0.2em;
+          color: #5a6580;
+          text-transform: uppercase;
+        }
+
+        .recon-trajectory-delta {
+          font-size: 10px;
+          letter-spacing: 0.02em;
+          color: #7a85a3;
+        }
+        .recon-trajectory-delta--up { color: #64ffda; }
+        .recon-trajectory-delta--down { color: #ff6b6b; }
+
+        .recon-trajectory-epochs {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .recon-trajectory-epoch {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .recon-trajectory-epoch-label {
+          font-size: 9px;
+          color: #5a6580;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          min-width: 80px;
+        }
+        .recon-trajectory-epoch--current .recon-trajectory-epoch-label { color: #9aa0bc; }
+
+        .recon-trajectory-epoch-bar-wrap {
+          flex: 1;
+          height: 6px;
+          background: rgba(90,101,128,0.12);
+          overflow: hidden;
+        }
+
+        .recon-trajectory-epoch-bar {
+          height: 100%;
+          background: rgba(74,158,255,0.5);
+          transition: width 0.3s ease;
+        }
+        .recon-trajectory-epoch--current .recon-trajectory-epoch-bar { background: #4a9eff; }
+
+        .recon-trajectory-epoch-value {
+          font-size: 10px;
+          color: #7a85a3;
+          min-width: 40px;
+          text-align: right;
+        }
+        .recon-trajectory-epoch--current .recon-trajectory-epoch-value { color: #e8edf8; }
+
+        .recon-trajectory-movements {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          margin-top: 8px;
+        }
+
+        .recon-trajectory-movement {
+          font-size: 9px;
+          padding: 1px 6px;
+          border: 1px solid rgba(90,101,128,0.2);
+          color: #7a85a3;
+        }
+        .recon-trajectory-movement--up { color: #64ffda; border-color: rgba(100,255,218,0.25); }
+        .recon-trajectory-movement--down { color: #ff6b6b; border-color: rgba(255,107,107,0.25); }
+
+        /* Debt disclosure */
+        .recon-debt {
+          padding: 12px 0;
+          border-top: 1px solid rgba(90,101,128,0.15);
+        }
+
+        .recon-debt-header {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: 8px;
+        }
+
+        .recon-debt-label {
+          font-size: 9px;
+          letter-spacing: 0.2em;
+          color: #5a6580;
+          text-transform: uppercase;
+        }
+
+        .recon-debt-rate {
+          font-size: 9px;
+          color: #64ffda;
+          letter-spacing: 0.04em;
+          margin-left: auto;
+        }
+
+        .recon-debt-list {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+
+        .recon-debt-item {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          padding: 3px 0;
+        }
+
+        .recon-debt-item-id {
+          font-size: 10px;
+          color: #ff6b6b;
+          min-width: 80px;
+        }
+
+        .recon-debt-item-name {
+          font-size: 10px;
+          color: #7a85a3;
+          flex: 1;
+        }
+
+        .recon-debt-item-type {
+          font-size: 9px;
+          color: #3a4560;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+        }
+
+        /* Per-domain correspondence */
+        .recon-domains {
+          padding: 12px 0;
+          border-top: 1px solid rgba(90,101,128,0.15);
+        }
+
+        .recon-domains-label {
+          font-size: 9px;
+          letter-spacing: 0.2em;
+          color: #5a6580;
+          text-transform: uppercase;
+          display: block;
+          margin-bottom: 8px;
+        }
+
+        .recon-domains-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 1px;
+        }
+
+        .recon-domain-row {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 4px 0;
+          font-size: 10px;
+        }
+
+        .recon-domain-badge {
+          font-size: 9px;
+          padding: 1px 5px;
+          border: 1px solid rgba(90,101,128,0.2);
+          min-width: 24px;
+          text-align: center;
+          letter-spacing: 0.02em;
+        }
+        .recon-domain-badge--l5 { color: #64ffda; border-color: rgba(100,255,218,0.3); }
+        .recon-domain-badge--l4 { color: #4a9eff; border-color: rgba(74,158,255,0.3); }
+        .recon-domain-badge--l3 { color: #ffd700; border-color: rgba(255,215,0,0.3); }
+        .recon-domain-badge--l2 { color: #ff9e4a; border-color: rgba(255,158,74,0.3); }
+        .recon-domain-badge--l1 { color: #ff6b6b; border-color: rgba(255,107,107,0.3); }
+
+        .recon-domain-id { color: #9aa0bc; min-width: 80px; }
+        .recon-domain-name { color: #7a85a3; flex: 1; }
+        .recon-domain-dom { color: #5a6580; min-width: 50px; }
+
+        .recon-domain-status {
+          font-size: 9px;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+        }
+        .recon-domain-status--reconciled { color: #64ffda; }
+        .recon-domain-status--unreconciled { color: #3a4560; }
+
+        /* Drilldown interaction — debt entries */
+        .recon-debt-entry {
+          border-bottom: 1px solid rgba(90,101,128,0.08);
+        }
+        .recon-debt-entry:last-child { border-bottom: none; }
+
+        .recon-debt-item--drillable {
+          cursor: pointer;
+          transition: background 0.15s ease;
+        }
+        .recon-debt-item--drillable:hover {
+          background: rgba(74,158,255,0.04);
+        }
+
+        .recon-debt-item-expand {
+          font-size: 9px;
+          color: #3a4560;
+          min-width: 10px;
+          transition: color 0.15s ease;
+        }
+        .recon-debt-item--drillable:hover .recon-debt-item-expand {
+          color: #5a6580;
+        }
+
+        /* Drilldown interaction — domain entries */
+        .recon-domain-entry {
+          border-bottom: 1px solid rgba(90,101,128,0.08);
+        }
+        .recon-domain-entry:last-child { border-bottom: none; }
+
+        .recon-domain-row--drillable {
+          cursor: pointer;
+          transition: background 0.15s ease;
+        }
+        .recon-domain-row--drillable:hover {
+          background: rgba(74,158,255,0.04);
+        }
+
+        .recon-domain-expand {
+          font-size: 9px;
+          color: #3a4560;
+          margin-left: auto;
+          transition: color 0.15s ease;
+        }
+        .recon-domain-row--drillable:hover .recon-domain-expand {
+          color: #5a6580;
+        }
+
+        /* Drilldown panel (shared) */
+        .recon-drilldown {
+          padding: 8px 0 10px 18px;
+          border-left: 2px solid rgba(74,158,255,0.15);
+          margin: 4px 0 2px 4px;
+        }
+
+        .recon-drilldown-section {
+          margin-bottom: 6px;
+        }
+        .recon-drilldown-section:last-child { margin-bottom: 0; }
+
+        .recon-drilldown-key {
+          font-size: 9px;
+          color: #3a4560;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          display: block;
+          margin-bottom: 2px;
+        }
+
+        .recon-drilldown-val {
+          font-size: 10px;
+          color: #7a85a3;
+          line-height: 1.5;
+          display: block;
+        }
+
+        .recon-drilldown-val--hint {
+          color: #ffd700;
+          font-style: italic;
+        }
+
+        .recon-drilldown-meta {
+          display: flex;
+          gap: 12px;
+          flex-wrap: wrap;
+          margin-top: 6px;
+          padding-top: 6px;
+          border-top: 1px solid rgba(90,101,128,0.08);
+        }
+
+        .recon-drilldown-meta-item {
+          font-size: 9px;
+          color: #3a4560;
+          letter-spacing: 0.02em;
+        }
+
+        /* Provenance */
+        .recon-provenance {
+          padding: 12px 0;
+          border-top: 1px solid rgba(90,101,128,0.15);
+        }
+
+        .recon-provenance-label {
+          font-size: 9px;
+          letter-spacing: 0.2em;
+          color: #5a6580;
+          text-transform: uppercase;
+          display: block;
+          margin-bottom: 6px;
+        }
+
+        .recon-provenance-items {
+          display: flex;
+          gap: 14px;
+          flex-wrap: wrap;
+        }
+
+        .recon-provenance-item {
+          display: flex;
+          gap: 4px;
+          align-items: baseline;
+        }
+
+        .recon-provenance-key {
+          font-size: 9px;
+          color: #3a4560;
+          letter-spacing: 0.04em;
+        }
+
+        .recon-provenance-val {
+          font-size: 9px;
+          color: #5a6580;
+        }
+
+        .recon-provenance-val--pass { color: #64ffda; }
 
         /* ════════════════════════════════════════════════════════════════
          * SEMANTIC ACTOR PANEL SYSTEM
@@ -3413,6 +4734,91 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           border: 1px solid rgba(230,184,0,0.22);
           border-radius: 3px;
           letter-spacing: 0.02em;
+        }
+
+        /* ── Investigation Reading Guide (inline preamble) ─────────────── */
+        .reading-guide-preamble {
+          margin-bottom: 16px;
+          padding: 14px 16px 16px;
+          border-left: 2px solid rgba(74,158,255,0.2);
+          background: rgba(74,158,255,0.02);
+        }
+        .reading-guide-preamble-label {
+          font-size: 9px;
+          font-weight: 600;
+          color: #5a6580;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          margin-bottom: 10px;
+        }
+        .reading-guide-preamble-body {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+        .reading-guide-prose {
+          font-size: 12px;
+          color: #7a8aaa;
+          line-height: 1.6;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          margin: 0;
+        }
+        .reading-guide-prose strong {
+          color: #9aa0bc;
+          font-weight: 600;
+        }
+        .reading-guide-prose--hint {
+          font-size: 11px;
+          color: #4a5570;
+          font-style: italic;
+          margin-top: 4px;
+        }
+
+        /* ── Term Hint (contextual decode tooltip) ───────────────────────── */
+        .term-hint {
+          position: relative;
+          border-bottom: 1px dotted rgba(74,158,255,0.35);
+          cursor: help;
+        }
+        .term-hint-popup {
+          position: absolute;
+          bottom: calc(100% + 8px);
+          left: 50%;
+          transform: translateX(-50%);
+          width: 280px;
+          padding: 10px 12px;
+          background: #161a25;
+          border: 1px solid #2a3348;
+          border-radius: 4px;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+          z-index: 100;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          pointer-events: none;
+        }
+        .term-hint-popup::after {
+          content: '';
+          position: absolute;
+          top: 100%;
+          left: 50%;
+          transform: translateX(-50%);
+          border: 5px solid transparent;
+          border-top-color: #2a3348;
+        }
+        .term-hint-popup-exec {
+          font-size: 11.5px;
+          color: #ccd6f6;
+          line-height: 1.5;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .term-hint-popup-tech {
+          font-size: 10px;
+          color: #5a6580;
+          line-height: 1.45;
+          font-family: 'Courier New', monospace;
+          border-top: 1px solid #1e2330;
+          padding-top: 5px;
         }
 
         /* ── BOARDROOM — Confidence Envelope ring (replaces decorative ring) ── */
