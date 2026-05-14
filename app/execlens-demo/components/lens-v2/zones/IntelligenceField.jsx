@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { PRESSURE_META, ROLE_META, DEFAULT_BINDING_CLIENT, DEFAULT_BINDING_RUN } from './constants'
 import InvestigationReadingGuide, { TermHint } from './InvestigationReadingGuide'
 import { TopologyGraph } from './StructuralTopologyZone'
@@ -811,7 +811,7 @@ const CONFIDENCE_COLORS = {
   1: '#ff6b6b',
 }
 
-function DomainDebtSection({ domainId, debtIndexData, progressionData }) {
+function DomainDebtSection({ domainId, debtIndexData, progressionData, onDomainSelect }) {
   if (!debtIndexData) {
     return (
       <div className="dsp-section">
@@ -849,6 +849,11 @@ function DomainDebtSection({ domainId, debtIndexData, progressionData }) {
     ? progressionData.blocking_debts.map(d => d.id)
     : []
   const domainBlocksS3 = posture.debt_item_ids.some(id => blockingIds.includes(id))
+
+  const blockingPeers = (debtIndexData.domain_postures || [])
+    .filter(p => p.debt_status !== 'CLEAR' && p.debt_item_ids.some(id => blockingIds.includes(id)))
+    .map(p => p.domain_id)
+  const peerIndex = blockingPeers.indexOf(domainId)
 
   const statusClass = posture.debt_status === 'ACTIVE' ? 'active' : 'partial'
   const exposureColors = { HIGH: '#ff6b6b', MEDIUM: '#ff9e4a', LOW: '#ffd700', NONE: '#4a5570' }
@@ -925,6 +930,27 @@ function DomainDebtSection({ domainId, debtIndexData, progressionData }) {
           })}
         </div>
       )}
+      {blockingPeers.length > 1 && onDomainSelect && peerIndex >= 0 && (
+        <div className="dsp-peer-nav">
+          <button
+            className="dsp-peer-nav-arrow"
+            type="button"
+            disabled={peerIndex === 0}
+            onClick={() => onDomainSelect(blockingPeers[peerIndex - 1])}
+            aria-label="Previous blocking domain"
+          >◂</button>
+          <span className="dsp-peer-nav-label">
+            {peerIndex + 1} of {blockingPeers.length} blocking S3
+          </span>
+          <button
+            className="dsp-peer-nav-arrow"
+            type="button"
+            disabled={peerIndex === blockingPeers.length - 1}
+            onClick={() => onDomainSelect(blockingPeers[peerIndex + 1])}
+            aria-label="Next blocking domain"
+          >▸</button>
+        </div>
+      )}
     </div>
   )
 }
@@ -936,12 +962,15 @@ const MATURITY_DIM_COLORS = {
   LOW: '#ff6b6b',
 }
 
-function BlockagePostureSummary({ debtIndexData, progressionData, maturityData }) {
+function BlockagePostureSummary({ debtIndexData, progressionData, maturityData, onDomainSelect }) {
   if (!debtIndexData && !progressionData && !maturityData) return null
 
   const agg = debtIndexData && debtIndexData.aggregate_posture
   const dims = maturityData && maturityData.dimension_breakdown
   const contDebt = debtIndexData && debtIndexData.continuity_debt
+  const debtDomains = (debtIndexData && debtIndexData.domain_postures || [])
+    .filter(p => p.debt_status !== 'CLEAR')
+    .map(p => p.domain_id)
 
   return (
     <div className="blockage-posture">
@@ -988,11 +1017,24 @@ function BlockagePostureSummary({ debtIndexData, progressionData, maturityData }
           {contDebt.map(d => d.description).join(' · ')}
         </div>
       )}
+      {debtDomains.length > 0 && onDomainSelect && (
+        <div className="blockage-posture-nav">
+          <span
+            className="blockage-posture-nav-link"
+            onClick={() => onDomainSelect(debtDomains[0])}
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => e.key === 'Enter' && onDomainSelect(debtDomains[0])}
+          >
+            {debtDomains.length} domain{debtDomains.length !== 1 ? 's' : ''} with active debt — explore →
+          </span>
+        </div>
+      )}
     </div>
   )
 }
 
-function TemporalStructuralSummary({ temporalAnalyticsData }) {
+function TemporalStructuralSummary({ temporalAnalyticsData, onDomainSelect }) {
   if (!temporalAnalyticsData) return null
   const timeline = temporalAnalyticsData.epoch_timeline || []
   const enrich = temporalAnalyticsData.enrichment_effectiveness || {}
@@ -1036,7 +1078,16 @@ function TemporalStructuralSummary({ temporalAnalyticsData }) {
           <div className="temporal-summary-persistent-label">PERSISTENT UNMAPPED ({persist.persistent_count})</div>
           <div className="temporal-summary-persistent-domains">
             {persist.persistent_domains.map(d => (
-              <span key={d.domain_id} className="temporal-summary-persistent-domain">{d.domain_id}</span>
+              <span
+                key={d.domain_id}
+                className={`temporal-summary-persistent-domain${onDomainSelect ? ' temporal-summary-persistent-domain--link' : ''}`}
+                onClick={() => onDomainSelect && onDomainSelect(d.domain_id)}
+                role={onDomainSelect ? 'button' : undefined}
+                tabIndex={onDomainSelect ? 0 : undefined}
+                onKeyDown={onDomainSelect ? (e => e.key === 'Enter' && onDomainSelect(d.domain_id)) : undefined}
+              >
+                {d.domain_id}
+              </span>
             ))}
           </div>
           <div className="temporal-summary-persistent-note">
@@ -1056,7 +1107,7 @@ function TemporalStructuralSummary({ temporalAnalyticsData }) {
   )
 }
 
-function DomainTemporalSection({ domainId, temporalLifecycleData, temporalAnalyticsData }) {
+function DomainTemporalSection({ domainId, temporalLifecycleData, temporalAnalyticsData, onDomainSelect }) {
   if (!temporalLifecycleData) {
     return (
       <div className="dsp-section">
@@ -1115,6 +1166,11 @@ function DomainTemporalSection({ domainId, temporalLifecycleData, temporalAnalyt
     movementColor = '#ff6b6b'
   }
 
+  const persistentPeers = (persist && persist.persistent_domains || []).map(p => p.domain_id)
+  const persistIdx = persistentPeers.indexOf(domainId)
+  const movedPeers = delta ? (delta.domain_deltas || []).map(dd => dd.domain_id) : []
+  const movedIdx = movedPeers.indexOf(domainId)
+
   const confColor0 = CONFIDENCE_COLORS[d0.confidence_level] || '#4a5570'
   const confColor1 = CONFIDENCE_COLORS[d1.confidence_level] || '#4a5570'
 
@@ -1167,11 +1223,29 @@ function DomainTemporalSection({ domainId, temporalLifecycleData, temporalAnalyt
           </div>
         )}
       </div>
+      {persistentDomain && persistentPeers.length > 1 && onDomainSelect && persistIdx >= 0 && (
+        <div className="dsp-peer-nav">
+          <button className="dsp-peer-nav-arrow" type="button" disabled={persistIdx === 0}
+            onClick={() => onDomainSelect(persistentPeers[persistIdx - 1])} aria-label="Previous persistent unmapped domain">◂</button>
+          <span className="dsp-peer-nav-label">{persistIdx + 1} of {persistentPeers.length} persistent unmapped</span>
+          <button className="dsp-peer-nav-arrow" type="button" disabled={persistIdx === persistentPeers.length - 1}
+            onClick={() => onDomainSelect(persistentPeers[persistIdx + 1])} aria-label="Next persistent unmapped domain">▸</button>
+        </div>
+      )}
+      {domainDelta && movedPeers.length > 1 && onDomainSelect && movedIdx >= 0 && (
+        <div className="dsp-peer-nav">
+          <button className="dsp-peer-nav-arrow" type="button" disabled={movedIdx === 0}
+            onClick={() => onDomainSelect(movedPeers[movedIdx - 1])} aria-label="Previous moved domain">◂</button>
+          <span className="dsp-peer-nav-label">{movedIdx + 1} of {movedPeers.length} moved</span>
+          <button className="dsp-peer-nav-arrow" type="button" disabled={movedIdx === movedPeers.length - 1}
+            onClick={() => onDomainSelect(movedPeers[movedIdx + 1])} aria-label="Next moved domain">▸</button>
+        </div>
+      )}
     </div>
   )
 }
 
-function DomainStructuralPanel({ domainId, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, temporalLifecycleData, temporalAnalyticsData }) {
+function DomainStructuralPanel({ domainId, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, temporalLifecycleData, temporalAnalyticsData, onDomainSelect }) {
   if (!correspondenceData || !domainId) return null
   const correspondences = correspondenceData.correspondences || []
   const corr = correspondences.find(c => c.semantic_domain_id === domainId)
@@ -1179,8 +1253,8 @@ function DomainStructuralPanel({ domainId, correspondenceData, evidenceIntakeDat
     return (
       <div className="dsp-panel">
         <div className="dsp-unavailable">Correspondence data unavailable for {domainId}</div>
-        <DomainDebtSection domainId={domainId} debtIndexData={debtIndexData} progressionData={progressionData} />
-        <DomainTemporalSection domainId={domainId} temporalLifecycleData={temporalLifecycleData} temporalAnalyticsData={temporalAnalyticsData} />
+        <DomainDebtSection domainId={domainId} debtIndexData={debtIndexData} progressionData={progressionData} onDomainSelect={onDomainSelect} />
+        <DomainTemporalSection domainId={domainId} temporalLifecycleData={temporalLifecycleData} temporalAnalyticsData={temporalAnalyticsData} onDomainSelect={onDomainSelect} />
         <EvidenceSourcesSection domainId={domainId} evidenceIntakeData={evidenceIntakeData} />
       </div>
     )
@@ -1319,9 +1393,9 @@ function DomainStructuralPanel({ domainId, correspondenceData, evidenceIntakeDat
         </div>
       </div>
 
-      <DomainDebtSection domainId={domainId} debtIndexData={debtIndexData} progressionData={progressionData} />
+      <DomainDebtSection domainId={domainId} debtIndexData={debtIndexData} progressionData={progressionData} onDomainSelect={onDomainSelect} />
 
-      <DomainTemporalSection domainId={domainId} temporalLifecycleData={temporalLifecycleData} temporalAnalyticsData={temporalAnalyticsData} />
+      <DomainTemporalSection domainId={domainId} temporalLifecycleData={temporalLifecycleData} temporalAnalyticsData={temporalAnalyticsData} onDomainSelect={onDomainSelect} />
 
       <EvidenceSourcesSection domainId={domainId} evidenceIntakeData={evidenceIntakeData} />
     </div>
@@ -1408,6 +1482,8 @@ function EvidenceSourcesSection({ domainId, evidenceIntakeData }) {
 function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, initialSignalTrace, onSignalTraceConsumed }) {
   const [focusedDomain, setFocusedDomain] = useState(null)
   const [traceResolution, setTraceResolution] = useState(null)
+  const panelRef = useRef(null)
+  const handleDomainSelect = useCallback((id) => { setFocusedDomain(id); setTraceResolution(null) }, [])
   const domainRegistry = (fullReport && fullReport.semantic_domain_registry) || []
   const clusterRegistry = (fullReport && fullReport.semantic_cluster_registry) || []
   const topologyEdges = (fullReport && fullReport.semantic_topology_edges) || []
@@ -1436,6 +1512,12 @@ function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntake
       document.body.style.overflow = ''
     }
   }, [onClose])
+
+  useEffect(() => {
+    if (focusedDomain && panelRef.current) {
+      panelRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    }
+  }, [focusedDomain])
 
   return (
     <div className="topo-modal-overlay" onClick={onClose}>
@@ -1475,7 +1557,9 @@ function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntake
             </div>
           )}
           {focusedDomain && (
-            <DomainStructuralPanel domainId={focusedDomain} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} temporalLifecycleData={temporalLifecycleData} temporalAnalyticsData={temporalAnalyticsData} />
+            <div ref={panelRef}>
+              <DomainStructuralPanel domainId={focusedDomain} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} temporalLifecycleData={temporalLifecycleData} temporalAnalyticsData={temporalAnalyticsData} onDomainSelect={handleDomainSelect} />
+            </div>
           )}
           <div className="topo-modal-domains">
             <div className="topo-modal-domains-heading">DOMAIN REGISTRY</div>
@@ -1503,8 +1587,8 @@ function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntake
               })}
             </div>
           </div>
-          <BlockagePostureSummary debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} />
-          <TemporalStructuralSummary temporalAnalyticsData={temporalAnalyticsData} />
+          <BlockagePostureSummary debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} onDomainSelect={handleDomainSelect} />
+          <TemporalStructuralSummary temporalAnalyticsData={temporalAnalyticsData} onDomainSelect={handleDomainSelect} />
         </div>
       </div>
     </div>

@@ -1613,6 +1613,75 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           margin-top: 2px;
         }
 
+        /* ── Integrated investigation flow (5A.6) ─────────────────────────── */
+        .temporal-summary-persistent-domain--link {
+          cursor: pointer;
+          transition: color 0.15s ease;
+        }
+        .temporal-summary-persistent-domain--link:hover {
+          color: #4a9eff;
+        }
+        .temporal-summary-persistent-domain--link:focus-visible {
+          outline: 1px solid #4a9eff;
+          outline-offset: 2px;
+          border-radius: 2px;
+        }
+        .blockage-posture-nav {
+          margin-top: 6px;
+          padding-top: 6px;
+          border-top: 1px solid #1e2330;
+        }
+        .blockage-posture-nav-link {
+          font-size: 10px;
+          color: #4a9eff;
+          cursor: pointer;
+          transition: color 0.15s ease;
+        }
+        .blockage-posture-nav-link:hover {
+          color: #6db8ff;
+        }
+        .blockage-posture-nav-link:focus-visible {
+          outline: 1px solid #4a9eff;
+          outline-offset: 2px;
+          border-radius: 2px;
+        }
+        .dsp-peer-nav {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-top: 6px;
+          padding-top: 6px;
+          border-top: 1px solid #1e2330;
+        }
+        .dsp-peer-nav-arrow {
+          background: none;
+          border: 1px solid #2a2f40;
+          border-radius: 3px;
+          color: #7a8aaa;
+          font-size: 11px;
+          width: 22px;
+          height: 22px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.15s ease;
+          padding: 0;
+        }
+        .dsp-peer-nav-arrow:hover:not(:disabled) {
+          border-color: #4a9eff;
+          color: #4a9eff;
+        }
+        .dsp-peer-nav-arrow:disabled {
+          opacity: 0.3;
+          cursor: default;
+        }
+        .dsp-peer-nav-label {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #5a6580;
+        }
+
         /* ── Domain temporal section (5A.5) ──────────────────────────────── */
         .dsp-temporal-arrow {
           color: #5a6580;
