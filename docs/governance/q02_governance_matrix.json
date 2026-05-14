@@ -1,0 +1,120 @@
+{
+  "matrix_id": "Q02-GOVERNANCE-MATRIX-01",
+  "schema_version": "1.0",
+  "stream": "PI.LENS.V2.Q02-AND-IP-GOVERNANCE-CLEANUP.01",
+  "baseline": "governed-dpsig-baseline-v1",
+  "baseline_commit": "93098cb",
+  "status": "AUTHORITATIVE",
+  "issued": "2026-05-10",
+  "supersedes": "Legacy fixture-era Q-00/Q-01/Q-02 placeholder semantics for new live emissions",
+  "principle": "Q-classes are governance classifications of grounding state; not probabilistic AI confidence",
+
+  "q_classes": [
+    {
+      "id": "Q-01",
+      "name": "FULL_GROUNDING",
+      "structural_grounding": "FULL",
+      "semantic_continuity": "VALIDATED",
+      "evidence_required": true,
+      "render_chip": false,
+      "render_absence_notice": false,
+      "executive_label": "Full Grounding",
+      "executive_note": null,
+      "forbidden_language": ["probabilistic", "AI confidence", "medium confidence", "estimated likelihood"],
+      "compat_legacy_class": "Q-00"
+    },
+    {
+      "id": "Q-02",
+      "name": "PARTIAL_GROUNDING_WITH_STRUCTURAL_CONTINUITY",
+      "structural_grounding": "PARTIAL",
+      "semantic_continuity": "VALIDATED",
+      "evidence_required": true,
+      "render_chip": true,
+      "render_absence_notice": false,
+      "executive_label": "Partial Grounding · Structural Continuity",
+      "executive_note": "Semantic continuity is validated. Some semantic domains lack structural backing; advisory confirmation is mandatory before executive commitment on partially grounded surfaces.",
+      "disclosure_required": [
+        "unresolved_semantic_gaps must be enumerated on the rendering metadata",
+        "advisory confirmation requirement must be visibly stated"
+      ],
+      "forbidden_language": ["probabilistic", "AI confidence", "medium confidence", "estimated likelihood", "model thinks"],
+      "compat_legacy_class": "Q-01",
+      "compat_note": "Aligns with the legacy adapter's 'Partial Grounding' semantics; new label is the governance-true language."
+    },
+    {
+      "id": "Q-03",
+      "name": "SEMANTIC_ONLY",
+      "structural_grounding": "ABSENT",
+      "semantic_continuity": "VALIDATED",
+      "evidence_required": true,
+      "render_chip": true,
+      "render_absence_notice": false,
+      "executive_label": "Semantic Continuity Only",
+      "executive_note": "Structural backing is absent. Only semantic continuity supports the projection. Executive caution mandatory.",
+      "disclosure_required": [
+        "absence of structural backing must be explicitly stated as the reason"
+      ],
+      "forbidden_language": ["probabilistic", "AI confidence", "medium confidence", "estimated likelihood"],
+      "compat_legacy_class": "Q-02",
+      "compat_note": "Legacy adapter Q-02 was 'Structural View Only' (inverse of new Q-03). Surfaces consuming the legacy adapter for Q-03 emissions MUST override the tooltip with the new meaning."
+    },
+    {
+      "id": "Q-04",
+      "name": "UNAVAILABLE",
+      "structural_grounding": "ABSENT",
+      "semantic_continuity": "ABSENT",
+      "evidence_required": false,
+      "render_chip": false,
+      "render_absence_notice": true,
+      "executive_label": "Withheld",
+      "executive_note": "Evidence is unavailable. No semantic projection is permitted.",
+      "compat_legacy_class": "Q-04"
+    }
+  ],
+
+  "resolution_rule": {
+    "id": "Q02-RES-RULE-01",
+    "version": "1.0",
+    "inputs": ["backed_count", "total_count", "semantic_continuity_status", "evidence_availability"],
+    "pseudocode": [
+      "if (evidence_availability != 'AVAILABLE') return Q-04",
+      "let r = backed_count / total_count",
+      "if (r == 1.0) return Q-01",
+      "if (r == 0)   return (semantic_continuity_status == 'VALIDATED') ? Q-03 : Q-04",
+      "if (0 < r < 1.0) return (semantic_continuity_status == 'VALIDATED') ? Q-02 : Q-03"
+    ],
+    "deterministic": true,
+    "replay_safe": true,
+    "topology_safe": true,
+    "ai_inference": false,
+    "prohibited": [
+      "Never derive Q-01 from semantic continuity alone",
+      "Never emit Q-02 without recording unresolved_semantic_gaps",
+      "Never emit Q-03 without explicit absence-of-structural-backing reason",
+      "Never collapse Q-04 into Q-03 to avoid disclosure"
+    ]
+  },
+
+  "compat_mapping": {
+    "purpose": "Allow legacy fixture-era adapters and tests to continue functioning while the live payload emits the new governance class",
+    "compat_field": "qualifier_class (top-level)",
+    "governance_field": "qualifier_summary.qualifier_class",
+    "rule": "Top-level qualifier_class carries the legacy adapter class; qualifier_summary.qualifier_class carries the new governance class. Live executive surfaces MUST display the new class with contract-mandated language.",
+    "table": [
+      { "new": "Q-01", "legacy": "Q-00" },
+      { "new": "Q-02", "legacy": "Q-01" },
+      { "new": "Q-03", "legacy": "Q-02" },
+      { "new": "Q-04", "legacy": "Q-04" }
+    ]
+  },
+
+  "active_emissions": [
+    {
+      "client": "blueedge",
+      "run": "run_blueedge_productized_01_fixed",
+      "emitted_class": "Q-02",
+      "compat_class": "Q-01",
+      "rendering_metadata_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/vault/rendering_metadata.json"
+    }
+  ]
+}

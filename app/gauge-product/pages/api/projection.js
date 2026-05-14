@@ -6,7 +6,7 @@
  *
  * Serves pre-generated static fragment files produced by:
  *   python3 scripts/pios/projection_runtime.py export-fragments \
- *     --output-dir clients/blueedge/vaults/run_01_authoritative/claims/fragments
+ *     --output-dir clients/<client>/vaults/<run_id>/claims/fragments
  *
  * Query parameters:
  *   claim_id  — required, e.g. "CLM-09"
@@ -29,11 +29,7 @@
 import fs   from 'fs'
 import path from 'path'
 
-const REPO_ROOT      = path.resolve(process.cwd(), '..', '..')
-const FRAGMENTS_DIR  = process.env.PROJECTION_FRAGMENTS_DIR || path.join(
-  REPO_ROOT,
-  'clients', 'blueedge', 'vaults', 'run_01_authoritative', 'claims', 'fragments'
-)
+const FRAGMENTS_DIR  = process.env.PROJECTION_FRAGMENTS_DIR || null
 
 const VALID_ZONES  = new Set(['ZONE-1', 'ZONE-2', 'ZONE-3'])
 const VALID_DEPTHS = new Set(['L1', 'L2', 'L3'])
@@ -55,6 +51,15 @@ function projectionError(reason, zone, depth, claimId, status) {
 export default function handler(req, res) {
   if (req.method !== 'GET') {
     res.status(405).json({ error_type: 'METHOD_NOT_ALLOWED', reason: 'GET only' })
+    return
+  }
+
+  if (!FRAGMENTS_DIR) {
+    res.status(503).json({
+      error_type: 'PROJECTION_API_ERROR',
+      reason: 'PROJECTION_FRAGMENTS_DIR_NOT_CONFIGURED',
+      generated_at: new Date().toISOString(),
+    })
     return
   }
 

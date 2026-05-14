@@ -1,0 +1,41 @@
+{
+  "contract_id": "PI.LENS.FASTAPI.CLIENT-SOURCE-REGISTRATION.01",
+  "artifact": "source_manifest_result",
+  "step": "STEP_4",
+  "generated_date": "2026-05-01",
+
+  "target_path": "clients/fastapi/sources/source_01/source_manifest.json",
+  "status": "WRITTEN",
+  "fields_written": {
+    "source_id": "source_01",
+    "client_id": "fastapi",
+    "uuid": "e65d2f0a-dfa7-4257-9333-fcbb583f0880",
+    "archive_type": "LOCAL_DIRECTORY",
+    "archive_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/manifests/fastapi-backend.manifest.sha256",
+    "sha256": "b93be45319f28dfb04269c42c0b14f6288f8b2328d9490962e83c4941ced86bb",
+    "source_dir": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/source/fastapi-backend",
+    "file_count": 87,
+    "aggregate_hash": "5a1a19d95665a650bf544cd3bf585ec7ac0d3ba0dfa886de9418c1aca4303082",
+    "source_version": "04dcdc9ae62e94d55f528cb89493a72b448845ab",
+    "intake_contract": "PRODUCTIZE.RAW.SOURCE.INTAKE.01",
+    "extracted_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/source/fastapi-backend",
+    "structural_contract": "PI.LENS.FASTAPI.CLIENT-SOURCE-REGISTRATION.01",
+    "structure_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/structure",
+    "ceu_grounding_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/binding",
+    "grounding_state_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/binding/provenance/grounding_state_v2.json",
+    "structural_reference_run": "run_02_oss_fastapi",
+    "canonical_topology": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/package/canonical_topology.json",
+    "binding_envelope": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/binding/binding_envelope.json",
+    "ceu_registry": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/lineage/ceu_registry.json",
+    "run_validation": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/validation/run_validation.json",
+    "pipeline_gap_register": "GAP-REG-01 (phase_03 BLOCKING), GAP-REG-02 (phase_04 BLOCKING)",
+    "registration_contract": "PI.LENS.FASTAPI.CLIENT-SOURCE-REGISTRATION.01",
+    "registration_date": "2026-05-01"
+  },
+  "archive_path_proxy_rationale": "phase_01_source_boundary opens archive_path in binary read mode and computes SHA256. Source is a local directory — not readable as binary. The manifest sha256 file is the canonical boundary proxy: a real file whose SHA256 provides stable source boundary identity.",
+  "gap_summary": {
+    "GAP-REG-01": "phase_03_40x_structural — BLOCKING — no 40.x subdirs",
+    "GAP-REG-02": "phase_04_ceu_grounding — BLOCKING — grounding_state_v3 not exists"
+  },
+  "governance": "No overwrite — clients/fastapi/sources/source_01/source_manifest.json did not exist prior to this step. CREATE_ONLY — PASS."
+}

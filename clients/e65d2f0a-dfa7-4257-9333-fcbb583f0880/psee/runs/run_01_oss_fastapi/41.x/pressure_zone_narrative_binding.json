@@ -1,0 +1,316 @@
+{
+  "schema_version": "1.0",
+  "projection_stage": "41.x",
+  "binding_contract": "PI.41X.PRESSURE-ZONE.NARRATIVE-BINDING.01",
+  "run_id": "run_01_oss_fastapi",
+  "client_id": "e65d2f0a-dfa7-4257-9333-fcbb583f0880",
+  "generated_at": "2026-04-25",
+  "source_artifacts": [
+    "41.x/pressure_zone_projection.json",
+    "41.x/signal_projection.json"
+  ],
+  "source_contracts": [
+    "PI.PRESSURE-ZONE.DESIGNATION.75X.04",
+    "PI.CONDITION-CORRELATION.ANALYSIS.75X.03",
+    "PI.41X.PRESSURE-ZONE.PROJECTION.01"
+  ],
+  "inference_prohibition": "ACTIVE",
+  "focus_domain_selected": false,
+  "ranking_applied": false,
+  "authority_note": "All narrative content derives from 41.x projection fields only. No interpretation beyond condition co-presence and attribution profile records. No causal claims. No recommendations. No focus domain selected. No zone ranking applied. PSIG signals are PROVISIONAL_CKR_CANDIDATE.",
+  "structural_context": {
+    "total_pressure_zones": 3,
+    "zone_class": "COMPOUND_ZONE",
+    "combination_signature": "PSIG-001|PSIG-002|PSIG-004",
+    "structural_blind_spot": {
+      "signal_id": "PSIG-006",
+      "activation_state": "ACTIVATED",
+      "activation_method": "THEORETICAL_BASELINE",
+      "signal_value": 0.20,
+      "note": "PSIG-006 (structural blind-spot signal) is activated but not assigned to any pressure zone. Its condition scope covers DOM-01, DOM-02, and NODE-001 through NODE-007 — structural entities not included in PZ-001, PZ-002, or PZ-003. PSIG-006 activation does not modify the COMPOUND_ZONE classification of any zone in this package.",
+      "condition_id": "COND-PSIG-006-01",
+      "zone_ids_where_active": []
+    }
+  },
+  "zone_narratives": [
+    {
+      "zone_id": "PZ-001",
+      "anchor_id": "DOM-03",
+      "anchor_name": "backend_isolated",
+      "zone_class": "COMPOUND_ZONE",
+      "zone_type": "DOMAIN_ZONE",
+      "attribution_profile": "secondary",
+      "condition_count": 3,
+      "narrative_title": "Structural condition co-presence — backend_isolated",
+      "executive_summary": "Three structural conditions are simultaneously co-present in the backend_isolated domain scope: fan-in concentration (PSIG-001, value 9.43), fan-out propagation (PSIG-002, value 9.43), and responsibility concentration (PSIG-004, value 4.33). All three are activated at HIGH state via run-relative outlier method. backend_isolated carries secondary attribution for PSIG-001 and PSIG-004 — the primary attribution entity (NODE-009) resides in the frontend_isolated domain (DOM-04). For PSIG-002, no single primary attribution entity exists; attribution distributes across DOM-03, DOM-04, and DOM-05. Co-presence of three simultaneously activated conditions from distinct pressure families (coupling, propagation, responsibility) produces the COMPOUND_ZONE designation. No focus domain has been selected; this zone is not ranked relative to PZ-002 or PZ-003.",
+      "evidence_basis": {
+        "signal_authority": "PROVISIONAL_CKR_CANDIDATE",
+        "conditions": [
+          {
+            "condition_id": "COND-PSIG-001-01",
+            "signal_id": "PSIG-001",
+            "signal_meaning": "Fan-In Concentration (coupling pressure — Class 1)",
+            "activation_state": "HIGH",
+            "signal_value": 9.43,
+            "activation_method": "RUN_RELATIVE_OUTLIER",
+            "threshold": 2.0,
+            "attribution_role": "secondary",
+            "primary_attribution_entity": "NODE-009",
+            "primary_attribution_domain": "DOM-04",
+            "this_zone_member_entity": "NODE-008",
+            "source": "41.x/signal_projection.json: condition_id=COND-PSIG-001-01"
+          },
+          {
+            "condition_id": "COND-PSIG-002-01",
+            "signal_id": "PSIG-002",
+            "signal_meaning": "Fan-Out Propagation (propagation pressure — Class 2)",
+            "activation_state": "HIGH",
+            "signal_value": 9.43,
+            "activation_method": "RUN_RELATIVE_OUTLIER",
+            "threshold": 2.0,
+            "statistical_note": "IQR degenerate; mean+2SD fallback boundary=6.228 applied",
+            "attribution_role": "domain_scope",
+            "primary_attribution_entity": null,
+            "domain_attribution_scope": ["DOM-03", "DOM-04", "DOM-05"],
+            "this_zone_member_entity": "NODE-008",
+            "source": "41.x/signal_projection.json: condition_id=COND-PSIG-002-01"
+          },
+          {
+            "condition_id": "COND-PSIG-004-01",
+            "signal_id": "PSIG-004",
+            "signal_meaning": "Responsibility Concentration (responsibility pressure — Class 3)",
+            "activation_state": "HIGH",
+            "signal_value": 4.33,
+            "activation_method": "RUN_RELATIVE_OUTLIER",
+            "threshold": 2.0,
+            "attribution_role": "secondary",
+            "primary_attribution_entity": "NODE-009",
+            "primary_attribution_domain": "DOM-04",
+            "this_zone_member_entity": "NODE-008",
+            "source": "41.x/signal_projection.json: condition_id=COND-PSIG-004-01"
+          }
+        ],
+        "source_artifact": "41.x/signal_projection.json"
+      },
+      "pressure_meaning": "COMPOUND_ZONE (Class 6 per PI.THRESHOLD-FOUNDATION.FORENSICS.75X.01) designates a structural location where conditions from two or more distinct pressure families are simultaneously activated. For PZ-001 (backend_isolated), three pressure families are co-present: coupling (PSIG-001 — fan-in concentration), propagation (PSIG-002 — fan-out propagation), and responsibility (PSIG-004 — responsibility concentration). The embedded pair rules — COUPLING_ZONE, PROPAGATION_ZONE, RESPONSIBILITY_ZONE — record the pairwise structural rule combinations active within this compound designation. Secondary attribution means that NODE-008, the member entity of backend_isolated, is included in the condition scope for PSIG-001 and PSIG-004, while the maximum-attribution entity (NODE-009) is located in the frontend_isolated domain. This is a factual record of condition co-presence and attribution — not a causal or severity claim.",
+      "unresolved_boundaries": [
+        {
+          "item": "Focus domain not selected",
+          "reason": "No focus-domain selection rule has been authorized for this run. PZ-001 is not ranked against PZ-002 or PZ-003. Source: projection_manifest.json: focus_domain_selected=false, ranking_applied=false."
+        },
+        {
+          "item": "Signal authority: PROVISIONAL_CKR_CANDIDATE",
+          "reason": "PSIG-001, PSIG-002, PSIG-004 are provisional pressure signal candidates (signal_projection.json: signal_authority=PROVISIONAL_CKR_CANDIDATE). These are not yet canonical CKR-admitted signals. Activation values and RUN_RELATIVE_OUTLIER method are specific to run_01_oss_fastapi static structural analysis."
+        },
+        {
+          "item": "Single-run scope — no temporal comparison",
+          "reason": "All conditions derive from a single run (run_01_oss_fastapi). RUN_RELATIVE_OUTLIER method normalizes within this run only. No cross-run comparison is available."
+        },
+        {
+          "item": "Structural blind-spot not zone-assigned",
+          "reason": "PSIG-006 (structural blind-spot, ACTIVATED, value 0.20) is active in this run but covers DOM-01/DOM-02 and NODE-001..007 — entities outside PZ-001's condition scope. PZ-001's COMPOUND_ZONE classification is not modified by PSIG-006."
+        }
+      ],
+      "trace_references": {
+        "zone_id": "PZ-001",
+        "anchor_domain": "DOM-03",
+        "member_entity": "NODE-008",
+        "candidate_ids": ["PC-002", "PC-005"],
+        "conditions": ["COND-PSIG-001-01", "COND-PSIG-002-01", "COND-PSIG-004-01"],
+        "signals": ["PSIG-001", "PSIG-002", "PSIG-004"],
+        "embedded_pair_rules": ["COUPLING_ZONE", "PROPAGATION_ZONE", "RESPONSIBILITY_ZONE"],
+        "source_artifacts": [
+          "41.x/pressure_zone_projection.json",
+          "41.x/signal_projection.json"
+        ],
+        "source_contract": "PI.CONDITION-CORRELATION.ANALYSIS.75X.03"
+      }
+    },
+    {
+      "zone_id": "PZ-002",
+      "anchor_id": "DOM-04",
+      "anchor_name": "frontend_isolated",
+      "zone_class": "COMPOUND_ZONE",
+      "zone_type": "DOMAIN_ZONE",
+      "attribution_profile": "primary",
+      "condition_count": 3,
+      "narrative_title": "Structural condition co-presence — frontend_isolated (primary attribution)",
+      "executive_summary": "Three structural conditions are simultaneously co-present in the frontend_isolated domain scope: fan-in concentration (PSIG-001, value 9.43), fan-out propagation (PSIG-002, value 9.43), and responsibility concentration (PSIG-004, value 4.33). All three are activated at HIGH state via run-relative outlier method. frontend_isolated carries primary attribution for PSIG-001 and PSIG-004 — NODE-009, a member entity of this domain, is the primary attribution entity for both conditions. For PSIG-002, no single primary attribution entity exists; attribution distributes across DOM-03, DOM-04, and DOM-05. Co-presence of three simultaneously activated conditions from distinct pressure families (coupling, propagation, responsibility) produces the COMPOUND_ZONE designation. No focus domain has been selected; this zone is not ranked relative to PZ-001 or PZ-003 despite carrying primary attribution.",
+      "evidence_basis": {
+        "signal_authority": "PROVISIONAL_CKR_CANDIDATE",
+        "conditions": [
+          {
+            "condition_id": "COND-PSIG-001-01",
+            "signal_id": "PSIG-001",
+            "signal_meaning": "Fan-In Concentration (coupling pressure — Class 1)",
+            "activation_state": "HIGH",
+            "signal_value": 9.43,
+            "activation_method": "RUN_RELATIVE_OUTLIER",
+            "threshold": 2.0,
+            "attribution_role": "primary",
+            "primary_attribution_entity": "NODE-009",
+            "primary_attribution_domain": "DOM-04",
+            "this_zone_member_entity": "NODE-009",
+            "source": "41.x/signal_projection.json: condition_id=COND-PSIG-001-01"
+          },
+          {
+            "condition_id": "COND-PSIG-002-01",
+            "signal_id": "PSIG-002",
+            "signal_meaning": "Fan-Out Propagation (propagation pressure — Class 2)",
+            "activation_state": "HIGH",
+            "signal_value": 9.43,
+            "activation_method": "RUN_RELATIVE_OUTLIER",
+            "threshold": 2.0,
+            "statistical_note": "IQR degenerate; mean+2SD fallback boundary=6.228 applied",
+            "attribution_role": "domain_scope",
+            "primary_attribution_entity": null,
+            "domain_attribution_scope": ["DOM-03", "DOM-04", "DOM-05"],
+            "this_zone_member_entity": "NODE-009",
+            "source": "41.x/signal_projection.json: condition_id=COND-PSIG-002-01"
+          },
+          {
+            "condition_id": "COND-PSIG-004-01",
+            "signal_id": "PSIG-004",
+            "signal_meaning": "Responsibility Concentration (responsibility pressure — Class 3)",
+            "activation_state": "HIGH",
+            "signal_value": 4.33,
+            "activation_method": "RUN_RELATIVE_OUTLIER",
+            "threshold": 2.0,
+            "attribution_role": "primary",
+            "primary_attribution_entity": "NODE-009",
+            "primary_attribution_domain": "DOM-04",
+            "this_zone_member_entity": "NODE-009",
+            "source": "41.x/signal_projection.json: condition_id=COND-PSIG-004-01"
+          }
+        ],
+        "source_artifact": "41.x/signal_projection.json"
+      },
+      "pressure_meaning": "COMPOUND_ZONE (Class 6 per PI.THRESHOLD-FOUNDATION.FORENSICS.75X.01) designates a structural location where conditions from two or more distinct pressure families are simultaneously activated. For PZ-002 (frontend_isolated), three pressure families are co-present: coupling (PSIG-001 — fan-in concentration), propagation (PSIG-002 — fan-out propagation), and responsibility (PSIG-004 — responsibility concentration). The embedded pair rules — COUPLING_ZONE, PROPAGATION_ZONE, RESPONSIBILITY_ZONE — record the pairwise structural rule combinations active within this compound designation. Primary attribution indicates that NODE-009, the member entity of frontend_isolated, is the maximum-attribution entity for both the PSIG-001 (fan-in, value 9.43) and PSIG-004 (responsibility, value 4.33) conditions. PSIG-002 has no single primary entity — it distributes across DOM-03, DOM-04, and DOM-05. Primary attribution is a factual record from condition attribution fields, not a severity or priority designation.",
+      "unresolved_boundaries": [
+        {
+          "item": "Focus domain not selected",
+          "reason": "No focus-domain selection rule has been authorized for this run. PZ-002 is not ranked against PZ-001 or PZ-003, and primary attribution does not constitute a focus-domain selection. Source: projection_manifest.json: focus_domain_selected=false, ranking_applied=false."
+        },
+        {
+          "item": "Signal authority: PROVISIONAL_CKR_CANDIDATE",
+          "reason": "PSIG-001, PSIG-002, PSIG-004 are provisional pressure signal candidates (signal_projection.json: signal_authority=PROVISIONAL_CKR_CANDIDATE). These are not yet canonical CKR-admitted signals. Activation values and RUN_RELATIVE_OUTLIER method are specific to run_01_oss_fastapi static structural analysis."
+        },
+        {
+          "item": "Single-run scope — no temporal comparison",
+          "reason": "All conditions derive from a single run (run_01_oss_fastapi). RUN_RELATIVE_OUTLIER method normalizes within this run only. No cross-run comparison is available."
+        },
+        {
+          "item": "Structural blind-spot not zone-assigned",
+          "reason": "PSIG-006 (structural blind-spot, ACTIVATED, value 0.20) is active in this run but covers DOM-01/DOM-02 and NODE-001..007 — entities outside PZ-002's condition scope. PZ-002's COMPOUND_ZONE classification is not modified by PSIG-006."
+        }
+      ],
+      "trace_references": {
+        "zone_id": "PZ-002",
+        "anchor_domain": "DOM-04",
+        "member_entity": "NODE-009",
+        "candidate_ids": ["PC-001", "PC-004"],
+        "conditions": ["COND-PSIG-001-01", "COND-PSIG-002-01", "COND-PSIG-004-01"],
+        "signals": ["PSIG-001", "PSIG-002", "PSIG-004"],
+        "embedded_pair_rules": ["COUPLING_ZONE", "PROPAGATION_ZONE", "RESPONSIBILITY_ZONE"],
+        "source_artifacts": [
+          "41.x/pressure_zone_projection.json",
+          "41.x/signal_projection.json"
+        ],
+        "source_contract": "PI.CONDITION-CORRELATION.ANALYSIS.75X.03"
+      }
+    },
+    {
+      "zone_id": "PZ-003",
+      "anchor_id": "DOM-05",
+      "anchor_name": "platform_monorepo",
+      "zone_class": "COMPOUND_ZONE",
+      "zone_type": "DOMAIN_ZONE",
+      "attribution_profile": "secondary",
+      "condition_count": 3,
+      "narrative_title": "Structural condition co-presence — platform_monorepo",
+      "executive_summary": "Three structural conditions are simultaneously co-present in the platform_monorepo domain scope: fan-in concentration (PSIG-001, value 9.43), fan-out propagation (PSIG-002, value 9.43), and responsibility concentration (PSIG-004, value 4.33). All three are activated at HIGH state via run-relative outlier method. platform_monorepo carries secondary attribution for PSIG-001 and PSIG-004 — the primary attribution entity (NODE-009) resides in the frontend_isolated domain (DOM-04). For PSIG-002, no single primary attribution entity exists; attribution distributes across DOM-03, DOM-04, and DOM-05. Co-presence of three simultaneously activated conditions from distinct pressure families (coupling, propagation, responsibility) produces the COMPOUND_ZONE designation. No focus domain has been selected; this zone is not ranked relative to PZ-001 or PZ-002.",
+      "evidence_basis": {
+        "signal_authority": "PROVISIONAL_CKR_CANDIDATE",
+        "conditions": [
+          {
+            "condition_id": "COND-PSIG-001-01",
+            "signal_id": "PSIG-001",
+            "signal_meaning": "Fan-In Concentration (coupling pressure — Class 1)",
+            "activation_state": "HIGH",
+            "signal_value": 9.43,
+            "activation_method": "RUN_RELATIVE_OUTLIER",
+            "threshold": 2.0,
+            "attribution_role": "secondary",
+            "primary_attribution_entity": "NODE-009",
+            "primary_attribution_domain": "DOM-04",
+            "this_zone_member_entity": "NODE-010",
+            "source": "41.x/signal_projection.json: condition_id=COND-PSIG-001-01"
+          },
+          {
+            "condition_id": "COND-PSIG-002-01",
+            "signal_id": "PSIG-002",
+            "signal_meaning": "Fan-Out Propagation (propagation pressure — Class 2)",
+            "activation_state": "HIGH",
+            "signal_value": 9.43,
+            "activation_method": "RUN_RELATIVE_OUTLIER",
+            "threshold": 2.0,
+            "statistical_note": "IQR degenerate; mean+2SD fallback boundary=6.228 applied",
+            "attribution_role": "domain_scope",
+            "primary_attribution_entity": null,
+            "domain_attribution_scope": ["DOM-03", "DOM-04", "DOM-05"],
+            "this_zone_member_entity": "NODE-010",
+            "source": "41.x/signal_projection.json: condition_id=COND-PSIG-002-01"
+          },
+          {
+            "condition_id": "COND-PSIG-004-01",
+            "signal_id": "PSIG-004",
+            "signal_meaning": "Responsibility Concentration (responsibility pressure — Class 3)",
+            "activation_state": "HIGH",
+            "signal_value": 4.33,
+            "activation_method": "RUN_RELATIVE_OUTLIER",
+            "threshold": 2.0,
+            "attribution_role": "secondary",
+            "primary_attribution_entity": "NODE-009",
+            "primary_attribution_domain": "DOM-04",
+            "this_zone_member_entity": "NODE-010",
+            "source": "41.x/signal_projection.json: condition_id=COND-PSIG-004-01"
+          }
+        ],
+        "source_artifact": "41.x/signal_projection.json"
+      },
+      "pressure_meaning": "COMPOUND_ZONE (Class 6 per PI.THRESHOLD-FOUNDATION.FORENSICS.75X.01) designates a structural location where conditions from two or more distinct pressure families are simultaneously activated. For PZ-003 (platform_monorepo), three pressure families are co-present: coupling (PSIG-001 — fan-in concentration), propagation (PSIG-002 — fan-out propagation), and responsibility (PSIG-004 — responsibility concentration). The embedded pair rules — COUPLING_ZONE, PROPAGATION_ZONE, RESPONSIBILITY_ZONE — record the pairwise structural rule combinations active within this compound designation. Secondary attribution means that NODE-010, the member entity of platform_monorepo, is included in the condition scope for PSIG-001 and PSIG-004, while the maximum-attribution entity (NODE-009) is located in the frontend_isolated domain. PSIG-002 distributes across DOM-03, DOM-04, and DOM-05 without a single primary entity. This is a factual record of condition co-presence and attribution — not a causal or severity claim.",
+      "unresolved_boundaries": [
+        {
+          "item": "Focus domain not selected",
+          "reason": "No focus-domain selection rule has been authorized for this run. PZ-003 is not ranked against PZ-001 or PZ-002. Source: projection_manifest.json: focus_domain_selected=false, ranking_applied=false."
+        },
+        {
+          "item": "Signal authority: PROVISIONAL_CKR_CANDIDATE",
+          "reason": "PSIG-001, PSIG-002, PSIG-004 are provisional pressure signal candidates (signal_projection.json: signal_authority=PROVISIONAL_CKR_CANDIDATE). These are not yet canonical CKR-admitted signals. Activation values and RUN_RELATIVE_OUTLIER method are specific to run_01_oss_fastapi static structural analysis."
+        },
+        {
+          "item": "Single-run scope — no temporal comparison",
+          "reason": "All conditions derive from a single run (run_01_oss_fastapi). RUN_RELATIVE_OUTLIER method normalizes within this run only. No cross-run comparison is available."
+        },
+        {
+          "item": "Structural blind-spot not zone-assigned",
+          "reason": "PSIG-006 (structural blind-spot, ACTIVATED, value 0.20) is active in this run but covers DOM-01/DOM-02 and NODE-001..007 — entities outside PZ-003's condition scope. PZ-003's COMPOUND_ZONE classification is not modified by PSIG-006."
+        }
+      ],
+      "trace_references": {
+        "zone_id": "PZ-003",
+        "anchor_domain": "DOM-05",
+        "member_entity": "NODE-010",
+        "candidate_ids": ["PC-003", "PC-006"],
+        "conditions": ["COND-PSIG-001-01", "COND-PSIG-002-01", "COND-PSIG-004-01"],
+        "signals": ["PSIG-001", "PSIG-002", "PSIG-004"],
+        "embedded_pair_rules": ["COUPLING_ZONE", "PROPAGATION_ZONE", "RESPONSIBILITY_ZONE"],
+        "source_artifacts": [
+          "41.x/pressure_zone_projection.json",
+          "41.x/signal_projection.json"
+        ],
+        "source_contract": "PI.CONDITION-CORRELATION.ANALYSIS.75X.03"
+      }
+    }
+  ]
+}

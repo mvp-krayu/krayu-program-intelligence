@@ -1,0 +1,116 @@
+{
+  "stream_id": "PI.LENS.V2.GENERIC-SEMANTIC-PAYLOAD-RESOLVER.01",
+  "branch": "work/lens-v2-productization",
+  "baseline_commit": "30e982e",
+  "baseline_pipeline_commit": "93098cb",
+  "milestone_tag": "lens-v2-live-substrate-v1",
+  "summary": {
+    "files_created": 16,
+    "files_modified": 1,
+    "files_deleted": 0
+  },
+  "files": [
+    {
+      "path": "docs/governance/runtime/client_run_manifest.schema.json",
+      "change": "created",
+      "purpose": "Per-client/run manifest wire schema (LOCKED). Resolver reads only manifest-declared paths."
+    },
+    {
+      "path": "docs/governance/runtime/lens_semantic_payload.schema.json",
+      "change": "created",
+      "purpose": "Canonical lens_semantic_payload wire schema (LOCKED)."
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/generic/ClientRunManifestSchema.js",
+      "change": "created",
+      "purpose": "JS validator + builder mirror of the manifest wire schema"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/generic/LensSemanticPayloadSchema.js",
+      "change": "created",
+      "purpose": "JS validator mirror of the canonical payload wire schema"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/generic/GenericSemanticArtifactLoader.js",
+      "change": "created",
+      "purpose": "Manifest-declared, traversal-safe artifact loader with required/optional/IP gap classification"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/generic/GenericSemanticPayloadResolver.js",
+      "change": "created",
+      "purpose": "Productized client/run-agnostic canonical payload resolver"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/generic/GenericActorHydrator.js",
+      "change": "created",
+      "purpose": "Re-export of the (already client-agnostic) 15-actor hydrator under the generic namespace"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/generic/mappers/index.js",
+      "change": "created",
+      "purpose": "Re-export of reusable substrate mappers (DPSIG / crosswalk)"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/manifests/index.js",
+      "change": "created",
+      "purpose": "Allow-listed manifest registry (no client-name branching beyond the allow-list)"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/manifests/blueedge.run_blueedge_productized_01_fixed.json",
+      "change": "created",
+      "purpose": "BlueEdge productized run manifest declaring all artifact + report-pack paths"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/BlueEdgePayloadResolver.js",
+      "change": "modified",
+      "purpose": "Refactored to a compatibility wrapper that delegates to the generic resolver while preserving public API (buildPaths, validateClientRun, resolveBlueEdgePayload, ALLOWED_CLIENTS, ALLOWED_RUNS)"
+    },
+    {
+      "path": "app/execlens-demo/flagship-experience/tests/generic-semantic-payload-resolver.test.js",
+      "change": "created",
+      "purpose": "33-case generic-resolver suite: registry, manifest schema, loader path safety, generic resolver contract, BlueEdge wrapper parity (full deepEqual), adapter pipeline parity, no-client-name-branching invariants"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.GENERIC-SEMANTIC-PAYLOAD-RESOLVER.01/GENERIC_SEMANTIC_PAYLOAD_RESOLVER_IMPLEMENTATION.md",
+      "change": "created",
+      "purpose": "Implementation deliverable"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.GENERIC-SEMANTIC-PAYLOAD-RESOLVER.01/GENERIC_SEMANTIC_PAYLOAD_RESOLVER_VALIDATION.md",
+      "change": "created",
+      "purpose": "Validation deliverable (all 30 mandatory checks PASS)"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.GENERIC-SEMANTIC-PAYLOAD-RESOLVER.01/client_c_onboarding_model.md",
+      "change": "created",
+      "purpose": "Client C onboarding playbook — configuration + certified artifacts + validation"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.GENERIC-SEMANTIC-PAYLOAD-RESOLVER.01/screenshots/dense_1440x900_generic.png",
+      "change": "created",
+      "purpose": "Visual smoke evidence — DENSE mode with INFERENCE PROHIBITION: ENFORCED + QUALIFIER Q-02 banner under the productized resolver"
+    },
+    {
+      "path": "docs/pios/PI.LENS.V2.GENERIC-SEMANTIC-PAYLOAD-RESOLVER.01/execution_report.md",
+      "change": "created",
+      "purpose": "Governance execution report"
+    },
+    {
+      "path": "docs/pios/PI.LENS.V2.GENERIC-SEMANTIC-PAYLOAD-RESOLVER.01/file_changes.json",
+      "change": "created",
+      "purpose": "Governance file-changes manifest"
+    },
+    {
+      "path": "docs/pios/PI.LENS.V2.GENERIC-SEMANTIC-PAYLOAD-RESOLVER.01/CLOSURE.md",
+      "change": "created",
+      "purpose": "Governance closure document"
+    }
+  ],
+  "validators_changed": [],
+  "topology_mutations": [],
+  "evidence_mutations": [],
+  "lane_a_artifacts_touched": [],
+  "lane_d_dpsig_artifacts_touched": [],
+  "api_routes_modified": [],
+  "page_routes_modified": []
+}

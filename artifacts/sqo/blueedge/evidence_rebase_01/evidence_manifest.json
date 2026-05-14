@@ -1,0 +1,46 @@
+{
+  "evidence_set_id": "blueedge_explicit_html_rebase_01",
+  "client": "blueedge",
+  "run_id": "run_blueedge_productized_01_fixed",
+  "source_class": "EXPLICIT_OPERATOR_PROVIDED_UPSTREAM_EVIDENCE",
+  "evidence_root": "clients/blueedge/sqo/evidence/blueedge_explicit_html_rebase_01",
+  "evidence_items": [
+    {
+      "evidence_id": "EV-RB-001",
+      "filename": "Blue_Edge_PMO_Dashboard.html",
+      "source_path": "clients/blueedge/sqo/evidence/blueedge_explicit_html_rebase_01/Blue_Edge_PMO_Dashboard.html",
+      "source_type": "HTML_PMO_DASHBOARD",
+      "evidence_hash": "cccf4ea553c2a46a42be860c5f9e273b11870416858c16099b6d388e186c7223",
+      "byte_size": 364637,
+      "ingestion_timestamp": "2026-05-12T09:06:50.492Z",
+      "operator_provided": true,
+      "source_class": "EXPLICIT_OPERATOR_PROVIDED_UPSTREAM_EVIDENCE"
+    },
+    {
+      "evidence_id": "EV-RB-002",
+      "filename": "BlueEdge_Competitive_Dashboard_Feb2026.html",
+      "source_path": "clients/blueedge/sqo/evidence/blueedge_explicit_html_rebase_01/BlueEdge_Competitive_Dashboard_Feb2026.html",
+      "source_type": "HTML_COMPETITIVE_DASHBOARD",
+      "evidence_hash": "9ac8340f5bdf7accebea343d5d988779f86f641b5c779c9ed5df91c67c269dcf",
+      "byte_size": 51135,
+      "ingestion_timestamp": "2026-05-12T09:06:50.493Z",
+      "operator_provided": true,
+      "source_class": "EXPLICIT_OPERATOR_PROVIDED_UPSTREAM_EVIDENCE"
+    },
+    {
+      "evidence_id": "EV-RB-003",
+      "filename": "BlueEdge_Unified_Architecture_v3_23_0.html",
+      "source_path": "clients/blueedge/sqo/evidence/blueedge_explicit_html_rebase_01/BlueEdge_Unified_Architecture_v3_23_0.html",
+      "source_type": "HTML_ARCHITECTURE_SPECIFICATION",
+      "evidence_hash": "0b8d086e6bb0807e4d1e88e751d87f230e1188d59264d4420ba85b31a907f1f6",
+      "byte_size": 89642,
+      "ingestion_timestamp": "2026-05-12T09:06:50.493Z",
+      "operator_provided": true,
+      "source_class": "EXPLICIT_OPERATOR_PROVIDED_UPSTREAM_EVIDENCE"
+    }
+  ],
+  "total_items": 3,
+  "total_bytes": 505414,
+  "all_operator_provided": true,
+  "source_bound": true
+}

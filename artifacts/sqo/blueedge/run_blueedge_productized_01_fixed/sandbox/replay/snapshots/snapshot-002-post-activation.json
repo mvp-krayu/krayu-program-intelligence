@@ -1,0 +1,31 @@
+{
+  "snapshot_id": "snapshot-002-post-activation",
+  "timestamp": "2026-05-11T22:00:06.000Z",
+  "snapshot_type": "POST_ACTIVATION",
+  "trigger": "SEP-blueedge-run01-001 ACTIVATED — re-evaluation completed",
+  "inputs": {
+    "substrate_hash": "fb04994af180d9428c6845c357ce8de466d3d5093cb49bf241e3f43b5ba013d1",
+    "baseline_hash": "e7fd21c49a4e7d1585147326f17df1c7ab8dc13889cea613d4eb27251cebe10c",
+    "package_set_hash": "sha256:SEP-blueedge-run01-001_v1_activated",
+    "activation_profile_hash": "sha256:SEP-001_active",
+    "framework_version": "1.0",
+    "sandbox_id": "sandbox-blueedge-run01-micro-001"
+  },
+  "composite_hash": "sha256:composite_with_domain11_strong",
+  "composite_summary": {
+    "s_state": "S2",
+    "q_class": "Q-02",
+    "backed_count": { "static": 4, "overlay": 1, "composite": 5 },
+    "overlay_count": 1,
+    "conflict_count": 0
+  },
+  "overlay_attribution": {
+    "packages_contributing": ["SEP-blueedge-run01-001"],
+    "domains_affected": ["DOMAIN-11"],
+    "lineage_changes": [
+      { "domain": "DOMAIN-11", "from": "PARTIAL", "to": "STRONG", "entry_id": "E-001" }
+    ]
+  },
+  "verification": "MATCH",
+  "verification_details": "Independent reconstruction from inputs produced identical composite hash"
+}

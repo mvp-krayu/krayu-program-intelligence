@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "client": "fastapi",
+  "run_id": "run_02_oss_fastapi_pipeline",
+  "current_state": "S1",
+  "prior_state": null,
+  "history_entries": [
+    {
+      "timestamp": "2026-05-10T11:42:27.101Z",
+      "s_state": "S1",
+      "state_label": "STRUCTURAL_LABELS_ONLY",
+      "prior_state": null,
+      "transition_type": "INITIAL",
+      "transition_cause": "Required artifact missing: decision_validation",
+      "evidence_snapshot": {
+        "loader_status": "REQUIRED_ARTIFACT_MISSING",
+        "binding_status": "NOT_RESOLVED",
+        "q_class": "NOT_AVAILABLE",
+        "required_artifacts_present_count": 1,
+        "required_artifacts_missing_count": 5
+      },
+      "governance": {
+        "fail_closed": true,
+        "client_agnostic": true,
+        "no_semantic_fabrication": true
+      },
+      "provenance": {
+        "source_commit": "9fdf308df8fa",
+        "operation": "record_qualification_history",
+        "operation_version": "1.0"
+      }
+    }
+  ],
+  "governance": {
+    "append_only": true,
+    "no_rewrite": true,
+    "fail_closed": true
+  },
+  "provenance": {
+    "source_commit": "9fdf308df8fa",
+    "operation": "emit_qualification_history",
+    "operation_version": "1.0"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "client": "blueedge",
+  "run_id": "run_blueedge_productized_01_fixed",
+  "timestamp": "2026-05-10T13:57:16.126Z",
+  "overall_maturity_score": 0.625,
+  "overall_classification": "STABLE",
+  "dimension_breakdown": {
+    "D1": {
+      "label": "STRUCTURAL_CONTINUITY",
+      "score": 0.532,
+      "classification": "STABLE"
+    },
+    "D2": {
+      "label": "SEMANTIC_GROUNDING",
+      "score": 0.235,
+      "classification": "LOW"
+    },
+    "D3": {
+      "label": "LINEAGE_STRENGTH",
+      "score": 0.235,
+      "classification": "LOW"
+    },
+    "D4": {
+      "label": "REPRODUCIBILITY",
+      "score": 1,
+      "classification": "STRONG"
+    },
+    "D5": {
+      "label": "GOVERNANCE_COMPLETENESS",
+      "score": 1,
+      "classification": "STRONG"
+    },
+    "D6": {
+      "label": "PROJECTION_READINESS",
+      "score": 0.75,
+      "classification": "STRONG"
+    },
+    "D7": {
+      "label": "SEMANTIC_COHERENCE",
+      "score": 0.246,
+      "classification": "PARTIAL"
+    },
+    "D8": {
+      "label": "ENRICHMENT_READINESS",
+      "score": 1,
+      "classification": "STRONG"
+    }
+  },
+  "governance": {
+    "fail_closed": true,
+    "client_agnostic": true,
+    "no_semantic_fabrication": true,
+    "deterministic": true
+  },
+  "provenance": {
+    "source_commit": "de4ccf5b1b0c",
+    "operation": "compute_dimension_breakdown",
+    "operation_version": "1.0",
+    "output_hash": "sha256:eaba32054da437b4829e7c9991f78b1dc8aa6e57b31debae56b1d7795ab8937e"
+  }
+}

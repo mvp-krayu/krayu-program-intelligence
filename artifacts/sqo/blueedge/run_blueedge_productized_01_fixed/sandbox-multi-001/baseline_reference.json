@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "sandbox_id": "sandbox-blueedge-run01-multi-001",
+  "anchor_time": "2026-05-11T23:00:00.000Z",
+  "baseline_references": {
+    "substrate_topology": {
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/semantic_topology_model.json",
+      "expected_hash": "fb04994af180d9428c6845c357ce8de466d3d5093cb49bf241e3f43b5ba013d1",
+      "verified_at": "2026-05-11T23:00:00.000Z",
+      "verification_result": "MATCH"
+    },
+    "qualification_baseline": {
+      "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/qualification_state.v1.json",
+      "expected_hash": "e7fd21c49a4e7d1585147326f17df1c7ab8dc13889cea613d4eb27251cebe10c",
+      "verified_at": "2026-05-11T23:00:00.000Z",
+      "verification_result": "MATCH"
+    },
+    "dpsig_signal_set": {
+      "path": "artifacts/dpsig/blueedge/run_blueedge_productized_01_fixed/dpsig_signal_set.json",
+      "expected_hash": "21b1d3801fc00c7adc05ac1b10f064c6308585377b62b3220376523efd2268b6",
+      "verified_at": "2026-05-11T23:00:00.000Z",
+      "verification_result": "MATCH"
+    },
+    "continuity_assessment": {
+      "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/continuity_assessment.v1.json",
+      "expected_hash": "9d9d6c6818f6fe533c38eb45b9fc918169fe74e0a4af9cb56804c4007d95f5e4",
+      "verified_at": "2026-05-11T23:00:00.000Z",
+      "verification_result": "MATCH"
+    }
+  },
+  "qualification_baseline_snapshot": {
+    "s_state": "S2",
+    "q_class": "Q-02",
+    "backed_count": 4,
+    "total_count": 17,
+    "grounding_ratio": 0.235,
+    "lineage_distribution": {
+      "EXACT": 3,
+      "STRONG": 1,
+      "PARTIAL": 1,
+      "NONE": 12,
+      "WEAK": 0
+    },
+    "crosswalk_entity_count": 13,
+    "decision_validation": "14/14 PASS",
+    "reproducibility_verdict": "FULL_REPRODUCIBILITY"
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "contract_id": "PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01",
+  "generated_date": "2026-05-02",
+
+  "files_created": [
+    {
+      "path": "docs/psee/PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01/semantic_bundle_loading_trace.md",
+      "action": "CREATED", "note": "Bundle loading trace and load path documentation"
+    },
+    {
+      "path": "docs/psee/PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01/renderer_integration_summary.md",
+      "action": "CREATED", "note": "Summary of all renderer changes with before/after diffs"
+    },
+    {
+      "path": "docs/psee/PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01/semantic_resolution_validation.json",
+      "action": "CREATED", "note": "JSON validation: semantic_bundle_loaded, crosswalk_applied, domain/zone label resolution"
+    },
+    {
+      "path": "docs/psee/PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01/topology_render_validation.json",
+      "action": "CREATED", "note": "JSON validation: topology used, domain_count=17, backed=5, layout_applied"
+    },
+    {
+      "path": "docs/psee/PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01/execution_log.md",
+      "action": "CREATED", "note": "Full test run output and semantic correctness check results"
+    },
+    {
+      "path": "docs/psee/PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01/no_pipeline_attestation.md",
+      "action": "CREATED", "note": "Attestation that no pipeline, FastAPI, or canonical reports were touched"
+    },
+    {
+      "path": "docs/psee/PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01/git_hygiene.json",
+      "action": "CREATED", "note": "Git hygiene record"
+    },
+    {
+      "path": "docs/psee/PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01/execution_report.md",
+      "action": "CREATED", "note": "Contract execution report"
+    },
+    {
+      "path": "docs/psee/PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01/validation_log.json",
+      "action": "CREATED", "note": "23-check validation log, all PASS"
+    },
+    {
+      "path": "docs/psee/PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01/file_changes.json",
+      "action": "CREATED", "note": "This file"
+    },
+    {
+      "path": "docs/psee/PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01/CLOSURE.md",
+      "action": "CREATED", "note": "Contract closure record"
+    }
+  ],
+
+  "files_modified": [
+    {
+      "path": "scripts/pios/lens_report_generator.py",
+      "action": "MODIFIED",
+      "diff_summary": "+34 lines / -3 lines",
+      "changes": [
+        "ADD: load_semantic_bundle(bundle_dir) function (~line 576)",
+        "ADD: semantic_bundle_dir param to _configure_runtime() signature (~line 919)",
+        "ADD: load_semantic_bundle() call in _configure_runtime() body (~line 962)",
+        "ADD: --semantic-bundle-dir argparse argument (~line 7179)",
+        "ADD: semantic_bundle_dir=args.semantic_bundle_dir in _configure_runtime() call (~line 7204)",
+        "FIX: _build_tier1_evidence_brief breakpoint 1 — _resolve_domain_display_label(~line 3221)",
+        "FIX: _build_tier1_evidence_brief breakpoint 2 — _resolve_domain_display_label(~line 3575)",
+        "FIX: _build_tier1_narrative_brief breakpoint 3 — _resolve_domain_display_label(~line 3918)"
+      ]
+    }
+  ],
+
+  "files_deleted": [],
+
+  "canonical_reports_modified": false,
+  "renderer_modified": true,
+  "vault_modified": false,
+  "pipeline_executed": false
+}

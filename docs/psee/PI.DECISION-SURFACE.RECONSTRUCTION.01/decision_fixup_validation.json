@@ -1,0 +1,87 @@
+{
+  "contract_id": "PI.DECISION-SURFACE.RECONSTRUCTION.FIXUP.01",
+  "artifact": "decision_fixup_validation",
+  "captured_date": "2026-04-30",
+
+  "checks": [
+    {
+      "id": "VF-01",
+      "name": "run id displays run_blueedge_productized_01_fixed",
+      "result": "PASS",
+      "detail": "run_blueedge_productized_01_fixed confirmed in ds-run span and all navigation href URLs. Old value run_01_authoritative_generated: 0 matches."
+    },
+    {
+      "id": "VF-02",
+      "name": "confidence displays 0.78 — STRONG for active zone",
+      "result": "PASS",
+      "detail": "'Confidence: 0.78 — STRONG' confirmed in synthesis block. Derived from semantic_topology_model.json DOMAIN-10 / DOM-04: confidence_score=0.78, lineage_status=STRONG."
+    },
+    {
+      "id": "VF-03",
+      "name": "DOM backing displays DOM-04 / backend_app_root",
+      "result": "PASS",
+      "detail": "'DOM backing: DOM-04 / backend_app_root' confirmed in synthesis block. anchor_name from pressure_zone_projection.json used (not semantic business_label)."
+    },
+    {
+      "id": "VF-04",
+      "name": "semantic label remains Platform Infrastructure and Data",
+      "result": "PASS",
+      "detail": "'Platform Infrastructure and Data' confirmed as zone title and in confirmed section pressure sentence. DOMAIN entity used as primary label throughout."
+    },
+    {
+      "id": "VF-05",
+      "name": "not-activated signals display PSIG-003 · PSIG-005",
+      "result": "PASS",
+      "detail": "'Not-activated signals: PSIG-003 · PSIG-005' confirmed in gap items list. IDs read from signal_projection.json signals_not_activated field."
+    },
+    {
+      "id": "VF-06",
+      "name": "structure status is scope-qualified",
+      "result": "PASS",
+      "detail": "'STRUCTURE: STABLE within structural evidence scope' confirmed in hero context badges."
+    },
+    {
+      "id": "VF-07",
+      "name": "risk label includes evidence-incompleteness / pressure rationale",
+      "result": "PASS",
+      "detail": "'RISK: MODERATE — driven by evidence incompleteness and concentrated structural pressure' confirmed. Condition: risk=MODERATE, exec_eval=False, zone_count=1."
+    },
+    {
+      "id": "VF-08",
+      "name": "duplicate coverage paragraph removed",
+      "result": "PASS",
+      "detail": "'structural evidence groups are grounded' appears exactly 1 time in output (hero rationale only). Confirmed block no longer opens with the duplicate structural coverage paragraph."
+    },
+    {
+      "id": "VF-09",
+      "name": "signal convergence wording corrected",
+      "result": "PASS",
+      "detail": "'All active signals converge on the same structural domain (DOM-04), indicating concentrated structural pressure within a single semantic domain.' confirmed in evidence pair block support text."
+    },
+    {
+      "id": "VF-10",
+      "name": "no Tier-1 / Tier-2 output modified",
+      "result": "PASS",
+      "detail": "run_blueedge_productized_01_fixed Tier-1 and Tier-2 HTML files unmodified. git diff confirms no tracked Tier-1/Tier-2 changes from this contract."
+    },
+    {
+      "id": "VF-11",
+      "name": "no vault / signal / binding mutation",
+      "result": "PASS",
+      "detail": "git diff --name-only shows no vault, signal_projection, canonical_topology, or binding files modified. Only generator modified among tracked files (pre-existing run_01_authoritative deletions excluded)."
+    },
+    {
+      "id": "VF-12",
+      "name": "no hardcoded BlueEdge-specific implementation introduced",
+      "result": "PASS",
+      "detail": "BlueEdge client guard (if client != 'blueedge': _ACTIVE_VAULT_RUN_ID = run_id) removed. New logic uses data-driven derivation: anchor_name from artifact, confidence/lineage_status from semantic model, signal IDs from signal_projection. No BlueEdge-specific strings in new code paths."
+    }
+  ],
+
+  "summary": {
+    "total_checks": 12,
+    "passed": 12,
+    "failed": 0,
+    "verdict": "ALL_PASS"
+  }
+}

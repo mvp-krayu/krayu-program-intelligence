@@ -1,0 +1,174 @@
+{
+  "contract_id": "PI.LENS.E2E.CANONICAL-EXECUTION-CONTRACT.01",
+  "artifact": "artifact_handoff_matrix",
+  "block": "BLOCK_E",
+  "generated_date": "2026-05-01",
+  "mode": "DOCUMENTATION_ONLY / CONTRACT_LOCK",
+  "anchor_run": "run_be_orchestrated_fixup_01",
+
+  "handoffs": [
+    {
+      "handoff_id": "H-01",
+      "from_stage": "S01 — CLIENT_MANIFEST_LOAD",
+      "to_stage": "S02 — SOURCE_MANIFEST_LOAD",
+      "artifacts": ["client_cfg dict (memory)"],
+      "handoff_type": "IN_MEMORY",
+      "critical_fields_passed": ["client_id", "uuid", "default_source"],
+      "failure_if_missing": true
+    },
+    {
+      "handoff_id": "H-02",
+      "from_stage": "S02 — SOURCE_MANIFEST_LOAD",
+      "to_stage": "S03, S04, S05, S06, S07, S08, S09 (all phases)",
+      "artifacts": ["source_manifest dict (memory)"],
+      "handoff_type": "IN_MEMORY",
+      "critical_fields_passed": [
+        "archive_path", "sha256", "extracted_path", "structure_path",
+        "ceu_grounding_path", "dom_layer_path", "grounding_state_path",
+        "integration_validation_path", "fastapi_conformance_path (optional)"
+      ],
+      "failure_if_missing": true
+    },
+    {
+      "handoff_id": "H-03",
+      "from_stage": "S03 — SOURCE_BOUNDARY_VALIDATION",
+      "to_stage": "S04 — INTAKE_VERIFICATION",
+      "artifacts": ["PASS bool (in-memory gate)"],
+      "handoff_type": "GATE_ONLY",
+      "failure_if_missing": true,
+      "note": "No file artifact produced; PASS bool gates pipeline continuation"
+    },
+    {
+      "handoff_id": "H-04",
+      "from_stage": "S04 — INTAKE_VERIFICATION",
+      "to_stage": "S05 — STRUCTURAL_VERIFICATION",
+      "artifacts": ["PASS bool (in-memory gate)"],
+      "handoff_type": "GATE_ONLY",
+      "failure_if_missing": true
+    },
+    {
+      "handoff_id": "H-05",
+      "from_stage": "S05 — STRUCTURAL_VERIFICATION",
+      "to_stage": "S06 — CEU_GROUNDING_VERIFICATION",
+      "artifacts": ["PASS bool (in-memory gate)"],
+      "handoff_type": "GATE_ONLY",
+      "failure_if_missing": true
+    },
+    {
+      "handoff_id": "H-06",
+      "from_stage": "S06 — CEU_GROUNDING_VERIFICATION",
+      "to_stage": "S07 — BINDING_ENVELOPE_BUILD",
+      "artifacts": ["PASS bool (in-memory gate)"],
+      "handoff_type": "GATE_ONLY",
+      "failure_if_missing": true
+    },
+    {
+      "handoff_id": "H-07",
+      "from_stage": "S07 — BINDING_ENVELOPE_BUILD",
+      "to_stage": "S08 — SIGNAL_ACTIVATION",
+      "artifacts": ["clients/<client_id>/psee/runs/<run_id>/binding/binding_envelope.json"],
+      "handoff_type": "FILE",
+      "failure_if_missing": true,
+      "note": "On conformance path: binding_envelope sourced from fastapi_conformance_path. On synthetic path: built from CEU registry + DOM layer. Either way: file must exist at run_dir/binding/binding_envelope.json for S08 synthetic path."
+    },
+    {
+      "handoff_id": "H-08",
+      "from_stage": "S08 — SIGNAL_ACTIVATION",
+      "to_stage": "S09 — VAULT_CONSTRUCTION",
+      "artifacts": [
+        "clients/<client_id>/psee/runs/<run_id>/75.x/condition_correlation_state.json",
+        "clients/<client_id>/psee/runs/<run_id>/75.x/pressure_candidate_state.json",
+        "clients/<client_id>/psee/runs/<run_id>/75.x/pressure_zone_state.json",
+        "clients/<client_id>/psee/runs/<run_id>/41.x/signal_projection.json",
+        "clients/<client_id>/psee/runs/<run_id>/41.x/pressure_zone_projection.json"
+      ],
+      "handoff_type": "FILE",
+      "failure_if_missing": true,
+      "note": "signal_projection.json is required by S09 when fastapi_conformance_path is NOT set. When conformance path set, S09 reads signal_registry_fastapi_compatible.json directly."
+    },
+    {
+      "handoff_id": "H-09",
+      "from_stage": "S09 — VAULT_CONSTRUCTION",
+      "to_stage": "S10 — LENS_REPORT_GENERATION",
+      "artifacts": [
+        "clients/<client_id>/psee/runs/<run_id>/vault/canonical_topology.json",
+        "clients/<client_id>/psee/runs/<run_id>/vault/signal_registry.json",
+        "clients/<client_id>/psee/runs/<run_id>/vault/gauge_state.json",
+        "clients/<client_id>/psee/runs/<run_id>/vault/binding_envelope.json",
+        "clients/<client_id>/psee/runs/<run_id>/vault/admissibility_log.json",
+        "clients/<client_id>/psee/runs/<run_id>/vault/evidence_trace.json",
+        "clients/<client_id>/psee/runs/<run_id>/vault/vault_manifest.json",
+        "clients/<client_id>/psee/runs/<run_id>/vault/coverage_state.json",
+        "clients/<client_id>/psee/runs/<run_id>/vault/reconstruction_state.json"
+      ],
+      "handoff_type": "FILE",
+      "failure_if_missing": true,
+      "note": "canonical_topology.json and signal_registry.json are required; others optional (lens_report_generator uses what is present)"
+    },
+    {
+      "handoff_id": "H-10",
+      "from_stage": "S09 — VAULT_CONSTRUCTION (also: S10 setup)",
+      "to_stage": "S11 — GRAPH_STATE_EXPORT",
+      "artifacts": [
+        "app/gauge-product/public/vault/<client_id>/<run_id>/vault_index.json"
+      ],
+      "handoff_type": "FILE",
+      "failure_if_missing": true,
+      "note": "vault_index.json is pre-existing in the gauge-product public tree; not generated by the pipeline. S11 reads it to build the d3-force-3d graph layout."
+    },
+    {
+      "handoff_id": "H-11",
+      "from_stage": "S11 — GRAPH_STATE_EXPORT",
+      "to_stage": "S10 — LENS_REPORT_GENERATION (Tier-2 embed)",
+      "artifacts": [
+        "clients/<client_id>/lens/runs/<run_id>/reports/tier2/graph_state.json"
+      ],
+      "handoff_type": "FILE",
+      "failure_if_missing": true,
+      "note": "graph_state.json is generated by S11 during S10 Tier-2 phase. If S11 fails, S10 (phase_08b) fails."
+    },
+    {
+      "handoff_id": "H-12",
+      "from_stage": "S10 — LENS_REPORT_GENERATION",
+      "to_stage": "S13 — RUN_METADATA_WRITE",
+      "artifacts": [
+        "clients/<client_id>/lens/runs/<run_id>/reports/ (all 8 HTML files + graph_state.json)"
+      ],
+      "handoff_type": "FILE",
+      "failure_if_missing": false,
+      "note": "S13 writes index.json and manifest.json referencing all report files. Executes within same lens_report_generator.py invocation."
+    },
+    {
+      "handoff_id": "H-13",
+      "from_stage": "S13 — RUN_METADATA_WRITE",
+      "to_stage": "S14 — CURRENT_RUN_MIRROR",
+      "artifacts": [
+        "clients/<client_id>/lens/runs/<run_id>/reports/ (complete, post-metadata)"
+      ],
+      "handoff_type": "FILE",
+      "failure_if_missing": false,
+      "note": "S14 mirrors the reports/ tree to lens/current/ via shutil.copytree. Executes within same lens_report_generator.py invocation."
+    },
+    {
+      "handoff_id": "H-14",
+      "from_stage": "S10/S13/S14 — LENS_REPORT_GENERATION complete",
+      "to_stage": "S12 — SELECTOR_UPDATE (Phase 9)",
+      "artifacts": [
+        "clients/<client_id>/lens/runs/<run_id>/index.json",
+        "clients/<client_id>/lens/runs/<run_id>/manifest.json"
+      ],
+      "handoff_type": "FILE",
+      "failure_if_missing": false,
+      "note": "Phase 9 (S12) runs after phase_08b completes. Phase 9 updates selector.json current_run and appends to available_runs.json. S13 also writes selector.json — S12 may overwrite or be overwritten depending on execution order. Generator (S13) is authoritative for run_status classification."
+    }
+  ],
+
+  "handoff_summary": {
+    "total_handoffs": 14,
+    "file_handoffs": 9,
+    "gate_only_handoffs": 4,
+    "memory_handoffs": 2,
+    "critical_path": "S01 → S02 → S03 → S04 → S05 → S06 → S07 → S08 → S09 → S10(+S11+S13+S14) → S12",
+    "parallel_stages": "None — all stages are sequential (each phase gates the next)"
+  }
+}

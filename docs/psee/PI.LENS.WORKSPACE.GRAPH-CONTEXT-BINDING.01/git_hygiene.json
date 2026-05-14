@@ -1,0 +1,36 @@
+{
+  "contract_id": "PI.LENS.WORKSPACE.GRAPH-CONTEXT-BINDING.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-03",
+
+  "branch": "work/psee-runtime",
+  "baseline_commit": "bc6cdeceb42eac215c532be21bfada9ff471bb14",
+  "baseline_commit_message": "[BINDING] PI.LENS.RUNTIME-BUNDLE-MAPPING.01 — runtime bundle mapping; vault_run distinct from display_run; workspace uses vaultRun for API calls",
+
+  "working_tree_before": "CLEAN",
+  "working_tree_after": "1 file modified, 1 evidence directory created",
+
+  "files_modified_tracked": [
+    "app/gauge-product/pages/tier2/workspace.js"
+  ],
+  "files_created_tracked": [
+    "docs/psee/PI.LENS.WORKSPACE.GRAPH-CONTEXT-BINDING.01/graph_context_binding_summary.md",
+    "docs/psee/PI.LENS.WORKSPACE.GRAPH-CONTEXT-BINDING.01/file_changes.json",
+    "docs/psee/PI.LENS.WORKSPACE.GRAPH-CONTEXT-BINDING.01/validation_log.json",
+    "docs/psee/PI.LENS.WORKSPACE.GRAPH-CONTEXT-BINDING.01/execution_report.md",
+    "docs/psee/PI.LENS.WORKSPACE.GRAPH-CONTEXT-BINDING.01/git_hygiene.json",
+    "docs/psee/PI.LENS.WORKSPACE.GRAPH-CONTEXT-BINDING.01/CLOSURE.md"
+  ],
+  "files_modified_gitignored": [],
+
+  "renderer_modified": false,
+  "pipeline_executed": false,
+  "canonical_reports_modified": false,
+  "semantic_bundle_modified": false,
+  "fastapi_involved": false,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[BINDING] PI.LENS.WORKSPACE.GRAPH-CONTEXT-BINDING.01 — synthesize vaultIndex from graph_state.json; replace env-var vault index with dynamic bundle-aware loader; 18-node graph rendered",
+
+  "git_hygiene_status": "COMPLETE"
+}

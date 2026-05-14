@@ -1,0 +1,127 @@
+{
+  "contract_id": "PI.LENS.REPORT-RENDERER.PARITY-STABILIZATION.01",
+  "generated_date": "2026-05-02",
+
+  "facts": [
+    {
+      "fact": "Platform Infrastructure and Data — tier1_narrative",
+      "canonical": "PRESENT",
+      "generated": "PRESENT",
+      "match": true
+    },
+    {
+      "fact": "Platform Infrastructure and Data — tier1_evidence",
+      "canonical": "PRESENT",
+      "generated": "PRESENT",
+      "match": true
+    },
+    {
+      "fact": "Platform Infrastructure and Data — tier2_diagnostic",
+      "canonical": "PRESENT",
+      "generated": "PRESENT",
+      "match": true
+    },
+    {
+      "fact": "Platform Infrastructure and Data — decision_surface",
+      "canonical": "PRESENT",
+      "generated": "PRESENT",
+      "match": true
+    },
+    {
+      "fact": "backend_app_root NOT used as primary zone label — all reports",
+      "canonical": "CONFIRMED (DOM backing context only)",
+      "generated": "CONFIRMED (DOM backing context only)",
+      "match": true
+    },
+    {
+      "fact": "17 semantic domains — tier1_evidence",
+      "canonical": "PRESENT",
+      "generated": "PRESENT",
+      "match": true
+    },
+    {
+      "fact": "17 semantic domains — tier2_diagnostic",
+      "canonical": "PRESENT",
+      "generated": "PRESENT",
+      "match": true
+    },
+    {
+      "fact": "5 structurally backed domains — tier1_evidence",
+      "canonical": "PRESENT",
+      "generated": "PRESENT",
+      "match": true
+    },
+    {
+      "fact": "5 structurally backed domains — tier2_diagnostic",
+      "canonical": "PRESENT",
+      "generated": "PRESENT",
+      "match": true
+    },
+    {
+      "fact": "5 structurally backed domains — decision_surface",
+      "canonical": "PRESENT (5/17 semantic domains backed in hero rationale)",
+      "generated": "ABSENT from hero rationale (structural path used: 13 of 13 structural domains)",
+      "match": false
+    },
+    {
+      "fact": "DOM-04 — tier1_narrative",
+      "canonical": "PRESENT",
+      "generated": "PRESENT",
+      "match": true
+    },
+    {
+      "fact": "DOM-04 — tier1_evidence",
+      "canonical": "PRESENT",
+      "generated": "PRESENT",
+      "match": true
+    },
+    {
+      "fact": "DOM-04 — tier2_diagnostic",
+      "canonical": "PRESENT",
+      "generated": "PRESENT",
+      "match": true
+    },
+    {
+      "fact": "DOM-04 — decision_surface",
+      "canonical": "PRESENT",
+      "generated": "PRESENT",
+      "match": true
+    },
+    {
+      "fact": "PZ-001 — tier1_narrative",
+      "canonical": "PRESENT",
+      "generated": "PRESENT",
+      "match": true
+    },
+    {
+      "fact": "PZ-001 — decision_surface",
+      "canonical": "ABSENT",
+      "generated": "PRESENT (PZ-001 — Platform Infrastructure and Data in synthesis)",
+      "match": false,
+      "note": "Generated is MORE semantically complete; canonical uses generic zone reference"
+    },
+    {
+      "fact": "gauge 60 — all reports",
+      "canonical": "PRESENT",
+      "generated": "PRESENT",
+      "match": true
+    },
+    {
+      "fact": "INVESTIGATE — all reports",
+      "canonical": "PRESENT",
+      "generated": "PRESENT",
+      "match": true
+    },
+    {
+      "fact": "CONDITIONAL — all reports",
+      "canonical": "PRESENT",
+      "generated": "PRESENT",
+      "match": true
+    }
+  ],
+
+  "semantic_fact_parity": "FAIL",
+  "fail_count": 2,
+  "pass_count": 17,
+  "fail_note": "2 mismatches both in decision_surface: (1) 5-backed hero rationale absent in generated — structural path used instead of semantic; (2) PZ-001 absent in canonical but present in generated — generated is richer, not degraded"
+}

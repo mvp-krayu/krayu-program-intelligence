@@ -1,0 +1,12 @@
+{
+  "client": "blueedge",
+  "current_run": "run_be_orchestrated_fixup_01",
+  "updated_at": "2026-05-01T09:32:32.560898+00:00",
+  "output_root": "clients/blueedge/lens",
+  "navigation_base": "/api/report-file",
+  "run_status": {
+    "run_be_orchestrated_fixup_01": "CANONICAL_ORCHESTRATED",
+    "run_blueedge_rerun_01": "CANONICAL_BASELINE_REFERENCE",
+    "run_be_orchestrated_01": "REJECTED_NON_CANONICAL"
+  }
+}

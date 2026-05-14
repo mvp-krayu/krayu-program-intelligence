@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "reevaluation_id": "reeval-multi-002",
+  "sandbox_id": "sandbox-blueedge-run01-multi-001",
+  "timestamp": "2026-05-11T23:07:30.000Z",
+  "trigger": { "type": "SEP_ACTIVATED", "package_id": "SEP-multi-002" },
+  "prior_state": {
+    "s_state": "S2", "q_class": "Q-02", "backed_count": 5, "grounding_ratio": 0.294,
+    "overlay_count": 1, "certification_level": "SANDBOX_COMPUTED"
+  },
+  "composite_state": {
+    "s_state": "S2", "q_class": "Q-02", "backed_count": 6, "grounding_ratio": 0.353,
+    "overlay_count": 2, "certification_level": "SANDBOX_COMPUTED"
+  },
+  "changes": [
+    { "metric": "backed_count", "before": 5, "after": 6, "change": "+1" },
+    { "metric": "grounding_ratio", "before": 0.294, "after": 0.353, "change": "+0.059" },
+    { "metric": "DOMAIN-02_lineage", "before": "NONE", "after": "STRONG" }
+  ],
+  "overlay_attribution": {
+    "static_backed_count": 4,
+    "overlay_backed_count": 2,
+    "total_backed_count": 6,
+    "overlay_derived_percentage": 33.3,
+    "per_package": [
+      { "package_id": "SEP-multi-001", "domains_contributed": ["DOMAIN-11"], "backed_contribution": 1 },
+      { "package_id": "SEP-multi-002", "domains_contributed": ["DOMAIN-02"], "backed_contribution": 1 }
+    ]
+  }
+}

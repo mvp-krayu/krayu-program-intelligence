@@ -1,0 +1,124 @@
+{
+  "contract_id": "PI.LENS.SEMANTIC-LAYER-PROMOTION.01",
+  "generated_date": "2026-05-02",
+
+  "copies": [
+    {
+      "artifact_id": "SEM-001",
+      "source": "clients/blueedge/psee/runs/run_blueedge_productized_01_dom_lineage_validation/language_layer/semantic_continuity_crosswalk.json",
+      "destination": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/crosswalk/semantic_continuity_crosswalk.json",
+      "sha256": "fed6fc381b18831bab48654fc87994fb2faaa7182a1a6b10992c200ebaa872c7",
+      "copy_status": "SUCCESS"
+    },
+    {
+      "artifact_id": "SEM-002",
+      "source": "clients/blueedge/psee/runs/run_blueedge_productized_01_dom_lineage_validation/vault/canonical_topology_with_lineage.json",
+      "destination": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/lineage/canonical_topology_with_lineage.json",
+      "sha256": "47aaaeaab8d4a8475d439fb6c17854172754a207cf027229b32821f07422c62b",
+      "copy_status": "SUCCESS"
+    },
+    {
+      "artifact_id": "SEM-003",
+      "source": "clients/blueedge/psee/runs/run_blueedge_productized_01_dom_lineage_validation/manifests/vault_compatibility_manifest.json",
+      "destination": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/lineage/vault_compatibility_manifest.json",
+      "sha256": "adb1e19d4440b97d311a9c20c079bd29fd60384224ac100fc41bd435c67edd1b",
+      "copy_status": "SUCCESS"
+    },
+    {
+      "artifact_id": "SEM-004",
+      "source": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.SEMANTIC-TOPOLOGY-REBUILD.01/semantic_topology_model.json",
+      "destination": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/semantic_topology_model.json",
+      "sha256": "",
+      "copy_status": "SKIPPED_MISSING"
+    },
+    {
+      "artifact_id": "SEM-005",
+      "source": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.SEMANTIC-TOPOLOGY-REBUILD.01/semantic_topology_layout.json",
+      "destination": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/semantic_topology_layout.json",
+      "sha256": "",
+      "copy_status": "SKIPPED_MISSING"
+    },
+    {
+      "artifact_id": "SEM-006",
+      "source": "docs/psee/41X.CANONICAL.TOPOLOGY.JSON.EMISSION.01/canonical_topology.json",
+      "destination": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/canonical_topology.json",
+      "sha256": "237c80e421e246f1fc42b2688ded63e15d6180bfc7430776d6f452f999e167cf",
+      "copy_status": "SUCCESS"
+    },
+    {
+      "artifact_id": "SEM-007",
+      "source": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/tier2/graph_state.json",
+      "destination": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/graph/graph_state.json",
+      "sha256": "d3ae706374c69842a311382eaa9c3afdca24984869a26d48aff3d738e1dd7c00",
+      "copy_status": "SUCCESS"
+    },
+    {
+      "artifact_id": "SEM-008",
+      "source": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER1-NARRATIVE-FINAL-ALIGNMENT.01/validation_log.json",
+      "destination": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/tier1/validation_log.json",
+      "sha256": "d7e4d1e852d6c8a86d4760a2a9b2725b3a31177650f1c5240bc6a5cf8d4ccf51",
+      "copy_status": "SUCCESS"
+    },
+    {
+      "artifact_id": "SEM-009",
+      "source": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER2-DIAGNOSTIC-FIXUP.01/tier2_fixup_generation_result.json",
+      "destination": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/tier2/tier2_fixup_generation_result.json",
+      "sha256": "7181a399e904ba84bc5fae744a8c2311bdc76757dc2c71b22ac588e0448b3401",
+      "copy_status": "SUCCESS"
+    },
+    {
+      "artifact_id": "SEM-010",
+      "source": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER2-DIAGNOSTIC-FIXUP.01/validation_log.json",
+      "destination": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/tier2/validation_log.json",
+      "sha256": "c04e3e8e384b34e3a59360dfc505864f8cfe505438845c9ff5e2e5c0915c5d0d",
+      "copy_status": "SUCCESS"
+    },
+    {
+      "artifact_id": "SEM-011",
+      "source": "docs/psee/PI.DECISION-SURFACE.RECONSTRUCTION.01/decision_fixup_generation_result.json",
+      "destination": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/decision/decision_fixup_generation_result.json",
+      "sha256": "0e72f130097500664eb9a0964b4248b6f31d35778bb2e1237e987638dc83f9f1",
+      "copy_status": "SUCCESS"
+    },
+    {
+      "artifact_id": "SEM-012",
+      "source": "docs/psee/PI.DECISION-SURFACE.RECONSTRUCTION.01/decision_validation.json",
+      "destination": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/decision/decision_validation.json",
+      "sha256": "99beee723bbbfca5c6dafbf223c7a4c86d795b6c5d93062dfb4c5384d61ee37a",
+      "copy_status": "SUCCESS"
+    },
+    {
+      "artifact_id": "SEM-013",
+      "source": "docs/psee/PI.DECISION-SURFACE.RECONSTRUCTION.01/decision_cross_report_alignment.json",
+      "destination": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/decision/decision_cross_report_alignment.json",
+      "sha256": "e079cbd788ef36378aee8c0833f68a464374bbeb9f36efcddcfeba33047a4b00",
+      "copy_status": "SUCCESS"
+    },
+    {
+      "artifact_id": "SEM-014",
+      "source": "docs/psee/PI.LENS.END-TO-END-RERUN.BLUEEDGE.01/reproducibility_verdict.json",
+      "destination": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/report_inputs/reproducibility_verdict.json",
+      "sha256": "8bac64382718644be265ce218752cc926151a064fcea7bf6b1118824bac700f3",
+      "copy_status": "SUCCESS"
+    },
+    {
+      "artifact_id": "SEM-015",
+      "source": "docs/psee/SEMANTIC.SIGNAL.MODEL.DEFINITION.01/semantic_validation_rules.md",
+      "destination": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/validation/semantic_validation_rules.md",
+      "sha256": "dac479f037d406b8a7013fc866e7517b86cdf22c728c2d4f264713b3df9efc7e",
+      "copy_status": "SUCCESS"
+    },
+    {
+      "artifact_id": "SEM-016",
+      "source": "docs/psee/SEMANTIC.SIGNAL.MODEL.DEFINITION.01/signal_derivation_rules.md",
+      "destination": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/validation/signal_derivation_rules.md",
+      "sha256": "3ae002b422ace5f070b7577c1d237ffc7358432a0a44d23148628aae30fa3eb5",
+      "copy_status": "SUCCESS"
+    }
+  ],
+
+  "total_artifacts": 16,
+  "copied": 14,
+  "missing": 2,
+  "copy_failures": 0
+}

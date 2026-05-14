@@ -1,0 +1,188 @@
+{
+  "stream": "PI.PSEE-PIOS.DPSIG-BLUEEDGE-PROJECTION.VALIDATION.01",
+  "generated": "2026-05-08",
+  "client": "blueedge",
+  "run": "run_blueedge_productized_01_fixed",
+  "baseline_commit": "93098cb",
+  "branch": "feature/psee-pios-integration-productized",
+
+  "task01_blueedge_baseline": {
+    "authoritative_run_id": "run_blueedge_productized_01_fixed",
+    "reports_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports",
+    "vault_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/vault",
+    "semantic_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic",
+    "runtime_list_entry": "CONFIRMED — has_reports=true, has_vault=true, has_semantic=true",
+    "dpsig_pre_existing": false,
+    "structural_path_finding": "BlueEdge run has vault/ and semantic/ but no structure/40.4/ — canonical_topology adapter created (pure format translation, no computation)",
+    "adapter_created": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/structure/40.4/canonical_topology.json"
+  },
+
+  "task02_semantic_richness": {
+    "total_domains": 13,
+    "all_domains_grounded": true,
+    "grounding_status": "GROUNDED (all 13/13)",
+    "semantic_clusters": 5,
+    "cluster_names": ["Operational Intelligence", "Fleet Operations", "Emerging Capabilities", "Platform Infrastructure", "Platform Services"],
+    "pressure_zone": "PZ-001 COMPOUND_ZONE on DOM-04/backend_app_root",
+    "pressure_zone_signals": ["PSIG-001", "PSIG-002", "PSIG-004"],
+    "confidence_scoring_present": true,
+    "executive_readability_preserved": true
+  },
+
+  "task03_dpsig_eligibility": {
+    "dominant_cluster_id": "DOM-09",
+    "dominant_cluster_name": "backend_modules",
+    "dominant_cluster_nodes": 6,
+    "total_nodes": 35,
+    "dominant_cluster_in_diagnostic_only_set": false,
+    "dominant_cluster_in_suppressed_set": false,
+    "all_domains_grounded": true,
+    "grounding_backed_count": 13,
+    "grounding_backed_fraction": 1.0,
+    "dpsig_eligibility": "ELIGIBLE — semantic grounding, domain attribution, no false-positive flag"
+  },
+
+  "task04_dpsig_derivation": {
+    "script": "scripts/pios/dpsig/derive_relational_signals.py",
+    "client_id": "blueedge",
+    "run_id": "run_blueedge_productized_01_fixed",
+    "exit_code": 0,
+    "output_path": "artifacts/dpsig/blueedge/run_blueedge_productized_01_fixed/dpsig_signal_set.json",
+    "dpsig_031_cpi": 2.1176,
+    "dpsig_031_activation": "CLUSTER_PRESSURE_ELEVATED",
+    "dpsig_032_cfa": 0.1714,
+    "dpsig_032_activation": "CLUSTER_BALANCED",
+    "severity_band": "ELEVATED",
+    "client_specific_logic": "NONE — same script, same path resolution, same formula",
+    "determinism": "CONFIRMED — second rerun produces identical checksums"
+  },
+
+  "task05_readiness_gate": {
+    "readiness_state": "EXECUTIVE_READY",
+    "executive_rendering_allowed": true,
+    "false_positive_flags": [],
+    "grounding_status": "NONE_REQUIRED — all domains grounded",
+    "render_apex": false,
+    "cluster_salience_score": 0.0871,
+    "salience_threshold_apex": 1.0,
+    "apex_position": false,
+    "render_position": "STANDARD (below Active Structural Signals — salience < 1.0)",
+    "headline_label": "ELEVATED",
+    "fastapi_comparison": {
+      "readiness_state": "DIAGNOSTIC_ONLY",
+      "executive_rendering_allowed": false,
+      "headline_label": "STRUCTURAL DIAGNOSTIC"
+    },
+    "divergence_basis": "EVIDENCE_DERIVED — FastAPI dominant cluster 'src' is ungrounded filesystem container; BlueEdge dominant cluster 'backend_modules' is grounded semantic domain with 13/13 backed domains"
+  },
+
+  "task06_semantic_preservation": {
+    "psig_001_present": true,
+    "psig_002_present": true,
+    "psig_004_present": true,
+    "pz_001_present": true,
+    "compound_zone_present": true,
+    "dom_04_backend_app_root_present": true,
+    "dpsig_031_present": true,
+    "dpsig_032_present": true,
+    "executive_summaries_rendered": 3,
+    "engineering_summaries_rendered": 2,
+    "semantic_topology_intact": true,
+    "confidence_scoring_intact": true,
+    "pressure_rendering_intact": true,
+    "executive_readability_intact": true
+  },
+
+  "task07_false_positive_containment": {
+    "backend_modules_not_in_diagnostic_set": true,
+    "no_filesystem_container_dominance_flag": true,
+    "no_ungrounded_cluster_promoted": true,
+    "no_diagnostic_notice_triggered": true,
+    "legitimate_semantic_concentration": true,
+    "grounded_domain_attribution": true,
+    "business_capability_anchoring": "backend_app_root / DOM-04 is pressure zone anchor — PSIG-001/002/004",
+    "executive_salience_safe": true
+  },
+
+  "task08_report_contract": {
+    "selector_unchanged": true,
+    "api_routes_unchanged": true,
+    "report_routing_unchanged": true,
+    "lens_generate_exit_0": true,
+    "reports_generated": 9,
+    "psee_flat_path_compliance": true,
+    "publish_variants_generated": true
+  },
+
+  "task09_non_regression": {
+    "fastapi_readiness_state_unchanged": "DIAGNOSTIC_ONLY",
+    "fastapi_executive_rendering_unchanged": "NO",
+    "fastapi_structural_diagnostic_h2_intact": true,
+    "fastapi_critical_absent_h2": true,
+    "fastapi_lens_generate_exit_0": true,
+    "blueedge_existing_psig_content_intact": true,
+    "blueedge_semantic_topology_intact": true
+  },
+
+  "task10_client_agnostic_governance": {
+    "same_derive_script": true,
+    "same_lens_generate": true,
+    "same_readiness_gate": true,
+    "same_path_resolution": true,
+    "no_client_specific_logic": true,
+    "no_hardcoding": true,
+    "divergence_mechanism": "evidence-derived: cluster name + grounding quality only",
+    "fastapi_readiness": "DIAGNOSTIC_ONLY — 'src' in diagnostic container set, no grounding",
+    "blueedge_readiness": "EXECUTIVE_READY — 'backend_modules' not in container set, 13/13 domains grounded"
+  },
+
+  "replay_determinism": {
+    "run_1_checksums": {
+      "lens_tier1_evidence_brief.html": "44d4c31fa4b700adb923fe99f83539d18c549055",
+      "lens_tier1_narrative_brief.html": "01268eb5de48647ccb74649e45c78baa26cb3d2a",
+      "lens_tier2_diagnostic_narrative.html": "f07468e93a1ee40aa87fda2298dd50a4010d9794",
+      "lens_decision_surface.html": "892d51fb14e08389433e7fdfe326959a3abdb3ac"
+    },
+    "run_2_checksums": {
+      "lens_tier1_evidence_brief.html": "44d4c31fa4b700adb923fe99f83539d18c549055",
+      "lens_tier1_narrative_brief.html": "01268eb5de48647ccb74649e45c78baa26cb3d2a",
+      "lens_tier2_diagnostic_narrative.html": "f07468e93a1ee40aa87fda2298dd50a4010d9794",
+      "lens_decision_surface.html": "892d51fb14e08389433e7fdfe326959a3abdb3ac"
+    },
+    "checksums_match": true
+  },
+
+  "validation_checks": [
+    {"id": "BV-01", "check": "Authoritative BlueEdge run identified: run_blueedge_productized_01_fixed", "result": "PASS"},
+    {"id": "BV-02", "check": "Semantic domain topology operational — 13 GROUNDED domains", "result": "PASS"},
+    {"id": "BV-03", "check": "Pressure zone PZ-001 COMPOUND_ZONE on DOM-04 operational", "result": "PASS"},
+    {"id": "BV-04", "check": "Executive readability preserved — confidence scoring, domain attribution", "result": "PASS"},
+    {"id": "BV-05", "check": "DPSIG derivation EXIT 0 — CPI=2.1176 ELEVATED, CFA=0.1714 BALANCED", "result": "PASS"},
+    {"id": "BV-06", "check": "Readiness gate: EXECUTIVE_READY — backend_modules not in container set", "result": "PASS"},
+    {"id": "BV-07", "check": "executive_rendering_allowed=True", "result": "PASS"},
+    {"id": "BV-08", "check": "Headline label: ELEVATED (not STRUCTURAL DIAGNOSTIC, not CRITICAL)", "result": "PASS"},
+    {"id": "BV-09", "check": "No FILESYSTEM_CONTAINER_DOMINANCE false_positive_flag", "result": "PASS"},
+    {"id": "BV-10", "check": "No diagnostic notice rendered", "result": "PASS"},
+    {"id": "BV-11", "check": "PSIG-001/002/004 semantic content preserved", "result": "PASS"},
+    {"id": "BV-12", "check": "PZ-001 COMPOUND_ZONE rendered in report", "result": "PASS"},
+    {"id": "BV-13", "check": "DPSIG-031/032 executive summaries rendered (3 occurrences)", "result": "PASS"},
+    {"id": "BV-14", "check": "lens_generate.sh EXIT 0 for BlueEdge", "result": "PASS"},
+    {"id": "BV-15", "check": "Determinism: identical checksums on second rerun", "result": "PASS"},
+    {"id": "BV-16", "check": "FastAPI DIAGNOSTIC_ONLY state unaffected by BlueEdge changes", "result": "PASS"},
+    {"id": "BV-17", "check": "FastAPI STRUCTURAL DIAGNOSTIC h2 intact after BlueEdge run", "result": "PASS"},
+    {"id": "BV-18", "check": "No client-specific logic — same script, same gate, same path resolution", "result": "PASS"},
+    {"id": "BV-19", "check": "Divergence is evidence-derived: cluster name + grounding quality", "result": "PASS"},
+    {"id": "BV-20", "check": "No selector/API/report contract mutation", "result": "PASS"},
+    {"id": "BV-21", "check": "No 75x/41x mutation", "result": "PASS"},
+    {"id": "BV-22", "check": "No semantic suppression applied to BlueEdge", "result": "PASS"},
+    {"id": "BV-23", "check": "Semantic richness preserved — topology, grounding, confidence", "result": "PASS"},
+    {"id": "BV-24", "check": "Executive projection quality maintained", "result": "PASS"},
+    {"id": "BV-25", "check": "BlueEdge CPI/CFA correctly below FastAPI (ELEVATED vs CRITICAL)", "result": "PASS"}
+  ],
+
+  "overall_verdict": "PASS — 25/25 checks PASS",
+  "blueedge_qualification": "EXECUTIVE_READY",
+  "fastapi_qualification": "DIAGNOSTIC_ONLY",
+  "governance_verdict": "CLIENT_AGNOSTIC_GOVERNANCE_CONFIRMED",
+  "next_stream": "PI.AGENTIC-SEMANTIC-ORCHESTRATION.01"
+}

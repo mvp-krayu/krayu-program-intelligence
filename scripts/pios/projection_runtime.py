@@ -330,11 +330,15 @@ def _find_claim_file(claim_id: str, vault_path: Path) -> Optional[Path]:
     return None
 
 
-def _find_signal_registry(repo_root: Path) -> Optional[Path]:
+def _find_signal_registry(repo_root: Path, vault_path: Optional[Path] = None) -> Optional[Path]:
+    if vault_path is None:
+        return None
+    # vault_path = clients/<id>/vaults/<run_id>  →  client_dir = clients/<id>
+    client_dir = vault_path.parent.parent
     candidates = [
-        repo_root / "clients" / "blueedge" / "psee" / "runs"
+        client_dir / "psee" / "runs"
         / "run_authoritative_recomputed_01" / "package" / "signal_registry.json",
-        repo_root / "clients" / "blueedge" / "psee" / "runs"
+        client_dir / "psee" / "runs"
         / "run_01_authoritative" / "package" / "signal_registry.json",
     ]
     for c in candidates:
@@ -473,7 +477,7 @@ def resolve_claim(
         record.signal_evidence_confidence = _extract_evidence_confidence_from_auth_value(auth_value)
 
         if record.signal_id and repo_root:
-            reg_path = _find_signal_registry(repo_root)
+            reg_path = _find_signal_registry(repo_root, vault_path)
             if reg_path:
                 sig = _load_signal_data(record.signal_id, reg_path)
                 record.signal_title             = sig.get("title")
@@ -941,8 +945,9 @@ def _default_repo_root() -> Path:
 
 
 def _default_vault_path(repo_root: Optional[Path] = None) -> Path:
-    root = repo_root or _default_repo_root()
-    return root / "clients" / "blueedge" / "vaults" / "run_01_authoritative"
+    raise ValueError(
+        "vault_path must be supplied explicitly — no default client path is configured"
+    )
 
 
 # ---------------------------------------------------------------------------

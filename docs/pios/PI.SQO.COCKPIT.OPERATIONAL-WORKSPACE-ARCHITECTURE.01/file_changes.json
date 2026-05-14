@@ -1,0 +1,78 @@
+{
+  "stream": "PI.SQO.COCKPIT.OPERATIONAL-WORKSPACE-ARCHITECTURE.01",
+  "phase": "O2",
+  "date": "2026-05-11",
+  "total_files": 14,
+  "changes": [
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKSPACE-ARCHITECTURE.01/OPERATIONAL_WORKSPACE_ARCHITECTURE.md",
+      "action": "CREATE",
+      "purpose": "Master workspace architecture: 10 domains, 4 layers, navigation model, authority model"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKSPACE-ARCHITECTURE.01/WORKFLOW_ORCHESTRATION_ARCHITECTURE.md",
+      "action": "CREATE",
+      "purpose": "7 workflow chains, 5 gate types, workflow state machine, cross-domain handoffs"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKSPACE-ARCHITECTURE.01/EVIDENCE_AND_OVERLAY_WORKSPACE_DOMAINS.md",
+      "action": "CREATE",
+      "purpose": "Evidence domain (WD-02) and overlay domain (WD-03) workspace architecture"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKSPACE-ARCHITECTURE.01/SANDBOX_OPERATIONAL_WORKSPACE.md",
+      "action": "CREATE",
+      "purpose": "Sandbox namespace model, overlay activation chain, replay/rollback chains, isolation rules"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKSPACE-ARCHITECTURE.01/REPLAY_AND_ROLLBACK_WORKSPACE.md",
+      "action": "CREATE",
+      "purpose": "Replay (WD-04), rollback (WD-05), certification (WD-06) workspace domains"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKSPACE-ARCHITECTURE.01/GOVERNANCE_ZONE_MONITORING_ARCHITECTURE.md",
+      "action": "CREATE",
+      "purpose": "Zone monitoring, transition alerts, operational constraints, escalation, recoverability"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKSPACE-ARCHITECTURE.01/AUTHORITY_BOUNDARY_AND_PUBLICATION_MODEL.md",
+      "action": "CREATE",
+      "purpose": "4 authority boundaries, anti-leakage rules, LENS consumption boundary, publication domain"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKSPACE-ARCHITECTURE.01/OPERATIONAL_LINEAGE_NAVIGATION_MODEL.md",
+      "action": "CREATE",
+      "purpose": "7 lineage types, 3 navigation directions, cross-domain links, reconstructability"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKSPACE-ARCHITECTURE.01/OPERATOR_AND_GOVERNANCE_RESPONSIBILITY_MODEL.md",
+      "action": "CREATE",
+      "purpose": "5 authority domains, 23 actions, authorization matrix, 9+6 prohibitions, audit model"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKSPACE-ARCHITECTURE.01/OPERATIONAL_OBSERVABILITY_MODEL.md",
+      "action": "CREATE",
+      "purpose": "10 observability domains, 120 event types, health indicators, alert architecture"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKSPACE-ARCHITECTURE.01/PATH_BOUNDARY_VALIDATION.md",
+      "action": "CREATE",
+      "purpose": "9-point path boundary compliance, NOT PATH A/B/LENS confirmation"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKSPACE-ARCHITECTURE.01/execution_report.md",
+      "action": "CREATE",
+      "purpose": "Execution report with pre-flight, steps, artifacts, governance confirmation"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKSPACE-ARCHITECTURE.01/file_changes.json",
+      "action": "CREATE",
+      "purpose": "File change manifest for stream"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKSPACE-ARCHITECTURE.01/CLOSURE.md",
+      "action": "CREATE",
+      "purpose": "Stream closure with mandatory 9-section format"
+    }
+  ]
+}

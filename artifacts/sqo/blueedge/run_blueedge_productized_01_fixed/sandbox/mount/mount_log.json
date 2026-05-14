@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "sandbox_id": "sandbox-blueedge-run01-micro-001",
+  "events": [
+    {
+      "event": "MOUNT",
+      "package_id": "SEP-blueedge-run01-001",
+      "timestamp": "2026-05-11T22:00:05.000Z",
+      "composite_before": {
+        "backed_count": 4,
+        "s_state": "S2",
+        "q_class": "Q-02"
+      },
+      "composite_after": {
+        "backed_count": 5,
+        "s_state": "S2",
+        "q_class": "Q-02"
+      },
+      "delta": {
+        "backed_count_change": "+1",
+        "domain_affected": "DOMAIN-11",
+        "lineage_change": "PARTIAL → STRONG"
+      }
+    },
+    {
+      "event": "UNMOUNT",
+      "package_id": "SEP-blueedge-run01-001",
+      "timestamp": "2026-05-11T22:00:08.000Z",
+      "reason": "Micro-activation proof complete — demonstrating deterministic rollback",
+      "composite_before": {
+        "backed_count": 5,
+        "s_state": "S2",
+        "q_class": "Q-02"
+      },
+      "composite_after": {
+        "backed_count": 4,
+        "s_state": "S2",
+        "q_class": "Q-02"
+      },
+      "delta": {
+        "backed_count_change": "-1",
+        "domain_affected": "DOMAIN-11",
+        "lineage_change": "STRONG → PARTIAL (restored)"
+      },
+      "baseline_match_verified": true
+    }
+  ]
+}

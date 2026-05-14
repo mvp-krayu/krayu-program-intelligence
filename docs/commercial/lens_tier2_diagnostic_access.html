@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signäl LENS — Tier 2: Diagnostic Access</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @page { size: A4; margin: 0; }
+
+    :root {
+      --gold:         #c8993a;
+      --gold-bright:  #e8b84b;
+      --gold-dim:     rgba(200,153,58,0.16);
+      --gold-border:  rgba(200,153,58,0.22);
+      --bg:           #080b12;
+      --panel-bg:     rgba(255,255,255,0.028);
+      --text-1:       #ede8df;
+      --text-2:       #8a8a9a;
+      --text-3:       #515162;
+      --rule:         rgba(255,255,255,0.07);
+      --teal:         #4a9b7a;
+      --teal-dim:     rgba(74,155,122,0.13);
+      --teal-border:  rgba(74,155,122,0.25);
+      --amber:        #c87941;
+      --amber-dim:    rgba(200,121,65,0.1);
+      --amber-border: rgba(200,121,65,0.28);
+    }
+
+    html { background: #0d1018; }
+
+    body {
+      width: 210mm;
+      height: 297mm;
+      margin: 0 auto;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text-1);
+      overflow: hidden;
+    }
+
+    .page {
+      width: 210mm;
+      height: 297mm;
+      padding: 28px 34px 22px 34px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-bottom: 13px;
+      border-bottom: 1px solid var(--gold);
+      flex-shrink: 0;
+    }
+    .logo {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-1);
+      letter-spacing: -0.01em;
+    }
+    .logo em { font-style: normal; color: var(--gold-bright); }
+    .doc-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 16px 0 15px 0;
+      border-bottom: 1px solid var(--rule);
+      flex-shrink: 0;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.18;
+      color: var(--text-1);
+      margin-bottom: 8px;
+      max-width: 530px;
+    }
+    .hero p {
+      font-size: 10.5px;
+      line-height: 1.65;
+      color: var(--text-2);
+      max-width: 600px;
+    }
+    .hero-canon {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 13px;
+      font-style: italic;
+      color: var(--text-2);
+      margin-bottom: 10px;
+      max-width: 530px;
+    }
+
+    /* ── BODY ── */
+    .body {
+      display: flex;
+      gap: 26px;
+      flex: 1;
+      padding: 16px 0 13px 0;
+      min-height: 0;
+    }
+
+    /* ── LEFT COLUMN ── */
+    .left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      min-width: 0;
+    }
+    .block {
+      padding-bottom: 13px;
+      margin-bottom: 13px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .block:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 7px;
+    }
+    .body-text {
+      font-size: 10px;
+      line-height: 1.68;
+      color: var(--text-2);
+    }
+    .body-text strong { color: var(--text-1); font-weight: 500; }
+
+    /* Inline deliver items in left col */
+    .left-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 2px;
+    }
+    .left-list li {
+      font-size: 9.5px;
+      color: var(--text-2);
+      line-height: 1.44;
+      padding-left: 11px;
+      position: relative;
+    }
+    .left-list li::before {
+      content: '·';
+      position: absolute;
+      left: 0;
+      color: var(--teal);
+      font-weight: 700;
+      font-size: 12px;
+      line-height: 1;
+      top: 1px;
+    }
+
+    /* Trigger badge */
+    .trigger {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      color: var(--gold-bright);
+      letter-spacing: 0.06em;
+      padding: 2px 7px;
+      border: 1px solid var(--gold-border);
+      border-radius: 2px;
+      background: var(--gold-dim);
+      margin-bottom: 8px;
+    }
+
+    /* ── RIGHT COLUMN ── */
+    .right {
+      width: 228px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--gold-border);
+      border-radius: 3px;
+      padding: 12px 13px;
+    }
+    .panel-prohibition {
+      background: var(--amber-dim);
+      border: 1px solid var(--amber-border);
+      border-radius: 3px;
+      padding: 11px 13px;
+    }
+    .panel-lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 9px;
+    }
+    .panel-lbl-amber {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--amber);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .prohibition-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--text-1);
+      margin-bottom: 7px;
+      display: block;
+    }
+    .panel-body-text {
+      font-size: 9px;
+      color: var(--text-2);
+      line-height: 1.52;
+    }
+
+    /* Mode rows */
+    .mode-list {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .mode-row { display: flex; flex-direction: column; gap: 2px; }
+    .mode-header {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .mode-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      font-weight: 500;
+      color: var(--text-1);
+      letter-spacing: 0.06em;
+    }
+    .mode-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 6px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 1px 5px;
+      border-radius: 2px;
+    }
+    .mbadge-ph1 { background: rgba(74,155,122,0.14); color: #6ec4a2; border: 1px solid rgba(74,155,122,0.28); }
+    .mbadge-def { background: rgba(200,121,65,0.12); color: #d4956a; border: 1px solid rgba(200,121,65,0.28); }
+    .mode-desc { font-size: 9px; color: var(--text-2); line-height: 1.44; padding-left: 0; }
+    .mode-sep { height: 1px; background: var(--rule); margin-top: 2px; }
+
+    /* Restrict list */
+    .restrict-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .restrict-list li {
+      font-size: 9px;
+      color: var(--text-3);
+      line-height: 1.42;
+      padding-left: 11px;
+      position: relative;
+    }
+    .restrict-list li::before {
+      content: '×';
+      position: absolute;
+      left: 0;
+      color: var(--text-3);
+      font-size: 9px;
+      line-height: 1.4;
+    }
+
+    /* ── QUOTE BAR ── */
+    .quote-bar {
+      flex-shrink: 0;
+      padding: 11px 0 10px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .quote-bar p {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 10.5px;
+      font-style: italic;
+      color: var(--text-2);
+      text-align: center;
+      line-height: 1.5;
+    }
+    .quote-bar p strong { color: var(--text-1); font-style: normal; font-weight: 600; }
+
+    /* ── FOOTER ── */
+    .footer {
+      flex-shrink: 0;
+      padding-top: 11px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-l {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      color: var(--text-3);
+      letter-spacing: 0.04em;
+    }
+    .footer-l em { font-style: normal; color: var(--gold); }
+    .footer-r { font-size: 7.5px; color: var(--text-3); font-style: italic; }
+
+    /* ── GRAPH SNAPSHOT PANEL ── */
+    .graph-panel { margin-bottom:13px; padding-bottom:13px; border-bottom:1px solid var(--rule); flex-shrink:0; }
+    .graph-canvas-wrap { border-radius:2px; overflow:hidden; border:1px solid var(--rule); }
+    .graph-caption { font-size:8px; color:var(--text-3); font-style:italic; margin-top:5px; text-align:center; }
+
+    /* ── CONTINUITY ── */
+    .notice-bar { padding:7px 0 8px; border-bottom:1px solid var(--rule); flex-shrink:0; font-size:8.5px; color:var(--text-3); font-style:italic; line-height:1.4; }
+    .cta-forward { flex-shrink:0; padding-top:7px; display:flex; justify-content:space-between; align-items:baseline; gap:14px; }
+    .cta-forward-text { font-size:8.5px; color:var(--text-3); font-style:italic; flex:1; }
+    .cta-forward-link { font-family:'JetBrains Mono',monospace; font-size:7.5px; letter-spacing:.06em; color:var(--gold); text-decoration:underline; text-decoration-color:var(--gold-border); white-space:nowrap; flex-shrink:0; }
+    .cta-forward-link:hover { color:var(--gold-bright); }
+
+    @media print {
+      html, body {
+        background: #080b12 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <header class="header">
+    <div class="logo"><em>Signäl</em> LENS</div>
+    <div class="doc-label">Diagnostic Access &nbsp;·&nbsp; Tier 2 &nbsp;·&nbsp; Confidential</div>
+  </header>
+
+  <section class="hero">
+    <h1>Diagnostic Access to the structural<br>system behind the assessment</h1>
+    <p class="hero-canon">Governed interrogation of the structural evidence gap layer.</p>
+    <p>
+      Diagnostic Access surfaces the evidence gap layer that the LENS Assessment identifies but does not expose.
+      Each unknown dimension is named. Each scope gap is described by the evidence type that is absent.
+      Each system area is identified. The output is evidence-bounded and structurally derived.
+    </p>
+  </section>
+
+  <div class="notice-bar">Following a LENS Assessment, deeper inspection may be required to understand structural conditions.</div>
+
+  <div class="body">
+
+    <div class="left">
+
+      <div class="block">
+        <div class="lbl">The situation</div>
+        <div class="trigger">INVESTIGATE decision state triggered</div>
+        <p class="body-text">
+          The LENS Assessment review concluded with an INVESTIGATE state. A structural evidence gap is identified —
+          but the assessment artifact does not surface which dimensions are blocked, where evidence is absent,
+          or what would resolve the gap.<br><br>
+          Diagnostic Access surfaces that layer. Each unknown dimension is named. Each scope gap is described.
+          Each system area is identified.
+        </p>
+      </div>
+
+      <div class="block">
+        <div class="lbl">What you receive</div>
+        <ul class="left-list">
+          <li>Diagnostic zone inventory — deterministic, derived from canonical topology and signal registry</li>
+          <li>Per-dimension: named, classified, severity and confidence assigned</li>
+          <li>Scope gap per dimension — evidence type absent that blocks confirmation</li>
+          <li>System area per dimension — functional area responsible</li>
+          <li>What evidence would move each dimension from unknown to confirmed</li>
+          <li>Diagnostic Narrative — HTML export with structural evidence topology graph</li>
+        </ul>
+      </div>
+
+      <div class="graph-panel">
+        <div class="lbl">Evidence topology — diagnostic zone</div>
+        <div class="graph-canvas-wrap">
+          <canvas id="gs-canvas" width="880" height="380" style="display:block;width:100%;background:#09090d"></canvas>
+        </div>
+        <div class="graph-caption">This is the diagnostic system behind the assessment.</div>
+        <script>
+(function(){
+  var c=document.getElementById('gs-canvas');
+  if(!c)return;
+  var ctx=c.getContext('2d');
+  var N=[
+    {x:439.21,y:190.24,r:9,color:'#f0f0f0',label:'ZONE-01'},
+    {x:360.58,y:233.84,r:6,color:'#52d97e',label:'SIG-001'},
+    {x:300.48,y:275.57,r:5,color:'#e8b54a',label:'CLM-20'},
+    {x:477.97,y:275.47,r:6,color:'#52d97e',label:'SIG-002'},
+    {x:508.7, y:342.4, r:5,color:'#e8b54a',label:'CLM-21'},
+    {x:529.66,y:165.77,r:6,color:'#52d97e',label:'SIG-003'},
+    {x:602.07,y:151.32,r:5,color:'#e8b54a',label:'CLM-22'},
+    {x:459.42,y:99.91, r:6,color:'#52d97e',label:'SIG-004'},
+    {x:478.09,y:28.95, r:5,color:'#e8b54a',label:'CLM-23'},
+    {x:352.32,y:167.2, r:6,color:'#52d97e',label:'SIG-005'},
+    {x:283.46,y:142.65,r:5,color:'#e8b54a',label:'CLM-24'},
+    {x:436.75,y:258.04,r:5,color:'#6ab4e8',label:'ART-01'},
+    {x:420.8, y:124.71,r:5,color:'#6ab4e8',label:'ART-02'},
+    {x:506.32,y:199.1, r:5,color:'#6ab4e8',label:'ART-03'},
+    {x:399.94,y:245.15,r:5,color:'#6ab4e8',label:'ART-04'},
+    {x:484.11,y:140.33,r:5,color:'#6ab4e8',label:'ART-05'},
+    {x:491.7, y:233.64,r:5,color:'#6ab4e8',label:'ART-06'},
+    {x:388.43,y:145.68,r:5,color:'#6ab4e8',label:'ART-07'}
+  ];
+  var L=[
+    {s:0,t:1,color:'#3cac64',w:2},{s:1,t:2,color:'#4b82d2',w:2.2},
+    {s:0,t:3,color:'#3cac64',w:2},{s:3,t:4,color:'#4b82d2',w:2.2},
+    {s:0,t:5,color:'#3cac64',w:2},{s:5,t:6,color:'#4b82d2',w:2.2},
+    {s:0,t:7,color:'#3cac64',w:2},{s:7,t:8,color:'#4b82d2',w:2.2},
+    {s:0,t:9,color:'#3cac64',w:2},{s:9,t:10,color:'#4b82d2',w:2.2},
+    {s:0,t:11,color:'#b29237',w:2},{s:0,t:12,color:'#b29237',w:2},
+    {s:0,t:13,color:'#b29237',w:2},{s:0,t:14,color:'#b29237',w:2},
+    {s:0,t:15,color:'#b29237',w:2},{s:0,t:16,color:'#b29237',w:2},
+    {s:0,t:17,color:'#b29237',w:2}
+  ];
+  ctx.globalAlpha=0.28;
+  L.forEach(function(l){
+    ctx.beginPath();
+    ctx.moveTo(N[l.s].x,N[l.s].y);
+    ctx.lineTo(N[l.t].x,N[l.t].y);
+    ctx.strokeStyle=l.color;
+    ctx.lineWidth=l.w;
+    ctx.stroke();
+  });
+  ctx.globalAlpha=0.88;
+  N.forEach(function(n){
+    ctx.beginPath();
+    ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+    ctx.fillStyle=n.color;
+    ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,0.1)';
+    ctx.lineWidth=1;
+    ctx.stroke();
+  });
+  ctx.globalAlpha=1;
+  ctx.fillStyle='#66666e';
+  ctx.font='10px -apple-system,sans-serif';
+  ctx.textAlign='center';
+  N.forEach(function(n){
+    ctx.fillText(n.label,n.x,n.y+n.r+14);
+  });
+})();
+        </script>
+      </div>
+
+      <div class="block">
+        <div class="lbl">What this gives you</div>
+        <p class="body-text">
+          A named, evidence-bounded view of each structural unknown in the assessed environment.
+          Dimensions are identified by functional label. Scope gaps are described by evidence type absent.
+          System areas are identified by functional name. This is not analysis — it is the evidence gap layer
+          surfaced and bounded to what the canonical data directly supports.
+        </p>
+      </div>
+
+      <div class="block">
+        <div class="lbl">When to use</div>
+        <p class="body-text">
+          When the LENS Assessment produced an INVESTIGATE decision state and you need to understand the evidence gap structure before deciding the next engagement step.
+          Diagnostic Access <strong>names and bounds</strong> the investigation. It does not resolve it — that requires targeted evidence collection or escalation.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="right">
+
+      <div class="panel">
+        <div class="panel-lbl">Interaction modes</div>
+        <div class="mode-list">
+          <div class="mode-row">
+            <div class="mode-header">
+              <span class="mode-name">WHY</span>
+              <span class="mode-badge mbadge-ph1">Phase 1 — Active</span>
+            </div>
+            <div class="mode-desc">Zone classification rationale — which canonical facts triggered zone type assignment. Returns: grounding state, signal count, confidence, structural scope.</div>
+            <div class="mode-sep"></div>
+          </div>
+          <div class="mode-row">
+            <div class="mode-header">
+              <span class="mode-name">EVIDENCE</span>
+              <span class="mode-badge mbadge-ph1">Phase 1 — Active</span>
+            </div>
+            <div class="mode-desc">Available trace links, missing evidence inventory, signal coverage summary per zone.</div>
+            <div class="mode-sep"></div>
+          </div>
+          <div class="mode-row">
+            <div class="mode-header">
+              <span class="mode-name">TRACE</span>
+              <span class="mode-badge mbadge-def">Phase 2 — Deferred</span>
+            </div>
+            <div class="mode-desc">Full propagation traversal from zone anchor domain. Depth ≤ 2 adjacency. Not available in Phase 1.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-prohibition">
+        <div class="panel-lbl-amber">Boundary constraint</div>
+        <span class="prohibition-tag">inference_prohibition: ACTIVE</span>
+        <p class="panel-body-text">
+          All outputs are bounded to what the evidence set directly supports.
+          The workspace produces no inferences about root causes, resolution paths,
+          or forward projections. This applies to all outputs, all interaction modes,
+          and all exports.
+        </p>
+      </div>
+
+      <div class="panel" style="flex:1">
+        <div class="panel-lbl">What it does not do</div>
+        <ul class="restrict-list">
+          <li>No advisory direction, prioritisation guidance, or investigation sequence</li>
+          <li>No root cause claims or forward projections</li>
+          <li>No certainty claims about current degradation state</li>
+          <li>Consequence class per dimension deferred to Phase 2</li>
+          <li>TRACE mode (full traversal) deferred to Phase 2</li>
+          <li>No internal system identifiers in any output</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="quote-bar">
+    <p>"The output is the <strong>evidence gap layer — surfaced, named, and bounded</strong> to what the canonical data directly supports."</p>
+  </div>
+
+  <div class="cta-forward">
+    <span class="cta-forward-text">For environments requiring continuous structural interrogation under governance.</span>
+    <a href="lens_tier3_enterprise_access.html" class="cta-forward-link">Escalate to enterprise access →</a>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-l"><em>Signäl</em> LENS &nbsp;·&nbsp; signal-pi.com &nbsp;·&nbsp; © 2026 Signäl &nbsp;·&nbsp; Tier 2: Diagnostic Access</div>
+    <div class="footer-r">Confidential — prepared for recipient only</div>
+  </footer>
+
+</div>
+</body>
+</html>

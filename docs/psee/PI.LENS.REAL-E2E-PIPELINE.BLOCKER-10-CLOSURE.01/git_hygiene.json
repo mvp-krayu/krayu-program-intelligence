@@ -1,0 +1,50 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE.BLOCKER-10-CLOSURE.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-03",
+
+  "branch": "work/psee-runtime",
+  "baseline_commit": "0fc4892b8975cad77fed1cabfe80badfc7aa390c",
+  "baseline_commit_message": "previous commit (BLOCKER-09 and idempotency work committed)",
+
+  "working_tree_before": "CLEAN",
+  "working_tree_after": "1 new file in existing untracked recomputed/ dir; 1 new evidence directory untracked; no producer scripts modified; run artifacts written to gitignored path",
+
+  "files_modified_tracked": [],
+  "files_created_untracked": [
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/signal_projection_fastapi_compatible.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-10-CLOSURE.01/signal_projection_source_trace.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-10-CLOSURE.01/implementation_summary.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-10-CLOSURE.01/validation_result.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-10-CLOSURE.01/phase6_7_execution_log.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-10-CLOSURE.01/no_free_patching_attestation.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-10-CLOSURE.01/git_hygiene.json"
+  ],
+  "files_gitignored_written_by_run": [
+    "clients/blueedge/psee/runs/run_blueedge_e2e_execute_01/41.x/signal_projection.json",
+    "clients/blueedge/psee/runs/run_blueedge_e2e_execute_01/41.x/pressure_zone_projection.json",
+    "clients/blueedge/psee/runs/run_blueedge_e2e_execute_01/75.x/condition_correlation_state.json",
+    "clients/blueedge/psee/runs/run_blueedge_e2e_execute_01/75.x/pressure_zone_state.json",
+    "clients/blueedge/psee/runs/run_blueedge_e2e_execute_01/75.x/pressure_candidate_state.json"
+  ],
+
+  "signal_projection_source": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/41.x/signal_projection.json",
+  "signal_projection_destination": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/signal_projection_fastapi_compatible.json",
+  "signal_projection_sha256": "a467ba0b6541e3a558d90ff55f6754332908f13dc536a0f94440feb73fa17e2d",
+  "content_fabricated": false,
+
+  "pipeline_executed": false,
+  "wrapper_executed": true,
+  "canonical_artifacts_mutated": false,
+  "producer_scripts_modified": false,
+  "renderer_modified": false,
+  "semantic_bundle_modified": false,
+  "ui_modified": false,
+  "api_modified": false,
+  "fastapi_code_modified": false,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[FIX] PI.LENS.REAL-E2E-PIPELINE.BLOCKER-10-CLOSURE.01 — governed copy of signal_projection_fastapi_compatible.json; Phase 6+7 PASS",
+
+  "git_hygiene_status": "COMPLETE"
+}

@@ -1,0 +1,72 @@
+{
+  "stream": "PI.LENS.V2.PLAYWRIGHT-VISUAL-INSPECTION.01",
+  "validated_at": "2026-05-09",
+  "scope": "Real runtime visual inspection and cinematic iteration on /lens-v2-flagship",
+  "runtime_url_inspected": "http://localhost:3002/lens-v2-flagship",
+  "app": "app/execlens-demo",
+  "checks": [
+    {
+      "name": "target_route_inspected_is_lens_v2_flagship",
+      "description": "All Playwright captures and signals were taken from /lens-v2-flagship, not from / or app/gauge-product or any other route.",
+      "result": "PASS",
+      "notes": "Confirmed via Playwright page URL on every capture; all screenshots in inspection_runs are from /lens-v2-flagship."
+    },
+    {
+      "name": "app_inspected_is_execlens_demo",
+      "description": "All edits and inspection targeted app/execlens-demo, not app/gauge-product.",
+      "result": "PASS",
+      "notes": "Source edits confined to app/execlens-demo/pages/lens-v2-flagship.js. No edits anywhere else in app/."
+    },
+    {
+      "name": "screenshots_captured_successfully",
+      "description": "12 screenshots captured: 3 viewports (1728x1117, 1440x900, 1280x800), 2 capture types (full-page + viewport), 2 phases (before + after).",
+      "result": "PASS",
+      "notes": "Files present under docs/psee/PI.LENS.V2.PLAYWRIGHT-VISUAL-INSPECTION.01/screenshots/ — 6 before + 6 after."
+    },
+    {
+      "name": "before_after_comparison_completed",
+      "description": "Mechanical signals extracted both before and after refinement; documented in BEFORE_AFTER_COMPARISON_MATRIX and rubric_results.",
+      "result": "PASS",
+      "notes": "12 mechanical signals captured pre and post. All deltas recorded."
+    },
+    {
+      "name": "rubric_results_json_created",
+      "description": "rubric_results.json produced with six-axis before/after evaluation and overall verdict.",
+      "result": "PASS",
+      "notes": "File exists; before overall = REDESIGN, after overall = PASS."
+    },
+    {
+      "name": "dashboard_syndrome_audit_completed",
+      "description": "DASHBOARD_SYNDROME_AUDIT.md produced with primary and secondary tests per detection guide.",
+      "result": "PASS",
+      "notes": "9 detection tests documented; before verdict FAIL, after verdict PASS."
+    },
+    {
+      "name": "terminology_normalization_preserved",
+      "description": "No reintroduction of L7, 51.x, demo/narrative layer, or demo / narrative layer terminology in any deliverable or source change.",
+      "result": "PASS",
+      "method": "grep -rn -E '\\bL7\\b|51\\.x|demo/narrative|demo / narrative' against this stream's deliverables and modified source.",
+      "notes": "Re-grep returned zero matches in the stream's added/modified files. Note: pre-existing strings outside this stream's scope remain unchanged per scope rule."
+    },
+    {
+      "name": "no_governance_mutation",
+      "description": "No changes to docs/governance/, validators, or any governance contract.",
+      "result": "PASS",
+      "notes": "git diff confirms changes are scoped to docs/psee/PI.LENS.V2.PLAYWRIGHT-VISUAL-INSPECTION.01/, docs/pios/PI.LENS.V2.PLAYWRIGHT-VISUAL-INSPECTION.01/, and app/execlens-demo/pages/lens-v2-flagship.js."
+    },
+    {
+      "name": "no_evidence_semantic_mutation",
+      "description": "No changes to evidence semantics, signal interpretation, render-state vocabulary, qualifier-class semantics, or governance ribbon pass/fail logic.",
+      "result": "PASS",
+      "notes": "All edits in pages/lens-v2-flagship.js are visual-composition / typography / atmosphere only. Render-state vocabulary (EXECUTIVE_READY / EXECUTIVE_READY_WITH_QUALIFIER / DIAGNOSTIC_ONLY / BLOCKED) preserved verbatim. Qualifier-class semantics (Q-00 / Q-01) preserved. Orchestration module untouched. Fixtures untouched."
+    },
+    {
+      "name": "no_unrelated_surface_mutation",
+      "description": "No edits to app/gauge-product, no edits to other routes within app/execlens-demo, no edits to unrelated frontend surfaces.",
+      "result": "PASS",
+      "notes": "git diff confirms exactly one source file modified: app/execlens-demo/pages/lens-v2-flagship.js."
+    }
+  ],
+  "verdict": "PASS",
+  "fail_count": 0
+}

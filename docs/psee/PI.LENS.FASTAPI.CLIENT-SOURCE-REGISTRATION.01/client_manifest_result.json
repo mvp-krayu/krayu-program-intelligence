@@ -1,0 +1,26 @@
+{
+  "contract_id": "PI.LENS.FASTAPI.CLIENT-SOURCE-REGISTRATION.01",
+  "artifact": "client_manifest_result",
+  "step": "STEP_3",
+  "generated_date": "2026-05-01",
+
+  "target_path": "clients/fastapi/client.yaml",
+  "status": "WRITTEN",
+  "fields_written": {
+    "client_id": "fastapi",
+    "uuid": "e65d2f0a-dfa7-4257-9333-fcbb583f0880",
+    "display_name": "OSS FastAPI Modular Monolith",
+    "source_type": "local_directory",
+    "pipeline_mode": "multi_contract",
+    "ceu_model": "dynamic",
+    "ceu_count": 13,
+    "dom_group_count": 5,
+    "structural_node_count": 45,
+    "default_source": "source_01"
+  },
+  "field_count": 10,
+  "schema_reference": "clients/blueedge/client.yaml",
+  "uuid_authority": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/config/client.yaml (business_client_id: oss-fastapi-modular)",
+  "ceu_dom_node_authority": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/ — 13 CEUs, 5 DOMs, 45 nodes documented in fastapi_source_discovery.json",
+  "governance": "No overwrite — clients/fastapi/client.yaml did not exist prior to this step. CREATE_ONLY — PASS."
+}

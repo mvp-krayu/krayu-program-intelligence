@@ -1,0 +1,10 @@
+client_id: fastapi
+uuid: e65d2f0a-dfa7-4257-9333-fcbb583f0880
+display_name: OSS FastAPI Modular Monolith
+source_type: local_directory
+pipeline_mode: multi_contract
+ceu_model: dynamic
+ceu_count: 13
+dom_group_count: 5
+structural_node_count: 45
+default_source: source_01

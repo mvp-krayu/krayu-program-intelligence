@@ -1,0 +1,27 @@
+{
+  "contract_id": "PI.CLIENT-LANGUAGE-LAYER.TIER1-NARRATIVE-FINAL-ALIGNMENT.01",
+  "artifact": "validation_log",
+  "captured_date": "2026-04-30",
+
+  "checks": [
+    { "name": "VF-01_additional_signals_phrase",       "result": "PASS", "detail": "'additional signals not activated' present; 'and signals not activated' absent" },
+    { "name": "VF-02_dependency_density_removed",      "result": "PASS", "detail": "'no structural instability patterns detected' present; 'elevated dependency or density risk' absent" },
+    { "name": "VF-03_dep_density_scope_sentence",      "result": "PASS", "detail": "'Dependency load and density metrics were not evaluated within the current evidence scope.' present" },
+    { "name": "VF-04_topology_scope_qualifier",        "result": "PASS", "detail": "'Full structural topology within assessment scope' present; old form 'Full structural topology — ' absent" },
+    { "name": "VF-05_zone_count_deduplicated",         "result": "PASS", "detail": "'simultaneous conditions satisfy' absent from report" },
+    { "name": "VF-06_these_conditions_phrase",         "result": "PASS", "detail": "'These conditions satisfy' present in zone body" },
+    { "name": "VF-07_cap_not_modeled_outside_confirmed", "result": "PASS", "detail": "'Capabilities not modeled' absent from boundary-block known section" },
+    { "name": "VF-08_additional_signal_label",         "result": "PASS", "detail": "'additional signal, not activated in this run' present in Outside Evidence Scope list" },
+    { "name": "VF-09_dom_anchor_dynamic",              "result": "PASS", "detail": "'(DOM-04)' present in conclusion; derived from pz_proj[zone_projection][0][anchor_id]" },
+    { "name": "VF-10_client_agnostic_structure",       "result": "PASS", "detail": "Client reference present and dynamic; no hardcoded structural identifiers in conclusion block" }
+  ],
+
+  "checks_total": 10,
+  "checks_passed": 10,
+  "checks_partial": 0,
+  "checks_failed": 0,
+
+  "generator_syntax": "PASS — python3 -m py_compile exit 0",
+
+  "verdict": "PASS"
+}

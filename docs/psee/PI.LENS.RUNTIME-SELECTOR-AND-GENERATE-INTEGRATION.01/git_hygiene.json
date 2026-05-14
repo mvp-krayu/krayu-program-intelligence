@@ -1,0 +1,40 @@
+{
+  "contract_id": "PI.LENS.RUNTIME-SELECTOR-AND-GENERATE-INTEGRATION.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-02",
+
+  "branch": "work/psee-runtime",
+  "baseline_commit": "d95005d596a22e40f3565ce5d09f2763ed9dade5",
+  "baseline_commit_message": "[FIX] wrapper path alignment (Decision parity restored)",
+
+  "working_tree_before": "CLEAN",
+  "working_tree_after": "4 files modified/created in app/gauge-product/pages/",
+
+  "files_modified_tracked": [
+    "app/gauge-product/pages/api/report-file.js",
+    "app/gauge-product/pages/lens.js"
+  ],
+  "files_created_tracked": [
+    "app/gauge-product/pages/api/runtime-list.js",
+    "app/gauge-product/pages/api/generate-report.js",
+    "docs/psee/PI.LENS.RUNTIME-SELECTOR-AND-GENERATE-INTEGRATION.01/runtime_selector_summary.md",
+    "docs/psee/PI.LENS.RUNTIME-SELECTOR-AND-GENERATE-INTEGRATION.01/api_contract.json",
+    "docs/psee/PI.LENS.RUNTIME-SELECTOR-AND-GENERATE-INTEGRATION.01/validation_result.json",
+    "docs/psee/PI.LENS.RUNTIME-SELECTOR-AND-GENERATE-INTEGRATION.01/ui_wiring_summary.md",
+    "docs/psee/PI.LENS.RUNTIME-SELECTOR-AND-GENERATE-INTEGRATION.01/decision_section_check.json",
+    "docs/psee/PI.LENS.RUNTIME-SELECTOR-AND-GENERATE-INTEGRATION.01/no_pipeline_attestation.md",
+    "docs/psee/PI.LENS.RUNTIME-SELECTOR-AND-GENERATE-INTEGRATION.01/git_hygiene.json"
+  ],
+  "files_modified_gitignored": [],
+
+  "renderer_modified": false,
+  "pipeline_executed": false,
+  "canonical_reports_modified": false,
+  "semantic_bundle_modified": false,
+  "fastapi_involved": false,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[INTEGRATION] PI.LENS.RUNTIME-SELECTOR-AND-GENERATE-INTEGRATION.01 — runtime-list + generate-report APIs; RuntimeSelector UI; report-file psee routing",
+
+  "git_hygiene_status": "COMPLETE"
+}

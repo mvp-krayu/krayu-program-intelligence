@@ -1,0 +1,52 @@
+{
+  "contract_id": "PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01",
+  "artifact": "ceu_grounding_comparison",
+  "block": "BLOCK_D",
+  "generated_date": "2026-05-01",
+  "mode": "FORENSIC / READ_ONLY",
+
+  "verdict": "CEU_MATCH",
+
+  "baseline_ceu": {
+    "source": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/grounding_state_v3.json",
+    "grounding_ratio": 1.0,
+    "readiness_gate": "PASS",
+    "total_ceu": 10,
+    "source_mode": "DYNAMIC",
+    "grounding_summary": {
+      "SOURCE_TRUTH": 10,
+      "DERIVED": 0,
+      "NON_AUTH": 0,
+      "OMITTED": 0,
+      "INVALID": 0
+    },
+    "registry": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/ceu_grounding/registry/ceu_grounding_registry.json"
+  },
+
+  "orchestrated_ceu": {
+    "source": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/grounding_state_v3.json",
+    "grounding_ratio": 1.0,
+    "readiness_gate": "PASS",
+    "total_ceu": 10,
+    "source_mode": "DYNAMIC",
+    "note": "IDENTICAL SOURCE as baseline — orchestrator Phase 4 references and validates the same grounding_state_v3.json file"
+  },
+
+  "ceu_list_match": {
+    "match": true,
+    "ceus": [
+      {"ceu_id": "CEU-01", "name": "BACKEND_SERVICE", "grounding_status": "SOURCE_TRUTH"},
+      {"ceu_id": "CEU-02", "name": "FRONTEND_APPLICATION", "grounding_status": "SOURCE_TRUTH"},
+      {"ceu_id": "CEU-03", "name": "DATA_LAYER", "grounding_status": "SOURCE_TRUTH"},
+      {"ceu_id": "CEU-04", "name": "API_LAYER", "grounding_status": "SOURCE_TRUTH"},
+      {"ceu_id": "CEU-05", "name": "AUTHENTICATION_SECURITY", "grounding_status": "SOURCE_TRUTH"},
+      {"ceu_id": "CEU-06", "name": "CONFIGURATION_INFRA", "grounding_status": "SOURCE_TRUTH"},
+      {"ceu_id": "CEU-07", "name": "MONITORING_OBSERVABILITY", "grounding_status": "SOURCE_TRUTH"},
+      {"ceu_id": "CEU-08", "name": "TESTING_VALIDATION", "grounding_status": "SOURCE_TRUTH"},
+      {"ceu_id": "CEU-09", "name": "EDGE_AGENTS", "grounding_status": "SOURCE_TRUTH"},
+      {"ceu_id": "CEU-10", "name": "CI_CD_PIPELINE", "grounding_status": "SOURCE_TRUTH"}
+    ]
+  },
+
+  "finding": "CEU grounding is identical. Both runs use the same grounding_state_v3.json from run_blueedge_integrated_01. 10/10 CEUs SOURCE_TRUTH, grounding_ratio=1.0. CEU delta is NOT the cause of signal delta."
+}

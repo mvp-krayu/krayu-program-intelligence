@@ -1,0 +1,395 @@
+{
+  "schema_version": "1.0",
+  "stream": "PI.LENS.NEXTGEN-REPORTS.PROFESSIONAL-UI.01",
+  "authority": "PROFESSIONAL_UI_ARCHITECTURE.md",
+  "upstream_bridge": "PI.LENS.GEIOS.PRODUCTIZATION-BRIDGE.01 (4e2a9e2)",
+  "upstream_explainability": "PI.LENS.NEXTGEN-REPORTS.EVIDENCE-PANEL-ARCHITECTURE.01 (b1f0e9f)",
+  "baseline_ref": "governed-dpsig-baseline-v1",
+  "issued": "2026-05-08",
+  "description": "Machine-readable executive rendering architecture definition for LENS NextGen. Defines regions, hierarchy levels, density classes, render states, panel placements, and visual governance rules.",
+
+  "rendering_regions": {
+    "REGION_EXECUTIVE_HEADER": {
+      "region_id": "REGION_EXECUTIVE_HEADER",
+      "label": "Executive Header",
+      "priority": "PRIMARY",
+      "default_visibility": "ALWAYS_VISIBLE",
+      "collapsible": false,
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"],
+      "required_components": [
+        "readiness_badge",
+        "qualifier_chip",
+        "report_identity",
+        "scope_indicator",
+        "generation_timestamp"
+      ],
+      "governance": {
+        "readiness_badge_required": true,
+        "qualifier_visible_if_active": true,
+        "raw_enum_values_forbidden": true,
+        "governance_verdict_as_status_label_only": true,
+        "cannot_be_hidden": true
+      },
+      "phase": "Phase 2+"
+    },
+
+    "REGION_INTELLIGENCE_SUMMARY": {
+      "region_id": "REGION_INTELLIGENCE_SUMMARY",
+      "label": "Intelligence Summary",
+      "priority": "PRIMARY",
+      "default_visibility": "ALWAYS_VISIBLE",
+      "collapsible": false,
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"],
+      "required_components": [
+        "executive_summary_narrative",
+        "why_section_primary_statement",
+        "domain_evidence_summary",
+        "propagation_summary"
+      ],
+      "governance": {
+        "narrative_from_report_object_only": true,
+        "no_live_ai_generation": true,
+        "vocabulary_contract_enforced": true,
+        "forbidden_vocabulary_excluded": true,
+        "cannot_be_collapsed": true
+      },
+      "phase": "Phase 2+"
+    },
+
+    "REGION_EXPLAINABILITY": {
+      "region_id": "REGION_EXPLAINABILITY",
+      "label": "Explainability Surface",
+      "priority": "SECONDARY",
+      "default_visibility": "ALWAYS_ACCESSIBLE",
+      "collapsible": true,
+      "collapse_behavior": "panels_collapse_independently",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"],
+      "panels": [
+        {
+          "panel_id": "WHY",
+          "placement": "inline_section",
+          "default_state": "EXPANDED",
+          "audience_minimum": "EXECUTIVE"
+        },
+        {
+          "panel_id": "EVIDENCE",
+          "placement": "inline_accordion_per_domain",
+          "default_state": "COLLAPSED",
+          "audience_minimum": "EXECUTIVE"
+        },
+        {
+          "panel_id": "QUALIFIERS",
+          "placement": "inline_section",
+          "default_state": "EXPANDED_IF_QUALIFIER_ACTIVE",
+          "audience_minimum": "EXECUTIVE"
+        },
+        {
+          "panel_id": "CONFIDENCE",
+          "placement": "inline_section",
+          "default_state": "COLLAPSED",
+          "audience_minimum": "EXECUTIVE"
+        },
+        {
+          "panel_id": "READINESS_STATE",
+          "placement": "inline_section",
+          "default_state": "EXPANDED",
+          "audience_minimum": "EXECUTIVE"
+        },
+        {
+          "panel_id": "TRACE",
+          "placement": "inline_section",
+          "default_state": "COLLAPSED",
+          "audience_minimum": "ADVISORY"
+        },
+        {
+          "panel_id": "LINEAGE",
+          "placement": "inline_section",
+          "default_state": "COLLAPSED",
+          "audience_minimum": "ADVISORY"
+        }
+      ],
+      "governance": {
+        "all_panels_pre_rendered": true,
+        "no_live_ai_generation_in_any_panel": true,
+        "qualifier_suppression_prohibited": true,
+        "evidence_immutable": true
+      },
+      "phase": "Phase 2+"
+    },
+
+    "REGION_TOPOLOGY": {
+      "region_id": "REGION_TOPOLOGY",
+      "label": "Structural Topology",
+      "priority": "TERTIARY",
+      "default_visibility": "PLACEHOLDER_PHASE_2",
+      "collapsible": true,
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"],
+      "governance": {
+        "topology_read_only": true,
+        "ali04_aliases_only": true,
+        "no_raw_topology_keys": true,
+        "no_numerical_topology_data": true,
+        "no_topology_mutation": true,
+        "no_topology_correction_affordance": true
+      },
+      "phase": "Phase 3+",
+      "phase_2_status": "PLACEHOLDER — not rendered"
+    },
+
+    "REGION_DIAGNOSTIC": {
+      "region_id": "REGION_DIAGNOSTIC",
+      "label": "Governance Notices",
+      "priority": "DIAGNOSTIC",
+      "default_visibility": "CONDITIONAL — governance-triggered",
+      "collapsible": false,
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"],
+      "trigger_conditions": [
+        "governance_verdict = FAIL",
+        "evidence_object_hash missing or failed",
+        "normalization_version mismatch",
+        "qualifier_class = Q-03 or Q-04",
+        "panel_state = BLOCKED",
+        "panel_state = DIAGNOSTIC"
+      ],
+      "governance": {
+        "cannot_be_suppressed_if_triggered": true,
+        "explicit_notice_required": true,
+        "silent_degradation_prohibited": true
+      },
+      "phase": "Phase 2+"
+    },
+
+    "REGION_LINEAGE": {
+      "region_id": "REGION_LINEAGE",
+      "label": "Analysis Provenance",
+      "priority": "TERTIARY",
+      "default_visibility": "COLLAPSED",
+      "collapsible": true,
+      "audience": ["ADVISORY", "AUDIT"],
+      "governance": {
+        "hidden_from_executive_by_default": true,
+        "hash_values_never_decoded": true,
+        "reference_labels_only_in_advisory": true,
+        "full_values_in_audit_only": true
+      },
+      "phase": "Phase 2+"
+    },
+
+    "REGION_AUDIT": {
+      "region_id": "REGION_AUDIT",
+      "label": "Audit Chain",
+      "priority": "TERTIARY",
+      "default_visibility": "AUDIENCE_GATED",
+      "collapsible": true,
+      "audience": ["AUDIT"],
+      "governance": {
+        "audit_tier_only": true,
+        "full_hash_values_visible": true,
+        "derivation_hash_as_reference_id_only": true,
+        "run_id_visible": true,
+        "never_decoded_or_interpreted": true
+      },
+      "phase": "Phase 2+"
+    }
+  },
+
+  "hierarchy_levels": {
+    "PRIMARY": {
+      "level_id": "PRIMARY",
+      "description": "Highest visual weight. Always in view. Cannot be collapsed or hidden.",
+      "components": ["readiness_badge", "executive_summary", "why_section"],
+      "visual_weight": "dominant"
+    },
+    "SECONDARY": {
+      "level_id": "SECONDARY",
+      "description": "High visual weight. Always accessible. Individual panels may collapse.",
+      "components": ["evidence_drawers", "qualifiers_panel", "signal_cards", "propagation_summary"],
+      "visual_weight": "high"
+    },
+    "TERTIARY": {
+      "level_id": "TERTIARY",
+      "description": "Accessible on demand. Collapsed by default. Critical for depth review.",
+      "components": ["trace_panel", "lineage_panel", "confidence_panel", "readiness_state_panel"],
+      "visual_weight": "medium"
+    },
+    "DIAGNOSTIC": {
+      "level_id": "DIAGNOSTIC",
+      "description": "Governance-triggered. Renders only when governance state requires it. Cannot be suppressed.",
+      "components": ["blocked_notice", "diagnostic_banner", "suppression_notice"],
+      "visual_weight": "high_when_active"
+    }
+  },
+
+  "density_classes": {
+    "EXECUTIVE_DENSE": {
+      "class_id": "EXECUTIVE_DENSE",
+      "description": "Default executive view. All regions present; depth layers collapsed.",
+      "default_state": {
+        "REGION_EXECUTIVE_HEADER": "EXPANDED",
+        "REGION_INTELLIGENCE_SUMMARY": "EXPANDED",
+        "REGION_EXPLAINABILITY": "PARTIALLY_EXPANDED",
+        "REGION_TOPOLOGY": "PLACEHOLDER",
+        "REGION_DIAGNOSTIC": "CONDITIONAL",
+        "REGION_LINEAGE": "COLLAPSED",
+        "REGION_AUDIT": "HIDDEN"
+      },
+      "audience": ["EXECUTIVE"]
+    },
+    "EXECUTIVE_BALANCED": {
+      "class_id": "EXECUTIVE_BALANCED",
+      "description": "Focused view for single-domain analysis or presentation mode.",
+      "default_state": {
+        "REGION_EXECUTIVE_HEADER": "EXPANDED",
+        "REGION_INTELLIGENCE_SUMMARY": "EXPANDED",
+        "REGION_EXPLAINABILITY": "KEY_PANELS_EXPANDED",
+        "REGION_TOPOLOGY": "PLACEHOLDER",
+        "REGION_DIAGNOSTIC": "CONDITIONAL",
+        "REGION_LINEAGE": "HIDDEN",
+        "REGION_AUDIT": "HIDDEN"
+      },
+      "audience": ["EXECUTIVE"]
+    },
+    "INVESTIGATION_DENSE": {
+      "class_id": "INVESTIGATION_DENSE",
+      "description": "Advisory evidence review mode. All evidence drawers open.",
+      "default_state": {
+        "REGION_EXECUTIVE_HEADER": "EXPANDED",
+        "REGION_INTELLIGENCE_SUMMARY": "EXPANDED",
+        "REGION_EXPLAINABILITY": "ALL_PANELS_EXPANDED",
+        "REGION_TOPOLOGY": "PLACEHOLDER",
+        "REGION_DIAGNOSTIC": "CONDITIONAL",
+        "REGION_LINEAGE": "COLLAPSED",
+        "REGION_AUDIT": "HIDDEN"
+      },
+      "audience": ["ADVISORY"]
+    },
+    "AUDIT_DENSE": {
+      "class_id": "AUDIT_DENSE",
+      "description": "Full audit review mode. All panels open including lineage and audit chain.",
+      "default_state": {
+        "REGION_EXECUTIVE_HEADER": "EXPANDED",
+        "REGION_INTELLIGENCE_SUMMARY": "EXPANDED",
+        "REGION_EXPLAINABILITY": "ALL_PANELS_EXPANDED",
+        "REGION_TOPOLOGY": "PLACEHOLDER",
+        "REGION_DIAGNOSTIC": "EXPANDED_IF_ACTIVE",
+        "REGION_LINEAGE": "EXPANDED",
+        "REGION_AUDIT": "EXPANDED"
+      },
+      "audience": ["AUDIT"]
+    }
+  },
+
+  "render_states": {
+    "EXECUTIVE_READY": {
+      "state_id": "EXECUTIVE_READY",
+      "source": "ReadinessState.EXECUTIVE_READY",
+      "executive_label": "Executive Ready",
+      "badge_token": "token-ready",
+      "qualifier_chip": null,
+      "diagnostic_notice": false,
+      "blocked_notice": false
+    },
+    "EXECUTIVE_READY_WITH_QUALIFIER": {
+      "state_id": "EXECUTIVE_READY_WITH_QUALIFIER",
+      "source": "ReadinessState.EXECUTIVE_READY_WITH_QUALIFIER",
+      "executive_label": "Executive Ready — Qualified",
+      "badge_token": "token-ready-qualified",
+      "qualifier_chip": "ACTIVE — chip per Q-taxonomy",
+      "diagnostic_notice": false,
+      "blocked_notice": false
+    },
+    "DIAGNOSTIC_ONLY": {
+      "state_id": "DIAGNOSTIC_ONLY",
+      "source": "ReadinessState.DIAGNOSTIC_ONLY",
+      "executive_label": "Under Structural Review",
+      "badge_token": "token-diagnostic",
+      "qualifier_chip": "token-qualifier-grey",
+      "diagnostic_notice": true,
+      "blocked_notice": false,
+      "advisory_notice_required": true
+    },
+    "BLOCKED": {
+      "state_id": "BLOCKED",
+      "source": "governance_verdict = FAIL or evidence_object_hash failure",
+      "executive_label": "Readiness classification unavailable",
+      "badge_token": "token-blocked",
+      "qualifier_chip": null,
+      "diagnostic_notice": false,
+      "blocked_notice": true,
+      "all_panels_blocked": true
+    }
+  },
+
+  "layout_constraints": {
+    "readiness_badge": {
+      "always_visible": true,
+      "always_first_in_header": true,
+      "minimum_size_preserved": true,
+      "cannot_be_minimized_on_narrow_viewport": true
+    },
+    "executive_summary": {
+      "always_visible": true,
+      "no_truncation": true,
+      "no_read_more_on_primary_paragraph": true
+    },
+    "qualifier_chips": {
+      "always_visible_when_active": true,
+      "never_hidden_on_narrow_viewport": true,
+      "suppression_prohibited": true
+    },
+    "evidence_panels": {
+      "always_accessible": true,
+      "no_removal_on_compress": true,
+      "collapsed_not_absent": true
+    }
+  },
+
+  "visual_governance_rules": {
+    "no_conversational_ui_surfaces": true,
+    "no_prompt_input_regions": true,
+    "no_ai_assistant_avatars": true,
+    "no_probabilistic_confidence_gauges": true,
+    "no_gamified_visualization": true,
+    "no_decorative_graph_overload": true,
+    "no_silent_qualifier_suppression": true,
+    "no_silent_blocked_degradation": true,
+    "no_chatbot_phrasing_in_ui_labels": true,
+    "no_geios_internal_labels_in_ui": true,
+    "no_raw_signal_keys_in_visual_elements": true,
+    "no_numerical_confidence_values": true,
+    "no_trend_arrows_without_evidence": true,
+    "no_comparative_metrics_without_evidence": true
+  },
+
+  "responsiveness_rules": {
+    "desktop": {
+      "min_width_px": 1200,
+      "layout": "two_column_explainability_evidence",
+      "topology_column": "Phase 3+",
+      "badge_scale": "full",
+      "narrative_visible": "full"
+    },
+    "tablet": {
+      "min_width_px": 768,
+      "max_width_px": 1199,
+      "layout": "single_column_stacked",
+      "badge_scale": "full",
+      "narrative_visible": "full",
+      "evidence_cards": "stacked_vertical"
+    },
+    "presentation_mode": {
+      "min_width_px": 1400,
+      "fullscreen": true,
+      "layout": "presentation_optimized",
+      "badge_scale": "enlarged",
+      "narrative_scale": "enlarged",
+      "depth_default": "collapsed"
+    },
+    "print_pdf": {
+      "layout": "linear_all_regions",
+      "collapsed_panels": "expanded_for_print",
+      "audit_tier_optional": true,
+      "hash_values_abbreviated": true
+    }
+  }
+}

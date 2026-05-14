@@ -1,0 +1,13 @@
+{
+  "snapshot_id": "snapshot-001-baseline",
+  "timestamp": "2026-05-11T23:01:00.000Z",
+  "sandbox_id": "sandbox-blueedge-run01-multi-001",
+  "snapshot_type": "BASELINE",
+  "active_overlays": [],
+  "composite_summary": {
+    "s_state": "S2", "q_class": "Q-02", "backed_count": 4,
+    "grounding_ratio": 0.235, "overlay_count": 0
+  },
+  "certification_level": "PIPELINE_CERTIFIED",
+  "verification": "MATCH"
+}

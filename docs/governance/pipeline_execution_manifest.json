@@ -1,0 +1,552 @@
+{
+  "manifest_id": "PI.PSEE-PIOS.PIPELINE-EXECUTION-MANIFEST.01",
+  "governance_version": "1.0",
+  "status": "FROZEN — AUTHORITATIVE",
+  "generated": "2026-05-07",
+  "stream": "PI.PSEE-PIOS.PIPELINE-EXECUTION-MANIFEST.01",
+
+  "baseline_commit": {
+    "hash": "93098cb",
+    "description": "[CLOSE] Formalize LENS real E2E pipeline execution baseline",
+    "authority": "CANONICAL_RUNTIME_ROOT",
+    "note": "All future implementation streams are bounded relative to this commit. No stream may claim runtime authority over any artifact state that predates 93098cb without an explicit rebaseline contract."
+  },
+
+  "lane_model": {
+    "LANE_A": {
+      "name": "Active Productized Generic Runtime",
+      "status": "ACTIVE",
+      "runtime_sovereign": true,
+      "execution_path": [
+        "clients/<client>/psee/runs/<run_id>/binding/binding_envelope.json",
+        "scripts/pios/75x/compute_condition_correlation.py → 75.x/condition_correlation_state.json",
+        "scripts/pios/75x/compute_pressure_candidates.py → 75.x/pressure_candidate_state.json",
+        "scripts/pios/75x/compute_pressure_zones.py → 75.x/pressure_zone_state.json",
+        "scripts/pios/41x/compute_signal_projection.py → 41.x/signal_projection.json",
+        "scripts/pios/run_client_pipeline.py Phase 8a → vault/signal_registry.json",
+        "scripts/pios/lens_report_generator.py → clients/<client>/reports/"
+      ],
+      "active_signals": ["PSIG-001", "PSIG-002", "PSIG-004", "PSIG-006"],
+      "namespace_note": "PSIG labels in Lane A are naming debt — these are generic distribution signals (DPSIG in Lane D). PSIG (LANE_A) != PSIG (LANE_D).",
+      "protected_artifacts": [
+        "scripts/pios/75x/compute_condition_correlation.py",
+        "scripts/pios/75x/compute_pressure_candidates.py",
+        "scripts/pios/75x/compute_pressure_zones.py",
+        "scripts/pios/41x/compute_signal_projection.py",
+        "scripts/pios/run_client_pipeline.py",
+        "scripts/pios/run_end_to_end.py",
+        "scripts/pios/lens_report_generator.py",
+        "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/"
+      ],
+      "immutable_constraints": [
+        "THRESHOLD=2.0 — locked in 75.x; no DPSIG stream may modify",
+        "RUN_RELATIVE_OUTLIER — activation method locked; DPSIG introduces parallel methods only",
+        "signal_registry.json — PSIG-sovereign; DPSIG writes to dpsig_signal_set.json only",
+        "binding_envelope.json — read-only for all downstream consumers"
+      ],
+      "implementation_eligibility": "AUTHORIZED for additive streams only — new artifacts, new scripts, no mutation of protected artifacts",
+      "mutation_authority": "Requires explicit Lane A contract citing this manifest. Protected artifacts may not be modified without atomic Lane A preservation proof.",
+      "forbidden_for_implementations": [
+        "Modify protected_artifacts list above",
+        "Alter THRESHOLD=2.0 in any 75.x script",
+        "Alter RUN_RELATIVE_OUTLIER activation method",
+        "Write to vault/signal_registry.json",
+        "Modify binding_envelope.json"
+      ]
+    },
+
+    "LANE_B": {
+      "name": "Legacy Static Markdown Reference",
+      "status": "INACTIVE_REFERENCE",
+      "runtime_sovereign": false,
+      "artifacts": [
+        "docs/pios/40.4/*.md (18 static telemetry markdown files)",
+        "docs/pios/40.5/*.md (11 signal markdown files, run_01_blueedge)",
+        "scripts/pios/40.5/build_signal_artifacts.py (not invoked by productized pipeline)",
+        "scripts/pios/40.5/validate_signal_artifacts.py (not invoked by productized pipeline)"
+      ],
+      "allowed_usage": [
+        "Read-only reference for static telemetry field definitions (ST-XXX series)",
+        "Design authority for selector model and PSIG expansion candidates",
+        "Historical signal specification reference for BlueEdge"
+      ],
+      "forbidden_usage": [
+        "Invoke as live signal computation path",
+        "Treat as active productized runtime",
+        "Cite as canonical signal provenance in implementation contracts",
+        "Import Lane B formulas into Lane A without explicit promotion contract"
+      ],
+      "implementation_eligibility": "NOT ELIGIBLE for implementation streams. Reference only.",
+      "promotion_path": "Explicit promotion contract citing LANE_GOVERNANCE_LOCK.md required"
+    },
+
+    "LANE_C": {
+      "name": "Relational Forensic Prototype",
+      "status": "BLOCKED_ISOLATED",
+      "runtime_sovereign": false,
+      "artifacts": [
+        "clients/fastapi/psee/runs/run_relational_recovery_01/",
+        "clients/fastapi/psee/runs/run_relational_recovery_01/signals/relational_signal_set.json",
+        "clients/fastapi/psee/runs/run_relational_recovery_01/binding/binding_model.json"
+      ],
+      "namespace": "R-PSIG-001..004 (RELATIONAL_EDGE_BASED, isolation_status: FULLY_ISOLATED)",
+      "allowed_usage": [
+        "Forensic analysis of relational semantic concepts",
+        "Design inspiration for future Lane D PSIG derivation (no direct import)"
+      ],
+      "forbidden_usage": [
+        "Treat as active runtime",
+        "Cite as canonical signal provenance",
+        "Import R-PSIG formulas into Lane A or Lane D without explicit promotion contract",
+        "Reference in implementation contracts as pattern source"
+      ],
+      "implementation_eligibility": "NOT ELIGIBLE. Forensic artifacts only.",
+      "promotion_path": "Lane C → Lane B promotion required before Lane B → Lane A promotion. No direct C→A path."
+    },
+
+    "LANE_D": {
+      "name": "Target Consolidated Architecture",
+      "status": "GOVERNED_DESIGN — not yet fully implemented",
+      "runtime_sovereign": false,
+      "blocking_points": {
+        "BP-01": "psig_computation.json authorization not issued (40x.04 contract pending)",
+        "BP-02": "PSEE pipeline not activated for any canonical client (canonical_topology.cluster_count=0)",
+        "BP-03": "Sidecar adapter consumer target needs correction (must point to 75.x boundary, not Lane B)",
+        "BP-04": "DPSIG namespace migration not performed (PSIG-XXX in Lane A must be renamed)",
+        "BP-05": "PSIG-001..008 derivation code does not exist"
+      },
+      "approved_streams": [
+        "PI.PSEE-PIOS.DETERMINISTIC-RELATIONAL-ENRICHMENT.01 — APPROVED",
+        "PI.PSEE-PIOS.DPSIG-RUNTIME-NORMALIZATION.DESIGN.01 — COMPLETE",
+        "PI.PSEE-PIOS.DPSIG-RUNTIME-NORMALIZATION.IMPLEMENTATION.01 — AUTHORIZED (additive only)"
+      ],
+      "allowed_usage": [
+        "Define target architecture and namespace structure",
+        "Authorize additive migration steps via explicit contracts",
+        "Introduce DPSIG derivation as additive parallel pipeline (separate artifact, no Lane A mutation)"
+      ],
+      "forbidden_usage": [
+        "Treat as current runtime",
+        "Cite as evidence that Lane A is incorrect",
+        "Allow architecture to leak into Lane A via informal implementation",
+        "Reopen semantic governance branch"
+      ],
+      "implementation_eligibility": "AUTHORIZED for additive streams. DPSIG additive derivation approved. Semantic activation BLOCKED until BP-01/BP-02 resolved.",
+      "semantic_authority_status": "BLOCKED — semantic governance exploration formally closed (SEMANTIC_GOVERNANCE_EXPLORATION_CLOSURE.md). Reopen conditions R-01..R-05 must be met."
+    }
+  },
+
+  "execution_modes": {
+    "DISCOVERY_MODE": {
+      "description": "Broad codebase inspection, repository traversal, gap analysis, forensic investigation",
+      "allowed_behavior": [
+        "Read any repository artifact for investigative purposes",
+        "Traverse directory structures to identify gaps",
+        "Run git log, git diff for historical analysis"
+      ],
+      "forbidden_behavior": [
+        "Write to any runtime artifact",
+        "Execute implementation tasks",
+        "Declare implementation findings as governance truth without a closure document"
+      ],
+      "traversal_scope": "UNRESTRICTED — but findings must be explicitly documented before informing implementation",
+      "runtime_access_scope": "READ_ONLY",
+      "note": "DISCOVERY_MODE is not IMPLEMENTATION_MODE. Findings from discovery must be formalized before use."
+    },
+    "GOVERNANCE_MODE": {
+      "description": "Writing governance documents, manifests, architecture definitions, closure documents",
+      "allowed_behavior": [
+        "Read all authoritative inputs declared in stream contract",
+        "Write to docs/governance/*, docs/psee/<stream>/",
+        "Produce CLOSURE.md, validation_log.json, file_changes.json",
+        "Produce governance manifests and schema definitions"
+      ],
+      "forbidden_behavior": [
+        "Modify Lane A protected artifacts",
+        "Execute scripts",
+        "Perform repository traversal beyond declared authoritative inputs"
+      ],
+      "traversal_scope": "BOUNDED — declared authoritative inputs only",
+      "runtime_access_scope": "READ from declared inputs; WRITE to declared outputs"
+    },
+    "IMPLEMENTATION_MODE": {
+      "description": "Bounded execution only — creating scripts and artifacts within explicit contract scope",
+      "allowed_behavior": [
+        "Read from ALLOWED_READS surfaces defined in this manifest",
+        "Write to ALLOWED_WRITES targets defined in this manifest",
+        "Create new scripts in authorized paths (scripts/pios/dpsig/)",
+        "Execute created scripts against declared validation fixtures"
+      ],
+      "forbidden_behavior": [
+        "Read from any artifact not in ALLOWED_READS",
+        "Write to any artifact not in ALLOWED_WRITES",
+        "Traverse scripts/pios/75x/ or scripts/pios/41x/ beyond reading declared constants",
+        "Perform generalized repository exploration to discover pipeline structure",
+        "Infer runtime behavior from undeclared artifacts",
+        "Hardcode client names or framework-specific logic in generic scripts"
+      ],
+      "traversal_scope": "STRICTLY BOUNDED — only declared contract surfaces",
+      "runtime_access_scope": "READ from ALLOWED_READS; WRITE to ALLOWED_WRITES",
+      "critical_rule": "IMPLEMENTATION_MODE is not DISCOVERY_MODE. The execution perimeter is frozen before implementation begins. Implementation streams do not discover; they execute."
+    },
+    "VALIDATION_MODE": {
+      "description": "Running scripts, checking outputs, comparing artifacts for correctness",
+      "allowed_behavior": [
+        "Execute scripts declared in the implementation stream",
+        "Read output artifacts and compare against expected values",
+        "Produce replay_diff.json, validation_log.json",
+        "Assert TAXONOMY-01 field identity across replay runs"
+      ],
+      "forbidden_behavior": [
+        "Modify any artifact based on validation findings without a repair stream",
+        "Expand scope of validated scripts beyond declared behavior",
+        "Use validation findings to reinterpret the runtime baseline"
+      ],
+      "traversal_scope": "Implementation outputs + declared validation fixtures",
+      "runtime_access_scope": "READ only (no writes except designated validation artifacts)"
+    },
+    "CERTIFICATION_MODE": {
+      "description": "Signing off on completed streams, producing CLOSURE.md, issuing return blocks",
+      "allowed_behavior": [
+        "Read all stream artifacts produced in IMPLEMENTATION_MODE and VALIDATION_MODE",
+        "Write CLOSURE.md, execution_report.md, file_changes.json",
+        "Issue stream RETURN block"
+      ],
+      "forbidden_behavior": [
+        "Introduce new implementation findings",
+        "Expand scope in closure documentation",
+        "Certify incomplete validation (any VAL-check FAIL = no certification)"
+      ],
+      "traversal_scope": "Stream artifacts only",
+      "runtime_access_scope": "READ stream artifacts; WRITE closure documentation"
+    }
+  },
+
+  "allowed_reads": {
+    "scope_note": "Applies to IMPLEMENTATION_MODE and VALIDATION_MODE. This is the COMPLETE authorized read surface for streams in the DPSIG implementation family.",
+    "tier_1_runtime_inputs": [
+      {
+        "artifact": "canonical_topology.json",
+        "pattern": "clients/<client_id>/psee/runs/<run_id>/structure/40.4/canonical_topology.json",
+        "authorized_for": ["DPSIG Class 4 derivation", "Cluster topology analysis"],
+        "fields_used": ["clusters[*].cluster_id", "clusters[*].node_count", "clusters[*].name"]
+      },
+      {
+        "artifact": "binding_envelope.json",
+        "pattern": "clients/<client_id>/psee/runs/<run_id>/binding/binding_envelope.json",
+        "authorized_for": ["DPSIG Class 1/5 derivation (deferred)", "Node fan-in/fan-out", "LENS report generation"],
+        "fields_used": ["nodes[*]", "edges[*]"],
+        "mutation_rule": "READ_ONLY — binding_envelope.json may never be written"
+      },
+      {
+        "artifact": "structural_topology_log.json",
+        "pattern": "clients/<client_id>/psee/runs/<run_id>/structure/40.3/structural_topology_log.json",
+        "authorized_for": ["DPSIG Class 2/6/7 derivation (deferred)", "CONTAINS/IMPORTS edge analysis"],
+        "fields_used": ["relations[*]", "contains_count", "total_relations"]
+      },
+      {
+        "artifact": "grounding_state_v3.json",
+        "pattern": "clients/<client_id>/psee/runs/<run_id>/ceu/grounding_state_v3.json",
+        "authorized_for": ["DPSIG Class 5 derivation (deferred)", "grounded_ceu_count denominator"],
+        "fields_used": ["total_ceu", "grounded_count", "grounding_ratio"]
+      }
+    ],
+    "tier_2_governance_inputs": [
+      {
+        "artifact": "DPSIG_RUNTIME_NORMALIZATION.md",
+        "pattern": "docs/psee/PI.PSEE-PIOS.DPSIG-RUNTIME-NORMALIZATION.DESIGN.01/DPSIG_RUNTIME_NORMALIZATION.md",
+        "authorized_for": ["Implementation contract reference — read before any implementation task"]
+      },
+      {
+        "artifact": "LANE_GOVERNANCE_LOCK.md",
+        "pattern": "docs/psee/PI.PSEE-PIOS.LANE-GOVERNANCE-LOCK.01/LANE_GOVERNANCE_LOCK.md",
+        "authorized_for": ["Lane ownership verification before implementation"]
+      },
+      {
+        "artifact": "pipeline_execution_manifest.json",
+        "pattern": "docs/governance/pipeline_execution_manifest.json",
+        "authorized_for": ["Execution perimeter enforcement — this file"]
+      }
+    ],
+    "tier_3_validation_fixtures": [
+      {
+        "artifact": "FastAPI run_02 canonical replay fixture",
+        "pattern": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/",
+        "authorized_for": ["Deterministic replay validation — this fixture only; not a runtime specialization"],
+        "note": "FastAPI is the canonical replay fixture. No client-specific logic may be derived from this path."
+      }
+    ],
+    "explicitly_forbidden_reads": [
+      "scripts/pios/75x/* (except reading declared public constants — THRESHOLD, activation method names)",
+      "scripts/pios/41x/* (no read required for DPSIG derivation)",
+      "vault/signal_registry.json (PSIG sovereign; DPSIG does not read it)",
+      "clients/fastapi/psee/runs/run_relational_recovery_01/* (Lane C — forbidden for implementation)",
+      "docs/pios/40.4/*.md beyond declared static telemetry field definitions",
+      "docs/pios/40.5/*.md (Lane B — reference only; not an implementation input)",
+      "Any uuid-named client directory (e65d2f0a-* — non-canonical)",
+      "Any artifact not explicitly listed in tier_1, tier_2, or tier_3 above"
+    ]
+  },
+
+  "allowed_writes": {
+    "scope_note": "Applies to IMPLEMENTATION_MODE. This is the COMPLETE authorized write surface for streams in the DPSIG implementation family.",
+    "implementation_outputs": [
+      {
+        "artifact": "derive_relational_signals.py",
+        "pattern": "scripts/pios/dpsig/derive_relational_signals.py",
+        "authorized_for": ["DPSIG Class 4 implementation — new file only; additive"],
+        "constraint": "No imports of 75.x, 41.x, or psee_handoff modules. Stdlib only. Client-agnostic."
+      },
+      {
+        "artifact": "dpsig_signal_set.json",
+        "pattern": "artifacts/dpsig/<client_id>/<run_id>/dpsig_signal_set.json",
+        "authorized_for": ["DPSIG signal output — DPSIG-031, DPSIG-032"],
+        "constraint": "Separate artifact path; never written to vault/signal_registry.json"
+      },
+      {
+        "artifact": "replay_diff.json",
+        "pattern": "artifacts/dpsig/<client_id>/<run_id>/replay_diff.json",
+        "authorized_for": ["DPSIG replay verification output"]
+      }
+    ],
+    "documentation_outputs": [
+      {
+        "artifact": "DPSIG_RUNTIME_NORMALIZATION_IMPLEMENTATION.md",
+        "pattern": "docs/psee/PI.PSEE-PIOS.DPSIG-RUNTIME-NORMALIZATION.IMPLEMENTATION.01/DPSIG_RUNTIME_NORMALIZATION_IMPLEMENTATION.md",
+        "authorized_for": ["Implementation stream closure report"]
+      },
+      {
+        "artifact": "PIPELINE_EXECUTION_MANIFEST.md",
+        "pattern": "docs/psee/PI.PSEE-PIOS.PIPELINE-EXECUTION-MANIFEST.01/PIPELINE_EXECUTION_MANIFEST.md",
+        "authorized_for": ["This governance stream's closure report"]
+      },
+      {
+        "artifact": "pipeline_execution_manifest.json",
+        "pattern": "docs/governance/pipeline_execution_manifest.json",
+        "authorized_for": ["This governance stream's machine-readable manifest — this file"]
+      }
+    ],
+    "explicitly_forbidden_writes": [
+      "vault/signal_registry.json — PSIG sovereign; DPSIG writes only to dpsig_signal_set.json",
+      "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/binding/binding_envelope.json — READ_ONLY",
+      "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/structure/* — READ_ONLY",
+      "scripts/pios/75x/* — protected Lane A artifacts",
+      "scripts/pios/41x/* — protected Lane A artifacts",
+      "scripts/pios/run_client_pipeline.py — protected Lane A artifact",
+      "scripts/pios/run_end_to_end.py — protected Lane A artifact",
+      "scripts/pios/lens_report_generator.py — protected Lane A artifact (reads dpsig_signal_set.json; must not be modified without explicit Lane A contract)",
+      "Any artifact under docs/pios/40.4/ or docs/pios/40.5/ — Lane B reference only",
+      "Any artifact outside declared allowed_writes paths above"
+    ]
+  },
+
+  "forbidden_patterns": {
+    "CRITICAL": [
+      {
+        "pattern": "LANE_A_PROTECTED_ARTIFACT_MUTATION",
+        "description": "Any write to protected Lane A scripts (75.x, 41.x, run_client_pipeline.py, lens_report_generator.py)",
+        "consequence": "Immediate STOP — stream execution invalid; Lane A integrity breach"
+      },
+      {
+        "pattern": "THRESHOLD_MUTATION",
+        "description": "Any change to THRESHOLD=2.0 in any 75.x script, or any DPSIG threshold that copies PSIG threshold value by reference",
+        "consequence": "STOP — activation sovereignty violation"
+      },
+      {
+        "pattern": "SIGNAL_REGISTRY_WRITE",
+        "description": "Writing any DPSIG entry into vault/signal_registry.json",
+        "consequence": "STOP — PSIG sovereignty violation"
+      },
+      {
+        "pattern": "ACTIVATION_COUPLING",
+        "description": "Any signal that derives its activation_state from a PSIG activation outcome",
+        "consequence": "STOP — forbidden by DETERMINISTIC_RELATIONAL_ENRICHMENT.md Section 8.3"
+      },
+      {
+        "pattern": "SEMANTIC_AUTHORITY_CLAIM",
+        "description": "Any implementation that claims authority over 75.x activation behavior",
+        "consequence": "STOP — semantic governance branch closed; reopen conditions not met"
+      },
+      {
+        "pattern": "LANE_C_IMPORT",
+        "description": "Importing R-PSIG formulas, relational_signal_set.json patterns, or uuid-client artifacts into any Lane A or Lane D implementation",
+        "consequence": "STOP — Lane C isolation violation"
+      }
+    ],
+    "HIGH": [
+      {
+        "pattern": "REPOSITORY_ARCHAEOLOGY",
+        "description": "Performing broad scripts/pios traversal or directory scans to discover pipeline structure during an IMPLEMENTATION_MODE stream",
+        "consequence": "Stream non-compliant — implementation may not proceed until perimeter is re-frozen"
+      },
+      {
+        "pattern": "CLIENT_SPECIFIC_LOGIC",
+        "description": "Any 'if fastapi', 'if blueedge', or client-name-conditional branching inside a generic implementation script",
+        "consequence": "Implementation reject — script must be rewritten to be topology-native"
+      },
+      {
+        "pattern": "UNDECLARED_READ",
+        "description": "Reading any artifact not listed in allowed_reads during IMPLEMENTATION_MODE",
+        "consequence": "Implementation non-compliant — read must be justified and added to manifest or abandoned"
+      },
+      {
+        "pattern": "BINDING_ENVELOPE_WRITE",
+        "description": "Any write to binding_envelope.json",
+        "consequence": "STOP — Lane A sovereignty violation"
+      },
+      {
+        "pattern": "DYNAMIC_PIPELINE_REDISCOVERY",
+        "description": "Inspecting run_client_pipeline.py or other Lane A orchestrators to discover execution order during implementation",
+        "consequence": "Non-compliant — execution order is declared in this manifest; inspection not authorized in IMPLEMENTATION_MODE"
+      }
+    ],
+    "MEDIUM": [
+      {
+        "pattern": "MISSING_LANE_SCOPE",
+        "description": "Stream contract that does not declare LANE_SCOPE header",
+        "consequence": "Contract INVALID per LANE_GOVERNANCE_LOCK.md Rule NC-05"
+      },
+      {
+        "pattern": "FLOAT_NONDETERMINISM",
+        "description": "Float operation that produces different results on CPython across platforms (e.g., unsorted summation, hash-order-dependent iteration)",
+        "consequence": "Signal fails REQ-02 (reproducibility) — must be corrected before shipping"
+      },
+      {
+        "pattern": "MISSING_DERIVATION_TRACE",
+        "description": "Signal entry in dpsig_signal_set.json missing any required derivation_trace field",
+        "consequence": "Signal fails REQ-06 (auditability) — must be completed before shipping"
+      },
+      {
+        "pattern": "UNAUTHORIZED_ARTIFACT_PATH",
+        "description": "Writing artifacts to paths outside ALLOWED_WRITES",
+        "consequence": "Implementation non-compliant — must be moved to authorized path"
+      }
+    ]
+  },
+
+  "immutable_runtime_constraints": {
+    "note": "These constraints are frozen at baseline 93098cb. No implementation stream may override them without an explicit Lane A contract that supersedes this manifest.",
+    "constraints": [
+      {
+        "id": "IRC-01",
+        "name": "THRESHOLD_LOCK",
+        "value": "THRESHOLD=2.0",
+        "location": "scripts/pios/75x/compute_pressure_candidates.py",
+        "rule": "No DPSIG stream may modify this value. DPSIG thresholds are defined independently in derive_relational_signals.py constants."
+      },
+      {
+        "id": "IRC-02",
+        "name": "ACTIVATION_METHOD_LOCK",
+        "value": "RUN_RELATIVE_OUTLIER",
+        "location": "scripts/pios/75x/compute_pressure_candidates.py",
+        "rule": "PSIG activation method is frozen. DPSIG may introduce CLUSTER_MASS_THRESHOLD, ASYMMETRY_THRESHOLD, etc. as new methods, but may not alter the PSIG activation method."
+      },
+      {
+        "id": "IRC-03",
+        "name": "SIGNAL_REGISTRY_SOVEREIGNTY",
+        "value": "vault/signal_registry.json — PSIG sovereign",
+        "location": "clients/<client>/psee/runs/<run_id>/vault/signal_registry.json",
+        "rule": "DPSIG writes exclusively to artifacts/dpsig/<client>/<run_id>/dpsig_signal_set.json. No DPSIG entry may appear in signal_registry.json."
+      },
+      {
+        "id": "IRC-04",
+        "name": "LANE_A_PIPELINE_ORDER",
+        "value": "binding_envelope → 75.x (3 scripts) → 41.x → vault → lens",
+        "location": "scripts/pios/run_client_pipeline.py",
+        "rule": "Execution order is frozen. DPSIG runs in parallel at 40.5 — it does not modify the execution order of Lane A scripts."
+      },
+      {
+        "id": "IRC-05",
+        "name": "BINDING_ENVELOPE_IMMUTABILITY",
+        "value": "READ_ONLY for all consumers",
+        "location": "clients/<client>/psee/runs/<run_id>/binding/binding_envelope.json",
+        "rule": "No downstream consumer may write to binding_envelope.json. It is the canonical topology source."
+      },
+      {
+        "id": "IRC-06",
+        "name": "SEMANTIC_ACTIVATION_BLOCKED",
+        "value": "activation_authorized=false for all current runs",
+        "location": "artifacts/psee_gate/<client>/<run_id>/gate_evaluation.json",
+        "rule": "Semantic activation authority is BLOCKED. Reopen conditions R-01..R-05 defined in SEMANTIC_GOVERNANCE_EXPLORATION_CLOSURE.md must be met before any semantic enrichment stream is authorized."
+      },
+      {
+        "id": "IRC-07",
+        "name": "NAMESPACE_DEBT_ACKNOWLEDGMENT",
+        "value": "PSIG(LANE_A) != PSIG(LANE_D)",
+        "location": "docs/psee/PI.PSEE-PIOS.LANE-GOVERNANCE-LOCK.01/LANE_GOVERNANCE_LOCK.md Section 2",
+        "rule": "Any contract using PSIG must declare which definition applies. Namespace migration requires explicit Lane A migration contract."
+      }
+    ]
+  },
+
+  "implementation_freeze_rules": {
+    "note": "These rules apply to ALL future implementation streams in the PSEE ↔ PiOS family.",
+    "rules": [
+      {
+        "id": "IFR-01",
+        "name": "PERIMETER_MUST_BE_FROZEN_BEFORE_EXECUTION",
+        "rule": "Implementation streams are NOT discovery streams. The execution perimeter (read surfaces, write targets, lane scope) must be declared in the stream contract before any implementation task begins. No perimeter expansion is allowed mid-stream."
+      },
+      {
+        "id": "IFR-02",
+        "name": "BASELINE_COMMIT_MUST_BE_DECLARED",
+        "rule": "Every implementation stream must explicitly reference baseline_commit=93098cb (or an authorized successor commit) in its contract header."
+      },
+      {
+        "id": "IFR-03",
+        "name": "LANE_SCOPE_MANDATORY",
+        "rule": "Every contract must include LANE_SCOPE and LANE_IMPACT headers. A contract without LANE_SCOPE is INVALID per LANE_GOVERNANCE_LOCK.md Rule NC-05."
+      },
+      {
+        "id": "IFR-04",
+        "name": "READ_SURFACE_FROZEN",
+        "rule": "Reads are bounded to the ALLOWED_READS declared in this manifest. Any read of an artifact not in allowed_reads requires a manifest amendment before proceeding."
+      },
+      {
+        "id": "IFR-05",
+        "name": "WRITE_TARGET_FROZEN",
+        "rule": "Writes are bounded to the ALLOWED_WRITES declared in this manifest. Any write to an artifact not in allowed_writes is FORBIDDEN without a manifest amendment."
+      },
+      {
+        "id": "IFR-06",
+        "name": "SCRIPTS_ARE_TOPOLOGY_NATIVE",
+        "rule": "All implementation scripts in the DPSIG family must be topology-native and client-agnostic. No client-specific logic (if-fastapi, if-blueedge, framework-specific branching) may exist inside any generic script. Client identity is a path parameter only."
+      },
+      {
+        "id": "IFR-07",
+        "name": "REPLAY_MANDATORY",
+        "rule": "Every implementation stream that produces a runtime artifact (dpsig_signal_set.json or equivalent) must include a replay verification run. overall_verdict=IDENTICAL is required for PASS."
+      },
+      {
+        "id": "IFR-08",
+        "name": "ADDITIVE_ONLY",
+        "rule": "DPSIG streams are additive. They introduce new artifacts and new scripts. They do not remove, rename, or repurpose any existing Lane A artifact. Non-regression is mandatory."
+      },
+      {
+        "id": "IFR-09",
+        "name": "DENOMINATOR_GUARDS_MANDATORY",
+        "rule": "Every signal formula that involves division must specify a denominator_guard. A signal without an explicit guard specification fails REQ-04 (Deterministic Derivation Basis)."
+      },
+      {
+        "id": "IFR-10",
+        "name": "FAIL_CLOSED_MANDATORY",
+        "rule": "Scripts must exit with non-zero status on REQUIRED_ARTIFACT_MISSING or SCHEMA_VIOLATION. No partial output may be written on error. Fail-closed is a hard contract requirement."
+      }
+    ]
+  },
+
+  "future_stream_enforcement": {
+    "pre_execution_checklist": [
+      "STEP 1: Verify baseline_commit=93098cb is the declared root",
+      "STEP 2: Verify LANE_SCOPE and LANE_IMPACT headers are present",
+      "STEP 3: Verify all read surfaces are in allowed_reads or have explicit manifest amendment",
+      "STEP 4: Verify all write targets are in allowed_writes or have explicit manifest amendment",
+      "STEP 5: Verify no forbidden_patterns are present in the stream contract",
+      "STEP 6: Verify Lane A protected artifacts are listed as immutable",
+      "STEP 7: Verify DPSIG script contains no client-specific logic (IFR-06)",
+      "STEP 8: Verify replay verification is included in the stream tasks (IFR-07)"
+    ],
+    "next_authorized_stream": "PI.PSEE-PIOS.DPSIG-RUNTIME-NORMALIZATION.IMPLEMENTATION.01",
+    "handoff_note": "After PI.PSEE-PIOS.PIPELINE-EXECUTION-MANIFEST.01 PASS, resume PI.PSEE-PIOS.DPSIG-RUNTIME-NORMALIZATION.IMPLEMENTATION.01 within the perimeter defined by this manifest."
+  }
+}

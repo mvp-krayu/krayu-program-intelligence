@@ -1,0 +1,41 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE.EXECUTION-MODE.02",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-03",
+
+  "branch": "work/psee-runtime",
+  "baseline_commit": "ea876d6262e84c271c6354c6f7058174daeb49f1",
+  "baseline_commit_message": "[FIX] Run client pipeline supports client/run path resolution",
+
+  "working_tree_before": "CLEAN",
+  "working_tree_after": "CLEAN (no producer output written; evidence directory untracked)",
+
+  "files_modified_tracked": [],
+  "files_created_tracked": [
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-MODE.02/execution_mode_02_summary.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-MODE.02/stage_execution_result.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-MODE.02/blocker_regression_check.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-MODE.02/next_blocker_log.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-MODE.02/no_free_patching_attestation.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-MODE.02/git_hygiene.json"
+  ],
+  "files_modified_gitignored": [],
+
+  "pipeline_executed": false,
+  "canonical_artifacts_mutated": false,
+  "producer_scripts_modified": [],
+  "renderer_modified": false,
+  "semantic_bundle_modified": false,
+  "ui_modified": false,
+  "api_modified": false,
+  "fastapi_involved": false,
+
+  "scripts_executed_read_only": [
+    "scripts/pios/lens_e2e_assemble.sh --mode execute (observation run only)"
+  ],
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[OBS] PI.LENS.REAL-E2E-PIPELINE.EXECUTION-MODE.02 — execute mode rerun; BLOCKER-01 RESOLVED; BLOCKER-02 RESOLVED; BLOCKER-06 identified (source_intake step_inventory UUID-only)",
+
+  "git_hygiene_status": "COMPLETE"
+}

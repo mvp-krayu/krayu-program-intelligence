@@ -1,0 +1,37 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE-ASSEMBLY.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-03",
+
+  "branch": "work/psee-runtime",
+  "baseline_commit": "fa6b62dc5242af9b21c691d94d99e3c8019258ca",
+  "baseline_commit_message": "[DEMO] lock BlueEdge LENS product demo package",
+
+  "working_tree_before": "CLEAN",
+  "working_tree_after": "1 script created (tracked), 1 evidence directory created",
+
+  "files_created_tracked": [
+    "scripts/pios/lens_e2e_assemble.sh",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE-ASSEMBLY.01/stage_map.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE-ASSEMBLY.01/validation_result.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE-ASSEMBLY.01/file_changes.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE-ASSEMBLY.01/execution_report.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE-ASSEMBLY.01/validation_log.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE-ASSEMBLY.01/git_hygiene.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE-ASSEMBLY.01/CLOSURE.md"
+  ],
+  "files_modified_tracked": [],
+  "files_modified_gitignored": [],
+
+  "pipeline_executed": false,
+  "canonical_data_mutated": false,
+  "renderer_modified": false,
+  "semantic_bundle_modified": false,
+  "ui_modified": false,
+  "api_modified": false,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[ASSEMBLY] PI.LENS.REAL-E2E-PIPELINE-ASSEMBLY.01 — lens_e2e_assemble.sh validate mode; 9-stage readiness map; PARTIAL status for blueedge",
+
+  "git_hygiene_status": "COMPLETE"
+}

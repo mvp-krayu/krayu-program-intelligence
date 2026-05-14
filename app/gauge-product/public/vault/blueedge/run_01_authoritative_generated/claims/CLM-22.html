@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SIG-003 Dependency Load 68 Percent — Evidence Vault</title>
+<style>:root{--bg:#0a0a0a;--bg1:#111114;--bg2:#1a1a1e;--border:#222228;--text:#c4c4c4;--muted:#666;--dim:#555;--accent:#5a9fd4;--strong:#e0e0e0}*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:"Courier New",monospace;font-size:13px;line-height:1.75;padding:2.5rem 2rem}.w{max-width:860px;margin:0 auto}.nav{margin-bottom:2rem;font-size:.78rem}.nav a{color:var(--muted);text-decoration:none;letter-spacing:.04em}.nav a:hover{color:var(--accent)}.meta{background:var(--bg1);border:1px solid var(--border);border-left:2px solid #253040;padding:1rem 1.25rem;margin-bottom:2rem;font-size:.78rem}.mrow{display:flex;gap:.75rem;margin-bottom:.3rem}.mrow:last-child{margin-bottom:0}.mk{color:var(--muted);min-width:140px;flex-shrink:0;letter-spacing:.02em}.mv{color:#b0b0b0}.content h1{color:var(--strong);font-size:.95rem;margin:1.5rem 0 .6rem;letter-spacing:.02em}.content h2{color:#aaa;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #1e1e24;padding-bottom:.35rem;margin:2rem 0 .75rem}.content h3{color:#888;font-size:.82rem;margin:1.25rem 0 .45rem;letter-spacing:.02em}.content p{margin:.7rem 0;line-height:1.75}.content a{color:var(--accent);text-decoration:none}.content a:hover{text-decoration:underline}.content code{background:var(--bg2);border:1px solid var(--border);padding:.1rem .3rem;font-size:.82em;color:#9ab}.content pre{background:var(--bg1);border:1px solid var(--border);border-left:2px solid #253040;padding:.9rem 1rem;overflow-x:auto;margin:1rem 0}.content pre code{background:none;border:none;padding:0;color:#aab}.content table{border-collapse:collapse;width:100%;margin:.9rem 0;font-size:.82rem}.content th,.content td{border:1px solid var(--border);padding:.4rem .7rem;text-align:left}.content th{background:var(--bg1);color:var(--muted);font-size:.72rem;letter-spacing:.07em;text-transform:uppercase}.content ul{padding-left:1.25rem;margin:.7rem 0}.content li{margin-bottom:.35rem}.content strong{color:var(--strong)}.footer{margin-top:3rem;padding-top:.85rem;border-top:1px solid var(--border);font-size:.72rem;color:var(--dim);letter-spacing:.03em}.footer .lbl{color:#a03030}</style>
+</head>
+<body>
+<div class="w">
+<div class="nav"><a href="/tier2/workspace">← Diagnostic Workspace</a></div>
+<div class="meta"><div class="mrow"><span class="mk">node_class</span><span class="mv">claim</span></div><div class="mrow"><span class="mk">claim_id</span><span class="mv">CLM-22</span></div><div class="mrow"><span class="mk">claim_label</span><span class="mv">SIG-003 Dependency Load 68 Percent</span></div><div class="mrow"><span class="mk">claim_type</span><span class="mv">signal</span></div><div class="mrow"><span class="mk">exposure</span><span class="mv">ZONE-2</span></div><div class="mrow"><span class="mk">lens_admissible</span><span class="mv">YES</span></div></div>
+<div class="content"><h2>Explanation</h2>
+
+<p>Signal SIG-003: Dependency Load: 68% of Architectural Relationships Are Dependency Edges. Confidence: MODERATE. This signal was derived from the four-layer evidence chain (condition → diagnosis → intelligence → signal) and is grounded in the Event-Driven Architecture domain, capability: Domain Event Bus.</p>
+
+<h2>Authoritative Value</h2>
+
+<p>MODERATE confidence</p>
+
+<h2>Business Impact</h2>
+
+<p>A dependency load of 0.682 means most architectural connections are direct dependencies, elevating the blast radius of any component-level failure or change; deployment safety, change management, and incident containment all require accounting for this coupling density.</p>
+
+<h2>Risk</h2>
+
+<p>If any of the 15 dependency edges involves a WEAKLY GROUNDED component (such as Apache Kafka or Apache Flink) or an undocumented runtime dependency, the actual coupling may be higher than observed; unmanaged dependency concentration will increase non-linearly as new modules are added to the 63-module backend.</p>
+
+<h2>Source Fields</h2>
+
+<ul>
+<li><code>signal_registry.json</code> → <code>signals[SIG-003]</code></li>
+<li>Source refs: <code>COND-001</code>, <code>SIG-002</code></li>
+</ul>
+
+<h2>Upstream Artifacts</h2>
+
+<ul>
+<li><a href="../artifacts/ART-05.html">ART-05 signal_registry.json</a></li>
+</ul>
+
+<h2>Transformation Chain</h2>
+
+<ul>
+<li>S3 signal emission — four-layer chain: COND → DIAG → INTEL → SIG</li>
+</ul>
+
+<h2>Exposure</h2>
+
+<ul>
+<li>ZONE: ZONE-2 (business_impact + risk + evidence_confidence label)</li>
+<li>LENS admissible: YES</li>
+<li>Reason: statement and confidence_rationale are ZONE-1/3 only; business_impact and risk are ZONE-2</li>
+</ul>
+
+<h2>Traceability</h2>
+
+<ul>
+<li>Status: FULL</li>
+<li>Caveats: None</li>
+</ul>
+
+<h2>Surfaces</h2>
+
+<ul>
+<li>SignalAvailability panel (title + business_impact + evidence_confidence)</li>
+</ul>
+
+<h2>Why It Matters</h2>
+
+<p>A dependency load of 0.682 means most architectural connections are direct dependencies, elevating the blast radius of any component-level failure or change; deployment safety, change management, and incident containment all require accounting for this coupling density. A dependency load above 0.6 means most architectural connections are direct dependencies, not loose event-driven couplings. This is a structural fact about the platform&#x27;s coupling topology — it informs change management, deployment risk, and incident blast radius calculations.</p></div>
+<div class="footer"><span class="lbl">inference_prohibition</span> ACTIVE &mdash; Evidence Vault V3 &mdash; READ-ONLY projection</div>
+</div>
+</body>
+</html>

@@ -42,6 +42,8 @@ import { useAccessGate } from '../lib/lens/useAccessGate'
 
 // LENS v1 claim set — ZONE-2 only
 const LENS_CLAIMS = ['CLM-09', 'CLM-20', 'CLM-25', 'CLM-12', 'CLM-10']
+// GAP-01 gate — set true only after CONCEPT-06 predicate fix (concepts.json NOT_EVALUATED support)
+const GAP_01_RESOLVED = false
 const ZONE  = 'ZONE-2'
 const DEPTH = 'L1'
 
@@ -287,68 +289,134 @@ function LensHeader({ runId, generatedAt, hasAccess, onUnlock }) {
 }
 
 // ---------------------------------------------------------------------------
-// Report panel (unchanged logic)
+// Runtime Selector + Generate
 // ---------------------------------------------------------------------------
 
-async function generateReport() {
-  const res  = await fetch('/api/report')
-  const data = await res.json()
-  if (!res.ok || data.status !== 'ok') {
-    throw new Error(data.reason || 'GENERATION_FAILED')
-  }
-  return data.report_path
-}
+function RuntimeSelector() {
+  const [runtimes,  setRuntimes]  = useState([])
+  const [selected,  setSelected]  = useState('')
+  const [genState,  setGenState]  = useState(null) // null | 'loading' | {urls} | {error}
 
-function ReportPanel({ runId }) {
-  const [state, setState] = useState(null)
+  useEffect(() => {
+    fetch('/api/runtime-list')
+      .then(r => r.json())
+      .then(data => {
+        const list = Array.isArray(data) ? data : []
+        setRuntimes(list)
+        if (list.length > 0) setSelected(`${list[0].client}||${list[0].display_run}`)
+      })
+      .catch(() => {})
+  }, [])
+
+  const rt = runtimes.find(r => `${r.client}||${r.display_run}` === selected)
 
   function handleGenerate() {
-    setState('loading')
-    generateReport()
-      .then(path  => setState({ path }))
-      .catch(err  => setState({ error: err.message || 'GENERATION_FAILED' }))
+    if (!rt) return
+    setGenState('loading')
+    fetch(`/api/generate-report?client=${encodeURIComponent(rt.client)}&run=${encodeURIComponent(rt.display_run)}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.status === 'success') setGenState({ urls: data.report_urls, workspaceUrl: data.workspace_url })
+        else setGenState({ error: data.reason || 'GENERATION_FAILED' })
+      })
+      .catch(err => setGenState({ error: err.message || 'FETCH_ERROR' }))
   }
 
-  function handleOpen()     { if (state?.path) window.open(state.path) }
-  function handleDownload() {
-    if (!state?.path) return
-    const a = document.createElement('a')
-    a.href = state.path + '&download=1'
-    const nameMatch = state.path.match(/[?&]name=([^&]+)/)
-    a.download = nameMatch ? decodeURIComponent(nameMatch[1]) : 'lens_report.html'
-    a.click()
+  const selectStyle = {
+    background: '#16161a', color: '#e8e8e8', border: '1px solid #2a2a2e',
+    borderRadius: '3px', padding: '6px 10px', fontSize: '12px',
+    marginRight: '10px', minWidth: '260px',
   }
 
   return (
     <div className="lens-report-panel">
-      <div className="lens-panel-label">EXECUTIVE REPORT</div>
-      <div className="lens-report-row">
-        {(!state || state === 'loading' || state?.error) && (
-          <button className="lens-report-btn" onClick={handleGenerate} disabled={state === 'loading'}>
-            {state === 'loading' ? 'Generating…' : 'Generate Executive Report'}
-          </button>
-        )}
-        {state === 'loading' && <span className="lens-report-status">Building governed projection report…</span>}
-        {state?.error && <span className="lens-report-error">{state.error}</span>}
-        {state?.path && (
-          <div className="lens-report-actions">
-            <button className="lens-report-action-btn lens-report-open" onClick={handleOpen}>Open HTML Report</button>
-            <button className="lens-report-action-btn lens-report-download" onClick={handleDownload}>Download HTML</button>
-            <span className="lens-report-ready">Report ready</span>
-          </div>
-        )}
+      <div className="lens-panel-label">RUNTIME REPORTS</div>
+      <div className="lens-report-row" style={{ alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+        <select
+          value={selected}
+          onChange={e => { setSelected(e.target.value); setGenState(null) }}
+          style={selectStyle}
+          disabled={runtimes.length === 0}
+        >
+          {runtimes.length === 0 && <option value="">Loading…</option>}
+          {runtimes.map(r => (
+            <option key={`${r.client}||${r.display_run}`} value={`${r.client}||${r.display_run}`}>
+              {r.client} / {r.display_run}
+            </option>
+          ))}
+        </select>
+        <button
+          className="lens-report-btn"
+          onClick={handleGenerate}
+          disabled={genState === 'loading' || !rt}
+        >
+          {genState === 'loading' ? 'Generating…' : 'Generate'}
+        </button>
       </div>
-      {runId && (
-        <div className="lens-report-basis">
-          Derived from governed projection (ZONE-2) · Run: {runId}
+      {genState === 'loading' && (
+        <span className="lens-report-status" style={{ marginTop: '8px', display: 'block' }}>
+          Building reports…
+        </span>
+      )}
+      {genState?.error && (
+        <span className="lens-report-error" style={{ marginTop: '8px', display: 'block' }}>
+          {genState.error}
+        </span>
+      )}
+      {genState?.urls && (
+        <div className="lens-report-artifacts" style={{ marginTop: '12px' }}>
+          {genState.urls.tier1_narrative && (
+            <button className="lens-report-action-btn lens-report-primary"
+              onClick={() => window.open(genState.urls.tier1_narrative)}>
+              Executive Brief
+            </button>
+          )}
+          {genState.urls.tier1_evidence && (
+            <button className="lens-report-action-btn lens-report-secondary"
+              onClick={() => window.open(genState.urls.tier1_evidence)}>
+              Structural Evidence
+            </button>
+          )}
+          {genState.urls.tier2_diagnostic && (
+            <button className="lens-report-action-btn lens-report-narrative"
+              onClick={() => window.open(genState.urls.tier2_diagnostic)}>
+              Diagnostic
+            </button>
+          )}
+          {genState.urls.decision && (
+            <button className="lens-report-action-btn lens-report-primary"
+              onClick={() => window.open(genState.urls.decision)}
+              style={{ marginLeft: '4px' }}>
+              Decision Surface
+            </button>
+          )}
         </div>
       )}
-      <div className="lens-report-format-note">
-        Output format: HTML &nbsp;·&nbsp; PDF export available when a PDF rendering engine is configured
+      <div className="lens-report-workspace-row">
+        <button
+          className="lens-report-workspace"
+          disabled={!rt}
+          onClick={() => {
+            if (!rt) return
+            const url = genState?.workspaceUrl || (
+              `/tier2/workspace?client=${encodeURIComponent(rt.client)}` +
+              `&displayRun=${encodeURIComponent(rt.display_run)}` +
+              `&vaultRun=${encodeURIComponent(rt.vault_run)}` +
+              `&reportRun=${encodeURIComponent(rt.report_run)}`
+            )
+            window.open(url)
+          }}
+        >
+          Diagnostic Workspace
+        </button>
+        <span className="lens-report-workspace-hint">
+          Live WHY &amp; EVIDENCE &amp; TRACE · inference_prohibition: ACTIVE
+        </span>
       </div>
     </div>
   )
 }
+
 
 // ---------------------------------------------------------------------------
 // Page
@@ -419,25 +487,22 @@ export default function LensPage() {
         <HeroBand scores={heroScores} />
       </div>
 
-      {/* Section B — System Intelligence Overview (static — curated 17-domain set) */}
-      <div className="lens-band">
-        <SystemIntelligenceOverview />
-      </div>
+      {/* Section B — System Intelligence Overview: suppressed — client-specific content not available */}
+      {null}
 
-      {/* Section C — Connected System View (static — curated graph projection) */}
-      <div className="lens-band">
-        <ConnectedSystemView />
-      </div>
+      {/* Section C — Connected System View: suppressed — client-specific content not available */}
+      {null}
 
-      {/* Section D — Focus Domain (static — Edge Data Acquisition spotlight) */}
-      <div className="lens-band">
-        <FocusDomainPanel />
-      </div>
+      {/* Section D — Focus Domain: suppressed — client-specific content not available */}
+      {null}
 
       {/* Primary band — readiness verdict + confidence distribution + depth */}
       <div className="lens-band lens-band-primary">
         <div className="lens-col lens-col-main">
-          <ExecutiveStatusPanel payload={p25} />
+          {GAP_01_RESOLVED && p25 && !p25.error_type
+            ? <ExecutiveStatusPanel payload={p25} />
+            : <div className="lens-gated-slot">Conceptual coherence not yet evaluated</div>
+          }
         </div>
         <div className="lens-col lens-col-aside">
           <StabilityComposition payloads={allPayloads} />
@@ -482,9 +547,9 @@ export default function LensPage() {
         <IntelligenceGateCTA onUnlock={showModal} />
       </div>
 
-      {/* Report generation */}
+      {/* Runtime selector + generate + workspace */}
       <div className="lens-band">
-        <ReportPanel runId={runId} />
+        <RuntimeSelector />
       </div>
 
       <div className="lens-footer">

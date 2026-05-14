@@ -1,0 +1,35 @@
+{
+  "stream": "PI.LENS.V2.SEMANTIC-CANVAS-LAYOUT-CORRECTION.01",
+  "branch": "work/lens-v2-productization",
+  "created": [
+    "docs/psee/PI.LENS.V2.SEMANTIC-CANVAS-LAYOUT-CORRECTION.01/SEMANTIC_CANVAS_REALIZATION.md",
+    "docs/psee/PI.LENS.V2.SEMANTIC-CANVAS-LAYOUT-CORRECTION.01/OPERATIONAL_COGNITION_SURFACE.md",
+    "docs/psee/PI.LENS.V2.SEMANTIC-CANVAS-LAYOUT-CORRECTION.01/CENTER_CANVAS_COMPOSITION_ANALYSIS.md",
+    "docs/psee/PI.LENS.V2.SEMANTIC-CANVAS-LAYOUT-CORRECTION.01/MODE_DIFFERENTIATION_MATRIX.md",
+    "docs/psee/PI.LENS.V2.SEMANTIC-CANVAS-LAYOUT-CORRECTION.01/RIGHT_RAIL_REDUCTION_AUDIT.md",
+    "docs/psee/PI.LENS.V2.SEMANTIC-CANVAS-LAYOUT-CORRECTION.01/EXECUTIVE_INTERPRETATION_LAYER_REBALANCE.md",
+    "docs/psee/PI.LENS.V2.SEMANTIC-CANVAS-LAYOUT-CORRECTION.01/PLAYWRIGHT_CANVAS_UTILIZATION_AUDIT.md",
+    "docs/psee/PI.LENS.V2.SEMANTIC-CANVAS-LAYOUT-CORRECTION.01/validation_log.json",
+    "docs/psee/PI.LENS.V2.SEMANTIC-CANVAS-LAYOUT-CORRECTION.01/screenshots/balanced_1440x900_full.png",
+    "docs/psee/PI.LENS.V2.SEMANTIC-CANVAS-LAYOUT-CORRECTION.01/screenshots/balanced_1440x900_viewport.png",
+    "docs/psee/PI.LENS.V2.SEMANTIC-CANVAS-LAYOUT-CORRECTION.01/screenshots/dense_1440x900_full.png",
+    "docs/psee/PI.LENS.V2.SEMANTIC-CANVAS-LAYOUT-CORRECTION.01/screenshots/dense_1440x900_viewport.png",
+    "docs/psee/PI.LENS.V2.SEMANTIC-CANVAS-LAYOUT-CORRECTION.01/screenshots/investigation_1440x900_full.png",
+    "docs/psee/PI.LENS.V2.SEMANTIC-CANVAS-LAYOUT-CORRECTION.01/screenshots/investigation_1440x900_viewport.png",
+    "docs/psee/PI.LENS.V2.SEMANTIC-CANVAS-LAYOUT-CORRECTION.01/screenshots/boardroom_1440x900_full.png",
+    "docs/psee/PI.LENS.V2.SEMANTIC-CANVAS-LAYOUT-CORRECTION.01/screenshots/boardroom_1440x900_viewport.png",
+    "docs/pios/PI.LENS.V2.SEMANTIC-CANVAS-LAYOUT-CORRECTION.01/execution_report.md",
+    "docs/pios/PI.LENS.V2.SEMANTIC-CANVAS-LAYOUT-CORRECTION.01/file_changes.json",
+    "docs/pios/PI.LENS.V2.SEMANTIC-CANVAS-LAYOUT-CORRECTION.01/CLOSURE.md"
+  ],
+  "modified": [
+    "app/execlens-demo/pages/lens-v2-flagship.js"
+  ],
+  "deleted": [],
+  "validators_changed": [],
+  "code_paths_touched": [
+    "app/execlens-demo/pages/lens-v2-flagship.js"
+  ],
+  "runtime_impact": "Layout correction. The IntelligenceField is now a three-column grid where the center column carries the primary semantic operational cognition surface, the left column hosts a compressed executive interpretation companion, and the right column hosts a calm support rail (evidence state + qualifier + Report Pack). The horizontal Report Pack band is removed; Report Pack now lives inside the SupportRail. The duplicated compact evidence-state at the bottom of each rep field is removed (canonical evidence state lives in the SupportRail). Mode-specific canvas designs were rescaled for the wider center column. No behavior change to render-state vocabulary, qualifier semantics, propagation logic, governance pass/fail, or evidence-block content. No new dependencies. No new API endpoints. Route compiles and renders cleanly at HTTP 200 across all four lenses.",
+  "notes": "Single source-file change. Adds: ExecutiveInterpretation, SupportRail components. Restructures IntelligenceField into 3-column. Removes ReportPackBand horizontal band. Removes duplicated RepEvidenceState calls. Rescales BalancedConsequenceField anchors (horizontal flow with pressure-graded rail), DenseTopologyField (spatial 3-column with central PASS-THROUGH actor and gradient rail), BoardroomAtmosphericField (320×320 mark area, 168px ring with outer halo). Removes orphan .report-pack horizontal-band CSS (replaced with SupportRail report-pack CSS). 8 Playwright screenshots produced as visual evidence."
+}

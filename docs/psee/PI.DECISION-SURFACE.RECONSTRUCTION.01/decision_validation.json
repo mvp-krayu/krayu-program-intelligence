@@ -1,0 +1,99 @@
+{
+  "contract_id": "PI.DECISION-SURFACE.RECONSTRUCTION.01",
+  "artifact": "decision_validation",
+  "captured_date": "2026-04-30",
+
+  "checks": [
+    {
+      "id": "VF-01",
+      "name": "score/band/posture artifact-derived",
+      "result": "PASS",
+      "evidence": "60, CONDITIONAL, INVESTIGATE confirmed in DS HTML. Sourced from gauge_state.json composite_score, band_label, decision_model."
+    },
+    {
+      "id": "VF-02",
+      "name": "no 'all domains grounded'",
+      "result": "PASS",
+      "evidence": "grep -ic 'all domains.*grounded|All domains are structurally grounded' → 0 matches."
+    },
+    {
+      "id": "VF-03",
+      "name": "no '13 domains' terminology misuse",
+      "result": "PASS",
+      "evidence": "grep -c '13 domains' → 0 matches. Term present: '13 of 13 structural evidence groups are grounded' (correct)."
+    },
+    {
+      "id": "VF-04",
+      "name": "semantic coverage displayed",
+      "result": "PASS",
+      "evidence": "DS confirmed section: '5 of 17 semantic domains have structural backing; 12 remain semantic-only.' Verified via grep."
+    },
+    {
+      "id": "VF-05",
+      "name": "active zone displayed with semantic label",
+      "result": "PASS",
+      "evidence": "Confirmed section: 'centered on Platform Infrastructure and Data'. Pressure block title: 'PZ-001 — Platform Infrastructure and Data'. Primary label is semantic domain name."
+    },
+    {
+      "id": "VF-06",
+      "name": "DOM backing displayed as trace only",
+      "result": "PASS",
+      "evidence": "DOM-04 appears as 'backed by DOM-04 / backend_app_root' (confirmed section) and 'DOM backing: DOM-04 / Platform Infrastructure and Data' (synthesis block). Not used as primary label."
+    },
+    {
+      "id": "VF-07",
+      "name": "active signals = PSIG-001/002/004",
+      "result": "PASS",
+      "evidence": "DS signals list: 'PSIG-001 · PSIG-002 · PSIG-004' (3 occurrences each for signal chips). Sourced from active_conditions_in_scope filtered by RUN_RELATIVE_OUTLIER."
+    },
+    {
+      "id": "VF-08",
+      "name": "PSIG-006 baseline not active pressure signal",
+      "result": "PASS",
+      "evidence": "DS: 'Baseline signal: PSIG-006 — theoretical baseline condition, not an activated pressure signal.' PSIG-006 not in active signals list, not in zone signals."
+    },
+    {
+      "id": "VF-09",
+      "name": "unsupported metrics not classified",
+      "result": "PASS",
+      "evidence": "dep_load = NOT_IN_SCOPE. The 'Dependency and structural density' sentence is NOT emitted (conditional check: dep_load not in NOT_IN_SCOPE). grep -c 'dep_load|density remain|dependency.*low|dependency.*high' → 0 matches."
+    },
+    {
+      "id": "VF-10",
+      "name": "runtime boundary visible",
+      "result": "PASS",
+      "evidence": "Hero rationale: 'Execution evidence is incomplete.' Gap items: 'Execution-layer behavioral state'. Inference prohibition ACTIVE banner present."
+    },
+    {
+      "id": "VF-11",
+      "name": "no recommendations/remediation",
+      "result": "PASS",
+      "evidence": "The word 'remediation' appears once in: 'No advisory content, causal inference, or remediation guidance may be derived.' — this IS the prohibition statement, not a recommendation. grep -ic 'recommend|action item|commit to|do not commit' → 0."
+    },
+    {
+      "id": "VF-12",
+      "name": "no PZ-002/PZ-003 unless artifact-backed",
+      "result": "PASS",
+      "evidence": "grep -c 'PZ-002|PZ-003' → 0. Only PZ-001 present (artifact has 1 zone)."
+    },
+    {
+      "id": "VF-13",
+      "name": "no backend_app_root as primary label",
+      "result": "PASS",
+      "evidence": "backend_app_root appears once: 'backed by DOM-04 / backend_app_root' — as structural backing, not primary label. Primary label is always semantic domain name."
+    },
+    {
+      "id": "VF-14",
+      "name": "client-agnostic — no hardcoded client values",
+      "result": "PASS",
+      "evidence": "Client name 'BlueEdge Fleet Management Platform' rendered via _get_client_display_name() from _CLIENT_DISPLAY_NAMES dict. 'blueedge' in navigation URLs comes from _ACTIVE_CLIENT runtime config. No client literals in new rendering logic."
+    }
+  ],
+
+  "summary": {
+    "total_checks": 14,
+    "passed": 14,
+    "failed": 0,
+    "verdict": "ALL_PASS"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "stream_id": "PI.LENS.V2.SEMANTIC-ENVELOPE-AND-PROVENANCE.BASELINE.01",
+  "branch": "work/lens-v2-productization",
+  "baseline_commit": "b4717ee",
+  "baseline_pipeline_commit": "93098cb",
+  "milestone_tag": "lens-v2-live-substrate-v1",
+  "summary": {
+    "files_created": 7,
+    "files_modified": 0,
+    "files_deleted": 0
+  },
+  "files": [
+    {
+      "path": "docs/psee/PI.LENS.V2.SEMANTIC-ENVELOPE-AND-PROVENANCE.BASELINE.01/BLUEEDGE_SEMANTIC_PROVENANCE_CAPSULE.md",
+      "change": "created",
+      "purpose": "Canonical explanation of how semantic richness emerges in PATH B, grounded in real BlueEdge artifacts"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.SEMANTIC-ENVELOPE-AND-PROVENANCE.BASELINE.01/MINIMUM_SEMANTIC_ENVELOPE_SPECIFICATION.md",
+      "change": "created",
+      "purpose": "Minimum viable semantic envelope definition: S0/S1/S2/S3 qualification classes, required/optional artifacts, gating rules, client guidance"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.SEMANTIC-ENVELOPE-AND-PROVENANCE.BASELINE.01/FASTAPI_THIN_SUBSTRATE_ANALYSIS.md",
+      "change": "created",
+      "purpose": "Canonical thin-substrate reference case: why FastAPI failed semantic stabilization, the CEU paradox, S1→S2 transition requirements"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.SEMANTIC-ENVELOPE-AND-PROVENANCE.BASELINE.01/PATH_B_PRODUCTIZATION_MODEL.md",
+      "change": "created",
+      "purpose": "Formal definition of PATH B as a governed semantic projection layer (not an AI hallucination layer)"
+    },
+    {
+      "path": "docs/pios/PI.LENS.V2.SEMANTIC-ENVELOPE-AND-PROVENANCE.BASELINE.01/execution_report.md",
+      "change": "created",
+      "purpose": "Governance execution report"
+    },
+    {
+      "path": "docs/pios/PI.LENS.V2.SEMANTIC-ENVELOPE-AND-PROVENANCE.BASELINE.01/file_changes.json",
+      "change": "created",
+      "purpose": "Governance file-changes manifest"
+    },
+    {
+      "path": "docs/pios/PI.LENS.V2.SEMANTIC-ENVELOPE-AND-PROVENANCE.BASELINE.01/CLOSURE.md",
+      "change": "created",
+      "purpose": "Governance closure document"
+    }
+  ],
+  "validators_changed": [],
+  "topology_mutations": [],
+  "evidence_mutations": [],
+  "lane_a_artifacts_touched": [],
+  "lane_d_dpsig_artifacts_touched": [],
+  "api_routes_modified": [],
+  "page_routes_modified": []
+}

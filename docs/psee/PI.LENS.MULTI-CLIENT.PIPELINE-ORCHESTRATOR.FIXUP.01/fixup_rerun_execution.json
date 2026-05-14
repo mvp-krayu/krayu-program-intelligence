@@ -1,0 +1,44 @@
+{
+  "contract_id": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.FIXUP.01",
+  "artifact": "fixup_rerun_execution",
+  "block": "BLOCK_E",
+  "generated_date": "2026-05-01",
+
+  "command": "python3 scripts/pios/run_client_pipeline.py --client blueedge --source source_01 --run-id run_be_orchestrated_fixup_01",
+  "exit_code": 0,
+  "result": "COMPLETE",
+
+  "phase_results": {
+    "Phase 1 — Source Boundary": "PASS",
+    "Phase 2 — Intake Verification": "PASS",
+    "Phase 3 — 40.x Structural Verification": "PASS",
+    "Phase 4 — CEU Grounding Verification": "PASS",
+    "Phase 5 — Build Binding Envelope": "PASS (STAGE_NOT_AUTOMATED — conformance artifacts used)",
+    "Phase 6+7 — 75.x Activation + 41.x Projection": "PASS (STAGE_NOT_AUTOMATED — run_end_to_end.py bypassed)",
+    "Phase 8a — Vault Construction": "PASS",
+    "Phase 8b — Lens Reports": "PASS",
+    "Phase 9 — Selector Update": "PASS"
+  },
+
+  "output_locations": {
+    "pipeline_run": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/",
+    "vault": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/",
+    "lens_run": "clients/blueedge/lens/runs/run_be_orchestrated_fixup_01/",
+    "selector": "clients/blueedge/lens/selector/selector.json (current_run=run_be_orchestrated_fixup_01)"
+  },
+
+  "output_boundary_check": {
+    "all_psee_output_in_target_run": true,
+    "all_lens_output_in_target_run": true,
+    "no_output_outside_target": true,
+    "no_report_html_patched_manually": true,
+    "no_canonical_baseline_modified": true
+  },
+
+  "first_attempt_failure": {
+    "failed": true,
+    "reason": "lens_report_generator.py _write_canonical_run_metadata AttributeError: list object has no attribute 'get' — available_runs.json is a list (from orchestrator) but generator expected dict with 'runs' key",
+    "fix_applied": "lens_report_generator.py line 7035 — added isinstance(avail, list) check to normalize to dict format before accessing .get('runs', [])",
+    "fix_type": "GENERATOR_BUG_FIX (required for orchestrator integration, not HTML patching)"
+  }
+}

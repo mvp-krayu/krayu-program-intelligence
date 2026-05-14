@@ -1,0 +1,130 @@
+{
+  "schema_version": "1.0",
+  "run_id": "run_01_oss_fastapi",
+  "client_id": "e65d2f0a-dfa7-4257-9333-fcbb583f0880",
+  "generated_at": "2026-04-25",
+  "layer": "75.x",
+  "runtime_artifacts": [
+    {
+      "filename": "condition_correlation_state.json",
+      "source_contract": "PI.CONDITION-CORRELATION.ANALYSIS.75X.03",
+      "source_markdown": [
+        "condition_correlation_summary.md",
+        "condition_correlation_map.md"
+      ],
+      "description": "Machine-readable entity condition map, domain correlation map, activation count distribution, and combination distribution"
+    },
+    {
+      "filename": "pressure_candidate_state.json",
+      "source_contract": "PI.CONDITION-CORRELATION.ANALYSIS.75X.03",
+      "source_markdown": [
+        "pressure_candidate_set.md"
+      ],
+      "description": "Machine-readable pressure candidate records (6 candidates: 3 entity-level, 3 domain-attribution) with full ST→PSIG→COND evidence traces"
+    },
+    {
+      "filename": "pressure_zone_state.json",
+      "source_contract": "PI.PRESSURE-ZONE.DESIGNATION.75X.04",
+      "source_markdown": [
+        "pressure_zone_set.md",
+        "pressure_zone_summary.md",
+        "pressure_zone_mapping.md"
+      ],
+      "description": "Machine-readable pressure zone records (3 DOMAIN_ZONE COMPOUND_ZONE designations) with entity/domain mappings, evidence traces, and structural blind-spot entities"
+    }
+  ],
+  "markdown_evidence_files": [
+    {
+      "filename": "condition_correlation_summary.md",
+      "source_contract": "PI.CONDITION-CORRELATION.ANALYSIS.75X.03",
+      "role": "audit evidence — activation count distribution and combination distribution"
+    },
+    {
+      "filename": "condition_correlation_map.md",
+      "source_contract": "PI.CONDITION-CORRELATION.ANALYSIS.75X.03",
+      "role": "audit evidence — entity condition map and domain correlation map"
+    },
+    {
+      "filename": "pressure_candidate_set.md",
+      "source_contract": "PI.CONDITION-CORRELATION.ANALYSIS.75X.03",
+      "role": "audit evidence — pressure candidate records with evidence traces"
+    },
+    {
+      "filename": "pressure_zone_set.md",
+      "source_contract": "PI.PRESSURE-ZONE.DESIGNATION.75X.04",
+      "role": "audit evidence — pressure zone records with class assignment and full evidence traces"
+    },
+    {
+      "filename": "pressure_zone_summary.md",
+      "source_contract": "PI.PRESSURE-ZONE.DESIGNATION.75X.04",
+      "role": "audit evidence — zone count, type distribution, class distribution, and density metrics"
+    },
+    {
+      "filename": "pressure_zone_mapping.md",
+      "source_contract": "PI.PRESSURE-ZONE.DESIGNATION.75X.04",
+      "role": "audit evidence — entity to zone mapping, domain to zone mapping, structural blind-spot records"
+    }
+  ],
+  "contracts_represented": [
+    "PI.CONDITION-CORRELATION.ANALYSIS.75X.03",
+    "PI.PRESSURE-ZONE.DESIGNATION.75X.04"
+  ],
+  "upstream_contracts": [
+    "PI.RUN-RELATIVE.ACTIVATION.75X.02",
+    "PI.SIGNAL-SPACE.EXPANSION.40X.02",
+    "PI.STATIC-TELEMETRY.REGISTRATION.40X.03",
+    "PI.THRESHOLD-FOUNDATION.FORENSICS.75X.01"
+  ],
+  "status": "RUNTIME_ARTIFACTIZED",
+  "downstream_ready_for": [
+    "focus-domain selection",
+    "41.x projection",
+    "agentic AI read-only consumption"
+  ],
+  "prohibited_downstream_assumptions": [
+    "JSON state does not imply focus-domain selection",
+    "JSON state does not imply ranking",
+    "JSON state does not imply narrative interpretation",
+    "JSON state does not modify upstream conditions or signals",
+    "JSON state does not constitute a 40.6 condition override"
+  ],
+  "key_state_summary": {
+    "total_zones": 3,
+    "all_zones_class": "COMPOUND_ZONE",
+    "zone_ids": ["PZ-001", "PZ-002", "PZ-003"],
+    "zone_anchors": ["DOM-03", "DOM-04", "DOM-05"],
+    "total_candidates": 6,
+    "max_activation_count": 3,
+    "structural_blind_spot_entity_count": 9,
+    "active_conditions_in_scope": ["COND-PSIG-001-01", "COND-PSIG-002-01", "COND-PSIG-004-01", "COND-PSIG-006-01"],
+    "focus_domain_selected": false,
+    "pressure_zones_ranked": false
+  },
+  "validation": {
+    "all_six_markdown_inputs_exist": true,
+    "all_four_json_outputs_exist": true,
+    "no_docs_pios_files_modified": true,
+    "no_code_files_modified": true,
+    "no_clients_files_outside_75x_modified": true,
+    "no_signal_recomputation": true,
+    "no_condition_recomputation": true,
+    "no_ranking_introduced": true,
+    "no_focus_domain_selected": true,
+    "zone_count_match": {
+      "json_count": 3,
+      "markdown_count": 3,
+      "match": true
+    },
+    "candidate_count_match": {
+      "json_count": 6,
+      "markdown_count": 6,
+      "match": true
+    },
+    "condition_combination_match": {
+      "json_primary_signature": "PSIG-001|PSIG-002|PSIG-004",
+      "markdown_primary_signature": "PSIG-001|PSIG-002|PSIG-004",
+      "match": true
+    },
+    "json_validity": "VALID"
+  }
+}

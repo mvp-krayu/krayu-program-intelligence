@@ -1,0 +1,50 @@
+{
+  "stream": "PI.SQO.RUNTIME-OVERLAY-BOUNDARY-CORRECTION.01",
+  "changes": [
+    {
+      "file": "app/execlens-demo/lib/lens-v2/flagshipBinding.js",
+      "action": "MODIFIED",
+      "description": "Reverted to pre-SQO state (ae3d657). Removed SQOOverlayStateResolver import, sqoOverlays from emptyPropsShape, overlay resolution block, and sqoOverlays from all return paths."
+    },
+    {
+      "file": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "action": "MODIFIED",
+      "description": "Reverted to pre-SQO state (ae3d657). Removed 6 SQO component functions, sqoOverlays from signature, 6 component invocations from render tree, and SQO CSS block."
+    },
+    {
+      "file": "app/execlens-demo/flagship-experience/tests/sqo-runtime-overlays.test.js",
+      "action": "MODIFIED",
+      "description": "Replaced direct-rendering tests with boundary enforcement tests. 23 tests assert LENS does NOT consume SQO directly. Validates PATH B and Q-class preservation."
+    },
+    {
+      "file": "docs/psee/PI.SQO.RUNTIME-OVERLAY-SYSTEM.01/CLOSURE.md",
+      "action": "MODIFIED",
+      "description": "Reclassified as EXPERIMENTAL_PROTOTYPE. Added non-canonical classification header."
+    },
+    {
+      "file": "docs/pios/PI.SQO.RUNTIME-OVERLAY-BOUNDARY-CORRECTION.01/LENS_SQO_BOUNDARY_CLASSIFICATION.md",
+      "action": "CREATED",
+      "description": "Formal boundary classification. 8-point doctrine: LENS is not the SQO cockpit, LENS consumes projection objects, PATH B owns projection authority."
+    },
+    {
+      "file": "docs/pios/PI.SQO.RUNTIME-OVERLAY-BOUNDARY-CORRECTION.01/PATH_B_CONSUMPTION_RULE.md",
+      "action": "CREATED",
+      "description": "Defines canonical and forbidden consumption flows. SQO artifacts must pass through PATH B qualification envelope builder before LENS rendering."
+    },
+    {
+      "file": "docs/pios/PI.SQO.RUNTIME-OVERLAY-BOUNDARY-CORRECTION.01/RUNTIME_OVERLAY_REVERT_REPORT.md",
+      "action": "CREATED",
+      "description": "Detailed revert report: what was removed, what was preserved, verification results."
+    },
+    {
+      "file": "docs/pios/PI.SQO.RUNTIME-OVERLAY-BOUNDARY-CORRECTION.01/SQO_COCKPIT_DIRECTION.md",
+      "action": "CREATED",
+      "description": "Future direction: SQO visibility belongs in a dedicated SQO Cockpit, not LENS. Retained prototype assets listed."
+    },
+    {
+      "file": "docs/pios/PI.SQO.RUNTIME-OVERLAY-BOUNDARY-CORRECTION.01/GOVERNANCE_BOUNDARY_VALIDATION.md",
+      "action": "CREATED",
+      "description": "Full validation results. 23 boundary enforcement tests, 8 targeted regression suites, 647/647 full regression."
+    }
+  ]
+}

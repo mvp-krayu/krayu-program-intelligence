@@ -1,0 +1,78 @@
+{
+  "contract_id": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01",
+  "artifact": "report_input_manifest_fastapi_compatible",
+  "block": "BLOCK_G",
+  "generated_date": "2026-04-29",
+
+  "validation_rule": "FAIL IF any report requires modification or Language Layer modification is suggested",
+
+  "reports": [
+
+    {
+      "report_id": "tier1",
+      "label": "Narrative and Evidence Brief",
+      "required_inputs": ["gauge_state.json", "coverage_state.json", "reconstruction_state.json", "binding_envelope.json", "signal_registry.json"],
+      "recomputed_available_inputs": ["gauge_state.json (READY_RECOMPUTED)", "coverage_state.json (READY_RECOMPUTED)", "reconstruction_state.json (READY_RECOMPUTED)"],
+      "blocked_inputs": ["binding_envelope.json (BI-01 + BI-02)", "signal_registry.json (BI-02)"],
+      "readiness_status": "BLOCKED",
+      "blocking_reason": "binding_envelope.json required for CEU assignments and L1-ST signals in narrative. signal_registry.json required for intelligence signal section. Both blocked.",
+      "report_modification_required": false,
+      "language_layer_modification_required": false,
+      "note": "Report generator runs unchanged. 3 of 5 inputs ready. 2 inputs blocked — report cannot complete without them."
+    },
+
+    {
+      "report_id": "tier2",
+      "label": "Diagnostic Narrative",
+      "required_inputs": ["signal_projection.json (FastAPI 41.x compatible)", "pressure_zone_state.json (DOMAIN_ZONE)", "condition_correlation_state.json (COND-PSIG-XXX)", "canonical_topology.json", "graph_state.json"],
+      "recomputed_available_inputs": ["canonical_topology.json (PATH_REMAP, schema unverified)"],
+      "blocked_inputs": [
+        "signal_projection.json — PSIG-001/002 NOT_RECOVERABLE (BI-02)",
+        "pressure_zone_state.json — DOMAIN_ZONE anchor requires DOM-XX schema; dom_path_domain_layer.json provides DOM groups but pressure_zone_state.json must be reformatted to DOMAIN_ZONE schema, which requires signal_projection first",
+        "condition_correlation_state.json — COND-PSIG-XXX namespace requires signal-type association (partial mapping only for compound zone)"
+      ],
+      "partially_addressable_inputs": [
+        "pressure_zone_state.json — DOM groups now defined in dom_path_domain_layer.json; zone-to-DOM mapping available (see blocked_binding_envelope.json partial_progress); DOMAIN_ZONE reformatting possible IF signal_projection unblocked",
+        "condition_correlation_state.json — PZ-001 compound zone condition normalization available"
+      ],
+      "readiness_status": "BLOCKED",
+      "blocking_reason": "signal_projection is the root blocker. Without FastAPI-compatible signal values (PSIG-001/002), the diagnostic narrative cannot correctly characterize coupling signals. pressure_zone_state DOMAIN_ZONE schema can be reformatted once signal_projection is unblocked.",
+      "report_modification_required": false,
+      "language_layer_modification_required": false,
+      "note": "DOM layer derivation (BLOCK_D) advances tier2 readiness: zone-to-DOM mapping now available. This is a partial unblocking for BI-03 within tier2 context. Primary blocker remains BI-02 (signal scale)."
+    },
+
+    {
+      "report_id": "decision",
+      "label": "Decision Surface",
+      "required_inputs": ["signal_projection.json (FastAPI 41.x compatible)", "gauge_state.json", "coverage_state.json", "binding_envelope.json"],
+      "recomputed_available_inputs": ["gauge_state.json (READY_RECOMPUTED)", "coverage_state.json (READY_RECOMPUTED)"],
+      "blocked_inputs": [
+        "signal_projection.json — PSIG-001/002 NOT_RECOVERABLE (BI-02)",
+        "binding_envelope.json — no binding stage + signal_projection blocked (BI-01 + BI-02)"
+      ],
+      "readiness_status": "BLOCKED",
+      "blocking_reason": "signal_projection and binding_envelope both blocked. Decision surface visualization requires both.",
+      "report_modification_required": false,
+      "language_layer_modification_required": false,
+      "additional_asset": {
+        "artifact": "decision_state.json",
+        "blueedge_path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/decision_state.json",
+        "fastapi_equivalent": "ABSENT in FastAPI pipeline",
+        "note": "BlueEdge decision_state.json (decision_category=INVESTIGATE, vault_readiness=NOT_READY) is native BlueEdge evidence with no FastAPI equivalent. Per RULE-03 and RULE-04: not used to redesign the decision report or introduce new downstream model. Documented as additional BlueEdge-native asset."
+      }
+    }
+
+  ],
+
+  "report_readiness_summary": {
+    "tier1": "BLOCKED — binding_envelope + signal_registry",
+    "tier2": "BLOCKED — signal_projection (root); DOM layer progress made",
+    "decision": "BLOCKED — signal_projection + binding_envelope",
+    "reports_ready": 0,
+    "reports_blocked": 3,
+    "report_modification_proposed": false,
+    "language_layer_modification_proposed": false,
+    "dom_layer_progress_note": "BLOCK_D produced dom_path_domain_layer.json with 13 DOM groups. This partially resolves BI-03 for tier2 (zone anchor model now defined). BI-02 (signal scale) remains the blocking dependency for all reports."
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "stream": "PI.SQO.COCKPIT.GOVERNANCE-ZONE-OPERATIONAL-VISIBILITY.01",
+  "phase": "O2",
+  "date": "2026-05-11",
+  "total_files": 14,
+  "changes": [
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.GOVERNANCE-ZONE-OPERATIONAL-VISIBILITY.01/GOVERNANCE_ZONE_OPERATIONAL_VISIBILITY_ARCHITECTURE.md",
+      "action": "CREATE",
+      "purpose": "Master visibility architecture: 15 domains, 4 layers, signal aggregation, deep-links"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.GOVERNANCE-ZONE-OPERATIONAL-VISIBILITY.01/ZONE_STATE_AND_TRANSITION_MODEL.md",
+      "action": "CREATE",
+      "purpose": "Zone state visibility, transition triggers, projections, impact matrix"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.GOVERNANCE-ZONE-OPERATIONAL-VISIBILITY.01/REPLAY_AND_ROLLBACK_STABILITY_VISIBILITY.md",
+      "action": "CREATE",
+      "purpose": "Replay determinism, chain pressure, rollback complexity, cascade visibility"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.GOVERNANCE-ZONE-OPERATIONAL-VISIBILITY.01/CERTIFICATION_AND_AUTHORITY_STABILITY_VISIBILITY.md",
+      "action": "CREATE",
+      "purpose": "Certification health, quarantine, authority boundary integrity, degradation"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.GOVERNANCE-ZONE-OPERATIONAL-VISIBILITY.01/OPERATIONAL_ENTROPY_VISIBILITY_MODEL.md",
+      "action": "CREATE",
+      "purpose": "12 entropy indicators, resistance effectiveness, per-domain entropy, trend"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.GOVERNANCE-ZONE-OPERATIONAL-VISIBILITY.01/ESCALATION_AND_QUALIFICATION_SAFETY_VISIBILITY.md",
+      "action": "CREATE",
+      "purpose": "Escalation pressure gauge, trigger proximity, S-state safety, risk assessment"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.GOVERNANCE-ZONE-OPERATIONAL-VISIBILITY.01/ZONE_LINEAGE_AND_COEXISTENCE_MODEL.md",
+      "action": "CREATE",
+      "purpose": "6 zone lineage types, coexistence rules, zone reconstruction"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.GOVERNANCE-ZONE-OPERATIONAL-VISIBILITY.01/AUTHORITY_IMPACT_AND_DEGRADATION_MODEL.md",
+      "action": "CREATE",
+      "purpose": "Authority impact matrix, 10 degradation signals, recovery paths"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.GOVERNANCE-ZONE-OPERATIONAL-VISIBILITY.01/OPERATOR_AND_GOVERNANCE_RESPONSIBILITY_MODEL.md",
+      "action": "CREATE",
+      "purpose": "14 visibility + 6 operator + 5 governance actions, audit trail"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.GOVERNANCE-ZONE-OPERATIONAL-VISIBILITY.01/OPERATIONAL_OBSERVABILITY_MODEL.md",
+      "action": "CREATE",
+      "purpose": "9 observability dimensions, 30 event types, health indicator, alert model"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.GOVERNANCE-ZONE-OPERATIONAL-VISIBILITY.01/PATH_BOUNDARY_VALIDATION.md",
+      "action": "CREATE",
+      "purpose": "9-point path boundary compliance, NOT PATH A/B/LENS confirmation"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.GOVERNANCE-ZONE-OPERATIONAL-VISIBILITY.01/execution_report.md",
+      "action": "CREATE",
+      "purpose": "Execution report with pre-flight, steps, artifacts, governance confirmation"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.GOVERNANCE-ZONE-OPERATIONAL-VISIBILITY.01/file_changes.json",
+      "action": "CREATE",
+      "purpose": "File change manifest for stream"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.GOVERNANCE-ZONE-OPERATIONAL-VISIBILITY.01/CLOSURE.md",
+      "action": "CREATE",
+      "purpose": "Stream closure with mandatory 9-section format"
+    }
+  ]
+}

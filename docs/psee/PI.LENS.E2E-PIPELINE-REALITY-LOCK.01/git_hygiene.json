@@ -1,0 +1,43 @@
+{
+  "contract_id": "PI.LENS.E2E-PIPELINE-REALITY-LOCK.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-01",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+
+  "files_created_this_contract": [
+    "docs/psee/PI.LENS.E2E-PIPELINE-REALITY-LOCK.01/e2e_pipeline_steps.md",
+    "docs/psee/PI.LENS.E2E-PIPELINE-REALITY-LOCK.01/artifact_lifecycle_matrix.json",
+    "docs/psee/PI.LENS.E2E-PIPELINE-REALITY-LOCK.01/step_classification.json",
+    "docs/psee/PI.LENS.E2E-PIPELINE-REALITY-LOCK.01/producer_inventory.json",
+    "docs/psee/PI.LENS.E2E-PIPELINE-REALITY-LOCK.01/blueedge_vs_fastapi_gap.md",
+    "docs/psee/PI.LENS.E2E-PIPELINE-REALITY-LOCK.01/e2e_pipeline_verdict.md",
+    "docs/psee/PI.LENS.E2E-PIPELINE-REALITY-LOCK.01/git_hygiene.json"
+  ],
+  "files_modified_this_contract": [],
+  "files_deleted_this_contract": [],
+
+  "scripts_executed": "NONE",
+  "runtime_artifacts_created": "NONE",
+  "client_artifacts_modified": "NONE",
+  "blueedge_artifacts_modified": "NONE",
+  "fastapi_artifacts_modified": "NONE",
+  "run_client_pipeline_modified": "NONE",
+  "create_only_violations": "NONE — all 7 files are net-new under new contract directory",
+
+  "validation_checks": {
+    "no_scripts_executed": "CONFIRMED",
+    "no_runtime_artifacts_created": "CONFIRMED",
+    "no_files_outside_scope_modified": "CONFIRMED",
+    "all_json_valid": "CONFIRMED",
+    "all_steps_covered": "CONFIRMED — 14 steps documented, 28 artifacts mapped",
+    "input_sources_only": "CONFIRMED — only read from allowed input sources"
+  },
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[REALITY-LOCK] PI.LENS.E2E-PIPELINE-REALITY-LOCK.01 — authoritative E2E pipeline map: PARTIAL status, 14 steps, 28 artifacts, 5 blockers",
+  "commit_note": "Commits are operator action per CLAUDE.md Section 7.1.",
+
+  "git_hygiene_status": "COMPLETE"
+}

@@ -1,0 +1,30 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE.BLOCKER-09-CLOSURE.01",
+  "generated_date": "2026-05-03",
+
+  "binding_artifact_present": true,
+  "binding_artifact_path": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/binding_envelope_fastapi_compatible.json",
+  "binding_source_known": true,
+  "binding_source_path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/binding/binding_envelope.json",
+  "binding_source_contract_id": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01",
+  "binding_source_artifact_field": "binding_envelope_fastapi_compatible",
+  "binding_checksum_verified": true,
+  "binding_sha256": "fa508036d5b048b50c4b4fd1e6385521f63821d86c750fdc00f15b1d5547bc33",
+  "content_modified": false,
+
+  "phase5_status": "PASS",
+  "phase5_run_command": "python3 scripts/pios/run_client_pipeline.py --client blueedge --source source_01 --run-id run_blueedge_e2e_execute_01 --phase 5",
+
+  "blocker_09_resolved": true,
+  "producer_scripts_modified": false,
+  "pipeline_executed": false,
+  "wrapper_executed": true,
+  "canonical_artifacts_mutated": false,
+
+  "next_blocker_detected": true,
+  "next_blocker_phase": "Phase 6+7",
+  "next_blocker_artifact": "signal_projection_fastapi_compatible.json",
+  "next_blocker_path": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/signal_projection_fastapi_compatible.json",
+
+  "validation_status": "PASS"
+}

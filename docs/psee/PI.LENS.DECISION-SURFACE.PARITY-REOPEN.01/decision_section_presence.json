@@ -1,0 +1,102 @@
+{
+  "contract_id": "PI.LENS.DECISION-SURFACE.PARITY-REOPEN.01",
+  "generated_date": "2026-05-02",
+  "canonical_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/decision/lens_decision_surface.html",
+  "generated_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/lens_decision_surface.html",
+  "canonical_bytes": 15169,
+  "generated_bytes": 11797,
+  "canonical_lines": 159,
+  "generated_lines": 138,
+  "sections": [
+    {
+      "section": "WHERE_PRESSURE_EXISTS",
+      "html_marker": "ds-epb-section-title",
+      "canonical_text": "Where pressure exists",
+      "canonical_present": true,
+      "generated_present": false,
+      "match": false,
+      "note": "Entire ds-epb block absent in generated — gated on pz_proj is not None and zone_count > 0"
+    },
+    {
+      "section": "STRUCTURAL_PRESSURE_SIGNALS",
+      "html_marker": "ds-epb-card-title",
+      "canonical_text": "Structural Pressure Signals",
+      "canonical_present": true,
+      "generated_present": false,
+      "match": false,
+      "note": "Inside ds-epb block; absent because EPB block suppressed"
+    },
+    {
+      "section": "GRAPH_VISUALIZATION",
+      "html_marker": "ds-signal-trace",
+      "canonical_text": "canvas id=ds-signal-trace",
+      "canonical_present": true,
+      "generated_present": false,
+      "match": false,
+      "note": "Canvas graph visualization inside ds-epb-visual; absent because EPB block suppressed"
+    },
+    {
+      "section": "PRESSURE_PATTERN_SYNTHESIS",
+      "html_marker": "ds-epb-synthesis",
+      "canonical_text": "A single structural pressure pattern spans multiple domains.",
+      "canonical_present": true,
+      "generated_present": false,
+      "match": false,
+      "note": "Synthesis block inside ds-epb; absent because EPB block suppressed"
+    },
+    {
+      "section": "TRUTH_TEXT_PATTERN_SENTENCE",
+      "html_marker": "ds-truth-text",
+      "canonical_text": "A single structural pressure pattern appears across the system.",
+      "canonical_present": true,
+      "generated_present": false,
+      "match": false,
+      "note": "3rd sentence gated on zone_count >= 1; zone_count=0 because pz_proj=None"
+    },
+    {
+      "section": "GAP_ITEM_NOT_ACTIVATED",
+      "html_marker": "ds-gap-item",
+      "canonical_text": "2 structural signals not activated",
+      "canonical_present": true,
+      "generated_present": false,
+      "match": false,
+      "note": "Gated on not_activated list from decision_model; not_activated=[] because psig_proj=None"
+    },
+    {
+      "section": "GAP_ITEM_BLIND_SPOT",
+      "html_marker": "ds-gap-item",
+      "canonical_text": "Blind spot coverage active — entities outside zone scope not characterized",
+      "canonical_present": true,
+      "generated_present": false,
+      "match": false,
+      "note": "Gated on blind_spot_active from decision_model; False because psig_proj=None"
+    },
+    {
+      "section": "INFERENCE_PROHIBITION",
+      "html_marker": "inference_prohibition",
+      "canonical_text": "inference_prohibition ACTIVE",
+      "canonical_present": true,
+      "generated_present": true,
+      "match": true
+    },
+    {
+      "section": "INVESTIGATE",
+      "html_marker": "ds-hero-posture",
+      "canonical_text": "INVESTIGATE",
+      "canonical_present": true,
+      "generated_present": true,
+      "match": true
+    },
+    {
+      "section": "SCORE_60",
+      "html_marker": "SVG text",
+      "canonical_text": "60",
+      "canonical_present": true,
+      "generated_present": true,
+      "match": true
+    }
+  ],
+  "sections_missing_in_generated": 7,
+  "sections_matching": 3,
+  "decision_surface_parity": "FAIL"
+}

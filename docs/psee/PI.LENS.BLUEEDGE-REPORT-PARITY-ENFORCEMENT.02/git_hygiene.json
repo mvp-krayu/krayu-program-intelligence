@@ -1,0 +1,30 @@
+{
+  "contract_id": "PI.LENS.BLUEEDGE-REPORT-PARITY-ENFORCEMENT.02",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-01",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+  "working_tree_at_start": "CLEAN — confirmed via git status --short (empty output)",
+  "working_tree_at_end": "DIRTY — ?? docs/psee/PI.LENS.BLUEEDGE-REPORT-PARITY-ENFORCEMENT.02/ (untracked evidence only)",
+  "baseline_commit": "3db0e541b4830523460326464db0727079384b6f",
+
+  "files_created_this_contract": [
+    "docs/psee/PI.LENS.BLUEEDGE-REPORT-PARITY-ENFORCEMENT.02/parity_result.json",
+    "docs/psee/PI.LENS.BLUEEDGE-REPORT-PARITY-ENFORCEMENT.02/difference_log.md",
+    "docs/psee/PI.LENS.BLUEEDGE-REPORT-PARITY-ENFORCEMENT.02/generation_log.md",
+    "docs/psee/PI.LENS.BLUEEDGE-REPORT-PARITY-ENFORCEMENT.02/no_mutation_attestation.md",
+    "docs/psee/PI.LENS.BLUEEDGE-REPORT-PARITY-ENFORCEMENT.02/git_hygiene.json"
+  ],
+  "files_modified_this_contract": [],
+  "files_deleted_this_contract": [],
+
+  "canonical_reports_mutation_check": "PASS — no canonical report files modified",
+  "script_mutation_check": "PASS — lens_report_generator.py not modified",
+  "generator_output": "SUCCESS — exit code 0, all 4 reports generated to /tmp/blueedge_report_parity_02/",
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[FORENSIC] PI.LENS.BLUEEDGE-REPORT-PARITY-ENFORCEMENT.02 — FAIL: generator diverges from canonical (4/4 hash mismatch)",
+
+  "git_hygiene_status": "COMPLETE"
+}

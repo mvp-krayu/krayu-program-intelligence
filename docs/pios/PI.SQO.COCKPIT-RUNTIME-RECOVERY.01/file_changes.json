@@ -1,0 +1,50 @@
+{
+  "stream": "PI.SQO.COCKPIT-RUNTIME-RECOVERY.01",
+  "changes": [
+    {
+      "file": "app/execlens-demo/pages/sqo/index.js",
+      "action": "MODIFIED",
+      "description": "Moved server module require() inside getServerSideProps to prevent fs leakage into browser bundle."
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/index.js",
+      "action": "MODIFIED",
+      "description": "Moved server module require() inside getServerSideProps to prevent fs leakage into browser bundle."
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/index.js",
+      "action": "MODIFIED",
+      "description": "Moved 4 server module requires inside getServerSideProps. Added isCritical prop computed server-side to replace client-side COCKPIT_STATES import."
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/debt.js",
+      "action": "MODIFIED",
+      "description": "Moved 4 server module requires inside getServerSideProps."
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/continuity.js",
+      "action": "MODIFIED",
+      "description": "Moved 4 server module requires inside getServerSideProps."
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/maturity.js",
+      "action": "MODIFIED",
+      "description": "Moved 4 server module requires inside getServerSideProps."
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/progression.js",
+      "action": "MODIFIED",
+      "description": "Moved 4 server module requires inside getServerSideProps."
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/evidence.js",
+      "action": "MODIFIED",
+      "description": "Moved 4 server module requires inside getServerSideProps."
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/handoff.js",
+      "action": "MODIFIED",
+      "description": "Moved 4 server module requires inside getServerSideProps."
+    }
+  ]
+}

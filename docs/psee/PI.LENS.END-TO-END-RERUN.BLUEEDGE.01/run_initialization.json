@@ -1,0 +1,36 @@
+{
+  "contract_id": "PI.LENS.END-TO-END-RERUN.BLUEEDGE.01",
+  "artifact": "run_initialization",
+  "captured_date": "2026-04-30",
+
+  "run_id": "run_blueedge_rerun_01",
+  "client": "blueedge",
+  "output_root": "clients/blueedge/lens/runs/run_blueedge_rerun_01/",
+
+  "directory_structure_created": [
+    "clients/blueedge/lens/runs/run_blueedge_rerun_01/",
+    "clients/blueedge/lens/runs/run_blueedge_rerun_01/reports/tier1/",
+    "clients/blueedge/lens/runs/run_blueedge_rerun_01/reports/tier1/publish/",
+    "clients/blueedge/lens/runs/run_blueedge_rerun_01/reports/tier2/",
+    "clients/blueedge/lens/runs/run_blueedge_rerun_01/reports/tier2/publish/",
+    "clients/blueedge/lens/runs/run_blueedge_rerun_01/reports/decision/",
+    "clients/blueedge/lens/runs/run_blueedge_rerun_01/reports/decision/publish/"
+  ],
+
+  "rule_checks": {
+    "no_nested_attempt_folders": "PASS — 0 attempt directories",
+    "output_inside_lens_root": "PASS — all under clients/blueedge/lens/",
+    "no_output_under_psee_runs": "PASS — no writes to clients/blueedge/psee/runs/",
+    "no_reuse_of_fixed_outputs": "PASS — fresh empty directory; not a copy of run_blueedge_productized_01_fixed"
+  },
+
+  "source_artifacts": {
+    "source_vault": "clients/blueedge/psee/runs/run_blueedge_productized_01/vault/ (READ ONLY)",
+    "signal_projection": "clients/blueedge/psee/runs/run_blueedge_productized_01/41.x/grounded/signal_projection.json",
+    "pressure_zone_projection": "clients/blueedge/psee/runs/run_blueedge_productized_01/41.x/grounded/pressure_zone_projection.json",
+    "crosswalk": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.SEMANTIC-CONTINUITY.01/semantic_continuity_crosswalk.json",
+    "semantic_topology_dir": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.SEMANTIC-TOPOLOGY-REBUILD.01/"
+  },
+
+  "verdict": "RUN_INITIALIZED — clean directory; ready for pipeline execution"
+}

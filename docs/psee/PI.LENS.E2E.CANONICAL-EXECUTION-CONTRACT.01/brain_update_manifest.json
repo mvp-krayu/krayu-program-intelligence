@@ -1,0 +1,102 @@
+{
+  "contract_id": "PI.LENS.E2E.CANONICAL-EXECUTION-CONTRACT.01",
+  "artifact": "brain_update_manifest",
+  "block": "BLOCK_L",
+  "generated_date": "2026-05-01",
+  "mode": "DOCUMENTATION_ONLY / CONTRACT_LOCK",
+  "anchor_run": "run_be_orchestrated_fixup_01",
+
+  "brain_update_required": true,
+  "brain_update_type": "DOCUMENTATION — contract lock facts to be recorded in each brain domain",
+
+  "canonical_brain": {
+    "domain": "CANONICAL",
+    "branch": "brain/canonical",
+    "status": "UPDATE_REQUIRED",
+    "facts_to_record": [
+      "run_be_orchestrated_fixup_01 is the canonical orchestrated run for BlueEdge — PARITY_PASS 14/14",
+      "PSIG-001=5.663 HIGH, PSIG-002=3.2098 HIGH, PSIG-004=2.1822 HIGH, PSIG-006=BASELINE/THEORETICAL_BASELINE/value=0",
+      "active_pressure_signals=3 (not 4 — THEORETICAL_BASELINE excluded)",
+      "PZ-001 / DOM-04 / COMPOUND_ZONE is the canonical pressure zone",
+      "GAUGE score=60 / CONDITIONAL / INVESTIGATE is the canonical verdict",
+      "Canonical signal computation for BlueEdge is STAGE_NOT_AUTOMATED — requires real 40.3 structural import topology",
+      "Pre-computed conformance artifacts at docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/ are authoritative",
+      "run_be_orchestrated_01 is REJECTED_NON_CANONICAL — two root causes: STRUCTURAL_TOPOLOGY_DELTA + SCHEMA_BRIDGE_BUG",
+      "E2E execution contract locked as PI.LENS.E2E.CANONICAL-EXECUTION-CONTRACT.01"
+    ],
+    "key_artifacts": [
+      "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/ (9 artifacts — canonical vault)",
+      "clients/blueedge/lens/runs/run_be_orchestrated_fixup_01/ (4 report pairs — canonical reports)",
+      "clients/blueedge/lens/selector/selector.json (current_run = run_be_orchestrated_fixup_01)"
+    ]
+  },
+
+  "product_brain": {
+    "domain": "PRODUCT",
+    "branch": "brain/product",
+    "status": "UPDATE_REQUIRED",
+    "facts_to_record": [
+      "The canonical product output is run_be_orchestrated_fixup_01 for BlueEdge",
+      "4 report surfaces are the product surface: Tier-1 Evidence Brief, Tier-1 Narrative Brief, Tier-2 Diagnostic Narrative, Decision Surface",
+      "Each report has a publish/ variant for external sharing",
+      "lens/current/ provides stable path for downstream product consumers",
+      "FastAPI status is ALLOWED_AFTER_OPERATOR_APPROVAL — next contract: PI.LENS.END-TO-END-RERUN.FASTAPI.01",
+      "Signal count is client-variable — 17 domains/nodes is BlueEdge-specific; use 'full-domain'/'varies by client' in cross-client product language",
+      "GAUGE score=60/CONDITIONAL/INVESTIGATE is the current product verdict for BlueEdge",
+      "Selector governs which run is exposed to the product surface — current_run = run_be_orchestrated_fixup_01"
+    ],
+    "key_artifacts": [
+      "clients/blueedge/lens/runs/run_be_orchestrated_fixup_01/reports/ (product output)",
+      "clients/blueedge/lens/current/ (stable product path)",
+      "clients/blueedge/lens/selector/selector.json (product selector)"
+    ]
+  },
+
+  "publish_brain": {
+    "domain": "PUBLISH",
+    "branch": "brain/publish",
+    "status": "UPDATE_REQUIRED",
+    "facts_to_record": [
+      "Publish-layer artifacts are the _pub.html variants in reports/*/publish/",
+      "Publish artifacts must not contain different signal values than primary reports",
+      "No manual HTML patches are permitted in any variant",
+      "Publish artifacts derive exclusively from vault artifacts — no synthetic content",
+      "PSIG-006 must appear as BASELINE in all published materials",
+      "FastAPI must receive operator approval before external binding is permitted"
+    ],
+    "key_artifacts": [
+      "clients/blueedge/lens/runs/run_be_orchestrated_fixup_01/reports/tier1/publish/",
+      "clients/blueedge/lens/runs/run_be_orchestrated_fixup_01/reports/tier2/publish/",
+      "clients/blueedge/lens/runs/run_be_orchestrated_fixup_01/reports/decision/publish/"
+    ]
+  },
+
+  "code_brain": {
+    "domain": "CODE",
+    "branch": "brain/code",
+    "status": "UPDATE_REQUIRED",
+    "facts_to_record": [
+      "scripts/pios/run_client_pipeline.py: Phase 5/6+7/8a now support fastapi_conformance_path routing",
+      "scripts/pios/run_client_pipeline.py: schema bridge fix — active_count excludes activation_method=THEORETICAL_BASELINE",
+      "scripts/pios/lens_report_generator.py: _write_canonical_run_metadata — list-to-dict normalization for available_runs.json",
+      "scripts/pios/export_graph_state.mjs: sole authoritative source of Tier-2 x/y positions via d3-force-3d",
+      "source_manifest.json: fastapi_conformance_path field routes orchestrator to pre-computed artifacts",
+      "Phase 6+7 signature change: now accepts source_manifest dict (not just run_dir) to enable conformance path routing",
+      "Gap GAP-03 (vault_index.json automation) remains open — requires future automation contract"
+    ],
+    "key_artifacts": [
+      "scripts/pios/run_client_pipeline.py (all phase functions)",
+      "scripts/pios/lens_report_generator.py (_write_canonical_run_metadata)",
+      "scripts/pios/export_graph_state.mjs (graph layout engine)",
+      "clients/blueedge/sources/source_01/source_manifest.json (fastapi_conformance_path)"
+    ]
+  },
+
+  "alignment_status": {
+    "all_four_brains_addressed": true,
+    "brain_updates_can_proceed": true,
+    "requires_brain_branch_commits": true,
+    "note": "Brain updates must be committed to brain/* branches per CLAUDE.md Section 15. This manifest documents what must be recorded — actual commits are a separate operator action.",
+    "blocking_conditions": []
+  }
+}

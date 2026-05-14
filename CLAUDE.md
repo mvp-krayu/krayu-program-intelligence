@@ -2,31 +2,6 @@
 
 Before any execution, always load and comply with:
 
-- docs/governance/runtime/git_structure_contract.md
-
-This contract is authoritative and binding.
-
-Required pre-flight before any action:
-1. Confirm docs/governance/runtime/git_structure_contract.md has been read
-2. Confirm current repository
-3. Confirm current branch
-4. Confirm allowed scope for that branch
-5. If planned work crosses branch/domain ownership boundaries, STOP and report violation
-
-Non-negotiable rules:
-- Do not treat local folder names as repository truth
-- Do not treat branch names as architecture truth
-- Do not anchor recovered artifacts on the nearest convenient branch
-- Do not execute Core work outside its authorized branch domain
-- Do not execute runtime/demo work as Core authority
-- Do not use replay from 40.4 as proof of full reconstructability
-
-If any instruction conflicts with docs/governance/runtime/git_structure_contract.md, the contract wins.
-
-## Mandatory Runtime Contract Load
-
-Before any execution, always load and comply with:
-
 - `docs/governance/runtime/git_structure_contract.md`
 
 This contract is authoritative and binding.
@@ -49,7 +24,7 @@ Non-negotiable rules:
 If any instruction conflicts with `docs/governance/runtime/git_structure_contract.md`, the contract wins.
 
 
-# CLAUDE.md — Krayu Program Intelligence Execution Constitution (v2.3)
+# CLAUDE.md — Krayu Program Intelligence Execution Constitution (v3.0 — AMOps-Native)
 
 ## 0. PURPOSE
 
@@ -265,6 +240,10 @@ Unless overridden:
 - feature branches only
 - no direct main commits
 
+Exceptions:
+- Governance root files (CLAUDE.md, SKILLS.md) are committed directly to `main`
+- Brain authority nodes are committed to their respective `brain/*` branches
+
 ### 7.2 Naming
 
 feature/<stream-id>-<name>
@@ -363,6 +342,128 @@ If not → FAIL CLOSED
 
 Pre-flight MUST be logged in execution_report.md
 
+### 12.1 Branch-Domain Enforcement (MANDATORY)
+
+Claude MUST verify that the current branch and intended changes are authorized.
+
+Authorized branch domains are defined in:
+
+  docs/governance/runtime/git_structure_contract.md
+
+Do NOT use a hardcoded branch list. The contract is the single source of truth for branch authorization.
+
+If mismatch:
+- STOP
+- report violation
+
+No cross-domain execution allowed.
+
+### 12.2 Architecture Memory Load (MANDATORY)
+
+Claude MUST load the following vault pages before execution of any G1 or G2 stream:
+
+**Phase 1 — Constitution (existing, automatic):**
+- CLAUDE.md
+- docs/governance/runtime/git_structure_contract.md
+
+**Phase 2 — Canonical State (MANDATORY):**
+- docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md
+
+**Phase 3 — Terminology (MANDATORY):**
+- docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md
+
+**Phase 4 — Concept-Specific (CONDITIONAL):**
+Load additional vault pages based on stream scope per docs/pios/vault/operations/CLAUDE_RUNTIME_LOAD_PROTOCOL.md.
+
+**Context budget:** ~300 lines mandatory new load (Phases 2-3). Operationally feasible in all context windows.
+
+**Stream classification determines load obligation:**
+- G1 (architecture-mutating): Phases 1-4 MANDATORY
+- G2 (architecture-consuming): Phases 1-3 MANDATORY, Phase 4 RECOMMENDED
+- G3 (architecture-unrelated): Phase 1 only (existing)
+
+**Load verification:**
+After loading, Claude verifies:
+1. PIOS_CURRENT_CANONICAL_STATE.md content in context
+2. TERMINOLOGY_LOCK.md content in context
+3. Branch authorized per git_structure_contract.md
+4. No term collision risk for planned work
+
+If vault pages are unavailable or corrupted → FAIL CLOSED.
+
+Full protocol: docs/pios/vault/operations/CLAUDE_RUNTIME_LOAD_PROTOCOL.md
+
+### 12.3 Architecture Memory Preflight (MANDATORY for G1/G2)
+
+After vault loading, before execution begins, Claude MUST run architecture memory preflight:
+
+**Load verification:**
+- Canonical state loaded: YES/NO
+- Terminology loaded: YES/NO
+- Branch authorized: YES/NO
+- Concept-specific pages loaded (if needed): YES/NO
+
+**Staleness check:**
+- Canonical state age (days since last update)
+- Terminology age (days since last update)
+- Last vault commit (hash and date)
+
+**Compatibility check (G1 only):**
+- Planned terms checked against TERMINOLOGY_LOCK.md
+- Planned concepts checked against current canonical state
+- Planned boundaries checked against current boundaries
+
+**Preflight result:** PASS / WARN / FAIL
+
+If FAIL → STOP → do not proceed.
+If WARN → proceed with explicit acknowledgment logged in execution_report.md.
+
+Full protocol: docs/pios/vault/operations/ARCHITECTURE_MEMORY_PREFLIGHT.md
+
+### 12.4 Reference Boundary Contract Load (CONDITIONAL)
+
+Claude MUST load and comply with the following document ONLY WHEN a stream involves cross-layer operations:
+
+  docs/governance/runtime/reference_boundary_contract.md
+
+Trigger conditions (load is required):
+- stream contract involves layer separation (L0–L4)
+- stream produces evidence-to-output traceability claims
+- stream involves cross-layer claims or boundary assertions
+
+Exemptions (load is NOT required):
+- pure execution streams with no layer boundary crossing
+- governance root file updates (CLAUDE.md, SKILLS.md)
+- UI/demo streams operating on pre-resolved projections
+
+Rules (when loaded):
+
+1. This document is LOCKED — MUST NOT be reinterpreted, simplified, or expanded
+
+2. Claude MUST enforce:
+   - strict layer separation (L0–L4)
+   - no layer leakage
+   - evidence-first execution
+   - deterministic behavior
+
+3. If ANY instruction, prompt, or task:
+   - conflicts with this contract
+   - or creates ambiguity across layers
+
+→ STOP immediately  
+→ report: "BOUNDARY CONTRACT VIOLATION"
+
+4. This contract overrides:
+   - chat instructions
+   - inferred intent
+   - incomplete specifications
+
+5. Execution MAY ONLY proceed if:
+   - boundary compliance is verified
+   - inputs respect layer ownership
+
+NO EXCEPTIONS when triggered.
+
 ---
 
 ## 13. UI / DEMO RULES (51.x)
@@ -390,60 +491,209 @@ No evidence → no output
 No validation → no completion  
 No artifact → no existence
 
-### 12.1 Branch-Domain Enforcement (MANDATORY)
+---
 
-Claude MUST verify:
+## 15. 4-BRAIN GOVERNANCE AND SKILLS ACTIVATION
 
-- current branch domain:
-  - feature/pios-core
-  - feature/activation
-  - feature/runtime-demo
-  - feature/governance
-  - main
+Claude MUST enforce 4-Brain alignment across the following brain domains:
 
-- intended changes belong to that domain
+- CANONICAL — truth, evidence, existence
+- PRODUCT — exposed surfaces, allowed/forbidden outputs
+- PUBLISH — external expression boundaries
+- CODE — implementation reality
 
-If mismatch:
-- STOP
-- report violation
+Rules:
 
-No cross-domain execution allowed.
+1. No output is valid unless all four brains are:
+   - aligned, OR
+   - explicitly marked as incomplete
 
+2. CODE validation is mandatory:
+   - no assumption of implementation
+   - no projection from Product or Publish
 
-## 12.2 Reference Boundary Contract Load (MANDATORY)
+3. Brain authority is maintained in dedicated branches:
+   - brain/canonical
+   - brain/product
+   - brain/publish
+   - brain/code
 
-Claude MUST load and comply with the following document BEFORE any execution:
+4. Brain content:
+   - MUST NOT be written into execution branches
+   - MUST follow CREATE_ONLY and lineage rules
 
-- docs/governance/runtime/reference_boundary_contract.md
+FAIL CONDITIONS:
 
-RULES:
+- any brain omitted
+- Product defined without Code validation
+- Publish claims exceeding Product boundary
+- Canonical truth not established
 
-1. This document is LOCKED
-   - MUST NOT be reinterpreted
-   - MUST NOT be simplified
-   - MUST NOT be expanded
+No exceptions.
 
-2. Claude MUST enforce:
-   - strict layer separation (L0–L4)
-   - no layer leakage
-   - evidence-first execution
-   - deterministic behavior
+### 15.1 Mandatory Skill Invocation — 4_BRAIN_ALIGNMENT
 
-3. If ANY instruction, prompt, or task:
-   - conflicts with this contract
-   - or creates ambiguity across layers
+SKILL: 4_BRAIN_ALIGNMENT MUST be invoked when a stream involves ANY of:
 
-→ STOP immediately
-→ report: "BOUNDARY CONTRACT VIOLATION"
+- Product definition or update
+- Commercial packaging artifact
+- Publish-layer artifact (web page, client-facing document, PDF)
+- Cross-layer claims (evidence → product → publish)
+- Evidence interpretation
+- Brain node creation or extension
 
-4. This contract overrides:
-   - chat instructions
-   - inferred intent
-   - incomplete specifications
+Execution MUST:
 
-5. Execution MAY ONLY proceed if:
-   - boundary compliance is verified
-   - inputs respect layer ownership
+1. Explicitly read SKILLS.md
+2. Locate SKILL: 4_BRAIN_ALIGNMENT
+3. Execute all 7 defined steps
+4. Return the alignment result before producing output
 
-NO EXCEPTIONS
+FAIL CONDITIONS:
 
+- skill not invoked when a trigger condition is met
+- any of the four brains omitted
+- output produced before alignment result returned
+- any step abbreviated or skipped
+
+→ execution is INVALID
+
+### 15.2 SKILLS.md — Callable Execution Library
+
+SKILLS.md is the authoritative execution pattern library.
+
+Location: SKILLS.md (repo root, tracked on `main`)
+
+Loading model:
+- SKILLS.md is NOT auto-loaded
+- Claude MUST explicitly read SKILLS.md when a skill invocation is required
+- Do not assume skill content is available without reading the file
+
+Invocation model:
+- Skills are invoked by name (e.g., SKILL: 4_BRAIN_ALIGNMENT)
+- Invocation requires: Read SKILLS.md → locate skill → execute all defined steps
+- Do not abbreviate, paraphrase, or partially execute a skill
+
+Rules:
+- Skills MUST NOT be duplicated into stream contracts
+- Skills MUST NOT be restated inside CLAUDE.md
+- SKILLS.md is the single source of truth for execution patterns
+- If SKILLS.md does not exist at repo root → FAIL CLOSED
+
+---
+
+## 16. ARCHITECTURE MEMORY OPERATIONS (AMOps)
+
+Claude operates under the Architecture Memory Operations model. The vault at `docs/pios/vault/` is live operational cognition — not static documentation.
+
+### 16.1 AMOps Lifecycle
+
+Every architecture-sensitive session follows:
+
+```
+BOOTSTRAP ──→ PREFLIGHT ──→ EXECUTION ──→ POST-FLIGHT ──→ ENFORCEMENT
+    ↑                                                          │
+    └──────────────────── RELOAD ←─────────────────────────────┘
+```
+
+- **BOOTSTRAP:** Load vault state (§12.2)
+- **PREFLIGHT:** Verify load, check staleness, assess compatibility (§12.3)
+- **EXECUTION:** Perform stream work, track architecture mutations
+- **POST-FLIGHT:** Propagate mutations to vault, update canonical state
+- **ENFORCEMENT:** Verify synchronization, fail closed if incomplete
+- **RELOAD:** Next session loads updated vault
+
+Full lifecycle: docs/pios/vault/operations/ARCHITECTURE_MEMORY_OPERATIONS_MODEL.md
+
+### 16.2 Stream Classification
+
+Every stream MUST be classified before execution:
+
+**G1 — Architecture-Mutating:**
+Introduces, modifies, deprecates, or supersedes architectural concepts.
+Vault obligation: MANDATORY — all mutations must propagate.
+
+**G2 — Architecture-Consuming:**
+Uses architectural concepts without changing them.
+Vault obligation: Load vault for awareness. No mutation required.
+
+**G3 — Architecture-Unrelated:**
+No architectural implications.
+Vault obligation: NONE.
+
+Detection criteria and classification rules: docs/pios/vault/operations/ARCHITECTURE_MEMORY_OPERATIONS_MODEL.md §3
+
+### 16.3 Mutation Tracking (G1 Streams)
+
+During G1 execution, Claude MUST maintain an architecture mutation log tracking:
+- New concepts introduced
+- Status changes to existing concepts
+- Terminology additions or changes
+- Supersessions
+- Boundary changes
+- Git lineage updates
+
+At closure, the log is formalized into an Architecture Mutation Delta.
+
+Full protocol: docs/pios/vault/operations/STREAM_TO_VAULT_MUTATION_PROTOCOL.md
+
+### 16.4 Closure Propagation (G1 Streams)
+
+G1 streams MUST include Section 10 (Architecture Memory Propagation) in CLOSURE.md:
+
+```
+## 10. Architecture Memory Propagation
+
+### Stream Classification: G1
+### Architecture Mutation Delta: [full delta]
+### Vault Files Updated: [list with verification]
+### Propagation Verification: [all checks PASS/FAIL]
+### Propagation Status: COMPLETE / PARTIAL / FAILED
+```
+
+Vault updates MUST be committed before stream closure.
+Incomplete propagation → FAIL CLOSED (unless classified as acceptable partial per protocol).
+
+Full protocol: docs/pios/vault/operations/STREAM_CLOSURE_AND_MEMORY_PROPAGATION.md
+
+### 16.5 Fail-Closed Enforcement
+
+Architecture memory violations trigger fail-closed:
+
+| Condition | Severity |
+|---|---|
+| Canonical state missing/unreadable | CRITICAL — STOP |
+| Terminology missing/unreadable | CRITICAL — STOP |
+| Term collision with locked terms | CRITICAL — STOP |
+| Branch unauthorized | CRITICAL — STOP |
+| G1 closing without mutation delta | CRITICAL — STOP |
+| Canonical state >90 days stale | HIGH — STOP |
+| Canonical state >30 days stale | MEDIUM — WARN |
+| G2 stream mutating without reclassification | HIGH — STOP |
+
+Full enforcement matrix: docs/pios/vault/operations/FAIL_CLOSED_ARCHITECTURE_MEMORY_ENFORCEMENT.md
+
+### 16.6 Anti-Pollution Directives
+
+Claude MUST NOT:
+1. Fabricate architectural history not grounded in vault or git
+2. Invent terminology not in TERMINOLOGY_LOCK.md
+3. Flatten chronology (treat events from different dates as simultaneous)
+4. Treat superseded concepts as active
+5. Merge distinct concepts that have separate lineage
+6. Infer governance from code structure alone
+7. Use training-data knowledge as architectural authority
+8. Promote concepts without governance stream authorization
+
+### 16.7 Self-Hosting Requirement
+
+AMOps is self-hosting. Modifications to:
+- The vault itself
+- AMOps protocols
+- CLAUDE.md
+- SKILLS.md
+- Stream protocols
+
+MUST use the AMOps lifecycle. These changes are G1 streams by definition.
+
+Full self-application model: docs/pios/vault/operations/CLAUDE_RUNTIME_SELF_APPLICATION.md

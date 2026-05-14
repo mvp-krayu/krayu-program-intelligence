@@ -1,0 +1,214 @@
+{
+  "client": "blueedge",
+  "canonical_report_run": "run_blueedge_productized_01_fixed",
+  "bundle_type": "semantic_runtime_bundle",
+  "created_date": "2026-05-02",
+  "contract": "PI.LENS.SEMANTIC-LAYER-PROMOTION.01",
+  "created_from_existing_artifacts_only": true,
+
+  "artifacts": [
+    {
+      "artifact_id": "SEM-001",
+      "artifact_type": "semantic_continuity_crosswalk",
+      "source_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_dom_lineage_validation/language_layer/semantic_continuity_crosswalk.json",
+      "target_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/crosswalk/semantic_continuity_crosswalk.json",
+      "source_stream": "PI.LENS.REPORT-RENDERER-LINEAGE-CONTEXT-DISCOVERY.01 / lineage validation run",
+      "purpose": "Maps DOM-XX technical anchor_names to business display labels with confidence scores. Required by _resolve_domain_display_label() in lens_report_generator.py via --crosswalk-path flag. Enables zone label rendering as 'Platform Infrastructure and Data' instead of 'backend_app_root'.",
+      "sha256": "fed6fc381b18831bab48654fc87994fb2faaa7182a1a6b10992c200ebaa872c7",
+      "status": "COPIED"
+    },
+    {
+      "artifact_id": "SEM-002",
+      "artifact_type": "canonical_topology_with_lineage",
+      "source_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_dom_lineage_validation/vault/canonical_topology_with_lineage.json",
+      "target_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/lineage/canonical_topology_with_lineage.json",
+      "source_stream": "PI.LENS.REPORT-RENDERER-LINEAGE-CONTEXT-DISCOVERY.01 / lineage validation run vault",
+      "purpose": "Canonical topology augmented with semantic lineage annotations. Provides DOM-to-DOMAIN mapping with lineage_status, confidence, and pressure_note per domain. 13 structural domains with lineage provenance.",
+      "sha256": "47aaaeaab8d4a8475d439fb6c17854172754a207cf027229b32821f07422c62b",
+      "status": "COPIED"
+    },
+    {
+      "artifact_id": "SEM-003",
+      "artifact_type": "vault_compatibility_manifest",
+      "source_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_dom_lineage_validation/manifests/vault_compatibility_manifest.json",
+      "target_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/lineage/vault_compatibility_manifest.json",
+      "source_stream": "PI.LENS.REPORT-RENDERER-LINEAGE-CONTEXT-DISCOVERY.01 / lineage validation run manifests",
+      "purpose": "Records compatibility between lineage validation vault and base productized vault. Confirms lineage artifacts are anchored to run_blueedge_productized_01 baseline.",
+      "sha256": "adb1e19d4440b97d311a9c20c079bd29fd60384224ac100fc41bd435c67edd1b",
+      "status": "COPIED"
+    },
+    {
+      "artifact_id": "SEM-004",
+      "artifact_type": "semantic_topology_model",
+      "source_path": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.SEMANTIC-TOPOLOGY-REBUILD.01/semantic_topology_model.json",
+      "target_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/semantic_topology_model.json",
+      "source_stream": "PI.CLIENT-LANGUAGE-LAYER.SEMANTIC-TOPOLOGY-REBUILD.01 (directory absent)",
+      "purpose": "17-domain semantic topology model required by _load_semantic_topology() in lens_report_generator.py via --semantic-topology-dir flag. Enables semantic count cards (17 Semantic Domains / 5 Backed / 12 Semantic-Only) and semantic SVG rendering. Was present at runtime 2026-04-30 but never committed to repository.",
+      "sha256": "",
+      "status": "MISSING"
+    },
+    {
+      "artifact_id": "SEM-005",
+      "artifact_type": "semantic_topology_layout",
+      "source_path": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.SEMANTIC-TOPOLOGY-REBUILD.01/semantic_topology_layout.json",
+      "target_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/semantic_topology_layout.json",
+      "source_stream": "PI.CLIENT-LANGUAGE-LAYER.SEMANTIC-TOPOLOGY-REBUILD.01 (directory absent)",
+      "purpose": "Layout configuration for semantic topology SVG renderer. Required alongside semantic_topology_model.json. Was present at runtime 2026-04-30 but never committed to repository.",
+      "sha256": "",
+      "status": "MISSING"
+    },
+    {
+      "artifact_id": "SEM-006",
+      "artifact_type": "canonical_topology_json",
+      "source_path": "docs/psee/41X.CANONICAL.TOPOLOGY.JSON.EMISSION.01/canonical_topology.json",
+      "target_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/canonical_topology.json",
+      "source_stream": "41X.CANONICAL.TOPOLOGY.JSON.EMISSION.01",
+      "purpose": "Authoritative machine-readable 41.1 semantic topology. 17 domains, 42 capabilities, 89 components, 148 total nodes. Generated from scripts/pios/41.1/build_semantic_layer.py. Intended consumer: GAUGE topology renderer and PSEE pipeline. Distinct from vault canonical_topology.json which has 13 structural groups.",
+      "sha256": "237c80e421e246f1fc42b2688ded63e15d6180bfc7430776d6f452f999e167cf",
+      "status": "COPIED"
+    },
+    {
+      "artifact_id": "SEM-007",
+      "artifact_type": "graph_state",
+      "source_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/tier2/graph_state.json",
+      "target_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/graph/graph_state.json",
+      "source_stream": "PI.LENS.BLUEEDGE-CANONICAL-REPORT-PATHS.01 (canonical run)",
+      "purpose": "Force-directed graph state for tier2 diagnostic structural topology visualization. 18 nodes, 17 links, 458 simulation ticks. Generated by export_graph_state.mjs. Required by lens_tier2_diagnostic_narrative.html section 01C.",
+      "sha256": "d3ae706374c69842a311382eaa9c3afdca24984869a26d48aff3d738e1dd7c00",
+      "status": "COPIED"
+    },
+    {
+      "artifact_id": "SEM-008",
+      "artifact_type": "tier1_language_alignment_validation",
+      "source_path": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER1-NARRATIVE-FINAL-ALIGNMENT.01/validation_log.json",
+      "target_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/tier1/validation_log.json",
+      "source_stream": "PI.CLIENT-LANGUAGE-LAYER.TIER1-NARRATIVE-FINAL-ALIGNMENT.01",
+      "purpose": "10-check validation log for tier1 narrative language alignment. Defines acceptance criteria for canonical tier1 output: zone_count, phrasing, scope qualifiers, DOM anchor. All 10 checks PASS.",
+      "sha256": "d7e4d1e852d6c8a86d4760a2a9b2725b3a31177650f1c5240bc6a5cf8d4ccf51",
+      "status": "COPIED"
+    },
+    {
+      "artifact_id": "SEM-009",
+      "artifact_type": "tier2_fixup_generation_result",
+      "source_path": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER2-DIAGNOSTIC-FIXUP.01/tier2_fixup_generation_result.json",
+      "target_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/tier2/tier2_fixup_generation_result.json",
+      "source_stream": "PI.CLIENT-LANGUAGE-LAYER.TIER2-DIAGNOSTIC-FIXUP.01",
+      "purpose": "Records exact CLI command, inputs, and outputs for canonical tier2 diagnostic generation. Confirms semantic topology LOADED (17 domains) and crosswalk LOADED. Zone label: Platform Infrastructure and Data via crosswalk.",
+      "sha256": "7181a399e904ba84bc5fae744a8c2311bdc76757dc2c71b22ac588e0448b3401",
+      "status": "COPIED"
+    },
+    {
+      "artifact_id": "SEM-010",
+      "artifact_type": "tier2_semantic_validation",
+      "source_path": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER2-DIAGNOSTIC-FIXUP.01/validation_log.json",
+      "target_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/tier2/validation_log.json",
+      "source_stream": "PI.CLIENT-LANGUAGE-LAYER.TIER2-DIAGNOSTIC-FIXUP.01",
+      "purpose": "Semantic validation checks for tier2 diagnostic output: domain-first zone labeling, capability label normalization, structural graph export correctness.",
+      "sha256": "c04e3e8e384b34e3a59360dfc505864f8cfe505438845c9ff5e2e5c0915c5d0d",
+      "status": "COPIED"
+    },
+    {
+      "artifact_id": "SEM-011",
+      "artifact_type": "decision_fixup_generation_result",
+      "source_path": "docs/psee/PI.DECISION-SURFACE.RECONSTRUCTION.01/decision_fixup_generation_result.json",
+      "target_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/decision/decision_fixup_generation_result.json",
+      "source_stream": "PI.DECISION-SURFACE.RECONSTRUCTION.01",
+      "purpose": "Records exact CLI command and inputs for canonical decision surface generation. Confirms package_dir, crosswalk, semantic-topology-dir, and run-id used.",
+      "sha256": "0e72f130097500664eb9a0964b4248b6f31d35778bb2e1237e987638dc83f9f1",
+      "status": "COPIED"
+    },
+    {
+      "artifact_id": "SEM-012",
+      "artifact_type": "decision_surface_validation",
+      "source_path": "docs/psee/PI.DECISION-SURFACE.RECONSTRUCTION.01/decision_validation.json",
+      "target_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/decision/decision_validation.json",
+      "source_stream": "PI.DECISION-SURFACE.RECONSTRUCTION.01",
+      "purpose": "Validation checks for canonical decision surface: posture language, structural rationale, evidence boundary, gap items. Defines acceptance criteria.",
+      "sha256": "99beee723bbbfca5c6dafbf223c7a4c86d795b6c5d93062dfb4c5384d61ee37a",
+      "status": "COPIED"
+    },
+    {
+      "artifact_id": "SEM-013",
+      "artifact_type": "decision_cross_report_alignment",
+      "source_path": "docs/psee/PI.DECISION-SURFACE.RECONSTRUCTION.01/decision_cross_report_alignment.json",
+      "target_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/decision/decision_cross_report_alignment.json",
+      "source_stream": "PI.DECISION-SURFACE.RECONSTRUCTION.01",
+      "purpose": "Cross-report alignment record: confirms decision surface posture, gauge score, zone label, and structural claims are consistent with tier1 and tier2 outputs.",
+      "sha256": "e079cbd788ef36378aee8c0833f68a464374bbeb9f36efcddcfeba33047a4b00",
+      "status": "COPIED"
+    },
+    {
+      "artifact_id": "SEM-014",
+      "artifact_type": "reproducibility_verdict",
+      "source_path": "docs/psee/PI.LENS.END-TO-END-RERUN.BLUEEDGE.01/reproducibility_verdict.json",
+      "target_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/report_inputs/reproducibility_verdict.json",
+      "source_stream": "PI.LENS.END-TO-END-RERUN.BLUEEDGE.01",
+      "purpose": "End-to-end reproducibility verdict from 2026-04-30 rerun. Confirms FULL_REPRODUCIBILITY when semantic context files are present: non_runid_diffs=0, graph_state MD5 identical.",
+      "sha256": "8bac64382718644be265ce218752cc926151a064fcea7bf6b1118824bac700f3",
+      "status": "COPIED"
+    },
+    {
+      "artifact_id": "SEM-015",
+      "artifact_type": "semantic_validation_rules",
+      "source_path": "docs/psee/SEMANTIC.SIGNAL.MODEL.DEFINITION.01/semantic_validation_rules.md",
+      "target_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/validation/semantic_validation_rules.md",
+      "source_stream": "SEMANTIC.SIGNAL.MODEL.DEFINITION.01",
+      "purpose": "Complete validation ruleset for semantic model: V-COMP (completeness), V-STRUCT (structural integrity), V-EVID (evidence integrity), V-SIG (signal consistency), V-LAYER (inter-layer compatibility). Defines pass/fail criteria for semantic artifact acceptance.",
+      "sha256": "dac479f037d406b8a7013fc866e7517b86cdf22c728c2d4f264713b3df9efc7e",
+      "status": "COPIED"
+    },
+    {
+      "artifact_id": "SEM-016",
+      "artifact_type": "signal_derivation_rules",
+      "source_path": "docs/psee/SEMANTIC.SIGNAL.MODEL.DEFINITION.01/signal_derivation_rules.md",
+      "target_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/validation/signal_derivation_rules.md",
+      "source_stream": "SEMANTIC.SIGNAL.MODEL.DEFINITION.01",
+      "purpose": "Signal derivation rules governing how semantic signals are computed from structural evidence. Defines the ruleset that produces PSIG-001 through PSIG-006 from the semantic topology.",
+      "sha256": "3ae002b422ace5f070b7577c1d237ffc7358432a0a44d23148628aae30fa3eb5",
+      "status": "COPIED"
+    }
+  ],
+
+  "missing_artifacts": [
+    {
+      "artifact_id": "SEM-004",
+      "artifact_type": "semantic_topology_model",
+      "expected_path": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.SEMANTIC-TOPOLOGY-REBUILD.01/semantic_topology_model.json",
+      "reason": "Directory PI.CLIENT-LANGUAGE-LAYER.SEMANTIC-TOPOLOGY-REBUILD.01 was never committed to repository. File was present at runtime 2026-04-30 (confirmed by execution_report.md preflight) but lost. Required by lens_report_generator.py --semantic-topology-dir for semantic count cards and SVG.",
+      "blocking": true
+    },
+    {
+      "artifact_id": "SEM-005",
+      "artifact_type": "semantic_topology_layout",
+      "expected_path": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.SEMANTIC-TOPOLOGY-REBUILD.01/semantic_topology_layout.json",
+      "reason": "Same as SEM-004. Layout file required alongside model. Never committed.",
+      "blocking": true
+    }
+  ],
+
+  "canonical_reports": [
+    {
+      "report_type": "TIER1_NARRATIVE",
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/tier1/lens_tier1_narrative_brief.html",
+      "sha256": "f60134881b2362a5857fc113cf4acde5a4e3513e5864f70b9cab1342e6014511"
+    },
+    {
+      "report_type": "TIER1_EVIDENCE",
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/tier1/lens_tier1_evidence_brief.html",
+      "sha256": "84e3d8800ee4c14ac5e19899d064307bcef676622c54cafcbf3ddea0321680ab"
+    },
+    {
+      "report_type": "TIER2_DIAGNOSTIC",
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/tier2/lens_tier2_diagnostic_narrative.html",
+      "sha256": "2a69bc0ea65515850da0d63a4392f3bc28abc8fe11d76f65648c42244d3c70fd"
+    },
+    {
+      "report_type": "DECISION_SURFACE",
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/decision/lens_decision_surface.html",
+      "sha256": "36886d0841fdcfc2143d7016d619cafbfcb6b69c660e11c3116be6a78cf2bc06"
+    }
+  ],
+
+  "validation_status": "PARTIAL",
+  "validation_note": "14 of 16 expected semantic artifacts copied. 2 MISSING: semantic_topology_model.json and semantic_topology_layout.json (never committed to repository). Bundle is structurally complete except for these two files. Full report reproducibility requires their recovery."
+}

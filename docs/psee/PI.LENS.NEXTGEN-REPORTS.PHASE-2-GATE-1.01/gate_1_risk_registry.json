@@ -1,0 +1,140 @@
+{
+  "schema_version": "1.0",
+  "gate": "PI.LENS.NEXTGEN-REPORTS.PHASE-2-GATE-1.01",
+  "inspection_date": "2026-05-09",
+  "registry_scope": "Experiential realization and workspace evolution risks",
+
+  "risks": [
+
+    {
+      "risk_id": "R-GOV-01",
+      "domain": "governance_drift",
+      "name": "Governance Drift During Experiential Evolution",
+      "severity": "HIGH",
+      "probability": "LOW",
+      "description": "Risk that as cinematic rendering and visual tokens are applied, the governance constraints (qualifier visibility, blocked state, determinism) erode through incremental exceptions.",
+      "mitigation": "All experiential realization contracts must explicitly reference and enforce VIS-QUAL-02, VIS-BLOCK-01/02, VIS-DIAG-01. Gate-1 constraints must be repeated as non-negotiable bounds in all downstream contracts.",
+      "escalation_trigger": "Any experiential contract that does not explicitly affirm qualifier-chip persistence and blocked-state non-degradation.",
+      "current_state": "NOT_TRIGGERED"
+    },
+
+    {
+      "risk_id": "R-AI-01",
+      "domain": "AI_contamination",
+      "name": "AI Contamination in Experiential Layer",
+      "severity": "HIGH",
+      "probability": "LOW",
+      "description": "Risk that experiential realization introduces AI-generated content, live inference, or chatbot surfaces as part of 'intelligence enhancement'.",
+      "mitigation": "Explicit contract prohibition on AI generation in all experiential and workspace contracts. AI interaction remains in a separate agentic governance layer (PI.AGENTIC.* streams) and must not bleed into the rendering substrate.",
+      "escalation_trigger": "Any contract that includes 'AI', 'generate', 'inference', 'prompt', or 'chat' without explicit boundary definition.",
+      "current_state": "NOT_TRIGGERED"
+    },
+
+    {
+      "risk_id": "R-TOPO-01",
+      "domain": "topology_contamination",
+      "name": "Topology Mutation via Interactive Features",
+      "severity": "HIGH",
+      "probability": "LOW-MEDIUM",
+      "description": "Risk that workspace evolution introduces topology editing affordances (drag-to-rearrange, flag-domain interactions) that violate VIS-TOPO-01 (read-only enforcement).",
+      "mitigation": "Interactive topology is explicitly FORBIDDEN in Phase-2 and conditionally gated for Phase-3. Any topology interaction requires a new governing contract with explicit read-only enforcement clauses.",
+      "escalation_trigger": "Any workspace evolution contract that includes topology interaction without a governing contract reference.",
+      "current_state": "NOT_TRIGGERED"
+    },
+
+    {
+      "risk_id": "R-QUAL-01",
+      "domain": "qualifier_suppression",
+      "name": "Qualifier Chip Suppression During Styling",
+      "severity": "MEDIUM",
+      "probability": "LOW-MEDIUM",
+      "description": "Risk that during design token application and visual refinement, qualifier chips are hidden or de-emphasized to simplify the executive header for aesthetic reasons. VIS-QUAL-02 forbids this.",
+      "mitigation": "Qualifier chip visibility (Q-01..Q-03) and Q-04 absence notice must be included in the acceptance criteria of every experiential realization contract. Non-suppressibility is non-negotiable.",
+      "escalation_trigger": "Any visual token application contract that does not explicitly affirm qualifier chip persistence and Q-04 absence notice rendering.",
+      "current_state": "NOT_TRIGGERED"
+    },
+
+    {
+      "risk_id": "R-EXP-01",
+      "domain": "experiential_over_activation",
+      "name": "Animated Propagation Flow / Graph Gimmick",
+      "severity": "MEDIUM",
+      "probability": "MEDIUM",
+      "description": "Risk that cinematic rendering introduces animated edge flows or graph weight visualizations for propagation paths. VIS-PROP-02 forbids animation for propagation flow. Risk is medium probability because graph animation is a common experiential impulse.",
+      "mitigation": "Propagation chain rendering must remain static paths with visual weight indicators. No animated edges. No edge weight visualizations. Motion semantics apply only to panel transitions and evidence reveals, not to propagation path rendering.",
+      "escalation_trigger": "Any contract that describes propagation path animation, animated flow arrows, or edge weight visualization.",
+      "current_state": "NOT_TRIGGERED"
+    },
+
+    {
+      "risk_id": "R-UX-01",
+      "domain": "executive_UX_overload",
+      "name": "Cognitive Overload from Experiential Density",
+      "severity": "MEDIUM",
+      "probability": "LOW",
+      "description": "Risk that cinematic rendering introduces too many simultaneous visual layers (motion, reveal, typography, evidence reveal) that undermine executive readability at EXECUTIVE_BALANCED density.",
+      "mitigation": "Density controller must gate experiential intensity. EXECUTIVE_BALANCED density must receive restrained experiential treatment. EXECUTIVE_DENSE allows richer reveals. Motion should enhance comprehension, not overwhelm.",
+      "escalation_trigger": "Experiential contract that applies identical animation/motion intensity across all density classes.",
+      "current_state": "NOT_TRIGGERED"
+    },
+
+    {
+      "risk_id": "R-GRAPH-01",
+      "domain": "graph_gimmick_risk",
+      "name": "Decorative Graph Overload",
+      "severity": "MEDIUM",
+      "probability": "MEDIUM",
+      "description": "Risk that propagation explainability is evolved into a consumer-grade animated dependency graph rather than an evidence-linked structural propagation surface. The visual_semantics_registry.json phase_2_restrictions explicitly prohibit decorative graph overload.",
+      "mitigation": "Propagation chain rendering uses ordered domain alias sequences with structural role indicators. No node-edge graph libraries. No animated layout algorithms. Direction is structural, not temporal.",
+      "escalation_trigger": "Any contract that introduces a graph rendering library (d3, cytoscape, etc.) into the propagation explainability surface without a formal governing contract.",
+      "current_state": "NOT_TRIGGERED"
+    },
+
+    {
+      "risk_id": "R-CHAT-01",
+      "domain": "chatbot_drift_risk",
+      "name": "Chatbot Drift via Investigation Features",
+      "severity": "HIGH",
+      "probability": "LOW",
+      "description": "Risk that guided investigation features evolve toward prompt-first chatbot UX as workspace evolution progresses. The agentic executive copilot streams (PI.AGENTIC.EXECUTIVE-COPILOT.FOUNDATION.01) must remain fully decoupled from the rendering substrate.",
+      "mitigation": "Investigation entry points must remain read-only navigation affordances. Prompt interaction must not exist in Phase-2 or experiential realization. Any prompt-capable surface requires a dedicated agentic contract with explicit isolation boundaries.",
+      "escalation_trigger": "Any contract that introduces a text input field or conversational interface into the rendering surface layer.",
+      "current_state": "NOT_TRIGGERED"
+    },
+
+    {
+      "risk_id": "R-SEM-01",
+      "domain": "semantic_dilution_risk",
+      "name": "Semantic Dilution via Custom Labels",
+      "severity": "MEDIUM",
+      "probability": "LOW",
+      "description": "Risk that experiential realization introduces custom labels, supplementary text, or editorial overlays that dilute the governance-derived vocabulary (ALI-03, ALI-04, Q-taxonomy, pressure tier labels).",
+      "mitigation": "All display labels must continue to derive from governed vocabulary mappings. No custom label injection outside the vocabulary contract and visual semantics registry.",
+      "escalation_trigger": "Any experiential contract that proposes client-configurable label text outside the ALI-taxonomy system.",
+      "current_state": "NOT_TRIGGERED"
+    },
+
+    {
+      "risk_id": "R-WS-01",
+      "domain": "workspace_premature_evolution_risk",
+      "name": "Workspace Persistence Without Governing Contract",
+      "severity": "MEDIUM",
+      "probability": "LOW-MEDIUM",
+      "description": "Risk that workspace persistence (saved views, investigation state, user-configured density) is introduced without a governing contract defining the data model, mutability rules, and evidence-link preservation requirements.",
+      "mitigation": "Workspace persistence requires a new formal contract before activation. Until issued, workspace interactions are display-only with no persisted state.",
+      "escalation_trigger": "Any implementation that writes user state to localStorage, sessionStorage, or a backend without a governing persistence contract.",
+      "current_state": "NOT_TRIGGERED"
+    }
+
+  ],
+
+  "risk_summary": {
+    "total_risks": 10,
+    "high_severity": 3,
+    "medium_severity": 6,
+    "low_severity": 1,
+    "triggered": 0,
+    "not_triggered": 10,
+    "overall_risk_level": "MANAGED"
+  }
+}

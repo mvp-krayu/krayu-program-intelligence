@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Signals — Evidence Vault</title>
+<style>:root{--bg:#0a0a0a;--bg1:#111114;--bg2:#1a1a1e;--border:#222228;--text:#c4c4c4;--muted:#666;--dim:#555;--accent:#5a9fd4;--strong:#e0e0e0}*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:"Courier New",monospace;font-size:13px;line-height:1.75;padding:2.5rem 2rem}.w{max-width:860px;margin:0 auto}.nav{margin-bottom:2rem;font-size:.78rem}.nav a{color:var(--muted);text-decoration:none;letter-spacing:.04em}.nav a:hover{color:var(--accent)}.meta{background:var(--bg1);border:1px solid var(--border);border-left:2px solid #253040;padding:1rem 1.25rem;margin-bottom:2rem;font-size:.78rem}.mrow{display:flex;gap:.75rem;margin-bottom:.3rem}.mrow:last-child{margin-bottom:0}.mk{color:var(--muted);min-width:140px;flex-shrink:0;letter-spacing:.02em}.mv{color:#b0b0b0}.content h1{color:var(--strong);font-size:.95rem;margin:1.5rem 0 .6rem;letter-spacing:.02em}.content h2{color:#aaa;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #1e1e24;padding-bottom:.35rem;margin:2rem 0 .75rem}.content h3{color:#888;font-size:.82rem;margin:1.25rem 0 .45rem;letter-spacing:.02em}.content p{margin:.7rem 0;line-height:1.75}.content a{color:var(--accent);text-decoration:none}.content a:hover{text-decoration:underline}.content code{background:var(--bg2);border:1px solid var(--border);padding:.1rem .3rem;font-size:.82em;color:#9ab}.content pre{background:var(--bg1);border:1px solid var(--border);border-left:2px solid #253040;padding:.9rem 1rem;overflow-x:auto;margin:1rem 0}.content pre code{background:none;border:none;padding:0;color:#aab}.content table{border-collapse:collapse;width:100%;margin:.9rem 0;font-size:.82rem}.content th,.content td{border:1px solid var(--border);padding:.4rem .7rem;text-align:left}.content th{background:var(--bg1);color:var(--muted);font-size:.72rem;letter-spacing:.07em;text-transform:uppercase}.content ul{padding-left:1.25rem;margin:.7rem 0}.content li{margin-bottom:.35rem}.content strong{color:var(--strong)}.footer{margin-top:3rem;padding-top:.85rem;border-top:1px solid var(--border);font-size:.72rem;color:var(--dim);letter-spacing:.03em}.footer .lbl{color:#a03030}</style>
+</head>
+<body>
+<div class="w">
+<div class="nav"><a href="/tier2/workspace">← Diagnostic Workspace</a></div>
+<div class="meta"><div class="mrow"><span class="mk">node_class</span><span class="mv">entity</span></div><div class="mrow"><span class="mk">entity_id</span><span class="mv">ENT-signals</span></div><div class="mrow"><span class="mk">entity_label</span><span class="mv">Signals</span></div></div>
+<div class="content"><h1>Entity: Signals</h1>
+
+<h2>Definition</h2>
+
+<p>Intelligence signals are forward-looking findings derived from the four-layer evidence chain: condition → diagnosis → intelligence → signal. Each signal has a classified evidence confidence level.</p>
+
+<h2>Registry</h2>
+
+<p>0 signals. Distribution: .</p>
+
+<table>
+<tr><th>signal</th><th>title</th><th>confidence</th></tr>
+</table>
+
+
+<h2>Exposure Policy</h2>
+
+<table>
+<tr><th>field</th><th>ZONE-1</th><th>ZONE-2</th><th>ZONE-3</th></tr>
+<tr><td>title</td><td>YES</td><td>YES</td><td>YES</td></tr>
+<tr><td>statement</td><td>YES</td><td>NO</td><td>YES</td></tr>
+<tr><td>business_impact</td><td>YES</td><td>YES</td><td>YES</td></tr>
+<tr><td>risk</td><td>YES</td><td>YES</td><td>YES</td></tr>
+<tr><td>evidence_confidence</td><td>YES</td><td>YES</td><td>YES</td></tr>
+<tr><td>confidence_rationale</td><td>YES</td><td>NO</td><td>YES</td></tr>
+<tr><td>source_refs</td><td>YES</td><td>NO</td><td>YES</td></tr>
+</table>
+
+<p><strong>Note:</strong> <code>business_impact</code> and <code>risk</code> fields are ZONE-2 safe but not currently rendered in GAUGE UI — unrendered product value gap.</p>
+
+<h2>Source Artifact</h2>
+
+<p><a href="../artifacts/ART-05.html">ART-05 signal_registry.json</a></p>
+
+<h2>Related Claims</h2>
+
+<p><a href="../claims/CLM-18.html">CLM-18 Governed Signal Count</a> <a href="../claims/CLM-19.html">CLM-19 Signal Evidence Quality Distribution</a> <a href="../claims/CLM-20.html">CLM-20 SIG-001 Sensor Bridge Throughput</a> <a href="../claims/CLM-21.html">CLM-21 SIG-002 Platform Runtime State Seven Unknown Dimensions</a> <a href="../claims/CLM-22.html">CLM-22 SIG-003 Dependency Load 68 Percent</a> <a href="../claims/CLM-23.html">CLM-23 SIG-004 Structural Volatility Edge Density</a> <a href="../claims/CLM-24.html">CLM-24 SIG-005 Coordination Pressure Partial</a></p></div>
+<div class="footer"><span class="lbl">inference_prohibition</span> ACTIVE &mdash; Evidence Vault V3 &mdash; READ-ONLY projection</div>
+</div>
+</body>
+</html>

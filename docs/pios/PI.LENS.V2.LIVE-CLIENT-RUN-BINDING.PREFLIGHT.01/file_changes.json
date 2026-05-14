@@ -1,0 +1,20 @@
+{
+  "stream": "PI.LENS.V2.LIVE-CLIENT-RUN-BINDING.PREFLIGHT.01",
+  "branch": "work/lens-v2-productization",
+  "created": [
+    "docs/psee/PI.LENS.V2.LIVE-CLIENT-RUN-BINDING.PREFLIGHT.01/LIVE_CLIENT_RUN_BINDING_PREFLIGHT.md",
+    "docs/psee/PI.LENS.V2.LIVE-CLIENT-RUN-BINDING.PREFLIGHT.01/client_run_candidate_inventory.json",
+    "docs/psee/PI.LENS.V2.LIVE-CLIENT-RUN-BINDING.PREFLIGHT.01/semantic_hydration_mapping_matrix.md",
+    "docs/psee/PI.LENS.V2.LIVE-CLIENT-RUN-BINDING.PREFLIGHT.01/fixture_dependency_audit.json",
+    "docs/psee/PI.LENS.V2.LIVE-CLIENT-RUN-BINDING.PREFLIGHT.01/LIVE_CLIENT_RUN_BINDING_PREFLIGHT_VALIDATION.md",
+    "docs/pios/PI.LENS.V2.LIVE-CLIENT-RUN-BINDING.PREFLIGHT.01/execution_report.md",
+    "docs/pios/PI.LENS.V2.LIVE-CLIENT-RUN-BINDING.PREFLIGHT.01/file_changes.json",
+    "docs/pios/PI.LENS.V2.LIVE-CLIENT-RUN-BINDING.PREFLIGHT.01/CLOSURE.md"
+  ],
+  "modified": [],
+  "deleted": [],
+  "validators_changed": [],
+  "code_paths_touched": [],
+  "runtime_impact": "NONE — INSPECTION_ONLY preflight. No runtime UI modified. No pipeline artifact modified. No vault file mutated. No new API endpoints implemented. No live binding wired. The LENS V2 surface continues to render from the in-memory fixture flagship_real_report.fixture.js as before this stream.",
+  "notes": "Documentation-only stream. 5 contract-mandated deliverables under docs/psee/PI.LENS.V2.LIVE-CLIENT-RUN-BINDING.PREFLIGHT.01/ + 3 governance pack files under docs/pios/PI.LENS.V2.LIVE-CLIENT-RUN-BINDING.PREFLIGHT.01/. Recommendation: the next implementation contract should bind LENS V2 to clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/ — the canonical replay fixture per pipeline_execution_manifest.json."
+}

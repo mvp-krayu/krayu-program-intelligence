@@ -3837,6 +3837,23 @@ def cmd_ig_integrate_structural_layers(args: argparse.Namespace) -> None:
 
 
 # ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# Vault export
+# ---------------------------------------------------------------------------
+
+def cmd_vault_export(args: argparse.Namespace) -> None:
+    _configure_logging(args.debug)
+    script = os.path.join(os.path.dirname(__file__), "vault_export.py")
+    cmd = [sys.executable, script, "--client", args.client, "--run", args.run]
+    if args.debug:
+        cmd.append("--debug")
+    _log(f"vault export: client={args.client} run={args.run}")
+    result = subprocess.run(cmd)
+    if result.returncode != 0:
+        _fail("vault export failed")
+
+
+# ---------------------------------------------------------------------------
 # Argument parser
 # ---------------------------------------------------------------------------
 
@@ -4413,6 +4430,31 @@ def _build_parser() -> argparse.ArgumentParser:
         "duplicates_collapsed, determinism_hash, output dir, each artifact write confirmation."
     ))
     sn.set_defaults(func=cmd_structural_normalize)
+
+    # --- vault ---
+    vault_parser = subparsers.add_parser(
+        "vault",
+        help="Vault operations",
+        description="Evidence Vault export and index operations.",
+    )
+    vault_sub = vault_parser.add_subparsers(dest="subcommand", metavar="SUBCOMMAND")
+    vault_sub.required = True
+
+    ve = vault_sub.add_parser(
+        "export",
+        help="Export Evidence Vault V3 to static HTML + vault_index.json",
+        description=(
+            "Convert Evidence Vault V3 markdown to static HTML and produce vault_index.json.\n\n"
+            "Reads from: clients/<client>/vaults/<run>/\n"
+            "Writes to:  app/gauge-product/public/vault/<client>/<run>/\n\n"
+            "Authority: PRODUCTIZE.GAUGE.CLIENT.VAULT.EXPORT.IMPLEMENT.01"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    ve.add_argument("--client", required=True, help="Client identifier (e.g. blueedge)")
+    ve.add_argument("--run",    required=True, help="Vault run directory name (e.g. run_01_authoritative_generated)")
+    ve.add_argument("--debug",  action="store_true")
+    ve.set_defaults(func=cmd_vault_export)
 
     return parser
 

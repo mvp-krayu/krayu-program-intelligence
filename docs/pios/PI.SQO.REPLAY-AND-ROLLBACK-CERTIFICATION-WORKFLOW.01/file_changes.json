@@ -1,0 +1,78 @@
+{
+  "stream": "PI.SQO.REPLAY-AND-ROLLBACK-CERTIFICATION-WORKFLOW.01",
+  "phase": "O1",
+  "date": "2026-05-11",
+  "total_files": 14,
+  "changes": [
+    {
+      "file": "docs/pios/PI.SQO.REPLAY-AND-ROLLBACK-CERTIFICATION-WORKFLOW.01/REPLAY_CERTIFICATION_WORKFLOW.md",
+      "action": "CREATE",
+      "purpose": "6-phase replay certification pipeline with double-replay verification"
+    },
+    {
+      "file": "docs/pios/PI.SQO.REPLAY-AND-ROLLBACK-CERTIFICATION-WORKFLOW.01/ROLLBACK_CERTIFICATION_WORKFLOW.md",
+      "action": "CREATE",
+      "purpose": "5-phase rollback certification pipeline with combined certification gate"
+    },
+    {
+      "file": "docs/pios/PI.SQO.REPLAY-AND-ROLLBACK-CERTIFICATION-WORKFLOW.01/REPLAY_AND_ROLLBACK_RECONSTRUCTION_MODEL.md",
+      "action": "CREATE",
+      "purpose": "5 reconstruction primitives, 8 determinism invariants, shared reconstruction model"
+    },
+    {
+      "file": "docs/pios/PI.SQO.REPLAY-AND-ROLLBACK-CERTIFICATION-WORKFLOW.01/DIVERGENCE_AND_AMBIGUITY_DETECTION.md",
+      "action": "CREATE",
+      "purpose": "4 divergence types, 5 ambiguity types, 7 root cause categories, investigation protocol"
+    },
+    {
+      "file": "docs/pios/PI.SQO.REPLAY-AND-ROLLBACK-CERTIFICATION-WORKFLOW.01/CERTIFICATION_EVIDENCE_MODEL.md",
+      "action": "CREATE",
+      "purpose": "6 certification evidence types, evidence lifecycle, L5 lineage"
+    },
+    {
+      "file": "docs/pios/PI.SQO.REPLAY-AND-ROLLBACK-CERTIFICATION-WORKFLOW.01/AUTHORITY_AND_PUBLICATION_ELIGIBILITY.md",
+      "action": "CREATE",
+      "purpose": "8 authority promotion prerequisites, 6 publication prerequisites, S-state interaction"
+    },
+    {
+      "file": "docs/pios/PI.SQO.REPLAY-AND-ROLLBACK-CERTIFICATION-WORKFLOW.01/CERTIFICATION_REJECTION_AND_QUARANTINE.md",
+      "action": "CREATE",
+      "purpose": "8 rejection types, 4 quarantine types, investigation protocol, re-certification limits"
+    },
+    {
+      "file": "docs/pios/PI.SQO.REPLAY-AND-ROLLBACK-CERTIFICATION-WORKFLOW.01/GOVERNANCE_ZONE_INTEGRATION.md",
+      "action": "CREATE",
+      "purpose": "Zone-phase interaction for certification, promotion, publication, mid-certification transitions"
+    },
+    {
+      "file": "docs/pios/PI.SQO.REPLAY-AND-ROLLBACK-CERTIFICATION-WORKFLOW.01/OPERATOR_AND_CERTIFICATION_RESPONSIBILITY_MODEL.md",
+      "action": "CREATE",
+      "purpose": "4 authority domains, 14 decisions, 12 automatable + 8 human-required + 4 semi-automated"
+    },
+    {
+      "file": "docs/pios/PI.SQO.REPLAY-AND-ROLLBACK-CERTIFICATION-WORKFLOW.01/CERTIFICATION_OBSERVABILITY_MODEL.md",
+      "action": "CREATE",
+      "purpose": "8 observability dimensions, 26 event types, 4-level health, governance dashboard"
+    },
+    {
+      "file": "docs/pios/PI.SQO.REPLAY-AND-ROLLBACK-CERTIFICATION-WORKFLOW.01/PATH_BOUNDARY_VALIDATION.md",
+      "action": "CREATE",
+      "purpose": "9-point path boundary compliance, NOT PATH A/B/LENS confirmation"
+    },
+    {
+      "file": "docs/pios/PI.SQO.REPLAY-AND-ROLLBACK-CERTIFICATION-WORKFLOW.01/execution_report.md",
+      "action": "CREATE",
+      "purpose": "Execution report with pre-flight, steps, artifacts, governance confirmation"
+    },
+    {
+      "file": "docs/pios/PI.SQO.REPLAY-AND-ROLLBACK-CERTIFICATION-WORKFLOW.01/file_changes.json",
+      "action": "CREATE",
+      "purpose": "File change manifest for stream"
+    },
+    {
+      "file": "docs/pios/PI.SQO.REPLAY-AND-ROLLBACK-CERTIFICATION-WORKFLOW.01/CLOSURE.md",
+      "action": "CREATE",
+      "purpose": "Stream closure with mandatory 9-section format"
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "stream_id": "PI.LENS.V2.Q02-AND-IP-GOVERNANCE-CLEANUP.01",
+  "branch": "work/lens-v2-productization",
+  "baseline_commit": "134f224",
+  "amendment_anchor": "docs/governance/Q02_GOVERNANCE_AMENDMENT.md",
+  "summary": {
+    "files_created": 17,
+    "files_modified": 4,
+    "files_deleted": 0
+  },
+  "files": [
+    {
+      "path": "docs/governance/Q02_GOVERNANCE_AMENDMENT.md",
+      "change": "created",
+      "purpose": "Q-class governance amendment (LOCKED, AUTHORITATIVE) — formal four-class qualifier model"
+    },
+    {
+      "path": "docs/governance/q02_governance_matrix.json",
+      "change": "created",
+      "purpose": "Machine-readable Q-class matrix and resolution rule"
+    },
+    {
+      "path": "docs/governance/runtime/rendering_metadata.schema.json",
+      "change": "created",
+      "purpose": "JSON schema for the per-run rendering_metadata vault artifact (LOCKED)"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/QClassResolver.js",
+      "change": "created",
+      "purpose": "Pure four-class Q-XX resolver (Q-01..Q-04) implementing Q02-RES-RULE-01"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/RenderingMetadataSchema.js",
+      "change": "created",
+      "purpose": "JS validator + builder for the rendering_metadata schema"
+    },
+    {
+      "path": "scripts/pios/PI.LENS.V2.Q02-AND-IP-GOVERNANCE-CLEANUP.01/emit_rendering_metadata.js",
+      "change": "created",
+      "purpose": "Replay-safe additive vault writer for rendering_metadata.json"
+    },
+    {
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/vault/rendering_metadata.json",
+      "change": "created",
+      "purpose": "First emission of the rendering_metadata vault artifact (Q-02, ENFORCED, replay-safe)"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/SemanticActorHydrator.js",
+      "change": "modified",
+      "purpose": "Routed qualifier derivation through QClassResolver; IP actor hydrated from rendering_metadata"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/BlueEdgePayloadResolver.js",
+      "change": "modified",
+      "purpose": "Read rendering_metadata; emit Q-02 governance class via qualifier_summary while preserving legacy compat top-level"
+    },
+    {
+      "path": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "change": "modified",
+      "purpose": "Live banner shows INFERENCE PROHIBITION: ENFORCED + QUALIFIER Q-02; QualifierMandate uses contract-mandated language; chip override propagates governance class to downstream components"
+    },
+    {
+      "path": "app/execlens-demo/flagship-experience/tests/live-binding.test.js",
+      "change": "modified",
+      "purpose": "Updated assertions for Q-02 governance class, IP HYDRATED, and resolved IP_RENDERING_METADATA gap"
+    },
+    {
+      "path": "app/execlens-demo/flagship-experience/tests/q02-and-ip.test.js",
+      "change": "created",
+      "purpose": "36-case Q02 + rendering_metadata + IP test suite"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.Q02-AND-IP-GOVERNANCE-CLEANUP.01/RENDERING_METADATA_IMPLEMENTATION.md",
+      "change": "created",
+      "purpose": "Implementation deliverable"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.Q02-AND-IP-GOVERNANCE-CLEANUP.01/Q02_AND_IP_VALIDATION.md",
+      "change": "created",
+      "purpose": "Validation deliverable (all 21 mandatory checks PASS)"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.Q02-AND-IP-GOVERNANCE-CLEANUP.01/screenshots/balanced_1440x900_q02.png",
+      "change": "created",
+      "purpose": "BALANCED mode visual evidence — active Q-02 + ENFORCED + hydrated IP"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.Q02-AND-IP-GOVERNANCE-CLEANUP.01/screenshots/dense_1440x900_q02.png",
+      "change": "created",
+      "purpose": "DENSE mode visual evidence"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.Q02-AND-IP-GOVERNANCE-CLEANUP.01/screenshots/investigation_1440x900_q02.png",
+      "change": "created",
+      "purpose": "INVESTIGATION mode visual evidence"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.Q02-AND-IP-GOVERNANCE-CLEANUP.01/screenshots/boardroom_1440x900_q02.png",
+      "change": "created",
+      "purpose": "BOARDROOM mode visual evidence"
+    },
+    {
+      "path": "docs/pios/PI.LENS.V2.Q02-AND-IP-GOVERNANCE-CLEANUP.01/execution_report.md",
+      "change": "created",
+      "purpose": "Governance execution report"
+    },
+    {
+      "path": "docs/pios/PI.LENS.V2.Q02-AND-IP-GOVERNANCE-CLEANUP.01/file_changes.json",
+      "change": "created",
+      "purpose": "Governance file-changes manifest"
+    },
+    {
+      "path": "docs/pios/PI.LENS.V2.Q02-AND-IP-GOVERNANCE-CLEANUP.01/CLOSURE.md",
+      "change": "created",
+      "purpose": "Governance closure document"
+    }
+  ],
+  "validators_changed": [],
+  "topology_mutations": [],
+  "evidence_mutations": [],
+  "lane_a_artifacts_touched": [],
+  "lane_d_dpsig_artifacts_touched": []
+}

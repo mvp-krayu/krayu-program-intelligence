@@ -1,0 +1,65 @@
+{
+  "contract_id": "PI.LENS.RENDERER-SEMANTIC-CONTEXT-APPLICATION-DIAG.01",
+  "generated_date": "2026-05-01",
+
+  "flags_parsed": true,
+  "files_loaded": true,
+  "context_propagated": true,
+  "context_used_in_render": false,
+
+  "breakpoint_type": "PROPAGATED_NOT_USED",
+
+  "breakpoint_locations": [
+    {
+      "site": "SITE-1",
+      "function": "_build_tier1_narrative_brief()",
+      "line": 3899,
+      "code": "zname = _z_sem_label or _z_anchor_name",
+      "problem": "Crosswalk not consulted as fallback. Falls back to raw anchor_name from pz_proj. Should call _resolve_domain_display_label(_z_anchor_id, _z_anchor_name) instead of _z_anchor_name.",
+      "rendered_value": "backend_app_root",
+      "canonical_value": "Platform Infrastructure and Data"
+    },
+    {
+      "site": "SITE-2",
+      "function": "_build_tier1_evidence_brief()",
+      "line": 3204,
+      "code": "_pz_display = _pz_sem_label or primary_zone.get('anchor_name', _pz_anchor_id)",
+      "problem": "Crosswalk not consulted as fallback. Same pattern as SITE-1.",
+      "rendered_value": "backend_app_root",
+      "canonical_value": "Platform Infrastructure and Data"
+    },
+    {
+      "site": "SITE-3",
+      "function": "_build_decision_surface()",
+      "line": "6744-6746",
+      "code": "_pz0_label = (_pz0_sem_ctx.get('business_label') if _pz0_sem_ctx.get('domain_id') else _pz0.get('anchor_name', _pz0_anchor))",
+      "problem": "Crosswalk not consulted as fallback. Same pattern as SITE-1.",
+      "rendered_value": "backend_app_root",
+      "canonical_value": "Platform Infrastructure and Data"
+    }
+  ],
+
+  "correctly_implemented_site": {
+    "site": "SITE-4",
+    "function": "_derive_tier2_zones_from_projection()",
+    "line": 4843,
+    "code": "_z_display_name = _z_sem_label or _resolve_domain_display_label(anchor_id, domain.get('domain_name', anchor_name))",
+    "status": "CORRECT — crosswalk IS consulted via _resolve_domain_display_label() fallback"
+  },
+
+  "secondary_blocker": {
+    "type": "MISSING_DATA",
+    "description": "semantic_topology_model.json and semantic_topology_layout.json do not exist in repository. Without these, _build_semantic_report_context() returns fallback_available=False and count cards render structural counts (13 Domains) instead of semantic counts (17 Semantic Domains / 5 Backed / 12 Semantic-Only). Crosswalk cannot substitute for topology model in this path.",
+    "affected_sites": ["SITE-5 — count cards in tier1_evidence", "_build_semantic_report_context() at all call sites", "SVG topology path selection"]
+  },
+
+  "crosswalk_state_at_render": {
+    "_SEMANTIC_CROSSWALK": "POPULATED when --crosswalk-path provided",
+    "_SEMANTIC_TOPOLOGY_MODEL": "None (files absent)",
+    "crosswalk_globally_accessible": true,
+    "crosswalk_reachable_via_resolve_domain_display_label": true,
+    "crosswalk_actually_called_at_breakpoint_sites": false
+  },
+
+  "explanation": "The crosswalk is correctly parsed, loaded, and stored in _SEMANTIC_CROSSWALK (a module-level global). It is accessible to all render functions. The function _resolve_domain_display_label() correctly uses the crosswalk as a fallback when the topology model is absent. However, the three primary zone-label render sites (tier1_narrative:3899, tier1_evidence:3204, decision_surface:6744-6746) use _resolve_dom_to_semantic_context() which only checks _SEMANTIC_TOPOLOGY_MODEL. When that function returns empty fields, they fall back directly to the raw anchor_name from the pressure_zone_projection — never calling _resolve_domain_display_label(). The crosswalk is propagated but not reached at these sites. The fix (not implemented here) is to replace the raw anchor_name fallback with a call to _resolve_domain_display_label() at each of the three breakpoint sites."
+}

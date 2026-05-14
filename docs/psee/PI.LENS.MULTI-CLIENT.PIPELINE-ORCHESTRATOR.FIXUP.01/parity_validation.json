@@ -1,0 +1,91 @@
+{
+  "contract_id": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.FIXUP.01",
+  "artifact": "parity_validation",
+  "block": "BLOCK_F",
+  "generated_date": "2026-05-01",
+
+  "status": "PARITY_PASS",
+
+  "canonical_baseline": {
+    "run_id": "run_blueedge_rerun_01",
+    "vault_source": "clients/blueedge/psee/runs/run_blueedge_productized_01/vault/"
+  },
+
+  "fixup_run": {
+    "run_id": "run_be_orchestrated_fixup_01",
+    "vault": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/",
+    "lens": "clients/blueedge/lens/runs/run_be_orchestrated_fixup_01/"
+  },
+
+  "signal_parity": [
+    {"signal_id": "PSIG-001", "canonical_value": 5.663, "fixup_value": 5.663, "canonical_state": "HIGH", "fixup_state": "HIGH", "value_match": true, "state_match": true},
+    {"signal_id": "PSIG-002", "canonical_value": 3.2098, "fixup_value": 3.2098, "canonical_state": "HIGH", "fixup_state": "HIGH", "value_match": true, "state_match": true},
+    {"signal_id": "PSIG-004", "canonical_value": 2.1822, "fixup_value": 2.1822, "canonical_state": "HIGH", "fixup_state": "HIGH", "value_match": true, "state_match": true},
+    {"signal_id": "PSIG-006", "canonical_value": 0, "fixup_value": 0, "canonical_state": "ACTIVATED", "fixup_state": "ACTIVATED", "canonical_method": "THEORETICAL_BASELINE", "fixup_method": "THEORETICAL_BASELINE", "value_match": true, "state_match": true, "classified_as_pressure_signal": false}
+  ],
+
+  "pressure_zone_parity": {
+    "canonical_zone_count": 1,
+    "fixup_zone_count": 1,
+    "match": true,
+    "canonical_zone_id": "PZ-001",
+    "fixup_zone_id": "PZ-001",
+    "canonical_anchor": "DOM-04",
+    "fixup_anchor": "DOM-04",
+    "canonical_zone_class": "COMPOUND_ZONE",
+    "fixup_zone_class": "COMPOUND_ZONE",
+    "zone_anchor_match": true,
+    "zone_class_match": true
+  },
+
+  "active_pressure_signals_parity": {
+    "canonical": 3,
+    "fixup": 3,
+    "match": true
+  },
+
+  "signals_not_activated_parity": {
+    "canonical": ["PSIG-003", "PSIG-005"],
+    "fixup": ["PSIG-003", "PSIG-005"],
+    "match": true
+  },
+
+  "score_parity": {
+    "canonical_score": 60,
+    "fixup_score": 60,
+    "canonical_band": "CONDITIONAL",
+    "fixup_band": "CONDITIONAL",
+    "canonical_posture": "INVESTIGATE",
+    "fixup_posture": "INVESTIGATE",
+    "match": true
+  },
+
+  "report_display_parity": {
+    "PSIG-001_displayed": "Fan-In Concentration (PSIG-001): HIGH — Statistically abnormal concentration — Value 5.663",
+    "PSIG-002_displayed": "Fan-Out Propagation (PSIG-002): HIGH — Statistically abnormal concentration — Value 3.2098",
+    "PSIG-004_displayed": "Responsibility Concentration (PSIG-004): HIGH — Statistically abnormal concentration — Value 2.1822",
+    "PSIG-006_displayed": "Structural Blind Spot (PSIG-006): BASELINE — theoretical baseline condition (not activated) — Value 0",
+    "primary_domain_displayed": "DOM-04 / backend_app_root",
+    "zone_label_displayed": "Primary Pressure Zone — Multiple structural pressures acting together (COMPOUND_ZONE)",
+    "score_displayed": "60 — CONDITIONAL",
+    "posture_displayed": "INVESTIGATE",
+    "all_match_canonical": true
+  },
+
+  "parity_check_table": [
+    {"check": "pressure_zone_count = 1", "result": "PASS"},
+    {"check": "pressure_zone_id = PZ-001", "result": "PASS"},
+    {"check": "DOM backing = DOM-04 / backend_app_root", "result": "PASS"},
+    {"check": "PSIG-001 = 5.663 HIGH", "result": "PASS"},
+    {"check": "PSIG-002 = 3.2098 HIGH", "result": "PASS"},
+    {"check": "PSIG-004 = 2.1822 HIGH", "result": "PASS"},
+    {"check": "PSIG-006 = BASELINE / THEORETICAL_BASELINE / not activated pressure signal", "result": "PASS"},
+    {"check": "score = 60", "result": "PASS"},
+    {"check": "band = CONDITIONAL / 60-100", "result": "PASS"},
+    {"check": "posture = INVESTIGATE", "result": "PASS"},
+    {"check": "no PZ-002/PZ-003", "result": "PASS"},
+    {"check": "no backend_common as primary label", "result": "PASS"},
+    {"check": "active_pressure_signals = 3", "result": "PASS"},
+    {"check": "PSIG-006 NOT counted in active_pressure_signals", "result": "PASS"}
+  ]
+}

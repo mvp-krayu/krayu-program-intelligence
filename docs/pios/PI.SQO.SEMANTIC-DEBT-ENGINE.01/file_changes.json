@@ -1,0 +1,145 @@
+{
+  "stream_id": "PI.SQO.SEMANTIC-DEBT-ENGINE.01",
+  "branch": "work/lens-v2-productization",
+  "baseline_commit": "8d41a51",
+  "baseline_pipeline_commit": "93098cb",
+  "summary": {
+    "files_created": 25,
+    "files_modified": 0,
+    "files_deleted": 0
+  },
+  "files": [
+    {
+      "path": "app/execlens-demo/lib/lens-v2/sqo/SemanticDebtEngine.js",
+      "change": "created",
+      "purpose": "Core 7-category semantic debt detection engine"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/sqo/DebtPriorityEngine.js",
+      "change": "created",
+      "purpose": "Deterministic priority scoring: severity_weight × impact_multiplier × dependency_modifier"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/sqo/ContinuityAssessmentEngine.js",
+      "change": "created",
+      "purpose": "Coverage metrics, gap identification, continuity assessment artifact"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/sqo/RemediationPathResolver.js",
+      "change": "created",
+      "purpose": "R1-R4 remediation pathway mapping and expected impact computation"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/sqo/DebtReplayVerifier.js",
+      "change": "created",
+      "purpose": "3-check replay verification for semantic debt artifacts"
+    },
+    {
+      "path": "app/execlens-demo/flagship-experience/tests/sqo-semantic-debt.test.js",
+      "change": "created",
+      "purpose": "44 tests across 10 suites certifying semantic debt engine"
+    },
+    {
+      "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/semantic_debt_inventory.v1.json",
+      "change": "created",
+      "purpose": "BlueEdge debt inventory (15 items, S2)"
+    },
+    {
+      "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/continuity_assessment.v1.json",
+      "change": "created",
+      "purpose": "BlueEdge continuity assessment (PARTIAL)"
+    },
+    {
+      "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/debt_replay_verification.v1.json",
+      "change": "created",
+      "purpose": "BlueEdge debt replay verification (PASS)"
+    },
+    {
+      "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/debt_certification.v1.json",
+      "change": "created",
+      "purpose": "BlueEdge debt certification (CERTIFIED)"
+    },
+    {
+      "path": "artifacts/sqo/fastapi/run_02_oss_fastapi_pipeline/semantic_debt_inventory.v1.json",
+      "change": "created",
+      "purpose": "FastAPI debt inventory (25 items, S1)"
+    },
+    {
+      "path": "artifacts/sqo/fastapi/run_02_oss_fastapi_pipeline/continuity_assessment.v1.json",
+      "change": "created",
+      "purpose": "FastAPI continuity assessment (NO_ASSESSMENT)"
+    },
+    {
+      "path": "artifacts/sqo/fastapi/run_02_oss_fastapi_pipeline/debt_replay_verification.v1.json",
+      "change": "created",
+      "purpose": "FastAPI debt replay verification (PASS)"
+    },
+    {
+      "path": "artifacts/sqo/fastapi/run_02_oss_fastapi_pipeline/debt_certification.v1.json",
+      "change": "created",
+      "purpose": "FastAPI debt certification (CERTIFIED)"
+    },
+    {
+      "path": "docs/psee/PI.SQO.SEMANTIC-DEBT-ENGINE.01/SEMANTIC_DEBT_ENGINE_IMPLEMENTATION.md",
+      "change": "created",
+      "purpose": "Implementation documentation"
+    },
+    {
+      "path": "docs/psee/PI.SQO.SEMANTIC-DEBT-ENGINE.01/DEBT_INVENTORY_ARTIFACT_SPEC.md",
+      "change": "created",
+      "purpose": "Artifact specification"
+    },
+    {
+      "path": "docs/psee/PI.SQO.SEMANTIC-DEBT-ENGINE.01/REPLAY_VERIFICATION_REPORT.md",
+      "change": "created",
+      "purpose": "Replay verification report"
+    },
+    {
+      "path": "docs/psee/PI.SQO.SEMANTIC-DEBT-ENGINE.01/BLUEEDGE_FASTAPI_DEBT_CERTIFICATION.md",
+      "change": "created",
+      "purpose": "Certification results"
+    },
+    {
+      "path": "docs/psee/PI.SQO.SEMANTIC-DEBT-ENGINE.01/GOVERNANCE_BOUNDARY_VALIDATION.md",
+      "change": "created",
+      "purpose": "Governance boundary validation"
+    },
+    {
+      "path": "docs/psee/PI.SQO.SEMANTIC-DEBT-ENGINE.01/CONTINUITY_ASSESSMENT_REPORT.md",
+      "change": "created",
+      "purpose": "Continuity assessment report"
+    },
+    {
+      "path": "docs/psee/PI.SQO.SEMANTIC-DEBT-ENGINE.01/PRIORITY_MODEL_REPORT.md",
+      "change": "created",
+      "purpose": "Priority model report"
+    },
+    {
+      "path": "docs/psee/PI.SQO.SEMANTIC-DEBT-ENGINE.01/REMEDIATION_PATHWAY_REPORT.md",
+      "change": "created",
+      "purpose": "Remediation pathway report"
+    },
+    {
+      "path": "docs/pios/PI.SQO.SEMANTIC-DEBT-ENGINE.01/execution_report.md",
+      "change": "created",
+      "purpose": "Governance execution report"
+    },
+    {
+      "path": "docs/pios/PI.SQO.SEMANTIC-DEBT-ENGINE.01/file_changes.json",
+      "change": "created",
+      "purpose": "Governance file-changes manifest"
+    },
+    {
+      "path": "docs/pios/PI.SQO.SEMANTIC-DEBT-ENGINE.01/CLOSURE.md",
+      "change": "created",
+      "purpose": "Governance closure document"
+    }
+  ],
+  "validators_changed": [],
+  "topology_mutations": [],
+  "evidence_mutations": [],
+  "lane_a_artifacts_touched": [],
+  "lane_d_dpsig_artifacts_touched": [],
+  "api_routes_modified": [],
+  "page_routes_modified": []
+}

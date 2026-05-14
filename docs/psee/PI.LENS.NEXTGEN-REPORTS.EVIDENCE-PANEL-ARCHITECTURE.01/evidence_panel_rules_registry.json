@@ -1,0 +1,470 @@
+{
+  "schema_version": "1.0",
+  "stream": "PI.LENS.NEXTGEN-REPORTS.EVIDENCE-PANEL-ARCHITECTURE.01",
+  "authority": "EVIDENCE_PANEL_ARCHITECTURE.md",
+  "upstream_schema": "PI.LENS.NEXTGEN-REPORTS.REPORT-OBJECT-MODEL.01 (e588150)",
+  "upstream_normalization": "PI.LENS.NEXTGEN-REPORTS.COGNITIVE-NORMALIZATION-INTEGRATION.01 (775d7c1)",
+  "baseline_ref": "governed-dpsig-baseline-v1",
+  "issued": "2026-05-08",
+  "description": "Machine-readable explainability rules registry for LENS NextGen Evidence Panels and Explainability Surfaces. 30 rules across 11 domains.",
+
+  "explainability_rules": [
+
+    {
+      "rule_id": "EXP-WHY-01",
+      "name": "WHY Panel Content Source Enforcement",
+      "domain": "WHY",
+      "description": "WHY panel content must be sourced exclusively from report_object.narrative_block.why_section. No content generation at render time.",
+      "check": "why_panel.content_blocks all have content sourced from committed narrative_block.why_section",
+      "fail_action": "BLOCKED",
+      "fail_condition": "Any WHY panel content not present in committed report_object",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-WHY-02",
+      "name": "WHY Panel Executive Phrasing Enforcement",
+      "domain": "WHY",
+      "description": "WHY panel must apply all NORM-NARR and NORM-FORBID rules. Predictive, recommendation, speculative, and chatbot language forbidden.",
+      "check": "why_panel content passes NORM-FORBID-01..04 vocabulary check",
+      "fail_action": "DIAGNOSTIC",
+      "fail_condition": "Any forbidden vocabulary category A-H detected in WHY panel content",
+      "timing": "at_generation_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-WHY-03",
+      "name": "WHY Panel Qualifier-Aware Rendering",
+      "domain": "WHY",
+      "description": "WHY panel must render qualifier notice when qualifier_class ≠ Q-00. Q-04 must render absence notice. Qualifier suppression is forbidden.",
+      "check": "qualifier_class ≠ Q-00 → qualifier notice rendered; qualifier_class = Q-04 → absence notice rendered",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_condition": "qualifier_class ≠ Q-00 and no qualifier notice rendered in WHY panel",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-EVID-01",
+      "name": "Evidence Drawer Source Enforcement",
+      "domain": "EVIDENCE",
+      "description": "Evidence drawer content must be sourced exclusively from committed evidence_blocks[]. No supplementation from external sources.",
+      "check": "evidence_drawers sourced only from report_object.evidence_blocks[]",
+      "fail_action": "BLOCKED",
+      "fail_condition": "Evidence drawer content not present in committed report_object.evidence_blocks[]",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-EVID-02",
+      "name": "Evidence Immutability Enforcement",
+      "domain": "EVIDENCE",
+      "description": "Evidence content is immutable after bridge crossing. LENS cannot modify, annotate, reorder, or supplement evidence drawer content.",
+      "check": "evidence_drawers.immutable = true; no mutation fields in schema",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_condition": "Any evidence drawer field modifiable by LENS rendering layer",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-EVID-03",
+      "name": "Evidence Hierarchy Ordering Enforcement",
+      "domain": "EVIDENCE",
+      "description": "Evidence drawers must be ordered: ORIGIN first, RECEIVER next, PASS_THROUGH next, ISOLATED last. Grounding status chip must be visible in collapsed drawer header.",
+      "check": "evidence_drawers ordered by propagation_role; grounding_label visible in collapsed state",
+      "fail_action": "DIAGNOSTIC",
+      "fail_condition": "Evidence drawers out of propagation-role order; grounding status chip hidden in collapsed state",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-TRACE-01",
+      "name": "TRACE Panel Propagation Path Alias Enforcement",
+      "domain": "TRACE",
+      "description": "Propagation path must use ALI-04 domain aliases. Raw cluster keys and raw domain IDs are forbidden in TRACE panel display.",
+      "check": "trace_object.propagation_path entries are ALI-04 aliases; no raw topology identifiers",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_condition": "Raw cluster keys or domain IDs present in propagation path display",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-TRACE-02",
+      "name": "TRACE Panel Derivation Reference Non-Decode Enforcement",
+      "domain": "TRACE",
+      "description": "Derivation hash and evidence_object_hash in TRACE panel must be rendered as opaque reference identifiers only. No decoding, explanation, or interpretation of hash values.",
+      "check": "derivation_ref rendered as first 8 chars + '...'; no decoded interpretation in any surface",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_condition": "Hash value decoded or interpreted in any client surface",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-TRACE-03",
+      "name": "TRACE Panel Collapsed-by-Default Enforcement",
+      "domain": "TRACE",
+      "description": "TRACE panel must be collapsed by default in executive view. Advisory view may expand by default.",
+      "check": "trace_panel.default_state = COLLAPSED for EXECUTIVE audience",
+      "fail_action": "DIAGNOSTIC",
+      "fail_condition": "TRACE panel expanded by default for EXECUTIVE audience",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE"]
+    },
+
+    {
+      "rule_id": "EXP-QUAL-01",
+      "name": "Qualifier Mandatory Visibility Enforcement",
+      "domain": "QUALIFIER",
+      "description": "Qualifier chips and notices are mandatory when qualifier_class ≠ Q-00. No qualifier can be hidden for aesthetic or UX simplicity reasons.",
+      "check": "qualifier_class ≠ Q-00 → qualifier chip rendered on readiness badge; qualifier notice in QUALIFIERS panel",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_condition": "Qualifier chip absent when qualifier_class ≠ Q-00",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-QUAL-02",
+      "name": "Q-04 Absence Notice Mandatory Enforcement",
+      "domain": "QUALIFIER",
+      "description": "When qualifier_class = Q-04, QUALIFIERS panel must render explicit absence notice: 'Signal intelligence withheld from this view.' Silent suppression of Q-04 is a governance violation.",
+      "check": "qualifier_class = Q-04 → absence_notice present and rendered in QUALIFIERS panel",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_condition": "qualifier_class = Q-04 and absence notice absent or suppressed",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-QUAL-03",
+      "name": "Qualifier Vocabulary Enforcement",
+      "domain": "QUALIFIER",
+      "description": "Qualifier labels must use Q-taxonomy chip labels from vocabulary contract. Raw Q-xx enum values (Q-01, Q-02, etc.) are forbidden in any executive surface.",
+      "check": "qualifier chip labels match vocabulary_contract.qualifier_vocabulary.approved_terms; raw Q-xx values not in display",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_condition": "Raw Q-xx enum values (Q-01, Q-02, Q-03, Q-04) rendered in any executive surface",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-LINEAGE-01",
+      "name": "Lineage Panel Audience Tier Enforcement",
+      "domain": "LINEAGE",
+      "description": "LINEAGE panel is advisory-visible by default. Executive tier does not see LINEAGE panel. Audit tier sees full lineage including run_id and full hash values.",
+      "check": "lineage_panel audience = ADVISORY; executive view does not render lineage panel; audit view sees full values",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_condition": "Full hash values visible to EXECUTIVE tier; LINEAGE panel shown to EXECUTIVE by default",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-LINEAGE-02",
+      "name": "Lineage Non-Decode Enforcement",
+      "domain": "LINEAGE",
+      "description": "Lineage references (evidence_object_hash, derivation_hash, stream_anchor) must never be decoded, explained, or interpreted in any client surface.",
+      "check": "all hash and anchor values rendered as opaque reference identifiers; no decoded explanation",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_condition": "Any lineage reference decoded or interpreted in client surface",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-CONF-01",
+      "name": "Non-Probabilistic Confidence Rendering Enforcement",
+      "domain": "CONFIDENCE",
+      "description": "CONFIDENCE panel must not render any numerical confidence score, percentage, or probabilistic framing. Confidence is expressed as grounding scope only.",
+      "check": "confidence_panel content contains no numerical probability values; probabilistic_scoring_prohibited = true",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_condition": "Any numerical confidence percentage, confidence bar, or probabilistic scoring visible in CONFIDENCE panel",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-CONF-02",
+      "name": "Confidence Panel Grounding Vocabulary Enforcement",
+      "domain": "CONFIDENCE",
+      "description": "CONFIDENCE panel must use approved grounding vocabulary: Full Grounding, Partial Coverage, Structural View, Under Review. Probabilistic alternatives forbidden.",
+      "check": "confidence_panel grounding labels match vocabulary_contract.evidence_vocabulary.grounding_labels",
+      "fail_action": "DIAGNOSTIC",
+      "fail_condition": "Grounding labels deviate from vocabulary contract",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-READY-01",
+      "name": "Readiness Label Alias Enforcement",
+      "domain": "READINESS",
+      "description": "READINESS_STATE panel must use ALI-03 executive labels for readiness state. Raw ReadinessState enum values (EXECUTIVE_READY, DIAGNOSTIC_ONLY, etc.) are forbidden in any executive surface.",
+      "check": "readiness_explanation.readiness_label matches vocabulary_contract.readiness_vocabulary.approved_terms[].executive_label",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_condition": "Raw ReadinessState enum value rendered in READINESS_STATE panel",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-READY-02",
+      "name": "Readiness Reclassification Prohibition",
+      "domain": "READINESS",
+      "description": "LENS rendering layer cannot recompute, reinterpret, or reclassify the readiness_state. The readiness_state is immutable from report_object commitment.",
+      "check": "readiness_state field is read-only; no LENS computation modifies readiness_state",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_condition": "Any LENS layer operation modifies or recomputes readiness_state",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-PROG-01",
+      "name": "Progressive Disclosure Non-Removal Enforcement",
+      "domain": "PROGRESSIVE_DISCLOSURE",
+      "description": "Collapse/expand is a display state change only. No evidence is removed when a panel or drawer is collapsed. Collapsed elements retain all committed content.",
+      "check": "collapsed panels retain content; expand reveals pre-rendered committed content unchanged",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_condition": "Evidence removed or unavailable after collapse/expand cycle",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-PROG-02",
+      "name": "Progressive Disclosure No-Computation Enforcement",
+      "domain": "PROGRESSIVE_DISCLOSURE",
+      "description": "No computation occurs at expand time. Evidence drawers and panels open to pre-rendered committed content. No external fetch on expand.",
+      "check": "drawer expand triggers no computation; no external data fetch at expand time",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_condition": "Any computation or external fetch triggered at panel or drawer expand time",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-AUD-01",
+      "name": "Audience Tier Visibility Enforcement",
+      "domain": "AUDIENCE",
+      "description": "Audience tier determines panel visibility and field exposure. Executive tier cannot access advisory/audit-only content. No client-side tier elevation.",
+      "check": "executive tier: TRACE collapsed, LINEAGE hidden, hashes hidden; advisory tier: lineage abbreviated; audit tier: full values",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_condition": "Higher-tier content visible to lower-tier audience; client-side tier elevation possible",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-AUD-02",
+      "name": "Audience Tier Immutability at Session Level",
+      "domain": "AUDIENCE",
+      "description": "Audience tier is set at session initialization. It cannot be elevated at panel-open time, drawer-expand time, or by any panel interaction.",
+      "check": "audience_tier set at session; no panel interaction alters audience_tier",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_condition": "Audience tier modified by any panel interaction",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-BLOCK-01",
+      "name": "Blocked State Explicit Rendering Enforcement",
+      "domain": "BLOCKED",
+      "description": "Blocked state must render an explicit BLOCKED notice. Silent degradation to a lower readiness state or blank panel is a governance violation.",
+      "check": "panel_state = BLOCKED → blocked_notice rendered and visible",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_condition": "BLOCKED panel renders silently (blank panel, degraded state, or default content instead of blocked notice)",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-BLOCK-02",
+      "name": "Full Bundle Block on Hash Failure",
+      "domain": "BLOCKED",
+      "description": "If evidence_object_hash is missing or fails verification, ALL panels in the bundle must enter BLOCKED state. Partial rendering from a failed hash is a governance violation.",
+      "check": "evidence_object_hash missing or mismatch → all 7 panels = BLOCKED",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_condition": "Any panel renders content when evidence_object_hash verification fails",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-DIAG-01",
+      "name": "Diagnostic State Explicit Rendering Enforcement",
+      "domain": "DIAGNOSTIC",
+      "description": "Diagnostic state must render an explicit DIAGNOSTIC notice. Silent rendering without a diagnostic indicator is a governance violation.",
+      "check": "panel_state = DIAGNOSTIC → diagnostic_notice rendered and visible",
+      "fail_action": "DIAGNOSTIC",
+      "fail_condition": "Diagnostic panel renders without diagnostic indicator",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-DIAG-02",
+      "name": "Normalization Version Mismatch Diagnostic",
+      "domain": "DIAGNOSTIC",
+      "description": "If rendering_metadata.normalization_version does not match the expected version, narrative panels enter DIAGNOSTIC state. Rendering proceeds with diagnostic notice.",
+      "check": "normalization_version mismatch → narrative panels (WHY, EVIDENCE, READINESS_STATE) → DIAGNOSTIC",
+      "fail_action": "DIAGNOSTIC",
+      "fail_condition": "normalization_version mismatch not surfaced to rendering layer",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-DET-01",
+      "name": "Deterministic Explainability Rendering",
+      "domain": "DETERMINISM",
+      "description": "Same report_object + same audience_tier + same phase must always produce the same explainability panel structure, content, and states. No stochastic rendering.",
+      "check": "render(report_object, audience_tier, phase) is idempotent and deterministic",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_condition": "Two renderings of the same report_object produce different panel content or states",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-DET-02",
+      "name": "Session State Non-Influence Enforcement",
+      "domain": "DETERMINISM",
+      "description": "Session state, user identity, and interaction history must not influence panel content. Panel content is derived from report_object only.",
+      "check": "panel content identical across sessions for same report_object and audience_tier",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_condition": "Panel content differs based on session state, user identity, or interaction history",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-FORBID-01",
+      "name": "No Live AI Generation in Explainability",
+      "domain": "FORBIDDEN",
+      "description": "No explainability panel may contain content generated at render time by any AI system. All panel content is committed at generation time and pre-rendered.",
+      "check": "live_generation_prohibited = true; no runtime AI call in panel rendering path",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_condition": "Any panel content generated by live AI call at render time",
+      "timing": "at_render_validation",
+      "phase": "Phase 2+",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+
+    {
+      "rule_id": "EXP-FORBID-02",
+      "name": "No Free-Form Query or Conversational Interaction",
+      "domain": "FORBIDDEN",
+      "description": "No explainability panel may contain a free-form text input, conversational AI entry point, or any form of live query capability. Phase 2 interaction is EXPAND_COLLAPSE only.",
+      "check": "no text input fields in explainability bundle; no conversational interaction affordances; COPILOT_ENTRY interaction = active: false",
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "fail_condition": "Any free-form text input, conversational AI entry, or live query field present in Phase 2 explainability surface",
+      "timing": "at_render_validation",
+      "phase": "Phase 2",
+      "audience": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    }
+  ],
+
+  "rule_domains": {
+    "WHY": ["EXP-WHY-01", "EXP-WHY-02", "EXP-WHY-03"],
+    "EVIDENCE": ["EXP-EVID-01", "EXP-EVID-02", "EXP-EVID-03"],
+    "TRACE": ["EXP-TRACE-01", "EXP-TRACE-02", "EXP-TRACE-03"],
+    "QUALIFIER": ["EXP-QUAL-01", "EXP-QUAL-02", "EXP-QUAL-03"],
+    "LINEAGE": ["EXP-LINEAGE-01", "EXP-LINEAGE-02"],
+    "CONFIDENCE": ["EXP-CONF-01", "EXP-CONF-02"],
+    "READINESS": ["EXP-READY-01", "EXP-READY-02"],
+    "PROGRESSIVE_DISCLOSURE": ["EXP-PROG-01", "EXP-PROG-02"],
+    "AUDIENCE": ["EXP-AUD-01", "EXP-AUD-02"],
+    "BLOCKED": ["EXP-BLOCK-01", "EXP-BLOCK-02"],
+    "DIAGNOSTIC": ["EXP-DIAG-01", "EXP-DIAG-02"],
+    "DETERMINISM": ["EXP-DET-01", "EXP-DET-02"],
+    "FORBIDDEN": ["EXP-FORBID-01", "EXP-FORBID-02"]
+  },
+
+  "fail_action_matrix": {
+    "GOVERNANCE_VIOLATION": ["EXP-WHY-03", "EXP-EVID-02", "EXP-TRACE-01", "EXP-TRACE-02", "EXP-QUAL-01", "EXP-QUAL-02", "EXP-QUAL-03", "EXP-LINEAGE-01", "EXP-LINEAGE-02", "EXP-CONF-01", "EXP-READY-01", "EXP-READY-02", "EXP-PROG-01", "EXP-PROG-02", "EXP-AUD-01", "EXP-AUD-02", "EXP-BLOCK-01", "EXP-BLOCK-02", "EXP-DET-01", "EXP-DET-02", "EXP-FORBID-01", "EXP-FORBID-02"],
+    "BLOCKED": ["EXP-WHY-01", "EXP-EVID-01"],
+    "DIAGNOSTIC": ["EXP-WHY-02", "EXP-EVID-03", "EXP-TRACE-03", "EXP-CONF-02", "EXP-DIAG-01", "EXP-DIAG-02"]
+  },
+
+  "phase_2_restrictions": {
+    "no_live_ai_generation": true,
+    "no_free_form_query": true,
+    "no_conversational_interaction": true,
+    "no_copilot_entry": true,
+    "expand_collapse_only": true,
+    "all_panels_pre_rendered_at_generation": true,
+    "no_external_data_fetch_at_render": true,
+    "no_session_state_influence_on_content": true,
+    "no_audience_tier_elevation_at_runtime": true,
+    "topology_mutation_prohibited": true,
+    "qualifier_suppression_prohibited": true,
+    "readiness_reclassification_prohibited": true
+  },
+
+  "panel_default_states": {
+    "EXECUTIVE": {
+      "WHY": "EXPANDED",
+      "EVIDENCE": "COLLAPSED",
+      "TRACE": "COLLAPSED",
+      "QUALIFIERS": "EXPANDED_IF_QUALIFIER_ACTIVE",
+      "LINEAGE": "HIDDEN",
+      "CONFIDENCE": "COLLAPSED",
+      "READINESS_STATE": "EXPANDED"
+    },
+    "ADVISORY": {
+      "WHY": "EXPANDED",
+      "EVIDENCE": "EXPANDED",
+      "TRACE": "COLLAPSED",
+      "QUALIFIERS": "EXPANDED",
+      "LINEAGE": "COLLAPSED",
+      "CONFIDENCE": "EXPANDED",
+      "READINESS_STATE": "EXPANDED"
+    },
+    "AUDIT": {
+      "WHY": "EXPANDED",
+      "EVIDENCE": "EXPANDED",
+      "TRACE": "EXPANDED",
+      "QUALIFIERS": "EXPANDED",
+      "LINEAGE": "EXPANDED",
+      "CONFIDENCE": "EXPANDED",
+      "READINESS_STATE": "EXPANDED"
+    }
+  }
+}

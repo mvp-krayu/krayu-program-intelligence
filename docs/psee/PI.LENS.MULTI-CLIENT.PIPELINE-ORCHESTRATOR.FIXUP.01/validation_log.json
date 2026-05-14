@@ -1,0 +1,87 @@
+{
+  "contract_id": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.FIXUP.01",
+  "artifact": "validation_log",
+  "generated_date": "2026-05-01",
+
+  "checks": [
+    {
+      "id": "VF-01",
+      "name": "Selector reverted from rejected run",
+      "result": "PASS",
+      "evidence": "selector_revert_result.json — BLOCK_A: selector.json set to run_blueedge_rerun_01 before any fixup execution"
+    },
+    {
+      "id": "VF-02",
+      "name": "Path delta localized",
+      "result": "PASS",
+      "evidence": "orchestrator_path_delta_localization.json — BLOCK_B: Phase 5 identified as divergence point (synthetic binding_envelope vs conformance artifacts); schema bridge bug location identified"
+    },
+    {
+      "id": "VF-03",
+      "name": "Schema bridge fixed",
+      "result": "PASS",
+      "evidence": "schema_bridge_fix.md — BLOCK_C: active_count filter corrected in both code paths; THEORETICAL_BASELINE excluded from active pressure signal count"
+    },
+    {
+      "id": "VF-04",
+      "name": "Structural path fixed or fail-closed",
+      "result": "PASS",
+      "evidence": "structural_path_fix.md — BLOCK_D: Phase 5 uses fastapi_conformance_path from source_manifest; Phase 6+7 bypasses run_end_to_end.py; Phase 8a loads canonical signal_registry directly; source_manifest.json updated with fastapi_conformance_path field"
+    },
+    {
+      "id": "VF-05",
+      "name": "Controlled rerun executed",
+      "result": "PASS",
+      "evidence": "fixup_rerun_execution.json — BLOCK_E: 9/9 phases PASS; exit_code=0; all output in target run paths"
+    },
+    {
+      "id": "VF-06",
+      "name": "Parity validation completed",
+      "result": "PASS",
+      "evidence": "parity_validation.json — BLOCK_F: PARITY_PASS; 14/14 parity checks pass; all canonical signal values matched"
+    },
+    {
+      "id": "VF-07",
+      "name": "Selector updated only after parity pass",
+      "result": "PASS",
+      "evidence": "selector_post_fixup_result.json — BLOCK_G: selector updated to run_be_orchestrated_fixup_01 (CANONICAL_ORCHESTRATED) only after PARITY_PASS confirmed"
+    },
+    {
+      "id": "VF-08",
+      "name": "Report family checked",
+      "result": "PASS",
+      "evidence": "report_family_check.json — BLOCK_H: all 4 reports generated; canonical values displayed; PSIG-006 shown as BASELINE; no manual patches"
+    },
+    {
+      "id": "VF-09",
+      "name": "Brain updated",
+      "result": "PASS",
+      "evidence": "brain_update_manifest.json — BLOCK_I: 5 brain artifacts documented; key facts recorded (rejection, fixup, selector, FastAPI status)"
+    },
+    {
+      "id": "VF-10",
+      "name": "FastAPI gate decision produced",
+      "result": "PASS",
+      "evidence": "fastapi_gate_decision.json — BLOCK_J: fastapi_status=ALLOWED_AFTER_OPERATOR_APPROVAL; next_contract=PI.LENS.END-TO-END-RERUN.FASTAPI.01"
+    },
+    {
+      "id": "VF-11",
+      "name": "Git hygiene recorded",
+      "result": "PASS",
+      "evidence": "git_hygiene.json — BLOCK_K: all modified files documented; no canonical baseline mutations"
+    },
+    {
+      "id": "VF-12",
+      "name": "No canonical baseline mutation",
+      "result": "PASS",
+      "evidence": "git_hygiene.json: run_blueedge_productized_01/vault/, run_blueedge_rerun_01/, run_blueedge_integrated_01/, FastAPI conformance recomputed/ all NOT_MODIFIED"
+    }
+  ],
+
+  "summary": {
+    "total_checks": 12,
+    "passed": 12,
+    "failed": 0,
+    "result": "ALL_PASS"
+  }
+}

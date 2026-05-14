@@ -1,0 +1,31 @@
+{
+  "contract_id": "PI.LENS.RUNTIME-BUNDLE-MAPPING.01",
+  "generated_date": "2026-05-03",
+  "runtime_list_bundle_mapping": "PASS",
+  "generate_bundle_mapping": "PASS",
+  "workspace_uses_vault_run": "PASS",
+  "workspace_no_fastapi": true,
+  "canonical_data_available": true,
+  "pipeline_executed": false,
+  "renderer_modified": false,
+  "runtime_list_curl": {
+    "vault_run": "run_blueedge_productized_01",
+    "display_run": "run_blueedge_productized_01_fixed",
+    "has_reports": true,
+    "has_vault": true,
+    "has_semantic": true
+  },
+  "generate_curl": {
+    "status": "success",
+    "vault_run": "run_blueedge_productized_01",
+    "workspace_url": "/tier2/workspace?client=blueedge&displayRun=run_blueedge_productized_01_fixed&vaultRun=run_blueedge_productized_01&reportRun=run_blueedge_productized_01_fixed"
+  },
+  "zones_with_vault_run": {
+    "url": "/api/zones?client=blueedge&runId=run_blueedge_productized_01",
+    "status": "ok",
+    "zones": 1,
+    "run_id": "run_blueedge_productized_01"
+  },
+  "workspace_page_http": 200,
+  "validation_status": "PASS"
+}

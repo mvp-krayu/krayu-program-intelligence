@@ -1,0 +1,109 @@
+{
+  "stream": "PI.LENS.V2.SEMANTIC-REPRESENTATION-SYSTEM.01",
+  "validated_at": "2026-05-09",
+  "scope": "Semantic representation system — 15 semantic actors composed per lens; modes share visual grammar but distinct content",
+  "runtime_url_inspected": "http://localhost:3002/lens-v2-flagship",
+  "app": "app/execlens-demo",
+  "page": "app/execlens-demo/pages/lens-v2-flagship.js",
+  "checks": [
+    {
+      "name": "semantic_actor_registry_created",
+      "description": "SEMANTIC_ACTORS registry of 15 named actors (A · DP through O · RA) defined in source and authoritatively documented.",
+      "result": "PASS",
+      "notes": "Registry implemented in source as `SEMANTIC_ACTORS`; full specification per actor in SEMANTIC_ACTOR_REGISTRY.md including data source, persona visibility, rendering rule, forbidden behaviors."
+    },
+    {
+      "name": "modes_use_distinct_semantic_actors",
+      "description": "LENS_MODE_SEMANTICS maps each mode to a distinct subset of actors; no mode shares its primary actors with another mode.",
+      "result": "PASS",
+      "notes": "BALANCED: DP/CB/RB/PA/RA. DENSE: ST/SB/SO/CC/AL/PA. INVESTIGATION: ET/SS/IP/CB/RB. BOARDROOM: DP/CB/PA/RA. Pressure Anchor (PA) is shared but rendered differently in each lens; otherwise the actor lists are distinct."
+    },
+    {
+      "name": "repeated_primary_coordination_secondary_pattern_reduced",
+      "description": "BALANCED's center canvas no longer renders the Primary/Coordination/Secondary triad. INVESTIGATION renders signal-level data (4 signals), not the 3-domain triad. DENSE annotates the triad with structural-backing semantics rather than rendering it as a propagation flow.",
+      "result": "PASS",
+      "notes": "Verified visually in screenshots — BALANCED shows Decision Posture / Resolution Boundary / Confidence Bar / single anchor; INVESTIGATION shows lineage chain / 4 signals / inference prohibition; DENSE shows 3 cells with backing-state labels."
+    },
+    {
+      "name": "dense_mode_semantic_topology_enriched",
+      "description": "DENSE renders Semantic Topology + Structural Backing + Semantic-Only Exposure as combined actor with backing-state per cell, plus Cluster Concentration headline panel and Absorption Load percentage panel.",
+      "result": "PASS",
+      "notes": "Three distinct actor panels in DENSE canvas. The three-cell topology now carries 'structurally backed' (Q-00) vs 'semantic-only · advisory' (Q-01) discrimination — different from prior weighted-node representation."
+    },
+    {
+      "name": "investigation_mode_visual_language_unified",
+      "description": "INVESTIGATION uses the same actor-panel grammar (`actor` / `actor-tag` / `actor-code` / `actor-name`) as BALANCED and DENSE.",
+      "result": "PASS",
+      "notes": "Visual continuity preserved across lenses — modes are coherent; content is distinct."
+    },
+    {
+      "name": "boardroom_circle_semantically_defined",
+      "description": "BOARDROOM ring now renders as Confidence Envelope (semantic actor B · CB) with conic-gradient showing grounded ratio (filled state-color arc) vs advisory-bound ratio (yellow arc). Center label shows qualifier-class. Below ring: explicit percent readout.",
+      "result": "PASS",
+      "notes": "Ring is no longer decorative. Verified visually in boardroom_1440x900_viewport.png — 67% blue arc + 33% yellow arc + Q-01 center label + readout."
+    },
+    {
+      "name": "propagation_structure_role_corrected",
+      "description": "Propagation Structure Zone demoted from full-width weighted-node chain to a thin single-line selected-path strip with text + chain count.",
+      "result": "PASS",
+      "notes": "Implemented in source as `<div className=\"topology-strip\">`. Renders only the path text, origin tier, and chain count. Documented in PROPAGATION_STRUCTURE_FUTURE_ROLE.md."
+    },
+    {
+      "name": "signal_evidence_crushed_labels_resolved",
+      "description": "EvidenceDepthLayer gated to INVESTIGATION mode only. In BALANCED / DENSE / BOARDROOM, the previously-crushed cards are not rendered.",
+      "result": "PASS",
+      "notes": "Implemented as `{densityClass === 'INVESTIGATION_DENSE' && !boardroomMode && (<EvidenceDepthLayer ... />)}`. In INVESTIGATION the layer remains as supplementary descent. Documented in SIGNAL_EVIDENCE_REDESIGN_DECISION.md."
+    },
+    {
+      "name": "vault_future_role_defined",
+      "description": "Vault role and binding architecture documented in VAULT_TO_SEMANTIC_CANVAS_MODEL.md with per-actor data source mapping and future API contract.",
+      "result": "PASS",
+      "notes": "Document specifies the three-layer architecture (vault / semantic payload / surface), the 15-actor data source mapping, and the next-stream binding sequencing."
+    },
+    {
+      "name": "static_reports_remain_artifacts_not_content_source",
+      "description": "Static report HTML files are referenced by name in REPORT_PACK_ARTIFACTS but never inlined; the Report Pack stays in the SupportRail as an access layer.",
+      "result": "PASS",
+      "notes": "REPORT_PACK_ARTIFACTS registry preserved. Report Pack items aria-disabled with 'binding pending' captions. No static HTML body is read or inlined."
+    },
+    {
+      "name": "no_static_html_prose_injection",
+      "description": "No paragraphs from any static report HTML embedded in the LENS V2 source.",
+      "result": "PASS",
+      "notes": "BALANCED authored prose (consequence statement now removed from BALANCED), DENSE authored prose (still 'organizational stress migration' note in Absorption Load), and BOARDROOM authored prose (still single supportive sentence) are all surface-authored — never scraped from static reports. INVESTIGATION evidence_text values come from the in-memory fixture, not from static HTML."
+    },
+    {
+      "name": "no_fake_runtime_binding",
+      "description": "Report Pack entries remain aria-disabled with 'binding pending' captions; no fake API endpoints implemented.",
+      "result": "PASS",
+      "notes": "FUTURE_CLIENT_RUN_BINDING_CONTRACT.md (predecessor) and VAULT_TO_SEMANTIC_CANVAS_MODEL.md (this stream) document the pending live binding. No /api/lens-payload or /api/report-pack implemented."
+    },
+    {
+      "name": "no_dashboard_regression",
+      "description": "Zero regular grids of identical-width components on the primary surface. No KPI tiles. No metric grids. No chart cards.",
+      "result": "PASS",
+      "notes": "Resolution Boundary and Semantic Topology render 3-cell grids but cells are differentiated by content category (Known/Partial/Unknown; backed/backed/semantic-only). Signal Stack renders 4 rows differentiated by tier color and per-signal evidence text. Anti-dashboard floor honored across all four lenses."
+    },
+    {
+      "name": "no_governance_mutation",
+      "description": "No changes to docs/governance/, validators, or any governance contract.",
+      "result": "PASS",
+      "notes": "git diff confirms changes scoped to docs/psee/PI.LENS.V2.SEMANTIC-REPRESENTATION-SYSTEM.01/, docs/pios/PI.LENS.V2.SEMANTIC-REPRESENTATION-SYSTEM.01/, and app/execlens-demo/pages/lens-v2-flagship.js."
+    },
+    {
+      "name": "no_evidence_semantic_mutation",
+      "description": "No changes to evidence semantics, signal interpretation, render-state vocabulary, qualifier-class semantics, propagation logic, or governance ribbon pass/fail logic.",
+      "result": "PASS",
+      "notes": "Render-state vocabulary preserved verbatim. Qualifier semantics (Q-00 / Q-01) preserved. Orchestration module untouched. Fixture untouched. Governance verdict logic untouched. ALI rules read from rendering_metadata; not invented."
+    },
+    {
+      "name": "no_L7_51x_demo_narrative_terminology",
+      "description": "No reintroduction of L7, 51.x, demo/narrative layer, or demo / narrative layer terminology in source or deliverables.",
+      "result": "PASS",
+      "method": "grep -rn -E '\\bL7\\b|51\\.x|demo/narrative|demo / narrative' against modified source.",
+      "notes": "Re-grep returned zero matches in the modified source."
+    }
+  ],
+  "verdict": "PASS",
+  "fail_count": 0
+}

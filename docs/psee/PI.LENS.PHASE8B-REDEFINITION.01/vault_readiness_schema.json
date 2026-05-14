@@ -1,0 +1,60 @@
+{
+  "contract_id": "PI.LENS.PHASE8B-REDEFINITION.01",
+  "artifact": "vault_readiness_schema",
+  "generated_date": "2026-05-01",
+
+  "schema": {
+    "description": "vault_readiness.json — produced by Phase 8b (pipeline layer)",
+    "output_path": "clients/<client>/psee/runs/<run_id>/vault/vault_readiness.json",
+    "create_only": true,
+    "fields": {
+      "client": "string — client alias (e.g. fastapi, blueedge)",
+      "run_id": "string — run identifier",
+      "status": "enum — READY | PARTIAL | FAIL",
+      "checks": "array of check objects",
+      "validation_timestamp": "ISO 8601 UTC timestamp"
+    },
+    "check_object": {
+      "check_id": "string — VR-01 through VR-09",
+      "status": "enum — PASS | FAIL",
+      "path": "string — repo-relative path to artifact under validation",
+      "reason": "string — present only on FAIL, describes failure cause"
+    }
+  },
+
+  "checks_defined": [
+    {"check_id": "VR-01", "artifact": "intake/intake_manifest.json",                           "test": "exists + valid JSON"},
+    {"check_id": "VR-02", "artifact": "structure/40.2/structural_node_inventory.json",          "test": "exists + valid JSON"},
+    {"check_id": "VR-03", "artifact": "structure/40.3/structural_topology_log.json",            "test": "exists + valid JSON"},
+    {"check_id": "VR-04", "artifact": "structure/40.4/canonical_topology.json",                 "test": "exists + valid JSON"},
+    {"check_id": "VR-05", "artifact": "ceu/grounding_state_v3.json",                            "test": "exists + valid JSON"},
+    {"check_id": "VR-06", "artifact": "dom/dom_layer.json",                                     "test": "exists + valid JSON"},
+    {"check_id": "VR-07", "artifact": "binding/binding_envelope.json",                          "test": "exists + valid JSON"},
+    {"check_id": "VR-08", "artifact": "integration/integration_validation.json",                "test": "exists + valid JSON"},
+    {"check_id": "VR-09", "artifact": "integration/integration_validation.json",                "test": "validation_status == PASS"}
+  ],
+
+  "status_semantics": {
+    "READY":   "all 9 checks PASS — vault is coherent and pipeline-complete",
+    "PARTIAL": "reserved for future partial-run scenarios",
+    "FAIL":    "one or more checks FAIL — vault is not ready for representation layer"
+  },
+
+  "example_instance": {
+    "client": "fastapi",
+    "run_id": "run_02_oss_fastapi_pipeline",
+    "status": "READY",
+    "checks": [
+      {"check_id": "VR-01", "status": "PASS", "path": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/intake/intake_manifest.json"},
+      {"check_id": "VR-02", "status": "PASS", "path": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/structure/40.2/structural_node_inventory.json"},
+      {"check_id": "VR-03", "status": "PASS", "path": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/structure/40.3/structural_topology_log.json"},
+      {"check_id": "VR-04", "status": "PASS", "path": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/structure/40.4/canonical_topology.json"},
+      {"check_id": "VR-05", "status": "PASS", "path": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/ceu/grounding_state_v3.json"},
+      {"check_id": "VR-06", "status": "PASS", "path": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/dom/dom_layer.json"},
+      {"check_id": "VR-07", "status": "PASS", "path": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/binding/binding_envelope.json"},
+      {"check_id": "VR-08", "status": "PASS", "path": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/integration/integration_validation.json"},
+      {"check_id": "VR-09", "status": "PASS", "path": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/integration/integration_validation.json"}
+    ],
+    "validation_timestamp": "2026-05-01T15:43:46.423478+00:00"
+  }
+}

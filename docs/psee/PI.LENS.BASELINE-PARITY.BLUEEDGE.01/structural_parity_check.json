@@ -1,0 +1,55 @@
+{
+  "contract_id": "PI.LENS.BASELINE-PARITY.BLUEEDGE.01",
+  "artifact": "structural_parity_check",
+  "generated_date": "2026-05-01",
+  "client": "blueedge",
+  "baseline_run": "run_be_orchestrated_fixup_01",
+  "current_run": "NOT_RUN",
+
+  "run_dir_structure": {
+    "baseline_dirs_present": ["41.x", "75.x", "binding", "vault"],
+    "baseline_dirs_absent": ["intake", "structure", "ceu", "dom", "integration"],
+    "generic_pipeline_expected_dirs": ["intake", "structure", "ceu", "dom", "binding", "integration", "vault", "41.x", "75.x"],
+    "coverage": "PARTIAL — baseline covers post-Phase-5 dirs only (binding, vault, 41.x, 75.x)"
+  },
+
+  "binding_envelope_schema": {
+    "baseline_schema": "pre-generic (PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01)",
+    "baseline_fields": ["bindings", "domain_telemetry", "pressure_zone_designations", "non_pressure_zones"],
+    "generic_pipeline_schema": "post-generic (PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.BLUEEDGE.01)",
+    "generic_pipeline_fields": ["nodes", "edges", "capability_surfaces"],
+    "schema_compatible": false,
+    "parity": "NOT_COMPARABLE"
+  },
+
+  "canonical_topology_schema": {
+    "baseline_schema": "adapted from dom_path_domain_layer.json (PATH_EVIDENCE_ONLY)",
+    "baseline_total_nodes": 35,
+    "baseline_domains": 13,
+    "baseline_capabilities": 0,
+    "baseline_source_authority": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01",
+    "current": "NOT_AVAILABLE",
+    "parity": "NOT_COMPARABLE"
+  },
+
+  "phase_8b_output": {
+    "artifact": "vault/vault_readiness.json",
+    "baseline": "ABSENT — produced by pre-Phase-8b orchestration",
+    "current": "NOT_GENERATED — run not executed",
+    "parity": "NOT_COMPARABLE"
+  },
+
+  "checks": [
+    {"check": "intake/ directory", "baseline": "ABSENT", "current": "NOT_COMPARABLE", "result": "NOT_COMPARABLE"},
+    {"check": "structure/ directory", "baseline": "ABSENT", "current": "NOT_COMPARABLE", "result": "NOT_COMPARABLE"},
+    {"check": "ceu/ directory", "baseline": "ABSENT", "current": "NOT_COMPARABLE", "result": "NOT_COMPARABLE"},
+    {"check": "dom/ directory", "baseline": "ABSENT", "current": "NOT_COMPARABLE", "result": "NOT_COMPARABLE"},
+    {"check": "binding/ directory", "baseline": "PRESENT (pre-generic schema)", "current": "NOT_COMPARABLE", "result": "NOT_COMPARABLE"},
+    {"check": "integration/ directory", "baseline": "ABSENT", "current": "NOT_COMPARABLE", "result": "NOT_COMPARABLE"},
+    {"check": "vault/ directory", "baseline": "PRESENT (9 artifacts)", "current": "NOT_COMPARABLE", "result": "NOT_COMPARABLE"},
+    {"check": "vault/vault_readiness.json", "baseline": "ABSENT", "current": "NOT_COMPARABLE", "result": "NOT_COMPARABLE"}
+  ],
+
+  "overall": "NOT_COMPARABLE",
+  "reason": "Baseline uses pre-generic orchestration architecture. Required source paths absent. No current run executed. Schema incompatibility in binding_envelope prevents structural comparison even if a run were available."
+}

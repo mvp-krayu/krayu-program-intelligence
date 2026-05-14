@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0",
+  "client": "fastapi",
+  "run_id": "run_02_oss_fastapi_pipeline",
+  "qualification_state": {
+    "s_state": "S1",
+    "state_label": "STRUCTURAL_LABELS_ONLY",
+    "state_reason": "Required artifact missing: decision_validation",
+    "authorization_tier": "NOT_AUTHORIZED",
+    "boardroom_readiness": "NOT_READY",
+    "projection_permission": "DENIED"
+  },
+  "evidence": {
+    "manifest_registered": true,
+    "required_artifacts_declared": [
+      "semantic_topology_model",
+      "decision_validation",
+      "reproducibility_verdict",
+      "semantic_continuity_crosswalk",
+      "canonical_topology_40_4",
+      "dpsig_signal_set"
+    ],
+    "required_artifacts_present": [
+      "semantic_topology_model"
+    ],
+    "required_artifacts_missing": [
+      "decision_validation",
+      "reproducibility_verdict",
+      "semantic_continuity_crosswalk",
+      "canonical_topology_40_4",
+      "dpsig_signal_set"
+    ],
+    "loader_status": "REQUIRED_ARTIFACT_MISSING",
+    "binding_status": "NOT_RESOLVED",
+    "q_class": "NOT_AVAILABLE",
+    "qualifier_summary": {}
+  },
+  "governance": {
+    "fail_closed": true,
+    "client_agnostic": true,
+    "no_semantic_fabrication": true,
+    "no_source_mutation": true,
+    "sqo_advisory_only": true
+  },
+  "provenance": {
+    "source_commit": "9fdf308df8fa",
+    "input_hashes": {
+      "semantic_topology_model": "present"
+    },
+    "operation": "detect_qualification_state",
+    "operation_version": "1.0",
+    "output_hash": "sha256:d4432e76005c48dc881fc3e11599a86535a5b3fd55eb93a896c12241f575d0fa"
+  }
+}

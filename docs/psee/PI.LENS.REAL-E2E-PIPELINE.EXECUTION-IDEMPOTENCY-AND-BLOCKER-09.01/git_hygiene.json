@@ -1,0 +1,41 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE.EXECUTION-IDEMPOTENCY-AND-BLOCKER-09.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-03",
+
+  "branch": "work/psee-runtime",
+  "baseline_commit": "7f716b9691bb693ad03ab36e1f664d0598e8b1d8",
+  "baseline_commit_message": "[FIX] E2E DOM layer path contract closes blocker 08",
+
+  "working_tree_before": "CLEAN",
+  "working_tree_after": "1 tracked file modified (lens_e2e_assemble.sh); 1 evidence directory untracked; no run artifacts written",
+
+  "files_modified_tracked": [
+    "scripts/pios/lens_e2e_assemble.sh"
+  ],
+  "files_created_untracked_scripts": [],
+  "files_created_tracked": [
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-IDEMPOTENCY-AND-BLOCKER-09.01/execution_idempotency_summary.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-IDEMPOTENCY-AND-BLOCKER-09.01/blocker09_classification.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-IDEMPOTENCY-AND-BLOCKER-09.01/stage_execution_result.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-IDEMPOTENCY-AND-BLOCKER-09.01/validation_result.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-IDEMPOTENCY-AND-BLOCKER-09.01/no_free_patching_attestation.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-IDEMPOTENCY-AND-BLOCKER-09.01/git_hygiene.json"
+  ],
+  "files_gitignored_written_by_run": [],
+
+  "pipeline_executed": true,
+  "canonical_artifacts_mutated": false,
+  "producer_scripts_modified": false,
+  "wrapper_script_modified": "scripts/pios/lens_e2e_assemble.sh",
+  "renderer_modified": false,
+  "semantic_bundle_modified": false,
+  "ui_modified": false,
+  "api_modified": false,
+  "fastapi_involved": false,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[FIX] PI.LENS.REAL-E2E-PIPELINE.EXECUTION-IDEMPOTENCY-AND-BLOCKER-09.01 — Stage 02 idempotent check; Stage 06 BLOCKER-09 classification",
+
+  "git_hygiene_status": "COMPLETE"
+}

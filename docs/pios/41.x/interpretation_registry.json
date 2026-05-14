@@ -1,0 +1,478 @@
+{
+  "registry_version": "1.0",
+  "registry_contract": "PI.41X.INTERPRETATION-REGISTRY.01",
+  "schema_ref": "docs/pios/41.x/interpretation_registry_schema.json",
+  "generated_at": "2026-04-25",
+  "inference_prohibition": "ACTIVE",
+  "authority_note": "All entries derive structural meaning from governed 75.x and 41.x source documents only. No client-specific language. No causal claims. No predictions. No recommendations. No prioritization. No severity.",
+  "source_authorities": [
+    "docs/pios/75.x/pressure_zone_and_focus_domain_concept.md",
+    "docs/pios/PI.SIGNAL-INTELLIGENCE.ONTOLOGY.01.md",
+    "clients/*/psee/runs/*/41.x/pressure_zone_projection.json",
+    "clients/*/psee/runs/*/41.x/signal_projection.json"
+  ],
+  "total_entries": 20,
+  "entries": [
+
+    {
+      "id": "INT-001",
+      "entry_type": "zone",
+      "name": "Coupling Zone",
+      "source_authority": "docs/pios/75.x/pressure_zone_and_focus_domain_concept.md — Class 1",
+      "inputs": {
+        "signal_id": "PSIG-001",
+        "condition_id": null,
+        "zone_class": "COUPLING_ZONE"
+      },
+      "output": {
+        "behavioral_meaning": "A structural location where incoming dependency concentration is active. The zone reflects that one or more nodes within the anchor domain receive dependencies from a disproportionate share of source nodes relative to the run baseline.",
+        "system_expression": "The anchor domain contains a node with elevated fan-in count. PSIG-001 condition is active within this zone's scope. Structural paths entering this domain are concentrated at a single node or small node set. Attribution entity is the max-fan-in node; parent domain is the zone anchor.",
+        "business_expression": "This part of the codebase is a dependency target for many other parts. Its incoming structural connections are concentrated beyond the typical pattern for this run."
+      },
+      "constraints": {
+        "no_prediction": true,
+        "no_recommendation": true,
+        "no_prioritization": true,
+        "no_severity": true
+      }
+    },
+
+    {
+      "id": "INT-002",
+      "entry_type": "zone",
+      "name": "Propagation Zone",
+      "source_authority": "docs/pios/75.x/pressure_zone_and_focus_domain_concept.md — Class 2",
+      "inputs": {
+        "signal_id": "PSIG-002",
+        "condition_id": null,
+        "zone_class": "PROPAGATION_ZONE"
+      },
+      "output": {
+        "behavioral_meaning": "A structural location where outgoing dependency concentration is active. The zone reflects that one or more nodes within the anchor domain hold dependencies on a disproportionate share of target nodes relative to the run baseline.",
+        "system_expression": "The anchor domain contains a node with elevated fan-out count. PSIG-002 condition is active within this zone's scope. Structural paths leaving this domain are concentrated at a single node or small node set. Attribution entity is the max-fan-out node; parent domain is the zone anchor.",
+        "business_expression": "This part of the codebase depends on many other parts. Its outgoing structural connections are concentrated beyond the typical pattern for this run."
+      },
+      "constraints": {
+        "no_prediction": true,
+        "no_recommendation": true,
+        "no_prioritization": true,
+        "no_severity": true
+      }
+    },
+
+    {
+      "id": "INT-003",
+      "entry_type": "zone",
+      "name": "Responsibility Zone",
+      "source_authority": "docs/pios/75.x/pressure_zone_and_focus_domain_concept.md — Class 3",
+      "inputs": {
+        "signal_id": "PSIG-004",
+        "condition_id": null,
+        "zone_class": "RESPONSIBILITY_ZONE"
+      },
+      "output": {
+        "behavioral_meaning": "A structural location where surface ownership concentration is active. The zone reflects that one or more component entities within the anchor domain hold ownership of a disproportionate share of exposed interfaces relative to the run baseline.",
+        "system_expression": "The anchor domain contains a component entity with elevated surface ownership count. PSIG-004 condition is active within this zone's scope. Surface ownership is concentrated at a single component entity within the domain. Attribution entity is the max-responsibility component entity.",
+        "business_expression": "This part of the codebase owns a disproportionate share of exposed interfaces. One component within this domain is responsible for far more surfaces than is typical for this run."
+      },
+      "constraints": {
+        "no_prediction": true,
+        "no_recommendation": true,
+        "no_prioritization": true,
+        "no_severity": true
+      }
+    },
+
+    {
+      "id": "INT-004",
+      "entry_type": "zone",
+      "name": "Surface Exposure Zone",
+      "source_authority": "docs/pios/75.x/pressure_zone_and_focus_domain_concept.md — Class 4",
+      "inputs": {
+        "signal_id": null,
+        "condition_id": null,
+        "zone_class": "SURFACE_EXPOSURE_ZONE"
+      },
+      "output": {
+        "behavioral_meaning": "A structural location where interface surface density and incoming cross-domain coupling are concurrently active. The zone reflects joint activation of surface concentration (PSIG-005) and cross-domain coupling ratio (PSIG-003) on the same anchor domain. Neither condition alone produces this zone class.",
+        "system_expression": "The anchor domain has elevated exposed surface count (PSIG-005 active) and elevated incoming OVERLAP_STRUCTURAL edge count (PSIG-003 active). Both conditions are required concurrently on the same domain. This zone class is distinct from COORDINATION_ZONE and COUPLING_ZONE.",
+        "business_expression": "This part of the codebase both exposes many interfaces and receives connections from many other parts. The structural profile reflects high surface density and high incoming inter-domain connectivity at the same domain."
+      },
+      "constraints": {
+        "no_prediction": true,
+        "no_recommendation": true,
+        "no_prioritization": true,
+        "no_severity": true
+      }
+    },
+
+    {
+      "id": "INT-005",
+      "entry_type": "zone",
+      "name": "Coordination Zone",
+      "source_authority": "docs/pios/75.x/pressure_zone_and_focus_domain_concept.md — Class 5",
+      "inputs": {
+        "signal_id": "PSIG-003",
+        "condition_id": null,
+        "zone_class": "COORDINATION_ZONE"
+      },
+      "output": {
+        "behavioral_meaning": "A structural location designated as the cross-domain coupling hub. The zone reflects that this domain receives the highest count of incoming OVERLAP_STRUCTURAL edges within the run scope, identifying it as the primary structural coordination point.",
+        "system_expression": "The anchor domain is the primary recipient of OVERLAP_STRUCTURAL edges. PSIG-003 condition is active. The domain is structurally positioned at the convergence of the most inter-domain dependency paths within the run scope.",
+        "business_expression": "This part of the codebase is where the most cross-boundary connections arrive. It is the structural coordination point for dependencies between different domains in this run."
+      },
+      "constraints": {
+        "no_prediction": true,
+        "no_recommendation": true,
+        "no_prioritization": true,
+        "no_severity": true
+      }
+    },
+
+    {
+      "id": "INT-006",
+      "entry_type": "zone",
+      "name": "Fragmentation Zone",
+      "source_authority": "docs/pios/PI.SIGNAL-INTELLIGENCE.ONTOLOGY.01.md; scripts/pios/tier2_query_engine.py: PSIG-006 zone class mapping",
+      "inputs": {
+        "signal_id": "PSIG-006",
+        "condition_id": null,
+        "zone_class": "FRAGMENTATION_ZONE"
+      },
+      "output": {
+        "behavioral_meaning": "A structural location where the blind-spot condition is active. The zone reflects that structural coverage of the domain or its nodes is below the theoretical baseline, indicating incomplete structural observability within the current run scope.",
+        "system_expression": "The zone's scope includes structural entities for which signal coverage or topology binding is absent or below the theoretical threshold. PSIG-006 is active within the affected entity scope. Structural state of these entities cannot be fully characterized from available evidence.",
+        "business_expression": "This part of the codebase is not fully observable in the structural model. The structural blind-spot condition is active within its scope. Characterization of its internal structure is limited by the current evidence boundary."
+      },
+      "constraints": {
+        "no_prediction": true,
+        "no_recommendation": true,
+        "no_prioritization": true,
+        "no_severity": true
+      }
+    },
+
+    {
+      "id": "INT-007",
+      "entry_type": "zone",
+      "name": "Compound Zone",
+      "source_authority": "docs/pios/75.x/pressure_zone_and_focus_domain_concept.md — Class 6",
+      "inputs": {
+        "signal_id": null,
+        "condition_id": null,
+        "zone_class": "COMPOUND_ZONE"
+      },
+      "output": {
+        "behavioral_meaning": "A structural location where conditions from two or more distinct pressure families are simultaneously active. The compound designation reflects co-presence of multiple activated conditions — from any combination of coupling, propagation, responsibility, surface exposure, or coordination pressure classes — on the same anchor domain.",
+        "system_expression": "The anchor domain's condition scope intersects two or more active pressure condition types concurrently. Embedded pair rules record which pairwise pressure class combinations are present. The compound zone is not ranked against single-class zones; it records structural co-presence across pressure families.",
+        "business_expression": "This part of the codebase is the structural intersection of multiple structural pressure patterns. More than one type of structural concentration is simultaneously active in its scope. The compound designation records co-presence — not priority, not severity."
+      },
+      "constraints": {
+        "no_prediction": true,
+        "no_recommendation": true,
+        "no_prioritization": true,
+        "no_severity": true
+      }
+    },
+
+    {
+      "id": "INT-008",
+      "entry_type": "signal",
+      "name": "Fan-In Concentration",
+      "source_authority": "docs/pios/75.x/pressure_zone_and_focus_domain_concept.md: PSIG-001 definition",
+      "inputs": {
+        "signal_id": "PSIG-001",
+        "condition_id": null,
+        "zone_class": null
+      },
+      "output": {
+        "behavioral_meaning": "Indicates that the maximum incoming dependency count (fan-in) within the run scope is a statistical outlier relative to the run distribution. The signal reflects structurally disproportionate incoming dependency concentration at one or more component nodes.",
+        "system_expression": "Computed via RUN_RELATIVE_OUTLIER method. The signal value represents the standardized outlier score for the max-fan-in node in the run. Attribution is recorded at the node and parent domain levels. Condition COND-PSIG-001 is activated when the value exceeds threshold.",
+        "business_expression": "One component in the codebase receives dependencies from far more other components than is typical for this run. The signal records the structural disproportion — not a judgment about whether this is acceptable."
+      },
+      "constraints": {
+        "no_prediction": true,
+        "no_recommendation": true,
+        "no_prioritization": true,
+        "no_severity": true
+      }
+    },
+
+    {
+      "id": "INT-009",
+      "entry_type": "signal",
+      "name": "Fan-Out Propagation",
+      "source_authority": "docs/pios/75.x/pressure_zone_and_focus_domain_concept.md: PSIG-002 definition",
+      "inputs": {
+        "signal_id": "PSIG-002",
+        "condition_id": null,
+        "zone_class": null
+      },
+      "output": {
+        "behavioral_meaning": "Indicates that the maximum outgoing dependency count (fan-out) within the run scope is a statistical outlier relative to the run distribution. The signal reflects structurally disproportionate outgoing dependency concentration at one or more component nodes.",
+        "system_expression": "Computed via RUN_RELATIVE_OUTLIER method. The signal value represents the standardized outlier score for the max-fan-out node in the run. When no single max-fan-out entity is identifiable, attribution distributes across the domain scope. Condition COND-PSIG-002 is activated when the value exceeds threshold.",
+        "business_expression": "One component in the codebase depends on far more other components than is typical for this run. The signal records the structural disproportion — not a judgment about whether this dependency pattern is acceptable."
+      },
+      "constraints": {
+        "no_prediction": true,
+        "no_recommendation": true,
+        "no_prioritization": true,
+        "no_severity": true
+      }
+    },
+
+    {
+      "id": "INT-010",
+      "entry_type": "signal",
+      "name": "Cross-Domain Coupling Ratio",
+      "source_authority": "docs/pios/75.x/pressure_zone_and_focus_domain_concept.md: PSIG-003 definition",
+      "inputs": {
+        "signal_id": "PSIG-003",
+        "condition_id": null,
+        "zone_class": null
+      },
+      "output": {
+        "behavioral_meaning": "Indicates that the ratio of incoming cross-domain structural connections for one or more domains exceeds the run-relative threshold. The signal reflects disproportionate concentration of OVERLAP_STRUCTURAL edges at the domain level.",
+        "system_expression": "The domain receiving the highest count of OVERLAP_STRUCTURAL incoming edges has a cross-domain coupling ratio that exceeds threshold. Attribution is at the domain level. PSIG-003 activation is required for both COORDINATION_ZONE (Class 5) and SURFACE_EXPOSURE_ZONE (Class 4) designation.",
+        "business_expression": "One part of the codebase receives a disproportionate share of cross-boundary structural connections. The signal records the structural concentration of incoming inter-domain dependencies — not whether those connections are appropriate."
+      },
+      "constraints": {
+        "no_prediction": true,
+        "no_recommendation": true,
+        "no_prioritization": true,
+        "no_severity": true
+      }
+    },
+
+    {
+      "id": "INT-011",
+      "entry_type": "signal",
+      "name": "Responsibility Concentration",
+      "source_authority": "docs/pios/75.x/pressure_zone_and_focus_domain_concept.md: PSIG-004 definition",
+      "inputs": {
+        "signal_id": "PSIG-004",
+        "condition_id": null,
+        "zone_class": null
+      },
+      "output": {
+        "behavioral_meaning": "Indicates that the maximum surface ownership count for a single component entity exceeds the run-relative threshold. The signal reflects structurally disproportionate ownership of exposed interfaces at one or more component entities.",
+        "system_expression": "Computed via RUN_RELATIVE_OUTLIER method. The signal value represents the standardized outlier score for the max-responsibility-surface component entity in the run. Attribution is recorded at the entity and parent domain levels. Condition COND-PSIG-004 is activated when the value exceeds threshold.",
+        "business_expression": "One component in the codebase owns far more exposed interfaces than is typical for this run. The signal records the structural disproportion of surface ownership — not a judgment about the design quality of that component."
+      },
+      "constraints": {
+        "no_prediction": true,
+        "no_recommendation": true,
+        "no_prioritization": true,
+        "no_severity": true
+      }
+    },
+
+    {
+      "id": "INT-012",
+      "entry_type": "signal",
+      "name": "Surface Concentration",
+      "source_authority": "docs/pios/75.x/pressure_zone_and_focus_domain_concept.md: PSIG-005 definition",
+      "inputs": {
+        "signal_id": "PSIG-005",
+        "condition_id": null,
+        "zone_class": null
+      },
+      "output": {
+        "behavioral_meaning": "Indicates that the count of exposed interfaces for a single domain exceeds the run-relative threshold. The signal reflects structurally disproportionate surface density at the domain level within the run scope.",
+        "system_expression": "The domain with the highest exposed surface count has a surface density that exceeds the run-relative threshold. Attribution is at the domain level. PSIG-005 is a companion signal to PSIG-003: joint activation of both is required for SURFACE_EXPOSURE_ZONE designation. PSIG-005 alone produces no zone class.",
+        "business_expression": "One part of the codebase exposes far more interfaces than is typical for this run. The signal records the structural disproportion of domain-level surface density — not whether that surface count is excessive in an absolute sense."
+      },
+      "constraints": {
+        "no_prediction": true,
+        "no_recommendation": true,
+        "no_prioritization": true,
+        "no_severity": true
+      }
+    },
+
+    {
+      "id": "INT-013",
+      "entry_type": "signal",
+      "name": "Structural Blind-Spot",
+      "source_authority": "docs/pios/PI.SIGNAL-INTELLIGENCE.ONTOLOGY.01.md; 41.x/signal_projection.json: PSIG-006",
+      "inputs": {
+        "signal_id": "PSIG-006",
+        "condition_id": null,
+        "zone_class": null
+      },
+      "output": {
+        "behavioral_meaning": "Indicates that the proportion of structurally observable entities falls below the theoretical baseline threshold within the run scope. The signal reflects incomplete structural observability across a declared set of domains and nodes.",
+        "system_expression": "Activated via THEORETICAL_BASELINE method when the fraction of entities with adequate structural coverage falls below the binary threshold. Affected entities are recorded in the signal's entity scope. PSIG-006 is not attributed to a pressure zone — it is a structural observability boundary record.",
+        "business_expression": "A set of parts of the codebase lacks full structural observability in this run. The signal records the structural blind-spot boundary and its affected entity scope — not a cause or a consequence."
+      },
+      "constraints": {
+        "no_prediction": true,
+        "no_recommendation": true,
+        "no_prioritization": true,
+        "no_severity": true
+      }
+    },
+
+    {
+      "id": "INT-014",
+      "entry_type": "condition",
+      "name": "Fan-In Concentration Condition",
+      "source_authority": "docs/pios/75.x/pressure_zone_and_focus_domain_concept.md; 41.x/signal_projection.json: COND-PSIG-001-XX",
+      "inputs": {
+        "signal_id": "PSIG-001",
+        "condition_id": "COND-PSIG-001",
+        "zone_class": null
+      },
+      "output": {
+        "behavioral_meaning": "A PSIG-001 condition is active when the fan-in concentration signal value exceeds the run-relative outlier threshold. Activation records that incoming dependency concentration is statistically disproportionate for at least one node. The activation event binds the max-fan-in node and its parent domain as attribution entities.",
+        "system_expression": "Activated when PSIG-001 value exceeds the RUN_RELATIVE_OUTLIER boundary. Attribution entity (max fan-in node) and parent domain are recorded at activation time. Secondary attribution entities are nodes in the same disproportionate scope. Condition state is HIGH when active.",
+        "business_expression": "The structural measurement for incoming dependency concentration has crossed the threshold for this run. The condition records the activation state and attribution — it is a structural fact, not a severity judgment."
+      },
+      "constraints": {
+        "no_prediction": true,
+        "no_recommendation": true,
+        "no_prioritization": true,
+        "no_severity": true
+      }
+    },
+
+    {
+      "id": "INT-015",
+      "entry_type": "condition",
+      "name": "Fan-Out Propagation Condition",
+      "source_authority": "docs/pios/75.x/pressure_zone_and_focus_domain_concept.md; 41.x/signal_projection.json: COND-PSIG-002-XX",
+      "inputs": {
+        "signal_id": "PSIG-002",
+        "condition_id": "COND-PSIG-002",
+        "zone_class": null
+      },
+      "output": {
+        "behavioral_meaning": "A PSIG-002 condition is active when the fan-out propagation signal value exceeds the run-relative outlier threshold. Activation records that outgoing dependency concentration is statistically disproportionate for at least one node. When no single primary attribution entity exists, attribution distributes across the affected domain scope.",
+        "system_expression": "Activated when PSIG-002 value exceeds the RUN_RELATIVE_OUTLIER boundary. When no single max-fan-out entity is identifiable, attribution distributes across domain scope without a primary attribution entity. Condition state is HIGH when active.",
+        "business_expression": "The structural measurement for outgoing dependency concentration has crossed the threshold for this run. The condition records the activation state and attribution scope — it is a structural fact, not a severity judgment."
+      },
+      "constraints": {
+        "no_prediction": true,
+        "no_recommendation": true,
+        "no_prioritization": true,
+        "no_severity": true
+      }
+    },
+
+    {
+      "id": "INT-016",
+      "entry_type": "condition",
+      "name": "Cross-Domain Coupling Condition",
+      "source_authority": "docs/pios/75.x/pressure_zone_and_focus_domain_concept.md; PSIG-003 condition type",
+      "inputs": {
+        "signal_id": "PSIG-003",
+        "condition_id": "COND-PSIG-003",
+        "zone_class": null
+      },
+      "output": {
+        "behavioral_meaning": "A PSIG-003 condition is active when the incoming OVERLAP_STRUCTURAL edge count for at least one domain exceeds the run-relative threshold. Activation records the domain with the highest cross-domain coupling concentration as the attribution domain.",
+        "system_expression": "Activated when PSIG-003 value exceeds the run-relative threshold. Attribution is at the domain level — the domain receiving the most OVERLAP_STRUCTURAL incoming edges. PSIG-003 condition is required for both COORDINATION_ZONE (Class 5) and SURFACE_EXPOSURE_ZONE (Class 4) designation.",
+        "business_expression": "The structural measurement for cross-boundary connection concentration has crossed the threshold for this run. The condition records the activation state and the coupling-hub domain — it is a structural fact, not a severity judgment."
+      },
+      "constraints": {
+        "no_prediction": true,
+        "no_recommendation": true,
+        "no_prioritization": true,
+        "no_severity": true
+      }
+    },
+
+    {
+      "id": "INT-017",
+      "entry_type": "condition",
+      "name": "Responsibility Concentration Condition",
+      "source_authority": "docs/pios/75.x/pressure_zone_and_focus_domain_concept.md; 41.x/signal_projection.json: COND-PSIG-004-XX",
+      "inputs": {
+        "signal_id": "PSIG-004",
+        "condition_id": "COND-PSIG-004",
+        "zone_class": null
+      },
+      "output": {
+        "behavioral_meaning": "A PSIG-004 condition is active when the responsibility concentration signal value exceeds the run-relative outlier threshold. Activation records that surface ownership is statistically disproportionate for at least one component entity. The activation event binds the max-responsibility-surface component entity and its parent domain.",
+        "system_expression": "Activated when PSIG-004 value exceeds the RUN_RELATIVE_OUTLIER boundary. Attribution entity (max responsibility surface component entity) and parent domain are recorded at activation time. Condition state is HIGH when active.",
+        "business_expression": "The structural measurement for surface ownership concentration has crossed the threshold for this run. The condition records the activation state and attribution — it is a structural fact, not a severity judgment."
+      },
+      "constraints": {
+        "no_prediction": true,
+        "no_recommendation": true,
+        "no_prioritization": true,
+        "no_severity": true
+      }
+    },
+
+    {
+      "id": "INT-018",
+      "entry_type": "condition",
+      "name": "Surface Concentration Condition",
+      "source_authority": "docs/pios/75.x/pressure_zone_and_focus_domain_concept.md; PSIG-005 condition type",
+      "inputs": {
+        "signal_id": "PSIG-005",
+        "condition_id": "COND-PSIG-005",
+        "zone_class": null
+      },
+      "output": {
+        "behavioral_meaning": "A PSIG-005 condition is active when the exposed interface count for at least one domain exceeds the run-relative threshold. Activation records the domain with disproportionate surface density. This condition must co-occur with COND-PSIG-003 on the same domain for SURFACE_EXPOSURE_ZONE designation.",
+        "system_expression": "Activated when PSIG-005 value exceeds the run-relative threshold. Attribution is at the domain level. Neither PSIG-005 condition alone nor PSIG-003 condition alone constitutes a SURFACE_EXPOSURE_ZONE — joint co-activation on the same domain is required.",
+        "business_expression": "The structural measurement for domain-level surface density has crossed the threshold for this run. The condition records the activation state — it is a structural fact, not a severity judgment."
+      },
+      "constraints": {
+        "no_prediction": true,
+        "no_recommendation": true,
+        "no_prioritization": true,
+        "no_severity": true
+      }
+    },
+
+    {
+      "id": "INT-019",
+      "entry_type": "condition",
+      "name": "Structural Blind-Spot Condition",
+      "source_authority": "docs/pios/PI.SIGNAL-INTELLIGENCE.ONTOLOGY.01.md; 41.x/signal_projection.json: COND-PSIG-006-XX",
+      "inputs": {
+        "signal_id": "PSIG-006",
+        "condition_id": "COND-PSIG-006",
+        "zone_class": null
+      },
+      "output": {
+        "behavioral_meaning": "A PSIG-006 condition is active when the theoretical baseline threshold for structural observability is crossed. Activation records the set of entities that fall outside the observable structural scope. The blind-spot condition is not attributed to any pressure zone.",
+        "system_expression": "Activated via THEORETICAL_BASELINE method when the binary threshold is reached (PSIG-006 value ≥ threshold). Affected entity scope is recorded. PSIG-006 condition does not contribute to pressure zone designation — it is recorded separately as a structural observability boundary. Condition state is ACTIVATED when active.",
+        "business_expression": "The structural blind-spot threshold has been crossed for this run. The condition records the presence of an observability gap and its affected entity scope — it is not a pressure zone designation and carries no severity."
+      },
+      "constraints": {
+        "no_prediction": true,
+        "no_recommendation": true,
+        "no_prioritization": true,
+        "no_severity": true
+      }
+    },
+
+    {
+      "id": "INT-020",
+      "entry_type": "composite",
+      "name": "Compound Zone Composite — Placeholder",
+      "source_authority": "PI.41X.INTERPRETATION-REGISTRY.01 — placeholder only",
+      "inputs": {
+        "signal_id": null,
+        "condition_id": null,
+        "zone_class": "COMPOUND_ZONE"
+      },
+      "output": {
+        "behavioral_meaning": "PLACEHOLDER — composite interpretation aggregating zone, signal, and condition interpretations across a co-present condition set. No aggregation logic is defined in registry version 1.0. Future composite entries will reference specific INT-XXX component entries by ID.",
+        "system_expression": "PLACEHOLDER — composite system expression requires authorized aggregation rules across component INT-XXX entries. When defined, a composite entry will enumerate the INT-XXX IDs it aggregates and declare the aggregation method. Not defined in registry version 1.0.",
+        "business_expression": "PLACEHOLDER — composite business expression requires scope definition and authorized integration rules. Not defined in registry version 1.0."
+      },
+      "constraints": {
+        "no_prediction": true,
+        "no_recommendation": true,
+        "no_prioritization": true,
+        "no_severity": true
+      }
+    }
+
+  ]
+}

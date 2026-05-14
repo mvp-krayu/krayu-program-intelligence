@@ -1,0 +1,434 @@
+{
+  "schema_version": "1.0",
+  "stream": "PI.LENS.NEXTGEN-REPORTS.COGNITIVE-NORMALIZATION-INTEGRATION.01",
+  "authority": "GEIOS_LENS_PRODUCTIZATION_BRIDGE.md §8, §9, §13",
+  "upstream_schema": "PI.LENS.NEXTGEN-REPORTS.REPORT-OBJECT-MODEL.01 (e588150)",
+  "baseline_ref": "governed-dpsig-baseline-v1",
+  "normalization_version": "1.0",
+  "issued": "2026-05-08",
+  "description": "Machine-readable normalization rules registry for LENS NextGen cognitive normalization integration. Defines ALI-01..07 integration rules, qualifier rendering rules, narrative rules, propagation rules, and governance enforcement rules.",
+
+  "normalization_rules": [
+    {
+      "rule_id": "NORM-ALI-01",
+      "name": "Cluster Pressure Index signal label normalization",
+      "domain": "ALI",
+      "source_field": "cpi_score / CPI signal key",
+      "source_layer": "L2/L3 DPSIG derivation",
+      "target_field": "signal_cards[].signal_label",
+      "default_label": "Cluster Pressure Level",
+      "client_configurable": true,
+      "configuration_path": "client_topology_config.signal_aliases.cpi",
+      "forbidden_outputs": ["cpi_score", "CPI", "cluster_pressure_index"],
+      "forbidden_in_executive_surface": true,
+      "application_timing": "at_generation",
+      "immutable_after_normalization": true,
+      "enforcement": "If source CPI key detected in any executive-visible field: NORM-DIAG-01 triggered"
+    },
+    {
+      "rule_id": "NORM-ALI-02",
+      "name": "Cluster Fan Asymmetry signal label normalization",
+      "domain": "ALI",
+      "source_field": "cfa_score / CFA signal key",
+      "source_layer": "L2/L3 DPSIG derivation",
+      "target_field": "signal_cards[].signal_label",
+      "default_label": "Fan Distribution Asymmetry",
+      "client_configurable": true,
+      "configuration_path": "client_topology_config.signal_aliases.cfa",
+      "forbidden_outputs": ["cfa_score", "CFA", "cluster_fan_asymmetry"],
+      "forbidden_in_executive_surface": true,
+      "application_timing": "at_generation",
+      "immutable_after_normalization": true,
+      "enforcement": "If source CFA key detected in any executive-visible field: NORM-DIAG-01 triggered"
+    },
+    {
+      "rule_id": "NORM-ALI-03",
+      "name": "Executive readiness state label normalization",
+      "domain": "ALI",
+      "source_field": "readiness_state",
+      "source_layer": "L8 executive rendering",
+      "target_field": "header_block.readiness_badge.state_label",
+      "mapping": {
+        "EXECUTIVE_READY": "Executive Ready",
+        "EXECUTIVE_READY_WITH_QUALIFIER": "Executive Ready — Qualified",
+        "DIAGNOSTIC_ONLY": "Under Structural Review",
+        "SUPPRESSED_FROM_EXECUTIVE": "Not Available",
+        "BLOCKED_PENDING_DOMAIN_GROUNDING": "Pending Grounding"
+      },
+      "forbidden_outputs": ["EXECUTIVE_READY", "DIAGNOSTIC_ONLY", "SUPPRESSED_FROM_EXECUTIVE", "BLOCKED_PENDING_DOMAIN_GROUNDING"],
+      "forbidden_in_executive_surface": true,
+      "application_timing": "at_generation",
+      "immutable_after_normalization": true,
+      "enforcement": "Raw readiness_state enum values must never appear in any executive-visible field"
+    },
+    {
+      "rule_id": "NORM-ALI-04",
+      "name": "Domain name alias normalization",
+      "domain": "ALI",
+      "source_field": "domain_id",
+      "source_layer": "L1/L3 topology",
+      "target_field": "evidence_blocks[].domain_alias; narrative_block (references); propagation path entries",
+      "default_label": "Domain {n}",
+      "client_configurable": true,
+      "configuration_path": "client_topology_config.domain_aliases",
+      "forbidden_outputs": ["raw domain IDs", "internal topology keys", "system path identifiers"],
+      "forbidden_in_executive_surface": true,
+      "application_timing": "at_generation",
+      "immutable_after_normalization": true,
+      "enforcement": "All domain references in executive surface must use configured alias. Raw IDs trigger NORM-DIAG-01."
+    },
+    {
+      "rule_id": "NORM-ALI-05",
+      "name": "Cluster name alias normalization",
+      "domain": "ALI",
+      "source_field": "cluster_key",
+      "source_layer": "L1/L3 topology",
+      "target_field": "trace_block.propagation_path entries; narrative_block cluster references",
+      "default_label": "Cluster {n}",
+      "client_configurable": true,
+      "configuration_path": "client_topology_config.cluster_aliases",
+      "forbidden_outputs": ["raw cluster keys", "internal cluster identifiers"],
+      "forbidden_in_executive_surface": true,
+      "application_timing": "at_generation",
+      "immutable_after_normalization": true,
+      "enforcement": "All cluster references in executive surface use configured alias."
+    },
+    {
+      "rule_id": "NORM-ALI-06",
+      "name": "Diagnostic state body-text normalization",
+      "domain": "ALI",
+      "source_field": "DIAGNOSTIC_ONLY occurrences in body text (outside readiness badge)",
+      "source_layer": "L6/L7",
+      "target_field": "Any body text reference to diagnostic state",
+      "default_label": "Under Structural Review",
+      "client_configurable": false,
+      "forbidden_outputs": ["DIAGNOSTIC_ONLY"],
+      "forbidden_in_executive_surface": true,
+      "application_timing": "at_generation",
+      "immutable_after_normalization": true,
+      "enforcement": "Wherever DIAGNOSTIC_ONLY state is referenced in narrative text, ALI-06 substitutes the executive label."
+    },
+    {
+      "rule_id": "NORM-ALI-07",
+      "name": "Suppressed signal absence notice",
+      "domain": "ALI",
+      "source_field": "SUPPRESSED_FROM_EXECUTIVE state; Q-04 qualifier signals",
+      "source_layer": "L6/L8",
+      "target_field": "Section absence notice (replaces signal content)",
+      "output_behavior": "section_absence_notice",
+      "absence_notice_text": "Signal intelligence withheld from this view",
+      "client_configurable": false,
+      "forbidden_outputs": ["SUPPRESSED_FROM_EXECUTIVE", "blank section", "silent omission"],
+      "forbidden_in_executive_surface": true,
+      "application_timing": "at_generation",
+      "immutable_after_normalization": true,
+      "enforcement": "Q-04 signals are never rendered. Their absence is always made explicit via absence notice. Silent suppression triggers governance violation."
+    },
+    {
+      "rule_id": "NORM-Q-01",
+      "name": "Q-01 Partial Grounding qualifier chip rendering",
+      "domain": "QUALIFIER",
+      "qualifier_class": "Q-01",
+      "chip_label": "Partial Grounding",
+      "chip_color_token": "--evidence-qualified",
+      "chip_style": "amber",
+      "tooltip_template": "Analysis based on {grounded_domain_count} of {domain_count} grounded domains. Findings reflect confirmed structural topology within the analyzed scope.",
+      "scope_note_injection": "append_to_executive_summary",
+      "scope_note_template": "Analysis covers {grounded_domain_count} of {domain_count} confirmed domains.",
+      "suppression_prohibited": true,
+      "enforcement": "Q-01 chip must appear on readiness badge and any signal cards with Q-01 grounding_status. Tooltip must render. Scope note injected."
+    },
+    {
+      "rule_id": "NORM-Q-02",
+      "name": "Q-02 Structural View qualifier chip rendering",
+      "domain": "QUALIFIER",
+      "qualifier_class": "Q-02",
+      "chip_label": "Structural View",
+      "chip_color_token": "--evidence-structural",
+      "chip_style": "blue",
+      "tooltip_template": "Structural topology confirmed. Semantic depth reflects available domain grounding.",
+      "scope_note_injection": "confidence_panel_only",
+      "suppression_prohibited": true,
+      "enforcement": "Q-02 chip on readiness badge. Tooltip renders. Scope note in CONFIDENCE panel."
+    },
+    {
+      "rule_id": "NORM-Q-03",
+      "name": "Q-03 Under Review qualifier indicator rendering",
+      "domain": "QUALIFIER",
+      "qualifier_class": "Q-03",
+      "chip_label": "Under Structural Review",
+      "chip_color_token": "--evidence-diagnostic",
+      "chip_style": "grey",
+      "tooltip_template": "This analysis is under structural review. Advisory confirmation recommended before executive action.",
+      "narrative_frame": "diagnostic",
+      "suppression_prohibited": true,
+      "enforcement": "Q-03 indicator on readiness badge. Narrative framed as diagnostic. Advisory confirmation note in CONFIDENCE panel."
+    },
+    {
+      "rule_id": "NORM-Q-04",
+      "name": "Q-04 Suppressed signal absence handling",
+      "domain": "QUALIFIER",
+      "qualifier_class": "Q-04",
+      "behavior": "absence_notice_only",
+      "absence_notice_text": "Signal intelligence withheld from this view",
+      "silent_suppression_prohibited": true,
+      "enforcement": "No signal content rendered for Q-04 signals. Explicit absence notice mandatory. Blank section is a governance violation."
+    },
+    {
+      "rule_id": "NORM-PROP-01",
+      "name": "Propagation direction language normalization",
+      "domain": "PROPAGATION",
+      "approved_origin_phrases": ["originates in", "is concentrated in", "emanates from"],
+      "approved_flow_phrases": ["flows through", "passes through", "channels through"],
+      "approved_destination_phrases": ["reaches", "affects", "places load on"],
+      "approved_isolation_phrases": ["shows independent pressure pattern", "is structurally isolated"],
+      "application": "trace_block.propagation_summary; narrative_block propagation references",
+      "enforcement": "Propagation descriptions use only approved directional vocabulary. No spatial metaphors that imply velocity, time, or intent."
+    },
+    {
+      "rule_id": "NORM-PROP-02",
+      "name": "Propagation numerical value prohibition",
+      "domain": "PROPAGATION",
+      "prohibition": "No numerical values in propagation descriptions",
+      "forbidden_patterns": ["[0-9]+\\.[0-9]+", "threshold", "coefficient", "score", "index value"],
+      "replacement_rule": "Replace numerical references with PressureTier labels (HIGH/ELEVATED/MODERATE/LOW)",
+      "enforcement": "Propagation text must never contain numerical derivation values. Pressure tier labels are the only quantitative language permitted."
+    },
+    {
+      "rule_id": "NORM-PROP-03",
+      "name": "Propagation scope qualification for partial evidence",
+      "domain": "PROPAGATION",
+      "trigger": "qualifier_class is Q-01 or Q-02",
+      "obligation": "Propagation description must include scope qualifier",
+      "scope_template": "Propagation analysis covers confirmed topology within {grounded_domain_count} of {domain_count} domains.",
+      "enforcement": "When qualifier is Q-01/Q-02, propagation claims are bounded. The normalization layer injects scope qualification."
+    },
+    {
+      "rule_id": "NORM-NARR-01",
+      "name": "Inverted pyramid narrative structure",
+      "domain": "NARRATIVE",
+      "structure": "conclusion_first",
+      "layer_1": "Readiness conclusion (1 sentence)",
+      "layer_2": "Primary structural finding (1-2 sentences)",
+      "layer_3": "Supporting evidence summary (1-2 sentences)",
+      "layer_4": "Qualifier scope if Q-01/Q-02 (1 sentence; end of summary)",
+      "enforcement": "executive_summary must lead with conclusion. Evidence follows finding. Qualifier scope note is last, not first."
+    },
+    {
+      "rule_id": "NORM-NARR-02",
+      "name": "Executive-first phrasing transformation",
+      "domain": "NARRATIVE",
+      "principle": "Findings stated in executive significance terms, not technical mechanism terms",
+      "examples": [
+        {"technical": "CPI exceeds 0.7 in Cluster X", "executive": "[Domain alias] shows elevated execution pressure"},
+        {"technical": "CFA asymmetry coefficient is 0.83", "executive": "[Domain alias] shows uneven downstream distribution"},
+        {"technical": "L2 contribution from cluster key abc123", "executive": "[Cluster alias] concentration drives [Domain alias] pressure"}
+      ],
+      "enforcement": "Technical language triggers NORM-DIAG-01 if found in executive-visible narrative fields."
+    },
+    {
+      "rule_id": "NORM-NARR-03",
+      "name": "Structural-first explanation order",
+      "domain": "NARRATIVE",
+      "principle": "Describe what topology shows before interpreting what it means",
+      "structure": ["structural observation", "structural interpretation"],
+      "example": {
+        "observation": "[Domain alias] shows concentrated pressure in [cluster alias].",
+        "interpretation": "This pattern indicates structural bottleneck rather than capacity issue."
+      },
+      "enforcement": "Interpretation sentences must follow observation sentences, not precede them."
+    },
+    {
+      "rule_id": "NORM-NARR-04",
+      "name": "Sentence length and readability constraint",
+      "domain": "NARRATIVE",
+      "max_words_per_sentence": 25,
+      "min_sentence_completeness": "subject + verb + object",
+      "forbidden_patterns": ["nested dependent clauses in primary finding sentences", "unexplained acronyms"],
+      "enforcement": "Narrative sentences exceeding 25 words trigger NORM-DIAG-01. Incomplete sentences trigger NORM-DIAG-01."
+    },
+    {
+      "rule_id": "NORM-DENSITY-01",
+      "name": "Executive summary finding density constraint",
+      "domain": "DENSITY",
+      "max_primary_findings_in_summary": 3,
+      "overflow_target": "structural_summary",
+      "principle": "Density is managed through hierarchy, not through information removal",
+      "enforcement": "executive_summary contains maximum 3 primary findings. Additional findings in structural_summary. No evidence is discarded — only display priority is managed."
+    },
+    {
+      "rule_id": "NORM-DENSITY-02",
+      "name": "Signal card default visibility constraint",
+      "domain": "DENSITY",
+      "default_visible_signal_cards": 5,
+      "overflow_mechanism": "progressive_disclosure",
+      "default_collapsed": true,
+      "enforcement": "Maximum 5 signal cards visible by default per domain. Additional cards accessible via evidence drawer expansion. No signal card is discarded."
+    },
+    {
+      "rule_id": "NORM-TRACE-01",
+      "name": "Trace reference label rendering",
+      "domain": "TRACE",
+      "principle": "Trace identifiers are rendered as reference labels, not decoded values",
+      "applies_to": ["derivation_lineage_ref", "stream_anchor", "run_id"],
+      "rendering_format": "Reference: {identifier}",
+      "decoding_prohibited": true,
+      "enforcement": "Trace identifiers appear as opaque reference labels in the TRACE panel. No decoding or interpretation of the identifier value."
+    },
+    {
+      "rule_id": "NORM-TRACE-02",
+      "name": "derivation_hash executive surface prohibition",
+      "domain": "TRACE",
+      "field": "derivation_hash",
+      "executive_visible": false,
+      "advisory_visible": false,
+      "audit_visible": "abbreviated reference ID",
+      "enforcement": "derivation_hash never appears in executive or advisory surface. Available as reference ID in LINEAGE panel for AUDIT tier only."
+    },
+    {
+      "rule_id": "NORM-FORBID-01",
+      "name": "Predictive language prohibition",
+      "domain": "FORBIDDEN",
+      "prohibited_patterns": [
+        "will result in",
+        "will cause",
+        "will lead to",
+        "is expected to",
+        "is likely to",
+        "is anticipated to",
+        "predicts",
+        "forecasts",
+        "projected outcome",
+        "will degrade",
+        "will improve"
+      ],
+      "fail_action": "BLOCKED",
+      "fail_message": "Predictive language detected in normalized narrative — governance violation — no predictive authority in governed structural derivation",
+      "enforcement": "Any predictive pattern in normalized narrative output triggers BLOCKED state."
+    },
+    {
+      "rule_id": "NORM-FORBID-02",
+      "name": "Recommendation language prohibition",
+      "domain": "FORBIDDEN",
+      "prohibited_patterns": [
+        "we recommend",
+        "action item",
+        "you should",
+        "the team should",
+        "must be addressed",
+        "requires immediate",
+        "action required",
+        "fix this",
+        "resolve this",
+        "address this"
+      ],
+      "fail_action": "BLOCKED",
+      "fail_message": "Recommendation language detected — governance violation — reports provide intelligence not prescriptions",
+      "enforcement": "Recommendation patterns trigger BLOCKED state. Advisory determines remediation; the report does not."
+    },
+    {
+      "rule_id": "NORM-FORBID-03",
+      "name": "Speculative and probabilistic language prohibition",
+      "domain": "FORBIDDEN",
+      "prohibited_patterns": [
+        "possibly",
+        "perhaps",
+        "maybe",
+        "might indicate",
+        "could suggest",
+        "may represent",
+        "our analysis suggests",
+        "we believe",
+        "confidence: [0-9]+%"
+      ],
+      "fail_action": "DIAGNOSTIC",
+      "fail_message": "Speculative language detected — replace with evidence-bounded statement or qualifier scope note",
+      "enforcement": "Speculative patterns trigger DIAGNOSTIC treatment. Uncertainty must be expressed through Q-taxonomy qualifiers, not speculative prose."
+    },
+    {
+      "rule_id": "NORM-FORBID-04",
+      "name": "Consumer AI and chatbot phrasing prohibition",
+      "domain": "FORBIDDEN",
+      "prohibited_patterns": [
+        "Sure!",
+        "Certainly!",
+        "Great question!",
+        "Let me explain",
+        "I think",
+        "I believe",
+        "I found",
+        "As an AI",
+        "Based on my analysis",
+        "I'm unable to"
+      ],
+      "fail_action": "BLOCKED",
+      "fail_message": "Consumer AI phrasing detected — governance violation — LENS is not a chatbot product",
+      "enforcement": "AI/chatbot phrasing triggers BLOCKED state. These patterns indicate a fundamental normalization failure."
+    },
+    {
+      "rule_id": "NORM-DET-01",
+      "name": "ALI rule determinism guarantee",
+      "domain": "DETERMINISTIC",
+      "guarantee": "Same ALI rule + same source value produces same executive label on every invocation",
+      "state_requirement": "ALI mapping is stateless — no session context, client history, or time affects output",
+      "version_requirement": "normalization_version recorded in rendering_metadata; same version always produces same output",
+      "enforcement": "Non-deterministic normalization output (same input → different output) is a governance violation. LENS rendering of committed normalized content is deterministic by construction."
+    },
+    {
+      "rule_id": "NORM-DET-02",
+      "name": "Stateless normalization guarantee",
+      "domain": "DETERMINISTIC",
+      "guarantee": "Normalization pipeline has no session state — prior reports, prior interactions, user identity do not influence normalization output",
+      "allowed_state": "client_topology_config (fixed at analysis time); normalization_version (fixed at generation time)",
+      "forbidden_state": "session history, user preferences, prior report content, interaction context",
+      "enforcement": "Normalization must produce identical output for identical GEIOS artifacts regardless of execution context."
+    },
+    {
+      "rule_id": "NORM-DIAG-01",
+      "name": "ALI rule miss diagnostic trigger",
+      "domain": "DIAGNOSTIC",
+      "trigger": "Source value has no ALI mapping in active normalization_version",
+      "fail_action": "DIAGNOSTIC",
+      "behavior": "Technical label suppressed (blank, not raw label). DIAGNOSTIC notice on affected field.",
+      "fail_message": "Normalization miss: source field has no ALI mapping — technical label suppressed; advisory review required",
+      "prohibited_behavior": "Do not display raw technical label when ALI rule miss occurs",
+      "enforcement": "ALI miss = blank label + DIAGNOSTIC notice. Never show raw GEIOS field name to executive."
+    },
+    {
+      "rule_id": "NORM-DIAG-02",
+      "name": "Normalization version mismatch diagnostic",
+      "domain": "DIAGNOSTIC",
+      "trigger": "rendering_metadata.normalization_version does not match active normalization dictionary version",
+      "fail_action": "DIAGNOSTIC",
+      "behavior": "DIAGNOSTIC notice on narrative block. Report continues to render from committed normalized content (do not re-normalize).",
+      "fail_message": "Normalization version mismatch — report was generated with an earlier normalization dictionary — advisory review recommended",
+      "enforcement": "Version mismatch does not trigger BLOCKED; it triggers DIAGNOSTIC. Committed report_object content is still valid."
+    }
+  ],
+
+  "rule_domains": {
+    "ALI": ["NORM-ALI-01", "NORM-ALI-02", "NORM-ALI-03", "NORM-ALI-04", "NORM-ALI-05", "NORM-ALI-06", "NORM-ALI-07"],
+    "QUALIFIER": ["NORM-Q-01", "NORM-Q-02", "NORM-Q-03", "NORM-Q-04"],
+    "PROPAGATION": ["NORM-PROP-01", "NORM-PROP-02", "NORM-PROP-03"],
+    "NARRATIVE": ["NORM-NARR-01", "NORM-NARR-02", "NORM-NARR-03", "NORM-NARR-04"],
+    "DENSITY": ["NORM-DENSITY-01", "NORM-DENSITY-02"],
+    "TRACE": ["NORM-TRACE-01", "NORM-TRACE-02"],
+    "FORBIDDEN": ["NORM-FORBID-01", "NORM-FORBID-02", "NORM-FORBID-03", "NORM-FORBID-04"],
+    "DETERMINISTIC": ["NORM-DET-01", "NORM-DET-02"],
+    "DIAGNOSTIC": ["NORM-DIAG-01", "NORM-DIAG-02"]
+  },
+
+  "fail_action_matrix": {
+    "BLOCKED": ["NORM-FORBID-01", "NORM-FORBID-02", "NORM-FORBID-04", "NORM-ALI-07 (silent suppression)"],
+    "DIAGNOSTIC": ["NORM-FORBID-03", "NORM-DIAG-01", "NORM-DIAG-02", "NORM-NARR-04"],
+    "GOVERNANCE_VIOLATION": ["NORM-Q-01 suppressed", "NORM-Q-02 suppressed", "NORM-Q-03 suppressed", "NORM-Q-04 silent", "NORM-DET-01 violated", "NORM-DET-02 violated"]
+  },
+
+  "phase_2_restrictions": {
+    "no_live_normalization_at_render_time": true,
+    "all_normalization_applied_at_generation": true,
+    "lens_renders_pre_normalized_content_only": true,
+    "no_session_state_influence": true,
+    "all_ali_rules_applied_before_report_object_commit": true
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "stream_id": "PI.SQO.STATE-DETECTION-ENGINE.01",
+  "branch": "work/semantic-qualification-loop",
+  "baseline_commit": "9fdf308",
+  "baseline_pipeline_commit": "93098cb",
+  "summary": {
+    "files_created": 21,
+    "files_modified": 0,
+    "files_deleted": 0
+  },
+  "files": [
+    {
+      "path": "app/execlens-demo/lib/lens-v2/sqo/QualificationStateEngine.js",
+      "change": "created",
+      "purpose": "Core S-state detection engine: detectQualificationState, classifyAuthorizationFromSState, normalizeQualificationState, runFullDetection"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/sqo/QualificationStateArtifact.js",
+      "change": "created",
+      "purpose": "Qualification state artifact builder and emitter"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/sqo/QualificationHistory.js",
+      "change": "created",
+      "purpose": "Append-only qualification history mechanism"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/sqo/ReplayVerifier.js",
+      "change": "created",
+      "purpose": "Replay verification for qualification state artifacts"
+    },
+    {
+      "path": "app/execlens-demo/flagship-experience/tests/sqo-state-detection.test.js",
+      "change": "created",
+      "purpose": "49 tests across 14 suites certifying S-state detection engine"
+    },
+    {
+      "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/qualification_state.v1.json",
+      "change": "created",
+      "purpose": "BlueEdge S2 qualification state artifact"
+    },
+    {
+      "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/qualification_history.v1.json",
+      "change": "created",
+      "purpose": "BlueEdge qualification history (INITIAL entry)"
+    },
+    {
+      "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/qualification_state_replay_verification.v1.json",
+      "change": "created",
+      "purpose": "BlueEdge replay verification (PASS)"
+    },
+    {
+      "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/qualification_state_certification.v1.json",
+      "change": "created",
+      "purpose": "E2E certification artifact (CERTIFIED)"
+    },
+    {
+      "path": "artifacts/sqo/fastapi/run_02_oss_fastapi_pipeline/qualification_state.v1.json",
+      "change": "created",
+      "purpose": "FastAPI S1 qualification state artifact"
+    },
+    {
+      "path": "artifacts/sqo/fastapi/run_02_oss_fastapi_pipeline/qualification_history.v1.json",
+      "change": "created",
+      "purpose": "FastAPI qualification history (INITIAL entry)"
+    },
+    {
+      "path": "artifacts/sqo/fastapi/run_02_oss_fastapi_pipeline/qualification_state_replay_verification.v1.json",
+      "change": "created",
+      "purpose": "FastAPI replay verification (PASS)"
+    },
+    {
+      "path": "artifacts/sqo/fastapi/run_02_oss_fastapi_pipeline/qualification_state_certification.v1.json",
+      "change": "created",
+      "purpose": "E2E certification artifact (CERTIFIED)"
+    },
+    {
+      "path": "docs/psee/PI.SQO.STATE-DETECTION-ENGINE.01/STATE_DETECTION_ENGINE_IMPLEMENTATION.md",
+      "change": "created",
+      "purpose": "Implementation documentation"
+    },
+    {
+      "path": "docs/psee/PI.SQO.STATE-DETECTION-ENGINE.01/QUALIFICATION_STATE_ARTIFACT_SPEC.md",
+      "change": "created",
+      "purpose": "Artifact specification"
+    },
+    {
+      "path": "docs/psee/PI.SQO.STATE-DETECTION-ENGINE.01/REPLAY_VERIFICATION_REPORT.md",
+      "change": "created",
+      "purpose": "Replay verification report"
+    },
+    {
+      "path": "docs/psee/PI.SQO.STATE-DETECTION-ENGINE.01/BLUEEDGE_FASTAPI_CERTIFICATION.md",
+      "change": "created",
+      "purpose": "BlueEdge/FastAPI certification results"
+    },
+    {
+      "path": "docs/psee/PI.SQO.STATE-DETECTION-ENGINE.01/GOVERNANCE_BOUNDARY_VALIDATION.md",
+      "change": "created",
+      "purpose": "Governance boundary validation report"
+    },
+    {
+      "path": "docs/pios/PI.SQO.STATE-DETECTION-ENGINE.01/execution_report.md",
+      "change": "created",
+      "purpose": "Governance execution report"
+    },
+    {
+      "path": "docs/pios/PI.SQO.STATE-DETECTION-ENGINE.01/file_changes.json",
+      "change": "created",
+      "purpose": "Governance file-changes manifest"
+    },
+    {
+      "path": "docs/pios/PI.SQO.STATE-DETECTION-ENGINE.01/CLOSURE.md",
+      "change": "created",
+      "purpose": "Governance closure document"
+    }
+  ],
+  "validators_changed": [],
+  "topology_mutations": [],
+  "evidence_mutations": [],
+  "lane_a_artifacts_touched": [],
+  "lane_d_dpsig_artifacts_touched": [],
+  "api_routes_modified": [],
+  "page_routes_modified": []
+}

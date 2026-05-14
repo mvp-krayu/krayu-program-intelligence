@@ -1,0 +1,25 @@
+{
+  "contract_id": "PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01",
+  "generated_date": "2026-05-02",
+
+  "semantic_topology_used": true,
+  "domain_count": 17,
+  "structurally_backed_count": 5,
+  "layout_applied": true,
+
+  "detail": {
+    "topo_container_in_tier1_evidence": true,
+    "topo_container_in_tier2_diagnostic": true,
+    "semantic_topology_svg_rendered": true,
+    "model_domains": 17,
+    "model_clusters": 5,
+    "model_edges": 12,
+    "backed_domains": ["DOMAIN-01", "DOMAIN-10", "DOMAIN-11", "DOMAIN-14", "DOMAIN-16"],
+    "zone_anchor": "DOMAIN-10",
+    "zone_anchor_dom_id": "DOM-04",
+    "zone_anchor_label": "Platform Infrastructure and Data",
+    "count_card_label_in_tier1": "17 semantic",
+    "count_card_backed_in_tier2": "5/17 semantic domains backed",
+    "dom04_anchor_preserved": true
+  }
+}

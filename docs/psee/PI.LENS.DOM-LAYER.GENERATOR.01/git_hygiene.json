@@ -1,0 +1,39 @@
+{
+  "contract_id": "PI.LENS.DOM-LAYER.GENERATOR.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-01",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+  "working_tree_at_start": "CLEAN",
+  "baseline_commit": "f415f675e631609adc95beeb945dd461d3537a4c",
+
+  "files_created_this_contract": [
+    "scripts/pios/dom_layer_generator.py",
+    "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/dom/dom_layer.json",
+    "docs/psee/PI.LENS.DOM-LAYER.GENERATOR.01/dom_layer_findings.md",
+    "docs/psee/PI.LENS.DOM-LAYER.GENERATOR.01/dom_layer_schema.json",
+    "docs/psee/PI.LENS.DOM-LAYER.GENERATOR.01/domain_derivation_rules.md",
+    "docs/psee/PI.LENS.DOM-LAYER.GENERATOR.01/validation_result.json",
+    "docs/psee/PI.LENS.DOM-LAYER.GENERATOR.01/implementation_summary.md",
+    "docs/psee/PI.LENS.DOM-LAYER.GENERATOR.01/git_hygiene.json"
+  ],
+  "files_modified_this_contract": [
+    "clients/fastapi/sources/source_01/source_manifest.json"
+  ],
+  "files_deleted_this_contract": [],
+
+  "diff_summary": "dom_layer_generator.py: new generic script (~350 lines). dom_layer.json: runtime artifact, 9 domains, 123 nodes, dual-format (domains + dom_groups). source_manifest.json: 1 field added (dom_layer_path).",
+
+  "blueedge_mutation_check": "PASS — no files under clients/blueedge/ or clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/ were created, modified, or deleted",
+  "fastapi_source_mutation_check": "PASS — no files under clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/source/ were modified",
+  "ceu_grounding_modified": "NO — scripts/pios/ceu_grounding.py not modified",
+  "structural_scanner_modified": "NO — scripts/pios/structural_scanner.py not modified",
+  "orchestrator_modified": "NO — scripts/pios/run_client_pipeline.py not modified",
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[DOM] PI.LENS.DOM-LAYER.GENERATOR.01 — Generic DOM layer generator: 9 domains, 123 nodes, dual-format output, manifest update",
+  "commit_note": "Commits are operator action per CLAUDE.md Section 7.1.",
+
+  "git_hygiene_status": "COMPLETE"
+}

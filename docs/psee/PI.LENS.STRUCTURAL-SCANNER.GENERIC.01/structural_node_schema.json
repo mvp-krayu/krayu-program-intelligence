@@ -1,0 +1,71 @@
+{
+  "contract_id": "PI.LENS.STRUCTURAL-SCANNER.GENERIC.01",
+  "artifact": "structural_node_schema",
+  "generated_date": "2026-05-01",
+  "output_file": "structure/40.2/structural_node_inventory.json",
+
+  "schema": {
+    "contract_id": "string — always PI.LENS.STRUCTURAL-SCANNER.GENERIC.01",
+    "client_id": "string — from CLI --client argument",
+    "source_id": "string — from CLI --source argument",
+    "run_id": "string — from CLI --run-id argument",
+    "stage": "string — always '40.2'",
+    "generated_at": "string — ISO 8601 UTC timestamp",
+    "total_nodes": "integer — directory_nodes + file_nodes",
+    "file_nodes": "integer — count of file-type nodes",
+    "directory_nodes": "integer — count of directory-type nodes",
+    "source_root": "string — extracted_path from source_manifest.json",
+    "nodes": "array[NodeRecord]"
+  },
+
+  "node_record_schema": {
+    "node_id": "string — NODE-NNNN (zero-padded to 4 digits)",
+    "path": "string — relative path from source_root; uses forward slashes",
+    "type": "string — 'directory' | 'file'",
+    "extension": "string | null — lowercase file extension including dot (e.g. '.py'); null for directories or extensionless files",
+    "language_type": "string — canonical language type from EXTENSION_TYPES; 'directory' for directory nodes; 'other' for unknown extensions",
+    "size_bytes": "integer | null — file size in bytes from source_inventory.json; null for directories"
+  },
+
+  "node_id_assignment": {
+    "rule": "Directories first (sorted lexicographically), then files (sorted lexicographically). Counter starts at 1.",
+    "directory_range": "NODE-0001 through NODE-{N_dirs}",
+    "file_range": "NODE-{N_dirs+1} through NODE-{N_dirs+N_files}"
+  },
+
+  "language_types": [
+    "python", "javascript", "typescript", "jsx", "tsx",
+    "json", "yaml", "markdown", "shell", "html", "css",
+    "toml", "text", "lockfile", "image", "sql",
+    "config", "directory", "other"
+  ],
+
+  "fastapi_example": {
+    "total_nodes": 123,
+    "file_nodes": 87,
+    "directory_nodes": 36,
+    "source_root": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/source/fastapi-backend",
+    "first_node": {
+      "node_id": "NODE-0001",
+      "path": ".github",
+      "type": "directory",
+      "extension": null,
+      "language_type": "directory",
+      "size_bytes": null
+    },
+    "example_file_node": {
+      "node_id": "NODE-0037",
+      "path": ".artrc",
+      "type": "file",
+      "extension": null,
+      "language_type": "other",
+      "size_bytes": 42
+    }
+  },
+
+  "orchestrator_compatibility": {
+    "field_read_by_orchestrator": "total_nodes",
+    "read_path": "run_client_pipeline.py Phase 3 — inv.get('total_nodes', inv.get('node_count', '?'))",
+    "compatibility": "COMPATIBLE — field name matches primary lookup"
+  }
+}

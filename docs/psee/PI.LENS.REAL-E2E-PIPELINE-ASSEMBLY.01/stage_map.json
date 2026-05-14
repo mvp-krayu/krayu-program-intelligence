@@ -1,0 +1,106 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE-ASSEMBLY.01",
+  "generated_date": "2026-05-03",
+  "client": "blueedge",
+  "source": "source_01",
+  "run": "run_blueedge_productized_01_fixed",
+  "mode": "validate",
+
+  "stages": [
+    {
+      "stage": "01",
+      "name": "Source",
+      "status": "READY_CALLABLE",
+      "producer": "source_intake.py",
+      "producer_present": true,
+      "output_path": "clients/blueedge/sources/source_01/source_manifest.json",
+      "output_present": true,
+      "detail": "source_manifest.json present"
+    },
+    {
+      "stage": "02",
+      "name": "Intake",
+      "status": "MISSING_INPUT",
+      "producer": "source_intake.py",
+      "producer_present": true,
+      "output_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/intake/",
+      "output_present": false,
+      "detail": "intake directory absent for run_blueedge_productized_01_fixed; source archive at external path"
+    },
+    {
+      "stage": "03",
+      "name": "Structure (40.x)",
+      "status": "READY_LOCKED_REFERENCE",
+      "producer": "structural_scanner.py",
+      "producer_present": true,
+      "output_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/canonical_topology.json",
+      "output_present": true,
+      "detail": "canonical_topology.json present in semantic/topology/; locked reference from prior run"
+    },
+    {
+      "stage": "04",
+      "name": "CEU Grounding",
+      "status": "MISSING_INPUT",
+      "producer": "ceu_grounding.py",
+      "producer_present": true,
+      "output_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/ceu/",
+      "output_present": false,
+      "detail": "ceu/ directory absent for run_blueedge_productized_01_fixed; grounding_state_v3.json exists only at UUID client path"
+    },
+    {
+      "stage": "05",
+      "name": "DOM Layer",
+      "status": "MISSING_INPUT",
+      "producer": "dom_layer_generator.py",
+      "producer_present": true,
+      "output_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/dom_layer.json",
+      "output_present": false,
+      "detail": "dom_layer.json absent in run_blueedge_productized_01_fixed"
+    },
+    {
+      "stage": "06",
+      "name": "Pipeline / Vault / 41.x",
+      "status": "READY_LOCKED_REFERENCE",
+      "producer": "run_client_pipeline.py",
+      "producer_present": true,
+      "output_path": "clients/blueedge/psee/runs/run_blueedge_productized_01/vault/",
+      "output_present": true,
+      "detail": "vault/ and 41.x/ present in vault_run (run_blueedge_productized_01); absent from display_run — locked reference via bundle split"
+    },
+    {
+      "stage": "07",
+      "name": "Semantic Bundle",
+      "status": "READY_LOCKED_REFERENCE",
+      "producer": "lens_report_generator.py",
+      "producer_present": true,
+      "output_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/semantic_bundle_manifest.json",
+      "output_present": true,
+      "detail": "semantic_bundle_manifest.json present; full semantic/ subtree present"
+    },
+    {
+      "stage": "08",
+      "name": "Reports",
+      "status": "READY_CALLABLE",
+      "producer": "lens_generate.sh + lens_report_generator.py",
+      "producer_present": true,
+      "output_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/",
+      "output_present": true,
+      "detail": "All 4 HTML reports present; lens_generate.sh present; idempotent re-generation supported"
+    },
+    {
+      "stage": "09",
+      "name": "Runtime",
+      "status": "READY_CALLABLE",
+      "producer": "lens_demo.sh",
+      "producer_present": true,
+      "output_path": "app/gauge-product/pages/lens.js + app/gauge-product/pages/tier2/workspace.js",
+      "output_present": true,
+      "detail": "lens.js and workspace.js present; lens_demo.sh entrypoint present"
+    }
+  ],
+
+  "overall_status": "PARTIAL",
+  "blocking_stages": ["02", "04", "05"],
+  "ready_stages": ["01", "03", "06", "07", "08", "09"],
+  "missing_producer_stages": []
+}

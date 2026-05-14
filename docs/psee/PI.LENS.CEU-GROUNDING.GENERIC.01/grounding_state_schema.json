@@ -1,0 +1,70 @@
+{
+  "contract_id": "PI.LENS.CEU-GROUNDING.GENERIC.01",
+  "artifact": "grounding_state_schema",
+  "generated_date": "2026-05-01",
+  "output_file": "ceu/grounding_state_v3.json",
+
+  "schema": {
+    "contract_id":             "string — always PI.LENS.CEU-GROUNDING.GENERIC.01",
+    "client":                  "string — from CLI --client argument",
+    "run_id":                  "string — from CLI --run-id argument",
+    "generated_at":            "string — ISO 8601 UTC timestamp",
+    "registry_id":             "string — registry_id from ceu_registry.json",
+    "total_ceu":               "integer — number of CEUs in registry",
+    "grounded_count":          "integer — CEUs where grounded=true",
+    "ungrounded_count":        "integer — CEUs where grounded=false (total_ceu - grounded_count)",
+    "grounding_ratio":         "float — grounded_count / total_ceu, rounded to 4 decimal places",
+    "coverage_classification": "string — HIGH | MEDIUM | LOW | ZERO",
+    "ceus":                    "array[CeuResult]",
+    "validation_status":       "string — PASS | PARTIAL | FAIL"
+  },
+
+  "ceu_result_schema": {
+    "ceu_id":           "string — CEU-NN from registry",
+    "present":          "boolean — at least one file node matched a detection rule",
+    "grounded":         "boolean — determined by activation_class and node_count",
+    "activation_class": "string — FULL | LIMITED | STRUCTURAL_ONLY | NONE",
+    "evidence_paths":   "array[string] — up to 10 matching file node paths (sorted, truncated)",
+    "node_count":       "integer — total file nodes matched for this CEU"
+  },
+
+  "coverage_classification_thresholds": {
+    "HIGH":   "grounding_ratio >= 0.8",
+    "MEDIUM": "grounding_ratio >= 0.5",
+    "LOW":    "grounding_ratio > 0",
+    "ZERO":   "grounding_ratio = 0"
+  },
+
+  "validation_status_thresholds": {
+    "PASS":    "grounding_ratio >= 0.5",
+    "PARTIAL": "grounding_ratio > 0",
+    "FAIL":    "grounding_ratio = 0"
+  },
+
+  "output_path_template": "clients/<client_id>/psee/runs/<run_id>/ceu/grounding_state_v3.json",
+
+  "orchestrator_path_note": "run_client_pipeline.py Phase 4 checks binding/provenance/grounding_state_v3.json — this differs from the generic pipeline output path (ceu/grounding_state_v3.json). Path alignment is a future concern outside this contract scope.",
+
+  "fastapi_example": {
+    "client": "fastapi",
+    "run_id": "run_02_oss_fastapi_pipeline",
+    "total_ceu": 10,
+    "grounded_count": 9,
+    "ungrounded_count": 1,
+    "grounding_ratio": 0.9,
+    "coverage_classification": "HIGH",
+    "validation_status": "PASS",
+    "ceu_summary": [
+      {"ceu_id": "CEU-01", "name": "APPLICATION_CORE",       "grounded": true,  "activation_class": "FULL",            "node_count": 64},
+      {"ceu_id": "CEU-02", "name": "SERVICE_LAYER",          "grounded": true,  "activation_class": "FULL",            "node_count": 44},
+      {"ceu_id": "CEU-03", "name": "DATA_LAYER",             "grounded": true,  "activation_class": "FULL",            "node_count":  8},
+      {"ceu_id": "CEU-04", "name": "API_ROUTING",            "grounded": true,  "activation_class": "FULL",            "node_count":  8},
+      {"ceu_id": "CEU-05", "name": "CONFIGURATION",          "grounded": true,  "activation_class": "FULL",            "node_count":  2},
+      {"ceu_id": "CEU-06", "name": "TESTING",                "grounded": true,  "activation_class": "FULL",            "node_count": 11},
+      {"ceu_id": "CEU-07", "name": "CI_CD",                  "grounded": true,  "activation_class": "FULL",            "node_count":  2},
+      {"ceu_id": "CEU-08", "name": "GENERATED_ARTIFACTS",    "grounded": false, "activation_class": "STRUCTURAL_ONLY", "node_count":  5},
+      {"ceu_id": "CEU-09", "name": "LOGGING_OBSERVABILITY",  "grounded": true,  "activation_class": "FULL",            "node_count":  9},
+      {"ceu_id": "CEU-10", "name": "DEPENDENCY_MANAGEMENT",  "grounded": true,  "activation_class": "FULL",            "node_count":  2}
+    ]
+  }
+}

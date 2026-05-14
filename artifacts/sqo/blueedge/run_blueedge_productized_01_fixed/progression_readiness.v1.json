@@ -1,0 +1,116 @@
+{
+  "schema_version": "1.0",
+  "client": "blueedge",
+  "run_id": "run_blueedge_productized_01_fixed",
+  "timestamp": "2026-05-10T13:57:16.121Z",
+  "current_s_state": "S2",
+  "next_s_state_target": "S3",
+  "progression_readiness": 0.133,
+  "blocking_debt_count": 13,
+  "total_debt_items": 15,
+  "blocking_debts": [
+    {
+      "id": "DEBT-GROUNDING_GAP-01",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "remediation_pathway": "R4"
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-02",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "remediation_pathway": "R4"
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-03",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "remediation_pathway": "R4"
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-04",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "remediation_pathway": "R4"
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-05",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "remediation_pathway": "R4"
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-06",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "remediation_pathway": "R4"
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-07",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "remediation_pathway": "R4"
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-08",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "remediation_pathway": "R4"
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-09",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "remediation_pathway": "R4"
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-10",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "remediation_pathway": "R4"
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-11",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "remediation_pathway": "R4"
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-12",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "remediation_pathway": "R4"
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-13",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "remediation_pathway": "R4"
+    }
+  ],
+  "governance": {
+    "fail_closed": true,
+    "client_agnostic": true,
+    "no_semantic_fabrication": true,
+    "deterministic": true
+  },
+  "provenance": {
+    "source_commit": "de4ccf5b1b0c",
+    "operation": "compute_progression_readiness",
+    "operation_version": "1.0",
+    "output_hash": "sha256:c1433cda47911fc230992f66300ebd1b7c4389ef517123c86f6f95b1d7c01c41"
+  }
+}

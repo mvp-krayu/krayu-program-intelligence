@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "sandbox_id": "sandbox-blueedge-run01-multi-001",
+  "last_verified": "2026-05-11T23:30:00.000Z",
+  "chain_length": 18,
+  "chain_valid": true,
+  "verification_method": "sequential_hash_chain",
+  "violations": [],
+  "coverage": {
+    "events_verified": 18,
+    "events_total": 18,
+    "coverage_percentage": 100.0
+  }
+}

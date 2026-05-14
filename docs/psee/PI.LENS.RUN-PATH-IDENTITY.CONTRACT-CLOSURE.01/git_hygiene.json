@@ -1,0 +1,39 @@
+{
+  "contract_id": "PI.LENS.RUN-PATH-IDENTITY.CONTRACT-CLOSURE.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-03",
+
+  "branch": "work/psee-runtime",
+  "baseline_commit": "180b2a0a739decbec519dd217d8de521c4a698c5",
+  "baseline_commit_message": "[FIX] Source intake supports external archive paths safely",
+
+  "working_tree_before": "CLEAN",
+  "working_tree_after": "1 orchestrator script modified (tracked), 1 evidence directory created (untracked)",
+
+  "files_modified_tracked": [
+    "scripts/pios/run_client_pipeline.py"
+  ],
+  "files_created_tracked": [
+    "docs/psee/PI.LENS.RUN-PATH-IDENTITY.CONTRACT-CLOSURE.01/run_path_identity_contract_decision.md",
+    "docs/psee/PI.LENS.RUN-PATH-IDENTITY.CONTRACT-CLOSURE.01/implementation_summary.md",
+    "docs/psee/PI.LENS.RUN-PATH-IDENTITY.CONTRACT-CLOSURE.01/validation_result.json",
+    "docs/psee/PI.LENS.RUN-PATH-IDENTITY.CONTRACT-CLOSURE.01/path_resolution_classification.json",
+    "docs/psee/PI.LENS.RUN-PATH-IDENTITY.CONTRACT-CLOSURE.01/no_pipeline_attestation.md",
+    "docs/psee/PI.LENS.RUN-PATH-IDENTITY.CONTRACT-CLOSURE.01/git_hygiene.json"
+  ],
+  "files_modified_gitignored": [],
+
+  "pipeline_executed": false,
+  "canonical_artifacts_mutated": false,
+  "producer_scripts_modified": ["scripts/pios/run_client_pipeline.py"],
+  "renderer_modified": false,
+  "semantic_bundle_modified": false,
+  "ui_modified": false,
+  "api_modified": false,
+  "fastapi_involved": false,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[FIX] PI.LENS.RUN-PATH-IDENTITY.CONTRACT-CLOSURE.01 — run_client_pipeline.py phases 2+3 hybrid path resolution; --phase arg; BLOCKER-02 closed",
+
+  "git_hygiene_status": "COMPLETE"
+}

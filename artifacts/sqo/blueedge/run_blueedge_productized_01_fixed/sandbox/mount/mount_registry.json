@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "sandbox_id": "sandbox-blueedge-run01-micro-001",
+  "baseline_hash": "e7fd21c49a4e7d1585147326f17df1c7ab8dc13889cea613d4eb27251cebe10c",
+  "mounts": [
+    {
+      "package_id": "SEP-blueedge-run01-001",
+      "package_version": 1,
+      "package_hash": "sha256:micro_overlay_001_v1",
+      "mounted_at": "2026-05-11T22:00:05.000Z",
+      "mount_status": "UNMOUNTED",
+      "unmounted_at": "2026-05-11T22:00:08.000Z",
+      "unmount_reason": "Micro-activation proof complete — demonstrating deterministic rollback",
+      "unmount_authority": "stream_contract",
+      "entry_count": 1,
+      "semantic_classes": ["TECHNICAL"],
+      "claim_types": ["LINEAGE_UPGRADE"],
+      "target_domains": ["DOMAIN-11"],
+      "origin": "OVERLAY"
+    }
+  ],
+  "mount_summary": {
+    "total_mounts": 1,
+    "currently_mounted": 0,
+    "unmounted": 1,
+    "superseded": 0
+  }
+}

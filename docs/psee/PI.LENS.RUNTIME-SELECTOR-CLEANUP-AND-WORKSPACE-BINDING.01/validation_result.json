@@ -1,0 +1,11 @@
+{
+  "contract_id": "PI.LENS.RUNTIME-SELECTOR-CLEANUP-AND-WORKSPACE-BINDING.01",
+  "generated_date": "2026-05-03",
+  "duplicate_reports_removed": true,
+  "selector_single_source": true,
+  "workspace_binding": "PASS",
+  "report_links": "PASS",
+  "internal_navigation": "PASS",
+  "workspace_binding_note": "lens.js passes client+run in workspace URL; workspace.js param consumption deferred to PI.LENS.WORKSPACE.DEEP-BINDING.01",
+  "errors": []
+}

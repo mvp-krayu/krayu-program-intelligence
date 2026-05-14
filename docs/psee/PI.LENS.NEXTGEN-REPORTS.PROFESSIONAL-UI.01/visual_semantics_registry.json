@@ -1,0 +1,374 @@
+{
+  "schema_version": "1.0",
+  "stream": "PI.LENS.NEXTGEN-REPORTS.PROFESSIONAL-UI.01",
+  "authority": "PROFESSIONAL_UI_ARCHITECTURE.md; COGNITIVE_NORMALIZATION_INTEGRATION.md; EVIDENCE_PANEL_ARCHITECTURE.md",
+  "baseline_ref": "governed-dpsig-baseline-v1",
+  "issued": "2026-05-08",
+  "description": "Formal visual semantics registry for LENS NextGen executive rendering. Defines semantic rules for readiness badges, qualifier chips, signal severity, pressure tiers, propagation roles, blocked/diagnostic states, evidence visibility, audit visibility, and topology display.",
+
+  "visual_semantics_rules": [
+
+    {
+      "rule_id": "VIS-READY-01",
+      "name": "Readiness Badge State Token Mapping",
+      "domain": "READINESS_VISIBILITY",
+      "description": "Readiness badge visual treatment is determined solely by the ReadinessState value from the report_object. No aesthetic override is permitted. Design token is derived from governance state.",
+      "mapping": {
+        "EXECUTIVE_READY":                    {"badge_token": "token-ready",           "executive_label": "Executive Ready",               "qualifier_chip": null},
+        "EXECUTIVE_READY_WITH_QUALIFIER":      {"badge_token": "token-ready-qualified", "executive_label": "Executive Ready — Qualified",   "qualifier_chip": "ACTIVE"},
+        "DIAGNOSTIC_ONLY":                    {"badge_token": "token-diagnostic",      "executive_label": "Under Structural Review",       "qualifier_chip": "token-qualifier-grey"},
+        "SUPPRESSED_FROM_EXECUTIVE":          {"badge_token": "token-suppressed",      "executive_label": "Not Available",                 "qualifier_chip": null},
+        "BLOCKED_PENDING_DOMAIN_GROUNDING":   {"badge_token": "token-blocked",         "executive_label": "Pending Grounding",             "qualifier_chip": null}
+      },
+      "forbidden": ["raw ReadinessState enum values in badge text", "aesthetic color overrides", "custom badge tokens outside mapping"],
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "phase": "Phase 2+"
+    },
+
+    {
+      "rule_id": "VIS-READY-02",
+      "name": "Readiness Badge Visual Priority Enforcement",
+      "domain": "READINESS_VISIBILITY",
+      "description": "Readiness badge is the highest-priority visual element. It must be the first rendered element in REGION_EXECUTIVE_HEADER. Cannot be minimized, hidden, or visually de-emphasized below any other element.",
+      "requirements": {
+        "always_first_in_header": true,
+        "cannot_be_hidden": true,
+        "cannot_be_minimized_on_narrow_viewport": true,
+        "minimum_visual_scale": "proportional — never smaller than supporting elements",
+        "cannot_be_replaced_by_generic_status_indicator": true
+      },
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "phase": "Phase 2+"
+    },
+
+    {
+      "rule_id": "VIS-QUAL-01",
+      "name": "Qualifier Chip Token and Label Mapping",
+      "domain": "QUALIFIER_PERSISTENCE",
+      "description": "Qualifier chip visual treatment is determined by Q-taxonomy class. Chip label is from vocabulary contract. Raw Q-xx values forbidden in display.",
+      "mapping": {
+        "Q-00": {"chip_label": null,                "chip_token": "NONE",                  "renders": false,        "tooltip": null},
+        "Q-01": {"chip_label": "Partial Grounding", "chip_token": "token-qualifier-amber",  "renders": true,         "tooltip": "pre-rendered from Q-taxonomy"},
+        "Q-02": {"chip_label": "Structural View",   "chip_token": "token-qualifier-blue",   "renders": true,         "tooltip": "pre-rendered from Q-taxonomy"},
+        "Q-03": {"chip_label": "Under Review",      "chip_token": "token-qualifier-grey",   "renders": true,         "tooltip": "pre-rendered from Q-taxonomy"},
+        "Q-04": {"chip_label": null,                "chip_token": "NONE",                  "renders": false,        "tooltip": null, "absence_notice": "Signal intelligence withheld from this view."}
+      },
+      "forbidden": ["raw Q-00..Q-04 text in chip label", "hiding chip when Q-01..Q-03 active", "custom chip tokens outside mapping"],
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "phase": "Phase 2+"
+    },
+
+    {
+      "rule_id": "VIS-QUAL-02",
+      "name": "Qualifier Chip Persistence Across Viewport Sizes",
+      "domain": "QUALIFIER_PERSISTENCE",
+      "description": "Qualifier chip must remain visible at all viewport sizes. It cannot be hidden to simplify the header on narrow screens. It may reflow to a second line in the header but must not disappear.",
+      "requirements": {
+        "visible_at_all_viewports": true,
+        "may_reflow_but_not_disappear": true,
+        "suppression_for_aesthetic_reasons_prohibited": true,
+        "q04_absence_notice_mandatory": true
+      },
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "phase": "Phase 2+"
+    },
+
+    {
+      "rule_id": "VIS-PROP-01",
+      "name": "Propagation Role Visual Encoding",
+      "domain": "STRUCTURAL_SEVERITY",
+      "description": "Propagation role is visually encoded with a distinct indicator per role. Role labels use vocabulary contract approved terms. Raw enum values forbidden.",
+      "mapping": {
+        "ORIGIN":       {"display_label": "Origin of Pressure",       "indicator": "source-indicator",      "visual_weight": "high"},
+        "RECEIVER":     {"display_label": "Pressure Receiver",        "indicator": "receiver-indicator",    "visual_weight": "medium"},
+        "PASS_THROUGH": {"display_label": "Pressure Pass-through",    "indicator": "flow-indicator",        "visual_weight": "medium"},
+        "ISOLATED":     {"display_label": "Independent Domain",       "indicator": "neutral-indicator",     "visual_weight": "low"}
+      },
+      "forbidden": ["raw PropagationRole enum values (ORIGIN, RECEIVER, PASS_THROUGH, ISOLATED) in visual display"],
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "phase": "Phase 2+"
+    },
+
+    {
+      "rule_id": "VIS-PROP-02",
+      "name": "Propagation Path Visual Rendering Rules",
+      "domain": "STRUCTURAL_SEVERITY",
+      "description": "Propagation path is rendered as an ordered domain alias sequence. ALI-04 aliases must be used. No raw cluster keys. No animated flow. Direction is structural, not temporal.",
+      "requirements": {
+        "ali04_aliases_only": true,
+        "no_raw_cluster_keys": true,
+        "no_animation_for_propagation_flow": true,
+        "direction_is_structural_not_temporal": true,
+        "path_text_description_on_narrow_viewport": true,
+        "no_edge_weight_visualization": true
+      },
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "phase": "Phase 2+"
+    },
+
+    {
+      "rule_id": "VIS-PRESS-01",
+      "name": "Pressure Tier Visual Token Mapping",
+      "domain": "STRUCTURAL_SEVERITY",
+      "description": "Pressure tier visual treatment uses design tokens derived from PressureTier enum. Numerical values are forbidden in all pressure indicators. Token colors are governance-derived, not aesthetic.",
+      "mapping": {
+        "HIGH":      {"display_label": "High execution pressure",  "pressure_token": "token-pressure-high",      "numerical_value": "FORBIDDEN"},
+        "ELEVATED":  {"display_label": "Elevated pressure",        "pressure_token": "token-pressure-elevated",  "numerical_value": "FORBIDDEN"},
+        "MODERATE":  {"display_label": "Moderate pressure",        "pressure_token": "token-pressure-moderate",  "numerical_value": "FORBIDDEN"},
+        "LOW":       {"display_label": "Stable / low pressure",    "pressure_token": "token-pressure-low",       "numerical_value": "FORBIDDEN"}
+      },
+      "forbidden": ["numerical pressure values", "threshold values", "raw PressureTier enum text", "percentage indicators"],
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "phase": "Phase 2+"
+    },
+
+    {
+      "rule_id": "VIS-PRESS-02",
+      "name": "Signal Card Pressure Indicator Rendering",
+      "domain": "STRUCTURAL_SEVERITY",
+      "description": "Signal cards render pressure tier as a labeled indicator using the pressure token. No numerical signal values. No threshold bar charts. No comparison indicators without grounded comparative evidence.",
+      "requirements": {
+        "pressure_label_from_vocabulary_contract": true,
+        "pressure_token_for_color": true,
+        "no_numerical_values": true,
+        "no_threshold_bars": true,
+        "no_trend_arrows_without_evidence": true,
+        "no_comparative_assessment_without_comparative_data": true
+      },
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "phase": "Phase 2+"
+    },
+
+    {
+      "rule_id": "VIS-DIAG-01",
+      "name": "Diagnostic State Visual Rendering",
+      "domain": "DIAGNOSTIC_VISIBILITY",
+      "description": "Diagnostic state renders an explicit banner in REGION_DIAGNOSTIC and a diagnostic border on affected panels. Content remains visible. The word 'advisory' must appear in the diagnostic notice.",
+      "rendering": {
+        "region_diagnostic_banner": {
+          "text": "This report contains content under advisory review. Advisory confirmation recommended.",
+          "token": "token-diagnostic",
+          "placement": "top of REGION_EXECUTIVE_HEADER"
+        },
+        "affected_panel_indicator": {
+          "style": "diagnostic-border",
+          "token": "token-diagnostic"
+        },
+        "content_visibility": "VISIBLE — content shown with diagnostic frame",
+        "advisory_notice_required": true
+      },
+      "forbidden": ["blank panel instead of diagnostic notice", "silent diagnostic degradation", "hiding content when diagnostic"],
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "phase": "Phase 2+"
+    },
+
+    {
+      "rule_id": "VIS-DIAG-02",
+      "name": "Q-03 Diagnostic Frame Application",
+      "domain": "DIAGNOSTIC_VISIBILITY",
+      "description": "When qualifier_class = Q-03, a diagnostic frame is applied to WHY and READINESS_STATE panels. Advisory notice is added: 'Advisory confirmation recommended before executive action.'",
+      "rendering": {
+        "panels_with_diagnostic_frame": ["WHY", "READINESS_STATE"],
+        "advisory_notice_text": "Advisory confirmation recommended before executive action.",
+        "badge_treatment": "token-diagnostic badge; token-qualifier-grey chip",
+        "content_visibility": "VISIBLE — shown with diagnostic frame"
+      },
+      "forbidden": ["suppressing content when Q-03", "rendering Q-03 as Q-00 (clean surface)"],
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "phase": "Phase 2+"
+    },
+
+    {
+      "rule_id": "VIS-BLOCK-01",
+      "name": "Blocked State Full Module Rendering",
+      "domain": "BLOCKED_VISIBILITY",
+      "description": "Blocked state renders an explicit blocked notice replacing intelligence content. All panels enter BLOCKED state. Blocked notice uses token-blocked visual treatment.",
+      "rendering": {
+        "notice_headline": "Readiness classification unavailable",
+        "notice_body_governance_fail": "Governance verdict: FAIL",
+        "notice_body_hash_fail": "Evidence integrity: UNVERIFIED",
+        "token": "token-blocked",
+        "content_replacement": "FULL — blocked notice replaces all intelligence content",
+        "audit_trace_access": "Available to Advisory+ audience tier",
+        "retry_affordance": "NOT PRESENT in Phase 2"
+      },
+      "forbidden": ["blank panel", "silent degradation to lower readiness state", "placeholder 'loading' text", "partial intelligence rendering from failed evidence"],
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "phase": "Phase 2+"
+    },
+
+    {
+      "rule_id": "VIS-BLOCK-02",
+      "name": "No Silent Blocked Degradation",
+      "domain": "BLOCKED_VISIBILITY",
+      "description": "Blocked state must never silently degrade. No blocked module may render without its explicit notice. The blocked token is visually distinct from all readiness tokens.",
+      "requirements": {
+        "explicit_notice_always_present": true,
+        "blocked_token_visually_distinct_from_all_readiness_tokens": true,
+        "cannot_substitute_blocked_with_low_readiness_state": true,
+        "silent_fail_prohibited": true
+      },
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "phase": "Phase 2+"
+    },
+
+    {
+      "rule_id": "VIS-EVID-01",
+      "name": "Evidence Drawer Visual Access Enforcement",
+      "domain": "EVIDENCE_VISIBILITY",
+      "description": "Evidence drawers must always be accessible within one interaction from the domain evidence summary. Evidence access cannot disappear based on viewport, audience tier (for EXECUTIVE+), or rendering state.",
+      "requirements": {
+        "evidence_access_within_one_interaction": true,
+        "expand_affordance_always_present": true,
+        "evidence_not_hidden_on_narrow_viewport": true,
+        "collapsed_means_accessible_not_absent": true
+      },
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "phase": "Phase 2+"
+    },
+
+    {
+      "rule_id": "VIS-EVID-02",
+      "name": "Evidence Content Visual Immutability",
+      "domain": "EVIDENCE_VISIBILITY",
+      "description": "Evidence content in drawers must be visually identical to committed evidence_blocks[] content. No editorial visual overlay. No 'simplified view' toggle that removes evidence detail.",
+      "requirements": {
+        "content_from_report_object_only": true,
+        "no_simplified_view_mode_that_reduces_evidence": true,
+        "no_annotation_interface": true,
+        "no_edit_mode": true,
+        "content_identical_across_sessions": true
+      },
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "phase": "Phase 2+"
+    },
+
+    {
+      "rule_id": "VIS-TOPO-01",
+      "name": "Topology Display Read-Only Enforcement",
+      "domain": "TOPOLOGY_SIMPLIFICATION",
+      "description": "Topology region is read-only. No user interaction may modify topology display state as a persistent change. Navigation interactions (zoom, select domain) are display-only.",
+      "requirements": {
+        "read_only": true,
+        "no_edit_affordances": true,
+        "no_topology_correction_interaction": true,
+        "no_flag_domain_interaction": true,
+        "no_rearrange_domains_interaction": true,
+        "ali04_aliases_only": true,
+        "no_raw_cluster_keys": true
+      },
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "phase": "Phase 3+"
+    },
+
+    {
+      "rule_id": "VIS-TOPO-02",
+      "name": "Topology Simplification for Executive Readability",
+      "domain": "TOPOLOGY_SIMPLIFICATION",
+      "description": "Topology display must be simplified to executive readability. Domain-level by default. Cluster detail on expand. No numerical topology data. Pressure indicators use tokens, not numbers.",
+      "requirements": {
+        "domain_level_by_default": true,
+        "cluster_detail_on_expand": true,
+        "max_visible_nodes_default": 7,
+        "no_numerical_topology_data": true,
+        "no_edge_weight_display": true,
+        "pressure_tier_token_only": true,
+        "no_animation_for_flow": true
+      },
+      "fail_action": "DIAGNOSTIC",
+      "phase": "Phase 3+"
+    },
+
+    {
+      "rule_id": "VIS-AUDIT-01",
+      "name": "Audit Region Audience-Gating Enforcement",
+      "domain": "AUDIT_DISTINCTION",
+      "description": "REGION_AUDIT and full lineage references are audience-gated to AUDIT tier. Executive and Advisory tiers do not see REGION_AUDIT by default. No client-side tier elevation.",
+      "requirements": {
+        "audit_region_audit_tier_only": true,
+        "no_client_side_tier_elevation": true,
+        "full_hash_values_audit_tier_only": true,
+        "abbreviated_hashes_advisory_only": true,
+        "run_id_audit_only": true
+      },
+      "fail_action": "GOVERNANCE_VIOLATION",
+      "phase": "Phase 2+"
+    },
+
+    {
+      "rule_id": "VIS-AUDIT-02",
+      "name": "Audit Reference Visual Distinction",
+      "domain": "AUDIT_DISTINCTION",
+      "description": "Audit reference elements (hash values, stream anchors, run IDs) use a visually distinct typographic treatment (monospace; muted) to distinguish them from intelligence content.",
+      "rendering": {
+        "typography_class": ".audit-ref",
+        "font_style": "monospace",
+        "color": "muted — not primary content color",
+        "no_decoding_labels": true,
+        "no_explanatory_text_next_to_hash": true
+      },
+      "forbidden": ["presenting hash values as primary content typography", "adding explanatory text that interprets hash value meaning"],
+      "fail_action": "DIAGNOSTIC",
+      "phase": "Phase 2+"
+    }
+  ],
+
+  "semantic_domains": {
+    "READINESS_VISIBILITY": ["VIS-READY-01", "VIS-READY-02"],
+    "QUALIFIER_PERSISTENCE": ["VIS-QUAL-01", "VIS-QUAL-02"],
+    "STRUCTURAL_SEVERITY": ["VIS-PROP-01", "VIS-PROP-02", "VIS-PRESS-01", "VIS-PRESS-02"],
+    "DIAGNOSTIC_VISIBILITY": ["VIS-DIAG-01", "VIS-DIAG-02"],
+    "BLOCKED_VISIBILITY": ["VIS-BLOCK-01", "VIS-BLOCK-02"],
+    "EVIDENCE_VISIBILITY": ["VIS-EVID-01", "VIS-EVID-02"],
+    "TOPOLOGY_SIMPLIFICATION": ["VIS-TOPO-01", "VIS-TOPO-02"],
+    "AUDIT_DISTINCTION": ["VIS-AUDIT-01", "VIS-AUDIT-02"]
+  },
+
+  "fail_action_matrix": {
+    "GOVERNANCE_VIOLATION": ["VIS-READY-01", "VIS-READY-02", "VIS-QUAL-01", "VIS-QUAL-02", "VIS-PROP-01", "VIS-PROP-02", "VIS-PRESS-01", "VIS-PRESS-02", "VIS-DIAG-01", "VIS-DIAG-02", "VIS-BLOCK-01", "VIS-BLOCK-02", "VIS-EVID-01", "VIS-EVID-02", "VIS-TOPO-01", "VIS-AUDIT-01"],
+    "DIAGNOSTIC": ["VIS-TOPO-02", "VIS-AUDIT-02"]
+  },
+
+  "design_token_governance": {
+    "description": "Design tokens are governance outputs, not aesthetic preferences. Token values derive from governance state mappings.",
+    "token_categories": [
+      {
+        "category": "readiness_tokens",
+        "tokens": ["token-ready", "token-ready-qualified", "token-diagnostic", "token-suppressed", "token-blocked"],
+        "source": "ALI-03 ReadinessState mapping",
+        "override_prohibited": true
+      },
+      {
+        "category": "qualifier_tokens",
+        "tokens": ["token-qualifier-amber", "token-qualifier-blue", "token-qualifier-grey"],
+        "source": "Q-taxonomy (Q-01..Q-03)",
+        "override_prohibited": true
+      },
+      {
+        "category": "pressure_tokens",
+        "tokens": ["token-pressure-high", "token-pressure-elevated", "token-pressure-moderate", "token-pressure-low"],
+        "source": "PressureTier enum; NORM-PROP-01",
+        "override_prohibited": true
+      },
+      {
+        "category": "state_tokens",
+        "tokens": ["token-blocked", "token-diagnostic"],
+        "source": "Governance state (governance_verdict FAIL; DIAGNOSTIC_ONLY)",
+        "override_prohibited": true
+      }
+    ]
+  },
+
+  "phase_2_restrictions": {
+    "no_conversational_ui_surfaces": true,
+    "no_prompt_input_regions": true,
+    "no_ai_assistant_avatars": true,
+    "no_probabilistic_confidence_gauges": true,
+    "no_gamified_visualization": true,
+    "no_decorative_graph_overload": true,
+    "no_animated_data_transitions_except_expand_collapse": true,
+    "topology_visualization_placeholder_only": true,
+    "investigation_entry_not_active": true,
+    "copilot_entry_not_active": true
+  }
+}

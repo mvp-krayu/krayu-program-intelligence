@@ -1,0 +1,73 @@
+{
+  "contract_id": "PI.LENS.BLUEEDGE-CHAIN-RECONSTRUCTION.01",
+  "generated_date": "2026-05-01",
+  "pipeline_script": "scripts/pios/run_client_pipeline.py",
+  "client": "blueedge",
+  "source": "source_01",
+  "run_id": "run_be_chain_reconstruction_01",
+
+  "execution_result": "FAIL",
+  "exit_code": 1,
+  "fail_closed_at": "Phase 2 — Intake Verification",
+
+  "phase_results": [
+    {
+      "phase": "Phase 1 — Source Boundary",
+      "result": "PASS",
+      "detail": "Archive present at /Users/khorrix/Projects/blueedge-clean-run/source-raw/raw/blueedge-platform-v3_23_0-COMPLETE.tar; SHA256=672a841277541921... verified"
+    },
+    {
+      "phase": "Phase 2 — Intake Verification",
+      "result": "FAIL",
+      "detail": "canonical_repo not found at clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/intake/canonical_repo — REMEDIATION: Re-execute PI.BLUEEDGE.CLEAN-INTAKE.01",
+      "blocker": "BLOCKER-01"
+    },
+    {
+      "phase": "Phase 3 — 40.x Structural Verification",
+      "result": "BLOCKED",
+      "detail": "Not reached — pipeline FAIL-CLOSED at Phase 2"
+    },
+    {
+      "phase": "Phase 4 — CEU Grounding Verification",
+      "result": "BLOCKED",
+      "detail": "Not reached — would have PASSED via run_dir fallback (run_be_chain_reconstruction_01/ceu/grounding_state_v3.json present)"
+    },
+    {
+      "phase": "Phase 5 — Build Binding Envelope",
+      "result": "BLOCKED",
+      "detail": "Not reached — would have FAILED: fastapi_conformance_path absent, dom_layer_path absent"
+    },
+    {
+      "phase": "Phase 6+7 — 75.x Activation + 41.x Projection",
+      "result": "BLOCKED",
+      "detail": "Not reached"
+    },
+    {
+      "phase": "Phase 8a — Vault Construction",
+      "result": "BLOCKED",
+      "detail": "Not reached — would have FAILED: dom_layer_path absent"
+    },
+    {
+      "phase": "Phase 8b — Vault Readiness Validation",
+      "result": "BLOCKED",
+      "detail": "Not reached — vault_readiness.json not created"
+    },
+    {
+      "phase": "Phase 9 — Selector Update",
+      "result": "BLOCKED",
+      "detail": "Not reached"
+    }
+  ],
+
+  "pre_execution_analysis_validated": true,
+  "prediction_match": "EXACT — Phase 1 PASS, Phase 2 FAIL, all subsequent BLOCKED as predicted in reconstruction_plan.md",
+
+  "artifacts_created_by_pipeline": [],
+  "artifacts_created_by_reconstruction": [
+    "clients/blueedge/psee/runs/run_be_chain_reconstruction_01/intake/intake_manifest.json",
+    "clients/blueedge/psee/runs/run_be_chain_reconstruction_01/structure/40.4/canonical_topology.json",
+    "clients/blueedge/psee/runs/run_be_chain_reconstruction_01/ceu/grounding_state_v3.json",
+    "clients/blueedge/psee/runs/run_be_chain_reconstruction_01/binding/binding_envelope.json",
+    "clients/blueedge/psee/runs/run_be_chain_reconstruction_01/integration/integration_validation.json"
+  ]
+}

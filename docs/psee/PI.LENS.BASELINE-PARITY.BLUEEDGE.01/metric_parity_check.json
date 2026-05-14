@@ -1,0 +1,40 @@
+{
+  "contract_id": "PI.LENS.BASELINE-PARITY.BLUEEDGE.01",
+  "artifact": "metric_parity_check",
+  "generated_date": "2026-05-01",
+  "client": "blueedge",
+  "baseline_run": "run_be_orchestrated_fixup_01",
+  "current_run": "NOT_RUN",
+
+  "baseline_metrics": {
+    "coverage_percent": 100.0,
+    "ceu_total": 10,
+    "ceu_admissible": 10,
+    "ceu_grounding_ratio": 1.0,
+    "gauge_canonical": 60,
+    "gauge_projected": 100,
+    "gauge_band": "CONDITIONAL",
+    "total_signals": 4,
+    "active_pressure_signals": 3,
+    "topology_nodes": 35,
+    "topology_domains": 13
+  },
+
+  "current_metrics": "NOT_AVAILABLE — pipeline not re-run",
+
+  "checks": [
+    {"check": "CEU total", "baseline": 10, "current": "NOT_COMPARABLE", "result": "NOT_COMPARABLE"},
+    {"check": "CEU grounded", "baseline": 10, "current": "NOT_COMPARABLE", "result": "NOT_COMPARABLE"},
+    {"check": "Grounding ratio", "baseline": 1.0, "current": "NOT_COMPARABLE", "result": "NOT_COMPARABLE"},
+    {"check": "Gauge canonical score", "baseline": 60, "current": "NOT_COMPARABLE", "result": "NOT_COMPARABLE"},
+    {"check": "Gauge projected score", "baseline": 100, "current": "NOT_COMPARABLE", "result": "NOT_COMPARABLE"},
+    {"check": "Gauge band", "baseline": "CONDITIONAL", "current": "NOT_COMPARABLE", "result": "NOT_COMPARABLE"},
+    {"check": "Signal count", "baseline": 4, "current": "NOT_COMPARABLE", "result": "NOT_COMPARABLE"},
+    {"check": "Active pressure signals", "baseline": 3, "current": "NOT_COMPARABLE", "result": "NOT_COMPARABLE"},
+    {"check": "Topology nodes", "baseline": 35, "current": "NOT_COMPARABLE", "result": "NOT_COMPARABLE"},
+    {"check": "Topology domains", "baseline": 13, "current": "NOT_COMPARABLE", "result": "NOT_COMPARABLE"}
+  ],
+
+  "overall": "NOT_COMPARABLE",
+  "reason": "No current run produced. BlueEdge pipeline re-run blocked at Phase 2 (canonical_repo absent at UUID path). Baseline metrics recorded for future comparison when BlueEdge is onboarded to generic pipeline."
+}

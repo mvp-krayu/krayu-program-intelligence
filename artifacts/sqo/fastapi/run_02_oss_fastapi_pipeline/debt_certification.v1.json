@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "client": "fastapi",
+  "run_id": "run_02_oss_fastapi_pipeline",
+  "timestamp": "2026-05-10T13:34:25.302Z",
+  "certification_cases": [
+    {
+      "name": "debt_detection_complete",
+      "pass": true,
+      "detail": {
+        "total": 25
+      }
+    },
+    {
+      "name": "deterministic_recomputation",
+      "pass": true,
+      "detail": {}
+    },
+    {
+      "name": "replay_verification",
+      "pass": true,
+      "detail": {}
+    },
+    {
+      "name": "governance_boundary",
+      "pass": true,
+      "detail": {}
+    }
+  ],
+  "overall_verdict": "CERTIFIED",
+  "provenance": {
+    "source_commit": "096c906c7ba1",
+    "operation": "debt_certification",
+    "operation_version": "1.0"
+  }
+}

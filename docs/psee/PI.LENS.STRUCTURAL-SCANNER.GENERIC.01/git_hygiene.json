@@ -1,0 +1,40 @@
+{
+  "contract_id": "PI.LENS.STRUCTURAL-SCANNER.GENERIC.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-01",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+  "working_tree_at_start": "CLEAN",
+  "baseline_commit": "02aaeba95cf3b742add547e950c5b01f44095744",
+
+  "files_created_this_contract": [
+    "scripts/pios/structural_scanner.py",
+    "docs/psee/PI.LENS.STRUCTURAL-SCANNER.GENERIC.01/structural_scanner_findings.md",
+    "docs/psee/PI.LENS.STRUCTURAL-SCANNER.GENERIC.01/structural_node_schema.json",
+    "docs/psee/PI.LENS.STRUCTURAL-SCANNER.GENERIC.01/topology_schema.json",
+    "docs/psee/PI.LENS.STRUCTURAL-SCANNER.GENERIC.01/canonical_topology_schema.json",
+    "docs/psee/PI.LENS.STRUCTURAL-SCANNER.GENERIC.01/validation_result.json",
+    "docs/psee/PI.LENS.STRUCTURAL-SCANNER.GENERIC.01/implementation_summary.md",
+    "docs/psee/PI.LENS.STRUCTURAL-SCANNER.GENERIC.01/git_hygiene.json"
+  ],
+  "files_modified_this_contract": [],
+  "files_deleted_this_contract": [],
+
+  "runtime_artifacts_note": "3 structure artifacts written to clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/structure/ — gitignored per .gitignore coverage (clients/*/psee/runs/)",
+
+  "blueedge_mutation_check": "PASS — no files under clients/blueedge/ or clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/ were created, modified, or deleted",
+  "fastapi_source_mutation_check": "PASS — no files under clients/e65d2f0a.../input/intake/source/ were modified",
+  "run_client_pipeline_modified": "NO",
+  "out_of_scope_guard": "PASS — no CEU/DOM/41.x/75.x or report generation performed; no semantic inference",
+
+  "runtime_artifacts_category": "structure",
+  "runtime_artifacts_path": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/structure/",
+  "runtime_artifacts_count": 3,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[STRUCTURAL] PI.LENS.STRUCTURAL-SCANNER.GENERIC.01 — generic structural_scanner.py + FastAPI structure artifacts (PASS: 123 nodes, 104 edges, 19 clusters)",
+  "commit_note": "Commits are operator action per CLAUDE.md Section 7.1.",
+
+  "git_hygiene_status": "COMPLETE"
+}

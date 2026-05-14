@@ -1,0 +1,36 @@
+{
+  "contract_id": "PI.LENS.REPORT-RENDERER.PARITY-CLOSURE.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-02",
+
+  "branch": "work/psee-runtime",
+  "baseline_commit": "bc803b3fcd58da28c04ff0dd0cff258ee0451bc6",
+  "baseline_commit_message": "[RENDERER] close BlueEdge report parity drift",
+
+  "working_tree_before": "CLEAN",
+  "working_tree_after": "CLEAN (evidence files untracked only)",
+
+  "files_modified_tracked": [],
+  "files_modified_gitignored": [],
+  "files_created_tracked": [
+    "docs/psee/PI.LENS.REPORT-RENDERER.PARITY-CLOSURE.01/parity_closure_statement.md",
+    "docs/psee/PI.LENS.REPORT-RENDERER.PARITY-CLOSURE.01/final_parity_verdict.json",
+    "docs/psee/PI.LENS.REPORT-RENDERER.PARITY-CLOSURE.01/canonical_report_reproduction_contract.md",
+    "docs/psee/PI.LENS.REPORT-RENDERER.PARITY-CLOSURE.01/closure_traceability.md",
+    "docs/psee/PI.LENS.REPORT-RENDERER.PARITY-CLOSURE.01/no_mutation_attestation.md",
+    "docs/psee/PI.LENS.REPORT-RENDERER.PARITY-CLOSURE.01/git_hygiene.json"
+  ],
+
+  "canonical_reports_modified": false,
+  "renderer_modified": false,
+  "topology_model_modified": false,
+  "topology_layout_modified": false,
+  "vault_modified": false,
+  "pipeline_executed": false,
+  "fastapi_involved": false,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[PARITY-CLOSURE] PI.LENS.REPORT-RENDERER.PARITY-CLOSURE.01 — BlueEdge report parity closed; 0 non-allowed diffs; all 4 reports at parity",
+
+  "git_hygiene_status": "COMPLETE"
+}

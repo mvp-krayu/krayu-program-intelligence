@@ -1,0 +1,15 @@
+{
+  "contract_id": "PI.CLIENT-LANGUAGE-LAYER.TIER1-NARRATIVE-FINAL-ALIGNMENT.01",
+  "artifact": "git_hygiene_preflight",
+  "captured_date": "2026-04-30",
+
+  "checks": [
+    { "name": "branch",           "value": "work/psee-runtime", "result": "FLAG — outside authorized set; proceeding per established pattern" },
+    { "name": "TARGET_RUN",       "value": "clients/blueedge/psee/runs/run_blueedge_productized_01_tier1_final", "result": "PASS — did not exist at contract start" },
+    { "name": "TARGET_DOC_ROOT",  "value": "docs/psee/PI.CLIENT-LANGUAGE-LAYER.TIER1-NARRATIVE-FINAL-ALIGNMENT.01", "result": "PASS — did not exist at contract start" },
+    { "name": "generator_syntax", "value": "python3 -m py_compile scripts/pios/lens_report_generator.py", "result": "PASS — exit 0" },
+    { "name": "baseline_commit",  "value": "031ca945f0cf5a61c4d4905472d132594496cb01", "result": "RECORDED" }
+  ],
+
+  "verdict": "PASS"
+}

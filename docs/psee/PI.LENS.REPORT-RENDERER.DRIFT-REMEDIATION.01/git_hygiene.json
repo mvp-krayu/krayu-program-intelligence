@@ -1,0 +1,38 @@
+{
+  "contract_id": "PI.LENS.REPORT-RENDERER.DRIFT-REMEDIATION.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-02",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+  "baseline_commit": "560f426708c09f82e0960e278ced5b35ec2bd4f2",
+  "baseline_commit_message": "[SECOND-CLIENT] Fix column alignment — top-align + card grows to fill height (head at contract start)",
+
+  "files_modified_tracked": [
+    "scripts/pios/lens_report_generator.py"
+  ],
+  "files_modified_gitignored": [
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/semantic_topology_layout.json",
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/semantic_topology_model.json"
+  ],
+  "files_created_tracked": [
+    "docs/psee/PI.LENS.REPORT-RENDERER.DRIFT-REMEDIATION.01/execution_report.md",
+    "docs/psee/PI.LENS.REPORT-RENDERER.DRIFT-REMEDIATION.01/validation_log.json",
+    "docs/psee/PI.LENS.REPORT-RENDERER.DRIFT-REMEDIATION.01/file_changes.json",
+    "docs/psee/PI.LENS.REPORT-RENDERER.DRIFT-REMEDIATION.01/parity_result.json",
+    "docs/psee/PI.LENS.REPORT-RENDERER.DRIFT-REMEDIATION.01/git_hygiene.json",
+    "docs/psee/PI.LENS.REPORT-RENDERER.DRIFT-REMEDIATION.01/CLOSURE.md"
+  ],
+
+  "canonical_reports_modified": false,
+  "renderer_modified": true,
+  "topology_model_modified": true,
+  "topology_layout_modified": true,
+  "vault_modified": false,
+  "pipeline_executed": false,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[DRIFT-REMEDIATION] PI.LENS.REPORT-RENDERER.DRIFT-REMEDIATION.01 — RC-01..04 resolved; 0 non-allowed diffs; TIER1_NARRATIVE/EVIDENCE/TIER2_DIAGNOSTIC at byte match",
+
+  "git_hygiene_status": "COMPLETE"
+}

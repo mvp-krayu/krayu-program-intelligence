@@ -1,0 +1,92 @@
+{
+  "contract_id": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01",
+  "artifact": "report_execution_readiness",
+  "block": "BLOCK_E",
+  "generated_date": "2026-04-29",
+  "supersedes": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01/recomputed/report_input_manifest_fastapi_compatible.json",
+
+  "reports": [
+
+    {
+      "report_id": "tier1",
+      "label": "Narrative and Evidence Brief",
+      "required_inputs": ["gauge_state.json", "coverage_state.json", "reconstruction_state.json", "binding_envelope.json", "signal_registry.json"],
+      "available_inputs": [
+        "gauge_state.json (ART-01, READY_RECOMPUTED)",
+        "coverage_state.json (ART-02, READY_RECOMPUTED)",
+        "reconstruction_state.json (ART-03, READY_RECOMPUTED)",
+        "binding_envelope.json (ART-06, READY_RECOMPUTED — binding_envelope_fastapi_compatible.json)",
+        "signal_registry.json (ART-05, READY_RECOMPUTED — signal_registry_fastapi_compatible.json)"
+      ],
+      "blocked_inputs": [],
+      "readiness_status": "READY",
+      "signal_semantics_compatible": true,
+      "dom_anchoring_present": true,
+      "language_layer_modification_required": false,
+      "report_modification_required": false,
+      "prior_status": "BLOCKED — binding_envelope + signal_registry were missing",
+      "unblocked_by": ["BI-01 resolution (binding_envelope)", "BI-02 resolution (signal_registry signal values)"]
+    },
+
+    {
+      "report_id": "tier2",
+      "label": "Diagnostic Narrative",
+      "required_inputs": [
+        "signal_projection.json (FastAPI 41.x compatible)",
+        "pressure_zone_state.json (DOMAIN_ZONE)",
+        "condition_correlation_state.json (COND-PSIG-XXX)",
+        "canonical_topology.json"
+      ],
+      "available_inputs": [
+        "signal_projection.json (ART-08, READY_RECOMPUTED — signal_projection_fastapi_compatible.json)",
+        "pressure_zone_state.json (ART-09, READY_RECOMPUTED — DOMAIN_ZONE schema, anchor_id=DOM-04)",
+        "condition_correlation_state.json (ART-10, READY_RECOMPUTED — COND-PSIG-XXX-YY namespace)",
+        "canonical_topology.json (ART-04, READY — path remapping required, schema unverified)"
+      ],
+      "blocked_inputs": [],
+      "deferred_runtime_inputs": [
+        "graph_state.json — runtime-generated canvas layout artifact (generated during report execution from workspace_runtime_positions; not a pre-computed vault input). Confirmed by reference: FastAPI reports/tier2/graph_state.json is output of runtime, not input."
+      ],
+      "readiness_status": "READY",
+      "signal_semantics_compatible": true,
+      "dom_anchoring_present": true,
+      "note_canonical_topology": "canonical_topology.json path remapping required and schema compatibility unverified — this caveat was present in prior assessment and remains. It does not block report execution for core signal/zone data.",
+      "language_layer_modification_required": false,
+      "report_modification_required": false,
+      "prior_status": "BLOCKED — signal_projection (BI-02), pressure_zone_state DOMAIN_ZONE (BI-03), condition_correlation COND-PSIG-XXX all blocked",
+      "unblocked_by": ["BI-02 resolution (signal values)", "BI-03 resolution (DOMAIN_ZONE schema)", "signal_projection production", "condition_correlation reformatting"]
+    },
+
+    {
+      "report_id": "decision",
+      "label": "Decision Surface",
+      "required_inputs": ["signal_projection.json (FastAPI 41.x compatible)", "gauge_state.json", "coverage_state.json", "binding_envelope.json"],
+      "available_inputs": [
+        "signal_projection.json (ART-08, READY_RECOMPUTED — signal_projection_fastapi_compatible.json)",
+        "gauge_state.json (ART-01, READY_RECOMPUTED)",
+        "coverage_state.json (ART-02, READY_RECOMPUTED)",
+        "binding_envelope.json (ART-06, READY_RECOMPUTED — binding_envelope_fastapi_compatible.json)"
+      ],
+      "blocked_inputs": [],
+      "readiness_status": "READY",
+      "signal_semantics_compatible": true,
+      "dom_anchoring_present": true,
+      "language_layer_modification_required": false,
+      "report_modification_required": false,
+      "prior_status": "BLOCKED — signal_projection + binding_envelope both blocked",
+      "unblocked_by": ["BI-01 resolution (binding_envelope)", "BI-02 resolution (signal_projection values)"]
+    }
+
+  ],
+
+  "report_readiness_summary": {
+    "tier1": "READY",
+    "tier2": "READY",
+    "decision": "READY",
+    "reports_ready": 3,
+    "reports_blocked": 0,
+    "report_modification_proposed": false,
+    "language_layer_modification_proposed": false,
+    "all_reports_ready": true
+  }
+}

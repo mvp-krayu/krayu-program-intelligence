@@ -1,0 +1,46 @@
+{
+  "contract_id": "PI.LENS.FASTAPI.40X-STRUCTURAL-BOOTSTRAP.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-01",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+
+  "files_created_this_contract": [
+    "scripts/pios/40.2/bootstrap_fastapi_40x.py",
+    "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/structure/40.2/structural_node_inventory.json",
+    "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/structure/40.3/structural_topology_log.json",
+    "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/structure/40.4/canonical_topology.json",
+    "docs/psee/PI.LENS.FASTAPI.40X-STRUCTURAL-BOOTSTRAP.01/structural_bootstrap_findings.md",
+    "docs/psee/PI.LENS.FASTAPI.40X-STRUCTURAL-BOOTSTRAP.01/structural_artifact_requirements.json",
+    "docs/psee/PI.LENS.FASTAPI.40X-STRUCTURAL-BOOTSTRAP.01/structural_generation_commands.md",
+    "docs/psee/PI.LENS.FASTAPI.40X-STRUCTURAL-BOOTSTRAP.01/structural_validation_result.json",
+    "docs/psee/PI.LENS.FASTAPI.40X-STRUCTURAL-BOOTSTRAP.01/orchestrator_phase3_recheck.log",
+    "docs/psee/PI.LENS.FASTAPI.40X-STRUCTURAL-BOOTSTRAP.01/git_hygiene.json"
+  ],
+  "files_modified_this_contract": [],
+  "files_deleted_this_contract": [],
+
+  "create_only_violations": "NONE — all files net-new",
+  "blueedge_files_modified": "NONE",
+  "canonical_registration_modified": "NONE",
+  "reports_generated": "NONE",
+  "semantic_artifacts_generated": "NONE",
+  "ceu_41x_75x_work": "NONE",
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[FASTAPI-40X] PI.LENS.FASTAPI.40X-STRUCTURAL-BOOTSTRAP.01 — generate 40.2/40.3/40.4 structural artifacts + bootstrap script + 6 evidence artifacts",
+  "commit_scope": "scripts/pios/40.2/bootstrap_fastapi_40x.py + clients/e65d2f0a.../structure/40.2|40.3|40.4/ + docs/psee/PI.LENS.FASTAPI.40X-STRUCTURAL-BOOTSTRAP.01/",
+  "commit_note": "Commits are operator action per CLAUDE.md Section 7.1 / RULE-10.",
+
+  "pre_commit_checklist": [
+    "Verify 40.2/structural_node_inventory.json is valid JSON with total_nodes=124",
+    "Verify 40.3/structural_topology_log.json is valid JSON with total_relations=123",
+    "Verify 40.4/canonical_topology.json is valid JSON with platform='OSS FastAPI Modular Monolith'",
+    "Verify Phase 3 isolation test returns PASS",
+    "Verify no BlueEdge UUID (6a6fcdbc) present in any generated artifact",
+    "Confirm no unintended files included in staging area"
+  ],
+
+  "git_hygiene_status": "COMPLETE"
+}

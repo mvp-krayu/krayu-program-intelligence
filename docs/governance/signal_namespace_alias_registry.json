@@ -1,0 +1,103 @@
+{
+  "version": "1.0",
+  "status": "ACTIVE_NAMESPACE_DEBT_MAPPING",
+  "generated": "2026-05-06",
+  "lane_scope": ["A", "D"],
+  "runtime_namespace": "PSIG",
+  "future_generic_namespace": "DPSIG",
+  "future_enriched_namespace": "PSIG",
+  "authority": {
+    "upstream_mapping": "docs/psee/PI.PSEE-PIOS.NAMESPACE-DEBT-MAPPING.01/NAMESPACE_DEBT_MAPPING.md",
+    "governance_lock": "docs/psee/PI.PSEE-PIOS.LANE-GOVERNANCE-LOCK.01/LANE_GOVERNANCE_LOCK.md",
+    "stream": "PI.PSEE-PIOS.NAMESPACE-ALIAS-METADATA.IMPLEMENTATION.01"
+  },
+  "no_change_rule": "This registry is additive metadata only. No signal_id field in any Lane A runtime artifact may be renamed or removed based solely on this document.",
+  "mappings": [
+    {
+      "current_id": "PSIG-001",
+      "signal_label": "coupling_pressure",
+      "future_generic_id": "DPSIG-001",
+      "future_enriched_id": "PSIG-001",
+      "classification": "GENERIC_RUNTIME_SIGNAL",
+      "runtime_status": "ACTIVE",
+      "activation_method": "RUN_RELATIVE_OUTLIER",
+      "population_type": "per_node_inbound_coupling",
+      "formula": "fan_in[node] / mean_fan",
+      "input_source": "binding/binding_envelope.json",
+      "st_field_for_enriched": "ST-030",
+      "enriched_signal_name": "Fan-In Concentration",
+      "enriched_status": "BLOCKED_BP01_BP02",
+      "lane_a_artifact": "vault/signal_registry.json"
+    },
+    {
+      "current_id": "PSIG-002",
+      "signal_label": "export_pressure",
+      "future_generic_id": "DPSIG-002",
+      "future_enriched_id": "PSIG-002",
+      "classification": "GENERIC_RUNTIME_SIGNAL",
+      "runtime_status": "ACTIVE",
+      "activation_method": "RUN_RELATIVE_OUTLIER",
+      "population_type": "per_node_outbound_exports",
+      "formula": "fan_out[node] / mean_fan",
+      "input_source": "binding/binding_envelope.json",
+      "st_field_for_enriched": "ST-031",
+      "enriched_signal_name": "Fan-Out Propagation",
+      "enriched_status": "BLOCKED_BP01_BP02",
+      "lane_a_artifact": "vault/signal_registry.json"
+    },
+    {
+      "current_id": "PSIG-004",
+      "signal_label": "cluster_fragmentation",
+      "future_generic_id": "DPSIG-004",
+      "future_enriched_id": "PSIG-004",
+      "classification": "GENERIC_RUNTIME_SIGNAL",
+      "runtime_status": "ACTIVE",
+      "activation_method": "RUN_RELATIVE_OUTLIER",
+      "population_type": "cluster_membership",
+      "formula": "surfaces_per_ceu[node] / mean_surfaces",
+      "input_source": "binding/binding_envelope.json",
+      "st_field_for_enriched": "ST-033",
+      "enriched_signal_name": "Responsibility Concentration",
+      "enriched_status": "BLOCKED_BP01_BP02",
+      "lane_a_artifact": "vault/signal_registry.json"
+    },
+    {
+      "current_id": "PSIG-006",
+      "signal_label": "isolation_pressure",
+      "future_generic_id": "DPSIG-006",
+      "future_enriched_id": "PSIG-006",
+      "classification": "GENERIC_RUNTIME_SIGNAL",
+      "runtime_status": "ACTIVE",
+      "activation_method": "THEORETICAL_BASELINE",
+      "population_type": "node_isolation_ratio",
+      "formula": "BFS connected component analysis; isolated nodes (component size = 1) -> ACTIVATED",
+      "input_source": "binding/binding_envelope.json",
+      "st_field_for_enriched": "ST-035",
+      "enriched_signal_name": "Structural Fragmentation Index",
+      "enriched_status": "BLOCKED_BP01_BP02",
+      "lane_a_artifact": "vault/signal_registry.json"
+    }
+  ],
+  "reserved_lane_d_only": [
+    {
+      "reserved_id": "PSIG-003",
+      "enriched_signal_name": "Cross-Domain Coupling Ratio",
+      "st_field": "ST-032",
+      "lane_a_status": "NOT_ACTIVATED",
+      "lane_d_status": "RESERVED_BLOCKED_BP01_BP02",
+      "note": "No derivation formula in compute_condition_correlation.py; hardcoded absent in compute_signal_projection.py"
+    },
+    {
+      "reserved_id": "PSIG-005",
+      "enriched_signal_name": "Interface Surface Area",
+      "st_field": "ST-034",
+      "lane_a_status": "NOT_ACTIVATED",
+      "lane_d_status": "RESERVED_BLOCKED_BP01_BP02",
+      "note": "No derivation formula in compute_condition_correlation.py; hardcoded absent in compute_signal_projection.py"
+    }
+  ],
+  "blocking_conditions": {
+    "BP-01": "psig_computation.json authorization not yet issued (40x.04 contract pending)",
+    "BP-02": "PSEE pipeline not yet activated: canonical_topology.cluster_count = 0 (pending run_blueedge_psee_candidate_01)"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "stream": "PI.SQO.BLUEEDGE.MULTI-OVERLAY-ORCHESTRATION.01",
+  "date": "2026-05-11",
+  "summary": {
+    "created": 42,
+    "modified": 0,
+    "deleted": 0
+  },
+  "categories": {
+    "sandbox_artifacts": 27,
+    "documentation": 15
+  },
+  "sandbox_artifacts": [
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/manifest.json", "action": "CREATED", "description": "Multi-overlay sandbox namespace identity and governance metadata" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/baseline_reference.json", "action": "CREATED", "description": "Hash-verified references to 4 certified baseline artifacts" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/packages/SEP-multi-001/package.json", "action": "CREATED", "description": "Overlay package: DOMAIN-11 LINEAGE_UPGRADE PARTIAL→STRONG" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/packages/SEP-multi-001/activation_record.json", "action": "CREATED", "description": "Full lifecycle record for SEP-multi-001 (8 phases, final REVOKED)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/packages/SEP-multi-002/package.json", "action": "CREATED", "description": "Overlay package: DOMAIN-02 LINEAGE_UPGRADE NONE→STRONG" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/packages/SEP-multi-002/activation_record.json", "action": "CREATED", "description": "Full lifecycle record for SEP-multi-002 (8 phases, final REVOKED)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/packages/SEP-multi-003/package.json", "action": "CREATED", "description": "Overlay package: DOMAIN-08 LINEAGE_UPGRADE NONE→STRONG" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/packages/SEP-multi-003/activation_record.json", "action": "CREATED", "description": "Full lifecycle record for SEP-multi-003 (8 phases, final REVOKED)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/registry/package_registry.json", "action": "CREATED", "description": "Authoritative package status registry (3 packages, all REVOKED)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/mount/mount_registry.json", "action": "CREATED", "description": "Overlay mount state (3 mounts, all UNMOUNTED)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/mount/composite_state.json", "action": "CREATED", "description": "Post-revocation composite state with 7-state history (T0–T6) and round-trip proof" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/mount/mount_log.json", "action": "CREATED", "description": "6 mount/unmount events (3 mounts + 3 unmounts)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/activation/reevaluation/reeval-001-post-SEP-multi-001.json", "action": "CREATED", "description": "Re-evaluation: backed 4→5, DOMAIN-11 PARTIAL→STRONG" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/activation/reevaluation/reeval-002-post-SEP-multi-002.json", "action": "CREATED", "description": "Re-evaluation: backed 5→6, DOMAIN-02 NONE→STRONG" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/activation/reevaluation/reeval-003-post-SEP-multi-003.json", "action": "CREATED", "description": "Re-evaluation: backed 6→7, DOMAIN-08 NONE→STRONG (peak)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/replay/reconstruction_inputs.json", "action": "CREATED", "description": "6-input replay reconstruction model for multi-overlay" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/replay/verification_log.json", "action": "CREATED", "description": "7 replay verifications, all MATCH, zero divergences" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/replay/snapshots/snapshot-001-baseline.json", "action": "CREATED", "description": "Baseline replay snapshot (zero overlays)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/replay/snapshots/snapshot-002-post-SEP-multi-001.json", "action": "CREATED", "description": "Post SEP-multi-001 activation snapshot (1 overlay, backed 5)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/replay/snapshots/snapshot-003-post-SEP-multi-002.json", "action": "CREATED", "description": "Post SEP-multi-002 activation snapshot (2 overlays, backed 6)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/replay/snapshots/snapshot-004-post-SEP-multi-003.json", "action": "CREATED", "description": "Post SEP-multi-003 activation snapshot (3 overlays, backed 7 — peak)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/replay/snapshots/snapshot-005-revoke-SEP-multi-003.json", "action": "CREATED", "description": "Post SEP-multi-003 revocation (2 overlays, backed 6, matches snapshot-003)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/replay/snapshots/snapshot-006-revoke-SEP-multi-002.json", "action": "CREATED", "description": "Post SEP-multi-002 revocation (1 overlay, backed 5, matches snapshot-002)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/replay/snapshots/snapshot-007-revoke-SEP-multi-001.json", "action": "CREATED", "description": "Post SEP-multi-001 revocation (0 overlays, backed 4, matches baseline)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/audit/audit_index.json", "action": "CREATED", "description": "Ordered audit event index (18 events)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/audit/audit_integrity.json", "action": "CREATED", "description": "Hash chain verification record (chain valid, 18/18 events)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox-multi-001/coexistence/coexistence_report.json", "action": "CREATED", "description": "3-overlay coexistence assessment (zero overlap, zero conflict, HEALTHY)" }
+  ],
+  "documentation_files": [
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.MULTI-OVERLAY-ORCHESTRATION.01/MULTI_OVERLAY_ORCHESTRATION_REPORT.md", "action": "CREATED", "description": "Executive summary, 10 design questions answered, 10 success conditions verified" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.MULTI-OVERLAY-ORCHESTRATION.01/OVERLAY_SEQUENCE_EXECUTION_LOG.md", "action": "CREATED", "description": "6-phase execution log: sandbox creation, 3 lifecycles, revocation, closure" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.MULTI-OVERLAY-ORCHESTRATION.01/QUALIFICATION_EVOLUTION_CHAIN.md", "action": "CREATED", "description": "7-state evolution chain (T0–T6), per-state metrics, determinism proof" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.MULTI-OVERLAY-ORCHESTRATION.01/REPLAY_CHAIN_RECONSTRUCTION_VALIDATION.md", "action": "CREATED", "description": "7 replay verifications, 3 cross-snapshot verifications, all MATCH" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.MULTI-OVERLAY-ORCHESTRATION.01/ROLLBACK_SEQUENCE_VALIDATION.md", "action": "CREATED", "description": "Per-overlay rollback, independent removability, round-trip proof T0=T6" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.MULTI-OVERLAY-ORCHESTRATION.01/OVERLAY_COEXISTENCE_STABILITY_REPORT.md", "action": "CREATED", "description": "Coverage matrix, conflict analysis, dependency analysis, coexistence health" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.MULTI-OVERLAY-ORCHESTRATION.01/ORCHESTRATION_OBSERVABILITY_VALIDATION.md", "action": "CREATED", "description": "7 observability dimensions validated, all VISIBLE" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.MULTI-OVERLAY-ORCHESTRATION.01/OVERLAY_LINEAGE_AND_CAUSALITY_TRACE.md", "action": "CREATED", "description": "3 overlay lineage chains (L0–L4), cross-lineage properties, reconstructability" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.MULTI-OVERLAY-ORCHESTRATION.01/SANDBOX_NAMESPACE_VALIDATION.md", "action": "CREATED", "description": "24 artifacts validated, write paths verified, namespace isolation confirmed" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.MULTI-OVERLAY-ORCHESTRATION.01/EXECUTION_SAFETY_VALIDATION.md", "action": "CREATED", "description": "10 safety rules + 7 orchestration safety checks, all VERIFIED" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.MULTI-OVERLAY-ORCHESTRATION.01/BASELINE_IMMUTABILITY_VALIDATION.md", "action": "CREATED", "description": "4 artifact hashes verified across 7 phases, 4 mandatory checks VERIFIED" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.MULTI-OVERLAY-ORCHESTRATION.01/PATH_BOUNDARY_VALIDATION.md", "action": "CREATED", "description": "9-point boundary compliance, governance confirmation" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.MULTI-OVERLAY-ORCHESTRATION.01/execution_report.md", "action": "CREATED", "description": "Pre-flight, scope, 10 execution steps, 42 artifacts, governance" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.MULTI-OVERLAY-ORCHESTRATION.01/file_changes.json", "action": "CREATED", "description": "File change manifest" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.MULTI-OVERLAY-ORCHESTRATION.01/CLOSURE.md", "action": "CREATED", "description": "Stream closure with orchestration proof verdict" }
+  ],
+  "validators_affected": [],
+  "governance_notes": "First multi-overlay orchestration event. 3 overlays activated sequentially, coexisted without conflict, replayed deterministically (7/7 MATCH), rolled back in reverse order (T0=T6), certified baseline byte-identical throughout. All sandbox artifacts in sandbox-multi-001/ namespace."
+}

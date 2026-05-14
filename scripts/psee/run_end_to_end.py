@@ -55,11 +55,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 SCRIPTS_DIR = os.path.join(REPO_ROOT, "scripts", "psee")
 
 # Reference DEMO run — authoritative package source for emit_structure_manifest pre-flight
-DEMO_CLIENT  = "blueedge"
-DEMO_RUN_ID  = "run_01_authoritative"
-DEMO_PKG_DIR = os.path.join(
-    REPO_ROOT, "clients", DEMO_CLIENT, "psee", "runs", DEMO_RUN_ID, "package"
-)
+# Resolved from --demo-client and --demo-run-id args in main(); no hardcoded default client.
 
 # Required scripts (names only — resolved via SCRIPTS_DIR)
 REQUIRED_SCRIPTS = [
@@ -170,7 +166,7 @@ def run_script(script_name, args_list, cwd=REPO_ROOT):
 
 
 # ── PRE-FLIGHT ─────────────────────────────────────────────────────────────────
-def pre_flight(args):
+def pre_flight(args, demo_pkg_dir):
     """Global pre-flight. Returns validated args dict."""
     print("=== PSEE END-TO-END PIPELINE RUNNER ===")
     print(f"stream:  {STREAM_ID}")
@@ -237,11 +233,11 @@ def pre_flight(args):
     print(f"  scripts:         PASS  ({len(REQUIRED_SCRIPTS)} found)")
 
     # DEMO package (reference state for emit_structure_manifest)
-    if not os.path.isdir(DEMO_PKG_DIR):
+    if not os.path.isdir(demo_pkg_dir):
         _fail_preflight(
-            f"DEMO package not found: clients/{DEMO_CLIENT}/psee/runs/{DEMO_RUN_ID}/package/"
+            f"DEMO package not found: {demo_pkg_dir}"
         )
-    print(f"  demo_package:    PASS  ({DEMO_CLIENT}/{DEMO_RUN_ID})")
+    print(f"  demo_package:    PASS  ({demo_pkg_dir})")
 
     # client UUID format
     uuid_re = re.compile(
@@ -405,7 +401,10 @@ def stage_01_intake(client_id, run_id, dirs, log_level, source=None):
     # ── STANDARD MODE: call build_raw_intake_package.py ───────────────────────
     try:
         logger.info("calling build_raw_intake_package.py", script="build_raw_intake_package.py")
-        rc, stdout, stderr = run_script("build_raw_intake_package.py", ["--client", client_id])
+        intake_args = ["--client", client_id]
+        if source:
+            intake_args += ["--source-dir", source]
+        rc, stdout, stderr = run_script("build_raw_intake_package.py", intake_args)
         logger.debug("script stdout", output=stdout[-2000:] if stdout else "")
         if rc != 0:
             logger.error("script failed", returncode=rc, stderr=stderr[-500:])
@@ -489,7 +488,7 @@ def stage_02_lineage(client_id, run_id, dirs, log_level):
             os.remove(raw_input_path)
 
         logger.info("calling extract_ceu_lineage.py")
-        rc, stdout, stderr = run_script("extract_ceu_lineage.py", [])
+        rc, stdout, stderr = run_script("extract_ceu_lineage.py", ["--target-client", client_id])
         logger.debug("script stdout", output=stdout[-2000:] if stdout else "")
         if rc != 0:
             logger.error("script failed", returncode=rc, stderr=stderr[-500:])
@@ -555,11 +554,11 @@ def stage_02_lineage(client_id, run_id, dirs, log_level):
 
 
 # ── EMIT INPUTS SETUP ──────────────────────────────────────────────────────────
-def setup_emit_inputs(client_id, run_id, dirs):
+def setup_emit_inputs(client_id, run_id, dirs, demo_pkg_dir):
     """
     Populate clients/<uuid>/runs/<run_id>/package/ with DEMO package files.
     emit_structure_manifest.py requires these at clients/<uuid>/runs/<run_id>/package/.
-    Source: DEMO run_01_authoritative/package/ — authoritative PSEE engine state.
+    Source: DEMO run package — authoritative PSEE engine state.
     """
     print("--- SETUP: emit_structure_manifest inputs ---")
     pkg_files = [
@@ -569,7 +568,7 @@ def setup_emit_inputs(client_id, run_id, dirs):
         "gauge_state.json",
     ]
     for fname in pkg_files:
-        src = os.path.join(DEMO_PKG_DIR, fname)
+        src = os.path.join(demo_pkg_dir, fname)
         dst = os.path.join(dirs["emit_pkg"], fname)
         if not os.path.isfile(src):
             print(f"\nSETUP FAIL: DEMO package file missing: {fname}", file=sys.stderr)
@@ -972,6 +971,12 @@ def main():
                         dest="fail_on_warning",
                         type=lambda v: v.lower() == "true",
                         help="Fail on warnings (default: false)")
+    parser.add_argument("--demo-client",      required=True,
+                        dest="demo_client",
+                        help="Client UUID owning the reference DEMO package for emit_structure_manifest")
+    parser.add_argument("--demo-run-id",      required=False, default="run_01_authoritative",
+                        dest="demo_run_id",
+                        help="Run ID of the reference DEMO package (default: run_01_authoritative)")
     args = parser.parse_args()
 
     # IG INPUT RESOLUTION: --ig-run sets source to payload_manifest.json
@@ -988,8 +993,12 @@ def main():
     t_start = now_iso()
     stage_durations = {}
 
+    demo_pkg_dir = os.path.join(
+        REPO_ROOT, "clients", args.demo_client, "psee", "runs", args.demo_run_id, "package"
+    )
+
     # PRE-FLIGHT
-    run_id = pre_flight(args)
+    run_id = pre_flight(args, demo_pkg_dir)
 
     # DIRECTORIES
     dirs = create_run_dirs(args.client, run_id)
@@ -1021,7 +1030,7 @@ def main():
         (datetime.now(timezone.utc) - t0).total_seconds(), 3)
 
     # SETUP emit_structure_manifest inputs
-    setup_emit_inputs(args.client, run_id, dirs)
+    setup_emit_inputs(args.client, run_id, dirs, demo_pkg_dir)
 
     # STAGE 03
     t0 = datetime.now(timezone.utc)

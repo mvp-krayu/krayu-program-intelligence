@@ -4,7 +4,7 @@ PRODUCTIZE.LENS.REPORT.01 / PRODUCTIZE.LENS.REPORT.DELIVERY.01 / PRODUCTIZE.LENS
 
 Executive report generator for LENS v1.
 
-Produces clients/blueedge/reports/lens_report_YYYYMMDD_HHMMSS.html
+Produces clients/<client>/reports/lens_report_YYYYMMDD_HHMMSS.html
 A formal, decision-grade executive artifact derived exclusively from
 governed ZONE-2 projections.
 
@@ -23,9 +23,13 @@ CLI:
   python3 scripts/pios/lens_report_generator.py [--output PATH]
 """
 
+import argparse
+import hashlib
 import json
+import math
 import os
 import re
+import subprocess
 import sys
 import urllib.request
 import urllib.error
@@ -40,6 +44,8 @@ from typing import Dict, List, Optional, Tuple
 STREAM_ID = "PRODUCTIZE.LENS.REPORT.TOPOLOGY.DELIVERY.01"
 
 LENS_CLAIMS = ["CLM-25", "CLM-09", "CLM-20", "CLM-12", "CLM-10"]
+# GAP-01 gate — set True only after CONCEPT-06 predicate fix (concepts.json NOT_EVALUATED support)
+GAP_01_RESOLVED = False
 
 API_BASE = "http://localhost:3000"
 API_TIMEOUT = 3  # seconds
@@ -48,6 +54,495 @@ REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 FRAGMENTS_DIR = REPO_ROOT / "clients" / "blueedge" / "vaults" / "run_01_authoritative" / "claims" / "fragments"
 REPORTS_DIR  = REPO_ROOT / "clients" / "blueedge" / "reports"
 
+# Tier-1 canonical sources
+CANONICAL_PKG_DIR = REPO_ROOT / "clients" / "blueedge" / "psee" / "runs" / "run_authoritative_recomputed_01" / "package"
+TIER1_REPORTS_DIR    = REPORTS_DIR / "tier1"
+DECISION_REPORTS_DIR = REPORTS_DIR / "decision"
+
+_ACTIVE_CLIENT          = "blueedge"
+_ACTIVE_VAULT_RUN_ID    = "run_01_authoritative_generated"
+_CANONICAL_OUTPUT_ROOT: Optional[Path] = None
+_SEMANTIC_CROSSWALK:       Optional[Dict] = None
+_SEMANTIC_TOPOLOGY_MODEL:  Optional[Dict] = None
+_SEMANTIC_TOPOLOGY_LAYOUT: Optional[Dict] = None
+
+_CLIENT_DISPLAY_NAMES: Dict = {
+    "blueedge": "BlueEdge Fleet Management Platform",
+    "e65d2f0a-dfa7-4257-9333-fcbb583f0880": "OSS FastAPI Codebase",
+}
+
+
+def _get_client_display_name(publish_safe: bool = False) -> str:
+    if publish_safe:
+        return "Client Environment"
+    return _CLIENT_DISPLAY_NAMES.get(_ACTIVE_CLIENT, "Client Environment")
+
+
+def _scoped_report_url(name: str) -> str:
+    return (f"/api/report-file?name={name}"
+            f"&client={_ACTIVE_CLIENT}&runId={_ACTIVE_VAULT_RUN_ID}")
+
+
+# Language Layer — executive phrases for structural terms (Task 1 / STEP 16G)
+_METHOD_EXEC: Dict = {
+    "RUN_RELATIVE_OUTLIER":  "Statistically abnormal concentration",
+    "THEORETICAL_BASELINE":  "Baseline condition without runtime validation",
+}
+_ZONE_CLASS_EXEC: Dict = {
+    "COMPOUND_ZONE":       "Multiple structural pressures acting together",
+    "DOMAIN_ZONE":         "Structural domain zone",
+    "COUPLING_ZONE":       "Structural coupling zone",
+    "PROPAGATION_ZONE":    "Structural propagation zone",
+    "RESPONSIBILITY_ZONE": "Responsibility concentration zone",
+    "FRAGMENTATION_ZONE":  "Structural fragmentation zone",
+}
+_ATTRIBUTION_EXEC: Dict = {
+    "primary":   "Primary pressure anchor",
+    "secondary": "Secondary affected zone",
+}
+
+# ---------------------------------------------------------------------------
+# Rendering Contract — PI.SECOND-CLIENT.STEP16H
+# Governs HOW content is rendered; does not alter data or truth layers.
+# ---------------------------------------------------------------------------
+
+# Section-level rendering rules (applied by RC.render_section)
+_RC_RULES: Dict = {
+    "zones":    frozenset({"exec_first", "no_repetition", "expandable"}),
+    "signals":  frozenset({"exec_first"}),
+    "unknowns": frozenset({"exec_first"}),
+    "score":    frozenset({"exec_first", "anchor_first"}),
+}
+
+# Canonical terms that must NOT appear as the first word of a rendered string
+_RC_RAW_FIRST_GUARD = (
+    "PSIG-", "COND-",
+    "RUN_RELATIVE_OUTLIER", "COMPOUND_ZONE",
+    "THEORETICAL_BASELINE", "PRIMARY", "SECONDARY",
+)
+
+
+class _RenderingContract:
+    """Rendering Contract for LENS report surfaces.
+
+    Controls display ordering, trace-label placement, and pattern collapse.
+    All inputs come from the Language Layer and projection data.
+    No synthetic values; no truth mutation.
+    """
+
+    @staticmethod
+    def apply_language(term: str) -> str:
+        """Return executive phrase for a canonical term, or term itself if no mapping."""
+        return (
+            _METHOD_EXEC.get(term)
+            or _ZONE_CLASS_EXEC.get(term)
+            or _ATTRIBUTION_EXEC.get(term.lower())
+            or term
+        )
+
+    @staticmethod
+    def render_term(term: str) -> str:
+        """Return exec-first HTML: exec phrase + trace label.
+
+        If term has no mapping, returns esc(term) with no trace label.
+        Never removes the canonical term.
+        """
+        exec_phrase = _RenderingContract.apply_language(term)
+        if exec_phrase == term:
+            return esc(term)
+        return (
+            f'{esc(exec_phrase)} '
+            f'<span class="rc-trace">trace: {esc(term)}</span>'
+        )
+
+    @staticmethod
+    def render_section(section_id: str, content: str,
+                       rules: frozenset = frozenset()) -> str:
+        """Wrap section content with rendering rules.
+
+        no_empty:   return empty string when content has no visible text.
+        exec_first: preserve content (enforcement is at build time, not post-hoc).
+        expandable: content handled by block builders; rule acknowledged here.
+        """
+        if "no_empty" in rules:
+            if not content or not content.strip():
+                return ""
+        return content
+
+    @staticmethod
+    def collapse_patterns(zones: list,
+                          pz_proj: Optional[Dict],
+                          publish_safe: bool = False) -> Optional[Dict]:
+        """Detect identical signal sets across zones.
+
+        Returns a dict with pattern metadata if all zones share the same PSIG set,
+        else None. Caller is responsible for rendering.
+
+        Dict keys: n_zones, shared_sigs, sigs_str, prim_name, zclass, zclass_exec.
+        """
+        if len(zones) < 2 or pz_proj is None:
+            return None
+        zone_list = pz_proj.get("zone_projection") or pz_proj.get("zones") or []
+        if len(zone_list) < 2:
+            return None
+        signal_sets = [frozenset(z.get("signals", [])) for z in zone_list]
+        if len(set(signal_sets)) != 1:
+            return None
+        shared_sigs   = sorted(signal_sets[0])
+        zclass        = zone_list[0].get("zone_class", "COMPOUND_ZONE")
+        prim_zone     = next((z for z in zone_list
+                              if z.get("attribution_profile") == "primary"), None)
+        prim_name_raw = (prim_zone.get("anchor_name", prim_zone.get("anchor_id", ""))
+                         if prim_zone else "")
+        if publish_safe:
+            prim_name = ""
+        else:
+            prim_name = prim_name_raw
+        return {
+            "n_zones":    len(zones),
+            "shared_sigs": shared_sigs,
+            "sigs_str":   " · ".join(shared_sigs),
+            "prim_name":  prim_name,
+            "zclass":     zclass,
+            "zclass_exec": _RenderingContract.apply_language(zclass),
+        }
+
+    @staticmethod
+    def enforce_exec_first(text: str) -> bool:
+        """Return False if text starts with a raw canonical term (guard check).
+
+        Called at key rendering points. Does not modify text; caller decides
+        whether to raise or log when this returns False.
+        """
+        stripped = text.strip()
+        return not any(stripped.startswith(p) for p in _RC_RAW_FIRST_GUARD)
+
+    @staticmethod
+    def anchor_block(score: int, band_label: str,
+                     band_lo: int, band_hi: int,
+                     decision: str = "INVESTIGATE") -> str:
+        """Return top-anchor HTML for all three report surfaces.
+
+        One-line structural state + score + decision. No commentary.
+        Implements rule: anchor_first.
+        """
+        return (
+            f'<div class="rc-anchor-block">'
+            f'<span class="rc-anchor-state">'
+            f'Structurally verified. Execution not yet validated.</span>'
+            f'<span class="rc-anchor-sep">·</span>'
+            f'<span class="rc-anchor-score">{score} — {esc(band_label)}</span>'
+            f'<span class="rc-anchor-sep">·</span>'
+            f'<span class="rc-anchor-band">{band_lo}\u2013{band_hi}</span>'
+            f'<span class="rc-anchor-sep">·</span>'
+            f'<span class="rc-anchor-decision">{esc(decision)}</span>'
+            f'</div>'
+        )
+
+
+    @staticmethod
+    def evidence_pair_block(
+        title: str,
+        insight: str,
+        signals: list,
+        supporting_visual: str,
+        synthesis: str,
+        trace: str,
+        support_text: Optional[str] = None,
+    ) -> str:
+        """RC v2 — reusable Evidence Block Pattern.
+
+        Pairs a concise insight card (left) with a supporting visual (right)
+        and a full-width synthesis statement below a connector line.
+
+        Args:
+            title:             Section title rendered above the pair.
+            insight:           One-sentence signal state description.
+            signals:           Ordered signal ID list for the trace line.
+            supporting_visual: Pre-rendered HTML — canvas or SVG only.
+            synthesis:         Pre-formed HTML for the synthesis block.
+            trace:             Muted trace string (ignored if signals provided).
+
+        Governance: inference_prohibition ACTIVE — no advisory content.
+        Caller must ensure synthesis contains no causal or advisory language.
+        """
+        _sig_trace = esc(" · ".join(signals)) if signals else esc(trace)
+        _trace_row = (
+            f'<div class="ds-epb-card-trace">{_sig_trace}</div>'
+            if _sig_trace else ""
+        )
+        _support_line = (support_text if support_text is not None
+                         else 'All active pressure signals share the same affected domain scope.')
+        return (
+            f'<div class="ds-epb">'
+            f'<div class="ds-epb-section-title">{esc(title)}</div>'
+            f'<div class="ds-epb-grid">'
+            f'<div class="ds-epb-card">'
+            f'<div>'
+            f'<div class="ds-epb-card-title">Structural Pressure Signals</div>'
+            f'<div class="ds-epb-card-main">{esc(insight)}</div>'
+            f'{_trace_row}'
+            f'<div class="ds-epb-card-support">'
+            f'{_support_line}'
+            f'</div>'
+            f'</div>'
+            f'<div class="ds-epb-card-close">'
+            f'This indicates a shared structural pressure pattern.'
+            f'</div>'
+            f'</div>'
+            f'<div class="ds-epb-visual">{supporting_visual}</div>'
+            f'</div>'
+            f'<div class="ds-epb-connector"></div>'
+            f'<div class="ds-epb-synthesis">{synthesis}</div>'
+            f'</div>'
+        )
+
+
+RC = _RenderingContract
+
+
+def _render_radial_gauge(score: int, band_min: int, band_max: int, label: str) -> str:
+    """Inline SVG radial gauge — canonical score with confidence band arc.
+
+    Renders a 270° arc gauge (7 o'clock → 5 o'clock, clockwise).
+    Dark theme; colors match report CSS variables.
+    Returns a self-contained <svg> string suitable for inline HTML embedding.
+    """
+    CX, CY, R        = 80, 72, 58
+    W_TRACK, W_BAND, W_SCORE = 7, 11, 8
+    START_DEG, SWEEP_DEG     = 225.0, 270.0
+
+    def _pt(deg: float) -> Tuple[float, float]:
+        rad = math.radians(deg)
+        return (CX + R * math.cos(rad), CY + R * math.sin(rad))
+
+    def _arc(a1: float, a2: float) -> str:
+        sweep = a2 - a1
+        if abs(sweep) < 0.01:
+            return ""
+        large = 1 if abs(sweep) > 180 else 0
+        x1, y1 = _pt(a1)
+        x2, y2 = _pt(a2)
+        return f"M {x1:.2f},{y1:.2f} A {R},{R} 0 {large},1 {x2:.2f},{y2:.2f}"
+
+    _s   = max(0, min(100, score))
+    _blo = max(0, min(100, band_min))
+    _bhi = max(0, min(100, band_max))
+
+    a_end     = START_DEG + SWEEP_DEG
+    a_score   = START_DEG + (_s   / 100.0) * SWEEP_DEG
+    a_band_lo = START_DEG + (_blo / 100.0) * SWEEP_DEG
+    a_band_hi = START_DEG + (_bhi / 100.0) * SWEEP_DEG
+
+    track_d = _arc(START_DEG, a_end)
+    band_d  = _arc(a_band_lo, a_band_hi)
+    score_d = _arc(START_DEG, a_score)
+    sx, sy  = _pt(a_score)
+
+    _band_path  = (f'<path d="{band_d}" fill="none" stroke="rgba(200,155,60,.18)" '
+                   f'stroke-width="{W_BAND}" stroke-linecap="round"/>') if band_d else ""
+    _score_path = (f'<path d="{score_d}" fill="none" stroke="#c89b3c" '
+                   f'stroke-width="{W_SCORE}" stroke-linecap="round"/>') if score_d else ""
+    _score_dot  = (
+        f'<circle cx="{sx:.2f}" cy="{sy:.2f}" r="6.5" fill="#d4a84b"/>'
+        f'<circle cx="{sx:.2f}" cy="{sy:.2f}" r="3.5" fill="#ffe0a0"/>'
+    ) if score_d else ""
+
+    _font = "-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+    return (
+        f'<svg viewBox="0 0 160 145" width="160" height="145" '
+        f'xmlns="http://www.w3.org/2000/svg" style="display:block;overflow:visible">'
+        f'<path d="{track_d}" fill="none" stroke="#242428" '
+        f'stroke-width="{W_TRACK}" stroke-linecap="round" opacity="0.85"/>'
+        f'{_band_path}'
+        f'{_score_path}'
+        f'{_score_dot}'
+        f'<text x="{CX}" y="76" text-anchor="middle" dominant-baseline="middle" '
+        f'font-family="{_font}" font-size="44" font-weight="600" fill="#c89b3c" '
+        f'letter-spacing="-.01em">{_s}</text>'
+        f'<text x="{CX}" y="100" text-anchor="middle" '
+        f'font-family="{_font}" font-size="8" fill="#888" letter-spacing=".18em" opacity="0.65">'
+        f'{esc(label.upper())}</text>'
+        f'<text x="{CX}" y="113" text-anchor="middle" '
+        f'font-family="{_font}" font-size="7" fill="#666" letter-spacing=".06em" opacity="0.45">'
+        f'{_blo}\u2013{_bhi}</text>'
+        f'</svg>'
+    )
+
+
+def _render_pressure_strip(zone_count: int) -> str:
+    """Horizontal strip of identical nodes — one per diagnostic zone.
+
+    Communicates count and shared presence only.
+    No attribution, hierarchy, intensity, or directionality.
+    """
+    if zone_count <= 0:
+        return ""
+
+    W, NY, R = 400, 40, 6
+    H        = 82
+
+    spacing    = min(72, 300 // max(zone_count - 1, 1)) if zone_count > 1 else 0
+    total_span = spacing * (zone_count - 1)
+    x_start    = W // 2 - total_span // 2
+    xs         = [x_start + i * spacing for i in range(zone_count)]
+
+    _font  = "-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+    _color = "#c89b3c"
+
+    _line = (
+        f'<line x1="{xs[0]}" y1="{NY}" x2="{xs[-1]}" y2="{NY}" '
+        f'stroke="{_color}" stroke-width="1" opacity="0.18"/>'
+    ) if zone_count > 1 else ""
+
+    _nodes = "".join(
+        f'<circle cx="{x}" cy="{NY}" r="{R}" fill="{_color}"/>'
+        for x in xs
+    )
+
+    _n_word  = "1 domain" if zone_count == 1 else f"{zone_count} domains"
+    _verb    = "exhibits" if zone_count == 1 else "exhibit"
+    _shared  = "" if zone_count == 1 else "a shared "
+    _label   = f"{_n_word} {_verb} {_shared}structural pressure pattern"
+
+    return (
+        f'<svg viewBox="0 0 {W} {H}" width="{W}" height="{H}" '
+        f'xmlns="http://www.w3.org/2000/svg" '
+        f'style="display:block;margin:12px auto 4px;overflow:visible">'
+        f'{_line}'
+        f'{_nodes}'
+        f'<text x="{W // 2}" y="{NY + 28}" text-anchor="middle" '
+        f'font-family="{_font}" font-size="10" fill="#666" letter-spacing=".04em">'
+        f'{esc(_label)}'
+        f'</text>'
+        f'</svg>'
+    )
+
+
+def _render_signal_trace_preview(graph_state: Optional[Dict]) -> str:
+    """Signal Trace Preview — Decision Surface teaser graph.
+
+    Renders the Tier-2 evidence graph at 67% width, labels and legend stripped.
+    Edges recessed (α=0.12), nodes softened (α=0.72). Identical structure.
+    Returns empty string when graph_state is absent.
+    """
+    if not graph_state:
+        return ''
+
+    nodes  = graph_state['nodes']
+    links  = graph_state['links']
+    width  = graph_state.get('canvas_width',  880)
+    height = graph_state.get('canvas_height', 380)
+
+    nidx = {n['id']: i for i, n in enumerate(nodes)}
+
+    nodes_js = json.dumps(
+        [{'x': n['x'], 'y': n['y'], 'r': n['r'], 'c': n['color']}
+         for n in nodes],
+        separators=(',', ':'),
+    )
+    links_js = json.dumps(
+        [{'s': nidx.get(l['source'], 0), 't': nidx.get(l['target'], 0),
+          'c': l['color'], 'w': l['width']}
+         for l in links],
+        separators=(',', ':'),
+    )
+
+    js_draw = (
+        f'(function(){{\n'
+        f'  var N={nodes_js};\n'
+        f'  var L={links_js};\n'
+        f'  var cv=document.getElementById("ds-signal-trace");if(!cv)return;\n'
+        f'  var ctx=cv.getContext("2d");\n'
+        f'  ctx.globalAlpha=0.12;\n'
+        f'  L.forEach(function(l){{\n'
+        f'    ctx.strokeStyle=l.c;ctx.lineWidth=l.w;\n'
+        f'    ctx.beginPath();ctx.moveTo(N[l.s].x,N[l.s].y);ctx.lineTo(N[l.t].x,N[l.t].y);ctx.stroke();\n'
+        f'  }});\n'
+        f'  N.forEach(function(n){{\n'
+        f'    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,6.283);\n'
+        f'    ctx.fillStyle=n.c;ctx.globalAlpha=0.72;ctx.fill();\n'
+        f'    ctx.lineWidth=0.6;ctx.strokeStyle="rgba(255,255,255,0.07)";ctx.globalAlpha=1;ctx.stroke();\n'
+        f'  }});\n'
+        f'}})();'
+    )
+
+    return (
+        f'<div class="ds-trace-preview">\n'
+        f'  <div class="ds-trace-preview-label">Signal Trace Preview</div>\n'
+        f'  <div class="ds-trace-preview-wrap">\n'
+        f'    <canvas id="ds-signal-trace" width="{width}" height="{height}" '
+        f'style="display:block;width:100%;background:#09090d"></canvas>\n'
+        f'  </div>\n'
+        f'  <div class="ds-trace-preview-text">'
+        f'This pattern reflects how structural signals connect across the system.'
+        f'<br>'
+        f'Detailed trace available in interactive workspace.'
+        f'</div>\n'
+        f'</div>\n'
+        f'<script>{js_draw}</script>'
+    )
+
+
+def _render_signal_trace_canvas(graph_state: Optional[Dict]) -> str:
+    """Canvas-only variant of the signal trace preview — no label, no caption wrapper.
+
+    Used inside the WHERE PRESSURE EXISTS grid so the label lives as an
+    explicit grid item in row 1 and the canvas occupies row 2.
+    """
+    if not graph_state:
+        return ''
+
+    nodes  = graph_state['nodes']
+    links  = graph_state['links']
+    width  = graph_state.get('canvas_width',  880)
+    height = graph_state.get('canvas_height', 380)
+
+    nidx = {n['id']: i for i, n in enumerate(nodes)}
+
+    nodes_js = json.dumps(
+        [{'x': n['x'], 'y': n['y'], 'r': n['r'], 'c': n['color']}
+         for n in nodes],
+        separators=(',', ':'),
+    )
+    links_js = json.dumps(
+        [{'s': nidx.get(l['source'], 0), 't': nidx.get(l['target'], 0),
+          'c': l['color'], 'w': l['width']}
+         for l in links],
+        separators=(',', ':'),
+    )
+
+    # Edge α 0.22: structure readable. Node α 0.85: solid.
+    # Central node (max radius) drawn at full α with stronger stroke ring.
+    js_draw = (
+        f'(function(){{\n'
+        f'  var N={nodes_js};\n'
+        f'  var L={links_js};\n'
+        f'  var cv=document.getElementById("ds-signal-trace");if(!cv)return;\n'
+        f'  var ctx=cv.getContext("2d");\n'
+        f'  ctx.globalAlpha=0.22;\n'
+        f'  L.forEach(function(l){{\n'
+        f'    ctx.strokeStyle=l.c;ctx.lineWidth=l.w;\n'
+        f'    ctx.beginPath();ctx.moveTo(N[l.s].x,N[l.s].y);ctx.lineTo(N[l.t].x,N[l.t].y);ctx.stroke();\n'
+        f'  }});\n'
+        f'  var mR=0;N.forEach(function(n){{if(n.r>mR)mR=n.r;}});\n'
+        f'  N.forEach(function(n){{\n'
+        f'    var c=n.r===mR;\n'
+        f'    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,6.283);\n'
+        f'    ctx.fillStyle=n.c;ctx.globalAlpha=c?1.0:0.85;ctx.fill();\n'
+        f'    ctx.lineWidth=c?1.5:0.6;\n'
+        f'    ctx.strokeStyle=c?"rgba(255,255,255,0.2)":"rgba(255,255,255,0.08)";\n'
+        f'    ctx.globalAlpha=1;ctx.stroke();\n'
+        f'  }});\n'
+        f'}})();'
+    )
+
+    return (
+        f'<canvas id="ds-signal-trace" width="{width}" height="{height}" '
+        f'style="display:block;width:90%;height:220px;margin:0 auto;border-radius:3px;background:#09090d"></canvas>\n'
+        f'<script>{js_draw}</script>'
+    )
+
 
 def _default_output_path() -> Path:
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
@@ -55,6 +550,419 @@ def _default_output_path() -> Path:
 
 # Forbidden substrings — must not appear in any report body text
 FORBIDDEN_SUBSTRINGS = ("SIG-", "COND-", "DIAG-", "INTEL-")
+
+
+# ---------------------------------------------------------------------------
+# Runtime configuration — call before execution to override BlueEdge defaults
+# ---------------------------------------------------------------------------
+
+def _load_semantic_crosswalk(path: Path) -> None:
+    global _SEMANTIC_CROSSWALK
+    if path.exists():
+        with open(path) as f:
+            _SEMANTIC_CROSSWALK = json.load(f)
+
+
+def _load_semantic_topology(dir_path: Path) -> None:
+    global _SEMANTIC_TOPOLOGY_MODEL, _SEMANTIC_TOPOLOGY_LAYOUT
+    model_path  = dir_path / "semantic_topology_model.json"
+    layout_path = dir_path / "semantic_topology_layout.json"
+    if model_path.exists() and layout_path.exists():
+        with open(model_path) as f:
+            _SEMANTIC_TOPOLOGY_MODEL = json.load(f)
+        with open(layout_path) as f:
+            _SEMANTIC_TOPOLOGY_LAYOUT = json.load(f)
+
+
+def load_semantic_bundle(bundle_dir: Path) -> None:
+    """Load semantic runtime bundle from canonical bundle directory layout.
+
+    Loads crosswalk and topology model/layout from the first-class bundle
+    structure promoted by PI.LENS.SEMANTIC-LAYER-PROMOTION.01. Existing
+    --crosswalk-path / --semantic-topology-dir values are overwritten when
+    both paths are present in the bundle.
+    """
+    crosswalk_path = bundle_dir / "crosswalk" / "semantic_continuity_crosswalk.json"
+    topology_dir   = bundle_dir / "topology"
+    if crosswalk_path.exists():
+        _load_semantic_crosswalk(crosswalk_path)
+    if topology_dir.exists():
+        _load_semantic_topology(topology_dir)
+
+
+def _resolve_domain_display_label(
+    domain_id: str, technical_label: str, min_confidence: float = 0.60
+) -> str:
+    # Check semantic topology model first (DOMAIN-NN format)
+    if _SEMANTIC_TOPOLOGY_MODEL is not None:
+        for d in _SEMANTIC_TOPOLOGY_MODEL.get("domains", []):
+            if d.get("domain_id") == domain_id:
+                bl = d.get("business_label")
+                ls = d.get("lineage_status", "NONE")
+                if bl and ls in ("EXACT", "STRONG", "PARTIAL"):
+                    return bl
+    # Check crosswalk (DOM-XX format)
+    if _SEMANTIC_CROSSWALK is not None:
+        for entry in _SEMANTIC_CROSSWALK.get("entities", []):
+            if entry.get("current_entity_id") == domain_id and not entry.get("fallback_used", True):
+                biz = entry.get("business_label")
+                if biz and entry.get("confidence_score", 0.0) >= min_confidence:
+                    return biz
+    return technical_label
+
+
+def _render_semantic_topology_svg(light_mode: bool = False) -> str:
+    """Render semantic topology SVG from loaded model/layout globals.
+
+    Returns empty string when semantic globals are not loaded (fallback signal).
+    """
+    if _SEMANTIC_TOPOLOGY_MODEL is None or _SEMANTIC_TOPOLOGY_LAYOUT is None:
+        return ""
+
+    model  = _SEMANTIC_TOPOLOGY_MODEL
+    layout = _SEMANTIC_TOPOLOGY_LAYOUT
+
+    node_pos    = {n["domain_id"]: n for n in layout["node_positions"]}
+    cluster_box = {c["cluster_id"]: c for c in layout["cluster_bounding_boxes"]}
+    cluster_mdl = {c["cluster_id"]: c for c in model["clusters"]}
+    domain_mdl  = {d["domain_id"]: d for d in model["domains"]}
+
+    def _edge_attrs(edge: Dict):
+        rtype = edge.get("relationship_type", "flow")
+        if rtype == "inferred_semantic":
+            return "#d29922", "5,4", 0.55
+        if rtype == "structural_co_membership":
+            return "#8b949e", "3,3", 0.45
+        src_d = domain_mdl.get(edge.get("source_domain", ""), {})
+        tgt_d = domain_mdl.get(edge.get("target_domain", ""), {})
+        if src_d.get("zone_anchor") or tgt_d.get("zone_anchor"):
+            return "#3fb950", None, 0.55
+        if tgt_d.get("lineage_status") in ("EXACT", "STRONG"):
+            return "#3fb950", None, 0.50
+        tgt_clu = cluster_mdl.get(tgt_d.get("cluster_id", ""), {})
+        color = tgt_clu.get("color_accent", "#58a6ff")
+        if color in ("#a5d6ff", "#79c0ff"):
+            color = "#58a6ff"
+        return color, None, 0.45
+
+    def _node_style(domain: Dict):
+        ls = domain.get("lineage_status", "NONE")
+        orig = domain.get("original_status", "verified")
+        if light_mode:
+            if ls == "EXACT":    return "#dcfce7", "#22c55e", "2", None
+            if ls == "STRONG":   return "#dbeafe", "#3b82f6", "2", None
+            if ls == "PARTIAL":  return "#fef9c3", "#d97706", "1.5", None
+            stroke = "#9ca3af" if orig == "verified" else "#6b7280"
+            return "none", stroke, "1.2", "4,3"
+        else:
+            if ls == "EXACT":    return "#0d2e1a", "#3fb950", "2", None
+            if ls == "STRONG":   return "#0d1f3c", "#58a6ff", "2", None
+            if ls == "PARTIAL":  return "#1c1600", "#d29922", "1.5", None
+            stroke = "#8b949e" if orig == "verified" else "#6e7681"
+            return "#0d1117", stroke, "1.2", "4,3"
+
+    def _arrow_id(color: str) -> str:
+        mapping = {"#3fb950": "arr-green", "#58a6ff": "arr-blue",
+                   "#d29922": "arr-amber",  "#8b949e": "arr-gray"}
+        return mapping.get(color, "arr-gray")
+
+    svg_bg     = "#ffffff" if light_mode else "#0d1117"
+    fill_op    = "0.10"   if light_mode else "0.06"
+    stroke_op  = "0.50"   if light_mode else "0.35"
+    label_op   = "0.75"   if light_mode else "0.60"
+    text_color = "#1e293b" if light_mode else "#c9d1d9"
+
+    parts: List[str] = []
+
+    # defs — arrowhead markers
+    def _marker(mid: str, color: str) -> str:
+        return (f'<marker id="{mid}" markerWidth="8" markerHeight="8" '
+                f'refX="6" refY="3" orient="auto">'
+                f'<path d="M0,0 L0,6 L8,3 z" fill="{color}" /></marker>')
+
+    parts.append("<defs>")
+    parts.append(_marker("arr-green", "#3fb950"))
+    parts.append(_marker("arr-blue",  "#58a6ff"))
+    parts.append(_marker("arr-amber", "#d29922"))
+    parts.append(_marker("arr-gray",  "#8b949e"))
+    parts.append("</defs>")
+
+    # Layer 1 — cluster bounding boxes
+    for cid, cbox in cluster_box.items():
+        accent = cbox["color_accent"]
+        parts.append(
+            f'<rect x="{cbox["x"]}" y="{cbox["y"]}" '
+            f'width="{cbox["width"]}" height="{cbox["height"]}" '
+            f'rx="{cbox["border_radius"]}" '
+            f'fill="{accent}" fill-opacity="{fill_op}" '
+            f'stroke="{accent}" stroke-width="1" stroke-opacity="{stroke_op}" />'
+        )
+
+    # Layer 2 — edges with arrowheads
+    import math as _math
+    for edge in model["edges"]:
+        src_id = edge.get("source_domain", "")
+        tgt_id = edge.get("target_domain", "")
+        sp = node_pos.get(src_id)
+        tp = node_pos.get(tgt_id)
+        if not sp or not tp:
+            continue
+        sx, sy = sp["cx"], sp["cy"]
+        tx, ty = tp["cx"], tp["cy"]
+        sr, tr = sp["radius"], tp["radius"]
+        dx = tx - sx
+        dy = ty - sy
+        dist = _math.hypot(dx, dy) or 1.0
+        # boundary-adjusted endpoints
+        x1 = sx + sr * dx / dist
+        y1 = sy + sr * dy / dist
+        x2 = tx - tr * dx / dist
+        y2 = ty - tr * dy / dist
+        color, dash, opacity = _edge_attrs(edge)
+        marker_ref = _arrow_id(color)
+        attrs = (f'stroke="{color}" stroke-opacity="{opacity}" stroke-width="1.4" '
+                 f'marker-end="url(#{marker_ref})" fill="none"')
+        if dash:
+            attrs += f' stroke-dasharray="{dash}"'
+        parts.append(f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" {attrs} />')
+
+    # Layer 3 — cluster labels
+    for cid, cbox in cluster_box.items():
+        accent = cbox["color_accent"]
+        lx = cbox["x"] + cbox["width"] // 2
+        ly = cbox["y"] + 16
+        label = cbox.get("cluster_label", cid)
+        parts.append(
+            f'<text x="{lx}" y="{ly}" text-anchor="middle" '
+            f'font-family="monospace" font-size="9" fill="{accent}" fill-opacity="{label_op}" '
+            f'font-weight="600" letter-spacing="0.08em">{esc(label.upper())}</text>'
+        )
+
+    # Layer 4 — nodes
+    for domain in model["domains"]:
+        did  = domain["domain_id"]
+        pos  = node_pos.get(did)
+        if not pos:
+            continue
+        cx, cy, r = pos["cx"], pos["cy"], pos["radius"]
+        l1, l2 = pos["label_line1"], pos["label_line2"]
+        fill, stroke, sw, dash = _node_style(domain)
+
+        # zone anchor ring
+        if domain.get("zone_anchor"):
+            parts.append(
+                f'<circle cx="{cx}" cy="{cy}" r="{r + 7}" '
+                f'fill="none" stroke="#ff7b72" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.7" />'
+            )
+
+        glow_color = stroke if stroke != "#8b949e" else "rgba(139,148,158,0.18)"
+        if not light_mode:
+            parts.append(f'<circle cx="{cx}" cy="{cy}" r="{r + 5}" fill="{glow_color}" fill-opacity="0.18" />')
+        circ_attrs = f'fill="{fill}" stroke="{stroke}" stroke-width="{sw}"'
+        if dash:
+            circ_attrs += f' stroke-dasharray="{dash}"'
+        parts.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" {circ_attrs} />')
+        parts.append(
+            f'<text x="{cx}" y="{cy - 5}" text-anchor="middle" '
+            f'font-family="monospace" font-size="7.5" fill="{text_color}" font-weight="400">'
+            f'{esc(l1)}</text>'
+        )
+        parts.append(
+            f'<text x="{cx}" y="{cy + 7}" text-anchor="middle" '
+            f'font-family="monospace" font-size="7.5" fill="{text_color}" font-weight="400">'
+            f'{esc(l2)}</text>'
+        )
+
+        # confidence badge for grounded nodes
+        ls = domain.get("lineage_status", "NONE")
+        if ls in ("EXACT", "STRONG", "PARTIAL"):
+            conf = domain.get("confidence", 0.0)
+            badge_color = {"EXACT": "#3fb950", "STRONG": "#58a6ff", "PARTIAL": "#d29922"}[ls]
+            badge_y = cy - r - 4
+            parts.append(
+                f'<text x="{cx}" y="{badge_y}" text-anchor="middle" '
+                f'font-family="monospace" font-size="7" fill="{badge_color}" font-weight="600">'
+                f'{conf:.2f}</text>'
+            )
+
+    # Metrics from model
+    m = model.get("metrics", {})
+    total_d  = m.get("total_domains", 17)
+    total_c  = m.get("total_clusters", 5)
+    total_e  = m.get("total_edges", 12)
+    grounded = m.get("domains_with_structural_evidence", 5)
+
+    svg_inner = '\n  '.join(parts)
+
+    if light_mode:
+        container_style = "overflow-x:auto;border:1px solid #e5e7eb;border-radius:4px;"
+    else:
+        container_style = "overflow-x:auto;border-radius:4px;background:#0d1117;"
+
+    return f"""
+<div class="topo-container">
+  <div style="{container_style}">
+    <svg viewBox="0 0 820 480" xmlns="http://www.w3.org/2000/svg"
+         style="width:100%;min-width:600px;background:{svg_bg};border-radius:4px;display:block;">
+  {svg_inner}
+    </svg>
+  </div>
+</div>
+"""
+
+
+def _build_semantic_report_context() -> Dict:
+    """Build normalized semantic report context from loaded model globals.
+
+    Returns a dict with fallback_available=False and empty fields when globals not loaded.
+    All numeric/textual report statements should consume this context instead of inline constants.
+    """
+    _empty: Dict = {
+        "fallback_available": False,
+        "total_semantic_domains": 0,
+        "structurally_backed_domains": 0,
+        "semantic_only_domains": 0,
+        "partial_domains": 0,
+        "unmapped_domains": 0,
+        "semantic_coverage_ratio": 0.0,
+        "clusters": [],
+        "domain_records": [],
+        "domain_to_dom_bindings": [],
+        "active_zone_semantic_label": None,
+        "active_zone_dom_label": None,
+        "active_zone_dom_id": None,
+        "active_zone_confidence": None,
+        "active_psig_signals": [],
+        "render_verdict": "FALLBACK",
+    }
+    if _SEMANTIC_TOPOLOGY_MODEL is None:
+        return _empty
+
+    model   = _SEMANTIC_TOPOLOGY_MODEL
+    domains = model.get("domains", [])
+    clusters = model.get("clusters", [])
+
+    total   = len(domains)
+    backed  = sum(1 for d in domains if d.get("lineage_status") in ("EXACT", "STRONG", "PARTIAL"))
+    sem_only = sum(1 for d in domains if d.get("lineage_status") == "NONE")
+    partial  = sum(1 for d in domains if d.get("lineage_status") == "PARTIAL")
+    unmapped = sem_only
+
+    # Active zone anchor
+    zone_d = next((d for d in domains if d.get("zone_anchor")), None)
+    az_sem_label = az_dom_label = az_dom_id = None
+    az_conf: Optional[float] = None
+    if zone_d:
+        az_sem_label = zone_d.get("business_label") or zone_d.get("domain_id")
+        az_dom_id    = zone_d.get("dominant_dom_id")
+        az_conf      = zone_d.get("confidence")
+        az_dom_label = az_dom_id  # default to ID
+        if _SEMANTIC_CROSSWALK and az_dom_id:
+            for entry in _SEMANTIC_CROSSWALK.get("entities", []):
+                if entry.get("current_entity_id") == az_dom_id:
+                    az_dom_label = entry.get("technical_label", az_dom_id)
+                    break
+
+    ratio = backed / total if total > 0 else 0.0
+    render_verdict = "PARTIAL_RENDER_READY" if backed > 0 else "NO_STRUCTURAL_EVIDENCE"
+
+    # DOMAIN → DOM bindings from model dom_bindings_summary if present
+    bindings = model.get("dom_bindings_summary", [])
+
+    return {
+        "fallback_available": True,
+        "total_semantic_domains": total,
+        "structurally_backed_domains": backed,
+        "semantic_only_domains": sem_only,
+        "partial_domains": partial,
+        "unmapped_domains": unmapped,
+        "semantic_coverage_ratio": ratio,
+        "clusters": clusters,
+        "domain_records": domains,
+        "domain_to_dom_bindings": bindings,
+        "active_zone_semantic_label": az_sem_label,
+        "active_zone_dom_label": az_dom_label,
+        "active_zone_dom_id": az_dom_id,
+        "active_zone_confidence": az_conf,
+        "active_psig_signals": [],
+        "render_verdict": render_verdict,
+    }
+
+
+def _resolve_dom_to_semantic_context(dom_id: str) -> Dict:
+    """Reverse-map a DOM-XX id to its semantic domain context.
+
+    Searches semantic model for the domain whose dominant_dom_id matches dom_id.
+    Returns empty fields (with domain_id="") when no backing found — callers must
+    render 'NO SEMANTIC BACKING' per RULE-07 when domain_id is empty.
+    """
+    if _SEMANTIC_TOPOLOGY_MODEL is not None:
+        for d in _SEMANTIC_TOPOLOGY_MODEL.get("domains", []):
+            if d.get("dominant_dom_id") == dom_id:
+                return {
+                    "domain_id":      d.get("domain_id", ""),
+                    "business_label": d.get("business_label", ""),
+                    "lineage_status": d.get("lineage_status", "NONE"),
+                    "confidence":     d.get("confidence", 0.0),
+                }
+    return {"domain_id": "", "business_label": "", "lineage_status": "NONE", "confidence": 0.0}
+
+
+def _configure_runtime(
+    client: str = "blueedge",
+    run_id: str = "run_authoritative_recomputed_01",
+    api_base: str = "http://localhost:3000",
+    fragments_dir: Optional[Path] = None,
+    package_dir: Optional[Path] = None,
+    claims: Optional[List[str]] = None,
+    crosswalk_path: Optional[Path] = None,
+    semantic_topology_dir: Optional[Path] = None,
+    semantic_bundle_dir: Optional[Path] = None,
+    output_root: Optional[Path] = None,
+) -> None:
+    """Update module-level path and configuration globals from CLI arguments.
+
+    Must be called before any generation functions when running with non-default
+    client parameters. Has no effect on module-level defaults when imported as a module.
+    """
+    global LENS_CLAIMS, API_BASE, FRAGMENTS_DIR, REPORTS_DIR, CANONICAL_PKG_DIR
+    global TIER1_REPORTS_DIR, TIER2_REPORTS_DIR, DECISION_REPORTS_DIR
+    global _ACTIVE_CLIENT, _ACTIVE_VAULT_RUN_ID, _CANONICAL_OUTPUT_ROOT
+    global _SEMANTIC_CROSSWALK, _SEMANTIC_TOPOLOGY_MODEL, _SEMANTIC_TOPOLOGY_LAYOUT
+
+    _ACTIVE_CLIENT = client
+    _ACTIVE_VAULT_RUN_ID = run_id
+    _CANONICAL_OUTPUT_ROOT = output_root
+
+    if claims:
+        LENS_CLAIMS = claims
+
+    API_BASE = api_base
+
+    REPORTS_DIR          = REPO_ROOT / "clients" / client / "reports"
+    TIER1_REPORTS_DIR    = REPORTS_DIR / "tier1"
+    TIER2_REPORTS_DIR    = REPORTS_DIR / "tier2"
+    DECISION_REPORTS_DIR = REPORTS_DIR / "decision"
+
+    if fragments_dir is not None:
+        FRAGMENTS_DIR = fragments_dir
+    else:
+        FRAGMENTS_DIR = REPO_ROOT / "clients" / client / "vaults" / run_id / "claims" / "fragments"
+
+    if package_dir is not None:
+        CANONICAL_PKG_DIR = package_dir
+    else:
+        CANONICAL_PKG_DIR = REPO_ROOT / "clients" / client / "psee" / "runs" / run_id / "package"
+
+    if crosswalk_path is not None:
+        _load_semantic_crosswalk(crosswalk_path)
+
+    if semantic_topology_dir is not None:
+        _load_semantic_topology(semantic_topology_dir)
+
+    if semantic_bundle_dir is not None:
+        load_semantic_bundle(semantic_bundle_dir)
+
 
 # ---------------------------------------------------------------------------
 # Data ingestion
@@ -259,7 +1167,6 @@ def compose_executive_summary(payloads: dict) -> str:
     p10 = payloads["CLM-10"]
     p12 = payloads["CLM-12"]
     p25 = payloads["CLM-25"]
-    p20 = payloads["CLM-20"]
 
     score_proven    = p09.get("value", {}).get("narrative", "60/100")
     score_achievable = p10.get("value", {}).get("narrative", "100/100")
@@ -274,8 +1181,9 @@ def compose_executive_summary(payloads: dict) -> str:
         f"The achievable score ceiling is <strong>{esc(score_achievable)}</strong>, "
         "contingent on the completion of a single bounded additional step: runtime execution assessment.",
 
-        "One critical operational signal has been identified — the security intelligence pathway has a "
-        "structurally confirmed capacity ceiling; live performance requires measurement to confirm it is being met.",
+        *(["One critical operational signal has been identified — the security intelligence pathway has a "
+           "structurally confirmed capacity ceiling; live performance requires measurement to confirm it is being met."]
+          if payloads.get("CLM-20") else []),
 
         "The current assessment posture is decision-ready on all structural dimensions. "
         "Execution readiness requires one additional measurement step before a complete determination can be issued.",
@@ -349,9 +1257,10 @@ def compose_current_state(payloads: dict) -> str:
 def compose_key_findings(payloads: dict) -> str:
     items = []
 
-    # --- CLM-25 ---
-    p = payloads["CLM-25"]
-    items.append(f"""
+    # --- CLM-25 — gated until GAP-01 (CONCEPT-06) resolved ---
+    if GAP_01_RESOLVED and payloads.get("CLM-25"):
+        p = payloads["CLM-25"]
+        items.append(f"""
 <div class="finding-card">
   <div class="finding-header">
     <div class="finding-title">Executive Verdict</div>
@@ -375,6 +1284,17 @@ def compose_key_findings(payloads: dict) -> str:
     <span class="finding-id">{p["claim_id"]}</span>
     <span class="finding-trace">Trace available · L2, L3</span>
   </div>
+</div>
+""")
+    else:
+        items.append("""
+<div class="finding-card finding-card-gated">
+  <div class="finding-header">
+    <div class="finding-title">Executive Verdict</div>
+  </div>
+  <p class="finding-statement">
+    Conceptual coherence not yet evaluated. Executive verdict pending configuration update.
+  </p>
 </div>
 """)
 
@@ -407,10 +1327,11 @@ def compose_key_findings(payloads: dict) -> str:
 </div>
 """)
 
-    # --- CLM-20 ---
-    p = payloads["CLM-20"]
-    sig = p.get("signal", {})
-    items.append(f"""
+    # --- CLM-20 — rendered only when signal fragment is present ---
+    if payloads.get("CLM-20"):
+        p = payloads["CLM-20"]
+        sig = p.get("signal", {})
+        items.append(f"""
 <div class="finding-card">
   <div class="finding-header">
     <div class="finding-title">Security Intelligence Pipeline Signal</div>
@@ -667,26 +1588,17 @@ def compose_appendix(payloads: dict) -> str:
 # New section composers — PRODUCTIZE.LENS.REPORT.TOPOLOGY.DELIVERY.01
 # ---------------------------------------------------------------------------
 
-def compose_system_intelligence() -> str:
-    domains = [
-        ('Edge Data Acquisition',                   'Operational Intelligence', 'verified'),
-        ('Sensor and Security Ingestion',            'Operational Intelligence', 'verified'),
-        ('Analytics and Intelligence',               'Operational Intelligence', 'verified'),
-        ('AI/ML Intelligence Layer',                 'Operational Intelligence', 'verified'),
-        ('Fleet Core Operations',                    'Fleet Operations',         'verified'),
-        ('Fleet Vertical Extensions',                'Fleet Operations',         'verified'),
-        ('Extended Operations and Driver Services',  'Fleet Operations',         'verified'),
-        ('EV and Electrification',                   'Emerging Capabilities',    'verified'),
-        ('Operational Engineering',                  'Emerging Capabilities',    'verified'),
-        ('Platform Infrastructure and Data',         'Platform Infrastructure',  'conditional'),
-        ('Telemetry Transport and Messaging',        'Platform Infrastructure',  'conditional'),
-        ('Event-Driven Architecture',                'Platform Infrastructure',  'verified'),
-        ('Real-Time Streaming and Gateway',          'Platform Infrastructure',  'verified'),
-        ('Access Control and Identity',              'Platform Services',        'verified'),
-        ('SaaS Platform Layer',                      'Platform Services',        'verified'),
-        ('External Integration',                     'Platform Services',        'verified'),
-        ('Frontend Application',                     'Platform Services',        'verified'),
-    ]
+def compose_system_intelligence(topology: Optional[Dict] = None) -> str:
+    """Render the system intelligence domain coverage section.
+
+    Derives domain names and counts from canonical_topology.json.
+    topology may be passed directly or will be loaded from CANONICAL_PKG_DIR.
+    """
+    if topology is None and CANONICAL_PKG_DIR.exists():
+        try:
+            topology = load_canonical_topology()
+        except SystemExit:
+            topology = None
 
     def _domain_row(name: str, cluster: str, status: str) -> str:
         badge = (
@@ -702,43 +1614,155 @@ def compose_system_intelligence() -> str:
             f'</div>'
         )
 
-    # Two-column layout when domain count > 10
-    if len(domains) > 10:
-        mid = (len(domains) + 1) // 2  # ceiling split: first column gets one more if odd
-        left_rows  = "".join(_domain_row(*d) for d in domains[:mid])
-        right_rows = "".join(_domain_row(*d) for d in domains[mid:])
-        list_html = (
-            f'<div class="domain-list-2col">'
-            f'<div class="domain-list">{left_rows}</div>'
-            f'<div class="domain-list">{right_rows}</div>'
-            f'</div>'
+    if topology is not None:
+        counts = topology["counts"]
+        dom_count  = counts.get("domains",      "?")
+        cap_count  = counts.get("capabilities", "?")
+        comp_count = counts.get("components",   "?")
+        topology_domains = topology["domains"]
+        verified_ct = sum(1 for d in topology_domains if d["grounding"] == "GROUNDED")
+        weak_ct     = sum(1 for d in topology_domains if d["grounding"] == "WEAKLY GROUNDED")
+        domains = [
+            (
+                d["domain_name"],
+                d.get("domain_type", "").replace("_", " ").title(),
+                "conditional" if d["grounding"] == "WEAKLY GROUNDED" else "verified",
+            )
+            for d in topology_domains
+        ]
+        summary_note = (
+            f"The platform assessment covers {dom_count} functional domains. "
+            f"{verified_ct} domain{'s are' if verified_ct != 1 else ' is'} structurally verified; "
+            f"{weak_ct} domain{'s carry' if weak_ct != 1 else ' carries'} pending runtime dimensions. "
+            "This represents the complete assessed surface — no domains are unexamined."
+        )
+        counts_text = (
+            f"{dom_count} functional domains &nbsp;·&nbsp; "
+            f"{cap_count} capability surfaces &nbsp;·&nbsp; "
+            f"{comp_count} components mapped"
         )
     else:
-        list_html = (
-            f'<div class="domain-list">'
-            + "".join(_domain_row(*d) for d in domains)
-            + '</div>'
+        domains = []
+        summary_note = (
+            "Domain coverage data is unavailable for this report. "
+            "Topology data was not found in the configured package directory."
         )
+        counts_text = ""
+
+    if domains:
+        if len(domains) > 10:
+            mid = (len(domains) + 1) // 2
+            left_rows  = "".join(_domain_row(*d) for d in domains[:mid])
+            right_rows = "".join(_domain_row(*d) for d in domains[mid:])
+            list_html = (
+                f'<div class="domain-list-2col">'
+                f'<div class="domain-list">{left_rows}</div>'
+                f'<div class="domain-list">{right_rows}</div>'
+                f'</div>'
+            )
+        else:
+            list_html = (
+                f'<div class="domain-list">'
+                + "".join(_domain_row(*d) for d in domains)
+                + '</div>'
+            )
+    else:
+        list_html = ''
+
+    summary_line = f'<div class="domain-summary">{counts_text}</div>' if counts_text else ''
 
     return f"""
 <p>
-  The platform assessment covers 17 functional domains across five capability clusters.
-  15 domains are structurally verified; 2 domains carry pending runtime dimensions.
-  This represents the complete assessed surface — no domains are unexamined.
+  {esc(summary_note)}
 </p>
 {list_html}
-<div class="domain-summary">
-  17 functional domains &nbsp;·&nbsp; 42 capability surfaces &nbsp;·&nbsp; 89 components mapped
+{summary_line}
+"""
+
+
+def _compose_topology_fallback(light_mode: bool, topology: Dict, domain_count: int) -> str:
+    """Fallback topology rendering for non-17-domain clients.
+
+    Shows domain list from canonical_topology.json domains[].domain_name with an
+    explicit portability notice. No hardcoded coordinates or cluster names.
+    """
+    if light_mode:
+        legend_verified    = '#22c55e'
+        legend_conditional = '#f59e0b'
+        container_style    = 'padding:16px;border:1px solid #e5e7eb;border-radius:4px;'
+        notice_color       = '#6b7280'
+    else:
+        legend_verified    = '#3fb950'
+        legend_conditional = '#d29922'
+        container_style    = 'padding:16px;border:1px solid #2a2a32;border-radius:4px;background:#0d1117;'
+        notice_color       = '#888'
+
+    domain_rows = ""
+    for d in topology["domains"]:
+        grounding = d.get("grounding", "GROUNDED")
+        dot_color = legend_conditional if grounding == "WEAKLY GROUNDED" else legend_verified
+        domain_rows += (
+            f'<div class="domain-row">'
+            f'<span class="domain-row-name">{esc(d["domain_name"])}</span>'
+            f'<span style="font-size:11px;color:{notice_color};">'
+            f'<span style="display:inline-block;width:8px;height:8px;border-radius:50%;'
+            f'background:{dot_color};margin-right:4px;vertical-align:middle;"></span>'
+            f'{"In Progress" if grounding == "WEAKLY GROUNDED" else "Verified"}'
+            f'</span>'
+            f'</div>'
+        )
+
+    counts = topology.get("counts", {})
+    depth_note = f"{domain_count} functional domains &nbsp;&middot;&nbsp; Structural depth only"
+
+    return f"""
+<div class="topo-container">
+  <div style="{container_style}">
+    <p style="font-size:12px;color:{notice_color};margin-bottom:12px;font-style:italic;">
+      Topology visualization currently optimized for reference model.
+      Dynamic topology rendering pending for this client.
+    </p>
+    <div class="domain-list">
+{domain_rows}
+    </div>
+  </div>
+  <div class="topo-legend">
+    <span class="topo-legend-dot" style="background:{legend_verified};"></span>&nbsp;Verified
+    &nbsp;&nbsp;
+    <span class="topo-legend-dot" style="background:{legend_conditional};"></span>&nbsp;In Progress
+    &nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;
+    <span class="topo-depth-note">{depth_note}</span>
+  </div>
 </div>
 """
 
 
-def compose_topology_view(light_mode: bool = False) -> str:
-    """Build the curated 17-domain topology SVG.
+def compose_topology_view(light_mode: bool = False, topology: Optional[Dict] = None) -> str:
+    """Build the topology section.
+
+    If topology domain count is 17, renders the curated reference-model SVG (unchanged logic).
+    For any other domain count, renders a domain list fallback with an explicit portability notice.
+    topology may be passed directly or will be loaded from CANONICAL_PKG_DIR.
 
     light_mode=True  → white/light background, dark labels — for executive report / print.
     light_mode=False → dark background — for LENS dark-theme web surface.
     """
+    if topology is None and CANONICAL_PKG_DIR.exists():
+        try:
+            topology = load_canonical_topology()
+        except SystemExit:
+            topology = None
+
+    domain_count = len(topology["domains"]) if topology else 17
+
+    # Semantic topology — if loaded, use artifact-driven renderer
+    if _SEMANTIC_TOPOLOGY_MODEL is not None and _SEMANTIC_TOPOLOGY_LAYOUT is not None:
+        return _render_semantic_topology_svg(light_mode=light_mode)
+
+    if domain_count != 17:
+        return _compose_topology_fallback(light_mode, topology, domain_count)
+
+    # 17-domain reference model — curated SVG rendering (unchanged logic below)
 
     clusters = [
         ('Operational Intelligence', 8,   8,   283, 205, 9, '#3fb950'),
@@ -1521,6 +2545,14 @@ body {
 
 
 def build_html(payloads: Dict) -> str:
+    # Load topology for dynamic sections; graceful fallback if unavailable
+    _topology: Optional[Dict] = None
+    if CANONICAL_PKG_DIR.exists():
+        try:
+            _topology = load_canonical_topology()
+        except SystemExit:
+            pass
+
     anchor = payloads[LENS_CLAIMS[0]]
     run_id = anchor.get("run_id", "—")
     generated_at_raw = anchor.get("generated_at", "")
@@ -1585,13 +2617,13 @@ def build_html(payloads: Dict) -> str:
 <!-- 2. SYSTEM INTELLIGENCE OVERVIEW -->
 <div class="section">
   <div class="section-title">System Intelligence Overview</div>
-  {compose_system_intelligence()}
+  {compose_system_intelligence(_topology)}
 </div>
 
 <!-- 3. STRUCTURAL TOPOLOGY VIEW -->
 <div class="section">
   <div class="section-title">Structural Topology View</div>
-  {compose_topology_view(light_mode=True)}
+  {compose_topology_view(light_mode=True, topology=_topology)}
 </div>
 
 <!-- 4. FOCUS DOMAIN — EDGE DATA ACQUISITION -->
@@ -1648,45 +2680,5062 @@ def build_html(payloads: Dict) -> str:
 """
 
 
+# ===========================================================================
+# TIER-1 REPORT GENERATION
+# PRODUCTIZE.GAUGE.TIER1.REPORT.GENERATOR.UPGRADE.02
+# ===========================================================================
+
 # ---------------------------------------------------------------------------
-# Entry point
+# Canonical data loaders
 # ---------------------------------------------------------------------------
 
-def main(output_path: Optional[Path] = None) -> None:
+def load_canonical_topology() -> Dict:
+    path = CANONICAL_PKG_DIR / "canonical_topology.json"
+    if not path.exists():
+        _fail(f"canonical_topology.json not found: {path}")
+    with open(path) as f:
+        return json.load(f)
+
+
+def load_signal_registry() -> Dict:
+    path = CANONICAL_PKG_DIR / "signal_registry.json"
+    if not path.exists():
+        _fail(f"signal_registry.json not found: {path}")
+    with open(path) as f:
+        return json.load(f)
+
+
+def load_gauge_state() -> Dict:
+    path = CANONICAL_PKG_DIR / "gauge_state.json"
+    if not path.exists():
+        _fail(f"gauge_state.json not found: {path}")
+    with open(path) as f:
+        return json.load(f)
+
+
+def _resolve_41x_path(filename: str) -> Path:
+    grounded = CANONICAL_PKG_DIR.parent / "41.x" / "grounded" / filename
+    legacy   = CANONICAL_PKG_DIR.parent / "41.x" / filename
+    if grounded.exists():
+        print(f"  [GROUNDED] {filename} → 41.x/grounded/{filename}")
+        return grounded
+    print(f"  [LEGACY] {filename} → 41.x/{filename}")
+    return legacy
+
+
+def _load_psig_projection() -> Optional[Dict]:
+    path = _resolve_41x_path("signal_projection.json")
+    if not path.exists():
+        return None
+    with open(path) as f:
+        return json.load(f)
+
+
+def _load_pressure_zone_projection() -> Optional[Dict]:
+    path = _resolve_41x_path("pressure_zone_projection.json")
+    if not path.exists():
+        return None
+    with open(path) as f:
+        return json.load(f)
+
+
+def _load_binding_envelope() -> Optional[Dict]:
+    path = CANONICAL_PKG_DIR.parent / "binding" / "binding_envelope.json"
+    if not path.exists():
+        return None
+    with open(path) as f:
+        return json.load(f)
+
+
+# ---------------------------------------------------------------------------
+# DPSIG Projection Weighting — PI.PSEE-PIOS.DPSIG-PROJECTION-WEIGHTING.IMPLEMENTATION.01
+# Additive sidecar: reads artifacts/dpsig/<client>/<run>/dpsig_signal_set.json
+# Lane A sovereign — no modification of signal_registry.json or 75.x artifacts
+# ---------------------------------------------------------------------------
+
+# Executive Readiness Gate — false-positive container sets
+# PI.PSEE-PIOS.DPSIG-EXECUTIVE-READINESS-GATE.01 Rule C-01/C-02
+_DPSIG_DIAGNOSTIC_ONLY_CONTAINERS: frozenset = frozenset({
+    "src", "app", "lib", "utils", "common", "core", "main", "pkg", "packages",
+})
+_DPSIG_SUPPRESSED_CONTAINERS: frozenset = frozenset({
+    "generated", "proto", "build", "dist", "__generated__",
+    "vendor", "node_modules", "third_party", "external",
+    "test", "tests", "spec", "docs", "fixtures", "mocks",
+})
+
+
+def load_dpsig_signal_set() -> Optional[Dict]:
+    """Load DPSIG signal set for active client/run. Returns None if absent — graceful fallback."""
+    path = REPO_ROOT / "artifacts" / "dpsig" / _ACTIVE_CLIENT / _ACTIVE_VAULT_RUN_ID / "dpsig_signal_set.json"
+    if not path.exists():
+        print(f"  [DPSIG] No dpsig_signal_set.json at {path} — DPSIG projection sections omitted")
+        return None
+    with open(path) as f:
+        data = json.load(f)
+    sev = data.get("derivation_summary", {}).get("severity_band", "—")
+    print(f"  [DPSIG] Loaded dpsig_signal_set.json (severity_band={sev})")
+    return data
+
+
+def _compute_dpsig_weights(dpsig: Optional[Dict]) -> Optional[Dict]:
+    """Compute all projection weighting values from dpsig_signal_set.
+    Returns None if dpsig is None. Implements DPSIG_PROJECTION_INTEGRATION.md Section 6.
+    All weights are TAXONOMY-01 stable — deterministic from signal_value/activation inputs.
+    """
+    if dpsig is None:
+        return None
+    ds = dpsig.get("derivation_summary", {})
+    sev_band = ds.get("severity_band", "NOMINAL")
+    _sev_mult = {"CRITICAL": 2.0, "HIGH": 1.5, "ELEVATED": 1.2, "NOMINAL": 1.0, "NULL_TOPOLOGY": 0.0}
+    sm = _sev_mult.get(sev_band, 1.0)
+
+    entries = {e["signal_id"]: e for e in dpsig.get("signal_entries", [])}
+    cpi_entry = entries.get("DPSIG-031")
+    cfa_entry = entries.get("DPSIG-032")
+    if cpi_entry is None or cfa_entry is None:
+        return None
+
+    cpi = cpi_entry.get("signal_value")
+    cfa = cfa_entry.get("signal_value")
+    nb  = dpsig.get("normalization_basis", {})
+
+    sev_color = {
+        "CRITICAL": "var(--red)", "HIGH": "var(--amber)",
+        "ELEVATED": "var(--gold)", "NOMINAL": "var(--green)", "NULL_TOPOLOGY": "var(--fg-dim)"
+    }.get(sev_band, "var(--fg-muted)")
+
+    if cpi is None or cfa is None:
+        return {
+            "severity_band": sev_band, "severity_multiplier": 0.0, "null_topology": True,
+            "sev_color": sev_color, "cluster_salience_score": 0.0,
+            "amplification_factor": 0.0, "cluster_mass_emphasis": 0.0,
+            "fragility_score": 0.0, "fragility_tier": "NULL_TOPOLOGY",
+            "amplification_label": "NULL", "render_apex": False, "projection_render_id": "",
+            "max_cluster_id": nb.get("max_cluster_id", "—"),
+            "max_cluster_name": nb.get("max_cluster_name", "—"),
+        }
+
+    CPI_HIGH_THRESHOLD             = 5.0
+    cpi_weight                     = round(cpi / CPI_HIGH_THRESHOLD, 4)
+    cluster_salience_score         = round(cpi_weight * sm * cfa, 4)
+    amplification_factor           = cluster_salience_score
+    cluster_mass_emphasis          = round(cfa * sm, 4)
+    fragility_score                = round(min(cpi_weight, 2.0) * cfa, 4)
+
+    if fragility_score > 0.50:
+        fragility_tier = "HIGH_STRUCTURAL_FRAGILITY"
+    elif fragility_score > 0.25:
+        fragility_tier = "ELEVATED_STRUCTURAL_FRAGILITY"
+    else:
+        fragility_tier = "NOMINAL_STRUCTURAL_FRAGILITY"
+
+    if amplification_factor >= 1.5:
+        amplification_label = "HIGH AMPLIFICATION"
+    elif amplification_factor >= 1.0:
+        amplification_label = "ELEVATED AMPLIFICATION"
+    elif amplification_factor > 0.0:
+        amplification_label = "BASELINE"
+    else:
+        amplification_label = "NULL"
+
+    raw_id = "|".join([
+        dpsig.get("schema_version", ""),
+        dpsig.get("client_id", ""),
+        dpsig.get("run_id", ""),
+        cpi_entry.get("signal_stable_key", ""),
+        cfa_entry.get("signal_stable_key", ""),
+        sev_band,
+    ])
+    projection_render_id = hashlib.sha256(raw_id.encode()).hexdigest()[:16]
+
+    dt = cpi_entry.get("derivation_trace", {})
+    denom_cluster_ids = dt.get("denominator_cluster_ids", [])
+
+    # Load per-cluster sizes from the DPSIG structural topology (authorized Tier-1 read surface)
+    _dpsig_client = dpsig.get("client_id", "")
+    _dpsig_run    = dpsig.get("run_id", "")
+    _topo_path    = REPO_ROOT / "clients" / _dpsig_client / "psee" / "runs" / _dpsig_run / "structure" / "40.4" / "canonical_topology.json"
+    cluster_size_map: Dict[str, int] = {}
+    if _topo_path.exists():
+        with open(_topo_path) as _f:
+            for _c in json.load(_f).get("clusters", []):
+                cluster_size_map[_c["cluster_id"]] = _c["node_count"]
+
+    max_node_count = nb.get("max_cluster_node_count", 1) or 1
+    non_singleton_sizes = [cluster_size_map.get(cid, 0) for cid in denom_cluster_ids]
+    heat_weights: Dict[str, float] = {
+        cid: round(sz / max_node_count, 4)
+        for cid, sz in zip(denom_cluster_ids, non_singleton_sizes)
+        if sz > 0
+    }
+
+    return {
+        "severity_band":           sev_band,
+        "severity_multiplier":     sm,
+        "sev_color":               sev_color,
+        "null_topology":           False,
+        "cpi":                     cpi,
+        "cfa":                     cfa,
+        "cpi_weight":              cpi_weight,
+        "cluster_salience_score":  cluster_salience_score,
+        "amplification_factor":    amplification_factor,
+        "cluster_mass_emphasis":   cluster_mass_emphasis,
+        "fragility_score":         fragility_score,
+        "fragility_tier":          fragility_tier,
+        "amplification_label":     amplification_label,
+        "render_apex":             cluster_salience_score >= 1.0,
+        "projection_render_id":    projection_render_id,
+        "max_cluster_id":          nb.get("max_cluster_id", "—"),
+        "max_cluster_name":        nb.get("max_cluster_name", "—"),
+        "max_cluster_node_count":  nb.get("max_cluster_node_count", 0),
+        "total_structural_nodes":  nb.get("total_structural_node_count", 0),
+        "non_singleton_count":     nb.get("non_singleton_cluster_count", 0),
+        "singleton_count":         nb.get("singleton_cluster_count", 0),
+        "mean_non_singleton_size": nb.get("mean_non_singleton_cluster_size", 0.0),
+        "heat_weights":            heat_weights,
+        "denom_cluster_ids":       denom_cluster_ids,
+        "non_singleton_sizes":     non_singleton_sizes,
+        "cpi_entry":               cpi_entry,
+        "cfa_entry":               cfa_entry,
+    }
+
+
+def _classify_dpsig_readiness_state(
+    dpsig: Optional[Dict], weights: Optional[Dict]
+) -> Optional[Dict]:
+    """Classify DPSIG executive readiness state.
+    Returns None if dpsig/weights absent. Deterministic, client-agnostic.
+    Implements PI.PSEE-PIOS.DPSIG-EXECUTIVE-READINESS-GATE.01 Rules C-01..C-04.
+    """
+    if dpsig is None or weights is None or weights.get("null_topology"):
+        return None
+
+    max_name = (weights.get("max_cluster_name") or "").strip().lower()
+    fp_flags: list = []
+
+    # Rule C-02 — suppressed containers (generated/vendor/test)
+    if max_name in _DPSIG_SUPPRESSED_CONTAINERS:
+        return {
+            "readiness_state":              "SUPPRESSED_FROM_EXECUTIVE",
+            "readiness_reason":             f"Dominant cluster '{max_name}' is a generated/vendor/test container (Rule C-02)",
+            "grounding_status":             "NOT_APPLICABLE",
+            "executive_rendering_allowed":  False,
+            "diagnostic_rendering_allowed": False,
+            "false_positive_flags":         ["GENERATED_OR_VENDOR_CONTAINER"],
+            "domain_grounding_required":    False,
+            "render_surface":               "INTERNAL_AUDIT_ONLY",
+        }
+
+    # Rule C-01 — filesystem container check
+    is_fs_container = max_name in _DPSIG_DIAGNOSTIC_ONLY_CONTAINERS
+    if is_fs_container:
+        fp_flags.append("FILESYSTEM_CONTAINER_DOMINANCE")
+
+    # Check domain grounding via semantic context (reads loaded global _SEMANTIC_TOPOLOGY_MODEL)
+    sem_ctx = _build_semantic_report_context()
+    backed  = sem_ctx.get("structurally_backed_domains", 0)
+    total   = sem_ctx.get("total_semantic_domains", 0)
+    all_ungrounded = (backed == 0)
+
+    if is_fs_container:
+        if not all_ungrounded:
+            # Rule C-04 override: domain grounding present → elevate to WITH_QUALIFIER
+            return {
+                "readiness_state":              "EXECUTIVE_READY_WITH_QUALIFIER",
+                "readiness_reason":             f"Dominant cluster '{max_name}' is a filesystem container; partial domain grounding present (Rule C-04)",
+                "grounding_status":             "PARTIAL",
+                "executive_rendering_allowed":  True,
+                "diagnostic_rendering_allowed": True,
+                "false_positive_flags":         fp_flags,
+                "domain_grounding_required":    False,
+                "render_surface":               "TIER1_WITH_QUALIFIER",
+            }
+        else:
+            return {
+                "readiness_state":              "DIAGNOSTIC_ONLY",
+                "readiness_reason":             f"Dominant cluster '{max_name}' is an ungrounded filesystem container (Rule C-01)",
+                "grounding_status":             "NONE",
+                "executive_rendering_allowed":  False,
+                "diagnostic_rendering_allowed": True,
+                "false_positive_flags":         fp_flags,
+                "domain_grounding_required":    True,
+                "render_surface":               "DIAGNOSTIC_AND_ENGINEERING_ONLY",
+            }
+
+    # Not a container — check grounding level
+    if all_ungrounded:
+        return {
+            "readiness_state":              "BLOCKED_PENDING_DOMAIN_GROUNDING",
+            "readiness_reason":             "No domain grounding available for any domain in this topology",
+            "grounding_status":             "NONE",
+            "executive_rendering_allowed":  False,
+            "diagnostic_rendering_allowed": False,
+            "false_positive_flags":         fp_flags,
+            "domain_grounding_required":    True,
+            "render_surface":               "ENGINEERING_INTERNAL_ONLY",
+        }
+
+    grounding_ratio = backed / total if total > 0 else 0.0
+    if grounding_ratio >= 0.5:
+        return {
+            "readiness_state":              "EXECUTIVE_READY",
+            "readiness_reason":             f"Domain grounding confirmed ({backed}/{total} domains structurally backed)",
+            "grounding_status":             "GROUNDED",
+            "executive_rendering_allowed":  True,
+            "diagnostic_rendering_allowed": True,
+            "false_positive_flags":         fp_flags,
+            "domain_grounding_required":    False,
+            "render_surface":               "ALL_SURFACES",
+        }
+    return {
+        "readiness_state":              "EXECUTIVE_READY_WITH_QUALIFIER",
+        "readiness_reason":             f"Domain grounding partially present ({backed}/{total} domains backed)",
+        "grounding_status":             "PARTIAL",
+        "executive_rendering_allowed":  True,
+        "diagnostic_rendering_allowed": True,
+        "false_positive_flags":         fp_flags,
+        "domain_grounding_required":    False,
+        "render_surface":               "TIER1_WITH_QUALIFIER",
+    }
+
+
+def _render_dpsig_cluster_pressure_html(
+    dpsig: Optional[Dict], weights: Optional[Dict], readiness: Optional[Dict] = None
+) -> str:
+    """Render DPSIG cluster pressure block for TIER-1 injection.
+    Returns empty string if dpsig/weights absent or NULL_TOPOLOGY.
+    All rendered text derives exclusively from TAXONOMY-01-stable fields. No inference.
+    Implements DPSIG_PROJECTION_INTEGRATION.md Sections 4, 5, 6, 7, 8.
+    Implements DPSIG_EXECUTIVE_READINESS_GATE.IMPLEMENTATION.01 rendering rules.
+    """
+    if dpsig is None or weights is None or weights.get("null_topology"):
+        return ""
+
+    w              = weights
+    cpi_entry      = w["cpi_entry"]
+    cfa_entry      = w["cfa_entry"]
+    sev_band       = w["severity_band"]
+    sev_color      = w["sev_color"]
+    callout_labels = {
+        "CRITICAL": "CLUSTER CONCENTRATION ALERT",
+        "HIGH":     "STRUCTURAL PRESSURE WARNING",
+        "ELEVATED": "STRUCTURAL CONCENTRATION — ELEVATED",
+        "NOMINAL":  "STRUCTURAL DISTRIBUTION — NOMINAL",
+    }
+    callout_label = callout_labels.get(sev_band, sev_band)
+    border_style  = {
+        "CRITICAL": "border-left:3px solid var(--red)",
+        "HIGH":     "border-left:3px solid var(--amber)",
+        "ELEVATED": "border-left:3px solid var(--gold)",
+        "NOMINAL":  "border-left:3px solid var(--green)",
+    }.get(sev_band, "border-left:3px solid var(--border)")
+
+    cs_score      = w["cluster_salience_score"]
+    amp_factor    = w["amplification_factor"]
+    amp_label     = w["amplification_label"]
+    frag_score    = w["fragility_score"]
+    frag_tier     = w["fragility_tier"]
+    mass_pct      = round(w["cfa"] * 100, 2)
+    max_name      = w["max_cluster_name"]
+    max_id        = w["max_cluster_id"]
+    max_nodes     = w["max_cluster_node_count"]
+    total_nodes   = w["total_structural_nodes"]
+    non_singletons = w["non_singleton_count"]
+    singletons    = w["singleton_count"]
+    mean_ns       = w["mean_non_singleton_size"]
+    render_id     = w["projection_render_id"]
+
+    exec_031 = cpi_entry.get("executive_summary", "")
+    exec_032 = cfa_entry.get("executive_summary", "")
+    eng_031  = cpi_entry.get("engineering_summary", "")
+    eng_032  = cfa_entry.get("engineering_summary", "")
+    deriv_031 = cpi_entry.get("derivation_summary", "")
+    deriv_032 = cfa_entry.get("derivation_summary", "")
+
+    amp_stmt = (
+        f"{esc(max_name)} ({esc(max_id)}) structural mass is {w['cpi']}x the average non-singleton "
+        f"cluster size — amplification factor {amp_factor} above expected distribution baseline."
+    )
+
+    frag_color = {
+        "HIGH_STRUCTURAL_FRAGILITY":     "var(--red)",
+        "ELEVATED_STRUCTURAL_FRAGILITY": "var(--amber)",
+        "NOMINAL_STRUCTURAL_FRAGILITY":  "var(--green)",
+    }.get(frag_tier, "var(--fg-muted)")
+
+    frag_label = frag_tier.replace("_STRUCTURAL_FRAGILITY", "").replace("_", " ")
+
+    heat_weights   = w["heat_weights"]
+    denom_ids      = w["denom_cluster_ids"]
+    ns_sizes       = w["non_singleton_sizes"]
+    cluster_rows   = ""
+    if ns_sizes and len(ns_sizes) == len(denom_ids):
+        sorted_pairs = sorted(zip(denom_ids, ns_sizes), key=lambda x: (-x[1], x[0]))
+        for cid, sz in sorted_pairs:
+            hw    = heat_weights.get(cid, 0.0)
+            pct   = round(sz / total_nodes * 100, 1) if total_nodes else 0.0
+            is_max = (cid == max_id)
+            row_bg = "background:rgba(224,82,82,0.05)" if is_max else ""
+            marker = (f' <span style="font-size:9px;color:{sev_color};letter-spacing:.08em">'
+                      f'&#9650; DOMINANT</span>') if is_max else ""
+            bar_color = sev_color if is_max else "var(--fg-dim)"
+            cluster_rows += (
+                f'<tr style="{row_bg}">'
+                f'<td style="padding:8px 10px;border-bottom:1px solid var(--border-subtle);color:var(--fg)">'
+                f'{esc(cid)}{marker}</td>'
+                f'<td style="padding:8px 10px;border-bottom:1px solid var(--border-subtle);'
+                f'color:var(--fg);font-variant-numeric:tabular-nums">{sz}</td>'
+                f'<td style="padding:8px 10px;border-bottom:1px solid var(--border-subtle);'
+                f'color:var(--fg-muted)">{pct}%</td>'
+                f'<td style="padding:8px 10px;border-bottom:1px solid var(--border-subtle)">'
+                f'<div style="height:6px;width:{round(hw * 100)}%;background:{bar_color};'
+                f'border-radius:2px;min-width:2px"></div></td>'
+                f'</tr>'
+            )
+        cluster_rows += (
+            f'<tr><td style="padding:8px 10px;color:var(--fg-dim)">'
+            f'{singletons} singletons</td>'
+            f'<td style="padding:8px 10px;color:var(--fg-dim)">1 each</td>'
+            f'<td style="padding:8px 10px;color:var(--fg-dim)">'
+            f'{round(singletons / total_nodes * 100, 1) if total_nodes else 0.0}%</td>'
+            f'<td style="padding:8px 10px"></td></tr>'
+        )
+
+    # Executive Readiness Gate — compute rendering variables
+    # PI.PSEE-PIOS.DPSIG-EXECUTIVE-READINESS-GATE.IMPLEMENTATION.01
+    _rs        = (readiness or {}).get("readiness_state", "EXECUTIVE_READY")
+    _fp_flags  = (readiness or {}).get("false_positive_flags", [])
+    _diag_only = _rs in ("DIAGNOSTIC_ONLY", "SUPPRESSED_FROM_EXECUTIVE", "BLOCKED_PENDING_DOMAIN_GROUNDING")
+    _with_qual = _rs == "EXECUTIVE_READY_WITH_QUALIFIER"
+
+    if _diag_only:
+        _render_sev_label     = {
+            "DIAGNOSTIC_ONLY":                   "STRUCTURAL DIAGNOSTIC",
+            "SUPPRESSED_FROM_EXECUTIVE":         "SUPPRESSED",
+            "BLOCKED_PENDING_DOMAIN_GROUNDING":  "GROUNDING REQUIRED",
+        }.get(_rs, "DIAGNOSTIC")
+        _render_callout_label = "STRUCTURAL DIAGNOSTIC — CLUSTER CONCENTRATION"
+        _render_border        = "border-left:3px solid var(--fg-muted)"
+        _render_label_color   = "var(--fg-muted)"
+        _render_main_line_1   = eng_031
+        _render_main_line_2   = eng_032
+        _render_qualifier_html = ""
+        _render_diag_notice   = (
+            '<div style="font-size:11px;color:var(--amber);margin-top:10px;padding-top:10px;'
+            'border-top:1px solid var(--border-subtle)">'
+            f'Readiness: {esc(_rs)} — Cluster is ungrounded. Structural diagnostic data only. '
+            'Not attributed to a named business capability. Engineering use only.</div>'
+        )
+    elif _with_qual:
+        _render_sev_label     = sev_band
+        _render_callout_label = callout_label
+        _render_border        = border_style
+        _render_label_color   = sev_color
+        _render_main_line_1   = exec_031
+        _render_main_line_2   = exec_032
+        _render_diag_notice   = ""
+        _render_qualifier_html = (
+            '<div style="font-size:11px;color:var(--amber);background:rgba(212,145,42,0.08);'
+            'border:1px solid rgba(212,145,42,0.25);padding:8px 12px;margin-bottom:10px;border-radius:2px">'
+            'QUALIFIER: Domain grounding is partial — interpretation confidence is limited. '
+            f'Validate with engineering before treating as strategic signal. [{esc(_rs)}]</div>'
+        )
+    else:
+        _render_sev_label     = sev_band
+        _render_callout_label = callout_label
+        _render_border        = border_style
+        _render_label_color   = sev_color
+        _render_main_line_1   = exec_031
+        _render_main_line_2   = exec_032
+        _render_diag_notice   = ""
+        _render_qualifier_html = ""
+
+    _readiness_metadata_html = ""
+    if readiness:
+        _rm_exec = "YES" if readiness.get("executive_rendering_allowed") else "NO"
+        _rm_diag = "YES" if readiness.get("diagnostic_rendering_allowed") else "NO"
+        _fp_str  = ", ".join(_fp_flags) if _fp_flags else "NONE"
+        _readiness_metadata_html = (
+            f'<div style="font-size:9px;color:var(--fg-dim);opacity:.5;margin-top:2px">'
+            f'readiness_state={esc(_rs)} · executive_rendering={_rm_exec} · '
+            f'diagnostic_rendering={_rm_diag} · false_positive_flags=[{_fp_str}] · '
+            f'grounding_status={esc(readiness.get("grounding_status", "—"))}'
+            f'</div>'
+        )
+
+    return f"""
+  <h2 style="margin-top:36px">Cluster Topology Intelligence
+    <span style="font-size:11px;font-weight:400;color:{_render_label_color};letter-spacing:.08em;margin-left:10px">{esc(_render_sev_label)}</span>
+  </h2>
+
+  <div style="background:var(--surface);border:1px solid var(--border);{_render_border};padding:18px 22px;margin:16px 0;border-radius:3px">
+    {_render_qualifier_html}<div style="font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:{_render_label_color};margin-bottom:10px">{esc(_render_callout_label)}</div>
+    <div style="font-size:14px;color:var(--fg);margin-bottom:8px">{esc(_render_main_line_1)}</div>
+    <div style="font-size:13px;color:var(--fg-muted);margin-bottom:6px">{esc(_render_main_line_2)}</div>
+    <div style="font-size:11px;color:var(--fg-dim);margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle)">{amp_stmt}</div>{_render_diag_notice}
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:12px 0">
+    <div style="background:var(--surface);border:1px solid var(--border);padding:12px 14px;border-radius:3px">
+      <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:4px">Salience Score</div>
+      <div style="font-size:18px;color:{sev_color};font-weight:300">{cs_score}</div>
+      <div style="font-size:10px;color:var(--fg-dim);margin-top:2px">{esc(amp_label)}</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);padding:12px 14px;border-radius:3px">
+      <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:4px">Structural Fragility</div>
+      <div style="font-size:18px;color:{frag_color};font-weight:300">{frag_score}</div>
+      <div style="font-size:10px;color:var(--fg-dim);margin-top:2px">{esc(frag_label)}</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);padding:12px 14px;border-radius:3px">
+      <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:4px">Mass Concentration</div>
+      <div style="font-size:18px;color:{sev_color};font-weight:300">{mass_pct}%</div>
+      <div style="font-size:10px;color:var(--fg-dim);margin-top:2px">{esc(max_name)} ({esc(max_id)})</div>
+    </div>
+  </div>
+
+  <p style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);margin:20px 0 8px">Cluster Distribution</p>
+  <table style="width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:8px">
+    <thead>
+      <tr>
+        <th style="text-align:left;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-dim);border-bottom:1px solid var(--border);padding:6px 10px;font-weight:400">Cluster</th>
+        <th style="text-align:left;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-dim);border-bottom:1px solid var(--border);padding:6px 10px;font-weight:400">Nodes</th>
+        <th style="text-align:left;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-dim);border-bottom:1px solid var(--border);padding:6px 10px;font-weight:400">Mass %</th>
+        <th style="text-align:left;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-dim);border-bottom:1px solid var(--border);padding:6px 10px;font-weight:400">Heat</th>
+      </tr>
+    </thead>
+    <tbody>{cluster_rows}</tbody>
+  </table>
+  <p style="font-size:11px;color:var(--fg-dim);margin-bottom:16px">
+    {non_singletons} non-singleton clusters &middot; {singletons} singletons &middot; {total_nodes} total structural nodes &middot; mean non-singleton: {mean_ns} nodes
+  </p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0">
+    <div style="background:var(--surface);border:1px solid var(--border-subtle);padding:12px 14px;border-radius:3px">
+      <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:6px">DPSIG-031 — Cluster Pressure Index</div>
+      <div style="font-size:12px;color:var(--fg-muted)">{esc(eng_031)}</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border-subtle);padding:12px 14px;border-radius:3px">
+      <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:6px">DPSIG-032 — Cluster Fan Asymmetry</div>
+      <div style="font-size:12px;color:var(--fg-muted)">{esc(eng_032)}</div>
+    </div>
+  </div>
+
+  <p style="font-size:10px;color:var(--fg-dim);opacity:.6;margin-top:4px">
+    {esc(deriv_031)} &middot; {esc(deriv_032)} &middot; salience={cs_score} &middot; render_id={render_id}<br>
+    Source: DPSIG Class 4 &middot; topology-native &middot; PI.PSEE-PIOS.DPSIG-PROJECTION-INTEGRATION.01
+  </p>
+{_readiness_metadata_html}"""
+
+
+def _compute_structural_metrics(binding: Optional[Dict]) -> Dict:
+    NIS = "NOT_IN_SCOPE"
+    empty = {k: NIS for k in ["dep_load", "dep_edges", "dep_nodes", "edge_to_node",
+                               "containment_density", "edges_count", "contains_count", "nodes_count"]}
+    if binding is None:
+        return empty
+    s = binding.get("summary", {})
+    nodes = s.get("nodes_count", 0)
+    if nodes == 0:
+        return empty
+    overlap  = s.get("overlap_structural_edges_count", 0)
+    edges    = s.get("edges_count", 0)
+    contains = s.get("contains_edges_count", 0)
+    return {
+        "dep_load":            round(overlap / nodes, 3),
+        "dep_edges":           overlap,
+        "dep_nodes":           nodes,
+        "edge_to_node":        round(edges / nodes, 3),
+        "containment_density": round(contains / nodes, 3),
+        "edges_count":         edges,
+        "contains_count":      contains,
+        "nodes_count":         nodes,
+    }
+
+
+def _compute_decision_model(metrics: Dict, psig_proj: Optional[Dict], gauge: Dict) -> Dict:
+    NIS = "NOT_IN_SCOPE"
+    dep_load = metrics.get("dep_load", NIS)
+    etn      = metrics.get("edge_to_node", NIS)
+
+    if dep_load == NIS or etn == NIS:
+        structural_risk = "MODERATE"
+    else:
+        dep_r = "HIGH" if dep_load > 0.4 else ("MODERATE" if dep_load > 0.15 else "LOW")
+        etn_r = "HIGH" if etn > 2.5 else ("MODERATE" if etn > 1.5 else "LOW")
+        order = {"LOW": 0, "MODERATE": 1, "HIGH": 2}
+        structural_risk = max([dep_r, etn_r], key=lambda x: order[x])
+
+    exec_evaluated = gauge.get("state", {}).get("execution_layer_evaluated", False)
+    not_activated: list = []
+    blind_spot_active = False
+    if psig_proj:
+        not_activated = psig_proj.get("signals_not_activated", [])
+        for c in psig_proj.get("active_conditions_in_scope", []):
+            if c.get("activation_method") == "THEORETICAL_BASELINE":
+                blind_spot_active = True
+
+    gap_count = len(not_activated) + (1 if blind_spot_active else 0) + (0 if exec_evaluated else 1)
+    evidence_completeness = "HIGH" if (exec_evaluated and gap_count == 0) else "PARTIAL"
+
+    order2 = {"LOW": 0, "MODERATE": 1, "HIGH": 2}
+    decision = ("ESCALATE" if order2.get(structural_risk, 1) >= 2
+                else "INVESTIGATE" if evidence_completeness in ("PARTIAL", "LOW")
+                else "PROCEED")
+
+    return {
+        "structural_risk":       structural_risk,
+        "evidence_completeness": evidence_completeness,
+        "decision":              decision,
+        "exec_evaluated":        exec_evaluated,
+        "not_activated":         not_activated,
+        "blind_spot_active":     blind_spot_active,
+        "gap_count":             gap_count,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Tier-1 SVG topology (BlueEdge 17-domain spatial map, contrast-corrected)
+# ---------------------------------------------------------------------------
+
+def _build_tier1_topology_svg(topology_domains: list, publish_safe: bool = False) -> str:
+    """Render spatial topology SVG from canonical domain data.
+
+    Positions reflect BlueEdge's 17-domain structural layout.
+    Grounding states and focus domain are derived from canonical_topology.json.
+    """
+    grounding_map = {d["domain_id"]: d["grounding"] for d in topology_domains}
+    # DOMAIN-10 is the focus domain (SIG-002 + SIG-004 both domain_id=DOMAIN-10)
+    FOCUS_DOMAIN = "DOMAIN-10"
+
+    # Domain node definitions: (domain_id, line1, line2, x, y, cx)
+    # x/y = rect top-left, cx = text center x, cy derived from y+19
+    NODES = [
+        ("DOMAIN-01", "Edge Data Acquisition", None,          50,  91, 108),
+        ("DOMAIN-07", "Sensor &amp; Security",  "Ingestion",  50, 166, 108),
+        ("DOMAIN-02", "Telemetry Transport",    "&amp; Messaging", 50, 251, 108),
+        ("DOMAIN-03", "Fleet Core Operations" if not publish_safe else "Core Operations",
+                       None,                                 227, 106, 285),
+        ("DOMAIN-04", "Fleet Vertical" if not publish_safe else "Vertical",
+                      "Extensions",                         227, 196, 285),
+        ("DOMAIN-15", "EV and Electrification", None,        212, 291, 270),
+        ("DOMAIN-11", "Event-Driven",           "Architecture", 382, 111, 440),
+        ("DOMAIN-10", "Platform Infrastructure", "&amp; Data", 397, 231, 455),
+        ("DOMAIN-09", "Access Control",         "&amp; Identity", 382, 356, 440),
+        ("DOMAIN-05", "Analytics and",          "Intelligence", 567, 106, 625),
+        ("DOMAIN-06", "AI/ML Intelligence",     "Layer",      582, 221, 640),
+        ("DOMAIN-17", "Extended Operations",
+                      "&amp; Driver Services" if not publish_safe else "&amp; User Services",
+                      562, 346, 620),
+        ("DOMAIN-08", "Real-Time Streaming",    "&amp; Gateway", 737, 106, 795),
+        ("DOMAIN-12", "SaaS Platform Layer",    None,         742, 206, 800),
+        ("DOMAIN-14", "Frontend Application",   None,         742, 291, 800),
+        ("DOMAIN-16", "Operational Engineering", None,        737, 381, 795),
+        ("DOMAIN-13", "External Integration",   None,         737, 446, 795),
+    ]
+
+    def _node_colors(domain_id: str):
+        if domain_id == FOCUS_DOMAIN:
+            return {"fill": "#221f0d", "stroke": "#c89b3c", "sw": "1.5", "tc": "#e0ca78", "filter": ' filter="url(#gf)"'}
+        g = grounding_map.get(domain_id, "GROUNDED")
+        if g == "WEAKLY GROUNDED":
+            return {"fill": "#221508", "stroke": "#c87c2c", "sw": "1", "tc": "#d0a868", "filter": ""}
+        return {"fill": "#1c1c22", "stroke": "#4a9e6a", "sw": "1", "tc": "#dcdce0", "filter": ""}
+
+    parts = []
+
+    # Background
+    parts.append('<rect width="880" height="500" fill="#0e0e10"/>')
+
+    # Cluster zone fills (contrast-corrected)
+    zones = [
+        (28,  72, 162, 244, "#141b16", "#1e2820", "EDGE"),
+        (204, 72, 162, 275, "#141b16", "#1e2820", "OPERATIONS"),
+        (362, 72, 172, 356, "#1a1910", "#252218", "INFRASTRUCTURE"),
+        (546, 72, 170, 330, "#141b16", "#1e2820", "INTELLIGENCE"),
+        (724, 72, 152, 430, "#131418", "#1a1d24", "PLATFORM &amp; SERVICES"),
+    ]
+    for x, y, w, h, fill, stroke, label in zones:
+        parts.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="5" fill="{fill}" stroke="{stroke}" stroke-width="0.5"/>')
+
+    # Zone labels
+    label_xs = [109, 285, 448, 631, 800]
+    for (_, _, _, _, _, _, label), lx in zip(zones, label_xs):
+        parts.append(
+            f'<text x="{lx}" y="87" text-anchor="middle" font-size="7" fill="#505068" '
+            f'letter-spacing="0.13em" font-family="Georgia,serif">{label}</text>'
+        )
+
+    # Structural edges — non-directional
+    std = "#32324a"
+    foc = "#4a3e1e"
+    edges = [
+        (108,129,108,166,std,False),(108,204,108,251,std,False),
+        (166,113,227,122,std,False),
+        (285,144,285,196,std,False),(278,234,272,291,std,False),
+        (443,149,451,231,std,False),(449,269,443,356,std,False),
+        (382,127,343,124,std,False),
+        (628,144,635,221,std,False),(637,259,623,346,std,False),
+        (798,144,800,206,std,False),(800,244,800,291,std,False),
+        (799,329,797,381,std,False),(797,419,797,446,std,False),
+        # focus-adjacent (amber)
+        (166,272,397,252,foc,False),(166,188,397,246,foc,False),
+        (343,128,397,244,foc,False),(343,218,397,250,foc,False),
+        (328,311,397,252,foc,False),(567,128,513,247,foc,False),
+        (582,242,513,252,foc,False),(737,131,513,248,foc,False),
+        (737,398,513,254,foc,False),
+        # cross-cluster standard
+        (737,125,498,130,std,False),(742,227,498,368,std,False),
+        (742,310,498,376,std,False),
+        # COMP-25 cross-domain ref (dashed)
+        (212,308,166,115,std,True),
+    ]
+    for x1, y1, x2, y2, stroke, dashed in edges:
+        dash = ' stroke-dasharray="3,3"' if dashed else ""
+        parts.append(f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="{stroke}" stroke-width="1"{dash}/>')
+
+    # Domain nodes
+    for domain_id, line1, line2, nx, ny, cx in NODES:
+        c = _node_colors(domain_id)
+        cy1 = ny + 19  # single-line text baseline (center of 38px rect)
+        if line2 is None:
+            parts.append(f'<rect x="{nx}" y="{ny}" width="116" height="38" rx="3" fill="{c["fill"]}" stroke="{c["stroke"]}" stroke-width="{c["sw"]}"{c["filter"]}/>')
+            parts.append(f'<text x="{cx}" y="{ny+24}" text-anchor="middle" font-size="9" fill="{c["tc"]}" font-family="Georgia,serif">{line1}</text>')
+        else:
+            parts.append(f'<rect x="{nx}" y="{ny}" width="116" height="38" rx="3" fill="{c["fill"]}" stroke="{c["stroke"]}" stroke-width="{c["sw"]}"{c["filter"]}/>')
+            parts.append(f'<text x="{cx}" y="{ny+15}" text-anchor="middle" font-size="9" fill="{c["tc"]}" font-family="Georgia,serif">{line1}</text>')
+            parts.append(f'<text x="{cx}" y="{ny+28}" text-anchor="middle" font-size="9" fill="{c["tc"]}" font-family="Georgia,serif">{line2}</text>')
+
+    inner = "\n      ".join(parts)
+    return f"""<svg viewBox="0 0 880 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:4px">
+      <defs>
+        <filter id="gf" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/>
+          <feComposite in="SourceGraphic" in2="b" operator="over"/>
+        </filter>
+      </defs>
+      {inner}
+    </svg>"""
+
+
+# ---------------------------------------------------------------------------
+# Tier-1 generic topology SVG (non-BlueEdge: N-domain structural layout)
+# ---------------------------------------------------------------------------
+
+def _build_tier1_topology_svg_generic(
+    topology_domains: list,
+    pz_proj: Optional[Dict] = None,
+) -> str:
+    zones_by_anchor: Dict[str, Dict] = {}
+    primary_anchor: Optional[str] = None
+    blind_spot_domains: set = set()
+
+    if pz_proj:
+        for z in pz_proj.get("zone_projection") or pz_proj.get("zones") or []:
+            aid = z.get("anchor_id")
+            if aid:
+                zones_by_anchor[aid] = z
+                if z.get("attribution_profile") == "primary":
+                    primary_anchor = aid
+        zoned = set(zones_by_anchor.keys())
+        for d in topology_domains:
+            if d["domain_id"] not in zoned:
+                blind_spot_domains.add(d["domain_id"])
+
+    n = len(topology_domains)
+    if n == 0:
+        return '<svg viewBox="0 0 880 400" xmlns="http://www.w3.org/2000/svg"><rect width="880" height="400" fill="#0e0e10"/></svg>'
+
+    MARGIN, GAP, TOTAL_W, SVG_H = 28, 12, 880, 400
+    col_w = (TOTAL_W - 2 * MARGIN - (n - 1) * GAP) // n
+
+    def _tile(x: int, y: int, w: int, h: int, fill: str, stroke: str, sw: str, filt: str = "") -> str:
+        return (f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="3"'
+                f' fill="{fill}" stroke="{stroke}" stroke-width="{sw}"{filt}/>')
+
+    def _txt(cx: int, y: int, text: str, size: float, color: str, spacing: str = "0") -> str:
+        return (f'<text x="{cx}" y="{y}" text-anchor="middle" font-size="{size}"'
+                f' fill="{color}" letter-spacing="{spacing}" font-family="Georgia,serif">{text}</text>')
+
+    parts: list = [
+        f'<svg viewBox="0 0 {TOTAL_W} {SVG_H}" xmlns="http://www.w3.org/2000/svg"'
+        ' style="width:100%;display:block;border-radius:4px">',
+        '<defs><filter id="gf" x="-40%" y="-40%" width="180%" height="180%">'
+        '<feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/>'
+        '<feComposite in="SourceGraphic" in2="b" operator="over"/>'
+        '</filter></defs>',
+        f'<rect width="{TOTAL_W}" height="{SVG_H}" fill="#0e0e10"/>',
+    ]
+
+    for i, d in enumerate(topology_domains):
+        did   = d["domain_id"]
+        name  = d.get("anchor_name", d.get("domain_name", did))
+        caps  = len(d.get("capability_ids", []))
+        comps = len(d.get("component_ids", []))
+        x  = MARGIN + i * (col_w + GAP)
+        cx = x + col_w // 2
+
+        zone      = zones_by_anchor.get(did)
+        is_blind  = did in blind_spot_domains
+        is_primary = (did == primary_anchor)
+
+        if is_primary:
+            bfill, bstroke, bsw, bfilt = "#221f0d", "#c89b3c", "1.5", ' filter="url(#gf)"'
+            lbl_c, txt_c = "#c8a040", "#e0ca78"
+            box_y, box_h = 60, 316
+            zone_tag = f"{zone['zone_id']} PRIMARY" if zone else did
+        elif zone:
+            bfill, bstroke, bsw, bfilt = "#141b16", "#2a4030", "1.5", ""
+            lbl_c, txt_c = "#4a6050", "#dcdce0"
+            box_y, box_h = 72, 288
+            zone_tag = f"{zone['zone_id']} {zone.get('attribution_profile','secondary')}"
+        elif is_blind:
+            bfill, bstroke, bsw, bfilt = "#141418", "#282830", "0.5", ""
+            lbl_c, txt_c = "#505068", "#dcdce0"
+            box_y, box_h = 72, 230
+            zone_tag = did
+        else:
+            bfill, bstroke, bsw, bfilt = "#141b16", "#1e2820", "0.5", ""
+            lbl_c, txt_c = "#505068", "#dcdce0"
+            box_y, box_h = 72, 200
+            zone_tag = did
+
+        parts.append(
+            f'<rect x="{x}" y="{box_y}" width="{col_w}" height="{box_h}" rx="5"'
+            f' fill="{bfill}" stroke="{bstroke}" stroke-width="{bsw}"{bfilt}/>'
+        )
+        parts.append(_txt(cx, box_y + 14, zone_tag, 6.5, lbl_c, "0.10em"))
+
+        # Domain name tile
+        ty = box_y + 20
+        ts = bstroke if is_primary else "#4a9e6a"
+        parts.append(_tile(x + 8, ty, col_w - 16, 34, "#1c1c22", ts, "1"))
+        name_lines = [name[:16], name[16:]] if len(name) > 16 else [name]
+        if len(name_lines) == 1:
+            parts.append(_txt(cx, ty + 22, esc(name_lines[0]), 8.5, txt_c))
+        else:
+            parts.append(_txt(cx, ty + 14, esc(name_lines[0]), 8, txt_c))
+            parts.append(_txt(cx, ty + 27, esc(name_lines[1]), 8, txt_c))
+
+        cy = ty + 43
+        if caps > 0:
+            parts.append(_tile(x + 8, cy, col_w - 16, 26, "#1c1c22", "#4a9e6a", "0.8"))
+            parts.append(_txt(cx, cy + 17, f"{caps} capabilit{'y' if caps == 1 else 'ies'}", 7.5, "#9cbc9c"))
+            cy += 34
+        if comps > 0:
+            parts.append(_tile(x + 8, cy, col_w - 16, 26, "#1c1c22", "#4a9e6a", "0.8"))
+            parts.append(_txt(cx, cy + 17, f"{comps} component{'s' if comps != 1 else ''}", 7.5, "#9cbc9c"))
+            cy += 34
+        if zone:
+            for sig in zone.get("signals", [])[:3]:
+                parts.append(_tile(x + 8, cy, col_w - 16, 22, "#141c22", "#304050", "0.5"))
+                parts.append(_txt(cx, cy + 15, sig, 7, "#5090a8"))
+                cy += 28
+        if is_blind:
+            parts.append(
+                f'<rect x="{x+8}" y="{cy}" width="{col_w-16}" height="30" rx="3"'
+                f' fill="#18181e" stroke="#38384a" stroke-width="0.5" stroke-dasharray="3,2"/>'
+            )
+            parts.append(_txt(cx, cy + 13, "PSIG-006 blind spot", 7.5, "#58586a"))
+            parts.append(_txt(cx, cy + 24, "coverage", 7, "#48485a"))
+
+    parts.append("</svg>")
+    return "\n".join(parts)
+
+
+# ---------------------------------------------------------------------------
+# Tier-1 Evidence Brief HTML builder
+# ---------------------------------------------------------------------------
+
+_TIER1_EVIDENCE_CSS = """
+  :root {
+    --bg:#0e0e10;--bg-card:#16161a;--bg-card-2:#1c1c22;
+    --fg:#e8e4df;--fg-muted:#8a8580;
+    --gold:#c89b3c;--gold-dim:#7a5e22;
+    --green:#4a9e6a;--green-dim:#1e3d2a;
+    --amber:#c87c2c;--amber-dim:#3d2810;
+    --border:#2a2a32;--border-gold:#4a3a1a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--fg);font-family:'Georgia','Times New Roman',serif;font-size:14px;line-height:1.6}
+  .page{max-width:960px;margin:0 auto;padding:48px 40px}
+  .report-header{border-bottom:1px solid var(--border-gold);padding-bottom:24px;margin-bottom:36px;display:flex;justify-content:space-between;align-items:flex-end}
+  .report-brand{font-size:11px;color:var(--fg-muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+  .report-title{font-size:22px;font-weight:normal;color:var(--gold);letter-spacing:.02em}
+  .report-meta{text-align:right;font-size:11px;color:var(--fg-muted);line-height:1.9}
+  .report-meta strong{color:var(--fg)}
+  h2{font-size:11px;font-weight:normal;color:var(--fg-muted);letter-spacing:.14em;text-transform:uppercase;border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:20px;margin-top:40px}
+  h2:first-of-type{margin-top:0}
+  .gauge-block{display:grid;grid-template-columns:auto 1fr auto;gap:32px;align-items:center;background:var(--bg-card);border:1px solid var(--border-gold);border-radius:4px;padding:28px 32px;margin-bottom:36px}
+  .gauge-score-circle{width:96px;height:96px;border-radius:50%;border:3px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+  .gauge-score-number{font-size:36px;color:var(--gold);line-height:1}
+  .gauge-score-label{font-size:9px;letter-spacing:.1em;color:var(--fg-muted);text-transform:uppercase;margin-top:3px}
+  .gauge-band-label{font-size:18px;color:var(--gold);letter-spacing:.06em;margin-bottom:8px}
+  .gauge-band-bar{height:6px;background:var(--bg-card-2);border-radius:3px;position:relative;width:280px;margin-bottom:8px}
+  .gauge-band-fill{height:100%;border-radius:3px;background:linear-gradient(to right,var(--amber),var(--gold));width:60%}
+  .gauge-band-range{font-size:11px;color:var(--fg-muted)}
+  .gauge-band-range span{color:var(--fg)}
+  .gauge-caveat{margin-top:12px;font-size:11px;color:var(--fg-muted);line-height:1.5;max-width:420px}
+  .gauge-decision{text-align:center;flex-shrink:0}
+  .gauge-decision-label{font-size:9px;letter-spacing:.12em;color:var(--fg-muted);text-transform:uppercase;margin-bottom:8px}
+  .gauge-decision-value{display:inline-block;font-size:13px;letter-spacing:.1em;color:var(--amber);border:1px solid var(--amber);padding:7px 16px;border-radius:2px;text-transform:uppercase}
+  .counts-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px}
+  .count-card{background:var(--bg-card);border:1px solid var(--border);border-radius:4px;padding:16px;text-align:center}
+  .count-value{font-size:28px;color:var(--fg)}
+  .count-label{font-size:10px;color:var(--fg-muted);letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
+  .domain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+  .domain-card{background:var(--bg-card);border:1px solid var(--border);border-radius:3px;padding:10px 12px;display:flex;align-items:flex-start;gap:10px}
+  .domain-card.grounded{border-left:3px solid var(--green)}
+  .domain-card.weak{border-left:3px solid var(--amber)}
+  .domain-card.focus{border:1px solid var(--gold);background:#1c1a12;border-left:3px solid var(--gold)}
+  .domain-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}
+  .domain-dot.grounded{background:var(--green)}
+  .domain-dot.weak{background:var(--amber)}
+  .domain-dot.focus{background:var(--gold)}
+  .domain-name{font-size:12px;color:var(--fg);line-height:1.4}
+  .domain-sub{font-size:10px;color:var(--fg-muted);margin-top:1px}
+  .domain-tag{font-size:9px;letter-spacing:.08em;text-transform:uppercase;margin-top:3px}
+  .domain-tag.grounded{color:var(--green)}
+  .domain-tag.weak{color:var(--amber)}
+  .domain-tag.focus{color:var(--gold)}
+  .domain-legend{display:flex;gap:24px;font-size:11px;color:var(--fg-muted);margin-bottom:32px}
+  .domain-legend-item{display:flex;align-items:center;gap:6px}
+  .legend-dot{width:8px;height:8px;border-radius:50%}
+  .signal-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+  .signal-card{background:var(--bg-card);border:1px solid var(--border);border-radius:3px;padding:14px 16px;display:grid;grid-template-columns:36px 1fr auto;gap:16px;align-items:start}
+  .signal-num{font-size:16px;color:var(--fg);line-height:1;padding-top:2px}
+  .signal-title{font-size:13px;color:var(--fg);margin-bottom:3px}
+  .signal-trace{font-size:10px;color:var(--fg-muted);letter-spacing:.04em;margin-bottom:5px}
+  .signal-statement{font-size:12px;color:var(--fg-muted);line-height:1.5}
+  .exec-state-lead{font-size:13px;font-weight:600;color:#c8c8d4;letter-spacing:.02em;margin-bottom:12px;padding:8px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid var(--green);border-radius:2px}
+  .signal-meta{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+  .signal-domain-tag{font-size:10px;color:var(--fg-muted);text-align:right}
+  .confidence-badge{font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:2px;border:1px solid}
+  .confidence-badge.strong{color:var(--green);border-color:var(--green);background:var(--green-dim)}
+  .confidence-badge.moderate{color:var(--gold);border-color:var(--gold-dim);background:#1e1a0a}
+  .confidence-badge.weak{color:var(--amber);border-color:var(--amber);background:var(--amber-dim)}
+  .focus-domain-block{background:#1c1a12;border:1px solid var(--gold);border-radius:4px;padding:24px 28px;margin-bottom:40px}
+  .focus-domain-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+  .focus-domain-label{font-size:9px;color:var(--gold);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+  .focus-domain-name{font-size:18px;color:var(--fg)}
+  .focus-domain-sub{font-size:12px;color:var(--fg-muted);margin-top:3px}
+  .focus-badge{font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border:1px solid var(--gold);color:var(--gold);border-radius:2px;flex-shrink:0}
+  .focus-summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
+  .focus-stat-label{font-size:10px;color:var(--fg-muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+  .focus-stat-value{font-size:15px;color:var(--amber)}
+  .focus-finding{font-size:12px;color:var(--fg-muted);line-height:1.6;border-top:1px solid var(--border-gold);padding-top:14px}
+  .focus-finding strong{color:var(--fg)}
+  .report-footer{border-top:1px solid var(--border);padding-top:20px;margin-top:48px;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--fg-muted)}
+  .footer-brand{color:var(--gold);font-size:13px}
+  .footer-note{font-size:10px;font-style:italic}
+  .sample-watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);font-size:120px;font-weight:bold;color:rgba(200,155,60,0.04);pointer-events:none;user-select:none;letter-spacing:.15em;z-index:0}
+  .nav-strip{display:flex;gap:10px;margin-bottom:28px}
+  .nav-link{display:inline-block;padding:7px 14px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border);color:var(--fg-muted);text-decoration:none;border-radius:3px}
+  .nav-link:hover{border-color:var(--border-gold);color:var(--gold)}
+  .nav-link.active{border-color:var(--border-gold);color:var(--gold);background:rgba(200,155,60,0.07)}
+  .tier2-handoff{background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--fg-muted);padding:18px 20px;margin:28px 0 0;border-radius:3px}
+  .tier2-handoff-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:8px}
+  .tier2-handoff-text{font-size:12.5px;color:#666;line-height:1.65}
+  .topo-view{margin-bottom:32px}
+  .topo-legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:12px;font-size:11px;color:var(--fg-muted);align-items:center}
+  .topo-leg-item{display:flex;align-items:center;gap:6px}
+  .topo-leg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+  .tl-grounded{background:var(--green)}
+  .tl-weak{background:var(--amber)}
+  .tl-focus{background:var(--gold)}
+  .topo-leg-note{margin-left:auto;font-size:10px;font-style:italic;color:var(--fg-muted)}
+  .rc-trace{font-size:10px;color:var(--fg-muted);opacity:.7;font-style:normal}
+  .rc-anchor-block{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid var(--green);border-radius:2px;margin-bottom:16px;font-size:12px;flex-wrap:wrap}
+  .rc-anchor-state{color:#c8c8d4;font-weight:600;letter-spacing:.02em}
+  .rc-anchor-score{color:var(--green);font-weight:600}
+  .rc-anchor-band{color:var(--fg-muted)}
+  .rc-anchor-decision{color:var(--amber);letter-spacing:.05em;text-transform:uppercase}
+  .rc-anchor-sep{color:#333}
+"""
+
+
+def _build_tier1_evidence_brief(topology: Dict, signals: Dict, gauge: Dict,
+                                 publish_safe: bool = False,
+                                 psig_proj: Optional[Dict] = None,
+                                 pz_proj: Optional[Dict] = None,
+                                 metrics: Optional[Dict] = None,
+                                 decision_model: Optional[Dict] = None,
+                                 dpsig: Optional[Dict] = None) -> str:
+    domains = topology["domains"]
+    counts = topology["counts"]
+    sigs = signals["signals"]
+    score = gauge["score"]["canonical"]
+    band_label = gauge["score"]["band_label"]
+    band_lo = gauge["confidence"]["lower"]
+    band_hi = gauge["confidence"]["upper"]
+
+    _dpsig_weights   = _compute_dpsig_weights(dpsig)
+    _dpsig_readiness = _classify_dpsig_readiness_state(dpsig, _dpsig_weights)
+    _dpsig_html      = _render_dpsig_cluster_pressure_html(dpsig, _dpsig_weights, _dpsig_readiness)
+    _exec_ok         = (_dpsig_readiness or {}).get("executive_rendering_allowed", True)
+    _dpsig_apex      = _dpsig_html if (_dpsig_weights and _dpsig_weights.get("render_apex") and _exec_ok) else ""
+    _dpsig_below     = _dpsig_html if (_dpsig_weights and (not _dpsig_weights.get("render_apex") or not _exec_ok)) else ""
+
+    use_psig = psig_proj is not None
+    client_name = _get_client_display_name(publish_safe)
+    _narr_name = "lens_tier1_narrative_brief_pub.html" if publish_safe else "lens_tier1_narrative_brief.html"
+    narr_link  = _scoped_report_url(_narr_name) if use_psig else f"/api/report-file?name={_narr_name}"
+    _t2_name   = "lens_tier2_diagnostic_narrative_pub.html" if publish_safe else "lens_tier2_diagnostic_narrative.html"
+    t2_link    = _scoped_report_url(_t2_name) if use_psig else f"/api/report-file?name={_t2_name}"
+    _ds_name   = "lens_decision_surface_pub.html" if publish_safe else "lens_decision_surface.html"
+    ds_link    = _scoped_report_url(_ds_name) if use_psig else f"/api/report-file?name={_ds_name}"
+    footer_note = (f"SAMPLE — {client_name}."
+                   if use_psig else
+                   ("SAMPLE — Client data used for demonstration purposes." if publish_safe
+                    else "SAMPLE — BlueEdge data used for demonstration purposes."))
+
+    grounded_count = sum(1 for d in domains if d["grounding"] == "GROUNDED")
+    weak_count = sum(1 for d in domains if d["grounding"] == "WEAKLY GROUNDED")
+
+    if _SEMANTIC_TOPOLOGY_MODEL is not None and _SEMANTIC_TOPOLOGY_LAYOUT is not None:
+        svg_html = _render_semantic_topology_svg(light_mode=False)
+    elif use_psig:
+        svg_html = _build_tier1_topology_svg_generic(domains, pz_proj=pz_proj)
+    else:
+        svg_html = _build_tier1_topology_svg(domains, publish_safe=publish_safe)
+
+    # Domain grid cards — FOCUS_DOMAIN is PRIMARY zone anchor for psig, DOMAIN-10 for BlueEdge
+    if use_psig and pz_proj:
+        primary_zone = next(
+            (z for z in pz_proj.get("zone_projection") or pz_proj.get("zones") or [] if z.get("attribution_profile") == "primary"),
+            None,
+        )
+        if primary_zone:
+            _pz_anchor_id = primary_zone.get("anchor_id", "")
+            _pz_sem_ctx   = _resolve_dom_to_semantic_context(_pz_anchor_id)
+            _pz_sem_label = _pz_sem_ctx.get("business_label") if _pz_sem_ctx.get("domain_id") else None
+            _pz_sem_id    = _pz_sem_ctx.get("domain_id")
+            FOCUS_DOMAIN  = _pz_sem_id or _pz_anchor_id
+            _pz_display   = _pz_sem_label or _resolve_domain_display_label(
+                _pz_anchor_id, primary_zone.get("anchor_name", _pz_anchor_id)
+            )
+            _focus_tag    = f"Pressure Zone — {_pz_display} PRIMARY"
+        else:
+            FOCUS_DOMAIN = None
+            _focus_tag   = ""
+    else:
+        FOCUS_DOMAIN = "DOMAIN-10"
+        _focus_tag = "Focus Domain — Investigate"
+    domain_cards = []
+    for d in domains:
+        did = d["domain_id"]
+        name_raw = d["domain_name"]
+        # Publish-safe domain name obfuscation
+        if publish_safe:
+            name_raw = (name_raw
+                .replace("Fleet Core Operations", "Core Operations")
+                .replace("Fleet Vertical Extensions", "Vertical Extensions")
+                .replace("Extended Operations and Driver Services", "Extended Operations")
+                .replace("Extended Operations & Driver Services", "Extended Operations"))
+        ncaps = len(d.get("capability_ids", []))
+        ncomps = len(d.get("component_ids", []))
+        if did == FOCUS_DOMAIN and FOCUS_DOMAIN is not None:
+            cls = "focus"
+            tag_label = _focus_tag
+        elif d["grounding"] == "WEAKLY GROUNDED":
+            cls = "weak"
+            tag_label = "Weakly Grounded"
+        else:
+            cls = "grounded"
+            tag_label = "Grounded"
+        if use_psig and ncaps == 0 and ncomps == 0:
+            sub_text = "Structural scope: evidence boundary"
+        else:
+            sub_text = f'{ncaps} capabilit{"y" if ncaps==1 else "ies"} · {ncomps} component{"" if ncomps==1 else "s"}'
+        domain_cards.append(f"""    <div class="domain-card {cls}">
+      <div class="domain-dot {cls}"></div>
+      <div>
+        <div class="domain-name">{esc(name_raw)}</div>
+        <div class="domain-sub">{sub_text}</div>
+        <div class="domain-tag {cls}">{tag_label}</div>
+      </div>
+    </div>""")
+    domain_grid_html = "\n".join(domain_cards)
+
+    # Semantic context for tier1 — computed from globals when loaded
+    _sem_ctx = _build_semantic_report_context()
+    if _sem_ctx["fallback_available"]:
+        _t1_sem_total    = _sem_ctx["total_semantic_domains"]
+        _t1_sem_backed   = _sem_ctx["structurally_backed_domains"]
+        _t1_sem_only     = _sem_ctx["semantic_only_domains"]
+        _t1_sem_clusters = len(_sem_ctx["clusters"])
+        _sem_coverage_stmt = (
+            f'{_t1_sem_backed} of {_t1_sem_total} semantic domains have current structural backing. '
+            f'{_t1_sem_only} remain semantic-only and are shown as projection-layer coverage.'
+        )
+        _sem_cards = []
+        for _d in _sem_ctx["domain_records"]:
+            _ls  = _d.get("lineage_status", "NONE")
+            _cls = {"EXACT": "grounded", "STRONG": "grounded", "PARTIAL": "weak"}.get(_ls, "")
+            _conf_val = _d.get("confidence", 0.0)
+            _conf_str = f"{_conf_val:.2f}" if _ls != "NONE" else ""
+            _tag = {
+                "EXACT":   f"EXACT {_conf_str}",
+                "STRONG":  f"STRONG {_conf_str}",
+                "PARTIAL": f"PARTIAL {_conf_str}",
+            }.get(_ls, "Semantic-only")
+            _dom_id   = _d.get("dominant_dom_id") or ""
+            _dom_back = f" · {_dom_id}" if _dom_id else ""
+            _zone_mk  = " · Zone Anchor" if _d.get("zone_anchor") else ""
+            _clu_id   = _d.get("cluster_id", "")
+            _sem_cards.append(
+                f'    <div class="domain-card {_cls}">\n'
+                f'      <div class="domain-dot {_cls}"></div>\n'
+                f'      <div>\n'
+                f'        <div class="domain-name">{esc(_d.get("business_label", _d["domain_id"]))}</div>\n'
+                f'        <div class="domain-sub">{esc(_clu_id)}{esc(_dom_back)}{esc(_zone_mk)}</div>\n'
+                f'        <div class="domain-tag {_cls}">{_tag}</div>\n'
+                f'      </div>\n'
+                f'    </div>'
+            )
+        _semantic_domain_grid_html = "\n".join(_sem_cards)
+        _t1_counts_html = (
+            f'    <div class="count-card"><div class="count-value">{_t1_sem_total}</div>'
+            f'<div class="count-label">Semantic Domains</div></div>\n'
+            f'    <div class="count-card"><div class="count-value">{_t1_sem_backed}</div>'
+            f'<div class="count-label">Structurally Backed</div></div>\n'
+            f'    <div class="count-card"><div class="count-value">{_t1_sem_only}</div>'
+            f'<div class="count-label">Semantic-Only</div></div>'
+        )
+        _t1_domain_header        = "Semantic Domain Coverage"
+        _t1_domain_legend_grnd   = f"Structurally Backed ({_t1_sem_backed} domains — EXACT/STRONG/PARTIAL evidence)"
+        _t1_domain_legend_weak   = f"Semantic-Only ({_t1_sem_only} domains — projection layer, no current structural backing)"
+    else:
+        _sem_coverage_stmt = ""
+        _semantic_domain_grid_html = domain_grid_html
+        _t1_counts_html = (
+            f'    <div class="count-card"><div class="count-value">{counts["domains"]}</div>'
+            f'<div class="count-label">Domains</div></div>\n'
+            f'    <div class="count-card"><div class="count-value">{counts["capabilities"]}</div>'
+            f'<div class="count-label">Capabilities</div></div>\n'
+            f'    <div class="count-card"><div class="count-value">{counts["components"]}</div>'
+            f'<div class="count-label">Components</div></div>\n'
+            f'    <div class="count-card"><div class="count-value">{counts["total_nodes"]}</div>'
+            f'<div class="count-label">Total Nodes</div></div>'
+        )
+        _t1_domain_header        = "Domain Topology"
+        _t1_domain_legend_grnd   = f"Grounded ({grounded_count} structural evidence groups — evidence-backed)"
+        _t1_domain_legend_weak   = f"Weakly Grounded ({weak_count} structural evidence groups — partial evidence)"
+    _sem_coverage_html = (
+        f'<p style="color:var(--amber);font-size:12px;margin-bottom:8px;margin-top:-4px">'
+        f'{esc(_sem_coverage_stmt)}</p>'
+        if _sem_coverage_stmt else ""
+    )
+
+    # Signal cards
+    CONF_CLASS = {"STRONG": "strong", "MODERATE": "moderate", "WEAK": "weak"}
+
+    if use_psig:
+        # PSIG path: build from signal_projection + structural metrics
+        active_conds = psig_proj.get("active_conditions_in_scope", [])
+        not_activated = psig_proj.get("signals_not_activated", [])
+        m = metrics or {}
+        dep_load = m.get("dep_load", "NOT_IN_SCOPE")
+        dep_edges = m.get("dep_edges", "N/A")
+        dep_nodes = m.get("dep_nodes", "N/A")
+        etn = m.get("edge_to_node", "NOT_IN_SCOPE")
+        cont = m.get("containment_density", "NOT_IN_SCOPE")
+
+        tier1_signals = []
+        for c in active_conds:
+            sid   = c["signal_id"]
+            val   = c["signal_value"]
+            state = c["activation_state"]
+            method = c.get("activation_method", "")
+            prim_ent = c.get("primary_attribution_entity")
+            prim_dom = c.get("primary_attribution_domain", "")
+            dom_scope = c.get("domain_attribution_scope", [])
+            entity_scope = c.get("entity_level_scope", [])
+
+            _meth_exec   = RC.apply_language(method)
+            _zclass_exec = RC.apply_language("COMPOUND_ZONE")
+            if sid == "PSIG-001":
+                title = f"Fan-In Concentration ({sid}): {state} — {_meth_exec} — Value {val}"
+                stmt = (
+                    f"Inbound dependency concentration is {val} — {_meth_exec} (trace: {method}). "
+                    f"Primary attribution within structural domain {prim_dom}. "
+                    f"Domain scope: {', '.join(dom_scope)}. "
+                    f"Co-present with PSIG-002 and PSIG-004 within the identified pressure zone — "
+                    f"contributes to {_zclass_exec} (trace: COMPOUND_ZONE)."
+                )
+                dom_tag, conf = prim_dom or "Multi-domain", "strong"
+            elif sid == "PSIG-002":
+                title = f"Fan-Out Propagation ({sid}): {state} — {_meth_exec} — Value {val}"
+                stmt = (
+                    f"Outbound dependency propagation is {val} — {_meth_exec} (trace: {method}). "
+                    f"Distributes across {', '.join(dom_scope)} with no single primary entity. "
+                    f"Co-presence with PSIG-001 at the same value ({val}) indicates bidirectional "
+                    f"concentration pressure — not a single directed flow. "
+                    f"Present within the identified pressure zone."
+                )
+                dom_tag = " · ".join(dom_scope[:3]) if dom_scope else "Multi-domain"
+                conf = "strong"
+            elif sid == "PSIG-004":
+                title = f"Responsibility Concentration ({sid}): {state} — {_meth_exec} — Value {val}"
+                stmt = (
+                    f"Structural responsibility concentration is {val} — {_meth_exec} (trace: {method}). "
+                    f"Primary attribution within structural domain {prim_dom}. "
+                    f"Convergence of PSIG-001 and PSIG-004 within structural domain {prim_dom} defines "
+                    f"the primary pressure anchor (trace: PRIMARY)."
+                )
+                dom_tag, conf = prim_dom or "Multi-domain", "strong"
+            elif sid == "PSIG-006":
+                title = f"Structural Blind Spot ({sid}): BASELINE — theoretical baseline condition (not activated) — Value {val}"
+                stmt = (
+                    f"PSIG-006 is a theoretical baseline condition (trace: {method}, value {val}). "
+                    f"Covers {len(entity_scope)} structural entities outside pressure zone scope. "
+                    f"This condition was not independently activated — it represents a structural "
+                    f"baseline used for blind spot coverage, not a detected pressure signal. "
+                    f"Represents a coverage gap, not a pressure candidate."
+                )
+                dom_tag = "Scope: cross-domain baseline"
+                conf = "weak"
+            else:
+                title = f"{sid}: {state} — Value {val}"
+                stmt  = f"Signal {sid} activated at {val} ({state}, {_meth_exec})."
+                dom_tag, conf = prim_dom or "Structural", "moderate"
+
+            tier1_signals.append({
+                "num": str(len(tier1_signals) + 1).zfill(2),
+                "title": title, "statement": stmt, "domain": dom_tag, "confidence": conf,
+                "trace": method,
+            })
+
+        # Add not-activated signal cards — all signals in signals_not_activated list
+        _evb_na_labels = {
+            "PSIG-003": (
+                "Inbound Coupling (PSIG-003): NOT_ACTIVATED — Below threshold",
+                "PSIG-003 evaluated inbound coupling ratio and did not reach the activation threshold "
+                "for this run. This is a confirmed structural observation, not a gap in evaluation."
+            ),
+            "PSIG-005": (
+                "Scope Coupling (PSIG-005): NOT_ACTIVATED — Below threshold",
+                "PSIG-005 evaluated scope coupling and did not reach the activation threshold "
+                "for this run. This is a confirmed structural observation, not a gap in evaluation."
+            ),
+        }
+        for _na_sid in not_activated:
+            _na_pair = _evb_na_labels.get(
+                _na_sid,
+                (
+                    f"{_na_sid}: NOT_ACTIVATED — Below threshold",
+                    f"{_na_sid} evaluated a structural dimension and did not reach the activation threshold "
+                    "for this run. This is a confirmed structural observation, not a gap in evaluation.",
+                )
+            )
+            tier1_signals.append({
+                "num": str(len(tier1_signals) + 1).zfill(2),
+                "title": _na_pair[0],
+                "statement": _na_pair[1],
+                "domain": "Structural analysis", "confidence": "strong",
+            })
+
+        # Add structural metrics card
+        if dep_load != "NOT_IN_SCOPE":
+            tier1_signals.append({
+                "num": str(len(tier1_signals) + 1).zfill(2),
+                "title": (f"Structural Metrics: Dependency Load {dep_load} · "
+                          f"Edge-to-Node {etn} · Containment {cont}"),
+                "statement": (
+                    f"Dependency load ratio: {dep_load} ({dep_edges} of {dep_nodes} edges are "
+                    f"load-bearing overlap edges). Edge-to-node density: {etn} "
+                    f"({m.get('edges_count')} edges / {dep_nodes} nodes). "
+                    f"Containment density: {cont} ({m.get('contains_count')} containment edges / "
+                    f"{dep_nodes} nodes). Low dependency load with dense containment indicates "
+                    f"a topology dominated by hierarchical nesting rather than direct coupling."
+                ),
+                "domain": "Structural topology", "confidence": "strong",
+            })
+
+        # Renumber after assembly
+        for idx, s in enumerate(tier1_signals):
+            s["num"] = str(idx + 1).zfill(2)
+
+    else:
+        # BlueEdge path — unchanged curated content
+        tier1_signals = [
+            {
+                "num": "01",
+                "title": "Security Intelligence Pipeline: Throughput Ceiling Confirmed, Runtime State Unverified",
+                "statement": (
+                    "The security intelligence collection pathway operates under a configured throughput ceiling derived from "
+                    "static configuration. This ceiling bounds the rate at which threat data reaches the cloud platform. "
+                    "Actual performance under live conditions is outside current evidence scope and cannot be confirmed "
+                    "without a live execution environment."
+                ),
+                "domain": "Edge Data Acquisition",
+                "confidence": "strong",
+            },
+            {
+                "num": "02",
+                "title": "Platform Runtime State: Seven Core Operational Dimensions Are Outside Current Evidence Scope",
+                "statement": (
+                    "Seven operational dimensions cannot be determined from available evidence: backend service health, "
+                    "cache layer efficiency, cache layer availability, event pipeline activity, "
+                    + ("platform" if publish_safe else "fleet") + " connection activity, "
+                    + ("operational" if publish_safe else "vehicle") + " alert activity, and "
+                    + ("session" if publish_safe else "driver session") + " performance. "
+                    "These represent the complete observable runtime state of the core platform. "
+                    "Any operational decision about platform health or capacity currently lacks an evidence base."
+                ),
+                "domain": "Platform Infrastructure",
+                "confidence": "strong",
+            },
+            {
+                "num": "03",
+                "title": "Dependency Structure: Most Architectural Connections Are Load-Bearing",
+                "statement": (
+                    "Dependency load is concentrated across the observed architectural scope — most inter-component "
+                    "connections are direct dependencies rather than loose couplings (load ratio: 0.682). "
+                    "This elevates the blast radius for any component-level failure and increases integration "
+                    "complexity as the platform scales."
+                ),
+                "domain": "Event-Driven Architecture",
+                "confidence": "moderate",
+            },
+            {
+                "num": "04",
+                "title": "Structural Volatility: Relationship Density Exceeds Component Count",
+                "statement": (
+                    "Edge-to-node density: 1.273 — the platform has more relationship edges than structural nodes, "
+                    "indicating a tightly interconnected architecture. Containment depth ratio: 0.545 — nearly half "
+                    "of components operate across module boundaries. Structural growth without boundary enforcement "
+                    "compounds this pressure at an accelerating rate."
+                ),
+                "domain": "Platform Infrastructure",
+                "confidence": "moderate",
+            },
+            {
+                "num": "05",
+                "title": "Coordination Pressure: Interface Surface Is Predominantly Shared",
+                "statement": (
+                    "Nearly all observable interface surface is shared across multiple components (sharing ratio: 0.875). "
+                    "Combined with dependency load (0.682) and structural density (1.273), the compounding coordination "
+                    "burden across the delivery pipeline is materially elevated. The runtime component of this signal "
+                    "remains outside current evidence scope."
+                ),
+                "domain": "Operational Engineering",
+                "confidence": "weak",
+            },
+        ]
+    signal_cards = []
+    for s in tier1_signals:
+        _trace_div = (f'<div class="signal-trace">trace: {esc(s["trace"])}</div>'
+                      if s.get("trace") else "")
+        signal_cards.append(f"""    <div class="signal-card">
+      <div class="signal-num">{s["num"]}</div>
+      <div class="signal-body">
+        <div class="signal-title">{esc(s["title"])}</div>
+        {_trace_div}
+        <div class="signal-statement">{esc(s["statement"])}</div>
+      </div>
+      <div class="signal-meta">
+        <div class="signal-domain-tag">{esc(s["domain"])}</div>
+        <div><span class="confidence-badge {s["confidence"]}">{s["confidence"].title()}</span></div>
+      </div>
+    </div>""")
+    signals_html = "\n".join(signal_cards)
+
+    # Pressure zones / focus domain block
+    if use_psig and pz_proj:
+        zone_list = pz_proj.get("zone_projection") or pz_proj.get("zones") or []
+        pz_blocks = []
+        # Shared condition set across all zones (de-duplicate repetition)
+        _all_sigs = zone_list[0].get("signals", []) if zone_list else []
+        _shared_sigs_str = " · ".join(_all_sigs)
+        _shared_ccount   = zone_list[0].get("condition_count", len(_all_sigs)) if zone_list else 0
+        _shared_zclass   = zone_list[0].get("zone_class", "COMPOUND_ZONE") if zone_list else "COMPOUND_ZONE"
+        _shared_header = (
+            f'  <p style="font-size:12.5px;color:var(--fg-muted);margin-bottom:16px">'
+            f'All zones share the same active condition set: {esc(_shared_sigs_str)}. '
+            f'Zone class: {esc(_shared_zclass)} ({_shared_ccount} conditions ≥ threshold).</p>\n'
+            if len(zone_list) > 1 else
+            f'  <p style="font-size:12.5px;color:var(--fg-muted);margin-bottom:16px">'
+            f'Active conditions within the pressure zone: {esc(_shared_sigs_str)}. '
+            f'Zone class: {esc(_shared_zclass)} ({_shared_ccount} conditions ≥ threshold).</p>\n'
+        ) if zone_list else ""
+        for z in zone_list:
+            zid         = z["zone_id"]
+            _z_anch_id  = z.get("anchor_id", zid)
+            _z_sem_ctx_ev  = _resolve_dom_to_semantic_context(_z_anch_id)
+            _z_sem_lbl_ev  = _z_sem_ctx_ev.get("business_label") if _z_sem_ctx_ev.get("domain_id") else None
+            _z_anch_name   = z.get("anchor_name", _z_anch_id)
+            zname       = _z_sem_lbl_ev or _resolve_domain_display_label(_z_anch_id, _z_anch_name)
+            profile = z.get("attribution_profile", "secondary")
+            is_prim = profile == "primary"
+            badge = "PRIMARY" if is_prim else profile.upper()
+            _attr_exec = RC.apply_language(profile)
+            sigs_in_zone = z.get("signals", [])
+            sigs_str = " · ".join(sigs_in_zone)
+            pz_blocks.append(
+                f'  <div class="focus-domain-block" style="margin-bottom:12px">\n'
+                f'    <div class="focus-domain-header">\n'
+                f'      <div>\n'
+                f'        <div class="focus-domain-label">{esc(zid)} — {esc(zname)}</div>\n'
+                f'        <div class="focus-domain-sub">{esc(sigs_str)}</div>\n'
+                f'      </div>\n'
+                f'      <div class="focus-badge">{esc(_attr_exec)}'
+                f'<span style="display:block;font-size:9px;opacity:.6;margin-top:2px">trace: {esc(badge)}</span>'
+                f'</div>\n'
+                f'    </div>\n'
+                f'    <div class="focus-finding">'
+                f'{esc(zid)} ({esc(zname)}): {esc(_attr_exec)} — '
+                f'<span style="font-size:11px;opacity:.7">trace: {esc(profile)} attribution</span>.'
+                f'</div>\n'
+                f'  </div>'
+            )
+        blind_spot_count = pz_proj.get("structural_blind_spot_entity_count", 0)
+        blind_spot_sig   = pz_proj.get("structural_blind_spot_signal", "PSIG-006")
+        blind_note = (
+            f'\n  <div class="tier2-handoff" style="margin-top:8px">'
+            f'<div class="tier2-handoff-label">Structural Blind Spot — {esc(blind_spot_sig)}</div>'
+            f'<div class="tier2-handoff-text">{blind_spot_count} entities outside pressure zone scope. '
+            f'{esc(blind_spot_sig)} — theoretical baseline condition (not activated) — coverage gap, not zone candidate.'
+            f'</div></div>'
+            if blind_spot_count > 0 else ""
+        )
+        focus_block_html = (
+            f'  <h2 style="margin-top:36px">Pressure Zones</h2>\n'
+            + _shared_header
+            + "\n".join(pz_blocks)
+            + blind_note
+        )
+    else:
+        focus_domain = next((d for d in domains if d["domain_id"] == FOCUS_DOMAIN), None)
+        focus_caps = len(focus_domain.get("capability_ids", [])) if focus_domain else 0
+        focus_comps = len(focus_domain.get("component_ids", [])) if focus_domain else 0
+        connectivity_word = "platform connectivity" if publish_safe else "fleet connectivity"
+        gateway_word = "platform gateway" if publish_safe else "fleet gateway"
+
+        if focus_domain is None:
+            focus_block_html = """  <h2 style="margin-top:36px">Pressure Zones</h2>
+  <div class="focus-domain-block">
+    <div class="focus-domain-header">
+      <div>
+        <div class="focus-domain-label">Pressure Zones</div>
+        <div class="focus-domain-name" style="color:var(--fg-muted)">Not yet evaluated</div>
+        <div class="focus-domain-sub">No focus domain has been designated for this client.</div>
+      </div>
+    </div>
+    <div class="focus-finding">
+      Pressure zones not yet evaluated. No focus domain has been designated for this client.
+      Signal derivation (PiOS 41.x) has not been executed. Zone analysis requires signal evidence.
+    </div>
+  </div>"""
+        else:
+            focus_block_html = f"""  <h2 style="margin-top:36px">Focus Domain</h2>
+  <div class="focus-domain-block">
+    <div class="focus-domain-header">
+      <div>
+        <div class="focus-domain-label">Focus Domain</div>
+        <div class="focus-domain-name">Platform Infrastructure and Data</div>
+        <div class="focus-domain-sub">Weakly Grounded · {focus_caps} capabilities · {focus_comps} components</div>
+      </div>
+      <div class="focus-badge">Focus Domain</div>
+    </div>
+    <div class="focus-summary-grid">
+      <div class="focus-stat"><div class="focus-stat-label">Signals Converging</div><div class="focus-stat-value">2 independent signals</div></div>
+      <div class="focus-stat"><div class="focus-stat-label">Grounding State</div><div class="focus-stat-value">Weakly Grounded</div></div>
+      <div class="focus-stat"><div class="focus-stat-label">Operational Dimensions Outside Scope</div><div class="focus-stat-value">7 of 7</div></div>
+    </div>
+    <div class="focus-finding">
+      <strong>What the LENS confirms:</strong> This domain is the structural hub through which cache performance, event delivery,
+      {connectivity_word}, alert processing, and driver session scoring are coordinated. All seven observable runtime dimensions
+      are currently outside evidence scope — not because the platform is instrumented and showing healthy values,
+      but because the evidence required to evaluate them is absent from the current assessment boundary.
+      The domain is structurally mapped and weakly grounded.<br><br>
+      <strong>What is not known:</strong> Whether the cache, event pipeline, {gateway_word}, and session systems
+      are operating normally or in a degraded state. This is a confirmed unknown, not an assumed healthy state.
+    </div>
+  </div>"""
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LENS Assessment — Structural Evidence Brief</title>
+<style>{_TIER1_EVIDENCE_CSS}</style>
+</head>
+<body>
+<div class="sample-watermark">SAMPLE</div>
+<div class="page">
+
+  <div class="report-header">
+    <div>
+      <div class="report-brand">Signäl Program Intelligence</div>
+      <div class="report-title">LENS Assessment — Structural Evidence Brief</div>
+    </div>
+    <div class="report-meta">
+      <div>Client: <strong>{esc(client_name)}</strong></div>
+      <div>Issued: <strong>April 2026</strong></div>
+    </div>
+  </div>
+
+  <div class="nav-strip">
+    <a href="{ds_link}" class="nav-link">Decision</a>
+    <a href="{narr_link}" class="nav-link">Executive Brief</a>
+    <span class="nav-link active">LENS Assessment</span>
+    <a href="{t2_link}" class="nav-link">Diagnostic</a>
+  </div>
+
+  {RC.anchor_block(score, band_label, band_lo, band_hi)}
+
+  <h2>Assessment Score</h2>
+  <p class="exec-state-lead">Structurally verified. Execution not yet validated.</p>
+  <div class="gauge-block">
+    <div class="gauge-score-circle">
+      <div class="gauge-score-number">{score}</div>
+      <div class="gauge-score-label">Score</div>
+    </div>
+    <div class="gauge-details">
+      <div class="gauge-band-label">{esc(band_label)}</div>
+      <div class="gauge-band-bar"><div class="gauge-band-fill"></div></div>
+      <div class="gauge-band-range">Confidence band: <span>{band_lo} – {band_hi}</span></div>
+      <div class="gauge-caveat">Score is anchored to verified evidence. The upper bound reflects the projected completion state;
+        actual score depends on assessment execution outcome. Score is not an opinion —
+        it is derived deterministically from structural analysis.</div>
+    </div>
+    <div class="gauge-decision">
+      <div class="gauge-decision-label">Decision Guidance</div>
+      <div class="gauge-decision-value">Investigate</div>
+    </div>
+  </div>
+
+  <h2>Structural Composition</h2>
+  {_sem_coverage_html}
+  <div class="counts-row">
+    {_t1_counts_html}
+  </div>
+
+  <h2>Semantic Domain Topology (with Structural Backing)</h2>
+  <div class="topo-view">
+    {svg_html}
+    <div class="topo-legend">
+      <span class="topo-leg-item"><span class="topo-leg-dot tl-grounded"></span>Grounded ({grounded_count} structural evidence group{"" if grounded_count == 1 else "s"})</span>
+      <span class="topo-leg-item"><span class="topo-leg-dot tl-weak"></span>Weakly Grounded ({weak_count} structural evidence group{"" if weak_count == 1 else "s"})</span>
+      {'<span class="topo-leg-item"><span class="topo-leg-dot tl-focus"></span>Primary Pressure Zone — Multiple structural pressures acting together &nbsp;<span style="font-size:10px;opacity:.6">trace: COMPOUND_ZONE</span></span>' if use_psig else '<span class="topo-leg-item"><span class="topo-leg-dot tl-focus"></span>Focus Domain — 2 signal convergence (also Weakly Grounded)</span>'}
+      <span class="topo-leg-note">Relationships shown are structural co-membership. No direction implied.</span>
+    </div>
+  </div>
+
+  <h2>{_t1_domain_header}</h2>
+  <div class="domain-grid">
+{_semantic_domain_grid_html}
+  </div>
+  <div class="domain-legend">
+    <div class="domain-legend-item"><div class="legend-dot" style="background:var(--green)"></div> {_t1_domain_legend_grnd}</div>
+    <div class="domain-legend-item"><div class="legend-dot" style="background:var(--amber)"></div> {_t1_domain_legend_weak}</div>
+    {'<div class="domain-legend-item"><div class="legend-dot" style="background:var(--gold)"></div> Primary Pressure Zone</div>' if use_psig else '<div class="domain-legend-item"><div class="legend-dot" style="background:var(--gold)"></div> Focus Domain</div>'}
+  </div>
+
+{_dpsig_apex}
+  <h2>Active Structural Signals</h2>
+  <div class="signal-grid">
+{signals_html}
+  </div>
+
+{focus_block_html}
+{_dpsig_below}
+  <div class="tier2-handoff">
+    <div class="tier2-handoff-label">Next Proposed Actions — Outside This Assessment</div>
+    <div class="tier2-handoff-text">
+      This assessment establishes confirmed structural state and evidence boundary.
+      Proposed next actions, diagnostic priorities, and resolution paths belong to a separate
+      analytical layer and are not produced here.
+    </div>
+  </div>
+
+  <div class="report-footer">
+    <div>
+      <div class="footer-brand">Signäl</div>
+      <div style="margin-top:4px">Program Intelligence — LENS Assessment</div>
+    </div>
+    <div class="footer-note">
+      {esc(footer_note)}<br>
+      Client environments, scores, and findings will vary.<br>
+      All structural values are derived from verified execution evidence.
+    </div>
+  </div>
+
+</div>
+</body>
+</html>"""
+
+
+# ---------------------------------------------------------------------------
+# Tier-1 Narrative Brief HTML builder
+# ---------------------------------------------------------------------------
+
+_TIER1_NARRATIVE_CSS = """
+  :root{--bg:#0e0e10;--surface:#16161a;--surface-raised:#1c1c22;--border:#2a2a2e;--border-subtle:#222228;--fg:#e8e8e8;--fg-muted:#888;--fg-dim:#555;--gold:#c89b3c;--gold-muted:rgba(200,155,60,0.12);--gold-border:rgba(200,155,60,0.28);--green:#4caf6e;--amber:#d4912a;--amber-muted:rgba(212,145,42,0.1);--amber-border:rgba(212,145,42,0.25);--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:14px;line-height:1.7;-webkit-font-smoothing:antialiased}
+  .page{max-width:960px;margin:0 auto;padding:48px 40px 80px}
+  .report-header{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:24px;border-bottom:1px solid var(--border);margin-bottom:32px}
+  .report-brand{font-size:11px;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;margin-bottom:6px}
+  .report-title{font-size:20px;color:var(--fg);font-weight:400}
+  .report-type{font-size:11px;color:var(--fg-muted);margin-top:4px;letter-spacing:.06em}
+  .report-meta{text-align:right;font-size:12px;color:var(--fg-muted);line-height:1.8}
+  .report-meta strong{color:var(--fg);font-weight:500}
+  .nav-strip{display:flex;gap:10px;margin-bottom:36px}
+  .nav-link{display:inline-block;padding:7px 14px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border);color:var(--fg-muted);text-decoration:none;border-radius:3px}
+  .nav-link:hover{border-color:var(--gold);color:var(--gold)}
+  .nav-link.active{border-color:var(--gold-border);color:var(--gold);background:var(--gold-muted)}
+  .section{margin-bottom:48px}
+  .section-header{display:flex;align-items:baseline;gap:12px;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid var(--border-subtle)}
+  .section-num{font-size:10px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;min-width:24px}
+  .section-title{font-size:15px;color:var(--fg);font-weight:500;letter-spacing:.02em}
+  .body-text{font-size:13.5px;color:var(--fg);line-height:1.75;margin-bottom:16px}
+  .body-text:last-child{margin-bottom:0}
+  .score-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+  .score-cell{background:var(--surface);border:1px solid var(--border);padding:14px 16px;border-radius:3px}
+  .score-cell-label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:6px}
+  .score-cell-value{font-size:18px;color:var(--gold);font-weight:300}
+  .score-cell-sub{font-size:11px;color:var(--fg-muted);margin-top:3px}
+  .signal-table{width:100%;border-collapse:collapse;margin:20px 0;font-size:12.5px}
+  .signal-table th{text-align:left;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);border-bottom:1px solid var(--border);padding:8px 10px;font-weight:400}
+  .signal-table td{padding:10px 10px;border-bottom:1px solid var(--border-subtle);vertical-align:top;color:var(--fg)}
+  .signal-table tr:last-child td{border-bottom:none}
+  .conf-badge{display:inline-block;padding:2px 7px;border-radius:2px;font-size:10px;letter-spacing:.06em}
+  .conf-strong{background:rgba(76,175,110,.12);color:#4caf6e}
+  .conf-moderate{background:rgba(200,155,60,.12);color:#c89b3c}
+  .conf-weak{background:rgba(136,136,136,.12);color:#888}
+  .grounding-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+  .grounding-cell{background:var(--surface);border:1px solid var(--border);padding:14px 16px;border-radius:3px;display:flex;align-items:center;gap:12px}
+  .grounding-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+  .dot-grounded{background:#4caf6e}
+  .dot-weak{background:var(--amber)}
+  .grounding-cell-text{font-size:12.5px;color:var(--fg)}
+  .grounding-cell-count{font-size:11px;color:var(--fg-muted);margin-top:2px}
+  .focus-block{background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--amber);padding:20px 22px;margin:20px 0;border-radius:3px}
+  .focus-block-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin-bottom:8px}
+  .focus-block-name{font-size:17px;color:var(--fg);margin-bottom:4px}
+  .focus-block-sub{font-size:12px;color:var(--fg-muted);margin-bottom:16px}
+  .focus-stats{display:flex;gap:24px;padding-top:14px;border-top:1px solid var(--border-subtle);margin-top:14px}
+  .focus-stat-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:4px}
+  .focus-stat-value{font-size:14px;color:var(--fg)}
+  .boundary-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+  .boundary-block{background:var(--surface);border:1px solid var(--border);padding:16px 18px;border-radius:3px}
+  .boundary-block.known{border-top:2px solid var(--green)}
+  .boundary-block.unknown{border-top:2px solid var(--amber)}
+  .boundary-block-label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+  .boundary-block.known .boundary-block-label{color:var(--green)}
+  .boundary-block.unknown .boundary-block-label{color:var(--amber)}
+  .boundary-list{list-style:none;padding:0}
+  .boundary-list li{font-size:12.5px;color:var(--fg);padding:5px 0;border-bottom:1px solid var(--border-subtle);display:flex;align-items:flex-start;gap:8px}
+  .boundary-list li:last-child{border-bottom:none}
+  .boundary-list li::before{content:'—';color:var(--fg-dim);flex-shrink:0;margin-top:1px}
+  .boundary-note{margin-top:14px;padding:10px 14px;background:var(--amber-muted);border:1px solid var(--amber-border);border-radius:3px;font-size:12px;color:var(--fg-muted);line-height:1.6}
+  .boundary-lead{font-size:13px;color:#c8c8d4;font-weight:500;margin-bottom:14px;padding:10px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid var(--gold);border-radius:2px}
+  .exec-state-lead{font-size:13px;font-weight:600;color:#c8c8d4;letter-spacing:.02em;margin-bottom:12px;padding:8px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid var(--green);border-radius:2px}
+  .narr-trace{font-size:10px;color:var(--fg-dim)}
+  .resolution-block{background:var(--surface-raised);border:1px solid var(--border);border-left:3px solid var(--fg-dim);padding:20px 22px;margin:20px 0;border-radius:3px}
+  .resolution-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:10px}
+  .resolution-text{font-size:13px;color:var(--fg-muted);line-height:1.7}
+  .resolution-text+.resolution-text{margin-top:10px}
+  .posture-row{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center;background:var(--surface);border:1px solid var(--border);padding:18px 20px;margin:20px 0;border-radius:3px}
+  .posture-badge{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold-border);padding:8px 16px;border-radius:3px;background:var(--gold-muted);white-space:nowrap}
+  .posture-text{font-size:13px;color:var(--fg-muted);line-height:1.65}
+  .report-footer{display:flex;justify-content:space-between;align-items:flex-end;padding-top:24px;border-top:1px solid var(--border);margin-top:48px}
+  .footer-brand{font-size:13px;color:var(--gold);letter-spacing:.08em}
+  .footer-note{font-size:11px;color:var(--fg-muted);text-align:right;line-height:1.7}
+  .conclusion-block{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--green);padding:20px 24px;border-radius:3px;margin-top:20px}
+  .conclusion-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:12px}
+  .conclusion-text{font-size:15px;color:var(--fg);font-weight:500;margin-bottom:10px}
+  .conclusion-body{font-size:13px;color:var(--fg-muted);line-height:1.7;margin-bottom:8px}
+  .rc-trace{font-size:10px;color:var(--fg-dim);opacity:.7;font-style:normal}
+  .rc-anchor-block{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid var(--green);border-radius:2px;margin-bottom:16px;font-size:12px;flex-wrap:wrap}
+  .rc-anchor-state{color:#c8c8d4;font-weight:600;letter-spacing:.02em}
+  .rc-anchor-score{color:var(--green);font-weight:600}
+  .rc-anchor-band{color:var(--fg-muted)}
+  .rc-anchor-decision{color:var(--amber);letter-spacing:.05em;text-transform:uppercase}
+  .rc-anchor-sep{color:#333}
+  @media(max-width:600px){.score-row{grid-template-columns:1fr 1fr}.grounding-row{grid-template-columns:1fr}.boundary-grid{grid-template-columns:1fr}.posture-row{grid-template-columns:1fr}.report-header{flex-direction:column;gap:12px}.report-meta{text-align:left}}
+"""
+
+
+def _build_tier1_narrative_brief(topology: Dict, signals: Dict, gauge: Dict,
+                                  publish_safe: bool = False,
+                                  psig_proj: Optional[Dict] = None,
+                                  pz_proj: Optional[Dict] = None,
+                                  metrics: Optional[Dict] = None,
+                                  decision_model: Optional[Dict] = None,
+                                  dpsig: Optional[Dict] = None) -> str:
+    domains = topology["domains"]
+    counts = topology["counts"]
+    score = gauge["score"]["canonical"]
+    band_label = gauge["score"]["band_label"]
+    band_lo = gauge["confidence"]["lower"]
+    band_hi = gauge["confidence"]["upper"]
+
+    _dpsig_weights   = _compute_dpsig_weights(dpsig)
+    _dpsig_readiness = _classify_dpsig_readiness_state(dpsig, _dpsig_weights)
+    _dpsig_narr_html = _render_dpsig_cluster_pressure_html(dpsig, _dpsig_weights, _dpsig_readiness)
+
+    use_psig = psig_proj is not None
+    client_name = _get_client_display_name(publish_safe)
+    _ev_name    = "lens_tier1_evidence_brief_pub.html" if publish_safe else "lens_tier1_evidence_brief.html"
+    ev_link     = _scoped_report_url(_ev_name) if use_psig else f"/api/report-file?name={_ev_name}"
+    _t2_name    = "lens_tier2_diagnostic_narrative_pub.html" if publish_safe else "lens_tier2_diagnostic_narrative.html"
+    t2_link     = _scoped_report_url(_t2_name) if use_psig else f"/api/report-file?name={_t2_name}"
+    _ds_name    = "lens_decision_surface_pub.html" if publish_safe else "lens_decision_surface.html"
+    ds_link     = _scoped_report_url(_ds_name) if use_psig else f"/api/report-file?name={_ds_name}"
+    title_suffix = " (Publish)" if publish_safe else ""
+    footer_note = (f"SAMPLE — {client_name}."
+                   if use_psig else
+                   ("SAMPLE — Illustrative client environment. All structural values represent actual assessment outputs."
+                    if publish_safe else
+                    "SAMPLE — BlueEdge data used for demonstration purposes."))
+
+    grounded_count = sum(1 for d in domains if d["grounding"] == "GROUNDED")
+    weak_count = sum(1 for d in domains if d["grounding"] == "WEAKLY GROUNDED")
+    client_ref = f"the {esc(client_name)}"
+
+    if not use_psig:
+        connectivity_word = "platform connectivity" if publish_safe else "fleet connectivity"
+        fleet_conn = "Platform connection activity" if publish_safe else "Fleet connection activity"
+        vehicle_alert = "Operational alert activity" if publish_safe else "Vehicle alert activity"
+        driver_session = "Session performance" if publish_safe else "Driver session performance"
+
+    focus_domain = next((d for d in domains if d["domain_id"] == "DOMAIN-10"), None)
+
+    if use_psig and pz_proj:
+        zone_list = pz_proj.get("zone_projection") or pz_proj.get("zones") or []
+        pz_items = []
+        for z in zone_list:
+            zid    = z["zone_id"]
+            _z_anchor_id   = z.get("anchor_id", zid)
+            _z_anchor_name = z.get("anchor_name", _z_anchor_id)
+            _z_sem_ctx  = _resolve_dom_to_semantic_context(_z_anchor_id)
+            _z_sem_label = _z_sem_ctx.get("business_label") if _z_sem_ctx.get("domain_id") else None
+            zname  = _z_sem_label or _resolve_domain_display_label(_z_anchor_id, _z_anchor_name)
+            _z_dom_backing = f"DOM backing: {esc(_z_anchor_id)}{' / ' + esc(_z_anchor_name) if _z_anchor_name and _z_anchor_name != _z_anchor_id else ''}"
+            zclass = z.get("zone_class", "COMPOUND_ZONE")
+            profile = z.get("attribution_profile", "secondary")
+            sigs_in_zone = z.get("signals", [])
+            sigs_str = " · ".join(sigs_in_zone)
+            ccount = z.get("condition_count", len(sigs_in_zone))
+            is_prim = profile == "primary"
+            _attr_exec   = RC.apply_language(profile)
+            _zclass_exec = RC.apply_language(zclass)
+            _cond_word = f"{ccount} co-present condition{'s' if ccount != 1 else ''}"
+            pz_items.append(
+                f'    <div class="focus-block">\n'
+                f'      <div class="focus-block-label">{esc(zid)} — {esc(zname)}</div>\n'
+                f'      <div class="focus-block-name" style="font-size:11px;color:var(--fg-muted)">{_z_dom_backing}</div>\n'
+                f'      <div class="focus-block-name">{esc(_zclass_exec)}'
+                f' <span style="font-size:10px;opacity:.6">trace: {esc(zclass)}</span>'
+                f' · {ccount} conditions co-present</div>\n'
+                f'      <div class="focus-block-sub">{esc(sigs_str)}</div>\n'
+                f'      <p class="body-text" style="font-size:13px">\n'
+                f'        {esc(zid)} ({esc(zname)}) is a {esc(_attr_exec)}'
+                f' <span style="font-size:11px;opacity:.7">(trace: {esc(profile)} attribution)</span> '
+                f'for {_cond_word} ({esc(sigs_str)}). '
+                f'These conditions satisfy the {esc(_zclass_exec)}'
+                f' <span style="font-size:11px;opacity:.7">(trace: {esc(zclass)})</span> threshold.</p>\n'
+                f'    </div>'
+            )
+        blind_count = pz_proj.get("structural_blind_spot_entity_count", 0)
+        blind_sig   = pz_proj.get("structural_blind_spot_signal", "PSIG-006")
+        _bs_exec = RC.apply_language("THEORETICAL_BASELINE")
+        blind_note = (
+            f'\n    <p class="body-text" style="font-size:12.5px;color:var(--fg-muted)">'
+            f'Structural blind spot: {esc(blind_sig)} covers {blind_count} entities outside zone scope — '
+            f'{esc(_bs_exec)} <span style="font-size:10px;opacity:.6">(trace: THEORETICAL_BASELINE)</span>'
+            f' — coverage gap, not pressure candidate.</p>'
+            if blind_count > 0 else ""
+        )
+        focus_section_html = (
+            '  <div class="section">\n'
+            '    <div class="section-header"><span class="section-num">03</span>'
+            '<span class="section-title">Pressure Zones</span></div>\n'
+            + "\n".join(pz_items)
+            + blind_note + "\n  </div>"
+        )
+    elif focus_domain is None:
+        focus_section_html = """  <div class="section">
+    <div class="section-header"><span class="section-num">03</span><span class="section-title">Pressure Zones</span></div>
+    <div class="focus-block">
+      <div class="focus-block-label">Pressure Zones</div>
+      <div class="focus-block-name" style="color:var(--fg-muted)">Not yet evaluated</div>
+      <div class="focus-block-sub">No focus domain has been designated for this client.</div>
+      <p class="body-text" style="font-size:13px;color:var(--fg-muted)">
+        Pressure zones not yet evaluated. Signal derivation (PiOS 41.x) has not been executed.
+        Zone analysis requires signal evidence to designate a focus domain.</p>
+    </div>
+  </div>"""
+    else:
+        focus_section_html = f"""  <div class="section">
+    <div class="section-header"><span class="section-num">03</span><span class="section-title">Focus Domain Narrative</span></div>
+    <div class="focus-block">
+      <div class="focus-block-label">Focus Domain</div>
+      <div class="focus-block-name">Platform Infrastructure and Data</div>
+      <div class="focus-block-sub">Weakly Grounded &nbsp;·&nbsp; 4 capabilities &nbsp;·&nbsp; 6 components</div>
+      <p class="body-text" style="font-size:13px;color:var(--fg-muted)">
+        This domain is the structural hub through which the platform's core runtime services are coordinated —
+        including caching, event delivery, {connectivity_word}, alert processing, and session performance infrastructure.
+        Two independent structural signals converge here.</p>
+      <div class="focus-stats">
+        <div class="focus-stat-item"><div class="focus-stat-label">Signals Converging</div><div class="focus-stat-value">2 independent</div></div>
+        <div class="focus-stat-item"><div class="focus-stat-label">Grounding State</div><div class="focus-stat-value">Weakly Grounded</div></div>
+        <div class="focus-stat-item"><div class="focus-stat-label">Runtime Dimensions Outside Scope</div><div class="focus-stat-value">7 of 7</div></div>
+      </div>
+    </div>
+    <p class="body-text"><strong>Structural volatility signal (edge-to-node density: 1.273).</strong> The platform has more
+      architectural relationship edges than structural nodes — meaning most components are interconnected
+      rather than isolated. A containment depth ratio of 0.545 indicates that nearly half of all components
+      operate across module boundaries, not within them. This structural condition means the cost and risk
+      of change grows non-linearly as the platform scales.</p>
+    <p class="body-text"><strong>Platform runtime state signal.</strong> Seven operational dimensions of this domain cannot
+      be determined from the available evidence. This is the complete set of observable runtime states for
+      the core platform — not a partial gap. The evidence required to evaluate them was not present within
+      the assessment boundary.</p>
+    <p class="body-text">The domain is structurally mapped and weakly grounded. Its topology is confirmed. Its runtime state is not.</p>
+  </div>"""
+
+    # --- Pre-compute conditional HTML blocks for narrative brief ---
+    if use_psig and psig_proj and metrics:
+        _sig_disp = {
+            "PSIG-001": "Fan-in structural concentration",
+            "PSIG-002": "Fan-out structural concentration",
+            "PSIG-003": "Node depth concentration",
+            "PSIG-004": "Responsibility concentration",
+            "PSIG-005": "Scope coupling",
+            "PSIG-006": "Structural blind spot coverage",
+        }
+        _sig_rows = []
+        for _c in psig_proj.get("active_conditions_in_scope", []):
+            _sid  = _c.get("signal_id", "")
+            _sname = _sig_disp.get(_sid, _sid)
+            _val  = _c.get("signal_value", "—")
+            _meth = _c.get("activation_method", "")
+            if _meth == "THEORETICAL_BASELINE":
+                _cc, _cl = "conf-weak", "Theoretical baseline"
+            elif _meth == "RUN_RELATIVE_OUTLIER":
+                _cc, _cl = "conf-strong", "Strong"
+            else:
+                _cc, _cl = "conf-moderate", "Moderate"
+            _exec_meth = RC.apply_language(_meth)
+            _trace_span = (f'<br><span style="font-size:10px;color:var(--fg-dim)">'
+                           f'trace: {esc(_meth)}</span>') if _meth else ""
+            _val_cell = f'{esc(str(_val))} — {esc(_exec_meth)}{_trace_span}'
+            _sig_rows.append(
+                f'        <tr><td>{esc(_sname)} ({esc(_sid)})</td>'
+                f'<td>{_val_cell}</td>'
+                f'<td><span class="conf-badge {_cc}">{esc(_cl)}</span></td></tr>'
+            )
+        # Separate RUN_RELATIVE_OUTLIER (active structural) from THEORETICAL_BASELINE
+        _active_struct_sigs = [c for c in psig_proj.get("active_conditions_in_scope", [])
+                               if c.get("activation_method") == "RUN_RELATIVE_OUTLIER"]
+        _baseline_sigs = [c for c in psig_proj.get("active_conditions_in_scope", [])
+                          if c.get("activation_method") == "THEORETICAL_BASELINE"]
+        _active_struct_ids = " · ".join(sorted({c["signal_id"] for c in _active_struct_sigs}))
+        _baseline_ids = " · ".join(sorted({c["signal_id"] for c in _baseline_sigs}))
+        _dl  = metrics.get("dep_load", "—")
+        _de  = metrics.get("dep_edges", "—")
+        _dn  = metrics.get("dep_nodes", "—")
+        _etn = metrics.get("edge_to_node", "—")
+        _cd  = metrics.get("containment_density", "—")
+        _sig_rows.append(
+            f'        <tr><td>Dependency load ratio</td>'
+            f'<td>{_dl} — {_de} of {_dn} edges overlap</td>'
+            f'<td><span class="conf-badge conf-moderate">Moderate</span></td></tr>'
+        )
+        _sig_rows.append(
+            f'        <tr><td>Structural density — edge-to-node</td>'
+            f'<td>{_etn}&nbsp;·&nbsp;Containment: {_cd}</td>'
+            f'<td><span class="conf-badge conf-moderate">Moderate</span></td></tr>'
+        )
+        signal_table_html = (
+            '    <table class="signal-table">\n'
+            '      <thead><tr><th style="width:40%">Signal</th>'
+            '<th style="width:30%">Computed Value</th>'
+            '<th style="width:30%">Confidence</th></tr></thead>\n'
+            '      <tbody>\n' + "\n".join(_sig_rows) + "\n"
+            '      </tbody>\n    </table>'
+        )
+    else:
+        signal_table_html = (
+            '    <table class="signal-table">\n'
+            '      <thead><tr><th style="width:40%">Signal</th>'
+            '<th style="width:30%">Computed Value</th>'
+            '<th style="width:30%">Confidence</th></tr></thead>\n'
+            '      <tbody>\n'
+            '        <tr><td>Security intelligence throughput ceiling</td>'
+            '<td>Configured — static constant</td>'
+            '<td><span class="conf-badge conf-strong">Strong</span></td></tr>\n'
+            '        <tr><td>Platform runtime dimensions outside scope</td>'
+            '<td>7 of 7 unresolvable</td>'
+            '<td><span class="conf-badge conf-strong">Strong</span></td></tr>\n'
+            '        <tr><td>Dependency load ratio</td>'
+            '<td>0.682 — 15 of 22 edges load-bearing</td>'
+            '<td><span class="conf-badge conf-moderate">Moderate</span></td></tr>\n'
+            '        <tr><td>Structural volatility — edge-to-node density</td>'
+            '<td>1.273 &nbsp;&middot;&nbsp; Containment: 0.545</td>'
+            '<td><span class="conf-badge conf-moderate">Moderate</span></td></tr>\n'
+            '        <tr><td>Coordination pressure — interface sharing</td>'
+            '<td>0.875 — 7 of 8 interfaces shared</td>'
+            '<td><span class="conf-badge conf-weak">Weak (static only)</span></td></tr>\n'
+            '      </tbody>\n    </table>'
+        )
+
+    if use_psig:
+        _dm = decision_model or {}
+        _na_sigs  = _dm.get("not_activated", [])
+        _blind    = _dm.get("blind_spot_active", False)
+        _actv_cnt = len(psig_proj.get("active_conditions_in_scope", [])) if psig_proj else 0
+        _na_labels = {
+            "PSIG-003": "Node depth concentration signal — additional signal, not activated in this run",
+            "PSIG-005": "Scope coupling signal — additional signal, not activated in this run",
+        }
+        _unk_items = ["<li>Runtime execution behavior (execution layer not evaluated)</li>"]
+        for _s in _na_sigs:
+            _unk_items.append(
+                f'<li>{esc(_na_labels.get(_s, f"{_s} — additional signal, not activated in this run"))}</li>'
+            )
+        if _blind:
+            _unk_items.append(
+                f"<li>Structural blind spot entity behavior — "
+                f"{RC.apply_language('THEORETICAL_BASELINE')} "
+                f"<span style='font-size:10px;opacity:.6'>(trace: THEORETICAL_BASELINE)</span>"
+                f" — coverage gap, not execution-derived</li>"
+            )
+        _unk_items += [
+            "<li>Memory and resource utilization under load</li>",
+            "<li>Live service interaction and latency profiles</li>",
+        ]
+        _unk_n = len(_unk_items)
+        _struct_sig_count = len(_active_struct_sigs)
+        _base_sig_count   = len(_baseline_sigs)
+        _struct_sig_label = (f"{_struct_sig_count} active structural signal{'s' if _struct_sig_count != 1 else ''}"
+                             + (f" ({_active_struct_ids})" if _active_struct_ids else ""))
+        _base_sig_label   = (f"{_base_sig_count} baseline signal{'s' if _base_sig_count != 1 else ''}"
+                             + (f" ({_baseline_ids} — theoretical baseline)" if _baseline_ids else ""))
+        _cap_part = (f', {counts["capabilities"]} capabilities' if counts["capabilities"] > 0 else '')
+        _conf_items = [
+            f'<li>Full structural topology within assessment scope — {counts["domains"]} structural evidence groups (DOM)'
+            f'{_cap_part}, {counts["components"]} components</li>',
+            "<li>Grounding classification for every structural evidence group</li>",
+            f"<li>{_struct_sig_label} with computed values</li>",
+            f"<li>{_base_sig_label}</li>" if _base_sig_count > 0 else "",
+            "<li>Pressure zone classification across all detected zones</li>",
+        ]
+        _conf_items = [x for x in _conf_items if x]
+        if _blind and pz_proj:
+            _bcnt = pz_proj.get("structural_blind_spot_entity_count", 0)
+            _bsig = pz_proj.get("structural_blind_spot_signal", "PSIG-006")
+            _conf_items.append(
+                f"<li>Structural blind spot scope — {_bcnt} entities ({esc(_bsig)}, THEORETICAL_BASELINE)</li>"
+            )
+        _dim_note = (
+            f"These {_unk_n} dimensions are confirmed unknowns — not assumed healthy states. "
+            f"The codebase may operate normally in all {_unk_n} dimensions, or it may not. "
+            "The current evidence scope does not resolve this. "
+            "Any decision that depends on these dimensions operating within expected parameters "
+            "currently lacks an evidence base."
+        )
+        _boundary_lead = (
+            "These unknowns do not indicate failure. "
+            "They define the evidence boundary that must be resolved before execution confidence can be claimed."
+        )
+        boundary_section_html = (
+            '  <div class="section">\n'
+            '    <div class="section-header">'
+            '<span class="section-num">04</span>'
+            '<span class="section-title">Known vs Unknown Boundary</span></div>\n'
+            f'    <p class="boundary-lead">{esc(_boundary_lead)}</p>\n'
+            '    <div class="boundary-grid">\n'
+            '      <div class="boundary-block known">\n'
+            '        <div class="boundary-block-label">Confirmed</div>\n'
+            '        <ul class="boundary-list">\n'
+            + "".join(f"          {li}\n" for li in _conf_items)
+            + '        </ul>\n      </div>\n'
+            '      <div class="boundary-block unknown">\n'
+            '        <div class="boundary-block-label">Outside Evidence Scope</div>\n'
+            '        <ul class="boundary-list">\n'
+            + "".join(f"          {li}\n" for li in _unk_items)
+            + '        </ul>\n      </div>\n'
+            '    </div>\n'
+            f'    <div class="boundary-note">\n      {esc(_dim_note)}\n    </div>\n'
+            '  </div>'
+        )
+    else:
+        boundary_section_html = (
+            '  <div class="section">\n'
+            '    <div class="section-header">'
+            '<span class="section-num">04</span>'
+            '<span class="section-title">Known vs Unknown Boundary</span></div>\n'
+            '    <div class="boundary-grid">\n'
+            '      <div class="boundary-block known">\n'
+            '        <div class="boundary-block-label">Confirmed</div>\n'
+            f'        <ul class="boundary-list">\n'
+            f'          <li>Full structural topology within assessment scope — {counts["domains"]} domains, '
+            f'{counts["capabilities"]} capabilities, {counts["components"]} components</li>\n'
+            '          <li>Grounding classification for every domain</li>\n'
+            '          <li>5 structural signals with computed values</li>\n'
+            '          <li>Dependency load, structural density, and coordination pressure ratios</li>\n'
+            '          <li>Count and domain location of unresolvable runtime dimensions</li>\n'
+            '        </ul>\n      </div>\n'
+            '      <div class="boundary-block unknown">\n'
+            '        <div class="boundary-block-label">Outside Evidence Scope</div>\n'
+            '        <ul class="boundary-list">\n'
+            '          <li>Backend service memory and resource utilization</li>\n'
+            '          <li>Cache layer efficiency</li>\n'
+            '          <li>Cache layer availability and connectivity</li>\n'
+            '          <li>Event pipeline activity and throughput</li>\n'
+            f'          <li>{fleet_conn}</li>\n'
+            f'          <li>{vehicle_alert}</li>\n'
+            f'          <li>{driver_session}</li>\n'
+            '        </ul>\n      </div>\n'
+            '    </div>\n'
+            '    <div class="boundary-note">\n'
+            '      These seven dimensions are confirmed unknowns — not assumed healthy states. '
+            'The platform may be\n'
+            '      operating normally in all seven dimensions, or it may not be. '
+            'The current evidence scope does not\n'
+            '      resolve this. Any operational decision that depends on these dimensions operating '
+            'within normal\n'
+            '      parameters currently lacks an evidence base.\n'
+            '    </div>\n  </div>'
+        )
+
+    if use_psig and decision_model:
+        _risk   = decision_model.get("structural_risk", "MODERATE")
+        _evcomp = decision_model.get("evidence_completeness", "PARTIAL")
+        _dec    = decision_model.get("decision", "INVESTIGATE")
+        # BLOCK_F: when structural_risk is MODERATE solely because dep_load/etn are NOT_IN_SCOPE
+        # (no metric elevation detected from signals), enforce LOW as consistent display value
+        if _risk == "MODERATE" and (metrics is None or metrics.get("dep_load") in (None, "NOT_IN_SCOPE")):
+            _risk = "LOW"
+        _risk_color = {
+            "LOW": "var(--green)", "MODERATE": "var(--amber)", "HIGH": "var(--red)"
+        }.get(_risk, "var(--fg-muted)")
+        _evc_color = {
+            "HIGH": "var(--green)", "PARTIAL": "var(--amber)"
+        }.get(_evcomp, "var(--fg-muted)")
+        _conc_dom_anchor = (
+            (pz_proj.get("zone_projection") or pz_proj.get("zones") or [{}])[0].get("anchor_id", "")
+            if pz_proj and (pz_proj.get("zone_projection") or pz_proj.get("zones")) else ""
+        )
+        decision_posture_html = (
+            '  <div class="section">\n'
+            '    <div class="section-header">'
+            '<span class="section-num">06</span>'
+            '<span class="section-title">Decision Posture</span></div>\n'
+            '    <div class="posture-row">\n'
+            f'      <div class="posture-badge">{esc(_dec)}</div>\n'
+            '      <div class="posture-text">The INVESTIGATE posture reflects evidence incompleteness, '
+            'not structural instability. Structural metrics are below risk thresholds. '
+            'The execution layer has not been evaluated in this run. '
+            'A commitment made at this state carries evidence gaps, not confirmed structural risk.</div>\n'
+            '    </div>\n'
+            '    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:16px 0;'
+            'background:var(--surface);border:1px solid var(--border);'
+            'border-left:3px solid var(--gold);padding:16px 20px;border-radius:3px">\n'
+            f'      <div><div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;'
+            f'color:var(--fg-muted);margin-bottom:4px">Structural Risk</div>'
+            f'<div style="font-size:14px;color:{_risk_color}">{esc(_risk)}</div></div>\n'
+            f'      <div><div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;'
+            f'color:var(--fg-muted);margin-bottom:4px">Evidence Completeness</div>'
+            f'<div style="font-size:14px;color:{_evc_color}">{esc(_evcomp)}</div></div>\n'
+            f'      <div><div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;'
+            f'color:var(--fg-muted);margin-bottom:4px">Decision</div>'
+            f'<div style="font-size:14px;color:var(--gold)">{esc(_dec)}</div></div>\n'
+            '    </div>\n'
+            '    <p class="body-text">The assessment does not specify what action to take. '
+            'It establishes the structural state from which any decision must be made. '
+            'Structural risk is LOW — no structural instability patterns detected within evaluated dimensions. '
+            'Dependency load and density metrics were not evaluated within the current evidence scope. '
+            'The INVESTIGATE designation is driven by evidence gaps: '
+            'execution layer not evaluated, blind spot coverage active, and additional signals not activated '
+            'in this run. Resolving these gaps moves evidence completeness from PARTIAL to HIGH.</p>\n'
+            '    <div class="conclusion-block">\n'
+            '      <div class="conclusion-label">Structural Conclusion</div>\n'
+            '      <p class="conclusion-text">The system is structurally stable.</p>\n'
+            f'      <p class="conclusion-body">Dependency load not evaluated within current evidence scope. '
+            f'No system-wide propagation across multiple domains detected. '
+            f'Propagation is localized within a single structural domain ({esc(_conc_dom_anchor)}).</p>\n'
+            '      <p class="conclusion-body">The INVESTIGATE posture is driven by evidence incompleteness, '
+            'not by structural instability.</p>\n'
+            '      <p class="conclusion-body">Execution-layer behavior remains outside the current evidence scope.</p>\n'
+            '    </div>\n'
+            '  </div>'
+        )
+    else:
+        decision_posture_html = (
+            '  <div class="section">\n'
+            '    <div class="section-header">'
+            '<span class="section-num">06</span>'
+            '<span class="section-title">Decision Posture</span></div>\n'
+            '    <div class="posture-row">\n'
+            '      <div class="posture-badge">INVESTIGATE</div>\n'
+            f'      <div class="posture-text">The {esc(band_label)} state means the structural foundation is confirmed, '
+            f'but the execution layer has not been evaluated. '
+            f'The gap between {band_lo} and {band_hi} will not close without execution evidence. '
+            'A commitment made at this state carries unresolved structural risk.</div>\n'
+            '    </div>\n'
+            '    <p class="body-text">The assessment does not specify what action to take. '
+            'It establishes the structural state from which any decision must be made. '
+            'Proceeding without resolving the known unknowns transfers structural risk '
+            'into the commitment. Deferring does not make the unknowns disappear — it carries them forward.</p>\n'
+            '  </div>'
+        )
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LENS Assessment — Narrative Brief{title_suffix}</title>
+  <style>{_TIER1_NARRATIVE_CSS}</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="report-header">
+    <div>
+      <div class="report-brand">Signäl Program Intelligence</div>
+      <div class="report-title">LENS Assessment — Narrative Brief{title_suffix}</div>
+      <div class="report-type">Tier-1 Interpretation Layer</div>
+    </div>
+    <div class="report-meta">
+      <div>Client: <strong>{esc(client_name)}</strong></div>
+      <div>Issued: <strong>April 2026</strong></div>
+    </div>
+  </div>
+
+  <div class="nav-strip">
+    <a href="{ds_link}" class="nav-link">Decision</a>
+    <span class="nav-link active">Executive Brief</span>
+    <a href="{ev_link}" class="nav-link">LENS Assessment</a>
+    <a href="{t2_link}" class="nav-link">Diagnostic</a>
+  </div>
+
+  {RC.anchor_block(score, band_label, band_lo, band_hi)}
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">01</span><span class="section-title">Executive Context</span></div>
+    <p class="body-text">A LENS Assessment is a bounded structural analysis of a delivery environment. It derives its outputs
+      exclusively from execution evidence — source artifacts, structural telemetry, and system configuration
+      observable within the assessment scope. It does not produce recommendations, prognosis, or remediation content.</p>
+    <p class="body-text">This Narrative Brief provides a governed interpretation of the Tier-1 Evidence Brief for {client_ref}.
+      All statements in this document are traceable to the underlying execution evidence. No claim is made beyond what the evidence supports.</p>
+    <p class="body-text">The Evidence Brief is the authoritative product surface. This document provides context for reading
+      and acting on the evidence it contains.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">02</span><span class="section-title">Structural State Overview</span></div>
+    <div class="score-row">
+      <div class="score-cell">
+        <div class="score-cell-label">Assessment Score</div>
+        <div class="score-cell-value">{score}</div>
+        <div class="score-cell-sub">{esc(band_label)}</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-cell-label">Confidence Band</div>
+        <div class="score-cell-value">{band_lo} – {band_hi}</div>
+        <div class="score-cell-sub">Unresolved</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-cell-label">Decision Guidance</div>
+        <div class="score-cell-value" style="font-size:14px;letter-spacing:.05em">INVESTIGATE</div>
+        <div class="score-cell-sub">Before committing</div>
+      </div>
+    </div>
+    <p class="exec-state-lead">Structurally verified. Execution not yet validated.</p>
+    <p class="body-text">The score of {score} reflects a complete structural proof — full coverage and reconstruction confirmed —
+      but an unevaluated execution layer. The score is derived deterministically from evidence; it is not
+      an assessment of quality or performance. The upper band of {band_hi} represents the achievable state
+      if execution evidence is produced.</p>
+    <p class="body-text">The {esc(band_label)} band means variance has not been resolved. The current score is a confirmed floor,
+      not a final number. Any commitment that depends on the execution layer operating within expected
+      parameters carries structural risk that this assessment does not resolve.</p>
+    <p class="body-text" style="font-size:12.5px;color:var(--fg-muted)">
+      Structural composition: {counts["domains"]} structural evidence groups (DOM) &nbsp;·&nbsp; {"Capabilities not modeled in current evidence scope" if counts["capabilities"] == 0 else str(counts["capabilities"]) + " capabilities"} &nbsp;·&nbsp; {counts["components"]} components &nbsp;·&nbsp; {counts["total_nodes"]} total nodes
+    </p>
+    <div class="grounding-row">
+      <div class="grounding-cell">
+        <div class="grounding-dot dot-grounded"></div>
+        <div><div class="grounding-cell-text">Grounded</div><div class="grounding-cell-count">{grounded_count} of {counts["domains"]} structural evidence groups — evidence-backed</div></div>
+      </div>
+      <div class="grounding-cell">
+        <div class="grounding-dot dot-weak"></div>
+        <div><div class="grounding-cell-text">Weakly Grounded</div><div class="grounding-cell-count">{weak_count} of {counts["domains"]} structural evidence groups — partial evidence</div></div>
+      </div>
+    </div>
+{signal_table_html}
+  </div>
+
+{_dpsig_narr_html}
+
+{focus_section_html}
+
+{boundary_section_html}
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">05</span><span class="section-title">Next Proposed Actions</span></div>
+    <div class="resolution-block">
+      <div class="resolution-label">Outside Tier-1 Scope</div>
+      <p class="resolution-text">This assessment establishes what is structurally confirmed, what falls outside the evidence boundary,
+        and what the structure of that gap looks like.</p>
+      <p class="resolution-text">What happens next — whether to investigate further, which structural unknowns to prioritize, what
+        diagnostic scope is required — is a separate matter. It is not produced by this assessment, and no
+        direction is implied by what is or is not confirmed here.</p>
+      <p class="resolution-text">Any proposed action layer requires a separate scope and is issued independently of this Tier-1 artifact.</p>
+    </div>
+  </div>
+
+{decision_posture_html}
+
+  <div class="report-footer">
+    <div>
+      <div class="footer-brand">Signäl</div>
+      <div style="margin-top:4px;font-size:11px;color:var(--fg-muted)">Program Intelligence — LENS Assessment</div>
+    </div>
+    <div class="footer-note">
+      {esc(footer_note)}<br>
+      All structural values are derived from verified execution evidence.
+    </div>
+  </div>
+
+</div>
+</body>
+</html>"""
+
+
+# ---------------------------------------------------------------------------
+# Tier-1 report set generation
+# ---------------------------------------------------------------------------
+
+def generate_tier1_reports(output_dir: Optional[Path] = None) -> List[Path]:
+    """Generate the Tier-1 report set: Evidence Brief + Narrative Brief, internal + publish-safe.
+
+    Returns list of written file paths (4 files).
+    """
+    if output_dir is None:
+        output_dir = TIER1_REPORTS_DIR
+
+    pub_dir = output_dir / "publish"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    pub_dir.mkdir(parents=True, exist_ok=True)
+
+    # Pre-flight: canonical package must exist
+    if not CANONICAL_PKG_DIR.exists():
+        _fail(f"Canonical package directory not found: {CANONICAL_PKG_DIR}")
+
+    topology = load_canonical_topology()
+    signals = load_signal_registry()
+    gauge = load_gauge_state()
+
+    psig_proj      = _load_psig_projection()
+    pz_proj        = _load_pressure_zone_projection()
+    binding        = _load_binding_envelope()
+    metrics        = _compute_structural_metrics(binding)
+    decision_model = _compute_decision_model(metrics, psig_proj, gauge)
+    dpsig          = load_dpsig_signal_set()
+
+    files: List[Path] = []
+
+    artifacts = [
+        (output_dir / "lens_tier1_evidence_brief.html",         _build_tier1_evidence_brief,  False),
+        (pub_dir    / "lens_tier1_evidence_brief_pub.html",     _build_tier1_evidence_brief,  True),
+        (output_dir / "lens_tier1_narrative_brief.html",        _build_tier1_narrative_brief, False),
+        (pub_dir    / "lens_tier1_narrative_brief_pub.html",    _build_tier1_narrative_brief, True),
+    ]
+
+    for out_path, builder, pub_safe in artifacts:
+        html = builder(topology, signals, gauge, publish_safe=pub_safe,
+                       psig_proj=psig_proj, pz_proj=pz_proj,
+                       metrics=metrics, decision_model=decision_model, dpsig=dpsig)
+        out_path.write_text(html, encoding="utf-8")
+        print(f"[LENS REPORT] Generated: {out_path.resolve()}")
+        files.append(out_path)
+
+    return files
+
+
+# ---------------------------------------------------------------------------
+# Tier-2: Diagnostic Narrative
+# ---------------------------------------------------------------------------
+
+TIER2_REPORTS_DIR = REPORTS_DIR / "tier2"
+
+
+def _resolve_vault_index_for_graph() -> Optional[Path]:
+    """Resolve vault_index.json path for export_graph_state.mjs.
+
+    Tries exact app vault path for the active run ID first.
+    Falls back to the first available vault for the client so T2 generation
+    succeeds even when the canonical run has not yet been deployed to the app vault.
+    """
+    exact = (REPO_ROOT / "app" / "gauge-product" / "public" / "vault"
+             / _ACTIVE_CLIENT / _ACTIVE_VAULT_RUN_ID / "vault_index.json")
+    if exact.exists():
+        return exact
+    vault_base = REPO_ROOT / "app" / "gauge-product" / "public" / "vault" / _ACTIVE_CLIENT
+    if vault_base.is_dir():
+        for entry in sorted(vault_base.iterdir()):
+            vi = entry / "vault_index.json"
+            if vi.exists():
+                return vi
+    return None
+
+FOCUS_DOMAIN_T2 = "DOMAIN-10"
+
+_TIER2_DIAGNOSTIC_CSS = """
+  :root{--bg:#0e0e10;--surface:#16161a;--surface-raised:#1c1c22;--border:#2a2a2e;--border-subtle:#222228;--fg:#e8e8e8;--fg-muted:#888;--fg-dim:#555;--gold:#c89b3c;--gold-muted:rgba(200,155,60,0.12);--gold-border:rgba(200,155,60,0.28);--green:#4caf6e;--amber:#d4912a;--amber-muted:rgba(212,145,42,0.1);--amber-border:rgba(212,145,42,0.25);--red:#e05252;--font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:14px;line-height:1.7;-webkit-font-smoothing:antialiased}
+  .page{max-width:960px;margin:0 auto;padding:48px 40px 80px}
+  .report-header{border-bottom:1px solid var(--border);padding-bottom:24px;margin-bottom:32px;display:flex;justify-content:space-between;align-items:flex-start}
+  .report-brand{font-size:11px;color:var(--fg-muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+  .report-title{font-size:20px;color:var(--fg);font-weight:400}
+  .report-type{font-size:11px;color:var(--fg-muted);margin-top:4px;letter-spacing:.06em}
+  .report-meta{text-align:right;font-size:12px;color:var(--fg-muted);line-height:1.8}
+  .report-meta strong{color:var(--fg);font-weight:500}
+  .nav-strip{display:flex;gap:10px;margin-bottom:36px}
+  .nav-link{display:inline-block;padding:7px 14px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border);color:var(--fg-muted);text-decoration:none;border-radius:3px}
+  .nav-link:hover{border-color:var(--gold);color:var(--gold)}
+  .nav-link.active{border-color:var(--gold-border);color:var(--gold);background:var(--gold-muted)}
+  .t2-section{margin-bottom:48px}
+  .t2-section-header{display:flex;align-items:baseline;gap:12px;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid var(--border-subtle)}
+  .t2-section-num{font-size:10px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;min-width:24px}
+  .t2-section-title{font-size:15px;color:var(--fg);font-weight:500;letter-spacing:.02em}
+  .t2-context-lock{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);padding:20px 24px;border-radius:3px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .t2-field{display:flex;flex-direction:column;gap:4px}
+  .t2-field-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted)}
+  .t2-field-value{font-size:13px;color:var(--fg)}
+  .t2-field-value.incomplete{color:var(--amber)}
+  .t2-field-value.complete{color:var(--green)}
+  .t2-overview-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+  .t2-overview-cell{background:var(--surface);border:1px solid var(--border);padding:14px 16px;border-radius:3px}
+  .t2-cell-label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:6px}
+  .t2-cell-value{font-size:18px;color:var(--fg);font-weight:300}
+  .t2-cell-sub{font-size:11px;color:var(--fg-muted);margin-top:3px}
+  .t2-pressure-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .t2-pressure-cell{background:var(--surface-raised);border:1px solid var(--border-subtle);padding:10px 12px;border-radius:3px}
+  .t2-pressure-label{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:4px}
+  .t2-pressure-count{font-size:16px;color:var(--fg-muted)}
+  .t2-zone-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .t2-zone-card{background:var(--surface);border:1px solid var(--border);padding:18px 20px;border-radius:3px;text-decoration:none;display:block;color:inherit}
+  .t2-zone-card:hover{border-color:var(--amber-border)}
+  .t2-zone-id{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:8px}
+  .t2-zone-domain{font-size:14px;color:var(--fg);margin-bottom:12px}
+  .t2-badge-row{display:flex;gap:6px;flex-wrap:wrap}
+  .t2-badge{display:inline-block;padding:3px 8px;font-size:10px;letter-spacing:.06em;border-radius:2px;text-transform:uppercase}
+  .t2-type-pressure{background:rgba(212,145,42,0.12);color:var(--amber);border:1px solid var(--amber-border)}
+  .t2-type-gap{background:rgba(136,136,136,0.1);color:#888;border:1px solid #333}
+  .t2-type-conflict{background:rgba(224,82,82,0.1);color:var(--red);border:1px solid rgba(224,82,82,0.25)}
+  .t2-type-inconsistency{background:rgba(76,175,110,0.08);color:var(--green);border:1px solid rgba(76,175,110,0.2)}
+  .t2-sev-high{background:rgba(224,82,82,0.1);color:var(--red)}
+  .t2-sev-moderate{background:rgba(212,145,42,0.1);color:var(--amber)}
+  .t2-sev-low{background:rgba(136,136,136,0.1);color:#888}
+  .t2-conf-strong{background:rgba(76,175,110,0.1);color:var(--green)}
+  .t2-conf-partial{background:rgba(200,155,60,0.1);color:var(--gold)}
+  .t2-conf-weak{background:rgba(136,136,136,0.1);color:#888}
+  .t2-zone-block{background:var(--surface);border:1px solid var(--border);padding:24px;border-radius:3px;margin-bottom:24px}
+  .t2-zone-block-header{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:16px;border-bottom:1px solid var(--border-subtle);margin-bottom:20px}
+  .t2-zone-block-id{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
+  .t2-zone-block-domain{font-size:14px;color:var(--fg);margin-top:4px}
+  .t2-zone-block-back{font-size:10px;color:var(--fg-dim);text-decoration:none;letter-spacing:.06em;text-transform:uppercase}
+  .t2-zone-block-back:hover{color:var(--fg-muted)}
+  .t2-sub-section{margin-bottom:16px;padding:16px 18px;background:var(--surface-raised);border:1px solid var(--border-subtle);border-radius:3px}
+  .t2-sub-section:last-child{margin-bottom:0}
+  .t2-sub-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .t2-sub-tag{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold-border);padding:2px 8px;border-radius:2px}
+  .t2-sub-title{font-size:12px;color:var(--fg-muted);letter-spacing:.04em;text-transform:uppercase}
+  .t2-body{font-size:13px;color:var(--fg);line-height:1.7;margin-bottom:10px}
+  .t2-body:last-child{margin-bottom:0}
+  .t2-chip-row{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+  .t2-chip{font-size:11px;padding:2px 8px;background:var(--surface);border:1px solid var(--border);border-radius:2px;color:var(--fg-muted);font-family:monospace}
+  .t2-path-block{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:12px 14px;margin:10px 0}
+  .t2-path-chain{font-size:12px;color:var(--fg);font-family:monospace;margin-bottom:6px}
+  .t2-path-meta{display:flex;gap:12px;font-size:10px;color:var(--fg-muted)}
+  .t2-path-block.t2-inferred{background:rgba(212,145,42,0.04);border-color:var(--amber-border)}
+  .t2-inferred-decl{font-size:11px;color:var(--amber);margin-top:8px;padding:6px 8px;background:var(--amber-muted);border:1px solid var(--amber-border);border-radius:2px}
+  .t2-evidence-row{display:flex;align-items:center;gap:10px;margin:8px 0}
+  .t2-ev-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted)}
+  .t2-ev-strong{color:var(--green);font-weight:500}
+  .t2-ev-partial{color:var(--gold);font-weight:500}
+  .t2-ev-weak{color:var(--amber);font-weight:500}
+  .t2-avail-list{list-style:none;padding:0;margin-top:8px}
+  .t2-avail-item{font-size:11px;color:var(--fg-muted);padding:4px 0;border-bottom:1px solid var(--border-subtle);font-family:monospace}
+  .t2-avail-item:last-child{border-bottom:none}
+  .t2-avail-decode{font-family:var(--font);font-size:10px;color:var(--fg-dim);margin-left:8px;font-style:italic}
+  .t2-pattern-summary{background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid var(--gold);padding:18px 22px;border-radius:2px}
+  .t2-reading-guide-prose{margin-bottom:14px}
+  .t2-reading-guide-prose p{margin-bottom:10px}
+  .t2-reading-guide-prose p:last-child{margin-bottom:0}
+  .t2-ll-table{display:flex;flex-direction:column;gap:0;border:1px solid var(--border);border-radius:3px;overflow:hidden}
+  .t2-ll-row{display:grid;grid-template-columns:180px 160px 1fr;gap:0;padding:8px 12px;border-bottom:1px solid var(--border-subtle);align-items:start}
+  .t2-ll-row:last-child{border-bottom:none}
+  .t2-ll-row:nth-child(even){background:rgba(255,255,255,0.02)}
+  .t2-ll-term{font-size:10px;font-family:monospace;color:var(--fg-dim);letter-spacing:.04em;padding-right:8px}
+  .t2-ll-exec{font-size:11px;color:var(--fg);font-weight:500;padding-right:8px}
+  .t2-ll-decode{font-size:11px;color:var(--fg-muted)}
+  .t2-missing-list{list-style:none;padding:0;margin-top:10px}
+  .t2-missing-item{font-size:12px;padding:8px 10px;border-bottom:1px solid var(--border-subtle);display:flex;flex-direction:column;gap:3px}
+  .t2-missing-item:last-child{border-bottom:none}
+  .t2-missing-desc{color:var(--fg)}
+  .t2-missing-impact{color:var(--amber);font-size:11px}
+  .t2-uncertainty-block{background:rgba(212,145,42,0.04);border:1px solid var(--amber-border);border-left:3px solid var(--amber);padding:16px 18px;border-radius:3px}
+  .t2-inference-active{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding:8px 12px;background:rgba(212,145,42,0.1);border:1px solid var(--amber-border);border-radius:2px}
+  .t2-inference-tag{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
+  .t2-inference-value{font-size:12px;color:var(--amber);letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+  .t2-unresolved-list{list-style:none;padding:0;margin-top:8px}
+  .t2-unresolved-item{padding:8px 0;border-bottom:1px solid var(--border-subtle)}
+  .t2-unresolved-item:last-child{border-bottom:none}
+  .t2-unresolved-element{font-size:12.5px;color:var(--fg);margin-bottom:3px}
+  .t2-unresolved-reason{font-size:11px;color:var(--fg-muted)}
+  .t2-hook-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:4px}
+  .t2-hook-block{background:var(--surface);border:1px solid var(--border);padding:12px 14px;border-radius:3px}
+  .t2-hook-type{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid var(--border-subtle)}
+  .t2-hook-id{font-size:10px;color:var(--fg-dim);font-family:monospace;margin-bottom:4px}
+  .t2-hook-surface{font-size:11.5px;color:var(--fg-muted);line-height:1.5}
+  .report-footer{display:flex;justify-content:space-between;align-items:flex-end;padding-top:24px;border-top:1px solid var(--border);margin-top:48px}
+  .footer-brand{font-size:13px;color:var(--gold);letter-spacing:.08em}
+  .footer-note{font-size:11px;color:var(--fg-muted);text-align:right;line-height:1.7}
+  @media(max-width:600px){.t2-context-lock{grid-template-columns:1fr}.t2-overview-grid{grid-template-columns:1fr 1fr}.t2-pressure-row{grid-template-columns:1fr 1fr}.t2-zone-grid{grid-template-columns:1fr}.t2-hook-grid{grid-template-columns:1fr}.report-header{flex-direction:column;gap:12px}.report-meta{text-align:left}}
+  details.t2-zone-details{margin-bottom:16px;background:var(--surface);border:1px solid var(--border);border-radius:3px}
+  details.t2-zone-details[open]{border-color:var(--amber-border)}
+  details.t2-zone-details > summary{list-style:none;cursor:pointer;padding:18px 20px;position:relative;outline:none;user-select:none}
+  details.t2-zone-details > summary::-webkit-details-marker{display:none}
+  details.t2-zone-details > summary::after{content:'▸';position:absolute;right:20px;top:20px;font-size:10px;color:var(--fg-dim)}
+  details.t2-zone-details[open] > summary::after{content:'▾';color:var(--gold)}
+  .t2-summary-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .t2-summary-zone-id{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);min-width:60px}
+  .t2-summary-domain{font-size:14px;color:var(--fg)}
+  .t2-summary-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .t2-summary-preview{font-size:12px;color:var(--fg-muted);line-height:1.6;padding-top:8px;border-top:1px solid var(--border-subtle)}
+  details.t2-zone-details > .t2-zone-block{border:none;border-top:1px solid var(--border-subtle);border-radius:0 0 3px 3px;margin-bottom:0;background:transparent}
+  .t2-topo-intro{font-size:12px;color:var(--fg-muted);margin-bottom:18px;line-height:1.7;max-width:680px}
+  .t2-topo-panel{border:1px solid var(--border);border-radius:4px;background:#09090d;box-shadow:0 2px 12px rgba(0,0,0,0.35)}
+  .og-frame{padding:18px 20px 16px}
+  .og-frame-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.05)}
+  .og-frame-tag{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+  .og-frame-meta{font-size:10px;color:var(--fg-dim);letter-spacing:.03em}
+  .og-canvas-wrap{border-radius:3px;overflow:hidden}
+  .og-legend{display:flex;flex-wrap:wrap;gap:0;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.05)}
+  .og-legend-item{display:inline-flex;align-items:center;gap:6px;margin-right:24px;margin-bottom:2px}
+  .og-legend-dot{display:inline-block;width:7px;height:7px;border-radius:50%;flex-shrink:0}
+  .og-legend-lbl{font-size:10.5px;color:#686870;letter-spacing:.02em}
+  .rc-trace{font-size:10px;color:var(--fg-dim);opacity:.7;font-style:normal}
+  .rc-anchor-block{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid var(--green);border-radius:2px;margin-bottom:16px;font-size:12px;flex-wrap:wrap}
+  .rc-anchor-state{color:#c8c8d4;font-weight:600;letter-spacing:.02em}
+  .rc-anchor-score{color:var(--green);font-weight:600}
+  .rc-anchor-band{color:var(--fg-muted)}
+  .rc-anchor-decision{color:var(--amber);letter-spacing:.05em;text-transform:uppercase}
+  .rc-anchor-sep{color:#333}
+"""
+
+
+def _load_psee_interpretation_by_zone_class() -> Dict:
+    """Load interpretation_exposure.json and index EXP render_payloads by zone_class.
+
+    Used by LENS report to attach interpretation to PSEE zone blocks.
+    Returns empty dict if file absent — report generation is unaffected.
+    Each zone_class maps to the render_payload dict of the first primary zone-class
+    EXP item found (binding_context=None, source_type='zone').
+    """
+    exposure_path = REPO_ROOT / "docs" / "pios" / "41.x" / "interpretation_exposure.json"
+    result: Dict = {}
+    if not exposure_path.exists():
+        return result
+    try:
+        exp = json.loads(exposure_path.read_text())
+        for item in exp.get("exposure_items", []):
+            src  = item.get("source_ref", {})
+            if (item.get("source_type") == "zone"
+                    and item.get("binding_context") is None
+                    and src.get("zone_class")
+                    and src["zone_class"] not in result):
+                result[src["zone_class"]] = {
+                    "render_payload":        item.get("render_payload", {}),
+                    "interpretation_ref_id": item.get("interpretation_ref", {}).get("registry_entry_id"),
+                }
+    except Exception:
+        pass
+    return result
+
+
+def _load_language_layer() -> Dict:
+    """Load language_layer_registry.json and index entries by canonical_label.
+
+    Returns empty dict if file absent — report generation is unaffected.
+    Callers use: ll.get("RUN_RELATIVE_OUTLIER", {}).get("short_decode", "")
+    """
+    registry_path = REPO_ROOT / "docs" / "pios" / "41.x" / "language_layer_registry.json"
+    result: Dict = {}
+    if not registry_path.exists():
+        return result
+    try:
+        reg = json.loads(registry_path.read_text())
+        for entry in reg.get("entries", []):
+            label = entry.get("canonical_label")
+            if label:
+                result[label] = entry
+    except Exception:
+        pass
+    return result
+
+
+_EXEC_LINE_STOP: frozenset = frozenset({
+    "a", "an", "the", "of", "in", "on", "at", "to", "for", "from", "by", "with",
+    "this", "that", "it", "its", "is", "are", "was", "were", "be", "been", "being",
+    "and", "or", "but", "not", "no", "as", "than", "more", "many", "much", "far",
+    "which", "who", "how", "where", "when", "while", "other", "another", "any",
+    "each", "all", "both", "one", "has", "have", "had", "per",
+})
+
+# Presentation-only normalization overrides keyed by interpretation_ref (registry_entry_id).
+# Applied at render time; not persisted. Ensures identical INT entries yield identical lines.
+_EXEC_LINE_OVERRIDES: Dict[str, str] = {
+    "INT-007": "Multiple pressure patterns intersect in this part of the system.",
+}
+
+
+def _derive_executive_line(text: str) -> str:
+    """Derive a deterministic executive summary line from interpretation text at render time.
+
+    Steps:
+    1. Take first sentence (up to ". "); truncate at subordinate markers (; — :)
+    2. Remove duplicate content tokens (keep last occurrence; skip stop words)
+    Deterministic: same input always yields same output. No new terms added.
+    """
+    if not text:
+        return text
+    dot = text.find(". ")
+    first = text[:dot] if dot != -1 else text
+    for marker in ["; ", " \u2014 ", ": "]:
+        pos = first.find(marker)
+        if pos != -1:
+            first = first[:pos]
+    first = first.strip()
+
+    words = first.split()
+    seen: dict = {}
+    for i, w in enumerate(words):
+        key = w.lower().rstrip(".,;!?")
+        if key not in _EXEC_LINE_STOP:
+            seen.setdefault(key, []).append(i)
+
+    remove = {idx for indices in seen.values() if len(indices) > 1 for idx in indices[:-1]}
+    return " ".join(w for i, w in enumerate(words) if i not in remove)
+
+
+def _t2_obfuscate(text: str) -> str:
+    return (text
+        .replace("BlueEdge Fleet Management Platform", "Client Environment")
+        .replace("BlueEdge", "Client")
+        .replace("Fleet Core Operations", "Core Operations")
+        .replace("Fleet Vertical Extensions", "Vertical Extensions")
+        .replace("Extended Operations and Driver Services", "Extended Operations")
+        .replace("Extended Operations & Driver Services", "Extended Operations")
+        .replace("fleet connection activity", "platform connection activity")
+        .replace("Fleet connection activity", "Platform connection activity")
+        .replace("vehicle alert activity", "operational alert activity")
+        .replace("Vehicle alert activity", "Operational alert activity")
+        .replace("driver session performance", "session performance")
+        .replace("Driver session performance", "Session performance")
+        .replace("CE-001", "the platform core")
+    )
+
+
+def _derive_tier2_zones(topology: Dict, signals: Dict) -> List[Dict]:
+    domains = topology["domains"]
+    sigs = signals["signals"]
+
+    sigs_by_domain: Dict[str, List] = {}
+    for s in sigs:
+        did = s.get("domain_id", "")
+        sigs_by_domain.setdefault(did, []).append(s)
+
+    candidates: List[Dict] = []
+    seen: set = set()
+
+    for d in domains:
+        if d["domain_id"] == FOCUS_DOMAIN_T2 and d["domain_id"] not in seen:
+            candidates.append(d)
+            seen.add(d["domain_id"])
+
+    for d in domains:
+        if d["grounding"] != "GROUNDED" and d["domain_id"] not in seen:
+            candidates.append(d)
+            seen.add(d["domain_id"])
+
+    zones = []
+    for i, d in enumerate(candidates, 1):
+        did = d["domain_id"]
+        domain_sigs = sigs_by_domain.get(did, [])
+        is_focus = did == FOCUS_DOMAIN_T2
+
+        if is_focus and domain_sigs:
+            zone_type = "pressure_concentration"
+        elif not domain_sigs:
+            zone_type = "evidence_gap"
+        else:
+            confs = {s.get("evidence_confidence") for s in domain_sigs}
+            if "STRONG" in confs and "WEAK" in confs:
+                zone_type = "signal_conflict"
+            else:
+                zone_type = "structural_inconsistency"
+
+        if is_focus:
+            severity = "HIGH"
+        elif zone_type == "evidence_gap":
+            severity = "MODERATE"
+        else:
+            severity = "LOW"
+
+        if not domain_sigs:
+            confidence = "WEAK"
+        elif any(s.get("evidence_confidence") == "STRONG" for s in domain_sigs):
+            confidence = "STRONG"
+        elif any(s.get("evidence_confidence") == "MODERATE" for s in domain_sigs):
+            confidence = "PARTIAL"
+        else:
+            confidence = "WEAK"
+
+        if not domain_sigs:
+            traceability = "NOT_TRACEABLE"
+        elif all(s.get("trace_links") for s in domain_sigs):
+            traceability = "FULLY_TRACEABLE"
+        else:
+            traceability = "PARTIALLY_TRACEABLE"
+
+        zones.append({
+            "zone_id": f"ZONE-{i:02d}",
+            "domain_id": did,
+            "domain_name": d["domain_name"],
+            "domain": d,
+            "domain_sigs": domain_sigs,
+            "zone_type": zone_type,
+            "severity": severity,
+            "confidence": confidence,
+            "traceability": traceability,
+        })
+
+    return zones
+
+
+def _derive_tier2_zones_from_projection(
+    pz_proj: Dict, psig_proj: Optional[Dict], topology: Dict
+) -> List[Dict]:
+    """Build tier-2 zones from pressure_zone_projection for PSIG clients.
+
+    Returns zone dicts with projection-native fields compatible with
+    _build_t2_psig_zone_block() (zone_class, conditions, condition_signals,
+    attribution_profile, embedded_pair_rules). BlueEdge path unaffected.
+    """
+    zone_projection = pz_proj.get("zone_projection") or pz_proj.get("zones") or []
+    domains_by_id   = {d["domain_id"]: d for d in topology.get("domains", [])}
+
+    cond_by_id: Dict = {}
+    if psig_proj:
+        for c in psig_proj.get("active_conditions_in_scope", []):
+            cond_by_id[c["condition_id"]] = c
+
+    zones = []
+    for pz in zone_projection:
+        anchor_id    = pz.get("anchor_id", "")
+        anchor_name  = pz.get("anchor_name", anchor_id)
+        domain       = domains_by_id.get(anchor_id, {
+            "domain_id":      anchor_id,
+            "domain_name":    anchor_name,
+            "capability_ids": [],
+        })
+        conditions       = pz.get("conditions", [])
+        condition_signals = [cond_by_id[c] for c in conditions if c in cond_by_id]
+        attr             = pz.get("attribution_profile", "secondary")
+        zone_class       = pz.get("zone_class", "COMPOUND_ZONE")
+        severity         = "HIGH"     if attr == "primary"    else "MODERATE"
+        confidence       = "STRONG"   if condition_signals    else "PARTIAL"
+        traceability     = "FULLY_TRACEABLE" if condition_signals else "PARTIALLY_TRACEABLE"
+        # Resolve semantic domain label: DOM-XX anchor → DOMAIN-NN business label
+        _z_sem_ctx  = _resolve_dom_to_semantic_context(anchor_id)
+        _z_sem_label = _z_sem_ctx.get("business_label") if _z_sem_ctx.get("domain_id") else None
+        _z_display_name = _z_sem_label or _resolve_domain_display_label(anchor_id, domain.get("domain_name", anchor_name))
+        zones.append({
+            "zone_id":             pz.get("zone_id", ""),
+            "domain_id":           anchor_id,
+            "domain_name":         _z_display_name,
+            "anchor_name":         anchor_name,
+            "domain":              domain,
+            "domain_sigs":         [],
+            "zone_type":           "pressure_concentration",
+            "severity":            severity,
+            "confidence":          confidence,
+            "traceability":        traceability,
+            "zone_class":          zone_class,
+            "conditions":          conditions,
+            "condition_signals":   condition_signals,
+            "attribution_profile": attr,
+            "embedded_pair_rules": pz.get("embedded_pair_rules", []),
+            "member_entity_ids":   pz.get("member_entity_ids", []),
+            "psig_signals":        pz.get("signals", []),
+        })
+    return zones
+
+
+def _t2_type_css(zone_type: str) -> str:
+    return {
+        "pressure_concentration": "t2-type-pressure",
+        "evidence_gap":           "t2-type-gap",
+        "signal_conflict":        "t2-type-conflict",
+        "structural_inconsistency": "t2-type-inconsistency",
+    }.get(zone_type, "t2-type-gap")
+
+
+def _t2_sev_css(severity: str) -> str:
+    return {"HIGH": "t2-sev-high", "MODERATE": "t2-sev-moderate", "LOW": "t2-sev-low"}.get(severity, "t2-sev-low")
+
+
+def _t2_conf_css(confidence: str) -> str:
+    return {"STRONG": "t2-conf-strong", "PARTIAL": "t2-conf-partial", "WEAK": "t2-conf-weak"}.get(confidence, "t2-conf-weak")
+
+
+def _t2_ev_css(strength: str) -> str:
+    return {"STRONG": "t2-ev-strong", "PARTIAL": "t2-ev-partial", "WEAK": "t2-ev-weak"}.get(strength, "t2-ev-weak")
+
+
+def _build_t2_zone_block(zone: Dict, publish_safe: bool, interpretation_payload: Optional[Dict] = None) -> str:
+    zone_id   = zone["zone_id"]
+    did       = zone["domain_id"]
+    dname     = zone["domain_name"]
+    sigs      = zone["domain_sigs"]
+    domain    = zone["domain"]
+    zt        = zone["zone_type"]
+    sev       = zone["severity"]
+    conf      = zone["confidence"]
+    trace_st  = zone["traceability"]
+
+    display_name = esc(_t2_obfuscate(dname) if publish_safe else dname)
+    caps = domain.get("capability_ids", [])
+
+    # ── Section A: Condition Description ──────────────────────────────────
+    if sigs:
+        sig_titles = "".join(
+            f'<span class="t2-chip">{esc(s["title"])}</span>' for s in sigs
+        )
+        if did == FOCUS_DOMAIN_T2:
+            raw_cond = (
+                f"{dname} domain exhibits concentrated structural pressure. "
+                "Seven core runtime operational dimensions are unresolvable from available static evidence: "
+                "backend service memory usage, cache efficiency, cache availability, event pipeline activity, "
+                "fleet connection activity, vehicle alert activity, and driver session performance. "
+                "Additionally, structural volatility analysis reveals an edge-to-node density ratio of 1.273, "
+                "exceeding architectural unity and indicating a tightly interconnected dependency mesh within this domain."
+            )
+        else:
+            raw_cond = (
+                f"{dname} domain is weakly grounded with signal coverage present. "
+                "Observable structural conditions are partially characterized."
+            )
+    else:
+        raw_cond = (
+            f"{dname} domain is weakly grounded. No signals are currently bound to this domain's "
+            "scope in the available evidence set. The structural state — including capability "
+            "functionality and component readiness — cannot be characterized beyond the grounding classification."
+        )
+        sig_titles = '<span class="t2-chip" style="color:var(--fg-dim)">No signals bound</span>'
+
+    cond_text = esc(_t2_obfuscate(raw_cond) if publish_safe else raw_cond)
+
+    section_a = f"""
+    <div class="t2-sub-section" id="zone-{zone_id}-block-a">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">A</span>
+        <span class="t2-sub-title">Condition Description</span>
+      </div>
+      <p class="t2-body">{cond_text}</p>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:4px">Source signals:</div>
+      <div class="t2-chip-row">{sig_titles}</div>
+      <div class="t2-chip-row">
+        <span class="t2-chip" style="color:var(--fg-dim)">derived_from: Tier-1 Evidence Brief</span>
+      </div>
+    </div>"""
+
+    # ── Section B: Structural Drivers ─────────────────────────────────────
+    node_chips = f'<span class="t2-chip">{esc(did)}</span>'
+    for cap in caps[:3]:
+        node_chips += f'<span class="t2-chip">{esc(cap)}</span>'
+
+    if sigs:
+        sig_chips = "".join(f'<span class="t2-chip">{esc(s["signal_id"])}</span>' for s in sigs) if not publish_safe else \
+                    "".join(f'<span class="t2-chip">{esc(s["title"][:40])}…</span>' for s in sigs)
+        dep_type = "BRANCHING" if len(sigs) > 1 else "LINEAR"
+        if did == FOCUS_DOMAIN_T2:
+            dep_desc = ("Multiple capability nodes within the platform infrastructure scope exhibit "
+                        "independent structural conditions. Cache layer and monorepo container "
+                        "contribute distinct but co-located pressure vectors.")
+        else:
+            dep_desc = "Observable dependency structure within domain scope. Full characterization pending signal coverage."
+    else:
+        sig_chips = '<span class="t2-chip" style="color:var(--fg-dim)">No contributing signals</span>'
+        dep_type  = "UNKNOWN"
+        dep_desc  = "No signal coverage available to characterize dependency structure within this domain."
+
+    dep_desc_safe = esc(_t2_obfuscate(dep_desc) if publish_safe else dep_desc)
+
+    section_b = f"""
+    <div class="t2-sub-section" id="zone-{zone_id}-block-b">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">B</span>
+        <span class="t2-sub-title">Structural Drivers</span>
+      </div>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted)">Contributing nodes:</div>
+      <div class="t2-chip-row">{node_chips}</div>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:8px">Contributing signals:</div>
+      <div class="t2-chip-row">{sig_chips}</div>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:8px">
+        Dependency structure: <span style="color:var(--fg)">{dep_type}</span>
+      </div>
+      <p class="t2-body" style="margin-top:6px">{dep_desc_safe}</p>
+    </div>"""
+
+    # ── Section C: Propagation Path ────────────────────────────────────────
+    if did == FOCUS_DOMAIN_T2:
+        paths_html = f"""
+      <div class="t2-path-block">
+        <div class="t2-path-chain">{did} → CAP-27 → CAP-29</div>
+        <div class="t2-path-meta">
+          <span>path_id: {zone_id}-P1</span>
+          <span>type: FORWARD</span>
+          <span>evidence: STRONG</span>
+        </div>
+      </div>
+      <div class="t2-path-block t2-inferred">
+        <div class="t2-path-chain">{did} → DOMAIN-11</div>
+        <div class="t2-path-meta">
+          <span>path_id: {zone_id}-P2</span>
+          <span>type: FORWARD</span>
+          <span>evidence: PARTIAL</span>
+        </div>
+        <div class="t2-inferred-decl">Component-confirmed connection (event module in shared scope). Cross-domain edge not explicitly declared in topology artifact.</div>
+      </div>"""
+    else:
+        paths_html = f"""
+      <div class="t2-path-block t2-inferred">
+        <div class="t2-path-chain">{did}</div>
+        <div class="t2-path-meta">
+          <span>path_id: {zone_id}-P1</span>
+          <span>type: UNKNOWN</span>
+          <span>evidence: INFERRED</span>
+        </div>
+        <div class="t2-inferred-decl">This path segment is inferred. No artifact evidence directly confirms structural connections from this domain.</div>
+      </div>"""
+
+    section_c = f"""
+    <div class="t2-sub-section" id="zone-{zone_id}-block-c">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">C</span>
+        <span class="t2-sub-title">Propagation Path</span>
+      </div>
+      {paths_html}
+    </div>"""
+
+    # ── Section D: Evidence State ──────────────────────────────────────────
+    ev_strength = ("STRONG" if any(s.get("evidence_confidence") == "STRONG" for s in sigs)
+                   else "PARTIAL" if sigs else "WEAK")
+
+    if sigs and not publish_safe:
+        avail_links = "".join(
+            f'<li class="t2-avail-item">{esc(link)}</li>'
+            for s in sigs for link in s.get("trace_links", [])
+        )
+        avail_html = f'<ul class="t2-avail-list">{avail_links}</ul>' if avail_links else ""
+    elif sigs and publish_safe:
+        avail_html = f'<p class="t2-body" style="font-size:11px;color:var(--fg-muted)">{len(sigs)} evidence artifact set(s) available via trace links.</p>'
+    else:
+        avail_html = '<p class="t2-body" style="color:var(--fg-dim)">No artifact references available.</p>'
+
+    if did == FOCUS_DOMAIN_T2:
+        missing_html = """
+        <ul class="t2-missing-list">
+          <li class="t2-missing-item">
+            <span class="t2-missing-desc">Live Prometheus metrics scrape</span>
+            <span class="t2-missing-impact">Backend memory, cache efficiency, and cache availability cannot be confirmed without runtime instrumentation.</span>
+          </li>
+          <li class="t2-missing-item">
+            <span class="t2-missing-desc">WebSocket and event-stream telemetry</span>
+            <span class="t2-missing-impact">Event pipeline activity, fleet connection activity, and alert processing state require live data to resolve.</span>
+          </li>
+        </ul>"""
+        if publish_safe:
+            missing_html = missing_html.replace("fleet connection activity", "platform connection activity")
+    elif not sigs:
+        missing_html = """
+        <ul class="t2-missing-list">
+          <li class="t2-missing-item">
+            <span class="t2-missing-desc">Any signal coverage for this domain</span>
+            <span class="t2-missing-impact">Domain structural state cannot be classified beyond grounding status without at least one bound signal.</span>
+          </li>
+        </ul>"""
+    else:
+        missing_html = '<p class="t2-body" style="color:var(--fg-dim)">No missing evidence identified.</p>'
+
+    ev_css = _t2_ev_css(ev_strength)
+    section_d = f"""
+    <div class="t2-sub-section" id="zone-{zone_id}-block-d">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">D</span>
+        <span class="t2-sub-title">Evidence State</span>
+      </div>
+      <div class="t2-evidence-row">
+        <span class="t2-ev-label">Evidence strength:</span>
+        <span class="{ev_css}">{ev_strength}</span>
+      </div>
+      {avail_html}
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:12px">Missing evidence:</div>
+      {missing_html}
+    </div>"""
+
+    # ── Section E: Uncertainty Declaration ────────────────────────────────
+    if did == FOCUS_DOMAIN_T2:
+        unresolved_raw = [
+            ("Seven runtime operational dimensions",
+             "Absence of live Prometheus scrape and WebSocket telemetry prevents resolution. "
+             "Dimensions confirmed as structurally required but evidence-absent: cache performance, "
+             "event pipeline activity, fleet connection activity, alert processing, session scoring, "
+             "backend memory, cache availability."),
+            ("Propagation extent to adjacent domains",
+             "Cross-domain structural connections are component-confirmed but not topology-edge-confirmed. "
+             "Full propagation scope cannot be declared without live traversal data."),
+        ]
+    elif not sigs:
+        unresolved_raw = [
+            (f"Complete structural state of {dname}",
+             "Absence of any signal coverage prevents characterization of capability-level "
+             "or component-level structural state within this domain."),
+        ]
+    else:
+        unresolved_raw = [
+            ("Full signal confidence resolution",
+             "Not all signals in zone scope have achieved full evidence closure."),
+        ]
+
+    unresolved_items = "".join(
+        f"""<li class="t2-unresolved-item">
+          <div class="t2-unresolved-element">{esc(_t2_obfuscate(elem) if publish_safe else elem)}</div>
+          <div class="t2-unresolved-reason">{esc(_t2_obfuscate(reason) if publish_safe else reason)}</div>
+        </li>"""
+        for elem, reason in unresolved_raw
+    )
+
+    section_e = f"""
+    <div class="t2-sub-section" id="zone-{zone_id}-block-e">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">E</span>
+        <span class="t2-sub-title">Uncertainty Declaration</span>
+      </div>
+      <div class="t2-uncertainty-block">
+        <div class="t2-inference-active">
+          <span class="t2-inference-tag">inference_prohibition</span>
+          <span class="t2-inference-value">ACTIVE</span>
+        </div>
+        <ul class="t2-unresolved-list">{unresolved_items}</ul>
+      </div>
+    </div>"""
+
+    # ── Section F: Investigation Entry Points ──────────────────────────────
+    why_surface   = esc(f"Why does {_t2_obfuscate(dname) if publish_safe else dname} exhibit {zt.replace('_', ' ')}?")
+    trace_dir     = "DOWNSTREAM" if sigs else "BOTH"
+    ev_scope      = "FULL" if ev_strength == "STRONG" else "BOUNDED"
+
+    section_f = f"""
+    <div class="t2-sub-section" id="zone-{zone_id}-block-f">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">F</span>
+        <span class="t2-sub-title">Investigation Entry Points</span>
+      </div>
+      <div class="t2-hook-grid">
+        <div class="t2-hook-block" id="zone-{zone_id}-why">
+          <div class="t2-hook-type">WHY</div>
+          <div class="t2-hook-id">{zone_id}-WHY</div>
+          <div class="t2-hook-surface">{why_surface}</div>
+        </div>
+        <div class="t2-hook-block" id="zone-{zone_id}-trace">
+          <div class="t2-hook-type">TRACE</div>
+          <div class="t2-hook-id">{zone_id}-TRACE</div>
+          <div class="t2-hook-surface">entry: {did} · direction: {trace_dir} · depth: 2</div>
+        </div>
+        <div class="t2-hook-block" id="zone-{zone_id}-ev">
+          <div class="t2-hook-type">EVIDENCE</div>
+          <div class="t2-hook-id">{zone_id}-EV</div>
+          <div class="t2-hook-surface">scope: {ev_scope} · artifact targets from zone signal set</div>
+        </div>
+      </div>
+    </div>"""
+
+    type_css = _t2_type_css(zt)
+    sev_css  = _t2_sev_css(sev)
+    conf_css = _t2_conf_css(conf)
+
+    cap_count    = len(caps)
+    scope_label  = f"{cap_count} capability node{'s' if cap_count != 1 else ''}" if cap_count else "NO SEMANTIC CAPABILITY MAPPING AVAILABLE"
+    preview_raw  = raw_cond[:130] + ("…" if len(raw_cond) > 130 else "")
+    preview_text = esc(_t2_obfuscate(preview_raw) if publish_safe else preview_raw)
+    zt_label     = zt.replace("_", " ")
+    trace_label  = trace_st.replace("_", " ")
+
+    section_g = ""
+    if interpretation_payload:
+        rp        = interpretation_payload.get("render_payload", interpretation_payload)
+        ref_id    = interpretation_payload.get("interpretation_ref_id")
+        biz_text  = rp.get("business_expression", "")
+        override  = _EXEC_LINE_OVERRIDES.get(ref_id) if ref_id else None
+        exec_line = override if override is not None else _derive_executive_line(biz_text)
+        biz_safe  = esc(_t2_obfuscate(biz_text)  if publish_safe else biz_text)
+        exec_safe = esc(_t2_obfuscate(exec_line) if publish_safe else exec_line)
+        section_g = f"""
+    <div class="t2-sub-section" id="zone-{zone_id}-block-g">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">G</span>
+        <span class="t2-sub-title">Structural Interpretation</span>
+      </div>
+      <p style="font-size:14px;color:#c8c8d4;font-weight:500;line-height:1.4;padding:10px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid #5a5a80;border-radius:2px;margin:0 0 8px 0">{exec_safe}</p>
+      <div class="t2-chip-row" style="margin-bottom:8px">
+        <span class="t2-chip" style="color:var(--fg-dim)">executive interpretation</span>
+      </div>
+      <p class="t2-body" style="font-size:12px;color:#9a9aaa;line-height:1.65;border-left:2px solid #3a3a5a;padding-left:12px;margin:0">{biz_safe}</p>
+      <div class="t2-chip-row" style="margin-top:6px">
+        <span class="t2-chip" style="color:var(--fg-dim)">source: interpretation_exposure.json · render_target: lens_report · field: business_expression</span>
+      </div>
+    </div>"""
+
+    return f"""
+  <details class="t2-zone-details" id="zone-{zone_id}-details">
+    <summary class="t2-zone-summary">
+      <div class="t2-summary-top">
+        <span class="t2-summary-zone-id">{zone_id}</span>
+        <span class="t2-summary-domain">{display_name}</span>
+      </div>
+      <div class="t2-summary-badges">
+        <span class="t2-badge {type_css}">{zt_label}</span>
+        <span class="t2-badge" style="background:var(--surface-raised);color:var(--fg-dim);border:1px solid var(--border-subtle)">{scope_label}</span>
+        <span class="t2-badge {sev_css}">{sev}</span>
+        <span class="t2-badge {conf_css}">{conf}</span>
+        <span class="t2-badge" style="background:var(--surface-raised);color:var(--fg-dim);border:1px solid var(--border-subtle)">{trace_label}</span>
+      </div>
+      <div class="t2-summary-preview">{preview_text}</div>
+    </summary>
+    <div class="t2-zone-block" id="zone-{zone_id}-block">
+      <div class="t2-zone-block-header">
+        <div>
+          <div class="t2-zone-block-id">{zone_id} · {zt.replace("_", " ").upper()}</div>
+          <div class="t2-zone-block-domain">{display_name}</div>
+        </div>
+        <a href="#zone-{zone_id}" class="t2-zone-block-back">↑ Zone inventory</a>
+      </div>
+      {section_a}
+      {section_b}
+      {section_c}
+      {section_d}
+      {section_e}
+      {section_f}{section_g}
+    </div>
+  </details>"""
+
+
+def _build_t2_psig_zone_block(zone: Dict, publish_safe: bool,
+                               interpretation_payload: Optional[Dict] = None,
+                               ll: Optional[Dict] = None) -> str:
+    """Render a Tier-2 zone detail block for PSIG clients using projection data.
+
+    Replaces _build_t2_zone_block() for zones derived from
+    _derive_tier2_zones_from_projection(). BlueEdge path unaffected.
+    """
+    zone_id    = zone["zone_id"]
+    did        = zone["domain_id"]
+    dname      = zone["domain_name"]
+    domain     = zone["domain"]
+    zt         = zone["zone_type"]
+    sev        = zone["severity"]
+    conf       = zone["confidence"]
+    trace_st   = zone["traceability"]
+    zone_class = zone.get("zone_class", "COMPOUND_ZONE")
+    conditions = zone.get("conditions", [])
+    cond_sigs  = zone.get("condition_signals", [])
+    attr       = zone.get("attribution_profile", "secondary")
+    pair_rules = zone.get("embedded_pair_rules", [])
+    members    = zone.get("member_entity_ids", [])
+    psig_ids   = zone.get("psig_signals", [])
+    caps       = domain.get("capability_ids", [])
+
+    display_name = esc(_t2_obfuscate(dname) if publish_safe else dname)
+
+    # Semantic context: reverse-map DOM anchor → semantic domain
+    _sem_ctx_zone = _resolve_dom_to_semantic_context(did)
+    _sem_has_backing = bool(_sem_ctx_zone.get("domain_id"))
+    # DOM technical label from crosswalk
+    _dom_tech_label = ""
+    if _SEMANTIC_CROSSWALK is not None:
+        for _xentry in _SEMANTIC_CROSSWALK.get("entities", []):
+            if _xentry.get("current_entity_id") == did:
+                _dom_tech_label = _xentry.get("technical_label", "")
+                break
+    _dom_backing_str = f"{esc(did)}{' / ' + esc(_dom_tech_label) if _dom_tech_label else ''}"
+    if _sem_has_backing:
+        _sem_domain_id    = _sem_ctx_zone["domain_id"]
+        _sem_domain_label = _sem_ctx_zone["business_label"] or _sem_domain_id
+        _sem_lineage      = _sem_ctx_zone["lineage_status"]
+        _sem_conf_str     = f"{_sem_ctx_zone['confidence']:.2f}"
+        _sem_lineage_color = {"EXACT": "#3fb950", "STRONG": "#58a6ff", "PARTIAL": "#d29922"}.get(_sem_lineage, "#8b949e")
+        _sem_ctx_block = f"""
+    <div style="background:#0c0c14;border:1px solid #2a2a40;border-left:3px solid {_sem_lineage_color};border-radius:2px;padding:8px 12px;margin-bottom:10px;font-size:12px">
+      <div style="font-size:10px;font-weight:600;color:var(--fg-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Semantic Context</div>
+      <div style="color:var(--fg-main)">Domain: <strong>{esc(_sem_domain_label)}</strong> <span style="color:var(--fg-muted)">({esc(_sem_domain_id)})</span></div>
+      <div style="color:var(--fg-dim);margin-top:3px">Structural backing: <span style="font-family:monospace">{_dom_backing_str}</span></div>
+      <div style="color:var(--fg-dim);margin-top:3px">Confidence: {_sem_conf_str} · Lineage status: <span style="color:{_sem_lineage_color}">{_sem_lineage}</span></div>
+    </div>"""
+    else:
+        _sem_ctx_block = f"""
+    <div style="background:#0c0c14;border:1px solid #2a2a40;border-left:3px solid #8b949e;border-radius:2px;padding:8px 12px;margin-bottom:10px;font-size:12px">
+      <div style="font-size:10px;font-weight:600;color:var(--fg-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Semantic Context</div>
+      <div style="color:#8b949e">NO SEMANTIC BACKING — DOM anchor {_dom_backing_str} has no semantic domain mapping in the current topology model.</div>
+    </div>"""
+
+    # ── Section A: Condition Description ──────────────────────────────────
+    cond_chips = "".join(f'<span class="t2-chip">{esc(c)}</span>' for c in conditions)
+    psig_chips = "".join(f'<span class="t2-chip">{esc(s)}</span>' for s in psig_ids)
+    _zclass_exec_a = RC.apply_language(zone_class)
+    _attr_exec_a   = RC.apply_language(attr.lower())
+    _primary_label = _sem_domain_label if _sem_has_backing else dname
+    raw_cond = (
+        f"{_primary_label} domain: {_zclass_exec_a} — "
+        f"{len(conditions)} active condition{'s' if len(conditions) != 1 else ''} at zone scope. "
+        f"{_attr_exec_a} — all conditions active."
+    )
+    cond_text = esc(_t2_obfuscate(raw_cond) if publish_safe else raw_cond)
+    section_a = f"""
+    <div class="t2-sub-section" id="zone-{zone_id}-block-a">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">A</span>
+        <span class="t2-sub-title">Condition Description</span>
+      </div>
+      <p class="t2-body">{cond_text}</p>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:4px">Active conditions:</div>
+      <div class="t2-chip-row">{cond_chips}</div>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:4px">Source signals:</div>
+      <div class="t2-chip-row">{psig_chips}</div>
+      <div class="t2-chip-row">
+        <span class="t2-chip" style="color:var(--fg-dim)">{esc(_zclass_exec_a)} <span style="opacity:.6;font-size:9px">trace: {esc(zone_class)}</span></span>
+        <span class="t2-chip" style="color:var(--fg-dim)">{esc(_attr_exec_a)} <span style="opacity:.6;font-size:9px">trace: {esc(attr)}</span></span>
+        <span class="t2-chip" style="color:var(--fg-dim)">source: pressure_zone_projection.json</span>
+      </div>
+    </div>"""
+
+    # ── Section B: Structural Drivers ─────────────────────────────────────
+    member_chips = "".join(f'<span class="t2-chip">{esc(m)}</span>' for m in members)
+    sig_chips    = "".join(f'<span class="t2-chip">{esc(s)}</span>' for s in psig_ids)
+    rule_chips   = "".join(
+        f'<span class="t2-chip">{esc(r.replace("_", " "))}</span>' for r in pair_rules
+    )
+    dep_type = "COMPOUND" if len(psig_ids) > 1 else "LINEAR"
+    dep_desc = (
+        f"Zone exhibits {len(pair_rules)} structural rule intersection(s): "
+        + (", ".join(r.replace("_", " ") for r in pair_rules) + ". " if pair_rules else "")
+        + "All conditions share domain attribution scope across zone membership."
+    )
+    dep_desc_safe = esc(_t2_obfuscate(dep_desc) if publish_safe else dep_desc)
+    section_b = f"""
+    <div class="t2-sub-section" id="zone-{zone_id}-block-b">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">B</span>
+        <span class="t2-sub-title">Structural Drivers</span>
+      </div>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted)">Member entities:</div>
+      <div class="t2-chip-row">{member_chips}</div>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:8px">Contributing signals:</div>
+      <div class="t2-chip-row">{sig_chips}</div>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:8px">Embedded pair rules:</div>
+      <div class="t2-chip-row">{rule_chips}</div>
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:8px">
+        Dependency structure: <span style="color:var(--fg)">{dep_type}</span>
+      </div>
+      <p class="t2-body" style="margin-top:6px">{dep_desc_safe}</p>
+    </div>"""
+
+    # ── Section C: Propagation Path ────────────────────────────────────────
+    if pair_rules:
+        paths_html = "".join(f"""
+      <div class="t2-path-block">
+        <div class="t2-path-chain">{did} — {esc(r.replace("_", " "))}</div>
+        <div class="t2-path-meta">
+          <span>rule: {esc(r)}</span>
+          <span>type: STRUCTURAL</span>
+          <span>evidence: STRONG</span>
+        </div>
+      </div>""" for r in pair_rules)
+    else:
+        paths_html = f"""
+      <div class="t2-path-block t2-inferred">
+        <div class="t2-path-chain">{did}</div>
+        <div class="t2-path-meta">
+          <span>path_id: {zone_id}-P1</span>
+          <span>type: UNKNOWN</span>
+          <span>evidence: PARTIAL</span>
+        </div>
+      </div>"""
+    section_c = f"""
+    <div class="t2-sub-section" id="zone-{zone_id}-block-c">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">C</span>
+        <span class="t2-sub-title">Propagation Path</span>
+      </div>
+      {paths_html}
+    </div>"""
+
+    # ── Section D: Evidence State ──────────────────────────────────────────
+    ev_strength = "STRONG" if cond_sigs else "PARTIAL"
+    if cond_sigs and not publish_safe:
+        _ll = ll or {}
+        def _method_decode(method: str) -> str:
+            entry = _ll.get(method, {})
+            decode = entry.get("short_decode", "")
+            if decode:
+                return f' <span class="t2-avail-decode">{esc(decode)}</span>'
+            return ""
+        cond_items = "".join(
+            f'<li class="t2-avail-item">'
+            f'{esc(c["condition_id"])} · {esc(c["signal_id"])} · '
+            f'value: {c.get("signal_value", "—")} · '
+            f'state: {esc(c.get("activation_state", "—"))} · '
+            f'method: {esc(c.get("activation_method", "—"))}'
+            f'{_method_decode(c.get("activation_method", ""))}'
+            f'</li>'
+            for c in cond_sigs
+        )
+        avail_html = f'<ul class="t2-avail-list">{cond_items}</ul>'
+    elif cond_sigs and publish_safe:
+        avail_html = (
+            f'<p class="t2-body" style="font-size:11px;color:var(--fg-muted)">'
+            f'{len(cond_sigs)} condition(s) active at zone scope.</p>'
+        )
+    else:
+        avail_html = '<p class="t2-body" style="color:var(--fg-dim)">No condition evidence available.</p>'
+    missing_html = """
+        <ul class="t2-missing-list">
+          <li class="t2-missing-item">
+            <span class="t2-missing-desc">Execution-layer validation</span>
+            <span class="t2-missing-impact">Runtime behavior and live operational dimensions are outside the current evidence scope.</span>
+          </li>
+        </ul>"""
+    ev_css = _t2_ev_css(ev_strength)
+    section_d = f"""
+    <div class="t2-sub-section" id="zone-{zone_id}-block-d">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">D</span>
+        <span class="t2-sub-title">Evidence State</span>
+      </div>
+      <div class="t2-evidence-row">
+        <span class="t2-ev-label">Evidence strength:</span>
+        <span class="{ev_css}">{ev_strength}</span>
+      </div>
+      {avail_html}
+      <div class="t2-body" style="font-size:11px;color:var(--fg-muted);margin-top:12px">Missing evidence:</div>
+      {missing_html}
+    </div>"""
+
+    # ── Section E: Uncertainty Declaration ────────────────────────────────
+    unresolved_items = f"""<li class="t2-unresolved-item">
+          <div class="t2-unresolved-element">Execution-layer behavioral state</div>
+          <div class="t2-unresolved-reason">Structural conditions are confirmed from static evidence. Runtime execution dimensions cannot be resolved from static analysis alone.</div>
+        </li>"""
+    section_e = f"""
+    <div class="t2-sub-section" id="zone-{zone_id}-block-e">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">E</span>
+        <span class="t2-sub-title">Uncertainty Declaration</span>
+      </div>
+      <div class="t2-uncertainty-block">
+        <div class="t2-inference-active">
+          <span class="t2-inference-tag">inference_prohibition</span>
+          <span class="t2-inference-value">ACTIVE</span>
+        </div>
+        <ul class="t2-unresolved-list">{unresolved_items}</ul>
+      </div>
+    </div>"""
+
+    # ── Section F: Investigation Entry Points ──────────────────────────────
+    why_surface = esc(f"Why does {_t2_obfuscate(dname) if publish_safe else dname} exhibit {zt.replace('_', ' ')}?")
+    section_f = f"""
+    <div class="t2-sub-section" id="zone-{zone_id}-block-f">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">F</span>
+        <span class="t2-sub-title">Investigation Entry Points</span>
+      </div>
+      <div class="t2-hook-grid">
+        <div class="t2-hook-block" id="zone-{zone_id}-why">
+          <div class="t2-hook-type">WHY</div>
+          <div class="t2-hook-id">{zone_id}-WHY</div>
+          <div class="t2-hook-surface">{why_surface}</div>
+        </div>
+        <div class="t2-hook-block" id="zone-{zone_id}-trace">
+          <div class="t2-hook-type">TRACE</div>
+          <div class="t2-hook-id">{zone_id}-TRACE</div>
+          <div class="t2-hook-surface">entry: {did} · direction: DOWNSTREAM · depth: 2</div>
+        </div>
+        <div class="t2-hook-block" id="zone-{zone_id}-ev">
+          <div class="t2-hook-type">EVIDENCE</div>
+          <div class="t2-hook-id">{zone_id}-EV</div>
+          <div class="t2-hook-surface">scope: BOUNDED · conditions: {len(conditions)} · source: projection</div>
+        </div>
+      </div>
+    </div>"""
+
+    # ── Section G: Structural Interpretation (from interpretation_exposure) ─
+    section_g = ""
+    if interpretation_payload:
+        rp        = interpretation_payload.get("render_payload", interpretation_payload)
+        ref_id    = interpretation_payload.get("interpretation_ref_id")
+        biz_text  = rp.get("business_expression", "")
+        override  = _EXEC_LINE_OVERRIDES.get(ref_id) if ref_id else None
+        exec_line = override if override is not None else _derive_executive_line(biz_text)
+        biz_safe  = esc(_t2_obfuscate(biz_text)  if publish_safe else biz_text)
+        exec_safe = esc(_t2_obfuscate(exec_line) if publish_safe else exec_line)
+        _g_dom_line = (
+            f'<div style="font-size:11px;color:var(--fg-muted);margin-bottom:8px">'
+            f'Domain: <strong>{esc(_sem_domain_label if _sem_has_backing else dname)}</strong>'
+            f'{(" · " + esc(_sem_domain_id) + " → " + esc(did)) if _sem_has_backing else ""}'
+            f'</div>'
+        )
+        section_g = f"""
+    <div class="t2-sub-section" id="zone-{zone_id}-block-g">
+      <div class="t2-sub-header">
+        <span class="t2-sub-tag">G</span>
+        <span class="t2-sub-title">Structural Interpretation (Executive)</span>
+      </div>
+      {_g_dom_line}
+      <p style="font-size:14px;color:#c8c8d4;font-weight:500;line-height:1.4;padding:10px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid #5a5a80;border-radius:2px;margin:0 0 8px 0">{exec_safe}</p>
+      <div class="t2-chip-row" style="margin-bottom:8px">
+        <span class="t2-chip" style="color:var(--fg-dim)">executive interpretation</span>
+      </div>
+      <p class="t2-body" style="font-size:12px;color:#9a9aaa;line-height:1.65;border-left:2px solid #3a3a5a;padding-left:12px;margin:0">{biz_safe}</p>
+      <div class="t2-chip-row" style="margin-top:6px">
+        <span class="t2-chip" style="color:var(--fg-dim)">source: interpretation_exposure.json · render_target: lens_report · field: business_expression</span>
+      </div>
+    </div>"""
+
+    type_css  = _t2_type_css(zt)
+    sev_css   = _t2_sev_css(sev)
+    conf_css  = _t2_conf_css(conf)
+    cap_count    = len(caps)
+    if cap_count:
+        scope_label = f"{cap_count} capability node{'s' if cap_count != 1 else ''}"
+    elif _sem_has_backing:
+        scope_label = f"Semantic domain: {esc(_sem_domain_label)} ({_sem_lineage} · {_sem_conf_str})"
+    else:
+        scope_label = "NO SEMANTIC DOMAIN BACKING AVAILABLE"
+    preview_raw  = raw_cond[:130] + ("…" if len(raw_cond) > 130 else "")
+    preview_text = esc(_t2_obfuscate(preview_raw) if publish_safe else preview_raw)
+    zt_label     = zt.replace("_", " ")
+    trace_label  = trace_st.replace("_", " ")
+
+    return f"""
+  <details class="t2-zone-details" id="zone-{zone_id}-details">
+    <summary class="t2-zone-summary">
+      <div class="t2-summary-top">
+        <span class="t2-summary-zone-id">{zone_id}</span>
+        <span class="t2-summary-domain">{display_name}</span>
+      </div>
+      <div class="t2-summary-badges">
+        <span class="t2-badge {type_css}">{zt_label}</span>
+        <span class="t2-badge" style="background:var(--surface-raised);color:var(--fg-dim);border:1px solid var(--border-subtle)">{scope_label}</span>
+        <span class="t2-badge {sev_css}">{sev}</span>
+        <span class="t2-badge {conf_css}">{conf}</span>
+        <span class="t2-badge" style="background:var(--surface-raised);color:var(--fg-dim);border:1px solid var(--border-subtle)">{trace_label}</span>
+      </div>
+      <div class="t2-summary-preview">{preview_text}</div>
+    </summary>
+    <div class="t2-zone-block" id="zone-{zone_id}-block">
+      <div class="t2-zone-block-header">
+        <div>
+          <div class="t2-zone-block-id">{zone_id} · {zt.replace("_", " ").upper()}</div>
+          <div class="t2-zone-block-domain">{display_name}</div>
+        </div>
+        <a href="#zone-{zone_id}" class="t2-zone-block-back">↑ Zone inventory</a>
+      </div>
+      {_sem_ctx_block}
+      {section_g}
+      {section_a}
+      {section_b}
+      {section_c}
+      {section_d}
+      {section_e}
+      {section_f}
+    </div>
+  </details>"""
+
+
+# ---------------------------------------------------------------------------
+# Tier-2 overview graph — positions sourced from workspace runtime (d3-force-3d)
+# ---------------------------------------------------------------------------
+
+def _build_overview_graph_html(graph_state: Optional[Dict]) -> str:
+    """Render overview graph passively from persisted graph_state.
+
+    Positions are read directly from graph_state — no simulation,
+    no re-layout, no golden-angle init. Pure draw-only canvas script.
+    """
+    if not graph_state:
+        return (
+            '<div style="padding:24px;text-align:center;color:var(--fg-muted);font-size:12px;'
+            'border:1px dashed var(--border);border-radius:4px">'
+            'STRUCTURAL GRAPH UNAVAILABLE — graph_state.json not found for this run. '
+            'Export positions via export_graph_state.mjs before generating this report.'
+            '</div>'
+        )
+
+    nodes  = graph_state['nodes']
+    links  = graph_state['links']
+    width  = graph_state.get('canvas_width',  880)
+    height = graph_state.get('canvas_height', 380)
+
+    nidx = {n['id']: i for i, n in enumerate(nodes)}
+
+    nodes_js = json.dumps(
+        [{'x': n['x'], 'y': n['y'], 'r': n['r'], 'c': n['color'], 'l': n['label']}
+         for n in nodes],
+        separators=(',', ':'),
+    )
+    links_js = json.dumps(
+        [{'s': nidx.get(l['source'], 0), 't': nidx.get(l['target'], 0),
+          'c': l['color'], 'w': l['width']}
+         for l in links],
+        separators=(',', ':'),
+    )
+
+    legend_html = ''.join(
+        f'<span class="og-legend-item">'
+        f'<span class="og-legend-dot" style="background:{col}"></span>'
+        f'<span class="og-legend-lbl">{lbl}</span>'
+        f'</span>'
+        for col, lbl in [
+            ('#f0f0f0', 'Zone root'),
+            ('#52d97e', 'Signal'),
+            ('#e8b54a', 'Mapped claim'),
+            ('#6ab4e8', 'Artifact'),
+        ]
+    )
+
+    node_ct = len(nodes)
+    link_ct = len(links)
+
+    # Draw-only — no simulation, no golden-angle, no force loop
+    # Edge alpha recessed so links read as structural connectors, not primary data.
+    # Node subtle stroke adds crafted visual weight without semantic change.
+    js_draw = (
+        f'(function(){{\n'
+        f'  var N={nodes_js};\n'
+        f'  var L={links_js};\n'
+        f'  var cv=document.getElementById("og-canvas");if(!cv)return;\n'
+        f'  var ctx=cv.getContext("2d");\n'
+        f'  ctx.globalAlpha=0.28;\n'
+        f'  L.forEach(function(l){{\n'
+        f'    ctx.strokeStyle=l.c;ctx.lineWidth=l.w;\n'
+        f'    ctx.beginPath();ctx.moveTo(N[l.s].x,N[l.s].y);ctx.lineTo(N[l.t].x,N[l.t].y);ctx.stroke();\n'
+        f'  }});\n'
+        f'  N.forEach(function(n){{\n'
+        f'    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,6.283);\n'
+        f'    ctx.fillStyle=n.c;ctx.globalAlpha=0.88;ctx.fill();\n'
+        f'    ctx.lineWidth=0.8;ctx.strokeStyle="rgba(255,255,255,0.1)";ctx.globalAlpha=1;ctx.stroke();\n'
+        f'  }});\n'
+        f'  ctx.font="10px -apple-system,BlinkMacSystemFont,\'Segoe UI\',sans-serif";\n'
+        f'  ctx.textAlign="center";ctx.fillStyle="#66666e";\n'
+        f'  N.forEach(function(n){{ctx.fillText(n.l,n.x,n.y+n.r+14);}});\n'
+        f'}})();'
+    )
+
+    return (
+        f'<div class="og-frame">\n'
+        f'  <div class="og-frame-header">\n'
+        f'    <span class="og-frame-tag">Overview</span>\n'
+        f'    <span class="og-frame-meta">{node_ct} nodes · {link_ct} links · full vault coverage</span>\n'
+        f'  </div>\n'
+        f'  <div class="og-canvas-wrap">\n'
+        f'    <canvas id="og-canvas" width="{width}" height="{height}" '
+        f'style="display:block;width:100%;background:#09090d"></canvas>\n'
+        f'  </div>\n'
+        f'  <div class="og-legend">{legend_html}</div>\n'
+        f'</div>\n'
+        f'<script>{js_draw}</script>'
+    )
+
+
+def _build_topology_svg(zones: List[Dict], width: int = 880, height: int = 270) -> str:
+    """Inline SVG of the zone-signal evidence topology for the narrative report.
+
+    Self-contained, no external dependencies. Dark-theme palette matched to
+    _TIER2_DIAGNOSTIC_CSS. Layout: zones spread horizontally, each zone's
+    signals radiate outward in a sector facing away from the horizontal centre.
+    """
+    if not zones:
+        return ''
+
+    C_BG      = '#09090d'
+    C_Z_HIGH  = '#b84040'
+    C_Z_MOD   = '#b07820'
+    C_Z_LOW   = '#3a7a50'
+    C_Z_GAP   = '#2a5870'
+    C_SIG_STR = '#4cc872'
+    C_SIG_PAR = '#d4912a'
+    C_SIG_WK  = '#5a90c0'
+    C_EDGE    = '#1a1e2c'
+    C_LBL_Z   = '#b8b8cc'
+    C_LBL_S   = '#505460'
+
+    n   = len(zones)
+    pad = 170
+    cy  = height // 2
+    R   = 82
+
+    zone_xs: List[int] = (
+        [width // 2] if n == 1
+        else [round(pad + i * (width - 2 * pad) / (n - 1)) for i in range(n)]
+    )
+    cx_all = width / 2
+
+    sig_xy: Dict[str, Tuple[float, float]] = {}
+    for i, z in enumerate(zones):
+        zx   = zone_xs[i]
+        sigs = z['domain_sigs']
+        if not sigs:
+            continue
+        ns     = len(sigs)
+        c_ang  = (math.pi if zx <= cx_all else 0.0) if n > 1 else -math.pi / 2
+        spread = min(2.0, 0.5 + (ns - 1) * 0.38) if ns > 1 else 0.0
+        angs   = ([c_ang] if ns == 1
+                  else [c_ang - spread / 2 + j * spread / (ns - 1) for j in range(ns)])
+        for j, sig in enumerate(sigs):
+            sig_xy[sig['signal_id']] = (
+                max(16.0, min(float(width - 16), zx + R * math.cos(angs[j]))),
+                max(16.0, min(float(height - 16), cy + R * math.sin(angs[j]))),
+            )
+
+    parts = [
+        f'<svg viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg" '
+        f'style="display:block;width:100%;background:{C_BG}">'
+    ]
+
+    for i, z in enumerate(zones):
+        zx = zone_xs[i]
+        for sig in z['domain_sigs']:
+            if sig['signal_id'] in sig_xy:
+                sx, sy = sig_xy[sig['signal_id']]
+                parts.append(
+                    f'<line x1="{zx}" y1="{cy}" x2="{sx:.1f}" y2="{sy:.1f}" '
+                    f'stroke="{C_EDGE}" stroke-width="2"/>'
+                )
+
+    for i, z in enumerate(zones):
+        for sig in z['domain_sigs']:
+            sid = sig['signal_id']
+            if sid not in sig_xy:
+                continue
+            sx, sy = sig_xy[sid]
+            conf = sig.get('evidence_confidence', 'WEAK')
+            col  = (C_SIG_STR if conf == 'STRONG'
+                    else C_SIG_PAR if conf in ('MODERATE', 'PARTIAL')
+                    else C_SIG_WK)
+            parts.append(
+                f'<circle cx="{sx:.1f}" cy="{sy:.1f}" r="7" fill="{col}" opacity="0.9"/>'
+            )
+            parts.append(
+                f'<text x="{sx:.1f}" y="{sy + 17:.1f}" text-anchor="middle" '
+                f'font-size="8" fill="{C_LBL_S}" font-family="monospace">{sid}</text>'
+            )
+
+    for i, z in enumerate(zones):
+        zx  = zone_xs[i]
+        sev = z['severity']
+        has = bool(z['domain_sigs'])
+        col = (C_Z_GAP  if not has  else
+               C_Z_HIGH if sev == 'HIGH'     else
+               C_Z_MOD  if sev == 'MODERATE' else C_Z_LOW)
+        if not has:
+            parts.append(
+                f'<circle cx="{zx}" cy="{cy}" r="22" fill="none" '
+                f'stroke="{C_Z_GAP}" stroke-width="1" stroke-dasharray="4 3" opacity="0.45"/>'
+            )
+        parts.append(f'<circle cx="{zx}" cy="{cy}" r="18" fill="{col}" opacity="0.9"/>')
+        parts.append(
+            f'<text x="{zx}" y="{cy + 5}" text-anchor="middle" '
+            f'font-size="9" fill="white" font-weight="bold" font-family="monospace">'
+            f'{z["zone_id"]}</text>'
+        )
+        ns  = len(z['domain_sigs'])
+        sub = (f'{sev} \u00b7 {ns} sig{"s" if ns != 1 else ""}' if has
+               else f'{sev} \u00b7 no signals')
+        parts.append(
+            f'<text x="{zx}" y="{cy + 31}" text-anchor="middle" '
+            f'font-size="8.5" fill="{C_LBL_Z}" font-family="monospace">{sub}</text>'
+        )
+
+    parts.append('</svg>')
+    return '\n'.join(parts)
+
+
+def _build_tier2_diagnostic_narrative(topology: Dict, signals: Dict, gauge: Dict,
+                                       publish_safe: bool = False,
+                                       graph_state: Optional[Dict] = None,
+                                       pz_proj: Optional[Dict] = None,
+                                       psig_proj: Optional[Dict] = None,
+                                       ll: Optional[Dict] = None) -> str:
+    domains      = topology["domains"]
+    counts       = topology["counts"]
+    score        = gauge["score"]["canonical"]
+    band_label   = gauge["score"]["band_label"]
+    band_lo      = gauge["confidence"]["lower"]
+    band_hi      = gauge["confidence"]["upper"]
+
+    client_name  = _get_client_display_name(publish_safe)
+    _use_psig    = True
+    _ev_name     = "lens_tier1_evidence_brief_pub.html" if publish_safe else "lens_tier1_evidence_brief.html"
+    _narr_name   = "lens_tier1_narrative_brief_pub.html" if publish_safe else "lens_tier1_narrative_brief.html"
+    ev_link      = _scoped_report_url(_ev_name) if _use_psig else f"/api/report-file?name={_ev_name}"
+    narr_link    = _scoped_report_url(_narr_name) if _use_psig else f"/api/report-file?name={_narr_name}"
+    _ds_name     = "lens_decision_surface_pub.html" if publish_safe else "lens_decision_surface.html"
+    ds_link      = _scoped_report_url(_ds_name) if _use_psig else f"/api/report-file?name={_ds_name}"
+    title_suffix = " (Publish)" if publish_safe else ""
+    footer_note  = ("SAMPLE — Illustrative client environment. All structural values represent actual assessment outputs."
+                    if publish_safe else
+                    f"SAMPLE — {client_name}.")
+
+    # Zone derivation: projection path for PSIG clients, topology path for BlueEdge
+    if _use_psig and pz_proj is not None:
+        zones = _derive_tier2_zones_from_projection(pz_proj, psig_proj, topology)
+    else:
+        zones = _derive_tier2_zones(topology, signals)
+
+    total_zones   = len(zones)
+    grounded_ct   = sum(1 for d in domains if d["grounding"] == "GROUNDED")
+    weakly_ct     = sum(1 for d in domains if d["grounding"] == "WEAKLY GROUNDED")
+    total_domains = counts.get("domains", len(domains))
+
+    evidence_scope = "FULL" if weakly_ct == 0 else ("PARTIAL" if weakly_ct <= 2 else "BOUNDED")
+    coverage_status = "COMPLETE" if weakly_ct == 0 else "INCOMPLETE"
+    coverage_css   = "complete" if coverage_status == "COMPLETE" else "incomplete"
+
+    # Semantic context for tier2 — distinguishes DOM structural grounding from semantic domain backing
+    _sem_ctx_t2 = _build_semantic_report_context()
+    resolution_boundary = (
+        f"{grounded_ct} of {total_domains} structural evidence groups are fully grounded. "
+        "Runtime-dependent dimensions cannot be resolved from static evidence alone."
+    )
+    if _sem_ctx_t2["fallback_available"]:
+        _t2_sem_backed = _sem_ctx_t2["structurally_backed_domains"]
+        _t2_sem_total  = _sem_ctx_t2["total_semantic_domains"]
+        _t2_sem_only   = _sem_ctx_t2["semantic_only_domains"]
+        _t2_az_label   = _sem_ctx_t2["active_zone_semantic_label"] or ""
+        _t2_az_dom     = _sem_ctx_t2["active_zone_dom_label"] or ""
+        _t2_az_dom_id  = _sem_ctx_t2["active_zone_dom_id"] or ""
+        _t2_az_conf    = _sem_ctx_t2["active_zone_confidence"]
+        _t2_az_conf_str = f"{_t2_az_conf:.2f}" if _t2_az_conf else ""
+        resolution_boundary = (
+            f"{grounded_ct} of {total_domains} structural evidence groups are fully grounded. "
+            f"{_t2_sem_backed} of {_t2_sem_total} semantic domains have structural backing — "
+            f"{_t2_sem_only} remain semantic-only. "
+            "Runtime-dependent dimensions cannot be resolved from static evidence alone."
+        )
+        _t2_struct_topology_label = (
+            f"{grounded_ct}/{total_domains} evidence groups grounded · "
+            f"{_t2_sem_backed}/{_t2_sem_total} semantic domains backed"
+        )
+        # DOMAIN → DOM backing table
+        _dom_rows = ""
+        for _d in _sem_ctx_t2["domain_records"]:
+            _ls = _d.get("lineage_status", "NONE")
+            _dom_ref = _d.get("dominant_dom_id") or "—"
+            _conf_s  = f"{_d.get('confidence',0):.2f}" if _ls != "NONE" else "—"
+            _za_mark = " ⊕" if _d.get("zone_anchor") else ""
+            _ls_color = {"EXACT": "var(--green)", "STRONG": "var(--blue,#58a6ff)", "PARTIAL": "var(--amber)"}.get(_ls, "var(--fg-dim)")
+            _dom_rows += (
+                f'<tr style="border-bottom:1px solid var(--border)">'
+                f'<td style="padding:4px 8px;color:var(--fg-main)">{esc(_d.get("business_label", _d["domain_id"]))}{esc(_za_mark)}</td>'
+                f'<td style="padding:4px 8px;color:var(--fg-dim)">{esc(_d["domain_id"])}</td>'
+                f'<td style="padding:4px 8px;font-family:monospace;color:var(--fg-dim)">{esc(_dom_ref)}</td>'
+                f'<td style="padding:4px 8px;color:{_ls_color}">{_ls}</td>'
+                f'<td style="padding:4px 8px;color:var(--fg-dim)">{_conf_s}</td>'
+                f'</tr>'
+            )
+        _sem_dom_mapping_html = f"""
+  <div class="t2-section">
+    <div class="t2-section-header">
+      <span class="t2-section-num">01B</span>
+      <span class="t2-section-title">Semantic Domain → Structural Backing</span>
+    </div>
+    <p class="t2-topo-intro">Maps each semantic domain to its dominant structural evidence group (DOM-XX). Lineage status indicates evidence quality: EXACT (≥0.90), STRONG (≥0.70), PARTIAL (≥0.60), NONE (no current structural backing). ⊕ = active pressure zone anchor.</p>
+    <div style="overflow-x:auto">
+      <table style="width:100%;font-size:11px;border-collapse:collapse">
+        <thead><tr style="border-bottom:1px solid var(--border)">
+          <th style="padding:4px 8px;text-align:left;color:var(--fg-muted)">Semantic Domain</th>
+          <th style="padding:4px 8px;text-align:left;color:var(--fg-muted)">Domain ID</th>
+          <th style="padding:4px 8px;text-align:left;color:var(--fg-muted)">DOM Backing</th>
+          <th style="padding:4px 8px;text-align:left;color:var(--fg-muted)">Lineage</th>
+          <th style="padding:4px 8px;text-align:left;color:var(--fg-muted)">Confidence</th>
+        </tr></thead>
+        <tbody>{_dom_rows}</tbody>
+      </table>
+    </div>
+  </div>"""
+        _t2_cell_domains_label = "Semantic Domains Backed"
+        _t2_cell_domains_value = f"{_t2_sem_backed} / {_t2_sem_total}"
+        _t2_cell_domains_sub   = "projection layer coverage"
+    else:
+        _t2_struct_topology_label = f"{grounded_ct} / {total_domains} domains grounded"
+        _t2_cell_domains_label = "Domains Grounded"
+        _t2_cell_domains_value = f"{grounded_ct} / {total_domains}"
+        _t2_cell_domains_sub   = "structurally confirmed"
+        _sem_dom_mapping_html = ""
+
+    if publish_safe:
+        resolution_boundary = _t2_obfuscate(resolution_boundary)
+
+    # Pressure distribution
+    pd = {"pressure_concentration": 0, "evidence_gap": 0, "signal_conflict": 0, "structural_inconsistency": 0}
+    for z in zones:
+        pd[z["zone_type"]] += 1
+
+    has_contradiction = any(z["zone_type"] == "signal_conflict" for z in zones)
+    # sig_count: zones with at least one bound signal
+    if _use_psig and pz_proj is not None:
+        sig_count = sum(1 for z in zones if z.get("condition_signals"))
+    else:
+        sig_count = sum(1 for z in zones if z["domain_sigs"])
+    # active_signal_count: unique signal IDs across all zones
+    _active_sig_ids: set = set()
+    for _z in zones:
+        for _c in _z.get("condition_signals", []):
+            _sid = _c.get("signal_id", "")
+            if _sid:
+                _active_sig_ids.add(_sid)
+    _active_signal_count = len(_active_sig_ids)
+    _active_sig_ids_str  = " · ".join(sorted(_active_sig_ids))
+    evidence_summary = (
+        f"{sig_count} of {total_zones} diagnostic zone(s) have bound signal coverage "
+        f"({_active_signal_count} active signal{'s' if _active_signal_count != 1 else ''}). "
+        f"{total_zones - sig_count} zone(s) have no signal coverage and cannot be structurally characterized."
+    )
+    zones_source_label = "identified from projection" if (_use_psig and pz_proj is not None) else "identified from canonical data"
+
+    # Zone inventory cards
+    zone_cards_html = ""
+    for z in zones:
+        zid = z["zone_id"]
+        dname = z["domain_name"]
+        display = esc(_t2_obfuscate(dname) if publish_safe else dname)
+        type_css = _t2_type_css(z["zone_type"])
+        sev_css  = _t2_sev_css(z["severity"])
+        conf_css = _t2_conf_css(z["confidence"])
+        zt_label = z["zone_type"].replace("_", " ")
+        _zcard_dom = z["domain_id"] if str(z.get("domain_id", "")).startswith("DOM-") else ""
+        _zcard_anchor_name = z.get("anchor_name", "")
+        _zcard_dom_backing = esc(_zcard_dom) + (f" / {esc(_zcard_anchor_name)}" if _zcard_anchor_name else "")
+        _zcard_dom_line = (
+            f'<div style="font-size:10px;color:var(--fg-muted);margin:2px 0 4px">'
+            f'DOM backing: {_zcard_dom_backing}'
+            f'</div>'
+        ) if _zcard_dom else ""
+        # Signal profile: deduplicate by signal_id, render compact bars
+        _zcard_conds = z.get("condition_signals", [])
+        _zcard_sigs_seen: Dict = {}
+        for _c in _zcard_conds:
+            _csid = _c.get("signal_id", "")
+            if _csid and _csid not in _zcard_sigs_seen:
+                _zcard_sigs_seen[_csid] = _c
+        _zcard_sig_vals = [float(_c.get("signal_value") or 0) for _c in _zcard_sigs_seen.values()]
+        _zcard_max_val  = max(_zcard_sig_vals) if _zcard_sig_vals else 1.0
+        _zcard_sig_rows = ""
+        for _csid, _c in _zcard_sigs_seen.items():
+            _sval   = float(_c.get("signal_value") or 0)
+            _sstate = _c.get("activation_state", "—")
+            _bar_w  = int((_sval / _zcard_max_val) * 64) if _zcard_max_val > 0 else 0
+            _bclr   = "#3fb950" if _sstate == "HIGH" else ("#d29922" if _sstate == "MODERATE" else "#8b949e")
+            _zcard_sig_rows += (
+                f'<div style="display:flex;align-items:center;gap:6px;font-size:10px;margin-top:3px">'
+                f'<span style="font-family:monospace;color:var(--fg-main);min-width:68px">{esc(_csid)}</span>'
+                f'<span style="color:{_bclr};min-width:38px">{esc(_sstate)}</span>'
+                f'<span style="color:var(--fg-muted);min-width:38px">{_sval:.3f}</span>'
+                f'<div style="width:{_bar_w}px;height:4px;background:{_bclr};border-radius:2px;min-width:2px"></div>'
+                f'</div>'
+            )
+        if not _zcard_sig_rows:
+            _zcard_sig_rows = '<div style="font-size:10px;color:var(--fg-dim);margin-top:3px">No signals bound</div>'
+        zone_cards_html += f"""
+      <a href="#zone-{zid}-details" class="t2-zone-card" id="zone-{zid}">
+        <div class="t2-zone-id">{zid}</div>
+        <div class="t2-zone-domain">{display}</div>
+        {_zcard_dom_line}
+        <div class="t2-badge-row">
+          <span class="t2-badge {type_css}">{zt_label}</span>
+          <span class="t2-badge {sev_css}">{z["severity"]}</span>
+          <span class="t2-badge {conf_css}">{z["confidence"]}</span>
+          <span class="t2-badge" style="background:var(--surface-raised);color:var(--fg-dim);border:1px solid var(--border-subtle)">{z["traceability"].replace("_", " ")}</span>
+        </div>
+        <div style="margin-top:8px;padding-top:6px;border-top:1px solid var(--border-subtle)">{_zcard_sig_rows}</div>
+        <div style="font-size:11px;color:var(--fg-muted);margin-top:6px">&#9654; View Zone Details</div>
+      </a>"""
+
+    # Per-zone blocks — PSIG path uses projection-aware builder
+    interp_by_class = _load_psee_interpretation_by_zone_class()
+    if _use_psig and pz_proj is not None:
+        zone_blocks_html = "".join(
+            _build_t2_psig_zone_block(z, publish_safe, interp_by_class.get(z.get("zone_class")), ll)
+            for z in zones
+        )
+    else:
+        zone_blocks_html = "".join(
+            _build_t2_zone_block(z, publish_safe, interp_by_class.get(z.get("zone_class")))
+            for z in zones
+        )
+
+    # Baseline signal section (04B) — signals with activation_method == THEORETICAL_BASELINE
+    if _use_psig and psig_proj is not None:
+        _t2_base_sigs = [c for c in psig_proj.get("active_conditions_in_scope", [])
+                         if c.get("activation_method") == "THEORETICAL_BASELINE"]
+        if _t2_base_sigs:
+            _t2_base_items = []
+            for _bc in _t2_base_sigs:
+                _bsid   = _bc.get("signal_id", "")
+                _bval   = _bc.get("signal_value", 0)
+                _bmeth  = _bc.get("activation_method", "")
+                _bscope = _bc.get("entity_level_scope", [])
+                _t2_base_items.append(
+                    f'    <div style="background:#0c0c14;border:1px solid #2a2a40;'
+                    f'border-left:3px solid #58a6ff;border-radius:2px;padding:10px 14px;margin-bottom:8px">\n'
+                    f'      <div style="font-size:11px;font-weight:600;color:#58a6ff;'
+                    f'text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">'
+                    f'BASELINE — {esc(_bsid)}</div>\n'
+                    f'      <div style="font-size:13px;color:var(--fg-main);margin-bottom:4px">'
+                    f'Structural Blind Spot ({esc(_bsid)}): THEORETICAL BASELINE — Value {esc(str(_bval))}</div>\n'
+                    f'      <div style="font-size:12px;color:var(--fg-muted)">'
+                    f'{esc(_bsid)} is a theoretical baseline condition '
+                    f'(trace: {esc(_bmeth)}, value {esc(str(_bval))}). '
+                    f'Covers {len(_bscope)} structural entities outside pressure zone scope. '
+                    f'This condition was not independently activated — it represents a structural '
+                    f'baseline used for blind spot coverage, not a detected pressure signal.</div>\n'
+                    f'      <div style="font-size:10px;color:var(--fg-dim);margin-top:6px">'
+                    f'trace: {esc(_bmeth)} · source: signal_projection.json · '
+                    f'scope: cross-domain baseline</div>\n'
+                    f'    </div>'
+                )
+            _t2_baseline_section_html = (
+                '\n  <div class="t2-section">\n'
+                '    <div class="t2-section-header">\n'
+                '      <span class="t2-section-num">04B</span>\n'
+                '      <span class="t2-section-title">Baseline Signals</span>\n'
+                '    </div>\n'
+                '    <p class="t2-body" style="font-size:12px;color:var(--fg-muted);margin-bottom:10px">'
+                'The following signals are present in the active conditions scope but classified as '
+                'theoretical baseline conditions (THEORETICAL_BASELINE). '
+                'They were not independently activated as pressure signals — '
+                'they represent structural coverage baselines.</p>\n'
+                + "\n".join(_t2_base_items) + "\n"
+                + '  </div>'
+            )
+        else:
+            _t2_baseline_section_html = ""
+    else:
+        _t2_baseline_section_html = ""
+
+    # Structural evidence topology graph (section 01A) — renders from graph_state only
+    topology_svg = _build_overview_graph_html(graph_state)
+
+    # Semantic topology section (01C) — present only when semantic globals loaded
+    if _SEMANTIC_TOPOLOGY_MODEL is not None and _SEMANTIC_TOPOLOGY_LAYOUT is not None:
+        _sem_svg = _render_semantic_topology_svg(light_mode=False)
+        _sem_edges_ct   = len(_SEMANTIC_TOPOLOGY_MODEL.get("edges", []))
+        _sem_legend_backed = _t2_sem_backed if _sem_ctx_t2["fallback_available"] else 0
+        _sem_legend_total  = _t2_sem_total  if _sem_ctx_t2["fallback_available"] else 0
+        _sem_legend_clust  = len(_sem_ctx_t2["clusters"]) if _sem_ctx_t2["fallback_available"] else 0
+        _sem_legend_html = f"""
+    <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;padding:8px 0 4px">
+      <span style="font-size:10px;font-weight:600;color:var(--fg-muted);text-transform:uppercase;letter-spacing:.06em">Legend</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--fg-dim)"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#3fb950"></span>EXACT</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--fg-dim)"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#58a6ff"></span>STRONG</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--fg-dim)"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#d29922"></span>PARTIAL</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--fg-dim)"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;border:1.5px dashed #8b949e"></span>NO BINDING</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--fg-dim)"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;border:2px dashed #ff7b72;background:transparent"></span>ZONE ANCHOR</span>
+    </div>
+    <div style="font-size:11px;color:var(--fg-muted);padding:0 0 8px">{_sem_legend_total} semantic domains · {_sem_legend_clust} clusters · {_sem_edges_ct} relationships · {_sem_legend_backed}/{_sem_legend_total} with structural evidence</div>"""
+        _semantic_topo_section_html = f"""
+  <div class="t2-section">
+    <div class="t2-section-header">
+      <span class="t2-section-num">01A</span>
+      <span class="t2-section-title">Semantic Domain Topology</span>
+    </div>
+    {_sem_legend_html}
+    <p class="t2-topo-intro">Semantic domain topology with structural evidence lineage and zone overlay.</p>
+    <div class="t2-topo-panel">
+      {_sem_svg}
+    </div>
+  </div>"""
+    else:
+        _semantic_topo_section_html = ""
+
+    # Language Layer reading guide (section 01B) and Pattern Summary (section 02) — omitted in publish_safe
+    _ll = ll or {}
+    reading_guide_html = ""
+    pattern_summary_html = ""
+    if not publish_safe:
+        # 01B: How to Read Diagnostic Terms
+        _guide_terms = [
+            "COMPOUND_ZONE", "PRESSURE_ZONE", "RUN_RELATIVE_OUTLIER",
+            "THEORETICAL_BASELINE", "CONFIDENCE_BAND", "EVIDENCE_SCOPE",
+            "SIGNAL_COVERAGE", "STRUCTURAL_COVERAGE", "TRACE_CONTINUITY",
+            "INFERENCE_PROHIBITION",
+        ]
+        _guide_rows = ""
+        if _ll:
+            for _t in _guide_terms:
+                _e = _ll.get(_t)
+                if _e:
+                    _guide_rows += (
+                        f'<div class="t2-ll-row">'
+                        f'<span class="t2-ll-term">{esc(_e["canonical_label"])}</span>'
+                        f'<span class="t2-ll-exec">{esc(_e["executive_label"])}</span>'
+                        f'<span class="t2-ll-decode">{esc(_e["short_decode"])}</span>'
+                        f'</div>'
+                    )
+        _table_block = f'<div class="t2-ll-table">\n      {_guide_rows}\n    </div>' if _guide_rows else ""
+        reading_guide_html = f"""
+  <div class="t2-section">
+    <div class="t2-section-header">
+      <span class="t2-section-num">01D</span>
+      <span class="t2-section-title">How to Read Diagnostic Terms</span>
+    </div>
+    <div class="t2-reading-guide-prose">
+      <p class="t2-body"><strong>What is a pressure zone?</strong> A pressure zone is a governed diagnostic unit identifying a domain segment where one or more active conditions create concentrated structural pressure. Zones are derived from the projection layer — they are not inferred from topology alone.</p>
+      <p class="t2-body"><strong>Why do compound zones matter?</strong> A compound zone is not a single intense condition — it is multiple structurally independent conditions active simultaneously in the same domain. This indicates multi-dimensional pressure convergence. That multiple pressures are co-present is a structural observation; it is not a causal claim about what caused them or what will happen.</p>
+      <p class="t2-body"><strong>Why might multiple zones share the same signal set?</strong> When active signals are domain-spanning, the same signal family may appear across multiple pressure zones. Each zone still differs in attribution — which domain carries primary pressure origin versus which receive it as secondary recipients. Same signal family, different structural role. Attribution is determined by the projection layer.</p>
+      <p class="t2-body"><strong>What does primary vs secondary attribution mean?</strong> Primary attribution means the conditions originated within that domain. Secondary attribution means the conditions are present but originated from another domain — the secondary zone is a structural recipient, not the source. Attribution is determined by the projection layer, not inferred here.</p>
+      <p class="t2-body" style="color:var(--fg-dim);font-size:11px">inference_prohibition: ACTIVE — all data on this surface is structural and evidential only. No advisory content, causal inference, or remediation guidance may be derived.</p>
+    </div>
+    {_table_block}
+  </div>"""
+
+        # 02: Diagnostic Pattern Summary (PSIG path only)
+        if _use_psig and pz_proj is not None and total_zones > 0:
+            _cp          = RC.collapse_patterns(zones, pz_proj, publish_safe)
+            _zone_names  = ", ".join(z["zone_id"] for z in zones)
+            _shared_sigs     = _cp["shared_sigs"] if _cp else []
+            _shared_sigs_str = _cp["sigs_str"]    if _cp else "—"
+            _prim_name       = _cp["prim_name"]   if _cp else ""
+            _zclass_shared   = _cp["zclass"]      if _cp else "COMPOUND_ZONE"
+            _zclass_exec_s   = _cp["zclass_exec"] if _cp else RC.apply_language("COMPOUND_ZONE")
+            _exec_phrase     = RC.apply_language("RUN_RELATIVE_OUTLIER")
+            pattern_summary_html = f"""
+  <div class="t2-section">
+    <div class="t2-section-header">
+      <span class="t2-section-num">02</span>
+      <span class="t2-section-title">Diagnostic Pattern Summary</span>
+    </div>
+    <div class="t2-pattern-summary">
+      <p class="t2-body" style="font-size:14px;color:#c8c8d4;font-weight:500;line-height:1.5">
+        This run shows one structural pressure pattern appearing across {total_zones} zone{'s' if total_zones != 1 else ''}.
+        {(f"The same {len(_shared_sigs)} signal{('s' if len(_shared_sigs) != 1 else '')} ({esc(_shared_sigs_str)}) are active in each pressure zone; the difference is attribution, not a different signal family.")
+         if _shared_sigs else
+         (f"{_active_signal_count} active signal{('s' if _active_signal_count != 1 else '')} ({esc(_active_sig_ids_str)}) bound to this zone." if _active_signal_count else "No active signals bound to this zone.")}
+      </p>
+      <p class="t2-body">
+        All {total_zones} zone{'s' if total_zones != 1 else ''} classified as {esc(_zclass_exec_s)}
+        <span style="font-size:10px;opacity:.6">(trace: {esc(_zclass_shared)})</span>.
+        Each zone carries {esc(_exec_phrase)}
+        <span style="font-size:10px;opacity:.6">(trace: RUN_RELATIVE_OUTLIER)</span>
+        conditions — statistically elevated values relative to the rest of the run's entity set.
+        {("Primary pressure anchor "
+          '<span style="font-size:10px;opacity:.6">(trace: PRIMARY attribution)</span>: '
+          + esc(_prim_name) + ".") if _prim_name else ""}
+        {("Remaining zones are secondary affected zones "
+          '<span style="font-size:10px;opacity:.6">(trace: SECONDARY attribution)</span> — '
+          "structurally exposed to the same signals but not the pressure origin.") if len(zones) > 1 else ""}
+      </p>
+      <p class="t2-body" style="font-size:11px;color:var(--fg-muted)">
+        This pattern describes structural co-presence. It is not a causal proof and does not constitute
+        a root-cause determination. inference_prohibition: ACTIVE.
+      </p>
+    </div>
+  </div>"""
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LENS Assessment — Diagnostic Narrative{title_suffix}</title>
+  <style>{_TIER2_DIAGNOSTIC_CSS}</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="nav-strip">
+    <a href="{ds_link}" class="nav-link">Decision</a>
+    <a href="{narr_link}" class="nav-link">Executive Brief</a>
+    <a href="{ev_link}" class="nav-link">LENS Assessment</a>
+    <span class="nav-link active">Diagnostic</span>
+  </div>
+
+  {RC.anchor_block(score, band_label, band_lo, band_hi)}
+
+  <div class="report-header">
+    <div>
+      <div class="report-brand">Signäl Program Intelligence</div>
+      <div class="report-title">LENS Assessment — Diagnostic Narrative{title_suffix}</div>
+      <div class="report-type">Tier-2 Diagnostic Access · Evidence Interrogation Surface</div>
+    </div>
+    <div class="report-meta">
+      <div>Client: <strong>{esc(client_name)}</strong></div>
+      <div>Assessment score: <strong>{score} — {esc(band_label)}</strong></div>
+      <div>Confidence band: <strong>{band_lo} – {band_hi}</strong></div>
+      <div>Issued: <strong>April 2026</strong></div>
+    </div>
+  </div>
+
+  <div class="t2-section">
+    <div class="t2-section-header">
+      <span class="t2-section-num">00</span>
+      <span class="t2-section-title">Context Lock</span>
+    </div>
+    <div class="t2-context-lock">
+      <div class="t2-field">
+        <span class="t2-field-label">Run ID</span>
+        <span class="t2-field-value">{esc(topology.get("emission_run_id", "—"))}</span>
+      </div>
+      <div class="t2-field">
+        <span class="t2-field-label">Evidence Scope</span>
+        <span class="t2-field-value">{evidence_scope}</span>
+      </div>
+      <div class="t2-field">
+        <span class="t2-field-label">Structural Coverage Status</span>
+        <span class="t2-field-value {coverage_css}">{coverage_status}</span>
+      </div>
+      <div class="t2-field">
+        <span class="t2-field-label">Resolution Boundary</span>
+        <span class="t2-field-value" style="font-size:12px">{esc(resolution_boundary)}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="t2-section">
+    <div class="t2-section-header">
+      <span class="t2-section-num">01</span>
+      <span class="t2-section-title">Diagnostic Overview</span>
+    </div>
+    <div class="t2-overview-grid">
+      <div class="t2-overview-cell">
+        <div class="t2-cell-label">Diagnostic Zones</div>
+        <div class="t2-cell-value">{total_zones}</div>
+        <div class="t2-cell-sub">{zones_source_label}</div>
+      </div>
+      <div class="t2-overview-cell">
+        <div class="t2-cell-label">Signal Contradiction</div>
+        <div class="t2-cell-value" style="color:{'var(--red)' if has_contradiction else 'var(--green)'}">{'YES' if has_contradiction else 'NO'}</div>
+        <div class="t2-cell-sub">across zone scope</div>
+      </div>
+      <div class="t2-overview-cell">
+        <div class="t2-cell-label">{_t2_cell_domains_label}</div>
+        <div class="t2-cell-value">{_t2_cell_domains_value}</div>
+        <div class="t2-cell-sub">{_t2_cell_domains_sub}</div>
+      </div>
+      <div class="t2-overview-cell">
+        <div class="t2-cell-label">Signal Coverage</div>
+        <div class="t2-cell-value">{sig_count} / {total_zones}</div>
+        <div class="t2-cell-sub">zones with signals bound</div>
+      </div>
+    </div>
+    <div class="t2-pressure-row">
+      <div class="t2-pressure-cell">
+        <div class="t2-pressure-label">Pressure Concentration</div>
+        <div class="t2-pressure-count">{pd['pressure_concentration']}</div>
+      </div>
+      <div class="t2-pressure-cell">
+        <div class="t2-pressure-label">Evidence Gap</div>
+        <div class="t2-pressure-count">{pd['evidence_gap']}</div>
+      </div>
+      <div class="t2-pressure-cell">
+        <div class="t2-pressure-label">Signal Conflict</div>
+        <div class="t2-pressure-count">{pd['signal_conflict']}</div>
+      </div>
+      <div class="t2-pressure-cell">
+        <div class="t2-pressure-label">Structural Inconsistency</div>
+        <div class="t2-pressure-count">{pd['structural_inconsistency']}</div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--fg-muted);margin-top:14px">{esc(evidence_summary)}</p>
+  </div>
+
+  {_semantic_topo_section_html}
+  {_sem_dom_mapping_html}
+  <div class="t2-section">
+    <div class="t2-section-header">
+      <span class="t2-section-num">01C</span>
+      <span class="t2-section-title">Structural Evidence Topology</span>
+    </div>
+    <p class="t2-topo-intro">This view represents the full structural evidence topology underlying the current assessment. It shows how signals and structural evidence connect across the assessed system. Diagnostic zones described below represent focused segments of this topology.</p>
+    <div class="t2-topo-panel">
+      {topology_svg}
+    </div>
+  </div>
+  {reading_guide_html}
+
+  {pattern_summary_html}
+
+  <div class="t2-section">
+    <div class="t2-section-header">
+      <span class="t2-section-num">03</span>
+      <span class="t2-section-title">Diagnostic Zone Inventory</span>
+    </div>
+    <div class="t2-zone-grid">
+      {zone_cards_html}
+    </div>
+  </div>
+
+  <div class="t2-section">
+    <div class="t2-section-header">
+      <span class="t2-section-num">04</span>
+      <span class="t2-section-title">Zone Details</span>
+    </div>
+    {zone_blocks_html}
+  </div>
+{_t2_baseline_section_html}
+  <div class="t2-section">
+    <div class="t2-section-header">
+      <span class="t2-section-num">05</span>
+      <span class="t2-section-title">Trace and Evidence Continuity</span>
+    </div>
+    <p class="t2-body" style="font-size:12px;color:var(--fg-muted);margin-bottom:12px">
+      This section records the authoritative source for each data element used in this report.
+      All structural values are deterministically derived — no computation or inference occurs in the report layer.
+    </p>
+    <div class="t2-ll-table">
+      <div class="t2-ll-row">
+        <span class="t2-ll-term">Assessment score</span>
+        <span class="t2-ll-exec">{score} — {esc(band_label)}</span>
+        <span class="t2-ll-decode">Source: gauge_state.json · authority: GAUGE.STATE.COMPUTATION.CONTRACT.01</span>
+      </div>
+      <div class="t2-ll-row">
+        <span class="t2-ll-term">Confidence band</span>
+        <span class="t2-ll-exec">{band_lo} – {band_hi}</span>
+        <span class="t2-ll-decode">Source: gauge_state.json · authority: GAUGE.STATE.COMPUTATION.CONTRACT.01</span>
+      </div>
+      <div class="t2-ll-row">
+        <span class="t2-ll-term">Zone derivation</span>
+        <span class="t2-ll-exec">{total_zones} zone{'s' if total_zones != 1 else ''}</span>
+        <span class="t2-ll-decode">Source: pressure_zone_projection.json · authority: PSEE.ZONE.PROJECTION.01</span>
+      </div>
+      <div class="t2-ll-row">
+        <span class="t2-ll-term">Signal activation</span>
+        <span class="t2-ll-exec">{_active_signal_count} active signal{'s' if _active_signal_count != 1 else ''}{' (' + esc(_active_sig_ids_str) + ')' if _active_sig_ids_str else ''}</span>
+        <span class="t2-ll-decode">Source: signal_projection.json · authority: PSEE.SIGNAL.ACTIVATION.CONTRACT.01</span>
+      </div>
+      <div class="t2-ll-row">
+        <span class="t2-ll-term">Structural topology</span>
+        <span class="t2-ll-exec">{_t2_struct_topology_label}</span>
+        <span class="t2-ll-decode">Source: canonical topology package + semantic topology model · authority: PSEE topology emission run</span>
+      </div>
+      <div class="t2-ll-row">
+        <span class="t2-ll-term">Language layer</span>
+        <span class="t2-ll-exec">term decodes active</span>
+        <span class="t2-ll-decode">Source: language_layer_registry.json · authority: LANGUAGE_LAYER_REGISTRY.01</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="t2-section">
+    <div class="t2-section-header">
+      <span class="t2-section-num">06</span>
+      <span class="t2-section-title">Uncertainty Declaration</span>
+    </div>
+    <div class="t2-uncertainty-block">
+      <div class="t2-inference-active">
+        <span class="t2-inference-tag">inference_prohibition</span>
+        <span class="t2-inference-value">ACTIVE</span>
+      </div>
+      <p class="t2-body" style="margin-top:10px;font-size:13px;color:#c8c8d4;font-weight:500">
+        These unknowns do not indicate failure.
+        They define the evidence boundary that must be resolved before execution confidence can be claimed.
+      </p>
+      <ul class="t2-unresolved-list">
+        <li class="t2-unresolved-item">
+          <div class="t2-unresolved-element">Execution-layer behavioral state</div>
+          <div class="t2-unresolved-reason">Structural conditions are confirmed from static evidence. Runtime execution dimensions are outside the current evidence scope and cannot be resolved from structural analysis alone.</div>
+        </li>
+        <li class="t2-unresolved-item">
+          <div class="t2-unresolved-element">Causal relationships between structural conditions</div>
+          <div class="t2-unresolved-reason">Co-presence of conditions across zones is a structural observation. No causal chain has been established and none is implied by this assessment.</div>
+        </li>
+        <li class="t2-unresolved-item">
+          <div class="t2-unresolved-element">Zone severity under runtime load</div>
+          <div class="t2-unresolved-reason">Zone severity classifications are derived from structural evidence. How these conditions express under actual execution load is outside the current evidence scope.</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="report-footer">
+    <div class="footer-brand">Signäl</div>
+    <div class="footer-note">
+      {esc(footer_note)}<br>
+      Tier-2 Diagnostic Access · No advisory content · No root cause claims · inference_prohibition: ACTIVE
+    </div>
+  </div>
+
+</div>
+</body>
+</html>"""
+
+
+def generate_tier2_reports(output_dir: Optional[Path] = None) -> List[Path]:
+    """Generate the Tier-2 Diagnostic Narrative: internal + publish-safe.
+
+    Returns list of written file paths (2 files).
+    """
+    if output_dir is None:
+        output_dir = TIER2_REPORTS_DIR
+
+    pub_dir = output_dir / "publish"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    pub_dir.mkdir(parents=True, exist_ok=True)
+
+    if not CANONICAL_PKG_DIR.exists():
+        _fail(f"Canonical package directory not found: {CANONICAL_PKG_DIR}")
+
+    topology  = load_canonical_topology()
+    signals   = load_signal_registry()
+    gauge     = load_gauge_state()
+    psig_proj = _load_psig_projection()
+    pz_proj   = _load_pressure_zone_projection()
+    ll        = _load_language_layer()
+
+    # Export graph positions from workspace runtime (d3-force-3d via Node.js).
+    # export_graph_state.js is the sole source of x/y — no Python layout math.
+    graph_state_path = output_dir / "graph_state.json"
+    export_script = REPO_ROOT / "scripts" / "pios" / "export_graph_state.mjs"
+    _vault_vi = _resolve_vault_index_for_graph()
+    if _vault_vi is None:
+        _fail(f"No vault_index.json found for client {_ACTIVE_CLIENT!r} in app vault")
+    try:
+        subprocess.run(["node", str(export_script),
+                        "--client",           _ACTIVE_CLIENT,
+                        "--run-id",           _ACTIVE_VAULT_RUN_ID,
+                        "--vault-index-path", str(_vault_vi),
+                        "--output",           str(graph_state_path)], check=True)
+        print(f"[LENS REPORT] Generated: {graph_state_path.resolve()}")
+    except (subprocess.CalledProcessError, FileNotFoundError) as e:
+        _fail(f"export_graph_state.js failed: {e}")
+
+    graph_state: Optional[Dict] = None
+    if graph_state_path.exists():
+        with open(graph_state_path) as f:
+            graph_state = json.load(f)
+
+    files: List[Path] = []
+
+    artifacts = [
+        (output_dir / "lens_tier2_diagnostic_narrative.html",         False),
+        (pub_dir    / "lens_tier2_diagnostic_narrative_pub.html",     True),
+    ]
+
+    for out_path, pub_safe in artifacts:
+        html = _build_tier2_diagnostic_narrative(topology, signals, gauge,
+                                                  publish_safe=pub_safe,
+                                                  graph_state=graph_state,
+                                                  pz_proj=pz_proj,
+                                                  psig_proj=psig_proj,
+                                                  ll=ll)
+        out_path.write_text(html, encoding="utf-8")
+        print(f"[LENS REPORT] Generated: {out_path.resolve()}")
+        files.append(out_path)
+
+    return files
+
+
+# ---------------------------------------------------------------------------
+# Decision Surface
+# PI.SECOND-CLIENT.STEP16I.DECISION-SURFACE-GENERATOR.01
+# ---------------------------------------------------------------------------
+
+_DECISION_SURFACE_CSS = """
+  :root{--bg:#0e0e10;--surface:#16161a;--surface-raised:#1c1c22;--border:#2a2a2e;--border-subtle:#222228;--fg:#e8e8e8;--fg-muted:#888;--fg-dim:#555;--gold:#c89b3c;--gold-muted:rgba(200,155,60,0.12);--gold-border:rgba(200,155,60,0.28);--green:#4caf6e;--green-muted:rgba(76,175,110,0.12);--green-border:rgba(76,175,110,0.28);--amber:#d4912a;--amber-muted:rgba(212,145,42,0.1);--amber-border:rgba(212,145,42,0.25);--red:#e05252;--red-muted:rgba(224,82,82,0.1);--red-border:rgba(224,82,82,0.25);--font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:14px;line-height:1.7;-webkit-font-smoothing:antialiased}
+  .page{max-width:760px;margin:0 auto;padding:36px 32px 72px}
+  .ds-identity{display:flex;align-items:center;gap:8px;margin-bottom:28px;padding-bottom:14px;border-bottom:1px solid var(--border-subtle);font-size:12px;flex-wrap:wrap}
+  .ds-brand{color:var(--gold);font-weight:500;letter-spacing:.06em}
+  .ds-sep{color:var(--fg-dim)}
+  .ds-client{color:var(--fg-muted)}
+  .ds-run{color:var(--fg-dim);font-family:monospace;font-size:11px}
+  .ds-nav{margin-left:auto;display:flex;gap:14px}
+  .ds-nav-link{font-size:11px;color:var(--fg-dim);text-decoration:none;letter-spacing:.04em}
+  .ds-nav-link:hover{color:var(--fg-muted)}
+  .ds-hero{display:flex;justify-content:space-between;align-items:flex-start;padding:24px 28px;border:1px solid var(--border);border-left:4px solid var(--amber);border-radius:4px;background:var(--surface);margin-bottom:28px;gap:20px}
+  .ds-hero.posture-proceed{border-left-color:var(--green)}
+  .ds-hero.posture-investigate{border-left-color:var(--amber)}
+  .ds-hero.posture-escalate{border-left-color:var(--red)}
+  .ds-hero-posture{font-size:28px;font-weight:300;letter-spacing:.04em;margin-bottom:8px}
+  .ds-hero.posture-proceed .ds-hero-posture{color:var(--green)}
+  .ds-hero.posture-investigate .ds-hero-posture{color:var(--amber)}
+  .ds-hero.posture-escalate .ds-hero-posture{color:var(--red)}
+  .ds-hero-rationale{font-size:13px;color:var(--fg-muted);line-height:1.6;max-width:420px;margin-bottom:12px}
+  .ds-hero-context{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .ds-ctx-sep{color:var(--fg-dim)}
+  .ds-ctx-badge{font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:var(--surface-raised);color:var(--fg-muted);padding:3px 8px;border-radius:2px;border:1px solid var(--border)}
+  .ds-hero-score-block{text-align:right;flex-shrink:0}
+  .ds-hero-score{font-size:40px;font-weight:300;color:var(--gold);line-height:1}
+  .ds-hero-band{font-size:12px;color:var(--gold);margin-top:4px;letter-spacing:.02em}
+  .ds-hero-range{font-size:11px;color:var(--fg-dim);margin-top:2px}
+  .ds-split{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
+  .ds-split-col{padding:16px 18px;border:1px solid var(--border);border-radius:3px;background:var(--surface)}
+  .ds-split-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px;font-weight:600}
+  .ds-split-col.confirmed .ds-split-label{color:var(--green)}
+  .ds-split-col.unknown .ds-split-label{color:var(--amber)}
+  .ds-truth-text{font-size:12px;color:var(--fg-muted);line-height:1.8}
+  .ds-gap-items{list-style:none;padding:0}
+  .ds-gap-item{font-size:12px;color:var(--fg-muted);padding:5px 0;border-bottom:1px solid var(--border-subtle);display:flex;gap:8px;align-items:flex-start}
+  .ds-gap-item:last-child{border-bottom:none}
+  .ds-gap-item::before{content:'○';color:var(--amber);font-size:10px;margin-top:3px;flex-shrink:0}
+  .ds-epb{margin-bottom:32px}
+  .ds-epb-section-title{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:16px}
+  .ds-epb-grid{display:grid;grid-template-columns:45% 55%;gap:32px;align-items:stretch}
+  .ds-epb-card{display:flex;flex-direction:column;justify-content:space-between;background:var(--surface);border:1px solid var(--border);border-top:2px solid var(--gold);padding:20px 22px;border-radius:3px}
+  .ds-epb-card-title{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;font-weight:600}
+  .ds-epb-card-main{font-size:14px;font-weight:300;color:var(--fg);line-height:1.5;margin-bottom:10px}
+  .ds-epb-card-trace{font-size:10px;color:var(--fg-dim);font-family:monospace;opacity:.6;margin-bottom:12px;word-break:break-all}
+  .ds-epb-card-support{font-size:11px;color:var(--fg-muted);line-height:1.6;margin-bottom:10px}
+  .ds-epb-card-close{font-size:11px;color:var(--fg-muted);font-style:italic}
+  .ds-epb-visual{display:flex;flex-direction:column}
+  .ds-epb-connector{height:1px;background:linear-gradient(90deg,transparent,rgba(200,155,60,.2),transparent);margin:20px 0}
+  .ds-epb-synthesis{font-size:11px;color:var(--fg-muted);line-height:1.8;padding:14px 18px;background:rgba(0,0,0,.15);border-radius:2px}
+  .ds-epb-synthesis strong{color:var(--fg);font-weight:500}
+  .ds-inference{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(0,0,0,.2);border:1px solid var(--border-subtle);border-radius:3px;margin-bottom:24px;font-size:11px;color:var(--fg-dim)}
+  .ds-inference-tag{font-size:9px;letter-spacing:.12em;text-transform:uppercase;background:var(--red-muted);color:var(--red);padding:3px 8px;border-radius:2px;border:1px solid var(--red-border);flex-shrink:0}
+  .ds-explore{margin-bottom:32px}
+  .ds-explore-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:10px}
+  .ds-explore-strip{display:flex;gap:10px;flex-wrap:wrap}
+  .ds-explore-link{display:inline-block;padding:8px 16px;font-size:12px;letter-spacing:.04em;border:1px solid var(--border);color:var(--fg-muted);text-decoration:none;border-radius:3px}
+  .ds-explore-link:hover{border-color:var(--gold-border);color:var(--gold)}
+  .ds-explore-link.primary{border-color:var(--gold-border);color:var(--gold);background:var(--gold-muted)}
+  .ds-footer{display:flex;justify-content:space-between;align-items:center;padding-top:20px;border-top:1px solid var(--border-subtle);margin-top:40px;font-size:11px;color:var(--fg-dim)}
+  .ds-footer-brand{color:var(--gold);letter-spacing:.06em;font-size:13px}
+  .rc-trace{font-size:10px;color:var(--fg-dim);opacity:.7;font-style:normal}
+  .ds-trace-preview{margin-bottom:32px}
+  .ds-trace-preview-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:12px}
+  .ds-trace-preview-wrap{width:67%;margin:0 auto;border-radius:3px;overflow:hidden}
+  .ds-trace-preview-text{font-size:11px;color:var(--fg-dim);margin-top:12px;text-align:center;line-height:1.7}
+  @media(max-width:600px){.ds-hero{flex-direction:column}.ds-hero-score-block{text-align:left}.ds-split{grid-template-columns:1fr}.ds-epb-grid{grid-template-columns:1fr}.ds-nav{margin-left:0;margin-top:6px}}
+"""
+
+
+def _build_decision_surface(topology: Dict, signals: Dict, gauge: Dict,
+                              publish_safe: bool = False,
+                              psig_proj: Optional[Dict] = None,
+                              pz_proj: Optional[Dict] = None,
+                              metrics: Optional[Dict] = None,
+                              decision_model: Optional[Dict] = None,
+                              ll: Optional[Dict] = None,
+                              graph_state: Optional[Dict] = None) -> str:
+    # ── Core state derivation ──────────────────────────────────────────
+    dm        = decision_model or {}
+    risk      = dm.get("structural_risk", "MODERATE")
+    ev_comp   = dm.get("evidence_completeness", "PARTIAL")
+    posture   = dm.get("decision", "INVESTIGATE")
+    not_activated = dm.get("not_activated", [])
+    blind_spot    = dm.get("blind_spot_active", False)
+    exec_eval     = dm.get("exec_evaluated", False)
+
+    score      = gauge["score"]["canonical"]
+    band_label = gauge["score"]["band_label"]
+    band_lo    = gauge["confidence"]["lower"]
+    band_hi    = gauge["confidence"]["upper"]
+
+    counts     = topology["counts"]
+    domains    = topology["domains"]
+    grounded_ct = sum(1 for d in domains if d["grounding"] == "GROUNDED")
+    weak_ct     = sum(1 for d in domains if d["grounding"] == "WEAKLY GROUNDED")
+    total_doms  = counts.get("domains", len(domains))
+
+    _use_psig   = True
+    client_name = _get_client_display_name(publish_safe)
+    title_suffix = " (Publish)" if publish_safe else ""
+    footer_note = (f"SAMPLE — {client_name}."
+                   if _use_psig else
+                   ("SAMPLE — Illustrative client environment." if publish_safe
+                    else "SAMPLE — BlueEdge data used for demonstration purposes."))
+
+    # Signal separation — active structural vs theoretical baseline vs not-activated
+    _ds_active_struct_sigs = []
+    _ds_baseline_sigs = []
+    _ds_na_sigs: list = []
+    if _use_psig and psig_proj:
+        _ds_active_struct_sigs = [c for c in psig_proj.get("active_conditions_in_scope", [])
+                                   if c.get("activation_method") == "RUN_RELATIVE_OUTLIER"]
+        _ds_baseline_sigs = [c for c in psig_proj.get("active_conditions_in_scope", [])
+                              if c.get("activation_method") == "THEORETICAL_BASELINE"]
+        _ds_na_sigs = psig_proj.get("signals_not_activated", [])
+    _ds_active_count   = len(_ds_active_struct_sigs)
+    _ds_baseline_count = len(_ds_baseline_sigs)
+    _ds_active_ids   = " · ".join(sorted({c["signal_id"] for c in _ds_active_struct_sigs}))
+    _ds_baseline_ids = " · ".join(sorted({c["signal_id"] for c in _ds_baseline_sigs}))
+
+    # Structural state: derived from risk + evidence completeness — not hardcoded per client
+    _order = {"LOW": 0, "MODERATE": 1, "HIGH": 2}
+    _risk_n = _order.get(risk, 1)
+    if _risk_n >= 2:
+        structural_state = "ESCALATED"
+    elif _risk_n == 1 or ev_comp != "HIGH":
+        structural_state = "UNRESOLVED"
+    elif _risk_n == 0 and ev_comp == "HIGH":
+        structural_state = "STABLE"
+    else:
+        structural_state = "CONDITIONAL"
+
+    _ev_label = {"HIGH": "Complete", "PARTIAL": "Partial", "LOW": "Limited"}.get(ev_comp, ev_comp)
+    _posture_hero_cls = {"PROCEED": "posture-proceed", "INVESTIGATE": "posture-investigate",
+                         "ESCALATE": "posture-escalate"}.get(posture, "posture-investigate")
+
+    # Semantic context for decision — distinguishes DOM structural coverage from semantic domain backing
+    _sem_ctx_ds = _build_semantic_report_context()
+    if _sem_ctx_ds["fallback_available"]:
+        _ds_sem_backed = _sem_ctx_ds["structurally_backed_domains"]
+        _ds_sem_total  = _sem_ctx_ds["total_semantic_domains"]
+        _ds_sem_only   = _sem_ctx_ds["semantic_only_domains"]
+        _ds_az_label   = _sem_ctx_ds["active_zone_semantic_label"] or ""
+        _ds_az_dom     = _sem_ctx_ds["active_zone_dom_label"] or ""
+        _ds_az_dom_id  = _sem_ctx_ds["active_zone_dom_id"] or ""
+        _struct_sentence = (
+            f"Structural evidence complete within the current evidence scope: "
+            f"{grounded_ct} of {total_doms} structural evidence groups are grounded. "
+            f"Semantic domain coverage is partial: "
+            f"{_ds_sem_backed} of {_ds_sem_total} semantic domains have structural backing; "
+            f"{_ds_sem_only} remain semantic-only."
+        )
+    else:
+        _ds_sem_backed = _ds_sem_total = _ds_sem_only = 0
+        _ds_az_label = _ds_az_dom = _ds_az_dom_id = ""
+        _struct_sentence = (
+            f"{grounded_ct} of {total_doms} structural evidence groups are grounded. "
+            + (f"{weak_ct} weakly grounded." if weak_ct > 0 else "Structural grounding complete within evidence scope.")
+        )
+
+    # Hero rationale — semantic path when context available, structural fallback otherwise
+    _evidence_sentence = ("Execution evidence is incomplete."
+                          if not exec_eval
+                          else "Execution evidence is present.")
+    if _sem_ctx_ds["fallback_available"]:
+        _sem_complete_prefix = ("Structural evidence layer complete — "
+                                if weak_ct == 0 and grounded_ct >= total_doms
+                                else "")
+        _hero_rationale = f"{_sem_complete_prefix}{_ds_sem_backed}/{_ds_sem_total} semantic domains backed. {_evidence_sentence}"
+    else:
+        _hero_rationale = f"{_struct_sentence} {_evidence_sentence}"
+
+    # Hero context tags — labeled structural / evidence / risk (no internal state label)
+    if _sem_ctx_ds["fallback_available"] and weak_ct == 0 and grounded_ct >= total_doms:
+        _struct_tag = "STABLE"
+    elif weak_ct == 0 and grounded_ct >= total_doms:
+        _struct_tag = "STABLE within structural evidence scope"
+    else:
+        _struct_tag = "DEGRADED"
+
+    # Navigation links — client/run scoped
+    _ev_name   = "lens_tier1_evidence_brief_pub.html" if publish_safe else "lens_tier1_evidence_brief.html"
+    _narr_name = "lens_tier1_narrative_brief_pub.html" if publish_safe else "lens_tier1_narrative_brief.html"
+    _t2_name   = "lens_tier2_diagnostic_narrative_pub.html" if publish_safe else "lens_tier2_diagnostic_narrative.html"
+    if _use_psig:
+        ev_link   = _scoped_report_url(_ev_name)
+        narr_link = _scoped_report_url(_narr_name)
+        t2_link   = _scoped_report_url(_t2_name)
+        ws_link   = f"/tier2/workspace?client={_ACTIVE_CLIENT}&runId={_ACTIVE_VAULT_RUN_ID}"
+    else:
+        ev_link   = f"/api/report-file?name={_ev_name}"
+        narr_link = f"/api/report-file?name={_narr_name}"
+        t2_link   = f"/api/report-file?name={_t2_name}"
+        ws_link   = None
+
+    # ── Zone / signal counts ───────────────────────────────────────────
+    sigs       = signals["signals"]
+    sig_count  = sum(1 for s in sigs if s.get("state") == "ACTIVE")
+    dep_load   = (metrics.get("dep_load", "—") if metrics else "—")
+    etn        = (metrics.get("edge_to_node", "—") if metrics else "—")
+
+    zone_count = 0
+    zone_class = "COMPOUND_ZONE"
+    if pz_proj:
+        _pz_list_f = pz_proj.get("zone_projection") or pz_proj.get("zones") or []
+        zone_count = len(_pz_list_f)
+        if _pz_list_f:
+            zone_class = _pz_list_f[0].get("zone_class", "COMPOUND_ZONE")
+
+    # Risk label — qualified when evidence is incomplete and structural pressure is concentrated
+    # Semantic path uses unqualified risk label (canonical format)
+    _risk_explanation = (
+        "driven by evidence incompleteness and concentrated structural pressure"
+        if (risk == "MODERATE" and not exec_eval and zone_count > 0
+            and not _sem_ctx_ds["fallback_available"])
+        else ""
+    )
+    _risk_label = f"{risk} — {_risk_explanation}" if _risk_explanation else risk
+
+    # ── Confirmed card — prose sentences, no metric dumps ─────────────
+    _truth_sentences: list = []
+    _pz_first_f = (pz_proj.get("zone_projection") or pz_proj.get("zones") or [{}])[0] if pz_proj else {}
+    _pz_first_zid = _pz_first_f.get("zone_id", "")
+    _pz_first_zcls = _pz_first_f.get("zone_class", "COMPOUND_ZONE")
+    _pz_first_zcls_exec = RC.apply_language(_pz_first_zcls)
+    if _sem_ctx_ds["fallback_available"]:
+        _truth_sentences.append(
+            f"Structural evidence is complete for the current evidence layer. "
+            f"Semantic domain coverage: {_ds_sem_backed}/{_ds_sem_total} domains have structural backing. "
+            f"{_ds_sem_only} semantic domains remain projection-only."
+        )
+        if _ds_az_label:
+            _dom_bk_str = (
+                f"backed by {_ds_az_dom} ({_ds_az_dom_id})"
+                if _ds_az_dom and _ds_az_dom_id and _ds_az_dom != _ds_az_dom_id
+                else (f"backed by {_ds_az_dom_id}" if _ds_az_dom_id else "")
+            )
+            _truth_sentences.append(
+                f"The active pressure pattern is centered on {_ds_az_label}"
+                + (f", {_dom_bk_str}." if _dom_bk_str else ".")
+            )
+        if _use_psig and zone_count >= 1:
+            _truth_sentences.append("A single structural pressure pattern appears across the system.")
+    else:
+        _truth_sentences.append(_struct_sentence)
+        if _use_psig and _ds_active_count > 0:
+            _truth_sentences.append(
+                f"Active structural signal{'s' if _ds_active_count != 1 else ''}: "
+                f"{_ds_active_ids}."
+            )
+        if _use_psig and _ds_baseline_count > 0:
+            _truth_sentences.append(
+                f"Baseline signal{'s' if _ds_baseline_count != 1 else ''}: "
+                f"{_ds_baseline_ids} — theoretical baseline condition, not an activated pressure signal."
+            )
+        if _use_psig and zone_count == 1 and _pz_first_zid:
+            _truth_sentences.append(
+                f"1 pressure zone identified: {_pz_first_zid}"
+                + (f" — {_ds_az_label}" if _ds_az_label else "") + "."
+            )
+        elif _use_psig and zone_count > 1:
+            _truth_sentences.append(f"{zone_count} pressure zones identified.")
+    truth_html = "<br><br>".join(esc(s) for s in _truth_sentences) if _truth_sentences else "—"
+
+    # ── Gap items — compressed to short phrases ────────────────────────
+    gap_items: list = []
+    if not exec_eval:
+        gap_items.append("Execution-layer behavioral state")
+    if _sem_ctx_ds["fallback_available"] and not_activated:
+        _n = len(not_activated)
+        gap_items.append(f"{_n} structural signal{'s' if _n != 1 else ''} not activated")
+    elif _ds_na_sigs:
+        _na_ids = " · ".join(str(s) for s in sorted(_ds_na_sigs))
+        gap_items.append(f"Not-activated signals: {_na_ids}")
+    elif not_activated:
+        _n = len(not_activated)
+        gap_items.append(f"Not-activated signals: {_n} structural signal{'s' if _n != 1 else ''}")
+    if blind_spot:
+        gap_items.append("Blind spot coverage active — entities outside zone scope not characterized")
+    gap_items += [
+        "Causal relationships between conditions",
+        "Runtime behavior under load",
+    ]
+    gap_items_html = "".join(
+        f'<li class="ds-gap-item">{esc(g)}</li>' for g in gap_items
+    )
+
+    # ── Pressure section — RC.evidence_pair_block (psig path only) ────
+    pressure_html = ""
+    if _use_psig and pz_proj is not None and zone_count > 0:
+        _pz_list_s  = pz_proj.get("zone_projection") or pz_proj.get("zones") or []
+        _cp         = RC.collapse_patterns(_pz_list_s, pz_proj, publish_safe)
+        _sig_set    = (_cp["shared_sigs"] if _cp
+                       else _pz_list_s[0].get("signals", []) if _pz_list_s else [])
+        _sig_n      = len(_sig_set)
+
+        if _sem_ctx_ds["fallback_available"]:
+            _insight = f"{_sig_n} signal{'s are' if _sig_n != 1 else ' is'} simultaneously active across the system."
+        else:
+            _insight = (
+                f"{_sig_n} structural signal{'s are' if _sig_n != 1 else ' is'} "
+                f"active within the pressure zone."
+            )
+        if _sem_ctx_ds["fallback_available"]:
+            _synthesis_html = (
+                f'<strong>A single structural pressure pattern spans multiple domains.</strong>'
+                f'<br><br>'
+                f'The same signals are present in each zone.<br>'
+                f'The pattern reflects structural co-presence across domains.'
+                f'<br><br>'
+                f'This is not a causal determination.'
+            )
+        elif _cp:
+            _synthesis_html = (
+                f'<strong>A structural pressure pattern spans {_cp["n_zones"]} zones.</strong>'
+                f'<br><br>'
+                f'The same signals are present in each zone.<br>'
+                f'The pattern reflects structural co-presence across zones.'
+                f'<br><br>'
+                f'This is not a causal determination.'
+            )
+        else:
+            _pz0 = _pz_list_s[0] if _pz_list_s else {}
+            _pz0_anchor      = _pz0.get("anchor_id", "")
+            _pz0_anchor_name = _pz0.get("anchor_name", "")
+            _pz0_zone_id     = _pz0.get("zone_id", "")
+            _pz0_zone_cls    = _pz0.get("zone_class", "COMPOUND_ZONE")
+            _pz0_zone_cls_exec = RC.apply_language(_pz0_zone_cls)
+            _pz0_sem_ctx  = _resolve_dom_to_semantic_context(_pz0_anchor)
+            _pz0_label    = (_pz0_sem_ctx.get("business_label") if _pz0_sem_ctx.get("domain_id")
+                             else _pz0.get("anchor_name", _pz0_anchor))
+            # DOM backing: use technical anchor_name (e.g. backend_app_root), not semantic label
+            _pz0_dom_bk   = (f' / {_pz0_anchor_name}'
+                             if _pz0_anchor_name and _pz0_anchor_name != _pz0_anchor
+                             else "")
+            # Confidence: derive from semantic DOM binding via semantic topology model
+            _pz0_conf_raw = _pz0_sem_ctx.get("confidence", 0.0) if _pz0_sem_ctx.get("domain_id") else None
+            _pz0_lin_stat = _pz0_sem_ctx.get("lineage_status", "") if _pz0_sem_ctx.get("domain_id") else ""
+            _pz0_confidence_str = (
+                f"{_pz0_conf_raw:.2f} — {_pz0_lin_stat}"
+                if (_pz0_conf_raw is not None and _pz0_lin_stat and _pz0_conf_raw > 0)
+                else str(_pz0.get("zone_confidence", "—"))
+            )
+            _synthesis_html = (
+                f'<strong>{esc(_pz0_zone_id)} — {esc(_pz0_label)}</strong>'
+                f'<br><br>'
+                f'DOM backing: {esc(_pz0_anchor)}{_pz0_dom_bk}<br>'
+                f'Signals: {esc(" · ".join(sorted(str(s) for s in _sig_set)))}<br>'
+                f'Zone class: {esc(_pz0_zone_cls_exec)} '
+                f'<span class="rc-trace">(trace: {esc(_pz0_zone_cls)})</span><br>'
+                f'Confidence: {esc(_pz0_confidence_str)}'
+                f'<br><br>'
+                f'This is not a causal determination.'
+            )
+        # Signal convergence support text — semantic path uses canonical generic form
+        if _sem_ctx_ds["fallback_available"]:
+            _signal_support_text = "All active pressure signals share the same affected domain scope."
+        else:
+            _signal_support_text = (
+                f"All active signals converge on the same structural domain ({_ds_az_dom_id}), "
+                f"indicating concentrated structural pressure within a single semantic domain."
+                if _ds_az_dom_id
+                else "All active pressure signals share the same affected domain scope."
+            )
+        pressure_html = (
+            '\n  '
+            + RC.evidence_pair_block(
+                title="Where pressure exists",
+                insight=_insight,
+                signals=list(_sig_set),
+                supporting_visual=_render_signal_trace_canvas(graph_state),
+                synthesis=_synthesis_html,
+                trace="",
+                support_text=_signal_support_text,
+            )
+        )
+
+    # ── Explore nav strip ──────────────────────────────────────────────
+    _explore_links: list = [
+        (narr_link, "Executive Brief",  True),
+        (ev_link,   "Structural Evidence", False),
+        (t2_link,   "Diagnostic",       False),
+    ]
+    if _use_psig and ws_link:
+        _explore_links.append((ws_link, "Workspace", False))
+    explore_html = "".join(
+        f'<a href="{href}" class="ds-explore-link{"  primary" if primary else ""}">'
+        f'{esc(label)}</a>'
+        for href, label, primary in _explore_links
+    )
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LENS — Decision Surface{title_suffix}</title>
+  <style>{_DECISION_SURFACE_CSS}</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="ds-identity">
+    <span class="ds-brand">Signäl</span>
+    <span class="ds-sep">·</span>
+    <span class="ds-client">{esc(client_name)}</span>
+    <span class="ds-sep">·</span>
+    <span class="ds-run">{esc(_ACTIVE_VAULT_RUN_ID)}</span>
+    <nav class="ds-nav">
+      <a href="{narr_link}" class="ds-nav-link">Executive Brief</a>
+      <a href="{ev_link}" class="ds-nav-link">Assessment</a>
+      <a href="{t2_link}" class="ds-nav-link">Diagnostic</a>
+    </nav>
+  </div>
+
+  <div class="ds-hero {_posture_hero_cls}">
+    <div>
+      <div class="ds-hero-posture">{esc(posture)}</div>
+      <div class="ds-hero-rationale">{esc(_hero_rationale)}</div>
+      <div class="ds-hero-context">
+        <span class="ds-ctx-badge">STRUCTURE: {esc(_struct_tag)}</span>
+        <span class="ds-ctx-sep">·</span>
+        <span class="ds-ctx-badge">EVIDENCE: {esc(ev_comp)}</span>
+        <span class="ds-ctx-sep">·</span>
+        <span class="ds-ctx-badge">RISK: {esc(_risk_label)}</span>
+      </div>
+    </div>
+    {_render_radial_gauge(score, band_lo, band_hi, band_label)}
+  </div>
+
+  <div class="ds-split">
+    <div class="ds-split-col confirmed">
+      <div class="ds-split-label">Structurally confirmed</div>
+      <div class="ds-truth-text">{truth_html}</div>
+    </div>
+    <div class="ds-split-col unknown">
+      <div class="ds-split-label">Not known</div>
+      <ul class="ds-gap-items">{gap_items_html}</ul>
+    </div>
+  </div>
+
+  {pressure_html}
+
+  <div class="ds-inference">
+    <span class="ds-inference-tag">inference_prohibition</span>
+    ACTIVE — all data on this surface is structural and evidential only.
+    No advisory content, causal inference, or remediation guidance may be derived.
+  </div>
+
+  <div class="ds-explore">
+    <div class="ds-explore-label">Open the evidence</div>
+    <div class="ds-explore-strip">{explore_html}</div>
+  </div>
+
+  <div class="ds-footer">
+    <span class="ds-footer-brand">Signäl</span>
+    <span>{esc(footer_note)} · Decision Surface · No advisory content</span>
+  </div>
+
+</div>
+</body>
+</html>"""
+
+
+def generate_decision_surface(output_dir: Optional[Path] = None,
+                              graph_state_path: Optional[Path] = None) -> List[Path]:
+    """Generate the Decision Surface: internal + publish-safe.
+
+    Derives all content from canonical package, projection artifacts, gauge state,
+    and language layer registry. No client-specific hardcoding.
+    graph_state_path: explicit path to graph_state.json; falls back to TIER2_REPORTS_DIR.
+    Returns list of written file paths (2 files).
+    """
+    if output_dir is None:
+        output_dir = DECISION_REPORTS_DIR
+
+    pub_dir = output_dir / "publish"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    pub_dir.mkdir(parents=True, exist_ok=True)
+
+    if not CANONICAL_PKG_DIR.exists():
+        _fail(f"Canonical package directory not found: {CANONICAL_PKG_DIR}")
+
+    topology  = load_canonical_topology()
+    signals   = load_signal_registry()
+    gauge     = load_gauge_state()
+    psig_proj = _load_psig_projection()
+    pz_proj   = _load_pressure_zone_projection()
+    binding   = _load_binding_envelope()
+    metrics   = _compute_structural_metrics(binding)
+    dm        = _compute_decision_model(metrics, psig_proj, gauge)
+    ll        = _load_language_layer()
+
+    graph_state: Optional[Dict] = None
+    _gs_path = graph_state_path if graph_state_path is not None else TIER2_REPORTS_DIR / "graph_state.json"
+    if _gs_path.exists():
+        with open(_gs_path) as f:
+            graph_state = json.load(f)
+
+    files: List[Path] = []
+    artifacts = [
+        (output_dir / "lens_decision_surface.html",         False),
+        (pub_dir    / "lens_decision_surface_pub.html",     True),
+    ]
+    for out_path, pub_safe in artifacts:
+        html = _build_decision_surface(
+            topology, signals, gauge,
+            publish_safe=pub_safe,
+            psig_proj=psig_proj,
+            pz_proj=pz_proj,
+            metrics=metrics,
+            decision_model=dm,
+            ll=ll,
+            graph_state=graph_state,
+        )
+        out_path.write_text(html, encoding="utf-8")
+        print(f"[LENS REPORT] Generated: {out_path.resolve()}")
+        files.append(out_path)
+
+    return files
+
+
+# ---------------------------------------------------------------------------
+# Legacy entry point (preserved, not default)
+# ---------------------------------------------------------------------------
+
+def _main_legacy(output_path: Optional[Path] = None) -> None:
     if output_path is None:
         output_path = _default_output_path()
 
-    # --- Pre-flight: fragments directory must exist ---
     if not FRAGMENTS_DIR.exists():
         _fail(f"Fragment directory not found: {FRAGMENTS_DIR}")
 
-    # --- Load payloads ---
     payloads = load_all_payloads()
-
-    # --- Build HTML ---
     html = build_html(payloads)
 
-    # --- Validate report body ---
     forbidden_found = validate_report_text(html)
     if forbidden_found:
         _fail(f"FORBIDDEN IDENTIFIERS IN REPORT: {forbidden_found}")
 
-    # --- Write output ---
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(html, encoding="utf-8")
-
-    # Section C — clean output line consumed by API wrapper
     print(f"[LENS REPORT] Generated: {output_path.resolve()}")
 
 
+# ---------------------------------------------------------------------------
+# Entry point
+# ---------------------------------------------------------------------------
+
+def _write_canonical_run_metadata(output_root: Path) -> None:
+    """Write index.json, manifest.json, selector, and current/ for a canonical run output."""
+    import hashlib
+    import datetime
+
+    run_id = _ACTIVE_VAULT_RUN_ID
+    client = _ACTIVE_CLIENT
+    now_iso = datetime.datetime.now(datetime.timezone.utc).isoformat()
+
+    # Collect all generated report files
+    report_files: List[Path] = []
+    for sub in ("tier1", "tier2", "decision"):
+        rd = output_root / "reports" / sub
+        if rd.exists():
+            report_files.extend(sorted(rd.rglob("*.html")))
+        gs = output_root / "reports" / "tier2" / "graph_state.json"
+        if gs.exists() and gs not in report_files:
+            report_files.append(gs)
+
+    def _file_md5(p: Path) -> str:
+        return hashlib.md5(p.read_bytes()).hexdigest()
+
+    manifest_entries = []
+    for fp in sorted(set(report_files)):
+        if fp.exists():
+            rel = fp.relative_to(output_root)
+            manifest_entries.append({"path": str(rel), "md5": _file_md5(fp), "size": fp.stat().st_size})
+
+    index = {
+        "client": client,
+        "run_id": run_id,
+        "generated_at": now_iso,
+        "source_vault": str(CANONICAL_PKG_DIR),
+        "output_root": str(output_root),
+        "validation_status": "PENDING",
+        "reports": {
+            "tier1_evb": f"reports/tier1/lens_tier1_evidence_brief.html",
+            "tier1_nar": f"reports/tier1/lens_tier1_narrative_brief.html",
+            "tier2_dia": f"reports/tier2/lens_tier2_diagnostic_narrative.html",
+            "decision":  f"reports/decision/lens_decision_surface.html",
+        },
+    }
+    (output_root / "index.json").write_text(
+        json.dumps(index, indent=2), encoding="utf-8")
+    print(f"[LENS REPORT] Generated: {(output_root / 'index.json').resolve()}")
+
+    manifest = {"run_id": run_id, "generated_at": now_iso, "files": manifest_entries}
+    (output_root / "manifest.json").write_text(
+        json.dumps(manifest, indent=2), encoding="utf-8")
+    print(f"[LENS REPORT] Generated: {(output_root / 'manifest.json').resolve()}")
+
+    # Selector files
+    lens_root = output_root.parent.parent  # clients/<client>/lens/
+    selector_dir = lens_root / "selector"
+    selector_dir.mkdir(parents=True, exist_ok=True)
+
+    selector = {
+        "client": client,
+        "current_run": run_id,
+        "updated_at": now_iso,
+        "output_root": str(lens_root),
+        "navigation_base": "/api/report-file",
+    }
+    (selector_dir / "selector.json").write_text(
+        json.dumps(selector, indent=2), encoding="utf-8")
+    print(f"[LENS REPORT] Generated: {(selector_dir / 'selector.json').resolve()}")
+
+    # Update available_runs.json (append-only per run)
+    avail_path = selector_dir / "available_runs.json"
+    if avail_path.exists():
+        avail = json.loads(avail_path.read_text(encoding="utf-8"))
+    else:
+        avail = {"client": client, "runs": []}
+    # Handle list format written by orchestrator (available_runs.json may be a list or dict)
+    if isinstance(avail, list):
+        avail = {"client": client, "runs": avail}
+    existing_ids = {r["run_id"] for r in avail.get("runs", [])}
+    if run_id not in existing_ids:
+        avail["runs"].append({
+            "run_id": run_id,
+            "generated_at": now_iso,
+            "source_vault": str(CANONICAL_PKG_DIR),
+            "validation_status": "PENDING",
+            "reports": index["reports"],
+        })
+    avail_path.write_text(json.dumps(avail, indent=2), encoding="utf-8")
+    print(f"[LENS REPORT] Generated: {avail_path.resolve()}")
+
+    # current/ — mirror of this run's reports
+    import shutil
+    current_dir = lens_root / "current"
+    reports_src = output_root / "reports"
+    if current_dir.exists():
+        shutil.rmtree(current_dir)
+    shutil.copytree(reports_src, current_dir)
+    print(f"[LENS REPORT] Updated: {current_dir.resolve()}")
+
+
+def main(tier1: bool = True, output_path: Optional[Path] = None,
+         output_dir: Optional[Path] = None,
+         deliverable: Optional[str] = None,
+         output_root: Optional[Path] = None) -> None:
+    if not tier1:
+        _main_legacy(output_path=output_path)
+        return
+
+    t1_dir  = (output_root / "reports" / "tier1")    if output_root else output_dir
+    t2_dir  = (output_root / "reports" / "tier2")    if output_root else output_dir
+    ds_dir  = (output_root / "reports" / "decision") if output_root else output_dir
+    gs_path = (output_root / "reports" / "tier2" / "graph_state.json") if output_root else None
+
+    if deliverable == "tier1":
+        generate_tier1_reports(output_dir=t1_dir)
+    elif deliverable == "diagnostic":
+        generate_tier2_reports(output_dir=t2_dir)
+    elif deliverable == "decision":
+        generate_decision_surface(output_dir=ds_dir, graph_state_path=gs_path)
+    else:
+        # "all" or None (no --deliverable flag) — generates all surfaces
+        generate_tier1_reports(output_dir=t1_dir)
+        generate_tier2_reports(output_dir=t2_dir)
+        generate_decision_surface(output_dir=ds_dir, graph_state_path=gs_path)
+
+    if output_root:
+        _write_canonical_run_metadata(output_root)
+
+
 if __name__ == "__main__":
-    import argparse
     parser = argparse.ArgumentParser(
-        description="LENS Executive Report Generator — PRODUCTIZE.LENS.REPORT.TOPOLOGY.DELIVERY.01"
+        description="LENS Report Generator — default: Tier-1 set (4 artifacts). Use --legacy for single executive report."
+    )
+    # Client / run parameterization
+    parser.add_argument(
+        "--client", default="blueedge",
+        help="Client ID (default: blueedge)"
+    )
+    parser.add_argument(
+        "--run-id", default="run_authoritative_recomputed_01",
+        help="Run ID for canonical package and vault paths (default: run_authoritative_recomputed_01)"
+    )
+    parser.add_argument(
+        "--api-base", default="http://localhost:3000",
+        help="API base URL for projection endpoint (default: http://localhost:3000)"
+    )
+    parser.add_argument(
+        "--fragments-dir", type=Path, default=None,
+        help="Fragment directory override (default: clients/<client>/vaults/<run-id>/claims/fragments)"
+    )
+    parser.add_argument(
+        "--package-dir", type=Path, default=None,
+        help="Canonical package directory override (default: clients/<client>/psee/runs/<run-id>/package)"
+    )
+    parser.add_argument(
+        "--claims", nargs="*", default=None,
+        help="Explicit claim IDs to include (default: derived from fragments or package)"
+    )
+    # Report mode
+    parser.add_argument(
+        "--deliverable",
+        choices=["tier1", "diagnostic", "decision", "all"],
+        default=None,
+        help=(
+            "Select which deliverable(s) to generate: "
+            "tier1 = Evidence Brief + Narrative Brief, "
+            "diagnostic = Tier-2 Diagnostic Narrative, "
+            "decision = Decision Surface only, "
+            "all = all surfaces. "
+            "Omitting this flag generates all surfaces."
+        ),
+    )
+    parser.add_argument(
+        "--tier1", action="store_true", default=True,
+        help="Generate Tier-1 report set (default behavior)"
+    )
+    parser.add_argument(
+        "--legacy", action="store_true", default=False,
+        help="Generate legacy single executive report instead of Tier-1 set"
+    )
+    parser.add_argument(
+        "--output-dir", type=Path, default=None,
+        help="Output directory for Tier-1 artifacts (default: clients/<client>/reports/tier1/)"
     )
     parser.add_argument(
         "--output", type=Path, default=None,
-        help="Output HTML path (default: clients/blueedge/reports/lens_report_YYYYMMDD_HHMMSS.html)"
+        help="[Legacy only] Output HTML path"
+    )
+    parser.add_argument(
+        "--crosswalk-path", type=Path, default=None,
+        help="Optional path to semantic_continuity_crosswalk.json for business label resolution"
+    )
+    parser.add_argument(
+        "--semantic-topology-dir", type=Path, default=None,
+        help="Optional path to directory containing semantic_topology_model.json and semantic_topology_layout.json"
+    )
+    parser.add_argument(
+        "--semantic-bundle-dir", type=Path, default=None,
+        help=(
+            "Path to semantic runtime bundle directory (e.g. .../semantic/). "
+            "Loads crosswalk from bundle/crosswalk/ and topology from bundle/topology/. "
+            "Takes precedence over --crosswalk-path and --semantic-topology-dir when both provided."
+        )
+    )
+    parser.add_argument(
+        "--output-root", type=Path, default=None,
+        help=(
+            "Canonical output root: clients/<client>/lens/runs/<run_id>. "
+            "When provided, derives all report subpaths automatically and generates all surfaces. "
+            "Also writes index.json, manifest.json, selector/, and current/."
+        )
     )
     args = parser.parse_args()
-    main(output_path=args.output)
+    _configure_runtime(
+        client=args.client,
+        run_id=args.run_id,
+        api_base=args.api_base,
+        fragments_dir=args.fragments_dir,
+        package_dir=args.package_dir,
+        claims=args.claims,
+        crosswalk_path=args.crosswalk_path,
+        semantic_topology_dir=args.semantic_topology_dir,
+        semantic_bundle_dir=args.semantic_bundle_dir,
+        output_root=args.output_root,
+    )
+    main(tier1=not args.legacy, output_path=args.output, output_dir=args.output_dir,
+         deliverable=args.deliverable, output_root=args.output_root)

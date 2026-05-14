@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "client": "blueedge",
+  "run_id": "run_blueedge_productized_01_fixed",
+  "timestamp": "2026-05-10T13:57:16.119Z",
+  "qualification_stability_score": 0.692,
+  "classification": "STABLE",
+  "contributing_dimensions": {
+    "D1": {
+      "label": "STRUCTURAL_CONTINUITY",
+      "score": 0.532,
+      "classification": "STABLE"
+    },
+    "D3": {
+      "label": "LINEAGE_STRENGTH",
+      "score": 0.235,
+      "classification": "LOW"
+    },
+    "D4": {
+      "label": "REPRODUCIBILITY",
+      "score": 1,
+      "classification": "STRONG"
+    },
+    "D5": {
+      "label": "GOVERNANCE_COMPLETENESS",
+      "score": 1,
+      "classification": "STRONG"
+    }
+  },
+  "governance": {
+    "fail_closed": true,
+    "client_agnostic": true,
+    "no_semantic_fabrication": true,
+    "deterministic": true
+  },
+  "provenance": {
+    "source_commit": "de4ccf5b1b0c",
+    "operation": "compute_qualification_stability",
+    "operation_version": "1.0",
+    "output_hash": "sha256:4c1758cf8543ba91f3ce583eb5b4082d144c8e13867d536306639840b753a93d"
+  }
+}

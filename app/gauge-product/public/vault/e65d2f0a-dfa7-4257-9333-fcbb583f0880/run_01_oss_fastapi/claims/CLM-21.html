@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PSIG-002 Outbound Fan-Out Pressure — Evidence Vault</title>
+<style>:root{--bg:#0a0a0a;--bg1:#111114;--bg2:#1a1a1e;--border:#222228;--text:#c4c4c4;--muted:#666;--dim:#555;--accent:#5a9fd4;--strong:#e0e0e0}*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:"Courier New",monospace;font-size:13px;line-height:1.75;padding:2.5rem 2rem}.w{max-width:860px;margin:0 auto}.nav{margin-bottom:2rem;font-size:.78rem}.nav a{color:var(--muted);text-decoration:none;letter-spacing:.04em}.nav a:hover{color:var(--accent)}.meta{background:var(--bg1);border:1px solid var(--border);border-left:2px solid #253040;padding:1rem 1.25rem;margin-bottom:2rem;font-size:.78rem}.mrow{display:flex;gap:.75rem;margin-bottom:.3rem}.mrow:last-child{margin-bottom:0}.mk{color:var(--muted);min-width:140px;flex-shrink:0;letter-spacing:.02em}.mv{color:#b0b0b0}.content h1{color:var(--strong);font-size:.95rem;margin:1.5rem 0 .6rem;letter-spacing:.02em}.content h2{color:#aaa;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #1e1e24;padding-bottom:.35rem;margin:2rem 0 .75rem}.content h3{color:#888;font-size:.82rem;margin:1.25rem 0 .45rem;letter-spacing:.02em}.content p{margin:.7rem 0;line-height:1.75}.content a{color:var(--accent);text-decoration:none}.content a:hover{text-decoration:underline}.content code{background:var(--bg2);border:1px solid var(--border);padding:.1rem .3rem;font-size:.82em;color:#9ab}.content pre{background:var(--bg1);border:1px solid var(--border);border-left:2px solid #253040;padding:.9rem 1rem;overflow-x:auto;margin:1rem 0}.content pre code{background:none;border:none;padding:0;color:#aab}.content table{border-collapse:collapse;width:100%;margin:.9rem 0;font-size:.82rem}.content th,.content td{border:1px solid var(--border);padding:.4rem .7rem;text-align:left}.content th{background:var(--bg1);color:var(--muted);font-size:.72rem;letter-spacing:.07em;text-transform:uppercase}.content ul{padding-left:1.25rem;margin:.7rem 0}.content li{margin-bottom:.35rem}.content strong{color:var(--strong)}.footer{margin-top:3rem;padding-top:.85rem;border-top:1px solid var(--border);font-size:.72rem;color:var(--dim);letter-spacing:.03em}.footer .lbl{color:#a03030}</style>
+</head>
+<body>
+<div class="w">
+<div class="nav"><a href="/tier2/workspace">← Diagnostic Workspace</a></div>
+<div class="meta"><div class="mrow"><span class="mk">node_class</span><span class="mv">claim</span></div><div class="mrow"><span class="mk">claim_id</span><span class="mv">CLM-21</span></div><div class="mrow"><span class="mk">claim_label</span><span class="mv">PSIG-002 Outbound Fan-Out Pressure</span></div><div class="mrow"><span class="mk">claim_type</span><span class="mv">signal</span></div><div class="mrow"><span class="mk">exposure</span><span class="mv">PZ-001,PZ-002,PZ-003</span></div><div class="mrow"><span class="mk">lens_admissible</span><span class="mv">YES</span></div></div>
+<div class="content"><h2>Explanation</h2>
+
+<p>PSIG-002 measures outbound dependency fan-out pressure at the domain level. A domain is flagged HIGH when its outbound dependency count exceeds the run-relative outlier threshold (&gt;2.0x run mean). IQR degenerate for this run — mean+2SD fallback boundary of 6.228 applied.</p>
+
+<p>Activation state: HIGH. Activation method: RUN_RELATIVE_OUTLIER. Threshold: 2.0x run mean (fallback: mean+2SD=6.228).</p>
+
+<p>Activating entities:</p>
+<ul>
+<li>DOM-04 (primary): fan_out=13, ratio=9.43x — frontend_isolated</li>
+<li>DOM-03 (secondary): fan_out=10, ratio=7.26x — backend_isolated</li>
+<li>DOM-05 (secondary): fan_out=7, ratio=5.08x — platform_monorepo</li>
+</ul>
+
+<p>Signal value: 9.43 (max domain-level ratio). Active in zones: PZ-001, PZ-002, PZ-003.</p>
+
+<h2>Authoritative Value</h2>
+
+<p>9.43</p>
+
+<h2>Traceability</h2>
+
+<ul>
+<li>Source: <code>signal_projection.json:active_conditions_in_scope[PSIG-002]</code></li>
+<li>Condition: COND-PSIG-002-01</li>
+<li>Evidence traces: <code>pressure_zone_state.json:zones[PZ-001/PZ-002/PZ-003]:evidence_trace[PSIG-002]</code></li>
+<li>Authority: PROVISIONAL_CKR_CANDIDATE (75.x / 41.x)</li>
+<li>Contract: PI.CONDITION-CORRELATION.ANALYSIS.75X.03 → PI.41X.PRESSURE-ZONE.PROJECTION.01</li>
+<li>Statistical note: IQR degenerate; mean+2SD fallback boundary=6.228 applied</li>
+</ul></div>
+<div class="footer"><span class="lbl">inference_prohibition</span> ACTIVE &mdash; Evidence Vault V3 &mdash; READ-ONLY projection</div>
+</div>
+</body>
+</html>

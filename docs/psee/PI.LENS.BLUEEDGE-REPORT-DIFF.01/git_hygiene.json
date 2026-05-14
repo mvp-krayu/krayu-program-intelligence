@@ -1,0 +1,32 @@
+{
+  "contract_id": "PI.LENS.BLUEEDGE-REPORT-DIFF.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-01",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+  "working_tree_at_start": "CLEAN — confirmed via git status --short (empty output)",
+  "working_tree_at_end": "DIRTY — ?? docs/psee/PI.LENS.BLUEEDGE-REPORT-DIFF.01/ (untracked evidence only)",
+  "baseline_commit": "d98db3ecd115089e42b71cc7144eda7137626ac2",
+
+  "files_created_this_contract": [
+    "docs/psee/PI.LENS.BLUEEDGE-REPORT-DIFF.01/report_diff_summary.md",
+    "docs/psee/PI.LENS.BLUEEDGE-REPORT-DIFF.01/report_diff_classification.json",
+    "docs/psee/PI.LENS.BLUEEDGE-REPORT-DIFF.01/metric_value_comparison.json",
+    "docs/psee/PI.LENS.BLUEEDGE-REPORT-DIFF.01/volatile_field_analysis.md",
+    "docs/psee/PI.LENS.BLUEEDGE-REPORT-DIFF.01/content_drift_log.md",
+    "docs/psee/PI.LENS.BLUEEDGE-REPORT-DIFF.01/no_mutation_attestation.md",
+    "docs/psee/PI.LENS.BLUEEDGE-REPORT-DIFF.01/git_hygiene.json"
+  ],
+  "files_modified_this_contract": [],
+  "files_deleted_this_contract": [],
+
+  "canonical_reports_mutation_check": "PASS — no canonical report files modified",
+  "generated_reports_mutation_check": "PASS — /tmp/blueedge_report_parity_02/ read-only during this contract",
+  "script_mutation_check": "PASS — lens_report_generator.py not modified",
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[DIAG] PI.LENS.BLUEEDGE-REPORT-DIFF.01 — MIXED: DATA_DRIFT primary (data source mismatch), VOLATILE_METADATA secondary; core metrics match",
+
+  "git_hygiene_status": "COMPLETE"
+}

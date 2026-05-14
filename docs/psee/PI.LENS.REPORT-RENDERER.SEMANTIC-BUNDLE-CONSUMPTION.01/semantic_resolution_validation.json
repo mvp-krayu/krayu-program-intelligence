@@ -1,0 +1,37 @@
+{
+  "contract_id": "PI.LENS.REPORT-RENDERER.SEMANTIC-BUNDLE-CONSUMPTION.01",
+  "generated_date": "2026-05-02",
+
+  "semantic_bundle_loaded": true,
+  "crosswalk_applied": true,
+  "domain_label_resolution": "PASS",
+  "zone_label_resolution": "PASS",
+
+  "detail": {
+    "crosswalk_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/crosswalk/semantic_continuity_crosswalk.json",
+    "crosswalk_entities_loaded": 13,
+    "topology_model_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/semantic_topology_model.json",
+    "topology_domains_loaded": 17,
+    "zone_label_dom04": "Platform Infrastructure and Data",
+    "zone_label_raw_anchor": "backend_app_root",
+    "zone_label_source": "crosswalk + topology model",
+    "zone_label_in_all_reports": true,
+    "tier1_evidence_brief": {
+      "Platform Infrastructure and Data present": true,
+      "backend_app_root as zone label": false
+    },
+    "tier1_narrative_brief": {
+      "Platform Infrastructure and Data present": true,
+      "backend_app_root as zone label": false
+    },
+    "tier2_diagnostic": {
+      "Platform Infrastructure and Data present": true,
+      "backend_app_root as zone label": false
+    },
+    "decision_surface": {
+      "Platform Infrastructure and Data present": true,
+      "backend_app_root as zone label": false
+    },
+    "propagated_not_used_breakpoints_fixed": 3
+  }
+}

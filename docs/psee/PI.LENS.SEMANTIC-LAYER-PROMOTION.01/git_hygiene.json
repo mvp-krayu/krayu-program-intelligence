@@ -1,0 +1,50 @@
+{
+  "contract_id": "PI.LENS.SEMANTIC-LAYER-PROMOTION.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-02",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+  "working_tree_at_start": "CLEAN — confirmed via git status --short (empty output)",
+  "working_tree_at_end": "DIRTY — ?? docs/psee/PI.LENS.SEMANTIC-LAYER-PROMOTION.01/ (untracked evidence); semantic bundle under clients/blueedge/psee/runs/ is gitignored per .gitignore:25 pattern clients/*/psee/runs/ — bundle exists on disk but does not appear in git status",
+  "baseline_commit": "ad220f3e0e222aef47f54aacf84bf8a82900f670",
+
+  "files_created_this_contract": [
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/semantic_bundle_manifest.json",
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/crosswalk/semantic_continuity_crosswalk.json",
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/canonical_topology.json",
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/lineage/canonical_topology_with_lineage.json",
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/lineage/vault_compatibility_manifest.json",
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/graph/graph_state.json",
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/tier1/validation_log.json",
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/tier2/tier2_fixup_generation_result.json",
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/tier2/validation_log.json",
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/decision/decision_fixup_generation_result.json",
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/decision/decision_validation.json",
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/decision/decision_cross_report_alignment.json",
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/report_inputs/reproducibility_verdict.json",
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/validation/semantic_validation_rules.md",
+    "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/validation/signal_derivation_rules.md",
+    "docs/psee/PI.LENS.SEMANTIC-LAYER-PROMOTION.01/semantic_layer_inventory.md",
+    "docs/psee/PI.LENS.SEMANTIC-LAYER-PROMOTION.01/semantic_bundle_manifest_copy.json",
+    "docs/psee/PI.LENS.SEMANTIC-LAYER-PROMOTION.01/artifact_copy_matrix.json",
+    "docs/psee/PI.LENS.SEMANTIC-LAYER-PROMOTION.01/missing_semantic_artifacts.md",
+    "docs/psee/PI.LENS.SEMANTIC-LAYER-PROMOTION.01/runtime_bundle_explanation.md",
+    "docs/psee/PI.LENS.SEMANTIC-LAYER-PROMOTION.01/no_generation_attestation.md",
+    "docs/psee/PI.LENS.SEMANTIC-LAYER-PROMOTION.01/git_hygiene.json"
+  ],
+  "files_modified_this_contract": [],
+  "files_deleted_this_contract": [],
+
+  "canonical_reports_modified": false,
+  "renderer_modified": false,
+  "vault_modified": false,
+  "pipeline_executed": false,
+
+  "json_validation": "PASS — semantic_bundle_manifest.json, semantic_bundle_manifest_copy.json, artifact_copy_matrix.json all valid",
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[SEMANTIC-BUNDLE] PI.LENS.SEMANTIC-LAYER-PROMOTION.01 — promote BlueEdge semantic layer into first-class runtime bundle under run_blueedge_productized_01_fixed/semantic/",
+
+  "git_hygiene_status": "COMPLETE"
+}

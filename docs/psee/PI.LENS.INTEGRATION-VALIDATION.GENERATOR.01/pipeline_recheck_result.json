@@ -1,0 +1,54 @@
+{
+  "contract_id": "PI.LENS.INTEGRATION-VALIDATION.GENERATOR.01",
+  "artifact": "pipeline_recheck_result",
+  "generated_date": "2026-05-01",
+
+  "target_client": "fastapi",
+  "target_run_id": "run_02_oss_fastapi_pipeline",
+
+  "pipeline_phase_outcomes": [
+    {"phase": "Phase 1 — Source Boundary",            "status": "PASS",  "detail": "Archive present, SHA256 verified"},
+    {"phase": "Phase 2 — Intake Verification",         "status": "PASS",  "detail": "canonical_repo present (87 files)"},
+    {"phase": "Phase 3 — 40.x Structural Verification","status": "PASS",  "detail": "40.2/40.3/40.4 all present"},
+    {"phase": "Phase 4 — CEU Grounding Verification",  "status": "PASS",  "detail": "grounding PASS, ratio=0.9, coverage=HIGH"},
+    {"phase": "Phase 5 — Build Binding Envelope",      "status": "PASS",  "detail": "10 CEUs synthesized; 29 nodes, 25 edges, 10 surfaces"},
+    {"phase": "Phase 6+7 — 75.x Activation + 41.x",   "status": "PASS",  "detail": "5 pipeline artifacts produced"},
+    {"phase": "Phase 8a — Vault Construction",         "status": "PASS",  "detail": "9 vault artifacts built"},
+    {"phase": "Phase 8b — Lens Reports",               "status": "FAIL",  "detail": "lens_report_generator.py exit 1 — vault_index.json missing for fastapi — pre-existing gap"}
+  ],
+
+  "phase_08a_artifacts_created": [
+    "vault/coverage_state.json",
+    "vault/reconstruction_state.json",
+    "vault/gauge_state.json",
+    "vault/canonical_topology.json",
+    "vault/signal_registry.json",
+    "vault/binding_envelope.json",
+    "vault/admissibility_log.json",
+    "vault/evidence_trace.json",
+    "vault/vault_manifest.json"
+  ],
+
+  "blocker_resolved": {
+    "blocker": "integration_validation_path KeyError in Phase 8a",
+    "resolution": "integration_validation_path added to source_manifest.json via generator",
+    "status": "RESOLVED"
+  },
+
+  "secondary_fix": {
+    "issue": "KeyError: evidence_paths in Phase 8a canonical_topology builder",
+    "root_cause": "Generic dom_groups uses path_patterns; Phase 8a expected evidence_paths (BlueEdge schema)",
+    "fix": "dg.get('evidence_paths', dg.get('path_patterns', [])) — 1-line backward-compatible fallback",
+    "status": "RESOLVED"
+  },
+
+  "current_blocker": {
+    "phase": "Phase 8b — Lens Reports",
+    "error": "lens_report_generator.py exit 1",
+    "detail": "vault_index.json not found for client 'fastapi' in app vault",
+    "scope": "Out of scope for PI.LENS.INTEGRATION-VALIDATION.GENERATOR.01"
+  },
+
+  "overall_result": "PHASE_8A_PASS_ADVANCED_TO_8B",
+  "contract_objective": "ACHIEVED"
+}

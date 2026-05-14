@@ -1,0 +1,90 @@
+{
+  "schema_version": "1.0",
+  "package_id": "SEP-blueedge-run01-001",
+  "package_version": 1,
+  "activation_history": [
+    {
+      "phase": "REGISTRATION",
+      "timestamp": "2026-05-11T22:00:01.000Z",
+      "result": "STAGED",
+      "details": "Package registered in sandbox namespace"
+    },
+    {
+      "phase": "VALIDATION",
+      "timestamp": "2026-05-11T22:00:02.000Z",
+      "result": "PASSED",
+      "checks": {
+        "V-01_hash_integrity": "PASS",
+        "V-02_source_hash_present": "PASS",
+        "V-03_confidence_basis_present": "PASS",
+        "V-04_claim_type_valid": "PASS",
+        "V-05_entry_count_within_limit": "PASS",
+        "V-06_entry_id_monotonic": "PASS",
+        "V-07_target_scope_match": "PASS",
+        "V-08_substrate_exists": "PASS",
+        "V-09_source_authority_external": "PASS"
+      }
+    },
+    {
+      "phase": "AUTHORIZATION",
+      "timestamp": "2026-05-11T22:00:03.000Z",
+      "result": "AUTHORIZED",
+      "checks": {
+        "A-01_class_authorized": "PASS",
+        "A-02_entry_class_in_authorized_list": "PASS",
+        "A-03_override_justification": "N/A",
+        "A-04_no_cross_class_span": "PASS",
+        "A-05_governance_class_restriction": "PASS"
+      }
+    },
+    {
+      "phase": "ELIGIBILITY",
+      "timestamp": "2026-05-11T22:00:04.000Z",
+      "result": "ELIGIBLE",
+      "checks": {
+        "E-01_package_count_within_limit": "PASS (1/10)",
+        "E-02_entry_count_within_limit": "PASS (1/200)",
+        "E-03_dependencies_resolved": "PASS (no dependencies)",
+        "E-04_no_contradictions": "PASS (no active overlays)",
+        "E-05_no_immutability_violation": "PASS",
+        "E-06_temporal_boundary": "PASS"
+      }
+    },
+    {
+      "phase": "ACTIVATION_AUTHORIZATION",
+      "timestamp": "2026-05-11T22:00:05.000Z",
+      "result": "AUTHORIZED",
+      "authorization_source": "stream_contract",
+      "authorization_scope": "PI.SQO.BLUEEDGE.DYNAMIC-CEU.MICRO-OVERLAY-ACTIVATION.01",
+      "authorization_details": "Governed micro-activation proof — single overlay, single domain, lineage strengthening"
+    },
+    {
+      "phase": "ACTIVATED",
+      "timestamp": "2026-05-11T22:00:05.000Z",
+      "result": "ACTIVATED",
+      "details": "Package transitioned to ACTIVATED. SEP_ACTIVATED trigger emitted."
+    },
+    {
+      "phase": "REEVALUATION",
+      "timestamp": "2026-05-11T22:00:06.000Z",
+      "result": "COMPLETED",
+      "details": "Qualification re-evaluation completed. backed_count 4→5, S-state S2 (unchanged), Q-class Q-02 (unchanged)."
+    },
+    {
+      "phase": "QUALIFICATION_VISIBLE",
+      "timestamp": "2026-05-11T22:00:06.000Z",
+      "result": "VISIBLE",
+      "details": "Overlay contributions reflected in composite evaluation."
+    },
+    {
+      "phase": "REVOCATION",
+      "timestamp": "2026-05-11T22:00:08.000Z",
+      "result": "REVOKED",
+      "revocation_type": "STANDARD",
+      "revocation_reason": "Micro-activation proof complete — demonstrating deterministic rollback",
+      "revocation_authority": "stream_contract"
+    }
+  ],
+  "current_status": "REVOKED",
+  "final_disposition": "REVOKED_AFTER_PROOF"
+}

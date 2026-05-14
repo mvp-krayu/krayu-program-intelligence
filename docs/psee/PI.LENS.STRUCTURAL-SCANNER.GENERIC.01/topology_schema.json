@@ -1,0 +1,56 @@
+{
+  "contract_id": "PI.LENS.STRUCTURAL-SCANNER.GENERIC.01",
+  "artifact": "topology_schema",
+  "generated_date": "2026-05-01",
+  "output_file": "structure/40.3/structural_topology_log.json",
+
+  "schema": {
+    "contract_id": "string — always PI.LENS.STRUCTURAL-SCANNER.GENERIC.01",
+    "client_id": "string",
+    "source_id": "string",
+    "run_id": "string",
+    "stage": "string — always '40.3'",
+    "generated_at": "string — ISO 8601 UTC timestamp",
+    "total_relations": "integer — contains_count + imports_count",
+    "contains_count": "integer — number of CONTAINS edges",
+    "imports_count": "integer — number of IMPORTS edges",
+    "relation_types": "array[string] — always ['CONTAINS', 'IMPORTS']",
+    "parsing_method": "string — always 'static_filesystem_and_regex_import_analysis'",
+    "edges": "array[EdgeRecord]"
+  },
+
+  "edge_record_schema": {
+    "source_id": "string — NODE-NNNN of the source node",
+    "target_id": "string — NODE-NNNN of the target node",
+    "relation_type": "string — 'CONTAINS' | 'IMPORTS'"
+  },
+
+  "contains_rule": "A CONTAINS edge is emitted from parent_dir → child (file or directory) when the parent path exists in path_to_node. Root-level files with no directory ancestor (parent = '.' or '') are not connected.",
+
+  "imports_rule": {
+    "applies_to": "Python files only (.py extension)",
+    "method": "Static regex — ^(?:from\\s+([\\w.]+)\\s+import|import\\s+([\\w.]+))",
+    "resolution": "module.path → [module/path.py, module/path/__init__.py]; both candidates checked against path_to_node",
+    "relative_imports": "Leading dots stripped — relative context is NOT preserved; relative imports will not resolve to correct paths in src/ layout projects",
+    "self_loop_guard": "Edges where source_id == target_id are discarded",
+    "duplicate_guard": "At most one IMPORTS edge per (importer, imported_module_path) pair"
+  },
+
+  "fastapi_example": {
+    "total_relations": 104,
+    "contains_count": 104,
+    "imports_count": 0,
+    "imports_count_explanation": "FastAPI source uses src/ layout and relative imports — neither pattern resolves to known node paths under static regex. Zero is correct and deterministic.",
+    "edge_example": {
+      "source_id": "NODE-0001",
+      "target_id": "NODE-0002",
+      "relation_type": "CONTAINS"
+    }
+  },
+
+  "orchestrator_compatibility": {
+    "check_by_orchestrator": "existence only — run_client_pipeline.py Phase 3 checks os.path.exists(topo_log_path)",
+    "no_field_reads": "Orchestrator does not read any fields from 40.3",
+    "compatibility": "COMPATIBLE"
+  }
+}

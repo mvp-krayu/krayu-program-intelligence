@@ -1,0 +1,95 @@
+{
+  "stream_id": "PI.SEMANTIC-QUALIFICATION-LOOP.ROADMAP-AND-ARCHITECTURE.01",
+  "branch": "work/semantic-qualification-loop",
+  "baseline_commit": "30b47e2",
+  "baseline_pipeline_commit": "93098cb",
+  "summary": {
+    "files_created": 15,
+    "files_modified": 0,
+    "files_deleted": 0
+  },
+  "files": [
+    {
+      "path": "docs/psee/PI.SEMANTIC-QUALIFICATION-LOOP.ROADMAP-AND-ARCHITECTURE.01/QUALIFICATION_STATE_MACHINE.md",
+      "change": "created",
+      "purpose": "Complete S0/S1/S2/S3/S4+ state definitions with transition rules and deterministic detection algorithm"
+    },
+    {
+      "path": "docs/psee/PI.SEMANTIC-QUALIFICATION-LOOP.ROADMAP-AND-ARCHITECTURE.01/SQO_LANE_ARCHITECTURE.md",
+      "change": "created",
+      "purpose": "Lane model, SQO boundary contract, artifact topology, lane interaction model, Lane A preservation guarantees"
+    },
+    {
+      "path": "docs/psee/PI.SEMANTIC-QUALIFICATION-LOOP.ROADMAP-AND-ARCHITECTURE.01/SEMANTIC_QUALIFICATION_ROADMAP.md",
+      "change": "created",
+      "purpose": "7-phase roadmap with objectives, deliverables, implications, risk profiles, and substrate maturity requirements"
+    },
+    {
+      "path": "docs/psee/PI.SEMANTIC-QUALIFICATION-LOOP.ROADMAP-AND-ARCHITECTURE.01/SEMANTIC_MATURITY_MODEL.md",
+      "change": "created",
+      "purpose": "7-dimension maturity scoring model with composite formula, continuity sub-scoring, and semantic gravity estimation"
+    },
+    {
+      "path": "docs/psee/PI.SEMANTIC-QUALIFICATION-LOOP.ROADMAP-AND-ARCHITECTURE.01/DYNAMIC_CEU_GOVERNANCE_MODEL.md",
+      "change": "created",
+      "purpose": "Dynamic CEU as governed maturation assistance: allowable/prohibited behaviors, evidence requirements, replay guarantees"
+    },
+    {
+      "path": "docs/psee/PI.SEMANTIC-QUALIFICATION-LOOP.ROADMAP-AND-ARCHITECTURE.01/RUNTIME_QUALIFICATION_UX.md",
+      "change": "created",
+      "purpose": "15 mandatory UX exploration areas for surfacing qualification state on the executive projection surface"
+    },
+    {
+      "path": "docs/psee/PI.SEMANTIC-QUALIFICATION-LOOP.ROADMAP-AND-ARCHITECTURE.01/PROJECTION_AUTHORIZATION_DOCTRINE.md",
+      "change": "created",
+      "purpose": "Projection authorization tiers, boardroom thresholds, decision flow, disclosure obligations, downgrade handling"
+    },
+    {
+      "path": "docs/psee/PI.SEMANTIC-QUALIFICATION-LOOP.ROADMAP-AND-ARCHITECTURE.01/SEMANTIC_DEBT_AND_REMEDIATION.md",
+      "change": "created",
+      "purpose": "7-category debt taxonomy, inventory schema, priority model, 4 remediation pathways, reference debt profiles"
+    },
+    {
+      "path": "docs/psee/PI.SEMANTIC-QUALIFICATION-LOOP.ROADMAP-AND-ARCHITECTURE.01/EXECUTIVE_PROJECTION_GATING.md",
+      "change": "created",
+      "purpose": "3-layer gating model, 6 gating rules, downgrade handling, SQO contribution to gating context"
+    },
+    {
+      "path": "docs/psee/PI.SEMANTIC-QUALIFICATION-LOOP.ROADMAP-AND-ARCHITECTURE.01/REPLAY_SAFE_ENRICHMENT_MODEL.md",
+      "change": "created",
+      "purpose": "5 replay guarantees, enrichment lifecycle, verification protocol, governance-safe overlays, operation registry"
+    },
+    {
+      "path": "docs/psee/PI.SEMANTIC-QUALIFICATION-LOOP.ROADMAP-AND-ARCHITECTURE.01/QUALIFICATION_EVIDENCE_CHAIN.md",
+      "change": "created",
+      "purpose": "Evidence chain model, per-state and per-dimension chains, 5 provenance rules, certification boundaries"
+    },
+    {
+      "path": "docs/psee/PI.SEMANTIC-QUALIFICATION-LOOP.ROADMAP-AND-ARCHITECTURE.01/STRATEGIC_POSITIONING_AND_PRODUCTIZATION.md",
+      "change": "created",
+      "purpose": "Strategic positioning of SQO as product capability: differentiation, onboarding model, competitive moat"
+    },
+    {
+      "path": "docs/pios/PI.SEMANTIC-QUALIFICATION-LOOP.ROADMAP-AND-ARCHITECTURE.01/execution_report.md",
+      "change": "created",
+      "purpose": "Governance execution report"
+    },
+    {
+      "path": "docs/pios/PI.SEMANTIC-QUALIFICATION-LOOP.ROADMAP-AND-ARCHITECTURE.01/file_changes.json",
+      "change": "created",
+      "purpose": "Governance file-changes manifest"
+    },
+    {
+      "path": "docs/pios/PI.SEMANTIC-QUALIFICATION-LOOP.ROADMAP-AND-ARCHITECTURE.01/CLOSURE.md",
+      "change": "created",
+      "purpose": "Governance closure document"
+    }
+  ],
+  "validators_changed": [],
+  "topology_mutations": [],
+  "evidence_mutations": [],
+  "lane_a_artifacts_touched": [],
+  "lane_d_dpsig_artifacts_touched": [],
+  "api_routes_modified": [],
+  "page_routes_modified": []
+}

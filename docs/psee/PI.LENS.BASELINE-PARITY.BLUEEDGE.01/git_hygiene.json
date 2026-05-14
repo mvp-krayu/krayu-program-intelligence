@@ -1,0 +1,34 @@
+{
+  "contract_id": "PI.LENS.BASELINE-PARITY.BLUEEDGE.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-01",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+  "working_tree_at_start": "CLEAN",
+  "working_tree_at_end": "MODIFIED — docs/psee/PI.LENS.BASELINE-PARITY.BLUEEDGE.01/ (untracked evidence only)",
+  "baseline_commit": "4383791",
+
+  "files_created_this_contract": [
+    "docs/psee/PI.LENS.BASELINE-PARITY.BLUEEDGE.01/baseline_location_analysis.md",
+    "docs/psee/PI.LENS.BASELINE-PARITY.BLUEEDGE.01/artifact_parity_matrix.json",
+    "docs/psee/PI.LENS.BASELINE-PARITY.BLUEEDGE.01/metric_parity_check.json",
+    "docs/psee/PI.LENS.BASELINE-PARITY.BLUEEDGE.01/structural_parity_check.json",
+    "docs/psee/PI.LENS.BASELINE-PARITY.BLUEEDGE.01/pipeline_integrity_verdict.md",
+    "docs/psee/PI.LENS.BASELINE-PARITY.BLUEEDGE.01/divergence_root_cause.md",
+    "docs/psee/PI.LENS.BASELINE-PARITY.BLUEEDGE.01/no_workaround_attestation.md",
+    "docs/psee/PI.LENS.BASELINE-PARITY.BLUEEDGE.01/git_hygiene.json"
+  ],
+  "files_modified_this_contract": [],
+  "files_deleted_this_contract": [],
+
+  "blueedge_mutation_check": "PASS — no files under clients/blueedge/ were created or modified. No files under clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/ were created or modified.",
+  "pipeline_mutation_check": "PASS — scripts/pios/run_client_pipeline.py not modified this contract.",
+  "runtime_artifacts_created": "NONE — BlueEdge pipeline not re-run.",
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[DIAG] PI.LENS.BASELINE-PARITY.BLUEEDGE.01 — BlueEdge baseline parity check: NOT_COMPARABLE (pre-generic pipeline, UUID paths absent, Phase 2 blocked)",
+  "commit_note": "Evidence artifacts only. No code or client artifacts modified.",
+
+  "git_hygiene_status": "COMPLETE"
+}

@@ -1,0 +1,19 @@
+{
+  "contract_id": "PI.LENS.SOURCE-INTAKE.INVENTORY-PATH.CONTRACT-CLOSURE.01",
+  "generated_date": "2026-05-03",
+  "client": "blueedge",
+  "source": "source_01",
+  "run": "run_blueedge_intake_contract_closure_01",
+  "resolution_mode": "MISSING",
+  "candidate_paths": [
+    "clients/blueedge/psee/runs/run_blueedge_intake_contract_closure_01/intake/canonical_repo",
+    "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/intake/canonical_repo"
+  ],
+  "resolved_path": null,
+  "resolution_logic": "CLIENT_RUN (run_dir/intake/canonical_repo) checked first; EXTRACTED_PATH (manifest extracted_path) checked second; MISSING when neither exists",
+  "client_run_path_exists": false,
+  "extracted_path_exists": false,
+  "reference_pattern": "resolve_inventory_source_path() in source_intake.py; mirrors phase_04_ceu_grounding() and run_client_pipeline.py phase_02/03 hybrid patterns",
+  "blocker_06_resolved": true,
+  "classification_status": "PASS"
+}

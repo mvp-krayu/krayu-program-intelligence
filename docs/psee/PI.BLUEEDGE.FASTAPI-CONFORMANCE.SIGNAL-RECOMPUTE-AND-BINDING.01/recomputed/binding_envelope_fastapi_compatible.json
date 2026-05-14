@@ -1,0 +1,212 @@
+{
+  "contract_id": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01",
+  "artifact": "binding_envelope_fastapi_compatible",
+  "schema_version": "1.0",
+  "block": "BLOCK_C",
+  "generated_date": "2026-04-29",
+  "client_uuid": "6a6fcdbc-41b6-4e0e-99b9-37394f6c870d",
+  "run_id": "run_blueedge_integrated_01",
+
+  "authority_boundary": {
+    "back_propagation_forbidden": true,
+    "cross_projection_forbidden": true,
+    "binding_basis": "PATH_EVIDENCE_ONLY — DOM groups derived from file path prefixes; no CEU role semantics used to define binding boundaries",
+    "signal_source": "40.3/structural_topology_log.json per-node IMPORTS counts (pre-aggregation)",
+    "dom_source": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01/recomputed/dom_path_domain_layer.json"
+  },
+
+  "bindings": [
+
+    {
+      "binding_id": "BIND-PSIG-001-DOM-04",
+      "signal_reference": {
+        "signal_id": "PSIG-001",
+        "condition_id": "COND-PSIG-001-01",
+        "signal_value": 5.6630,
+        "activation_state": "HIGH",
+        "activation_method": "RUN_RELATIVE_OUTLIER"
+      },
+      "dom_reference": {
+        "dom_id": "DOM-04",
+        "dom_label": "backend_app_root",
+        "path_patterns": ["backend/src/app.module.ts", "backend/src/main.ts"]
+      },
+      "zone_reference": {
+        "zone_id": "PZ-001",
+        "zone_class": "COMPOUND_ZONE",
+        "zone_type": "DOMAIN_ZONE",
+        "anchor_id": "DOM-04",
+        "attribution_role": "primary"
+      },
+      "node_membership": [
+        {"node_id": "NODE-0021", "path": "backend/src/app.module.ts", "imports_count": 69, "attribution_role": "primary_outlier"},
+        {"node_id": "NODE-0022", "path": "backend/src/main.ts", "imports_count": 2, "attribution_role": "secondary"}
+      ],
+      "evidence_paths": ["backend/src/app.module.ts", "backend/src/main.ts"],
+      "binding_basis": "NODE-0021 outbound IMPORTS count (69) is RUN_RELATIVE_OUTLIER in 35-node per-node distribution. z-score=5.663 > threshold 2.0.",
+      "confidence": "HIGH"
+    },
+
+    {
+      "binding_id": "BIND-PSIG-002-DOM-04",
+      "signal_reference": {
+        "signal_id": "PSIG-002",
+        "condition_id": "COND-PSIG-002-01",
+        "signal_value": 3.2098,
+        "activation_state": "HIGH",
+        "activation_method": "RUN_RELATIVE_OUTLIER"
+      },
+      "dom_reference": {
+        "dom_id": "DOM-04",
+        "dom_label": "backend_app_root",
+        "path_patterns": ["backend/src/app.module.ts", "backend/src/main.ts"]
+      },
+      "zone_reference": {
+        "zone_id": "PZ-001",
+        "zone_class": "COMPOUND_ZONE",
+        "zone_type": "DOMAIN_ZONE",
+        "anchor_id": "DOM-04",
+        "attribution_role": "primary"
+      },
+      "node_membership": [
+        {"node_id": "NODE-0021", "path": "backend/src/app.module.ts", "imports_count": 69, "attribution_role": "primary_contributor"},
+        {"node_id": "NODE-0022", "path": "backend/src/main.ts", "imports_count": 2, "attribution_role": "secondary_contributor"}
+      ],
+      "evidence_paths": ["backend/src/app.module.ts", "backend/src/main.ts"],
+      "binding_basis": "DOM-04 aggregated IMPORTS count (71) is RUN_RELATIVE_OUTLIER in 13-DOM distribution. z-score=3.210 > threshold 2.0. Domain-level signal — no single entity attribution.",
+      "confidence": "HIGH"
+    },
+
+    {
+      "binding_id": "BIND-PSIG-004-PZ001",
+      "signal_reference": {
+        "signal_id": "PSIG-004",
+        "condition_id": "COND-PSIG-004-01",
+        "signal_value": 2.1822,
+        "activation_state": "HIGH",
+        "activation_method": "RUN_RELATIVE_OUTLIER"
+      },
+      "dom_reference": {
+        "dom_id": "DOM-04",
+        "dom_label": "backend_app_root",
+        "path_patterns": ["backend/src/app.module.ts", "backend/src/main.ts"],
+        "note": "DOM-04 is the dominant contributor in PZ-001 (hub node NODE-0021 anchors zone)"
+      },
+      "zone_reference": {
+        "zone_id": "PZ-001",
+        "zone_class": "COMPOUND_ZONE",
+        "zone_type": "DOMAIN_ZONE",
+        "anchor_id": "DOM-04",
+        "attribution_role": "primary"
+      },
+      "node_membership": [
+        {"node_id": "NODE-0021", "path": "backend/src/app.module.ts", "zone_id": "PZ-001", "attribution_role": "primary"},
+        {"node_id": "NODE-0022", "path": "backend/src/main.ts", "zone_id": "PZ-001", "attribution_role": "secondary"},
+        {"node_id": "NODE-0030", "path": "backend/src/common/cache/index.ts", "zone_id": "PZ-001", "attribution_role": "member"},
+        {"node_id": "NODE-0027", "path": "backend/src/common/cache/cache.module.ts", "zone_id": "PZ-001", "attribution_role": "member"},
+        {"node_id": "NODE-0084", "path": "backend/src/health/health.controller.ts", "zone_id": "PZ-001", "attribution_role": "member"},
+        {"node_id": "NODE-0098", "path": "backend/src/modules/aftersales/aftersales.controller.ts", "zone_id": "PZ-001", "attribution_role": "member"},
+        {"node_id": "NODE-0105", "path": "backend/src/modules/agentic-ai/agentic-ai.controller.ts", "zone_id": "PZ-001", "attribution_role": "member"},
+        {"node_id": "NODE-0039", "path": "backend/src/common/guards/jwt-auth.guard.ts", "zone_id": "PZ-001", "attribution_role": "member"},
+        {"node_id": "NODE-0136", "path": "backend/src/modules/auth/auth.controller.ts", "zone_id": "PZ-001", "attribution_role": "member"},
+        {"node_id": "NODE-0137", "path": "backend/src/modules/auth/auth.module.ts", "zone_id": "PZ-001", "attribution_role": "member"},
+        {"node_id": "NODE-0138", "path": "backend/src/modules/auth/auth.service.ts", "zone_id": "PZ-001", "attribution_role": "member"},
+        {"node_id": "NODE-0139", "path": "backend/src/modules/auth/auth.spec.ts", "zone_id": "PZ-001", "attribution_role": "member"},
+        {"node_id": "NODE-0088", "path": "backend/src/health/prometheus.service.ts", "zone_id": "PZ-001", "attribution_role": "member"},
+        {"node_id": "NODE-0935", "path": "monitoring/grafana/dashboards/fleet-operations.json", "zone_id": "PZ-001", "attribution_role": "member"},
+        {"node_id": "NODE-0938", "path": "monitoring/grafana/provisioning/dashboards/default.yml", "zone_id": "PZ-001", "attribution_role": "member"}
+      ],
+      "evidence_paths": [
+        "backend/src/app.module.ts", "backend/src/main.ts",
+        "backend/src/common/cache/", "backend/src/health/",
+        "backend/src/modules/", "monitoring/"
+      ],
+      "binding_basis": "PZ-001 contains 15 of 35 nodes (42.86% concentration). Node fraction is RUN_RELATIVE_OUTLIER. z-score=2.182 > threshold 2.0.",
+      "confidence": "HIGH"
+    },
+
+    {
+      "binding_id": "BIND-PSIG-006-UNANCHORED",
+      "signal_reference": {
+        "signal_id": "PSIG-006",
+        "condition_id": "COND-PSIG-006-01",
+        "signal_value": 0,
+        "activation_state": "ACTIVATED",
+        "activation_method": "THEORETICAL_BASELINE",
+        "note": "ACTIVATED — structural telemetry marker only; no pressure zone assigned"
+      },
+      "dom_reference": null,
+      "zone_reference": {
+        "zone_id": null,
+        "note": "No zone — PSIG-006=0 does not activate zone designation"
+      },
+      "node_membership": [],
+      "evidence_paths": [],
+      "binding_basis": "unanchored_count=0 from ceu_node_map.json. All 35 nodes anchored. No blind-spot zone raised.",
+      "confidence": "EXACT"
+    }
+
+  ],
+
+  "domain_telemetry": [
+    {"dom_id": "DOM-01", "dom_label": "root_configuration",  "node_count": 3,  "imports_total": 0,  "telemetry_id": "L1-ST-DOM-01-001"},
+    {"dom_id": "DOM-02", "dom_label": "ci_cd_workflows",     "node_count": 2,  "imports_total": 0,  "telemetry_id": "L1-ST-DOM-02-001"},
+    {"dom_id": "DOM-03", "dom_label": "backend_migrations",  "node_count": 3,  "imports_total": 0,  "telemetry_id": "L1-ST-DOM-03-001"},
+    {"dom_id": "DOM-04", "dom_label": "backend_app_root",    "node_count": 2,  "imports_total": 71, "telemetry_id": "L1-ST-DOM-04-001", "outlier_flag": true},
+    {"dom_id": "DOM-05", "dom_label": "backend_common",      "node_count": 5,  "imports_total": 4,  "telemetry_id": "L1-ST-DOM-05-001"},
+    {"dom_id": "DOM-06", "dom_label": "backend_config",      "node_count": 2,  "imports_total": 0,  "telemetry_id": "L1-ST-DOM-06-001"},
+    {"dom_id": "DOM-07", "dom_label": "backend_events",      "node_count": 1,  "imports_total": 5,  "telemetry_id": "L1-ST-DOM-07-001"},
+    {"dom_id": "DOM-08", "dom_label": "backend_health",      "node_count": 2,  "imports_total": 4,  "telemetry_id": "L1-ST-DOM-08-001"},
+    {"dom_id": "DOM-09", "dom_label": "backend_modules",     "node_count": 6,  "imports_total": 18, "telemetry_id": "L1-ST-DOM-09-001"},
+    {"dom_id": "DOM-10", "dom_label": "frontend",            "node_count": 3,  "imports_total": 8,  "telemetry_id": "L1-ST-DOM-10-001"},
+    {"dom_id": "DOM-11", "dom_label": "load_tests",          "node_count": 2,  "imports_total": 0,  "telemetry_id": "L1-ST-DOM-11-001"},
+    {"dom_id": "DOM-12", "dom_label": "monitoring",          "node_count": 2,  "imports_total": 0,  "telemetry_id": "L1-ST-DOM-12-001"},
+    {"dom_id": "DOM-13", "dom_label": "svg_agents",          "node_count": 2,  "imports_total": 0,  "telemetry_id": "L1-ST-DOM-13-001"}
+  ],
+
+  "pressure_zone_designations": [
+    {
+      "zone_id": "PZ-001",
+      "zone_type": "DOMAIN_ZONE",
+      "zone_class": "COMPOUND_ZONE",
+      "class_rule_applied": "condition_count >= 3",
+      "anchor_id": "DOM-04",
+      "anchor_name": "backend_app_root",
+      "aggregated_conditions": ["PSIG-001", "PSIG-002", "PSIG-004"],
+      "condition_count": 3,
+      "embedded_pair_rules": ["COUPLING_ZONE", "PROPAGATION_ZONE", "RESPONSIBILITY_ZONE"],
+      "psig_006_flag": "NOT",
+      "member_entities": [
+        {"entity_id": "NODE-0021", "entity_type": "NODE", "attribution_role": "primary"},
+        {"entity_id": "DOM-04", "entity_type": "DOMAIN", "attribution_role": "primary"}
+      ],
+      "evidence_trace": {
+        "PSIG-001": "NODE-0021 IMPORTS=69 → z-score=5.663 → COND-PSIG-001-01 HIGH primary → DOM-04 → PZ-001",
+        "PSIG-002": "DOM-04 IMPORTS_total=71 → z-score=3.210 → COND-PSIG-002-01 HIGH primary → DOM-04 → PZ-001",
+        "PSIG-004": "PZ-001 node_fraction=0.4286 → z-score=2.182 → COND-PSIG-004-01 HIGH primary → DOM-04 → PZ-001"
+      },
+      "grounding_status": "ACTIVATED",
+      "zone_weight": 1.0
+    }
+  ],
+
+  "non_pressure_zones": [
+    {"zone_id": "PZ-002", "anchor_dom": "DOM-10", "note": "No active pressure signals — PSIG-001/002/004 do not attribute to this zone"},
+    {"zone_id": "PZ-003", "anchor_dom": "DOM-03", "note": "No active pressure signals"},
+    {"zone_id": "PZ-004", "anchor_dom": "DOM-01", "note": "No active pressure signals"},
+    {"zone_id": "PZ-005", "anchor_dom": "DOM-05", "note": "No active pressure signals"},
+    {"zone_id": "PZ-006", "anchor_dom": "DOM-13", "note": "No active pressure signals"},
+    {"zone_id": "PZ-007", "anchor_dom": "DOM-02", "note": "No active pressure signals"}
+  ],
+
+  "summary": {
+    "total_dom_groups": 13,
+    "total_bindings": 4,
+    "active_pressure_zones": 1,
+    "non_pressure_zones": 6,
+    "primary_outlier_node": "NODE-0021",
+    "primary_outlier_domain": "DOM-04",
+    "signals_bound": ["PSIG-001", "PSIG-002", "PSIG-004", "PSIG-006"],
+    "binding_basis": "PATH_EVIDENCE_ONLY"
+  }
+}

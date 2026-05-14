@@ -1,0 +1,25 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE.EXECUTION-CLOSURE.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-03",
+  "baseline_commit": "65b1bac",
+  "baseline_message": "[FIX] Renderer schema compatibility for pressure zone projection (zones vs zone_projection)",
+  "baseline_tag": "lens-e2e-stable-v1",
+  "branch": "work/psee-runtime",
+  "files_modified": [],
+  "files_created": [
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-CLOSURE.01/canonical_execution_flow.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-CLOSURE.01/runtime_mapping.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-CLOSURE.01/idempotency_rules.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-CLOSURE.01/artifact_contract.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-CLOSURE.01/entrypoint_definition.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-CLOSURE.01/validation_result.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.EXECUTION-CLOSURE.01/git_hygiene.json"
+  ],
+  "pipeline_code_modified": false,
+  "renderer_modified": false,
+  "producer_modified": false,
+  "change_type": "documentation_consolidation_only",
+  "commit_recommendation": "pending — commit after RETURN issued",
+  "status": "CLEAN_PENDING_COMMIT"
+}

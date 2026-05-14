@@ -1,0 +1,101 @@
+{
+  "contract_id": "PI.LENS.E2E.CANONICAL-EXECUTION-CONTRACT.01",
+  "artifact": "validation_log",
+  "generated_date": "2026-05-01",
+  "mode": "DOCUMENTATION_ONLY / CONTRACT_LOCK",
+  "anchor_run": "run_be_orchestrated_fixup_01",
+
+  "checks": [
+    {
+      "id": "VF-01",
+      "name": "BLOCK_A: caller_inventory.json written — 14 callers documented",
+      "result": "PASS",
+      "evidence": "caller_inventory.json: CALLER-01 through CALLER-14; all phase functions, lens_report_generator.py, export_graph_state.mjs, and _write_canonical_run_metadata documented with inputs, outputs, and fail-closed conditions"
+    },
+    {
+      "id": "VF-02",
+      "name": "BLOCK_B: stage_contracts.json written — 14 stages S01-S14 documented",
+      "result": "PASS",
+      "evidence": "stage_contracts.json: S01_CLIENT_MANIFEST_LOAD through S14_CURRENT_RUN_MIRROR; automation_status, inputs, outputs, fail-closed conditions, and critical notes documented for each stage"
+    },
+    {
+      "id": "VF-03",
+      "name": "BLOCK_C: input_contract.md written — all required and optional inputs documented",
+      "result": "PASS",
+      "evidence": "input_contract.md: client.yaml (10 fields), source_manifest.json (10 required + 2 optional fields), fastapi_conformance_path artifact requirements, path resolution rules, 40.x structural requirements, CEU grounding readiness gate formats"
+    },
+    {
+      "id": "VF-04",
+      "name": "BLOCK_D: output_contract.md written — canonical output directory structure documented",
+      "result": "PASS",
+      "evidence": "output_contract.md: psee/runs/<run_id>/ tree (binding/, 75.x/, 41.x/, vault/ with 9 artifacts), lens/runs/<run_id>/ tree (index.json, manifest.json, reports/ with 3 tier dirs + publish/ + graph_state.json), selector/ tree, current/ mirror — 22 governed outputs per run"
+    },
+    {
+      "id": "VF-05",
+      "name": "BLOCK_E: artifact_handoff_matrix.json written — 14 handoffs documented",
+      "result": "PASS",
+      "evidence": "artifact_handoff_matrix.json: H-01 through H-14; 9 FILE handoffs, 4 GATE_ONLY handoffs, 2 IN_MEMORY handoffs; critical path S01→S02→...→S12 documented"
+    },
+    {
+      "id": "VF-06",
+      "name": "BLOCK_F: signal_schema_contract.md written — three-class model, schema bridge fix, PSIG-006 guardrail",
+      "result": "PASS",
+      "evidence": "signal_schema_contract.md: three-class model (active/telemetry/not_activated), fixed active_count formula (excludes THEORETICAL_BASELINE), PSIG-006 invariant table, canonical BlueEdge signal values (PSIG-001=5.663, PSIG-002=3.2098, PSIG-004=2.1822, PSIG-006=0/BASELINE), signal_registry.json schema"
+    },
+    {
+      "id": "VF-07",
+      "name": "BLOCK_G: selector_contract.md written — selector.json schema, available_runs.json duality, integrity rules",
+      "result": "PASS",
+      "evidence": "selector_contract.md: selector.json schema, run_status classification values (CANONICAL_ORCHESTRATED, CANONICAL_BASELINE_REFERENCE, REJECTED_NON_CANONICAL), available_runs.json list-vs-dict normalization rule, selector update sequence (S12 then S13), selector revert protocol, current/ mirror behavior"
+    },
+    {
+      "id": "VF-08",
+      "name": "BLOCK_H: report_generation_contract.md written — canonical invocation, 4 surfaces, graph export, metadata write",
+      "result": "PASS",
+      "evidence": "report_generation_contract.md: canonical lens_report_generator.py invocation, all CLI arguments, 4 report surfaces with inputs/outputs, S11 graph export subprocess invocation, S13 metadata write behavior, publish variant rules, report integrity rules"
+    },
+    {
+      "id": "VF-09",
+      "name": "BLOCK_I: canonical_run_validation_contract.md written — BlueEdge parity reference, 14-check procedure",
+      "result": "PASS",
+      "evidence": "canonical_run_validation_contract.md: 14-check parity procedure (P-01 through P-14), canonical BlueEdge reference values, run classification decision tree, non-canonical run handling protocol, BlueEdge run history table"
+    },
+    {
+      "id": "VF-10",
+      "name": "BLOCK_J: gap_register_contract.md written — 4 active gaps + 1 closed gap documented",
+      "result": "PASS",
+      "evidence": "gap_register_contract.md: GAP-01 (STAGE_NOT_AUTOMATED: signal computation), GAP-02 (STAGE_NOT_AUTOMATED: signal registry), GAP-03 (vault_index.json automation), GAP-04 (available_runs.json format — mitigated), CLOSED-01 (schema bridge bug — fixed); gap classification taxonomy and remediation rules"
+    },
+    {
+      "id": "VF-11",
+      "name": "BLOCK_K: fastapi_readiness_rules.md written — FastAPI status ALLOWED_AFTER_OPERATOR_APPROVAL",
+      "result": "PASS",
+      "evidence": "fastapi_readiness_rules.md: current status ALLOWED_AFTER_OPERATOR_APPROVAL, canonical vault paths, forbidden patterns, entrypoint rules, signal serving rules, pre-FastAPI checklist, next contract PI.LENS.END-TO-END-RERUN.FASTAPI.01"
+    },
+    {
+      "id": "VF-12",
+      "name": "BLOCK_L: brain_update_manifest.json written — all 4 brain domains addressed",
+      "result": "PASS",
+      "evidence": "brain_update_manifest.json: CANONICAL brain (canonical run, signal values, gap facts), PRODUCT brain (product surface, FastAPI status, selector), PUBLISH brain (publish variants, no manual patches), CODE brain (all code changes, gaps, file list); alignment_status.all_four_brains_addressed=true"
+    },
+    {
+      "id": "VF-13",
+      "name": "execution_report.md written — pre-flight and block log complete",
+      "result": "PASS",
+      "evidence": "execution_report.md: pre-flight checks (branch, scope, CONTROL_DOC_ROOT, inputs), block execution log (BLOCK_A through BLOCK_N), code changes applied table, governance confirmation"
+    },
+    {
+      "id": "VF-14",
+      "name": "BLOCK_N: canonical_execution_contract_summary.md written — verdict CANONICAL_E2E_CONTRACT_LOCKED",
+      "result": "PASS",
+      "evidence": "canonical_execution_contract_summary.md: 15 artifacts produced, all blocks COMPLETE, verdict CANONICAL_E2E_CONTRACT_LOCKED, next contract PI.LENS.END-TO-END-RERUN.FASTAPI.01 authorized after operator approval"
+    }
+  ],
+
+  "summary": {
+    "total_checks": 14,
+    "passed": 14,
+    "failed": 0,
+    "result": "ALL_PASS"
+  }
+}

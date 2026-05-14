@@ -1,0 +1,143 @@
+{
+  "schema_version": "1.0",
+  "schema_contract": "PI.41X.INTERPRETATION-BINDING.01",
+  "description": "Schema for interpretation binding entries. Each binding attaches a global registry interpretation (INT-XXX) to a specific structural construct found in a 41.x projection output. Binding is by reference — no projection content is altered.",
+
+  "source_type_values": ["zone", "signal", "condition", "composite"],
+
+  "binding_id_pattern": "^BIND-\\d{3}$",
+
+  "binding_schema": {
+    "binding_id": {
+      "type": "string",
+      "pattern": "^BIND-\\d{3}$",
+      "description": "Stable binding identifier. Monotonically assigned within a binding file. Never reused."
+    },
+    "source_type": {
+      "type": "string",
+      "enum": ["zone", "signal", "condition", "composite"],
+      "description": "The structural layer of the construct being bound."
+    },
+    "binding_context": {
+      "type": ["string", "null"],
+      "description": "Optional: declares the specific field relationship within source_type. Example: 'embedded_pair_rule' when binding a zone_class that appears as an embedded pair rule entry rather than as the zone's own zone_class. Null when not applicable."
+    },
+    "source_ref": {
+      "type": "object",
+      "description": "Structural identifier(s) from the 41.x projection artifact. At least one non-null field required. zone_id fields are run-instance-specific; zone_class and signal_id and condition_id fields are global.",
+      "properties": {
+        "zone_id": {
+          "type": ["string", "null"],
+          "description": "PZ-NNN zone identifier from pressure_zone_projection.json. Run-instance-specific. Null when binding is purely class-level."
+        },
+        "zone_class": {
+          "type": ["string", "null"],
+          "description": "Zone class identifier (e.g. COMPOUND_ZONE). Global. Null when not applicable to this binding."
+        },
+        "signal_id": {
+          "type": ["string", "null"],
+          "description": "PSIG-NNN signal identifier. Global. Null when not applicable to this binding."
+        },
+        "condition_id": {
+          "type": ["string", "null"],
+          "description": "COND-PSIG-NNN-NN condition identifier. Run-instance-specific suffix. Null when not applicable to this binding."
+        }
+      },
+      "required": ["zone_id", "zone_class", "signal_id", "condition_id"]
+    },
+    "interpretation_ref": {
+      "type": "object",
+      "description": "Reference to the global Interpretation Registry entry providing governed meaning for this binding.",
+      "properties": {
+        "registry_entry_id": {
+          "type": "string",
+          "pattern": "^INT-\\d{3}$",
+          "description": "The INT-XXX ID of the registry entry being attached."
+        },
+        "registry_version": {
+          "type": "string",
+          "description": "Version of the registry from which the entry was read at binding time."
+        }
+      },
+      "required": ["registry_entry_id", "registry_version"]
+    },
+    "attached_interpretation": {
+      "type": "object",
+      "description": "Three-layer interpretation content copied verbatim from the referenced registry entry at binding time. Must be identical to the INT-XXX entry content. Consumers must not modify this content at consumption time.",
+      "properties": {
+        "behavioral_meaning": {
+          "type": "string",
+          "description": "Verbatim copy of behavioral_meaning from the registry entry."
+        },
+        "system_expression": {
+          "type": "string",
+          "description": "Verbatim copy of system_expression from the registry entry."
+        },
+        "business_expression": {
+          "type": "string",
+          "description": "Verbatim copy of business_expression from the registry entry."
+        }
+      },
+      "required": ["behavioral_meaning", "system_expression", "business_expression"]
+    },
+    "trace": {
+      "type": "object",
+      "description": "Traceability record linking the binding to its registry source and projection source artifact.",
+      "properties": {
+        "registry_path": {
+          "type": "string",
+          "description": "Path to the interpretation registry file from which the INT-XXX entry was read."
+        },
+        "source_artifact_path": {
+          "type": "string",
+          "description": "Path to the 41.x projection artifact from which the source_ref was derived."
+        },
+        "evidence_status": {
+          "type": "string",
+          "const": "registry_bound",
+          "description": "Fixed status confirming that interpretation is attached by reference from registry only. Never 'inferred', 'derived', or 'computed'."
+        }
+      },
+      "required": ["registry_path", "source_artifact_path", "evidence_status"]
+    },
+    "constraints": {
+      "type": "object",
+      "description": "Invariant constraint flags. All must be false — none of these operations were performed in producing this binding.",
+      "properties": {
+        "truth_mutation": {
+          "type": "boolean",
+          "const": false,
+          "description": "Confirms projection artifact source truth was not modified."
+        },
+        "runtime_computation": {
+          "type": "boolean",
+          "const": false,
+          "description": "Confirms no new computation was performed on projection values."
+        },
+        "recommendation": {
+          "type": "boolean",
+          "const": false,
+          "description": "Confirms no recommendation language was introduced."
+        },
+        "severity": {
+          "type": "boolean",
+          "const": false,
+          "description": "Confirms no severity labels were assigned."
+        },
+        "prediction": {
+          "type": "boolean",
+          "const": false,
+          "description": "Confirms no predictive claims were introduced."
+        }
+      },
+      "required": ["truth_mutation", "runtime_computation", "recommendation", "severity", "prediction"]
+    }
+  },
+
+  "extension_rules": {
+    "new_binding": "New bindings must be appended with the next BIND-NNN ID. IDs must not be reused or recycled.",
+    "update_binding": "Existing bindings may be updated only if the referenced registry entry has been superseded and the binding is updated to reference the new INT-XXX ID.",
+    "deletion": "Bindings must not be deleted. Deprecated bindings must be marked with a deprecation note referencing the superseding BIND-NNN or INT-XXX.",
+    "client_specificity": "Bindings referencing zone_id fields are run-instance-specific. Bindings referencing only zone_class, signal_id, or condition_id are global. Both types are permitted in the same binding file."
+  }
+}

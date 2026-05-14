@@ -1,0 +1,36 @@
+{
+  "contract_id": "PI.LENS.REPORT-RENDERER.DRIFT-REMEDIATION.01",
+  "generated_date": "2026-05-02",
+  "branch": "work/psee-runtime",
+  "commit": "560f426708c09f82e0960e278ced5b35ec2bd4f2",
+
+  "checks": [
+    { "name": "pre_flight_branch",        "result": "PASS", "detail": "branch == work/psee-runtime" },
+    { "name": "pre_flight_working_tree",  "result": "PASS", "detail": "clean at start" },
+    { "name": "pre_flight_drift_input",   "result": "PASS", "detail": "PARITY-STABILIZATION.01 classification present" },
+    { "name": "pre_flight_canonical_lock","result": "PASS", "detail": "canonical_report_paths.json verified" },
+    { "name": "pre_flight_bundle",        "result": "PASS", "detail": "semantic bundle 16/16 COMPLETE" },
+    { "name": "generator_exit_code",      "result": "PASS", "detail": "exit 0, all 4 reports generated" },
+    { "name": "tier1_narrative_byte_match","result": "PASS", "detail": "sha256 f60134881b2362a5857fc113cf4acde5a4e3513e5864f70b9cab1342e6014511 matches canonical" },
+    { "name": "tier1_evidence_byte_match", "result": "PASS", "detail": "sha256 84e3d8800ee4c14ac5e19899d064307bcef676622c54cafcbf3ddea0321680ab matches canonical" },
+    { "name": "tier2_diagnostic_byte_match","result": "PASS", "detail": "sha256 2a69bc0ea65515850da0d63a4392f3bc28abc8fe11d76f65648c42244d3c70fd matches canonical" },
+    { "name": "decision_surface_norm_parity","result": "PASS", "detail": "0 normalized diff lines; byte diff is run-id volatile metadata only" },
+    { "name": "rc01_svg_coordinates",     "result": "PASS", "detail": "semantic_topology_layout.json updated with canonical node positions and cluster bounding boxes" },
+    { "name": "rc02_cluster_ids",         "result": "PASS", "detail": "semantic_topology_model.json cluster_ids CLU-01..CLU-05 matching canonical domain cards" },
+    { "name": "rc03_lineage_status",      "result": "PASS", "detail": "DOMAIN-01 EXACT, DOMAIN-16 EXACT in model and dom_bindings_summary" },
+    { "name": "rc04_hero_rationale",      "result": "PASS", "detail": "decision surface hero rationale uses semantic path: 'Structural evidence layer complete — 5/17 semantic domains backed'" },
+    { "name": "rc04_truth_text",          "result": "PASS", "detail": "truth text uses canonical multi-sentence semantic format" },
+    { "name": "rc04_badge_text",          "result": "PASS", "detail": "structure badge STABLE, risk badge MODERATE (no qualifier)" },
+    { "name": "rc04_gap_items",           "result": "PASS", "detail": "gap items use canonical 'N structural signals not activated' format" },
+    { "name": "rc04_epb_insight",         "result": "PASS", "detail": "EPB insight: 'N signals are simultaneously active across the system.'" },
+    { "name": "rc04_synthesis",           "result": "PASS", "detail": "synthesis: 'A single structural pressure pattern spans multiple domains.'" },
+    { "name": "rc04_support_text",        "result": "PASS", "detail": "signal support text: canonical generic form" },
+    { "name": "canonical_not_modified",   "result": "PASS", "detail": "canonical reports untouched (hash verified)" },
+    { "name": "no_rerun_loops",           "result": "PASS", "detail": "single generation pass per RC group" },
+    { "name": "total_non_allowed_diffs",  "result": "PASS", "detail": "0 non-allowed diffs (down from 438)" }
+  ],
+
+  "overall": "PASS",
+  "fail_count": 0,
+  "pass_count": 23
+}

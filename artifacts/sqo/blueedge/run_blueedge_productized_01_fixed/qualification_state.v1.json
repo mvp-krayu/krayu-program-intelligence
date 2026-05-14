@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "client": "blueedge",
+  "run_id": "run_blueedge_productized_01_fixed",
+  "qualification_state": {
+    "s_state": "S2",
+    "state_label": "PARTIAL_GROUNDING_WITH_CONTINUITY",
+    "state_reason": "Partial grounding with validated semantic continuity",
+    "authorization_tier": "AUTHORIZED_WITH_QUALIFICATION",
+    "boardroom_readiness": "BOARDROOM_QUALIFIED",
+    "projection_permission": "EXECUTIVE_SURFACE_WITH_QUALIFIER"
+  },
+  "evidence": {
+    "manifest_registered": true,
+    "required_artifacts_declared": [
+      "semantic_topology_model",
+      "decision_validation",
+      "reproducibility_verdict",
+      "semantic_continuity_crosswalk",
+      "canonical_topology_40_4",
+      "dpsig_signal_set"
+    ],
+    "required_artifacts_present": [
+      "semantic_topology_model",
+      "decision_validation",
+      "reproducibility_verdict",
+      "semantic_continuity_crosswalk",
+      "canonical_topology_40_4",
+      "dpsig_signal_set"
+    ],
+    "required_artifacts_missing": [],
+    "loader_status": "OK",
+    "binding_status": "LIVE",
+    "q_class": "Q-02",
+    "qualifier_summary": {
+      "qualifier_class": "Q-02",
+      "qualifier_label": "Partial Grounding · Structural Continuity",
+      "qualifier_note": "Semantic continuity is validated. Some semantic domains lack structural backing; advisory confirmation is mandatory before executive commitment.",
+      "derived_qualifier_class": "Q-02",
+      "qualifier_class_compat": "Q-01",
+      "semantic_projection_class": "PARTIAL_GROUNDING_WITH_STRUCTURAL_CONTINUITY",
+      "semantic_continuity_status": "VALIDATED",
+      "evidence_availability": "AVAILABLE",
+      "derivation_inputs": {
+        "backed_count": 4,
+        "total_count": 17,
+        "semantic_continuity_status": "VALIDATED",
+        "evidence_availability": "AVAILABLE",
+        "grounding_ratio": 0.23529411764705882
+      },
+      "derivation_rule_id": "Q02-RES-RULE-01",
+      "derivation_rule_version": "1.0",
+      "derivation_rule": "evidence_availability!=AVAILABLE → Q-04; ratio==1.0 → Q-01; ratio==0 → semantic_continuity_status==VALIDATED ? Q-03 : Q-04; 0<ratio<1.0 → semantic_continuity_status==VALIDATED ? Q-02 : Q-03",
+      "amendment_anchor": "docs/governance/Q02_GOVERNANCE_AMENDMENT.md"
+    }
+  },
+  "governance": {
+    "fail_closed": true,
+    "client_agnostic": true,
+    "no_semantic_fabrication": true,
+    "no_source_mutation": true,
+    "sqo_advisory_only": true
+  },
+  "provenance": {
+    "source_commit": "9fdf308df8fa",
+    "input_hashes": {
+      "semantic_topology_model": "present",
+      "decision_validation": "present",
+      "reproducibility_verdict": "present",
+      "semantic_continuity_crosswalk": "present",
+      "canonical_topology_40_4": "present",
+      "dpsig_signal_set": "present"
+    },
+    "operation": "detect_qualification_state",
+    "operation_version": "1.0",
+    "output_hash": "sha256:c60e175572115b5edd07f7f671e3ac73bfa4999312faaefe168ddc923ed1314e"
+  }
+}

@@ -54,11 +54,17 @@ Exit codes:
   1 = FAIL_CLOSED
 """
 
+import argparse as _argparse
 import hashlib
 import json
 import os
 import subprocess
 import sys
+
+_ap = _argparse.ArgumentParser(description="PSEE BlueEdge CEU Lineage Extractor")
+_ap.add_argument("--target-client", required=True, dest="target_client",
+                  help="Target client UUID to write extracted lineage output to")
+_parsed = _ap.parse_args()
 
 # ── CONSTANTS ─────────────────────────────────────────────────────────────────
 STREAM            = "PSEE.BLUEEDGE.CEU.LINEAGE.EXTRACTOR"
@@ -68,7 +74,7 @@ REQUIRED_BRANCH   = "work/psee-runtime"
 
 BLUEEDGE_CLIENT   = "blueedge"
 BLUEEDGE_RUN_ID   = "run_01_authoritative"
-TARGET_CLIENT_UUID = "1de0d815-0721-58e9-bc8d-ca83e70fa903"
+TARGET_CLIENT_UUID = _parsed.target_client
 
 TOPOLOGY_STREAM_DIR = "docs/pios/PI.STRUCTURAL_TOPOLOGY.RECONSTRUCTION.WP-03_TO_WP-07"
 

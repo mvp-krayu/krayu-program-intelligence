@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "sandbox_id": "sandbox-blueedge-run01-micro-001",
+  "reconstruction_inputs": {
+    "I1_substrate_version": {
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/semantic_topology_model.json",
+      "hash": "fb04994af180d9428c6845c357ce8de466d3d5093cb49bf241e3f43b5ba013d1"
+    },
+    "I2_qualification_baseline_version": {
+      "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/qualification_state.v1.json",
+      "hash": "e7fd21c49a4e7d1585147326f17df1c7ab8dc13889cea613d4eb27251cebe10c"
+    },
+    "I3_overlay_package_set": {
+      "packages": [
+        {
+          "package_id": "SEP-blueedge-run01-001",
+          "package_version": 1,
+          "package_hash": "sha256:micro_overlay_001_v1",
+          "status_at_snapshot": "REVOKED"
+        }
+      ]
+    },
+    "I4_activation_profile": {
+      "activated_packages_at_peak": ["SEP-blueedge-run01-001"],
+      "activated_packages_at_close": [],
+      "application_order": ["SEP-blueedge-run01-001"]
+    },
+    "I5_evaluation_framework_version": {
+      "q_class_formula_version": "1.0",
+      "s_state_gate_version": "1.0",
+      "q_class_derivation_rule": "Q02-RES-RULE-01"
+    },
+    "I6_sandbox_manifest": {
+      "sandbox_id": "sandbox-blueedge-run01-micro-001",
+      "created_at": "2026-05-11T22:00:00.000Z",
+      "substrate_hash": "fb04994af180d9428c6845c357ce8de466d3d5093cb49bf241e3f43b5ba013d1",
+      "baseline_hash": "e7fd21c49a4e7d1585147326f17df1c7ab8dc13889cea613d4eb27251cebe10c"
+    }
+  }
+}

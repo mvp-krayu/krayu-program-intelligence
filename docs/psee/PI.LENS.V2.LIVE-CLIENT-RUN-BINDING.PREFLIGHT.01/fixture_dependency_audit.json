@@ -1,0 +1,233 @@
+{
+  "stream": "PI.LENS.V2.LIVE-CLIENT-RUN-BINDING.PREFLIGHT.01",
+  "generated": "2026-05-09",
+  "audit_scope": "All non-live dependencies in app/execlens-demo for the LENS V2 flagship surface",
+  "dependency_type_legend": {
+    "STATIC_FIXTURE": "in-memory data file imported at build time",
+    "HARDCODED_SEMANTIC_VALUE": "literal value in source code that should derive from upstream",
+    "PRESENTATION_METADATA": "labels / tier names / mode names that are presentation-layer constants",
+    "MOCK_REPORT_OBJECT": "an object shaped like a real report but populated with fixture values",
+    "PROSE_DERIVED_VALUE": "value extracted from authored prose for visual display",
+    "SAFE_VISUAL_CONSTANT": "constant used only for layout / styling, no semantic claim",
+    "UNSAFE_FAKE_TELEMETRY": "value pretending to be live runtime data — forbidden"
+  },
+  "dependencies": [
+    {
+      "file_path": "app/execlens-demo/flagship-experience/fixtures/flagship_real_report.fixture.js",
+      "dependency_type": "STATIC_FIXTURE",
+      "value_description": "FLAGSHIP_REAL_REPORT object — full mock of a report with topology_scope (cluster_count=47, domain_count=3), evidence_blocks (3 fictional 'Primary Delivery' / 'Coordination Layer' / 'Secondary Delivery' domains), narrative_block (authored prose), trace_block, trace_linkage (synthetic hashes), rendering_metadata (Q-01, ALI-01..04)",
+      "fixture_or_hardcoded": "fixture",
+      "safe_to_keep": false,
+      "must_replace_for_live_binding": true,
+      "replacement_source": "SemanticPayloadResolver consuming clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/* artifacts via /api/lens-payload",
+      "governance_risk": "MEDIUM — fixture values do not match either FastAPI or BlueEdge vault data; commercial-evocative authored content",
+      "notes": "Single source of truth for surface content today. Replace via getServerSideProps fetching /api/lens-payload."
+    },
+    {
+      "file_path": "app/execlens-demo/flagship-experience/fixtures/flagship_real_report.fixture.js",
+      "dependency_type": "STATIC_FIXTURE",
+      "value_description": "FLAGSHIP_PROPAGATION_CHAINS array — 2 propagation chains using the same 3 fictional domain aliases",
+      "fixture_or_hardcoded": "fixture",
+      "safe_to_keep": false,
+      "must_replace_for_live_binding": true,
+      "replacement_source": "Derived by SemanticPayloadResolver from binding_envelope.edges + signal_registry primary_entity traversal",
+      "governance_risk": "LOW",
+      "notes": "Used for the demoted topology strip below the IntelligenceField."
+    },
+    {
+      "file_path": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "dependency_type": "HARDCODED_SEMANTIC_VALUE",
+      "value_description": "BALANCED hard-coded consequence statement: 'Pressure originates upstream and is being absorbed through the coordination layer; secondary delivery remains within bounds, advisory-qualified.'",
+      "fixture_or_hardcoded": "hardcoded",
+      "safe_to_keep": false,
+      "must_replace_for_live_binding": true,
+      "replacement_source": "narrative_block.executive_summary from payload — but a generation rule for the consequence statement specifically may need a separate sentence-extraction adapter",
+      "governance_risk": "MEDIUM — currently authored prose with operational meaning",
+      "notes": "Out of scope for first binding; keep as authored prose until a narrative-generation contract is issued."
+    },
+    {
+      "file_path": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "dependency_type": "HARDCODED_SEMANTIC_VALUE",
+      "value_description": "DENSE hard-coded dense-note: 'Coordination layer is conducting upstream pressure rather than generating it — consistent with organizational stress migration, not isolated incident.'",
+      "fixture_or_hardcoded": "hardcoded",
+      "safe_to_keep": false,
+      "must_replace_for_live_binding": true,
+      "replacement_source": "Could derive from absorption_load percentage + structural_summary in narrative_block",
+      "governance_risk": "MEDIUM",
+      "notes": "Authored prose for the cinematic surface; out of scope for first binding."
+    },
+    {
+      "file_path": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "dependency_type": "HARDCODED_SEMANTIC_VALUE",
+      "value_description": "DENSE hard-coded absorption percentage: 68% (in absorption-bar-fill style and in actor-absorption-meta-value)",
+      "fixture_or_hardcoded": "hardcoded",
+      "safe_to_keep": false,
+      "must_replace_for_live_binding": true,
+      "replacement_source": "Computed from binding_envelope.edges (inbound coupling at PASS-THROUGH node) divided by total propagated load",
+      "governance_risk": "LOW",
+      "notes": "The absorption metric needs a deterministic derivation rule per IFR-09 denominator_guard."
+    },
+    {
+      "file_path": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "dependency_type": "HARDCODED_SEMANTIC_VALUE",
+      "value_description": "INVESTIGATION lineage chain — currently reads from FLAGSHIP_REAL_REPORT.trace_linkage which is fixture-only",
+      "fixture_or_hardcoded": "fixture",
+      "safe_to_keep": false,
+      "must_replace_for_live_binding": true,
+      "replacement_source": "vault/evidence_trace.json (evidence_object_hash, derivation_hash) + vault_manifest.json (baseline_anchor) + manifests/run_initialization_manifest.json (run_id)",
+      "governance_risk": "LOW",
+      "notes": "Read-only Tier-1 artifacts; straightforward replacement."
+    },
+    {
+      "file_path": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "dependency_type": "HARDCODED_SEMANTIC_VALUE",
+      "value_description": "INVESTIGATION rule chips: Q-01 + ALI-01..04 — currently reads FLAGSHIP_REAL_REPORT.rendering_metadata.qualifier_rules_applied / ali_rules_applied",
+      "fixture_or_hardcoded": "fixture",
+      "safe_to_keep": false,
+      "must_replace_for_live_binding": true,
+      "replacement_source": "rendering_metadata field — currently NOT in vault. Requires upstream contract to write rendering_metadata as a per-run vault artifact.",
+      "governance_risk": "MEDIUM — Inference Prohibition actor (N · IP) is BLOCKED_MISSING_ARTIFACT until this is addressed",
+      "notes": "First binding can ship with placeholder rule chips and a 'pending live binding' caption for IP only."
+    },
+    {
+      "file_path": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "dependency_type": "HARDCODED_SEMANTIC_VALUE",
+      "value_description": "BOARDROOM hard-coded statement: 'Operating posture. Pressure is propagating through coordination — advisory-bounded at the secondary receiver.'",
+      "fixture_or_hardcoded": "hardcoded",
+      "safe_to_keep": false,
+      "must_replace_for_live_binding": false,
+      "replacement_source": "Could derive from narrative_block; out of scope for first binding",
+      "governance_risk": "LOW",
+      "notes": "Authored prose for projection-grade boardroom statement."
+    },
+    {
+      "file_path": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "dependency_type": "PRESENTATION_METADATA",
+      "value_description": "PRESSURE_META: HIGH/ELEVATED/MODERATE/LOW with color codes and symbols (e.g. HIGH=#ff6b6b, '▲')",
+      "fixture_or_hardcoded": "hardcoded",
+      "safe_to_keep": true,
+      "must_replace_for_live_binding": false,
+      "replacement_source": "n/a — this is presentation metadata that maps tier names to colors",
+      "governance_risk": "LOW",
+      "notes": "Safe presentation constant. The tier names themselves come from upstream."
+    },
+    {
+      "file_path": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "dependency_type": "PRESENTATION_METADATA",
+      "value_description": "ROLE_META: ORIGIN/PASS_THROUGH/RECEIVER with color codes and symbols",
+      "fixture_or_hardcoded": "hardcoded",
+      "safe_to_keep": true,
+      "must_replace_for_live_binding": false,
+      "replacement_source": "n/a — presentation metadata",
+      "governance_risk": "LOW",
+      "notes": "Safe."
+    },
+    {
+      "file_path": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "dependency_type": "PRESENTATION_METADATA",
+      "value_description": "STATE_LABELS: render_state → display label mapping (EXECUTIVE_READY, EXECUTIVE_READY_WITH_QUALIFIER, DIAGNOSTIC_ONLY, BLOCKED)",
+      "fixture_or_hardcoded": "hardcoded",
+      "safe_to_keep": true,
+      "must_replace_for_live_binding": false,
+      "replacement_source": "n/a — render_state vocabulary is governance-defined",
+      "governance_risk": "LOW",
+      "notes": "Safe presentation constant."
+    },
+    {
+      "file_path": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "dependency_type": "PRESENTATION_METADATA",
+      "value_description": "DENSITY_OPTIONS persona metadata + BOARDROOM_PERSONA",
+      "fixture_or_hardcoded": "hardcoded",
+      "safe_to_keep": true,
+      "must_replace_for_live_binding": false,
+      "replacement_source": "n/a",
+      "governance_risk": "LOW",
+      "notes": "Persona-line microcopy and ARIA accessibility — safe."
+    },
+    {
+      "file_path": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "dependency_type": "PRESENTATION_METADATA",
+      "value_description": "SEMANTIC_ACTORS registry (15 actors) + LENS_MODE_SEMANTICS map",
+      "fixture_or_hardcoded": "hardcoded",
+      "safe_to_keep": true,
+      "must_replace_for_live_binding": false,
+      "replacement_source": "n/a — registry is presentation contract",
+      "governance_risk": "LOW",
+      "notes": "Safe; the registry is a UI contract not a data dependency."
+    },
+    {
+      "file_path": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "dependency_type": "PRESENTATION_METADATA",
+      "value_description": "INTERP_MODE_FRAMING constant (label / tone / section labels per lens)",
+      "fixture_or_hardcoded": "hardcoded",
+      "safe_to_keep": true,
+      "must_replace_for_live_binding": false,
+      "replacement_source": "n/a",
+      "governance_risk": "LOW",
+      "notes": "Safe presentation constant."
+    },
+    {
+      "file_path": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "dependency_type": "PRESENTATION_METADATA",
+      "value_description": "REPORT_PACK_ARTIFACTS registry (4 entries with future binding_path placeholders)",
+      "fixture_or_hardcoded": "hardcoded",
+      "safe_to_keep": true,
+      "must_replace_for_live_binding": false,
+      "replacement_source": "Live binding paths injected by /api/report-pack at the support-rail level",
+      "governance_risk": "LOW",
+      "notes": "Path templates are safe; live binding wires actual file resolution."
+    },
+    {
+      "file_path": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "dependency_type": "MOCK_REPORT_OBJECT",
+      "value_description": "Top-level FLAGSHIP_REAL_REPORT import via require() in source — flagship_real_report.fixture acts as the entire 'report object' shape",
+      "fixture_or_hardcoded": "mock",
+      "safe_to_keep": false,
+      "must_replace_for_live_binding": true,
+      "replacement_source": "Replace with getServerSideProps that fetches /api/lens-payload",
+      "governance_risk": "MEDIUM",
+      "notes": "Removing the require() and replacing with payload fetch is the central code change for the binding implementation contract."
+    },
+    {
+      "file_path": "app/execlens-demo/flagship-experience/fixtures/*",
+      "dependency_type": "STATIC_FIXTURE",
+      "value_description": "Other fixtures: flagship_blocked, flagship_diagnostic, flagship_executive_ready, flagship_q01, flagship_q02, flagship_topology_safe, flagship_boardroom_mode, flagship_investigation_flow, flagship_operational_canvas, flagship_forbidden_*",
+      "fixture_or_hardcoded": "fixture",
+      "safe_to_keep": true,
+      "must_replace_for_live_binding": false,
+      "replacement_source": "n/a — these are test fixtures for adapter / orchestration tests; they remain the test substrate even after live binding lands",
+      "governance_risk": "LOW",
+      "notes": "These fixtures support unit tests for the orchestration / adapter logic and should be preserved."
+    },
+    {
+      "file_path": "app/execlens-demo/flagship-experience/flagshipOrchestration.js",
+      "dependency_type": "MOCK_REPORT_OBJECT",
+      "value_description": "orchestrateFlagshipExperience() function takes the in-memory report object and adapts it for rendering",
+      "fixture_or_hardcoded": "function",
+      "safe_to_keep": true,
+      "must_replace_for_live_binding": false,
+      "replacement_source": "Live payload from /api/lens-payload should be byte-compatible with the input shape this function expects, so this function is preserved as-is",
+      "governance_risk": "LOW",
+      "notes": "Stable contract surface. Live payload must conform to the input shape."
+    }
+  ],
+  "summary": {
+    "total_dependencies_audited": 18,
+    "must_replace_for_live_binding_count": 8,
+    "safe_to_keep_count": 10,
+    "unsafe_fake_telemetry_count": 0,
+    "blocked_by_missing_artifact_count": 1,
+    "out_of_scope_for_first_binding_count": 3,
+    "blocked_actor_id": "N (Inference Prohibition)",
+    "blocked_reason": "rendering_metadata not yet written as a per-run vault artifact"
+  },
+  "first_binding_replacement_priority_order": [
+    "1. Replace require() of flagship_real_report.fixture in lens-v2-flagship.js with getServerSideProps fetching /api/lens-payload",
+    "2. Implement /api/lens-payload backed by SemanticPayloadResolver reading FastAPI run_02 artifacts",
+    "3. Implement /api/report-pack returning static HTML for the four canonical report artifacts",
+    "4. Compute absorption percentage (currently 68%) from binding_envelope.edges deterministically",
+    "5. Compute trace_linkage hashes from vault/evidence_trace + vault_manifest + run_initialization_manifest",
+    "6. Compute qualifier_class from grounding_state_v3.grounding_ratio per derivation rule §3.1 of mapping matrix",
+    "7. Document Inference Prohibition (N · IP) as still partially fixture-derived until rendering_metadata is vault-written"
+  ]
+}

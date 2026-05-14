@@ -1,0 +1,565 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "explainability_panels.schema.json",
+  "title": "LENS NextGen Explainability Panels Schema",
+  "description": "Formal schema for the LENS NextGen explainability panel bundle and all explainability sub-objects. All panels are pre-rendered at generation time on the GEIOS side. LENS rendering layer is read-only.",
+  "stream": "PI.LENS.NEXTGEN-REPORTS.EVIDENCE-PANEL-ARCHITECTURE.01",
+  "schema_version": "1.0",
+  "baseline_ref": "governed-dpsig-baseline-v1",
+  "upstream_schema": "PI.LENS.NEXTGEN-REPORTS.REPORT-OBJECT-MODEL.01 (e588150)",
+  "issued": "2026-05-08",
+  "governance_note": "No field in this schema may be modified by the LENS rendering layer. All content is committed at generation time and sealed by evidence_object_hash. LENS is a rendering layer only.",
+
+  "definitions": {
+
+    "PanelId": {
+      "type": "string",
+      "enum": ["WHY", "EVIDENCE", "TRACE", "QUALIFIERS", "LINEAGE", "CONFIDENCE", "READINESS_STATE"],
+      "description": "Identifier for each of the seven explainability panels."
+    },
+
+    "ContentBlockType": {
+      "type": "string",
+      "enum": [
+        "NARRATIVE",
+        "LIST",
+        "SIGNAL_CARD",
+        "QUALIFIER_CHIP",
+        "REFERENCE",
+        "PROPAGATION",
+        "EVIDENCE_REFERENCE",
+        "TRACE_REFERENCE"
+      ],
+      "description": "Type of content block within a panel."
+    },
+
+    "Audience": {
+      "type": "string",
+      "enum": ["EXECUTIVE", "ADVISORY", "AUDIT"],
+      "description": "Audience visibility tier. Determines which fields and panels are exposed."
+    },
+
+    "PanelState": {
+      "type": "string",
+      "enum": ["COLLAPSED", "EXPANDED", "BLOCKED", "DIAGNOSTIC"],
+      "description": "Rendering state of a panel. BLOCKED and DIAGNOSTIC are governance-driven states, not UX choices."
+    },
+
+    "GroundingScope": {
+      "type": "string",
+      "enum": ["FULL", "PARTIAL", "STRUCTURAL", "DIAGNOSTIC", "SUPPRESSED"],
+      "description": "Evidence grounding scope classification. Mapped from Q-taxonomy qualifier class."
+    },
+
+    "PropagationRole": {
+      "type": "string",
+      "enum": ["ORIGIN", "RECEIVER", "PASS_THROUGH", "ISOLATED"],
+      "description": "Structural propagation role of a domain in the pressure flow."
+    },
+
+    "PressureTier": {
+      "type": "string",
+      "enum": ["HIGH", "ELEVATED", "MODERATE", "LOW"],
+      "description": "Normalized pressure tier label. Never a numerical value."
+    },
+
+    "ContentBlock": {
+      "type": "object",
+      "description": "A discrete content element within an explainability panel.",
+      "required": ["block_type", "content", "audience"],
+      "additionalProperties": false,
+      "properties": {
+        "block_type": {
+          "$ref": "#/definitions/ContentBlockType"
+        },
+        "content": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Pre-rendered, normalized content. Never generated at render time. Vocabulary contract applied at generation."
+        },
+        "audience": {
+          "$ref": "#/definitions/Audience",
+          "description": "Minimum audience tier required to see this content block."
+        },
+        "immutable": {
+          "type": "boolean",
+          "const": true,
+          "description": "All content blocks are immutable after bridge crossing."
+        }
+      }
+    },
+
+    "SignalContributor": {
+      "type": "object",
+      "description": "A contributing signal entry in the WHY panel. Describes one domain's role in the readiness derivation.",
+      "required": ["domain_alias", "signal_label", "pressure_label", "propagation_role"],
+      "additionalProperties": false,
+      "properties": {
+        "domain_alias": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Client-configured domain alias. ALI-04 applied. Raw domain IDs forbidden."
+        },
+        "signal_label": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Normalized signal label. ALI-01 (CPI) or ALI-02 (CFA) applied. Raw signal keys forbidden."
+        },
+        "pressure_label": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Normalized pressure tier label. NORM-PROP-01 applied. Numerical values forbidden."
+        },
+        "propagation_role": {
+          "$ref": "#/definitions/PropagationRole",
+          "description": "Structural role of this domain in the pressure propagation."
+        },
+        "qualifier_chip": {
+          "type": ["string", "null"],
+          "description": "Qualifier chip label for this signal. Empty string for Q-00. NORM-Q applied. Raw Q-xx values forbidden."
+        }
+      }
+    },
+
+    "EvidenceDrawer": {
+      "type": "object",
+      "description": "Domain-level evidence drawer. One per evidence_block entry. Expandable in Phase 2.",
+      "required": ["domain_alias", "grounding_scope", "grounding_label", "propagation_role", "evidence_summary"],
+      "additionalProperties": false,
+      "properties": {
+        "domain_alias": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Client-configured domain alias. ALI-04 applied. Raw domain IDs forbidden in any surface."
+        },
+        "grounding_scope": {
+          "$ref": "#/definitions/GroundingScope"
+        },
+        "grounding_label": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Normalized grounding label. NORM-Q applied. Raw grounding enum values forbidden."
+        },
+        "propagation_role": {
+          "$ref": "#/definitions/PropagationRole"
+        },
+        "propagation_role_label": {
+          "type": "string",
+          "description": "Executive-visible propagation role label. NORM-PROP-01 applied. Values: Origin of Pressure / Pressure Receiver / Pressure Pass-through / Independent Domain."
+        },
+        "signal_cards": {
+          "type": "array",
+          "description": "Signal cards for this domain. Pre-rendered. Normalized at generation.",
+          "items": {
+            "$ref": "#/definitions/SignalCard"
+          }
+        },
+        "evidence_summary": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Normalized evidence description. Vocabulary contract applied. Forbidden terms excluded."
+        },
+        "default_state": {
+          "type": "string",
+          "enum": ["COLLAPSED", "EXPANDED"],
+          "default": "COLLAPSED",
+          "description": "Default display state. Phase 2: COLLAPSED by default."
+        }
+      }
+    },
+
+    "SignalCard": {
+      "type": "object",
+      "description": "A single signal entry within an evidence drawer.",
+      "required": ["signal_label", "pressure_tier", "pressure_label"],
+      "additionalProperties": false,
+      "properties": {
+        "signal_label": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Normalized signal label. ALI-01/ALI-02 applied. Raw keys (cpi_score, cfa_score, CPI, CFA) forbidden."
+        },
+        "pressure_tier": {
+          "$ref": "#/definitions/PressureTier",
+          "description": "Internal pressure tier enum. Not directly shown to executive; used to derive pressure_label."
+        },
+        "pressure_label": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Executive-visible pressure label. NORM-PROP-01 applied. Numerical values forbidden."
+        },
+        "qualifier_label": {
+          "type": "string",
+          "description": "Qualifier label for this signal. Empty string for Q-00; Q-taxonomy label for Q-01..04."
+        },
+        "evidence_text": {
+          "type": "string",
+          "description": "Normalized evidence text. Vocabulary contract applied. NORM-NARR-02 and NORM-FORBID applied."
+        }
+      }
+    },
+
+    "TraceObject": {
+      "type": "object",
+      "description": "Propagation path and derivation lineage for the TRACE panel.",
+      "required": ["propagation_path", "propagation_summary"],
+      "additionalProperties": false,
+      "properties": {
+        "propagation_path": {
+          "type": "array",
+          "description": "Ordered list of domain aliases in the propagation path. ALI-04 applied. Raw cluster keys forbidden.",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "propagation_summary": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Normalized propagation narrative. NORM-PROP-01..03 applied. Predictive language forbidden."
+        },
+        "baseline_ref": {
+          "type": "string",
+          "description": "Baseline reference label. Readable label only; not decoded. Advisory visibility."
+        },
+        "stream_anchor": {
+          "type": "string",
+          "description": "Stream anchor reference label. Advisory visibility only."
+        },
+        "derivation_ref_abbreviated": {
+          "type": "string",
+          "description": "Abbreviated derivation reference (first 8 chars). Advisory visibility. Never decoded. Never full hash in advisory surface."
+        }
+      }
+    },
+
+    "QualifierObject": {
+      "type": "object",
+      "description": "Qualifier state object for the QUALIFIERS panel.",
+      "required": ["qualifier_class_label", "scope_explanation", "suppression_prohibited"],
+      "additionalProperties": false,
+      "properties": {
+        "qualifier_class_label": {
+          "type": ["string", "null"],
+          "description": "Executive-visible qualifier label. Q-taxonomy chip label. Null for Q-00 (no chip). Raw Q-xx values forbidden."
+        },
+        "scope_explanation": {
+          "type": "string",
+          "description": "Pre-rendered Q-taxonomy scope explanation. Vocabulary contract applied."
+        },
+        "chip_style": {
+          "type": "string",
+          "enum": ["AMBER", "BLUE", "GREY", "NONE"],
+          "description": "Design token for qualifier chip color. Q-01: AMBER. Q-02: BLUE. Q-03: GREY. Q-00/Q-04: NONE."
+        },
+        "affected_domain_aliases": {
+          "type": "array",
+          "description": "Domain aliases with partial or diagnostic grounding. ALI-04 applied.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "suppression_prohibited": {
+          "type": "boolean",
+          "const": true,
+          "description": "Qualifier suppression is permanently prohibited. This field is always true."
+        },
+        "absence_notice": {
+          "type": ["string", "null"],
+          "description": "Q-04 absence notice. Required when qualifier_class = Q-04. 'Signal intelligence withheld from this view.'"
+        }
+      }
+    },
+
+    "LineageReference": {
+      "type": "object",
+      "description": "Evidence provenance reference for the LINEAGE panel.",
+      "required": ["report_id", "baseline_anchor"],
+      "additionalProperties": false,
+      "properties": {
+        "report_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Report identifier. Reference label only."
+        },
+        "baseline_anchor": {
+          "type": "string",
+          "description": "Readable baseline anchor label. Advisory and audit visibility."
+        },
+        "evidence_hash_abbreviated": {
+          "type": ["string", "null"],
+          "description": "Abbreviated evidence_object_hash (8 chars + '...'). Advisory visibility only. Never decoded."
+        },
+        "evidence_hash_full": {
+          "type": ["string", "null"],
+          "description": "Full evidence_object_hash. Audit visibility only. Never decoded or interpreted."
+        },
+        "stream_anchor": {
+          "type": ["string", "null"],
+          "description": "Stream anchor. Advisory: reference label. Audit: full value."
+        },
+        "run_id": {
+          "type": ["string", "null"],
+          "description": "Pipeline run identifier. Audit visibility only."
+        },
+        "generated_at": {
+          "type": ["string", "null"],
+          "description": "Generation timestamp. ISO 8601 format."
+        }
+      }
+    },
+
+    "ConfidenceObject": {
+      "type": "object",
+      "description": "Structural grounding confidence object for the CONFIDENCE panel. Non-probabilistic.",
+      "required": ["overall_grounding_scope", "grounding_label", "probabilistic_scoring_prohibited"],
+      "additionalProperties": false,
+      "properties": {
+        "overall_grounding_scope": {
+          "$ref": "#/definitions/GroundingScope",
+          "description": "Overall grounding scope classification. Derived from qualifier_class."
+        },
+        "grounding_label": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Executive-visible grounding label. Q-taxonomy applied. Numerical confidence values forbidden."
+        },
+        "domain_coverage": {
+          "type": "array",
+          "description": "Per-domain grounding coverage.",
+          "items": {
+            "type": "object",
+            "required": ["domain_alias", "grounding_scope", "grounding_label"],
+            "additionalProperties": false,
+            "properties": {
+              "domain_alias": {
+                "type": "string",
+                "description": "Client-configured domain alias. ALI-04 applied."
+              },
+              "grounding_scope": {
+                "$ref": "#/definitions/GroundingScope"
+              },
+              "grounding_label": {
+                "type": "string",
+                "description": "Normalized grounding label per domain."
+              }
+            }
+          }
+        },
+        "scope_note": {
+          "type": "string",
+          "description": "Pre-rendered grounding scope explanation. Q-taxonomy language applied."
+        },
+        "probabilistic_scoring_prohibited": {
+          "type": "boolean",
+          "const": true,
+          "description": "Probabilistic confidence scoring is permanently prohibited. Always true."
+        }
+      }
+    },
+
+    "ReadinessExplanation": {
+      "type": "object",
+      "description": "Readiness state explanation object for the READINESS_STATE panel.",
+      "required": ["readiness_label", "governance_verdict", "evidence_linkage"],
+      "additionalProperties": false,
+      "properties": {
+        "readiness_label": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Executive-visible readiness label. ALI-03 applied. Raw ReadinessState enum values forbidden."
+        },
+        "governance_verdict": {
+          "type": "string",
+          "enum": ["PASS", "FAIL"],
+          "description": "Governance verdict. FAIL triggers BLOCKED rendering."
+        },
+        "evidence_linkage": {
+          "type": "array",
+          "description": "Contributing evidence domains. ALI-04 aliases applied.",
+          "items": {
+            "type": "object",
+            "required": ["domain_alias", "grounding_label"],
+            "additionalProperties": false,
+            "properties": {
+              "domain_alias": {
+                "type": "string"
+              },
+              "grounding_label": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "qualifier_linkage": {
+          "type": ["string", "null"],
+          "description": "Qualifier scope explanation if qualifier_class ≠ Q-00."
+        },
+        "governance_linkage": {
+          "type": "object",
+          "description": "Governance reference labels. Never governance internals.",
+          "additionalProperties": false,
+          "properties": {
+            "baseline_label": {
+              "type": "string"
+            },
+            "stream_label": {
+              "type": "string"
+            }
+          }
+        },
+        "reengagement_notice": {
+          "type": ["string", "null"],
+          "description": "Advisory confirmation notice for Q-03/Q-04 states only. Null for Q-00/Q-01/Q-02."
+        },
+        "blocked_notice": {
+          "type": ["string", "null"],
+          "description": "Blocked state notice. Rendered when governance_verdict = FAIL or BridgeValidator fails."
+        }
+      }
+    },
+
+    "ExplainabilityPanel": {
+      "type": "object",
+      "description": "A single explainability panel within the bundle. Pre-rendered at generation. Immutable after bridge crossing.",
+      "required": ["panel_id", "panel_title", "audience", "default_state", "content_blocks"],
+      "additionalProperties": false,
+      "properties": {
+        "panel_id": {
+          "$ref": "#/definitions/PanelId"
+        },
+        "panel_title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Executive-visible panel title. Must match vocabulary_contract.explainability_vocabulary.panel_titles."
+        },
+        "audience": {
+          "$ref": "#/definitions/Audience",
+          "description": "Default audience tier for this panel."
+        },
+        "default_state": {
+          "$ref": "#/definitions/PanelState",
+          "description": "Default rendering state. Governance-determined, not UX-determined."
+        },
+        "content_blocks": {
+          "type": "array",
+          "description": "Ordered list of content blocks. Pre-rendered. Immutable.",
+          "items": {
+            "$ref": "#/definitions/ContentBlock"
+          }
+        },
+        "signal_contributors": {
+          "type": "array",
+          "description": "Contributing signal list. WHY panel only.",
+          "items": {
+            "$ref": "#/definitions/SignalContributor"
+          }
+        },
+        "evidence_drawers": {
+          "type": "array",
+          "description": "Evidence drawers. EVIDENCE panel only.",
+          "items": {
+            "$ref": "#/definitions/EvidenceDrawer"
+          }
+        },
+        "trace_object": {
+          "$ref": "#/definitions/TraceObject",
+          "description": "Trace and lineage object. TRACE panel only."
+        },
+        "qualifier_object": {
+          "$ref": "#/definitions/QualifierObject",
+          "description": "Qualifier state object. QUALIFIERS panel only."
+        },
+        "lineage_reference": {
+          "$ref": "#/definitions/LineageReference",
+          "description": "Provenance reference. LINEAGE panel only."
+        },
+        "confidence_object": {
+          "$ref": "#/definitions/ConfidenceObject",
+          "description": "Grounding confidence object. CONFIDENCE panel only."
+        },
+        "readiness_explanation": {
+          "$ref": "#/definitions/ReadinessExplanation",
+          "description": "Readiness classification explanation. READINESS_STATE panel only."
+        },
+        "blocked_notice": {
+          "type": ["string", "null"],
+          "description": "Notice rendered when panel_state = BLOCKED. Explicit; never silent."
+        },
+        "diagnostic_notice": {
+          "type": ["string", "null"],
+          "description": "Notice rendered when panel_state = DIAGNOSTIC. Explicit; never silent."
+        },
+        "immutable": {
+          "type": "boolean",
+          "const": true,
+          "description": "All panels are immutable after bridge crossing. Always true."
+        }
+      }
+    },
+
+    "ExplainabilityBundle": {
+      "type": "object",
+      "description": "The complete explainability bundle. Contains exactly seven panels. Pre-rendered at generation time. Immutable after bridge crossing.",
+      "required": ["why_panel", "evidence_panel", "trace_panel", "qualifiers_panel", "lineage_panel", "confidence_panel", "readiness_state_panel"],
+      "additionalProperties": false,
+      "properties": {
+        "why_panel": {
+          "$ref": "#/definitions/ExplainabilityPanel",
+          "description": "WHY panel. Answers: why does this readiness state exist? Default: EXPANDED."
+        },
+        "evidence_panel": {
+          "$ref": "#/definitions/ExplainabilityPanel",
+          "description": "EVIDENCE panel with domain evidence drawers. Default: COLLAPSED."
+        },
+        "trace_panel": {
+          "$ref": "#/definitions/ExplainabilityPanel",
+          "description": "TRACE panel with propagation path and lineage. Default: COLLAPSED. Advisory audience default."
+        },
+        "qualifiers_panel": {
+          "$ref": "#/definitions/ExplainabilityPanel",
+          "description": "QUALIFIERS panel with evidence scope. Default: EXPANDED if qualifier active; COLLAPSED if Q-00."
+        },
+        "lineage_panel": {
+          "$ref": "#/definitions/ExplainabilityPanel",
+          "description": "LINEAGE panel with analysis provenance. Default: COLLAPSED. Advisory visibility."
+        },
+        "confidence_panel": {
+          "$ref": "#/definitions/ExplainabilityPanel",
+          "description": "CONFIDENCE panel with structural grounding coverage. Default: COLLAPSED."
+        },
+        "readiness_state_panel": {
+          "$ref": "#/definitions/ExplainabilityPanel",
+          "description": "READINESS_STATE panel with classification detail. Default: EXPANDED."
+        },
+        "bundle_version": {
+          "type": "string",
+          "description": "Explainability bundle schema version."
+        },
+        "generated_at": {
+          "type": "string",
+          "description": "Bundle generation timestamp. ISO 8601."
+        },
+        "live_generation_prohibited": {
+          "type": "boolean",
+          "const": true,
+          "description": "Live content generation at render time is permanently prohibited. Always true."
+        },
+        "topology_mutation_prohibited": {
+          "type": "boolean",
+          "const": true,
+          "description": "Topology mutation via any panel interaction is permanently prohibited. Always true."
+        },
+        "qualifier_suppression_prohibited": {
+          "type": "boolean",
+          "const": true,
+          "description": "Qualifier suppression is permanently prohibited. Always true."
+        }
+      }
+    }
+  },
+
+  "type": "object",
+  "description": "Root object: the explainability bundle for one LENS NextGen Executive Intelligence Report.",
+  "$ref": "#/definitions/ExplainabilityBundle"
+}

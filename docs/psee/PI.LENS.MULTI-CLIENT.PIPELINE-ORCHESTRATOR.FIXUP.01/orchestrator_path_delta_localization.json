@@ -1,0 +1,94 @@
+{
+  "contract_id": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.FIXUP.01",
+  "artifact": "orchestrator_path_delta_localization",
+  "block": "BLOCK_B",
+  "generated_date": "2026-05-01",
+
+  "delta_phase": "Phase 5 + Phase 6+7 + Phase 8a",
+
+  "canonical_chain": {
+    "source": "docs/psee/PI.BLUEEDGE.E2E.CHAIN-FORENSICS.REVERSE-MAP.01/execution_chain_reconstructed.json",
+    "steps": [
+      "Step 1: Source boundary assessment (read-only)",
+      "Step 2: Intake — tar extraction → canonical_repo 741 files",
+      "Step 3: 40.x structural pipeline → structural_topology_log.json (1937 relations, 35 nodes)",
+      "Step 4: CEU integration (run_end_to_end.py) → run_blueedge_integrated_01 native artifacts",
+      "Step 5: FastAPI conformance recompute (4 manual contracts, NO SCRIPT) → signal_registry_fastapi_compatible.json with canonical signal values (PSIG-001=5.663, PSIG-002=3.2098, PSIG-004=2.1822)",
+      "Step 6: Vault construction using Step 5 FastAPI-compatible artifacts",
+      "Step 7: Lens report generation from vault"
+    ],
+    "step_5_is_automated": false,
+    "step_5_note": "STAGE_NOT_AUTOMATED — 4 FastAPI conformance contracts (PI.BLUEEDGE.FASTAPI-CONFORMANCE.*.01) are manual analysis contracts, not Python scripts. Pre-computed artifacts stored in docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/"
+  },
+
+  "orchestrator_phase_map": {
+    "Phase 1": "Source boundary — CORRECT (matches chain step 1)",
+    "Phase 2": "Intake verification — CORRECT (matches chain step 2)",
+    "Phase 3": "40.x structural verification — CORRECT (matches chain step 3)",
+    "Phase 4": "CEU grounding verification — CORRECT (matches chain step 4)",
+    "Phase 5": "INCORRECT — builds synthetic CEU-DOM binding_envelope instead of using pre-computed conformance artifacts from step 5",
+    "Phase 6+7": "INCORRECT — runs run_end_to_end.py on synthetic binding_envelope. Canonical chain step 5 is manual (not run_end_to_end.py). Signal values diverge because synthetic graph has different topology.",
+    "Phase 8a": "INCORRECT — schema bridge reads from 41.x/signal_projection.json produced by wrong topology; also incorrectly counts PSIG-006 as active pressure signal",
+    "Phase 8b": "CORRECT (report generator works correctly from vault)",
+    "Phase 9": "CORRECT (selector update logic is correct)"
+  },
+
+  "exact_divergence_point": {
+    "phase": "Phase 5",
+    "function": "phase_05_build_binding_envelope",
+    "file": "scripts/pios/run_client_pipeline.py",
+    "lines": "214-408",
+    "what_it_does": "Builds synthetic 33-node CEU-DOM binding_envelope from ceu_grounding_registry.json + dom_path_domain_layer.json using GROUNDS/EXPOSES relations",
+    "what_it_should_do": "Use pre-computed binding_envelope_fastapi_compatible.json from FastAPI conformance recomputed artifacts (when available), or FAIL_CLOSED with STAGE_NOT_AUTOMATED",
+    "divergence_type": "STRUCTURAL_TOPOLOGY_DELTA — different edge semantics (GROUNDS/EXPOSES vs real IMPORTS relations), different populations (33 synthetic nodes vs 35 structural nodes)"
+  },
+
+  "schema_bridge_bug_location": {
+    "phase": "Phase 8a",
+    "function": "phase_08a_vault",
+    "file": "scripts/pios/run_client_pipeline.py",
+    "line": "~651",
+    "buggy_code": "active_count = sum(1 for s in vault_signals if s.get('activation_state') in ('HIGH', 'ACTIVATED', 'ACTIVE'))",
+    "correct_code": "active_count = sum(1 for s in vault_signals if s.get('activation_state') == 'HIGH' or (s.get('activation_state') in ('ACTIVATED', 'ACTIVE') and s.get('activation_method') != 'THEORETICAL_BASELINE'))",
+    "effect": "PSIG-006 (THEORETICAL_BASELINE/ACTIVATED) incorrectly counted as active pressure signal → active_pressure_signals=4 instead of 3"
+  },
+
+  "fastapi_conformance_bypass": {
+    "canonical_chain_step_5_automated": false,
+    "canonical_chain_step_5_contracts": [
+      "PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01",
+      "PI.BLUEEDGE.FASTAPI-CONFORMANCE.NODE-RELATIONSHIP-RECOVERY.01",
+      "PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01",
+      "PI.BLUEEDGE.FASTAPI-CONFORMANCE.SEMANTIC-PARITY-VALIDATION.01"
+    ],
+    "pre_computed_artifacts_exist_at": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/",
+    "artifacts_available": [
+      "binding_envelope_fastapi_compatible.json",
+      "signal_projection_fastapi_compatible.json",
+      "signal_registry_fastapi_compatible.json",
+      "pressure_zone_state_fastapi_compatible.json",
+      "condition_correlation_state_fastapi_compatible.json"
+    ],
+    "fix_strategy": "Add fastapi_conformance_path to source_manifest.json. Phases 5, 6+7, and 8a check this field; if present, load from pre-computed conformance artifacts instead of building synthetic topology."
+  },
+
+  "signal_label_table_issue": {
+    "SIGNAL_LABELS_dict_in_orchestrator": {
+      "PSIG-001": "coupling_pressure (correct)",
+      "PSIG-002": "export_pressure (WRONG — canonical is domain_coupling_pressure)",
+      "PSIG-004": "cluster_fragmentation (WRONG — canonical is zone_coverage_concentration)",
+      "PSIG-006": "isolation_pressure (WRONG — canonical is unanchored_nodes)"
+    },
+    "fix": "When using conformance path: load signal labels from signal_registry_fastapi_compatible.json directly, not from hardcoded SIGNAL_LABELS dict"
+  },
+
+  "population_type_table_issue": {
+    "POPULATION_TYPES_dict_in_orchestrator": {
+      "PSIG-001": "per_node_inbound_coupling (WRONG — canonical is per_node_outbound_imports)",
+      "PSIG-002": "per_node_outbound_exports (WRONG — canonical is per_dom_aggregated_imports)",
+      "PSIG-004": "cluster_membership (WRONG — canonical is per_zone_node_fraction)",
+      "PSIG-006": "node_isolation_ratio (WRONG — canonical is per structural isolation check)"
+    },
+    "fix": "When using conformance path: load population types from signal_registry_fastapi_compatible.json directly"
+  }
+}

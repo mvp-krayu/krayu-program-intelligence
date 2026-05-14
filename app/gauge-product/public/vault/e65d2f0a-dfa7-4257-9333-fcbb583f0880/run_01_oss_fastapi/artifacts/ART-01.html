@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>gauge_state.json — Evidence Vault</title>
+<style>:root{--bg:#0a0a0a;--bg1:#111114;--bg2:#1a1a1e;--border:#222228;--text:#c4c4c4;--muted:#666;--dim:#555;--accent:#5a9fd4;--strong:#e0e0e0}*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:"Courier New",monospace;font-size:13px;line-height:1.75;padding:2.5rem 2rem}.w{max-width:860px;margin:0 auto}.nav{margin-bottom:2rem;font-size:.78rem}.nav a{color:var(--muted);text-decoration:none;letter-spacing:.04em}.nav a:hover{color:var(--accent)}.meta{background:var(--bg1);border:1px solid var(--border);border-left:2px solid #253040;padding:1rem 1.25rem;margin-bottom:2rem;font-size:.78rem}.mrow{display:flex;gap:.75rem;margin-bottom:.3rem}.mrow:last-child{margin-bottom:0}.mk{color:var(--muted);min-width:140px;flex-shrink:0;letter-spacing:.02em}.mv{color:#b0b0b0}.content h1{color:var(--strong);font-size:.95rem;margin:1.5rem 0 .6rem;letter-spacing:.02em}.content h2{color:#aaa;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #1e1e24;padding-bottom:.35rem;margin:2rem 0 .75rem}.content h3{color:#888;font-size:.82rem;margin:1.25rem 0 .45rem;letter-spacing:.02em}.content p{margin:.7rem 0;line-height:1.75}.content a{color:var(--accent);text-decoration:none}.content a:hover{text-decoration:underline}.content code{background:var(--bg2);border:1px solid var(--border);padding:.1rem .3rem;font-size:.82em;color:#9ab}.content pre{background:var(--bg1);border:1px solid var(--border);border-left:2px solid #253040;padding:.9rem 1rem;overflow-x:auto;margin:1rem 0}.content pre code{background:none;border:none;padding:0;color:#aab}.content table{border-collapse:collapse;width:100%;margin:.9rem 0;font-size:.82rem}.content th,.content td{border:1px solid var(--border);padding:.4rem .7rem;text-align:left}.content th{background:var(--bg1);color:var(--muted);font-size:.72rem;letter-spacing:.07em;text-transform:uppercase}.content ul{padding-left:1.25rem;margin:.7rem 0}.content li{margin-bottom:.35rem}.content strong{color:var(--strong)}.footer{margin-top:3rem;padding-top:.85rem;border-top:1px solid var(--border);font-size:.72rem;color:var(--dim);letter-spacing:.03em}.footer .lbl{color:#a03030}</style>
+</head>
+<body>
+<div class="w">
+<div class="nav"><a href="/tier2/workspace">← Diagnostic Workspace</a></div>
+<div class="meta"><div class="mrow"><span class="mk">node_class</span><span class="mv">artifact</span></div><div class="mrow"><span class="mk">artifact_id</span><span class="mv">ART-01</span></div><div class="mrow"><span class="mk">artifact_name</span><span class="mv">gauge_state.json</span></div></div>
+<div class="content"><h2>Purpose</h2>
+<p>Terminal output of the S0→S4 execution chain. The single artifact consumed by the GAUGE product surface (<code>/api/gauge</code>). Contains all dimensions, scores, execution state, confidence, and projection.</p>
+
+<h2>Producing Step</h2>
+<p><code>pios compute gauge</code> (S4) → <code>pios declare coherence</code> → <code>pios validate freshness</code></p>
+
+<h2>Consuming Steps</h2>
+<p><code>/api/gauge</code> reads via GAUGE_PACKAGE_DIR environment variable → serves index.js, overview.js</p>
+
+<h2>Structure Summary</h2>
+<p>Key fields: run_id, stream, state (execution_status, execution_layer_evaluated, execution_mode), dimensions (DIM-01..06), score (canonical, projected, components, band_label), projection (value, rule), confidence (lower, upper, status)</p>
+
+<p><strong>This run:</strong> schema_version=&#x27;NOT_EVALUATED&#x27; variant — execution_status=NOT_EVALUATED</p>
+
+<h2>Claims Grounded</h2>
+<p><a href="../claims/CLM-01.html">CLM-01 Structural Coverage Completeness</a> <a href="../claims/CLM-02.html">CLM-02 Structural Unit Count</a> <a href="../claims/CLM-03.html">CLM-03 Structural Reconstruction Pass-Fail</a> <a href="../claims/CLM-04.html">CLM-04 Four-Axis Reconstruction Detail</a> <a href="../claims/CLM-05.html">CLM-05 Escalation Clearance</a> <a href="../claims/CLM-06.html">CLM-06 Runtime Unknown-Space Count</a> <a href="../claims/CLM-07.html">CLM-07 Source Data Intake Complete</a> <a href="../claims/CLM-08.html">CLM-08 Structural Patterns Conform</a> <a href="../claims/CLM-09.html">CLM-09 Proven Structural Score</a> <a href="../claims/CLM-10.html">CLM-10 Achievable Score Projected</a> <a href="../claims/CLM-11.html">CLM-11 Score Band Classification</a> <a href="../claims/CLM-12.html">CLM-12 Score Confidence Range</a> <a href="../claims/CLM-13.html">CLM-13 Execution Layer Status</a> <a href="../claims/CLM-25.html">CLM-25 Executive Three-Axis Verdict</a></p>
+
+<h2>Authoritative Path</h2>
+<p><code>clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_01_oss_fastapi/package/gauge_state.json</code></p>
+
+<h2>Product Role</h2>
+<p>This is the artifact that powers the GAUGE product surface. The execution chain computes — this file is the terminal product of that computation. GAUGE renders by reading this single file through the GAUGE_PACKAGE_DIR binding. Every dimension panel, score display, confidence band, and executive verdict in the product traces to a field in gauge_state.json.</p></div>
+<div class="footer"><span class="lbl">inference_prohibition</span> ACTIVE &mdash; Evidence Vault V3 &mdash; READ-ONLY projection</div>
+</div>
+</body>
+</html>

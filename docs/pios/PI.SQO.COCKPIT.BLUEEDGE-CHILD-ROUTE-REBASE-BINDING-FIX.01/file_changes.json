@@ -1,0 +1,40 @@
+{
+  "stream": "PI.SQO.COCKPIT.BLUEEDGE-CHILD-ROUTE-REBASE-BINDING-FIX.01",
+  "changes": [
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/server/ExplicitEvidenceRebaseExtractor.server.js",
+      "action": "modified",
+      "description": "Added loadRebasedCandidateData() and loadRebasedAdmissibilityData() adapter functions. Updated module.exports."
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/semantic-candidates.js",
+      "action": "modified",
+      "description": "Changed data loader from BlueEdgeSemanticCandidateExtractor.server to ExplicitEvidenceRebaseExtractor.server. Added source metadata injection."
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/ceu-admissibility.js",
+      "action": "modified",
+      "description": "Changed data loader from DynamicCEUAdmissibilityEvaluator.server to ExplicitEvidenceRebaseExtractor.server. Added source metadata injection."
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/SemanticCandidateExtractionPanel.jsx",
+      "action": "modified",
+      "description": "Added source status section with evidence set, source status badge, source class, source files, and tier warning."
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/DynamicCEUAdmissibilityPanel.jsx",
+      "action": "modified",
+      "description": "Added source status section with evidence set, source status badge, source class, source files, and tier warning."
+    },
+    {
+      "file": "app/execlens-demo/styles/globals.css",
+      "action": "modified",
+      "description": "Added source status CSS for both candidate and admissibility panels (~50 lines)."
+    },
+    {
+      "file": "app/execlens-demo/flagship-experience/tests/sqo-blueedge-child-route-rebase-binding-fix.test.js",
+      "action": "created",
+      "description": "55 tests across 19 suites covering all mandatory test categories."
+    }
+  ]
+}

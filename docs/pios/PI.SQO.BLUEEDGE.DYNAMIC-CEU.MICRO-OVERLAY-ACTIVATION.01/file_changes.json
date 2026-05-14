@@ -1,0 +1,49 @@
+{
+  "stream": "PI.SQO.BLUEEDGE.DYNAMIC-CEU.MICRO-OVERLAY-ACTIVATION.01",
+  "date": "2026-05-11",
+  "summary": {
+    "created": 30,
+    "modified": 0,
+    "deleted": 0
+  },
+  "categories": {
+    "sandbox_artifacts": 16,
+    "documentation": 14
+  },
+  "sandbox_artifacts": [
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox/manifest.json", "action": "CREATED", "description": "Sandbox namespace identity, lifecycle, and governance metadata" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox/baseline_reference.json", "action": "CREATED", "description": "Hash-verified references to 4 certified baseline artifacts" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox/packages/SEP-blueedge-run01-001/package.json", "action": "CREATED", "description": "First overlay package: 1 LINEAGE_UPGRADE entry for DOMAIN-11 (PARTIAL→STRONG)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox/packages/SEP-blueedge-run01-001/activation_record.json", "action": "CREATED", "description": "Full activation lifecycle record (9 phases including revocation)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox/registry/package_registry.json", "action": "CREATED", "description": "Authoritative package status registry (1 package, status REVOKED)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox/mount/mount_registry.json", "action": "CREATED", "description": "Overlay mount state (1 mount, status UNMOUNTED after revocation)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox/mount/composite_state.json", "action": "CREATED", "description": "Post-revocation composite state (equals certified baseline)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox/mount/mount_log.json", "action": "CREATED", "description": "Mount/unmount event history with delta tracking" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox/activation/reevaluation/reeval-001-post-activation.json", "action": "CREATED", "description": "Re-evaluation artifact with overlay attribution (backed 4→5)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox/replay/reconstruction_inputs.json", "action": "CREATED", "description": "6-input replay reconstruction model" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox/replay/verification_log.json", "action": "CREATED", "description": "3 replay verifications, all MATCH" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox/replay/snapshots/snapshot-001-baseline.json", "action": "CREATED", "description": "Baseline replay snapshot (zero overlays)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox/replay/snapshots/snapshot-002-post-activation.json", "action": "CREATED", "description": "Post-activation replay snapshot (DOMAIN-11 STRONG)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox/replay/snapshots/snapshot-003-post-revocation.json", "action": "CREATED", "description": "Post-revocation replay snapshot (baseline restored)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox/audit/audit_index.json", "action": "CREATED", "description": "Ordered audit event index (10 events)" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/sandbox/audit/audit_integrity.json", "action": "CREATED", "description": "Hash chain verification record (chain valid)" }
+  ],
+  "documentation_files": [
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.DYNAMIC-CEU.MICRO-OVERLAY-ACTIVATION.01/MICRO_OVERLAY_ACTIVATION_REPORT.md", "action": "CREATED", "description": "Executive summary, target selection, proof results (all 10 questions answered YES)" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.DYNAMIC-CEU.MICRO-OVERLAY-ACTIVATION.01/SANDBOX_NAMESPACE_EXECUTION_LOG.md", "action": "CREATED", "description": "Namespace lifecycle, structure, write path validation, certified read verification" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.DYNAMIC-CEU.MICRO-OVERLAY-ACTIVATION.01/QUALIFICATION_DELTA_REPORT.md", "action": "CREATED", "description": "3-state delta (T0/T1/T2), round-trip proof, determinism verification, attribution" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.DYNAMIC-CEU.MICRO-OVERLAY-ACTIVATION.01/REPLAY_RECONSTRUCTION_VALIDATION.md", "action": "CREATED", "description": "6-input replay, 3 snapshots, 3 verifications (all MATCH), cross-snapshot verification" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.DYNAMIC-CEU.MICRO-OVERLAY-ACTIVATION.01/ROLLBACK_AND_REVOCATION_VALIDATION.md", "action": "CREATED", "description": "Revocation execution, state restoration, independent removability proof, replay chain preservation" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.DYNAMIC-CEU.MICRO-OVERLAY-ACTIVATION.01/BASELINE_IMMUTABILITY_VALIDATION.md", "action": "CREATED", "description": "4 artifact hashes verified across 3 phases, 4 mandatory checks (all VERIFIED)" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.DYNAMIC-CEU.MICRO-OVERLAY-ACTIVATION.01/OVERLAY_ATTRIBUTION_AND_AUDITABILITY.md", "action": "CREATED", "description": "Attribution chain, 10 audit events, hash chain integrity, disclosure compliance, evidence linkage" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.DYNAMIC-CEU.MICRO-OVERLAY-ACTIVATION.01/ACTIVATION_PROFILE_METADATA.md", "action": "CREATED", "description": "Package specification, evidence entry detail, operational boundaries, lifecycle timestamps" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.DYNAMIC-CEU.MICRO-OVERLAY-ACTIVATION.01/SANDBOX_ISOLATION_VALIDATION.md", "action": "CREATED", "description": "8 isolation properties verified, namespace/read/write/state isolation, failure containment" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.DYNAMIC-CEU.MICRO-OVERLAY-ACTIVATION.01/EXECUTION_SAFETY_VALIDATION.md", "action": "CREATED", "description": "All 10 mandatory safety rules verified COMPLIANT" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.DYNAMIC-CEU.MICRO-OVERLAY-ACTIVATION.01/PATH_BOUNDARY_VALIDATION.md", "action": "CREATED", "description": "9-point compliance, 10 design questions answered, governance confirmation" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.DYNAMIC-CEU.MICRO-OVERLAY-ACTIVATION.01/execution_report.md", "action": "CREATED", "description": "Pre-flight, scope, 10 execution steps, 30 artifacts produced, governance" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.DYNAMIC-CEU.MICRO-OVERLAY-ACTIVATION.01/file_changes.json", "action": "CREATED", "description": "File change manifest" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.DYNAMIC-CEU.MICRO-OVERLAY-ACTIVATION.01/CLOSURE.md", "action": "CREATED", "description": "Stream closure with completion status and proof verdict" }
+  ],
+  "validators_affected": [],
+  "governance_notes": "First governed semantic operationalization event. Sandbox artifacts created within sandbox/ namespace only. Certified artifacts verified byte-identical throughout. Overlay activated then revoked — proof of safe round-trip."
+}

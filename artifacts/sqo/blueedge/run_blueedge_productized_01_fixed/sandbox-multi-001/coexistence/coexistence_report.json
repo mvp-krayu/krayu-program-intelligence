@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "sandbox_id": "sandbox-blueedge-run01-multi-001",
+  "timestamp": "2026-05-11T23:11:30.000Z",
+  "assessment_point": "peak_state_with_3_overlays",
+  "coexistence_summary": {
+    "active_overlays": 3,
+    "total_domains_targeted": 3,
+    "overlapping_domains": 0,
+    "conflicts_detected": 0,
+    "conflicts_unresolved": 0,
+    "dependency_depth": 0,
+    "shadowed_contributions": 0,
+    "coexistence_health": "HEALTHY"
+  },
+  "coverage_matrix": {
+    "DOMAIN-11": { "targeted_by": ["SEP-multi-001"], "conflict": false },
+    "DOMAIN-02": { "targeted_by": ["SEP-multi-002"], "conflict": false },
+    "DOMAIN-08": { "targeted_by": ["SEP-multi-003"], "conflict": false }
+  },
+  "interaction_model": {
+    "strategy": "COMPLEMENTARY_COVERAGE",
+    "description": "All 3 overlays target distinct domains within CLU-04. No overlap, no conflict, no dependency.",
+    "cross_package_interaction": "NONE",
+    "precedence_required": false,
+    "hidden_coupling": false
+  },
+  "attribution_at_peak": {
+    "total_backed": 7,
+    "certified_backed": 4,
+    "overlay_backed": 3,
+    "certified_percentage": 57.1,
+    "overlay_percentage": 42.9,
+    "per_package": [
+      { "package_id": "SEP-multi-001", "contribution": 1, "domain": "DOMAIN-11" },
+      { "package_id": "SEP-multi-002", "contribution": 1, "domain": "DOMAIN-02" },
+      { "package_id": "SEP-multi-003", "contribution": 1, "domain": "DOMAIN-08" }
+    ]
+  },
+  "independent_removability": {
+    "all_packages_independently_removable": true,
+    "revocation_impact": [
+      { "if_revoked": "SEP-multi-001", "backed_change": -1, "domains_reverted": ["DOMAIN-11"], "s_state_change": false },
+      { "if_revoked": "SEP-multi-002", "backed_change": -1, "domains_reverted": ["DOMAIN-02"], "s_state_change": false },
+      { "if_revoked": "SEP-multi-003", "backed_change": -1, "domains_reverted": ["DOMAIN-08"], "s_state_change": false }
+    ],
+    "cascade_risk": "NONE (zero dependencies)"
+  }
+}

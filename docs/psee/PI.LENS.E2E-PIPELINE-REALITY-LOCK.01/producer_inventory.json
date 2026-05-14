@@ -1,0 +1,146 @@
+{
+  "contract_id": "PI.LENS.E2E-PIPELINE-REALITY-LOCK.01",
+  "artifact": "producer_inventory",
+  "generated_date": "2026-05-01",
+
+  "producers": [
+    {
+      "name": "run_client_pipeline.py",
+      "path": "scripts/pios/run_client_pipeline.py",
+      "type": "script",
+      "purpose": "Multi-client E2E pipeline orchestrator. Executes 9 phases from source boundary validation through selector update.",
+      "usable_for_client_pipeline": true,
+      "reason_if_not": null,
+      "functions": [
+        "phase_01_source_boundary (lines 125-149) — validation only",
+        "phase_02_intake (lines 154-163) — validation only",
+        "phase_03_40x_structural (lines 168-185) — validation only",
+        "phase_04_ceu_grounding (lines 190-213) — validation only",
+        "phase_05_build_binding_envelope (lines 217-426) — generates binding_envelope.json",
+        "phase_06_and_07_e2e (lines 431-507) — generates 75.x and 41.x artifacts",
+        "phase_08a_vault (lines 512-892) — generates 9 vault artifacts",
+        "phase_08b_lens_reports (lines 896-921) — generates LENS report tree",
+        "phase_09_selector_update (lines 926-971) — generates selector artifacts"
+      ],
+      "cli": "python3 scripts/pios/run_client_pipeline.py --client <id> --source <source_id> --run-id <run_id>"
+    },
+    {
+      "name": "run_end_to_end.py",
+      "path": "scripts/pios/run_end_to_end.py",
+      "type": "script",
+      "purpose": "E2E signal pipeline — invoked as subprocess by phase_06_and_07_e2e (native path). Generates 75.x and 41.x signal artifacts from binding_envelope.json.",
+      "usable_for_client_pipeline": true,
+      "reason_if_not": null,
+      "notes": "Invoked via subprocess by orchestrator native path. Not directly invoked for BlueEdge (conformance path used instead). Callable — file exists."
+    },
+    {
+      "name": "lens_report_generator.py",
+      "path": "scripts/pios/lens_report_generator.py",
+      "type": "script",
+      "purpose": "LENS report generation — invoked as subprocess by phase_08b_lens_reports. Generates full report tree from vault artifacts.",
+      "usable_for_client_pipeline": true,
+      "reason_if_not": null,
+      "notes": "Invoked via subprocess by orchestrator. Also calls export_graph_state.mjs as sub-subprocess. Callable — file exists."
+    },
+    {
+      "name": "bootstrap_fastapi_40x.py",
+      "path": "scripts/pios/40.2/bootstrap_fastapi_40x.py",
+      "type": "script",
+      "purpose": "FastAPI-specific structural artifact bootstrap. Generates 40.2/40.3/40.4 JSON artifacts from FastAPI raw intake source via static filesystem scan.",
+      "usable_for_client_pipeline": false,
+      "reason_if_not": "Client-specific (FastAPI only). Hardcoded to FastAPI source path (clients/e65d2f0a.../input/intake/source/fastapi-backend/). Not wired into orchestrator. Cannot be used for other clients without modification.",
+      "notes": "Created by PI.LENS.FASTAPI.40X-STRUCTURAL-BOOTSTRAP.01. Successfully generated Phase 3 artifacts for FastAPI — Phase 3 PASS confirmed."
+    },
+    {
+      "name": "scan_repository.sh",
+      "path": "scripts/pios/40.2/scan_repository.sh",
+      "type": "script",
+      "purpose": "k-pi-core self-analysis: scans k-pi-core repo files, produces sorted file list for INT-03 replication.",
+      "usable_for_client_pipeline": false,
+      "reason_if_not": "Designed for k-pi-core repo (expects 106 files). Outputs stdout file list — not structural_node_inventory.json JSON schema. Hardcoded file count validation for k-pi-core. Cannot produce Phase 3 artifacts for any client source.",
+      "notes": "Pipeline family: k-pi-core self-analysis (INT-03 replication). Confirmed by PI.LENS.PIPELINE-ORCHESTRATOR-IMPLEMENTATION.01 investigation."
+    },
+    {
+      "name": "extract_entities.py",
+      "path": "scripts/pios/40.2/extract_entities.py",
+      "type": "script",
+      "purpose": "k-pi-core self-analysis: extracts CKR entries, Stream references, and named components (PiOS/Signäl/Krayu) from k-pi-core .md files.",
+      "usable_for_client_pipeline": false,
+      "reason_if_not": "Patterns are k-pi-core-specific governance constructs. Outputs tab-separated entity records to stdout — not JSON structural inventory. Applied to BlueEdge or FastAPI source would produce zero useful matches.",
+      "notes": "Pipeline family: k-pi-core self-analysis (INT-03 replication)."
+    },
+    {
+      "name": "classify_files.py",
+      "path": "scripts/pios/40.2/classify_files.py",
+      "type": "script",
+      "purpose": "k-pi-core self-analysis: classifies k-pi-core files into code/documentation/configuration/interface/other categories.",
+      "usable_for_client_pipeline": false,
+      "reason_if_not": "Expected counts hardcoded for k-pi-core (94 docs, 1 code, 3 config, 0 interface, 8 other). Outputs tab-separated classification to stdout — not JSON. Would produce FAIL warnings on count mismatch for any other client.",
+      "notes": "Pipeline family: k-pi-core self-analysis (INT-03 replication). Classification logic by file extension is generically applicable but output format incompatible with Phase 3 schema."
+    },
+    {
+      "name": "extract_perm_entities.py",
+      "path": "scripts/pios/40.3/extract_perm_entities.py",
+      "type": "script",
+      "purpose": "BlueEdge 40.3 PERM entity validation: checks entity catalog at ~/Projects/krayu-program-intelligence/ against expected entity IDs.",
+      "usable_for_client_pipeline": false,
+      "reason_if_not": "NOT A GENERATOR. Hardcoded external paths (~/Projects/krayu-program-intelligence/, ~/Projects/blueedge-program-intelligence/source-v3.23/). Paths do not exist in this environment. No CLI arguments accepted. Produces no output files — stdout validation report only.",
+      "notes": "Pipeline family: external project validation. Cannot be invoked by orchestrator."
+    },
+    {
+      "name": "build_telemetry_artifacts.py",
+      "path": "scripts/pios/40.4/build_telemetry_artifacts.py",
+      "type": "script",
+      "purpose": "k-pi-core self-analysis telemetry: re-writes docs/pios/40.4/ markdown files from docs/pios/40.2/ and docs/pios/40.3/ inputs.",
+      "usable_for_client_pipeline": false,
+      "reason_if_not": "Hardcoded to docs/pios/ paths (k-pi-core self-analysis). REPO_ROOT computed via parents[3] — not parameterizable. load_existing_outputs() reads and re-writes existing 40.4 artifacts (pass-through). Does not produce structural_node_inventory.json or canonical_topology.json.",
+      "notes": "Pipeline family: k-pi-core self-analysis (PiOS 40.4 stream)."
+    },
+    {
+      "name": "MISSING: Generic structural scanner",
+      "path": "scripts/pios/structural_scanner.py (DOES NOT EXIST)",
+      "type": "script",
+      "purpose": "Would generate Phase 3 JSON artifacts from any client source directory. Required to close Step 5 gap for new clients.",
+      "usable_for_client_pipeline": false,
+      "reason_if_not": "Does not exist. bootstrap_fastapi_40x.py is the only structural scanner in repo and is FastAPI-specific.",
+      "notes": "This is the primary missing component identified by PI.LENS.PIPELINE-ORCHESTRATOR-IMPLEMENTATION.01 and PI.LENS.E2E-PIPELINE-REALITY-LOCK.01. Required for PI.LENS.STRUCTURAL-SCANNER.GENERIC.01."
+    },
+    {
+      "name": "MISSING: CEU grounding pipeline",
+      "path": "scripts/pios/ceu_grounding.py or equivalent (DOES NOT EXIST in repo)",
+      "type": "script",
+      "purpose": "Would generate ceu_grounding_registry.json and grounding_state_v3.json from structural artifacts.",
+      "usable_for_client_pipeline": false,
+      "reason_if_not": "Does not exist in repo. External contract (PI.BLUEEDGE.CLEAN-INTAKE.01 / integrated pipeline). Scripts from krayu-program-intelligence project not present.",
+      "notes": "Required to close Step 7 gap. Blocking FastAPI at Phase 4 (GAP-REG-02)."
+    },
+    {
+      "name": "MISSING: Integration pipeline / grounding state v3 migrator",
+      "path": "Unknown — not in repo",
+      "type": "unknown",
+      "purpose": "Would generate grounding_state_v3.json and integration_validation.json.",
+      "usable_for_client_pipeline": false,
+      "reason_if_not": "Does not exist in repo. Future contract required (PI.LENS.FASTAPI.CEU-GROUNDING-BOOTSTRAP.01).",
+      "notes": "Required for FastAPI Phase 4 to pass."
+    },
+    {
+      "name": "MISSING: DOM layer generator",
+      "path": "Unknown — not in repo",
+      "type": "unknown",
+      "purpose": "Would generate dom_path_domain_layer.json for any client source.",
+      "usable_for_client_pipeline": false,
+      "reason_if_not": "Does not exist in repo. BlueEdge dom_layer was produced by a one-time recompute contract. No generic path.",
+      "notes": "Required for Step 9. dom_layer_path field also missing from FastAPI source_manifest.json."
+    }
+  ],
+
+  "summary": {
+    "total_producers": 13,
+    "callable_and_usable": 3,
+    "callable_but_client_specific": 1,
+    "callable_but_incompatible_with_client_pipeline": 5,
+    "missing_from_repo": 4,
+    "callable_and_usable_list": ["run_client_pipeline.py", "run_end_to_end.py", "lens_report_generator.py"],
+    "gap_count": "4 missing producers required to close the full pipeline chain"
+  }
+}

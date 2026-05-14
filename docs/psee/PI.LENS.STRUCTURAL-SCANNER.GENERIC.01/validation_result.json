@@ -1,0 +1,96 @@
+{
+  "contract_id": "PI.LENS.STRUCTURAL-SCANNER.GENERIC.01",
+  "artifact": "validation_result",
+  "generated_date": "2026-05-01",
+  "client": "fastapi",
+  "source": "source_01",
+  "run_id": "run_02_oss_fastapi_pipeline",
+
+  "write_run": {
+    "command": "python3 scripts/pios/structural_scanner.py --client fastapi --source source_01 --run-id run_02_oss_fastapi_pipeline",
+    "exit_code": 0,
+    "result": "PASS",
+    "nodes_produced": 123,
+    "directory_nodes": 36,
+    "file_nodes": 87,
+    "edges_produced": 104,
+    "contains_edges": 104,
+    "imports_edges": 0,
+    "clusters_produced": 19,
+    "files_written": [
+      "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/structure/40.2/structural_node_inventory.json",
+      "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/structure/40.3/structural_topology_log.json",
+      "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/structure/40.4/canonical_topology.json"
+    ]
+  },
+
+  "validate_only_run": {
+    "command": "python3 scripts/pios/structural_scanner.py --client fastapi --source source_01 --run-id run_02_oss_fastapi_pipeline --validate-only",
+    "exit_code": 0,
+    "result": "PASS",
+    "files_written": []
+  },
+
+  "dry_run": {
+    "command": "python3 scripts/pios/structural_scanner.py --client fastapi --source source_01 --run-id run_02_oss_fastapi_pipeline --dry-run",
+    "exit_code": 0,
+    "result": "PASS",
+    "nodes_computed": 123,
+    "edges_computed": 104,
+    "clusters_computed": 19,
+    "files_written": []
+  },
+
+  "create_only_guard_test": {
+    "command": "python3 scripts/pios/structural_scanner.py --client fastapi --source source_01 --run-id run_02_oss_fastapi_pipeline (re-run)",
+    "exit_code": 1,
+    "result": "FAIL-CLOSED",
+    "error": "CREATE_ONLY violation — output files already exist: all 3 structure artifacts",
+    "guard_status": "PASS — correctly blocked overwrite"
+  },
+
+  "artifact_existence_checks": {
+    "40_2": {
+      "path": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/structure/40.2/structural_node_inventory.json",
+      "exists": true,
+      "valid_json": true
+    },
+    "40_3": {
+      "path": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/structure/40.3/structural_topology_log.json",
+      "exists": true,
+      "valid_json": true
+    },
+    "40_4": {
+      "path": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/structure/40.4/canonical_topology.json",
+      "exists": true,
+      "valid_json": true
+    }
+  },
+
+  "schema_checks": {
+    "40_2_total_nodes_field": "PRESENT — value: 123",
+    "40_2_nodes_array": "PRESENT — 123 records",
+    "40_3_edges_array": "PRESENT — 104 records",
+    "40_3_relation_types": "PRESENT — ['CONTAINS', 'IMPORTS']",
+    "40_4_platform_field": "PRESENT — value: 'generic'",
+    "40_4_clusters_array": "PRESENT — 19 records",
+    "40_4_cluster_id_format": "PASS — CLU-01 through CLU-19"
+  },
+
+  "orchestrator_phase3_compatibility": {
+    "total_nodes_field_present": true,
+    "topology_log_exists": true,
+    "canonical_topology_exists": true,
+    "compatibility_verdict": "COMPATIBLE — Phase 3 will pass for this run"
+  },
+
+  "scope_guards": {
+    "blueedge_artifacts_modified": false,
+    "fastapi_source_files_modified": false,
+    "ceu_dom_41x_75x_performed": false,
+    "semantic_inference_performed": false,
+    "output_path_correct": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/structure/"
+  },
+
+  "overall_validation": "PASS"
+}

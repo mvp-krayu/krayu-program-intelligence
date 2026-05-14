@@ -1,0 +1,111 @@
+{
+  "schema_version": "1.0",
+  "stream": "PI.PSEE-PIOS.ENRICHMENT-PARTICIPATION-ADVISORY.IMPLEMENTATION.01",
+  "design_ref": "docs/psee/PI.PSEE-PIOS.ENRICHED-CONDITION-PARTICIPATION.DESIGN.01/ENRICHED_CONDITION_PARTICIPATION.md",
+  "gate_design_ref": "docs/psee/PI.PSEE-PIOS.PSEE-CONDITION-ACTIVATION-GATE.DESIGN.01/PSEE_CONDITION_ACTIVATION_GATE.md",
+  "evaluated_at": "2026-05-07T07:47:47.558750+00:00",
+  "gate_session_id": "8149e858d47767c352525a66b78f8ac45b9ee037dbcb510f3462d84e310ee0be",
+  "client_id": "fastapi",
+  "run_id": "run_02_oss_fastapi_pipeline",
+  "evaluation_context": {
+    "script_version": "2.0",
+    "evaluated_at": "2026-05-07T07:47:47.558750+00:00",
+    "gate_session_id": "8149e858d47767c352525a66b78f8ac45b9ee037dbcb510f3462d84e310ee0be"
+  },
+  "lane_scope": [
+    "A",
+    "D"
+  ],
+  "advisory_mode": "ADVISORY_ONLY_MODE",
+  "participation_mode": "OBSERVATIONAL_ONLY",
+  "activation_state": "ENRICHMENT_READY",
+  "bp_01_status": "NOT_RESOLVED",
+  "bp_02_status": "RESOLVED",
+  "activation_authorized": false,
+  "enriched_participation": "NOT_ACTIVE",
+  "enrichment_inputs_present": [
+    "psee_context",
+    "psee_context.grounding_ratio",
+    "ceu_topology",
+    "structural_overlap",
+    "selector_context",
+    "evidence_state"
+  ],
+  "enrichment_inputs_missing": [
+    "selector_context.selector_confidence",
+    "evidence_state.evidence_confidence"
+  ],
+  "degradation_state": "CONTEXT_INCOMPLETE",
+  "advisory_count": 3,
+  "advisories": [
+    {
+      "advisory_id": "ADV-001",
+      "advisory_stable_key": "49042e2375fc7279",
+      "advisory_type": "confidence_downgrade",
+      "advisory_state": "CONTEXT_INCOMPLETE",
+      "advisory_reason": "evidence_state.evidence_confidence is null \u2014 derivation not yet implemented. Enrichment confidence context is partially available. Grounding ratio is within nominal range; this is not a hard downgrade.",
+      "enrichment_inputs_used": [
+        "evidence_state.evidence_confidence"
+      ],
+      "emitted_at": "2026-05-07T07:47:47.558750+00:00",
+      "originating_artifact": "binding/psee_binding_envelope.json",
+      "participation_mode_at_emission": "OBSERVATIONAL_ONLY",
+      "degradation_state_at_emission": "CONTEXT_INCOMPLETE",
+      "note": "CONTEXT_INCOMPLETE: grounding_ratio is nominal but evidence_confidence derivation is pending. Full enrichment confidence context requires evidence_confidence to be non-null. Participation mode remains OBSERVATIONAL_ONLY."
+    },
+    {
+      "advisory_id": "ADV-002",
+      "advisory_stable_key": "863cb12ba0e1d008",
+      "advisory_type": "evidence_insufficiency",
+      "advisory_state": "PENDING_DERIVATION",
+      "advisory_reason": "evidence_state.evidence_confidence is null \u2014 required for SUPPRESSION_ADVISORY (MODE-03) quality checks and ENRICHED_PARTICIPATION (MODE-05) | structural_overlap.edge_count is 0 (placeholder) despite cluster_count=19. OVERLAP_STRUCTURAL derivation is not yet implemented. ESCALATION_ADVISORY (MODE-04) structural trigger is unavailable. | selector_context.selector_confidence is null \u2014 selector execution not yet authorized. ENRICHED_PARTICIPATION (MODE-05) requires non-null selector_confidence.",
+      "enrichment_inputs_used": [
+        "evidence_state.evidence_confidence",
+        "structural_overlap.edge_count",
+        "ceu_topology.cluster_count",
+        "selector_context.selector_confidence"
+      ],
+      "emitted_at": "2026-05-07T07:47:47.558750+00:00",
+      "originating_artifact": "binding/psee_binding_envelope.json",
+      "participation_mode_at_emission": "OBSERVATIONAL_ONLY",
+      "degradation_state_at_emission": "CONTEXT_INCOMPLETE",
+      "note": "PENDING_DERIVATION: these inputs will be available after upstream derivation streams are issued and implemented. Current state: OBSERVATIONAL_ONLY."
+    },
+    {
+      "advisory_id": "ADV-003",
+      "advisory_stable_key": "eea81500636255d1",
+      "advisory_type": "activation_not_authorized",
+      "advisory_state": "GOVERNANCE_BLOCKED",
+      "advisory_reason": "activation_authorized is false \u2014 explicit governance authorization has not been issued. G-08 (gate_evaluation.json) must be set by governance authority before any enriched participation mode can proceed.",
+      "enrichment_inputs_used": [
+        "activation_authorized"
+      ],
+      "emitted_at": "2026-05-07T07:47:47.558750+00:00",
+      "originating_artifact": "artifacts/psee_gate/<client>/<run_id>/gate_evaluation.json",
+      "participation_mode_at_emission": "OBSERVATIONAL_ONLY",
+      "degradation_state_at_emission": "CONTEXT_INCOMPLETE",
+      "note": "GOVERNANCE_BLOCKED: no enriched participation mode is accessible until activation_authorized is explicitly set to true by governance action. This is not a data gap \u2014 it is an authorization gap."
+    }
+  ],
+  "observability_status": {
+    "gate_evaluation_present": true,
+    "psee_binding_envelope_present": true,
+    "obs_01_participation_reason_log": true,
+    "obs_02_enrichment_source_trace": true,
+    "obs_03_degradation_logged": true,
+    "obs_04_activation_state_visible": true,
+    "obs_05_advisory_artifact_written": true
+  },
+  "runtime_impact": "NONE",
+  "evaluator_authority": "OBSERVATIONAL_ONLY",
+  "zero_impact_guarantee": {
+    "runtime_artifacts_modified": false,
+    "75x_behavior_changed": false,
+    "41x_behavior_changed": false,
+    "signal_values_changed": false,
+    "reports_changed": false,
+    "binding_envelope_modified": false,
+    "psee_binding_envelope_modified": false,
+    "thresholds_modified": false
+  }
+}

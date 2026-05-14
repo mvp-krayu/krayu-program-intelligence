@@ -1,0 +1,19 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE.IDEMPOTENCY-SWEEP.01",
+  "artifact": "validation_result",
+  "generated_date": "2026-05-03",
+  "wrapper_modified": true,
+  "producer_scripts_modified": "Phase 8b guard only (run_client_pipeline.py)",
+  "stage_03_idempotent": true,
+  "phase_8b_idempotent": true,
+  "stale_blocker_text_removed": true,
+  "pipeline_executed": true,
+  "pipeline_exit_code": 0,
+  "pipeline_all_phases_pass": true,
+  "canonical_artifacts_mutated": false,
+  "structural_scanner_modified": false,
+  "ceu_grounding_modified": false,
+  "dom_layer_generator_modified": false,
+  "source_intake_modified": false,
+  "validation_status": "PASS"
+}

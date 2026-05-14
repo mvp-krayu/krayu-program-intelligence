@@ -1,0 +1,361 @@
+{
+  "schema_version": "2.0",
+  "stream": "PI.PSEE-PIOS.SEMANTIC-PROVENANCE-INSTRUMENTATION.IMPLEMENTATION.01",
+  "design_ref": "docs/psee/PI.PSEE-PIOS.SEMANTIC-TRACEABILITY-OBSERVABILITY.DESIGN.01/SEMANTIC_TRACEABILITY_OBSERVABILITY.md",
+  "captured_at": "2026-05-07T07:47:47.602866+00:00",
+  "gate_session_id": "8149e858d47767c352525a66b78f8ac45b9ee037dbcb510f3462d84e310ee0be",
+  "client_id": "fastapi",
+  "run_id": "run_02_oss_fastapi_pipeline",
+  "capture_context": {
+    "script_version": "2.0",
+    "captured_at": "2026-05-07T07:47:47.602866+00:00",
+    "gate_session_id": "8149e858d47767c352525a66b78f8ac45b9ee037dbcb510f3462d84e310ee0be",
+    "input_artifact_hashes": {
+      "gate_evaluation.json": "3fad5b3990117d2ac3c8349e97d322dcb59eba7001eaed3168148a3b5f38ffe1",
+      "participation_advisory.json": "5ae76e2de0221805f82a534b85881a179731bb1b014448a5f4740ac8d82dc23f",
+      "psee_binding_envelope.json": "481e46a30b88c9d76f77d58f3535f9b8986a6bc6f5fc6fc70f5a39fc506b7741"
+    },
+    "source_map_origin": "ARTIFACT_BOUND"
+  },
+  "provenance_health": {
+    "gate_session_id_present": true,
+    "source_map_artifact_bound": true,
+    "advisory_stable_keys_present": true,
+    "degradation_stable_keys_present": true,
+    "total_advisory_lineage_gaps": 3,
+    "activation_not_authorized_advisory_present": true
+  },
+  "lane_scope": [
+    "A",
+    "D"
+  ],
+  "activation_state": "ENRICHMENT_READY",
+  "participation_mode": "OBSERVATIONAL_ONLY",
+  "semantic_authority": "BLOCKED",
+  "advisory_count": 3,
+  "advisory_lineage": [
+    {
+      "advisory_id": "ADV-001",
+      "advisory_stable_key": "49042e2375fc7279",
+      "advisory_type": "confidence_downgrade",
+      "advisory_state": "CONTEXT_INCOMPLETE",
+      "originating_enrichment_inputs": [
+        {
+          "field": "evidence_state.evidence_confidence",
+          "observed_value": null,
+          "source_artifact": "binding/psee_binding_envelope.json",
+          "ultimate_source": "PENDING_DERIVATION:evidence_confidence_formula_pending",
+          "derivation_status": "PENDING_DERIVATION"
+        }
+      ],
+      "participation_mode": "OBSERVATIONAL_ONLY",
+      "activation_state": "ENRICHMENT_READY",
+      "degradation_state": "CONTEXT_INCOMPLETE",
+      "advisory_reason": "evidence_state.evidence_confidence is null \u2014 derivation not yet implemented. Enrichment confidence context is partially available. Grounding ratio is within nominal range; this is not a hard downgrade.",
+      "governance_gate_state": {
+        "available": true,
+        "activation_state": "ENRICHMENT_READY",
+        "bp_01_resolved": false,
+        "bp_02_resolved": true,
+        "activation_authorized": false,
+        "grounding_ratio": 0.9,
+        "cluster_count": 19,
+        "evaluator_authority": "OBSERVATIONAL_ONLY"
+      },
+      "observability_state": "PARTIAL",
+      "lineage_gaps": [
+        "AL-03: advisory_reason_structured absent \u2014 text reason only"
+      ],
+      "source_map_origin": "ARTIFACT_BOUND"
+    },
+    {
+      "advisory_id": "ADV-002",
+      "advisory_stable_key": "863cb12ba0e1d008",
+      "advisory_type": "evidence_insufficiency",
+      "advisory_state": "PENDING_DERIVATION",
+      "originating_enrichment_inputs": [
+        {
+          "field": "evidence_state.evidence_confidence",
+          "observed_value": null,
+          "source_artifact": "binding/psee_binding_envelope.json",
+          "ultimate_source": "PENDING_DERIVATION:evidence_confidence_formula_pending",
+          "derivation_status": "PENDING_DERIVATION"
+        },
+        {
+          "field": "structural_overlap.edge_count",
+          "observed_value": 0,
+          "source_artifact": "binding/psee_binding_envelope.json",
+          "ultimate_source": "PLACEHOLDER:OVERLAP_STRUCTURAL_pending",
+          "derivation_status": "PLACEHOLDER"
+        },
+        {
+          "field": "ceu_topology.cluster_count",
+          "observed_value": 19,
+          "source_artifact": "binding/psee_binding_envelope.json",
+          "ultimate_source": "structure/40.4/canonical_topology.json$.cluster_count",
+          "derivation_status": "DERIVED"
+        },
+        {
+          "field": "selector_context.selector_confidence",
+          "observed_value": null,
+          "source_artifact": "binding/psee_binding_envelope.json",
+          "ultimate_source": "NOT_AUTHORIZED:selector_execution_pending",
+          "derivation_status": "NOT_AUTHORIZED"
+        }
+      ],
+      "participation_mode": "OBSERVATIONAL_ONLY",
+      "activation_state": "ENRICHMENT_READY",
+      "degradation_state": "CONTEXT_INCOMPLETE",
+      "advisory_reason": "evidence_state.evidence_confidence is null \u2014 required for SUPPRESSION_ADVISORY (MODE-03) quality checks and ENRICHED_PARTICIPATION (MODE-05) | structural_overlap.edge_count is 0 (placeholder) despite cluster_count=19. OVERLAP_STRUCTURAL derivation is not yet implemented. ESCALATION_ADVISORY (MODE-04) structural trigger is unavailable. | selector_context.selector_confidence is null \u2014 selector execution not yet authorized. ENRICHED_PARTICIPATION (MODE-05) requires non-null selector_confidence.",
+      "governance_gate_state": {
+        "available": true,
+        "activation_state": "ENRICHMENT_READY",
+        "bp_01_resolved": false,
+        "bp_02_resolved": true,
+        "activation_authorized": false,
+        "grounding_ratio": 0.9,
+        "cluster_count": 19,
+        "evaluator_authority": "OBSERVATIONAL_ONLY"
+      },
+      "observability_state": "PARTIAL",
+      "lineage_gaps": [
+        "AL-03: advisory_reason_structured absent \u2014 text reason only"
+      ],
+      "source_map_origin": "ARTIFACT_BOUND"
+    },
+    {
+      "advisory_id": "ADV-003",
+      "advisory_stable_key": "eea81500636255d1",
+      "advisory_type": "activation_not_authorized",
+      "advisory_state": "GOVERNANCE_BLOCKED",
+      "originating_enrichment_inputs": [
+        {
+          "field": "activation_authorized",
+          "observed_value": null,
+          "source_artifact": "binding/psee_binding_envelope.json",
+          "ultimate_source": "UNKNOWN",
+          "derivation_status": "UNKNOWN"
+        }
+      ],
+      "participation_mode": "OBSERVATIONAL_ONLY",
+      "activation_state": "ENRICHMENT_READY",
+      "degradation_state": "CONTEXT_INCOMPLETE",
+      "advisory_reason": "activation_authorized is false \u2014 explicit governance authorization has not been issued. G-08 (gate_evaluation.json) must be set by governance authority before any enriched participation mode can proceed.",
+      "governance_gate_state": {
+        "available": true,
+        "activation_state": "ENRICHMENT_READY",
+        "bp_01_resolved": false,
+        "bp_02_resolved": true,
+        "activation_authorized": false,
+        "grounding_ratio": 0.9,
+        "cluster_count": 19,
+        "evaluator_authority": "OBSERVATIONAL_ONLY"
+      },
+      "observability_state": "PARTIAL",
+      "lineage_gaps": [
+        "AL-03: advisory_reason_structured absent \u2014 text reason only"
+      ],
+      "source_map_origin": "ARTIFACT_BOUND"
+    }
+  ],
+  "degradation_lineage": [
+    {
+      "event_id": "DEG-001",
+      "degradation_stable_key": "688b2d21bc53bc58",
+      "event_type": "EVIDENCE_INCOMPLETE",
+      "degradation_reason": "evidence_state.evidence_confidence is null \u2014 evidence_confidence derivation formula not yet implemented",
+      "degradation_scope": "RUN_WIDE",
+      "degradation_visibility": "VISIBLE",
+      "degradation_replayable": true,
+      "source_artifact": "binding/psee_binding_envelope.json",
+      "affected_field": "evidence_state.evidence_confidence",
+      "observed_value": null,
+      "advisory_refs": [
+        "ADV-001",
+        "ADV-002"
+      ],
+      "ultimate_source": "PENDING_DERIVATION:evidence_confidence_formula_pending",
+      "modes_blocked": [
+        "SUPPRESSION_ADVISORY (MODE-03)",
+        "ENRICHED_PARTICIPATION (MODE-05)"
+      ],
+      "captured_at": "2026-05-07T07:47:47.602866+00:00"
+    },
+    {
+      "event_id": "DEG-002",
+      "degradation_stable_key": "e001bd69c4dc5e4d",
+      "event_type": "STRUCTURAL_OVERLAP_PENDING",
+      "degradation_reason": "structural_overlap.edge_count is 0 (placeholder) despite cluster_count=19. OVERLAP_STRUCTURAL derivation not yet implemented.",
+      "degradation_scope": "RUN_WIDE",
+      "degradation_visibility": "PARTIAL",
+      "degradation_replayable": true,
+      "source_artifact": "binding/psee_binding_envelope.json",
+      "affected_field": "structural_overlap.edge_count",
+      "observed_value": 0,
+      "advisory_refs": [
+        "ADV-002"
+      ],
+      "ultimate_source": "PLACEHOLDER:OVERLAP_STRUCTURAL_pending",
+      "modes_blocked": [
+        "ESCALATION_ADVISORY structural trigger (MODE-04)"
+      ],
+      "captured_at": "2026-05-07T07:47:47.602866+00:00"
+    },
+    {
+      "event_id": "DEG-003",
+      "degradation_stable_key": "6bdc373ea03c05ee",
+      "event_type": "SELECTOR_NOT_AUTHORIZED",
+      "degradation_reason": "selector_context.selector_confidence is null \u2014 selector execution not yet authorized",
+      "degradation_scope": "RUN_WIDE",
+      "degradation_visibility": "PARTIAL",
+      "degradation_replayable": true,
+      "source_artifact": "binding/psee_binding_envelope.json",
+      "affected_field": "selector_context.selector_confidence",
+      "observed_value": null,
+      "advisory_refs": [
+        "ADV-002"
+      ],
+      "ultimate_source": "NOT_AUTHORIZED:selector_execution_pending",
+      "modes_blocked": [
+        "ENRICHED_PARTICIPATION (MODE-05)"
+      ],
+      "captured_at": "2026-05-07T07:47:47.602866+00:00"
+    },
+    {
+      "event_id": "DEG-004",
+      "degradation_stable_key": "b6d5ccea403ca176",
+      "event_type": "ACTIVATION_NOT_AUTHORIZED",
+      "degradation_reason": "activation_authorized is false \u2014 explicit governance authorization has not been issued (G-08 FAIL in gate_evaluation.json)",
+      "degradation_scope": "RUN_WIDE",
+      "degradation_visibility": "VISIBLE",
+      "degradation_replayable": true,
+      "source_artifact": "artifacts/psee_gate/<client>/<run_id>/gate_evaluation.json",
+      "affected_field": "activation_authorized",
+      "observed_value": false,
+      "advisory_refs": [
+        "ADV-003"
+      ],
+      "ultimate_source": "gate_evaluation.json G-08 \u2014 governance authority action required",
+      "modes_blocked": [
+        "ENRICHMENT_ACTIVE gate state",
+        "ENRICHED_PARTICIPATION (MODE-05)"
+      ],
+      "captured_at": "2026-05-07T07:47:47.602866+00:00"
+    }
+  ],
+  "provenance_chain": [
+    {
+      "step": 1,
+      "artifact_type": "readiness_provenance",
+      "artifact_path": "artifacts/psee_gate/fastapi/run_02_oss_fastapi_pipeline/gate_evaluation.json",
+      "provenance_type": "PT-04 (subset) \u2014 gate readiness state",
+      "present": true,
+      "fields_consumed": [
+        "activation_state",
+        "bp_01_resolved",
+        "bp_02_resolved",
+        "activation_authorized",
+        "grounding_ratio",
+        "cluster_count"
+      ]
+    },
+    {
+      "step": 2,
+      "artifact_type": "semantic_provenance",
+      "artifact_path": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/binding/psee_binding_envelope.json",
+      "provenance_type": "PT-02 \u2014 enrichment context",
+      "present": true,
+      "fields_consumed": [
+        "psee_context",
+        "ceu_topology",
+        "structural_overlap",
+        "selector_context",
+        "evidence_state"
+      ],
+      "source_map_present": true
+    },
+    {
+      "step": 3,
+      "artifact_type": "advisory_provenance",
+      "artifact_path": "artifacts/psee_advisory/fastapi/run_02_oss_fastapi_pipeline/participation_advisory.json",
+      "provenance_type": "PT-03 \u2014 advisory records",
+      "present": true,
+      "fields_consumed": [
+        "advisories",
+        "degradation_state",
+        "participation_mode",
+        "enrichment_inputs_present",
+        "enrichment_inputs_missing"
+      ],
+      "lineage_complete": false,
+      "gap": "PT-03: AL-02/03/08 absent \u2014 advisory records not self-describing for cold reconstruction"
+    }
+  ],
+  "provenance_completeness": {
+    "PT-01_structural": {
+      "status": "IMPLEMENTED",
+      "artifacts": [
+        "binding/binding_envelope.json",
+        "structure/40.4/canonical_topology.json"
+      ],
+      "note": "Structural provenance produced by 40.x pipeline; out of scope for this instrumentation"
+    },
+    "PT-02_semantic": {
+      "status": "PARTIAL",
+      "artifact": "binding/psee_binding_envelope.json",
+      "present": true,
+      "gap": "psee_enrichment_meta.source_map absent \u2014 field-level source attribution not captured in artifact itself"
+    },
+    "PT-03_advisory": {
+      "status": "PARTIAL",
+      "artifact": "artifacts/psee_advisory/fastapi/run_02_oss_fastapi_pipeline/participation_advisory.json",
+      "present": true,
+      "gaps": [
+        "AL-02: originating_artifact absent from advisory records",
+        "AL-03: advisory_reason_structured absent",
+        "AL-08: provenance_chain absent"
+      ]
+    },
+    "PT-04_participation": {
+      "status": "PARTIAL",
+      "artifacts": [
+        "artifacts/psee_gate/fastapi/run_02_oss_fastapi_pipeline/gate_evaluation.json",
+        "artifacts/psee_advisory/fastapi/run_02_oss_fastapi_pipeline/participation_advisory.json"
+      ],
+      "both_present": true,
+      "gaps": [
+        "No formal session_id linking gate and advisory artifacts",
+        "No structured degradation_event records in advisory artifact"
+      ]
+    },
+    "PT-05_activation": {
+      "status": "NOT_IMPLEMENTED",
+      "note": "Activation provenance requires 75.x coupling framework not yet designed or authorized"
+    }
+  },
+  "replay_supported": "PARTIAL",
+  "replay_readiness": {
+    "advisory_reconstructable": "PARTIAL",
+    "degradation_reconstructable": "PARTIAL",
+    "enrichment_inputs_attributable": "PARTIAL",
+    "provenance_chain_complete": "PARTIAL"
+  },
+  "replay_gaps": [
+    "AL-03: advisory_reason_structured absent \u2014 text reason only",
+    "evidence_state.evidence_confidence is null \u2014 confidence provenance chain incomplete",
+    "structural_overlap.edge_count is 0 (placeholder) \u2014 structural provenance chain incomplete",
+    "selector_context.selector_confidence is null \u2014 selector provenance chain incomplete"
+  ],
+  "runtime_impact": "NONE",
+  "evaluator_authority": "OBSERVATIONAL_ONLY",
+  "zero_impact_guarantee": {
+    "runtime_artifacts_modified": false,
+    "75x_behavior_changed": false,
+    "41x_behavior_changed": false,
+    "signal_values_changed": false,
+    "reports_changed": false,
+    "binding_envelope_modified": false,
+    "psee_binding_envelope_modified": false,
+    "thresholds_modified": false
+  }
+}

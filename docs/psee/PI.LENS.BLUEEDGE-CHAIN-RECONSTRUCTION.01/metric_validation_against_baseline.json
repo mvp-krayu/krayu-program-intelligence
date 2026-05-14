@@ -1,0 +1,107 @@
+{
+  "contract_id": "PI.LENS.BLUEEDGE-CHAIN-RECONSTRUCTION.01",
+  "generated_date": "2026-05-01",
+  "validation_mode": "STATIC_FROM_COPIES",
+  "note": "Pipeline failed at Phase 2 — metrics validated directly from copied reconstruction artifacts and named baseline vault. No pipeline computation performed.",
+
+  "baseline_reference": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/",
+
+  "metric_checks": [
+    {
+      "metric": "CEU count",
+      "expected": 10,
+      "observed": 10,
+      "source": "run_be_chain_reconstruction_01/ceu/grounding_state_v3.json — grounding_summary.total_ceu=10",
+      "result": "PASS",
+      "notes": "Exact copy from UUID run — value preserved"
+    },
+    {
+      "metric": "grounding_ratio",
+      "expected": 1.0,
+      "observed": 1.0,
+      "source": "run_be_chain_reconstruction_01/ceu/grounding_state_v3.json — grounding_ratio=1.0",
+      "result": "PASS",
+      "notes": "Exact copy from UUID run — value preserved"
+    },
+    {
+      "metric": "readiness_gate",
+      "expected": "PASS",
+      "observed": "PASS",
+      "source": "run_be_chain_reconstruction_01/ceu/grounding_state_v3.json — readiness_gate.status=PASS",
+      "result": "PASS",
+      "notes": "Exact copy from UUID run — value preserved"
+    },
+    {
+      "metric": "total_signals",
+      "expected": 4,
+      "observed": 4,
+      "source": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/signal_registry.json — total_signals=4",
+      "result": "PASS",
+      "notes": "Baseline vault artifact — signals cannot be regenerated without fastapi_conformance_path (BLOCKER-04)"
+    },
+    {
+      "metric": "active_pressure_signals",
+      "expected": 3,
+      "observed": 3,
+      "source": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/signal_registry.json — active_pressure_signals=3",
+      "result": "PASS",
+      "notes": "Baseline vault artifact"
+    },
+    {
+      "metric": "gauge_canonical",
+      "expected": 60,
+      "observed": 60,
+      "source": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/gauge_state.json — score.canonical=60",
+      "result": "PASS",
+      "notes": "Baseline vault artifact — gauge cannot be regenerated (pipeline blocked at Phase 2)"
+    },
+    {
+      "metric": "gauge_projected",
+      "expected": 100,
+      "observed": 100,
+      "source": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/gauge_state.json — score.projected=100",
+      "result": "PASS",
+      "notes": "Baseline vault artifact"
+    },
+    {
+      "metric": "gauge_band",
+      "expected": "CONDITIONAL",
+      "observed": "CONDITIONAL",
+      "source": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/gauge_state.json — score.band_label=CONDITIONAL",
+      "result": "PASS",
+      "notes": "Baseline vault artifact"
+    },
+    {
+      "metric": "topology_nodes",
+      "expected": 35,
+      "observed": 35,
+      "source": "run_be_chain_reconstruction_01/structure/40.4/canonical_topology.json — counts.total_nodes=35",
+      "result": "PASS",
+      "notes": "Exact copy from vault canonical_topology; PATH_EVIDENCE_ONLY schema preserved"
+    },
+    {
+      "metric": "topology_domains",
+      "expected": 13,
+      "observed": 13,
+      "source": "run_be_chain_reconstruction_01/structure/40.4/canonical_topology.json — counts.domains=13",
+      "result": "PASS",
+      "notes": "Exact copy from vault canonical_topology"
+    },
+    {
+      "metric": "integration_checks_passed",
+      "expected": 9,
+      "observed": 9,
+      "source": "run_be_chain_reconstruction_01/integration/integration_validation.json — summary.total_checks=9, passed=9",
+      "result": "PASS",
+      "notes": "Exact copy from UUID run"
+    }
+  ],
+
+  "summary": {
+    "total_checks": 11,
+    "passed": 11,
+    "failed": 0,
+    "result": "PASS",
+    "caveat": "ALL METRICS VALIDATED FROM STATIC COPIES — no pipeline computation was performed. Signal/gauge values are from baseline vault artifacts, not from reconstruction run pipeline output. This is a COPY-INTEGRITY validation, not a PIPELINE-COMPUTATION validation."
+  }
+}

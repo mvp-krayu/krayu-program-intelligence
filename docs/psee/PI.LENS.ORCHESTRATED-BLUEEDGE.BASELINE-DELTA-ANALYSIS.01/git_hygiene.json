@@ -1,0 +1,65 @@
+{
+  "contract_id": "PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01",
+  "artifact": "git_hygiene",
+  "block": "BLOCK_K",
+  "generated_date": "2026-05-01",
+  "mode": "FORENSIC / READ_ONLY",
+
+  "repository": "k-pi-core",
+  "branch": "work/psee-runtime",
+  "head_commit": "c60634d",
+  "head_commit_message": "PIN: client-agnostic semantic LENS report generator",
+
+  "mutation_confirmation": {
+    "this_forensic_contract_mutated_runtime_artifacts": false,
+    "this_forensic_contract_mutated_vault_artifacts": false,
+    "this_forensic_contract_mutated_signal_values": false,
+    "this_forensic_contract_mutated_selector": false,
+    "this_forensic_contract_created_new_runs": false,
+    "artifacts_created": [
+      "docs/psee/PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01/run_inventory.json",
+      "docs/psee/PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01/source_scope_comparison.json",
+      "docs/psee/PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01/structural_topology_comparison.json",
+      "docs/psee/PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01/ceu_grounding_comparison.json",
+      "docs/psee/PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01/41x_artifact_comparison.json",
+      "docs/psee/PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01/75x_signal_condition_comparison.json",
+      "docs/psee/PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01/schema_bridge_analysis.json",
+      "docs/psee/PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01/report_surface_delta.json",
+      "docs/psee/PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01/root_cause_classification.json",
+      "docs/psee/PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01/remediation_plan.md",
+      "docs/psee/PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01/git_hygiene.json",
+      "docs/psee/PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01/baseline_delta_summary.md",
+      "docs/psee/PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01/validation_log.json",
+      "docs/psee/PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01/execution_report.md",
+      "docs/psee/PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01/CLOSURE.md"
+    ],
+    "note": "All artifacts created are READ_ONLY forensic analysis documents in docs/psee/PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01/. No runtime, vault, run, or selector artifacts were modified."
+  },
+
+  "git_status_summary": {
+    "tracked_modified": [
+      "scripts/pios/lens_report_generator.py",
+      "scripts/pios/export_graph_state.mjs"
+    ],
+    "tracked_deleted": [
+      "clients/blueedge/psee/runs/run_01_authoritative/intake/intake_log.md",
+      "clients/blueedge/psee/runs/run_01_authoritative/intake/intake_result.json",
+      "clients/blueedge/psee/runs/run_01_authoritative/package/coverage_state.json",
+      "clients/blueedge/psee/runs/run_01_authoritative/package/engine_state.json",
+      "clients/blueedge/psee/runs/run_01_authoritative/package/gauge_state.json",
+      "clients/blueedge/psee/runs/run_01_authoritative/package/gauge_view.json",
+      "clients/blueedge/psee/runs/run_01_authoritative/package/package_manifest.json",
+      "clients/blueedge/psee/runs/run_01_authoritative/package/reconstruction_state.json"
+    ],
+    "untracked_directories_of_note": [
+      "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/ (orchestrated run output)",
+      "clients/blueedge/client.yaml (orchestrator config)",
+      "clients/blueedge/lens/ (orchestrated lens output)",
+      "clients/blueedge/sources/ (source manifest)"
+    ],
+    "note": "The tracked modifications (lens_report_generator.py, export_graph_state.mjs) are from the prior PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.BLUEEDGE.01 stream. The deletions of run_01_authoritative artifacts are also from the prior stream. None of these are mutations from the forensic delta analysis contract."
+  },
+
+  "no_mutation_confirmed": true,
+  "forensic_contract_compliance": "COMPLIANT — mode was READ_ONLY throughout; no runtime artifacts were mutated"
+}

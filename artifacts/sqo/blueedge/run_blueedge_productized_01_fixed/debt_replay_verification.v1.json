@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "client": "blueedge",
+  "run_id": "run_blueedge_productized_01_fixed",
+  "verification_timestamp": "2026-05-10T13:34:25.294Z",
+  "checks": {
+    "input_integrity": {
+      "pass": true,
+      "mismatches": []
+    },
+    "deterministic_recomputation": {
+      "pass": true,
+      "stored": {
+        "total_debt_items": 15,
+        "summary": {
+          "critical_count": 0,
+          "high_count": 13,
+          "medium_high_count": 0,
+          "medium_count": 2,
+          "s_state_blocking_count": 13
+        }
+      },
+      "recomputed": {
+        "total_debt_items": 15,
+        "summary": {
+          "critical_count": 0,
+          "high_count": 13,
+          "medium_high_count": 0,
+          "medium_count": 2,
+          "s_state_blocking_count": 13
+        }
+      }
+    },
+    "output_hash": {
+      "pass": true,
+      "stored_hash": "sha256:bc07a67a6a39d9817b6e5c46367fd13d2ed7fabe1c898c7a04ffbb6ba18a09f8",
+      "recomputed_hash": "sha256:bc07a67a6a39d9817b6e5c46367fd13d2ed7fabe1c898c7a04ffbb6ba18a09f8"
+    }
+  },
+  "overall_verdict": "PASS",
+  "governance": {
+    "operation": "debt_replay_verification",
+    "operation_version": "1.0"
+  }
+}

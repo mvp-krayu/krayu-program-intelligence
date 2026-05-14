@@ -1,0 +1,144 @@
+{
+  "version": "1.0",
+  "status": "ACTIVE",
+  "generated": "2026-05-07",
+  "lane_scope": ["D"],
+  "stream": "PI.PSEE-PIOS.DETERMINISTIC-REPLAY-INSTRUMENTATION.IMPLEMENTATION.01",
+  "note": "MDT-02: Formal TAXONOMY-01/02/03 field classification for all PSEE provenance artifacts. Required for replay diff correctness.",
+  "taxonomy_definition": {
+    "TAXONOMY_01_REPLAY_STABLE": {
+      "description": "Fields that must be identical across replay runs given identical inputs. Divergence in TAXONOMY-01 fields indicates non-determinism.",
+      "replay_diff_behavior": "COMPARE — divergence is a finding"
+    },
+    "TAXONOMY_02_TIME_VARYING": {
+      "description": "Fields that legitimately differ across replay runs due to wall-clock timestamps. Excluded from replay diff comparison.",
+      "replay_diff_behavior": "EXCLUDE — divergence is expected and normal"
+    },
+    "TAXONOMY_03_VERSION_DEPENDENT": {
+      "description": "Fields that may differ across replay runs if script version changed. Excluded from equality check but recorded for traceability.",
+      "replay_diff_behavior": "RECORD_ONLY — divergence is informational, not a finding"
+    }
+  },
+  "semantic_provenance_artifact": {
+    "file": "artifacts/psee_semantic_provenance/<client>/<run_id>/semantic_provenance.json",
+    "TAXONOMY_01_REPLAY_STABLE": [
+      "activation_state",
+      "participation_mode",
+      "semantic_authority",
+      "advisory_count",
+      "runtime_impact",
+      "evaluator_authority",
+      "replay_supported",
+      "replay_readiness.advisory_reconstructable",
+      "replay_readiness.degradation_reconstructable",
+      "replay_readiness.enrichment_inputs_attributable",
+      "replay_readiness.provenance_chain_complete",
+      "advisory_lineage[*].advisory_stable_key",
+      "advisory_lineage[*].advisory_type",
+      "advisory_lineage[*].advisory_state",
+      "advisory_lineage[*].originating_enrichment_inputs[*].field",
+      "advisory_lineage[*].originating_enrichment_inputs[*].observed_value",
+      "advisory_lineage[*].originating_enrichment_inputs[*].derivation_status",
+      "advisory_lineage[*].observability_state",
+      "advisory_lineage[*].lineage_gaps",
+      "degradation_lineage[*].degradation_stable_key",
+      "degradation_lineage[*].event_type",
+      "degradation_lineage[*].affected_field",
+      "degradation_lineage[*].observed_value",
+      "degradation_lineage[*].degradation_replayable",
+      "degradation_lineage[*].modes_blocked",
+      "provenance_health.source_map_artifact_bound",
+      "provenance_health.advisory_stable_keys_present",
+      "provenance_health.degradation_stable_keys_present",
+      "provenance_health.activation_not_authorized_advisory_present"
+    ],
+    "TAXONOMY_02_TIME_VARYING": [
+      "captured_at",
+      "advisory_lineage[*].governance_gate_state",
+      "degradation_lineage[*].captured_at"
+    ],
+    "TAXONOMY_03_VERSION_DEPENDENT": [
+      "schema_version",
+      "capture_context.script_version",
+      "capture_context.input_artifact_hashes",
+      "replay_gaps"
+    ]
+  },
+  "gate_evaluation_artifact": {
+    "file": "artifacts/psee_gate/<client>/<run_id>/gate_evaluation.json",
+    "TAXONOMY_01_REPLAY_STABLE": [
+      "activation_state",
+      "bp_01_resolved",
+      "bp_02_resolved",
+      "readiness_status",
+      "grounding_ratio",
+      "cluster_count",
+      "activation_authorized",
+      "degradation_reason",
+      "gate_results[*].gate_id",
+      "gate_results[*].result",
+      "gate_results[*].observed_value",
+      "enrichment_inputs_present"
+    ],
+    "TAXONOMY_02_TIME_VARYING": [
+      "evaluated_at",
+      "session_id",
+      "evaluation_context.evaluated_at"
+    ],
+    "TAXONOMY_03_VERSION_DEPENDENT": [
+      "schema_version",
+      "evaluation_context.script_version",
+      "evaluation_context.input_artifact_hashes"
+    ]
+  },
+  "participation_advisory_artifact": {
+    "file": "artifacts/psee_advisory/<client>/<run_id>/participation_advisory.json",
+    "TAXONOMY_01_REPLAY_STABLE": [
+      "advisory_mode",
+      "participation_mode",
+      "activation_state",
+      "bp_01_status",
+      "bp_02_status",
+      "activation_authorized",
+      "enriched_participation",
+      "degradation_state",
+      "advisory_count",
+      "advisories[*].advisory_stable_key",
+      "advisories[*].advisory_type",
+      "advisories[*].advisory_state",
+      "advisories[*].enrichment_inputs_used",
+      "advisories[*].originating_artifact",
+      "advisories[*].participation_mode_at_emission",
+      "advisories[*].degradation_state_at_emission"
+    ],
+    "TAXONOMY_02_TIME_VARYING": [
+      "evaluated_at",
+      "advisories[*].emitted_at",
+      "evaluation_context.evaluated_at"
+    ],
+    "TAXONOMY_03_VERSION_DEPENDENT": [
+      "schema_version",
+      "evaluation_context.script_version"
+    ]
+  },
+  "replay_causality_artifact": {
+    "file": "artifacts/psee_semantic_provenance/<client>/<run_id>/replay_causality.json",
+    "TAXONOMY_01_REPLAY_STABLE": [
+      "advisory_stable_keys[*].advisory_stable_key",
+      "advisory_stable_keys[*].advisory_type",
+      "advisory_stable_keys[*].advisory_state",
+      "degradation_stable_keys[*].degradation_stable_key",
+      "degradation_stable_keys[*].event_type",
+      "degradation_stable_keys[*].affected_field",
+      "replay_supported"
+    ],
+    "TAXONOMY_02_TIME_VARYING": [
+      "captured_at",
+      "gate_session_id"
+    ],
+    "TAXONOMY_03_VERSION_DEPENDENT": [
+      "schema_version",
+      "input_artifact_hashes"
+    ]
+  }
+}

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LENS Assessment — Structural Evidence Brief</title>
+<style>
+  :root {
+    --bg:#0e0e10;--bg-card:#16161a;--bg-card-2:#1c1c22;
+    --fg:#e8e4df;--fg-muted:#8a8580;
+    --gold:#c89b3c;--gold-dim:#7a5e22;
+    --green:#4a9e6a;--green-dim:#1e3d2a;
+    --amber:#c87c2c;--amber-dim:#3d2810;
+    --border:#2a2a32;--border-gold:#4a3a1a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--fg);font-family:'Georgia','Times New Roman',serif;font-size:14px;line-height:1.6}
+  .page{max-width:960px;margin:0 auto;padding:48px 40px}
+  .report-header{border-bottom:1px solid var(--border-gold);padding-bottom:24px;margin-bottom:36px;display:flex;justify-content:space-between;align-items:flex-end}
+  .report-brand{font-size:11px;color:var(--fg-muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+  .report-title{font-size:22px;font-weight:normal;color:var(--gold);letter-spacing:.02em}
+  .report-meta{text-align:right;font-size:11px;color:var(--fg-muted);line-height:1.9}
+  .report-meta strong{color:var(--fg)}
+  h2{font-size:11px;font-weight:normal;color:var(--fg-muted);letter-spacing:.14em;text-transform:uppercase;border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:20px;margin-top:40px}
+  h2:first-of-type{margin-top:0}
+  .gauge-block{display:grid;grid-template-columns:auto 1fr auto;gap:32px;align-items:center;background:var(--bg-card);border:1px solid var(--border-gold);border-radius:4px;padding:28px 32px;margin-bottom:36px}
+  .gauge-score-circle{width:96px;height:96px;border-radius:50%;border:3px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+  .gauge-score-number{font-size:36px;color:var(--gold);line-height:1}
+  .gauge-score-label{font-size:9px;letter-spacing:.1em;color:var(--fg-muted);text-transform:uppercase;margin-top:3px}
+  .gauge-band-label{font-size:18px;color:var(--gold);letter-spacing:.06em;margin-bottom:8px}
+  .gauge-band-bar{height:6px;background:var(--bg-card-2);border-radius:3px;position:relative;width:280px;margin-bottom:8px}
+  .gauge-band-fill{height:100%;border-radius:3px;background:linear-gradient(to right,var(--amber),var(--gold));width:60%}
+  .gauge-band-range{font-size:11px;color:var(--fg-muted)}
+  .gauge-band-range span{color:var(--fg)}
+  .gauge-caveat{margin-top:12px;font-size:11px;color:var(--fg-muted);line-height:1.5;max-width:420px}
+  .gauge-decision{text-align:center;flex-shrink:0}
+  .gauge-decision-label{font-size:9px;letter-spacing:.12em;color:var(--fg-muted);text-transform:uppercase;margin-bottom:8px}
+  .gauge-decision-value{display:inline-block;font-size:13px;letter-spacing:.1em;color:var(--amber);border:1px solid var(--amber);padding:7px 16px;border-radius:2px;text-transform:uppercase}
+  .counts-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px}
+  .count-card{background:var(--bg-card);border:1px solid var(--border);border-radius:4px;padding:16px;text-align:center}
+  .count-value{font-size:28px;color:var(--fg)}
+  .count-label{font-size:10px;color:var(--fg-muted);letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
+  .domain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+  .domain-card{background:var(--bg-card);border:1px solid var(--border);border-radius:3px;padding:10px 12px;display:flex;align-items:flex-start;gap:10px}
+  .domain-card.grounded{border-left:3px solid var(--green)}
+  .domain-card.weak{border-left:3px solid var(--amber)}
+  .domain-card.focus{border:1px solid var(--gold);background:#1c1a12;border-left:3px solid var(--gold)}
+  .domain-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}
+  .domain-dot.grounded{background:var(--green)}
+  .domain-dot.weak{background:var(--amber)}
+  .domain-dot.focus{background:var(--gold)}
+  .domain-name{font-size:12px;color:var(--fg);line-height:1.4}
+  .domain-sub{font-size:10px;color:var(--fg-muted);margin-top:1px}
+  .domain-tag{font-size:9px;letter-spacing:.08em;text-transform:uppercase;margin-top:3px}
+  .domain-tag.grounded{color:var(--green)}
+  .domain-tag.weak{color:var(--amber)}
+  .domain-tag.focus{color:var(--gold)}
+  .domain-legend{display:flex;gap:24px;font-size:11px;color:var(--fg-muted);margin-bottom:32px}
+  .domain-legend-item{display:flex;align-items:center;gap:6px}
+  .legend-dot{width:8px;height:8px;border-radius:50%}
+  .signal-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+  .signal-card{background:var(--bg-card);border:1px solid var(--border);border-radius:3px;padding:14px 16px;display:grid;grid-template-columns:36px 1fr auto;gap:16px;align-items:start}
+  .signal-num{font-size:16px;color:var(--fg);line-height:1;padding-top:2px}
+  .signal-title{font-size:13px;color:var(--fg);margin-bottom:3px}
+  .signal-trace{font-size:10px;color:var(--fg-muted);letter-spacing:.04em;margin-bottom:5px}
+  .signal-statement{font-size:12px;color:var(--fg-muted);line-height:1.5}
+  .exec-state-lead{font-size:13px;font-weight:600;color:#c8c8d4;letter-spacing:.02em;margin-bottom:12px;padding:8px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid var(--green);border-radius:2px}
+  .signal-meta{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+  .signal-domain-tag{font-size:10px;color:var(--fg-muted);text-align:right}
+  .confidence-badge{font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:2px;border:1px solid}
+  .confidence-badge.strong{color:var(--green);border-color:var(--green);background:var(--green-dim)}
+  .confidence-badge.moderate{color:var(--gold);border-color:var(--gold-dim);background:#1e1a0a}
+  .confidence-badge.weak{color:var(--amber);border-color:var(--amber);background:var(--amber-dim)}
+  .focus-domain-block{background:#1c1a12;border:1px solid var(--gold);border-radius:4px;padding:24px 28px;margin-bottom:40px}
+  .focus-domain-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+  .focus-domain-label{font-size:9px;color:var(--gold);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+  .focus-domain-name{font-size:18px;color:var(--fg)}
+  .focus-domain-sub{font-size:12px;color:var(--fg-muted);margin-top:3px}
+  .focus-badge{font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border:1px solid var(--gold);color:var(--gold);border-radius:2px;flex-shrink:0}
+  .focus-summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
+  .focus-stat-label{font-size:10px;color:var(--fg-muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+  .focus-stat-value{font-size:15px;color:var(--amber)}
+  .focus-finding{font-size:12px;color:var(--fg-muted);line-height:1.6;border-top:1px solid var(--border-gold);padding-top:14px}
+  .focus-finding strong{color:var(--fg)}
+  .report-footer{border-top:1px solid var(--border);padding-top:20px;margin-top:48px;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--fg-muted)}
+  .footer-brand{color:var(--gold);font-size:13px}
+  .footer-note{font-size:10px;font-style:italic}
+  .sample-watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);font-size:120px;font-weight:bold;color:rgba(200,155,60,0.04);pointer-events:none;user-select:none;letter-spacing:.15em;z-index:0}
+  .nav-strip{display:flex;gap:10px;margin-bottom:28px}
+  .nav-link{display:inline-block;padding:7px 14px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border);color:var(--fg-muted);text-decoration:none;border-radius:3px}
+  .nav-link:hover{border-color:var(--border-gold);color:var(--gold)}
+  .nav-link.active{border-color:var(--border-gold);color:var(--gold);background:rgba(200,155,60,0.07)}
+  .tier2-handoff{background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--fg-muted);padding:18px 20px;margin:28px 0 0;border-radius:3px}
+  .tier2-handoff-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:8px}
+  .tier2-handoff-text{font-size:12.5px;color:#666;line-height:1.65}
+  .topo-view{margin-bottom:32px}
+  .topo-legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:12px;font-size:11px;color:var(--fg-muted);align-items:center}
+  .topo-leg-item{display:flex;align-items:center;gap:6px}
+  .topo-leg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+  .tl-grounded{background:var(--green)}
+  .tl-weak{background:var(--amber)}
+  .tl-focus{background:var(--gold)}
+  .topo-leg-note{margin-left:auto;font-size:10px;font-style:italic;color:var(--fg-muted)}
+  .rc-trace{font-size:10px;color:var(--fg-muted);opacity:.7;font-style:normal}
+  .rc-anchor-block{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#0f0f14;border:1px solid #2a2a38;border-left:3px solid var(--green);border-radius:2px;margin-bottom:16px;font-size:12px;flex-wrap:wrap}
+  .rc-anchor-state{color:#c8c8d4;font-weight:600;letter-spacing:.02em}
+  .rc-anchor-score{color:var(--green);font-weight:600}
+  .rc-anchor-band{color:var(--fg-muted)}
+  .rc-anchor-decision{color:var(--amber);letter-spacing:.05em;text-transform:uppercase}
+  .rc-anchor-sep{color:#333}
+</style>
+</head>
+<body>
+<div class="sample-watermark">SAMPLE</div>
+<div class="page">
+
+  <div class="report-header">
+    <div>
+      <div class="report-brand">Signäl Program Intelligence</div>
+      <div class="report-title">LENS Assessment — Structural Evidence Brief</div>
+    </div>
+    <div class="report-meta">
+      <div>Client: <strong>OSS FastAPI Codebase</strong></div>
+      <div>Issued: <strong>April 2026</strong></div>
+    </div>
+  </div>
+
+  <div class="nav-strip">
+    <a href="/api/report-file?name=lens_decision_surface.html&client=e65d2f0a-dfa7-4257-9333-fcbb583f0880&runId=run_01_oss_fastapi" class="nav-link">Decision</a>
+    <a href="/api/report-file?name=lens_tier1_narrative_brief.html&client=e65d2f0a-dfa7-4257-9333-fcbb583f0880&runId=run_01_oss_fastapi" class="nav-link">Executive Brief</a>
+    <span class="nav-link active">LENS Assessment</span>
+    <a href="/api/report-file?name=lens_tier2_diagnostic_narrative.html&client=e65d2f0a-dfa7-4257-9333-fcbb583f0880&runId=run_01_oss_fastapi" class="nav-link">Diagnostic</a>
+  </div>
+
+  <div class="rc-anchor-block"><span class="rc-anchor-state">Structurally verified. Execution not yet validated.</span><span class="rc-anchor-sep">·</span><span class="rc-anchor-score">60 — CONDITIONAL</span><span class="rc-anchor-sep">·</span><span class="rc-anchor-band">60–100</span><span class="rc-anchor-sep">·</span><span class="rc-anchor-decision">INVESTIGATE</span></div>
+
+  <h2>Assessment Score</h2>
+  <p class="exec-state-lead">Structurally verified. Execution not yet validated.</p>
+  <div class="gauge-block">
+    <div class="gauge-score-circle">
+      <div class="gauge-score-number">60</div>
+      <div class="gauge-score-label">Score</div>
+    </div>
+    <div class="gauge-details">
+      <div class="gauge-band-label">CONDITIONAL</div>
+      <div class="gauge-band-bar"><div class="gauge-band-fill"></div></div>
+      <div class="gauge-band-range">Confidence band: <span>60 – 100</span></div>
+      <div class="gauge-caveat">Score is anchored to verified evidence. The upper bound reflects the projected completion state;
+        actual score depends on assessment execution outcome. Score is not an opinion —
+        it is derived deterministically from structural analysis.</div>
+    </div>
+    <div class="gauge-decision">
+      <div class="gauge-decision-label">Decision Guidance</div>
+      <div class="gauge-decision-value">Investigate</div>
+    </div>
+  </div>
+
+  <h2>Structural Composition</h2>
+  <div class="counts-row">
+    <div class="count-card"><div class="count-value">5</div><div class="count-label">Domains</div></div>
+    <div class="count-card"><div class="count-value">30</div><div class="count-label">Capabilities</div></div>
+    <div class="count-card"><div class="count-value">10</div><div class="count-label">Components</div></div>
+    <div class="count-card"><div class="count-value">45</div><div class="count-label">Total Nodes</div></div>
+  </div>
+
+  <h2>Structural Topology View</h2>
+  <div class="topo-view">
+    <svg viewBox="0 0 880 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:4px">
+<defs><filter id="gf" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/><feComposite in="SourceGraphic" in2="b" operator="over"/></filter></defs>
+<rect width="880" height="400" fill="#0e0e10"/>
+<rect x="28" y="72" width="155" height="230" rx="5" fill="#141418" stroke="#282830" stroke-width="0.5"/>
+<text x="105" y="86" text-anchor="middle" font-size="6.5" fill="#505068" letter-spacing="0.10em" font-family="Georgia,serif">DOM-01</text>
+<rect x="36" y="92" width="139" height="34" rx="3" fill="#1c1c22" stroke="#4a9e6a" stroke-width="1"/>
+<text x="105" y="106" text-anchor="middle" font-size="8" fill="#dcdce0" letter-spacing="0" font-family="Georgia,serif">documentation_ro</text>
+<text x="105" y="119" text-anchor="middle" font-size="8" fill="#dcdce0" letter-spacing="0" font-family="Georgia,serif">ot</text>
+<rect x="36" y="135" width="139" height="30" rx="3" fill="#18181e" stroke="#38384a" stroke-width="0.5" stroke-dasharray="3,2"/>
+<text x="105" y="148" text-anchor="middle" font-size="7.5" fill="#58586a" letter-spacing="0" font-family="Georgia,serif">PSIG-006 blind spot</text>
+<text x="105" y="159" text-anchor="middle" font-size="7" fill="#48485a" letter-spacing="0" font-family="Georgia,serif">coverage</text>
+<rect x="195" y="72" width="155" height="230" rx="5" fill="#141418" stroke="#282830" stroke-width="0.5"/>
+<text x="272" y="86" text-anchor="middle" font-size="6.5" fill="#505068" letter-spacing="0.10em" font-family="Georgia,serif">DOM-02</text>
+<rect x="203" y="92" width="139" height="34" rx="3" fill="#1c1c22" stroke="#4a9e6a" stroke-width="1"/>
+<text x="272" y="106" text-anchor="middle" font-size="8" fill="#dcdce0" letter-spacing="0" font-family="Georgia,serif">extraction_analy</text>
+<text x="272" y="119" text-anchor="middle" font-size="8" fill="#dcdce0" letter-spacing="0" font-family="Georgia,serif">sis</text>
+<rect x="203" y="135" width="139" height="30" rx="3" fill="#18181e" stroke="#38384a" stroke-width="0.5" stroke-dasharray="3,2"/>
+<text x="272" y="148" text-anchor="middle" font-size="7.5" fill="#58586a" letter-spacing="0" font-family="Georgia,serif">PSIG-006 blind spot</text>
+<text x="272" y="159" text-anchor="middle" font-size="7" fill="#48485a" letter-spacing="0" font-family="Georgia,serif">coverage</text>
+<rect x="362" y="72" width="155" height="288" rx="5" fill="#141b16" stroke="#2a4030" stroke-width="1.5"/>
+<text x="439" y="86" text-anchor="middle" font-size="6.5" fill="#4a6050" letter-spacing="0.10em" font-family="Georgia,serif">PZ-001 secondary</text>
+<rect x="370" y="92" width="139" height="34" rx="3" fill="#1c1c22" stroke="#4a9e6a" stroke-width="1"/>
+<text x="439" y="114" text-anchor="middle" font-size="8.5" fill="#dcdce0" letter-spacing="0" font-family="Georgia,serif">backend_isolated</text>
+<rect x="370" y="135" width="139" height="26" rx="3" fill="#1c1c22" stroke="#4a9e6a" stroke-width="0.8"/>
+<text x="439" y="152" text-anchor="middle" font-size="7.5" fill="#9cbc9c" letter-spacing="0" font-family="Georgia,serif">10 capabilities</text>
+<rect x="370" y="169" width="139" height="26" rx="3" fill="#1c1c22" stroke="#4a9e6a" stroke-width="0.8"/>
+<text x="439" y="186" text-anchor="middle" font-size="7.5" fill="#9cbc9c" letter-spacing="0" font-family="Georgia,serif">1 component</text>
+<rect x="370" y="203" width="139" height="22" rx="3" fill="#141c22" stroke="#304050" stroke-width="0.5"/>
+<text x="439" y="218" text-anchor="middle" font-size="7" fill="#5090a8" letter-spacing="0" font-family="Georgia,serif">PSIG-001</text>
+<rect x="370" y="231" width="139" height="22" rx="3" fill="#141c22" stroke="#304050" stroke-width="0.5"/>
+<text x="439" y="246" text-anchor="middle" font-size="7" fill="#5090a8" letter-spacing="0" font-family="Georgia,serif">PSIG-002</text>
+<rect x="370" y="259" width="139" height="22" rx="3" fill="#141c22" stroke="#304050" stroke-width="0.5"/>
+<text x="439" y="274" text-anchor="middle" font-size="7" fill="#5090a8" letter-spacing="0" font-family="Georgia,serif">PSIG-004</text>
+<rect x="529" y="60" width="155" height="316" rx="5" fill="#221f0d" stroke="#c89b3c" stroke-width="1.5" filter="url(#gf)"/>
+<text x="606" y="74" text-anchor="middle" font-size="6.5" fill="#c8a040" letter-spacing="0.10em" font-family="Georgia,serif">PZ-002 PRIMARY</text>
+<rect x="537" y="80" width="139" height="34" rx="3" fill="#1c1c22" stroke="#c89b3c" stroke-width="1"/>
+<text x="606" y="94" text-anchor="middle" font-size="8" fill="#e0ca78" letter-spacing="0" font-family="Georgia,serif">frontend_isolate</text>
+<text x="606" y="107" text-anchor="middle" font-size="8" fill="#e0ca78" letter-spacing="0" font-family="Georgia,serif">d</text>
+<rect x="537" y="123" width="139" height="26" rx="3" fill="#1c1c22" stroke="#4a9e6a" stroke-width="0.8"/>
+<text x="606" y="140" text-anchor="middle" font-size="7.5" fill="#9cbc9c" letter-spacing="0" font-family="Georgia,serif">13 capabilities</text>
+<rect x="537" y="157" width="139" height="26" rx="3" fill="#1c1c22" stroke="#4a9e6a" stroke-width="0.8"/>
+<text x="606" y="174" text-anchor="middle" font-size="7.5" fill="#9cbc9c" letter-spacing="0" font-family="Georgia,serif">1 component</text>
+<rect x="537" y="191" width="139" height="22" rx="3" fill="#141c22" stroke="#304050" stroke-width="0.5"/>
+<text x="606" y="206" text-anchor="middle" font-size="7" fill="#5090a8" letter-spacing="0" font-family="Georgia,serif">PSIG-001</text>
+<rect x="537" y="219" width="139" height="22" rx="3" fill="#141c22" stroke="#304050" stroke-width="0.5"/>
+<text x="606" y="234" text-anchor="middle" font-size="7" fill="#5090a8" letter-spacing="0" font-family="Georgia,serif">PSIG-002</text>
+<rect x="537" y="247" width="139" height="22" rx="3" fill="#141c22" stroke="#304050" stroke-width="0.5"/>
+<text x="606" y="262" text-anchor="middle" font-size="7" fill="#5090a8" letter-spacing="0" font-family="Georgia,serif">PSIG-004</text>
+<rect x="696" y="72" width="155" height="288" rx="5" fill="#141b16" stroke="#2a4030" stroke-width="1.5"/>
+<text x="773" y="86" text-anchor="middle" font-size="6.5" fill="#4a6050" letter-spacing="0.10em" font-family="Georgia,serif">PZ-003 secondary</text>
+<rect x="704" y="92" width="139" height="34" rx="3" fill="#1c1c22" stroke="#4a9e6a" stroke-width="1"/>
+<text x="773" y="106" text-anchor="middle" font-size="8" fill="#dcdce0" letter-spacing="0" font-family="Georgia,serif">platform_monorep</text>
+<text x="773" y="119" text-anchor="middle" font-size="8" fill="#dcdce0" letter-spacing="0" font-family="Georgia,serif">o</text>
+<rect x="704" y="135" width="139" height="26" rx="3" fill="#1c1c22" stroke="#4a9e6a" stroke-width="0.8"/>
+<text x="773" y="152" text-anchor="middle" font-size="7.5" fill="#9cbc9c" letter-spacing="0" font-family="Georgia,serif">7 capabilities</text>
+<rect x="704" y="169" width="139" height="26" rx="3" fill="#1c1c22" stroke="#4a9e6a" stroke-width="0.8"/>
+<text x="773" y="186" text-anchor="middle" font-size="7.5" fill="#9cbc9c" letter-spacing="0" font-family="Georgia,serif">1 component</text>
+<rect x="704" y="203" width="139" height="22" rx="3" fill="#141c22" stroke="#304050" stroke-width="0.5"/>
+<text x="773" y="218" text-anchor="middle" font-size="7" fill="#5090a8" letter-spacing="0" font-family="Georgia,serif">PSIG-001</text>
+<rect x="704" y="231" width="139" height="22" rx="3" fill="#141c22" stroke="#304050" stroke-width="0.5"/>
+<text x="773" y="246" text-anchor="middle" font-size="7" fill="#5090a8" letter-spacing="0" font-family="Georgia,serif">PSIG-002</text>
+<rect x="704" y="259" width="139" height="22" rx="3" fill="#141c22" stroke="#304050" stroke-width="0.5"/>
+<text x="773" y="274" text-anchor="middle" font-size="7" fill="#5090a8" letter-spacing="0" font-family="Georgia,serif">PSIG-004</text>
+</svg>
+    <div class="topo-legend">
+      <span class="topo-leg-item"><span class="topo-leg-dot tl-grounded"></span>Grounded (5 domains)</span>
+      <span class="topo-leg-item"><span class="topo-leg-dot tl-weak"></span>Weakly Grounded (0 domains)</span>
+      <span class="topo-leg-item"><span class="topo-leg-dot tl-focus"></span>Primary Pressure Zone — Multiple structural pressures acting together &nbsp;<span style="font-size:10px;opacity:.6">trace: COMPOUND_ZONE</span></span>
+      <span class="topo-leg-note">Relationships shown are structural co-membership. No direction implied.</span>
+    </div>
+  </div>
+
+  <h2>Domain Topology</h2>
+  <div class="domain-grid">
+    <div class="domain-card grounded">
+      <div class="domain-dot grounded"></div>
+      <div>
+        <div class="domain-name">documentation_root</div>
+        <div class="domain-sub">Structural scope: evidence boundary</div>
+        <div class="domain-tag grounded">Grounded</div>
+      </div>
+    </div>
+    <div class="domain-card grounded">
+      <div class="domain-dot grounded"></div>
+      <div>
+        <div class="domain-name">extraction_analysis</div>
+        <div class="domain-sub">Structural scope: evidence boundary</div>
+        <div class="domain-tag grounded">Grounded</div>
+      </div>
+    </div>
+    <div class="domain-card grounded">
+      <div class="domain-dot grounded"></div>
+      <div>
+        <div class="domain-name">backend_isolated</div>
+        <div class="domain-sub">10 capabilities · 1 component</div>
+        <div class="domain-tag grounded">Grounded</div>
+      </div>
+    </div>
+    <div class="domain-card focus">
+      <div class="domain-dot focus"></div>
+      <div>
+        <div class="domain-name">frontend_isolated</div>
+        <div class="domain-sub">13 capabilities · 1 component</div>
+        <div class="domain-tag focus">Pressure Zone — frontend_isolated PRIMARY</div>
+      </div>
+    </div>
+    <div class="domain-card grounded">
+      <div class="domain-dot grounded"></div>
+      <div>
+        <div class="domain-name">platform_monorepo</div>
+        <div class="domain-sub">7 capabilities · 1 component</div>
+        <div class="domain-tag grounded">Grounded</div>
+      </div>
+    </div>
+  </div>
+  <div class="domain-legend">
+    <div class="domain-legend-item"><div class="legend-dot" style="background:var(--green)"></div> Grounded (5 domains — evidence-backed)</div>
+    <div class="domain-legend-item"><div class="legend-dot" style="background:var(--amber)"></div> Weakly Grounded (0 domains — partial evidence)</div>
+    <div class="domain-legend-item"><div class="legend-dot" style="background:var(--gold)"></div> Primary Pressure Zone</div>
+  </div>
+
+  <h2>Active Structural Signals</h2>
+  <div class="signal-grid">
+    <div class="signal-card">
+      <div class="signal-num">01</div>
+      <div class="signal-body">
+        <div class="signal-title">Fan-In Concentration (PSIG-001): HIGH — Statistically abnormal concentration — Value 9.43</div>
+        <div class="signal-trace">trace: RUN_RELATIVE_OUTLIER</div>
+        <div class="signal-statement">Inbound dependency concentration is 9.43 — Statistically abnormal concentration (trace: RUN_RELATIVE_OUTLIER). Primary attribution entity: NODE-009 in DOM-04. Domain scope: DOM-03, DOM-04, DOM-05. Co-present with PSIG-002 and PSIG-004 across all three pressure zones (PZ-001, PZ-002, PZ-003) — contributes to Multiple structural pressures acting together (trace: COMPOUND_ZONE) in each.</div>
+      </div>
+      <div class="signal-meta">
+        <div class="signal-domain-tag">DOM-04</div>
+        <div><span class="confidence-badge strong">Strong</span></div>
+      </div>
+    </div>
+    <div class="signal-card">
+      <div class="signal-num">02</div>
+      <div class="signal-body">
+        <div class="signal-title">Fan-Out Propagation (PSIG-002): HIGH — Statistically abnormal concentration — Value 9.43</div>
+        <div class="signal-trace">trace: RUN_RELATIVE_OUTLIER</div>
+        <div class="signal-statement">Outbound dependency propagation is 9.43 — Statistically abnormal concentration (trace: RUN_RELATIVE_OUTLIER). Distributes across DOM-03, DOM-04, DOM-05 with no single primary entity. Co-presence with PSIG-001 at the same value (9.43) indicates bidirectional concentration pressure — not a single directed flow. Present in all three zones.</div>
+      </div>
+      <div class="signal-meta">
+        <div class="signal-domain-tag">DOM-03 · DOM-04 · DOM-05</div>
+        <div><span class="confidence-badge strong">Strong</span></div>
+      </div>
+    </div>
+    <div class="signal-card">
+      <div class="signal-num">03</div>
+      <div class="signal-body">
+        <div class="signal-title">Responsibility Concentration (PSIG-004): HIGH — Statistically abnormal concentration — Value 4.33</div>
+        <div class="signal-trace">trace: RUN_RELATIVE_OUTLIER</div>
+        <div class="signal-statement">Structural responsibility concentration is 4.33 — Statistically abnormal concentration (trace: RUN_RELATIVE_OUTLIER). Primary attribution entity: NODE-009 in DOM-04. Convergence of PSIG-001 and PSIG-004 at NODE-009 defines the Primary pressure anchor (trace: PRIMARY) for PZ-002 (DOM-04). Secondary affected zones (trace: SECONDARY) cover all three zone domains.</div>
+      </div>
+      <div class="signal-meta">
+        <div class="signal-domain-tag">DOM-04</div>
+        <div><span class="confidence-badge strong">Strong</span></div>
+      </div>
+    </div>
+    <div class="signal-card">
+      <div class="signal-num">04</div>
+      <div class="signal-body">
+        <div class="signal-title">Structural Blind Spot (PSIG-006): ACTIVATED — Baseline condition without runtime validation — Value 0.2</div>
+        <div class="signal-trace">trace: THEORETICAL_BASELINE</div>
+        <div class="signal-statement">PSIG-006 activated at Baseline condition without runtime validation (trace: THEORETICAL_BASELINE, value 0.2). Covers 9 structural entities: DOM-01, DOM-02, NODE-001, NODE-002…. These entities are outside pressure zone scope (PZ-001/PZ-002/PZ-003). Baseline condition without runtime validation means structural basis is present but execution evidence is insufficient for an empirical pressure value. Represents a coverage gap.</div>
+      </div>
+      <div class="signal-meta">
+        <div class="signal-domain-tag">DOM-01 · DOM-02</div>
+        <div><span class="confidence-badge weak">Weak</span></div>
+      </div>
+    </div>
+    <div class="signal-card">
+      <div class="signal-num">05</div>
+      <div class="signal-body">
+        <div class="signal-title">Inbound Coupling (PSIG-003): NOT_ACTIVATED — Below threshold</div>
+        
+        <div class="signal-statement">PSIG-003 evaluated inbound coupling ratio and did not reach the activation threshold for this run. This is a confirmed structural observation, not a gap in evaluation.</div>
+      </div>
+      <div class="signal-meta">
+        <div class="signal-domain-tag">Structural analysis</div>
+        <div><span class="confidence-badge strong">Strong</span></div>
+      </div>
+    </div>
+    <div class="signal-card">
+      <div class="signal-num">06</div>
+      <div class="signal-body">
+        <div class="signal-title">Structural Metrics: Dependency Load 0.044 · Edge-to-Node 1.378 · Containment 1.333</div>
+        
+        <div class="signal-statement">Dependency load ratio: 0.044 (2 of 45 edges are load-bearing overlap edges). Edge-to-node density: 1.378 (62 edges / 45 nodes). Containment density: 1.333 (60 containment edges / 45 nodes). Low dependency load with dense containment indicates a topology dominated by hierarchical nesting rather than direct coupling.</div>
+      </div>
+      <div class="signal-meta">
+        <div class="signal-domain-tag">Structural topology</div>
+        <div><span class="confidence-badge strong">Strong</span></div>
+      </div>
+    </div>
+  </div>
+
+  <h2 style="margin-top:36px">Pressure Zones</h2>
+  <p style="font-size:12.5px;color:var(--fg-muted);margin-bottom:16px">All zones share the same active condition set: PSIG-001 · PSIG-002 · PSIG-004. Zone class: COMPOUND_ZONE (3 conditions ≥ threshold).</p>
+  <div class="focus-domain-block" style="margin-bottom:12px">
+    <div class="focus-domain-header">
+      <div>
+        <div class="focus-domain-label">PZ-001 — backend_isolated</div>
+        <div class="focus-domain-sub">PSIG-001 · PSIG-002 · PSIG-004</div>
+      </div>
+      <div class="focus-badge">Secondary affected zone<span style="display:block;font-size:9px;opacity:.6;margin-top:2px">trace: SECONDARY</span></div>
+    </div>
+    <div class="focus-finding">PZ-001 (backend_isolated): Secondary affected zone — <span style="font-size:11px;opacity:.7">trace: secondary attribution</span>.</div>
+  </div>
+  <div class="focus-domain-block" style="margin-bottom:12px">
+    <div class="focus-domain-header">
+      <div>
+        <div class="focus-domain-label">PZ-002 — frontend_isolated</div>
+        <div class="focus-domain-sub">PSIG-001 · PSIG-002 · PSIG-004</div>
+      </div>
+      <div class="focus-badge">Primary pressure anchor<span style="display:block;font-size:9px;opacity:.6;margin-top:2px">trace: PRIMARY</span></div>
+    </div>
+    <div class="focus-finding">PZ-002 (frontend_isolated): Primary pressure anchor — <span style="font-size:11px;opacity:.7">trace: primary attribution</span>.</div>
+  </div>
+  <div class="focus-domain-block" style="margin-bottom:12px">
+    <div class="focus-domain-header">
+      <div>
+        <div class="focus-domain-label">PZ-003 — platform_monorepo</div>
+        <div class="focus-domain-sub">PSIG-001 · PSIG-002 · PSIG-004</div>
+      </div>
+      <div class="focus-badge">Secondary affected zone<span style="display:block;font-size:9px;opacity:.6;margin-top:2px">trace: SECONDARY</span></div>
+    </div>
+    <div class="focus-finding">PZ-003 (platform_monorepo): Secondary affected zone — <span style="font-size:11px;opacity:.7">trace: secondary attribution</span>.</div>
+  </div>
+  <div class="tier2-handoff" style="margin-top:8px"><div class="tier2-handoff-label">Structural Blind Spot — PSIG-006</div><div class="tier2-handoff-text">9 entities outside pressure zone scope. PSIG-006 activated at THEORETICAL_BASELINE — coverage gap, not zone candidate.</div></div>
+
+  <div class="tier2-handoff">
+    <div class="tier2-handoff-label">Next Proposed Actions — Outside This Assessment</div>
+    <div class="tier2-handoff-text">
+      This assessment establishes confirmed structural state and evidence boundary.
+      Proposed next actions, diagnostic priorities, and resolution paths belong to a separate
+      analytical layer and are not produced here.
+    </div>
+  </div>
+
+  <div class="report-footer">
+    <div>
+      <div class="footer-brand">Signäl</div>
+      <div style="margin-top:4px">Program Intelligence — LENS Assessment</div>
+    </div>
+    <div class="footer-note">
+      SAMPLE — OSS FastAPI Codebase.<br>
+      Client environments, scores, and findings will vary.<br>
+      All structural values are derived from verified execution evidence.
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

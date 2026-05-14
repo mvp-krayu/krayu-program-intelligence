@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0",
+  "package_id": "SEP-multi-003",
+  "package_version": 1,
+  "sandbox_id": "sandbox-blueedge-run01-multi-001",
+  "lifecycle": [
+    {
+      "phase": 0,
+      "name": "REGISTRATION",
+      "timestamp": "2026-05-11T23:09:00.000Z",
+      "result": "STAGED",
+      "detail": "Package registered in sandbox registry (third overlay)"
+    },
+    {
+      "phase": 1,
+      "name": "VALIDATION",
+      "timestamp": "2026-05-11T23:09:30.000Z",
+      "result": "PASSED",
+      "checks": {
+        "total": 9,
+        "passed": 9,
+        "failed": 0,
+        "details": [
+          { "check": "package_hash_integrity", "result": "PASS" },
+          { "check": "provenance_chain_complete", "result": "PASS" },
+          { "check": "source_hash_verified", "result": "PASS" },
+          { "check": "entry_structure_valid", "result": "PASS" },
+          { "check": "claim_type_recognized", "result": "PASS" },
+          { "check": "target_domain_exists", "result": "PASS" },
+          { "check": "confidence_basis_valid", "result": "PASS" },
+          { "check": "semantic_class_declared", "result": "PASS" },
+          { "check": "no_duplicate_entries", "result": "PASS" }
+        ]
+      }
+    },
+    {
+      "phase": 2,
+      "name": "AUTHORIZATION",
+      "timestamp": "2026-05-11T23:10:00.000Z",
+      "result": "AUTHORIZED",
+      "checks": {
+        "total": 5,
+        "passed": 5,
+        "failed": 0,
+        "details": [
+          { "check": "semantic_class_TECHNICAL_authorized", "result": "PASS" },
+          { "check": "class_within_authorized_set", "result": "PASS" },
+          { "check": "no_governance_class_used", "result": "PASS" },
+          { "check": "no_business_class_used", "result": "PASS" },
+          { "check": "authorization_scope_valid", "result": "PASS" }
+        ]
+      }
+    },
+    {
+      "phase": 3,
+      "name": "ELIGIBILITY",
+      "timestamp": "2026-05-11T23:10:30.000Z",
+      "result": "ELIGIBLE",
+      "checks": {
+        "total": 6,
+        "passed": 6,
+        "failed": 0,
+        "details": [
+          { "check": "package_limit_not_exceeded", "result": "PASS", "current": 3, "max": 10 },
+          { "check": "entry_limit_not_exceeded", "result": "PASS", "current": 3, "max": 200 },
+          { "check": "no_blocking_conflicts", "result": "PASS" },
+          { "check": "dependencies_satisfied", "result": "PASS" },
+          { "check": "domain_not_locked", "result": "PASS" },
+          { "check": "lineage_upgrade_valid", "result": "PASS", "from": "NONE", "to": "STRONG" }
+        ]
+      }
+    },
+    {
+      "phase": 4,
+      "name": "ACTIVATION_AUTHORIZATION",
+      "timestamp": "2026-05-11T23:11:00.000Z",
+      "result": "AUTHORIZED",
+      "authorization_source": "stream_contract",
+      "authorization_authority": "PI.SQO.BLUEEDGE.MULTI-OVERLAY-ORCHESTRATION.01",
+      "scope": "DOMAIN-08 LINEAGE_UPGRADE NONE→STRONG"
+    },
+    {
+      "phase": 5,
+      "name": "REEVALUATION",
+      "timestamp": "2026-05-11T23:11:30.000Z",
+      "result": "COMPOSITE_UPDATED",
+      "trigger_type": "SEP_ACTIVATED",
+      "composite_before": { "backed_count": 6, "s_state": "S2", "q_class": "Q-02" },
+      "composite_after": { "backed_count": 7, "s_state": "S2", "q_class": "Q-02" }
+    },
+    {
+      "phase": 6,
+      "name": "QUALIFICATION_VISIBLE",
+      "timestamp": "2026-05-11T23:11:30.000Z",
+      "result": "COMPOSITE_REFLECTS_OVERLAY"
+    },
+    {
+      "phase": 7,
+      "name": "TERMINAL",
+      "timestamp": "2026-05-11T23:19:00.000Z",
+      "result": "REVOKED",
+      "revocation_reason": "Sequential rollback — multi-overlay orchestration proof (first revocation in reverse order)",
+      "revocation_type": "STANDARD"
+    }
+  ],
+  "final_status": "REVOKED"
+}

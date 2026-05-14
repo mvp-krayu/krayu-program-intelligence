@@ -1,0 +1,277 @@
+{
+  "contract_id": "PI.LENS.E2E.CANONICAL-EXECUTION-CONTRACT.01",
+  "artifact": "caller_inventory",
+  "block": "BLOCK_A",
+  "generated_date": "2026-05-01",
+  "mode": "DOCUMENTATION_ONLY / CONTRACT_LOCK",
+  "anchor_run": "run_be_orchestrated_fixup_01",
+
+  "callers": [
+    {
+      "caller_id": "CALLER-01",
+      "file_path": "scripts/pios/run_client_pipeline.py",
+      "role": "PIPELINE_ORCHESTRATOR — canonical entrypoint; executes all 9 pipeline phases in sequence; fail-closed on any phase failure",
+      "called_by": "operator / CI / authorized contract execution",
+      "calls": [
+        "scripts/pios/run_end_to_end.py (Phase 6+7 synthetic path only — bypassed when fastapi_conformance_path present)",
+        "scripts/pios/lens_report_generator.py (Phase 8b)",
+        "all phase functions internally"
+      ],
+      "invocation": "python3 scripts/pios/run_client_pipeline.py --client <client_id> --source <source_id> --run-id <run_id>",
+      "required_inputs": [
+        "clients/<client_id>/client.yaml",
+        "clients/<client_id>/sources/<source_id>/source_manifest.json"
+      ],
+      "expected_outputs": [
+        "clients/<client_id>/psee/runs/<run_id>/binding/binding_envelope.json",
+        "clients/<client_id>/psee/runs/<run_id>/75.x/condition_correlation_state.json",
+        "clients/<client_id>/psee/runs/<run_id>/75.x/pressure_candidate_state.json",
+        "clients/<client_id>/psee/runs/<run_id>/75.x/pressure_zone_state.json",
+        "clients/<client_id>/psee/runs/<run_id>/41.x/signal_projection.json",
+        "clients/<client_id>/psee/runs/<run_id>/41.x/pressure_zone_projection.json",
+        "clients/<client_id>/psee/runs/<run_id>/vault/ (9 artifacts)",
+        "clients/<client_id>/lens/runs/<run_id>/ (reports + manifest + index)",
+        "clients/<client_id>/lens/selector/selector.json (updated)"
+      ],
+      "fail_closed_conditions": [
+        "client.yaml not found",
+        "source_manifest.json not found",
+        "archive SHA256 mismatch",
+        "canonical_repo not present",
+        "any required 40.x structural artifact missing",
+        "readiness_gate != PASS",
+        "conformance artifacts missing when fastapi_conformance_path set",
+        "run_end_to_end.py non-zero exit (synthetic path)",
+        "any 75.x or 41.x output artifact missing after Phase 6+7",
+        "lens_report_generator.py non-zero exit"
+      ],
+      "client_agnostic_status": true,
+      "notes": "All client paths resolved through client.yaml + source_manifest.json. No hardcoded client paths."
+    },
+    {
+      "caller_id": "CALLER-02",
+      "file_path": "scripts/pios/run_client_pipeline.py — parse_yaml_simple()",
+      "role": "CLIENT_MANIFEST_LOADER — reads client.yaml using minimal key:value YAML parser",
+      "called_by": "CALLER-01 main()",
+      "calls": [],
+      "required_inputs": ["clients/<client_id>/client.yaml"],
+      "expected_outputs": ["client_cfg dict in memory"],
+      "fail_closed_conditions": ["client.yaml not found → sys.exit(1)"],
+      "client_agnostic_status": true
+    },
+    {
+      "caller_id": "CALLER-03",
+      "file_path": "scripts/pios/run_client_pipeline.py — load_source_manifest()",
+      "role": "SOURCE_MANIFEST_LOADER — reads source_manifest.json as JSON",
+      "called_by": "CALLER-01 main()",
+      "calls": [],
+      "required_inputs": ["clients/<client_id>/sources/<source_id>/source_manifest.json"],
+      "expected_outputs": ["source_manifest dict in memory"],
+      "fail_closed_conditions": ["source_manifest.json not found → sys.exit(1)"],
+      "client_agnostic_status": true
+    },
+    {
+      "caller_id": "CALLER-04",
+      "file_path": "scripts/pios/run_client_pipeline.py — phase_01_source_boundary()",
+      "role": "SOURCE_BOUNDARY_VALIDATOR — verifies archive existence and SHA256",
+      "called_by": "CALLER-01 phases loop",
+      "calls": [],
+      "required_inputs": ["source_manifest['archive_path'] (absolute path)", "source_manifest['sha256']"],
+      "expected_outputs": ["PASS bool"],
+      "fail_closed_conditions": ["archive not found", "SHA256 mismatch"],
+      "client_agnostic_status": true
+    },
+    {
+      "caller_id": "CALLER-05",
+      "file_path": "scripts/pios/run_client_pipeline.py — phase_02_intake()",
+      "role": "INTAKE_VERIFIER — confirms canonical_repo extraction is present",
+      "called_by": "CALLER-01 phases loop",
+      "calls": [],
+      "required_inputs": ["source_manifest['extracted_path'] (relative to REPO_ROOT)"],
+      "expected_outputs": ["PASS bool", "file count log"],
+      "fail_closed_conditions": ["canonical_repo directory not found"],
+      "client_agnostic_status": true
+    },
+    {
+      "caller_id": "CALLER-06",
+      "file_path": "scripts/pios/run_client_pipeline.py — phase_03_40x_structural()",
+      "role": "STRUCTURAL_VERIFIER — confirms 40.x structural artifacts are present",
+      "called_by": "CALLER-01 phases loop",
+      "calls": [],
+      "required_inputs": [
+        "source_manifest['structure_path']/40.2/structural_node_inventory.json",
+        "source_manifest['structure_path']/40.3/structural_topology_log.json",
+        "source_manifest['structure_path']/40.4/canonical_topology.json"
+      ],
+      "expected_outputs": ["PASS bool"],
+      "fail_closed_conditions": ["any required 40.x artifact missing"],
+      "client_agnostic_status": true
+    },
+    {
+      "caller_id": "CALLER-07",
+      "file_path": "scripts/pios/run_client_pipeline.py — phase_04_ceu_grounding()",
+      "role": "CEU_GROUNDING_VERIFIER — confirms CEU grounding readiness_gate = PASS",
+      "called_by": "CALLER-01 phases loop",
+      "calls": [],
+      "required_inputs": ["source_manifest['grounding_state_path']"],
+      "expected_outputs": ["PASS bool"],
+      "fail_closed_conditions": ["grounding_state_v3.json not found", "readiness_gate.status != PASS"],
+      "client_agnostic_status": true,
+      "notes": "readiness_gate may be a string 'PASS' or a dict {'status': 'PASS', ...}. Both are handled."
+    },
+    {
+      "caller_id": "CALLER-08",
+      "file_path": "scripts/pios/run_client_pipeline.py — phase_05_build_binding_envelope()",
+      "role": "BINDING_ENVELOPE_BUILDER — either loads pre-computed conformance binding_envelope (when fastapi_conformance_path set) or builds synthetic CEU-DOM binding_envelope",
+      "called_by": "CALLER-01 phases loop",
+      "calls": [],
+      "required_inputs": {
+        "conformance_path": ["<fastapi_conformance_path>/binding_envelope_fastapi_compatible.json"],
+        "synthetic_path": [
+          "source_manifest['ceu_grounding_path']/registry/ceu_grounding_registry.json",
+          "source_manifest['dom_layer_path']"
+        ]
+      },
+      "expected_outputs": ["clients/<client_id>/psee/runs/<run_id>/binding/binding_envelope.json"],
+      "fail_closed_conditions": ["conformance artifact missing when path set", "CEU registry or DOM layer missing on synthetic path"],
+      "client_agnostic_status": true,
+      "stage_automation_status": "STAGE_NOT_AUTOMATED for BlueEdge (conformance path); automated for clients using synthetic path"
+    },
+    {
+      "caller_id": "CALLER-09",
+      "file_path": "scripts/pios/run_client_pipeline.py — phase_06_and_07_e2e()",
+      "role": "SIGNAL_ACTIVATION_CALLER — either loads pre-computed conformance 41.x/75.x artifacts (when fastapi_conformance_path set) or runs scripts/pios/run_end_to_end.py",
+      "called_by": "CALLER-01 phases loop",
+      "calls": ["scripts/pios/run_end_to_end.py (synthetic path only)"],
+      "required_inputs": {
+        "conformance_path": [
+          "<fastapi_conformance_path>/signal_projection_fastapi_compatible.json",
+          "<fastapi_conformance_path>/pressure_zone_state_fastapi_compatible.json",
+          "<fastapi_conformance_path>/condition_correlation_state_fastapi_compatible.json"
+        ],
+        "synthetic_path": ["clients/<client_id>/psee/runs/<run_id>/binding/binding_envelope.json"]
+      },
+      "expected_outputs": [
+        "clients/<client_id>/psee/runs/<run_id>/75.x/condition_correlation_state.json",
+        "clients/<client_id>/psee/runs/<run_id>/75.x/pressure_candidate_state.json",
+        "clients/<client_id>/psee/runs/<run_id>/75.x/pressure_zone_state.json",
+        "clients/<client_id>/psee/runs/<run_id>/41.x/signal_projection.json",
+        "clients/<client_id>/psee/runs/<run_id>/41.x/pressure_zone_projection.json"
+      ],
+      "fail_closed_conditions": ["signal_projection_fastapi_compatible.json missing (conformance)", "run_end_to_end.py non-zero exit (synthetic)"],
+      "client_agnostic_status": true
+    },
+    {
+      "caller_id": "CALLER-10",
+      "file_path": "scripts/pios/run_client_pipeline.py — phase_08a_vault()",
+      "role": "VAULT_PACKAGER — produces 9 vault artifacts; resolves signal registry from conformance or 41.x; applies schema bridge fix",
+      "called_by": "CALLER-01 phases loop",
+      "calls": [],
+      "required_inputs": {
+        "all_paths": [
+          "source_manifest['grounding_state_path']",
+          "source_manifest['dom_layer_path']",
+          "source_manifest['integration_validation_path']"
+        ],
+        "conformance_path": ["<fastapi_conformance_path>/signal_registry_fastapi_compatible.json"],
+        "synthetic_path": ["clients/<client_id>/psee/runs/<run_id>/41.x/signal_projection.json"]
+      },
+      "expected_outputs": [
+        "vault/coverage_state.json",
+        "vault/reconstruction_state.json",
+        "vault/gauge_state.json",
+        "vault/canonical_topology.json",
+        "vault/signal_registry.json",
+        "vault/binding_envelope.json",
+        "vault/admissibility_log.json",
+        "vault/evidence_trace.json",
+        "vault/vault_manifest.json"
+      ],
+      "fail_closed_conditions": ["signal_registry source artifact missing"],
+      "client_agnostic_status": true,
+      "schema_bridge_fix": "active_count excludes activation_method=THEORETICAL_BASELINE from active_pressure_signals"
+    },
+    {
+      "caller_id": "CALLER-11",
+      "file_path": "scripts/pios/export_graph_state.mjs",
+      "role": "GRAPH_STATE_EXPORTER — builds overview graph topology using d3-force-3d; settles x/y positions; writes graph_state.json. Called by lens_report_generator.py during tier2 report generation.",
+      "called_by": "scripts/pios/lens_report_generator.py generate_tier2_reports()",
+      "calls": ["app/gauge-product/node_modules/d3-force-3d"],
+      "invocation": "node scripts/pios/export_graph_state.mjs --client <client_id> --run-id <run_id> --output <path>",
+      "required_inputs": [
+        "app/gauge-product/public/vault/<client_id>/<run_id>/vault_index.json (default) OR --vault-index-path override",
+        "app/gauge-product/node_modules/d3-force-3d"
+      ],
+      "expected_outputs": ["clients/<client_id>/lens/runs/<run_id>/reports/tier2/graph_state.json"],
+      "fail_closed_conditions": ["d3-force-3d not available", "vault_index.json missing"],
+      "client_agnostic_status": true,
+      "notes": "Sole authoritative source of x/y positions for report graph. No Python layout math. Uses identical force parameters as VaultGraph.js."
+    },
+    {
+      "caller_id": "CALLER-12",
+      "file_path": "scripts/pios/lens_report_generator.py",
+      "role": "LENS_REPORT_GENERATOR — generates all 4 report surfaces (Tier-1 Evidence Brief, Tier-1 Narrative Brief, Tier-2 Diagnostic Narrative, Decision Surface) plus publish variants; writes index.json, manifest.json, selector/, current/",
+      "called_by": "scripts/pios/run_client_pipeline.py phase_08b_lens_reports()",
+      "calls": ["scripts/pios/export_graph_state.mjs (via subprocess, for Tier-2)"],
+      "invocation": "python3 scripts/pios/lens_report_generator.py --client <client_id> --run-id <run_id> --package-dir clients/<client_id>/psee/runs/<run_id>/vault --output-root clients/<client_id>/lens/runs/<run_id>",
+      "required_inputs": [
+        "clients/<client_id>/psee/runs/<run_id>/vault/canonical_topology.json",
+        "clients/<client_id>/psee/runs/<run_id>/vault/signal_registry.json",
+        "clients/<client_id>/psee/runs/<run_id>/vault/gauge_state.json",
+        "clients/<client_id>/psee/runs/<run_id>/vault/binding_envelope.json (optional — for binding context)",
+        "clients/<client_id>/psee/runs/<run_id>/41.x/signal_projection.json (for signal trace preview)"
+      ],
+      "expected_outputs": [
+        "clients/<client_id>/lens/runs/<run_id>/reports/tier1/lens_tier1_evidence_brief.html",
+        "clients/<client_id>/lens/runs/<run_id>/reports/tier1/publish/lens_tier1_evidence_brief_pub.html",
+        "clients/<client_id>/lens/runs/<run_id>/reports/tier1/lens_tier1_narrative_brief.html",
+        "clients/<client_id>/lens/runs/<run_id>/reports/tier1/publish/lens_tier1_narrative_brief_pub.html",
+        "clients/<client_id>/lens/runs/<run_id>/reports/tier2/lens_tier2_diagnostic_narrative.html",
+        "clients/<client_id>/lens/runs/<run_id>/reports/tier2/publish/lens_tier2_diagnostic_narrative_pub.html",
+        "clients/<client_id>/lens/runs/<run_id>/reports/tier2/graph_state.json",
+        "clients/<client_id>/lens/runs/<run_id>/reports/decision/lens_decision_surface.html",
+        "clients/<client_id>/lens/runs/<run_id>/reports/decision/publish/lens_decision_surface_pub.html",
+        "clients/<client_id>/lens/runs/<run_id>/index.json",
+        "clients/<client_id>/lens/runs/<run_id>/manifest.json",
+        "clients/<client_id>/lens/selector/selector.json",
+        "clients/<client_id>/lens/selector/available_runs.json",
+        "clients/<client_id>/lens/current/ (mirror of reports/)"
+      ],
+      "fail_closed_conditions": ["vault/canonical_topology.json missing", "vault/signal_registry.json missing", "export_graph_state.mjs failure"],
+      "client_agnostic_status": true
+    },
+    {
+      "caller_id": "CALLER-13",
+      "file_path": "scripts/pios/run_client_pipeline.py — phase_09_selector_update()",
+      "role": "SELECTOR_UPDATER — updates selector.json current_run and appends run to available_runs.json",
+      "called_by": "CALLER-01 phases loop (Phase 9)",
+      "calls": [],
+      "required_inputs": ["clients/<client_id>/lens/selector/ (creates if missing)"],
+      "expected_outputs": [
+        "clients/<client_id>/lens/selector/selector.json (current_run updated)",
+        "clients/<client_id>/lens/selector/available_runs.json (run appended)"
+      ],
+      "fail_closed_conditions": [],
+      "client_agnostic_status": true,
+      "notes": "selector.json also written by lens_report_generator._write_canonical_run_metadata. Available_runs.json written in both list format (orchestrator) and dict format (generator). Generator normalizes on read."
+    },
+    {
+      "caller_id": "CALLER-14",
+      "file_path": "scripts/pios/lens_report_generator.py — _write_canonical_run_metadata()",
+      "role": "CURRENT_RUN_WRITER — writes index.json, manifest.json, selector.json, available_runs.json, and mirrors reports/ to current/",
+      "called_by": "CALLER-12 main() (when --output-root is provided)",
+      "calls": [],
+      "required_inputs": ["output_root path", "all generated report files under output_root"],
+      "expected_outputs": [
+        "output_root/index.json",
+        "output_root/manifest.json",
+        "lens/selector/selector.json",
+        "lens/selector/available_runs.json",
+        "lens/current/ (shutil.copytree of reports/)"
+      ],
+      "fail_closed_conditions": [],
+      "client_agnostic_status": true,
+      "notes": "available_runs.json list-vs-dict normalization: if file contains a list, it is normalized to {'client': client, 'runs': list} before appending."
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "snapshot_id": "snapshot-001-baseline",
+  "timestamp": "2026-05-11T22:00:00.000Z",
+  "snapshot_type": "BASELINE",
+  "inputs": {
+    "substrate_hash": "fb04994af180d9428c6845c357ce8de466d3d5093cb49bf241e3f43b5ba013d1",
+    "baseline_hash": "e7fd21c49a4e7d1585147326f17df1c7ab8dc13889cea613d4eb27251cebe10c",
+    "package_set_hash": "sha256:empty_set",
+    "activation_profile_hash": "sha256:no_active_packages",
+    "framework_version": "1.0",
+    "sandbox_id": "sandbox-blueedge-run01-micro-001"
+  },
+  "composite_hash": "e7fd21c49a4e7d1585147326f17df1c7ab8dc13889cea613d4eb27251cebe10c",
+  "composite_summary": {
+    "s_state": "S2",
+    "q_class": "Q-02",
+    "backed_count": { "static": 4, "overlay": 0, "composite": 4 },
+    "overlay_count": 0,
+    "conflict_count": 0
+  },
+  "verification": "FIRST_SNAPSHOT"
+}

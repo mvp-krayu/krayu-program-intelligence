@@ -1,0 +1,315 @@
+{
+  "contract_id": "PI.LENS.BLUEEDGE-EVIDENCE-CHAIN-MANIFEST.01",
+  "generated_date": "2026-05-01",
+  "client": "blueedge",
+  "baseline_run": "run_be_orchestrated_fixup_01",
+  "uuid_run": "run_blueedge_integrated_01",
+  "uuid_client": "6a6fcdbc-41b6-4e0e-99b9-37394f6c870d",
+  "source_manifest": "clients/blueedge/sources/source_01/source_manifest.json",
+
+  "evidence_chain": [
+
+    {
+      "stage": "SOURCE",
+      "artifact": "source_archive",
+      "path": "/Users/khorrix/Projects/blueedge-clean-run/source-raw/raw/blueedge-platform-v3_23_0-COMPLETE.tar",
+      "source": "SOURCE_MANIFEST",
+      "purpose": "Original BlueEdge platform archive — boundary identity for SHA256 verification",
+      "present": true,
+      "note": "External path — not in k-pi-core. SHA256=672a841277541921bf8ade69a467d35d9f105a1525c754fa4b750f0aa50e9c80"
+    },
+    {
+      "stage": "SOURCE",
+      "artifact": "sha256_manifest",
+      "path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/manifests/fastapi-backend.manifest.sha256",
+      "source": "SOURCE_MANIFEST",
+      "purpose": "NOT_PRESENT_IN_RUN — BlueEdge has no in-repo sha256 manifest (archive is external)",
+      "present": false
+    },
+
+    {
+      "stage": "INTAKE",
+      "artifact": "canonical_repo",
+      "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/intake/canonical_repo",
+      "source": "SOURCE_MANIFEST",
+      "purpose": "Extracted BlueEdge source tree — input to structural scanner",
+      "present": false,
+      "note": "source_manifest.extracted_path — directory does not exist in k-pi-core"
+    },
+
+    {
+      "stage": "STRUCTURE",
+      "artifact": "structure_40x_directory",
+      "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/structure",
+      "source": "SOURCE_MANIFEST",
+      "purpose": "NOT_PRESENT_IN_RUN — 40.x structural scanner output directory (40.2/40.3/40.4); never committed to repo",
+      "present": false,
+      "note": "source_manifest.structure_path — directory does not exist"
+    },
+
+    {
+      "stage": "CEU",
+      "artifact": "grounding_state_v3",
+      "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/grounding_state_v3.json",
+      "source": "UUID_RUN",
+      "purpose": "CEU grounding results: 10 CEUs, all SOURCE_TRUTH, ratio=1.0, readiness_gate=PASS",
+      "present": true
+    },
+    {
+      "stage": "CEU",
+      "artifact": "ceu_grounding_registry_directory",
+      "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/ceu_grounding",
+      "source": "SOURCE_MANIFEST",
+      "purpose": "NOT_PRESENT_IN_RUN — CEU grounding registry directory; does not exist in repo",
+      "present": false,
+      "note": "source_manifest.ceu_grounding_path"
+    },
+    {
+      "stage": "CEU",
+      "artifact": "ceu_registry_dynamic",
+      "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/ceu_registry_dynamic.json",
+      "source": "UUID_RUN",
+      "purpose": "Dynamic CEU registry produced during integrated run; defines 10 CEU IDs and names",
+      "present": true
+    },
+    {
+      "stage": "CEU",
+      "artifact": "ceu_node_map",
+      "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/ceu_node_map.json",
+      "source": "UUID_RUN",
+      "purpose": "Maps CEU IDs to structural node evidence paths",
+      "present": true
+    },
+    {
+      "stage": "CEU",
+      "artifact": "ceu_zone_map",
+      "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/ceu_zone_map.json",
+      "source": "UUID_RUN",
+      "purpose": "Maps CEU IDs to pressure zone assignments",
+      "present": true
+    },
+
+    {
+      "stage": "DOM",
+      "artifact": "dom_path_domain_layer",
+      "path": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01/recomputed/dom_path_domain_layer.json",
+      "source": "DOCS_PSEE",
+      "purpose": "NOT_PRESENT_IN_RUN — 13-domain PATH_EVIDENCE_ONLY layer; source for canonical_topology 35-node/13-domain values; file absent",
+      "present": false,
+      "note": "source_manifest.dom_layer_path — directory PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01 does not exist in docs/psee"
+    },
+
+    {
+      "stage": "BINDING",
+      "artifact": "binding_envelope_named_run",
+      "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/binding/binding_envelope.json",
+      "source": "NAMED_RUN",
+      "purpose": "Pre-generic binding envelope (BLOCK_C schema): 4 bindings, 13 domain_telemetry, 1 pressure zone, 6 non-pressure zones",
+      "present": true,
+      "note": "contract_id=PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01; produced by fastapi_conformance pipeline, not generic orchestrator Phase 5"
+    },
+    {
+      "stage": "BINDING",
+      "artifact": "fastapi_conformance_precomputed_directory",
+      "path": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed",
+      "source": "DOCS_PSEE",
+      "purpose": "NOT_PRESENT_IN_RUN — upstream precomputed signals and binding artifacts consumed by binding_envelope production; directory absent",
+      "present": false,
+      "note": "source_manifest.fastapi_conformance_path — directory does not exist in docs/psee"
+    },
+
+    {
+      "stage": "CONDITION_SIGNAL_ZONES",
+      "artifact": "condition_correlation_state_named_run",
+      "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/75.x/condition_correlation_state.json",
+      "source": "NAMED_RUN",
+      "purpose": "4 conditions (3 HIGH + 1 ACTIVATED); FastAPI-compatible COND-PSIG-XXX-YY namespace; derived from BLOCK_D",
+      "present": true
+    },
+    {
+      "stage": "CONDITION_SIGNAL_ZONES",
+      "artifact": "condition_correlation_state_uuid_run",
+      "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/condition_correlation_state.json",
+      "source": "UUID_RUN",
+      "purpose": "Native BlueEdge condition correlation state (COND-XX namespace) from integrated run",
+      "present": true
+    },
+    {
+      "stage": "CONDITION_SIGNAL_ZONES",
+      "artifact": "pressure_zone_state_named_run",
+      "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/75.x/pressure_zone_state.json",
+      "source": "NAMED_RUN",
+      "purpose": "1 active zone: PZ-001 COMPOUND_ZONE, DOM-04 anchor, 15 nodes, conditions={PSIG-001,-002,-004}",
+      "present": true
+    },
+    {
+      "stage": "CONDITION_SIGNAL_ZONES",
+      "artifact": "pressure_zone_state_uuid_run",
+      "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/pressure_zone_state.json",
+      "source": "UUID_RUN",
+      "purpose": "Native BlueEdge pressure zone state from integrated run (pre-FastAPI conformance reformatting)",
+      "present": true
+    },
+    {
+      "stage": "CONDITION_SIGNAL_ZONES",
+      "artifact": "pressure_candidate_state_named_run",
+      "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/75.x/pressure_candidate_state.json",
+      "source": "NAMED_RUN",
+      "purpose": "Pressure candidate entities identified prior to zone formation",
+      "present": true
+    },
+    {
+      "stage": "CONDITION_SIGNAL_ZONES",
+      "artifact": "signal_projection_named_run",
+      "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/41.x/signal_projection.json",
+      "source": "NAMED_RUN",
+      "purpose": "FastAPI-compatible signal projection (BLOCK_A): PSIG-001=5.663, PSIG-002=3.2098, PSIG-004=2.1822, PSIG-006=0",
+      "present": true
+    },
+    {
+      "stage": "CONDITION_SIGNAL_ZONES",
+      "artifact": "signal_projection_uuid_run",
+      "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/signal_projection.json",
+      "source": "UUID_RUN",
+      "purpose": "Native BlueEdge signal projection from integrated run",
+      "present": true
+    },
+    {
+      "stage": "CONDITION_SIGNAL_ZONES",
+      "artifact": "pressure_zone_projection_named_run",
+      "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/41.x/pressure_zone_projection.json",
+      "source": "NAMED_RUN",
+      "purpose": "Zone projection: PZ-001 COMPOUND_ZONE projected forward; 41.x layer output",
+      "present": true
+    },
+    {
+      "stage": "CONDITION_SIGNAL_ZONES",
+      "artifact": "pressure_zone_projection_uuid_run",
+      "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/pressure_zone_projection.json",
+      "source": "UUID_RUN",
+      "purpose": "Native BlueEdge zone projection from integrated run",
+      "present": true
+    },
+
+    {
+      "stage": "INTEGRATION",
+      "artifact": "integration_validation",
+      "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/integration_validation.json",
+      "source": "UUID_RUN",
+      "purpose": "9 integration checks, all PASS; gate for admissibility_log in vault",
+      "present": true,
+      "note": "source_manifest.integration_validation_path points to this exact file"
+    },
+
+    {
+      "stage": "VAULT",
+      "artifact": "vault_canonical_topology",
+      "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/canonical_topology.json",
+      "source": "NAMED_RUN",
+      "purpose": "35 nodes, 13 domains; derived from dom_path_domain_layer.json (PATH_EVIDENCE_ONLY); upstream file absent",
+      "present": true
+    },
+    {
+      "stage": "VAULT",
+      "artifact": "vault_gauge_state",
+      "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/gauge_state.json",
+      "source": "NAMED_RUN",
+      "purpose": "canonical=60, projected=100, CONDITIONAL band; derived from grounding_state_v3.json",
+      "present": true
+    },
+    {
+      "stage": "VAULT",
+      "artifact": "vault_coverage_state",
+      "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/coverage_state.json",
+      "source": "NAMED_RUN",
+      "purpose": "coverage_percent=100.0, 10/10 CEUs; derived from grounding_state_v3.json",
+      "present": true
+    },
+    {
+      "stage": "VAULT",
+      "artifact": "vault_reconstruction_state",
+      "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/reconstruction_state.json",
+      "source": "NAMED_RUN",
+      "purpose": "state=PASS, 10/10 validated units; derived from grounding_state_v3.json",
+      "present": true
+    },
+    {
+      "stage": "VAULT",
+      "artifact": "vault_signal_registry",
+      "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/signal_registry.json",
+      "source": "NAMED_RUN",
+      "purpose": "4 signals (3 active pressure); source: FastAPI conformance recomputed artifacts",
+      "present": true
+    },
+    {
+      "stage": "VAULT",
+      "artifact": "vault_binding_envelope",
+      "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/binding_envelope.json",
+      "source": "NAMED_RUN",
+      "purpose": "Vault copy of binding/binding_envelope.json; source: Phase 5 orchestrator build from binding/",
+      "present": true
+    },
+    {
+      "stage": "VAULT",
+      "artifact": "vault_admissibility_log",
+      "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/admissibility_log.json",
+      "source": "NAMED_RUN",
+      "purpose": "CEU_GROUNDING_PROXY gate; derived from integration_validation.json (UUID run); gate_result=PASS",
+      "present": true
+    },
+    {
+      "stage": "VAULT",
+      "artifact": "vault_evidence_trace",
+      "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/evidence_trace.json",
+      "source": "NAMED_RUN",
+      "purpose": "Evidence chain trace; source: grounding_state_v3.json (UUID run)",
+      "present": true
+    },
+    {
+      "stage": "VAULT",
+      "artifact": "vault_manifest",
+      "path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/vault/vault_manifest.json",
+      "source": "NAMED_RUN",
+      "purpose": "Lists 9 vault artifacts with sources; produced by orchestrator",
+      "present": true
+    },
+
+    {
+      "stage": "DECISION",
+      "artifact": "decision_state",
+      "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/decision_state.json",
+      "source": "UUID_RUN",
+      "purpose": "INVESTIGATE category; PIOS_40.7 pipeline artifact; not present in named run or generic pipeline",
+      "present": true
+    },
+
+    {
+      "stage": "PIPELINE_TRACE",
+      "artifact": "pipeline_execution_trace",
+      "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/pipeline_execution_trace.json",
+      "source": "UUID_RUN",
+      "purpose": "Execution trace of the BlueEdge-specific multi-contract pipeline that produced UUID run artifacts",
+      "present": true
+    },
+    {
+      "stage": "PIPELINE_TRACE",
+      "artifact": "execution_report",
+      "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/execution_report.md",
+      "source": "UUID_RUN",
+      "purpose": "Human-readable execution report for integrated run",
+      "present": true
+    }
+  ],
+
+  "summary": {
+    "total_artifacts_mapped": 33,
+    "present": 24,
+    "absent": 7,
+    "absent_critical": ["canonical_repo", "structure_40x_directory", "ceu_grounding_registry_directory", "dom_path_domain_layer", "fastapi_conformance_precomputed_directory"],
+    "sources_involved": ["NAMED_RUN", "UUID_RUN", "SOURCE_MANIFEST", "DOCS_PSEE"],
+    "artifact_roots": 3,
+    "root_1": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/",
+    "root_2": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/",
+    "root_3": "/Users/khorrix/Projects/blueedge-clean-run/ (external)"
+  }
+}

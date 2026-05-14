@@ -1,0 +1,61 @@
+{
+  "stream_id": "PI.LENS.V2.FASTAPI-RUNTIME-ONBOARDING.01",
+  "branch": "work/lens-v2-productization",
+  "baseline_commit": "1e46b83",
+  "baseline_pipeline_commit": "93098cb",
+  "milestone_tag": "lens-v2-live-substrate-v1",
+  "summary": {
+    "files_created": 8,
+    "files_modified": 1,
+    "files_deleted": 0
+  },
+  "files": [
+    {
+      "path": "app/execlens-demo/lib/lens-v2/manifests/fastapi.run_02_oss_fastapi_pipeline.json",
+      "change": "created",
+      "purpose": "FastAPI client/run manifest declaring artifact paths (3 of 6 required artifacts absent on disk — resolver fails closed)"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/manifests/index.js",
+      "change": "modified",
+      "purpose": "Added FastAPI registry entry — single-line addition to REGISTRY map"
+    },
+    {
+      "path": "app/execlens-demo/flagship-experience/tests/fastapi-onboarding.test.js",
+      "change": "created",
+      "purpose": "34-case suite covering registry recognition, manifest schema, resolver fail-closed, flagship binding rejection, BlueEdge preservation, report-pack availability, writer behaviour, no-client-name-branching"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.FASTAPI-RUNTIME-ONBOARDING.01/FASTAPI_ONBOARDING_VALIDATION.md",
+      "change": "created",
+      "purpose": "Validation deliverable (all mandatory checks PASS)"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.FASTAPI-RUNTIME-ONBOARDING.01/FASTAPI_ONBOARDING_IMPLEMENTATION.md",
+      "change": "created",
+      "purpose": "Implementation deliverable"
+    },
+    {
+      "path": "docs/pios/PI.LENS.V2.FASTAPI-RUNTIME-ONBOARDING.01/execution_report.md",
+      "change": "created",
+      "purpose": "Governance execution report"
+    },
+    {
+      "path": "docs/pios/PI.LENS.V2.FASTAPI-RUNTIME-ONBOARDING.01/file_changes.json",
+      "change": "created",
+      "purpose": "Governance file-changes manifest"
+    },
+    {
+      "path": "docs/pios/PI.LENS.V2.FASTAPI-RUNTIME-ONBOARDING.01/CLOSURE.md",
+      "change": "created",
+      "purpose": "Governance closure document"
+    }
+  ],
+  "validators_changed": [],
+  "topology_mutations": [],
+  "evidence_mutations": [],
+  "lane_a_artifacts_touched": [],
+  "lane_d_dpsig_artifacts_touched": [],
+  "api_routes_modified": [],
+  "page_routes_modified": []
+}

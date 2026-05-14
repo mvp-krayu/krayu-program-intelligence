@@ -1,0 +1,58 @@
+{
+  "stream": "PI.LENS.V2.TERMINOLOGY-NORMALIZATION.01",
+  "validated_at": "2026-05-09",
+  "scope": "Terminology normalization across companion LENS V2 cinematic streams",
+  "checks": [
+    {
+      "name": "no_remaining_L7_terminology",
+      "description": "No occurrences of the standalone token `L7` remain in any of the four target directories (docs/psee/PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01, docs/psee/PI.LENS.V2.CINEMATIC-REFERENCE-MAPPING.01, docs/pios/PI.LENS.V2.VISUAL-DIRECTION-DOCTRINE.01, docs/pios/PI.LENS.V2.CINEMATIC-REFERENCE-MAPPING.01).",
+      "method": "grep -rn -E '\\bL7\\b' across all four directories",
+      "result": "PASS",
+      "notes": "Re-grep returned zero matches after normalization."
+    },
+    {
+      "name": "no_remaining_51_x_terminology",
+      "description": "No occurrences of `51.x` remain in any of the four target directories.",
+      "method": "grep -rn -E '51\\.x' across all four directories",
+      "result": "PASS",
+      "notes": "Re-grep returned zero matches after normalization."
+    },
+    {
+      "name": "no_remaining_demo_narrative_terminology",
+      "description": "No occurrences of `demo/narrative` or `demo / narrative` remain in any of the four target directories.",
+      "method": "grep -rn -E 'demo/narrative|demo / narrative' across all four directories",
+      "result": "PASS",
+      "notes": "Re-grep returned zero matches after normalization."
+    },
+    {
+      "name": "no_accidental_semantic_drift",
+      "description": "Each replacement preserved the meaning of the original passage. No clauses were rewritten beyond the token-level normalization and the explicit boundary-clarification addition mandated by the contract.",
+      "method": "Per-occurrence diff inspection against terminology_replacement_matrix.json",
+      "result": "PASS",
+      "notes": "All 18 occurrences are substitutions inside existing sentences. The §14 boundary expansion in VISUAL_DIRECTION_DOCTRINE.md is an addition that strictly clarifies, never weakens, the existing boundary statement."
+    },
+    {
+      "name": "no_governance_mutation",
+      "description": "No changes were made to docs/governance/, validators, validation logic, or any governance contract.",
+      "method": "git diff inspection — only docs/psee/PI.LENS.V2.* and docs/pios/PI.LENS.V2.* paths touched.",
+      "result": "PASS",
+      "notes": "git diff confirms changes are scoped to the two companion streams and the new normalization stream's own pios pack."
+    },
+    {
+      "name": "no_brain_authority_reinterpretation",
+      "description": "No Brain node was created, modified, or referenced as authority. Boundary clarification ENUMERATES Brain authority as out-of-scope; it does not assign authority.",
+      "method": "Inspection of doctrine §14 expansion against contract MANDATORY BOUNDARY CLARIFICATION list.",
+      "result": "PASS",
+      "notes": "§14 now explicitly states the stream does NOT mutate Brain authority across all four brains, matching the contract's enumerated exclusions exactly."
+    },
+    {
+      "name": "no_doctrine_weakening_or_playwright_regression",
+      "description": "All cinematic direction, executive cognition, anti-dashboard enforcement, motion / typography / color doctrine, reference deep-dives, comparison matrix, dashboard syndrome detection, and Playwright inspection framework content remains intact.",
+      "method": "Diff coverage check — only the 18 token-level edits and the §14 boundary expansion appear in the diff. No other content was modified, removed, or re-ordered.",
+      "result": "PASS",
+      "notes": "Doctrine sections, rubric axes, mechanical signals, viewport list, route list, screenshot discipline, failure classification, and recovery guidance are byte-identical except for the catalogued occurrences."
+    }
+  ],
+  "verdict": "PASS",
+  "fail_count": 0
+}

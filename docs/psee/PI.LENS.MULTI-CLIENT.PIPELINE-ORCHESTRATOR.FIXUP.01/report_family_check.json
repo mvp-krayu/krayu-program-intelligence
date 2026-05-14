@@ -1,0 +1,33 @@
+{
+  "contract_id": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.FIXUP.01",
+  "artifact": "report_family_check",
+  "block": "BLOCK_H",
+  "generated_date": "2026-05-01",
+
+  "status": "REPORT_FAMILY_PASS",
+
+  "run_id": "run_be_orchestrated_fixup_01",
+  "reports_generated_by": "scripts/pios/lens_report_generator.py",
+  "no_manual_patches": true,
+
+  "reports": [
+    {"report": "Tier-1 Evidence Brief", "path": "clients/blueedge/lens/runs/run_be_orchestrated_fixup_01/reports/tier1/lens_tier1_evidence_brief.html", "generated": true},
+    {"report": "Tier-1 Narrative Brief", "path": "clients/blueedge/lens/runs/run_be_orchestrated_fixup_01/reports/tier1/lens_tier1_narrative_brief.html", "generated": true},
+    {"report": "Tier-2 Diagnostic Narrative", "path": "clients/blueedge/lens/runs/run_be_orchestrated_fixup_01/reports/tier2/lens_tier2_diagnostic_narrative.html", "generated": true},
+    {"report": "Decision Surface", "path": "clients/blueedge/lens/runs/run_be_orchestrated_fixup_01/reports/decision/lens_decision_surface.html", "generated": true}
+  ],
+
+  "canonical_value_checks": {
+    "PSIG-001_displayed": "Fan-In Concentration (PSIG-001): HIGH — Statistically abnormal concentration — Value 5.663",
+    "PSIG-002_displayed": "Fan-Out Propagation (PSIG-002): HIGH — Statistically abnormal concentration — Value 3.2098",
+    "PSIG-004_displayed": "Responsibility Concentration (PSIG-004): HIGH — Statistically abnormal concentration — Value 2.1822",
+    "PSIG-006_displayed": "Structural Blind Spot (PSIG-006): BASELINE — theoretical baseline condition (not activated) — Value 0",
+    "primary_domain_displayed": "DOM-04 / backend_app_root",
+    "zone_count_displayed": 1,
+    "score_displayed": "60 — CONDITIONAL",
+    "posture_displayed": "INVESTIGATE",
+    "all_canonical_values_present": true
+  },
+
+  "stale_text_check": "CLEAN — no run_be_orchestrated_01 references in fixup reports"
+}

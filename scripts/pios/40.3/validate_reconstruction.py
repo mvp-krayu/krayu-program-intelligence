@@ -15,6 +15,7 @@ Validation failures must be resolved by correcting the artifact under validation
 This script must not be modified in response to a failing check.
 """
 
+import argparse
 import re
 import sys
 from pathlib import Path
@@ -301,8 +302,15 @@ def check_immutability_declaration():
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Validate 40.3 reconstruction artifacts.")
+    parser.add_argument("--expected-run-id", default="run_02_blueedge",
+                        help="Expected run ID to validate against (default: run_02_blueedge)")
+    args = parser.parse_args()
+    global REQUIRED_RUN_TERMS
+    REQUIRED_RUN_TERMS = [args.expected_run_id, "PIOS-40.3-RUN02-CONTRACT-v3"]
+
     print("\nStream 40.3 — PiOS Reverse Engineering")
-    print("Validate Reconstruction — run_02_blueedge")
+    print(f"Validate Reconstruction — {args.expected_run_id}")
     print("Contract: PIOS-40.3-RUN02-CONTRACT-v3")
 
     checks = {

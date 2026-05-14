@@ -1,0 +1,50 @@
+{
+  "contract_id": "PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01",
+  "artifact": "41x_artifact_comparison",
+  "block": "BLOCK_E",
+  "generated_date": "2026-05-01",
+  "mode": "FORENSIC / READ_ONLY",
+
+  "verdict": "41X_DELTA",
+
+  "baseline_41x": {
+    "pipeline_run": false,
+    "note": "Baseline (run_blueedge_productized_01) was NOT produced by the PIOS 41.x pipeline. It was produced by 4 FastAPI conformance contracts (manual forensic analysis).",
+    "signal_projection_path": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/signal_projection_fastapi_compatible.json",
+    "signal_projection_schema": "active_conditions_in_scope[] format",
+    "signal_source": "Manual z-score recomputation from 40.3/structural_topology_log.json import counts",
+    "projection_manifest_path": null,
+    "pressure_zone_projection_path": null,
+    "vault_signal_registry_source": "signal_registry_fastapi_compatible.json (manual production)",
+    "total_41x_artifacts_in_vault": 0,
+    "41x_pipeline_artifacts_in_run": 0
+  },
+
+  "orchestrated_41x": {
+    "pipeline_run": true,
+    "note": "Orchestrated run used PIOS compute scripts (run_end_to_end.py → compute_signal_projection.py → compute_zone_projection.py).",
+    "signal_projection_path": "clients/blueedge/psee/runs/run_be_orchestrated_01/41.x/signal_projection.json",
+    "signal_projection_schema": "active_conditions_in_scope[] format (PIOS output)",
+    "signal_source": "compute_signal_projection.py using binding_envelope.json + 75.x/condition_correlation_state.json",
+    "projection_manifest_path": "clients/blueedge/psee/runs/run_be_orchestrated_01/41.x/projection_manifest.json",
+    "pressure_zone_projection_path": "clients/blueedge/psee/runs/run_be_orchestrated_01/41.x/pressure_zone_projection.json",
+    "vault_signal_registry_source": "Phase 8a schema bridge from 41.x/signal_projection.json",
+    "total_41x_artifacts_in_vault": 0,
+    "41x_pipeline_artifacts_in_run": 3
+  },
+
+  "delta": {
+    "pipeline_pathway_differs": true,
+    "baseline_uses_manual_forensic_conformance": true,
+    "orchestrated_uses_pios_compute_scripts": true,
+    "signal_projection_schema_same": true,
+    "signal_values_differ": true,
+    "pressure_zone_count_differs": {
+      "baseline": 1,
+      "orchestrated": 4,
+      "note": "Baseline has 1 pressure zone (PZ-001 anchor DOM-04). Orchestrated has 4 pressure zones (PZ-001 DOM-04, PZ-002 DOM-05, PZ-003 DOM-08, PZ-004 DOM-09). Cause: PIOS pipeline computes pressure zones from binding_envelope topology (synthetic fan_in graph) which creates 4 domain-level pressure candidates. Baseline was manually computed against actual 40.3 topology with single compound zone."
+    }
+  },
+
+  "finding": "41.x delta is fundamental. Baseline 41.x signal values came from manual recomputation over 40.3 import topology. Orchestrated 41.x signal values came from PIOS compute_signal_projection.py over binding_envelope synthetic topology. Same CEU population, different computation graph → different signal values and different pressure zone count."
+}

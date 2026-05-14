@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0",
+  "reevaluation_id": "reeval-001-post-activation",
+  "sandbox_id": "sandbox-blueedge-run01-micro-001",
+  "timestamp": "2026-05-11T22:00:06.000Z",
+  "trigger": {
+    "type": "SEP_ACTIVATED",
+    "source_package": "SEP-blueedge-run01-001",
+    "source_version": 1
+  },
+  "prior_state": {
+    "s_state": "S2",
+    "q_class": "Q-02",
+    "backed_count": 4,
+    "total_count": 17,
+    "grounding_ratio": 0.235
+  },
+  "composite_state": {
+    "s_state": "S2",
+    "q_class": "Q-02",
+    "backed_count": 5,
+    "total_count": 17,
+    "grounding_ratio": 0.294,
+    "static_backed_count": 4,
+    "overlay_backed_count": 1,
+    "overlay_derived_percentage": 20.0
+  },
+  "changes": [
+    {
+      "domain": "DOMAIN-11",
+      "domain_name": "Event-Driven Architecture",
+      "field": "lineage_status",
+      "prior_value": "PARTIAL",
+      "new_value": "STRONG",
+      "change_source": "OVERLAY",
+      "package_id": "SEP-blueedge-run01-001",
+      "entry_id": "E-001"
+    }
+  ],
+  "overlay_attribution": {
+    "packages_contributing": [
+      {
+        "package_id": "SEP-blueedge-run01-001",
+        "domains_backed": 1,
+        "entries_applied": 1,
+        "entries_rejected": 0
+      }
+    ],
+    "total_overlay_impact": {
+      "backed_count_delta": 1,
+      "new_domains_backed": ["DOMAIN-11"],
+      "conflicts": 0
+    }
+  },
+  "qualification_impact": {
+    "s_state_changed": false,
+    "q_class_changed": false,
+    "backed_count_changed": true,
+    "backed_count_delta": 1
+  },
+  "disclosure": {
+    "overlay_present": true,
+    "package_count": 1,
+    "domain_attribution": "4 domains certified, 1 domain overlay-backed",
+    "grounding_attribution": "backed_count: 4 certified + 1 overlay = 5 composite",
+    "advisory": "Dynamic CEU overlay active — 20% of composite backing is overlay-derived"
+  }
+}

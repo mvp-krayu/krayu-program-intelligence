@@ -1,0 +1,50 @@
+{
+  "contract_id": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.ARTIFACT-SWEEP.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-03",
+
+  "branch": "work/psee-runtime",
+  "baseline_commit": "64ff900",
+  "baseline_commit_message": "[RECOVER] FastAPI conformance DOM path-domain artifact from stash",
+
+  "working_tree_before": "CLEAN (only untracked conformance artifacts from prior contracts)",
+  "working_tree_after": "9 new untracked recomputed JSON artifacts + 8 new sweep evidence files",
+
+  "files_modified_tracked": [],
+  "files_created_untracked": [
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01/recomputed/blocked_binding_envelope.json",
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01/recomputed/blocked_signal_recompute.json",
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01/recomputed/report_input_manifest_fastapi_compatible.json",
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01/recomputed/vault_input_manifest_fastapi_compatible.json",
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/condition_correlation_state_fastapi_compatible.json",
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/pressure_zone_state_fastapi_compatible.json",
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/report_execution_readiness.json",
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/signal_registry_fastapi_compatible.json",
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/vault_input_manifest_fastapi_compatible.json",
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.ARTIFACT-SWEEP.01/stash_inventory.md",
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.ARTIFACT-SWEEP.01/restored_artifacts.md",
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.ARTIFACT-SWEEP.01/skipped_artifacts.md",
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.ARTIFACT-SWEEP.01/missing_artifacts.md",
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.ARTIFACT-SWEEP.01/validation_result.json",
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.ARTIFACT-SWEEP.01/checksum_registry.json",
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.ARTIFACT-SWEEP.01/no_mutation_attestation.md",
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.ARTIFACT-SWEEP.01/git_hygiene.json"
+  ],
+
+  "stash_searched": "stash@{0}^3",
+  "artifacts_sourced_from_stash": 9,
+  "artifacts_already_present": 3,
+  "content_fabricated": false,
+  "content_modified": false,
+
+  "pipeline_executed": false,
+  "phase_validation_executed": false,
+  "wrapper_executed": false,
+  "canonical_artifacts_mutated": false,
+  "producer_scripts_modified": false,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[SWEEP] PI.BLUEEDGE.FASTAPI-CONFORMANCE.ARTIFACT-SWEEP.01 — all 12 conformance artifacts present; 9 restored from stash",
+
+  "git_hygiene_status": "COMPLETE"
+}

@@ -1,0 +1,40 @@
+{
+  "contract_id": "PI.LENS.CEU-GROUNDING.GENERIC.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-01",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+  "working_tree_at_start": "CLEAN",
+  "baseline_commit": "ec91f845c2ea2dea28233d1f8643a1be0b179294",
+
+  "files_created_this_contract": [
+    "scripts/pios/ceu_registry.json",
+    "scripts/pios/ceu_grounding.py",
+    "docs/psee/PI.LENS.CEU-GROUNDING.GENERIC.01/ceu_grounding_findings.md",
+    "docs/psee/PI.LENS.CEU-GROUNDING.GENERIC.01/ceu_registry_schema.json",
+    "docs/psee/PI.LENS.CEU-GROUNDING.GENERIC.01/grounding_state_schema.json",
+    "docs/psee/PI.LENS.CEU-GROUNDING.GENERIC.01/validation_result.json",
+    "docs/psee/PI.LENS.CEU-GROUNDING.GENERIC.01/implementation_summary.md",
+    "docs/psee/PI.LENS.CEU-GROUNDING.GENERIC.01/git_hygiene.json"
+  ],
+  "files_modified_this_contract": [],
+  "files_deleted_this_contract": [],
+
+  "runtime_artifacts_note": "grounding_state_v3.json written to clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/ceu/ — gitignored per .gitignore coverage (clients/*/psee/runs/)",
+
+  "blueedge_mutation_check": "PASS — no files under clients/blueedge/ or clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/ were created, modified, or deleted",
+  "fastapi_source_mutation_check": "PASS — no files under clients/e65d2f0a.../input/intake/source/ were modified",
+  "run_client_pipeline_modified": "NO",
+  "out_of_scope_guard": "PASS — no semantic inference, CEU redesign, DOM/41.x/75.x, or report generation performed",
+
+  "runtime_artifacts_category": "ceu_grounding",
+  "runtime_artifacts_path": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/ceu/",
+  "runtime_artifacts_count": 1,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[CEU] PI.LENS.CEU-GROUNDING.GENERIC.01 — generic ceu_grounding.py + ceu_registry.json + FastAPI grounding (PASS: 9/10 CEUs, ratio=0.9, HIGH)",
+  "commit_note": "Commits are operator action per CLAUDE.md Section 7.1.",
+
+  "git_hygiene_status": "COMPLETE"
+}

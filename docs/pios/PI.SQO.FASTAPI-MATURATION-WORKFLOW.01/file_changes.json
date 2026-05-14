@@ -1,0 +1,91 @@
+{
+  "stream": "PI.SQO.FASTAPI-MATURATION-WORKFLOW.01",
+  "changes": [
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/DeferredDebtClassifier.js",
+      "action": "CREATED",
+      "description": "Debt urgency classifier: IMMEDIATE/ACTIVE/DEFERRED based on S-state"
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/RemediationStageResolver.js",
+      "action": "CREATED",
+      "description": "5-stage remediation workflow resolver with filter-based item assignment"
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/QualificationJourneyResolver.js",
+      "action": "CREATED",
+      "description": "Main orchestrator: banner, blockers, stages, source guidance, rerun checklist, validation gates, narratives"
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/WorkflowPrioritizationEngine.js",
+      "action": "CREATED",
+      "description": "Priority class engine: CRITICAL_BLOCKER through IMPROVEMENT with sorting"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/QualificationJourneyBanner.jsx",
+      "action": "CREATED",
+      "description": "S-state banner component with blocker class and workflow stage"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/ImmediateBlockerPanel.jsx",
+      "action": "CREATED",
+      "description": "Immediate blocker display with urgency reasons and remediation pathways"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/RemediationWorkflowPanel.jsx",
+      "action": "CREATED",
+      "description": "Staged remediation workflow with item details per stage"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/SemanticProgressionTimeline.jsx",
+      "action": "CREATED",
+      "description": "Progression metrics, maturity, continuity, and maturation narratives"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/SourceMaterialGuidancePanel.jsx",
+      "action": "CREATED",
+      "description": "Debt-category-to-source-material mapping display"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/RerunPreparationChecklist.jsx",
+      "action": "CREATED",
+      "description": "Pre-run requirements, expected outputs, and validation gates checklist"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/ValidationGatePanel.jsx",
+      "action": "CREATED",
+      "description": "S-state eligibility validation gates with met/unmet status"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/DeferredDebtPanel.jsx",
+      "action": "CREATED",
+      "description": "Active and deferred debt items with urgency classification"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/SemanticMaturationStrip.jsx",
+      "action": "CREATED",
+      "description": "Compact maturation summary strip for overview page header"
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/index.js",
+      "action": "MODIFIED",
+      "description": "Integrated 9 workflow components and journey resolution into overview page"
+    },
+    {
+      "file": "app/execlens-demo/flagship-experience/tests/sqo-fastapi-maturation-workflow.test.js",
+      "action": "CREATED",
+      "description": "22 tests in 5 suites covering all workflow modules and governance"
+    },
+    {
+      "file": "app/execlens-demo/package.json",
+      "action": "MODIFIED",
+      "description": "Added test:sqo-maturation script and included in aggregate test"
+    }
+  ],
+  "summary": {
+    "created": 14,
+    "modified": 2,
+    "deleted": 0,
+    "total": 16
+  }
+}

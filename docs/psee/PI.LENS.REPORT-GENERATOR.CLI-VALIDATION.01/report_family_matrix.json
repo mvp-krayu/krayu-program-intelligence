@@ -1,0 +1,92 @@
+{
+  "contract_id": "PI.LENS.REPORT-GENERATOR.CLI-VALIDATION.01",
+  "artifact": "report_family_matrix",
+  "generated_date": "2026-05-01",
+
+  "report_surfaces": [
+    {
+      "surface_id": "RS-01",
+      "file_name": "lens_tier1_evidence_brief.html",
+      "deliverable": "tier1",
+      "generator_function": "generate_tier1_reports",
+      "input_dependency": "RUN_ARTIFACT_NATIVE",
+      "requires_vault_index": false,
+      "requires_node_js": false,
+      "fastapi_status": "PASS",
+      "blueedge_status": "PASS",
+      "fastapi_output_path": "clients/fastapi/lens/runs/run_02_oss_fastapi_pipeline/reports/tier1/lens_tier1_evidence_brief.html",
+      "fastapi_lines": 484,
+      "blueedge_validation_path": "/tmp/blueedge_t1_validation/lens_tier1_evidence_brief.html",
+      "blueedge_lines": 514
+    },
+    {
+      "surface_id": "RS-02",
+      "file_name": "lens_tier1_narrative_brief.html",
+      "deliverable": "tier1",
+      "generator_function": "generate_tier1_reports",
+      "input_dependency": "RUN_ARTIFACT_NATIVE",
+      "requires_vault_index": false,
+      "requires_node_js": false,
+      "fastapi_status": "PASS",
+      "blueedge_status": "PASS",
+      "fastapi_output_path": "clients/fastapi/lens/runs/run_02_oss_fastapi_pipeline/reports/tier1/lens_tier1_narrative_brief.html",
+      "fastapi_lines": 289,
+      "blueedge_validation_path": "/tmp/blueedge_t1_validation/lens_tier1_narrative_brief.html",
+      "blueedge_lines": 265
+    },
+    {
+      "surface_id": "RS-03",
+      "file_name": "lens_tier2_diagnostic_narrative.html",
+      "deliverable": "diagnostic",
+      "generator_function": "generate_tier2_reports",
+      "input_dependency": "APP_VAULT_DEPENDENT",
+      "requires_vault_index": true,
+      "requires_node_js": true,
+      "fastapi_status": "FAIL",
+      "fastapi_fail_reason": "vault_index.json not found at app/gauge-product/public/vault/fastapi/ — FastAPI app vault published under UUID e65d2f0a-dfa7-4257-9333-fcbb583f0880, not slug 'fastapi'",
+      "blueedge_status": "PASS",
+      "blueedge_vault_index_path": "app/gauge-product/public/vault/blueedge/run_01_authoritative_generated/vault_index.json",
+      "blueedge_validation_path": "/tmp/blueedge_t2_validation/lens_tier2_diagnostic_narrative.html"
+    },
+    {
+      "surface_id": "RS-04",
+      "file_name": "lens_decision_surface.html",
+      "deliverable": "decision",
+      "generator_function": "generate_decision_surface",
+      "input_dependency": "RUN_ARTIFACT_NATIVE",
+      "requires_vault_index": false,
+      "requires_node_js": false,
+      "fastapi_status": "PASS",
+      "blueedge_status": "PASS",
+      "fastapi_output_path": "clients/fastapi/lens/runs/run_02_oss_fastapi_pipeline/reports/decision/lens_decision_surface.html",
+      "fastapi_lines": 139,
+      "blueedge_validation_path": "/tmp/blueedge_decision_validation/lens_decision_surface.html",
+      "blueedge_lines": 138
+    }
+  ],
+
+  "publish_safe_variants": [
+    "lens_tier1_evidence_brief_pub.html",
+    "lens_tier1_narrative_brief_pub.html",
+    "lens_tier2_diagnostic_narrative_pub.html",
+    "lens_decision_surface_pub.html"
+  ],
+
+  "metadata_outputs": [
+    "index.json",
+    "manifest.json",
+    "selector/selector.json",
+    "selector/available_runs.json",
+    "current/"
+  ],
+
+  "summary": {
+    "total_surfaces": 4,
+    "fastapi_pass": 3,
+    "fastapi_fail": 1,
+    "blueedge_pass": 4,
+    "blueedge_fail": 0,
+    "tier2_blocked_by": "app_vault_slug_mismatch",
+    "input_verdict": "HYBRID"
+  }
+}

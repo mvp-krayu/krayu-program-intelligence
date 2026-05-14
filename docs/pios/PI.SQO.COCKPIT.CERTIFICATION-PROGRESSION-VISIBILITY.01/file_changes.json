@@ -1,0 +1,78 @@
+{
+  "stream": "PI.SQO.COCKPIT.CERTIFICATION-PROGRESSION-VISIBILITY.01",
+  "phase": "O2",
+  "date": "2026-05-11",
+  "total_files": 14,
+  "changes": [
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.CERTIFICATION-PROGRESSION-VISIBILITY.01/CERTIFICATION_PROGRESSION_VISIBILITY_ARCHITECTURE.md",
+      "action": "CREATE",
+      "purpose": "Master visibility architecture: 15 domains, 4 layers, signal aggregation, deep-links"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.CERTIFICATION-PROGRESSION-VISIBILITY.01/CERTIFICATION_STATE_AND_TRANSITION_MODEL.md",
+      "action": "CREATE",
+      "purpose": "10 certification states, transition map, projections, 6-dimension impact matrix"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.CERTIFICATION-PROGRESSION-VISIBILITY.01/REPLAY_AND_ROLLBACK_CERTIFICATION_VISIBILITY.md",
+      "action": "CREATE",
+      "purpose": "Replay pipeline, hash integrity, rollback pipeline, cascade, combined certification"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.CERTIFICATION-PROGRESSION-VISIBILITY.01/AUTHORITY_AND_PUBLICATION_ELIGIBILITY_VISIBILITY.md",
+      "action": "CREATE",
+      "purpose": "Authority promotion prerequisites, publication prerequisites, LENS boundary"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.CERTIFICATION-PROGRESSION-VISIBILITY.01/CERTIFICATION_DEGRADATION_VISIBILITY_MODEL.md",
+      "action": "CREATE",
+      "purpose": "12 degradation signals, severity model, per-dimension dashboards, composite view"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.CERTIFICATION-PROGRESSION-VISIBILITY.01/ESCALATION_AND_QUALIFICATION_TRUST_VISIBILITY.md",
+      "action": "CREATE",
+      "purpose": "8 escalation triggers, S-state progression, trust feedback loop, risk factors"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.CERTIFICATION-PROGRESSION-VISIBILITY.01/CERTIFICATION_LINEAGE_AND_COEXISTENCE_MODEL.md",
+      "action": "CREATE",
+      "purpose": "7 lineage types, 5 coexistence rules, reconstruction, archive"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.CERTIFICATION-PROGRESSION-VISIBILITY.01/AUTHORITY_BOUNDARY_AND_PUBLICATION_VISIBILITY.md",
+      "action": "CREATE",
+      "purpose": "4 authority boundaries, 6 anti-leakage rules, 6 violation types, zone interaction"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.CERTIFICATION-PROGRESSION-VISIBILITY.01/OPERATOR_AND_GOVERNANCE_RESPONSIBILITY_MODEL.md",
+      "action": "CREATE",
+      "purpose": "16 visibility + 7 operator + 5 governance actions, audit trail"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.CERTIFICATION-PROGRESSION-VISIBILITY.01/OPERATIONAL_OBSERVABILITY_MODEL.md",
+      "action": "CREATE",
+      "purpose": "9 observability dimensions, 32 event types, health indicator, alert model"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.CERTIFICATION-PROGRESSION-VISIBILITY.01/PATH_BOUNDARY_VALIDATION.md",
+      "action": "CREATE",
+      "purpose": "9-point path boundary compliance, NOT PATH A/B/LENS confirmation"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.CERTIFICATION-PROGRESSION-VISIBILITY.01/execution_report.md",
+      "action": "CREATE",
+      "purpose": "Execution report with pre-flight, steps, artifacts, governance confirmation"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.CERTIFICATION-PROGRESSION-VISIBILITY.01/file_changes.json",
+      "action": "CREATE",
+      "purpose": "File change manifest for stream"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.CERTIFICATION-PROGRESSION-VISIBILITY.01/CLOSURE.md",
+      "action": "CREATE",
+      "purpose": "Stream closure with mandatory 9-section format"
+    }
+  ]
+}

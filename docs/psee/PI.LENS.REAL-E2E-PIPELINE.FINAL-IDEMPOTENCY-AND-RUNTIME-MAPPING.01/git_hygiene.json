@@ -1,0 +1,49 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE.FINAL-IDEMPOTENCY-AND-RUNTIME-MAPPING.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-03",
+
+  "branch": "work/psee-runtime",
+  "baseline_commit": "34e19d0",
+  "baseline_commit_message": "[FIX] E2E idempotency sweep for Stage 03 and Phase 8b",
+
+  "working_tree_before": "CLEAN (selector.json reverted per contract pre-flight)",
+  "working_tree_after": "2 modified tracked files + 1 new untracked evidence directory",
+
+  "files_modified_tracked": [
+    "scripts/pios/lens_e2e_assemble.sh",
+    "clients/blueedge/lens/selector/selector.json"
+  ],
+  "files_created_untracked": [
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.FINAL-IDEMPOTENCY-AND-RUNTIME-MAPPING.01/final_idempotency_summary.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.FINAL-IDEMPOTENCY-AND-RUNTIME-MAPPING.01/runtime_mapping_summary.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.FINAL-IDEMPOTENCY-AND-RUNTIME-MAPPING.01/stage_execution_result.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.FINAL-IDEMPOTENCY-AND-RUNTIME-MAPPING.01/validation_result.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.FINAL-IDEMPOTENCY-AND-RUNTIME-MAPPING.01/no_producer_modification_attestation.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.FINAL-IDEMPOTENCY-AND-RUNTIME-MAPPING.01/git_hygiene.json"
+  ],
+  "files_created_gitignored": [
+    "clients/blueedge/psee/runs/run_blueedge_e2e_execute_01/reports/ (HTML reports + graph_state.json)"
+  ],
+
+  "lens_e2e_assemble_sh_changes": [
+    "Runtime mapping constants added: SEMANTIC_RUN_ID, EXEC_SEMANTIC_DIR, EXEC_REPORT_DIR",
+    "Execute mode comment updated: stale vault-absent note removed",
+    "Stage 04 idempotency check added: ceu/grounding_state_v3.json present → VALIDATED_ONLY",
+    "Stage 07 updated: checks semantic in SEMANTIC_RUN_ID (run_blueedge_productized_01_fixed) not execution run",
+    "Stage 08 updated: lens_generate.sh replaced with lens_report_generator.py explicit mapping call",
+    "Stage 09 updated: mapping-aware validation (vault + semantic locked ref + 4 HTML report checks)"
+  ],
+
+  "pipeline_executed": true,
+  "pipeline_exit_code": 0,
+  "pipeline_all_phases_pass": true,
+  "wrapper_overall_status": "COMPLETE",
+  "canonical_artifacts_mutated": false,
+  "producer_scripts_modified": false,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[COMPLETE] PI.LENS.REAL-E2E-PIPELINE.FINAL-IDEMPOTENCY-AND-RUNTIME-MAPPING.01 — Stage 04 idempotent; semantic locked reference; E2E wrapper COMPLETE",
+
+  "git_hygiene_status": "COMPLETE"
+}

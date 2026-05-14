@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "client": "blueedge",
+  "run_id": "run_blueedge_productized_01_fixed",
+  "verification_timestamp": "2026-05-10T11:42:27.100Z",
+  "checks": {
+    "input_integrity": {
+      "pass": true,
+      "mismatches": []
+    },
+    "deterministic_recomputation": {
+      "pass": true,
+      "stored": {
+        "s_state": "S2",
+        "authorization_tier": "AUTHORIZED_WITH_QUALIFICATION"
+      },
+      "recomputed": {
+        "s_state": "S2",
+        "authorization_tier": "AUTHORIZED_WITH_QUALIFICATION"
+      }
+    },
+    "output_hash": {
+      "pass": true,
+      "stored_hash": "sha256:c60e175572115b5edd07f7f671e3ac73bfa4999312faaefe168ddc923ed1314e",
+      "recomputed_hash": "sha256:c60e175572115b5edd07f7f671e3ac73bfa4999312faaefe168ddc923ed1314e"
+    }
+  },
+  "overall_verdict": "PASS",
+  "governance": {
+    "operation": "replay_verification",
+    "operation_version": "1.0"
+  }
+}

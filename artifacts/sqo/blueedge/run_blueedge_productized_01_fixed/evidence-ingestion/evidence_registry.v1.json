@@ -1,0 +1,101 @@
+{
+  "schema_version": "1.0",
+  "registry_id": "EVREG-blueedge-run01-001",
+  "client": "blueedge",
+  "run_id": "run_blueedge_productized_01_fixed",
+  "created_at": "2026-05-12T00:00:00.000Z",
+  "created_by": "PI.SQO.BLUEEDGE.EVIDENCE-INGESTION-CORRIDOR.01",
+  "registry_type": "EVIDENCE_INGESTION",
+  "ingestion_boundary": "NON_AUTHORITATIVE",
+  "evidence_items": [
+    {
+      "evidence_id": "EV-BE-001",
+      "source_type": "HTML_EVIDENCE_BRIEF",
+      "source_path": "clients/blueedge/reports/tier1/lens_tier1_evidence_brief.html",
+      "evidence_hash": "8d18f52a5420578b9aa306cc9b39587fbc90dce750b24c9122a8fe7316ee219c",
+      "ingestion_timestamp": "2026-05-12T00:00:00.000Z",
+      "provenance_origin": "LENS_TIER1_STRUCTURAL_EVIDENCE",
+      "replay_hash": "8d18f52a5420578b9aa306cc9b39587fbc90dce750b24c9122a8fe7316ee219c",
+      "candidate_domains": ["DOMAIN-01", "DOMAIN-02", "DOMAIN-03", "DOMAIN-04", "DOMAIN-05", "DOMAIN-06", "DOMAIN-07", "DOMAIN-08", "DOMAIN-09", "DOMAIN-10", "DOMAIN-11", "DOMAIN-12", "DOMAIN-13", "DOMAIN-14", "DOMAIN-15", "DOMAIN-16", "DOMAIN-17"],
+      "structural_correlation_status": "PENDING_ANALYSIS",
+      "authority_state": "NON_AUTHORITATIVE_EVIDENCE",
+      "file_size_bytes": 34842,
+      "description": "Structural evidence brief covering all 17 BlueEdge domains with grounding status and evidence relationships"
+    },
+    {
+      "evidence_id": "EV-BE-002",
+      "source_type": "HTML_GAUGE_ARTIFACT",
+      "source_path": "app/gauge-product/public/vault/blueedge/run_01_authoritative_generated/artifacts/ART-01.html",
+      "evidence_hash": "647e08b7a097adea840492ef0eb075364cb50968fd3d7a62cb323631729ccd27",
+      "ingestion_timestamp": "2026-05-12T00:00:00.000Z",
+      "provenance_origin": "GAUGE_EVIDENCE_VAULT_ARTIFACT",
+      "replay_hash": "647e08b7a097adea840492ef0eb075364cb50968fd3d7a62cb323631729ccd27",
+      "candidate_domains": ["DOMAIN-01", "DOMAIN-02", "DOMAIN-03", "DOMAIN-04", "DOMAIN-05"],
+      "structural_correlation_status": "PENDING_ANALYSIS",
+      "authority_state": "NON_AUTHORITATIVE_EVIDENCE",
+      "file_size_bytes": 5425,
+      "description": "GAUGE state artifact (ART-01) containing dimensional scores, execution state, and confidence"
+    },
+    {
+      "evidence_id": "EV-BE-003",
+      "source_type": "HTML_DIAGNOSTIC_NARRATIVE",
+      "source_path": "clients/blueedge/reports/tier2/lens_tier2_diagnostic_narrative.html",
+      "evidence_hash": "ba3a782e4bca710780caf92948e0c3844744a49228d73a38a49bdc2051486405",
+      "ingestion_timestamp": "2026-05-12T00:00:00.000Z",
+      "provenance_origin": "LENS_TIER2_DIAGNOSTIC_EVIDENCE",
+      "replay_hash": "ba3a782e4bca710780caf92948e0c3844744a49228d73a38a49bdc2051486405",
+      "candidate_domains": ["DOMAIN-01", "DOMAIN-02", "DOMAIN-03", "DOMAIN-04", "DOMAIN-05", "DOMAIN-06", "DOMAIN-07", "DOMAIN-08", "DOMAIN-09", "DOMAIN-10", "DOMAIN-11", "DOMAIN-12", "DOMAIN-13", "DOMAIN-14", "DOMAIN-15", "DOMAIN-16", "DOMAIN-17"],
+      "structural_correlation_status": "PENDING_ANALYSIS",
+      "authority_state": "NON_AUTHORITATIVE_EVIDENCE",
+      "file_size_bytes": 48972,
+      "description": "Tier 2 diagnostic narrative with deep execution layer analysis, confidence ranges, and domain-level evidence"
+    },
+    {
+      "evidence_id": "EV-BE-004",
+      "source_type": "HTML_GAUGE_CLAIM",
+      "source_path": "app/gauge-product/public/vault/blueedge/run_01_authoritative_generated/claims/CLM-01.html",
+      "evidence_hash": "f32492ef7bcedfebbf209cbf46ae714475d3f531db33d87e683b867ee424a86f",
+      "ingestion_timestamp": "2026-05-12T00:00:00.000Z",
+      "provenance_origin": "GAUGE_EVIDENCE_VAULT_CLAIM",
+      "replay_hash": "f32492ef7bcedfebbf209cbf46ae714475d3f531db33d87e683b867ee424a86f",
+      "candidate_domains": ["DOMAIN-01"],
+      "structural_correlation_status": "PENDING_ANALYSIS",
+      "authority_state": "NON_AUTHORITATIVE_EVIDENCE",
+      "file_size_bytes": 4024,
+      "description": "GAUGE claim CLM-01: structural evidence claim with grounding assertion"
+    },
+    {
+      "evidence_id": "EV-BE-005",
+      "source_type": "HTML_GAUGE_CLAIM",
+      "source_path": "app/gauge-product/public/vault/blueedge/run_01_authoritative_generated/claims/CLM-02.html",
+      "evidence_hash": "7b2eb3307d2ae8bfc120cb269893958b4f25af8f0f705ef25d6947c192a1b2fe",
+      "ingestion_timestamp": "2026-05-12T00:00:00.000Z",
+      "provenance_origin": "GAUGE_EVIDENCE_VAULT_CLAIM",
+      "replay_hash": "7b2eb3307d2ae8bfc120cb269893958b4f25af8f0f705ef25d6947c192a1b2fe",
+      "candidate_domains": ["DOMAIN-02"],
+      "structural_correlation_status": "PENDING_ANALYSIS",
+      "authority_state": "NON_AUTHORITATIVE_EVIDENCE",
+      "file_size_bytes": 3894,
+      "description": "GAUGE claim CLM-02: structural evidence claim with grounding assertion"
+    }
+  ],
+  "summary": {
+    "total_items": 5,
+    "source_types": ["HTML_EVIDENCE_BRIEF", "HTML_GAUGE_ARTIFACT", "HTML_DIAGNOSTIC_NARRATIVE", "HTML_GAUGE_CLAIM"],
+    "total_size_bytes": 97157,
+    "all_non_authoritative": true,
+    "all_replay_safe": true,
+    "domains_covered": 17,
+    "structural_correlations_pending": 5
+  },
+  "governance": {
+    "no_semantic_mutation": true,
+    "no_authority_mutation": true,
+    "no_overlay_generation": true,
+    "no_qualification_mutation": true,
+    "no_lens_mutation": true,
+    "ingestion_only": true,
+    "additive_only": true,
+    "fail_closed": true
+  }
+}

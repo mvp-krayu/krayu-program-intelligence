@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "client": "fastapi",
+  "run_id": "run_02_oss_fastapi_pipeline",
+  "timestamp": "2026-05-10T13:34:25.300Z",
+  "overall_status": "NO_ASSESSMENT",
+  "coverage_ratio": 0,
+  "label_fidelity_ratio": 0,
+  "lineage_strength": 0,
+  "metrics": {
+    "entity_count": 0,
+    "topology_node_count": 123,
+    "domain_count": 9,
+    "entities_with_business_label": 0,
+    "entities_without_business_label": 0,
+    "domains_grounded": 0,
+    "domains_ungrounded": 0
+  },
+  "gaps": [
+    {
+      "gap_type": "crosswalk_absent",
+      "description": "Semantic continuity crosswalk absent — no continuity assessment possible",
+      "structural_reference": "canonical_topology_40_4",
+      "semantic_reference": "semantic_continuity_crosswalk",
+      "severity": "CRITICAL",
+      "remediation_pathway": "R2"
+    }
+  ],
+  "governance": {
+    "fail_closed": true,
+    "client_agnostic": true,
+    "no_semantic_fabrication": true,
+    "no_source_mutation": true
+  },
+  "provenance": {
+    "source_commit": "096c906c7ba1",
+    "operation": "assess_continuity",
+    "operation_version": "1.0",
+    "output_hash": "sha256:ed6a8a0f6b8c8128eccb36c36dcfdf548f605559724f8106cd5ed192ebbebb8a"
+  }
+}

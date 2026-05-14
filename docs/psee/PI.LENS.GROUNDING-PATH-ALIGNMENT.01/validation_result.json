@@ -1,0 +1,65 @@
+{
+  "contract_id": "PI.LENS.GROUNDING-PATH-ALIGNMENT.01",
+  "artifact": "validation_result",
+  "generated_date": "2026-05-01",
+
+  "pre_patch_state": {
+    "phase_1_result": "PASS",
+    "phase_2_result": "PASS",
+    "phase_3_result": "PASS",
+    "phase_4_result": "FAIL",
+    "phase_4_error": "readiness_gate.status= (expected PASS), ratio=0",
+    "phase_4_root_cause": "Orchestrator loaded grounding_state_v2.json (wrong run, wrong version); v2 has no readiness_gate field"
+  },
+
+  "patch_applied": {
+    "file": "scripts/pios/run_client_pipeline.py",
+    "function": "phase_04_ceu_grounding",
+    "changes": [
+      "Added run_dir: Path parameter",
+      "Primary path: run_dir / 'ceu' / 'grounding_state_v3.json' (run-derived)",
+      "Fallback path: source_manifest['grounding_state_path'] (legacy/BlueEdge)",
+      "Gate check: validation_status (generic) OR readiness_gate (BlueEdge)",
+      "Updated call site to pass run_dir"
+    ]
+  },
+
+  "post_patch_validation": {
+    "command": "python3 scripts/pios/run_client_pipeline.py --client fastapi --source source_01 --run-id run_02_oss_fastapi_pipeline",
+    "phase_1_result": "PASS",
+    "phase_2_result": "PASS",
+    "phase_3_result": "PASS",
+    "phase_4_result": "PASS",
+    "phase_4_output": "PASS: grounding PASS, grounding_ratio=0.9, coverage=HIGH",
+    "phase_5_result": "FAIL",
+    "phase_5_failure_cause": "KeyError: 'dom_layer_path' — pre-existing GAP-REG-03, out of scope"
+  },
+
+  "canonical_path_check": {
+    "path": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/ceu/grounding_state_v3.json",
+    "exists": true
+  },
+
+  "blueedge_compatibility": {
+    "generic_path_for_blueedge_exists": false,
+    "manifest_fallback_path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/grounding_state_v3.json",
+    "manifest_fallback_exists": true,
+    "backwards_compatible": true,
+    "note": "BlueEdge run has no ceu/ directory; falls back to manifest path with readiness_gate schema — both handled"
+  },
+
+  "scope_guards": {
+    "ceu_logic_changed": false,
+    "structural_scanner_changed": false,
+    "dom_generation_performed": false,
+    "blueedge_artifact_modified": false,
+    "fastapi_source_modified": false,
+    "new_artifacts_created": false
+  },
+
+  "json_validation": {
+    "this_file": "PASS"
+  },
+
+  "overall_validation": "PASS"
+}

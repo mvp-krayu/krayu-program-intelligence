@@ -1,0 +1,109 @@
+{
+  "contract_id": "PI.LENS.BLUEEDGE-REPORT-DIFF.01",
+  "generated_date": "2026-05-01",
+  "comparisons": [
+    {
+      "metric": "gauge_score",
+      "canonical": "60",
+      "generated": "60",
+      "match": true,
+      "source": "body text in tier1_narrative"
+    },
+    {
+      "metric": "decision_classification",
+      "canonical": "INVESTIGATE",
+      "generated": "INVESTIGATE",
+      "match": true,
+      "source": "decision_surface"
+    },
+    {
+      "metric": "confidence_band",
+      "canonical": "CONDITIONAL",
+      "generated": "CONDITIONAL",
+      "match": true,
+      "source": "decision_surface"
+    },
+    {
+      "metric": "active_signal_count",
+      "canonical": "3 (PSIG-001, PSIG-002, PSIG-004)",
+      "generated": "6 shown (PSIG-001 through PSIG-006)",
+      "match": false,
+      "source": "decision_surface"
+    },
+    {
+      "metric": "semantic_domain_count",
+      "canonical": "17",
+      "generated": "not presented as semantic domains (13 structural groups)",
+      "match": false,
+      "source": "tier1_evidence count cards"
+    },
+    {
+      "metric": "structurally_backed_domains",
+      "canonical": "5 / 17",
+      "generated": "0 / 13 (different schema)",
+      "match": false,
+      "source": "tier1_evidence count cards + tier2_diagnostic"
+    },
+    {
+      "metric": "semantic_only_domains",
+      "canonical": "12",
+      "generated": "not shown",
+      "match": false,
+      "source": "tier1_evidence"
+    },
+    {
+      "metric": "structural_node_count",
+      "canonical": "not shown in evidence cards",
+      "generated": "35 Total Nodes",
+      "match": false,
+      "source": "tier1_evidence count cards"
+    },
+    {
+      "metric": "pressure_zones_active",
+      "canonical": "1 (PZ-001)",
+      "generated": "0",
+      "match": false,
+      "source": "tier1_narrative focus_block + tier2_diagnostic"
+    },
+    {
+      "metric": "dom_anchor",
+      "canonical": "DOM-04 / backend_app_root",
+      "generated": "EMPTY",
+      "match": false,
+      "source": "tier1_narrative conclusion text"
+    },
+    {
+      "metric": "diagnostic_zones_covered",
+      "canonical": "1 of 1",
+      "generated": "0 of 0",
+      "match": false,
+      "source": "tier2_diagnostic"
+    },
+    {
+      "metric": "run_id_nav_links",
+      "canonical": "run_01_authoritative_generated (decision_surface); run_blueedge_productized_01_fixed (tier1)",
+      "generated": "run_blueedge_productized_01_fixed (all reports)",
+      "match": false,
+      "note": "canonical decision_surface was generated without --run-id (used default); generated uses --run-id run_blueedge_productized_01_fixed",
+      "source": "nav link hrefs"
+    },
+    {
+      "metric": "vault_run_id_displayed",
+      "canonical": "run_blueedge_productized_01 (tier2 field)",
+      "generated": "run_be_orchestrated_fixup_01 (tier2 field)",
+      "match": false,
+      "note": "read from vault_index.json via _resolve_vault_index_for_graph()",
+      "source": "tier2_diagnostic t2-field-value"
+    },
+    {
+      "metric": "graph_node_coordinates",
+      "canonical": "fixed xy coords embedded in HTML",
+      "generated": "different xy coords (force simulation, 18 nodes, 17 links, 458 ticks)",
+      "match": false,
+      "note": "non-deterministic force simulation — this will never match",
+      "source": "decision_surface canvas script"
+    }
+  ],
+  "metric_parity": "PARTIAL",
+  "notes": "Core assessment metrics (gauge=60, INVESTIGATE, CONDITIONAL) match. All structural/data metrics diverge due to data source mismatch."
+}

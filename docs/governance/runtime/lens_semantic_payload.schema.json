@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://krayu.local/schemas/lens_semantic_payload.schema.json",
+  "title": "LensSemanticPayload",
+  "description": "Canonical payload emitted by the LENS V2 generic semantic payload resolver. Stream: PI.LENS.V2.GENERIC-SEMANTIC-PAYLOAD-RESOLVER.01. Backed-by: docs/governance/Q02_GOVERNANCE_AMENDMENT.md and docs/governance/runtime/rendering_metadata.schema.json.",
+  "type": "object",
+  "required": [
+    "ok",
+    "payload_version",
+    "client",
+    "run_id",
+    "baseline_commit",
+    "binding_status",
+    "actor_registry",
+    "source_artifacts",
+    "unresolved_gaps",
+    "report_pack",
+    "governance_assertions",
+    "rendering_metadata",
+    "qualifier_summary",
+    "evidence_summary",
+    "topology_summary",
+    "trace_summary",
+    "dpsig_signal_summary"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "ok": { "type": "boolean" },
+    "payload_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$" },
+    "client": { "type": "string", "minLength": 1 },
+    "client_name": { "type": "string" },
+    "run_id": { "type": "string", "minLength": 1 },
+    "baseline_commit": { "type": "string" },
+    "baseline_governance_tag": { "type": "string" },
+    "binding_status": { "type": "string", "enum": ["LIVE", "REJECTED", "PARTIAL"] },
+
+    "qualifier_summary": {
+      "type": "object",
+      "required": ["qualifier_class"],
+      "properties": {
+        "qualifier_class": { "type": "string", "enum": ["Q-01", "Q-02", "Q-03", "Q-04"] },
+        "qualifier_class_compat": { "type": ["string", "null"] },
+        "semantic_projection_class": { "type": "string" },
+        "qualifier_label": { "type": "string" },
+        "qualifier_note": { "type": ["string", "null"] }
+      },
+      "additionalProperties": true
+    },
+
+    "actor_registry": {
+      "type": "object",
+      "description": "Map of canonical actor name → actor entry (15 entries).",
+      "patternProperties": {
+        "^[a-z_]+$": {
+          "type": "object",
+          "required": ["code", "name", "status"],
+          "properties": {
+            "code": { "type": "string", "pattern": "^[A-Z]{2}$" },
+            "name": { "type": "string" },
+            "status": {
+              "type": "string",
+              "enum": [
+                "HYDRATED", "HYDRATED_WITH_DERIVATION",
+                "PRESENTATION_LAYER_DERIVED", "PLACEHOLDER_BINDING_PENDING",
+                "BLOCKED_MISSING_ARTIFACT", "PARTIALLY_HYDRATED"
+              ]
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "source_artifacts": {
+      "type": "object",
+      "description": "Each entry records {path, ok} for an artifact loaded by the resolver.",
+      "patternProperties": {
+        "^[A-Za-z0-9_\\-]+$": {
+          "type": "object",
+          "required": ["path", "ok"],
+          "properties": {
+            "path": { "type": "string" },
+            "ok": { "type": "boolean" },
+            "valid": { "type": "boolean" },
+            "hash": { "type": ["string", "null"] }
+          },
+          "additionalProperties": true
+        }
+      }
+    },
+
+    "unresolved_gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "reason", "impact"],
+        "properties": {
+          "code": { "type": "string" },
+          "reason": { "type": "string" },
+          "impact": { "type": "string" },
+          "path": { "type": ["string", "null"] }
+        },
+        "additionalProperties": true
+      }
+    },
+
+    "report_pack": {
+      "type": "object",
+      "required": ["artifacts"],
+      "properties": {
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "binding_path"],
+            "properties": {
+              "id": { "type": "string" },
+              "binding_path": { "type": "string" }
+            },
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+
+    "governance_assertions": {
+      "type": "object",
+      "required": ["evidence_first", "no_source_mutation", "no_synthetic_telemetry", "no_ai_generation", "topology_native", "replay_safe"],
+      "properties": {
+        "evidence_first": { "type": "boolean", "const": true },
+        "no_source_mutation": { "type": "boolean", "const": true },
+        "no_synthetic_telemetry": { "type": "boolean", "const": true },
+        "no_ai_generation": { "type": "boolean", "const": true },
+        "topology_native": { "type": "boolean", "const": true },
+        "replay_safe": { "type": "boolean", "const": true },
+        "lane_a_read_only": { "type": "boolean" },
+        "lane_d_dpsig_read_only": { "type": "boolean" },
+        "baseline_commit": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+
+    "rendering_metadata": {
+      "type": "object",
+      "required": ["binding_status"],
+      "properties": {
+        "binding_status": {
+          "type": "string",
+          "enum": ["INFERENCE_PROHIBITION_ENFORCED", "INFERENCE_PROHIBITION_PLACEHOLDER_PENDING"]
+        },
+        "rendering_metadata_live": { "type": ["object", "null"] }
+      },
+      "additionalProperties": true
+    },
+
+    "evidence_summary": { "type": "object", "additionalProperties": true },
+    "topology_summary": { "type": "object", "additionalProperties": true },
+    "trace_summary": { "type": "object", "additionalProperties": true },
+    "dpsig_signal_summary": { "type": "object", "additionalProperties": true }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "contract_id": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.FIXUP.01",
+  "artifact": "selector_post_fixup_result",
+  "block": "BLOCK_G",
+  "generated_date": "2026-05-01",
+
+  "parity_status": "PARITY_PASS",
+  "selector_action": "UPDATED_TO_FIXUP_RUN",
+
+  "selector_path": "clients/blueedge/lens/selector/selector.json",
+  "selector_current_run": "run_be_orchestrated_fixup_01",
+
+  "run_classification": {
+    "run_be_orchestrated_fixup_01": "CANONICAL_ORCHESTRATED",
+    "run_blueedge_rerun_01": "CANONICAL_BASELINE_REFERENCE",
+    "run_be_orchestrated_01": "REJECTED_NON_CANONICAL"
+  },
+
+  "validation": {
+    "selector_current_run_is_canonical_orchestrated": true,
+    "baseline_reference_preserved": true,
+    "rejected_run_labeled": true
+  }
+}

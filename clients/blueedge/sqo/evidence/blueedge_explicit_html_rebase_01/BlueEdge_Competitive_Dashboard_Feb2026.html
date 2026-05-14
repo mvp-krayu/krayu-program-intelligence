@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blue Edge vs Competition — Competitive Intelligence Dashboard (Feb 2026)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050910;--bg2:#0A1018;--bg3:#0F1724;--bg4:#162033;
+  --card:#0C1420;--card2:#111D2D;
+  --bdr:#15243A;--bdr2:#1D3050;
+  --tx:#E8EDF5;--tx2:#8B9DB8;--tx3:#556B85;
+  --be:#06D6A0;--be2:#0AEFB7;
+  --sam:#F97316;--sam2:#FB923C;
+  --geo:#22C55E;--geo2:#4ADE80;
+  --ver:#EF4444;--ver2:#F87171;
+  --bl:#3B82F6;--pr:#A78BFA;--yl:#FBBF24;--tl:#22D3EE;--pk:#F472B6;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:3px}
+.hdr{position:sticky;top:0;z-index:100;background:rgba(5,9,16,0.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--bdr);padding:0 28px;display:flex;align-items:center;height:50px;gap:16px}
+.hdr .logo{font-size:14px;font-weight:800;background:linear-gradient(135deg,var(--be),var(--tl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;flex-shrink:0}
+.hdr .sep{width:1px;height:20px;background:var(--bdr2)}
+.hdr .vs{font-size:11px;color:var(--tx3);font-weight:500}
+.tabs{display:flex;gap:2px;margin-left:auto;overflow-x:auto}
+.tab{padding:14px 14px;font-size:11px;font-weight:500;color:var(--tx3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:inherit}
+.tab:hover{color:var(--tx)}.tab.active{color:var(--be2);border-bottom-color:var(--be);font-weight:600}
+.page{max-width:1440px;margin:0 auto;padding:24px 28px 60px}
+.pg-t{font-size:24px;font-weight:900;margin-bottom:3px}
+.pg-s{font-size:11px;color:var(--tx3);margin-bottom:20px}
+.view{display:none}.view.active{display:block}
+.card{background:var(--card);border:1px solid var(--bdr);border-radius:12px;overflow:hidden;margin-bottom:20px}
+.card-t{padding:14px 20px;border-bottom:1px solid var(--bdr);font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px}
+.card-b{padding:18px 20px}
+.badge{font-size:8.5px;padding:3px 9px;border-radius:8px;font-weight:600;letter-spacing:0.3px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin-bottom:20px}
+.stat{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:14px 16px}
+.stat-v{font-size:22px;font-weight:800;font-family:'JetBrains Mono',monospace}
+.stat-l{font-size:9px;color:var(--tx3);text-transform:uppercase;letter-spacing:0.6px;margin-top:2px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px}
+@media(max-width:1000px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.co-card{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:18px 20px;position:relative;overflow:hidden}
+.co-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.co-card.be::before{background:linear-gradient(90deg,var(--be),var(--tl))}
+.co-card.sam::before{background:var(--sam)}
+.co-card.geo::before{background:var(--geo)}
+.co-card.ver::before{background:var(--ver)}
+.co-name{font-size:16px;font-weight:800;margin-bottom:2px}
+.co-sub{font-size:10px;color:var(--tx3);margin-bottom:12px}
+.co-stats{display:flex;flex-direction:column;gap:6px}
+.co-row{display:flex;justify-content:space-between;align-items:center;font-size:11px}
+.co-row .k{color:var(--tx3)}.co-row .v{font-weight:600;font-family:'JetBrains Mono',monospace;font-size:10px}
+.matrix{width:100%;border-collapse:separate;border-spacing:0;font-size:11px}
+.matrix th{padding:10px 12px;text-align:left;font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--tx3);border-bottom:1px solid var(--bdr);position:sticky;top:0;background:var(--card);z-index:2}
+.matrix td{padding:8px 12px;border-bottom:1px solid rgba(21,36,58,0.5);vertical-align:middle}
+.matrix tr:hover td{background:rgba(6,214,160,0.03)}
+.matrix .cat{background:var(--bg3);font-weight:700;font-size:10px;letter-spacing:0.8px;color:var(--tl);text-transform:uppercase;padding:6px 12px}
+.matrix .feat{font-weight:500;min-width:180px}
+.matrix .star{color:var(--be);font-weight:700}
+.y{color:var(--be);font-weight:600}.p{color:var(--yl);font-weight:500}.n{color:var(--ver);font-weight:500;opacity:0.7}
+.u{background:rgba(6,214,160,0.06);font-weight:600;color:var(--be)}
+.adv{font-size:10px;color:var(--tl);font-weight:500}
+.bar-group{display:flex;flex-direction:column;gap:10px;padding:4px 0}
+.bar-row{display:flex;align-items:center;gap:10px}
+.bar-label{width:100px;font-size:10px;font-weight:600;text-align:right;flex-shrink:0}
+.bar-track{flex:1;height:22px;background:var(--bg3);border-radius:4px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:8px;font-size:9px;font-weight:700;color:rgba(255,255,255,0.9);transition:width 0.8s ease}
+.bar-val{width:50px;font-size:10px;font-weight:700;font-family:'JetBrains Mono',monospace;text-align:right;flex-shrink:0}
+.verdict{padding:16px 20px;border-radius:10px;margin:14px 0;font-size:12px;line-height:1.7}
+.verdict.win{background:rgba(6,214,160,0.06);border:1px solid rgba(6,214,160,0.15);color:var(--be)}
+.verdict.neutral{background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.15);color:var(--yl)}
+.verdict.risk{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);color:var(--ver)}
+.score{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.score.high{background:rgba(6,214,160,0.12);color:var(--be)}
+.score.med{background:rgba(251,191,36,0.12);color:var(--yl)}
+.score.low{background:rgba(239,68,68,0.12);color:var(--ver)}
+.filter-bar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.filter-btn{padding:6px 14px;font-size:10px;font-weight:600;border-radius:6px;border:1px solid var(--bdr);background:var(--bg3);color:var(--tx3);cursor:pointer;transition:all 0.15s;font-family:inherit}
+.filter-btn:hover{border-color:var(--bdr2);color:var(--tx)}
+.filter-btn.active{background:rgba(6,214,160,0.1);border-color:rgba(6,214,160,0.3);color:var(--be)}
+.upd{display:inline-block;padding:1px 5px;border-radius:4px;font-size:7.5px;font-weight:700;letter-spacing:0.3px;vertical-align:middle;margin-left:4px}
+.upd.new{background:rgba(6,214,160,0.15);color:var(--be)}
+.upd.chg{background:rgba(251,191,36,0.15);color:var(--yl)}
+.upd.comp{background:rgba(239,68,68,0.15);color:var(--ver)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fade{animation:fadeUp 0.4s ease forwards}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="logo">⬡ Blue Edge</div>
+  <div class="sep"></div>
+  <div class="vs">vs Samsara · Geotab · Verizon Connect — Updated Feb 2026</div>
+  <div class="tabs">
+    <div class="tab active" data-v="exec">Executive Summary</div>
+    <div class="tab" data-v="hw">Hardware</div>
+    <div class="tab" data-v="sw">Software Platform</div>
+    <div class="tab" data-v="ai">AI / ML</div>
+    <div class="tab" data-v="sec">Security</div>
+    <div class="tab" data-v="vert">Verticals</div>
+    <div class="tab" data-v="price">Pricing</div>
+    <div class="tab" data-v="matrix">Feature Matrix</div>
+  </div>
+</div>
+
+<div class="page">
+<div class="pg-t" id="pg-t">Competitive Intelligence Dashboard</div>
+<div class="pg-s" id="pg-s">Blue Edge SVG 2.0 vs Samsara · Geotab · Verizon Connect — Complete battlecard across 8 dimensions · Updated February 28, 2026</div>
+
+<!-- EXEC -->
+<div class="view active" id="v-exec">
+<div class="stats">
+  <div class="stat"><div class="stat-v" style="color:var(--be)">40+</div><div class="stat-l">Unique Features</div></div>
+  <div class="stat"><div class="stat-v" style="color:var(--tl)">161+</div><div class="stat-l">Telemetry Metrics</div></div>
+  <div class="stat"><div class="stat-v" style="color:var(--pr)">20</div><div class="stat-l">AI/ML Models</div></div>
+  <div class="stat"><div class="stat-v" style="color:var(--yl)">$750</div><div class="stat-l">SVG 2.0 Unit Price</div></div>
+  <div class="stat"><div class="stat-v" style="color:var(--be)">&lt;10ms</div><div class="stat-l">Edge AI Latency</div></div>
+  <div class="stat"><div class="stat-v" style="color:var(--pk)">6 Layers</div><div class="stat-l">Security Depth</div></div>
+  <div class="stat"><div class="stat-v" style="color:var(--tl)">20</div><div class="stat-l">Threat Categories</div></div>
+</div>
+<div class="g4" id="co-cards"></div>
+<div class="card">
+  <div class="card-t">📊 Overall Capability Scoring (0–100) <span class="upd chg">FEB 2026 UPDATE</span></div>
+  <div class="card-b" id="overall-bars"></div>
+</div>
+<div class="g2">
+  <div class="card">
+    <div class="card-t">🏆 Where Blue Edge Wins Decisively</div>
+    <div class="card-b" id="wins-list"></div>
+  </div>
+  <div class="card">
+    <div class="card-t">⚠️ Competitor Moves to Watch <span class="upd comp">THREATS</span></div>
+    <div class="card-b" id="gaps-list"></div>
+  </div>
+</div>
+<div class="verdict win">
+  <strong>💡 Bottom Line (Feb 2026):</strong> Blue Edge SVG 2.0 remains architecturally a generation ahead despite Geotab's next-gen GO Plus (Feb 2026) and Samsara's AI Multicam expansion. Geotab's GO Plus now claims "edge AI capable" but lacks a dedicated NPU — their edge processing uses general-purpose ARM cores vs Blue Edge's 2 TOPS dedicated neural processor. Samsara's AI Multicam adds 4 additional HD cameras but still requires cloud processing for inference (200ms+ latency). Blue Edge's combination of dedicated NPU (sub-10ms), native dual 4K cameras, HASI network security with 20 threat categories, post-quantum cryptography, blockchain identity, 17 external sensor protocols, and 3 native verticals creates a moat that competitors are not closing — they are adding cameras and AI branding but not redesigning silicon. The ~25% pricing premium ($750 vs $150-350 hardware) is justified by 40+ unique capabilities no competitor offers.
+</div>
+</div>
+
+<!-- HARDWARE -->
+<div class="view" id="v-hw">
+<div class="g4" id="hw-cards"></div>
+<div class="card">
+  <div class="card-t">🔧 Hardware Specification Comparison <span class="upd chg">GEOTAB GO PLUS FEB 2026</span></div>
+  <div class="card-b"><div id="hw-bars"></div></div>
+</div>
+<div class="card">
+  <div class="card-t">⚡ Hardware Feature Matrix</div>
+  <div class="card-b" style="overflow-x:auto"><table class="matrix" id="hw-matrix"></table></div>
+</div>
+<div class="verdict win"><strong>Verdict (Updated):</strong> Despite Geotab's Feb 2026 next-gen GO Plus announcing "edge AI capable" processing and satellite connectivity, the hardware gap remains decisive. Geotab's GO Plus uses improved ARM cores but still has NO dedicated NPU, NO native cameras (GO Focus Pro is a separate $300+ add-on), and NO post-quantum crypto. Samsara's AI Multicam adds 360° coverage but requires cloud processing. Blue Edge SVG 2.0 integrates NPU + dual 4K + TPM + 5G + 17 sensor protocols in a single device — competitors need 3-4 separate products to approach similar functionality, at higher combined cost.</div>
+</div>
+
+<!-- SOFTWARE -->
+<div class="view" id="v-sw">
+<div class="card">
+  <div class="card-t">💻 Platform Feature Coverage <span class="upd new">v3.23.0</span></div>
+  <div class="card-b" id="sw-bars"></div>
+</div>
+<div class="card">
+  <div class="card-t">📋 Module-by-Module Comparison</div>
+  <div class="card-b" style="overflow-x:auto"><table class="matrix" id="sw-matrix"></table></div>
+</div>
+<div class="verdict win"><strong>Verdict (v3.23.0):</strong> Blue Edge now ships 63 NestJS backend modules, 623 REST endpoints, and 61 frontend pages — the broadest coverage of any fleet platform. v3.23.0 adds external sensor integration (17 protocols, 20+ sensor types with HAZMAT alerting) and HASI network security (20 threat categories, MITRE ATT&CK, multi-vendor firewall rules). Geotab's marketplace (300+ apps) and Samsara's UX polish remain strengths, but neither offers native HAZMAT sensor alerting, fleet SOC cybersecurity, or blockchain audit.</div>
+</div>
+
+<!-- AI -->
+<div class="view" id="v-ai">
+<div class="card">
+  <div class="card-t">🧠 AI/ML Capability Comparison <span class="upd chg">COMPETITORS UPDATED</span></div>
+  <div class="card-b" id="ai-bars"></div>
+</div>
+<div class="card">
+  <div class="card-t">🤖 AI Model Portfolio</div>
+  <div class="card-b" style="overflow-x:auto"><table class="matrix" id="ai-matrix"></table></div>
+</div>
+<div class="verdict win"><strong>Verdict (Feb 2026):</strong> Geotab's ACE generative AI assistant is now GA (Feb 2026) with geographic reasoning and MCP connector planned — this narrows the gen AI gap slightly. However, ACE is cloud-only conversational AI, not on-device inference. Samsara's AI Safety Coaching automates driver feedback but remains cloud-dependent. Blue Edge deploys 20 AI/ML models across edge AND cloud. On-device NPU inference at &lt;10ms (vs competitors' 200ms+ cloud roundtrip) enables real-time ADAS, DMS, HASI threat detection, and anomaly scoring that cloud-only AI fundamentally cannot match for safety-critical applications.</div>
+</div>
+
+<!-- SECURITY -->
+<div class="view" id="v-sec">
+<div class="card">
+  <div class="card-t">🔒 Security Capability Depth <span class="upd new">HASI v3.23.0</span></div>
+  <div class="card-b" id="sec-bars"></div>
+</div>
+<div class="card">
+  <div class="card-t">🛡️ Security Feature Matrix</div>
+  <div class="card-b" style="overflow-x:auto"><table class="matrix" id="sec-matrix"></table></div>
+</div>
+<div class="verdict win"><strong>Verdict (v3.23.0):</strong> Blue Edge now has 6 security layers — adding HASI Network Security (v3.23.0) as a dedicated fleet SOC capability that no competitor offers. HASI provides 20 threat categories with MITRE ATT&CK mapping, GeoIP enrichment, confidence scoring, and multi-vendor firewall rule deployment (iptables, Cisco ACL, Palo Alto, Fortinet). Combined with Hardware RoT (TPM 2.0), Post-Quantum Crypto (Kyber + Dilithium), Blockchain Chain of Custody, FHE privacy, and Continuous Attestation — this is the deepest security stack in the fleet industry by a decisive margin. Geotab's GO Plus claims "government-grade security" but provides no details on specific cryptographic capabilities.</div>
+</div>
+
+<!-- VERTICALS -->
+<div class="view" id="v-vert">
+<div class="card">
+  <div class="card-t">🏢 Vertical-Specific Capability <span class="upd new">SENSORS v3.23</span></div>
+  <div class="card-b" id="vert-bars"></div>
+</div>
+<div class="card">
+  <div class="card-t">🛢️🚌🚕 Vertical Feature Matrix</div>
+  <div class="card-b" style="overflow-x:auto"><table class="matrix" id="vert-matrix"></table></div>
+</div>
+<div class="verdict win"><strong>Verdict (v3.23.0):</strong> Blue Edge's vertical advantage has widened with v3.23.0 external sensor integration. Tanker operations now have native H2S/CO/CH4 gas leak detection, oil pressure monitoring, tank level sensors, and 3-level HAZMAT escalation with emergency services notification — all via 17 supported protocols. Combined with blockchain custody transfer, this creates the most comprehensive hazmat fleet management solution available. Competitors remain horizontal-only platforms that require expensive third-party sensor integrations.</div>
+</div>
+
+<!-- PRICING -->
+<div class="view" id="v-price">
+<div class="card">
+  <div class="card-t">💰 Pricing Comparison (per vehicle/month) <span class="upd chg">FEB 2026 PRICES</span></div>
+  <div class="card-b" id="price-content"></div>
+</div>
+<div class="verdict neutral"><strong>Pricing Position (Feb 2026):</strong> Blue Edge commands a 20-30% premium vs competitors. With updated v3.23.0, the premium is now justified by 40+ unique features including HASI network security (fleet SOC), 17 external sensor protocols, HAZMAT alerting, dedicated 2 TOPS NPU, native dual 4K cameras, blockchain identity, and post-quantum crypto. Samsara's real-world pricing has crept to $40-60/vehicle/month with all add-ons (AI Multicam alone adds $15-25/mo), narrowing the effective premium to ~10-15%. Geotab GO Plus pricing not yet announced but "edge AI capable" hardware will likely command premium over current GO9+. At scale (10K+ vehicles), Blue Edge volume discounts bring effective premium below 12%.</div>
+</div>
+
+<!-- FULL MATRIX -->
+<div class="view" id="v-matrix">
+<div class="filter-bar" id="cat-filters"></div>
+<div class="card">
+  <div class="card-t">📋 Complete Feature Matrix (75+ Features) <span class="badge" style="background:rgba(6,214,160,0.12);color:var(--be)">★ = Blue Edge Unique</span> <span class="upd new">v3.23.0</span></div>
+  <div class="card-b" style="overflow-x:auto;max-height:70vh;"><table class="matrix" id="full-matrix"></table></div>
+</div>
+</div>
+
+</div>
+
+<script>
+// ═══ UPDATED DATA — FEB 2026 ═══
+const CO = [
+  {id:'be',name:'Blue Edge SVG 2.0',sub:'Dubai/Geneva · Proprietary HW+SW · 3 Verticals · v3.23.0',color:'var(--be)',
+   stats:{founded:'2023',hq:'Dubai, UAE / Geneva, CH',hw:'$750',sw:'$65-95/mo ARPV',total:'~$80/v/mo',modules:'63 NestJS modules',endpoints:'623 REST endpoints',pages:'61 React pages',verticals:'Tanker · Bus · Taxi',tech:'NXP i.MX 95 · 2T NPU · 5G · PQ-Kyber · HASI'}},
+  {id:'sam',name:'Samsara',sub:'San Francisco · Cloud + Camera HW · Horizontal · AI Multicam 2025',color:'var(--sam)',
+   stats:{founded:'2015',hq:'San Francisco, CA',hw:'$99-148 + add-ons',sw:'$27-60/mo (all-in)',total:'~$50-60/v/mo',dataScale:'80B+ miles/yr · 120B+ API calls',fleet:'250K+ customers',verticals:'Horizontal (all)',tech:'Basic ARM · 4G LTE · AI Multicam',newFeb26:'AI Multicam 360° · Weather Intel · Safety Coaching · Wearable'}},
+  {id:'geo',name:'Geotab',sub:'Ontario · Data + OEM HW · Horizontal · Next-Gen GO Plus Feb 2026',color:'var(--geo)',
+   stats:{founded:'2000',hq:'Oakville, Canada',hw:'~$150-250 (GO Plus TBD)',sw:'$25-40/mo',total:'~$48/v/mo',dataScale:'100B data points/day · 5M+ subs',fleet:'55K+ customers · 5M+ vehicles',verticals:'Horizontal (all)',tech:'Next-Gen ARM · Edge AI claims · BT · IOX',newFeb26:'GO Plus edge AI · GO Focus Pro 5-cam · ACE GA · Satellite · MCP'}},
+  {id:'ver',name:'Verizon Connect',sub:'Atlanta · Telecom + Basic HW · Horizontal · Reveal Platform',color:'var(--ver)',
+   stats:{founded:'2018 (rebrand)',hq:'Atlanta, GA',hw:'~$200-300',sw:'$23.50-35/mo',total:'~$43/v/mo',fleet:'~330K vehicles',verticals:'Horizontal (all)',tech:'Basic ARM · 4G LTE · Reveal platform',newFeb26:'No major hardware updates'}}
+];
+
+const DIMS = [
+  {name:'Hardware Architecture',be:97,sam:45,geo:52,ver:35},
+  {name:'Edge AI / NPU',be:95,sam:22,geo:30,ver:10},
+  {name:'Security Depth',be:98,sam:40,geo:38,ver:30},
+  {name:'Network Security (SOC)',be:95,sam:5,geo:5,ver:0},
+  {name:'Blockchain / DLT',be:95,sam:0,geo:0,ver:0},
+  {name:'External Sensors (IoT)',be:95,sam:30,geo:25,ver:15},
+  {name:'Telemetry Breadth',be:95,sam:62,geo:58,ver:50},
+  {name:'Tanker Operations',be:95,sam:15,geo:10,ver:5},
+  {name:'Bus Operations',be:90,sam:20,geo:15,ver:10},
+  {name:'Taxi Operations',be:85,sam:10,geo:5,ver:5},
+  {name:'Camera / Video AI',be:90,sam:92,geo:75,ver:65},
+  {name:'Platform UX Polish',be:78,sam:90,geo:72,ver:65},
+  {name:'Marketplace / Ecosystem',be:42,sam:72,geo:95,ver:50},
+  {name:'Installed Base / Brand',be:10,sam:82,geo:95,ver:75},
+  {name:'Gen AI / Conversational',be:85,sam:20,geo:55,ver:5},
+  {name:'API / Integration',be:82,sam:85,geo:92,ver:60},
+];
+
+const WINS = [
+  {t:'Dedicated 2 TOPS Neural Processing Unit',d:'NXP i.MX 95 with hardware NPU for sub-10ms edge inference. Geotab GO Plus claims "edge AI capable" but uses general-purpose ARM — no dedicated NPU silicon. Samsara has no edge processing at all.'},
+  {t:'HASI Fleet SOC — Network Security (v3.23.0 NEW)',d:'20 threat categories with MITRE ATT&CK mapping, GeoIP enrichment, multi-vendor firewall rules (iptables/Cisco/PaloAlto/Fortinet). Zero competitors offer vehicle network security operations.'},
+  {t:'17 External Sensor Protocols (v3.23.0 NEW)',d:'CAN FD, J1939, Modbus, GPIO, I2C, SPI, BLE 5.0, Zigbee, LoRa, MQTT, and more. Native HAZMAT sensor integration with 3-level escalation. Competitors support basic OBD-II only.'},
+  {t:'Post-Quantum Cryptography',d:'CRYSTALS-Kyber key exchange + Dilithium signatures. Zero competitors have quantum-resistant security. Geotab GO Plus claims "government-grade" but specifies no PQ crypto.'},
+  {t:'Blockchain Device Identity & Chain of Custody',d:'DeviceNFT (ERC-721), VehicleNFT, immutable audit trail, smart contracts, state channels. No competitor offers on-chain fleet management.'},
+  {t:'3 Native Fleet Verticals',d:'Tanker (HAZMAT/ADR + v3.23.0 gas/pressure/level sensors), Bus (PIS/GTFS/L-STOP), Taxi (surge/dispatch). Built-in, not third-party. Now enhanced with 20+ IoT sensor types.'},
+  {t:'Native Dual 4K Cameras (Included)',d:'Front + cabin at 4K HDR included in $750 unit. Samsara AI Multicam charges $15-25/mo EXTRA per camera; Geotab GO Focus Pro is a separate $300+ accessory.'},
+  {t:'FHE Privacy Analytics',d:'Fully Homomorphic Encryption enables computation on encrypted fleet data for data marketplace monetization. Unique in the industry.'},
+  {t:'5G Native Connectivity',d:'Sub-6GHz + mmWave vs all competitors still on 4G LTE. 10x bandwidth for real-time video and high-frequency telemetry.'},
+];
+
+const GAPS = [
+  {t:'🔴 Geotab GO Plus — "Edge AI" Claims (Feb 2026)',d:'Geotab now markets "edge AI capable" hardware. While no dedicated NPU, improved ARM processing + ACE AI assistant (now GA) creates competitive narrative. Key counter: ask for NPU TOPS specs — they have none.'},
+  {t:'🔴 Geotab ACE Gen AI — Now GA with MCP Connector',d:'ACE is generally available with geographic reasoning, multilingual, and plans for MCP connector (Q1 2026) enabling Claude/Gemini integration. Blue Edge should accelerate AI Companion rollout.'},
+  {t:'🔴 Samsara AI Multicam — 360° + Real-time Alerts',d:'Up to 4 additional HD cameras for 360° view with pedestrian/cyclist alerts. Strong safety narrative. Counter: cloud-dependent (200ms+), no on-device inference.'},
+  {t:'🟡 Geotab GO Focus Pro — 5-Camera AI Dash Cam',d:'New AI dash cam supporting 5 auxiliary cameras, continuous inference for traffic-light violations, collision risk, vulnerable road users. Separate product from GO Plus.'},
+  {t:'🟡 Geotab Satellite Connectivity (GO Anywhere)',d:'Starlink Direct to Cell via carrier partners for remote areas. Asset tracking in areas without cellular. Blue Edge has 5G but not satellite fallback.'},
+  {t:'🟡 Market Scale — Geotab at 55K Customers, 5M+ Devices',d:'Geotab now processes 100B data points/day from 5M+ subscriptions. Samsara has 250K+ customers, 80B+ miles data. Blue Edge must prove at scale.'},
+  {t:'🟡 ELD/HOS Certification Gap',d:'Samsara and Geotab have FMCSA-certified ELD. Blue Edge needs certification for North American market entry.'},
+  {t:'🟡 Samsara Wearable — Worker Safety',d:'New wearable device for frontline worker protection. Expanding beyond vehicle to worker safety. Different market segment but brand halo effect.'},
+];
+
+const HW_SPECS = [
+  {spec:'CPU',be:'6× A55 @ 2.3GHz (i.MX 95)',sam:'Dual-core ARM',geo:'Next-Gen ARM (improved)',ver:'Basic ARM',beV:95,samV:35,geoV:40,verV:20},
+  {spec:'RAM',be:'16GB LPDDR5',sam:'~1GB',geo:'~1-2GB (est.)',ver:'~1GB',beV:98,samV:20,geoV:18,verV:20},
+  {spec:'Storage',be:'128GB eMMC',sam:'~4GB',geo:'~4-8GB',ver:'~4GB',beV:97,samV:15,geoV:18,verV:15},
+  {spec:'AI Accelerator',be:'2 TOPS Dedicated NPU',sam:'None',geo:'None (ARM cores)',ver:'None',beV:95,samV:0,geoV:12,verV:0},
+  {spec:'Cellular',be:'5G Sub-6 + mmWave',sam:'4G LTE Cat 4',geo:'4G LTE (satellite-ready)',ver:'4G LTE Cat 4',beV:95,samV:50,geoV:45,verV:50},
+  {spec:'Wi-Fi',be:'Wi-Fi 6E',sam:'Wi-Fi 5',geo:'Wi-Fi (hotspot new)',ver:'Wi-Fi 4',beV:95,samV:50,geoV:42,verV:30},
+  {spec:'CAN Bus',be:'CAN-FD @ 8Mbps + J1939',sam:'1× CAN 2.0',geo:'CAN + improved diag',ver:'1× CAN 2.0',beV:95,samV:30,geoV:38,verV:30},
+  {spec:'Cameras',be:'Native Dual 4K HDR',sam:'AI Multicam 4×HD add-on',geo:'GO Focus Pro 5×HD add-on',ver:'Optional 1080p',beV:95,samV:60,geoV:55,verV:40},
+  {spec:'Security HW',be:'TPM 2.0 + PQ Crypto',sam:'Basic crypto',geo:'"Gov-grade" (unspec)',ver:'None',beV:98,samV:25,geoV:28,verV:10},
+  {spec:'Sensors (External)',be:'17 protocols native',sam:'Basic (temp, door)',geo:'IOX add-ons',ver:'Basic',beV:95,samV:25,geoV:30,verV:15},
+  {spec:'GNSS',be:'Multi-band multi-const.',sam:'Single-band',geo:'Enhanced accuracy',ver:'Single-band',beV:92,samV:50,geoV:55,verV:50},
+];
+
+const HW_FEATURES = [
+  {cat:'PROCESSOR & COMPUTE'},
+  {f:'Dedicated NPU',be:'✔ 2 TOPS Neutron',sam:'✗',geo:'✗ (ARM only)',ver:'✗',u:1,a:'Real-time edge AI'},
+  {f:'GPU',be:'✔ Mali-G310 MP2',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Video processing'},
+  {f:'16GB LPDDR5',be:'✔',sam:'✗ ~1GB',geo:'✗ ~1-2GB',ver:'✗ ~1GB',u:1,a:'8-16x competition'},
+  {f:'128GB eMMC Storage',be:'✔',sam:'✗ ~4GB',geo:'✗ ~4-8GB',ver:'✗ ~4GB',u:1,a:'Local data + AI models'},
+  {cat:'CONNECTIVITY'},
+  {f:'5G mmWave + Sub-6',be:'✔',sam:'✗ 4G LTE',geo:'✗ 4G LTE',ver:'✗ 4G LTE',u:1,a:'10x bandwidth'},
+  {f:'Wi-Fi 6E',be:'✔',sam:'✗ Wi-Fi 5',geo:'○ Wi-Fi hotspot (new)',ver:'✗ Wi-Fi 4',u:1,a:'3x wireless BW'},
+  {f:'BLE 5.0+',be:'✔ BT 5.4',sam:'○ BT 5.0',geo:'○ BT native (new)',ver:'○ BT 4.2',a:'Latest standard'},
+  {f:'Satellite Fallback',be:'✗',sam:'✗',geo:'✔ Starlink DtC (new)',ver:'✗',a:'Geotab leads here'},
+  {f:'CAN FD 8Mbps + J1939',be:'✔ Native',sam:'○ CAN 2.0',geo:'○ Enhanced (new)',ver:'○ CAN 2.0',a:'4x speed + heavy-duty'},
+  {cat:'CAMERAS & SENSORS'},
+  {f:'Native Dual 4K Cameras',be:'✔ Included',sam:'✗ (add-on HD)',geo:'✗ (add-on HD)',ver:'✗ (add-on)',u:1,a:'No extra cost'},
+  {f:'Multi-Camera Support',be:'✔ 2× 4K native',sam:'✔ 4× HD add-on (new)',geo:'✔ 5× HD add-on (new)',ver:'○ 1× optional',a:'BE: included, others: extra cost'},
+  {f:'17 Sensor Protocols',be:'✔ CAN/Modbus/I2C/SPI/BLE/LoRa...',sam:'✗ Basic only',geo:'○ IOX add-ons',ver:'✗',u:1,a:'Broadest IoT support'},
+  {f:'HAZMAT/ATEX Sensors',be:'✔ H2S/CO/CH4/LPG',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Explosion prevention'},
+  {f:'9-axis IMU',be:'✔',sam:'○ 3-axis',geo:'○ Enhanced (new)',ver:'○ 3-axis',a:'Full motion sensing'},
+  {cat:'SECURITY HARDWARE'},
+  {f:'Discrete TPM 2.0',be:'✔',sam:'○ Firmware',geo:'○ "Gov-grade" (new)',ver:'✗',u:1,a:'Hardware Root of Trust'},
+  {f:'Post-Quantum Crypto',be:'✔ Kyber+Dilithium',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Quantum-resistant'},
+  {f:'Anti-Tamper',be:'✔ Mesh sensor',sam:'✗',geo:'○ "Last gasp" (new)',ver:'✗',a:'BE: physical mesh; Geotab: unplug alert'},
+  {cat:'PHYSICAL'},
+  {f:'Operating Temp',be:'-40°C to +85°C',sam:'-30°C to +70°C',geo:'-40°C to +85°C',ver:'-20°C to +60°C',a:'Industrial grade'},
+  {f:'IP Rating',be:'IP67',sam:'IP66',geo:'IP67',ver:'IP54',a:'Full submersion'},
+  {f:'AEC-Q100',be:'✔',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Automotive qualified'},
+];
+
+const SW_DIMS = [
+  {name:'Fleet Tracking',be:90,sam:95,geo:88,ver:80},
+  {name:'Trip Management',be:90,sam:85,geo:82,ver:75},
+  {name:'Alert Engine',be:95,sam:85,geo:82,ver:70},
+  {name:'Geofence',be:95,sam:82,geo:78,ver:65},
+  {name:'Maintenance',be:90,sam:82,geo:85,ver:65},
+  {name:'Driver Scoring',be:95,sam:78,geo:68,ver:55},
+  {name:'Video / Camera',be:90,sam:94,geo:72,ver:70},
+  {name:'Compliance/ELD',be:70,sam:95,geo:92,ver:80},
+  {name:'Reporting',be:85,sam:90,geo:95,ver:75},
+  {name:'API Platform',be:82,sam:85,geo:95,ver:60},
+  {name:'Mobile App',be:75,sam:95,geo:78,ver:70},
+  {name:'Multi-Tenant SaaS',be:95,sam:85,geo:82,ver:70},
+  {name:'External Sensors',be:95,sam:30,geo:35,ver:15},
+  {name:'Network Security',be:95,sam:5,geo:5,ver:0},
+];
+
+const SW_FEATURES = [
+  {cat:'CORE PLATFORM'},
+  {f:'Backend Modules',be:'✔ 63 NestJS',sam:'~30',geo:'~25',ver:'~20',a:'Most comprehensive'},
+  {f:'REST Endpoints',be:'✔ 623+',sam:'~200',geo:'~300 (SDK)',ver:'~100',a:'Broadest API surface'},
+  {f:'Frontend Pages',be:'✔ 61 React',sam:'~40',geo:'~30',ver:'~25',a:'Full operational coverage'},
+  {f:'WebSocket Real-time',be:'✔',sam:'✔',geo:'○',ver:'○',a:'Sub-second updates'},
+  {f:'PWA Offline',be:'✔',sam:'○',geo:'✗',ver:'✗',u:1,a:'Works without network'},
+  {f:'RTL Arabic + AED',be:'✔',sam:'○',geo:'○',ver:'✗',u:1,a:'GCC market native'},
+  {cat:'v3.23.0 NEW MODULES'},
+  {f:'★ SensorsModule (17 protocols)',be:'✔ 14 endpoints',sam:'✗',geo:'○ IOX limited',ver:'✗',u:1,a:'CAN/Modbus/BLE/LoRa/I2C...'},
+  {f:'★ HasiModule (Fleet SOC)',be:'✔ 11 endpoints',sam:'✗',geo:'✗',ver:'✗',u:1,a:'20 threats, MITRE ATT&CK'},
+  {f:'★ HAZMAT Escalation (3-level)',be:'✔ Emergency notify',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Gas leak → escalation → 911'},
+  {f:'★ Multi-vendor Firewall Rules',be:'✔ iptables/Cisco/Palo/Fort',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Auto-generated + deployable'},
+  {cat:'ADVANCED CAPABILITIES'},
+  {f:'★ Digital Twin',be:'✔ Monte Carlo sim',sam:'✗',geo:'✗',ver:'✗',u:1,a:'What-if simulation'},
+  {f:'★ Blockchain Audit Trail',be:'✔ Smart contracts',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Immutable records'},
+  {f:'★ Data Monetization Marketplace',be:'✔ FHE privacy',sam:'✗',geo:'○ Marketplace',ver:'✗',u:1,a:'Revenue from encrypted data'},
+  {f:'★ SVG Provisioning (8-step)',be:'✔ 28 endpoints',sam:'✗',geo:'○ Basic',ver:'✗',u:1,a:'TPM + blockchain identity'},
+  {f:'Gen AI Assistant',be:'✔ NLQ → SQL',sam:'○ "Sam" chatbot',geo:'✔ ACE GA (new)',ver:'✗',a:'Geotab ACE now competitive'},
+  {f:'20+ RBAC Roles',be:'✔',sam:'○ ~10',geo:'○ ~8',ver:'○ ~6',a:'Granular access'},
+];
+
+const AI_DIMS = [
+  {name:'Edge AI Inference (NPU)',be:95,sam:15,geo:25,ver:5},
+  {name:'Predictive Maintenance',be:90,sam:52,geo:48,ver:25},
+  {name:'Driver Behavior/Scoring',be:95,sam:75,geo:55,ver:40},
+  {name:'Anomaly Detection',be:90,sam:42,geo:38,ver:20},
+  {name:'Computer Vision (ADAS/DMS)',be:95,sam:65,geo:50,ver:40},
+  {name:'Route Optimization',be:80,sam:72,geo:62,ver:50},
+  {name:'Digital Twin / Simulation',be:90,sam:10,geo:5,ver:0},
+  {name:'Gen AI / NLQ',be:85,sam:20,geo:55,ver:0},
+  {name:'Network Threat AI (HASI)',be:95,sam:0,geo:0,ver:0},
+  {name:'Safety Coaching AI',be:82,sam:85,geo:60,ver:45},
+];
+
+const AI_FEATURES = [
+  {cat:'EDGE AI (ON-DEVICE)'},
+  {f:'★ Dedicated NPU <10ms',be:'✔ 2 TOPS Neutron',sam:'✗ Cloud only',geo:'○ "Edge AI" ARM (new)',ver:'✗',u:1,a:'Dedicated silicon vs ARM'},
+  {f:'★ ADAS (FCW/LDW/BSA)',be:'✔ On-device 4K',sam:'○ Cloud HD',geo:'○ GO Focus Pro AI (new)',ver:'○ Cloud',a:'4K on-device vs HD cloud'},
+  {f:'★ DMS Fatigue/Distraction',be:'✔ On-device',sam:'○ Cloud AI',geo:'○ Focus Pro (new)',ver:'○ Cloud',a:'Works offline'},
+  {f:'★ HASI Threat Detection',be:'✔ On-device + cloud AI',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Network security AI'},
+  {f:'★ Rollover Risk (Physics NN)',be:'✔ LSTM edge',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Tanker-specific'},
+  {f:'★ Leak Detection',be:'✔ Autoencoder',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Environmental protection'},
+  {cat:'CLOUD AI'},
+  {f:'Predictive Maintenance',be:'✔ 7 components',sam:'○ Basic',geo:'○ Improved (new)',ver:'✗',a:'25-40% cost reduction'},
+  {f:'AI Safety Coaching',be:'✔ Scoring + coaching',sam:'✔ Automated (new)',geo:'○ Focus Pro scoring (new)',ver:'○ Basic',a:'Samsara now automates'},
+  {f:'★ DWVS Scoring (Welford)',be:'✔ Insurance-grade',sam:'○ Basic score',geo:'○ Basic',ver:'○ Basic',u:1,a:'CV² algorithm'},
+  {f:'★ Digital Twin',be:'✔ Monte Carlo',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Fleet simulation'},
+  {cat:'GENERATIVE AI'},
+  {f:'★ NLQ → SQL Fleet Queries',be:'✔ Claude/Bedrock',sam:'✗',geo:'✔ ACE GA (new)',ver:'✗',a:'Both now offer; BE more flexible'},
+  {f:'★ Incident Analysis (Multimodal)',be:'✔ Video+telemetry LLM',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Multi-modal reasoning'},
+  {f:'Gen AI Assistant',be:'✔ AI Companion',sam:'○ "Sam" basic',geo:'✔ ACE + MCP (new)',ver:'✗',a:'Geotab ACE now GA'},
+  {f:'AI + External Tool Integration',be:'✔ API-based',sam:'○ HappyRobot partner',geo:'✔ MCP connector (Q1)',ver:'✗',a:'Geotab plans MCP'},
+];
+
+const SEC_DIMS = [
+  {name:'Hardware Root of Trust',be:98,sam:25,geo:30,ver:10},
+  {name:'Post-Quantum Crypto',be:95,sam:0,geo:0,ver:0},
+  {name:'Blockchain / DLT',be:95,sam:0,geo:0,ver:0},
+  {name:'Network Security (HASI)',be:95,sam:0,geo:0,ver:0},
+  {name:'PKI / Certificates',be:95,sam:50,geo:45,ver:35},
+  {name:'Encryption (Transit)',be:95,sam:75,geo:72,ver:65},
+  {name:'Encryption (At Rest)',be:95,sam:70,geo:68,ver:60},
+  {name:'Tamper Detection',be:95,sam:20,geo:30,ver:10},
+  {name:'Firewall Deployment',be:95,sam:0,geo:0,ver:0},
+  {name:'Compliance (UN R155)',be:90,sam:30,geo:28,ver:20},
+];
+
+const SEC_FEATURES = [
+  {cat:'HARDWARE SECURITY'},
+  {f:'★ Discrete TPM 2.0',be:'✔ Hardware RoT',sam:'○ Firmware TPM',geo:'○ "Gov-grade" (new)',ver:'✗',u:1,a:'Physical key storage'},
+  {f:'★ EdgeLock SE050',be:'✔ FIPS 140-3',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Certified secure element'},
+  {f:'★ Anti-Tamper Mesh',be:'✔ Physical detection',sam:'✗',geo:'○ "Last gasp" alert (new)',ver:'✗',u:1,a:'Mesh vs unplug-detect'},
+  {f:'Secure Boot',be:'✔ Measured chain',sam:'○ Basic',geo:'○ Improved (new)',ver:'○ Basic',a:'Full chain verification'},
+  {cat:'CRYPTOGRAPHY'},
+  {f:'★ PQ-Kyber Key Exchange',be:'✔',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Quantum-resistant KEM'},
+  {f:'★ PQ-Dilithium Signatures',be:'✔',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Quantum-resistant sigs'},
+  {f:'★ FHE Analytics',be:'✔ CKKS/BFV',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Compute on encrypted data'},
+  {f:'★ Zero-Knowledge Proofs',be:'✔',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Verify without revealing'},
+  {f:'TLS 1.3 / mTLS',be:'✔',sam:'✔',geo:'✔',ver:'○',a:'Standard transport'},
+  {cat:'NETWORK SECURITY (v3.23.0 NEW)'},
+  {f:'★ HASI On-Device Analysis',be:'✔ 60+ protocols · 9 methods',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Native network security'},
+  {f:'★ 20 Threat Categories',be:'✔ C2/CAN inject/Exfil/Scan...',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Vehicle-specific threats'},
+  {f:'★ MITRE ATT&CK Mapping',be:'✔ Tactic + Technique IDs',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Industry-standard framework'},
+  {f:'★ Multi-vendor Firewall Rules',be:'✔ iptables/Cisco/Palo/Fort',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Auto-gen + fleet deploy'},
+  {f:'★ GeoIP + ASN Enrichment',be:'✔ Source country/org',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Threat intelligence'},
+  {f:'★ AI Threat Summarization',be:'✔ Claude-powered',sam:'✗',geo:'✗',ver:'✗',u:1,a:'LLM analysis of captures'},
+  {cat:'BLOCKCHAIN & IDENTITY'},
+  {f:'★ DeviceNFT (ERC-721)',be:'✔',sam:'✗',geo:'✗',ver:'✗',u:1,a:'On-chain device identity'},
+  {f:'★ Smart Contracts',be:'✔ 5 contracts',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Automated compliance'},
+  {f:'★ Chain of Custody',be:'✔ 7 anchors',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Immutable audit trail'},
+  {cat:'COMPLIANCE'},
+  {f:'★ UN R155 Cybersecurity',be:'✔',sam:'○ Partial',geo:'○ Partial',ver:'○ Partial',u:1,a:'Full automotive cyber'},
+  {f:'★ FIPS 140-3',be:'✔ Level 2',sam:'✗',geo:'✔ FedRAMP (new)',ver:'✗',a:'Geotab now FedRAMP'},
+  {f:'★ ISO 26262 ASIL-B',be:'✔',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Functional safety'},
+];
+
+const VERT_DIMS = [
+  {name:'Tanker: HAZMAT Sensors',be:95,sam:15,geo:10,ver:5},
+  {name:'Tanker: Custody Transfer',be:95,sam:0,geo:0,ver:0},
+  {name:'Tanker: Gas Leak Detection',be:95,sam:0,geo:0,ver:0},
+  {name:'Tanker: Compliance (ADR)',be:90,sam:10,geo:5,ver:0},
+  {name:'Bus: APC Passenger Count',be:90,sam:15,geo:10,ver:5},
+  {name:'Bus: Transit Signal Priority',be:85,sam:0,geo:0,ver:0},
+  {name:'Bus: GTFS/L-STOP',be:85,sam:20,geo:15,ver:10},
+  {name:'Taxi: Surge Pricing',be:85,sam:0,geo:0,ver:0},
+  {name:'Taxi: Dispatch + Sessions',be:80,sam:10,geo:5,ver:5},
+  {name:'Cold Chain (Temperature)',be:90,sam:55,geo:30,ver:20},
+];
+
+const VERT_FEATURES = [
+  {cat:'🛢️ TANKER OPERATIONS (Enhanced v3.23.0)'},
+  {f:'★ H2S/CO/CH4/LPG Gas Sensors',be:'✔ CAN/Modbus/4-20mA (new)',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Explosion prevention'},
+  {f:'★ Oil Pressure Monitoring',be:'✔ J1939 PGN (new)',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Real-time cargo safety'},
+  {f:'★ Tank Level Sensors',be:'✔ Ultrasonic/analog (new)',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Loading/unloading monitoring'},
+  {f:'★ 3-Level HAZMAT Escalation',be:'✔ → Emergency services (new)',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Automated emergency response'},
+  {f:'★ Custody Transfer (Blockchain)',be:'✔ On-chain verified',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Immutable load/unload'},
+  {f:'★ Rollover Risk AI',be:'✔ Physics-LSTM',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Liquid sloshing prediction'},
+  {f:'★ ADR/IMDG Compliance',be:'✔ GCC regulations',sam:'✗',geo:'○ Basic HAZMAT',ver:'✗',u:1,a:'Regional regulatory'},
+  {cat:'🚌 BUS TRANSIT'},
+  {f:'★ APC Passenger Counting',be:'✔ Infrared + AI',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Real-time occupancy'},
+  {f:'★ Transit Signal Priority',be:'✔ DSRC/CV2X',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Green phase extension'},
+  {f:'★ PIS Display Updates',be:'✔ Next-bus ETA',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Passenger information'},
+  {f:'★ L-STOP Platform',be:'✔ 3,700 EV bus Africa',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Smart transit platform'},
+  {f:'★ GTFS Export',be:'✔ Route scheduling',sam:'○ Basic route',geo:'○ Basic route',ver:'✗',u:1,a:'Transit planning'},
+  {cat:'🚕 TAXI DISPATCH'},
+  {f:'★ Surge Pricing Engine',be:'✔ Zone-based ML',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Dynamic fare optimization'},
+  {f:'★ Dispatch Optimization',be:'✔ Nearest + AI',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Reduce empty miles'},
+  {f:'★ Driver Sessions/Shifts',be:'✔ Login/logout tracking',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Shift management'},
+  {f:'★ Zone Management',be:'✔ Configurable zones',sam:'✗',geo:'✗',ver:'✗',u:1,a:'Geospatial zone ops'},
+];
+
+const PRICES = [
+  {fleet:1000,be:80.00,sam:55.00,geo:48.00,ver:43.50},
+  {fleet:3000,be:72.50,sam:50.00,geo:45.00,ver:40.50},
+  {fleet:5000,be:68.00,sam:47.50,geo:43.00,ver:38.50},
+  {fleet:10000,be:62.00,sam:44.00,geo:40.00,ver:36.00},
+  {fleet:25000,be:56.00,sam:40.00,geo:37.00,ver:33.00},
+  {fleet:50000,be:51.00,sam:37.00,geo:34.50,ver:30.50},
+  {fleet:100000,be:47.00,sam:34.50,geo:32.00,ver:28.50},
+];
+
+// ═══ RENDERERS ═══
+function renderBars(el, dims) {
+  el.innerHTML = `<div class="bar-group">${dims.map(d => `
+    <div style="margin-bottom:4px;font-size:10px;font-weight:600;color:var(--tx2);letter-spacing:0.5px;">${d.name}</div>
+    ${[{n:'Blue Edge',v:d.be,c:'var(--be)'},{n:'Samsara',v:d.sam,c:'var(--sam)'},{n:'Geotab',v:d.geo,c:'var(--geo)'},{n:'Verizon',v:d.ver,c:'var(--ver)'}].map(b => `
+    <div class="bar-row">
+      <div class="bar-label" style="color:${b.c}">${b.n}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${b.v}%;background:${b.c}">${b.v>15?b.v+'%':''}</div></div>
+      <div class="bar-val" style="color:${b.c}">${b.v}%</div>
+    </div>`).join('')}
+  `).join('')}</div>`;
+}
+
+function renderMatrix(table, features) {
+  let html = `<thead><tr><th style="min-width:180px">Feature</th><th style="color:var(--be)">Blue Edge</th><th style="color:var(--sam)">Samsara</th><th style="color:var(--geo)">Geotab</th><th style="color:var(--ver)">Verizon</th><th>Advantage</th></tr></thead><tbody>`;
+  features.forEach(r => {
+    if(r.cat) {
+      html += `<tr><td class="cat" colspan="6">${r.cat}</td></tr>`;
+    } else {
+      const mark = (v) => {
+        if(!v) return '<span class="n">—</span>';
+        if(v.startsWith('✔')) return `<span class="y">${v}</span>`;
+        if(v.startsWith('✗')) return `<span class="n">${v}</span>`;
+        if(v.startsWith('○')) return `<span class="p">${v}</span>`;
+        return v;
+      };
+      const newTag = (v) => v && v.includes('(new)') ? ' <span class="upd chg">UPD</span>' : '';
+      html += `<tr class="${r.u?'u':''}"><td class="feat ${r.u?'star':''}">${r.f}</td><td>${mark(r.be)}</td><td>${mark(r.sam)}${newTag(r.sam)}</td><td>${mark(r.geo)}${newTag(r.geo)}</td><td>${mark(r.ver)}${newTag(r.ver)}</td><td class="adv">${r.a||''}</td></tr>`;
+    }
+  });
+  html += '</tbody>';
+  table.innerHTML = html;
+}
+
+// ═══ EXEC VIEW ═══
+document.getElementById('co-cards').innerHTML = CO.map(c => `
+  <div class="co-card ${c.id} fade">
+    <div class="co-name" style="color:${c.color}">${c.name}</div>
+    <div class="co-sub">${c.sub}</div>
+    <div class="co-stats">
+      ${Object.entries(c.stats).map(([k,v]) => `<div class="co-row"><span class="k">${k.replace(/([A-Z])/g,' $1').replace(/^./,s=>s.toUpperCase())}</span><span class="v" style="color:${c.color}">${v}</span></div>`).join('')}
+    </div>
+  </div>
+`).join('');
+
+renderBars(document.getElementById('overall-bars'), DIMS);
+
+document.getElementById('wins-list').innerHTML = WINS.map(w => `
+  <div style="padding:8px 0;border-bottom:1px solid var(--bdr);">
+    <div style="font-size:12px;font-weight:700;color:var(--be);margin-bottom:2px;">✅ ${w.t}</div>
+    <div style="font-size:10.5px;color:var(--tx2);line-height:1.5;">${w.d}</div>
+  </div>
+`).join('');
+
+document.getElementById('gaps-list').innerHTML = GAPS.map(g => `
+  <div style="padding:8px 0;border-bottom:1px solid var(--bdr);">
+    <div style="font-size:12px;font-weight:700;color:var(--yl);margin-bottom:2px;">${g.t}</div>
+    <div style="font-size:10.5px;color:var(--tx2);line-height:1.5;">${g.d}</div>
+  </div>
+`).join('');
+
+// ═══ HARDWARE VIEW ═══
+document.getElementById('hw-cards').innerHTML = [
+  {n:'Blue Edge SVG 2.0',c:'var(--be)',s:'NXP i.MX 95 · 16GB · 2T NPU · Dual 4K · 5G · 17 sensors · HASI',p:'$750'},
+  {n:'Samsara VG54 + Multicam',c:'var(--sam)',s:'Basic ARM · ~1GB · No NPU · AI Multicam 4×HD add-on · 4G',p:'$99-148 + cam'},
+  {n:'Geotab GO Plus (NEW Feb 26)',c:'var(--geo)',s:'Next-gen ARM · "Edge AI" · BT · Wi-Fi hotspot · Satellite-ready · IOX',p:'TBD (~$200-300?)'},
+  {n:'Verizon Connect Reveal',c:'var(--ver)',s:'Basic ARM · ~1GB · No NPU · Optional cam · 4G',p:'$200-300'},
+].map(h => `<div class="co-card fade" style="border-top:3px solid ${h.c}"><div class="co-name" style="color:${h.c};font-size:14px">${h.n}</div><div style="font-size:10px;color:var(--tx3);margin:4px 0">${h.s}</div><div style="font-size:18px;font-weight:800;color:${h.c};font-family:'JetBrains Mono'">${h.p}</div></div>`).join('');
+renderBars(document.getElementById('hw-bars'), HW_SPECS.map(s => ({name:s.spec,be:s.beV,sam:s.samV,geo:s.geoV,ver:s.verV})));
+renderMatrix(document.getElementById('hw-matrix'), HW_FEATURES);
+
+// ═══ SOFTWARE VIEW ═══
+renderBars(document.getElementById('sw-bars'), SW_DIMS);
+renderMatrix(document.getElementById('sw-matrix'), SW_FEATURES);
+
+// ═══ AI VIEW ═══
+renderBars(document.getElementById('ai-bars'), AI_DIMS);
+renderMatrix(document.getElementById('ai-matrix'), AI_FEATURES);
+
+// ═══ SECURITY VIEW ═══
+renderBars(document.getElementById('sec-bars'), SEC_DIMS);
+renderMatrix(document.getElementById('sec-matrix'), SEC_FEATURES);
+
+// ═══ VERTICALS VIEW ═══
+renderBars(document.getElementById('vert-bars'), VERT_DIMS);
+renderMatrix(document.getElementById('vert-matrix'), VERT_FEATURES);
+
+// ═══ PRICING VIEW ═══
+document.getElementById('price-content').innerHTML = `
+  <div style="overflow-x:auto;">
+    <table class="matrix">
+      <thead><tr>
+        <th>Fleet Size</th>
+        <th style="color:var(--be)">Blue Edge</th>
+        <th style="color:var(--sam)">Samsara</th>
+        <th style="color:var(--geo)">Geotab</th>
+        <th style="color:var(--ver)">Verizon</th>
+        <th>vs Samsara</th>
+        <th>vs Geotab</th>
+        <th style="color:var(--be)">BE Annual Rev</th>
+      </tr></thead>
+      <tbody>
+        ${PRICES.map(p => {
+          const vsSam = ((p.be - p.sam) / p.sam * 100).toFixed(0);
+          const vsGeo = ((p.be - p.geo) / p.geo * 100).toFixed(0);
+          const rev = (p.be * p.fleet * 12);
+          return `<tr>
+            <td style="font-weight:700;font-family:'JetBrains Mono'">${p.fleet.toLocaleString()}</td>
+            <td style="color:var(--be);font-weight:700">$${p.be.toFixed(2)}</td>
+            <td style="color:var(--sam)">$${p.sam.toFixed(2)}</td>
+            <td style="color:var(--geo)">$${p.geo.toFixed(2)}</td>
+            <td style="color:var(--ver)">$${p.ver.toFixed(2)}</td>
+            <td><span class="score ${Math.abs(vsSam)>30?'low':'med'}">+${vsSam}%</span></td>
+            <td><span class="score ${Math.abs(vsGeo)>35?'low':'med'}">+${vsGeo}%</span></td>
+            <td style="color:var(--be);font-weight:700;font-family:'JetBrains Mono'">$${(rev/1e6).toFixed(1)}M</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+  </div>
+  <div style="margin-top:16px;">
+    <div style="font-size:11px;font-weight:600;color:var(--tx2);margin-bottom:8px;">Effective Price Comparison at 5,000 Vehicles (incl. all add-ons)</div>
+    <div class="bar-group">
+      ${[
+        {n:'BE SVG 2.0 (all-in)',v:68.00,c:'var(--be)'},
+        {n:'Samsara + Multicam',v:72.50,c:'var(--sam)'},
+        {n:'Geotab GO Plus + Focus Pro',v:68.00,c:'var(--geo)'},
+        {n:'Verizon + cameras',v:58.50,c:'var(--ver)'},
+      ].map(b => `
+      <div class="bar-row">
+        <div class="bar-label" style="color:${b.c};width:160px">${b.n}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${b.v/72.50*100}%;background:${b.c}">$${b.v}</div></div>
+        <div class="bar-val" style="color:${b.c}">$${b.v}</div>
+      </div>`).join('')}
+    </div>
+    <div style="margin-top:10px;font-size:10px;color:var(--tl);line-height:1.6;">
+      <strong>Key insight:</strong> When Samsara adds AI Multicam ($15-25/mo) and Geotab adds GO Focus Pro ($300+ hardware amortized), their all-in cost approaches or exceeds Blue Edge — while still lacking NPU, PQ crypto, blockchain, HASI, and 17 sensor protocols. Blue Edge delivers MORE capability at a comparable effective price point.
+    </div>
+  </div>
+  <div style="margin-top:16px;">
+    <div style="font-size:11px;font-weight:600;color:var(--tx2);margin-bottom:8px;">ROI Justification for Any Premium</div>
+    <div class="bar-group">
+      ${[
+        {n:'Predictive Maint. Savings',v:'25-40%',w:85,c:'var(--be)'},
+        {n:'Fuel Optimization',v:'8-12%',w:55,c:'var(--tl)'},
+        {n:'Insurance Discount (DWVS)',v:'10-25%',w:65,c:'var(--pr)'},
+        {n:'HAZMAT Penalty Avoided',v:'$50K-500K',w:80,c:'var(--yl)'},
+        {n:'Cargo Loss Prevention',v:'95%+',w:90,c:'var(--sam)'},
+        {n:'Cybersecurity Breach Avoided',v:'$1M-10M',w:95,c:'var(--ver)'},
+      ].map(r => `
+      <div class="bar-row">
+        <div class="bar-label" style="font-size:9px;width:170px">${r.n}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${r.w}%;background:${r.c}">${r.v}</div></div>
+      </div>`).join('')}
+    </div>
+  </div>
+`;
+
+// ═══ FULL MATRIX VIEW ═══
+const ALL_FEATURES = [...HW_FEATURES,...SW_FEATURES,...AI_FEATURES,...SEC_FEATURES,...VERT_FEATURES];
+const cats = ['all','processor','connectivity','camera','sensor','security','network','blockchain','compliance','tanker','bus','taxi','core','v3.23','advanced','edge','cloud','generative'];
+document.getElementById('cat-filters').innerHTML = cats.map(c => `<div class="filter-btn ${c==='all'?'active':''}" data-cat="${c}">${c === 'all' ? 'All Categories' : c.charAt(0).toUpperCase() + c.slice(1)}</div>`).join('');
+
+function renderFullMatrix(cat) {
+  let inCat = cat === 'all';
+  const final = [];
+  ALL_FEATURES.forEach(r => {
+    if(r.cat) {
+      if(cat === 'all' || r.cat.toLowerCase().includes(cat)) {
+        inCat = true; final.push(r);
+      } else { inCat = false; }
+    } else if(inCat) { final.push(r); }
+  });
+  renderMatrix(document.getElementById('full-matrix'), final);
+}
+
+document.querySelectorAll('.filter-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    renderFullMatrix(b.dataset.cat);
+  });
+});
+renderFullMatrix('all');
+
+// ═══ NAV ═══
+const PI = {
+  exec:['Competitive Intelligence Dashboard — Feb 2026','Blue Edge SVG 2.0 v3.23.0 vs Samsara (AI Multicam) · Geotab (GO Plus/ACE) · Verizon Connect — Updated Feb 28, 2026'],
+  hw:['Hardware Comparison — Updated Feb 2026','NXP i.MX 95 + 2T NPU vs Geotab Next-Gen GO Plus (Feb 2026) · Samsara AI Multicam · Verizon Reveal'],
+  sw:['Software Platform Comparison — v3.23.0','63 modules · 623 endpoints · 61 pages · Sensors + HASI vs horizontal competitors'],
+  ai:['AI/ML Capability Comparison — Feb 2026','20 models · Edge NPU <10ms vs Geotab ACE GA · Samsara AI Safety Coaching · GO Focus Pro AI'],
+  sec:['Security Architecture — 6 Layers with HASI','Hardware RoT + PQ Crypto + Blockchain + HASI SOC + FHE + Attestation vs basic TLS competitors'],
+  vert:['Vertical Capabilities — Enhanced v3.23.0','Tanker (H2S/gas/pressure sensors + blockchain) · Bus (PIS/GTFS/L-STOP) · Taxi (surge/dispatch) — now with 17 sensor protocols'],
+  price:['Pricing & ROI Analysis — Feb 2026','All-in pricing comparison shows Blue Edge competitive when competitors add cameras + sensors'],
+  matrix:['Complete Feature Matrix (75+ Features)','All dimensions with category filtering — v3.23.0 features highlighted'],
+};
+
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('v-'+t.dataset.v)?.classList.add('active');
+    const [a,b] = PI[t.dataset.v] || ['',''];
+    document.getElementById('pg-t').textContent = a;
+    document.getElementById('pg-s').textContent = b;
+  });
+});
+</script>
+</body>
+</html>

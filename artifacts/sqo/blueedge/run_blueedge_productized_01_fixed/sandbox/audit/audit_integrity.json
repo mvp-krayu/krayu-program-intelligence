@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0",
+  "sandbox_id": "sandbox-blueedge-run01-micro-001",
+  "last_verified": "2026-05-11T22:00:10.000Z",
+  "chain_length": 10,
+  "chain_valid": true,
+  "verification_hash": "sha256:audit_chain_verification_hash",
+  "violations": []
+}

@@ -1,0 +1,81 @@
+{
+  "contract_id": "PI.LENS.FASTAPI.CLIENT-SOURCE-REGISTRATION.01",
+  "artifact": "source_selection_decision",
+  "step": "STEP_2",
+  "generated_date": "2026-05-01",
+
+  "selected_source": {
+    "candidate_id": "C-01",
+    "selection_class": "AUTHORITATIVE_INTAKE",
+    "path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/source/fastapi-backend/",
+    "source_type": "LOCAL_DIRECTORY",
+    "file_count": 87,
+    "aggregate_hash": "5a1a19d95665a650bf544cd3bf585ec7ac0d3ba0dfa886de9418c1aca4303082",
+    "source_version": "04dcdc9ae62e94d55f528cb89493a72b448845ab",
+    "governed_by": "PRODUCTIZE.RAW.SOURCE.INTAKE.01",
+    "rationale": "Canonical raw source. Highest priority. Already extracted local directory. 87 files ingested and hash-verified under intake contract PRODUCTIZE.RAW.SOURCE.INTAKE.01."
+  },
+
+  "archive_path_proxy": {
+    "candidate_id": "C-03",
+    "role": "MANIFEST_FILE_PROXY",
+    "path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/manifests/fastapi-backend.manifest.sha256",
+    "sha256": "b93be45319f28dfb04269c42c0b14f6288f8b2328d9490962e83c4941ced86bb",
+    "rationale": "phase_01_source_boundary in run_client_pipeline.py calls open(archive_path, 'rb') and computes SHA256. Source is a local directory — not openable as a binary file. The SHA256 manifest file is a real, readable file that proves boundary identity. Its SHA256 provides a stable boundary check. This is the documented approach for LOCAL_DIRECTORY sources."
+  },
+
+  "structural_reference": {
+    "candidate_id": "C-04",
+    "role": "STRUCTURAL_REFERENCE_ONLY",
+    "path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/",
+    "usable_as_source": false,
+    "rationale": "Derived pipeline artifacts from run_02_oss_fastapi. NOT a source. Provides structural topology, CEU registry, grounding state (v2), binding envelope, and structure manifest as reference inputs for the new pipeline run."
+  },
+
+  "rejected_candidates": [
+    {
+      "candidate_id": "C-02",
+      "reason": "INTAKE_RECORD — points to C-01; not used directly when C-01 is accessible"
+    },
+    {
+      "candidate_id": "C-05",
+      "reason": "UNKNOWN schema and provenance — not authoritative"
+    },
+    {
+      "candidate_id": "C-06",
+      "reason": "FORBIDDEN — vault output artifact"
+    },
+    {
+      "candidate_id": "C-07",
+      "reason": "FORBIDDEN per RULE-7 — legacy replay output, not source"
+    },
+    {
+      "candidate_id": "C-08",
+      "reason": "DERIVED — claim fragments, not source"
+    }
+  ],
+
+  "selection_status": "COMPLETE",
+  "pipeline_target_fields": {
+    "archive_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/manifests/fastapi-backend.manifest.sha256",
+    "sha256": "b93be45319f28dfb04269c42c0b14f6288f8b2328d9490962e83c4941ced86bb",
+    "source_dir": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/source/fastapi-backend",
+    "aggregate_hash": "5a1a19d95665a650bf544cd3bf585ec7ac0d3ba0dfa886de9418c1aca4303082",
+    "structural_reference_run": "run_02_oss_fastapi"
+  },
+
+  "blocking_gaps": [
+    {
+      "gap_id": "GAP-REG-01",
+      "description": "No 40.2/40.3/40.4 structural artifact subdirectories exist for FastAPI — phase_03_40x_structural will FAIL on live run",
+      "resolution_required": true,
+      "resolution_contract": "TBD — future structural import contract"
+    },
+    {
+      "gap_id": "GAP-REG-02",
+      "description": "No grounding_state_v3.json exists for FastAPI — only v2 at run_02_oss_fastapi/binding/provenance/. phase_04_ceu_grounding will FAIL on live run",
+      "resolution_required": true,
+      "resolution_contract": "TBD — future grounding state migration contract"
+    }
+  ]
+}

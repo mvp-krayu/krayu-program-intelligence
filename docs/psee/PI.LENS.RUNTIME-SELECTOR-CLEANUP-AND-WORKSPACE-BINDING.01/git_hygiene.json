@@ -1,0 +1,38 @@
+{
+  "contract_id": "PI.LENS.RUNTIME-SELECTOR-CLEANUP-AND-WORKSPACE-BINDING.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-03",
+
+  "branch": "work/psee-runtime",
+  "baseline_commit": "7e47787",
+  "baseline_commit_message": "[INTEGRATION] LENS runtime selector and generate flow",
+
+  "working_tree_before": "CLEAN",
+  "working_tree_after": "2 files modified, 1 evidence directory created",
+
+  "files_modified_tracked": [
+    "app/gauge-product/pages/lens.js",
+    "app/gauge-product/pages/api/report-file.js"
+  ],
+  "files_created_tracked": [
+    "docs/psee/PI.LENS.RUNTIME-SELECTOR-CLEANUP-AND-WORKSPACE-BINDING.01/cleanup_summary.md",
+    "docs/psee/PI.LENS.RUNTIME-SELECTOR-CLEANUP-AND-WORKSPACE-BINDING.01/workspace_binding_summary.md",
+    "docs/psee/PI.LENS.RUNTIME-SELECTOR-CLEANUP-AND-WORKSPACE-BINDING.01/navigation_fix_summary.md",
+    "docs/psee/PI.LENS.RUNTIME-SELECTOR-CLEANUP-AND-WORKSPACE-BINDING.01/validation_result.json",
+    "docs/psee/PI.LENS.RUNTIME-SELECTOR-CLEANUP-AND-WORKSPACE-BINDING.01/decision_navigation_check.json",
+    "docs/psee/PI.LENS.RUNTIME-SELECTOR-CLEANUP-AND-WORKSPACE-BINDING.01/no_renderer_change_attestation.md",
+    "docs/psee/PI.LENS.RUNTIME-SELECTOR-CLEANUP-AND-WORKSPACE-BINDING.01/git_hygiene.json"
+  ],
+  "files_modified_gitignored": [],
+
+  "renderer_modified": false,
+  "pipeline_executed": false,
+  "canonical_reports_modified": false,
+  "semantic_bundle_modified": false,
+  "fastapi_involved": false,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[CLEANUP] PI.LENS.RUNTIME-SELECTOR-CLEANUP-AND-WORKSPACE-BINDING.01 — remove duplicate REPORTS block; workspace URL bound to selector; psee link rewrite for cross-navigation",
+
+  "git_hygiene_status": "COMPLETE"
+}

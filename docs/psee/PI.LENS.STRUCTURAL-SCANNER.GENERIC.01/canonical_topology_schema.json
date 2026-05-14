@@ -1,0 +1,63 @@
+{
+  "contract_id": "PI.LENS.STRUCTURAL-SCANNER.GENERIC.01",
+  "artifact": "canonical_topology_schema",
+  "generated_date": "2026-05-01",
+  "output_file": "structure/40.4/canonical_topology.json",
+
+  "schema": {
+    "contract_id": "string — always PI.LENS.STRUCTURAL-SCANNER.GENERIC.01",
+    "client_id": "string",
+    "source_id": "string",
+    "run_id": "string",
+    "stage": "string — always '40.4'",
+    "generated_at": "string — ISO 8601 UTC timestamp",
+    "platform": "string — always 'generic'",
+    "cluster_count": "integer — number of clusters",
+    "clusters": "array[ClusterRecord]"
+  },
+
+  "cluster_record_schema": {
+    "cluster_id": "string — CLU-NN (zero-padded to 2 digits; starts at 01)",
+    "name": "string — top-level path component of the nodes in this cluster",
+    "node_count": "integer — total nodes (directories + files) in cluster",
+    "node_ids": "array[string] — all NODE-NNNN IDs belonging to this cluster"
+  },
+
+  "clustering_rule": {
+    "method": "Group nodes by Path(node.path).parts[0]",
+    "root_level_single_files": "Files at root level (e.g. 'README.md') form their own single-node cluster named by their filename",
+    "sort_order": "Clusters sorted lexicographically by name; CLU-01 = first alphabetically",
+    "dotfiles": "Dotfiles (e.g. .gitignore, .artrc) appear before alphabetic names — sorted before 'a'"
+  },
+
+  "fastapi_example": {
+    "cluster_count": 19,
+    "clusters": [
+      {"cluster_id": "CLU-01", "name": ".artrc",               "node_count": 1},
+      {"cluster_id": "CLU-02", "name": ".gitattributes",        "node_count": 1},
+      {"cluster_id": "CLU-03", "name": ".github",               "node_count": 6},
+      {"cluster_id": "CLU-04", "name": ".gitignore",            "node_count": 1},
+      {"cluster_id": "CLU-05", "name": ".pre-commit-config.yaml", "node_count": 1},
+      {"cluster_id": "CLU-06", "name": ".readme_assets",        "node_count": 2},
+      {"cluster_id": "CLU-07", "name": ".sqlite_db",            "node_count": 2},
+      {"cluster_id": "CLU-08", "name": ".vscode",               "node_count": 3},
+      {"cluster_id": "CLU-09", "name": "README.md",             "node_count": 1},
+      {"cluster_id": "CLU-10", "name": "TODO.md",               "node_count": 1},
+      {"cluster_id": "CLU-11", "name": "config.yaml",           "node_count": 1},
+      {"cluster_id": "CLU-12", "name": "generated",             "node_count": 7},
+      {"cluster_id": "CLU-13", "name": "log_config.json",       "node_count": 1},
+      {"cluster_id": "CLU-14", "name": "openapitools.json",     "node_count": 1},
+      {"cluster_id": "CLU-15", "name": "pyproject.toml",        "node_count": 1},
+      {"cluster_id": "CLU-16", "name": "run.sh",                "node_count": 1},
+      {"cluster_id": "CLU-17", "name": "src",                   "node_count": 89},
+      {"cluster_id": "CLU-18", "name": "tests",                 "node_count": 2},
+      {"cluster_id": "CLU-19", "name": "uv.lock",               "node_count": 1}
+    ]
+  },
+
+  "orchestrator_compatibility": {
+    "check_by_orchestrator": "existence only — run_client_pipeline.py Phase 3 checks os.path.exists(canon_topo_path)",
+    "no_field_reads": "Orchestrator does not read any fields from 40.4",
+    "compatibility": "COMPATIBLE"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "contract_id": "PI.LENS.RUNTIME-SELECTOR-AND-GENERATE-INTEGRATION.01",
+  "generated_date": "2026-05-02",
+  "server_port": 3001,
+  "runtime_list": "PASS",
+  "runtime_list_returned": 1,
+  "runtime_list_client": "blueedge",
+  "runtime_list_run": "run_blueedge_productized_01_fixed",
+  "generate_api": "PASS",
+  "generate_exit_code": 0,
+  "package_dir_resolved": "run_blueedge_productized_01/vault (via realpath symlink resolution)",
+  "projection_resolution": "GROUNDED",
+  "report_file_psee_route": "PASS",
+  "ui_selector": "PASS",
+  "ui_generate": "PASS",
+  "reports_generated": 4,
+  "errors": []
+}

@@ -1,0 +1,31 @@
+{
+  "contract_id": "PI.LENS.BLUEEDGE-EVIDENCE-CHAIN-MANIFEST.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-01",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+  "working_tree_at_start": "CLEAN",
+  "working_tree_at_end": "MODIFIED — docs/psee/PI.LENS.BLUEEDGE-EVIDENCE-CHAIN-MANIFEST.01/ (untracked evidence only)",
+  "baseline_commit": "94d8c62",
+
+  "files_created_this_contract": [
+    "docs/psee/PI.LENS.BLUEEDGE-EVIDENCE-CHAIN-MANIFEST.01/evidence_chain_manifest.json",
+    "docs/psee/PI.LENS.BLUEEDGE-EVIDENCE-CHAIN-MANIFEST.01/evidence_chain_explanation.md",
+    "docs/psee/PI.LENS.BLUEEDGE-EVIDENCE-CHAIN-MANIFEST.01/path_source_classification.md",
+    "docs/psee/PI.LENS.BLUEEDGE-EVIDENCE-CHAIN-MANIFEST.01/missing_artifact_log.md",
+    "docs/psee/PI.LENS.BLUEEDGE-EVIDENCE-CHAIN-MANIFEST.01/no_mutation_attestation.md",
+    "docs/psee/PI.LENS.BLUEEDGE-EVIDENCE-CHAIN-MANIFEST.01/git_hygiene.json"
+  ],
+  "files_modified_this_contract": [],
+  "files_deleted_this_contract": [],
+
+  "blueedge_mutation_check": "PASS — no files under clients/blueedge/ or clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/ were modified",
+  "pipeline_mutation_check": "PASS — scripts/pios/run_client_pipeline.py not modified (M scripts/pios/lens_report_generator.py is pre-existing from PI.LENS.PHASE8B-REDEFINITION.01)",
+  "runtime_artifacts_created": "NONE — no pipeline run executed",
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[FORENSIC] PI.LENS.BLUEEDGE-EVIDENCE-CHAIN-MANIFEST.01 — BlueEdge evidence chain consolidated: 33 artifacts mapped, 3 artifact roots, NOT reconstructible from single pipeline run",
+
+  "git_hygiene_status": "COMPLETE"
+}

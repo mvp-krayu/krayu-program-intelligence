@@ -1,0 +1,91 @@
+{
+  "stream_id": "PI.LENS.V2.RUNTIME-PARAMETERIZATION-AND-REGISTRY-UNIFICATION.01",
+  "branch": "work/lens-v2-productization",
+  "baseline_commit": "2184188",
+  "baseline_pipeline_commit": "93098cb",
+  "milestone_tag": "lens-v2-live-substrate-v1",
+  "summary": {
+    "files_created": 9,
+    "files_modified": 3,
+    "files_deleted": 0
+  },
+  "files": [
+    {
+      "path": "app/execlens-demo/lib/lens-v2/flagshipBinding.js",
+      "change": "created",
+      "purpose": "Server-side flagship binding resolution; reads ?client/?run, validates via manifest registry, delegates to generic resolver, sets HTTP status code on failure"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/manifests/index.js",
+      "change": "modified",
+      "purpose": "Added contract-named registry helpers: listAllowedClientRuns, isClientRunAllowed, resolveClientRunManifest (legacy helpers preserved)"
+    },
+    {
+      "path": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "change": "modified",
+      "purpose": "Query-parameterised getServerSideProps via flagshipBinding; dynamic banner text using resolved client/run; per-render report-pack registry"
+    },
+    {
+      "path": "scripts/pios/PI.LENS.V2.Q02-AND-IP-GOVERNANCE-CLEANUP.01/emit_rendering_metadata.js",
+      "change": "modified",
+      "purpose": "Allow-list now derived from the manifest registry via listAllowedClientRuns(); gating uses isClientRunAllowed; replay-safe output preserved"
+    },
+    {
+      "path": "app/execlens-demo/flagship-experience/tests/runtime-parameterization.test.js",
+      "change": "created",
+      "purpose": "23-case suite covering registry contract API, default/explicit/unknown/malformed routes, generic-resolver parity under parameterization, writer replay-safety, registry alignment, no-client-name-branching invariants"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.RUNTIME-PARAMETERIZATION-AND-REGISTRY-UNIFICATION.01/RUNTIME_PARAMETERIZATION_IMPLEMENTATION.md",
+      "change": "created",
+      "purpose": "Implementation deliverable"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.RUNTIME-PARAMETERIZATION-AND-REGISTRY-UNIFICATION.01/RUNTIME_PARAMETERIZATION_VALIDATION.md",
+      "change": "created",
+      "purpose": "Validation deliverable (all 25 mandatory checks PASS)"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.RUNTIME-PARAMETERIZATION-AND-REGISTRY-UNIFICATION.01/client_c_runtime_onboarding_checklist.md",
+      "change": "created",
+      "purpose": "Client C runtime onboarding playbook — manifest + registry entry + writer dry-run + URL verification, no UI code changes"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.RUNTIME-PARAMETERIZATION-AND-REGISTRY-UNIFICATION.01/screenshots/default_route.png",
+      "change": "created",
+      "purpose": "Visual evidence — default /lens-v2-flagship URL"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.RUNTIME-PARAMETERIZATION-AND-REGISTRY-UNIFICATION.01/screenshots/explicit_blueedge_query.png",
+      "change": "created",
+      "purpose": "Visual evidence — explicit ?client=blueedge&run=... URL"
+    },
+    {
+      "path": "docs/psee/PI.LENS.V2.RUNTIME-PARAMETERIZATION-AND-REGISTRY-UNIFICATION.01/screenshots/unknown_pair_failclose.png",
+      "change": "created",
+      "purpose": "Visual evidence — fail-closed surface for ?client=unknown&run=unknown"
+    },
+    {
+      "path": "docs/pios/PI.LENS.V2.RUNTIME-PARAMETERIZATION-AND-REGISTRY-UNIFICATION.01/execution_report.md",
+      "change": "created",
+      "purpose": "Governance execution report"
+    },
+    {
+      "path": "docs/pios/PI.LENS.V2.RUNTIME-PARAMETERIZATION-AND-REGISTRY-UNIFICATION.01/file_changes.json",
+      "change": "created",
+      "purpose": "Governance file-changes manifest"
+    },
+    {
+      "path": "docs/pios/PI.LENS.V2.RUNTIME-PARAMETERIZATION-AND-REGISTRY-UNIFICATION.01/CLOSURE.md",
+      "change": "created",
+      "purpose": "Governance closure document"
+    }
+  ],
+  "validators_changed": [],
+  "topology_mutations": [],
+  "evidence_mutations": [],
+  "lane_a_artifacts_touched": [],
+  "lane_d_dpsig_artifacts_touched": [],
+  "api_routes_modified": [],
+  "page_routes_modified": ["app/execlens-demo/pages/lens-v2-flagship.js"]
+}

@@ -1,0 +1,84 @@
+{
+  "client": "blueedge",
+  "source": "source_01",
+  "run": "run_blueedge_productized_01_fixed",
+  "execute_run_id": "run_blueedge_e2e_execute_01",
+  "mode": "execute",
+  "contract": "PI.LENS.REAL-E2E-PIPELINE.EXECUTION-MODE.03",
+  "generated_date": "2026-05-03",
+  "stages": [
+    {
+      "stage": "01",
+      "name": "Source Registration",
+      "producer": "source_intake.py --validate-only",
+      "status": "BLOCKED_STAGE_FAILURE",
+      "exit_code": 1,
+      "notes": "boundary PASS (BLOCKER-01 RESOLVED: [EXTERNAL_ABSOLUTE], no ValueError); inventory [PATH-RESOLUTION] mode: MISSING — both candidates checked, neither exists; MISSING_INPUT_FAIL_CLOSED (BLOCKER-06 RESOLVED: no crash, hybrid path logic confirmed); genuine source extraction prerequisite absent (BLOCKER-07)"
+    },
+    {
+      "stage": "02",
+      "name": "Intake",
+      "producer": "source_intake.py",
+      "status": "NOT_ATTEMPTED",
+      "exit_code": -1,
+      "notes": "skipped — stage 01 CASCADE failure"
+    },
+    {
+      "stage": "03",
+      "name": "Structure (40.x)",
+      "producer": "structural_scanner.py",
+      "status": "NOT_ATTEMPTED",
+      "exit_code": -1,
+      "notes": "skipped — stage 02 not attempted"
+    },
+    {
+      "stage": "04",
+      "name": "CEU Grounding",
+      "producer": "ceu_grounding.py",
+      "status": "NOT_ATTEMPTED",
+      "exit_code": -1,
+      "notes": "skipped — stage 03 not attempted"
+    },
+    {
+      "stage": "05",
+      "name": "DOM Layer",
+      "producer": "dom_layer_generator.py",
+      "status": "NOT_ATTEMPTED",
+      "exit_code": -1,
+      "notes": "skipped — stage 03 or 04 not attempted"
+    },
+    {
+      "stage": "06",
+      "name": "Pipeline / 75.x / 41.x",
+      "producer": "run_client_pipeline.py",
+      "status": "BLOCKED_STAGE_06",
+      "exit_code": 1,
+      "notes": "Phase 1 PASS (SHA256 verified); Phase 2 [PATH-RESOLUTION] FAIL: CLIENT_RUN intake absent (stage 02 never ran); EXTRACTED_PATH absent (UUID canonical_repo); BLOCKER-02 fix confirmed — no crash, [PATH-RESOLUTION] logged"
+    },
+    {
+      "stage": "07",
+      "name": "Semantic Bundle",
+      "producer": "lens_report_generator.py",
+      "status": "READY_LOCKED_REFERENCE",
+      "exit_code": 0,
+      "notes": "semantic_bundle_manifest.json present in run_blueedge_productized_01_fixed; validate-only; no rebuild"
+    },
+    {
+      "stage": "08",
+      "name": "Reports",
+      "producer": "lens_generate.sh",
+      "status": "BLOCKED_STAGE_FAILURE",
+      "exit_code": -1,
+      "notes": "vault and semantic both absent from execution run run_blueedge_e2e_execute_01; stage 06 blocked; semantic READY_LOCKED_REFERENCE in ref run only — copy not authorized"
+    },
+    {
+      "stage": "09",
+      "name": "Runtime Package",
+      "producer": "lens_demo.sh",
+      "status": "VALIDATED_ONLY",
+      "exit_code": 0,
+      "notes": "lens.js, workspace.js, lens_demo.sh, reports/, semantic/ all present; runtime package validated"
+    }
+  ],
+  "overall_status": "PARTIAL"
+}

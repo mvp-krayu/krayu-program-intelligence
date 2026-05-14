@@ -1,0 +1,203 @@
+{
+  "contract_id": "PI.LENS.PIPELINE-ORCHESTRATOR-BLUEEDGE-REFERENCE.01",
+  "artifact": "orchestrator_gap_map",
+  "generated_date": "2026-05-01",
+  "reference_client": "blueedge",
+  "reference_run": "run_be_orchestrated_fixup_01",
+
+  "gap_classification_legend": {
+    "OWNED": "Orchestrator generates this artifact via a callable phase function",
+    "VALIDATED_ONLY": "Orchestrator checks existence/correctness but has no generation path when absent",
+    "ASSUMED_PRESENT": "Orchestrator reads artifact without any validation phase — silently fails if absent",
+    "ORPHANED_SCRIPT": "Script exists in repo that generates this artifact but is never invoked by orchestrator",
+    "CONFORMANCE_BYPASS": "Artifact is injected via fastapi_conformance_path; bypasses native generation"
+  },
+
+  "phases": [
+    {
+      "phase_id": "phase_01",
+      "function": "phase_01_source_boundary",
+      "orchestrator_role": "VALIDATION_GATE",
+      "generates": [],
+      "validates": ["BE-00"],
+      "gap": {
+        "type": "VALIDATED_ONLY",
+        "severity": "CRITICAL",
+        "description": "Opens archive_path as a binary file (SHA256 check). If BE-00 is absent, phase fails with FileNotFoundError. No invocation path to fetch or generate the source archive.",
+        "remediation_action": "Add intake phase: invoke PI.BLUEEDGE.CLEAN-INTAKE.01 equivalent when archive absent, or define source provisioning contract."
+      }
+    },
+    {
+      "phase_id": "phase_02",
+      "function": "phase_02_canonical_repo",
+      "orchestrator_role": "VALIDATION_GATE",
+      "generates": [],
+      "validates": ["BE-01", "BE-02"],
+      "gap": {
+        "type": "VALIDATED_ONLY",
+        "severity": "CRITICAL",
+        "description": "Checks that canonical_repo directory exists and intake_manifest.json is present. If absent, phase fails. No invocation of extraction script.",
+        "remediation_action": "Add extraction sub-phase: invoke extraction when canonical_repo absent, deriving it from BE-00."
+      }
+    },
+    {
+      "phase_id": "phase_03",
+      "function": "phase_03_40x_structural",
+      "orchestrator_role": "VALIDATION_GATE",
+      "generates": [],
+      "validates": ["BE-06", "BE-07", "BE-08"],
+      "gap": {
+        "type": "VALIDATED_ONLY + ORPHANED_SCRIPT",
+        "severity": "CRITICAL",
+        "description": "Checks existence of 3 structural artifact files. If absent, prints REMEDIATION message referencing PI.BLUEEDGE.STRUCTURAL-PIPELINE.40X.01 but does NOT invoke any script. Scripts scan_repository.sh, extract_entities.py, classify_files.py, extract_perm_entities.py, build_telemetry_artifacts.py exist in scripts/pios/40.x/ but are never called by this phase.",
+        "orphaned_scripts": [
+          "scripts/pios/40.2/scan_repository.sh",
+          "scripts/pios/40.2/extract_entities.py",
+          "scripts/pios/40.2/classify_files.py",
+          "scripts/pios/40.3/extract_perm_entities.py",
+          "scripts/pios/40.4/build_telemetry_artifacts.py"
+        ],
+        "remediation_action": "Wire orphaned scripts into phase_03 as a generation sub-phase when structural artifacts are absent. Or invoke bootstrap_fastapi_40x.py equivalent per client."
+      }
+    },
+    {
+      "phase_id": "phase_04",
+      "function": "phase_04_readiness_gate",
+      "orchestrator_role": "VALIDATION_GATE",
+      "generates": [],
+      "validates": ["BE-12"],
+      "gap": {
+        "type": "VALIDATED_ONLY",
+        "severity": "CRITICAL",
+        "description": "Reads grounding_state_v3.json and checks readiness_gate == PASS. If absent or not PASS, phase fails. No invocation of grounding pipeline. BE-12 is produced by PI.BLUEEDGE Integrated Pipeline (external).",
+        "remediation_action": "Add grounding generation sub-phase: invoke CEU grounding pipeline or grounding state migration script when grounding_state_v3 absent or not at PASS gate."
+      }
+    },
+    {
+      "phase_id": "phase_05",
+      "function": "phase_05_build_binding_envelope",
+      "orchestrator_role": "GENERATOR (conditional)",
+      "generates": ["BE-15"],
+      "reads_native": ["BE-11", "BE-14"],
+      "reads_conformance": ["BE-C1"],
+      "gap": {
+        "type": "ASSUMED_PRESENT (native path inputs)",
+        "severity": "HIGH",
+        "description": "BE-11 (ceu_grounding_registry) and BE-14 (dom_path_domain_layer) are read as required inputs with no prior validation phase. If either is absent and fastapi_conformance_path is not set, phase fails with KeyError or FileNotFoundError. No validation gate protects these inputs.",
+        "remediation_action": "Add input validation for dom_layer_path and ceu_grounding_registry_path in source_manifest schema. Or make Phase 5 generate these from upstream grounding artifacts."
+      }
+    },
+    {
+      "phase_id": "phase_06_07",
+      "function": "phase_06_and_07_e2e",
+      "orchestrator_role": "GENERATOR",
+      "generates": ["BE-16", "BE-17", "BE-18", "BE-19", "BE-20"],
+      "reads_native": ["BE-15"],
+      "reads_conformance": ["BE-C2", "BE-C3", "BE-C4"],
+      "gap": {
+        "type": "NONE (generation owned)",
+        "severity": "LOW",
+        "description": "Native path invokes run_end_to_end.py as subprocess. Conformance path copies pre-computed artifacts. Both paths are orchestrator-owned. Gap is upstream dependency on BE-15.",
+        "remediation_action": "No gap at this phase. Ensure BE-15 is properly generated by phase_05."
+      }
+    },
+    {
+      "phase_id": "phase_08a",
+      "function": "phase_08a_vault",
+      "orchestrator_role": "GENERATOR (conditional)",
+      "generates": ["BE-21", "BE-22", "BE-23", "BE-24", "BE-25", "BE-26", "BE-27", "BE-28", "BE-29"],
+      "reads": ["BE-12", "BE-13", "BE-14", "BE-C5"],
+      "gap": {
+        "type": "ASSUMED_PRESENT (3 of 4 inputs unvalidated)",
+        "severity": "HIGH",
+        "description": "BE-13 (integration_validation) and BE-14 (dom_path_domain_layer) are read without any prior validation phase. BE-12 is validated by phase_04 but only for readiness_gate field. If integration_validation_path is absent from source_manifest and fastapi_conformance_path is not set, phase fails. FastAPI source_manifest is missing dom_layer_path and integration_validation_path fields.",
+        "remediation_action": "Add dom_layer_path and integration_validation_path to source_manifest schema. Add validation gate for integration_validation before phase_08a. Or supply via conformance path."
+      }
+    },
+    {
+      "phase_id": "phase_08b",
+      "function": "phase_08b_lens_reports",
+      "orchestrator_role": "GENERATOR",
+      "generates": ["BE-30", "BE-31", "BE-32", "BE-33", "BE-34", "BE-35", "BE-36"],
+      "reads": ["BE-21", "BE-22", "BE-23", "BE-24", "BE-25", "BE-26", "BE-27", "BE-28", "BE-29"],
+      "gap": {
+        "type": "NONE (generation owned)",
+        "severity": "LOW",
+        "description": "Invokes lens_report_generator.py and export_graph_state.mjs as subprocesses. Fully orchestrator-owned. Gap is upstream dependency on vault artifacts.",
+        "remediation_action": "No gap at this phase. Ensure vault artifacts BE-21 through BE-29 are generated by phase_08a."
+      }
+    },
+    {
+      "phase_id": "phase_09",
+      "function": "phase_09_selector_update",
+      "orchestrator_role": "GENERATOR",
+      "generates": ["BE-37", "BE-38", "BE-39"],
+      "reads": ["BE-30", "BE-33"],
+      "gap": {
+        "type": "NONE (generation owned)",
+        "severity": "LOW",
+        "description": "Fully orchestrator-owned. Reads report outputs and graph state from phase_08b. Gap is upstream dependency on reports.",
+        "remediation_action": "No gap at this phase."
+      }
+    }
+  ],
+
+  "unphased_artifact_gaps": [
+    {
+      "artifact_id": "BE-09",
+      "artifact_label": "perm_entity_registry.json (40.3)",
+      "gap_type": "ORPHANED_SCRIPT",
+      "severity": "MEDIUM",
+      "description": "Produced by extract_perm_entities.py (scripts/pios/40.3/). Not validated by any phase. Not read by any phase. Exists in artifact inventory but has no consumer in the orchestrator. Script is orphaned.",
+      "remediation_action": "Determine if perm_entity_registry is consumed downstream. If not, deprecate. If yes, add consumer phase."
+    },
+    {
+      "artifact_id": "BE-10",
+      "artifact_label": "telemetry_artifact_summary.json (40.4)",
+      "gap_type": "ORPHANED_SCRIPT",
+      "severity": "MEDIUM",
+      "description": "Produced by build_telemetry_artifacts.py (scripts/pios/40.4/). Not validated by any phase. Not read by any phase. Script is orphaned.",
+      "remediation_action": "Determine if telemetry summary is consumed downstream. If not, deprecate. If yes, add consumer phase."
+    },
+    {
+      "artifact_id": "BE-11",
+      "artifact_label": "ceu_grounding_registry.json",
+      "gap_type": "ASSUMED_PRESENT",
+      "severity": "HIGH",
+      "description": "Required as native path input to phase_05. Produced by CEU Grounding Pipeline (PROD-04). No validation phase checks its existence before phase_05. No phase generates it.",
+      "remediation_action": "Add to phase validation chain or make phase_05 conditionally generate from upstream grounding artifacts."
+    },
+    {
+      "artifact_id": "BE-13",
+      "artifact_label": "integration_validation.json",
+      "gap_type": "ASSUMED_PRESENT",
+      "severity": "HIGH",
+      "description": "Required by phase_08a (admissibility proxy). Produced by PI.BLUEEDGE Integrated Pipeline (PROD-05). No validation phase checks existence. Not registered in source_manifest schema for new clients.",
+      "remediation_action": "Add integration_validation_path to source_manifest schema. Add validation gate before phase_08a."
+    },
+    {
+      "artifact_id": "BE-14",
+      "artifact_label": "dom_path_domain_layer.json",
+      "gap_type": "ASSUMED_PRESENT",
+      "severity": "HIGH",
+      "description": "Required by phase_05 (DOM majority-vote for CE assignment) and phase_08a (topology domains construction). Lives in docs/, not clients/. No validation phase. Not registered in source_manifest for new clients.",
+      "remediation_action": "Add dom_layer_path to source_manifest schema. Add validation gate. Or generate from 40.x structural artifacts within orchestrator."
+    }
+  ],
+
+  "gap_summary": {
+    "phases_with_generation_gap": ["phase_01", "phase_02", "phase_03", "phase_04"],
+    "phases_with_assumed_present_inputs": ["phase_05", "phase_08a"],
+    "phases_with_no_gap": ["phase_06_07", "phase_08b", "phase_09"],
+    "orphaned_scripts_count": 5,
+    "unvalidated_required_inputs": 3,
+    "total_artifacts_with_gaps": 18,
+    "orchestrator_closure_possible": false,
+    "closure_blockers": [
+      "Phases 1-4 are validation-only with no generation path",
+      "BE-11, BE-13, BE-14 have no validation gate and no generation path",
+      "40.x scripts are orphaned from orchestrator",
+      "FastAPI source_manifest missing dom_layer_path and integration_validation_path"
+    ]
+  }
+}

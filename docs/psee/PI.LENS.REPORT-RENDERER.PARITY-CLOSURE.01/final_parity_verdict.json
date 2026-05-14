@@ -1,0 +1,14 @@
+{
+  "client": "blueedge",
+  "status": "CLOSED",
+  "canonical_reports_reproducible": true,
+  "tier1_narrative": "BYTE_PARITY",
+  "tier1_evidence": "BYTE_PARITY",
+  "tier2_diagnostic": "BYTE_PARITY",
+  "decision_surface": "NORMALIZED_PARITY",
+  "non_allowed_diffs": 0,
+  "canonical_reports_modified": false,
+  "pipeline_executed": false,
+  "fastapi_involved": false,
+  "final_verdict": "REPORT_RENDERER_PARITY_CLOSED"
+}

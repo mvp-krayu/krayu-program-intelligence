@@ -1,0 +1,43 @@
+{
+  "contract_id": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01",
+  "artifact": "blocked_binding_envelope",
+  "block": "BLOCK_E",
+  "generated_date": "2026-04-29",
+
+  "status": "BLOCKED",
+  "execution_rule": "BLOCK_E executes ONLY IF recomputed/signal_projection_fastapi_compatible.json exists AND recomputed/dom_path_domain_layer.json exists",
+
+  "prerequisite_check": {
+    "signal_projection_fastapi_compatible": {
+      "exists": false,
+      "reason": "Not produced — BLOCK_C stopped at NOT_RECOVERABLE classification for PSIG-001 and PSIG-002"
+    },
+    "dom_path_domain_layer": {
+      "exists": true,
+      "path": "recomputed/dom_path_domain_layer.json",
+      "status": "COMPLETE — 13 DOM groups derived from path evidence"
+    }
+  },
+
+  "execution_decision": "BLOCK_E cannot execute — signal_projection_fastapi_compatible.json prerequisite not satisfied",
+
+  "bi_01_status": "PARTIALLY_ADVANCED — DOM layer is defined (resolves half the prerequisite). Binding envelope remains blocked on signal_projection.",
+
+  "partial_progress": {
+    "dom_anchor_layer": "COMPLETE — 13 DOM groups defined with node assignments and path patterns",
+    "zone_to_dom_mapping": {
+      "PZ-001": "spans DOM-04 (app.module.ts), DOM-05 (common/guards), DOM-08 (health) — multi-domain compound zone; primary anchor = DOM-09 (backend_modules) by node count",
+      "PZ-002": "DOM-10 (frontend/)",
+      "PZ-003": "DOM-03 (backend/migrations/)",
+      "PZ-004": "DOM-01 (root_configuration)",
+      "PZ-005": "DOM-05 (backend/src/common/) + DOM-11 (load-tests/) overlap",
+      "PZ-006": "DOM-13 (svg-agents/)",
+      "PZ-007": "DOM-02 (ci_cd_workflows)"
+    },
+    "signal_to_dom_binding": "BLOCKED — requires FastAPI-compatible signal_projection values to bind signals to DOM anchors"
+  },
+
+  "unblocking_path": "Provide FastAPI-compatible signal_projection (PSIG-001/002 with statistical outlier scores computed from per-node relationship count data). Once signal_projection is available, binding_envelope can be assembled by connecting signal values to DOM anchors derived in dom_path_domain_layer.json.",
+
+  "fabrication_rule": "Per RULE-07: binding_envelope.json will NOT be produced with fabricated signal values."
+}

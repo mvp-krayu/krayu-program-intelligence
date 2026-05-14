@@ -1,0 +1,83 @@
+{
+  "schema_version": "1.0",
+  "stream": "PI.PSEE-PIOS.DETERMINISTIC-REPLAY-INSTRUMENTATION.IMPLEMENTATION.01",
+  "audit_type": "MDT-09_HIDDEN_INFLUENCE_AUDIT",
+  "generated_at": "2026-05-07",
+  "scope": "All advisory types emitted by evaluate_enrichment_participation.py",
+  "audit_results": [
+    {
+      "advisory_type": "suppression_advisory",
+      "finding": "NO_HIDDEN_INFLUENCE",
+      "enrichment_inputs_used": ["selector_context.suppression_flags"],
+      "hidden_influence_fields": [],
+      "notes": "All fields controlling emission are listed in enrichment_inputs_used"
+    },
+    {
+      "advisory_type": "suppression_advisory (grounding)",
+      "finding": "NO_HIDDEN_INFLUENCE",
+      "enrichment_inputs_used": ["psee_context.grounding_ratio"],
+      "hidden_influence_fields": [],
+      "notes": "grounding_ratio both controls emission and is listed in enrichment_inputs_used"
+    },
+    {
+      "advisory_type": "escalation_advisory",
+      "finding": "NO_HIDDEN_INFLUENCE",
+      "enrichment_inputs_used": ["ceu_topology.cluster_count", "structural_overlap.edge_count"],
+      "hidden_influence_fields": [],
+      "notes": "Both fields controlling emission (cluster_count AND edge_count) are listed"
+    },
+    {
+      "advisory_type": "confidence_downgrade",
+      "finding": "NO_HIDDEN_INFLUENCE",
+      "enrichment_inputs_used": ["psee_context.grounding_ratio"],
+      "hidden_influence_fields": [],
+      "notes": "grounding_ratio both controls HARD_DOWNGRADE path and is listed; evidence_confidence controls CONTEXT_INCOMPLETE path and is listed"
+    },
+    {
+      "advisory_type": "evidence_insufficiency",
+      "finding": "HIDDEN_INFLUENCE_DETECTED_AND_FIXED",
+      "enrichment_inputs_used_before_fix": [
+        "evidence_state.evidence_confidence",
+        "structural_overlap.edge_count",
+        "selector_context.selector_confidence"
+      ],
+      "enrichment_inputs_used_after_fix": [
+        "evidence_state.evidence_confidence",
+        "structural_overlap.edge_count",
+        "ceu_topology.cluster_count",
+        "selector_context.selector_confidence"
+      ],
+      "hidden_influence_fields": ["ceu_topology.cluster_count"],
+      "finding_reference": "RF-04 from PI.PSEE-PIOS.REPLAY-DETERMINISM-GAP-ANALYSIS.01",
+      "fix_description": "ceu_topology.cluster_count gates the structural_overlap.edge_count insufficiency reason (overlap_is_placeholder AND cluster_count > CLUSTER_ESCALATION_THRESHOLD). Before fix: cluster_count was not listed in enrichment_inputs_used. After fix: cluster_count added to insufficiency_inputs when the condition fires.",
+      "fix_location": "scripts/pios/psee_handoff/evaluate_enrichment_participation.py — ADV-04 structural overlap block",
+      "verified_in_artifact": "artifacts/psee_advisory/fastapi/run_02_oss_fastapi_pipeline/participation_advisory.json",
+      "verified_advisory_id": "ADV-002",
+      "verified_enrichment_inputs_used": [
+        "evidence_state.evidence_confidence",
+        "structural_overlap.edge_count",
+        "ceu_topology.cluster_count",
+        "selector_context.selector_confidence"
+      ]
+    },
+    {
+      "advisory_type": "activation_not_authorized",
+      "finding": "NO_HIDDEN_INFLUENCE",
+      "enrichment_inputs_used": ["activation_authorized"],
+      "hidden_influence_fields": [],
+      "notes": "New advisory type added by MDT-07. activation_authorized is the sole controlling field and is listed."
+    }
+  ],
+  "overall_verdict": "PASS_AFTER_FIX",
+  "hidden_influence_count_before_fix": 1,
+  "hidden_influence_count_after_fix": 0,
+  "fix_applied_in_stream": "PI.PSEE-PIOS.DETERMINISTIC-REPLAY-INSTRUMENTATION.IMPLEMENTATION.01",
+  "replay_impact": "Before fix: ADV-004 (evidence_insufficiency) enrichment_inputs_used was incomplete — replay would miss ceu_topology.cluster_count as an influence factor. After fix: complete. Identical cluster_count input produces identical advisory.",
+  "evaluator_authority": "OBSERVATIONAL_ONLY",
+  "zero_impact_guarantee": {
+    "runtime_artifacts_modified": false,
+    "75x_behavior_changed": false,
+    "41x_behavior_changed": false,
+    "signal_values_changed": false
+  }
+}

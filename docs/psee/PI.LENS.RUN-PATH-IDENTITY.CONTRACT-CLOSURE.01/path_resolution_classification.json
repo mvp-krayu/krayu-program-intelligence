@@ -1,0 +1,23 @@
+{
+  "contract_id": "PI.LENS.RUN-PATH-IDENTITY.CONTRACT-CLOSURE.01",
+  "generated_date": "2026-05-03",
+  "client": "blueedge",
+  "source": "source_01",
+  "run_id": "run_blueedge_intake_contract_closure_01",
+  "phase_2_resolution": {
+    "generic_path": "clients/blueedge/psee/runs/run_blueedge_intake_contract_closure_01/intake",
+    "generic_path_exists": false,
+    "manifest_path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/intake/canonical_repo",
+    "manifest_path_exists": false,
+    "resolved_mode": null,
+    "result": "FAIL_BOTH_ABSENT"
+  },
+  "phase_3_resolution": {
+    "generic_path": "clients/blueedge/psee/runs/run_blueedge_intake_contract_closure_01/structure",
+    "manifest_path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/structure",
+    "note": "phase_3 not reached in this validation run (phase_2 failed, single-phase mode)"
+  },
+  "resolution_logic": "CLIENT_RUN (run_dir/intake or run_dir/structure) checked first; EXTRACTED_PATH (manifest UUID key) checked second; FAIL if neither exists",
+  "reference_pattern": "phase_04_ceu_grounding() in run_client_pipeline.py",
+  "classification_status": "PASS"
+}

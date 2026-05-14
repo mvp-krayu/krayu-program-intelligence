@@ -1,0 +1,70 @@
+{
+  "contract_id": "PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01",
+  "artifact": "schema_bridge_analysis",
+  "block": "BLOCK_G",
+  "generated_date": "2026-05-01",
+  "mode": "FORENSIC / READ_ONLY",
+
+  "verdict": "SCHEMA_BRIDGE_BUG",
+
+  "bridge_location": "scripts/pios/run_client_pipeline.py Phase 8a (phase_08a_vault function)",
+
+  "field_bridged": {
+    "source_field": "41.x/signal_projection.json → active_conditions_in_scope[]",
+    "target_field": "vault/signal_registry.json → signals[]",
+    "bridge_purpose": "Transform PIOS output schema (active_conditions_in_scope) to FastAPI vault schema (signals). This bridges GAP-FASTAPI-01, documented in orchestrator return."
+  },
+
+  "bridge_code_location": "scripts/pios/run_client_pipeline.py line ~645 (active_count calculation)",
+  "bridge_code_actual": "active_count = sum(1 for s in vault_signals if s.get('activation_state') in ('HIGH', 'ACTIVATED', 'ACTIVE'))",
+
+  "bug_analysis": {
+    "what_is_wrong": "The active_count calculation includes ALL signals with activation_state ACTIVATED, regardless of activation_method. PSIG-006 has activation_state=ACTIVATED but activation_method=THEORETICAL_BASELINE. THEORETICAL_BASELINE signals are NOT pressure candidates — this is explicitly stated by compute_signal_projection.py in the signal's note field.",
+    "evidence_from_signal_projection": {
+      "field": "clients/blueedge/psee/runs/run_be_orchestrated_01/41.x/signal_projection.json active_conditions_in_scope[3].note",
+      "value": "PSIG-006 activated; structural blind-spot condition only; not a pressure candidate; no zone assigned"
+    },
+    "incorrect_count": {
+      "orchestrated_active_pressure_signals": 4,
+      "correct_active_pressure_signals": 3,
+      "error": "+1 (PSIG-006 incorrectly counted as pressure signal)"
+    },
+    "correct_logic": "active_count should count only signals where activation_state=='HIGH' OR (activation_state=='ACTIVATED' AND activation_method!='THEORETICAL_BASELINE')"
+  },
+
+  "psig006_status_change": {
+    "baseline_psig006_in_pressure_set": false,
+    "baseline_active_pressure_signals": 3,
+    "baseline_telemetry_signals": 1,
+    "baseline_note": "Baseline correctly counts PSIG-006 as telemetry (value=0, THEORETICAL_BASELINE). Source: signal_registry_fastapi_compatible.json from PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01.",
+    "orchestrated_psig006_in_pressure_set": true,
+    "orchestrated_active_pressure_signals": 4,
+    "orchestrated_telemetry_signals": 2,
+    "orchestrated_note": "Orchestrated incorrectly counts PSIG-006 as active_pressure_signals=4. The 41.x/signal_projection.json explicitly says 'not a pressure candidate' but the schema bridge does not read this note.",
+    "bridge_caused_this": true
+  },
+
+  "psig006_value_delta": {
+    "baseline_value": 0,
+    "orchestrated_value": 0.15151515151515152,
+    "cause": "Different topology. Baseline: 40.3 structural graph (35 nodes, no isolated nodes → ratio=0). Orchestrated: binding_envelope synthetic graph (33 nodes, some nodes have isolation_ratio > 0 based on connected component analysis). The value difference is a STRUCTURAL_TOPOLOGY_DELTA, not a schema bridge issue.",
+    "verdict_for_value": "STRUCTURAL_TOPOLOGY_DELTA (secondary to main bridge bug)"
+  },
+
+  "active_conditions_in_scope_treatment": {
+    "correct_interpretation": "active_conditions_in_scope[] in 41.x/signal_projection.json contains ALL activated signals including telemetry (THEORETICAL_BASELINE). It does NOT mean all signals in this list are pressure signals.",
+    "baseline_separation": "signal_registry_fastapi_compatible.json explicitly separates: signals[] with active_pressure_signals=3 and telemetry_signals=1. PSIG-006 in signals[] but only counted as telemetry.",
+    "bridge_failure": "Bridge does not replicate this separation — it treats all signals from active_conditions_in_scope as pressure signals when checking activation_state."
+  },
+
+  "was_psig006_moved_from_baseline": {
+    "answer": false,
+    "explanation": "PSIG-006 was ACTIVATED in baseline too (activation_state=ACTIVATED, activation_method=THEORETICAL_BASELINE, value=0). It was not moved from baseline into active signal set — it was always present as a telemetry signal. The bridge bug caused it to be miscounted as a pressure signal in the orchestrated vault."
+  },
+
+  "impact": {
+    "report_impact": "active_pressure_signals in vault/signal_registry.json shows 4 instead of 3. This may affect report sections that count pressure signals.",
+    "semantic_impact": "No semantic change to signal activation states (all 4 signals have same activation_state as expected). The pressure COUNT is wrong, not the signal classification.",
+    "remediation_required": "Fix phase_08a_vault in orchestrator: correct active_count calculation to exclude THEORETICAL_BASELINE signals from pressure count."
+  }
+}

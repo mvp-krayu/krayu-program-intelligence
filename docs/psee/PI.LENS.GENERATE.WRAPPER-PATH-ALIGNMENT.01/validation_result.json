@@ -1,0 +1,13 @@
+{
+  "contract_id": "PI.LENS.GENERATE.WRAPPER-PATH-ALIGNMENT.01",
+  "generated_date": "2026-05-02",
+  "wrapper_modified": true,
+  "renderer_modified": false,
+  "pipeline_executed": false,
+  "lens_command_exit_code": 0,
+  "package_dir_used": "clients/blueedge/psee/runs/run_blueedge_productized_01/vault",
+  "output_dir": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports",
+  "projection_resolution": "GROUNDED",
+  "normalized_diff_lines": 0,
+  "validation_status": "PASS"
+}

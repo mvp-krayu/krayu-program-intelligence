@@ -1,0 +1,72 @@
+{
+  "stream": "PI.SQO.BLUEEDGE.EVIDENCE-INGESTION-CORRIDOR.01",
+  "timestamp": "2026-05-12T00:00:00.000Z",
+  "changes": [
+    {
+      "file": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/evidence-ingestion/evidence_registry.v1.json",
+      "action": "CREATE",
+      "purpose": "Evidence registry artifact with 5 registered evidence items, governance flags, summary"
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/server/BlueEdgeEvidenceIngestionLoader.server.js",
+      "action": "CREATE",
+      "purpose": "Server-side evidence registry loader with SHA-256 hash verification"
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/client/BlueEdgeEvidenceViewModel.js",
+      "action": "CREATE",
+      "purpose": "Client-safe view model for evidence registry data"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/EvidenceIngestionCorridorPanel.jsx",
+      "action": "CREATE",
+      "purpose": "Main evidence ingestion corridor panel composing sub-components"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/EvidenceRegistryTable.jsx",
+      "action": "CREATE",
+      "purpose": "Evidence registry table with item grid, details, domain chips"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/EvidenceProvenanceSummary.jsx",
+      "action": "CREATE",
+      "purpose": "Evidence provenance summary with source types, replay/authority flags"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/EvidenceAuthorityBoundaryNotice.jsx",
+      "action": "CREATE",
+      "purpose": "Authority boundary notice with governance flag display"
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/evidence-ingestion.js",
+      "action": "CREATE",
+      "purpose": "Evidence ingestion page route with getServerSideProps"
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/SQOCockpitRouteResolver.js",
+      "action": "MODIFY",
+      "purpose": "Added evidence-ingestion to COCKPIT_SECTIONS, SECTION_ROUTES, SECTION_LABELS"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/SQOWorkspaceShell.jsx",
+      "action": "MODIFY",
+      "purpose": "Added evidence-ingestion to knownSections"
+    },
+    {
+      "file": "app/execlens-demo/styles/globals.css",
+      "action": "MODIFY",
+      "purpose": "Added evidence ingestion corridor CSS (~300 lines)"
+    },
+    {
+      "file": "app/execlens-demo/flagship-experience/tests/sqo-blueedge-evidence-ingestion-corridor.test.js",
+      "action": "CREATE",
+      "purpose": "66 tests across 12 suites for evidence ingestion corridor"
+    }
+  ],
+  "summary": {
+    "created": 8,
+    "modified": 3,
+    "deleted": 0,
+    "total": 11
+  }
+}

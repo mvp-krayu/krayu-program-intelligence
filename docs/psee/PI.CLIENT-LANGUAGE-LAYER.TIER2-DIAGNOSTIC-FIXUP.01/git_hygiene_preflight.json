@@ -1,0 +1,28 @@
+{
+  "contract_id": "PI.CLIENT-LANGUAGE-LAYER.TIER2-DIAGNOSTIC-FIXUP.01",
+  "artifact": "git_hygiene_preflight",
+  "captured_date": "2026-04-30",
+
+  "git_status_short": [
+    " M clients/blueedge/reports/tier2/lens_tier2_diagnostic_narrative.html",
+    " M clients/blueedge/reports/tier2/publish/lens_tier2_diagnostic_narrative_pub.html",
+    " M scripts/pios/lens_report_generator.py"
+  ],
+
+  "git_diff_stat": [
+    "scripts/pios/lens_report_generator.py | 722 +++ (673 insertions, 49 deletions from HEAD 031ca94)"
+  ],
+
+  "git_diff_check": "CLEAN — no whitespace errors",
+
+  "notes": {
+    "tracked_modified": [
+      "scripts/pios/lens_report_generator.py — modified in CONTRACT C + D + TIER2-DIAGNOSTIC-CORRECTION.01 + TIER2-DIAGNOSTIC-REFINEMENT.01",
+      "clients/blueedge/reports/tier2/* — modified by graph_state export writing to default legacy path"
+    ],
+    "untracked": "Multiple docs/psee/* and clients/* directories — all untracked, not in scope",
+    "target_run": "clients/blueedge/psee/runs/run_blueedge_productized_01_tier2_fixup/ — does not exist, will be created"
+  },
+
+  "preflight_verdict": "CLEAN — proceeding with FIXUP.01"
+}

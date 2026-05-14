@@ -1,0 +1,93 @@
+{
+  "contract_id": "PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01",
+  "artifact": "validation_log",
+  "generated_date": "2026-05-01",
+  "mode": "FORENSIC / READ_ONLY",
+
+  "checks": [
+    {
+      "id": "VF-01",
+      "name": "Run inventory complete",
+      "description": "Both baseline and orchestrated run directories verified to exist with required artifacts",
+      "result": "PASS",
+      "evidence": "run_inventory.json — BLOCK_A: baseline=run_blueedge_productized_01, orchestrated=run_be_orchestrated_01, both vault/signal_registry.json present"
+    },
+    {
+      "id": "VF-02",
+      "name": "Source scope match confirmed",
+      "description": "Both runs operate on the same source archive (same SHA256, same extracted canonical_repo)",
+      "result": "PASS",
+      "evidence": "source_scope_comparison.json — BLOCK_B: verdict SOURCE_SCOPE_MATCH, sha256 matches, same 741-file canonical_repo"
+    },
+    {
+      "id": "VF-03",
+      "name": "CEU grounding equivalence confirmed",
+      "description": "Both runs use the same grounding_state_v3.json (10/10 CEUs, grounding_ratio=1.0)",
+      "result": "PASS",
+      "evidence": "ceu_grounding_comparison.json — BLOCK_D: verdict CEU_MATCH, identical source file referenced"
+    },
+    {
+      "id": "VF-04",
+      "name": "Structural topology delta identified and classified",
+      "description": "Topology delta between runs documented with edge counts, computation basis, and population differences",
+      "result": "PASS",
+      "evidence": "structural_topology_comparison.json — BLOCK_C: verdict STRUCTURAL_DELTA, baseline total_edges=1937 vs orchestrated binding_envelope edges=29, fundamentally different graphs"
+    },
+    {
+      "id": "VF-05",
+      "name": "41.x pipeline pathway difference documented",
+      "description": "Baseline uses manual FastAPI conformance conformance; orchestrated uses PIOS compute scripts",
+      "result": "PASS",
+      "evidence": "41x_artifact_comparison.json — BLOCK_E: verdict 41X_DELTA, baseline_uses_manual_forensic_conformance=true, orchestrated_uses_pios_compute_scripts=true"
+    },
+    {
+      "id": "VF-06",
+      "name": "Per-signal value delta fully enumerated",
+      "description": "All 4 active signals compared with exact baseline and orchestrated values, activation states, population types, and primary entities",
+      "result": "PASS",
+      "evidence": "75x_signal_condition_comparison.json — BLOCK_F: all 4 signals documented, delta_class=SIGNAL_VALUE_DELTA, status_same=true for all"
+    },
+    {
+      "id": "VF-07",
+      "name": "Schema bridge bug identified with correct fix",
+      "description": "Phase 8a active_count bug identified, correct filter logic documented, impact quantified (active_pressure_signals 3 vs 4)",
+      "result": "PASS",
+      "evidence": "schema_bridge_analysis.json — BLOCK_G: verdict SCHEMA_BRIDGE_BUG, correct_logic field present, bridge_code_actual cited"
+    },
+    {
+      "id": "VF-08",
+      "name": "Report surface delta documented",
+      "description": "All HTML report value differences traced to artifact-level deltas; score/decision confirmed unchanged",
+      "result": "PASS",
+      "evidence": "report_surface_delta.json — BLOCK_H: verdict REPORT_DELTA_FROM_ARTIFACT, score_changed=false, decision_changed=false, schema_bridge_bug_visible_in_report=false"
+    },
+    {
+      "id": "VF-09",
+      "name": "Root cause classified from allowed verdict set",
+      "description": "Final verdict is one of the 10 defined delta classes: STRUCTURAL_TOPOLOGY_DELTA (primary) + SCHEMA_BRIDGE_BUG (secondary)",
+      "result": "PASS",
+      "evidence": "root_cause_classification.json — BLOCK_I: final_verdict=STRUCTURAL_TOPOLOGY_DELTA, secondary=SCHEMA_BRIDGE_BUG, delta_classification_table complete for all 9 deltas"
+    },
+    {
+      "id": "VF-10",
+      "name": "Remediation plan produced with blocking status and next step",
+      "description": "Remediation plan identifies selector action (REVERT), FastAPI status (BLOCKED), next contract, and fix specifications for both issues",
+      "result": "PASS",
+      "evidence": "remediation_plan.md — BLOCK_J: selector REVERT to run_blueedge_rerun_01, FastAPI BLOCKED, next_step PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.FIXUP.01, code fix for schema bridge bug included"
+    },
+    {
+      "id": "VF-11",
+      "name": "No mutation — forensic mode compliance",
+      "description": "Confirmed that no runtime, vault, run, or selector artifacts were mutated during this forensic analysis",
+      "result": "PASS",
+      "evidence": "git_hygiene.json — BLOCK_K: no_mutation_confirmed=true, all artifacts created are READ_ONLY docs in docs/psee/PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01/"
+    }
+  ],
+
+  "summary": {
+    "total_checks": 11,
+    "passed": 11,
+    "failed": 0,
+    "result": "ALL_PASS"
+  }
+}

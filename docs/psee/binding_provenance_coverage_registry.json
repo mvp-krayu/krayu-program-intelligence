@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "contract": "PI.BINDING.PROVENANCE-COVERAGE.BASELINE.01",
+  "generated_at": "2026-04-27",
+  "description": "Cross-client binding provenance coverage registry",
+  "entry_count": 2,
+  "entries": [
+    {
+      "client_id": "e65d2f0a-dfa7-4257-9333-fcbb583f0880",
+      "client_label": "OSS FastAPI Codebase",
+      "run_id": "run_02_oss_fastapi",
+      "run_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi",
+      "binding_model_origin": "BlueEdge-derived reference structural envelope",
+      "total_surfaces": 30,
+      "grounded_count": 0,
+      "ungrounded_count": 30,
+      "source_grounding_ratio": 0.0,
+      "coverage_classification": "LOW_STRUCTURAL_EXPRESSION",
+      "validation_status": "CONDITIONAL",
+      "cf_reference": "PI.BINDING.PROVENANCE-PURITY.CF-01.01",
+      "provenance_purity_status": "CF-01_REMEDIATED_CONDITIONAL",
+      "recorded_at": "2026-04-27"
+    },
+    {
+      "client_id": "e65d2f0a-dfa7-4257-9333-fcbb583f0880",
+      "client_label": "OSS FastAPI Codebase",
+      "run_id": "run_02_oss_fastapi",
+      "run_path": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi",
+      "source": "grounding_state.json",
+      "total_surfaces": 30,
+      "grounded_count": 0,
+      "non_grounded_count": 30,
+      "source_grounding_ratio": 0.0,
+      "classification": "ZERO_GROUNDING",
+      "contract": "PI.CEU.GROUNDING.01.EXECUTION-CONTRACT.01",
+      "recorded_at": "2026-04-27"
+    },
+    {
+      "entry_id": 3,
+      "contract": "PI.CEU.GROUNDING.07.GROUNDING-MATERIALIZATION.V2.01",
+      "artifact_version": "v2",
+      "source": "binding/provenance/grounding_state_v2.json",
+      "supersedes": "binding/provenance/grounding_state.json",
+      "run_id": "run_02_oss_fastapi",
+      "client_id": "e65d2f0a-dfa7-4257-9333-fcbb583f0880",
+      "generated_at": "2026-04-27",
+      "grounded_count": 13,
+      "total_surfaces": 13,
+      "source_grounding_ratio": 1.0,
+      "classification": "SOURCE_TRUTH_BOUND",
+      "current_materialized_grounding_state": true,
+      "notes": "v2 materializes explicit governed CEU assignments; v1 ZERO_GROUNDING preserved as historical evidence"
+    }
+  ]
+}

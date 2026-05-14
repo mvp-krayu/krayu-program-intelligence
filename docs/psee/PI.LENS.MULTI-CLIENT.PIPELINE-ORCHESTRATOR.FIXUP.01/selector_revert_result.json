@@ -1,0 +1,36 @@
+{
+  "contract_id": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.FIXUP.01",
+  "artifact": "selector_revert_result",
+  "block": "BLOCK_A",
+  "generated_date": "2026-05-01",
+
+  "action": "SELECTOR_REVERTED",
+  "selector_path": "clients/blueedge/lens/selector/selector.json",
+
+  "before": {
+    "current_run": "run_be_orchestrated_01"
+  },
+  "after": {
+    "current_run": "run_blueedge_rerun_01"
+  },
+
+  "rejected_run": {
+    "run_id": "run_be_orchestrated_01",
+    "status": "REJECTED_NON_CANONICAL",
+    "reason": "STRUCTURAL_TOPOLOGY_DELTA + SCHEMA_BRIDGE_BUG",
+    "source": "PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01"
+  },
+
+  "canonical_run": {
+    "run_id": "run_blueedge_rerun_01",
+    "status": "CANONICAL_BASELINE_REFERENCE",
+    "vault_source": "clients/blueedge/psee/runs/run_blueedge_productized_01/vault/"
+  },
+
+  "validation": {
+    "selector_current_run_is_canonical": true,
+    "rejected_run_remains_available": true,
+    "rejected_run_labeled_non_canonical": true,
+    "no_report_files_modified": true
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "stream": "PI.SQO.RUNTIME-OVERLAY-SYSTEM.01",
+  "changes": [
+    {
+      "file": "app/execlens-demo/lib/lens-v2/sqo/SQORuntimeOverlayLoader.js",
+      "action": "CREATED",
+      "description": "SQO artifact loader. Loads 8 artifact types per client/run from artifacts/sqo/ directory. Validates against manifest registry."
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/sqo/SQOOverlayDegradationHandler.js",
+      "action": "CREATED",
+      "description": "Fail-closed degradation handler. Assesses critical artifact availability. Builds degraded overlay shape with governance disclosure preserved."
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/sqo/SQOOverlayFormatter.js",
+      "action": "CREATED",
+      "description": "7 overlay formatters for qualification banner, maturity panel, gravity/stability indicators, debt/progression summaries, runtime warnings. S-state lookup tables."
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/sqo/SQOOverlayStateResolver.js",
+      "action": "CREATED",
+      "description": "Main overlay orchestrator. Loads artifacts, assesses degradation, formats all 9 overlay sections. Single entry point: resolveSQOOverlays(client, runId)."
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/flagshipBinding.js",
+      "action": "MODIFIED",
+      "description": "Added SQO overlay integration. Imports SQOOverlayStateResolver, resolves overlays with fail-safe try/catch, adds sqoOverlays to all return paths."
+    },
+    {
+      "file": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "action": "MODIFIED",
+      "description": "Added 6 inline SQO overlay components (QualificationBanner, MaturityPanel, GravityStabilityPanel, DebtProgressionPanel, GovernanceStrip, RuntimeWarnings) with comprehensive CSS."
+    },
+    {
+      "file": "app/execlens-demo/flagship-experience/tests/sqo-runtime-overlays.test.js",
+      "action": "CREATED",
+      "description": "39 tests across 10 suites. Covers BlueEdge/FastAPI overlay rendering, degradation, binding integration, PATH B non-mutation, Q-class non-mutation, AI language absence, client-name branching absence."
+    }
+  ]
+}

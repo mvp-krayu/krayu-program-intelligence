@@ -1,0 +1,42 @@
+{
+  "contract_id": "PI.LENS.REPORT-RENDERER.PARITY-STABILIZATION.01",
+  "generated_date": "2026-05-02",
+
+  "reports": [
+    {
+      "report_type": "TIER1_NARRATIVE",
+      "canonical_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/tier1/lens_tier1_narrative_brief.html",
+      "generated_path": "/tmp/blueedge_report_parity_semantic_bundle_01/lens_tier1_narrative_brief.html",
+      "canonical_sha256": "f60134881b2362a5857fc113cf4acde5a4e3513e5864f70b9cab1342e6014511",
+      "generated_sha256": "f60134881b2362a5857fc113cf4acde5a4e3513e5864f70b9cab1342e6014511",
+      "byte_match": true
+    },
+    {
+      "report_type": "TIER1_EVIDENCE",
+      "canonical_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/tier1/lens_tier1_evidence_brief.html",
+      "generated_path": "/tmp/blueedge_report_parity_semantic_bundle_01/lens_tier1_evidence_brief.html",
+      "canonical_sha256": "84e3d8800ee4c14ac5e19899d064307bcef676622c54cafcbf3ddea0321680ab",
+      "generated_sha256": "4c4d17bd4beebcab155da7979242d28b8da6de8c8c3a9c4022011202a7f9d4b9",
+      "byte_match": false
+    },
+    {
+      "report_type": "TIER2_DIAGNOSTIC",
+      "canonical_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/tier2/lens_tier2_diagnostic_narrative.html",
+      "generated_path": "/tmp/blueedge_report_parity_semantic_bundle_01/lens_tier2_diagnostic_narrative.html",
+      "canonical_sha256": "2a69bc0ea65515850da0d63a4392f3bc28abc8fe11d76f65648c42244d3c70fd",
+      "generated_sha256": "2f8e7803915b7c867f85e2fddd9c52cf8a38b8d25e061be34f8afa15cbe5d070",
+      "byte_match": false
+    },
+    {
+      "report_type": "DECISION_SURFACE",
+      "canonical_path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/decision/lens_decision_surface.html",
+      "generated_path": "/tmp/blueedge_report_parity_semantic_bundle_01/lens_decision_surface.html",
+      "canonical_sha256": "36886d0841fdcfc2143d7016d619cafbfcb6b69c660e11c3116be6a78cf2bc06",
+      "generated_sha256": "35a07b3ad033a88bf8c96abd5eb653d012c51b646457ec4dee0f76fa5fe5526f",
+      "byte_match": false
+    }
+  ],
+
+  "byte_parity": "FAIL",
+  "byte_parity_note": "1/4 byte match (tier1_narrative). 3/4 fail: tier1_evidence, tier2_diagnostic, decision_surface."
+}

@@ -1,0 +1,23 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE-ASSEMBLY.01",
+  "generated_date": "2026-05-03",
+  "checks": [
+    { "name": "assembly_script_syntax",       "status": "PASS" },
+    { "name": "assembly_script_executable",   "status": "PASS" },
+    { "name": "validate_mode_exits_zero",     "status": "PASS" },
+    { "name": "stage_01_source_manifest",     "status": "PASS" },
+    { "name": "stage_02_intake_classified",   "status": "PASS" },
+    { "name": "stage_03_structure_present",   "status": "PASS" },
+    { "name": "stage_04_ceu_classified",      "status": "PASS" },
+    { "name": "stage_05_dom_classified",      "status": "PASS" },
+    { "name": "stage_06_vault_locked_ref",    "status": "PASS" },
+    { "name": "stage_07_semantic_bundle",     "status": "PASS" },
+    { "name": "stage_08_reports_ready",       "status": "PASS" },
+    { "name": "stage_09_runtime_ready",       "status": "PASS" },
+    { "name": "all_producers_present",        "status": "PASS" },
+    { "name": "no_pipeline_executed",         "status": "PASS" },
+    { "name": "no_artifacts_mutated",         "status": "PASS" },
+    { "name": "overall_status_partial",       "status": "PASS" }
+  ],
+  "validation_status": "PASS"
+}

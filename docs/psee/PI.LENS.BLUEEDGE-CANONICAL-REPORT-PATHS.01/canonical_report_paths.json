@@ -1,0 +1,33 @@
+{
+  "contract_id": "PI.LENS.BLUEEDGE-CANONICAL-REPORT-PATHS.01",
+  "generated_date": "2026-05-01",
+  "client": "blueedge",
+  "canonical_run": "run_blueedge_productized_01_fixed",
+  "operator_confirmed": true,
+  "reports": [
+    {
+      "report_type": "TIER1_NARRATIVE",
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/tier1/lens_tier1_narrative_brief.html",
+      "sha256": "f60134881b2362a5857fc113cf4acde5a4e3513e5864f70b9cab1342e6014511",
+      "size_bytes": 22782
+    },
+    {
+      "report_type": "TIER1_EVIDENCE",
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/tier1/lens_tier1_evidence_brief.html",
+      "sha256": "84e3d8800ee4c14ac5e19899d064307bcef676622c54cafcbf3ddea0321680ab",
+      "size_bytes": 38145
+    },
+    {
+      "report_type": "TIER2_DIAGNOSTIC",
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/tier2/lens_tier2_diagnostic_narrative.html",
+      "sha256": "2a69bc0ea65515850da0d63a4392f3bc28abc8fe11d76f65648c42244d3c70fd",
+      "size_bytes": 71008
+    },
+    {
+      "report_type": "DECISION_SURFACE",
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/decision/lens_decision_surface.html",
+      "sha256": "36886d0841fdcfc2143d7016d619cafbfcb6b69c660e11c3116be6a78cf2bc06",
+      "size_bytes": 15169
+    }
+  ]
+}

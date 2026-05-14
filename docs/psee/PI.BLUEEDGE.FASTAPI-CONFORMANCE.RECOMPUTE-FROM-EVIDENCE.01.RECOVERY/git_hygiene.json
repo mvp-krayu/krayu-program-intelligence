@@ -1,0 +1,49 @@
+{
+  "contract_id": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01.RECOVERY",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-03",
+
+  "branch": "work/psee-runtime",
+  "baseline_commit": "9a24f3448f14375767547b9ee96a12c9674f3b04",
+  "baseline_commit_message": "[FAIL-CLOSED] E2E Blocker 11 DOM path-domain artifact absent from authorized locations",
+
+  "working_tree_before": "CLEAN",
+  "working_tree_after": "1 new stream directory with 1 restored artifact; 1 evidence directory untracked",
+
+  "files_modified_tracked": [],
+  "files_created_untracked": [
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01/recomputed/dom_path_domain_layer.json",
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01.RECOVERY/recovery_search_log.md",
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01.RECOVERY/artifact_source_trace.md",
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01.RECOVERY/recovery_decision.md",
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01.RECOVERY/validation_result.json",
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01.RECOVERY/phase8a_validation_log.md",
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01.RECOVERY/no_fabrication_attestation.md",
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01.RECOVERY/git_hygiene.json"
+  ],
+  "files_gitignored_written_by_run": [
+    "clients/blueedge/psee/runs/run_blueedge_e2e_execute_01/vault/coverage_state.json",
+    "clients/blueedge/psee/runs/run_blueedge_e2e_execute_01/vault/reconstruction_state.json",
+    "clients/blueedge/psee/runs/run_blueedge_e2e_execute_01/vault/gauge_state.json",
+    "clients/blueedge/psee/runs/run_blueedge_e2e_execute_01/vault/canonical_topology.json"
+  ],
+
+  "stash_searched": "stash@{0}^3",
+  "artifact_source": "stash@{0}^3",
+  "artifact_sha256": "f5e2a0dfeedeab8f2450b2dc6894fc63d70ed28cf8429eaed7e229f898ca29a6",
+  "content_fabricated": false,
+  "content_modified": false,
+
+  "stash_note": "stash@{0} contains additional conformance artifacts for both RECOMPUTE-FROM-EVIDENCE.01 and SIGNAL-RECOMPUTE-AND-BINDING.01 not yet restored — see recovery_decision.md",
+
+  "pipeline_executed": false,
+  "phase_validation_executed": true,
+  "wrapper_executed": false,
+  "canonical_artifacts_mutated": false,
+  "producer_scripts_modified": false,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[FIX] PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01.RECOVERY — dom_path_domain_layer.json restored from stash; Phase 8a dom artifact consumed",
+
+  "git_hygiene_status": "COMPLETE"
+}

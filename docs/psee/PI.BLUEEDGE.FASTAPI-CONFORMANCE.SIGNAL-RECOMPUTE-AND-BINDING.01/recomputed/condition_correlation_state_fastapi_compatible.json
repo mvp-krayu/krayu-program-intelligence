@@ -1,0 +1,93 @@
+{
+  "contract_id": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01",
+  "artifact": "condition_correlation_state_fastapi_compatible",
+  "schema_version": "1.0",
+  "block": "BLOCK_D",
+  "generated_date": "2026-04-29",
+  "client_uuid": "6a6fcdbc-41b6-4e0e-99b9-37394f6c870d",
+  "run_id": "run_blueedge_integrated_01",
+
+  "reformatting_basis": "Derived from signal_projection_fastapi_compatible.json. Condition IDs remapped from BlueEdge COND-XX namespace to FastAPI COND-PSIG-XXX-XX namespace. Source: blueEdge condition_correlation_state.json (COND-01..COND-10). Condition content derived from PSIG signal assignments and zone membership.",
+
+  "id_mapping_rule": "BlueEdge COND-XX conditions correlate with CEU role activations. FastAPI COND-PSIG-XXX-YY conditions correspond to signal-specific pressure conditions. Mapping is signal-driven: conditions where PSIG signals activate are assigned COND-PSIG-XXX-01 IDs.",
+
+  "total_conditions": 4,
+  "active_signal_conditions": 3,
+  "telemetry_conditions": 1,
+
+  "conditions": [
+
+    {
+      "condition_id": "COND-PSIG-001-01",
+      "signal_id": "PSIG-001",
+      "condition_type": "COUPLING_PRESSURE",
+      "activation_state": "HIGH",
+      "signal_value": 5.6630,
+      "activation_method": "RUN_RELATIVE_OUTLIER",
+      "zone_id": "PZ-001",
+      "primary_entity": "NODE-0021",
+      "primary_domain": "DOM-04",
+      "activation_basis": "NODE-0021 outbound IMPORTS count (69) is statistical outlier in 35-node distribution. z-score=5.663 > threshold 2.0.",
+      "node_refs": ["NODE-0021"],
+      "domain_refs": ["DOM-04"],
+      "evidence_source": "40.3/structural_topology_log.json"
+    },
+
+    {
+      "condition_id": "COND-PSIG-002-01",
+      "signal_id": "PSIG-002",
+      "condition_type": "DOMAIN_COUPLING_PRESSURE",
+      "activation_state": "HIGH",
+      "signal_value": 3.2098,
+      "activation_method": "RUN_RELATIVE_OUTLIER",
+      "zone_id": "PZ-001",
+      "primary_entity": null,
+      "primary_domain": "DOM-04",
+      "activation_basis": "DOM-04 aggregated IMPORTS count (71) is statistical outlier in 13-DOM distribution. z-score=3.210 > threshold 2.0.",
+      "node_refs": [],
+      "domain_refs": ["DOM-04"],
+      "evidence_source": "40.3/structural_topology_log.json + dom_path_domain_layer.json"
+    },
+
+    {
+      "condition_id": "COND-PSIG-004-01",
+      "signal_id": "PSIG-004",
+      "condition_type": "ZONE_COVERAGE_CONCENTRATION",
+      "activation_state": "HIGH",
+      "signal_value": 2.1822,
+      "activation_method": "RUN_RELATIVE_OUTLIER",
+      "zone_id": "PZ-001",
+      "primary_entity": "NODE-0021",
+      "primary_domain": "DOM-04",
+      "activation_basis": "PZ-001 contains 15/35 nodes (42.86% fraction), outlier z-score=2.182 > threshold 2.0.",
+      "node_refs": ["NODE-0021"],
+      "domain_refs": ["DOM-04"],
+      "evidence_source": "pressure_zone_state.json + ceu_node_map.json"
+    },
+
+    {
+      "condition_id": "COND-PSIG-006-01",
+      "signal_id": "PSIG-006",
+      "condition_type": "STRUCTURAL_BLIND_SPOT",
+      "activation_state": "ACTIVATED",
+      "signal_value": 0,
+      "activation_method": "THEORETICAL_BASELINE",
+      "zone_id": null,
+      "primary_entity": null,
+      "primary_domain": null,
+      "activation_basis": "unanchored_count=0 from ceu_node_map.json. No unanchored nodes — structural telemetry marker only.",
+      "node_refs": [],
+      "domain_refs": [],
+      "evidence_source": "ceu_node_map.json"
+    }
+
+  ],
+
+  "namespace_mapping": {
+    "blueedge_native": ["COND-01","COND-02","COND-03","COND-04","COND-05","COND-06","COND-07","COND-08","COND-09","COND-10"],
+    "fastapi_compatible": ["COND-PSIG-001-01","COND-PSIG-002-01","COND-PSIG-004-01","COND-PSIG-006-01"],
+    "mapping_basis": "FastAPI condition IDs are signal-derived (one condition per active PSIG). BlueEdge native COND-XX are CEU-derived (one per CEU role). The sets are orthogonal — this artifact replaces the CEU-based conditions with signal-based conditions for FastAPI conformance.",
+    "no_new_signal_types": true,
+    "no_ontology_introduced": true
+  }
+}

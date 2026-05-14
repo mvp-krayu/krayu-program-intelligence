@@ -1,0 +1,28 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE.BLOCKER-08-CLOSURE.01",
+  "artifact": "dom_validation_result",
+  "generated_date": "2026-05-03",
+
+  "client": "blueedge",
+  "source": "source_01",
+  "run": "run_blueedge_e2e_execute_01",
+
+  "blocker_08": "RESOLVED",
+  "blocker_08_root_cause": "dom_layer_generator.py::update_manifest() called fail_closed() when source_manifest.json dom_layer_path conflicted with run-specific expected path",
+  "blocker_08_fix": "conflict branch changed to log-and-skip ([LEGACY] pattern); manifest not modified; run proceeds using run-specific dom_layer.json",
+
+  "dry_run_validation": "PASS",
+  "dry_run_legacy_logged": true,
+  "dry_run_manifest_not_modified": true,
+  "dry_run_dom_complete": "1 domains, 945 nodes assigned, PASS",
+
+  "dom_layer_path": "clients/blueedge/psee/runs/run_blueedge_e2e_execute_01/dom/dom_layer.json",
+  "dom_layer_exists": true,
+  "domain_count": 1,
+  "total_nodes": 945,
+  "dom_validation_status": "PASS",
+
+  "manifest_dom_layer_path_existing": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01/recomputed/dom_path_domain_layer.json",
+  "manifest_not_updated": true,
+  "manifest_legacy_skip_reason": "legacy reference to FastAPI conformance recomputed artifact; not a run-specific path"
+}

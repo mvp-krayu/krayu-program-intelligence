@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0",
+  "sandbox_id": "sandbox-blueedge-run01-multi-001",
+  "events": [
+    {
+      "event": "MOUNT",
+      "mount_id": "mount-001",
+      "package_id": "SEP-multi-001",
+      "timestamp": "2026-05-11T23:03:00.000Z",
+      "domains_affected": ["DOMAIN-11"],
+      "delta": { "backed_count": "4→5", "DOMAIN-11": "PARTIAL→STRONG" },
+      "active_mount_count_after": 1
+    },
+    {
+      "event": "MOUNT",
+      "mount_id": "mount-002",
+      "package_id": "SEP-multi-002",
+      "timestamp": "2026-05-11T23:07:00.000Z",
+      "domains_affected": ["DOMAIN-02"],
+      "delta": { "backed_count": "5→6", "DOMAIN-02": "NONE→STRONG" },
+      "active_mount_count_after": 2
+    },
+    {
+      "event": "MOUNT",
+      "mount_id": "mount-003",
+      "package_id": "SEP-multi-003",
+      "timestamp": "2026-05-11T23:11:00.000Z",
+      "domains_affected": ["DOMAIN-08"],
+      "delta": { "backed_count": "6→7", "DOMAIN-08": "NONE→STRONG" },
+      "active_mount_count_after": 3
+    },
+    {
+      "event": "UNMOUNT",
+      "mount_id": "mount-003",
+      "package_id": "SEP-multi-003",
+      "timestamp": "2026-05-11T23:19:00.000Z",
+      "domains_affected": ["DOMAIN-08"],
+      "delta": { "backed_count": "7→6", "DOMAIN-08": "STRONG→NONE" },
+      "active_mount_count_after": 2,
+      "baseline_match_verified": false
+    },
+    {
+      "event": "UNMOUNT",
+      "mount_id": "mount-002",
+      "package_id": "SEP-multi-002",
+      "timestamp": "2026-05-11T23:22:00.000Z",
+      "domains_affected": ["DOMAIN-02"],
+      "delta": { "backed_count": "6→5", "DOMAIN-02": "STRONG→NONE" },
+      "active_mount_count_after": 1,
+      "baseline_match_verified": false
+    },
+    {
+      "event": "UNMOUNT",
+      "mount_id": "mount-001",
+      "package_id": "SEP-multi-001",
+      "timestamp": "2026-05-11T23:25:00.000Z",
+      "domains_affected": ["DOMAIN-11"],
+      "delta": { "backed_count": "5→4", "DOMAIN-11": "STRONG→PARTIAL" },
+      "active_mount_count_after": 0,
+      "baseline_match_verified": true
+    }
+  ]
+}

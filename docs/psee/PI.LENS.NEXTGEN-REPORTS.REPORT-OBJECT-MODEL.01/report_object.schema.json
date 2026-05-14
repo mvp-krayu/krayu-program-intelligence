@@ -1,0 +1,700 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "lens/schemas/report_object.schema.json",
+  "title": "ReportObject",
+  "description": "LENS NextGen Executive Intelligence Report Object — governed bridge artifact from GEIOS substrate to LENS executive rendering surface. This object is sealed at generation time and immutable at the LENS rendering layer.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "report_id",
+    "baseline_ref",
+    "stream_ref",
+    "generated_at",
+    "evidence_object_hash",
+    "derivation_hash",
+    "governance_verdict",
+    "readiness_state",
+    "qualifier_class",
+    "topology_scope",
+    "header_block",
+    "narrative_block",
+    "evidence_blocks",
+    "trace_block",
+    "explainability_bundle",
+    "interaction_registry",
+    "module_registry",
+    "rendering_metadata",
+    "trace_linkage"
+  ],
+  "properties": {
+    "report_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "IMMUTABLE — Unique report identifier. Set at generation time. Stable across all sessions and phases. Never modified at LENS rendering layer."
+    },
+    "baseline_ref": {
+      "type": "string",
+      "minLength": 1,
+      "description": "IMMUTABLE — Active governance baseline reference. e.g. 'governed-dpsig-baseline-v1'."
+    },
+    "stream_ref": {
+      "type": "string",
+      "minLength": 1,
+      "description": "IMMUTABLE — Originating pipeline stream identifier."
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "IMMUTABLE — ISO8601 generation timestamp."
+    },
+    "evidence_object_hash": {
+      "type": "string",
+      "minLength": 1,
+      "description": "IMMUTABLE — GEIOS-sealed evidence envelope hash. Verified by BridgeValidator before any rendering. Absence or mismatch triggers BLOCKED state. Never displayed in executive surface. Never modified at LENS layer."
+    },
+    "derivation_hash": {
+      "type": "string",
+      "minLength": 1,
+      "description": "IMMUTABLE — TAXONOMY-01 derivation hash from GEIOS derivation record. For audit reference only. Available in LINEAGE explainability panel. Never displayed in primary executive surface."
+    },
+    "governance_verdict": {
+      "type": "string",
+      "enum": ["PASS", "FAIL"],
+      "description": "IMMUTABLE — Governance outcome from GEIOS enforcement layer. FAIL triggers BLOCKED module rendering. Never overridden at LENS layer."
+    },
+    "readiness_state": {
+      "type": "string",
+      "enum": [
+        "EXECUTIVE_READY",
+        "EXECUTIVE_READY_WITH_QUALIFIER",
+        "DIAGNOSTIC_ONLY",
+        "SUPPRESSED_FROM_EXECUTIVE",
+        "BLOCKED_PENDING_DOMAIN_GROUNDING"
+      ],
+      "description": "IMMUTABLE — Executive readiness classification from DPSIG readiness gate (Lane A). Drives readiness badge rendering. Never re-classified at LENS layer."
+    },
+    "qualifier_class": {
+      "type": "string",
+      "enum": ["Q-00", "Q-01", "Q-02", "Q-03", "Q-04"],
+      "description": "IMMUTABLE — Qualifier class from GEIOS cognitive normalization pipeline. Never suppressed, hidden, or upgraded at LENS rendering layer. Q-04 triggers explicit absence notice."
+    },
+    "topology_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain_count", "cluster_count", "grounded_domain_count", "grounding_label"],
+      "description": "Read-only scope metadata. Never used to compute or derive signals at LENS layer.",
+      "properties": {
+        "domain_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total domains in client topology."
+        },
+        "cluster_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total clusters in client topology."
+        },
+        "grounded_domain_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Domains with semantic grounding at analysis time."
+        },
+        "grounding_label": {
+          "type": "string",
+          "description": "Human-readable scope note. ALI-applied. e.g. 'Full Coverage' or 'Partial Coverage (5 of 12 domains)'."
+        }
+      }
+    },
+    "header_block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["readiness_badge", "scope_indicator", "report_metadata"],
+      "properties": {
+        "readiness_badge": {
+          "$ref": "#/definitions/ReadinessBadgeObject"
+        },
+        "scope_indicator": {
+          "$ref": "#/definitions/ScopeIndicatorObject"
+        },
+        "report_metadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["report_id", "generated_at", "baseline_ref"],
+          "properties": {
+            "report_id": {
+              "type": "string",
+              "description": "Reference to root report_id."
+            },
+            "generated_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "baseline_ref": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "narrative_block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["executive_summary", "why_section", "structural_summary"],
+      "description": "All text has ALI-01..07 normalization applied at GEIOS generation time. LENS renders as-is without re-normalization or supplementation.",
+      "properties": {
+        "executive_summary": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Normalized executive summary. Inverted pyramid: conclusion first. No raw technical labels."
+        },
+        "why_section": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Primary causal chain. Evidence-sourced and normalized. Answers: why does this readiness state exist?"
+        },
+        "structural_summary": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Key structural findings ranked by pressure. Normalized."
+        }
+      }
+    },
+    "evidence_blocks": {
+      "type": "array",
+      "minItems": 1,
+      "description": "One EvidenceBlock per analyzed domain. Sealed by evidence_object_hash.",
+      "items": {
+        "$ref": "#/definitions/EvidenceBlock"
+      }
+    },
+    "trace_block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["propagation_path", "propagation_summary", "derivation_lineage_ref", "baseline_ref"],
+      "description": "Propagation path and derivation lineage. ADVISORY audience by default. Collapsed in executive view.",
+      "properties": {
+        "propagation_path": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Ordered domain/cluster aliases showing pressure propagation direction. No raw topology keys."
+        },
+        "propagation_summary": {
+          "type": "string",
+          "description": "Normalized propagation narrative."
+        },
+        "derivation_lineage_ref": {
+          "type": "string",
+          "description": "Stream reference for audit. Shown as label only; not decoded in executive surface."
+        },
+        "baseline_ref": {
+          "type": "string",
+          "description": "Baseline anchor for this derivation."
+        }
+      }
+    },
+    "explainability_bundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "why_panel",
+        "evidence_panel",
+        "trace_panel",
+        "qualifiers_panel",
+        "lineage_panel",
+        "confidence_panel",
+        "readiness_state_panel"
+      ],
+      "description": "Exactly seven pre-rendered explainability panels. All content generated at GEIOS generation time. LENS renders; does not generate.",
+      "properties": {
+        "why_panel": {
+          "$ref": "#/definitions/ExplainabilityPanel",
+          "description": "WHY panel: causal chain explaining readiness state."
+        },
+        "evidence_panel": {
+          "$ref": "#/definitions/ExplainabilityPanel",
+          "description": "EVIDENCE panel: grounded domain evidence by domain."
+        },
+        "trace_panel": {
+          "$ref": "#/definitions/ExplainabilityPanel",
+          "description": "TRACE panel: propagation path and derivation lineage."
+        },
+        "qualifiers_panel": {
+          "$ref": "#/definitions/ExplainabilityPanel",
+          "description": "QUALIFIERS panel: all active qualifier labels and scope notes."
+        },
+        "lineage_panel": {
+          "$ref": "#/definitions/ExplainabilityPanel",
+          "description": "LINEAGE panel: baseline, stream, run references for audit."
+        },
+        "confidence_panel": {
+          "$ref": "#/definitions/ExplainabilityPanel",
+          "description": "CONFIDENCE panel: grounding depth and evidence completeness."
+        },
+        "readiness_state_panel": {
+          "$ref": "#/definitions/ExplainabilityPanel",
+          "description": "READINESS_STATE panel: full readiness classification detail."
+        }
+      }
+    },
+    "interaction_registry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["interactions"],
+      "description": "Registered interaction injection points. Phase 2: only EXPAND_COLLAPSE may be active.",
+      "properties": {
+        "interactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InteractionEntry"
+          }
+        }
+      }
+    },
+    "module_registry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entries"],
+      "description": "Deterministic module registry. Set at generation time. Immutable at LENS layer.",
+      "properties": {
+        "entries": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/ModuleRegistryEntry"
+          }
+        }
+      }
+    },
+    "rendering_metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "normalization_version",
+        "ali_rules_applied",
+        "qualifier_rules_applied",
+        "surface_mode",
+        "explainability_panels_rendered",
+        "topology_scope_verified",
+        "evidence_hash_verified",
+        "rendered_at",
+        "lens_version"
+      ],
+      "properties": {
+        "normalization_version": {
+          "type": "string",
+          "description": "Cognitive normalization version applied at generation."
+        },
+        "ali_rules_applied": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "ALI rules applied. e.g. ['ALI-01', 'ALI-02', 'ALI-04']."
+        },
+        "qualifier_rules_applied": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Qualifier rules applied. e.g. ['Q-01']."
+        },
+        "surface_mode": {
+          "$ref": "#/definitions/SurfaceMode"
+        },
+        "explainability_panels_rendered": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Panel IDs included in this bundle."
+        },
+        "topology_scope_verified": {
+          "type": "boolean",
+          "description": "Whether topology_scope was verified as read-only at generation."
+        },
+        "evidence_hash_verified": {
+          "type": "boolean",
+          "description": "Whether evidence_object_hash was verified at generation."
+        },
+        "rendered_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when LENS renderer produced the final module."
+        },
+        "lens_version": {
+          "type": "string",
+          "description": "LENS renderer version."
+        }
+      }
+    },
+    "trace_linkage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_object_hash",
+        "derivation_hash",
+        "baseline_anchor",
+        "stream_anchor",
+        "run_id"
+      ],
+      "description": "Governance provenance anchor for replay and audit. Not rendered in primary executive surface.",
+      "properties": {
+        "evidence_object_hash": {
+          "type": "string",
+          "description": "AUDIT ONLY — Links to sealed evidence envelope."
+        },
+        "derivation_hash": {
+          "type": "string",
+          "description": "AUDIT ONLY — Links to TAXONOMY-01 derivation record."
+        },
+        "baseline_anchor": {
+          "type": "string",
+          "description": "e.g. 'governed-dpsig-baseline-v1'."
+        },
+        "stream_anchor": {
+          "type": "string",
+          "description": "Originating stream identifier."
+        },
+        "run_id": {
+          "type": "string",
+          "description": "Pipeline run identifier. Used as replay anchor for Type 5 memory continuity (Phase 5+)."
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ReadinessState": {
+      "type": "string",
+      "enum": [
+        "EXECUTIVE_READY",
+        "EXECUTIVE_READY_WITH_QUALIFIER",
+        "DIAGNOSTIC_ONLY",
+        "SUPPRESSED_FROM_EXECUTIVE",
+        "BLOCKED_PENDING_DOMAIN_GROUNDING"
+      ]
+    },
+    "QualifierClass": {
+      "type": "string",
+      "enum": ["Q-00", "Q-01", "Q-02", "Q-03", "Q-04"]
+    },
+    "GovernanceVerdict": {
+      "type": "string",
+      "enum": ["PASS", "FAIL"]
+    },
+    "SurfaceMode": {
+      "type": "string",
+      "enum": [
+        "EXECUTIVE_READY",
+        "EXECUTIVE_READY_WITH_QUALIFIER",
+        "DIAGNOSTIC_ONLY",
+        "STRUCTURAL_ONLY",
+        "BLOCKED"
+      ]
+    },
+    "ModuleType": {
+      "type": "string",
+      "enum": [
+        "EXECUTIVE_SUMMARY_MODULE",
+        "DOMAIN_EVIDENCE_MODULE",
+        "PROPAGATION_MODULE",
+        "EXPLAINABILITY_MODULE",
+        "TOPOLOGY_MODULE",
+        "INVESTIGATION_MODULE",
+        "CONTINUITY_MODULE",
+        "OPERATIONAL_MODULE"
+      ]
+    },
+    "InteractionType": {
+      "type": "string",
+      "enum": [
+        "EXPAND_COLLAPSE",
+        "EVIDENCE_DRAWER",
+        "INVESTIGATION_ENTRY",
+        "COPILOT_ENTRY"
+      ]
+    },
+    "Audience": {
+      "type": "string",
+      "enum": ["EXECUTIVE", "ADVISORY", "AUDIT"]
+    },
+    "PropagationRole": {
+      "type": "string",
+      "enum": ["ORIGIN", "RECEIVER", "PASS_THROUGH", "ISOLATED"]
+    },
+    "PressureTier": {
+      "type": "string",
+      "enum": ["HIGH", "ELEVATED", "MODERATE", "LOW"]
+    },
+    "PanelId": {
+      "type": "string",
+      "enum": [
+        "WHY",
+        "EVIDENCE",
+        "TRACE",
+        "QUALIFIERS",
+        "LINEAGE",
+        "CONFIDENCE",
+        "READINESS_STATE"
+      ]
+    },
+    "ContentBlockType": {
+      "type": "string",
+      "enum": [
+        "NARRATIVE",
+        "LIST",
+        "SIGNAL_CARD",
+        "QUALIFIER_CHIP",
+        "REFERENCE",
+        "PROPAGATION"
+      ]
+    },
+    "ReadinessBadgeObject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state_label", "color_token"],
+      "properties": {
+        "state_label": {
+          "type": "string",
+          "description": "ALI-03 applied executive label. No raw readiness_state key. e.g. 'Executive Ready'."
+        },
+        "qualifier_label": {
+          "type": "string",
+          "description": "Q-xx taxonomy label. Present for Q-01..Q-04; empty string for Q-00. Never null."
+        },
+        "color_token": {
+          "type": "string",
+          "description": "Design system color token reference. Never a raw hex value. e.g. '--intelligence-authority'."
+        },
+        "tooltip_text": {
+          "type": "string",
+          "description": "Qualifier explanation text from Q-taxonomy. Present for Q-01..Q-04; empty string for Q-00."
+        }
+      }
+    },
+    "ScopeIndicatorObject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain_label", "grounding_label", "cluster_label"],
+      "properties": {
+        "domain_label": {
+          "type": "string",
+          "description": "e.g. '12 Domains Analyzed'."
+        },
+        "grounding_label": {
+          "type": "string",
+          "description": "e.g. 'Full Coverage' or 'Partial Coverage (5 of 12)'."
+        },
+        "cluster_label": {
+          "type": "string",
+          "description": "e.g. '47 Clusters'."
+        }
+      }
+    },
+    "EvidenceBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain_alias",
+        "grounding_status",
+        "grounding_label",
+        "signal_cards",
+        "evidence_description",
+        "propagation_role"
+      ],
+      "properties": {
+        "domain_alias": {
+          "type": "string",
+          "description": "ALI-04 applied. No raw domain ID or technical key."
+        },
+        "grounding_status": {
+          "$ref": "#/definitions/QualifierClass",
+          "description": "Qualifier class for this specific domain."
+        },
+        "grounding_label": {
+          "type": "string",
+          "description": "Human-readable scope note for this domain. e.g. 'Full Grounding'."
+        },
+        "signal_cards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SignalCard"
+          }
+        },
+        "evidence_description": {
+          "type": "string",
+          "description": "Normalized domain evidence description. ALI-applied."
+        },
+        "propagation_role": {
+          "$ref": "#/definitions/PropagationRole"
+        }
+      }
+    },
+    "SignalCard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "signal_label",
+        "pressure_label",
+        "pressure_tier",
+        "qualifier_label",
+        "evidence_text"
+      ],
+      "properties": {
+        "signal_label": {
+          "type": "string",
+          "description": "ALI-01 (CPI) or ALI-02 (CFA) applied. No raw signal key (never 'cpi_score', 'cfa_score')."
+        },
+        "pressure_label": {
+          "type": "string",
+          "description": "Human-readable pressure description. e.g. 'Elevated Cluster Pressure'."
+        },
+        "pressure_tier": {
+          "$ref": "#/definitions/PressureTier"
+        },
+        "qualifier_label": {
+          "type": "string",
+          "description": "Q-xx label for this signal. Empty string for Q-00. Never null for Q-01..Q-04."
+        },
+        "evidence_text": {
+          "type": "string",
+          "description": "Normalized evidence description for this signal."
+        }
+      }
+    },
+    "ExplainabilityPanel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["panel_id", "panel_title", "content_blocks", "audience", "available_in_phase"],
+      "properties": {
+        "panel_id": {
+          "$ref": "#/definitions/PanelId"
+        },
+        "panel_title": {
+          "type": "string",
+          "description": "Human-readable panel title."
+        },
+        "content_blocks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContentBlock"
+          }
+        },
+        "audience": {
+          "$ref": "#/definitions/Audience"
+        },
+        "available_in_phase": {
+          "type": "integer",
+          "minimum": 2,
+          "description": "2 = pre-rendered static (Phase 2); 3 = interactive drawer (Phase 3+)."
+        }
+      }
+    },
+    "ContentBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["block_type", "content"],
+      "properties": {
+        "block_type": {
+          "$ref": "#/definitions/ContentBlockType"
+        },
+        "content": {
+          "description": "Type-specific content. String for NARRATIVE, LIST, REFERENCE; object for SIGNAL_CARD, QUALIFIER_CHIP, PROPAGATION.",
+          "oneOf": [
+            { "type": "string" },
+            { "type": "object" }
+          ]
+        },
+        "qualifier_ref": {
+          "description": "Qualifier reference for this content block. Null if not qualifier-specific.",
+          "oneOf": [
+            { "$ref": "#/definitions/QualifierClass" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "InteractionEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "interaction_id",
+        "interaction_type",
+        "target_module_id",
+        "phase_required",
+        "active",
+        "governance_gate"
+      ],
+      "properties": {
+        "interaction_id": {
+          "type": "string",
+          "description": "Unique stable interaction identifier."
+        },
+        "interaction_type": {
+          "$ref": "#/definitions/InteractionType"
+        },
+        "target_module_id": {
+          "type": "string",
+          "description": "Module this interaction applies to."
+        },
+        "phase_required": {
+          "type": "integer",
+          "minimum": 2,
+          "description": "Phase gate required to activate this interaction."
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Phase 2 constraint: only EXPAND_COLLAPSE interactions may be true. All others must be false until their phase gate is passed."
+        },
+        "governance_gate": {
+          "type": "string",
+          "description": "Gate identifier from maturity model. e.g. 'GATE-2', 'GATE-3'."
+        }
+      }
+    },
+    "ModuleRegistryEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "module_id",
+        "module_type",
+        "report_id",
+        "evidence_ref",
+        "active",
+        "phase_gate",
+        "registered_at"
+      ],
+      "properties": {
+        "module_id": {
+          "type": "string",
+          "description": "Deterministic stable module identifier. Set at generation time."
+        },
+        "module_type": {
+          "$ref": "#/definitions/ModuleType"
+        },
+        "report_id": {
+          "type": "string",
+          "description": "Parent report_id reference."
+        },
+        "evidence_ref": {
+          "type": "string",
+          "description": "evidence_object_hash reference for this module."
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Phase 2 active: EXECUTIVE_SUMMARY_MODULE, DOMAIN_EVIDENCE_MODULE, PROPAGATION_MODULE, EXPLAINABILITY_MODULE. Others are false placeholders."
+        },
+        "phase_gate": {
+          "type": "integer",
+          "minimum": 2,
+          "description": "Phase required to activate. Phase 2 modules: 2."
+        },
+        "registered_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

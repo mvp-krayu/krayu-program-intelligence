@@ -1,0 +1,31 @@
+{
+  "contract_id": "PI.LENS.END-TO-END-RERUN.BLUEEDGE.01",
+  "artifact": "structural_consistency",
+  "captured_date": "2026-04-30",
+
+  "source": "clients/blueedge/psee/runs/run_blueedge_productized_01/ (READ ONLY)",
+
+  "checks": [
+    {"id": "SC-01", "fact": "semantic domains total", "expected": 17, "actual": 17, "result": "PASS", "source": "semantic_topology_model.json domains[]"},
+    {"id": "SC-02", "fact": "structural groups grounded", "expected": 13, "actual": 13, "result": "PASS", "source": "canonical_topology.json domains[]"},
+    {"id": "SC-03", "fact": "backed domains", "expected": 5, "actual": 5, "result": "PASS", "source": "semantic_topology_model.json dom_bindings_summary[]"},
+    {"id": "SC-04", "fact": "semantic-only domains", "expected": 12, "actual": 12, "result": "PASS", "source": "17 - 5 = 12"},
+    {"id": "SC-05", "fact": "clusters", "expected": 5, "actual": 5, "result": "PASS", "source": "semantic_topology_model.json clusters[]"},
+    {"id": "SC-06", "fact": "pressure zones", "expected": 1, "actual": 1, "result": "PASS", "source": "pressure_zone_projection.json zone_projection[]"},
+    {"id": "SC-07", "fact": "zone ID", "expected": "PZ-001", "actual": "PZ-001", "result": "PASS", "source": "pressure_zone_projection.json zone_projection[0].zone_id"},
+    {"id": "SC-08", "fact": "zone label", "expected": "Platform Infrastructure and Data", "actual": "Platform Infrastructure and Data (from language layer / semantic cluster)", "result": "PASS", "source": "language layer / cluster label — consistent with prior validated family"},
+    {"id": "SC-09", "fact": "DOM backing anchor_id", "expected": "DOM-04", "actual": "DOM-04", "result": "PASS", "source": "pressure_zone_projection.json zone_projection[0].anchor_id"},
+    {"id": "SC-10", "fact": "DOM backing anchor_name", "expected": "backend_app_root", "actual": "backend_app_root", "result": "PASS", "source": "pressure_zone_projection.json zone_projection[0].anchor_name"},
+    {"id": "SC-11", "fact": "active signals", "expected": ["PSIG-001", "PSIG-002", "PSIG-004"], "actual": ["PSIG-001", "PSIG-002", "PSIG-004"], "result": "PASS", "source": "signal_projection.json active_conditions_in_scope[activation_method=RUN_RELATIVE_OUTLIER]"},
+    {"id": "SC-12", "fact": "baseline signal", "expected": ["PSIG-006"], "actual": ["PSIG-006"], "result": "PASS", "source": "signal_projection.json active_conditions_in_scope[activation_method=THEORETICAL_BASELINE]"},
+    {"id": "SC-13", "fact": "not activated", "expected": ["PSIG-003", "PSIG-005"], "actual": ["PSIG-003", "PSIG-005"], "result": "PASS", "source": "signal_projection.json signals_not_activated[]"}
+  ],
+
+  "summary": {
+    "total": 13,
+    "passed": 13,
+    "failed": 0
+  },
+
+  "verdict": "STRUCTURAL_CONSISTENCY_PASS — all 13 structural checks match baseline exactly"
+}

@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "client": "fastapi",
+  "run_id": "run_02_oss_fastapi_pipeline",
+  "verification_timestamp": "2026-05-10T13:57:16.133Z",
+  "checks": {
+    "input_integrity": {
+      "pass": true,
+      "mismatches": []
+    },
+    "deterministic_recomputation": {
+      "pass": true,
+      "stored": {
+        "overall_maturity_score": 0.208,
+        "overall_classification": "LOW"
+      },
+      "recomputed": {
+        "overall_maturity_score": 0.208,
+        "overall_classification": "LOW"
+      }
+    },
+    "output_hash": {
+      "pass": true,
+      "stored_hash": "sha256:87c150ed341a19b5ca100980cd9b4b17f316a672979d8febabda9d65fa06409a",
+      "recomputed_hash": "sha256:87c150ed341a19b5ca100980cd9b4b17f316a672979d8febabda9d65fa06409a"
+    }
+  },
+  "overall_verdict": "PASS",
+  "governance": {
+    "operation": "maturity_replay_verification",
+    "operation_version": "1.0"
+  }
+}

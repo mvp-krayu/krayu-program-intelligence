@@ -1,0 +1,86 @@
+{
+  "stream": "PI.SQO.DYNAMIC-CEU-ACTIVATION-MODEL.01",
+  "changes": [
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU-ACTIVATION-MODEL.01/DYNAMIC_CEU_ACTIVATION_LIFECYCLE.md",
+      "action": "CREATED",
+      "description": "8-phase activation lifecycle: registration through terminal state, validation checks, governance constraints"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU-ACTIVATION-MODEL.01/OVERLAY_STATE_MACHINE.md",
+      "action": "CREATED",
+      "description": "6 states, 9 transitions, state machine rules, transient state handling, audit records"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU-ACTIVATION-MODEL.01/ACTIVATION_AUTHORIZATION_MODEL.md",
+      "action": "CREATED",
+      "description": "3 authorization sources, no autonomous activation rule, scope matching, denial handling"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU-ACTIVATION-MODEL.01/QUALIFICATION_REEVALUATION_TRIGGER_MODEL.md",
+      "action": "CREATED",
+      "description": "4 trigger types, trigger-to-re-evaluation flows, S-state advancement/regression, trigger governance"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU-ACTIVATION-MODEL.01/OVERLAY_DEPENDENCY_AND_CONFLICT_MODEL.md",
+      "action": "CREATED",
+      "description": "Dependency model, conflict types, 4 resolution rules, conflict limits, governance escalation"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU-ACTIVATION-MODEL.01/OVERLAY_REVOCATION_AND_ROLLBACK_MODEL.md",
+      "action": "CREATED",
+      "description": "3 revocation types, version rollback, full overlay reset, replay chain preservation"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU-ACTIVATION-MODEL.01/REPLAY_RECONSTRUCTION_MODEL.md",
+      "action": "CREATED",
+      "description": "5 replay inputs, 8-step reconstruction, 3 verification types, replay snapshots, failure handling"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU-ACTIVATION-MODEL.01/SEMANTIC_CLASS_ACTIVATION_GATING.md",
+      "action": "CREATED",
+      "description": "3-point enforcement, class-claim compatibility matrix, class expansion governance"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU-ACTIVATION-MODEL.01/MULTI_OVERLAY_ACTIVATION_SEQUENCING.md",
+      "action": "CREATED",
+      "description": "Activation sequencing, application order, re-evaluation serialization, interaction patterns"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU-ACTIVATION-MODEL.01/ACTIVATION_AUDITABILITY_MODEL.md",
+      "action": "CREATED",
+      "description": "6 auditability properties, 15 event types, hash-chain integrity, mandatory disclosure"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU-ACTIVATION-MODEL.01/OVERLAY_CERTIFICATION_BOUNDARIES.md",
+      "action": "CREATED",
+      "description": "5 boundary types, certification matrix, per-phase enforcement, boundary evolution governance"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU-ACTIVATION-MODEL.01/PATH_BOUNDARY_VALIDATION.md",
+      "action": "CREATED",
+      "description": "Path identity confirmation, compliance matrix, design questions answered, architecture diagram"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU-ACTIVATION-MODEL.01/execution_report.md",
+      "action": "CREATED",
+      "description": "Pre-flight, scope, upstream references, 12 execution steps, governance compliance"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU-ACTIVATION-MODEL.01/file_changes.json",
+      "action": "CREATED",
+      "description": "File change manifest for this stream"
+    },
+    {
+      "file": "docs/pios/PI.SQO.DYNAMIC-CEU-ACTIVATION-MODEL.01/CLOSURE.md",
+      "action": "CREATED",
+      "description": "Stream closure record"
+    }
+  ],
+  "summary": {
+    "created": 15,
+    "modified": 0,
+    "deleted": 0,
+    "total": 15
+  }
+}

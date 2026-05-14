@@ -1,0 +1,464 @@
+{
+  "schema_version": "1.0",
+  "client": "blueedge",
+  "run_id": "run_blueedge_productized_01_fixed",
+  "timestamp": "2026-05-10T13:34:25.291Z",
+  "s_state": "S2",
+  "total_debt_items": 15,
+  "debt_items": [
+    {
+      "id": "DEBT-GROUNDING_GAP-01",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "description": "Domain 'Telemetry Transport and Messaging' has lineage_status 'NONE' (requires EXACT or STRONG)",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOMAIN-02].lineage_status",
+        "current_value": "NONE",
+        "required_value": "EXACT or STRONG"
+      },
+      "blocks_s_state": "S3",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides evidence mapping each domain to structural components. Re-run semantic pipeline with evidence-enriched inputs.",
+        "source_material_needed": "Evidence mapping each ungrounded domain to structural components",
+        "enrichment_pathway": "R4",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D2",
+            "D4"
+          ],
+          "s_state_progression": "S2_TO_S3"
+        }
+      },
+      "priority_score": 6,
+      "priority": 1
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-02",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "description": "Domain 'Fleet Core Operations' has lineage_status 'NONE' (requires EXACT or STRONG)",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOMAIN-03].lineage_status",
+        "current_value": "NONE",
+        "required_value": "EXACT or STRONG"
+      },
+      "blocks_s_state": "S3",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides evidence mapping each domain to structural components. Re-run semantic pipeline with evidence-enriched inputs.",
+        "source_material_needed": "Evidence mapping each ungrounded domain to structural components",
+        "enrichment_pathway": "R4",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D2",
+            "D4"
+          ],
+          "s_state_progression": "S2_TO_S3"
+        }
+      },
+      "priority_score": 6,
+      "priority": 2
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-03",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "description": "Domain 'Fleet Vertical Extensions' has lineage_status 'NONE' (requires EXACT or STRONG)",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOMAIN-04].lineage_status",
+        "current_value": "NONE",
+        "required_value": "EXACT or STRONG"
+      },
+      "blocks_s_state": "S3",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides evidence mapping each domain to structural components. Re-run semantic pipeline with evidence-enriched inputs.",
+        "source_material_needed": "Evidence mapping each ungrounded domain to structural components",
+        "enrichment_pathway": "R4",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D2",
+            "D4"
+          ],
+          "s_state_progression": "S2_TO_S3"
+        }
+      },
+      "priority_score": 6,
+      "priority": 3
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-04",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "description": "Domain 'Analytics and Intelligence' has lineage_status 'NONE' (requires EXACT or STRONG)",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOMAIN-05].lineage_status",
+        "current_value": "NONE",
+        "required_value": "EXACT or STRONG"
+      },
+      "blocks_s_state": "S3",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides evidence mapping each domain to structural components. Re-run semantic pipeline with evidence-enriched inputs.",
+        "source_material_needed": "Evidence mapping each ungrounded domain to structural components",
+        "enrichment_pathway": "R4",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D2",
+            "D4"
+          ],
+          "s_state_progression": "S2_TO_S3"
+        }
+      },
+      "priority_score": 6,
+      "priority": 4
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-05",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "description": "Domain 'AI/ML Intelligence Layer' has lineage_status 'NONE' (requires EXACT or STRONG)",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOMAIN-06].lineage_status",
+        "current_value": "NONE",
+        "required_value": "EXACT or STRONG"
+      },
+      "blocks_s_state": "S3",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides evidence mapping each domain to structural components. Re-run semantic pipeline with evidence-enriched inputs.",
+        "source_material_needed": "Evidence mapping each ungrounded domain to structural components",
+        "enrichment_pathway": "R4",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D2",
+            "D4"
+          ],
+          "s_state_progression": "S2_TO_S3"
+        }
+      },
+      "priority_score": 6,
+      "priority": 5
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-06",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "description": "Domain 'Sensor and Security Ingestion' has lineage_status 'NONE' (requires EXACT or STRONG)",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOMAIN-07].lineage_status",
+        "current_value": "NONE",
+        "required_value": "EXACT or STRONG"
+      },
+      "blocks_s_state": "S3",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides evidence mapping each domain to structural components. Re-run semantic pipeline with evidence-enriched inputs.",
+        "source_material_needed": "Evidence mapping each ungrounded domain to structural components",
+        "enrichment_pathway": "R4",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D2",
+            "D4"
+          ],
+          "s_state_progression": "S2_TO_S3"
+        }
+      },
+      "priority_score": 6,
+      "priority": 6
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-07",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "description": "Domain 'Real-Time Streaming and Gateway' has lineage_status 'NONE' (requires EXACT or STRONG)",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOMAIN-08].lineage_status",
+        "current_value": "NONE",
+        "required_value": "EXACT or STRONG"
+      },
+      "blocks_s_state": "S3",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides evidence mapping each domain to structural components. Re-run semantic pipeline with evidence-enriched inputs.",
+        "source_material_needed": "Evidence mapping each ungrounded domain to structural components",
+        "enrichment_pathway": "R4",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D2",
+            "D4"
+          ],
+          "s_state_progression": "S2_TO_S3"
+        }
+      },
+      "priority_score": 6,
+      "priority": 7
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-08",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "description": "Domain 'Access Control and Identity' has lineage_status 'NONE' (requires EXACT or STRONG)",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOMAIN-09].lineage_status",
+        "current_value": "NONE",
+        "required_value": "EXACT or STRONG"
+      },
+      "blocks_s_state": "S3",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides evidence mapping each domain to structural components. Re-run semantic pipeline with evidence-enriched inputs.",
+        "source_material_needed": "Evidence mapping each ungrounded domain to structural components",
+        "enrichment_pathway": "R4",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D2",
+            "D4"
+          ],
+          "s_state_progression": "S2_TO_S3"
+        }
+      },
+      "priority_score": 6,
+      "priority": 8
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-09",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "description": "Domain 'Event-Driven Architecture' has lineage_status 'PARTIAL' (requires EXACT or STRONG)",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOMAIN-11].lineage_status",
+        "current_value": "PARTIAL",
+        "required_value": "EXACT or STRONG"
+      },
+      "blocks_s_state": "S3",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides evidence mapping each domain to structural components. Re-run semantic pipeline with evidence-enriched inputs.",
+        "source_material_needed": "Evidence mapping each ungrounded domain to structural components",
+        "enrichment_pathway": "R4",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D2",
+            "D4"
+          ],
+          "s_state_progression": "S2_TO_S3"
+        }
+      },
+      "priority_score": 6,
+      "priority": 9
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-10",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "description": "Domain 'SaaS Platform Layer' has lineage_status 'NONE' (requires EXACT or STRONG)",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOMAIN-12].lineage_status",
+        "current_value": "NONE",
+        "required_value": "EXACT or STRONG"
+      },
+      "blocks_s_state": "S3",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides evidence mapping each domain to structural components. Re-run semantic pipeline with evidence-enriched inputs.",
+        "source_material_needed": "Evidence mapping each ungrounded domain to structural components",
+        "enrichment_pathway": "R4",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D2",
+            "D4"
+          ],
+          "s_state_progression": "S2_TO_S3"
+        }
+      },
+      "priority_score": 6,
+      "priority": 10
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-11",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "description": "Domain 'External Integration' has lineage_status 'NONE' (requires EXACT or STRONG)",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOMAIN-13].lineage_status",
+        "current_value": "NONE",
+        "required_value": "EXACT or STRONG"
+      },
+      "blocks_s_state": "S3",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides evidence mapping each domain to structural components. Re-run semantic pipeline with evidence-enriched inputs.",
+        "source_material_needed": "Evidence mapping each ungrounded domain to structural components",
+        "enrichment_pathway": "R4",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D2",
+            "D4"
+          ],
+          "s_state_progression": "S2_TO_S3"
+        }
+      },
+      "priority_score": 6,
+      "priority": 11
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-12",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "description": "Domain 'EV and Electrification' has lineage_status 'NONE' (requires EXACT or STRONG)",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOMAIN-15].lineage_status",
+        "current_value": "NONE",
+        "required_value": "EXACT or STRONG"
+      },
+      "blocks_s_state": "S3",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides evidence mapping each domain to structural components. Re-run semantic pipeline with evidence-enriched inputs.",
+        "source_material_needed": "Evidence mapping each ungrounded domain to structural components",
+        "enrichment_pathway": "R4",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D2",
+            "D4"
+          ],
+          "s_state_progression": "S2_TO_S3"
+        }
+      },
+      "priority_score": 6,
+      "priority": 12
+    },
+    {
+      "id": "DEBT-GROUNDING_GAP-13",
+      "category": "grounding_gap",
+      "severity": "HIGH",
+      "description": "Domain 'Extended Operations and Driver Services' has lineage_status 'NONE' (requires EXACT or STRONG)",
+      "evidence": {
+        "artifact_key": "semantic_topology_model",
+        "field_path": "domains[DOMAIN-17].lineage_status",
+        "current_value": "NONE",
+        "required_value": "EXACT or STRONG"
+      },
+      "blocks_s_state": "S3",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides evidence mapping each domain to structural components. Re-run semantic pipeline with evidence-enriched inputs.",
+        "source_material_needed": "Evidence mapping each ungrounded domain to structural components",
+        "enrichment_pathway": "R4",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D2",
+            "D4"
+          ],
+          "s_state_progression": "S2_TO_S3"
+        }
+      },
+      "priority_score": 6,
+      "priority": 13
+    },
+    {
+      "id": "DEBT-CONTINUITY_GAP-01",
+      "category": "continuity_gap",
+      "severity": "MEDIUM",
+      "description": "22 structural topology nodes without semantic crosswalk mapping (13/35 covered)",
+      "evidence": {
+        "artifact_key": "semantic_continuity_crosswalk",
+        "field_path": "entities.length",
+        "current_value": "13",
+        "required_value": "35"
+      },
+      "blocks_s_state": "none",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides additional source material (ADRs, capability models, domain glossaries). Semantic pipeline re-processes with enriched inputs.",
+        "source_material_needed": "Domain glossaries and capability models for richer crosswalk production",
+        "enrichment_pathway": "R1",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D3",
+            "D5"
+          ],
+          "s_state_progression": "none"
+        }
+      },
+      "priority_score": 1,
+      "priority": 14
+    },
+    {
+      "id": "DEBT-CONTINUITY_GAP-02",
+      "category": "continuity_gap",
+      "severity": "MEDIUM",
+      "description": "4 crosswalk entities without business labels (label fidelity 69%)",
+      "evidence": {
+        "artifact_key": "semantic_continuity_crosswalk",
+        "field_path": "entities[].business_label",
+        "current_value": "4 null",
+        "required_value": "all entities with business labels"
+      },
+      "blocks_s_state": "none",
+      "has_upstream_dependency": false,
+      "remediation": {
+        "action": "Client provides additional source material (ADRs, capability models, domain glossaries). Semantic pipeline re-processes with enriched inputs.",
+        "source_material_needed": "Domain glossaries and capability models for richer crosswalk production",
+        "enrichment_pathway": "R1",
+        "expected_impact": {
+          "maturity_dimensions": [
+            "D3",
+            "D5"
+          ],
+          "s_state_progression": "none"
+        }
+      },
+      "priority_score": 1,
+      "priority": 15
+    }
+  ],
+  "summary": {
+    "critical_count": 0,
+    "high_count": 13,
+    "medium_high_count": 0,
+    "medium_count": 2,
+    "s_state_blocking_count": 13
+  },
+  "governance": {
+    "fail_closed": true,
+    "client_agnostic": true,
+    "no_semantic_fabrication": true,
+    "no_source_mutation": true,
+    "sqo_advisory_only": true
+  },
+  "provenance": {
+    "source_commit": "096c906c7ba1",
+    "input_hashes": {
+      "semantic_topology_model": "present",
+      "decision_validation": "present",
+      "reproducibility_verdict": "present",
+      "semantic_continuity_crosswalk": "present",
+      "canonical_topology_40_4": "present",
+      "dpsig_signal_set": "present",
+      "structural_topology_log_40_3": "absent",
+      "signal_registry": "present",
+      "evidence_trace": "present",
+      "vault_readiness": "absent",
+      "semantic_bundle_manifest": "present",
+      "rendering_metadata": "present"
+    },
+    "operation": "detect_semantic_debt",
+    "operation_version": "1.0",
+    "output_hash": "sha256:bc07a67a6a39d9817b6e5c46367fd13d2ed7fabe1c898c7a04ffbb6ba18a09f8"
+  }
+}

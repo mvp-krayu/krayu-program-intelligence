@@ -1,0 +1,39 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE.BLOCKER-10-CLOSURE.01",
+  "generated_date": "2026-05-03",
+
+  "signal_projection_artifact_present": true,
+  "signal_projection_artifact_path": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/signal_projection_fastapi_compatible.json",
+  "signal_projection_source_known": true,
+  "signal_projection_source_path": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/41.x/signal_projection.json",
+  "signal_projection_source_contract_id": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01",
+  "signal_projection_source_artifact_field": "signal_projection_fastapi_compatible",
+  "signal_projection_checksum_verified": true,
+  "signal_projection_sha256": "a467ba0b6541e3a558d90ff55f6754332908f13dc536a0f94440feb73fa17e2d",
+  "content_modified": false,
+
+  "source_shape_valid": true,
+  "source_shape_signals_confirmed": {
+    "PSIG-001": 5.663,
+    "PSIG-002": 3.2098,
+    "PSIG-004": 2.1822,
+    "PSIG-006": 0
+  },
+  "active_conditions_count": 4,
+
+  "phase6_7_status": "PASS",
+  "phase6_7_run_command": "python3 scripts/pios/run_client_pipeline.py --client blueedge --source source_01 --run-id run_blueedge_e2e_execute_01 --phase 6",
+
+  "blocker_10_resolved": true,
+  "producer_scripts_modified": false,
+  "pipeline_full_execution": false,
+  "wrapper_executed": true,
+  "canonical_artifacts_mutated": false,
+
+  "next_blocker_detected": true,
+  "next_blocker_phase": "Phase 8a",
+  "next_blocker_description": "Vault Construction raises FileNotFoundError: dom_path_domain_layer.json absent at docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01/recomputed/",
+  "next_blocker_id": "BLOCKER-11",
+
+  "validation_status": "PASS"
+}

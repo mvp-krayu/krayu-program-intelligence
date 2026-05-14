@@ -1,0 +1,38 @@
+{
+  "contract_id": "PI.LENS.REPORT-RENDERER.DRIFT-REMEDIATION.01",
+  "generated_date": "2026-05-02",
+
+  "files_modified": [
+    {
+      "path": "scripts/pios/lens_report_generator.py",
+      "action": "MODIFIED",
+      "root_cause": "RC-04",
+      "description": "Decision surface builder: semantic context path for hero rationale, badge, truth text, gap items, EPB insight, synthesis, and support text. +76 lines / -42 lines.",
+      "diff_summary": "1 file changed, 76 insertions(+), 42 deletions(-)"
+    },
+    {
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/semantic_topology_layout.json",
+      "action": "MODIFIED",
+      "root_cause": "RC-01",
+      "description": "Replaced DETERMINISTIC_RECONSTRUCTION SVG coordinates with canonical node positions (17 nodes) and cluster bounding boxes (5 clusters). Cluster IDs updated to CLU-01..CLU-05. generation_basis updated to CANONICAL_SVG_EXTRACTION.",
+      "gitignored": true,
+      "note": "clients/*/psee/runs/ is gitignored; file exists on disk only"
+    },
+    {
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/semantic_topology_model.json",
+      "action": "MODIFIED",
+      "root_cause": "RC-02, RC-03",
+      "description": "RC-02: cluster_ids updated to CLU-01..CLU-05 for all 17 domains; clusters section updated with canonical labels and colors. RC-03: DOMAIN-01 and DOMAIN-16 lineage_status STRONG→EXACT. Additional: DOMAIN-02 original_status verified→inferred (for canonical SVG stroke coloring); edges replaced with canonical 12-edge topology (different connectivity, 3 special relationship_types).",
+      "gitignored": true,
+      "note": "clients/*/psee/runs/ is gitignored; file exists on disk only"
+    }
+  ],
+
+  "files_created": [],
+  "files_deleted": [],
+
+  "canonical_reports_modified": false,
+  "vault_modified": false,
+
+  "scope_boundary": "RC-01/02/03 apply to gitignored topology JSON files under clients/. RC-04 applies to scripts/pios/lens_report_generator.py (tracked). Evidence files created under docs/psee/PI.LENS.REPORT-RENDERER.DRIFT-REMEDIATION.01/ (tracked)."
+}

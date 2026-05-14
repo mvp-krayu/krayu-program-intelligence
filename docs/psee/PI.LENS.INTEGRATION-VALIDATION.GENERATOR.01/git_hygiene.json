@@ -1,0 +1,50 @@
+{
+  "contract_id": "PI.LENS.INTEGRATION-VALIDATION.GENERATOR.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-01",
+
+  "branch": "work/psee-runtime",
+  "branch_note": "Non-canonical branch. Flagged per standing memory. Proceeding per prior operator authorization pattern.",
+  "working_tree_at_start": "CLEAN",
+  "baseline_commit": "ba12ed1938e5bc39c71c9e75cd17a325d7bef00e",
+
+  "files_created_this_contract": [
+    "scripts/pios/integration_validation_generator.py",
+    "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/integration/integration_validation.json",
+    "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/vault/coverage_state.json",
+    "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/vault/reconstruction_state.json",
+    "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/vault/gauge_state.json",
+    "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/vault/canonical_topology.json",
+    "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/vault/signal_registry.json",
+    "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/vault/binding_envelope.json",
+    "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/vault/admissibility_log.json",
+    "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/vault/evidence_trace.json",
+    "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/vault/vault_manifest.json",
+    "docs/psee/PI.LENS.INTEGRATION-VALIDATION.GENERATOR.01/integration_validation_findings.md",
+    "docs/psee/PI.LENS.INTEGRATION-VALIDATION.GENERATOR.01/integration_validation_schema.json",
+    "docs/psee/PI.LENS.INTEGRATION-VALIDATION.GENERATOR.01/validation_rules.md",
+    "docs/psee/PI.LENS.INTEGRATION-VALIDATION.GENERATOR.01/implementation_summary.md",
+    "docs/psee/PI.LENS.INTEGRATION-VALIDATION.GENERATOR.01/pipeline_recheck_result.json",
+    "docs/psee/PI.LENS.INTEGRATION-VALIDATION.GENERATOR.01/git_hygiene.json"
+  ],
+  "files_modified_this_contract": [
+    "clients/fastapi/sources/source_01/source_manifest.json",
+    "scripts/pios/run_client_pipeline.py"
+  ],
+  "files_deleted_this_contract": [],
+
+  "diff_summary": "integration_validation_generator.py: new generic script (~240 lines). run_client_pipeline.py: 1-line Phase 8a patch (evidence_paths → path_patterns fallback). source_manifest.json: 1 field added (integration_validation_path). Vault artifacts: 9 files created as Phase 8a output during validation run.",
+
+  "blueedge_mutation_check": "PASS — no files under clients/blueedge/ or clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/ were created, modified, or deleted",
+  "fastapi_source_mutation_check": "PASS — no files under clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/source/ were modified",
+  "ceu_logic_modified": "NO — scripts/pios/ceu_grounding.py and scripts/pios/ceu_registry.json not modified",
+  "dom_logic_modified": "NO — scripts/pios/dom_layer_generator.py not modified",
+  "structural_scanner_modified": "NO — scripts/pios/structural_scanner.py not modified",
+  "intake_modified": "NO — scripts/pios/source_intake_generic.py not modified",
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[IV] PI.LENS.INTEGRATION-VALIDATION.GENERATOR.01 — Generic integration validator: 12 checks PASS, Phase 8a vault construction unblocked",
+  "commit_note": "Commits are operator action per CLAUDE.md Section 7.1.",
+
+  "git_hygiene_status": "COMPLETE"
+}

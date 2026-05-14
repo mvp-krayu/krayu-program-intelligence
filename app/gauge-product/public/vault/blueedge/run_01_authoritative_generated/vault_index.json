@@ -1,0 +1,80 @@
+{
+  "client_id": "blueedge",
+  "run_id": "run_01_authoritative_generated",
+  "export_status": "EXPORTED",
+  "exported_at": "2026-04-23T07:13:17.351623+00:00",
+  "base_url": "/vault/blueedge/run_01_authoritative_generated",
+  "signals": {
+    "SIG-001": "CLM-20",
+    "SIG-002": "CLM-21",
+    "SIG-003": "CLM-22",
+    "SIG-004": "CLM-23",
+    "SIG-005": "CLM-24"
+  },
+  "claims": {
+    "CLM-01": "claims/CLM-01.html",
+    "CLM-02": "claims/CLM-02.html",
+    "CLM-03": "claims/CLM-03.html",
+    "CLM-04": "claims/CLM-04.html",
+    "CLM-05": "claims/CLM-05.html",
+    "CLM-06": "claims/CLM-06.html",
+    "CLM-07": "claims/CLM-07.html",
+    "CLM-08": "claims/CLM-08.html",
+    "CLM-09": "claims/CLM-09.html",
+    "CLM-10": "claims/CLM-10.html",
+    "CLM-11": "claims/CLM-11.html",
+    "CLM-12": "claims/CLM-12.html",
+    "CLM-13": "claims/CLM-13.html",
+    "CLM-14": "claims/CLM-14.html",
+    "CLM-15": "claims/CLM-15.html",
+    "CLM-16": "claims/CLM-16.html",
+    "CLM-17": "claims/CLM-17.html",
+    "CLM-18": "claims/CLM-18.html",
+    "CLM-19": "claims/CLM-19.html",
+    "CLM-20": "claims/CLM-20.html",
+    "CLM-21": "claims/CLM-21.html",
+    "CLM-22": "claims/CLM-22.html",
+    "CLM-23": "claims/CLM-23.html",
+    "CLM-24": "claims/CLM-24.html",
+    "CLM-25": "claims/CLM-25.html",
+    "CLM-26": "claims/CLM-26.html",
+    "CLM-27": "claims/CLM-27.html"
+  },
+  "artifacts": {
+    "ART-01": "artifacts/ART-01.html",
+    "ART-02": "artifacts/ART-02.html",
+    "ART-03": "artifacts/ART-03.html",
+    "ART-04": "artifacts/ART-04.html",
+    "ART-05": "artifacts/ART-05.html",
+    "ART-06": "artifacts/ART-06.html",
+    "ART-07": "artifacts/ART-07.html"
+  },
+  "entities": {
+    "ENT-dimensions": "entities/ENT-dimensions.html",
+    "ENT-score-components": "entities/ENT-score-components.html",
+    "ENT-signals": "entities/ENT-signals.html",
+    "ENT-structural-units": "entities/ENT-structural-units.html",
+    "ENT-topology-nodes": "entities/ENT-topology-nodes.html"
+  },
+  "transformations": {
+    "TRN-01": "transformations/TRN-01.html",
+    "TRN-02": "transformations/TRN-02.html",
+    "TRN-03": "transformations/TRN-03.html",
+    "TRN-04": "transformations/TRN-04.html",
+    "TRN-05": "transformations/TRN-05.html",
+    "TRN-06": "transformations/TRN-06.html"
+  },
+  "navigation": {
+    "NAV-core-artifacts": "navigation/NAV-core-artifacts.html",
+    "NAV-top-claims": "navigation/NAV-top-claims.html",
+    "NAV-value-creation-path": "navigation/NAV-value-creation-path.html"
+  },
+  "domain_routing": {
+    "rule": "all domain IDs route to topology entity \u2014 no per-domain vault nodes",
+    "fallback": "entities/ENT-topology-nodes.html"
+  },
+  "zone_routing": {
+    "rule": "zone IDs not individually vaulted \u2014 route to topology entity node",
+    "fallback": "entities/ENT-topology-nodes.html"
+  }
+}

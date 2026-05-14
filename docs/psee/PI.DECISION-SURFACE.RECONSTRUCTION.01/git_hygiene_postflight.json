@@ -1,0 +1,30 @@
+{
+  "contract_id": "PI.DECISION-SURFACE.RECONSTRUCTION.01",
+  "artifact": "git_hygiene_postflight",
+  "captured_date": "2026-04-30",
+
+  "tracked_modified_files": [
+    "scripts/pios/lens_report_generator.py (+123 lines — 93 insertions, 29 deletions from this contract)",
+    "clients/blueedge/psee/runs/run_01_authoritative/* (8 deleted files — pre-existing, not from this contract)"
+  ],
+
+  "generator_diff_stat_from_prior_HEAD": "123 lines changed (93 insertions, 29 deletions) — Decision Surface reconstruction patches only",
+  "diff_check": "PASS — no whitespace errors introduced by this contract",
+
+  "new_run_created": "clients/blueedge/psee/runs/run_blueedge_productized_01_decision_reconstructed/ (untracked — CREATE_ONLY compliant)",
+  "new_run_contents": [
+    "reports/decision/lens_decision_surface.html",
+    "reports/decision/publish/lens_decision_surface_pub.html"
+  ],
+
+  "rule_checks": {
+    "no_vault_mutation": "PASS — vault files not modified",
+    "no_signal_recompute": "PASS — signal values unchanged",
+    "no_binding_change": "PASS — binding envelope not modified",
+    "generator_only_tracked_change": "PASS — only generator modified among tracked files (excluding pre-existing deletions)",
+    "create_only": "PASS — new run created; no existing run directory overwritten",
+    "no_tier1_tier2_tracked_modification": "PASS — T1/T2 HTML files not modified by this contract"
+  },
+
+  "verdict": "POSTFLIGHT_CLEAN"
+}

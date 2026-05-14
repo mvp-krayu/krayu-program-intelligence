@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0",
+  "sandbox_id": "sandbox-blueedge-run01-multi-001",
+  "last_updated": "2026-05-11T23:25:00.000Z",
+  "composite_state": {
+    "s_state": "S2",
+    "q_class": "Q-02",
+    "backed_count": 4,
+    "total_count": 17,
+    "grounding_ratio": 0.235,
+    "overlay_count": 0,
+    "certification_level": "PIPELINE_CERTIFIED"
+  },
+  "composite_equals_baseline": true,
+  "baseline_composite_hash_match": true,
+  "attribution": {
+    "certified_backed": 4,
+    "overlay_backed": 0,
+    "overlay_percentage": 0.0,
+    "per_package": []
+  },
+  "state_history": {
+    "T0_baseline": {
+      "backed_count": 4, "s_state": "S2", "q_class": "Q-02",
+      "grounding_ratio": 0.235, "overlay_count": 0,
+      "certification_level": "PIPELINE_CERTIFIED"
+    },
+    "T1_after_SEP_multi_001": {
+      "backed_count": 5, "s_state": "S2", "q_class": "Q-02",
+      "grounding_ratio": 0.294, "overlay_count": 1,
+      "certification_level": "SANDBOX_COMPUTED"
+    },
+    "T2_after_SEP_multi_002": {
+      "backed_count": 6, "s_state": "S2", "q_class": "Q-02",
+      "grounding_ratio": 0.353, "overlay_count": 2,
+      "certification_level": "SANDBOX_COMPUTED"
+    },
+    "T3_after_SEP_multi_003": {
+      "backed_count": 7, "s_state": "S2", "q_class": "Q-02",
+      "grounding_ratio": 0.412, "overlay_count": 3,
+      "certification_level": "SANDBOX_COMPUTED"
+    },
+    "T4_revoke_SEP_multi_003": {
+      "backed_count": 6, "s_state": "S2", "q_class": "Q-02",
+      "grounding_ratio": 0.353, "overlay_count": 2,
+      "certification_level": "SANDBOX_COMPUTED"
+    },
+    "T5_revoke_SEP_multi_002": {
+      "backed_count": 5, "s_state": "S2", "q_class": "Q-02",
+      "grounding_ratio": 0.294, "overlay_count": 1,
+      "certification_level": "SANDBOX_COMPUTED"
+    },
+    "T6_revoke_SEP_multi_001": {
+      "backed_count": 4, "s_state": "S2", "q_class": "Q-02",
+      "grounding_ratio": 0.235, "overlay_count": 0,
+      "certification_level": "PIPELINE_CERTIFIED"
+    }
+  },
+  "round_trip_proof": {
+    "T0_hash_equals_T6_hash": true,
+    "proof_type": "MULTI_OVERLAY_INDEPENDENT_REMOVABILITY",
+    "overlays_in_round_trip": ["SEP-multi-001", "SEP-multi-002", "SEP-multi-003"],
+    "conclusion": "3-overlay activation and sequential revocation form a perfect round-trip"
+  }
+}

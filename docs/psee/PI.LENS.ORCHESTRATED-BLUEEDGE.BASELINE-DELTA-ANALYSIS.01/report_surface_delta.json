@@ -1,0 +1,113 @@
+{
+  "contract_id": "PI.LENS.ORCHESTRATED-BLUEEDGE.BASELINE-DELTA-ANALYSIS.01",
+  "artifact": "report_surface_delta",
+  "block": "BLOCK_H",
+  "generated_date": "2026-05-01",
+  "mode": "FORENSIC / READ_ONLY",
+
+  "verdict": "REPORT_DELTA_FROM_ARTIFACT",
+
+  "score_comparison": {
+    "baseline_score": 60,
+    "orchestrated_score": 60,
+    "baseline_decision": "CONDITIONAL — INVESTIGATE",
+    "orchestrated_decision": "CONDITIONAL — INVESTIGATE",
+    "match": true,
+    "note": "Score and decision band are identical. Both reports show 60/CONDITIONAL/INVESTIGATE. Score is anchored to grounding evidence which is identical (CEU_MATCH). Score is NOT driven by signal values."
+  },
+
+  "signal_display_comparison": [
+    {
+      "signal_id": "PSIG-001",
+      "baseline_display": "Fan-In Concentration (PSIG-001): HIGH — Statistically abnormal concentration — Value 5.663",
+      "orchestrated_display": "Fan-In Concentration (PSIG-001): HIGH — Statistically abnormal concentration — Value 4.55",
+      "baseline_domain": "DOM-04",
+      "orchestrated_domain": "DOM-05",
+      "status_match": true,
+      "value_match": false,
+      "domain_match": false,
+      "display_delta": "Value 5.663 → 4.55, Domain DOM-04 → DOM-05. Statistically abnormal detection persists (both HIGH), but numeric magnitude and primary domain differ."
+    },
+    {
+      "signal_id": "PSIG-002",
+      "baseline_display": "Fan-Out Propagation (PSIG-002): HIGH — Statistically abnormal concentration — Value 3.2098",
+      "orchestrated_display": "Fan-Out Propagation (PSIG-002): HIGH — Statistically abnormal concentration — Value 4.55",
+      "baseline_domain": "DOM-04",
+      "orchestrated_domain": "DOM-04, DOM-05, DOM-08, DOM-09 (multi-domain, no primary)",
+      "status_match": true,
+      "value_match": false,
+      "domain_match": false,
+      "label_match": false,
+      "display_delta": "Value 3.2098 → 4.55. Baseline: domain_coupling_pressure on DOM-04 (per_dom_aggregated_imports). Orchestrated: export_pressure on DOM-05 (per_node_outbound_exports). Different underlying metric visible in statement text."
+    },
+    {
+      "signal_id": "PSIG-004",
+      "baseline_display": "Responsibility Concentration (PSIG-004): HIGH — Statistically abnormal concentration — Value 2.1822",
+      "orchestrated_display": "Responsibility Concentration (PSIG-004): HIGH — Statistically abnormal concentration — Value 1.0",
+      "baseline_domain": "DOM-04",
+      "orchestrated_domain": "DOM-05",
+      "status_match": true,
+      "value_match": false,
+      "domain_match": false,
+      "display_delta": "Value 2.1822 → 1.0. Primary domain shifts from DOM-04 (backend_app_root) to DOM-05 (backend_common). Both report COMPOUND_ZONE convergence."
+    },
+    {
+      "signal_id": "PSIG-006",
+      "baseline_display": "Structural Blind Spot (PSIG-006): BASELINE — theoretical baseline condition (not activated) — Value 0",
+      "orchestrated_display": "Structural Blind Spot (PSIG-006): BASELINE — theoretical baseline condition (not activated) — Value 0.15151515151515152",
+      "status_match": true,
+      "value_match": false,
+      "display_delta": "Value 0 → 0.1515. Both correctly display BASELINE (not activated). The report generator correctly treats THEORETICAL_BASELINE signals as BASELINE display regardless of vault active_pressure_signals miscounting. The schema bridge bug in vault does NOT propagate to this display label — however the vault artifact is still incorrect (active_pressure_signals=4 vs correct=3).",
+      "schema_bridge_bug_visible_in_report": false,
+      "schema_bridge_bug_present_in_vault": true
+    }
+  ],
+
+  "pressure_zone_display_comparison": {
+    "baseline_zones_displayed": 1,
+    "baseline_zone_anchor": "DOM-04 (backend_app_root)",
+    "baseline_zone_conditions": "PSIG-001 · PSIG-002 · PSIG-004",
+    "baseline_zone_class": "COMPOUND_ZONE",
+    "orchestrated_zones_displayed": 4,
+    "orchestrated_zone_anchor_primary": "DOM-05 (backend_common)",
+    "orchestrated_zone_conditions_all": "PSIG-001 · PSIG-002 · PSIG-004 (all 4 zones share same condition set)",
+    "orchestrated_zone_class": "COMPOUND_ZONE",
+    "zone_count_match": false,
+    "zone_anchor_domain_match": false,
+    "display_delta": "1 zone → 4 zones. Primary domain shifts DOM-04 → DOM-05. Zone count increase reflects PIOS compute_pressure_zones.py finding 4 domains with activation counts >= threshold from binding_envelope topology.",
+    "zone_conditions_match": true,
+    "zone_class_match": true
+  },
+
+  "domain_count_display_comparison": {
+    "baseline_display": "17 Semantic Domains, 5 Structurally Backed, 12 Semantic-Only",
+    "orchestrated_display": "13 Domains, 0 Capabilities, 35 Components, 35 Total Nodes",
+    "display_differs": true,
+    "note": "Baseline report uses semantic domain counts from a different report template variant. Orchestrated report uses canonical_topology counts (13 DOM groups). These reflect different output schemas in lens_report_generator.py — not a data delta."
+  },
+
+  "graph_state_comparison": {
+    "baseline_graph_nodes": 18,
+    "baseline_graph_links": 17,
+    "orchestrated_graph_nodes": 18,
+    "orchestrated_graph_links": 17,
+    "match": true,
+    "note": "Both reports render the same 18-node, 17-link graph. Graph topology in the report is derived from CEU/DOM grounding structure which is identical."
+  },
+
+  "surface_delta_classification": "REPORT_DELTA_FROM_ARTIFACT",
+  "surface_delta_explanation": "All visible value differences in the report (PSIG values, primary domain, zone count, zone anchor) trace directly to the STRUCTURAL_TOPOLOGY_DELTA and SIGNAL_VALUE_DELTA documented in BLOCK_C and BLOCK_F. The schema bridge bug (BLOCK_G) is present in the vault artifact but does NOT produce visible distortion in the PSIG-006 display label — lens_report_generator.py correctly handles THEORETICAL_BASELINE rendering. The score (60/CONDITIONAL/INVESTIGATE) is unchanged because it is anchored to grounding evidence, not signal values.",
+
+  "verdict_flags": {
+    "score_changed": false,
+    "decision_changed": false,
+    "signal_status_changed": false,
+    "signal_values_changed": true,
+    "primary_domain_changed": true,
+    "zone_count_changed": true,
+    "zone_anchor_domain_changed": true,
+    "psig006_display_correct_in_both": true,
+    "schema_bridge_bug_visible_in_report": false,
+    "schema_bridge_bug_in_vault": true
+  }
+}

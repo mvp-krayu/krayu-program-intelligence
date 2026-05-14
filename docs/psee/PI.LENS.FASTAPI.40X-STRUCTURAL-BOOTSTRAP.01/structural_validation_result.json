@@ -1,0 +1,108 @@
+{
+  "contract_id": "PI.LENS.FASTAPI.40X-STRUCTURAL-BOOTSTRAP.01",
+  "artifact": "structural_validation_result",
+  "generated_date": "2026-05-01",
+
+  "checks": [
+    {
+      "id": "SV-01",
+      "name": "40.2/structural_node_inventory.json exists at required path",
+      "result": "PASS",
+      "evidence": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/structure/40.2/structural_node_inventory.json — size: 40057 bytes"
+    },
+    {
+      "id": "SV-02",
+      "name": "40.2/structural_node_inventory.json is non-empty valid JSON",
+      "result": "PASS",
+      "evidence": "json.load() succeeds. total_nodes=124, file_nodes=87, directory_nodes=37. nodes[] array contains 124 entries."
+    },
+    {
+      "id": "SV-03",
+      "name": "40.2 contains FastAPI-derived structural content",
+      "result": "PASS",
+      "evidence": "client_uuid=e65d2f0a-dfa7-4257-9333-fcbb583f0880. Nodes include FastAPI-specific paths: src/app/main.py, src/services/pet_service/routers/pets.py, etc. source_root matches registered intake path."
+    },
+    {
+      "id": "SV-04",
+      "name": "40.2 does not contain BlueEdge contamination",
+      "result": "PASS",
+      "evidence": "String '6a6fcdbc' (BlueEdge UUID) absent from artifact content. No BlueEdge node IDs, paths, or contract references present."
+    },
+    {
+      "id": "SV-05",
+      "name": "40.3/structural_topology_log.json exists at required path",
+      "result": "PASS",
+      "evidence": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/structure/40.3/structural_topology_log.json — size: 36036 bytes"
+    },
+    {
+      "id": "SV-06",
+      "name": "40.3 is non-empty valid JSON",
+      "result": "PASS",
+      "evidence": "json.load() succeeds. total_relations=123. relations[] array contains 123 CONTAINS relations."
+    },
+    {
+      "id": "SV-07",
+      "name": "40.3 does not contain BlueEdge contamination",
+      "result": "PASS",
+      "evidence": "String '6a6fcdbc' absent from artifact content."
+    },
+    {
+      "id": "SV-08",
+      "name": "40.4/canonical_topology.json exists at required path",
+      "result": "PASS",
+      "evidence": "clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/run_02_oss_fastapi/structure/40.4/canonical_topology.json — size: 3603 bytes"
+    },
+    {
+      "id": "SV-09",
+      "name": "40.4 is non-empty valid JSON",
+      "result": "PASS",
+      "evidence": "json.load() succeeds. platform='OSS FastAPI Modular Monolith'. 14 clusters in cluster_topology."
+    },
+    {
+      "id": "SV-10",
+      "name": "40.4 does not contain BlueEdge contamination",
+      "result": "PASS",
+      "evidence": "String '6a6fcdbc' absent from artifact content. platform field is 'OSS FastAPI Modular Monolith', not 'BlueEdge Platform v3'."
+    },
+    {
+      "id": "SV-11",
+      "name": "Orchestrator Phase 3 passes",
+      "result": "PASS",
+      "evidence": "Phase 3 isolation test executed: phase_03_40x_structural(source_manifest) returns True. Output: 'PASS: 40.2 (124 nodes), 40.3 (topology), 40.4 (clusters) all present'"
+    },
+    {
+      "id": "SV-12",
+      "name": "No report artifacts generated",
+      "result": "PASS",
+      "evidence": "No lens/runs/ directories created. No HTML files generated. bootstrap_fastapi_40x.py writes only to structure/40.x/ subdirs."
+    },
+    {
+      "id": "SV-13",
+      "name": "No semantic artifacts generated",
+      "result": "PASS",
+      "evidence": "No 41.x/, 75.x/ directories created. No signal_projection, pressure_zone, or binding artifacts produced."
+    },
+    {
+      "id": "SV-14",
+      "name": "No BlueEdge files modified",
+      "result": "PASS",
+      "evidence": "Git status shows no modifications to clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/ or clients/blueedge/. Bootstrap script explicitly targets UUID e65d2f0a path only."
+    },
+    {
+      "id": "SV-15",
+      "name": "CREATE_ONLY — no overwrite of existing validated artifacts",
+      "result": "PASS",
+      "evidence": "All three target artifacts were verified absent before execution via test ! -f. Script enforces abort-on-exists guard."
+    }
+  ],
+
+  "summary": {
+    "total_checks": 15,
+    "passed": 15,
+    "failed": 0,
+    "result": "ALL_PASS",
+    "phase_3_status": "PASS",
+    "phase_4_status": "STILL_BLOCKED (GAP-REG-02 — grounding_state_v3.json absent)",
+    "advancement": "Pipeline now advances from Phase 3 to Phase 4. GAP-REG-02 resolution required for Phase 4."
+  }
+}

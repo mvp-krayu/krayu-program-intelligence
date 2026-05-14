@@ -1,0 +1,78 @@
+{
+  "stream": "PI.SQO.COCKPIT.OPERATIONAL-WORKFLOW-NAVIGATION.01",
+  "phase": "O2",
+  "date": "2026-05-11",
+  "total_files": 14,
+  "changes": [
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKFLOW-NAVIGATION.01/OPERATIONAL_WORKFLOW_NAVIGATION_ARCHITECTURE.md",
+      "action": "CREATE",
+      "purpose": "Master navigation architecture: 10 domains, 5 layers, 8 primitives, deep-links"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKFLOW-NAVIGATION.01/LIFECYCLE_AND_SANDBOX_NAVIGATION_MODEL.md",
+      "action": "CREATE",
+      "purpose": "Lifecycle stage navigation, S-state progression, session lifecycle, timeline"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKFLOW-NAVIGATION.01/EVIDENCE_AND_OVERLAY_WORKFLOW_NAVIGATION.md",
+      "action": "CREATE",
+      "purpose": "Evidence intake pipeline, packaging, overlay proposal pipeline, activation chain"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKFLOW-NAVIGATION.01/REPLAY_AND_ROLLBACK_WORKFLOW_NAVIGATION.md",
+      "action": "CREATE",
+      "purpose": "Replay/rollback pipeline navigation, divergence investigation, ambiguity resolution"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKFLOW-NAVIGATION.01/CERTIFICATION_AND_PUBLICATION_NAVIGATION.md",
+      "action": "CREATE",
+      "purpose": "Certification progression, authority states, promotion gates, publication, LENS boundary"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKFLOW-NAVIGATION.01/GOVERNANCE_ZONE_AND_ESCALATION_NAVIGATION.md",
+      "action": "CREATE",
+      "purpose": "Zone navigation, transition risk, escalation levels, recovery options"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKFLOW-NAVIGATION.01/LINEAGE_NAVIGATION_INTEGRATION.md",
+      "action": "CREATE",
+      "purpose": "7 lineage types integrated into workflow navigation, attribution, session lineage"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKFLOW-NAVIGATION.01/WORKFLOW_COEXISTENCE_AND_CONTEXT_PRESERVATION.md",
+      "action": "CREATE",
+      "purpose": "7 coexistence rules, 8 context preservation rules, branching, supersession, archive"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKFLOW-NAVIGATION.01/OPERATOR_AND_GOVERNANCE_RESPONSIBILITY_MODEL.md",
+      "action": "CREATE",
+      "purpose": "12 nav actions, 8 operator actions, 5 governance actions, audit trail"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKFLOW-NAVIGATION.01/OPERATIONAL_OBSERVABILITY_MODEL.md",
+      "action": "CREATE",
+      "purpose": "9 observability dimensions, 28 event types, health indicator, alert model"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKFLOW-NAVIGATION.01/PATH_BOUNDARY_VALIDATION.md",
+      "action": "CREATE",
+      "purpose": "9-point path boundary compliance, NOT PATH A/B/LENS confirmation"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKFLOW-NAVIGATION.01/execution_report.md",
+      "action": "CREATE",
+      "purpose": "Execution report with pre-flight, steps, artifacts, governance confirmation"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKFLOW-NAVIGATION.01/file_changes.json",
+      "action": "CREATE",
+      "purpose": "File change manifest for stream"
+    },
+    {
+      "file": "docs/pios/PI.SQO.COCKPIT.OPERATIONAL-WORKFLOW-NAVIGATION.01/CLOSURE.md",
+      "action": "CREATE",
+      "purpose": "Stream closure with mandatory 9-section format"
+    }
+  ]
+}

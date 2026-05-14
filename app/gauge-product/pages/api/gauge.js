@@ -5,18 +5,14 @@
  * Gauge intelligence API route — reads from local governed artifacts.
  * Returns dimensions, score, and confidence from gauge_state.json.
  *
- * Source: clients/blueedge/psee/runs/run_01_authoritative/package/
+ * Source: clients/<client>/psee/runs/<run_id>/package/ (set via GAUGE_PACKAGE_DIR)
  * Governed by: PSEE-GAUGE.0 / PSEE-RUNTIME.5
  */
 
 import fs   from 'fs'
 import path from 'path'
 
-const REPO_ROOT  = path.resolve(process.cwd(), '..', '..')
-const PACKAGE_DIR = process.env.GAUGE_PACKAGE_DIR || path.join(
-  REPO_ROOT,
-  'clients', 'blueedge', 'psee', 'runs', 'run_01_authoritative', 'package'
-)
+const PACKAGE_DIR = process.env.GAUGE_PACKAGE_DIR || null
 
 function readJson(filePath) {
   if (!fs.existsSync(filePath)) return null
@@ -30,6 +26,13 @@ function readJson(filePath) {
 export default function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' })
+  }
+
+  if (!PACKAGE_DIR) {
+    return res.status(503).json({
+      error: 'Gauge state unavailable',
+      detail: 'GAUGE_PACKAGE_DIR environment variable not configured'
+    })
   }
 
   const gaugeState      = readJson(path.join(PACKAGE_DIR, 'gauge_state.json'))

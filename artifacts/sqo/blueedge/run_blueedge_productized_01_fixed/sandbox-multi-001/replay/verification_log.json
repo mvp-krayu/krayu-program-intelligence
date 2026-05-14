@@ -1,0 +1,104 @@
+{
+  "schema_version": "1.0",
+  "sandbox_id": "sandbox-blueedge-run01-multi-001",
+  "verifications": [
+    {
+      "verification_id": "verify-001",
+      "snapshot_id": "snapshot-001-baseline",
+      "timestamp": "2026-05-11T23:01:00.000Z",
+      "replay_type": "BASELINE",
+      "inputs_verified": true,
+      "result": "MATCH",
+      "expected_backed_count": 4,
+      "actual_backed_count": 4,
+      "expected_s_state": "S2",
+      "actual_s_state": "S2",
+      "divergences": []
+    },
+    {
+      "verification_id": "verify-002",
+      "snapshot_id": "snapshot-002-post-SEP-multi-001",
+      "timestamp": "2026-05-11T23:03:30.000Z",
+      "replay_type": "SINGLE_OVERLAY",
+      "inputs_verified": true,
+      "result": "MATCH",
+      "expected_backed_count": 5,
+      "actual_backed_count": 5,
+      "expected_s_state": "S2",
+      "actual_s_state": "S2",
+      "divergences": []
+    },
+    {
+      "verification_id": "verify-003",
+      "snapshot_id": "snapshot-003-post-SEP-multi-002",
+      "timestamp": "2026-05-11T23:07:30.000Z",
+      "replay_type": "MULTI_OVERLAY",
+      "inputs_verified": true,
+      "result": "MATCH",
+      "expected_backed_count": 6,
+      "actual_backed_count": 6,
+      "expected_s_state": "S2",
+      "actual_s_state": "S2",
+      "divergences": []
+    },
+    {
+      "verification_id": "verify-004",
+      "snapshot_id": "snapshot-004-post-SEP-multi-003",
+      "timestamp": "2026-05-11T23:11:30.000Z",
+      "replay_type": "MULTI_OVERLAY",
+      "inputs_verified": true,
+      "result": "MATCH",
+      "expected_backed_count": 7,
+      "actual_backed_count": 7,
+      "expected_s_state": "S2",
+      "actual_s_state": "S2",
+      "divergences": []
+    },
+    {
+      "verification_id": "verify-005",
+      "snapshot_id": "snapshot-005-revoke-SEP-multi-003",
+      "timestamp": "2026-05-11T23:19:00.000Z",
+      "replay_type": "POST_REVOCATION",
+      "inputs_verified": true,
+      "result": "MATCH",
+      "expected_backed_count": 6,
+      "actual_backed_count": 6,
+      "expected_s_state": "S2",
+      "actual_s_state": "S2",
+      "divergences": []
+    },
+    {
+      "verification_id": "verify-006",
+      "snapshot_id": "snapshot-006-revoke-SEP-multi-002",
+      "timestamp": "2026-05-11T23:22:00.000Z",
+      "replay_type": "POST_REVOCATION",
+      "inputs_verified": true,
+      "result": "MATCH",
+      "expected_backed_count": 5,
+      "actual_backed_count": 5,
+      "expected_s_state": "S2",
+      "actual_s_state": "S2",
+      "divergences": []
+    },
+    {
+      "verification_id": "verify-007",
+      "snapshot_id": "snapshot-007-revoke-SEP-multi-001",
+      "timestamp": "2026-05-11T23:25:00.000Z",
+      "replay_type": "POST_REVOCATION",
+      "inputs_verified": true,
+      "result": "MATCH",
+      "expected_backed_count": 4,
+      "actual_backed_count": 4,
+      "expected_s_state": "S2",
+      "actual_s_state": "S2",
+      "divergences": []
+    }
+  ],
+  "summary": {
+    "total_verifications": 7,
+    "total_match": 7,
+    "total_divergence": 0,
+    "all_inputs_verified": true,
+    "determinism_confirmed": true
+  }
+}

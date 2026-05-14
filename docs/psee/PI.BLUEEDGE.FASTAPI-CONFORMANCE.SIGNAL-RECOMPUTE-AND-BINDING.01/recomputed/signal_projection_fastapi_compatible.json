@@ -1,0 +1,181 @@
+{
+  "contract_id": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01",
+  "artifact": "signal_projection_fastapi_compatible",
+  "schema_version": "1.0",
+  "projection_stage": "41.x",
+  "source_stage": "40.3",
+  "block": "BLOCK_A",
+  "generated_date": "2026-04-29",
+  "client_uuid": "6a6fcdbc-41b6-4e0e-99b9-37394f6c870d",
+  "run_id": "run_blueedge_integrated_01",
+  "signal_authority": "PROVISIONAL_CKR_CANDIDATE",
+  "activation_model": "RUN_RELATIVE_OUTLIER",
+
+  "population_source": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.NODE-RELATIONSHIP-RECOVERY.01/node_relationship_observations.json",
+  "dom_layer_source": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01/recomputed/dom_path_domain_layer.json",
+
+  "computation_note": "Signal values are RUN_RELATIVE_OUTLIER z-scores computed from BlueEdge per-node IMPORTS distribution (40.3 structural topology). Values are run-relative and differ from FastAPI reference values (9.43) by design — different codebases produce different distributions. Both scores exceed activation threshold 2.0. Method is identical to FastAPI reference method.",
+
+  "active_conditions_in_scope": [
+
+    {
+      "condition_id": "COND-PSIG-001-01",
+      "signal_id": "PSIG-001",
+      "signal_label": "coupling_pressure",
+      "signal_authority": "PROVISIONAL_CKR_CANDIDATE",
+      "activation_state": "HIGH",
+      "signal_value": 5.6630,
+      "activation_method": "RUN_RELATIVE_OUTLIER",
+      "threshold": 2.0,
+      "population": {
+        "type": "per_node_outbound_imports",
+        "size": 35,
+        "values": [0,0,0,0,0,0,0,0,69,2,2,0,0,1,1,0,0,5,4,0,5,5,3,2,1,2,0,0,8,0,0,0,0,0,0],
+        "mean": 3.1429,
+        "standard_deviation": 11.6294,
+        "q1": 0.0,
+        "q3": 2.0,
+        "iqr": 2.0,
+        "iqr_threshold": 5.0,
+        "mean_2sd_threshold": 26.4017,
+        "iqr_degenerate": false,
+        "detection_method_used": "IQR"
+      },
+      "outlier_score": 5.6630,
+      "outlier_score_formula": "(69 - 3.1429) / 11.6294 = 5.6630",
+      "outlier_confirmed_iqr": true,
+      "outlier_confirmed_mean2sd": true,
+      "zone_ids_where_active": ["PZ-001"],
+      "primary_attribution_entity": "NODE-0021",
+      "primary_attribution_domain": "DOM-04",
+      "secondary_attribution_entities": ["NODE-0566", "NODE-0071", "NODE-0098", "NODE-0105"],
+      "entity_level_scope": ["NODE-0021"],
+      "domain_attribution_scope": ["DOM-04"],
+      "source_traceability": {
+        "source_artifact": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/structure/40.3/structural_topology_log.json",
+        "extraction_method": "COUNT IMPORTS edges where source_node_id = NODE-0021",
+        "node_observation": "NODE-0021 (backend/src/app.module.ts): 69 outbound IMPORTS",
+        "population_anchor": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.NODE-RELATIONSHIP-RECOVERY.01/node_relationship_observations.json",
+        "recovery_contract": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.NODE-RELATIONSHIP-RECOVERY.01"
+      },
+      "evidence_trace": "40.3 topology (structural_topology_log.json) → per-node IMPORTS count → NODE-0021=69 → outlier z-score=(69-3.14)/11.63=5.663 > threshold 2.0 → COND-PSIG-001-01 HIGH → primary NODE-0021/DOM-04 → zone PZ-001"
+    },
+
+    {
+      "condition_id": "COND-PSIG-002-01",
+      "signal_id": "PSIG-002",
+      "signal_label": "domain_coupling_pressure",
+      "signal_authority": "PROVISIONAL_CKR_CANDIDATE",
+      "activation_state": "HIGH",
+      "signal_value": 3.2098,
+      "activation_method": "RUN_RELATIVE_OUTLIER",
+      "threshold": 2.0,
+      "population": {
+        "type": "per_dom_group_aggregated_imports",
+        "size": 13,
+        "values": [0,0,0,71,4,0,5,4,18,8,0,0,0],
+        "mean": 8.4615,
+        "standard_deviation": 19.4834,
+        "q1": 0.0,
+        "q3": 6.5,
+        "iqr": 6.5,
+        "iqr_threshold": 16.25,
+        "mean_2sd_threshold": 47.4283,
+        "iqr_degenerate": false,
+        "detection_method_used": "IQR"
+      },
+      "outlier_score": 3.2098,
+      "outlier_score_formula": "(71 - 8.4615) / 19.4834 = 3.2098",
+      "outlier_confirmed_iqr": true,
+      "outlier_confirmed_mean2sd": true,
+      "zone_ids_where_active": ["PZ-001"],
+      "primary_attribution_entity": null,
+      "primary_attribution_domain": "DOM-04",
+      "secondary_attribution_entities": [],
+      "entity_level_scope": [],
+      "domain_attribution_scope": ["DOM-04"],
+      "source_traceability": {
+        "source_artifact": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/structure/40.3/structural_topology_log.json",
+        "extraction_method": "SUM IMPORTS per DOM group; DOM-04 = NODE-0021(69) + NODE-0022(2) = 71",
+        "dom_anchor": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01/recomputed/dom_path_domain_layer.json",
+        "recovery_contract": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.NODE-RELATIONSHIP-RECOVERY.01"
+      },
+      "evidence_trace": "40.3 topology → per-DOM IMPORTS aggregate → DOM-04=71 → outlier z-score=(71-8.46)/19.48=3.210 > threshold 2.0 → COND-PSIG-002-01 HIGH → primary domain DOM-04 → zone PZ-001"
+    },
+
+    {
+      "condition_id": "COND-PSIG-004-01",
+      "signal_id": "PSIG-004",
+      "signal_label": "zone_coverage_concentration",
+      "signal_authority": "PROVISIONAL_CKR_CANDIDATE",
+      "activation_state": "HIGH",
+      "signal_value": 2.1822,
+      "activation_method": "RUN_RELATIVE_OUTLIER",
+      "threshold": 2.0,
+      "population": {
+        "type": "per_zone_node_fraction",
+        "size": 7,
+        "values": [0.4286, 0.0857, 0.1429, 0.0857, 0.1429, 0.0571, 0.0571],
+        "mean": 0.1429,
+        "standard_deviation": 0.1309,
+        "q1": 0.0571,
+        "q3": 0.1429,
+        "iqr": 0.0857,
+        "iqr_threshold": 0.2714,
+        "mean_2sd_threshold": 0.4047,
+        "iqr_degenerate": false,
+        "detection_method_used": "IQR",
+        "note": "PZ-001 fraction (0.4286) exceeds IQR threshold (0.2714) → outlier confirmed"
+      },
+      "outlier_score": 2.1822,
+      "outlier_score_formula": "(0.4286 - 0.1429) / 0.1309 = 2.1822",
+      "outlier_confirmed_iqr": true,
+      "outlier_confirmed_mean2sd": true,
+      "zone_ids_where_active": ["PZ-001"],
+      "primary_attribution_entity": "NODE-0021",
+      "primary_attribution_domain": "DOM-04",
+      "secondary_attribution_entities": ["NODE-0022", "NODE-0030"],
+      "entity_level_scope": ["NODE-0021"],
+      "domain_attribution_scope": ["DOM-04"],
+      "source_traceability": {
+        "source_artifact": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/pressure_zone_state.json",
+        "extraction_method": "COUNT unique_nodes per zone / 35 total nodes",
+        "zone_observation": "PZ-001: 15/35 = 0.4286 — clear outlier vs mean 0.1429"
+      },
+      "evidence_trace": "pressure_zone_state.json → PZ-001 node_count=15/35=0.4286 → outlier z-score=(0.4286-0.1429)/0.1309=2.182 > threshold 2.0 → COND-PSIG-004-01 HIGH → primary NODE-0021/DOM-04 → zone PZ-001"
+    },
+
+    {
+      "condition_id": "COND-PSIG-006-01",
+      "signal_id": "PSIG-006",
+      "signal_label": "unanchored_nodes",
+      "signal_authority": "PROVISIONAL_CKR_CANDIDATE",
+      "activation_state": "ACTIVATED",
+      "signal_value": 0,
+      "activation_method": "THEORETICAL_BASELINE",
+      "threshold": 1,
+      "threshold_type": "binary",
+      "zone_ids_where_active": [],
+      "primary_attribution_entity": null,
+      "primary_attribution_domain": null,
+      "entity_level_scope": [],
+      "domain_attribution_scope": [],
+      "note": "PSIG-006=0: all 35 CEU-grounded nodes are anchored. Structural blind-spot condition not raised. ACTIVATED state is a structural telemetry marker, not pressure.",
+      "source_traceability": {
+        "source_artifact": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/ceu_node_map.json",
+        "extraction_method": "DIRECT — unanchored_count field",
+        "value": "unanchored_count = 0"
+      }
+    }
+
+  ],
+
+  "combination_signature": {
+    "primary": "PSIG-001|PSIG-002|PSIG-004",
+    "all_active": "PSIG-001|PSIG-002|PSIG-004|PSIG-006"
+  },
+  "signals_not_activated": ["PSIG-003", "PSIG-005"],
+  "active_conditions_count": 4,
+  "ranking_applied": false,
+  "interpretation_applied": false
+}

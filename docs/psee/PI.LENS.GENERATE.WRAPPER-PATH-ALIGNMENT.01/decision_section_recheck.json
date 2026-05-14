@@ -1,0 +1,50 @@
+{
+  "contract_id": "PI.LENS.GENERATE.WRAPPER-PATH-ALIGNMENT.01",
+  "generated_date": "2026-05-02",
+  "decision_file": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/reports/lens_decision_surface.html",
+  "file_lines": 159,
+  "normalized_diff_vs_canonical": 0,
+  "sections": [
+    {
+      "section": "WHERE_PRESSURE_EXISTS",
+      "html_marker": "ds-epb-section-title / Where pressure exists",
+      "present": true
+    },
+    {
+      "section": "STRUCTURAL_PRESSURE_SIGNALS",
+      "html_marker": "ds-epb-card-title / Structural Pressure Signals",
+      "present": true
+    },
+    {
+      "section": "GRAPH_VISUALIZATION",
+      "html_marker": "canvas id=ds-signal-trace",
+      "present": true
+    },
+    {
+      "section": "PRESSURE_PATTERN_SYNTHESIS",
+      "html_marker": "A single structural pressure pattern spans multiple domains.",
+      "present": true
+    },
+    {
+      "section": "TRUTH_TEXT_PATTERN_SENTENCE",
+      "html_marker": "A single structural pressure pattern appears across the system.",
+      "present": true
+    },
+    {
+      "section": "INVESTIGATE",
+      "html_marker": "ds-hero-posture INVESTIGATE",
+      "present": true
+    },
+    {
+      "section": "SCORE_60",
+      "html_marker": "SVG text 60",
+      "present": true
+    },
+    {
+      "section": "INFERENCE_PROHIBITION",
+      "html_marker": "inference_prohibition",
+      "present": true
+    }
+  ],
+  "decision_section_status": "PASS"
+}

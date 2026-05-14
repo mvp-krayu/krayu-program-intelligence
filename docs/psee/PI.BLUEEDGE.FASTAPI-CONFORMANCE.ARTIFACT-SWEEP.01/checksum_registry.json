@@ -1,0 +1,103 @@
+{
+  "contract_id": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.ARTIFACT-SWEEP.01",
+  "artifact": "checksum_registry",
+  "generated_date": "2026-05-03",
+  "source": "stash@{0}^3",
+
+  "artifacts": [
+    {
+      "stream": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01",
+      "file": "recomputed/blocked_binding_envelope.json",
+      "sha256_prefix": "ea5cd5d81ced8a6d",
+      "action": "RESTORED",
+      "json_valid": true
+    },
+    {
+      "stream": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01",
+      "file": "recomputed/blocked_signal_recompute.json",
+      "sha256_prefix": "3c2d9a3a9858ab6d",
+      "action": "RESTORED",
+      "json_valid": true
+    },
+    {
+      "stream": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01",
+      "file": "recomputed/dom_path_domain_layer.json",
+      "sha256_prefix": "f5e2a0dfeedeab8f",
+      "action": "ALREADY_PRESENT",
+      "json_valid": true
+    },
+    {
+      "stream": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01",
+      "file": "recomputed/report_input_manifest_fastapi_compatible.json",
+      "sha256_prefix": "b36798f4d08c88d2",
+      "action": "RESTORED",
+      "json_valid": true
+    },
+    {
+      "stream": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01",
+      "file": "recomputed/vault_input_manifest_fastapi_compatible.json",
+      "sha256_prefix": "ba89fceabf2459ed",
+      "action": "RESTORED",
+      "json_valid": true
+    },
+    {
+      "stream": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01",
+      "file": "recomputed/binding_envelope_fastapi_compatible.json",
+      "sha256_prefix": "fa508036d5b048b5",
+      "action": "ALREADY_PRESENT",
+      "json_valid": true
+    },
+    {
+      "stream": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01",
+      "file": "recomputed/condition_correlation_state_fastapi_compatible.json",
+      "sha256_prefix": "e43c868b94631a26",
+      "action": "RESTORED",
+      "json_valid": true
+    },
+    {
+      "stream": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01",
+      "file": "recomputed/pressure_zone_state_fastapi_compatible.json",
+      "sha256_prefix": "3984ebf81a195a44",
+      "action": "RESTORED",
+      "json_valid": true
+    },
+    {
+      "stream": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01",
+      "file": "recomputed/report_execution_readiness.json",
+      "sha256_prefix": "4ca175d29a4979ff",
+      "action": "RESTORED",
+      "json_valid": true
+    },
+    {
+      "stream": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01",
+      "file": "recomputed/signal_projection_fastapi_compatible.json",
+      "sha256_prefix": "a467ba0b6541e3a5",
+      "action": "ALREADY_PRESENT",
+      "json_valid": true
+    },
+    {
+      "stream": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01",
+      "file": "recomputed/signal_registry_fastapi_compatible.json",
+      "sha256_prefix": "165e3a9121cd8ada",
+      "action": "RESTORED",
+      "json_valid": true
+    },
+    {
+      "stream": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01",
+      "file": "recomputed/vault_input_manifest_fastapi_compatible.json",
+      "sha256_prefix": "9f35ee3bc534d267",
+      "action": "RESTORED",
+      "json_valid": true
+    }
+  ],
+
+  "totals": {
+    "total": 12,
+    "restored": 9,
+    "already_present": 3,
+    "missing": 0,
+    "json_valid": 12,
+    "json_invalid": 0,
+    "sha256_verified": 12
+  }
+}

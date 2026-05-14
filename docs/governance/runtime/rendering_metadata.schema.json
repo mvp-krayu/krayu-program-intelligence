@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://krayu.local/schemas/rendering_metadata.schema.json",
+  "title": "RenderingMetadata",
+  "description": "Per-run vault artifact authorising LENS V2 executive surface rendering for a given client/run pair. Replay-safe, additive-only. Stream: PI.LENS.V2.Q02-AND-IP-GOVERNANCE-CLEANUP.01.",
+  "type": "object",
+  "required": [
+    "rendering_contract_version",
+    "client_id",
+    "run_id",
+    "generated_at",
+    "semantic_projection_class",
+    "inference_prohibition_status",
+    "grounding_class",
+    "semantic_continuity_status",
+    "replay_safe",
+    "topology_safe",
+    "unresolved_semantic_gaps",
+    "disclosure_requirements",
+    "governance_assertions",
+    "actor_projection_status"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "rendering_contract_version": {
+      "type": "string",
+      "description": "Semantic version of the rendering contract this metadata satisfies.",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+    },
+    "client_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "semantic_projection_class": {
+      "type": "string",
+      "enum": [
+        "FULL_GROUNDING",
+        "PARTIAL_GROUNDING_WITH_STRUCTURAL_CONTINUITY",
+        "SEMANTIC_ONLY",
+        "UNAVAILABLE"
+      ]
+    },
+    "inference_prohibition_status": {
+      "type": "string",
+      "enum": ["ENFORCED", "PLACEHOLDER_PENDING"]
+    },
+    "grounding_class": {
+      "type": "string",
+      "enum": ["Q-01", "Q-02", "Q-03", "Q-04"]
+    },
+    "semantic_continuity_status": {
+      "type": "string",
+      "enum": ["VALIDATED", "ABSENT"]
+    },
+    "replay_safe": {
+      "type": "boolean",
+      "const": true
+    },
+    "topology_safe": {
+      "type": "boolean",
+      "const": true
+    },
+    "unresolved_semantic_gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "reason", "impact"],
+        "properties": {
+          "code": { "type": "string", "minLength": 1 },
+          "domain_id": { "type": ["string", "null"] },
+          "reason": { "type": "string", "minLength": 1 },
+          "impact": {
+            "type": "string",
+            "enum": ["NON_BLOCKING", "ADVISORY_REQUIRED", "EXECUTIVE_CAUTION"]
+          },
+          "evidence_path": { "type": ["string", "null"] }
+        },
+        "additionalProperties": true
+      }
+    },
+    "disclosure_requirements": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "governance_assertions": {
+      "type": "object",
+      "required": [
+        "no_ai_inference",
+        "no_synthetic_qualifiers",
+        "no_topology_mutation",
+        "additive_artifact_only",
+        "no_prompt_surfaces",
+        "no_chatbot_ux"
+      ],
+      "properties": {
+        "no_ai_inference": { "type": "boolean", "const": true },
+        "no_synthetic_qualifiers": { "type": "boolean", "const": true },
+        "no_topology_mutation": { "type": "boolean", "const": true },
+        "additive_artifact_only": { "type": "boolean", "const": true },
+        "no_prompt_surfaces": { "type": "boolean", "const": true },
+        "no_chatbot_ux": { "type": "boolean", "const": true },
+        "evidence_first": { "type": "boolean" },
+        "lane_a_read_only": { "type": "boolean" },
+        "lane_d_dpsig_read_only": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "actor_projection_status": {
+      "type": "object",
+      "description": "Status by 2-letter actor code (DP, CB, PA, ...)",
+      "patternProperties": {
+        "^[A-Z]{2}$": {
+          "type": "string",
+          "enum": [
+            "HYDRATED",
+            "HYDRATED_WITH_DERIVATION",
+            "PRESENTATION_LAYER_DERIVED",
+            "PLACEHOLDER_BINDING_PENDING"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "qualifier_rules_applied": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "ali_rules_applied": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "derivation_inputs": {
+      "type": "object",
+      "required": ["backed_count", "total_count", "semantic_continuity_status", "evidence_availability"],
+      "properties": {
+        "backed_count": { "type": "integer", "minimum": 0 },
+        "total_count": { "type": "integer", "minimum": 1 },
+        "semantic_continuity_status": { "type": "string", "enum": ["VALIDATED", "ABSENT"] },
+        "evidence_availability": { "type": "string", "enum": ["AVAILABLE", "ABSENT"] },
+        "grounding_ratio": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "stream_anchor": { "type": "string" },
+    "amendment_anchor": { "type": "string" },
+    "baseline_commit": { "type": "string" },
+    "rendering_metadata_hash": { "type": "string" }
+  }
+}

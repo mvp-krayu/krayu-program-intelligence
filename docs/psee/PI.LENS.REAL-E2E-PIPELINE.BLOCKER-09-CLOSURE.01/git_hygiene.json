@@ -1,0 +1,43 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE.BLOCKER-09-CLOSURE.01",
+  "artifact": "git_hygiene",
+  "generated_date": "2026-05-03",
+
+  "branch": "work/psee-runtime",
+  "baseline_commit": "d1bb5e4dc92190b45b9fe1dc118e599f5979b0ac",
+  "baseline_commit_message": "[FIX] PI.LENS.REAL-E2E-PIPELINE.EXECUTION-IDEMPOTENCY-AND-BLOCKER-09.01 — Stage 02 idempotent check; Stage 06 BLOCKER-09 classification",
+
+  "working_tree_before": "CLEAN",
+  "working_tree_after": "2 evidence directories untracked; 1 binding artifact created in new docs/psee stream directory; no producer scripts modified; no run artifacts written",
+
+  "files_modified_tracked": [],
+  "files_created_untracked": [
+    "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/binding_envelope_fastapi_compatible.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-09-CLOSURE.01/binding_source_trace.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-09-CLOSURE.01/implementation_summary.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-09-CLOSURE.01/validation_result.json",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-09-CLOSURE.01/phase5_execution_log.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-09-CLOSURE.01/no_free_patching_attestation.md",
+    "docs/psee/PI.LENS.REAL-E2E-PIPELINE.BLOCKER-09-CLOSURE.01/git_hygiene.json"
+  ],
+
+  "binding_artifact_source": "clients/blueedge/psee/runs/run_be_orchestrated_fixup_01/binding/binding_envelope.json",
+  "binding_artifact_destination": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/binding_envelope_fastapi_compatible.json",
+  "binding_sha256": "fa508036d5b048b50c4b4fd1e6385521f63821d86c750fdc00f15b1d5547bc33",
+  "content_fabricated": false,
+
+  "pipeline_executed": false,
+  "wrapper_executed": true,
+  "canonical_artifacts_mutated": false,
+  "producer_scripts_modified": false,
+  "renderer_modified": false,
+  "semantic_bundle_modified": false,
+  "ui_modified": false,
+  "api_modified": false,
+  "fastapi_code_modified": false,
+
+  "commit_recommendation": "PENDING_OPERATOR_ACTION",
+  "suggested_commit_message": "[FIX] PI.LENS.REAL-E2E-PIPELINE.BLOCKER-09-CLOSURE.01 — governed copy of binding_envelope_fastapi_compatible.json to recomputed path; Phase 5 PASS",
+
+  "git_hygiene_status": "COMPLETE"
+}

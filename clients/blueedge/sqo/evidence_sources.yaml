@@ -1,0 +1,14 @@
+client: blueedge
+run_id: run_blueedge_productized_01_fixed
+evidence_set_id: blueedge_explicit_html_rebase_01
+evidence_root: clients/blueedge/sqo/evidence/blueedge_explicit_html_rebase_01
+allowed_source_class: EXPLICIT_OPERATOR_PROVIDED_UPSTREAM_EVIDENCE
+disallowed_source_classes:
+  - DOWNSTREAM_PROJECTION
+  - SELF_RECURSIVE_EVIDENCE
+  - UNCONTROLLED_DISCOVERY
+  - MOCK_OR_SEEDED_FIXTURE
+files:
+  - Blue_Edge_PMO_Dashboard.html
+  - BlueEdge_Competitive_Dashboard_Feb2026.html
+  - BlueEdge_Unified_Architecture_v3_23_0.html

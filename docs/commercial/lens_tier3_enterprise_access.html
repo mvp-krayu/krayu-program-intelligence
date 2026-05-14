@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signäl LENS — Tier 3: Enterprise Access</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @page { size: A4; margin: 0; }
+
+    :root {
+      --gold:         #c8993a;
+      --gold-bright:  #e8b84b;
+      --gold-dim:     rgba(200,153,58,0.16);
+      --gold-border:  rgba(200,153,58,0.22);
+      --bg:           #080b12;
+      --panel-bg:     rgba(255,255,255,0.028);
+      --text-1:       #ede8df;
+      --text-2:       #8a8a9a;
+      --text-3:       #515162;
+      --rule:         rgba(255,255,255,0.07);
+      --slate:        #6888c0;
+      --slate-dim:    rgba(50,70,120,0.18);
+      --slate-border: rgba(50,70,120,0.30);
+    }
+
+    html { background: #0d1018; }
+
+    body {
+      width: 210mm;
+      height: 297mm;
+      margin: 0 auto;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text-1);
+      overflow: hidden;
+    }
+
+    .page {
+      width: 210mm;
+      height: 297mm;
+      padding: 28px 34px 22px 34px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-bottom: 13px;
+      border-bottom: 1px solid var(--gold);
+      flex-shrink: 0;
+    }
+    .logo {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-1);
+      letter-spacing: -0.01em;
+    }
+    .logo em { font-style: normal; color: var(--gold-bright); }
+    .doc-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 16px 0 15px 0;
+      border-bottom: 1px solid var(--rule);
+      flex-shrink: 0;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.18;
+      color: var(--text-1);
+      margin-bottom: 8px;
+      max-width: 530px;
+    }
+    .hero p {
+      font-size: 10.5px;
+      line-height: 1.65;
+      color: var(--text-2);
+      max-width: 600px;
+    }
+
+    /* ── BODY ── */
+    .body {
+      display: flex;
+      gap: 26px;
+      flex: 1;
+      padding: 16px 0 13px 0;
+      min-height: 0;
+    }
+
+    /* ── LEFT COLUMN ── */
+    .left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      min-width: 0;
+    }
+    .block {
+      padding-bottom: 13px;
+      margin-bottom: 13px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .block:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 7px;
+    }
+    .body-text {
+      font-size: 10px;
+      line-height: 1.68;
+      color: var(--text-2);
+    }
+    .body-text strong { color: var(--text-1); font-weight: 500; }
+
+    /* Trigger badge */
+    .trigger {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      color: var(--gold-bright);
+      letter-spacing: 0.06em;
+      padding: 2px 7px;
+      border: 1px solid var(--gold-border);
+      border-radius: 2px;
+      background: var(--gold-dim);
+      margin-bottom: 8px;
+    }
+
+    /* Left fact list */
+    .fact-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .fact-list li {
+      font-size: 9.5px;
+      color: var(--text-2);
+      line-height: 1.44;
+      padding-left: 11px;
+      position: relative;
+    }
+    .fact-list li::before {
+      content: '·';
+      position: absolute;
+      left: 0;
+      color: var(--slate);
+      font-weight: 700;
+      font-size: 12px;
+      line-height: 1;
+      top: 1px;
+    }
+    .fact-list li strong { color: var(--text-1); font-weight: 500; }
+
+    /* Layer rows */
+    .layer-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      margin-top: 4px;
+    }
+    .layer-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0;
+      padding: 4px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    .layer-row:last-child { border-bottom: none; }
+    .layer-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      color: var(--slate);
+      width: 28px;
+      flex-shrink: 0;
+    }
+    .layer-name { font-size: 9.5px; font-weight: 600; color: var(--text-1); width: 130px; flex-shrink: 0; }
+    .layer-desc { font-size: 9px; color: var(--text-2); line-height: 1.42; }
+
+    /* ── RIGHT COLUMN ── */
+    .right {
+      width: 228px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--gold-border);
+      border-radius: 3px;
+      padding: 12px 13px;
+    }
+    .panel-slate {
+      background: var(--slate-dim);
+      border: 1px solid var(--slate-border);
+      border-radius: 3px;
+      padding: 12px 13px;
+    }
+    .panel-lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 9px;
+    }
+    .panel-lbl-slate {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--slate);
+      text-transform: uppercase;
+      margin-bottom: 9px;
+    }
+
+    /* Definition status rows */
+    .def-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .def-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      padding: 5px 0;
+      border-bottom: 1px solid var(--rule);
+      font-size: 9px;
+    }
+    .def-row:last-child { border-bottom: none; }
+    .def-key { color: var(--text-3); flex: 1; font-size: 8.5px; }
+    .def-present { color: var(--text-2); font-size: 8.5px; }
+    .def-absent  { color: var(--text-3); font-style: italic; font-size: 8.5px; }
+
+    /* Tiers */
+    .tiers {
+      background: var(--panel-bg);
+      border: 1px solid var(--gold-border);
+      border-radius: 3px;
+      overflow: hidden;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .tiers-hd { padding: 10px 13px 8px 13px; border-bottom: 1px solid var(--rule); flex-shrink: 0; }
+    .tier {
+      padding: 9px 13px;
+      border-bottom: 1px solid var(--rule);
+      flex: 1;
+    }
+    .tier:last-of-type { border-bottom: none; }
+    .tier-lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7px;
+      letter-spacing: 0.14em;
+      color: var(--text-3);
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 6.5px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 5px;
+      border-radius: 2px;
+      margin-bottom: 3px;
+      vertical-align: middle;
+    }
+    .badge-in  { background: rgba(200,153,58,0.16); color: #e8b84b; border: 1px solid rgba(200,153,58,0.3); }
+    .badge-ph1 { background: rgba(74,155,122,0.14); color: #6ec4a2; border: 1px solid rgba(74,155,122,0.28); }
+    .badge-gov { background: var(--slate-dim); color: var(--slate); border: 1px solid var(--slate-border); }
+    .tier.current { background: rgba(50,70,120,0.06); }
+    .tier-desc { font-size: 9px; color: var(--text-2); line-height: 1.5; }
+    .tiers-ft {
+      padding: 7px 13px;
+      background: rgba(0,0,0,0.12);
+      border-top: 1px solid var(--rule);
+      flex-shrink: 0;
+    }
+    .tiers-ft p { font-size: 7.5px; color: var(--text-3); font-style: italic; line-height: 1.5; }
+
+    /* ── QUOTE BAR ── */
+    .quote-bar {
+      flex-shrink: 0;
+      padding: 11px 0 10px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .quote-bar p {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 10.5px;
+      font-style: italic;
+      color: var(--text-2);
+      text-align: center;
+      line-height: 1.5;
+    }
+    .quote-bar p strong { color: var(--text-1); font-style: normal; font-weight: 600; }
+
+    /* ── FOOTER ── */
+    .footer {
+      flex-shrink: 0;
+      padding-top: 11px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-l {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      color: var(--text-3);
+      letter-spacing: 0.04em;
+    }
+    .footer-l em { font-style: normal; color: var(--gold); }
+    .footer-r { font-size: 7.5px; color: var(--text-3); font-style: italic; }
+
+    /* ── QUERY EXAMPLE PANEL ── */
+    .query-text { font-family:'JetBrains Mono',monospace; font-size:8.5px; color:var(--text-2); line-height:1.6; padding:10px 11px; background:rgba(0,0,0,0.22); border-radius:2px; border-left:2px solid var(--slate); }
+
+    /* ── CONTINUITY ── */
+    .notice-bar { padding:7px 0 8px; border-bottom:1px solid var(--rule); flex-shrink:0; font-size:8.5px; color:var(--text-3); font-style:italic; line-height:1.4; }
+
+    @media print {
+      html, body {
+        background: #080b12 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <header class="header">
+    <div class="logo"><em>Signäl</em> LENS</div>
+    <div class="doc-label">Enterprise Access &nbsp;·&nbsp; Tier 3 &nbsp;·&nbsp; Confidential</div>
+  </header>
+
+  <section class="hero">
+    <h1>Full PiOS Core access.<br>Governed contract engagement.</h1>
+    <p>
+      Enterprise Access provides direct engagement at the canonical derivation layer — L2 through L4.
+      This is the top tier of the product ladder, triggered by an ESCALATE decision state.
+      Scope, deliverables, and engagement form are governed by contract, defined at engagement time.
+    </p>
+  </section>
+
+  <div class="notice-bar">Enterprise access is issued under governed engagement following assessment and diagnostic phases.</div>
+
+  <div class="body">
+
+    <div class="left">
+
+      <div class="block">
+        <div class="lbl">The situation</div>
+        <div class="trigger">ESCALATE decision state triggered</div>
+        <p class="body-text">
+          Structural concerns identified through the assessment and investigation process require engagement at the
+          full canonical derivation layer — beyond what the evidence gap surface alone can resolve.
+          Enterprise Access is not a predefined feature set. It is a governed contract engagement
+          where scope is defined by the specific concerns that triggered escalation.
+        </p>
+      </div>
+
+      <div class="block">
+        <div class="lbl">What is defined</div>
+        <ul class="fact-list">
+          <li><strong>Canonical basis:</strong> PiOS Core — L2, L3, and L4</li>
+          <li><strong>Access model:</strong> Governed contract — scope defined at engagement time</li>
+          <li><strong>Entry condition:</strong> ESCALATE decision state from Tier 1 or Tier 2</li>
+          <li><strong>Deliverable scope:</strong> Governed at contract time, scoped to identified concerns</li>
+          <li><strong>Product map status:</strong> Declared in product ladder; product node and canonical stream not yet established</li>
+        </ul>
+      </div>
+
+      <div class="block">
+        <div class="lbl">The canonical basis — PiOS Core</div>
+        <p class="body-text" style="margin-bottom:6px">Enterprise Access engages directly at the canonical derivation layer that produces the structural truth consumed by Tier 1 and Tier 2.</p>
+        <div class="layer-rows">
+          <div class="layer-row">
+            <span class="layer-id">L2</span>
+            <span class="layer-name">Evidence Navigation</span>
+            <span class="layer-desc">Structural mapping of evidence against domain model</span>
+          </div>
+          <div class="layer-row">
+            <span class="layer-id">L3</span>
+            <span class="layer-name">Derivation</span>
+            <span class="layer-desc">Signals, conditions, diagnosis — governed derivation chain</span>
+          </div>
+          <div class="layer-row">
+            <span class="layer-id">L4</span>
+            <span class="layer-name">Semantic Shaping</span>
+            <span class="layer-desc">ESI / RAG — semantic payload preparation for activation</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="lbl">When to use</div>
+        <p class="body-text">
+          When ESCALATE is the governed decision state from a completed LENS Assessment or Diagnostic Access engagement.
+          When structural concerns require engagement at the canonical derivation layer.
+          When the evidence gap surface alone is insufficient for the decisions at stake.
+          <strong>Entry is via governed contract only.</strong>
+        </p>
+      </div>
+
+    </div>
+
+    <div class="right">
+
+      <div class="panel-slate">
+        <div class="panel-lbl-slate">Brain definition status</div>
+        <div class="def-rows">
+          <div class="def-row">
+            <span class="def-key">Product map entry</span>
+            <span class="def-present">Defined</span>
+          </div>
+          <div class="def-row">
+            <span class="def-key">Canonical stream</span>
+            <span class="def-absent">Not yet established</span>
+          </div>
+          <div class="def-row">
+            <span class="def-key">Product node</span>
+            <span class="def-absent">Not yet established</span>
+          </div>
+          <div class="def-row">
+            <span class="def-key">Code surface</span>
+            <span class="def-absent">Not yet surfaced</span>
+          </div>
+          <div class="def-row">
+            <span class="def-key">Publish coverage</span>
+            <span class="def-absent">No controlled claims</span>
+          </div>
+        </div>
+        <p style="margin-top:9px;font-size:8px;color:var(--text-3);font-style:italic;line-height:1.5">Claims in this brief derive from the product map declaration only. Scope is governed at contract time — not by a predefined feature set.</p>
+      </div>
+
+      <div class="panel" style="margin-bottom:9px">
+        <div class="panel-lbl">Example query — PiOS Core L3</div>
+        <div class="query-text">"What structural constraints currently bound the achievable readiness ceiling in the Edge Data Acquisition domain, and what evidence supports each constraint?"</div>
+      </div>
+
+      <div class="tiers">
+        <div class="tiers-hd">
+          <div class="panel-lbl">Product ladder</div>
+        </div>
+
+        <div class="tier">
+          <div class="tier-lbl">Tier 1 — LENS Assessment</div>
+          <span class="badge badge-in">Included</span>
+          <div class="tier-desc" style="margin-top:3px">Fixed assessment engagement. Structural view, report, and guided review session. Decision state: proceed / investigate / escalate.</div>
+        </div>
+
+        <div class="tier">
+          <div class="tier-lbl">Tier 2 — Diagnostic Access</div>
+          <span class="badge badge-ph1">Phase 1 — HTML Export</span>
+          <div class="tier-desc" style="margin-top:3px">Zone-based investigation surface. Named unknown dimensions, evidence gaps, WHY and EVIDENCE query modes.</div>
+        </div>
+
+        <div class="tier current">
+          <div class="tier-lbl">Tier 3 — Enterprise Access</div>
+          <span class="badge badge-gov">Governed Contract</span>
+          <div class="tier-desc" style="margin-top:3px">Full PiOS Core access — L2 through L4. Scope governed by contract. Top tier of the product ladder.</div>
+        </div>
+
+        <div class="tiers-ft">
+          <p>Tier 3 access issued following ESCALATE decision state. Engagement scope defined at contract time based on findings from prior tiers.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="quote-bar">
+    <p>"Scope, deliverables, and engagement form are <strong>governed by contract</strong> — defined by the structural concerns that triggered escalation."</p>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-l"><em>Signäl</em> LENS &nbsp;·&nbsp; signal-pi.com &nbsp;·&nbsp; © 2026 Signäl &nbsp;·&nbsp; Tier 3: Enterprise Access</div>
+    <div class="footer-r">Confidential — prepared for recipient only</div>
+  </footer>
+
+</div>
+</body>
+</html>

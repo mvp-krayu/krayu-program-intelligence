@@ -1,0 +1,97 @@
+{
+  "contract_id": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01",
+  "artifact": "pressure_zone_state_fastapi_compatible",
+  "schema_version": "1.0",
+  "artifact_version": "fastapi_compatible_v1",
+  "block": "BLOCK_D",
+  "generated_date": "2026-04-29",
+  "client_uuid": "6a6fcdbc-41b6-4e0e-99b9-37394f6c870d",
+  "run_id": "run_blueedge_integrated_01",
+  "source_artifact": "binding_envelope_fastapi_compatible.json + signal_projection_fastapi_compatible.json",
+
+  "reformatting_basis": "Derived from BLOCK_C binding_envelope zone designations. Schema reformatted to DOMAIN_ZONE type with DOM-XX anchor_id pattern, matching FastAPI pressure_zone_state schema. BlueEdge native pressure_zone_state.json used CEU-based zone types — this artifact replaces it for FastAPI conformance.",
+
+  "zone_class_rules": {
+    "COUPLING_ZONE": "PSIG-001 + PSIG-002",
+    "PROPAGATION_ZONE": "PSIG-002 + PSIG-004",
+    "RESPONSIBILITY_ZONE": "PSIG-001 + PSIG-004",
+    "FRAGMENTATION_ZONE": "PSIG-006 present",
+    "COMPOUND_ZONE": "condition_count >= 3"
+  },
+
+  "total_zones": 1,
+  "suppressed_zone_count": 0,
+  "active_zone_count": 1,
+  "zones_by_type": {"DOMAIN_ZONE": 1},
+  "zones_by_class": {"COMPOUND_ZONE": 1},
+
+  "zones": [
+    {
+      "zone_id": "PZ-001",
+      "zone_type": "DOMAIN_ZONE",
+      "zone_class": "COMPOUND_ZONE",
+      "class_rule_applied": "condition_count >= 3",
+      "anchor_id": "DOM-04",
+      "anchor_name": "backend_app_root",
+      "anchor_path_pattern": "backend/src/app.module.ts, backend/src/main.ts",
+      "member_entities": [
+        {"entity_id": "NODE-0021", "entity_type": "NODE", "candidate_id": "PC-001"},
+        {"entity_id": "DOM-04",    "entity_type": "DOMAIN", "candidate_id": "PC-002"}
+      ],
+      "member_count": 2,
+      "node_count_in_zone": 15,
+      "unique_nodes": [
+        "NODE-0021","NODE-0022","NODE-0030","NODE-0027","NODE-0084",
+        "NODE-0098","NODE-0105","NODE-0039","NODE-0136","NODE-0137",
+        "NODE-0138","NODE-0139","NODE-0088","NODE-0935","NODE-0938"
+      ],
+      "aggregated_conditions": ["PSIG-001", "PSIG-002", "PSIG-004"],
+      "condition_count": 3,
+      "embedded_pair_rules": ["COUPLING_ZONE", "PROPAGATION_ZONE", "RESPONSIBILITY_ZONE"],
+      "psig_006_flag": "NOT",
+      "condition_sources": [
+        {
+          "condition_id": "COND-PSIG-001-01",
+          "signal_id": "PSIG-001",
+          "signal_value": 5.6630,
+          "attribution_role": "primary",
+          "entity_in_zone": "NODE-0021"
+        },
+        {
+          "condition_id": "COND-PSIG-002-01",
+          "signal_id": "PSIG-002",
+          "signal_value": 3.2098,
+          "attribution_role": "primary",
+          "entity_in_zone": "DOM-04"
+        },
+        {
+          "condition_id": "COND-PSIG-004-01",
+          "signal_id": "PSIG-004",
+          "signal_value": 2.1822,
+          "attribution_role": "primary",
+          "entity_in_zone": "NODE-0021"
+        }
+      ],
+      "evidence_trace": {
+        "PSIG-001": "40.3 topology → NODE-0021 IMPORTS=69 → z-score=5.663 → COND-PSIG-001-01 HIGH primary → NODE-0021/DOM-04 → PZ-001",
+        "PSIG-002": "40.3 topology → DOM-04 IMPORTS_total=71 → z-score=3.210 → COND-PSIG-002-01 HIGH primary → DOM-04 → PZ-001",
+        "PSIG-004": "pressure_zone_state → PZ-001 node_fraction=15/35=0.4286 → z-score=2.182 → COND-PSIG-004-01 HIGH primary → PZ-001"
+      },
+      "validation_status": "VALID",
+      "zone_weight": 1.0,
+      "anchor_effective_weight": 1.0,
+      "grounding_status": "ACTIVATED"
+    }
+  ],
+
+  "non_pressure_zones_reference": [
+    {"zone_id": "PZ-002", "original_type": "SINGLE", "anchor_dom": "DOM-10", "reason_excluded": "No active pressure signals"},
+    {"zone_id": "PZ-003", "original_type": "SINGLE", "anchor_dom": "DOM-03", "reason_excluded": "No active pressure signals"},
+    {"zone_id": "PZ-004", "original_type": "SINGLE", "anchor_dom": "DOM-01", "reason_excluded": "No active pressure signals"},
+    {"zone_id": "PZ-005", "original_type": "SINGLE", "anchor_dom": "DOM-05", "reason_excluded": "No active pressure signals"},
+    {"zone_id": "PZ-006", "original_type": "SINGLE", "anchor_dom": "DOM-13", "reason_excluded": "No active pressure signals"},
+    {"zone_id": "PZ-007", "original_type": "SINGLE", "anchor_dom": "DOM-02", "reason_excluded": "No active pressure signals"}
+  ],
+
+  "bi_03_resolution_note": "BI-03 (DOM-XX anchor) fully satisfied. All zones use DOMAIN_ZONE type with anchor_id=DOM-XX. DOM-04 is the anchor for PZ-001. Derived from dom_path_domain_layer.json (PATH_EVIDENCE_ONLY)."
+}

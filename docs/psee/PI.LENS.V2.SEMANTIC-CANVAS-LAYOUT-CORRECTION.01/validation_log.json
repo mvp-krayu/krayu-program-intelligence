@@ -1,0 +1,96 @@
+{
+  "stream": "PI.LENS.V2.SEMANTIC-CANVAS-LAYOUT-CORRECTION.01",
+  "validated_at": "2026-05-09",
+  "scope": "Layout correction — three-column operational surface with semantic canvas as primary cognition region",
+  "runtime_url_inspected": "http://localhost:3002/lens-v2-flagship",
+  "app": "app/execlens-demo",
+  "page": "app/execlens-demo/pages/lens-v2-flagship.js",
+  "checks": [
+    {
+      "name": "center_canvas_activated_as_primary_surface",
+      "description": "The IntelligenceField is now a three-column grid where the center column carries the dominant share of horizontal real estate (~56%). The center column hosts the RepresentationField as the primary cognition surface.",
+      "result": "PASS",
+      "notes": "grid-template-columns: minmax(260px, 0.85fr) minmax(0, 2.2fr) minmax(280px, 0.8fr). BOARDROOM widens center further to 2.6fr. Verified visually in all four lens captures."
+    },
+    {
+      "name": "right_rail_reduced_to_support_role",
+      "description": "Right rail (SupportRail) carries only three blocks: evidence state, qualifier state, Report Pack access. No mode-specific representation content remains in the rail.",
+      "result": "PASS",
+      "notes": "RIGHT_RAIL_REDUCTION_AUDIT.md inventories what moved to the center canvas (mode-specific representation) and what stayed in the rail (constant support content). Right rail is calm and constant across lenses."
+    },
+    {
+      "name": "executive_assessment_rebalanced",
+      "description": "Left column compressed to a 280px executive interpretation companion at 13/12/11 px typography. No longer dominant.",
+      "result": "PASS",
+      "notes": "EXECUTIVE_INTERPRETATION_LAYER_REBALANCE.md records the typography ladder change (18→13, 15→12, 13→11). New tag header with state phrase. Lens-aware visibility (structural context only in INVESTIGATION; why-block hidden in BOARDROOM)."
+    },
+    {
+      "name": "semantic_zones_rendered_as_visual_constructs",
+      "description": "Semantic zones surface as visual actors in the center canvas (pressure-tier glow halos, spatial topology, trace band tier rails, atmospheric ring) — not as metadata chips alone. Zone chips remain in the persona tag header as supplementary identifiers.",
+      "result": "PASS",
+      "notes": "BALANCED: 3 horizontal anchors with 36px tier-glow halos. DENSE: spatial three-node composition with central PASS-THROUGH actor and gradient pressure rail. INVESTIGATION: three vertical trace bands with tier rails and confidence rows. BOARDROOM: 168px state ring with outer halo and atmospheric gradient."
+    },
+    {
+      "name": "no_dashboard_regression",
+      "description": "Zero regular grids on the primary surface. No KPI tiles. No metric grids. No chart / sparkline / dial / donut elements. No filter row. No time-range picker. No tab strip. No '+ Add widget'.",
+      "result": "PASS",
+      "notes": "Audited per DASHBOARD_SYNDROME_DETECTION_GUIDE.md primary tests: five-second confusion, grid-gravity, metric-first, component-repetition. All PASS across all four lenses."
+    },
+    {
+      "name": "no_empty_atmospheric_void",
+      "description": "The center canvas contains operational substance per lens — not decorative gradient.",
+      "result": "PASS",
+      "notes": "Each lens canvas has explicit semantic actors (anchors / nodes / trace bands / ring). Canvas gradient ground supplements but does not stand alone. Verified visually in all captures."
+    },
+    {
+      "name": "mode_differentiation_improved",
+      "description": "Each lens produces a distinctly different center-canvas signature that an unbriefed observer can describe in plain language within five seconds.",
+      "result": "PASS",
+      "notes": "MODE_DIFFERENTIATION_MATRIX.md documents: BALANCED (horizontal flow), DENSE (spatial topology), INVESTIGATION (vertical trace stack), BOARDROOM (single atmospheric mark). Five-second material-differentiation test passes for all four switches."
+    },
+    {
+      "name": "operational_gravity_improved",
+      "description": "Center canvas reads as cognitive substance with operational gravity, not as decoration.",
+      "result": "PASS",
+      "notes": "OPERATIONAL_COGNITION_SURFACE.md documents the operational gravity contract. Each lens canvas embodies its persona role through visual mass and spatial encoding."
+    },
+    {
+      "name": "semantic_repetition_reduced",
+      "description": "Evidence state, qualifier state, and confidence labels appear once per surface — not duplicated across rail and canvas.",
+      "result": "PASS",
+      "notes": "Compact RepEvidenceState (previously duplicated at the bottom of each rep field) was removed. SupportRail block carries the canonical evidence state. Cluster Concentration sub-panel appears only in DENSE canvas, not in the rail."
+    },
+    {
+      "name": "report_pack_preserved",
+      "description": "Report Pack registry preserved with all four canonical artifacts. Visible in every lens via the SupportRail.",
+      "result": "PASS",
+      "notes": "REPORT_PACK_ARTIFACTS registry unchanged. Items rendered in the SupportRail's Report Pack block with binding-pending captions and tooltips carrying the future binding paths."
+    },
+    {
+      "name": "no_static_html_injection",
+      "description": "No paragraphs from any static report HTML are embedded in the LENS V2 source.",
+      "result": "PASS",
+      "notes": "Authored prose (BALANCED consequence statement, DENSE dense note, BOARDROOM statement) was preserved from prior iterations — never scraped from static reports. INVESTIGATION trace bands draw evidence_text/evidence_description from the in-memory fixture, not from static HTML files. Report Pack lists names only."
+    },
+    {
+      "name": "no_fake_runtime_binding",
+      "description": "Report Pack entries remain aria-disabled with 'binding pending' captions; tooltips carry the future binding paths; no fake API endpoints implemented.",
+      "result": "PASS",
+      "notes": "REPORT_PACK_INTEGRATION_MODEL.md (predecessor stream) and FUTURE_CLIENT_RUN_BINDING_CONTRACT.md (predecessor stream) documented the pending live binding. This stream did not implement /api/report-pack or /api/lens-payload. The 'binding pending — live client/run integration not yet active' caption is visible at the bottom of the Report Pack block."
+    },
+    {
+      "name": "no_governance_mutation",
+      "description": "No changes to docs/governance/, validators, or any governance contract.",
+      "result": "PASS",
+      "notes": "git diff confirms changes scoped to docs/psee/PI.LENS.V2.SEMANTIC-CANVAS-LAYOUT-CORRECTION.01/, docs/pios/PI.LENS.V2.SEMANTIC-CANVAS-LAYOUT-CORRECTION.01/, and app/execlens-demo/pages/lens-v2-flagship.js."
+    },
+    {
+      "name": "no_evidence_semantic_mutation",
+      "description": "No changes to evidence semantics, signal interpretation, render-state vocabulary, qualifier-class semantics, propagation logic, or governance ribbon pass/fail logic.",
+      "result": "PASS",
+      "notes": "Render-state vocabulary preserved verbatim. Qualifier semantics (Q-00 / Q-01) preserved. Orchestration module untouched. Fixture untouched. Governance verdict logic untouched."
+    }
+  ],
+  "verdict": "PASS",
+  "fail_count": 0
+}

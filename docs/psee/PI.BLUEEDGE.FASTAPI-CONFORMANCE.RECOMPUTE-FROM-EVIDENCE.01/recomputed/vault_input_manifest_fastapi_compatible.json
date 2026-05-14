@@ -1,0 +1,103 @@
+{
+  "contract_id": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01",
+  "artifact": "vault_input_manifest_fastapi_compatible",
+  "block": "BLOCK_F",
+  "generated_date": "2026-04-29",
+
+  "vault_artifacts": [
+
+    {
+      "vault_artifact_id": "ART-01",
+      "artifact": "gauge_state.json",
+      "status": "READY_RECOMPUTED",
+      "source": "Projectable from grounding_state_v3.json — all 10 CEUs SOURCE_TRUTH, grounding_ratio=1.0 → coverage=100%, reconstruction=PASS → GAUGE terminal state S-13",
+      "projected_values": {
+        "DIM-01_coverage_percent": 100.0,
+        "DIM-02_reconstruction": "PASS",
+        "DIM-03_escalation_clearance": 100,
+        "execution_status": "NOT_EVALUATED",
+        "execution_layer_evaluated": false
+      },
+      "defined_in": "alignment/vault_input_alignment.json ART-01",
+      "ready_for_implementation": true
+    },
+
+    {
+      "vault_artifact_id": "ART-02",
+      "artifact": "coverage_state.json",
+      "status": "READY_RECOMPUTED",
+      "source": "Projectable from grounding_state_v3.json — total_ceu=10, SOURCE_TRUTH=10 → coverage_percent=100.0",
+      "projected_values": {
+        "coverage_percent": 100.0,
+        "state": "COMPUTED",
+        "required_units": 10,
+        "admissible_units": 10
+      },
+      "defined_in": "alignment/vault_input_alignment.json ART-02",
+      "ready_for_implementation": true
+    },
+
+    {
+      "vault_artifact_id": "ART-03",
+      "artifact": "reconstruction_state.json",
+      "status": "READY_RECOMPUTED",
+      "source": "Projectable from grounding_state_v3.json — 10/10 CEUs SOURCE_TRUTH → all 4 reconstruction axes PASS",
+      "projected_values": {
+        "state": "PASS",
+        "validated_units": 10,
+        "total_units": 10,
+        "axis_results": {"COMPLETENESS": "PASS", "STRUCTURAL_LINK": "PASS", "REFERENTIAL_INTEGRITY": "PASS", "LAYER_CONSISTENCY": "PASS"}
+      },
+      "defined_in": "alignment/vault_input_alignment.json ART-03",
+      "ready_for_implementation": true
+    },
+
+    {
+      "vault_artifact_id": "ART-04",
+      "artifact": "canonical_topology.json",
+      "status": "READY",
+      "source": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/structure/40.4/canonical_topology.json",
+      "note": "Path remapping required. Schema compatibility unverified — may require verification before use in vault generation.",
+      "ready_for_implementation": true,
+      "caveat": "Schema compatibility not verified against FastAPI package/canonical_topology.json schema"
+    },
+
+    {
+      "vault_artifact_id": "ART-05",
+      "artifact": "signal_registry.json",
+      "status": "BLOCKED",
+      "blocking_reason": "Signal registry adapter from signal_projection.json is structurally definable, but requires FastAPI-compatible signal values (PSIG-001/002 blocked by BI-02). A signal registry with BLOCKED signal values would not satisfy vault requirements for report generation.",
+      "dependency": "BI-02 signal scale resolution",
+      "ready_for_implementation": false
+    },
+
+    {
+      "vault_artifact_id": "ART-06",
+      "artifact": "binding_envelope.json",
+      "status": "BLOCKED",
+      "blocking_reason": "No binding stage in BlueEdge pipeline (BI-01). DOM layer derived in BLOCK_D, but signal_projection prerequisite is blocked. binding_envelope_fastapi_compatible.json not produced.",
+      "dependency": "BI-01 + BI-02 resolution",
+      "ready_for_implementation": false
+    },
+
+    {
+      "vault_artifact_id": "ART-07",
+      "artifact": "admissibility_log.json",
+      "status": "READY_RECOMPUTED",
+      "source": "Structural adapter from integration_validation.json — FINAL_STATUS=PASS → admissibility proxy",
+      "semantic_caveat": "Check scope differs (CEU integration checks vs structural admissibility). Vault consumers validating check names will detect the difference.",
+      "defined_in": "alignment/vault_input_alignment.json ART-07",
+      "ready_for_implementation": true
+    }
+
+  ],
+
+  "vault_manifest_summary": {
+    "status_READY": ["ART-04 canonical_topology"],
+    "status_READY_RECOMPUTED": ["ART-01 gauge_state", "ART-02 coverage_state", "ART-03 reconstruction_state", "ART-07 admissibility_log"],
+    "status_BLOCKED": ["ART-05 signal_registry", "ART-06 binding_envelope"],
+    "ready_count": 5,
+    "blocked_count": 2,
+    "overall_vault_readiness": "NOT_READY — binding_envelope (ART-06) and signal_registry (ART-05) blocked; vault cannot be fully populated"
+  }
+}

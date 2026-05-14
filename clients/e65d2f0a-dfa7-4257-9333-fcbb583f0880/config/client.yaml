@@ -1,0 +1,21 @@
+client_uuid: e65d2f0a-dfa7-4257-9333-fcbb583f0880
+business_client_id: oss-fastapi-modular
+display_name: "OSS FastAPI Modular Monolith"
+
+tenant_mapping:
+  client: e65d2f0a-dfa7-4257-9333-fcbb583f0880
+  tenant: e65d2f0a-dfa7-4257-9333-fcbb583f0880
+
+intake_selector:
+  selector_type: local_directory
+  source_uri: clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/source/fastapi-backend
+  source_version: 04dcdc9ae62e94d55f528cb89493a72b448845ab
+  checksum_manifest: clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/input/intake/manifests/fastapi-backend.manifest.sha256
+
+pregate:
+  classification: PASS
+  record_path: clients/e65d2f0a-dfa7-4257-9333-fcbb583f0880/psee/runs/pregate_run_01/pregate_viability_record.json
+
+governance:
+  step0_completed: true
+  runtime_execution: false

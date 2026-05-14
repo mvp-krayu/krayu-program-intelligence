@@ -1,0 +1,63 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE.STAGE-CONTRACT-CLOSURE.01",
+  "generated_date": "2026-05-03",
+  "source_stream": "PI.LENS.REAL-E2E-PIPELINE.EXECUTION-MODE.01",
+
+  "real_e2e_pipeline_ready": false,
+  "validate_mode_ready": true,
+  "execute_mode_ready": false,
+
+  "blocked_by": [
+    "BLOCKER-01",
+    "BLOCKER-02",
+    "BLOCKER-03",
+    "BLOCKER-04"
+  ],
+
+  "blocker_summary": {
+    "BLOCKER-01": "source_intake.py fails on external archive_path; stages 01–05 cannot execute",
+    "BLOCKER-02": "run_client_pipeline.py phases 2–3 use UUID paths absent from repo; stage 06 cannot execute",
+    "BLOCKER-03": "lens_generate.sh assumes vault+semantic co-location in single --run; BlueEdge split design unsupported; stage 08 cannot execute",
+    "BLOCKER-04": "No generic semantic bundle producer; stage 07 is READY_LOCKED_REFERENCE for BlueEdge only; new clients blocked"
+  },
+
+  "stage_09_closed": true,
+  "stage_07_closed_for_blueedge": true,
+  "validate_mode_stages_ready": ["01", "03", "06", "07", "08", "09"],
+  "validate_mode_stages_missing_input": ["02", "04", "05"],
+
+  "unblocking_sequence": [
+    {
+      "step": 1,
+      "blocker": "BLOCKER-01",
+      "stream": "PI.LENS.SOURCE-INTAKE.CONTRACT-CLOSURE.01",
+      "unlocks": "stages 01–05 entry"
+    },
+    {
+      "step": 2,
+      "blocker": "BLOCKER-02",
+      "stream": "PI.LENS.RUNTIME-BUNDLE-MAPPING.CONTRACT.01",
+      "unlocks": "stage 06 (independent of step 1)"
+    },
+    {
+      "step": 3,
+      "blocker": "BLOCKER-03",
+      "stream": "PI.LENS.RUNTIME-BUNDLE-MAPPING.CONTRACT.01",
+      "unlocks": "stage 08 co-location"
+    },
+    {
+      "step": 4,
+      "blocker": "BLOCKER-04",
+      "stream": "PI.LENS.SEMANTIC-BUNDLE.PRODUCER.01",
+      "unlocks": "stage 07 for new clients"
+    },
+    {
+      "step": 5,
+      "blocker": "BLOCKER-05",
+      "stream": "resolved by step 3",
+      "unlocks": "stage 08 downstream (automatic)"
+    }
+  ],
+
+  "next_required_stream": "PI.LENS.SOURCE-INTAKE.CONTRACT-CLOSURE.01"
+}

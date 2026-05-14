@@ -1,0 +1,42 @@
+{
+  "contract_id": "PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01",
+  "artifact": "blocked_signal_recompute",
+  "block": "BLOCK_C",
+  "generated_date": "2026-04-29",
+
+  "status": "BLOCKED",
+  "blocking_reason": "distribution_recoverability.json classification = NOT_RECOVERABLE. PSIG-001 and PSIG-002 statistical recompute is not possible from available BlueEdge evidence. Per contract stopping rule: statistical recompute halted. BI-02 remains unresolved.",
+
+  "bi_02_status": "UNRESOLVED",
+
+  "per_signal_status": {
+    "PSIG-001": {
+      "status": "BLOCKED",
+      "reason": "Population of 4 CEU-pair relation_counts [3,1,1,1] insufficient. Outlier score=1.73 below threshold=2.0. FastAPI score=9.43 not reproducible from CEU-level coupling evidence."
+    },
+    "PSIG-002": {
+      "status": "BLOCKED",
+      "reason": "Uniform zone activation (7/7=1.0) — zero variance. No statistical distribution to compute outlier score from."
+    },
+    "PSIG-004": {
+      "status": "PARTIAL_BLOCKED",
+      "reason": "Approximate recompute is arithmetically possible (outlier score ≈2.355-3.33 from per-zone node coverage distribution). However: (a) numeric value differs from FastAPI reference 4.33; (b) PSIG-001 and PSIG-002 are blocked making the overall signal_projection artifact incomplete; (c) report generators expecting PSIG-001/002 in statistical scale will produce incorrect characterizations even if PSIG-004 is approximate.",
+      "approximate_score_range": "2.355 (mean+2SD method) to 3.33 (IQR method)",
+      "activation_status_confirmed": "HIGH (above threshold=2.0 by both methods)"
+    },
+    "PSIG-006": {
+      "status": "EXACT",
+      "value": 0,
+      "reason": "Direct count = 0. No statistical computation required. Exact match with FastAPI expected value."
+    }
+  },
+
+  "fabrication_rule": "Per RULE-07: values not recovered are BLOCKED, not fabricated. signal_projection_fastapi_compatible.json will NOT be produced.",
+
+  "downstream_impact": {
+    "BLOCK_E_binding_envelope": "BLOCKED — prerequisite signal_projection_fastapi_compatible.json not produced",
+    "tier2_report": "BLOCKED — primary coupling signal characterization (PSIG-001, PSIG-002) unavailable",
+    "decision_surface": "BLOCKED — signal values not FastAPI-compatible",
+    "BI-01_binding": "REMAINS PARTIALLY BLOCKED — DOM layer can be derived (BLOCK_D), but binding envelope requires signal_projection (blocked)"
+  }
+}

@@ -1,0 +1,233 @@
+{
+  "schema_version": "1.0",
+  "script_version": "1.0",
+  "client_id": "blueedge",
+  "run_id": "run_blueedge_productized_01_fixed",
+  "generated_at": "2026-05-08T07:27:57.944209+00:00",
+  "derivation_context": {
+    "canonical_topology_hash": "4ea34f80660d06013fdec4ac32f77d64b7715fb1828f610598468a909e0a2e09",
+    "binding_envelope_hash": "ABSENT",
+    "structural_topology_log_hash": "ABSENT",
+    "grounding_state_hash": "ABSENT",
+    "topology_snapshot_hash": "4ea34f80660d06013fdec4ac32f77d64b7715fb1828f610598468a909e0a2e09",
+    "total_structural_nodes": 35,
+    "total_clusters": 13,
+    "total_ceu_nodes": "UNUSED_CLASS4",
+    "total_edges": "UNUSED_CLASS4"
+  },
+  "normalization_basis": {
+    "total_structural_node_count": 35,
+    "total_cluster_count": 13,
+    "singleton_cluster_count": 1,
+    "non_singleton_cluster_count": 12,
+    "mean_non_singleton_cluster_size": 2.8333,
+    "max_cluster_node_count": 6,
+    "max_cluster_id": "DOM-09",
+    "max_cluster_name": "backend_modules",
+    "non_singleton_cluster_ids": [
+      "DOM-01",
+      "DOM-02",
+      "DOM-03",
+      "DOM-04",
+      "DOM-05",
+      "DOM-06",
+      "DOM-08",
+      "DOM-09",
+      "DOM-10",
+      "DOM-11",
+      "DOM-12",
+      "DOM-13"
+    ]
+  },
+  "signal_entries": [
+    {
+      "signal_id": "DPSIG-031",
+      "signal_class": 4,
+      "signal_name": "Cluster Pressure Index",
+      "formula": "max(cluster_node_count) / max(mean(non_singleton_cluster_node_counts), 1)",
+      "normalization_scope": "CLUSTER_RELATIVE",
+      "normalization_basis_field": "normalization_basis.mean_non_singleton_cluster_size",
+      "activation_method": "CLUSTER_MASS_THRESHOLD",
+      "threshold_basis": "DPSIG_CLASS4_CPI_THRESHOLD",
+      "threshold_high": 5.0,
+      "threshold_elevated": 2.0,
+      "replay_class": "TAXONOMY-01",
+      "lens_tier": [
+        "TIER-1",
+        "TIER-2",
+        "TIER-3"
+      ],
+      "signal_value": 2.1176,
+      "activation_state": "CLUSTER_PRESSURE_ELEVATED",
+      "severity": "ELEVATED",
+      "denominator_guard": {
+        "guard_condition": "non_singleton_cluster_count == 0",
+        "guard_action": "emit null \u2014 ALL_SINGLETON_CLUSTERS",
+        "denominator_zero_flag": false
+      },
+      "derivation_trace": {
+        "numerator_field": "max(cluster.node_count for all clusters)",
+        "numerator_value": 6,
+        "numerator_cluster_id": "DOM-09",
+        "numerator_cluster_name": "backend_modules",
+        "numerator_source": "canonical_topology.json \u2192 clusters[cluster_id=DOM-09].node_count",
+        "denominator_field": "mean(cluster.node_count for clusters where node_count > 1)",
+        "denominator_value": 2.8333,
+        "denominator_raw": 2.8333333333333335,
+        "denominator_cluster_ids": [
+          "DOM-01",
+          "DOM-02",
+          "DOM-03",
+          "DOM-04",
+          "DOM-05",
+          "DOM-06",
+          "DOM-08",
+          "DOM-09",
+          "DOM-10",
+          "DOM-11",
+          "DOM-12",
+          "DOM-13"
+        ],
+        "denominator_source": "canonical_topology.json \u2192 mean([2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 5, 6]) over clusters ['DOM-01', 'DOM-02', 'DOM-03', 'DOM-04', 'DOM-05', 'DOM-06', 'DOM-08', 'DOM-09', 'DOM-10', 'DOM-11', 'DOM-12', 'DOM-13']",
+        "denominator_guard_applied": false,
+        "result": 2.1176,
+        "raw_result": 2.1176470588235294,
+        "rounding": "round(raw, 4)"
+      },
+      "topology_dependencies": [
+        {
+          "artifact": "canonical_topology.json",
+          "field": "clusters[*].node_count",
+          "usage": "primary input \u2014 cluster size distribution for CPI derivation"
+        }
+      ],
+      "explainability_template": "The {max_cluster_name} cluster ({max_cluster_id}) contains {numerator_value} structural nodes \u2014 {signal_value}x the mean non-singleton cluster size of {denominator_value} nodes. It is the dominant structural mass concentration zone in this topology.",
+      "explainability_render": "The backend_modules cluster (DOM-09) contains 6 structural nodes \u2014 2.1176x the mean non-singleton cluster size of 2.8333 nodes. It is the dominant structural mass concentration zone in this topology.",
+      "executive_summary": "The backend_modules cluster (DOM-09) carries 2.1176x the average cluster structural load. Structural investment in this cluster has system-wide impact.",
+      "engineering_summary": "CPI=2.1176 (CLUSTER_PRESSURE_ELEVATED): DOM-09/backend_modules = 6 nodes, mean non-singleton = 2.8333 nodes across 12 clusters.",
+      "derivation_summary": "CPI = 6 / 2.8333 = 2.1176",
+      "signal_stable_key": "57586792a4a447f1",
+      "derivation_hash": "af156c6d0e7b5edad001110b769fb3fcabc859aa9a90ea8774273c853f5125a4",
+      "source_artifacts": {
+        "canonical_topology": "4ea34f80660d06013fdec4ac32f77d64b7715fb1828f610598468a909e0a2e09",
+        "binding_envelope": "ABSENT",
+        "structural_topology_log": "ABSENT",
+        "grounding_state": "ABSENT"
+      }
+    },
+    {
+      "signal_id": "DPSIG-032",
+      "signal_class": 4,
+      "signal_name": "Cluster Fan Asymmetry",
+      "formula": "max(cluster_node_count) / max(sum(all cluster_node_counts), 1)",
+      "normalization_scope": "RUN_RELATIVE",
+      "normalization_basis_field": "normalization_basis.total_structural_node_count",
+      "activation_method": "CLUSTER_MASS_THRESHOLD",
+      "threshold_basis": "DPSIG_CLASS4_CFA_THRESHOLD",
+      "threshold_dominant": 0.6,
+      "threshold_asymmetric": 0.35,
+      "replay_class": "TAXONOMY-01",
+      "lens_tier": [
+        "TIER-1",
+        "TIER-2",
+        "TIER-3"
+      ],
+      "signal_value": 0.1714,
+      "activation_state": "CLUSTER_BALANCED",
+      "severity": "NOMINAL",
+      "denominator_guard": {
+        "guard_condition": "total_structural_node_count == 0",
+        "guard_action": "emit null \u2014 EMPTY_TOPOLOGY",
+        "denominator_zero_flag": false
+      },
+      "derivation_trace": {
+        "numerator_field": "max(cluster.node_count for all clusters)",
+        "numerator_value": 6,
+        "numerator_cluster_id": "DOM-09",
+        "numerator_cluster_name": "backend_modules",
+        "numerator_source": "canonical_topology.json \u2192 clusters[cluster_id=DOM-09].node_count",
+        "denominator_field": "sum(cluster.node_count for all clusters)",
+        "denominator_value": 35,
+        "denominator_source": "canonical_topology.json \u2192 sum(all cluster node_counts) = 35",
+        "denominator_guard_applied": false,
+        "result": 0.1714,
+        "raw_result": 0.17142857142857143,
+        "pct_share": 17.14,
+        "rounding": "round(raw, 4)"
+      },
+      "topology_dependencies": [
+        {
+          "artifact": "canonical_topology.json",
+          "field": "clusters[*].node_count",
+          "usage": "primary input \u2014 max cluster count and total node count for CFA derivation"
+        }
+      ],
+      "explainability_template": "The {max_cluster_name} cluster ({max_cluster_id}) holds {pct_share}% of the topology's {total_nodes} structural nodes ({numerator_value} of {denominator_value}). {singleton_count} of {total_clusters} clusters ({singleton_pct}%) contain only a single structural node.",
+      "explainability_render": "The backend_modules cluster (DOM-09) holds 17.14% of the topology's 35 structural nodes (6 of 35). 1 of 13 clusters (7.7%) contain only a single structural node.",
+      "executive_summary": "The backend_modules cluster (DOM-09) holds 17.14% of all structural files. It is the topology's structural center of gravity.",
+      "engineering_summary": "CFA=0.1714 (CLUSTER_BALANCED): 6/35 nodes in DOM-09/backend_modules. 1 singleton clusters (7.7% of 13 total).",
+      "derivation_summary": "CFA = 6 / 35 = 0.1714 (17.14%)",
+      "signal_stable_key": "9a48b9a36ed0b874",
+      "derivation_hash": "72d0e6356ac83183fbb2f4932069a006fee84662eb7ca52dd8370b33364aed18",
+      "source_artifacts": {
+        "canonical_topology": "4ea34f80660d06013fdec4ac32f77d64b7715fb1828f610598468a909e0a2e09",
+        "binding_envelope": "ABSENT",
+        "structural_topology_log": "ABSENT",
+        "grounding_state": "ABSENT"
+      }
+    }
+  ],
+  "derivation_summary": {
+    "signals_derived": 2,
+    "signals_activated": 1,
+    "signals_null": 0,
+    "null_reasons": [],
+    "severity_band": "ELEVATED"
+  },
+  "replay_taxonomy": {
+    "TAXONOMY_01_REPLAY_STABLE": [
+      "normalization_basis.*",
+      "signal_entries[*].signal_id",
+      "signal_entries[*].signal_value",
+      "signal_entries[*].activation_state",
+      "signal_entries[*].severity",
+      "signal_entries[*].signal_stable_key",
+      "signal_entries[*].derivation_hash",
+      "signal_entries[*].denominator_guard.denominator_zero_flag",
+      "signal_entries[*].derivation_trace.*",
+      "signal_entries[*].explainability_render",
+      "signal_entries[*].executive_summary",
+      "signal_entries[*].engineering_summary",
+      "signal_entries[*].derivation_summary",
+      "derivation_summary.*",
+      "derivation_context.topology_snapshot_hash",
+      "derivation_context.total_structural_nodes",
+      "derivation_context.total_clusters"
+    ],
+    "TAXONOMY_02_TIME_VARYING": [
+      "generated_at"
+    ],
+    "TAXONOMY_03_VERSION_DEPENDENT": [
+      "schema_version",
+      "script_version",
+      "derivation_context.canonical_topology_hash",
+      "derivation_context.binding_envelope_hash",
+      "derivation_context.structural_topology_log_hash",
+      "derivation_context.grounding_state_hash",
+      "signal_entries[*].source_artifacts.*"
+    ]
+  },
+  "provenance_chain": {
+    "stream": "PI.PSEE-PIOS.DPSIG-RUNTIME-NORMALIZATION.IMPLEMENTATION.01",
+    "design_contract": "PI.PSEE-PIOS.DPSIG-RUNTIME-NORMALIZATION.DESIGN.01",
+    "architecture_ref": "PI.PSEE-PIOS.DETERMINISTIC-RELATIONAL-ENRICHMENT.01",
+    "manifest_ref": "docs/governance/pipeline_execution_manifest.json",
+    "baseline_commit": "93098cb",
+    "lane_a_impact": "NONE \u2014 additive parallel derivation; no Lane A artifacts modified",
+    "signal_registry_impact": "NONE \u2014 DPSIG writes to dpsig_signal_set.json only",
+    "psig_impact": "NONE \u2014 PSIG activation, threshold, and method unchanged",
+    "client_agnostic": true,
+    "topology_native": true,
+    "assertion": "The DPSIG runtime implementation is topology-native and client-agnostic. FastAPI is used exclusively as the canonical replay validation fixture. No framework-specific, repository-specific, or client-specific logic exists inside derive_relational_signals.py."
+  }
+}

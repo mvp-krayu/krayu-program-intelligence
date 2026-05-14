@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0",
+  "stream": "PI.PSEE-PIOS.DPSIG-PROJECTION-WEIGHTING.IMPLEMENTATION.01",
+  "generated_at": "2026-05-07T00:00:00+00:00",
+  "client_id": "fastapi",
+  "run_id": "run_02_oss_fastapi_pipeline",
+  "projection_render_id": "44a820d0ea720f01",
+  "overall_verdict": "IDENTICAL",
+  "taxonomy_01_weight_fields_checked": 24,
+  "taxonomy_01_identical": 24,
+  "taxonomy_01_diverged": 0,
+  "html_rendering_identical": true,
+  "projection_weight_fields": {
+    "cpi_weight": { "run1": 1.1225, "run2": 1.1225, "verdict": "IDENTICAL" },
+    "severity_multiplier": { "run1": 2.0, "run2": 2.0, "verdict": "IDENTICAL" },
+    "cluster_salience_score": { "run1": 1.6245, "run2": 1.6245, "verdict": "IDENTICAL" },
+    "amplification_factor": { "run1": 1.6245, "run2": 1.6245, "verdict": "IDENTICAL" },
+    "cluster_mass_emphasis": { "run1": 1.4472, "run2": 1.4472, "verdict": "IDENTICAL" },
+    "fragility_score": { "run1": 0.8122, "run2": 0.8122, "verdict": "IDENTICAL" },
+    "fragility_tier": { "run1": "HIGH_STRUCTURAL_FRAGILITY", "run2": "HIGH_STRUCTURAL_FRAGILITY", "verdict": "IDENTICAL" },
+    "render_apex": { "run1": true, "run2": true, "verdict": "IDENTICAL" },
+    "projection_render_id": { "run1": "44a820d0ea720f01", "run2": "44a820d0ea720f01", "verdict": "IDENTICAL" },
+    "severity_band": { "run1": "CRITICAL", "run2": "CRITICAL", "verdict": "IDENTICAL" },
+    "cpi_value": { "run1": 5.6126, "run2": 5.6126, "verdict": "IDENTICAL" },
+    "cfa_value": { "run1": 0.7236, "run2": 0.7236, "verdict": "IDENTICAL" },
+    "max_cluster_id": { "run1": "CLU-17", "run2": "CLU-17", "verdict": "IDENTICAL" },
+    "max_cluster_name": { "run1": "src", "run2": "src", "verdict": "IDENTICAL" },
+    "max_node_count": { "run1": 89, "run2": 89, "verdict": "IDENTICAL" },
+    "total_nodes": { "run1": 123, "run2": 123, "verdict": "IDENTICAL" },
+    "heat_weight_CLU-03": { "run1": 0.0674, "run2": 0.0674, "verdict": "IDENTICAL" },
+    "heat_weight_CLU-06": { "run1": 0.0225, "run2": 0.0225, "verdict": "IDENTICAL" },
+    "heat_weight_CLU-07": { "run1": 0.0225, "run2": 0.0225, "verdict": "IDENTICAL" },
+    "heat_weight_CLU-08": { "run1": 0.0337, "run2": 0.0337, "verdict": "IDENTICAL" },
+    "heat_weight_CLU-12": { "run1": 0.0787, "run2": 0.0787, "verdict": "IDENTICAL" },
+    "heat_weight_CLU-17": { "run1": 1.0, "run2": 1.0, "verdict": "IDENTICAL" },
+    "heat_weight_CLU-18": { "run1": 0.0225, "run2": 0.0225, "verdict": "IDENTICAL" },
+    "singleton_cluster_count": { "run1": 12, "run2": 12, "verdict": "IDENTICAL" }
+  },
+  "source_signal_keys": {
+    "DPSIG-031_signal_stable_key": "b70663c865b168b5",
+    "DPSIG-032_signal_stable_key": "2358e0b083acda90"
+  },
+  "diverged_fields": [],
+  "governance_assertions": {
+    "psig_activation_modified": false,
+    "signal_registry_modified": false,
+    "threshold_modified": false,
+    "lane_a_impact": "ADDITIVE_ONLY",
+    "seventy_five_x_mutation": false,
+    "client_specific_logic": false
+  },
+  "provenance_chain": {
+    "stream": "PI.PSEE-PIOS.DPSIG-PROJECTION-WEIGHTING.IMPLEMENTATION.01",
+    "governance_ref": "PI.PSEE-PIOS.DPSIG-PROJECTION-INTEGRATION.01",
+    "certification_ref": "PI.PSEE-PIOS.DPSIG.RUNTIME-CERTIFICATION.01",
+    "signal_set_ref": "artifacts/dpsig/fastapi/run_02_oss_fastapi_pipeline/dpsig_signal_set.json",
+    "topology_ref": "clients/fastapi/psee/runs/run_02_oss_fastapi_pipeline/structure/40.4/canonical_topology.json",
+    "topology_snapshot_hash": "08480c17c6fbfdccd4c304aee1ade1677dec748c40f779d5667ec61e02c3987c"
+  }
+}

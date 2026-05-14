@@ -1,0 +1,29 @@
+{
+  "contract_id": "PI.LENS.REAL-E2E-PIPELINE.EXECUTION-IDEMPOTENCY-AND-BLOCKER-09.01",
+  "generated_date": "2026-05-03",
+  "client": "blueedge",
+  "run": "run_blueedge_e2e_execute_01",
+
+  "stage_00_status": "VALIDATED_ONLY",
+  "stage_01_status": "VALIDATED_ONLY",
+  "stage_02_status": "VALIDATED_ONLY",
+  "stage_03_status": "BLOCKED_STAGE_FAILURE",
+  "stage_03_note": "structural_scanner.py CREATE_ONLY — structure/40.2, 40.3, 40.4 artifacts already exist; idempotent check for Stage 03 not in scope for this contract",
+  "stage_04_status": "NOT_ATTEMPTED",
+  "stage_05_status": "NOT_ATTEMPTED",
+  "stage_06_status": "BLOCKED_STAGE_06",
+  "stage_06_reached_phase": "Phase 5",
+  "stage_07_status": "BLOCKED_STAGE_FAILURE",
+  "stage_08_status": "BLOCKED_STAGE_FAILURE",
+  "stage_09_status": "BLOCKED_STAGE_FAILURE",
+
+  "blocker_09_detected": true,
+  "blocker_09_summary": "Phase 5 Build Binding Envelope fails: binding_envelope_fastapi_compatible.json absent at docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.SIGNAL-RECOMPUTE-AND-BINDING.01/recomputed/. Phases 1-4 all PASS. BlueEdge-specific FastAPI conformance upstream artifact missing.",
+  "blocker_09_phases_passed": ["Phase 1", "Phase 2", "Phase 3", "Phase 4"],
+  "blocker_09_phase_failed": "Phase 5",
+  "blocker_09_path_resolution_issue": false,
+
+  "stage_02_create_only_fixed": true,
+  "stage_06_stale_notes_corrected": true,
+  "overall_status": "PARTIAL"
+}

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signäl LENS — Tier 1: Assessment Brief</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @page { size: A4; margin: 0; }
+
+    :root {
+      --gold:         #c8993a;
+      --gold-bright:  #e8b84b;
+      --gold-dim:     rgba(200,153,58,0.16);
+      --gold-border:  rgba(200,153,58,0.22);
+      --bg:           #080b12;
+      --panel-bg:     rgba(255,255,255,0.028);
+      --text-1:       #ede8df;
+      --text-2:       #8a8a9a;
+      --text-3:       #515162;
+      --rule:         rgba(255,255,255,0.07);
+    }
+
+    html { background: #0d1018; }
+
+    body {
+      width: 210mm;
+      height: 297mm;
+      margin: 0 auto;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text-1);
+      overflow: hidden;
+    }
+
+    .page {
+      width: 210mm;
+      height: 297mm;
+      padding: 28px 34px 22px 34px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-bottom: 13px;
+      border-bottom: 1px solid var(--gold);
+      flex-shrink: 0;
+    }
+    .logo {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-1);
+      letter-spacing: -0.01em;
+    }
+    .logo em { font-style: normal; color: var(--gold-bright); }
+    .doc-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 16px 0 15px 0;
+      border-bottom: 1px solid var(--rule);
+      flex-shrink: 0;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.18;
+      color: var(--text-1);
+      margin-bottom: 8px;
+      max-width: 530px;
+    }
+    .hero p {
+      font-size: 10.5px;
+      line-height: 1.65;
+      color: var(--text-2);
+      max-width: 600px;
+    }
+
+    /* ── BODY ── */
+    .body {
+      display: flex;
+      gap: 26px;
+      flex: 1;
+      padding: 16px 0 13px 0;
+      min-height: 0;
+    }
+
+    /* ── LEFT COLUMN ── */
+    .left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      min-width: 0;
+    }
+    .block {
+      padding-bottom: 13px;
+      margin-bottom: 13px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .block:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 7px;
+    }
+    .body-text {
+      font-size: 10px;
+      line-height: 1.68;
+      color: var(--text-2);
+    }
+    .body-text strong { color: var(--text-1); font-weight: 500; }
+
+    /* Steps */
+    .step-intro {
+      font-size: 10px;
+      line-height: 1.55;
+      color: var(--text-2);
+      margin-bottom: 10px;
+    }
+    .steps { display: flex; flex-direction: column; gap: 7px; }
+    .step { display: flex; align-items: baseline; gap: 0; }
+    .step-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      color: var(--gold);
+      width: 20px;
+      flex-shrink: 0;
+    }
+    .step-name {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-1);
+      width: 60px;
+      flex-shrink: 0;
+    }
+    .step-desc { font-size: 10px; color: var(--text-2); line-height: 1.45; }
+
+    /* Decision states */
+    .states { display: flex; gap: 7px; margin-top: 6px; }
+    .state {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      color: var(--gold-bright);
+      letter-spacing: 0.06em;
+      padding: 3px 8px;
+      border: 1px solid var(--gold-border);
+      border-radius: 2px;
+      background: var(--gold-dim);
+    }
+
+    /* ── RIGHT COLUMN ── */
+    .right {
+      width: 228px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--gold-border);
+      border-radius: 3px;
+      padding: 12px 13px;
+    }
+    .panel-lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 9px;
+    }
+    .deliver-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .deliver-list li {
+      font-size: 9.5px;
+      color: var(--text-2);
+      line-height: 1.45;
+      padding-left: 11px;
+      position: relative;
+    }
+    .deliver-list li::before {
+      content: '·';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 12px;
+      line-height: 1;
+      top: 1px;
+    }
+    /* Restrict list (NOT DO) */
+    .restrict-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .restrict-list li {
+      font-size: 9px;
+      color: var(--text-3);
+      line-height: 1.42;
+      padding-left: 11px;
+      position: relative;
+    }
+    .restrict-list li::before {
+      content: '×';
+      position: absolute;
+      left: 0;
+      color: var(--text-3);
+      font-size: 9px;
+      line-height: 1.4;
+    }
+
+    /* Tiers */
+    .tiers {
+      background: var(--panel-bg);
+      border: 1px solid var(--gold-border);
+      border-radius: 3px;
+      overflow: hidden;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .tiers-hd { padding: 10px 13px 8px 13px; border-bottom: 1px solid var(--rule); flex-shrink: 0; }
+    .tier {
+      padding: 10px 13px;
+      border-bottom: 1px solid var(--rule);
+      flex: 1;
+    }
+    .tier:last-of-type { border-bottom: none; }
+    .tier.current { background: rgba(200,153,58,0.04); }
+    .tier-lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7px;
+      letter-spacing: 0.14em;
+      color: var(--text-3);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .tier-name { font-size: 11px; font-weight: 600; color: var(--text-1); margin-bottom: 4px; }
+    .badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 6.5px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 5px;
+      border-radius: 2px;
+      margin-bottom: 4px;
+      vertical-align: middle;
+    }
+    .badge-in  { background: rgba(200,153,58,0.16); color: #e8b84b; border: 1px solid rgba(200,153,58,0.3); }
+    .badge-ph1 { background: rgba(74,155,122,0.14); color: #6ec4a2; border: 1px solid rgba(74,155,122,0.28); }
+    .badge-gov { background: rgba(50,70,120,0.2);   color: #6888c0; border: 1px solid rgba(50,70,120,0.3); }
+    .tier-desc { font-size: 9px; color: var(--text-2); line-height: 1.5; }
+    .tiers-ft {
+      padding: 7px 13px;
+      background: rgba(0,0,0,0.12);
+      border-top: 1px solid var(--rule);
+      flex-shrink: 0;
+    }
+    .tiers-ft p { font-size: 8px; color: var(--text-3); font-style: italic; line-height: 1.45; }
+
+    /* ── QUOTE BAR ── */
+    .quote-bar {
+      flex-shrink: 0;
+      padding: 11px 0 10px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .quote-bar p {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 10.5px;
+      font-style: italic;
+      color: var(--text-2);
+      text-align: center;
+      line-height: 1.5;
+    }
+    .quote-bar p strong { color: var(--text-1); font-style: normal; font-weight: 600; }
+
+    /* ── FOOTER ── */
+    .footer {
+      flex-shrink: 0;
+      padding-top: 11px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-l {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      color: var(--text-3);
+      letter-spacing: 0.04em;
+    }
+    .footer-l em { font-style: normal; color: var(--gold); }
+    .footer-r { font-size: 7.5px; color: var(--text-3); font-style: italic; }
+
+    /* ── SCORE STRIP ── */
+    .score-strip { display:flex; align-items:center; padding:10px 0 11px; border-bottom:1px solid var(--rule); flex-shrink:0; gap:0; }
+    .score-item { display:flex; flex-direction:column; gap:2px; padding-right:26px; }
+    .score-key { font-family:'JetBrains Mono',monospace; font-size:6.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-3); }
+    .score-val { font-family:'Playfair Display',Georgia,serif; font-size:16px; font-weight:700; color:var(--gold-bright); letter-spacing:-.01em; line-height:1; }
+    .score-denom { font-size:10px; color:var(--text-3); font-weight:400; }
+    .score-val-sm { font-family:'Playfair Display',Georgia,serif; font-size:13px; font-weight:600; color:var(--text-1); letter-spacing:-.01em; line-height:1; }
+    .score-sep { width:1px; height:26px; background:var(--rule); margin-right:26px; flex-shrink:0; }
+
+    /* ── CONTINUITY ── */
+    .cta-forward { flex-shrink:0; padding-top:7px; display:flex; justify-content:space-between; align-items:baseline; gap:14px; }
+    .cta-forward-text { font-size:8.5px; color:var(--text-3); font-style:italic; flex:1; }
+    .cta-forward-link { font-family:'JetBrains Mono',monospace; font-size:7.5px; letter-spacing:.06em; color:var(--gold); text-decoration:underline; text-decoration-color:var(--gold-border); white-space:nowrap; flex-shrink:0; }
+    .cta-forward-link:hover { color:var(--gold-bright); }
+
+    @media print {
+      html, body {
+        background: #080b12 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <header class="header">
+    <div class="logo"><em>Signäl</em> LENS</div>
+    <div class="doc-label">Assessment Brief &nbsp;·&nbsp; Tier 1 &nbsp;·&nbsp; Confidential</div>
+  </header>
+
+  <section class="hero">
+    <h1>Structural intelligence for complex<br>delivery environments.</h1>
+    <p>
+      LENS Assessment produces a single governed view of your delivery environment derived from structural evidence —
+      not a status summary, not a narrative composition. What is proven. What is uncertain. Where to focus.
+      Delivered as a print-ready executive report with a guided review session.
+    </p>
+  </section>
+
+  <div class="score-strip">
+    <div class="score-item"><span class="score-key">Assessment Score</span><span class="score-val">60 <span class="score-denom">/ 100</span></span></div>
+    <div class="score-sep"></div>
+    <div class="score-item"><span class="score-key">Confidence Band</span><span class="score-val">60–100</span></div>
+    <div class="score-sep"></div>
+    <div class="score-item"><span class="score-key">Focus Domain</span><span class="score-val-sm">Edge Data Acquisition</span></div>
+    <div class="score-sep"></div>
+    <div class="score-item"><span class="score-key">Status</span><span class="score-val-sm">Structurally Verified</span></div>
+  </div>
+
+  <div class="body">
+
+    <div class="left">
+
+      <div class="block">
+        <div class="lbl">The situation</div>
+        <p class="body-text">
+          Complex environments are typically managed through fragmented signals — dashboards, status reports, team metrics.
+          These describe activity. They do not reveal structure. Pressure accumulates in specific domains without a structural view of where.
+          Decisions are made on partial visibility — until something fails.<br><br>
+          LENS produces the structural view before that happens: a derived, evidence-bounded intelligence output
+          that resolves to a single governed decision state.
+        </p>
+      </div>
+
+      <div class="block">
+        <div class="lbl">The engagement</div>
+        <p class="step-intro">Four steps. No instrumentation required. No extended access. No preparation beyond context provision.</p>
+        <div class="steps">
+          <div class="step">
+            <span class="step-num">01</span>
+            <span class="step-name">Intake</span>
+            <span class="step-desc">Lightweight context provision from existing sources. Evidence boundary established. No restructuring required.</span>
+          </div>
+          <div class="step">
+            <span class="step-num">02</span>
+            <span class="step-name">Analysis</span>
+            <span class="step-desc">System-executed deterministic derivation. Domains, connections, pressure zones, and confidence bands derived from the evidence set.</span>
+          </div>
+          <div class="step">
+            <span class="step-num">03</span>
+            <span class="step-name">Report</span>
+            <span class="step-desc">Governed executive artifact generated. HTML, print-ready, 10 governed sections, timestamp-stamped.</span>
+          </div>
+          <div class="step">
+            <span class="step-num">04</span>
+            <span class="step-name">Review</span>
+            <span class="step-desc">Guided session using the report artifact. Findings contextualised. Decision state produced.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="lbl">The decision output</div>
+        <p class="body-text" style="margin-bottom:0">Every assessment concludes with one governed decision state:</p>
+        <div class="states">
+          <div class="state">PROCEED</div>
+          <div class="state">INVESTIGATE</div>
+          <div class="state">ESCALATE</div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="lbl">When to use</div>
+        <p class="body-text">
+          <strong>Before committing to a transformation.</strong> Before a major investment decision.
+          When delivery problems repeat without structural explanation. When scaling reduces visibility.
+          After an incident whose structural driver was not confirmed. When new leadership needs to understand
+          the environment before changing it.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="right">
+
+      <div class="panel">
+        <div class="panel-lbl">What you receive</div>
+        <ul class="deliver-list">
+          <li>Executive structural overview with confidence band — scored, evidence-bounded</li>
+          <li>Full-domain structural topology — SVG, light mode, print-safe</li>
+          <li>Focus domain spotlight — highest-leverage domain, evidence-derived</li>
+          <li>Score per domain: 0–100 with proven floor and achievable ceiling</li>
+          <li>Executive Report — HTML artifact, 10 governed sections, timestamp-stamped</li>
+          <li>Guided review session — included in Tier 1</li>
+        </ul>
+      </div>
+
+      <div class="panel">
+        <div class="panel-lbl">What it does not do</div>
+        <ul class="restrict-list">
+          <li>Does not produce advisory direction, recommendations, or prioritisation guidance</li>
+          <li>Does not produce root cause claims or forward projections</li>
+          <li>Does not assert certainty about current system degradation state</li>
+          <li>Does not require instrumentation, extended access, or integration</li>
+          <li>Does not expose internal system identifiers in rendered output</li>
+        </ul>
+      </div>
+
+      <div class="tiers">
+        <div class="tiers-hd">
+          <div class="panel-lbl">Access tiers &amp; transition</div>
+        </div>
+
+        <div class="tier current">
+          <div class="tier-lbl">Tier 1 — LENS Assessment</div>
+          <span class="badge badge-in">This engagement</span>
+          <div class="tier-desc" style="margin-top:4px">Single bounded engagement. Structural view, report, and guided review session. Decision state produced at conclusion of review.</div>
+        </div>
+
+        <div class="tier">
+          <div class="tier-lbl">Tier 2 — Diagnostic Access</div>
+          <span class="badge badge-ph1">Triggered by Investigate</span>
+          <div class="tier-desc" style="margin-top:4px">Surfaces named unknown dimensions, evidence gaps, and what evidence would resolve each one. HTML export with live WHY and EVIDENCE query modes.</div>
+        </div>
+
+        <div class="tier">
+          <div class="tier-lbl">Tier 3 — Enterprise Access</div>
+          <span class="badge badge-gov">Governed Contract</span>
+          <div class="tier-desc" style="margin-top:4px">Triggered by ESCALATE. Full PiOS Core access — L2 through L4. Engagement scope defined at contract time.</div>
+        </div>
+
+        <div class="tiers-ft">
+          <p>Tier 2 and Tier 3 access issued following Assessment findings and governed decision state.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="quote-bar">
+    <p>"The output is a <strong>structural view derived from evidence</strong> — not a narrative, not a status summary, not a recommendation."</p>
+  </div>
+
+  <div class="cta-forward">
+    <span class="cta-forward-text">Some structural conditions may require deeper inspection before decision commitment.</span>
+    <a href="lens_tier2_diagnostic_access.html" class="cta-forward-link">Investigate further →</a>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-l"><em>Signäl</em> LENS &nbsp;·&nbsp; signal-pi.com &nbsp;·&nbsp; © 2026 Signäl &nbsp;·&nbsp; Tier 1: LENS Assessment</div>
+    <div class="footer-r">Confidential — prepared for recipient only</div>
+  </footer>
+
+</div>
+</body>
+</html>

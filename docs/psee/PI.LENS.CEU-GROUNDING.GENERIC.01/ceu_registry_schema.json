@@ -1,0 +1,64 @@
+{
+  "contract_id": "PI.LENS.CEU-GROUNDING.GENERIC.01",
+  "artifact": "ceu_registry_schema",
+  "generated_date": "2026-05-01",
+  "registry_file": "scripts/pios/ceu_registry.json",
+
+  "top_level_schema": {
+    "registry_id":        "string — unique identifier for this registry version",
+    "version":            "string — semver",
+    "contract_id":        "string — producing contract",
+    "semantic_inference": "string — always 'FORBIDDEN'",
+    "detection_basis":    "string — always 'structural_pattern_matching_only'",
+    "description":        "string — human-readable summary",
+    "rule_types":         "object — documentation of supported rule type semantics",
+    "activation_classes": "object — documentation of activation class semantics",
+    "ceus":               "array[CeuDefinition]"
+  },
+
+  "ceu_definition_schema": {
+    "ceu_id":                   "string — CEU-NN (zero-padded to 2 digits)",
+    "name":                     "string — UPPER_SNAKE_CASE label",
+    "description":              "string — human-readable description",
+    "default_activation_class": "string — FULL | LIMITED | STRUCTURAL_ONLY",
+    "detection_rules":          "array[DetectionRule]"
+  },
+
+  "detection_rule_schema": {
+    "type":  "string — one of: path_prefix | path_contains | filename_equals | extension_equals | dir_component_equals",
+    "value": "string — the pattern to match (case-sensitive)"
+  },
+
+  "rule_type_semantics": {
+    "path_prefix":          "node.path.startswith(value) — efficient for top-level directories",
+    "path_contains":        "'value' in node.path — substring match on full path string",
+    "filename_equals":      "Path(node.path).name == value — exact filename match",
+    "extension_equals":     "Path(node.path).suffix.lower() == value — case-insensitive extension",
+    "dir_component_equals": "value in Path(node.path).parts — any path component (including filename) exactly equals value"
+  },
+
+  "activation_class_semantics": {
+    "FULL":            "Any match → grounded = True",
+    "LIMITED":         "node_count >= 2 → grounded = True; else present=True, grounded=False",
+    "STRUCTURAL_ONLY": "Any match → present = True, grounded = False (structural evidence only)"
+  },
+
+  "matching_logic": {
+    "unit_of_evaluation": "file nodes only (type=file from 40.2 structural_node_inventory.json)",
+    "per_node":           "first matching rule wins — at most one match per node across all rules",
+    "evidence_cap":       "10 — at most 10 evidence_paths in output per CEU (sorted, first 10)",
+    "determinism":        "sorted(matched_paths)[:10] — fully deterministic"
+  },
+
+  "registry_instance": {
+    "registry_id":   "GENERIC-CEU-REGISTRY-V1",
+    "version":       "1.0",
+    "ceu_count":     10,
+    "ceu_ids":       ["CEU-01", "CEU-02", "CEU-03", "CEU-04", "CEU-05", "CEU-06", "CEU-07", "CEU-08", "CEU-09", "CEU-10"],
+    "activation_distribution": {
+      "FULL":            9,
+      "LIMITED":         0,
+      "STRUCTURAL_ONLY": 1
+    }
+  }
+}
