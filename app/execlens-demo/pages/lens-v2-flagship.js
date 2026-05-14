@@ -224,7 +224,7 @@ export async function getServerSideProps(context) {
   }
 }
 
-export default function LensV2FlagshipPage({ livePayload, livePropagationChains, liveBindingError, bindingClient, bindingRun, reconciliationAwareness, domainTraceability, substrateBinding, reportBinding, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData }) {
+export default function LensV2FlagshipPage({ livePayload, livePropagationChains, liveBindingError, bindingClient, bindingRun, reconciliationAwareness, domainTraceability, substrateBinding, reportBinding, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData }) {
   const [densityClass, setDensityClass] = useState('EXECUTIVE_DENSE')
   const [boardroomMode, setBoardroomMode] = useState(false)
   const [investigationStage, setInvestigationStage] = useState('SUMMARY')
@@ -430,6 +430,8 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             debtIndexData={debtIndexData}
             progressionData={progressionData}
             maturityData={maturityData}
+            temporalAnalyticsData={temporalAnalyticsData}
+            temporalLifecycleData={temporalLifecycleData}
           />
         </div>
       </div>
@@ -1523,6 +1525,113 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-family: 'Courier New', monospace;
           font-size: 10px;
           font-weight: 500;
+        }
+
+        /* ── Temporal structural summary (5A.5) ──────────────────────────── */
+        .temporal-summary {
+          background: #0d0f14;
+          border: 1px solid #1e2330;
+          border-radius: 3px;
+          padding: 10px 14px;
+          margin: 8px 0 0 0;
+        }
+        .temporal-summary-label {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          font-weight: 500;
+          margin-bottom: 8px;
+        }
+        .temporal-summary-row {
+          display: flex;
+          gap: 20px;
+          margin-bottom: 6px;
+          flex-wrap: wrap;
+        }
+        .temporal-summary-metric {
+          display: flex;
+          flex-direction: column;
+          gap: 1px;
+        }
+        .temporal-summary-metric-value {
+          font-family: 'Courier New', monospace;
+          font-size: 13px;
+          color: #ccd6f6;
+        }
+        .temporal-summary-metric-label {
+          font-size: 9px;
+          color: #4a5570;
+        }
+        .temporal-summary-transitions {
+          display: flex;
+          gap: 16px;
+          margin-bottom: 6px;
+          flex-wrap: wrap;
+        }
+        .temporal-summary-transition {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          color: #4a9eff;
+        }
+        .temporal-summary-persistent {
+          border-top: 1px solid #1e2330;
+          padding-top: 6px;
+          margin-top: 6px;
+        }
+        .temporal-summary-persistent-label {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
+          font-weight: 500;
+          margin-bottom: 4px;
+        }
+        .temporal-summary-persistent-domains {
+          display: flex;
+          gap: 6px;
+          flex-wrap: wrap;
+        }
+        .temporal-summary-persistent-domain {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          color: #7a8aaa;
+        }
+        .temporal-summary-persistent-note {
+          font-size: 10px;
+          color: #4a5570;
+          margin-top: 2px;
+        }
+        .temporal-summary-divergence {
+          font-size: 10px;
+          color: #5a6580;
+          margin-top: 4px;
+        }
+        .temporal-summary-degradation {
+          font-size: 10px;
+          color: #4a5570;
+          margin-top: 2px;
+        }
+
+        /* ── Domain temporal section (5A.5) ──────────────────────────────── */
+        .dsp-temporal-arrow {
+          color: #5a6580;
+          font-size: 11px;
+          margin: 0 4px;
+        }
+        .dsp-temporal-level {
+          font-family: 'Courier New', monospace;
+          font-size: 12px;
+          font-weight: 600;
+        }
+        .dsp-temporal-basis {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #4a5570;
+        }
+        .dsp-temporal-persistence {
+          font-size: 10px;
+          color: #ff6b6b;
         }
 
         .cockpit-impact {

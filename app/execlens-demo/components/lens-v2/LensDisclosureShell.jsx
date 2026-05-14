@@ -97,6 +97,8 @@ export default function LensDisclosureShell({
   debtIndexData,
   progressionData,
   maturityData,
+  temporalAnalyticsData,
+  temporalLifecycleData,
 }) {
   const directives = useMemo(() => {
     return resolveLayoutDirectives({
@@ -186,6 +188,8 @@ export default function LensDisclosureShell({
             debtIndexData={debtIndexData}
             progressionData={progressionData}
             maturityData={maturityData}
+            temporalAnalyticsData={temporalAnalyticsData}
+            temporalLifecycleData={temporalLifecycleData}
           />
         )
       case 'StructuralTopologyZone':

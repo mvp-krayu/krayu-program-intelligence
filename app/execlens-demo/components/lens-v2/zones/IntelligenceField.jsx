@@ -992,7 +992,186 @@ function BlockagePostureSummary({ debtIndexData, progressionData, maturityData }
   )
 }
 
-function DomainStructuralPanel({ domainId, correspondenceData, evidenceIntakeData, debtIndexData, progressionData }) {
+function TemporalStructuralSummary({ temporalAnalyticsData }) {
+  if (!temporalAnalyticsData) return null
+  const timeline = temporalAnalyticsData.epoch_timeline || []
+  const enrich = temporalAnalyticsData.enrichment_effectiveness || {}
+  const persist = temporalAnalyticsData.unresolved_persistence || {}
+  const diverg = temporalAnalyticsData.structural_semantic_divergence || {}
+  const degrad = temporalAnalyticsData.degradation || {}
+
+  const firstEpoch = timeline[0]
+  const lastEpoch = timeline[timeline.length - 1]
+
+  return (
+    <div className="temporal-summary">
+      <div className="temporal-summary-label">TEMPORAL STRUCTURE</div>
+      {firstEpoch && lastEpoch && (
+        <div className="temporal-summary-row">
+          <div className="temporal-summary-metric">
+            <div className="temporal-summary-metric-value">{firstEpoch.epoch_label} → {lastEpoch.epoch_label}</div>
+            <div className="temporal-summary-metric-label">{timeline.length} epoch{timeline.length !== 1 ? 's' : ''}</div>
+          </div>
+          <div className="temporal-summary-metric">
+            <div className="temporal-summary-metric-value">{firstEpoch.weighted_confidence} → {lastEpoch.weighted_confidence}</div>
+            <div className="temporal-summary-metric-label">weighted confidence</div>
+          </div>
+          <div className="temporal-summary-metric">
+            <div className="temporal-summary-metric-value">{firstEpoch.unresolved_count} → {lastEpoch.unresolved_count}</div>
+            <div className="temporal-summary-metric-label">unmapped</div>
+          </div>
+        </div>
+      )}
+      {enrich.available && enrich.level_transitions && (
+        <div className="temporal-summary-transitions">
+          {Object.entries(enrich.level_transitions).map(([key, count]) => (
+            <span key={key} className="temporal-summary-transition">
+              {key.replace(/_to_/g, ' → ')}: {count} domain{count !== 1 ? 's' : ''}
+            </span>
+          ))}
+        </div>
+      )}
+      {persist.available && persist.persistent_domains && persist.persistent_domains.length > 0 && (
+        <div className="temporal-summary-persistent">
+          <div className="temporal-summary-persistent-label">PERSISTENT UNMAPPED ({persist.persistent_count})</div>
+          <div className="temporal-summary-persistent-domains">
+            {persist.persistent_domains.map(d => (
+              <span key={d.domain_id} className="temporal-summary-persistent-domain">{d.domain_id}</span>
+            ))}
+          </div>
+          <div className="temporal-summary-persistent-note">
+            {persist.persistent_domains[0].reducibility} · {persist.persistent_domains[0].epochs_unmapped} epoch{persist.persistent_domains[0].epochs_unmapped !== 1 ? 's' : ''} each
+          </div>
+        </div>
+      )}
+      {diverg.available && diverg.indicator_count > 0 && (
+        <div className="temporal-summary-divergence">
+          {diverg.indicator_count} domain{diverg.indicator_count !== 1 ? 's' : ''} with weak structural fit · divergence score: {diverg.divergence_score}
+        </div>
+      )}
+      <div className="temporal-summary-degradation">
+        degradation: {degrad.detected ? `${degrad.signal_count} signal${degrad.signal_count !== 1 ? 's' : ''} detected` : 'none detected'}
+      </div>
+    </div>
+  )
+}
+
+function DomainTemporalSection({ domainId, temporalLifecycleData, temporalAnalyticsData }) {
+  if (!temporalLifecycleData) {
+    return (
+      <div className="dsp-section">
+        <div className="dsp-section-label">TEMPORAL MOVEMENT</div>
+        <div className="dsp-grid">
+          <div className="dsp-row"><span className="dsp-val dsp-dim" style={{ fontStyle: 'italic' }}>Temporal data unavailable</span></div>
+        </div>
+      </div>
+    )
+  }
+
+  const epochs = temporalLifecycleData.epochs || []
+  if (epochs.length < 2) {
+    return (
+      <div className="dsp-section">
+        <div className="dsp-section-label">TEMPORAL MOVEMENT</div>
+        <div className="dsp-grid">
+          <div className="dsp-row"><span className="dsp-val dsp-dim">Insufficient epochs for temporal comparison</span></div>
+        </div>
+      </div>
+    )
+  }
+
+  const epoch0 = epochs[0]
+  const epoch1 = epochs[epochs.length - 1]
+  const d0 = (epoch0.per_domain || []).find(d => d.domain_id === domainId)
+  const d1 = (epoch1.per_domain || []).find(d => d.domain_id === domainId)
+
+  if (!d0 || !d1) {
+    return (
+      <div className="dsp-section">
+        <div className="dsp-section-label">TEMPORAL MOVEMENT</div>
+        <div className="dsp-grid">
+          <div className="dsp-row"><span className="dsp-val dsp-dim">No temporal record for {domainId}</span></div>
+        </div>
+      </div>
+    )
+  }
+
+  const deltas = temporalLifecycleData.deltas || []
+  const delta = deltas.length > 0 ? deltas[0] : null
+  const domainDelta = delta ? (delta.domain_deltas || []).find(dd => dd.domain_id === domainId) : null
+
+  const persist = temporalAnalyticsData && temporalAnalyticsData.unresolved_persistence
+  const persistentDomain = persist && persist.persistent_domains
+    ? persist.persistent_domains.find(p => p.domain_id === domainId)
+    : null
+
+  let movementStatus = 'UNCHANGED'
+  let movementColor = '#4a5570'
+  if (domainDelta) {
+    movementStatus = 'MOVED'
+    movementColor = '#4a9eff'
+  } else if (persistentDomain) {
+    movementStatus = 'PERSISTENT_UNMAPPED'
+    movementColor = '#ff6b6b'
+  }
+
+  const confColor0 = CONFIDENCE_COLORS[d0.confidence_level] || '#4a5570'
+  const confColor1 = CONFIDENCE_COLORS[d1.confidence_level] || '#4a5570'
+
+  return (
+    <div className="dsp-section">
+      <div className="dsp-section-label">TEMPORAL MOVEMENT</div>
+      <div className="dsp-grid">
+        <div className="dsp-row">
+          <span className="dsp-key">Status</span>
+          <span className="dsp-val">
+            <span className="dsp-badge" style={{ color: movementColor }}>{movementStatus}</span>
+          </span>
+        </div>
+        <div className="dsp-row">
+          <span className="dsp-key">Level transition</span>
+          <span className="dsp-val">
+            <span className="dsp-temporal-level" style={{ color: confColor0 }}>L{d0.confidence_level}</span>
+            <span className="dsp-temporal-arrow">→</span>
+            <span className="dsp-temporal-level" style={{ color: confColor1 }}>L{d1.confidence_level}</span>
+          </span>
+        </div>
+        <div className="dsp-row">
+          <span className="dsp-key">Epoch</span>
+          <span className="dsp-val dsp-mono dsp-dim">{epoch0.epoch_label} → {epoch1.epoch_label}</span>
+        </div>
+        {domainDelta && (
+          <div className="dsp-row">
+            <span className="dsp-key">Basis transition</span>
+            <span className="dsp-val dsp-temporal-basis">{domainDelta.from_basis} → {domainDelta.to_basis}</span>
+          </div>
+        )}
+        {domainDelta && domainDelta.to_dom && (
+          <div className="dsp-row">
+            <span className="dsp-key">Structural mapping</span>
+            <span className="dsp-val dsp-mono dsp-dim">{domainDelta.from_dom || 'none'} → {domainDelta.to_dom}</span>
+          </div>
+        )}
+        {persistentDomain && (
+          <div className="dsp-row">
+            <span className="dsp-key">Persistence</span>
+            <span className="dsp-val">
+              <span className="dsp-temporal-persistence">unmapped across {persistentDomain.epochs_unmapped} epochs · {persistentDomain.reducibility}</span>
+            </span>
+          </div>
+        )}
+        {!domainDelta && !persistentDomain && (
+          <div className="dsp-row">
+            <span className="dsp-key">Basis</span>
+            <span className="dsp-val dsp-mono dsp-dim">{d1.correspondence_basis}</span>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function DomainStructuralPanel({ domainId, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, temporalLifecycleData, temporalAnalyticsData }) {
   if (!correspondenceData || !domainId) return null
   const correspondences = correspondenceData.correspondences || []
   const corr = correspondences.find(c => c.semantic_domain_id === domainId)
@@ -1001,6 +1180,7 @@ function DomainStructuralPanel({ domainId, correspondenceData, evidenceIntakeDat
       <div className="dsp-panel">
         <div className="dsp-unavailable">Correspondence data unavailable for {domainId}</div>
         <DomainDebtSection domainId={domainId} debtIndexData={debtIndexData} progressionData={progressionData} />
+        <DomainTemporalSection domainId={domainId} temporalLifecycleData={temporalLifecycleData} temporalAnalyticsData={temporalAnalyticsData} />
         <EvidenceSourcesSection domainId={domainId} evidenceIntakeData={evidenceIntakeData} />
       </div>
     )
@@ -1141,6 +1321,8 @@ function DomainStructuralPanel({ domainId, correspondenceData, evidenceIntakeDat
 
       <DomainDebtSection domainId={domainId} debtIndexData={debtIndexData} progressionData={progressionData} />
 
+      <DomainTemporalSection domainId={domainId} temporalLifecycleData={temporalLifecycleData} temporalAnalyticsData={temporalAnalyticsData} />
+
       <EvidenceSourcesSection domainId={domainId} evidenceIntakeData={evidenceIntakeData} />
     </div>
   )
@@ -1223,7 +1405,7 @@ function EvidenceSourcesSection({ domainId, evidenceIntakeData }) {
   )
 }
 
-function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, initialSignalTrace, onSignalTraceConsumed }) {
+function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, initialSignalTrace, onSignalTraceConsumed }) {
   const [focusedDomain, setFocusedDomain] = useState(null)
   const [traceResolution, setTraceResolution] = useState(null)
   const domainRegistry = (fullReport && fullReport.semantic_domain_registry) || []
@@ -1293,7 +1475,7 @@ function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntake
             </div>
           )}
           {focusedDomain && (
-            <DomainStructuralPanel domainId={focusedDomain} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} />
+            <DomainStructuralPanel domainId={focusedDomain} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} temporalLifecycleData={temporalLifecycleData} temporalAnalyticsData={temporalAnalyticsData} />
           )}
           <div className="topo-modal-domains">
             <div className="topo-modal-domains-heading">DOMAIN REGISTRY</div>
@@ -1322,13 +1504,14 @@ function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntake
             </div>
           </div>
           <BlockagePostureSummary debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} />
+          <TemporalStructuralSummary temporalAnalyticsData={temporalAnalyticsData} />
         </div>
       </div>
     </div>
   )
 }
 
-function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, narrative, evidenceBlocks, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData }) {
+function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, narrative, evidenceBlocks, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData }) {
   const [topoModalOpen, setTopoModalOpen] = useState(false)
   const [signalTraceId, setSignalTraceId] = useState(null)
   const openTopoModal = useCallback(() => setTopoModalOpen(true), [])
@@ -1447,7 +1630,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
         </div>
       )}
 
-      {topoModalOpen && <TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} initialSignalTrace={signalTraceId} onSignalTraceConsumed={() => setSignalTraceId(null)} />}
+      {topoModalOpen && <TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} initialSignalTrace={signalTraceId} onSignalTraceConsumed={() => setSignalTraceId(null)} />}
 
       <div className="cockpit-impact">
         <div className="cockpit-impact-label">ORGANIZATIONAL IMPACT</div>
@@ -1502,9 +1685,9 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData }) {
   if (boardroomMode) {
-    return <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} />
+    return <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} />
   }
   if (densityClass === 'INVESTIGATION_DENSE') {
     return <InvestigationTraceField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} />
@@ -1515,7 +1698,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   return <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} />
 }
 
-export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData }) {
+export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData }) {
   const scope = (fullReport && fullReport.topology_scope) || {}
 
   return (
@@ -1546,6 +1729,8 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           debtIndexData={debtIndexData}
           progressionData={progressionData}
           maturityData={maturityData}
+          temporalAnalyticsData={temporalAnalyticsData}
+          temporalLifecycleData={temporalLifecycleData}
         />
       </main>
 
