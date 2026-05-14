@@ -1,0 +1,461 @@
+{
+  "schema_version": "1.0",
+  "artifact_type": "semantic_debt_index",
+  "client": "blueedge",
+  "run_id": "run_blueedge_productized_01_fixed",
+  "generated_at": "2026-05-13T07:34:48.692Z",
+  "compiler_version": "1.0",
+  "aggregate_posture": {
+    "total_domains": 17,
+    "total_debt_items": 15,
+    "domains_with_debt": 13,
+    "domains_clear": 4,
+    "severity_distribution": {
+      "CRITICAL": 0,
+      "HIGH": 13,
+      "MEDIUM_HIGH": 0,
+      "MEDIUM": 2
+    },
+    "reducibility_distribution": {
+      "IRREDUCIBLE_STRUCTURAL_ABSENCE": 4,
+      "REDUCED_BY_ENRICHMENT": 8,
+      "REDUCIBLE_BY_EVIDENCE": 1
+    },
+    "origin_distribution": {
+      "STRUCTURAL_ABSENCE": 4,
+      "ENRICHMENT_RESIDUAL": 8,
+      "UNRESOLVED_CORRESPONDENCE": 1,
+      "CONTINUITY_DEFICIENCY": 2
+    },
+    "exposure_distribution": {
+      "HIGH": 4,
+      "MEDIUM": 4,
+      "LOW": 5
+    },
+    "s_state_blocking_count": 13,
+    "operational_exposure": "HIGH",
+    "debt_ratio": 0.7647,
+    "weighted_debt_score": 49.4,
+    "qualification_impact": "BLOCKS_S3"
+  },
+  "domain_postures": [
+    {
+      "domain_id": "DOMAIN-01",
+      "domain_name": "Edge Data Acquisition",
+      "domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-01",
+      "debt_status": "CLEAR",
+      "debt_item_ids": [],
+      "debt_item_count": 0,
+      "baseline_confidence_level": 5,
+      "enriched_confidence_level": 5,
+      "confidence_delta": 0,
+      "lineage_status": "EXACT",
+      "reconciliation_status": "RECONCILED",
+      "enrichment_status": null,
+      "enrichment_reason": null,
+      "reducibility": "NOT_APPLICABLE",
+      "origin_type": "NONE",
+      "operational_exposure": "NONE"
+    },
+    {
+      "domain_id": "DOMAIN-02",
+      "domain_name": "Telemetry Transport and Messaging",
+      "domain_type": "INFRASTRUCTURE",
+      "cluster_id": "CLU-04",
+      "debt_status": "ACTIVE",
+      "debt_item_ids": [
+        "DEBT-GROUNDING_GAP-01"
+      ],
+      "debt_item_count": 1,
+      "baseline_confidence_level": 1,
+      "enriched_confidence_level": 1,
+      "confidence_delta": 0,
+      "lineage_status": "NONE",
+      "reconciliation_status": "UNRECONCILED",
+      "enrichment_status": "UNMAPPED_RETAINED",
+      "enrichment_reason": "No dedicated structural DOM for transport/messaging infrastructure. Telemetry transport is a conceptual layer distributed across edge agents (DOM-13) and backend events (DOM-07) without a dedicated structural home. Enrichment would require fabricating a correspondence.",
+      "reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+      "origin_type": "STRUCTURAL_ABSENCE",
+      "operational_exposure": "HIGH"
+    },
+    {
+      "domain_id": "DOMAIN-03",
+      "domain_name": "Fleet Core Operations",
+      "domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-02",
+      "debt_status": "PARTIALLY_RESOLVED",
+      "debt_item_ids": [
+        "DEBT-GROUNDING_GAP-02"
+      ],
+      "debt_item_count": 1,
+      "baseline_confidence_level": 1,
+      "enriched_confidence_level": 2,
+      "confidence_delta": 1,
+      "lineage_status": "WEAK",
+      "reconciliation_status": "UNRECONCILED",
+      "enrichment_status": "AI_RECONSTRUCTED",
+      "enrichment_reason": "DOM-09 (backend_modules) contains the primary business logic modules where fleet management operations reside. The multi-module structure of backend/src/modules/ encompasses fleet-related functionality. Weak confidence due to DOM-09 containing multiple unrelated business domains.",
+      "reducibility": "REDUCED_BY_ENRICHMENT",
+      "origin_type": "ENRICHMENT_RESIDUAL",
+      "operational_exposure": "MEDIUM"
+    },
+    {
+      "domain_id": "DOMAIN-04",
+      "domain_name": "Fleet Vertical Extensions",
+      "domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-02",
+      "debt_status": "PARTIALLY_RESOLVED",
+      "debt_item_ids": [
+        "DEBT-GROUNDING_GAP-03"
+      ],
+      "debt_item_count": 1,
+      "baseline_confidence_level": 1,
+      "enriched_confidence_level": 2,
+      "confidence_delta": 1,
+      "lineage_status": "WEAK",
+      "reconciliation_status": "UNRECONCILED",
+      "enrichment_status": "AI_RECONSTRUCTED",
+      "enrichment_reason": "DOM-09 (backend_modules) would contain vertical fleet extensions as sub-modules. Lower confidence than Fleet Core Operations because vertical extensions are specialized sub-features without explicit structural markers.",
+      "reducibility": "REDUCED_BY_ENRICHMENT",
+      "origin_type": "ENRICHMENT_RESIDUAL",
+      "operational_exposure": "MEDIUM"
+    },
+    {
+      "domain_id": "DOMAIN-05",
+      "domain_name": "Analytics and Intelligence",
+      "domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-01",
+      "debt_status": "PARTIALLY_RESOLVED",
+      "debt_item_ids": [
+        "DEBT-GROUNDING_GAP-04"
+      ],
+      "debt_item_count": 1,
+      "baseline_confidence_level": 1,
+      "enriched_confidence_level": 2,
+      "confidence_delta": 1,
+      "lineage_status": "WEAK",
+      "reconciliation_status": "UNRECONCILED",
+      "enrichment_status": "AI_RECONSTRUCTED",
+      "enrichment_reason": "DOM-12 (monitoring) contains fleet-operations.json Grafana dashboard — an analytical surface. Monitoring dashboards serve the analytics function. Weak confidence because monitoring is operational observability, not pure business analytics.",
+      "reducibility": "REDUCED_BY_ENRICHMENT",
+      "origin_type": "ENRICHMENT_RESIDUAL",
+      "operational_exposure": "MEDIUM"
+    },
+    {
+      "domain_id": "DOMAIN-06",
+      "domain_name": "AI/ML Intelligence Layer",
+      "domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-01",
+      "debt_status": "PARTIALLY_RESOLVED",
+      "debt_item_ids": [
+        "DEBT-GROUNDING_GAP-05"
+      ],
+      "debt_item_count": 1,
+      "baseline_confidence_level": 1,
+      "enriched_confidence_level": 3,
+      "confidence_delta": 2,
+      "lineage_status": "PARTIAL",
+      "reconciliation_status": "UNRECONCILED",
+      "enrichment_status": "AI_RECONSTRUCTED",
+      "enrichment_reason": "DOM-09 (backend_modules) explicitly contains backend/src/modules/agentic-ai/ — a direct structural correspondent for AI/ML functionality. The evidence path literally names the AI module. PARTIAL lineage because DOM-09 merges multiple domains; the agentic-ai sub-module is one of several.",
+      "reducibility": "REDUCED_BY_ENRICHMENT",
+      "origin_type": "ENRICHMENT_RESIDUAL",
+      "operational_exposure": "LOW"
+    },
+    {
+      "domain_id": "DOMAIN-07",
+      "domain_name": "Sensor and Security Ingestion",
+      "domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-01",
+      "debt_status": "PARTIALLY_RESOLVED",
+      "debt_item_ids": [
+        "DEBT-GROUNDING_GAP-06"
+      ],
+      "debt_item_count": 1,
+      "baseline_confidence_level": 1,
+      "enriched_confidence_level": 3,
+      "confidence_delta": 2,
+      "lineage_status": "PARTIAL",
+      "reconciliation_status": "UNRECONCILED",
+      "enrichment_status": "AI_RECONSTRUCTED",
+      "enrichment_reason": "DOM-13 (svg_agents) contains sensor_collector.py — this IS sensor ingestion infrastructure. DOM-13 is shared with DOMAIN-01 (Edge Data Acquisition). DOMAIN-07 represents the ingestion concern specifically; DOMAIN-01 represents the acquisition concern. Both are legitimate semantic views of the same structural substrate.",
+      "reducibility": "REDUCED_BY_ENRICHMENT",
+      "origin_type": "ENRICHMENT_RESIDUAL",
+      "operational_exposure": "LOW"
+    },
+    {
+      "domain_id": "DOMAIN-08",
+      "domain_name": "Real-Time Streaming and Gateway",
+      "domain_type": "OPERATIONAL",
+      "cluster_id": "CLU-04",
+      "debt_status": "ACTIVE",
+      "debt_item_ids": [
+        "DEBT-GROUNDING_GAP-07"
+      ],
+      "debt_item_count": 1,
+      "baseline_confidence_level": 1,
+      "enriched_confidence_level": 1,
+      "confidence_delta": 0,
+      "lineage_status": "NONE",
+      "reconciliation_status": "UNRECONCILED",
+      "enrichment_status": "UNMAPPED_RETAINED",
+      "enrichment_reason": "No dedicated streaming or gateway DOM in the structural topology. Real-time streaming infrastructure (WebSockets, SSE, message brokers) is either absent from the evidence or embedded within backend modules without a distinct structural footprint. Enrichment would require fabricating a correspondence.",
+      "reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+      "origin_type": "STRUCTURAL_ABSENCE",
+      "operational_exposure": "HIGH"
+    },
+    {
+      "domain_id": "DOMAIN-09",
+      "domain_name": "Access Control and Identity",
+      "domain_type": "CROSS-CUTTING",
+      "cluster_id": "CLU-05",
+      "debt_status": "PARTIALLY_RESOLVED",
+      "debt_item_ids": [
+        "DEBT-GROUNDING_GAP-08"
+      ],
+      "debt_item_count": 1,
+      "baseline_confidence_level": 1,
+      "enriched_confidence_level": 3,
+      "confidence_delta": 2,
+      "lineage_status": "PARTIAL",
+      "reconciliation_status": "UNRECONCILED",
+      "enrichment_status": "AI_RECONSTRUCTED",
+      "enrichment_reason": "DOM-05 (backend_common) contains backend/src/common/guards/ — guard infrastructure IS access control enforcement. Additionally, DOM-09 (backend_modules) contains backend/src/modules/auth/. DOM-05 chosen as primary because guards are the cross-cutting access control mechanism used across the application.",
+      "reducibility": "REDUCED_BY_ENRICHMENT",
+      "origin_type": "ENRICHMENT_RESIDUAL",
+      "operational_exposure": "LOW"
+    },
+    {
+      "domain_id": "DOMAIN-10",
+      "domain_name": "Platform Infrastructure and Data",
+      "domain_type": "INFRASTRUCTURE",
+      "cluster_id": "CLU-04",
+      "debt_status": "CLEAR",
+      "debt_item_ids": [],
+      "debt_item_count": 0,
+      "baseline_confidence_level": 5,
+      "enriched_confidence_level": 5,
+      "confidence_delta": 0,
+      "lineage_status": "STRONG",
+      "reconciliation_status": "RECONCILED",
+      "enrichment_status": null,
+      "enrichment_reason": null,
+      "reducibility": "NOT_APPLICABLE",
+      "origin_type": "NONE",
+      "operational_exposure": "NONE"
+    },
+    {
+      "domain_id": "DOMAIN-11",
+      "domain_name": "Event-Driven Architecture",
+      "domain_type": "CROSS-CUTTING",
+      "cluster_id": "CLU-04",
+      "debt_status": "ACTIVE",
+      "debt_item_ids": [
+        "DEBT-GROUNDING_GAP-09"
+      ],
+      "debt_item_count": 1,
+      "baseline_confidence_level": 3,
+      "enriched_confidence_level": 3,
+      "confidence_delta": 0,
+      "lineage_status": "PARTIAL",
+      "reconciliation_status": "UNRECONCILED",
+      "enrichment_status": null,
+      "enrichment_reason": null,
+      "reducibility": "REDUCIBLE_BY_EVIDENCE",
+      "origin_type": "UNRESOLVED_CORRESPONDENCE",
+      "operational_exposure": "LOW"
+    },
+    {
+      "domain_id": "DOMAIN-12",
+      "domain_name": "SaaS Platform Layer",
+      "domain_type": "OPERATIONAL",
+      "cluster_id": "CLU-05",
+      "debt_status": "PARTIALLY_RESOLVED",
+      "debt_item_ids": [
+        "DEBT-GROUNDING_GAP-10"
+      ],
+      "debt_item_count": 1,
+      "baseline_confidence_level": 1,
+      "enriched_confidence_level": 2,
+      "confidence_delta": 1,
+      "lineage_status": "WEAK",
+      "reconciliation_status": "UNRECONCILED",
+      "enrichment_status": "AI_RECONSTRUCTED",
+      "enrichment_reason": "DOM-04 (backend_app_root) is the NestJS application container (app.module.ts, main.ts) — the SaaS platform entry point. DOM-04 is shared with DOMAIN-10 (Platform Infrastructure and Data). DOMAIN-12 represents the SaaS service layer; DOMAIN-10 represents the data infrastructure. Weak confidence because the SaaS layer is the entire application, not a specific structural component.",
+      "reducibility": "REDUCED_BY_ENRICHMENT",
+      "origin_type": "ENRICHMENT_RESIDUAL",
+      "operational_exposure": "MEDIUM"
+    },
+    {
+      "domain_id": "DOMAIN-13",
+      "domain_name": "External Integration",
+      "domain_type": "INTEGRATION",
+      "cluster_id": "CLU-05",
+      "debt_status": "ACTIVE",
+      "debt_item_ids": [
+        "DEBT-GROUNDING_GAP-11"
+      ],
+      "debt_item_count": 1,
+      "baseline_confidence_level": 1,
+      "enriched_confidence_level": 1,
+      "confidence_delta": 0,
+      "lineage_status": "NONE",
+      "reconciliation_status": "UNRECONCILED",
+      "enrichment_status": "UNMAPPED_RETAINED",
+      "enrichment_reason": "No dedicated integration DOM in the structural topology. External integration points (API connectors, third-party service adapters) are either absent from the evidence or distributed within backend modules without a distinct structural boundary. The domain represents an integration concern, not a structural component.",
+      "reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+      "origin_type": "STRUCTURAL_ABSENCE",
+      "operational_exposure": "HIGH"
+    },
+    {
+      "domain_id": "DOMAIN-14",
+      "domain_name": "Frontend Application",
+      "domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-05",
+      "debt_status": "CLEAR",
+      "debt_item_ids": [],
+      "debt_item_count": 0,
+      "baseline_confidence_level": 5,
+      "enriched_confidence_level": 5,
+      "confidence_delta": 0,
+      "lineage_status": "EXACT",
+      "reconciliation_status": "RECONCILED",
+      "enrichment_status": null,
+      "enrichment_reason": null,
+      "reducibility": "NOT_APPLICABLE",
+      "origin_type": "NONE",
+      "operational_exposure": "NONE"
+    },
+    {
+      "domain_id": "DOMAIN-15",
+      "domain_name": "EV and Electrification",
+      "domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-03",
+      "debt_status": "ACTIVE",
+      "debt_item_ids": [
+        "DEBT-GROUNDING_GAP-12"
+      ],
+      "debt_item_count": 1,
+      "baseline_confidence_level": 1,
+      "enriched_confidence_level": 1,
+      "confidence_delta": 0,
+      "lineage_status": "NONE",
+      "reconciliation_status": "UNRECONCILED",
+      "enrichment_status": "UNMAPPED_RETAINED",
+      "enrichment_reason": "No dedicated EV/electrification DOM in the structural topology. This is a business vertical domain — a market-specific capability that may be implemented across multiple structural components without a dedicated path. No evidence of EV-specific code in any DOM evidence_refs.",
+      "reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+      "origin_type": "STRUCTURAL_ABSENCE",
+      "operational_exposure": "HIGH"
+    },
+    {
+      "domain_id": "DOMAIN-16",
+      "domain_name": "Operational Engineering",
+      "domain_type": "INFRASTRUCTURE",
+      "cluster_id": "CLU-03",
+      "debt_status": "CLEAR",
+      "debt_item_ids": [],
+      "debt_item_count": 0,
+      "baseline_confidence_level": 5,
+      "enriched_confidence_level": 5,
+      "confidence_delta": 0,
+      "lineage_status": "EXACT",
+      "reconciliation_status": "RECONCILED",
+      "enrichment_status": null,
+      "enrichment_reason": null,
+      "reducibility": "NOT_APPLICABLE",
+      "origin_type": "NONE",
+      "operational_exposure": "NONE"
+    },
+    {
+      "domain_id": "DOMAIN-17",
+      "domain_name": "Extended Operations and Driver Services",
+      "domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-02",
+      "debt_status": "PARTIALLY_RESOLVED",
+      "debt_item_ids": [
+        "DEBT-GROUNDING_GAP-13"
+      ],
+      "debt_item_count": 1,
+      "baseline_confidence_level": 1,
+      "enriched_confidence_level": 3,
+      "confidence_delta": 2,
+      "lineage_status": "PARTIAL",
+      "reconciliation_status": "UNRECONCILED",
+      "enrichment_status": "AI_RECONSTRUCTED",
+      "enrichment_reason": "DOM-09 (backend_modules) explicitly contains backend/src/modules/aftersales/ — aftersales IS extended operations (post-sale service management, driver support). PARTIAL lineage because DOM-09 merges multiple domains; aftersales is one identifiable sub-module.",
+      "reducibility": "REDUCED_BY_ENRICHMENT",
+      "origin_type": "ENRICHMENT_RESIDUAL",
+      "operational_exposure": "LOW"
+    }
+  ],
+  "continuity_debt": [
+    {
+      "id": "DEBT-CONTINUITY_GAP-01",
+      "category": "continuity_gap",
+      "severity": "MEDIUM",
+      "description": "22 structural topology nodes without semantic crosswalk mapping (13/35 covered)",
+      "origin_type": "CONTINUITY_DEFICIENCY"
+    },
+    {
+      "id": "DEBT-CONTINUITY_GAP-02",
+      "category": "continuity_gap",
+      "severity": "MEDIUM",
+      "description": "4 crosswalk entities without business labels (label fidelity 69%)",
+      "origin_type": "CONTINUITY_DEFICIENCY"
+    }
+  ],
+  "lifecycle": {
+    "baseline_unmapped_count": 12,
+    "enriched_unmapped_count": 4,
+    "debt_reduction_by_enrichment": 8,
+    "debt_reduction_ratio": 0.6667,
+    "enrichment_impact": "SIGNIFICANT",
+    "active_debt_domains": 5,
+    "partially_resolved_domains": 8,
+    "clear_domains": 4
+  },
+  "classification_framework": {
+    "reducibility_definitions": {
+      "IRREDUCIBLE_STRUCTURAL_ABSENCE": "No structural component exists for this semantic domain. Enrichment cannot fabricate structural correspondence.",
+      "REDUCIBLE_BY_EVIDENCE": "Debt requires new structural evidence from the client to resolve. Current evidence is insufficient.",
+      "REDUCED_BY_ENRICHMENT": "Debt was partially addressed by AI-assisted enrichment. Residual gap remains below STRONG/EXACT threshold.",
+      "NOT_APPLICABLE": "Domain is fully grounded — no debt classification applies."
+    },
+    "origin_type_definitions": {
+      "STRUCTURAL_ABSENCE": "No structural component corresponds to this semantic domain in the topology.",
+      "ENRICHMENT_RESIDUAL": "AI-assisted enrichment improved confidence but did not achieve full structural grounding.",
+      "UNRESOLVED_CORRESPONDENCE": "Partial correspondence exists but at insufficient confidence for grounding.",
+      "CONTINUITY_DEFICIENCY": "Semantic continuity crosswalk has coverage or label fidelity gaps.",
+      "NONE": "No debt origin — domain is fully resolved."
+    },
+    "exposure_levels": {
+      "NONE": "No operational exposure — domain fully grounded.",
+      "LOW": "Minor exposure — domain partially mapped with acceptable confidence (L3+).",
+      "MEDIUM": "Moderate exposure — domain mapped but confidence below coherence threshold (L2).",
+      "HIGH": "Significant exposure — domain unmapped (L1), blocks qualification progression."
+    },
+    "debt_status_definitions": {
+      "CLEAR": "No active debt — domain at L5 with STRONG/EXACT lineage.",
+      "ACTIVE": "Debt is present and unresolved — domain below grounding threshold.",
+      "PARTIALLY_RESOLVED": "Enrichment reduced debt but residual gap remains."
+    }
+  },
+  "governance": {
+    "deterministic": true,
+    "replay_safe": true,
+    "no_inference": true,
+    "no_enrichment": true,
+    "no_authority_promotion": true
+  },
+  "provenance": {
+    "source_artifacts": [
+      "semantic_debt_inventory.v1.json",
+      "reconciliation_correspondence.v1.json",
+      "reconciliation_correspondence.enriched.v1.json",
+      "semantic_topology_model.enriched.json"
+    ],
+    "source_commit": "2be555c8960d",
+    "output_hash": "sha256:f36bae13abb18b5ff95e3e62439768345dc6857a78bc6a629fc7e6edc8106690"
+  }
+}

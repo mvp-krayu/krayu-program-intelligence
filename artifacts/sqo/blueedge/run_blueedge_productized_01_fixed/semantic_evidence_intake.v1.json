@@ -1,0 +1,411 @@
+{
+  "schema_version": "1.0",
+  "artifact_type": "semantic_evidence_intake",
+  "client": "blueedge",
+  "run_id": "run_blueedge_productized_01_fixed",
+  "generated_at": "2026-05-13T07:51:51.580Z",
+  "compiler_version": "1.0",
+  "intake_summary": {
+    "total_items": 8,
+    "accepted_count": 8,
+    "rejected_count": 0,
+    "quarantined_count": 0,
+    "all_valid": true,
+    "source_class_distribution": {
+      "STRUCTURAL_EVIDENCE": 1,
+      "GAUGE_ARTIFACT": 3,
+      "DIAGNOSTIC_NARRATIVE": 1,
+      "EXPLICIT_REBASE": 3
+    },
+    "eligibility_counts": {
+      "SEMANTIC_RECONSTRUCTION": 4,
+      "ENRICHMENT": 8,
+      "RECONCILIATION": 7,
+      "LIFECYCLE_PROGRESSION": 4
+    },
+    "covered_domains": [
+      "DOMAIN-01",
+      "DOMAIN-02",
+      "DOMAIN-03",
+      "DOMAIN-04",
+      "DOMAIN-05",
+      "DOMAIN-06",
+      "DOMAIN-07",
+      "DOMAIN-08",
+      "DOMAIN-09",
+      "DOMAIN-10",
+      "DOMAIN-11",
+      "DOMAIN-12",
+      "DOMAIN-13",
+      "DOMAIN-14",
+      "DOMAIN-15",
+      "DOMAIN-16",
+      "DOMAIN-17"
+    ],
+    "covered_domain_count": 17,
+    "registry_items_count": 5,
+    "rebase_items_count": 3
+  },
+  "items": [
+    {
+      "evidence_id": "EV-BE-001",
+      "source_type": "HTML_EVIDENCE_BRIEF",
+      "source_class": "STRUCTURAL_EVIDENCE",
+      "source_path": "clients/blueedge/reports/tier1/lens_tier1_evidence_brief.html",
+      "authority_state": "NON_AUTHORITATIVE_EVIDENCE",
+      "candidate_domain_count": 17,
+      "candidate_domains": [
+        "DOMAIN-01",
+        "DOMAIN-02",
+        "DOMAIN-03",
+        "DOMAIN-04",
+        "DOMAIN-05",
+        "DOMAIN-06",
+        "DOMAIN-07",
+        "DOMAIN-08",
+        "DOMAIN-09",
+        "DOMAIN-10",
+        "DOMAIN-11",
+        "DOMAIN-12",
+        "DOMAIN-13",
+        "DOMAIN-14",
+        "DOMAIN-15",
+        "DOMAIN-16",
+        "DOMAIN-17"
+      ],
+      "provenance_origin": "LENS_TIER1_STRUCTURAL_EVIDENCE",
+      "intake_status": "ACCEPTED",
+      "rejection_reason": null,
+      "rejection_detail": null,
+      "hash_verified": true,
+      "computed_hash": "8d18f52a5420578b9aa306cc9b39587fbc90dce750b24c9122a8fe7316ee219c",
+      "expected_hash": "8d18f52a5420578b9aa306cc9b39587fbc90dce750b24c9122a8fe7316ee219c",
+      "file_size": 34842,
+      "eligible_operations": [
+        "SEMANTIC_RECONSTRUCTION",
+        "ENRICHMENT",
+        "RECONCILIATION",
+        "LIFECYCLE_PROGRESSION"
+      ],
+      "description": "Structural evidence brief covering all 17 BlueEdge domains with grounding status and evidence relationships"
+    },
+    {
+      "evidence_id": "EV-BE-002",
+      "source_type": "HTML_GAUGE_ARTIFACT",
+      "source_class": "GAUGE_ARTIFACT",
+      "source_path": "app/gauge-product/public/vault/blueedge/run_01_authoritative_generated/artifacts/ART-01.html",
+      "authority_state": "NON_AUTHORITATIVE_EVIDENCE",
+      "candidate_domain_count": 5,
+      "candidate_domains": [
+        "DOMAIN-01",
+        "DOMAIN-02",
+        "DOMAIN-03",
+        "DOMAIN-04",
+        "DOMAIN-05"
+      ],
+      "provenance_origin": "GAUGE_EVIDENCE_VAULT_ARTIFACT",
+      "intake_status": "ACCEPTED",
+      "rejection_reason": null,
+      "rejection_detail": null,
+      "hash_verified": true,
+      "computed_hash": "647e08b7a097adea840492ef0eb075364cb50968fd3d7a62cb323631729ccd27",
+      "expected_hash": "647e08b7a097adea840492ef0eb075364cb50968fd3d7a62cb323631729ccd27",
+      "file_size": 5425,
+      "eligible_operations": [
+        "ENRICHMENT",
+        "RECONCILIATION"
+      ],
+      "description": "GAUGE state artifact (ART-01) containing dimensional scores, execution state, and confidence"
+    },
+    {
+      "evidence_id": "EV-BE-003",
+      "source_type": "HTML_DIAGNOSTIC_NARRATIVE",
+      "source_class": "DIAGNOSTIC_NARRATIVE",
+      "source_path": "clients/blueedge/reports/tier2/lens_tier2_diagnostic_narrative.html",
+      "authority_state": "NON_AUTHORITATIVE_EVIDENCE",
+      "candidate_domain_count": 17,
+      "candidate_domains": [
+        "DOMAIN-01",
+        "DOMAIN-02",
+        "DOMAIN-03",
+        "DOMAIN-04",
+        "DOMAIN-05",
+        "DOMAIN-06",
+        "DOMAIN-07",
+        "DOMAIN-08",
+        "DOMAIN-09",
+        "DOMAIN-10",
+        "DOMAIN-11",
+        "DOMAIN-12",
+        "DOMAIN-13",
+        "DOMAIN-14",
+        "DOMAIN-15",
+        "DOMAIN-16",
+        "DOMAIN-17"
+      ],
+      "provenance_origin": "LENS_TIER2_DIAGNOSTIC_EVIDENCE",
+      "intake_status": "ACCEPTED",
+      "rejection_reason": null,
+      "rejection_detail": null,
+      "hash_verified": true,
+      "computed_hash": "ba3a782e4bca710780caf92948e0c3844744a49228d73a38a49bdc2051486405",
+      "expected_hash": "ba3a782e4bca710780caf92948e0c3844744a49228d73a38a49bdc2051486405",
+      "file_size": 48972,
+      "eligible_operations": [
+        "ENRICHMENT"
+      ],
+      "description": "Tier 2 diagnostic narrative with deep execution layer analysis, confidence ranges, and domain-level evidence"
+    },
+    {
+      "evidence_id": "EV-BE-004",
+      "source_type": "HTML_GAUGE_CLAIM",
+      "source_class": "GAUGE_ARTIFACT",
+      "source_path": "app/gauge-product/public/vault/blueedge/run_01_authoritative_generated/claims/CLM-01.html",
+      "authority_state": "NON_AUTHORITATIVE_EVIDENCE",
+      "candidate_domain_count": 1,
+      "candidate_domains": [
+        "DOMAIN-01"
+      ],
+      "provenance_origin": "GAUGE_EVIDENCE_VAULT_CLAIM",
+      "intake_status": "ACCEPTED",
+      "rejection_reason": null,
+      "rejection_detail": null,
+      "hash_verified": true,
+      "computed_hash": "f32492ef7bcedfebbf209cbf46ae714475d3f531db33d87e683b867ee424a86f",
+      "expected_hash": "f32492ef7bcedfebbf209cbf46ae714475d3f531db33d87e683b867ee424a86f",
+      "file_size": 4731,
+      "eligible_operations": [
+        "ENRICHMENT",
+        "RECONCILIATION"
+      ],
+      "description": "GAUGE claim CLM-01: structural evidence claim with grounding assertion"
+    },
+    {
+      "evidence_id": "EV-BE-005",
+      "source_type": "HTML_GAUGE_CLAIM",
+      "source_class": "GAUGE_ARTIFACT",
+      "source_path": "app/gauge-product/public/vault/blueedge/run_01_authoritative_generated/claims/CLM-02.html",
+      "authority_state": "NON_AUTHORITATIVE_EVIDENCE",
+      "candidate_domain_count": 1,
+      "candidate_domains": [
+        "DOMAIN-02"
+      ],
+      "provenance_origin": "GAUGE_EVIDENCE_VAULT_CLAIM",
+      "intake_status": "ACCEPTED",
+      "rejection_reason": null,
+      "rejection_detail": null,
+      "hash_verified": true,
+      "computed_hash": "7b2eb3307d2ae8bfc120cb269893958b4f25af8f0f705ef25d6947c192a1b2fe",
+      "expected_hash": "7b2eb3307d2ae8bfc120cb269893958b4f25af8f0f705ef25d6947c192a1b2fe",
+      "file_size": 4557,
+      "eligible_operations": [
+        "ENRICHMENT",
+        "RECONCILIATION"
+      ],
+      "description": "GAUGE claim CLM-02: structural evidence claim with grounding assertion"
+    },
+    {
+      "evidence_id": "EV-REBASE-blueedge_explicit_html_rebase_01-BlueEdge_Competitive_Dashboard_Feb2026",
+      "source_type": "HTML_EXPLICIT_REBASE",
+      "source_class": "EXPLICIT_REBASE",
+      "source_path": "clients/blueedge/sqo/evidence/blueedge_explicit_html_rebase_01/BlueEdge_Competitive_Dashboard_Feb2026.html",
+      "authority_state": "NON_AUTHORITATIVE_EVIDENCE",
+      "candidate_domain_count": 0,
+      "candidate_domains": [],
+      "provenance_origin": "EXPLICIT_REBASE_blueedge_explicit_html_rebase_01",
+      "intake_status": "ACCEPTED",
+      "rejection_reason": null,
+      "rejection_detail": null,
+      "hash_verified": true,
+      "computed_hash": "9ac8340f5bdf7accebea343d5d988779f86f641b5c779c9ed5df91c67c269dcf",
+      "expected_hash": "9ac8340f5bdf7accebea343d5d988779f86f641b5c779c9ed5df91c67c269dcf",
+      "file_size": 51135,
+      "eligible_operations": [
+        "SEMANTIC_RECONSTRUCTION",
+        "ENRICHMENT",
+        "RECONCILIATION",
+        "LIFECYCLE_PROGRESSION"
+      ],
+      "description": "Rebase evidence: BlueEdge_Competitive_Dashboard_Feb2026.html from blueedge_explicit_html_rebase_01"
+    },
+    {
+      "evidence_id": "EV-REBASE-blueedge_explicit_html_rebase_01-BlueEdge_Unified_Architecture_v3_23_0",
+      "source_type": "HTML_EXPLICIT_REBASE",
+      "source_class": "EXPLICIT_REBASE",
+      "source_path": "clients/blueedge/sqo/evidence/blueedge_explicit_html_rebase_01/BlueEdge_Unified_Architecture_v3_23_0.html",
+      "authority_state": "NON_AUTHORITATIVE_EVIDENCE",
+      "candidate_domain_count": 0,
+      "candidate_domains": [],
+      "provenance_origin": "EXPLICIT_REBASE_blueedge_explicit_html_rebase_01",
+      "intake_status": "ACCEPTED",
+      "rejection_reason": null,
+      "rejection_detail": null,
+      "hash_verified": true,
+      "computed_hash": "0b8d086e6bb0807e4d1e88e751d87f230e1188d59264d4420ba85b31a907f1f6",
+      "expected_hash": "0b8d086e6bb0807e4d1e88e751d87f230e1188d59264d4420ba85b31a907f1f6",
+      "file_size": 89642,
+      "eligible_operations": [
+        "SEMANTIC_RECONSTRUCTION",
+        "ENRICHMENT",
+        "RECONCILIATION",
+        "LIFECYCLE_PROGRESSION"
+      ],
+      "description": "Rebase evidence: BlueEdge_Unified_Architecture_v3_23_0.html from blueedge_explicit_html_rebase_01"
+    },
+    {
+      "evidence_id": "EV-REBASE-blueedge_explicit_html_rebase_01-Blue_Edge_PMO_Dashboard",
+      "source_type": "HTML_EXPLICIT_REBASE",
+      "source_class": "EXPLICIT_REBASE",
+      "source_path": "clients/blueedge/sqo/evidence/blueedge_explicit_html_rebase_01/Blue_Edge_PMO_Dashboard.html",
+      "authority_state": "NON_AUTHORITATIVE_EVIDENCE",
+      "candidate_domain_count": 0,
+      "candidate_domains": [],
+      "provenance_origin": "EXPLICIT_REBASE_blueedge_explicit_html_rebase_01",
+      "intake_status": "ACCEPTED",
+      "rejection_reason": null,
+      "rejection_detail": null,
+      "hash_verified": true,
+      "computed_hash": "cccf4ea553c2a46a42be860c5f9e273b11870416858c16099b6d388e186c7223",
+      "expected_hash": "cccf4ea553c2a46a42be860c5f9e273b11870416858c16099b6d388e186c7223",
+      "file_size": 364637,
+      "eligible_operations": [
+        "SEMANTIC_RECONSTRUCTION",
+        "ENRICHMENT",
+        "RECONCILIATION",
+        "LIFECYCLE_PROGRESSION"
+      ],
+      "description": "Rebase evidence: Blue_Edge_PMO_Dashboard.html from blueedge_explicit_html_rebase_01"
+    }
+  ],
+  "accepted": [
+    {
+      "evidence_id": "EV-BE-001",
+      "source_class": "STRUCTURAL_EVIDENCE",
+      "eligible_operations": [
+        "SEMANTIC_RECONSTRUCTION",
+        "ENRICHMENT",
+        "RECONCILIATION",
+        "LIFECYCLE_PROGRESSION"
+      ],
+      "candidate_domain_count": 17
+    },
+    {
+      "evidence_id": "EV-BE-002",
+      "source_class": "GAUGE_ARTIFACT",
+      "eligible_operations": [
+        "ENRICHMENT",
+        "RECONCILIATION"
+      ],
+      "candidate_domain_count": 5
+    },
+    {
+      "evidence_id": "EV-BE-003",
+      "source_class": "DIAGNOSTIC_NARRATIVE",
+      "eligible_operations": [
+        "ENRICHMENT"
+      ],
+      "candidate_domain_count": 17
+    },
+    {
+      "evidence_id": "EV-BE-004",
+      "source_class": "GAUGE_ARTIFACT",
+      "eligible_operations": [
+        "ENRICHMENT",
+        "RECONCILIATION"
+      ],
+      "candidate_domain_count": 1
+    },
+    {
+      "evidence_id": "EV-BE-005",
+      "source_class": "GAUGE_ARTIFACT",
+      "eligible_operations": [
+        "ENRICHMENT",
+        "RECONCILIATION"
+      ],
+      "candidate_domain_count": 1
+    },
+    {
+      "evidence_id": "EV-REBASE-blueedge_explicit_html_rebase_01-BlueEdge_Competitive_Dashboard_Feb2026",
+      "source_class": "EXPLICIT_REBASE",
+      "eligible_operations": [
+        "SEMANTIC_RECONSTRUCTION",
+        "ENRICHMENT",
+        "RECONCILIATION",
+        "LIFECYCLE_PROGRESSION"
+      ],
+      "candidate_domain_count": 0
+    },
+    {
+      "evidence_id": "EV-REBASE-blueedge_explicit_html_rebase_01-BlueEdge_Unified_Architecture_v3_23_0",
+      "source_class": "EXPLICIT_REBASE",
+      "eligible_operations": [
+        "SEMANTIC_RECONSTRUCTION",
+        "ENRICHMENT",
+        "RECONCILIATION",
+        "LIFECYCLE_PROGRESSION"
+      ],
+      "candidate_domain_count": 0
+    },
+    {
+      "evidence_id": "EV-REBASE-blueedge_explicit_html_rebase_01-Blue_Edge_PMO_Dashboard",
+      "source_class": "EXPLICIT_REBASE",
+      "eligible_operations": [
+        "SEMANTIC_RECONSTRUCTION",
+        "ENRICHMENT",
+        "RECONCILIATION",
+        "LIFECYCLE_PROGRESSION"
+      ],
+      "candidate_domain_count": 0
+    }
+  ],
+  "rejected": [],
+  "quarantined": [],
+  "eligibility": {
+    "semantic_reconstruction": [
+      "EV-BE-001",
+      "EV-REBASE-blueedge_explicit_html_rebase_01-BlueEdge_Competitive_Dashboard_Feb2026",
+      "EV-REBASE-blueedge_explicit_html_rebase_01-BlueEdge_Unified_Architecture_v3_23_0",
+      "EV-REBASE-blueedge_explicit_html_rebase_01-Blue_Edge_PMO_Dashboard"
+    ],
+    "enrichment": [
+      "EV-BE-001",
+      "EV-BE-002",
+      "EV-BE-003",
+      "EV-BE-004",
+      "EV-BE-005",
+      "EV-REBASE-blueedge_explicit_html_rebase_01-BlueEdge_Competitive_Dashboard_Feb2026",
+      "EV-REBASE-blueedge_explicit_html_rebase_01-BlueEdge_Unified_Architecture_v3_23_0",
+      "EV-REBASE-blueedge_explicit_html_rebase_01-Blue_Edge_PMO_Dashboard"
+    ],
+    "reconciliation": [
+      "EV-BE-001",
+      "EV-BE-002",
+      "EV-BE-004",
+      "EV-BE-005",
+      "EV-REBASE-blueedge_explicit_html_rebase_01-BlueEdge_Competitive_Dashboard_Feb2026",
+      "EV-REBASE-blueedge_explicit_html_rebase_01-BlueEdge_Unified_Architecture_v3_23_0",
+      "EV-REBASE-blueedge_explicit_html_rebase_01-Blue_Edge_PMO_Dashboard"
+    ],
+    "lifecycle_progression": [
+      "EV-BE-001",
+      "EV-REBASE-blueedge_explicit_html_rebase_01-BlueEdge_Competitive_Dashboard_Feb2026",
+      "EV-REBASE-blueedge_explicit_html_rebase_01-BlueEdge_Unified_Architecture_v3_23_0",
+      "EV-REBASE-blueedge_explicit_html_rebase_01-Blue_Edge_PMO_Dashboard"
+    ]
+  },
+  "governance": {
+    "deterministic": true,
+    "replay_safe": true,
+    "no_inference": true,
+    "no_enrichment": true,
+    "no_authority_promotion": true,
+    "ingestion_boundary": "NON_AUTHORITATIVE"
+  },
+  "provenance": {
+    "source_artifacts": [
+      "evidence_registry.v1.json"
+    ],
+    "source_commit": "2be555c8960d",
+    "output_hash": "sha256:5b03f9df9a36e2aa912db56cb3e15b4bc368ca09c4bb685ed8733383db84344e"
+  }
+}

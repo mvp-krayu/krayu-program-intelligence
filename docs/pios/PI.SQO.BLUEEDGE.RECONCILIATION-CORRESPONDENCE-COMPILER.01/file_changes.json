@@ -1,0 +1,23 @@
+{
+  "stream": "PI.SQO.BLUEEDGE.RECONCILIATION-CORRESPONDENCE-COMPILER.01",
+  "changes": [
+    { "path": "app/execlens-demo/lib/lens-v2/reconciliation/ReconciliationCorrespondenceCompiler.js", "action": "CREATE" },
+    { "path": "app/execlens-demo/lib/lens-v2/reconciliation/ReconciliationArtifactWriter.js", "action": "CREATE" },
+    { "path": "app/execlens-demo/lib/lens-v2/reconciliation/index.js", "action": "CREATE" },
+    { "path": "app/execlens-demo/lib/lens-v2/generic/GenericSemanticPayloadResolver.js", "action": "MODIFY" },
+    { "path": "app/execlens-demo/lib/lens-v2/index.js", "action": "MODIFY" },
+    { "path": "app/execlens-demo/lib/sqo-cockpit/SQOCockpitArtifactLoader.js", "action": "MODIFY" },
+    { "path": "app/execlens-demo/lib/sqo-cockpit/SQOCockpitFormatter.js", "action": "MODIFY" },
+    { "path": "app/execlens-demo/lib/sqo-cockpit/SQOWorkspaceDataResolver.js", "action": "MODIFY" },
+    { "path": "app/execlens-demo/lib/sqo-cockpit/SQOCockpitRouteResolver.js", "action": "MODIFY" },
+    { "path": "app/execlens-demo/components/sqo-cockpit/SQOWorkspacePanel.jsx", "action": "MODIFY" },
+    { "path": "app/execlens-demo/components/sqo-cockpit/ReconciliationCorrespondencePanel.jsx", "action": "CREATE" },
+    { "path": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/reconciliation.js", "action": "CREATE" },
+    { "path": "scripts/reconciliation/compile_blueedge_correspondence.js", "action": "CREATE" },
+    { "path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/reconciliation_correspondence.v1.json", "action": "CREATE" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.RECONCILIATION-CORRESPONDENCE-COMPILER.01/execution_report.md", "action": "CREATE" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.RECONCILIATION-CORRESPONDENCE-COMPILER.01/CLOSURE.md", "action": "CREATE" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.RECONCILIATION-CORRESPONDENCE-COMPILER.01/validation_log.json", "action": "CREATE" },
+    { "path": "docs/pios/PI.SQO.BLUEEDGE.RECONCILIATION-CORRESPONDENCE-COMPILER.01/file_changes.json", "action": "CREATE" }
+  ]
+}

@@ -1,0 +1,497 @@
+{
+  "ok": true,
+  "schema_version": "1.0",
+  "artifact_type": "reconciliation_correspondence",
+  "generated_at": "2026-05-12T16:39:36.844Z",
+  "compiler_version": "PI.SQO.BLUEEDGE.RECONCILIATION-CORRESPONDENCE-COMPILER.01",
+  "source_authority": {
+    "semantic_topology": "PI.LENS.SEMANTIC-TOPOLOGY-REBUILD.02",
+    "canonical_topology": "PI.BLUEEDGE.E2E.PRODUCTIZED-RUN.VAULT-AND-REPORT-EXECUTION.01",
+    "crosswalk_version": "2.0"
+  },
+  "summary": {
+    "total_semantic_domains": 17,
+    "reconciled_count": 4,
+    "unreconciled_count": 13,
+    "reconciliation_ratio": 0.2353,
+    "confidence_distribution": {
+      "level_5_structurally_grounded": 4,
+      "level_4_observationally_corroborated": 0,
+      "level_3_semantically_coherent": 1,
+      "level_2_upstream_evidence_bound": 0,
+      "level_1_unmapped": 12
+    },
+    "weighted_confidence_score": 41.2,
+    "unmatched_structural_count": 8
+  },
+  "correspondences": [
+    {
+      "semantic_domain_id": "DOMAIN-01",
+      "semantic_domain_name": "Edge Data Acquisition",
+      "semantic_domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-01",
+      "structural_dom_id": "DOM-13",
+      "structural_domain_name": "svg_agents",
+      "confidence_level": 5,
+      "confidence_label": "Structurally Grounded",
+      "confidence_q_impact": "Q-01",
+      "correspondence_basis": "EXACT_CROSSWALK_HIGH_CONFIDENCE",
+      "evidence_factors": [
+        "STRUCTURAL_DOM_EXISTS",
+        "CROSSWALK_STRONG"
+      ],
+      "crosswalk_confidence": 0.95,
+      "crosswalk_lineage_status": "STRONG",
+      "crosswalk_business_label": "Edge Data Acquisition",
+      "structural_component_count": 2,
+      "structural_evidence_refs": [
+        "svg-agents/hasi-bridge/hasi_bridge.py",
+        "svg-agents/sensor-collector/sensor_collector.py"
+      ],
+      "structural_grounding": "GROUNDED",
+      "reconciliation_status": "RECONCILED"
+    },
+    {
+      "semantic_domain_id": "DOMAIN-02",
+      "semantic_domain_name": "Telemetry Transport and Messaging",
+      "semantic_domain_type": "INFRASTRUCTURE",
+      "cluster_id": "CLU-04",
+      "structural_dom_id": null,
+      "structural_domain_name": null,
+      "confidence_level": 1,
+      "confidence_label": "Unmapped",
+      "confidence_q_impact": "Q-03/Q-04",
+      "correspondence_basis": "NO_STRUCTURAL_CORRESPONDENCE",
+      "evidence_factors": [],
+      "crosswalk_confidence": 0,
+      "crosswalk_lineage_status": "NONE",
+      "crosswalk_business_label": null,
+      "structural_component_count": 0,
+      "structural_evidence_refs": [],
+      "structural_grounding": null,
+      "reconciliation_status": "UNRECONCILED"
+    },
+    {
+      "semantic_domain_id": "DOMAIN-03",
+      "semantic_domain_name": "Fleet Core Operations",
+      "semantic_domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-02",
+      "structural_dom_id": null,
+      "structural_domain_name": null,
+      "confidence_level": 1,
+      "confidence_label": "Unmapped",
+      "confidence_q_impact": "Q-03/Q-04",
+      "correspondence_basis": "NO_STRUCTURAL_CORRESPONDENCE",
+      "evidence_factors": [],
+      "crosswalk_confidence": 0,
+      "crosswalk_lineage_status": "NONE",
+      "crosswalk_business_label": null,
+      "structural_component_count": 0,
+      "structural_evidence_refs": [],
+      "structural_grounding": null,
+      "reconciliation_status": "UNRECONCILED"
+    },
+    {
+      "semantic_domain_id": "DOMAIN-04",
+      "semantic_domain_name": "Fleet Vertical Extensions",
+      "semantic_domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-02",
+      "structural_dom_id": null,
+      "structural_domain_name": null,
+      "confidence_level": 1,
+      "confidence_label": "Unmapped",
+      "confidence_q_impact": "Q-03/Q-04",
+      "correspondence_basis": "NO_STRUCTURAL_CORRESPONDENCE",
+      "evidence_factors": [],
+      "crosswalk_confidence": 0,
+      "crosswalk_lineage_status": "NONE",
+      "crosswalk_business_label": null,
+      "structural_component_count": 0,
+      "structural_evidence_refs": [],
+      "structural_grounding": null,
+      "reconciliation_status": "UNRECONCILED"
+    },
+    {
+      "semantic_domain_id": "DOMAIN-05",
+      "semantic_domain_name": "Analytics and Intelligence",
+      "semantic_domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-01",
+      "structural_dom_id": null,
+      "structural_domain_name": null,
+      "confidence_level": 1,
+      "confidence_label": "Unmapped",
+      "confidence_q_impact": "Q-03/Q-04",
+      "correspondence_basis": "NO_STRUCTURAL_CORRESPONDENCE",
+      "evidence_factors": [],
+      "crosswalk_confidence": 0,
+      "crosswalk_lineage_status": "NONE",
+      "crosswalk_business_label": null,
+      "structural_component_count": 0,
+      "structural_evidence_refs": [],
+      "structural_grounding": null,
+      "reconciliation_status": "UNRECONCILED"
+    },
+    {
+      "semantic_domain_id": "DOMAIN-06",
+      "semantic_domain_name": "AI/ML Intelligence Layer",
+      "semantic_domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-01",
+      "structural_dom_id": null,
+      "structural_domain_name": null,
+      "confidence_level": 1,
+      "confidence_label": "Unmapped",
+      "confidence_q_impact": "Q-03/Q-04",
+      "correspondence_basis": "NO_STRUCTURAL_CORRESPONDENCE",
+      "evidence_factors": [],
+      "crosswalk_confidence": 0,
+      "crosswalk_lineage_status": "NONE",
+      "crosswalk_business_label": null,
+      "structural_component_count": 0,
+      "structural_evidence_refs": [],
+      "structural_grounding": null,
+      "reconciliation_status": "UNRECONCILED"
+    },
+    {
+      "semantic_domain_id": "DOMAIN-07",
+      "semantic_domain_name": "Sensor and Security Ingestion",
+      "semantic_domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-01",
+      "structural_dom_id": null,
+      "structural_domain_name": null,
+      "confidence_level": 1,
+      "confidence_label": "Unmapped",
+      "confidence_q_impact": "Q-03/Q-04",
+      "correspondence_basis": "NO_STRUCTURAL_CORRESPONDENCE",
+      "evidence_factors": [],
+      "crosswalk_confidence": 0,
+      "crosswalk_lineage_status": "NONE",
+      "crosswalk_business_label": null,
+      "structural_component_count": 0,
+      "structural_evidence_refs": [],
+      "structural_grounding": null,
+      "reconciliation_status": "UNRECONCILED"
+    },
+    {
+      "semantic_domain_id": "DOMAIN-08",
+      "semantic_domain_name": "Real-Time Streaming and Gateway",
+      "semantic_domain_type": "OPERATIONAL",
+      "cluster_id": "CLU-04",
+      "structural_dom_id": null,
+      "structural_domain_name": null,
+      "confidence_level": 1,
+      "confidence_label": "Unmapped",
+      "confidence_q_impact": "Q-03/Q-04",
+      "correspondence_basis": "NO_STRUCTURAL_CORRESPONDENCE",
+      "evidence_factors": [],
+      "crosswalk_confidence": 0,
+      "crosswalk_lineage_status": "NONE",
+      "crosswalk_business_label": null,
+      "structural_component_count": 0,
+      "structural_evidence_refs": [],
+      "structural_grounding": null,
+      "reconciliation_status": "UNRECONCILED"
+    },
+    {
+      "semantic_domain_id": "DOMAIN-09",
+      "semantic_domain_name": "Access Control and Identity",
+      "semantic_domain_type": "CROSS-CUTTING",
+      "cluster_id": "CLU-05",
+      "structural_dom_id": null,
+      "structural_domain_name": null,
+      "confidence_level": 1,
+      "confidence_label": "Unmapped",
+      "confidence_q_impact": "Q-03/Q-04",
+      "correspondence_basis": "NO_STRUCTURAL_CORRESPONDENCE",
+      "evidence_factors": [],
+      "crosswalk_confidence": 0,
+      "crosswalk_lineage_status": "NONE",
+      "crosswalk_business_label": null,
+      "structural_component_count": 0,
+      "structural_evidence_refs": [],
+      "structural_grounding": null,
+      "reconciliation_status": "UNRECONCILED"
+    },
+    {
+      "semantic_domain_id": "DOMAIN-10",
+      "semantic_domain_name": "Platform Infrastructure and Data",
+      "semantic_domain_type": "INFRASTRUCTURE",
+      "cluster_id": "CLU-04",
+      "structural_dom_id": "DOM-04",
+      "structural_domain_name": "backend_app_root",
+      "confidence_level": 5,
+      "confidence_label": "Structurally Grounded",
+      "confidence_q_impact": "Q-01",
+      "correspondence_basis": "STRONG_CROSSWALK_WITH_SIGNAL_AND_TRACE",
+      "evidence_factors": [
+        "STRUCTURAL_DOM_EXISTS",
+        "CROSSWALK_STRONG",
+        "ACTIVE_SIGNAL_BINDING",
+        "EVIDENCE_TRACE_CHAIN"
+      ],
+      "crosswalk_confidence": 0.78,
+      "crosswalk_lineage_status": "STRONG",
+      "crosswalk_business_label": "Platform Infrastructure and Data",
+      "structural_component_count": 2,
+      "structural_evidence_refs": [
+        "backend/src/app.module.ts",
+        "backend/src/main.ts"
+      ],
+      "structural_grounding": "GROUNDED",
+      "reconciliation_status": "RECONCILED"
+    },
+    {
+      "semantic_domain_id": "DOMAIN-11",
+      "semantic_domain_name": "Event-Driven Architecture",
+      "semantic_domain_type": "CROSS-CUTTING",
+      "cluster_id": "CLU-04",
+      "structural_dom_id": "DOM-07",
+      "structural_domain_name": "backend_events",
+      "confidence_level": 3,
+      "confidence_label": "Semantically Coherent",
+      "confidence_q_impact": "Q-02",
+      "correspondence_basis": "PARTIAL_CROSSWALK_ALIGNMENT",
+      "evidence_factors": [
+        "STRUCTURAL_DOM_EXISTS",
+        "CROSSWALK_PARTIAL"
+      ],
+      "crosswalk_confidence": 0.65,
+      "crosswalk_lineage_status": "PARTIAL",
+      "crosswalk_business_label": "Event-Driven Architecture",
+      "structural_component_count": 1,
+      "structural_evidence_refs": [
+        "backend/src/events/fleet-events.spec.ts"
+      ],
+      "structural_grounding": "GROUNDED",
+      "reconciliation_status": "UNRECONCILED"
+    },
+    {
+      "semantic_domain_id": "DOMAIN-12",
+      "semantic_domain_name": "SaaS Platform Layer",
+      "semantic_domain_type": "OPERATIONAL",
+      "cluster_id": "CLU-05",
+      "structural_dom_id": null,
+      "structural_domain_name": null,
+      "confidence_level": 1,
+      "confidence_label": "Unmapped",
+      "confidence_q_impact": "Q-03/Q-04",
+      "correspondence_basis": "NO_STRUCTURAL_CORRESPONDENCE",
+      "evidence_factors": [],
+      "crosswalk_confidence": 0,
+      "crosswalk_lineage_status": "NONE",
+      "crosswalk_business_label": null,
+      "structural_component_count": 0,
+      "structural_evidence_refs": [],
+      "structural_grounding": null,
+      "reconciliation_status": "UNRECONCILED"
+    },
+    {
+      "semantic_domain_id": "DOMAIN-13",
+      "semantic_domain_name": "External Integration",
+      "semantic_domain_type": "INTEGRATION",
+      "cluster_id": "CLU-05",
+      "structural_dom_id": null,
+      "structural_domain_name": null,
+      "confidence_level": 1,
+      "confidence_label": "Unmapped",
+      "confidence_q_impact": "Q-03/Q-04",
+      "correspondence_basis": "NO_STRUCTURAL_CORRESPONDENCE",
+      "evidence_factors": [],
+      "crosswalk_confidence": 0,
+      "crosswalk_lineage_status": "NONE",
+      "crosswalk_business_label": null,
+      "structural_component_count": 0,
+      "structural_evidence_refs": [],
+      "structural_grounding": null,
+      "reconciliation_status": "UNRECONCILED"
+    },
+    {
+      "semantic_domain_id": "DOMAIN-14",
+      "semantic_domain_name": "Frontend Application",
+      "semantic_domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-05",
+      "structural_dom_id": "DOM-10",
+      "structural_domain_name": "frontend",
+      "confidence_level": 5,
+      "confidence_label": "Structurally Grounded",
+      "confidence_q_impact": "Q-01",
+      "correspondence_basis": "EXACT_CROSSWALK_HIGH_CONFIDENCE",
+      "evidence_factors": [
+        "STRUCTURAL_DOM_EXISTS",
+        "CROSSWALK_EXACT"
+      ],
+      "crosswalk_confidence": 0.92,
+      "crosswalk_lineage_status": "EXACT",
+      "crosswalk_business_label": "Frontend Application",
+      "structural_component_count": 3,
+      "structural_evidence_refs": [
+        "frontend/App.tsx",
+        "frontend/index.html",
+        "frontend/main.tsx"
+      ],
+      "structural_grounding": "GROUNDED",
+      "reconciliation_status": "RECONCILED"
+    },
+    {
+      "semantic_domain_id": "DOMAIN-15",
+      "semantic_domain_name": "EV and Electrification",
+      "semantic_domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-03",
+      "structural_dom_id": null,
+      "structural_domain_name": null,
+      "confidence_level": 1,
+      "confidence_label": "Unmapped",
+      "confidence_q_impact": "Q-03/Q-04",
+      "correspondence_basis": "NO_STRUCTURAL_CORRESPONDENCE",
+      "evidence_factors": [],
+      "crosswalk_confidence": 0,
+      "crosswalk_lineage_status": "NONE",
+      "crosswalk_business_label": null,
+      "structural_component_count": 0,
+      "structural_evidence_refs": [],
+      "structural_grounding": null,
+      "reconciliation_status": "UNRECONCILED"
+    },
+    {
+      "semantic_domain_id": "DOMAIN-16",
+      "semantic_domain_name": "Operational Engineering",
+      "semantic_domain_type": "INFRASTRUCTURE",
+      "cluster_id": "CLU-03",
+      "structural_dom_id": "DOM-11",
+      "structural_domain_name": "load_tests",
+      "confidence_level": 5,
+      "confidence_label": "Structurally Grounded",
+      "confidence_q_impact": "Q-01",
+      "correspondence_basis": "EXACT_CROSSWALK_HIGH_CONFIDENCE",
+      "evidence_factors": [
+        "STRUCTURAL_DOM_EXISTS",
+        "CROSSWALK_STRONG"
+      ],
+      "crosswalk_confidence": 0.93,
+      "crosswalk_lineage_status": "STRONG",
+      "crosswalk_business_label": "Operational Engineering",
+      "structural_component_count": 2,
+      "structural_evidence_refs": [
+        "load-tests/api-load.js",
+        "load-tests/run.sh"
+      ],
+      "structural_grounding": "GROUNDED",
+      "reconciliation_status": "RECONCILED"
+    },
+    {
+      "semantic_domain_id": "DOMAIN-17",
+      "semantic_domain_name": "Extended Operations and Driver Services",
+      "semantic_domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-02",
+      "structural_dom_id": null,
+      "structural_domain_name": null,
+      "confidence_level": 1,
+      "confidence_label": "Unmapped",
+      "confidence_q_impact": "Q-03/Q-04",
+      "correspondence_basis": "NO_STRUCTURAL_CORRESPONDENCE",
+      "evidence_factors": [],
+      "crosswalk_confidence": 0,
+      "crosswalk_lineage_status": "NONE",
+      "crosswalk_business_label": null,
+      "structural_component_count": 0,
+      "structural_evidence_refs": [],
+      "structural_grounding": null,
+      "reconciliation_status": "UNRECONCILED"
+    }
+  ],
+  "unmatched_structural": [
+    {
+      "structural_dom_id": "DOM-01",
+      "structural_domain_name": "root_configuration",
+      "component_count": 3,
+      "evidence_refs": [
+        ".env.example",
+        "docker-compose.monitoring.yml",
+        "docker-compose.yml"
+      ],
+      "status": "NO_SEMANTIC_CONSUMER"
+    },
+    {
+      "structural_dom_id": "DOM-02",
+      "structural_domain_name": "ci_cd_workflows",
+      "component_count": 2,
+      "evidence_refs": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/deploy.yml"
+      ],
+      "status": "NO_SEMANTIC_CONSUMER"
+    },
+    {
+      "structural_dom_id": "DOM-03",
+      "structural_domain_name": "backend_migrations",
+      "component_count": 3,
+      "evidence_refs": [
+        "backend/migrations/",
+        "backend/migrations/init.sql",
+        "backend/migrations/seeds/seed-driver-sessions.sql"
+      ],
+      "status": "NO_SEMANTIC_CONSUMER"
+    },
+    {
+      "structural_dom_id": "DOM-05",
+      "structural_domain_name": "backend_common",
+      "component_count": 5,
+      "evidence_refs": [
+        "backend/src/common/cache/",
+        "backend/src/common/guards/",
+        "backend/src/common/versioning/"
+      ],
+      "status": "NO_SEMANTIC_CONSUMER"
+    },
+    {
+      "structural_dom_id": "DOM-06",
+      "structural_domain_name": "backend_config",
+      "component_count": 2,
+      "evidence_refs": [
+        "backend/src/config/data-source.ts",
+        "backend/src/config/database.config.ts"
+      ],
+      "status": "NO_SEMANTIC_CONSUMER"
+    },
+    {
+      "structural_dom_id": "DOM-08",
+      "structural_domain_name": "backend_health",
+      "component_count": 2,
+      "evidence_refs": [
+        "backend/src/health/health.controller.ts",
+        "backend/src/health/prometheus.service.ts"
+      ],
+      "status": "NO_SEMANTIC_CONSUMER"
+    },
+    {
+      "structural_dom_id": "DOM-09",
+      "structural_domain_name": "backend_modules",
+      "component_count": 6,
+      "evidence_refs": [
+        "backend/src/modules/aftersales/",
+        "backend/src/modules/agentic-ai/",
+        "backend/src/modules/auth/"
+      ],
+      "status": "NO_SEMANTIC_CONSUMER"
+    },
+    {
+      "structural_dom_id": "DOM-12",
+      "structural_domain_name": "monitoring",
+      "component_count": 2,
+      "evidence_refs": [
+        "monitoring/grafana/dashboards/fleet-operations.json",
+        "monitoring/grafana/provisioning/dashboards/default.yml"
+      ],
+      "status": "NO_SEMANTIC_CONSUMER"
+    }
+  ],
+  "governance": {
+    "path_a_read_only": true,
+    "path_b_read_only": true,
+    "no_ai_inference": true,
+    "deterministic": true,
+    "replay_safe": true
+  },
+  "client": "blueedge",
+  "run_id": "run_blueedge_productized_01_fixed",
+  "artifact_path": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/reconciliation_correspondence.v1.json"
+}
