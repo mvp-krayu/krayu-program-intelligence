@@ -811,7 +811,7 @@ const CONFIDENCE_COLORS = {
   1: '#ff6b6b',
 }
 
-function DomainStructuralPanel({ domainId, correspondenceData }) {
+function DomainStructuralPanel({ domainId, correspondenceData, evidenceIntakeData }) {
   if (!correspondenceData || !domainId) return null
   const correspondences = correspondenceData.correspondences || []
   const corr = correspondences.find(c => c.semantic_domain_id === domainId)
@@ -819,6 +819,7 @@ function DomainStructuralPanel({ domainId, correspondenceData }) {
     return (
       <div className="dsp-panel">
         <div className="dsp-unavailable">Correspondence data unavailable for {domainId}</div>
+        <EvidenceSourcesSection domainId={domainId} evidenceIntakeData={evidenceIntakeData} />
       </div>
     )
   }
@@ -955,12 +956,92 @@ function DomainStructuralPanel({ domainId, correspondenceData }) {
           )}
         </div>
       </div>
+
+      <EvidenceSourcesSection domainId={domainId} evidenceIntakeData={evidenceIntakeData} />
     </div>
   )
 }
 
-function TopologyModal({ fullReport, onClose, correspondenceData }) {
+function resolveOriginDomain(fullReport, domainRegistry) {
+  const blocks = (fullReport && fullReport.evidence_blocks) || []
+  const origin = blocks.find(b => b && b.propagation_role === 'ORIGIN')
+  if (origin) {
+    const match = domainRegistry.find(d =>
+      (d.business_label || d.domain_name) === origin.domain_alias
+    )
+    if (match) return match.domain_id
+  }
+  const pzAnchor = domainRegistry.find(d => d.zone_anchor)
+  if (pzAnchor) return pzAnchor.domain_id
+  return null
+}
+
+const SOURCE_CLASS_COLORS = {
+  STRUCTURAL_EVIDENCE: '#64ffda',
+  GAUGE_ARTIFACT: '#4a9eff',
+  DIAGNOSTIC_NARRATIVE: '#ffd700',
+  EXPLICIT_REBASE: '#ff9e4a',
+}
+
+function EvidenceSourcesSection({ domainId, evidenceIntakeData }) {
+  if (!evidenceIntakeData) {
+    return (
+      <div className="dsp-section">
+        <div className="dsp-section-label">EVIDENCE SOURCES</div>
+        <div className="dsp-grid">
+          <div className="dsp-row"><span className="dsp-val dsp-dim" style={{ fontStyle: 'italic' }}>Evidence intake data unavailable</span></div>
+        </div>
+      </div>
+    )
+  }
+  const items = (evidenceIntakeData.items || []).filter(
+    item => item.candidate_domains && item.candidate_domains.includes(domainId)
+  )
+  if (items.length === 0) {
+    return (
+      <div className="dsp-section">
+        <div className="dsp-section-label">EVIDENCE SOURCES</div>
+        <div className="dsp-grid">
+          <div className="dsp-row"><span className="dsp-val dsp-dim">No registered evidence sources for {domainId}</span></div>
+        </div>
+      </div>
+    )
+  }
+  return (
+    <div className="dsp-section">
+      <div className="dsp-section-label">EVIDENCE SOURCES</div>
+      <div className="dsp-sources">
+        {items.map(item => {
+          const classColor = SOURCE_CLASS_COLORS[item.source_class] || '#4a5570'
+          return (
+            <div key={item.evidence_id} className="dsp-source">
+              <div className="dsp-source-header">
+                <span className="dsp-source-class" style={{ color: classColor }}>{item.source_class}</span>
+                <span className="dsp-source-id dsp-dim">{item.evidence_id}</span>
+                <span className={`dsp-source-hash ${item.hash_verified ? 'dsp-source-hash--ok' : 'dsp-source-hash--fail'}`}>
+                  {item.hash_verified ? '✓ hash verified' : '✗ hash unverified'}
+                </span>
+              </div>
+              <div className="dsp-source-path">{item.source_path}</div>
+              {item.description && <div className="dsp-source-desc">{item.description}</div>}
+              {item.eligible_operations && item.eligible_operations.length > 0 && (
+                <div className="dsp-source-ops">
+                  {item.eligible_operations.map((op, i) => (
+                    <span key={i} className="dsp-source-op">{op}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntakeData, initialSignalTrace, onSignalTraceConsumed }) {
   const [focusedDomain, setFocusedDomain] = useState(null)
+  const [traceResolution, setTraceResolution] = useState(null)
   const domainRegistry = (fullReport && fullReport.semantic_domain_registry) || []
   const clusterRegistry = (fullReport && fullReport.semantic_cluster_registry) || []
   const topologyEdges = (fullReport && fullReport.semantic_topology_edges) || []
@@ -968,7 +1049,20 @@ function TopologyModal({ fullReport, onClose, correspondenceData }) {
   const zoneName = ps.primary_zone_business_label || ''
 
   useEffect(() => {
-    function onKey(e) { if (e.key === 'Escape') { setFocusedDomain(null); onClose() } }
+    if (initialSignalTrace) {
+      const originId = resolveOriginDomain(fullReport, domainRegistry)
+      if (originId) {
+        setFocusedDomain(originId)
+        setTraceResolution(null)
+      } else {
+        setTraceResolution('ORIGIN_UNRESOLVED')
+      }
+      if (onSignalTraceConsumed) onSignalTraceConsumed()
+    }
+  }, [initialSignalTrace])
+
+  useEffect(() => {
+    function onKey(e) { if (e.key === 'Escape') { setFocusedDomain(null); setTraceResolution(null); onClose() } }
     document.addEventListener('keydown', onKey)
     document.body.style.overflow = 'hidden'
     return () => {
@@ -982,7 +1076,20 @@ function TopologyModal({ fullReport, onClose, correspondenceData }) {
       <div className="topo-modal" onClick={e => e.stopPropagation()}>
         <div className="topo-modal-header">
           <div className="topo-modal-title">SEMANTIC DOMAIN TOPOLOGY</div>
-          <div className="topo-modal-meta">{domainRegistry.length} domains · {clusterRegistry.length} clusters</div>
+          <div className="topo-modal-meta">
+            {domainRegistry.length} domains · {clusterRegistry.length} clusters
+            <button
+              className="topo-modal-trace-origin"
+              onClick={() => {
+                const originId = resolveOriginDomain(fullReport, domainRegistry)
+                if (originId) { setFocusedDomain(originId); setTraceResolution(null) }
+                else setTraceResolution('ORIGIN_UNRESOLVED')
+              }}
+              type="button"
+            >
+              trace origin
+            </button>
+          </div>
           <button className="topo-modal-close" onClick={onClose} aria-label="Close topology">✕</button>
         </div>
         <div className="topo-modal-body">
@@ -996,8 +1103,13 @@ function TopologyModal({ fullReport, onClose, correspondenceData }) {
               onNodeSelect={setFocusedDomain}
             />
           </div>
+          {traceResolution === 'ORIGIN_UNRESOLVED' && (
+            <div className="dsp-panel">
+              <div className="dsp-unavailable">Origin domain unresolved — select a domain manually to view evidence lineage</div>
+            </div>
+          )}
           {focusedDomain && (
-            <DomainStructuralPanel domainId={focusedDomain} correspondenceData={correspondenceData} />
+            <DomainStructuralPanel domainId={focusedDomain} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} />
           )}
           <div className="topo-modal-domains">
             <div className="topo-modal-domains-heading">DOMAIN REGISTRY</div>
@@ -1012,7 +1124,7 @@ function TopologyModal({ fullReport, onClose, correspondenceData }) {
                   <div
                     key={d.domain_id}
                     className={`topo-modal-domain-card${isFocused ? ' topo-modal-domain-card--focused' : ''}${isPZ ? ' topo-modal-domain-card--pz' : ''}`}
-                    onClick={() => setFocusedDomain(isFocused ? null : d.domain_id)}
+                    onClick={() => { setFocusedDomain(isFocused ? null : d.domain_id); setTraceResolution(null) }}
                   >
                     {(backed || partial) && <span className="topo-modal-domain-dot" style={{ background: lineageColor }} />}
                     <span className="topo-modal-domain-name">{d.business_label || d.domain_name}</span>
@@ -1031,10 +1143,11 @@ function TopologyModal({ fullReport, onClose, correspondenceData }) {
   )
 }
 
-function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, narrative, evidenceBlocks, correspondenceData }) {
+function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, narrative, evidenceBlocks, correspondenceData, evidenceIntakeData }) {
   const [topoModalOpen, setTopoModalOpen] = useState(false)
+  const [signalTraceId, setSignalTraceId] = useState(null)
   const openTopoModal = useCallback(() => setTopoModalOpen(true), [])
-  const closeTopoModal = useCallback(() => setTopoModalOpen(false), [])
+  const closeTopoModal = useCallback(() => { setTopoModalOpen(false); setSignalTraceId(null) }, [])
 
   const rs = (fullReport && fullReport.readiness_summary) || {}
   const ts = (fullReport && fullReport.topology_summary) || {}
@@ -1149,7 +1262,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
         </div>
       )}
 
-      {topoModalOpen && <TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} />}
+      {topoModalOpen && <TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} initialSignalTrace={signalTraceId} onSignalTraceConsumed={() => setSignalTraceId(null)} />}
 
       <div className="cockpit-impact">
         <div className="cockpit-impact-label">ORGANIZATIONAL IMPACT</div>
@@ -1204,9 +1317,9 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, qualifierClass, narrative, correspondenceData }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, qualifierClass, narrative, correspondenceData, evidenceIntakeData }) {
   if (boardroomMode) {
-    return <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} />
+    return <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} />
   }
   if (densityClass === 'INVESTIGATION_DENSE') {
     return <InvestigationTraceField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} />
@@ -1217,7 +1330,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   return <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} />
 }
 
-export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData }) {
+export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData }) {
   const scope = (fullReport && fullReport.topology_scope) || {}
 
   return (
@@ -1244,6 +1357,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           qualifierClass={qualifierClass}
           narrative={narrative}
           correspondenceData={correspondenceData}
+          evidenceIntakeData={evidenceIntakeData}
         />
       </main>
 
