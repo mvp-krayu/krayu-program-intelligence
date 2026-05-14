@@ -94,9 +94,9 @@
 
 ### LENS v2
 
-**Definition:** The executive semantic intelligence rendering surface. Supersedes ExecLens panel model.
+**Definition:** The cognitive operational intelligence surface. An interactive structural intelligence instrument with persona-based projection, topology exploration, evidence traversal, and governed investigation flows. Supersedes ExecLens panel model and the prior static report rendering identity.
 
-**Status:** CANONICAL — active runtime surface.
+**Status:** CANONICAL — active runtime surface, operational cognition transition complete (2026-05-14).
 
 ### ExecLens
 
@@ -109,6 +109,84 @@
 **Definition:** The original 17-domain, 42-capability, 89-component semantic inventory (Stream 41.2).
 
 **Status:** HISTORICAL — ancestor of current DOM model.
+
+### Runtime Semantic Operations Substrate
+
+**Definition:** The unified operational model that consolidates all SQO semantic primitives (qualification, reconciliation, debt, analytics, intake, replay/certification, projection) into one coherent runtime substrate with explicit ownership boundaries, propagation contracts, orchestration phases, and stabilization rules.
+
+**Status:** CANONICAL — operational runtime component.
+
+### Propagation Contract
+
+**Definition:** An explicit declaration of how data flows between SQO ownership domains. Each contract specifies source domain, target domain, artifacts consumed, artifacts produced, and flow direction (DOWNSTREAM or CONVERGENT).
+
+**Status:** CANONICAL — 7 contracts defined in RuntimeSemanticOperationsSubstrate.
+
+### Ownership Boundary
+
+**Definition:** An explicit declaration of which SQO ownership domain controls which artifacts, engines, compilers, and projections. Mutations to artifacts within a domain are authorized only by that domain's mutation authority.
+
+**Status:** CANONICAL — 8 ownership domains defined in RuntimeSemanticOperationsSubstrate.
+
+### Operational Semantic Reconciliation Loop
+
+**Definition:** The explicit operational lifecycle model that governs how newly submitted semantic evidence enters SQO, progresses through intake registration, enrichment eligibility, reconciliation rerun, debt recalculation, qualification reprojection, and runtime propagation. Models semantic improvement as an operational lifecycle with deterministic phase sequencing and replay-safe rerun chains.
+
+**Status:** CANONICAL — operational runtime component.
+
+### Reconciliation Rerun Orchestration
+
+**Definition:** Deterministic sequencing of compilation reruns triggered by new evidence or upstream artifact changes. Defines entry points (FULL_RERUN, FROM_RECONCILIATION, FROM_DEBT, FROM_PROJECTION, PROPAGATION_ONLY) with explicit script ordering and phase coverage.
+
+**Status:** CANONICAL — 5 rerun orchestration modes defined in ReconciliationLoopOrchestrator.
+
+### Semantic Lifecycle Transition
+
+**Definition:** A governed state change within the operational semantic reconciliation loop. Each transition has explicit from/to states, guard conditions, and trigger types (OPERATOR, COMPILATION, ASSESSMENT, AUTOMATIC). Terminal states end the improvement cycle.
+
+**Status:** CANONICAL — 13 transitions defined in ReconciliationLoopOrchestrator.
+
+### Runtime Propagation Chain
+
+**Definition:** The explicit artifact-to-artifact update chain that defines how changes propagate from new evidence through to consumer surfaces. A 7-step chain from evidence_file → semantic_evidence_intake → reconciliation_correspondence → reconciliation_lifecycle → semantic_debt_index → reconciliation_temporal_analytics → runtime_qualification_projection → runtime_semantic_operations_substrate.
+
+**Status:** CANONICAL — 7-step chain defined in ReconciliationLoopOrchestrator.
+
+### Investigative Authority
+
+**Definition:** The governance authority layer between DETERMINISTIC (pure rendering) and INTERPRETIVE (75.x authorized synthesis). Permits topology-derived guided traversal: surfacing connected domains via topology edges, exposing pressure zones via structural adjacency, traversing evidence lineage, presenting temporal deltas between measured epochs. Selection criteria are topology-derived, not inference-derived. Does NOT permit inference, recommendation, prioritization, or prediction.
+
+**Status:** CANONICAL — governance concept introduced by Phase 5 roadmap (2026-05-14).
+
+### Persona Projection
+
+**Definition:** The system's mechanism for projecting the same structural truth at different cognitive depths. Four personas (BOARDROOM, EXECUTIVE_BALANCED, EXECUTIVE_DENSE, INVESTIGATION_DENSE) represent distinct executive cognition modes, not display variants. Persona gates evidence deterministically — it selects depth, not content.
+
+**Status:** CANONICAL — operational in LENS v2 (2026-05-13).
+
+### Structural Cognition
+
+**Definition:** The user's mode of interaction with LENS v2. The user thinks through the topology — clicking domains, tracing edges, following propagation chains — rather than querying or reading reports. Structural cognition means the interface is a thinking instrument, not an information display.
+
+**Status:** CANONICAL — operational identity term (2026-05-14).
+
+### Topology Interaction
+
+**Definition:** Interactive SVG topology with hover, click-to-highlight, zone anchor selection, and cross-highlighting between graph and domain registry. The topology graph is the primary interaction surface — not a visualization but the structural cognition instrument through which the user navigates evidence.
+
+**Status:** CANONICAL — operational in LENS v2 (2026-05-13).
+
+### Evidence Traversal
+
+**Definition:** The interaction pattern of tracing from any signal or domain backward through the full evidence chain to structural source. Signal → Pressure Zone → Origin Domain → Structural Evidence → Source Path. Every interactive path traces to structural evidence.
+
+**Status:** CANONICAL — operational interaction pattern (2026-05-13).
+
+### Guided Structural Investigation
+
+**Definition:** The Phase 5A capability class. The user investigates by navigating structure: clicking domains, traversing edges, tracing lineage, expanding evidence chains, observing temporal drift. The system surfaces structural connections based on navigation position under investigative authority. The primary interaction model for Program Intelligence — structural exploration, not conversational querying.
+
+**Status:** CANONICAL — planned (Phase 5A roadmap complete, implementation pending).
 
 ## Term Usage Rules
 

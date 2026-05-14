@@ -6,15 +6,48 @@
 
 ## LENS v2 Runtime
 
+### Core Resolvers
+
 | Module | Path | Role |
 |---|---|---|
-| SemanticActorHydrator | app/execlens-demo/lib/ | 15-actor semantic model hydration |
-| SemanticCrosswalkMapper | app/execlens-demo/lib/ | DOM-XX → business label translation |
-| QClassResolver | app/execlens-demo/lib/ | Q-01→Q-04 governance classification |
-| DPSIGSignalMapper | app/execlens-demo/lib/ | Signal stack projection |
-| GenericSemanticPayloadResolver | app/execlens-demo/lib/ | Manifest-driven payload assembly |
-| BlueEdgePayloadResolver | app/execlens-demo/lib/ | Compatibility wrapper |
-| LENS v2 flagship page | app/execlens-demo/flagship-experience/ | Executive surface |
+| SemanticActorHydrator | app/execlens-demo/lib/lens-v2/ | 15-actor semantic model hydration |
+| SemanticCrosswalkMapper | app/execlens-demo/lib/lens-v2/ | DOM-XX → business label translation |
+| QClassResolver | app/execlens-demo/lib/lens-v2/ | Q-01→Q-04 governance classification |
+| DPSIGSignalMapper | app/execlens-demo/lib/lens-v2/ | Signal stack projection |
+| GenericSemanticPayloadResolver | app/execlens-demo/lib/lens-v2/ | Manifest-driven payload assembly |
+| BlueEdgePayloadResolver | app/execlens-demo/lib/lens-v2/ | Compatibility wrapper |
+| flagshipBinding | app/execlens-demo/lib/lens-v2/flagshipBinding.js | Payload resolution → persona → zone assembly |
+| ConditionDrivenLayoutResolver | app/execlens-demo/lib/lens-v2/ | Persona → zone composition mapping |
+| DisclosureSequencingContract | app/execlens-demo/lib/lens-v2/ | Q-class disclosure governance |
+| ProjectionDepthContract | app/execlens-demo/lib/lens-v2/ | Persona depth projection rules |
+| SeverityHierarchyResolver | app/execlens-demo/lib/lens-v2/ | Signal severity classification |
+| SemanticArtifactLoader | app/execlens-demo/lib/lens-v2/ | Artifact file loading |
+| LensReconciliationConsumptionLayer | app/execlens-demo/lib/lens-v2/ | Reconciliation data binding |
+| LensSQOSubstrateConsumer | app/execlens-demo/lib/lens-v2/ | SQO substrate data binding |
+| RenderingMetadataSchema | app/execlens-demo/lib/lens-v2/ | Rendering metadata contract |
+
+### Zone Components
+
+| Component | Path | Role |
+|---|---|---|
+| IntelligenceField | app/execlens-demo/components/lens-v2/zones/ | Primary intelligence rendering zone (persona-aware) |
+| StructuralTopologyZone | app/execlens-demo/components/lens-v2/zones/ | Interactive SVG topology graph |
+| DeclarationZone | app/execlens-demo/components/lens-v2/zones/ | Declaration and posture display |
+| GovernanceRibbon | app/execlens-demo/components/lens-v2/zones/ | Governance status ribbon |
+| ReconciliationAwarenessZone | app/execlens-demo/components/lens-v2/zones/ | Reconciliation state awareness |
+| SQOIntelligenceZone | app/execlens-demo/components/lens-v2/zones/ | SQO qualification intelligence |
+| SemanticTrustPostureZone | app/execlens-demo/components/lens-v2/zones/ | Trust posture display |
+| EvidenceDepthLayer | app/execlens-demo/components/lens-v2/zones/ | Evidence depth rendering |
+| QualifierMandate | app/execlens-demo/components/lens-v2/zones/ | Qualifier governance display |
+| InvestigationReadingGuide | app/execlens-demo/components/lens-v2/zones/ | Investigation flow guidance |
+
+### Route Pages
+
+| Page | Path | Role |
+|---|---|---|
+| LENS v2 flagship (CSS + layout) | app/execlens-demo/pages/lens-v2-flagship.js | Executive surface page + styles |
+| LENS v2 isolated route | app/execlens-demo/pages/lens/[client]/[run].js | Standalone LENS v2 at /lens/[client]/[run] |
+| LENS v2 API | app/execlens-demo/pages/api/lens-payload.js | Payload serving endpoint |
 
 ## SQO Runtime
 
