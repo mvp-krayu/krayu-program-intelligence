@@ -1,0 +1,191 @@
+{
+  "ok": true,
+  "schema_version": "1.0",
+  "artifact_type": "reconciliation_loop_state",
+  "client": "blueedge",
+  "run_id": "run_blueedge_productized_01_fixed",
+  "lifecycle": {
+    "current_state": "PROPAGATED",
+    "state_description": "Runtime artifacts updated — LENS and consumers reflect new state",
+    "is_terminal": true,
+    "successors": [
+      "IDLE"
+    ]
+  },
+  "phase_assessment": {
+    "total_phases": 8,
+    "completed_phases": 8,
+    "completion_ratio": 1,
+    "all_complete": true,
+    "phases": [
+      {
+        "phase": 1,
+        "id": "EVIDENCE_INTAKE",
+        "inputs_satisfied": true,
+        "outputs_present": true,
+        "complete": true,
+        "missing_inputs": [],
+        "missing_outputs": [],
+        "compilation_target": "compile_blueedge_evidence_intake.js",
+        "mutation_boundary": "evidence_intake"
+      },
+      {
+        "phase": 2,
+        "id": "ENRICHMENT_ELIGIBILITY",
+        "inputs_satisfied": true,
+        "outputs_present": true,
+        "complete": true,
+        "missing_inputs": [],
+        "missing_outputs": [],
+        "compilation_target": null,
+        "mutation_boundary": "evidence_intake"
+      },
+      {
+        "phase": 3,
+        "id": "RECONCILIATION_RERUN",
+        "inputs_satisfied": true,
+        "outputs_present": true,
+        "complete": true,
+        "missing_inputs": [],
+        "missing_outputs": [],
+        "compilation_target": "compile_blueedge_correspondence.js",
+        "mutation_boundary": "reconciliation"
+      },
+      {
+        "phase": 4,
+        "id": "DEBT_RECALCULATION",
+        "inputs_satisfied": true,
+        "outputs_present": true,
+        "complete": true,
+        "missing_inputs": [],
+        "missing_outputs": [],
+        "compilation_target": "compile_blueedge_debt_index.js",
+        "mutation_boundary": "semantic_debt"
+      },
+      {
+        "phase": 5,
+        "id": "QUALIFICATION_REPROJECTION",
+        "inputs_satisfied": true,
+        "outputs_present": true,
+        "complete": true,
+        "missing_inputs": [],
+        "missing_outputs": [],
+        "compilation_target": "compile_blueedge_qualification_projection.js",
+        "mutation_boundary": "qualification_projection"
+      },
+      {
+        "phase": 6,
+        "id": "LIFECYCLE_PROGRESSION",
+        "inputs_satisfied": true,
+        "outputs_present": true,
+        "complete": true,
+        "missing_inputs": [],
+        "missing_outputs": [],
+        "compilation_target": null,
+        "mutation_boundary": "qualification_core"
+      },
+      {
+        "phase": 7,
+        "id": "TEMPORAL_ANALYTICS_UPDATE",
+        "inputs_satisfied": true,
+        "outputs_present": true,
+        "complete": true,
+        "missing_inputs": [],
+        "missing_outputs": [],
+        "compilation_target": "compile_blueedge_temporal_analytics.js",
+        "mutation_boundary": "temporal_analytics"
+      },
+      {
+        "phase": 8,
+        "id": "RUNTIME_PROPAGATION",
+        "inputs_satisfied": true,
+        "outputs_present": true,
+        "complete": true,
+        "missing_inputs": [],
+        "missing_outputs": [],
+        "compilation_target": "compile_blueedge_semantic_operations.js",
+        "mutation_boundary": "semantic_operations_substrate"
+      }
+    ],
+    "blocked_phases": [],
+    "pending_phases": []
+  },
+  "rerun_chain": null,
+  "progression_readiness": {
+    "gates_met": 6,
+    "gate_count": 6,
+    "blocking_gates": []
+  },
+  "propagation_chain": {
+    "step_count": 7,
+    "steps": [
+      {
+        "step": 1,
+        "source": "evidence_file",
+        "target": "semantic_evidence_intake",
+        "action": "Register evidence via intake loop",
+        "script": "compile_blueedge_evidence_intake.js"
+      },
+      {
+        "step": 2,
+        "source": "semantic_evidence_intake",
+        "target": "reconciliation_correspondence",
+        "action": "Rerun correspondence with new evidence",
+        "script": "compile_blueedge_correspondence.js"
+      },
+      {
+        "step": 3,
+        "source": "reconciliation_correspondence",
+        "target": "reconciliation_lifecycle",
+        "action": "Update lifecycle with new epoch",
+        "script": "compile_blueedge_lifecycle.js"
+      },
+      {
+        "step": 4,
+        "source": "reconciliation_correspondence",
+        "target": "semantic_debt_index",
+        "action": "Recalculate debt index with updated reconciliation",
+        "script": "compile_blueedge_debt_index.js"
+      },
+      {
+        "step": 5,
+        "source": [
+          "reconciliation_lifecycle",
+          "semantic_debt_index"
+        ],
+        "target": "reconciliation_temporal_analytics",
+        "action": "Rerun temporal analytics with updated lifecycle and debt",
+        "script": "compile_blueedge_temporal_analytics.js"
+      },
+      {
+        "step": 6,
+        "source": "all_upstream_artifacts",
+        "target": "runtime_qualification_projection",
+        "action": "Reproject unified qualification posture",
+        "script": "compile_blueedge_qualification_projection.js"
+      },
+      {
+        "step": 7,
+        "source": "runtime_qualification_projection",
+        "target": "runtime_semantic_operations_substrate",
+        "action": "Update operations substrate with new posture",
+        "script": "compile_blueedge_semantic_operations.js"
+      }
+    ]
+  },
+  "replay_boundaries": {
+    "determinism": "All phases produce deterministic output from the same input artifacts",
+    "timestamp_exclusion": "Timestamps are excluded from replay comparison — only structural content compared",
+    "provenance_tracking": "Each phase records trigger source, input artifact hashes, and output artifact hashes",
+    "rerun_safety": "Reruns from any phase produce identical output given identical upstream artifacts",
+    "no_side_effects": "No phase produces side effects beyond writing governed artifacts",
+    "no_upstream_mutation": "No downstream phase may mutate upstream artifacts",
+    "compilation_order_invariant": "Phase ordering is fixed — downstream cannot execute before upstream completes"
+  },
+  "provenance": {
+    "compiled_at": "2026-05-13T08:44:07.359Z",
+    "compiler": "ReconciliationLoopOrchestrator",
+    "compiler_version": "1.0",
+    "source_commit": "2be555c8960d"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "stream": "PI.SQO.BLUEEDGE.RECONCILIATION-CORRESPONDENCE-COMPILER.01",
+  "classification": "G2",
+  "checks": [
+    { "name": "correspondence_compiler_deterministic", "result": "PASS" },
+    { "name": "all_17_semantic_domains_assessed", "result": "PASS" },
+    { "name": "graduated_confidence_5_levels", "result": "PASS" },
+    { "name": "replayable_artifact_written_and_loadable", "result": "PASS" },
+    { "name": "lens_v2_payload_reconciliation_summary", "result": "PASS" },
+    { "name": "sqo_cockpit_loads_reconciliation_artifact", "result": "PASS" },
+    { "name": "live_binding_tests_37_pass", "result": "PASS" },
+    { "name": "q02_and_ip_tests_36_pass", "result": "PASS" },
+    { "name": "sqo_cockpit_tests_23_pass", "result": "PASS" },
+    { "name": "generic_payload_resolver_tests_33_pass", "result": "PASS" },
+    { "name": "no_runtime_mutation", "result": "PASS" },
+    { "name": "no_grounding_mutation", "result": "PASS" },
+    { "name": "no_authority_mutation", "result": "PASS" },
+    { "name": "no_fabricated_evidence", "result": "PASS" }
+  ],
+  "verdict": "PASS"
+}

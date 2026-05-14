@@ -1,0 +1,234 @@
+{
+  "schema_version": "1.0",
+  "artifact_type": "reconciliation_temporal_analytics",
+  "client": "blueedge",
+  "run_id": "run_blueedge_productized_01_fixed",
+  "generated_at": "2026-05-13T07:45:21.850Z",
+  "compiler_version": "1.0",
+  "trend": {
+    "label": "IMPROVING",
+    "reason": "weighted confidence +14.1, unresolved reduced"
+  },
+  "enrichment_effectiveness": {
+    "available": true,
+    "grade": "MODERATE",
+    "baseline_weighted_confidence": 41.2,
+    "current_weighted_confidence": 55.3,
+    "weighted_lift": 14.1,
+    "weighted_lift_pct": 34.2,
+    "baseline_unresolved": 12,
+    "current_unresolved": 4,
+    "unresolved_reduction": 8,
+    "domains_improved": 8,
+    "domains_degraded": 0,
+    "enriched_domains": 8,
+    "effectiveness_ratio": 47.1,
+    "level_transitions": {
+      "L1_to_L2": 4,
+      "L1_to_L3": 4
+    }
+  },
+  "debt_reduction": {
+    "available": true,
+    "baseline_unmapped": 12,
+    "current_unmapped": 4,
+    "reduction_count": 8,
+    "reduction_ratio": 0.6667,
+    "enrichment_impact": "SIGNIFICANT",
+    "active_debt": 5,
+    "partially_resolved": 8,
+    "clear": 4,
+    "irreducible_floor": 4,
+    "theoretical_ceiling": 13,
+    "remaining_reducible": 9,
+    "residual_by_reducibility": {
+      "IRREDUCIBLE_STRUCTURAL_ABSENCE": 4,
+      "REDUCED_BY_ENRICHMENT": 8,
+      "REDUCIBLE_BY_EVIDENCE": 1
+    },
+    "residual_by_origin": {
+      "STRUCTURAL_ABSENCE": 4,
+      "ENRICHMENT_RESIDUAL": 8,
+      "UNRESOLVED_CORRESPONDENCE": 1
+    },
+    "weighted_debt_score": 49.4,
+    "debt_ratio": 0.7647
+  },
+  "unresolved_persistence": {
+    "available": true,
+    "baseline_unmapped_count": 12,
+    "current_unmapped_count": 4,
+    "persistent_count": 4,
+    "resolved_count": 8,
+    "newly_unmapped_count": 0,
+    "persistence_ratio": 0.3333,
+    "persistent_domains": [
+      {
+        "domain_id": "DOMAIN-02",
+        "domain_name": "Telemetry Transport and Messaging",
+        "epochs_unmapped": 2,
+        "reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+        "origin_type": "STRUCTURAL_ABSENCE"
+      },
+      {
+        "domain_id": "DOMAIN-08",
+        "domain_name": "Real-Time Streaming and Gateway",
+        "epochs_unmapped": 2,
+        "reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+        "origin_type": "STRUCTURAL_ABSENCE"
+      },
+      {
+        "domain_id": "DOMAIN-13",
+        "domain_name": "External Integration",
+        "epochs_unmapped": 2,
+        "reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+        "origin_type": "STRUCTURAL_ABSENCE"
+      },
+      {
+        "domain_id": "DOMAIN-15",
+        "domain_name": "EV and Electrification",
+        "epochs_unmapped": 2,
+        "reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+        "origin_type": "STRUCTURAL_ABSENCE"
+      }
+    ],
+    "resolved_domains": [
+      {
+        "domain_id": "DOMAIN-03",
+        "domain_name": "Fleet Core Operations",
+        "resolved_to_level": 2
+      },
+      {
+        "domain_id": "DOMAIN-04",
+        "domain_name": "Fleet Vertical Extensions",
+        "resolved_to_level": 2
+      },
+      {
+        "domain_id": "DOMAIN-05",
+        "domain_name": "Analytics and Intelligence",
+        "resolved_to_level": 2
+      },
+      {
+        "domain_id": "DOMAIN-06",
+        "domain_name": "AI/ML Intelligence Layer",
+        "resolved_to_level": 3
+      },
+      {
+        "domain_id": "DOMAIN-07",
+        "domain_name": "Sensor and Security Ingestion",
+        "resolved_to_level": 3
+      },
+      {
+        "domain_id": "DOMAIN-09",
+        "domain_name": "Access Control and Identity",
+        "resolved_to_level": 3
+      },
+      {
+        "domain_id": "DOMAIN-12",
+        "domain_name": "SaaS Platform Layer",
+        "resolved_to_level": 2
+      },
+      {
+        "domain_id": "DOMAIN-17",
+        "domain_name": "Extended Operations and Driver Services",
+        "resolved_to_level": 3
+      }
+    ],
+    "newly_unmapped_domains": []
+  },
+  "degradation": {
+    "detected": false,
+    "signal_count": 0,
+    "signals": []
+  },
+  "structural_semantic_divergence": {
+    "available": true,
+    "indicator_count": 4,
+    "indicators": [
+      {
+        "type": "ENRICHMENT_WEAK_STRUCTURAL_FIT",
+        "domain_id": "DOMAIN-03",
+        "domain_name": "Fleet Core Operations",
+        "enriched_level": 2,
+        "lineage_status": "WEAK",
+        "description": "AI enrichment applied but structural fit remains weak"
+      },
+      {
+        "type": "ENRICHMENT_WEAK_STRUCTURAL_FIT",
+        "domain_id": "DOMAIN-04",
+        "domain_name": "Fleet Vertical Extensions",
+        "enriched_level": 2,
+        "lineage_status": "WEAK",
+        "description": "AI enrichment applied but structural fit remains weak"
+      },
+      {
+        "type": "ENRICHMENT_WEAK_STRUCTURAL_FIT",
+        "domain_id": "DOMAIN-05",
+        "domain_name": "Analytics and Intelligence",
+        "enriched_level": 2,
+        "lineage_status": "WEAK",
+        "description": "AI enrichment applied but structural fit remains weak"
+      },
+      {
+        "type": "ENRICHMENT_WEAK_STRUCTURAL_FIT",
+        "domain_id": "DOMAIN-12",
+        "domain_name": "SaaS Platform Layer",
+        "enriched_level": 2,
+        "lineage_status": "WEAK",
+        "description": "AI enrichment applied but structural fit remains weak"
+      }
+    ],
+    "grounded_ratio": 0.2353,
+    "structurally_grounded": 4,
+    "semantic_only": 0,
+    "total_domains": 17,
+    "divergence_score": 76.5
+  },
+  "epoch_timeline": [
+    {
+      "epoch_index": 0,
+      "epoch_label": "BASELINE",
+      "enrichment_type": "NONE",
+      "weighted_confidence": 41.2,
+      "reconciliation_ratio": 0.2353,
+      "unresolved_count": 12,
+      "total_domains": 17
+    },
+    {
+      "epoch_index": 1,
+      "epoch_label": "AI_ENRICHED",
+      "enrichment_type": "AI_ASSISTED_SEMANTIC_ENRICHMENT",
+      "weighted_confidence": 55.3,
+      "reconciliation_ratio": 0.2353,
+      "unresolved_count": 4,
+      "total_domains": 17
+    }
+  ],
+  "runtime_summary": {
+    "trend": "IMPROVING",
+    "trend_reason": "weighted confidence +14.1, unresolved reduced",
+    "enrichment_grade": "MODERATE",
+    "weighted_lift": 14.1,
+    "debt_reduction_ratio": 0.6667,
+    "irreducible_floor": 4,
+    "persistent_unmapped": 4,
+    "degradation_detected": false,
+    "divergence_score": 76.5,
+    "epoch_count": 2
+  },
+  "governance": {
+    "deterministic": true,
+    "replay_safe": true,
+    "no_inference": true,
+    "no_enrichment": true,
+    "no_authority_promotion": true
+  },
+  "provenance": {
+    "source_artifacts": [
+      "reconciliation_lifecycle.v1.json",
+      "semantic_debt_index.v1.json"
+    ],
+    "source_commit": "2be555c8960d",
+    "output_hash": "sha256:2ad51910de0b5476528f9bb8380663957ec3074a95dd620812d85d762e86249f"
+  }
+}
