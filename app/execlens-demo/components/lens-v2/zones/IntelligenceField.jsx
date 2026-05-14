@@ -803,7 +803,163 @@ function CockpitSignalBar({ signal }) {
   )
 }
 
-function TopologyModal({ fullReport, onClose }) {
+const CONFIDENCE_COLORS = {
+  5: '#64ffda',
+  4: '#4a9eff',
+  3: '#ffd700',
+  2: '#ff9e4a',
+  1: '#ff6b6b',
+}
+
+function DomainStructuralPanel({ domainId, correspondenceData }) {
+  if (!correspondenceData || !domainId) return null
+  const correspondences = correspondenceData.correspondences || []
+  const corr = correspondences.find(c => c.semantic_domain_id === domainId)
+  if (!corr) {
+    return (
+      <div className="dsp-panel">
+        <div className="dsp-unavailable">Correspondence data unavailable for {domainId}</div>
+      </div>
+    )
+  }
+
+  const confColor = CONFIDENCE_COLORS[corr.confidence_level] || '#4a5570'
+  const hasStructural = corr.structural_dom_id != null
+  const enrichment = correspondenceData.enrichment_metadata || {}
+
+  return (
+    <div className="dsp-panel" style={{ borderLeftColor: confColor }}>
+      <div className="dsp-section">
+        <div className="dsp-section-label">DOMAIN IDENTITY</div>
+        <div className="dsp-grid">
+          <div className="dsp-row">
+            <span className="dsp-key">Name</span>
+            <span className="dsp-val">{corr.semantic_domain_name}</span>
+          </div>
+          <div className="dsp-row">
+            <span className="dsp-key">ID</span>
+            <span className="dsp-val dsp-mono">{corr.semantic_domain_id}</span>
+          </div>
+          <div className="dsp-row">
+            <span className="dsp-key">Type</span>
+            <span className="dsp-val">{corr.semantic_domain_type}</span>
+          </div>
+          <div className="dsp-row">
+            <span className="dsp-key">Cluster</span>
+            <span className="dsp-val dsp-mono">{corr.cluster_id}</span>
+          </div>
+          <div className="dsp-row">
+            <span className="dsp-key">Structural mapping</span>
+            <span className="dsp-val dsp-mono">
+              {hasStructural
+                ? <>{corr.structural_dom_id} <span className="dsp-dim">→</span> {corr.structural_domain_name}</>
+                : <span className="dsp-dim">UNMAPPED</span>
+              }
+            </span>
+          </div>
+          <div className="dsp-row">
+            <span className="dsp-key">Reconciliation</span>
+            <span className={`dsp-val dsp-badge dsp-badge--${corr.reconciliation_status === 'RECONCILED' ? 'ok' : 'gap'}`}>
+              {corr.reconciliation_status}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div className="dsp-section">
+        <div className="dsp-section-label">EVIDENCE CHAIN</div>
+        <div className="dsp-grid">
+          <div className="dsp-row">
+            <span className="dsp-key">Confidence</span>
+            <span className="dsp-val">
+              <span className="dsp-confidence-dot" style={{ background: confColor }} />
+              <span className="dsp-mono">L{corr.confidence_level}</span>
+              <span className="dsp-dim"> — {corr.confidence_label}</span>
+            </span>
+          </div>
+          <div className="dsp-row">
+            <span className="dsp-key">Basis</span>
+            <span className="dsp-val dsp-mono">{corr.correspondence_basis}</span>
+          </div>
+          {corr.evidence_factors.length > 0 && (
+            <div className="dsp-row dsp-row--stack">
+              <span className="dsp-key">Evidence factors</span>
+              <div className="dsp-factors">
+                {corr.evidence_factors.map((f, i) => (
+                  <span key={i} className="dsp-factor">{f}</span>
+                ))}
+              </div>
+            </div>
+          )}
+          {corr.evidence_factors.length === 0 && (
+            <div className="dsp-row">
+              <span className="dsp-key">Evidence factors</span>
+              <span className="dsp-val dsp-dim">none</span>
+            </div>
+          )}
+          <div className="dsp-row">
+            <span className="dsp-key">Crosswalk confidence</span>
+            <span className="dsp-val dsp-mono">{corr.crosswalk_confidence}</span>
+          </div>
+          <div className="dsp-row">
+            <span className="dsp-key">Lineage status</span>
+            <span className="dsp-val dsp-mono">{corr.crosswalk_lineage_status}</span>
+          </div>
+          {corr.crosswalk_business_label && corr.crosswalk_business_label !== corr.semantic_domain_name && (
+            <div className="dsp-row">
+              <span className="dsp-key">Business label</span>
+              <span className="dsp-val">{corr.crosswalk_business_label}</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="dsp-section">
+        <div className="dsp-section-label">GROUNDING STATE</div>
+        <div className="dsp-grid">
+          <div className="dsp-row">
+            <span className="dsp-key">Structural grounding</span>
+            <span className={`dsp-val dsp-badge dsp-badge--${corr.structural_grounding === 'GROUNDED' ? 'ok' : 'gap'}`}>
+              {corr.structural_grounding || 'UNGROUNDED'}
+            </span>
+          </div>
+          <div className="dsp-row">
+            <span className="dsp-key">Component count</span>
+            <span className="dsp-val dsp-mono">{corr.structural_component_count}</span>
+          </div>
+          <div className="dsp-row">
+            <span className="dsp-key">Q-impact</span>
+            <span className="dsp-val dsp-mono">{corr.confidence_q_impact}</span>
+          </div>
+          {corr.structural_evidence_refs.length > 0 && (
+            <div className="dsp-row dsp-row--stack">
+              <span className="dsp-key">Evidence refs</span>
+              <div className="dsp-refs">
+                {corr.structural_evidence_refs.map((ref, i) => (
+                  <div key={i} className="dsp-ref">{ref}</div>
+                ))}
+              </div>
+            </div>
+          )}
+          {corr.structural_evidence_refs.length === 0 && (
+            <div className="dsp-row">
+              <span className="dsp-key">Evidence refs</span>
+              <span className="dsp-val dsp-dim">none</span>
+            </div>
+          )}
+          {enrichment.enrichment_type && (
+            <div className="dsp-row">
+              <span className="dsp-key">Enrichment</span>
+              <span className="dsp-val dsp-dim">{enrichment.enrichment_type} — {enrichment.enrichment_source || 'unknown'}</span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function TopologyModal({ fullReport, onClose, correspondenceData }) {
   const [focusedDomain, setFocusedDomain] = useState(null)
   const domainRegistry = (fullReport && fullReport.semantic_domain_registry) || []
   const clusterRegistry = (fullReport && fullReport.semantic_cluster_registry) || []
@@ -840,6 +996,9 @@ function TopologyModal({ fullReport, onClose }) {
               onNodeSelect={setFocusedDomain}
             />
           </div>
+          {focusedDomain && (
+            <DomainStructuralPanel domainId={focusedDomain} correspondenceData={correspondenceData} />
+          )}
           <div className="topo-modal-domains">
             <div className="topo-modal-domains-heading">DOMAIN REGISTRY</div>
             <div className="topo-modal-domains-grid">
@@ -872,7 +1031,7 @@ function TopologyModal({ fullReport, onClose }) {
   )
 }
 
-function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, narrative, evidenceBlocks }) {
+function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, narrative, evidenceBlocks, correspondenceData }) {
   const [topoModalOpen, setTopoModalOpen] = useState(false)
   const openTopoModal = useCallback(() => setTopoModalOpen(true), [])
   const closeTopoModal = useCallback(() => setTopoModalOpen(false), [])
@@ -990,7 +1149,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
         </div>
       )}
 
-      {topoModalOpen && <TopologyModal fullReport={fullReport} onClose={closeTopoModal} />}
+      {topoModalOpen && <TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} />}
 
       <div className="cockpit-impact">
         <div className="cockpit-impact-label">ORGANIZATIONAL IMPACT</div>
@@ -1045,9 +1204,9 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, qualifierClass, narrative }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, qualifierClass, narrative, correspondenceData }) {
   if (boardroomMode) {
-    return <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} narrative={narrative} evidenceBlocks={blocks} />
+    return <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} />
   }
   if (densityClass === 'INVESTIGATION_DENSE') {
     return <InvestigationTraceField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} />
@@ -1058,7 +1217,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   return <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} />
 }
 
-export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, reportPackArtifacts, qualifierClass, qualifierLabel }) {
+export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData }) {
   const scope = (fullReport && fullReport.topology_scope) || {}
 
   return (
@@ -1084,6 +1243,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           fullReport={fullReport}
           qualifierClass={qualifierClass}
           narrative={narrative}
+          correspondenceData={correspondenceData}
         />
       </main>
 

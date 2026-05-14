@@ -224,7 +224,7 @@ export async function getServerSideProps(context) {
   }
 }
 
-export default function LensV2FlagshipPage({ livePayload, livePropagationChains, liveBindingError, bindingClient, bindingRun, reconciliationAwareness, domainTraceability, substrateBinding, reportBinding }) {
+export default function LensV2FlagshipPage({ livePayload, livePropagationChains, liveBindingError, bindingClient, bindingRun, reconciliationAwareness, domainTraceability, substrateBinding, reportBinding, correspondenceData }) {
   const [densityClass, setDensityClass] = useState('EXECUTIVE_DENSE')
   const [boardroomMode, setBoardroomMode] = useState(false)
   const [investigationStage, setInvestigationStage] = useState('SUMMARY')
@@ -425,6 +425,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             fullReport={reportObject}
             reportPackArtifacts={reportPackArtifactsForRender}
             propagationChains={livePropagationChains || []}
+            correspondenceData={correspondenceData}
           />
         </div>
       </div>
@@ -1180,6 +1181,126 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-family: 'Courier New', monospace;
           letter-spacing: 0.04em;
           flex-shrink: 0;
+        }
+
+        /* ── DomainStructuralPanel ───────────────────────────────────────── */
+        .dsp-panel {
+          background: #12151f;
+          border: 1px solid #2a2f40;
+          border-left: 3px solid #4a5570;
+          border-radius: 4px;
+          padding: 16px 20px;
+          margin: 0 0 16px 0;
+          animation: v2Appear 0.15s ease-out;
+        }
+        .dsp-unavailable {
+          font-size: 11px;
+          color: #5a6580;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          font-style: italic;
+        }
+        .dsp-section {
+          margin-bottom: 14px;
+        }
+        .dsp-section:last-child {
+          margin-bottom: 0;
+        }
+        .dsp-section-label {
+          font-size: 9px;
+          color: #5a6580;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          font-weight: 500;
+          margin-bottom: 8px;
+          padding-bottom: 4px;
+          border-bottom: 1px solid #1e2330;
+        }
+        .dsp-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .dsp-row {
+          display: flex;
+          align-items: baseline;
+          gap: 12px;
+          min-height: 20px;
+        }
+        .dsp-row--stack {
+          flex-direction: column;
+          gap: 4px;
+        }
+        .dsp-key {
+          font-size: 10px;
+          color: #5a6580;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          min-width: 130px;
+          flex-shrink: 0;
+          letter-spacing: 0.02em;
+        }
+        .dsp-val {
+          font-size: 11px;
+          color: #ccd6f6;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+        .dsp-mono {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+        }
+        .dsp-dim {
+          color: #4a5570;
+        }
+        .dsp-confidence-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          flex-shrink: 0;
+        }
+        .dsp-badge {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.06em;
+        }
+        .dsp-badge--ok {
+          color: #64ffda;
+        }
+        .dsp-badge--gap {
+          color: #ff9e4a;
+        }
+        .dsp-factors {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 4px;
+        }
+        .dsp-factor {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #7a8aaa;
+          background: #1a1e2b;
+          padding: 2px 8px;
+          border-radius: 2px;
+          border: 1px solid #2a2f40;
+        }
+        .dsp-refs {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          max-height: 80px;
+          overflow-y: auto;
+          background: #0d0f14;
+          border: 1px solid #1e2330;
+          border-radius: 2px;
+          padding: 6px 8px;
+        }
+        .dsp-ref {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #7a8aaa;
+          white-space: nowrap;
         }
 
         .cockpit-impact {

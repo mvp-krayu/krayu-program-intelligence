@@ -19,11 +19,18 @@ import LensV2FlagshipPage from '../../lens-v2-flagship'
 
 export async function getServerSideProps(context) {
   const { resolveFlagshipBinding } = require('../../../lib/lens-v2/flagshipBinding')
+  const { loadJSON } = require('../../../lib/lens-v2/SemanticArtifactLoader')
   const result = resolveFlagshipBinding({
     query: (context && context.query) || {},
     res: (context && context.res) || null,
   })
-  return { props: result.props }
+  const query = (context && context.query) || {}
+  const client = query.client || ''
+  const run = query.run || ''
+  const corrPath = `artifacts/sqo/${client}/${run}/reconciliation_correspondence.enriched.v1.json`
+  const corrResult = loadJSON(corrPath)
+  const correspondenceData = corrResult.ok ? corrResult.data : null
+  return { props: { ...result.props, correspondenceData } }
 }
 
 export default LensV2FlagshipPage
