@@ -93,6 +93,7 @@ export default function LensDisclosureShell({
   reportPackArtifacts,
   propagationChains,
   correspondenceData,
+  evidenceIntakeData,
 }) {
   const directives = useMemo(() => {
     return resolveLayoutDirectives({
@@ -178,6 +179,7 @@ export default function LensDisclosureShell({
             qualifierClass={qualifierClass}
             qualifierLabel={qualifierLabel}
             correspondenceData={correspondenceData}
+            evidenceIntakeData={evidenceIntakeData}
           />
         )
       case 'StructuralTopologyZone':

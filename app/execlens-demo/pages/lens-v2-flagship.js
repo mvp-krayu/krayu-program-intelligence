@@ -224,7 +224,7 @@ export async function getServerSideProps(context) {
   }
 }
 
-export default function LensV2FlagshipPage({ livePayload, livePropagationChains, liveBindingError, bindingClient, bindingRun, reconciliationAwareness, domainTraceability, substrateBinding, reportBinding, correspondenceData }) {
+export default function LensV2FlagshipPage({ livePayload, livePropagationChains, liveBindingError, bindingClient, bindingRun, reconciliationAwareness, domainTraceability, substrateBinding, reportBinding, correspondenceData, evidenceIntakeData }) {
   const [densityClass, setDensityClass] = useState('EXECUTIVE_DENSE')
   const [boardroomMode, setBoardroomMode] = useState(false)
   const [investigationStage, setInvestigationStage] = useState('SUMMARY')
@@ -426,6 +426,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             reportPackArtifacts={reportPackArtifactsForRender}
             propagationChains={livePropagationChains || []}
             correspondenceData={correspondenceData}
+            evidenceIntakeData={evidenceIntakeData}
           />
         </div>
       </div>
@@ -1301,6 +1302,92 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-size: 10px;
           color: #7a8aaa;
           white-space: nowrap;
+        }
+
+        /* ── Evidence Sources (5A.2) ─────────────────────────────────────── */
+        .dsp-sources {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+        .dsp-source {
+          background: #0d0f14;
+          border: 1px solid #1e2330;
+          border-radius: 2px;
+          padding: 8px 10px;
+        }
+        .dsp-source-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 4px;
+        }
+        .dsp-source-class {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          font-weight: 600;
+          letter-spacing: 0.04em;
+        }
+        .dsp-source-id {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+        }
+        .dsp-source-hash {
+          font-size: 9px;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          margin-left: auto;
+        }
+        .dsp-source-hash--ok { color: #64ffda; }
+        .dsp-source-hash--fail { color: #ff6b6b; }
+        .dsp-source-path {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #7a8aaa;
+          word-break: break-all;
+          line-height: 1.4;
+        }
+        .dsp-source-desc {
+          font-size: 10px;
+          color: #4a5570;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          margin-top: 4px;
+          line-height: 1.4;
+        }
+        .dsp-source-ops {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 3px;
+          margin-top: 4px;
+        }
+        .dsp-source-op {
+          font-family: 'Courier New', monospace;
+          font-size: 8px;
+          color: #5a6580;
+          background: #141720;
+          padding: 1px 5px;
+          border-radius: 2px;
+          border: 1px solid #1e2330;
+          letter-spacing: 0.02em;
+        }
+
+        /* ── Trace origin affordance ─────────────────────────────────────── */
+        .topo-modal-trace-origin {
+          display: inline-block;
+          margin-left: 10px;
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          color: #4a9eff;
+          background: none;
+          border: 1px solid #2a2f40;
+          border-radius: 2px;
+          padding: 1px 6px;
+          cursor: pointer;
+          opacity: 0.7;
+          transition: opacity 0.15s ease;
+        }
+        .topo-modal-trace-origin:hover {
+          opacity: 1;
+          border-color: #4a9eff;
         }
 
         .cockpit-impact {

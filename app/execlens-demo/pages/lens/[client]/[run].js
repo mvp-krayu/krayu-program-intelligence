@@ -30,7 +30,10 @@ export async function getServerSideProps(context) {
   const corrPath = `artifacts/sqo/${client}/${run}/reconciliation_correspondence.enriched.v1.json`
   const corrResult = loadJSON(corrPath)
   const correspondenceData = corrResult.ok ? corrResult.data : null
-  return { props: { ...result.props, correspondenceData } }
+  const intakePath = `artifacts/sqo/${client}/${run}/semantic_evidence_intake.v1.json`
+  const intakeResult = loadJSON(intakePath)
+  const evidenceIntakeData = intakeResult.ok ? intakeResult.data : null
+  return { props: { ...result.props, correspondenceData, evidenceIntakeData } }
 }
 
 export default LensV2FlagshipPage
