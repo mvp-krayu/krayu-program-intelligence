@@ -6,7 +6,6 @@ import {
   SemanticTrustPostureZone,
   ReconciliationAwarenessZone,
   IntelligenceField,
-  StructuralTopologyZone,
   SQOIntelligenceZone,
   EvidenceDepthLayer,
 } from './zones'
@@ -22,7 +21,6 @@ const ZONE_LABELS = {
   SemanticTrustPostureZone: 'Trust Posture',
   ReconciliationAwarenessZone: 'Reconciliation',
   IntelligenceField: 'Intelligence Field',
-  StructuralTopologyZone: 'Structural Topology',
   SQOIntelligenceZone: 'Qualification Intelligence',
   EvidenceDepthLayer: 'Evidence Depth',
 }
@@ -111,11 +109,10 @@ export default function LensDisclosureShell({
       qualifierClass,
       qualifierVisible,
       evidenceAvailable: !!(evidenceBlocks && evidenceBlocks.length),
-      topologyAvailable: !!(propagationChains && propagationChains.length),
       densityClass,
       boardroomMode,
     })
-  }, [renderState, substrateBinding, reconciliationAwareness, qualifierClass, qualifierVisible, evidenceBlocks, propagationChains, densityClass, boardroomMode])
+  }, [renderState, substrateBinding, reconciliationAwareness, qualifierClass, qualifierVisible, evidenceBlocks, densityClass, boardroomMode])
 
   const sequence = useMemo(() => getEffectiveSequence(directives), [directives])
 
@@ -197,16 +194,6 @@ export default function LensDisclosureShell({
             onModeTransition={onModeTransition}
             pendingTransitionZone={pendingTransitionZone}
             onTransitionZoneConsumed={onTransitionZoneConsumed}
-          />
-        )
-      case 'StructuralTopologyZone':
-        return (
-          <StructuralTopologyZone
-            evidenceBlocks={evidenceBlocks}
-            propagationChains={propagationChains}
-            fullReport={fullReport}
-            boardroomMode={boardroomMode}
-            densityClass={densityClass}
           />
         )
       case 'SQOIntelligenceZone':

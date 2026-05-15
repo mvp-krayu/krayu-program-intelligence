@@ -67,13 +67,6 @@ const ZONE_SEVERITY_RULES = {
     ambient: 'all other states',
     suppressed: 'persona-level suppression only',
   },
-  StructuralTopologyZone: {
-    inputs: ['topologyAvailable', 'substrateBinding.structuralBacking'],
-    critical: null,
-    elevated: 'structural backing below 50% reconciliation',
-    ambient: 'topology available with acceptable backing',
-    suppressed: 'no topology data exists',
-  },
   EvidenceDepthLayer: {
     inputs: ['densityClass', 'boardroomMode', 'evidenceAvailable', 'substrateBinding.evidenceVisibility'],
     critical: 'evidence present but integrity check failed (all_valid false)',
@@ -114,7 +107,6 @@ function classifyZone(zone, input, persona) {
     case 'SemanticTrustPostureZone': return classifySemanticTrustPostureZone(input);
     case 'ReconciliationAwarenessZone': return classifyReconciliationAwarenessZone(input);
     case 'IntelligenceField': return classifyIntelligenceField(input);
-    case 'StructuralTopologyZone': return classifyStructuralTopologyZone(input);
     case 'EvidenceDepthLayer': return classifyEvidenceDepthLayer(input);
     default: return 'AMBIENT';
   }
@@ -170,16 +162,6 @@ function classifyReconciliationAwarenessZone(input) {
 
 function classifyIntelligenceField(input) {
   if (input.renderState === 'BLOCKED') return 'CRITICAL';
-  return 'AMBIENT';
-}
-
-function classifyStructuralTopologyZone(input) {
-  if (!input.topologyAvailable) return 'SUPPRESSED';
-  var sb = input.substrateBinding;
-  if (sb && sb.structuralBacking) {
-    var b = sb.structuralBacking;
-    if (b.reconciliation_pct !== null && b.reconciliation_pct !== undefined && b.reconciliation_pct < 50) return 'ELEVATED';
-  }
   return 'AMBIENT';
 }
 

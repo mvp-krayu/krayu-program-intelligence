@@ -28,7 +28,6 @@ const KNOWN_ZONES = [
   'SemanticTrustPostureZone',
   'ReconciliationAwarenessZone',
   'IntelligenceField',
-  'StructuralTopologyZone',
   'SQOIntelligenceZone',
   'EvidenceDepthLayer',
 ];
@@ -46,26 +45,26 @@ const ALL_TIERS_AND_SUPPRESSED = ['tier0', 'tier1', 'tier2', 'tier3', 'suppresse
 const DISCLOSURE_TIERS = {
   EXECUTIVE_BALANCED: {
     tier0: ['DeclarationZone'],
-    tier1: ['IntelligenceField', 'SemanticTrustPostureZone', 'ReconciliationAwarenessZone', 'StructuralTopologyZone', 'SQOIntelligenceZone'],
+    tier1: ['IntelligenceField', 'SemanticTrustPostureZone', 'ReconciliationAwarenessZone', 'SQOIntelligenceZone'],
     tier2: [],
     tier3: ['EvidenceDepthLayer'],
     suppressed: ['GovernanceRibbon', 'QualifierMandate'],
   },
   EXECUTIVE_DENSE: {
     tier0: ['DeclarationZone'],
-    tier1: ['SemanticTrustPostureZone', 'ReconciliationAwarenessZone', 'QualifierMandate', 'IntelligenceField', 'StructuralTopologyZone', 'SQOIntelligenceZone'],
+    tier1: ['SemanticTrustPostureZone', 'ReconciliationAwarenessZone', 'QualifierMandate', 'IntelligenceField', 'SQOIntelligenceZone'],
     tier2: ['GovernanceRibbon'],
     tier3: ['EvidenceDepthLayer'],
   },
   INVESTIGATION_DENSE: {
     tier0: ['DeclarationZone'],
     tier1: ['SemanticTrustPostureZone', 'ReconciliationAwarenessZone', 'QualifierMandate'],
-    tier2: ['IntelligenceField', 'StructuralTopologyZone', 'SQOIntelligenceZone', 'EvidenceDepthLayer', 'GovernanceRibbon'],
+    tier2: ['IntelligenceField', 'SQOIntelligenceZone', 'EvidenceDepthLayer', 'GovernanceRibbon'],
     tier3: [],
   },
   BOARDROOM: {
     tier0: ['DeclarationZone'],
-    tier1: ['IntelligenceField', 'StructuralTopologyZone'],
+    tier1: ['IntelligenceField'],
     tier2: [],
     tier3: [],
     suppressed: [
@@ -106,10 +105,6 @@ const ZONE_METADATA = {
   IntelligenceField: {
     conditional: false,
     description: 'Persona-dispatched intelligence rendering (Balanced/Dense/Investigation/Boardroom)',
-  },
-  StructuralTopologyZone: {
-    conditional: false,
-    description: 'Domain topology with propagation chains and role classification',
   },
   SQOIntelligenceZone: {
     conditional: true,
