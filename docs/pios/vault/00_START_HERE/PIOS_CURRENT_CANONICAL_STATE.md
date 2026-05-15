@@ -1,6 +1,6 @@
 # PiOS Current Canonical State
 
-> **This page reflects the system's canonical state as of 2026-05-14.**
+> **This page reflects the system's canonical state as of 2026-05-15.**
 
 ---
 
@@ -22,7 +22,7 @@ The system consists of six evolutionary strata. All are active and reconciled:
 | S3 | [[../03_PATH_SPLIT_EVOLUTION/PATH_A_EMERGENCE\|Path Split]] | 2026-05-07 → 2026-05-08 | OPERATIONAL — PATH A/B terminology active |
 | S4 | [[../04_SQO_AND_QUALIFICATION/SQO_EVOLUTION\|SQO Qualification]] | 2026-05-10 → present | OPERATIONAL — unified semantic operations substrate, 8 ownership domains, 23 artifacts, operational reconciliation loop |
 | S5 | [[../05_RUNTIME_AND_CORRIDOR/CURRENT_RUNTIME_BOUNDARIES\|Runtime Corridor]] | 2026-05-11 → present | OPERATIONAL — evidence/runtime corridors |
-| S6 | [[../07_LENS_V2_OPERATIONAL_IDENTITY/OPERATIONAL_COGNITION_TRANSITION\|Operational Cognition]] | 2026-05-13 → present | OPERATIONAL — cognitive operational intelligence surface, 4-persona projection, interactive topology, guided structural investigation |
+| S6 | [[../07_LENS_V2_OPERATIONAL_IDENTITY/OPERATIONAL_COGNITION_TRANSITION\|Operational Cognition]] | 2026-05-13 → present | OPERATIONAL — cognitive operational intelligence surface, 4-persona projection, interactive topology, guided structural investigation, zone-aware cognitive orchestration, narrative affordance (5B proto-query infrastructure) |
 
 ## LENS v2 Operational Identity Transition
 
@@ -39,6 +39,10 @@ LENS v2 has materially transitioned from a static report surface to an interacti
 - Dynamic viewBox sizing (topology renders at natural scale, expands proportionally in modal)
 - Condition-driven layout resolution (persona determines zone composition)
 - Isolated LENS v2 route (`/lens/[client]/[run]`) alongside SQO-embedded flagship
+- Zone-aware cognitive orchestration with dynamic interpretation and contextual traversal (5A.8)
+- Narrative affordance layer with proto-query infrastructure for 5B (5A.8.10)
+- Guided cognitive descent: BOARDROOM → DENSE with zone targeting (5A.8.4)
+- Signal continuity architecture with zone-specific attribution (5A.8.9)
 
 **Commits registering this transition:**
 - 7841f42: boardroom executive cockpit and dense propagation flow
@@ -46,6 +50,8 @@ LENS v2 has materially transitioned from a static report surface to an interacti
 - c12834a: boardroom topology modal with dynamic viewBox sizing
 - f5e3db4: runtime overlay reclassification and LENS boundary restoration
 - 70fe57f: SQO runtime overlay integration into LENS v2
+- 605b157: 5A.7 mode separation with signal field and cognitive descent
+- 069ce78: 5A.8 guided cognitive traversal and operational orchestration
 
 ## Persona-Based Projection Doctrine
 
@@ -116,19 +122,39 @@ See [[../04_SQO_AND_QUALIFICATION/HYDRATED_AND_QSTATE_EVOLUTION]] for full model
 
 **Stream:** PI.LENS.V2.PHASE5.GUIDED-STRUCTURAL-INVESTIGATION.ROADMAP.01 (COMPLETE — ad46ff2)
 
-Phase 5 is planned and sequenced. Execution blocked on vault propagation (this stream). Next implementation stream: PI.LENS.V2.PHASE5A.DOMAIN-STRUCTURAL-DEEP-DIVE.01.
+| Sub-Phase | Authority | Status | Commit |
+|---|---|---|---|
+| 5A.1 Domain Structural Deep-Dive | Investigative | **COMPLETE** | 3ea34b6 |
+| 5A.2 Evidence Lineage Tracer | Investigative | **COMPLETE** | 37c14bd |
+| 5A.3 Structural Blockage Visibility | Investigative | **COMPLETE** | 5daa815 |
+| 5A.5 Temporal Structural Intelligence | Investigative | **COMPLETE** | c561660 |
+| 5A.6 Integrated Investigation Flow | Investigative | **COMPLETE** | 72bd8ad |
+| 5A.7 Mode Separation & Signal Field | Investigative | **COMPLETE** | 605b157 |
+| 5A.8 Guided Cognitive Traversal (10 sub-phases) | G1 | **COMPLETE** | 069ce78 |
+| 5B.0 Governance Gate (75.x) | G1 | PLANNED |  |
+| 5B.1 Guided Query Layer | Interpretive (75.x) | PLANNED — blocked on 5B.0 |  |
+| 5B.2 Narrative Response Surface | Interpretive (75.x) | PLANNED — blocked on 5B.0 |  |
+| 5B.3 Open Copilot Layer | Interpretive (75.x) | PLANNED — blocked on 5B.0 |  |
 
-| Sub-Phase | Authority | Status |
-|---|---|---|
-| 5A.1 Domain Structural Deep-Dive | Investigative | PLANNED |
-| 5A.2 Evidence Lineage Tracer | Investigative | PLANNED |
-| 5A.3 Structural Blockage Visibility | Investigative | PLANNED |
-| 5A.5 Temporal Structural Intelligence | Investigative | PLANNED |
-| 5A.6 Integrated Investigation Flow | Investigative | PLANNED |
-| 5B.0 Governance Gate (75.x) | G1 | PLANNED |
-| 5B.1 Narrative Structural Intelligence | Interpretive (75.x) | PLANNED — blocked on 5B.0 |
-| 5B.2 Controlled Investigative Query | Interpretive (75.x) | PLANNED — blocked on 5B.0 |
-| 5B.3 Multi-Turn Guided Analytical Dialogue | Interpretive (75.x) | PLANNED — blocked on 5B.0 |
+### Phase 5A.8 Architectural Contributions
+
+Phase 5A.8 (PI.LENS.V2.PHASE5A8.GUIDED-COGNITIVE-TRAVERSAL.01) introduced guided cognitive orchestration — the architectural foundation for 5B:
+
+- **Zone-aware cognitive orchestration:** 6-zone DENSE_ZONE_REGISTRY with activeZoneKey tracking via scroll listener. Three columns respond to which zone has viewport focus.
+- **Dynamic interpretation columns:** Left column transforms from static prose to zone-aware structural interpreter (DENSE_ZONE_INTERPRETATIONS — 6 deterministic derive functions).
+- **Contextual traversal paths:** Right column becomes zone-aware (DENSE_ZONE_PATHS — 12 navigational paths across 6 zones).
+- **Narrative affordance layer:** Proto-query infrastructure for 5B. Each path carries narrative/answers/boundary payloads. The `answers` field is the canonical seed for 5B guided queries.
+- **Guided cognitive descent:** BOARDROOM posture card rows trigger mode transitions that land in specific DENSE zone context (pendingTransitionZone mechanism).
+- **Progressive cognitive ladder:** BOARDROOM (what should I understand?) → DENSE (what can I explore?) → INVESTIGATION (what proves it?). This governs 5B's three-layer model.
+- **Signal continuity:** Zone-specific signal attribution in interpretation (per-signal decomposition, concentration by role, pressure summary).
+- **Three-column cognitive model:** CENTER = observed (scrollable), LEFT = why it matters (sticky), RIGHT = what can be explored (sticky at 73px).
+
+### 5B Strategic Direction (Established by 5A.8)
+
+5B must emerge FROM the deterministic traversal structure established in 5A. Three-layer model:
+- **Layer 1 — Guided Queries:** System-derived from narrative affordance `answers` field. Governed, structurally grounded.
+- **Layer 2 — Narrative Response Surface:** Commercially gated. Evidence-synthesized executive narrative. Inference prohibition preserved.
+- **Layer 3 — Open Copilot:** Optional freeform extension. Center of gravity remains guided deterministic layer.
 
 ## What Exists Now (Capability Summary)
 

@@ -1,0 +1,21 @@
+{
+  "stream": "PI.LENS.V2.PHASE5A8.GUIDED-COGNITIVE-TRAVERSAL.01",
+  "method": "Playwright visual verification (headless Chromium via MCP)",
+  "target_url": "http://localhost:3000/lens/blueedge/run_blueedge_productized_01_fixed",
+  "checks": [
+    { "id": 1, "name": "BOARDROOM no regression", "description": "Open LENS in BOARDROOM mode — signal field, posture card, cockpit instruments render without regression", "result": "PASS" },
+    { "id": 2, "name": "DENSE zone tracking", "description": "Switch to DENSE, scroll through actors — left column dynamically updates with zone-specific interpretation for all 6 zones", "result": "PASS" },
+    { "id": 3, "name": "DENSE right column paths", "description": "Right column paths change per active zone — correct badge codes (ST/CC/AL/SA/PF/PZ) and correct path labels for all 6 zones", "result": "PASS" },
+    { "id": 4, "name": "Sticky column anchoring", "description": "Left and right columns stay anchored (position:sticky at top:73px) while center column scrolls through multiple pages of content", "result": "PASS" },
+    { "id": 5, "name": "Guided BOARDROOM→DENSE transition", "description": "BOARDROOM posture card row click opens DENSE focused on correct zone with scroll-to-target via rAF retry", "result": "PASS" },
+    { "id": 6, "name": "Topology modal portal", "description": "TopologyModal renders via createPortal at document.body — no CSS containing block trap from ancestor transforms", "result": "PASS" },
+    { "id": 7, "name": "INVESTIGATION unchanged", "description": "INVESTIGATION mode renders without regression — no zone paths, no overlays, no unwanted elements", "result": "PASS" },
+    { "id": 8, "name": "Narrative overlay hover", "description": "Hover over DENSE traversal paths — narrative overlay appears with explanation, ANSWERS question, governance boundary for all 12 paths across 6 zones", "result": "PASS" },
+    { "id": 9, "name": "Narrative overlay dismiss", "description": "Overlay disappears on mouse leave (CSS-only display:none ↔ block) — no flicker, no layout shift, no JS state", "result": "PASS" },
+    { "id": 10, "name": "Mode isolation", "description": "BOARDROOM: 0 overlays in DOM, 0 zone paths. INVESTIGATION: 0 overlays in DOM, 0 zone paths", "result": "PASS" },
+    { "id": 11, "name": "Governance envelope", "description": "Footer shows green dot + GOVERNANCE ENVELOPE ACTIVE, expandable details (inference/derivation/qualifier), collapses back, qualifier Q-02 visible", "result": "PASS" },
+    { "id": 12, "name": "SQO compact badge", "description": "SQO section: compact badge (S2 + label), expands to full narrative (5 lines), collapses back, navigation block with hover border accent", "result": "PASS" },
+    { "id": 13, "name": "Signal continuity", "description": "signalAssessment shows SIGNAL DECOMPOSITION with per-signal severity+interpretation, propagationFlow shows SIGNAL CONCENTRATION BY ROLE, pressureZoneFocus shows SIGNAL PRESSURE. Non-signal zones (semanticTopology) show 0 signal sections", "result": "PASS" }
+  ],
+  "summary": { "total": 13, "pass": 13, "fail": 0 }
+}
