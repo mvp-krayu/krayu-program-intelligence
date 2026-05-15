@@ -199,7 +199,7 @@ const DENSE_ZONE_PATHS = {
   ],
 }
 
-function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass }) {
+function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass, activeQueryKey, onQuerySelect, exploredQueries }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const chip = (adapted && adapted.qualifierChip) || {}
   const artifacts = (reportPackArtifacts && reportPackArtifacts.length > 0)
@@ -270,25 +270,39 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
         <div className="support-block support-block--zone-paths" data-zone={activeZoneKey}>
           <div className="support-zone-header">
             <span className="support-zone-badge">{zoneReg.code}</span>
-            <span className="support-label">TRAVERSAL</span>
+            <span className="support-label">GUIDED QUERIES</span>
           </div>
           <div className="support-paths-list">
-            {zonePaths.map((p, i) => (
-              <div key={`${activeZoneKey}-${i}`} className="support-path-item support-path-item--zone">
-                <span className="support-path-icon">{p.icon}</span>
-                <span className="support-path-text">{p.label}</span>
-                {p.narrative && (
-                  <div className="path-narrative-overlay">
-                    <div className="path-narrative-text">{p.narrative}</div>
-                    <div className="path-narrative-question">
-                      <span className="path-narrative-question-label">ANSWERS</span>
-                      <span className="path-narrative-question-text">{p.answers}</span>
+            {zonePaths.map((p, i) => {
+              const queryKey = `${activeZoneKey}:${i}`
+              const isActive = activeQueryKey === queryKey
+              const isExplored = exploredQueries && exploredQueries.has(queryKey)
+              return (
+                <div
+                  key={queryKey}
+                  className="support-path-item support-path-item--zone"
+                  role="button"
+                  tabIndex={0}
+                  aria-pressed={isActive}
+                  data-explored={isExplored || undefined}
+                  onClick={() => onQuerySelect && onQuerySelect(activeZoneKey, i)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onQuerySelect && onQuerySelect(activeZoneKey, i) } }}
+                >
+                  <span className="support-path-icon">{p.icon}</span>
+                  <span className="support-path-text">{p.answers || p.label}</span>
+                  {p.narrative && !isActive && (
+                    <div className="path-narrative-overlay">
+                      <div className="path-narrative-text">{p.narrative}</div>
+                      <div className="path-narrative-question">
+                        <span className="path-narrative-question-label">ANSWERS</span>
+                        <span className="path-narrative-question-text">{p.answers}</span>
+                      </div>
+                      <div className="path-narrative-boundary">{p.boundary}</div>
                     </div>
-                    <div className="path-narrative-boundary">{p.boundary}</div>
-                  </div>
-                )}
-              </div>
-            ))}
+                  )}
+                </div>
+              )
+            })}
           </div>
         </div>
       )}
@@ -456,7 +470,272 @@ const DENSE_ZONE_INTERPRETATIONS = {
   },
 }
 
-function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport, activeZoneKey }) {
+const GUIDED_QUERY_ANSWERS = {
+  semanticTopology: [
+    {
+      derive: (fullReport) => {
+        const ts = (fullReport && fullReport.topology_summary) || {}
+        const backed = ts.structurally_backed_count || 0
+        const total = ts.semantic_domain_count || 0
+        const semantic = total - backed
+        const ratio = Math.round(backed / Math.max(1, total) * 100)
+        return {
+          summary: backed === total
+            ? `All ${total} domains are structurally backed. Every semantic claim has evidence confirmation.`
+            : `${backed} of ${total} domains have structural backing. ${semantic} remain semantic assertions without evidence confirmation.`,
+          evidence: [
+            { label: 'Structurally backed', value: String(backed), severity: 'nominal' },
+            { label: 'Semantic only', value: String(semantic), severity: semantic > 0 ? 'elevated' : 'nominal' },
+            { label: 'Grounding ratio', value: `${ratio}%`, severity: ratio < 50 ? 'critical' : ratio < 80 ? 'elevated' : 'nominal' },
+          ],
+          structuralContext: 'Grounding is determined by reconciliation correspondence — each domain is checked against structural evidence from the evidence rebase corridor.',
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const blocks = (fullReport && fullReport.evidence_blocks) || []
+        const ts = (fullReport && fullReport.topology_summary) || {}
+        return {
+          summary: blocks.length > 0
+            ? `${blocks.length} evidence blocks available across the propagation chain. Each block corresponds to a structural domain with traceable evidence lineage.`
+            : 'No evidence blocks available in the current payload.',
+          evidence: blocks.map(b => ({
+            label: b.domain_alias || b.propagation_role,
+            value: b.propagation_role,
+            severity: b.propagation_role === 'ORIGIN' ? 'critical' : b.propagation_role === 'PASS_THROUGH' ? 'elevated' : 'nominal',
+          })),
+          structuralContext: ts.structurally_backed_count > 0
+            ? `${ts.structurally_backed_count} domains have direct structural backing via canonical topology anchoring. Evidence lineage traces from source files through reconciliation correspondence.`
+            : null,
+        }
+      },
+    },
+  ],
+  clusterConcentration: [
+    {
+      derive: (fullReport) => {
+        const scope = (fullReport && fullReport.topology_scope) || {}
+        const ts = (fullReport && fullReport.topology_summary) || {}
+        const clusters = ts.cluster_count || scope.cluster_count || 0
+        const domains = scope.domain_count || ts.semantic_domain_count || 0
+        const density = domains > 0 ? (clusters / domains).toFixed(1) : '0'
+        return {
+          summary: clusters > 0
+            ? `${clusters} structural clusters span ${domains} semantic domains. Average density is ${density} clusters per domain.`
+            : 'No cluster data available for concentration analysis.',
+          evidence: [
+            { label: 'Clusters', value: String(clusters), severity: null },
+            { label: 'Domains', value: String(domains), severity: null },
+            { label: 'Avg density', value: density, severity: parseFloat(density) > 3 ? 'elevated' : 'nominal' },
+          ],
+          structuralContext: 'Cluster concentration indicates how structural mass is distributed. High concentration in few clusters creates dependency exposure.',
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const blocks = (fullReport && fullReport.evidence_blocks) || []
+        const scope = (fullReport && fullReport.topology_scope) || {}
+        const nodes = (scope.nodes || [])
+        return {
+          summary: blocks.length > 0
+            ? `${blocks.length} evidence blocks carry structural weight across the propagation chain. ${nodes.length > 0 ? `${nodes.length} topology nodes mapped.` : ''}`
+            : 'No structural weight data available.',
+          evidence: blocks.map(b => ({
+            label: b.domain_alias || 'Unknown',
+            value: `${b.propagation_role} · ${b.structural_backing ? 'backed' : 'semantic'}`,
+            severity: b.structural_backing ? 'nominal' : 'elevated',
+          })),
+          structuralContext: 'Structural weight is determined by evidence block classification. Clusters with more pass-through load carry disproportionate organizational influence.',
+        }
+      },
+    },
+  ],
+  absorptionLoad: [
+    {
+      derive: (fullReport) => {
+        const blocks = (fullReport && fullReport.evidence_blocks) || []
+        const passthrough = blocks.find(b => b && b.propagation_role === 'PASS_THROUGH')
+        const total = blocks.length
+        return {
+          summary: passthrough
+            ? `${passthrough.domain_alias} absorbs propagated load as a conducting layer. It transmits upstream pressure without generating independent structural evidence.`
+            : 'No pass-through absorption node detected in the current chain.',
+          evidence: passthrough ? [
+            { label: 'Absorber', value: passthrough.domain_alias, severity: 'elevated' },
+            { label: 'Role', value: 'PASS_THROUGH', severity: null },
+            { label: 'Chain nodes', value: String(total), severity: null },
+          ] : [
+            { label: 'Chain nodes', value: String(total), severity: null },
+          ],
+          structuralContext: passthrough
+            ? 'Absorption identifies nodes that conduct organizational stress without originating it. This pattern indicates structural coupling rather than independent pressure.'
+            : null,
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const blocks = (fullReport && fullReport.evidence_blocks) || []
+        const ps = (fullReport && fullReport.propagation_summary) || {}
+        const origin = blocks.find(b => b && b.propagation_role === 'ORIGIN')
+        const passthrough = blocks.find(b => b && b.propagation_role === 'PASS_THROUGH')
+        const receiver = blocks.find(b => b && b.propagation_role === 'RECEIVER')
+        const chain = [origin, passthrough, receiver].filter(Boolean)
+        return {
+          summary: chain.length >= 2
+            ? `Pressure propagates ${chain.map(n => n.domain_alias).join(' → ')}. This structural chain shows how organizational load transfers through dependency coupling.`
+            : 'Propagation chain not fully resolved.',
+          evidence: chain.map(n => ({
+            label: n.domain_alias,
+            value: n.propagation_role,
+            severity: n.propagation_role === 'ORIGIN' ? 'critical' : n.propagation_role === 'PASS_THROUGH' ? 'elevated' : 'nominal',
+          })),
+          structuralContext: ps.primary_zone_business_label
+            ? `Primary pressure zone: ${ps.primary_zone_business_label}. Chain structure derived from evidence block propagation roles.`
+            : 'Chain structure derived from evidence block propagation roles.',
+        }
+      },
+    },
+  ],
+  signalAssessment: [
+    {
+      derive: (fullReport) => {
+        const sigs = (fullReport && fullReport.signal_interpretations) || []
+        const activated = sigs.filter(s => s.severity !== 'NOMINAL')
+        const critical = activated.filter(s => s.severity === 'CRITICAL' || s.severity === 'HIGH')
+        const elevated = activated.filter(s => s.severity === 'ELEVATED')
+        return {
+          summary: activated.length > 0
+            ? `${activated.length} of ${sigs.length} signals are elevated. ${critical.length > 0 ? `${critical.length} at critical/high severity require structural attention.` : 'No critical-tier signals detected.'}`
+            : `All ${sigs.length} signals are within nominal parameters. No structural elevation detected.`,
+          evidence: activated.length > 0
+            ? activated.map(s => ({
+              label: s.signal_id || 'Signal',
+              value: s.severity,
+              severity: (s.severity === 'CRITICAL' || s.severity === 'HIGH') ? 'critical' : 'elevated',
+            }))
+            : [{ label: 'All signals', value: 'NOMINAL', severity: 'nominal' }],
+          structuralContext: `Signal assessment: ${sigs.length} total · ${activated.length} activated · ${sigs.length - activated.length} nominal. Thresholds are deterministic from structural evidence.`,
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const sigs = (fullReport && fullReport.signal_interpretations) || []
+        const activated = sigs.filter(s => s.severity !== 'NOMINAL')
+        const concentrated = {}
+        for (const s of activated) {
+          const zone = s.concentration || 'unattributed'
+          if (!concentrated[zone]) concentrated[zone] = 0
+          concentrated[zone]++
+        }
+        const zones = Object.entries(concentrated)
+        return {
+          summary: zones.length > 1
+            ? `Elevated signals are distributed across ${zones.length} concentration zones. This indicates systemic rather than localized structural conditions.`
+            : zones.length === 1
+              ? `All ${activated.length} elevated signals concentrate on "${zones[0][0]}". This indicates localized structural pressure.`
+              : 'No elevated signals to analyze for concentration.',
+          evidence: zones.map(([zone, count]) => ({
+            label: zone,
+            value: `${count} signal${count !== 1 ? 's' : ''}`,
+            severity: count >= 3 ? 'critical' : count >= 2 ? 'elevated' : 'nominal',
+          })),
+          structuralContext: 'Concentration analysis maps signal activation to domain attribution. Systemic distribution suggests structural coupling; localized distribution suggests isolated pressure.',
+        }
+      },
+    },
+  ],
+  propagationFlow: [
+    {
+      derive: (fullReport) => {
+        const blocks = (fullReport && fullReport.evidence_blocks) || []
+        const ts = (fullReport && fullReport.topology_summary) || {}
+        const origin = blocks.find(b => b && b.propagation_role === 'ORIGIN')
+        const passthrough = blocks.find(b => b && b.propagation_role === 'PASS_THROUGH')
+        const receiver = blocks.find(b => b && b.propagation_role === 'RECEIVER')
+        const chain = [origin, passthrough, receiver].filter(Boolean)
+        return {
+          summary: chain.length >= 2
+            ? `Full structural dependency: ${chain.map(n => `${n.domain_alias} (${n.propagation_role})`).join(' → ')}. ${ts.structurally_backed_count || 0} of ${ts.semantic_domain_count || 0} domains are structurally grounded.`
+            : 'Propagation chain not fully available.',
+          evidence: chain.map(n => ({
+            label: n.domain_alias,
+            value: `${n.propagation_role}${n.structural_backing ? ' · backed' : ' · semantic'}`,
+            severity: n.structural_backing ? 'nominal' : 'elevated',
+          })),
+          structuralContext: 'Propagation flow maps how structural dependency connects domains. Each link in the chain represents organizational coupling verified by evidence block classification.',
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const blocks = (fullReport && fullReport.evidence_blocks) || []
+        const ts = (fullReport && fullReport.topology_summary) || {}
+        const backed = ts.structurally_backed_count || 0
+        const total = ts.semantic_domain_count || 0
+        return {
+          summary: blocks.length > 0
+            ? `${blocks.length} propagation chain links have evidence backing. ${backed} of ${total} total domains are structurally grounded through reconciliation correspondence.`
+            : 'No evidence available for propagation chain verification.',
+          evidence: blocks.map(b => ({
+            label: `${b.domain_alias} → ${b.propagation_role}`,
+            value: b.structural_backing ? 'Evidence confirmed' : 'Semantic only',
+            severity: b.structural_backing ? 'nominal' : 'elevated',
+          })),
+          structuralContext: 'Each propagation link is verified against the evidence rebase corridor. Links without structural backing carry advisory weight only under Q-02 governance.',
+        }
+      },
+    },
+  ],
+  pressureZoneFocus: [
+    {
+      derive: (fullReport) => {
+        const ps = (fullReport && fullReport.propagation_summary) || {}
+        const sigs = (fullReport && fullReport.signal_interpretations) || []
+        const zoneName = ps.primary_zone_business_label
+        const activated = sigs.filter(s => s.severity !== 'NOMINAL')
+        const critical = activated.filter(s => s.severity === 'CRITICAL' || s.severity === 'HIGH')
+        return {
+          summary: zoneName
+            ? `Pressure concentrates on "${zoneName}" with ${activated.length} elevated signal${activated.length !== 1 ? 's' : ''}${critical.length > 0 ? ` (${critical.length} critical/high)` : ''}. ${activated.length > 2 ? 'Multi-signal activation indicates compound structural conditions.' : 'Signal activation is structurally bounded.'}`
+            : 'No primary pressure zone identified.',
+          evidence: zoneName ? [
+            { label: 'Primary zone', value: zoneName, severity: critical.length > 0 ? 'critical' : 'elevated' },
+            { label: 'Elevated signals', value: String(activated.length), severity: activated.length > 2 ? 'critical' : activated.length > 0 ? 'elevated' : 'nominal' },
+            { label: 'Critical/high', value: String(critical.length), severity: critical.length > 0 ? 'critical' : 'nominal' },
+          ] : [],
+          structuralContext: zoneName
+            ? `Zone classification: ${ps.zone_classification || 'UNCLASSIFIED'}. Pressure zone derived from propagation summary — structural, not inferred.`
+            : null,
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const ts = (fullReport && fullReport.topology_summary) || {}
+        const backed = ts.structurally_backed_count || 0
+        const total = ts.semantic_domain_count || 0
+        const semantic = total - backed
+        return {
+          summary: semantic > 0
+            ? `${semantic} semantic-only domain${semantic !== 1 ? 's' : ''} represent unresolved qualification gaps. These domains carry advisory weight only and affect progression toward the next S-state.`
+            : 'All domains are structurally backed. No qualification gaps from unresolved semantic claims.',
+          evidence: [
+            { label: 'Unresolved domains', value: String(semantic), severity: semantic > 0 ? 'elevated' : 'nominal' },
+            { label: 'Total domains', value: String(total), severity: null },
+            { label: 'Backed domains', value: String(backed), severity: 'nominal' },
+          ],
+          structuralContext: 'Qualification progression requires structural backing for semantic claims. Each unresolved domain represents a gap between what is claimed and what is evidenced.',
+        }
+      },
+    },
+  ],
+}
+
+function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport, activeZoneKey, activeQueryKey, onQueryDismiss }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const framing = boardroomMode
     ? INTERP_MODE_FRAMING.BOARDROOM
@@ -530,6 +809,47 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
         )}
       </aside>
     )
+  }
+
+  if (activeQueryKey && densityClass === 'EXECUTIVE_DENSE') {
+    const parts = activeQueryKey.split(':')
+    const qZone = parts[0]
+    const qIndex = parseInt(parts[1], 10)
+    const qPaths = DENSE_ZONE_PATHS[qZone]
+    const qAnswers = GUIDED_QUERY_ANSWERS[qZone]
+    const qPath = qPaths && qPaths[qIndex]
+    const qAnswer = qAnswers && qAnswers[qIndex]
+    const qReg = DENSE_ZONE_REGISTRY[qZone]
+    if (qPath && qAnswer && qReg) {
+      const derived = qAnswer.derive(fullReport)
+      return (
+        <aside className="intel-interp intel-interp--query-active" data-tone={framing.tone} data-zone={qZone} aria-label="Guided query answer">
+          <div className="query-answer-panel">
+            <div className="query-answer-header">
+              <span className="query-answer-badge">{qReg.code}</span>
+              <span className="query-answer-header-label">GUIDED QUERY</span>
+              <button className="query-answer-dismiss" onClick={onQueryDismiss} type="button" aria-label="Dismiss answer">✕</button>
+            </div>
+            <div className="query-answer-question">{qPath.answers}</div>
+            <div className="query-answer-summary">{derived.summary}</div>
+            {derived.evidence && derived.evidence.length > 0 && (
+              <div className="query-answer-evidence">
+                {derived.evidence.map((e, ei) => (
+                  <div key={ei} className="query-answer-evidence-row" data-severity={e.severity}>
+                    <span className="query-answer-evidence-label">{e.label}</span>
+                    <span className="query-answer-evidence-value">{e.value}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {derived.structuralContext && (
+              <div className="query-answer-context">{derived.structuralContext}</div>
+            )}
+            <div className="query-answer-boundary">{qPath.boundary}</div>
+          </div>
+        </aside>
+      )
+    }
   }
 
   const zoneInterp = activeZoneKey && densityClass === 'EXECUTIVE_DENSE' && DENSE_ZONE_INTERPRETATIONS[activeZoneKey]
@@ -2652,10 +2972,21 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
 export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed }) {
   const scope = (fullReport && fullReport.topology_scope) || {}
   const [activeZoneKey, setActiveZoneKey] = useState(null)
+  const [activeQueryKey, setActiveQueryKey] = useState(null)
+  const [exploredQueries, setExploredQueries] = useState(() => new Set())
   const isDense = !boardroomMode && densityClass === 'EXECUTIVE_DENSE'
   const canvasRef = useRef(null)
   const handleZoneChange = useCallback((zoneKey) => {
     setActiveZoneKey(zoneKey)
+    setActiveQueryKey(null)
+  }, [])
+  const handleQuerySelect = useCallback((zoneKey, pathIndex) => {
+    const key = `${zoneKey}:${pathIndex}`
+    setActiveQueryKey(key)
+    setExploredQueries(prev => { const next = new Set(prev); next.add(key); return next })
+  }, [])
+  const handleQueryDismiss = useCallback(() => {
+    setActiveQueryKey(null)
   }, [])
 
   useEffect(() => {
@@ -2677,11 +3008,21 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
     requestAnimationFrame(tryScroll)
   }, [pendingTransitionZone, isDense, onTransitionZoneConsumed])
 
+  useEffect(() => {
+    if (!activeQueryKey) return
+    function onKeyDown(e) {
+      if (e.key === 'Escape') setActiveQueryKey(null)
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [activeQueryKey])
+
   return (
     <div
       className={`intelligence-field intelligence-field--three-col${boardroomMode ? ' intelligence-field--boardroom' : ''}`}
       data-mode={boardroomMode ? 'BOARDROOM' : densityClass}
       data-active-zone={isDense ? activeZoneKey : undefined}
+      data-query-active={isDense && activeQueryKey ? activeQueryKey : undefined}
     >
       <ExecutiveInterpretation
         narrative={narrative}
@@ -2690,6 +3031,8 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         adapted={adapted}
         fullReport={fullReport}
         activeZoneKey={isDense ? activeZoneKey : null}
+        activeQueryKey={isDense ? activeQueryKey : null}
+        onQueryDismiss={handleQueryDismiss}
       />
 
       <main ref={canvasRef} className="intel-canvas" role="region" aria-label="Semantic operational canvas">
@@ -2724,6 +3067,9 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         qualifierClass={qualifierClass}
         activeZoneKey={isDense ? activeZoneKey : null}
         densityClass={densityClass}
+        activeQueryKey={isDense ? activeQueryKey : null}
+        onQuerySelect={handleQuerySelect}
+        exploredQueries={exploredQueries}
       />
     </div>
   )

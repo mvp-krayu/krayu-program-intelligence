@@ -330,6 +330,7 @@ export default function LensDisclosureShell({
           <div className="disclosure-footer-details">
             <div className="disclosure-footer-detail-row">Inference prohibition: ENFORCED</div>
             <div className="disclosure-footer-detail-row">Structural derivation: VERIFIED</div>
+            <div className="disclosure-footer-detail-row">Guided queries: STRUCTURALLY DERIVED</div>
             <div className="disclosure-footer-detail-row">Qualifier governance: {qualifierClass || 'Q-01'}</div>
           </div>
         )}
