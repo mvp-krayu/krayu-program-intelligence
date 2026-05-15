@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { PRESSURE_META, ROLE_META, DEFAULT_BINDING_CLIENT, DEFAULT_BINDING_RUN } from './constants'
 import InvestigationReadingGuide, { TermHint } from './InvestigationReadingGuide'
 import { TopologyGraph } from './StructuralTopologyZone'
@@ -26,6 +27,15 @@ const LENS_MODE_SEMANTICS = {
   EXECUTIVE_DENSE:    ['semanticTopology', 'structuralBacking', 'semanticOnlyExposure', 'clusterConcentration', 'absorptionLoad', 'pressureAnchor'],
   INVESTIGATION_DENSE:['evidenceTrace', 'signalStack', 'inferenceProhibition', 'confidenceBoundary', 'resolutionBoundary'],
   BOARDROOM:          ['decisionPosture', 'confidenceBoundary', 'pressureAnchor', 'reportArtifactAccess'],
+}
+
+const DENSE_ZONE_REGISTRY = {
+  semanticTopology:    { key: 'semanticTopology',    code: 'ST', label: 'Semantic Topology' },
+  clusterConcentration:{ key: 'clusterConcentration', code: 'CC', label: 'Cluster Concentration' },
+  absorptionLoad:      { key: 'absorptionLoad',       code: 'AL', label: 'Absorption Load' },
+  signalAssessment:    { key: 'signalAssessment',      code: 'SA', label: 'Signal Assessment' },
+  propagationFlow:     { key: 'propagationFlow',       code: 'PF', label: 'Propagation Flow' },
+  pressureZoneFocus:   { key: 'pressureZoneFocus',     code: 'PZ', label: 'Pressure Zone Focus' },
 }
 
 const REP_TIER_COLOR = {
@@ -126,7 +136,70 @@ function RepModeTag({ label, sub, zones }) {
   )
 }
 
-function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass }) {
+const DENSE_ZONE_PATHS = {
+  semanticTopology: [
+    { label: 'Open topology explorer', icon: '◇',
+      narrative: 'Shows how semantic domains map to structural backing across the full topology.',
+      answers: 'Which domains have structural reality versus semantic assertion?',
+      boundary: 'Derived from reconciliation correspondence — no inference applied.' },
+    { label: 'Descend into forensic lineage', icon: '↓',
+      narrative: 'Opens the full evidence chain for each domain, including source traceability and reconciliation status.',
+      answers: 'What evidence exists for each structural claim?',
+      boundary: 'Requires INVESTIGATION mode — full forensic depth.' },
+  ],
+  clusterConcentration: [
+    { label: 'Inspect cluster distribution', icon: '◇',
+      narrative: 'Reveals how structural mass is distributed across domain clusters and where concentration creates dependency.',
+      answers: 'Where is structural mass concentrated and what does that imply?',
+      boundary: 'Cluster topology derived from evidence blocks — deterministic.' },
+    { label: 'View structural mass breakdown', icon: '→',
+      narrative: 'Decomposes cluster-level structural weight to show which groups carry disproportionate organizational load.',
+      answers: 'Which clusters carry the most structural weight?',
+      boundary: 'Mass calculation based on evidence block count per cluster.' },
+  ],
+  absorptionLoad: [
+    { label: 'Trace absorption source', icon: '◇',
+      narrative: 'Maps the upstream propagation path to show where absorbed load originates and how it reaches the conducting layer.',
+      answers: 'Where does the absorbed pressure come from?',
+      boundary: 'Propagation roles derived from evidence block classification.' },
+    { label: 'Open propagation map', icon: '→',
+      narrative: 'Displays the full origin → pass-through → receiver chain with structural backing status at each node.',
+      answers: 'How does pressure propagate through the organizational structure?',
+      boundary: 'Chain structure from propagation summary — no synthetic links.' },
+  ],
+  signalAssessment: [
+    { label: 'Open signal trace', icon: '◇',
+      narrative: 'Exposes individual signal activation, severity, and the structural conditions that triggered elevation.',
+      answers: 'What specifically triggered each elevated signal?',
+      boundary: 'Signals derived from structural assessment — deterministic thresholds.' },
+    { label: 'Inspect signal concentration', icon: '→',
+      narrative: 'Shows how activated signals cluster across domains and whether concentration indicates systemic versus localized conditions.',
+      answers: 'Are elevated signals localized or systemically distributed?',
+      boundary: 'Concentration analysis from signal domain attribution.' },
+  ],
+  propagationFlow: [
+    { label: 'Open full topology', icon: '◇',
+      narrative: 'Displays the complete structural topology with propagation roles, grounding status, and inter-domain dependency.',
+      answers: 'What is the full structural dependency picture?',
+      boundary: 'Topology from evidence blocks and reconciliation — no inference.' },
+    { label: 'Descend to forensic traversal', icon: '↓',
+      narrative: 'Opens forensic-depth analysis of propagation chain nodes with per-domain evidence lineage and temporal continuity.',
+      answers: 'What evidence supports each link in the propagation chain?',
+      boundary: 'Requires INVESTIGATION mode — full forensic depth.' },
+  ],
+  pressureZoneFocus: [
+    { label: 'Open pressure zone topology', icon: '◇',
+      narrative: 'Shows how the active pressure zone is structurally connected across origin, pass-through, and receiver domains.',
+      answers: 'Is this pressure localized or systemic?',
+      boundary: 'Pressure zone from propagation summary — deterministic classification.' },
+    { label: 'View qualification posture', icon: '→',
+      narrative: 'Exposes unresolved semantic domains and debt items affecting qualification progression toward the next S-state.',
+      answers: 'What is preventing qualification advancement?',
+      boundary: 'Qualification state from SQO binding — no advisory interpretation.' },
+  ],
+}
+
+function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const chip = (adapted && adapted.qualifierChip) || {}
   const artifacts = (reportPackArtifacts && reportPackArtifacts.length > 0)
@@ -153,6 +226,10 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
       paths.push({ label: 'Inspect evidence boundaries', condition: true })
     }
   }
+
+  const isDense = !boardroomMode && densityClass === 'EXECUTIVE_DENSE'
+  const zoneReg = activeZoneKey && DENSE_ZONE_REGISTRY[activeZoneKey]
+  const zonePaths = activeZoneKey && DENSE_ZONE_PATHS[activeZoneKey]
 
   return (
     <aside className="intel-support" aria-label="Support rail — evidence, confidence, report pack">
@@ -189,6 +266,33 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
         </div>
       )}
 
+      {isDense && zonePaths && zoneReg && (
+        <div className="support-block support-block--zone-paths" data-zone={activeZoneKey}>
+          <div className="support-zone-header">
+            <span className="support-zone-badge">{zoneReg.code}</span>
+            <span className="support-label">TRAVERSAL</span>
+          </div>
+          <div className="support-paths-list">
+            {zonePaths.map((p, i) => (
+              <div key={`${activeZoneKey}-${i}`} className="support-path-item support-path-item--zone">
+                <span className="support-path-icon">{p.icon}</span>
+                <span className="support-path-text">{p.label}</span>
+                {p.narrative && (
+                  <div className="path-narrative-overlay">
+                    <div className="path-narrative-text">{p.narrative}</div>
+                    <div className="path-narrative-question">
+                      <span className="path-narrative-question-label">ANSWERS</span>
+                      <span className="path-narrative-question-text">{p.answers}</span>
+                    </div>
+                    <div className="path-narrative-boundary">{p.boundary}</div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="support-block support-block--reports">
         <div className="support-label">REPORT PACK</div>
         <div className="support-reports-sub">Official Tier-1 / Tier-2 deliverables</div>
@@ -215,7 +319,144 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
   )
 }
 
-function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport }) {
+const DENSE_ZONE_INTERPRETATIONS = {
+  semanticTopology: {
+    sectionLabel: 'TOPOLOGY INTERPRETATION',
+    code: 'ST',
+    derive: (fullReport) => {
+      const ts = (fullReport && fullReport.topology_summary) || {}
+      const scope = (fullReport && fullReport.topology_scope) || {}
+      const backed = ts.structurally_backed_count || 0
+      const total = ts.semantic_domain_count || 0
+      const semantic = total - backed
+      return {
+        heading: 'What the topology reveals',
+        body: backed === total
+          ? 'All domains are structurally backed. The topology reflects verified organizational reality.'
+          : `${semantic} of ${total} domain${semantic !== 1 ? 's' : ''} lack structural backing. These represent semantic claims without evidence confirmation.`,
+        structuralNote: total > 0
+          ? `Grounding ratio: ${backed}/${total} (${Math.round(backed / Math.max(1, total) * 100)}%) · ${scope.cluster_count || 0} clusters mapped`
+          : null,
+      }
+    },
+  },
+  clusterConcentration: {
+    sectionLabel: 'CLUSTER INTERPRETATION',
+    code: 'CC',
+    derive: (fullReport) => {
+      const scope = (fullReport && fullReport.topology_scope) || {}
+      const ts = (fullReport && fullReport.topology_summary) || {}
+      const clusters = ts.cluster_count || scope.cluster_count || 0
+      const domains = scope.domain_count || ts.semantic_domain_count || 0
+      return {
+        heading: 'What the cluster distribution reveals',
+        body: clusters > 0
+          ? `${clusters} clusters distributed across ${domains} domain${domains !== 1 ? 's' : ''}. Structural mass concentration determines organizational dependency exposure.`
+          : 'No cluster data available for structural mass analysis.',
+        structuralNote: domains > 0
+          ? `Average density: ${(clusters / Math.max(1, domains)).toFixed(1)} clusters per domain`
+          : null,
+      }
+    },
+  },
+  absorptionLoad: {
+    sectionLabel: 'ABSORPTION INTERPRETATION',
+    code: 'AL',
+    derive: (fullReport) => {
+      const blocks = (fullReport && fullReport.evidence_blocks) || []
+      const passthrough = blocks.find(b => b && b.propagation_role === 'PASS_THROUGH')
+      return {
+        heading: 'What the absorption pattern reveals',
+        body: passthrough
+          ? `${passthrough.domain_alias} operates as a conducting layer — absorbing upstream propagated load without generating independent structural evidence.`
+          : 'No pass-through node detected in the current propagation chain.',
+        structuralNote: passthrough
+          ? `Role: ${passthrough.propagation_role} · Pattern: organizational stress migration`
+          : null,
+      }
+    },
+  },
+  signalAssessment: {
+    sectionLabel: 'SIGNAL INTERPRETATION',
+    code: 'SA',
+    derive: (fullReport) => {
+      const sigs = (fullReport && fullReport.signal_interpretations) || []
+      const activated = sigs.filter(s => s.severity !== 'NOMINAL')
+      const critical = activated.filter(s => s.severity === 'CRITICAL' || s.severity === 'HIGH')
+      const elevated = activated.filter(s => s.severity === 'ELEVATED')
+      return {
+        heading: 'What the signal landscape reveals',
+        body: activated.length > 0
+          ? `${activated.length} signal${activated.length !== 1 ? 's' : ''} elevated above nominal threshold${critical.length > 0 ? ` — ${critical.length} at critical/high severity` : ''}. ${elevated.length > 0 ? `${elevated.length} at elevated tier.` : ''}`
+          : `All ${sigs.length} structural indicators are within nominal parameters.`,
+        structuralNote: sigs.length > 0
+          ? `Total signals: ${sigs.length} · Activated: ${activated.length} · Nominal: ${sigs.length - activated.length}`
+          : null,
+        signalDetail: activated.map(s => ({
+          id: s.signal_id,
+          severity: s.severity,
+          interpretation: s.interpretation,
+          concentration: s.concentration,
+        })),
+      }
+    },
+  },
+  propagationFlow: {
+    sectionLabel: 'PROPAGATION INTERPRETATION',
+    code: 'PF',
+    derive: (fullReport) => {
+      const blocks = (fullReport && fullReport.evidence_blocks) || []
+      const ps = (fullReport && fullReport.propagation_summary) || {}
+      const sigs = (fullReport && fullReport.signal_interpretations) || []
+      const origin = blocks.find(b => b && b.propagation_role === 'ORIGIN')
+      const passthrough = blocks.find(b => b && b.propagation_role === 'PASS_THROUGH')
+      const receiver = blocks.find(b => b && b.propagation_role === 'RECEIVER')
+      const chainRoles = [origin, passthrough, receiver].filter(Boolean)
+      const activated = sigs.filter(s => s.severity !== 'NOMINAL')
+      const byRole = {}
+      for (const node of chainRoles) {
+        const roleSigs = activated.filter(s => s.concentration && s.concentration.toLowerCase().includes(node.domain_alias.toLowerCase()))
+        if (roleSigs.length > 0) byRole[node.propagation_role] = roleSigs.length
+      }
+      return {
+        heading: 'What the propagation structure reveals',
+        body: chainRoles.length >= 2
+          ? `Structural dependency flows ${chainRoles.map(n => n.domain_alias).join(' → ')}. This propagation is organizational — pressure transfers through structural coupling, not incidental correlation.`
+          : 'Propagation chain not fully resolved in available evidence.',
+        structuralNote: ps.primary_zone_business_label
+          ? `Primary zone: ${ps.primary_zone_business_label}`
+          : null,
+        signalByRole: Object.keys(byRole).length > 0 ? byRole : null,
+      }
+    },
+  },
+  pressureZoneFocus: {
+    sectionLabel: 'PRESSURE ZONE INTERPRETATION',
+    code: 'PZ',
+    derive: (fullReport) => {
+      const ps = (fullReport && fullReport.propagation_summary) || {}
+      const sigs = (fullReport && fullReport.signal_interpretations) || []
+      const zoneName = ps.primary_zone_business_label
+      const activated = sigs.filter(s => s.severity !== 'NOMINAL')
+      const compound = sigs[0] && sigs[0].compound_narrative
+      const critical = activated.filter(s => s.severity === 'CRITICAL' || s.severity === 'HIGH')
+      return {
+        heading: 'What the pressure concentration reveals',
+        body: zoneName
+          ? `Pressure concentrates around "${zoneName}" with ${activated.length} elevated signal${activated.length !== 1 ? 's' : ''}. ${compound || 'Structural assessment indicates localized organizational stress.'}`
+          : 'No primary pressure zone identified in the current structural assessment.',
+        structuralNote: zoneName && activated.length > 0
+          ? `Zone: ${zoneName} · Classification: ${ps.zone_classification || 'UNCLASSIFIED'} · Activated: ${activated.length}`
+          : null,
+        signalSummary: activated.length > 0
+          ? { total: activated.length, critical: critical.length, compound: compound || null }
+          : null,
+      }
+    },
+  },
+}
+
+function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport, activeZoneKey }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const framing = boardroomMode
     ? INTERP_MODE_FRAMING.BOARDROOM
@@ -287,6 +528,88 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
             )}
           </div>
         )}
+      </aside>
+    )
+  }
+
+  const zoneInterp = activeZoneKey && densityClass === 'EXECUTIVE_DENSE' && DENSE_ZONE_INTERPRETATIONS[activeZoneKey]
+  const zoneDerived = zoneInterp ? zoneInterp.derive(fullReport) : null
+
+  if (zoneDerived) {
+    return (
+      <aside className="intel-interp intel-interp--zone-active" data-tone={framing.tone} data-zone={activeZoneKey} aria-label="Zone-focused interpretation">
+        <div className="interp-tag">
+          <span className="interp-tag-label">{framing.label}</span>
+          <span className="interp-tag-state">{badge.state_label || '—'}</span>
+        </div>
+
+        <div className="interp-zone-focus">
+          <div className="interp-zone-badge">
+            <span className="interp-zone-badge-code">{zoneInterp.code}</span>
+            <span className="interp-zone-badge-label">{zoneInterp.sectionLabel}</span>
+          </div>
+          <div className="interp-zone-heading">{zoneDerived.heading}</div>
+          <div className="interp-zone-body">{zoneDerived.body}</div>
+          {zoneDerived.structuralNote && (
+            <div className="interp-zone-structural">{zoneDerived.structuralNote}</div>
+          )}
+
+          {zoneDerived.signalDetail && zoneDerived.signalDetail.length > 0 && (
+            <div className="interp-zone-signals">
+              <div className="interp-zone-signals-label">SIGNAL DECOMPOSITION</div>
+              {zoneDerived.signalDetail.map(s => (
+                <div key={s.id} className="interp-zone-signal" data-severity={s.severity}>
+                  <span className="interp-zone-signal-severity">{s.severity}</span>
+                  <span className="interp-zone-signal-text">{s.interpretation}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {zoneDerived.signalByRole && (
+            <div className="interp-zone-signals">
+              <div className="interp-zone-signals-label">SIGNAL CONCENTRATION BY ROLE</div>
+              {Object.entries(zoneDerived.signalByRole).map(([role, count]) => (
+                <div key={role} className="interp-zone-signal">
+                  <span className="interp-zone-signal-severity">{role}</span>
+                  <span className="interp-zone-signal-text">{count} elevated signal{count !== 1 ? 's' : ''}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {zoneDerived.signalSummary && (
+            <div className="interp-zone-signals">
+              <div className="interp-zone-signals-label">SIGNAL PRESSURE</div>
+              <div className="interp-zone-signal">
+                <span className="interp-zone-signal-text">
+                  {zoneDerived.signalSummary.total} elevated{zoneDerived.signalSummary.critical > 0 ? ` · ${zoneDerived.signalSummary.critical} critical/high` : ''}
+                </span>
+              </div>
+              {zoneDerived.signalSummary.compound && (
+                <div className="interp-zone-signal interp-zone-signal--compound">
+                  <span className="interp-zone-signal-text">{zoneDerived.signalSummary.compound}</span>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        <details className="interp-context-secondary">
+          <summary className="interp-context-secondary-toggle">STRUCTURAL CONTEXT</summary>
+          {narrative.executive_summary && (
+            <div className="interp-block interp-block--lead">
+              <div className="interp-section-label">{framing.assessmentLabel}</div>
+              <div className="interp-summary">{narrative.executive_summary}</div>
+            </div>
+          )}
+          {narrative.why_primary_statement && framing.whyLabel && (
+            <div className="interp-block">
+              <div className="interp-section-label">{framing.whyLabel}</div>
+              <div className="interp-why">{narrative.why_primary_statement}</div>
+            </div>
+          )}
+        </details>
       </aside>
     )
   }
@@ -451,7 +774,7 @@ function PressureZoneFocusBlock({ fullReport }) {
   const zoneClassification = ps.zone_classification || (activated.length > 1 ? 'COMPOUND' : 'SINGLE')
 
   return (
-    <div className="pressure-zone-focus" data-tier={severityTier} aria-label="Pressure zone focus">
+    <div className="pressure-zone-focus" data-tier={severityTier} data-zone-key="pressureZoneFocus" aria-label="Pressure zone focus">
       <div className="pressure-zone-focus-label">PRESSURE ZONE FOCUS</div>
       <div className="pressure-zone-focus-name">{zoneName}</div>
       <div className="pressure-zone-focus-classification">
@@ -565,7 +888,7 @@ function DenseSignalSection({ fullReport }) {
   const activated = sigs.filter(s => s.severity !== 'NOMINAL')
 
   return (
-    <div className="actor actor--signal-assessment">
+    <div className="actor actor--signal-assessment" data-zone-key="signalAssessment">
       <div className="actor-tag">
         <span className="actor-code">SA</span>
         <span className="actor-name">Signal Assessment</span>
@@ -593,10 +916,42 @@ function DenseSignalSection({ fullReport }) {
   )
 }
 
-function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData }) {
+function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onZoneChange }) {
   const [topoModalOpen, setTopoModalOpen] = useState(false)
   const openTopoModal = useCallback(() => setTopoModalOpen(true), [])
   const closeTopoModal = useCallback(() => setTopoModalOpen(false), [])
+  const fieldRef = useRef(null)
+  const pinnedZoneRef = useRef(null)
+
+  useEffect(() => {
+    if (!fieldRef.current || !onZoneChange) return
+    let rafId = null
+
+    function updateActiveZone() {
+      if (pinnedZoneRef.current) return
+      const actors = fieldRef.current ? fieldRef.current.querySelectorAll('[data-zone-key]') : []
+      if (!actors.length) return
+      const vpCenter = window.innerHeight / 2
+      let best = null
+      let bestDist = Infinity
+      actors.forEach(actor => {
+        const rect = actor.getBoundingClientRect()
+        if (rect.bottom < 0 || rect.top > window.innerHeight) return
+        const dist = Math.abs((rect.top + rect.bottom) / 2 - vpCenter)
+        if (dist < bestDist) { best = actor.getAttribute('data-zone-key'); bestDist = dist }
+      })
+      if (best) onZoneChange(best)
+    }
+
+    function onScroll() {
+      if (rafId) return
+      rafId = requestAnimationFrame(() => { rafId = null; updateActiveZone() })
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    updateActiveZone()
+    return () => { window.removeEventListener('scroll', onScroll); if (rafId) cancelAnimationFrame(rafId) }
+  }, [onZoneChange])
   const origin = findByRole(blocks, 'ORIGIN')
   const passthrough = findByRole(blocks, 'PASS_THROUGH')
   const receiver = findByRole(blocks, 'RECEIVER')
@@ -606,7 +961,7 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
   const ps = (fullReport && fullReport.propagation_summary) || {}
   const pressureZone = ps.primary_zone_business_label || ''
   return (
-    <div className="rep-field rep-field--dense">
+    <div className="rep-field rep-field--dense" ref={fieldRef}>
       <RepModeTag
         label="Structural lens"
         sub="CTO · structural cause and propagation"
@@ -617,7 +972,7 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
         ]}
       />
 
-      <div className="actor actor--semantic-topology">
+      <div className="actor actor--semantic-topology" data-zone-key="semanticTopology">
         <div className="actor-tag">
           <span className="actor-code">ST · SB · SO</span>
           <span className="actor-name">Semantic Topology · structural backing · semantic-only exposure</span>
@@ -656,7 +1011,7 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
       </div>
 
       {scope && scope.cluster_count != null && (
-        <div className="actor actor--cluster-concentration">
+        <div className="actor actor--cluster-concentration" data-zone-key="clusterConcentration">
           <div className="actor-tag">
             <span className="actor-code">CC</span>
             <span className="actor-name">Cluster Concentration</span>
@@ -678,7 +1033,7 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
       )}
 
       {passthrough && (
-        <div className="actor actor--absorption-load">
+        <div className="actor actor--absorption-load" data-zone-key="absorptionLoad">
           <div className="actor-tag">
             <span className="actor-code">AL</span>
             <span className="actor-name">Absorption Load</span>
@@ -703,7 +1058,7 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
       <DenseSignalSection fullReport={fullReport} />
 
       {(origin || passthrough || receiver) && (
-        <div className="actor actor--propagation-flow">
+        <div className="actor actor--propagation-flow" data-zone-key="propagationFlow">
           <div className="actor-tag">
             <span className="actor-code">PF</span>
             <span className="actor-name">Pressure Propagation Flow</span>
@@ -747,7 +1102,7 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
         </div>
       )}
 
-      {topoModalOpen && <TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} mode="dense" />}
+      {topoModalOpen && createPortal(<TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} mode="dense" />, document.body)}
     </div>
   )
 }
@@ -888,7 +1243,7 @@ function InvestigationTraceField({ adapted, blocks, scope, fullReport, correspon
         </div>
       )}
 
-      {topoModalOpen && <TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} mode="investigation" />}
+      {topoModalOpen && createPortal(<TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} mode="investigation" />, document.body)}
 
       <TierHandoffStatement />
     </div>
@@ -1701,11 +2056,11 @@ function DomainPostureCard({ domainId, correspondenceData, evidenceIntakeData, d
     : 'No registered sources'
 
   const rows = [
-    { label: 'Structural confidence', value: confLabel, tone: confLevel >= 4 ? 'ok' : confLevel >= 3 ? 'partial' : 'gap', target: 'EXECUTIVE_DENSE' },
-    { label: 'Reconciliation posture', value: reconciled ? 'Reconciled' : 'Unreconciled', tone: reconciled ? 'ok' : 'gap', target: 'EXECUTIVE_DENSE' },
-    { label: 'Grounding state', value: grounded ? 'Structurally grounded' : 'Ungrounded — no structural backing', tone: grounded ? 'ok' : 'gap', target: 'EXECUTIVE_DENSE' },
-    { label: 'Exposure posture', value: effectiveExposure, tone: debtClear ? 'ok' : domainBlocksS3 ? 'gap' : 'partial', target: 'EXECUTIVE_DENSE' },
-    { label: 'Temporal continuity', value: temporalLabel, tone: temporalLabel === 'Stable across epochs' ? 'ok' : temporalLabel.includes('Persistent') ? 'gap' : 'partial', target: 'EXECUTIVE_DENSE' },
+    { label: 'Structural confidence', value: confLabel, tone: confLevel >= 4 ? 'ok' : confLevel >= 3 ? 'partial' : 'gap', target: 'EXECUTIVE_DENSE', zoneKey: 'semanticTopology' },
+    { label: 'Reconciliation posture', value: reconciled ? 'Reconciled' : 'Unreconciled', tone: reconciled ? 'ok' : 'gap', target: 'EXECUTIVE_DENSE', zoneKey: 'semanticTopology' },
+    { label: 'Grounding state', value: grounded ? 'Structurally grounded' : 'Ungrounded — no structural backing', tone: grounded ? 'ok' : 'gap', target: 'EXECUTIVE_DENSE', zoneKey: 'clusterConcentration' },
+    { label: 'Exposure posture', value: effectiveExposure, tone: debtClear ? 'ok' : domainBlocksS3 ? 'gap' : 'partial', target: 'EXECUTIVE_DENSE', zoneKey: 'pressureZoneFocus' },
+    { label: 'Temporal continuity', value: temporalLabel, tone: temporalLabel === 'Stable across epochs' ? 'ok' : temporalLabel.includes('Persistent') ? 'gap' : 'partial', target: 'EXECUTIVE_DENSE', zoneKey: 'propagationFlow' },
     { label: 'Evidence availability', value: evidenceLabel, tone: sourceCount > 0 ? 'ok' : 'gap', target: 'INVESTIGATION_DENSE' },
   ]
 
@@ -1724,10 +2079,10 @@ function DomainPostureCard({ domainId, correspondenceData, evidenceIntakeData, d
             key={row.label}
             className={`posture-card-row${canNavigate ? ' posture-card-row--navigable' : ''}`}
             data-tone={row.tone}
-            onClick={canNavigate ? () => onModeTransition(row.target, domainId) : undefined}
+            onClick={canNavigate ? () => onModeTransition(row.target, domainId, row.zoneKey) : undefined}
             role={canNavigate ? 'button' : undefined}
             tabIndex={canNavigate ? 0 : undefined}
-            onKeyDown={canNavigate ? (e => e.key === 'Enter' && onModeTransition(row.target, domainId)) : undefined}
+            onKeyDown={canNavigate ? (e => e.key === 'Enter' && onModeTransition(row.target, domainId, row.zoneKey)) : undefined}
           >
             <span className="posture-card-row-label">{row.label}</span>
             <span className="posture-card-row-value">
@@ -2238,7 +2593,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
         </div>
       )}
 
-      {topoModalOpen && <TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} initialSignalTrace={signalTraceId} onSignalTraceConsumed={() => setSignalTraceId(null)} mode="boardroom" onModeTransition={(targetMode, domainId) => { closeTopoModal(); if (onModeTransition) onModeTransition(targetMode, domainId) }} />}
+      {topoModalOpen && createPortal(<TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} initialSignalTrace={signalTraceId} onSignalTraceConsumed={() => setSignalTraceId(null)} mode="boardroom" onModeTransition={(targetMode, domainId, targetZoneKey) => { closeTopoModal(); if (onModeTransition) onModeTransition(targetMode, domainId, targetZoneKey) }} />, document.body)}
 
       <div className="cockpit-impact">
         <div className="cockpit-impact-label">ORGANIZATIONAL IMPACT</div>
@@ -2281,7 +2636,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange }) {
   if (boardroomMode) {
     return <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} />
   }
@@ -2291,16 +2646,42 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   if (densityClass === 'EXECUTIVE_BALANCED') {
     return <BalancedConsequenceField adapted={adapted} blocks={blocks} scope={scope} renderState={renderState} fullReport={fullReport} qualifierClass={qualifierClass} />
   }
-  return <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} />
+  return <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onZoneChange={onZoneChange} />
 }
 
-export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition }) {
+export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed }) {
   const scope = (fullReport && fullReport.topology_scope) || {}
+  const [activeZoneKey, setActiveZoneKey] = useState(null)
+  const isDense = !boardroomMode && densityClass === 'EXECUTIVE_DENSE'
+  const canvasRef = useRef(null)
+  const handleZoneChange = useCallback((zoneKey) => {
+    setActiveZoneKey(zoneKey)
+  }, [])
+
+  useEffect(() => {
+    if (!pendingTransitionZone || !isDense) return
+    setActiveZoneKey(pendingTransitionZone)
+    const zoneKey = pendingTransitionZone
+    if (onTransitionZoneConsumed) onTransitionZoneConsumed()
+    let attempts = 0
+    function tryScroll() {
+      const container = canvasRef.current
+      const target = container && container.querySelector(`[data-zone-key="${zoneKey}"]`)
+      if (target) {
+        const rect = target.getBoundingClientRect()
+        window.scrollTo(0, window.scrollY + rect.top + rect.height / 2 - window.innerHeight / 2)
+        return
+      }
+      if (++attempts < 10) requestAnimationFrame(tryScroll)
+    }
+    requestAnimationFrame(tryScroll)
+  }, [pendingTransitionZone, isDense, onTransitionZoneConsumed])
 
   return (
     <div
       className={`intelligence-field intelligence-field--three-col${boardroomMode ? ' intelligence-field--boardroom' : ''}`}
       data-mode={boardroomMode ? 'BOARDROOM' : densityClass}
+      data-active-zone={isDense ? activeZoneKey : undefined}
     >
       <ExecutiveInterpretation
         narrative={narrative}
@@ -2308,9 +2689,10 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         boardroomMode={boardroomMode}
         adapted={adapted}
         fullReport={fullReport}
+        activeZoneKey={isDense ? activeZoneKey : null}
       />
 
-      <main className="intel-canvas" role="region" aria-label="Semantic operational canvas">
+      <main ref={canvasRef} className="intel-canvas" role="region" aria-label="Semantic operational canvas">
         <RepresentationField
           boardroomMode={boardroomMode}
           densityClass={densityClass}
@@ -2329,6 +2711,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           temporalAnalyticsData={temporalAnalyticsData}
           temporalLifecycleData={temporalLifecycleData}
           onModeTransition={onModeTransition}
+          onZoneChange={isDense ? handleZoneChange : undefined}
         />
       </main>
 
@@ -2339,6 +2722,8 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         reportPackArtifacts={reportPackArtifacts}
         fullReport={fullReport}
         qualifierClass={qualifierClass}
+        activeZoneKey={isDense ? activeZoneKey : null}
+        densityClass={densityClass}
       />
     </div>
   )

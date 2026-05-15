@@ -229,11 +229,13 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
   const [boardroomMode, setBoardroomMode] = useState(false)
   const [investigationStage, setInvestigationStage] = useState('SUMMARY')
   const [pendingTransitionDomain, setPendingTransitionDomain] = useState(null)
+  const [pendingTransitionZone, setPendingTransitionZone] = useState(null)
 
-  const handleModeTransition = useCallback((targetMode, focusedDomainId) => {
+  const handleModeTransition = useCallback((targetMode, focusedDomainId, targetZoneKey) => {
     setBoardroomMode(false)
     setDensityClass(targetMode)
     if (focusedDomainId) setPendingTransitionDomain(focusedDomainId)
+    if (targetZoneKey) setPendingTransitionZone(targetZoneKey)
   }, [])
 
   const reportObject = livePayload || null
@@ -440,6 +442,8 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             temporalAnalyticsData={temporalAnalyticsData}
             temporalLifecycleData={temporalLifecycleData}
             onModeTransition={handleModeTransition}
+            pendingTransitionZone={pendingTransitionZone}
+            onTransitionZoneConsumed={() => setPendingTransitionZone(null)}
           />
         </div>
       </div>
@@ -2160,6 +2164,11 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           flex-direction: column;
           gap: 24px;
           background: rgba(8, 10, 15, 0.32);
+          position: sticky;
+          top: 73px;
+          align-self: start;
+          max-height: calc(100vh - 73px);
+          overflow-y: auto;
         }
         .intel-interp[aria-label] { /* selector boost */ }
         .interp-tag {
@@ -2240,6 +2249,148 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #5a6580;
           margin-top: 4px;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* ── DENSE Zone-Focused Interpretation ──────────────── */
+        .intel-interp--zone-active {
+          transition: opacity 0.2s ease;
+        }
+        .interp-zone-focus {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          animation: interpZoneIn 0.2s ease;
+        }
+        @keyframes interpZoneIn {
+          from { opacity: 0; transform: translateY(4px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .interp-zone-badge {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .interp-zone-badge-code {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 22px;
+          height: 18px;
+          font-size: 9px;
+          font-weight: 700;
+          letter-spacing: 0.05em;
+          font-family: 'Courier New', monospace;
+          color: #ccd6f6;
+          background: rgba(74, 158, 255, 0.12);
+          border: 1px solid rgba(74, 158, 255, 0.2);
+          border-radius: 2px;
+        }
+        .interp-zone-badge-label {
+          font-size: 9px;
+          font-weight: 600;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
+          color: #7a8aaa;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .interp-zone-heading {
+          font-size: 12px;
+          font-weight: 600;
+          color: #ccd6f6;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          line-height: 1.4;
+        }
+        .interp-zone-body {
+          font-size: 12px;
+          line-height: 1.65;
+          color: #a0aac4;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .interp-zone-structural {
+          font-size: 10px;
+          color: #5a6580;
+          font-family: 'Courier New', monospace;
+          padding: 6px 8px;
+          background: rgba(10, 12, 18, 0.4);
+          border-left: 2px solid #2a2f40;
+          border-radius: 0 2px 2px 0;
+        }
+        /* ── Signal attribution in zone interpretation (5A.8.9) ── */
+        .interp-zone-signals {
+          margin-top: 4px;
+          padding-top: 8px;
+          border-top: 1px solid #1e2330;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .interp-zone-signals-label {
+          font-size: 9px;
+          font-weight: 600;
+          letter-spacing: 0.15em;
+          color: #4a5570;
+          margin-bottom: 2px;
+        }
+        .interp-zone-signal {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          font-size: 10px;
+          line-height: 1.5;
+        }
+        .interp-zone-signal-severity {
+          font-size: 9px;
+          font-weight: 600;
+          font-family: 'Courier New', monospace;
+          color: #5a6580;
+          flex-shrink: 0;
+          min-width: 52px;
+        }
+        .interp-zone-signal[data-severity="CRITICAL"] .interp-zone-signal-severity,
+        .interp-zone-signal[data-severity="HIGH"] .interp-zone-signal-severity {
+          color: #ff6b6b;
+        }
+        .interp-zone-signal[data-severity="ELEVATED"] .interp-zone-signal-severity {
+          color: #ff9e4a;
+        }
+        .interp-zone-signal-text {
+          color: #7a8aaa;
+          font-size: 10px;
+          line-height: 1.5;
+        }
+        .interp-zone-signal--compound .interp-zone-signal-text {
+          color: #6a7590;
+          font-style: italic;
+          font-size: 10px;
+        }
+
+        .interp-context-secondary {
+          margin-top: 12px;
+          border-top: 1px solid #1e2330;
+          padding-top: 8px;
+        }
+        .interp-context-secondary-toggle {
+          font-size: 9px;
+          font-weight: 600;
+          letter-spacing: 0.15em;
+          color: #4a5570;
+          cursor: pointer;
+          padding: 4px 0;
+          list-style: none;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          transition: color 0.15s ease;
+        }
+        .interp-context-secondary-toggle:hover {
+          color: #7a8aaa;
+        }
+        .interp-context-secondary-toggle::-webkit-details-marker { display: none; }
+        .interp-context-secondary-toggle::marker { content: ''; }
+        .interp-context-secondary[open] .interp-context-secondary-toggle {
+          color: #7a8aaa;
+          margin-bottom: 8px;
+        }
+        .interp-context-secondary .interp-block {
+          opacity: 0.7;
         }
 
         /* ── BALANCED — Narrative-First Vertical Layout ──────────────── */
@@ -2767,6 +2918,11 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           display: flex;
           flex-direction: column;
           gap: 26px;
+          position: sticky;
+          top: 73px;
+          align-self: start;
+          max-height: calc(100vh - 73px);
+          overflow-y: auto;
         }
         .intelligence-field--boardroom .intel-support {
           padding: 64px 32px 64px 28px;
@@ -2909,6 +3065,117 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #7a8aaa;
           line-height: 1.45;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* ── DENSE Zone-Contextual Traversal Paths ──────────────── */
+        .support-block--zone-paths {
+          border-top: 1px solid #1e2330;
+          animation: supportZoneIn 0.2s ease;
+        }
+        @keyframes supportZoneIn {
+          from { opacity: 0; transform: translateY(3px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .support-zone-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 6px;
+        }
+        .support-zone-badge {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 20px;
+          height: 16px;
+          font-size: 9px;
+          font-weight: 700;
+          letter-spacing: 0.05em;
+          font-family: 'Courier New', monospace;
+          color: #ccd6f6;
+          background: rgba(74, 158, 255, 0.12);
+          border: 1px solid rgba(74, 158, 255, 0.2);
+          border-radius: 2px;
+        }
+        .support-path-item--zone {
+          cursor: pointer;
+          padding: 6px 8px;
+          margin: 0 -8px;
+          border-radius: 2px;
+          transition: background 0.15s ease;
+        }
+        .support-path-item--zone:hover {
+          background: rgba(74, 158, 255, 0.06);
+        }
+        .support-path-icon {
+          font-size: 10px;
+          color: #4a5570;
+          flex-shrink: 0;
+          width: 14px;
+          text-align: center;
+          transition: color 0.15s ease;
+        }
+        .support-path-item--zone:hover .support-path-icon {
+          color: #4a9eff;
+        }
+        .support-path-item--zone:hover .support-path-text {
+          color: #ccd6f6;
+        }
+
+        /* ── Narrative Affordance Overlay (5A.8.10) ── */
+        .support-path-item--zone {
+          position: relative;
+          flex-wrap: wrap;
+        }
+        .path-narrative-overlay {
+          display: none;
+          width: 100%;
+          margin-top: 6px;
+          padding: 10px;
+          background: #12151f;
+          border: 1px solid #2a2f40;
+          border-radius: 3px;
+        }
+        .support-path-item--zone:hover .path-narrative-overlay {
+          display: block;
+          animation: narrativeIn 0.2s ease;
+        }
+        @keyframes narrativeIn {
+          from { opacity: 0; transform: translateY(4px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .path-narrative-text {
+          font-size: 11px;
+          line-height: 1.6;
+          color: #a0aac4;
+          margin-bottom: 8px;
+        }
+        .path-narrative-question {
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+          margin-bottom: 8px;
+        }
+        .path-narrative-question-label {
+          font-size: 9px;
+          font-weight: 600;
+          letter-spacing: 0.15em;
+          color: #4a9eff;
+        }
+        .path-narrative-question-text {
+          font-size: 11px;
+          line-height: 1.5;
+          color: #ccd6f6;
+          font-style: italic;
+        }
+        .path-narrative-boundary {
+          font-size: 10px;
+          line-height: 1.5;
+          color: #5a6580;
+          font-family: 'Courier New', monospace;
+          padding: 5px 7px;
+          background: rgba(10, 12, 18, 0.5);
+          border-left: 2px solid #2a2f40;
         }
 
         .status-value--state { color: var(--state-color); transition: color 0.4s; font-weight: 600; }
@@ -3690,104 +3957,127 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
 
         /* ── SQO Intelligence Zone — qualification narrative ────────── */
         .sqo-intelligence {
-          padding: 28px 56px 24px;
+          padding: 20px 56px 18px;
           border-bottom: 1px solid #1a2030;
           display: flex;
           flex-direction: column;
-          gap: 14px;
-          background: rgba(8, 10, 15, 0.25);
+          gap: 10px;
         }
-        .sqo-intelligence-header {
+        .sqo-compact-badge {
           display: flex;
           align-items: center;
-          gap: 12px;
-        }
-        .sqo-intelligence-label {
-          font-size: 9px;
-          color: #5a6580;
-          letter-spacing: 0.22em;
-          text-transform: uppercase;
-          font-weight: 500;
-        }
-        .sqo-intelligence-narrative {
-          display: flex;
-          flex-direction: column;
           gap: 10px;
-          max-width: 780px;
+          cursor: pointer;
+          padding: 6px 0;
+          user-select: none;
         }
-        .sqo-intelligence-state {
-          display: flex;
-          align-items: baseline;
-          gap: 10px;
-        }
-        .sqo-intelligence-state-badge {
-          font-size: 13px;
+        .sqo-compact-state {
+          font-size: 12px;
           font-weight: 700;
           color: var(--state-color, #4a9eff);
           letter-spacing: 0.06em;
-          padding: 2px 8px;
+          padding: 2px 7px;
           background: rgba(74, 158, 255, 0.08);
           border: 1px solid rgba(74, 158, 255, 0.2);
           border-radius: 3px;
+          flex-shrink: 0;
         }
-        .sqo-intelligence[data-s-state="S3"] .sqo-intelligence-state-badge {
+        .sqo-compact[data-s-state="S3"] .sqo-compact-state {
           color: #64ffda;
           background: rgba(100, 255, 218, 0.08);
           border-color: rgba(100, 255, 218, 0.2);
         }
-        .sqo-intelligence[data-s-state="S1"] .sqo-intelligence-state-badge,
-        .sqo-intelligence[data-s-state="S0"] .sqo-intelligence-state-badge {
+        .sqo-compact[data-s-state="S1"] .sqo-compact-state,
+        .sqo-compact[data-s-state="S0"] .sqo-compact-state {
           color: #ff9e4a;
           background: rgba(255, 158, 74, 0.08);
           border-color: rgba(255, 158, 74, 0.2);
         }
-        .sqo-intelligence-state-text {
-          font-size: 13px;
-          color: #ccd6f6;
-          font-weight: 500;
-          letter-spacing: -0.005em;
+        .sqo-compact-label {
+          font-size: 12px;
+          color: #9aa0bc;
+          letter-spacing: 0.01em;
+        }
+        .sqo-compact-caret {
+          font-size: 10px;
+          color: #5a6580;
+          margin-left: auto;
+          transition: color 0.15s ease;
+        }
+        .sqo-compact-badge:hover .sqo-compact-caret {
+          color: #8a95b0;
+        }
+        .sqo-compact-detail {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          padding: 8px 0 4px;
+          border-top: 1px solid #1e2330;
+          max-width: 780px;
+        }
+        .sqo-compact-action {
+          padding-top: 4px;
         }
         .sqo-intelligence-description {
-          font-size: 12px;
-          color: #9aa0bc;
+          font-size: 11px;
+          color: #7a8aaa;
           line-height: 1.55;
-          padding-left: 14px;
-          border-left: 2px solid rgba(74, 158, 255, 0.15);
+          padding-left: 12px;
+          border-left: 2px solid rgba(74, 158, 255, 0.12);
         }
         .sqo-intelligence-line {
-          font-size: 12px;
-          color: #9aa0bc;
+          font-size: 11px;
+          color: #7a8aaa;
           line-height: 1.55;
         }
         .sqo-intelligence-line--debt {
-          color: #b6bdd6;
+          color: #9aa0bc;
           font-weight: 500;
         }
         .sqo-intelligence-line--condition {
-          color: #e6b800;
-          font-size: 11px;
+          color: rgba(230, 184, 0, 0.8);
+          font-size: 10px;
         }
         .sqo-intelligence-line--resolution {
-          color: #7a8aaa;
-          font-style: italic;
+          color: #6a7590;
+          font-size: 10px;
         }
         .sqo-intelligence-line--progression {
-          color: #7a8aaa;
-          font-size: 11px;
+          color: #6a7590;
+          font-size: 10px;
         }
-        .sqo-intelligence-footer {
-          padding-top: 8px;
-        }
-        .sqo-intelligence-link {
-          font-size: 11px;
-          color: #4a9eff;
+        .sqo-intelligence-action {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 8px 12px;
+          border: 1px solid #2a2f40;
+          border-radius: 3px;
           text-decoration: none;
+          transition: border-color 0.15s ease, background 0.15s ease;
+          cursor: pointer;
+        }
+        .sqo-intelligence-action:hover {
+          border-color: #4a9eff;
+          background: rgba(74, 158, 255, 0.04);
+        }
+        .sqo-intelligence-action-label {
+          font-size: 11px;
+          color: #8a95b0;
           letter-spacing: 0.02em;
           transition: color 0.15s ease;
         }
-        .sqo-intelligence-link:hover {
-          color: #6fb4ff;
-          text-decoration: underline;
+        .sqo-intelligence-action:hover .sqo-intelligence-action-label {
+          color: #ccd6f6;
+        }
+        .sqo-intelligence-action-arrow {
+          font-size: 12px;
+          color: #4a5570;
+          transition: color 0.15s ease, transform 0.15s ease;
+        }
+        .sqo-intelligence-action:hover .sqo-intelligence-action-arrow {
+          color: #4a9eff;
+          transform: translateX(2px);
         }
 
         /* Legacy topology-strip and topology-zone (deprecated) */
@@ -4460,30 +4750,82 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: var(--text-dim);
         }
 
-        /* ── Disclosure footer — inference prohibition & qualifier note ── */
+        /* ── Governance Envelope (5A.8.6) ── */
         .disclosure-footer {
-          padding: 16px 56px 20px;
-          border-top: 1px solid #1a2030;
+          padding: 14px 56px 18px;
+          border-top: 1px solid #2a3350;
         }
         .disclosure-footer-inner {
           display: flex;
-          align-items: baseline;
-          gap: 16px;
+          align-items: center;
+          gap: 14px;
           flex-wrap: wrap;
+        }
+        .disclosure-footer-status {
+          display: flex;
+          align-items: center;
+          gap: 7px;
+          flex-shrink: 0;
+        }
+        .disclosure-footer-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #64ffda;
+          flex-shrink: 0;
+        }
+        .disclosure-footer-status-label {
+          font-size: 9px;
+          font-weight: 600;
+          letter-spacing: 0.2em;
+          color: #64ffda;
+          text-transform: uppercase;
         }
         .disclosure-footer-prohibition {
           font-size: 10px;
-          color: #4a5570;
-          letter-spacing: 0.03em;
-          font-style: italic;
+          color: #7a85a3;
+          letter-spacing: 0.02em;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
         .disclosure-footer-qualifier {
           font-size: 9px;
-          color: rgba(230,184,0,0.45);
+          color: rgba(230,184,0,0.5);
           letter-spacing: 0.1em;
           text-transform: uppercase;
           font-weight: 500;
+        }
+        .disclosure-footer-expand {
+          background: none;
+          border: 1px solid #2a2f40;
+          color: #5a6580;
+          font-size: 10px;
+          width: 22px;
+          height: 18px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 2px;
+          cursor: pointer;
+          margin-left: auto;
+          transition: border-color 0.15s ease, color 0.15s ease;
+        }
+        .disclosure-footer-expand:hover {
+          border-color: #4a5570;
+          color: #8a95b0;
+        }
+        .disclosure-footer-details {
+          margin-top: 10px;
+          padding-top: 10px;
+          border-top: 1px solid #1e2330;
+          display: flex;
+          gap: 24px;
+          flex-wrap: wrap;
+        }
+        .disclosure-footer-detail-row {
+          font-size: 10px;
+          font-family: 'Courier New', monospace;
+          color: #5a6580;
+          letter-spacing: 0.03em;
         }
 
         /* ════════════════════════════════════════════════════════════════
