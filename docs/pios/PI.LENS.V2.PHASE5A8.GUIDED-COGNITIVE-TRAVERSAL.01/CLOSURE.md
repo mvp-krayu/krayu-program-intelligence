@@ -61,6 +61,7 @@ Method: Playwright visual verification (headless Chromium via MCP). Each mode te
 | File Changes | docs/pios/PI.LENS.V2.PHASE5A8.GUIDED-COGNITIVE-TRAVERSAL.01/file_changes.json |
 | Validation Log | docs/pios/PI.LENS.V2.PHASE5A8.GUIDED-COGNITIVE-TRAVERSAL.01/validation_log.json |
 | Closure | docs/pios/PI.LENS.V2.PHASE5A8.GUIDED-COGNITIVE-TRAVERSAL.01/CLOSURE.md |
+| Implementation Semantics | docs/pios/PI.LENS.V2.PHASE5A8.GUIDED-COGNITIVE-TRAVERSAL.01/IMPLEMENTATION_SEMANTICS.md |
 
 ## 9. Ready State
 
@@ -99,3 +100,7 @@ Ready for merge to main. Vault propagation required (Section 10).
 - [ ] LENS v2 operational identity updated to reflect guided cognitive orchestration
 - [ ] 5B readiness registered (proto-query infrastructure available)
 - [ ] Terminology assessed — no new locked terms required
+
+## 11. Implementation Semantics
+
+See: IMPLEMENTATION_SEMANTICS.md

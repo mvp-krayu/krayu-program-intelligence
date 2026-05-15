@@ -62,6 +62,22 @@
         "Large narrative block replaced with compact expandable badge (sqo-compact-badge, sqo-compact-detail)",
         "expanded state for detail toggle"
       ]
+    },
+    {
+      "path": "docs/pios/PI.LENS.V2.PHASE5A8.GUIDED-COGNITIVE-TRAVERSAL.01/IMPLEMENTATION_SEMANTICS.md",
+      "action": "CREATED",
+      "phases": ["closure"],
+      "changes": [
+        "Primitive inventory (7 reusable primitives)",
+        "Input contracts (fullReport fields per zone, transition props, SQO props)",
+        "Output contracts (derive function return shape, path object shape)",
+        "Calibration assumptions (6 constants: governed vs tuned)",
+        "Extension points (6 parameterization surfaces)",
+        "Module responsibility map (4 files, owns/does-not-own)",
+        "Architectural decision record (4 decisions with rationale)",
+        "Dependency graph (10 phases)",
+        "5B consumption surface (4 infrastructure items)"
+      ]
     }
   ]
 }
