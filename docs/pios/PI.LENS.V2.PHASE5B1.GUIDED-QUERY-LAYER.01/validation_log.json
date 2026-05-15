@@ -1,0 +1,27 @@
+{
+  "stream": "PI.LENS.V2.PHASE5B1.GUIDED-QUERY-LAYER.01",
+  "classification": "G1",
+  "authority": "INVESTIGATIVE",
+  "baseline": "d4a6671",
+  "commit": "f18cc9e",
+  "timestamp": "2026-05-15",
+  "checks": [
+    { "name": "BOARDROOM_NO_REGRESSION", "result": "PASS", "detail": "Signal field, posture cards, cockpit instruments render. No query chips, no answer panels." },
+    { "name": "DENSE_QUERY_CHIP_RENDERING", "result": "PASS", "detail": "Zone paths render as clickable query chips with zone badge and GUIDED QUERIES label." },
+    { "name": "QUERY_SELECTION", "result": "PASS", "detail": "Click path item sets activeQueryKey, left column transforms to answer panel." },
+    { "name": "ANSWER_PANEL_CONTENT", "result": "PASS", "detail": "Answer panel shows question, summary, evidence rows, structural context, governance boundary." },
+    { "name": "ANSWER_EVIDENCE_ACCURACY", "result": "PASS", "detail": "semanticTopology:0 — Structurally backed: 4, Semantic only: 13, Grounding ratio: 24%. Matches fullReport topology_summary." },
+    { "name": "QUERY_DISMISSAL", "result": "PASS", "detail": "Dismiss button clears activeQueryKey, removes answer panel, restores zone interpretation." },
+    { "name": "ZONE_CHANGE_CLEARS_QUERY", "result": "PASS", "detail": "Scroll from semanticTopology to signalAssessment clears query, shows new zone interpretation." },
+    { "name": "EXPLORED_QUERY_INDICATOR", "result": "PASS", "detail": "Previously clicked query shows data-explored=true. Unexplored query has no attribute." },
+    { "name": "MULTIPLE_QUERY_SELECTION", "result": "PASS", "detail": "signalAssessment:0 shows signal data; signalAssessment:1 shows concentration data. Cross-zone and within-zone switching works." },
+    { "name": "INVESTIGATION_NO_REGRESSION", "result": "PASS", "detail": "No query chips, no answer panels in INVESTIGATION mode." },
+    { "name": "GOVERNANCE_ENVELOPE", "result": "PASS", "detail": "Expanded footer shows 'Guided queries: STRUCTURALLY DERIVED' row." },
+    { "name": "KEYBOARD_ACCESSIBILITY", "result": "PASS", "detail": "Tab to focus query chip, Enter to select, Escape to dismiss. Full keyboard flow." },
+    { "name": "NARRATIVE_OVERLAY_COEXISTENCE", "result": "PASS", "detail": "Hover on non-selected path shows narrative overlay (display:block when parent hovered)." },
+    { "name": "TERM_COLLISION_CHECK", "result": "PASS", "detail": "Guided Query, Answer Panel, Query Chip, Explored/Unexplored — none collide with TERMINOLOGY_LOCK.md." },
+    { "name": "AUTHORITY_BOUNDARY", "result": "PASS", "detail": "All 12 derive functions read only from fullReport. No inference, no AI-generated content." },
+    { "name": "MODE_ISOLATION", "result": "PASS", "detail": "Query interaction only in EXECUTIVE_DENSE. BOARDROOM, BALANCED, INVESTIGATION: no query infrastructure." }
+  ],
+  "summary": "16 checks — 16 PASS — 0 FAIL"
+}

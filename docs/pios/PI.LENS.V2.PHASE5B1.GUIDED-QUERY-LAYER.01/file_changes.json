@@ -1,0 +1,53 @@
+{
+  "stream": "PI.LENS.V2.PHASE5B1.GUIDED-QUERY-LAYER.01",
+  "baseline": "d4a6671",
+  "commit": "f18cc9e",
+  "files": [
+    {
+      "path": "app/execlens-demo/components/lens-v2/zones/IntelligenceField.jsx",
+      "action": "MODIFIED",
+      "lines_added": 364,
+      "lines_removed": 18,
+      "description": "activeQueryKey/exploredQueries state, handleZoneChange/handleQuerySelect/handleQueryDismiss callbacks, Escape listener, GUIDED_QUERY_ANSWERS constant (12 derive functions), answer panel branch in ExecutiveInterpretation, query chip interaction in SupportRail"
+    },
+    {
+      "path": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "action": "MODIFIED",
+      "lines_added": 142,
+      "lines_removed": 0,
+      "description": "CSS for query chip selected/focus/explored states, answer panel rendering, evidence rows with severity coloring, structural context, governance boundary styling"
+    },
+    {
+      "path": "app/execlens-demo/components/lens-v2/LensDisclosureShell.jsx",
+      "action": "MODIFIED",
+      "lines_added": 1,
+      "lines_removed": 0,
+      "description": "Added governance envelope detail row: Guided queries: STRUCTURALLY DERIVED"
+    },
+    {
+      "path": "docs/pios/PI.LENS.V2.PHASE5B1.GUIDED-QUERY-LAYER.01/execution_report.md",
+      "action": "CREATED",
+      "description": "Stream execution report"
+    },
+    {
+      "path": "docs/pios/PI.LENS.V2.PHASE5B1.GUIDED-QUERY-LAYER.01/validation_log.json",
+      "action": "CREATED",
+      "description": "16-check validation log — all PASS"
+    },
+    {
+      "path": "docs/pios/PI.LENS.V2.PHASE5B1.GUIDED-QUERY-LAYER.01/file_changes.json",
+      "action": "CREATED",
+      "description": "File change manifest"
+    },
+    {
+      "path": "docs/pios/PI.LENS.V2.PHASE5B1.GUIDED-QUERY-LAYER.01/CLOSURE.md",
+      "action": "CREATED",
+      "description": "Stream closure with G1 architecture memory propagation"
+    },
+    {
+      "path": "docs/pios/PI.LENS.V2.PHASE5B1.GUIDED-QUERY-LAYER.01/IMPLEMENTATION_SEMANTICS.md",
+      "action": "CREATED",
+      "description": "Implementation semantics per §5.5"
+    }
+  ]
+}

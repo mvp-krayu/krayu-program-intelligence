@@ -22,7 +22,7 @@ The system consists of six evolutionary strata. All are active and reconciled:
 | S3 | [[../03_PATH_SPLIT_EVOLUTION/PATH_A_EMERGENCE\|Path Split]] | 2026-05-07 → 2026-05-08 | OPERATIONAL — PATH A/B terminology active |
 | S4 | [[../04_SQO_AND_QUALIFICATION/SQO_EVOLUTION\|SQO Qualification]] | 2026-05-10 → present | OPERATIONAL — unified semantic operations substrate, 8 ownership domains, 23 artifacts, operational reconciliation loop |
 | S5 | [[../05_RUNTIME_AND_CORRIDOR/CURRENT_RUNTIME_BOUNDARIES\|Runtime Corridor]] | 2026-05-11 → present | OPERATIONAL — evidence/runtime corridors |
-| S6 | [[../07_LENS_V2_OPERATIONAL_IDENTITY/OPERATIONAL_COGNITION_TRANSITION\|Operational Cognition]] | 2026-05-13 → present | OPERATIONAL — cognitive operational intelligence surface, 4-persona projection, interactive topology, guided structural investigation, zone-aware cognitive orchestration, narrative affordance (5B proto-query infrastructure) |
+| S6 | [[../07_LENS_V2_OPERATIONAL_IDENTITY/OPERATIONAL_COGNITION_TRANSITION\|Operational Cognition]] | 2026-05-13 → present | OPERATIONAL — cognitive operational intelligence surface, 4-persona projection, interactive topology, guided structural investigation, zone-aware cognitive orchestration, guided query layer (5B.1 — interactive question-answer cognition) |
 
 ## LENS v2 Operational Identity Transition
 
@@ -43,6 +43,9 @@ LENS v2 has materially transitioned from a static report surface to an interacti
 - Narrative affordance layer with proto-query infrastructure for 5B (5A.8.10)
 - Guided cognitive descent: BOARDROOM → DENSE with zone targeting (5A.8.4)
 - Signal continuity architecture with zone-specific attribution (5A.8.9)
+- Guided query layer with 12 deterministic derive functions (5B.1)
+- Click-to-understand interaction model with answer panel rendering (5B.1)
+- Explored query session tracking with visual indicators (5B.1)
 
 **Commits registering this transition:**
 - 7841f42: boardroom executive cockpit and dense propagation flow
@@ -52,6 +55,7 @@ LENS v2 has materially transitioned from a static report surface to an interacti
 - 70fe57f: SQO runtime overlay integration into LENS v2
 - 605b157: 5A.7 mode separation with signal field and cognitive descent
 - 069ce78: 5A.8 guided cognitive traversal and operational orchestration
+- f18cc9e: 5B.1 guided query layer with interactive question-answer cognition
 
 ## Persona-Based Projection Doctrine
 
@@ -131,8 +135,8 @@ See [[../04_SQO_AND_QUALIFICATION/HYDRATED_AND_QSTATE_EVOLUTION]] for full model
 | 5A.6 Integrated Investigation Flow | Investigative | **COMPLETE** | 72bd8ad |
 | 5A.7 Mode Separation & Signal Field | Investigative | **COMPLETE** | 605b157 |
 | 5A.8 Guided Cognitive Traversal (10 sub-phases) | G1 | **COMPLETE** | 069ce78 |
-| 5B.0 Governance Gate (75.x) | G1 | PLANNED |  |
-| 5B.1 Guided Query Layer | Interpretive (75.x) | PLANNED — blocked on 5B.0 |  |
+| 5B.0 Governance Gate (75.x) | G1 | REPOSITIONED — gate between Layer 1 (investigative) and Layer 2 (interpretive) |  |
+| 5B.1 Guided Query Layer | Investigative | **COMPLETE** | f18cc9e |
 | 5B.2 Narrative Response Surface | Interpretive (75.x) | PLANNED — blocked on 5B.0 |  |
 | 5B.3 Open Copilot Layer | Interpretive (75.x) | PLANNED — blocked on 5B.0 |  |
 
@@ -148,6 +152,17 @@ Phase 5A.8 (PI.LENS.V2.PHASE5A8.GUIDED-COGNITIVE-TRAVERSAL.01) introduced guided
 - **Progressive cognitive ladder:** BOARDROOM (what should I understand?) → DENSE (what can I explore?) → INVESTIGATION (what proves it?). This governs 5B's three-layer model.
 - **Signal continuity:** Zone-specific signal attribution in interpretation (per-signal decomposition, concentration by role, pressure summary).
 - **Three-column cognitive model:** CENTER = observed (scrollable), LEFT = why it matters (sticky), RIGHT = what can be explored (sticky at 73px).
+
+### Phase 5B.1 Architectural Contributions
+
+Phase 5B.1 (PI.LENS.V2.PHASE5B1.GUIDED-QUERY-LAYER.01) evolved proto-query affordances into interactive guided cognition:
+
+- **Guided query interaction model:** Click-to-understand cognitive frame. Right column path items become clickable query chips; left column transforms to answer panel.
+- **GUIDED_QUERY_ANSWERS:** 12 path-level derive functions (2 per zone × 6 zones). All deterministic from fullReport. Output contract: `{ summary, evidence[], structuralContext }`.
+- **activeQueryKey state model:** Format "zone:pathIndex". Null = zone interpretation mode. Set = answer panel mode. Zone change auto-clears.
+- **exploredQueries tracking:** Set-based session awareness. Previously-clicked queries show visual indicators (dimmed styling).
+- **Answer panel rendering:** Question, derived summary, evidence rows (severity-colored), structural context, governance boundary.
+- **Authority reclassification:** 5B.1 reclassified from Interpretive (75.x) to Investigative per operator decision. 5B.0 repositioned as gate between Layer 1 (investigative) and Layer 2 (interpretive).
 
 ### 5B Strategic Direction (Established by 5A.8)
 
@@ -185,3 +200,5 @@ See [[../10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS]] for full path inve
 - 10 zone components (IntelligenceField, StructuralTopologyZone, DeclarationZone, GovernanceRibbon, ReconciliationAwarenessZone, SQOIntelligenceZone, SemanticTrustPostureZone, EvidenceDepthLayer, QualifierMandate, InvestigationReadingGuide)
 - Flagship binding layer (payload resolution → persona → zone assembly)
 - Evidence boundary activation, pressure zone focus, tier handoff
+- Guided query layer (GUIDED_QUERY_ANSWERS — 12 derive functions, click-to-understand, answer panel, explored tracking)
+- Keyboard-accessible query interaction (Tab/Enter/Escape flow)
