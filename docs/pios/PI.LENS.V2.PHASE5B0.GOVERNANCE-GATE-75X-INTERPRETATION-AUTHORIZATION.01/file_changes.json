@@ -1,0 +1,60 @@
+{
+  "stream": "PI.LENS.V2.PHASE5B0.GOVERNANCE-GATE-75X-INTERPRETATION-AUTHORIZATION.01",
+  "date": "2026-05-15",
+  "changes": [
+    {
+      "file": "CLAUDE.md",
+      "action": "MODIFIED",
+      "branch": "main",
+      "detail": "Added §3.4.1 LENS v2 Bounded Interpretive Authority (75.x)"
+    },
+    {
+      "file": "docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md",
+      "action": "MODIFIED",
+      "branch": "main",
+      "detail": "Added 'Interpretive Authority' locked term definition"
+    },
+    {
+      "file": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "action": "MODIFIED",
+      "branch": "main",
+      "detail": "Updated 5B.0 to COMPLETE, 5B.2/5B.3 to UNBLOCKED"
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/LensDisclosureShell.jsx",
+      "action": "MODIFIED",
+      "branch": "main",
+      "detail": "Added authorityTier prop with authority-aware footer rendering"
+    },
+    {
+      "file": "docs/pios/PI.LENS.V2.PHASE5B0.GOVERNANCE-GATE-75X-INTERPRETATION-AUTHORIZATION.01/75x_interpretation_authorization_contract.md",
+      "action": "CREATED",
+      "branch": "main",
+      "detail": "Primary governance deliverable — 75.x authorization contract"
+    },
+    {
+      "file": "docs/brain/canonical/interpretive_authority.md",
+      "action": "CREATED",
+      "branch": "brain/canonical",
+      "detail": "Canonical brain node — existence, derivation chain, 13 prohibitions"
+    },
+    {
+      "file": "docs/brain/product/interpretive_authority.md",
+      "action": "CREATED",
+      "branch": "brain/product",
+      "detail": "Product brain node — permitted/forbidden outputs boundary"
+    },
+    {
+      "file": "docs/brain/publish/interpretive_authority.md",
+      "action": "CREATED",
+      "branch": "brain/publish",
+      "detail": "Publish brain node — external language constraints, disclosure requirements"
+    },
+    {
+      "file": "docs/brain/code/interpretive_authority.md",
+      "action": "CREATED",
+      "branch": "brain/code",
+      "detail": "Code brain node — authorityTier prop interface, file locations, 5B.2 integration points"
+    }
+  ]
+}

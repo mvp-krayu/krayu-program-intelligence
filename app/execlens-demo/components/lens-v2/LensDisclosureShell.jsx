@@ -100,6 +100,7 @@ export default function LensDisclosureShell({
   onModeTransition,
   pendingTransitionZone,
   onTransitionZoneConsumed,
+  authorityTier = 'INVESTIGATIVE',
 }) {
   const directives = useMemo(() => {
     return resolveLayoutDirectives({
@@ -298,7 +299,9 @@ export default function LensDisclosureShell({
             <span className="disclosure-footer-status-label">GOVERNANCE ENVELOPE ACTIVE</span>
           </div>
           <span className="disclosure-footer-prohibition">
-            All outputs structurally derived · no inference · no AI-generated interpretation
+            {authorityTier === 'INTERPRETIVE'
+              ? 'Structural derivation primary · bounded interpretive synthesis active · evidence-bound'
+              : 'All outputs structurally derived · no inference · no AI-generated interpretation'}
           </span>
           {qualifierClass && qualifierClass !== 'Q-01' && qualifierClass !== 'Q-04' && qualifierClass !== 'Q-00' && (
             <span className="disclosure-footer-qualifier">Qualifier {qualifierClass} in effect</span>
@@ -315,9 +318,10 @@ export default function LensDisclosureShell({
         </div>
         {governanceExpanded && (
           <div className="disclosure-footer-details">
-            <div className="disclosure-footer-detail-row">Inference prohibition: ENFORCED</div>
+            <div className="disclosure-footer-detail-row">Inference prohibition: {authorityTier === 'INTERPRETIVE' ? 'BOUNDED (75.x)' : 'ENFORCED'}</div>
             <div className="disclosure-footer-detail-row">Structural derivation: VERIFIED</div>
             <div className="disclosure-footer-detail-row">Guided queries: STRUCTURALLY DERIVED</div>
+            <div className="disclosure-footer-detail-row">Interpretive authority: {authorityTier === 'INTERPRETIVE' ? 'ACTIVE' : 'INACTIVE'}</div>
             <div className="disclosure-footer-detail-row">Qualifier governance: {qualifierClass || 'Q-01'}</div>
           </div>
         )}

@@ -158,6 +158,12 @@
 
 **Status:** CANONICAL — governance concept introduced by Phase 5 roadmap (2026-05-14).
 
+### Interpretive Authority
+
+**Definition:** The governance authority layer above INVESTIGATIVE that permits bounded evidence-synthesized interpretation under explicit 75.x authorization. Allows executive narrative synthesis, domain grounding explanation, blockage pattern explanation, movement/trend explanation, and pattern-matched bounded query responses. All interpretive outputs must trace to structural evidence and be disclosure-wrapped. Does NOT permit team behavior inference, organizational intent inference, human motive interpretation, cultural diagnosis, leadership quality interpretation, management effectiveness assessment, personnel attribution, behavioral prediction, organizational sentiment, causal attribution to humans, remediation prioritization, or ranked next actions.
+
+**Status:** CANONICAL — governance concept introduced by Phase 5B.0 governance gate (2026-05-15).
+
 ### Persona Projection
 
 **Definition:** The system's mechanism for projecting the same structural truth at different cognitive depths. Four personas (BOARDROOM, EXECUTIVE_BALANCED, EXECUTIVE_DENSE, INVESTIGATION_DENSE) represent distinct executive cognition modes, not display variants. Persona gates evidence deterministically — it selects depth, not content.

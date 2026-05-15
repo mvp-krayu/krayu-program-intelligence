@@ -129,6 +129,26 @@ Unless explicitly enabled (75.x):
 - no inference
 - no semantic enrichment
 
+#### 3.4.1 LENS v2 Bounded Interpretive Authority (75.x)
+
+Authorized by: PI.LENS.V2.PHASE5B0.GOVERNANCE-GATE-75X-INTERPRETATION-AUTHORIZATION.01
+
+LENS v2 Phase 5B.2+ operates under bounded interpretive authority:
+- ONLY evidence-synthesized executive narrative
+- ONLY domain grounding, blockage pattern, movement, dimension, coverage explanation
+- ONLY pattern-matched bounded query types
+- ALL outputs must trace to structural evidence
+- ALL interpretive outputs must be disclosure-wrapped
+
+Absolute prohibitions (not overridable):
+- no team behavior, organizational intent, or human motive inference
+- no cultural diagnosis, leadership quality, or management effectiveness assessment
+- no personnel attribution, behavioral prediction, or organizational sentiment
+- no causal attribution to humans
+- no remediation prioritization, "you should" language, or ranked next actions
+
+Structural derivation remains primary. Interpretive authority is additive, not replacement.
+
 ---
 
 ## 4. VALIDATION AUTHORITY MODEL

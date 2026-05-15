@@ -135,10 +135,10 @@ See [[../04_SQO_AND_QUALIFICATION/HYDRATED_AND_QSTATE_EVOLUTION]] for full model
 | 5A.6 Integrated Investigation Flow | Investigative | **COMPLETE** | 72bd8ad |
 | 5A.7 Mode Separation & Signal Field | Investigative | **COMPLETE** | 605b157 |
 | 5A.8 Guided Cognitive Traversal (10 sub-phases) | G1 | **COMPLETE** | 069ce78 |
-| 5B.0 Governance Gate (75.x) | G1 | REPOSITIONED — gate between Layer 1 (investigative) and Layer 2 (interpretive) |  |
+| 5B.0 Governance Gate (75.x) | G1 | **COMPLETE** | pending |
 | 5B.1 Guided Query Layer | Investigative | **COMPLETE** | f18cc9e |
-| 5B.2 Narrative Response Surface | Interpretive (75.x) | PLANNED — blocked on 5B.0 |  |
-| 5B.3 Open Copilot Layer | Interpretive (75.x) | PLANNED — blocked on 5B.0 |  |
+| 5B.2 Narrative Response Surface | Interpretive (75.x) | UNBLOCKED — 75.x authorization active |  |
+| 5B.3 Open Copilot Layer | Interpretive (75.x) | UNBLOCKED — 75.x authorization active |  |
 
 ### Phase 5A.8 Architectural Contributions
 

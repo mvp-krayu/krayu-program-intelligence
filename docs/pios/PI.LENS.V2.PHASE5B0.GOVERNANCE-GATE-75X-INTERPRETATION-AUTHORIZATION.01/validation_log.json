@@ -1,0 +1,73 @@
+{
+  "stream": "PI.LENS.V2.PHASE5B0.GOVERNANCE-GATE-75X-INTERPRETATION-AUTHORIZATION.01",
+  "classification": "G1",
+  "date": "2026-05-15",
+  "checks": [
+    {
+      "name": "CLAUDE.md §3.4 default prohibition intact",
+      "result": "PASS",
+      "detail": "§3.4 unchanged — §3.4.1 is additive exception"
+    },
+    {
+      "name": "§3.4.1 scoped to LENS v2 Phase 5B.2+",
+      "result": "PASS",
+      "detail": "Authorization references stream ID and scopes to LENS v2 only"
+    },
+    {
+      "name": "All 13 prohibitions present in authorization contract",
+      "result": "PASS",
+      "detail": "Section 4 contains all 13 absolute prohibitions"
+    },
+    {
+      "name": "All 13 prohibitions present in §3.4.1",
+      "result": "PASS",
+      "detail": "§3.4.1 contains condensed prohibition list matching all 13"
+    },
+    {
+      "name": "Evidence binding requirement explicit",
+      "result": "PASS",
+      "detail": "Section 5 of authorization contract defines evidence binding"
+    },
+    {
+      "name": "Disclosure requirement explicit",
+      "result": "PASS",
+      "detail": "Section 6 of authorization contract defines disclosure wrapping"
+    },
+    {
+      "name": "LensDisclosureShell default authorityTier renders identical to current",
+      "result": "PASS",
+      "detail": "Default 'INVESTIGATIVE' produces same footer text as before"
+    },
+    {
+      "name": "TERMINOLOGY_LOCK Interpretive Authority locked",
+      "result": "PASS",
+      "detail": "Term locked with full definition, no collision with Investigative Authority"
+    },
+    {
+      "name": "Canonical state updated",
+      "result": "PASS",
+      "detail": "5B.0 COMPLETE, 5B.2/5B.3 UNBLOCKED in roadmap table"
+    },
+    {
+      "name": "4_BRAIN_ALIGNMENT all 4 brains validated",
+      "result": "PASS",
+      "detail": "brain/canonical, brain/product, brain/publish, brain/code nodes created"
+    },
+    {
+      "name": "No Product-exceeds-Code violation",
+      "result": "PASS",
+      "detail": "authorityTier prop implemented, interpretive outputs await 5B.2"
+    },
+    {
+      "name": "Brain nodes on correct branches",
+      "result": "PASS",
+      "detail": "All brain nodes committed to respective brain/* branches"
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 12,
+    "fail": 0,
+    "result": "VALID"
+  }
+}
