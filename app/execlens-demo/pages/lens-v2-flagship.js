@@ -3178,6 +3178,148 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           border-left: 2px solid #2a2f40;
         }
 
+        /* ── Guided Query Chips (5B.1.1) ── */
+        .support-path-item--zone[aria-pressed="true"] {
+          background: rgba(74, 158, 255, 0.1);
+          border-left: 2px solid #4a9eff;
+          padding-left: 6px;
+        }
+        .support-path-item--zone[aria-pressed="true"] .support-path-icon {
+          color: #4a9eff;
+        }
+        .support-path-item--zone[aria-pressed="true"] .support-path-text {
+          color: #ccd6f6;
+        }
+        .support-path-item--zone:focus-visible {
+          outline: 1px solid rgba(74, 158, 255, 0.4);
+          outline-offset: 1px;
+        }
+        .support-path-item--zone[data-explored="true"] .support-path-icon {
+          color: #3a4560;
+        }
+        .support-path-item--zone[data-explored="true"]:not([aria-pressed="true"]) .support-path-text {
+          color: #5a6580;
+        }
+
+        /* ── Answer Panel (5B.1.3) ── */
+        .intel-interp--query-active {
+          animation: narrativeIn 0.2s ease;
+        }
+        .query-answer-panel {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+        .query-answer-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .query-answer-badge {
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          color: #4a9eff;
+          padding: 2px 6px;
+          background: rgba(74, 158, 255, 0.1);
+          border: 1px solid rgba(74, 158, 255, 0.2);
+          border-radius: 2px;
+          flex-shrink: 0;
+        }
+        .query-answer-header-label {
+          font-size: 9px;
+          font-weight: 600;
+          letter-spacing: 0.15em;
+          color: #4a5570;
+        }
+        .query-answer-dismiss {
+          margin-left: auto;
+          background: none;
+          border: 1px solid #2a2f40;
+          color: #5a6580;
+          font-size: 11px;
+          width: 22px;
+          height: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 2px;
+          cursor: pointer;
+          transition: border-color 0.15s ease, color 0.15s ease;
+          flex-shrink: 0;
+        }
+        .query-answer-dismiss:hover {
+          border-color: #4a5570;
+          color: #ccd6f6;
+        }
+        .query-answer-question {
+          font-size: 12px;
+          line-height: 1.55;
+          color: #ccd6f6;
+          font-style: italic;
+          padding-left: 10px;
+          border-left: 2px solid rgba(74, 158, 255, 0.3);
+        }
+        .query-answer-summary {
+          font-size: 11px;
+          line-height: 1.65;
+          color: #a0aac4;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .query-answer-evidence {
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+          padding: 8px 0;
+          border-top: 1px solid #1e2330;
+          border-bottom: 1px solid #1e2330;
+        }
+        .query-answer-evidence-row {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          gap: 12px;
+          padding: 2px 0;
+        }
+        .query-answer-evidence-label {
+          font-size: 10px;
+          color: #7a8aaa;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .query-answer-evidence-value {
+          font-size: 10px;
+          font-family: 'Courier New', monospace;
+          color: #8a95b0;
+          text-align: right;
+        }
+        .query-answer-evidence-row[data-severity="critical"] .query-answer-evidence-value {
+          color: #ff6b6b;
+        }
+        .query-answer-evidence-row[data-severity="elevated"] .query-answer-evidence-value {
+          color: #ff9e4a;
+        }
+        .query-answer-evidence-row[data-severity="nominal"] .query-answer-evidence-value {
+          color: #64ffda;
+        }
+        .query-answer-context {
+          font-size: 10px;
+          line-height: 1.5;
+          color: #5a6580;
+          font-family: 'Courier New', monospace;
+          padding: 6px 8px;
+          background: rgba(10, 12, 18, 0.5);
+          border-left: 2px solid #2a2f40;
+        }
+        .query-answer-boundary {
+          font-size: 10px;
+          line-height: 1.5;
+          color: #4a5570;
+          font-family: 'Courier New', monospace;
+          padding: 5px 7px;
+          background: rgba(10, 12, 18, 0.3);
+          border-left: 2px solid rgba(100, 255, 218, 0.15);
+        }
+
         .status-value--state { color: var(--state-color); transition: color 0.4s; font-weight: 600; }
 
         /* ── Representation Field — primary semantic operational canvas ───
