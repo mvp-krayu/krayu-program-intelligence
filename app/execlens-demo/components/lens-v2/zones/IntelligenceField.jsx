@@ -126,12 +126,34 @@ function RepModeTag({ label, sub, zones }) {
   )
 }
 
-function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts }) {
+function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const chip = (adapted && adapted.qualifierChip) || {}
   const artifacts = (reportPackArtifacts && reportPackArtifacts.length > 0)
     ? reportPackArtifacts
     : buildReportPackRegistry(DEFAULT_BINDING_CLIENT, DEFAULT_BINDING_RUN)
+
+  const ps = (fullReport && fullReport.propagation_summary) || {}
+  const ts = (fullReport && fullReport.topology_summary) || {}
+  const sigs = (fullReport && fullReport.signal_interpretations) || []
+  const pressureZone = ps.primary_zone_business_label || null
+  const activatedSignals = sigs.filter(s => s.severity !== 'NOMINAL')
+  const semanticOnlyCount = ts.semantic_only_count || Math.max(0, (ts.semantic_domain_count || 0) - (ts.structurally_backed_count || 0))
+
+  const paths = []
+  if (boardroomMode) {
+    if (pressureZone && activatedSignals.length > 0) {
+      paths.push({ label: 'Review pressure concentration', condition: true })
+    }
+    paths.push({ label: 'Open structural exposure map', condition: true })
+    if (semanticOnlyCount > 0) {
+      paths.push({ label: `Investigate ${semanticOnlyCount} unresolved domain${semanticOnlyCount !== 1 ? 's' : ''}`, condition: true })
+    }
+    if (qualifierClass && qualifierClass !== 'Q-01' && qualifierClass !== 'Q-00' && qualifierClass !== 'Q-04') {
+      paths.push({ label: 'Inspect evidence boundaries', condition: true })
+    }
+  }
+
   return (
     <aside className="intel-support" aria-label="Support rail — evidence, confidence, report pack">
       <div className="support-block">
@@ -150,6 +172,20 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts }) {
           <div className="support-label">QUALIFIER</div>
           <div className="support-qualifier-class">{chip.class_label || chip.qualifier_class || '—'}</div>
           <div className="support-qualifier-note">advisory bound</div>
+        </div>
+      )}
+
+      {boardroomMode && paths.length > 0 && (
+        <div className="support-block support-block--paths">
+          <div className="support-label">AVAILABLE PATHS</div>
+          <div className="support-paths-list">
+            {paths.map((p, i) => (
+              <div key={i} className="support-path-item">
+                <span className="support-path-marker" />
+                <span className="support-path-text">{p.label}</span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
@@ -179,11 +215,82 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts }) {
   )
 }
 
-function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted }) {
+function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const framing = boardroomMode
     ? INTERP_MODE_FRAMING.BOARDROOM
     : (INTERP_MODE_FRAMING[densityClass] || INTERP_MODE_FRAMING.EXECUTIVE_DENSE)
+
+  const rs = (fullReport && fullReport.readiness_summary) || {}
+  const ts = (fullReport && fullReport.topology_summary) || {}
+  const ps = (fullReport && fullReport.propagation_summary) || {}
+  const sigs = (fullReport && fullReport.signal_interpretations) || []
+  const chains = (fullReport && fullReport.evidence_blocks) || []
+
+  const backedCount = ts.structurally_backed_count || 0
+  const totalDomains = ts.semantic_domain_count || 0
+  const groundingRatio = totalDomains > 0 ? `${backedCount} of ${totalDomains} structurally backed` : null
+
+  const pressureZone = ps.primary_zone_business_label || null
+  const activatedSignals = sigs.filter(s => s.severity !== 'NOMINAL')
+
+  const origin = chains.find(b => b && b.propagation_role === 'ORIGIN')
+  const passthrough = chains.find(b => b && b.propagation_role === 'PASS_THROUGH')
+  const receiver = chains.find(b => b && b.propagation_role === 'RECEIVER')
+  const chainRoles = [origin, passthrough, receiver].filter(Boolean)
+
+  const compoundNarrative = sigs[0] && sigs[0].compound_narrative
+  const confidenceNote = sigs[0] && sigs[0].confidence_note
+
+  if (boardroomMode) {
+    return (
+      <aside className="intel-interp" data-tone={framing.tone} aria-label="Executive environmental synthesis">
+        <div className="interp-tag">
+          <span className="interp-tag-label">{framing.label}</span>
+          <span className="interp-tag-state">{badge.state_label || '—'}</span>
+        </div>
+
+        <div className="interp-block interp-block--lead">
+          <div className="interp-section-label">STRUCTURAL ENVIRONMENT</div>
+          <div className="interp-synthesis">
+            {rs.conclusion || narrative.executive_summary || '—'}
+          </div>
+          {groundingRatio && (
+            <div className="interp-synthesis-meta">{groundingRatio}</div>
+          )}
+        </div>
+
+        {pressureZone && activatedSignals.length > 0 && (
+          <div className="interp-block">
+            <div className="interp-section-label">PRESSURE CONCENTRATION</div>
+            <div className="interp-synthesis">
+              Pressure concentrated around &ldquo;{pressureZone}&rdquo; — {activatedSignals.length} elevated signal{activatedSignals.length !== 1 ? 's' : ''} active.
+            </div>
+          </div>
+        )}
+
+        {chainRoles.length >= 2 && (
+          <div className="interp-block">
+            <div className="interp-section-label">DEPENDENCY PATTERN</div>
+            <div className="interp-synthesis">
+              {chainRoles.map(n => n.domain_alias).join(' → ')} — structural propagation is organizational, not incidental.
+            </div>
+          </div>
+        )}
+
+        {compoundNarrative && (
+          <div className="interp-block">
+            <div className="interp-section-label">SYSTEMIC CONDITION</div>
+            <div className="interp-synthesis">{compoundNarrative}</div>
+            {confidenceNote && (
+              <div className="interp-synthesis-meta">{confidenceNote}</div>
+            )}
+          </div>
+        )}
+      </aside>
+    )
+  }
+
   return (
     <aside className="intel-interp" data-tone={framing.tone} aria-label="Executive interpretation layer">
       <div className="interp-tag">
@@ -202,7 +309,7 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
           <div className="interp-why">{narrative.why_primary_statement}</div>
         </div>
       )}
-      {narrative.structural_summary && (densityClass === 'INVESTIGATION_DENSE' || densityClass === 'EXECUTIVE_BALANCED') && !boardroomMode && framing.structuralLabel && (
+      {narrative.structural_summary && (densityClass === 'INVESTIGATION_DENSE' || densityClass === 'EXECUTIVE_BALANCED') && framing.structuralLabel && (
         <div className="interp-block">
           <div className="interp-section-label">{framing.structuralLabel}</div>
           <div className="interp-structural">{narrative.structural_summary}</div>
@@ -486,13 +593,18 @@ function DenseSignalSection({ fullReport }) {
   )
 }
 
-function DenseTopologyField({ adapted, blocks, scope, fullReport }) {
+function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData }) {
+  const [topoModalOpen, setTopoModalOpen] = useState(false)
+  const openTopoModal = useCallback(() => setTopoModalOpen(true), [])
+  const closeTopoModal = useCallback(() => setTopoModalOpen(false), [])
   const origin = findByRole(blocks, 'ORIGIN')
   const passthrough = findByRole(blocks, 'PASS_THROUGH')
   const receiver = findByRole(blocks, 'RECEIVER')
   const grounded = (scope && scope.grounded_domain_count) || 0
   const total = (scope && scope.domain_count) || 1
   const semanticOnly = Math.max(0, total - grounded)
+  const ps = (fullReport && fullReport.propagation_summary) || {}
+  const pressureZone = ps.primary_zone_business_label || ''
   return (
     <div className="rep-field rep-field--dense">
       <RepModeTag
@@ -622,11 +734,30 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport }) {
       )}
 
       <PressureZoneFocusBlock fullReport={fullReport} />
+
+      {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (
+        <div className="dense-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
+          <TopologyGraph
+            domains={fullReport.semantic_domain_registry}
+            clusters={fullReport.semantic_cluster_registry || []}
+            edges={fullReport.semantic_topology_edges || []}
+            pressureZoneLabel={pressureZone}
+          />
+          <div className="dense-topology-hint">Open structural topology</div>
+        </div>
+      )}
+
+      {topoModalOpen && <TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} mode="dense" />}
     </div>
   )
 }
 
-function InvestigationTraceField({ adapted, blocks, scope, fullReport }) {
+function InvestigationTraceField({ adapted, blocks, scope, fullReport, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData }) {
+  const [topoModalOpen, setTopoModalOpen] = useState(false)
+  const openTopoModal = useCallback(() => setTopoModalOpen(true), [])
+  const closeTopoModal = useCallback(() => setTopoModalOpen(false), [])
+  const ps = (fullReport && fullReport.propagation_summary) || {}
+  const pressureZone = ps.primary_zone_business_label || ''
   const signalRows = []
   ;(blocks || []).forEach(block => {
     ;(block.signal_cards || []).forEach((card, idx) => {
@@ -744,6 +875,20 @@ function InvestigationTraceField({ adapted, blocks, scope, fullReport }) {
           </div>
         </div>
       </div>
+
+      {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (
+        <div className="investigation-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
+          <TopologyGraph
+            domains={fullReport.semantic_domain_registry}
+            clusters={fullReport.semantic_cluster_registry || []}
+            edges={fullReport.semantic_topology_edges || []}
+            pressureZoneLabel={pressureZone}
+          />
+          <div className="investigation-topology-hint">Open forensic topology</div>
+        </div>
+      )}
+
+      {topoModalOpen && <TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} mode="investigation" />}
 
       <TierHandoffStatement />
     </div>
@@ -1479,7 +1624,337 @@ function EvidenceSourcesSection({ domainId, evidenceIntakeData }) {
   )
 }
 
-function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, initialSignalTrace, onSignalTraceConsumed }) {
+const CONFIDENCE_EXECUTIVE_LABELS = {
+  5: 'High structural confidence',
+  4: 'Confirmed structural confidence',
+  3: 'Moderate — partial structural evidence',
+  2: 'Low — advisory only',
+  1: 'Unmapped — no structural backing',
+}
+
+const EXPOSURE_EXECUTIVE_LABELS = {
+  HIGH: 'High exposure — blocks advancement',
+  MEDIUM: 'Elevated structural exposure',
+  LOW: 'Low-level structural exposure',
+  NONE: 'No active exposure',
+}
+
+function DomainPostureCard({ domainId, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, temporalLifecycleData, temporalAnalyticsData, onModeTransition }) {
+  if (!domainId) return null
+
+  const correspondences = (correspondenceData && correspondenceData.correspondences) || []
+  const corr = correspondences.find(c => c.semantic_domain_id === domainId)
+
+  const confLevel = corr ? corr.confidence_level : null
+  const confLabel = CONFIDENCE_EXECUTIVE_LABELS[confLevel] || 'Unknown'
+  const reconciled = corr ? corr.reconciliation_status === 'RECONCILED' : false
+  const grounded = corr ? corr.structural_grounding === 'GROUNDED' : false
+
+  const postures = (debtIndexData && debtIndexData.domain_postures) || []
+  const posture = postures.find(p => p.domain_id === domainId)
+  const debtClear = posture ? posture.debt_status === 'CLEAR' : true
+  const exposureLabel = posture
+    ? (EXPOSURE_EXECUTIVE_LABELS[posture.operational_exposure] || 'No active exposure')
+    : 'No active exposure'
+
+  const blockingIds = (progressionData && progressionData.blocking_debts)
+    ? progressionData.blocking_debts.map(d => d.id)
+    : []
+  const domainBlocksS3 = posture ? posture.debt_item_ids.some(id => blockingIds.includes(id)) : false
+  const effectiveExposure = domainBlocksS3
+    ? 'High exposure — blocks advancement'
+    : (debtClear ? 'No active exposure' : exposureLabel)
+
+  let temporalLabel = 'No temporal data'
+  if (temporalLifecycleData) {
+    const epochs = temporalLifecycleData.epochs || []
+    if (epochs.length >= 2) {
+      const epoch0 = epochs[0]
+      const epoch1 = epochs[epochs.length - 1]
+      const d0 = (epoch0.per_domain || []).find(d => d.domain_id === domainId)
+      const d1 = (epoch1.per_domain || []).find(d => d.domain_id === domainId)
+      if (d0 && d1) {
+        const deltas = temporalLifecycleData.deltas || []
+        const delta = deltas.length > 0 ? deltas[0] : null
+        const domainDelta = delta ? (delta.domain_deltas || []).find(dd => dd.domain_id === domainId) : null
+        const persist = temporalAnalyticsData && temporalAnalyticsData.unresolved_persistence
+        const persistentDomain = persist && persist.persistent_domains
+          ? persist.persistent_domains.find(p => p.domain_id === domainId) : null
+        if (persistentDomain) {
+          temporalLabel = 'Persistent gap — unresolved across epochs'
+        } else if (domainDelta) {
+          temporalLabel = 'Structural movement detected'
+        } else {
+          temporalLabel = 'Stable across epochs'
+        }
+      }
+    }
+  }
+
+  const intakeItems = (evidenceIntakeData && evidenceIntakeData.items) || []
+  const domainSources = intakeItems.filter(
+    item => item.candidate_domains && item.candidate_domains.includes(domainId)
+  )
+  const sourceCount = domainSources.length
+  const evidenceLabel = sourceCount > 0
+    ? `${sourceCount} registered source${sourceCount !== 1 ? 's' : ''}`
+    : 'No registered sources'
+
+  const rows = [
+    { label: 'Structural confidence', value: confLabel, tone: confLevel >= 4 ? 'ok' : confLevel >= 3 ? 'partial' : 'gap', target: 'EXECUTIVE_DENSE' },
+    { label: 'Reconciliation posture', value: reconciled ? 'Reconciled' : 'Unreconciled', tone: reconciled ? 'ok' : 'gap', target: 'EXECUTIVE_DENSE' },
+    { label: 'Grounding state', value: grounded ? 'Structurally grounded' : 'Ungrounded — no structural backing', tone: grounded ? 'ok' : 'gap', target: 'EXECUTIVE_DENSE' },
+    { label: 'Exposure posture', value: effectiveExposure, tone: debtClear ? 'ok' : domainBlocksS3 ? 'gap' : 'partial', target: 'EXECUTIVE_DENSE' },
+    { label: 'Temporal continuity', value: temporalLabel, tone: temporalLabel === 'Stable across epochs' ? 'ok' : temporalLabel.includes('Persistent') ? 'gap' : 'partial', target: 'EXECUTIVE_DENSE' },
+    { label: 'Evidence availability', value: evidenceLabel, tone: sourceCount > 0 ? 'ok' : 'gap', target: 'INVESTIGATION_DENSE' },
+  ]
+
+  const domainName = corr ? corr.semantic_domain_name : domainId
+  const canNavigate = !!onModeTransition
+
+  return (
+    <div className="posture-card">
+      <div className="posture-card-header">
+        <div className="posture-card-name">{domainName}</div>
+        <div className="posture-card-id">{domainId}</div>
+      </div>
+      <div className="posture-card-rows">
+        {rows.map(row => (
+          <div
+            key={row.label}
+            className={`posture-card-row${canNavigate ? ' posture-card-row--navigable' : ''}`}
+            data-tone={row.tone}
+            onClick={canNavigate ? () => onModeTransition(row.target, domainId) : undefined}
+            role={canNavigate ? 'button' : undefined}
+            tabIndex={canNavigate ? 0 : undefined}
+            onKeyDown={canNavigate ? (e => e.key === 'Enter' && onModeTransition(row.target, domainId)) : undefined}
+          >
+            <span className="posture-card-row-label">{row.label}</span>
+            <span className="posture-card-row-value">
+              {row.value}
+              {canNavigate && <span className="posture-card-row-arrow">→</span>}
+            </span>
+          </div>
+        ))}
+      </div>
+      {onModeTransition && (
+        <div className="posture-card-transitions">
+          <div className="posture-card-transitions-rule" />
+          <button className="posture-card-transition" type="button" onClick={() => onModeTransition('INVESTIGATION_DENSE', domainId)}>
+            Open investigation workspace <span className="posture-card-transition-arrow">→</span>
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function DomainStructuralDecomposition({ domainId, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, temporalLifecycleData, temporalAnalyticsData, onDomainSelect }) {
+  if (!domainId) return null
+
+  const correspondences = (correspondenceData && correspondenceData.correspondences) || []
+  const corr = correspondences.find(c => c.semantic_domain_id === domainId)
+
+  const confLevel = corr ? corr.confidence_level : null
+  const confColor = CONFIDENCE_COLORS[confLevel] || '#4a5570'
+  const confLabel = CONFIDENCE_EXECUTIVE_LABELS[confLevel] || 'Unknown'
+  const reconciled = corr ? corr.reconciliation_status === 'RECONCILED' : false
+  const grounded = corr ? corr.structural_grounding === 'GROUNDED' : false
+  const reconciliationMethod = corr ? corr.correspondence_basis : null
+
+  const postures = (debtIndexData && debtIndexData.domain_postures) || []
+  const posture = postures.find(p => p.domain_id === domainId)
+  const debtClear = posture ? posture.debt_status === 'CLEAR' : true
+  const exposureLabel = posture ? (EXPOSURE_EXECUTIVE_LABELS[posture.operational_exposure] || 'No active exposure') : 'No active exposure'
+
+  const blockingIds = (progressionData && progressionData.blocking_debts)
+    ? progressionData.blocking_debts.map(d => d.id)
+    : []
+  const blockingDebtCount = posture
+    ? posture.debt_item_ids.filter(id => blockingIds.includes(id)).length
+    : 0
+
+  let temporalLabel = 'No temporal data'
+  let levelTransition = null
+  if (temporalLifecycleData) {
+    const epochs = temporalLifecycleData.epochs || []
+    if (epochs.length >= 2) {
+      const epoch0 = epochs[0]
+      const epoch1 = epochs[epochs.length - 1]
+      const d0 = (epoch0.per_domain || []).find(d => d.domain_id === domainId)
+      const d1 = (epoch1.per_domain || []).find(d => d.domain_id === domainId)
+      if (d0 && d1) {
+        if (d0.confidence_level !== d1.confidence_level) {
+          levelTransition = `L${d0.confidence_level} → L${d1.confidence_level}`
+        }
+        const deltas = temporalLifecycleData.deltas || []
+        const delta = deltas.length > 0 ? deltas[0] : null
+        const domainDelta = delta ? (delta.domain_deltas || []).find(dd => dd.domain_id === domainId) : null
+        const persist = temporalAnalyticsData && temporalAnalyticsData.unresolved_persistence
+        const persistentDomain = persist && persist.persistent_domains
+          ? persist.persistent_domains.find(p => p.domain_id === domainId) : null
+        if (persistentDomain) {
+          temporalLabel = 'Persistent gap — unresolved across epochs'
+        } else if (domainDelta) {
+          temporalLabel = 'Structural movement detected'
+        } else {
+          temporalLabel = 'Stable across epochs'
+        }
+      }
+    }
+  }
+
+  const intakeItems = (evidenceIntakeData && evidenceIntakeData.items) || []
+  const sourceCount = intakeItems.filter(
+    item => item.candidate_domains && item.candidate_domains.includes(domainId)
+  ).length
+
+  const domainName = corr ? corr.semantic_domain_name : domainId
+  const domainType = corr ? corr.semantic_domain_type : null
+  const domainRole = corr ? (corr.cluster_id || null) : null
+  const factorCount = corr ? (corr.evidence_factors || []).length : 0
+  const componentCount = corr ? corr.structural_component_count : 0
+
+  return (
+    <div className="dsd-panel" style={{ borderLeftColor: confColor }}>
+      <div className="dsp-section">
+        <div className="dsp-section-label">DOMAIN IDENTITY</div>
+        <div className="dsp-grid">
+          <div className="dsp-row">
+            <span className="dsp-key">Name</span>
+            <span className="dsp-val">{domainName}</span>
+          </div>
+          <div className="dsp-row">
+            <span className="dsp-key">ID</span>
+            <span className="dsp-val dsp-mono">{domainId}</span>
+          </div>
+          {domainType && (
+            <div className="dsp-row">
+              <span className="dsp-key">Type</span>
+              <span className="dsp-val">{domainType}</span>
+            </div>
+          )}
+          {domainRole && (
+            <div className="dsp-row">
+              <span className="dsp-key">Cluster</span>
+              <span className="dsp-val dsp-mono">{domainRole}</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="dsp-section">
+        <div className="dsp-section-label">STRUCTURAL CONFIDENCE</div>
+        <div className="dsp-grid">
+          <div className="dsp-row">
+            <span className="dsp-key">Level</span>
+            <span className="dsp-val">
+              <span className="dsp-confidence-dot" style={{ background: confColor }} />
+              {confLabel}
+            </span>
+          </div>
+          <div className="dsp-row">
+            <span className="dsp-key">Evidence backing</span>
+            <span className="dsp-val dsp-dim">backed by {factorCount} factor{factorCount !== 1 ? 's' : ''}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="dsp-section">
+        <div className="dsp-section-label">RECONCILIATION</div>
+        <div className="dsp-grid">
+          <div className="dsp-row">
+            <span className="dsp-key">Status</span>
+            <span className={`dsp-val dsp-badge dsp-badge--${reconciled ? 'ok' : 'gap'}`}>
+              {reconciled ? 'Reconciled' : 'Unreconciled'}
+            </span>
+          </div>
+          {reconciliationMethod && (
+            <div className="dsp-row">
+              <span className="dsp-key">Method</span>
+              <span className="dsp-val dsp-dim">{reconciliationMethod.replace(/_/g, ' ').toLowerCase()}</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="dsp-section">
+        <div className="dsp-section-label">GROUNDING POSTURE</div>
+        <div className="dsp-grid">
+          <div className="dsp-row">
+            <span className="dsp-key">State</span>
+            <span className={`dsp-val dsp-badge dsp-badge--${grounded ? 'ok' : 'gap'}`}>
+              {grounded ? 'Structurally grounded' : 'Ungrounded'}
+            </span>
+          </div>
+          <div className="dsp-row">
+            <span className="dsp-key">Components</span>
+            <span className="dsp-val dsp-dim">{componentCount} structural component{componentCount !== 1 ? 's' : ''}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="dsp-section">
+        <div className="dsp-section-label">DEBT POSTURE</div>
+        <div className="dsp-grid">
+          {debtClear ? (
+            <div className="dsp-row"><span className="dsp-val" style={{ color: '#64ffda' }}>No structural debt</span></div>
+          ) : (
+            <>
+              <div className="dsp-row">
+                <span className="dsp-key">Status</span>
+                <span className="dsp-val">
+                  <span className={`dsp-badge dsp-debt-status dsp-debt-status--${posture.debt_status === 'ACTIVE' ? 'active' : 'partial'}`}>{posture.debt_status}</span>
+                </span>
+              </div>
+              <div className="dsp-row">
+                <span className="dsp-key">Exposure</span>
+                <span className="dsp-val dsp-dim">{exposureLabel}</span>
+              </div>
+              {blockingDebtCount > 0 && (
+                <div className="dsp-row">
+                  <span className="dsp-key">Blocking items</span>
+                  <span className="dsp-val" style={{ color: '#ff6b6b' }}>{blockingDebtCount} blocking S3</span>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+
+      <div className="dsp-section">
+        <div className="dsp-section-label">TEMPORAL MOVEMENT</div>
+        <div className="dsp-grid">
+          <div className="dsp-row">
+            <span className="dsp-key">Status</span>
+            <span className="dsp-val dsp-dim">{temporalLabel}</span>
+          </div>
+          {levelTransition && (
+            <div className="dsp-row">
+              <span className="dsp-key">Level transition</span>
+              <span className="dsp-val dsp-mono">{levelTransition}</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="dsp-section">
+        <div className="dsp-section-label">EVIDENCE SOURCES</div>
+        <div className="dsp-grid">
+          <div className="dsp-row">
+            <span className="dsp-val dsp-dim">
+              {sourceCount > 0
+                ? `${sourceCount} registered source${sourceCount !== 1 ? 's' : ''}`
+                : 'No registered sources'}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, initialSignalTrace, onSignalTraceConsumed, mode, onModeTransition }) {
   const [focusedDomain, setFocusedDomain] = useState(null)
   const [traceResolution, setTraceResolution] = useState(null)
   const panelRef = useRef(null)
@@ -1558,7 +2033,13 @@ function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntake
           )}
           {focusedDomain && (
             <div ref={panelRef}>
-              <DomainStructuralPanel domainId={focusedDomain} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} temporalLifecycleData={temporalLifecycleData} temporalAnalyticsData={temporalAnalyticsData} onDomainSelect={handleDomainSelect} />
+              {mode === 'boardroom' ? (
+                <DomainPostureCard domainId={focusedDomain} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} temporalLifecycleData={temporalLifecycleData} temporalAnalyticsData={temporalAnalyticsData} onModeTransition={onModeTransition} />
+              ) : mode === 'dense' ? (
+                <DomainStructuralDecomposition domainId={focusedDomain} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} temporalLifecycleData={temporalLifecycleData} temporalAnalyticsData={temporalAnalyticsData} onDomainSelect={handleDomainSelect} />
+              ) : (
+                <DomainStructuralPanel domainId={focusedDomain} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} temporalLifecycleData={temporalLifecycleData} temporalAnalyticsData={temporalAnalyticsData} onDomainSelect={handleDomainSelect} />
+              )}
             </div>
           )}
           <div className="topo-modal-domains">
@@ -1595,7 +2076,7 @@ function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntake
   )
 }
 
-function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, narrative, evidenceBlocks, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData }) {
+function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, narrative, evidenceBlocks, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition }) {
   const [topoModalOpen, setTopoModalOpen] = useState(false)
   const [signalTraceId, setSignalTraceId] = useState(null)
   const openTopoModal = useCallback(() => setTopoModalOpen(true), [])
@@ -1635,14 +2116,6 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
       : 'Moderate structural pressure detected — monitor for escalation, no immediate organizational risk.')
     : 'Structural posture is stable. No active exposure requiring executive attention.'
 
-  const nextSteps = []
-  if (qs.qualifier_class === 'Q-02') nextSteps.push('Advisory confirmation required before executive commitment')
-  if (qs.qualifier_class === 'Q-03') nextSteps.push('Semantic continuity only — structural backing absent, executive caution mandatory')
-  if (somethingFound && pressureZone) nextSteps.push(`Review pressure concentration in "${pressureZone}"`)
-  if (semanticOnlyCount > 0) nextSteps.push(`${semanticOnlyCount} domain${semanticOnlyCount > 1 ? 's' : ''} lack structural backing — evidence gaps remain`)
-  if (!somethingFound && qs.qualifier_class === 'Q-01') nextSteps.push('No action required — structural evidence is complete and stable')
-  if (nextSteps.length === 0) nextSteps.push('Continue monitoring — no escalation required')
-
   return (
     <div className="rep-field rep-field--boardroom rep-field--cockpit">
       <RepModeTag
@@ -1656,6 +2129,57 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
           {somethingFound ? 'STRUCTURAL PRESSURE DETECTED' : 'NO ELEVATED PRESSURE'}
         </div>
         <div className="cockpit-finding-summary">{findingVerdict}</div>
+      </div>
+
+      {sigs.length > 0 && (
+        <div className="signal-field" data-pressure={somethingFound ? 'active' : 'nominal'}>
+          {[origin, passthrough, receiver].filter(Boolean).length >= 2 && (
+            <div className="signal-field-vector">
+              {[origin, passthrough, receiver].filter(Boolean).map((node, i, arr) => {
+                const roleGlyph = node.propagation_role === 'ORIGIN' ? '◉' : node.propagation_role === 'PASS_THROUGH' ? '◎' : '◯'
+                const tier = node.signal_cards && node.signal_cards[0] ? node.signal_cards[0].pressure_tier : 'LOW'
+                return (
+                  <span key={node.domain_alias} className="signal-field-node" data-tier={tier}>
+                    <span className="signal-field-glyph">{roleGlyph}</span>
+                    <span className="signal-field-domain">{node.domain_alias}</span>
+                    {i < arr.length - 1 && <span className="signal-field-arrow">→</span>}
+                  </span>
+                )
+              })}
+            </div>
+          )}
+          <div className="signal-field-strip">
+            {activatedSignals.map(sig => (
+              <span key={sig.signal_id} className="signal-field-pip" data-severity={sig.severity} title={sig.signal_name} />
+            ))}
+            {activatedSignals.length > 0 && (
+              <span className="signal-field-count">{activatedSignals.length} activated</span>
+            )}
+            {nominalSignals.length > 0 && (
+              <span className="signal-field-nominal">{nominalSignals.length} nominal</span>
+            )}
+          </div>
+        </div>
+      )}
+
+      <div className="cockpit-synthesis">
+        {rs.conclusion && (
+          <div className="cockpit-synthesis-conclusion">{rs.conclusion}</div>
+        )}
+        {somethingFound && sigs[0] && sigs[0].compound_narrative && (
+          <div className="cockpit-synthesis-compound">{sigs[0].compound_narrative}</div>
+        )}
+        {sigs[0] && sigs[0].confidence_note && (
+          <div className="cockpit-synthesis-confidence">{sigs[0].confidence_note}</div>
+        )}
+        {somethingFound && pressureZone && (
+          <div className="cockpit-synthesis-pressure">
+            Pressure concentrated around &ldquo;{pressureZone}&rdquo;
+            {[origin, passthrough, receiver].filter(Boolean).length >= 2 && (
+              <span> — propagation: {[origin, passthrough, receiver].filter(Boolean).map(n => n.domain_alias).join(' → ')}</span>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="cockpit-instruments">
@@ -1714,7 +2238,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
         </div>
       )}
 
-      {topoModalOpen && <TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} initialSignalTrace={signalTraceId} onSignalTraceConsumed={() => setSignalTraceId(null)} />}
+      {topoModalOpen && <TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} initialSignalTrace={signalTraceId} onSignalTraceConsumed={() => setSignalTraceId(null)} mode="boardroom" onModeTransition={(targetMode, domainId) => { closeTopoModal(); if (onModeTransition) onModeTransition(targetMode, domainId) }} />}
 
       <div className="cockpit-impact">
         <div className="cockpit-impact-label">ORGANIZATIONAL IMPACT</div>
@@ -1750,18 +2274,6 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
         )}
       </div>
 
-      <div className="cockpit-action">
-        <div className="cockpit-action-label">NEXT STEPS</div>
-        <div className="cockpit-action-items">
-          {nextSteps.map((step, i) => (
-            <div key={i} className="cockpit-action-item">
-              <span className="cockpit-action-marker" />
-              <span className="cockpit-action-text">{step}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
       <div className="cockpit-footer">
         All outputs structurally derived — no inference, no AI-generated assessment.
       </div>
@@ -1769,20 +2281,20 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition }) {
   if (boardroomMode) {
-    return <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} />
+    return <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} />
   }
   if (densityClass === 'INVESTIGATION_DENSE') {
-    return <InvestigationTraceField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} />
+    return <InvestigationTraceField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} />
   }
   if (densityClass === 'EXECUTIVE_BALANCED') {
     return <BalancedConsequenceField adapted={adapted} blocks={blocks} scope={scope} renderState={renderState} fullReport={fullReport} qualifierClass={qualifierClass} />
   }
-  return <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} />
+  return <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} />
 }
 
-export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData }) {
+export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition }) {
   const scope = (fullReport && fullReport.topology_scope) || {}
 
   return (
@@ -1795,6 +2307,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         densityClass={densityClass}
         boardroomMode={boardroomMode}
         adapted={adapted}
+        fullReport={fullReport}
       />
 
       <main className="intel-canvas" role="region" aria-label="Semantic operational canvas">
@@ -1815,6 +2328,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           maturityData={maturityData}
           temporalAnalyticsData={temporalAnalyticsData}
           temporalLifecycleData={temporalLifecycleData}
+          onModeTransition={onModeTransition}
         />
       </main>
 
@@ -1823,6 +2337,8 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         scope={scope}
         boardroomMode={boardroomMode}
         reportPackArtifacts={reportPackArtifacts}
+        fullReport={fullReport}
+        qualifierClass={qualifierClass}
       />
     </div>
   )

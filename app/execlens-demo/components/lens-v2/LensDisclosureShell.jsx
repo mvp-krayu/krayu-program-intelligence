@@ -99,6 +99,7 @@ export default function LensDisclosureShell({
   maturityData,
   temporalAnalyticsData,
   temporalLifecycleData,
+  onModeTransition,
 }) {
   const directives = useMemo(() => {
     return resolveLayoutDirectives({
@@ -190,6 +191,7 @@ export default function LensDisclosureShell({
             maturityData={maturityData}
             temporalAnalyticsData={temporalAnalyticsData}
             temporalLifecycleData={temporalLifecycleData}
+            onModeTransition={onModeTransition}
           />
         )
       case 'StructuralTopologyZone':

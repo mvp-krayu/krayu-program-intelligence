@@ -15,7 +15,7 @@
  */
 
 import Head from 'next/head'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import LensDisclosureShell from '../components/lens-v2/LensDisclosureShell'
 
 
@@ -228,6 +228,13 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
   const [densityClass, setDensityClass] = useState('EXECUTIVE_DENSE')
   const [boardroomMode, setBoardroomMode] = useState(false)
   const [investigationStage, setInvestigationStage] = useState('SUMMARY')
+  const [pendingTransitionDomain, setPendingTransitionDomain] = useState(null)
+
+  const handleModeTransition = useCallback((targetMode, focusedDomainId) => {
+    setBoardroomMode(false)
+    setDensityClass(targetMode)
+    if (focusedDomainId) setPendingTransitionDomain(focusedDomainId)
+  }, [])
 
   const reportObject = livePayload || null
 
@@ -432,6 +439,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             maturityData={maturityData}
             temporalAnalyticsData={temporalAnalyticsData}
             temporalLifecycleData={temporalLifecycleData}
+            onModeTransition={handleModeTransition}
           />
         </div>
       </div>
@@ -873,6 +881,112 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #9aa4c0;
           line-height: 1.6;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* ── Signal Field (BOARDROOM atmospheric projection) ────────── */
+        .signal-field {
+          padding: 14px 0;
+          border-bottom: 1px solid #1e2330;
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          flex-wrap: wrap;
+        }
+        .signal-field[data-pressure="active"] {
+          border-bottom-color: rgba(255, 158, 74, 0.15);
+        }
+        .signal-field-vector {
+          display: flex;
+          align-items: center;
+          gap: 0;
+        }
+        .signal-field-node {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+        }
+        .signal-field-glyph {
+          font-size: 10px;
+          line-height: 1;
+        }
+        .signal-field-node[data-tier="HIGH"] .signal-field-glyph { color: #ff6b6b; }
+        .signal-field-node[data-tier="ELEVATED"] .signal-field-glyph { color: #ff9e4a; }
+        .signal-field-node[data-tier="MODERATE"] .signal-field-glyph { color: #ffd700; }
+        .signal-field-node[data-tier="LOW"] .signal-field-glyph { color: #64ffda; }
+        .signal-field-domain {
+          font-size: 10px;
+          color: #7a8aaa;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.02em;
+        }
+        .signal-field-node[data-tier="HIGH"] .signal-field-domain { color: #ccd6f6; }
+        .signal-field-arrow {
+          font-size: 10px;
+          color: #2a2f40;
+          margin: 0 8px;
+        }
+        .signal-field[data-pressure="active"] .signal-field-arrow { color: #4a5570; }
+        .signal-field-strip {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          margin-left: auto;
+        }
+        .signal-field-pip {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          flex-shrink: 0;
+        }
+        .signal-field-pip[data-severity="CRITICAL"] { background: #ff6b6b; box-shadow: 0 0 4px rgba(255, 107, 107, 0.4); }
+        .signal-field-pip[data-severity="HIGH"] { background: #ff6b6b; box-shadow: 0 0 4px rgba(255, 107, 107, 0.3); }
+        .signal-field-pip[data-severity="ELEVATED"] { background: #ff9e4a; box-shadow: 0 0 3px rgba(255, 158, 74, 0.3); }
+        .signal-field-pip[data-severity="MODERATE"] { background: #ffd700; }
+        .signal-field-count {
+          font-size: 9px;
+          color: #ff9e4a;
+          letter-spacing: 0.06em;
+          margin-left: 4px;
+          font-family: 'Courier New', monospace;
+        }
+        .signal-field-nominal {
+          font-size: 9px;
+          color: #4a5570;
+          letter-spacing: 0.06em;
+          margin-left: 4px;
+          font-family: 'Courier New', monospace;
+        }
+
+        /* ── Cockpit Synthesis (BOARDROOM signal presence) ────────────── */
+        .cockpit-synthesis {
+          padding: 14px 0;
+          border-bottom: 1px solid #1e2330;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+        .cockpit-synthesis-conclusion {
+          font-size: 12px;
+          color: #ccd6f6;
+          line-height: 1.55;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .cockpit-synthesis-compound {
+          font-size: 11px;
+          color: #9aa4c0;
+          line-height: 1.55;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .cockpit-synthesis-confidence {
+          font-size: 10px;
+          color: #5a6580;
+          line-height: 1.5;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .cockpit-synthesis-pressure {
+          font-size: 11px;
+          color: #ff9e4a;
+          font-family: 'Courier New', monospace;
         }
 
         .cockpit-instruments {
@@ -1703,6 +1817,171 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #ff6b6b;
         }
 
+        /* ── DomainPostureCard (BOARDROOM executive synthesis) ─────────── */
+        .posture-card {
+          background: #12151f;
+          border: 1px solid #2a2f40;
+          border-left: 3px solid #4a9eff;
+          padding: 16px 18px;
+          margin-top: 12px;
+        }
+        .posture-card-header {
+          margin-bottom: 14px;
+          padding-bottom: 10px;
+          border-bottom: 1px solid #1e2330;
+        }
+        .posture-card-name {
+          font-size: 13px;
+          font-weight: 600;
+          color: #ccd6f6;
+          letter-spacing: 0.02em;
+        }
+        .posture-card-id {
+          font-size: 10px;
+          color: #4a5570;
+          font-family: 'Courier New', monospace;
+          margin-top: 3px;
+        }
+        .posture-card-rows {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+        }
+        .posture-card-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          padding: 7px 0;
+          border-bottom: 1px solid #161a25;
+        }
+        .posture-card-row:last-child {
+          border-bottom: none;
+        }
+        .posture-card-row-label {
+          font-size: 10px;
+          color: #5a6580;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          font-weight: 500;
+          flex-shrink: 0;
+        }
+        .posture-card-row-value {
+          font-size: 11px;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          text-align: right;
+        }
+        .posture-card-row[data-tone="ok"] .posture-card-row-value { color: #64ffda; }
+        .posture-card-row[data-tone="partial"] .posture-card-row-value { color: #ffd700; }
+        .posture-card-row[data-tone="gap"] .posture-card-row-value { color: #ff9e4a; }
+        .posture-card-row--navigable {
+          cursor: pointer;
+          transition: background 0.15s ease;
+          margin: 0 -10px;
+          padding-left: 10px;
+          padding-right: 10px;
+          border-radius: 2px;
+        }
+        .posture-card-row--navigable:hover {
+          background: rgba(74, 158, 255, 0.06);
+        }
+        .posture-card-row--navigable:focus-visible {
+          outline: 1px solid rgba(74, 158, 255, 0.3);
+          outline-offset: -1px;
+        }
+        .posture-card-row-arrow {
+          display: inline-block;
+          margin-left: 6px;
+          color: #2a2f40;
+          font-size: 10px;
+          transition: color 0.15s ease, transform 0.15s ease;
+        }
+        .posture-card-row--navigable:hover .posture-card-row-arrow {
+          color: #4a9eff;
+          transform: translateX(2px);
+        }
+        .posture-card-transitions {
+          margin-top: 14px;
+        }
+        .posture-card-transitions-rule {
+          height: 1px;
+          background: #2a2f40;
+          margin-bottom: 10px;
+        }
+        .posture-card-transition {
+          display: block;
+          width: 100%;
+          background: none;
+          border: none;
+          padding: 6px 0;
+          font-size: 11px;
+          color: #7a8aaa;
+          text-align: left;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          transition: color 0.15s ease;
+          cursor: pointer;
+        }
+        .posture-card-transition:hover {
+          color: #4a9eff;
+        }
+        .posture-card-transition-arrow {
+          color: #4a5570;
+          margin-left: 4px;
+          transition: color 0.15s ease;
+        }
+        .posture-card-transition:hover .posture-card-transition-arrow {
+          color: #4a9eff;
+        }
+
+        /* ── DomainStructuralDecomposition (DENSE mid-depth) ──────────── */
+        .dsd-panel {
+          background: #12151f;
+          border: 1px solid #2a2f40;
+          border-left: 3px solid #4a5570;
+          padding: 14px 16px;
+          margin-top: 12px;
+        }
+
+        /* ── Topology Preview (DENSE + INVESTIGATION) ────────────────── */
+        .dense-topology-preview,
+        .investigation-topology-preview {
+          padding: 12px 0;
+          border-top: 1px solid #1e2330;
+          cursor: pointer;
+          position: relative;
+          transition: background 0.2s;
+          margin-top: 8px;
+        }
+        .dense-topology-preview:hover,
+        .investigation-topology-preview:hover {
+          background: rgba(74, 158, 255, 0.03);
+        }
+        .dense-topology-preview .topo-graph-wrap,
+        .investigation-topology-preview .topo-graph-wrap {
+          margin-bottom: 0;
+        }
+        .dense-topology-preview .topo-graph-heading,
+        .investigation-topology-preview .topo-graph-heading {
+          font-size: 9px;
+          text-align: center;
+        }
+        .dense-topology-preview .topo-graph-svg,
+        .investigation-topology-preview .topo-graph-svg {
+          pointer-events: none;
+        }
+        .dense-topology-hint,
+        .investigation-topology-hint {
+          text-align: center;
+          font-size: 9px;
+          color: #4a5570;
+          letter-spacing: 0.08em;
+          margin-top: 4px;
+          transition: color 0.2s;
+        }
+        .dense-topology-preview:hover .dense-topology-hint,
+        .investigation-topology-preview:hover .investigation-topology-hint {
+          color: #4a9eff;
+        }
+
         .cockpit-impact {
           padding: 18px 0;
           border-bottom: 1px solid #1e2330;
@@ -1944,6 +2223,23 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #7a85a3;
           line-height: 1.55;
           padding-left: 16px;
+        }
+        .interp-synthesis {
+          font-size: 12px;
+          color: #ccd6f6;
+          line-height: 1.6;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .intel-interp[data-tone="projection"] .interp-synthesis {
+          font-size: 13px;
+          line-height: 1.55;
+          color: #e8edf8;
+        }
+        .interp-synthesis-meta {
+          font-size: 10px;
+          color: #5a6580;
+          margin-top: 4px;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
         /* ── BALANCED — Narrative-First Vertical Layout ──────────────── */
@@ -2583,6 +2879,36 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           background: #6a7593;
           opacity: 0.55;
           flex-shrink: 0;
+        }
+
+        /* ── Available Executive Paths (SupportRail, BOARDROOM) ───────── */
+        .support-block--paths {
+          border-top: 1px solid #1e2330;
+        }
+        .support-paths-list {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+        }
+        .support-path-item {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          padding: 5px 0;
+        }
+        .support-path-marker {
+          width: 3px;
+          height: 3px;
+          border-radius: 50%;
+          background: #4a5570;
+          flex-shrink: 0;
+          margin-top: 5px;
+        }
+        .support-path-text {
+          font-size: 11px;
+          color: #7a8aaa;
+          line-height: 1.45;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
         .status-value--state { color: var(--state-color); transition: color 0.4s; font-weight: 600; }
