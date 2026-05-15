@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { DEFAULT_BINDING_CLIENT, DEFAULT_BINDING_RUN } from './constants'
 
 const S_STATE_NARRATIVE = {
@@ -67,43 +68,44 @@ export default function SQOIntelligenceZone({ binding, densityClass, boardroomMo
   const resolutionPath = deriveResolutionPath(dv, tp)
 
   const cockpitHref = `/sqo/client/${DEFAULT_BINDING_CLIENT}/run/${DEFAULT_BINDING_RUN}`
+  const [expanded, setExpanded] = useState(false)
 
   return (
-    <div className="sqo-intelligence" data-s-state={sState}>
-      <div className="sqo-intelligence-header">
-        <div className="sqo-intelligence-label">QUALIFICATION INTELLIGENCE</div>
+    <div className="sqo-intelligence sqo-compact" data-s-state={sState}>
+      <div className="sqo-compact-badge" onClick={() => setExpanded(prev => !prev)} role="button" tabIndex={0} aria-expanded={expanded}>
+        <span className="sqo-compact-state">{sState}</span>
+        <span className="sqo-compact-label">{meta.label}</span>
+        <span className="sqo-compact-caret">{expanded ? '▴' : '▾'}</span>
       </div>
 
-      <div className="sqo-intelligence-narrative">
-        <div className="sqo-intelligence-state">
-          <span className="sqo-intelligence-state-badge">{sState}</span>
-          <span className="sqo-intelligence-state-text">Qualification state: {meta.label}.</span>
+      {expanded && (
+        <div className="sqo-compact-detail">
+          <div className="sqo-intelligence-description">{meta.description}</div>
+
+          {blockingNarrative && (
+            <div className="sqo-intelligence-line sqo-intelligence-line--debt">{blockingNarrative}</div>
+          )}
+
+          {primaryCondition && (
+            <div className="sqo-intelligence-line sqo-intelligence-line--condition">
+              Primary blocking condition: {primaryCondition}.
+            </div>
+          )}
+
+          {resolutionPath && (
+            <div className="sqo-intelligence-line sqo-intelligence-line--resolution">{resolutionPath}</div>
+          )}
+
+          {progressionNarrative && (
+            <div className="sqo-intelligence-line sqo-intelligence-line--progression">{progressionNarrative}</div>
+          )}
         </div>
+      )}
 
-        <div className="sqo-intelligence-description">{meta.description}</div>
-
-        {blockingNarrative && (
-          <div className="sqo-intelligence-line sqo-intelligence-line--debt">{blockingNarrative}</div>
-        )}
-
-        {primaryCondition && (
-          <div className="sqo-intelligence-line sqo-intelligence-line--condition">
-            Primary blocking condition: {primaryCondition}.
-          </div>
-        )}
-
-        {resolutionPath && (
-          <div className="sqo-intelligence-line sqo-intelligence-line--resolution">{resolutionPath}</div>
-        )}
-
-        {progressionNarrative && (
-          <div className="sqo-intelligence-line sqo-intelligence-line--progression">{progressionNarrative}</div>
-        )}
-      </div>
-
-      <div className="sqo-intelligence-footer">
-        <a className="sqo-intelligence-link" href={cockpitHref}>
-          SQO Cockpit — operational drill-down
+      <div className="sqo-compact-action">
+        <a className="sqo-intelligence-action" href={cockpitHref}>
+          <span className="sqo-intelligence-action-label">Open qualification posture</span>
+          <span className="sqo-intelligence-action-arrow">→</span>
         </a>
       </div>
     </div>

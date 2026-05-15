@@ -100,6 +100,8 @@ export default function LensDisclosureShell({
   temporalAnalyticsData,
   temporalLifecycleData,
   onModeTransition,
+  pendingTransitionZone,
+  onTransitionZoneConsumed,
 }) {
   const directives = useMemo(() => {
     return resolveLayoutDirectives({
@@ -128,6 +130,7 @@ export default function LensDisclosureShell({
 
   const persona = directives.diagnostics.persona
   const [expandedTiers, setExpandedTiers] = useState({})
+  const [governanceExpanded, setGovernanceExpanded] = useState(false)
 
   const toggleTier = useCallback((tier) => {
     setExpandedTiers(prev => ({ ...prev, [tier]: !prev[tier] }))
@@ -192,6 +195,8 @@ export default function LensDisclosureShell({
             temporalAnalyticsData={temporalAnalyticsData}
             temporalLifecycleData={temporalLifecycleData}
             onModeTransition={onModeTransition}
+            pendingTransitionZone={pendingTransitionZone}
+            onTransitionZoneConsumed={onTransitionZoneConsumed}
           />
         )
       case 'StructuralTopologyZone':
@@ -299,13 +304,35 @@ export default function LensDisclosureShell({
         )
       })}
 
-      <footer className="disclosure-footer" aria-label="Governance footer">
+      <footer className="disclosure-footer" aria-label="Governance envelope">
         <div className="disclosure-footer-inner">
-          <span className="disclosure-footer-prohibition">No inference, no AI-generated interpretation, no synthetic data. All outputs are structurally derived.</span>
+          <div className="disclosure-footer-status">
+            <span className="disclosure-footer-dot" />
+            <span className="disclosure-footer-status-label">GOVERNANCE ENVELOPE ACTIVE</span>
+          </div>
+          <span className="disclosure-footer-prohibition">
+            All outputs structurally derived · no inference · no AI-generated interpretation
+          </span>
           {qualifierClass && qualifierClass !== 'Q-01' && qualifierClass !== 'Q-04' && qualifierClass !== 'Q-00' && (
             <span className="disclosure-footer-qualifier">Qualifier {qualifierClass} in effect</span>
           )}
+          <button
+            className="disclosure-footer-expand"
+            onClick={() => setGovernanceExpanded(prev => !prev)}
+            type="button"
+            aria-expanded={governanceExpanded}
+            aria-label="Toggle governance details"
+          >
+            {governanceExpanded ? '▴' : '▾'}
+          </button>
         </div>
+        {governanceExpanded && (
+          <div className="disclosure-footer-details">
+            <div className="disclosure-footer-detail-row">Inference prohibition: ENFORCED</div>
+            <div className="disclosure-footer-detail-row">Structural derivation: VERIFIED</div>
+            <div className="disclosure-footer-detail-row">Qualifier governance: {qualifierClass || 'Q-01'}</div>
+          </div>
+        )}
       </footer>
     </div>
   )
