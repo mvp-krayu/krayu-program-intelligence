@@ -409,6 +409,11 @@ function buildStyles() {
       margin-bottom: 10px;
       overflow-x: auto;
     }
+    .topology-container--captured svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
     .topology-svg {
       width: 100%;
       height: auto;
@@ -572,10 +577,9 @@ function buildConfidenceEnvelopeSection(fullReport) {
   return html
 }
 
-function buildTopologySection(fullReport) {
+function buildTopologySection(fullReport, capturedTopologySvg) {
   const domains = (fullReport && fullReport.semantic_domain_registry) || []
   const edges = (fullReport && fullReport.semantic_topology_edges) || []
-  const blocks = (fullReport && fullReport.evidence_blocks) || []
   const ts = (fullReport && fullReport.topology_summary) || {}
   const backed = ts.structurally_backed_count || 0
   const total = ts.semantic_domain_count || 0
@@ -584,12 +588,24 @@ function buildTopologySection(fullReport) {
   if (domains.length === 0 && edges.length === 0) return ''
 
   const hasTopology = edges.length > 0
-
   let html = `<div class="section">`
 
-  if (hasTopology) {
+  if (capturedTopologySvg) {
     html += `<div class="section-title">Structural Semantic Topology</div>`
+    html += `<div class="topology-container topology-container--captured">`
+    html += capturedTopologySvg
+    html += `</div>`
+    html += `<div class="topology-stats">`
+    html += `<span class="mono dim">${total} domains</span>`
+    html += `<span class="mono dim">${edges.length} edges</span>`
+    html += `<span class="mono dim">${clusters} clusters</span>`
+    html += `<span class="mono dim">${backed}/${total} grounded</span>`
+    html += `</div>`
+  } else if (hasTopology) {
+    html += `<div class="section-title">Structural Semantic Topology</div>`
+    html += `<div class="dim" style="font-size:11px;margin-bottom:12px;">Authoritative topology projection was not available at export time. Generated structural view shown instead.</div>`
 
+    const blocks = (fullReport && fullReport.evidence_blocks) || []
     const roleMap = {}
     for (const b of blocks) {
       if (b && b.domain_alias && b.propagation_role) {
@@ -598,55 +614,39 @@ function buildTopologySection(fullReport) {
     }
 
     const groundedSet = new Set()
-    const semanticOnlySet = new Set()
     for (const d of domains) {
       const key = (d.business_label || d.domain_id || '').toLowerCase()
-      if (d.structurally_backed || (d.grounding_status === 'GROUNDED') || (d.lineage_status === 'EXACT' || d.lineage_status === 'STRONG')) {
+      if (d.structurally_backed || d.grounding_status === 'GROUNDED' || d.lineage_status === 'EXACT' || d.lineage_status === 'STRONG') {
         groundedSet.add(key)
-      } else {
-        semanticOnlySet.add(key)
       }
     }
 
     const nodeIds = new Set()
     for (const d of domains) nodeIds.add(d.domain_id || d.business_label || '')
-    for (const e of edges) {
-      nodeIds.add(e.source_domain || '')
-      nodeIds.add(e.target_domain || '')
-    }
+    for (const e of edges) { nodeIds.add(e.source_domain || ''); nodeIds.add(e.target_domain || '') }
     const nodeList = Array.from(nodeIds).filter(Boolean)
 
     const domainLabelMap = {}
-    for (const d of domains) {
-      domainLabelMap[d.domain_id || ''] = d.business_label || d.domain_id || ''
-    }
+    for (const d of domains) { domainLabelMap[d.domain_id || ''] = d.business_label || d.domain_id || '' }
 
     const svgW = 820
     const svgH = Math.max(280, Math.min(460, nodeList.length * 32))
-    const cx = svgW / 2
-    const cy = svgH / 2
-    const rx = svgW * 0.38
-    const ry = svgH * 0.36
+    const cx = svgW / 2, cy = svgH / 2
+    const rx = svgW * 0.38, ry = svgH * 0.36
 
     const nodePositions = {}
     nodeList.forEach((id, i) => {
       const angle = (2 * Math.PI * i) / nodeList.length - Math.PI / 2
-      nodePositions[id] = {
-        x: Math.round(cx + rx * Math.cos(angle)),
-        y: Math.round(cy + ry * Math.sin(angle)),
-      }
+      nodePositions[id] = { x: Math.round(cx + rx * Math.cos(angle)), y: Math.round(cy + ry * Math.sin(angle)) }
     })
 
     html += `<div class="topology-container">`
     html += `<svg viewBox="0 0 ${svgW} ${svgH}" xmlns="http://www.w3.org/2000/svg" class="topology-svg">`
-
     for (const e of edges) {
-      const from = nodePositions[e.source_domain]
-      const to = nodePositions[e.target_domain]
+      const from = nodePositions[e.source_domain], to = nodePositions[e.target_domain]
       if (!from || !to) continue
       html += `<line x1="${from.x}" y1="${from.y}" x2="${to.x}" y2="${to.y}" stroke="#2a2f40" stroke-width="1" stroke-dasharray="${e.relationship_type === 'causal' ? 'none' : '4,3'}"/>`
     }
-
     for (const id of nodeList) {
       const pos = nodePositions[id]
       if (!pos) continue
@@ -656,15 +656,12 @@ function buildTopologySection(fullReport) {
       const role = roleMap[lk] || roleMap[id.toLowerCase()] || null
       const nodeColor = role === 'ORIGIN' ? '#ff6b6b' : role === 'PASS_THROUGH' ? '#ffd700' : isGrounded ? '#64ffda' : '#4a5570'
       const nodeR = role === 'ORIGIN' ? 7 : role === 'PASS_THROUGH' ? 6 : 5
-
       html += `<circle cx="${pos.x}" cy="${pos.y}" r="${nodeR}" fill="${nodeColor}" opacity="0.9"/>`
       html += `<circle cx="${pos.x}" cy="${pos.y}" r="${nodeR + 3}" fill="none" stroke="${nodeColor}" stroke-width="1" opacity="0.3"/>`
-
       const labelX = pos.x > cx ? pos.x + nodeR + 6 : pos.x - nodeR - 6
       const anchor = pos.x > cx ? 'start' : 'end'
       html += `<text x="${labelX}" y="${pos.y + 3}" fill="#7a8aaa" font-family="'Courier New', monospace" font-size="9" text-anchor="${anchor}">${esc(label)}</text>`
     }
-
     html += `</svg></div>`
 
     html += `<div class="topology-legend">`
@@ -672,8 +669,6 @@ function buildTopologySection(fullReport) {
     html += `<span class="topology-legend-item"><span class="topology-dot" style="background:#4a5570;"></span>Semantic only</span>`
     html += `<span class="topology-legend-item"><span class="topology-dot" style="background:#ff6b6b;"></span>Pressure origin</span>`
     html += `<span class="topology-legend-item"><span class="topology-dot" style="background:#ffd700;"></span>Pass-through</span>`
-    html += `<span class="topology-legend-item"><span style="display:inline-block;width:16px;height:1px;background:#2a2f40;vertical-align:middle;margin-right:6px;"></span>Causal</span>`
-    html += `<span class="topology-legend-item"><span style="display:inline-block;width:16px;height:0;border-top:1px dashed #2a2f40;vertical-align:middle;margin-right:6px;"></span>Dependency</span>`
     html += `</div>`
 
     html += `<div class="topology-stats">`
@@ -684,7 +679,7 @@ function buildTopologySection(fullReport) {
     html += `</div>`
   } else {
     html += `<div class="section-title">Semantic-to-Structural Mapping</div>`
-    html += `<div class="topology-fallback-note dim" style="font-size:11px;margin-bottom:12px;">Structural topology view unavailable for this evidence state. Semantic-to-structural mapping is shown instead.</div>`
+    html += `<div class="dim" style="font-size:11px;margin-bottom:12px;">Structural topology projection unavailable for current evidence state. Semantic-to-structural mapping shown instead.</div>`
 
     const grounded = domains.filter(d => d && (d.structurally_backed || d.grounding_status === 'GROUNDED' || d.lineage_status === 'EXACT' || d.lineage_status === 'STRONG'))
     const semanticOnly = domains.filter(d => d && (d.semantic_only || d.grounding_status === 'SEMANTIC_ONLY' || d.lineage_status === 'NONE' || d.lineage_status === 'WEAK'))
@@ -1038,6 +1033,7 @@ export function buildTrailHTML(options) {
     authorityTier,
     densityClass,
     boardroomMode,
+    capturedTopologySvg,
   } = options || {}
 
   const title = 'Structural Evidence Record'
@@ -1045,7 +1041,7 @@ export function buildTrailHTML(options) {
 
   const s0 = buildPostureSection(fullReport, qualifierClass, authorityTier, client, run)
   const sEnv = buildConfidenceEnvelopeSection(fullReport)
-  const sTopo = buildTopologySection(fullReport)
+  const sTopo = buildTopologySection(fullReport, capturedTopologySvg)
   const s1 = buildPosturePathSection(fullReport)
   const s2 = buildGovernanceBoundarySection(fullReport, exploredQueries, interrogationTrail, denseZoneRegistry, denseZonePaths)
   const s3 = buildEvidenceReviewSection(exploredQueries, interrogationTrail, fullReport, denseZonePaths, guidedQueryAnswers, interrogationExpansionRegistry, expansionTypeLabels, denseZoneRegistry, tonePalette, densityClass, boardroomMode)

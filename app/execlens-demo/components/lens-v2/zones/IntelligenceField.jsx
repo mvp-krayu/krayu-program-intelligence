@@ -4606,6 +4606,14 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
     setActiveExpansionIndex(null)
   }, [])
   const handleTrailExport = useCallback(() => {
+    let capturedTopologySvg = null
+    const svgEl = document.querySelector('.topo-graph-svg')
+    if (svgEl) {
+      const clone = svgEl.cloneNode(true)
+      clone.querySelectorAll('.topo-tooltip').forEach(el => el.remove())
+      clone.removeAttribute('ref')
+      capturedTopologySvg = clone.outerHTML
+    }
     const html = buildTrailHTML({
       exploredQueries,
       interrogationTrail,
@@ -4622,6 +4630,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
       authorityTier: piRuntimeActive ? 'PI_INTERPRETIVE' : (emergenceState ? 'INTERPRETIVE' : 'INVESTIGATIVE'),
       densityClass,
       boardroomMode,
+      capturedTopologySvg,
     })
     const blob = new Blob([html], { type: 'text/html' })
     const url = URL.createObjectURL(blob)
