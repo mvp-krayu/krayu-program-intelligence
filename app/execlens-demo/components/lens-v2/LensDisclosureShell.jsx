@@ -129,6 +129,10 @@ export default function LensDisclosureShell({
   const persona = directives.diagnostics.persona
   const [expandedTiers, setExpandedTiers] = useState({})
   const [governanceExpanded, setGovernanceExpanded] = useState(false)
+  const [activeAuthorityTier, setActiveAuthorityTier] = useState(authorityTier)
+  const handleAuthorityChange = useCallback((tier) => {
+    setActiveAuthorityTier(tier || authorityTier)
+  }, [authorityTier])
 
   const toggleTier = useCallback((tier) => {
     setExpandedTiers(prev => ({ ...prev, [tier]: !prev[tier] }))
@@ -195,6 +199,7 @@ export default function LensDisclosureShell({
             onModeTransition={onModeTransition}
             pendingTransitionZone={pendingTransitionZone}
             onTransitionZoneConsumed={onTransitionZoneConsumed}
+            onAuthorityChange={handleAuthorityChange}
           />
         )
       case 'SQOIntelligenceZone':
@@ -299,7 +304,7 @@ export default function LensDisclosureShell({
             <span className="disclosure-footer-status-label">GOVERNANCE ENVELOPE ACTIVE</span>
           </div>
           <span className="disclosure-footer-prohibition">
-            {authorityTier === 'INTERPRETIVE'
+            {activeAuthorityTier === 'INTERPRETIVE'
               ? 'Structural derivation primary · bounded interpretive synthesis active · evidence-bound'
               : 'All outputs structurally derived · no inference · no AI-generated interpretation'}
           </span>
@@ -318,10 +323,10 @@ export default function LensDisclosureShell({
         </div>
         {governanceExpanded && (
           <div className="disclosure-footer-details">
-            <div className="disclosure-footer-detail-row">Inference prohibition: {authorityTier === 'INTERPRETIVE' ? 'BOUNDED (75.x)' : 'ENFORCED'}</div>
+            <div className="disclosure-footer-detail-row">Inference prohibition: {activeAuthorityTier === 'INTERPRETIVE' ? 'BOUNDED (75.x)' : 'ENFORCED'}</div>
             <div className="disclosure-footer-detail-row">Structural derivation: VERIFIED</div>
             <div className="disclosure-footer-detail-row">Guided queries: STRUCTURALLY DERIVED</div>
-            <div className="disclosure-footer-detail-row">Interpretive authority: {authorityTier === 'INTERPRETIVE' ? 'ACTIVE' : 'INACTIVE'}</div>
+            <div className="disclosure-footer-detail-row">Interpretive authority: {activeAuthorityTier === 'INTERPRETIVE' ? 'ACTIVE' : 'INACTIVE'}</div>
             <div className="disclosure-footer-detail-row">Qualifier governance: {qualifierClass || 'Q-01'}</div>
           </div>
         )}

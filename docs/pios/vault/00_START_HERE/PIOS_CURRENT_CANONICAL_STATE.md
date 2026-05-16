@@ -22,7 +22,7 @@ The system consists of six evolutionary strata. All are active and reconciled:
 | S3 | [[../03_PATH_SPLIT_EVOLUTION/PATH_A_EMERGENCE\|Path Split]] | 2026-05-07 → 2026-05-08 | OPERATIONAL — PATH A/B terminology active |
 | S4 | [[../04_SQO_AND_QUALIFICATION/SQO_EVOLUTION\|SQO Qualification]] | 2026-05-10 → present | OPERATIONAL — unified semantic operations substrate, 8 ownership domains, 23 artifacts, operational reconciliation loop |
 | S5 | [[../05_RUNTIME_AND_CORRIDOR/CURRENT_RUNTIME_BOUNDARIES\|Runtime Corridor]] | 2026-05-11 → present | OPERATIONAL — evidence/runtime corridors |
-| S6 | [[../07_LENS_V2_OPERATIONAL_IDENTITY/OPERATIONAL_COGNITION_TRANSITION\|Operational Cognition]] | 2026-05-13 → present | OPERATIONAL — cognitive operational intelligence surface, 4-persona projection, interactive topology, guided structural investigation, zone-aware cognitive orchestration, guided query layer (5B.1 — interactive question-answer cognition) |
+| S6 | [[../07_LENS_V2_OPERATIONAL_IDENTITY/OPERATIONAL_COGNITION_TRANSITION\|Operational Cognition]] | 2026-05-13 → present | OPERATIONAL — cognitive operational intelligence surface, 4-persona projection, interactive topology, guided structural investigation, zone-aware cognitive orchestration, guided query layer (5B.1 — interactive question-answer cognition), selective interpretive emergence (5B.2 — governed narrative synthesis via BALANCED) |
 
 ## LENS v2 Operational Identity Transition
 
@@ -137,7 +137,7 @@ See [[../04_SQO_AND_QUALIFICATION/HYDRATED_AND_QSTATE_EVOLUTION]] for full model
 | 5A.8 Guided Cognitive Traversal (10 sub-phases) | G1 | **COMPLETE** | 069ce78 |
 | 5B.0 Governance Gate (75.x) | G1 | **COMPLETE** | 7b78a04 |
 | 5B.1 Guided Query Layer | Investigative | **COMPLETE** | f18cc9e |
-| 5B.2 Narrative Response Surface | Interpretive (75.x) | UNBLOCKED — 75.x authorization active |  |
+| 5B.2 Narrative Response Surface | Interpretive (75.x) | **COMPLETE** | PENDING |
 | 5B.3 Open Copilot Layer | Interpretive (75.x) | UNBLOCKED — 75.x authorization active |  |
 
 ### Phase 5A.8 Architectural Contributions

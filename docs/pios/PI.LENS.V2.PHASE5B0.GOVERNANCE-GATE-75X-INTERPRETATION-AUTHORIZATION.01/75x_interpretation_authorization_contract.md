@@ -18,9 +18,9 @@ Structural derivation remains primary. Interpretive authority is additive, not r
 
 - **Surface:** LENS v2 runtime (isolated and SQO-embedded flagship routes)
 - **Phases:** 5B.2 (Narrative Response Surface) and subsequent
-- **Persona:** EXECUTIVE_DENSE only (initial scope)
-- **Condition:** Interpretive outputs ONLY when 5B.2+ query types are active
-- **Inactive in:** BOARDROOM, INVESTIGATION_DENSE, deterministic rendering, EXECUTIVE_BALANCED (initial scope)
+- **Persona:** EXECUTIVE_BALANCED (primary) — governed narrative interaction surface
+- **Condition:** Interpretive outputs ONLY when narrative emergence conditions are met (condition-driven, not structurally guaranteed)
+- **Inactive in:** BOARDROOM, EXECUTIVE_DENSE, INVESTIGATION_DENSE
 
 ---
 
@@ -110,17 +110,16 @@ When interpretive outputs are NOT active, the envelope reverts to DETERMINISTIC 
 ### 7.1 Activation Conditions
 
 Interpretive authority is ACTIVE when:
-- 5B.2+ query types are active in the current session
-- Persona is EXECUTIVE_DENSE (initial scope)
-- User has engaged an interpretive query interaction
+- Persona is EXECUTIVE_BALANCED
+- ≥1 interpretive narrative has emerged (elevation threshold met, narrative non-null)
+- Narrative emergence is condition-driven (not structurally guaranteed)
 
 ### 7.2 Deactivation Conditions
 
 Interpretive authority is INACTIVE when:
-- No 5B.2+ query is active
-- Persona is BOARDROOM, EXECUTIVE_BALANCED, or INVESTIGATION_DENSE
+- Persona is BOARDROOM, EXECUTIVE_DENSE, or INVESTIGATION_DENSE
+- Persona is EXECUTIVE_BALANCED but 0 narratives emerged (all thresholds unmet or data insufficient)
 - User is in deterministic rendering mode
-- System is displaying investigative (5B.1) guided queries only
 
 ### 7.3 Default State
 

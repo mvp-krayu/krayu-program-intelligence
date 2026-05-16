@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react'
 import { createPortal } from 'react-dom'
 import { PRESSURE_META, ROLE_META, DEFAULT_BINDING_CLIENT, DEFAULT_BINDING_RUN } from './constants'
 import InvestigationReadingGuide, { TermHint } from './InvestigationReadingGuide'
@@ -199,7 +199,169 @@ const DENSE_ZONE_PATHS = {
   ],
 }
 
-function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass, activeQueryKey, onQuerySelect, exploredQueries }) {
+const BALANCED_INTERPRETIVE_NARRATIVES = {
+  deriveExecutiveSynthesis: {
+    key: 'executiveSynthesis',
+    emergenceClass: 'PRIMARY',
+    label: 'EXECUTIVE SYNTHESIS',
+    emergenceLabel: 'Executive synthesis active',
+    nominalLabel: 'Executive synthesis nominal',
+    derive: (fullReport) => {
+      const rs = (fullReport && fullReport.readiness_summary) || {}
+      const ts = (fullReport && fullReport.topology_summary) || {}
+      const sigs = (fullReport && fullReport.signal_interpretations) || []
+      if (!rs.score && !rs.posture) return { narrative: null, evidenceChain: [], structuralBasis: '', authority: 'INTERPRETIVE', emergenceClass: 'PRIMARY' }
+      const backed = ts.structurally_backed_count || 0
+      const total = ts.semantic_domain_count || 0
+      const semantic = Math.max(0, total - backed)
+      const activated = sigs.filter(s => s.severity !== 'NOMINAL')
+      const groundingPct = total > 0 ? Math.round(backed / total * 100) : 0
+      const posture = (rs.posture || 'INVESTIGATE').toUpperCase()
+      let narrative = posture === 'INVESTIGATE'
+        ? `Structural evidence is incomplete — the system recommends investigation before executive commitment.`
+        : posture === 'PROCEED'
+        ? `Structural evidence supports forward movement across grounded domains.`
+        : posture === 'ESCALATE'
+        ? `Pressure signals exceed operational thresholds — immediate executive attention is structurally warranted.`
+        : `Evidence state is indeterminate — structural grounding has not converged to actionable confidence.`
+      if (semantic > 0 && activated.length > 0) {
+        narrative += ` ${semantic} ungrounded domain${semantic !== 1 ? 's' : ''} and ${activated.length} elevated signal${activated.length !== 1 ? 's' : ''} compress decision certainty.`
+      } else if (semantic > 0) {
+        narrative += ` ${semantic} of ${total} domains lack structural backing, limiting confidence scope.`
+      }
+      const evidenceChain = [
+        { source: 'readiness_summary', claim: `Score: ${rs.score || '—'} · Band: ${rs.band || '—'} · Posture: ${posture}`, severity: rs.band === 'STRONG' ? 'NOMINAL' : 'ELEVATED' },
+        { source: 'topology_summary', claim: `Grounding: ${backed}/${total} (${groundingPct}%) structurally backed`, severity: groundingPct >= 70 ? 'NOMINAL' : 'ELEVATED' },
+      ]
+      if (activated.length > 0) {
+        evidenceChain.push({ source: 'signal_interpretations', claim: `${activated.length} activated signal${activated.length !== 1 ? 's' : ''}`, severity: activated.some(s => s.severity === 'CRITICAL') ? 'CRITICAL' : 'ELEVATED' })
+      }
+      return { narrative, evidenceChain, structuralBasis: `${posture} posture · ${backed}/${total} grounded · ${activated.length} signal${activated.length !== 1 ? 's' : ''} elevated`, authority: 'INTERPRETIVE', emergenceClass: 'PRIMARY' }
+    },
+  },
+  deriveGroundingIntelligence: {
+    key: 'groundingIntelligence',
+    emergenceClass: 'SECONDARY',
+    label: 'GROUNDING INTELLIGENCE',
+    subordinateLabel: 'Grounding posture',
+    emergenceLabel: 'Grounding asymmetry detected',
+    nominalLabel: 'Grounding distribution nominal',
+    derive: (fullReport) => {
+      const ts = (fullReport && fullReport.topology_summary) || {}
+      const backed = ts.structurally_backed_count || 0
+      const total = ts.semantic_domain_count || 0
+      const semantic = Math.max(0, total - backed)
+      const clusters = ts.cluster_count || 0
+      const ratio = total > 0 ? semantic / total : 0
+      if (ratio <= 0.3 && backed >= clusters) return { narrative: null, evidenceChain: [], structuralBasis: '', authority: 'INTERPRETIVE', emergenceClass: 'SECONDARY' }
+      const narrative = ratio > 0.3
+        ? `Most operational domains remain advisory-bound rather than structurally grounded, compressing executive confidence across the topology.`
+        : `Structural backing does not uniformly cover all organizational segments — evidence concentration is uneven across ${clusters} clusters.`
+      return {
+        narrative,
+        evidenceChain: [
+          { source: 'topology_summary', claim: `${backed}/${total} structurally backed · ${semantic} semantic-only`, severity: ratio > 0.5 ? 'CRITICAL' : 'ELEVATED' },
+          { source: 'topology_summary', claim: `${clusters} clusters mapped`, severity: backed < clusters ? 'ELEVATED' : 'NOMINAL' },
+        ],
+        structuralBasis: `${backed}/${total} grounded · ${semantic} advisory-bound · ${clusters} clusters`,
+        authority: 'INTERPRETIVE',
+        emergenceClass: 'SECONDARY',
+      }
+    },
+  },
+  derivePressureIntelligence: {
+    key: 'pressureIntelligence',
+    emergenceClass: 'SECONDARY',
+    label: 'PRESSURE INTELLIGENCE',
+    subordinateLabel: 'Pressure concentration',
+    emergenceLabel: 'Pressure concentration detected',
+    nominalLabel: 'Pressure field nominal',
+    derive: (fullReport) => {
+      const sigs = (fullReport && fullReport.signal_interpretations) || []
+      const ps = (fullReport && fullReport.propagation_summary) || {}
+      const activated = sigs.filter(s => s.severity !== 'NOMINAL')
+      const critical = activated.filter(s => s.severity === 'CRITICAL' || s.severity === 'HIGH')
+      const zoneClass = ps.zone_classification || 'NOMINAL'
+      if (activated.length < 2 && critical.length === 0 && zoneClass === 'NOMINAL') return { narrative: null, evidenceChain: [], structuralBasis: '', authority: 'INTERPRETIVE', emergenceClass: 'SECONDARY' }
+      const zoneName = ps.primary_zone_business_label || 'the primary zone'
+      const narrative = critical.length > 0
+        ? `Structural pressure around ${zoneName} exceeds operational thresholds — ${critical.length} signal${critical.length !== 1 ? 's' : ''} at critical severity indicate conditions requiring executive attention.`
+        : `Compound signal activation around ${zoneName} indicates systemic structural stress rather than isolated conditions.`
+      const evidenceChain = [
+        { source: 'signal_interpretations', claim: `${activated.length} activated · ${critical.length} critical/high`, severity: critical.length > 0 ? 'CRITICAL' : 'ELEVATED' },
+        { source: 'propagation_summary', claim: `Primary zone: ${zoneName} · Classification: ${zoneClass}`, severity: zoneClass !== 'NOMINAL' ? 'ELEVATED' : 'NOMINAL' },
+      ]
+      activated.forEach(s => {
+        evidenceChain.push({ source: s.signal_name, claim: `${s.severity}`, severity: s.severity })
+      })
+      return { narrative, evidenceChain, structuralBasis: `${activated.length} elevated signal${activated.length !== 1 ? 's' : ''} · zone: ${zoneName} · ${zoneClass}`, authority: 'INTERPRETIVE', emergenceClass: 'SECONDARY' }
+    },
+  },
+  derivePropagationIntelligence: {
+    key: 'propagationIntelligence',
+    emergenceClass: 'TERTIARY',
+    label: 'PROPAGATION INTELLIGENCE',
+    subordinateLabel: 'Propagation pattern',
+    emergenceLabel: 'Propagation instability observed',
+    nominalLabel: 'Propagation chain nominal',
+    derive: (fullReport) => {
+      const blocks = (fullReport && fullReport.evidence_blocks) || []
+      const roles = {}
+      blocks.forEach(b => { if (b && b.propagation_role) roles[b.propagation_role] = (roles[b.propagation_role] || []).concat(b) })
+      const roleCount = Object.keys(roles).length
+      const hasOrigin = !!roles['ORIGIN']
+      const hasPassThrough = !!roles['PASS_THROUGH']
+      const hasReceiver = !!roles['RECEIVER']
+      if (roleCount < 2 || (!hasOrigin && !hasPassThrough && !hasReceiver)) return { narrative: null, evidenceChain: [], structuralBasis: '', authority: 'INTERPRETIVE', emergenceClass: 'TERTIARY' }
+      const originDomains = (roles['ORIGIN'] || []).map(b => b.domain_alias)
+      const ptDomains = (roles['PASS_THROUGH'] || []).map(b => b.domain_alias)
+      const recvDomains = (roles['RECEIVER'] || []).map(b => b.domain_alias)
+      const chainStr = [originDomains, ptDomains, recvDomains].filter(a => a.length).map(a => a.join(', ')).join(' → ')
+      const narrative = roleCount >= 3
+        ? `Structural conditions propagate across organizational boundaries — the full ${chainStr} chain is active rather than contained.`
+        : `Propagation chain partially active across ${roleCount} structural roles, indicating cross-domain dependency.`
+      const evidenceChain = blocks.filter(b => b && b.propagation_role).map(b => ({
+        source: b.domain_alias,
+        claim: `${b.propagation_role} · ${b.structural_backing || 'unknown'} backing`,
+        severity: b.propagation_role === 'ORIGIN' ? 'ELEVATED' : 'NOMINAL',
+      }))
+      return { narrative, evidenceChain, structuralBasis: `${roleCount} roles active · chain: ${chainStr}`, authority: 'INTERPRETIVE', emergenceClass: 'TERTIARY' }
+    },
+  },
+  deriveQualificationIntelligence: {
+    key: 'qualificationIntelligence',
+    emergenceClass: 'TERTIARY',
+    label: 'QUALIFICATION INTELLIGENCE',
+    subordinateLabel: 'Qualification compression',
+    emergenceLabel: 'Qualification posture degraded',
+    nominalLabel: 'Qualification posture stable',
+    derive: (fullReport) => {
+      const rs = (fullReport && fullReport.readiness_summary) || {}
+      const ts = (fullReport && fullReport.topology_summary) || {}
+      const backed = ts.structurally_backed_count || 0
+      const total = ts.semantic_domain_count || 0
+      const semantic = Math.max(0, total - backed)
+      const advisoryRatio = total > 0 ? semantic / total : 0
+      const band = rs.band || ''
+      if (band === 'STRONG' && advisoryRatio <= 0.4) return { narrative: null, evidenceChain: [], structuralBasis: '', authority: 'INTERPRETIVE', emergenceClass: 'TERTIARY' }
+      const narrative = advisoryRatio > 0.4
+        ? `Confidence compression is active — ${Math.round(advisoryRatio * 100)}% of domains are advisory-bound, limiting decision certainty to structurally grounded areas only.`
+        : `Qualification has not reached STRONG band — structural evidence supports operational awareness but not unconditional executive commitment.`
+      return {
+        narrative,
+        evidenceChain: [
+          { source: 'readiness_summary', claim: `Band: ${band || '—'}`, severity: band === 'STRONG' ? 'NOMINAL' : 'ELEVATED' },
+          { source: 'topology_summary', claim: `Advisory-bound: ${semantic}/${total} (${Math.round(advisoryRatio * 100)}%)`, severity: advisoryRatio > 0.4 ? 'CRITICAL' : 'ELEVATED' },
+        ],
+        structuralBasis: `${band || '—'} band · ${semantic}/${total} advisory-bound`,
+        authority: 'INTERPRETIVE',
+        emergenceClass: 'TERTIARY',
+      }
+    },
+  },
+}
+
+function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass, activeQueryKey, onQuerySelect, exploredQueries, emergenceState }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const chip = (adapted && adapted.qualifierChip) || {}
   const artifacts = (reportPackArtifacts && reportPackArtifacts.length > 0)
@@ -249,6 +411,24 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
           <div className="support-label">QUALIFIER</div>
           <div className="support-qualifier-class">{chip.class_label || chip.qualifier_class || '—'}</div>
           <div className="support-qualifier-note">advisory bound</div>
+        </div>
+      )}
+
+      {densityClass === 'EXECUTIVE_BALANCED' && emergenceState && (
+        <div className="support-block support-block--emergence">
+          <div className="support-label">INTELLIGENCE STATE</div>
+          <div className="emergence-index">
+            {Object.values(BALANCED_INTERPRETIVE_NARRATIVES).map(fn => {
+              const state = emergenceState[fn.key]
+              const active = state && state.narrative !== null
+              return (
+                <div key={fn.key} className="emergence-indicator" data-active={active} data-tier={fn.emergenceClass}>
+                  <span className="emergence-indicator-dot">{active ? '●' : '○'}</span>
+                  <span className="emergence-indicator-label">{active ? fn.emergenceLabel : fn.nominalLabel}</span>
+                </div>
+              )
+            })}
+          </div>
         </div>
       )}
 
@@ -735,7 +915,7 @@ const GUIDED_QUERY_ANSWERS = {
   ],
 }
 
-function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport, activeZoneKey, activeQueryKey, onQueryDismiss }) {
+function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport, activeZoneKey, activeQueryKey, onQueryDismiss, emergenceState }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const framing = boardroomMode
     ? INTERP_MODE_FRAMING.BOARDROOM
@@ -805,6 +985,48 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
             {confidenceNote && (
               <div className="interp-synthesis-meta">{confidenceNote}</div>
             )}
+          </div>
+        )}
+      </aside>
+    )
+  }
+
+  if (densityClass === 'EXECUTIVE_BALANCED' && emergenceState) {
+    const emerged = Object.values(emergenceState).filter(n => n && n.narrative !== null)
+    const authorityActive = emerged.length > 0
+    return (
+      <aside className="intel-interp intel-interp--balanced-interpretive" data-tone={framing.tone} aria-label="Executive interpretation — governed narrative">
+        <div className="interp-tag">
+          <span className="interp-tag-label">{framing.label}</span>
+          <span className="interp-tag-state">{badge.state_label || '—'}</span>
+          {authorityActive && <span className="interp-75x-marker">75.x</span>}
+        </div>
+
+        {narrative.executive_summary && (
+          <div className={`interp-block interp-block--lead${authorityActive ? ' interp-block--interpretive' : ''}`}>
+            <div className="interp-section-label">{framing.assessmentLabel}</div>
+            <div className="interp-summary">{narrative.executive_summary}</div>
+          </div>
+        )}
+
+        {emerged.filter(n => n.emergenceClass === 'SECONDARY' || n.emergenceClass === 'TERTIARY').map(n => {
+          const registryEntry = Object.values(BALANCED_INTERPRETIVE_NARRATIVES).find(fn => emergenceState[fn.key] === n)
+          return (
+            <div key={(registryEntry && registryEntry.key) || n.structuralBasis} className={`interp-block interp-block--interpretive${n.emergenceClass === 'TERTIARY' ? ' interp-block--tertiary' : ''}`}>
+              <div className="interp-section-label interp-section-label--emerged">
+                {(registryEntry && registryEntry.subordinateLabel) || 'Structural observation'}
+              </div>
+              <div className="interp-synthesis interp-synthesis--emerged">
+                {n.evidenceChain[0] && n.evidenceChain[0].claim}
+              </div>
+            </div>
+          )
+        })}
+
+        {narrative.structural_summary && framing.structuralLabel && (
+          <div className="interp-block">
+            <div className="interp-section-label">{framing.structuralLabel}</div>
+            <div className="interp-structural">{narrative.structural_summary}</div>
           </div>
         )}
       </aside>
@@ -1136,13 +1358,72 @@ function QualifierNarrativeLine({ qualifierClass }) {
   )
 }
 
-function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullReport, qualifierClass }) {
+function BalancedNarrativeSection({ derived, subordinateLabel }) {
+  if (!derived || !derived.narrative) return null
+  const tier = derived.emergenceClass
+  const isTertiary = tier === 'TERTIARY'
+  return (
+    <div className="balanced-narrative" data-authority="INTERPRETIVE" data-emergence={tier}>
+      {tier === 'PRIMARY' ? (
+        <div className="balanced-narrative-marker">EXECUTIVE SYNTHESIS · 75.x</div>
+      ) : (
+        <div className="balanced-narrative-subordinate-marker">{subordinateLabel || 'Structural observation'}</div>
+      )}
+      <div className="balanced-narrative-layer1">{derived.narrative}</div>
+      {!isTertiary && (
+        <div className="balanced-narrative-layer2">{derived.structuralBasis}</div>
+      )}
+      {derived.evidenceChain && derived.evidenceChain.length > 0 && (
+        <details className="balanced-narrative-layer3">
+          <summary className="balanced-narrative-trace-toggle">
+            {isTertiary ? `${derived.evidenceChain.length} anchor${derived.evidenceChain.length !== 1 ? 's' : ''}` : `Evidence lineage · ${derived.evidenceChain.length} anchor${derived.evidenceChain.length !== 1 ? 's' : ''}`}
+          </summary>
+          <div className="balanced-narrative-trace-body">
+            {derived.evidenceChain.map((e, i) => (
+              <div key={i} className="balanced-narrative-anchor" data-severity={e.severity}>
+                <span className="balanced-narrative-anchor-source">{e.source}</span>
+                <span className="balanced-narrative-anchor-claim">{e.claim}</span>
+              </div>
+            ))}
+          </div>
+        </details>
+      )}
+    </div>
+  )
+}
+
+function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullReport, qualifierClass, onAuthorityChange, onEmergenceState }) {
   const origin = findByRole(blocks, 'ORIGIN')
   const badge = (adapted && adapted.readinessBadge) || {}
   const chip = (adapted && adapted.qualifierChip) || {}
   const grounded = (scope && scope.grounded_domain_count) || 0
   const total = (scope && scope.domain_count) || 1
   const groundedPct = Math.round((grounded / Math.max(1, total)) * 100)
+
+  const narratives = useMemo(() => {
+    const results = {}
+    Object.entries(BALANCED_INTERPRETIVE_NARRATIVES).forEach(([name, fn]) => {
+      results[fn.key] = fn.derive(fullReport)
+    })
+    return results
+  }, [fullReport])
+
+  const emergedCount = useMemo(() => {
+    return Object.values(narratives).filter(n => n && n.narrative !== null).length
+  }, [narratives])
+
+  useEffect(() => {
+    if (onAuthorityChange) {
+      onAuthorityChange(emergedCount > 0 ? 'INTERPRETIVE' : null)
+    }
+  }, [emergedCount, onAuthorityChange])
+
+  useEffect(() => {
+    if (onEmergenceState) onEmergenceState(narratives)
+  }, [narratives, onEmergenceState])
+
+  const authorityActive = emergedCount > 0
+
   return (
     <div className="rep-field rep-field--balanced">
       <RepModeTag
@@ -1186,17 +1467,30 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
         </div>
       )}
 
+      <BalancedNarrativeSection derived={narratives.executiveSynthesis} />
+
       <QualifierNarrativeLine qualifierClass={qualifierClass} />
 
       <EvidenceBoundarySection scope={scope} fullReport={fullReport} />
+      <BalancedNarrativeSection derived={narratives.groundingIntelligence} subordinateLabel="Grounding posture" />
 
       <SignalNarrativeBlock fullReport={fullReport} />
+      <BalancedNarrativeSection derived={narratives.pressureIntelligence} subordinateLabel="Pressure concentration" />
 
       <PressureZoneFocusBlock fullReport={fullReport} />
+      <BalancedNarrativeSection derived={narratives.propagationIntelligence} subordinateLabel="Propagation pattern" />
 
       <StructuralConclusionBlock fullReport={fullReport} />
+      <BalancedNarrativeSection derived={narratives.qualificationIntelligence} subordinateLabel="Qualification compression" />
 
-      <TierHandoffStatement />
+      <div className="tier-handoff" aria-label="Governance handoff">
+        <div className="tier-handoff-rule" />
+        <div className="tier-handoff-text">
+          {authorityActive
+            ? 'Structural derivation primary — bounded interpretive synthesis · evidence-bound · 75.x'
+            : 'This surface presents structurally derived evidence only. All outputs are deterministic, traceable, and bound by the governance framework. No inference, ranking, or AI-generated assessment has been applied.'}
+        </div>
+      </div>
     </div>
   )
 }
@@ -2956,7 +3250,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState }) {
   if (boardroomMode) {
     return <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} />
   }
@@ -2964,16 +3258,19 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
     return <InvestigationTraceField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} />
   }
   if (densityClass === 'EXECUTIVE_BALANCED') {
-    return <BalancedConsequenceField adapted={adapted} blocks={blocks} scope={scope} renderState={renderState} fullReport={fullReport} qualifierClass={qualifierClass} />
+    return <BalancedConsequenceField adapted={adapted} blocks={blocks} scope={scope} renderState={renderState} fullReport={fullReport} qualifierClass={qualifierClass} onAuthorityChange={onAuthorityChange} onEmergenceState={onEmergenceState} />
   }
   return <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onZoneChange={onZoneChange} />
 }
 
-export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed }) {
+export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed, onAuthorityChange }) {
   const scope = (fullReport && fullReport.topology_scope) || {}
   const [activeZoneKey, setActiveZoneKey] = useState(null)
   const [activeQueryKey, setActiveQueryKey] = useState(null)
   const [exploredQueries, setExploredQueries] = useState(() => new Set())
+  const [emergenceState, setEmergenceState] = useState(null)
+  const isBalanced = !boardroomMode && densityClass === 'EXECUTIVE_BALANCED'
+  const handleEmergenceState = useCallback((state) => { setEmergenceState(state) }, [])
   const isDense = !boardroomMode && densityClass === 'EXECUTIVE_DENSE'
   const canvasRef = useRef(null)
   const handleZoneChange = useCallback((zoneKey) => {
@@ -2988,6 +3285,11 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
   const handleQueryDismiss = useCallback(() => {
     setActiveQueryKey(null)
   }, [])
+
+  useEffect(() => {
+    if (!isBalanced && onAuthorityChange) onAuthorityChange(null)
+    if (!isBalanced) setEmergenceState(null)
+  }, [isBalanced, onAuthorityChange])
 
   useEffect(() => {
     if (!pendingTransitionZone || !isDense) return
@@ -3033,6 +3335,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         activeZoneKey={isDense ? activeZoneKey : null}
         activeQueryKey={isDense ? activeQueryKey : null}
         onQueryDismiss={handleQueryDismiss}
+        emergenceState={isBalanced ? emergenceState : null}
       />
 
       <main ref={canvasRef} className="intel-canvas" role="region" aria-label="Semantic operational canvas">
@@ -3055,6 +3358,8 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           temporalLifecycleData={temporalLifecycleData}
           onModeTransition={onModeTransition}
           onZoneChange={isDense ? handleZoneChange : undefined}
+          onAuthorityChange={isBalanced ? onAuthorityChange : undefined}
+          onEmergenceState={isBalanced ? handleEmergenceState : undefined}
         />
       </main>
 
@@ -3070,6 +3375,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         activeQueryKey={isDense ? activeQueryKey : null}
         onQuerySelect={handleQuerySelect}
         exploredQueries={exploredQueries}
+        emergenceState={isBalanced ? emergenceState : null}
       />
     </div>
   )

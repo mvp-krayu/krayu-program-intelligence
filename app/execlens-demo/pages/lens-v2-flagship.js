@@ -2893,6 +2893,232 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           line-height: 1.4;
         }
 
+        /* BALANCED Narrative Emergence (5B.2 — interpretive surfaces) */
+        .balanced-narrative {
+          margin: 20px 0;
+          padding: 16px 20px;
+          background: rgba(74, 158, 255, 0.03);
+          border-left: 2px solid rgba(74, 158, 255, 0.15);
+          border-radius: 0 4px 4px 0;
+          transition: opacity 0.15s ease;
+        }
+        .balanced-narrative[data-emergence="PRIMARY"] {
+          border-left-width: 3px;
+          border-left-color: rgba(74, 158, 255, 0.25);
+          padding: 20px 24px;
+          margin: 28px 0;
+          background: rgba(74, 158, 255, 0.04);
+        }
+        .balanced-narrative[data-emergence="SECONDARY"] {
+          background: transparent;
+          border-left-color: rgba(74, 158, 255, 0.12);
+          padding: 14px 20px;
+          margin: 16px 0;
+        }
+        .balanced-narrative[data-emergence="TERTIARY"] {
+          background: transparent;
+          border-left-color: rgba(74, 158, 255, 0.04);
+          border-left-width: 1px;
+          padding: 8px 20px;
+          margin: 8px 0;
+        }
+        .balanced-narrative-marker {
+          font-size: 9px;
+          color: #6a7a9a;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          font-weight: 500;
+          margin-bottom: 10px;
+        }
+        .balanced-narrative-subordinate-marker {
+          font-size: 9.5px;
+          color: #4a5570;
+          letter-spacing: 0.04em;
+          margin-bottom: 6px;
+          font-family: 'Courier New', monospace;
+        }
+
+        /* Layer 1 — Executive Observation (full visibility, highest intensity) */
+        .balanced-narrative-layer1 {
+          font-size: 12.5px;
+          color: #ccd6f6;
+          line-height: 1.7;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          max-width: 640px;
+        }
+        .balanced-narrative[data-emergence="PRIMARY"] .balanced-narrative-layer1 {
+          font-size: 13px;
+          line-height: 1.75;
+          color: #d6dceb;
+        }
+        .balanced-narrative[data-emergence="SECONDARY"] .balanced-narrative-layer1 {
+          font-size: 12px;
+          line-height: 1.6;
+          color: #9aa8c4;
+        }
+        .balanced-narrative[data-emergence="SECONDARY"] .balanced-narrative-layer2 {
+          color: #4a5570;
+          font-size: 10px;
+        }
+        .balanced-narrative[data-emergence="TERTIARY"] .balanced-narrative-layer1 {
+          font-size: 11.5px;
+          line-height: 1.5;
+          color: #6a7a9a;
+        }
+        .balanced-narrative[data-emergence="TERTIARY"] .balanced-narrative-subordinate-marker {
+          font-size: 9px;
+          color: #3e4d66;
+        }
+
+        /* Layer 2 — Structural Basis (visible but receding — lower intensity) */
+        .balanced-narrative-layer2 {
+          margin-top: 8px;
+          font-size: 10.5px;
+          color: #5a6a88;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.02em;
+          line-height: 1.5;
+        }
+
+        /* Layer 3 — Evidence Lineage (collapsed by default — constitutional grounding anchors) */
+        .balanced-narrative-layer3 {
+          margin-top: 10px;
+        }
+        .balanced-narrative-trace-toggle {
+          font-size: 9.5px;
+          color: #4a5570;
+          letter-spacing: 0.08em;
+          cursor: pointer;
+          font-family: 'Courier New', monospace;
+          list-style: none;
+          user-select: none;
+          transition: color 0.15s ease;
+        }
+        .balanced-narrative-trace-toggle::-webkit-details-marker { display: none; }
+        .balanced-narrative-trace-toggle::before {
+          content: '▸ ';
+          font-size: 8px;
+          color: #3a4560;
+          transition: transform 0.15s ease;
+          display: inline-block;
+        }
+        .balanced-narrative-layer3[open] .balanced-narrative-trace-toggle::before {
+          content: '▾ ';
+        }
+        .balanced-narrative-trace-toggle:hover {
+          color: #7a8aaa;
+        }
+        .balanced-narrative-trace-body {
+          margin-top: 8px;
+          padding-left: 10px;
+          border-left: 1px solid rgba(74, 158, 255, 0.08);
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .balanced-narrative-anchor {
+          display: flex;
+          align-items: baseline;
+          gap: 10px;
+          font-size: 10px;
+          font-family: 'Courier New', monospace;
+          color: #4a5570;
+        }
+        .balanced-narrative-anchor[data-severity="CRITICAL"] .balanced-narrative-anchor-source { color: #ff6b6b; }
+        .balanced-narrative-anchor[data-severity="ELEVATED"] .balanced-narrative-anchor-source { color: #ff9e4a; }
+        .balanced-narrative-anchor[data-severity="NOMINAL"] .balanced-narrative-anchor-source { color: #64ffda; }
+        .balanced-narrative-anchor-source {
+          flex-shrink: 0;
+          color: #3e4d66;
+          min-width: 140px;
+        }
+        .balanced-narrative-anchor-claim {
+          color: #4a5570;
+        }
+
+        /* Intelligence Emergence Index (SupportRail) */
+        .support-block--emergence {
+          border-top: 1px solid #1a2030;
+        }
+        .emergence-index {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          margin-top: 8px;
+        }
+        .emergence-indicator {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 10px;
+          color: #4a5570;
+          transition: color 0.15s ease;
+        }
+        .emergence-indicator[data-active="true"] {
+          color: #8a96b2;
+        }
+        .emergence-indicator-dot {
+          font-size: 8px;
+          width: 12px;
+          text-align: center;
+          flex-shrink: 0;
+        }
+        .emergence-indicator[data-active="true"] .emergence-indicator-dot {
+          color: #4a9eff;
+        }
+        .emergence-indicator-label {
+          letter-spacing: 0.01em;
+        }
+        .emergence-indicator[data-tier="TERTIARY"] {
+          font-size: 9.5px;
+          color: #3e4d66;
+        }
+        .emergence-indicator[data-tier="TERTIARY"][data-active="true"] {
+          color: #5a6a88;
+        }
+        .emergence-indicator[data-tier="TERTIARY"][data-active="true"] .emergence-indicator-dot {
+          color: rgba(74, 158, 255, 0.5);
+        }
+
+        /* Left column interpretive markers (BALANCED) */
+        .intel-interp--balanced-interpretive .interp-75x-marker {
+          font-size: 8px;
+          color: #5a6580;
+          letter-spacing: 0.12em;
+          padding: 1px 5px;
+          border: 1px solid #2a2f40;
+          border-radius: 2px;
+          margin-left: 8px;
+          vertical-align: middle;
+        }
+        .interp-block--interpretive {
+          border-left: 2px solid rgba(74, 158, 255, 0.15);
+          padding-left: 10px;
+          margin-left: -10px;
+        }
+        .interp-section-label--emerged {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+        .interp-synthesis--emerged {
+          font-size: 10.5px;
+          color: #7a8aaa;
+          line-height: 1.5;
+        }
+        .interp-block--tertiary {
+          border-left-color: rgba(74, 158, 255, 0.06);
+          border-left-width: 1px;
+        }
+        .interp-block--tertiary .interp-section-label--emerged {
+          font-size: 9px;
+          color: #3e4d66;
+        }
+        .interp-block--tertiary .interp-synthesis--emerged {
+          font-size: 10px;
+          color: #5a6a88;
+        }
+
         /* CENTER — Semantic Operational Canvas (primary cognition surface) */
         .intel-canvas {
           padding: 56px 56px 64px;
