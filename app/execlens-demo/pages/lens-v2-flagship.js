@@ -3621,6 +3621,145 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           padding: 8px 10px;
         }
 
+        /* ── Structural Depth / Expansion panels ── */
+        .query-answer-panel--expansion {
+          gap: 12px;
+          border-left: 2px solid rgba(74, 158, 255, 0.3);
+        }
+        .expansion-authority-marker {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          letter-spacing: 0.5px;
+          color: #4a9eff;
+          background: rgba(74, 158, 255, 0.08);
+          padding: 1px 6px;
+          border-radius: 2px;
+          margin-left: auto;
+          margin-right: 8px;
+        }
+        .expansion-governance-footer {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          letter-spacing: 0.5px;
+          color: #4a5570;
+          padding-top: 8px;
+          border-top: 1px solid #1e2330;
+          margin-top: 4px;
+        }
+
+        /* ── Structural Depth Indicator (SupportRail) ── */
+        .support-block--structural-depth {
+          border-color: #1e2330;
+        }
+        .support-block--depth-active {
+          border-color: rgba(74, 158, 255, 0.15);
+        }
+        .structural-depth-indicator {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          width: 100%;
+          background: none;
+          border: 1px solid #2a2f40;
+          border-radius: 3px;
+          padding: 8px 10px;
+          cursor: pointer;
+          transition: border-color 0.15s ease, background 0.15s ease;
+        }
+        .structural-depth-indicator:hover {
+          border-color: rgba(74, 158, 255, 0.3);
+          background: rgba(74, 158, 255, 0.04);
+        }
+        .structural-depth-glyph {
+          font-size: 12px;
+          color: #4a9eff;
+          opacity: 0.7;
+        }
+        .structural-depth-glyph--active {
+          opacity: 1;
+        }
+        .structural-depth-label {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          letter-spacing: 0.8px;
+          color: #7a8aaa;
+        }
+        .structural-depth-active-state {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        .structural-depth-active-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .structural-depth-dismiss {
+          background: none;
+          border: none;
+          color: #4a5570;
+          cursor: pointer;
+          font-size: 12px;
+          padding: 0 2px;
+          margin-left: auto;
+          transition: color 0.15s ease;
+        }
+        .structural-depth-dismiss:hover {
+          color: #7a8aaa;
+        }
+        .expansion-chips-list {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .expansion-chip {
+          display: flex;
+          align-items: flex-start;
+          gap: 6px;
+          padding: 6px 8px;
+          border-radius: 3px;
+          cursor: pointer;
+          transition: background 0.15s ease;
+          border: 1px solid transparent;
+        }
+        .expansion-chip:hover {
+          background: rgba(74, 158, 255, 0.04);
+          border-color: rgba(74, 158, 255, 0.12);
+        }
+        .expansion-chip[aria-pressed="true"] {
+          background: rgba(74, 158, 255, 0.08);
+          border-color: rgba(74, 158, 255, 0.2);
+        }
+        .expansion-chip[data-explored="true"] {
+          opacity: 0.6;
+        }
+        .expansion-chip[data-tone="alarming"] {
+          border-left: 2px solid rgba(255, 107, 107, 0.3);
+        }
+        .expansion-chip[data-tone="quiet"] {
+          opacity: 0.7;
+        }
+        .expansion-chip-icon {
+          font-size: 10px;
+          color: #4a9eff;
+          flex-shrink: 0;
+          margin-top: 2px;
+        }
+        .expansion-chip-text {
+          font-family: var(--font-ui), system-ui, sans-serif;
+          font-size: 11px;
+          line-height: 1.45;
+          color: #8a96b2;
+        }
+        .expansion-chip:hover .expansion-chip-text {
+          color: #ccd6f6;
+        }
+
+        /* ── Depth-escalated intelligence field indicator ── */
+        .intelligence-field[data-depth-escalated="true"] {
+          border-top: 1px solid rgba(74, 158, 255, 0.08);
+        }
+
         .status-value--state { color: var(--state-color); transition: color 0.4s; font-weight: 600; }
 
         /* ── Representation Field — primary semantic operational canvas ───

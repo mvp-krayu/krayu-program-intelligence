@@ -20,7 +20,31 @@ Structural derivation remains primary. Interpretive authority is additive, not r
 - **Phases:** 5B.2 (Narrative Response Surface) and subsequent
 - **Persona:** EXECUTIVE_BALANCED (primary) — governed narrative interaction surface
 - **Condition:** Interpretive outputs ONLY when narrative emergence conditions are met (condition-driven, not structurally guaranteed)
-- **Inactive in:** BOARDROOM, EXECUTIVE_DENSE, INVESTIGATION_DENSE
+- **Inactive in:** BOARDROOM, EXECUTIVE_DENSE, INVESTIGATION_DENSE — unless PI Runtime Layer is active (see §2.1)
+
+### 2.1 PI Runtime Layer Authorization (5B.3)
+
+**Amended by:** PI.LENS.V2.PHASE5B3.PI-RUNTIME-LAYER.01
+
+When the PI Runtime Layer (structural depth escalation) is active, interpretive authority extends to ALL four cognitive modes:
+
+- **BOARDROOM:** Executive interrogation expansion — posture probing, structural consequence, evidence boundary
+- **EXECUTIVE_BALANCED:** Narrative probing — pattern verification, evidence support, condition change analysis
+- **EXECUTIVE_DENSE:** Structural traversal acceleration — zone-specific investigation, propagation tracing, evidence chain depth
+- **INVESTIGATION_DENSE:** Forensic evidence resolution — chain verification, qualification boundary testing, ungrounded claim analysis
+
+**Conditions for PI Runtime Layer activation:**
+- Structural escalation conditions must be met (evidence-derived thresholds per mode)
+- Operator explicitly engages structural depth (click activation, not auto-enabled)
+- All 13 absolute prohibitions (§4) remain non-overridable
+- Evidence binding requirement (§5) applies to all PI Runtime outputs
+- Disclosure requirement (§6) applies — footer shows "Structural depth active · bounded interpretation (75.x)"
+
+**PI Runtime Layer is NOT:**
+- A copilot, assistant, or chatbot surface
+- A freeform query interface
+- An always-on feature — it emerges from structural conditions
+- A replacement for the guided deterministic lattice (lattice primacy preserved)
 
 ---
 

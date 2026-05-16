@@ -147,6 +147,41 @@ const TONE_PALETTE = {
   containment:   { glyph: '◈' },
 }
 
+const STRUCTURAL_ESCALATION_CONDITIONS = {
+  boardroom: (fullReport) => {
+    const rs = (fullReport && fullReport.readiness_summary) || {}
+    const sigs = (fullReport && fullReport.signal_interpretations) || []
+    const critical = sigs.filter(s => s.severity === 'CRITICAL' || s.severity === 'HIGH')
+    return rs.posture === 'INVESTIGATE' || rs.posture === 'ESCALATE' || critical.length >= 2
+  },
+  balanced: (fullReport) => {
+    const ts = (fullReport && fullReport.topology_summary) || {}
+    const backed = ts.structurally_backed_count || 0
+    const total = ts.semantic_domain_count || 0
+    const advisoryRatio = total > 0 ? (total - backed) / total : 0
+    const sigs = (fullReport && fullReport.signal_interpretations) || []
+    const activated = sigs.filter(s => s.severity !== 'NOMINAL')
+    return advisoryRatio > 0.3 && activated.length >= 2
+  },
+  dense: (fullReport, activeZoneKey) => {
+    if (!activeZoneKey) return false
+    const ts = (fullReport && fullReport.topology_summary) || {}
+    return (ts.structurally_backed_count || 0) < (ts.semantic_domain_count || 0)
+  },
+  investigation: (fullReport) => {
+    const blocks = (fullReport && fullReport.evidence_blocks) || []
+    return blocks.some(b => b && (!b.structural_backing || b.structural_backing === 'SEMANTIC_ONLY'))
+  },
+}
+
+const EXPANSION_TYPE_LABELS = {
+  structural_expansion: 'STRUCTURAL EXPANSION',
+  continuity_probe: 'CONTINUITY PROBE',
+  traversal: 'TRAVERSAL',
+  resolution: 'RESOLUTION',
+  escalation: 'ESCALATION',
+}
+
 const DENSE_ZONE_PATHS = {
   semanticTopology: [
     { label: 'Open topology explorer', icon: '◇', tone: 'operational', archetype: 'SCAN', depth: 'standard',
@@ -468,7 +503,7 @@ const BALANCED_INTERPRETIVE_NARRATIVES = {
   },
 }
 
-function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass, activeQueryKey, onQuerySelect, exploredQueries, emergenceState }) {
+function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass, activeQueryKey, onQuerySelect, exploredQueries, emergenceState, escalationAvailable, piRuntimeActive, onEscalate, onDeescalate, expansions, activeExpansionIndex, onExpansionSelect, interrogationTrail }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const chip = (adapted && adapted.qualifierChip) || {}
   const artifacts = (reportPackArtifacts && reportPackArtifacts.length > 0)
@@ -597,6 +632,59 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
               )
             })}
           </div>
+        </div>
+      )}
+
+      {escalationAvailable && (
+        <div className={`support-block support-block--structural-depth${piRuntimeActive ? ' support-block--depth-active' : ''}`}>
+          <div className="support-label">STRUCTURAL DEPTH</div>
+          {!piRuntimeActive ? (
+            <button
+              className="structural-depth-indicator"
+              onClick={onEscalate}
+              type="button"
+              aria-label="Engage structural depth escalation"
+            >
+              <span className="structural-depth-glyph">◉</span>
+              <span className="structural-depth-label">STRUCTURAL DEPTH AVAILABLE</span>
+            </button>
+          ) : (
+            <div className="structural-depth-active-state">
+              <div className="structural-depth-active-header">
+                <span className="structural-depth-glyph structural-depth-glyph--active">◉</span>
+                <span className="structural-depth-label">STRUCTURAL EXPANSION ACTIVE</span>
+                <button className="structural-depth-dismiss" onClick={onDeescalate} type="button" aria-label="Contract structural depth">✕</button>
+              </div>
+              {expansions && expansions.length > 0 && (
+                <div className="expansion-chips-list">
+                  {expansions.map((exp, i) => {
+                    const isActive = activeExpansionIndex === i
+                    const isExplored = interrogationTrail && interrogationTrail.has(i)
+                    const tonePalette = exp.tone && TONE_PALETTE[exp.tone]
+                    const glyph = tonePalette ? tonePalette.glyph : '◇'
+                    return (
+                      <div
+                        key={i}
+                        className="expansion-chip"
+                        role="button"
+                        tabIndex={0}
+                        aria-pressed={isActive}
+                        data-explored={isExplored || undefined}
+                        data-tone={exp.tone || undefined}
+                        data-depth={exp.depth || undefined}
+                        data-expansion-type={exp.expansionType || undefined}
+                        onClick={() => onExpansionSelect && onExpansionSelect(i)}
+                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onExpansionSelect && onExpansionSelect(i) } }}
+                      >
+                        <span className="expansion-chip-icon">{glyph}</span>
+                        <span className="expansion-chip-text">{exp.question}</span>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 
@@ -1622,7 +1710,412 @@ const GUIDED_QUERY_ANSWERS = {
   ],
 }
 
-function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport, activeZoneKey, activeQueryKey, onQueryDismiss, emergenceState }) {
+const INTERROGATION_EXPANSION_REGISTRY = {
+  boardroom: (fullReport) => {
+    const rs = (fullReport && fullReport.readiness_summary) || {}
+    const ts = (fullReport && fullReport.topology_summary) || {}
+    const sigs = (fullReport && fullReport.signal_interpretations) || []
+    const backed = ts.structurally_backed_count || 0
+    const total = ts.semantic_domain_count || 0
+    const posture = (rs.posture || 'INVESTIGATE').toUpperCase()
+    const activated = sigs.filter(s => s.severity !== 'NOMINAL')
+    const critical = activated.filter(s => s.severity === 'CRITICAL' || s.severity === 'HIGH')
+    return [
+      {
+        question: `What structural conditions produce the ${posture} posture?`,
+        expansionType: 'structural_expansion',
+        tone: 'executive', depth: 'standard',
+        boundary: 'Posture derived from readiness scoring thresholds — deterministic.',
+        derive: (fr) => {
+          const r = (fr && fr.readiness_summary) || {}
+          const score = r.score || 0
+          const band = r.band || '—'
+          return {
+            summary: `${posture} posture is produced by readiness score ${score} (band: ${band}). ${critical.length > 0 ? `${critical.length} critical/high signal${critical.length !== 1 ? 's' : ''} contribute to posture compression.` : 'No critical signals contribute to current posture.'}`,
+            evidence: [
+              { label: 'Readiness score', value: String(score), severity: score < 50 ? 'critical' : score < 70 ? 'elevated' : 'nominal' },
+              { label: 'Band', value: band, severity: band === 'STRONG' ? 'nominal' : 'elevated' },
+              { label: 'Critical signals', value: String(critical.length), severity: critical.length > 0 ? 'critical' : 'nominal' },
+            ],
+            structuralContext: 'Posture is a deterministic output of the readiness scoring engine. Band thresholds and signal severity combine to produce posture classification.',
+          }
+        },
+      },
+      {
+        question: 'What structural evidence boundary constrains executive confidence?',
+        expansionType: 'resolution',
+        tone: 'containment', depth: 'deep',
+        boundary: 'Evidence boundary from topology grounding ratio — deterministic.',
+        derive: (fr) => {
+          const t = (fr && fr.topology_summary) || {}
+          const b = t.structurally_backed_count || 0
+          const tot = t.semantic_domain_count || 0
+          const sem = Math.max(0, tot - b)
+          const ratio = tot > 0 ? Math.round(b / tot * 100) : 0
+          const blocks = (fr && fr.evidence_blocks) || []
+          const semOnly = blocks.filter(bl => bl && bl.structural_backing === 'SEMANTIC_ONLY')
+          return {
+            summary: `Executive confidence is bounded by ${ratio}% structural grounding. ${sem} domain${sem !== 1 ? 's' : ''} operate on semantic assertion without structural proof. ${semOnly.length > 0 ? `${semOnly.length} evidence block${semOnly.length !== 1 ? 's' : ''} carry SEMANTIC_ONLY backing.` : 'All evidence blocks have structural backing.'}`,
+            evidence: [
+              { label: 'Grounding ratio', value: `${ratio}%`, severity: ratio < 50 ? 'critical' : ratio < 80 ? 'elevated' : 'nominal' },
+              { label: 'Ungrounded domains', value: String(sem), severity: sem > 0 ? 'elevated' : 'nominal' },
+              { label: 'Semantic-only blocks', value: String(semOnly.length), severity: semOnly.length > 0 ? 'elevated' : 'nominal' },
+            ],
+            structuralContext: `${b} of ${tot} domains have structural backing from reconciliation correspondence. The remaining ${sem} are advisory-bound — their claims are operationally useful but structurally unverified. This defines the boundary of deterministic confidence.`,
+          }
+        },
+      },
+      {
+        question: 'Where does structural pressure concentrate and what does it propagate?',
+        expansionType: 'traversal',
+        tone: 'forensic', depth: 'standard',
+        boundary: 'Pressure from signal interpretations and propagation summary — deterministic.',
+        derive: (fr) => {
+          const p = (fr && fr.propagation_summary) || {}
+          const s = (fr && fr.signal_interpretations) || []
+          const zone = p.primary_zone_business_label || 'unknown'
+          const act = s.filter(sig => sig.severity !== 'NOMINAL')
+          return {
+            summary: act.length > 0
+              ? `Pressure concentrates around "${zone}" with ${act.length} elevated signal${act.length !== 1 ? 's' : ''}. ${p.zone_classification ? `Zone classification: ${p.zone_classification}.` : ''}`
+              : `No significant pressure concentration detected. Zone: "${zone}".`,
+            evidence: [
+              { label: 'Primary zone', value: zone, severity: act.length > 0 ? 'elevated' : 'nominal' },
+              { label: 'Elevated signals', value: String(act.length), severity: act.length >= 3 ? 'critical' : act.length > 0 ? 'elevated' : 'nominal' },
+              ...(p.zone_classification ? [{ label: 'Zone class', value: p.zone_classification, severity: p.zone_classification === 'NOMINAL' ? 'nominal' : 'elevated' }] : []),
+            ],
+            structuralContext: 'Pressure concentration is derived from signal severity distribution and propagation zone classification. Not an interpretation — a structural measurement.',
+          }
+        },
+      },
+      {
+        question: 'What would change the current posture band?',
+        expansionType: 'continuity_probe',
+        tone: 'reflective', depth: 'standard',
+        boundary: 'Band thresholds from readiness summary — deterministic.',
+        derive: (fr) => {
+          const r = (fr && fr.readiness_summary) || {}
+          const score = r.score || 0
+          const band = r.band || '—'
+          const nextBand = band === 'INVESTIGATE' ? 'CAUTIOUS' : band === 'CAUTIOUS' ? 'MODERATE' : band === 'MODERATE' ? 'STRONG' : 'beyond current scale'
+          return {
+            summary: `Current band: ${band} (score: ${score}). To advance to ${nextBand}, the system requires additional structural grounding or signal resolution. Posture changes when the readiness score crosses the next band threshold.`,
+            evidence: [
+              { label: 'Current score', value: String(score), severity: 'nominal' },
+              { label: 'Current band', value: band, severity: 'nominal' },
+              { label: 'Next band', value: nextBand, severity: 'nominal' },
+            ],
+            structuralContext: 'Band advancement is deterministic from readiness score. Score improves when ungrounded domains gain structural backing or when elevated signals resolve to NOMINAL.',
+          }
+        },
+      },
+    ]
+  },
+
+  EXECUTIVE_BALANCED: (fullReport) => {
+    const ts = (fullReport && fullReport.topology_summary) || {}
+    const rs = (fullReport && fullReport.readiness_summary) || {}
+    const sigs = (fullReport && fullReport.signal_interpretations) || []
+    const backed = ts.structurally_backed_count || 0
+    const total = ts.semantic_domain_count || 0
+    const semantic = Math.max(0, total - backed)
+    const activated = sigs.filter(s => s.severity !== 'NOMINAL')
+    return [
+      {
+        question: 'What structural evidence supports the emerged narrative patterns?',
+        expansionType: 'resolution',
+        tone: 'forensic', depth: 'deep',
+        boundary: 'Evidence traced from emerged narratives to structural sources — deterministic.',
+        derive: (fr) => {
+          const blocks = (fr && fr.evidence_blocks) || []
+          const grounded = blocks.filter(b => b && b.structural_backing && b.structural_backing !== 'SEMANTIC_ONLY')
+          const semOnly = blocks.filter(b => b && (!b.structural_backing || b.structural_backing === 'SEMANTIC_ONLY'))
+          return {
+            summary: `${grounded.length} evidence block${grounded.length !== 1 ? 's' : ''} have structural backing. ${semOnly.length} operate on semantic continuity only. Narrative patterns emerge from this structural distribution — they reflect evidence state, not interpretation.`,
+            evidence: [
+              { label: 'Structurally backed blocks', value: String(grounded.length), severity: 'nominal' },
+              { label: 'Semantic-only blocks', value: String(semOnly.length), severity: semOnly.length > 0 ? 'elevated' : 'nominal' },
+              ...grounded.slice(0, 3).map(b => ({ label: b.domain_alias || 'Domain', value: b.structural_backing || 'backed', severity: 'nominal' })),
+            ],
+            structuralContext: `Emerged narratives are bounded by evidence state. ${grounded.length} blocks provide deterministic structural support. ${semOnly.length} blocks contribute semantic continuity without structural proof.`,
+          }
+        },
+      },
+      {
+        question: 'Where does the grounding asymmetry create interpretive risk?',
+        expansionType: 'structural_expansion',
+        tone: 'architectural', depth: 'standard',
+        boundary: 'Grounding asymmetry from topology summary — deterministic.',
+        derive: (fr) => {
+          const t = (fr && fr.topology_summary) || {}
+          const b = t.structurally_backed_count || 0
+          const tot = t.semantic_domain_count || 0
+          const sem = Math.max(0, tot - b)
+          const ratio = tot > 0 ? Math.round(sem / tot * 100) : 0
+          return {
+            summary: `${ratio}% of domains are advisory-bound. ${sem > 0 ? `Interpretive narratives touching these ${sem} domain${sem !== 1 ? 's' : ''} carry inherently lower structural authority.` : 'All domains are grounded — narrative authority is structurally supported.'}`,
+            evidence: [
+              { label: 'Advisory-bound ratio', value: `${ratio}%`, severity: ratio > 50 ? 'critical' : ratio > 30 ? 'elevated' : 'nominal' },
+              { label: 'Ungrounded domains', value: String(sem), severity: sem > 0 ? 'elevated' : 'nominal' },
+              { label: 'Grounded domains', value: String(b), severity: 'nominal' },
+            ],
+            structuralContext: 'Grounding asymmetry measures the gap between semantic claims and structural proof. Higher asymmetry means interpretive outputs carry more governance risk.',
+          }
+        },
+      },
+      {
+        question: 'What conditions would change the current narrative emergence pattern?',
+        expansionType: 'continuity_probe',
+        tone: 'reflective', depth: 'standard',
+        boundary: 'Emergence thresholds from narrative derive functions — deterministic.',
+        derive: (fr) => {
+          const s = (fr && fr.signal_interpretations) || []
+          const t = (fr && fr.topology_summary) || {}
+          const act = s.filter(sig => sig.severity !== 'NOMINAL')
+          const b = t.structurally_backed_count || 0
+          const tot = t.semantic_domain_count || 0
+          return {
+            summary: `Narrative emergence is conditioned on: signal activation count (currently ${act.length}), grounding ratio (${b}/${tot}), and readiness band. Changes to any threshold condition would alter which narratives surface.`,
+            evidence: [
+              { label: 'Activated signals', value: String(act.length), severity: act.length >= 2 ? 'elevated' : 'nominal' },
+              { label: 'Grounding coverage', value: `${b}/${tot}`, severity: b < tot ? 'elevated' : 'nominal' },
+            ],
+            structuralContext: 'Emergence patterns are deterministic responses to structural conditions. The system does not choose to surface narratives — they emerge when evidence state crosses threshold conditions.',
+          }
+        },
+      },
+      {
+        question: 'Which signal combinations most compress decision confidence?',
+        expansionType: 'escalation',
+        tone: 'alarming', depth: 'deep',
+        boundary: 'Signal severity from signal_interpretations — deterministic.',
+        derive: (fr) => {
+          const s = (fr && fr.signal_interpretations) || []
+          const act = s.filter(sig => sig.severity !== 'NOMINAL')
+          const crit = act.filter(sig => sig.severity === 'CRITICAL' || sig.severity === 'HIGH')
+          const r = (fr && fr.readiness_summary) || {}
+          return {
+            summary: crit.length > 0
+              ? `${crit.length} critical/high signal${crit.length !== 1 ? 's' : ''} compress decision confidence. Combined with readiness band ${r.band || '—'}, the structural environment constrains executive commitment.`
+              : `${act.length} elevated signal${act.length !== 1 ? 's' : ''} present but none at critical severity. Decision confidence is structurally bounded but not compressed.`,
+            evidence: [
+              ...crit.slice(0, 4).map(sig => ({ label: sig.signal_name || 'Signal', value: sig.severity, severity: sig.severity === 'CRITICAL' ? 'critical' : 'elevated' })),
+              { label: 'Readiness band', value: r.band || '—', severity: r.band === 'STRONG' ? 'nominal' : 'elevated' },
+            ],
+            structuralContext: `Signal severity is measured, not interpreted. ${crit.length} critical/high signals indicate structural conditions that exceed operational thresholds — not a judgment, a measurement.`,
+          }
+        },
+      },
+    ]
+  },
+
+  EXECUTIVE_DENSE: (fullReport, activeZoneKey) => {
+    const rs = (fullReport && fullReport.readiness_summary) || {}
+    const ts = (fullReport && fullReport.topology_summary) || {}
+    const blocks = (fullReport && fullReport.evidence_blocks) || []
+    const sigs = (fullReport && fullReport.signal_interpretations) || []
+    const ps = (fullReport && fullReport.propagation_summary) || {}
+    const domains = (fullReport && fullReport.semantic_domain_registry) || []
+    const zoneReg = activeZoneKey && DENSE_ZONE_REGISTRY[activeZoneKey]
+    const zoneName = (zoneReg && zoneReg.name) || activeZoneKey || 'current zone'
+    return [
+      {
+        question: `What structural dependencies anchor ${zoneName}?`,
+        expansionType: 'structural_expansion',
+        tone: 'architectural', depth: 'deep',
+        boundary: 'Dependency from topology edges and propagation chain — deterministic.',
+        derive: (fr) => {
+          const blks = (fr && fr.evidence_blocks) || []
+          const edges = (fr && fr.semantic_topology_edges) || []
+          const roleMap = {}
+          blks.forEach(b => { if (b && b.propagation_role) roleMap[b.propagation_role] = (roleMap[b.propagation_role] || []).concat(b) })
+          const origins = roleMap['ORIGIN'] || []
+          const passThrough = roleMap['PASS_THROUGH'] || []
+          const receivers = roleMap['RECEIVER'] || []
+          return {
+            summary: `${origins.length} origin${origins.length !== 1 ? 's' : ''}, ${passThrough.length} pass-through${passThrough.length !== 1 ? 's' : ''}, ${receivers.length} receiver${receivers.length !== 1 ? 's' : ''} in the structural chain. ${edges.length} topology edge${edges.length !== 1 ? 's' : ''} connect the domain graph.`,
+            evidence: [
+              { label: 'Origins', value: origins.map(b => b.domain_alias).join(', ') || '—', severity: 'nominal' },
+              { label: 'Pass-throughs', value: passThrough.map(b => b.domain_alias).join(', ') || '—', severity: 'nominal' },
+              { label: 'Receivers', value: receivers.map(b => b.domain_alias).join(', ') || '—', severity: receivers.some(b => !b.structural_backing || b.structural_backing === 'SEMANTIC_ONLY') ? 'elevated' : 'nominal' },
+              { label: 'Topology edges', value: String(edges.length), severity: 'nominal' },
+            ],
+            structuralContext: `Structural dependencies are topology-derived. The propagation chain traces from origin through pass-through to receiver domains. Each link represents measurable structural dependency, not inferred relationship.`,
+          }
+        },
+      },
+      {
+        question: `What evidence chain completeness exists within ${zoneName}?`,
+        expansionType: 'continuity_probe',
+        tone: 'forensic', depth: 'standard',
+        boundary: 'Evidence completeness from evidence_blocks backing status — deterministic.',
+        derive: (fr) => {
+          const blks = (fr && fr.evidence_blocks) || []
+          const grounded = blks.filter(b => b && b.structural_backing && b.structural_backing !== 'SEMANTIC_ONLY')
+          const semOnly = blks.filter(b => b && (!b.structural_backing || b.structural_backing === 'SEMANTIC_ONLY'))
+          return {
+            summary: `${grounded.length} of ${blks.length} evidence blocks have structural backing. ${semOnly.length > 0 ? `${semOnly.length} block${semOnly.length !== 1 ? 's' : ''} operate on semantic continuity only — structural proof is absent.` : 'All blocks are structurally backed.'}`,
+            evidence: [
+              { label: 'Backed blocks', value: String(grounded.length), severity: 'nominal' },
+              { label: 'Semantic-only', value: String(semOnly.length), severity: semOnly.length > 0 ? 'elevated' : 'nominal' },
+              ...semOnly.slice(0, 2).map(b => ({ label: b.domain_alias || 'Domain', value: 'SEMANTIC_ONLY', severity: 'elevated' })),
+            ],
+            structuralContext: 'Evidence completeness is measured by backing status. SEMANTIC_ONLY blocks have operational utility but lack structural proof.',
+          }
+        },
+      },
+      {
+        question: 'How does pressure propagate across the structural chain?',
+        expansionType: 'traversal',
+        tone: 'operational', depth: 'standard',
+        boundary: 'Propagation path from propagation_summary and evidence_blocks — deterministic.',
+        derive: (fr) => {
+          const p = (fr && fr.propagation_summary) || {}
+          const blks = (fr && fr.evidence_blocks) || []
+          const chain = blks.filter(b => b && b.propagation_role).sort((a, b) => {
+            const order = { ORIGIN: 0, PASS_THROUGH: 1, RECEIVER: 2 }
+            return (order[a.propagation_role] || 3) - (order[b.propagation_role] || 3)
+          })
+          const chainStr = chain.map(b => b.domain_alias).join(' → ')
+          return {
+            summary: chain.length > 0
+              ? `Propagation chain: ${chainStr}. Zone classification: ${p.zone_classification || 'NOMINAL'}. Pressure flows from origin through intermediate domains to receivers.`
+              : 'No propagation chain detected in current evidence blocks.',
+            evidence: chain.slice(0, 5).map(b => ({
+              label: b.domain_alias || 'Domain',
+              value: b.propagation_role,
+              severity: b.propagation_role === 'ORIGIN' ? 'elevated' : 'nominal',
+            })),
+            structuralContext: 'Propagation is topology-derived. Each link in the chain represents a measurable structural dependency confirmed by evidence blocks.',
+          }
+        },
+      },
+      {
+        question: 'Which structural claims lack evidence continuity in this zone?',
+        expansionType: 'resolution',
+        tone: 'containment', depth: 'deep',
+        boundary: 'Evidence gaps from domain registry and evidence blocks — deterministic.',
+        derive: (fr) => {
+          const doms = (fr && fr.semantic_domain_registry) || []
+          const blks = (fr && fr.evidence_blocks) || []
+          const blockDomains = new Set(blks.map(b => b.domain_alias).filter(Boolean))
+          const uncovered = doms.filter(d => !blockDomains.has(d.domain_name) && !blockDomains.has(d.domain_id))
+          const semOnly = doms.filter(d => d.semantic_only || !d.structurally_backed)
+          return {
+            summary: `${uncovered.length} domain${uncovered.length !== 1 ? 's' : ''} have no evidence block representation. ${semOnly.length} domain${semOnly.length !== 1 ? 's' : ''} are semantic-only. These represent claims without structural continuity.`,
+            evidence: [
+              { label: 'Uncovered domains', value: String(uncovered.length), severity: uncovered.length > 0 ? 'elevated' : 'nominal' },
+              { label: 'Semantic-only domains', value: String(semOnly.length), severity: semOnly.length > 0 ? 'elevated' : 'nominal' },
+              ...uncovered.slice(0, 3).map(d => ({ label: d.domain_name || d.domain_id || 'Domain', value: 'no evidence block', severity: 'elevated' })),
+            ],
+            structuralContext: `Evidence continuity requires both domain registration and evidence block representation. Domains without evidence blocks are semantically present but structurally unverifiable.`,
+          }
+        },
+      },
+    ]
+  },
+
+  INVESTIGATION_DENSE: (fullReport) => {
+    const blocks = (fullReport && fullReport.evidence_blocks) || []
+    const domains = (fullReport && fullReport.semantic_domain_registry) || []
+    const ts = (fullReport && fullReport.topology_summary) || {}
+    return [
+      {
+        question: 'Which evidence chains have structural gaps?',
+        expansionType: 'resolution',
+        tone: 'forensic', depth: 'deep',
+        boundary: 'Evidence gaps from structural_backing field — deterministic.',
+        derive: (fr) => {
+          const blks = (fr && fr.evidence_blocks) || []
+          const semOnly = blks.filter(b => b && (!b.structural_backing || b.structural_backing === 'SEMANTIC_ONLY'))
+          const grounded = blks.filter(b => b && b.structural_backing && b.structural_backing !== 'SEMANTIC_ONLY')
+          return {
+            summary: semOnly.length > 0
+              ? `${semOnly.length} of ${blks.length} evidence block${blks.length !== 1 ? 's' : ''} lack structural backing. These chains cannot be verified to structural source.`
+              : `All ${blks.length} evidence blocks have structural backing. No structural gaps detected.`,
+            evidence: [
+              { label: 'Total blocks', value: String(blks.length), severity: 'nominal' },
+              { label: 'Structural gaps', value: String(semOnly.length), severity: semOnly.length > 0 ? 'critical' : 'nominal' },
+              ...semOnly.slice(0, 4).map(b => ({ label: b.domain_alias || 'Domain', value: b.structural_backing || 'SEMANTIC_ONLY', severity: 'elevated' })),
+            ],
+            structuralContext: `Structural gaps represent evidence chains where the link between semantic claim and structural proof is absent. ${grounded.length} block${grounded.length !== 1 ? 's' : ''} have confirmed structural backing. ${semOnly.length} do not.`,
+          }
+        },
+      },
+      {
+        question: 'What is the complete evidence provenance for each propagation role?',
+        expansionType: 'traversal',
+        tone: 'operational', depth: 'standard',
+        boundary: 'Role provenance from evidence_blocks propagation_role — deterministic.',
+        derive: (fr) => {
+          const blks = (fr && fr.evidence_blocks) || []
+          const roles = {}
+          blks.forEach(b => { if (b && b.propagation_role) roles[b.propagation_role] = (roles[b.propagation_role] || []).concat(b) })
+          const roleEntries = Object.entries(roles)
+          return {
+            summary: roleEntries.length > 0
+              ? `${roleEntries.length} propagation role${roleEntries.length !== 1 ? 's' : ''} present: ${roleEntries.map(([r, bs]) => `${r} (${bs.length})`).join(', ')}.`
+              : 'No propagation roles detected in evidence blocks.',
+            evidence: roleEntries.map(([role, bs]) => ({
+              label: role,
+              value: bs.map(b => b.domain_alias).join(', '),
+              severity: role === 'ORIGIN' ? 'elevated' : 'nominal',
+            })),
+            structuralContext: 'Propagation roles are assigned by evidence block classification. ORIGIN → PASS_THROUGH → RECEIVER traces the full structural dependency chain.',
+          }
+        },
+      },
+      {
+        question: 'Where do qualification boundaries constrain evidence acceptance?',
+        expansionType: 'structural_expansion',
+        tone: 'containment', depth: 'standard',
+        boundary: 'Qualification from qualifier_summary — deterministic.',
+        derive: (fr) => {
+          const qs = (fr && fr.qualifier_summary) || {}
+          const rs = (fr && fr.readiness_summary) || {}
+          const posture = qs.qualification_posture || rs.qualification_posture || 'UNRESOLVED'
+          const qualifiers = qs.active_qualifiers
+          const sState = rs.current_s_state || rs.s_state || 'UNKNOWN'
+          return {
+            summary: `Qualification posture: ${posture} at ${sState}. ${qualifiers != null ? `${qualifiers} active qualifier${qualifiers !== 1 ? 's' : ''} constrain evidence acceptance.` : 'Qualifier count unavailable.'} Evidence acceptance is bounded by current qualification state.`,
+            evidence: [
+              { label: 'S-state', value: sState, severity: 'nominal' },
+              { label: 'Posture', value: posture, severity: posture === 'UNRESOLVED' ? 'elevated' : 'nominal' },
+              ...(qualifiers != null ? [{ label: 'Active qualifiers', value: String(qualifiers), severity: qualifiers > 0 ? 'elevated' : 'nominal' }] : []),
+            ],
+            structuralContext: 'Qualification boundaries are deterministic from S-state and qualifier gates. Evidence acceptance is constrained by the system qualification posture, not by judgment.',
+          }
+        },
+      },
+      {
+        question: 'What ungrounded claims exist across the domain registry?',
+        expansionType: 'escalation',
+        tone: 'alarming', depth: 'deep',
+        boundary: 'Ungrounded claims from semantic_domain_registry — deterministic.',
+        derive: (fr) => {
+          const doms = (fr && fr.semantic_domain_registry) || []
+          const semOnly = doms.filter(d => d.semantic_only || !d.structurally_backed)
+          const grounded = doms.filter(d => d.structurally_backed)
+          const ratio = doms.length > 0 ? Math.round(semOnly.length / doms.length * 100) : 0
+          return {
+            summary: semOnly.length > 0
+              ? `${semOnly.length} of ${doms.length} domains (${ratio}%) are ungrounded — semantic claims without structural correspondence. ${semOnly.length > 3 ? 'This represents a significant evidence gap.' : 'Gap is localized.'}`
+              : `All ${doms.length} domains are structurally grounded. No ungrounded claims detected.`,
+            evidence: [
+              { label: 'Total domains', value: String(doms.length), severity: 'nominal' },
+              { label: 'Ungrounded', value: String(semOnly.length), severity: semOnly.length > 0 ? 'critical' : 'nominal' },
+              { label: 'Grounded', value: String(grounded.length), severity: 'nominal' },
+              ...semOnly.slice(0, 3).map(d => ({ label: d.domain_name || d.domain_id || 'Domain', value: 'ungrounded', severity: 'elevated' })),
+            ],
+            structuralContext: `Ungrounded claims are domains registered in the semantic model without structural correspondence in the evidence rebase corridor. These are operationally present but forensically unverifiable.`,
+          }
+        },
+      },
+    ]
+  },
+}
+
+function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport, activeZoneKey, activeQueryKey, onQueryDismiss, emergenceState, piRuntimeActive, activeExpansionIndex, expansions, onExpansionDismiss }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const framing = boardroomMode
     ? INTERP_MODE_FRAMING.BOARDROOM
@@ -1736,6 +2229,44 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
             <div className="interp-structural">{narrative.structural_summary}</div>
           </div>
         )}
+      </aside>
+    )
+  }
+
+  if (piRuntimeActive && activeExpansionIndex !== null && expansions && expansions[activeExpansionIndex]) {
+    const expansion = expansions[activeExpansionIndex]
+    const derived = expansion.derive(fullReport)
+    const depth = expansion.depth || 'standard'
+    const typeLabel = EXPANSION_TYPE_LABELS[expansion.expansionType] || 'STRUCTURAL EXPANSION'
+    const zoneReg = activeZoneKey && DENSE_ZONE_REGISTRY[activeZoneKey]
+    const zoneBadge = zoneReg ? zoneReg.code : '◉'
+    return (
+      <aside className="intel-interp intel-interp--expansion-active" data-tone={framing.tone} data-depth={depth} aria-label="Structural expansion — bounded interpretation">
+        <div className={`query-answer-panel query-answer-panel--expansion query-answer-panel--${depth}`}>
+          <div className="query-answer-header">
+            <span className="query-answer-badge">{zoneBadge}</span>
+            <span className="query-answer-header-label">{typeLabel}</span>
+            <span className="expansion-authority-marker">75.x</span>
+            <button className="query-answer-dismiss" onClick={onExpansionDismiss} type="button" aria-label="Dismiss expansion">✕</button>
+          </div>
+          <div className="query-answer-question">{expansion.question}</div>
+          <div className="query-answer-summary">{derived.summary}</div>
+          {derived.evidence && derived.evidence.length > 0 && (
+            <div className="query-answer-evidence">
+              {derived.evidence.map((e, ei) => (
+                <div key={ei} className="query-answer-evidence-row" data-severity={e.severity}>
+                  <span className="query-answer-evidence-label">{e.label}</span>
+                  <span className="query-answer-evidence-value">{e.value}</span>
+                </div>
+              ))}
+            </div>
+          )}
+          {derived.structuralContext && (
+            <div className="query-answer-context">{derived.structuralContext}</div>
+          )}
+          <div className="query-answer-boundary">{expansion.boundary}</div>
+          <div className="expansion-governance-footer">BOUNDED INTERPRETATION · evidence-bound · 13 prohibitions enforced</div>
+        </div>
       </aside>
     )
   }
@@ -3991,26 +4522,75 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
   const [activeQueryKey, setActiveQueryKey] = useState(null)
   const [exploredQueries, setExploredQueries] = useState(() => new Set())
   const [emergenceState, setEmergenceState] = useState(null)
+  const [piRuntimeActive, setPiRuntimeActive] = useState(false)
+  const [activeExpansionIndex, setActiveExpansionIndex] = useState(null)
+  const [interrogationTrail, setInterrogationTrail] = useState(() => new Set())
   const isBalanced = !boardroomMode && densityClass === 'EXECUTIVE_BALANCED'
   const handleEmergenceState = useCallback((state) => { setEmergenceState(state) }, [])
   const isDense = !boardroomMode && densityClass === 'EXECUTIVE_DENSE'
+  const isInvestigation = !boardroomMode && densityClass === 'INVESTIGATION_DENSE'
   const canvasRef = useRef(null)
+
+  const escalationAvailable = useMemo(() => {
+    if (!fullReport) return false
+    if (boardroomMode) return STRUCTURAL_ESCALATION_CONDITIONS.boardroom(fullReport)
+    if (isBalanced) return STRUCTURAL_ESCALATION_CONDITIONS.balanced(fullReport)
+    if (isDense) return STRUCTURAL_ESCALATION_CONDITIONS.dense(fullReport, activeZoneKey)
+    if (isInvestigation) return STRUCTURAL_ESCALATION_CONDITIONS.investigation(fullReport)
+    return false
+  }, [fullReport, boardroomMode, isBalanced, isDense, isInvestigation, activeZoneKey])
+
+  const escalationContext = useMemo(() => {
+    if (!escalationAvailable || !fullReport) return null
+    const mode = boardroomMode ? 'boardroom' : densityClass
+    return { mode, zone: activeZoneKey }
+  }, [escalationAvailable, fullReport, boardroomMode, densityClass, activeZoneKey])
+
+  const expansions = useMemo(() => {
+    if (!piRuntimeActive || !escalationContext || !fullReport) return []
+    const modeKey = boardroomMode ? 'boardroom' : densityClass
+    const generator = INTERROGATION_EXPANSION_REGISTRY[modeKey]
+    return generator ? generator(fullReport, activeZoneKey) : []
+  }, [piRuntimeActive, escalationContext, fullReport, boardroomMode, densityClass, activeZoneKey])
+
   const handleZoneChange = useCallback((zoneKey) => {
     setActiveZoneKey(zoneKey)
     setActiveQueryKey(null)
+    setActiveExpansionIndex(null)
   }, [])
   const handleQuerySelect = useCallback((zoneKey, pathIndex) => {
     const key = `${zoneKey}:${pathIndex}`
     setActiveQueryKey(key)
     setExploredQueries(prev => { const next = new Set(prev); next.add(key); return next })
+    setActiveExpansionIndex(null)
   }, [])
   const handleQueryDismiss = useCallback(() => {
     setActiveQueryKey(null)
+  }, [])
+  const handleEscalate = useCallback(() => {
+    setPiRuntimeActive(true)
+    setActiveQueryKey(null)
+    if (onAuthorityChange) onAuthorityChange('PI_INTERPRETIVE')
+  }, [onAuthorityChange])
+  const handleDeescalate = useCallback(() => {
+    setPiRuntimeActive(false)
+    setActiveExpansionIndex(null)
+    if (onAuthorityChange) onAuthorityChange(isBalanced ? null : null)
+  }, [isBalanced, onAuthorityChange])
+  const handleExpansionSelect = useCallback((index) => {
+    setActiveExpansionIndex(index)
+    setInterrogationTrail(prev => { const next = new Set(prev); next.add(index); return next })
+    setActiveQueryKey(null)
+  }, [])
+  const handleExpansionDismiss = useCallback(() => {
+    setActiveExpansionIndex(null)
   }, [])
 
   useEffect(() => {
     if (!isBalanced && onAuthorityChange) onAuthorityChange(null)
     if (!isBalanced) setEmergenceState(null)
+    setPiRuntimeActive(false)
+    setActiveExpansionIndex(null)
   }, [isBalanced, onAuthorityChange])
 
   useEffect(() => {
@@ -4033,13 +4613,23 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
   }, [pendingTransitionZone, isDense, onTransitionZoneConsumed])
 
   useEffect(() => {
-    if (!activeQueryKey) return
+    if (!activeQueryKey && activeExpansionIndex === null) return
     function onKeyDown(e) {
-      if (e.key === 'Escape') setActiveQueryKey(null)
+      if (e.key === 'Escape') {
+        if (activeExpansionIndex !== null) setActiveExpansionIndex(null)
+        else if (activeQueryKey) setActiveQueryKey(null)
+      }
     }
     document.addEventListener('keydown', onKeyDown)
     return () => document.removeEventListener('keydown', onKeyDown)
-  }, [activeQueryKey])
+  }, [activeQueryKey, activeExpansionIndex])
+
+  useEffect(() => {
+    if (piRuntimeActive && !escalationAvailable) {
+      setPiRuntimeActive(false)
+      setActiveExpansionIndex(null)
+    }
+  }, [piRuntimeActive, escalationAvailable])
 
   return (
     <div
@@ -4047,6 +4637,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
       data-mode={boardroomMode ? 'BOARDROOM' : densityClass}
       data-active-zone={isDense ? activeZoneKey : undefined}
       data-query-active={isDense && activeQueryKey ? activeQueryKey : undefined}
+      data-depth-escalated={piRuntimeActive || undefined}
     >
       <ExecutiveInterpretation
         narrative={narrative}
@@ -4058,6 +4649,10 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         activeQueryKey={isDense ? activeQueryKey : null}
         onQueryDismiss={handleQueryDismiss}
         emergenceState={isBalanced ? emergenceState : null}
+        piRuntimeActive={piRuntimeActive}
+        activeExpansionIndex={activeExpansionIndex}
+        expansions={expansions}
+        onExpansionDismiss={handleExpansionDismiss}
       />
 
       <main ref={canvasRef} className="intel-canvas" role="region" aria-label="Semantic operational canvas">
@@ -4098,6 +4693,14 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         onQuerySelect={handleQuerySelect}
         exploredQueries={exploredQueries}
         emergenceState={isBalanced ? emergenceState : null}
+        escalationAvailable={escalationAvailable}
+        piRuntimeActive={piRuntimeActive}
+        onEscalate={handleEscalate}
+        onDeescalate={handleDeescalate}
+        expansions={expansions}
+        activeExpansionIndex={activeExpansionIndex}
+        onExpansionSelect={handleExpansionSelect}
+        interrogationTrail={interrogationTrail}
       />
     </div>
   )

@@ -22,7 +22,7 @@ The system consists of six evolutionary strata. All are active and reconciled:
 | S3 | [[../03_PATH_SPLIT_EVOLUTION/PATH_A_EMERGENCE\|Path Split]] | 2026-05-07 → 2026-05-08 | OPERATIONAL — PATH A/B terminology active |
 | S4 | [[../04_SQO_AND_QUALIFICATION/SQO_EVOLUTION\|SQO Qualification]] | 2026-05-10 → present | OPERATIONAL — unified semantic operations substrate, 8 ownership domains, 23 artifacts, operational reconciliation loop |
 | S5 | [[../05_RUNTIME_AND_CORRIDOR/CURRENT_RUNTIME_BOUNDARIES\|Runtime Corridor]] | 2026-05-11 → present | OPERATIONAL — evidence/runtime corridors |
-| S6 | [[../07_LENS_V2_OPERATIONAL_IDENTITY/OPERATIONAL_COGNITION_TRANSITION\|Operational Cognition]] | 2026-05-13 → present | OPERATIONAL — cognitive operational intelligence surface, 4-persona projection, interactive topology, guided structural investigation, zone-aware cognitive orchestration, guided query layer (5B.1 — interactive question-answer cognition), guided interrogation evolution (5B.1+ — 36-query lattice with tonal diversity, archetypes, depth hierarchy), selective interpretive emergence (5B.2 — governed narrative synthesis via BALANCED) |
+| S6 | [[../07_LENS_V2_OPERATIONAL_IDENTITY/OPERATIONAL_COGNITION_TRANSITION\|Operational Cognition]] | 2026-05-13 → present | OPERATIONAL — cognitive operational intelligence surface, 4-persona projection, interactive topology, guided structural investigation, zone-aware cognitive orchestration, guided query layer (5B.1 — interactive question-answer cognition), guided interrogation evolution (5B.1+ — 36-query lattice with tonal diversity, archetypes, depth hierarchy), selective interpretive emergence (5B.2 — governed narrative synthesis via BALANCED), PI Runtime Layer (5B.3 — transversal governed interrogation across all four cognitive modes, two-axis cognitive model) |
 
 ## LENS v2 Operational Identity Transition
 
@@ -142,7 +142,7 @@ See [[../04_SQO_AND_QUALIFICATION/HYDRATED_AND_QSTATE_EVOLUTION]] for full model
 | 5B.1 Guided Query Layer | Investigative | **COMPLETE** | f18cc9e |
 | 5B.1+ Guided Interrogation Evolution | G2 | **COMPLETE** | PENDING |
 | 5B.2 Narrative Response Surface | Interpretive (75.x) | **COMPLETE** | PENDING |
-| 5B.3 Open Copilot Layer | Interpretive (75.x) | UNBLOCKED — 75.x authorization active |  |
+| 5B.3 PI Runtime Layer | Interpretive (75.x) | **COMPLETE** | PENDING |
 
 ### Phase 5A.8 Architectural Contributions
 
@@ -186,7 +186,22 @@ Phase 5B.1+ (PI.LENS.V2.PHASE5B1.GUIDED-INTERROGATION-EVOLUTION.01) evolved 12 q
 5B must emerge FROM the deterministic traversal structure established in 5A. Three-layer model:
 - **Layer 1 — Guided Queries:** System-derived from narrative affordance `answers` field. Governed, structurally grounded.
 - **Layer 2 — Narrative Response Surface:** Commercially gated. Evidence-synthesized executive narrative. Inference prohibition preserved.
-- **Layer 3 — Open Copilot:** Optional freeform extension. Center of gravity remains guided deterministic layer.
+- **Layer 3 — PI Runtime Layer:** Transversal governed interrogation across all four cognitive modes. Not a copilot — structural depth escalation. Center of gravity remains guided deterministic layer.
+
+### Phase 5B.3 Architectural Contributions
+
+Phase 5B.3 (PI.LENS.V2.PHASE5B3.PI-RUNTIME-LAYER.01) introduced the PI Runtime Layer — the first transversal governed interrogation capability:
+
+- **Two-axis cognitive model:** Cognitive Runtime (BOARDROOM/BALANCED/DENSE/INVESTIGATION) × Interaction Authority (passive/guided/escalated). PI is NOT a fifth mode — it is a second axis orthogonal to existing modes.
+- **Structural escalation conditions:** `STRUCTURAL_ESCALATION_CONDITIONS` — 4 mode-specific evaluators that determine when structural depth is available based on evidence-derived thresholds (posture, signal severity, advisory ratio, evidence backing).
+- **Interrogation expansion registry:** `INTERROGATION_EXPANSION_REGISTRY` — 4 mode-specific generator functions producing ~16 structural expansions. Each expansion carries question, derive function, tone, depth, boundary, and expansionType metadata.
+- **Expansion types:** structural_expansion, continuity_probe, traversal, resolution, escalation — replacing "query" semantics with structural language.
+- **Structural depth affordance:** SupportRail indicator that emerges when conditions are met ("STRUCTURAL DEPTH AVAILABLE" → "STRUCTURAL EXPANSION ACTIVE"). No animation, no prompt, no eager CTA.
+- **Expansion rendering:** ExecutiveInterpretation gains expansion branch with 75.x governance marker, evidence binding, and governance footer ("BOUNDED INTERPRETATION · evidence-bound · 13 prohibitions enforced").
+- **Authority chain integration:** LensDisclosureShell recognizes PI_INTERPRETIVE tier with structural depth language.
+- **75.x contract amendment:** §2.1 PI Runtime Layer Authorization — expanding interpretive authority to all four modes when structural depth is escalated. All 13 absolute prohibitions remain non-overridable.
+- **Semantic framing doctrine:** All user-facing labels use structural language (expansion, depth, interrogation, traversal, resolution). No PI/runtime/query/AI/assistant/copilot in user-facing surfaces. Activation feels like "descending deeper into structural reality" — never "activated AI."
+- **Strategic lock:** PI augments the lattice. It MUST NOT replace the lattice.
 
 ## What Exists Now (Capability Summary)
 

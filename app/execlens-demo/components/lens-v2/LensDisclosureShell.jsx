@@ -304,7 +304,9 @@ export default function LensDisclosureShell({
             <span className="disclosure-footer-status-label">GOVERNANCE ENVELOPE ACTIVE</span>
           </div>
           <span className="disclosure-footer-prohibition">
-            {activeAuthorityTier === 'INTERPRETIVE'
+            {activeAuthorityTier === 'PI_INTERPRETIVE'
+              ? 'Structural depth active · bounded interpretation (75.x) · evidence-bound · 13 prohibitions enforced'
+              : activeAuthorityTier === 'INTERPRETIVE'
               ? 'Structural derivation primary · bounded interpretive synthesis active · evidence-bound'
               : 'All outputs structurally derived · no inference · no AI-generated interpretation'}
           </span>
@@ -323,10 +325,13 @@ export default function LensDisclosureShell({
         </div>
         {governanceExpanded && (
           <div className="disclosure-footer-details">
-            <div className="disclosure-footer-detail-row">Inference prohibition: {activeAuthorityTier === 'INTERPRETIVE' ? 'BOUNDED (75.x)' : 'ENFORCED'}</div>
+            <div className="disclosure-footer-detail-row">Inference prohibition: {activeAuthorityTier === 'PI_INTERPRETIVE' ? 'BOUNDED (75.x) · structural depth' : activeAuthorityTier === 'INTERPRETIVE' ? 'BOUNDED (75.x)' : 'ENFORCED'}</div>
             <div className="disclosure-footer-detail-row">Structural derivation: VERIFIED</div>
             <div className="disclosure-footer-detail-row">Guided queries: STRUCTURALLY DERIVED</div>
-            <div className="disclosure-footer-detail-row">Interpretive authority: {activeAuthorityTier === 'INTERPRETIVE' ? 'ACTIVE' : 'INACTIVE'}</div>
+            <div className="disclosure-footer-detail-row">Interpretive authority: {activeAuthorityTier === 'PI_INTERPRETIVE' ? 'STRUCTURAL DEPTH ACTIVE' : activeAuthorityTier === 'INTERPRETIVE' ? 'ACTIVE' : 'INACTIVE'}</div>
+            {activeAuthorityTier === 'PI_INTERPRETIVE' && (
+              <div className="disclosure-footer-detail-row">Interaction authority: ESCALATED</div>
+            )}
             <div className="disclosure-footer-detail-row">Qualifier governance: {qualifierClass || 'Q-01'}</div>
           </div>
         )}

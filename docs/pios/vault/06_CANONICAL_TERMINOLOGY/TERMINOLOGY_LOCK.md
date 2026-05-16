@@ -194,6 +194,28 @@
 
 **Status:** CANONICAL — planned (Phase 5A roadmap complete, implementation pending).
 
+### PI Runtime Layer
+
+**Definition:** A transversal governed interrogation capability that operates across all four LENS v2 cognitive modes under 75.x bounded interpretive authority. PI Runtime Layer is NOT a fifth mode — it is a second axis (Interaction Authority) orthogonal to the existing Cognitive Runtime axis. It enables structural depth escalation: deeper structural investigation that emerges from evidence-derived conditions, not from user-initiated AI activation.
+
+**Aliases:** PI Runtime, PI Interrogation
+
+**Status:** CANONICAL — active operational concept (2026-05-16).
+
+**What it is NOT:** A copilot. An assistant. A chatbot. An AI feature. A freeform query surface. Always-on. A replacement for the guided deterministic lattice.
+
+### Interaction Authority
+
+**Definition:** The second axis of the LENS v2 cognitive architecture. Three tiers: passive (base rendering), guided (5B.1 deterministic queries), escalated (5B.3 structural depth — PI Runtime Layer). Interaction Authority is orthogonal to Cognitive Runtime (BOARDROOM/BALANCED/DENSE/INVESTIGATION).
+
+**Status:** CANONICAL — active operational concept (2026-05-16).
+
+### Transversal Interrogation
+
+**Definition:** An interrogation capability that spans all cognitive modes rather than being confined to a single mode. The PI Runtime Layer is the first transversal interrogation implementation. "Transversal" means the capability operates across the Cognitive Runtime axis without being mode-specific.
+
+**Status:** CANONICAL — active operational concept (2026-05-16).
+
 ## Term Usage Rules
 
 1. **Use locked definitions exactly.** Do not paraphrase, simplify, or reinterpret.
