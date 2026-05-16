@@ -14,7 +14,7 @@ const LINEAGE_COLORS = {
   STRONG:  '#64ffda',
   PARTIAL: '#ffd700',
   WEAK:    '#ff9e4a',
-  NONE:    '#4a5570',
+  NONE:    '#5e6d8a',
 }
 
 
@@ -366,11 +366,11 @@ export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, foc
                 {hoveredDomain.cluster_id} · {(LINEAGE_LABELS[hoveredDomain.lineage_status] || 'SEMANTIC-ONLY')} · conf {hoveredDomain.confidence != null ? hoveredDomain.confidence.toFixed(2) : '—'}
               </text>
               <text x={tx + tp} y={ty + 36}
-                fontSize={5.5} fill={hoveredDomain.zone_anchor ? '#ffd700' : '#5a6580'} fontFamily="-apple-system, sans-serif">
+                fontSize={5.5} fill={hoveredDomain.zone_anchor ? '#ffd700' : '#6a7a9a'} fontFamily="-apple-system, sans-serif">
                 {hoveredDomain.zone_anchor ? 'Zone Anchor — click to highlight connections' : hoveredDomain.structurally_backed ? 'Structurally backed' : 'Semantic-only'}
               </text>
               <text x={tx + tp} y={ty + 47}
-                fontSize={5} fill="#4a5570" fontFamily="-apple-system, sans-serif">
+                fontSize={5} fill="#5e6d8a" fontFamily="-apple-system, sans-serif">
                 {hoveredDomain.dominant_dom_id || hoveredDomain.domain_id}
               </text>
             </g>
@@ -389,7 +389,7 @@ export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, foc
               <text x={22} y={ly + 16} fontSize={5.5} fill="#6a7593" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
                 Primary Pressure Zone{pressureZoneLabel ? ` — ${pressureZoneLabel}` : ''}
               </text>
-              <text x={14} y={ly + 28} fontSize={4.6} fill="#4a5570" fontStyle="italic" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+              <text x={14} y={ly + 28} fontSize={4.6} fill="#5e6d8a" fontStyle="italic" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
                 Hover nodes for details · click zone anchors to highlight connections · Escape to reset
               </text>
             </g>
@@ -443,7 +443,7 @@ function DomainCoverageGrid({ domains, onDomainClick, focusedDomain }) {
           Structurally Backed ({domains.filter(d => d.structurally_backed).length} domains — EXACT/STRONG/PARTIAL evidence)
         </span>
         <span className="topo-coverage-legend-item">
-          <span className="topo-coverage-dot" style={{ background: '#4a5570' }} />
+          <span className="topo-coverage-dot" style={{ background: '#5e6d8a' }} />
           Semantic-Only ({domains.filter(d => d.semantic_only).length} domains — projection layer, no current structural backing)
         </span>
         {domains.some(d => d.zone_anchor) && (

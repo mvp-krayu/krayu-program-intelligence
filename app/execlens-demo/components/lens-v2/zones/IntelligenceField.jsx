@@ -1895,16 +1895,16 @@ function CockpitRadialGauge({ score, groundingPct }) {
       <path d={`M ${cx - gr} ${cy} A ${gr} ${gr} 0 0 1 ${cx + gr} ${cy}`} fill="none" stroke="#1e2330" strokeWidth="5" strokeLinecap="round" />
       {groundPath && <path d={groundPath} fill="none" stroke="#4a9eff" strokeWidth="5" strokeLinecap="round" opacity="0.7" />}
       <text x={cx} y={cy - 16} textAnchor="middle" fontSize="28" fontWeight="600" fill={scoreColor} fontFamily="'Courier New', monospace">{s}</text>
-      <text x={cx} y={cy - 2} textAnchor="middle" fontSize="8" fill="#5a6580" letterSpacing="0.15em" fontFamily="-apple-system, sans-serif">READINESS</text>
+      <text x={cx} y={cy - 2} textAnchor="middle" fontSize="8" fill="#6a7a9a" letterSpacing="0.15em" fontFamily="-apple-system, sans-serif">READINESS</text>
       <text x={cx - r + 2} y={cy + 12} textAnchor="start" fontSize="7" fill="#4a9eff" fontFamily="-apple-system, sans-serif">{g}% grounded</text>
-      <text x={cx + r - 2} y={cy + 12} textAnchor="end" fontSize="7" fill="#4a5570" fontFamily="-apple-system, sans-serif">of 100</text>
+      <text x={cx + r - 2} y={cy + 12} textAnchor="end" fontSize="7" fill="#5e6d8a" fontFamily="-apple-system, sans-serif">of 100</text>
     </svg>
   )
 }
 
 function CockpitSignalBar({ signal }) {
   const sevColor = { CRITICAL: '#ff6b6b', HIGH: '#ff6b6b', ELEVATED: '#ff9e4a', MODERATE: '#ffd700', NOMINAL: '#64ffda' }
-  const color = sevColor[signal.severity] || '#4a5570'
+  const color = sevColor[signal.severity] || '#5e6d8a'
   const isActive = signal.severity !== 'NOMINAL'
   return (
     <div className={`cockpit-signal${isActive ? ' cockpit-signal--active' : ''}`} data-severity={signal.severity}>
@@ -1970,12 +1970,12 @@ function DomainDebtSection({ domainId, debtIndexData, progressionData, onDomainS
   const peerIndex = blockingPeers.indexOf(domainId)
 
   const statusClass = posture.debt_status === 'ACTIVE' ? 'active' : 'partial'
-  const exposureColors = { HIGH: '#ff6b6b', MEDIUM: '#ff9e4a', LOW: '#ffd700', NONE: '#4a5570' }
+  const exposureColors = { HIGH: '#ff6b6b', MEDIUM: '#ff9e4a', LOW: '#ffd700', NONE: '#5e6d8a' }
   const reducibilityColors = {
     IRREDUCIBLE_STRUCTURAL_ABSENCE: '#ff6b6b',
     REDUCED_BY_ENRICHMENT: '#ffd700',
     REDUCIBLE_BY_EVIDENCE: '#4a9eff',
-    NOT_APPLICABLE: '#4a5570',
+    NOT_APPLICABLE: '#5e6d8a',
   }
 
   const blockingDebtsLookup = progressionData && progressionData.blocking_debts
@@ -1995,7 +1995,7 @@ function DomainDebtSection({ domainId, debtIndexData, progressionData, onDomainS
         <div className="dsp-row">
           <span className="dsp-key">Operational exposure</span>
           <span className="dsp-val">
-            <span className="dsp-badge dsp-exposure" style={{ color: exposureColors[posture.operational_exposure] || '#4a5570' }}>
+            <span className="dsp-badge dsp-exposure" style={{ color: exposureColors[posture.operational_exposure] || '#5e6d8a' }}>
               {posture.operational_exposure}
             </span>
           </span>
@@ -2011,7 +2011,7 @@ function DomainDebtSection({ domainId, debtIndexData, progressionData, onDomainS
         <div className="dsp-row">
           <span className="dsp-key">Reducibility</span>
           <span className="dsp-val">
-            <span className="dsp-badge dsp-reducibility" style={{ color: reducibilityColors[posture.reducibility] || '#4a5570' }}>
+            <span className="dsp-badge dsp-reducibility" style={{ color: reducibilityColors[posture.reducibility] || '#5e6d8a' }}>
               {posture.reducibility}
             </span>
           </span>
@@ -2112,7 +2112,7 @@ function BlockagePostureSummary({ debtIndexData, progressionData, maturityData, 
       {dims && (
         <div className="blockage-posture-dims">
           {Object.entries(dims).map(([key, dim]) => {
-            const color = MATURITY_DIM_COLORS[dim.classification] || '#4a5570'
+            const color = MATURITY_DIM_COLORS[dim.classification] || '#5e6d8a'
             const pct = Math.round(dim.score * 100)
             return (
               <div key={key} className="blockage-posture-dim">
@@ -2271,7 +2271,7 @@ function DomainTemporalSection({ domainId, temporalLifecycleData, temporalAnalyt
     : null
 
   let movementStatus = 'UNCHANGED'
-  let movementColor = '#4a5570'
+  let movementColor = '#5e6d8a'
   if (domainDelta) {
     movementStatus = 'MOVED'
     movementColor = '#4a9eff'
@@ -2285,8 +2285,8 @@ function DomainTemporalSection({ domainId, temporalLifecycleData, temporalAnalyt
   const movedPeers = delta ? (delta.domain_deltas || []).map(dd => dd.domain_id) : []
   const movedIdx = movedPeers.indexOf(domainId)
 
-  const confColor0 = CONFIDENCE_COLORS[d0.confidence_level] || '#4a5570'
-  const confColor1 = CONFIDENCE_COLORS[d1.confidence_level] || '#4a5570'
+  const confColor0 = CONFIDENCE_COLORS[d0.confidence_level] || '#5e6d8a'
+  const confColor1 = CONFIDENCE_COLORS[d1.confidence_level] || '#5e6d8a'
 
   return (
     <div className="dsp-section">
@@ -2374,7 +2374,7 @@ function DomainStructuralPanel({ domainId, correspondenceData, evidenceIntakeDat
     )
   }
 
-  const confColor = CONFIDENCE_COLORS[corr.confidence_level] || '#4a5570'
+  const confColor = CONFIDENCE_COLORS[corr.confidence_level] || '#5e6d8a'
   const hasStructural = corr.structural_dom_id != null
   const enrichment = correspondenceData.enrichment_metadata || {}
 
@@ -2566,7 +2566,7 @@ function EvidenceSourcesSection({ domainId, evidenceIntakeData }) {
       <div className="dsp-section-label">EVIDENCE SOURCES</div>
       <div className="dsp-sources">
         {items.map(item => {
-          const classColor = SOURCE_CLASS_COLORS[item.source_class] || '#4a5570'
+          const classColor = SOURCE_CLASS_COLORS[item.source_class] || '#5e6d8a'
           return (
             <div key={item.evidence_id} className="dsp-source">
               <div className="dsp-source-header">
@@ -2725,7 +2725,7 @@ function DomainStructuralDecomposition({ domainId, correspondenceData, evidenceI
   const corr = correspondences.find(c => c.semantic_domain_id === domainId)
 
   const confLevel = corr ? corr.confidence_level : null
-  const confColor = CONFIDENCE_COLORS[confLevel] || '#4a5570'
+  const confColor = CONFIDENCE_COLORS[confLevel] || '#5e6d8a'
   const confLabel = CONFIDENCE_EXECUTIVE_LABELS[confLevel] || 'Unknown'
   const reconciled = corr ? corr.reconciliation_status === 'RECONCILED' : false
   const grounded = corr ? corr.structural_grounding === 'GROUNDED' : false
@@ -3019,7 +3019,7 @@ function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntake
                 const partial = d.lineage_status === 'PARTIAL'
                 const isPZ = d.zone_anchor
                 const isFocused = focusedDomain === d.domain_id
-                const lineageColor = backed ? (d.lineage_status === 'EXACT' ? '#64ffda' : d.lineage_status === 'STRONG' ? '#64ffda' : '#ffd700') : '#4a5570'
+                const lineageColor = backed ? (d.lineage_status === 'EXACT' ? '#64ffda' : d.lineage_status === 'STRONG' ? '#64ffda' : '#ffd700') : '#5e6d8a'
                 return (
                   <div
                     key={d.domain_id}
@@ -3185,7 +3185,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
                 strokeDasharray={`${(backedCount / Math.max(1, totalDomains)) * 201} 201`}
                 strokeLinecap="round" transform="rotate(-90 40 40)" />
               <text x="40" y="37" textAnchor="middle" fontSize="16" fontWeight="600" fill="#ccd6f6" fontFamily="'Courier New', monospace">{backedCount}</text>
-              <text x="40" y="49" textAnchor="middle" fontSize="7" fill="#5a6580" fontFamily="-apple-system, sans-serif">of {totalDomains}</text>
+              <text x="40" y="49" textAnchor="middle" fontSize="7" fill="#6a7a9a" fontFamily="-apple-system, sans-serif">of {totalDomains}</text>
             </svg>
           </div>
           <div className="cockpit-coverage-meta">
