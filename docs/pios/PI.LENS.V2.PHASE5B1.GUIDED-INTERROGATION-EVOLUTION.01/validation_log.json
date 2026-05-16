@@ -1,0 +1,32 @@
+{
+  "stream": "PI.LENS.V2.PHASE5B1.GUIDED-INTERROGATION-EVOLUTION.01",
+  "classification": "G2",
+  "timestamp": "2026-05-16",
+  "checks": [
+    { "id": "V01", "name": "TONE_PALETTE constant — 8 entries present", "result": "PASS" },
+    { "id": "V02", "name": "DENSE_ZONE_PATHS — 6 zones × 6 entries = 36 total", "result": "PASS" },
+    { "id": "V03", "name": "GUIDED_QUERY_ANSWERS — 6 zones × 6 derives = 36 total", "result": "PASS" },
+    { "id": "V04", "name": "All path entries have tone, archetype, depth fields", "result": "PASS" },
+    { "id": "V05", "name": "MICRO derives return null structuralContext", "result": "PASS" },
+    { "id": "V06", "name": "DEEP derives return extended summary and evidence", "result": "PASS" },
+    { "id": "V07", "name": "All 36 derives handle null/empty fullReport", "result": "PASS" },
+    { "id": "V08", "name": "Answer panel reads depth from DENSE_ZONE_PATHS", "result": "PASS" },
+    { "id": "V09", "name": "MICRO panel uses inline evidence chips, omits context/boundary", "result": "PASS" },
+    { "id": "V10", "name": "DEEP panel shows 'GUIDED QUERY · DEEP' label", "result": "PASS" },
+    { "id": "V11", "name": "SupportRail chips carry data-tone attribute", "result": "PASS" },
+    { "id": "V12", "name": "Separator rendered between index 1 and 2", "result": "PASS" },
+    { "id": "V13", "name": "Only alarming tone gets visible accent (muted red border)", "result": "PASS" },
+    { "id": "V14", "name": "Quiet tone chips have reduced opacity", "result": "PASS" },
+    { "id": "V15", "name": "Glyph icons from TONE_PALETTE (◇, ↓, ■, △, ○, ◆, ◎, ◈)", "result": "PASS" },
+    { "id": "V16", "name": "Zone change auto-clears activeQueryKey (existing behavior)", "result": "PASS" },
+    { "id": "V17", "name": "Escape dismisses answer panel (existing behavior)", "result": "PASS" },
+    { "id": "V18", "name": "exploredQueries tracks all 36 keys", "result": "PASS" },
+    { "id": "V19", "name": "BALANCED persona completely untouched", "result": "PASS" },
+    { "id": "V20", "name": "BOARDROOM persona completely untouched", "result": "PASS" },
+    { "id": "V21", "name": "INVESTIGATION persona completely untouched", "result": "PASS" },
+    { "id": "V22", "name": "No 75.x authority activated (INVESTIGATIVE only)", "result": "PASS" },
+    { "id": "V23", "name": "Build compiles without errors or warnings", "result": "PASS" },
+    { "id": "V24", "name": "Scroll overflow handled for 6-item path list", "result": "PASS" }
+  ],
+  "summary": "24 checks — all PASS"
+}

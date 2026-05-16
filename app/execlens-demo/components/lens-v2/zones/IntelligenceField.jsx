@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef, useMemo } from 'react'
+import { useState, useCallback, useEffect, useRef, useMemo, Fragment } from 'react'
 import { createPortal } from 'react-dom'
 import { PRESSURE_META, ROLE_META, DEFAULT_BINDING_CLIENT, DEFAULT_BINDING_RUN } from './constants'
 import InvestigationReadingGuide, { TermHint } from './InvestigationReadingGuide'
@@ -136,66 +136,173 @@ function RepModeTag({ label, sub, zones }) {
   )
 }
 
+const TONE_PALETTE = {
+  operational:   { glyph: '◇' },
+  forensic:      { glyph: '↓' },
+  executive:     { glyph: '■' },
+  architectural: { glyph: '△' },
+  quiet:         { glyph: '○' },
+  alarming:      { glyph: '◆' },
+  reflective:    { glyph: '◎' },
+  containment:   { glyph: '◈' },
+}
+
 const DENSE_ZONE_PATHS = {
   semanticTopology: [
-    { label: 'Open topology explorer', icon: '◇',
+    { label: 'Open topology explorer', icon: '◇', tone: 'operational', archetype: 'SCAN', depth: 'standard',
       narrative: 'Shows how semantic domains map to structural backing across the full topology.',
       answers: 'Which domains have structural reality versus semantic assertion?',
       boundary: 'Derived from reconciliation correspondence — no inference applied.' },
-    { label: 'Descend into forensic lineage', icon: '↓',
+    { label: 'Descend into forensic lineage', icon: '↓', tone: 'forensic', archetype: 'TRACE', depth: 'standard',
       narrative: 'Opens the full evidence chain for each domain, including source traceability and reconciliation status.',
       answers: 'What evidence exists for each structural claim?',
       boundary: 'Requires INVESTIGATION mode — full forensic depth.' },
+    { label: 'Semantic continuity domains', icon: '○', tone: 'quiet', archetype: 'SCAN', depth: 'micro',
+      narrative: 'Identifies domains that operate on semantic assertion alone without structural correspondence.',
+      answers: 'Which domains operate primarily on semantic continuity?',
+      boundary: 'Domain classification from semantic_domain_registry — deterministic.' },
+    { label: 'Structural asymmetry map', icon: '△', tone: 'architectural', archetype: 'INTERPRET', depth: 'standard',
+      narrative: 'Reveals how structural reality distributes unevenly across the topology — where evidence concentrates and where it thins.',
+      answers: 'Where is structural reality most asymmetrically distributed?',
+      boundary: 'Distribution from cluster and domain registries — no inference.' },
+    { label: 'Executive confidence anchors', icon: '■', tone: 'executive', archetype: 'INTERPRET', depth: 'standard',
+      narrative: 'Surfaces the grounded domains that provide the structural foundation for executive decision certainty.',
+      answers: 'Which grounded domains anchor executive confidence?',
+      boundary: 'Grounding from reconciliation correspondence — deterministic.' },
+    { label: 'Ungrounded semantic claims', icon: '◆', tone: 'alarming', archetype: 'BOUNDARY', depth: 'deep',
+      narrative: 'Exposes semantic claims with no structural correspondence — assertions that carry advisory weight without evidence confirmation.',
+      answers: 'Which semantic claims have no structural correspondence?',
+      boundary: 'Reconciliation status from per-domain reconciliation — deterministic.' },
   ],
   clusterConcentration: [
-    { label: 'Inspect cluster distribution', icon: '◇',
+    { label: 'Inspect cluster distribution', icon: '◇', tone: 'operational', archetype: 'SCAN', depth: 'standard',
       narrative: 'Reveals how structural mass is distributed across domain clusters and where concentration creates dependency.',
       answers: 'Where is structural mass concentrated and what does that imply?',
       boundary: 'Cluster topology derived from evidence blocks — deterministic.' },
-    { label: 'View structural mass breakdown', icon: '→',
+    { label: 'View structural mass breakdown', icon: '↓', tone: 'forensic', archetype: 'TRACE', depth: 'standard',
       narrative: 'Decomposes cluster-level structural weight to show which groups carry disproportionate organizational load.',
       answers: 'Which clusters carry the most structural weight?',
       boundary: 'Mass calculation based on evidence block count per cluster.' },
+    { label: 'Concentration dependency', icon: '△', tone: 'architectural', archetype: 'INTERPRET', depth: 'standard',
+      narrative: 'Explains what structural dependency is created when mass concentrates in few clusters.',
+      answers: 'What structural dependency does concentration create?',
+      boundary: 'Concentration from cluster domain counts — deterministic.' },
+    { label: 'Thin clusters', icon: '○', tone: 'quiet', archetype: 'SCAN', depth: 'micro',
+      narrative: 'Identifies clusters with minimal structural mass — areas of low evidence density.',
+      answers: 'Which clusters remain structurally thin?',
+      boundary: 'Cluster sizing from semantic_cluster_registry — deterministic.' },
+    { label: 'Fragility assessment', icon: '■', tone: 'executive', archetype: 'ESCALATION', depth: 'deep',
+      narrative: 'Assesses whether the current cluster distribution indicates structural fragility or resilience.',
+      answers: 'Does cluster distribution indicate organizational fragility?',
+      boundary: 'Fragility derived from concentration ratios — deterministic.' },
+    { label: 'Topology shape analysis', icon: '◎', tone: 'reflective', archetype: 'INTERPRET', depth: 'standard',
+      narrative: 'Characterizes the overall topology shape — star, mesh, or chain — based on edge distribution and hub connectivity.',
+      answers: 'What topology shape sustains the current mass distribution?',
+      boundary: 'Shape from topology edges and domain connectivity — deterministic.' },
   ],
   absorptionLoad: [
-    { label: 'Trace absorption source', icon: '◇',
+    { label: 'Trace absorption source', icon: '◇', tone: 'operational', archetype: 'TRACE', depth: 'standard',
       narrative: 'Maps the upstream propagation path to show where absorbed load originates and how it reaches the conducting layer.',
       answers: 'Where does the absorbed pressure come from?',
       boundary: 'Propagation roles derived from evidence block classification.' },
-    { label: 'Open propagation map', icon: '→',
+    { label: 'Open propagation map', icon: '↓', tone: 'forensic', archetype: 'TRACE', depth: 'standard',
       narrative: 'Displays the full origin → pass-through → receiver chain with structural backing status at each node.',
       answers: 'How does pressure propagate through the organizational structure?',
       boundary: 'Chain structure from propagation summary — no synthetic links.' },
+    { label: 'Dissipation resistance', icon: '△', tone: 'architectural', archetype: 'INTERPRET', depth: 'deep',
+      narrative: 'Explains why pressure cannot dissipate — what structural conditions make the conducting path non-bypassable.',
+      answers: 'What structural condition prevents pressure dissipation?',
+      boundary: 'Grounding status of chain nodes — deterministic.' },
+    { label: 'Absorption scope', icon: '■', tone: 'executive', archetype: 'INTERPRET', depth: 'standard',
+      narrative: 'Determines whether absorbed pressure is contained to specific domains or distributed across the structural topology.',
+      answers: 'Is the absorption localized or systemic?',
+      boundary: 'Scope from role count and signal distribution — deterministic.' },
+    { label: 'Amplification chain', icon: '↓', tone: 'forensic', archetype: 'TRACE', depth: 'standard',
+      narrative: 'Traces which dependency chain amplifies the absorption pattern through pressure tier escalation and signal co-presence.',
+      answers: 'Which dependency chain amplifies the absorption pattern?',
+      boundary: 'Amplification from signal co-presence and pressure tiers — deterministic.' },
+    { label: 'Evidence continuity gaps', icon: '◈', tone: 'containment', archetype: 'BOUNDARY', depth: 'standard',
+      narrative: 'Identifies where evidence continuity weakens across the propagation corridor — grounding drops that limit confidence.',
+      answers: 'Where does evidence continuity weaken across the propagation corridor?',
+      boundary: 'Grounding status per chain node from evidence blocks — deterministic.' },
   ],
   signalAssessment: [
-    { label: 'Open signal trace', icon: '◇',
+    { label: 'Open signal trace', icon: '◇', tone: 'operational', archetype: 'SCAN', depth: 'standard',
       narrative: 'Exposes individual signal activation, severity, and the structural conditions that triggered elevation.',
       answers: 'What specifically triggered each elevated signal?',
       boundary: 'Signals derived from structural assessment — deterministic thresholds.' },
-    { label: 'Inspect signal concentration', icon: '→',
+    { label: 'Inspect signal concentration', icon: '↓', tone: 'forensic', archetype: 'TRACE', depth: 'standard',
       narrative: 'Shows how activated signals cluster across domains and whether concentration indicates systemic versus localized conditions.',
       answers: 'Are elevated signals localized or systemically distributed?',
       boundary: 'Concentration analysis from signal domain attribution.' },
+    { label: 'Confidence compression', icon: '■', tone: 'executive', archetype: 'INTERPRET', depth: 'deep',
+      narrative: 'Explains how the combination of elevated signals compresses executive confidence beyond what any individual signal would produce.',
+      answers: 'Which signal combination most compresses confidence?',
+      boundary: 'Compression from signal count × readiness band — deterministic.' },
+    { label: 'Isolated signals', icon: '○', tone: 'quiet', archetype: 'SCAN', depth: 'micro',
+      narrative: 'Identifies signals that remain structurally isolated at nominal severity — conditions not yet coupled to the active pressure field.',
+      answers: 'Which signals remain structurally isolated?',
+      boundary: 'Isolation from signal severity classification — deterministic.' },
+    { label: 'Signal field asymmetry', icon: '△', tone: 'architectural', archetype: 'INTERPRET', depth: 'standard',
+      narrative: 'Reveals the dominant asymmetry in the signal field — whether pressure concentrates at one severity tier or distributes evenly.',
+      answers: 'What structural asymmetry dominates the signal field?',
+      boundary: 'Asymmetry from severity distribution — deterministic.' },
+    { label: 'Advisory vs verified signals', icon: '◈', tone: 'containment', archetype: 'BOUNDARY', depth: 'standard',
+      narrative: 'Distinguishes which elevated signals have full structural verification versus those operating under advisory-bound confidence.',
+      answers: 'Which elevated signals are advisory-bound versus structurally verified?',
+      boundary: 'Verification from signal confidence classification — deterministic.' },
   ],
   propagationFlow: [
-    { label: 'Open full topology', icon: '◇',
+    { label: 'Open full topology', icon: '◇', tone: 'operational', archetype: 'TRACE', depth: 'standard',
       narrative: 'Displays the complete structural topology with propagation roles, grounding status, and inter-domain dependency.',
       answers: 'What is the full structural dependency picture?',
       boundary: 'Topology from evidence blocks and reconciliation — no inference.' },
-    { label: 'Descend to forensic traversal', icon: '↓',
+    { label: 'Descend to forensic traversal', icon: '↓', tone: 'forensic', archetype: 'TRACE', depth: 'standard',
       narrative: 'Opens forensic-depth analysis of propagation chain nodes with per-domain evidence lineage and temporal continuity.',
       answers: 'What evidence supports each link in the propagation chain?',
       boundary: 'Requires INVESTIGATION mode — full forensic depth.' },
+    { label: 'Containment failure', icon: '◆', tone: 'alarming', archetype: 'ESCALATION', depth: 'deep',
+      narrative: 'Identifies where propagation containment fails — pressure traverses the full chain into receiving domains.',
+      answers: 'Where does propagation containment fail?',
+      boundary: 'Containment from chain completeness and receiver grounding — deterministic.' },
+    { label: 'Non-bypassable dependency', icon: '△', tone: 'architectural', archetype: 'INTERPRET', depth: 'standard',
+      narrative: 'Identifies the structural dependency in the propagation chain that cannot be bypassed or rerouted.',
+      answers: 'What structural dependency cannot be bypassed?',
+      boundary: 'Dependency from pass-through grounding status — deterministic.' },
+    { label: 'Ungrounded receivers', icon: '◈', tone: 'containment', archetype: 'BOUNDARY', depth: 'standard',
+      narrative: 'Surfaces receiver domains that inherit propagated pressure without full structural grounding.',
+      answers: 'Which receiver domains inherit pressure without structural grounding?',
+      boundary: 'Receiver grounding from evidence blocks — deterministic.' },
+    { label: 'Evidence uncertainty ranking', icon: '◎', tone: 'reflective', archetype: 'BOUNDARY', depth: 'micro',
+      narrative: 'Ranks each role in the propagation chain by evidence uncertainty — which link has the weakest structural backing.',
+      answers: 'Which role in the chain carries the highest evidence uncertainty?',
+      boundary: 'Uncertainty from grounding status classification — deterministic.' },
   ],
   pressureZoneFocus: [
-    { label: 'Open pressure zone topology', icon: '◇',
+    { label: 'Open pressure zone topology', icon: '◇', tone: 'operational', archetype: 'SCAN', depth: 'standard',
       narrative: 'Shows how the active pressure zone is structurally connected across origin, pass-through, and receiver domains.',
       answers: 'Is this pressure localized or systemic?',
       boundary: 'Pressure zone from propagation summary — deterministic classification.' },
-    { label: 'View qualification posture', icon: '→',
+    { label: 'View qualification blockers', icon: '↓', tone: 'forensic', archetype: 'TRACE', depth: 'standard',
       narrative: 'Exposes unresolved semantic domains and debt items affecting qualification progression toward the next S-state.',
       answers: 'What is preventing qualification advancement?',
       boundary: 'Qualification state from SQO binding — no advisory interpretation.' },
+    { label: 'Instability conditions', icon: '◆', tone: 'alarming', archetype: 'ESCALATION', depth: 'deep',
+      narrative: 'Assesses proximity to systemic instability based on signal saturation and structural posture.',
+      answers: 'What conditions would produce systemic instability?',
+      boundary: 'Instability from signal activation ratio and posture — deterministic.' },
+    { label: 'Pressure boundary', icon: '◈', tone: 'containment', archetype: 'BOUNDARY', depth: 'standard',
+      narrative: 'Maps the structural boundary that currently contains the pressure zone and what domains lie outside it.',
+      answers: 'What structural boundary contains the pressure zone?',
+      boundary: 'Boundary from propagation chain vs full domain registry — deterministic.' },
+    { label: 'Qualification posture', icon: '■', tone: 'executive', archetype: 'INTERPRET', depth: 'standard',
+      narrative: 'Surfaces the full qualification posture including qualifier class, readiness band, and executive posture.',
+      answers: 'What qualification posture applies to the pressure zone?',
+      boundary: 'Posture from qualifier_summary and readiness_summary — deterministic.' },
+    { label: 'Domains outside propagation', icon: '○', tone: 'quiet', archetype: 'SCAN', depth: 'micro',
+      narrative: 'Lists organizational domains not part of the active propagation path — areas outside current pressure exposure.',
+      answers: 'Which organizational domains remain outside the propagation path?',
+      boundary: 'Domain subtraction from semantic_domain_registry — deterministic.' },
   ],
 }
 
@@ -457,30 +564,36 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
               const queryKey = `${activeZoneKey}:${i}`
               const isActive = activeQueryKey === queryKey
               const isExplored = exploredQueries && exploredQueries.has(queryKey)
+              const tonePalette = p.tone && TONE_PALETTE[p.tone]
+              const glyph = tonePalette ? tonePalette.glyph : p.icon
               return (
-                <div
-                  key={queryKey}
-                  className="support-path-item support-path-item--zone"
-                  role="button"
-                  tabIndex={0}
-                  aria-pressed={isActive}
-                  data-explored={isExplored || undefined}
-                  onClick={() => onQuerySelect && onQuerySelect(activeZoneKey, i)}
-                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onQuerySelect && onQuerySelect(activeZoneKey, i) } }}
-                >
-                  <span className="support-path-icon">{p.icon}</span>
-                  <span className="support-path-text">{p.answers || p.label}</span>
-                  {p.narrative && !isActive && (
-                    <div className="path-narrative-overlay">
-                      <div className="path-narrative-text">{p.narrative}</div>
-                      <div className="path-narrative-question">
-                        <span className="path-narrative-question-label">ANSWERS</span>
-                        <span className="path-narrative-question-text">{p.answers}</span>
+                <Fragment key={queryKey}>
+                  {i === 2 && <div className="zone-paths-separator" />}
+                  <div
+                    className="support-path-item support-path-item--zone"
+                    role="button"
+                    tabIndex={0}
+                    aria-pressed={isActive}
+                    data-explored={isExplored || undefined}
+                    data-tone={p.tone || undefined}
+                    data-depth={p.depth || undefined}
+                    onClick={() => onQuerySelect && onQuerySelect(activeZoneKey, i)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onQuerySelect && onQuerySelect(activeZoneKey, i) } }}
+                  >
+                    <span className="support-path-icon">{glyph}</span>
+                    <span className="support-path-text">{p.answers || p.label}</span>
+                    {p.narrative && !isActive && (
+                      <div className="path-narrative-overlay">
+                        <div className="path-narrative-text">{p.narrative}</div>
+                        <div className="path-narrative-question">
+                          <span className="path-narrative-question-label">ANSWERS</span>
+                          <span className="path-narrative-question-text">{p.answers}</span>
+                        </div>
+                        <div className="path-narrative-boundary">{p.boundary}</div>
                       </div>
-                      <div className="path-narrative-boundary">{p.boundary}</div>
-                    </div>
-                  )}
-                </div>
+                    )}
+                  </div>
+                </Fragment>
               )
             })}
           </div>
@@ -691,6 +804,92 @@ const GUIDED_QUERY_ANSWERS = {
         }
       },
     },
+    {
+      derive: (fullReport) => {
+        const domains = (fullReport && fullReport.semantic_domain_registry) || []
+        const semanticOnly = domains.filter(d => d.semantic_only || !d.structurally_backed)
+        return {
+          summary: semanticOnly.length > 0
+            ? `${semanticOnly.length} of ${domains.length} domains operate on semantic continuity alone.`
+            : 'All domains have structural correspondence.',
+          evidence: semanticOnly.slice(0, 3).map(d => ({
+            label: d.domain_name || d.domain_id,
+            value: d.lineage_status || 'semantic-only',
+            severity: 'elevated',
+          })),
+          structuralContext: null,
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const clusters = (fullReport && fullReport.semantic_cluster_registry) || []
+        const ts = (fullReport && fullReport.topology_summary) || {}
+        const sorted = [...clusters].sort((a, b) => (b.domain_count || 0) - (a.domain_count || 0))
+        const largest = sorted[0]
+        const smallest = sorted[sorted.length - 1]
+        const totalDomains = ts.semantic_domain_count || 0
+        const ratio = largest && smallest && smallest.domain_count > 0
+          ? (largest.domain_count / smallest.domain_count).toFixed(1) : '—'
+        return {
+          summary: largest
+            ? `Structural reality concentrates in "${largest.cluster_label || 'primary cluster'}" (${largest.domain_count} domains). ${smallest && smallest !== largest ? `Thinnest cluster: "${smallest.cluster_label}" (${smallest.domain_count}).` : ''} Asymmetry ratio: ${ratio}:1.`
+            : 'No cluster data available for asymmetry analysis.',
+          evidence: sorted.slice(0, 3).map(c => ({
+            label: c.cluster_label || c.cluster_id,
+            value: `${c.domain_count || 0} domains`,
+            severity: c === largest ? 'critical' : c === smallest ? 'elevated' : 'nominal',
+          })),
+          structuralContext: `${clusters.length} clusters across ${totalDomains} domains. Asymmetric distribution indicates uneven evidence accumulation across organizational segments.`,
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const domains = (fullReport && fullReport.semantic_domain_registry) || []
+        const blocks = (fullReport && fullReport.evidence_blocks) || []
+        const grounded = domains.filter(d => d.structurally_backed)
+        const chainDomains = new Set(blocks.map(b => b.domain_alias))
+        const anchors = grounded.filter(d => chainDomains.has(d.domain_name || d.domain_id) || d.confidence > 0)
+        return {
+          summary: anchors.length > 0
+            ? `${anchors.length} structurally grounded domains provide the verified foundation for executive confidence. These represent the structural surface where evidence has been confirmed.`
+            : grounded.length > 0
+              ? `${grounded.length} domains are structurally backed but none appear in the active propagation chain.`
+              : 'No grounded domains available to anchor confidence.',
+          evidence: anchors.slice(0, 5).map(d => ({
+            label: d.domain_name || d.domain_id,
+            value: `confidence: ${d.confidence || '—'}`,
+            severity: 'nominal',
+          })),
+          structuralContext: `${grounded.length} of ${domains.length} total domains are structurally backed. Executive confidence is bounded by this grounded surface.`,
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const recon = (fullReport && fullReport.reconciliation_summary) || {}
+        const perDomain = recon.per_domain || []
+        const unreconciled = perDomain.filter(d => d.reconciliation_status !== 'RECONCILED')
+        const domains = (fullReport && fullReport.semantic_domain_registry) || []
+        const semanticOnly = domains.filter(d => d.semantic_only || !d.structurally_backed)
+        return {
+          summary: unreconciled.length > 0
+            ? `${unreconciled.length} semantic claims lack structural correspondence — these represent assertions without evidence confirmation. ${semanticOnly.length} domains are classified as semantic-only in the registry.`
+            : perDomain.length > 0
+              ? 'All semantic claims have structural correspondence through reconciliation.'
+              : 'No reconciliation data available for correspondence analysis.',
+          evidence: unreconciled.slice(0, 5).map(d => ({
+            label: d.domain_name || d.domain_id || 'Unknown',
+            value: d.reconciliation_status || 'unreconciled',
+            severity: 'critical',
+          })),
+          structuralContext: recon.weighted_confidence_score != null
+            ? `Weighted confidence across the topology: ${recon.weighted_confidence_score}. Unreconciled domains compress this score and limit executive commitment scope.`
+            : 'Correspondence determined by reconciliation — each domain checked against structural evidence from the evidence rebase corridor.',
+        }
+      },
+    },
   ],
   clusterConcentration: [
     {
@@ -728,6 +927,97 @@ const GUIDED_QUERY_ANSWERS = {
             severity: b.structural_backing ? 'nominal' : 'elevated',
           })),
           structuralContext: 'Structural weight is determined by evidence block classification. Clusters with more pass-through load carry disproportionate organizational influence.',
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const clusters = (fullReport && fullReport.semantic_cluster_registry) || []
+        const ts = (fullReport && fullReport.topology_summary) || {}
+        const totalDomains = ts.semantic_domain_count || 0
+        const sorted = [...clusters].sort((a, b) => (b.domain_count || 0) - (a.domain_count || 0))
+        const topCluster = sorted[0]
+        const topPct = topCluster && totalDomains > 0 ? Math.round((topCluster.domain_count || 0) / totalDomains * 100) : 0
+        return {
+          summary: topCluster
+            ? `The largest cluster ("${topCluster.cluster_label || topCluster.cluster_id}") accounts for ${topPct}% of all domains. ${topPct > 50 ? 'This creates single-point structural dependency — removal of this cluster would collapse majority coverage.' : 'Concentration is distributed across multiple clusters.'}`
+            : 'No cluster data available for dependency analysis.',
+          evidence: sorted.slice(0, 3).map(c => ({
+            label: c.cluster_label || c.cluster_id,
+            value: `${c.domain_count || 0} domains (${totalDomains > 0 ? Math.round((c.domain_count || 0) / totalDomains * 100) : 0}%)`,
+            severity: (c.domain_count || 0) / Math.max(1, totalDomains) > 0.5 ? 'critical' : 'nominal',
+          })),
+          structuralContext: `${clusters.length} clusters span ${totalDomains} domains. Dependency emerges when structural mass concentrates beyond 50% in a single cluster.`,
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const clusters = (fullReport && fullReport.semantic_cluster_registry) || []
+        const thin = clusters.filter(c => (c.domain_count || 0) <= 1)
+        return {
+          summary: thin.length > 0
+            ? `${thin.length} of ${clusters.length} clusters carry minimal structural mass.`
+            : clusters.length > 0
+              ? `All ${clusters.length} clusters carry substantive structural mass.`
+              : 'No cluster data available.',
+          evidence: thin.slice(0, 3).map(c => ({
+            label: c.cluster_label || c.cluster_id,
+            value: `${c.domain_count || 0} domain${(c.domain_count || 0) !== 1 ? 's' : ''}`,
+            severity: 'elevated',
+          })),
+          structuralContext: null,
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const clusters = (fullReport && fullReport.semantic_cluster_registry) || []
+        const ts = (fullReport && fullReport.topology_summary) || {}
+        const totalDomains = ts.semantic_domain_count || 0
+        const sorted = [...clusters].sort((a, b) => (b.domain_count || 0) - (a.domain_count || 0))
+        const topCluster = sorted[0]
+        const topPct = topCluster && totalDomains > 0 ? Math.round((topCluster.domain_count || 0) / totalDomains * 100) : 0
+        const bottomHalf = sorted.slice(Math.ceil(sorted.length / 2))
+        const bottomDomains = bottomHalf.reduce((sum, c) => sum + (c.domain_count || 0), 0)
+        const bottomPct = totalDomains > 0 ? Math.round(bottomDomains / totalDomains * 100) : 0
+        const fragile = topPct > 50 || bottomPct < 20
+        return {
+          summary: fragile
+            ? `Cluster distribution indicates structural fragility. ${topPct > 50 ? `Top cluster holds ${topPct}% of domains — single-point failure exposure.` : `Bottom half of clusters account for only ${bottomPct}% of domains — evidence is thinly distributed across organizational periphery.`}`
+            : `Cluster distribution appears structurally resilient. Top cluster holds ${topPct}% of domains; bottom half accounts for ${bottomPct}%.`,
+          evidence: [
+            { label: 'Top cluster share', value: `${topPct}%`, severity: topPct > 50 ? 'critical' : 'nominal' },
+            { label: 'Bottom half share', value: `${bottomPct}%`, severity: bottomPct < 20 ? 'elevated' : 'nominal' },
+            { label: 'Total clusters', value: String(clusters.length), severity: null },
+          ],
+          structuralContext: `Fragility is structural when removal of a single cluster would collapse majority domain coverage. Current topology has ${clusters.length} clusters across ${totalDomains} domains.`,
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const edges = (fullReport && fullReport.semantic_topology_edges) || []
+        const domains = (fullReport && fullReport.semantic_domain_registry) || []
+        const hubCount = {}
+        edges.forEach(e => {
+          hubCount[e.source_domain] = (hubCount[e.source_domain] || 0) + 1
+          hubCount[e.target_domain] = (hubCount[e.target_domain] || 0) + 1
+        })
+        const hubs = Object.entries(hubCount).sort((a, b) => b[1] - a[1])
+        const topHub = hubs[0]
+        const avgConnections = hubs.length > 0 ? (edges.length * 2 / hubs.length).toFixed(1) : '0'
+        const shape = topHub && topHub[1] > edges.length * 0.5 ? 'star' : hubs.length > 0 && parseFloat(avgConnections) > 2 ? 'mesh' : 'chain'
+        return {
+          summary: edges.length > 0
+            ? `The topology contains ${edges.length} edges across ${domains.length} domains. ${topHub ? `Hub domain "${topHub[0]}" connects to ${topHub[1]} other domains.` : ''} Shape classification: ${shape}.`
+            : 'No topology edges available for shape analysis.',
+          evidence: hubs.slice(0, 3).map(([domain, count]) => ({
+            label: domain,
+            value: `${count} connections`,
+            severity: count > 3 ? 'elevated' : 'nominal',
+          })),
+          structuralContext: `Topology shape: ${shape}. Star = single hub concentrates connections. Mesh = distributed connectivity. Chain = linear dependency.`,
         }
       },
     },
@@ -775,6 +1065,112 @@ const GUIDED_QUERY_ANSWERS = {
           structuralContext: ps.primary_zone_business_label
             ? `Primary pressure zone: ${ps.primary_zone_business_label}. Chain structure derived from evidence block propagation roles.`
             : 'Chain structure derived from evidence block propagation roles.',
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const blocks = (fullReport && fullReport.evidence_blocks) || []
+        const ps = (fullReport && fullReport.propagation_summary) || {}
+        const origin = blocks.find(b => b && b.propagation_role === 'ORIGIN')
+        const passthrough = blocks.filter(b => b && b.propagation_role === 'PASS_THROUGH')
+        const structuralBarriers = blocks.filter(b => b && b.structural_backing && b.propagation_role !== 'RECEIVER')
+        const unbacked = blocks.filter(b => b && !b.structural_backing)
+        return {
+          summary: passthrough.length > 0
+            ? `${passthrough.length} pass-through node${passthrough.length !== 1 ? 's' : ''} conduct pressure without dissipation. ${unbacked.length > 0 ? `${unbacked.length} node${unbacked.length !== 1 ? 's' : ''} lack structural backing — pressure flows through semantic assertion rather than evidenced structure.` : 'All conducting nodes are structurally backed.'}`
+            : origin
+              ? 'Pressure originates but no pass-through conduction detected — dissipation pathway unclear.'
+              : 'No propagation chain available for dissipation analysis.',
+          evidence: [
+            ...passthrough.map(n => ({
+              label: n.domain_alias || 'Pass-through',
+              value: n.structural_backing ? 'conducting · backed' : 'conducting · unbacked',
+              severity: n.structural_backing ? 'elevated' : 'critical',
+            })),
+            ...unbacked.slice(0, 2).map(n => ({
+              label: n.domain_alias || 'Node',
+              value: 'no structural backing',
+              severity: 'critical',
+            })),
+          ].slice(0, 5),
+          structuralContext: `Dissipation requires structural boundaries that absorb rather than transmit pressure. ${structuralBarriers.length} node${structuralBarriers.length !== 1 ? 's' : ''} have structural backing in the chain. Unbacked nodes transmit without attenuation — this is the mechanism of systemic pressure amplification.`,
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const blocks = (fullReport && fullReport.evidence_blocks) || []
+        const sigs = (fullReport && fullReport.signal_interpretations) || []
+        const ps = (fullReport && fullReport.propagation_summary) || {}
+        const activated = sigs.filter(s => s.severity !== 'NOMINAL')
+        const concentrated = {}
+        for (const s of activated) {
+          const zone = s.concentration || 'unattributed'
+          if (!concentrated[zone]) concentrated[zone] = 0
+          concentrated[zone]++
+        }
+        const zones = Object.keys(concentrated)
+        const chainLength = blocks.length
+        return {
+          summary: zones.length > 1
+            ? `Absorption spans ${zones.length} concentration zones across ${chainLength} chain nodes — systemic pattern. Pressure is not containable within a single domain boundary.`
+            : zones.length === 1
+              ? `Absorption is localized to "${zones[0]}" with ${activated.length} activated signal${activated.length !== 1 ? 's' : ''}. Containment is structurally possible within this boundary.`
+              : 'No activated signals — absorption pattern is quiescent.',
+          evidence: zones.map(z => ({
+            label: z,
+            value: `${concentrated[z]} signal${concentrated[z] !== 1 ? 's' : ''}`,
+            severity: concentrated[z] >= 3 ? 'critical' : concentrated[z] >= 2 ? 'elevated' : 'nominal',
+          })),
+          structuralContext: ps.primary_zone_business_label
+            ? `Primary pressure zone: ${ps.primary_zone_business_label}. Systemic absorption means pressure crosses domain boundaries; localized absorption means it can be addressed within a single structural perimeter.`
+            : 'Localized vs systemic classification derived from signal concentration distribution across chain nodes.',
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const blocks = (fullReport && fullReport.evidence_blocks) || []
+        const chain = blocks.filter(b => b && (b.propagation_role === 'ORIGIN' || b.propagation_role === 'PASS_THROUGH'))
+        const amplifiers = chain.filter(b => !b.structural_backing)
+        return {
+          summary: amplifiers.length > 0
+            ? `${amplifiers.length} unbacked node${amplifiers.length !== 1 ? 's' : ''} in the dependency chain amplify absorption — pressure passes through without structural attenuation.`
+            : chain.length > 0
+              ? `All ${chain.length} dependency chain nodes are structurally backed. No amplification detected.`
+              : 'Dependency chain not resolved — amplification analysis unavailable.',
+          evidence: chain.map(n => ({
+            label: n.domain_alias || n.domain_id || 'Node',
+            value: `${n.propagation_role}${n.structural_backing ? '' : ' · unbacked'}`,
+            severity: n.structural_backing ? 'nominal' : 'critical',
+          })),
+          structuralContext: 'Amplification occurs when pressure traverses unbacked nodes — these transmit load without the structural capacity to absorb it. Each unbacked link compounds downstream exposure.',
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const blocks = (fullReport && fullReport.evidence_blocks) || []
+        const withConfidence = blocks.filter(b => b && b.evidence_confidence != null)
+        const lowConfidence = withConfidence.filter(b => b.evidence_confidence < 0.5)
+        const corridor = blocks.map(b => ({
+          alias: b.domain_alias || b.domain_id || 'Unknown',
+          confidence: b.evidence_confidence,
+          role: b.propagation_role,
+        }))
+        return {
+          summary: lowConfidence.length > 0
+            ? `Evidence continuity weakens at ${lowConfidence.length} node${lowConfidence.length !== 1 ? 's' : ''} in the propagation corridor. ${lowConfidence.map(b => b.domain_alias || b.domain_id).join(', ')} ${lowConfidence.length === 1 ? 'has' : 'have'} confidence below 0.5.`
+            : withConfidence.length > 0
+              ? `Evidence continuity holds across all ${withConfidence.length} corridor nodes. No confidence degradation detected.`
+              : 'No evidence confidence data available across the propagation corridor.',
+          evidence: corridor.filter(n => n.confidence != null).slice(0, 5).map(n => ({
+            label: n.alias,
+            value: `${n.confidence.toFixed(2)} · ${n.role}`,
+            severity: n.confidence < 0.5 ? 'critical' : n.confidence < 0.7 ? 'elevated' : 'nominal',
+          })),
+          structuralContext: null,
         }
       },
     },
@@ -827,6 +1223,119 @@ const GUIDED_QUERY_ANSWERS = {
         }
       },
     },
+    {
+      derive: (fullReport) => {
+        const sigs = (fullReport && fullReport.signal_interpretations) || []
+        const rs = (fullReport && fullReport.readiness_summary) || {}
+        const activated = sigs.filter(s => s.severity !== 'NOMINAL')
+        const critical = activated.filter(s => s.severity === 'CRITICAL' || s.severity === 'HIGH')
+        const elevated = activated.filter(s => s.severity === 'ELEVATED')
+        const confidenceScore = rs.weighted_confidence_score
+        return {
+          summary: critical.length > 1
+            ? `${critical.length} critical/high signals compound to compress executive confidence${confidenceScore != null ? ` — weighted score: ${confidenceScore}` : ''}. This combination creates structural conditions that exceed individual signal severity.`
+            : critical.length === 1
+              ? `Single critical signal (${critical[0].signal_id || 'unidentified'}) compresses confidence${confidenceScore != null ? ` to ${confidenceScore}` : ''}. ${elevated.length > 0 ? `${elevated.length} elevated signal${elevated.length !== 1 ? 's' : ''} provide compounding context.` : 'No elevated signals compound the condition.'}`
+              : elevated.length > 0
+                ? `${elevated.length} elevated signal${elevated.length !== 1 ? 's' : ''} present but no critical-tier compression detected.`
+                : 'No signal compression — all signals within nominal parameters.',
+          evidence: [
+            ...critical.map(s => ({
+              label: s.signal_id || 'Critical signal',
+              value: s.severity,
+              severity: 'critical',
+            })),
+            ...elevated.slice(0, 3).map(s => ({
+              label: s.signal_id || 'Elevated signal',
+              value: s.severity,
+              severity: 'elevated',
+            })),
+          ].slice(0, 5),
+          structuralContext: confidenceScore != null
+            ? `Weighted confidence: ${confidenceScore}. Signal combination effects are multiplicative — two elevated signals in dependent domains compress confidence more than their individual severities suggest. Confidence score integrates all signal interactions.`
+            : 'Signal compression is assessed by counting co-occurring critical and elevated signals across dependent domains. No weighted confidence score available for quantitative assessment.',
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const sigs = (fullReport && fullReport.signal_interpretations) || []
+        const activated = sigs.filter(s => s.severity !== 'NOMINAL')
+        const isolated = sigs.filter(s => s.severity === 'NOMINAL')
+        return {
+          summary: isolated.length > 0
+            ? `${isolated.length} of ${sigs.length} signals remain structurally isolated at nominal.`
+            : 'No isolated signals — all signals are activated.',
+          evidence: isolated.slice(0, 3).map(s => ({
+            label: s.signal_id || 'Signal',
+            value: 'NOMINAL',
+            severity: 'nominal',
+          })),
+          structuralContext: null,
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const sigs = (fullReport && fullReport.signal_interpretations) || []
+        const activated = sigs.filter(s => s.severity !== 'NOMINAL')
+        const bySeverity = {}
+        for (const s of activated) {
+          const sev = s.severity || 'UNKNOWN'
+          if (!bySeverity[sev]) bySeverity[sev] = []
+          bySeverity[sev].push(s)
+        }
+        const tiers = Object.entries(bySeverity).sort((a, b) => {
+          const order = { CRITICAL: 0, HIGH: 1, ELEVATED: 2 }
+          return (order[a[0]] ?? 3) - (order[b[0]] ?? 3)
+        })
+        const dominant = tiers[0]
+        return {
+          summary: dominant
+            ? `${dominant[0]} tier dominates with ${dominant[1].length} signal${dominant[1].length !== 1 ? 's' : ''} — this is the structural asymmetry shaping the signal field. ${tiers.length > 1 ? `${tiers.length - 1} other tier${tiers.length - 1 !== 1 ? 's' : ''} provide secondary context.` : 'No other severity tiers are active.'}`
+            : 'No structural asymmetry — all signals are nominal.',
+          evidence: tiers.map(([sev, items]) => ({
+            label: sev,
+            value: `${items.length} signal${items.length !== 1 ? 's' : ''}`,
+            severity: sev === 'CRITICAL' || sev === 'HIGH' ? 'critical' : 'elevated',
+          })),
+          structuralContext: 'Structural asymmetry identifies which severity tier carries the most signals. When one tier dominates, it shapes executive attention and qualification posture more than the aggregate count suggests.',
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const sigs = (fullReport && fullReport.signal_interpretations) || []
+        const qs = (fullReport && fullReport.qualifier_summary) || {}
+        const activated = sigs.filter(s => s.severity !== 'NOMINAL')
+        const advisoryBound = activated.filter(s => s.advisory_only || s.qualification_status === 'ADVISORY')
+        const verified = activated.filter(s => !s.advisory_only && s.qualification_status !== 'ADVISORY')
+        return {
+          summary: advisoryBound.length > 0 && verified.length > 0
+            ? `${verified.length} signal${verified.length !== 1 ? 's' : ''} structurally verified, ${advisoryBound.length} advisory-bound. Advisory signals carry weight in narrative but not in qualification progression.`
+            : advisoryBound.length > 0
+              ? `All ${advisoryBound.length} elevated signals are advisory-bound — they inform executive awareness but do not block qualification advancement.`
+              : verified.length > 0
+                ? `All ${verified.length} elevated signals are structurally verified — each contributes to qualification posture.`
+                : 'No elevated signals to classify.',
+          evidence: [
+            ...verified.slice(0, 3).map(s => ({
+              label: s.signal_id || 'Signal',
+              value: 'structurally verified',
+              severity: 'elevated',
+            })),
+            ...advisoryBound.slice(0, 2).map(s => ({
+              label: s.signal_id || 'Signal',
+              value: 'advisory-bound',
+              severity: 'nominal',
+            })),
+          ].slice(0, 5),
+          structuralContext: qs.active_qualifiers != null
+            ? `${qs.active_qualifiers} active qualifiers in the current posture. Advisory-bound signals are excluded from qualifier gates under Q-02 governance but remain visible in the signal field.`
+            : 'Advisory vs verified classification determines whether a signal affects qualification gates. Advisory-bound signals are governed by Q-02 disclosure but excluded from progression criteria.',
+        }
+      },
+    },
   ],
   propagationFlow: [
     {
@@ -866,6 +1375,106 @@ const GUIDED_QUERY_ANSWERS = {
             severity: b.structural_backing ? 'nominal' : 'elevated',
           })),
           structuralContext: 'Each propagation link is verified against the evidence rebase corridor. Links without structural backing carry advisory weight only under Q-02 governance.',
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const blocks = (fullReport && fullReport.evidence_blocks) || []
+        const ps = (fullReport && fullReport.propagation_summary) || {}
+        const unbacked = blocks.filter(b => b && !b.structural_backing)
+        const receivers = blocks.filter(b => b && b.propagation_role === 'RECEIVER')
+        const unbackedReceivers = receivers.filter(b => !b.structural_backing)
+        return {
+          summary: unbackedReceivers.length > 0
+            ? `Propagation containment fails at ${unbackedReceivers.length} receiver node${unbackedReceivers.length !== 1 ? 's' : ''} — pressure reaches endpoints without structural verification. ${unbacked.length > unbackedReceivers.length ? `${unbacked.length - unbackedReceivers.length} additional unbacked node${unbacked.length - unbackedReceivers.length !== 1 ? 's' : ''} in the chain compound the failure.` : ''}`
+            : unbacked.length > 0
+              ? `${unbacked.length} unbacked node${unbacked.length !== 1 ? 's' : ''} in the chain but receiver endpoints are structurally verified — containment holds at boundaries.`
+              : blocks.length > 0
+                ? 'Propagation containment intact — all chain nodes are structurally backed.'
+                : 'No propagation chain available for containment analysis.',
+          evidence: [
+            ...unbackedReceivers.map(b => ({
+              label: b.domain_alias || 'Receiver',
+              value: 'unbacked receiver — containment breach',
+              severity: 'critical',
+            })),
+            ...unbacked.filter(b => b.propagation_role !== 'RECEIVER').slice(0, 3).map(b => ({
+              label: b.domain_alias || 'Node',
+              value: `unbacked ${b.propagation_role || 'node'}`,
+              severity: 'elevated',
+            })),
+          ].slice(0, 5),
+          structuralContext: `Containment failure means pressure propagates to organizational endpoints without evidence-backed structural boundaries. This is the most critical propagation condition — it indicates that downstream domains absorb load they cannot structurally verify.${ps.primary_zone_business_label ? ` Primary zone: ${ps.primary_zone_business_label}.` : ''}`,
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const blocks = (fullReport && fullReport.evidence_blocks) || []
+        const backed = blocks.filter(b => b && b.structural_backing)
+        const critical = backed.filter(b => b.propagation_role === 'ORIGIN' || b.propagation_role === 'PASS_THROUGH')
+        const unbypassed = critical.filter(b => {
+          const dependents = blocks.filter(d => d && d.dependency_source === b.domain_id)
+          return dependents.length > 0
+        })
+        return {
+          summary: critical.length > 0
+            ? `${critical.length} structural node${critical.length !== 1 ? 's' : ''} in the dependency chain cannot be bypassed — ${critical.map(b => b.domain_alias || b.domain_id).join(', ')}. These are load-bearing structural links.`
+            : blocks.length > 0
+              ? 'No irreducible structural dependencies detected in the current chain.'
+              : 'Propagation chain not available for dependency analysis.',
+          evidence: critical.map(b => ({
+            label: b.domain_alias || b.domain_id || 'Node',
+            value: `${b.propagation_role} · structural`,
+            severity: 'elevated',
+          })),
+          structuralContext: 'Irreducible dependencies are chain nodes that cannot be removed without breaking the propagation path. They represent structural commitments — organizational architecture that is load-bearing by design, not by accident.',
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const blocks = (fullReport && fullReport.evidence_blocks) || []
+        const receivers = blocks.filter(b => b && b.propagation_role === 'RECEIVER')
+        const ungroundedReceivers = receivers.filter(b => !b.structural_backing)
+        return {
+          summary: ungroundedReceivers.length > 0
+            ? `${ungroundedReceivers.length} receiver domain${ungroundedReceivers.length !== 1 ? 's' : ''} inherit pressure without structural grounding: ${ungroundedReceivers.map(b => b.domain_alias || b.domain_id).join(', ')}.`
+            : receivers.length > 0
+              ? `All ${receivers.length} receiver domains are structurally grounded.`
+              : 'No receiver domains identified in the propagation chain.',
+          evidence: ungroundedReceivers.length > 0
+            ? ungroundedReceivers.map(b => ({
+                label: b.domain_alias || b.domain_id || 'Receiver',
+                value: 'semantic only — inheriting pressure',
+                severity: 'critical',
+              }))
+            : receivers.map(b => ({
+                label: b.domain_alias || b.domain_id || 'Receiver',
+                value: 'structurally grounded',
+                severity: 'nominal',
+              })),
+          structuralContext: 'Ungrounded receivers absorb propagated pressure without evidence-backed structural capacity. Under Q-02 governance, their absorbed load carries advisory weight only — but the organizational exposure is real regardless of qualification status.',
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const blocks = (fullReport && fullReport.evidence_blocks) || []
+        const withConfidence = blocks.filter(b => b && b.evidence_confidence != null)
+        const sorted = [...withConfidence].sort((a, b) => (a.evidence_confidence || 0) - (b.evidence_confidence || 0))
+        const weakest = sorted[0]
+        return {
+          summary: weakest
+            ? `Highest evidence uncertainty at ${weakest.domain_alias || weakest.domain_id} (${weakest.propagation_role}) — confidence ${weakest.evidence_confidence.toFixed(2)}.`
+            : 'No evidence confidence data available for uncertainty ranking.',
+          evidence: sorted.slice(0, 3).map(b => ({
+            label: b.domain_alias || b.domain_id || 'Node',
+            value: `${b.evidence_confidence.toFixed(2)} · ${b.propagation_role}`,
+            severity: b.evidence_confidence < 0.5 ? 'critical' : b.evidence_confidence < 0.7 ? 'elevated' : 'nominal',
+          })),
+          structuralContext: null,
         }
       },
     },
@@ -909,6 +1518,104 @@ const GUIDED_QUERY_ANSWERS = {
             { label: 'Backed domains', value: String(backed), severity: 'nominal' },
           ],
           structuralContext: 'Qualification progression requires structural backing for semantic claims. Each unresolved domain represents a gap between what is claimed and what is evidenced.',
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const ps = (fullReport && fullReport.propagation_summary) || {}
+        const sigs = (fullReport && fullReport.signal_interpretations) || []
+        const blocks = (fullReport && fullReport.evidence_blocks) || []
+        const critical = sigs.filter(s => s.severity === 'CRITICAL' || s.severity === 'HIGH')
+        const unbacked = blocks.filter(b => b && !b.structural_backing)
+        const multiZone = new Set(sigs.filter(s => s.severity !== 'NOMINAL').map(s => s.concentration)).size > 1
+        return {
+          summary: critical.length > 1 && unbacked.length > 0 && multiZone
+            ? `Systemic instability conditions present: ${critical.length} critical signals, ${unbacked.length} unbacked node${unbacked.length !== 1 ? 's' : ''}, multi-zone distribution. This combination creates compound structural exposure that exceeds individual risk factors.`
+            : critical.length > 1
+              ? `${critical.length} critical signals create potential instability but structural backing limits propagation.`
+              : critical.length === 1
+                ? `Single critical signal — instability risk is bounded. ${unbacked.length > 0 ? 'Unbacked nodes could amplify if a second critical signal emerges.' : 'Chain is structurally contained.'}`
+                : 'No conditions for systemic instability detected. Signal field is within containment parameters.',
+          evidence: [
+            { label: 'Critical signals', value: String(critical.length), severity: critical.length > 1 ? 'critical' : critical.length > 0 ? 'elevated' : 'nominal' },
+            { label: 'Unbacked nodes', value: String(unbacked.length), severity: unbacked.length > 0 ? 'critical' : 'nominal' },
+            { label: 'Multi-zone', value: multiZone ? 'YES — systemic' : 'NO — localized', severity: multiZone ? 'elevated' : 'nominal' },
+          ],
+          structuralContext: `Systemic instability emerges from the combination of: (1) multiple critical signals, (2) unbacked propagation nodes, and (3) multi-zone signal distribution. Any two of three indicates elevated risk. All three indicates compound structural exposure.${ps.primary_zone_business_label ? ` Primary zone: ${ps.primary_zone_business_label}.` : ''}`,
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const blocks = (fullReport && fullReport.evidence_blocks) || []
+        const ps = (fullReport && fullReport.propagation_summary) || {}
+        const backed = blocks.filter(b => b && b.structural_backing)
+        const receivers = blocks.filter(b => b && b.propagation_role === 'RECEIVER')
+        const containingNodes = backed.filter(b => b.propagation_role !== 'RECEIVER')
+        return {
+          summary: containingNodes.length > 0
+            ? `Pressure zone bounded by ${containingNodes.length} structurally backed node${containingNodes.length !== 1 ? 's' : ''}: ${containingNodes.map(b => b.domain_alias || b.domain_id).join(', ')}. These form the structural perimeter preventing uncontrolled propagation.`
+            : backed.length > 0
+              ? `${backed.length} backed node${backed.length !== 1 ? 's' : ''} in the chain but none form a clear containment boundary — pressure may propagate beyond the identified zone.`
+              : 'No structural containment boundary identified. Pressure zone is unbounded.',
+          evidence: containingNodes.map(b => ({
+            label: b.domain_alias || b.domain_id || 'Node',
+            value: `${b.propagation_role} · structural boundary`,
+            severity: 'nominal',
+          })).concat(
+            receivers.filter(b => !b.structural_backing).map(b => ({
+              label: b.domain_alias || b.domain_id || 'Receiver',
+              value: 'outside containment',
+              severity: 'elevated',
+            }))
+          ).slice(0, 5),
+          structuralContext: `Structural boundaries contain pressure by absorbing load at backed nodes. ${ps.primary_zone_business_label ? `Zone "${ps.primary_zone_business_label}" ` : 'The zone '}is contained when all paths from origin to receiver pass through at least one structurally backed intermediary.`,
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const rs = (fullReport && fullReport.readiness_summary) || {}
+        const qs = (fullReport && fullReport.qualifier_summary) || {}
+        const ps = (fullReport && fullReport.propagation_summary) || {}
+        const currentState = rs.current_s_state || rs.s_state || 'UNKNOWN'
+        const qualifiers = qs.active_qualifiers
+        const posture = qs.qualification_posture || rs.qualification_posture || 'UNRESOLVED'
+        return {
+          summary: posture !== 'UNRESOLVED'
+            ? `Qualification posture: ${posture} at ${currentState}. ${qualifiers != null ? `${qualifiers} active qualifier${qualifiers !== 1 ? 's' : ''} govern the pressure zone.` : 'Qualifier count not available.'} Pressure zone conditions must resolve before posture advancement.`
+            : `Qualification posture unresolved at ${currentState}. Pressure zone prevents definitive qualification assessment.`,
+          evidence: [
+            { label: 'S-state', value: currentState, severity: null },
+            { label: 'Posture', value: posture, severity: posture === 'UNRESOLVED' ? 'elevated' : 'nominal' },
+            ...(qualifiers != null ? [{ label: 'Active qualifiers', value: String(qualifiers), severity: qualifiers > 0 ? 'elevated' : 'nominal' }] : []),
+            ...(ps.primary_zone_business_label ? [{ label: 'Pressure zone', value: ps.primary_zone_business_label, severity: 'elevated' }] : []),
+          ],
+          structuralContext: 'Qualification posture reflects the combined assessment of structural evidence, signal conditions, and qualifier gates. The pressure zone modifies posture by introducing conditions that must resolve before the next qualification threshold can be crossed.',
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const blocks = (fullReport && fullReport.evidence_blocks) || []
+        const sigs = (fullReport && fullReport.signal_interpretations) || []
+        const ps = (fullReport && fullReport.propagation_summary) || {}
+        const domains = (fullReport && fullReport.semantic_domain_registry) || []
+        const propagationAliases = new Set(blocks.map(b => b.domain_alias || b.domain_id).filter(Boolean))
+        const outside = domains.filter(d => !propagationAliases.has(d.domain_name) && !propagationAliases.has(d.domain_id))
+        return {
+          summary: outside.length > 0
+            ? `${outside.length} domain${outside.length !== 1 ? 's' : ''} outside the propagation path.`
+            : domains.length > 0
+              ? 'All registered domains are within the propagation path.'
+              : 'No domain registry available for propagation path analysis.',
+          evidence: outside.slice(0, 3).map(d => ({
+            label: d.domain_name || d.domain_id || 'Domain',
+            value: 'outside propagation',
+            severity: 'nominal',
+          })),
+          structuralContext: null,
         }
       },
     },
@@ -1044,30 +1751,45 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
     const qReg = DENSE_ZONE_REGISTRY[qZone]
     if (qPath && qAnswer && qReg) {
       const derived = qAnswer.derive(fullReport)
+      const depth = qPath.depth || 'standard'
+      const isMicro = depth === 'micro'
+      const isDeep = depth === 'deep'
       return (
-        <aside className="intel-interp intel-interp--query-active" data-tone={framing.tone} data-zone={qZone} aria-label="Guided query answer">
-          <div className="query-answer-panel">
+        <aside className="intel-interp intel-interp--query-active" data-tone={framing.tone} data-zone={qZone} data-depth={depth} aria-label="Guided query answer">
+          <div className={`query-answer-panel query-answer-panel--${depth}`}>
             <div className="query-answer-header">
               <span className="query-answer-badge">{qReg.code}</span>
-              <span className="query-answer-header-label">GUIDED QUERY</span>
+              <span className="query-answer-header-label">{isDeep ? 'GUIDED QUERY · DEEP' : 'GUIDED QUERY'}</span>
               <button className="query-answer-dismiss" onClick={onQueryDismiss} type="button" aria-label="Dismiss answer">✕</button>
             </div>
             <div className="query-answer-question">{qPath.answers}</div>
             <div className="query-answer-summary">{derived.summary}</div>
             {derived.evidence && derived.evidence.length > 0 && (
-              <div className="query-answer-evidence">
-                {derived.evidence.map((e, ei) => (
-                  <div key={ei} className="query-answer-evidence-row" data-severity={e.severity}>
-                    <span className="query-answer-evidence-label">{e.label}</span>
-                    <span className="query-answer-evidence-value">{e.value}</span>
-                  </div>
-                ))}
-              </div>
+              isMicro ? (
+                <div className="query-answer-evidence-inline">
+                  {derived.evidence.map((e, ei) => (
+                    <span key={ei} className="query-answer-evidence-chip" data-severity={e.severity}>
+                      {e.label}: {e.value}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <div className="query-answer-evidence">
+                  {derived.evidence.map((e, ei) => (
+                    <div key={ei} className="query-answer-evidence-row" data-severity={e.severity}>
+                      <span className="query-answer-evidence-label">{e.label}</span>
+                      <span className="query-answer-evidence-value">{e.value}</span>
+                    </div>
+                  ))}
+                </div>
+              )
             )}
-            {derived.structuralContext && (
+            {!isMicro && derived.structuralContext && (
               <div className="query-answer-context">{derived.structuralContext}</div>
             )}
-            <div className="query-answer-boundary">{qPath.boundary}</div>
+            {!isMicro && (
+              <div className="query-answer-boundary">{qPath.boundary}</div>
+            )}
           </div>
         </aside>
       )
