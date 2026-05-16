@@ -600,7 +600,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .auth-version {
           font-size: 10px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.08em;
           font-weight: 500;
         }
@@ -719,7 +719,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           letter-spacing: 0.06em;
           margin-bottom: 10px;
         }
-        .blocked-detail { font-size: 14px; color: #6a7a9a; line-height: 1.7; }
+        .blocked-detail { font-size: 14px; color: #8a96b2; line-height: 1.7; }
 
         /* ── Diagnostic Declaration ──────────────────────────────────────── */
         .diagnostic-declaration {
@@ -738,7 +738,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #ff9e4a;
           letter-spacing: 0.09em;
         }
-        .diagnostic-detail { font-size: 12px; color: #6a7a9a; }
+        .diagnostic-detail { font-size: 12px; color: #8a96b2; }
 
         /* ── Declaration Zone ────────────────────────────────────────────── */
         .declaration-zone {
@@ -752,7 +752,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .declaration-pre-label {
           font-size: 10px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.28em;
           text-transform: uppercase;
           margin-bottom: 22px;
@@ -791,7 +791,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .declaration-boardroom-pre {
           font-size: 10px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.3em;
           text-transform: uppercase;
           font-weight: 500;
@@ -842,7 +842,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .declaration-badge-label {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.2em;
           text-transform: uppercase;
           font-weight: 500;
@@ -930,7 +930,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #2a2f40;
           margin: 0 8px;
         }
-        .signal-field[data-pressure="active"] .signal-field-arrow { color: #5e6d8a; }
+        .signal-field[data-pressure="active"] .signal-field-arrow { color: #7a8aaa; }
         .signal-field-strip {
           display: flex;
           align-items: center;
@@ -956,7 +956,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .signal-field-nominal {
           font-size: 9px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           letter-spacing: 0.06em;
           margin-left: 4px;
           font-family: 'Courier New', monospace;
@@ -984,7 +984,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .cockpit-synthesis-confidence {
           font-size: 10px;
-          color: #6a7a9a;
+          color: #8a96b2;
           line-height: 1.5;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
@@ -1017,7 +1017,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           align-items: center;
           gap: 6px;
           font-size: 10px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.08em;
           text-transform: uppercase;
         }
@@ -1031,7 +1031,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .cockpit-signal-label,
         .cockpit-coverage-label {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.2em;
           text-transform: uppercase;
           font-weight: 500;
@@ -1071,7 +1071,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .cockpit-signal-reading {
           font-size: 11px;
-          color: #6a7a9a;
+          color: #8a96b2;
           line-height: 1.5;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
@@ -1080,7 +1080,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .cockpit-signal-tally {
           font-size: 10px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           margin-top: 8px;
           letter-spacing: 0.06em;
         }
@@ -1109,7 +1109,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           align-items: center;
           gap: 6px;
           font-size: 10px;
-          color: #6a7a9a;
+          color: #8a96b2;
           white-space: nowrap;
         }
         .cockpit-coverage-dot {
@@ -1146,7 +1146,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .cockpit-topology-hint {
           text-align: center;
           font-size: 9px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           letter-spacing: 0.08em;
           margin-top: 4px;
           transition: color 0.2s;
@@ -1236,7 +1236,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .topo-modal-meta {
           font-size: 11px;
-          color: #6a7a9a;
+          color: #8a96b2;
           font-family: 'Courier New', monospace;
           letter-spacing: 0.06em;
         }
@@ -1246,7 +1246,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .topo-modal-domains-heading {
           font-size: 10px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.22em;
           text-transform: uppercase;
           font-weight: 500;
@@ -1296,7 +1296,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .topo-modal-domain-meta {
           font-size: 9px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           font-family: 'Courier New', monospace;
           flex-shrink: 0;
         }
@@ -1320,7 +1320,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .dsp-unavailable {
           font-size: 11px;
-          color: #6a7a9a;
+          color: #8a96b2;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
           font-style: italic;
         }
@@ -1332,7 +1332,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .dsp-section-label {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.2em;
           text-transform: uppercase;
           font-weight: 500;
@@ -1357,7 +1357,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .dsp-key {
           font-size: 10px;
-          color: #6a7a9a;
+          color: #8a96b2;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
           min-width: 130px;
           flex-shrink: 0;
@@ -1376,7 +1376,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-size: 11px;
         }
         .dsp-dim {
-          color: #5e6d8a;
+          color: #7a8aaa;
         }
         .dsp-confidence-dot {
           width: 7px;
@@ -1472,7 +1472,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .dsp-source-desc {
           font-size: 10px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
           margin-top: 4px;
           line-height: 1.4;
@@ -1486,7 +1486,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .dsp-source-op {
           font-family: 'Courier New', monospace;
           font-size: 8px;
-          color: #6a7a9a;
+          color: #8a96b2;
           background: #141720;
           padding: 1px 5px;
           border-radius: 2px;
@@ -1524,7 +1524,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .blockage-posture-label {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.2em;
           text-transform: uppercase;
           font-weight: 500;
@@ -1550,7 +1550,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .blockage-posture-metric-label {
           font-size: 9px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           letter-spacing: 0.05em;
         }
         .blockage-posture-dims {
@@ -1567,7 +1567,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .blockage-posture-dim-id {
           font-family: 'Courier New', monospace;
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           min-width: 18px;
         }
         .blockage-posture-dim-bar-track {
@@ -1590,7 +1590,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .blockage-posture-continuity {
           font-size: 10px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           line-height: 1.4;
           margin-top: 4px;
         }
@@ -1627,7 +1627,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .dsp-debt-item-cat {
           font-size: 10px;
-          color: #5e6d8a;
+          color: #7a8aaa;
         }
         .dsp-debt-item-blocks {
           font-family: 'Courier New', monospace;
@@ -1656,7 +1656,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .temporal-summary-label {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.2em;
           text-transform: uppercase;
           font-weight: 500;
@@ -1680,7 +1680,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .temporal-summary-metric-label {
           font-size: 9px;
-          color: #5e6d8a;
+          color: #7a8aaa;
         }
         .temporal-summary-transitions {
           display: flex;
@@ -1700,7 +1700,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .temporal-summary-persistent-label {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.15em;
           text-transform: uppercase;
           font-weight: 500;
@@ -1718,17 +1718,17 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .temporal-summary-persistent-note {
           font-size: 10px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           margin-top: 2px;
         }
         .temporal-summary-divergence {
           font-size: 10px;
-          color: #6a7a9a;
+          color: #8a96b2;
           margin-top: 4px;
         }
         .temporal-summary-degradation {
           font-size: 10px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           margin-top: 2px;
         }
 
@@ -1798,12 +1798,12 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .dsp-peer-nav-label {
           font-family: 'Courier New', monospace;
           font-size: 10px;
-          color: #6a7a9a;
+          color: #8a96b2;
         }
 
         /* ── Domain temporal section (5A.5) ──────────────────────────────── */
         .dsp-temporal-arrow {
-          color: #6a7a9a;
+          color: #8a96b2;
           font-size: 11px;
           margin: 0 4px;
         }
@@ -1815,7 +1815,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .dsp-temporal-basis {
           font-family: 'Courier New', monospace;
           font-size: 10px;
-          color: #5e6d8a;
+          color: #7a8aaa;
         }
         .dsp-temporal-persistence {
           font-size: 10px;
@@ -1843,7 +1843,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .posture-card-id {
           font-size: 10px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           font-family: 'Courier New', monospace;
           margin-top: 3px;
         }
@@ -1864,7 +1864,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .posture-card-row-label {
           font-size: 10px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.12em;
           text-transform: uppercase;
           font-weight: 500;
@@ -1929,7 +1929,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #4a9eff;
         }
         .posture-card-transition-arrow {
-          color: #5e6d8a;
+          color: #7a8aaa;
           margin-left: 4px;
           transition: color 0.15s ease;
         }
@@ -1977,7 +1977,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .investigation-topology-hint {
           text-align: center;
           font-size: 9px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           letter-spacing: 0.08em;
           margin-top: 4px;
           transition: color 0.2s;
@@ -1994,7 +1994,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .cockpit-impact-label,
         .cockpit-action-label {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.2em;
           text-transform: uppercase;
           font-weight: 500;
@@ -2022,7 +2022,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           gap: 6px;
         }
         .cockpit-impact-arrow {
-          color: #5e6d8a;
+          color: #7a8aaa;
           font-size: 14px;
           margin: 0 8px;
         }
@@ -2033,7 +2033,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .cockpit-impact-role {
           font-size: 9px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           letter-spacing: 0.1em;
           text-transform: uppercase;
         }
@@ -2181,7 +2181,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .interp-tag-label {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.22em;
           text-transform: uppercase;
           font-weight: 500;
@@ -2197,7 +2197,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .interp-block { display: flex; flex-direction: column; gap: 8px; }
         .interp-section-label {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.18em;
           text-transform: uppercase;
           font-weight: 500;
@@ -2219,7 +2219,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .intel-interp[data-tone="projection"] .interp-summary { color: #e8edf8; font-size: 14px; line-height: 1.55; }
         .intel-interp[data-tone="forensic"]   .interp-tag-label { color: #b08c00; }
         .intel-interp[data-tone="structural"] .interp-tag-label { color: #b87632; }
-        .intel-interp[data-tone="projection"] .interp-tag-label { color: #6a7a9a; }
+        .intel-interp[data-tone="projection"] .interp-tag-label { color: #8a96b2; }
         .interp-why {
           font-size: 12px;
           color: #9aa0bc;
@@ -2247,7 +2247,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .interp-synthesis-meta {
           font-size: 10px;
-          color: #6a7a9a;
+          color: #8a96b2;
           margin-top: 4px;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
@@ -2309,7 +2309,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .interp-zone-structural {
           font-size: 10px;
-          color: #6a7a9a;
+          color: #8a96b2;
           font-family: 'Courier New', monospace;
           padding: 6px 8px;
           background: rgba(10, 12, 18, 0.4);
@@ -2329,7 +2329,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-size: 9px;
           font-weight: 600;
           letter-spacing: 0.15em;
-          color: #5e6d8a;
+          color: #7a8aaa;
           margin-bottom: 2px;
         }
         .interp-zone-signal {
@@ -2343,7 +2343,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-size: 9px;
           font-weight: 600;
           font-family: 'Courier New', monospace;
-          color: #6a7a9a;
+          color: #8a96b2;
           flex-shrink: 0;
           min-width: 52px;
         }
@@ -2374,7 +2374,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-size: 9px;
           font-weight: 600;
           letter-spacing: 0.15em;
-          color: #5e6d8a;
+          color: #7a8aaa;
           cursor: pointer;
           padding: 4px 0;
           list-style: none;
@@ -2481,7 +2481,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .signal-narrative-label {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.22em;
           text-transform: uppercase;
           font-weight: 500;
@@ -2527,7 +2527,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .signal-narrative-confidence {
           font-size: 11px;
-          color: #6a7a9a;
+          color: #8a96b2;
           line-height: 1.5;
           font-style: italic;
         }
@@ -2577,13 +2577,13 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .dense-signal-prose {
           font-size: 12px;
-          color: #8a94b0;
+          color: #a0adc6;
           line-height: 1.55;
           padding-left: 2px;
         }
         .dense-signal-where {
           font-size: 11px;
-          color: #6a7a9a;
+          color: #7a8aaa;
           line-height: 1.45;
           margin-top: 3px;
           padding-left: 2px;
@@ -2599,7 +2599,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .dense-signal-confidence {
           font-size: 10px;
-          color: #6a7a9a;
+          color: #7a8aaa;
           line-height: 1.45;
           margin-top: 6px;
           font-style: italic;
@@ -2625,7 +2625,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .propagation-flow-arrow {
           font-size: 18px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           padding: 0 8px;
           flex-shrink: 0;
           line-height: 1;
@@ -2642,7 +2642,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-size: 9px;
           letter-spacing: 0.18em;
           text-transform: uppercase;
-          color: #6a7a9a;
+          color: #8a96b2;
           font-weight: 600;
           margin-bottom: 4px;
         }
@@ -2662,14 +2662,14 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .propagation-flow-backing {
           font-size: 9px;
-          color: #5e6d8a;
+          color: #7a8aaa;
         }
         .propagation-flow-backing--grounded {
           color: #64ffda;
         }
         .propagation-flow-narrative {
           font-size: 10px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           margin-top: 10px;
           font-style: italic;
           line-height: 1.5;
@@ -2694,7 +2694,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .evidence-boundary-label {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.22em;
           text-transform: uppercase;
           font-weight: 500;
@@ -2749,7 +2749,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .evidence-boundary-meta {
           font-size: 10px;
-          color: #6a7a9a;
+          color: #8a96b2;
           line-height: 1.4;
         }
         .evidence-boundary-note {
@@ -2797,7 +2797,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .pressure-zone-focus[data-tier="NOMINAL"] { border-left-color: rgba(100, 255, 218, 0.3); }
         .pressure-zone-focus-label {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.22em;
           text-transform: uppercase;
           font-weight: 500;
@@ -2844,7 +2844,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .tier-handoff-text {
           font-size: 10px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           line-height: 1.6;
           letter-spacing: 0.02em;
           max-width: 680px;
@@ -2861,7 +2861,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .cockpit-evidence-boundary-label {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.18em;
           text-transform: uppercase;
           font-weight: 500;
@@ -2889,7 +2889,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .cockpit-evidence-boundary-sep { color: #2a2f40; }
         .cockpit-evidence-boundary-note {
           font-size: 10px;
-          color: #6a7a9a;
+          color: #8a96b2;
           font-style: italic;
           line-height: 1.4;
         }
@@ -2925,7 +2925,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .balanced-narrative-marker {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.18em;
           text-transform: uppercase;
           font-weight: 500;
@@ -2933,7 +2933,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .balanced-narrative-subordinate-marker {
           font-size: 9.5px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           letter-spacing: 0.04em;
           margin-bottom: 6px;
           font-family: 'Courier New', monospace;
@@ -2958,13 +2958,13 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #9aa8c4;
         }
         .balanced-narrative[data-emergence="SECONDARY"] .balanced-narrative-layer2 {
-          color: #5e6d8a;
+          color: #7a8aaa;
           font-size: 10px;
         }
         .balanced-narrative[data-emergence="TERTIARY"] .balanced-narrative-layer1 {
           font-size: 11.5px;
           line-height: 1.5;
-          color: #6a7a9a;
+          color: #8a96b2;
         }
         .balanced-narrative[data-emergence="TERTIARY"] .balanced-narrative-subordinate-marker {
           font-size: 9px;
@@ -2987,7 +2987,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .balanced-narrative-trace-toggle {
           font-size: 9.5px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           letter-spacing: 0.08em;
           cursor: pointer;
           font-family: 'Courier New', monospace;
@@ -3023,7 +3023,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           gap: 10px;
           font-size: 10px;
           font-family: 'Courier New', monospace;
-          color: #5e6d8a;
+          color: #7a8aaa;
         }
         .balanced-narrative-anchor[data-severity="CRITICAL"] .balanced-narrative-anchor-source { color: #ff6b6b; }
         .balanced-narrative-anchor[data-severity="ELEVATED"] .balanced-narrative-anchor-source { color: #ff9e4a; }
@@ -3034,7 +3034,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           min-width: 140px;
         }
         .balanced-narrative-anchor-claim {
-          color: #5e6d8a;
+          color: #7a8aaa;
         }
 
         /* Intelligence Emergence Index (SupportRail) */
@@ -3052,7 +3052,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           align-items: center;
           gap: 8px;
           font-size: 10px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           transition: color 0.15s ease;
         }
         .emergence-indicator[data-active="true"] {
@@ -3084,7 +3084,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         /* Left column interpretive markers (BALANCED) */
         .intel-interp--balanced-interpretive .interp-75x-marker {
           font-size: 8px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.12em;
           padding: 1px 5px;
           border: 1px solid #2a2f40;
@@ -3161,7 +3161,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .support-label {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.22em;
           text-transform: uppercase;
           font-weight: 500;
@@ -3235,7 +3235,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-size: 8px;
           letter-spacing: 0.18em;
           text-transform: uppercase;
-          color: #6a7a9a;
+          color: #8a96b2;
           font-weight: 500;
         }
         .support-report-name {
@@ -3342,7 +3342,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .support-path-icon {
           font-size: 10px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           flex-shrink: 0;
           width: 14px;
           text-align: center;
@@ -3404,7 +3404,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .path-narrative-boundary {
           font-size: 10px;
           line-height: 1.5;
-          color: #6a7a9a;
+          color: #8a96b2;
           font-family: 'Courier New', monospace;
           padding: 5px 7px;
           background: rgba(10, 12, 18, 0.5);
@@ -3431,7 +3431,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #3a4560;
         }
         .support-path-item--zone[data-explored="true"]:not([aria-pressed="true"]) .support-path-text {
-          color: #6a7a9a;
+          color: #8a96b2;
         }
 
         /* ── Zone Query Separator & Tonal Styling ── */
@@ -3481,13 +3481,13 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-size: 9px;
           font-weight: 600;
           letter-spacing: 0.15em;
-          color: #5e6d8a;
+          color: #7a8aaa;
         }
         .query-answer-dismiss {
           margin-left: auto;
           background: none;
           border: 1px solid #2a2f40;
-          color: #6a7a9a;
+          color: #8a96b2;
           font-size: 11px;
           width: 22px;
           height: 20px;
@@ -3500,7 +3500,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           flex-shrink: 0;
         }
         .query-answer-dismiss:hover {
-          border-color: #5e6d8a;
+          border-color: #7a8aaa;
           color: #ccd6f6;
         }
         .query-answer-question {
@@ -3514,7 +3514,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .query-answer-summary {
           font-size: 11px;
           line-height: 1.65;
-          color: #a0aac4;
+          color: #b8c2da;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
         .query-answer-evidence {
@@ -3540,7 +3540,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .query-answer-evidence-value {
           font-size: 10px;
           font-family: 'Courier New', monospace;
-          color: #8a95b0;
+          color: #a0adc6;
           text-align: right;
         }
         .query-answer-evidence-row[data-severity="critical"] .query-answer-evidence-value {
@@ -3555,7 +3555,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .query-answer-context {
           font-size: 10px;
           line-height: 1.5;
-          color: #6a7a9a;
+          color: #8a96b2;
           font-family: 'Courier New', monospace;
           padding: 6px 8px;
           background: rgba(10, 12, 18, 0.5);
@@ -3564,7 +3564,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .query-answer-boundary {
           font-size: 10px;
           line-height: 1.5;
-          color: #5e6d8a;
+          color: #7a8aaa;
           font-family: 'Courier New', monospace;
           padding: 5px 7px;
           background: rgba(10, 12, 18, 0.3);
@@ -3749,7 +3749,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .rep-dense-cluster-label {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.18em;
           text-transform: uppercase;
           font-weight: 500;
@@ -3776,7 +3776,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .rep-evstate-label {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.22em;
           text-transform: uppercase;
           font-weight: 500;
@@ -3882,7 +3882,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .rep-anchor-rail { display: none; }
         .rep-anchor-label {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.2em;
           text-transform: uppercase;
           font-weight: 500;
@@ -3993,7 +3993,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .rep-topo-role {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.2em;
           text-transform: uppercase;
           font-weight: 500;
@@ -4087,7 +4087,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           border-top: 1px solid #14181f;
         }
         .rep-trace-band-conf-label {
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.16em;
           text-transform: uppercase;
           font-weight: 500;
@@ -4201,7 +4201,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .topo-executive-pre {
           font-size: 10px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.28em;
           text-transform: uppercase;
           font-weight: 500;
@@ -4239,7 +4239,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .topo-stat-label {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.18em;
           text-transform: uppercase;
           margin-top: 4px;
@@ -4265,7 +4265,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .topo-evidence-card[data-tier="LOW"]      { border-top-color: #64ffda; }
         .topo-evidence-card-role {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.18em;
           text-transform: uppercase;
           margin-bottom: 4px;
@@ -4290,7 +4290,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .topo-evidence-card-text {
           font-size: 10px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           line-height: 1.4;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
@@ -4302,7 +4302,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .topo-graph-heading {
           font-size: 10px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.22em;
           text-transform: uppercase;
           font-weight: 500;
@@ -4321,7 +4321,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .topo-coverage-heading {
           font-size: 10px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.22em;
           text-transform: uppercase;
           font-weight: 500;
@@ -4369,7 +4369,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .topo-coverage-card-meta {
           font-size: 9px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           margin-bottom: 2px;
         }
         .topo-coverage-card-lineage {
@@ -4443,7 +4443,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .sqo-compact-caret {
           font-size: 10px;
-          color: #6a7a9a;
+          color: #8a96b2;
           margin-left: auto;
           transition: color 0.15s ease;
         }
@@ -4515,7 +4515,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .sqo-intelligence-action-arrow {
           font-size: 12px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           transition: color 0.15s ease, transform 0.15s ease;
         }
         .sqo-intelligence-action:hover .sqo-intelligence-action-arrow {
@@ -4556,7 +4556,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .domain-role-sym { font-size: 10px; }
         .domain-role-lbl {
           font-size: 8px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.13em;
           text-transform: uppercase;
         }
@@ -4620,7 +4620,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           letter-spacing: 0.16em;
           text-transform: uppercase;
         }
-        .footnote-path { font-size: 12px; color: #6a7a9a; letter-spacing: 0.03em; }
+        .footnote-path { font-size: 12px; color: #8a96b2; letter-spacing: 0.03em; }
         .footnote-sep { color: #3a4560; }
         .footnote-tier { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
 
@@ -4704,7 +4704,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .eb-signal {
           font-size: 11px;
-          color: #6a7a9a;
+          color: #8a96b2;
           line-height: 1.65;
           letter-spacing: 0.02em;
           font-style: italic;
@@ -4730,7 +4730,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .signal-interp-label {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.22em;
           text-transform: uppercase;
           font-weight: 500;
@@ -4773,7 +4773,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-weight: 600;
           padding: 1px 6px;
           border-radius: 2px;
-          color: #6a7a9a;
+          color: #8a96b2;
           background: rgba(90, 101, 128, 0.1);
           border: 1px solid rgba(90, 101, 128, 0.2);
         }
@@ -4794,7 +4794,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .signal-interp-confidence {
           font-size: 10px;
-          color: #6a7a9a;
+          color: #8a96b2;
           line-height: 1.5;
           font-style: italic;
         }
@@ -4830,7 +4830,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .gov-ribbon--fail { border-top-color: rgba(255,107,107,0.25); }
         .gov-label {
           font-size: 8px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           letter-spacing: 0.2em;
           text-transform: uppercase;
           margin-right: 16px;
@@ -5240,7 +5240,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .disclosure-footer-expand {
           background: none;
           border: 1px solid #2a2f40;
-          color: #6a7a9a;
+          color: #8a96b2;
           font-size: 10px;
           width: 22px;
           height: 18px;
@@ -5253,7 +5253,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           transition: border-color 0.15s ease, color 0.15s ease;
         }
         .disclosure-footer-expand:hover {
-          border-color: #5e6d8a;
+          border-color: #7a8aaa;
           color: #8a95b0;
         }
         .disclosure-footer-details {
@@ -5267,7 +5267,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .disclosure-footer-detail-row {
           font-size: 10px;
           font-family: 'Courier New', monospace;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.03em;
         }
 
@@ -5325,7 +5325,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #8a96b2;
         }
         .trust-zone-compact-maturity {
-          color: #6a7a9a;
+          color: #8a96b2;
           font-size: 11px;
         }
         .trust-zone-strip {
@@ -5342,7 +5342,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           letter-spacing: 0.06em;
         }
         .trust-zone-sep {
-          color: #5e6d8a;
+          color: #7a8aaa;
           user-select: none;
         }
         .trust-zone-s-state {
@@ -5366,7 +5366,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-size: 10px;
           letter-spacing: 0.12em;
           text-transform: uppercase;
-          color: #5e6d8a;
+          color: #7a8aaa;
           font-weight: 600;
         }
         .trust-zone-header-level {
@@ -5481,7 +5481,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-size: 9px;
           letter-spacing: 0.1em;
           text-transform: uppercase;
-          color: #5e6d8a;
+          color: #7a8aaa;
           margin-bottom: 4px;
         }
         .trust-zone-metric-value {
@@ -5500,7 +5500,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .trust-zone-metric-detail {
           font-family: 'Courier New', monospace;
           font-size: 10px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           margin-top: 3px;
           display: flex;
           gap: 4px;
@@ -5510,7 +5510,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #ff9e4a;
         }
         .trust-zone-metric-detail-sep {
-          color: #5e6d8a;
+          color: #7a8aaa;
         }
 
         .trust-zone-structural {
@@ -5523,7 +5523,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-size: 9px;
           letter-spacing: 0.1em;
           text-transform: uppercase;
-          color: #5e6d8a;
+          color: #7a8aaa;
           margin-bottom: 8px;
         }
         .trust-zone-structural-grid {
@@ -5545,7 +5545,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .trust-zone-structural-key {
           font-family: 'Courier New', monospace;
           font-size: 10px;
-          color: #5e6d8a;
+          color: #7a8aaa;
         }
 
         .trust-zone-unresolved-disclosure {
@@ -5578,7 +5578,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #8a96b2;
         }
         .trust-zone-unresolved-type {
-          color: #5e6d8a;
+          color: #7a8aaa;
           font-size: 10px;
         }
 
@@ -5612,7 +5612,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .recon-zone-label {
           font-size: 9px;
           letter-spacing: 0.28em;
-          color: #6a7a9a;
+          color: #8a96b2;
           text-transform: uppercase;
         }
 
@@ -5631,7 +5631,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .recon-zone-trend--improving { color: #64ffda; }
         .recon-zone-trend--degrading { color: #ff6b6b; }
-        .recon-zone-trend--stable { color: #6a7a9a; }
+        .recon-zone-trend--stable { color: #8a96b2; }
         .recon-zone-trend--insufficient_data { color: #3a4560; }
 
         .recon-zone-posture-strip {
@@ -5677,7 +5677,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
 
         .recon-zone-metric-label {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.06em;
           text-transform: uppercase;
         }
@@ -5698,7 +5698,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .recon-trajectory-label {
           font-size: 9px;
           letter-spacing: 0.2em;
-          color: #6a7a9a;
+          color: #8a96b2;
           text-transform: uppercase;
         }
 
@@ -5724,7 +5724,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
 
         .recon-trajectory-epoch-label {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           text-transform: uppercase;
           letter-spacing: 0.06em;
           min-width: 80px;
@@ -5785,7 +5785,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .recon-debt-label {
           font-size: 9px;
           letter-spacing: 0.2em;
-          color: #6a7a9a;
+          color: #8a96b2;
           text-transform: uppercase;
         }
 
@@ -5837,7 +5837,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .recon-domains-label {
           font-size: 9px;
           letter-spacing: 0.2em;
-          color: #6a7a9a;
+          color: #8a96b2;
           text-transform: uppercase;
           display: block;
           margin-bottom: 8px;
@@ -5873,7 +5873,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
 
         .recon-domain-id { color: #9aa0bc; min-width: 80px; }
         .recon-domain-name { color: #7a85a3; flex: 1; }
-        .recon-domain-dom { color: #6a7a9a; min-width: 50px; }
+        .recon-domain-dom { color: #8a96b2; min-width: 50px; }
 
         .recon-domain-status {
           font-size: 9px;
@@ -5904,7 +5904,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           transition: color 0.15s ease;
         }
         .recon-debt-item--drillable:hover .recon-debt-item-expand {
-          color: #6a7a9a;
+          color: #8a96b2;
         }
 
         /* Drilldown interaction — domain entries */
@@ -5928,7 +5928,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           transition: color 0.15s ease;
         }
         .recon-domain-row--drillable:hover .recon-domain-expand {
-          color: #6a7a9a;
+          color: #8a96b2;
         }
 
         /* Drilldown panel (shared) */
@@ -5988,7 +5988,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .recon-provenance-label {
           font-size: 9px;
           letter-spacing: 0.2em;
-          color: #6a7a9a;
+          color: #8a96b2;
           text-transform: uppercase;
           display: block;
           margin-bottom: 6px;
@@ -6014,7 +6014,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
 
         .recon-provenance-val {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
         }
 
         .recon-provenance-val--pass { color: #64ffda; }
@@ -6146,7 +6146,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .actor-resolution-cell--unknown  { --cell-rail: rgba(122,133,163,0.55); }
         .actor-resolution-cell-label {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.18em;
           text-transform: uppercase;
           font-weight: 500;
@@ -6289,7 +6289,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .actor-topo-cell--semantic-only::before { background: linear-gradient(90deg, transparent 0%, rgba(230,184,0,0.55) 50%, transparent 100%); }
         .actor-topo-cell-role {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.2em;
           text-transform: uppercase;
           font-weight: 500;
@@ -6481,7 +6481,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .actor-trace-step-label {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.18em;
           text-transform: uppercase;
           font-weight: 500;
@@ -6604,7 +6604,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-size: 10px;
         }
         .actor-signal-row-conf-label {
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.16em;
           text-transform: uppercase;
           font-weight: 500;
@@ -6659,7 +6659,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .actor-inference-rules-label {
           font-size: 9px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.18em;
           text-transform: uppercase;
           font-weight: 500;
@@ -6690,7 +6690,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .reading-guide-preamble-label {
           font-size: 9px;
           font-weight: 600;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.18em;
           text-transform: uppercase;
           margin-bottom: 10px;
@@ -6713,7 +6713,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .reading-guide-prose--hint {
           font-size: 11px;
-          color: #5e6d8a;
+          color: #7a8aaa;
           font-style: italic;
           margin-top: 4px;
         }
@@ -6758,7 +6758,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .term-hint-popup-tech {
           font-size: 10px;
-          color: #6a7a9a;
+          color: #8a96b2;
           line-height: 1.45;
           font-family: 'Courier New', monospace;
           border-top: 1px solid #1e2330;
@@ -6768,7 +6768,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         /* ── BOARDROOM — Confidence Envelope ring (replaces decorative ring) ── */
         .rep-board-decision-label {
           font-size: 10px;
-          color: #6a7a9a;
+          color: #8a96b2;
           letter-spacing: 0.28em;
           text-transform: uppercase;
           font-weight: 500;
