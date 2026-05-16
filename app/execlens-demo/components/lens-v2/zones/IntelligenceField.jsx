@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { PRESSURE_META, ROLE_META, DEFAULT_BINDING_CLIENT, DEFAULT_BINDING_RUN } from './constants'
 import InvestigationReadingGuide, { TermHint } from './InvestigationReadingGuide'
 import { TopologyGraph } from './StructuralTopologyZone'
+import { buildTrailHTML } from '../../../lib/lens-v2/InterrogationTrailBuilder'
 
 const SEMANTIC_ACTORS = {
   decisionPosture:       { id: 'A', code: 'DP', name: 'Decision Posture' },
@@ -503,7 +504,7 @@ const BALANCED_INTERPRETIVE_NARRATIVES = {
   },
 }
 
-function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass, activeQueryKey, onQuerySelect, exploredQueries, emergenceState, escalationAvailable, piRuntimeActive, onEscalate, onDeescalate, expansions, activeExpansionIndex, onExpansionSelect, interrogationTrail }) {
+function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass, activeQueryKey, onQuerySelect, exploredQueries, emergenceState, escalationAvailable, piRuntimeActive, onEscalate, onDeescalate, expansions, activeExpansionIndex, onExpansionSelect, interrogationTrail, onTrailExport }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const chip = (adapted && adapted.qualifierChip) || {}
   const artifacts = (reportPackArtifacts && reportPackArtifacts.length > 0)
@@ -685,6 +686,25 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
               )}
             </div>
           )}
+        </div>
+      )}
+
+      {fullReport && (
+        <div className="support-block support-block--trail">
+          <div className="support-label">EVIDENCE RECORD</div>
+          {(exploredQueries.size > 0 || interrogationTrail.size > 0) && (
+            <div className="trail-export-summary">
+              {exploredQueries.size > 0 && <span className="trail-count">{exploredQueries.size} structural queries reviewed</span>}
+              {interrogationTrail.size > 0 && <span className="trail-count">{interrogationTrail.size} depth expansions reviewed</span>}
+            </div>
+          )}
+          <button
+            className="trail-export-trigger"
+            onClick={onTrailExport}
+            type="button"
+          >
+            GENERATE EVIDENCE RECORD
+          </button>
         </div>
       )}
 
@@ -4585,6 +4605,34 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
   const handleExpansionDismiss = useCallback(() => {
     setActiveExpansionIndex(null)
   }, [])
+  const handleTrailExport = useCallback(() => {
+    const html = buildTrailHTML({
+      exploredQueries,
+      interrogationTrail,
+      fullReport,
+      denseZonePaths: DENSE_ZONE_PATHS,
+      guidedQueryAnswers: GUIDED_QUERY_ANSWERS,
+      interrogationExpansionRegistry: INTERROGATION_EXPANSION_REGISTRY,
+      expansionTypeLabels: EXPANSION_TYPE_LABELS,
+      denseZoneRegistry: DENSE_ZONE_REGISTRY,
+      tonePalette: TONE_PALETTE,
+      client: DEFAULT_BINDING_CLIENT,
+      run: DEFAULT_BINDING_RUN,
+      qualifierClass,
+      authorityTier: piRuntimeActive ? 'PI_INTERPRETIVE' : (emergenceState ? 'INTERPRETIVE' : 'INVESTIGATIVE'),
+      densityClass,
+      boardroomMode,
+    })
+    const blob = new Blob([html], { type: 'text/html' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `evidence-record-${DEFAULT_BINDING_CLIENT}-${DEFAULT_BINDING_RUN}-${new Date().toISOString().slice(0, 10)}.html`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }, [exploredQueries, interrogationTrail, fullReport, qualifierClass, piRuntimeActive, emergenceState, densityClass, boardroomMode])
 
   useEffect(() => {
     if (!isBalanced && onAuthorityChange) onAuthorityChange(null)
@@ -4701,6 +4749,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         activeExpansionIndex={activeExpansionIndex}
         onExpansionSelect={handleExpansionSelect}
         interrogationTrail={interrogationTrail}
+        onTrailExport={handleTrailExport}
       />
     </div>
   )

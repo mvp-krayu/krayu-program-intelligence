@@ -3760,6 +3760,41 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           border-top: 1px solid rgba(74, 158, 255, 0.08);
         }
 
+        /* ── Evidence Record Export ─── */
+        .support-block--trail {
+          border-top: 1px solid #2a2f40;
+        }
+        .trail-export-summary {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          margin-top: 4px;
+        }
+        .trail-count {
+          font-size: 11px;
+          color: #7a8aaa;
+          font-family: 'Courier New', monospace;
+        }
+        .trail-export-trigger {
+          margin-top: 8px;
+          padding: 6px 12px;
+          background: transparent;
+          border: 1px solid #2a2f40;
+          color: #4a9eff;
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          letter-spacing: 0.05em;
+          cursor: pointer;
+          text-transform: uppercase;
+          transition: border-color 0.15s ease, color 0.15s ease;
+          width: 100%;
+          text-align: center;
+        }
+        .trail-export-trigger:hover {
+          border-color: #4a9eff;
+          color: #ccd6f6;
+        }
+
         .status-value--state { color: var(--state-color); transition: color 0.4s; font-weight: 600; }
 
         /* ── Representation Field — primary semantic operational canvas ───
