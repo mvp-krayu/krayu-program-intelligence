@@ -19,8 +19,8 @@
   --accent-dim:   #2a5a99;
   --accent-faint: rgba(74,158,255,0.08);
   --text:         #ccd6f6;
-  --text-dim:     #7a8aaa;
-  --text-muted:   #4a5570;
+  --text-dim:     #8a96b2;
+  --text-muted:   #5e6d8a;
   --green:        #64ffda;
   --yellow:       #ffd700;
   --orange:       #ff9e4a;
@@ -8321,7 +8321,7 @@ a.topo-chip:hover {
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-dim, #7a8aaa);
+  color: var(--text-dim, #8a96b2);
   margin-bottom: 12px;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--border-dim, #1e2330);
@@ -8333,7 +8333,7 @@ a.topo-chip:hover {
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-muted, #4a5570);
+  color: var(--text-muted, #5e6d8a);
   margin-top: 10px;
   margin-bottom: 6px;
 }
@@ -8357,7 +8357,7 @@ a.topo-chip:hover {
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-muted, #4a5570);
+  color: var(--text-muted, #5e6d8a);
 }
 
 .rms-value {
@@ -8389,7 +8389,7 @@ a.topo-chip:hover {
 .rms-disclosure-count {
   font-family: var(--font-mono, 'Courier New', monospace);
   font-size: 11px;
-  color: var(--text-dim, #7a8aaa);
+  color: var(--text-dim, #8a96b2);
   margin-bottom: 8px;
 }
 
@@ -8412,7 +8412,7 @@ a.topo-chip:hover {
   content: '·';
   position: absolute;
   left: 0;
-  color: var(--text-muted, #4a5570);
+  color: var(--text-muted, #5e6d8a);
 }
 
 .rms-trust-badge {
@@ -8435,7 +8435,7 @@ a.topo-chip:hover {
 .rms-trust-tier {
   font-family: var(--font-mono, 'Courier New', monospace);
   font-size: 10px;
-  color: var(--text-dim, #7a8aaa);
+  color: var(--text-dim, #8a96b2);
   letter-spacing: 0.06em;
 }
 

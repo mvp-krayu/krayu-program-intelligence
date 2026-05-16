@@ -920,7 +920,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .signal-field-node[data-tier="LOW"] .signal-field-glyph { color: #64ffda; }
         .signal-field-domain {
           font-size: 10px;
-          color: #7a8aaa;
+          color: #8a96b2;
           font-family: 'Courier New', monospace;
           letter-spacing: 0.02em;
         }
@@ -1062,7 +1062,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .cockpit-signal-name {
           font-size: 11px;
-          color: #7a8aaa;
+          color: #8a96b2;
           font-weight: 500;
           margin-bottom: 2px;
         }
@@ -1076,7 +1076,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
         .cockpit-signal--active .cockpit-signal-reading {
-          color: #7a8aaa;
+          color: #8a96b2;
         }
         .cockpit-signal-tally {
           font-size: 10px;
@@ -1188,7 +1188,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .topo-modal-title {
           font-size: 12px;
-          color: #7a8aaa;
+          color: #8a96b2;
           letter-spacing: 0.22em;
           text-transform: uppercase;
           font-weight: 500;
@@ -1197,7 +1197,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .topo-modal-close {
           background: none;
           border: 1px solid #2a2f40;
-          color: #7a8aaa;
+          color: #8a96b2;
           font-size: 16px;
           width: 36px;
           height: 36px;
@@ -1404,7 +1404,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .dsp-factor {
           font-family: 'Courier New', monospace;
           font-size: 10px;
-          color: #7a8aaa;
+          color: #8a96b2;
           background: #1a1e2b;
           padding: 2px 8px;
           border-radius: 2px;
@@ -1424,7 +1424,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .dsp-ref {
           font-family: 'Courier New', monospace;
           font-size: 10px;
-          color: #7a8aaa;
+          color: #8a96b2;
           white-space: nowrap;
         }
 
@@ -1466,7 +1466,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .dsp-source-path {
           font-family: 'Courier New', monospace;
           font-size: 10px;
-          color: #7a8aaa;
+          color: #8a96b2;
           word-break: break-all;
           line-height: 1.4;
         }
@@ -1617,7 +1617,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .dsp-debt-item-id {
           font-family: 'Courier New', monospace;
           font-size: 11px;
-          color: #7a8aaa;
+          color: #8a96b2;
         }
         .dsp-debt-item-severity {
           font-family: 'Courier New', monospace;
@@ -1714,7 +1714,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .temporal-summary-persistent-domain {
           font-family: 'Courier New', monospace;
           font-size: 11px;
-          color: #7a8aaa;
+          color: #8a96b2;
         }
         .temporal-summary-persistent-note {
           font-size: 10px;
@@ -1776,7 +1776,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           background: none;
           border: 1px solid #2a2f40;
           border-radius: 3px;
-          color: #7a8aaa;
+          color: #8a96b2;
           font-size: 11px;
           width: 22px;
           height: 22px;
@@ -1919,7 +1919,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           border: none;
           padding: 6px 0;
           font-size: 11px;
-          color: #7a8aaa;
+          color: #8a96b2;
           text-align: left;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
           transition: color 0.15s ease;
@@ -2291,7 +2291,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-weight: 600;
           letter-spacing: 0.15em;
           text-transform: uppercase;
-          color: #7a8aaa;
+          color: #8a96b2;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
         .interp-zone-heading {
@@ -2355,7 +2355,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #ff9e4a;
         }
         .interp-zone-signal-text {
-          color: #7a8aaa;
+          color: #8a96b2;
           font-size: 10px;
           line-height: 1.5;
         }
@@ -2382,12 +2382,12 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           transition: color 0.15s ease;
         }
         .interp-context-secondary-toggle:hover {
-          color: #7a8aaa;
+          color: #8a96b2;
         }
         .interp-context-secondary-toggle::-webkit-details-marker { display: none; }
         .interp-context-secondary-toggle::marker { content: ''; }
         .interp-context-secondary[open] .interp-context-secondary-toggle {
-          color: #7a8aaa;
+          color: #8a96b2;
           margin-bottom: 8px;
         }
         .interp-context-secondary .interp-block {
@@ -2516,7 +2516,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .signal-narrative-finding-where {
           font-size: 11px;
-          color: #7a8aaa;
+          color: #8a96b2;
           line-height: 1.5;
         }
         .signal-narrative-compound {
@@ -2572,7 +2572,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .dense-signal-val {
           font-family: 'Courier New', monospace;
           font-size: 12px;
-          color: #7a8aaa;
+          color: #8a96b2;
           letter-spacing: 0.02em;
         }
         .dense-signal-prose {
@@ -2590,7 +2590,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .dense-signal-compound {
           font-size: 11px;
-          color: #7a8aaa;
+          color: #8a96b2;
           line-height: 1.5;
           margin-top: 8px;
           padding: 8px 10px;
@@ -2657,7 +2657,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .propagation-flow-pressure {
           font-size: 10px;
-          color: #7a8aaa;
+          color: #8a96b2;
           margin-bottom: 4px;
         }
         .propagation-flow-backing {
@@ -2727,13 +2727,13 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .evidence-boundary-heading {
           font-size: 10px;
-          color: #7a8aaa;
+          color: #8a96b2;
           letter-spacing: 0.14em;
           text-transform: uppercase;
           font-weight: 500;
         }
         .evidence-boundary-col--confirmed .evidence-boundary-heading { color: #64ffda; }
-        .evidence-boundary-col--unknown .evidence-boundary-heading { color: #7a8aaa; }
+        .evidence-boundary-col--unknown .evidence-boundary-heading { color: #8a96b2; }
         .evidence-boundary-count {
           font-size: 28px;
           font-weight: 600;
@@ -2754,7 +2754,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .evidence-boundary-note {
           font-size: 11px;
-          color: #7a8aaa;
+          color: #8a96b2;
           font-style: italic;
           letter-spacing: 0.01em;
           line-height: 1.5;
@@ -2813,7 +2813,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           align-items: center;
           gap: 8px;
           font-size: 10px;
-          color: #7a8aaa;
+          color: #8a96b2;
         }
         .pressure-zone-focus-class-tag {
           font-weight: 600;
@@ -2822,7 +2822,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #9aa0bc;
         }
         .pressure-zone-focus-class-sep { color: #2a2f40; }
-        .pressure-zone-focus-class-count { color: #7a8aaa; }
+        .pressure-zone-focus-class-count { color: #8a96b2; }
         .pressure-zone-focus-narrative {
           font-size: 12px;
           color: #9aa0bc;
@@ -3007,7 +3007,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           content: '▾ ';
         }
         .balanced-narrative-trace-toggle:hover {
-          color: #7a8aaa;
+          color: #8a96b2;
         }
         .balanced-narrative-trace-body {
           margin-top: 8px;
@@ -3104,7 +3104,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .interp-synthesis--emerged {
           font-size: 10.5px;
-          color: #7a8aaa;
+          color: #8a96b2;
           line-height: 1.5;
         }
         .interp-block--tertiary {
@@ -3289,7 +3289,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .support-path-text {
           font-size: 11px;
-          color: #7a8aaa;
+          color: #8a96b2;
           line-height: 1.45;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
@@ -3510,7 +3510,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .query-answer-evidence-label {
           font-size: 10px;
-          color: #7a8aaa;
+          color: #8a96b2;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
         .query-answer-evidence-value {
@@ -4211,7 +4211,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .topo-evidence-card-signal {
           font-size: 10px;
-          color: #7a8aaa;
+          color: #8a96b2;
           margin-bottom: 4px;
         }
         .topo-evidence-card-text {
@@ -4389,14 +4389,14 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .sqo-intelligence-description {
           font-size: 11px;
-          color: #7a8aaa;
+          color: #8a96b2;
           line-height: 1.55;
           padding-left: 12px;
           border-left: 2px solid rgba(74, 158, 255, 0.12);
         }
         .sqo-intelligence-line {
           font-size: 11px;
-          color: #7a8aaa;
+          color: #8a96b2;
           line-height: 1.55;
         }
         .sqo-intelligence-line--debt {
@@ -4689,7 +4689,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .signal-interp-value {
           font-size: 12px;
-          color: #7a8aaa;
+          color: #8a96b2;
           font-family: ui-monospace, 'SF Mono', Menlo, monospace;
         }
         .signal-interp-severity {
@@ -4715,7 +4715,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .signal-interp-concentration {
           font-size: 11px;
-          color: #7a8aaa;
+          color: #8a96b2;
           line-height: 1.5;
         }
         .signal-interp-confidence {
@@ -4756,7 +4756,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .gov-ribbon--fail { border-top-color: rgba(255,107,107,0.25); }
         .gov-label {
           font-size: 8px;
-          color: #232d42;
+          color: #5e6d8a;
           letter-spacing: 0.2em;
           text-transform: uppercase;
           margin-right: 16px;
@@ -4770,8 +4770,8 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .gov-item { display: flex; align-items: center; gap: 4px; }
         .gov-dot { font-size: 7px; }
-        .gov-pass .gov-dot { color: #1f3a2e; }
-        .gov-pass .gov-key { color: #1f3a2e; }
+        .gov-pass .gov-dot { color: #2d6e52; }
+        .gov-pass .gov-key { color: #3d7e62; }
         .gov-fail .gov-dot { color: #ff6b6b; }
         .gov-fail .gov-key { color: #ff6b6b; }
         .gov-key {
@@ -5233,7 +5233,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-family: 'Courier New', monospace;
           font-size: 12px;
           letter-spacing: 0.04em;
-          color: #7a8aaa;
+          color: #8a96b2;
         }
         .trust-zone-compact-level {
           font-weight: 700;
@@ -5248,7 +5248,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-weight: 600;
         }
         .trust-zone-compact-grounding {
-          color: #7a8aaa;
+          color: #8a96b2;
         }
         .trust-zone-compact-maturity {
           color: #6a7a9a;
@@ -5261,7 +5261,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-family: 'Courier New', monospace;
           font-size: 12px;
           letter-spacing: 0.04em;
-          color: #7a8aaa;
+          color: #8a96b2;
         }
         .trust-zone-level {
           font-weight: 700;
@@ -5276,7 +5276,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-weight: 600;
         }
         .trust-zone-q-class {
-          color: #7a8aaa;
+          color: #8a96b2;
         }
         .trust-zone-trend {
           font-weight: 600;
@@ -5338,7 +5338,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .trust-zone-qual-q-class {
           font-family: 'Courier New', monospace;
           font-size: 10px;
-          color: #7a8aaa;
+          color: #8a96b2;
           letter-spacing: 0.06em;
           line-height: 1.2;
         }
@@ -5355,7 +5355,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .trust-zone-qual-maturity {
           font-family: 'Courier New', monospace;
           font-size: 11px;
-          color: #7a8aaa;
+          color: #8a96b2;
         }
         .trust-zone-progression {
           display: flex;
@@ -5366,7 +5366,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .trust-zone-progression-label {
           font-family: 'Courier New', monospace;
           font-size: 11px;
-          color: #7a8aaa;
+          color: #8a96b2;
           white-space: nowrap;
         }
         .trust-zone-progression-bar-wrap {
@@ -5420,7 +5420,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .trust-zone-metric-sub {
           font-family: 'Courier New', monospace;
           font-size: 10px;
-          color: #7a8aaa;
+          color: #8a96b2;
           line-height: 1.4;
         }
         .trust-zone-metric-detail {
@@ -5501,7 +5501,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           min-width: 40px;
         }
         .trust-zone-unresolved-name {
-          color: #7a8aaa;
+          color: #8a96b2;
         }
         .trust-zone-unresolved-type {
           color: #5e6d8a;
@@ -6628,7 +6628,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .reading-guide-prose {
           font-size: 12px;
-          color: #7a8aaa;
+          color: #8a96b2;
           line-height: 1.6;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
           margin: 0;
