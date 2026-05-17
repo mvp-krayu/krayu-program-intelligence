@@ -79,6 +79,7 @@ Not yet achieved:
 
 ## Cross-References
 
+- [[PATH_A5_PARTICIPATION_ARCHITECTURE]] — grounding-aware semantic participation compression (Path A.5)
 - [[STRUCTURAL_GROUNDING_CRISIS]] — the crisis that created PATH A
 - [[PATH_B_EMERGENCE]] — the complementary path
 - [[CROSSWALK_AND_RECONCILIATION]] — the bridge between PATH A and PATH B

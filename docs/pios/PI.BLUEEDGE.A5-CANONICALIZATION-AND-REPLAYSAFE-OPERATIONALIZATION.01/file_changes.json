@@ -1,0 +1,118 @@
+{
+  "stream_id": "PI.BLUEEDGE.A5-CANONICALIZATION-AND-REPLAYSAFE-OPERATIONALIZATION.01",
+  "generated": "2026-05-17T19:45:00Z",
+  "changes": [
+    {
+      "path": "scripts/pios/structural_scanner.py",
+      "action": "MODIFY",
+      "purpose": "Wrapper normalization: detect single-enclosing-directory archives and cluster past wrapper. Return type change: list[dict] → tuple[list[dict], dict]. 40.4 artifact includes wrapper_normalization metadata.",
+      "lane": "A"
+    },
+    {
+      "path": "scripts/pios/dom_layer_generator.py",
+      "action": "MODIFY",
+      "purpose": "A.5 path-prefix semantic participation reconstruction. Replaced static DOMAIN_RULES with two-pass path-prefix grouping. Now reads 40.2 node inventory and 40.4 wrapper_metadata.",
+      "lane": "A.5"
+    },
+    {
+      "path": "scripts/pios/run_client_pipeline.py",
+      "action": "MODIFY",
+      "purpose": "Removed hardcoded BlueEdge references in vault construction (Phase 8a). source_authority, schema_adaptation_note, counts now read from dom_layer.json dynamically.",
+      "lane": "Orchestrator"
+    },
+    {
+      "path": "clients/blueedge/sources/source_a5_validation/source_manifest.json",
+      "action": "CREATE",
+      "purpose": "Source manifest for A.5 validation run 1"
+    },
+    {
+      "path": "clients/blueedge/psee/runs/run_blueedge_a5_validation_01/",
+      "action": "CREATE",
+      "purpose": "First A.5 validation run output (all 9 phases PASS)"
+    },
+    {
+      "path": "clients/blueedge/sources/source_a5_validation_02/source_manifest.json",
+      "action": "CREATE",
+      "purpose": "Source manifest for A.5 validation run 2 (deterministic comparison)"
+    },
+    {
+      "path": "clients/blueedge/psee/runs/run_blueedge_a5_validation_02/",
+      "action": "CREATE",
+      "purpose": "Second A.5 validation run output (deterministic comparison — pre-orchestrator stages only)"
+    },
+    {
+      "path": "clients/blueedge/lens/selector/selector.json",
+      "action": "RESTORE",
+      "purpose": "Selector restored to run_be_orchestrated_fixup_01 after Phase 9 validation"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.A5-CANONICALIZATION-AND-REPLAYSAFE-OPERATIONALIZATION.01/A5_OPERATIONALIZATION_CORRECTION.md",
+      "action": "CREATE",
+      "purpose": "Certification drift correction document"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.A5-CANONICALIZATION-AND-REPLAYSAFE-OPERATIONALIZATION.01/SEMANTIC_PARTICIPATION_RECONSTRUCTION_POLICY.md",
+      "action": "CREATE",
+      "purpose": "A.5 reconstruction method policy"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.A5-CANONICALIZATION-AND-REPLAYSAFE-OPERATIONALIZATION.01/WRAPPER_NORMALIZATION_POLICY.md",
+      "action": "CREATE",
+      "purpose": "Path A wrapper normalization policy"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.A5-CANONICALIZATION-AND-REPLAYSAFE-OPERATIONALIZATION.01/NODE_PARTICIPATION_POLICY.md",
+      "action": "CREATE",
+      "purpose": "Full node set participation policy"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.A5-CANONICALIZATION-AND-REPLAYSAFE-OPERATIONALIZATION.01/PATH_A_AND_A5_SEPARATION_VALIDATION.md",
+      "action": "CREATE",
+      "purpose": "Lane isolation validation"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.A5-CANONICALIZATION-AND-REPLAYSAFE-OPERATIONALIZATION.01/REPLAYSAFE_REGENERATION_VALIDATION.md",
+      "action": "CREATE",
+      "purpose": "Replay-safe deterministic comparison evidence"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.A5-CANONICALIZATION-AND-REPLAYSAFE-OPERATIONALIZATION.01/CERTIFICATION_GAP_REINTERPRETATION.md",
+      "action": "CREATE",
+      "purpose": "CERT-09/10/11 reinterpretation after A.5 operationalization"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.A5-CANONICALIZATION-AND-REPLAYSAFE-OPERATIONALIZATION.01/PIPELINE_INTEGRATION_REPORT.md",
+      "action": "CREATE",
+      "purpose": "Pipeline integration and compatibility report"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.A5-CANONICALIZATION-AND-REPLAYSAFE-OPERATIONALIZATION.01/execution_report.md",
+      "action": "CREATE",
+      "purpose": "Stream execution record"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.A5-CANONICALIZATION-AND-REPLAYSAFE-OPERATIONALIZATION.01/validation_log.json",
+      "action": "CREATE",
+      "purpose": "15 checks: 15 PASS, 0 FAIL"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.A5-CANONICALIZATION-AND-REPLAYSAFE-OPERATIONALIZATION.01/file_changes.json",
+      "action": "CREATE",
+      "purpose": "This manifest"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.A5-CANONICALIZATION-AND-REPLAYSAFE-OPERATIONALIZATION.01/CLOSURE.md",
+      "action": "MODIFY",
+      "purpose": "Stream closure — verdict changed from A5_OPERATIONALIZATION_COMPLETE to A5_OPERATIONALIZATION_PARTIAL"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.A5-CANONICALIZATION-AND-REPLAYSAFE-OPERATIONALIZATION.01/GROUNDED_PARTICIPATION_COMPRESSION_ANALYSIS.md",
+      "action": "CREATE",
+      "purpose": "Architecture lineage recovery — traces historical 945→35→13 grounded participation compression chain. Determines 48-domain output is valid raw substrate but missing grounding-aware compression layer."
+    }
+  ],
+  "existing_lens_serving_artifacts_preserved": true,
+  "lane_a_artifacts_unmodified_by_a5": true,
+  "selector_restored": true,
+  "stream_verdict_corrected": "A5_OPERATIONALIZATION_PARTIAL — raw substrate complete, grounding participation compression missing"
+}

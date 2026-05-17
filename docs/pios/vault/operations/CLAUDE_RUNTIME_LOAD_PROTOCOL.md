@@ -60,6 +60,7 @@ Load additional vault pages based on stream scope:
 |---|---|
 | Layer boundaries | vault/01_FOUNDATIONAL_GOVERNANCE/L0_L8_MODEL.md |
 | PATH A/grounding | vault/03_PATH_SPLIT_EVOLUTION/PATH_A_EMERGENCE.md |
+| PATH A.5/semantic participation/domains/CEU compression/dom_layer | vault/03_PATH_SPLIT_EVOLUTION/PATH_A5_PARTICIPATION_ARCHITECTURE.md |
 | PATH B/semantic | vault/03_PATH_SPLIT_EVOLUTION/PATH_B_EMERGENCE.md |
 | SQO/qualification | vault/04_SQO_AND_QUALIFICATION/SQO_EVOLUTION.md |
 | HYDRATED/Q-class | vault/04_SQO_AND_QUALIFICATION/HYDRATED_AND_QSTATE_EVOLUTION.md |

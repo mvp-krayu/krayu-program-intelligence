@@ -1,0 +1,104 @@
+{
+  "stream_id": "PI.BLUEEDGE.A5-CANONICALIZATION-AND-REPLAYSAFE-OPERATIONALIZATION.01",
+  "generated": "2026-05-17T19:45:00Z",
+  "checks": [
+    {
+      "check_id": "A5-01",
+      "name": "Wrapper normalization detects BlueEdge wrapper",
+      "status": "PASS",
+      "detail": "structural_scanner.py detects blueedge-platform as wrapper, produces 11 clusters instead of 1"
+    },
+    {
+      "check_id": "A5-02",
+      "name": "Wrapper normalization does not trigger for FastAPI",
+      "status": "PASS",
+      "detail": "FastAPI has no wrapper directory. 19 clusters produced (unchanged from prior behavior)"
+    },
+    {
+      "check_id": "A5-03",
+      "name": "40.4 includes wrapper_normalization metadata",
+      "status": "PASS",
+      "detail": "canonical_topology.json contains wrapper_normalization.wrapper_detected=true, wrapper_prefix=blueedge-platform"
+    },
+    {
+      "check_id": "A5-04",
+      "name": "A.5 path-prefix reconstruction produces meaningful domains",
+      "status": "PASS",
+      "detail": "48 domains from 945 nodes. Includes backend_src_common, backend_src_config, backend_src_events, backend_src_health, backend_src_modules — matching reference artifact grouping pattern"
+    },
+    {
+      "check_id": "A5-05",
+      "name": "100% node coverage",
+      "status": "PASS",
+      "detail": "945 nodes assigned, 0 unassigned. validation_status=PASS"
+    },
+    {
+      "check_id": "A5-06",
+      "name": "Deterministic: Run 1 == Run 2 (dom_layer)",
+      "status": "PASS",
+      "detail": "Two independent runs produce bit-identical dom_layer.json (excluding generated_at, run_id, client)"
+    },
+    {
+      "check_id": "A5-07",
+      "name": "Deterministic: Run 1 == Run 2 (40.4 topology)",
+      "status": "PASS",
+      "detail": "Two independent runs produce bit-identical canonical_topology.json (excluding generated_at, run_id, client_id, source_id)"
+    },
+    {
+      "check_id": "A5-08",
+      "name": "Lane isolation: A.5 does not mutate Lane A artifacts",
+      "status": "PASS",
+      "detail": "dom_layer_generator.py reads structure/ (40.2, 40.4) and writes dom/ only. No structure/ modification."
+    },
+    {
+      "check_id": "A5-09",
+      "name": "Orchestrator compatibility: all dom_groups fields preserved",
+      "status": "PASS",
+      "detail": "dom_id, dom_label, included_nodes, derivation_rule, path_patterns all present in A.5 output"
+    },
+    {
+      "check_id": "A5-10",
+      "name": "Orchestrator hardcoded references removed",
+      "status": "PASS",
+      "detail": "run_client_pipeline.py vault construction reads domain count and method from dom_layer.json dynamically. No hardcoded 35/13/BlueEdge."
+    },
+    {
+      "check_id": "A5-11",
+      "name": "Full pipeline: all 9 phases PASS",
+      "status": "PASS",
+      "detail": "run_blueedge_a5_validation_01: Phase 1-9 all PASS. Vault readiness 9/9."
+    },
+    {
+      "check_id": "A5-12",
+      "name": "Integration validation: 12/12 checks PASS",
+      "status": "PASS",
+      "detail": "integration_validation_generator.py: all checks pass including node_count_consistency, dom_node_coverage"
+    },
+    {
+      "check_id": "A5-13",
+      "name": "LENS selector restored after validation",
+      "status": "PASS",
+      "detail": "Selector restored to run_be_orchestrated_fixup_01 after Phase 9 validation"
+    },
+    {
+      "check_id": "A5-14",
+      "name": "No BlueEdge-specific exceptions in modified scripts",
+      "status": "PASS",
+      "detail": "structural_scanner.py, dom_layer_generator.py, run_client_pipeline.py — grep confirms zero BlueEdge-specific conditional logic"
+    },
+    {
+      "check_id": "A5-15",
+      "name": "generation_rules declares A.5 method",
+      "status": "PASS",
+      "detail": "dom_layer.json contains generation_rules.method=a5_path_prefix_reconstruction, version=2.0"
+    }
+  ],
+  "summary": {
+    "total": 15,
+    "pass": 15,
+    "fail": 0,
+    "blocking_failures": [],
+    "non_blocking_failures": []
+  },
+  "verdict": "A5_OPERATIONALIZATION_COMPLETE"
+}
