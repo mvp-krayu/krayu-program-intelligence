@@ -1,0 +1,52 @@
+{
+  "stream": "PI.STRATEGIC-DIRECTION.MARKETPLACE-COMMERCIALIZATION-STRATEGY.01",
+  "classification": "G1",
+  "date": "2026-05-17",
+  "changes": [
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.STRATEGIC-DIRECTION.MARKETPLACE-COMMERCIALIZATION-STRATEGY.01/marketplace_commercialization_strategy.md",
+      "description": "Primary strategy document — 16-section canonical marketplace commercialization strategy covering tier structure, wedge identity, demo choreography, commercial model, implementation roadmap, and signal maturity state mapping"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.STRATEGIC-DIRECTION.MARKETPLACE-COMMERCIALIZATION-STRATEGY.01/execution_report.md",
+      "description": "Stream execution report with pre-flight, execution phases, architecture mutations, governance constraints, and correction stream audit"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.STRATEGIC-DIRECTION.MARKETPLACE-COMMERCIALIZATION-STRATEGY.01/validation_log.json",
+      "description": "15-check validation log — all PASS"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.STRATEGIC-DIRECTION.MARKETPLACE-COMMERCIALIZATION-STRATEGY.01/file_changes.json",
+      "description": "This file — change manifest"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.STRATEGIC-DIRECTION.MARKETPLACE-COMMERCIALIZATION-STRATEGY.01/CLOSURE.md",
+      "description": "Stream closure with Architecture Memory Propagation (§10) — propagation status PENDING"
+    }
+  ],
+  "vault_updates_pending": [
+    {
+      "action": "UPDATE",
+      "path": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "description": "Add marketplace commercialization status, frozen wedge identity, tier structure",
+      "status": "PENDING — deferred to propagation phase"
+    },
+    {
+      "action": "UPDATE",
+      "path": "docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md",
+      "description": "Add stream path reference",
+      "status": "PENDING — deferred to propagation phase"
+    },
+    {
+      "action": "ASSESS",
+      "path": "docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md",
+      "description": "Assess whether Structural Execution Visibility and Execution Blindness should be added as locked terms",
+      "status": "PENDING — deferred to propagation phase"
+    }
+  ]
+}

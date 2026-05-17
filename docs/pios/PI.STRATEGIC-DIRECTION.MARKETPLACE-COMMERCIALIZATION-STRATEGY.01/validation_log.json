@@ -1,0 +1,83 @@
+{
+  "stream": "PI.STRATEGIC-DIRECTION.MARKETPLACE-COMMERCIALIZATION-STRATEGY.01",
+  "classification": "G1",
+  "date": "2026-05-17",
+  "checks": [
+    {
+      "name": "preflight_canonical_state_loaded",
+      "result": "PASS",
+      "detail": "PIOS_CURRENT_CANONICAL_STATE.md loaded and verified (2026-05-17)"
+    },
+    {
+      "name": "preflight_terminology_loaded",
+      "result": "PASS",
+      "detail": "TERMINOLOGY_LOCK.md loaded and verified"
+    },
+    {
+      "name": "preflight_branch_authorized",
+      "result": "PASS",
+      "detail": "Strategic direction stream on main — no L0-L8 domain overlap"
+    },
+    {
+      "name": "preflight_term_collision_check",
+      "result": "PASS",
+      "detail": "New terms (Structural Execution Visibility, Execution Blindness, Structural Fidelity) do not collide with locked terms in TERMINOLOGY_LOCK.md"
+    },
+    {
+      "name": "hierarchy_alignment",
+      "result": "PASS",
+      "detail": "Product hierarchy (PI → GEIOS → PiOS → LENS → SQO → Marketplace) matches PIOS_CURRENT_CANONICAL_STATE.md"
+    },
+    {
+      "name": "maturity_classification_integrity",
+      "result": "PASS",
+      "detail": "All constructs classified by runtime maturity (§10). No vision hallucination. CANONICAL_RUNTIME_ACTIVE / IMPLEMENTED_ISOLATED / SPECIFIED_NOT_IMPLEMENTED / FUTURE_DECLARED / CONCEPTUAL_FRAMEWORK / INTERPRETIVE_LINEAGE / EXTERNAL all used correctly."
+    },
+    {
+      "name": "path_a_validation",
+      "result": "PASS",
+      "detail": "Signal maturity state mapping validated against run_client_pipeline.py 9-phase orchestrator. All CANONICAL_RUNTIME_ACTIVE claims verified. ESI/RAG correctly classified as IMPLEMENTED_ISOLATED."
+    },
+    {
+      "name": "governance_doctrine_preserved",
+      "result": "PASS",
+      "detail": "Evidence-first doctrine maintained. 13 absolute prohibitions enforced in all commercial framing. No prescriptive output. No temporal prediction claims for Tier 1A/1B."
+    },
+    {
+      "name": "brand_hierarchy_consistency",
+      "result": "PASS",
+      "detail": "Signäl = product family brand. LENS = foundational shell (not Signäl/LENS). SQO = embedded (never branded). PMO Bundle = first marketplace module (not the platform)."
+    },
+    {
+      "name": "category_defense_integrity",
+      "result": "PASS",
+      "detail": "Program Intelligence remains the category. PMO is one vertical projection. No category collapse into 'advanced PMO intelligence' or 'GitHub Intelligence'."
+    },
+    {
+      "name": "static_temporal_separation",
+      "result": "PASS",
+      "detail": "STATIC (topology + propagation + qualification + signal activation) cleanly separated from TEMPORAL (posture drift, run-over-run, execution dynamics). No temporal claims in Tier 1A/1B."
+    },
+    {
+      "name": "demo_capability_verification",
+      "result": "PASS",
+      "detail": "All 12 capabilities used in demo choreography (§14) verified as CANONICAL_RUNTIME_ACTIVE. No hypothetical or aspirational capabilities in the 20-minute demo."
+    },
+    {
+      "name": "commercial_anti_patterns_enforced",
+      "result": "PASS",
+      "detail": "14 forbidden commercial terms defined (§12.3). 7 demo anti-patterns defined (§14.4). 7 commercial anti-patterns defined (§15.9). No violations in plan content."
+    },
+    {
+      "name": "correction_streams_applied",
+      "result": "PASS",
+      "detail": "Three correction streams applied and audited: CLAUDE-GOVERNANCE-CORRECTION.01, SIGNAL-MATURITY.STATE-MAPPING.FEEDBACK.01, GITHUB-MARKETPLACE-PRIORITIZATION.CORRECTION.01"
+    },
+    {
+      "name": "frozen_identity_compliance",
+      "result": "PASS",
+      "detail": "User declared core strategic identity FROZEN (2026-05-17). Plan does not reopen: category positioning, product hierarchy, brand hierarchy, tier structure, wedge direction, STATIC/TEMPORAL separation, maturity classification model."
+    }
+  ],
+  "summary": "15/15 PASS — all validation checks passed"
+}
