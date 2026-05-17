@@ -1,0 +1,54 @@
+{
+  "stream_id": "PI.BLUEEDGE.CROSSWALK-AND-RECONCILIATION-RECOVERY.01",
+  "classification": "G2",
+  "date": "2026-05-17",
+  "changes": [
+    {
+      "file": "docs/pios/PI.BLUEEDGE.CROSSWALK-AND-RECONCILIATION-RECOVERY.01/CROSSWALK_RUNTIME_ANALYSIS.md",
+      "action": "CREATED",
+      "purpose": "Crosswalk bridge architecture, coverage, consumers, derivation chain analysis"
+    },
+    {
+      "file": "docs/pios/PI.BLUEEDGE.CROSSWALK-AND-RECONCILIATION-RECOVERY.01/RECONCILIATION_CORRESPONDENCE_ANALYSIS.md",
+      "action": "CREATED",
+      "purpose": "Reconciliation computation, graduated confidence model, grounding determination analysis"
+    },
+    {
+      "file": "docs/pios/PI.BLUEEDGE.CROSSWALK-AND-RECONCILIATION-RECOVERY.01/HISTORICAL_17_DOMAIN_RECOVERY.md",
+      "action": "CREATED",
+      "purpose": "Recovery of all 17 semantic domains with origin, grounding status, and root cause analysis"
+    },
+    {
+      "file": "docs/pios/PI.BLUEEDGE.CROSSWALK-AND-RECONCILIATION-RECOVERY.01/SEMANTIC_ONTOLOGY_VALIDATION.md",
+      "action": "CREATED",
+      "purpose": "Hypothesis A/B validation with evidence traces and falsification points"
+    },
+    {
+      "file": "docs/pios/PI.BLUEEDGE.CROSSWALK-AND-RECONCILIATION-RECOVERY.01/LENS_TRACEBACK_ANALYSIS.md",
+      "action": "CREATED",
+      "purpose": "7-layer traceback from LENS projection to upstream evidence"
+    },
+    {
+      "file": "docs/pios/PI.BLUEEDGE.CROSSWALK-AND-RECONCILIATION-RECOVERY.01/execution_report.md",
+      "action": "CREATED",
+      "purpose": "Stream execution report per CLAUDE.md §5.2"
+    },
+    {
+      "file": "docs/pios/PI.BLUEEDGE.CROSSWALK-AND-RECONCILIATION-RECOVERY.01/validation_log.json",
+      "action": "CREATED",
+      "purpose": "Validation checks per CLAUDE.md §5.3"
+    },
+    {
+      "file": "docs/pios/PI.BLUEEDGE.CROSSWALK-AND-RECONCILIATION-RECOVERY.01/file_changes.json",
+      "action": "CREATED",
+      "purpose": "File change manifest per CLAUDE.md §5.2"
+    },
+    {
+      "file": "docs/pios/PI.BLUEEDGE.CROSSWALK-AND-RECONCILIATION-RECOVERY.01/CLOSURE.md",
+      "action": "CREATED",
+      "purpose": "Stream closure per CLAUDE.md §5.4"
+    }
+  ],
+  "existing_files_modified": [],
+  "note": "G2 read-only stream — no existing files were modified. All outputs are new analysis artifacts."
+}

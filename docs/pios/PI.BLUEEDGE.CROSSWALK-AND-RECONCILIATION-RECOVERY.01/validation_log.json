@@ -1,0 +1,140 @@
+{
+  "stream_id": "PI.BLUEEDGE.CROSSWALK-AND-RECONCILIATION-RECOVERY.01",
+  "classification": "G2",
+  "date": "2026-05-17",
+  "baseline_commit": "11e54a2943b9654cc886016b024d05faa249865c",
+  "validation_checks": [
+    {
+      "check": "READ_ONLY_COMPLIANCE",
+      "description": "Stream made no modifications to any existing files",
+      "status": "PASS"
+    },
+    {
+      "check": "NO_IMPLEMENTATION",
+      "description": "No code was written, no runtime was modified, no new features introduced",
+      "status": "PASS"
+    },
+    {
+      "check": "NO_THEORY_INVENTION",
+      "description": "All findings derived from existing artifacts, no new theory constructed",
+      "status": "PASS"
+    },
+    {
+      "check": "NO_TOPOLOGY_GENERATION",
+      "description": "No new topology models, domain models, or structural outputs produced",
+      "status": "PASS"
+    },
+    {
+      "check": "NO_SELECTOR_MUTATION",
+      "description": "No selector.json or manifest files were modified",
+      "status": "PASS"
+    },
+    {
+      "check": "CROSSWALK_ARTIFACT_LOCATED",
+      "description": "semantic_continuity_crosswalk.json found and analyzed at clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/crosswalk/",
+      "status": "PASS"
+    },
+    {
+      "check": "CROSSWALK_VERSION_CONFIRMED",
+      "description": "Crosswalk v2.0 confirmed with 13 DOM entries, 9 business labels, source contract PI.CLIENT-LANGUAGE-LAYER.DOM-REDERIVATION-WITH-LINEAGE.01",
+      "status": "PASS"
+    },
+    {
+      "check": "CROSSWALK_CONSUMERS_IDENTIFIED",
+      "description": "5 consumers identified: GenericSemanticPayloadResolver, SemanticActorHydrator, ReconciliationCorrespondenceCompiler, crosswalk_mapping_validation, LENS report renderer",
+      "status": "PASS"
+    },
+    {
+      "check": "RECONCILIATION_COMPILER_LOCATED",
+      "description": "ReconciliationCorrespondenceCompiler.js found at app/execlens-demo/lib/lens-v2/reconciliation/",
+      "status": "PASS"
+    },
+    {
+      "check": "RECONCILIATION_ARTIFACTS_LOCATED",
+      "description": "reconciliation_correspondence.v1.json and enriched.v1.json found at artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/",
+      "status": "PASS"
+    },
+    {
+      "check": "GRADUATED_CONFIDENCE_MODEL_CONFIRMED",
+      "description": "5-level graduated model confirmed in ReconciliationCorrespondenceCompiler: Level 1 UNMAPPED through Level 5 STRUCTURALLY_GROUNDED",
+      "status": "PASS"
+    },
+    {
+      "check": "GROUNDING_RATIO_TRACED",
+      "description": "4/17 = 0.2353 traced from SemanticActorHydrator.js lines 142-147 (lineage_status filter) through deriveQualifierClass to Q-02",
+      "status": "PASS"
+    },
+    {
+      "check": "SEVENTEEN_DOMAINS_RECOVERED",
+      "description": "All 17 DOMAIN-NN entities recovered with domain_name, domain_type, cluster_id, lineage_status, dominant_dom_id, confidence",
+      "status": "PASS"
+    },
+    {
+      "check": "FOUR_GROUNDED_IDENTIFIED",
+      "description": "DOMAIN-01 (DOM-13, 0.95), DOMAIN-10 (DOM-04, 0.78), DOMAIN-14 (DOM-10, 0.92), DOMAIN-16 (DOM-11, 0.93) confirmed as the 4 structurally backed domains",
+      "status": "PASS"
+    },
+    {
+      "check": "THIRTEEN_SEMANTIC_ONLY_IDENTIFIED",
+      "description": "13 semantic-only domains identified with root cause analysis: 10 of 13 inside DOM-09 backend_modules (irresolvable structural boundary)",
+      "status": "PASS"
+    },
+    {
+      "check": "DOMAIN_PRE_EXISTENCE_CONFIRMED",
+      "description": "Domains confirmed as pre-existing grounding via build_semantic_layer.py (41.1), provenance recovery, and grouping_decision_inventory.md (Decision A-5)",
+      "status": "PASS"
+    },
+    {
+      "check": "HYPOTHESIS_A_VALIDATED",
+      "description": "Semantic domains projected first from upstream evidence then reconciled against structure — 10 evidence traces provided",
+      "status": "PASS"
+    },
+    {
+      "check": "HYPOTHESIS_B_FALSIFIED",
+      "description": "Semantic domains did NOT emerge from CEU structural grouping — 6 falsification points provided",
+      "status": "PASS"
+    },
+    {
+      "check": "LENS_TRACEBACK_COMPLETE",
+      "description": "7-layer traceback from LENS executive projection to upstream evidence completed: GenericSemanticPayloadResolver → SemanticActorHydrator → semantic_topology_model → crosswalk → reconciliation → structural DOMs + semantic domains → upstream evidence",
+      "status": "PASS"
+    },
+    {
+      "check": "TWO_LENS_PATHWAYS_DOCUMENTED",
+      "description": "Manifest-driven payload (run_blueedge_productized_01_fixed) and selector-driven vault (run_be_orchestrated_fixup_01) both documented with convergence analysis",
+      "status": "PASS"
+    },
+    {
+      "check": "VAULT_STALENESS_IDENTIFIED",
+      "description": "CROSSWALK_AND_RECONCILIATION.md states 'NOT IMPLEMENTED' for ReconciliationCorrespondenceCompiler and graduated grounding model — both are implemented",
+      "status": "PASS",
+      "note": "Staleness flagged but not corrected (read-only stream)"
+    },
+    {
+      "check": "GROUNDING_DISCREPANCY_DOCUMENTED",
+      "description": "41.1 evidence-boundary grounding (15/17 GROUNDED) vs reconciliation crosswalk grounding (4/17 RECONCILED) — different questions producing different answers, documented in HISTORICAL_17_DOMAIN_RECOVERY.md §6",
+      "status": "PASS"
+    },
+    {
+      "check": "DOM09_IRRESOLVABILITY_DOCUMENTED",
+      "description": "DOM-09 backend_modules (6 CEU nodes) maps to 6+ semantic domains — permanently irresolvable in 1:1 crosswalk model, root cause of 10/13 unreconciled domains",
+      "status": "PASS"
+    },
+    {
+      "check": "DELIVERABLE_COMPLETENESS",
+      "description": "All 8 mandatory deliverables produced: 5 analysis documents + execution_report.md + validation_log.json + CLOSURE.md",
+      "status": "PASS"
+    },
+    {
+      "check": "ARTIFACT_PATH_COMPLIANCE",
+      "description": "All artifacts written to docs/pios/PI.BLUEEDGE.CROSSWALK-AND-RECONCILIATION-RECOVERY.01/ per CLAUDE.md §8",
+      "status": "PASS"
+    }
+  ],
+  "summary": {
+    "total_checks": 25,
+    "passed": 25,
+    "failed": 0,
+    "result": "VALID"
+  }
+}
