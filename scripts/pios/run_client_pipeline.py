@@ -781,20 +781,19 @@ def phase_08a_vault(
         "emission_date": now_date,
         "emission_run_id": run_id,
         "emission_stream": "PSEE-PIPELINE.ORCHESTRATOR",
-        "source_authority": "dom_path_domain_layer.json (PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01)",
+        "source_authority": f"dom_layer.json ({dom_layer.get('contract_id', 'dom_layer_generator')})",
         "schema_adaptation_note": (
-            "13 DOM groups from dom_path_domain_layer.json adapted to FastAPI domains[] format. "
-            "Native 40.4 canonical_topology uses incompatible cluster_topology schema — "
-            "dom_path_domain_layer.json is the authoritative source for this vault."
+            f"{len(domains)} DOM groups from dom_layer.json adapted to domains[] format. "
+            f"Generation method: {dom_layer.get('generation_rules', {}).get('method', 'unknown')}."
         ),
         "counts": {
-            "total_nodes": dom_layer.get("total_nodes", 35),
+            "total_nodes": dom_layer.get("total_nodes", 0),
             "domains": len(domains),
             "capabilities": 0,
-            "components": dom_layer.get("total_nodes", 35),
+            "components": dom_layer.get("total_nodes", 0),
             "total_edges": 0,
             "coverage_percent": 100.0,
-            "source": "dom_path_domain_layer.json (PATH_EVIDENCE_ONLY, 13 DOM groups from 40.3 structural_topology_log.json)",
+            "source": f"dom_layer.json ({dom_layer.get('generation_rules', {}).get('method', 'unknown')}, {len(domains)} DOM groups)",
         },
         "domains": domains,
         "determinism_hash": determinism_hash,

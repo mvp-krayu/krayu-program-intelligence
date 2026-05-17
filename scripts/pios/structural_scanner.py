@@ -292,16 +292,44 @@ def build_topology_edges(
 
 # ── Canonical Topology ─────────────────────────────────────────────────────────
 
-def build_canonical_topology(nodes: list[dict]) -> list[dict]:
+def build_canonical_topology(nodes: list[dict]) -> tuple[list[dict], dict]:
     """
     Group nodes by top-level path component (cluster).
     Root-level files (no directory ancestor) go into cluster '_root'.
+
+    Wrapper normalization (Path A): when all nodes share a single top-level
+    directory (common for tar archive extraction), cluster by the next path
+    level instead. The wrapper is an archive packaging artifact, not a
+    structural boundary. Original node paths are preserved.
     """
-    clusters: dict[str, list[str]] = {}
+    initial: dict[str, list[str]] = {}
     for node in nodes:
         parts = Path(node["path"]).parts
         top = parts[0] if len(parts) >= 1 else "_root"
-        clusters.setdefault(top, []).append(node["node_id"])
+        initial.setdefault(top, []).append(node["node_id"])
+
+    wrapper_prefix = None
+    if len(initial) == 1:
+        candidate = list(initial.keys())[0]
+        has_children = any(
+            len(Path(n["path"]).parts) > 1
+            for n in nodes
+            if Path(n["path"]).parts and Path(n["path"]).parts[0] == candidate
+        )
+        if has_children:
+            wrapper_prefix = candidate
+
+    if wrapper_prefix:
+        clusters: dict[str, list[str]] = {}
+        for node in nodes:
+            parts = Path(node["path"]).parts
+            if len(parts) >= 2 and parts[0] == wrapper_prefix:
+                effective_top = parts[1]
+            else:
+                effective_top = "_root"
+            clusters.setdefault(effective_top, []).append(node["node_id"])
+    else:
+        clusters = initial
 
     result = []
     for i, (name, node_ids) in enumerate(sorted(clusters.items()), start=1):
@@ -311,7 +339,12 @@ def build_canonical_topology(nodes: list[dict]) -> list[dict]:
             "node_count": len(node_ids),
             "node_ids": node_ids,
         })
-    return result
+
+    wrapper_metadata = {
+        "wrapper_detected": wrapper_prefix is not None,
+        "wrapper_prefix": wrapper_prefix,
+    }
+    return result, wrapper_metadata
 
 
 # ── Main ───────────────────────────────────────────────────────────────────────
@@ -390,7 +423,9 @@ def main() -> None:
 
     # ── [4] Build canonical topology ──────────────────────────────────────────
     print("\n[4] Building canonical topology ...")
-    clusters = build_canonical_topology(nodes)
+    clusters, wrapper_metadata = build_canonical_topology(nodes)
+    if wrapper_metadata["wrapper_detected"]:
+        print(f"  wrapper detected: {wrapper_metadata['wrapper_prefix']} (normalized)")
     print(f"  clusters: {len(clusters)}")
     for c in clusters:
         print(f"    {c['cluster_id']} {c['name']:30s} ({c['node_count']} nodes)")
@@ -436,6 +471,7 @@ def main() -> None:
         "generated_at": ts,
         "platform": "generic",
         "cluster_count": len(clusters),
+        "wrapper_normalization": wrapper_metadata,
         "clusters": clusters,
     }
 
