@@ -87,6 +87,7 @@
 | reference_boundary_contract.md | docs/governance/runtime/ | Cross-layer boundary rules |
 | Q02_GOVERNANCE_AMENDMENT.md | docs/governance/ | Q-class governance |
 | MARKETPLACE_IMPLEMENTATION_LANE_DISCIPLINE.md | docs/governance/ | Three-lane execution discipline for marketplace development |
+| GITHUB_FIRST_OPERATIONALIZATION_CORRECTION.md | docs/governance/ | GitHub-first implementation sequencing correction (Phase 0A/0B) |
 
 ## Governance Streams (Active)
 
@@ -94,6 +95,7 @@
 |---|---|---|---|
 | PI.STRATEGIC-DIRECTION.MARKETPLACE-COMMERCIALIZATION-STRATEGY.01 | docs/pios/PI.STRATEGIC-DIRECTION.MARKETPLACE-COMMERCIALIZATION-STRATEGY.01/ | G1 | COMPLETE |
 | PI.IMPLEMENTATION-LANE.MARKETPLACE-EXECUTION-DISCIPLINE.01 | docs/pios/PI.IMPLEMENTATION-LANE.MARKETPLACE-EXECUTION-DISCIPLINE.01/ | G1 | COMPLETE |
+| PI.IMPLEMENTATION-SEQUENCING.GITHUB-FIRST-OPERATIONALIZATION.CORRECTION.01 | docs/pios/PI.IMPLEMENTATION-SEQUENCING.GITHUB-FIRST-OPERATIONALIZATION.CORRECTION.01/ | G1 | COMPLETE |
 
 ## Cross-References
 

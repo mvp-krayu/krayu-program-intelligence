@@ -322,7 +322,14 @@ TIER 2 — Cross-Plane Structural Coherence (FUTURE)
 
 **Implementation lane discipline:** MARKETPLACE_IMPLEMENTATION_LANE_DISCIPLINE.md (PI.IMPLEMENTATION-LANE.MARKETPLACE-EXECUTION-DISCIPLINE.01) — three-lane execution model protecting canonical PATH A + PATH B while enabling marketplace experimentation. LOCKED — AUTHORITATIVE.
 
-**Implementation phases:** Phase 0 (demo readiness) → Phase 1A (PMO commercial) → Phase 1B (Engineering entry) → Phase 2 (cross-plane). Revenue begins at Phase 1A (~week 12).
+**Implementation phases (corrected per PI.IMPLEMENTATION-SEQUENCING.GITHUB-FIRST-OPERATIONALIZATION.CORRECTION.01):**
+- Phase 0A: GitHub substrate operationalization — FIRST critical milestone. External evidence portability proof.
+- Phase 0B: Commercial projection refinement — SECONDARY. Demo polish, report packaging.
+- Phase 1A: Signäl/PMO commercial entry — advisory-led structural assessment.
+- Phase 1B: Signäl/Engineering substrate-native operationalization.
+- Phase 2: Cross-plane structural coherence (future — requires EXSIG/TIMSIG).
+
+Revenue begins at Phase 1A. Substrate proof (Phase 0A) precedes projection polish (Phase 0B).
 
 ## What Exists Now (Capability Summary)
 

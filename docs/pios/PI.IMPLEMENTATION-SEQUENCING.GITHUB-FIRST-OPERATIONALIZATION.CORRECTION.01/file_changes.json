@@ -1,0 +1,44 @@
+{
+  "stream": "PI.IMPLEMENTATION-SEQUENCING.GITHUB-FIRST-OPERATIONALIZATION.CORRECTION.01",
+  "classification": "G1",
+  "date": "2026-05-17",
+  "changes": [
+    {
+      "action": "CREATE",
+      "path": "docs/governance/GITHUB_FIRST_OPERATIONALIZATION_CORRECTION.md",
+      "description": "Primary governance document — GitHub-first operationalization correction. Restructures Phase 0 into Phase 0A (substrate operationalization) + Phase 0B (projection refinement). 9 sections + 2 appendices."
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.IMPLEMENTATION-SEQUENCING.GITHUB-FIRST-OPERATIONALIZATION.CORRECTION.01/execution_report.md",
+      "description": "Stream execution report"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.IMPLEMENTATION-SEQUENCING.GITHUB-FIRST-OPERATIONALIZATION.CORRECTION.01/validation_log.json",
+      "description": "15-check validation log — all PASS"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.IMPLEMENTATION-SEQUENCING.GITHUB-FIRST-OPERATIONALIZATION.CORRECTION.01/file_changes.json",
+      "description": "This file — change manifest"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.IMPLEMENTATION-SEQUENCING.GITHUB-FIRST-OPERATIONALIZATION.CORRECTION.01/CLOSURE.md",
+      "description": "Stream closure with §10 Architecture Memory Propagation"
+    }
+  ],
+  "vault_updates": [
+    {
+      "action": "UPDATE",
+      "path": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "description": "Correct implementation phases from 'Phase 0 → 1A → 1B → 2' to 'Phase 0A → 0B → 1A → 1B → 2'"
+    },
+    {
+      "action": "UPDATE",
+      "path": "docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md",
+      "description": "Add governance doc reference and stream path"
+    }
+  ]
+}
