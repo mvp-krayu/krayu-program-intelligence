@@ -1,0 +1,46 @@
+{
+  "stream": "PI.IMPLEMENTATION-LANE.MARKETPLACE-EXECUTION-DISCIPLINE.01",
+  "classification": "G1",
+  "date": "2026-05-17",
+  "changes": [
+    {
+      "action": "CREATE",
+      "path": "docs/governance/MARKETPLACE_IMPLEMENTATION_LANE_DISCIPLINE.md",
+      "description": "Primary governance document — implementation lane discipline for marketplace commercialization. Defines 3 lanes (Canonical/Marketplace/Substrate Evolution), branch strategy, 8 contamination patterns, layer protection matrix, implementation entry sequence, 10-check merge reconciliation contract, architectural warning."
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.IMPLEMENTATION-LANE.MARKETPLACE-EXECUTION-DISCIPLINE.01/execution_report.md",
+      "description": "Stream execution report"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.IMPLEMENTATION-LANE.MARKETPLACE-EXECUTION-DISCIPLINE.01/validation_log.json",
+      "description": "15-check validation log — all PASS"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.IMPLEMENTATION-LANE.MARKETPLACE-EXECUTION-DISCIPLINE.01/file_changes.json",
+      "description": "This file — change manifest"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.IMPLEMENTATION-LANE.MARKETPLACE-EXECUTION-DISCIPLINE.01/CLOSURE.md",
+      "description": "Stream closure with Architecture Memory Propagation (§10) — propagation status PENDING"
+    }
+  ],
+  "vault_updates_pending": [
+    {
+      "action": "UPDATE",
+      "path": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "description": "Add marketplace implementation lane discipline reference",
+      "status": "PENDING — deferred to propagation phase"
+    },
+    {
+      "action": "UPDATE",
+      "path": "docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md",
+      "description": "Add stream path reference",
+      "status": "PENDING — deferred to propagation phase"
+    }
+  ]
+}
