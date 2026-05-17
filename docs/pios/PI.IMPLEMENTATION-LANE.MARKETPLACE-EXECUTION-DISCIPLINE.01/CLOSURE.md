@@ -2,9 +2,7 @@
 
 ## 1. Status
 
-INCOMPLETE
-
-Artifacts created. Vault propagation PENDING — halted per user-established checkpoint pattern. Resume with: "Continue stream PI.IMPLEMENTATION-LANE.MARKETPLACE-EXECUTION-DISCIPLINE.01 — vault propagation pending"
+COMPLETE
 
 ## 2. Scope
 
@@ -18,6 +16,7 @@ G1 governance stream establishing implementation lane discipline for marketplace
 | 2026-05-17 | MARKETPLACE_IMPLEMENTATION_LANE_DISCIPLINE.md created (7 sections + 2 appendices) |
 | 2026-05-17 | All 5 mandatory artifacts created |
 | 2026-05-17 | Vault propagation deferred per checkpoint pattern |
+| 2026-05-17 | Vault propagation executed — PIOS_CURRENT_CANONICAL_STATE.md, CURRENT_CANONICAL_PATHS.md, TERMINOLOGY_LOCK.md updated |
 
 ## 4. Files Impacted
 
@@ -62,18 +61,13 @@ No regression risk — governance artifact only. No code changes. No runtime mod
 
 ## 9. Ready State
 
-INCOMPLETE — vault propagation pending.
+COMPLETE
 
-**Completed:**
 - Primary governance document created with all 7 mandatory sections + 2 appendices
 - All 5 mandatory stream artifacts created
 - All 15 validation checks passed
 - Non-goals verified (no implementation, no PATH A modification)
-
-**Remaining (deferred):**
-- Update `PIOS_CURRENT_CANONICAL_STATE.md` with lane discipline reference
-- Update `CURRENT_CANONICAL_PATHS.md` with stream path reference
-- Update CLOSURE.md status to COMPLETE after propagation
+- Vault propagation complete: PIOS_CURRENT_CANONICAL_STATE.md, CURRENT_CANONICAL_PATHS.md, TERMINOLOGY_LOCK.md updated
 
 ## 10. Architecture Memory Propagation
 
@@ -92,19 +86,16 @@ INCOMPLETE — vault propagation pending.
 
 ### Vault Files Updated
 
-NONE — propagation deferred.
-
-### Vault Files Pending Update
-
-| File | Update Required |
-|------|----------------|
-| `docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md` | Add marketplace implementation lane discipline as active governance artifact |
-| `docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md` | Add stream path reference |
+| File | Update |
+|------|--------|
+| `docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md` | Added: lane discipline reference within marketplace commercialization status section |
+| `docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md` | Added: governance doc reference, stream path reference |
+| `docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md` | Added: Implementation Lane term lock |
 
 ### Propagation Verification
 
-NOT YET EXECUTED — deferred to continuation session.
+All vault updates applied. Lane discipline referenced in canonical state. Stream path in CURRENT_CANONICAL_PATHS.md. Implementation Lane concept locked in TERMINOLOGY_LOCK.md.
 
 ### Propagation Status
 
-PENDING
+COMPLETE

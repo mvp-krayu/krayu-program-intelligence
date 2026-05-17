@@ -216,6 +216,92 @@
 
 **Status:** CANONICAL — active operational concept (2026-05-16).
 
+### Program Intelligence
+
+**Definition:** The overarching discipline and category name. The practice of applying governed structural intelligence to program execution assessment. Program Intelligence is the category that contains all Krayu products and capabilities — it is not itself a product name.
+
+**Status:** CANONICAL — category identity (2026-05-17).
+
+**What it is NOT:** A product. A brand. A software tool. It is the discipline within which GEIOS, PiOS, LENS, SQO, and Marketplace operate.
+
+### GEIOS
+
+**Definition:** Governed Executive Intelligence Operating System. The operating architecture that unifies all governed structural intelligence capabilities into a cohesive, enterprise-deployable executive intelligence platform. GEIOS is the governing frame around PiOS, LENS, SQO, and Marketplace — it emerged through Path B and ecosystem maturation as the name for an architectural reality that the runtime implementation had already substantially achieved.
+
+**Status:** CANONICAL — operating architecture (2026-05-17).
+
+**What it is NOT:** A runtime. A product surface. A layer the user sees. GEIOS is never directly exposed as a product capability. It is the reason the product works, never the product itself.
+
+**Architectural note:** GEIOS codified an emergent operational reality rather than inventing a disconnected theoretical architecture. The runtime implementation achieved many GEIOS outcomes before the GEIOS framework was formally specified (11 foundation streams + 1 capstone, 183 safety rules, 9-layer stack). PiOS remains historically canonical as the original Program Intelligence Operating System; GEIOS is the broader governing architecture that emerged later.
+
+### Productization Bridge
+
+**Definition:** The formal architectural contract defining what crosses the GEIOS substrate → LENS surface boundary. Establishes that GEIOS owns intelligence production and LENS owns intelligence presentation.
+
+**Status:** CANONICAL (principle) / SUPERSEDED (mechanism) — The bridge *principle* (substrate never exposed directly to executive surface) is permanently in force. The bridge *mechanism* (6 rendering adapters: ReadinessBadge, SignalCard, DomainEvidence, Narrative, Propagation, Explainability) was superseded by the cognitive zone architecture that emerged as the actual implementation path. GenericSemanticPayloadResolver + zone derive functions are the canonical bridge implementation. (2026-05-17)
+
+**Reference:** `docs/psee/PI.LENS.GEIOS.PRODUCTIZATION-BRIDGE.01/GEIOS_LENS_PRODUCTIZATION_BRIDGE.md`
+
+### PMO Bundle
+
+**Definition:** The first commercial Program Intelligence package. Targets Enterprise PMOs, Transformation Offices, and CTO Organizations. Six functional modules: Topology Intelligence, Execution Qualification, Propagation Intelligence, Executive Cognitive Projection, Governance Integrity, Operational Investigation Workspace.
+
+**Status:** CANONICAL — commercial package definition (2026-05-17).
+
+### Marketplace
+
+**Definition:** The extension ecosystem that enables third-party and first-party capability extension on governed rails. Includes semantic signal packs, industry overlays, governance templates, and integration adapters.
+
+**Status:** CANONICAL — future capability, not yet implemented (2026-05-17).
+
+### Signäl
+
+**Definition:** The market-facing product family brand. All verticalized operational intelligence packages carry the Signäl prefix (Signäl/PMO, Signäl/Engineering, etc.). Signäl packages consume governed structural intelligence from the PiOS substrate and project it through LENS for specific buyer verticals.
+
+**Status:** CANONICAL — frozen product brand (2026-05-17).
+
+**What it is NOT:** The platform. The substrate. The category. Signäl is the product family name, not the discipline (Program Intelligence) or the architecture (GEIOS/PiOS).
+
+**Brand hierarchy:** Program Intelligence (category) → GEIOS (hidden architecture) → Signäl (product family) → LENS (foundational projection shell) → Signäl/PMO, Signäl/Engineering (verticalized packages).
+
+### Execution Blindness
+
+**Definition:** The named market problem. Enterprises operating with incomplete or distorted visibility into actual program execution behavior. Tools show work items. Structure is hidden. The gap between what tools represent and what actually exists is where execution risk compounds.
+
+**Status:** CANONICAL — market problem naming, frozen (2026-05-17).
+
+**Source:** `docs/program-intelligence-framework/program_intelligence_pyramid.md`
+
+### Structural Execution Visibility
+
+**Definition:** The canonical solution wedge — what Program Intelligence provides to counteract Execution Blindness. Reconstructed structural execution topology with governed confidence boundaries. Encompasses topology reconstruction, propagation intelligence, qualification posture, evidence-bound confidence, and multi-persona projection.
+
+**Status:** CANONICAL — frozen wedge identity (2026-05-17).
+
+**What it is NOT:** Prediction. Prescription. Autonomous governance. AI copilot capability. It is a structural mirror with governed confidence boundaries.
+
+### STATIC Capability (Capability Classification)
+
+**Definition:** Structural intelligence capabilities that are CANONICAL_RUNTIME_ACTIVE today: topology reconstruction, propagation intelligence, qualification posture (S-state + Q-class), signal activation, and evidence-bound projection. STATIC capabilities assess current structural state without temporal comparison.
+
+**Status:** CANONICAL — capability classification, frozen (2026-05-17).
+
+### TEMPORAL Capability (Capability Classification)
+
+**Definition:** Structural intelligence capabilities requiring execution signal families not yet implemented: posture drift detection, run-over-run comparison, execution dynamics. TEMPORAL capabilities require EXSIG (SPECIFIED_NOT_IMPLEMENTED) and TIMSIG (FUTURE_DECLARED).
+
+**Status:** CANONICAL — capability classification, frozen (2026-05-17).
+
+**Critical rule:** TEMPORAL capabilities MUST NOT be marketed, claimed, or implied as current capability. STATIC and TEMPORAL are mutually exclusive classification labels.
+
+### Implementation Lane
+
+**Definition:** A governed execution scope for marketplace development work. Three lanes defined: Canonical Execution Lane (PATH A + PATH B frozen, modification prohibited), Marketplace Experimentation Lane (projection-only authority, no substrate mutation), Substrate Evolution Lane (isolated G1 with promotion protocol). Each lane has explicit protected scope, allowed scope, and forbidden scope.
+
+**Status:** CANONICAL — governance concept, frozen (2026-05-17).
+
+**Reference:** `docs/governance/MARKETPLACE_IMPLEMENTATION_LANE_DISCIPLINE.md`
+
 ## Term Usage Rules
 
 1. **Use locked definitions exactly.** Do not paraphrase, simplify, or reinterpret.

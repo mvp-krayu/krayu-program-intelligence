@@ -41,6 +41,12 @@
 | QualifierMandate | app/execlens-demo/components/lens-v2/zones/ | Qualifier governance display |
 | InvestigationReadingGuide | app/execlens-demo/components/lens-v2/zones/ | Investigation flow guidance |
 
+### Export Primitives
+
+| Module | Path | Role |
+|---|---|---|
+| InterrogationTrailBuilder | app/execlens-demo/lib/lens-v2/InterrogationTrailBuilder.js | Governed evidence record generation (buildTrailHTML) |
+
 ### Route Pages
 
 | Page | Path | Role |
@@ -80,6 +86,14 @@
 | git_structure_contract.md | docs/governance/runtime/ | Branch-domain authority |
 | reference_boundary_contract.md | docs/governance/runtime/ | Cross-layer boundary rules |
 | Q02_GOVERNANCE_AMENDMENT.md | docs/governance/ | Q-class governance |
+| MARKETPLACE_IMPLEMENTATION_LANE_DISCIPLINE.md | docs/governance/ | Three-lane execution discipline for marketplace development |
+
+## Governance Streams (Active)
+
+| Stream | Path | Classification | Status |
+|---|---|---|---|
+| PI.STRATEGIC-DIRECTION.MARKETPLACE-COMMERCIALIZATION-STRATEGY.01 | docs/pios/PI.STRATEGIC-DIRECTION.MARKETPLACE-COMMERCIALIZATION-STRATEGY.01/ | G1 | COMPLETE |
+| PI.IMPLEMENTATION-LANE.MARKETPLACE-EXECUTION-DISCIPLINE.01 | docs/pios/PI.IMPLEMENTATION-LANE.MARKETPLACE-EXECUTION-DISCIPLINE.01/ | G1 | COMPLETE |
 
 ## Cross-References
 

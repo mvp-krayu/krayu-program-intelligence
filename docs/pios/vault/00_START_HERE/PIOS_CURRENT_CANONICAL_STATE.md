@@ -1,6 +1,6 @@
 # PiOS Current Canonical State
 
-> **This page reflects the system's canonical state as of 2026-05-15.**
+> **This page reflects the system's canonical state as of 2026-05-17.**
 
 ---
 
@@ -10,6 +10,43 @@
 **Repository:** krayu-program-intelligence (k-pi-core)
 **Execution Engine:** Claude Code (CLAUDE.md v2.4)
 **Layer Model:** L0-L8 (LOCKED via git_structure_contract.md)
+
+## Canonical Product Hierarchy
+
+The system operates within a canonical architectural hierarchy. Each layer has a permanent role that does not collapse into adjacent layers:
+
+```
+Program Intelligence (category/discipline)
+  └── GEIOS (operating architecture — governed substrate, never exposed)
+        ├── PiOS (computational substrate)
+        │     ├── Ingestion (L1: 40.x)
+        │     ├── Core Derivation (L2-L4: 40.x, 41.x)
+        │     └── Activation (L5: 43.x, 44.x)
+        ├── LENS (projection surface — visible executive shell)
+        │     ├── Cognitive Projection (4-persona)
+        │     ├── Guided Investigation (5A/5B)
+        │     ├── Evidence Record Export
+        │     └── Conversational Intelligence (future)
+        ├── SQO (qualification overlay)
+        │     ├── State Machine (S0-S3)
+        │     ├── Cockpit (12 sections)
+        │     └── Reconciliation Loop
+        └── Marketplace (extension ecosystem — future)
+```
+
+**Hierarchy invariants:**
+- **Program Intelligence** is the discipline — the overarching practice, not a product
+- **GEIOS** is the governing architecture — hidden substrate, never directly exposed. The reason the product works, never the product itself
+- **PiOS** is the computational substrate — deterministic derivation from evidence to governed output
+- **LENS** is the projection surface — executive interaction shell that renders governed outputs
+- **SQO** is the qualification overlay — assessment of operational maturity on governed data
+- **Marketplace** is the extension ecosystem — future capability for governed third-party/first-party extensions
+
+**Historical note:** PiOS remains historically canonical as the original Program Intelligence Operating System. GEIOS emerged later through Path B and ecosystem maturation as the broader governing architecture. GEIOS codified an emergent operational reality rather than inventing a disconnected theoretical architecture — the runtime implementation achieved many GEIOS outcomes before the framework was formally specified.
+
+**Architectural evolution note:** The evolutionary strata (S1-S6 below) describe *what evolved and when*. The canonical product hierarchy describes *where each component sits in the governed architecture*. Both views are necessary — strata track implementation evolution; the hierarchy defines structural position.
+
+See [[../10_CANONICAL_RUNTIME_STATE/PRODUCT_HIERARCHY]] for detailed hierarchy mapping.
 
 ## Architectural Strata (Active)
 
@@ -22,7 +59,7 @@ The system consists of six evolutionary strata. All are active and reconciled:
 | S3 | [[../03_PATH_SPLIT_EVOLUTION/PATH_A_EMERGENCE\|Path Split]] | 2026-05-07 → 2026-05-08 | OPERATIONAL — PATH A/B terminology active |
 | S4 | [[../04_SQO_AND_QUALIFICATION/SQO_EVOLUTION\|SQO Qualification]] | 2026-05-10 → present | OPERATIONAL — unified semantic operations substrate, 8 ownership domains, 23 artifacts, operational reconciliation loop |
 | S5 | [[../05_RUNTIME_AND_CORRIDOR/CURRENT_RUNTIME_BOUNDARIES\|Runtime Corridor]] | 2026-05-11 → present | OPERATIONAL — evidence/runtime corridors |
-| S6 | [[../07_LENS_V2_OPERATIONAL_IDENTITY/OPERATIONAL_COGNITION_TRANSITION\|Operational Cognition]] | 2026-05-13 → present | OPERATIONAL — cognitive operational intelligence surface, 4-persona projection, interactive topology, guided structural investigation, zone-aware cognitive orchestration, guided query layer (5B.1 — interactive question-answer cognition), guided interrogation evolution (5B.1+ — 36-query lattice with tonal diversity, archetypes, depth hierarchy), selective interpretive emergence (5B.2 — governed narrative synthesis via BALANCED), PI Runtime Layer (5B.3 — transversal governed interrogation across all four cognitive modes, two-axis cognitive model) |
+| S6 | [[../10_CANONICAL_RUNTIME_STATE/PRODUCT_HIERARCHY\|Operational Cognition]] | 2026-05-13 → present | OPERATIONAL — cognitive operational intelligence surface, 4-persona projection, interactive topology, guided structural investigation, zone-aware cognitive orchestration, guided query layer (5B.1 — interactive question-answer cognition), guided interrogation evolution (5B.1+ — 36-query lattice with tonal diversity, archetypes, depth hierarchy), selective interpretive emergence (5B.2 — governed narrative synthesis via BALANCED), PI Runtime Layer (5B.3 — transversal governed interrogation across all four cognitive modes, two-axis cognitive model), evidence record export (governed structural evidence record with topology capture) |
 
 ## LENS v2 Operational Identity Transition
 
@@ -49,6 +86,7 @@ LENS v2 has materially transitioned from a static report surface to an interacti
 - Tonal diversity: 8 registers (operational, forensic, executive, architectural, quiet, alarming, reflective, containment) (5B.1+)
 - Query archetypes: SCAN, TRACE, INTERPRET, BOUNDARY, ESCALATION (5B.1+)
 - Response depth hierarchy: MICRO, STANDARD, DEEP (5B.1+)
+- Governed evidence record export with structural topology capture, posture stability assessment, confidence envelope, and deterministic snapshot identity (Evidence Record Export)
 
 **Commits registering this transition:**
 - 7841f42: boardroom executive cockpit and dense propagation flow
@@ -203,6 +241,89 @@ Phase 5B.3 (PI.LENS.V2.PHASE5B3.PI-RUNTIME-LAYER.01) introduced the PI Runtime L
 - **Semantic framing doctrine:** All user-facing labels use structural language (expansion, depth, interrogation, traversal, resolution). No PI/runtime/query/AI/assistant/copilot in user-facing surfaces. Activation feels like "descending deeper into structural reality" — never "activated AI."
 - **Strategic lock:** PI augments the lattice. It MUST NOT replace the lattice.
 
+## Strategic Phase Reconciliation
+
+Two phase models exist in the system. They describe different concerns and are complementary, not competing:
+
+**Strategic Phases 1-6** describe the GEIOS ecosystem/productization evolution:
+
+| Strategic Phase | Description | Status |
+|---|---|---|
+| Phase 1: Generated Reports | Static HTML artifact delivery | SURPASSED |
+| Phase 2: Interactive Reports | Interactive intelligence surfaces | COMPLETE |
+| Phase 3: Workspace Shell | Persona-based cognitive workspace | COMPLETE |
+| Phase 4: Guided Investigations | Structural investigation + interpretive depth | SUBSTANTIALLY COMPLETE |
+| Phase 5: Conversational Intelligence | Copilot-capable conversational executive interaction | NOT STARTED |
+| Phase 6: Operational Ecosystem | Live-signal operational intelligence with marketplace | NOT STARTED |
+
+**LENS Phases 5A/5B** describe the implementation decomposition of **Strategic Phase 4** (Guided Operational Investigation):
+
+- 5A.1–5A.8: Investigative authority — domain deep-dive, evidence lineage, blockage visibility, temporal intelligence, mode separation, guided cognitive traversal
+- 5B.0: Governance gate (75.x authorization boundary)
+- 5B.1–5B.1+: Guided query layer — 36-query lattice with tonal diversity, archetypes, depth hierarchy
+- 5B.2: Narrative response surface — governed narrative synthesis via BALANCED
+- 5B.3: PI Runtime Layer — transversal governed interrogation across all four cognitive modes
+
+**Key reconciliation:** The LENS 5A/5B roadmap is NOT a separate phase model. It is the internal execution decomposition of Strategic Phase 4. Future implementation phases (Strategic Phase 5: conversational, Strategic Phase 6: ecosystem) will have their own internal execution decompositions.
+
+## GEIOS–LENS Bridge State
+
+**Principle:** GEIOS is the governed intelligence substrate. LENS is the executive interaction shell. These positions are permanent and non-negotiable.
+
+**Bridge mechanism status:** The GEIOS–LENS Productization Bridge (`docs/psee/PI.LENS.GEIOS.PRODUCTIZATION-BRIDGE.01/`) defined 6 rendering adapters (ReadinessBadge, SignalCard, DomainEvidence, Narrative, Propagation, Explainability) as the interface between substrate and surface.
+
+**Supersession:** LENS v2 evolved into a cognitive zone architecture — 10 zone components, 36 derive functions, interactive topology, structural depth escalation, persona-driven layout resolution. This architecture consumes `fullReport` directly at finer granularity than the 6 coarse adapters could provide. The adapters were designed for a report module architecture that was superseded by the cognitive zone architecture.
+
+**Canonical bridge implementation:** `GenericSemanticPayloadResolver` (payload normalization) + zone derive functions (`GUIDED_QUERY_ANSWERS`, `INTERROGATION_EXPANSION_REGISTRY`) + `LensDisclosureShell` (governance boundary enforcement). The bridge *principle* is preserved; the adapter *mechanism* is retired.
+
+**Reference:** `docs/psee/PI.LENS.GEIOS.PRODUCTIZATION-BRIDGE.01/GEIOS_LENS_PRODUCTIZATION_BRIDGE.md`
+
+## Marketplace Commercialization Status
+
+**Strategic direction frozen:** 2026-05-17 (PI.STRATEGIC-DIRECTION.MARKETPLACE-COMMERCIALIZATION-STRATEGY.01)
+
+The system's marketplace commercialization strategy is approved and frozen. Core strategic identity — category positioning, product hierarchy, brand hierarchy, tier structure, wedge direction, STATIC/TEMPORAL separation, and maturity classification — MUST NOT be reopened without explicit user-initiated correction.
+
+**Frozen elements:**
+
+| Element | Value | Status |
+|---------|-------|--------|
+| Category | Program Intelligence | FROZEN |
+| Market problem | Execution Blindness | FROZEN |
+| Wedge identity | Structural Execution Visibility | FROZEN |
+| Differentiator | Governed Confidence Boundaries | FROZEN |
+| Primary tagline | "You can't govern what you can't structurally see." | FROZEN |
+| Canonical first artifact | Structural Execution Visibility Report | FROZEN |
+| Product family brand | Signäl | FROZEN |
+| Entry modules | Signäl/PMO (Tier 1A) + Signäl/Engineering (Tier 1B) | FROZEN |
+
+**Tier structure:**
+
+```
+TIER 1A — Signäl/PMO: Governance Entry Wedge
+├── Advisory-led, per-program structural assessment
+├── Capability class: STATIC structural intelligence
+└── Revenue: advisory engagement + deliverable package
+
+TIER 1B — Signäl/Engineering: Substrate-Native Operationalization
+├── GitHub evidence, semi-automated, DPSIG-aligned
+├── Capability class: STATIC structural intelligence
+└── Revenue: subscription + structural assessment
+
+TIER 2 — Cross-Plane Structural Coherence (FUTURE)
+├── Requires: EXSIG + TIMSIG + dual-plane qualification
+├── Capability class: STATIC + TEMPORAL structural intelligence
+└── Revenue: platform + marketplace
+```
+
+**Capability classification (FROZEN):**
+- **STATIC** = topology + propagation + qualification + signal activation. CANONICAL_RUNTIME_ACTIVE. Built today.
+- **TEMPORAL** = posture drift, run-over-run comparison, execution dynamics. Requires EXSIG/TIMSIG. NOT built. Do NOT claim.
+
+**Implementation lane discipline:** MARKETPLACE_IMPLEMENTATION_LANE_DISCIPLINE.md (PI.IMPLEMENTATION-LANE.MARKETPLACE-EXECUTION-DISCIPLINE.01) — three-lane execution model protecting canonical PATH A + PATH B while enabling marketplace experimentation. LOCKED — AUTHORITATIVE.
+
+**Implementation phases:** Phase 0 (demo readiness) → Phase 1A (PMO commercial) → Phase 1B (Engineering entry) → Phase 2 (cross-plane). Revenue begins at Phase 1A (~week 12).
+
 ## What Exists Now (Capability Summary)
 
 See [[../10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS]] for full path inventory.
@@ -232,5 +353,9 @@ See [[../10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS]] for full path inve
 - 10 zone components (IntelligenceField, StructuralTopologyZone, DeclarationZone, GovernanceRibbon, ReconciliationAwarenessZone, SQOIntelligenceZone, SemanticTrustPostureZone, EvidenceDepthLayer, QualifierMandate, InvestigationReadingGuide)
 - Flagship binding layer (payload resolution → persona → zone assembly)
 - Evidence boundary activation, pressure zone focus, tier handoff
-- Guided query layer (GUIDED_QUERY_ANSWERS — 12 derive functions, click-to-understand, answer panel, explored tracking)
+- Guided query layer (GUIDED_QUERY_ANSWERS — 36 derive functions, click-to-understand, answer panel, explored tracking)
 - Keyboard-accessible query interaction (Tab/Enter/Escape flow)
+- 36-query governed interrogation lattice with 8 tonal registers, 5 archetypes, 3 depth tiers (5B.1+)
+- BALANCED selective interpretive emergence — governed narrative synthesis (5B.2)
+- PI Runtime Layer — transversal governed interrogation, structural depth escalation, 4 mode-specific expansion generators (5B.3)
+- Evidence record export (InterrogationTrailBuilder — self-contained HTML with posture stability, confidence envelope, topology capture, deterministic snapshot identity)

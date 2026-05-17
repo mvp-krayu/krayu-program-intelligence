@@ -2,9 +2,7 @@
 
 ## 1. Status
 
-INCOMPLETE
-
-Artifacts created and committed. Vault propagation PENDING — halted by user request. Resume with: "Continue stream PI.STRATEGIC-DIRECTION.MARKETPLACE-COMMERCIALIZATION-STRATEGY.01 — vault propagation pending"
+COMPLETE
 
 ## 2. Scope
 
@@ -20,6 +18,7 @@ Strategic direction stream establishing the canonical marketplace commercializat
 | 2026-05-17 | PI.STRATEGIC-DIRECTION.CLAUDE-GOVERNANCE-CORRECTION.01 applied — maturity classification enforced |
 | 2026-05-17 | PI.SIGNAL-MATURITY.STATE-MAPPING.FEEDBACK.01 applied — PATH A validation |
 | 2026-05-17 | Vault persistence initiated — artifacts created, propagation deferred |
+| 2026-05-17 | Vault propagation executed — PIOS_CURRENT_CANONICAL_STATE.md, CURRENT_CANONICAL_PATHS.md, TERMINOLOGY_LOCK.md updated |
 
 ## 4. Files Impacted
 
@@ -62,18 +61,12 @@ No regression risk — strategic direction artifact only. No code changes. No ru
 
 ## 9. Ready State
 
-INCOMPLETE — vault propagation pending.
+COMPLETE
 
-**Completed:**
 - All 5 mandatory artifacts created
 - All validation checks passed
 - Strategy document contains 16 sections covering full commercialization strategy
-
-**Remaining (deferred):**
-- Update `PIOS_CURRENT_CANONICAL_STATE.md` with marketplace commercialization status
-- Update `CURRENT_CANONICAL_PATHS.md` with stream path reference
-- Assess whether new terms should be added to `TERMINOLOGY_LOCK.md`
-- Update CLOSURE.md status to COMPLETE after propagation
+- Vault propagation complete: PIOS_CURRENT_CANONICAL_STATE.md, CURRENT_CANONICAL_PATHS.md, TERMINOLOGY_LOCK.md updated
 
 ## 10. Architecture Memory Propagation
 
@@ -97,20 +90,16 @@ INCOMPLETE — vault propagation pending.
 
 ### Vault Files Updated
 
-NONE — propagation deferred by user request.
-
-### Vault Files Pending Update
-
-| File | Update Required |
-|------|----------------|
-| `docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md` | Add: marketplace commercialization status, frozen wedge identity, tier 1A/1B/2 structure, canonical first artifact |
-| `docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md` | Add: stream path reference |
-| `docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md` | Assess: whether Structural Execution Visibility, Execution Blindness, STATIC/TEMPORAL should be locked |
+| File | Update |
+|------|--------|
+| `docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md` | Added: marketplace commercialization status section (frozen elements, tier structure, STATIC/TEMPORAL, lane discipline, implementation phases) |
+| `docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md` | Added: governance doc reference, stream path references |
+| `docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md` | Added: Signäl, Execution Blindness, Structural Execution Visibility, STATIC Capability, TEMPORAL Capability, Implementation Lane |
 
 ### Propagation Verification
 
-NOT YET EXECUTED — deferred to continuation session.
+All vault updates applied. PIOS_CURRENT_CANONICAL_STATE.md reflects marketplace strategy. CURRENT_CANONICAL_PATHS.md references governance doc and both streams. TERMINOLOGY_LOCK.md locks 6 new terms.
 
 ### Propagation Status
 
-PENDING — halted after artifact creation. Resume instruction: "Continue stream PI.STRATEGIC-DIRECTION.MARKETPLACE-COMMERCIALIZATION-STRATEGY.01 — vault propagation pending"
+COMPLETE
