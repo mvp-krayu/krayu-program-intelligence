@@ -24,20 +24,25 @@ VERIFY: branch authorized
 
 This phase is already mandatory per CLAUDE.md §12. No change required.
 
-### Phase 2 — Canonical State (ALWAYS — new mandatory step)
+### Phase 2 — Canonical State (ALWAYS — mandatory)
 
 ```
 LOAD: docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md
+LOAD: docs/pios/vault/00_START_HERE/OPERATIONAL_ONTOLOGY.md
 ```
 
-This single page provides:
+This phase provides:
 - Current architectural strata and status
 - Active runtime surfaces
 - Current client states
 - Current trustworthiness model
 - Current governance documents
+- Complete operational chain (dual-path ontology, crosswalk, reconciliation, pipeline, LENS traceback)
+- Anti-rediscovery reference (what has been canonicalized and where)
 
-**Cost:** ~120 lines. Fits within any context window.
+**Cost:** ~500 lines total. Fits within any context window.
+
+**Anti-rediscovery function:** Loading OPERATIONAL_ONTOLOGY.md prevents rediscovery of operational chain knowledge. Before investigating how the system works, check whether OPERATIONAL_ONTOLOGY.md already answers the question.
 
 ### Phase 3 — Terminology (ALWAYS — new mandatory step)
 
@@ -62,6 +67,7 @@ Load additional vault pages based on stream scope:
 | PATH A/grounding | vault/03_PATH_SPLIT_EVOLUTION/PATH_A_EMERGENCE.md |
 | PATH A.5/semantic participation/domains/CEU compression/dom_layer | vault/03_PATH_SPLIT_EVOLUTION/PATH_A5_PARTICIPATION_ARCHITECTURE.md |
 | PATH B/semantic | vault/03_PATH_SPLIT_EVOLUTION/PATH_B_EMERGENCE.md |
+| Crosswalk/reconciliation/grounding | vault/03_PATH_SPLIT_EVOLUTION/CROSSWALK_AND_RECONCILIATION.md |
 | SQO/qualification | vault/04_SQO_AND_QUALIFICATION/SQO_EVOLUTION.md |
 | HYDRATED/Q-class | vault/04_SQO_AND_QUALIFICATION/HYDRATED_AND_QSTATE_EVOLUTION.md |
 | Evidence/extraction | vault/05_RUNTIME_AND_CORRIDOR/EVIDENCE_CORRIDOR_EVOLUTION.md |
@@ -69,6 +75,8 @@ Load additional vault pages based on stream scope:
 | LENS/rendering | vault/02_EXECLENS_LINEAGE/EXECLENS_RUNTIME_EVOLUTION.md |
 | Terminology changes | vault/06_CANONICAL_TERMINOLOGY/SEMANTIC_COLLISIONS.md |
 | Architecture promotion | vault/11_GOVERNANCE_AND_MUTATION/CANONICAL_PROMOTION_PROTOCOL.md |
+| Rediscovery prevention | vault/11_GOVERNANCE_AND_MUTATION/ANTI_REDISCOVERY_DISCIPLINE.md |
+| Traceback validation | vault/11_GOVERNANCE_AND_MUTATION/TOP_DOWN_TRACEBACK_DISCIPLINE.md |
 
 ## 3. Load Verification
 
@@ -77,11 +85,24 @@ After loading, Claude verifies:
 | Check | How |
 |---|---|
 | Canonical state loaded | PIOS_CURRENT_CANONICAL_STATE.md content in context |
+| Operational ontology loaded | OPERATIONAL_ONTOLOGY.md content in context |
 | Terminology loaded | TERMINOLOGY_LOCK.md content in context |
 | Branch authorized | git_structure_contract.md verification passed |
 | No term collision risk | Planned work checked against TERMINOLOGY_LOCK.md |
+| GIT_LINEAGE present | Vault pages being consumed have GIT_LINEAGE sections with "Last verified" dates |
 
 If any check fails → STOP → report violation.
+
+### 3.1 GIT_LINEAGE Validation
+
+Vault pages updated by PI.VAULT.OPERATIONAL-ONTOLOGY-CANONICALIZATION.01 and later streams include a GIT_LINEAGE section recording:
+- Originating streams
+- Creation/fix commits
+- Recovered-from artifacts
+- Authoritative runtime artifacts
+- Last verified date
+
+When loading a vault page with a GIT_LINEAGE section, Claude should note the "Last verified" date. Pages verified more than 90 days ago should trigger a WARN per CLAUDE.md §16.5.
 
 ## 4. What Happens Without Loading
 

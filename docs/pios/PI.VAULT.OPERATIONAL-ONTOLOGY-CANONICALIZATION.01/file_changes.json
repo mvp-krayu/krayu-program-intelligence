@@ -1,0 +1,69 @@
+{
+  "stream_id": "PI.VAULT.OPERATIONAL-ONTOLOGY-CANONICALIZATION.01",
+  "classification": "G1",
+  "baseline_commit": "f6709bd",
+  "date": "2026-05-17",
+  "files_created": [
+    {
+      "path": "docs/pios/vault/00_START_HERE/OPERATIONAL_ONTOLOGY.md",
+      "purpose": "Master operational ontology document — 12-section complete operational chain reference"
+    },
+    {
+      "path": "docs/pios/vault/11_GOVERNANCE_AND_MUTATION/ANTI_REDISCOVERY_DISCIPLINE.md",
+      "purpose": "Anti-rediscovery governance — pre-investigation test, allowed/forbidden forensics, detection protocol"
+    },
+    {
+      "path": "docs/pios/vault/11_GOVERNANCE_AND_MUTATION/TOP_DOWN_TRACEBACK_DISCIPLINE.md",
+      "purpose": "Top-down traceback governance — 7-layer protocol, anti-shortcut rule, verification checklist"
+    },
+    {
+      "path": "docs/pios/PI.VAULT.OPERATIONAL-ONTOLOGY-CANONICALIZATION.01/ontology_consistency_check.md",
+      "purpose": "Cross-reference and terminology consistency verification"
+    },
+    {
+      "path": "docs/pios/PI.VAULT.OPERATIONAL-ONTOLOGY-CANONICALIZATION.01/git_lineage_matrix.md",
+      "purpose": "Provenance tracing for all vault artifacts created/updated by this stream"
+    },
+    {
+      "path": "docs/pios/PI.VAULT.OPERATIONAL-ONTOLOGY-CANONICALIZATION.01/vault_propagation_matrix.md",
+      "purpose": "Mutation propagation tracking and verification"
+    },
+    {
+      "path": "docs/pios/PI.VAULT.OPERATIONAL-ONTOLOGY-CANONICALIZATION.01/execution_report.md",
+      "purpose": "Stream execution record"
+    },
+    {
+      "path": "docs/pios/PI.VAULT.OPERATIONAL-ONTOLOGY-CANONICALIZATION.01/validation_log.json",
+      "purpose": "24 validation checks, all PASS"
+    },
+    {
+      "path": "docs/pios/PI.VAULT.OPERATIONAL-ONTOLOGY-CANONICALIZATION.01/file_changes.json",
+      "purpose": "File change manifest (this file)"
+    },
+    {
+      "path": "docs/pios/PI.VAULT.OPERATIONAL-ONTOLOGY-CANONICALIZATION.01/CLOSURE.md",
+      "purpose": "Stream closure with §10 Architecture Memory Propagation"
+    }
+  ],
+  "files_modified": [
+    {
+      "path": "docs/pios/vault/03_PATH_SPLIT_EVOLUTION/CROSSWALK_AND_RECONCILIATION.md",
+      "change": "STALENESS FIX — updated from 'NOT IMPLEMENTED' to 'OPERATIONAL' for ReconciliationCorrespondenceCompiler and graduated grounding model. Added full operational documentation, LENS consumption chain, GIT_LINEAGE."
+    },
+    {
+      "path": "docs/pios/vault/operations/CLAUDE_RUNTIME_LOAD_PROTOCOL.md",
+      "change": "PROTOCOL EXTENSION — added OPERATIONAL_ONTOLOGY.md to Phase 2 mandatory load, added 3 entries to Phase 4 conditional table, added GIT_LINEAGE validation to §3."
+    },
+    {
+      "path": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "change": "SECTION ADDITION — added Vault Status section (page status table, anti-rediscovery status, load order) and Ontology Git Lineage Status section (stream contribution table)."
+    }
+  ],
+  "files_deleted": [],
+  "summary": {
+    "created": 10,
+    "modified": 3,
+    "deleted": 0,
+    "total": 13
+  }
+}

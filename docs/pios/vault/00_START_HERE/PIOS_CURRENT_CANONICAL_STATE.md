@@ -331,6 +331,38 @@ TIER 2 — Cross-Plane Structural Coherence (FUTURE)
 
 Revenue begins at Phase 1A. Substrate proof (Phase 0A) precedes projection polish (Phase 0B).
 
+## Vault Status
+
+**Operational ontology:** CANONICALIZED (PI.VAULT.OPERATIONAL-ONTOLOGY-CANONICALIZATION.01, 2026-05-17)
+
+| Vault Page | Status | Last Verified |
+|---|---|---|
+| OPERATIONAL_ONTOLOGY.md | CREATED — master operational chain document | 2026-05-17 |
+| CROSSWALK_AND_RECONCILIATION.md | FIXED — staleness resolved (was "NOT IMPLEMENTED" for implemented capabilities) | 2026-05-17 |
+| ANTI_REDISCOVERY_DISCIPLINE.md | CREATED — rediscovery prevention rules | 2026-05-17 |
+| TOP_DOWN_TRACEBACK_DISCIPLINE.md | CREATED — traceback validation protocol | 2026-05-17 |
+| CLAUDE_RUNTIME_LOAD_PROTOCOL.md | UPDATED — OPERATIONAL_ONTOLOGY.md added to mandatory Phase 2 load | 2026-05-17 |
+
+**Anti-rediscovery status:** The following operational knowledge is now canonicalized in vault and MUST NOT be rediscovered through forensics:
+- Dual-path ontology (PATH A/PATH B independence)
+- Crosswalk bridge structure (v2.0, DOM→DOMAIN, DOM-09 irresolvability)
+- Reconciliation compiler (5-input, 5-level graduated model)
+- Grounding ratio and Q-class computation (4/17, grounding discrepancy explained)
+- LENS 7-layer traceback
+- Pipeline orchestration (9 phases)
+- 945→35→13 compression chain
+
+**Load order:** CLAUDE.md → git_structure_contract.md → PIOS_CURRENT_CANONICAL_STATE.md → OPERATIONAL_ONTOLOGY.md → TERMINOLOGY_LOCK.md → (concept-specific pages per CLAUDE_RUNTIME_LOAD_PROTOCOL.md Phase 4)
+
+## Ontology Git Lineage Status
+
+| Stream | Classification | Contribution | Status |
+|---|---|---|---|
+| PI.BLUEEDGE.CROSSWALK-AND-RECONCILIATION-RECOVERY.01 | G2 | Recovered crosswalk/reconciliation operational ontology | COMPLETE — findings propagated to vault |
+| PI.BLUEEDGE.A5-CANONICALIZATION-AND-REPLAYSAFE-OPERATIONALIZATION.01 | G1 | Recovered 945→35→13 compression chain, A.5a substrate | COMPLETE — canonicalized in PATH_A5_PARTICIPATION_ARCHITECTURE.md |
+| PI.CANONICALIZATION.END-TO-END-LOCK.01 | G2 | Assessed vault sufficiency, recommended operational document | COMPLETE — recommendations executed by canonicalization stream |
+| PI.VAULT.OPERATIONAL-ONTOLOGY-CANONICALIZATION.01 | G1 | Canonicalized operational ontology, fixed staleness, created governance pages | COMPLETE (this stream) |
+
 ## What Exists Now (Capability Summary)
 
 See [[../10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS]] for full path inventory.
