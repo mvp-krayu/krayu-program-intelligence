@@ -63,6 +63,8 @@ def parse_args():
     p.add_argument("--source", required=True, help="Source ID (e.g. source_01)")
     p.add_argument("--run-id", required=True, help="Run identifier (e.g. run_be_orchestrated_01)")
     p.add_argument("--phase", type=int, default=None, help="Execute single phase only (1-9)")
+    p.add_argument("--enable-semantic-derivation", action="store_true",
+                   help="Enable AI-assisted semantic derivation (Phase 3b)")
     return p.parse_args()
 
 
@@ -544,6 +546,67 @@ def phase_05_build_binding_envelope(
         f"nodes={len(all_nodes)} (bc={len(bc_nodes)}, ce={len(ce_nodes)}, cs={len(cs_nodes)}), "
         f"edges={len(edges)}, surfaces={len(cap_surfaces)}"
     )
+    return True
+
+
+# ── Phase 3b: Semantic Derivation (optional, explicit opt-in) ──────────────────
+
+def phase_03b_semantic_derivation(
+    client: str, run_id: str, run_dir: Path, enable_ai: bool
+) -> bool:
+    """Run the Semantic Derivation Compiler if CSR is absent and evidence exists.
+    Requires --enable-semantic-derivation flag (explicit opt-in).
+    If CSR already exists → skip automatically.
+    Phase 3b failure is isolated — pipeline continues."""
+    csr_path = REPO_ROOT / "clients" / client / "semantic" / "client_semantic_registry.json"
+    if csr_path.is_file():
+        print(f"  CSR exists: {csr_path.name} — skipping semantic derivation")
+        return True
+
+    if not enable_ai:
+        print("  --enable-semantic-derivation not set — remaining S1 structural-only")
+        return True
+
+    evidence_dir = REPO_ROOT / "clients" / client / "sqo" / "evidence"
+    evidence_sets = sorted(evidence_dir.glob("*")) if evidence_dir.is_dir() else []
+    evidence_sets = [d for d in evidence_sets if d.is_dir() and list(d.glob("*.html"))]
+
+    if not evidence_sets:
+        print("  No evidence directories with HTML files found — skipping")
+        return True
+
+    evidence_set = evidence_sets[0]
+    compiler = SCRIPTS_DIR / "semantic_derivation_compiler.py"
+    if not compiler.is_file():
+        print(f"  WARNING: compiler not found at {compiler} — skipping")
+        return True
+
+    cmd = [
+        sys.executable, str(compiler),
+        "--client", client,
+        "--run", run_id,
+        "--evidence-dir", str(evidence_set),
+        "--enable-semantic-derivation",
+    ]
+    print(f"  Evidence: {evidence_set.name}")
+    print(f"  Running: semantic_derivation_compiler.py --client {client} --run {run_id}")
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+
+    if result.stdout:
+        for line in result.stdout.strip().split("\n")[-5:]:
+            print(f"    {line}")
+
+    if result.returncode == 4:
+        print("  WARNING: AI_PROVIDER_UNAVAILABLE — partial deterministic output emitted")
+        return True
+    elif result.returncode != 0:
+        print(f"  WARNING: compiler exited {result.returncode} — Phase 3b failure isolated")
+        if result.stderr:
+            print(f"  stderr: {result.stderr.strip()[:200]}")
+        return True
+
+    print("  Semantic derivation: OK")
     return True
 
 
@@ -1225,6 +1288,9 @@ def main() -> int:
          lambda: phase_02_intake(source_manifest, run_dir)),
         ("Phase 3  — 40.x Structural Verification",
          lambda: phase_03_40x_structural(source_manifest, run_dir)),
+        ("Phase 3b — Semantic Derivation",
+         lambda: phase_03b_semantic_derivation(
+             args.client, run_id, run_dir, args.enable_semantic_derivation)),
         ("Phase 4  — CEU Grounding Verification",
          lambda: phase_04_ceu_grounding(source_manifest, run_dir)),
         ("Phase 5  — Build Binding Envelope",

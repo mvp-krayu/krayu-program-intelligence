@@ -103,6 +103,35 @@ Onboarding gate definitions are formalized in the Client Onboarding Lifecycle Sp
 
 **Reference:** `docs/pios/PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01/ONBOARDING_LIFECYCLE_SPECIFICATION.md` — 8-phase lifecycle model with gate formalization (2026-05-18).
 
+## Stage 3: Semantic Construction (Semantic Derivation Compiler)
+
+**Stream:** PI.SUBSTRATE.SEMANTIC-DERIVATION-COMPILER.01 (COMPLETE — 2026-05-18)
+
+SQO Stage 3 is now operationally addressable via the Semantic Derivation Compiler — a governed AI-assisted pipeline that transforms structured evidence documents into candidate CSR.
+
+**What Stage 3 adds to SQO:**
+- Governed mechanism for producing candidate semantic structures from evidence
+- Confidence-scored, evidence-traced, review-gated output
+- Authority boundary: L3 ceiling — compiler output alone cannot advance qualification
+- Explicit opt-in (`--enable-semantic-derivation`) integrated as Phase 3b in client pipeline
+
+**What Stage 3 does NOT change:**
+- S-state machine unchanged (S0/S1/S2/S3 definitions preserved)
+- Crosswalk remains the first authority-elevating bridge (Stage 3→4)
+- Reconciliation remains Stage 4 (unchanged)
+- S2 qualification still requires reviewed CSR + crosswalk + reconciliation
+
+**SQO-coupled progression:**
+
+| Stage | What | Status |
+|---|---|---|
+| Stage 1: Structural Grounding | PATH A — structural topology and evidence | OPERATIONAL |
+| Stage 2: CSR Specification | Client Semantic Registry schema and production chain | OPERATIONAL (2c39a5d) |
+| Stage 3: Semantic Construction | Semantic Derivation Compiler — candidate CSR from evidence | OPERATIONAL (this stream) |
+| Stage 3→4: Crosswalk | Map semantic elements to structural elements | SPECIFIED_NOT_IMPLEMENTED |
+| Stage 4: Reconciliation | Verify structural proof | OPERATIONAL (BlueEdge-specific) |
+| Stage 5: Qualification | Advance authority state | OPERATIONAL (S-state machine) |
+
 ## Cross-References
 
 - [[HYDRATED_AND_QSTATE_EVOLUTION]] — HYDRATED state and Q-class
