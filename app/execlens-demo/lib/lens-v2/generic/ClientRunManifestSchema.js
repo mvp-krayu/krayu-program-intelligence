@@ -16,6 +16,12 @@ const REQUIRED_TOPLEVEL = [
   'baseline', 'artifacts', 'report_pack', 'governance',
 ];
 
+const OPTIONAL_TOPLEVEL_HINT = [
+  'passthrough_dom',
+  'labels',
+  'amendment_anchor',
+];
+
 const REQUIRED_ARTIFACT_KEYS = [
   'semantic_topology_model',
   'decision_validation',
@@ -119,6 +125,7 @@ function validateClientRunManifest(doc) {
 
 module.exports = {
   REQUIRED_TOPLEVEL,
+  OPTIONAL_TOPLEVEL_HINT,
   REQUIRED_ARTIFACT_KEYS,
   OPTIONAL_ARTIFACT_KEYS_HINT,
   REPORT_PACK_ARTIFACT_KEYS_HINT,

@@ -4,6 +4,7 @@
   "run_id": "run_blueedge_productized_01_fixed",
   "stream_anchor": "PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01",
   "amendment_anchor": "docs/governance/Q02_GOVERNANCE_AMENDMENT.md",
+  "passthrough_dom": "DOM-04",
   "labels": {
     "client_display_name": "BlueEdge",
     "run_display_name": "BlueEdge productized · run_blueedge_productized_01_fixed"

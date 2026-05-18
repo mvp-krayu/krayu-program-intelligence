@@ -28,8 +28,8 @@ const { loadReconciliationLifecycle, buildReconciliationAwareness, loadDomainEnr
 const { buildLensSubstrateBinding } = require('./LensSQOSubstrateConsumer');
 const { buildNextGenReportBinding } = require('./NextGenReportReconciliationBinding');
 
-const DEFAULT_BINDING_CLIENT = 'blueedge';
-const DEFAULT_BINDING_RUN = 'run_blueedge_productized_01_fixed';
+const DEFAULT_BINDING_CLIENT = process.env.LENS_DEFAULT_CLIENT || 'blueedge';
+const DEFAULT_BINDING_RUN = process.env.LENS_DEFAULT_RUN || 'run_blueedge_productized_01_fixed';
 
 function paramSafe(value) {
   if (typeof value !== 'string') return false;

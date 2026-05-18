@@ -280,9 +280,12 @@ function resolveSemanticPayload(manifest) {
   const originDom = canonicalTopology.clusters && canonicalTopology.clusters.find((c) =>
     (dpsigSummary.normalization_basis || {}).max_cluster_id === c.cluster_id
   );
-  const passthroughDom = canonicalTopology.clusters && canonicalTopology.clusters.find((c) => c.cluster_id === 'DOM-04');
+  const passthroughDomId = manifest.passthrough_dom || null;
+  const passthroughDom = passthroughDomId && canonicalTopology.clusters &&
+    canonicalTopology.clusters.find((c) => c.cluster_id === passthroughDomId);
   const receiverDom = canonicalTopology.clusters && canonicalTopology.clusters.find(
-    (c) => c.cluster_id !== ((dpsigSummary.normalization_basis || {}).max_cluster_id) && c.cluster_id !== 'DOM-04'
+    (c) => c.cluster_id !== ((dpsigSummary.normalization_basis || {}).max_cluster_id) &&
+           (!passthroughDomId || c.cluster_id !== passthroughDomId)
   );
 
   const evidenceBlocks = [
