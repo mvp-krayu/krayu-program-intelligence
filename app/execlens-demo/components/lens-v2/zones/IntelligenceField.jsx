@@ -105,7 +105,7 @@ function RepEvidenceState({ adapted, scope, compact }) {
       <div className="rep-evstate-coverage">
         {(scope && scope.grounding_label) || 'Partial Coverage'}
         <span className="rep-evstate-coverage-meta">
-          {' · '}{(scope && scope.domain_count) || 3} domains · {(scope && scope.cluster_count) || 47} clusters
+          {' · '}{(scope && scope.domain_label) || `${(scope && scope.domain_count) || 3} domains`} · {(scope && scope.cluster_count) || 47} clusters
         </span>
       </div>
       {chip.renders && (
@@ -4240,9 +4240,9 @@ function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntake
     <div className="topo-modal-overlay" onClick={onClose}>
       <div className="topo-modal" onClick={e => e.stopPropagation()}>
         <div className="topo-modal-header">
-          <div className="topo-modal-title">SEMANTIC DOMAIN TOPOLOGY</div>
+          <div className="topo-modal-title">{(fullReport && fullReport.qualification_level) === 'S1' ? 'STRUCTURAL EXECUTION TOPOLOGY' : 'SEMANTIC DOMAIN TOPOLOGY'}</div>
           <div className="topo-modal-meta">
-            {domainRegistry.length} domains · {clusterRegistry.length} clusters
+            {(fullReport && fullReport.qualification_level) === 'S1' ? `${clusterRegistry.length} clusters` : `${domainRegistry.length} domains · ${clusterRegistry.length} clusters`}
             <button
               className="topo-modal-trace-origin"
               onClick={() => {
@@ -4266,6 +4266,7 @@ function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntake
               pressureZoneLabel={zoneName}
               focusedDomain={focusedDomain}
               onNodeSelect={setFocusedDomain}
+              isS1={(fullReport && fullReport.qualification_level) === 'S1'}
             />
           </div>
           {traceResolution === 'ORIGIN_UNRESOLVED' && (
@@ -4285,7 +4286,7 @@ function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntake
             </div>
           )}
           <div className="topo-modal-domains">
-            <div className="topo-modal-domains-heading">DOMAIN REGISTRY</div>
+            <div className="topo-modal-domains-heading">{(fullReport && fullReport.qualification_level) === 'S1' ? 'STRUCTURAL CLUSTER REGISTRY' : 'DOMAIN REGISTRY'}</div>
             <div className="topo-modal-domains-grid">
               {domainRegistry.map(d => {
                 const backed = d.structurally_backed
@@ -4303,7 +4304,7 @@ function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntake
                     <span className="topo-modal-domain-name">{d.business_label || d.domain_name}</span>
                     <span className="topo-modal-domain-meta">{d.cluster_id}</span>
                     <span className="topo-modal-domain-lineage" style={{ color: lineageColor }}>
-                      {d.lineage_status === 'NONE' || !d.lineage_status ? 'SEMANTIC-ONLY' : d.lineage_status}{d.confidence > 0 ? ` ${d.confidence.toFixed(2)}` : ''}
+                      {d.lineage_status === 'NONE' || !d.lineage_status ? ((fullReport && fullReport.qualification_level) === 'S1' ? 'STRUCTURAL' : 'SEMANTIC-ONLY') : d.lineage_status}{d.confidence > 0 ? ` ${d.confidence.toFixed(2)}` : ''}
                     </span>
                   </div>
                 )

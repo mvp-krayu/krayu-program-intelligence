@@ -114,10 +114,11 @@ function clusterToEvidenceBlock(cluster, role, displayResolution, zoneAnchorBusi
   };
 }
 
-function buildSignalInterpretations(dpsigSummary, evidenceBlocks, derived, zoneAnchorBusinessLabel) {
+function buildSignalInterpretations(dpsigSummary, evidenceBlocks, derived, zoneAnchorBusinessLabel, qualificationLevel) {
   if (!dpsigSummary || !dpsigSummary.ok || !dpsigSummary.signals) return [];
   const signals = dpsigSummary.signals;
   const nb = dpsigSummary.normalization_basis || {};
+  const s1 = qualificationLevel === 'S1';
   const activatedSignals = signals.filter(s => s.activation_state && s.activation_state !== 'NOMINAL' && s.activation_state !== 'CLUSTER_BALANCED');
   const nominalSignals = signals.filter(s => s.activation_state === 'NOMINAL' || s.activation_state === 'CLUSTER_BALANCED');
 
@@ -134,7 +135,9 @@ function buildSignalInterpretations(dpsigSummary, evidenceBlocks, derived, zoneA
     ? `Compound pressure zone centers on "${zoneAnchorBusinessLabel}". ` +
       `${nb.max_cluster_name ? `The "${nb.max_cluster_name}" group (${nb.max_cluster_node_count || '?'} of ${nb.total_structural_node_count || '?'} structural nodes)` : 'The dominant structural group'} ` +
       `concentrates the primary structural mass. ` +
-      `${derived.backed_count} of ${derived.total_domains} semantic domains are structurally backed; ${derived.semantic_only_count} remain advisory-bound.`
+      (s1
+        ? `Structural topology active across ${nb.total_cluster_count || '?'} clusters. Semantic qualification pending.`
+        : `${derived.backed_count} of ${derived.total_domains} semantic domains are structurally backed; ${derived.semantic_only_count} remain advisory-bound.`)
     : null;
 
   return signals.map(sig => ({
@@ -150,10 +153,12 @@ function buildSignalInterpretations(dpsigSummary, evidenceBlocks, derived, zoneA
       : null,
     co_presence: coPresenceNote,
     compound_narrative: compoundNarrative,
-    confidence: derived.qualifier_class === 'Q-01' ? 'FULL' : derived.qualifier_class === 'Q-02' ? 'PARTIAL' : 'ADVISORY',
-    confidence_note: derived.qualifier_class !== 'Q-01'
-      ? `Signal derived under ${derived.qualifier_label || derived.qualifier_class}. Advisory confirmation required.`
-      : 'Signal derived from fully grounded structural evidence.',
+    confidence: s1 ? 'STRUCTURAL' : derived.qualifier_class === 'Q-01' ? 'FULL' : derived.qualifier_class === 'Q-02' ? 'PARTIAL' : 'ADVISORY',
+    confidence_note: s1
+      ? 'Signal derived from structural topology. Semantic qualification pending.'
+      : derived.qualifier_class !== 'Q-01'
+        ? `Signal derived under ${derived.qualifier_label || derived.qualifier_class}. Advisory confirmation required.`
+        : 'Signal derived from fully grounded structural evidence.',
   }));
 }
 
@@ -255,26 +260,49 @@ function resolveSemanticPayload(manifest) {
     return m ? m[1].trim() : null;
   })() || 'Coordination group';
 
+  // S1 qualification gating — used for domain registry, narrative, header.
+  const isS1 = manifest.qualification_level === 'S1';
+  const maxClusterId = (dpsigSummary.normalization_basis || {}).max_cluster_id;
+
   // Build semantic_domain_registry.
-  const semanticDomainRegistry = (semanticTopology.domains || []).map((d) => {
-    const dominantDomId = d.dominant_dom_id || null;
-    const crosswalkEntry = dominantDomId ? resolveDisplayLabel(dominantDomId, crosswalkIndex) : null;
-    return {
-      domain_id: d.domain_id || null,
-      domain_name: d.domain_name || d.domain_label || d.domain_id || null,
-      domain_type: d.domain_type || null,
-      cluster_id: d.cluster_id || null,
-      lineage_status: d.lineage_status || null,
-      zone_anchor: !!d.zone_anchor,
-      dominant_dom_id: dominantDomId,
-      confidence: d.confidence != null ? d.confidence : 0,
-      business_label: d.business_label || null,
-      original_status: d.original_status || null,
-      structurally_backed: d.lineage_status === 'EXACT' || d.lineage_status === 'STRONG',
-      semantic_only: d.lineage_status === 'NONE' || d.lineage_status === 'WEAK',
-      crosswalk_resolution: crosswalkEntry || null,
-    };
-  });
+  // S1: structural clusters ARE the topology nodes (not meaningless DOMs all in CLU-01).
+  // S2+: semantic domains from the semantic topology model with crosswalk resolution.
+  const semanticDomainRegistry = isS1
+    ? (canonicalTopology.clusters || []).map((c) => ({
+        domain_id: c.cluster_id,
+        domain_name: c.name || c.cluster_id,
+        domain_type: 'STRUCTURAL',
+        cluster_id: c.cluster_id,
+        lineage_status: 'STRUCTURAL',
+        zone_anchor: c.cluster_id === maxClusterId,
+        dominant_dom_id: c.cluster_id,
+        confidence: 0,
+        business_label: c.name || c.cluster_id,
+        original_status: null,
+        structurally_backed: true,
+        semantic_only: false,
+        crosswalk_resolution: null,
+        node_count: c.node_count || 0,
+      }))
+    : (semanticTopology.domains || []).map((d) => {
+        const dominantDomId = d.dominant_dom_id || null;
+        const crosswalkEntry = dominantDomId ? resolveDisplayLabel(dominantDomId, crosswalkIndex) : null;
+        return {
+          domain_id: d.domain_id || null,
+          domain_name: d.domain_name || d.domain_label || d.domain_id || null,
+          domain_type: d.domain_type || null,
+          cluster_id: d.cluster_id || null,
+          lineage_status: d.lineage_status || null,
+          zone_anchor: !!d.zone_anchor,
+          dominant_dom_id: dominantDomId,
+          confidence: d.confidence != null ? d.confidence : 0,
+          business_label: d.business_label || null,
+          original_status: d.original_status || null,
+          structurally_backed: d.lineage_status === 'EXACT' || d.lineage_status === 'STRONG',
+          semantic_only: d.lineage_status === 'NONE' || d.lineage_status === 'WEAK',
+          crosswalk_resolution: crosswalkEntry || null,
+        };
+      });
 
   // Semantic crosswalk lookup (cluster_id → resolved display).
   const semanticCrosswalk = {};
@@ -300,42 +328,81 @@ function resolveSemanticPayload(manifest) {
     clusterToEvidenceBlock(receiverDom, 'RECEIVER', resolveCanonicalCluster(receiverDom, crosswalkIndex), zoneAnchorBusinessLabel),
   ].filter(Boolean);
 
-  // Narrative honestly composed from substrate. Q-02 governance-true language.
-  const narrative = {
-    executive_summary:
-      `Decision Surface (Score ${derived.score}, ${derived.band} band, ${derived.posture} posture) confirms a qualified-ready operating posture. ` +
-      `${derived.backed_count} of ${derived.total_domains} semantic domains are structurally backed; ${derived.semantic_only_count} remain semantic-only. ` +
-      `The active pressure zone anchors on "${zoneAnchorBusinessLabel}". ` +
-      `Under qualifier ${derived.qualifier_class} (partial grounding with validated semantic continuity), advisory confirmation is mandatory before executive commitment.`,
-    why_section:
-      `Reproducibility verdict for this run: ${(reproducibilityVerdictData || {}).verdict || 'UNKNOWN'}. ` +
-      `${derived.backed_count} structurally-backed domains are anchored to the canonical topology. ` +
-      `The remaining ${derived.semantic_only_count} domains carry advisory weight only. ` +
-      `Active program intelligence signals confirm a compound pressure zone centred on "${zoneAnchorBusinessLabel}".`,
-    structural_summary:
-      `Structural topology covers ${(canonicalTopology.counts || {}).total_nodes || 'N'} components across ${(canonicalTopology.clusters || []).length} structural groups. ` +
-      `Concentration is dominated by the "${(dpsigSummary.normalization_basis || {}).max_cluster_name || 'leading group'}" group. ` +
-      `Coordination layer absorbs propagation across the full structural surface.`,
-  };
+  // Narrative honestly composed from substrate.
+  // S1 structural-only: structural framing. S2+: governance-true Q-class language.
+  const clusterCount = (canonicalTopology.clusters || []).length;
+  const totalNodes = (canonicalTopology.counts || {}).total_nodes || (dpsigSummary.normalization_basis || {}).total_structural_node_count || 'N';
+  const maxClusterName = (dpsigSummary.normalization_basis || {}).max_cluster_name || 'leading group';
 
-  const headerBlock = {
-    readiness_badge: {
-      state_label: 'Executive Ready — Qualified',
-      qualifier_label: derived.qualifier_label,
-      color_token: '--intelligence-qualified',
-      tooltip_text: derived.qualifier_note,
-    },
-    scope_indicator: {
-      domain_label: `${derived.total_domains} Semantic Domains`,
-      grounding_label: `${derived.backed_count} of ${derived.total_domains} structurally backed · ${derived.semantic_only_count} semantic-only`,
-      cluster_label: `${(canonicalTopology.clusters || []).length} Structural Groups`,
-    },
-    report_metadata: {
-      report_id: `${client.toUpperCase()}-${runId.toUpperCase()}`,
-      generated_at: dpsigSummary.generated_at || new Date().toISOString(),
-      baseline_ref: baselineTag,
-    },
-  };
+  const narrative = isS1
+    ? {
+        executive_summary:
+          `Structural substrate active. ${clusterCount} structural clusters across ${totalNodes} components. ` +
+          `Pressure concentration anchors on "${zoneAnchorBusinessLabel}". ` +
+          `Semantic qualification not yet onboarded — structural topology and signal analysis available.`,
+        why_section:
+          `PATH A structural topology is operational. ${psigSummary.active_pressure_signals || 0} elevated pressure signals detected. ` +
+          `Structural concentration dominated by the "${maxClusterName}" cluster. ` +
+          `Semantic qualification (PATH B) is not yet instantiated for this client.`,
+        structural_summary:
+          `Structural topology covers ${totalNodes} components across ${clusterCount} structural groups. ` +
+          `Concentration is dominated by the "${maxClusterName}" group. ` +
+          `Coordination layer absorbs propagation across the full structural surface.`,
+      }
+    : {
+        executive_summary:
+          `Decision Surface (Score ${derived.score}, ${derived.band} band, ${derived.posture} posture) confirms a qualified-ready operating posture. ` +
+          `${derived.backed_count} of ${derived.total_domains} semantic domains are structurally backed; ${derived.semantic_only_count} remain semantic-only. ` +
+          `The active pressure zone anchors on "${zoneAnchorBusinessLabel}". ` +
+          `Under qualifier ${derived.qualifier_class} (partial grounding with validated semantic continuity), advisory confirmation is mandatory before executive commitment.`,
+        why_section:
+          `Reproducibility verdict for this run: ${(reproducibilityVerdictData || {}).verdict || 'UNKNOWN'}. ` +
+          `${derived.backed_count} structurally-backed domains are anchored to the canonical topology. ` +
+          `The remaining ${derived.semantic_only_count} domains carry advisory weight only. ` +
+          `Active program intelligence signals confirm a compound pressure zone centred on "${zoneAnchorBusinessLabel}".`,
+        structural_summary:
+          `Structural topology covers ${totalNodes} components across ${clusterCount} structural groups. ` +
+          `Concentration is dominated by the "${maxClusterName}" group. ` +
+          `Coordination layer absorbs propagation across the full structural surface.`,
+      };
+
+  const headerBlock = isS1
+    ? {
+        readiness_badge: {
+          state_label: 'Structural Substrate Active',
+          qualifier_label: 'S1 — Structural Only',
+          color_token: '--intelligence-structural',
+          tooltip_text: 'PATH A structural topology is operational. Semantic qualification (PATH B) not yet onboarded.',
+        },
+        scope_indicator: {
+          domain_label: `${clusterCount} Structural Clusters`,
+          grounding_label: `${totalNodes} components · ${clusterCount} clusters · ${psigSummary.active_pressure_signals || 0} pressure signals`,
+          cluster_label: `${clusterCount} Structural Groups`,
+        },
+        report_metadata: {
+          report_id: `${client.toUpperCase()}-${runId.toUpperCase()}`,
+          generated_at: dpsigSummary.generated_at || new Date().toISOString(),
+          baseline_ref: baselineTag,
+        },
+      }
+    : {
+        readiness_badge: {
+          state_label: 'Executive Ready — Qualified',
+          qualifier_label: derived.qualifier_label,
+          color_token: '--intelligence-qualified',
+          tooltip_text: derived.qualifier_note,
+        },
+        scope_indicator: {
+          domain_label: `${derived.total_domains} Semantic Domains`,
+          grounding_label: `${derived.backed_count} of ${derived.total_domains} structurally backed · ${derived.semantic_only_count} semantic-only`,
+          cluster_label: `${clusterCount} Structural Groups`,
+        },
+        report_metadata: {
+          report_id: `${client.toUpperCase()}-${runId.toUpperCase()}`,
+          generated_at: dpsigSummary.generated_at || new Date().toISOString(),
+          baseline_ref: baselineTag,
+        },
+      };
 
   const traceBlock = {
     propagation_path: evidenceBlocks.map((b) => b.domain_alias).filter(Boolean),
@@ -426,19 +493,35 @@ function resolveSemanticPayload(manifest) {
     // Canonical contract fields
     dpsig_signal_summary: dpsigSummary,
     semantic_domain_registry: semanticDomainRegistry,
-    semantic_cluster_registry: (semanticTopology.clusters || []).map(c => ({
-      cluster_id: c.cluster_id || null,
-      cluster_label: c.cluster_label || null,
-      color_accent: c.color_accent || null,
-      domain_count: c.domain_count != null ? c.domain_count : 0,
-    })),
+    semantic_cluster_registry: isS1
+      ? (canonicalTopology.clusters || []).map(c => ({
+          cluster_id: c.cluster_id || null,
+          cluster_label: c.name || c.cluster_id || null,
+          color_accent: c.cluster_id === maxClusterId ? '#ffd700' : '#58a6ff',
+          domain_count: 1,
+          node_count: c.node_count || 0,
+        }))
+      : (semanticTopology.clusters || []).map(c => ({
+          cluster_id: c.cluster_id || null,
+          cluster_label: c.cluster_label || null,
+          color_accent: c.color_accent || null,
+          domain_count: c.domain_count != null ? c.domain_count : 0,
+        })),
     semantic_topology_edges: (semanticTopology.edges || []).map(e => ({
       source_domain: e.source_domain || null,
       target_domain: e.target_domain || null,
       relationship_type: e.relationship_type || null,
     })),
     semantic_crosswalk: semanticCrosswalk,
-    topology_summary: {
+    topology_summary: isS1 ? {
+      semantic_domain_count: semanticDomainRegistry.length,
+      structural_dom_count: (canonicalTopology.clusters || []).length,
+      cluster_count: (canonicalTopology.clusters || []).length,
+      structurally_backed_count: semanticDomainRegistry.length,
+      semantic_only_count: 0,
+      grounding_ratio: 1,
+      coverage_classification: 'STRUCTURAL',
+    } : {
       semantic_domain_count: derived.total_domains,
       structural_dom_count: (canonicalTopology.clusters || []).length,
       cluster_count: (canonicalTopology.clusters || []).length,
@@ -543,7 +626,7 @@ function resolveSemanticPayload(manifest) {
     header_block: headerBlock,
     narrative_block: narrative,
     evidence_blocks: evidenceBlocks,
-    signal_interpretations: buildSignalInterpretations(dpsigSummary, evidenceBlocks, derived, zoneAnchorBusinessLabel),
+    signal_interpretations: buildSignalInterpretations(dpsigSummary, evidenceBlocks, derived, zoneAnchorBusinessLabel, manifest.qualification_level),
     trace_block: traceBlock,
     trace_linkage: traceLinkage,
     rendering_metadata: renderingMetadataCompat,

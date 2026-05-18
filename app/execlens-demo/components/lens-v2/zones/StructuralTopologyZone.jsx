@@ -18,11 +18,35 @@ const LINEAGE_COLORS = {
 }
 
 
-function StructuralComposition({ topologySummary }) {
+function StructuralComposition({ topologySummary, isS1 }) {
   const ts = topologySummary || {}
   const total = ts.semantic_domain_count || 0
   const backed = ts.structurally_backed_count || 0
   const semOnly = ts.semantic_only_count || 0
+  const clusters = ts.cluster_count || 0
+  if (isS1) {
+    return (
+      <div className="topo-composition">
+        <div className="topo-composition-summary">
+          Structural topology active. {clusters} structural clusters across {total} structural domains.
+        </div>
+        <div className="topo-composition-stats">
+          <div className="topo-stat-card">
+            <div className="topo-stat-value">{clusters}</div>
+            <div className="topo-stat-label">STRUCTURAL CLUSTERS</div>
+          </div>
+          <div className="topo-stat-card">
+            <div className="topo-stat-value">{total}</div>
+            <div className="topo-stat-label">STRUCTURAL DOMAINS</div>
+          </div>
+          <div className="topo-stat-card">
+            <div className="topo-stat-value">{ts.structural_dom_count || clusters}</div>
+            <div className="topo-stat-label">TOPOLOGY GROUPS</div>
+          </div>
+        </div>
+      </div>
+    )
+  }
   return (
     <div className="topo-composition">
       <div className="topo-composition-summary">
@@ -89,6 +113,7 @@ const EDGE_COLORS = {
 const EDGE_DASHED = { inferred_semantic: '5,4', structural_co_membership: '3,3' }
 
 function nodeStyle(d) {
+  if (d.lineage_status === 'STRUCTURAL') return { fill: '#0d1a2e', stroke: '#58a6ff', sw: 1.8, glow: '#58a6ff', glowOp: 0.15, dashed: false }
   if (d.lineage_status === 'EXACT') return { fill: '#0d2e1a', stroke: '#3fb950', sw: 2, glow: '#3fb950', glowOp: 0.18, dashed: false }
   if (d.lineage_status === 'STRONG') return { fill: '#0d1f3c', stroke: '#58a6ff', sw: 2, glow: '#58a6ff', glowOp: 0.18, dashed: false }
   if (d.lineage_status === 'PARTIAL') return { fill: '#1c1600', stroke: '#d29922', sw: 1.5, glow: '#d29922', glowOp: 0.18, dashed: false }
@@ -101,11 +126,11 @@ function confColor(d) {
   return '#8b949e'
 }
 
-function tooltipOffsetY(cy, row0Y) {
-  return cy > row0Y + 60 ? 60 : -30
+function tooltipOffsetY(cy) {
+  return cy > 68 ? 60 : -30
 }
 
-export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, focusedDomain, onNodeSelect }) {
+export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, focusedDomain, onNodeSelect, isS1 }) {
   const [hoveredNode, setHoveredNode] = useState(null)
   const [selectedAnchor, setSelectedAnchor] = useState(null)
   const svgRef = useRef(null)
@@ -167,48 +192,46 @@ export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, foc
     return set
   }, [selectedAnchor, focusedDomain, connectedTo])
 
-  const clusterIds = Object.keys(clusterMap).sort()
-  if (clusterIds.length === 0) return null
+  const visibleIds = Object.keys(clusterMap).filter(id => clusterMap[id].domains.length > 0).sort()
+  if (visibleIds.length === 0) return null
 
   const legendH = 36
   const nodeSpX = 110, nodeSpY = 66
   const cluPadTop = 24, cluPadLeft = 18
   const gap = 14
-
-  const row0Ids = ['CLU-01', 'CLU-02', 'CLU-03'].filter(id => clusterMap[id])
-  const row1Ids = ['CLU-04', 'CLU-05'].filter(id => clusterMap[id])
+  const maxPerRow = isS1 ? Math.min(Math.ceil(Math.sqrt(visibleIds.length)), 5) : 3
 
   function clusterRect(id) {
     const n = clusterMap[id].domains.length
     const cols = Math.min(n, 2)
-    const rows = Math.ceil(n / cols)
-    const w = cluPadLeft * 2 + cols * nodeSpX
-    const h = cluPadTop + rows * nodeSpY + 8
-    return { w, h, cols, rows }
+    const rows = Math.ceil(n / Math.max(cols, 1))
+    const w = cluPadLeft * 2 + Math.max(cols, 1) * nodeSpX
+    const h = cluPadTop + Math.max(rows, 1) * nodeSpY + 8
+    return { w, h, cols: Math.max(cols, 1), rows }
   }
 
-  const row0Rects = row0Ids.map(clusterRect)
-  const row1Rects = row1Ids.map(clusterRect)
-  const row0H = Math.max(...row0Rects.map(r => r.h), 0)
-  const row1H = row1Rects.length > 0 ? Math.max(...row1Rects.map(r => r.h), 0) : 0
-  const row0Y = 8, row1Y = row0Y + row0H + gap
+  const rowGroups = []
+  for (let i = 0; i < visibleIds.length; i += maxPerRow) {
+    rowGroups.push(visibleIds.slice(i, i + maxPerRow))
+  }
 
   const layouts = {}
-  let x0 = 8
-  row0Ids.forEach((id, i) => {
-    const r = row0Rects[i]
-    layouts[id] = { x: x0, y: row0Y, w: r.w, h: row0H, cols: r.cols }
-    x0 += r.w + gap
-  })
-  let x1 = 8
-  row1Ids.forEach((id, i) => {
-    const r = row1Rects[i]
-    layouts[id] = { x: x1, y: row1Y, w: r.w, h: row1H, cols: r.cols }
-    x1 += r.w + gap
+  let curY = 8
+  let maxRowW = 0
+  rowGroups.forEach(rowIds => {
+    const rects = rowIds.map(clusterRect)
+    const rowH = Math.max(...rects.map(r => r.h), 0)
+    let curX = 8
+    rowIds.forEach((id, i) => {
+      const r = rects[i]
+      layouts[id] = { x: curX, y: curY, w: r.w, h: rowH, cols: r.cols }
+      curX += r.w + gap
+    })
+    maxRowW = Math.max(maxRowW, curX)
+    curY += rowH + gap
   })
 
-  const contentW = Math.max(x0, x1)
-  const W = contentW + 8
+  const W = maxRowW + 8
 
   const allPos = {}
   Object.entries(layouts).forEach(([cid, lay]) => {
@@ -222,7 +245,7 @@ export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, foc
     })
   })
 
-  const svgH = row1Y + row1H + legendH
+  const svgH = curY + legendH
   const tooltipH = 52
   const tooltipW = 180
 
@@ -231,7 +254,7 @@ export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, foc
 
   return (
     <div className="topo-graph-wrap">
-      <div className="topo-graph-heading">SEMANTIC DOMAIN TOPOLOGY (WITH STRUCTURAL BACKING)</div>
+      <div className="topo-graph-heading">{isS1 ? 'STRUCTURAL EXECUTION TOPOLOGY' : 'SEMANTIC DOMAIN TOPOLOGY (WITH STRUCTURAL BACKING)'}</div>
       <svg ref={svgRef} viewBox={`0 0 ${W} ${svgH}`} className="topo-graph-svg" role="img" aria-label="Semantic domain topology graph — click zone anchors to highlight connections">
         <defs>
           <marker id="arr-green" markerWidth={10} markerHeight={10} refX={8} refY={4} orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L0,8 L10,4 z" fill="#3fb950" /></marker>
@@ -351,7 +374,7 @@ export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, foc
 
         {hoveredDomain && hoveredPos && (() => {
           const tx = Math.min(hoveredPos.cx - tooltipW / 2, W - tooltipW - 8)
-          const ty = hoveredPos.cy - tooltipOffsetY(hoveredPos.cy, row0Y)
+          const ty = hoveredPos.cy - tooltipOffsetY(hoveredPos.cy)
           const tp = 6
           return (
             <g className="topo-tooltip" style={{ pointerEvents: 'none' }}>
@@ -363,11 +386,13 @@ export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, foc
               </text>
               <text x={tx + tp} y={ty + 25}
                 fontSize={5.5} fill="#7a8aaa" fontFamily="-apple-system, sans-serif">
-                {hoveredDomain.cluster_id} · {(LINEAGE_LABELS[hoveredDomain.lineage_status] || 'SEMANTIC-ONLY')} · conf {hoveredDomain.confidence != null ? hoveredDomain.confidence.toFixed(2) : '—'}
+                {isS1
+                  ? `${hoveredDomain.node_count || '?'} components · ${hoveredDomain.cluster_id}`
+                  : `${hoveredDomain.cluster_id} · ${(LINEAGE_LABELS[hoveredDomain.lineage_status] || 'SEMANTIC-ONLY')} · conf ${hoveredDomain.confidence != null ? hoveredDomain.confidence.toFixed(2) : '—'}`}
               </text>
               <text x={tx + tp} y={ty + 36}
                 fontSize={5.5} fill={hoveredDomain.zone_anchor ? '#ffd700' : '#6a7a9a'} fontFamily="-apple-system, sans-serif">
-                {hoveredDomain.zone_anchor ? 'Zone Anchor — click to highlight connections' : hoveredDomain.structurally_backed ? 'Structurally backed' : 'Semantic-only'}
+                {hoveredDomain.zone_anchor ? (isS1 ? 'Dominant cluster — structural concentration anchor' : 'Zone Anchor — click to highlight connections') : (isS1 ? 'Structural group' : hoveredDomain.structurally_backed ? 'Structurally backed' : 'Semantic-only')}
               </text>
               <text x={tx + tp} y={ty + 47}
                 fontSize={5} fill="#5e6d8a" fontFamily="-apple-system, sans-serif">
@@ -379,7 +404,19 @@ export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, foc
 
         {(() => {
           const ly = svgH - legendH + 8
-          return (
+          return isS1 ? (
+            <g>
+              <circle cx={14} cy={ly} r={3} fill="#58a6ff" />
+              <text x={22} y={ly + 3} fontSize={5.5} fill="#6a7593" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Structural Group</text>
+              <circle cx={120} cy={ly} r={3} fill="none" stroke="#ffd700" strokeWidth={1.3} />
+              <text x={128} y={ly + 3} fontSize={5.5} fill="#6a7593" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+                Concentration Anchor{pressureZoneLabel ? ` — ${pressureZoneLabel}` : ''}
+              </text>
+              <text x={14} y={ly + 16} fontSize={4.6} fill="#5e6d8a" fontStyle="italic" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+                Structural clusters from PATH A topology · hover for component counts
+              </text>
+            </g>
+          ) : (
             <g>
               <circle cx={14} cy={ly} r={3} fill="#3fb950" />
               <text x={22} y={ly + 3} fontSize={5.5} fill="#6a7593" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Grounded</text>
@@ -401,17 +438,17 @@ export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, foc
 }
 
 
-function DomainCoverageGrid({ domains, onDomainClick, focusedDomain }) {
+function DomainCoverageGrid({ domains, onDomainClick, focusedDomain, isS1 }) {
   if (!domains || domains.length === 0) return null
   return (
     <div className="topo-coverage">
-      <div className="topo-coverage-heading">SEMANTIC DOMAIN COVERAGE</div>
+      <div className="topo-coverage-heading">{isS1 ? 'STRUCTURAL DOMAIN COVERAGE' : 'SEMANTIC DOMAIN COVERAGE'}</div>
       <div className="topo-coverage-grid">
         {domains.map(d => {
           const backed = d.structurally_backed
           const partial = d.lineage_status === 'PARTIAL'
           const isPZ = d.zone_anchor
-          const lineageLabel = LINEAGE_LABELS[d.lineage_status] || 'SEMANTIC-ONLY'
+          const lineageLabel = isS1 ? (d.lineage_status || 'STRUCTURAL') : (LINEAGE_LABELS[d.lineage_status] || 'SEMANTIC-ONLY')
           const lineageColor = LINEAGE_COLORS[d.lineage_status] || LINEAGE_COLORS.NONE
           const isFocused = focusedDomain === d.domain_id
           return (
@@ -438,14 +475,23 @@ function DomainCoverageGrid({ domains, onDomainClick, focusedDomain }) {
         })}
       </div>
       <div className="topo-coverage-legend">
-        <span className="topo-coverage-legend-item">
-          <span className="topo-coverage-dot" style={{ background: '#64ffda' }} />
-          Structurally Backed ({domains.filter(d => d.structurally_backed).length} domains — EXACT/STRONG/PARTIAL evidence)
-        </span>
-        <span className="topo-coverage-legend-item">
-          <span className="topo-coverage-dot" style={{ background: '#5e6d8a' }} />
-          Semantic-Only ({domains.filter(d => d.semantic_only).length} domains — projection layer, no current structural backing)
-        </span>
+        {isS1 ? (
+          <span className="topo-coverage-legend-item">
+            <span className="topo-coverage-dot" style={{ background: '#58a6ff' }} />
+            Structural Domains ({domains.length} — PATH A topology, semantic qualification pending)
+          </span>
+        ) : (
+          <>
+            <span className="topo-coverage-legend-item">
+              <span className="topo-coverage-dot" style={{ background: '#64ffda' }} />
+              Structurally Backed ({domains.filter(d => d.structurally_backed).length} domains — EXACT/STRONG/PARTIAL evidence)
+            </span>
+            <span className="topo-coverage-legend-item">
+              <span className="topo-coverage-dot" style={{ background: '#5e6d8a' }} />
+              Semantic-Only ({domains.filter(d => d.semantic_only).length} domains — projection layer, no current structural backing)
+            </span>
+          </>
+        )}
         {domains.some(d => d.zone_anchor) && (
           <span className="topo-coverage-legend-item">
             <span className="topo-coverage-dot" style={{ background: '#ffd700' }} />
@@ -466,14 +512,15 @@ export default function StructuralTopologyZone({ evidenceBlocks, propagationChai
   const topologySummary = (fullReport && fullReport.topology_summary) || {}
   const propagationSummary = (fullReport && fullReport.propagation_summary) || {}
   const zoneName = propagationSummary.primary_zone_business_label || ''
+  const isS1 = (fullReport && fullReport.qualification_level) === 'S1'
 
-  if (domainRegistry.length === 0) return null
+  if (domainRegistry.length === 0 && !isS1) return null
 
   if (boardroomMode) return null
 
   if (densityClass === 'EXECUTIVE_BALANCED' || densityClass === 'EXECUTIVE_DENSE') {
     return (
-      <div className="topo-executive" aria-label="Structural topology — executive view">
+      <div className="topo-executive" aria-label={isS1 ? 'Structural execution topology' : 'Structural topology — executive view'}>
         {clusterRegistry.length > 0 && (
           <TopologyGraph
             domains={domainRegistry}
@@ -482,22 +529,26 @@ export default function StructuralTopologyZone({ evidenceBlocks, propagationChai
             pressureZoneLabel={zoneName}
             focusedDomain={focusedDomain}
             onNodeSelect={setFocusedDomain}
+            isS1={isS1}
           />
         )}
-        {densityClass === 'EXECUTIVE_DENSE' && (
-          <DomainCoverageGrid domains={domainRegistry} onDomainClick={setFocusedDomain} focusedDomain={focusedDomain} />
+        {isS1 && domainRegistry.length === 0 && clusterRegistry.length > 0 && (
+          <StructuralComposition topologySummary={topologySummary} isS1={isS1} />
+        )}
+        {densityClass === 'EXECUTIVE_DENSE' && domainRegistry.length > 0 && (
+          <DomainCoverageGrid domains={domainRegistry} onDomainClick={setFocusedDomain} focusedDomain={focusedDomain} isS1={isS1} />
         )}
       </div>
     )
   }
 
   return (
-    <div className={`topo-executive${boardroomMode ? ' topo-executive--boardroom' : ''}`} aria-label="Structural topology — executive view">
+    <div className={`topo-executive${boardroomMode ? ' topo-executive--boardroom' : ''}`} aria-label={isS1 ? 'Structural execution topology' : 'Structural topology — executive view'}>
       <div className="topo-executive-header">
-        <span className="topo-executive-pre">STRUCTURAL COMPOSITION</span>
+        <span className="topo-executive-pre">{isS1 ? 'STRUCTURAL TOPOLOGY' : 'STRUCTURAL COMPOSITION'}</span>
       </div>
 
-      <StructuralComposition topologySummary={topologySummary} />
+      <StructuralComposition topologySummary={topologySummary} isS1={isS1} />
 
       <EvidenceCardPanel evidenceBlocks={evidenceBlocks} />
 
@@ -509,10 +560,13 @@ export default function StructuralTopologyZone({ evidenceBlocks, propagationChai
           pressureZoneLabel={zoneName}
           focusedDomain={focusedDomain}
           onNodeSelect={setFocusedDomain}
+          isS1={isS1}
         />
       )}
 
-      <DomainCoverageGrid domains={domainRegistry} onDomainClick={setFocusedDomain} focusedDomain={focusedDomain} />
+      {domainRegistry.length > 0 && (
+        <DomainCoverageGrid domains={domainRegistry} onDomainClick={setFocusedDomain} focusedDomain={focusedDomain} isS1={isS1} />
+      )}
     </div>
   )
 }
