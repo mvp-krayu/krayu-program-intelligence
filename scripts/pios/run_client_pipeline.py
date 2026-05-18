@@ -547,6 +547,46 @@ def phase_05_build_binding_envelope(
     return True
 
 
+# ── Phase 5b: CSR Semantic Topology Generation (optional) ─────────────────────
+
+def phase_05b_csr_semantic_topology(client: str, run_id: str, run_dir: Path) -> bool:
+    csr_path = REPO_ROOT / "clients" / client / "semantic" / "client_semantic_registry.json"
+    if not csr_path.is_file():
+        print(f"  CSR absent for {client} — S1 structural-only mode, skipping")
+        return True
+
+    generator = SCRIPTS_DIR / "generate_semantic_topology.py"
+    if not generator.is_file():
+        print(f"  WARNING: generator not found at {generator}")
+        return True
+
+    out_dir = run_dir / "semantic" / "topology"
+    cmd = [
+        sys.executable, str(generator),
+        "--client", client,
+        "--run", run_id,
+        "--output-dir", str(out_dir),
+    ]
+    print(f"  CSR found: {csr_path.name}")
+    print(f"  Running: generate_semantic_topology.py --client {client} --run {run_id}")
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    if result.returncode != 0:
+        print(f"  FAIL: generator exited {result.returncode}")
+        if result.stderr:
+            print(f"  stderr: {result.stderr.strip()}")
+        return False
+
+    print(result.stdout.strip())
+    model_path = out_dir / "semantic_topology_model.json"
+    if not model_path.is_file():
+        print("  FAIL: semantic_topology_model.json not produced")
+        return False
+
+    print("  CSR → semantic_topology_model.json: OK")
+    return True
+
+
 # ── Phase 6+7: 75.x Activation + 41.x Projection ────────────────────────────
 
 def phase_06_and_07_e2e(run_dir: Path, source_manifest: dict) -> bool:
@@ -1189,6 +1229,8 @@ def main() -> int:
          lambda: phase_04_ceu_grounding(source_manifest, run_dir)),
         ("Phase 5  — Build Binding Envelope",
          lambda: phase_05_build_binding_envelope(client_cfg, source_manifest, run_dir)),
+        ("Phase 5b — CSR Semantic Topology",
+         lambda: phase_05b_csr_semantic_topology(args.client, run_id, run_dir)),
         ("Phase 6+7 — 75.x Activation + 41.x Projection",
          lambda: phase_06_and_07_e2e(run_dir, source_manifest)),
         ("Phase 8a — Vault Construction",

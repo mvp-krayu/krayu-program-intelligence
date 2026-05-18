@@ -1,0 +1,38 @@
+{
+  "stream_id": "PI.SUBSTRATE.CSR-IMPLEMENTATION.01",
+  "validation_date": "2026-05-18",
+  "checks": [
+    {"name": "CSR_EXTRACTION_DOMAIN_PARITY", "status": "PASS", "detail": "17 domains extracted"},
+    {"name": "CSR_EXTRACTION_CAPABILITY_PARITY", "status": "PASS", "detail": "42 capabilities extracted"},
+    {"name": "CSR_EXTRACTION_COMPONENT_PARITY", "status": "PASS", "detail": "89 components extracted"},
+    {"name": "CSR_CLUSTER_ASSIGNMENTS", "status": "PASS", "detail": "5 clusters from production topology"},
+    {"name": "CSR_EDGES", "status": "PASS", "detail": "12 edges from production topology"},
+    {"name": "CSR_LINEAGE_OVERRIDES", "status": "PASS", "detail": "5 RC-02 amended bindings extracted"},
+    {"name": "CSR_SCHEMA_VERSION", "status": "PASS", "detail": "schema_version=1.0"},
+    {"name": "GENERATOR_DOMAIN_COUNT", "status": "PASS", "detail": "17 domains generated"},
+    {"name": "GENERATOR_CLUSTER_COUNT", "status": "PASS", "detail": "5 clusters generated"},
+    {"name": "GENERATOR_EDGE_COUNT", "status": "PASS", "detail": "12 edges generated"},
+    {"name": "GENERATOR_BACKED_COUNT", "status": "PASS", "detail": "5 domains with structural evidence"},
+    {"name": "TOPOLOGY_EQUIVALENCE_DOMAINS", "status": "PASS", "detail": "All domain fields match production"},
+    {"name": "TOPOLOGY_EQUIVALENCE_CLUSTERS", "status": "PASS", "detail": "All cluster fields match production"},
+    {"name": "TOPOLOGY_EQUIVALENCE_EDGES", "status": "PASS", "detail": "All edge fields match production"},
+    {"name": "TOPOLOGY_EQUIVALENCE_METRICS", "status": "PASS", "detail": "All metrics match production"},
+    {"name": "TOPOLOGY_EQUIVALENCE_DOM_BINDINGS", "status": "PASS", "detail": "All DOM bindings match production"},
+    {"name": "DETERMINISTIC_REPLAY", "status": "PASS", "detail": "Hash parity: 1a654f00f1332cb41ee314c386d93f189d33e3a35debb240ad04bdaf138159a4"},
+    {"name": "CLUSTER_ASSIGNMENT_SOURCE", "status": "PASS", "detail": "CSR_EXPLICIT (not domain_type fallback)"},
+    {"name": "LINEAGE_OVERRIDE_PRECEDENCE", "status": "PASS", "detail": "CSR overrides applied before lineage file"},
+    {"name": "MULTI_DOM_CONFLICT_RESOLUTION", "status": "PASS", "detail": "Highest confidence wins"},
+    {"name": "LENS_BLUEEDGE_RENDERING", "status": "PASS", "detail": "HTTP 200, 17 domains, 5 clusters, EXACT/STRONG/PARTIAL present"},
+    {"name": "LENS_FASTAPI_RENDERING", "status": "PASS", "detail": "HTTP 200, S1 structural mode, no regression"},
+    {"name": "FASTAPI_PROTECTION", "status": "PASS", "detail": "No CSR for FastAPI, S1 structural-only"},
+    {"name": "PIPELINE_INTEGRATION", "status": "PASS", "detail": "Phase 5b added, CSR-absent → skip"},
+    {"name": "NO_SEMANTIC_REAUTHORING", "status": "PASS", "detail": "Mechanical extraction only"},
+    {"name": "PROVENANCE_HASHES", "status": "PASS", "detail": "csr_hash, lineage_hash, crosswalk_hash present"}
+  ],
+  "summary": {
+    "total": 26,
+    "pass": 26,
+    "fail": 0,
+    "result": "VALID"
+  }
+}

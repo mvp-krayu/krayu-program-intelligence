@@ -1,0 +1,1217 @@
+{
+  "schema_version": "1.0",
+  "client_id": "blueedge",
+  "domains": [
+    {
+      "domain_id": "DOMAIN-01",
+      "name": "Edge Data Acquisition",
+      "type": "FUNCTIONAL",
+      "grounding": "GROUNDED",
+      "description": "Edge Data Acquisition"
+    },
+    {
+      "domain_id": "DOMAIN-02",
+      "name": "Telemetry Transport and Messaging",
+      "type": "INFRASTRUCTURE",
+      "grounding": "WEAKLY_GROUNDED",
+      "description": "Telemetry Transport and Messaging"
+    },
+    {
+      "domain_id": "DOMAIN-03",
+      "name": "Fleet Core Operations",
+      "type": "FUNCTIONAL",
+      "grounding": "GROUNDED",
+      "description": "Fleet Core Operations"
+    },
+    {
+      "domain_id": "DOMAIN-04",
+      "name": "Fleet Vertical Extensions",
+      "type": "FUNCTIONAL",
+      "grounding": "GROUNDED",
+      "description": "Fleet Vertical Extensions"
+    },
+    {
+      "domain_id": "DOMAIN-05",
+      "name": "Analytics and Intelligence",
+      "type": "FUNCTIONAL",
+      "grounding": "GROUNDED",
+      "description": "Analytics and Intelligence"
+    },
+    {
+      "domain_id": "DOMAIN-06",
+      "name": "AI/ML Intelligence Layer",
+      "type": "FUNCTIONAL",
+      "grounding": "GROUNDED",
+      "description": "AI/ML Intelligence Layer"
+    },
+    {
+      "domain_id": "DOMAIN-07",
+      "name": "Sensor and Security Ingestion",
+      "type": "FUNCTIONAL",
+      "grounding": "GROUNDED",
+      "description": "Sensor and Security Ingestion"
+    },
+    {
+      "domain_id": "DOMAIN-08",
+      "name": "Real-Time Streaming and Gateway",
+      "type": "OPERATIONAL",
+      "grounding": "GROUNDED",
+      "description": "Real-Time Streaming and Gateway"
+    },
+    {
+      "domain_id": "DOMAIN-09",
+      "name": "Access Control and Identity",
+      "type": "CROSS-CUTTING",
+      "grounding": "GROUNDED",
+      "description": "Access Control and Identity"
+    },
+    {
+      "domain_id": "DOMAIN-10",
+      "name": "Platform Infrastructure and Data",
+      "type": "INFRASTRUCTURE",
+      "grounding": "WEAKLY_GROUNDED",
+      "description": "Platform Infrastructure and Data"
+    },
+    {
+      "domain_id": "DOMAIN-11",
+      "name": "Event-Driven Architecture",
+      "type": "CROSS-CUTTING",
+      "grounding": "GROUNDED",
+      "description": "Event-Driven Architecture"
+    },
+    {
+      "domain_id": "DOMAIN-12",
+      "name": "SaaS Platform Layer",
+      "type": "OPERATIONAL",
+      "grounding": "GROUNDED",
+      "description": "SaaS Platform Layer"
+    },
+    {
+      "domain_id": "DOMAIN-13",
+      "name": "External Integration",
+      "type": "INTEGRATION",
+      "grounding": "GROUNDED",
+      "description": "External Integration"
+    },
+    {
+      "domain_id": "DOMAIN-14",
+      "name": "Frontend Application",
+      "type": "FUNCTIONAL",
+      "grounding": "GROUNDED",
+      "description": "Frontend Application"
+    },
+    {
+      "domain_id": "DOMAIN-15",
+      "name": "EV and Electrification",
+      "type": "FUNCTIONAL",
+      "grounding": "GROUNDED",
+      "description": "EV and Electrification"
+    },
+    {
+      "domain_id": "DOMAIN-16",
+      "name": "Operational Engineering",
+      "type": "INFRASTRUCTURE",
+      "grounding": "GROUNDED",
+      "description": "Operational Engineering"
+    },
+    {
+      "domain_id": "DOMAIN-17",
+      "name": "Extended Operations and Driver Services",
+      "type": "FUNCTIONAL",
+      "grounding": "GROUNDED",
+      "description": "Extended Operations and Driver Services"
+    }
+  ],
+  "capabilities": [
+    {
+      "capability_id": "CAP-01",
+      "name": "Vehicle Sensor Collection",
+      "domain_id": "DOMAIN-01",
+      "type": "CORE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-02",
+      "name": "Network Security Intelligence Collection",
+      "domain_id": "DOMAIN-01",
+      "type": "CORE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-03",
+      "name": "SVG Device Hardware Platform",
+      "domain_id": "DOMAIN-01",
+      "type": "INFRASTRUCTURE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-04",
+      "name": "SVG Device Firmware Management",
+      "domain_id": "DOMAIN-01",
+      "type": "SUPPORTING",
+      "weakly_grounded": true
+    },
+    {
+      "capability_id": "CAP-05",
+      "name": "MQTT Telemetry Transport",
+      "domain_id": "DOMAIN-02",
+      "type": "INFRASTRUCTURE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-06",
+      "name": "Stream Processing Infrastructure",
+      "domain_id": "DOMAIN-02",
+      "type": "INFRASTRUCTURE",
+      "weakly_grounded": true
+    },
+    {
+      "capability_id": "CAP-07",
+      "name": "Core Fleet Asset Management",
+      "domain_id": "DOMAIN-03",
+      "type": "CORE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-08",
+      "name": "Driver Management",
+      "domain_id": "DOMAIN-03",
+      "type": "CORE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-09",
+      "name": "Alert and Notification Management",
+      "domain_id": "DOMAIN-03",
+      "type": "CORE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-10",
+      "name": "Maintenance and Fuel Operations",
+      "domain_id": "DOMAIN-03",
+      "type": "CORE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-11",
+      "name": "Operational Control and Device Management",
+      "domain_id": "DOMAIN-03",
+      "type": "CORE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-12",
+      "name": "Fleet Type Verticals",
+      "domain_id": "DOMAIN-04",
+      "type": "CORE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-13",
+      "name": "Specialty Transport Extensions",
+      "domain_id": "DOMAIN-04",
+      "type": "SUPPORTING",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-14",
+      "name": "Fleet Analytics and Reporting",
+      "domain_id": "DOMAIN-05",
+      "type": "CORE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-15",
+      "name": "Compliance, Safety, and Finance Intelligence",
+      "domain_id": "DOMAIN-05",
+      "type": "CORE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-16",
+      "name": "Executive Intelligence and Data Monetization",
+      "domain_id": "DOMAIN-05",
+      "type": "SUPPORTING",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-17",
+      "name": "Predictive and Anomaly Intelligence",
+      "domain_id": "DOMAIN-06",
+      "type": "CORE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-18",
+      "name": "Driver Intelligence",
+      "domain_id": "DOMAIN-06",
+      "type": "CORE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-19",
+      "name": "Agentic AI and Road Intelligence",
+      "domain_id": "DOMAIN-06",
+      "type": "ENABLING",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-20",
+      "name": "Sensor Telemetry Ingestion",
+      "domain_id": "DOMAIN-07",
+      "type": "CORE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-21",
+      "name": "HASI Security Intelligence Ingestion",
+      "domain_id": "DOMAIN-07",
+      "type": "CORE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-22",
+      "name": "WebSocket Event Broadcasting",
+      "domain_id": "DOMAIN-08",
+      "type": "CORE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-23",
+      "name": "JWT Authentication",
+      "domain_id": "DOMAIN-09",
+      "type": "ENABLING",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-24",
+      "name": "Frontend Auth State Management",
+      "domain_id": "DOMAIN-09",
+      "type": "ENABLING",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-25",
+      "name": "API Versioning",
+      "domain_id": "DOMAIN-09",
+      "type": "ENABLING",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-26",
+      "name": "Primary Data Persistence",
+      "domain_id": "DOMAIN-10",
+      "type": "INFRASTRUCTURE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-27",
+      "name": "Caching Layer",
+      "domain_id": "DOMAIN-10",
+      "type": "INFRASTRUCTURE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-28",
+      "name": "Object Storage",
+      "domain_id": "DOMAIN-10",
+      "type": "INFRASTRUCTURE",
+      "weakly_grounded": true
+    },
+    {
+      "capability_id": "CAP-29",
+      "name": "Platform Monorepo Container",
+      "domain_id": "DOMAIN-10",
+      "type": "INFRASTRUCTURE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-30",
+      "name": "Domain Event Bus",
+      "domain_id": "DOMAIN-11",
+      "type": "ENABLING",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-31",
+      "name": "Multi-Tenant Provisioning",
+      "domain_id": "DOMAIN-12",
+      "type": "CORE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-32",
+      "name": "Tenant Onboarding and Branding",
+      "domain_id": "DOMAIN-12",
+      "type": "SUPPORTING",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-33",
+      "name": "Notification Delivery Channels",
+      "domain_id": "DOMAIN-13",
+      "type": "SUPPORTING",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-34",
+      "name": "Enterprise System Integration",
+      "domain_id": "DOMAIN-13",
+      "type": "ENABLING",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-35",
+      "name": "Operator Web Application",
+      "domain_id": "DOMAIN-14",
+      "type": "CORE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-36",
+      "name": "EV Telemetry and Energy Management",
+      "domain_id": "DOMAIN-15",
+      "type": "CORE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-37",
+      "name": "Fleet Electrification Planning",
+      "domain_id": "DOMAIN-15",
+      "type": "SUPPORTING",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-38",
+      "name": "Device OTA Management",
+      "domain_id": "DOMAIN-15",
+      "type": "SUPPORTING",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-39",
+      "name": "Platform Observability",
+      "domain_id": "DOMAIN-16",
+      "type": "ENABLING",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-40",
+      "name": "Delivery and Quality Infrastructure",
+      "domain_id": "DOMAIN-16",
+      "type": "INFRASTRUCTURE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-41",
+      "name": "Commercial Operations and Dispatch Services",
+      "domain_id": "DOMAIN-17",
+      "type": "CORE",
+      "weakly_grounded": false
+    },
+    {
+      "capability_id": "CAP-42",
+      "name": "Customer and Ecosystem Services",
+      "domain_id": "DOMAIN-17",
+      "type": "SUPPORTING",
+      "weakly_grounded": false
+    }
+  ],
+  "components": [
+    {
+      "component_id": "COMP-01",
+      "name": "blueedge-platform (Monorepo)",
+      "capability_id": "CAP-29",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-02",
+      "name": "AuthModule",
+      "capability_id": "CAP-23",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-03",
+      "name": "VehiclesModule",
+      "capability_id": "CAP-07",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-04",
+      "name": "DriversModule",
+      "capability_id": "CAP-08",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-05",
+      "name": "FleetsModule",
+      "capability_id": "CAP-07",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-06",
+      "name": "TripsModule",
+      "capability_id": "CAP-07",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-07",
+      "name": "AlertsModule",
+      "capability_id": "CAP-09",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-08",
+      "name": "MaintenanceModule",
+      "capability_id": "CAP-10",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-09",
+      "name": "FuelModule",
+      "capability_id": "CAP-10",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-10",
+      "name": "TankerModule",
+      "capability_id": "CAP-12",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-11",
+      "name": "BusModule",
+      "capability_id": "CAP-12",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-12",
+      "name": "TaxiModule",
+      "capability_id": "CAP-12",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-13",
+      "name": "OperationsModule",
+      "capability_id": "CAP-11",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-14",
+      "name": "DevicesModule",
+      "capability_id": "CAP-11",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-15",
+      "name": "NotificationsModule",
+      "capability_id": "CAP-09",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-16",
+      "name": "AnalyticsModule",
+      "capability_id": "CAP-14",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-17",
+      "name": "ReportsModule",
+      "capability_id": "CAP-14",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-18",
+      "name": "DiagnosticsModule",
+      "capability_id": "CAP-14",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-19",
+      "name": "ComplianceModule",
+      "capability_id": "CAP-15",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-20",
+      "name": "SafetyModule",
+      "capability_id": "CAP-15",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-21",
+      "name": "FinanceModule",
+      "capability_id": "CAP-15",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-22",
+      "name": "UsersModule",
+      "capability_id": "CAP-08",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-23",
+      "name": "ColdchainModule",
+      "capability_id": "CAP-13",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-24",
+      "name": "EvModule",
+      "capability_id": "CAP-36",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-25",
+      "name": "OtaModule",
+      "capability_id": "CAP-38",
+      "cross_domain": "DOM-01",
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-26",
+      "name": "V2gModule",
+      "capability_id": "CAP-36",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-27",
+      "name": "GatewaysModule",
+      "capability_id": "CAP-22",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-28",
+      "name": "SurgePricingModule",
+      "capability_id": "CAP-41",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-29",
+      "name": "DriverIncentivesModule",
+      "capability_id": "CAP-41",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-30",
+      "name": "ElectrificationModule",
+      "capability_id": "CAP-37",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-31",
+      "name": "DepotChargingModule",
+      "capability_id": "CAP-37",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-32",
+      "name": "ExecutiveModule",
+      "capability_id": "CAP-16",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-33",
+      "name": "AnomalyDetectionModule",
+      "capability_id": "CAP-17",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-34",
+      "name": "CrossBorderModule",
+      "capability_id": "CAP-42",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-35",
+      "name": "PermitsModule",
+      "capability_id": "CAP-42",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-36",
+      "name": "PartsMarketplaceModule",
+      "capability_id": "CAP-42",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-37",
+      "name": "FleetLifecycleModule",
+      "capability_id": "CAP-42",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-38",
+      "name": "DriverMobileModule",
+      "capability_id": "CAP-41",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-39",
+      "name": "FatigueRiskModule",
+      "capability_id": "CAP-18",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-40",
+      "name": "CustomerPortalModule",
+      "capability_id": "CAP-42",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-41",
+      "name": "BlockchainModule",
+      "capability_id": "CAP-16",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-42",
+      "name": "WhiteLabelModule",
+      "capability_id": "CAP-32",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-43",
+      "name": "ChargingStationsModule",
+      "capability_id": "CAP-36",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-44",
+      "name": "PredictiveMaintenanceModule",
+      "capability_id": "CAP-17",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-45",
+      "name": "DigitalTwinModule",
+      "capability_id": "CAP-17",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-46",
+      "name": "DriverScoringModule",
+      "capability_id": "CAP-18",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-47",
+      "name": "GeofenceAutomationModule",
+      "capability_id": "CAP-41",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-48",
+      "name": "MessagingModule",
+      "capability_id": "CAP-41",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-49",
+      "name": "MultiTenantModule",
+      "capability_id": "CAP-31",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-50",
+      "name": "BillingModule",
+      "capability_id": "CAP-31",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-51",
+      "name": "OnboardingModule",
+      "capability_id": "CAP-32",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-52",
+      "name": "NotificationProvidersModule",
+      "capability_id": "CAP-33",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-53",
+      "name": "ErpConnectorsModule",
+      "capability_id": "CAP-34",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-54",
+      "name": "ApiMarketplaceModule",
+      "capability_id": "CAP-34",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-55",
+      "name": "IntegrationHubModule",
+      "capability_id": "CAP-34",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-56",
+      "name": "AgenticAIModule",
+      "capability_id": "CAP-19",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-57",
+      "name": "AftersalesModule",
+      "capability_id": "CAP-42",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-58",
+      "name": "RoadIntelligenceModule",
+      "capability_id": "CAP-19",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-59",
+      "name": "DataMonetizationModule",
+      "capability_id": "CAP-16",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-60",
+      "name": "DriverSessionsModule",
+      "capability_id": "CAP-13",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-61",
+      "name": "VehicleLifecycleModule",
+      "capability_id": "CAP-13",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-62",
+      "name": "SensorsModule",
+      "capability_id": "CAP-20",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-63",
+      "name": "HasiModule",
+      "capability_id": "CAP-21",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-64",
+      "name": "RedisCacheModule",
+      "capability_id": "CAP-27",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-65",
+      "name": "FleetEventsModule",
+      "capability_id": "CAP-30",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-66",
+      "name": "HealthModule",
+      "capability_id": "CAP-39",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-67",
+      "name": "V2Module (API Versioning)",
+      "capability_id": "CAP-25",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-68",
+      "name": "Frontend Application",
+      "capability_id": "CAP-35",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-69",
+      "name": "FleetSocket Client",
+      "capability_id": "CAP-22",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-70",
+      "name": "AuthContext / AuthProvider",
+      "capability_id": "CAP-24",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-71",
+      "name": "Frontend Page Modules (61 pages)",
+      "capability_id": "CAP-35",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-72",
+      "name": "SVG 2.0 Smart Vehicle Gateway",
+      "capability_id": "CAP-03",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-73",
+      "name": "sensor_collector.py",
+      "capability_id": "CAP-01",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-74",
+      "name": "hasi_bridge.py",
+      "capability_id": "CAP-02",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-75",
+      "name": "HASI v1.0.0",
+      "capability_id": "CAP-02",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-76",
+      "name": "SVG Main Telemetry Firmware",
+      "capability_id": "CAP-01",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-77",
+      "name": "SVG OTA Agent",
+      "capability_id": "CAP-04",
+      "cross_domain": null,
+      "weakly_grounded": true
+    },
+    {
+      "component_id": "COMP-78",
+      "name": "SVG Agent Configuration",
+      "capability_id": "CAP-01",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-79",
+      "name": "PostgreSQL 15",
+      "capability_id": "CAP-26",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-80",
+      "name": "TimescaleDB",
+      "capability_id": "CAP-26",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-81",
+      "name": "Redis 7",
+      "capability_id": "CAP-27",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-82",
+      "name": "S3 / MinIO Object Storage",
+      "capability_id": "CAP-28",
+      "cross_domain": null,
+      "weakly_grounded": true
+    },
+    {
+      "component_id": "COMP-83",
+      "name": "MQTT Broker (EMQX)",
+      "capability_id": "CAP-05",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-84",
+      "name": "Apache Kafka",
+      "capability_id": "CAP-06",
+      "cross_domain": null,
+      "weakly_grounded": true
+    },
+    {
+      "component_id": "COMP-85",
+      "name": "Apache Flink",
+      "capability_id": "CAP-06",
+      "cross_domain": null,
+      "weakly_grounded": true
+    },
+    {
+      "component_id": "COMP-86",
+      "name": "Monitoring Stack",
+      "capability_id": "CAP-39",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-87",
+      "name": "Load Tests",
+      "capability_id": "CAP-40",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-88",
+      "name": "CI/CD Workflows",
+      "capability_id": "CAP-40",
+      "cross_domain": null,
+      "weakly_grounded": false
+    },
+    {
+      "component_id": "COMP-89",
+      "name": "Docker Compose Orchestration",
+      "capability_id": "CAP-40",
+      "cross_domain": null,
+      "weakly_grounded": false
+    }
+  ],
+  "cluster_assignments": [
+    {
+      "cluster_id": "CLU-01",
+      "cluster_label": "Operational Intelligence",
+      "color_accent": "#3fb950",
+      "domain_ids": [
+        "DOMAIN-01",
+        "DOMAIN-05",
+        "DOMAIN-06",
+        "DOMAIN-07"
+      ]
+    },
+    {
+      "cluster_id": "CLU-02",
+      "cluster_label": "Fleet Operations",
+      "color_accent": "#58a6ff",
+      "domain_ids": [
+        "DOMAIN-03",
+        "DOMAIN-04",
+        "DOMAIN-17"
+      ]
+    },
+    {
+      "cluster_id": "CLU-03",
+      "cluster_label": "Emerging Capabilities",
+      "color_accent": "#79c0ff",
+      "domain_ids": [
+        "DOMAIN-15",
+        "DOMAIN-16"
+      ]
+    },
+    {
+      "cluster_id": "CLU-04",
+      "cluster_label": "Platform Infrastructure",
+      "color_accent": "#d29922",
+      "domain_ids": [
+        "DOMAIN-02",
+        "DOMAIN-08",
+        "DOMAIN-10",
+        "DOMAIN-11"
+      ]
+    },
+    {
+      "cluster_id": "CLU-05",
+      "cluster_label": "Platform Services",
+      "color_accent": "#a5d6ff",
+      "domain_ids": [
+        "DOMAIN-09",
+        "DOMAIN-12",
+        "DOMAIN-13",
+        "DOMAIN-14"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "L-DOM-01",
+      "source_domain": "DOMAIN-01",
+      "target_domain": "DOMAIN-03",
+      "relationship_type": "EMITS"
+    },
+    {
+      "edge_id": "L-DOM-02",
+      "source_domain": "DOMAIN-05",
+      "target_domain": "DOMAIN-03",
+      "relationship_type": "CALLS"
+    },
+    {
+      "edge_id": "L-DOM-03",
+      "source_domain": "DOMAIN-01",
+      "target_domain": "DOMAIN-10",
+      "relationship_type": "EMITS"
+    },
+    {
+      "edge_id": "L-DOM-04",
+      "source_domain": "DOMAIN-07",
+      "target_domain": "DOMAIN-10",
+      "relationship_type": "EMITS"
+    },
+    {
+      "edge_id": "L-DOM-05",
+      "source_domain": "DOMAIN-03",
+      "target_domain": "DOMAIN-09",
+      "relationship_type": "inferred_semantic"
+    },
+    {
+      "edge_id": "L-DOM-06",
+      "source_domain": "DOMAIN-03",
+      "target_domain": "DOMAIN-16",
+      "relationship_type": "inferred_semantic"
+    },
+    {
+      "edge_id": "L-DOM-07",
+      "source_domain": "DOMAIN-04",
+      "target_domain": "DOMAIN-15",
+      "relationship_type": "structural_co_membership"
+    },
+    {
+      "edge_id": "L-DOM-08",
+      "source_domain": "DOMAIN-02",
+      "target_domain": "DOMAIN-05",
+      "relationship_type": "EMITS"
+    },
+    {
+      "edge_id": "L-DOM-09",
+      "source_domain": "DOMAIN-10",
+      "target_domain": "DOMAIN-03",
+      "relationship_type": "CALLS"
+    },
+    {
+      "edge_id": "L-DOM-10",
+      "source_domain": "DOMAIN-10",
+      "target_domain": "DOMAIN-12",
+      "relationship_type": "CALLS"
+    },
+    {
+      "edge_id": "L-DOM-11",
+      "source_domain": "DOMAIN-10",
+      "target_domain": "DOMAIN-16",
+      "relationship_type": "CALLS"
+    },
+    {
+      "edge_id": "L-DOM-12",
+      "source_domain": "DOMAIN-09",
+      "target_domain": "DOMAIN-03",
+      "relationship_type": "CALLS"
+    }
+  ],
+  "lineage_overrides": [
+    {
+      "domain_id": "DOMAIN-01",
+      "dom_id": "DOM-13",
+      "lineage_status": "EXACT",
+      "confidence": 0.95
+    },
+    {
+      "domain_id": "DOMAIN-10",
+      "dom_id": "DOM-04",
+      "lineage_status": "STRONG",
+      "confidence": 0.78,
+      "zone_anchor": true
+    },
+    {
+      "domain_id": "DOMAIN-11",
+      "dom_id": "DOM-07",
+      "lineage_status": "PARTIAL",
+      "confidence": 0.65
+    },
+    {
+      "domain_id": "DOMAIN-14",
+      "dom_id": "DOM-10",
+      "lineage_status": "EXACT",
+      "confidence": 0.92
+    },
+    {
+      "domain_id": "DOMAIN-16",
+      "dom_id": "DOM-11",
+      "lineage_status": "EXACT",
+      "confidence": 0.93
+    }
+  ],
+  "metadata": {
+    "authored_by": "PI.SUBSTRATE.CSR-IMPLEMENTATION.01",
+    "authored_date": "2026-05-18",
+    "version": "1.0",
+    "evidence_basis": "build_semantic_layer.py (PIOS-41.1-ADDENDUM-SCRIPT-RECOVERY-v1)",
+    "review_status": "LOCKED",
+    "notes": "Mechanical extraction from build_semantic_layer.py lines 39-196. Cluster assignments from production semantic_topology_model.json (RC-02 amended). Edges from semantic_transformation_trace.md via production topology. Lineage overrides from production topology (RC-02 amended bindings). No re-authoring performed.",
+    "extraction_source_hash": "7c4d2b33d0ded66c",
+    "production_topology_hash": "381a714f372c82c1"
+  }
+}

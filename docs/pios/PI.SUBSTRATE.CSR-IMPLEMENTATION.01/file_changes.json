@@ -1,0 +1,50 @@
+{
+  "stream_id": "PI.SUBSTRATE.CSR-IMPLEMENTATION.01",
+  "changes": [
+    {
+      "path": "clients/blueedge/semantic/client_semantic_registry.json",
+      "action": "CREATE",
+      "purpose": "BlueEdge CSR — ontology authority for 17/42/89 semantic structure"
+    },
+    {
+      "path": "scripts/pios/extract_blueedge_csr.py",
+      "action": "CREATE",
+      "purpose": "Mechanical extractor: build_semantic_layer.py + production topology → CSR JSON"
+    },
+    {
+      "path": "scripts/pios/generate_semantic_topology.py",
+      "action": "CREATE",
+      "purpose": "Deterministic generator: CSR → semantic_topology_model.json"
+    },
+    {
+      "path": "scripts/pios/run_client_pipeline.py",
+      "action": "MODIFY",
+      "purpose": "Add Phase 5b (CSR Semantic Topology) — optional CSR-aware generation step"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.CSR-IMPLEMENTATION.01/execution_report.md",
+      "action": "CREATE",
+      "purpose": "Stream execution report"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.CSR-IMPLEMENTATION.01/validation_log.json",
+      "action": "CREATE",
+      "purpose": "26/26 validation checks — VALID"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.CSR-IMPLEMENTATION.01/file_changes.json",
+      "action": "CREATE",
+      "purpose": "File change manifest"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.CSR-IMPLEMENTATION.01/CLOSURE.md",
+      "action": "CREATE",
+      "purpose": "Stream closure artifact (G1 §10)"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.CSR-IMPLEMENTATION.01/IMPLEMENTATION_SEMANTICS.md",
+      "action": "CREATE",
+      "purpose": "§5.5 reusable primitive documentation"
+    }
+  ]
+}
