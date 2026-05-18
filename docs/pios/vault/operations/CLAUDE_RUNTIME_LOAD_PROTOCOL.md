@@ -14,6 +14,34 @@ The vault load is triggered by:
 
 ## 2. Load Sequence
 
+### Phase 0 — BlueEdge Canonical Authority Lock (CONDITIONAL — mandatory when triggered)
+
+```
+LOAD: docs/pios/vault/00_CANONICAL_AUTHORITY/BLUEEDGE_CANONICAL_TRUTH_CERTIFICATION.md
+```
+
+**Trigger conditions** (load is MANDATORY if ANY apply):
+- Any BlueEdge stream
+- Any PATH A stream
+- Any PATH B stream
+- Any crosswalk stream
+- Any reconciliation stream
+- Any A5 stream
+- Any LENS replay stream
+- Any ontology stream touching BlueEdge operational facts
+- Any E2E certification or revalidation stream
+
+**What it provides:**
+- Complete BlueEdge operational truth (all canonical values)
+- Derivation boundary classification (FULLY_DERIVED / MANIFEST-LINKED / PRE-COMPUTED / STATIC_SEMANTIC)
+- Anti-rediscovery lock (10 items that must never be re-forensicked)
+- Current replay capability and architectural debt
+- Certification verdict and trust boundaries
+
+**Cost:** ~400 lines. This is the FIRST authority layer loaded before any other ontology page.
+
+**Anti-rediscovery function:** Before investigating any BlueEdge operational fact, check whether BLUEEDGE_CANONICAL_TRUTH_CERTIFICATION.md §F already answers the question.
+
 ### Phase 1 — Constitution (ALWAYS — automatic via CLAUDE.md)
 
 ```

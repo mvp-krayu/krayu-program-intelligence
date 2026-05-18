@@ -1,0 +1,189 @@
+{
+  "stream": "PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01",
+  "validation_date": "2026-05-18",
+  "total_checks": 30,
+  "passed": 30,
+  "failed": 0,
+  "checks": [
+    {
+      "id": "V-01",
+      "name": "GAP_ASSESSMENT.md classifies every LENS traceback artifact",
+      "status": "PASS",
+      "detail": "7 layers classified: Layer 0 (source) through Layer 7 (executive projection). 4 infrastructure/binding categories. All artifacts have GENERAL/PARAMETERIZABLE/BLUEEDGE_SPECIFIC classification."
+    },
+    {
+      "id": "V-02",
+      "name": "GAP_ASSESSMENT.md quantifies generalization ratio",
+      "status": "PASS",
+      "detail": "52 .js files analyzed. ~88% runtime engine general, ~6% parameterizable, ~6% BlueEdge-specific. Summary table with by-file-count and by-functional-role breakdowns."
+    },
+    {
+      "id": "V-03",
+      "name": "GAP_ASSESSMENT.md documents the impact chain for Client C",
+      "status": "PASS",
+      "detail": "Full cascade: semantic_topology_model ABSENT → crosswalk EMPTY → reconciliation NULL → grounding_ratio undefined → Q-class undefined → LENS semantic zones EMPTY → SQO stays at S1. What works and what doesn't documented."
+    },
+    {
+      "id": "V-04",
+      "name": "GAP_ASSESSMENT.md includes BlueEdge-Specific Assumptions That MUST NOT Leak subsection",
+      "status": "PASS",
+      "detail": "Section 5: 9 assumptions documented (17 DOMAINs, 42 capabilities, 89 components, DOM-09, grounding ratio, Q-02, DOMAIN names, DOMAIN types, confidence thresholds)."
+    },
+    {
+      "id": "V-05",
+      "name": "CSR spec defines JSON schema",
+      "status": "PASS",
+      "detail": "Full JSON Schema 2020-12 with required fields: schema_version, client_id, domains[], capabilities[], components[], metadata{}. Pattern validation for IDs."
+    },
+    {
+      "id": "V-06",
+      "name": "CSR spec documents CEU analogy AND disanalogy",
+      "status": "PASS",
+      "detail": "Section 5: 5 analogy points (structural role, location, pipeline position, versioning, client isolation) and 6 disanalogy points (construction method, automation, time, repeatability, error mode, evolution)."
+    },
+    {
+      "id": "V-07",
+      "name": "CSR spec classifies as SPECIFIED_NOT_IMPLEMENTED",
+      "status": "PASS",
+      "detail": "Maturity: SPECIFIED_NOT_IMPLEMENTED stated in header and Section 6."
+    },
+    {
+      "id": "V-08",
+      "name": "CSR spec defines advisory construction protocol",
+      "status": "PASS",
+      "detail": "Section 6: 6-step protocol (Evidence Review → Domain Identification → Capability Classification → Component Mapping → Review Gate → Versioning and Lock)."
+    },
+    {
+      "id": "V-09",
+      "name": "CSR spec separates semantic ontology authoring (human) from topology generation (deterministic)",
+      "status": "PASS",
+      "detail": "Section 1: Critical distinction table. Semantic Ontology Authoring = human/governed. Semantic Topology Generation = deterministic from CSR. Decoupled from build_semantic_layer.py."
+    },
+    {
+      "id": "V-10",
+      "name": "CSR spec includes BlueEdge-Specific Assumptions That MUST NOT Leak subsection",
+      "status": "PASS",
+      "detail": "Section 7: 8 assumptions documented with 'Why It Must Not Leak' justification for each."
+    },
+    {
+      "id": "V-11",
+      "name": "Crosswalk spec defines auto-derivation interface",
+      "status": "PASS",
+      "detail": "Section 2: Inputs (5 artifacts), Outputs (3 artifacts), Proposal Schema (JSON), Confidence Scoring (4 ranges)."
+    },
+    {
+      "id": "V-12",
+      "name": "Crosswalk spec specifies human review gate",
+      "status": "PASS",
+      "detail": "Section 3: 7-step review process with auto_accept_threshold and review_threshold. Review Gate Output schema."
+    },
+    {
+      "id": "V-13",
+      "name": "Crosswalk spec addresses irresolvability detection",
+      "status": "PASS",
+      "detail": "Section 4: Detection algorithm (3 conditions), Detection Output schema, 3 handling strategies (accept, split DOM, map to dominant)."
+    },
+    {
+      "id": "V-14",
+      "name": "Lifecycle spec defines all 8 phases with automated/advisory classification",
+      "status": "PASS",
+      "detail": "Section 1: 8 phases (0-8) with Name, Automated?, Duration, Maturity columns."
+    },
+    {
+      "id": "V-15",
+      "name": "Lifecycle spec Phase 3 = Semantic Ontology Authoring, Phase 4 = Semantic Topology Generation (distinct)",
+      "status": "PASS",
+      "detail": "Phase 3: 'Semantic Ontology Authoring (CSR)' — NO advisory. Phase 4: 'Semantic Topology Generation (from CSR)' — YES deterministic."
+    },
+    {
+      "id": "V-16",
+      "name": "Lifecycle spec integrates with existing SQO 15-stage lifecycle",
+      "status": "PASS",
+      "detail": "Section 5: Mapping table from 8 onboarding phases to 15 SQO lifecycle stages."
+    },
+    {
+      "id": "V-17",
+      "name": "Lifecycle spec formalizes S0→S1 gate",
+      "status": "PASS",
+      "detail": "Section 3: Gate requirements table (5 requirements), What S1 Delivers (7 items), What S1 Does NOT Deliver (7 items). CSR NOT required for S1."
+    },
+    {
+      "id": "V-18",
+      "name": "Marketplace assessment addresses 'built today' claim precision",
+      "status": "PASS",
+      "detail": "Section 2: PATH A = fully built and general (TRUE). PATH B = built for BlueEdge, requires per-client advisory authoring (FALSE as universal claim). Corrected claim provided."
+    },
+    {
+      "id": "V-19",
+      "name": "Marketplace assessment contains irreducible governance statement",
+      "status": "PASS",
+      "detail": "Section 1: 'Semantic qualification is not a temporary onboarding inconvenience. It is an architecturally permanent governed layer.' — prominent placement with full justification."
+    },
+    {
+      "id": "V-20",
+      "name": "Marketplace assessment specifies advisory as architecturally permanent",
+      "status": "PASS",
+      "detail": "Section 5: 5 reasons why advisory is permanent. Evolution table (4 phases: current → CSR → auto-derivation → multi-client). Role evolution, not elimination."
+    },
+    {
+      "id": "V-21",
+      "name": "Hardcoding fix specs cover DOM-04, flagshipBinding, compile_blueedge",
+      "status": "PASS",
+      "detail": "3 fixes: Fix 1 (DOM-04 passthrough, LOW), Fix 2 (flagshipBinding defaults, TRIVIAL), Fix 3 (compile_blueedge_correspondence.js parameterization, MEDIUM). Each with current code, fix approach, effort."
+    },
+    {
+      "id": "V-22",
+      "name": "No terminology collision with TERMINOLOGY_LOCK.md",
+      "status": "PASS",
+      "detail": "'Client Semantic Registry' verified against 60+ locked terms before execution. No collision. Term now added to TERMINOLOGY_LOCK.md."
+    },
+    {
+      "id": "V-23",
+      "name": "CLOSURE.md §10 Architecture Memory Propagation complete",
+      "status": "PASS",
+      "detail": "Section 10: Stream Classification G1, Architecture Mutation Delta (6 mutations), Vault Files Updated (5 files verified), Propagation Status COMPLETE."
+    },
+    {
+      "id": "V-24",
+      "name": "CLOSURE.md contains maturity table (8 constructs with maturity classification)",
+      "status": "PASS",
+      "detail": "8 constructs: PATH A (OPERATIONAL), A5a (OPERATIONAL), A5b (OPERATIONAL_WITH_MANIFEST_DEBT), PATH B BlueEdge (OPERATIONAL), CSR (SPECIFIED_NOT_IMPLEMENTED), Crosswalk auto-derivation (SPECIFIED_NOT_IMPLEMENTED), Generic PATH B onboarding (PARTIAL), Multi-client SQO (FUTURE_DECLARED)."
+    },
+    {
+      "id": "V-25",
+      "name": "All vault files updated per propagation plan (5 files including OPERATIONAL_ONTOLOGY.md)",
+      "status": "PASS",
+      "detail": "TERMINOLOGY_LOCK.md (CSR term added), CROSSWALK_AND_RECONCILIATION.md (auto-derivation cross-ref), SQO_EVOLUTION.md (S0→S1 gate), PIOS_CURRENT_CANONICAL_STATE.md (substrate section + maturity), OPERATIONAL_ONTOLOGY.md (§14 authoring vs generation)."
+    },
+    {
+      "id": "V-26",
+      "name": "All constructs have maturity classification",
+      "status": "PASS",
+      "detail": "Every specified construct carries maturity: OPERATIONAL, OPERATIONAL_WITH_MANIFEST_DEBT, SPECIFIED_NOT_IMPLEMENTED, PARTIAL, or FUTURE_DECLARED."
+    },
+    {
+      "id": "V-27",
+      "name": "No implementation code produced",
+      "status": "PASS",
+      "detail": "All deliverables are architectural specification documents. No .js, .py, or .json runtime code produced."
+    },
+    {
+      "id": "V-28",
+      "name": "Closure answers minimum S1 artifact set question (Q1)",
+      "status": "PASS",
+      "detail": "Q1 answered in CLOSURE.md §11: 4 artifacts (client.yaml, source evidence, structural scan output, CEU grounding output)."
+    },
+    {
+      "id": "V-29",
+      "name": "Closure answers PATH A-only LENS functionality percentage question (Q2)",
+      "status": "PASS",
+      "detail": "Q2 answered in CLOSURE.md §11: ~60% of current LENS functionality survives with PATH A only and no CSR."
+    },
+    {
+      "id": "V-30",
+      "name": "No changes to existing runtime files",
+      "status": "PASS",
+      "detail": "No files in app/ or scripts/ modified. All changes are in docs/pios/ (stream artifacts) and docs/pios/vault/ (vault propagation)."
+    }
+  ]
+}

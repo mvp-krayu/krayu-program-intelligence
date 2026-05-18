@@ -1,0 +1,57 @@
+{
+  "stream": "PI.BLUEEDGE.CANONICAL-TRUTH-CERTIFICATION.01",
+  "date": "2026-05-18",
+  "total_changes": 9,
+  "files": [
+    {
+      "path": "docs/pios/vault/00_CANONICAL_AUTHORITY/BLUEEDGE_CANONICAL_TRUTH_CERTIFICATION.md",
+      "action": "CREATED",
+      "type": "vault_authority",
+      "note": "Single top-level authority document for BlueEdge runtime truth"
+    },
+    {
+      "path": "docs/pios/vault/00_CANONICAL_AUTHORITY/BLUEEDGE_CERTIFICATION_VERDICT.md",
+      "action": "CREATED",
+      "type": "vault_authority",
+      "note": "Formal certification verdict: OPERATIONALLY_CERTIFIED_WITH_ARCHITECTURAL_DEBT"
+    },
+    {
+      "path": "docs/pios/vault/00_CANONICAL_AUTHORITY/BLUEEDGE_CERTIFIED_REPLAY_CONTRACT.md",
+      "action": "CREATED",
+      "type": "vault_authority",
+      "note": "Exact replay procedure, expectations, trust boundaries"
+    },
+    {
+      "path": "docs/pios/vault/operations/CLAUDE_RUNTIME_LOAD_PROTOCOL.md",
+      "action": "UPDATED",
+      "type": "vault_operations",
+      "note": "Added Phase 0 — BlueEdge Canonical Authority Lock"
+    },
+    {
+      "path": "docs/pios/vault/00_START_HERE/OPERATIONAL_ONTOLOGY.md",
+      "action": "UPDATED",
+      "type": "vault_ontology",
+      "note": "Added §12 Current Operational Reality vs Target Architecture, updated GIT_LINEAGE"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.CANONICAL-TRUTH-CERTIFICATION.01/execution_report.md",
+      "action": "CREATED",
+      "type": "mandatory_artifact"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.CANONICAL-TRUTH-CERTIFICATION.01/validation_log.json",
+      "action": "CREATED",
+      "type": "mandatory_artifact"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.CANONICAL-TRUTH-CERTIFICATION.01/file_changes.json",
+      "action": "CREATED",
+      "type": "mandatory_artifact"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.CANONICAL-TRUTH-CERTIFICATION.01/CLOSURE.md",
+      "action": "CREATED",
+      "type": "mandatory_artifact"
+    }
+  ]
+}

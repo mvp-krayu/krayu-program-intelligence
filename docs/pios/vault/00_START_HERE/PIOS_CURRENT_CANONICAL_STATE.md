@@ -331,6 +331,38 @@ TIER 2 — Cross-Plane Structural Coherence (FUTURE)
 
 Revenue begins at Phase 1A. Substrate proof (Phase 0A) precedes projection polish (Phase 0B).
 
+## Client Onboarding Substrate
+
+**Stream:** PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01 (COMPLETE — 2026-05-18)
+**Classification:** G1 — Architecture-Mutating
+
+The Client Onboarding Substrate specifies the governed process for onboarding new clients from S0 (unregistered) through S1 (structural-only) to S2+ (semantically qualified).
+
+**Key architectural concept:** Client Semantic Registry (CSR) — the canonical per-client semantic authority source. CSR is to PATH B what the CEU registry is to PATH A.
+
+**Critical distinction:**
+- **Semantic Ontology Authoring** (CSR construction) = human/governed process. Advisory team identifies DOMAINs. NOT AI-discoverable.
+- **Semantic Topology Generation** (from CSR) = deterministic computation. Automated once CSR exists.
+
+**Onboarding gates:**
+- S0→S1 requires PATH A only (no CSR needed). Produces structural-only LENS projection.
+- S1→S2+ requires CSR + crosswalk + reconciliation. Produces full semantic depth.
+
+**Maturity classification:**
+
+| Construct | Maturity |
+|---|---|
+| PATH A | OPERATIONAL |
+| A5a (48 replay-safe structural domains) | OPERATIONAL |
+| A5b (13 executive DOMs) | OPERATIONAL_WITH_MANIFEST_DEBT |
+| PATH B (BlueEdge) | OPERATIONAL |
+| Client Semantic Registry (CSR) | SPECIFIED_NOT_IMPLEMENTED |
+| Crosswalk auto-derivation | SPECIFIED_NOT_IMPLEMENTED |
+| Generic PATH B onboarding | PARTIAL |
+| Multi-client SQO | FUTURE_DECLARED |
+
+**Reference:** `docs/pios/PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01/` — 6 primary deliverables + 4 mandatory artifacts.
+
 ## Vault Status
 
 **Operational ontology:** CANONICALIZED (PI.VAULT.OPERATIONAL-ONTOLOGY-CANONICALIZATION.01, 2026-05-17)

@@ -1,0 +1,164 @@
+{
+  "stream": "PI.BLUEEDGE.E2E.RUNTIME-REVALIDATION.01",
+  "validation_date": "2026-05-18",
+  "total_checks": 24,
+  "passed": 21,
+  "failed": 0,
+  "deferred": 3,
+  "checks": [
+    {
+      "id": "V-01",
+      "name": "Source archive SHA-256 verification",
+      "status": "PASS",
+      "detail": "672a841277541921bf8ade69a467d35d9f105a1525c754fa4b750f0aa50e9c80 verified"
+    },
+    {
+      "id": "V-02",
+      "name": "Source intake (741 files inventoried)",
+      "status": "PASS",
+      "detail": "source_intake.py → 741 files from canonical_repo"
+    },
+    {
+      "id": "V-03",
+      "name": "Structural scan produces ~945 nodes",
+      "status": "PASS",
+      "detail": "structural_scanner.py → 945 nodes, 944 edges, 11 clusters"
+    },
+    {
+      "id": "V-04",
+      "name": "Wrapper normalization (no ROOT collapse)",
+      "status": "PASS",
+      "detail": "blueedge-platform normalized, 11 clusters (non-collapsed). GAP-001 NOT present."
+    },
+    {
+      "id": "V-05",
+      "name": "CEU grounding gate PASS",
+      "status": "PASS",
+      "detail": "5/10 grounded, ratio=0.5, coverage=MEDIUM. Gate=PASS. CEU_REGISTRY_DRIFT documented."
+    },
+    {
+      "id": "V-06",
+      "name": "A5a produces 48 replay-safe domains",
+      "status": "DEFERRED",
+      "detail": "A5a not produced in E2E pipeline run. Validated separately in run_blueedge_a5_validation_01 (48 domains). Classified as PIPELINE_ARCHITECTURE_GAP."
+    },
+    {
+      "id": "V-07",
+      "name": "Executive DOM layer = 13 groups",
+      "status": "PASS",
+      "detail": "13 DOMs, 35 nodes. Determinism hash matches production. Source: conformance artifact (MANIFEST_LINEAGE_DRIFT documented)."
+    },
+    {
+      "id": "V-08",
+      "name": "Binding envelope construction",
+      "status": "PASS",
+      "detail": "Phase 5 PASS. Loaded from FastAPI conformance artifacts (STAGE_NOT_AUTOMATED)."
+    },
+    {
+      "id": "V-09",
+      "name": "Signal computation (4 signals)",
+      "status": "PASS",
+      "detail": "PSIG-001=5.663, PSIG-002=3.2098, PSIG-004=2.1822, PSIG-006=THEORETICAL_BASELINE. All values identical to production."
+    },
+    {
+      "id": "V-10",
+      "name": "Vault construction (9 artifacts)",
+      "status": "PASS",
+      "detail": "canonical_topology, signal_registry, gauge_state, coverage_state, reconstruction_state, binding_envelope, admissibility_log, evidence_trace, vault_manifest"
+    },
+    {
+      "id": "V-11",
+      "name": "Vault readiness (9/9 checks)",
+      "status": "PASS",
+      "detail": "vault_readiness.json → READY after schema bridge for VR-09"
+    },
+    {
+      "id": "V-12",
+      "name": "Canonical topology determinism hash match",
+      "status": "PASS",
+      "detail": "Production and revalidation produce identical determinism_hash"
+    },
+    {
+      "id": "V-13",
+      "name": "Signal values match production exactly",
+      "status": "PASS",
+      "detail": "All 4 signal values identical. 3 active pressure, 1 telemetry."
+    },
+    {
+      "id": "V-14",
+      "name": "Gauge state match production",
+      "status": "PASS",
+      "detail": "canonical=60, CONDITIONAL, band match"
+    },
+    {
+      "id": "V-15",
+      "name": "Coverage state match production",
+      "status": "PASS",
+      "detail": "100%, 10/10 match"
+    },
+    {
+      "id": "V-16",
+      "name": "PATH B semantic topology = 17 DOMAINs",
+      "status": "PASS",
+      "detail": "17 domains in semantic_topology_model.json match build_semantic_layer.py source"
+    },
+    {
+      "id": "V-17",
+      "name": "PATH B capabilities = 42",
+      "status": "PASS",
+      "detail": "42 capabilities confirmed in build_semantic_layer.py (CAP-01 through CAP-42)"
+    },
+    {
+      "id": "V-18",
+      "name": "PATH B components = 89",
+      "status": "PASS",
+      "detail": "89 components confirmed in build_semantic_layer.py (COMP-01 through COMP-89)"
+    },
+    {
+      "id": "V-19",
+      "name": "Crosswalk v2.0 structure consistent",
+      "status": "PASS",
+      "detail": "13 entities, 9/1/3 pattern confirmed (9 labeled, 1 irresolvable DOM-09, 3 weak). Version 2.0."
+    },
+    {
+      "id": "V-20",
+      "name": "Reconciliation = 4/17 backed, Q-02",
+      "status": "PASS",
+      "detail": "4 at L5 (structurally grounded), 1 at L3, 12 at L1. Weighted confidence 41.2%. Reconciliation ratio 23.53%."
+    },
+    {
+      "id": "V-21",
+      "name": "DOM-09 irresolvable confirmed",
+      "status": "PASS",
+      "detail": "DOM-09 (backend_modules) classified as IRRESOLVABLE, confidence=0.33, no semantic source"
+    },
+    {
+      "id": "V-22",
+      "name": "LENS manifest chain verified",
+      "status": "PASS",
+      "detail": "All required manifest artifacts exist and are consistent with revalidation results"
+    },
+    {
+      "id": "V-23",
+      "name": "Selector unchanged (non-mutation rule)",
+      "status": "PASS",
+      "detail": "selector.json still points to run_be_orchestrated_fixup_01. Phase 9 SKIPPED."
+    },
+    {
+      "id": "V-24",
+      "name": "No production artifacts mutated",
+      "status": "PASS",
+      "detail": "All revalidation outputs isolated to run_blueedge_revalidation_01/. No changes to run_be_orchestrated_fixup_01, run_blueedge_productized_01_fixed, or active selector."
+    }
+  ],
+  "deferred_checks": [
+    {
+      "id": "V-06",
+      "reason": "A5a layer not produced by current E2E pipeline. Validated in separate run.",
+      "classification": "PIPELINE_ARCHITECTURE_GAP"
+    }
+  ],
+  "deviations_registered": 6,
+  "critical_regressions": 0,
+  "gap_reappearances": 0
+}

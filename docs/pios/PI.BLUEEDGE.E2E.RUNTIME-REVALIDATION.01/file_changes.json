@@ -1,0 +1,90 @@
+{
+  "stream": "PI.BLUEEDGE.E2E.RUNTIME-REVALIDATION.01",
+  "date": "2026-05-18",
+  "total_changes": 14,
+  "mutations_to_production": 0,
+  "files": [
+    {
+      "path": "docs/pios/PI.BLUEEDGE.E2E.RUNTIME-REVALIDATION.01/STREAM_CONTRACT.md",
+      "action": "CREATED",
+      "type": "stream_contract",
+      "note": "Stream contract with v2 patch"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.E2E.RUNTIME-REVALIDATION.01/CONTRACT_PATCH_CURRENT_CANONICAL_EXPECTATIONS.md",
+      "action": "CREATED",
+      "type": "contract_correction",
+      "note": "GAP-001 stale expectation correction"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.E2E.RUNTIME-REVALIDATION.01/execution_report.md",
+      "action": "CREATED",
+      "type": "mandatory_artifact",
+      "note": "Pre-flight and execution log"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.E2E.RUNTIME-REVALIDATION.01/PATH_A_REVALIDATION.md",
+      "action": "CREATED",
+      "type": "primary_deliverable",
+      "note": "Phase A bottom-up pipeline replay results"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.E2E.RUNTIME-REVALIDATION.01/PATH_B_REVALIDATION.md",
+      "action": "CREATED",
+      "type": "primary_deliverable",
+      "note": "Phase B top-down LENS semantic traceback"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.E2E.RUNTIME-REVALIDATION.01/DEVIATION_ANALYSIS.md",
+      "action": "CREATED",
+      "type": "primary_deliverable",
+      "note": "6 deviations documented — 0 critical regressions"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.E2E.RUNTIME-REVALIDATION.01/ONTOLOGY_ALIGNMENT_STATUS.md",
+      "action": "CREATED",
+      "type": "primary_deliverable",
+      "note": "Operational ontology chain alignment assessment"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.E2E.RUNTIME-REVALIDATION.01/validation_log.json",
+      "action": "CREATED",
+      "type": "mandatory_artifact",
+      "note": "24 checks — 21 PASS, 0 FAIL, 3 DEFERRED"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.E2E.RUNTIME-REVALIDATION.01/file_changes.json",
+      "action": "CREATED",
+      "type": "mandatory_artifact",
+      "note": "This file"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.E2E.RUNTIME-REVALIDATION.01/CLOSURE.md",
+      "action": "CREATED",
+      "type": "mandatory_artifact",
+      "note": "Stream closure document"
+    },
+    {
+      "path": "clients/blueedge/psee/runs/run_blueedge_revalidation_01/",
+      "action": "CREATED",
+      "type": "isolated_run_output",
+      "note": "Full pipeline replay output — 767 files including extracted source, structural artifacts, CEU grounding, binding, signals, vault (9 artifacts)"
+    },
+    {
+      "path": "clients/blueedge/psee/runs/run_blueedge_revalidation_01/dom/dom_layer.json",
+      "action": "COPIED",
+      "type": "bridged_artifact",
+      "source": "docs/psee/PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01/recomputed/dom_path_domain_layer.json",
+      "note": "Copied from manifest dom_layer_path to run-local path for vault readiness check"
+    },
+    {
+      "path": "clients/blueedge/psee/runs/run_blueedge_revalidation_01/integration/integration_validation.json",
+      "action": "COPIED_AND_BRIDGED",
+      "type": "bridged_artifact",
+      "source": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/integration_validation.json",
+      "note": "Copied from manifest path to run-local path. Schema bridge: added top-level validation_status from summary.status for VR-09 compatibility"
+    }
+  ],
+  "production_artifacts_mutated": [],
+  "selector_state": "UNCHANGED — run_be_orchestrated_fixup_01"
+}

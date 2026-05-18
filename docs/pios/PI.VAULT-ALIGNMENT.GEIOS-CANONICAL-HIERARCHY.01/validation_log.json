@@ -1,0 +1,33 @@
+{
+  "stream": "PI.VAULT-ALIGNMENT.GEIOS-CANONICAL-HIERARCHY.01",
+  "classification": "G1",
+  "total_checks": 24,
+  "passed": 24,
+  "failed": 0,
+  "checks": [
+    { "id": 1, "category": "terminology", "check": "Program Intelligence term added to TERMINOLOGY_LOCK.md", "result": "PASS" },
+    { "id": 2, "category": "terminology", "check": "GEIOS term added to TERMINOLOGY_LOCK.md with historical emergence note", "result": "PASS" },
+    { "id": 3, "category": "terminology", "check": "Productization Bridge term added with supersession status", "result": "PASS" },
+    { "id": 4, "category": "terminology", "check": "PMO Bundle term added with 6 functional modules", "result": "PASS" },
+    { "id": 5, "category": "terminology", "check": "Marketplace term added as future capability", "result": "PASS" },
+    { "id": 6, "category": "terminology", "check": "No collision with existing locked terms", "result": "PASS" },
+    { "id": 7, "category": "terminology", "check": "New terms placed before Term Usage Rules (consistent ordering)", "result": "PASS" },
+    { "id": 8, "category": "canonical_state", "check": "Canonical Product Hierarchy section present with full hierarchy diagram", "result": "PASS" },
+    { "id": 9, "category": "canonical_state", "check": "Hierarchy invariants documented (5 layers with permanent roles)", "result": "PASS" },
+    { "id": 10, "category": "canonical_state", "check": "PiOS historical canon preserved — described as original, not replaced", "result": "PASS" },
+    { "id": 11, "category": "canonical_state", "check": "GEIOS described as emergent governing frame, not retroactive invention", "result": "PASS" },
+    { "id": 12, "category": "canonical_state", "check": "Architectural evolution note distinguishes strata from hierarchy", "result": "PASS" },
+    { "id": 13, "category": "canonical_state", "check": "S6 stale link fixed to existing vault page", "result": "PASS" },
+    { "id": 14, "category": "canonical_state", "check": "Evidence record export in S6 status and transition markers", "result": "PASS" },
+    { "id": 15, "category": "canonical_state", "check": "Capability list corrected: guided queries 12 → 36", "result": "PASS" },
+    { "id": 16, "category": "canonical_state", "check": "5B.1+, 5B.2, 5B.3, evidence record export added to capabilities", "result": "PASS" },
+    { "id": 17, "category": "phase_reconciliation", "check": "Strategic Phases 1-6 documented with current status", "result": "PASS" },
+    { "id": 18, "category": "phase_reconciliation", "check": "LENS 5A/5B explicitly declared as implementation decomposition of Strategic Phase 4", "result": "PASS" },
+    { "id": 19, "category": "bridge", "check": "Bridge principle documented as permanent", "result": "PASS" },
+    { "id": 20, "category": "bridge", "check": "6 rendering adapters documented as superseded with names listed", "result": "PASS" },
+    { "id": 21, "category": "bridge", "check": "Canonical bridge implementation identified (GenericSemanticPayloadResolver + zones)", "result": "PASS" },
+    { "id": 22, "category": "product_hierarchy", "check": "PRODUCT_HIERARCHY.md created with full hierarchy, layer definitions, PMO mapping", "result": "PASS" },
+    { "id": 23, "category": "canonical_paths", "check": "InterrogationTrailBuilder added to CURRENT_CANONICAL_PATHS.md", "result": "PASS" },
+    { "id": 24, "category": "consistency", "check": "Hierarchy identical across PIOS_CURRENT_CANONICAL_STATE.md and PRODUCT_HIERARCHY.md", "result": "PASS" }
+  ]
+}

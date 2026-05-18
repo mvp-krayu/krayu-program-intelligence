@@ -141,6 +141,7 @@ The crosswalk bridges these two independent ontologies. Reconciliation assesses 
 - [[PATH_B_EMERGENCE]] — semantic reconstruction (reconciliation source)
 - [[TOPOLOGY_AND_HYDRATION_SPLIT]] — how these concerns separated
 - [[../04_SQO_AND_QUALIFICATION/HYDRATED_AND_QSTATE_EVOLUTION]] — state progression through reconciliation
+- Crosswalk Auto-Derivation: `docs/pios/PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01/CROSSWALK_AUTO_DERIVATION_SPECIFICATION.md` — algorithm interface for proposing DOM↔DOMAIN mappings from both registries, confidence scoring, human review gate, irresolvability detection (DOM-09 pattern generalized). Maturity: SPECIFIED_NOT_IMPLEMENTED (2026-05-18).
 
 ## GIT_LINEAGE
 

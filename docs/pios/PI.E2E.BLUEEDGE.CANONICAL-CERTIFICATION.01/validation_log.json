@@ -1,0 +1,98 @@
+{
+  "stream_id": "PI.E2E.BLUEEDGE.CANONICAL-CERTIFICATION.01",
+  "generated": "2026-05-17T17:30:00Z",
+  "checks": [
+    {
+      "check_id": "CERT-01",
+      "name": "Source archive accessible",
+      "status": "PASS",
+      "detail": "Archive at external path, SHA256 672a841...matched"
+    },
+    {
+      "check_id": "CERT-02",
+      "name": "Source intake produces inventory",
+      "status": "PASS",
+      "detail": "741 files extracted to canonical_repo/"
+    },
+    {
+      "check_id": "CERT-03",
+      "name": "Structural scanner produces 40.x artifacts",
+      "status": "PASS",
+      "detail": "40.2 (945 nodes), 40.3 (197 edges), 40.4 (1 cluster) all produced"
+    },
+    {
+      "check_id": "CERT-04",
+      "name": "CEU grounding produces grounding state",
+      "status": "PASS",
+      "detail": "grounding_state_v3.json produced, 5/10 grounded, readiness_gate PASS"
+    },
+    {
+      "check_id": "CERT-05",
+      "name": "DOM layer generator produces dom_layer.json",
+      "status": "PASS",
+      "detail": "1 domain (ROOT) produced — mechanically correct but structurally poor"
+    },
+    {
+      "check_id": "CERT-06",
+      "name": "Integration validation passes",
+      "status": "PASS",
+      "detail": "12/12 checks PASS after re-run with binding envelope present"
+    },
+    {
+      "check_id": "CERT-07",
+      "name": "Pipeline Phases 1-9 complete",
+      "status": "PASS",
+      "detail": "All 9 phases pass mechanically"
+    },
+    {
+      "check_id": "CERT-08",
+      "name": "Vault readiness 9/9",
+      "status": "PASS",
+      "detail": "All vault readiness checks pass after integration validation remediation"
+    },
+    {
+      "check_id": "CERT-09",
+      "name": "Domain reconstruction matches LENS-serving state",
+      "status": "FAIL",
+      "detail": "Generic pipeline: 1 domain (ROOT). LENS-serving: 13 domains. Gap: conformance artifact dependency."
+    },
+    {
+      "check_id": "CERT-10",
+      "name": "Node count matches LENS-serving state",
+      "status": "FAIL",
+      "detail": "Generic pipeline: 945 nodes. LENS-serving: 35 curated nodes. No curation stage in pipeline."
+    },
+    {
+      "check_id": "CERT-11",
+      "name": "Domain reconstruction method canonically declared",
+      "status": "FAIL",
+      "detail": "No AMOps/Vault authority declares which reconstruction method is canonical."
+    },
+    {
+      "check_id": "CERT-12",
+      "name": "LENS-serving run produced by single pipeline execution",
+      "status": "FAIL",
+      "detail": "run_be_orchestrated_fixup_01 assembled from partial outputs, not single execution. Non-blocking."
+    },
+    {
+      "check_id": "CERT-13",
+      "name": "No existing LENS-serving artifacts modified",
+      "status": "PASS",
+      "detail": "LENS selector restored after Phase 9 overwrite. No other modifications."
+    },
+    {
+      "check_id": "CERT-14",
+      "name": "Discovery posture maintained (CORRECTION compliance)",
+      "status": "PASS",
+      "detail": "No canonical stages assumed. Pipeline discovered, not validated."
+    }
+  ],
+  "summary": {
+    "total": 14,
+    "pass": 10,
+    "fail": 4,
+    "blocking_failures": ["CERT-09", "CERT-10", "CERT-11"],
+    "non_blocking_failures": ["CERT-12"]
+  },
+  "verdict": "PARTIALLY_CERTIFIED"
+}

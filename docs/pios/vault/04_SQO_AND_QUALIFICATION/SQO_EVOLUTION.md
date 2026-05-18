@@ -94,6 +94,15 @@ SQO emerged entirely on 2026-05-10, with operational extensions on 2026-05-11:
 | BlueEdge | S2_QUALIFIED_WITH_DEBT | 15 | HYDRATED (Q-02) |
 | FastAPI | S1_ONBOARDING_REQUIRED | N/A | PARTIAL |
 
+## S0→S1 and S1→S2+ Gate Formalization
+
+Onboarding gate definitions are formalized in the Client Onboarding Lifecycle Specification:
+
+- **S0→S1 (Structural Onboarding):** Requires PATH A artifacts only (structural topology, DOMs, CEU grounding). CSR is NOT required. Produces structurally grounded but semantically incomplete LENS projection. FastAPI's current state IS S1.
+- **S1→S2+ (Semantic Qualification):** Requires CSR + semantic_topology_model + crosswalk + reconciliation. Produces full semantic depth with Q-class and reconciliation.
+
+**Reference:** `docs/pios/PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01/ONBOARDING_LIFECYCLE_SPECIFICATION.md` — 8-phase lifecycle model with gate formalization (2026-05-18).
+
 ## Cross-References
 
 - [[HYDRATED_AND_QSTATE_EVOLUTION]] — HYDRATED state and Q-class

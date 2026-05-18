@@ -1,0 +1,93 @@
+{
+  "stream": "PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01",
+  "date": "2026-05-18",
+  "total_changes": 15,
+  "files": [
+    {
+      "path": "docs/pios/PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01/GAP_ASSESSMENT.md",
+      "action": "CREATED",
+      "type": "primary_deliverable",
+      "note": "D-1: Per-artifact generalization classification, quantified ratio, impact chain, irreducible boundary"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01/CLIENT_SEMANTIC_REGISTRY_SPECIFICATION.md",
+      "action": "CREATED",
+      "type": "primary_deliverable",
+      "note": "D-2: CSR JSON schema, advisory construction protocol, CEU analogy/disanalogy"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01/CROSSWALK_AUTO_DERIVATION_SPECIFICATION.md",
+      "action": "CREATED",
+      "type": "primary_deliverable",
+      "note": "D-3: Auto-derivation algorithm interface, confidence scoring, human review gate, irresolvability detection"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01/ONBOARDING_LIFECYCLE_SPECIFICATION.md",
+      "action": "CREATED",
+      "type": "primary_deliverable",
+      "note": "D-4: 8-phase lifecycle model, S0→S1 and S1→S2+ gates, SQO 15-stage integration"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01/MARKETPLACE_IMPACT_ASSESSMENT.md",
+      "action": "CREATED",
+      "type": "primary_deliverable",
+      "note": "D-5: Built-today claim precision, effort model, advisory as permanent, irreducible governance statement"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01/HARDCODING_FIX_SPECIFICATIONS.md",
+      "action": "CREATED",
+      "type": "primary_deliverable",
+      "note": "D-6: DOM-04, flagshipBinding, compile_blueedge — fix approaches and effort estimates"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01/execution_report.md",
+      "action": "CREATED",
+      "type": "mandatory_artifact"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01/validation_log.json",
+      "action": "CREATED",
+      "type": "mandatory_artifact"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01/file_changes.json",
+      "action": "CREATED",
+      "type": "mandatory_artifact"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01/CLOSURE.md",
+      "action": "CREATED",
+      "type": "mandatory_artifact"
+    },
+    {
+      "path": "docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md",
+      "action": "UPDATED",
+      "type": "vault_terminology",
+      "note": "Added 'Client Semantic Registry (CSR)' as locked term"
+    },
+    {
+      "path": "docs/pios/vault/03_PATH_SPLIT_EVOLUTION/CROSSWALK_AND_RECONCILIATION.md",
+      "action": "UPDATED",
+      "type": "vault_crosswalk",
+      "note": "Added cross-reference to CROSSWALK_AUTO_DERIVATION_SPECIFICATION.md"
+    },
+    {
+      "path": "docs/pios/vault/04_SQO_AND_QUALIFICATION/SQO_EVOLUTION.md",
+      "action": "UPDATED",
+      "type": "vault_sqo",
+      "note": "Added S0→S1 and S1→S2+ gate formalization section with cross-reference"
+    },
+    {
+      "path": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "action": "UPDATED",
+      "type": "vault_canonical_state",
+      "note": "Added Client Onboarding Substrate section with maturity table"
+    },
+    {
+      "path": "docs/pios/vault/00_START_HERE/OPERATIONAL_ONTOLOGY.md",
+      "action": "UPDATED",
+      "type": "vault_ontology",
+      "note": "Added §14 Semantic Ontology Authoring vs Topology Generation distinction, updated GIT_LINEAGE"
+    }
+  ]
+}

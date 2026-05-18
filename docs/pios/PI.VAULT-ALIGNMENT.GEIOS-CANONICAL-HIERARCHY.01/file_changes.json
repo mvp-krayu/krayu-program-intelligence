@@ -1,0 +1,40 @@
+{
+  "stream": "PI.VAULT-ALIGNMENT.GEIOS-CANONICAL-HIERARCHY.01",
+  "classification": "G1",
+  "files_modified": [
+    {
+      "path": "docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md",
+      "change": "Added 5 locked terms: Program Intelligence, GEIOS, Productization Bridge, PMO Bundle, Marketplace"
+    },
+    {
+      "path": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "change": "Added Canonical Product Hierarchy section, Strategic Phase Reconciliation section, GEIOS-LENS Bridge State section. Fixed S6 stale link. Updated date, capabilities, transition markers"
+    },
+    {
+      "path": "docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md",
+      "change": "Added Export Primitives subsection with InterrogationTrailBuilder"
+    }
+  ],
+  "files_created": [
+    {
+      "path": "docs/pios/vault/10_CANONICAL_RUNTIME_STATE/PRODUCT_HIERARCHY.md",
+      "purpose": "Canonical product hierarchy vault page — layer definitions, PMO module mapping, strategic phase mapping"
+    },
+    {
+      "path": "docs/pios/PI.VAULT-ALIGNMENT.GEIOS-CANONICAL-HIERARCHY.01/execution_report.md",
+      "purpose": "Stream execution narrative"
+    },
+    {
+      "path": "docs/pios/PI.VAULT-ALIGNMENT.GEIOS-CANONICAL-HIERARCHY.01/validation_log.json",
+      "purpose": "Validation checks"
+    },
+    {
+      "path": "docs/pios/PI.VAULT-ALIGNMENT.GEIOS-CANONICAL-HIERARCHY.01/file_changes.json",
+      "purpose": "Change manifest"
+    },
+    {
+      "path": "docs/pios/PI.VAULT-ALIGNMENT.GEIOS-CANONICAL-HIERARCHY.01/CLOSURE.md",
+      "purpose": "Stream closure"
+    }
+  ]
+}

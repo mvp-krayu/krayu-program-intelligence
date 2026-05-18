@@ -246,7 +246,56 @@ Both converge at LENS via GenericSemanticPayloadResolver.
 
 **13 absolute prohibitions** (not overridable): no team behavior inference, no organizational intent, no human motive, no cultural diagnosis, no leadership quality, no management effectiveness, no personnel attribution, no behavioral prediction, no organizational sentiment, no causal attribution to humans, no remediation prioritization, no "you should" language, no ranked next actions.
 
-## 12. Anti-Rediscovery Reference
+## 12. Current Operational Reality vs Target Architecture
+
+This section explicitly distinguishes between what is operationally implemented and what is target architecture. No ambiguity allowed.
+
+### Operational Implementation (WHAT RUNS TODAY)
+
+| Layer | Implementation | Source |
+|---|---|---|
+| Source intake | `source_intake.py` — SHA-256 boundary validation | Generic, multi-client |
+| Structural scan | `structural_scanner.py` — 945 nodes, 944 edges, 11 clusters | Generic, multi-client |
+| CEU grounding | `ceu_grounding.py` — generic 10-CEU registry | Generic, multi-client |
+| A5b executive DOMs | 13 DOMs from conformance artifact (`dom_layer_path`) | BlueEdge-specific, manifest-linked |
+| PATH B topology | `build_semantic_layer.py` — 17/42/89 static definitions | BlueEdge-specific, static |
+| Crosswalk | `semantic_continuity_crosswalk.json` v2.0 — 13 entities | BlueEdge-specific, static |
+| Reconciliation | `ReconciliationCorrespondenceCompiler.js` — 5-input, 5-level | Generic compiler, BlueEdge inputs |
+| Signal computation | Pre-computed from 4 FastAPI conformance contracts | STAGE_NOT_AUTOMATED |
+| Vault construction | `run_client_pipeline.py` Phase 8a — 9 artifacts | Generic orchestrator |
+| LENS projection | Manifest-driven, 4-persona, 36 derive functions | Generic rendering, client-parameterized |
+
+### Target Ontology (WHAT THE ARCHITECTURE SPECIFIES)
+
+| Layer | Target State | Gap |
+|---|---|---|
+| A5a substrate | 48 domains as pipeline intermediate stage | PIPELINE_NOT_INTEGRATED — validated separately |
+| A5b compression | CEU-grounded path-prefix compression as governed pipeline stage | MANIFEST_LINEAGE_DRIFT — reads conformance artifact instead |
+| Signal derivation | Independent computation from structural scan via `run_end_to_end.py` | STAGE_NOT_AUTOMATED — bypassed by pre-computed conformance |
+| CEU parity | Generic registry matches historical BlueEdge-specific grounding | CEU_REGISTRY_DRIFT — 5/10 vs 35/35 |
+| Run self-containment | All artifacts local to run directory | RUN_LOCAL_ARTIFACT_GAP — pipeline reads from external manifest paths |
+| PATH B generalization | Dynamic semantic derivation from client evidence | STATIC_SEMANTIC — Python literals, BlueEdge-specific |
+| Crosswalk generalization | Auto-derived from DOM↔DOMAIN correspondence | STATIC_SEMANTIC — hand-crafted bridge |
+
+### Architectural Debt
+
+| Item | Severity | What It Means |
+|---|---|---|
+| MANIFEST_LINEAGE_DRIFT | HIGH | The 13 DOMs are correct but sourced from a recovery artifact, not a governed pipeline stage |
+| CEU_REGISTRY_DRIFT | MEDIUM | Generic CEU registry is the correct forward path but doesn't reproduce historical BlueEdge grounding |
+| PIPELINE_ARCHITECTURE_GAP | LOW | A5a exists as concept and separate validation, not integrated into standard E2E pipeline |
+| STAGE_NOT_AUTOMATED | LOW | Signal values are canonical but not independently recomputable from structural scan |
+
+### Future Intended Canonicalization
+
+1. **A5b Pipeline Stage:** Implement path-prefix compression from CEU-grounded nodes as Phase 4.5 in pipeline. Replace conformance artifact dependency.
+2. **Signal Automation:** Implement independent signal computation from structural scan. Remove STAGE_NOT_AUTOMATED bypass.
+3. **CEU Registry Alignment:** Either add BlueEdge-specific patterns to generic registry or document the divergence as permanent.
+4. **PATH B Generalization:** Client Semantic Registry (per PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01) to replace static Python literals.
+
+## 13. Anti-Rediscovery Reference
+
+> **See also:** BLUEEDGE_CANONICAL_TRUTH_CERTIFICATION.md §F for the complete anti-rediscovery lock (10 items).
 
 **What has been rediscovered and should NOT be rediscovered again:**
 
@@ -265,6 +314,36 @@ Both converge at LENS via GenericSemanticPayloadResolver.
 | Pipeline orchestration (9 phases) | This document §5 | PI.CANONICALIZATION.END-TO-END-LOCK.01 |
 
 **Rule:** Before investigating any of the above, load the canonical location. If the canonical location is insufficient, fix the canonical location — do not produce a parallel recovery document.
+
+## 14. Semantic Ontology Authoring vs Topology Generation
+
+Two distinct operations exist within PATH B. They MUST NOT be conflated:
+
+### Semantic Ontology Authoring (CSR Construction)
+
+- **Nature:** Human/governed process
+- **Who:** Advisory team + client
+- **Duration:** Days to weeks
+- **Automation:** NOT automatable — requires business domain expertise and human judgment
+- **Output:** `client_semantic_registry.json` (CSR) — the canonical semantic authority source
+- **Why not automatable:** Business domain boundaries are semantic, not structural. Code structure does not encode business intent. Capability classification requires strategic judgment.
+
+### Semantic Topology Generation (from CSR)
+
+- **Nature:** Deterministic computation
+- **Who:** Automated system
+- **Duration:** Seconds
+- **Automation:** Fully automated once CSR exists
+- **Input:** CSR
+- **Output:** `semantic_topology_model.json`
+- **Current implementation:** `build_semantic_layer.py` (BlueEdge — reads Python literals that are the de facto CSR)
+- **Target implementation:** Generic generator reading from `client_semantic_registry.json`
+
+**Maturity:**
+- Semantic ontology authoring: SPECIFIED_NOT_IMPLEMENTED (CSR schema defined, governed process specified)
+- Semantic topology generation: OPERATIONAL (BlueEdge), SPECIFIED_NOT_IMPLEMENTED (generic)
+
+**Reference:** `docs/pios/PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01/CLIENT_SEMANTIC_REGISTRY_SPECIFICATION.md`
 
 ## Cross-References
 
@@ -285,4 +364,5 @@ Both converge at LENS via GenericSemanticPayloadResolver.
 | Derived from | PI.CANONICALIZATION.END-TO-END-LOCK.01 (MASTER_OPERATIONAL_DOCUMENT_ASSESSMENT.md — recommended this document), PI.BLUEEDGE.CROSSWALK-AND-RECONCILIATION-RECOVERY.01 (ontology recovery), PI.BLUEEDGE.A5-CANONICALIZATION-AND-REPLAYSAFE-OPERATIONALIZATION.01 (compression chain recovery) |
 | Authoritative runtime artifacts | run_client_pipeline.py, ReconciliationCorrespondenceCompiler.js, SemanticCrosswalkMapper.js, SemanticActorHydrator.js, build_semantic_layer.py, structural_scanner.py, dom_layer_generator.py |
 | Client binding | BlueEdge reference implementation. All instantiation values (17 domains, 13 DOMs, 4/17 ratio, DOM-09 irresolvability, 945→35→13 chain) are BlueEdge-specific. Architecture is substrate-general. |
-| Last verified | 2026-05-17 |
+| Updated by | PI.BLUEEDGE.CANONICAL-TRUTH-CERTIFICATION.01 (added §12 Current Operational Reality vs Target Architecture), PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01 (added §14 Semantic Ontology Authoring vs Topology Generation) |
+| Last verified | 2026-05-18 |

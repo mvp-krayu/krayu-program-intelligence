@@ -302,6 +302,19 @@
 
 **Reference:** `docs/governance/MARKETPLACE_IMPLEMENTATION_LANE_DISCIPLINE.md`
 
+### Client Semantic Registry (CSR)
+
+**Definition:** The canonical per-client semantic authority source that defines a client's DOMAIN model (business domains, capabilities, components). The PATH B equivalent of the CEU registry for PATH A. CSR is the ontology; `semantic_topology_model.json` is a derived artifact generated FROM the CSR.
+
+**Status:** CANONICAL — SPECIFIED_NOT_IMPLEMENTED (2026-05-18).
+
+**Critical distinctions:**
+- **Semantic Ontology Authoring** (CSR construction) = human/governed process. NOT AI-discoverable.
+- **Semantic Topology Generation** (from CSR) = deterministic computation. Automated once CSR exists.
+- CSR is decoupled from any specific generation tool (`build_semantic_layer.py` is one current generator).
+
+**Source:** `docs/pios/PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01/CLIENT_SEMANTIC_REGISTRY_SPECIFICATION.md`
+
 ## Term Usage Rules
 
 1. **Use locked definitions exactly.** Do not paraphrase, simplify, or reinterpret.
