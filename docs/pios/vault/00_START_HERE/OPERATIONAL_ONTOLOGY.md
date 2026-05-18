@@ -281,7 +281,8 @@ Both converge at LENS via GenericSemanticPayloadResolver.
 | Field | Value |
 |---|---|
 | Created by | PI.VAULT.OPERATIONAL-ONTOLOGY-CANONICALIZATION.01 |
-| Creation commit | PENDING (this stream) |
+| Creation commit | 16b96aa |
 | Derived from | PI.CANONICALIZATION.END-TO-END-LOCK.01 (MASTER_OPERATIONAL_DOCUMENT_ASSESSMENT.md — recommended this document), PI.BLUEEDGE.CROSSWALK-AND-RECONCILIATION-RECOVERY.01 (ontology recovery), PI.BLUEEDGE.A5-CANONICALIZATION-AND-REPLAYSAFE-OPERATIONALIZATION.01 (compression chain recovery) |
 | Authoritative runtime artifacts | run_client_pipeline.py, ReconciliationCorrespondenceCompiler.js, SemanticCrosswalkMapper.js, SemanticActorHydrator.js, build_semantic_layer.py, structural_scanner.py, dom_layer_generator.py |
+| Client binding | BlueEdge reference implementation. All instantiation values (17 domains, 13 DOMs, 4/17 ratio, DOM-09 irresolvability, 945→35→13 chain) are BlueEdge-specific. Architecture is substrate-general. |
 | Last verified | 2026-05-17 |

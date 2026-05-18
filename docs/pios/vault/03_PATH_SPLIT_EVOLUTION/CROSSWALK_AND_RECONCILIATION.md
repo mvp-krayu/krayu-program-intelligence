@@ -150,7 +150,8 @@ The crosswalk bridges these two independent ontologies. Reconciliation assesses 
 | Staleness detected by | PI.BLUEEDGE.CROSSWALK-AND-RECONCILIATION-RECOVERY.01 |
 | Staleness assessed by | PI.CANONICALIZATION.END-TO-END-LOCK.01 (AMOPS_VAULT_SUFFICIENCY_ASSESSMENT.md) |
 | Fixed by | PI.VAULT.OPERATIONAL-ONTOLOGY-CANONICALIZATION.01 |
-| Fix commit | PENDING (this stream) |
+| Fix commit | 16b96aa |
 | Recovered-from artifacts | CROSSWALK_RUNTIME_ANALYSIS.md, RECONCILIATION_CORRESPONDENCE_ANALYSIS.md, LENS_TRACEBACK_ANALYSIS.md (PI.BLUEEDGE.CROSSWALK-AND-RECONCILIATION-RECOVERY.01) |
 | Authoritative runtime artifacts | ReconciliationCorrespondenceCompiler.js, SemanticCrosswalkMapper.js, SemanticActorHydrator.js, semantic_continuity_crosswalk.json, reconciliation_correspondence.v1.json |
+| Client binding | BlueEdge reference implementation. All instantiation values (13 DOMs, 17 DOMAINs, 4/17 ratio, DOM-09 irresolvability, crosswalk v2.0 mapping counts) are BlueEdge-specific. Architecture is substrate-general. |
 | Last verified | 2026-05-17 |
