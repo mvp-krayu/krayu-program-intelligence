@@ -1,0 +1,22 @@
+{
+  "stream": "PI.SUBSTRATE.SEMANTIC-DERIVATION-COMPILER.01",
+  "changes": [
+    {"path": "scripts/pios/semantic_derivation_compiler.py", "action": "CREATE", "purpose": "CLI entry point — 7-phase compiler pipeline"},
+    {"path": "scripts/pios/sdc/__init__.py", "action": "CREATE", "purpose": "SDC package init"},
+    {"path": "scripts/pios/sdc/evidence_parser.py", "action": "CREATE", "purpose": "P1: HTML → structured intermediate representation"},
+    {"path": "scripts/pios/sdc/domain_proposer.py", "action": "CREATE", "purpose": "P2-P4: Component extraction + capability grouping + domain classification"},
+    {"path": "scripts/pios/sdc/confidence_scorer.py", "action": "CREATE", "purpose": "P5: Per-element confidence assignment"},
+    {"path": "scripts/pios/sdc/review_queue_generator.py", "action": "CREATE", "purpose": "P6: Review trigger detection → queue artifact"},
+    {"path": "scripts/pios/sdc/candidate_csr_emitter.py", "action": "CREATE", "purpose": "Output formatter — candidate_csr, derivation_report, review_queue, rejection_report"},
+    {"path": "scripts/pios/sdc/llm_adapter.py", "action": "CREATE", "purpose": "Provider-isolated LLM call boundary"},
+    {"path": "scripts/pios/sdc/validate_candidate_csr.py", "action": "CREATE", "purpose": "Schema + referential integrity + confidence bounds validation"},
+    {"path": "scripts/pios/sdc/blueedge_retroactive_validation.py", "action": "CREATE", "purpose": "BlueEdge retroactive validation (governance + reconstruction recall)"},
+    {"path": "scripts/pios/run_client_pipeline.py", "action": "MODIFY", "purpose": "Add Phase 3b: Semantic Derivation (explicit opt-in)"},
+    {"path": "docs/pios/PI.SUBSTRATE.SEMANTIC-DERIVATION-COMPILER.01/SQO_STAGE3_AUTHORITY_BOUNDARY.md", "action": "CREATE", "purpose": "Mandatory governance artifact — authority boundary definition"},
+    {"path": "docs/pios/PI.SUBSTRATE.SEMANTIC-DERIVATION-COMPILER.01/IMPLEMENTATION_SEMANTICS.md", "action": "CREATE", "purpose": "§5.5 implementation semantics"},
+    {"path": "docs/pios/PI.SUBSTRATE.SEMANTIC-DERIVATION-COMPILER.01/execution_report.md", "action": "CREATE", "purpose": "Stream execution report"},
+    {"path": "docs/pios/PI.SUBSTRATE.SEMANTIC-DERIVATION-COMPILER.01/validation_log.json", "action": "CREATE", "purpose": "Validation results — 33 checks"},
+    {"path": "docs/pios/PI.SUBSTRATE.SEMANTIC-DERIVATION-COMPILER.01/file_changes.json", "action": "CREATE", "purpose": "File change manifest"},
+    {"path": "docs/pios/PI.SUBSTRATE.SEMANTIC-DERIVATION-COMPILER.01/CLOSURE.md", "action": "CREATE", "purpose": "G1 stream closure with architecture memory propagation"}
+  ]
+}

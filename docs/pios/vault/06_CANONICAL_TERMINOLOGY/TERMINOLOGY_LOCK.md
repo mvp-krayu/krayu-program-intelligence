@@ -306,14 +306,32 @@
 
 **Definition:** The canonical per-client semantic authority source that defines a client's DOMAIN model (business domains, capabilities, components). The PATH B equivalent of the CEU registry for PATH A. CSR is the ontology; `semantic_topology_model.json` is a derived artifact generated FROM the CSR.
 
-**Status:** CANONICAL — SPECIFIED_NOT_IMPLEMENTED (2026-05-18).
+**Status:** CANONICAL — PARTIAL (2026-05-18). Semantic Derivation Compiler can produce candidate CSR from evidence. Promotion to canonical CSR remains human-governed.
 
 **Critical distinctions:**
 - **Semantic Ontology Authoring** (CSR construction) = human/governed process. NOT AI-discoverable.
 - **Semantic Topology Generation** (from CSR) = deterministic computation. Automated once CSR exists.
+- **Semantic Derivation** (candidate CSR from evidence) = governed AI-assisted process via Semantic Derivation Compiler. Output is CANDIDATE with L3 ceiling.
 - CSR is decoupled from any specific generation tool (`build_semantic_layer.py` is one current generator).
 
 **Source:** `docs/pios/PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01/CLIENT_SEMANTIC_REGISTRY_SPECIFICATION.md`
+
+### Semantic Derivation Compiler
+
+**Definition:** The governed AI-assisted compiler that fills SQO Stage 3 (Semantic Construction). Transforms structured evidence documents (HTML) into candidate CSR with confidence scoring (DIRECT_EVIDENCE / DERIVED / INFERRED), evidence tracing, review gating, and SQO authority ceiling (L3). A 7-phase pipeline: evidence gate → parse → extract → group → classify → score → review queue → emit.
+
+**Status:** CANONICAL — operational (2026-05-18).
+
+**Governance invariants:**
+- AI proposes, never self-authorizes. Output is always `review_status: "CANDIDATE"`.
+- Compiler NEVER writes to canonical CSR path. Output to `clients/{client}/psee/runs/{run}/semantic/compiler/`.
+- Qualification ceiling: L3. DIRECT_EVIDENCE derivation confidence does NOT imply L5 authority.
+- Explicit opt-in required (`--enable-semantic-derivation` flag).
+- Evidence gate rejects insufficient evidence BEFORE any AI invocation.
+
+**Shape independence:** The compiler does NOT target any specific domain/capability/component cardinality. BlueEdge's 17/42/89 is a certified reference outcome, not a universal model, target topology, success constraint, or forced ontology shape. For new clients, all dimensions may differ.
+
+**Source:** `docs/pios/PI.SUBSTRATE.SEMANTIC-DERIVATION-COMPILER.01/`
 
 ## Term Usage Rules
 

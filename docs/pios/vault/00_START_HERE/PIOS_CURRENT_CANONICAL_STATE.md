@@ -1,6 +1,6 @@
 # PiOS Current Canonical State
 
-> **This page reflects the system's canonical state as of 2026-05-17.**
+> **This page reflects the system's canonical state as of 2026-05-18.**
 
 ---
 
@@ -356,12 +356,38 @@ The Client Onboarding Substrate specifies the governed process for onboarding ne
 | A5a (48 replay-safe structural domains) | OPERATIONAL |
 | A5b (13 executive DOMs) | OPERATIONAL_WITH_MANIFEST_DEBT |
 | PATH B (BlueEdge) | OPERATIONAL |
-| Client Semantic Registry (CSR) | SPECIFIED_NOT_IMPLEMENTED |
+| Client Semantic Registry (CSR) | PARTIAL — candidate CSR via Semantic Derivation Compiler; canonical promotion human-governed |
 | Crosswalk auto-derivation | SPECIFIED_NOT_IMPLEMENTED |
 | Generic PATH B onboarding | PARTIAL |
 | Multi-client SQO | FUTURE_DECLARED |
 
 **Reference:** `docs/pios/PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01/` — 6 primary deliverables + 4 mandatory artifacts.
+
+## Semantic Derivation Compiler
+
+**Stream:** PI.SUBSTRATE.SEMANTIC-DERIVATION-COMPILER.01 (COMPLETE — 2026-05-18)
+**Classification:** G1 — Architecture-Mutating
+
+The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — the governed AI-assisted mechanism that transforms structured evidence documents into candidate CSR with confidence scoring, evidence tracing, review gating, and SQO authority ceiling.
+
+**Architecture:**
+- 7-phase pipeline: P0 Evidence Gate → P1 Parse → P2-P4 Extract/Group/Classify → P5 Score → P6 Review Queue → Emit
+- 3-tier extraction: Tier 1 (deterministic, DIRECT_EVIDENCE) → Tier 2 (technology stack, DERIVED) → Tier 3 (AI-assisted, INFERRED)
+- 4-signal grouping: document groups, layer structure, naming patterns, PATH A adjacency
+- Provider-isolated LLM adapter boundary
+
+**Governance invariants:**
+- AI proposes, never self-authorizes — output is always CANDIDATE with L3 qualification ceiling
+- Evidence gate rejects insufficient evidence BEFORE AI invocation
+- Compiler NEVER writes to canonical CSR path
+- Explicit opt-in required (`--enable-semantic-derivation`)
+- Confidence model separation: derivation confidence (DIRECT_EVIDENCE/DERIVED/INFERRED) is distinct from SQO authority (L1-L5)
+
+**Shape independence:** Compiler does NOT target any specific domain/capability/component cardinality. BlueEdge's 17/42/89 is certified reference outcome, not universal model or forced ontology shape.
+
+**Pipeline integration:** Phase 3b in `run_client_pipeline.py` — explicit opt-in, CSR-exists skip, failure isolation.
+
+**Reference:** `docs/pios/PI.SUBSTRATE.SEMANTIC-DERIVATION-COMPILER.01/` — 6 governance artifacts + `scripts/pios/sdc/` (8-module compiler package).
 
 ## Vault Status
 
