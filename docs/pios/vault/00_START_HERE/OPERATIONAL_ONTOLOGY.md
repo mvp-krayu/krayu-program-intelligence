@@ -118,11 +118,45 @@ Result: `backed / total` = grounding ratio → Q-class per Q02_GOVERNANCE_AMENDM
 
 **BlueEdge:** 4/17 = 0.2353 → Q-02 (Partial Grounding)
 
-**Q-class classification:**
+**Q-class classification (governance numbering — authoritative):**
 - Q-01: Fully grounded (all domains structurally backed)
 - Q-02: Partially grounded (some domains backed, disclosure required)
 - Q-03: Semantic only (zero structural backing)
 - Q-04: Unavailable (evidence absent)
+
+**Q-class dual-field compatibility (canonical — do NOT rediscover):**
+
+The system maintains TWO parallel Q-class numbering schemes. The governance numbering (above) is authoritative. A legacy compatibility field exists for backward-compatible adapters:
+
+| Governance class | Governance meaning | Legacy compat class |
+|---|---|---|
+| Q-01 | FULL_GROUNDING | Q-00 |
+| Q-02 | PARTIAL_GROUNDING | Q-01 |
+| Q-03 | SEMANTIC_ONLY | Q-02 |
+| Q-04 | UNAVAILABLE | Q-04 |
+
+The numbering is INVERTED between the two schemes. Governance Q-02 maps to legacy Q-01. This is intentional and canonical.
+
+**Authoritative fields (governance-driven, used by LENS narrative):**
+- `qualifier_summary.qualifier_class`
+- `payload.qualifier_class_governance`
+
+**Compatibility fields (legacy, backward-compat ONLY — never use for executive rendering):**
+- `payload.qualifier_class`
+- `qualifier_summary.qualifier_class_compat`
+
+**Resolution source:** `QClassResolver.js` — the `Q_CLASSES` table defines both `id` (governance) and `compat_legacy_class` (legacy) per class. `governanceToLegacy()` and `legacyToGovernance()` perform bidirectional mapping.
+
+**BlueEdge concrete values:** 4/17 backed, ratio 0.2353, continuity VALIDATED → governance Q-02, compat Q-01. Both are correct outputs of the same deterministic derivation.
+
+**DOMAIN-11 accounting (canonical — do NOT rediscover):**
+
+BlueEdge has 17 semantic domains. The grounding classification:
+- 4 **structurally backed** (lineage EXACT or STRONG): DOMAIN-01, DOMAIN-10, DOMAIN-14, DOMAIN-16
+- 12 **semantic-only** (lineage NONE): all remaining except DOMAIN-11
+- 1 **PARTIAL** (lineage PARTIAL — Level-3 equivalent): DOMAIN-11 "Event-Driven Architecture"
+
+4 + 12 + 1 = 17. DOMAIN-11 is the "missing 17th" if only backed and semantic-only are counted (4 + 12 = 16). PARTIAL does NOT count as structurally grounded — it is excluded from the backed numerator. DOMAIN-11 is a genuine intermediate state: some correspondence evidence exists but insufficient for structural grounding classification.
 
 **Grounding discrepancy:** Two different questions:
 - 41.1 evidence-boundary: "Does evidence exist?" → 15/17 GROUNDED
@@ -312,6 +346,8 @@ This section explicitly distinguishes between what is operationally implemented 
 | A5a raw substrate (48 domains) | PATH_A5_PARTICIPATION_ARCHITECTURE.md | PI.BLUEEDGE.A5-CANONICALIZATION-AND-REPLAYSAFE-OPERATIONALIZATION.01 |
 | CEU registry drift | PATH_A5_PARTICIPATION_ARCHITECTURE.md | PI.BLUEEDGE.A5-CANONICALIZATION-AND-REPLAYSAFE-OPERATIONALIZATION.01 |
 | Pipeline orchestration (9 phases) | This document §5 | PI.CANONICALIZATION.END-TO-END-LOCK.01 |
+| Q-class dual-field compatibility (governance vs legacy numbering) | This document §4, QClassResolver.js | PI.SUBSTRATE.CLIENT-ONBOARDING-GENERALIZATION.01 |
+| DOMAIN-11 PARTIAL classification (4+12+1=17 accounting) | This document §4 | PI.SUBSTRATE.CLIENT-ONBOARDING-GENERALIZATION.01 |
 
 **Rule:** Before investigating any of the above, load the canonical location. If the canonical location is insufficient, fix the canonical location — do not produce a parallel recovery document.
 
@@ -364,5 +400,5 @@ Two distinct operations exist within PATH B. They MUST NOT be conflated:
 | Derived from | PI.CANONICALIZATION.END-TO-END-LOCK.01 (MASTER_OPERATIONAL_DOCUMENT_ASSESSMENT.md — recommended this document), PI.BLUEEDGE.CROSSWALK-AND-RECONCILIATION-RECOVERY.01 (ontology recovery), PI.BLUEEDGE.A5-CANONICALIZATION-AND-REPLAYSAFE-OPERATIONALIZATION.01 (compression chain recovery) |
 | Authoritative runtime artifacts | run_client_pipeline.py, ReconciliationCorrespondenceCompiler.js, SemanticCrosswalkMapper.js, SemanticActorHydrator.js, build_semantic_layer.py, structural_scanner.py, dom_layer_generator.py |
 | Client binding | BlueEdge reference implementation. All instantiation values (17 domains, 13 DOMs, 4/17 ratio, DOM-09 irresolvability, 945→35→13 chain) are BlueEdge-specific. Architecture is substrate-general. |
-| Updated by | PI.BLUEEDGE.CANONICAL-TRUTH-CERTIFICATION.01 (added §12 Current Operational Reality vs Target Architecture), PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01 (added §14 Semantic Ontology Authoring vs Topology Generation) |
+| Updated by | PI.BLUEEDGE.CANONICAL-TRUTH-CERTIFICATION.01 (added §12 Current Operational Reality vs Target Architecture), PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01 (added §14 Semantic Ontology Authoring vs Topology Generation), PI.SUBSTRATE.CLIENT-ONBOARDING-GENERALIZATION.01 (added Q-class dual-field compatibility and DOMAIN-11 accounting to §4, added anti-rediscovery entries to §13) |
 | Last verified | 2026-05-18 |

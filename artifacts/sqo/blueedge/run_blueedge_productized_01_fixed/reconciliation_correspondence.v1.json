@@ -2,7 +2,7 @@
   "ok": true,
   "schema_version": "1.0",
   "artifact_type": "reconciliation_correspondence",
-  "generated_at": "2026-05-12T16:39:36.844Z",
+  "generated_at": "2026-05-18T11:04:40.753Z",
   "compiler_version": "PI.SQO.BLUEEDGE.RECONCILIATION-CORRESPONDENCE-COMPILER.01",
   "source_authority": {
     "semantic_topology": "PI.LENS.SEMANTIC-TOPOLOGY-REBUILD.02",

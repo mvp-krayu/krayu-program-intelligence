@@ -371,6 +371,14 @@ source_manifest.json `dom_layer_path` points to a conformance recovery artifact,
 PATH A produces 13 structural DOMs. PATH B produces 17 semantic DOMAINs. They have DIFFERENT counts because they measure DIFFERENT things. 13 ≠ 17 is correct. The crosswalk bridges them; the reconciliation measures how well the bridge holds.
 → Canonical location: OPERATIONAL_ONTOLOGY.md §1
 
+**11. Q-Class Dual-Field Compatibility**
+The system maintains TWO Q-class numbering schemes: governance (Q-01=FULL, Q-02=PARTIAL, Q-03=SEMANTIC_ONLY, Q-04=UNAVAILABLE) and legacy compat (inverted: governance Q-02 maps to compat Q-01). This is INTENTIONAL and CANONICAL. Authoritative fields: `qualifier_summary.qualifier_class` and `payload.qualifier_class_governance`. Legacy compat fields: `payload.qualifier_class` and `qualifier_summary.qualifier_class_compat`. BlueEdge: governance Q-02, compat Q-01.
+→ Canonical location: OPERATIONAL_ONTOLOGY.md §4, QClassResolver.js
+
+**12. DOMAIN-11 PARTIAL Classification (4+12+1=17)**
+BlueEdge domain grounding: 4 structurally backed (EXACT/STRONG) + 12 semantic-only (NONE) + 1 PARTIAL (DOMAIN-11 "Event-Driven Architecture"). 4+12+1=17. PARTIAL does NOT count as structurally grounded. DOMAIN-11 is the "missing 17th" when only backed (4) and semantic-only (12) are summed.
+→ Canonical location: OPERATIONAL_ONTOLOGY.md §4
+
 ---
 
 ## G. 17 Canonical Semantic Domains (BlueEdge)
@@ -422,6 +430,7 @@ PATH A produces 13 structural DOMs. PATH B produces 17 semantic DOMAINs. They ha
 | Created by | PI.BLUEEDGE.CANONICAL-TRUTH-CERTIFICATION.01 |
 | Derived from | PI.BLUEEDGE.E2E.RUNTIME-REVALIDATION.01 (revalidation data), PI.VAULT.OPERATIONAL-ONTOLOGY-CANONICALIZATION.01 (ontology), PI.BLUEEDGE.A5-CANONICALIZATION-AND-REPLAYSAFE-OPERATIONALIZATION.01 (A5 chain), PI.BLUEEDGE.CROSSWALK-AND-RECONCILIATION-RECOVERY.01 (crosswalk/reconciliation recovery), PI.E2E.BLUEEDGE.CANONICAL-CERTIFICATION.01 (prior certification) |
 | Authoritative runtime artifacts | run_client_pipeline.py, structural_scanner.py, source_intake.py, ceu_grounding.py, build_semantic_layer.py, ReconciliationCorrespondenceCompiler.js, SemanticCrosswalkMapper.js, SemanticActorHydrator.js, GenericSemanticPayloadResolver.js |
+| Updated by | PI.SUBSTRATE.CLIENT-ONBOARDING-GENERALIZATION.01 (added anti-rediscovery items 11-12: Q-class dual-field compatibility, DOMAIN-11 PARTIAL classification) |
 | Verification date | 2026-05-18 |
 | Verification stream | PI.BLUEEDGE.E2E.RUNTIME-REVALIDATION.01 |
 | Operational trust status | OPERATIONALLY CERTIFIED WITH ARCHITECTURAL DEBT |

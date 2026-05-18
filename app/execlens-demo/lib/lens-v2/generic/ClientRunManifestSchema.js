@@ -22,13 +22,21 @@ const OPTIONAL_TOPLEVEL_HINT = [
   'amendment_anchor',
 ];
 
-const REQUIRED_ARTIFACT_KEYS = [
+const STRUCTURAL_ARTIFACT_KEYS = [
   'semantic_topology_model',
+  'canonical_topology_40_4',
+  'dpsig_signal_set',
+];
+
+const SEMANTIC_ARTIFACT_KEYS = [
   'decision_validation',
   'reproducibility_verdict',
   'semantic_continuity_crosswalk',
-  'canonical_topology_40_4',
-  'dpsig_signal_set',
+];
+
+const REQUIRED_ARTIFACT_KEYS = [
+  ...STRUCTURAL_ARTIFACT_KEYS,
+  ...SEMANTIC_ARTIFACT_KEYS,
 ];
 
 const OPTIONAL_ARTIFACT_KEYS_HINT = [
@@ -84,13 +92,23 @@ function validateClientRunManifest(doc) {
     if (!doc.artifacts.required || typeof doc.artifacts.required !== 'object') {
       errors.push('ARTIFACTS_REQUIRED_MISSING');
     } else {
-      for (const k of REQUIRED_ARTIFACT_KEYS) {
+      const isS1 = doc.qualification_level === 'S1';
+      for (const k of STRUCTURAL_ARTIFACT_KEYS) {
         if (!Object.prototype.hasOwnProperty.call(doc.artifacts.required, k)) {
           errors.push(`ARTIFACT_REQUIRED_MISSING:${k}`);
           continue;
         }
         if (!looksLikeRelativePath(doc.artifacts.required[k])) {
           errors.push(`ARTIFACT_REQUIRED_PATH_INVALID:${k}`);
+        }
+      }
+      for (const k of SEMANTIC_ARTIFACT_KEYS) {
+        if (Object.prototype.hasOwnProperty.call(doc.artifacts.required, k)) {
+          if (!looksLikeRelativePath(doc.artifacts.required[k])) {
+            errors.push(`ARTIFACT_REQUIRED_PATH_INVALID:${k}`);
+          }
+        } else if (!isS1) {
+          errors.push(`ARTIFACT_REQUIRED_MISSING:${k}`);
         }
       }
     }
@@ -126,6 +144,8 @@ function validateClientRunManifest(doc) {
 module.exports = {
   REQUIRED_TOPLEVEL,
   OPTIONAL_TOPLEVEL_HINT,
+  STRUCTURAL_ARTIFACT_KEYS,
+  SEMANTIC_ARTIFACT_KEYS,
   REQUIRED_ARTIFACT_KEYS,
   OPTIONAL_ARTIFACT_KEYS_HINT,
   REPORT_PACK_ARTIFACT_KEYS_HINT,

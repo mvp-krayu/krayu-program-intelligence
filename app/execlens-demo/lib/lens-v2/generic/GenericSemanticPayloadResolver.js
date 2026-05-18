@@ -218,15 +218,21 @@ function resolveSemanticPayload(manifest) {
     ? projectPSIGSignals(sources.signal_registry.data)
     : { ok: false, signals: [], reason: 'PSIG_REGISTRY_ABSENT' };
 
-  // Crosswalk index.
-  const crosswalkIndex = buildCrosswalkIndex(sources.semantic_continuity_crosswalk.data);
+  // Crosswalk index — empty when crosswalk absent (S1 structural-only).
+  const crosswalkData = sources.semantic_continuity_crosswalk && sources.semantic_continuity_crosswalk.ok
+    ? sources.semantic_continuity_crosswalk.data : null;
+  const crosswalkIndex = buildCrosswalkIndex(crosswalkData);
 
   // Hydrate the 15-actor registry.
+  const decisionValidationData = sources.decision_validation && sources.decision_validation.ok
+    ? sources.decision_validation.data : null;
+  const reproducibilityVerdictData = sources.reproducibility_verdict && sources.reproducibility_verdict.ok
+    ? sources.reproducibility_verdict.data : null;
   const hydrated = hydrateActors({
     semanticTopologyModel: sources.semantic_topology_model.data,
-    decisionValidation: sources.decision_validation.data,
-    reproducibilityVerdict: sources.reproducibility_verdict.data,
-    semanticCrosswalk: sources.semantic_continuity_crosswalk.data,
+    decisionValidation: decisionValidationData,
+    reproducibilityVerdict: reproducibilityVerdictData,
+    semanticCrosswalk: crosswalkData,
     canonicalTopology40_4: sources.canonical_topology_40_4.data,
     signalRegistry: psigSummary,
     evidenceTrace: sources.evidence_trace && sources.evidence_trace.ok ? sources.evidence_trace.data : null,
@@ -239,10 +245,10 @@ function resolveSemanticPayload(manifest) {
   const derived = hydrated.derived;
   const semanticTopology = sources.semantic_topology_model.data;
   const canonicalTopology = sources.canonical_topology_40_4.data;
-  const decisionValidation = sources.decision_validation.data;
+  const decisionValidation = decisionValidationData;
 
-  // Active zone anchor (from VF-05 evidence text).
-  const vf05 = (decisionValidation.checks || []).find((c) => c.id === 'VF-05');
+  // Active zone anchor (from VF-05 evidence text, or DPSIG max cluster for S1).
+  const vf05 = ((decisionValidation || {}).checks || []).find((c) => c.id === 'VF-05');
   const zoneAnchorBusinessLabel = (() => {
     if (!vf05 || !vf05.evidence) return null;
     const m = vf05.evidence.match(/centered on ['"]?([^'".]+)['"]?/);
@@ -254,19 +260,19 @@ function resolveSemanticPayload(manifest) {
     const dominantDomId = d.dominant_dom_id || null;
     const crosswalkEntry = dominantDomId ? resolveDisplayLabel(dominantDomId, crosswalkIndex) : null;
     return {
-      domain_id: d.domain_id,
-      domain_name: d.domain_name,
-      domain_type: d.domain_type,
-      cluster_id: d.cluster_id,
-      lineage_status: d.lineage_status,
+      domain_id: d.domain_id || null,
+      domain_name: d.domain_name || d.domain_label || d.domain_id || null,
+      domain_type: d.domain_type || null,
+      cluster_id: d.cluster_id || null,
+      lineage_status: d.lineage_status || null,
       zone_anchor: !!d.zone_anchor,
       dominant_dom_id: dominantDomId,
       confidence: d.confidence != null ? d.confidence : 0,
-      business_label: d.business_label,
-      original_status: d.original_status,
+      business_label: d.business_label || null,
+      original_status: d.original_status || null,
       structurally_backed: d.lineage_status === 'EXACT' || d.lineage_status === 'STRONG',
       semantic_only: d.lineage_status === 'NONE' || d.lineage_status === 'WEAK',
-      crosswalk_resolution: crosswalkEntry,
+      crosswalk_resolution: crosswalkEntry || null,
     };
   });
 
@@ -302,7 +308,7 @@ function resolveSemanticPayload(manifest) {
       `The active pressure zone anchors on "${zoneAnchorBusinessLabel}". ` +
       `Under qualifier ${derived.qualifier_class} (partial grounding with validated semantic continuity), advisory confirmation is mandatory before executive commitment.`,
     why_section:
-      `Reproducibility verdict for this run: ${(sources.reproducibility_verdict.data || {}).verdict || 'UNKNOWN'}. ` +
+      `Reproducibility verdict for this run: ${(reproducibilityVerdictData || {}).verdict || 'UNKNOWN'}. ` +
       `${derived.backed_count} structurally-backed domains are anchored to the canonical topology. ` +
       `The remaining ${derived.semantic_only_count} domains carry advisory weight only. ` +
       `Active program intelligence signals confirm a compound pressure zone centred on "${zoneAnchorBusinessLabel}".`,
@@ -409,6 +415,7 @@ function resolveSemanticPayload(manifest) {
     ok: true,
     payload_version: PAYLOAD_VERSION,
     binding_status: 'LIVE',
+    qualification_level: manifest.qualification_level || null,
     client_name: client,
     client,
     run_id: runId,
@@ -420,15 +427,15 @@ function resolveSemanticPayload(manifest) {
     dpsig_signal_summary: dpsigSummary,
     semantic_domain_registry: semanticDomainRegistry,
     semantic_cluster_registry: (semanticTopology.clusters || []).map(c => ({
-      cluster_id: c.cluster_id,
-      cluster_label: c.cluster_label,
-      color_accent: c.color_accent,
-      domain_count: c.domain_count,
+      cluster_id: c.cluster_id || null,
+      cluster_label: c.cluster_label || null,
+      color_accent: c.color_accent || null,
+      domain_count: c.domain_count != null ? c.domain_count : 0,
     })),
     semantic_topology_edges: (semanticTopology.edges || []).map(e => ({
-      source_domain: e.source_domain,
-      target_domain: e.target_domain,
-      relationship_type: e.relationship_type,
+      source_domain: e.source_domain || null,
+      target_domain: e.target_domain || null,
+      relationship_type: e.relationship_type || null,
     })),
     semantic_crosswalk: semanticCrosswalk,
     topology_summary: {
@@ -445,8 +452,8 @@ function resolveSemanticPayload(manifest) {
           : 'NONE',
     },
     propagation_summary: {
-      active_psig_evidence: (decisionValidation.checks || []).find((c) => c.id === 'VF-07')
-        ? (decisionValidation.checks || []).find((c) => c.id === 'VF-07').evidence
+      active_psig_evidence: ((decisionValidation || {}).checks || []).find((c) => c.id === 'VF-07')
+        ? ((decisionValidation || {}).checks || []).find((c) => c.id === 'VF-07').evidence
         : null,
       primary_zone_evidence: vf05 ? vf05.evidence : null,
       primary_zone_business_label: zoneAnchorBusinessLabel,
@@ -459,7 +466,7 @@ function resolveSemanticPayload(manifest) {
         (sources.evidence_trace && sources.evidence_trace.ok && sources.evidence_trace.data && Array.isArray(sources.evidence_trace.data.traceability_chains))
           ? sources.evidence_trace.data.traceability_chains.length
           : 0,
-      reproducibility_verdict: (sources.reproducibility_verdict.data || {}).verdict || null,
+      reproducibility_verdict: (reproducibilityVerdictData || {}).verdict || null,
     },
     readiness_summary: {
       score: derived.score,
@@ -467,8 +474,8 @@ function resolveSemanticPayload(manifest) {
       posture: derived.posture,
       render_state: derived.render_state,
       decision_validation_passed:
-        (decisionValidation.checks || []).filter((c) => c.result === 'PASS').length,
-      decision_validation_total: (decisionValidation.checks || []).length,
+        ((decisionValidation || {}).checks || []).filter((c) => c.result === 'PASS').length,
+      decision_validation_total: ((decisionValidation || {}).checks || []).length,
     },
     qualifier_summary: {
       qualifier_class: derived.qualifier_class,
@@ -490,7 +497,7 @@ function resolveSemanticPayload(manifest) {
         (dpsigSummary.derivation_context || {}).canonical_topology_hash || null,
       topology_snapshot_hash:
         (dpsigSummary.derivation_context || {}).topology_snapshot_hash || null,
-      reproducibility_verdict: (sources.reproducibility_verdict.data || {}).verdict || null,
+      reproducibility_verdict: (reproducibilityVerdictData || {}).verdict || null,
       dpsig_provenance_stream:
         (dpsigSummary.provenance_chain || {}).stream || null,
       baseline_commit: baselineCommit,
@@ -545,7 +552,7 @@ function resolveSemanticPayload(manifest) {
       const recon = compileCorrespondence({
         semanticTopologyModel: semanticTopology,
         canonicalTopology,
-        semanticCrosswalk: sources.semantic_continuity_crosswalk.data,
+        semanticCrosswalk: crosswalkData,
         signalRegistry: sources.signal_registry && sources.signal_registry.ok ? sources.signal_registry.data : null,
         evidenceTrace: sources.evidence_trace && sources.evidence_trace.ok ? sources.evidence_trace.data : null,
       });
@@ -560,13 +567,13 @@ function resolveSemanticPayload(manifest) {
         confidence_distribution: recon.summary.confidence_distribution,
         unmatched_structural_count: recon.summary.unmatched_structural_count,
         per_domain: recon.correspondences.map(c => ({
-          domain_id: c.semantic_domain_id,
-          domain_name: c.semantic_domain_name,
-          confidence_level: c.confidence_level,
-          confidence_label: c.confidence_label,
-          reconciliation_status: c.reconciliation_status,
-          structural_dom_id: c.structural_dom_id,
-          correspondence_basis: c.correspondence_basis,
+          domain_id: c.semantic_domain_id || null,
+          domain_name: c.semantic_domain_name || c.semantic_domain_id || null,
+          confidence_level: c.confidence_level != null ? c.confidence_level : 0,
+          confidence_label: c.confidence_label || null,
+          reconciliation_status: c.reconciliation_status || null,
+          structural_dom_id: c.structural_dom_id || null,
+          correspondence_basis: c.correspondence_basis || null,
         })),
       };
     })(),
