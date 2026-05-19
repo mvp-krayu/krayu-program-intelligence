@@ -29,7 +29,9 @@ Program Intelligence (category/discipline)
         │     └── Conversational Intelligence (future)
         ├── SQO (qualification overlay)
         │     ├── State Machine (S0-S3)
-        │     ├── Cockpit (13 sections, including Authority)
+        │     ├── Cockpit (15 sections, including Authority)
+        │     ├── Qualification Posture Model (8 states)
+        │     ├── Client-Scoped Section Resolution (runtime isolation)
         │     ├── Operator Authority Workflow (12 actions, 5 RBAC roles)
         │     └── Reconciliation Loop
         └── Marketplace (extension ecosystem — future)
@@ -58,7 +60,7 @@ The system consists of six evolutionary strata. All are active and reconciled:
 | S1 | [[../01_FOUNDATIONAL_GOVERNANCE/GOVERNANCE_ORIGINS\|Foundational Governance]] | 2026-03-10 → 2026-03-28 | OPERATIONAL — L0-L8 model locked |
 | S2 | [[../02_EXECLENS_LINEAGE/EXECLENS_RUNTIME_EVOLUTION\|ExecLens Lineage]] | 2026-03-21 → 2026-04-02 | SUPERSEDED (lineage preserved) — replaced by LENS v2 + SQO |
 | S3 | [[../03_PATH_SPLIT_EVOLUTION/PATH_A_EMERGENCE\|Path Split]] | 2026-05-07 → 2026-05-08 | OPERATIONAL — PATH A/B terminology active. **PATH A.5 participation architecture recovered 2026-05-17:** grounding-aware semantic participation compression (945→35→13 chain). See [[../03_PATH_SPLIT_EVOLUTION/PATH_A5_PARTICIPATION_ARCHITECTURE]]. Raw replay-safe substrate (48 domains) operational; grounded executive compression layer (13 domains) requires canonicalization. |
-| S4 | [[../04_SQO_AND_QUALIFICATION/SQO_EVOLUTION\|SQO Qualification]] | 2026-05-10 → present | OPERATIONAL — unified semantic operations substrate, 8 ownership domains, 23 artifacts, operational reconciliation loop, operator authority workflow (12 actions, 5 RBAC roles, governed mutation surface) |
+| S4 | [[../04_SQO_AND_QUALIFICATION/SQO_EVOLUTION\|SQO Qualification]] | 2026-05-10 → present | OPERATIONAL — unified semantic operations substrate, 8 ownership domains, 23 artifacts, operational reconciliation loop, operator authority workflow (12 actions, 5 RBAC roles, governed mutation surface), qualification posture model (8 states), client-scoped section resolution with runtime isolation, dual-layer section architecture (Layer A/B) |
 | S5 | [[../05_RUNTIME_AND_CORRIDOR/CURRENT_RUNTIME_BOUNDARIES\|Runtime Corridor]] | 2026-05-11 → present | OPERATIONAL — evidence/runtime corridors |
 | S6 | [[../10_CANONICAL_RUNTIME_STATE/PRODUCT_HIERARCHY\|Operational Cognition]] | 2026-05-13 → present | OPERATIONAL — cognitive operational intelligence surface, 4-persona projection, interactive topology, guided structural investigation, zone-aware cognitive orchestration, guided query layer (5B.1 — interactive question-answer cognition), guided interrogation evolution (5B.1+ — 36-query lattice with tonal diversity, archetypes, depth hierarchy), selective interpretive emergence (5B.2 — governed narrative synthesis via BALANCED), PI Runtime Layer (5B.3 — transversal governed interrogation across all four cognitive modes, two-axis cognitive model), evidence record export (governed structural evidence record with topology capture) |
 
@@ -134,8 +136,7 @@ DETERMINISTIC → INVESTIGATIVE → INTERPRETIVE
 |---|---|---|---|
 | LENS v2 Flagship (SQO-embedded) | `/sqo/client/[client]/run/[run]` | Executive semantic intelligence | OPERATIONAL |
 | LENS v2 Flagship (isolated) | `/lens/[client]/[run]` | Standalone executive intelligence | OPERATIONAL |
-| SQO Cockpit | `/sqo/client/[client]/run/[run]/*` (12 sections) | Qualification state machine | OPERATIONAL |
-| Evidence Rebase | Child routes: semantic-candidates, ceu-admissibility | Evidence extraction/admissibility | OPERATIONAL |
+| SQO Cockpit | `/sqo/client/[client]/run/[run]/*` (15 sections) | Qualification state machine with runtime isolation | OPERATIONAL |
 
 ## Current Clients
 
@@ -143,7 +144,7 @@ DETERMINISTIC → INVESTIGATIVE → INTERPRETIVE
 |---|---|---|---|
 | BlueEdge | S2_QUALIFIED_WITH_DEBT (15 debt items) | OPERATIONAL (Q-02, 4-persona projection, interactive topology) | 3 HTML files, rebase complete |
 | FastAPI | S1_ONBOARDING_REQUIRED | PARTIAL (SQO cockpit, no LENS v2) | 15 SQO v1.json artifacts |
-| pallets-flask | S1 (permanent insufficiency acknowledged) | AUTHORITY WORKFLOW OPERATIONAL | PATH A structural onboarding complete, 15 clusters, 287 nodes, candidate CSR (L3) |
+| pallets-flask | S1 (permanent insufficiency acknowledged) | AUTHORITY WORKFLOW OPERATIONAL, posture-driven overview, semantic intake (Layer B) | PATH A structural onboarding complete, 15 clusters, 287 nodes, candidate CSR (L3) |
 
 ## Current Trustworthiness Model
 
@@ -421,7 +422,8 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.BLUEEDGE.CROSSWALK-AND-RECONCILIATION-RECOVERY.01 | G2 | Recovered crosswalk/reconciliation operational ontology | COMPLETE — findings propagated to vault |
 | PI.BLUEEDGE.A5-CANONICALIZATION-AND-REPLAYSAFE-OPERATIONALIZATION.01 | G1 | Recovered 945→35→13 compression chain, A.5a substrate | COMPLETE — canonicalized in PATH_A5_PARTICIPATION_ARCHITECTURE.md |
 | PI.CANONICALIZATION.END-TO-END-LOCK.01 | G2 | Assessed vault sufficiency, recommended operational document | COMPLETE — recommendations executed by canonicalization stream |
-| PI.VAULT.OPERATIONAL-ONTOLOGY-CANONICALIZATION.01 | G1 | Canonicalized operational ontology, fixed staleness, created governance pages | COMPLETE (this stream) |
+| PI.VAULT.OPERATIONAL-ONTOLOGY-CANONICALIZATION.01 | G1 | Canonicalized operational ontology, fixed staleness, created governance pages | COMPLETE |
+| PI.SQO.RUNTIME-QUALIFICATION-PROJECTION-CORRECTION.01 | G1 | Runtime isolation correction, qualification posture model, client-scoped resolution, dual-layer separation | COMPLETE |
 
 ## SQO Operator Authority Workflow
 
@@ -486,3 +488,8 @@ See [[../10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS]] for full path inve
 - POST /api/sqo/authority-action — system's first governed mutation endpoint
 - Semantic disposition taxonomy (OPERATIONAL_ACCEPTANCE, OPERATIONAL_REJECTION, CONTESTED, PARTIAL_ACCEPTANCE, ARBITRATION_ESCALATION, INSUFFICIENCY_DETERMINATION, QUALIFICATION_ADVANCEMENT, QUALIFICATION_DENIAL, QUALIFICATION_REQUEST, STRUCTURAL_ACCEPTANCE)
 - pallets-flask S1 client with permanent insufficiency acknowledged
+- Qualification posture model (8 states: STRUCTURAL_ONLY, SEMANTIC_INTAKE, QUALIFICATION_PENDING, CROSSWALK_ACTIVE, RECONCILIATION_ACTIVE, QUALIFIED, INSUFFICIENT_EVIDENCE, PERMANENTLY_UNQUALIFIABLE)
+- Client-scoped section resolution with strict runtime isolation (fail-closed, no cross-client data)
+- Dual-layer section architecture: Layer A (engineering/forensic — BlueEdge extraction) vs Layer B (operational qualification — semantic intake summary)
+- Posture-driven overview for S1/S1.5 clients (replaces generic "no data" message)
+- Semantic Qualification Intake panel (Layer B — operator-facing, not raw extraction dumps)

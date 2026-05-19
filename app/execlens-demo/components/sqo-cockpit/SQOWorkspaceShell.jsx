@@ -12,10 +12,12 @@ import ProgressionRail from './ProgressionRail';
 import DeferredDebtCollapseZone from './DeferredDebtCollapseZone';
 import OperationalAttentionLayout from './OperationalAttentionLayout';
 import SQOWorkspacePanel from './SQOWorkspacePanel';
+import QualificationPostureSummary from './QualificationPostureSummary';
 
 export default function SQOWorkspaceShell({
   client, runId, error, cockpitState, navigation, clientRuns,
   degradation, degradedNotice, isCritical,
+  qualificationPosture,
   runtimeCapabilities, sectionAvailability, runtimeClasses,
   journey, visualState, attentionHierarchy, workflowDominance, deferredVisibility,
   sectionData, initialSection,
@@ -160,23 +162,13 @@ export default function SQOWorkspaceShell({
             />
           </OperationalAttentionLayout>
         ) : activeSection === 'overview' && !hasJourney ? (
-          <div className="sqo-cockpit__no-journey">
-            <p>Static qualification artifacts not available for this client. Use section navigation for available capabilities.</p>
-            {sectionAvailability && (
-              <nav className="sqo-cockpit__available-sections">
-                {navigation && navigation.filter(n => n.section !== 'overview' && sectionAvailability[n.section]).map(nav => (
-                  <a
-                    key={nav.section}
-                    href={nav.path}
-                    className="sqo-cockpit__available-section-link"
-                    onClick={(e) => { e.preventDefault(); navigateSection(nav.section); }}
-                  >
-                    {nav.label}
-                  </a>
-                ))}
-              </nav>
-            )}
-          </div>
+          <QualificationPostureSummary
+            qualificationPosture={qualificationPosture}
+            sectionAvailability={sectionAvailability}
+            navigation={navigation}
+            runtimeCapabilities={runtimeCapabilities}
+            onNavigate={navigateSection}
+          />
         ) : (
           <SQOWorkspacePanel
             section={activeSection}

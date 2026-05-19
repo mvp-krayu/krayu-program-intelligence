@@ -64,8 +64,11 @@
 | QualificationVisualStateResolver | app/execlens-demo/lib/sqo-cockpit/server/ | Severity classification |
 | BlueEdgeRuntimeCorridorLoader | app/execlens-demo/lib/sqo-cockpit/server/ | Overlay/replay/rollback |
 | ExplicitEvidenceRebaseExtractor | app/execlens-demo/lib/sqo-cockpit/server/ | Evidence extraction + admissibility |
-| 57 cockpit components (51 + 6 authority) | app/execlens-demo/components/sqo-cockpit/ | UI rendering |
-| 13 cockpit routes (12 + authority) | app/execlens-demo/pages/sqo/client/[client]/run/[run]/ | Section pages |
+| ClientScopedSectionResolver | app/execlens-demo/lib/sqo-cockpit/server/ClientScopedSectionResolver.server.js | Client-scoped section dispatch gate with runtime isolation |
+| QualificationPostureResolver | app/execlens-demo/lib/sqo-cockpit/QualificationPostureResolver.js | 8-state qualification posture derivation from operational data |
+| SemanticQualificationIntakeResolver | app/execlens-demo/lib/sqo-cockpit/server/SemanticQualificationIntakeResolver.server.js | Layer B semantic intake from compiler output |
+| 60 cockpit components (51 + 6 authority + 3 projection) | app/execlens-demo/components/sqo-cockpit/ | UI rendering |
+| 15 cockpit routes | app/execlens-demo/pages/sqo/client/[client]/run/[run]/ | Section pages (all client-scoped via SQOWorkspaceShell) |
 
 ### Authority Workflow Modules
 
@@ -133,6 +136,7 @@
 | PI.IMPLEMENTATION-LANE.MARKETPLACE-EXECUTION-DISCIPLINE.01 | docs/pios/PI.IMPLEMENTATION-LANE.MARKETPLACE-EXECUTION-DISCIPLINE.01/ | G1 | COMPLETE |
 | PI.IMPLEMENTATION-SEQUENCING.GITHUB-FIRST-OPERATIONALIZATION.CORRECTION.01 | docs/pios/PI.IMPLEMENTATION-SEQUENCING.GITHUB-FIRST-OPERATIONALIZATION.CORRECTION.01/ | G1 | COMPLETE |
 | PI.SQO.OPERATOR-WORKFLOW-OPERATIONALIZATION.01 | docs/pios/PI.SQO.OPERATOR-WORKFLOW-OPERATIONALIZATION.01/ | G1 | COMPLETE |
+| PI.SQO.RUNTIME-QUALIFICATION-PROJECTION-CORRECTION.01 | docs/pios/PI.SQO.RUNTIME-QUALIFICATION-PROJECTION-CORRECTION.01/ | G1 | COMPLETE |
 
 ## Cross-References
 

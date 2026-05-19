@@ -1,0 +1,142 @@
+{
+  "stream": "PI.SQO.RUNTIME-QUALIFICATION-PROJECTION-CORRECTION.01",
+  "classification": "G1",
+  "validated_at": "2026-05-19",
+  "total_checks": 22,
+  "passed": 22,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "RUNTIME_ISOLATION_PALLETS_SEMANTIC_CANDIDATES",
+      "description": "pallets-flask semantic-candidates returns Layer B client data, not BlueEdge extraction",
+      "result": "PASS",
+      "evidence": "layer=B, total_capabilities=4, direct_evidence_ratio=1"
+    },
+    {
+      "name": "RUNTIME_ISOLATION_PALLETS_CEU",
+      "description": "pallets-flask ceu-admissibility returns SECTION_NOT_AVAILABLE",
+      "result": "PASS",
+      "evidence": "failReason=SECTION_NOT_AVAILABLE"
+    },
+    {
+      "name": "RUNTIME_ISOLATION_PALLETS_EVIDENCE_INGESTION",
+      "description": "pallets-flask evidence-ingestion returns SECTION_NOT_AVAILABLE",
+      "result": "PASS",
+      "evidence": "failReason=SECTION_NOT_AVAILABLE"
+    },
+    {
+      "name": "RUNTIME_ISOLATION_PALLETS_CORRIDOR",
+      "description": "pallets-flask corridor returns SECTION_NOT_AVAILABLE",
+      "result": "PASS",
+      "evidence": "failReason=SECTION_NOT_AVAILABLE"
+    },
+    {
+      "name": "RUNTIME_ISOLATION_PALLETS_EVIDENCE_REBASE",
+      "description": "pallets-flask evidence-rebase returns SECTION_NOT_AVAILABLE",
+      "result": "PASS",
+      "evidence": "failReason=SECTION_NOT_AVAILABLE"
+    },
+    {
+      "name": "BLUEEDGE_NOREGRESSION_SEMANTIC_CANDIDATES",
+      "description": "BlueEdge semantic-candidates still returns Layer A extraction data",
+      "result": "PASS",
+      "evidence": "available=true, layer=A, source_class=EXPLICIT_OPERATOR_PROVIDED_UPSTREAM_EVIDENCE"
+    },
+    {
+      "name": "BLUEEDGE_NOREGRESSION_CEU",
+      "description": "BlueEdge ceu-admissibility still returns Layer A data",
+      "result": "PASS",
+      "evidence": "available=true"
+    },
+    {
+      "name": "BLUEEDGE_NOREGRESSION_EVIDENCE_INGESTION",
+      "description": "BlueEdge evidence-ingestion still returns Layer A data",
+      "result": "PASS",
+      "evidence": "available=true"
+    },
+    {
+      "name": "BLUEEDGE_NOREGRESSION_CORRIDOR",
+      "description": "BlueEdge corridor still returns Layer A data",
+      "result": "PASS",
+      "evidence": "available=true"
+    },
+    {
+      "name": "BLUEEDGE_NOREGRESSION_EVIDENCE_REBASE",
+      "description": "BlueEdge evidence-rebase still returns Layer A data",
+      "result": "PASS",
+      "evidence": "available=true"
+    },
+    {
+      "name": "BLUEEDGE_OVERVIEW_NOREGRESSION",
+      "description": "BlueEdge overview still renders full S2 journey with cognitive layout",
+      "result": "PASS",
+      "evidence": "S2 journey data present, hero region and workflow spine render"
+    },
+    {
+      "name": "POSTURE_PALLETS_FLASK",
+      "description": "pallets-flask resolves correct qualification posture",
+      "result": "PASS",
+      "evidence": "posture=PERMANENTLY_UNQUALIFIABLE, postureLabel=Permanently Unqualifiable, s_level=S1"
+    },
+    {
+      "name": "POSTURE_FASTAPI",
+      "description": "FastAPI resolves correct qualification posture",
+      "result": "PASS",
+      "evidence": "posture=STRUCTURAL_ONLY"
+    },
+    {
+      "name": "POSTURE_DRIVEN_OVERVIEW",
+      "description": "pallets-flask overview renders QualificationPostureSummary, not generic message",
+      "result": "PASS",
+      "evidence": "Posture summary with S1 badge, runtime capabilities grid, available sections"
+    },
+    {
+      "name": "CROSS_CLIENT_DATA_LEAK_AUDIT",
+      "description": "Zero BlueEdge data in pallets-flask section payloads",
+      "result": "PASS",
+      "evidence": "Only blueedge references in clientRuns dropdown, zero in sectionData"
+    },
+    {
+      "name": "NEXTJS_BUILD_CLEAN",
+      "description": "Next.js production build succeeds with zero errors",
+      "result": "PASS",
+      "evidence": "All 27 routes compiled successfully"
+    },
+    {
+      "name": "ALL_PAGES_HTTP_200",
+      "description": "All 12 critical page routes return HTTP 200",
+      "result": "PASS",
+      "evidence": "5 pallets-flask + 5 blueedge + pallets-flask authority + blueedge overview"
+    },
+    {
+      "name": "SEMANTIC_INTAKE_LABEL",
+      "description": "Navigation shows 'Semantic Intake' not 'Semantic Candidates'",
+      "result": "PASS",
+      "evidence": "SQOCockpitRouteResolver.SECTION_LABELS updated"
+    },
+    {
+      "name": "PAGE_UNIFICATION",
+      "description": "All 5 standalone pages now use SQOWorkspaceShell pattern",
+      "result": "PASS",
+      "evidence": "Each page imports SQOWorkspaceShell, calls resolveWorkspaceData + resolveClientScopedSection"
+    },
+    {
+      "name": "BLUEEDGE_LOADERS_UNMODIFIED",
+      "description": "Zero changes to any BlueEdge-specific loader or view model builder",
+      "result": "PASS",
+      "evidence": "git diff shows no changes to 10 BlueEdge-specific files"
+    },
+    {
+      "name": "FAIL_CLOSED_RENDERING",
+      "description": "SectionUnavailableNotice renders with governance notice for unavailable sections",
+      "result": "PASS",
+      "evidence": "Badge UNAVAILABLE, reason, governance footer 'No silent fallback · No cross-client data · Fail-closed'"
+    },
+    {
+      "name": "LAYER_AB_DISPATCH",
+      "description": "SQOWorkspacePanel dispatches Layer A vs Layer B for semantic-candidates",
+      "result": "PASS",
+      "evidence": "data.layer=B renders SemanticQualificationIntakePanel, default renders SemanticCandidateExtractionPanel"
+    }
+  ]
+}

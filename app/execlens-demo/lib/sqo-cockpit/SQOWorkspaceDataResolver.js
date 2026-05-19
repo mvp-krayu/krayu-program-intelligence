@@ -19,6 +19,8 @@ const {
   formatReconciliationLoopSection,
 } = require('./SQOCockpitFormatter');
 const { resolveRuntimeSubstrates } = require('./server/SQORuntimeResolver.server');
+const { resolveQualificationPosture } = require('./QualificationPostureResolver');
+const { loadPromotionState } = require('./server/PromotionStateLoader.server');
 
 function resolveWorkspaceData(client, runId, initialSection) {
   const validation = validateRouteParams(client, runId);
@@ -52,6 +54,22 @@ function resolveWorkspaceData(client, runId, initialSection) {
   const degradedNotice = state.degradation ? buildDegradedNotice(state.degradation) : null;
 
   const isCritical = !runtime.anyCapabilityAvailable;
+
+  let qualificationPosture = null;
+  try {
+    const promotionBundle = loadPromotionState(client, runId);
+    if (promotionBundle && promotionBundle.loaded) {
+      qualificationPosture = resolveQualificationPosture(
+        promotionBundle.promotionState,
+        promotionBundle.qualificationBlockers,
+        runtime.capabilities
+      );
+    } else {
+      qualificationPosture = resolveQualificationPosture(null, null, runtime.capabilities);
+    }
+  } catch (_e) {
+    qualificationPosture = null;
+  }
 
   let journey = null;
   let visualState = null;
@@ -104,6 +122,7 @@ function resolveWorkspaceData(client, runId, initialSection) {
     degradation: state.degradation,
     degradedNotice,
     isCritical,
+    qualificationPosture,
     runtimeCapabilities: runtime.capabilities,
     sectionAvailability: runtime.sectionAvailability,
     runtimeClasses: runtime.runtimeClasses,

@@ -393,6 +393,39 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 **Status:** CANONICAL — obligation state model (2026-05-19).
 
+### Qualification Posture
+
+**Definition:** The derived operational posture of a client's qualification state, computed deterministically from promotion state, qualification blockers, and runtime capabilities. Eight states in priority order:
+
+1. PERMANENTLY_UNQUALIFIABLE — permanent insufficiency acknowledged
+2. INSUFFICIENT_EVIDENCE — temporary insufficiency (revisitable)
+3. QUALIFIED — S2 or S3 qualification achieved
+4. RECONCILIATION_ACTIVE — reconciliation in progress
+5. CROSSWALK_ACTIVE — semantic intake complete, crosswalk construction required
+6. QUALIFICATION_PENDING — review obligations exist, unresolved
+7. SEMANTIC_INTAKE — candidate CSR available, structural onboarding complete
+8. STRUCTURAL_ONLY — structural topology only, no semantic authority
+
+**Status:** CANONICAL — operational runtime concept (2026-05-19).
+
+**What it is NOT:** An S-state. A Q-class. A user-assigned label. Qualification Posture is derived from operational data by QualificationPostureResolver — it is not stored, configured, or manually set.
+
+### Client-Scoped Resolution
+
+**Definition:** The runtime isolation mechanism that ensures each client receives only its own data. ClientScopedSectionResolver is the single dispatch gate — it checks runtime capabilities, verifies client identity before calling any loader, and returns fail-closed (SECTION_NOT_AVAILABLE) when data does not exist for the requested client/run.
+
+**Status:** CANONICAL — operational runtime enforcement (2026-05-19).
+
+**Critical rule:** Hardcoded BlueEdge loaders are ONLY callable when `client === 'blueedge'`. Non-BlueEdge clients NEVER receive BlueEdge data. There is no fallback dataset, no default client, no shared cache. Violation of this rule is a trust violation.
+
+### Semantic Intake
+
+**Definition:** The operator-facing qualification intake section (previously labeled "Semantic Candidates"). Shows qualification posture, intake summary, qualification blockers, lane status, and next governed actions — NOT raw extraction tables. Layer B rendering for non-BlueEdge clients; Layer A (extraction table) preserved for BlueEdge.
+
+**Status:** CANONICAL — operational section label (2026-05-19).
+
+**What it is NOT:** A raw data dump. A compiler telemetry view. An engineering debug surface. Semantic Intake is the operator projection of qualification intake state.
+
 ## Term Usage Rules
 
 1. **Use locked definitions exactly.** Do not paraphrase, simplify, or reinterpret.

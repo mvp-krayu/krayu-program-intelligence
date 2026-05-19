@@ -55,11 +55,19 @@ function resolveRuntimeSubstrates(client, runId) {
     promotion_event_log: probeFile(path.join(operationalRoot, 'promotion_event_log.jsonl')),
   };
 
+  const evidenceRebaseRoot = path.join('artifacts', 'sqo', client);
+
   const semanticProbes = {
     candidate_csr: probeFile(path.join('clients', client, 'psee', 'runs', runId, 'semantic', 'compiler', 'candidate_csr.json')),
     semantic_topology: probeFile(path.join('clients', client, 'psee', 'runs', runId, 'semantic', 'topology', 'semantic_topology_model.json')),
     canonical_topology: probeFile(path.join('clients', client, 'psee', 'runs', runId, 'structure', '40.4', 'canonical_topology.json')),
     vault_readiness: probeFile(path.join('clients', client, 'psee', 'runs', runId, 'vault', 'vault_readiness.json')),
+  };
+
+  const rebaseProbes = {
+    evidence_registry: probeFile(path.join(staticRoot, 'evidence-ingestion', 'evidence_registry.v1.json')),
+    sandbox_corridor: probeFile(path.join(staticRoot, 'sandbox-multi-001')),
+    evidence_rebase_manifest: probeFile(path.join(evidenceRebaseRoot, 'evidence_rebase_01', 'evidence_manifest.json')),
   };
 
   const staticAvailable = Object.values(staticProbes).some(v => v);
@@ -84,6 +92,11 @@ function resolveRuntimeSubstrates(client, runId) {
     structural_topology: semanticProbes.canonical_topology,
     semantic_topology: semanticProbes.semantic_topology,
     vault_readiness: semanticProbes.vault_readiness,
+
+    evidence_ingestion_registry: rebaseProbes.evidence_registry,
+    ceu_admissibility: rebaseProbes.evidence_registry,
+    runtime_corridor: rebaseProbes.sandbox_corridor,
+    evidence_rebase: rebaseProbes.evidence_rebase_manifest,
   };
 
   const sectionAvailability = {
@@ -96,8 +109,11 @@ function resolveRuntimeSubstrates(client, runId) {
     handoff: capabilities.static_qualification,
     reconciliation: capabilities.static_reconciliation,
     'reconciliation-loop': capabilities.static_reconciliation_loop,
-    'evidence-ingestion': capabilities.static_evidence_intake,
-    'semantic-candidates': capabilities.semantic_candidates,
+    'evidence-ingestion': capabilities.evidence_ingestion_registry,
+    'semantic-candidates': capabilities.semantic_candidates || capabilities.evidence_rebase,
+    'ceu-admissibility': capabilities.ceu_admissibility,
+    corridor: capabilities.runtime_corridor,
+    'evidence-rebase': capabilities.evidence_rebase,
     authority: capabilities.authority_runtime,
   };
 
@@ -119,6 +135,7 @@ function resolveRuntimeSubstrates(client, runId) {
       static: staticProbes,
       operational: operationalProbes,
       semantic: semanticProbes,
+      rebase: rebaseProbes,
     },
     anyCapabilityAvailable: staticAvailable || operationalAvailable,
   };

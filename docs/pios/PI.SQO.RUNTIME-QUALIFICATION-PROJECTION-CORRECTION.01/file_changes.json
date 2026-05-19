@@ -1,0 +1,100 @@
+{
+  "stream": "PI.SQO.RUNTIME-QUALIFICATION-PROJECTION-CORRECTION.01",
+  "total_files_modified": 11,
+  "total_files_created": 6,
+  "total_files_deleted": 0,
+  "changes": [
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/server/SQORuntimeResolver.server.js",
+      "action": "MODIFIED",
+      "purpose": "Added 3 rebase probes, 4 capabilities, extended sectionAvailability for 5 sections"
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/server/ClientScopedSectionResolver.server.js",
+      "action": "CREATED",
+      "purpose": "Single dispatch gate for client-scoped section data with BlueEdge guard and fail-closed"
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/QualificationPostureResolver.js",
+      "action": "CREATED",
+      "purpose": "8-state qualification posture model derived from operational data"
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/server/SemanticQualificationIntakeResolver.server.js",
+      "action": "CREATED",
+      "purpose": "Operator-facing semantic qualification intake resolver reading compiler output"
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/SQOWorkspaceDataResolver.js",
+      "action": "MODIFIED",
+      "purpose": "Added qualificationPosture derivation from promotionState and runtime capabilities"
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/SQOCockpitRouteResolver.js",
+      "action": "MODIFIED",
+      "purpose": "Changed semantic-candidates label to 'Semantic Intake'"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/SQOWorkspacePanel.jsx",
+      "action": "MODIFIED",
+      "purpose": "Added 5 section renderers to SECTION_PANELS and SECTION_CONTEXT with Layer A/B dispatch"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/SQOWorkspaceShell.jsx",
+      "action": "MODIFIED",
+      "purpose": "Added qualificationPosture prop, replaced no-journey overview with QualificationPostureSummary"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/SectionUnavailableNotice.jsx",
+      "action": "CREATED",
+      "purpose": "Fail-closed component for unavailable sections with governance notice"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/SemanticQualificationIntakePanel.jsx",
+      "action": "CREATED",
+      "purpose": "Layer B operator-facing semantic intake rendering"
+    },
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/QualificationPostureSummary.jsx",
+      "action": "CREATED",
+      "purpose": "Posture-driven overview for S1/S1.5 clients replacing generic no-data message"
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/semantic-candidates.js",
+      "action": "MODIFIED",
+      "purpose": "Rewrote from hardcoded BlueEdge loader to client-scoped SQOWorkspaceShell pattern"
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/ceu-admissibility.js",
+      "action": "MODIFIED",
+      "purpose": "Rewrote from hardcoded BlueEdge loader to client-scoped SQOWorkspaceShell pattern"
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/evidence-ingestion.js",
+      "action": "MODIFIED",
+      "purpose": "Rewrote from hardcoded BlueEdge loader to client-scoped SQOWorkspaceShell pattern"
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/corridor.js",
+      "action": "MODIFIED",
+      "purpose": "Rewrote from hardcoded BlueEdge loader to client-scoped SQOWorkspaceShell pattern"
+    },
+    {
+      "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/evidence-rebase.js",
+      "action": "MODIFIED",
+      "purpose": "Rewrote from hardcoded BlueEdge loader to client-scoped SQOWorkspaceShell pattern"
+    }
+  ],
+  "not_modified": [
+    "app/execlens-demo/lib/sqo-cockpit/server/BlueEdgeSemanticCandidateExtractor.server.js",
+    "app/execlens-demo/lib/sqo-cockpit/server/BlueEdgeEvidenceIngestionLoader.server.js",
+    "app/execlens-demo/lib/sqo-cockpit/server/BlueEdgeRuntimeCorridorLoader.server.js",
+    "app/execlens-demo/lib/sqo-cockpit/server/DynamicCEUAdmissibilityEvaluator.server.js",
+    "app/execlens-demo/lib/sqo-cockpit/server/ExplicitEvidenceRebaseExtractor.server.js",
+    "app/execlens-demo/lib/sqo-cockpit/client/BlueEdgeSemanticCandidateViewModel.js",
+    "app/execlens-demo/lib/sqo-cockpit/client/DynamicCEUAdmissibilityViewModel.js",
+    "app/execlens-demo/lib/sqo-cockpit/client/BlueEdgeEvidenceViewModel.js",
+    "app/execlens-demo/lib/sqo-cockpit/client/BlueEdgeRuntimeCorridorViewModel.js",
+    "app/execlens-demo/lib/sqo-cockpit/client/ExplicitEvidenceRebaseViewModel.js"
+  ]
+}

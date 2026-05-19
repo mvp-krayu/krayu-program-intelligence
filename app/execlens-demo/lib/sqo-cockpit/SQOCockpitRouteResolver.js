@@ -33,7 +33,7 @@ const SECTION_LABELS = {
   handoff: 'PATH B Handoff',
   corridor: 'Runtime Corridor',
   'evidence-ingestion': 'Evidence Ingestion',
-  'semantic-candidates': 'Semantic Candidates',
+  'semantic-candidates': 'Semantic Intake',
   'ceu-admissibility': 'CEU Admissibility',
   'evidence-rebase': 'Evidence Rebase',
   'reconciliation-loop': 'Reconciliation Loop',

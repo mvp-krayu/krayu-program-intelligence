@@ -7,6 +7,13 @@ import HandoffReadinessPanel from './HandoffReadinessPanel';
 import ReconciliationCorrespondencePanel from './ReconciliationCorrespondencePanel';
 import ReconciliationLoopWorkflowPanel from './ReconciliationLoopWorkflowPanel';
 import OperatorAuthorityWorkflowPanel from './authority/OperatorAuthorityWorkflowPanel';
+import SemanticCandidateExtractionPanel from './SemanticCandidateExtractionPanel';
+import DynamicCEUAdmissibilityPanel from './DynamicCEUAdmissibilityPanel';
+import EvidenceIngestionCorridorPanel from './EvidenceIngestionCorridorPanel';
+import BlueEdgeRuntimeCorridorPanel from './BlueEdgeRuntimeCorridorPanel';
+import ExplicitEvidenceRebasePanel from './ExplicitEvidenceRebasePanel';
+import SemanticQualificationIntakePanel from './SemanticQualificationIntakePanel';
+import SectionUnavailableNotice from './SectionUnavailableNotice';
 
 const SECTION_PANELS = {
   debt: (data) => <SemanticDebtPanel debtData={data} />,
@@ -18,6 +25,27 @@ const SECTION_PANELS = {
   reconciliation: (data) => <ReconciliationCorrespondencePanel reconciliationData={data} />,
   'reconciliation-loop': (data) => <ReconciliationLoopWorkflowPanel loopData={data} />,
   authority: (data) => <OperatorAuthorityWorkflowPanel authorityData={data} />,
+  'semantic-candidates': (data) => {
+    if (!data || !data.available) return <SectionUnavailableNotice section="Semantic Intake" reason={data && data.failReason} />;
+    if (data.layer === 'B') return <SemanticQualificationIntakePanel intakeData={data} />;
+    return <SemanticCandidateExtractionPanel extraction={data} />;
+  },
+  'ceu-admissibility': (data) => {
+    if (!data || !data.available) return <SectionUnavailableNotice section="CEU Admissibility" reason={data && data.failReason} />;
+    return <DynamicCEUAdmissibilityPanel admissibility={data} />;
+  },
+  'evidence-ingestion': (data) => {
+    if (!data || !data.available) return <SectionUnavailableNotice section="Evidence Ingestion" reason={data && data.failReason} />;
+    return <EvidenceIngestionCorridorPanel evidence={data} />;
+  },
+  corridor: (data) => {
+    if (!data || !data.available) return <SectionUnavailableNotice section="Runtime Corridor" reason={data && data.failReason} />;
+    return <BlueEdgeRuntimeCorridorPanel corridor={data} />;
+  },
+  'evidence-rebase': (data) => {
+    if (!data || !data.available) return <SectionUnavailableNotice section="Evidence Rebase" reason={data && data.failReason} />;
+    return <ExplicitEvidenceRebasePanel rebase={data} />;
+  },
 };
 
 const SECTION_CONTEXT = {
@@ -74,6 +102,36 @@ const SECTION_CONTEXT = {
     purpose: 'Governed operator authority actions: review obligations, qualification advancement, insufficiency acknowledgment.',
     focus: 'Execute bounded operational acceptance, contest semantic interpretations, manage qualification progression.',
     type: 'operational authority',
+  },
+  'semantic-candidates': {
+    title: 'Semantic Intake',
+    purpose: 'Semantic qualification intake: discovered domains, admissibility posture, evidence sufficiency, qualification blockers.',
+    focus: 'Understand what semantic structure has been identified and what blocks qualification advancement.',
+    type: 'qualification intake',
+  },
+  'ceu-admissibility': {
+    title: 'CEU Admissibility',
+    purpose: 'Canonical Evidence Unit admissibility evaluation and structural compatibility assessment.',
+    focus: 'Review admissibility determinations for extracted semantic candidates.',
+    type: 'engineering substrate',
+  },
+  'evidence-ingestion': {
+    title: 'Evidence Ingestion',
+    purpose: 'Evidence registry, source verification, and ingestion corridor state.',
+    focus: 'Inspect evidence source integrity and ingestion pipeline state.',
+    type: 'engineering substrate',
+  },
+  corridor: {
+    title: 'Runtime Corridor',
+    purpose: 'Runtime overlay management: sandbox state, activation, replay, rollback.',
+    focus: 'Manage runtime corridor artifacts and overlay lifecycle.',
+    type: 'engineering substrate',
+  },
+  'evidence-rebase': {
+    title: 'Evidence Rebase',
+    purpose: 'Evidence chain rebase extraction and source linkage.',
+    focus: 'Inspect rebased evidence artifacts and extraction provenance.',
+    type: 'engineering substrate',
   },
 };
 
