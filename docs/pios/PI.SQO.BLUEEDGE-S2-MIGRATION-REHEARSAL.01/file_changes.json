@@ -1,0 +1,16 @@
+{
+  "stream": "PI.SQO.BLUEEDGE-S2-MIGRATION-REHEARSAL.01",
+  "changes": [
+    { "file": "docs/pios/PI.SQO.BLUEEDGE-S2-MIGRATION-REHEARSAL.01/execution_report.md", "action": "CREATED", "purpose": "Full rehearsal assessment with 6 mandatory questions answered" },
+    { "file": "docs/pios/PI.SQO.BLUEEDGE-S2-MIGRATION-REHEARSAL.01/validation_log.json", "action": "CREATED", "purpose": "18/18 validation checks" },
+    { "file": "docs/pios/PI.SQO.BLUEEDGE-S2-MIGRATION-REHEARSAL.01/file_changes.json", "action": "CREATED", "purpose": "File change manifest" },
+    { "file": "docs/pios/PI.SQO.BLUEEDGE-S2-MIGRATION-REHEARSAL.01/CLOSURE.md", "action": "CREATED", "purpose": "Stream closure with BLUEEDGE_LEGACY_S2_DEBT_CONFIRMED verdict" }
+  ],
+  "not_modified": [
+    "All SQO runtime code (no changes — G2 assessment only)",
+    "All BlueEdge evidence artifacts (read-only)",
+    "All cockpit components",
+    "All resolvers",
+    "All vault pages"
+  ]
+}

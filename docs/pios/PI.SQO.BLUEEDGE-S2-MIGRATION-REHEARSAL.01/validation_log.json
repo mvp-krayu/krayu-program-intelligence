@@ -1,0 +1,28 @@
+{
+  "stream": "PI.SQO.BLUEEDGE-S2-MIGRATION-REHEARSAL.01",
+  "timestamp": "2026-05-20T00:00:00Z",
+  "checks": [
+    { "name": "static_artifacts_present", "status": "PASS", "detail": "24 static SQO artifacts present at artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/" },
+    { "name": "qualification_state_s2", "status": "PASS", "detail": "qualification_state.v1.json declares s_state=S2, state_label=PARTIAL_GROUNDING_WITH_CONTINUITY" },
+    { "name": "q_class_q02", "status": "PASS", "detail": "Q-02 classification, grounding_ratio=0.235, derivation_rule_id=Q02-RES-RULE-01" },
+    { "name": "all_replays_pass", "status": "PASS", "detail": "maturity, qualification_state, and debt replay verifications all PASS" },
+    { "name": "all_certifications_pass", "status": "PASS", "detail": "maturity, qualification_state, and debt certifications all CERTIFIED" },
+    { "name": "propagation_readiness", "status": "PASS", "detail": "6/6 gates met, propagation ready" },
+    { "name": "promotion_state_absent", "status": "PASS", "detail": "No promotion_state.json at clients/blueedge/psee/runs/.../sqo/ — confirms legacy status" },
+    { "name": "qualification_blockers_absent", "status": "PASS", "detail": "No qualification_blockers.json — confirms no SQO-native blocker governance" },
+    { "name": "review_obligations_absent", "status": "PASS", "detail": "No review_obligations.json — confirms no SQO-native review governance" },
+    { "name": "promotion_event_log_absent", "status": "PASS", "detail": "No promotion_event_log.jsonl — confirms no operator workflow history" },
+    { "name": "v2_workflow_null_slevel", "status": "PASS", "detail": "resolveOperatorWorkflowFromRaw returns s_level=null for BlueEdge, posture=RECONCILIATION_ACTIVE" },
+    { "name": "v1_cockpit_reads_static", "status": "PASS", "detail": "SQOCockpitStateResolver reads qualification_state.v1.json directly — no promotion_state dependency" },
+    { "name": "csr_grounding_discrepancy", "status": "PASS", "detail": "CSR: 15/17 GROUNDED. Reconciliation: 4/17 L5. Discrepancy documented — different assessments" },
+    { "name": "debt_inventory_consistent", "status": "PASS", "detail": "15 debt items, all grounding_gap/HIGH, all blocks_s_state=S3. Consistent with progression_readiness" },
+    { "name": "no_evidence_mutation", "status": "PASS", "detail": "Assessment performed read-only. No evidence files modified." },
+    { "name": "no_state_machine_change", "status": "PASS", "detail": "No changes to SQO state machine or qualification logic" },
+    { "name": "no_hardcoded_exception", "status": "PASS", "detail": "No BlueEdge-specific exceptions introduced" },
+    { "name": "classification_determination", "status": "PASS", "detail": "BLUEEDGE_LEGACY_S2_DEBT_CONFIRMED — migration required, not requalification" }
+  ],
+  "total_checks": 18,
+  "passed": 18,
+  "failed": 0,
+  "result": "VALID"
+}
