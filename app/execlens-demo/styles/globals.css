@@ -8488,3 +8488,976 @@ a.topo-chip:hover {
   color: var(--semantic-red, #ff6b6b);
   border: 1px solid rgba(255, 107, 107, 0.25);
 }
+
+/* ============================================================
+   SQO COCKPIT V2 — Workflow-Driven Operational Shell
+   ============================================================ */
+
+/* --- V2 Posture Accent Variables --- */
+.sqo-v2-posture--structural { --sqo-v2-accent: #7a8aaa; --sqo-v2-accent-bg: rgba(122, 138, 170, 0.08); }
+.sqo-v2-posture--intake { --sqo-v2-accent: #4a9eff; --sqo-v2-accent-bg: rgba(74, 158, 255, 0.08); }
+.sqo-v2-posture--pending { --sqo-v2-accent: #ffd700; --sqo-v2-accent-bg: rgba(255, 215, 0, 0.08); }
+.sqo-v2-posture--crosswalk { --sqo-v2-accent: #4a9eff; --sqo-v2-accent-bg: rgba(74, 158, 255, 0.08); }
+.sqo-v2-posture--reconciliation { --sqo-v2-accent: #4a9eff; --sqo-v2-accent-bg: rgba(74, 158, 255, 0.08); }
+.sqo-v2-posture--qualified { --sqo-v2-accent: #64ffda; --sqo-v2-accent-bg: rgba(100, 255, 218, 0.08); }
+.sqo-v2-posture--insufficient { --sqo-v2-accent: #ff9e4a; --sqo-v2-accent-bg: rgba(255, 158, 74, 0.08); }
+.sqo-v2-posture--terminal { --sqo-v2-accent: #ff6b6b; --sqo-v2-accent-bg: rgba(255, 107, 107, 0.08); }
+
+/* --- V2 Cockpit Shell --- */
+.sqo-v2-cockpit {
+  display: flex;
+  min-height: 100vh;
+  background: #0d0f14;
+  color: #ccd6f6;
+  font-family: 'Courier New', monospace;
+}
+
+.sqo-v2-cockpit--gate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sqo-v2-cockpit--error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+}
+
+.sqo-v2-cockpit__content {
+  flex: 1;
+  min-width: 0;
+  padding: 24px 32px;
+  overflow-y: auto;
+}
+
+/* --- Role Declaration Gate --- */
+.sqo-v2-role-gate {
+  max-width: 720px;
+  width: 100%;
+  padding: 48px 40px;
+  background: #141720;
+  border: 1px solid #2a2f40;
+  border-radius: 4px;
+}
+
+.sqo-v2-role-gate__header {
+  margin-bottom: 32px;
+}
+
+.sqo-v2-role-gate__title {
+  display: block;
+  font-size: 20px;
+  font-weight: bold;
+  color: #ccd6f6;
+  margin-bottom: 8px;
+}
+
+.sqo-v2-role-gate__subtitle {
+  display: block;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  color: #7a8aaa;
+  line-height: 1.5;
+}
+
+.sqo-v2-role-gate__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.sqo-v2-role-gate__card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 18px;
+  background: #1a1e2b;
+  border: 1px solid #1e2330;
+  border-radius: 3px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+  min-height: 80px;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.sqo-v2-role-gate__card:hover {
+  background: #1e2330;
+  border-color: #2a2f40;
+}
+
+.sqo-v2-role-gate__card--selected {
+  border-color: #4a9eff;
+  background: rgba(74, 158, 255, 0.06);
+  border-left: 3px solid #4a9eff;
+}
+
+.sqo-v2-role-gate__card-label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ccd6f6;
+}
+
+.sqo-v2-role-gate__card-identity {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 12px;
+  color: #7a8aaa;
+}
+
+.sqo-v2-role-gate__card-scope {
+  font-size: 10px;
+  color: #4a5570;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sqo-v2-role-gate__identifier {
+  margin-bottom: 24px;
+  padding: 16px 18px;
+  background: #1a1e2b;
+  border: 1px solid #1e2330;
+  border-radius: 3px;
+}
+
+.sqo-v2-role-gate__identifier-label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #4a5570;
+  margin-bottom: 8px;
+}
+
+.sqo-v2-role-gate__identifier-input {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  background: #12151f;
+  border: 1px solid #2a2f40;
+  border-radius: 2px;
+  color: #ccd6f6;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.sqo-v2-role-gate__identifier-input:focus {
+  border-color: #4a9eff;
+}
+
+.sqo-v2-role-gate__identifier-preview {
+  display: block;
+  margin-top: 8px;
+  font-size: 11px;
+  color: #4a5570;
+}
+
+.sqo-v2-role-gate__proceed {
+  display: block;
+  width: 100%;
+  padding: 12px 20px;
+  background: rgba(74, 158, 255, 0.12);
+  border: 1px solid rgba(74, 158, 255, 0.3);
+  border-radius: 3px;
+  color: #4a9eff;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-bottom: 16px;
+}
+
+.sqo-v2-role-gate__proceed:hover {
+  background: rgba(74, 158, 255, 0.18);
+}
+
+.sqo-v2-role-gate__governance {
+  font-size: 10px;
+  color: #4a5570;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: center;
+}
+
+/* --- Navigation Rail --- */
+.sqo-v2-nav-rail {
+  width: 220px;
+  min-width: 220px;
+  background: #12151f;
+  border-right: 1px solid #1e2330;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow-y: auto;
+}
+
+.sqo-v2-nav-rail__header {
+  padding: 20px 16px 12px;
+  border-bottom: 1px solid #1e2330;
+}
+
+.sqo-v2-nav-rail__client {
+  display: block;
+  font-size: 13px;
+  font-weight: bold;
+  color: #ccd6f6;
+  margin-bottom: 4px;
+}
+
+.sqo-v2-nav-rail__run-toggle {
+  display: block;
+  font-size: 11px;
+  color: #7a8aaa;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Courier New', monospace;
+  padding: 0;
+  text-align: left;
+  transition: color 0.15s ease;
+}
+
+.sqo-v2-nav-rail__run-toggle:hover {
+  color: #4a9eff;
+}
+
+.sqo-v2-nav-rail__run-list {
+  margin-top: 8px;
+  padding: 4px 0;
+  background: #1a1e2b;
+  border: 1px solid #2a2f40;
+  border-radius: 3px;
+}
+
+.sqo-v2-nav-rail__run-item {
+  display: block;
+  padding: 6px 12px;
+  font-size: 11px;
+  color: #7a8aaa;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.sqo-v2-nav-rail__run-item:hover {
+  background: #141720;
+  color: #ccd6f6;
+}
+
+.sqo-v2-nav-rail__role {
+  padding: 12px 16px;
+  border-bottom: 1px solid #1e2330;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sqo-v2-nav-rail__role-label {
+  font-size: 11px;
+  font-weight: bold;
+  color: #4a9eff;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sqo-v2-nav-rail__role-change {
+  font-size: 10px;
+  color: #4a5570;
+  background: none;
+  border: 1px solid #2a2f40;
+  border-radius: 2px;
+  padding: 2px 8px;
+  cursor: pointer;
+  font-family: 'Courier New', monospace;
+  transition: all 0.15s ease;
+}
+
+.sqo-v2-nav-rail__role-change:hover {
+  border-color: #4a9eff;
+  color: #7a8aaa;
+}
+
+.sqo-v2-nav-rail__tier {
+  padding: 12px 0 4px;
+}
+
+.sqo-v2-nav-rail__tier--1 {
+  border-bottom: 1px solid #1e2330;
+  padding-bottom: 8px;
+}
+
+.sqo-v2-nav-rail__tier-label {
+  display: block;
+  padding: 0 16px 8px;
+  font-size: 10px;
+  color: #4a5570;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sqo-v2-nav-rail__tier-toggle {
+  display: block;
+  width: 100%;
+  padding: 4px 16px 8px;
+  font-size: 10px;
+  color: #4a5570;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: 'Courier New', monospace;
+  transition: color 0.15s ease;
+}
+
+.sqo-v2-nav-rail__tier-toggle:hover {
+  color: #7a8aaa;
+}
+
+.sqo-v2-nav-rail__item {
+  display: block;
+  padding: 8px 16px 8px 20px;
+  font-size: 13px;
+  color: #7a8aaa;
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.sqo-v2-nav-rail__item:hover {
+  background: rgba(74, 158, 255, 0.04);
+  color: #ccd6f6;
+}
+
+.sqo-v2-nav-rail__item--active {
+  border-left-color: #4a9eff;
+  color: #ccd6f6;
+  background: rgba(74, 158, 255, 0.06);
+}
+
+.sqo-v2-nav-rail__item--tier1 {
+  font-weight: bold;
+  color: #ccd6f6;
+}
+
+.sqo-v2-nav-rail__item--tier3 {
+  font-size: 12px;
+  color: #4a5570;
+  padding-left: 24px;
+}
+
+.sqo-v2-nav-rail__item--tier3:hover {
+  color: #7a8aaa;
+}
+
+.sqo-v2-nav-rail__governance {
+  margin-top: auto;
+  padding: 16px;
+  font-size: 9px;
+  color: #4a5570;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-top: 1px solid #1e2330;
+  line-height: 1.5;
+}
+
+/* --- Primary Guidance Strip --- */
+.sqo-v2-guidance-strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: #141720;
+  border: 1px solid #2a2f40;
+  border-radius: 3px;
+  border-left: 3px solid #7a8aaa;
+  margin-bottom: 20px;
+}
+
+.sqo-v2-guidance-strip--critical {
+  border-left-color: #ffd700;
+  background: rgba(255, 215, 0, 0.04);
+}
+
+.sqo-v2-guidance-strip--actionable {
+  border-left-color: #4a9eff;
+  background: rgba(74, 158, 255, 0.04);
+}
+
+.sqo-v2-guidance-strip--informational {
+  border-left-color: #7a8aaa;
+}
+
+.sqo-v2-guidance-strip--terminal {
+  border-left-color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.04);
+}
+
+.sqo-v2-guidance-strip__indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sqo-v2-guidance-strip--critical .sqo-v2-guidance-strip__indicator { background: #ffd700; }
+.sqo-v2-guidance-strip--actionable .sqo-v2-guidance-strip__indicator { background: #4a9eff; }
+.sqo-v2-guidance-strip--informational .sqo-v2-guidance-strip__indicator { background: #7a8aaa; }
+.sqo-v2-guidance-strip--terminal .sqo-v2-guidance-strip__indicator { background: #ff6b6b; }
+
+.sqo-v2-guidance-strip__headline {
+  flex: 1;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  color: #ccd6f6;
+  line-height: 1.4;
+}
+
+.sqo-v2-guidance-strip__action {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  color: #4a9eff;
+  background: rgba(74, 158, 255, 0.08);
+  border: 1px solid rgba(74, 158, 255, 0.2);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sqo-v2-guidance-strip__action:hover {
+  background: rgba(74, 158, 255, 0.15);
+}
+
+/* --- Blocker Summary Panel --- */
+.sqo-v2-blocker-summary {
+  background: #1a1e2b;
+  border: 1px solid #1e2330;
+  border-radius: 3px;
+  padding: 16px 18px;
+}
+
+.sqo-v2-blocker-summary__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.sqo-v2-blocker-summary__title {
+  font-size: 12px;
+  font-weight: bold;
+  color: #ccd6f6;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sqo-v2-blocker-summary__count {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ff9e4a;
+}
+
+.sqo-v2-blocker-summary__count--clear {
+  color: #64ffda;
+}
+
+.sqo-v2-blocker-summary__clear {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  color: #64ffda;
+}
+
+.sqo-v2-blocker-summary__lanes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sqo-v2-blocker-summary__lane {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: #12151f;
+  border-radius: 2px;
+  border-left: 3px solid #7a8aaa;
+}
+
+.sqo-v2-blocker-summary__lane--resolvable {
+  border-left-color: #4a9eff;
+}
+
+.sqo-v2-blocker-summary__lane--escalation {
+  border-left-color: #ff9e4a;
+}
+
+.sqo-v2-blocker-summary__lane-label {
+  flex: 1;
+  font-size: 12px;
+  color: #ccd6f6;
+}
+
+.sqo-v2-blocker-summary__lane-count {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ccd6f6;
+}
+
+.sqo-v2-blocker-summary__lane-escalation {
+  font-size: 10px;
+  color: #ff9e4a;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sqo-v2-blocker-summary__escalation-banner {
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: rgba(255, 158, 74, 0.06);
+  border: 1px solid rgba(255, 158, 74, 0.2);
+  border-radius: 2px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 12px;
+  color: #ff9e4a;
+}
+
+.sqo-v2-blocker-summary__critical {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #ff6b6b;
+  font-weight: bold;
+}
+
+/* --- Action Availability Grid --- */
+.sqo-v2-action-grid {
+  background: #1a1e2b;
+  border: 1px solid #1e2330;
+  border-radius: 3px;
+  padding: 16px 18px;
+}
+
+.sqo-v2-action-grid__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.sqo-v2-action-grid__title {
+  font-size: 12px;
+  font-weight: bold;
+  color: #ccd6f6;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sqo-v2-action-grid__role-badge {
+  font-size: 10px;
+  color: #4a9eff;
+  background: rgba(74, 158, 255, 0.08);
+  border: 1px solid rgba(74, 158, 255, 0.2);
+  padding: 2px 8px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sqo-v2-action-grid__categories {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sqo-v2-action-grid__category-label {
+  display: block;
+  font-size: 10px;
+  color: #4a5570;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+
+.sqo-v2-action-grid__items {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.sqo-v2-action-grid__item {
+  padding: 10px 12px;
+  background: #12151f;
+  border: 1px solid #1e2330;
+  border-radius: 2px;
+  transition: all 0.15s ease;
+}
+
+.sqo-v2-action-grid__item--available {
+  border-left: 3px solid #64ffda;
+}
+
+.sqo-v2-action-grid__item--available:hover {
+  background: rgba(100, 255, 218, 0.04);
+}
+
+.sqo-v2-action-grid__item--role-blocked {
+  border-left: 3px solid #ff9e4a;
+  opacity: 0.7;
+}
+
+.sqo-v2-action-grid__item--state-blocked {
+  border-left: 3px solid #4a5570;
+  opacity: 0.6;
+}
+
+.sqo-v2-action-grid__item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.sqo-v2-action-grid__item-label {
+  font-size: 12px;
+  color: #ccd6f6;
+}
+
+.sqo-v2-action-grid__item-level {
+  font-size: 10px;
+  color: #4a5570;
+}
+
+.sqo-v2-action-grid__item-count {
+  display: block;
+  font-size: 11px;
+  color: #64ffda;
+}
+
+.sqo-v2-action-grid__item-reason {
+  display: block;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 11px;
+  color: #7a8aaa;
+  line-height: 1.3;
+}
+
+.sqo-v2-action-grid__item-required-role {
+  display: block;
+  font-size: 10px;
+  color: #ff9e4a;
+  margin-top: 2px;
+}
+
+/* --- Progression Path --- */
+.sqo-v2-progression-path {
+  background: #1a1e2b;
+  border: 1px solid #1e2330;
+  border-radius: 3px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+}
+
+.sqo-v2-progression-path__header {
+  margin-bottom: 16px;
+}
+
+.sqo-v2-progression-path__title {
+  font-size: 12px;
+  font-weight: bold;
+  color: #ccd6f6;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sqo-v2-progression-path__steps {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.sqo-v2-progression-path__step-wrapper {
+  display: flex;
+  align-items: flex-start;
+  flex: 1;
+}
+
+.sqo-v2-progression-path__connector {
+  width: 24px;
+  height: 2px;
+  margin-top: 9px;
+  flex-shrink: 0;
+}
+
+.sqo-v2-progression-path__connector--complete { background: #64ffda; }
+.sqo-v2-progression-path__connector--current { background: #4a9eff; }
+.sqo-v2-progression-path__connector--future { background: #2a2f40; }
+.sqo-v2-progression-path__connector--blocked { background: #ffd700; }
+.sqo-v2-progression-path__connector--terminal { background: #ff6b6b; }
+
+.sqo-v2-progression-path__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  flex: 1;
+}
+
+.sqo-v2-progression-path__step-dot {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.sqo-v2-progression-path__step--complete .sqo-v2-progression-path__step-dot { color: #64ffda; }
+.sqo-v2-progression-path__step--current .sqo-v2-progression-path__step-dot { color: #4a9eff; }
+.sqo-v2-progression-path__step--future .sqo-v2-progression-path__step-dot { color: #4a5570; }
+.sqo-v2-progression-path__step--blocked .sqo-v2-progression-path__step-dot { color: #ffd700; }
+.sqo-v2-progression-path__step--terminal .sqo-v2-progression-path__step-dot { color: #ff6b6b; }
+
+.sqo-v2-progression-path__step-label {
+  font-size: 10px;
+  color: #7a8aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  max-width: 100px;
+}
+
+.sqo-v2-progression-path__step--current .sqo-v2-progression-path__step-label { color: #ccd6f6; }
+
+.sqo-v2-progression-path__step-detail {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 10px;
+  color: #4a5570;
+  max-width: 120px;
+}
+
+.sqo-v2-progression-path__next-states {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #1e2330;
+}
+
+.sqo-v2-progression-path__next-state {
+  padding: 8px 12px;
+  background: #12151f;
+  border-radius: 2px;
+  margin-bottom: 6px;
+}
+
+.sqo-v2-progression-path__next-state-label {
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  color: #ccd6f6;
+  margin-bottom: 6px;
+}
+
+.sqo-v2-progression-path__prereqs {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sqo-v2-progression-path__prereq {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 11px;
+  color: #7a8aaa;
+}
+
+.sqo-v2-progression-path__reachable-badge {
+  font-size: 11px;
+  color: #64ffda;
+}
+
+/* --- Operational Overview Shell --- */
+.sqo-v2-overview-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sqo-v2-overview-shell__posture-zone {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 24px 28px;
+  background: #141720;
+  border: 1px solid #2a2f40;
+  border-radius: 4px;
+  border-left: 4px solid var(--sqo-v2-accent, #7a8aaa);
+}
+
+.sqo-v2-overview-shell__s-badge {
+  font-size: 40px;
+  font-weight: bold;
+  color: var(--sqo-v2-accent, #7a8aaa);
+  line-height: 1;
+  flex-shrink: 0;
+  min-width: 80px;
+  text-align: center;
+}
+
+.sqo-v2-overview-shell__posture-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sqo-v2-overview-shell__posture-label {
+  font-size: 18px;
+  color: var(--sqo-v2-accent, #ccd6f6);
+}
+
+.sqo-v2-overview-shell__posture-summary {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  color: #7a8aaa;
+  line-height: 1.4;
+}
+
+.sqo-v2-overview-shell__pressure-zone {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.sqo-v2-overview-shell__obligation-zone {
+  background: #1a1e2b;
+  border: 1px solid #1e2330;
+  border-radius: 3px;
+  padding: 14px 18px;
+}
+
+.sqo-v2-overview-shell__obligation-title {
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  color: #ccd6f6;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+}
+
+.sqo-v2-overview-shell__obligation-counts {
+  display: flex;
+  gap: 16px;
+}
+
+.sqo-v2-overview-shell__obligation-stat {
+  font-size: 12px;
+  color: #7a8aaa;
+}
+
+.sqo-v2-overview-shell__obligation-stat-value {
+  font-weight: bold;
+  color: #ccd6f6;
+}
+
+.sqo-v2-overview-shell__obligation-stat--contested .sqo-v2-overview-shell__obligation-stat-value {
+  color: #ff9e4a;
+}
+
+.sqo-v2-overview-shell__evidence-zone {
+  background: #1a1e2b;
+  border: 1px solid #1e2330;
+  border-radius: 3px;
+  padding: 14px 18px;
+}
+
+.sqo-v2-overview-shell__evidence-title {
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  color: #ccd6f6;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+}
+
+.sqo-v2-overview-shell__evidence-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.sqo-v2-overview-shell__evidence-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 2px;
+}
+
+.sqo-v2-overview-shell__evidence-indicator {
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+.sqo-v2-overview-shell__evidence-item--available .sqo-v2-overview-shell__evidence-indicator { color: #64ffda; }
+.sqo-v2-overview-shell__evidence-item--absent .sqo-v2-overview-shell__evidence-indicator { color: #4a5570; }
+
+.sqo-v2-overview-shell__evidence-label {
+  font-size: 11px;
+  color: #7a8aaa;
+}
+
+.sqo-v2-overview-shell__evidence-item--available .sqo-v2-overview-shell__evidence-label { color: #ccd6f6; }
+
+.sqo-v2-overview-shell__drilldown-zone {
+  padding: 4px 0;
+}
+
+.sqo-v2-overview-shell__drilldown-group-label {
+  display: block;
+  font-size: 10px;
+  color: #4a5570;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+
+.sqo-v2-overview-shell__drilldown-items {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sqo-v2-overview-shell__drilldown-link {
+  padding: 8px 14px;
+  font-size: 12px;
+  color: #7a8aaa;
+  background: #1a1e2b;
+  border: 1px solid #1e2330;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: 'Courier New', monospace;
+}
+
+.sqo-v2-overview-shell__drilldown-link:hover {
+  border-color: #2a2f40;
+  color: #ccd6f6;
+}
+
+.sqo-v2-overview-shell__drilldown-link--primary {
+  border-color: var(--sqo-v2-accent, #4a9eff);
+  color: #ccd6f6;
+}
+
+.sqo-v2-overview-shell__governance {
+  font-size: 10px;
+  color: #4a5570;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: center;
+  padding: 8px 0;
+}

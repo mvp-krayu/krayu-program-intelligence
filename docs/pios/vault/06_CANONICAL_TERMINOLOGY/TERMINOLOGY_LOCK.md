@@ -426,6 +426,38 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 **What it is NOT:** A raw data dump. A compiler telemetry view. An engineering debug surface. Semantic Intake is the operator projection of qualification intake state.
 
+### resolveOperatorWorkflow
+
+**Definition:** The V2 cockpit's center of gravity. A single server-side resolver that computes the full qualification workflow state from raw promotion data, qualification blockers, review obligations, event lineage, runtime capabilities, and section availability. Returns a deterministic `WorkflowState` object containing currentPosture, primaryGuidance, blockerSummary, obligationSummary, evidenceState, availableActions (12), nextPossibleStates, progressionPath (6 steps), roleProjection (5 roles), availableDrilldowns (tier2+tier3), isTerminal, and terminalReason.
+
+**Status:** CANONICAL — operational resolver (2026-05-19).
+
+**What it is NOT:** A page. A component. A visualization. It is the computation that all V2 rendering is a deterministic projection of.
+
+### V2 Cockpit
+
+**Definition:** The workflow-driven SQO qualification operating system. Replaces the artifact-driven 15-section flat cockpit (V1) with a posture-first, workflow-first operational surface where the primary object is qualification progression state, not pages/artifacts/sections. V2 runs under `/v2/` route prefix — zero V1 collision.
+
+**Status:** CANONICAL — operational runtime surface (2026-05-19).
+
+**Key architectural properties:**
+- 3-tier navigation: Tier 1 (Operational Spine: overview + authority, always visible), Tier 2 (Qualification Detail: 5 capability-dependent sections), Tier 3 (Forensic Investigation: 8 sections, collapsed by default)
+- Session-level declarative RBAC role: 5 roles (operator/reviewer/domain_authority/promotion_authority/audit_authority) as React state, not URL. SSR with operator (broadest), client-side recomputation via computeWorkflowProjection
+- 12-action visibility: all governed actions always visible regardless of role. Unavailable actions show reason + required_role + authority_level. Hidden controls are WRONG.
+- Posture dominates: 2-second legibility standard. System determines what matters, not user navigation.
+
+### WorkflowRoleProjection
+
+**Definition:** Client-side role recomputation primitive. Pure function (`computeWorkflowProjection`) that re-filters a WorkflowState for a different RBAC role without server round-trip. Embeds ROLE_ACTION_MAP and ACTION_AUTHORITY as constants. Consumed by OperationalCockpitShell for session role changes.
+
+**Status:** CANONICAL — operational client-side primitive (2026-05-19).
+
+### Primary Guidance
+
+**Definition:** The "What do I do next?" element of the workflow state. A single-line headline with urgency classification (critical/actionable/informational/terminal) derived from qualification posture and obligation state. When unresolved obligations exist AND the current role can act on them, guidance overrides to obligations regardless of posture.
+
+**Status:** CANONICAL — operational workflow concept (2026-05-19).
+
 ## Term Usage Rules
 
 1. **Use locked definitions exactly.** Do not paraphrase, simplify, or reinterpret.

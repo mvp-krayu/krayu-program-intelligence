@@ -81,6 +81,37 @@
 | OperatorWorkflowResolver | app/execlens-demo/lib/sqo-cockpit/server/OperatorWorkflowResolver.server.js | SSR data resolver for authority page |
 | SQORuntimeResolver | app/execlens-demo/lib/sqo-cockpit/server/SQORuntimeResolver.server.js | Canonical runtime substrate discovery — probes static and operational paths, resolves capabilities and section availability |
 
+### V2 Cockpit Modules
+
+| Module | Path | Role |
+|---|---|---|
+| resolveOperatorWorkflow | app/execlens-demo/lib/sqo-cockpit/server/OperatorWorkflowResolver.server.js | V2 brain — full workflow state computation (posture, guidance, blockers, actions, progression, role projection) |
+| resolveOperatorWorkflowFromRaw | app/execlens-demo/lib/sqo-cockpit/server/OperatorWorkflowResolver.server.js | Convenience wrapper — loads raw state then delegates |
+| V2CockpitRouteResolver | app/execlens-demo/lib/sqo-cockpit/V2CockpitRouteResolver.js | Tier-aware V2 route resolver (TIER1/TIER2/TIER3 classification, path building) |
+| WorkflowRoleProjection | app/execlens-demo/lib/sqo-cockpit/client/WorkflowRoleProjection.js | Client-side role recomputation (pure function, no server imports) |
+
+### V2 Cockpit Components
+
+| Component | Path | Role |
+|---|---|---|
+| OperationalCockpitShell | app/execlens-demo/components/sqo-cockpit/v2/ | V2 top-level shell — role state management, content routing |
+| OperationalOverviewShell | app/execlens-demo/components/sqo-cockpit/v2/ | V2 posture-first composed overview layout |
+| WorkflowNavigationRail | app/execlens-demo/components/sqo-cockpit/v2/ | 3-tier grouped navigation |
+| RoleDeclarationGate | app/execlens-demo/components/sqo-cockpit/v2/ | Session role selector — 5 role cards |
+| PrimaryGuidanceStrip | app/execlens-demo/components/sqo-cockpit/v2/ | "What do I do next?" with urgency accent |
+| BlockerSummaryPanel | app/execlens-demo/components/sqo-cockpit/v2/ | Lane-grouped blocker summary with resolvability |
+| ActionAvailabilityGrid | app/execlens-demo/components/sqo-cockpit/v2/ | 12 governed actions in category-grouped grid |
+| ProgressionPathVisualization | app/execlens-demo/components/sqo-cockpit/v2/ | 6-step horizontal progression path |
+
+### V2 Cockpit Routes
+
+| Page | Path | Role |
+|---|---|---|
+| V2 overview | app/execlens-demo/pages/sqo/client/[client]/run/[run]/v2/index.js | V2 entry surface at /v2/ |
+| V2 authority | app/execlens-demo/pages/sqo/client/[client]/run/[run]/v2/authority.js | V2 authority page at /v2/authority |
+| V2 detail | app/execlens-demo/pages/sqo/client/[client]/run/[run]/v2/detail/[section].js | Tier 2 detail pages at /v2/detail/{section} |
+| V2 forensic | app/execlens-demo/pages/sqo/client/[client]/run/[run]/v2/forensic/[section].js | Tier 3 forensic pages at /v2/forensic/{section} |
+
 ### Authority Workflow API
 
 | Route | Path | Role |
@@ -137,6 +168,7 @@
 | PI.IMPLEMENTATION-SEQUENCING.GITHUB-FIRST-OPERATIONALIZATION.CORRECTION.01 | docs/pios/PI.IMPLEMENTATION-SEQUENCING.GITHUB-FIRST-OPERATIONALIZATION.CORRECTION.01/ | G1 | COMPLETE |
 | PI.SQO.OPERATOR-WORKFLOW-OPERATIONALIZATION.01 | docs/pios/PI.SQO.OPERATOR-WORKFLOW-OPERATIONALIZATION.01/ | G1 | COMPLETE |
 | PI.SQO.RUNTIME-QUALIFICATION-PROJECTION-CORRECTION.01 | docs/pios/PI.SQO.RUNTIME-QUALIFICATION-PROJECTION-CORRECTION.01/ | G1 | COMPLETE |
+| PI.SQO.COCKPIT-WORKFLOW-REFOUNDATION.01 | docs/pios/PI.SQO.COCKPIT-WORKFLOW-REFOUNDATION.01/ | G1 | COMPLETE |
 
 ## Cross-References
 

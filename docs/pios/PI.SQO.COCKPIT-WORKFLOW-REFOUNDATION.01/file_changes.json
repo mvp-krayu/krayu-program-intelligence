@@ -1,0 +1,32 @@
+{
+  "stream": "PI.SQO.COCKPIT-WORKFLOW-REFOUNDATION.01",
+  "changes": [
+    { "file": "app/execlens-demo/lib/sqo-cockpit/server/OperatorWorkflowResolver.server.js", "action": "MODIFIED", "purpose": "Added resolveOperatorWorkflow + resolveOperatorWorkflowFromRaw — the V2 cockpit brain" },
+    { "file": "app/execlens-demo/lib/sqo-cockpit/V2CockpitRouteResolver.js", "action": "CREATED", "purpose": "Tier-aware V2 route resolver (TIER1/TIER2/TIER3 classification, path building)" },
+    { "file": "app/execlens-demo/lib/sqo-cockpit/client/WorkflowRoleProjection.js", "action": "CREATED", "purpose": "Client-side role recomputation (pure function, no server imports)" },
+    { "file": "app/execlens-demo/components/sqo-cockpit/v2/RoleDeclarationGate.jsx", "action": "CREATED", "purpose": "Session role selector — 5 role cards + identifier input" },
+    { "file": "app/execlens-demo/components/sqo-cockpit/v2/PrimaryGuidanceStrip.jsx", "action": "CREATED", "purpose": "Single-line guidance headline with urgency accent" },
+    { "file": "app/execlens-demo/components/sqo-cockpit/v2/BlockerSummaryPanel.jsx", "action": "CREATED", "purpose": "Lane-grouped blocker summary with resolvability indicators" },
+    { "file": "app/execlens-demo/components/sqo-cockpit/v2/ActionAvailabilityGrid.jsx", "action": "CREATED", "purpose": "12 governed actions — category-grouped grid, no action hidden" },
+    { "file": "app/execlens-demo/components/sqo-cockpit/v2/ProgressionPathVisualization.jsx", "action": "CREATED", "purpose": "6-step horizontal progression path with status dots" },
+    { "file": "app/execlens-demo/components/sqo-cockpit/v2/OperationalOverviewShell.jsx", "action": "CREATED", "purpose": "V2 primary entry surface — composed from posture, guidance, blockers, actions, progression, evidence" },
+    { "file": "app/execlens-demo/components/sqo-cockpit/v2/WorkflowNavigationRail.jsx", "action": "CREATED", "purpose": "3-tier grouped navigation replacing flat 15-item sidebar" },
+    { "file": "app/execlens-demo/components/sqo-cockpit/v2/OperationalCockpitShell.jsx", "action": "CREATED", "purpose": "V2 top-level shell — role state management, content routing, BlueEdge S2 journey preservation" },
+    { "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/v2/index.js", "action": "CREATED", "purpose": "V2 overview page route" },
+    { "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/v2/authority.js", "action": "CREATED", "purpose": "V2 authority page route" },
+    { "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/v2/detail/[section].js", "action": "CREATED", "purpose": "V2 Tier 2 detail page route" },
+    { "file": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/v2/forensic/[section].js", "action": "CREATED", "purpose": "V2 Tier 3 forensic page route" },
+    { "file": "app/execlens-demo/styles/globals.css", "action": "MODIFIED", "purpose": "Added ~500 lines V2 CSS (posture accents, role gate, guidance strip, blocker summary, action grid, progression path, overview shell, navigation rail, cockpit shell)" }
+  ],
+  "not_modified": [
+    "app/execlens-demo/components/sqo-cockpit/SQOWorkspaceShell.jsx",
+    "app/execlens-demo/components/sqo-cockpit/SQONavigation.jsx",
+    "app/execlens-demo/components/sqo-cockpit/SQOWorkspacePanel.jsx",
+    "app/execlens-demo/lib/sqo-cockpit/SQOCockpitRouteResolver.js",
+    "app/execlens-demo/lib/sqo-cockpit/SQOWorkspaceDataResolver.js",
+    "All existing page files (authority.js, debt.js, etc.)",
+    "All panel components",
+    "All authority components",
+    "All BlueEdge loaders"
+  ]
+}

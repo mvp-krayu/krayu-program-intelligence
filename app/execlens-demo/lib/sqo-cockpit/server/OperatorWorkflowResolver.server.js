@@ -2,6 +2,8 @@
 
 const { loadPromotionState } = require('./PromotionStateLoader.server');
 const { ROLE_ACTION_MAP, ACTION_AUTHORITY } = require('./SQOAuthorityValidator.server');
+const { resolveQualificationPosture, POSTURE } = require('../QualificationPostureResolver');
+const { resolveRuntimeSubstrates } = require('./SQORuntimeResolver.server');
 
 function resolveAuthorityWorkspace(client, runId) {
   const loaded = loadPromotionState(client, runId);
@@ -152,4 +154,416 @@ function resolveEventTimeline(promotionEventLog) {
   }));
 }
 
-module.exports = { resolveAuthorityWorkspace };
+const ROLE_LABELS = {
+  operator: 'Operator',
+  reviewer: 'Reviewer',
+  domain_authority: 'Domain Authority',
+  promotion_authority: 'Promotion Authority',
+  audit_authority: 'Audit Authority',
+};
+
+const TIER2_SECTION_DEFS = [
+  { section: 'semantic-candidates', label: 'Semantic Intake' },
+  { section: 'progression', label: 'Progression' },
+  { section: 'reconciliation', label: 'Reconciliation' },
+  { section: 'evidence', label: 'Evidence & Replay' },
+  { section: 'debt', label: 'Semantic Debt' },
+];
+
+const TIER3_SECTION_DEFS = [
+  { section: 'continuity', label: 'Continuity Assessment' },
+  { section: 'maturity', label: 'Maturity Profile' },
+  { section: 'reconciliation-loop', label: 'Reconciliation Loop' },
+  { section: 'handoff', label: 'PATH B Handoff' },
+  { section: 'ceu-admissibility', label: 'CEU Admissibility' },
+  { section: 'evidence-ingestion', label: 'Evidence Ingestion' },
+  { section: 'corridor', label: 'Runtime Corridor' },
+  { section: 'evidence-rebase', label: 'Evidence Rebase' },
+];
+
+const POSTURE_RELEVANCE = {
+  [POSTURE.SEMANTIC_INTAKE]: 'semantic-candidates',
+  [POSTURE.QUALIFICATION_PENDING]: 'semantic-candidates',
+  [POSTURE.CROSSWALK_ACTIVE]: 'semantic-candidates',
+  [POSTURE.RECONCILIATION_ACTIVE]: 'reconciliation',
+  [POSTURE.QUALIFIED]: 'debt',
+};
+
+const LANE_LABELS = {
+  evidence: 'Evidence',
+  crosswalk: 'Crosswalk',
+  reconciliation: 'Reconciliation',
+  semantic_authority: 'Semantic Authority',
+  governance: 'Governance',
+  grounding: 'Grounding',
+  replay: 'Replay',
+};
+
+const LANE_RESOLUTION_ACTIONS = {
+  evidence: null,
+  crosswalk: 'crosswalk_accept',
+  reconciliation: 'reconciliation_accept',
+  semantic_authority: 'review_accept',
+  governance: 'promotion_request',
+  grounding: null,
+  replay: null,
+};
+
+function findRequiredRole(action, excludeRole) {
+  const specialistOrder = ['reviewer', 'domain_authority', 'promotion_authority', 'operator'];
+  for (const r of specialistOrder) {
+    if (r !== excludeRole && (ROLE_ACTION_MAP[r] || []).includes(action)) {
+      return r;
+    }
+  }
+  return 'operator';
+}
+
+function resolvePrimaryGuidance(currentPosture, obligationSummary, role, runtimeCapabilities) {
+  const roleActions = ROLE_ACTION_MAP[role] || [];
+  const hasReviewAuthority = roleActions.some(a => a.startsWith('review_'));
+  if (obligationSummary.unresolved > 0 && hasReviewAuthority) {
+    return {
+      headline: `${obligationSummary.unresolved} review obligation${obligationSummary.unresolved !== 1 ? 's' : ''} require${obligationSummary.unresolved === 1 ? 's' : ''} operator action.`,
+      action_target: 'authority',
+      urgency: 'critical',
+    };
+  }
+
+  const caps = runtimeCapabilities || {};
+  switch (currentPosture.posture) {
+    case POSTURE.PERMANENTLY_UNQUALIFIABLE:
+      return { headline: 'Permanent insufficiency acknowledged. No further progression possible.', action_target: null, urgency: 'terminal' };
+    case POSTURE.INSUFFICIENT_EVIDENCE:
+      return { headline: 'Insufficient evidence for qualification. Determination may be revisited.', action_target: null, urgency: 'informational' };
+    case POSTURE.QUALIFIED:
+      return { headline: `Qualified at ${currentPosture.s_level}. Review semantic debt for remaining items.`, action_target: caps.static_debt ? 'debt' : null, urgency: 'informational' };
+    case POSTURE.RECONCILIATION_ACTIVE:
+      return { headline: 'Reconciliation in progress. Review correspondence for completion.', action_target: 'reconciliation', urgency: 'actionable' };
+    case POSTURE.CROSSWALK_ACTIVE:
+      return { headline: 'Semantic intake complete. Crosswalk construction required for advancement.', action_target: null, urgency: 'actionable' };
+    case POSTURE.QUALIFICATION_PENDING:
+      return { headline: `${obligationSummary.unresolved} review obligation${obligationSummary.unresolved !== 1 ? 's' : ''} pending resolution.`, action_target: 'authority', urgency: 'critical' };
+    case POSTURE.SEMANTIC_INTAKE:
+      return { headline: 'Semantic intake available. Candidate capabilities awaiting review.', action_target: 'semantic-candidates', urgency: 'actionable' };
+    case POSTURE.STRUCTURAL_ONLY:
+      return { headline: 'Structural topology only. Semantic derivation required for qualification.', action_target: null, urgency: 'informational' };
+    default:
+      return { headline: 'Qualification state could not be determined.', action_target: null, urgency: 'informational' };
+  }
+}
+
+function resolveBlockerSummaryV2(qualificationBlockers, role) {
+  const blockers = qualificationBlockers?.blockers || [];
+  const unresolvedBlockers = blockers.filter(b => !b.resolved);
+  const roleActions = ROLE_ACTION_MAP[role] || [];
+  const byLane = {};
+
+  for (const b of unresolvedBlockers) {
+    const lane = b.lane || 'evidence';
+    if (!byLane[lane]) {
+      const resAction = LANE_RESOLUTION_ACTIONS[lane] || null;
+      byLane[lane] = {
+        count: 0,
+        label: LANE_LABELS[lane] || lane,
+        resolvable_by_role: resAction ? roleActions.includes(resAction) : false,
+        resolution_action: resAction,
+      };
+    }
+    byLane[lane].count += 1;
+  }
+
+  const critical_count = unresolvedBlockers.filter(b => b.severity === 'critical' || b.blocks_promotion).length;
+  const escalation_required = Object.values(byLane).some(l => !l.resolvable_by_role && l.count > 0);
+
+  return { total: unresolvedBlockers.length, by_lane: byLane, critical_count, escalation_required };
+}
+
+function resolveObligationSummaryV2(reviewObligations, role) {
+  const obligations = reviewObligations?.obligations || [];
+  const total = reviewObligations?.total_obligations || obligations.length;
+  const resolved = obligations.filter(o => o.status === 'RESOLVED' || o.status === 'REJECTED').length;
+  const unresolved = obligations.filter(o => o.status === 'UNRESOLVED' || o.status === 'DISPUTED').length;
+  const contested = obligations.filter(o => o.status === 'CONTESTED' || o.status === 'ARBITRATION_REQUIRED').length;
+
+  const roleActions = ROLE_ACTION_MAP[role] || [];
+  let actionable = 0;
+  for (const obl of obligations) {
+    const affordances = resolveObligationAffordances(obl);
+    if (!affordances.readonly && affordances.actions.some(a => roleActions.includes(a))) {
+      actionable++;
+    }
+  }
+
+  return { total, unresolved, contested, resolved, actionable_by_role: actionable };
+}
+
+function resolveEvidenceState(runtimeCapabilities) {
+  const caps = runtimeCapabilities || {};
+  return {
+    structural_topology: { available: !!caps.structural_topology, detail: caps.structural_topology ? 'Canonical topology available' : null },
+    semantic_intake: { available: !!caps.semantic_candidates, detail: caps.semantic_candidates ? 'Candidate CSR available' : null },
+    crosswalk: { available: !!caps.static_reconciliation, detail: caps.static_reconciliation ? 'Crosswalk correspondence available' : null },
+    reconciliation: { available: !!caps.static_reconciliation, detail: caps.static_reconciliation ? 'Reconciliation data available' : null },
+    evidence_replay: { available: !!caps.static_replay, detail: caps.static_replay ? 'Replay verification available' : null },
+    vault_readiness: { available: !!caps.vault_readiness, detail: caps.vault_readiness ? 'Vault readiness assessed' : null },
+    event_lineage: { available: !!caps.event_lineage, detail: caps.event_lineage ? 'Promotion event lineage available' : null },
+    authority_runtime: { available: !!caps.authority_runtime, detail: caps.authority_runtime ? 'Authority runtime operational' : null },
+  };
+}
+
+function resolveAvailableActions(role, promotionState, reviewObligations, promotionEventLog, qualificationBlockers) {
+  const roleActions = ROLE_ACTION_MAP[role] || [];
+  const obligations = reviewObligations?.obligations || [];
+  const events = promotionEventLog || [];
+  const blockers = qualificationBlockers?.blockers || [];
+  const unresolvedBlockers = blockers.filter(b => !b.resolved);
+  const sLevel = promotionState?.s_level;
+  const hasRequest = events.some(e => e.action === 'promotion_request');
+  const hasDecision = events.some(e => e.action === 'promotion_approve' || e.action === 'promotion_deny');
+
+  const actionDefs = [
+    { action: 'review_accept', label: 'Accept Review', category: 'review', stateCheck: () => {
+      const t = obligations.filter(o => ['UNRESOLVED', 'CONTESTED', 'DISPUTED'].includes(o.status));
+      return { valid: t.length > 0, reason: t.length === 0 ? 'No obligations in reviewable state' : null, count: t.length };
+    }},
+    { action: 'review_reject', label: 'Reject Review', category: 'review', stateCheck: () => {
+      const t = obligations.filter(o => ['UNRESOLVED', 'CONTESTED', 'DISPUTED'].includes(o.status));
+      return { valid: t.length > 0, reason: t.length === 0 ? 'No obligations in reviewable state' : null, count: t.length };
+    }},
+    { action: 'review_contest', label: 'Contest Review', category: 'review', stateCheck: () => {
+      const t = obligations.filter(o => ['UNRESOLVED', 'RESOLVED'].includes(o.status));
+      return { valid: t.length > 0, reason: t.length === 0 ? 'No obligations in contestable state' : null, count: t.length };
+    }},
+    { action: 'review_partial_accept', label: 'Partial Accept', category: 'review', stateCheck: () => {
+      const t = obligations.filter(o => o.status === 'UNRESOLVED');
+      return { valid: t.length > 0, reason: t.length === 0 ? 'No unresolved obligations' : null, count: t.length };
+    }},
+    { action: 'promotion_request', label: 'Request Promotion', category: 'promotion', stateCheck: () => {
+      if (unresolvedBlockers.length > 0) return { valid: false, reason: `${unresolvedBlockers.length} blocker${unresolvedBlockers.length !== 1 ? 's' : ''} unresolved`, count: null };
+      if (hasRequest) return { valid: false, reason: 'Promotion already requested', count: null };
+      return { valid: true, reason: null, count: null };
+    }},
+    { action: 'promotion_approve', label: 'Approve Promotion', category: 'promotion', stateCheck: () => {
+      if (!hasRequest) return { valid: false, reason: 'No pending promotion request', count: null };
+      if (hasDecision) return { valid: false, reason: 'Promotion already decided', count: null };
+      return { valid: true, reason: null, count: null };
+    }},
+    { action: 'promotion_deny', label: 'Deny Promotion', category: 'promotion', stateCheck: () => {
+      if (!hasRequest) return { valid: false, reason: 'No pending promotion request', count: null };
+      if (hasDecision) return { valid: false, reason: 'Promotion already decided', count: null };
+      return { valid: true, reason: null, count: null };
+    }},
+    { action: 'insufficiency_acknowledge', label: 'Acknowledge Insufficiency', category: 'insufficiency', stateCheck: () => {
+      if (sLevel !== 'S1' && sLevel !== 'S1.5') return { valid: false, reason: `Requires S1 state (current: ${sLevel || 'unknown'})`, count: null };
+      return { valid: true, reason: null, count: null };
+    }},
+    { action: 'crosswalk_accept', label: 'Accept Crosswalk', category: 'structural', stateCheck: () => {
+      const lane = promotionState?.lanes?.crosswalk;
+      if (!lane || lane.state === 'ABSENT') return { valid: false, reason: 'No crosswalk artifact exists', count: null };
+      return { valid: true, reason: null, count: null };
+    }},
+    { action: 'reconciliation_accept', label: 'Accept Reconciliation', category: 'structural', stateCheck: () => {
+      const lane = promotionState?.lanes?.reconciliation;
+      if (!lane || lane.state === 'ABSENT') return { valid: false, reason: 'No reconciliation artifact exists', count: null };
+      return { valid: true, reason: null, count: null };
+    }},
+    { action: 'escalate_arbitration', label: 'Escalate to Arbitration', category: 'escalation', stateCheck: () => {
+      const t = obligations.filter(o => o.status === 'CONTESTED');
+      return { valid: t.length > 0, reason: t.length === 0 ? 'No contested obligations' : null, count: t.length };
+    }},
+    { action: 'resolve_arbitration', label: 'Resolve Arbitration', category: 'escalation', stateCheck: () => {
+      const t = obligations.filter(o => o.status === 'ARBITRATION_REQUIRED');
+      return { valid: t.length > 0, reason: t.length === 0 ? 'No obligations requiring arbitration' : null, count: t.length };
+    }},
+  ];
+
+  return actionDefs.map(def => {
+    const authority = ACTION_AUTHORITY[def.action];
+    const roleHasAction = roleActions.includes(def.action);
+    const stateResult = def.stateCheck();
+    const available = roleHasAction && stateResult.valid;
+
+    let reason_if_unavailable = null;
+    let required_role = null;
+
+    if (!available) {
+      if (!roleHasAction) {
+        required_role = findRequiredRole(def.action, role);
+        reason_if_unavailable = `Requires ${ROLE_LABELS[required_role] || required_role}`;
+        if (!stateResult.valid && stateResult.reason) {
+          reason_if_unavailable += ` — ${stateResult.reason}`;
+        }
+      } else {
+        reason_if_unavailable = stateResult.reason;
+      }
+    }
+
+    return {
+      action: def.action,
+      label: def.label,
+      category: def.category,
+      available,
+      reason_if_unavailable,
+      required_role,
+      authority_level: authority.level,
+      target_count: stateResult.count,
+    };
+  });
+}
+
+function resolveNextPossibleStates(currentPosture, qualificationBlockers, reviewObligations, promotionEventLog, runtimeCapabilities) {
+  const sLevel = currentPosture.s_level;
+  const caps = runtimeCapabilities || {};
+  const blockers = qualificationBlockers?.blockers || [];
+  const unresolvedBlockers = blockers.filter(b => !b.resolved);
+  const obligations = reviewObligations?.obligations || [];
+  const unresolvedObligations = obligations.filter(o => !['RESOLVED', 'REJECTED', 'UNRESOLVABLE'].includes(o.status));
+  const events = promotionEventLog || [];
+  const hasApproval = events.some(e => e.action === 'promotion_approve');
+  const states = [];
+
+  if (sLevel === 'S1' || sLevel === 'S1.5' || !sLevel) {
+    const prereqs = [
+      { requirement: 'All qualification blockers resolved', met: unresolvedBlockers.length === 0, resolution: unresolvedBlockers.length > 0 ? `${unresolvedBlockers.length} blockers remaining` : null },
+      { requirement: 'All review obligations resolved', met: unresolvedObligations.length === 0, resolution: unresolvedObligations.length > 0 ? `${unresolvedObligations.length} obligations unresolved` : null },
+      { requirement: 'Crosswalk validated', met: !!caps.static_reconciliation, resolution: !caps.static_reconciliation ? 'Crosswalk construction required' : null },
+      { requirement: 'Reconciliation complete', met: !!caps.static_reconciliation, resolution: !caps.static_reconciliation ? 'PATH A/B reconciliation required' : null },
+      { requirement: 'Promotion approved', met: hasApproval, resolution: !hasApproval ? 'Promotion request and approval required' : null },
+    ];
+    states.push({ state: 'S2', label: 'Qualified with Debt', reachable: prereqs.every(p => p.met), remaining_prerequisites: prereqs });
+  }
+
+  if (sLevel === 'S2') {
+    states.push({
+      state: 'S3',
+      label: 'Authority Ready',
+      reachable: false,
+      remaining_prerequisites: [
+        { requirement: 'All semantic debt resolved', met: false, resolution: 'Future stream' },
+        { requirement: 'Full structural grounding', met: false, resolution: 'Future stream' },
+        { requirement: 'Authority ceiling at L5', met: false, resolution: 'Future stream' },
+      ],
+    });
+  }
+
+  return states;
+}
+
+function resolveProgressionPath(currentPosture, runtimeCapabilities) {
+  const caps = runtimeCapabilities || {};
+  const posture = currentPosture.posture;
+  const sLevel = currentPosture.s_level;
+  const isTerminal = posture === POSTURE.PERMANENTLY_UNQUALIFIABLE;
+
+  function stepStatus(isComplete, isCurrent) {
+    if (isTerminal && !isComplete) return 'terminal';
+    if (isComplete) return 'complete';
+    if (isCurrent) return 'current';
+    return 'future';
+  }
+
+  const hasStructural = !!caps.structural_topology;
+  const hasSemantic = !!caps.semantic_candidates;
+  const hasReview = !!caps.review_obligations;
+  const hasReconciliation = !!caps.static_reconciliation || !!caps.static_reconciliation_loop;
+  const isQualified = sLevel === 'S2' || sLevel === 'S3';
+  const reviewComplete = isQualified || posture === POSTURE.RECONCILIATION_ACTIVE || posture === POSTURE.CROSSWALK_ACTIVE;
+  const crosswalkComplete = isQualified || posture === POSTURE.RECONCILIATION_ACTIVE;
+  const reconComplete = isQualified;
+
+  return [
+    { step: 'structural_onboarding', label: 'Structural Onboarding', status: stepStatus(hasStructural, !hasStructural), detail: hasStructural ? 'Canonical topology available' : 'Awaiting structural pipeline' },
+    { step: 'semantic_derivation', label: 'Semantic Derivation', status: stepStatus(hasSemantic, hasStructural && !hasSemantic), detail: hasSemantic ? 'Candidate CSR generated' : (hasStructural ? 'Awaiting semantic compiler' : null) },
+    { step: 'semantic_review', label: 'Semantic Review', status: stepStatus(reviewComplete, hasSemantic && !reviewComplete && (posture === POSTURE.QUALIFICATION_PENDING || posture === POSTURE.SEMANTIC_INTAKE)), detail: reviewComplete ? 'Review obligations resolved' : (hasReview ? 'Review obligations pending' : null) },
+    { step: 'crosswalk_construction', label: 'Crosswalk Construction', status: stepStatus(crosswalkComplete, posture === POSTURE.CROSSWALK_ACTIVE), detail: crosswalkComplete ? 'Crosswalk validated' : (posture === POSTURE.CROSSWALK_ACTIVE ? 'Crosswalk construction in progress' : null) },
+    { step: 'reconciliation', label: 'Reconciliation', status: stepStatus(reconComplete, posture === POSTURE.RECONCILIATION_ACTIVE), detail: reconComplete ? 'PATH A/B reconciliation complete' : (posture === POSTURE.RECONCILIATION_ACTIVE ? 'Reconciliation in progress' : null) },
+    { step: 'qualification_promotion', label: 'Qualification Promotion', status: stepStatus(isQualified, reconComplete && !isQualified), detail: isQualified ? `Qualified at ${sLevel}` : null },
+  ];
+}
+
+function resolveRoleProjection(role) {
+  const allActions = Object.keys(ACTION_AUTHORITY);
+  const permitted = ROLE_ACTION_MAP[role] || [];
+  const prohibited = allActions.filter(a => !permitted.includes(a));
+  const escalation_targets = prohibited.map(action => ({
+    action,
+    required_role: findRequiredRole(action, role),
+  }));
+  return { role, roleLabel: ROLE_LABELS[role] || role, permitted_actions: permitted, prohibited_actions: prohibited, escalation_targets };
+}
+
+function resolveAvailableDrilldowns(sectionAvailability, currentPosture) {
+  const sa = sectionAvailability || {};
+  const primarySection = POSTURE_RELEVANCE[currentPosture.posture] || null;
+
+  const tier2 = TIER2_SECTION_DEFS.map(def => ({
+    section: def.section,
+    label: def.label,
+    available: !!sa[def.section],
+    relevance: def.section === primarySection ? 'primary' : 'standard',
+  }));
+
+  const tier3 = TIER3_SECTION_DEFS.map(def => ({
+    section: def.section,
+    label: def.label,
+    available: !!sa[def.section],
+  }));
+
+  return { tier2, tier3 };
+}
+
+function resolveOperatorWorkflow(client, runId, role, promotionState, qualificationBlockers, reviewObligations, promotionEventLog, runtimeCapabilities, sectionAvailability) {
+  const currentPosture = resolveQualificationPosture(promotionState, qualificationBlockers, runtimeCapabilities);
+  const blockerSummary = resolveBlockerSummaryV2(qualificationBlockers, role);
+  const obligationSummary = resolveObligationSummaryV2(reviewObligations, role);
+  const primaryGuidance = resolvePrimaryGuidance(currentPosture, obligationSummary, role, runtimeCapabilities);
+  const evidenceState = resolveEvidenceState(runtimeCapabilities);
+  const availableActions = resolveAvailableActions(role, promotionState, reviewObligations, promotionEventLog, qualificationBlockers);
+  const nextPossibleStates = resolveNextPossibleStates(currentPosture, qualificationBlockers, reviewObligations, promotionEventLog, runtimeCapabilities);
+  const progressionPath = resolveProgressionPath(currentPosture, runtimeCapabilities);
+  const roleProjection = resolveRoleProjection(role);
+  const availableDrilldowns = resolveAvailableDrilldowns(sectionAvailability, currentPosture);
+  const isTerminal = currentPosture.posture === POSTURE.PERMANENTLY_UNQUALIFIABLE;
+  const terminalReason = isTerminal ? currentPosture.summary : null;
+
+  return {
+    currentPosture,
+    primaryGuidance,
+    blockerSummary,
+    obligationSummary,
+    evidenceState,
+    availableActions,
+    nextPossibleStates,
+    progressionPath,
+    roleProjection,
+    availableDrilldowns,
+    isTerminal,
+    terminalReason,
+  };
+}
+
+function resolveOperatorWorkflowFromRaw(client, runId, role) {
+  const runtime = resolveRuntimeSubstrates(client, runId);
+  const loaded = loadPromotionState(client, runId);
+
+  if (!loaded.loaded) {
+    return resolveOperatorWorkflow(
+      client, runId, role || 'operator',
+      null, null, null, null,
+      runtime.capabilities, runtime.sectionAvailability
+    );
+  }
+
+  return resolveOperatorWorkflow(
+    client, runId, role || 'operator',
+    loaded.promotionState,
+    loaded.qualificationBlockers,
+    loaded.reviewObligations,
+    loaded.promotionEventLog,
+    runtime.capabilities,
+    runtime.sectionAvailability
+  );
+}
+
+module.exports = { resolveAuthorityWorkspace, resolveOperatorWorkflow, resolveOperatorWorkflowFromRaw };

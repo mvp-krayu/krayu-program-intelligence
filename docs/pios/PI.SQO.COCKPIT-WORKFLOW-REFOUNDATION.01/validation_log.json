@@ -1,0 +1,28 @@
+{
+  "stream": "PI.SQO.COCKPIT-WORKFLOW-REFOUNDATION.01",
+  "timestamp": "2026-05-19T00:00:00Z",
+  "checks": [
+    { "name": "resolver_export_verification", "status": "PASS", "detail": "resolveOperatorWorkflow and resolveOperatorWorkflowFromRaw export as functions" },
+    { "name": "resolver_pallets_flask_operator", "status": "PASS", "detail": "Posture: PERMANENTLY_UNQUALIFIABLE, S1, 6 blockers, 0 obligations, 1/12 actions available, terminal=true" },
+    { "name": "resolver_blueedge_operator", "status": "PASS", "detail": "Posture: RECONCILIATION_ACTIVE, s_level=null, 0 blockers, guidance=actionable" },
+    { "name": "resolver_reviewer_projection", "status": "PASS", "detail": "5 permitted, 7 prohibited, escalation targets correctly mapped" },
+    { "name": "resolver_audit_authority_projection", "status": "PASS", "detail": "0 permitted, 12 prohibited, all role-blocked" },
+    { "name": "resolver_progression_path", "status": "PASS", "detail": "6 steps computed, terminal cascade works for PERMANENTLY_UNQUALIFIABLE" },
+    { "name": "build_compilation", "status": "PASS", "detail": "Next.js build clean, all V2 routes compile" },
+    { "name": "v2_overview_pallets_flask", "status": "PASS", "detail": "HTTP 200, role gate renders, workflowState in NEXT_DATA" },
+    { "name": "v2_overview_blueedge", "status": "PASS", "detail": "HTTP 200, posture=RECONCILIATION_ACTIVE, journey available=true" },
+    { "name": "v2_authority_page", "status": "PASS", "detail": "HTTP 200, authorityPosture and primaryGuidance both present" },
+    { "name": "v2_detail_page", "status": "PASS", "detail": "HTTP 200 for semantic-candidates detail" },
+    { "name": "v2_forensic_page", "status": "PASS", "detail": "HTTP 200 for continuity forensic" },
+    { "name": "v2_invalid_section_404", "status": "PASS", "detail": "HTTP 404 for nonexistent detail section" },
+    { "name": "v1_regression_blueedge_overview", "status": "PASS", "detail": "HTTP 200, V1 shell unchanged" },
+    { "name": "v1_regression_pallets_flask_authority", "status": "PASS", "detail": "HTTP 200, authority page unchanged" },
+    { "name": "v1_regression_pallets_flask_overview", "status": "PASS", "detail": "HTTP 200, sqo-posture-summary class present" },
+    { "name": "css_v2_sections_added", "status": "PASS", "detail": "~500 lines V2 CSS appended to globals.css" },
+    { "name": "v1_files_unmodified", "status": "PASS", "detail": "SQOWorkspaceShell, SQONavigation, SQOWorkspacePanel, SQOCockpitRouteResolver, SQOWorkspaceDataResolver unchanged" }
+  ],
+  "total_checks": 18,
+  "passed": 18,
+  "failed": 0,
+  "result": "VALID"
+}
