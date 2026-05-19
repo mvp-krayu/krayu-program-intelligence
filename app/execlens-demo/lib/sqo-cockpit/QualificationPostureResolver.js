@@ -49,11 +49,17 @@ function resolveQualificationPosture(promotionState, qualificationBlockers, runt
   }
 
   if (sLevel === 'S2' || sLevel === 'S3') {
+    const blockers = qualificationBlockers ? qualificationBlockers.blockers || [] : [];
+    const unresolvedBlockers = blockers.filter(b => !b.resolved);
+    const summary = sLevel === 'S3' ? 'Authority-ready qualification.'
+      : unresolvedBlockers.length > 0
+        ? `Qualified with ${unresolvedBlockers.length} active qualification blocker${unresolvedBlockers.length !== 1 ? 's' : ''}. S3 advancement blocked.`
+        : 'Qualified. No active debt.';
     return {
       posture: POSTURE.QUALIFIED,
       postureLabel: POSTURE_LABELS[POSTURE.QUALIFIED],
       s_level: sLevel,
-      summary: sLevel === 'S3' ? 'Authority-ready qualification.' : 'Qualified with potential debt.',
+      summary,
     };
   }
 

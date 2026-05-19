@@ -1,0 +1,30 @@
+{
+  "stream": "PI.SQO.BLUEEDGE-S2-WORKFLOW-PROJECTION-CORRECTION.01",
+  "timestamp": "2026-05-20T00:00:00Z",
+  "checks": [
+    { "name": "blueedge_v2_overview_200", "status": "PASS", "detail": "BlueEdge V2 overview returns 200, renders OperationalOverviewShell (not SQOCognitiveLayoutShell)" },
+    { "name": "blueedge_v2_posture_qualified", "status": "PASS", "detail": "currentPosture.posture=QUALIFIED, s_level=S2, summary includes '15 active qualification blockers'" },
+    { "name": "blueedge_v2_guidance_actionable", "status": "PASS", "detail": "primaryGuidance.urgency=actionable, headline='15 qualification blockers active across grounding, evidence. Remediation required for S3 advancement.'" },
+    { "name": "blueedge_v2_remediation_present", "status": "PASS", "detail": "remediationWorkflow present with 3 stages and 4 gates" },
+    { "name": "blueedge_v2_remediation_stages", "status": "PASS", "detail": "Stages: Continuity Restoration (active, 2 blockers), Grounding Expansion (pending, 13 blockers), S3 Eligibility (future)" },
+    { "name": "blueedge_v2_remediation_source_req", "status": "PASS", "detail": "Grounding stage: 'Source evidence required for 13 ungrounded domains (4 structurally absent — new evidence sources needed)'" },
+    { "name": "blueedge_v2_remediation_domains", "status": "PASS", "detail": "13 domain IDs listed in grounding stage (DOMAIN-02 through DOMAIN-17)" },
+    { "name": "blueedge_v2_remediation_gates", "status": "PASS", "detail": "4 gates all unmet: blockers resolved, full grounding, L5 ceiling, promotion approval" },
+    { "name": "blueedge_v2_progression_7_steps", "status": "PASS", "detail": "7 progression steps (6 original + semantic_debt_resolution as current)" },
+    { "name": "blueedge_v2_debt_step_detail", "status": "PASS", "detail": "Debt Remediation step: '15 blockers active (13 grounding, 2 evidence) — resolve for S3 eligibility'" },
+    { "name": "blueedge_v2_next_states_computed", "status": "PASS", "detail": "S3 prerequisites computed from actual data: 13 grounding blockers, 2 evidence blockers, L5 ceiling, approval required" },
+    { "name": "blueedge_v2_authority_200", "status": "PASS", "detail": "BlueEdge V2 authority page returns 200" },
+    { "name": "flask_v2_overview_200", "status": "PASS", "detail": "Flask V2 overview returns 200 with PERMANENTLY_UNQUALIFIABLE posture" },
+    { "name": "flask_v2_no_remediation", "status": "PASS", "detail": "Flask V2 remediationWorkflow is null (correct — not QUALIFIED with debt)" },
+    { "name": "flask_v2_guidance_terminal", "status": "PASS", "detail": "Flask V2 guidance: 'Permanent insufficiency acknowledged. No further progression possible.' (terminal)" },
+    { "name": "flask_v1_regression", "status": "PASS", "detail": "Flask V1 overview returns 200 with PERMANENTLY_UNQUALIFIABLE" },
+    { "name": "blueedge_v1_regression", "status": "PASS", "detail": "BlueEdge V1 overview returns 200 with PARTIAL_GROUNDING_WITH_CONTINUITY and sqo-hero" },
+    { "name": "no_evidence_mutation", "status": "PASS", "detail": "No files in artifacts/sqo/ or clients/*/psee/ modified" },
+    { "name": "no_client_special_case", "status": "PASS", "detail": "No 'blueedge' string literal in modified resolver or component logic" },
+    { "name": "build_compilation", "status": "PASS", "detail": "Next.js build clean, all routes compile" }
+  ],
+  "total_checks": 20,
+  "passed": 20,
+  "failed": 0,
+  "result": "VALID"
+}

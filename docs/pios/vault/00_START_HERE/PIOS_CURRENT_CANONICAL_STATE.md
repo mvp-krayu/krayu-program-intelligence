@@ -428,6 +428,7 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.SQO.RUNTIME-QUALIFICATION-PROJECTION-CORRECTION.01 | G1 | Runtime isolation correction, qualification posture model, client-scoped resolution, dual-layer separation | COMPLETE |
 | PI.SQO.COCKPIT-WORKFLOW-REFOUNDATION.01 | G1 | V2 cockpit — workflow-driven redesign, resolveOperatorWorkflow, 3-tier navigation, session-level RBAC role projection | COMPLETE |
 | PI.SQO.LEGACY-QUALIFICATION-BRIDGE.01 | G1 | Legacy qualification bridge — canonical migration pattern for pre-SQO systems, governance projection (not historical reconstruction), BlueEdge SQO-native S2 | COMPLETE |
+| PI.SQO.BLUEEDGE-S2-WORKFLOW-PROJECTION-CORRECTION.01 | G1 | V2 workflow projection correction — generic remediation workflow for S2-with-debt, removes V1 journey routing from V2 shell | COMPLETE |
 
 ## SQO Operator Authority Workflow
 
@@ -501,5 +502,5 @@ See [[../10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS]] for full path inve
 - V2 3-tier navigation: Tier 1 (Operational Spine: overview + authority), Tier 2 (Qualification Detail: 5 sections), Tier 3 (Forensic Investigation: 8 sections, collapsed by default)
 - V2 session-level declarative RBAC role: SSR with operator, client-side recomputation via computeWorkflowProjection
 - V2 12-action visibility: all governed actions always visible regardless of role, unavailable actions show reason + required_role + authority_level
-- V2 posture-first overview: OperationalOverviewShell with guidance strip, blocker summary, action grid, progression path, evidence state, drilldown links
-- V2 BlueEdge S2 preservation: overview with journey delegates to SQOCognitiveLayoutShell
+- V2 posture-first overview: OperationalOverviewShell with guidance strip, remediation workflow, blocker summary, action grid, progression path, evidence state, drilldown links
+- V2 remediation workflow: generic S2-with-debt projection — remediation stages (continuity restoration, grounding expansion, S3 eligibility), source requirements, eligibility gates

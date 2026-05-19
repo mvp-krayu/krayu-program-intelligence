@@ -219,7 +219,7 @@ function findRequiredRole(action, excludeRole) {
   return 'operator';
 }
 
-function resolvePrimaryGuidance(currentPosture, obligationSummary, role, runtimeCapabilities) {
+function resolvePrimaryGuidance(currentPosture, obligationSummary, role, runtimeCapabilities, blockerSummary) {
   const roleActions = ROLE_ACTION_MAP[role] || [];
   const hasReviewAuthority = roleActions.some(a => a.startsWith('review_'));
   if (obligationSummary.unresolved > 0 && hasReviewAuthority) {
@@ -236,8 +236,19 @@ function resolvePrimaryGuidance(currentPosture, obligationSummary, role, runtime
       return { headline: 'Permanent insufficiency acknowledged. No further progression possible.', action_target: null, urgency: 'terminal' };
     case POSTURE.INSUFFICIENT_EVIDENCE:
       return { headline: 'Insufficient evidence for qualification. Determination may be revisited.', action_target: null, urgency: 'informational' };
-    case POSTURE.QUALIFIED:
-      return { headline: `Qualified at ${currentPosture.s_level}. Review semantic debt for remaining items.`, action_target: caps.static_debt ? 'debt' : null, urgency: 'informational' };
+    case POSTURE.QUALIFIED: {
+      const totalBlockers = blockerSummary ? blockerSummary.total : 0;
+      if (totalBlockers > 0) {
+        const lanes = blockerSummary.by_lane ? Object.values(blockerSummary.by_lane).map(l => l.label.toLowerCase()) : [];
+        const laneLabel = lanes.length > 0 ? lanes.join(', ') : 'qualification';
+        return {
+          headline: `${totalBlockers} qualification blocker${totalBlockers !== 1 ? 's' : ''} active across ${laneLabel}. Remediation required for S3 advancement.`,
+          action_target: 'debt',
+          urgency: 'actionable',
+        };
+      }
+      return { headline: `Qualified at ${currentPosture.s_level}. No active blockers.`, action_target: null, urgency: 'informational' };
+    }
     case POSTURE.RECONCILIATION_ACTIVE:
       return { headline: 'Reconciliation in progress. Review correspondence for completion.', action_target: 'reconciliation', urgency: 'actionable' };
     case POSTURE.CROSSWALK_ACTIVE:
@@ -435,22 +446,27 @@ function resolveNextPossibleStates(currentPosture, qualificationBlockers, review
   }
 
   if (sLevel === 'S2') {
-    states.push({
-      state: 'S3',
-      label: 'Authority Ready',
-      reachable: false,
-      remaining_prerequisites: [
-        { requirement: 'All semantic debt resolved', met: false, resolution: 'Future stream' },
-        { requirement: 'Full structural grounding', met: false, resolution: 'Future stream' },
-        { requirement: 'Authority ceiling at L5', met: false, resolution: 'Future stream' },
-      ],
-    });
+    const groundingBlockers = unresolvedBlockers.filter(b => b.lane === 'grounding');
+    const evidenceBlockers = unresolvedBlockers.filter(b => b.lane === 'evidence');
+    const otherBlockers = unresolvedBlockers.filter(b => b.lane !== 'grounding' && b.lane !== 'evidence');
+    const prereqs = [
+      { requirement: 'All grounding gaps resolved', met: groundingBlockers.length === 0, resolution: groundingBlockers.length > 0 ? `${groundingBlockers.length} grounding blocker${groundingBlockers.length !== 1 ? 's' : ''} — source evidence expansion required` : null },
+      { requirement: 'All continuity gaps resolved', met: evidenceBlockers.length === 0, resolution: evidenceBlockers.length > 0 ? `${evidenceBlockers.length} evidence blocker${evidenceBlockers.length !== 1 ? 's' : ''} — continuity restoration required` : null },
+    ];
+    if (otherBlockers.length > 0) {
+      prereqs.push({ requirement: 'All remaining blockers resolved', met: false, resolution: `${otherBlockers.length} additional blocker${otherBlockers.length !== 1 ? 's' : ''}` });
+    }
+    prereqs.push(
+      { requirement: 'Authority ceiling at L5', met: false, resolution: 'Current authority ceiling below L5' },
+      { requirement: 'Promotion authority approval', met: hasApproval, resolution: !hasApproval ? 'Promotion request and approval required' : null },
+    );
+    states.push({ state: 'S3', label: 'Authority Ready', reachable: prereqs.every(p => p.met), remaining_prerequisites: prereqs });
   }
 
   return states;
 }
 
-function resolveProgressionPath(currentPosture, runtimeCapabilities) {
+function resolveProgressionPath(currentPosture, runtimeCapabilities, qualificationBlockers) {
   const caps = runtimeCapabilities || {};
   const posture = currentPosture.posture;
   const sLevel = currentPosture.s_level;
@@ -472,7 +488,11 @@ function resolveProgressionPath(currentPosture, runtimeCapabilities) {
   const crosswalkComplete = isQualified || posture === POSTURE.RECONCILIATION_ACTIVE;
   const reconComplete = isQualified;
 
-  return [
+  const blockers = qualificationBlockers?.blockers || [];
+  const unresolvedBlockers = blockers.filter(b => !b.resolved);
+  const hasActiveDebt = isQualified && sLevel === 'S2' && unresolvedBlockers.length > 0;
+
+  const steps = [
     { step: 'structural_onboarding', label: 'Structural Onboarding', status: stepStatus(hasStructural, !hasStructural), detail: hasStructural ? 'Canonical topology available' : 'Awaiting structural pipeline' },
     { step: 'semantic_derivation', label: 'Semantic Derivation', status: stepStatus(hasSemantic, hasStructural && !hasSemantic), detail: hasSemantic ? 'Candidate CSR generated' : (hasStructural ? 'Awaiting semantic compiler' : null) },
     { step: 'semantic_review', label: 'Semantic Review', status: stepStatus(reviewComplete, hasSemantic && !reviewComplete && (posture === POSTURE.QUALIFICATION_PENDING || posture === POSTURE.SEMANTIC_INTAKE)), detail: reviewComplete ? 'Review obligations resolved' : (hasReview ? 'Review obligations pending' : null) },
@@ -480,6 +500,24 @@ function resolveProgressionPath(currentPosture, runtimeCapabilities) {
     { step: 'reconciliation', label: 'Reconciliation', status: stepStatus(reconComplete, posture === POSTURE.RECONCILIATION_ACTIVE), detail: reconComplete ? 'PATH A/B reconciliation complete' : (posture === POSTURE.RECONCILIATION_ACTIVE ? 'Reconciliation in progress' : null) },
     { step: 'qualification_promotion', label: 'Qualification Promotion', status: stepStatus(isQualified, reconComplete && !isQualified), detail: isQualified ? `Qualified at ${sLevel}` : null },
   ];
+
+  if (hasActiveDebt) {
+    const groundingCount = unresolvedBlockers.filter(b => b.lane === 'grounding').length;
+    const evidenceCount = unresolvedBlockers.filter(b => b.lane === 'evidence').length;
+    const parts = [];
+    if (groundingCount > 0) parts.push(`${groundingCount} grounding`);
+    if (evidenceCount > 0) parts.push(`${evidenceCount} evidence`);
+    const otherCount = unresolvedBlockers.length - groundingCount - evidenceCount;
+    if (otherCount > 0) parts.push(`${otherCount} other`);
+    steps.push({
+      step: 'semantic_debt_resolution',
+      label: 'Debt Remediation',
+      status: 'current',
+      detail: `${unresolvedBlockers.length} blocker${unresolvedBlockers.length !== 1 ? 's' : ''} active (${parts.join(', ')}) — resolve for S3 eligibility`,
+    });
+  }
+
+  return steps;
 }
 
 function resolveRoleProjection(role) {
@@ -513,17 +551,98 @@ function resolveAvailableDrilldowns(sectionAvailability, currentPosture) {
   return { tier2, tier3 };
 }
 
+function resolveRemediationWorkflow(currentPosture, blockerSummary, qualificationBlockers) {
+  if (currentPosture.posture !== POSTURE.QUALIFIED || !blockerSummary || blockerSummary.total === 0) {
+    return null;
+  }
+
+  const blockers = qualificationBlockers?.blockers || [];
+  const unresolvedByLane = {};
+  for (const b of blockers) {
+    if (b.resolved) continue;
+    const lane = b.lane || 'evidence';
+    if (!unresolvedByLane[lane]) unresolvedByLane[lane] = [];
+    unresolvedByLane[lane].push(b);
+  }
+
+  const stages = [];
+
+  if (unresolvedByLane.evidence) {
+    const items = unresolvedByLane.evidence;
+    stages.push({
+      id: 'continuity_restoration',
+      label: 'Continuity Restoration',
+      status: 'active',
+      blocker_count: items.length,
+      description: 'Restore evidence continuity for gap domains',
+      source_requirement: 'Continuity documentation for domains with evidence gaps',
+      domains: items.filter(b => b.domain_id).map(b => b.domain_id),
+    });
+  }
+
+  if (unresolvedByLane.grounding) {
+    const items = unresolvedByLane.grounding;
+    const irreducible = items.filter(b => b.reducibility === 'IRREDUCIBLE_STRUCTURAL_ABSENCE').length;
+    stages.push({
+      id: 'grounding_expansion',
+      label: 'Grounding Expansion',
+      status: unresolvedByLane.evidence ? 'pending' : 'active',
+      blocker_count: items.length,
+      description: 'Expand structural grounding to cover ungrounded domains',
+      source_requirement: `Source evidence required for ${items.length} ungrounded domain${items.length !== 1 ? 's' : ''}${irreducible > 0 ? ` (${irreducible} structurally absent — new evidence sources needed)` : ''}`,
+      domains: items.filter(b => b.domain_id).map(b => b.domain_id),
+    });
+  }
+
+  for (const [lane, items] of Object.entries(unresolvedByLane)) {
+    if (lane === 'evidence' || lane === 'grounding') continue;
+    stages.push({
+      id: `${lane}_remediation`,
+      label: `${LANE_LABELS[lane] || lane} Remediation`,
+      status: 'active',
+      blocker_count: items.length,
+      description: `Resolve ${(LANE_LABELS[lane] || lane).toLowerCase()} blockers`,
+      source_requirement: null,
+      domains: items.filter(b => b.domain_id).map(b => b.domain_id),
+    });
+  }
+
+  stages.push({
+    id: 's3_eligibility',
+    label: 'S3 Eligibility',
+    status: 'future',
+    blocker_count: 0,
+    description: 'All gates clear for S3 Authority Ready promotion',
+    source_requirement: null,
+    domains: [],
+  });
+
+  return {
+    current_state: `${currentPosture.s_level} Qualified with Debt`,
+    target_state: 'S3 Authority Ready',
+    total_blockers: blockerSummary.total,
+    stages,
+    gates: [
+      { gate: 'All qualification blockers resolved', met: blockerSummary.total === 0 },
+      { gate: 'Full structural grounding achieved', met: false },
+      { gate: 'Authority ceiling elevated to L5', met: false },
+      { gate: 'Promotion authority approval', met: false },
+    ],
+  };
+}
+
 function resolveOperatorWorkflow(client, runId, role, promotionState, qualificationBlockers, reviewObligations, promotionEventLog, runtimeCapabilities, sectionAvailability) {
   const currentPosture = resolveQualificationPosture(promotionState, qualificationBlockers, runtimeCapabilities);
   const blockerSummary = resolveBlockerSummaryV2(qualificationBlockers, role);
   const obligationSummary = resolveObligationSummaryV2(reviewObligations, role);
-  const primaryGuidance = resolvePrimaryGuidance(currentPosture, obligationSummary, role, runtimeCapabilities);
+  const primaryGuidance = resolvePrimaryGuidance(currentPosture, obligationSummary, role, runtimeCapabilities, blockerSummary);
   const evidenceState = resolveEvidenceState(runtimeCapabilities);
   const availableActions = resolveAvailableActions(role, promotionState, reviewObligations, promotionEventLog, qualificationBlockers);
   const nextPossibleStates = resolveNextPossibleStates(currentPosture, qualificationBlockers, reviewObligations, promotionEventLog, runtimeCapabilities);
-  const progressionPath = resolveProgressionPath(currentPosture, runtimeCapabilities);
+  const progressionPath = resolveProgressionPath(currentPosture, runtimeCapabilities, qualificationBlockers);
   const roleProjection = resolveRoleProjection(role);
   const availableDrilldowns = resolveAvailableDrilldowns(sectionAvailability, currentPosture);
+  const remediationWorkflow = resolveRemediationWorkflow(currentPosture, blockerSummary, qualificationBlockers);
   const isTerminal = currentPosture.posture === POSTURE.PERMANENTLY_UNQUALIFIABLE;
   const terminalReason = isTerminal ? currentPosture.summary : null;
 
@@ -538,6 +657,7 @@ function resolveOperatorWorkflow(client, runId, role, promotionState, qualificat
     progressionPath,
     roleProjection,
     availableDrilldowns,
+    remediationWorkflow,
     isTerminal,
     terminalReason,
   };

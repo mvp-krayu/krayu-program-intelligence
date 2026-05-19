@@ -8938,6 +8938,177 @@ a.topo-chip:hover {
   background: rgba(74, 158, 255, 0.15);
 }
 
+/* --- Remediation Workflow Zone --- */
+.sqo-v2-overview-shell__remediation-zone {
+  background: #12151f;
+  border: 1px solid #1e2330;
+  border-left: 3px solid #4a9eff;
+  border-radius: 3px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+}
+
+.sqo-v2-overview-shell__remediation-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #1e2330;
+}
+
+.sqo-v2-overview-shell__remediation-title {
+  font-size: 13px;
+  font-weight: bold;
+  color: #ccd6f6;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sqo-v2-overview-shell__remediation-transition {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: #4a9eff;
+  letter-spacing: 0.02em;
+}
+
+.sqo-v2-overview-shell__remediation-stages {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.sqo-v2-overview-shell__remediation-stage {
+  background: #141720;
+  border: 1px solid #1e2330;
+  border-radius: 2px;
+  padding: 12px 14px;
+  transition: border-color 0.15s ease;
+}
+
+.sqo-v2-overview-shell__remediation-stage--active {
+  border-left: 2px solid #4a9eff;
+}
+
+.sqo-v2-overview-shell__remediation-stage--pending {
+  border-left: 2px solid #4a5570;
+  opacity: 0.7;
+}
+
+.sqo-v2-overview-shell__remediation-stage--future {
+  border-left: 2px solid #2a2f40;
+  opacity: 0.5;
+}
+
+.sqo-v2-overview-shell__remediation-stage-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.sqo-v2-overview-shell__remediation-stage-indicator {
+  font-size: 11px;
+  color: #4a9eff;
+  width: 14px;
+  text-align: center;
+}
+
+.sqo-v2-overview-shell__remediation-stage--pending .sqo-v2-overview-shell__remediation-stage-indicator {
+  color: #4a5570;
+}
+
+.sqo-v2-overview-shell__remediation-stage--future .sqo-v2-overview-shell__remediation-stage-indicator {
+  color: #2a2f40;
+}
+
+.sqo-v2-overview-shell__remediation-stage-label {
+  font-size: 13px;
+  font-weight: bold;
+  color: #ccd6f6;
+}
+
+.sqo-v2-overview-shell__remediation-stage-count {
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  color: #ffd700;
+  background: rgba(255, 215, 0, 0.08);
+  padding: 1px 6px;
+  border-radius: 2px;
+  margin-left: auto;
+}
+
+.sqo-v2-overview-shell__remediation-stage-desc {
+  display: block;
+  font-size: 12px;
+  color: #7a8aaa;
+  padding-left: 22px;
+  line-height: 1.4;
+}
+
+.sqo-v2-overview-shell__remediation-stage-source {
+  display: block;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  color: #ff9e4a;
+  padding-left: 22px;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.sqo-v2-overview-shell__remediation-stage-domains {
+  display: block;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  color: #4a5570;
+  padding-left: 22px;
+  margin-top: 3px;
+  letter-spacing: 0.02em;
+}
+
+.sqo-v2-overview-shell__remediation-gates {
+  border-top: 1px solid #1e2330;
+  padding-top: 12px;
+}
+
+.sqo-v2-overview-shell__remediation-gates-title {
+  display: block;
+  font-size: 11px;
+  font-weight: bold;
+  color: #7a8aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.sqo-v2-overview-shell__remediation-gate {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 0;
+}
+
+.sqo-v2-overview-shell__remediation-gate-indicator {
+  font-size: 10px;
+  color: #4a5570;
+  width: 14px;
+  text-align: center;
+}
+
+.sqo-v2-overview-shell__remediation-gate--met .sqo-v2-overview-shell__remediation-gate-indicator {
+  color: #64ffda;
+}
+
+.sqo-v2-overview-shell__remediation-gate-label {
+  font-size: 12px;
+  color: #7a8aaa;
+}
+
+.sqo-v2-overview-shell__remediation-gate--met .sqo-v2-overview-shell__remediation-gate-label {
+  color: #64ffda;
+}
+
 /* --- Blocker Summary Panel --- */
 .sqo-v2-blocker-summary {
   background: #1a1e2b;

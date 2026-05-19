@@ -1,0 +1,23 @@
+{
+  "stream": "PI.SQO.BLUEEDGE-S2-WORKFLOW-PROJECTION-CORRECTION.01",
+  "changes": [
+    { "file": "app/execlens-demo/components/sqo-cockpit/v2/OperationalCockpitShell.jsx", "action": "MODIFIED", "purpose": "Remove hasJourney routing — V2 overview always uses OperationalOverviewShell" },
+    { "file": "app/execlens-demo/components/sqo-cockpit/v2/OperationalOverviewShell.jsx", "action": "MODIFIED", "purpose": "Add remediation workflow zone between guidance and pressure zones" },
+    { "file": "app/execlens-demo/lib/sqo-cockpit/server/OperatorWorkflowResolver.server.js", "action": "MODIFIED", "purpose": "Add resolveRemediationWorkflow, enrich S2-with-debt guidance/progression/next-states" },
+    { "file": "app/execlens-demo/lib/sqo-cockpit/QualificationPostureResolver.js", "action": "MODIFIED", "purpose": "Enrich QUALIFIED posture summary with blocker count" },
+    { "file": "app/execlens-demo/styles/globals.css", "action": "MODIFIED", "purpose": "Add remediation workflow zone CSS (~150 lines)" },
+    { "file": "docs/pios/PI.SQO.BLUEEDGE-S2-WORKFLOW-PROJECTION-CORRECTION.01/execution_report.md", "action": "CREATED", "purpose": "Full execution report" },
+    { "file": "docs/pios/PI.SQO.BLUEEDGE-S2-WORKFLOW-PROJECTION-CORRECTION.01/validation_log.json", "action": "CREATED", "purpose": "20/20 validation checks" },
+    { "file": "docs/pios/PI.SQO.BLUEEDGE-S2-WORKFLOW-PROJECTION-CORRECTION.01/file_changes.json", "action": "CREATED", "purpose": "File change manifest" },
+    { "file": "docs/pios/PI.SQO.BLUEEDGE-S2-WORKFLOW-PROJECTION-CORRECTION.01/CLOSURE.md", "action": "CREATED", "purpose": "Stream closure" }
+  ],
+  "not_modified": [
+    "All evidence artifacts",
+    "All BlueEdge SQO operational artifacts (promotion_state.json, qualification_blockers.json, etc.)",
+    "All V1 cockpit components, pages, and resolvers",
+    "All LENS v2 code",
+    "All V1 section pages",
+    "V2CockpitRouteResolver.js",
+    "WorkflowRoleProjection.js (remediationWorkflow passes through via spread)"
+  ]
+}

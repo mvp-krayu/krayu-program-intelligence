@@ -478,6 +478,14 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 - Governance Projection: single migration bridge event, `system:governance_projection` actor, migration timestamps, explicit provenance, reversible
 - Historical Reconstruction: multiple fabricated events, fabricated operator actors, fabricated dates, hidden fabrication, irreversible — PROHIBITED
 
+### Remediation Workflow
+
+**Definition:** A generic workflow projection computed for any client at S2 (Qualified with Debt) posture with active qualification blockers. Describes the governed remediation path from current S2 state to S3 Authority Ready. Contains remediation stages (e.g., Continuity Restoration, Grounding Expansion, S3 Eligibility), source material requirements, affected domain lists, and S3 eligibility gate checklist. Computed by `resolveRemediationWorkflow` from blocker data — null when posture is not QUALIFIED or blockers are zero.
+
+**Status:** CANONICAL — operational workflow concept (2026-05-20).
+
+**What it is NOT:** A fixed sequence. A BlueEdge-specific construct. A manual plan. Remediation stages are derived from blocker lane classification. Different clients with different blocker profiles produce different stage compositions.
+
 ## Term Usage Rules
 
 1. **Use locked definitions exactly.** Do not paraphrase, simplify, or reinterpret.
