@@ -458,6 +458,26 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 **Status:** CANONICAL — operational workflow concept (2026-05-19).
 
+### Legacy Qualification Bridge
+
+**Definition:** The canonical migration pattern for converting pre-SQO computational qualification systems into SQO-native governed qualification. The bridge creates governance metadata (promotion workflow artifacts) through deterministic projection from valid legacy evidence — it does NOT recompute qualification, mutate evidence, fabricate historical events, or invent operator reviews that never occurred.
+
+**Status:** CANONICAL — operational migration pattern (2026-05-20).
+
+**What it is NOT:** Historical reconstruction. Evidence mutation. Qualification recomputation. The bridge creates governance scaffolding only — the distinction between governance projection and historical reconstruction is formally documented in LEGACY_QUALIFICATION_BRIDGE_DOCTRINE.md.
+
+**Source:** `docs/pios/PI.SQO.LEGACY-QUALIFICATION-BRIDGE.01/LEGACY_QUALIFICATION_BRIDGE_DOCTRINE.md`
+
+### Governance Projection
+
+**Definition:** The migration mechanism used by the Legacy Qualification Bridge. Creates truthful governance scaffolding representing the current operational state from valid legacy evidence. The migration event is a single governance event documenting the bridge — not a series of fabricated reviews, acceptances, or promotions. All projected artifacts carry `migration_provenance` metadata with `type: "GOVERNANCE_PROJECTION"`, `fabricated_history: false`. System actors (`system:governance_projection`) are used — never fabricated human operator IDs.
+
+**Status:** CANONICAL — migration mechanism (2026-05-20).
+
+**Distinction from Historical Reconstruction:**
+- Governance Projection: single migration bridge event, `system:governance_projection` actor, migration timestamps, explicit provenance, reversible
+- Historical Reconstruction: multiple fabricated events, fabricated operator actors, fabricated dates, hidden fabrication, irreversible — PROHIBITED
+
 ## Term Usage Rules
 
 1. **Use locked definitions exactly.** Do not paraphrase, simplify, or reinterpret.

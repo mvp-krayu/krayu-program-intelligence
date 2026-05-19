@@ -1,0 +1,23 @@
+{
+  "stream": "PI.SQO.LEGACY-QUALIFICATION-BRIDGE.01",
+  "changes": [
+    { "file": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/sqo/promotion_state.json", "action": "CREATED", "purpose": "SQO-native promotion state projected from legacy qualification_state.v1.json" },
+    { "file": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/sqo/qualification_blockers.json", "action": "CREATED", "purpose": "Qualification blockers projected from semantic_debt_inventory.v1.json (15 items)" },
+    { "file": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/sqo/review_obligations.json", "action": "CREATED", "purpose": "Empty review obligations (legacy pre-dates review workflow)" },
+    { "file": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/sqo/promotion_event_log.jsonl", "action": "CREATED", "purpose": "Migration event log — 2 governance projection events" },
+    { "file": "docs/pios/PI.SQO.LEGACY-QUALIFICATION-BRIDGE.01/LEGACY_QUALIFICATION_BRIDGE_DOCTRINE.md", "action": "CREATED", "purpose": "Canonical migration pattern for pre-SQO qualification systems" },
+    { "file": "docs/pios/PI.SQO.LEGACY-QUALIFICATION-BRIDGE.01/execution_report.md", "action": "CREATED", "purpose": "Full execution report with 8 phases" },
+    { "file": "docs/pios/PI.SQO.LEGACY-QUALIFICATION-BRIDGE.01/validation_log.json", "action": "CREATED", "purpose": "30/30 validation checks" },
+    { "file": "docs/pios/PI.SQO.LEGACY-QUALIFICATION-BRIDGE.01/file_changes.json", "action": "CREATED", "purpose": "File change manifest" },
+    { "file": "docs/pios/PI.SQO.LEGACY-QUALIFICATION-BRIDGE.01/CLOSURE.md", "action": "CREATED", "purpose": "Stream closure with BLUEEDGE_SQO_NATIVE_S2_CONFIRMED verdict" }
+  ],
+  "not_modified": [
+    "All evidence artifacts at artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/",
+    "All SQO runtime code (resolvers, components, pages, CSS)",
+    "All LENS v2 code",
+    "All BlueEdge-specific loaders",
+    "All V1 cockpit code",
+    "All V2 cockpit code",
+    "pallets-flask data"
+  ]
+}

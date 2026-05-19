@@ -1,0 +1,14 @@
+{
+  "client": "blueedge",
+  "run_id": "run_blueedge_productized_01_fixed",
+  "total_obligations": 0,
+  "resolved": 0,
+  "unresolved": 0,
+  "obligations": [],
+  "migration_provenance": {
+    "type": "GOVERNANCE_PROJECTION",
+    "source_stream": "PI.SQO.LEGACY-QUALIFICATION-BRIDGE.01",
+    "projection_class": "LEGACY_PRE_REVIEW_WORKFLOW",
+    "note": "BlueEdge qualification pre-dates SQO operator review workflow. No review obligations were created because the qualification was computationally certified. Future operator-initiated reviews may be created through the authority page."
+  }
+}

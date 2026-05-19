@@ -1,0 +1,121 @@
+{
+  "client": "blueedge",
+  "run_id": "run_blueedge_productized_01_fixed",
+  "s_level": "S2",
+  "authority_ceiling": "L3",
+  "promotion_eligible": false,
+  "generated_at": "2026-05-20T00:00:00.000Z",
+  "migration_provenance": {
+    "type": "GOVERNANCE_PROJECTION",
+    "source_stream": "PI.SQO.LEGACY-QUALIFICATION-BRIDGE.01",
+    "source_artifact": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/qualification_state.v1.json",
+    "projection_class": "LEGACY_S2_TO_SQO_NATIVE",
+    "evidence_mutated": false,
+    "qualification_recomputed": false,
+    "fabricated_history": false
+  },
+  "promotion_lineage": {
+    "initial_state": "S0",
+    "current_state": "S2",
+    "transitions": [
+      {
+        "from": "S0",
+        "to": "S1",
+        "timestamp": "2026-05-10T00:00:00.000Z",
+        "actor_id": "system:pipeline",
+        "action": "structural_onboarding_complete",
+        "authority_domain": "technical_authority",
+        "audit_event_ref": "EVT-BRIDGE-001"
+      },
+      {
+        "from": "S1",
+        "to": "S2",
+        "timestamp": "2026-05-10T13:57:16.121Z",
+        "actor_id": "system:pipeline",
+        "action": "legacy_qualification_bridge",
+        "authority_domain": "governance_authority",
+        "audit_event_ref": "EVT-BRIDGE-002"
+      }
+    ]
+  },
+  "last_transition_actor": "system:pipeline",
+  "last_transition_reason": "Governance projection from validated legacy S2 qualification — PI.SQO.LEGACY-QUALIFICATION-BRIDGE.01",
+  "lanes": {
+    "evidence_intake": {
+      "state": "COMPLETE",
+      "authority": "STRUCTURAL",
+      "blocking_gaps": []
+    },
+    "structural_analysis": {
+      "state": "COMPLETE",
+      "authority": "L5_STRUCTURAL_PROOF",
+      "blocking_gaps": []
+    },
+    "semantic_candidate": {
+      "state": "ACCEPTED",
+      "authority": "L3_CANDIDATE",
+      "blocking_gaps": [],
+      "migration_note": "CSR authored prior to SQO operator workflow. 17 domains accepted via legacy computational qualification."
+    },
+    "review_queue": {
+      "state": "RESOLVED",
+      "authority": "LEGACY_COMPUTATIONAL",
+      "blocking_gaps": [],
+      "migration_note": "Pre-dates SQO operator review workflow. Qualification certified via replay verification."
+    },
+    "crosswalk": {
+      "state": "ACCEPTED",
+      "authority": "L3_CORRESPONDENCE",
+      "blocking_gaps": [],
+      "migration_note": "Crosswalk operational. 13 DOM→DOMAIN correspondences."
+    },
+    "reconciliation": {
+      "state": "ACCEPTED",
+      "authority": "L3_RECONCILIATION",
+      "blocking_gaps": [],
+      "migration_note": "Reconciliation complete. 4/17 L5, 0.235 ratio. 15 debt items registered."
+    },
+    "qualification_debt": {
+      "state": "ACTIVE",
+      "authority": "ASSESSED",
+      "blocking_gaps": [
+        "GROUNDING_DEBT_BLOCKS_S3"
+      ],
+      "migration_note": "15 debt items (13 grounding_gap/HIGH blocking S3, 2 continuity_gap/MEDIUM)."
+    },
+    "promotion_decision": {
+      "state": "APPROVED",
+      "authority": "LEGACY_CERTIFIED",
+      "blocking_gaps": [],
+      "migration_note": "S2 qualification certified via deterministic replay. Governance projection bridge."
+    },
+    "runtime_projection": {
+      "state": "OPERATIONAL",
+      "authority": "L3_QUALIFIED",
+      "blocking_gaps": [],
+      "migration_note": "LENS v2 + SQO cockpit operational."
+    }
+  },
+  "insufficiency_assessment": {
+    "semantic_coverage": "PARTIAL_GROUNDING",
+    "promotion_feasibility": "BLOCKED_BY_GROUNDING_DEBT",
+    "indefinite_s2_risk": "LOW"
+  },
+  "unresolved_authority_requirements": [
+    {
+      "domain": "structural_authority",
+      "level": "L5",
+      "for": "grounding_debt_resolution"
+    }
+  ],
+  "promotion_authority_ownership": {
+    "promotion_authority_owner": null,
+    "approval_required_from": "governance_authority:L5",
+    "promotion_scope": "S2 → S3",
+    "promotion_reasoning_class": null
+  },
+  "audit_event_refs": [
+    "EVT-BRIDGE-001",
+    "EVT-BRIDGE-002"
+  ]
+}

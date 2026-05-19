@@ -144,6 +144,7 @@
 | BlueEdge SQO artifacts | artifacts/sqo/blueedge/ | Client qualification data |
 | FastAPI SQO artifacts | artifacts/sqo/fastapi/ | Client qualification data |
 | BlueEdge evidence files | artifacts/sqo/blueedge/evidence_rebase_01/ | HTML evidence sources |
+| BlueEdge SQO operational artifacts | clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/sqo/ | SQO-native promotion state, qualification blockers, review obligations, event log (governance projection from legacy qualification) |
 | pallets-flask SQO artifacts | clients/pallets-flask/psee/runs/run_github_flask_20260517_163222/sqo/ | Promotion state, blockers, obligations, event log (gitignored, runtime-mutated) |
 | pallets-flask manifest | app/execlens-demo/lib/lens-v2/manifests/pallets-flask.run_github_flask_20260517_163222.json | Client REGISTRY entry |
 
@@ -169,6 +170,7 @@
 | PI.SQO.OPERATOR-WORKFLOW-OPERATIONALIZATION.01 | docs/pios/PI.SQO.OPERATOR-WORKFLOW-OPERATIONALIZATION.01/ | G1 | COMPLETE |
 | PI.SQO.RUNTIME-QUALIFICATION-PROJECTION-CORRECTION.01 | docs/pios/PI.SQO.RUNTIME-QUALIFICATION-PROJECTION-CORRECTION.01/ | G1 | COMPLETE |
 | PI.SQO.COCKPIT-WORKFLOW-REFOUNDATION.01 | docs/pios/PI.SQO.COCKPIT-WORKFLOW-REFOUNDATION.01/ | G1 | COMPLETE |
+| PI.SQO.LEGACY-QUALIFICATION-BRIDGE.01 | docs/pios/PI.SQO.LEGACY-QUALIFICATION-BRIDGE.01/ | G1 | COMPLETE |
 
 ## Cross-References
 

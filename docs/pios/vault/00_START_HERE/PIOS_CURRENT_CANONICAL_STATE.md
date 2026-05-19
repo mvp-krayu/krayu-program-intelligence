@@ -144,7 +144,7 @@ DETERMINISTIC → INVESTIGATIVE → INTERPRETIVE
 
 | Client | SQO State | LENS State | Evidence Status |
 |---|---|---|---|
-| BlueEdge | S2_QUALIFIED_WITH_DEBT (15 debt items) | OPERATIONAL (Q-02, 4-persona projection, interactive topology) | 3 HTML files, rebase complete |
+| BlueEdge | SQO-native S2 (15 debt items, governance projection bridge) | OPERATIONAL (Q-02, 4-persona projection, interactive topology) | 3 HTML files, rebase complete |
 | FastAPI | S1_ONBOARDING_REQUIRED | PARTIAL (SQO cockpit, no LENS v2) | 15 SQO v1.json artifacts |
 | pallets-flask | S1 (permanent insufficiency acknowledged) | AUTHORITY WORKFLOW OPERATIONAL, posture-driven overview, semantic intake (Layer B) | PATH A structural onboarding complete, 15 clusters, 287 nodes, candidate CSR (L3) |
 
@@ -427,6 +427,7 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.VAULT.OPERATIONAL-ONTOLOGY-CANONICALIZATION.01 | G1 | Canonicalized operational ontology, fixed staleness, created governance pages | COMPLETE |
 | PI.SQO.RUNTIME-QUALIFICATION-PROJECTION-CORRECTION.01 | G1 | Runtime isolation correction, qualification posture model, client-scoped resolution, dual-layer separation | COMPLETE |
 | PI.SQO.COCKPIT-WORKFLOW-REFOUNDATION.01 | G1 | V2 cockpit — workflow-driven redesign, resolveOperatorWorkflow, 3-tier navigation, session-level RBAC role projection | COMPLETE |
+| PI.SQO.LEGACY-QUALIFICATION-BRIDGE.01 | G1 | Legacy qualification bridge — canonical migration pattern for pre-SQO systems, governance projection (not historical reconstruction), BlueEdge SQO-native S2 | COMPLETE |
 
 ## SQO Operator Authority Workflow
 
