@@ -1,0 +1,34 @@
+{
+  "manifest_version": "1.0",
+  "client": "pallets-flask",
+  "run_id": "run_github_flask_20260517_163222",
+  "stream_anchor": "PI.SUBSTRATE.GITHUB-EVIDENCE-OPERATIONALIZATION.01",
+  "qualification_level": "S1",
+  "labels": {
+    "client_display_name": "Flask (pallets)",
+    "run_display_name": "Flask PATH A structural onboarding · run_github_flask_20260517_163222"
+  },
+  "baseline": {
+    "governance_tag": null,
+    "pipeline_commit": "10191a3"
+  },
+  "artifacts": {
+    "required": {
+      "semantic_topology_model": "clients/pallets-flask/psee/runs/run_github_flask_20260517_163222/semantic/topology/semantic_topology_model.json",
+      "canonical_topology_40_4": "clients/pallets-flask/psee/runs/run_github_flask_20260517_163222/structure/40.4/canonical_topology.json"
+    },
+    "optional": {
+      "structural_topology_log_40_3": "clients/pallets-flask/psee/runs/run_github_flask_20260517_163222/structure/40.3/structural_topology_log.json",
+      "signal_registry": "clients/pallets-flask/psee/runs/run_github_flask_20260517_163222/vault/signal_registry.json",
+      "evidence_trace": "clients/pallets-flask/psee/runs/run_github_flask_20260517_163222/vault/evidence_trace.json",
+      "vault_readiness": "clients/pallets-flask/psee/runs/run_github_flask_20260517_163222/vault/vault_readiness.json"
+    }
+  },
+  "governance": {
+    "lane_a_read_only": true,
+    "additive_only": true,
+    "no_ai_inference": true,
+    "no_topology_mutation": true,
+    "no_synthetic_telemetry": true
+  }
+}

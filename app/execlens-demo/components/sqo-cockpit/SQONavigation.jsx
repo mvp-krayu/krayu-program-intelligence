@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-export default function SQONavigation({ client, runId, activeSection, sections, clientRuns, degradation, onNavigate }) {
+export default function SQONavigation({ client, runId, activeSection, sections, clientRuns, degradation, sectionAvailability, onNavigate }) {
   if (!sections || sections.length === 0) return null;
 
   const [switcherOpen, setSwitcherOpen] = useState(false);
 
   const degradedSet = new Set((degradation?.degraded_sections) || []);
   const unavailableSet = new Set((degradation?.unavailable_sections) || []);
+  const runtimeAvailable = sectionAvailability || {};
 
   const otherRuns = (clientRuns || []).filter(
     cr => !(cr.client === client && cr.run === runId)
@@ -52,7 +53,7 @@ export default function SQONavigation({ client, runId, activeSection, sections, 
       <ul className="sqo-cockpit-nav__list">
         {sections.map(item => {
           const isDegraded = degradedSet.has(item.section);
-          const isUnavailable = unavailableSet.has(item.section);
+          const isUnavailable = unavailableSet.has(item.section) && !runtimeAvailable[item.section];
           const statusClass = isUnavailable ? 'sqo-cockpit-nav__item--unavailable'
             : isDegraded ? 'sqo-cockpit-nav__item--degraded'
             : '';

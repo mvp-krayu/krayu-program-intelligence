@@ -1,6 +1,6 @@
 # PiOS Current Canonical State
 
-> **This page reflects the system's canonical state as of 2026-05-18.**
+> **This page reflects the system's canonical state as of 2026-05-19.**
 
 ---
 
@@ -29,7 +29,8 @@ Program Intelligence (category/discipline)
         │     └── Conversational Intelligence (future)
         ├── SQO (qualification overlay)
         │     ├── State Machine (S0-S3)
-        │     ├── Cockpit (12 sections)
+        │     ├── Cockpit (13 sections, including Authority)
+        │     ├── Operator Authority Workflow (12 actions, 5 RBAC roles)
         │     └── Reconciliation Loop
         └── Marketplace (extension ecosystem — future)
 ```
@@ -57,7 +58,7 @@ The system consists of six evolutionary strata. All are active and reconciled:
 | S1 | [[../01_FOUNDATIONAL_GOVERNANCE/GOVERNANCE_ORIGINS\|Foundational Governance]] | 2026-03-10 → 2026-03-28 | OPERATIONAL — L0-L8 model locked |
 | S2 | [[../02_EXECLENS_LINEAGE/EXECLENS_RUNTIME_EVOLUTION\|ExecLens Lineage]] | 2026-03-21 → 2026-04-02 | SUPERSEDED (lineage preserved) — replaced by LENS v2 + SQO |
 | S3 | [[../03_PATH_SPLIT_EVOLUTION/PATH_A_EMERGENCE\|Path Split]] | 2026-05-07 → 2026-05-08 | OPERATIONAL — PATH A/B terminology active. **PATH A.5 participation architecture recovered 2026-05-17:** grounding-aware semantic participation compression (945→35→13 chain). See [[../03_PATH_SPLIT_EVOLUTION/PATH_A5_PARTICIPATION_ARCHITECTURE]]. Raw replay-safe substrate (48 domains) operational; grounded executive compression layer (13 domains) requires canonicalization. |
-| S4 | [[../04_SQO_AND_QUALIFICATION/SQO_EVOLUTION\|SQO Qualification]] | 2026-05-10 → present | OPERATIONAL — unified semantic operations substrate, 8 ownership domains, 23 artifacts, operational reconciliation loop |
+| S4 | [[../04_SQO_AND_QUALIFICATION/SQO_EVOLUTION\|SQO Qualification]] | 2026-05-10 → present | OPERATIONAL — unified semantic operations substrate, 8 ownership domains, 23 artifacts, operational reconciliation loop, operator authority workflow (12 actions, 5 RBAC roles, governed mutation surface) |
 | S5 | [[../05_RUNTIME_AND_CORRIDOR/CURRENT_RUNTIME_BOUNDARIES\|Runtime Corridor]] | 2026-05-11 → present | OPERATIONAL — evidence/runtime corridors |
 | S6 | [[../10_CANONICAL_RUNTIME_STATE/PRODUCT_HIERARCHY\|Operational Cognition]] | 2026-05-13 → present | OPERATIONAL — cognitive operational intelligence surface, 4-persona projection, interactive topology, guided structural investigation, zone-aware cognitive orchestration, guided query layer (5B.1 — interactive question-answer cognition), guided interrogation evolution (5B.1+ — 36-query lattice with tonal diversity, archetypes, depth hierarchy), selective interpretive emergence (5B.2 — governed narrative synthesis via BALANCED), PI Runtime Layer (5B.3 — transversal governed interrogation across all four cognitive modes, two-axis cognitive model), evidence record export (governed structural evidence record with topology capture) |
 
@@ -142,6 +143,7 @@ DETERMINISTIC → INVESTIGATIVE → INTERPRETIVE
 |---|---|---|---|
 | BlueEdge | S2_QUALIFIED_WITH_DEBT (15 debt items) | OPERATIONAL (Q-02, 4-persona projection, interactive topology) | 3 HTML files, rebase complete |
 | FastAPI | S1_ONBOARDING_REQUIRED | PARTIAL (SQO cockpit, no LENS v2) | 15 SQO v1.json artifacts |
+| pallets-flask | S1 (permanent insufficiency acknowledged) | AUTHORITY WORKFLOW OPERATIONAL | PATH A structural onboarding complete, 15 clusters, 287 nodes, candidate CSR (L3) |
 
 ## Current Trustworthiness Model
 
@@ -421,6 +423,30 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.CANONICALIZATION.END-TO-END-LOCK.01 | G2 | Assessed vault sufficiency, recommended operational document | COMPLETE — recommendations executed by canonicalization stream |
 | PI.VAULT.OPERATIONAL-ONTOLOGY-CANONICALIZATION.01 | G1 | Canonicalized operational ontology, fixed staleness, created governance pages | COMPLETE (this stream) |
 
+## SQO Operator Authority Workflow
+
+**Stream:** PI.SQO.OPERATOR-WORKFLOW-OPERATIONALIZATION.01 (COMPLETE — 2026-05-19)
+**Classification:** G1 — Architecture-Mutating
+
+The Operator Authority Workflow transforms SQO from a read-only qualification viewer into a governed operational authority cockpit — the system's first mutation surface.
+
+**Architecture:**
+- 12 operator actions: review_accept, review_reject, review_contest, review_partial_accept, promotion_request, promotion_approve, promotion_deny, insufficiency_acknowledge, crosswalk_accept, reconciliation_accept, escalate_arbitration, resolve_arbitration
+- 5 declarative RBAC roles: operator, reviewer, domain_authority, promotion_authority, audit_authority
+- 7 non-automatable boundaries: no system actor can promote, elevate, resolve, accept, close, advance, or override
+- Append-only event lineage (promotion_event_log.jsonl) with semantic_disposition taxonomy
+- Mutation safety protocol: snapshot → mutate → event → replay validate → rollback on failure
+- Contested/disputed semantic states as first-class obligation states
+- Permanent insufficiency as valid terminal governance posture
+
+**Governance invariants:**
+- review_accept = bounded operational acceptance, NOT semantic truth validation
+- Permanent insufficiency preserves all blockers and unresolved obligations
+- actor_id is DECLARATIVE ONLY — not production RBAC, not secure identity enforcement
+- All mutations scoped to single client/run path (no generalized write)
+
+**Reference:** `docs/pios/PI.SQO.OPERATOR-WORKFLOW-OPERATIONALIZATION.01/`
+
 ## What Exists Now (Capability Summary)
 
 See [[../10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS]] for full path inventory.
@@ -456,3 +482,7 @@ See [[../10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS]] for full path inve
 - BALANCED selective interpretive emergence — governed narrative synthesis (5B.2)
 - PI Runtime Layer — transversal governed interrogation, structural depth escalation, 4 mode-specific expansion generators (5B.3)
 - Evidence record export (InterrogationTrailBuilder — self-contained HTML with posture stability, confidence envelope, topology capture, deterministic snapshot identity)
+- SQO operator authority workflow (12 actions, 5 RBAC roles, 7 non-automatable boundaries, append-only event lineage, mutation safety with replay validation)
+- POST /api/sqo/authority-action — system's first governed mutation endpoint
+- Semantic disposition taxonomy (OPERATIONAL_ACCEPTANCE, OPERATIONAL_REJECTION, CONTESTED, PARTIAL_ACCEPTANCE, ARBITRATION_ESCALATION, INSUFFICIENCY_DETERMINATION, QUALIFICATION_ADVANCEMENT, QUALIFICATION_DENIAL, QUALIFICATION_REQUEST, STRUCTURAL_ACCEPTANCE)
+- pallets-flask S1 client with permanent insufficiency acknowledged

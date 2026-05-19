@@ -16,6 +16,7 @@ import SQOWorkspacePanel from './SQOWorkspacePanel';
 export default function SQOWorkspaceShell({
   client, runId, error, cockpitState, navigation, clientRuns,
   degradation, degradedNotice, isCritical,
+  runtimeCapabilities, sectionAvailability, runtimeClasses,
   journey, visualState, attentionHierarchy, workflowDominance, deferredVisibility,
   sectionData, initialSection,
 }) {
@@ -33,7 +34,7 @@ export default function SQOWorkspaceShell({
     const handleRouteChange = (url) => {
       const segments = url.split('?')[0].split('/').filter(Boolean);
       const last = segments[segments.length - 1];
-      const knownSections = ['debt', 'continuity', 'maturity', 'progression', 'evidence', 'reconciliation-loop', 'handoff', 'corridor', 'evidence-ingestion', 'semantic-candidates', 'ceu-admissibility', 'evidence-rebase'];
+      const knownSections = ['debt', 'continuity', 'maturity', 'progression', 'evidence', 'reconciliation-loop', 'handoff', 'corridor', 'evidence-ingestion', 'semantic-candidates', 'ceu-admissibility', 'evidence-rebase', 'authority'];
       setActiveSection(knownSections.includes(last) ? last : 'overview');
     };
 
@@ -61,6 +62,7 @@ export default function SQOWorkspaceShell({
         sections={navigation}
         clientRuns={clientRuns}
         degradation={degradation}
+        sectionAvailability={sectionAvailability}
         onNavigate={navigateSection}
       />
 
@@ -73,96 +75,108 @@ export default function SQOWorkspaceShell({
 
         {isCritical ? (
           <SQODegradedState degradation={degradation} />
-        ) : activeSection === 'overview' ? (
-          hasJourney ? (
-            <OperationalAttentionLayout attentionHierarchy={attentionHierarchy}>
-              <SQOCognitiveLayoutShell
-                visualState={visualState}
-                ribbon={
-                  <QualificationStateRibbon
-                    banner={journey.banner}
-                    visualState={visualState}
+        ) : activeSection === 'overview' && hasJourney ? (
+          <OperationalAttentionLayout attentionHierarchy={attentionHierarchy}>
+            <SQOCognitiveLayoutShell
+              visualState={visualState}
+              ribbon={
+                <QualificationStateRibbon
+                  banner={journey.banner}
+                  visualState={visualState}
+                  debtCounts={journey.debtCounts}
+                  maturity={journey.maturity}
+                  continuity={journey.continuity}
+                />
+              }
+              heroRegion={
+                <QualificationHeroRegion
+                  banner={journey.banner}
+                  visualState={visualState}
+                  narratives={journey.narratives}
+                />
+              }
+              blockerLayer={
+                journey.immediateBlockers && journey.immediateBlockers.length > 0 ? (
+                  <BlockerDominanceLayer
+                    blockers={journey.immediateBlockers}
                     debtCounts={journey.debtCounts}
-                    maturity={journey.maturity}
-                    continuity={journey.continuity}
-                  />
-                }
-                heroRegion={
-                  <QualificationHeroRegion
-                    banner={journey.banner}
-                    visualState={visualState}
-                    narratives={journey.narratives}
-                  />
-                }
-                blockerLayer={
-                  journey.immediateBlockers && journey.immediateBlockers.length > 0 ? (
-                    <BlockerDominanceLayer
-                      blockers={journey.immediateBlockers}
-                      debtCounts={journey.debtCounts}
-                      visualState={visualState}
-                    />
-                  ) : null
-                }
-                spine={
-                  workflowDominance && workflowDominance.spineNodes.length > 0 ? (
-                    <OperationalWorkflowSpine
-                      spineNodes={workflowDominance.spineNodes}
-                      sState={journey.banner.s_state}
-                      nextState={journey.banner.next_reachable}
-                    />
-                  ) : null
-                }
-                workflowCluster={
-                  workflowDominance && workflowDominance.stages.length > 0 ? (
-                    <WorkflowStageCluster
-                      stages={workflowDominance.stages}
-                      currentStage={journey.currentStage}
-                      sourceGuidance={journey.sourceGuidance}
-                      rerunChecklist={journey.rerunChecklist}
-                    />
-                  ) : null
-                }
-                progressionRail={
-                  <ProgressionRail
-                    progression={journey.progression}
-                    validationGates={journey.validationGates}
                     visualState={visualState}
                   />
-                }
-                deferredZone={
-                  <DeferredDebtCollapseZone
-                    deferred={journey.deferredDebt}
-                    active={journey.activeDebt}
-                    visibility={deferredVisibility}
+                ) : null
+              }
+              spine={
+                workflowDominance && workflowDominance.spineNodes.length > 0 ? (
+                  <OperationalWorkflowSpine
+                    spineNodes={workflowDominance.spineNodes}
+                    sState={journey.banner.s_state}
+                    nextState={journey.banner.next_reachable}
                   />
-                }
-                forensicLink={
-                  <div className="sqo-forensic-link">
-                    <span className="sqo-forensic-link__label">Detailed exploration</span>
-                    <nav className="sqo-forensic-link__nav">
-                      {navigation && navigation.filter(n => n.section !== 'overview').map(nav => (
-                        <a
-                          key={nav.section}
-                          href={nav.path}
-                          className="sqo-forensic-link__item"
-                          onClick={(e) => { e.preventDefault(); navigateSection(nav.section); }}
-                        >
-                          {nav.label}
-                        </a>
-                      ))}
-                    </nav>
-                  </div>
-                }
-                governance={
-                  <span>Read-only artifact consumption · No AI interpretation · Deterministic display</span>
-                }
-              />
-            </OperationalAttentionLayout>
-          ) : (
-            <div className="sqo-cockpit__no-journey">
-              <p>Qualification journey could not be resolved. Use section navigation for detailed artifact exploration.</p>
-            </div>
-          )
+                ) : null
+              }
+              workflowCluster={
+                workflowDominance && workflowDominance.stages.length > 0 ? (
+                  <WorkflowStageCluster
+                    stages={workflowDominance.stages}
+                    currentStage={journey.currentStage}
+                    sourceGuidance={journey.sourceGuidance}
+                    rerunChecklist={journey.rerunChecklist}
+                  />
+                ) : null
+              }
+              progressionRail={
+                <ProgressionRail
+                  progression={journey.progression}
+                  validationGates={journey.validationGates}
+                  visualState={visualState}
+                />
+              }
+              deferredZone={
+                <DeferredDebtCollapseZone
+                  deferred={journey.deferredDebt}
+                  active={journey.activeDebt}
+                  visibility={deferredVisibility}
+                />
+              }
+              forensicLink={
+                <div className="sqo-forensic-link">
+                  <span className="sqo-forensic-link__label">Detailed exploration</span>
+                  <nav className="sqo-forensic-link__nav">
+                    {navigation && navigation.filter(n => n.section !== 'overview').map(nav => (
+                      <a
+                        key={nav.section}
+                        href={nav.path}
+                        className="sqo-forensic-link__item"
+                        onClick={(e) => { e.preventDefault(); navigateSection(nav.section); }}
+                      >
+                        {nav.label}
+                      </a>
+                    ))}
+                  </nav>
+                </div>
+              }
+              governance={
+                <span>Read-only artifact consumption · No AI interpretation · Deterministic display</span>
+              }
+            />
+          </OperationalAttentionLayout>
+        ) : activeSection === 'overview' && !hasJourney ? (
+          <div className="sqo-cockpit__no-journey">
+            <p>Static qualification artifacts not available for this client. Use section navigation for available capabilities.</p>
+            {sectionAvailability && (
+              <nav className="sqo-cockpit__available-sections">
+                {navigation && navigation.filter(n => n.section !== 'overview' && sectionAvailability[n.section]).map(nav => (
+                  <a
+                    key={nav.section}
+                    href={nav.path}
+                    className="sqo-cockpit__available-section-link"
+                    onClick={(e) => { e.preventDefault(); navigateSection(nav.section); }}
+                  >
+                    {nav.label}
+                  </a>
+                ))}
+              </nav>
+            )}
+          </div>
         ) : (
           <SQOWorkspacePanel
             section={activeSection}

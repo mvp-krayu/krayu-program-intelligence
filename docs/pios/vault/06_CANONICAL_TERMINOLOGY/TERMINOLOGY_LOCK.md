@@ -333,6 +333,66 @@
 
 **Source:** `docs/pios/PI.SUBSTRATE.SEMANTIC-DERIVATION-COMPILER.01/`
 
+### Operator Authority Workflow
+
+**Definition:** The governed mutation surface within SQO that enables operator-driven authority progression. 12 discrete actions (review, promotion, insufficiency, crosswalk, reconciliation, arbitration) executed through a single governed POST endpoint with append-only event lineage and mutation safety protocol.
+
+**Status:** CANONICAL — operational (2026-05-19).
+
+**What it is NOT:** An automated promotion pipeline. A chatbot. An AI decision-maker. The operator authority workflow requires explicit human action for every mutation. System actors are rejected at the non-automatable boundary.
+
+### Semantic Disposition
+
+**Definition:** The classification of operational meaning for each authority action event. A governed taxonomy that records the nature of each operator action in the event lineage:
+
+- OPERATIONAL_ACCEPTANCE — bounded operational acceptance for qualification progression (NOT semantic truth)
+- OPERATIONAL_REJECTION — bounded operational rejection within authority scope
+- CONTESTED — active semantic disagreement between reviewers or between reviewer and evidence
+- PARTIAL_ACCEPTANCE — operator accepts part of a semantic grouping but contests other aspects
+- ARBITRATION_ESCALATION — escalation to higher authority due to competing reviewer outcomes
+- INSUFFICIENCY_DETERMINATION — governed operational determination that evidence does not support further progression
+- QUALIFICATION_ADVANCEMENT — approved qualification state transition
+- QUALIFICATION_DENIAL — denied qualification state transition
+- QUALIFICATION_REQUEST — request for qualification state transition
+- STRUCTURAL_ACCEPTANCE — acceptance of structural translation (crosswalk/reconciliation)
+
+**Status:** CANONICAL — operational taxonomy (2026-05-19).
+
+### Operational Acceptance
+
+**Definition:** The bounded determination by an authorized operator that a semantic interpretation is accepted for qualification progression purposes within their authority scope. This is NOT semantic truth validation — it is a governed operational decision within bounded authority.
+
+**Status:** CANONICAL — label discipline term (2026-05-19).
+
+**Forbidden synonyms:** Semantic Truth, Validated Meaning, Confirmed Semantics, Approved Intelligence.
+
+### Non-Automatable Boundary
+
+**Definition:** A governance enforcement rule that prevents system actors (actor_id starting with "system:") from executing authority actions. Seven boundaries defined: no system actor can promote, elevate authority, resolve reviews, accept crosswalks, close reconciliation, advance S-state, or override insufficiency. This ensures human governance authority is never bypassed by automated processes.
+
+**Status:** CANONICAL — governance enforcement (2026-05-19).
+
+### Permanent Insufficiency
+
+**Definition:** A governed operational determination that the current evidence state does not support further qualification progression, and that this determination is permanent rather than temporary. When permanent insufficiency is acknowledged: blockers are NOT deleted, obligations are NOT fake-resolved, the action records a deliberate governance posture, and unresolved semantic limitations are preserved as evidence of the insufficiency.
+
+**Status:** CANONICAL — valid terminal state (2026-05-19).
+
+**What it is NOT:** A failure mode. A bug. A timeout. An error state. Permanent insufficiency is a first-class governance posture — systems may remain at S1 indefinitely by design.
+
+### Contested State
+
+**Definition:** An obligation state representing active semantic disagreement. Five first-class contested/disputed states:
+- CONTESTED — active semantic disagreement between reviewers or between reviewer and evidence
+- ARBITRATION_REQUIRED — competing reviewer outcomes requiring escalation to higher authority
+- PARTIAL_ACCEPT — operator accepts part of a semantic grouping but contests other aspects
+- DISPUTED — formal disagreement recorded, resolution pending
+- UNRESOLVABLE — semantic interpretation cannot be determined from available evidence
+
+These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED. The workflow is NOT linear/binary.
+
+**Status:** CANONICAL — obligation state model (2026-05-19).
+
 ## Term Usage Rules
 
 1. **Use locked definitions exactly.** Do not paraphrase, simplify, or reinterpret.

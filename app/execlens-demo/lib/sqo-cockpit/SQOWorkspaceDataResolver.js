@@ -18,6 +18,7 @@ const {
   formatReconciliationSection,
   formatReconciliationLoopSection,
 } = require('./SQOCockpitFormatter');
+const { resolveRuntimeSubstrates } = require('./server/SQORuntimeResolver.server');
 
 function resolveWorkspaceData(client, runId, initialSection) {
   const validation = validateRouteParams(client, runId);
@@ -33,6 +34,7 @@ function resolveWorkspaceData(client, runId, initialSection) {
       degradedNotice: null,
       degradation: null,
       isCritical: false,
+      runtimeCapabilities: null,
       journey: null,
       visualState: null,
       attentionHierarchy: null,
@@ -43,19 +45,20 @@ function resolveWorkspaceData(client, runId, initialSection) {
     };
   }
 
+  const runtime = resolveRuntimeSubstrates(client, runId);
+
   const state = resolveCockpitState(client, runId);
   const navigation = buildNavigationItems(client, runId, initialSection || 'overview');
   const degradedNotice = state.degradation ? buildDegradedNotice(state.degradation) : null;
 
-  const isCritical = state.cockpit_state === 'NO_CLIENT_SELECTED' ||
-    state.cockpit_state === 'CLIENT_REGISTERED_NO_SQO';
+  const isCritical = !runtime.anyCapabilityAvailable;
 
   let journey = null;
   let visualState = null;
   let attentionHierarchy = null;
   let workflowDominance = null;
   let deferredVisibility = null;
-  let sectionData = null;
+  let sectionData = {};
 
   if (state.artifacts && state.artifacts.ok) {
     try {
@@ -77,16 +80,14 @@ function resolveWorkspaceData(client, runId, initialSection) {
       journey = { available: false, reason: 'JOURNEY_RESOLUTION_ERROR' };
     }
 
-    sectionData = {
-      debt: formatDebtSection(state.artifacts),
-      continuity: formatContinuitySection(state.artifacts),
-      maturity: formatMaturitySection(state.artifacts),
-      progression: formatProgressionSection(state.artifacts),
-      evidence: formatEvidenceReplaySection(state.artifacts),
-      handoff: formatHandoffSection(state.artifacts, state.handoff_status),
-      reconciliation: formatReconciliationSection(state.artifacts),
-      'reconciliation-loop': formatReconciliationLoopSection(state.artifacts),
-    };
+    sectionData.debt = formatDebtSection(state.artifacts);
+    sectionData.continuity = formatContinuitySection(state.artifacts);
+    sectionData.maturity = formatMaturitySection(state.artifacts);
+    sectionData.progression = formatProgressionSection(state.artifacts);
+    sectionData.evidence = formatEvidenceReplaySection(state.artifacts);
+    sectionData.handoff = formatHandoffSection(state.artifacts, state.handoff_status);
+    sectionData.reconciliation = formatReconciliationSection(state.artifacts);
+    sectionData['reconciliation-loop'] = formatReconciliationLoopSection(state.artifacts);
   }
 
   return normalizeSSRProps({
@@ -103,6 +104,9 @@ function resolveWorkspaceData(client, runId, initialSection) {
     degradation: state.degradation,
     degradedNotice,
     isCritical,
+    runtimeCapabilities: runtime.capabilities,
+    sectionAvailability: runtime.sectionAvailability,
+    runtimeClasses: runtime.runtimeClasses,
     journey,
     visualState,
     attentionHierarchy,

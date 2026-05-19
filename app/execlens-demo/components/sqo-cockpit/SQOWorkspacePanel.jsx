@@ -6,6 +6,7 @@ import EvidenceReplayPanel from './EvidenceReplayPanel';
 import HandoffReadinessPanel from './HandoffReadinessPanel';
 import ReconciliationCorrespondencePanel from './ReconciliationCorrespondencePanel';
 import ReconciliationLoopWorkflowPanel from './ReconciliationLoopWorkflowPanel';
+import OperatorAuthorityWorkflowPanel from './authority/OperatorAuthorityWorkflowPanel';
 
 const SECTION_PANELS = {
   debt: (data) => <SemanticDebtPanel debtData={data} />,
@@ -16,6 +17,7 @@ const SECTION_PANELS = {
   handoff: (data) => <HandoffReadinessPanel handoffData={data} />,
   reconciliation: (data) => <ReconciliationCorrespondencePanel reconciliationData={data} />,
   'reconciliation-loop': (data) => <ReconciliationLoopWorkflowPanel loopData={data} />,
+  authority: (data) => <OperatorAuthorityWorkflowPanel authorityData={data} />,
 };
 
 const SECTION_CONTEXT = {
@@ -66,6 +68,12 @@ const SECTION_CONTEXT = {
     purpose: 'Operational workflow for the semantic reconciliation improvement loop.',
     focus: 'See current loop state, phase completion, next required action, blocked reasons, rerun chain, and propagation status.',
     type: 'operational guidance',
+  },
+  authority: {
+    title: 'Authority Workflow',
+    purpose: 'Governed operator authority actions: review obligations, qualification advancement, insufficiency acknowledgment.',
+    focus: 'Execute bounded operational acceptance, contest semantic interpretations, manage qualification progression.',
+    type: 'operational authority',
   },
 };
 

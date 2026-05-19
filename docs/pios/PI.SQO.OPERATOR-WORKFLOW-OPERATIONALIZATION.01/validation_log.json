@@ -1,0 +1,121 @@
+{
+  "stream_id": "PI.SQO.OPERATOR-WORKFLOW-OPERATIONALIZATION.01",
+  "classification": "G1",
+  "generated_at": "2026-05-19T09:30:00.000Z",
+  "checks": [
+    {
+      "name": "non_automatable_boundary_enforcement",
+      "description": "system: actor_id rejected for all authority actions",
+      "result": "PASS",
+      "evidence": "POST /api/sqo/authority-action with actor_id=system:pipeline → boundary_violation: true"
+    },
+    {
+      "name": "role_action_mismatch_rejection",
+      "description": "reviewer role cannot execute promotion_approve",
+      "result": "PASS",
+      "evidence": "POST with actor_id=reviewer:analyst1, action=promotion_approve → ROLE_ACTION_MISMATCH"
+    },
+    {
+      "name": "method_guard",
+      "description": "GET request to POST-only endpoint returns 405",
+      "result": "PASS",
+      "evidence": "GET /api/sqo/authority-action → METHOD_NOT_ALLOWED"
+    },
+    {
+      "name": "insufficiency_acknowledge_permanent",
+      "description": "Permanent insufficiency preserves blockers and unresolved state",
+      "result": "PASS",
+      "evidence": "POST insufficiency_acknowledge with insufficiency_permanent=true → success, 6 blockers preserved, s_level stays S1"
+    },
+    {
+      "name": "event_log_append",
+      "description": "Event appended to promotion_event_log.jsonl with sequential ID",
+      "result": "PASS",
+      "evidence": "EVT-003 appended after EVT-001, EVT-002 with semantic_disposition=INSUFFICIENCY_DETERMINATION"
+    },
+    {
+      "name": "replay_validation",
+      "description": "Event log replay reconstructs current state",
+      "result": "PASS",
+      "evidence": "replay_valid: true in API response"
+    },
+    {
+      "name": "disclaimer_present",
+      "description": "_disclaimer field present on every API response",
+      "result": "PASS",
+      "evidence": "_disclaimer: 'actor_id is DECLARATIVE ONLY. Not production RBAC. Not secure identity enforcement.'"
+    },
+    {
+      "name": "authority_page_renders_pallets_flask",
+      "description": "Authority page renders all 6 sub-components for pallets-flask",
+      "result": "PASS",
+      "evidence": "HTTP 200, sqo-authority-panel, sqo-posture-banner, sqo-review-queue, sqo-promotion-control, sqo-blocker-list, sqo-event-timeline classes present in HTML"
+    },
+    {
+      "name": "blueedge_no_mutation_affordances",
+      "description": "BlueEdge authority page shows unavailable panel only",
+      "result": "PASS",
+      "evidence": "Only sqo-authority-panel--unavailable class present, zero action buttons, zero input fields"
+    },
+    {
+      "name": "blueedge_overview_no_regression",
+      "description": "BlueEdge overview page still serves 200 OK",
+      "result": "PASS",
+      "evidence": "HTTP 200 for /sqo/client/blueedge/run/run_blueedge_productized_01_fixed"
+    },
+    {
+      "name": "zero_blueedge_files_in_diff",
+      "description": "No BlueEdge-specific files modified",
+      "result": "PASS",
+      "evidence": "git diff --name-only | grep blueedge returns empty"
+    },
+    {
+      "name": "semantic_disposition_correct",
+      "description": "Semantic disposition uses operational acceptance language",
+      "result": "PASS",
+      "evidence": "INSUFFICIENCY_DETERMINATION (not 'insufficient' or 'failed')"
+    },
+    {
+      "name": "blockers_preserved_after_insufficiency",
+      "description": "All 6 blockers remain unresolved after permanent insufficiency",
+      "result": "PASS",
+      "evidence": "qualification_blockers.json: 6 blockers, all resolved=false"
+    },
+    {
+      "name": "label_discipline",
+      "description": "UI labels use operational acceptance language",
+      "result": "PASS",
+      "evidence": "ACTION_LABELS: review_accept='Operational Acceptance', review_reject='Operational Rejection'. No 'Semantic Truth' / 'Validated Meaning'"
+    },
+    {
+      "name": "declarative_identity_disclaimer_in_footer",
+      "description": "Footer disclaimer renders in HTML",
+      "result": "PASS",
+      "evidence": "'DECLARATIVE ONLY' found in rendered HTML"
+    },
+    {
+      "name": "pallets_flask_registration",
+      "description": "pallets-flask registered in manifest REGISTRY",
+      "result": "PASS",
+      "evidence": "REGISTRY['pallets-flask']['run_github_flask_20260517_163222'] = manifest file"
+    },
+    {
+      "name": "mutations_scoped_to_pallets_flask",
+      "description": "All file mutations scoped to pallets-flask SQO artifacts only",
+      "result": "PASS",
+      "evidence": "SQOActionEngine resolves paths to clients/pallets-flask/psee/runs/{run}/sqo/ only"
+    },
+    {
+      "name": "no_authentication_claimed",
+      "description": "No production RBAC or secure identity enforcement claimed",
+      "result": "PASS",
+      "evidence": "_disclaimer on every response, footer disclaimer, execution_report disclaimer"
+    }
+  ],
+  "summary": {
+    "total": 18,
+    "passed": 18,
+    "failed": 0,
+    "result": "ALL PASS"
+  }
+}

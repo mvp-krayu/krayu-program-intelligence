@@ -1,0 +1,105 @@
+{
+  "stream_id": "PI.SQO.OPERATOR-WORKFLOW-OPERATIONALIZATION.01",
+  "classification": "G1",
+  "generated_at": "2026-05-19T09:30:00.000Z",
+  "files": {
+    "created": [
+      {
+        "path": "app/execlens-demo/lib/sqo-cockpit/server/PromotionStateLoader.server.js",
+        "purpose": "Load and write promotion state artifacts from disk"
+      },
+      {
+        "path": "app/execlens-demo/lib/sqo-cockpit/server/SQOAuthorityValidator.server.js",
+        "purpose": "Validate operator actions against authority model with 5 RBAC roles and 7 non-automatable boundaries"
+      },
+      {
+        "path": "app/execlens-demo/lib/sqo-cockpit/server/PromotionEventWriter.server.js",
+        "purpose": "Append-only event writer for promotion_event_log.jsonl with semantic_disposition"
+      },
+      {
+        "path": "app/execlens-demo/lib/sqo-cockpit/server/SQOActionEngine.server.js",
+        "purpose": "12-action orchestrator: validate → snapshot → mutate → event → replay validate"
+      },
+      {
+        "path": "app/execlens-demo/lib/sqo-cockpit/server/OperatorWorkflowResolver.server.js",
+        "purpose": "SSR data resolver for authority page"
+      },
+      {
+        "path": "app/execlens-demo/pages/api/sqo/authority-action.js",
+        "purpose": "POST endpoint — first mutation route (authority-named)"
+      },
+      {
+        "path": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/authority.js",
+        "purpose": "Authority page route"
+      },
+      {
+        "path": "app/execlens-demo/components/sqo-cockpit/authority/OperatorAuthorityWorkflowPanel.jsx",
+        "purpose": "Layout shell for authority page with disclaimer footer"
+      },
+      {
+        "path": "app/execlens-demo/components/sqo-cockpit/authority/AuthorityPostureBanner.jsx",
+        "purpose": "S-level, authority ceiling, lane summary, insufficiency status"
+      },
+      {
+        "path": "app/execlens-demo/components/sqo-cockpit/authority/ReviewQueueActionPanel.jsx",
+        "purpose": "Review obligations with per-item affordances and operational acceptance language"
+      },
+      {
+        "path": "app/execlens-demo/components/sqo-cockpit/authority/PromotionControlPanel.jsx",
+        "purpose": "Qualification advancement, insufficiency acknowledge with permanent toggle"
+      },
+      {
+        "path": "app/execlens-demo/components/sqo-cockpit/authority/QualificationBlockerActionList.jsx",
+        "purpose": "Blocker list with authority domain and resolution path"
+      },
+      {
+        "path": "app/execlens-demo/components/sqo-cockpit/authority/PromotionEventTimeline.jsx",
+        "purpose": "Immutable event timeline display"
+      },
+      {
+        "path": "app/execlens-demo/lib/lens-v2/manifests/pallets-flask.run_github_flask_20260517_163222.json",
+        "purpose": "pallets-flask client manifest for REGISTRY"
+      },
+      {
+        "path": "app/execlens-demo/lib/sqo-cockpit/server/SQORuntimeResolver.server.js",
+        "purpose": "Canonical runtime substrate discovery — probes static and operational paths, resolves capabilities and section availability"
+      }
+    ],
+    "modified": [
+      {
+        "path": "app/execlens-demo/lib/sqo-cockpit/SQOCockpitRouteResolver.js",
+        "change": "Added 'authority' to COCKPIT_SECTIONS, SECTION_ROUTES, and SECTION_LABELS"
+      },
+      {
+        "path": "app/execlens-demo/components/sqo-cockpit/SQOWorkspaceShell.jsx",
+        "change": "Capability-driven rendering: accepts runtimeCapabilities/sectionAvailability, passes sectionAvailability to SQONavigation, overview shows capability-aware message with available section links when no journey"
+      },
+      {
+        "path": "app/execlens-demo/components/sqo-cockpit/SQOWorkspacePanel.jsx",
+        "change": "Added OperatorAuthorityWorkflowPanel import and authority section renderer"
+      },
+      {
+        "path": "app/execlens-demo/lib/lens-v2/manifests/index.js",
+        "change": "Added pallets-flask entry to REGISTRY"
+      },
+      {
+        "path": "app/execlens-demo/lib/sqo-cockpit/SQOWorkspaceDataResolver.js",
+        "change": "Integrated SQORuntimeResolver: isCritical now derived from anyCapabilityAvailable, sectionData initialized as empty object instead of null, runtime capabilities and section availability passed through to client"
+      },
+      {
+        "path": "app/execlens-demo/components/sqo-cockpit/SQONavigation.jsx",
+        "change": "Accepts sectionAvailability prop — runtime-available sections override degradation unavailable marking"
+      }
+    ],
+    "mutated_at_runtime": [
+      {
+        "path": "clients/pallets-flask/psee/runs/run_github_flask_20260517_163222/sqo/promotion_state.json",
+        "change": "insufficiency_acknowledged, insufficiency_permanent, insufficiency_justification added by operator action"
+      },
+      {
+        "path": "clients/pallets-flask/psee/runs/run_github_flask_20260517_163222/sqo/promotion_event_log.jsonl",
+        "change": "EVT-003 (insufficiency_acknowledge) appended"
+      }
+    ]
+  }
+}

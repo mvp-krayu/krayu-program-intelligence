@@ -2,7 +2,7 @@
 
 const { isClientRunAllowed, listAllowedClientRuns } = require('../lens-v2/manifests');
 
-const COCKPIT_SECTIONS = ['overview', 'debt', 'continuity', 'maturity', 'progression', 'evidence', 'reconciliation', 'reconciliation-loop', 'handoff', 'corridor', 'evidence-ingestion', 'semantic-candidates', 'ceu-admissibility', 'evidence-rebase'];
+const COCKPIT_SECTIONS = ['overview', 'debt', 'continuity', 'maturity', 'progression', 'evidence', 'reconciliation', 'reconciliation-loop', 'handoff', 'corridor', 'evidence-ingestion', 'semantic-candidates', 'ceu-admissibility', 'evidence-rebase', 'authority'];
 
 const SECTION_ROUTES = {
   overview: '',
@@ -19,6 +19,7 @@ const SECTION_ROUTES = {
   'ceu-admissibility': '/ceu-admissibility',
   'evidence-rebase': '/evidence-rebase',
   'reconciliation-loop': '/reconciliation-loop',
+  authority: '/authority',
 };
 
 const SECTION_LABELS = {
@@ -36,6 +37,7 @@ const SECTION_LABELS = {
   'ceu-admissibility': 'CEU Admissibility',
   'evidence-rebase': 'Evidence Rebase',
   'reconciliation-loop': 'Reconciliation Loop',
+  authority: 'Authority',
 };
 
 function validateRouteParams(client, runId) {

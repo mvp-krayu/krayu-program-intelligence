@@ -24,6 +24,9 @@ const REGISTRY = {
   fastapi: {
     run_02_oss_fastapi_pipeline: 'fastapi.run_02_oss_fastapi_pipeline.json',
   },
+  'pallets-flask': {
+    run_github_flask_20260517_163222: 'pallets-flask.run_github_flask_20260517_163222.json',
+  },
 };
 
 function resolveRepoRoot() {
