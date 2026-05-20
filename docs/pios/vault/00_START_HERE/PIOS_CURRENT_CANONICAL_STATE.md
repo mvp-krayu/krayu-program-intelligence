@@ -147,6 +147,7 @@ DETERMINISTIC → INVESTIGATIVE → INTERPRETIVE
 | BlueEdge | SQO-native S2 (15 debt items, governance projection bridge) | OPERATIONAL (Q-02, 4-persona projection, interactive topology) | 3 HTML files, rebase complete |
 | FastAPI | S1_ONBOARDING_REQUIRED | PARTIAL (SQO cockpit, no LENS v2) | 15 SQO v1.json artifacts |
 | pallets-flask | S1 (permanent insufficiency acknowledged) | AUTHORITY WORKFLOW OPERATIONAL, posture-driven overview, semantic intake (Layer B) | PATH A structural onboarding complete, 15 clusters, 287 nodes, candidate CSR (L3), full client registration (client.yaml + source_manifest.json) |
+| NetBox | S0 STRUCTURAL ONLY | SQO: Cockpit Unavailable (diagnostic view); LENS: LIVE_BINDING_FAILED | First live S2 candidate. PATH A complete: 2,540 nodes, 3,614 IMPORTS, 1,089 ranked files. 11 structural surprises documented. CEU definition required for S1. |
 
 ## Current Trustworthiness Model
 
@@ -523,6 +524,8 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01 | G1 | Code-graph structural enrichment prototype, 40.3s artifact contract, indexer landscape assessment | COMPLETE |
 | PI.PATHA.CODE-GRAPH-PIPELINE-INTEGRATION.01 | G1 | Pipeline Phase 3.6 integration of code-graph structural enrichment | COMPLETE |
 | PI.PATHA.STRUCTURAL-CENTRALITY-DERIVATION.01 | G1 | Structural centrality derivation (40.3c), role classification, Phase 3.7 pipeline integration | COMPLETE |
+| PI.PATHA.LIVE-S2-CANDIDATE-SELECTION.01 | G1 | Live S2 candidate selection — NetBox (netbox-community/netbox) selected as first canonical live S2 candidate (63/80), Nautobot as backup (50/80) | COMPLETE |
+| PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01 | G1 | First canonical Program Intelligence onboarding — NetBox through PATH A substrate, pipeline maturation (source root + import resolution fixes), 11 structural surprises, demonstration foundation capture | COMPLETE |
 | PI.PIOS.PROGRAM-INTELLIGENCE-EVOLUTION-MODEL.01 | G1 | Program Intelligence Evolution Model — spine object contracts, accumulation doctrine, activation sequence | COMPLETE |
 
 ## SQO Operator Authority Workflow

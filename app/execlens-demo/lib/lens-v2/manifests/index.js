@@ -27,6 +27,9 @@ const REGISTRY = {
   'pallets-flask': {
     run_github_flask_20260517_163222: 'pallets-flask.run_github_flask_20260517_163222.json',
   },
+  netbox: {
+    run_github_netbox_20260520_134600: 'netbox.run_github_netbox_20260520_134600.json',
+  },
 };
 
 function resolveRepoRoot() {

@@ -1,0 +1,41 @@
+{
+  "stream": "PI.PATHA.LIVE-S2-CANDIDATE-SELECTION.01",
+  "classification": "G1",
+  "changes": [
+    {
+      "file": "docs/pios/PI.PATHA.LIVE-S2-CANDIDATE-SELECTION.01/execution_report.md",
+      "action": "CREATE",
+      "reason": "Stream execution report documenting research methodology, candidate screening, and selection rationale"
+    },
+    {
+      "file": "docs/pios/PI.PATHA.LIVE-S2-CANDIDATE-SELECTION.01/CANDIDATE_SCORING_MATRIX.md",
+      "action": "CREATE",
+      "reason": "10-criterion scoring matrix with per-candidate evidence, Flask/FastAPI insufficiency, Python vs language-neutral separation, and narrative transformation justification"
+    },
+    {
+      "file": "docs/pios/PI.PATHA.LIVE-S2-CANDIDATE-SELECTION.01/validation_log.json",
+      "action": "CREATE",
+      "reason": "10-check validation log — all PASS"
+    },
+    {
+      "file": "docs/pios/PI.PATHA.LIVE-S2-CANDIDATE-SELECTION.01/file_changes.json",
+      "action": "CREATE",
+      "reason": "File change manifest"
+    },
+    {
+      "file": "docs/pios/PI.PATHA.LIVE-S2-CANDIDATE-SELECTION.01/CLOSURE.md",
+      "action": "CREATE",
+      "reason": "Stream closure artifact"
+    },
+    {
+      "file": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "action": "UPDATE",
+      "reason": "G1 vault propagation — add live S2 candidate selection to lineage table and update roadmap"
+    },
+    {
+      "file": "docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md",
+      "action": "UPDATE",
+      "reason": "Add stream to governance streams table"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "source_id": "source_01",
+  "client_id": "netbox",
+  "archive_type": "GITHUB_CLONE",
+  "archive_filename": "netbox-64d3b11.tar",
+  "archive_path": "clients/netbox/archives/netbox-64d3b11.tar",
+  "sha256": "043d4ca2b85fde16e2bc86eea6631e5f363c8f5c59d14332eed11d0f0c44a697",
+  "intake_contract": "PI.LENS.SOURCE-INTAKE.GENERIC.01",
+  "extracted_path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo",
+  "structure_path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/structure",
+  "ceu_grounding_path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/ceu",
+  "dom_layer_path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/dom/dom_layer.json",
+  "grounding_state_path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/ceu/grounding_state_v3.json",
+  "integration_validation_path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/integration/integration_validation.json"
+}

@@ -94,15 +94,13 @@ def resolve_paths(client: str, run_id: str) -> dict:
 
 def discover_source_root(intake_dir: Path) -> Path | None:
     """
-    Find the primary Python package root within the intake directory.
-    Heuristic: deepest directory containing __init__.py that is NOT a test directory.
-    For src-layout projects (e.g., src/flask/), returns the package directory.
+    Find the primary Python source root within the intake directory.
+    Handles single-package (Flask: src/flask/) and multi-app (Django: project/{app1,app2,...}/).
     """
     candidates = []
     for root, dirs, files in os.walk(intake_dir):
         root_path = Path(root)
         rel = root_path.relative_to(intake_dir)
-        rel_str = str(rel)
 
         if any(part in ("tests", "test", "testing", "benchmarks", "examples", "docs")
                for part in rel.parts):
@@ -115,14 +113,29 @@ def discover_source_root(intake_dir: Path) -> Path | None:
     if not candidates:
         return None
 
-    candidates.sort(key=lambda x: x[0], reverse=True)
-    deepest_depth = candidates[0][0]
-    deepest_packages = [c for c in candidates if c[0] == deepest_depth]
+    min_depth = min(c[0] for c in candidates)
+    shallowest = [c for c in candidates if c[0] == min_depth]
 
-    if deepest_packages:
-        return deepest_packages[0][1].parent if deepest_depth > 1 else deepest_packages[0][1]
+    if len(shallowest) == 1:
+        return shallowest[0][1]
 
-    return candidates[0][1]
+    # Multiple packages at same depth → return their common parent (multi-app layout)
+    parents = {c[1].parent for c in shallowest}
+    if len(parents) == 1:
+        return parents.pop()
+
+    # Multiple distinct parents — find deepest common ancestor
+    ref = shallowest[0][2].parts
+    common_depth = 0
+    for i in range(min(len(ref), min_depth)):
+        if all(len(c[2].parts) > i and c[2].parts[i] == ref[i] for c in shallowest):
+            common_depth = i + 1
+        else:
+            break
+    if common_depth > 0:
+        return intake_dir / Path(*ref[:common_depth])
+
+    return intake_dir
 
 
 def find_python_files(source_root: Path, intake_dir: Path) -> list[tuple[Path, str]]:
@@ -191,25 +204,25 @@ def resolve_absolute_import(
     module: str,
     known_files: set[str],
     intake_dir: Path,
+    source_root_rel: str = "",
 ) -> str | None:
     """
     Resolve an absolute import against known project files.
-    module = "flask.app" → try "flask/app.py", "flask/app/__init__.py",
-                           "src/flask/app.py", "src/flask/app/__init__.py"
+    Tries bare path, src/ prefix, and source_root_rel prefix (for Django-style layouts).
     """
     parts = module.split(".")
-    base_candidates = [
-        "/".join(parts) + ".py",
-        "/".join(parts) + "/__init__.py",
-    ]
-    src_candidates = [
-        "src/" + "/".join(parts) + ".py",
-        "src/" + "/".join(parts) + "/__init__.py",
-    ]
+    suffixes = ["/".join(parts) + ".py", "/".join(parts) + "/__init__.py"]
 
-    for candidate in base_candidates + src_candidates:
-        if candidate in known_files:
-            return candidate
+    prefixes = [""]
+    if source_root_rel and source_root_rel != "src":
+        prefixes.append(source_root_rel + "/")
+    prefixes.append("src/")
+
+    for prefix in prefixes:
+        for suffix in suffixes:
+            candidate = prefix + suffix
+            if candidate in known_files:
+                return candidate
 
     return None
 
@@ -220,6 +233,7 @@ def extract_relationships(
     package_root: Path,
     intake_dir: Path,
     known_files: set[str],
+    source_root_rel: str = "",
 ) -> list[dict]:
     """
     Extract all structural code-graph relationships from a single Python file.
@@ -263,7 +277,7 @@ def extract_relationships(
                     })
             else:
                 if node.module:
-                    target = resolve_absolute_import(node.module, known_files, intake_dir)
+                    target = resolve_absolute_import(node.module, known_files, intake_dir, source_root_rel)
                     if target and target != rel_path and target not in seen_imports:
                         seen_imports.add(target)
                         names = ", ".join(a.name for a in node.names[:3])
@@ -283,7 +297,7 @@ def extract_relationships(
 
         elif isinstance(node, ast.Import):
             for alias in node.names:
-                target = resolve_absolute_import(alias.name, known_files, intake_dir)
+                target = resolve_absolute_import(alias.name, known_files, intake_dir, source_root_rel)
                 if target and target != rel_path and target not in seen_imports:
                     seen_imports.add(target)
                     relationships.append({
@@ -653,7 +667,7 @@ def main() -> int:
     all_relationships: list[dict] = []
     for abs_path, rel_path in py_files:
         rels = extract_relationships(
-            abs_path, rel_path, package_root, paths["intake_dir"], known_files
+            abs_path, rel_path, package_root, paths["intake_dir"], known_files, source_root_rel
         )
         all_relationships.extend(rels)
 

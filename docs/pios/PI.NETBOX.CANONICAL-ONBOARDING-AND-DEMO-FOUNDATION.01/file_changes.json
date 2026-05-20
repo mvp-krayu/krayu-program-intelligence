@@ -1,0 +1,26 @@
+{
+  "stream_id": "PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01",
+  "total_operations": 20,
+  "operations": [
+    { "action": "CREATE", "path": "clients/netbox/client.yaml", "description": "Client registration" },
+    { "action": "CREATE", "path": "clients/netbox/sources/source_01/source_manifest.json", "description": "Source manifest" },
+    { "action": "CREATE", "path": "clients/netbox/archives/netbox-64d3b11.tar", "description": "Source archive (gitignored)" },
+    { "action": "CREATE", "path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/", "description": "Run directory with intake, structure subdirectories (gitignored)" },
+    { "action": "UPDATE", "path": "scripts/pios/code_graph_feasibility.py", "description": "Fixed discover_source_root() for multi-app layouts; fixed resolve_absolute_import() for source-root-prefix resolution" },
+    { "action": "CREATE", "path": "app/execlens-demo/lib/lens-v2/manifests/netbox.run_github_netbox_20260520_134600.json", "description": "LENS manifest for NetBox" },
+    { "action": "UPDATE", "path": "app/execlens-demo/lib/lens-v2/manifests/index.js", "description": "Added netbox to REGISTRY" },
+    { "action": "CREATE", "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/execution_report.md", "description": "Execution report" },
+    { "action": "CREATE", "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/replay_commands.md", "description": "Replay command manifest" },
+    { "action": "CREATE", "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/domain_emergence_observations.md", "description": "Domain emergence analysis" },
+    { "action": "CREATE", "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/STRUCTURAL_SURPRISE_REPORT.md", "description": "Mandatory structural surprise report" },
+    { "action": "CREATE", "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/screenshot_manifest.md", "description": "Screenshot catalog" },
+    { "action": "CREATE", "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/hero_moment_inventory.md", "description": "Genuine hero moment catalog" },
+    { "action": "CREATE", "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/s1_readiness_assessment.md", "description": "S1 readiness gap analysis" },
+    { "action": "CREATE", "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/validation_log.json", "description": "Validation log (16/16 PASS)" },
+    { "action": "CREATE", "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/file_changes.json", "description": "File changes manifest" },
+    { "action": "CREATE", "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/CLOSURE.md", "description": "Stream closure with §10" },
+    { "action": "CREATE", "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/screenshots/", "description": "4 cockpit screenshots" },
+    { "action": "UPDATE", "path": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md", "description": "Vault lineage table entry" },
+    { "action": "UPDATE", "path": "docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md", "description": "Governance streams entry + NetBox evidence paths" }
+  ]
+}

@@ -163,6 +163,10 @@
 | pallets-flask manifest | app/execlens-demo/lib/lens-v2/manifests/pallets-flask.run_github_flask_20260517_163222.json | Client REGISTRY entry |
 | pallets-flask client.yaml | clients/pallets-flask/client.yaml | Client registration (pipeline prerequisite) |
 | pallets-flask source manifest | clients/pallets-flask/sources/source_01/source_manifest.json | Source registration (pipeline prerequisite) |
+| NetBox client.yaml | clients/netbox/client.yaml | Client registration (first live S2 candidate) |
+| NetBox source manifest | clients/netbox/sources/source_01/source_manifest.json | Source registration |
+| NetBox manifest | app/execlens-demo/lib/lens-v2/manifests/netbox.run_github_netbox_20260520_134600.json | LENS REGISTRY entry (S1 structural-only) |
+| NetBox structural artifacts | clients/netbox/psee/runs/run_github_netbox_20260520_134600/structure/ | 40.2, 40.3, 40.4, 40.2r, 40.3s, 40.3c (gitignored) |
 
 ## Governance
 
@@ -194,6 +198,8 @@
 | PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01 | docs/pios/PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01/ | G1 | COMPLETE |
 | PI.PATHA.CODE-GRAPH-PIPELINE-INTEGRATION.01 | docs/pios/PI.PATHA.CODE-GRAPH-PIPELINE-INTEGRATION.01/ | G1 | COMPLETE |
 | PI.PATHA.STRUCTURAL-CENTRALITY-DERIVATION.01 | docs/pios/PI.PATHA.STRUCTURAL-CENTRALITY-DERIVATION.01/ | G1 | COMPLETE |
+| PI.PATHA.LIVE-S2-CANDIDATE-SELECTION.01 | docs/pios/PI.PATHA.LIVE-S2-CANDIDATE-SELECTION.01/ | G1 | COMPLETE |
+| PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01 | docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/ | G1 | COMPLETE |
 
 ## Cross-References
 
