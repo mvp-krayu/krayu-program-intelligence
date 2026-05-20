@@ -166,6 +166,7 @@ See [[../04_SQO_AND_QUALIFICATION/HYDRATED_AND_QSTATE_EVOLUTION]] for full model
 | git_structure_contract.md | Branch/domain authority | LOCKED — AUTHORITATIVE |
 | reference_boundary_contract.md | Cross-layer boundary rules | LOCKED |
 | Q02_GOVERNANCE_AMENDMENT.md | Q-class qualification rules | LOCKED |
+| PROGRAM_INTELLIGENCE_EVOLUTION_MODEL.md | Spine object model and accumulation doctrine | LOCKED |
 | This vault | Architecture operating memory | OPERATIONAL |
 
 ## Phase 5 Roadmap Status
@@ -522,6 +523,7 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01 | G1 | Code-graph structural enrichment prototype, 40.3s artifact contract, indexer landscape assessment | COMPLETE |
 | PI.PATHA.CODE-GRAPH-PIPELINE-INTEGRATION.01 | G1 | Pipeline Phase 3.6 integration of code-graph structural enrichment | COMPLETE |
 | PI.PATHA.STRUCTURAL-CENTRALITY-DERIVATION.01 | G1 | Structural centrality derivation (40.3c), role classification, Phase 3.7 pipeline integration | COMPLETE |
+| PI.PIOS.PROGRAM-INTELLIGENCE-EVOLUTION-MODEL.01 | G1 | Program Intelligence Evolution Model — spine object contracts, accumulation doctrine, activation sequence | COMPLETE |
 
 ## SQO Operator Authority Workflow
 

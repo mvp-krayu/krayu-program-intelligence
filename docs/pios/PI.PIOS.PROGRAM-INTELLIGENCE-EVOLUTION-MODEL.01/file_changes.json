@@ -1,0 +1,48 @@
+{
+  "stream": "PI.PIOS.PROGRAM-INTELLIGENCE-EVOLUTION-MODEL.01",
+  "classification": "G1",
+  "timestamp": "2026-05-20T00:00:00Z",
+  "changes": [
+    {
+      "file": "docs/governance/PROGRAM_INTELLIGENCE_EVOLUTION_MODEL.md",
+      "operation": "CREATE",
+      "purpose": "Permanent operational meta-model — spine object contracts, accumulation model, governance boundaries"
+    },
+    {
+      "file": "docs/pios/PI.PIOS.PROGRAM-INTELLIGENCE-EVOLUTION-MODEL.01/execution_report.md",
+      "operation": "CREATE",
+      "purpose": "Mandatory governance artifact — execution log"
+    },
+    {
+      "file": "docs/pios/PI.PIOS.PROGRAM-INTELLIGENCE-EVOLUTION-MODEL.01/validation_log.json",
+      "operation": "CREATE",
+      "purpose": "Mandatory governance artifact — 28/28 PASS"
+    },
+    {
+      "file": "docs/pios/PI.PIOS.PROGRAM-INTELLIGENCE-EVOLUTION-MODEL.01/file_changes.json",
+      "operation": "CREATE",
+      "purpose": "Mandatory governance artifact — file manifest"
+    },
+    {
+      "file": "docs/pios/PI.PIOS.PROGRAM-INTELLIGENCE-EVOLUTION-MODEL.01/CLOSURE.md",
+      "operation": "CREATE",
+      "purpose": "Mandatory governance artifact — stream closure with §10"
+    },
+    {
+      "file": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "operation": "MODIFY",
+      "purpose": "Vault propagation — add evolution model lineage entry"
+    },
+    {
+      "file": "docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md",
+      "operation": "MODIFY",
+      "purpose": "Vault propagation — register governance document path"
+    }
+  ],
+  "summary": {
+    "created": 5,
+    "modified": 2,
+    "deleted": 0,
+    "total": 7
+  }
+}
