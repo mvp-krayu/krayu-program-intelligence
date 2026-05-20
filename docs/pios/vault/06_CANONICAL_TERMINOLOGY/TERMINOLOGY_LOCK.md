@@ -544,6 +544,30 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 **What it is NOT:** Resolved inheritance. Cross-file authority. Semantic truth. INHERITS_UNRESOLVED records that class X declares base class name Y — it does NOT prove which file provides Y.
 
+### Structural Centrality Artifact (40.3c)
+
+**Definition:** A normalized centrality evidence artifact derived from 40.3s code-graph relationships. Contains per-file centrality metrics (in-degree, out-degree, structural throughput proxy), structural role classification, centrality ranking, and false-positive centrality risk catalog. 40.3c is EVIDENCE-ONLY — it does not influence DOM, pressure, SQO, semantic derivation, or any downstream consumer.
+
+**Status:** CANONICAL — operational artifact class, pipeline Phase 3.7 (2026-05-20).
+
+**What it is NOT:** Projection authority. DOM weighting input. Pressure zone input. Semantic authority. A ranking of "importance." 40.3c records structural centrality evidence; interpretation of that evidence for projection requires a separate governed stream.
+
+### Structural Role Classification
+
+**Definition:** A deterministic first-match-wins classification of each file's structural role within the import graph. Seven roles in priority order: ENTRYPOINT (main entry, zero inbound), RE_EXPORT_HUB (`__init__.py` pass-through), RUNTIME_SPINE (high in-degree, defines classes), UTILITY_HUB (high in-degree, functions or passive data), INTERFACE_BOUNDARY (defines symbols, rarely imported), ISOLATED_LEAF (zero connectivity), VALIDATION_SUPPORT (fallback — moderate connectivity).
+
+**Status:** CANONICAL — operational taxonomy in 40.3c (2026-05-20).
+
+**What it is NOT:** Semantic classification. AI-assisted inference. Content-based analysis. Structural role classification is deterministic from import graph metrics and path patterns.
+
+### Normalized Centrality Score
+
+**Definition:** Degree centrality normalized by `degree / (N - 1)` where N = file count. Standard graph-theoretic normalization producing values in [0.0, 1.0] regardless of project size. Enables within-project comparison of structural centrality without project-size bias. Does NOT enable cross-project comparison (that requires a population reference).
+
+**Status:** CANONICAL — normalization method in 40.3c (2026-05-20).
+
+**What it is NOT:** A percentile rank. A cross-project comparison metric. An importance score. Normalized centrality is a structural metric, not a judgment of value.
+
 ## Term Usage Rules
 
 1. **Use locked definitions exactly.** Do not paraphrase, simplify, or reinterpret.

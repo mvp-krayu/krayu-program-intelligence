@@ -147,6 +147,7 @@
 | source_intake.py | scripts/pios/ | Source intake processor |
 | semantic_derivation_compiler.py | scripts/pios/ | AI-assisted semantic derivation (Phase 3b) |
 | code_graph_feasibility.py | scripts/pios/ | ast-based code-graph structural enrichment prototype (40.3s) |
+| structural_centrality.py | scripts/pios/ | Structural centrality derivation from 40.3s (40.3c — Phase 3.7) |
 
 ## Evidence / Data
 
@@ -191,6 +192,7 @@
 | PI.PATHA.STRUCTURAL-SUBSTRATE-MATURATION.01 | docs/pios/PI.PATHA.STRUCTURAL-SUBSTRATE-MATURATION.01/ | G1 | COMPLETE |
 | PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01 | docs/pios/PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01/ | G1 | COMPLETE |
 | PI.PATHA.CODE-GRAPH-PIPELINE-INTEGRATION.01 | docs/pios/PI.PATHA.CODE-GRAPH-PIPELINE-INTEGRATION.01/ | G1 | COMPLETE |
+| PI.PATHA.STRUCTURAL-CENTRALITY-DERIVATION.01 | docs/pios/PI.PATHA.STRUCTURAL-CENTRALITY-DERIVATION.01/ | G1 | COMPLETE |
 
 ## Cross-References
 

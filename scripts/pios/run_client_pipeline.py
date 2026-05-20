@@ -627,6 +627,50 @@ def phase_03_6_code_graph_enrichment(client: str, run_id: str, run_dir: Path) ->
     return True
 
 
+# ── Phase 3.7: Structural Centrality Derivation ─────────────────────────────
+
+def phase_03_7_structural_centrality(client: str, run_id: str, run_dir: Path) -> bool:
+    """Run structural_centrality.py to produce 40.3c centrality derivation.
+    Default ON — always runs. If 40.3s is absent, logs warning and skips
+    (graceful degradation)."""
+    script = SCRIPTS_DIR / "structural_centrality.py"
+    if not script.is_file():
+        print(f"  WARNING: structural_centrality.py not found — skipping")
+        return True
+
+    out_centrality = run_dir / "structure" / "40.3c" / "structural_centrality.json"
+    if out_centrality.exists():
+        print(f"  [IDEMPOTENT] 40.3c/structural_centrality.json already exists — skipping")
+        return True
+
+    in_code_graph = run_dir / "structure" / "40.3s" / "code_graph.json"
+    if not in_code_graph.exists():
+        print(f"  WARNING: 40.3s/code_graph.json not found — skipping centrality derivation")
+        return True
+
+    cmd = [
+        sys.executable, str(script),
+        "--client", client,
+        "--run-id", run_id,
+    ]
+    print(f"  Running: structural_centrality.py --client {client} --run-id {run_id}")
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+
+    if result.stdout:
+        for line in result.stdout.strip().split("\n"):
+            print(f"    {line}")
+
+    if result.returncode != 0:
+        print(f"  WARNING: centrality derivation exited {result.returncode} — continuing without 40.3c")
+        if result.stderr:
+            print(f"  stderr: {result.stderr.strip()[:200]}")
+        return True
+
+    print("  Structural centrality derivation: OK")
+    return True
+
+
 # ── Phase 3b: Semantic Derivation (optional, explicit opt-in) ──────────────────
 
 def phase_03b_semantic_derivation(
@@ -1370,6 +1414,8 @@ def main() -> int:
          lambda: phase_03_5_structural_relevance(args.client, run_id, run_dir)),
         ("Phase 3.6 — Code-Graph Structural Enrichment",
          lambda: phase_03_6_code_graph_enrichment(args.client, run_id, run_dir)),
+        ("Phase 3.7 — Structural Centrality Derivation",
+         lambda: phase_03_7_structural_centrality(args.client, run_id, run_dir)),
         ("Phase 3b — Semantic Derivation",
          lambda: phase_03b_semantic_derivation(
              args.client, run_id, run_dir, args.enable_semantic_derivation)),

@@ -403,12 +403,26 @@ The code-graph structural enrichment layer introduces the 40.3s artifact class �
 | ast-based code-graph enrichment | OPERATIONAL — pipeline Phase 3.6, default ON |
 | 40.3s artifact contract | OPERATIONAL — schema defined, indexer-neutral |
 | SCIP enrichment | FUTURE_DECLARED — possible enricher, requires Python 3.10+ |
-| Structural centrality from code-graph | FUTURE_DECLARED — next stream |
-| Evidence-ranked projection | FUTURE_DECLARED — depends on structural centrality |
+| Structural centrality (40.3c) | OPERATIONAL — pipeline Phase 3.7, default ON |
+| Structural role classification | OPERATIONAL — 7-role taxonomy, first-match-wins |
+| Evidence-ranked projection | FUTURE_DECLARED — requires separate projection-readiness validation stream |
 
-**Pipeline integration:** Phase 3.6 in `run_client_pipeline.py` — between Phase 3.5 (structural relevance classification) and Phase 3b (semantic derivation). Default ON, graceful degradation, idempotent.
+**Pipeline integration:** Phase 3.6 (code-graph) + Phase 3.7 (centrality) in `run_client_pipeline.py` — between Phase 3.5 (structural relevance classification) and Phase 3b (semantic derivation). Default ON, graceful degradation, idempotent.
 
-**Reference:** `docs/pios/PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01/` + `docs/pios/PI.PATHA.CODE-GRAPH-PIPELINE-INTEGRATION.01/`
+**Enrichment stack:**
+```
+40.3  (full topology — CONTAINS + regex IMPORTS)
+  └── 40.3r (filtered structural topology — PRIMARY nodes only)
+        └── 40.3s (code-graph structural enrichment — resolved IMPORTS + structural symbol evidence)
+              └── 40.3c (structural centrality — normalized metrics + role classification)
+```
+
+**Structural role taxonomy (40.3c):**
+- ENTRYPOINT, RE_EXPORT_HUB, RUNTIME_SPINE, UTILITY_HUB, INTERFACE_BOUNDARY, ISOLATED_LEAF, VALIDATION_SUPPORT
+- Adaptive threshold: `max(3, ceil(file_count * 0.20))`
+- False-positive risk catalog: init re-export inflation, type stub inflation, conditional import overcounting, test utility leakage, circular dependency masking
+
+**Reference:** `docs/pios/PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01/` + `docs/pios/PI.PATHA.CODE-GRAPH-PIPELINE-INTEGRATION.01/` + `docs/pios/PI.PATHA.STRUCTURAL-CENTRALITY-DERIVATION.01/`
 
 ## Client Onboarding Substrate
 
@@ -507,6 +521,7 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.PATHA.STRUCTURAL-SUBSTRATE-MATURATION.01 | G1 | Structural relevance classification, 40.2r/40.3r filtered views, Phase 3.5 pipeline integration | COMPLETE |
 | PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01 | G1 | Code-graph structural enrichment prototype, 40.3s artifact contract, indexer landscape assessment | COMPLETE |
 | PI.PATHA.CODE-GRAPH-PIPELINE-INTEGRATION.01 | G1 | Pipeline Phase 3.6 integration of code-graph structural enrichment | COMPLETE |
+| PI.PATHA.STRUCTURAL-CENTRALITY-DERIVATION.01 | G1 | Structural centrality derivation (40.3c), role classification, Phase 3.7 pipeline integration | COMPLETE |
 
 ## SQO Operator Authority Workflow
 

@@ -1,0 +1,73 @@
+{
+  "contract_id": "PI.PATHA.STRUCTURAL-CENTRALITY-DERIVATION.01",
+  "stream_classification": "G1",
+  "validated_at": "2026-05-20T22:15:00Z",
+  "checks": [
+    {
+      "name": "40_3s_consumed_correctly",
+      "description": "40.3c references the correct 40.3s artifact and loads it successfully",
+      "result": "PASS",
+      "detail": "Loaded 270 relationships from 40.3s/code_graph.json (artifact_class verified)"
+    },
+    {
+      "name": "flask_centrality_produced",
+      "description": "Flask 40.3c artifact exists with expected file count and role distribution",
+      "result": "PASS",
+      "detail": "24 files ranked, 7 RUNTIME_SPINE, 1 RE_EXPORT_HUB, 1 UTILITY_HUB, 1 ENTRYPOINT, 3 INTERFACE_BOUNDARY, 11 VALIDATION_SUPPORT"
+    },
+    {
+      "name": "artifact_validation_6_of_6",
+      "description": "All 6 internal artifact validation checks PASS",
+      "result": "PASS",
+      "detail": "all_files_from_source, no_negative_values, normalized_range_valid, role_coverage_complete, ranking_unique, sum_roles_equals_file_count"
+    },
+    {
+      "name": "create_only_enforced",
+      "description": "Script aborts with exit code 1 if output already exists",
+      "result": "PASS",
+      "detail": "Re-run produced FATAL: output already exists (CREATE_ONLY), exit 1"
+    },
+    {
+      "name": "no_downstream_consumer_changes",
+      "description": "No DOM, pressure, binding, signal, SQO, or cockpit scripts modified",
+      "result": "PASS",
+      "detail": "Only run_client_pipeline.py and structural_centrality.py modified/created"
+    },
+    {
+      "name": "no_authority_statement_present",
+      "description": "governance.no_authority_statement is non-empty in artifact",
+      "result": "PASS",
+      "detail": "EVIDENCE_ONLY authority level, no downstream consumers, projection NOT_EVALUATED"
+    },
+    {
+      "name": "false_positive_catalog_present",
+      "description": "false_positive_catalog contains detected risks with affected files",
+      "result": "PASS",
+      "detail": "3 risks detected: init_re_export_inflation (1 file), conditional_import_overcounting (ast limitation), circular_dependency_masking (17 pairs)"
+    },
+    {
+      "name": "pipeline_phase_ordering",
+      "description": "Phase 3.7 is between Phase 3.6 and Phase 3b in phase list",
+      "result": "PASS",
+      "detail": "Phase list: 3.5, 3.6, 3.7, 3b — centrality follows code-graph, precedes semantic derivation"
+    },
+    {
+      "name": "graceful_degradation_40_3s_absent",
+      "description": "Phase 3.7 skips gracefully when 40.3s artifact is absent",
+      "result": "PASS",
+      "detail": "Checks in_code_graph.exists() before subprocess execution"
+    },
+    {
+      "name": "nextjs_build",
+      "description": "Next.js build compiles cleanly",
+      "result": "PASS",
+      "detail": "All routes compiled successfully"
+    }
+  ],
+  "summary": {
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "result": "VALID"
+  }
+}

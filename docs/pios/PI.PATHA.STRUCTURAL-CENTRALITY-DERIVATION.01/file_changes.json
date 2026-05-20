@@ -1,0 +1,64 @@
+{
+  "contract_id": "PI.PATHA.STRUCTURAL-CENTRALITY-DERIVATION.01",
+  "stream_classification": "G1",
+  "changes": [
+    {
+      "file": "scripts/pios/structural_centrality.py",
+      "action": "CREATE",
+      "purpose": "Centrality derivation script — reads 40.3s, computes normalized centrality, classifies structural roles, produces 40.3c artifact"
+    },
+    {
+      "file": "scripts/pios/run_client_pipeline.py",
+      "action": "MODIFY",
+      "purpose": "Add Phase 3.7 — Structural Centrality Derivation (between Phase 3.6 and Phase 3b)"
+    },
+    {
+      "file": "docs/pios/PI.PATHA.STRUCTURAL-CENTRALITY-DERIVATION.01/execution_report.md",
+      "action": "CREATE",
+      "purpose": "Stream execution report"
+    },
+    {
+      "file": "docs/pios/PI.PATHA.STRUCTURAL-CENTRALITY-DERIVATION.01/validation_log.json",
+      "action": "CREATE",
+      "purpose": "10-check validation log"
+    },
+    {
+      "file": "docs/pios/PI.PATHA.STRUCTURAL-CENTRALITY-DERIVATION.01/file_changes.json",
+      "action": "CREATE",
+      "purpose": "File change manifest"
+    },
+    {
+      "file": "docs/pios/PI.PATHA.STRUCTURAL-CENTRALITY-DERIVATION.01/IMPLEMENTATION_SEMANTICS.md",
+      "action": "CREATE",
+      "purpose": "Reusable centrality primitives documentation (§5.5)"
+    },
+    {
+      "file": "docs/pios/PI.PATHA.STRUCTURAL-CENTRALITY-DERIVATION.01/CLOSURE.md",
+      "action": "CREATE",
+      "purpose": "Stream closure with §10 Architecture Memory Propagation"
+    },
+    {
+      "file": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "action": "MODIFY",
+      "purpose": "Add Structural Centrality section, update enrichment stack, add stream to lineage"
+    },
+    {
+      "file": "docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md",
+      "action": "MODIFY",
+      "purpose": "Add Structural Centrality Artifact (40.3c), Structural Role Classification, Normalized Centrality Score terms"
+    },
+    {
+      "file": "docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md",
+      "action": "MODIFY",
+      "purpose": "Add structural_centrality.py to pipeline scripts, add stream to governance list"
+    }
+  ],
+  "not_modified": [
+    "scripts/pios/code_graph_feasibility.py",
+    "scripts/pios/structural_scanner.py",
+    "scripts/pios/structural_relevance_classifier.py",
+    "scripts/pios/dom_layer_generator.py",
+    "scripts/pios/ceu_grounding.py",
+    "scripts/pios/semantic_derivation_compiler.py"
+  ]
+}
