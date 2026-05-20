@@ -1,0 +1,73 @@
+{
+  "stream": "PI.PATHA.LIVE-S2-CANDIDATE-SELECTION.01",
+  "classification": "G1",
+  "timestamp": "2026-05-20T12:00:00Z",
+  "checks": [
+    {
+      "name": "hard_operational_semantic_filter_applied",
+      "description": "All candidates screened against 7-criterion operational-semantic filter (3+ required)",
+      "status": "PASS",
+      "evidence": "6 candidates scored, all pass 3+ of 7. NetBox scores 6.5/7."
+    },
+    {
+      "name": "rejection_criteria_enforced",
+      "description": "Candidates checked against explicit rejection criteria (framework-first, SDK-first, library-only, etc.)",
+      "status": "PASS",
+      "evidence": "11 repos eliminated: Airflow (too large), Dagster (too large), Sentry (too large/polyglot), Dispatch (archived), Prefect (framework-first), Paperless-ngx (GPL/insufficient domain), Ralph (insufficient PATH B), Kill Bill (Java), Meteroid (Rust), PyCasbin (library-only), django-helpdesk (too small)"
+    },
+    {
+      "name": "path_b_viability_checkpoint",
+      "description": "Surviving candidates checked for compiler, CSR, reconciliation, grounding, and SQO onboarding viability",
+      "status": "PASS",
+      "evidence": "5 candidates assessed. NetBox passes all 5 PATH B criteria. Ralph eliminated (insufficient). InvenTree marginal."
+    },
+    {
+      "name": "scoring_matrix_complete",
+      "description": "10-criterion scoring matrix applied with correct weight multipliers (CRITICAL = 2x)",
+      "status": "PASS",
+      "evidence": "5 candidates scored. Maximum 80. NetBox: 63, Nautobot: 50, AWX: 41, StackStorm: 40, InvenTree: 37."
+    },
+    {
+      "name": "top_candidate_selected",
+      "description": "Top candidate identified with backup",
+      "status": "PASS",
+      "evidence": "NetBox (63/80) selected as primary. Nautobot (50/80) selected as backup."
+    },
+    {
+      "name": "flask_fastapi_insufficiency_explained",
+      "description": "Why Flask and FastAPI cannot serve as S2 candidates is documented",
+      "status": "PASS",
+      "evidence": "See CANDIDATE_SCORING_MATRIX.md §5. Framework-first, no operational domain, fail hard filter (0/7)."
+    },
+    {
+      "name": "python_vs_language_neutral_separated",
+      "description": "Python-compatible candidates separated from future language-neutral candidates",
+      "status": "PASS",
+      "evidence": "See CANDIDATE_SCORING_MATRIX.md §6. 5 Python-compatible scored. 4 future candidates noted (Kubernetes, Consul, GitLab, Backstage)."
+    },
+    {
+      "name": "narrative_transformation_justified",
+      "description": "Dedicated section explaining why top candidate proves PI matters",
+      "status": "PASS",
+      "evidence": "See CANDIDATE_SCORING_MATRIX.md §7. Covers PATH A, PATH B, compiler, CSR, SQO, LENS, S1→S2 as coherent operational story."
+    },
+    {
+      "name": "candidate_is_real_and_accessible",
+      "description": "Top candidate verified as real, accessible GitHub repo with permissive license",
+      "status": "PASS",
+      "evidence": "netbox-community/netbox: 20,550 stars, Apache-2.0, last updated 2026-05-20, 1,156 Python files, Python/Django."
+    },
+    {
+      "name": "candidate_not_in_rejection_set",
+      "description": "Top candidate does not match any explicit rejection criteria",
+      "status": "PASS",
+      "evidence": "NetBox is an operational application (not framework/SDK/library), Python-primary (not generated-code-heavy), 193MB (not unbounded monolith), actively maintained (commits 2026-05-20), has rich operational domain."
+    }
+  ],
+  "summary": {
+    "total": 10,
+    "pass": 10,
+    "fail": 0,
+    "result": "VALID"
+  }
+}
