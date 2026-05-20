@@ -67,6 +67,18 @@
 | 51 cockpit components | app/execlens-demo/components/sqo-cockpit/ | UI rendering |
 | 12 cockpit routes | app/execlens-demo/pages/sqo/client/[client]/run/[run]/ | Section pages |
 
+## Pipeline Scripts
+
+| Script | Path | Role |
+|---|---|---|
+| run_client_pipeline.py | scripts/pios/ | Multi-client E2E pipeline orchestrator (9+ phases) |
+| structural_scanner.py | scripts/pios/ | Generic structural scanner (40.2/40.3/40.4) |
+| structural_relevance_classifier.py | scripts/pios/ | Structural relevance classification (40.2r/40.3r — Phase 3.5) |
+| dom_layer_generator.py | scripts/pios/ | DOM layer derivation (A.5 path-prefix, 40.2r-aware) |
+| ceu_grounding.py | scripts/pios/ | CEU grounding engine (consumes full 40.2) |
+| source_intake.py | scripts/pios/ | Source intake processor |
+| semantic_derivation_compiler.py | scripts/pios/ | AI-assisted semantic derivation (Phase 3b) |
+
 ## Evidence / Data
 
 | Artifact | Path | Role |
@@ -96,6 +108,7 @@
 | PI.STRATEGIC-DIRECTION.MARKETPLACE-COMMERCIALIZATION-STRATEGY.01 | docs/pios/PI.STRATEGIC-DIRECTION.MARKETPLACE-COMMERCIALIZATION-STRATEGY.01/ | G1 | COMPLETE |
 | PI.IMPLEMENTATION-LANE.MARKETPLACE-EXECUTION-DISCIPLINE.01 | docs/pios/PI.IMPLEMENTATION-LANE.MARKETPLACE-EXECUTION-DISCIPLINE.01/ | G1 | COMPLETE |
 | PI.IMPLEMENTATION-SEQUENCING.GITHUB-FIRST-OPERATIONALIZATION.CORRECTION.01 | docs/pios/PI.IMPLEMENTATION-SEQUENCING.GITHUB-FIRST-OPERATIONALIZATION.CORRECTION.01/ | G1 | COMPLETE |
+| PI.PATHA.STRUCTURAL-SUBSTRATE-MATURATION.01 | docs/pios/PI.PATHA.STRUCTURAL-SUBSTRATE-MATURATION.01/ | G1 | COMPLETE |
 
 ## Cross-References
 

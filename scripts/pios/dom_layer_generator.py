@@ -348,7 +348,9 @@ def main() -> None:
     dom_dir        = run_dir / "dom"
     output_path    = dom_dir / "dom_layer.json"
     canon_path     = run_dir / "structure" / "40.4" / "canonical_topology.json"
-    node_inv_path  = run_dir / "structure" / "40.2" / "structural_node_inventory.json"
+    node_inv_filtered = run_dir / "structure" / "40.2r" / "structural_node_inventory_filtered.json"
+    node_inv_full  = run_dir / "structure" / "40.2" / "structural_node_inventory.json"
+    node_inv_path  = node_inv_filtered if node_inv_filtered.exists() else node_inv_full
     grounding_path = run_dir / "ceu" / "grounding_state_v3.json"
     manifest_path  = REPO_ROOT / "clients" / client_id / "sources" / source_id / "source_manifest.json"
 
@@ -370,6 +372,9 @@ def main() -> None:
             f"{node_inv_path.relative_to(REPO_ROOT)}\n"
             f"  Run structural_scanner.py first."
         )
+
+    inv_mode = "40.2r (filtered — PRIMARY only)" if node_inv_path == node_inv_filtered else "40.2 (unfiltered)"
+    print(f"  [NODE-INVENTORY] {inv_mode}: {node_inv_path.relative_to(REPO_ROOT)}")
 
     if not grounding_path.exists():
         fail_closed(
@@ -414,11 +419,27 @@ def main() -> None:
     node_path_index = build_node_path_index(node_inv["nodes"])
     print(f"  indexed: {len(node_path_index)} nodes")
 
+    # When using filtered inventory (40.2r), cluster node_ids from 40.4 may
+    # reference nodes that were excluded. Filter clusters to indexed nodes.
+    indexed_ids = set(node_path_index.keys())
+    effective_clusters = []
+    for cluster in clusters:
+        filtered_ids = [nid for nid in cluster["node_ids"] if nid in indexed_ids]
+        if filtered_ids:
+            effective_clusters.append({
+                "name": cluster["name"],
+                "node_ids": filtered_ids,
+                "node_count": len(filtered_ids),
+            })
+    if len(effective_clusters) < len(clusters):
+        dropped = len(clusters) - len(effective_clusters)
+        print(f"  [FILTERED] {dropped} cluster(s) dropped (no indexed nodes remaining)")
+
     # ── [3] Derive domains (A.5 path-prefix reconstruction) ──────────────────
     print("\n[3] Deriving domains via A.5 path-prefix reconstruction ...")
 
     domains, dom_groups, node_to_domain_map = derive_domains_a5(
-        clusters, node_path_index, wrapper_prefix,
+        effective_clusters, node_path_index, wrapper_prefix,
     )
 
     print(f"  domains derived: {len(domains)}")
