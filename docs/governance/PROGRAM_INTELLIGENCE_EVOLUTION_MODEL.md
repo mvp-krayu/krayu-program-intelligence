@@ -237,8 +237,8 @@ executive_projection_snapshot:
 The spine activates through execution, not through architecture design:
 
 ```
-Phase 0 (CURRENT):  Implicit spine — pipeline produces artifacts but no spine objects
-Phase 1 (NEXT):     First spine objects — NetBox onboarding produces evidence_objects + hero_moments + replay_corridor
+Phase 0 (COMPLETE):  Implicit spine — pipeline produces artifacts but no spine objects
+Phase 1 (CURRENT):   First spine objects — NetBox onboarding: 8 evidence_objects + 5 hero_moments + 1 replay_corridor
 Phase 2:            Qualification spine — operator workflow produces qualification_transitions
 Phase 3:            Cross-specimen spine — second onboarding produces convergence_observations
 Phase 4:            Projection spine — LENS captures produce executive_projection_snapshots
@@ -291,14 +291,14 @@ This model defines **what accumulates** as those systems execute. It is the conn
 
 | Construct | Maturity |
 |---|---|
-| evidence_object contract | DEFINED — not yet produced as spine objects |
-| semantic_proposition contract | DEFINED — not yet produced as spine objects |
-| replay_corridor contract | DEFINED — not yet produced as spine objects |
-| convergence_observation contract | DEFINED — not yet produced as spine objects |
-| qualification_transition contract | DEFINED — not yet produced as spine objects |
-| hero_moment contract | DEFINED — not yet produced as spine objects |
-| doctrine_evolution_record contract | DEFINED — not yet produced as spine objects |
-| executive_projection_snapshot contract | DEFINED — not yet produced as spine objects |
+| evidence_object contract | OPERATIONAL — 8 objects produced (NetBox onboarding) |
+| hero_moment contract | OPERATIONAL — 5 objects produced (NetBox onboarding) |
+| replay_corridor contract | OPERATIONAL — 1 object produced (NetBox onboarding) |
+| qualification_transition contract | DEFINED — produced at Step 2 |
+| executive_projection_snapshot contract | DEFINED — produced at Step 3 |
+| convergence_observation contract | DEFINED — produced at Step 4 |
+| semantic_proposition contract | DEFINED — produced at Step 5 |
+| doctrine_evolution_record contract | DEFINED — produced at Step 7 |
 | Spine persistence layer | NOT_IMPLEMENTED — governance shape defined, storage not |
 | Spine query interface | NOT_IMPLEMENTED |
 | Spine replay validation | NOT_IMPLEMENTED |
@@ -306,7 +306,93 @@ This model defines **what accumulates** as those systems execute. It is the conn
 
 ---
 
-## 10. AMENDMENT RULES
+## 10. OPERATIONAL ACTIVATION ROADMAP
+
+High-level operational sequencing. Not backlog. Not implementation tasks. Not GTM.
+
+### Current State
+
+- NetBox onboarded through PATH A (Phases 1–3.7 PASS, 14 spine objects produced)
+- pallets-flask at S1 with permanent insufficiency
+- BlueEdge at S2 (only semantically qualified specimen)
+- LENS v2 operationally mature (5B.3 complete, 4-persona, 36-query lattice, PI runtime layer)
+- SQO V2 cockpit operational (12-action authority workflow)
+- Evolution model defined, spine contracts locked
+- Two feature branches unmerged (evolution model, NetBox onboarding)
+
+### Operational Sequence
+
+```
+STEP 1 ── CONSOLIDATE
+           Merge evolution model + NetBox onboarding to main.
+           Main becomes clean integrated baseline with spine model + first specimen.
+           Spine phase: 1 CONFIRMED
+
+STEP 2 ── NETBOX COCKPIT ACTIVATION
+           Produce SQO governance projection for NetBox (S0→S1).
+           Enable cockpit rendering (posture-driven overview, not "unavailable").
+           Produces: qualification_transition spine objects.
+           Spine phase: 2 ACTIVATED
+
+STEP 3 ── NETBOX STRUCTURAL DEMONSTRATION
+           First live structural intelligence walkthrough using NetBox evidence.
+           LENS v2 rendering with structural-only manifest.
+           Capture: executive_projection_snapshot spine objects.
+           Output: canonical demonstration corridor (replayable).
+           Spine phase: 4 ACTIVATED
+
+STEP 4 ── SECOND SPECIMEN ONBOARDING
+           Select and onboard second S2 candidate through PATH A.
+           Different architecture profile than NetBox (different language, size, or structure).
+           Produces: evidence_objects + hero_moments + replay_corridor for specimen 2.
+           Compare: structural patterns across NetBox and specimen 2.
+           Produces: convergence_observation spine objects.
+           Spine phase: 3 ACTIVATED
+
+STEP 5 ── NETBOX SEMANTIC PROGRESSION
+           Define NetBox CEU model. Run semantic derivation compiler.
+           Produce candidate CSR. Begin S1→S2 qualification path.
+           Produces: semantic_proposition spine objects.
+           Spine phase: 5 ACTIVATED
+
+STEP 6 ── COMMERCIAL PROOF POINT
+           Package NetBox structural intelligence as Signäl/PMO structural assessment.
+           First canonical case study with governed confidence boundaries.
+           Replayable from spine evidence — not fabricated.
+
+STEP 7 ── DOCTRINE SPINE ACTIVATION
+           Governance streams begin producing doctrine_evolution_record spine objects.
+           Retroactive records for prior streams optional.
+           Spine phase: 6 ACTIVATED
+
+STEP 8 ── FULL SPINE OPERATIONAL
+           All 8 object classes producing. Cross-specimen accumulation active.
+           Spine phase: 7 CONFIRMED
+```
+
+### Sequencing Rules
+
+1. **Steps 1–2 are immediate.** No architectural decision needed — merge and project.
+2. **Step 3 depends on LENS manifest support for structural-only clients.** May require resolver adjustment.
+3. **Step 4 candidate selection uses the same S2 scoring criteria as NetBox.** No new methodology.
+4. **Step 5 requires human CSR authoring.** Compiler assists, does not replace.
+5. **Step 6 is commercial — requires packaging, not engineering.** Advisory-led, per the Signäl/PMO tier.
+6. **Steps may overlap.** Step 4 can begin before Step 3 completes. Step 5 can begin before Step 4.
+7. **Each step produces spine objects.** If a step completes without producing spine objects, it didn't happen.
+
+### What This Roadmap Does NOT Cover
+
+- Specific engineering tasks within each step
+- Timeline or sprint assignments
+- GTM sequencing beyond "Step 6 = first commercial proof"
+- Agent implementation
+- Persistence infrastructure
+- Marketplace module development
+- Temporal capability (EXSIG/TIMSIG)
+
+---
+
+## 11. AMENDMENT RULES
 
 This document may be amended ONLY by:
 1. A G1 governance stream with explicit scope to modify this document
