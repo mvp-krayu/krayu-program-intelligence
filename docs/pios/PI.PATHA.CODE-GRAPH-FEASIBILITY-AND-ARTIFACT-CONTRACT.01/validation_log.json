@@ -1,0 +1,97 @@
+{
+  "contract_id": "PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01",
+  "stream_classification": "G1",
+  "validated_at": "2026-05-20T21:00:00Z",
+  "checks": [
+    {
+      "name": "flask_imports_produced",
+      "description": "Flask prototype produces >0 resolved IMPORTS edges",
+      "result": "PASS",
+      "detail": "95 IMPORTS edges resolved (from 167 relative imports, after dedup)"
+    },
+    {
+      "name": "imports_target_path_exist",
+      "description": "All IMPORTS target_path values exist in intake filesystem",
+      "result": "PASS",
+      "detail": "all_target_paths_in_files: true"
+    },
+    {
+      "name": "cross_reference_accuracy",
+      "description": "All populated node_ids match 40.2 inventory",
+      "result": "PASS",
+      "detail": "95 matched targets, 0 unmatched paths"
+    },
+    {
+      "name": "determinism",
+      "description": "Two runs produce identical structure (excluding generated_at timestamp)",
+      "result": "PASS",
+      "detail": "270 relationships, same summary, same validation in both runs"
+    },
+    {
+      "name": "create_only_protection",
+      "description": "Script rejects overwrite when output already exists",
+      "result": "PASS",
+      "detail": "Exit code 1 with CREATE_ONLY message"
+    },
+    {
+      "name": "dry_run_no_write",
+      "description": "--dry-run flag prevents file creation",
+      "result": "PASS",
+      "detail": "Output file absent after dry-run execution"
+    },
+    {
+      "name": "schema_compliance",
+      "description": "Output artifact matches declared 40.3s schema",
+      "result": "PASS",
+      "detail": "contract_id, artifact_class, indexer, relationships, validation blocks all present"
+    },
+    {
+      "name": "no_pipeline_modification",
+      "description": "run_client_pipeline.py, structural_scanner.py, dom_layer_generator.py unchanged",
+      "result": "PASS",
+      "detail": "git diff shows no modifications to existing pipeline scripts"
+    },
+    {
+      "name": "nextjs_build",
+      "description": "Next.js build compiles cleanly",
+      "result": "PASS",
+      "detail": "All routes compiled successfully"
+    },
+    {
+      "name": "indexer_neutrality",
+      "description": "Schema allows any indexer name, not hardcoded to python-ast",
+      "result": "PASS",
+      "detail": "indexer.name field is dynamic; capabilities vary by indexer"
+    },
+    {
+      "name": "no_self_references",
+      "description": "No relationship has source_path == target_path",
+      "result": "PASS",
+      "detail": "Self-reference check in validate_graph()"
+    },
+    {
+      "name": "evidence_first",
+      "description": "Every relationship carries evidence block with line and statement",
+      "result": "PASS",
+      "detail": "has_evidence: true for all 270 relationships"
+    },
+    {
+      "name": "no_semantic_authority_claim",
+      "description": "40.3s does not claim semantic authority; INHERITS_UNRESOLVED is symbolic only",
+      "result": "PASS",
+      "detail": "Relation type is INHERITS_UNRESOLVED (not INHERITS), documentation explicit"
+    },
+    {
+      "name": "vault_term_no_collision",
+      "description": "Planned terminology does not collide with TERMINOLOGY_LOCK.md",
+      "result": "PASS",
+      "detail": "Code-Graph Artifact (40.3s) and Code-Graph Structural Enrichment are new terms"
+    }
+  ],
+  "summary": {
+    "total": 14,
+    "passed": 14,
+    "failed": 0,
+    "result": "VALID"
+  }
+}

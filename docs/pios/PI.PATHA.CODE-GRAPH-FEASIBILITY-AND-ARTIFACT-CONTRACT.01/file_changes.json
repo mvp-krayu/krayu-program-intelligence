@@ -1,0 +1,58 @@
+{
+  "contract_id": "PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01",
+  "stream_classification": "G1",
+  "changes": [
+    {
+      "file": "scripts/pios/code_graph_feasibility.py",
+      "action": "CREATE",
+      "purpose": "ast-based code-graph structural enrichment prototype — produces 40.3s artifact"
+    },
+    {
+      "file": "docs/pios/PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01/execution_report.md",
+      "action": "CREATE",
+      "purpose": "Stream execution report with feasibility verdict and implementation recommendation"
+    },
+    {
+      "file": "docs/pios/PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01/validation_log.json",
+      "action": "CREATE",
+      "purpose": "14-check validation log"
+    },
+    {
+      "file": "docs/pios/PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01/file_changes.json",
+      "action": "CREATE",
+      "purpose": "File change manifest"
+    },
+    {
+      "file": "docs/pios/PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01/CLOSURE.md",
+      "action": "CREATE",
+      "purpose": "Stream closure with §10 Architecture Memory Propagation"
+    },
+    {
+      "file": "docs/pios/PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01/IMPLEMENTATION_SEMANTICS.md",
+      "action": "CREATE",
+      "purpose": "§5.5 implementation semantics — 40.3s artifact contract and extension points"
+    },
+    {
+      "file": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "action": "MODIFY",
+      "purpose": "Add Code-Graph Structural Enrichment (40.3s) concept to canonical state"
+    },
+    {
+      "file": "docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md",
+      "action": "MODIFY",
+      "purpose": "Add Code-Graph Artifact (40.3s) and Code-Graph Structural Enrichment terms"
+    },
+    {
+      "file": "docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md",
+      "action": "MODIFY",
+      "purpose": "Add code_graph_feasibility.py to pipeline scripts, add stream to governance list"
+    }
+  ],
+  "not_modified": [
+    "scripts/pios/structural_scanner.py",
+    "scripts/pios/structural_relevance_classifier.py",
+    "scripts/pios/run_client_pipeline.py",
+    "scripts/pios/dom_layer_generator.py",
+    "scripts/pios/ceu_grounding.py"
+  ]
+}

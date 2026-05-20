@@ -515,6 +515,35 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 **What it is NOT:** A replacement for 40.2/40.3. The full unfiltered inventory is preserved for CEU grounding and other consumers that need exhaustive structural data.
 
+### Code-Graph Artifact (40.3s)
+
+**Definition:** A generic code-graph structural enrichment artifact that captures resolved import relationships, class/function definitions, and unresolved symbolic inheritance evidence extracted from source code. 40.3s is produced by any code-graph indexer (ast, SCIP, Jedi) through an indexer-neutral schema. It enriches the structural topology (40.3/40.3r) with relationships that path-based scanning cannot produce.
+
+**Status:** CANONICAL — prototype validated, pipeline integration pending (2026-05-20).
+
+**Enrichment stack:**
+- 40.3 = full structural topology (CONTAINS + regex IMPORTS)
+- 40.3r = filtered structural topology (PRIMARY nodes only)
+- 40.3s = code-graph structural enrichment (resolved IMPORTS + structural symbol evidence)
+
+**What it is NOT:** Semantic authority. Semantic derivation. A replacement for 40.3 or 40.3r. An SCIP-specific artifact. 40.3s is structural evidence produced by deterministic code analysis — it occupies the same structural evidence plane as 40.3/40.3r.
+
+### Code-Graph Structural Enrichment
+
+**Definition:** The enrichment layer that 40.3s represents — additive structural evidence from code analysis (import resolution, class/function definitions, symbolic inheritance). Code-graph structural enrichment produces relationships that are invisible from filesystem topology alone (e.g., which files import from which other files). The enrichment is indexer-neutral — any tool that can parse source code and produce the 40.3s schema contributes to this layer.
+
+**Status:** CANONICAL — operational concept (2026-05-20).
+
+**What it is NOT:** Semantic enrichment. AI-assisted classification. Content-based inference. Code-graph structural enrichment is deterministic code analysis producing structural evidence.
+
+### INHERITS_UNRESOLVED
+
+**Definition:** A relationship type in 40.3s representing symbolic inheritance evidence — a class declares a base class by name, but the target file providing that base class is NOT cross-file resolved. This is unresolved symbolic evidence, not resolved inheritance authority. Cross-file resolution would require a richer indexer (e.g., SCIP).
+
+**Status:** CANONICAL — relationship type in code-graph structural enrichment (2026-05-20).
+
+**What it is NOT:** Resolved inheritance. Cross-file authority. Semantic truth. INHERITS_UNRESOLVED records that class X declares base class name Y — it does NOT prove which file provides Y.
+
 ## Term Usage Rules
 
 1. **Use locked definitions exactly.** Do not paraphrase, simplify, or reinterpret.

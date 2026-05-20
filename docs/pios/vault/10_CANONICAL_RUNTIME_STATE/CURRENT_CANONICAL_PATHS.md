@@ -146,6 +146,7 @@
 | ceu_grounding.py | scripts/pios/ | CEU grounding engine (consumes full 40.2) |
 | source_intake.py | scripts/pios/ | Source intake processor |
 | semantic_derivation_compiler.py | scripts/pios/ | AI-assisted semantic derivation (Phase 3b) |
+| code_graph_feasibility.py | scripts/pios/ | ast-based code-graph structural enrichment prototype (40.3s) |
 
 ## Evidence / Data
 
@@ -188,6 +189,7 @@
 | PI.SQO.BLUEEDGE-S2-WORKFLOW-PROJECTION-CORRECTION.01 | docs/pios/PI.SQO.BLUEEDGE-S2-WORKFLOW-PROJECTION-CORRECTION.01/ | G1 | COMPLETE |
 | PI.IMPLEMENTATION-SEQUENCING.PORTABLE-SUBSTRATE-OPERATIONALIZATION.01 | docs/pios/PI.IMPLEMENTATION-SEQUENCING.PORTABLE-SUBSTRATE-OPERATIONALIZATION.01/ | G1 | COMPLETE |
 | PI.PATHA.STRUCTURAL-SUBSTRATE-MATURATION.01 | docs/pios/PI.PATHA.STRUCTURAL-SUBSTRATE-MATURATION.01/ | G1 | COMPLETE |
+| PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01 | docs/pios/PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01/ | G1 | COMPLETE |
 
 ## Cross-References
 

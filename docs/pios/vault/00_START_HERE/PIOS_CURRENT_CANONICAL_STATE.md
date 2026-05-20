@@ -361,10 +361,52 @@ PATH A structural substrate maturation introduces deterministic structural relev
 | Construct | Maturity |
 |---|---|
 | SRC Classifier (Tier 1 — path patterns) | OPERATIONAL |
-| SCIP Code Graph (Tier 2 — symbol-level) | FUTURE_DECLARED — separate stream |
-| Evidence-Ranked Projection (Tier 3) | FUTURE_DECLARED |
+| Code-Graph Structural Enrichment (Tier 2 — ast-based) | PROTOTYPE — bounded prototype validated, pipeline integration pending |
+| SCIP Code Graph (Tier 3 — symbol-level) | FUTURE_DECLARED — possible enricher, not canonical authority |
+| Evidence-Ranked Projection (Tier 4) | FUTURE_DECLARED |
 
 **Reference:** `docs/pios/PI.PATHA.STRUCTURAL-SUBSTRATE-MATURATION.01/` — 5 governance artifacts.
+
+## Code-Graph Structural Enrichment (40.3s)
+
+**Stream:** PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01 (COMPLETE — 2026-05-20)
+**Classification:** G1 — Architecture-Mutating
+
+The code-graph structural enrichment layer introduces the 40.3s artifact class — resolved import edges, class/function definitions, and unresolved symbolic inheritance evidence extracted from Python source via `ast`. This is additive structural enrichment, NOT semantic authority.
+
+**Key architectural concept:** 40.3s is a generic code-graph artifact class with an indexer-neutral schema. Any indexer (ast, SCIP, Jedi) can produce 40.3s — the system is NOT dependent on one indexer.
+
+**Three-layer structural enrichment stack:**
+```
+40.3  (full topology — CONTAINS + regex IMPORTS)
+  └── 40.3r (filtered structural topology — PRIMARY nodes only)
+        └── 40.3s (code-graph structural enrichment — resolved IMPORTS + structural symbol evidence)
+```
+
+**Prototype results (Flask):**
+- IMPORTS: 0 → 95 (complete intra-package dependency graph)
+- DEFINES_CLASS: 53
+- DEFINES_FUNCTION: 81
+- INHERITS_UNRESOLVED: 41 (symbolic evidence, NOT resolved authority)
+- Cross-reference: 95/95 targets matched to 40.2 inventory
+
+**Structural centrality observations:**
+- `globals.py` (12 inbound), `helpers.py` (9), `wrappers.py` (9) = architectural spine
+- `__main__.py`, `views.py` = isolated (0 inbound) — entry point / potential underutilization
+
+**Feasibility verdict:** VIABLE. ast-based extraction produces useful resolved IMPORTS edges that regex scanning cannot.
+
+**Maturity classification:**
+
+| Construct | Maturity |
+|---|---|
+| ast-based code-graph prototype | PROTOTYPE — validated, pipeline integration pending |
+| 40.3s artifact contract | OPERATIONAL — schema defined, indexer-neutral |
+| SCIP enrichment | FUTURE_DECLARED — possible enricher, requires Python 3.10+ |
+| Structural centrality from code-graph | FUTURE_DECLARED — depends on pipeline integration |
+| Evidence-ranked projection | FUTURE_DECLARED — depends on structural centrality |
+
+**Reference:** `docs/pios/PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01/` — 6 governance artifacts.
 
 ## Client Onboarding Substrate
 
@@ -461,6 +503,7 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.SQO.BLUEEDGE-S2-WORKFLOW-PROJECTION-CORRECTION.01 | G1 | V2 workflow projection correction — generic remediation workflow for S2-with-debt, removes V1 journey routing from V2 shell | COMPLETE |
 | PI.IMPLEMENTATION-SEQUENCING.PORTABLE-SUBSTRATE-OPERATIONALIZATION.01 | G1 | Portable substrate operationalization — pipeline parameterization, pallets-flask registration, onboarding contract | COMPLETE |
 | PI.PATHA.STRUCTURAL-SUBSTRATE-MATURATION.01 | G1 | Structural relevance classification, 40.2r/40.3r filtered views, Phase 3.5 pipeline integration | COMPLETE |
+| PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01 | G1 | Code-graph structural enrichment prototype, 40.3s artifact contract, indexer landscape assessment | COMPLETE |
 
 ## SQO Operator Authority Workflow
 
