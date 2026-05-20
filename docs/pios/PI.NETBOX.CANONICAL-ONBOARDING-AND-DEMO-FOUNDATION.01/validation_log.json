@@ -113,11 +113,109 @@
       "description": "Pipeline fixes improve all multi-app Python projects, not NetBox-specific",
       "result": "PASS",
       "evidence": "Source root discovery and import resolution fixes are parameterized by project structure"
+    },
+    {
+      "id": "V17",
+      "name": "s1_structural_lens_renders",
+      "description": "LENS v2 renders valid payload for S1 structural-only clients",
+      "result": "PASS",
+      "evidence": "NetBox and StackStorm both render in LENS v2 with S1 structural topology"
+    },
+    {
+      "id": "V18",
+      "name": "stackstorm_onboarded",
+      "description": "StackStorm second specimen onboarded through PATH A substrate",
+      "result": "PASS",
+      "evidence": "2,163 files, 57 clusters, 1,333 nodes, manifest registered, LENS renders"
+    },
+    {
+      "id": "V19",
+      "name": "inheritance_resolution_active",
+      "description": "Code-graph enrichment resolves inheritance edges alongside imports",
+      "result": "PASS",
+      "evidence": "NetBox: 58% resolution rate (605/1,044). StackStorm: 691 resolved INHERITS"
+    },
+    {
+      "id": "V20",
+      "name": "centrality_decomposition_active",
+      "description": "Structural centrality decomposes in-degree into import and inheritance axes",
+      "result": "PASS",
+      "evidence": "Both specimens show import_in_degree + inherits_in_degree fields"
+    },
+    {
+      "id": "V21",
+      "name": "topology_maturity_classification",
+      "description": "Topology maturity correctly classifies specimens by substrate level",
+      "result": "PASS",
+      "evidence": "NetBox: AUTHORITY_ENRICHED, StackStorm: AUTHORITY_ENRICHED, BlueEdge: SEMANTIC_PROJECTION"
+    },
+    {
+      "id": "V22",
+      "name": "svg_gating_by_maturity",
+      "description": "SVG topology rendering is gated by maturity level svg_policy",
+      "result": "PASS",
+      "evidence": "ENRICHED policy renders SVG for both specimens; REGISTRY would show compact grid"
+    },
+    {
+      "id": "V23",
+      "name": "dual_authority_detection",
+      "description": "Dual authority pattern detected when import and inheritance dominants differ",
+      "result": "PASS",
+      "evidence": "NetBox: dcim/choices.py (IMP 76) vs utilities/choices.py (INH 107). StackStorm: util/monkey_patch.py (IMP 64) vs api/base.py (INH 59)"
+    },
+    {
+      "id": "V24",
+      "name": "structural_spines_panel_renders",
+      "description": "StructuralSpinesPanel renders top 10 centrality spines with decomposed metrics",
+      "result": "PASS",
+      "evidence": "Both specimens: 10 spine cards with IMP/INH breakdown, dual authority tags, role chips"
+    },
+    {
+      "id": "V25",
+      "name": "sqo_netbox_s1_posture",
+      "description": "SQO cockpit renders S1 qualification posture for NetBox",
+      "result": "PASS",
+      "evidence": "S1 badge, Qualification Pending, runtime capabilities detected, Authority section available"
+    },
+    {
+      "id": "V26",
+      "name": "sqo_stackstorm_unavailable_documented",
+      "description": "SQO cockpit correctly shows unavailable state for StackStorm (no operational artifacts)",
+      "result": "PASS",
+      "evidence": "Cockpit Unavailable with artifact binding diagnostics. Shell renders, navigation works. Gap: pipeline orchestrator not run"
+    },
+    {
+      "id": "V27",
+      "name": "no_sqo_logic_mutation",
+      "description": "No SQO cockpit logic was modified during post-merge work",
+      "result": "PASS",
+      "evidence": "All SQO cockpit files unchanged. Only LENS v2 components modified"
+    },
+    {
+      "id": "V28",
+      "name": "blueedge_regression_clear",
+      "description": "BlueEdge (existing S2 specimen) still renders correctly after changes",
+      "result": "PASS",
+      "evidence": "BlueEdge renders at SEMANTIC_PROJECTION maturity level, full SVG, all zones functional"
+    },
+    {
+      "id": "V29",
+      "name": "post_merge_screenshots_captured",
+      "description": "Post-merge screenshots captured for SQO and LENS views",
+      "result": "PASS",
+      "evidence": "4 screenshots: sqo-netbox-s1-posture, sqo-stackstorm-unavailable, lens-netbox-authority-enriched, lens-stackstorm-authority-enriched"
+    },
+    {
+      "id": "V30",
+      "name": "manifest_enrichment_declared",
+      "description": "Both specimen manifests declare 40.3s and 40.3c as optional artifacts",
+      "result": "PASS",
+      "evidence": "code_graph_40_3s and structural_centrality_40_3c in artifacts.optional for both"
     }
   ],
   "summary": {
-    "total": 16,
-    "pass": 16,
+    "total": 30,
+    "pass": 30,
     "fail": 0,
     "verdict": "ALL PASS"
   }

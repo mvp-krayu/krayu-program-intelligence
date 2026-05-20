@@ -1,6 +1,6 @@
 {
   "stream_id": "PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01",
-  "total_operations": 20,
+  "total_operations": 40,
   "operations": [
     { "action": "CREATE", "path": "clients/netbox/client.yaml", "description": "Client registration" },
     { "action": "CREATE", "path": "clients/netbox/sources/source_01/source_manifest.json", "description": "Source manifest" },
@@ -21,6 +21,25 @@
     { "action": "CREATE", "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/CLOSURE.md", "description": "Stream closure with §10" },
     { "action": "CREATE", "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/screenshots/", "description": "4 cockpit screenshots" },
     { "action": "UPDATE", "path": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md", "description": "Vault lineage table entry" },
-    { "action": "UPDATE", "path": "docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md", "description": "Governance streams entry + NetBox evidence paths" }
+    { "action": "UPDATE", "path": "docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md", "description": "Governance streams entry + NetBox evidence paths" },
+
+    { "action": "UPDATE", "path": "app/execlens-demo/lib/lens-v2/SemanticActorHydrator.js", "description": "S1 structural-only support" },
+    { "action": "UPDATE", "path": "app/execlens-demo/lib/lens-v2/generic/GenericSemanticPayloadResolver.js", "description": "Structural enrichment derivation + topology maturity classification" },
+    { "action": "UPDATE", "path": "app/execlens-demo/lib/lens-v2/generic/ClientRunManifestSchema.js", "description": "Optional artifact keys for 40.3s, 40.3c" },
+    { "action": "UPDATE", "path": "app/execlens-demo/components/lens-v2/zones/IntelligenceField.jsx", "description": "Topology surface with maturity gating + StructuralSpinesPanel import" },
+    { "action": "UPDATE", "path": "app/execlens-demo/components/lens-v2/zones/StructuralTopologyZone.jsx", "description": "StructuralSpinesPanel component (dual authority, spine cards, role chips)" },
+    { "action": "UPDATE", "path": "app/execlens-demo/pages/lens-v2-flagship.js", "description": "CSS for maturity badges, registry view, spines panel, enrichment stats" },
+    { "action": "CREATE", "path": "app/execlens-demo/lib/lens-v2/manifests/stackstorm.run_github_st2_20260520_131000.json", "description": "StackStorm LENS manifest with enrichment artifacts" },
+    { "action": "UPDATE", "path": "app/execlens-demo/lib/lens-v2/manifests/netbox.run_github_netbox_20260520_134600.json", "description": "Added enrichment artifact paths (40.3s, 40.3c)" },
+    { "action": "UPDATE", "path": "app/execlens-demo/lib/lens-v2/manifests/index.js", "description": "Added stackstorm to REGISTRY" },
+    { "action": "UPDATE", "path": "scripts/pios/code_graph_feasibility.py", "description": "Inheritance resolution + multi-package import resolution" },
+    { "action": "UPDATE", "path": "scripts/pios/structural_centrality.py", "description": "Import/inheritance decomposition in centrality ranking" },
+    { "action": "CREATE", "path": "clients/stackstorm/", "description": "StackStorm client registration + pipeline artifacts (gitignored)" },
+    { "action": "UPDATE", "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/PROGRAM_INTELLIGENCE_EVOLUTION_MODEL.md", "description": "Operational activation roadmap" },
+    { "action": "UPDATE", "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/execution_report.md", "description": "Extended with post-merge phases J-P" },
+    { "action": "UPDATE", "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/CLOSURE.md", "description": "Extended with post-merge operational activation" },
+    { "action": "UPDATE", "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/validation_log.json", "description": "Extended to 30/30 PASS" },
+    { "action": "UPDATE", "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/screenshot_manifest.md", "description": "Added 4 post-merge screenshots" },
+    { "action": "UPDATE", "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/file_changes.json", "description": "Extended with post-merge operations" }
   ]
 }

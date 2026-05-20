@@ -106,6 +106,90 @@ No cockpit logic was modified. All rendering outcomes are observational.
 
 All artifacts produced in `docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/`.
 
+---
+
+## Post-Merge Operational Activation (main branch, commits 9eda7a4..153c5d3)
+
+The following phases were executed on `main` after the onboarding branch was merged (`f294f24`). They implement the Operational Activation Roadmap from PROGRAM_INTELLIGENCE_EVOLUTION_MODEL.md.
+
+### Phase J — S1 Structural-Only LENS Support (9eda7a4)
+
+LENS v2 payload resolver extended to produce valid payloads for S1 structural-only clients. Previously, clients without semantic artifacts (`semantic_topology_model`, `dpsig_signal_set`) failed with MANIFEST_INVALID. Now, S1 manifests produce a governed payload with structural topology summary and evidence blocks.
+
+### Phase K — Second Specimen Onboarding: StackStorm (f601c7a)
+
+StackStorm (StackStorm/st2) onboarded as second specimen via the same PATH A substrate:
+- Shallow-cloned `StackStorm/st2` to `/tmp/stackstorm-clone`
+- Created client registration, LENS manifest, REGISTRY entry
+- Executed full structural pipeline: 2,163 files, 57 clusters, 1,333 structural nodes
+- Code-graph enrichment: 8,254 relationships, 4,006 IMPORTS, 691 resolved INHERITS
+
+Pipeline improvement: multi-package import resolution for monorepo layouts (StackStorm has 13 packages under one root).
+
+**Hero moment (f5eee58):** `st2common` upward dependency inversion — a shared library that imports from the packages that depend on it, creating bidirectional coupling invisible from project documentation.
+
+### Phase L — Inheritance Resolution Enrichment (a47a302, f693b83)
+
+Extended `code_graph_feasibility.py` with inheritance resolution: unresolved class references resolved against known class definitions. NetBox: 58% resolution rate (605 of 1,044 unresolved → resolved).
+
+Extended `structural_centrality.py` to decompose in-degree into import vs. inheritance axes. Enables dual authority detection — structurally distinct files dominating import authority vs. inheritance authority.
+
+### Phase M — Structural Enrichment Pipeline + Topology Maturity Gating (153c5d3)
+
+Manifest enrichment: both NetBox and StackStorm manifests declare `code_graph_40_3s` and `structural_centrality_40_3c` as optional artifacts.
+
+Resolver structural enrichment derivation:
+- Code graph summary (edge counts by type, file count, indexer capabilities)
+- Top 10 centrality spines (false-positive filtered) with decomposed import/inheritance metrics
+- Role summary, dual authority detection
+
+Topology maturity classification (5 levels):
+- `STRUCTURAL_REGISTRY` — raw cluster inventory (svg_policy: REGISTRY)
+- `GRAPH_ENRICHED` — code graph active (svg_policy: COMPACT)
+- `AUTHORITY_ENRICHED` — centrality + dual authority (svg_policy: ENRICHED)
+- `PRESSURE_ENRICHED` — DPSIG signals active (svg_policy: FULL)
+- `SEMANTIC_PROJECTION` — PATH B semantic qualification (svg_policy: FULL)
+
+SVG topology rendering gated by maturity — prevents visual overstatement at low substrate levels.
+
+### Phase N — StackStorm Centrality Gap Fill (local artifact)
+
+Ran `structural_centrality.py` for StackStorm: 1,126 ranked nodes, 4,006 import edges, 691 resolved inheritance edges, 1,395 classes. StackStorm promoted from GRAPH_ENRICHED to AUTHORITY_ENRICHED.
+
+Dual authority pattern confirmed:
+- Import dominant: `st2common/st2common/util/monkey_patch.py` (64 import in-degree)
+- Inheritance dominant: `st2common/st2common/models/api/base.py` (59 inheritance in-degree)
+
+### Phase O — SQO Cockpit Rendering Observation
+
+**NetBox** — SQO cockpit renders S1 posture:
+- S1 badge with "Qualification Pending" posture
+- "Review obligations exist. Qualification pending operator review actions."
+- Runtime capabilities detected: Structural Topology, Authority Workflow, Qualification Blockers, Event Lineage
+- Available sections: Authority
+- Route: `/sqo/client/netbox/run/run_github_netbox_20260520_134600`
+
+**Why NetBox renders but StackStorm does not:** The pipeline (Phase E) produced operational SQO artifacts for NetBox (`promotion_state.json`, `qualification_blockers.json`, `review_obligations.json`, `promotion_event_log.jsonl` at `clients/netbox/psee/runs/<run>/sqo/`). These give `operationalAvailable = true`, so `isCritical = false`. StackStorm's pipeline did not produce these artifacts.
+
+**StackStorm** — SQO cockpit shows "Cockpit Unavailable":
+- Artifact binding diagnostics: 0/23 artifacts present
+- Route resolves, shell renders, navigation sidebar works — no crash
+- Route: `/sqo/client/stackstorm/run/run_github_st2_20260520_131000`
+
+**Gap:** `run_client_pipeline.py` produces SQO operational artifacts as a side effect of pipeline phase completion. StackStorm was onboarded via individual pipeline scripts, not `run_client_pipeline.py`. The SQO artifacts are a pipeline orchestration artifact, not a structural pipeline artifact.
+
+No cockpit logic was modified. All rendering outcomes are observational.
+
+### Phase P — Screenshot Capture (Post-Merge)
+
+4 additional screenshots captured via Playwright MCP:
+- `sqo-netbox-s1-posture.png` — NetBox SQO cockpit, S1 qualification pending
+- `sqo-stackstorm-unavailable.png` — StackStorm SQO cockpit, unavailable state
+- `lens-netbox-authority-enriched.png` — NetBox LENS v2, authority enriched maturity
+- `lens-stackstorm-authority-enriched.png` — StackStorm LENS v2, authority enriched maturity
+
+---
+
 ## Pipeline Fix Summary
 
 Two generic pipeline improvements were made during this onboarding:

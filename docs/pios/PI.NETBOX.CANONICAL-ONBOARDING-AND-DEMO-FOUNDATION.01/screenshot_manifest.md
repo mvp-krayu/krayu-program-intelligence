@@ -42,6 +42,42 @@
 
 **What it demonstrates:** LENS v2 manifest validation correctly rejects the NetBox manifest (missing semantic_topology_model and dpsig_signal_set). No synthetic fallback — the system refuses to display incomplete data. This is the expected behavior for an S1 structural-only client.
 
+---
+
+## Post-Merge Screenshots (Operational Activation)
+
+### 5. SQO Cockpit — NetBox S1 Posture
+
+**File:** `sqo-netbox-s1-posture.png` (project root)
+
+**Content:** SQO cockpit overview for NetBox showing S1 qualification posture. S1 badge with "Qualification Pending" label. Summary: "Review obligations exist. Qualification pending operator review actions." Runtime capabilities detected: Structural Topology, Authority Workflow, Qualification Blockers, Event Lineage. Available sections: Authority. Navigation sidebar with client/run binding.
+
+**What it demonstrates:** After S1 structural-only LENS support was implemented and the pipeline produced operational SQO artifacts (`promotion_state.json`, `qualification_blockers.json`, `review_obligations.json`), the SQO cockpit correctly derives S1 posture from runtime capabilities. Progression from "Cockpit Unavailable" (screenshot #1) to operational posture view.
+
+### 6. SQO Cockpit — StackStorm Unavailable
+
+**File:** `sqo-stackstorm-unavailable.png` (project root)
+
+**Content:** SQO cockpit for StackStorm showing "Cockpit Unavailable" with artifact binding diagnostics. 0/23 artifacts present. Shell renders, navigation sidebar works, client/run binding correct.
+
+**What it demonstrates:** StackStorm was onboarded via individual pipeline scripts, not `run_client_pipeline.py`, so operational SQO artifacts were not produced. The cockpit correctly shows unavailable state with diagnostics. This is a gap in the onboarding workflow, not a cockpit defect.
+
+### 7. LENS v2 — NetBox Authority Enriched
+
+**File:** `lens-netbox-authority-enriched.png` (project root)
+
+**Content:** LENS v2 dense topology view for NetBox. Topology Surface actor with "Authority Enriched" maturity badge. Full SVG topology graph rendered (ENRICHED svg_policy). Structural Spines Panel showing top 10 centrality spines with decomposed IMP/INH metrics. Dual authority tags: "IMPORT AUTHORITY: dcim/choices.py (76)" and "INHERITANCE AUTHORITY: utilities/choices.py (107)". Cluster concentration stats showing code graph metrics.
+
+**What it demonstrates:** Structural enrichment pipeline active — code graph metrics, centrality decomposition, and dual authority detection all rendering correctly. Topology maturity gating allows full SVG at AUTHORITY_ENRICHED level.
+
+### 8. LENS v2 — StackStorm Authority Enriched
+
+**File:** `lens-stackstorm-authority-enriched.png` (project root)
+
+**Content:** LENS v2 dense topology view for StackStorm. Topology Surface actor with "Authority Enriched" maturity badge. Full SVG topology graph rendered. Structural Spines Panel showing top 10 centrality spines. Dual authority tags: "IMPORT AUTHORITY: util/monkey_patch.py (64)" and "INHERITANCE AUTHORITY: api/base.py (59)".
+
+**What it demonstrates:** Second specimen renders identically to the first through the same generic pipeline. No client-specific code branching. Topology maturity promoted from GRAPH_ENRICHED to AUTHORITY_ENRICHED after centrality gap was filled.
+
 ## Governance
 
 All screenshots are governed evidence captures of actual runtime behavior. No mockups. No synthetic data. No post-processing.
