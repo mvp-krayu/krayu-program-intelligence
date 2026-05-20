@@ -549,6 +549,45 @@ def phase_05_build_binding_envelope(
     return True
 
 
+# ── Phase 3.5: Structural Relevance Classification ──────────────────────────
+
+def phase_03_5_structural_relevance(client: str, run_id: str, run_dir: Path) -> bool:
+    """Run structural_relevance_classifier.py to produce 40.2r/40.3r filtered views.
+    Default ON — always runs. If classification fails, logs warning and continues
+    with unfiltered 40.2/40.3 (graceful degradation)."""
+    classifier = SCRIPTS_DIR / "structural_relevance_classifier.py"
+    if not classifier.is_file():
+        print(f"  WARNING: structural_relevance_classifier.py not found — skipping")
+        return True
+
+    out_relevance = run_dir / "structure" / "40.2r" / "structural_relevance.json"
+    if out_relevance.exists():
+        print(f"  [IDEMPOTENT] 40.2r/structural_relevance.json already exists — skipping")
+        return True
+
+    cmd = [
+        sys.executable, str(classifier),
+        "--client", client,
+        "--run-id", run_id,
+    ]
+    print(f"  Running: structural_relevance_classifier.py --client {client} --run-id {run_id}")
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+
+    if result.stdout:
+        for line in result.stdout.strip().split("\n"):
+            print(f"    {line}")
+
+    if result.returncode != 0:
+        print(f"  WARNING: classifier exited {result.returncode} — continuing with unfiltered 40.2/40.3")
+        if result.stderr:
+            print(f"  stderr: {result.stderr.strip()[:200]}")
+        return True
+
+    print("  Structural relevance classification: OK")
+    return True
+
+
 # ── Phase 3b: Semantic Derivation (optional, explicit opt-in) ──────────────────
 
 def phase_03b_semantic_derivation(
@@ -1288,6 +1327,8 @@ def main() -> int:
          lambda: phase_02_intake(source_manifest, run_dir)),
         ("Phase 3  — 40.x Structural Verification",
          lambda: phase_03_40x_structural(source_manifest, run_dir)),
+        ("Phase 3.5 — Structural Relevance Classification",
+         lambda: phase_03_5_structural_relevance(args.client, run_id, run_dir)),
         ("Phase 3b — Semantic Derivation",
          lambda: phase_03b_semantic_derivation(
              args.client, run_id, run_dir, args.enable_semantic_derivation)),

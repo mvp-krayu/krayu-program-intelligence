@@ -1,0 +1,90 @@
+{
+  "stream_id": "PI.PATHA.STRUCTURAL-SUBSTRATE-MATURATION.01",
+  "classification": "G1",
+  "changes": [
+    {
+      "action": "CREATE",
+      "path": "scripts/pios/structural_relevance_classifier.py",
+      "purpose": "Deterministic SRC classifier + filtered inventory/topology generator"
+    },
+    {
+      "action": "MODIFY",
+      "path": "scripts/pios/run_client_pipeline.py",
+      "purpose": "Add Phase 3.5 (structural relevance classification) between Phase 3 and Phase 3b"
+    },
+    {
+      "action": "MODIFY",
+      "path": "scripts/pios/dom_layer_generator.py",
+      "purpose": "Prefer 40.2r filtered inventory when available, fall back to 40.2; filter cluster node_ids to indexed set"
+    },
+    {
+      "action": "CREATE",
+      "path": "clients/pallets-flask/psee/runs/run_github_flask_20260517_163222/structure/40.2r/structural_relevance.json",
+      "purpose": "Flask structural relevance classification (287 nodes classified)"
+    },
+    {
+      "action": "CREATE",
+      "path": "clients/pallets-flask/psee/runs/run_github_flask_20260517_163222/structure/40.2r/structural_node_inventory_filtered.json",
+      "purpose": "Flask filtered node inventory (66 PRIMARY nodes)"
+    },
+    {
+      "action": "CREATE",
+      "path": "clients/pallets-flask/psee/runs/run_github_flask_20260517_163222/structure/40.3r/structural_topology_log_filtered.json",
+      "purpose": "Flask filtered topology (PRIMARY-only edges)"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.PATHA.STRUCTURAL-SUBSTRATE-MATURATION.01/execution_report.md",
+      "purpose": "Governance execution report"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.PATHA.STRUCTURAL-SUBSTRATE-MATURATION.01/validation_log.json",
+      "purpose": "Governance validation log (18/18 PASS)"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.PATHA.STRUCTURAL-SUBSTRATE-MATURATION.01/file_changes.json",
+      "purpose": "Governance file change manifest"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.PATHA.STRUCTURAL-SUBSTRATE-MATURATION.01/CLOSURE.md",
+      "purpose": "Governance stream closure"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.PATHA.STRUCTURAL-SUBSTRATE-MATURATION.01/IMPLEMENTATION_SEMANTICS.md",
+      "purpose": "§5.5 implementation semantics artifact"
+    },
+    {
+      "action": "MODIFY",
+      "path": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "purpose": "Vault propagation — add SRC concept, stream reference"
+    },
+    {
+      "action": "MODIFY",
+      "path": "docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md",
+      "purpose": "Vault propagation — add SRC, Filtered Topology terms"
+    },
+    {
+      "action": "MODIFY",
+      "path": "docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md",
+      "purpose": "Vault propagation — add classifier script path, stream to governance list"
+    }
+  ],
+  "not_modified": [
+    {
+      "path": "scripts/pios/structural_scanner.py",
+      "reason": "40.2/40.3/40.4 remain complete and untouched"
+    },
+    {
+      "path": "scripts/pios/ceu_grounding.py",
+      "reason": "Continues consuming full unfiltered 40.2"
+    },
+    {
+      "path": "scripts/pios/ceu_registry.json",
+      "reason": "Detection rules unchanged"
+    }
+  ]
+}

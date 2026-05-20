@@ -1,0 +1,121 @@
+{
+  "stream_id": "PI.PATHA.STRUCTURAL-SUBSTRATE-MATURATION.01",
+  "classification": "G1",
+  "validated_at": "2026-05-20",
+  "checks": [
+    {
+      "check_id": "V-01",
+      "name": "classifier_creates_40.2r_artifacts",
+      "status": "PASS",
+      "detail": "structural_relevance.json + structural_node_inventory_filtered.json created in 40.2r/"
+    },
+    {
+      "check_id": "V-02",
+      "name": "classifier_creates_40.3r_artifacts",
+      "status": "PASS",
+      "detail": "structural_topology_log_filtered.json created in 40.3r/"
+    },
+    {
+      "check_id": "V-03",
+      "name": "only_core_source_is_primary",
+      "status": "PASS",
+      "detail": "66 PRIMARY nodes, all CORE_SOURCE. TESTING(92) and CONFIG(11) classified as SUPPORT."
+    },
+    {
+      "check_id": "V-04",
+      "name": "false_positive_elimination",
+      "status": "PASS",
+      "detail": "Flask: .github(15 INFRASTRUCTURE), docs(95 DOCUMENTATION), tests(92 TESTING), .editorconfig(1 TOOLING), .pre-commit(1 TOOLING) — all excluded from PRIMARY"
+    },
+    {
+      "check_id": "V-05",
+      "name": "dom_layer_prefers_40.2r",
+      "status": "PASS",
+      "detail": "dom_layer_generator.py resolves 40.2r when present, falls back to 40.2 when absent"
+    },
+    {
+      "check_id": "V-06",
+      "name": "dom_layer_cluster_filtering",
+      "status": "PASS",
+      "detail": "Clusters with no indexed nodes dropped; cluster node_ids filtered to indexed set"
+    },
+    {
+      "check_id": "V-07",
+      "name": "pipeline_phase_3.5_integration",
+      "status": "PASS",
+      "detail": "Phase 3.5 inserted between Phase 3 and Phase 3b in run_client_pipeline.py"
+    },
+    {
+      "check_id": "V-08",
+      "name": "pipeline_graceful_degradation",
+      "status": "PASS",
+      "detail": "Phase 3.5 returns True on failure — pipeline continues with unfiltered artifacts"
+    },
+    {
+      "check_id": "V-09",
+      "name": "determinism",
+      "status": "PASS",
+      "detail": "Two runs on identical 40.2 input produce identical output (excluding generated_at)"
+    },
+    {
+      "check_id": "V-10",
+      "name": "40.2_unmodified",
+      "status": "PASS",
+      "detail": "Original 40.2/structural_node_inventory.json untouched — 40.2r is derived view"
+    },
+    {
+      "check_id": "V-11",
+      "name": "40.3_unmodified",
+      "status": "PASS",
+      "detail": "Original 40.3/structural_topology_log.json untouched — 40.3r is derived view"
+    },
+    {
+      "check_id": "V-12",
+      "name": "ceu_grounding_unmodified",
+      "status": "PASS",
+      "detail": "ceu_grounding.py not modified — continues consuming full unfiltered 40.2"
+    },
+    {
+      "check_id": "V-13",
+      "name": "structural_scanner_unmodified",
+      "status": "PASS",
+      "detail": "structural_scanner.py not modified — exhaustive inventory preserved"
+    },
+    {
+      "check_id": "V-14",
+      "name": "no_client_specific_rules",
+      "status": "PASS",
+      "detail": "All classification rules are path-pattern based, no client-specific hardcoding"
+    },
+    {
+      "check_id": "V-15",
+      "name": "no_ai_llm_classification",
+      "status": "PASS",
+      "detail": "All classification is deterministic path-pattern matching — no AI/LLM invocation"
+    },
+    {
+      "check_id": "V-16",
+      "name": "no_file_content_reading",
+      "status": "PASS",
+      "detail": "Classification by path patterns only — no file content is read"
+    },
+    {
+      "check_id": "V-17",
+      "name": "nextjs_build_clean",
+      "status": "PASS",
+      "detail": "npx next build compiles without errors"
+    },
+    {
+      "check_id": "V-18",
+      "name": "flask_dom_count_reduction",
+      "status": "PASS",
+      "detail": "Flask DOMs: 287→66 nodes, false-positive DOMs (CI_INFRA, TOOLING, DOCUMENTATION, ROOT spillover) eliminated"
+    }
+  ],
+  "summary": {
+    "total_checks": 18,
+    "pass": 18,
+    "fail": 0,
+    "status": "PASS"
+  }
+}

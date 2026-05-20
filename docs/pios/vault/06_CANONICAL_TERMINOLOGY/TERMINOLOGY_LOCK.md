@@ -494,6 +494,27 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 **What it is NOT:** An automatic process. A self-service API. A single-command tool. Each step is governed and produces auditable artifacts. S2 promotion is explicitly out of scope — requires semantic remediation runtime not yet stabilized.
 
+### Structural Relevance Class (SRC)
+
+**Definition:** A deterministic classification of a structural node's architectural role, based on path-pattern matching. 9 classes: CORE_SOURCE, TESTING, CONFIG, DOCUMENTATION, INFRASTRUCTURE, GENERATED, TOOLING, VENDOR, OTHER.
+
+**Status:** CANONICAL — active operational concept (2026-05-20).
+
+**Significance tiers:**
+- **PRIMARY** (CORE_SOURCE only): Enters DOM layer, generates pressure zones, drives signal computation. The ONLY class that produces architectural surfaces.
+- **SUPPORT** (TESTING, CONFIG): Retained for CEU/evidence context. Excluded from DOM/pressure derivation.
+- **PERIPHERAL** (everything else): Excluded from all downstream structural computation.
+
+**What it is NOT:** Semantic classification. AI-assisted inference. Content-based analysis. SRC is pure path-pattern deterministic classification.
+
+### Filtered Topology (40.2r / 40.3r)
+
+**Definition:** Derived views of 40.2 (node inventory) and 40.3 (topology log) containing only PRIMARY-significant nodes/edges. 40.2r is the input for DOM/pressure derivation when available. 40.2 and 40.3 remain untouched — filtered views are separate artifact classes in separate subdirectories.
+
+**Status:** CANONICAL — active operational artifact class (2026-05-20).
+
+**What it is NOT:** A replacement for 40.2/40.3. The full unfiltered inventory is preserved for CEU grounding and other consumers that need exhaustive structural data.
+
 ## Term Usage Rules
 
 1. **Use locked definitions exactly.** Do not paraphrase, simplify, or reinterpret.

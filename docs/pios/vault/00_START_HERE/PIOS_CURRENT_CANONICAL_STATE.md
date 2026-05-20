@@ -1,6 +1,6 @@
 # PiOS Current Canonical State
 
-> **This page reflects the system's canonical state as of 2026-05-19.**
+> **This page reflects the system's canonical state as of 2026-05-20.**
 
 ---
 
@@ -336,6 +336,36 @@ TIER 2 — Cross-Plane Structural Coherence (FUTURE)
 
 Revenue begins at Phase 1A. Substrate proof (Phase 0A) precedes projection polish (Phase 0B).
 
+## PATH A Structural Substrate Maturation
+
+**Stream:** PI.PATHA.STRUCTURAL-SUBSTRATE-MATURATION.01 (COMPLETE — 2026-05-20)
+**Classification:** G1 — Architecture-Mutating
+
+PATH A structural substrate maturation introduces deterministic structural relevance classification. Prior to this stream, PATH A over-trusted filesystem topology — every file and directory received equal architectural weight, producing false-positive pressure surfaces (CI/CD, tooling, documentation, generated artifacts appearing as architectural domains).
+
+**Key architectural concept:** Structural Relevance Class (SRC) — a deterministic classification of every structural node's architectural role, governing what enters downstream DOM/pressure derivation.
+
+**Three-tier significance model:**
+- **PRIMARY** (CORE_SOURCE only): Enters DOM layer, generates pressure zones, drives signal computation
+- **SUPPORT** (TESTING, CONFIG): Retained for CEU/evidence context, excluded from DOM/pressure derivation
+- **PERIPHERAL** (everything else): Excluded from all downstream structural computation
+
+**Impact:**
+- Flask: 287 → 66 PRIMARY nodes. False-positive DOMs (CI_INFRA, TOOLING, DOCUMENTATION, ROOT spillover) eliminated.
+- 40.2r/40.3r derived views: filtered inventory and topology. 40.2/40.3 remain untouched.
+- Pipeline Phase 3.5: structural relevance classification between Phase 3 and Phase 3b. Default ON, graceful degradation.
+- DOM layer generator: prefers filtered 40.2r when available, falls back to unfiltered 40.2.
+
+**Maturity classification:**
+
+| Construct | Maturity |
+|---|---|
+| SRC Classifier (Tier 1 — path patterns) | OPERATIONAL |
+| SCIP Code Graph (Tier 2 — symbol-level) | FUTURE_DECLARED — separate stream |
+| Evidence-Ranked Projection (Tier 3) | FUTURE_DECLARED |
+
+**Reference:** `docs/pios/PI.PATHA.STRUCTURAL-SUBSTRATE-MATURATION.01/` — 5 governance artifacts.
+
 ## Client Onboarding Substrate
 
 **Stream:** PI.SUBSTRATE.CLIENT-ONBOARDING-ARCHITECTURE.01 (COMPLETE — 2026-05-18)
@@ -430,6 +460,7 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.SQO.LEGACY-QUALIFICATION-BRIDGE.01 | G1 | Legacy qualification bridge — canonical migration pattern for pre-SQO systems, governance projection (not historical reconstruction), BlueEdge SQO-native S2 | COMPLETE |
 | PI.SQO.BLUEEDGE-S2-WORKFLOW-PROJECTION-CORRECTION.01 | G1 | V2 workflow projection correction — generic remediation workflow for S2-with-debt, removes V1 journey routing from V2 shell | COMPLETE |
 | PI.IMPLEMENTATION-SEQUENCING.PORTABLE-SUBSTRATE-OPERATIONALIZATION.01 | G1 | Portable substrate operationalization — pipeline parameterization, pallets-flask registration, onboarding contract | COMPLETE |
+| PI.PATHA.STRUCTURAL-SUBSTRATE-MATURATION.01 | G1 | Structural relevance classification, 40.2r/40.3r filtered views, Phase 3.5 pipeline integration | COMPLETE |
 
 ## SQO Operator Authority Workflow
 
