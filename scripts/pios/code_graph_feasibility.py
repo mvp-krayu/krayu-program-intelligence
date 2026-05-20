@@ -52,6 +52,7 @@ SUPPORTED_RELATION_TYPES = frozenset([
     "DEFINES_CLASS",
     "DEFINES_FUNCTION",
     "INHERITS_UNRESOLVED",
+    "INHERITS",
 ])
 
 INDEXER_INFO = {
@@ -278,21 +279,24 @@ def extract_relationships(
     known_files: set[str],
     source_root_rel: str = "",
     package_prefixes: dict[str, str] | None = None,
-) -> list[dict]:
+) -> tuple[list[dict], dict[str, str]]:
     """
     Extract all structural code-graph relationships from a single Python file.
+    Returns (relationships, import_names) where import_names maps
+    imported symbol names to their resolved target file paths.
     """
     try:
         source = abs_path.read_text(encoding="utf-8", errors="replace")
     except OSError:
-        return []
+        return [], {}
 
     try:
         tree = ast.parse(source, filename=rel_path)
     except SyntaxError:
-        return []
+        return [], {}
 
     relationships = []
+    import_names: dict[str, str] = {}
     seen_imports: set[str] = set()
 
     for node in ast.walk(tree):
@@ -303,6 +307,9 @@ def extract_relationships(
                 )
                 if target and target != rel_path and target not in seen_imports:
                     seen_imports.add(target)
+                    for alias in node.names:
+                        name = alias.asname or alias.name
+                        import_names[name] = target
                     level_dots = "." * node.level
                     mod = node.module or ""
                     names = ", ".join(a.name for a in node.names[:3])
@@ -324,6 +331,9 @@ def extract_relationships(
                     target = resolve_absolute_import(node.module, known_files, intake_dir, source_root_rel, package_prefixes)
                     if target and target != rel_path and target not in seen_imports:
                         seen_imports.add(target)
+                        for alias in node.names:
+                            name = alias.asname or alias.name
+                            import_names[name] = target
                         names = ", ".join(a.name for a in node.names[:3])
                         if len(node.names) > 3:
                             names += ", ..."
@@ -344,6 +354,8 @@ def extract_relationships(
                 target = resolve_absolute_import(alias.name, known_files, intake_dir, source_root_rel, package_prefixes)
                 if target and target != rel_path and target not in seen_imports:
                     seen_imports.add(target)
+                    name = alias.asname or alias.name.split(".")[-1]
+                    import_names[name] = target
                     relationships.append({
                         "source_path": rel_path,
                         "target_path": target,
@@ -417,7 +429,7 @@ def extract_relationships(
                     },
                 })
 
-    return relationships
+    return relationships, import_names
 
 
 def _annotate_parents(tree: ast.AST) -> None:
@@ -437,6 +449,110 @@ def _walk_parents(tree: ast.AST, target: ast.AST) -> list[ast.AST]:
         current = current._parent  # type: ignore[attr-defined]
         parents.append(current)
     return parents
+
+
+# ── Inheritance Resolution ───────────────────────────────────────────────────
+
+def resolve_inheritance(
+    relationships: list[dict],
+    file_import_names: dict[str, dict[str, str]],
+) -> dict:
+    """
+    Post-processing step: resolve INHERITS_UNRESOLVED edges using import
+    context and class definition registry.
+
+    For each INHERITS_UNRESOLVED edge:
+    1. Parse the base class expression (bare name or qualified dotted name)
+    2. Look up the importing file's import context to find the source file
+    3. Verify the target file defines that class
+    4. If resolved: change relation_type to INHERITS, set target_path
+
+    Returns resolution statistics.
+    """
+    class_registry: dict[str, list[str]] = {}
+    for r in relationships:
+        if r["relation_type"] == "DEFINES_CLASS":
+            sym = r.get("symbol", "")
+            if sym:
+                class_registry.setdefault(sym, []).append(r["source_path"])
+
+    classes_in_file: dict[str, set[str]] = {}
+    for r in relationships:
+        if r["relation_type"] == "DEFINES_CLASS":
+            classes_in_file.setdefault(r["source_path"], set()).add(r.get("symbol", ""))
+
+    resolved = 0
+    resolved_via_import = 0
+    resolved_via_same_file = 0
+    resolved_via_unique_class = 0
+    unresolved_external = 0
+    unresolved_ambiguous = 0
+
+    for r in relationships:
+        if r["relation_type"] != "INHERITS_UNRESOLVED":
+            continue
+
+        source_file = r["source_path"]
+        symbol = r.get("symbol", "")
+        if " -> " not in symbol:
+            continue
+
+        class_name, base_expr = symbol.split(" -> ", 1)
+        file_imports = file_import_names.get(source_file, {})
+
+        target_path = None
+
+        if "." in base_expr:
+            module_part = base_expr.rsplit(".", 1)[0]
+            attr_part = base_expr.rsplit(".", 1)[1]
+
+            if module_part in file_imports:
+                candidate_file = file_imports[module_part]
+                file_classes = classes_in_file.get(candidate_file, set())
+                if attr_part in file_classes:
+                    target_path = candidate_file
+                    resolved_via_import += 1
+        else:
+            if base_expr in file_imports:
+                candidate_file = file_imports[base_expr]
+                file_classes = classes_in_file.get(candidate_file, set())
+                if base_expr in file_classes:
+                    target_path = candidate_file
+                    resolved_via_import += 1
+                else:
+                    target_path = candidate_file
+                    resolved_via_import += 1
+
+            if not target_path:
+                file_classes = classes_in_file.get(source_file, set())
+                if base_expr in file_classes:
+                    target_path = source_file
+                    resolved_via_same_file += 1
+
+            if not target_path and base_expr in class_registry:
+                defs = class_registry[base_expr]
+                if len(defs) == 1:
+                    target_path = defs[0]
+                    resolved_via_unique_class += 1
+                else:
+                    unresolved_ambiguous += 1
+
+        if target_path:
+            r["relation_type"] = "INHERITS"
+            r["target_path"] = target_path
+            resolved += 1
+        else:
+            unresolved_external += 1
+
+    return {
+        "total_inherits_input": resolved + unresolved_external + unresolved_ambiguous,
+        "resolved": resolved,
+        "resolved_via_import_context": resolved_via_import,
+        "resolved_via_same_file": resolved_via_same_file,
+        "resolved_via_unique_class": resolved_via_unique_class,
+        "unresolved_external": unresolved_external,
+        "unresolved_ambiguous": unresolved_ambiguous,
+    }
 
 
 # ── Cross-Reference with 40.2 Inventory ─────────────────────────────────────
@@ -497,16 +613,17 @@ def validate_graph(
     checks = {}
 
     self_refs = [r for r in relationships
-                 if r.get("target_path") and r["source_path"] == r["target_path"]]
+                 if r["relation_type"] == "IMPORTS"
+                 and r.get("target_path") and r["source_path"] == r["target_path"]]
     checks["no_self_references"] = len(self_refs) == 0
 
     bad_types = [r for r in relationships
                  if r["relation_type"] not in SUPPORTED_RELATION_TYPES]
     checks["all_relation_types_supported"] = len(bad_types) == 0
 
-    import_rels = [r for r in relationships if r["relation_type"] == "IMPORTS"]
-    source_ok = all(r["source_path"] in known_files for r in import_rels)
-    target_ok = all(r["target_path"] in known_files for r in import_rels if r.get("target_path"))
+    edge_rels = [r for r in relationships if r["relation_type"] in ("IMPORTS", "INHERITS")]
+    source_ok = all(r["source_path"] in known_files for r in edge_rels)
+    target_ok = all(r["target_path"] in known_files for r in edge_rels if r.get("target_path"))
     checks["all_source_paths_in_files"] = source_ok
     checks["all_target_paths_in_files"] = target_ok
 
@@ -551,6 +668,7 @@ def build_artifact(
     file_count: int,
     validation: dict,
     xref_stats: dict,
+    inheritance_stats: dict | None = None,
 ) -> dict:
     """Assemble the 40.3s code_graph.json artifact."""
     type_counts: Counter = Counter()
@@ -560,7 +678,7 @@ def build_artifact(
     summary = {rt: type_counts.get(rt, 0) for rt in sorted(SUPPORTED_RELATION_TYPES)}
     summary["total"] = len(relationships)
 
-    return {
+    artifact = {
         "contract_id": CONTRACT_ID,
         "artifact_class": "40.3s",
         "client_id": client,
@@ -574,6 +692,9 @@ def build_artifact(
         "validation": validation,
         "cross_reference": xref_stats,
     }
+    if inheritance_stats:
+        artifact["inheritance_resolution"] = inheritance_stats
+    return artifact
 
 
 # ── Feasibility Report ──────────────────────────────────────────────────────
@@ -716,16 +837,28 @@ def main() -> int:
 
     # ── Extract relationships from all files ──────────────────────────────
     all_relationships: list[dict] = []
+    file_import_names: dict[str, dict[str, str]] = {}
     for abs_path, rel_path in py_files:
-        rels = extract_relationships(
+        rels, imp_names = extract_relationships(
             abs_path, rel_path, package_root, paths["intake_dir"], known_files, source_root_rel,
             package_prefixes=package_prefixes,
         )
         all_relationships.extend(rels)
+        if imp_names:
+            file_import_names[rel_path] = imp_names
 
     all_relationships.sort(key=lambda r: (r["source_path"], r["relation_type"], r.get("evidence", {}).get("line", 0)))
 
     print(f"  Total relationships extracted: {len(all_relationships)}")
+
+    # ── Resolve inheritance ──────────────────────────────────────────────
+    inheritance_stats = resolve_inheritance(all_relationships, file_import_names)
+    print(f"  Inheritance resolution: {inheritance_stats['resolved']}/{inheritance_stats['total_inherits_input']} resolved")
+    print(f"    via import context: {inheritance_stats['resolved_via_import_context']}")
+    print(f"    via same file:     {inheritance_stats['resolved_via_same_file']}")
+    print(f"    via unique class:  {inheritance_stats['resolved_via_unique_class']}")
+    print(f"    unresolved (external): {inheritance_stats['unresolved_external']}")
+    print(f"    unresolved (ambiguous): {inheritance_stats['unresolved_ambiguous']}")
 
     # ── Cross-reference with 40.2 ────────────────────────────────────────
     all_relationships, xref_stats = cross_reference_inventory(
@@ -744,6 +877,7 @@ def main() -> int:
     artifact = build_artifact(
         all_relationships, args.client, args.run_id,
         source_root_rel, len(py_files), validation, xref_stats,
+        inheritance_stats=inheritance_stats,
     )
 
     if args.dry_run:
