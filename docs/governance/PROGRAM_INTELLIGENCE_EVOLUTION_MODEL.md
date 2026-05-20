@@ -303,8 +303,8 @@ This model defines **what accumulates** as those systems execute. It is the conn
 
 | Construct | Maturity |
 |---|---|
-| evidence_object contract | OPERATIONAL — 16 objects produced (NetBox 8 + StackStorm 8) |
-| hero_moment contract | OPERATIONAL — 5 objects produced (NetBox 5, StackStorm 0) |
+| evidence_object contract | OPERATIONAL — 19 objects produced (NetBox 9 + StackStorm 10) |
+| hero_moment contract | OPERATIONAL — 6 objects produced (NetBox 5, StackStorm 1) |
 | replay_corridor contract | OPERATIONAL — 2 objects produced (NetBox 1 + StackStorm 1) |
 | convergence_observation contract | OPERATIONAL — 5 objects produced (NetBox × StackStorm cross-specimen) |
 | qualification_transition contract | DEFINED — produced at Step 2 |
@@ -325,14 +325,14 @@ High-level operational sequencing. Not backlog. Not implementation tasks. Not GT
 ### Current State
 
 - Steps 1–4 COMPLETE
-- NetBox onboarded through PATH A (Phases 1–3.7 PASS, 14 spine objects)
-- StackStorm onboarded as second specimen (Phases 1–3.7 PASS, 14 spine objects: 8 evidence, 0 hero moments, 1 replay, 5 convergence observations)
+- NetBox onboarded through PATH A (Phases 1–3.7 PASS, 15 spine objects: 9 evidence, 5 hero moments, 1 replay)
+- StackStorm onboarded as second specimen (Phases 1–3.7 PASS, 17 spine objects: 10 evidence, 1 hero moment, 1 replay, 5 convergence observations)
 - LENS v2 renders both specimens at S1 structural-only (24 clusters NetBox, 57 clusters StackStorm)
 - SQO V1/V2 cockpits operational for both specimens
 - pallets-flask at S1 with permanent insufficiency
 - BlueEdge at S2 (only semantically qualified specimen)
 - 4 spine object classes OPERATIONAL: evidence_object, hero_moment, replay_corridor, convergence_observation
-- Cross-specimen accumulation operational (2 specimens, 28 total spine objects)
+- Cross-specimen accumulation operational (2 specimens, 32 total spine objects)
 
 ### Operational Sequence
 
