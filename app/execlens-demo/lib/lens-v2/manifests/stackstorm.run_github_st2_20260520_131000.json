@@ -1,0 +1,32 @@
+{
+  "manifest_version": "1.0",
+  "client": "stackstorm",
+  "run_id": "run_github_st2_20260520_131000",
+  "stream_anchor": "PI.STACKSTORM.SECOND-SPECIMEN-ONBOARDING.01",
+  "qualification_level": "S1",
+  "labels": {
+    "client_display_name": "StackStorm (StackStorm/st2)",
+    "run_display_name": "StackStorm second specimen onboarding · run_github_st2_20260520_131000"
+  },
+  "baseline": {
+    "governance_tag": "PI.STACKSTORM.SECOND-SPECIMEN-ONBOARDING.01",
+    "pipeline_commit": "7d20478"
+  },
+  "artifacts": {
+    "required": {
+      "canonical_topology_40_4": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/structure/40.4/canonical_topology.json"
+    },
+    "optional": {
+      "structural_topology_log_40_3": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/structure/40.3/structural_topology_log.json"
+    }
+  },
+  "report_pack": {},
+  "governance": {
+    "lane_a_read_only": true,
+    "lane_d_dpsig_read_only": true,
+    "additive_only": true,
+    "no_ai_inference": true,
+    "no_topology_mutation": true,
+    "no_synthetic_telemetry": true
+  }
+}

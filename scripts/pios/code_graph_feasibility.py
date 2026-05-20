@@ -154,6 +154,33 @@ def find_python_files(source_root: Path, intake_dir: Path) -> list[tuple[Path, s
     return results
 
 
+# ── Multi-Package Discovery ──────────────────────────────────────────────────
+
+def discover_package_prefixes(intake_dir: Path) -> dict[str, str]:
+    """
+    Detect multi-package Python repos where each top-level directory contains
+    a nested directory of the same name with __init__.py.
+
+    Pattern: <pkg>/<pkg>/__init__.py  (e.g. st2common/st2common/__init__.py)
+
+    Returns a mapping: { "st2common": "st2common/st2common" }
+    so that `from st2common.models import X` resolves to
+    `st2common/st2common/models.py` or `st2common/st2common/models/__init__.py`.
+    """
+    prefixes = {}
+    try:
+        entries = sorted(intake_dir.iterdir())
+    except OSError:
+        return prefixes
+    for entry in entries:
+        if not entry.is_dir() or entry.name.startswith("."):
+            continue
+        nested = entry / entry.name
+        if nested.is_dir() and (nested / "__init__.py").is_file():
+            prefixes[entry.name] = f"{entry.name}/{entry.name}"
+    return prefixes
+
+
 # ── AST Extraction ───────────────────────────────────────────────────────────
 
 def resolve_relative_import(
@@ -205,16 +232,32 @@ def resolve_absolute_import(
     known_files: set[str],
     intake_dir: Path,
     source_root_rel: str = "",
+    package_prefixes: dict[str, str] | None = None,
 ) -> str | None:
     """
     Resolve an absolute import against known project files.
-    Tries bare path, src/ prefix, and source_root_rel prefix (for Django-style layouts).
+
+    Resolution order:
+    1. Multi-package prefix rewrite (st2common.X → st2common/st2common/X)
+    2. Bare path (X.Y → X/Y.py)
+    3. source_root_rel prefix (for Django-style layouts)
+    4. src/ prefix (for src-layout)
     """
     parts = module.split(".")
+
+    # Multi-package prefix resolution: if the top-level module name matches
+    # a discovered package prefix, rewrite the path through the nested package.
+    if package_prefixes and parts[0] in package_prefixes:
+        rewritten = [package_prefixes[parts[0]]] + list(parts[1:])
+        suffixes = ["/".join(rewritten) + ".py", "/".join(rewritten) + "/__init__.py"]
+        for suffix in suffixes:
+            if suffix in known_files:
+                return suffix
+
     suffixes = ["/".join(parts) + ".py", "/".join(parts) + "/__init__.py"]
 
     prefixes = [""]
-    if source_root_rel and source_root_rel != "src":
+    if source_root_rel and source_root_rel != "." and source_root_rel != "src":
         prefixes.append(source_root_rel + "/")
     prefixes.append("src/")
 
@@ -234,6 +277,7 @@ def extract_relationships(
     intake_dir: Path,
     known_files: set[str],
     source_root_rel: str = "",
+    package_prefixes: dict[str, str] | None = None,
 ) -> list[dict]:
     """
     Extract all structural code-graph relationships from a single Python file.
@@ -277,7 +321,7 @@ def extract_relationships(
                     })
             else:
                 if node.module:
-                    target = resolve_absolute_import(node.module, known_files, intake_dir, source_root_rel)
+                    target = resolve_absolute_import(node.module, known_files, intake_dir, source_root_rel, package_prefixes)
                     if target and target != rel_path and target not in seen_imports:
                         seen_imports.add(target)
                         names = ", ".join(a.name for a in node.names[:3])
@@ -297,7 +341,7 @@ def extract_relationships(
 
         elif isinstance(node, ast.Import):
             for alias in node.names:
-                target = resolve_absolute_import(alias.name, known_files, intake_dir, source_root_rel)
+                target = resolve_absolute_import(alias.name, known_files, intake_dir, source_root_rel, package_prefixes)
                 if target and target != rel_path and target not in seen_imports:
                     seen_imports.add(target)
                     relationships.append({
@@ -663,11 +707,19 @@ def main() -> int:
 
     print(f"  Package root: {package_root.relative_to(paths['intake_dir'])}")
 
+    # ── Discover multi-package prefixes ──────────────────────────────────
+    package_prefixes = discover_package_prefixes(paths["intake_dir"])
+    if package_prefixes:
+        print(f"  Multi-package prefixes: {len(package_prefixes)} detected")
+        for pkg_name, pkg_path in sorted(package_prefixes.items()):
+            print(f"    {pkg_name} → {pkg_path}/")
+
     # ── Extract relationships from all files ──────────────────────────────
     all_relationships: list[dict] = []
     for abs_path, rel_path in py_files:
         rels = extract_relationships(
-            abs_path, rel_path, package_root, paths["intake_dir"], known_files, source_root_rel
+            abs_path, rel_path, package_root, paths["intake_dir"], known_files, source_root_rel,
+            package_prefixes=package_prefixes,
         )
         all_relationships.extend(rels)
 

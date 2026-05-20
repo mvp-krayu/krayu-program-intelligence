@@ -118,12 +118,24 @@ convergence_observation:
   specimens:        [<specimen_id>, ...]  # minimum 2 for cross-specimen
   evidence_anchors: [<evidence_object_id>, ...]
   pattern_status:   OBSERVED | REPEATABLE | CANDIDATE_LAW | CONFIRMED_LAW
+  interpretation_maturity: DESCRIPTIVE | COMPARATIVE | EMERGENT_PATTERN | OPERATIONAL_LAW
   observation_count: <int>
   timestamp:        <utc_iso>
 ```
 
 **Anchor:** Evidence objects from each referenced specimen.
-**Governance:** CONFIRMED_LAW requires 3+ independent specimens. No retroactive application.
+
+**Interpretation maturity levels:**
+- **DESCRIPTIVE** — measured difference between specimens. No causal attribution. No generalization. This is where all cross-specimen observations begin.
+- **COMPARATIVE** — pattern observed across 3+ specimens with consistent direction. May indicate structural tendency but not law. Causal attribution remains prohibited.
+- **EMERGENT_PATTERN** — pattern observed across 5+ specimens spanning at least 2 architecture styles. Documented as recurring structural tendency. Still not law — confounding variables not controlled.
+- **OPERATIONAL_LAW** — structurally derived invariant confirmed across specimen diversity sufficient to exclude architecture-style, language, and project-age confounds. Requires explicit governance review before promotion.
+
+**Governance:**
+- CONFIRMED_LAW pattern_status requires 3+ independent specimens. No retroactive application.
+- OPERATIONAL_LAW interpretation_maturity requires explicit governance stream authorization. Descriptive metrics do not become doctrine through repetition.
+- Convergence observations must not claim causality ("microservices produce X") — they state measured differences ("in this specimen pair, X was observed").
+- Two specimens establish a comparison, not a pattern. Three specimens begin to indicate recurrence. No specimen count alone proves a law.
 
 ### 3.5 qualification_transition
 
@@ -238,17 +250,17 @@ The spine activates through execution, not through architecture design:
 
 ```
 Phase 0 (COMPLETE):  Implicit spine — pipeline produces artifacts but no spine objects
-Phase 1 (CURRENT):   First spine objects — NetBox onboarding: 8 evidence_objects + 5 hero_moments + 1 replay_corridor
-Phase 2:            Qualification spine — operator workflow produces qualification_transitions
-Phase 3:            Cross-specimen spine — second onboarding produces convergence_observations
-Phase 4:            Projection spine — LENS captures produce executive_projection_snapshots
+Phase 1 (COMPLETE):  First spine objects — NetBox onboarding: 8 evidence_objects + 5 hero_moments + 1 replay_corridor
+Phase 2 (COMPLETE):  Qualification spine — SQO governance projection produces qualification state
+Phase 3 (COMPLETE):  Cross-specimen spine — StackStorm onboarding: 8 evidence_objects + 5 hero_moments + 1 replay_corridor + 5 convergence_observations
+Phase 4 (CURRENT):   Projection spine — LENS captures produce executive_projection_snapshots
 Phase 5:            Semantic spine — semantic derivation produces semantic_propositions
 Phase 6:            Doctrine spine — governance streams produce doctrine_evolution_records
 Phase 7:            Full spine — all 8 object classes operational
 ```
 
 Each phase requires the previous. No phase may be skipped.
-Phase 1 begins with NetBox onboarding.
+Phase 3 completed with StackStorm (StackStorm/st2) as second specimen.
 
 ---
 
@@ -291,18 +303,18 @@ This model defines **what accumulates** as those systems execute. It is the conn
 
 | Construct | Maturity |
 |---|---|
-| evidence_object contract | OPERATIONAL — 8 objects produced (NetBox onboarding) |
-| hero_moment contract | OPERATIONAL — 5 objects produced (NetBox onboarding) |
-| replay_corridor contract | OPERATIONAL — 1 object produced (NetBox onboarding) |
+| evidence_object contract | OPERATIONAL — 16 objects produced (NetBox 8 + StackStorm 8) |
+| hero_moment contract | OPERATIONAL — 5 objects produced (NetBox 5, StackStorm 0) |
+| replay_corridor contract | OPERATIONAL — 2 objects produced (NetBox 1 + StackStorm 1) |
+| convergence_observation contract | OPERATIONAL — 5 objects produced (NetBox × StackStorm cross-specimen) |
 | qualification_transition contract | DEFINED — produced at Step 2 |
 | executive_projection_snapshot contract | DEFINED — produced at Step 3 |
-| convergence_observation contract | DEFINED — produced at Step 4 |
 | semantic_proposition contract | DEFINED — produced at Step 5 |
 | doctrine_evolution_record contract | DEFINED — produced at Step 7 |
 | Spine persistence layer | NOT_IMPLEMENTED — governance shape defined, storage not |
 | Spine query interface | NOT_IMPLEMENTED |
 | Spine replay validation | NOT_IMPLEMENTED |
-| Cross-specimen accumulation | NOT_IMPLEMENTED — requires 2+ onboarded specimens |
+| Cross-specimen accumulation | OPERATIONAL — 5 convergence_observations across 2 specimens |
 
 ---
 
@@ -312,13 +324,15 @@ High-level operational sequencing. Not backlog. Not implementation tasks. Not GT
 
 ### Current State
 
-- NetBox onboarded through PATH A (Phases 1–3.7 PASS, 14 spine objects produced)
+- Steps 1–4 COMPLETE
+- NetBox onboarded through PATH A (Phases 1–3.7 PASS, 14 spine objects)
+- StackStorm onboarded as second specimen (Phases 1–3.7 PASS, 14 spine objects: 8 evidence, 0 hero moments, 1 replay, 5 convergence observations)
+- LENS v2 renders both specimens at S1 structural-only (24 clusters NetBox, 57 clusters StackStorm)
+- SQO V1/V2 cockpits operational for both specimens
 - pallets-flask at S1 with permanent insufficiency
 - BlueEdge at S2 (only semantically qualified specimen)
-- LENS v2 operationally mature (5B.3 complete, 4-persona, 36-query lattice, PI runtime layer)
-- SQO V2 cockpit operational (12-action authority workflow)
-- Evolution model defined, spine contracts locked
-- Two feature branches unmerged (evolution model, NetBox onboarding)
+- 4 spine object classes OPERATIONAL: evidence_object, hero_moment, replay_corridor, convergence_observation
+- Cross-specimen accumulation operational (2 specimens, 28 total spine objects)
 
 ### Operational Sequence
 

@@ -30,6 +30,9 @@ const REGISTRY = {
   netbox: {
     run_github_netbox_20260520_134600: 'netbox.run_github_netbox_20260520_134600.json',
   },
+  stackstorm: {
+    run_github_st2_20260520_131000: 'stackstorm.run_github_st2_20260520_131000.json',
+  },
 };
 
 function resolveRepoRoot() {
