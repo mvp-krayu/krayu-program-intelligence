@@ -215,8 +215,10 @@ function resolveSemanticPayload(manifest) {
     }
   }
 
-  // Project DPSIG signal set.
-  const dpsigSummary = projectDPSIGSignalSet(sources.dpsig_signal_set.data);
+  // Project DPSIG signal set (absent for S1 structural-only).
+  const dpsigSummary = sources.dpsig_signal_set && sources.dpsig_signal_set.ok
+    ? projectDPSIGSignalSet(sources.dpsig_signal_set.data)
+    : { ok: false, signals: [], normalization_basis: {} };
 
   // Project PSIG signals (optional).
   const psigSummary = sources.signal_registry && sources.signal_registry.ok
@@ -233,8 +235,10 @@ function resolveSemanticPayload(manifest) {
     ? sources.decision_validation.data : null;
   const reproducibilityVerdictData = sources.reproducibility_verdict && sources.reproducibility_verdict.ok
     ? sources.reproducibility_verdict.data : null;
+  const semanticTopologyData = sources.semantic_topology_model && sources.semantic_topology_model.ok
+    ? sources.semantic_topology_model.data : null;
   const hydrated = hydrateActors({
-    semanticTopologyModel: sources.semantic_topology_model.data,
+    semanticTopologyModel: semanticTopologyData,
     decisionValidation: decisionValidationData,
     reproducibilityVerdict: reproducibilityVerdictData,
     semanticCrosswalk: crosswalkData,
@@ -248,7 +252,7 @@ function resolveSemanticPayload(manifest) {
   });
 
   const derived = hydrated.derived;
-  const semanticTopology = sources.semantic_topology_model.data;
+  const semanticTopology = semanticTopologyData;
   const canonicalTopology = sources.canonical_topology_40_4.data;
   const decisionValidation = decisionValidationData;
 
@@ -507,7 +511,7 @@ function resolveSemanticPayload(manifest) {
           color_accent: c.color_accent || null,
           domain_count: c.domain_count != null ? c.domain_count : 0,
         })),
-    semantic_topology_edges: (semanticTopology.edges || []).map(e => ({
+    semantic_topology_edges: ((semanticTopology && semanticTopology.edges) || []).map(e => ({
       source_domain: e.source_domain || null,
       target_domain: e.target_domain || null,
       relationship_type: e.relationship_type || null,
@@ -586,11 +590,11 @@ function resolveSemanticPayload(manifest) {
       baseline_commit: baselineCommit,
     },
     governance_summary: {
-      lane_a_impact: dpsigSummary.lane_a_impact,
-      signal_registry_impact: dpsigSummary.signal_registry_impact,
-      psig_impact: dpsigSummary.psig_impact,
-      client_agnostic: dpsigSummary.client_agnostic,
-      topology_native: dpsigSummary.topology_native,
+      lane_a_impact: dpsigSummary.lane_a_impact || null,
+      signal_registry_impact: dpsigSummary.signal_registry_impact || null,
+      psig_impact: dpsigSummary.psig_impact || null,
+      client_agnostic: dpsigSummary.client_agnostic != null ? dpsigSummary.client_agnostic : null,
+      topology_native: dpsigSummary.topology_native != null ? dpsigSummary.topology_native : null,
       governance_verdict: 'PASS',
     },
     report_pack: reportPack,
@@ -633,7 +637,7 @@ function resolveSemanticPayload(manifest) {
     explainability_bundle: buildExplainabilityBundle(client, runId),
     reconciliation_summary: (() => {
       const recon = compileCorrespondence({
-        semanticTopologyModel: semanticTopology,
+        semanticTopologyModel: semanticTopology || null,
         canonicalTopology,
         semanticCrosswalk: crosswalkData,
         signalRegistry: sources.signal_registry && sources.signal_registry.ok ? sources.signal_registry.data : null,

@@ -23,8 +23,11 @@ const OPTIONAL_TOPLEVEL_HINT = [
 ];
 
 const STRUCTURAL_ARTIFACT_KEYS = [
-  'semantic_topology_model',
   'canonical_topology_40_4',
+];
+
+const S2_STRUCTURAL_ARTIFACT_KEYS = [
+  'semantic_topology_model',
   'dpsig_signal_set',
 ];
 
@@ -102,6 +105,15 @@ function validateClientRunManifest(doc) {
           errors.push(`ARTIFACT_REQUIRED_PATH_INVALID:${k}`);
         }
       }
+      for (const k of S2_STRUCTURAL_ARTIFACT_KEYS) {
+        if (Object.prototype.hasOwnProperty.call(doc.artifacts.required, k)) {
+          if (!looksLikeRelativePath(doc.artifacts.required[k])) {
+            errors.push(`ARTIFACT_REQUIRED_PATH_INVALID:${k}`);
+          }
+        } else if (!isS1) {
+          errors.push(`ARTIFACT_REQUIRED_MISSING:${k}`);
+        }
+      }
       for (const k of SEMANTIC_ARTIFACT_KEYS) {
         if (Object.prototype.hasOwnProperty.call(doc.artifacts.required, k)) {
           if (!looksLikeRelativePath(doc.artifacts.required[k])) {
@@ -145,6 +157,7 @@ module.exports = {
   REQUIRED_TOPLEVEL,
   OPTIONAL_TOPLEVEL_HINT,
   STRUCTURAL_ARTIFACT_KEYS,
+  S2_STRUCTURAL_ARTIFACT_KEYS,
   SEMANTIC_ARTIFACT_KEYS,
   REQUIRED_ARTIFACT_KEYS,
   OPTIONAL_ARTIFACT_KEYS_HINT,

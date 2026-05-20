@@ -326,9 +326,9 @@ function hydrateActors({
         psig_total: (signalRegistry && signalRegistry.total_signals) || 0,
         psig_active_count: (signalRegistry && signalRegistry.active_pressure_signals) || 0,
         active_psig_evidence: activePSIGEvidence,
-        dpsig_derived_count: dpsigSummary ? dpsigSummary.derived_count : 0,
-        dpsig_activated_count: dpsigSummary ? dpsigSummary.activated_count : 0,
-        dpsig_severity_band: dpsigSummary ? dpsigSummary.severity_band : null,
+        dpsig_derived_count: (dpsigSummary && dpsigSummary.derived_count) || 0,
+        dpsig_activated_count: (dpsigSummary && dpsigSummary.activated_count) || 0,
+        dpsig_severity_band: (dpsigSummary && dpsigSummary.severity_band) || null,
       },
     },
     evidence_trace: {
