@@ -17,7 +17,9 @@
       "canonical_topology_40_4": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/structure/40.4/canonical_topology.json"
     },
     "optional": {
-      "structural_topology_log_40_3": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/structure/40.3/structural_topology_log.json"
+      "structural_topology_log_40_3": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/structure/40.3/structural_topology_log.json",
+      "code_graph_40_3s": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/structure/40.3s/code_graph.json",
+      "structural_centrality_40_3c": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/structure/40.3c/structural_centrality.json"
     }
   },
   "report_pack": {},

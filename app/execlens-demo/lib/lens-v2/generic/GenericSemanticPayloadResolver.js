@@ -34,6 +34,129 @@ const { governanceToLegacy } = require('../QClassResolver');
 const { PAYLOAD_VERSION } = require('./LensSemanticPayloadSchema');
 const { compileCorrespondence } = require('../reconciliation/ReconciliationCorrespondenceCompiler');
 
+function deriveStructuralEnrichment(codeGraphData, centralityData, canonicalTopology) {
+  const enrichment = { available: false };
+
+  const cg = codeGraphData && codeGraphData.ok ? codeGraphData.data : null;
+  const ct = centralityData && centralityData.ok ? centralityData.data : null;
+
+  if (!cg && !ct) return enrichment;
+  enrichment.available = true;
+
+  if (cg) {
+    const rs = cg.relationship_summary || {};
+    enrichment.code_graph = {
+      total_import_edges: rs.IMPORTS || 0,
+      total_inheritance_edges: rs.INHERITS || 0,
+      total_unresolved_inheritance: rs.INHERITS_UNRESOLVED || 0,
+      total_classes: rs.DEFINES_CLASS || 0,
+      total_functions: rs.DEFINES_FUNCTION || 0,
+      total_structural_edges: (rs.IMPORTS || 0) + (rs.INHERITS || 0),
+      file_count: cg.file_count || 0,
+      indexer: cg.indexer ? cg.indexer.name : 'unknown',
+      capabilities: cg.indexer ? cg.indexer.capabilities : [],
+    };
+  }
+
+  if (ct) {
+    const ranking = ct.centrality_ranking || [];
+    const pm = ct.project_metrics || {};
+    const topSpines = ranking
+      .filter(n => !(n.false_positive_flags && n.false_positive_flags.length > 0))
+      .slice(0, 10)
+      .map(n => ({
+        path: n.path,
+        structural_role: n.structural_role,
+        in_degree: n.in_degree,
+        out_degree: n.out_degree,
+        import_in_degree: n.import_in_degree || 0,
+        import_out_degree: n.import_out_degree || 0,
+        inherits_in_degree: n.inherits_in_degree || 0,
+        inherits_out_degree: n.inherits_out_degree || 0,
+        centrality_rank: n.centrality_rank,
+      }));
+
+    const importDominant = ranking
+      .filter(n => !(n.false_positive_flags && n.false_positive_flags.length > 0))
+      .sort((a, b) => (b.import_in_degree || 0) - (a.import_in_degree || 0))[0];
+    const inheritsDominant = ranking
+      .filter(n => !(n.false_positive_flags && n.false_positive_flags.length > 0))
+      .sort((a, b) => (b.inherits_in_degree || 0) - (a.inherits_in_degree || 0))[0];
+
+    enrichment.centrality = {
+      top_structural_spines: topSpines,
+      role_summary: ct.role_summary || {},
+      project_metrics: {
+        total_files: pm.total_files || 0,
+        total_import_edges: pm.total_import_edges || 0,
+        total_resolved_inheritance_edges: pm.total_resolved_inheritance_edges || 0,
+        total_structural_edges: pm.total_structural_edges || 0,
+        graph_density: pm.graph_density || 0,
+      },
+    };
+
+    if (importDominant && inheritsDominant && importDominant.path !== inheritsDominant.path) {
+      enrichment.dual_authority = {
+        import_dominant: { path: importDominant.path, import_in_degree: importDominant.import_in_degree || 0 },
+        inheritance_dominant: { path: inheritsDominant.path, inherits_in_degree: inheritsDominant.inherits_in_degree || 0 },
+      };
+    }
+  }
+
+  return enrichment;
+}
+
+function classifyTopologyMaturity(manifest, structuralEnrichment, dpsigSummary, semanticTopologyData) {
+  if (semanticTopologyData && manifest.qualification_level !== 'S1') {
+    return {
+      level: 'SEMANTIC_PROJECTION',
+      label: 'Semantic Projection',
+      description: 'PATH B semantic qualification active — full domain topology with structural backing assessment.',
+      svg_policy: 'FULL',
+    };
+  }
+
+  const hasActivatedSignals = dpsigSummary && dpsigSummary.ok &&
+    (dpsigSummary.signals || []).some(s => s.activation_state && s.activation_state !== 'NOMINAL' && s.activation_state !== 'CLUSTER_BALANCED');
+  if (hasActivatedSignals) {
+    return {
+      level: 'PRESSURE_ENRICHED',
+      label: 'Pressure Enriched',
+      description: 'DPSIG pressure signals active — propagation topology with zone anchoring.',
+      svg_policy: 'FULL',
+    };
+  }
+
+  const en = structuralEnrichment;
+  const hasCentrality = en && en.available && en.centrality && en.centrality.top_structural_spines && en.centrality.top_structural_spines.length > 0;
+  const hasDualAuthority = en && en.dual_authority;
+  if (hasCentrality || hasDualAuthority) {
+    return {
+      level: 'AUTHORITY_ENRICHED',
+      label: 'Authority Enriched',
+      description: 'Code graph + centrality decomposition active — structural authority visible.',
+      svg_policy: 'ENRICHED',
+    };
+  }
+
+  const hasCodeGraph = en && en.available && en.code_graph && en.code_graph.total_structural_edges > 0;
+  if (hasCodeGraph) {
+    return {
+      level: 'GRAPH_ENRICHED',
+      label: 'Graph Enriched',
+      description: 'Code graph resolved — import/inheritance edges available, centrality pending.',
+      svg_policy: 'COMPACT',
+    };
+  }
+
+  return {
+    level: 'STRUCTURAL_REGISTRY',
+    label: 'Structural Registry',
+    description: 'Raw cluster inventory from directory topology. No authority, pressure, or semantic enrichment.',
+    svg_policy: 'REGISTRY',
+  };
+}
+
 const REPORT_NAMES = {
   'decision-surface':  'Decision Surface',
   'tier1-narrative':   'Tier-1 Narrative Brief',
@@ -255,6 +378,14 @@ function resolveSemanticPayload(manifest) {
   const semanticTopology = semanticTopologyData;
   const canonicalTopology = sources.canonical_topology_40_4.data;
   const decisionValidation = decisionValidationData;
+
+  const structuralEnrichment = deriveStructuralEnrichment(
+    sources.code_graph_40_3s, sources.structural_centrality_40_3c, canonicalTopology
+  );
+
+  const topologyMaturity = classifyTopologyMaturity(
+    manifest, structuralEnrichment, dpsigSummary, semanticTopologyData
+  );
 
   // Active zone anchor (from VF-05 evidence text, or DPSIG max cluster for S1).
   const vf05 = ((decisionValidation || {}).checks || []).find((c) => c.id === 'VF-05');
@@ -517,7 +648,7 @@ function resolveSemanticPayload(manifest) {
       relationship_type: e.relationship_type || null,
     })),
     semantic_crosswalk: semanticCrosswalk,
-    topology_summary: isS1 ? {
+    topology_summary: isS1 ? Object.assign({
       semantic_domain_count: semanticDomainRegistry.length,
       structural_dom_count: (canonicalTopology.clusters || []).length,
       cluster_count: (canonicalTopology.clusters || []).length,
@@ -525,7 +656,14 @@ function resolveSemanticPayload(manifest) {
       semantic_only_count: 0,
       grounding_ratio: 1,
       coverage_classification: 'STRUCTURAL',
-    } : {
+    }, structuralEnrichment.available && structuralEnrichment.code_graph ? {
+      total_import_edges: structuralEnrichment.code_graph.total_import_edges,
+      total_inheritance_edges: structuralEnrichment.code_graph.total_inheritance_edges,
+      total_structural_edges: structuralEnrichment.code_graph.total_structural_edges,
+      total_classes: structuralEnrichment.code_graph.total_classes,
+      code_graph_file_count: structuralEnrichment.code_graph.file_count,
+      enrichment_source: '40.3s + 40.3c',
+    } : {}) : {
       semantic_domain_count: derived.total_domains,
       structural_dom_count: (canonicalTopology.clusters || []).length,
       cluster_count: (canonicalTopology.clusters || []).length,
@@ -664,6 +802,8 @@ function resolveSemanticPayload(manifest) {
         })),
       };
     })(),
+    structural_enrichment: structuralEnrichment,
+    topology_maturity: topologyMaturity,
     interaction_registry: { interactions: [] },
     module_registry: {
       entries: [

@@ -18,17 +18,19 @@ const LINEAGE_COLORS = {
 }
 
 
-function StructuralComposition({ topologySummary, isS1 }) {
+function StructuralComposition({ topologySummary, isS1, structuralEnrichment }) {
   const ts = topologySummary || {}
   const total = ts.semantic_domain_count || 0
   const backed = ts.structurally_backed_count || 0
   const semOnly = ts.semantic_only_count || 0
   const clusters = ts.cluster_count || 0
+  const enriched = structuralEnrichment && structuralEnrichment.available
   if (isS1) {
     return (
       <div className="topo-composition">
         <div className="topo-composition-summary">
           Structural topology active. {clusters} structural clusters across {total} structural domains.
+          {enriched && ts.total_structural_edges ? ` ${ts.total_structural_edges.toLocaleString()} structural edges resolved (${ts.total_import_edges.toLocaleString()} import · ${ts.total_inheritance_edges.toLocaleString()} inheritance).` : ''}
         </div>
         <div className="topo-composition-stats">
           <div className="topo-stat-card">
@@ -36,13 +38,32 @@ function StructuralComposition({ topologySummary, isS1 }) {
             <div className="topo-stat-label">STRUCTURAL CLUSTERS</div>
           </div>
           <div className="topo-stat-card">
-            <div className="topo-stat-value">{total}</div>
-            <div className="topo-stat-label">STRUCTURAL DOMAINS</div>
+            <div className="topo-stat-value">{enriched ? (ts.code_graph_file_count || total) : total}</div>
+            <div className="topo-stat-label">{enriched ? 'CODE GRAPH FILES' : 'STRUCTURAL DOMAINS'}</div>
           </div>
-          <div className="topo-stat-card">
-            <div className="topo-stat-value">{ts.structural_dom_count || clusters}</div>
-            <div className="topo-stat-label">TOPOLOGY GROUPS</div>
-          </div>
+          {enriched && ts.total_import_edges ? (
+            <div className="topo-stat-card">
+              <div className="topo-stat-value">{ts.total_import_edges.toLocaleString()}</div>
+              <div className="topo-stat-label">IMPORT EDGES</div>
+            </div>
+          ) : (
+            <div className="topo-stat-card">
+              <div className="topo-stat-value">{ts.structural_dom_count || clusters}</div>
+              <div className="topo-stat-label">TOPOLOGY GROUPS</div>
+            </div>
+          )}
+          {enriched && ts.total_inheritance_edges ? (
+            <div className="topo-stat-card">
+              <div className="topo-stat-value">{ts.total_inheritance_edges.toLocaleString()}</div>
+              <div className="topo-stat-label">INHERITANCE EDGES</div>
+            </div>
+          ) : null}
+          {enriched && ts.total_classes ? (
+            <div className="topo-stat-card">
+              <div className="topo-stat-value">{ts.total_classes.toLocaleString()}</div>
+              <div className="topo-stat-label">CLASS DEFINITIONS</div>
+            </div>
+          ) : null}
         </div>
       </div>
     )
@@ -66,6 +87,54 @@ function StructuralComposition({ topologySummary, isS1 }) {
           <div className="topo-stat-label">SEMANTIC-ONLY</div>
         </div>
       </div>
+    </div>
+  )
+}
+
+export function StructuralSpinesPanel({ structuralEnrichment }) {
+  if (!structuralEnrichment || !structuralEnrichment.available) return null
+  const ct = structuralEnrichment.centrality
+  if (!ct || !ct.top_structural_spines || ct.top_structural_spines.length === 0) return null
+  const spines = ct.top_structural_spines
+  const dual = structuralEnrichment.dual_authority
+  return (
+    <div className="topo-spines-panel">
+      <div className="topo-spines-heading">STRUCTURAL CENTRALITY — TOP SPINES</div>
+      {dual && (
+        <div className="topo-spines-dual">
+          <span className="topo-spines-dual-tag" style={{ borderColor: '#4a9eff' }}>
+            IMPORT AUTHORITY: {dual.import_dominant.path.split('/').slice(-2).join('/')} ({dual.import_dominant.import_in_degree})
+          </span>
+          <span className="topo-spines-dual-tag" style={{ borderColor: '#64ffda' }}>
+            INHERITANCE AUTHORITY: {dual.inheritance_dominant.path.split('/').slice(-2).join('/')} ({dual.inheritance_dominant.inherits_in_degree})
+          </span>
+        </div>
+      )}
+      <div className="topo-spines-grid">
+        {spines.map((s, i) => {
+          const shortPath = s.path.split('/').slice(-2).join('/')
+          const hasInheritance = s.inherits_in_degree > 0
+          const hasImports = s.import_in_degree > 0
+          return (
+            <div key={i} className="topo-spine-card">
+              <div className="topo-spine-card-rank">#{s.centrality_rank}</div>
+              <div className="topo-spine-card-path" title={s.path}>{shortPath}</div>
+              <div className="topo-spine-card-role">{s.structural_role}</div>
+              <div className="topo-spine-card-metrics">
+                {hasImports && <span className="topo-spine-metric" data-type="import">IMP {s.import_in_degree}↓ {s.import_out_degree}↑</span>}
+                {hasInheritance && <span className="topo-spine-metric" data-type="inherit">INH {s.inherits_in_degree}↓ {s.inherits_out_degree}↑</span>}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+      {ct.role_summary && (
+        <div className="topo-spines-roles">
+          {Object.entries(ct.role_summary).filter(([,v]) => v > 0).map(([role, count]) => (
+            <span key={role} className="topo-spine-role-chip">{role.replace(/_/g, ' ')} ({count})</span>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
@@ -511,6 +580,7 @@ export default function StructuralTopologyZone({ evidenceBlocks, propagationChai
   const topologyEdges = (fullReport && fullReport.semantic_topology_edges) || []
   const topologySummary = (fullReport && fullReport.topology_summary) || {}
   const propagationSummary = (fullReport && fullReport.propagation_summary) || {}
+  const structuralEnrichment = (fullReport && fullReport.structural_enrichment) || null
   const zoneName = propagationSummary.primary_zone_business_label || ''
   const isS1 = (fullReport && fullReport.qualification_level) === 'S1'
 
@@ -533,7 +603,10 @@ export default function StructuralTopologyZone({ evidenceBlocks, propagationChai
           />
         )}
         {isS1 && domainRegistry.length === 0 && clusterRegistry.length > 0 && (
-          <StructuralComposition topologySummary={topologySummary} isS1={isS1} />
+          <StructuralComposition topologySummary={topologySummary} isS1={isS1} structuralEnrichment={structuralEnrichment} />
+        )}
+        {isS1 && structuralEnrichment && structuralEnrichment.available && (
+          <StructuralSpinesPanel structuralEnrichment={structuralEnrichment} />
         )}
         {densityClass === 'EXECUTIVE_DENSE' && domainRegistry.length > 0 && (
           <DomainCoverageGrid domains={domainRegistry} onDomainClick={setFocusedDomain} focusedDomain={focusedDomain} isS1={isS1} />
@@ -548,9 +621,11 @@ export default function StructuralTopologyZone({ evidenceBlocks, propagationChai
         <span className="topo-executive-pre">{isS1 ? 'STRUCTURAL TOPOLOGY' : 'STRUCTURAL COMPOSITION'}</span>
       </div>
 
-      <StructuralComposition topologySummary={topologySummary} isS1={isS1} />
+      <StructuralComposition topologySummary={topologySummary} isS1={isS1} structuralEnrichment={structuralEnrichment} />
 
       <EvidenceCardPanel evidenceBlocks={evidenceBlocks} />
+
+      {isS1 && <StructuralSpinesPanel structuralEnrichment={structuralEnrichment} />}
 
       {clusterRegistry.length > 0 && (
         <TopologyGraph

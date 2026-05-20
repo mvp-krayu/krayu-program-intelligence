@@ -4470,6 +4470,210 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .topo-executive--boardroom .topo-evidence-panel { display: none; }
 
+        /* Topology Maturity Badge + Registry View */
+        .topo-maturity-badge {
+          font-size: 9px;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          padding: 2px 8px;
+          border-radius: 2px;
+          margin-left: 8px;
+          font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+          border: 1px solid;
+        }
+        .topo-maturity-badge--structural-registry {
+          color: #5e6d8a;
+          border-color: #2a2f40;
+          background: rgba(30,35,48,0.4);
+        }
+        .topo-maturity-badge--graph-enriched {
+          color: #7a8aaa;
+          border-color: #2a2f40;
+          background: rgba(30,35,48,0.5);
+        }
+        .topo-maturity-badge--authority-enriched {
+          color: #4a9eff;
+          border-color: rgba(74,158,255,0.3);
+          background: rgba(74,158,255,0.06);
+        }
+        .topo-maturity-badge--pressure-enriched {
+          color: #ffd700;
+          border-color: rgba(255,215,0,0.3);
+          background: rgba(255,215,0,0.06);
+        }
+        .topo-maturity-badge--semantic-projection {
+          color: #64ffda;
+          border-color: rgba(100,255,218,0.3);
+          background: rgba(100,255,218,0.06);
+        }
+        .topo-maturity-description {
+          font-size: 10px;
+          color: #5e6d8a;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          margin-bottom: 12px;
+          line-height: 1.4;
+        }
+        .topo-registry-compact {
+          border: 1px solid #1e2330;
+          border-radius: 3px;
+          background: rgba(18,21,31,0.5);
+          padding: 12px 14px;
+        }
+        .topo-registry-heading {
+          font-size: 10px;
+          color: #5e6d8a;
+          letter-spacing: 0.18em;
+          font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+          margin-bottom: 10px;
+        }
+        .topo-registry-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+          gap: 4px;
+        }
+        .topo-registry-item {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 4px 8px;
+          border-radius: 2px;
+          background: rgba(20,23,32,0.4);
+          border-left: 2px solid #1e2330;
+        }
+        .topo-registry-item--anchor {
+          border-left-color: #ffd700;
+        }
+        .topo-registry-item-id {
+          font-size: 9px;
+          color: #4a5570;
+          font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+          flex-shrink: 0;
+          width: 44px;
+        }
+        .topo-registry-item-name {
+          font-size: 10px;
+          color: #8a96b2;
+          font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+          flex: 1;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .topo-registry-item-count {
+          font-size: 9px;
+          color: #4a5570;
+          font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+          flex-shrink: 0;
+        }
+        .topo-registry-expand {
+          margin-top: 10px;
+          font-size: 10px;
+          color: #4a9eff;
+          cursor: pointer;
+          font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+          text-align: center;
+          padding: 6px;
+          border: 1px solid #1e2330;
+          border-radius: 2px;
+          transition: background 0.15s ease;
+        }
+        .topo-registry-expand:hover {
+          background: rgba(74,158,255,0.06);
+        }
+
+        /* Structural Spines Panel */
+        .topo-spines-panel {
+          margin-bottom: 16px;
+          padding: 12px 14px;
+          border: 1px solid #1e2330;
+          border-radius: 3px;
+          background: rgba(18,21,31,0.6);
+        }
+        .topo-spines-heading {
+          font-size: 10px;
+          color: #8a96b2;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          font-weight: 500;
+          margin-bottom: 10px;
+        }
+        .topo-spines-dual {
+          display: flex;
+          gap: 10px;
+          margin-bottom: 12px;
+          flex-wrap: wrap;
+        }
+        .topo-spines-dual-tag {
+          font-size: 10px;
+          font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+          color: #ccd6f6;
+          padding: 4px 10px;
+          border: 1px solid;
+          border-radius: 2px;
+          background: rgba(20,23,32,0.7);
+        }
+        .topo-spines-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+          gap: 6px;
+          margin-bottom: 10px;
+        }
+        .topo-spine-card {
+          padding: 8px 10px;
+          border: 1px solid #1e2330;
+          border-radius: 2px;
+          background: rgba(20,23,32,0.4);
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+        .topo-spine-card-rank {
+          font-size: 9px;
+          color: #5e6d8a;
+          font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+          font-weight: 600;
+        }
+        .topo-spine-card-path {
+          font-size: 11px;
+          color: #ccd6f6;
+          font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .topo-spine-card-role {
+          font-size: 9px;
+          color: #7a8aaa;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+        }
+        .topo-spine-card-metrics {
+          display: flex;
+          gap: 8px;
+          margin-top: 2px;
+        }
+        .topo-spine-metric {
+          font-size: 9px;
+          font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+          color: #7a8aaa;
+        }
+        .topo-spine-metric[data-type="import"] { color: #4a9eff; }
+        .topo-spine-metric[data-type="inherit"] { color: #64ffda; }
+        .topo-spines-roles {
+          display: flex;
+          gap: 6px;
+          flex-wrap: wrap;
+        }
+        .topo-spine-role-chip {
+          font-size: 9px;
+          color: #7a8aaa;
+          padding: 2px 8px;
+          border: 1px solid #1e2330;
+          border-radius: 2px;
+          font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+          letter-spacing: 0.06em;
+        }
+
         /* Topology Graph SVG */
         .topo-graph-wrap {
           margin-bottom: 14px;
@@ -6546,6 +6750,23 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-size: 11px;
           color: #9aa0bc;
           line-height: 1.55;
+        }
+        .actor-cluster-enrichment {
+          display: flex;
+          gap: 4px;
+          align-items: center;
+          flex-wrap: wrap;
+          margin-bottom: 10px;
+          font-size: 11px;
+          color: #8a96b2;
+          font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        }
+        .actor-cluster-enrichment strong {
+          color: #ccd6f6;
+        }
+        .actor-cluster-enrichment-sep {
+          color: #4a5570;
+          margin: 0 2px;
         }
 
         /* ── Absorption Load (E) ───────────────────────────────────────── */

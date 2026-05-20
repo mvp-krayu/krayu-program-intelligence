@@ -44,6 +44,8 @@ const REQUIRED_ARTIFACT_KEYS = [
 
 const OPTIONAL_ARTIFACT_KEYS_HINT = [
   'structural_topology_log_40_3',
+  'code_graph_40_3s',
+  'structural_centrality_40_3c',
   'signal_registry',
   'evidence_trace',
   'vault_readiness',

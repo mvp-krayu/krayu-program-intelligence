@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useRef, useMemo, Fragment } from 'rea
 import { createPortal } from 'react-dom'
 import { PRESSURE_META, ROLE_META, DEFAULT_BINDING_CLIENT, DEFAULT_BINDING_RUN } from './constants'
 import InvestigationReadingGuide, { TermHint } from './InvestigationReadingGuide'
-import { TopologyGraph } from './StructuralTopologyZone'
+import { TopologyGraph, StructuralSpinesPanel } from './StructuralTopologyZone'
 import { buildTrailHTML } from '../../../lib/lens-v2/InterrogationTrailBuilder'
 
 const SEMANTIC_ACTORS = {
@@ -2897,16 +2897,30 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
         </div>
       </div>
 
-      {scope && scope.cluster_count != null && (
+      {scope && scope.cluster_count != null && (() => {
+        const ts = (fullReport && fullReport.topology_summary) || {}
+        const enriched = ts.enrichment_source
+        return (
         <div className="actor actor--cluster-concentration" data-zone-key="clusterConcentration">
           <div className="actor-tag">
             <span className="actor-code">CC</span>
-            <span className="actor-name">Cluster Concentration</span>
+            <span className="actor-name">Cluster Concentration{enriched ? ' · Code Graph Enriched' : ''}</span>
           </div>
           <div className="actor-cluster-headline">
             <span className="actor-cluster-value">{scope.cluster_count}</span>
             <span className="actor-cluster-label">clusters monitored</span>
           </div>
+          {enriched && (
+            <div className="actor-cluster-enrichment">
+              <span className="actor-cluster-enrichment-stat"><strong>{(ts.total_import_edges || 0).toLocaleString()}</strong> import edges</span>
+              <span className="actor-cluster-enrichment-sep">·</span>
+              <span className="actor-cluster-enrichment-stat"><strong>{(ts.total_inheritance_edges || 0).toLocaleString()}</strong> inheritance edges</span>
+              <span className="actor-cluster-enrichment-sep">·</span>
+              <span className="actor-cluster-enrichment-stat"><strong>{(ts.total_classes || 0).toLocaleString()}</strong> classes</span>
+              <span className="actor-cluster-enrichment-sep">·</span>
+              <span className="actor-cluster-enrichment-stat"><strong>{(ts.code_graph_file_count || 0).toLocaleString()}</strong> code graph files</span>
+            </div>
+          )}
           <div className="actor-cluster-bar">
             <div
               className="actor-cluster-bar-fill"
@@ -2914,10 +2928,13 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
             />
           </div>
           <div className="actor-cluster-meta">
-            structural mass concentrated upstream — Primary Delivery holds 23 of 31 active clusters; coordination layer absorbs propagation
+            {enriched
+              ? `${(ts.total_structural_edges || 0).toLocaleString()} structural edges across ${ts.code_graph_file_count || '?'} files — import + inheritance authority resolved`
+              : 'structural mass concentrated upstream — Primary Delivery holds 23 of 31 active clusters; coordination layer absorbs propagation'}
           </div>
         </div>
-      )}
+        )
+      })()}
 
       {passthrough && (
         <div className="actor actor--absorption-load" data-zone-key="absorptionLoad">
@@ -2977,16 +2994,58 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
 
       <PressureZoneFocusBlock fullReport={fullReport} />
 
-      {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (
-        <div className="dense-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
-          <TopologyGraph
-            domains={fullReport.semantic_domain_registry}
-            clusters={fullReport.semantic_cluster_registry || []}
-            edges={fullReport.semantic_topology_edges || []}
-            pressureZoneLabel={pressureZone}
-          />
-          <div className="dense-topology-hint">Open structural topology</div>
-        </div>
+      {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (() => {
+        const tm = (fullReport && fullReport.topology_maturity) || {}
+        const svgPolicy = tm.svg_policy || 'REGISTRY'
+        const showFullSvg = svgPolicy === 'FULL' || svgPolicy === 'ENRICHED'
+        const clusters = fullReport.semantic_cluster_registry || []
+        return (
+          <div className="actor actor--topology-surface" data-zone-key="topologySurface">
+            <div className="actor-tag">
+              <span className="actor-code">TS</span>
+              <span className="actor-name">Topology Surface</span>
+              <span className={`topo-maturity-badge topo-maturity-badge--${(tm.level || 'STRUCTURAL_REGISTRY').toLowerCase().replace(/_/g, '-')}`}>
+                {tm.label || 'Structural Registry'}
+              </span>
+            </div>
+            <div className="topo-maturity-description">{tm.description || ''}</div>
+            {showFullSvg ? (
+              <div className="dense-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
+                <TopologyGraph
+                  domains={fullReport.semantic_domain_registry}
+                  clusters={clusters}
+                  edges={fullReport.semantic_topology_edges || []}
+                  pressureZoneLabel={pressureZone}
+                />
+                <div className="dense-topology-hint">Open structural topology</div>
+              </div>
+            ) : (
+              <div className="topo-registry-compact">
+                <div className="topo-registry-heading">
+                  {clusters.length} STRUCTURAL CLUSTERS — REGISTRY VIEW
+                </div>
+                <div className="topo-registry-grid">
+                  {clusters.map(c => (
+                    <div key={c.cluster_id} className={`topo-registry-item${c.color_accent === '#ffd700' ? ' topo-registry-item--anchor' : ''}`}>
+                      <span className="topo-registry-item-id">{c.cluster_id}</span>
+                      <span className="topo-registry-item-name">{c.cluster_label || c.cluster_id}</span>
+                      <span className="topo-registry-item-count">{c.node_count || 0}</span>
+                    </div>
+                  ))}
+                </div>
+                {svgPolicy === 'COMPACT' && (
+                  <div className="topo-registry-expand" onClick={openTopoModal} role="button" tabIndex={0} onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
+                    Expand full cluster topology
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )
+      })()}
+
+      {fullReport && fullReport.structural_enrichment && fullReport.structural_enrichment.available && (
+        <StructuralSpinesPanel structuralEnrichment={fullReport.structural_enrichment} />
       )}
 
       {topoModalOpen && createPortal(<TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} mode="dense" />, document.body)}
