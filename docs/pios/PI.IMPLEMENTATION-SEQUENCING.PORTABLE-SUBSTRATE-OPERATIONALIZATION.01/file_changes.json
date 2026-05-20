@@ -1,0 +1,28 @@
+{
+  "stream": "PI.IMPLEMENTATION-SEQUENCING.PORTABLE-SUBSTRATE-OPERATIONALIZATION.01",
+  "changes": [
+    { "file": "scripts/pios/run_client_pipeline.py", "action": "MODIFIED", "purpose": "Parameterize all BlueEdge-specific hardcodings: artifact_id, GR-01 guardrail text (2 instances), evidence_basis, vault_manifest GR-01, contract ID, remediation message, comments" },
+    { "file": "clients/pallets-flask/client.yaml", "action": "CREATED", "purpose": "Complete pallets-flask client registration (was missing)" },
+    { "file": "clients/pallets-flask/sources/source_01/source_manifest.json", "action": "CREATED", "purpose": "Complete pallets-flask source manifest registration (was missing)" },
+    { "file": "docs/pios/PI.IMPLEMENTATION-SEQUENCING.PORTABLE-SUBSTRATE-OPERATIONALIZATION.01/PORTABLE_ONBOARDING_CONTRACT.md", "action": "CREATED", "purpose": "7-step portable onboarding contract specification" },
+    { "file": "docs/pios/PI.IMPLEMENTATION-SEQUENCING.PORTABLE-SUBSTRATE-OPERATIONALIZATION.01/execution_report.md", "action": "CREATED", "purpose": "Full execution report" },
+    { "file": "docs/pios/PI.IMPLEMENTATION-SEQUENCING.PORTABLE-SUBSTRATE-OPERATIONALIZATION.01/validation_log.json", "action": "CREATED", "purpose": "20/20 validation checks" },
+    { "file": "docs/pios/PI.IMPLEMENTATION-SEQUENCING.PORTABLE-SUBSTRATE-OPERATIONALIZATION.01/file_changes.json", "action": "CREATED", "purpose": "File change manifest" },
+    { "file": "docs/pios/PI.IMPLEMENTATION-SEQUENCING.PORTABLE-SUBSTRATE-OPERATIONALIZATION.01/CLOSURE.md", "action": "CREATED", "purpose": "Stream closure" }
+  ],
+  "not_modified": [
+    "All BlueEdge client registration files (client.yaml, source_manifest.json)",
+    "All BlueEdge pipeline artifacts and vault data",
+    "All V1 and V2 cockpit components (OperationalCockpitShell.jsx already generic from prior stream)",
+    "All LENS v2 components and resolvers",
+    "All SQO engines and resolvers",
+    "source_intake.py (already generic)",
+    "structural_scanner.py (already generic)",
+    "ceu_grounding.py (already generic)",
+    "dom_layer_generator.py (already generic)",
+    "generate_semantic_topology.py (already generic)",
+    "GenericSemanticPayloadResolver.js (already generic)",
+    "build_semantic_layer.py (BlueEdge-specific Layer A — correct separation)",
+    "ClientScopedSectionResolver.server.js (Layer A/B dispatch — correct separation)"
+  ]
+}

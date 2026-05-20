@@ -147,6 +147,8 @@
 | BlueEdge SQO operational artifacts | clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/sqo/ | SQO-native promotion state, qualification blockers, review obligations, event log (governance projection from legacy qualification) |
 | pallets-flask SQO artifacts | clients/pallets-flask/psee/runs/run_github_flask_20260517_163222/sqo/ | Promotion state, blockers, obligations, event log (gitignored, runtime-mutated) |
 | pallets-flask manifest | app/execlens-demo/lib/lens-v2/manifests/pallets-flask.run_github_flask_20260517_163222.json | Client REGISTRY entry |
+| pallets-flask client.yaml | clients/pallets-flask/client.yaml | Client registration (pipeline prerequisite) |
+| pallets-flask source manifest | clients/pallets-flask/sources/source_01/source_manifest.json | Source registration (pipeline prerequisite) |
 
 ## Governance
 
@@ -172,6 +174,7 @@
 | PI.SQO.COCKPIT-WORKFLOW-REFOUNDATION.01 | docs/pios/PI.SQO.COCKPIT-WORKFLOW-REFOUNDATION.01/ | G1 | COMPLETE |
 | PI.SQO.LEGACY-QUALIFICATION-BRIDGE.01 | docs/pios/PI.SQO.LEGACY-QUALIFICATION-BRIDGE.01/ | G1 | COMPLETE |
 | PI.SQO.BLUEEDGE-S2-WORKFLOW-PROJECTION-CORRECTION.01 | docs/pios/PI.SQO.BLUEEDGE-S2-WORKFLOW-PROJECTION-CORRECTION.01/ | G1 | COMPLETE |
+| PI.IMPLEMENTATION-SEQUENCING.PORTABLE-SUBSTRATE-OPERATIONALIZATION.01 | docs/pios/PI.IMPLEMENTATION-SEQUENCING.PORTABLE-SUBSTRATE-OPERATIONALIZATION.01/ | G1 | COMPLETE |
 
 ## Cross-References
 

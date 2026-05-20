@@ -1,0 +1,10 @@
+client_id: pallets-flask
+uuid: e65d2f0a-dfa7-4257-9333-fcbb583f0880
+display_name: pallets/flask
+source_type: github_clone
+pipeline_mode: generic
+ceu_model: static
+ceu_count: 0
+dom_group_count: 8
+structural_node_count: 287
+default_source: source_01

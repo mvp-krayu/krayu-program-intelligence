@@ -1,0 +1,15 @@
+{
+  "source_id": "source_01",
+  "client_id": "pallets-flask",
+  "archive_type": "GITHUB_CLONE",
+  "archive_filename": "flask-9fcd34c9f306.tar",
+  "archive_path": "clients/pallets-flask/archives/flask-9fcd34c9f306.tar",
+  "sha256": "6e88410a817117c0988cbcd2e18fc947dc9d7e95726addddd087366e58bb48e7",
+  "intake_contract": "PI.LENS.SOURCE-INTAKE.GENERIC.01",
+  "extracted_path": "clients/pallets-flask/psee/runs/run_github_flask_20260517_163222/intake/canonical_repo",
+  "structure_path": "clients/pallets-flask/psee/runs/run_github_flask_20260517_163222/structure",
+  "ceu_grounding_path": "clients/pallets-flask/psee/runs/run_github_flask_20260517_163222/ceu",
+  "dom_layer_path": "clients/pallets-flask/psee/runs/run_github_flask_20260517_163222/dom/dom_layer.json",
+  "grounding_state_path": "clients/pallets-flask/psee/runs/run_github_flask_20260517_163222/ceu/grounding_state_v3.json",
+  "integration_validation_path": "clients/pallets-flask/psee/runs/run_github_flask_20260517_163222/integration/integration_validation.json"
+}

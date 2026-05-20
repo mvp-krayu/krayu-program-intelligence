@@ -486,6 +486,14 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 **What it is NOT:** A fixed sequence. A BlueEdge-specific construct. A manual plan. Remediation stages are derived from blocker lane classification. Different clients with different blocker profiles produce different stage compositions.
 
+### Portable Onboarding Contract
+
+**Definition:** The canonical 7-step specification for onboarding an arbitrary GitHub repository into governed S1 qualification. Steps: Client Registration (client.yaml) → Source Intake (archive + extraction) → Source Manifest Registration → Pipeline Execution (11-phase orchestrator) → SQO Governance Projection (S0→S1) → LENS Manifest Registration → Verification. The contract ensures any GitHub repository can produce a deterministic structural substrate, governed SQO S1 posture, and stable cockpit representation without BlueEdge-specific dependencies.
+
+**Status:** CANONICAL — operational onboarding specification (2026-05-20).
+
+**What it is NOT:** An automatic process. A self-service API. A single-command tool. Each step is governed and produces auditable artifacts. S2 promotion is explicitly out of scope — requires semantic remediation runtime not yet stabilized.
+
 ## Term Usage Rules
 
 1. **Use locked definitions exactly.** Do not paraphrase, simplify, or reinterpret.

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 run_client_pipeline.py
-Contract: PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.BLUEEDGE.01
+Contract: PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01
 
 Multi-client E2E pipeline orchestrator. Executes 9 phases:
   Phase 1  — Source Boundary (archive existence + SHA256)
@@ -38,7 +38,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS_DIR = Path(__file__).resolve().parent
 
-CONTRACT_ID = "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.BLUEEDGE.01"
+CONTRACT_ID = "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01"
 FIXUP_CONTRACT_ID = "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.FIXUP.01"
 
 SIGNAL_LABELS = {
@@ -131,7 +131,7 @@ def phase_01_source_boundary(source_manifest: dict) -> bool:
 
     if not archive_path.exists():
         print(f"  FAIL: Archive not found at {archive_path}")
-        print(f"  NOTE: BlueEdge archives are external to k-pi-core. Ensure the archive is present.")
+        print(f"  NOTE: Source archives may be external to k-pi-core. Ensure the archive is present.")
         return False
 
     expected_sha = source_manifest["sha256"]
@@ -156,7 +156,7 @@ def phase_01_source_boundary(source_manifest: dict) -> bool:
 
 def phase_02_intake(source_manifest: dict, run_dir: Path) -> bool:
     # Prefer run-derived generic path (source_intake.py output).
-    # Fall back to manifest-registered UUID path for legacy/BlueEdge runs.
+    # Fall back to manifest-registered UUID path for legacy runs.
     # PI.LENS.RUN-PATH-IDENTITY.CONTRACT-CLOSURE.01
     generic_path = run_dir / "intake"
     manifest_path_str = source_manifest.get("extracted_path", "")
@@ -190,7 +190,7 @@ def phase_02_intake(source_manifest: dict, run_dir: Path) -> bool:
 
 def phase_03_40x_structural(source_manifest: dict, run_dir: Path) -> bool:
     # Prefer run-derived generic path (structural_scanner.py output).
-    # Fall back to manifest-registered UUID path for legacy/BlueEdge runs.
+    # Fall back to manifest-registered UUID path for legacy runs.
     # PI.LENS.RUN-PATH-IDENTITY.CONTRACT-CLOSURE.01
     generic_path = run_dir / "structure"
     manifest_path_str = source_manifest.get("structure_path", "")
@@ -225,7 +225,7 @@ def phase_03_40x_structural(source_manifest: dict, run_dir: Path) -> bool:
         p = struct_path / rel
         if not p.exists():
             print(f"  FAIL: Missing {p.relative_to(REPO_ROOT)}")
-            print(f"  REMEDIATION: Re-execute PI.BLUEEDGE.STRUCTURAL-PIPELINE.40X.01")
+            print(f"  REMEDIATION: Re-execute structural_scanner.py for this client")
             return False
 
     inv = load_json(struct_path / "40.2" / "structural_node_inventory.json")
@@ -238,7 +238,7 @@ def phase_03_40x_structural(source_manifest: dict, run_dir: Path) -> bool:
 
 def phase_04_ceu_grounding(source_manifest: dict, run_dir: Path) -> bool:
     # Prefer run-derived generic path (ceu_grounding.py output).
-    # Fall back to manifest-registered path for legacy/BlueEdge runs.
+    # Fall back to manifest-registered path for legacy runs.
     generic_path  = run_dir / "ceu" / "grounding_state_v3.json"
     manifest_path_str = source_manifest.get("grounding_state_path", "")
     manifest_path = (REPO_ROOT / manifest_path_str) if manifest_path_str else None
@@ -260,7 +260,7 @@ def phase_04_ceu_grounding(source_manifest: dict, run_dir: Path) -> bool:
     ratio = gs.get("grounding_ratio", 0)
 
     # Generic format (ceu_grounding.py): validation_status field.
-    # Legacy/BlueEdge format: readiness_gate field (string or dict).
+    # Legacy format: readiness_gate field (string or dict).
     if gs.get("validation_status") == "PASS":
         gate_status = "PASS"
     else:
@@ -518,7 +518,7 @@ def phase_05_build_binding_envelope(
 
     now_iso = datetime.now(timezone.utc).isoformat()
     envelope = {
-        "artifact_id": "binding_envelope_blueedge_orchestrated",
+        "artifact_id": f"binding_envelope_{client_cfg.get('client_id', 'unknown')}_orchestrated",
         "contract_id": CONTRACT_ID,
         "schema_version": "1.0",
         "generated_at": now_iso,
@@ -941,14 +941,14 @@ def phase_08a_vault(
             "guardrail_GR_01": {
                 "guardrail_id": "GR-01",
                 "text": (
-                    "BlueEdge PSEE signal z-scores are run-relative values computed from "
-                    "BlueEdge's own structural import topology (40.3 — per_node_outbound_imports). "
-                    "They are NOT comparable to FastAPI reference z-scores or other client runs. "
-                    "Activation state (HIGH/ACTIVATED) is the portable semantic unit."
+                    f"{alias} PSEE signal z-scores are run-relative values computed from "
+                    f"{alias}'s own structural import topology (40.3 — per_node_outbound_imports). "
+                    f"They are NOT comparable to other client runs or reference z-scores. "
+                    f"Activation state (HIGH/ACTIVATED) is the portable semantic unit."
                 ),
                 "scope": "vault artifacts, downstream consumers, any UI displaying raw z-scores",
                 "enforcement": "Documented in vault_manifest.json.",
-                "source": "GR-01 inherited from PI.BLUEEDGE.FASTAPI-CONFORMANCE.SEMANTIC-PARITY-VALIDATION.01",
+                "source": f"GR-01 — {alias} conformance-path signal registry",
             },
         })
     else:
@@ -1013,14 +1013,14 @@ def phase_08a_vault(
             "guardrail_GR_01": {
                 "guardrail_id": "GR-01",
                 "text": (
-                    "BlueEdge PSEE signal z-scores are run-relative values computed from "
-                    "BlueEdge's own binding topology (n=33 nodes, orchestrated binding_envelope). "
-                    "They are NOT comparable to FastAPI reference z-scores or prior BlueEdge runs. "
-                    "Activation state (HIGH/ACTIVATED) is the portable semantic unit."
+                    f"{alias} PSEE signal z-scores are run-relative values computed from "
+                    f"{alias}'s own binding topology (orchestrated binding_envelope). "
+                    f"They are NOT comparable to other client runs or reference z-scores. "
+                    f"Activation state (HIGH/ACTIVATED) is the portable semantic unit."
                 ),
                 "scope": "vault artifacts, downstream consumers, any UI displaying raw z-scores",
                 "enforcement": "Documented in vault_manifest.json.",
-                "source": "GR-01 inherited from PI.BLUEEDGE.FASTAPI-CONFORMANCE.SEMANTIC-PARITY-VALIDATION.01",
+                "source": f"GR-01 — {alias} pipeline-path signal registry",
             },
         })
 
@@ -1059,7 +1059,7 @@ def phase_08a_vault(
         "schema_version": "1.0",
         "generated_date": now_date,
         "source_artifact": gs_source_ref,
-        "evidence_basis": "CEU grounding state v3 (run_blueedge_integrated_01 — grounding authority)",
+        "evidence_basis": f"CEU grounding state v3 ({run_id} — grounding authority)",
         "grounding_ratio": gs.get("grounding_ratio", 1.0),
         "grounding_summary": gs.get("grounding_summary", {}),
         "ceu_grounding": ceu_grounding_list,
@@ -1076,7 +1076,7 @@ def phase_08a_vault(
         "contract_id": CONTRACT_ID,
         "guardrail_GR_01": {
             "guardrail_id": "GR-01",
-            "text": "BlueEdge z-scores are run-relative, not cross-client comparable.",
+            "text": f"{alias} z-scores are run-relative, not cross-client comparable.",
             "scope": "vault artifacts",
             "enforcement": "Documented.",
         },
