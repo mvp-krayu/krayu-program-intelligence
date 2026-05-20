@@ -28,5 +28,7 @@ clients/*/fragments/
 app/gauge-product/public/vault/
 # Local intake artifacts
 clients/*/psee/intake/
+# Source archives (large tarballs, regenerated from clone)
+clients/*/archives/
 # Brain (until governed)
 docs/brain/

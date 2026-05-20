@@ -1,0 +1,10 @@
+client_id: netbox
+uuid: 4c05aeb0-87e5-47bc-a708-75f69f9a2870
+display_name: netbox-community/netbox
+source_type: github_clone
+pipeline_mode: generic
+ceu_model: static
+ceu_count: 0
+dom_group_count: 0
+structural_node_count: 2540
+default_source: source_01

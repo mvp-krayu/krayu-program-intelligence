@@ -1,0 +1,124 @@
+{
+  "stream_id": "PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01",
+  "validation_date": "2026-05-20",
+  "checks": [
+    {
+      "id": "V01",
+      "name": "source_intake_complete",
+      "description": "Source intake produces source_inventory.json with correct file count",
+      "result": "PASS",
+      "evidence": "2,169 files inventoried in source_inventory.json"
+    },
+    {
+      "id": "V02",
+      "name": "structural_scan_artifacts_produced",
+      "description": "40.2, 40.3, 40.4 structural artifacts all produced",
+      "result": "PASS",
+      "evidence": "40.2: 2,540 nodes; 40.3: 2,516 edges; 40.4: 24 clusters"
+    },
+    {
+      "id": "V03",
+      "name": "src_classification_complete",
+      "description": "40.2r SRC classification produces PRIMARY/SUPPORT/PERIPHERAL breakdown",
+      "result": "PASS",
+      "evidence": "1,848 PRIMARY (72.8%), 138 SUPPORT, 554 PERIPHERAL"
+    },
+    {
+      "id": "V04",
+      "name": "code_graph_enrichment_complete",
+      "description": "40.3s code-graph artifact produced with resolved IMPORTS",
+      "result": "PASS",
+      "evidence": "1,155 files, 3,614 IMPORTS, 16,046 total relationships, 5/5 validation PASS"
+    },
+    {
+      "id": "V05",
+      "name": "structural_centrality_complete",
+      "description": "40.3c centrality derivation produces ranked files with roles",
+      "result": "PASS",
+      "evidence": "1,089 files ranked, 6/6 validation PASS"
+    },
+    {
+      "id": "V06",
+      "name": "client_registration_valid",
+      "description": "client.yaml and source_manifest.json present and consistent",
+      "result": "PASS",
+      "evidence": "client_id: netbox, uuid: 4c05aeb0, source: source_01"
+    },
+    {
+      "id": "V07",
+      "name": "manifest_registration_valid",
+      "description": "LENS manifest created and registered in REGISTRY",
+      "result": "PASS",
+      "evidence": "netbox.run_github_netbox_20260520_134600.json in REGISTRY"
+    },
+    {
+      "id": "V08",
+      "name": "sqo_cockpit_renders",
+      "description": "SQO cockpit route resolves and renders (even in degraded state)",
+      "result": "PASS",
+      "evidence": "V1: Cockpit Unavailable with diagnostics; V2: Role gate + diagnostics"
+    },
+    {
+      "id": "V09",
+      "name": "lens_v2_binding_documented",
+      "description": "LENS v2 binding failure correctly identified and documented",
+      "result": "PASS",
+      "evidence": "MANIFEST_INVALID — missing semantic_topology_model, dpsig_signal_set"
+    },
+    {
+      "id": "V10",
+      "name": "replay_commands_documented",
+      "description": "Complete replay command sequence documented with immutable run ID",
+      "result": "PASS",
+      "evidence": "replay_commands.md with 6 phases, SHA256, commit hash"
+    },
+    {
+      "id": "V11",
+      "name": "structural_surprise_report_produced",
+      "description": "Mandatory STRUCTURAL_SURPRISE_REPORT.md produced with genuine findings",
+      "result": "PASS",
+      "evidence": "11 structural surprises documented, 4 rejected candidates"
+    },
+    {
+      "id": "V12",
+      "name": "domain_emergence_documented",
+      "description": "Domain emergence observations documented with cross-domain analysis",
+      "result": "PASS",
+      "evidence": "3-tier structural hierarchy, 60.8% cross-domain import rate"
+    },
+    {
+      "id": "V13",
+      "name": "screenshots_captured",
+      "description": "Cockpit screenshots captured via Playwright MCP",
+      "result": "PASS",
+      "evidence": "4 screenshots in screenshots/ directory"
+    },
+    {
+      "id": "V14",
+      "name": "no_cockpit_logic_mutation",
+      "description": "No SQO/LENS cockpit logic was modified",
+      "result": "PASS",
+      "evidence": "Only pipeline scripts (code_graph_feasibility.py) and manifest/registry files modified"
+    },
+    {
+      "id": "V15",
+      "name": "no_semantic_qualification_claimed",
+      "description": "No S2 promotion, no semantic remediation, no compiler authority activated",
+      "result": "PASS",
+      "evidence": "Stream is structural + demonstration foundation only"
+    },
+    {
+      "id": "V16",
+      "name": "pipeline_fixes_are_generic",
+      "description": "Pipeline fixes improve all multi-app Python projects, not NetBox-specific",
+      "result": "PASS",
+      "evidence": "Source root discovery and import resolution fixes are parameterized by project structure"
+    }
+  ],
+  "summary": {
+    "total": 16,
+    "pass": 16,
+    "fail": 0,
+    "verdict": "ALL PASS"
+  }
+}

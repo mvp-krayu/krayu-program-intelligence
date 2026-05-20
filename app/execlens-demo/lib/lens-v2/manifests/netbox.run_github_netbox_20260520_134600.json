@@ -1,0 +1,32 @@
+{
+  "manifest_version": "1.0",
+  "client": "netbox",
+  "run_id": "run_github_netbox_20260520_134600",
+  "stream_anchor": "PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01",
+  "qualification_level": "S1",
+  "labels": {
+    "client_display_name": "NetBox (netbox-community/netbox)",
+    "run_display_name": "NetBox canonical onboarding · run_github_netbox_20260520_134600"
+  },
+  "baseline": {
+    "governance_tag": "PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01",
+    "pipeline_commit": "67d1c39"
+  },
+  "artifacts": {
+    "required": {
+      "canonical_topology_40_4": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/structure/40.4/canonical_topology.json"
+    },
+    "optional": {
+      "structural_topology_log_40_3": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/structure/40.3/structural_topology_log.json"
+    }
+  },
+  "report_pack": {},
+  "governance": {
+    "lane_a_read_only": true,
+    "lane_d_dpsig_read_only": true,
+    "additive_only": true,
+    "no_ai_inference": true,
+    "no_topology_mutation": true,
+    "no_synthetic_telemetry": true
+  }
+}
