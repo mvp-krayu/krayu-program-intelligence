@@ -143,11 +143,13 @@ def compute_degree_metrics(
     relationships: list[dict],
     all_files: set[str],
 ) -> dict[str, dict]:
-    in_count: Counter = Counter()
-    out_count: Counter = Counter()
+    import_in: Counter = Counter()
+    import_out: Counter = Counter()
+    inherits_in: Counter = Counter()
+    inherits_out: Counter = Counter()
     class_count: Counter = Counter()
     func_count: Counter = Counter()
-    inherit_count: Counter = Counter()
+    inherit_unresolved_count: Counter = Counter()
 
     for r in relationships:
         rtype = r["relation_type"]
@@ -155,24 +157,36 @@ def compute_degree_metrics(
         tgt = r.get("target_path")
 
         if rtype == "IMPORTS" and tgt:
-            in_count[tgt] += 1
+            import_in[tgt] += 1
             if src:
-                out_count[src] += 1
+                import_out[src] += 1
+        elif rtype == "INHERITS" and tgt:
+            inherits_in[tgt] += 1
+            if src:
+                inherits_out[src] += 1
         elif rtype == "DEFINES_CLASS" and src:
             class_count[src] += 1
         elif rtype == "DEFINES_FUNCTION" and src:
             func_count[src] += 1
         elif rtype == "INHERITS_UNRESOLVED" and src:
-            inherit_count[src] += 1
+            inherit_unresolved_count[src] += 1
 
     metrics: dict[str, dict] = {}
     for fp in sorted(all_files):
+        imp_in = import_in.get(fp, 0)
+        imp_out = import_out.get(fp, 0)
+        inh_in = inherits_in.get(fp, 0)
+        inh_out = inherits_out.get(fp, 0)
         metrics[fp] = {
-            "in_degree": in_count.get(fp, 0),
-            "out_degree": out_count.get(fp, 0),
+            "in_degree": imp_in + inh_in,
+            "out_degree": imp_out + inh_out,
+            "import_in_degree": imp_in,
+            "import_out_degree": imp_out,
+            "inherits_in_degree": inh_in,
+            "inherits_out_degree": inh_out,
             "defines_classes": class_count.get(fp, 0),
             "defines_functions": func_count.get(fp, 0),
-            "inherits_unresolved": inherit_count.get(fp, 0),
+            "inherits_unresolved": inherit_unresolved_count.get(fp, 0),
         }
     return metrics
 
@@ -335,7 +349,7 @@ def detect_false_positives(
     # FP-05: circular dependency masking
     import_edges: set[tuple[str, str]] = set()
     for r in relationships:
-        if r["relation_type"] == "IMPORTS" and r.get("source_path") and r.get("target_path"):
+        if r["relation_type"] in ("IMPORTS", "INHERITS") and r.get("source_path") and r.get("target_path"):
             import_edges.add((r["source_path"], r["target_path"]))
 
     circular_pairs = []
@@ -389,6 +403,10 @@ def compute_ranking(metrics: dict[str, dict]) -> list[dict]:
             "node_id": None,
             "in_degree": m["in_degree"],
             "out_degree": m["out_degree"],
+            "import_in_degree": m["import_in_degree"],
+            "import_out_degree": m["import_out_degree"],
+            "inherits_in_degree": m["inherits_in_degree"],
+            "inherits_out_degree": m["inherits_out_degree"],
             "in_degree_normalized": m["in_degree_normalized"],
             "out_degree_normalized": m["out_degree_normalized"],
             "structural_throughput_proxy": m["structural_throughput_proxy"],
@@ -496,9 +514,11 @@ def build_artifact(
         "project_metrics": {
             "total_files": file_count,
             "total_import_edges": total_imports,
+            "total_resolved_inheritance_edges": rel_summary.get("INHERITS", 0),
+            "total_unresolved_inheritance_edges": rel_summary.get("INHERITS_UNRESOLVED", 0),
+            "total_structural_edges": total_imports + rel_summary.get("INHERITS", 0),
             "total_classes": rel_summary.get("DEFINES_CLASS", 0),
             "total_functions": rel_summary.get("DEFINES_FUNCTION", 0),
-            "total_inheritance_edges": rel_summary.get("INHERITS_UNRESOLVED", 0),
             "graph_density": round(total_imports / max_edges, 4) if max_edges > 0 else 0.0,
             "max_possible_edges": max_edges,
         },
