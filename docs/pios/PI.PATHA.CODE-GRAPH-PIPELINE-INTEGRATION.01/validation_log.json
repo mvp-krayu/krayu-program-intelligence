@@ -1,0 +1,61 @@
+{
+  "contract_id": "PI.PATHA.CODE-GRAPH-PIPELINE-INTEGRATION.01",
+  "stream_classification": "G1",
+  "validated_at": "2026-05-20T21:30:00Z",
+  "checks": [
+    {
+      "name": "phase_3_6_runs_in_pipeline",
+      "description": "Phase 3.6 executes successfully via pipeline orchestrator",
+      "result": "PASS",
+      "detail": "code_graph_feasibility.py produced 40.3s with 270 relationships (95 IMPORTS)"
+    },
+    {
+      "name": "idempotent_skip",
+      "description": "Phase 3.6 skips when 40.3s already exists",
+      "result": "PASS",
+      "detail": "[IDEMPOTENT] 40.3s/code_graph.json already exists — skipping"
+    },
+    {
+      "name": "graceful_degradation_pattern",
+      "description": "Phase follows established graceful degradation pattern (script missing → warning → continue)",
+      "result": "PASS",
+      "detail": "Identical pattern to phase_03_5_structural_relevance"
+    },
+    {
+      "name": "phase_ordering",
+      "description": "Phase 3.6 is between Phase 3.5 and Phase 3b in phase list",
+      "result": "PASS",
+      "detail": "Index 4 in phases list (0-indexed): 3.5=3, 3.6=4, 3b=5"
+    },
+    {
+      "name": "no_downstream_consumer_changes",
+      "description": "No DOM, pressure, binding, or signal scripts modified",
+      "result": "PASS",
+      "detail": "Only run_client_pipeline.py modified"
+    },
+    {
+      "name": "no_scip_dependency",
+      "description": "No npm install, no scip-python, no external dependencies added",
+      "result": "PASS",
+      "detail": "ast module only (stdlib)"
+    },
+    {
+      "name": "indexer_neutral",
+      "description": "40.3s schema accepts any indexer, pipeline does not hardcode indexer choice",
+      "result": "PASS",
+      "detail": "Pipeline calls code_graph_feasibility.py without indexer-specific flags"
+    },
+    {
+      "name": "nextjs_build",
+      "description": "Next.js build compiles cleanly",
+      "result": "PASS",
+      "detail": "All routes compiled successfully"
+    }
+  ],
+  "summary": {
+    "total": 8,
+    "passed": 8,
+    "failed": 0,
+    "result": "VALID"
+  }
+}

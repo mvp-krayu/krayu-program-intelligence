@@ -400,13 +400,15 @@ The code-graph structural enrichment layer introduces the 40.3s artifact class �
 
 | Construct | Maturity |
 |---|---|
-| ast-based code-graph prototype | PROTOTYPE — validated, pipeline integration pending |
+| ast-based code-graph enrichment | OPERATIONAL — pipeline Phase 3.6, default ON |
 | 40.3s artifact contract | OPERATIONAL — schema defined, indexer-neutral |
 | SCIP enrichment | FUTURE_DECLARED — possible enricher, requires Python 3.10+ |
-| Structural centrality from code-graph | FUTURE_DECLARED — depends on pipeline integration |
+| Structural centrality from code-graph | FUTURE_DECLARED — next stream |
 | Evidence-ranked projection | FUTURE_DECLARED — depends on structural centrality |
 
-**Reference:** `docs/pios/PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01/` — 6 governance artifacts.
+**Pipeline integration:** Phase 3.6 in `run_client_pipeline.py` — between Phase 3.5 (structural relevance classification) and Phase 3b (semantic derivation). Default ON, graceful degradation, idempotent.
+
+**Reference:** `docs/pios/PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01/` + `docs/pios/PI.PATHA.CODE-GRAPH-PIPELINE-INTEGRATION.01/`
 
 ## Client Onboarding Substrate
 
@@ -504,6 +506,7 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.IMPLEMENTATION-SEQUENCING.PORTABLE-SUBSTRATE-OPERATIONALIZATION.01 | G1 | Portable substrate operationalization — pipeline parameterization, pallets-flask registration, onboarding contract | COMPLETE |
 | PI.PATHA.STRUCTURAL-SUBSTRATE-MATURATION.01 | G1 | Structural relevance classification, 40.2r/40.3r filtered views, Phase 3.5 pipeline integration | COMPLETE |
 | PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01 | G1 | Code-graph structural enrichment prototype, 40.3s artifact contract, indexer landscape assessment | COMPLETE |
+| PI.PATHA.CODE-GRAPH-PIPELINE-INTEGRATION.01 | G1 | Pipeline Phase 3.6 integration of code-graph structural enrichment | COMPLETE |
 
 ## SQO Operator Authority Workflow
 

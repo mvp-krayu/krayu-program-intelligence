@@ -1,0 +1,48 @@
+{
+  "contract_id": "PI.PATHA.CODE-GRAPH-PIPELINE-INTEGRATION.01",
+  "stream_classification": "G1",
+  "changes": [
+    {
+      "file": "scripts/pios/run_client_pipeline.py",
+      "action": "MODIFY",
+      "purpose": "Add Phase 3.6 — Code-Graph Structural Enrichment (code_graph_feasibility.py integration)"
+    },
+    {
+      "file": "docs/pios/PI.PATHA.CODE-GRAPH-PIPELINE-INTEGRATION.01/execution_report.md",
+      "action": "CREATE",
+      "purpose": "Stream execution report"
+    },
+    {
+      "file": "docs/pios/PI.PATHA.CODE-GRAPH-PIPELINE-INTEGRATION.01/validation_log.json",
+      "action": "CREATE",
+      "purpose": "8-check validation log"
+    },
+    {
+      "file": "docs/pios/PI.PATHA.CODE-GRAPH-PIPELINE-INTEGRATION.01/file_changes.json",
+      "action": "CREATE",
+      "purpose": "File change manifest"
+    },
+    {
+      "file": "docs/pios/PI.PATHA.CODE-GRAPH-PIPELINE-INTEGRATION.01/CLOSURE.md",
+      "action": "CREATE",
+      "purpose": "Stream closure with §10 Architecture Memory Propagation"
+    },
+    {
+      "file": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "action": "MODIFY",
+      "purpose": "Update 40.3s maturity from PROTOTYPE to OPERATIONAL, add pipeline integration stream to lineage"
+    },
+    {
+      "file": "docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md",
+      "action": "MODIFY",
+      "purpose": "Add stream to governance streams list"
+    }
+  ],
+  "not_modified": [
+    "scripts/pios/code_graph_feasibility.py",
+    "scripts/pios/structural_scanner.py",
+    "scripts/pios/structural_relevance_classifier.py",
+    "scripts/pios/dom_layer_generator.py",
+    "scripts/pios/ceu_grounding.py"
+  ]
+}

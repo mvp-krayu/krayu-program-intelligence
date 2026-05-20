@@ -3,7 +3,7 @@
 run_client_pipeline.py
 Contract: PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01
 
-Multi-client E2E pipeline orchestrator. Executes 9 phases:
+Multi-client E2E pipeline orchestrator. Executes 10+ phases:
   Phase 1  — Source Boundary (archive existence + SHA256)
   Phase 2  — Intake Verification (canonical_repo present)
   Phase 3  — 40.x Structural Verification (artifacts present)
@@ -585,6 +585,45 @@ def phase_03_5_structural_relevance(client: str, run_id: str, run_dir: Path) -> 
         return True
 
     print("  Structural relevance classification: OK")
+    return True
+
+
+# ── Phase 3.6: Code-Graph Structural Enrichment ─────────────────────────────
+
+def phase_03_6_code_graph_enrichment(client: str, run_id: str, run_dir: Path) -> bool:
+    """Run code_graph_feasibility.py to produce 40.3s code-graph structural enrichment.
+    Default ON — always runs. If extraction fails, logs warning and continues
+    without code-graph data (graceful degradation)."""
+    script = SCRIPTS_DIR / "code_graph_feasibility.py"
+    if not script.is_file():
+        print(f"  WARNING: code_graph_feasibility.py not found — skipping")
+        return True
+
+    out_code_graph = run_dir / "structure" / "40.3s" / "code_graph.json"
+    if out_code_graph.exists():
+        print(f"  [IDEMPOTENT] 40.3s/code_graph.json already exists — skipping")
+        return True
+
+    cmd = [
+        sys.executable, str(script),
+        "--client", client,
+        "--run-id", run_id,
+    ]
+    print(f"  Running: code_graph_feasibility.py --client {client} --run-id {run_id}")
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+
+    if result.stdout:
+        for line in result.stdout.strip().split("\n"):
+            print(f"    {line}")
+
+    if result.returncode != 0:
+        print(f"  WARNING: code-graph enrichment exited {result.returncode} — continuing without 40.3s")
+        if result.stderr:
+            print(f"  stderr: {result.stderr.strip()[:200]}")
+        return True
+
+    print("  Code-graph structural enrichment: OK")
     return True
 
 
@@ -1329,6 +1368,8 @@ def main() -> int:
          lambda: phase_03_40x_structural(source_manifest, run_dir)),
         ("Phase 3.5 — Structural Relevance Classification",
          lambda: phase_03_5_structural_relevance(args.client, run_id, run_dir)),
+        ("Phase 3.6 — Code-Graph Structural Enrichment",
+         lambda: phase_03_6_code_graph_enrichment(args.client, run_id, run_dir)),
         ("Phase 3b — Semantic Derivation",
          lambda: phase_03b_semantic_derivation(
              args.client, run_id, run_dir, args.enable_semantic_derivation)),
