@@ -1,0 +1,33 @@
+{
+  "stream_id": "PI.GOVERNANCE.S1-S2-READINESS-ASSESSMENT.01",
+  "classification": "G2",
+  "validated_at": "2026-05-21T20:00:00Z",
+  "checks": [
+    { "id": "V-001", "name": "PATH A structural substrate complete", "result": "PASS", "detail": "2,540 nodes, 24 clusters, 3,614 imports, 1,089 centrality-ranked. Phases 1–3.7 ALL PASS." },
+    { "id": "V-002", "name": "Code-graph enrichment operational", "result": "PASS", "detail": "40.3s artifact present, pipeline Phase 3.6 operational" },
+    { "id": "V-003", "name": "Structural relevance classification operational", "result": "PASS", "detail": "SRC classifier operational, filtered topology views active" },
+    { "id": "V-004", "name": "CEU reconciliation COMPLETE", "result": "PASS", "detail": "13 candidates, 12 confirmed, 1 merged, 0 unresolved obligations" },
+    { "id": "V-005", "name": "CEU evidence anchors sufficient", "result": "PASS", "detail": "74 evidence anchors across 8 evidence types" },
+    { "id": "V-006", "name": "CEU lifecycle maturity proven", "result": "PASS", "detail": "Reclassification (CEU-EXTRAS) and refinement (CEU-TENANCY) exercised in Phase 7" },
+    { "id": "V-007", "name": "Governance loop validated (Phase 7)", "result": "PASS", "detail": "12/12 replay reconstruction tests PASS. Full governance cycle proven end-to-end." },
+    { "id": "V-008", "name": "Session independence proven", "result": "PASS", "detail": "All governance state reconstructable from persistent artifacts without Claude-session memory" },
+    { "id": "V-009", "name": "Learning consumption architecture operational", "result": "PASS", "detail": "Registry seeded (5 events), pipeline learning-aware (Phase 0L + 10L), activation manifests operational" },
+    { "id": "V-010", "name": "Semantic derivation compiler exists", "result": "PASS", "detail": "Pipeline Phase 3b with --enable-semantic-derivation flag. 7-phase compiler with evidence gate." },
+    { "id": "V-011", "name": "Semantic derivation not yet run for NetBox", "result": "PASS", "detail": "Confirmed: semantic_candidate lane ABSENT, promotion_state.json confirms NO_SEMANTIC_DERIVATION" },
+    { "id": "V-012", "name": "Blockers form sequential chain", "result": "PASS", "detail": "7 blockers cascade from single root (BLK-001: NO_SEMANTIC_DERIVATION). Not 7 independent problems." },
+    { "id": "V-013", "name": "Operator authority available", "result": "PASS", "detail": "Promotion decision is governance-gated (L5). Operator khorrix has authority. Non-automatable boundary preserved." },
+    { "id": "V-014", "name": "SQO cockpit V2 operational", "result": "PASS", "detail": "Authority workflow surface exists for candidate review and promotion decision" },
+    { "id": "V-015", "name": "Spine objects present", "result": "PASS", "detail": "16 objects: 9 evidence, 6 hero moments, 1 replay corridor (summary stale at 14 — known LRNE-P7-0004)" },
+    { "id": "V-016", "name": "No structural gaps block semantic derivation", "result": "PASS", "detail": "All PATH A artifacts present and pipeline-validated" },
+    { "id": "V-017", "name": "No governance gaps block S2 progression", "result": "PASS", "detail": "Governance loop, replay, CEU lifecycle, learning awareness — all proven" },
+    { "id": "V-018", "name": "Assessment does not claim S2 guaranteed", "result": "PASS", "detail": "CONDITIONAL_READY — semantic derivation may reveal gaps requiring additional governance cycles" },
+    { "id": "V-019", "name": "Assessment does not mutate state", "result": "PASS", "detail": "Read-only assessment. No SQO state, CEU state, or spine state modified." },
+    { "id": "V-020", "name": "Governance artifacts in stream directory", "result": "PASS", "detail": "execution_report.md, validation_log.json, file_changes.json, CLOSURE.md" }
+  ],
+  "summary": {
+    "total": 20,
+    "passed": 20,
+    "failed": 0,
+    "result": "ALL PASS"
+  }
+}
