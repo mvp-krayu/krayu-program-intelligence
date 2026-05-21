@@ -1,0 +1,241 @@
+{
+  "registry_id": "LEARNING_REGISTRY_V1",
+  "contract": "PI.GOVERNANCE.LEARNING-CONSUMPTION-ARCHITECTURE.01",
+  "schema_version": "1.0.0",
+  "metadata": {
+    "created": "2026-05-21T19:30:00Z",
+    "last_updated": "2026-05-21T19:30:00Z",
+    "event_count": 5,
+    "lifecycle_summary": {
+      "PROPOSED": 5,
+      "REVIEWED": 0,
+      "PROMOTED": 0,
+      "CONSUMABLE": 0,
+      "SUPERSEDED": 0,
+      "REJECTED": 0,
+      "total": 5
+    }
+  },
+  "capability_classes": {
+    "SEMANTIC_DERIVATION": {
+      "class_id": "SEMANTIC_DERIVATION",
+      "description": "Learnings that improve CEU derivation, tier classification, and authority pattern detection",
+      "target_capabilities": [
+        "python_django_adapter",
+        "semantic_grounding_assistant",
+        "tier_classifier",
+        "authority_pattern_detector"
+      ],
+      "governance_level": "ADVISORY",
+      "registered_at": "2026-05-21T19:30:00Z"
+    },
+    "EVIDENCE_INTAKE": {
+      "class_id": "EVIDENCE_INTAKE",
+      "description": "Learnings that expand evidence type coverage and intake pipeline scope",
+      "target_capabilities": [
+        "documentation_classifier",
+        "package_evidence_intake_adapter",
+        "evidence_source_registry"
+      ],
+      "governance_level": "ADVISORY",
+      "registered_at": "2026-05-21T19:30:00Z"
+    },
+    "SPINE_MANAGEMENT": {
+      "class_id": "SPINE_MANAGEMENT",
+      "description": "Learnings that improve spine object consistency and management",
+      "target_capabilities": [
+        "spine_object_validator",
+        "projection_fidelity_checker"
+      ],
+      "governance_level": "ADVISORY",
+      "registered_at": "2026-05-21T19:30:00Z"
+    },
+    "GOVERNANCE_WORKFLOW": {
+      "class_id": "GOVERNANCE_WORKFLOW",
+      "description": "Learnings that formalize governance processes and operator workflows",
+      "target_capabilities": [
+        "evidence_source_registry",
+        "governance_process_orchestrator"
+      ],
+      "governance_level": "INFORMATIONAL",
+      "registered_at": "2026-05-21T19:30:00Z"
+    },
+    "CODE_GRAPH_ENRICHMENT": {
+      "class_id": "CODE_GRAPH_ENRICHMENT",
+      "description": "Learnings that improve code graph structural enrichment and centrality analysis",
+      "target_capabilities": [
+        "scip_code_graph_enricher",
+        "centrality_analyzer",
+        "structural_relevance_classifier"
+      ],
+      "governance_level": "ADVISORY",
+      "registered_at": "2026-05-21T19:30:00Z"
+    }
+  },
+  "consumption_declarations": [
+    {
+      "consumer_id": "phase_03b_semantic_derivation",
+      "consumer_type": "PIPELINE_PHASE",
+      "capability_classes": ["SEMANTIC_DERIVATION"],
+      "governance_level": "ADVISORY",
+      "replay_guarantee": "DETERMINISTIC_ADVISORY",
+      "declared_at": "2026-05-21T19:30:00Z"
+    },
+    {
+      "consumer_id": "phase_02_intake",
+      "consumer_type": "PIPELINE_PHASE",
+      "capability_classes": ["EVIDENCE_INTAKE"],
+      "governance_level": "ADVISORY",
+      "replay_guarantee": "DETERMINISTIC_ADVISORY",
+      "declared_at": "2026-05-21T19:30:00Z"
+    },
+    {
+      "consumer_id": "phase_03_6_code_graph",
+      "consumer_type": "PIPELINE_PHASE",
+      "capability_classes": ["CODE_GRAPH_ENRICHMENT"],
+      "governance_level": "ADVISORY",
+      "replay_guarantee": "DETERMINISTIC_ADVISORY",
+      "declared_at": "2026-05-21T19:30:00Z"
+    },
+    {
+      "consumer_id": "phase_05b_csr_topology",
+      "consumer_type": "PIPELINE_PHASE",
+      "capability_classes": ["SPINE_MANAGEMENT"],
+      "governance_level": "ADVISORY",
+      "replay_guarantee": "DETERMINISTIC_ADVISORY",
+      "declared_at": "2026-05-21T19:30:00Z"
+    },
+    {
+      "consumer_id": "phase_08a_vault",
+      "consumer_type": "PIPELINE_PHASE",
+      "capability_classes": ["GOVERNANCE_WORKFLOW"],
+      "governance_level": "INFORMATIONAL",
+      "replay_guarantee": "DETERMINISTIC_ADVISORY",
+      "declared_at": "2026-05-21T19:30:00Z"
+    }
+  ],
+  "events": [
+    {
+      "event_id": "LRNE-P7-0001",
+      "timestamp": "2026-05-21T18:40:00Z",
+      "specimen_id": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "source": "RECONCILIATION_FRICTION",
+      "lifecycle_state": "PROPOSED",
+      "category": "TIER_CLASSIFICATION_GAP",
+      "capability_class": "SEMANTIC_DERIVATION",
+      "title": "Structural tier classifier misclassifies cross-cutting infrastructure as CONSUMER",
+      "description": "CEU-EXTRAS was classified as CONSUMER tier by the structural CEU derivation pipeline, but architecture documentation reveals it provides cross-cutting infrastructure that all domain apps depend on. Import direction alone is insufficient for tier classification of cross-cutting infrastructure components.",
+      "impact": "TIER_RECLASSIFICATION",
+      "severity": "MEDIUM",
+      "enrichment_guidance": "Future CEU derivation should consider: (1) whether an app provides model feature mixins consumed by other apps, (2) whether an app hosts application-wide registries, (3) whether external documentation classifies it as infrastructure vs domain. Import direction analysis should be supplemented by inheritance provision analysis for cross-cutting apps.",
+      "evidence_refs": ["EV-PHASE7-001", "EV-PHASE7-002", "EV-PHASE7-003"],
+      "propagation_target": "CEU_DERIVATION_PIPELINE",
+      "registry_metadata": {
+        "ingested_from": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/governance/learning_events.jsonl",
+        "ingested_at": "2026-05-21T19:30:00Z",
+        "ingested_by": "PI.GOVERNANCE.LEARNING-CONSUMPTION-ARCHITECTURE.01"
+      }
+    },
+    {
+      "event_id": "LRNE-P7-0002",
+      "timestamp": "2026-05-21T18:41:00Z",
+      "specimen_id": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "source": "EVIDENCE_GAP",
+      "lifecycle_state": "PROPOSED",
+      "category": "EVIDENCE_TYPE_GAP",
+      "capability_class": "EVIDENCE_INTAKE",
+      "title": "Architecture documentation not consumed as evidence type",
+      "description": "The evidence intake pipeline extracts APP_CONFIG, MODEL_INVENTORY, URL_NAMESPACE, OFFICIAL_DOCS, MODEL_DOCS but does NOT extract ARCHITECTURE_DOCS, FEATURE_DOCS, or REPO_ARCHITECTURE evidence types that contain structurally relevant evidence.",
+      "impact": "EVIDENCE_COVERAGE_EXPANSION",
+      "severity": "MEDIUM",
+      "enrichment_guidance": "Future evidence intake should consider extracting: (1) docs/development/ for architecture documentation, (2) docs/features/ for cross-cutting feature documentation, (3) AGENTS.md/CLAUDE.md for official repository architecture descriptions.",
+      "evidence_refs": ["EV-SRC-001", "EV-SRC-002", "EV-SRC-003", "EV-SRC-004"],
+      "propagation_target": "EVIDENCE_INTAKE_PIPELINE",
+      "registry_metadata": {
+        "ingested_from": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/governance/learning_events.jsonl",
+        "ingested_at": "2026-05-21T19:30:00Z",
+        "ingested_by": "PI.GOVERNANCE.LEARNING-CONSUMPTION-ARCHITECTURE.01"
+      }
+    },
+    {
+      "event_id": "LRNE-P7-0003",
+      "timestamp": "2026-05-21T18:42:00Z",
+      "specimen_id": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "source": "REFINEMENT_PATTERN",
+      "lifecycle_state": "PROPOSED",
+      "category": "AUTHORITY_PATTERN_GAP",
+      "capability_class": "SEMANTIC_DERIVATION",
+      "title": "Import-only authority pattern misses inheritance-dominant behavioral authority",
+      "description": "CEU-TENANCY was classified with IMPORT_DOMINANT authority pattern, but structural evidence shows inheritance authority at 2.22x its import authority. Cross-cutting behavioral frameworks that primarily influence through mixin inheritance are underrepresented.",
+      "impact": "AUTHORITY_MODEL_ENRICHMENT",
+      "severity": "LOW",
+      "enrichment_guidance": "CEU derivation should compute both import_authority_score and inheritance_authority_score, then classify as DUAL_AUTHORITY when the ratio exceeds a threshold.",
+      "evidence_refs": ["EV-PHASE7-004", "EV-PHASE7-005"],
+      "propagation_target": "CEU_DERIVATION_PIPELINE",
+      "registry_metadata": {
+        "ingested_from": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/governance/learning_events.jsonl",
+        "ingested_at": "2026-05-21T19:30:00Z",
+        "ingested_by": "PI.GOVERNANCE.LEARNING-CONSUMPTION-ARCHITECTURE.01"
+      }
+    },
+    {
+      "event_id": "LRNE-P7-0004",
+      "timestamp": "2026-05-21T18:43:00Z",
+      "specimen_id": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "source": "ADAPTER_WEAKNESS",
+      "lifecycle_state": "PROPOSED",
+      "category": "SPINE_CONSISTENCY_GAP",
+      "capability_class": "SPINE_MANAGEMENT",
+      "title": "Spine objects summary section does not auto-update on append",
+      "description": "spine_objects.json summary reports 14 total objects but actual content is 16. The summary was computed at generation time and was not updated when objects were appended post-generation.",
+      "impact": "DATA_CONSISTENCY",
+      "severity": "LOW",
+      "enrichment_guidance": "Spine object append operations should recompute the summary section. Alternatively, consumers should count array lengths directly rather than trusting the summary.",
+      "evidence_refs": [],
+      "propagation_target": "SPINE_OBJECT_MANAGEMENT",
+      "registry_metadata": {
+        "ingested_from": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/governance/learning_events.jsonl",
+        "ingested_at": "2026-05-21T19:30:00Z",
+        "ingested_by": "PI.GOVERNANCE.LEARNING-CONSUMPTION-ARCHITECTURE.01"
+      }
+    },
+    {
+      "event_id": "LRNE-P7-0005",
+      "timestamp": "2026-05-21T18:44:00Z",
+      "specimen_id": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "source": "OPERATOR_CORRECTION",
+      "lifecycle_state": "PROPOSED",
+      "category": "GOVERNANCE_PROCESS_GAP",
+      "capability_class": "GOVERNANCE_WORKFLOW",
+      "title": "Evidence ingestion selection requires human judgment without persistent workflow",
+      "description": "The Phase 7 evidence ingestion step required selecting which documentation sources to ingest. The selection reasoning is captured but the selection PROCESS is not a persistent governed workflow.",
+      "impact": "WORKFLOW_FORMALIZATION",
+      "severity": "MEDIUM",
+      "enrichment_guidance": "Evidence ingestion should evolve toward: (1) an evidence source registry, (2) a selection workflow that records which sources were considered and why, (3) a persistent recommendation engine.",
+      "evidence_refs": [],
+      "propagation_target": "GOVERNANCE_WORKFLOW",
+      "registry_metadata": {
+        "ingested_from": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/governance/learning_events.jsonl",
+        "ingested_at": "2026-05-21T19:30:00Z",
+        "ingested_by": "PI.GOVERNANCE.LEARNING-CONSUMPTION-ARCHITECTURE.01"
+      }
+    }
+  ],
+  "ingestion_log": [
+    {
+      "timestamp": "2026-05-21T19:30:00Z",
+      "specimen_id": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "source_path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/governance/learning_events.jsonl",
+      "events_found": 5,
+      "ingested": 5,
+      "skipped_duplicate": 0,
+      "actor_id": "PI.GOVERNANCE.LEARNING-CONSUMPTION-ARCHITECTURE.01"
+    }
+  ]
+}

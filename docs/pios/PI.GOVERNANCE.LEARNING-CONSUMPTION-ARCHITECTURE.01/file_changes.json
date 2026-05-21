@@ -1,0 +1,61 @@
+{
+  "stream_id": "PI.GOVERNANCE.LEARNING-CONSUMPTION-ARCHITECTURE.01",
+  "classification": "G1",
+  "changes": [
+    {
+      "file": "scripts/pios/learning/__init__.py",
+      "action": "CREATED",
+      "description": "Package marker for learning module"
+    },
+    {
+      "file": "scripts/pios/learning/learning_lifecycle.py",
+      "action": "CREATED",
+      "description": "Governed learning event lifecycle state machine — PROPOSED→REVIEWED→PROMOTED→CONSUMABLE→SUPERSEDED, fail-closed transitions"
+    },
+    {
+      "file": "scripts/pios/learning/learning_registry.py",
+      "action": "CREATED",
+      "description": "Central learning registry — capability-oriented, consumption declarations, activation manifest production, agent-extensible consumer types"
+    },
+    {
+      "file": "docs/governance/learning/learning_registry.json",
+      "action": "CREATED",
+      "description": "Central learning registry data — 5 Phase 7 events, 5 capability classes, 5 consumption declarations"
+    },
+    {
+      "file": "docs/governance/learning/LEARNING_CONSUMPTION_ARCHITECTURE.md",
+      "action": "CREATED",
+      "description": "Architecture document — lifecycle, registry, capability classes, consumption hooks, activation manifest, replay contract, agentic orchestration plane"
+    },
+    {
+      "file": "scripts/pios/run_client_pipeline.py",
+      "action": "MODIFIED",
+      "description": "Added Phase 0L (Learning Registry Load) and Phase 10L (Learning Activation Manifest) to pipeline orchestrator"
+    },
+    {
+      "file": "docs/pios/PI.GOVERNANCE.LEARNING-CONSUMPTION-ARCHITECTURE.01/execution_report.md",
+      "action": "CREATED",
+      "description": "Stream execution report"
+    },
+    {
+      "file": "docs/pios/PI.GOVERNANCE.LEARNING-CONSUMPTION-ARCHITECTURE.01/validation_log.json",
+      "action": "CREATED",
+      "description": "Stream validation log — 23/23 PASS"
+    },
+    {
+      "file": "docs/pios/PI.GOVERNANCE.LEARNING-CONSUMPTION-ARCHITECTURE.01/file_changes.json",
+      "action": "CREATED",
+      "description": "Stream file change manifest"
+    },
+    {
+      "file": "docs/pios/PI.GOVERNANCE.LEARNING-CONSUMPTION-ARCHITECTURE.01/CLOSURE.md",
+      "action": "CREATED",
+      "description": "Stream closure document"
+    },
+    {
+      "file": "docs/pios/PI.GOVERNANCE.LEARNING-CONSUMPTION-ARCHITECTURE.01/IMPLEMENTATION_SEMANTICS.md",
+      "action": "CREATED",
+      "description": "Implementation semantics — §5.5 primitive inventory, contracts, extension points"
+    }
+  ]
+}
