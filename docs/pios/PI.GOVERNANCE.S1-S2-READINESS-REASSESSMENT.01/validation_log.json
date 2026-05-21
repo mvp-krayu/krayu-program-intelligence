@@ -1,0 +1,110 @@
+{
+  "stream_id": "PI.GOVERNANCE.S1-S2-READINESS-REASSESSMENT.01",
+  "classification": "G2",
+  "date": "2026-05-21",
+  "specimen": "netbox",
+  "run_id": "run_github_netbox_20260520_134600",
+  "total_checks": 14,
+  "passed": 14,
+  "failed": 0,
+  "checks": [
+    {
+      "id": "V-001",
+      "name": "PHASE_8_ASSESSMENT_LOADED",
+      "description": "Phase 8 execution report loaded and condition identified",
+      "status": "PASS",
+      "evidence": "PI.GOVERNANCE.S1-S2-READINESS-ASSESSMENT.01/execution_report.md — CONDITIONAL_READY, 7 blockers, root BLK-001 NO_SEMANTIC_DERIVATION"
+    },
+    {
+      "id": "V-002",
+      "name": "PHASE_9_CLOSURE_LOADED",
+      "description": "Phase 9 closure loaded and delivery confirmed",
+      "status": "PASS",
+      "evidence": "PI.PATHB.SEMANTIC-PROPOSITION-ENGINE.01/CLOSURE.md — COMPLETE, 75 semantic_propositions, 29/29 validation"
+    },
+    {
+      "id": "V-003",
+      "name": "SPE_OUTPUT_EXISTS",
+      "description": "SPE derivation artifacts exist in run directory",
+      "status": "PASS",
+      "evidence": "spine/spine_objects.json (75 propositions), semantic/spe/spe_derivation_report.json, semantic/spe/proposition_review_queue.json, semantic/spe/proposition_derivation_lineage.json"
+    },
+    {
+      "id": "V-004",
+      "name": "CSR_PATH_ABSENT",
+      "description": "CSR-path artifacts confirmed absent (expected for SPE-path specimen)",
+      "status": "PASS",
+      "evidence": "semantic/compiler/candidate_csr.json ABSENT, semantic/compiler/derivation_report.json ABSENT, semantic/compiler/review_queue.json ABSENT"
+    },
+    {
+      "id": "V-005",
+      "name": "BLK_001_RESOLVED",
+      "description": "BLK-001 NO_SEMANTIC_DERIVATION resolved by SPE",
+      "status": "PASS",
+      "evidence": "75 governed propositions from 6 deterministic derivation classes, spe_derivation_report.json documents derivation"
+    },
+    {
+      "id": "V-006",
+      "name": "BLK_002_RECHARACTERIZED",
+      "description": "BLK-002 NO_CANDIDATES recharacterized — semantic evidence exists via proposition path",
+      "status": "PASS",
+      "evidence": "spine_objects.json semantic_propositions populated, candidate_csr.json correctly absent (SPE path)"
+    },
+    {
+      "id": "V-007",
+      "name": "BLK_003_INAPPLICABLE",
+      "description": "BLK-003 NO_CROSSWALK structurally inapplicable to SPE path",
+      "status": "PASS",
+      "evidence": "SPE propositions reference CEUs directly, not DOMs — crosswalk concept applies to CSR path only"
+    },
+    {
+      "id": "V-008",
+      "name": "BLK_004_ALREADY_DONE",
+      "description": "BLK-004 NO_RECONCILIATION already achieved at CEU layer",
+      "status": "PASS",
+      "evidence": "reconciliation_state.json: 12 confirmed, OPERATOR_VALIDATED, 46 reconciliation events"
+    },
+    {
+      "id": "V-009",
+      "name": "BLK_005_NOT_COMPUTABLE",
+      "description": "BLK-005 NO_DEBT_COMPUTED — debt infrastructure expects CSR reconciliation artifacts",
+      "status": "PASS",
+      "evidence": "Debt computation model operates on CSR reconciliation correspondence, not proposition evidence"
+    },
+    {
+      "id": "V-010",
+      "name": "BLK_006_PARTIAL",
+      "description": "BLK-006 SEMANTIC_ABSENT partially resolved — semantic evidence exists, qualification pipeline incomplete",
+      "status": "PASS",
+      "evidence": "75 propositions exist (absence claim factually incorrect), but no consumer pathway or qualification bridge"
+    },
+    {
+      "id": "V-011",
+      "name": "BLK_007_UNCHANGED",
+      "description": "BLK-007 NO_SEMANTIC_AUTHORITY unchanged — no runtime consumer",
+      "status": "PASS",
+      "evidence": "Neither LENS nor SQO consumes semantic_propositions — consumer pathway does not exist"
+    },
+    {
+      "id": "V-012",
+      "name": "PATH_MISMATCH_IDENTIFIED",
+      "description": "Two S2 paths identified — CSR (BlueEdge) and Proposition (PATH A) — qualification pipeline only serves CSR",
+      "status": "PASS",
+      "evidence": "CSR-path artifacts absent by design (SPE path), qualification_blockers.json references CSR artifacts"
+    },
+    {
+      "id": "V-013",
+      "name": "READINESS_DIMENSIONS_ASSESSED",
+      "description": "All 7 readiness dimensions assessed with current state",
+      "status": "PASS",
+      "evidence": "Structural READY, Governance READY, CEU READY, Semantic Pipeline OPERATIONAL, Learning READY, Semantic Qualification ABSENT, Operator Authority AVAILABLE"
+    },
+    {
+      "id": "V-014",
+      "name": "NO_VAULT_MUTATION",
+      "description": "G2 stream — no vault mutation required or performed",
+      "status": "PASS",
+      "evidence": "Assessment-only stream, architecture-consuming, no new concepts introduced"
+    }
+  ]
+}
