@@ -104,9 +104,15 @@ See: IMPLEMENTATION_SEMANTICS.md
 - STATUS CHANGE: semantic_proposition spine class — DEFINED → OPERATIONAL (NetBox: 75 propositions)
 - CAPABILITY CLASS: SEMANTIC_PROPOSITION added to learning registry
 
-### Vault Files To Update:
-- PIOS_CURRENT_CANONICAL_STATE.md — spine Phase 5 activated, NetBox semantic_propositions operational
-- TERMINOLOGY_LOCK.md — SPE, proposition_class, derivation lineage semantic_type terms
-- CANONICAL_OPERATIONAL_ROADMAP.md — Phase 9 COMPLETE
+### Vault Files Updated:
+- PIOS_CURRENT_CANONICAL_STATE.md — NetBox status updated (75 semantic_propositions), ontology lineage table extended (Phase 8 assessment, learning consumption, Phase 9 SPE)
+- TERMINOLOGY_LOCK.md — 4 terms added: Semantic Proposition Engine, Semantic Proposition, Proposition Class, Derivation Lineage Semantic Type
+- CANONICAL_OPERATIONAL_ROADMAP.md — Phase 9 COMPLETE, spine Phase 5 OPERATIONAL, accumulation table (semantic_proposition: 75), learning events updated (9 total)
 
-### Propagation Status: PENDING (vault updates deferred to separate commit)
+### Propagation Verification:
+- [x] PIOS_CURRENT_CANONICAL_STATE.md updated
+- [x] TERMINOLOGY_LOCK.md updated
+- [x] CANONICAL_OPERATIONAL_ROADMAP.md updated
+- [x] CLOSURE.md propagation status updated
+
+### Propagation Status: COMPLETE

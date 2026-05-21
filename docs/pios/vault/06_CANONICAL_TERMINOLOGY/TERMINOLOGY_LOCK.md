@@ -568,6 +568,48 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 **What it is NOT:** A percentile rank. A cross-project comparison metric. An importance score. Normalized centrality is a structural metric, not a judgment of value.
 
+### Semantic Proposition Engine (SPE)
+
+**Definition:** The governed semantic derivation engine that produces semantic_proposition spine objects from PATH A structural artifacts (centrality, topology, code graph, CEU reconciliation, hero moments). SPE runs alongside the Semantic Derivation Compiler (SDC) — SPE consumes PATH A structural evidence, SDC consumes HTML documentation. They are parallel, not sequential. SPE output is always CANDIDATE with L3 authority ceiling.
+
+**Status:** CANONICAL — operational (2026-05-21). Pipeline Phase 3c.
+
+**What it is NOT:** A replacement for the SDC. An AI-first pipeline. A CSR producer. SPE produces semantic_propositions (spine objects), not CSR taxonomy entries. It is deterministic-first with an optional AI-gated INFERRED tier.
+
+**Source:** `scripts/pios/spe/` (9 modules) + `scripts/pios/semantic_proposition_engine.py` (orchestrator)
+
+### Semantic Proposition
+
+**Definition:** A governed structural claim derived from PATH A evidence, modeled as a canonical spine object class. Each semantic proposition carries: proposition text, derivation tier (DIRECT_EVIDENCE / DERIVED / INFERRED), confidence score (0.0–1.0), authority ceiling (L3), proposition class, CEU references, structural references, evidence anchors, replay corridor references, derivation rationale, and reconciliation state.
+
+**Status:** CANONICAL — spine object class, OPERATIONAL (NetBox: 75 propositions, 2026-05-21).
+
+**What it is NOT:** Semantic truth. An assertion of fact. A recommendation. Semantic propositions are governed structural claims at CANDIDATE status requiring operator review for any progression.
+
+### Proposition Class
+
+**Definition:** The structural derivation category of a semantic proposition. Six classes:
+- **STRUCTURAL_DOMINANCE** — centrality gravitational dominance within a CEU domain (DIRECT_EVIDENCE)
+- **COUPLING_PATTERN** — cross-domain import entanglement between CEUs (DIRECT_EVIDENCE)
+- **AUTHORITY_TOPOLOGY** — dual structural authority (import vs inheritance) detection (DERIVED)
+- **TIER_GROUNDING** — CEU tier grounded to structural evidence and reconciliation state (DIRECT_EVIDENCE or DERIVED)
+- **HERO_MOMENT_GROUNDING** — semantic interpretation of structural hero moments (DERIVED)
+- **CLUSTER_ARCHITECTURE** — topology cluster CEU distribution analysis (DERIVED)
+
+**Status:** CANONICAL — 6 classes locked (2026-05-21).
+
+### Derivation Lineage Semantic Type
+
+**Definition:** The semantic classification of each derivation lineage event, recorded as `semantic_type` on the lineage event (NOT as a spine class). Four types:
+- **GROUNDING** — proposition directly grounded in structural evidence
+- **RELATIONSHIP** — proposition captures inter-CEU or inter-cluster structural relationship
+- **CONFLICT** — derivation encountered contradictory evidence (recorded, not suppressed)
+- **REFINEMENT** — proposition refines or narrows a prior derivation based on additional evidence
+
+**Status:** CANONICAL — lineage field values (2026-05-21).
+
+**What it is NOT:** A spine class. The 8 canonical spine classes are LOCKED. Semantic sub-types are modeled within derivation lineage, not as spine classes. This keeps the spine schema clean while preserving rich semantic classification within the derivation record.
+
 ## Term Usage Rules
 
 1. **Use locked definitions exactly.** Do not paraphrase, simplify, or reinterpret.

@@ -3,7 +3,7 @@
 Status: ACTIVE — AUTHORITATIVE
 Classification: Operational State Document (updates with each phase completion)
 Relation: Instantiation of PROGRAM_INTELLIGENCE_EVOLUTION_MODEL.md
-Last Updated: 2026-05-21 (Phase 8 complete — S1→S2 CONDITIONAL_READY)
+Last Updated: 2026-05-21 (Phase 9 complete — Semantic Proposition Engine operational)
 
 ---
 
@@ -15,7 +15,7 @@ Phase 1: First spine objects               COMPLETE (NetBox: 9 evidence, 6 hero 
 Phase 2: Qualification spine               COMPLETE (SQO governance projection, S1)
 Phase 3: Cross-specimen spine              COMPLETE (StackStorm: comparative specimen)
 Phase 4: Projection spine                  COMPLETE (BOARDROOM executive projection on main)
-Phase 5: Semantic spine                    NOT STARTED (semantic_propositions = 0)
+Phase 5: Semantic spine                    OPERATIONAL (NetBox: 75 semantic_propositions)
 Phase 6: Doctrine spine                    NOT STARTED (doctrine_evolution_records = 0)
 Phase 7: Full spine                        NOT STARTED (all 8 classes operational)
 ```
@@ -32,7 +32,7 @@ Evolution Model Steps mapped to current state:
 | 2 | NetBox cockpit activation (S0→S1) | COMPLETE | qualification state |
 | 3 | NetBox structural demonstration | COMPLETE | executive_projection_snapshot (BOARDROOM) |
 | 4 | Second specimen onboarding | COMPLETE | StackStorm: 10 evidence, 1 hero, 1 replay, 5 convergence |
-| 5 | NetBox semantic progression | NOT STARTED | will produce: semantic_propositions |
+| 5 | NetBox semantic progression | COMPLETE | 75 semantic_propositions (6 classes, mean confidence 0.872) |
 | 6 | Commercial proof point | NOT STARTED | — |
 | 7 | Doctrine spine activation | NOT STARTED | will produce: doctrine_evolution_records |
 | 8 | Full spine operational | NOT STARTED | all 8 classes |
@@ -41,7 +41,7 @@ Evolution Model Steps mapped to current state:
 
 ## 3. CURRENT ACCUMULATION
 
-33+ spine objects across 2 specimens:
+108+ spine objects across 2 specimens:
 
 | Object Class | NetBox | StackStorm | Total | Status |
 |-------------|--------|------------|-------|--------|
@@ -50,14 +50,14 @@ Evolution Model Steps mapped to current state:
 | replay_corridor | 1 | 1 | 2 | OPERATIONAL |
 | convergence_observation | — | — | 5 | OPERATIONAL (cross-specimen) |
 | qualification_transition | 0 | 0 | 0 | DEFINED (CEU events exist but not formalized as spine objects) |
-| semantic_proposition | 0 | 0 | 0 | DEFINED |
+| semantic_proposition | 75 | 0 | 75 | OPERATIONAL (6 classes: 12 STRUCTURAL_DOMINANCE, 34 COUPLING_PATTERN, 10 AUTHORITY_TOPOLOGY, 12 TIER_GROUNDING, 6 HERO_MOMENT_GROUNDING, 1 CLUSTER_ARCHITECTURE) |
 | doctrine_evolution_record | 0 | 0 | 0 | DEFINED |
 | executive_projection_snapshot | 0 | 0 | 0 | DEFINED (BOARDROOM operational but no formal capture) |
 
 Additional non-spine operational state:
 - CEU reconciliation: 13 candidates (12 confirmed, 1 merged, 1 reclassified CONSUMER→FOUNDATION, 1 authority refined), promotion gate OPEN
 - Reconciliation event log: 46 events (35 baseline + 11 Phase 7 governance loop)
-- Learning events: 6 total — LRNE-0001 (StackStorm, resolved) + 5 Phase 7 PROPOSED (tier classification gap, evidence type gap, authority pattern gap, spine consistency gap, governance process gap)
+- Learning events: 9 total — LRNE-0001 (StackStorm, resolved) + 5 Phase 7 PROPOSED (tier classification gap, evidence type gap, authority pattern gap, spine consistency gap, governance process gap) + 3 Phase 9 SPE PROPOSED (2 over-generalization risk, 1 reconciliation friction)
 - Evidence intake: generalized pipeline operational (NetBox + StackStorm)
 - Governance session artifacts: baseline freeze, evidence ingestion delta, replay validation, learning events, operator continuity assessment (Phase 7)
 
@@ -112,7 +112,7 @@ How operational cognition survives sessions and streams:
 |---|-------|-------------------|-------------|------------|
 | 7 | Semantic governance loop validation | Full governance cycle: intake → reconcile → reopen → refine → lineage delta → replay → learn → persist | Validates learning propagation. Proves governance continuity across sessions. 12/12 replay reconstruction PASS. 5 learning events PROPOSED. 1 CEU reclassified, 1 refined. | **COMPLETE** (PI.GOVERNANCE.SEMANTIC-GOVERNANCE-LOOP-VALIDATION.01) |
 | 8 | S1→S2 readiness assessment | Whether validated governance loop + structural substrate qualifies for semantic derivation | Assessment artifact — CONDITIONAL_READY. 7 blockers form sequential chain from single root (NO_SEMANTIC_DERIVATION). All readiness dimensions PASS except semantic pipeline (not yet run). | **COMPLETE** (PI.GOVERNANCE.S1-S2-READINESS-ASSESSMENT.01) |
-| 9 | Semantic derivation / registry population | semantic_proposition production. Compiler-assisted, operator-governed, L3-ceiling. | Activates spine phase 5. First semantic_propositions. | Phase 8 assessment positive |
+| 9 | Semantic derivation / registry population | semantic_proposition production. SPE — 6 deterministic class derivers, L3-ceiling, CANDIDATE. | Activates spine phase 5. 75 semantic_propositions. | **COMPLETE** (PI.PATHB.SEMANTIC-PROPOSITION-ENGINE.01) |
 | 10 | Demo capture / commercial proof | Governed commercial proof from spine evidence. Not fabricated. Replayable from spine. | executive_projection_snapshot formalized. | Phase 9 (or overlap with 8–9) |
 | 11 | Learning-cycle propagation | Multi-cycle learning: events from cycle N consumed in cycle N+1 | Learning event lifecycle: PROPOSED → REVIEWED → PROMOTED validated | Ongoing from phase 7 forward |
 | 12 | Future semantic / GEIOS evolution | Doctrine spine. Agent enrichment. Full spine operational. | doctrine_evolution_records. Phase 6–7 spine activation. | All prior phases |
