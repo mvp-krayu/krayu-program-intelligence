@@ -70,6 +70,21 @@
       ],
       "governance_level": "ADVISORY",
       "registered_at": "2026-05-21T19:30:00Z"
+    },
+    "SEMANTIC_PROPOSITION": {
+      "class_id": "SEMANTIC_PROPOSITION",
+      "description": "Learnings that improve semantic proposition derivation, confidence scoring, and structural-to-semantic translation",
+      "target_capabilities": [
+        "structural_dominance_deriver",
+        "coupling_pattern_deriver",
+        "authority_topology_deriver",
+        "tier_grounding_deriver",
+        "hero_moment_grounding_deriver",
+        "cluster_architecture_deriver",
+        "proposition_confidence_scorer"
+      ],
+      "governance_level": "ADVISORY",
+      "registered_at": "2026-05-21T20:30:00Z"
     }
   },
   "consumption_declarations": [
@@ -112,6 +127,14 @@
       "governance_level": "INFORMATIONAL",
       "replay_guarantee": "DETERMINISTIC_ADVISORY",
       "declared_at": "2026-05-21T19:30:00Z"
+    },
+    {
+      "consumer_id": "phase_03c_semantic_proposition_derivation",
+      "consumer_type": "PIPELINE_PHASE",
+      "capability_classes": ["SEMANTIC_PROPOSITION", "SEMANTIC_DERIVATION"],
+      "governance_level": "ADVISORY",
+      "replay_guarantee": "DETERMINISTIC_ADVISORY",
+      "declared_at": "2026-05-21T20:30:00Z"
     }
   ],
   "events": [

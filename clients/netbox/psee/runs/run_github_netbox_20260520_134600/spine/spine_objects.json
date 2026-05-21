@@ -1,0 +1,2955 @@
+{
+  "spine_version": "1.0",
+  "model_reference": "docs/governance/PROGRAM_INTELLIGENCE_EVOLUTION_MODEL.md",
+  "specimen_id": "netbox",
+  "run_id": "run_github_netbox_20260520_134600",
+  "activation_phase": 1,
+  "generated_at": "2026-05-20T13:46:00Z",
+  "objects": {
+    "evidence_objects": [
+      {
+        "id": "75125491-bd71-49e4-b0c6-b7791624096a",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "phase": "intake",
+        "artifact_path": "intake/source_inventory.json",
+        "artifact_hash": "df064778b1cc35306add099ac4f385a52c380b7403c611f8fa8c46555780c694",
+        "timestamp": "2026-05-20T13:46:00Z",
+        "evidence_class": "INVENTORY",
+        "node_count": 2169,
+        "lineage": null
+      },
+      {
+        "id": "af80bda7-b966-41eb-8761-8734ad735e54",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "phase": "40.2",
+        "artifact_path": "structure/40.2/structural_node_inventory.json",
+        "artifact_hash": "f59d7f990ba9a6ac565ccc1d42b78fcce2b442bcb9636b1b4a41e003cb8b8030",
+        "timestamp": "2026-05-20T13:46:00Z",
+        "evidence_class": "STRUCTURAL",
+        "lineage": null,
+        "node_count": 2540
+      },
+      {
+        "id": "74365943-b71b-44dd-a1f2-78250b77f468",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "phase": "40.3",
+        "artifact_path": "structure/40.3/structural_topology_log.json",
+        "artifact_hash": "2a77a01a891042af0c5d3a6b26f51b7e31fcc5bd11f0f5ef76802b935b072925",
+        "timestamp": "2026-05-20T13:46:00Z",
+        "evidence_class": "STRUCTURAL",
+        "lineage": null,
+        "edge_count": 2516
+      },
+      {
+        "id": "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "phase": "40.4",
+        "artifact_path": "structure/40.4/canonical_topology.json",
+        "artifact_hash": "2a8c93fbd8f7586b14091b06a1534c8f6581edef1bd968982e7a28f49ba8adf4",
+        "timestamp": "2026-05-20T13:46:00Z",
+        "evidence_class": "STRUCTURAL",
+        "lineage": null,
+        "node_count": 24
+      },
+      {
+        "id": "61503bcc-1c0a-4383-be82-a3d126754a2f",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "phase": "40.2r",
+        "artifact_path": "structure/40.2r/structural_node_inventory_filtered.json",
+        "artifact_hash": "4f31fc2ae8ccc30ef6ee33d51097a106005aad33a49db1b072d087312118101c",
+        "timestamp": "2026-05-20T13:46:00Z",
+        "evidence_class": "STRUCTURAL",
+        "lineage": "af80bda7-b966-41eb-8761-8734ad735e54",
+        "node_count": 1848
+      },
+      {
+        "id": "b9f3e979-0408-4541-8db7-adb7a90485d2",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "phase": "40.3r",
+        "artifact_path": "structure/40.3r/structural_topology_log_filtered.json",
+        "artifact_hash": "93477c38719d37c5afd0c20d216927267f8995c2ddbf104c98bea5329c013f87",
+        "timestamp": "2026-05-20T13:46:00Z",
+        "evidence_class": "STRUCTURAL",
+        "lineage": "74365943-b71b-44dd-a1f2-78250b77f468"
+      },
+      {
+        "id": "980a6cfb-6ccf-4680-be4a-790ada4fab95",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "phase": "40.3s",
+        "artifact_path": "structure/40.3s/code_graph.json",
+        "artifact_hash": "02ec089cd76e4b9b54429d381e1b82ae8662dbd1f1f4eadb33f5ec659954e8e7",
+        "timestamp": "2026-05-20T13:46:00Z",
+        "evidence_class": "CODE_GRAPH",
+        "lineage": "b9f3e979-0408-4541-8db7-adb7a90485d2",
+        "edge_count": 16046
+      },
+      {
+        "id": "8407316f-d24d-4f1e-a556-2a737a60afbf",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "phase": "40.3c",
+        "artifact_path": "structure/40.3c/structural_centrality.json",
+        "artifact_hash": "6087fce251a49cbb4fb8330b417f42acf55805b763ba718195fc3e2ba3785168",
+        "timestamp": "2026-05-20T13:46:00Z",
+        "evidence_class": "CENTRALITY",
+        "lineage": "980a6cfb-6ccf-4680-be4a-790ada4fab95",
+        "node_count": 0
+      },
+      {
+        "object_type": "evidence_object",
+        "id": "4db5091a-9b81-4bb8-b733-4ce961ce3eb0",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "evidence_type": "spine_enrichment_40_3s_multi_package_resolution",
+        "description": "40.3s code graph upgraded with multi-package import resolution. Resolved 3614 IMPORTS (2197 cross-app, 1417 intra-app) from 16046 total relationships. dcim/models/__init__.py identified as most-imported file (160 inbound). Cross-domain coupling map produced: extras->netbox (117), extras->utilities (108), dcim->netbox (106), dcim->utilities (102). Centrality: 31 RE_EXPORT_HUB, 694 INTERFACE_BOUNDARY, 364 VALIDATION_SUPPORT.",
+        "artifact_path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/structure/40.3s/code_graph.json",
+        "artifact_hash": null,
+        "pipeline_stage": "40.3s",
+        "enrichment_event": true,
+        "prior_state": {
+          "resolved_imports": "low \u2014 multi-package resolution not available"
+        },
+        "current_state": {
+          "total_relationships": 16046,
+          "resolved_imports": 3614,
+          "cross_app_imports": 2197,
+          "role_distribution": {
+            "RE_EXPORT_HUB": 31,
+            "INTERFACE_BOUNDARY": 694,
+            "VALIDATION_SUPPORT": 364
+          }
+        },
+        "timestamp": "2026-05-20T13:45:31Z"
+      }
+    ],
+    "hero_moments": [
+      {
+        "id": "f6503b5d-f80f-494d-8442-52e177ecbf89",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "discovery": "DCIM gravitational dominance: dcim/models/__init__.py at 160 inbound imports exceeds core (114) + extras (95) combined. Appears as peer app in docs, structurally is the foundation.",
+        "surprise_class": "CENTRALITY",
+        "evidence_anchors": [
+          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+        ],
+        "manufactured": false,
+        "timestamp": "2026-05-20T13:46:00Z"
+      },
+      {
+        "id": "a87f5be1-7aaa-4c96-821a-a591328ae35d",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "discovery": "60.8% cross-domain import rate: 2,197 of 3,614 imports cross app boundaries. Django app structure implies modularity; PI reveals majority of imports are cross-app. Apparent modularity is organizational fiction.",
+        "surprise_class": "COUPLING",
+        "evidence_anchors": [
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "manufactured": false,
+        "timestamp": "2026-05-20T13:46:00Z"
+      },
+      {
+        "id": "436ac01d-226d-4169-b13d-8fe10dd1e26a",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "discovery": "Bidirectional DCIM-IPAM entanglement: 30 DCIM->IPAM + 28 IPAM->DCIM = 58 bidirectional imports. Domains appear separate in docs and UI but cannot be independently versioned, tested, or extracted.",
+        "surprise_class": "COUPLING",
+        "evidence_anchors": [
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "manufactured": false,
+        "timestamp": "2026-05-20T13:46:00Z"
+      },
+      {
+        "id": "62ca6d51-a8ce-4945-a915-503d6213a2da",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "discovery": "Choice enumerations as coupling multipliers: dcim/choices.py at 76 inbound imports; 4 choices files totaling 203 combined inbound. Small enumeration files (~50-200 lines) have disproportionate structural influence.",
+        "surprise_class": "CENTRALITY",
+        "evidence_anchors": [
+          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+        ],
+        "manufactured": false,
+        "timestamp": "2026-05-20T13:46:00Z"
+      },
+      {
+        "id": "32270224-f206-4f98-8b7e-2c83457a0599",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "discovery": "Pipeline self-improvement through live onboarding: source root discovery (21->1,155 files) and cross-app import resolution (580->3,614 imports) exposed by first real multi-app Django project. Flask testing could not reveal these.",
+        "surprise_class": "EMERGENCE",
+        "evidence_anchors": [
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95",
+          "af80bda7-b966-41eb-8761-8734ad735e54"
+        ],
+        "manufactured": false,
+        "timestamp": "2026-05-20T13:46:00Z"
+      },
+      {
+        "id": "9d2b670c-1c8c-4927-aa57-30884f6939db",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "discovery": "Dual structural authority \u2014 import graph vs inheritance graph reveal different hierarchies. Import authority: dcim dominates (189 cross-domain edges) \u2014 vocabulary/data coupling. Inheritance authority: tenancy dominates (226 cross-domain edges, 2.22x its import authority) \u2014 behavioral composition via forms, tables, filtersets, GraphQL mixins. Tenancy is documented as optional organizational metadata but structurally provides the behavioral framework that ALL domain apps inherit. Every domain's forms, filters, and tables inherit from tenancy. dcim tells domains WHAT to reference; tenancy tells domains HOW to behave. Consumer domains (circuits, virtualization, vpn, wireless) have zero inheritance authority \u2014 they only inherit, never provide.",
+        "surprise_class": "TOPOLOGY",
+        "evidence_anchors": [
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95",
+          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+        ],
+        "manufactured": false,
+        "timestamp": "2026-05-20T20:15:00Z"
+      }
+    ],
+    "replay_corridors": [
+      {
+        "id": "9a624e6b-2bd8-497a-9e12-9a55848290b0",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "corridor_type": "ONBOARDING",
+        "commands": [
+          "git clone --depth 1 https://github.com/netbox-community/netbox.git /tmp/netbox-clone",
+          "cd /tmp/netbox-clone && tar cf /tmp/netbox-source.tar --exclude=.git .",
+          "python3 scripts/pios/source_intake.py --client netbox --source source_01 --run-id run_github_netbox_20260520_134600",
+          "python3 scripts/pios/structural_scanner.py --client netbox --source source_01 --run-id run_github_netbox_20260520_134600",
+          "python3 scripts/pios/structural_relevance_classifier.py --client netbox --source source_01 --run-id run_github_netbox_20260520_134600",
+          "python3 scripts/pios/code_graph_feasibility.py --client netbox --run-id run_github_netbox_20260520_134600",
+          "python3 scripts/pios/structural_centrality.py --client netbox --run-id run_github_netbox_20260520_134600"
+        ],
+        "input_hash": "043d4ca2b85fde16e2bc86eea6631e5f363c8f5c59d14332eed11d0f0c44a697",
+        "output_hashes": {
+          "intake/source_inventory.json": "df064778b1cc35306add099ac4f385a52c380b7403c611f8fa8c46555780c694",
+          "structure/40.2/structural_node_inventory.json": "f59d7f990ba9a6ac565ccc1d42b78fcce2b442bcb9636b1b4a41e003cb8b8030",
+          "structure/40.3/structural_topology_log.json": "2a77a01a891042af0c5d3a6b26f51b7e31fcc5bd11f0f5ef76802b935b072925",
+          "structure/40.4/canonical_topology.json": "2a8c93fbd8f7586b14091b06a1534c8f6581edef1bd968982e7a28f49ba8adf4",
+          "structure/40.2r/structural_node_inventory_filtered.json": "4f31fc2ae8ccc30ef6ee33d51097a106005aad33a49db1b072d087312118101c",
+          "structure/40.3r/structural_topology_log_filtered.json": "93477c38719d37c5afd0c20d216927267f8995c2ddbf104c98bea5329c013f87",
+          "structure/40.3s/code_graph.json": "02ec089cd76e4b9b54429d381e1b82ae8662dbd1f1f4eadb33f5ec659954e8e7",
+          "structure/40.3c/structural_centrality.json": "6087fce251a49cbb4fb8330b417f42acf55805b763ba718195fc3e2ba3785168"
+        },
+        "fidelity": "STRUCTURAL",
+        "timestamp": "2026-05-20T13:46:00Z"
+      }
+    ],
+    "semantic_propositions": [
+      {
+        "id": "SP-netbox-0001",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-CORE exhibits structural gravitational dominance: netbox/core/models/__init__.py concentrates 114 inbound imports, 114.0x the domain median",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.954,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95",
+          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "STRUCTURAL_DOMINANCE",
+        "ceu_refs": [
+          "CEU-CORE"
+        ],
+        "structural_refs": {
+          "top_node": "netbox/core/models/__init__.py",
+          "import_in_degree": 114,
+          "domain_median_in_degree": 1.0,
+          "dominance_ratio": 114.0,
+          "domain_file_count": 96,
+          "structural_role": "RE_EXPORT_HUB",
+          "centrality_rank": 14
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Top centrality node in core has 114.0x median in-degree. Structural role: RE_EXPORT_HUB.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0002",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-IPAM exhibits structural gravitational dominance: netbox/ipam/models/__init__.py concentrates 86 inbound imports, 86.0x the domain median",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.954,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95",
+          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "STRUCTURAL_DOMINANCE",
+        "ceu_refs": [
+          "CEU-IPAM"
+        ],
+        "structural_refs": {
+          "top_node": "netbox/ipam/models/__init__.py",
+          "import_in_degree": 86,
+          "domain_median_in_degree": 1.0,
+          "dominance_ratio": 86.0,
+          "domain_file_count": 94,
+          "structural_role": "RE_EXPORT_HUB",
+          "centrality_rank": 21
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Top centrality node in ipam has 86.0x median in-degree. Structural role: RE_EXPORT_HUB.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0003",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-NETBOX exhibits structural gravitational dominance: netbox/netbox/api/serializers/__init__.py concentrates 64 inbound imports, 64.0x the domain median",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.954,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95",
+          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "STRUCTURAL_DOMINANCE",
+        "ceu_refs": [
+          "CEU-NETBOX"
+        ],
+        "structural_refs": {
+          "top_node": "netbox/netbox/api/serializers/__init__.py",
+          "import_in_degree": 64,
+          "domain_median_in_degree": 1.0,
+          "dominance_ratio": 64.0,
+          "domain_file_count": 136,
+          "structural_role": "RE_EXPORT_HUB",
+          "centrality_rank": 4
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Top centrality node in netbox has 64.0x median in-degree. Structural role: RE_EXPORT_HUB.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0004",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-TENANCY exhibits structural gravitational dominance: netbox/tenancy/models/__init__.py concentrates 46 inbound imports, 92.0x the domain median",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.854,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95",
+          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "STRUCTURAL_DOMINANCE",
+        "ceu_refs": [
+          "CEU-TENANCY"
+        ],
+        "structural_refs": {
+          "top_node": "netbox/tenancy/models/__init__.py",
+          "import_in_degree": 46,
+          "domain_median_in_degree": 0.5,
+          "dominance_ratio": 92.0,
+          "domain_file_count": 56,
+          "structural_role": "VALIDATION_SUPPORT",
+          "centrality_rank": 36
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Top centrality node in tenancy has 92.0x median in-degree. Structural role: VALIDATION_SUPPORT.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-netbox-0005",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-USERS exhibits structural gravitational dominance: netbox/users/models/__init__.py concentrates 73 inbound imports, 73.0x the domain median",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.954,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95",
+          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "STRUCTURAL_DOMINANCE",
+        "ceu_refs": [
+          "CEU-USERS"
+        ],
+        "structural_refs": {
+          "top_node": "netbox/users/models/__init__.py",
+          "import_in_degree": 73,
+          "domain_median_in_degree": 1.0,
+          "dominance_ratio": 73.0,
+          "domain_file_count": 60,
+          "structural_role": "RE_EXPORT_HUB",
+          "centrality_rank": 24
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Top centrality node in users has 73.0x median in-degree. Structural role: RE_EXPORT_HUB.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0006",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-UTILITIES exhibits structural gravitational dominance: netbox/utilities/testing/__init__.py concentrates 60 inbound imports, 30.0x the domain median",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.954,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95",
+          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "STRUCTURAL_DOMINANCE",
+        "ceu_refs": [
+          "CEU-UTILITIES"
+        ],
+        "structural_refs": {
+          "top_node": "netbox/utilities/testing/__init__.py",
+          "import_in_degree": 60,
+          "domain_median_in_degree": 2.0,
+          "dominance_ratio": 30.0,
+          "domain_file_count": 105,
+          "structural_role": "RE_EXPORT_HUB",
+          "centrality_rank": 3
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Top centrality node in utilities has 30.0x median in-degree. Structural role: RE_EXPORT_HUB.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0007",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-CIRCUITS and CEU-NETBOX exhibit bidirectional structural entanglement: 46 cross-domain imports (43+3)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.942,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-CIRCUITS",
+          "CEU-NETBOX"
+        ],
+        "structural_refs": {
+          "src_domain": "circuits",
+          "tgt_domain": "netbox",
+          "forward_count": 43,
+          "reverse_count": 3,
+          "total_bidirectional": 46,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 46 edges between circuits and netbox. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0008",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-CIRCUITS and CEU-UTILITIES exhibit bidirectional structural entanglement: 36 cross-domain imports (35+1)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.942,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-CIRCUITS",
+          "CEU-UTILITIES"
+        ],
+        "structural_refs": {
+          "src_domain": "circuits",
+          "tgt_domain": "utilities",
+          "forward_count": 35,
+          "reverse_count": 1,
+          "total_bidirectional": 36,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 36 edges between circuits and utilities. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0009",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-CIRCUITS and CEU-DCIM exhibit bidirectional structural entanglement: 38 cross-domain imports (24+14)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.942,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-CIRCUITS",
+          "CEU-DCIM"
+        ],
+        "structural_refs": {
+          "src_domain": "circuits",
+          "tgt_domain": "dcim",
+          "forward_count": 24,
+          "reverse_count": 14,
+          "total_bidirectional": 38,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 38 edges between circuits and dcim. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0010",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-CORE and CEU-NETBOX exhibit bidirectional structural entanglement: 122 cross-domain imports (82+40)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.972,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-CORE",
+          "CEU-NETBOX"
+        ],
+        "structural_refs": {
+          "src_domain": "core",
+          "tgt_domain": "netbox",
+          "forward_count": 82,
+          "reverse_count": 40,
+          "total_bidirectional": 122,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 122 edges between core and netbox. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0011",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-CORE and CEU-UTILITIES exhibit bidirectional structural entanglement: 70 cross-domain imports (54+16)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.972,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-CORE",
+          "CEU-UTILITIES"
+        ],
+        "structural_refs": {
+          "src_domain": "core",
+          "tgt_domain": "utilities",
+          "forward_count": 54,
+          "reverse_count": 16,
+          "total_bidirectional": 70,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 70 edges between core and utilities. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0012",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-CORE and CEU-EXTRAS exhibit bidirectional structural entanglement: 77 cross-domain imports (11+66)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.972,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-CORE",
+          "CEU-EXTRAS"
+        ],
+        "structural_refs": {
+          "src_domain": "core",
+          "tgt_domain": "extras",
+          "forward_count": 11,
+          "reverse_count": 66,
+          "total_bidirectional": 77,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 77 edges between core and extras. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0013",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-DCIM and CEU-NETBOX exhibit bidirectional structural entanglement: 127 cross-domain imports (106+21)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.972,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-DCIM",
+          "CEU-NETBOX"
+        ],
+        "structural_refs": {
+          "src_domain": "dcim",
+          "tgt_domain": "netbox",
+          "forward_count": 106,
+          "reverse_count": 21,
+          "total_bidirectional": 127,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 127 edges between dcim and netbox. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0014",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-DCIM and CEU-UTILITIES exhibit bidirectional structural entanglement: 120 cross-domain imports (102+18)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.972,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-DCIM",
+          "CEU-UTILITIES"
+        ],
+        "structural_refs": {
+          "src_domain": "dcim",
+          "tgt_domain": "utilities",
+          "forward_count": 102,
+          "reverse_count": 18,
+          "total_bidirectional": 120,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 120 edges between dcim and utilities. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0015",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-DCIM and CEU-IPAM exhibit bidirectional structural entanglement: 58 cross-domain imports (30+28)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.972,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-DCIM",
+          "CEU-IPAM"
+        ],
+        "structural_refs": {
+          "src_domain": "dcim",
+          "tgt_domain": "ipam",
+          "forward_count": 30,
+          "reverse_count": 28,
+          "total_bidirectional": 58,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 58 edges between dcim and ipam. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0016",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-DCIM and CEU-WIRELESS exhibit bidirectional structural entanglement: 65 cross-domain imports (29+36)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.972,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-DCIM",
+          "CEU-WIRELESS"
+        ],
+        "structural_refs": {
+          "src_domain": "dcim",
+          "tgt_domain": "wireless",
+          "forward_count": 29,
+          "reverse_count": 36,
+          "total_bidirectional": 65,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 65 edges between dcim and wireless. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0017",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-DCIM and CEU-EXTRAS exhibit bidirectional structural entanglement: 59 cross-domain imports (25+34)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.972,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-DCIM",
+          "CEU-EXTRAS"
+        ],
+        "structural_refs": {
+          "src_domain": "dcim",
+          "tgt_domain": "extras",
+          "forward_count": 25,
+          "reverse_count": 34,
+          "total_bidirectional": 59,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 59 edges between dcim and extras. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0018",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-DCIM and CEU-TENANCY exhibit bidirectional structural entanglement: 28 cross-domain imports (23+5)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.942,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-DCIM",
+          "CEU-TENANCY"
+        ],
+        "structural_refs": {
+          "src_domain": "dcim",
+          "tgt_domain": "tenancy",
+          "forward_count": 23,
+          "reverse_count": 5,
+          "total_bidirectional": 28,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 28 edges between dcim and tenancy. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0019",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-DCIM and CEU-VIRTUALIZATION exhibit bidirectional structural entanglement: 62 cross-domain imports (20+42)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.972,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-DCIM",
+          "CEU-VIRTUALIZATION"
+        ],
+        "structural_refs": {
+          "src_domain": "dcim",
+          "tgt_domain": "virtualization",
+          "forward_count": 20,
+          "reverse_count": 42,
+          "total_bidirectional": 62,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 62 edges between dcim and virtualization. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0020",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-EXTRAS and CEU-NETBOX exhibit bidirectional structural entanglement: 162 cross-domain imports (117+45)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.972,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-EXTRAS",
+          "CEU-NETBOX"
+        ],
+        "structural_refs": {
+          "src_domain": "extras",
+          "tgt_domain": "netbox",
+          "forward_count": 117,
+          "reverse_count": 45,
+          "total_bidirectional": 162,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 162 edges between extras and netbox. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0021",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-EXTRAS and CEU-UTILITIES exhibit bidirectional structural entanglement: 125 cross-domain imports (108+17)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.972,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-EXTRAS",
+          "CEU-UTILITIES"
+        ],
+        "structural_refs": {
+          "src_domain": "extras",
+          "tgt_domain": "utilities",
+          "forward_count": 108,
+          "reverse_count": 17,
+          "total_bidirectional": 125,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 125 edges between extras and utilities. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0022",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-EXTRAS and CEU-USERS exhibit bidirectional structural entanglement: 30 cross-domain imports (29+1)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.942,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-EXTRAS",
+          "CEU-USERS"
+        ],
+        "structural_refs": {
+          "src_domain": "extras",
+          "tgt_domain": "users",
+          "forward_count": 29,
+          "reverse_count": 1,
+          "total_bidirectional": 30,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 30 edges between extras and users. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0023",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-EXTRAS and CEU-VIRTUALIZATION exhibit bidirectional structural entanglement: 30 cross-domain imports (11+19)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.942,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-EXTRAS",
+          "CEU-VIRTUALIZATION"
+        ],
+        "structural_refs": {
+          "src_domain": "extras",
+          "tgt_domain": "virtualization",
+          "forward_count": 11,
+          "reverse_count": 19,
+          "total_bidirectional": 30,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 30 edges between extras and virtualization. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0024",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-IPAM and CEU-NETBOX exhibit bidirectional structural entanglement: 59 cross-domain imports (56+3)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.972,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-IPAM",
+          "CEU-NETBOX"
+        ],
+        "structural_refs": {
+          "src_domain": "ipam",
+          "tgt_domain": "netbox",
+          "forward_count": 56,
+          "reverse_count": 3,
+          "total_bidirectional": 59,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 59 edges between ipam and netbox. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0025",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-IPAM and CEU-UTILITIES exhibit bidirectional structural entanglement: 42 cross-domain imports (37+5)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.942,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-IPAM",
+          "CEU-UTILITIES"
+        ],
+        "structural_refs": {
+          "src_domain": "ipam",
+          "tgt_domain": "utilities",
+          "forward_count": 37,
+          "reverse_count": 5,
+          "total_bidirectional": 42,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 42 edges between ipam and utilities. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0026",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-IPAM and CEU-TENANCY exhibit bidirectional structural entanglement: 20 cross-domain imports (18+2)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.942,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-IPAM",
+          "CEU-TENANCY"
+        ],
+        "structural_refs": {
+          "src_domain": "ipam",
+          "tgt_domain": "tenancy",
+          "forward_count": 18,
+          "reverse_count": 2,
+          "total_bidirectional": 20,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 20 edges between ipam and tenancy. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0027",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-IPAM and CEU-VIRTUALIZATION exhibit bidirectional structural entanglement: 32 cross-domain imports (10+22)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.942,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-IPAM",
+          "CEU-VIRTUALIZATION"
+        ],
+        "structural_refs": {
+          "src_domain": "ipam",
+          "tgt_domain": "virtualization",
+          "forward_count": 10,
+          "reverse_count": 22,
+          "total_bidirectional": 32,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 32 edges between ipam and virtualization. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0028",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-IPAM and CEU-VPN exhibit bidirectional structural entanglement: 21 cross-domain imports (7+14)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.942,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-IPAM",
+          "CEU-VPN"
+        ],
+        "structural_refs": {
+          "src_domain": "ipam",
+          "tgt_domain": "vpn",
+          "forward_count": 7,
+          "reverse_count": 14,
+          "total_bidirectional": 21,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 21 edges between ipam and vpn. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0029",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-NETBOX and CEU-UTILITIES exhibit bidirectional structural entanglement: 157 cross-domain imports (112+45)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.972,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-NETBOX",
+          "CEU-UTILITIES"
+        ],
+        "structural_refs": {
+          "src_domain": "netbox",
+          "tgt_domain": "utilities",
+          "forward_count": 112,
+          "reverse_count": 45,
+          "total_bidirectional": 157,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 157 edges between netbox and utilities. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0030",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-NETBOX and CEU-USERS exhibit bidirectional structural entanglement: 50 cross-domain imports (19+31)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.972,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-NETBOX",
+          "CEU-USERS"
+        ],
+        "structural_refs": {
+          "src_domain": "netbox",
+          "tgt_domain": "users",
+          "forward_count": 19,
+          "reverse_count": 31,
+          "total_bidirectional": 50,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 50 edges between netbox and users. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0031",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-NETBOX and CEU-TENANCY exhibit bidirectional structural entanglement: 37 cross-domain imports (6+31)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.942,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-NETBOX",
+          "CEU-TENANCY"
+        ],
+        "structural_refs": {
+          "src_domain": "netbox",
+          "tgt_domain": "tenancy",
+          "forward_count": 6,
+          "reverse_count": 31,
+          "total_bidirectional": 37,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 37 edges between netbox and tenancy. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0032",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-NETBOX and CEU-VPN exhibit bidirectional structural entanglement: 36 cross-domain imports (3+33)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.942,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-NETBOX",
+          "CEU-VPN"
+        ],
+        "structural_refs": {
+          "src_domain": "netbox",
+          "tgt_domain": "vpn",
+          "forward_count": 3,
+          "reverse_count": 33,
+          "total_bidirectional": 36,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 36 edges between netbox and vpn. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0033",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-NETBOX and CEU-VIRTUALIZATION exhibit bidirectional structural entanglement: 40 cross-domain imports (1+39)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.942,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-NETBOX",
+          "CEU-VIRTUALIZATION"
+        ],
+        "structural_refs": {
+          "src_domain": "netbox",
+          "tgt_domain": "virtualization",
+          "forward_count": 1,
+          "reverse_count": 39,
+          "total_bidirectional": 40,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 40 edges between netbox and virtualization. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0034",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-NETBOX and CEU-WIRELESS exhibit bidirectional structural entanglement: 34 cross-domain imports (1+33)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.942,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-NETBOX",
+          "CEU-WIRELESS"
+        ],
+        "structural_refs": {
+          "src_domain": "netbox",
+          "tgt_domain": "wireless",
+          "forward_count": 1,
+          "reverse_count": 33,
+          "total_bidirectional": 34,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 34 edges between netbox and wireless. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0035",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-TENANCY and CEU-UTILITIES exhibit bidirectional structural entanglement: 25 cross-domain imports (24+1)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.942,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-TENANCY",
+          "CEU-UTILITIES"
+        ],
+        "structural_refs": {
+          "src_domain": "tenancy",
+          "tgt_domain": "utilities",
+          "forward_count": 24,
+          "reverse_count": 1,
+          "total_bidirectional": 25,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 25 edges between tenancy and utilities. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0036",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-USERS and CEU-UTILITIES exhibit bidirectional structural entanglement: 48 cross-domain imports (38+10)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.942,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-USERS",
+          "CEU-UTILITIES"
+        ],
+        "structural_refs": {
+          "src_domain": "users",
+          "tgt_domain": "utilities",
+          "forward_count": 38,
+          "reverse_count": 10,
+          "total_bidirectional": 48,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 48 edges between users and utilities. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0037",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-UTILITIES and CEU-VIRTUALIZATION exhibit bidirectional structural entanglement: 53 cross-domain imports (2+51)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.972,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-UTILITIES",
+          "CEU-VIRTUALIZATION"
+        ],
+        "structural_refs": {
+          "src_domain": "utilities",
+          "tgt_domain": "virtualization",
+          "forward_count": 2,
+          "reverse_count": 51,
+          "total_bidirectional": 53,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 53 edges between utilities and virtualization. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0038",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-UTILITIES and CEU-WIRELESS exhibit bidirectional structural entanglement: 25 cross-domain imports (1+24)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.942,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-UTILITIES",
+          "CEU-WIRELESS"
+        ],
+        "structural_refs": {
+          "src_domain": "utilities",
+          "tgt_domain": "wireless",
+          "forward_count": 1,
+          "reverse_count": 24,
+          "total_bidirectional": 25,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 25 edges between utilities and wireless. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0039",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-VPN has unidirectional coupling to CEU-UTILITIES: 23 cross-domain imports",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.942,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-VPN",
+          "CEU-UTILITIES"
+        ],
+        "structural_refs": {
+          "src_domain": "vpn",
+          "tgt_domain": "utilities",
+          "forward_count": 23,
+          "reverse_count": 0,
+          "total_bidirectional": 23,
+          "is_bidirectional": false
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain import matrix shows 23 edges between vpn and utilities. Unidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0040",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "System-level cross-domain coupling rate: 60.8% (2197 of 3614 imports cross app boundaries)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.952,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468",
+          "a4e4b7e4-cff5-4444-b58f-f04cd07670f1",
+          "61503bcc-1c0a-4383-be82-a3d126754a2f",
+          "b9f3e979-0408-4541-8db7-adb7a90485d2",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-CIRCUITS",
+          "CEU-CORE",
+          "CEU-DCIM",
+          "CEU-EXTRAS",
+          "CEU-IPAM",
+          "CEU-NETBOX",
+          "CEU-TENANCY",
+          "CEU-USERS",
+          "CEU-UTILITIES",
+          "CEU-VIRTUALIZATION",
+          "CEU-VPN",
+          "CEU-WIRELESS"
+        ],
+        "structural_refs": {
+          "total_imports": 3614,
+          "cross_domain_imports": 2197,
+          "cross_domain_ratio": 0.6079
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cross-domain ratio computed from code graph: 2197/3614.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0041",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-CIRCUITS exhibits dual structural authority: import-dominant (10 inheritance, 28 import edges, 2.8x ratio)",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.704,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95",
+          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "AUTHORITY_TOPOLOGY",
+        "ceu_refs": [
+          "CEU-CIRCUITS"
+        ],
+        "structural_refs": {
+          "import_authority": 28,
+          "inheritance_authority": 10,
+          "authority_ratio": 2.8,
+          "dominant_axis": "import",
+          "authority_pattern": "IMPORT_DOMINANT"
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Dual authority detected: import axis dominates at 2.8x. Pattern: IMPORT_DOMINANT.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0042",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-CORE exhibits dual structural authority: import-dominant (44 inheritance, 155 import edges, 3.5x ratio)",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.704,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95",
+          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "AUTHORITY_TOPOLOGY",
+        "ceu_refs": [
+          "CEU-CORE"
+        ],
+        "structural_refs": {
+          "import_authority": 155,
+          "inheritance_authority": 44,
+          "authority_ratio": 3.52,
+          "dominant_axis": "import",
+          "authority_pattern": "IMPORT_DOMINANT"
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Dual authority detected: import axis dominates at 3.5x. Pattern: IMPORT_DOMINANT.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0043",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-DCIM exhibits dual structural authority: inheritance-dominant (466 inheritance, 228 import edges, 2.0x ratio)",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.704,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95",
+          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "AUTHORITY_TOPOLOGY",
+        "ceu_refs": [
+          "CEU-DCIM"
+        ],
+        "structural_refs": {
+          "import_authority": 228,
+          "inheritance_authority": 466,
+          "authority_ratio": 2.04,
+          "dominant_axis": "inheritance",
+          "authority_pattern": "IMPORT_DOMINANT"
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Dual authority detected: inheritance axis dominates at 2.0x. Pattern: IMPORT_DOMINANT.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0044",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-IPAM exhibits dual structural authority: import-dominant (47 inheritance, 109 import edges, 2.3x ratio)",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.704,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95",
+          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "AUTHORITY_TOPOLOGY",
+        "ceu_refs": [
+          "CEU-IPAM"
+        ],
+        "structural_refs": {
+          "import_authority": 109,
+          "inheritance_authority": 47,
+          "authority_ratio": 2.32,
+          "dominant_axis": "import",
+          "authority_pattern": "IMPORT_DOMINANT"
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Dual authority detected: import axis dominates at 2.3x. Pattern: IMPORT_DOMINANT.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0045",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-NETBOX exhibits dual structural authority: inheritance-dominant (1727 inheritance, 620 import edges, 2.8x ratio)",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.704,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95",
+          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "AUTHORITY_TOPOLOGY",
+        "ceu_refs": [
+          "CEU-NETBOX"
+        ],
+        "structural_refs": {
+          "import_authority": 620,
+          "inheritance_authority": 1727,
+          "authority_ratio": 2.79,
+          "dominant_axis": "inheritance",
+          "authority_pattern": "INHERITANCE_DOMINANT"
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Dual authority detected: inheritance axis dominates at 2.8x. Pattern: INHERITANCE_DOMINANT.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0046",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-TENANCY exhibits dual structural authority: inheritance-dominant (233 inheritance, 109 import edges, 2.1x ratio)",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.704,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95",
+          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "AUTHORITY_TOPOLOGY",
+        "ceu_refs": [
+          "CEU-TENANCY"
+        ],
+        "structural_refs": {
+          "import_authority": 109,
+          "inheritance_authority": 233,
+          "authority_ratio": 2.14,
+          "dominant_axis": "inheritance",
+          "authority_pattern": "IMPORT_DOMINANT"
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Dual authority detected: inheritance axis dominates at 2.1x. Pattern: IMPORT_DOMINANT. Authority pattern refined during reconciliation.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0047",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-USERS exhibits dual structural authority: import-dominant (61 inheritance, 97 import edges, 1.6x ratio)",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.704,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95",
+          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "AUTHORITY_TOPOLOGY",
+        "ceu_refs": [
+          "CEU-USERS"
+        ],
+        "structural_refs": {
+          "import_authority": 97,
+          "inheritance_authority": 61,
+          "authority_ratio": 1.59,
+          "dominant_axis": "import",
+          "authority_pattern": "DUAL_AUTHORITY"
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Dual authority detected: import axis dominates at 1.6x. Pattern: DUAL_AUTHORITY.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0048",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-VIRTUALIZATION exhibits dual structural authority: import-dominant (18 inheritance, 52 import edges, 2.9x ratio)",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.704,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95",
+          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "AUTHORITY_TOPOLOGY",
+        "ceu_refs": [
+          "CEU-VIRTUALIZATION"
+        ],
+        "structural_refs": {
+          "import_authority": 52,
+          "inheritance_authority": 18,
+          "authority_ratio": 2.89,
+          "dominant_axis": "import",
+          "authority_pattern": "IMPORT_DOMINANT"
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Dual authority detected: import axis dominates at 2.9x. Pattern: IMPORT_DOMINANT.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0049",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-VPN exhibits dual structural authority: import-dominant (2 inheritance, 20 import edges, 10.0x ratio)",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.704,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95",
+          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "AUTHORITY_TOPOLOGY",
+        "ceu_refs": [
+          "CEU-VPN"
+        ],
+        "structural_refs": {
+          "import_authority": 20,
+          "inheritance_authority": 2,
+          "authority_ratio": 10.0,
+          "dominant_axis": "import",
+          "authority_pattern": "IMPORT_DOMINANT"
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Dual authority detected: import axis dominates at 10.0x. Pattern: IMPORT_DOMINANT.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0050",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-WIRELESS exhibits dual structural authority: import-dominant (5 inheritance, 35 import edges, 7.0x ratio)",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.704,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95",
+          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "AUTHORITY_TOPOLOGY",
+        "ceu_refs": [
+          "CEU-WIRELESS"
+        ],
+        "structural_refs": {
+          "import_authority": 35,
+          "inheritance_authority": 5,
+          "authority_ratio": 7.0,
+          "dominant_axis": "import",
+          "authority_pattern": "IMPORT_DOMINANT"
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Dual authority detected: import axis dominates at 7.0x. Pattern: IMPORT_DOMINANT.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0051",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-CIRCUITS is structurally grounded as CONSUMER: 63 files, 5 evidence anchors, reconciliation ALIGNED",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.904,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "75125491-bd71-49e4-b0c6-b7791624096a",
+          "af80bda7-b966-41eb-8761-8734ad735e54"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "TIER_GROUNDING",
+        "ceu_refs": [
+          "CEU-CIRCUITS"
+        ],
+        "structural_refs": {
+          "tier": "CONSUMER",
+          "file_count": 63,
+          "evidence_count": 5,
+          "reconciliation_finding": "ALIGNED",
+          "was_reclassified": false,
+          "was_refined": false,
+          "import_in_degree": 99,
+          "import_out_degree": 204,
+          "inherits_in_degree": 10,
+          "cross_domain_import_in": 28,
+          "cross_domain_import_out": 133,
+          "import_balance_ratio": 0.211
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Tier CONSUMER grounded by 5 evidence anchors and 63 structural files. Finding: ALIGNED.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0052",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-CORE is structurally grounded as OPERATIONAL_DOMAIN: 96 files, 7 evidence anchors, reconciliation ALIGNED",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.904,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "75125491-bd71-49e4-b0c6-b7791624096a",
+          "af80bda7-b966-41eb-8761-8734ad735e54"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "TIER_GROUNDING",
+        "ceu_refs": [
+          "CEU-CORE"
+        ],
+        "structural_refs": {
+          "tier": "OPERATIONAL_DOMAIN",
+          "file_count": 96,
+          "evidence_count": 7,
+          "reconciliation_finding": "ALIGNED",
+          "was_reclassified": false,
+          "was_refined": false,
+          "import_in_degree": 271,
+          "import_out_degree": 281,
+          "inherits_in_degree": 44,
+          "cross_domain_import_in": 155,
+          "cross_domain_import_out": 165,
+          "import_balance_ratio": 0.939
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Tier OPERATIONAL_DOMAIN grounded by 7 evidence anchors and 96 structural files. Finding: ALIGNED.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0053",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-DCIM is structurally grounded as OPERATIONAL_DOMAIN: 156 files, 7 evidence anchors, reconciliation ALIGNED",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.904,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "75125491-bd71-49e4-b0c6-b7791624096a",
+          "af80bda7-b966-41eb-8761-8734ad735e54"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "TIER_GROUNDING",
+        "ceu_refs": [
+          "CEU-DCIM"
+        ],
+        "structural_refs": {
+          "tier": "OPERATIONAL_DOMAIN",
+          "file_count": 156,
+          "evidence_count": 7,
+          "reconciliation_finding": "ALIGNED",
+          "was_reclassified": false,
+          "was_refined": false,
+          "import_in_degree": 500,
+          "import_out_degree": 648,
+          "inherits_in_degree": 466,
+          "cross_domain_import_in": 228,
+          "cross_domain_import_out": 376,
+          "import_balance_ratio": 0.606
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Tier OPERATIONAL_DOMAIN grounded by 7 evidence anchors and 156 structural files. Finding: ALIGNED.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0054",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-EXTRAS is structurally grounded as FOUNDATION: 151 files, 14 evidence anchors, reconciliation RECLASSIFIED_AND_CONFIRMED",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.804,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "75125491-bd71-49e4-b0c6-b7791624096a",
+          "af80bda7-b966-41eb-8761-8734ad735e54"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "TIER_GROUNDING",
+        "ceu_refs": [
+          "CEU-EXTRAS"
+        ],
+        "structural_refs": {
+          "tier": "FOUNDATION",
+          "file_count": 151,
+          "evidence_count": 14,
+          "reconciliation_finding": "RECLASSIFIED_AND_CONFIRMED",
+          "was_reclassified": false,
+          "was_refined": false,
+          "import_in_degree": 332,
+          "import_out_degree": 587,
+          "inherits_in_degree": 153,
+          "cross_domain_import_in": 131,
+          "cross_domain_import_out": 386,
+          "import_balance_ratio": 0.339
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Tier FOUNDATION grounded by 14 evidence anchors and 151 structural files. Finding: RECLASSIFIED_AND_CONFIRMED.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-netbox-0055",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-IPAM is structurally grounded as OPERATIONAL_DOMAIN: 94 files, 6 evidence anchors, reconciliation ALIGNED",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.904,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "75125491-bd71-49e4-b0c6-b7791624096a",
+          "af80bda7-b966-41eb-8761-8734ad735e54"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "TIER_GROUNDING",
+        "ceu_refs": [
+          "CEU-IPAM"
+        ],
+        "structural_refs": {
+          "tier": "OPERATIONAL_DOMAIN",
+          "file_count": 94,
+          "evidence_count": 6,
+          "reconciliation_finding": "ALIGNED",
+          "was_reclassified": false,
+          "was_refined": false,
+          "import_in_degree": 247,
+          "import_out_degree": 307,
+          "inherits_in_degree": 47,
+          "cross_domain_import_in": 109,
+          "cross_domain_import_out": 169,
+          "import_balance_ratio": 0.645
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Tier OPERATIONAL_DOMAIN grounded by 6 evidence anchors and 94 structural files. Finding: ALIGNED.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0056",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-NETBOX is structurally grounded as FOUNDATION: 136 files, 1 evidence anchors, reconciliation ALIGNED",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.904,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "75125491-bd71-49e4-b0c6-b7791624096a",
+          "af80bda7-b966-41eb-8761-8734ad735e54"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "TIER_GROUNDING",
+        "ceu_refs": [
+          "CEU-NETBOX"
+        ],
+        "structural_refs": {
+          "tier": "FOUNDATION",
+          "file_count": 136,
+          "evidence_count": 1,
+          "reconciliation_finding": "ALIGNED",
+          "was_reclassified": false,
+          "was_refined": false,
+          "import_in_degree": 815,
+          "import_out_degree": 450,
+          "inherits_in_degree": 1727,
+          "cross_domain_import_in": 620,
+          "cross_domain_import_out": 255,
+          "import_balance_ratio": 2.431
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Tier FOUNDATION grounded by 1 evidence anchors and 136 structural files. Finding: ALIGNED.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0057",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-TENANCY is structurally grounded as OPERATIONAL_DOMAIN (refined): 56 files, 9 evidence anchors, reconciliation REFINED",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.604,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "75125491-bd71-49e4-b0c6-b7791624096a",
+          "af80bda7-b966-41eb-8761-8734ad735e54"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "TIER_GROUNDING",
+        "ceu_refs": [
+          "CEU-TENANCY"
+        ],
+        "structural_refs": {
+          "tier": "OPERATIONAL_DOMAIN",
+          "file_count": 56,
+          "evidence_count": 9,
+          "reconciliation_finding": "REFINED",
+          "was_reclassified": false,
+          "was_refined": true,
+          "import_in_degree": 161,
+          "import_out_degree": 128,
+          "inherits_in_degree": 233,
+          "cross_domain_import_in": 109,
+          "cross_domain_import_out": 76,
+          "import_balance_ratio": 1.434
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Tier OPERATIONAL_DOMAIN grounded by 9 evidence anchors and 56 structural files. Finding: REFINED.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-netbox-0058",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-USERS is structurally grounded as OPERATIONAL_DOMAIN: 60 files, 6 evidence anchors, reconciliation ALIGNED",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.904,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "75125491-bd71-49e4-b0c6-b7791624096a",
+          "af80bda7-b966-41eb-8761-8734ad735e54"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "TIER_GROUNDING",
+        "ceu_refs": [
+          "CEU-USERS"
+        ],
+        "structural_refs": {
+          "tier": "OPERATIONAL_DOMAIN",
+          "file_count": 60,
+          "evidence_count": 6,
+          "reconciliation_finding": "ALIGNED",
+          "was_reclassified": false,
+          "was_refined": false,
+          "import_in_degree": 165,
+          "import_out_degree": 154,
+          "inherits_in_degree": 61,
+          "cross_domain_import_in": 97,
+          "cross_domain_import_out": 86,
+          "import_balance_ratio": 1.128
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Tier OPERATIONAL_DOMAIN grounded by 6 evidence anchors and 60 structural files. Finding: ALIGNED.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0059",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-UTILITIES is structurally grounded as FOUNDATION: 105 files, 1 evidence anchors, reconciliation ALIGNED",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.904,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "75125491-bd71-49e4-b0c6-b7791624096a",
+          "af80bda7-b966-41eb-8761-8734ad735e54"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "TIER_GROUNDING",
+        "ceu_refs": [
+          "CEU-UTILITIES"
+        ],
+        "structural_refs": {
+          "tier": "FOUNDATION",
+          "file_count": 105,
+          "evidence_count": 1,
+          "reconciliation_finding": "ALIGNED",
+          "was_reclassified": false,
+          "was_refined": false,
+          "import_in_degree": 737,
+          "import_out_degree": 241,
+          "inherits_in_degree": 880,
+          "cross_domain_import_in": 612,
+          "cross_domain_import_out": 116,
+          "import_balance_ratio": 5.276
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Tier FOUNDATION grounded by 1 evidence anchors and 105 structural files. Finding: ALIGNED.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0060",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-VIRTUALIZATION is structurally grounded as CONSUMER: 65 files, 5 evidence anchors, reconciliation ALIGNED",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.904,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "75125491-bd71-49e4-b0c6-b7791624096a",
+          "af80bda7-b966-41eb-8761-8734ad735e54"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "TIER_GROUNDING",
+        "ceu_refs": [
+          "CEU-VIRTUALIZATION"
+        ],
+        "structural_refs": {
+          "tier": "CONSUMER",
+          "file_count": 65,
+          "evidence_count": 5,
+          "reconciliation_finding": "ALIGNED",
+          "was_reclassified": false,
+          "was_refined": false,
+          "import_in_degree": 107,
+          "import_out_degree": 250,
+          "inherits_in_degree": 18,
+          "cross_domain_import_in": 52,
+          "cross_domain_import_out": 195,
+          "import_balance_ratio": 0.267
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Tier CONSUMER grounded by 5 evidence anchors and 65 structural files. Finding: ALIGNED.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0061",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-VPN is structurally grounded as CONSUMER: 51 files, 6 evidence anchors, reconciliation ALIGNED",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.904,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "75125491-bd71-49e4-b0c6-b7791624096a",
+          "af80bda7-b966-41eb-8761-8734ad735e54"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "TIER_GROUNDING",
+        "ceu_refs": [
+          "CEU-VPN"
+        ],
+        "structural_refs": {
+          "tier": "CONSUMER",
+          "file_count": 51,
+          "evidence_count": 6,
+          "reconciliation_finding": "ALIGNED",
+          "was_reclassified": false,
+          "was_refined": false,
+          "import_in_degree": 82,
+          "import_out_degree": 167,
+          "inherits_in_degree": 2,
+          "cross_domain_import_in": 20,
+          "cross_domain_import_out": 105,
+          "import_balance_ratio": 0.19
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Tier CONSUMER grounded by 6 evidence anchors and 51 structural files. Finding: ALIGNED.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0062",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-WIRELESS is structurally grounded as CONSUMER: 51 files, 5 evidence anchors, reconciliation ALIGNED",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.904,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "75125491-bd71-49e4-b0c6-b7791624096a",
+          "af80bda7-b966-41eb-8761-8734ad735e54"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "TIER_GROUNDING",
+        "ceu_refs": [
+          "CEU-WIRELESS"
+        ],
+        "structural_refs": {
+          "tier": "CONSUMER",
+          "file_count": 51,
+          "evidence_count": 5,
+          "reconciliation_finding": "ALIGNED",
+          "was_reclassified": false,
+          "was_refined": false,
+          "import_in_degree": 95,
+          "import_out_degree": 178,
+          "inherits_in_degree": 5,
+          "cross_domain_import_in": 35,
+          "cross_domain_import_out": 118,
+          "import_balance_ratio": 0.297
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Tier CONSUMER grounded by 5 evidence anchors and 51 structural files. Finding: ALIGNED.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-netbox-0063",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "Structural surprise (CENTRALITY): DCIM gravitational dominance: dcim/models/__init__.py at 160 inbound imports exceeds core (114) + extras (95) combined. Appears as peer app in docs, structurally is the foundation.",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.595,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "HERO_MOMENT_GROUNDING",
+        "ceu_refs": [
+          "CEU-CORE",
+          "CEU-DCIM",
+          "CEU-EXTRAS"
+        ],
+        "structural_refs": {
+          "surprise_class": "CENTRALITY",
+          "hero_moment_id": "f6503b5d-f80f-494d-8442-52e177ecbf89"
+        },
+        "hero_moment_refs": [
+          "f6503b5d-f80f-494d-8442-52e177ecbf89"
+        ],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Semantic grounding of hero moment (CENTRALITY). Cross-referenced with CEU evidence.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-netbox-0064",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "Structural surprise (COUPLING): 60.8% cross-domain import rate: 2,197 of 3,614 imports cross app boundaries. Django app structure implies modularity; PI reveals majority of imports are cross-app. Apparent modularity is organizationa",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.595,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "HERO_MOMENT_GROUNDING",
+        "ceu_refs": [
+          "CEU-CIRCUITS",
+          "CEU-CORE"
+        ],
+        "structural_refs": {
+          "surprise_class": "COUPLING",
+          "hero_moment_id": "a87f5be1-7aaa-4c96-821a-a591328ae35d"
+        },
+        "hero_moment_refs": [
+          "a87f5be1-7aaa-4c96-821a-a591328ae35d"
+        ],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Semantic grounding of hero moment (COUPLING). Cross-referenced with CEU evidence.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-netbox-0065",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "Structural surprise (COUPLING): Bidirectional DCIM-IPAM entanglement: 30 DCIM->IPAM + 28 IPAM->DCIM = 58 bidirectional imports. Domains appear separate in docs and UI but cannot be independently versioned, tested, or extracted.",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.595,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "HERO_MOMENT_GROUNDING",
+        "ceu_refs": [
+          "CEU-DCIM",
+          "CEU-IPAM"
+        ],
+        "structural_refs": {
+          "surprise_class": "COUPLING",
+          "hero_moment_id": "436ac01d-226d-4169-b13d-8fe10dd1e26a"
+        },
+        "hero_moment_refs": [
+          "436ac01d-226d-4169-b13d-8fe10dd1e26a"
+        ],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Semantic grounding of hero moment (COUPLING). Cross-referenced with CEU evidence.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-netbox-0066",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "Structural surprise (CENTRALITY): Choice enumerations as coupling multipliers: dcim/choices.py at 76 inbound imports; 4 choices files totaling 203 combined inbound. Small enumeration files (~50-200 lines) have disproportionate structu",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.595,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "HERO_MOMENT_GROUNDING",
+        "ceu_refs": [
+          "CEU-DCIM"
+        ],
+        "structural_refs": {
+          "surprise_class": "CENTRALITY",
+          "hero_moment_id": "62ca6d51-a8ce-4945-a915-503d6213a2da"
+        },
+        "hero_moment_refs": [
+          "62ca6d51-a8ce-4945-a915-503d6213a2da"
+        ],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Semantic grounding of hero moment (CENTRALITY). Cross-referenced with CEU evidence.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-netbox-0067",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "Structural surprise (EMERGENCE): Pipeline self-improvement through live onboarding: source root discovery (21->1,155 files) and cross-app import resolution (580->3,614 imports) exposed by first real multi-app Django project. Flask te",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.604,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95",
+          "af80bda7-b966-41eb-8761-8734ad735e54"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "HERO_MOMENT_GROUNDING",
+        "ceu_refs": [
+          "CEU-CIRCUITS",
+          "CEU-CORE"
+        ],
+        "structural_refs": {
+          "surprise_class": "EMERGENCE",
+          "hero_moment_id": "32270224-f206-4f98-8b7e-2c83457a0599"
+        },
+        "hero_moment_refs": [
+          "32270224-f206-4f98-8b7e-2c83457a0599"
+        ],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Semantic grounding of hero moment (EMERGENCE). Cross-referenced with CEU evidence.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-netbox-0068",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "Structural surprise (TOPOLOGY): Dual structural authority \u2014 import graph vs inheritance graph reveal different hierarchies. Import authority: dcim dominates (189 cross-domain edges) \u2014 vocabulary/data coupling. Inheritance authority:",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.604,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95",
+          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "HERO_MOMENT_GROUNDING",
+        "ceu_refs": [
+          "CEU-CIRCUITS",
+          "CEU-DCIM",
+          "CEU-TENANCY",
+          "CEU-VIRTUALIZATION",
+          "CEU-VPN",
+          "CEU-WIRELESS"
+        ],
+        "structural_refs": {
+          "surprise_class": "TOPOLOGY",
+          "hero_moment_id": "9d2b670c-1c8c-4927-aa57-30884f6939db"
+        },
+        "hero_moment_refs": [
+          "9d2b670c-1c8c-4927-aa57-30884f6939db"
+        ],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Semantic grounding of hero moment (TOPOLOGY). Cross-referenced with CEU evidence.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-netbox-0069",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "Cluster CLU-01 spans 0 CEUs: 17 nodes, dominant None at 0%",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.524,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "CLUSTER_ARCHITECTURE",
+        "ceu_refs": [],
+        "structural_refs": {
+          "cluster_id": "CLU-01",
+          "node_count": 17,
+          "ceu_distribution": {},
+          "distinct_ceu_count": 0,
+          "cluster_kind": "mixed",
+          "dominant_ceu": null,
+          "dominant_share": 0
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cluster CLU-01: mixed with 0 CEUs and 17 nodes.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-netbox-0070",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "Cluster CLU-03 spans 0 CEUs: 23 nodes, dominant None at 0%",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.524,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "CLUSTER_ARCHITECTURE",
+        "ceu_refs": [],
+        "structural_refs": {
+          "cluster_id": "CLU-03",
+          "node_count": 23,
+          "ceu_distribution": {},
+          "distinct_ceu_count": 0,
+          "cluster_kind": "mixed",
+          "dominant_ceu": null,
+          "dominant_share": 0
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cluster CLU-03: mixed with 0 CEUs and 23 nodes.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-netbox-0071",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "Cluster CLU-17 spans 0 CEUs: 9 nodes, dominant None at 0%",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.524,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "CLUSTER_ARCHITECTURE",
+        "ceu_refs": [],
+        "structural_refs": {
+          "cluster_id": "CLU-17",
+          "node_count": 9,
+          "ceu_distribution": {},
+          "distinct_ceu_count": 0,
+          "cluster_kind": "mixed",
+          "dominant_ceu": null,
+          "dominant_share": 0
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cluster CLU-17: mixed with 0 CEUs and 9 nodes.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-netbox-0072",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "Cluster CLU-18 spans 0 CEUs: 337 nodes, dominant None at 0%",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.524,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "CLUSTER_ARCHITECTURE",
+        "ceu_refs": [],
+        "structural_refs": {
+          "cluster_id": "CLU-18",
+          "node_count": 337,
+          "ceu_distribution": {},
+          "distinct_ceu_count": 0,
+          "cluster_kind": "mixed",
+          "dominant_ceu": null,
+          "dominant_share": 0
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cluster CLU-18: mixed with 0 CEUs and 337 nodes.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-netbox-0073",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "Cluster CLU-20 is cross-cutting: 2129 nodes spanning 12 CEUs",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.604,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "CLUSTER_ARCHITECTURE",
+        "ceu_refs": [
+          "CEU-CIRCUITS",
+          "CEU-CORE",
+          "CEU-DCIM",
+          "CEU-EXTRAS",
+          "CEU-IPAM",
+          "CEU-NETBOX",
+          "CEU-TENANCY",
+          "CEU-USERS",
+          "CEU-UTILITIES",
+          "CEU-VIRTUALIZATION",
+          "CEU-VPN",
+          "CEU-WIRELESS"
+        ],
+        "structural_refs": {
+          "cluster_id": "CLU-20",
+          "node_count": 2129,
+          "ceu_distribution": {
+            "CEU-CIRCUITS": 63,
+            "CEU-CORE": 96,
+            "CEU-DCIM": 156,
+            "CEU-EXTRAS": 151,
+            "CEU-IPAM": 94,
+            "CEU-NETBOX": 136,
+            "CEU-TENANCY": 56,
+            "CEU-USERS": 60,
+            "CEU-UTILITIES": 105,
+            "CEU-VIRTUALIZATION": 65,
+            "CEU-VPN": 51,
+            "CEU-WIRELESS": 51
+          },
+          "distinct_ceu_count": 12,
+          "cluster_kind": "cross-cutting",
+          "dominant_ceu": "CEU-DCIM",
+          "dominant_share": 0.073
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cluster CLU-20: cross-cutting with 12 CEUs and 2129 nodes.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-netbox-0074",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "Cluster CLU-23 spans 0 CEUs: 6 nodes, dominant None at 0%",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.524,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "af80bda7-b966-41eb-8761-8734ad735e54",
+          "74365943-b71b-44dd-a1f2-78250b77f468"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-21T16:26:51.805772+00:00",
+        "proposition_class": "CLUSTER_ARCHITECTURE",
+        "ceu_refs": [],
+        "structural_refs": {
+          "cluster_id": "CLU-23",
+          "node_count": 6,
+          "ceu_distribution": {},
+          "distinct_ceu_count": 0,
+          "cluster_kind": "mixed",
+          "dominant_ceu": null,
+          "dominant_share": 0
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [
+          "9a624e6b-2bd8-497a-9e12-9a55848290b0"
+        ],
+        "derivation_rationale": "Cluster CLU-23: mixed with 0 CEUs and 6 nodes.",
+        "reconciliation_state": "NOVEL"
+      }
+    ],
+    "convergence_observations": [],
+    "qualification_transitions": [],
+    "doctrine_evolution_records": [],
+    "executive_projection_snapshots": []
+  },
+  "summary": {
+    "evidence_objects": 8,
+    "hero_moments": 5,
+    "replay_corridors": 1,
+    "total_spine_objects": 14,
+    "semantic_propositions": 74,
+    "total_objects": 90
+  },
+  "last_updated": "2026-05-21T16:26:51.818956+00:00"
+}

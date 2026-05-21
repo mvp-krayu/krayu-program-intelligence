@@ -1,0 +1,96 @@
+{
+  "stream_id": "PI.PATHB.SEMANTIC-PROPOSITION-ENGINE.01",
+  "classification": "G1",
+  "changes": [
+    {
+      "file": "scripts/pios/spe/__init__.py",
+      "action": "CREATED",
+      "description": "SPE package marker"
+    },
+    {
+      "file": "scripts/pios/spe/proposition_schema.py",
+      "action": "CREATED",
+      "description": "Canonical semantic_proposition spine schema with SPE extensions — 6 proposition classes, 4 semantic types as lineage fields"
+    },
+    {
+      "file": "scripts/pios/spe/input_loader.py",
+      "action": "CREATED",
+      "description": "PATH A input bundle loader with readiness validation and input_hash computation"
+    },
+    {
+      "file": "scripts/pios/spe/derivation_engine.py",
+      "action": "CREATED",
+      "description": "Six deterministic class derivers: structural dominance, coupling patterns, authority topology, tier grounding, hero moment grounding, cluster architecture"
+    },
+    {
+      "file": "scripts/pios/spe/confidence_engine.py",
+      "action": "CREATED",
+      "description": "Multi-factor confidence scoring: tier base, evidence density, reconciliation alignment, structural strength, cross-validation"
+    },
+    {
+      "file": "scripts/pios/spe/learning_emitter.py",
+      "action": "CREATED",
+      "description": "PROPOSED learning event emission for confidence gaps, coverage gaps, over-generalization, reconciliation friction"
+    },
+    {
+      "file": "scripts/pios/spe/review_queue_emitter.py",
+      "action": "CREATED",
+      "description": "Proposition-specific review queue with 4 trigger types"
+    },
+    {
+      "file": "scripts/pios/spe/output_emitter.py",
+      "action": "CREATED",
+      "description": "Run directory output writer — spine, lineage, review queue, report, learning events"
+    },
+    {
+      "file": "scripts/pios/spe/inferred_proposer.py",
+      "action": "CREATED",
+      "description": "Optional AI-gated INFERRED tier — LLM-assisted cross-cutting pattern identification"
+    },
+    {
+      "file": "scripts/pios/semantic_proposition_engine.py",
+      "action": "CREATED",
+      "description": "Top-level SPE orchestrator — parallel to semantic_derivation_compiler.py"
+    },
+    {
+      "file": "scripts/pios/run_client_pipeline.py",
+      "action": "MODIFIED",
+      "description": "Added Phase 3c — Semantic Proposition Derivation between Phase 3b and Phase 4"
+    },
+    {
+      "file": "docs/governance/learning/learning_registry.json",
+      "action": "MODIFIED",
+      "description": "Added SEMANTIC_PROPOSITION capability class and phase_03c consumption declaration"
+    },
+    {
+      "file": "docs/pios/PI.PATHB.SEMANTIC-PROPOSITION-ENGINE.01/execution_report.md",
+      "action": "CREATED",
+      "description": "Stream execution report"
+    },
+    {
+      "file": "docs/pios/PI.PATHB.SEMANTIC-PROPOSITION-ENGINE.01/validation_log.json",
+      "action": "CREATED",
+      "description": "Stream validation log"
+    },
+    {
+      "file": "docs/pios/PI.PATHB.SEMANTIC-PROPOSITION-ENGINE.01/file_changes.json",
+      "action": "CREATED",
+      "description": "Stream file change manifest"
+    },
+    {
+      "file": "docs/pios/PI.PATHB.SEMANTIC-PROPOSITION-ENGINE.01/CLOSURE.md",
+      "action": "CREATED",
+      "description": "Stream closure document"
+    },
+    {
+      "file": "docs/pios/PI.PATHB.SEMANTIC-PROPOSITION-ENGINE.01/IMPLEMENTATION_SEMANTICS.md",
+      "action": "CREATED",
+      "description": "Reusable primitive specification (§5.5)"
+    },
+    {
+      "file": "docs/pios/PI.PATHB.SEMANTIC-PROPOSITION-ENGINE.01/DESIGN_RATIONALE.md",
+      "action": "CREATED",
+      "description": "SPE architecture rationale — SDC/SPE coexistence, semantic sub-types as lineage fields, learning context at derivation-step level"
+    }
+  ]
+}

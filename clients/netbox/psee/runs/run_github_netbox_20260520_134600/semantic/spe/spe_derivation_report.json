@@ -1,0 +1,372 @@
+{
+  "contract_id": "PI.PATHB.SEMANTIC-PROPOSITION-ENGINE.01",
+  "specimen_id": "netbox",
+  "run_id": "run_github_netbox_20260520_134600",
+  "generated_at": "2026-05-21T16:26:51.818956+00:00",
+  "input_hash": "0c8b6b4db5f9df349dbd75a92c8d66fb65396828da7cced7e18e0aa19b9d4ac3",
+  "derivation_hash": "d7981f35f66d53ad519fd47548e95e49ec02da037e0af58ad3efb9cbaac825c8",
+  "proposition_count": 74,
+  "confidence_report": {
+    "total": 74,
+    "confidence_distribution": {
+      "high": 51,
+      "medium": 14,
+      "low": 9
+    },
+    "tier_distribution": {
+      "DIRECT_EVIDENCE": 51,
+      "DERIVED": 23
+    },
+    "class_distribution": {
+      "STRUCTURAL_DOMINANCE": 6,
+      "COUPLING_PATTERN": 34,
+      "AUTHORITY_TOPOLOGY": 10,
+      "TIER_GROUNDING": 12,
+      "HERO_MOMENT_GROUNDING": 6,
+      "CLUSTER_ARCHITECTURE": 6
+    },
+    "mean_confidence": 0.843,
+    "min_confidence": 0.524,
+    "max_confidence": 0.972
+  },
+  "review_queue_count": 0,
+  "learning_events_emitted": 3,
+  "learning_influence_summary": {
+    "active_events": 16,
+    "influenced_derivations": 0
+  },
+  "class_summary": {
+    "STRUCTURAL_DOMINANCE": {
+      "count": 6,
+      "mean_confidence": 0.937,
+      "propositions": [
+        {
+          "id": "SP-netbox-0001",
+          "confidence": 0.954
+        },
+        {
+          "id": "SP-netbox-0002",
+          "confidence": 0.954
+        },
+        {
+          "id": "SP-netbox-0003",
+          "confidence": 0.954
+        },
+        {
+          "id": "SP-netbox-0004",
+          "confidence": 0.854
+        },
+        {
+          "id": "SP-netbox-0005",
+          "confidence": 0.954
+        },
+        {
+          "id": "SP-netbox-0006",
+          "confidence": 0.954
+        }
+      ]
+    },
+    "COUPLING_PATTERN": {
+      "count": 34,
+      "mean_confidence": 0.956,
+      "propositions": [
+        {
+          "id": "SP-netbox-0007",
+          "confidence": 0.942
+        },
+        {
+          "id": "SP-netbox-0008",
+          "confidence": 0.942
+        },
+        {
+          "id": "SP-netbox-0009",
+          "confidence": 0.942
+        },
+        {
+          "id": "SP-netbox-0010",
+          "confidence": 0.972
+        },
+        {
+          "id": "SP-netbox-0011",
+          "confidence": 0.972
+        },
+        {
+          "id": "SP-netbox-0012",
+          "confidence": 0.972
+        },
+        {
+          "id": "SP-netbox-0013",
+          "confidence": 0.972
+        },
+        {
+          "id": "SP-netbox-0014",
+          "confidence": 0.972
+        },
+        {
+          "id": "SP-netbox-0015",
+          "confidence": 0.972
+        },
+        {
+          "id": "SP-netbox-0016",
+          "confidence": 0.972
+        },
+        {
+          "id": "SP-netbox-0017",
+          "confidence": 0.972
+        },
+        {
+          "id": "SP-netbox-0018",
+          "confidence": 0.942
+        },
+        {
+          "id": "SP-netbox-0019",
+          "confidence": 0.972
+        },
+        {
+          "id": "SP-netbox-0020",
+          "confidence": 0.972
+        },
+        {
+          "id": "SP-netbox-0021",
+          "confidence": 0.972
+        },
+        {
+          "id": "SP-netbox-0022",
+          "confidence": 0.942
+        },
+        {
+          "id": "SP-netbox-0023",
+          "confidence": 0.942
+        },
+        {
+          "id": "SP-netbox-0024",
+          "confidence": 0.972
+        },
+        {
+          "id": "SP-netbox-0025",
+          "confidence": 0.942
+        },
+        {
+          "id": "SP-netbox-0026",
+          "confidence": 0.942
+        },
+        {
+          "id": "SP-netbox-0027",
+          "confidence": 0.942
+        },
+        {
+          "id": "SP-netbox-0028",
+          "confidence": 0.942
+        },
+        {
+          "id": "SP-netbox-0029",
+          "confidence": 0.972
+        },
+        {
+          "id": "SP-netbox-0030",
+          "confidence": 0.972
+        },
+        {
+          "id": "SP-netbox-0031",
+          "confidence": 0.942
+        },
+        {
+          "id": "SP-netbox-0032",
+          "confidence": 0.942
+        },
+        {
+          "id": "SP-netbox-0033",
+          "confidence": 0.942
+        },
+        {
+          "id": "SP-netbox-0034",
+          "confidence": 0.942
+        },
+        {
+          "id": "SP-netbox-0035",
+          "confidence": 0.942
+        },
+        {
+          "id": "SP-netbox-0036",
+          "confidence": 0.942
+        },
+        {
+          "id": "SP-netbox-0037",
+          "confidence": 0.972
+        },
+        {
+          "id": "SP-netbox-0038",
+          "confidence": 0.942
+        },
+        {
+          "id": "SP-netbox-0039",
+          "confidence": 0.942
+        },
+        {
+          "id": "SP-netbox-0040",
+          "confidence": 0.952
+        }
+      ]
+    },
+    "AUTHORITY_TOPOLOGY": {
+      "count": 10,
+      "mean_confidence": 0.704,
+      "propositions": [
+        {
+          "id": "SP-netbox-0041",
+          "confidence": 0.704
+        },
+        {
+          "id": "SP-netbox-0042",
+          "confidence": 0.704
+        },
+        {
+          "id": "SP-netbox-0043",
+          "confidence": 0.704
+        },
+        {
+          "id": "SP-netbox-0044",
+          "confidence": 0.704
+        },
+        {
+          "id": "SP-netbox-0045",
+          "confidence": 0.704
+        },
+        {
+          "id": "SP-netbox-0046",
+          "confidence": 0.704
+        },
+        {
+          "id": "SP-netbox-0047",
+          "confidence": 0.704
+        },
+        {
+          "id": "SP-netbox-0048",
+          "confidence": 0.704
+        },
+        {
+          "id": "SP-netbox-0049",
+          "confidence": 0.704
+        },
+        {
+          "id": "SP-netbox-0050",
+          "confidence": 0.704
+        }
+      ]
+    },
+    "TIER_GROUNDING": {
+      "count": 12,
+      "mean_confidence": 0.871,
+      "propositions": [
+        {
+          "id": "SP-netbox-0051",
+          "confidence": 0.904
+        },
+        {
+          "id": "SP-netbox-0052",
+          "confidence": 0.904
+        },
+        {
+          "id": "SP-netbox-0053",
+          "confidence": 0.904
+        },
+        {
+          "id": "SP-netbox-0054",
+          "confidence": 0.804
+        },
+        {
+          "id": "SP-netbox-0055",
+          "confidence": 0.904
+        },
+        {
+          "id": "SP-netbox-0056",
+          "confidence": 0.904
+        },
+        {
+          "id": "SP-netbox-0057",
+          "confidence": 0.604
+        },
+        {
+          "id": "SP-netbox-0058",
+          "confidence": 0.904
+        },
+        {
+          "id": "SP-netbox-0059",
+          "confidence": 0.904
+        },
+        {
+          "id": "SP-netbox-0060",
+          "confidence": 0.904
+        },
+        {
+          "id": "SP-netbox-0061",
+          "confidence": 0.904
+        },
+        {
+          "id": "SP-netbox-0062",
+          "confidence": 0.904
+        }
+      ]
+    },
+    "HERO_MOMENT_GROUNDING": {
+      "count": 6,
+      "mean_confidence": 0.598,
+      "propositions": [
+        {
+          "id": "SP-netbox-0063",
+          "confidence": 0.595
+        },
+        {
+          "id": "SP-netbox-0064",
+          "confidence": 0.595
+        },
+        {
+          "id": "SP-netbox-0065",
+          "confidence": 0.595
+        },
+        {
+          "id": "SP-netbox-0066",
+          "confidence": 0.595
+        },
+        {
+          "id": "SP-netbox-0067",
+          "confidence": 0.604
+        },
+        {
+          "id": "SP-netbox-0068",
+          "confidence": 0.604
+        }
+      ]
+    },
+    "CLUSTER_ARCHITECTURE": {
+      "count": 6,
+      "mean_confidence": 0.537,
+      "propositions": [
+        {
+          "id": "SP-netbox-0069",
+          "confidence": 0.524
+        },
+        {
+          "id": "SP-netbox-0070",
+          "confidence": 0.524
+        },
+        {
+          "id": "SP-netbox-0071",
+          "confidence": 0.524
+        },
+        {
+          "id": "SP-netbox-0072",
+          "confidence": 0.524
+        },
+        {
+          "id": "SP-netbox-0073",
+          "confidence": 0.604
+        },
+        {
+          "id": "SP-netbox-0074",
+          "confidence": 0.524
+        }
+      ]
+    }
+  }
+}

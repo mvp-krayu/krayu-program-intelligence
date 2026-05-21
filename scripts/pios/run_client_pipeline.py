@@ -737,6 +737,64 @@ def phase_03b_semantic_derivation(
     return True
 
 
+# ── Phase 3c: Semantic Proposition Derivation (SPE) ─────────────────────────────
+
+def phase_03c_semantic_proposition_derivation(
+    client: str, run_id: str, run_dir: Path, enable_inferred: bool
+) -> bool:
+    """Phase 3c — Semantic Proposition Engine. Produces spine semantic_propositions.
+    Gates: reconciliation_state.json + structural_centrality.json must exist.
+    Idempotent: skips if spe_derivation_report.json already present.
+    Phase 3c failure is isolated — pipeline continues."""
+    recon_path = run_dir / "ceu" / "reconciliation_state.json"
+    centrality_path = run_dir / "structure" / "40.3c" / "structural_centrality.json"
+
+    if not recon_path.exists():
+        print(f"  reconciliation_state.json absent — Phase 3c skipped (no CEU data)")
+        return True
+    if not centrality_path.exists():
+        print(f"  structural_centrality.json absent — Phase 3c skipped (no centrality)")
+        return True
+
+    report_path = run_dir / "semantic" / "spe" / "spe_derivation_report.json"
+    if report_path.exists():
+        print(f"  spe_derivation_report.json already present — Phase 3c skipped (idempotent)")
+        return True
+
+    spe_script = SCRIPTS_DIR / "semantic_proposition_engine.py"
+    if not spe_script.exists():
+        print(f"  SPE script not found — Phase 3c skipped")
+        return True
+
+    cmd = [
+        sys.executable, str(spe_script),
+        "--client", client,
+        "--run", run_id,
+    ]
+    if enable_inferred:
+        cmd.append("--enable-semantic-derivation")
+
+    print(f"  Running SPE: {' '.join(cmd[-4:])}")
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+    except subprocess.TimeoutExpired:
+        print("  WARNING: SPE timed out — Phase 3c failure isolated")
+        return True
+
+    if result.stdout:
+        for line in result.stdout.strip().split("\n")[-10:]:
+            print(f"    {line}")
+
+    if result.returncode != 0:
+        print(f"  WARNING: SPE exited {result.returncode} — Phase 3c failure isolated")
+        if result.stderr:
+            print(f"  stderr: {result.stderr.strip()[:200]}")
+        return True
+
+    print("  Semantic proposition derivation: OK")
+    return True
+
+
 # ── Phase 5b: CSR Semantic Topology Generation (optional) ─────────────────────
 
 def phase_05b_csr_semantic_topology(client: str, run_id: str, run_dir: Path) -> bool:
@@ -1546,6 +1604,9 @@ def main() -> int:
          lambda: phase_03_7_structural_centrality(args.client, run_id, run_dir)),
         ("Phase 3b — Semantic Derivation",
          lambda: phase_03b_semantic_derivation(
+             args.client, run_id, run_dir, args.enable_semantic_derivation)),
+        ("Phase 3c — Semantic Proposition Derivation",
+         lambda: phase_03c_semantic_proposition_derivation(
              args.client, run_id, run_dir, args.enable_semantic_derivation)),
         ("Phase 4  — CEU Grounding Verification",
          lambda: phase_04_ceu_grounding(source_manifest, run_dir)),

@@ -1,0 +1,37 @@
+{
+  "stream_id": "PI.PATHB.SEMANTIC-PROPOSITION-ENGINE.01",
+  "classification": "G1",
+  "validated_at": "2026-05-21T20:30:00Z",
+  "checks": [
+    { "id": "V-001", "name": "SPE module structure complete", "result": "PASS", "detail": "10 Python files: __init__, schema, input_loader, derivation_engine, confidence_engine, learning_emitter, review_queue_emitter, output_emitter, inferred_proposer, orchestrator" },
+    { "id": "V-002", "name": "All modules parse (AST)", "result": "PASS", "detail": "All 10 SPE modules + modified pipeline pass ast.parse()" },
+    { "id": "V-003", "name": "Input loader validates readiness", "result": "PASS", "detail": "Fail-closed on missing required artifacts, incomplete reconciliation, empty centrality" },
+    { "id": "V-004", "name": "Input hash computed for replayability", "result": "PASS", "detail": "SHA256 of sorted artifact hashes — deterministic anchor" },
+    { "id": "V-005", "name": "Six deterministic derivation classes operational", "result": "PASS", "detail": "STRUCTURAL_DOMINANCE (6), COUPLING_PATTERN (34), AUTHORITY_TOPOLOGY (10), TIER_GROUNDING (12), HERO_MOMENT_GROUNDING (6), CLUSTER_ARCHITECTURE (6) = 74 total" },
+    { "id": "V-006", "name": "Propositions have canonical + SPE fields", "result": "PASS", "detail": "id, specimen_id, run_id, proposition, derivation_tier, confidence, authority_ceiling, evidence_anchors, status, timestamp + proposition_class, ceu_refs, structural_refs, hero_moment_refs, replay_corridor_refs, derivation_rationale, reconciliation_state" },
+    { "id": "V-007", "name": "replay_corridor_refs populated", "result": "PASS", "detail": "74/74 propositions have replay_corridor_refs" },
+    { "id": "V-008", "name": "Lineage events have semantic_type", "result": "PASS", "detail": "All 74 lineage events carry semantic_type: GROUNDING, RELATIONSHIP, or REFINEMENT" },
+    { "id": "V-009", "name": "Lineage events have learning_context", "result": "PASS", "detail": "All 74 lineage events carry learning_context field (AWARENESS_ONLY for current PROPOSED events)" },
+    { "id": "V-010", "name": "Replayability verified", "result": "PASS", "detail": "Two consecutive runs produce identical derivation_hash (timestamps excluded from hash)" },
+    { "id": "V-011", "name": "Confidence distribution reasonable", "result": "PASS", "detail": "Mean 0.843, min 0.524, max 0.972. Distribution: 51 high, 14 medium, 9 low" },
+    { "id": "V-012", "name": "L3 authority ceiling enforced", "result": "PASS", "detail": "All 74 propositions have authority_ceiling=L3" },
+    { "id": "V-013", "name": "All propositions status=CANDIDATE", "result": "PASS", "detail": "74/74 CANDIDATE — no auto-promotion" },
+    { "id": "V-014", "name": "Learning events emitted", "result": "PASS", "detail": "3 PROPOSED events: reconciliation friction (1), over-generalization risk (0), coverage gap (0), low confidence (0), hero moment coverage (2)" },
+    { "id": "V-015", "name": "Review queue operational", "result": "PASS", "detail": "Review queue generated with 4 trigger types. 0 items (all above threshold)" },
+    { "id": "V-016", "name": "Spine objects updated", "result": "PASS", "detail": "spine_objects.json now has semantic_propositions: 74. Total objects: 90" },
+    { "id": "V-017", "name": "Pipeline Phase 3c integrated", "result": "PASS", "detail": "Phase 3c between 3b and 4. Gates: reconciliation_state + structural_centrality. Idempotent. Failure isolated." },
+    { "id": "V-018", "name": "SDC unmodified", "result": "PASS", "detail": "No files in scripts/pios/sdc/ modified. BlueEdge compatibility preserved." },
+    { "id": "V-019", "name": "No CSR produced", "result": "PASS", "detail": "SPE produces semantic_propositions (spine objects), not CSR taxonomy" },
+    { "id": "V-020", "name": "Learning registry updated", "result": "PASS", "detail": "SEMANTIC_PROPOSITION capability class + phase_03c consumption declaration added" },
+    { "id": "V-021", "name": "DESIGN_RATIONALE.md present", "result": "PASS", "detail": "Captures SDC/SPE evolution rationale, semantic sub-type decision, learning context design" },
+    { "id": "V-022", "name": "IMPLEMENTATION_SEMANTICS.md present", "result": "PASS", "detail": "§5.5 reusable primitive specification — 10 primitives documented" },
+    { "id": "V-023", "name": "Semantic sub-types as lineage fields", "result": "PASS", "detail": "4 semantic_type values (GROUNDING, RELATIONSHIP, CONFLICT, REFINEMENT) on lineage events, NOT spine classes" },
+    { "id": "V-024", "name": "Governance artifacts in stream directory", "result": "PASS", "detail": "execution_report.md, validation_log.json, file_changes.json, CLOSURE.md, IMPLEMENTATION_SEMANTICS.md, DESIGN_RATIONALE.md" }
+  ],
+  "summary": {
+    "total": 24,
+    "passed": 24,
+    "failed": 0,
+    "result": "ALL PASS"
+  }
+}
