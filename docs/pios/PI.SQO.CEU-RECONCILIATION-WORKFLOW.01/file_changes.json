@@ -1,0 +1,150 @@
+{
+  "stream_id": "PI.SQO.CEU-RECONCILIATION-WORKFLOW.01",
+  "baseline_commit": "153c5d3",
+  "closure_commit": "ae22de0",
+  "files": [
+    {
+      "path": "scripts/pios/ceu_candidate_derivation.py",
+      "action": "EXISTED",
+      "note": "Executed against NetBox and StackStorm — no modifications this session"
+    },
+    {
+      "path": "scripts/pios/ceu_evidence_intake.py",
+      "action": "CREATED",
+      "commit": "fff3513",
+      "note": "Django-specific evidence extraction: AppConfig, model inventory, URL namespaces, official docs, model docs"
+    },
+    {
+      "path": "scripts/pios/ceu_reconciliation_seeder.py",
+      "action": "CREATED",
+      "commit": "fff3513",
+      "note": "Seeds reconciliation_state.json from candidate registry + evidence anchors; derives initial obligations"
+    },
+    {
+      "path": "app/execlens-demo/lib/sqo-cockpit/server/CEUStateLoader.server.js",
+      "action": "CREATED",
+      "commit": "cf0debf",
+      "note": "Server-side artifact loader for CEU reconciliation state, registry, anchors, obligations, event log"
+    },
+    {
+      "path": "app/execlens-demo/lib/sqo-cockpit/server/CEUEventWriter.server.js",
+      "action": "CREATED",
+      "commit": "cf0debf",
+      "note": "Append-only RCEU event log writer with sequential event IDs"
+    },
+    {
+      "path": "app/execlens-demo/lib/sqo-cockpit/server/CEUAuthorityValidator.server.js",
+      "action": "CREATED",
+      "commit": "cf0debf",
+      "note": "10 action validators, 5 roles, non-automatable boundary enforcement. Extended with ceu_classify_review in 7d031f8"
+    },
+    {
+      "path": "app/execlens-demo/lib/sqo-cockpit/server/CEUActionEngine.server.js",
+      "action": "CREATED",
+      "commit": "cf0debf",
+      "note": "10 action handlers with snapshot/rollback, promotion gate recomputation, review_mode-aware gating. Extended with ceu_classify_review and review_mode gate in 7d031f8"
+    },
+    {
+      "path": "app/execlens-demo/lib/sqo-cockpit/server/CEUReconciliationResolver.server.js",
+      "action": "CREATED",
+      "commit": "cf0debf",
+      "note": "Server-side workspace data resolver: candidate list, obligation queue, event timeline, affordances. Extended with reviewMode in 7d031f8"
+    },
+    {
+      "path": "app/execlens-demo/pages/api/sqo/ceu-action.js",
+      "action": "CREATED",
+      "commit": "cf0debf",
+      "note": "POST-only API route for CEU actions; justification enforcement. Extended with ceu_classify_review in 7d031f8"
+    },
+    {
+      "path": "app/execlens-demo/pages/sqo/client/[client]/run/[run]/ceu-reconciliation.js",
+      "action": "CREATED",
+      "commit": "cf0debf",
+      "note": "SSR page for CEU reconciliation workspace"
+    },
+    {
+      "path": "app/execlens-demo/components/sqo-cockpit/CeuReconciliationPanel.jsx",
+      "action": "CREATED",
+      "commit": "cf0debf",
+      "note": "Full UI panel: PromotionGateBanner, CandidateRow, EvidenceDetail, ObligationItem, EventTimeline. Extended with review_mode classification UI and bidirectional obligation lineage in 7d031f8"
+    },
+    {
+      "path": "app/execlens-demo/lib/sqo-cockpit/SQOCockpitRouteResolver.js",
+      "action": "MODIFIED",
+      "commit": "cf0debf",
+      "note": "Added ceu-reconciliation to COCKPIT_SECTIONS, SECTION_ROUTES, SECTION_LABELS"
+    },
+    {
+      "path": "app/execlens-demo/components/sqo-cockpit/SQOWorkspacePanel.jsx",
+      "action": "MODIFIED",
+      "commit": "cf0debf",
+      "note": "Added CeuReconciliationPanel import and section registration"
+    },
+    {
+      "path": "app/execlens-demo/components/sqo-cockpit/SQOWorkspaceShell.jsx",
+      "action": "MODIFIED",
+      "commit": "cf0debf",
+      "note": "Added ceu-reconciliation to knownSections array"
+    },
+    {
+      "path": "app/execlens-demo/styles/globals.css",
+      "action": "MODIFIED",
+      "commit": "cf0debf",
+      "note": "Added ~540 lines CEU reconciliation CSS. Extended with review_mode, classify controls, and obligation lineage CSS in 7d031f8 (~230 additional lines)"
+    },
+    {
+      "path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/ceu/evidence_anchors.json",
+      "action": "CREATED",
+      "commit": "fff3513",
+      "note": "66 evidence anchors across 13 CEU candidates"
+    },
+    {
+      "path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/ceu/reconciliation_state.json",
+      "action": "CREATED",
+      "commit": "fff3513",
+      "note": "Reconciliation state: 12 CONFIRMED, 1 MERGED, OPERATOR_VALIDATED, gate OPEN"
+    },
+    {
+      "path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/ceu/reconciliation_obligations.json",
+      "action": "CREATED",
+      "commit": "fff3513",
+      "note": "3 obligations, all RESOLVED"
+    },
+    {
+      "path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/ceu/reconciliation_event_log.jsonl",
+      "action": "CREATED",
+      "commit": "fff3513",
+      "note": "35 events: seed + reconciliation + governance correction"
+    },
+    {
+      "path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/ceu/evidence_anchors.json",
+      "action": "CREATED",
+      "commit": "fff3513",
+      "note": "0 anchors — Django-specific extractors produce nothing for Python-package projects"
+    },
+    {
+      "path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/ceu/reconciliation_state.json",
+      "action": "CREATED",
+      "commit": "fff3513",
+      "note": "15 PROPOSED candidates, UNCLASSIFIED review_mode, gate BLOCKED"
+    },
+    {
+      "path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/ceu/reconciliation_obligations.json",
+      "action": "CREATED",
+      "commit": "fff3513",
+      "note": "24 unresolved obligations"
+    },
+    {
+      "path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/ceu/reconciliation_event_log.jsonl",
+      "action": "CREATED",
+      "commit": "fff3513",
+      "note": "25 seed events"
+    },
+    {
+      "path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/learning_events.jsonl",
+      "action": "CREATED",
+      "commit": "ae22de0",
+      "note": "First learning event specimen LRNE-0001: evidence intake gap for non-Django Python projects"
+    }
+  ]
+}

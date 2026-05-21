@@ -1,0 +1,117 @@
+{
+  "stream_id": "PI.SQO.CEU-RECONCILIATION-WORKFLOW.01",
+  "validation_timestamp": "2026-05-21T09:30:00.000Z",
+  "checks": [
+    {
+      "name": "CEU_CANDIDATE_DERIVATION_NETBOX",
+      "status": "PASS",
+      "detail": "13 candidates derived from 40.3s/40.3c/40.4 structural artifacts, 28 lineage events, 1 merge decision"
+    },
+    {
+      "name": "CEU_CANDIDATE_DERIVATION_STACKSTORM",
+      "status": "PASS",
+      "detail": "15 candidates derived, 34 lineage events, 4 merge decisions"
+    },
+    {
+      "name": "CEU_EVIDENCE_INTAKE_NETBOX",
+      "status": "PASS",
+      "detail": "66 evidence anchors across 13 candidates from Django-specific extractors (AppConfig, models, URLs, docs)"
+    },
+    {
+      "name": "CEU_EVIDENCE_INTAKE_STACKSTORM",
+      "status": "PASS_WITH_GAP",
+      "detail": "0 evidence anchors — Django-specific extractors produce nothing for Python-package projects. Gap recorded as LRNE-0001"
+    },
+    {
+      "name": "RECONCILIATION_SEEDER_NETBOX",
+      "status": "PASS",
+      "detail": "13 candidates seeded, 3 obligations derived (1 MERGE_REVIEW, 2 EVIDENCE_GAP), initial gate BLOCKED"
+    },
+    {
+      "name": "RECONCILIATION_SEEDER_STACKSTORM",
+      "status": "PASS",
+      "detail": "15 candidates seeded as PROPOSED, 24 obligations derived, initial gate BLOCKED"
+    },
+    {
+      "name": "CEU_ACTION_ENGINE_10_ACTIONS",
+      "status": "PASS",
+      "detail": "All 10 actions implemented: attach_evidence, reconcile, confirm, reject, merge, split, reclassify, create_obligation, resolve_obligation, classify_review"
+    },
+    {
+      "name": "NON_AUTOMATABLE_BOUNDARY",
+      "status": "PASS",
+      "detail": "system:* actors hard-rejected from all CEU actions via isSystemActor() check"
+    },
+    {
+      "name": "AUTHORITY_VALIDATOR_ROLES",
+      "status": "PASS",
+      "detail": "5 roles enforced: operator (10 actions), reviewer (3), domain_authority (8), promotion_authority (0), audit_authority (0)"
+    },
+    {
+      "name": "STATE_PREREQUISITES",
+      "status": "PASS",
+      "detail": "Each action validates candidate state prerequisite (e.g., ceu_reconcile requires EVIDENCE_ATTACHED, ceu_confirm requires RECONCILED)"
+    },
+    {
+      "name": "SNAPSHOT_ROLLBACK",
+      "status": "PASS",
+      "detail": "CEUActionEngine performs deep clone snapshot before mutation, writes rollback on exception"
+    },
+    {
+      "name": "PROMOTION_GATE_RECOMPUTATION",
+      "status": "PASS",
+      "detail": "Gate recomputed after every action: allResolved + unresolvedObls + reviewMode check"
+    },
+    {
+      "name": "REVIEW_MODE_GOVERNANCE",
+      "status": "PASS",
+      "detail": "review_mode field added to reconciliation state. SYSTEM_TEST insufficient for promotion. OPERATOR_VALIDATED or DOMAIN_AUTHORITY_VALIDATED required. Downgrade prevention enforced"
+    },
+    {
+      "name": "NETBOX_FULL_RECONCILIATION",
+      "status": "PASS",
+      "detail": "12 confirmed, 1 merged (CEU-ACCOUNT → CEU-USERS), 3 obligations resolved, OPERATOR_VALIDATED, promotion gate OPEN"
+    },
+    {
+      "name": "GOVERNANCE_CORRECTION_APPLIED",
+      "status": "PASS",
+      "detail": "Claude-driven reconciliation initially opened gate (SYSTEM_TEST). Corrected: gate requires review_mode >= OPERATOR_VALIDATED. RCEU-0034 governance correction event recorded"
+    },
+    {
+      "name": "BIDIRECTIONAL_OBLIGATION_LINEAGE",
+      "status": "PASS",
+      "detail": "Obligations link to candidates (click to scroll+expand). Candidates show linked obligations inline. Obligation count badge on candidate header"
+    },
+    {
+      "name": "SSR_PAGE_RENDERS",
+      "status": "PASS",
+      "detail": "ceu-reconciliation page loads without console errors, renders gate banner, candidate list, obligations, event timeline"
+    },
+    {
+      "name": "EVENT_LOG_APPEND_ONLY",
+      "status": "PASS",
+      "detail": "All CEU events written to reconciliation_event_log.jsonl via CEUEventWriter, sequential RCEU-NNNN IDs, never overwritten"
+    },
+    {
+      "name": "LEARNING_EVENT_SPECIMEN",
+      "status": "PASS",
+      "detail": "LRNE-0001 written to learning_events.jsonl — evidence intake gap for non-Django Python projects with full lineage fields"
+    },
+    {
+      "name": "NO_SEMANTIC_COMPILER_ACTIVATION",
+      "status": "PASS",
+      "detail": "No semantic derivation compiler implemented or activated. Promotion gate opening is prerequisite only"
+    },
+    {
+      "name": "NO_S2_PROMOTION_ATTEMPTED",
+      "status": "PASS",
+      "detail": "NetBox remains at structural qualification level. Gate opening does not trigger S2 progression"
+    }
+  ],
+  "summary": {
+    "total": 21,
+    "pass": 20,
+    "pass_with_gap": 1,
+    "fail": 0
+  }
+}

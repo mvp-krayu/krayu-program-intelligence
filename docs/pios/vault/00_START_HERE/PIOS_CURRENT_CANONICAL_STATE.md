@@ -34,6 +34,7 @@ Program Intelligence (category/discipline)
         │     ├── Qualification Posture Model (8 states)
         │     ├── Client-Scoped Section Resolution (runtime isolation)
         │     ├── Operator Authority Workflow (12 actions, 5 RBAC roles)
+        │     ├── CEU Reconciliation Workflow (10 actions, review_mode governance, bidirectional obligation lineage)
         │     └── Reconciliation Loop
         └── Marketplace (extension ecosystem — future)
 ```
@@ -147,7 +148,8 @@ DETERMINISTIC → INVESTIGATIVE → INTERPRETIVE
 | BlueEdge | SQO-native S2 (15 debt items, governance projection bridge) | OPERATIONAL (Q-02, 4-persona projection, interactive topology) | 3 HTML files, rebase complete |
 | FastAPI | S1_ONBOARDING_REQUIRED | PARTIAL (SQO cockpit, no LENS v2) | 15 SQO v1.json artifacts |
 | pallets-flask | S1 (permanent insufficiency acknowledged) | AUTHORITY WORKFLOW OPERATIONAL, posture-driven overview, semantic intake (Layer B) | PATH A structural onboarding complete, 15 clusters, 287 nodes, candidate CSR (L3), full client registration (client.yaml + source_manifest.json) |
-| NetBox | S0 STRUCTURAL ONLY | SQO: Cockpit Unavailable (diagnostic view); LENS: LIVE_BINDING_FAILED | First live S2 candidate. PATH A complete: 2,540 nodes, 3,614 IMPORTS, 1,089 ranked files. 11 structural surprises documented. CEU definition required for S1. |
+| NetBox | S1 CEU RECONCILED (OPERATOR_VALIDATED) | SQO: CEU Reconciliation operational, promotion gate OPEN; LENS: LIVE_BINDING_FAILED | First live S2 candidate. PATH A complete: 2,540 nodes, 3,614 IMPORTS, 1,089 ranked files. 13 CEU candidates (12 confirmed, 1 merged), 66 evidence anchors. OPERATOR_VALIDATED. Semantic compiler not yet active. |
+| StackStorm | S0 STRUCTURAL ONLY | SQO: CEU Reconciliation seeded (15 PROPOSED, 0 evidence); LENS: structural topology | Second specimen. PATH A complete: 1,804 nodes, 3,087 IMPORTS, 920 ranked files. Evidence intake blocked by Django-specific extractors (LRNE-0001). |
 
 ## Current Trustworthiness Model
 

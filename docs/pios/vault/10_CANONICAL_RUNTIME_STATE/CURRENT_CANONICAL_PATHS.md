@@ -81,6 +81,16 @@
 | OperatorWorkflowResolver | app/execlens-demo/lib/sqo-cockpit/server/OperatorWorkflowResolver.server.js | SSR data resolver for authority page |
 | SQORuntimeResolver | app/execlens-demo/lib/sqo-cockpit/server/SQORuntimeResolver.server.js | Canonical runtime substrate discovery — probes static and operational paths, resolves capabilities and section availability |
 
+### CEU Reconciliation Workflow Modules
+
+| Module | Path | Role |
+|---|---|---|
+| CEUStateLoader | app/execlens-demo/lib/sqo-cockpit/server/CEUStateLoader.server.js | Load/write CEU reconciliation artifacts from disk |
+| CEUAuthorityValidator | app/execlens-demo/lib/sqo-cockpit/server/CEUAuthorityValidator.server.js | 10-action CEU validation with 5 RBAC roles and non-automatable boundary |
+| CEUEventWriter | app/execlens-demo/lib/sqo-cockpit/server/CEUEventWriter.server.js | Append-only RCEU event log writer |
+| CEUActionEngine | app/execlens-demo/lib/sqo-cockpit/server/CEUActionEngine.server.js | 10-action orchestrator with review_mode-aware promotion gate |
+| CEUReconciliationResolver | app/execlens-demo/lib/sqo-cockpit/server/CEUReconciliationResolver.server.js | SSR workspace data resolver for CEU reconciliation page |
+
 ### V2 Cockpit Modules
 
 | Module | Path | Role |
