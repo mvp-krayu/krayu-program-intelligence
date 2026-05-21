@@ -1,0 +1,36 @@
+{
+  "stream_id": "PI.GOVERNANCE.SEMANTIC-GOVERNANCE-LOOP-VALIDATION.01",
+  "classification": "G1",
+  "validated_at": "2026-05-21T19:00:00Z",
+  "checks": [
+    { "id": "V-001", "name": "Baseline freeze artifact produced", "result": "PASS", "detail": "governance/baseline_freeze_20260521.json — 11 artifact hashes, full state snapshot" },
+    { "id": "V-002", "name": "Baseline artifact hashes valid", "result": "PASS", "detail": "SHA256 hashes computed for all 11 governance artifacts" },
+    { "id": "V-003", "name": "External evidence sources identified", "result": "PASS", "detail": "4 sources: application-registry.md, tenancy.md, models.md, AGENTS.md" },
+    { "id": "V-004", "name": "New evidence types introduced", "result": "PASS", "detail": "3 new types: ARCHITECTURE_DOCS, FEATURE_DOCS, REPO_ARCHITECTURE" },
+    { "id": "V-005", "name": "Evidence anchors produced", "result": "PASS", "detail": "8 new evidence anchors (EV-PHASE7-001 through EV-PHASE7-008)" },
+    { "id": "V-006", "name": "Evidence delta artifact produced", "result": "PASS", "detail": "governance/evidence_ingestion_delta_20260521.json" },
+    { "id": "V-007", "name": "CEU reopen lifecycle exercised", "result": "PASS", "detail": "CEU-EXTRAS: CONFIRMED → REOPENED → RECLASSIFIED → CONFIRMED" },
+    { "id": "V-008", "name": "CEU reclassification recorded", "result": "PASS", "detail": "CEU-EXTRAS tier: CONSUMER → FOUNDATION with reclassification_lineage" },
+    { "id": "V-009", "name": "CEU refinement exercised", "result": "PASS", "detail": "CEU-TENANCY: authority_pattern IMPORT_DOMINANT → DUAL_AUTHORITY_CROSS_CUTTING" },
+    { "id": "V-010", "name": "Reconciliation event log growth", "result": "PASS", "detail": "35 → 46 events (11 new: RCEU-0036 through RCEU-0046)" },
+    { "id": "V-011", "name": "Event log sequence continuity", "result": "PASS", "detail": "RCEU-0001 through RCEU-0046 — no gaps" },
+    { "id": "V-012", "name": "Replay reconstruction tests", "result": "PASS", "detail": "12/12 tests PASS — governance/replay_validation_20260521.json" },
+    { "id": "V-013", "name": "State reconstructable without session", "result": "PASS", "detail": "All CEU state, SQO state, spine state, reclassification lineage reconstructable from persistent artifacts" },
+    { "id": "V-014", "name": "Learning events captured", "result": "PASS", "detail": "5 PROPOSED learning events — governance/learning_events.jsonl" },
+    { "id": "V-015", "name": "Learning event lifecycle model respected", "result": "PASS", "detail": "All events at PROPOSED state — awaiting REVIEWED → PROMOTED cycle" },
+    { "id": "V-016", "name": "Learning events have propagation targets", "result": "PASS", "detail": "Targets: CEU_DERIVATION_PIPELINE (2), EVIDENCE_INTAKE_PIPELINE, SPINE_OBJECT_MANAGEMENT, GOVERNANCE_WORKFLOW" },
+    { "id": "V-017", "name": "Operator continuity assessment produced", "result": "PASS", "detail": "5 persistent surfaces, 5 session dependencies, 4 feasible formalizations" },
+    { "id": "V-018", "name": "Non-automatable boundaries preserved", "result": "PASS", "detail": "Reclassification decision correctly requires operator authority — not automated" },
+    { "id": "V-019", "name": "Reconciliation state consistent with event log", "result": "PASS", "detail": "reconciliation_state.json matches replayed terminal state of event log" },
+    { "id": "V-020", "name": "No unauthorized interpretation", "result": "PASS", "detail": "All outputs traceable to structural evidence or architecture documentation" },
+    { "id": "V-021", "name": "No S2 promotion attempted", "result": "PASS", "detail": "S-state remains S1. No promotion events generated. Phase 7 is loop validation, not advancement." },
+    { "id": "V-022", "name": "Spine objects not fabricated", "result": "PASS", "detail": "No new spine objects manufactured — existing objects referenced and validated" },
+    { "id": "V-023", "name": "Governance artifacts in stream directory", "result": "PASS", "detail": "execution_report.md, validation_log.json, file_changes.json, CLOSURE.md in docs/pios/<stream>/" }
+  ],
+  "summary": {
+    "total": 23,
+    "passed": 23,
+    "failed": 0,
+    "result": "ALL PASS"
+  }
+}

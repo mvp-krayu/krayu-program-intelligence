@@ -1,0 +1,160 @@
+{
+  "validation_id": "REPLAY-VALIDATION-NETBOX-20260521",
+  "contract_id": "PI.GOVERNANCE.SEMANTIC-GOVERNANCE-LOOP-VALIDATION.01",
+  "baseline_ref": "BASELINE-NETBOX-20260521",
+  "specimen_id": "netbox",
+  "run_id": "run_github_netbox_20260520_134600",
+  "validated_at": "2026-05-21T18:35:00Z",
+  "purpose": "Prove governance state can be reconstructed from event logs, lineage objects, and spine references — that governance survives sessions and operators.",
+
+  "replay_sources": {
+    "reconciliation_event_log": {
+      "path": "ceu/reconciliation_event_log.jsonl",
+      "event_count": 46,
+      "first_event": "RCEU-0001",
+      "last_event": "RCEU-0046",
+      "event_id_sequence_valid": true,
+      "timestamp_monotonic": true,
+      "actor_ids_present": true
+    },
+    "promotion_event_log": {
+      "path": "sqo/promotion_event_log.jsonl",
+      "event_count": 1,
+      "first_event": "EVT-001",
+      "last_event": "EVT-001",
+      "event_id_sequence_valid": true
+    },
+    "derivation_lineage": {
+      "path": "ceu/derivation_lineage.json",
+      "event_count": 28,
+      "event_types": ["ceu_candidate_proposed", "ceu_classification", "ceu_merge_decision", "dual_authority_observation"]
+    },
+    "spine_objects": {
+      "path": "spine/spine_objects.json",
+      "evidence_objects": 9,
+      "hero_moments": 6,
+      "replay_corridors": 1,
+      "lineage_chain_valid": true
+    }
+  },
+
+  "reconstruction_tests": [
+    {
+      "test_id": "REPLAY-01",
+      "description": "Reconstruct CEU candidate count from derivation lineage",
+      "method": "Count ceu_candidate_proposed events in derivation_lineage.json",
+      "expected": 13,
+      "actual": 13,
+      "result": "PASS"
+    },
+    {
+      "test_id": "REPLAY-02",
+      "description": "Reconstruct merge decisions from derivation lineage",
+      "method": "Count ceu_merge_decision events in derivation_lineage.json",
+      "expected": 1,
+      "actual": 1,
+      "result": "PASS",
+      "detail": "CEU-ACCOUNT merged into CEU-USERS"
+    },
+    {
+      "test_id": "REPLAY-03",
+      "description": "Reconstruct S-state from promotion event log",
+      "method": "Replay EVT-001: S0 → S1 via structural_onboarding_complete",
+      "expected": "S1",
+      "actual": "S1",
+      "result": "PASS"
+    },
+    {
+      "test_id": "REPLAY-04",
+      "description": "Reconstruct reconciliation status from event log",
+      "method": "Replay RCEU-0001 through RCEU-0035. Count terminal states.",
+      "expected": "COMPLETE — 12 CONFIRMED, 1 MERGED",
+      "actual": "COMPLETE — 12 CONFIRMED, 1 MERGED (at RCEU-0035)",
+      "result": "PASS"
+    },
+    {
+      "test_id": "REPLAY-05",
+      "description": "Reconstruct obligation resolution from event log",
+      "method": "Replay OBL-CEU-0001 through OBL-CEU-0003 from events RCEU-0031 to RCEU-0033",
+      "expected": "3 obligations, all RESOLVED",
+      "actual": "3 obligations, all RESOLVED",
+      "result": "PASS"
+    },
+    {
+      "test_id": "REPLAY-06",
+      "description": "Reconstruct Phase 7 evidence ingestion from event log",
+      "method": "Replay RCEU-0036 through RCEU-0041. Count new evidence attachments.",
+      "expected": "8 new evidence anchors across 5 CEUs",
+      "actual": "RCEU-0037: 3 to CEU-EXTRAS, RCEU-0038: 2 to CEU-TENANCY, RCEU-0039: 1 to CEU-DCIM, RCEU-0040: 1 to CEU-UTILITIES, RCEU-0041: 1 to CEU-NETBOX = 8 total",
+      "result": "PASS"
+    },
+    {
+      "test_id": "REPLAY-07",
+      "description": "Reconstruct CEU-EXTRAS reclassification from event log",
+      "method": "Replay RCEU-0042 (reopen) → RCEU-0043 (reclassify CONSUMER→FOUNDATION) → RCEU-0044 (re-confirm)",
+      "expected": "CEU-EXTRAS tier = FOUNDATION, state = CONFIRMED",
+      "actual": "RCEU-0042: CONFIRMED→REOPENED, RCEU-0043: REOPENED→RECLASSIFIED (CONSUMER→FOUNDATION), RCEU-0044: RECLASSIFIED→CONFIRMED",
+      "result": "PASS"
+    },
+    {
+      "test_id": "REPLAY-08",
+      "description": "Reconstruct CEU-TENANCY refinement from event log",
+      "method": "Replay RCEU-0045 (refine authority pattern)",
+      "expected": "CEU-TENANCY authority_pattern = DUAL_AUTHORITY_CROSS_CUTTING",
+      "actual": "RCEU-0045: authority IMPORT_DOMINANT → DUAL_AUTHORITY_CROSS_CUTTING",
+      "result": "PASS"
+    },
+    {
+      "test_id": "REPLAY-09",
+      "description": "Verify event ID sequence continuity",
+      "method": "Check RCEU-0001 through RCEU-0046 for gaps",
+      "expected": "No gaps in sequence",
+      "actual": "Continuous sequence RCEU-0001 through RCEU-0046",
+      "result": "PASS"
+    },
+    {
+      "test_id": "REPLAY-10",
+      "description": "Verify spine object lineage chain",
+      "method": "Trace evidence_object lineage from intake through 40.2 → 40.2r → 40.3r → 40.3s → 40.3c",
+      "expected": "Lineage chain from root to centrality derivation",
+      "actual": "intake (null) → 40.2 (null) → 40.2r (af80bda7) → 40.3r (74365943) → 40.3s (b9f3e979) → 40.3c (980a6cfb). Chain intact.",
+      "result": "PASS"
+    },
+    {
+      "test_id": "REPLAY-11",
+      "description": "Verify governance state matches event log terminal state",
+      "method": "Compare reconciliation_state.json against replayed event log terminal state",
+      "expected": "reconciliation_state matches event log replay",
+      "actual": "reconciliation_state shows: 12 CONFIRMED, 1 MERGED, 1 reclassified (EXTRAS), 1 refined (TENANCY). Matches events RCEU-0001 through RCEU-0046.",
+      "result": "PASS"
+    },
+    {
+      "test_id": "REPLAY-12",
+      "description": "Verify replay corridor reproduceability",
+      "method": "Check replay corridor input_hash and output_hashes against actual artifacts",
+      "expected": "All output hashes match stored values",
+      "actual": "Replay corridor 9a624e6b contains 8 output hash entries. Artifact hashes verified against baseline_freeze hash values.",
+      "result": "PASS"
+    }
+  ],
+
+  "reconstruction_summary": {
+    "total_tests": 12,
+    "passed": 12,
+    "failed": 0,
+    "result": "ALL PASS",
+    "conclusion": "Governance state is fully reconstructable from event logs, derivation lineage, and spine objects. The Phase 7 evidence ingestion cycle (RCEU-0036 through RCEU-0046) is replayable. The CEU-EXTRAS reclassification lifecycle (reopen → reclassify → re-confirm) is fully traceable. No state requires Claude-session memory to reconstruct."
+  },
+
+  "session_independence_assessment": {
+    "can_reconstruct_ceu_state_without_session": true,
+    "can_reconstruct_sqo_state_without_session": true,
+    "can_reconstruct_spine_state_without_session": true,
+    "can_reconstruct_reclassification_lineage_without_session": true,
+    "remaining_session_dependencies": [
+      "Evidence ingestion selection (which docs to ingest) required human judgment — not persistent workflow",
+      "CEU challenge identification required structural analysis — partially derivable from evidence delta artifact",
+      "Reclassification decision required operator authority — event log records decision but not reasoning process"
+    ]
+  }
+}

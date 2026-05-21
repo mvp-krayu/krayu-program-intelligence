@@ -148,7 +148,7 @@ DETERMINISTIC → INVESTIGATIVE → INTERPRETIVE
 | BlueEdge | SQO-native S2 (15 debt items, governance projection bridge) | OPERATIONAL (Q-02, 4-persona projection, interactive topology) | 3 HTML files, rebase complete |
 | FastAPI | S1_ONBOARDING_REQUIRED | PARTIAL (SQO cockpit, no LENS v2) | 15 SQO v1.json artifacts |
 | pallets-flask | S1 (permanent insufficiency acknowledged) | AUTHORITY WORKFLOW OPERATIONAL, posture-driven overview, semantic intake (Layer B) | PATH A structural onboarding complete, 15 clusters, 287 nodes, candidate CSR (L3), full client registration (client.yaml + source_manifest.json) |
-| NetBox | S1 CEU RECONCILED (OPERATOR_VALIDATED) | SQO: CEU Reconciliation operational, promotion gate OPEN; LENS: LIVE_BINDING_FAILED | First live S2 candidate. PATH A complete: 2,540 nodes, 3,614 IMPORTS, 1,089 ranked files. 13 CEU candidates (12 confirmed, 1 merged), 66 evidence anchors. OPERATOR_VALIDATED. Semantic compiler not yet active. |
+| NetBox | S1 CEU RECONCILED (OPERATOR_VALIDATED) | SQO: CEU Reconciliation operational, promotion gate OPEN; LENS: LIVE_BINDING_FAILED | First live S2 candidate. PATH A complete: 2,540 nodes, 3,614 IMPORTS, 1,089 ranked files. 13 CEU candidates (12 confirmed, 1 merged, 1 reclassified CONSUMER→FOUNDATION, 1 authority refined), 74 evidence anchors, 46 reconciliation events. OPERATOR_VALIDATED. Phase 7 governance loop validated (12/12 replay PASS, 5 learning events PROPOSED). Semantic compiler not yet active. |
 | StackStorm | S0 STRUCTURAL ONLY | SQO: CEU Reconciliation seeded (11 EVIDENCE_ATTACHED, 4 PROPOSED, 13 obligations); LENS: structural topology | Second specimen. PATH A complete: 1,804 nodes, 3,087 IMPORTS, 920 ranked files. 22 evidence anchors (SETUP_PY, CROSS_PACKAGE_DEP, PACKAGE_README, REPO_README_MAP). LRNE-0001 resolved. |
 
 ## Current Trustworthiness Model
@@ -531,6 +531,7 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.PIOS.PROGRAM-INTELLIGENCE-EVOLUTION-MODEL.01 | G1 | Program Intelligence Evolution Model — spine object contracts, accumulation doctrine, activation sequence | COMPLETE |
 | PI.SQO.CEU-RECONCILIATION-WORKFLOW.01 | G1 | CEU reconciliation workflow — 10-action SQO workflow, review_mode governance, bidirectional obligation lineage, learning event hook model | COMPLETE |
 | PI.PIPELINE.GENERALIZED-EVIDENCE-INTAKE.01 | G1 | Generalized evidence intake — project type detection (DJANGO/PYTHON_PACKAGE), 4 generic extractors, StackStorm 0→22 anchors, LRNE-0001 resolved | COMPLETE |
+| PI.GOVERNANCE.SEMANTIC-GOVERNANCE-LOOP-VALIDATION.01 | G1 | Phase 7 semantic governance loop validation — full governance cycle proven on NetBox: evidence ingestion (4 architecture doc sources), CEU reopen/reclassify (EXTRAS CONSUMER→FOUNDATION), replay validation (12/12 PASS), 5 learning events PROPOSED, operator continuity assessment | COMPLETE |
 
 ## SQO Operator Authority Workflow
 

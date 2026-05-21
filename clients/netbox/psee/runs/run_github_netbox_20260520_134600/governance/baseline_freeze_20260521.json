@@ -1,0 +1,108 @@
+{
+  "baseline_id": "BASELINE-NETBOX-20260521",
+  "contract_id": "PI.GOVERNANCE.SEMANTIC-GOVERNANCE-LOOP-VALIDATION.01",
+  "specimen_id": "netbox",
+  "run_id": "run_github_netbox_20260520_134600",
+  "frozen_at": "2026-05-21T18:00:00Z",
+  "purpose": "Replayable governance baseline for Phase 7 — Semantic Governance Loop Validation",
+
+  "frozen_state": {
+    "sqo": {
+      "s_level": "S1",
+      "authority_ceiling": "L3",
+      "promotion_eligible": false,
+      "qualification_posture": "STRUCTURAL_ONLY",
+      "blocker_count": 7,
+      "promotion_event_count": 1,
+      "review_obligation_count": 0
+    },
+
+    "ceu": {
+      "reconciliation_status": "COMPLETE",
+      "review_mode": "OPERATOR_VALIDATED",
+      "total_candidates": 13,
+      "confirmed": 12,
+      "merged": 1,
+      "rejected": 0,
+      "evidence_anchor_count": 66,
+      "reconciliation_event_count": 35,
+      "reconciliation_obligation_count": 3,
+      "obligations_resolved": 3,
+      "derivation_lineage_event_count": 28,
+      "promotion_gate": {
+        "all_candidates_resolved": true,
+        "unresolved_obligations": 0,
+        "semantic_derivation_permitted": true
+      }
+    },
+
+    "spine": {
+      "activation_phase": 1,
+      "evidence_objects": 9,
+      "hero_moments": 6,
+      "replay_corridors": 1,
+      "semantic_propositions": 0,
+      "convergence_observations": 0,
+      "qualification_transitions": 0,
+      "doctrine_evolution_records": 0,
+      "executive_projection_snapshots": 0,
+      "total_spine_objects": 16,
+      "note": "spine_objects.json summary section is stale — reports 14 total (8 evidence, 5 hero) but actual counts are 16 (9 evidence, 6 hero). Summary not auto-updated when objects appended post-generation."
+    },
+
+    "learning": {
+      "learning_events_file_exists": false,
+      "learning_event_count": 0,
+      "note": "No learning_events.jsonl exists yet for this run."
+    },
+
+    "evidence_types_coverage": {
+      "APP_CONFIG": 10,
+      "MODEL_INVENTORY": 12,
+      "URL_NAMESPACE": 10,
+      "OFFICIAL_DOCS": 23,
+      "MODEL_DOCS": 11,
+      "total_anchors": 66
+    },
+
+    "candidate_summary": [
+      { "ceu_id": "CEU-CIRCUITS",        "state": "CONFIRMED", "tier": "CONSUMER",           "evidence_count": 5, "authority_pattern": "IMPORT_DOMINANT" },
+      { "ceu_id": "CEU-CORE",            "state": "CONFIRMED", "tier": "OPERATIONAL_DOMAIN",  "evidence_count": 7, "authority_pattern": "IMPORT_DOMINANT" },
+      { "ceu_id": "CEU-DCIM",            "state": "CONFIRMED", "tier": "OPERATIONAL_DOMAIN",  "evidence_count": 7, "authority_pattern": "IMPORT_DOMINANT" },
+      { "ceu_id": "CEU-EXTRAS",          "state": "CONFIRMED", "tier": "CONSUMER",           "evidence_count": 11, "authority_pattern": "IMPORT_DOMINANT" },
+      { "ceu_id": "CEU-IPAM",            "state": "CONFIRMED", "tier": "OPERATIONAL_DOMAIN",  "evidence_count": 6, "authority_pattern": "IMPORT_DOMINANT" },
+      { "ceu_id": "CEU-NETBOX",          "state": "CONFIRMED", "tier": "FOUNDATION",          "evidence_count": 1, "authority_pattern": "INHERITANCE_DOMINANT" },
+      { "ceu_id": "CEU-TENANCY",         "state": "CONFIRMED", "tier": "OPERATIONAL_DOMAIN",  "evidence_count": 7, "authority_pattern": "IMPORT_DOMINANT" },
+      { "ceu_id": "CEU-USERS",           "state": "CONFIRMED", "tier": "OPERATIONAL_DOMAIN",  "evidence_count": 6, "authority_pattern": "DUAL_AUTHORITY" },
+      { "ceu_id": "CEU-UTILITIES",       "state": "CONFIRMED", "tier": "FOUNDATION",          "evidence_count": 1, "authority_pattern": "INHERITANCE_DOMINANT" },
+      { "ceu_id": "CEU-VIRTUALIZATION",  "state": "CONFIRMED", "tier": "CONSUMER",           "evidence_count": 5, "authority_pattern": "IMPORT_DOMINANT" },
+      { "ceu_id": "CEU-VPN",             "state": "CONFIRMED", "tier": "CONSUMER",           "evidence_count": 6, "authority_pattern": "IMPORT_DOMINANT" },
+      { "ceu_id": "CEU-WIRELESS",        "state": "CONFIRMED", "tier": "CONSUMER",           "evidence_count": 5, "authority_pattern": "IMPORT_DOMINANT" },
+      { "ceu_id": "CEU-ACCOUNT",         "state": "MERGED",    "tier": "OPERATIONAL_DOMAIN",  "evidence_count": 0, "merged_into": "CEU-USERS" }
+    ]
+  },
+
+  "artifact_hashes": {
+    "ceu/candidate_registry.json": "29a79a7522a0f8acbbb82157980be698a53f4a24f43e8bf5530a2301ccda00ed",
+    "ceu/reconciliation_state.json": "613ce4b5decd2dab79d9e4e01c639a614ce0ca4b7762a72cb38c7c3956ef455a",
+    "ceu/reconciliation_event_log.jsonl": "221d0c3b4712d019c1c457ead1a89db585ca884a6422d28751861ee03bf66180",
+    "ceu/evidence_anchors.json": "3b1479aaaa8a85dde4925ddc2eeab9d04dfa9e76c4e73f821d5f0c830aebd7a6",
+    "ceu/reconciliation_obligations.json": "ac11abb2a7f05cef5e472f44800bab98446fbdfc4a9bd6021077a2674784990e",
+    "ceu/derivation_lineage.json": "fe31bfc4bf99274a57e03a0a938772b69fa747460c2b4399503cdb1556",
+    "sqo/promotion_state.json": "56a1733e4c74797aa1c95f2a50f30ab7617f804591892721a2abc6517beb6e1f",
+    "sqo/promotion_event_log.jsonl": "355ba52e168a59caab08a2b0b7518009217181bd99162f529f13df258aa55fdd",
+    "sqo/qualification_blockers.json": "3d5a38e039535b36a61d0881318b16e089cb383ea5c77fcc2312f1e0df952414",
+    "sqo/review_obligations.json": "865b6fc62824e52179be305e31d2e3fbff2636d98b8d9307643cdb9b01b40833",
+    "spine/spine_objects.json": "2442f28ba0e3cc5abbe18d410bf3a035e92cec6066e7cb9484841b6d2c93f767"
+  },
+
+  "replay_contract": {
+    "description": "This baseline is replayable. All governance state can be reconstructed from: (1) reconciliation_event_log.jsonl (35 events), (2) promotion_event_log.jsonl (1 event), (3) derivation_lineage.json (28 events), (4) spine_objects.json evidence chain.",
+    "reconstruction_inputs": [
+      "ceu/reconciliation_event_log.jsonl",
+      "sqo/promotion_event_log.jsonl",
+      "ceu/derivation_lineage.json",
+      "spine/spine_objects.json"
+    ]
+  }
+}

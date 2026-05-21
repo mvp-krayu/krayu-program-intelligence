@@ -14,7 +14,8 @@
     "rejected": 0,
     "merged": 1,
     "split": 0,
-    "reclassified": 0,
+    "reclassified": 1,
+    "refined": 1,
     "pending": 0
   },
   "candidates": {
@@ -96,22 +97,31 @@
     "CEU-EXTRAS": {
       "domain": "extras",
       "state": "CONFIRMED",
-      "tier": "CONSUMER",
+      "tier": "FOUNDATION",
       "file_count": 151,
-      "evidence_count": 11,
+      "evidence_count": 14,
       "evidence_types": {
         "APP_CONFIG": 1,
         "MODEL_INVENTORY": 1,
         "URL_NAMESPACE": 1,
         "MODEL_DOCS": 1,
-        "OFFICIAL_DOCS": 7
+        "OFFICIAL_DOCS": 7,
+        "ARCHITECTURE_DOCS": 2,
+        "REPO_ARCHITECTURE": 1
       },
       "merge_candidate": false,
       "authority_pattern": "IMPORT_DOMINANT",
-      "reconciliation_finding": "ALIGNED",
+      "reconciliation_finding": "RECLASSIFIED_AND_CONFIRMED",
+      "reclassification_lineage": {
+        "prior_tier": "CONSUMER",
+        "new_tier": "FOUNDATION",
+        "reclassified_at": "2026-05-21T18:26:00.000Z",
+        "evidence_basis": "application-registry.md, AGENTS.md, models.md feature matrix",
+        "event_refs": ["RCEU-0042", "RCEU-0043", "RCEU-0044"]
+      },
       "last_action": "ceu_confirm",
       "last_actor": "operator:khorrix",
-      "last_action_at": "2026-05-21T07:39:58.711Z"
+      "last_action_at": "2026-05-21T18:27:00.000Z"
     },
     "CEU-IPAM": {
       "domain": "ipam",
@@ -154,20 +164,29 @@
       "state": "CONFIRMED",
       "tier": "OPERATIONAL_DOMAIN",
       "file_count": 56,
-      "evidence_count": 7,
+      "evidence_count": 9,
       "evidence_types": {
         "APP_CONFIG": 1,
         "MODEL_INVENTORY": 1,
         "URL_NAMESPACE": 1,
         "OFFICIAL_DOCS": 3,
-        "MODEL_DOCS": 1
+        "MODEL_DOCS": 1,
+        "FEATURE_DOCS": 1,
+        "ARCHITECTURE_DOCS": 1
       },
       "merge_candidate": false,
-      "authority_pattern": "IMPORT_DOMINANT",
-      "reconciliation_finding": "ALIGNED",
-      "last_action": "ceu_confirm",
+      "authority_pattern": "DUAL_AUTHORITY_CROSS_CUTTING",
+      "reconciliation_finding": "REFINED",
+      "refinement_lineage": {
+        "prior_authority": "IMPORT_DOMINANT",
+        "refined_authority": "DUAL_AUTHORITY_CROSS_CUTTING",
+        "refined_at": "2026-05-21T18:28:00.000Z",
+        "evidence_basis": "tenancy feature docs + models index — tenancy assignment reaches all domain apps, inheritance authority 2.22x import authority",
+        "event_refs": ["RCEU-0045"]
+      },
+      "last_action": "ceu_refine",
       "last_actor": "operator:khorrix",
-      "last_action_at": "2026-05-21T07:39:58.821Z"
+      "last_action_at": "2026-05-21T18:28:00.000Z"
     },
     "CEU-USERS": {
       "domain": "users",

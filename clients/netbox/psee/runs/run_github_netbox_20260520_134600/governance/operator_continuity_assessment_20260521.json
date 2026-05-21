@@ -1,0 +1,137 @@
+{
+  "assessment_id": "CONTINUITY-ASSESSMENT-NETBOX-20260521",
+  "contract_id": "PI.GOVERNANCE.SEMANTIC-GOVERNANCE-LOOP-VALIDATION.01",
+  "specimen_id": "netbox",
+  "run_id": "run_github_netbox_20260520_134600",
+  "assessed_at": "2026-05-21T18:50:00Z",
+  "purpose": "Assess which governance capabilities persist through interfaces vs which depend on Claude-session cognition. Identify formalization gaps.",
+
+  "persistent_governance_surfaces": {
+    "sqo_cockpit_v2": {
+      "surface": "SQO Cockpit V2 — /sqo/client/netbox/run/run_github_netbox_20260520_134600/v2/",
+      "persistent": true,
+      "capabilities": [
+        "Qualification posture display (STRUCTURAL_ONLY)",
+        "Blocker summary (7 blockers)",
+        "Progression path (6 steps)",
+        "Available actions (12 governed actions)",
+        "Role projection (5 RBAC roles)",
+        "Primary guidance"
+      ],
+      "continuity_status": "OPERATIONAL — operator can see qualification state without session context"
+    },
+    "sqo_authority_workflow": {
+      "surface": "POST /api/sqo/authority-action",
+      "persistent": true,
+      "capabilities": [
+        "review_accept / review_reject / review_contest / review_partial_accept",
+        "promotion_request / promotion_approve / promotion_deny",
+        "insufficiency_acknowledge",
+        "crosswalk_accept / reconciliation_accept",
+        "escalate_arbitration / resolve_arbitration"
+      ],
+      "continuity_status": "OPERATIONAL — 12 actions available through governed mutation endpoint"
+    },
+    "lens_v2": {
+      "surface": "LENS v2 — /lens/netbox/run_github_netbox_20260520_134600",
+      "persistent": true,
+      "capabilities": [
+        "4-persona cognitive projection",
+        "Interactive topology with cross-highlighting",
+        "BOARDROOM governed narrative with proof-graph substrate",
+        "36-query guided interrogation lattice",
+        "PI Runtime structural depth expansion",
+        "Evidence record export"
+      ],
+      "continuity_status": "OPERATIONAL — structural intelligence accessible without session context"
+    },
+    "event_logs": {
+      "surface": "Append-only JSONL event logs",
+      "persistent": true,
+      "capabilities": [
+        "reconciliation_event_log.jsonl — 46 events, full lifecycle",
+        "promotion_event_log.jsonl — 1 event, S0→S1",
+        "learning_events.jsonl — 5 PROPOSED events (new in Phase 7)"
+      ],
+      "continuity_status": "OPERATIONAL — governance history reconstructable from logs"
+    },
+    "spine_objects": {
+      "surface": "spine/spine_objects.json",
+      "persistent": true,
+      "capabilities": [
+        "Evidence object chain with lineage references",
+        "Hero moment discovery records",
+        "Replay corridor with reproducibility hashes"
+      ],
+      "continuity_status": "OPERATIONAL — structural intelligence accumulation persisted"
+    }
+  },
+
+  "session_dependent_capabilities": {
+    "evidence_source_selection": {
+      "description": "Selecting which documentation to ingest as new evidence",
+      "current_state": "SESSION_DEPENDENT — requires Claude to read docs and identify structural relevance",
+      "formalization_path": "Evidence source registry + recommendation engine",
+      "priority": "MEDIUM",
+      "formalization_feasibility": "FEASIBLE — evidence source catalog is a straightforward data structure"
+    },
+    "tier_challenge_identification": {
+      "description": "Identifying when new evidence challenges existing CEU classifications",
+      "current_state": "PARTIALLY_SESSION_DEPENDENT — evidence delta artifact captures findings, but initial identification requires structural analysis",
+      "formalization_path": "Automated tier consistency checker comparing evidence types against tier expectations",
+      "priority": "MEDIUM",
+      "formalization_feasibility": "FEASIBLE — rules-based: if evidence contains INFRASTRUCTURE keywords and tier is CONSUMER, flag for review"
+    },
+    "reclassification_reasoning": {
+      "description": "Deciding whether a tier challenge warrants reclassification",
+      "current_state": "OPERATOR_GOVERNED — correctly session-dependent. This SHOULD require human judgment.",
+      "formalization_path": "NOT RECOMMENDED for full automation. Persist the reasoning in event log (already done: RCEU-0042/43/44).",
+      "priority": "LOW",
+      "formalization_feasibility": "N/A — this is a non-automatable boundary by design"
+    },
+    "learning_event_generation": {
+      "description": "Identifying patterns from reconciliation friction and converting to learning events",
+      "current_state": "SESSION_DEPENDENT — requires Claude to observe patterns and articulate them",
+      "formalization_path": "Structured friction capture during reconciliation (e.g., if reclassification occurs, auto-generate TIER_CLASSIFICATION_GAP learning event)",
+      "priority": "HIGH",
+      "formalization_feasibility": "FEASIBLE — trigger-based: specific governance actions (reclassify, refine, challenge) auto-generate PROPOSED learning events"
+    },
+    "cross_session_reasoning_continuity": {
+      "description": "Carrying analysis context from one Claude session to the next",
+      "current_state": "PARTIALLY_MITIGATED — event logs, governance artifacts, and learning events persist reasoning. But the 'why did we look at this' context degrades.",
+      "formalization_path": "Governance session log + persistent investigation state",
+      "priority": "MEDIUM",
+      "formalization_feasibility": "FEASIBLE — governance session artifacts (baseline_freeze, evidence_delta, replay_validation, learning_events) already form a persistent investigation trail"
+    }
+  },
+
+  "continuity_score": {
+    "persistent_surfaces": 5,
+    "session_dependent_capabilities": 5,
+    "non_automatable_boundaries_correctly_human": 1,
+    "formalization_feasible": 4,
+    "formalization_priority_high": 1,
+    "formalization_priority_medium": 3,
+    "formalization_priority_low": 1
+  },
+
+  "phase_7_continuity_improvements": [
+    {
+      "improvement": "Governance session artifacts (baseline_freeze, evidence_ingestion_delta, replay_validation, learning_events, operator_continuity_assessment)",
+      "impact": "New persistent governance investigation trail — a future session can reconstruct not just the state but the reasoning path",
+      "status": "IMPLEMENTED in this stream"
+    },
+    {
+      "improvement": "Learning events with PROPOSED lifecycle (learning_events.jsonl)",
+      "impact": "Reconciliation friction, evidence gaps, and operator corrections are now captured as governed learning events. Future cycles can consume PROMOTED events.",
+      "status": "IMPLEMENTED in this stream — lifecycle not yet validated (no PROPOSED → REVIEWED → PROMOTED cycle completed)"
+    },
+    {
+      "improvement": "Evidence ingestion delta as governed artifact",
+      "impact": "Evidence selection and reconciliation findings persist outside Claude-session memory",
+      "status": "IMPLEMENTED in this stream"
+    }
+  ],
+
+  "conclusion": "Phase 7 demonstrates that the core governance loop — evidence ingestion, CEU reconciliation, reopen/refine, replay validation, learning capture — operates through persistent interfaces with reconstructable state. The primary remaining session dependency is evidence source selection and learning event generation, both of which are feasible to formalize through trigger-based automation. Reclassification decisions correctly remain operator-governed (non-automatable boundary)."
+}

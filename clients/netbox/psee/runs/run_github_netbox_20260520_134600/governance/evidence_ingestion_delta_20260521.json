@@ -1,0 +1,155 @@
+{
+  "delta_id": "EVIDENCE-DELTA-NETBOX-20260521",
+  "contract_id": "PI.GOVERNANCE.SEMANTIC-GOVERNANCE-LOOP-VALIDATION.01",
+  "baseline_ref": "BASELINE-NETBOX-20260521",
+  "specimen_id": "netbox",
+  "run_id": "run_github_netbox_20260520_134600",
+  "ingested_at": "2026-05-21T18:15:00Z",
+  "purpose": "Controlled evidence ingestion for Phase 7 governance loop validation. NOT proving semantic truth — exercising evidence reconciliation against existing CEU state.",
+
+  "evidence_sources": [
+    {
+      "source_id": "EV-SRC-001",
+      "path": "docs/development/application-registry.md",
+      "evidence_type": "ARCHITECTURE_DOCS",
+      "description": "NetBox application registry documentation — reveals extras.registry as central infrastructure component",
+      "structural_relevance": "HIGH — directly reveals cross-cutting dependency architecture"
+    },
+    {
+      "source_id": "EV-SRC-002",
+      "path": "docs/features/tenancy.md",
+      "evidence_type": "FEATURE_DOCS",
+      "description": "Tenancy feature documentation — reveals tenancy assignment reaches across all domain apps",
+      "structural_relevance": "HIGH — confirms hero moment about tenancy hidden behavioral authority"
+    },
+    {
+      "source_id": "EV-SRC-003",
+      "path": "docs/development/models.md",
+      "evidence_type": "ARCHITECTURE_DOCS",
+      "description": "NetBox models documentation — feature matrix, model index with per-app model counts",
+      "structural_relevance": "HIGH — quantifies model distribution and cross-cutting feature mixin patterns"
+    },
+    {
+      "source_id": "EV-SRC-004",
+      "path": "AGENTS.md",
+      "evidence_type": "REPO_ARCHITECTURE",
+      "description": "NetBox official repository architecture map — canonical app descriptions, dependency documentation",
+      "structural_relevance": "HIGH — authoritative external documentation of intended architecture"
+    }
+  ],
+
+  "evidence_attachments": [
+    {
+      "anchor_id": "EV-PHASE7-001",
+      "ceu_id": "CEU-EXTRAS",
+      "evidence_type": "ARCHITECTURE_DOCS",
+      "source_ref": "EV-SRC-001",
+      "finding": "TIER_CHALLENGE",
+      "description": "Application registry lives in extras.registry. The registry is described as 'application-wide parameters' that 'cannot be deleted or overwritten.' Stores include: counter_fields, data_backends, denormalized_fields, filtersets, model_features, models, plugins, request_processors, search, tables, views. Every other app implicitly depends on extras for cross-cutting features. CEU-EXTRAS is classified CONSUMER but evidence suggests FOUNDATION or INFRASTRUCTURE.",
+      "reconciliation_impact": "TIER_RECLASSIFICATION_CANDIDATE"
+    },
+    {
+      "anchor_id": "EV-PHASE7-002",
+      "ceu_id": "CEU-EXTRAS",
+      "evidence_type": "REPO_ARCHITECTURE",
+      "source_ref": "EV-SRC-004",
+      "finding": "TIER_CONFIRMING",
+      "description": "AGENTS.md explicitly describes extras as 'Cross-cutting features (custom fields, tags, webhooks, scripts)' and states 'New cross-cutting features belong here.' This is infrastructure language, not consumer language.",
+      "reconciliation_impact": "TIER_RECLASSIFICATION_CANDIDATE"
+    },
+    {
+      "anchor_id": "EV-PHASE7-003",
+      "ceu_id": "CEU-EXTRAS",
+      "evidence_type": "ARCHITECTURE_DOCS",
+      "source_ref": "EV-SRC-003",
+      "finding": "TIER_CONFIRMING",
+      "description": "Feature matrix in models.md lists 14 cross-cutting model features, all registered through extras. BookmarksMixin, ChangeLoggingMixin, CloningMixin, ContactsMixin, CustomFieldsMixin, CustomLinksMixin, etc. Every NetBoxModel inherits these from extras infrastructure.",
+      "reconciliation_impact": "TIER_RECLASSIFICATION_CANDIDATE"
+    },
+    {
+      "anchor_id": "EV-PHASE7-004",
+      "ceu_id": "CEU-TENANCY",
+      "evidence_type": "FEATURE_DOCS",
+      "source_ref": "EV-SRC-002",
+      "finding": "AUTHORITY_CONFIRMING",
+      "description": "Tenancy feature docs list 30+ model types across ALL domain apps that support tenant assignment: Circuits, Cables, Devices, VDCs, Power Feeds, Racks, Sites, Locations, ASNs, Prefixes, IP ranges, IP addresses, VLANs, VRFs, Route targets, Clusters, VMs, L2VPNs, Tunnels, WLANs, WLinks. Confirms hero moment: tenancy is documented as 'optional organizational metadata' but structurally provides behavioral framework for all domains.",
+      "reconciliation_impact": "AUTHORITY_PATTERN_REFINEMENT"
+    },
+    {
+      "anchor_id": "EV-PHASE7-005",
+      "ceu_id": "CEU-TENANCY",
+      "evidence_type": "ARCHITECTURE_DOCS",
+      "source_ref": "EV-SRC-003",
+      "finding": "AUTHORITY_CONFIRMING",
+      "description": "Models index shows tenancy provides: Contact, Tenant (Primary), ContactRole (Organizational), ContactGroup, TenantGroup (Nested Group). Despite small model count (5 primary/org models), tenancy's inheritance authority (226 cross-domain edges) vastly exceeds its import authority — confirmed by dual structural authority hero moment.",
+      "reconciliation_impact": "AUTHORITY_PATTERN_REFINEMENT"
+    },
+    {
+      "anchor_id": "EV-PHASE7-006",
+      "ceu_id": "CEU-DCIM",
+      "evidence_type": "ARCHITECTURE_DOCS",
+      "source_ref": "EV-SRC-003",
+      "finding": "ALIGNED",
+      "description": "Models index confirms DCIM dominates with ~30+ primary models (Device, Cable, CableBundle, DeviceType, Module, ModuleType, PowerFeed, PowerPanel, Rack, RackReservation, RackType, Site, VirtualChassis, VDC) plus 10 component models, 10 component template models. Largest app by model count — aligns with CENTRALITY hero moment (dcim/models/__init__.py at 160 inbound imports).",
+      "reconciliation_impact": "NONE — confirms existing classification"
+    },
+    {
+      "anchor_id": "EV-PHASE7-007",
+      "ceu_id": "CEU-UTILITIES",
+      "evidence_type": "REPO_ARCHITECTURE",
+      "source_ref": "EV-SRC-004",
+      "finding": "ALIGNED",
+      "description": "AGENTS.md explicitly describes utilities as 'Shared utilities (no models)'. Confirms FOUNDATION tier classification and INHERITANCE_DOMINANT authority pattern — utilities provides shared infrastructure without own model authority.",
+      "reconciliation_impact": "NONE — confirms existing classification"
+    },
+    {
+      "anchor_id": "EV-PHASE7-008",
+      "ceu_id": "CEU-NETBOX",
+      "evidence_type": "REPO_ARCHITECTURE",
+      "source_ref": "EV-SRC-004",
+      "finding": "ALIGNED",
+      "description": "AGENTS.md describes netbox/ as 'Core settings, URLs, WSGI, plugin infrastructure' with sub-components: api/, graphql/, models/, navigation/, plugins/, registry.py, search/, ui/. Confirms FOUNDATION tier classification — netbox is the framework itself.",
+      "reconciliation_impact": "NONE — confirms existing classification"
+    }
+  ],
+
+  "reconciliation_findings": {
+    "challenged": [
+      {
+        "ceu_id": "CEU-EXTRAS",
+        "current_tier": "CONSUMER",
+        "evidence_suggests": "FOUNDATION or INFRASTRUCTURE",
+        "evidence_count": 3,
+        "challenge_basis": "Three independent evidence sources (application registry docs, AGENTS.md, feature matrix) all describe extras as cross-cutting infrastructure that every other app depends on. CONSUMER tier implies it consumes services; evidence shows it PROVIDES cross-cutting infrastructure.",
+        "resolution_required": true
+      }
+    ],
+    "confirmed_with_refinement": [
+      {
+        "ceu_id": "CEU-TENANCY",
+        "current_tier": "OPERATIONAL_DOMAIN",
+        "refinement": "Authority pattern fully confirmed by external docs. Tenancy reaches across ALL domain apps via tenant assignment. Dual authority (import vs inheritance) hero moment confirmed by docs. Current OPERATIONAL_DOMAIN tier is correct but authority_pattern should be recorded as DUAL_AUTHORITY_CROSS_CUTTING.",
+        "evidence_count": 2,
+        "resolution_required": false
+      }
+    ],
+    "confirmed": [
+      { "ceu_id": "CEU-DCIM", "evidence_count": 1, "finding": "Model dominance confirmed by model index" },
+      { "ceu_id": "CEU-UTILITIES", "evidence_count": 1, "finding": "FOUNDATION confirmed — 'no models' shared utilities" },
+      { "ceu_id": "CEU-NETBOX", "evidence_count": 1, "finding": "FOUNDATION confirmed — core framework infrastructure" }
+    ],
+    "unchanged": ["CEU-CIRCUITS", "CEU-CORE", "CEU-IPAM", "CEU-USERS", "CEU-VIRTUALIZATION", "CEU-VPN", "CEU-WIRELESS"]
+  },
+
+  "delta_summary": {
+    "new_evidence_sources": 4,
+    "new_evidence_anchors": 8,
+    "new_evidence_types": ["ARCHITECTURE_DOCS", "FEATURE_DOCS", "REPO_ARCHITECTURE"],
+    "ceus_challenged": 1,
+    "ceus_confirmed_with_refinement": 1,
+    "ceus_confirmed": 3,
+    "ceus_unchanged": 7,
+    "baseline_evidence_anchor_count": 66,
+    "post_delta_evidence_anchor_count": 74
+  }
+}
