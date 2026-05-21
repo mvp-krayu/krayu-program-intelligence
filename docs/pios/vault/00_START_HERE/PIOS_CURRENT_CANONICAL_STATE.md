@@ -76,7 +76,7 @@ LENS v2 has materially transitioned from a static report surface to an interacti
 **Transition markers:**
 - 4-persona cognitive projection system (BOARDROOM, EXECUTIVE_BALANCED, EXECUTIVE_DENSE, INVESTIGATION_DENSE)
 - Interactive SVG topology with hover, click-to-highlight, zone anchor selection, cross-highlighting
-- Boardroom executive cockpit (radial gauge, signal assessment, coverage ring, topology modal)
+- Boardroom governed narrative projection at S1 (narrative-first executive prose with proof-graph substrate, deterministic bounded composition under 75.x); cockpit instruments preserved at S2+
 - Evidence boundary activation, pressure zone focus, tier handoff
 - Dynamic viewBox sizing (topology renders at natural scale, expands proportionally in modal)
 - Condition-driven layout resolution (persona determines zone composition)
@@ -109,7 +109,7 @@ Four distinct cognitive projections represent different executive cognition mode
 
 | Persona | Cognitive Mode | Primary Audience | Structural Focus |
 |---|---|---|---|
-| BOARDROOM | Executive consequence | Board, C-suite | Posture, readiness, risk signal |
+| BOARDROOM | Executive consequence | Board, C-suite | Governed narrative projection (S1); posture/readiness/risk signal cockpit (S2+) |
 | EXECUTIVE_BALANCED | CEO consequence lens | Senior leadership | Balanced depth across all zones |
 | EXECUTIVE_DENSE | CTO structural lens | Technical leadership | Structural cause, propagation detail |
 | INVESTIGATION_DENSE | Analyst evidence trace | Technical analysts | Full evidence depth, lineage, structural proof |
@@ -579,7 +579,7 @@ See [[../10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS]] for full path inve
 - Runtime qualification projection (unified posture aggregation, 6-gate propagation readiness)
 - 4-persona cognitive projection system (BOARDROOM, BALANCED, DENSE, INVESTIGATION)
 - Interactive SVG topology with hover, click, cross-highlighting, zone anchor selection
-- Boardroom executive cockpit (radial gauge, signal assessment, coverage ring, topology modal)
+- Boardroom governed narrative projection at S1 (synthesis-native composition interface, deterministic bounded provider, proof-graph substrate); cockpit instruments at S2+
 - Dynamic viewBox sizing (tight content-derived viewBox, proportional modal expansion)
 - Condition-driven layout resolution (persona → zone composition)
 - 10 zone components (IntelligenceField, StructuralTopologyZone, DeclarationZone, GovernanceRibbon, ReconciliationAwarenessZone, SQOIntelligenceZone, SemanticTrustPostureZone, EvidenceDepthLayer, QualifierMandate, InvestigationReadingGuide)

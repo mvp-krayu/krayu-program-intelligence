@@ -504,7 +504,7 @@ const BALANCED_INTERPRETIVE_NARRATIVES = {
   },
 }
 
-function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass, activeQueryKey, onQuerySelect, exploredQueries, emergenceState, escalationAvailable, piRuntimeActive, onEscalate, onDeescalate, expansions, activeExpansionIndex, onExpansionSelect, interrogationTrail, onTrailExport }) {
+function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass, activeQueryKey, onQuerySelect, exploredQueries, emergenceState, escalationAvailable, piRuntimeActive, onEscalate, onDeescalate, expansions, activeExpansionIndex, onExpansionSelect, interrogationTrail, onTrailExport, selectedNarrativeArc }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const chip = (adapted && adapted.qualifierChip) || {}
   const artifacts = (reportPackArtifacts && reportPackArtifacts.length > 0)
@@ -588,6 +588,58 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
           </div>
         </div>
       )}
+
+      {boardroomMode && fullReport && fullReport.qualification_level === 'S1' && (() => {
+        const gn = fullReport.governed_narrative
+        const gnAvail = gn && gn.available
+        const qc = gnAvail ? (gn.qualification_context || {}) : {}
+        const ss = gnAvail ? (gn.structural_summary || {}) : {}
+        const tm = fullReport.topology_maturity || {}
+        return (
+          <>
+            <div className="support-block support-block--qualification">
+              <div className="support-label">QUALIFICATION</div>
+              <div className="support-qualification-state">
+                <span className="support-qualification-s">{fullReport.qualification_level}</span>
+                <span className="support-qualification-gate">{qc.gate_status === 'OPEN' ? 'Gate Open' : 'Gate Pending'}</span>
+              </div>
+              <div className="support-qualification-detail">
+                Structural topology complete. Semantic qualification not yet established.
+              </div>
+            </div>
+
+            <div className="support-block support-block--structural-summary">
+              <div className="support-label">STRUCTURAL SUBSTRATE</div>
+              <div className="support-kv-list">
+                <div className="support-kv"><span className="support-kv-key">Clusters</span><span className="support-kv-val">{ss.cluster_count || (fullReport.topology_summary || {}).cluster_count || '—'}</span></div>
+                <div className="support-kv"><span className="support-kv-key">Files</span><span className="support-kv-val">{(ss.file_count || 0).toLocaleString()}</span></div>
+                <div className="support-kv"><span className="support-kv-key">Import edges</span><span className="support-kv-val">{(ss.import_edges || 0).toLocaleString()}</span></div>
+                <div className="support-kv"><span className="support-kv-key">Inheritance</span><span className="support-kv-val">{(ss.inheritance_edges || 0).toLocaleString()}</span></div>
+              </div>
+              <div className="support-kv-maturity">{tm.label || 'Registry'}</div>
+            </div>
+
+            {gnAvail && (
+              <div className="support-block support-block--provenance">
+                <div className="support-label">COMPOSITION</div>
+                <div className="support-kv-list">
+                  <div className="support-kv"><span className="support-kv-key">Method</span><span className="support-kv-val">Deterministic</span></div>
+                  <div className="support-kv"><span className="support-kv-key">Contract</span><span className="support-kv-val">{(gn.composition_provenance || {}).governance_contract || '75.x'}</span></div>
+                  <div className="support-kv"><span className="support-kv-key">Replay</span><span className="support-kv-val">{(gn.composition_provenance || {}).replay_tier || 'EXACT'}</span></div>
+                </div>
+              </div>
+            )}
+
+            {selectedNarrativeArc && (
+              <div className="support-block support-block--arc-context">
+                <div className="support-label">SELECTED SECTION</div>
+                <div className="support-arc-name">{ARC_LABELS[selectedNarrativeArc] || selectedNarrativeArc}</div>
+                <div className="support-arc-hint">Evidence context shown in left panel</div>
+              </div>
+            )}
+          </>
+        )
+      })()}
 
       {isDense && zonePaths && zoneReg && (
         <div className="support-block support-block--zone-paths" data-zone={activeZoneKey}>
@@ -2135,7 +2187,7 @@ const INTERROGATION_EXPANSION_REGISTRY = {
   },
 }
 
-function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport, activeZoneKey, activeQueryKey, onQueryDismiss, emergenceState, piRuntimeActive, activeExpansionIndex, expansions, onExpansionDismiss }) {
+function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport, activeZoneKey, activeQueryKey, onQueryDismiss, emergenceState, piRuntimeActive, activeExpansionIndex, expansions, onExpansionDismiss, selectedNarrativeArc }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const framing = boardroomMode
     ? INTERP_MODE_FRAMING.BOARDROOM
@@ -2163,6 +2215,92 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
   const confidenceNote = sigs[0] && sigs[0].confidence_note
 
   if (boardroomMode) {
+    const isS1 = fullReport && fullReport.qualification_level === 'S1'
+    const gn = fullReport && fullReport.governed_narrative
+    const narrativeAvailable = gn && gn.available
+
+    if (isS1 && narrativeAvailable) {
+      const selectedParagraph = selectedNarrativeArc
+        ? (gn.paragraphs || []).find(p => p.arc_position === selectedNarrativeArc)
+        : null
+      const proofGraph = gn.proof_graph || {}
+      const selectedAnchors = selectedParagraph ? (selectedParagraph.anchors || []) : []
+      const allEvidenceObjects = proofGraph.evidence_objects || []
+      const referencedEoIds = new Set(selectedAnchors.flatMap(a => a.evidence_object_ids || []))
+      const referencedEos = allEvidenceObjects.filter(eo => referencedEoIds.has(eo.id))
+
+      return (
+        <aside className="intel-interp intel-interp--narrative-evidence" data-tone={framing.tone} aria-label="Executive environmental synthesis">
+          <div className="interp-tag">
+            <span className="interp-tag-label">Evidence Context</span>
+            <span className="interp-tag-state">{badge.state_label || 'S1'}</span>
+          </div>
+
+          {!selectedNarrativeArc ? (
+            <div className="interp-block interp-block--lead">
+              <div className="interp-section-label">SELECT A SECTION</div>
+              <div className="interp-synthesis interp-synthesis--prompt">
+                Click a narrative section to inspect its evidence anchors, source artifacts, and structural basis.
+              </div>
+              <div className="interp-synthesis-meta">
+                {(gn.paragraphs || []).length} sections · {(gn.composition_provenance || {}).anchors_consumed || 0} anchors · {(gn.composition_provenance || {}).evidence_objects_referenced || 0} evidence objects
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="interp-block interp-block--lead">
+                <div className="interp-section-label">{ARC_LABELS[selectedNarrativeArc] || selectedNarrativeArc}</div>
+                <div className="interp-synthesis-meta">
+                  {selectedAnchors.length} anchor{selectedAnchors.length !== 1 ? 's' : ''} · {referencedEos.length} evidence object{referencedEos.length !== 1 ? 's' : ''}
+                </div>
+              </div>
+
+              {selectedAnchors.map((anchor, i) => (
+                <div key={anchor.anchor_id || i} className="interp-block interp-block--evidence-anchor">
+                  <div className="interp-section-label">
+                    <span className="narrative-proof-anchor-id">{anchor.anchor_id}</span>
+                    <span className="narrative-proof-anchor-class">{anchor.source && anchor.source.surprise_class}</span>
+                  </div>
+                  {anchor.structural_basis && (
+                    <div className="interp-synthesis interp-synthesis--basis">{anchor.structural_basis}</div>
+                  )}
+                  {anchor.evidence_object_ids && anchor.evidence_object_ids.length > 0 && (
+                    <div className="narrative-proof-anchor-refs">
+                      {anchor.evidence_object_ids.map(eid => (
+                        <span key={eid} className="narrative-proof-anchor-ref">{eid.slice(0, 12)}…</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+
+              {referencedEos.length > 0 && (
+                <div className="interp-block">
+                  <div className="interp-section-label">SOURCE ARTIFACTS</div>
+                  {referencedEos.map(eo => (
+                    <div key={eo.id} className="interp-evidence-object">
+                      <div className="interp-evidence-object-phase">{eo.phase}</div>
+                      <div className="interp-evidence-object-path">{eo.artifact_path}</div>
+                      {eo.evidence_class && <div className="interp-evidence-object-class">{eo.evidence_class}</div>}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {selectedParagraph && selectedParagraph.governance && (
+                <div className="interp-block">
+                  <div className="interp-section-label">AUTHORITY</div>
+                  <div className="interp-synthesis-meta">
+                    {selectedParagraph.governance.authority} · {selectedParagraph.governance.contract}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </aside>
+      )
+    }
+
     return (
       <aside className="intel-interp" data-tone={framing.tone} aria-label="Executive environmental synthesis">
         <div className="interp-tag">
@@ -2839,6 +2977,7 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
     updateActiveZone()
     return () => { window.removeEventListener('scroll', onScroll); if (rafId) cancelAnimationFrame(rafId) }
   }, [onZoneChange])
+  const isS1 = fullReport && fullReport.qualification_level === 'S1'
   const origin = findByRole(blocks, 'ORIGIN')
   const passthrough = findByRole(blocks, 'PASS_THROUGH')
   const receiver = findByRole(blocks, 'RECEIVER')
@@ -2851,15 +2990,17 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
     <div className="rep-field rep-field--dense" ref={fieldRef}>
       <RepModeTag
         label="Structural lens"
-        sub="CTO · structural cause and propagation"
-        zones={[
+        sub={isS1 ? 'CTO · structural topology and authority' : 'CTO · structural cause and propagation'}
+        zones={isS1 ? [
+          { id: 'Z6', name: 'Cluster Concentration' },
+        ] : [
           { id: 'Z3', name: 'Semantic Topology' },
           { id: 'Z4', name: 'Pressure Anchor' },
           { id: 'Z6', name: 'Cluster Concentration' },
         ]}
       />
 
-      <div className="actor actor--semantic-topology" data-zone-key="semanticTopology">
+      {!isS1 && <div className="actor actor--semantic-topology" data-zone-key="semanticTopology">
         <div className="actor-tag">
           <span className="actor-code">ST · SB · SO</span>
           <span className="actor-name">Semantic Topology · structural backing · semantic-only exposure</span>
@@ -2895,7 +3036,7 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
           <span className="actor-topo-summary-sep">·</span>
           <span><strong>{semanticOnly}</strong> semantic-only exposure</span>
         </div>
-      </div>
+      </div>}
 
       {scope && scope.cluster_count != null && (() => {
         const ts = (fullReport && fullReport.topology_summary) || {}
@@ -2936,7 +3077,7 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
         )
       })()}
 
-      {passthrough && (
+      {!isS1 && passthrough && (
         <div className="actor actor--absorption-load" data-zone-key="absorptionLoad">
           <div className="actor-tag">
             <span className="actor-code">AL</span>
@@ -2961,7 +3102,7 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
 
       <DenseSignalSection fullReport={fullReport} />
 
-      {(origin || passthrough || receiver) && (
+      {!isS1 && (origin || passthrough || receiver) && (
         <div className="actor actor--propagation-flow" data-zone-key="propagationFlow">
           <div className="actor-tag">
             <span className="actor-code">PF</span>
@@ -2992,7 +3133,7 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
         </div>
       )}
 
-      <PressureZoneFocusBlock fullReport={fullReport} />
+      {!isS1 && <PressureZoneFocusBlock fullReport={fullReport} />}
 
       {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (() => {
         const tm = (fullReport && fullReport.topology_maturity) || {}
@@ -3022,7 +3163,9 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
             ) : (
               <div className="topo-registry-compact">
                 <div className="topo-registry-heading">
-                  {clusters.length} STRUCTURAL CLUSTERS — REGISTRY VIEW
+                  {isS1
+                    ? `${clusters.length} STRUCTURAL CLUSTERS — DIRECTORY TOPOLOGY`
+                    : `${clusters.length} STRUCTURAL CLUSTERS — REGISTRY VIEW`}
                 </div>
                 <div className="topo-registry-grid">
                   {clusters.map(c => (
@@ -4378,11 +4521,147 @@ function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntake
   )
 }
 
-function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, narrative, evidenceBlocks, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition }) {
+const ARC_LABELS = {
+  OPENING: 'System Profile',
+  REVELATION: 'Structural Discovery',
+  DEPTH: 'Coupling Analysis',
+  AUTHORITY: 'Authority Concentration',
+  QUALIFICATION: 'Qualification State',
+  POSTURE: 'Structural Posture',
+}
+
+const ARC_CHIPS = {
+  OPENING: { label: 'PROFILE', color: '#4a9eff' },
+  REVELATION: { label: 'DISCOVERY', color: '#64ffda' },
+  DEPTH: { label: 'COUPLING', color: '#ffd700' },
+  AUTHORITY: { label: 'AUTHORITY', color: '#ff9e4a' },
+  QUALIFICATION: { label: 'GATE', color: '#7a8aaa' },
+}
+
+function NarrativeEnvelope({ governedNarrative, qualificationLevel, selectedArc, onArcSelect }) {
+  const paragraphs = (governedNarrative && governedNarrative.paragraphs) || []
+  const provenance = (governedNarrative && governedNarrative.composition_provenance) || {}
+  const qc = (governedNarrative && governedNarrative.qualification_context) || {}
+
+  return (
+    <div className="narrative-envelope">
+      <div className="narrative-header">
+        <div className="narrative-header-state">
+          <span className="narrative-header-s-state">{qualificationLevel || 'S1'}</span>
+          <span className="narrative-header-label">Structural Qualification</span>
+        </div>
+        {qc.specimen_display && (
+          <div className="narrative-header-specimen">{qc.specimen_display}</div>
+        )}
+      </div>
+
+      <div className="narrative-body">
+        {paragraphs.map((p, i) => {
+          const arc = p.arc_position
+          const chip = ARC_CHIPS[arc]
+          const isSelected = selectedArc === arc
+          const anchorCount = (p.anchors || []).length
+          return (
+            <div
+              key={arc || i}
+              className={`narrative-paragraph${isSelected ? ' narrative-paragraph--selected' : ''}`}
+              data-arc={arc}
+              role="button"
+              tabIndex={0}
+              onClick={() => onArcSelect && onArcSelect(isSelected ? null : arc)}
+              onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onArcSelect && onArcSelect(isSelected ? null : arc) } }}
+              aria-pressed={isSelected}
+              aria-label={`${ARC_LABELS[arc] || arc} — click to inspect evidence`}
+            >
+              <div className="narrative-paragraph-header">
+                {chip && (
+                  <span className="narrative-arc-chip" style={{ borderColor: chip.color, color: chip.color }}>{chip.label}</span>
+                )}
+                {anchorCount > 0 && (
+                  <span className="narrative-anchor-count">{anchorCount} anchor{anchorCount !== 1 ? 's' : ''}</span>
+                )}
+              </div>
+              <p className="narrative-paragraph-text">{p.text}</p>
+            </div>
+          )
+        })}
+      </div>
+
+      <div className="narrative-provenance">
+        <span className="narrative-provenance-method">{provenance.method === 'DETERMINISTIC_BOUNDED' ? 'Deterministic bounded composition' : provenance.method}</span>
+        <span className="narrative-provenance-sep">·</span>
+        <span className="narrative-provenance-contract">{provenance.governance_contract}</span>
+        <span className="narrative-provenance-sep">·</span>
+        <span className="narrative-provenance-anchors">{provenance.anchors_consumed} anchors</span>
+        <span className="narrative-provenance-sep">·</span>
+        <span className="narrative-provenance-evidence">{provenance.evidence_objects_referenced} evidence objects</span>
+      </div>
+    </div>
+  )
+}
+
+function BoardroomStructuralPosture({ fullReport }) {
+  const ts = (fullReport && fullReport.topology_summary) || {}
+  const ql = (fullReport && fullReport.qualification_level) || 'S1'
+  const clusterCount = ts.cluster_count || 0
+  const nodeCount = ts.semantic_domain_count || 0
+
+  return (
+    <div className="narrative-envelope narrative-envelope--posture">
+      <div className="narrative-header">
+        <div className="narrative-header-state">
+          <span className="narrative-header-s-state">{ql}</span>
+          <span className="narrative-header-label">Structural Qualification</span>
+        </div>
+      </div>
+      <div className="narrative-body">
+        <div className="narrative-paragraph" data-arc="POSTURE">
+          <p className="narrative-paragraph-text">
+            Structural substrate active. {clusterCount} structural clusters spanning {nodeCount} components.
+            Structural topology and authority analysis complete. Semantic qualification has not yet been established —
+            all intelligence is structurally derived.
+          </p>
+        </div>
+      </div>
+      <div className="narrative-provenance">
+        <span className="narrative-provenance-method">Structural posture only</span>
+        <span className="narrative-provenance-sep">·</span>
+        <span className="narrative-provenance-contract">No narrative anchors available</span>
+      </div>
+    </div>
+  )
+}
+
+function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, narrative, evidenceBlocks, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, selectedNarrativeArc, onNarrativeSelect }) {
   const [topoModalOpen, setTopoModalOpen] = useState(false)
   const [signalTraceId, setSignalTraceId] = useState(null)
   const openTopoModal = useCallback(() => setTopoModalOpen(true), [])
   const closeTopoModal = useCallback(() => { setTopoModalOpen(false); setSignalTraceId(null) }, [])
+
+  const isS1 = fullReport && fullReport.qualification_level === 'S1'
+  const governedNarrative = fullReport && fullReport.governed_narrative
+
+  if (isS1) {
+    const narrativeAvailable = governedNarrative && governedNarrative.available
+    return (
+      <div className="rep-field rep-field--boardroom rep-field--narrative">
+        <RepModeTag
+          label="Boardroom lens"
+          sub="Board · governed executive narrative"
+          zones={[{ id: 'Z1', name: 'Executive Narrative' }, { id: 'Z2', name: 'Structural Authority' }]}
+        />
+
+        {narrativeAvailable
+          ? <NarrativeEnvelope governedNarrative={governedNarrative} qualificationLevel="S1" selectedArc={selectedNarrativeArc} onArcSelect={onNarrativeSelect} />
+          : <BoardroomStructuralPosture fullReport={fullReport} />
+        }
+
+        <div className="cockpit-footer">
+          All outputs structurally derived — governed narrative composition under 75.x bounded authority. No inference, no AI-generated assessment beyond structural evidence.
+        </div>
+      </div>
+    )
+  }
 
   const rs = (fullReport && fullReport.readiness_summary) || {}
   const ts = (fullReport && fullReport.topology_summary) || {}
@@ -4583,9 +4862,9 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect }) {
   if (boardroomMode) {
-    return <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} />
+    return <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} />
   }
   if (densityClass === 'INVESTIGATION_DENSE') {
     return <InvestigationTraceField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} />
@@ -4605,6 +4884,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
   const [piRuntimeActive, setPiRuntimeActive] = useState(false)
   const [activeExpansionIndex, setActiveExpansionIndex] = useState(null)
   const [interrogationTrail, setInterrogationTrail] = useState(() => new Set())
+  const [selectedNarrativeArc, setSelectedNarrativeArc] = useState(null)
   const isBalanced = !boardroomMode && densityClass === 'EXECUTIVE_BALANCED'
   const handleEmergenceState = useCallback((state) => { setEmergenceState(state) }, [])
   const isDense = !boardroomMode && densityClass === 'EXECUTIVE_DENSE'
@@ -4770,6 +5050,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         activeExpansionIndex={activeExpansionIndex}
         expansions={expansions}
         onExpansionDismiss={handleExpansionDismiss}
+        selectedNarrativeArc={selectedNarrativeArc}
       />
 
       <main ref={canvasRef} className="intel-canvas" role="region" aria-label="Semantic operational canvas">
@@ -4794,6 +5075,8 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           onZoneChange={isDense ? handleZoneChange : undefined}
           onAuthorityChange={isBalanced ? onAuthorityChange : undefined}
           onEmergenceState={isBalanced ? handleEmergenceState : undefined}
+          selectedNarrativeArc={selectedNarrativeArc}
+          onNarrativeSelect={setSelectedNarrativeArc}
         />
       </main>
 
@@ -4819,6 +5102,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         onExpansionSelect={handleExpansionSelect}
         interrogationTrail={interrogationTrail}
         onTrailExport={handleTrailExport}
+        selectedNarrativeArc={selectedNarrativeArc}
       />
     </div>
   )

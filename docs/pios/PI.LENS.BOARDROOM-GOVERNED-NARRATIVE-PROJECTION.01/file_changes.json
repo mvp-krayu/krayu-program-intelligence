@@ -1,0 +1,35 @@
+{
+  "stream_id": "PI.LENS.BOARDROOM-GOVERNED-NARRATIVE-PROJECTION.01",
+  "baseline_commit": "fe932dc",
+  "files": [
+    {
+      "path": "app/execlens-demo/lib/lens-v2/generic/GoverningNarrativeComposer.js",
+      "action": "CREATED",
+      "purpose": "Synthesis-native composition interface with deterministic bounded provider. Defines composition contract for governed narrative, derives narrative anchors from hero moments, composes 5-position editorial arc (OPENING, REVELATION, DEPTH, AUTHORITY, QUALIFICATION)."
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/generic/GenericSemanticPayloadResolver.js",
+      "action": "MODIFIED",
+      "purpose": "Integrated GoverningNarrativeComposer. Added governed_narrative field to fullReport output. S1 SVG policy gating (svg_policy capped to REGISTRY at S1). S1 evidence_blocks suppression (triadic roles meaningless without semantic topology)."
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/manifests/netbox.run_github_netbox_20260520_134600.json",
+      "action": "MODIFIED",
+      "purpose": "Added spine_objects path to optional artifacts for hero moment and evidence object loading."
+    },
+    {
+      "path": "app/execlens-demo/components/lens-v2/zones/IntelligenceField.jsx",
+      "action": "MODIFIED",
+      "purpose": "Added NarrativeEnvelope (selectable sections with arc chips), BoardroomStructuralPosture fallback. Three-panel cognitive layout: CENTER narrative sections with click-to-inspect, LEFT evidence context panel (anchors, source artifacts, authority envelope per selected section), RIGHT operational continuation (qualification, structural substrate, composition provenance, selected section context). BoardroomDecisionSurface branches on S1 (narrative-first) vs S2+ (existing cockpit preserved). S1 SVG, triadic roles, pressure flow suppressed. selectedNarrativeArc state propagated through IntelligenceField → RepresentationField → BoardroomDecisionSurface → NarrativeEnvelope + ExecutiveInterpretation + SupportRail."
+    },
+    {
+      "path": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "action": "MODIFIED",
+      "purpose": "Added narrative envelope CSS: selectable paragraph styling (border-left accent, hover/selected states), arc claim chips (PROFILE/DISCOVERY/COUPLING/AUTHORITY/GATE colors), anchor count display. LEFT panel evidence anchor display styles. RIGHT panel S1 blocks (qualification state, KV lists, maturity indicator, arc context). Fixed density/boardroom mode toggle mutual exclusion (clicking density radio now clears boardroomMode)."
+    }
+  ],
+  "total_files": 5,
+  "created": 1,
+  "modified": 4,
+  "deleted": 0
+}

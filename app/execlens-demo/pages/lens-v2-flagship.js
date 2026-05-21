@@ -408,7 +408,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         <AuthorityBand
           densityClass={densityClass}
           boardroomMode={boardroomMode}
-          onDensityChange={setDensityClass}
+          onDensityChange={v => { setDensityClass(v); setBoardroomMode(false) }}
           onBoardroomToggle={() => setBoardroomMode(p => !p)}
         />
 
@@ -2073,6 +2073,302 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           padding-top: 12px;
           border-top: 1px solid #12151f;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* ── Boardroom Narrative Envelope ────────────────────────────────── */
+        .rep-field--narrative {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+          text-align: left;
+        }
+        .rep-field--narrative .rep-mode-tag {
+          border-bottom: 1px solid #1e2330;
+          text-align: left;
+        }
+        .narrative-envelope {
+          padding: 28px 0 20px;
+        }
+        .narrative-envelope--posture {
+          padding: 24px 0 16px;
+        }
+        .narrative-header {
+          display: flex;
+          align-items: baseline;
+          gap: 20px;
+          margin-bottom: 28px;
+          padding-bottom: 16px;
+          border-bottom: 1px solid #1e2330;
+        }
+        .narrative-header-state {
+          display: flex;
+          align-items: baseline;
+          gap: 10px;
+        }
+        .narrative-header-s-state {
+          font-size: 28px;
+          font-weight: 700;
+          color: #4a9eff;
+          letter-spacing: 0.06em;
+          font-family: 'Courier New', Courier, monospace;
+        }
+        .narrative-header-label {
+          font-size: 10px;
+          text-transform: uppercase;
+          letter-spacing: 0.16em;
+          color: #5e6d8a;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .narrative-header-specimen {
+          font-size: 12px;
+          color: #7a8aaa;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          margin-left: auto;
+        }
+        .narrative-body {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+        }
+        .narrative-paragraph {
+          padding: 16px 14px 20px;
+          border-bottom: 1px solid rgba(30,35,48,0.5);
+          cursor: pointer;
+          border-left: 3px solid transparent;
+          transition: border-color 0.15s ease, background 0.15s ease;
+          border-radius: 2px;
+        }
+        .narrative-paragraph:hover {
+          background: rgba(74,158,255,0.03);
+          border-left-color: rgba(74,158,255,0.2);
+        }
+        .narrative-paragraph--selected {
+          background: rgba(74,158,255,0.06);
+          border-left-color: #4a9eff;
+        }
+        .narrative-paragraph--selected:hover {
+          background: rgba(74,158,255,0.08);
+        }
+        .narrative-paragraph:last-child {
+          border-bottom: none;
+        }
+        .narrative-paragraph-header {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 10px;
+        }
+        .narrative-arc-chip {
+          font-size: 9px;
+          font-weight: 600;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          padding: 2px 8px;
+          border: 1px solid;
+          border-radius: 3px;
+          font-family: 'Courier New', Courier, monospace;
+          background: transparent;
+        }
+        .narrative-anchor-count {
+          font-size: 9px;
+          color: #4a5570;
+          font-family: 'Courier New', Courier, monospace;
+          letter-spacing: 0.06em;
+        }
+        .narrative-paragraph-text {
+          font-size: 14.5px;
+          line-height: 1.72;
+          color: #b8c4e0;
+          font-family: 'Georgia', 'Times New Roman', serif;
+          letter-spacing: 0.008em;
+        }
+        .narrative-paragraph[data-arc="OPENING"] .narrative-paragraph-text {
+          color: #ccd6f6;
+        }
+        .narrative-paragraph[data-arc="REVELATION"] .narrative-paragraph-text {
+          color: #ccd6f6;
+        }
+        .narrative-paragraph[data-arc="QUALIFICATION"] .narrative-paragraph-text {
+          color: #8a96b2;
+          font-size: 13.5px;
+        }
+
+        /* ── Evidence Anchor Display (LEFT panel) ────────────────────────── */
+        .intel-interp--narrative-evidence .interp-section-label {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .intel-interp--narrative-evidence .interp-synthesis {
+          font-size: 12px;
+          color: #a0aac4;
+          line-height: 1.65;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .intel-interp--narrative-evidence .interp-synthesis-meta {
+          font-size: 10px;
+          color: #8a96b2;
+        }
+        .intel-interp--narrative-evidence .interp-block--evidence-anchor {
+          border-left: 2px solid rgba(74,158,255,0.3);
+          padding-left: 10px;
+        }
+        .intel-interp--narrative-evidence .interp-synthesis--basis {
+          font-size: 12px;
+          color: #a0aac4;
+          line-height: 1.65;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .intel-interp--narrative-evidence .interp-synthesis--prompt {
+          font-size: 12px;
+          color: #5e6d8a;
+          font-style: italic;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .interp-evidence-object {
+          padding: 6px 0;
+          border-bottom: 1px solid rgba(30,35,48,0.4);
+        }
+        .interp-evidence-object:last-child {
+          border-bottom: none;
+        }
+        .interp-evidence-object-phase {
+          font-size: 9px;
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          color: #4a9eff;
+          font-family: 'Courier New', Courier, monospace;
+          margin-bottom: 2px;
+        }
+        .interp-evidence-object-path {
+          font-size: 10px;
+          color: #7a8aaa;
+          font-family: 'Courier New', Courier, monospace;
+          word-break: break-all;
+        }
+        .interp-evidence-object-class {
+          font-size: 9px;
+          color: #5e6d8a;
+          margin-top: 2px;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .narrative-proof-anchor-id {
+          font-size: 10px;
+          color: #4a9eff;
+          font-family: 'Courier New', Courier, monospace;
+          letter-spacing: 0.06em;
+        }
+        .narrative-proof-anchor-class {
+          font-size: 9px;
+          text-transform: uppercase;
+          letter-spacing: 0.14em;
+          color: #5e6d8a;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .narrative-proof-anchor-refs {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          margin-top: 4px;
+        }
+        .narrative-proof-anchor-ref {
+          font-size: 9px;
+          color: #4a5570;
+          font-family: 'Courier New', Courier, monospace;
+          background: rgba(74,158,255,0.06);
+          padding: 1px 6px;
+          border-radius: 3px;
+          border: 1px solid rgba(74,158,255,0.1);
+        }
+
+        /* ── Support Rail — Boardroom S1 ─────────────────────────────────── */
+        .support-qualification-state {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          margin-bottom: 4px;
+        }
+        .support-qualification-s {
+          font-size: 16px;
+          font-weight: 700;
+          color: #4a9eff;
+          font-family: 'Courier New', Courier, monospace;
+        }
+        .support-qualification-gate {
+          font-size: 10px;
+          color: #5e6d8a;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+        }
+        .support-qualification-detail {
+          font-size: 11px;
+          color: #5e6d8a;
+          line-height: 1.5;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .support-kv-list {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .support-kv {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          font-size: 11px;
+        }
+        .support-kv-key {
+          color: #5e6d8a;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .support-kv-val {
+          color: #8a96b2;
+          font-family: 'Courier New', Courier, monospace;
+          font-size: 11px;
+        }
+        .support-kv-maturity {
+          font-size: 9px;
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          color: #4a5570;
+          margin-top: 6px;
+          font-family: 'Courier New', Courier, monospace;
+        }
+        .support-arc-name {
+          font-size: 12px;
+          color: #ccd6f6;
+          font-weight: 600;
+          margin-bottom: 4px;
+        }
+        .support-arc-hint {
+          font-size: 10px;
+          color: #4a5570;
+          font-style: italic;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .narrative-provenance {
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 6px;
+          padding-top: 16px;
+          margin-top: 8px;
+          border-top: 1px solid #1e2330;
+          font-size: 10px;
+          font-family: 'Courier New', Courier, monospace;
+          color: #4a5570;
+          letter-spacing: 0.04em;
+        }
+        .narrative-provenance-sep {
+          color: #2a2f40;
+        }
+        .narrative-provenance-method {
+          color: #5e6d8a;
+        }
+        .narrative-provenance-contract {
+          color: #4a9eff;
+          opacity: 0.6;
         }
 
         /* ── Qualifier Mandate ───────────────────────────────────────────── */

@@ -33,6 +33,7 @@ const { validateRenderingMetadata } = require('../RenderingMetadataSchema');
 const { governanceToLegacy } = require('../QClassResolver');
 const { PAYLOAD_VERSION } = require('./LensSemanticPayloadSchema');
 const { compileCorrespondence } = require('../reconciliation/ReconciliationCorrespondenceCompiler');
+const { composeGoverningNarrative } = require('./GoverningNarrativeComposer');
 
 function deriveStructuralEnrichment(codeGraphData, centralityData, canonicalTopology) {
   const enrichment = { available: false };
@@ -107,7 +108,9 @@ function deriveStructuralEnrichment(codeGraphData, centralityData, canonicalTopo
 }
 
 function classifyTopologyMaturity(manifest, structuralEnrichment, dpsigSummary, semanticTopologyData) {
-  if (semanticTopologyData && manifest.qualification_level !== 'S1') {
+  const isS1 = manifest.qualification_level === 'S1';
+
+  if (semanticTopologyData && !isS1) {
     return {
       level: 'SEMANTIC_PROJECTION',
       label: 'Semantic Projection',
@@ -118,7 +121,7 @@ function classifyTopologyMaturity(manifest, structuralEnrichment, dpsigSummary, 
 
   const hasActivatedSignals = dpsigSummary && dpsigSummary.ok &&
     (dpsigSummary.signals || []).some(s => s.activation_state && s.activation_state !== 'NOMINAL' && s.activation_state !== 'CLUSTER_BALANCED');
-  if (hasActivatedSignals) {
+  if (hasActivatedSignals && !isS1) {
     return {
       level: 'PRESSURE_ENRICHED',
       label: 'Pressure Enriched',
@@ -135,7 +138,7 @@ function classifyTopologyMaturity(manifest, structuralEnrichment, dpsigSummary, 
       level: 'AUTHORITY_ENRICHED',
       label: 'Authority Enriched',
       description: 'Code graph + centrality decomposition active — structural authority visible.',
-      svg_policy: 'ENRICHED',
+      svg_policy: isS1 ? 'REGISTRY' : 'ENRICHED',
     };
   }
 
@@ -145,7 +148,7 @@ function classifyTopologyMaturity(manifest, structuralEnrichment, dpsigSummary, 
       level: 'GRAPH_ENRICHED',
       label: 'Graph Enriched',
       description: 'Code graph resolved — import/inheritance edges available, centrality pending.',
-      svg_policy: 'COMPACT',
+      svg_policy: isS1 ? 'REGISTRY' : 'COMPACT',
     };
   }
 
@@ -446,22 +449,26 @@ function resolveSemanticPayload(manifest) {
   }
 
   // Construct evidence_blocks via triadic projection from canonical topology.
-  const originDom = canonicalTopology.clusters && canonicalTopology.clusters.find((c) =>
-    (dpsigSummary.normalization_basis || {}).max_cluster_id === c.cluster_id
-  );
-  const passthroughDomId = manifest.passthrough_dom || null;
-  const passthroughDom = passthroughDomId && canonicalTopology.clusters &&
-    canonicalTopology.clusters.find((c) => c.cluster_id === passthroughDomId);
-  const receiverDom = canonicalTopology.clusters && canonicalTopology.clusters.find(
-    (c) => c.cluster_id !== ((dpsigSummary.normalization_basis || {}).max_cluster_id) &&
-           (!passthroughDomId || c.cluster_id !== passthroughDomId)
-  );
-
-  const evidenceBlocks = [
-    clusterToEvidenceBlock(originDom, 'ORIGIN', resolveCanonicalCluster(originDom, crosswalkIndex), zoneAnchorBusinessLabel),
-    clusterToEvidenceBlock(passthroughDom, 'PASS_THROUGH', resolveCanonicalCluster(passthroughDom, crosswalkIndex), zoneAnchorBusinessLabel),
-    clusterToEvidenceBlock(receiverDom, 'RECEIVER', resolveCanonicalCluster(receiverDom, crosswalkIndex), zoneAnchorBusinessLabel),
-  ].filter(Boolean);
+  // S1: triadic roles (ORIGIN/PASS_THROUGH/RECEIVER) are meaningless without semantic
+  // topology — they produce arbitrary cluster picks like ".claude" as RECEIVER.
+  // Suppress entirely at S1; only produce at S2+ with semantic backing.
+  const evidenceBlocks = isS1 ? [] : (() => {
+    const originDom = canonicalTopology.clusters && canonicalTopology.clusters.find((c) =>
+      (dpsigSummary.normalization_basis || {}).max_cluster_id === c.cluster_id
+    );
+    const passthroughDomId = manifest.passthrough_dom || null;
+    const passthroughDom = passthroughDomId && canonicalTopology.clusters &&
+      canonicalTopology.clusters.find((c) => c.cluster_id === passthroughDomId);
+    const receiverDom = canonicalTopology.clusters && canonicalTopology.clusters.find(
+      (c) => c.cluster_id !== ((dpsigSummary.normalization_basis || {}).max_cluster_id) &&
+             (!passthroughDomId || c.cluster_id !== passthroughDomId)
+    );
+    return [
+      clusterToEvidenceBlock(originDom, 'ORIGIN', resolveCanonicalCluster(originDom, crosswalkIndex), zoneAnchorBusinessLabel),
+      clusterToEvidenceBlock(passthroughDom, 'PASS_THROUGH', resolveCanonicalCluster(passthroughDom, crosswalkIndex), zoneAnchorBusinessLabel),
+      clusterToEvidenceBlock(receiverDom, 'RECEIVER', resolveCanonicalCluster(receiverDom, crosswalkIndex), zoneAnchorBusinessLabel),
+    ].filter(Boolean);
+  })();
 
   // Narrative honestly composed from substrate.
   // S1 structural-only: structural framing. S2+: governance-true Q-class language.
@@ -803,6 +810,19 @@ function resolveSemanticPayload(manifest) {
       };
     })(),
     structural_enrichment: structuralEnrichment,
+    governed_narrative: (() => {
+      const spineSource = sources.spine_objects;
+      if (!spineSource || !spineSource.ok || !spineSource.data) {
+        return { available: false, reason: 'SPINE_DATA_ABSENT' };
+      }
+      return composeGoverningNarrative(
+        spineSource.data,
+        structuralEnrichment,
+        canonicalTopology,
+        manifest.qualification_level || 'S1',
+        manifest
+      );
+    })(),
     topology_maturity: topologyMaturity,
     interaction_registry: { interactions: [] },
     module_registry: {
