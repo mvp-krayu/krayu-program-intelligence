@@ -1,0 +1,72 @@
+{
+  "stream_id": "PI.PIPELINE.GENERALIZED-EVIDENCE-INTAKE.01",
+  "validation_timestamp": "2026-05-21T10:00:00.000Z",
+  "checks": [
+    {
+      "name": "PROJECT_TYPE_DETECTION_STACKSTORM",
+      "status": "PASS",
+      "detail": "detect_project_type() returns PYTHON_PACKAGE for StackStorm (8 setup.py files detected across subdirectories)"
+    },
+    {
+      "name": "PROJECT_TYPE_DETECTION_NETBOX",
+      "status": "PASS",
+      "detail": "detect_project_type() returns DJANGO for NetBox (apps.py found in domain subdirectories under netbox/ source root)"
+    },
+    {
+      "name": "SETUP_PY_EXTRACTOR",
+      "status": "PASS",
+      "detail": "8 SETUP_PY anchors extracted from 8 st2* packages. Package names, descriptions, entry_points, and scripts captured correctly"
+    },
+    {
+      "name": "PACKAGE_README_EXTRACTOR",
+      "status": "PASS",
+      "detail": "3 PACKAGE_README anchors: st2client/README.rst, contrib/README.md, pants-plugins/README.md. Headings and summaries extracted"
+    },
+    {
+      "name": "CROSS_PACKAGE_DEP_EXTRACTOR",
+      "status": "PASS",
+      "detail": "8 CROSS_PACKAGE_DEP anchors. st2common internal dep (st2-rbac-backend) correctly flagged as external_repo. External dep counts accurate"
+    },
+    {
+      "name": "REPO_README_MAPPING",
+      "status": "PASS",
+      "detail": "3 REPO_README_MAP anchors: st2actions mapped via inline bold definition (Actions), contrib and tools mapped via section content"
+    },
+    {
+      "name": "STACKSTORM_TOTAL_ANCHORS",
+      "status": "PASS",
+      "detail": "22 total anchors (from 0). 11 candidates at EVIDENCE_ATTACHED, 4 remain PROPOSED (structurally correct — non-package dirs)"
+    },
+    {
+      "name": "NETBOX_REGRESSION",
+      "status": "PASS",
+      "detail": "NetBox evidence intake produces identical 66 anchors. Django extractors unaffected by generalization"
+    },
+    {
+      "name": "FORCE_FLAG_EVIDENCE_INTAKE",
+      "status": "PASS",
+      "detail": "--force flag overwrites existing evidence_anchors.json. CREATE_ONLY preserved as default behavior"
+    },
+    {
+      "name": "FORCE_FLAG_RECONCILIATION_SEEDER",
+      "status": "PASS",
+      "detail": "--force flag overwrites existing reconciliation_state.json, reconciliation_obligations.json, reconciliation_event_log.jsonl"
+    },
+    {
+      "name": "RECONCILIATION_RESEEDED",
+      "status": "PASS",
+      "detail": "StackStorm reconciliation state re-seeded: 11 EVIDENCE_ATTACHED, 4 PROPOSED, 13 obligations (down from 24), promotion gate BLOCKED"
+    },
+    {
+      "name": "SQO_COCKPIT_RENDERING",
+      "status": "PASS",
+      "detail": "CEU reconciliation page renders updated StackStorm state: all 15 candidates, 13 obligations, event timeline, promotion gate status"
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 12,
+    "pass_with_gap": 0,
+    "fail": 0
+  }
+}

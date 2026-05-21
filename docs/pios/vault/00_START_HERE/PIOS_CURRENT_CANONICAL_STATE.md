@@ -1,6 +1,6 @@
 # PiOS Current Canonical State
 
-> **This page reflects the system's canonical state as of 2026-05-20.**
+> **This page reflects the system's canonical state as of 2026-05-21.**
 
 ---
 
@@ -149,7 +149,7 @@ DETERMINISTIC → INVESTIGATIVE → INTERPRETIVE
 | FastAPI | S1_ONBOARDING_REQUIRED | PARTIAL (SQO cockpit, no LENS v2) | 15 SQO v1.json artifacts |
 | pallets-flask | S1 (permanent insufficiency acknowledged) | AUTHORITY WORKFLOW OPERATIONAL, posture-driven overview, semantic intake (Layer B) | PATH A structural onboarding complete, 15 clusters, 287 nodes, candidate CSR (L3), full client registration (client.yaml + source_manifest.json) |
 | NetBox | S1 CEU RECONCILED (OPERATOR_VALIDATED) | SQO: CEU Reconciliation operational, promotion gate OPEN; LENS: LIVE_BINDING_FAILED | First live S2 candidate. PATH A complete: 2,540 nodes, 3,614 IMPORTS, 1,089 ranked files. 13 CEU candidates (12 confirmed, 1 merged), 66 evidence anchors. OPERATOR_VALIDATED. Semantic compiler not yet active. |
-| StackStorm | S0 STRUCTURAL ONLY | SQO: CEU Reconciliation seeded (15 PROPOSED, 0 evidence); LENS: structural topology | Second specimen. PATH A complete: 1,804 nodes, 3,087 IMPORTS, 920 ranked files. Evidence intake blocked by Django-specific extractors (LRNE-0001). |
+| StackStorm | S0 STRUCTURAL ONLY | SQO: CEU Reconciliation seeded (11 EVIDENCE_ATTACHED, 4 PROPOSED, 13 obligations); LENS: structural topology | Second specimen. PATH A complete: 1,804 nodes, 3,087 IMPORTS, 920 ranked files. 22 evidence anchors (SETUP_PY, CROSS_PACKAGE_DEP, PACKAGE_README, REPO_README_MAP). LRNE-0001 resolved. |
 
 ## Current Trustworthiness Model
 
@@ -529,6 +529,8 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.PATHA.LIVE-S2-CANDIDATE-SELECTION.01 | G1 | Live S2 candidate selection — NetBox (netbox-community/netbox) selected as first canonical live S2 candidate (63/80), Nautobot as backup (50/80) | COMPLETE |
 | PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01 | G1 | First canonical Program Intelligence onboarding — NetBox through PATH A substrate, pipeline maturation (source root + import resolution fixes), 11 structural surprises, demonstration foundation capture | COMPLETE |
 | PI.PIOS.PROGRAM-INTELLIGENCE-EVOLUTION-MODEL.01 | G1 | Program Intelligence Evolution Model — spine object contracts, accumulation doctrine, activation sequence | COMPLETE |
+| PI.SQO.CEU-RECONCILIATION-WORKFLOW.01 | G1 | CEU reconciliation workflow — 10-action SQO workflow, review_mode governance, bidirectional obligation lineage, learning event hook model | COMPLETE |
+| PI.PIPELINE.GENERALIZED-EVIDENCE-INTAKE.01 | G1 | Generalized evidence intake — project type detection (DJANGO/PYTHON_PACKAGE), 4 generic extractors, StackStorm 0→22 anchors, LRNE-0001 resolved | COMPLETE |
 
 ## SQO Operator Authority Workflow
 

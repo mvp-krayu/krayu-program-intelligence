@@ -1,0 +1,50 @@
+{
+  "stream_id": "PI.PIPELINE.GENERALIZED-EVIDENCE-INTAKE.01",
+  "total_files": 6,
+  "created": 0,
+  "modified": 6,
+  "files": [
+    {
+      "path": "scripts/pios/ceu_evidence_intake.py",
+      "action": "MODIFIED",
+      "description": "Added project type detection (DJANGO/PYTHON_PACKAGE/UNKNOWN), 4 generic Python extractors (extract_setup_py, extract_package_readme, extract_cross_package_deps, extract_repo_readme_mapping), --force flag, project-type-aware gap detection, extractor orchestration by project type",
+      "lines_added": 359,
+      "lines_removed": 93
+    },
+    {
+      "path": "scripts/pios/ceu_reconciliation_seeder.py",
+      "action": "MODIFIED",
+      "description": "Added --force flag to overwrite existing reconciliation artifacts",
+      "lines_added": 8,
+      "lines_removed": 4
+    },
+    {
+      "path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/ceu/evidence_anchors.json",
+      "action": "MODIFIED",
+      "description": "Overwritten with 22 evidence anchors (from 0). 4 evidence types: SETUP_PY (8), CROSS_PACKAGE_DEP (8), PACKAGE_README (3), REPO_README_MAP (3)",
+      "lines_added": 467,
+      "lines_removed": 0
+    },
+    {
+      "path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/ceu/reconciliation_state.json",
+      "action": "MODIFIED",
+      "description": "Re-seeded with evidence-aware state: 11 EVIDENCE_ATTACHED, 4 PROPOSED, 13 obligations, promotion gate BLOCKED, review_mode UNCLASSIFIED",
+      "lines_added": 109,
+      "lines_removed": 93
+    },
+    {
+      "path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/ceu/reconciliation_obligations.json",
+      "action": "MODIFIED",
+      "description": "Re-seeded with 13 obligations (4 MERGE_REVIEW, 4 EVIDENCE_GAP, 5 AUTHORITY_REVIEW) — down from 24",
+      "lines_added": 127,
+      "lines_removed": 0
+    },
+    {
+      "path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/ceu/reconciliation_event_log.jsonl",
+      "action": "MODIFIED",
+      "description": "Re-seeded with 14 seed events (1 initialization + 13 obligation_created)",
+      "lines_added": 14,
+      "lines_removed": 0
+    }
+  ]
+}
