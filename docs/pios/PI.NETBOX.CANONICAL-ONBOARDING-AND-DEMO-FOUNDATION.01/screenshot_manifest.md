@@ -78,6 +78,48 @@
 
 **What it demonstrates:** Second specimen renders identically to the first through the same generic pipeline. No client-specific code branching. Topology maturity promoted from GRAPH_ENRICHED to AUTHORITY_ENRICHED after centrality gap was filled.
 
+## Post-CEU Reconciliation Screenshots (Executive Demonstration Foundation)
+
+### 9. SQO V1 — Post-CEU Overview
+
+**File:** `screenshots/netbox-sqo-overview-post-ceu.png`
+
+**Content:** SQO cockpit V1 overview showing S1 Qualification Pending posture after CEU reconciliation. Runtime capabilities: Structural Topology, Authority Workflow, Qualification Blockers, Event Lineage. Available section: Authority.
+
+**What it demonstrates:** Post-CEU reconciliation, the SQO cockpit correctly reflects the operational state with detected runtime capabilities. The CEU Reconciliation section is accessible in the sidebar navigation.
+
+### 10. CEU Reconciliation — Complete (OPERATOR_VALIDATED)
+
+**File:** `screenshots/netbox-ceu-reconciliation-complete.png`
+
+**Content:** Full CEU reconciliation page: Operator Validated status, 12 confirmed candidates, 1 merged (CEU-ACCOUNT → CEU-USERS), 0 rejected, 0 pending. 4 obligations resolved. Full event timeline (34+ events) showing reconciliation progression from initialization through evidence attachment, reconciliation, confirmation, merge, obligation resolution, and governance correction (SYSTEM_TEST → OPERATOR_VALIDATED). Promotion gate OPEN.
+
+**What it demonstrates:** End-to-end governed reconciliation workflow: structure proposes → evidence attaches → operator validates → gate opens. Non-automatable boundary enforced (governance correction visible in timeline). This is the strongest commercial proof point.
+
+### 11. LENS v2 — Current Structural Intelligence
+
+**File:** `screenshots/netbox-lens-v2-current.png`
+
+**Content:** LENS v2 full structural intelligence view. "INTELLIGENCE BLOCKED" disclosure banner. Structural topology with 24 clusters, code graph metrics (3,614 IMPORTS, 1,089 ranked files). Interactive SVG topology graph with domain rings. Structural Spines Panel with centrality rankings. Dual authority detection badges.
+
+**What it demonstrates:** Structural intelligence surface rendering at S1 — honest "INTELLIGENCE BLOCKED" disclosure, full structural depth available, no semantic overclaim.
+
+### 12. V2 Cockpit — Operator View
+
+**File:** `screenshots/netbox-v2-operator-cockpit.png`
+
+**Content:** V2 cockpit after Operator role selection. S1 Qualification Pending with 7 qualification blockers. 12 available actions (grouped by Review, Promotion, Structural, Escalation, Insufficiency). 6-step qualification progression rail. Evidence state inventory. Blocker escalation guidance.
+
+**What it demonstrates:** Workflow-driven operational cockpit: posture dominates, blockers are surfaced with escalation requirements, all 12 actions visible with availability reasons. The operator knows exactly where they are and what they can do.
+
+### 13. V2 Cockpit — Role Declaration Gate
+
+**File:** `screenshots/netbox-v2-cockpit-current.png`
+
+**Content:** V2 role declaration screen with 5 RBAC roles and operator identifier input. Each role shows authority scope.
+
+**What it demonstrates:** Declarative RBAC gate — session-level role selection before operational access.
+
 ## Governance
 
 All screenshots are governed evidence captures of actual runtime behavior. No mockups. No synthetic data. No post-processing.
