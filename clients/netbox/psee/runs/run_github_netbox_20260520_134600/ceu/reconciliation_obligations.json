@@ -1,0 +1,37 @@
+{
+  "contract_id": "PI.SQO.CEU-RECONCILIATION-WORKFLOW.01",
+  "client_id": "netbox",
+  "run_id": "run_github_netbox_20260520_134600",
+  "total_obligations": 3,
+  "resolved": 0,
+  "unresolved": 3,
+  "obligations": [
+    {
+      "obligation_id": "OBL-CEU-0001",
+      "ceu_id": "CEU-ACCOUNT",
+      "obligation_type": "MERGE_REVIEW",
+      "description": "Merge candidate CEU-ACCOUNT (account) has 5 files \u2014 review whether to merge into a parent domain",
+      "required_evidence": "Structural coupling analysis and domain intent documentation",
+      "status": "UNRESOLVED",
+      "created_at": "2026-05-21T07:15:33.012454+00:00"
+    },
+    {
+      "obligation_id": "OBL-CEU-0002",
+      "ceu_id": "CEU-ACCOUNT",
+      "obligation_type": "EVIDENCE_GAP",
+      "description": "No documentation evidence found for CEU-ACCOUNT (account) \u2014 requires manual evidence attachment or rejection",
+      "required_evidence": "Documentation, README, or architectural description for this domain",
+      "status": "UNRESOLVED",
+      "created_at": "2026-05-21T07:15:33.012457+00:00"
+    },
+    {
+      "obligation_id": "OBL-CEU-0003",
+      "ceu_id": "CEU-UTILITIES",
+      "obligation_type": "EVIDENCE_GAP",
+      "description": "No documentation evidence found for CEU-UTILITIES (utilities) \u2014 requires manual evidence attachment or rejection",
+      "required_evidence": "Documentation, README, or architectural description for this domain",
+      "status": "UNRESOLVED",
+      "created_at": "2026-05-21T07:15:33.012462+00:00"
+    }
+  ]
+}

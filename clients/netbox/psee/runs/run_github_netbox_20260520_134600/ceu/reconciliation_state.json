@@ -1,0 +1,271 @@
+{
+  "contract_id": "PI.SQO.CEU-RECONCILIATION-WORKFLOW.01",
+  "client_id": "netbox",
+  "run_id": "run_github_netbox_20260520_134600",
+  "seeded_at": "2026-05-21T07:15:33.012150+00:00",
+  "reconciliation_status": "INITIALIZED",
+  "summary": {
+    "total": 13,
+    "proposed": 2,
+    "evidence_attached": 11,
+    "reconciled": 0,
+    "confirmed": 0,
+    "rejected": 0,
+    "merged": 0,
+    "split": 0,
+    "reclassified": 0,
+    "pending": 13
+  },
+  "candidates": {
+    "CEU-ACCOUNT": {
+      "domain": "account",
+      "state": "PROPOSED",
+      "tier": "OPERATIONAL_DOMAIN",
+      "file_count": 5,
+      "evidence_count": 0,
+      "evidence_types": {},
+      "merge_candidate": true,
+      "authority_pattern": "IMPORT_DOMINANT",
+      "reconciliation_finding": null,
+      "last_action": null,
+      "last_actor": null,
+      "last_action_at": null
+    },
+    "CEU-CIRCUITS": {
+      "domain": "circuits",
+      "state": "EVIDENCE_ATTACHED",
+      "tier": "CONSUMER",
+      "file_count": 63,
+      "evidence_count": 5,
+      "evidence_types": {
+        "APP_CONFIG": 1,
+        "MODEL_INVENTORY": 1,
+        "URL_NAMESPACE": 1,
+        "OFFICIAL_DOCS": 1,
+        "MODEL_DOCS": 1
+      },
+      "merge_candidate": false,
+      "authority_pattern": "IMPORT_DOMINANT",
+      "reconciliation_finding": null,
+      "last_action": null,
+      "last_actor": null,
+      "last_action_at": null
+    },
+    "CEU-CORE": {
+      "domain": "core",
+      "state": "EVIDENCE_ATTACHED",
+      "tier": "OPERATIONAL_DOMAIN",
+      "file_count": 96,
+      "evidence_count": 7,
+      "evidence_types": {
+        "APP_CONFIG": 1,
+        "MODEL_INVENTORY": 1,
+        "URL_NAMESPACE": 1,
+        "MODEL_DOCS": 1,
+        "OFFICIAL_DOCS": 3
+      },
+      "merge_candidate": false,
+      "authority_pattern": "IMPORT_DOMINANT",
+      "reconciliation_finding": null,
+      "last_action": null,
+      "last_actor": null,
+      "last_action_at": null
+    },
+    "CEU-DCIM": {
+      "domain": "dcim",
+      "state": "EVIDENCE_ATTACHED",
+      "tier": "OPERATIONAL_DOMAIN",
+      "file_count": 156,
+      "evidence_count": 7,
+      "evidence_types": {
+        "APP_CONFIG": 1,
+        "MODEL_INVENTORY": 1,
+        "URL_NAMESPACE": 1,
+        "MODEL_DOCS": 1,
+        "OFFICIAL_DOCS": 3
+      },
+      "merge_candidate": false,
+      "authority_pattern": "IMPORT_DOMINANT",
+      "reconciliation_finding": null,
+      "last_action": null,
+      "last_actor": null,
+      "last_action_at": null
+    },
+    "CEU-EXTRAS": {
+      "domain": "extras",
+      "state": "EVIDENCE_ATTACHED",
+      "tier": "CONSUMER",
+      "file_count": 151,
+      "evidence_count": 11,
+      "evidence_types": {
+        "APP_CONFIG": 1,
+        "MODEL_INVENTORY": 1,
+        "URL_NAMESPACE": 1,
+        "MODEL_DOCS": 1,
+        "OFFICIAL_DOCS": 7
+      },
+      "merge_candidate": false,
+      "authority_pattern": "IMPORT_DOMINANT",
+      "reconciliation_finding": null,
+      "last_action": null,
+      "last_actor": null,
+      "last_action_at": null
+    },
+    "CEU-IPAM": {
+      "domain": "ipam",
+      "state": "EVIDENCE_ATTACHED",
+      "tier": "OPERATIONAL_DOMAIN",
+      "file_count": 94,
+      "evidence_count": 6,
+      "evidence_types": {
+        "APP_CONFIG": 1,
+        "MODEL_INVENTORY": 1,
+        "URL_NAMESPACE": 1,
+        "OFFICIAL_DOCS": 2,
+        "MODEL_DOCS": 1
+      },
+      "merge_candidate": false,
+      "authority_pattern": "IMPORT_DOMINANT",
+      "reconciliation_finding": null,
+      "last_action": null,
+      "last_actor": null,
+      "last_action_at": null
+    },
+    "CEU-NETBOX": {
+      "domain": "netbox",
+      "state": "EVIDENCE_ATTACHED",
+      "tier": "FOUNDATION",
+      "file_count": 136,
+      "evidence_count": 1,
+      "evidence_types": {
+        "MODEL_INVENTORY": 1
+      },
+      "merge_candidate": false,
+      "authority_pattern": "INHERITANCE_DOMINANT",
+      "reconciliation_finding": null,
+      "last_action": null,
+      "last_actor": null,
+      "last_action_at": null
+    },
+    "CEU-TENANCY": {
+      "domain": "tenancy",
+      "state": "EVIDENCE_ATTACHED",
+      "tier": "OPERATIONAL_DOMAIN",
+      "file_count": 56,
+      "evidence_count": 7,
+      "evidence_types": {
+        "APP_CONFIG": 1,
+        "MODEL_INVENTORY": 1,
+        "URL_NAMESPACE": 1,
+        "OFFICIAL_DOCS": 3,
+        "MODEL_DOCS": 1
+      },
+      "merge_candidate": false,
+      "authority_pattern": "IMPORT_DOMINANT",
+      "reconciliation_finding": null,
+      "last_action": null,
+      "last_actor": null,
+      "last_action_at": null
+    },
+    "CEU-USERS": {
+      "domain": "users",
+      "state": "EVIDENCE_ATTACHED",
+      "tier": "OPERATIONAL_DOMAIN",
+      "file_count": 60,
+      "evidence_count": 6,
+      "evidence_types": {
+        "APP_CONFIG": 1,
+        "MODEL_INVENTORY": 1,
+        "URL_NAMESPACE": 1,
+        "MODEL_DOCS": 1,
+        "OFFICIAL_DOCS": 2
+      },
+      "merge_candidate": false,
+      "authority_pattern": "DUAL_AUTHORITY",
+      "reconciliation_finding": null,
+      "last_action": null,
+      "last_actor": null,
+      "last_action_at": null
+    },
+    "CEU-UTILITIES": {
+      "domain": "utilities",
+      "state": "PROPOSED",
+      "tier": "FOUNDATION",
+      "file_count": 105,
+      "evidence_count": 0,
+      "evidence_types": {},
+      "merge_candidate": false,
+      "authority_pattern": "INHERITANCE_DOMINANT",
+      "reconciliation_finding": null,
+      "last_action": null,
+      "last_actor": null,
+      "last_action_at": null
+    },
+    "CEU-VIRTUALIZATION": {
+      "domain": "virtualization",
+      "state": "EVIDENCE_ATTACHED",
+      "tier": "CONSUMER",
+      "file_count": 65,
+      "evidence_count": 5,
+      "evidence_types": {
+        "APP_CONFIG": 1,
+        "MODEL_INVENTORY": 1,
+        "URL_NAMESPACE": 1,
+        "OFFICIAL_DOCS": 1,
+        "MODEL_DOCS": 1
+      },
+      "merge_candidate": false,
+      "authority_pattern": "IMPORT_DOMINANT",
+      "reconciliation_finding": null,
+      "last_action": null,
+      "last_actor": null,
+      "last_action_at": null
+    },
+    "CEU-VPN": {
+      "domain": "vpn",
+      "state": "EVIDENCE_ATTACHED",
+      "tier": "CONSUMER",
+      "file_count": 51,
+      "evidence_count": 6,
+      "evidence_types": {
+        "APP_CONFIG": 1,
+        "MODEL_INVENTORY": 1,
+        "URL_NAMESPACE": 1,
+        "OFFICIAL_DOCS": 2,
+        "MODEL_DOCS": 1
+      },
+      "merge_candidate": false,
+      "authority_pattern": "IMPORT_DOMINANT",
+      "reconciliation_finding": null,
+      "last_action": null,
+      "last_actor": null,
+      "last_action_at": null
+    },
+    "CEU-WIRELESS": {
+      "domain": "wireless",
+      "state": "EVIDENCE_ATTACHED",
+      "tier": "CONSUMER",
+      "file_count": 51,
+      "evidence_count": 5,
+      "evidence_types": {
+        "APP_CONFIG": 1,
+        "MODEL_INVENTORY": 1,
+        "URL_NAMESPACE": 1,
+        "OFFICIAL_DOCS": 1,
+        "MODEL_DOCS": 1
+      },
+      "merge_candidate": false,
+      "authority_pattern": "IMPORT_DOMINANT",
+      "reconciliation_finding": null,
+      "last_action": null,
+      "last_actor": null,
+      "last_action_at": null
+    }
+  },
+  "promotion_gate": {
+    "all_candidates_resolved": false,
+    "unresolved_obligations": 3,
+    "semantic_derivation_permitted": false,
+    "gate_reason": "Reconciliation not started \u2014 candidates require review"
+  }
+}

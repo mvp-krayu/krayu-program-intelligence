@@ -1,0 +1,1834 @@
+{
+  "contract_id": "PI.SQO.CEU-RECONCILIATION-WORKFLOW.01",
+  "artifact_class": "ceu_evidence_anchors",
+  "client_id": "netbox",
+  "run_id": "run_github_netbox_20260520_134600",
+  "generated_at": "2026-05-21T07:15:25.284200+00:00",
+  "source_repository": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo",
+  "effective_source_root": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox",
+  "total_anchors": 66,
+  "candidate_count": 13,
+  "domain_summary": {
+    "CEU-ACCOUNT": {
+      "domain": "account",
+      "total_anchors": 0,
+      "evidence_types": {}
+    },
+    "CEU-CIRCUITS": {
+      "domain": "circuits",
+      "total_anchors": 5,
+      "evidence_types": {
+        "APP_CONFIG": 1,
+        "MODEL_INVENTORY": 1,
+        "URL_NAMESPACE": 1,
+        "OFFICIAL_DOCS": 1,
+        "MODEL_DOCS": 1
+      }
+    },
+    "CEU-CORE": {
+      "domain": "core",
+      "total_anchors": 7,
+      "evidence_types": {
+        "APP_CONFIG": 1,
+        "MODEL_INVENTORY": 1,
+        "URL_NAMESPACE": 1,
+        "MODEL_DOCS": 1,
+        "OFFICIAL_DOCS": 3
+      }
+    },
+    "CEU-DCIM": {
+      "domain": "dcim",
+      "total_anchors": 7,
+      "evidence_types": {
+        "APP_CONFIG": 1,
+        "MODEL_INVENTORY": 1,
+        "URL_NAMESPACE": 1,
+        "MODEL_DOCS": 1,
+        "OFFICIAL_DOCS": 3
+      }
+    },
+    "CEU-EXTRAS": {
+      "domain": "extras",
+      "total_anchors": 11,
+      "evidence_types": {
+        "APP_CONFIG": 1,
+        "MODEL_INVENTORY": 1,
+        "URL_NAMESPACE": 1,
+        "MODEL_DOCS": 1,
+        "OFFICIAL_DOCS": 7
+      }
+    },
+    "CEU-IPAM": {
+      "domain": "ipam",
+      "total_anchors": 6,
+      "evidence_types": {
+        "APP_CONFIG": 1,
+        "MODEL_INVENTORY": 1,
+        "URL_NAMESPACE": 1,
+        "OFFICIAL_DOCS": 2,
+        "MODEL_DOCS": 1
+      }
+    },
+    "CEU-NETBOX": {
+      "domain": "netbox",
+      "total_anchors": 1,
+      "evidence_types": {
+        "MODEL_INVENTORY": 1
+      }
+    },
+    "CEU-TENANCY": {
+      "domain": "tenancy",
+      "total_anchors": 7,
+      "evidence_types": {
+        "APP_CONFIG": 1,
+        "MODEL_INVENTORY": 1,
+        "URL_NAMESPACE": 1,
+        "OFFICIAL_DOCS": 3,
+        "MODEL_DOCS": 1
+      }
+    },
+    "CEU-USERS": {
+      "domain": "users",
+      "total_anchors": 6,
+      "evidence_types": {
+        "APP_CONFIG": 1,
+        "MODEL_INVENTORY": 1,
+        "URL_NAMESPACE": 1,
+        "MODEL_DOCS": 1,
+        "OFFICIAL_DOCS": 2
+      }
+    },
+    "CEU-UTILITIES": {
+      "domain": "utilities",
+      "total_anchors": 0,
+      "evidence_types": {}
+    },
+    "CEU-VIRTUALIZATION": {
+      "domain": "virtualization",
+      "total_anchors": 5,
+      "evidence_types": {
+        "APP_CONFIG": 1,
+        "MODEL_INVENTORY": 1,
+        "URL_NAMESPACE": 1,
+        "OFFICIAL_DOCS": 1,
+        "MODEL_DOCS": 1
+      }
+    },
+    "CEU-VPN": {
+      "domain": "vpn",
+      "total_anchors": 6,
+      "evidence_types": {
+        "APP_CONFIG": 1,
+        "MODEL_INVENTORY": 1,
+        "URL_NAMESPACE": 1,
+        "OFFICIAL_DOCS": 2,
+        "MODEL_DOCS": 1
+      }
+    },
+    "CEU-WIRELESS": {
+      "domain": "wireless",
+      "total_anchors": 5,
+      "evidence_types": {
+        "APP_CONFIG": 1,
+        "MODEL_INVENTORY": 1,
+        "URL_NAMESPACE": 1,
+        "OFFICIAL_DOCS": 1,
+        "MODEL_DOCS": 1
+      }
+    }
+  },
+  "anchors": [
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/circuits/apps.py",
+      "evidence_type": "APP_CONFIG",
+      "config_class": "CircuitsConfig",
+      "app_name": "circuits",
+      "verbose_name": "Circuits",
+      "anchor_id": "EA-0001",
+      "ceu_id": "CEU-CIRCUITS",
+      "domain": "circuits"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/circuits/models",
+      "evidence_type": "MODEL_INVENTORY",
+      "model_count": 8,
+      "models": [
+        {
+          "class_name": "BaseCircuitType",
+          "source_file": "base.py"
+        },
+        {
+          "class_name": "Circuit",
+          "source_file": "circuits.py"
+        },
+        {
+          "class_name": "CircuitGroup",
+          "source_file": "circuits.py"
+        },
+        {
+          "class_name": "CircuitGroupAssignment",
+          "source_file": "circuits.py"
+        },
+        {
+          "class_name": "Provider",
+          "source_file": "providers.py"
+        },
+        {
+          "class_name": "ProviderAccount",
+          "source_file": "providers.py"
+        },
+        {
+          "class_name": "ProviderNetwork",
+          "source_file": "providers.py"
+        },
+        {
+          "class_name": "VirtualCircuit",
+          "source_file": "virtual_circuits.py"
+        }
+      ],
+      "anchor_id": "EA-0002",
+      "ceu_id": "CEU-CIRCUITS",
+      "domain": "circuits"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/circuits/api/urls.py",
+      "evidence_type": "URL_NAMESPACE",
+      "app_name": "circuits-api",
+      "endpoints": [
+        "providers",
+        "provider-accounts",
+        "provider-networks",
+        "circuit-types",
+        "circuits",
+        "circuit-terminations",
+        "circuit-groups",
+        "circuit-group-assignments",
+        "virtual-circuits",
+        "virtual-circuit-types",
+        "virtual-circuit-terminations"
+      ],
+      "endpoint_count": 11,
+      "anchor_id": "EA-0003",
+      "ceu_id": "CEU-CIRCUITS",
+      "domain": "circuits"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/circuits.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "Circuits",
+      "summary": "NetBox is ideal for managing your network's transit and peering providers and circuits. It provides all the flexibility needed to model physical circuits in both data center and enterprise environments, and allows for \"connecting\" circuits directly to device interfaces via cables.",
+      "anchor_id": "EA-0004",
+      "ceu_id": "CEU-CIRCUITS",
+      "domain": "circuits"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/models/circuits",
+      "evidence_type": "MODEL_DOCS",
+      "doc_section": "models",
+      "documented_models": [
+        "circuit",
+        "circuitgroup",
+        "circuitgroupassignment",
+        "circuittermination",
+        "circuittype",
+        "provider",
+        "provideraccount",
+        "providernetwork",
+        "virtualcircuit",
+        "virtualcircuittermination",
+        "virtualcircuittype"
+      ],
+      "documented_model_count": 11,
+      "anchor_id": "EA-0005",
+      "ceu_id": "CEU-CIRCUITS",
+      "domain": "circuits"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/core/apps.py",
+      "evidence_type": "APP_CONFIG",
+      "config_class": "CoreConfig",
+      "app_name": "core",
+      "anchor_id": "EA-0006",
+      "ceu_id": "CEU-CORE",
+      "domain": "core"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/core/models",
+      "evidence_type": "MODEL_INVENTORY",
+      "model_count": 7,
+      "models": [
+        {
+          "class_name": "ObjectChange",
+          "source_file": "change_logging.py"
+        },
+        {
+          "class_name": "ConfigRevision",
+          "source_file": "config.py"
+        },
+        {
+          "class_name": "DataSource",
+          "source_file": "data.py"
+        },
+        {
+          "class_name": "DataFile",
+          "source_file": "data.py"
+        },
+        {
+          "class_name": "AutoSyncRecord",
+          "source_file": "data.py"
+        },
+        {
+          "class_name": "ManagedFile",
+          "source_file": "files.py"
+        },
+        {
+          "class_name": "Job",
+          "source_file": "jobs.py"
+        }
+      ],
+      "anchor_id": "EA-0007",
+      "ceu_id": "CEU-CORE",
+      "domain": "core"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/core/api/urls.py",
+      "evidence_type": "URL_NAMESPACE",
+      "app_name": "core-api",
+      "endpoints": [
+        "data-sources",
+        "data-files",
+        "jobs",
+        "object-changes",
+        "object-types",
+        "background-queues",
+        "background-workers",
+        "background-tasks"
+      ],
+      "endpoint_count": 8,
+      "anchor_id": "EA-0008",
+      "ceu_id": "CEU-CORE",
+      "domain": "core"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/models/core",
+      "evidence_type": "MODEL_DOCS",
+      "doc_section": "models",
+      "documented_models": [
+        "datafile",
+        "datasource",
+        "job",
+        "objectchange",
+        "objecttype"
+      ],
+      "documented_model_count": 5,
+      "anchor_id": "EA-0009",
+      "ceu_id": "CEU-CORE",
+      "domain": "core"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/background-jobs.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "Background Jobs",
+      "summary": "NetBox includes the ability to execute certain functions as background tasks. These include:",
+      "alias_mapping": "background-jobs",
+      "anchor_id": "EA-0010",
+      "ceu_id": "CEU-CORE",
+      "domain": "core"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/synchronized-data.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "Synchronized Data",
+      "summary": "Several models in NetBox support the automatic synchronization of local data from a designated remote source. For example, [configuration templates](./configuration-rendering.md) defined in NetBox can source their content from text files stored in a remote git repository. This is accomplished using ",
+      "alias_mapping": "synchronized-data",
+      "anchor_id": "EA-0011",
+      "ceu_id": "CEU-CORE",
+      "domain": "core"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/change-logging.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "Change Logging",
+      "summary": "Every time an object in NetBox is created, updated, or deleted, a serialized copy of that object taken both before and after the change is saved to the database, along with metadata including the current time and the user associated with the change. These records form a persistent record of changes ",
+      "alias_mapping": "change-logging",
+      "anchor_id": "EA-0012",
+      "ceu_id": "CEU-CORE",
+      "domain": "core"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/dcim/apps.py",
+      "evidence_type": "APP_CONFIG",
+      "config_class": "DCIMConfig",
+      "app_name": "dcim",
+      "verbose_name": "DCIM",
+      "anchor_id": "EA-0013",
+      "ceu_id": "CEU-DCIM",
+      "domain": "dcim"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/dcim/models",
+      "evidence_type": "MODEL_INVENTORY",
+      "model_count": 74,
+      "models": [
+        {
+          "class_name": "PortMappingBase",
+          "source_file": "base.py"
+        },
+        {
+          "class_name": "CableBundle",
+          "source_file": "cables.py"
+        },
+        {
+          "class_name": "Cable",
+          "source_file": "cables.py"
+        },
+        {
+          "class_name": "CableTermination",
+          "source_file": "cables.py"
+        },
+        {
+          "class_name": "CablePath",
+          "source_file": "cables.py"
+        },
+        {
+          "class_name": "ComponentTemplateModel",
+          "source_file": "device_component_templates.py"
+        },
+        {
+          "class_name": "ModularComponentTemplateModel",
+          "source_file": "device_component_templates.py"
+        },
+        {
+          "class_name": "ConsolePortTemplate",
+          "source_file": "device_component_templates.py"
+        },
+        {
+          "class_name": "Meta",
+          "source_file": "device_component_templates.py"
+        },
+        {
+          "class_name": "ConsoleServerPortTemplate",
+          "source_file": "device_component_templates.py"
+        },
+        {
+          "class_name": "Meta",
+          "source_file": "device_component_templates.py"
+        },
+        {
+          "class_name": "PowerPortTemplate",
+          "source_file": "device_component_templates.py"
+        },
+        {
+          "class_name": "Meta",
+          "source_file": "device_component_templates.py"
+        },
+        {
+          "class_name": "PowerOutletTemplate",
+          "source_file": "device_component_templates.py"
+        },
+        {
+          "class_name": "Meta",
+          "source_file": "device_component_templates.py"
+        },
+        {
+          "class_name": "InterfaceTemplate",
+          "source_file": "device_component_templates.py"
+        },
+        {
+          "class_name": "Meta",
+          "source_file": "device_component_templates.py"
+        },
+        {
+          "class_name": "FrontPortTemplate",
+          "source_file": "device_component_templates.py"
+        },
+        {
+          "class_name": "Meta",
+          "source_file": "device_component_templates.py"
+        },
+        {
+          "class_name": "RearPortTemplate",
+          "source_file": "device_component_templates.py"
+        },
+        {
+          "class_name": "Meta",
+          "source_file": "device_component_templates.py"
+        },
+        {
+          "class_name": "ModuleBayTemplate",
+          "source_file": "device_component_templates.py"
+        },
+        {
+          "class_name": "Meta",
+          "source_file": "device_component_templates.py"
+        },
+        {
+          "class_name": "DeviceBayTemplate",
+          "source_file": "device_component_templates.py"
+        },
+        {
+          "class_name": "Meta",
+          "source_file": "device_component_templates.py"
+        },
+        {
+          "class_name": "InventoryItemTemplate",
+          "source_file": "device_component_templates.py"
+        },
+        {
+          "class_name": "ComponentModel",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "ModularComponentModel",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "Meta",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "CabledObjectModel",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "PathEndpoint",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "ConsolePort",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "Meta",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "ConsoleServerPort",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "Meta",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "PowerPort",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "Meta",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "PowerOutlet",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "Meta",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "BaseInterface",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "Meta",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "FrontPort",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "Meta",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "RearPort",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "Meta",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "ModuleBay",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "Meta",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "DeviceBay",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "Meta",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "InventoryItemRole",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "InventoryItem",
+          "source_file": "device_components.py"
+        },
+        {
+          "class_name": "Manufacturer",
+          "source_file": "devices.py"
+        },
+        {
+          "class_name": "DeviceType",
+          "source_file": "devices.py"
+        },
+        {
+          "class_name": "DeviceRole",
+          "source_file": "devices.py"
+        },
+        {
+          "class_name": "Platform",
+          "source_file": "devices.py"
+        },
+        {
+          "class_name": "VirtualChassis",
+          "source_file": "devices.py"
+        },
+        {
+          "class_name": "VirtualDeviceContext",
+          "source_file": "devices.py"
+        },
+        {
+          "class_name": "MACAddress",
+          "source_file": "devices.py"
+        },
+        {
+          "class_name": "RenderConfigMixin",
+          "source_file": "mixins.py"
+        },
+        {
+          "class_name": "CachedScopeMixin",
+          "source_file": "mixins.py"
+        },
+        {
+          "class_name": "ModuleTypeProfile",
+          "source_file": "modules.py"
+        },
+        {
+          "class_name": "ModuleType",
+          "source_file": "modules.py"
+        },
+        {
+          "class_name": "Module",
+          "source_file": "modules.py"
+        },
+        {
+          "class_name": "PowerPanel",
+          "source_file": "power.py"
+        },
+        {
+          "class_name": "PowerFeed",
+          "source_file": "power.py"
+        },
+        {
+          "class_name": "RackGroup",
+          "source_file": "racks.py"
+        },
+        {
+          "class_name": "RackBase",
+          "source_file": "racks.py"
+        },
+        {
+          "class_name": "RackRole",
+          "source_file": "racks.py"
+        },
+        {
+          "class_name": "Rack",
+          "source_file": "racks.py"
+        },
+        {
+          "class_name": "RackReservation",
+          "source_file": "racks.py"
+        },
+        {
+          "class_name": "Region",
+          "source_file": "sites.py"
+        },
+        {
+          "class_name": "SiteGroup",
+          "source_file": "sites.py"
+        },
+        {
+          "class_name": "Site",
+          "source_file": "sites.py"
+        },
+        {
+          "class_name": "Location",
+          "source_file": "sites.py"
+        }
+      ],
+      "anchor_id": "EA-0014",
+      "ceu_id": "CEU-DCIM",
+      "domain": "dcim"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/dcim/api/urls.py",
+      "evidence_type": "URL_NAMESPACE",
+      "app_name": "dcim-api",
+      "endpoints": [
+        "regions",
+        "site-groups",
+        "sites",
+        "locations",
+        "rack-groups",
+        "rack-types",
+        "rack-roles",
+        "racks",
+        "rack-reservations",
+        "manufacturers",
+        "device-types",
+        "module-types",
+        "module-type-profiles",
+        "console-port-templates",
+        "console-server-port-templates",
+        "power-port-templates",
+        "power-outlet-templates",
+        "interface-templates",
+        "front-port-templates",
+        "rear-port-templates",
+        "module-bay-templates",
+        "device-bay-templates",
+        "inventory-item-templates",
+        "device-roles",
+        "platforms",
+        "devices",
+        "virtual-device-contexts",
+        "modules",
+        "console-ports",
+        "console-server-ports",
+        "power-ports",
+        "power-outlets",
+        "interfaces",
+        "front-ports",
+        "rear-ports",
+        "module-bays",
+        "device-bays",
+        "inventory-items",
+        "inventory-item-roles",
+        "mac-addresses",
+        "cables",
+        "cable-terminations",
+        "cable-bundles",
+        "virtual-chassis",
+        "power-panels",
+        "power-feeds",
+        "connected-device"
+      ],
+      "endpoint_count": 47,
+      "anchor_id": "EA-0015",
+      "ceu_id": "CEU-DCIM",
+      "domain": "dcim"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/models/dcim",
+      "evidence_type": "MODEL_DOCS",
+      "doc_section": "models",
+      "documented_models": [
+        "cable",
+        "cablebundle",
+        "consoleport",
+        "consoleporttemplate",
+        "consoleserverport",
+        "consoleserverporttemplate",
+        "device",
+        "devicebay",
+        "devicebaytemplate",
+        "devicerole",
+        "devicetype",
+        "frontport",
+        "frontporttemplate",
+        "interface",
+        "interfacetemplate",
+        "inventoryitem",
+        "inventoryitemrole",
+        "inventoryitemtemplate",
+        "location",
+        "macaddress",
+        "manufacturer",
+        "module",
+        "modulebay",
+        "modulebaytemplate",
+        "moduletype",
+        "moduletypeprofile",
+        "platform",
+        "powerfeed",
+        "poweroutlet",
+        "poweroutlettemplate",
+        "powerpanel",
+        "powerport",
+        "powerporttemplate",
+        "rack",
+        "rackgroup",
+        "rackreservation",
+        "rackrole",
+        "racktype",
+        "rearport",
+        "rearporttemplate",
+        "region",
+        "site",
+        "sitegroup",
+        "virtualchassis",
+        "virtualdevicecontext"
+      ],
+      "documented_model_count": 45,
+      "anchor_id": "EA-0016",
+      "ceu_id": "CEU-DCIM",
+      "domain": "dcim"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/devices-cabling.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "Devices & Cabling",
+      "summary": "At its heart, NetBox is a tool for modeling your network infrastructure, and the device object is pivotal to that function. A device can be any piece of physical hardware installed within your network, such as server, router, or switch, and may optionally be mounted within a rack. Within each device",
+      "alias_mapping": "devices-cabling",
+      "anchor_id": "EA-0017",
+      "ceu_id": "CEU-DCIM",
+      "domain": "dcim"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/facilities.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "Facilities",
+      "summary": "From global regions down to individual equipment racks, NetBox allows you to model your network's entire presence. This is accomplished through the use of several purpose-built models. The graph below illustrates these models and their relationships.",
+      "alias_mapping": "facilities",
+      "anchor_id": "EA-0018",
+      "ceu_id": "CEU-DCIM",
+      "domain": "dcim"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/power-tracking.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "Power Tracking",
+      "summary": "As part of its DCIM feature set, NetBox supports modeling facility power as discrete power panels and feeds. These are most commonly used to document power distribution within a data center, but can serve more traditional environments as well.",
+      "alias_mapping": "power-tracking",
+      "anchor_id": "EA-0019",
+      "ceu_id": "CEU-DCIM",
+      "domain": "dcim"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/extras/apps.py",
+      "evidence_type": "APP_CONFIG",
+      "config_class": "ExtrasConfig",
+      "app_name": "extras",
+      "anchor_id": "EA-0020",
+      "ceu_id": "CEU-EXTRAS",
+      "domain": "extras"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/extras/models",
+      "evidence_type": "MODEL_INVENTORY",
+      "model_count": 20,
+      "models": [
+        {
+          "class_name": "ConfigContextProfile",
+          "source_file": "configs.py"
+        },
+        {
+          "class_name": "ConfigContext",
+          "source_file": "configs.py"
+        },
+        {
+          "class_name": "ConfigContextModel",
+          "source_file": "configs.py"
+        },
+        {
+          "class_name": "CustomField",
+          "source_file": "customfields.py"
+        },
+        {
+          "class_name": "CustomFieldChoiceSet",
+          "source_file": "customfields.py"
+        },
+        {
+          "class_name": "Dashboard",
+          "source_file": "dashboard.py"
+        },
+        {
+          "class_name": "RenderTemplateMixin",
+          "source_file": "mixins.py"
+        },
+        {
+          "class_name": "EventRule",
+          "source_file": "models.py"
+        },
+        {
+          "class_name": "Webhook",
+          "source_file": "models.py"
+        },
+        {
+          "class_name": "CustomLink",
+          "source_file": "models.py"
+        },
+        {
+          "class_name": "SavedFilter",
+          "source_file": "models.py"
+        },
+        {
+          "class_name": "TableConfig",
+          "source_file": "models.py"
+        },
+        {
+          "class_name": "ImageAttachment",
+          "source_file": "models.py"
+        },
+        {
+          "class_name": "JournalEntry",
+          "source_file": "models.py"
+        },
+        {
+          "class_name": "Bookmark",
+          "source_file": "models.py"
+        },
+        {
+          "class_name": "Notification",
+          "source_file": "notifications.py"
+        },
+        {
+          "class_name": "NotificationGroup",
+          "source_file": "notifications.py"
+        },
+        {
+          "class_name": "Subscription",
+          "source_file": "notifications.py"
+        },
+        {
+          "class_name": "CachedValue",
+          "source_file": "search.py"
+        },
+        {
+          "class_name": "Tag",
+          "source_file": "tags.py"
+        }
+      ],
+      "anchor_id": "EA-0021",
+      "ceu_id": "CEU-EXTRAS",
+      "domain": "extras"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/extras/api/urls.py",
+      "evidence_type": "URL_NAMESPACE",
+      "app_name": "extras-api",
+      "endpoints": [
+        "event-rules",
+        "webhooks",
+        "custom-fields",
+        "custom-field-choice-sets",
+        "custom-links",
+        "export-templates",
+        "saved-filters",
+        "table-configs",
+        "bookmarks",
+        "notifications",
+        "notification-groups",
+        "subscriptions",
+        "tags",
+        "tagged-objects",
+        "image-attachments",
+        "journal-entries",
+        "config-contexts",
+        "config-context-profiles",
+        "config-templates",
+        "scripts/upload",
+        "scripts"
+      ],
+      "endpoint_count": 21,
+      "anchor_id": "EA-0022",
+      "ceu_id": "CEU-EXTRAS",
+      "domain": "extras"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/models/extras",
+      "evidence_type": "MODEL_DOCS",
+      "doc_section": "models",
+      "documented_models": [
+        "bookmark",
+        "configcontext",
+        "configcontextprofile",
+        "configtemplate",
+        "customfield",
+        "customfieldchoiceset",
+        "customlink",
+        "eventrule",
+        "exporttemplate",
+        "imageattachment",
+        "journalentry",
+        "notification",
+        "notificationgroup",
+        "savedfilter",
+        "subscription",
+        "tableconfig",
+        "tag",
+        "webhook"
+      ],
+      "documented_model_count": 18,
+      "anchor_id": "EA-0023",
+      "ceu_id": "CEU-EXTRAS",
+      "domain": "extras"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/customization.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "Customization",
+      "summary": "While NetBox strives to meet the needs of every network, the needs of users to cater to their own unique environments cannot be ignored. NetBox was built with this in mind, and can be customized in many ways to better suit your particular needs.",
+      "alias_mapping": "customization",
+      "anchor_id": "EA-0024",
+      "ceu_id": "CEU-EXTRAS",
+      "domain": "extras"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/event-rules.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "Event Rules",
+      "summary": "NetBox includes the ability to automatically perform certain functions in response to internal events. These include:",
+      "alias_mapping": "event-rules",
+      "anchor_id": "EA-0025",
+      "ceu_id": "CEU-EXTRAS",
+      "domain": "extras"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/journaling.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "Journaling",
+      "summary": "All primary and organizational models in NetBox support journaling. A journal is a collection of human-generated notes and comments about an object maintained for historical context. It supplements NetBox's change log to provide additional information about why changes have been made or to convey ev",
+      "alias_mapping": "journaling",
+      "anchor_id": "EA-0026",
+      "ceu_id": "CEU-EXTRAS",
+      "domain": "extras"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/context-data.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "Context Data",
+      "summary": "Configuration context data (or \"config contexts\" for short) is a powerful feature that enables users to define arbitrary data that applies to device and virtual machines based on certain characteristics. For example, suppose you want to define syslog servers for devices assigned to sites within a pa",
+      "alias_mapping": "context-data",
+      "anchor_id": "EA-0027",
+      "ceu_id": "CEU-EXTRAS",
+      "domain": "extras"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/configuration-rendering.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "Configuration Rendering",
+      "summary": "One of the critical aspects of operating a network is ensuring that every network node is configured correctly. By leveraging configuration templates and [context data](./context-data.md), NetBox can render complete configuration files for each device on your network.",
+      "alias_mapping": "configuration-rendering",
+      "anchor_id": "EA-0028",
+      "ceu_id": "CEU-EXTRAS",
+      "domain": "extras"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/notifications.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "Notifications",
+      "summary": "NetBox includes a system for generating user notifications, which can be marked as read or deleted by individual users. There are two built-in mechanisms for generating a notification:",
+      "alias_mapping": "notifications",
+      "anchor_id": "EA-0029",
+      "ceu_id": "CEU-EXTRAS",
+      "domain": "extras"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/search.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "Search",
+      "summary": "NetBox includes a powerful global search engine, providing a single convenient interface to search across its complex data model. Relevant fields on each model are indexed according to their precedence, so that the most relevant results are returned first. When objects are created or modified, the s",
+      "alias_mapping": "search",
+      "anchor_id": "EA-0030",
+      "ceu_id": "CEU-EXTRAS",
+      "domain": "extras"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/ipam/apps.py",
+      "evidence_type": "APP_CONFIG",
+      "config_class": "IPAMConfig",
+      "app_name": "ipam",
+      "verbose_name": "IPAM",
+      "anchor_id": "EA-0031",
+      "ceu_id": "CEU-IPAM",
+      "domain": "ipam"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/ipam/models",
+      "evidence_type": "MODEL_INVENTORY",
+      "model_count": 19,
+      "models": [
+        {
+          "class_name": "ASNRange",
+          "source_file": "asns.py"
+        },
+        {
+          "class_name": "ASN",
+          "source_file": "asns.py"
+        },
+        {
+          "class_name": "FHRPGroup",
+          "source_file": "fhrp.py"
+        },
+        {
+          "class_name": "FHRPGroupAssignment",
+          "source_file": "fhrp.py"
+        },
+        {
+          "class_name": "RIR",
+          "source_file": "ip.py"
+        },
+        {
+          "class_name": "Aggregate",
+          "source_file": "ip.py"
+        },
+        {
+          "class_name": "Role",
+          "source_file": "ip.py"
+        },
+        {
+          "class_name": "Prefix",
+          "source_file": "ip.py"
+        },
+        {
+          "class_name": "IPRange",
+          "source_file": "ip.py"
+        },
+        {
+          "class_name": "IPAddress",
+          "source_file": "ip.py"
+        },
+        {
+          "class_name": "ServiceBase",
+          "source_file": "services.py"
+        },
+        {
+          "class_name": "ServiceTemplate",
+          "source_file": "services.py"
+        },
+        {
+          "class_name": "Service",
+          "source_file": "services.py"
+        },
+        {
+          "class_name": "VLANGroup",
+          "source_file": "vlans.py"
+        },
+        {
+          "class_name": "VLAN",
+          "source_file": "vlans.py"
+        },
+        {
+          "class_name": "VLANTranslationPolicy",
+          "source_file": "vlans.py"
+        },
+        {
+          "class_name": "VLANTranslationRule",
+          "source_file": "vlans.py"
+        },
+        {
+          "class_name": "VRF",
+          "source_file": "vrfs.py"
+        },
+        {
+          "class_name": "RouteTarget",
+          "source_file": "vrfs.py"
+        }
+      ],
+      "anchor_id": "EA-0032",
+      "ceu_id": "CEU-IPAM",
+      "domain": "ipam"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/ipam/api/urls.py",
+      "evidence_type": "URL_NAMESPACE",
+      "app_name": "ipam-api",
+      "endpoints": [
+        "asns",
+        "asn-ranges",
+        "vrfs",
+        "route-targets",
+        "rirs",
+        "aggregates",
+        "roles",
+        "prefixes",
+        "ip-ranges",
+        "ip-addresses",
+        "fhrp-groups",
+        "fhrp-group-assignments",
+        "vlan-groups",
+        "vlans",
+        "vlan-translation-policies",
+        "vlan-translation-rules",
+        "service-templates",
+        "services"
+      ],
+      "endpoint_count": 18,
+      "anchor_id": "EA-0033",
+      "ceu_id": "CEU-IPAM",
+      "domain": "ipam"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/ipam.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "IP Address Management",
+      "summary": "IP address management (IPAM) is one of NetBox's core features. It supports full parity for IP4 and IPv6, advanced VRF assignment, automatic hierarchy formation, and much more.",
+      "anchor_id": "EA-0034",
+      "ceu_id": "CEU-IPAM",
+      "domain": "ipam"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/models/ipam",
+      "evidence_type": "MODEL_DOCS",
+      "doc_section": "models",
+      "documented_models": [
+        "aggregate",
+        "asn",
+        "asnrange",
+        "fhrpgroup",
+        "fhrpgroupassignment",
+        "ipaddress",
+        "iprange",
+        "prefix",
+        "rir",
+        "role",
+        "routetarget",
+        "service",
+        "servicetemplate",
+        "vlan",
+        "vlangroup",
+        "vlantranslationpolicy",
+        "vlantranslationrule",
+        "vrf"
+      ],
+      "documented_model_count": 18,
+      "anchor_id": "EA-0035",
+      "ceu_id": "CEU-IPAM",
+      "domain": "ipam"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/vlan-management.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "VLAN Management",
+      "summary": "Complementing its IPAM capabilities, NetBox also tracks VLAN information to assist with layer two network configurations. VLANs are defined per IEEE 802.1Q and related standards, and can be assigned to groups and functional roles.",
+      "alias_mapping": "vlan-management",
+      "anchor_id": "EA-0036",
+      "ceu_id": "CEU-IPAM",
+      "domain": "ipam"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/netbox/models",
+      "evidence_type": "MODEL_INVENTORY",
+      "model_count": 19,
+      "models": [
+        {
+          "class_name": "ChangeLoggingMixin",
+          "source_file": "features.py"
+        },
+        {
+          "class_name": "CloningMixin",
+          "source_file": "features.py"
+        },
+        {
+          "class_name": "MyModel",
+          "source_file": "features.py"
+        },
+        {
+          "class_name": "CustomFieldsMixin",
+          "source_file": "features.py"
+        },
+        {
+          "class_name": "CustomLinksMixin",
+          "source_file": "features.py"
+        },
+        {
+          "class_name": "CustomValidationMixin",
+          "source_file": "features.py"
+        },
+        {
+          "class_name": "ExportTemplatesMixin",
+          "source_file": "features.py"
+        },
+        {
+          "class_name": "ImageAttachmentsMixin",
+          "source_file": "features.py"
+        },
+        {
+          "class_name": "ContactsMixin",
+          "source_file": "features.py"
+        },
+        {
+          "class_name": "BookmarksMixin",
+          "source_file": "features.py"
+        },
+        {
+          "class_name": "NotificationsMixin",
+          "source_file": "features.py"
+        },
+        {
+          "class_name": "JobsMixin",
+          "source_file": "features.py"
+        },
+        {
+          "class_name": "JournalingMixin",
+          "source_file": "features.py"
+        },
+        {
+          "class_name": "TagsMixin",
+          "source_file": "features.py"
+        },
+        {
+          "class_name": "EventRulesMixin",
+          "source_file": "features.py"
+        },
+        {
+          "class_name": "SyncedDataMixin",
+          "source_file": "features.py"
+        },
+        {
+          "class_name": "OwnerMixin",
+          "source_file": "mixins.py"
+        },
+        {
+          "class_name": "WeightMixin",
+          "source_file": "mixins.py"
+        },
+        {
+          "class_name": "DistanceMixin",
+          "source_file": "mixins.py"
+        }
+      ],
+      "anchor_id": "EA-0037",
+      "ceu_id": "CEU-NETBOX",
+      "domain": "netbox"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/tenancy/apps.py",
+      "evidence_type": "APP_CONFIG",
+      "config_class": "TenancyConfig",
+      "app_name": "tenancy",
+      "anchor_id": "EA-0038",
+      "ceu_id": "CEU-TENANCY",
+      "domain": "tenancy"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/tenancy/models",
+      "evidence_type": "MODEL_INVENTORY",
+      "model_count": 6,
+      "models": [
+        {
+          "class_name": "ContactGroup",
+          "source_file": "contacts.py"
+        },
+        {
+          "class_name": "ContactRole",
+          "source_file": "contacts.py"
+        },
+        {
+          "class_name": "Contact",
+          "source_file": "contacts.py"
+        },
+        {
+          "class_name": "ContactAssignment",
+          "source_file": "contacts.py"
+        },
+        {
+          "class_name": "TenantGroup",
+          "source_file": "tenants.py"
+        },
+        {
+          "class_name": "Tenant",
+          "source_file": "tenants.py"
+        }
+      ],
+      "anchor_id": "EA-0039",
+      "ceu_id": "CEU-TENANCY",
+      "domain": "tenancy"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/tenancy/api/urls.py",
+      "evidence_type": "URL_NAMESPACE",
+      "app_name": "tenancy-api",
+      "endpoints": [
+        "tenant-groups",
+        "tenants",
+        "contact-groups",
+        "contact-roles",
+        "contacts",
+        "contact-assignments"
+      ],
+      "endpoint_count": 6,
+      "anchor_id": "EA-0040",
+      "ceu_id": "CEU-TENANCY",
+      "domain": "tenancy"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/tenancy.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "Tenancy",
+      "summary": "Most core objects within NetBox's data model support _tenancy_. This is the association of an object with a particular tenant to convey assignment or dependency. For example, an enterprise might represent its internal business units as tenants, whereas a managed services provider might create a tena",
+      "anchor_id": "EA-0041",
+      "ceu_id": "CEU-TENANCY",
+      "domain": "tenancy"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/models/tenancy",
+      "evidence_type": "MODEL_DOCS",
+      "doc_section": "models",
+      "documented_models": [
+        "contact",
+        "contactgroup",
+        "contactrole",
+        "tenant",
+        "tenantgroup"
+      ],
+      "documented_model_count": 5,
+      "anchor_id": "EA-0042",
+      "ceu_id": "CEU-TENANCY",
+      "domain": "tenancy"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/resource-ownership.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "Resource Ownership",
+      "summary": "!!! info \"This feature was introduced in NetBox v4.5.\"",
+      "alias_mapping": "resource-ownership",
+      "anchor_id": "EA-0043",
+      "ceu_id": "CEU-TENANCY",
+      "domain": "tenancy"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/contacts.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "Contacts",
+      "summary": "Much like [tenancy](./tenancy.md), contact assignment enables you to track ownership of resources modeled in NetBox. A contact represents an individual responsible for a resource within the context of its assigned role.",
+      "alias_mapping": "contacts",
+      "anchor_id": "EA-0044",
+      "ceu_id": "CEU-TENANCY",
+      "domain": "tenancy"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/users/apps.py",
+      "evidence_type": "APP_CONFIG",
+      "config_class": "UsersConfig",
+      "app_name": "users",
+      "anchor_id": "EA-0045",
+      "ceu_id": "CEU-USERS",
+      "domain": "users"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/users/models",
+      "evidence_type": "MODEL_INVENTORY",
+      "model_count": 6,
+      "models": [
+        {
+          "class_name": "OwnerGroup",
+          "source_file": "owners.py"
+        },
+        {
+          "class_name": "Owner",
+          "source_file": "owners.py"
+        },
+        {
+          "class_name": "ObjectPermission",
+          "source_file": "permissions.py"
+        },
+        {
+          "class_name": "UserConfig",
+          "source_file": "preferences.py"
+        },
+        {
+          "class_name": "Token",
+          "source_file": "tokens.py"
+        },
+        {
+          "class_name": "Group",
+          "source_file": "users.py"
+        }
+      ],
+      "anchor_id": "EA-0046",
+      "ceu_id": "CEU-USERS",
+      "domain": "users"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/users/api/urls.py",
+      "evidence_type": "URL_NAMESPACE",
+      "app_name": "users-api",
+      "endpoints": [
+        "users",
+        "groups",
+        "tokens",
+        "permissions",
+        "owner-groups",
+        "owners",
+        "config"
+      ],
+      "endpoint_count": 7,
+      "anchor_id": "EA-0047",
+      "ceu_id": "CEU-USERS",
+      "domain": "users"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/models/users",
+      "evidence_type": "MODEL_DOCS",
+      "doc_section": "models",
+      "documented_models": [
+        "group",
+        "objectpermission",
+        "owner",
+        "ownergroup",
+        "token",
+        "user"
+      ],
+      "documented_model_count": 6,
+      "anchor_id": "EA-0048",
+      "ceu_id": "CEU-USERS",
+      "domain": "users"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/authentication-permissions.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "Authentication & Permissions",
+      "summary": "NetBox boasts a very robust permissions system which extends well beyond the model-based permissions of the underlying Django framework. Assigning permissions in NetBox involves several dimensions:",
+      "alias_mapping": "authentication-permissions",
+      "anchor_id": "EA-0049",
+      "ceu_id": "CEU-USERS",
+      "domain": "users"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/user-preferences.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "User Preferences",
+      "summary": "NetBox stores per\u2011user options that control aspects of the web interface and data display. Preferences persist across sessions and can be managed under **User \u2192 Preferences**.",
+      "alias_mapping": "user-preferences",
+      "anchor_id": "EA-0050",
+      "ceu_id": "CEU-USERS",
+      "domain": "users"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/virtualization/apps.py",
+      "evidence_type": "APP_CONFIG",
+      "config_class": "VirtualizationConfig",
+      "app_name": "virtualization",
+      "anchor_id": "EA-0051",
+      "ceu_id": "CEU-VIRTUALIZATION",
+      "domain": "virtualization"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/virtualization/models",
+      "evidence_type": "MODEL_INVENTORY",
+      "model_count": 9,
+      "models": [
+        {
+          "class_name": "ClusterType",
+          "source_file": "clusters.py"
+        },
+        {
+          "class_name": "ClusterGroup",
+          "source_file": "clusters.py"
+        },
+        {
+          "class_name": "Cluster",
+          "source_file": "clusters.py"
+        },
+        {
+          "class_name": "VirtualMachineType",
+          "source_file": "virtualmachines.py"
+        },
+        {
+          "class_name": "ComponentModel",
+          "source_file": "virtualmachines.py"
+        },
+        {
+          "class_name": "VMInterface",
+          "source_file": "virtualmachines.py"
+        },
+        {
+          "class_name": "Meta",
+          "source_file": "virtualmachines.py"
+        },
+        {
+          "class_name": "VirtualDisk",
+          "source_file": "virtualmachines.py"
+        },
+        {
+          "class_name": "Meta",
+          "source_file": "virtualmachines.py"
+        }
+      ],
+      "anchor_id": "EA-0052",
+      "ceu_id": "CEU-VIRTUALIZATION",
+      "domain": "virtualization"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/virtualization/api/urls.py",
+      "evidence_type": "URL_NAMESPACE",
+      "app_name": "virtualization-api",
+      "endpoints": [
+        "cluster-types",
+        "cluster-groups",
+        "clusters",
+        "virtual-machine-types",
+        "virtual-machines",
+        "interfaces",
+        "virtual-disks"
+      ],
+      "endpoint_count": 7,
+      "anchor_id": "EA-0053",
+      "ceu_id": "CEU-VIRTUALIZATION",
+      "domain": "virtualization"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/virtualization.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "Virtualization",
+      "summary": "Virtual machines, clusters, and standalone hypervisors can be modeled in NetBox alongside physical infrastructure. IP addresses and other resources are assigned to these objects just like physical objects, providing a seamless integration between physical and virtual networks.",
+      "anchor_id": "EA-0054",
+      "ceu_id": "CEU-VIRTUALIZATION",
+      "domain": "virtualization"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/models/virtualization",
+      "evidence_type": "MODEL_DOCS",
+      "doc_section": "models",
+      "documented_models": [
+        "cluster",
+        "clustergroup",
+        "clustertype",
+        "virtualdisk",
+        "virtualmachine",
+        "virtualmachinetype",
+        "vminterface"
+      ],
+      "documented_model_count": 7,
+      "anchor_id": "EA-0055",
+      "ceu_id": "CEU-VIRTUALIZATION",
+      "domain": "virtualization"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/vpn/apps.py",
+      "evidence_type": "APP_CONFIG",
+      "config_class": "VPNConfig",
+      "app_name": "vpn",
+      "verbose_name": "VPN",
+      "anchor_id": "EA-0056",
+      "ceu_id": "CEU-VPN",
+      "domain": "vpn"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/vpn/models",
+      "evidence_type": "MODEL_INVENTORY",
+      "model_count": 10,
+      "models": [
+        {
+          "class_name": "IKEProposal",
+          "source_file": "crypto.py"
+        },
+        {
+          "class_name": "IKEPolicy",
+          "source_file": "crypto.py"
+        },
+        {
+          "class_name": "IPSecProposal",
+          "source_file": "crypto.py"
+        },
+        {
+          "class_name": "IPSecPolicy",
+          "source_file": "crypto.py"
+        },
+        {
+          "class_name": "IPSecProfile",
+          "source_file": "crypto.py"
+        },
+        {
+          "class_name": "L2VPN",
+          "source_file": "l2vpn.py"
+        },
+        {
+          "class_name": "L2VPNTermination",
+          "source_file": "l2vpn.py"
+        },
+        {
+          "class_name": "TunnelGroup",
+          "source_file": "tunnels.py"
+        },
+        {
+          "class_name": "Tunnel",
+          "source_file": "tunnels.py"
+        },
+        {
+          "class_name": "TunnelTermination",
+          "source_file": "tunnels.py"
+        }
+      ],
+      "anchor_id": "EA-0057",
+      "ceu_id": "CEU-VPN",
+      "domain": "vpn"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/vpn/api/urls.py",
+      "evidence_type": "URL_NAMESPACE",
+      "app_name": "vpn-api",
+      "endpoints": [
+        "ike-policies",
+        "ike-proposals",
+        "ipsec-policies",
+        "ipsec-proposals",
+        "ipsec-profiles",
+        "tunnel-groups",
+        "tunnels",
+        "tunnel-terminations",
+        "l2vpns",
+        "l2vpn-terminations"
+      ],
+      "endpoint_count": 10,
+      "anchor_id": "EA-0058",
+      "ceu_id": "CEU-VPN",
+      "domain": "vpn"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/l2vpn-overlay.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "L2VPN & Overlay",
+      "summary": "L2VPN and overlay networks, such as VXLAN and EVPN, can be defined in NetBox and tied to interfaces and VLANs. This allows for easy tracking of overlay assets and their relationships with underlay resources.",
+      "anchor_id": "EA-0059",
+      "ceu_id": "CEU-VPN",
+      "domain": "vpn"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/vpn-tunnels.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "Tunnels",
+      "summary": "NetBox can model private tunnels formed among virtual termination points across your network. Typical tunnel implementations include GRE, IP-in-IP, and IPSec. A tunnel may be terminated to two or more device or virtual machine interfaces. For convenient organization, tunnels may be assigned to user-",
+      "anchor_id": "EA-0060",
+      "ceu_id": "CEU-VPN",
+      "domain": "vpn"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/models/vpn",
+      "evidence_type": "MODEL_DOCS",
+      "doc_section": "models",
+      "documented_models": [
+        "ikepolicy",
+        "ikeproposal",
+        "ipsecpolicy",
+        "ipsecprofile",
+        "ipsecproposal",
+        "l2vpn",
+        "l2vpntermination",
+        "tunnel",
+        "tunnelgroup",
+        "tunneltermination"
+      ],
+      "documented_model_count": 10,
+      "anchor_id": "EA-0061",
+      "ceu_id": "CEU-VPN",
+      "domain": "vpn"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/wireless/apps.py",
+      "evidence_type": "APP_CONFIG",
+      "config_class": "WirelessConfig",
+      "app_name": "wireless",
+      "anchor_id": "EA-0062",
+      "ceu_id": "CEU-WIRELESS",
+      "domain": "wireless"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/wireless/models.py",
+      "evidence_type": "MODEL_INVENTORY",
+      "model_count": 4,
+      "models": [
+        {
+          "class_name": "WirelessAuthenticationBase",
+          "source_file": "models.py"
+        },
+        {
+          "class_name": "WirelessLANGroup",
+          "source_file": "models.py"
+        },
+        {
+          "class_name": "WirelessLAN",
+          "source_file": "models.py"
+        },
+        {
+          "class_name": "WirelessLink",
+          "source_file": "models.py"
+        }
+      ],
+      "anchor_id": "EA-0063",
+      "ceu_id": "CEU-WIRELESS",
+      "domain": "wireless"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/netbox/wireless/api/urls.py",
+      "evidence_type": "URL_NAMESPACE",
+      "app_name": "wireless-api",
+      "endpoints": [
+        "wireless-lan-groups",
+        "wireless-lans",
+        "wireless-links"
+      ],
+      "endpoint_count": 3,
+      "anchor_id": "EA-0064",
+      "ceu_id": "CEU-WIRELESS",
+      "domain": "wireless"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/features/wireless.md",
+      "evidence_type": "OFFICIAL_DOCS",
+      "doc_section": "features",
+      "heading": "Wireless",
+      "summary": "Just as NetBox provides robust modeling for physical cable plants, it also supports modeling wireless LANs and point-to-point links.",
+      "anchor_id": "EA-0065",
+      "ceu_id": "CEU-WIRELESS",
+      "domain": "wireless"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake/canonical_repo/docs/models/wireless",
+      "evidence_type": "MODEL_DOCS",
+      "doc_section": "models",
+      "documented_models": [
+        "wirelesslan",
+        "wirelesslangroup",
+        "wirelesslink"
+      ],
+      "documented_model_count": 3,
+      "anchor_id": "EA-0066",
+      "ceu_id": "CEU-WIRELESS",
+      "domain": "wireless"
+    }
+  ],
+  "governance": {
+    "extraction_method": "DETERMINISTIC_FILE_READING",
+    "no_semantic_authoring": true,
+    "no_ai_llm": true,
+    "replayable": true
+  }
+}
