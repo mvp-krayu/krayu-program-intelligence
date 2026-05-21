@@ -190,6 +190,7 @@
 | MARKETPLACE_IMPLEMENTATION_LANE_DISCIPLINE.md | docs/governance/ | Three-lane execution discipline for marketplace development |
 | GITHUB_FIRST_OPERATIONALIZATION_CORRECTION.md | docs/governance/ | GitHub-first implementation sequencing correction (Phase 0A/0B) |
 | PROGRAM_INTELLIGENCE_EVOLUTION_MODEL.md | docs/governance/ | Permanent operational meta-model — spine object contracts, accumulation model, governance boundaries |
+| CANONICAL_OPERATIONAL_ROADMAP.md | docs/governance/ | Spine-native operational roadmap — activation state, accumulation, continuity architecture, remaining phases |
 
 ## Governance Streams (Active)
 
