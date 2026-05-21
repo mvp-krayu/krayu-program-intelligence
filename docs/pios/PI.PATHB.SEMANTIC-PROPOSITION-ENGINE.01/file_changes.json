@@ -20,7 +20,7 @@
     {
       "file": "scripts/pios/spe/derivation_engine.py",
       "action": "CREATED",
-      "description": "Six deterministic class derivers: structural dominance, coupling patterns, authority topology, tier grounding, hero moment grounding, cluster architecture"
+      "description": "Six deterministic class derivers: structural dominance (active-node median), coupling patterns, authority topology, tier grounding, hero moment grounding, cluster architecture (app-code filtered)"
     },
     {
       "file": "scripts/pios/spe/confidence_engine.py",

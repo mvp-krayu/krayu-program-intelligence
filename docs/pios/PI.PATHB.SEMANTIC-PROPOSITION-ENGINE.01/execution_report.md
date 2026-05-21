@@ -60,12 +60,12 @@ scripts/pios/semantic_proposition_engine.py  — Orchestrator
 
 | Class | Source | Tier | NetBox Yield |
 |-------|--------|------|-------------|
-| STRUCTURAL_DOMINANCE | Centrality top-N per domain | DIRECT_EVIDENCE | 6 |
+| STRUCTURAL_DOMINANCE | Centrality top-N per domain (active-node median) | DIRECT_EVIDENCE | 12 |
 | COUPLING_PATTERN | Cross-domain import matrix | DIRECT_EVIDENCE | 34 |
 | AUTHORITY_TOPOLOGY | Import vs inheritance authority | DERIVED | 10 |
 | TIER_GROUNDING | CEU tier + reconciliation evidence | DIRECT_EVIDENCE or DERIVED | 12 |
 | HERO_MOMENT_GROUNDING | Hero moment cross-reference | DERIVED | 6 |
-| CLUSTER_ARCHITECTURE | Topology cluster CEU distribution | DERIVED | 6 |
+| CLUSTER_ARCHITECTURE | Topology cluster CEU distribution (app-code filtered) | DERIVED | 1 |
 
 ---
 
@@ -75,12 +75,12 @@ scripts/pios/semantic_proposition_engine.py  — Orchestrator
 
 | Metric | Value |
 |--------|-------|
-| Total propositions | 74 |
-| DIRECT_EVIDENCE | 51 |
-| DERIVED | 23 |
+| Total propositions | 75 |
+| DIRECT_EVIDENCE | 57 |
+| DERIVED | 18 |
 | INFERRED | 0 (not enabled) |
-| Mean confidence | 0.843 |
-| Min confidence | 0.524 |
+| Mean confidence | 0.872 |
+| Min confidence | 0.604 |
 | Max confidence | 0.972 |
 | Authority ceiling | L3 (all) |
 | Status | CANDIDATE (all) |
@@ -89,9 +89,9 @@ scripts/pios/semantic_proposition_engine.py  — Orchestrator
 
 | Range | Count |
 |-------|-------|
-| High (≥0.80) | 51 |
+| High (≥0.80) | 57 |
 | Medium (0.60–0.79) | 14 |
-| Low (0.45–0.59) | 9 |
+| Low (0.45–0.59) | 4 |
 | Very low (<0.45) | 0 |
 
 ### Learning Events Emitted
@@ -124,6 +124,18 @@ Each proposition carries `replay_corridor_refs` — the replay corridors from wh
 ### 3d. Replayability
 
 Derivation hash is computed from proposition content excluding timestamps and confidence scores. Two consecutive runs on identical inputs produce identical derivation hashes. Verified.
+
+---
+
+## 3e. Post-Merge Calibration Fixes
+
+Two derivation calibration issues identified during post-merge assessment and corrected:
+
+**STRUCTURAL_DOMINANCE — non-zero-exclusive median:** The original deriver computed median `import_in_degree` across ALL domain files, including leaf files with 0 inbound imports. Domains with >50% leaf files (DCIM, CIRCUITS, EXTRAS, VIRTUALIZATION, VPN, WIRELESS) produced median=0, triggering the `median <= 0` guard and silently dropping the domain. Fix: filter to nodes with `import_in_degree > 0` before computing median. Requires at least 2 active nodes. DCIM (160 import_in_degree, 76/156 active nodes, ratio=80.0x) now correctly surfaces. All 12 confirmed CEUs now have STRUCTURAL_DOMINANCE propositions.
+
+**CLUSTER_ARCHITECTURE — application-code filtering:** The original deriver resolved NODE-XXXX to file paths but classified ALL resolved paths by domain prefix, including non-application paths (`.claude/`, `docs/`, `scripts/`). Only paths with `netbox/` prefix are application code. Fix: require `parts[0] == "netbox"` for domain classification. Require minimum 3 classified nodes per cluster. Use classified node count (not total) as denominator for dominant_share. Result: 5 semantically empty clusters suppressed. Only CLU-20 (1,084 of 2,129 nodes classified across all 12 CEUs) survives.
+
+**Learning events cleanup:** Accumulated JSONL duplicates from development re-runs removed. Clean state: 5 Phase 7 events + 3 SPE events.
 
 ---
 
@@ -164,7 +176,7 @@ Phase 3c inserted between Phase 3b (SDC) and Phase 4 (CEU Grounding):
 - `docs/governance/learning/learning_registry.json` — SEMANTIC_PROPOSITION class
 
 ### Run Directory Outputs (NetBox)
-- `spine/spine_objects.json` — 74 semantic_propositions appended
+- `spine/spine_objects.json` — 75 semantic_propositions appended
 - `semantic/spe/proposition_derivation_lineage.json`
 - `semantic/spe/proposition_review_queue.json`
 - `semantic/spe/spe_derivation_report.json`

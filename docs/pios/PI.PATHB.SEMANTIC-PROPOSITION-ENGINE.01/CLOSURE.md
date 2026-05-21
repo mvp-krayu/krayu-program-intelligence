@@ -18,8 +18,11 @@ Phase 9 of the Canonical Operational Roadmap — Semantic Proposition Engine. Fi
 8. Implemented AI-gated INFERRED tier (optional, uses SDC LLM adapter)
 9. Integrated Phase 3c into pipeline orchestrator (between Phase 3b and Phase 4)
 10. Updated learning registry with SEMANTIC_PROPOSITION capability class and consumption declaration
-11. Executed SPE on NetBox: 74 CANDIDATE propositions, 74 lineage events, 3 learning events
+11. Executed SPE on NetBox: 75 CANDIDATE propositions, 75 lineage events, 3 learning events
 12. Verified replayability: identical derivation_hash across runs
+13. Calibrated STRUCTURAL_DOMINANCE: non-zero-exclusive median — all 12 CEUs now covered (was 6)
+14. Calibrated CLUSTER_ARCHITECTURE: application-code filtering — 5 empty clusters suppressed
+15. Cleaned learning events JSONL: removed development duplicates
 
 ## 4. Files Impacted
 
@@ -49,7 +52,7 @@ Phase 9 of the Canonical Operational Roadmap — Semantic Proposition Engine. Fi
 
 ## 5. Validation
 
-24/24 checks PASS. See validation_log.json.
+29/29 checks PASS. See validation_log.json.
 
 ## 6. Governance
 
@@ -72,15 +75,15 @@ See execution_report.md for full artifact list and derivation results.
 
 **Phase 9: COMPLETE**
 
-NetBox spine now has 74 semantic_propositions (first specimen with operational semantic DNA):
-- 6 STRUCTURAL_DOMINANCE
+NetBox spine now has 75 semantic_propositions (first specimen with operational semantic DNA):
+- 12 STRUCTURAL_DOMINANCE (all confirmed CEUs)
 - 34 COUPLING_PATTERN
 - 10 AUTHORITY_TOPOLOGY
 - 12 TIER_GROUNDING
 - 6 HERO_MOMENT_GROUNDING
-- 6 CLUSTER_ARCHITECTURE
+- 1 CLUSTER_ARCHITECTURE (CLU-20 only — app-code filtered)
 
-Mean confidence: 0.843. Replayable. Learning-aware. Operator review ready.
+Mean confidence: 0.872. Replayable. Learning-aware. Operator review ready.
 
 Recommended next: Phase 10 — Demo capture / commercial proof from spine evidence.
 
@@ -98,7 +101,7 @@ See: IMPLEMENTATION_SEMANTICS.md
 - NEW CONCEPT: Derivation lineage semantic_type (GROUNDING, RELATIONSHIP, CONFLICT, REFINEMENT) — NOT spine classes
 - NEW CONCEPT: Derivation-step learning_context — per-event record of learning influence
 - NEW ARTIFACT: Pipeline Phase 3c (SPE integration)
-- STATUS CHANGE: semantic_proposition spine class — DEFINED → OPERATIONAL (NetBox: 74 propositions)
+- STATUS CHANGE: semantic_proposition spine class — DEFINED → OPERATIONAL (NetBox: 75 propositions)
 - CAPABILITY CLASS: SEMANTIC_PROPOSITION added to learning registry
 
 ### Vault Files To Update:

@@ -88,10 +88,17 @@ def derive_structural_dominance(
 
         top_node = max(nodes, key=lambda n: n.get("import_in_degree", 0))
         top_in = top_node.get("import_in_degree", 0)
-        median = _median_in_degree(nodes)
-
-        if median <= 0 or top_in <= 0:
+        if top_in <= 0:
             continue
+
+        # Non-zero-exclusive median: leaf files with 0 imports are structural noise
+        active_nodes = [n for n in nodes if n.get("import_in_degree", 0) > 0]
+        if len(active_nodes) < 2:
+            continue
+
+        median = _median_in_degree(active_nodes)
+        if median <= 0:
+            median = 1.0
 
         ratio = top_in / median
         if ratio < 1.5:
@@ -121,12 +128,14 @@ def derive_structural_dominance(
                 "domain_median_in_degree": median,
                 "dominance_ratio": round(ratio, 2),
                 "domain_file_count": len(nodes),
+                "active_node_count": len(active_nodes),
                 "structural_role": top_node.get("structural_role", "UNKNOWN"),
                 "centrality_rank": top_node.get("centrality_rank", 0),
             },
             replay_corridor_refs=replay_refs,
             derivation_rationale=(
-                f"Top centrality node in {domain} has {ratio:.1f}x median in-degree. "
+                f"Top centrality node in {domain} has {ratio:.1f}x active-node median in-degree "
+                f"({len(active_nodes)} of {len(nodes)} nodes with imports). "
                 f"Structural role: {top_node.get('structural_role', 'UNKNOWN')}."
             ),
             reconciliation_state="ALIGNED" if ceu.get("reconciliation_finding") == "ALIGNED" else "NOVEL",
@@ -146,6 +155,7 @@ def derive_structural_dominance(
                 "in_degree": top_in,
                 "median": median,
                 "ratio": round(ratio, 2),
+                "active_node_count": len(active_nodes),
             },
             learning_context=learning_ctx,
             timestamp=ts,
@@ -637,6 +647,7 @@ def derive_cluster_architecture(
             continue
 
         ceu_distribution = defaultdict(int)
+        classified_count = 0
         if isinstance(raw_nodes, list):
             for node in raw_nodes:
                 if isinstance(node, str):
@@ -644,32 +655,38 @@ def derive_cluster_architecture(
                 else:
                     path = node.get("path", "")
                 parts = path.split("/")
-                if len(parts) >= 2:
-                    domain = parts[1] if parts[0] == "netbox" else parts[0]
+                if len(parts) >= 2 and parts[0] == "netbox":
+                    domain = parts[1]
                     if domain in confirmed_domains:
                         ceu_distribution[confirmed_domains[domain]] += 1
+                        classified_count += 1
+
+        if classified_count < 3:
+            continue
 
         distinct_ceus = len(ceu_distribution)
         dominant_ceu = max(ceu_distribution, key=ceu_distribution.get) if ceu_distribution else None
-        dominant_share = ceu_distribution[dominant_ceu] / node_count if dominant_ceu and node_count > 0 else 0
+        dominant_share = ceu_distribution[dominant_ceu] / classified_count if dominant_ceu else 0
 
         if distinct_ceus <= 1 and dominant_share > 0.9:
             kind = "aligned"
             text = (
                 f"Cluster {cluster_id} is {dominant_ceu}-aligned: "
-                f"{node_count} nodes, {dominant_share:.0%} from single CEU"
+                f"{classified_count} of {node_count} nodes classified, "
+                f"{dominant_share:.0%} from single CEU"
             )
         elif distinct_ceus >= 3:
             kind = "cross-cutting"
             text = (
                 f"Cluster {cluster_id} is cross-cutting: "
-                f"{node_count} nodes spanning {distinct_ceus} CEUs"
+                f"{classified_count} of {node_count} nodes across {distinct_ceus} CEUs"
             )
         else:
             kind = "mixed"
             text = (
                 f"Cluster {cluster_id} spans {distinct_ceus} CEUs: "
-                f"{node_count} nodes, dominant {dominant_ceu} at {dominant_share:.0%}"
+                f"{classified_count} of {node_count} nodes classified, "
+                f"dominant {dominant_ceu} at {dominant_share:.0%}"
             )
 
         prop_id = _prop_id(specimen_id, prop_counter)
@@ -689,6 +706,7 @@ def derive_cluster_architecture(
             structural_refs={
                 "cluster_id": cluster_id,
                 "node_count": node_count,
+                "classified_node_count": classified_count,
                 "ceu_distribution": dict(ceu_distribution),
                 "distinct_ceu_count": distinct_ceus,
                 "cluster_kind": kind,
@@ -696,7 +714,7 @@ def derive_cluster_architecture(
                 "dominant_share": round(dominant_share, 3) if dominant_share else 0,
             },
             replay_corridor_refs=replay_refs,
-            derivation_rationale=f"Cluster {cluster_id}: {kind} with {distinct_ceus} CEUs and {node_count} nodes.",
+            derivation_rationale=f"Cluster {cluster_id}: {kind} with {distinct_ceus} CEUs across {classified_count} classified nodes ({node_count} total).",
             reconciliation_state="NOVEL",
         )
         propositions.append(prop)
@@ -710,6 +728,7 @@ def derive_cluster_architecture(
             evidence={
                 "cluster_id": cluster_id,
                 "node_count": node_count,
+                "classified_node_count": classified_count,
                 "ceu_distribution": dict(ceu_distribution),
                 "kind": kind,
             },
