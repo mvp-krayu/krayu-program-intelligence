@@ -3,23 +3,24 @@
   "client_id": "netbox",
   "run_id": "run_github_netbox_20260520_134600",
   "seeded_at": "2026-05-21T07:31:54.282433+00:00",
-  "reconciliation_status": "INITIALIZED",
+  "review_mode": "OPERATOR_VALIDATED",
+  "reconciliation_status": "COMPLETE",
   "summary": {
     "total": 13,
-    "proposed": 2,
-    "evidence_attached": 11,
+    "proposed": 0,
+    "evidence_attached": 0,
     "reconciled": 0,
-    "confirmed": 0,
+    "confirmed": 12,
     "rejected": 0,
-    "merged": 0,
+    "merged": 1,
     "split": 0,
     "reclassified": 0,
-    "pending": 13
+    "pending": 0
   },
   "candidates": {
     "CEU-ACCOUNT": {
       "domain": "account",
-      "state": "PROPOSED",
+      "state": "MERGED",
       "tier": "OPERATIONAL_DOMAIN",
       "file_count": 5,
       "evidence_count": 0,
@@ -27,13 +28,14 @@
       "merge_candidate": true,
       "authority_pattern": "IMPORT_DOMINANT",
       "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "last_action": "ceu_merge",
+      "last_actor": "operator:khorrix",
+      "last_action_at": "2026-05-21T07:40:14.033Z",
+      "merged_into": "CEU-USERS"
     },
     "CEU-CIRCUITS": {
       "domain": "circuits",
-      "state": "EVIDENCE_ATTACHED",
+      "state": "CONFIRMED",
       "tier": "CONSUMER",
       "file_count": 63,
       "evidence_count": 5,
@@ -46,14 +48,14 @@
       },
       "merge_candidate": false,
       "authority_pattern": "IMPORT_DOMINANT",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "ALIGNED",
+      "last_action": "ceu_confirm",
+      "last_actor": "operator:khorrix",
+      "last_action_at": "2026-05-21T07:39:58.588Z"
     },
     "CEU-CORE": {
       "domain": "core",
-      "state": "EVIDENCE_ATTACHED",
+      "state": "CONFIRMED",
       "tier": "OPERATIONAL_DOMAIN",
       "file_count": 96,
       "evidence_count": 7,
@@ -66,14 +68,14 @@
       },
       "merge_candidate": false,
       "authority_pattern": "IMPORT_DOMINANT",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "ALIGNED",
+      "last_action": "ceu_confirm",
+      "last_actor": "operator:khorrix",
+      "last_action_at": "2026-05-21T07:39:58.635Z"
     },
     "CEU-DCIM": {
       "domain": "dcim",
-      "state": "EVIDENCE_ATTACHED",
+      "state": "CONFIRMED",
       "tier": "OPERATIONAL_DOMAIN",
       "file_count": 156,
       "evidence_count": 7,
@@ -86,14 +88,14 @@
       },
       "merge_candidate": false,
       "authority_pattern": "IMPORT_DOMINANT",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "ALIGNED",
+      "last_action": "ceu_confirm",
+      "last_actor": "operator:khorrix",
+      "last_action_at": "2026-05-21T07:39:58.673Z"
     },
     "CEU-EXTRAS": {
       "domain": "extras",
-      "state": "EVIDENCE_ATTACHED",
+      "state": "CONFIRMED",
       "tier": "CONSUMER",
       "file_count": 151,
       "evidence_count": 11,
@@ -106,14 +108,14 @@
       },
       "merge_candidate": false,
       "authority_pattern": "IMPORT_DOMINANT",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "ALIGNED",
+      "last_action": "ceu_confirm",
+      "last_actor": "operator:khorrix",
+      "last_action_at": "2026-05-21T07:39:58.711Z"
     },
     "CEU-IPAM": {
       "domain": "ipam",
-      "state": "EVIDENCE_ATTACHED",
+      "state": "CONFIRMED",
       "tier": "OPERATIONAL_DOMAIN",
       "file_count": 94,
       "evidence_count": 6,
@@ -126,14 +128,14 @@
       },
       "merge_candidate": false,
       "authority_pattern": "IMPORT_DOMINANT",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "ALIGNED",
+      "last_action": "ceu_confirm",
+      "last_actor": "operator:khorrix",
+      "last_action_at": "2026-05-21T07:39:58.748Z"
     },
     "CEU-NETBOX": {
       "domain": "netbox",
-      "state": "EVIDENCE_ATTACHED",
+      "state": "CONFIRMED",
       "tier": "FOUNDATION",
       "file_count": 136,
       "evidence_count": 1,
@@ -142,14 +144,14 @@
       },
       "merge_candidate": false,
       "authority_pattern": "INHERITANCE_DOMINANT",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "ALIGNED",
+      "last_action": "ceu_confirm",
+      "last_actor": "operator:khorrix",
+      "last_action_at": "2026-05-21T07:39:58.784Z"
     },
     "CEU-TENANCY": {
       "domain": "tenancy",
-      "state": "EVIDENCE_ATTACHED",
+      "state": "CONFIRMED",
       "tier": "OPERATIONAL_DOMAIN",
       "file_count": 56,
       "evidence_count": 7,
@@ -162,16 +164,16 @@
       },
       "merge_candidate": false,
       "authority_pattern": "IMPORT_DOMINANT",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "ALIGNED",
+      "last_action": "ceu_confirm",
+      "last_actor": "operator:khorrix",
+      "last_action_at": "2026-05-21T07:39:58.821Z"
     },
     "CEU-USERS": {
       "domain": "users",
-      "state": "EVIDENCE_ATTACHED",
+      "state": "CONFIRMED",
       "tier": "OPERATIONAL_DOMAIN",
-      "file_count": 60,
+      "file_count": 65,
       "evidence_count": 6,
       "evidence_types": {
         "APP_CONFIG": 1,
@@ -182,28 +184,28 @@
       },
       "merge_candidate": false,
       "authority_pattern": "DUAL_AUTHORITY",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "ALIGNED",
+      "last_action": "ceu_confirm",
+      "last_actor": "operator:khorrix",
+      "last_action_at": "2026-05-21T07:39:58.857Z"
     },
     "CEU-UTILITIES": {
       "domain": "utilities",
-      "state": "PROPOSED",
+      "state": "CONFIRMED",
       "tier": "FOUNDATION",
       "file_count": 105,
-      "evidence_count": 0,
+      "evidence_count": 1,
       "evidence_types": {},
       "merge_candidate": false,
       "authority_pattern": "INHERITANCE_DOMINANT",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "ALIGNED",
+      "last_action": "ceu_confirm",
+      "last_actor": "operator:khorrix",
+      "last_action_at": "2026-05-21T07:40:27.482Z"
     },
     "CEU-VIRTUALIZATION": {
       "domain": "virtualization",
-      "state": "EVIDENCE_ATTACHED",
+      "state": "CONFIRMED",
       "tier": "CONSUMER",
       "file_count": 65,
       "evidence_count": 5,
@@ -216,14 +218,14 @@
       },
       "merge_candidate": false,
       "authority_pattern": "IMPORT_DOMINANT",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "ALIGNED",
+      "last_action": "ceu_confirm",
+      "last_actor": "operator:khorrix",
+      "last_action_at": "2026-05-21T07:39:58.893Z"
     },
     "CEU-VPN": {
       "domain": "vpn",
-      "state": "EVIDENCE_ATTACHED",
+      "state": "CONFIRMED",
       "tier": "CONSUMER",
       "file_count": 51,
       "evidence_count": 6,
@@ -236,14 +238,14 @@
       },
       "merge_candidate": false,
       "authority_pattern": "IMPORT_DOMINANT",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "ALIGNED",
+      "last_action": "ceu_confirm",
+      "last_actor": "operator:khorrix",
+      "last_action_at": "2026-05-21T07:39:58.931Z"
     },
     "CEU-WIRELESS": {
       "domain": "wireless",
-      "state": "EVIDENCE_ATTACHED",
+      "state": "CONFIRMED",
       "tier": "CONSUMER",
       "file_count": 51,
       "evidence_count": 5,
@@ -256,16 +258,18 @@
       },
       "merge_candidate": false,
       "authority_pattern": "IMPORT_DOMINANT",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "ALIGNED",
+      "last_action": "ceu_confirm",
+      "last_actor": "operator:khorrix",
+      "last_action_at": "2026-05-21T07:39:58.967Z"
     }
   },
   "promotion_gate": {
-    "all_candidates_resolved": false,
-    "unresolved_obligations": 3,
-    "semantic_derivation_permitted": false,
-    "gate_reason": "Reconciliation not started \u2014 candidates require review"
+    "all_candidates_resolved": true,
+    "unresolved_obligations": 0,
+    "review_mode": "OPERATOR_VALIDATED",
+    "review_sufficient": true,
+    "semantic_derivation_permitted": true,
+    "gate_reason": "All candidates resolved, obligations cleared, and review mode qualifies — semantic derivation permitted"
   }
 }

@@ -30,20 +30,39 @@ function recomputeSummary(candidates) {
   return summary;
 }
 
-function recomputePromotionGate(candidates, obligations) {
+const REVIEW_MODE_RANK = {
+  UNCLASSIFIED: 0,
+  SYSTEM_TEST: 1,
+  OPERATOR_VALIDATED: 2,
+  DOMAIN_AUTHORITY_VALIDATED: 3,
+};
+
+function recomputePromotionGate(candidates, obligations, reviewMode) {
   const allResolved = Object.values(candidates).every(c => TERMINAL_STATES.includes(c.state));
   const unresolvedObls = (obligations || []).filter(o => o.status === 'UNRESOLVED').length;
-  const permitted = allResolved && unresolvedObls === 0;
+  const candidatesCleared = allResolved && unresolvedObls === 0;
+  const modeRank = REVIEW_MODE_RANK[reviewMode] ?? 0;
+  const reviewSufficient = modeRank >= REVIEW_MODE_RANK.OPERATOR_VALIDATED;
+  const permitted = candidatesCleared && reviewSufficient;
+
+  let gate_reason;
+  if (permitted) {
+    gate_reason = 'All candidates resolved, obligations cleared, and review mode qualifies — semantic derivation permitted';
+  } else if (!allResolved) {
+    gate_reason = `${Object.values(candidates).filter(c => !TERMINAL_STATES.includes(c.state)).length} candidates still pending resolution`;
+  } else if (unresolvedObls > 0) {
+    gate_reason = `${unresolvedObls} unresolved obligations remain`;
+  } else {
+    gate_reason = `Review mode "${reviewMode || 'UNCLASSIFIED'}" insufficient — requires OPERATOR_VALIDATED or DOMAIN_AUTHORITY_VALIDATED`;
+  }
 
   return {
     all_candidates_resolved: allResolved,
     unresolved_obligations: unresolvedObls,
+    review_mode: reviewMode || 'UNCLASSIFIED',
+    review_sufficient: reviewSufficient,
     semantic_derivation_permitted: permitted,
-    gate_reason: permitted
-      ? 'All candidates resolved and obligations cleared — semantic derivation permitted'
-      : !allResolved
-        ? `${Object.values(candidates).filter(c => !TERMINAL_STATES.includes(c.state)).length} candidates still pending resolution`
-        : `${unresolvedObls} unresolved obligations remain`,
+    gate_reason,
   };
 }
 
@@ -264,12 +283,26 @@ function applyAction({ action, client, runId, actor_id, target_ceu_id, justifica
       break;
     }
 
+    case 'ceu_classify_review': {
+      const priorMode = reconciliationState.review_mode || 'UNCLASSIFIED';
+      reconciliationState.review_mode = target_ceu_id;
+
+      event = buildEvent({
+        existingLog, actorId: actor_id, actorRole: validation.actor_role,
+        action, targetCeuId: null,
+        priorState: priorMode, resultingState: target_ceu_id,
+        justification,
+        detail: { prior_review_mode: priorMode, new_review_mode: target_ceu_id },
+      });
+      break;
+    }
+
     default:
       throw new Error(`Unknown action: ${action}`);
   }
 
   reconciliationState.summary = recomputeSummary(candidates);
-  reconciliationState.promotion_gate = recomputePromotionGate(candidates, obligations);
+  reconciliationState.promotion_gate = recomputePromotionGate(candidates, obligations, reconciliationState.review_mode);
   reconciliationState.reconciliation_status = reconciliationState.promotion_gate.semantic_derivation_permitted ? 'COMPLETE' : 'IN_PROGRESS';
 
   reconciliationObligations.obligations = obligations;

@@ -20,6 +20,7 @@ function resolveCeuReconciliationWorkspace(client, runId) {
     available: true,
     client,
     runId,
+    reviewMode: reconciliationState.review_mode || 'UNCLASSIFIED',
     reconciliationStatus: reconciliationState.reconciliation_status,
     summary,
     gateStatus,

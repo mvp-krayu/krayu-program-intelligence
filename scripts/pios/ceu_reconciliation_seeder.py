@@ -177,6 +177,7 @@ def build_reconciliation_state(
         "client_id": client,
         "run_id": run_id,
         "seeded_at": now,
+        "review_mode": "UNCLASSIFIED",
         "reconciliation_status": "INITIALIZED",
         "summary": {
             "total": total,
@@ -194,6 +195,8 @@ def build_reconciliation_state(
         "promotion_gate": {
             "all_candidates_resolved": False,
             "unresolved_obligations": unresolved,
+            "review_mode": "UNCLASSIFIED",
+            "review_sufficient": False,
             "semantic_derivation_permitted": False,
             "gate_reason": "Reconciliation not started — candidates require review",
         },

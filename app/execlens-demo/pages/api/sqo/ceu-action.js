@@ -2,7 +2,7 @@
 
 const { executeAction } = require('../../../lib/sqo-cockpit/server/CEUActionEngine.server');
 
-const ACTIONS_REQUIRING_JUSTIFICATION = ['ceu_reject', 'ceu_merge', 'ceu_split', 'ceu_reclassify'];
+const ACTIONS_REQUIRING_JUSTIFICATION = ['ceu_reject', 'ceu_merge', 'ceu_split', 'ceu_reclassify', 'ceu_classify_review'];
 
 export default function handler(req, res) {
   if (req.method !== 'POST') {

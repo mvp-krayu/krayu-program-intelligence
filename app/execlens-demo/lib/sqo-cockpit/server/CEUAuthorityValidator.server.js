@@ -5,6 +5,7 @@ const ROLE_ACTION_MAP = {
     'ceu_attach_evidence', 'ceu_reconcile',
     'ceu_confirm', 'ceu_reject', 'ceu_merge', 'ceu_split', 'ceu_reclassify',
     'ceu_create_obligation', 'ceu_resolve_obligation',
+    'ceu_classify_review',
   ],
   reviewer: [
     'ceu_attach_evidence', 'ceu_reconcile',
@@ -13,6 +14,7 @@ const ROLE_ACTION_MAP = {
   domain_authority: [
     'ceu_confirm', 'ceu_reject', 'ceu_merge', 'ceu_split', 'ceu_reclassify',
     'ceu_resolve_obligation',
+    'ceu_classify_review',
   ],
   promotion_authority: [],
   audit_authority: [],
@@ -28,6 +30,7 @@ const ACTION_AUTHORITY = {
   ceu_reclassify:         { domain: 'semantic_authority', level: 'L4' },
   ceu_create_obligation:  { domain: 'semantic_authority', level: 'L3' },
   ceu_resolve_obligation: { domain: 'semantic_authority', level: 'L4' },
+  ceu_classify_review:    { domain: 'governance_authority', level: 'L4' },
 };
 
 const VALID_CANDIDATE_STATES = ['PROPOSED', 'EVIDENCE_ATTACHED', 'RECONCILED', 'CONFIRMED', 'REJECTED', 'MERGED'];
@@ -163,6 +166,18 @@ function validateAction(action, actorId, targetCeuId, reconciliationState, recon
       if (!obl) return { valid: false, reason: 'OBLIGATION_NOT_FOUND', detail: `Obligation "${targetCeuId}" not found` };
       if (obl.status !== 'UNRESOLVED') {
         return { valid: false, reason: 'OBLIGATION_NOT_UNRESOLVED', detail: `Obligation "${targetCeuId}" is "${obl.status}", must be UNRESOLVED` };
+      }
+      break;
+    }
+
+    case 'ceu_classify_review': {
+      const VALID_MODES = ['SYSTEM_TEST', 'OPERATOR_VALIDATED', 'DOMAIN_AUTHORITY_VALIDATED'];
+      if (!targetCeuId || !VALID_MODES.includes(targetCeuId)) {
+        return { valid: false, reason: 'INVALID_REVIEW_MODE', detail: `target_ceu_id must be one of: ${VALID_MODES.join(', ')}` };
+      }
+      const currentMode = reconciliationState?.review_mode || 'UNCLASSIFIED';
+      if (targetCeuId === 'SYSTEM_TEST' && currentMode !== 'UNCLASSIFIED' && currentMode !== 'SYSTEM_TEST') {
+        return { valid: false, reason: 'REVIEW_MODE_DOWNGRADE', detail: `Cannot downgrade review mode from "${currentMode}" to "SYSTEM_TEST"` };
       }
       break;
     }
