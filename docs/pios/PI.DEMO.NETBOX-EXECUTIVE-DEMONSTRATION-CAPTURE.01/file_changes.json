@@ -1,0 +1,43 @@
+{
+  "stream_id": "PI.DEMO.NETBOX-EXECUTIVE-DEMONSTRATION-CAPTURE.01",
+  "total_files": 7,
+  "created": 6,
+  "modified": 1,
+  "files": [
+    {
+      "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/EXECUTIVE_DEMONSTRATION_FOUNDATION.md",
+      "action": "CREATED",
+      "description": "Executive demonstration walkthrough — 6-act narrative, choreography, emphasis guidance, guardrails"
+    },
+    {
+      "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/screenshots/netbox-sqo-overview-post-ceu.png",
+      "action": "CREATED",
+      "description": "SQO V1 overview — S1 posture, runtime capabilities"
+    },
+    {
+      "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/screenshots/netbox-ceu-reconciliation-complete.png",
+      "action": "CREATED",
+      "description": "CEU reconciliation complete — 12 confirmed, 1 merged, OPERATOR_VALIDATED, event timeline"
+    },
+    {
+      "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/screenshots/netbox-lens-v2-current.png",
+      "action": "CREATED",
+      "description": "LENS v2 structural intelligence — INTELLIGENCE BLOCKED, 24 clusters, topology, spines"
+    },
+    {
+      "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/screenshots/netbox-v2-cockpit-current.png",
+      "action": "CREATED",
+      "description": "V2 role declaration gate — 5 RBAC roles"
+    },
+    {
+      "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/screenshots/netbox-v2-operator-cockpit.png",
+      "action": "CREATED",
+      "description": "V2 operator cockpit — S1, 7 blockers, 12 actions, progression rail"
+    },
+    {
+      "path": "docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/screenshot_manifest.md",
+      "action": "MODIFIED",
+      "description": "Added entries 9-13 for post-CEU screenshot captures"
+    }
+  ]
+}
