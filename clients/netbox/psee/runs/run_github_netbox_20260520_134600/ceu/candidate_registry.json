@@ -1,0 +1,675 @@
+{
+  "contract_id": "PI.PATHA.CEU-CANDIDATE-DERIVATION.01",
+  "artifact_class": "ceu_candidates",
+  "client_id": "netbox",
+  "run_id": "run_github_netbox_20260520_134600",
+  "generated_at": "2026-05-21T06:55:42.296088+00:00",
+  "source_artifacts": {
+    "code_graph": "40.3s/code_graph.json",
+    "structural_centrality": "40.3c/structural_centrality.json",
+    "canonical_topology": "40.4/canonical_topology.json"
+  },
+  "derivation_method": "STRUCTURAL_SUBSTRATE_PROPOSAL",
+  "candidate_count": 13,
+  "tier_summary": {
+    "OPERATIONAL_DOMAIN": 6,
+    "CONSUMER": 5,
+    "FOUNDATION": 2
+  },
+  "merge_decisions_count": 1,
+  "candidates": [
+    {
+      "ceu_id": "CEU-ACCOUNT",
+      "domain": "account",
+      "tier": "OPERATIONAL_DOMAIN",
+      "tier_rationale": "import_balance_ratio=0.06 \u2014 balanced cross-domain flow",
+      "file_count": 5,
+      "structural_metrics": {
+        "import_in_degree": 3,
+        "import_out_degree": 19,
+        "inherits_in_degree": 0,
+        "cross_domain_import_in": 1,
+        "cross_domain_import_out": 17,
+        "import_balance_ratio": 0.059
+      },
+      "authority_pattern": {
+        "pattern": "IMPORT_DOMINANT",
+        "import_ratio": 1.0,
+        "spine": "netbox/account/views.py"
+      },
+      "top_spine": {
+        "path": "netbox/account/views.py",
+        "in_degree": 1,
+        "import_in_degree": 1,
+        "inherits_in_degree": 0,
+        "structural_role": "INTERFACE_BOUNDARY"
+      },
+      "role_distribution": {
+        "INTERFACE_BOUNDARY": 3,
+        "VALIDATION_SUPPORT": 2
+      },
+      "merge_candidate": true,
+      "status": "PROPOSED",
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "ceu_id": "CEU-CIRCUITS",
+      "domain": "circuits",
+      "tier": "CONSUMER",
+      "tier_rationale": "import_balance_ratio=0.21 (<0.5) with cross_out=133 \u2014 depends on many",
+      "file_count": 63,
+      "structural_metrics": {
+        "import_in_degree": 99,
+        "import_out_degree": 204,
+        "inherits_in_degree": 10,
+        "cross_domain_import_in": 28,
+        "cross_domain_import_out": 133,
+        "import_balance_ratio": 0.211
+      },
+      "authority_pattern": {
+        "pattern": "IMPORT_DOMINANT",
+        "import_ratio": 1.0,
+        "spine": "netbox/circuits/choices.py"
+      },
+      "top_spine": {
+        "path": "netbox/circuits/choices.py",
+        "in_degree": 13,
+        "import_in_degree": 13,
+        "inherits_in_degree": 0,
+        "structural_role": "VALIDATION_SUPPORT"
+      },
+      "role_distribution": {
+        "INTERFACE_BOUNDARY": 42,
+        "VALIDATION_SUPPORT": 18,
+        "RE_EXPORT_HUB": 3
+      },
+      "merge_candidate": false,
+      "status": "PROPOSED",
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "ceu_id": "CEU-CORE",
+      "domain": "core",
+      "tier": "OPERATIONAL_DOMAIN",
+      "tier_rationale": "import_balance_ratio=0.94 \u2014 balanced cross-domain flow",
+      "file_count": 96,
+      "structural_metrics": {
+        "import_in_degree": 271,
+        "import_out_degree": 281,
+        "inherits_in_degree": 44,
+        "cross_domain_import_in": 155,
+        "cross_domain_import_out": 165,
+        "import_balance_ratio": 0.939
+      },
+      "authority_pattern": {
+        "pattern": "IMPORT_DOMINANT",
+        "import_ratio": 1.0,
+        "spine": "netbox/core/choices.py"
+      },
+      "top_spine": {
+        "path": "netbox/core/choices.py",
+        "in_degree": 40,
+        "import_in_degree": 40,
+        "inherits_in_degree": 0,
+        "structural_role": "VALIDATION_SUPPORT"
+      },
+      "role_distribution": {
+        "INTERFACE_BOUNDARY": 64,
+        "VALIDATION_SUPPORT": 29,
+        "RE_EXPORT_HUB": 3
+      },
+      "merge_candidate": false,
+      "status": "PROPOSED",
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "ceu_id": "CEU-DCIM",
+      "domain": "dcim",
+      "tier": "OPERATIONAL_DOMAIN",
+      "tier_rationale": "import_balance_ratio=0.61 \u2014 balanced cross-domain flow",
+      "file_count": 156,
+      "structural_metrics": {
+        "import_in_degree": 500,
+        "import_out_degree": 648,
+        "inherits_in_degree": 466,
+        "cross_domain_import_in": 228,
+        "cross_domain_import_out": 376,
+        "import_balance_ratio": 0.606
+      },
+      "authority_pattern": {
+        "pattern": "IMPORT_DOMINANT",
+        "import_ratio": 1.0,
+        "spine": "netbox/dcim/choices.py"
+      },
+      "top_spine": {
+        "path": "netbox/dcim/choices.py",
+        "in_degree": 76,
+        "import_in_degree": 76,
+        "inherits_in_degree": 0,
+        "structural_role": "VALIDATION_SUPPORT"
+      },
+      "role_distribution": {
+        "INTERFACE_BOUNDARY": 94,
+        "VALIDATION_SUPPORT": 59,
+        "RE_EXPORT_HUB": 3
+      },
+      "merge_candidate": false,
+      "status": "PROPOSED",
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "ceu_id": "CEU-EXTRAS",
+      "domain": "extras",
+      "tier": "CONSUMER",
+      "tier_rationale": "import_balance_ratio=0.34 (<0.5) with cross_out=386 \u2014 depends on many",
+      "file_count": 151,
+      "structural_metrics": {
+        "import_in_degree": 332,
+        "import_out_degree": 587,
+        "inherits_in_degree": 153,
+        "cross_domain_import_in": 131,
+        "cross_domain_import_out": 386,
+        "import_balance_ratio": 0.339
+      },
+      "authority_pattern": {
+        "pattern": "IMPORT_DOMINANT",
+        "import_ratio": 1.0,
+        "spine": "netbox/extras/choices.py"
+      },
+      "top_spine": {
+        "path": "netbox/extras/choices.py",
+        "in_degree": 46,
+        "import_in_degree": 46,
+        "inherits_in_degree": 0,
+        "structural_role": "VALIDATION_SUPPORT"
+      },
+      "role_distribution": {
+        "INTERFACE_BOUNDARY": 104,
+        "VALIDATION_SUPPORT": 44,
+        "RE_EXPORT_HUB": 3
+      },
+      "merge_candidate": false,
+      "status": "PROPOSED",
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "ceu_id": "CEU-IPAM",
+      "domain": "ipam",
+      "tier": "OPERATIONAL_DOMAIN",
+      "tier_rationale": "import_balance_ratio=0.64 \u2014 balanced cross-domain flow",
+      "file_count": 94,
+      "structural_metrics": {
+        "import_in_degree": 247,
+        "import_out_degree": 307,
+        "inherits_in_degree": 47,
+        "cross_domain_import_in": 109,
+        "cross_domain_import_out": 169,
+        "import_balance_ratio": 0.645
+      },
+      "authority_pattern": {
+        "pattern": "IMPORT_DOMINANT",
+        "import_ratio": 1.0,
+        "spine": "netbox/ipam/choices.py"
+      },
+      "top_spine": {
+        "path": "netbox/ipam/choices.py",
+        "in_degree": 26,
+        "import_in_degree": 26,
+        "inherits_in_degree": 0,
+        "structural_role": "VALIDATION_SUPPORT"
+      },
+      "role_distribution": {
+        "INTERFACE_BOUNDARY": 52,
+        "VALIDATION_SUPPORT": 39,
+        "RE_EXPORT_HUB": 3
+      },
+      "merge_candidate": false,
+      "status": "PROPOSED",
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "ceu_id": "CEU-NETBOX",
+      "domain": "netbox",
+      "tier": "FOUNDATION",
+      "tier_rationale": "import_balance_ratio=2.43 (>2.0) \u2014 consumed by many, low outbound dependency",
+      "file_count": 136,
+      "structural_metrics": {
+        "import_in_degree": 815,
+        "import_out_degree": 450,
+        "inherits_in_degree": 1727,
+        "cross_domain_import_in": 620,
+        "cross_domain_import_out": 255,
+        "import_balance_ratio": 2.431
+      },
+      "authority_pattern": {
+        "pattern": "INHERITANCE_DOMINANT",
+        "import_ratio": 0.158,
+        "spine": "netbox/netbox/forms/mixins.py"
+      },
+      "top_spine": {
+        "path": "netbox/netbox/forms/mixins.py",
+        "in_degree": 114,
+        "import_in_degree": 18,
+        "inherits_in_degree": 96,
+        "structural_role": "VALIDATION_SUPPORT"
+      },
+      "role_distribution": {
+        "VALIDATION_SUPPORT": 80,
+        "INTERFACE_BOUNDARY": 53,
+        "RE_EXPORT_HUB": 3
+      },
+      "merge_candidate": false,
+      "status": "PROPOSED",
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "ceu_id": "CEU-TENANCY",
+      "domain": "tenancy",
+      "tier": "OPERATIONAL_DOMAIN",
+      "tier_rationale": "import_balance_ratio=1.43 \u2014 balanced cross-domain flow",
+      "file_count": 56,
+      "structural_metrics": {
+        "import_in_degree": 161,
+        "import_out_degree": 128,
+        "inherits_in_degree": 233,
+        "cross_domain_import_in": 109,
+        "cross_domain_import_out": 76,
+        "import_balance_ratio": 1.434
+      },
+      "authority_pattern": {
+        "pattern": "IMPORT_DOMINANT",
+        "import_ratio": 1.0,
+        "spine": "netbox/tenancy/api/serializers_/tenants.py"
+      },
+      "top_spine": {
+        "path": "netbox/tenancy/api/serializers_/tenants.py",
+        "in_degree": 18,
+        "import_in_degree": 18,
+        "inherits_in_degree": 0,
+        "structural_role": "VALIDATION_SUPPORT"
+      },
+      "role_distribution": {
+        "INTERFACE_BOUNDARY": 35,
+        "VALIDATION_SUPPORT": 19,
+        "RE_EXPORT_HUB": 2
+      },
+      "merge_candidate": false,
+      "status": "PROPOSED",
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "ceu_id": "CEU-USERS",
+      "domain": "users",
+      "tier": "OPERATIONAL_DOMAIN",
+      "tier_rationale": "import_balance_ratio=1.13 \u2014 balanced cross-domain flow",
+      "file_count": 60,
+      "structural_metrics": {
+        "import_in_degree": 165,
+        "import_out_degree": 154,
+        "inherits_in_degree": 61,
+        "cross_domain_import_in": 97,
+        "cross_domain_import_out": 86,
+        "import_balance_ratio": 1.128
+      },
+      "authority_pattern": {
+        "pattern": "DUAL_AUTHORITY",
+        "import_ratio": 0.306,
+        "spine": "netbox/users/api/serializers_/mixins.py"
+      },
+      "top_spine": {
+        "path": "netbox/users/api/serializers_/mixins.py",
+        "in_degree": 36,
+        "import_in_degree": 11,
+        "inherits_in_degree": 25,
+        "structural_role": "VALIDATION_SUPPORT"
+      },
+      "role_distribution": {
+        "INTERFACE_BOUNDARY": 36,
+        "VALIDATION_SUPPORT": 22,
+        "RE_EXPORT_HUB": 2
+      },
+      "merge_candidate": false,
+      "status": "PROPOSED",
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "ceu_id": "CEU-UTILITIES",
+      "domain": "utilities",
+      "tier": "FOUNDATION",
+      "tier_rationale": "import_balance_ratio=5.28 (>2.0) \u2014 consumed by many, low outbound dependency",
+      "file_count": 105,
+      "structural_metrics": {
+        "import_in_degree": 737,
+        "import_out_degree": 241,
+        "inherits_in_degree": 880,
+        "cross_domain_import_in": 612,
+        "cross_domain_import_out": 116,
+        "import_balance_ratio": 5.276
+      },
+      "authority_pattern": {
+        "pattern": "INHERITANCE_DOMINANT",
+        "import_ratio": 0.116,
+        "spine": "netbox/utilities/choices.py"
+      },
+      "top_spine": {
+        "path": "netbox/utilities/choices.py",
+        "in_degree": 121,
+        "import_in_degree": 14,
+        "inherits_in_degree": 107,
+        "structural_role": "VALIDATION_SUPPORT"
+      },
+      "role_distribution": {
+        "VALIDATION_SUPPORT": 60,
+        "INTERFACE_BOUNDARY": 40,
+        "RE_EXPORT_HUB": 4,
+        "RUNTIME_SPINE": 1
+      },
+      "merge_candidate": false,
+      "status": "PROPOSED",
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "ceu_id": "CEU-VIRTUALIZATION",
+      "domain": "virtualization",
+      "tier": "CONSUMER",
+      "tier_rationale": "import_balance_ratio=0.27 (<0.5) with cross_out=195 \u2014 depends on many",
+      "file_count": 65,
+      "structural_metrics": {
+        "import_in_degree": 107,
+        "import_out_degree": 250,
+        "inherits_in_degree": 18,
+        "cross_domain_import_in": 52,
+        "cross_domain_import_out": 195,
+        "import_balance_ratio": 0.267
+      },
+      "authority_pattern": {
+        "pattern": "IMPORT_DOMINANT",
+        "import_ratio": 1.0,
+        "spine": "netbox/virtualization/choices.py"
+      },
+      "top_spine": {
+        "path": "netbox/virtualization/choices.py",
+        "in_degree": 7,
+        "import_in_degree": 7,
+        "inherits_in_degree": 0,
+        "structural_role": "VALIDATION_SUPPORT"
+      },
+      "role_distribution": {
+        "INTERFACE_BOUNDARY": 42,
+        "VALIDATION_SUPPORT": 22,
+        "RE_EXPORT_HUB": 1
+      },
+      "merge_candidate": false,
+      "status": "PROPOSED",
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "ceu_id": "CEU-VPN",
+      "domain": "vpn",
+      "tier": "CONSUMER",
+      "tier_rationale": "import_balance_ratio=0.19 (<0.5) with cross_out=105 \u2014 depends on many",
+      "file_count": 51,
+      "structural_metrics": {
+        "import_in_degree": 82,
+        "import_out_degree": 167,
+        "inherits_in_degree": 2,
+        "cross_domain_import_in": 20,
+        "cross_domain_import_out": 105,
+        "import_balance_ratio": 0.19
+      },
+      "authority_pattern": {
+        "pattern": "IMPORT_DOMINANT",
+        "import_ratio": 1.0,
+        "spine": "netbox/vpn/choices.py"
+      },
+      "top_spine": {
+        "path": "netbox/vpn/choices.py",
+        "in_degree": 17,
+        "import_in_degree": 17,
+        "inherits_in_degree": 0,
+        "structural_role": "VALIDATION_SUPPORT"
+      },
+      "role_distribution": {
+        "INTERFACE_BOUNDARY": 33,
+        "VALIDATION_SUPPORT": 15,
+        "RE_EXPORT_HUB": 3
+      },
+      "merge_candidate": false,
+      "status": "PROPOSED",
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "ceu_id": "CEU-WIRELESS",
+      "domain": "wireless",
+      "tier": "CONSUMER",
+      "tier_rationale": "import_balance_ratio=0.30 (<0.5) with cross_out=118 \u2014 depends on many",
+      "file_count": 51,
+      "structural_metrics": {
+        "import_in_degree": 95,
+        "import_out_degree": 178,
+        "inherits_in_degree": 5,
+        "cross_domain_import_in": 35,
+        "cross_domain_import_out": 118,
+        "import_balance_ratio": 0.297
+      },
+      "authority_pattern": {
+        "pattern": "IMPORT_DOMINANT",
+        "import_ratio": 1.0,
+        "spine": "netbox/wireless/choices.py"
+      },
+      "top_spine": {
+        "path": "netbox/wireless/choices.py",
+        "in_degree": 25,
+        "import_in_degree": 25,
+        "inherits_in_degree": 0,
+        "structural_role": "VALIDATION_SUPPORT"
+      },
+      "role_distribution": {
+        "INTERFACE_BOUNDARY": 33,
+        "VALIDATION_SUPPORT": 17,
+        "RE_EXPORT_HUB": 1
+      },
+      "merge_candidate": false,
+      "status": "PROPOSED",
+      "review_status": "PENDING_HUMAN_REVIEW"
+    }
+  ],
+  "merge_decisions": [
+    {
+      "decision_type": "MERGE_CANDIDATE",
+      "domain": "account",
+      "file_count": 5,
+      "reason": "file_count=5 <= threshold=10",
+      "merge_targets": [
+        "REVIEW_REQUIRED"
+      ],
+      "status": "PROPOSED"
+    }
+  ],
+  "coupling_matrix": [
+    {
+      "domain_a": "extras",
+      "domain_b": "netbox",
+      "a_to_b": 117,
+      "b_to_a": 45,
+      "total": 162,
+      "pattern": "BIDIRECTIONAL"
+    },
+    {
+      "domain_a": "netbox",
+      "domain_b": "utilities",
+      "a_to_b": 112,
+      "b_to_a": 45,
+      "total": 157,
+      "pattern": "BIDIRECTIONAL"
+    },
+    {
+      "domain_a": "dcim",
+      "domain_b": "netbox",
+      "a_to_b": 106,
+      "b_to_a": 21,
+      "total": 127,
+      "pattern": "ASYMMETRIC"
+    },
+    {
+      "domain_a": "extras",
+      "domain_b": "utilities",
+      "a_to_b": 108,
+      "b_to_a": 17,
+      "total": 125,
+      "pattern": "ASYMMETRIC"
+    },
+    {
+      "domain_a": "core",
+      "domain_b": "netbox",
+      "a_to_b": 82,
+      "b_to_a": 40,
+      "total": 122,
+      "pattern": "BIDIRECTIONAL"
+    },
+    {
+      "domain_a": "dcim",
+      "domain_b": "utilities",
+      "a_to_b": 102,
+      "b_to_a": 18,
+      "total": 120,
+      "pattern": "ASYMMETRIC"
+    },
+    {
+      "domain_a": "core",
+      "domain_b": "extras",
+      "a_to_b": 11,
+      "b_to_a": 66,
+      "total": 77,
+      "pattern": "ASYMMETRIC"
+    },
+    {
+      "domain_a": "core",
+      "domain_b": "utilities",
+      "a_to_b": 54,
+      "b_to_a": 16,
+      "total": 70,
+      "pattern": "ASYMMETRIC"
+    },
+    {
+      "domain_a": "dcim",
+      "domain_b": "wireless",
+      "a_to_b": 29,
+      "b_to_a": 36,
+      "total": 65,
+      "pattern": "BIDIRECTIONAL"
+    },
+    {
+      "domain_a": "dcim",
+      "domain_b": "virtualization",
+      "a_to_b": 20,
+      "b_to_a": 42,
+      "total": 62,
+      "pattern": "BIDIRECTIONAL"
+    },
+    {
+      "domain_a": "dcim",
+      "domain_b": "extras",
+      "a_to_b": 25,
+      "b_to_a": 34,
+      "total": 59,
+      "pattern": "BIDIRECTIONAL"
+    },
+    {
+      "domain_a": "ipam",
+      "domain_b": "netbox",
+      "a_to_b": 56,
+      "b_to_a": 3,
+      "total": 59,
+      "pattern": "ASYMMETRIC"
+    },
+    {
+      "domain_a": "dcim",
+      "domain_b": "ipam",
+      "a_to_b": 30,
+      "b_to_a": 28,
+      "total": 58,
+      "pattern": "BIDIRECTIONAL"
+    },
+    {
+      "domain_a": "utilities",
+      "domain_b": "virtualization",
+      "a_to_b": 2,
+      "b_to_a": 51,
+      "total": 53,
+      "pattern": "ASYMMETRIC"
+    },
+    {
+      "domain_a": "netbox",
+      "domain_b": "users",
+      "a_to_b": 19,
+      "b_to_a": 31,
+      "total": 50,
+      "pattern": "BIDIRECTIONAL"
+    },
+    {
+      "domain_a": "users",
+      "domain_b": "utilities",
+      "a_to_b": 38,
+      "b_to_a": 10,
+      "total": 48,
+      "pattern": "ASYMMETRIC"
+    },
+    {
+      "domain_a": "circuits",
+      "domain_b": "netbox",
+      "a_to_b": 43,
+      "b_to_a": 3,
+      "total": 46,
+      "pattern": "ASYMMETRIC"
+    },
+    {
+      "domain_a": "ipam",
+      "domain_b": "utilities",
+      "a_to_b": 37,
+      "b_to_a": 5,
+      "total": 42,
+      "pattern": "ASYMMETRIC"
+    },
+    {
+      "domain_a": "netbox",
+      "domain_b": "virtualization",
+      "a_to_b": 1,
+      "b_to_a": 39,
+      "total": 40,
+      "pattern": "ASYMMETRIC"
+    },
+    {
+      "domain_a": "circuits",
+      "domain_b": "dcim",
+      "a_to_b": 24,
+      "b_to_a": 14,
+      "total": 38,
+      "pattern": "BIDIRECTIONAL"
+    }
+  ],
+  "governance": {
+    "candidates_are_proposals": true,
+    "requires_human_validation": true,
+    "no_semantic_authority_claimed": true,
+    "no_ai_inference": true,
+    "deterministic": true,
+    "derivation_sequence": [
+      "1. Structural substrate derives candidate operational partitions",
+      "2. Structural derivation proposes candidate CEUs",
+      "3. Human validates / adjusts candidates",
+      "4. Documentation evidence anchors boundaries",
+      "5. Semantic derivation compiler runs",
+      "6. Operator reviews via SQO"
+    ]
+  },
+  "validation": {
+    "source_artifacts_present": true,
+    "all_domains_classified": true,
+    "all_tiers_assigned": true,
+    "merge_candidates_identified": true,
+    "coupling_matrix_computed": true,
+    "checks_passed": 5,
+    "checks_total": 5
+  }
+}

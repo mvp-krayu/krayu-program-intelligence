@@ -1,0 +1,333 @@
+{
+  "contract_id": "PI.PATHA.CEU-CANDIDATE-DERIVATION.01",
+  "artifact_class": "ceu_derivation_lineage",
+  "client_id": "netbox",
+  "run_id": "run_github_netbox_20260520_134600",
+  "generated_at": "2026-05-21T06:55:42.296507+00:00",
+  "total_events": 28,
+  "event_types": {
+    "ceu_candidate_proposed": 13,
+    "ceu_classification": 13,
+    "ceu_merge_decision": 1,
+    "dual_authority_observation": 1
+  },
+  "events": [
+    {
+      "event_id": "DRV-0001",
+      "event_type": "ceu_candidate_proposed",
+      "domain": "account",
+      "ceu_id": "CEU-ACCOUNT",
+      "evidence": {
+        "file_count": 5,
+        "import_in": 3,
+        "import_out": 19,
+        "inherits_in": 0,
+        "cross_domain_in": 1,
+        "cross_domain_out": 17
+      }
+    },
+    {
+      "event_id": "DRV-0002",
+      "event_type": "ceu_candidate_proposed",
+      "domain": "circuits",
+      "ceu_id": "CEU-CIRCUITS",
+      "evidence": {
+        "file_count": 63,
+        "import_in": 99,
+        "import_out": 204,
+        "inherits_in": 10,
+        "cross_domain_in": 28,
+        "cross_domain_out": 133
+      }
+    },
+    {
+      "event_id": "DRV-0003",
+      "event_type": "ceu_candidate_proposed",
+      "domain": "core",
+      "ceu_id": "CEU-CORE",
+      "evidence": {
+        "file_count": 96,
+        "import_in": 271,
+        "import_out": 281,
+        "inherits_in": 44,
+        "cross_domain_in": 155,
+        "cross_domain_out": 165
+      }
+    },
+    {
+      "event_id": "DRV-0004",
+      "event_type": "ceu_candidate_proposed",
+      "domain": "dcim",
+      "ceu_id": "CEU-DCIM",
+      "evidence": {
+        "file_count": 156,
+        "import_in": 500,
+        "import_out": 648,
+        "inherits_in": 466,
+        "cross_domain_in": 228,
+        "cross_domain_out": 376
+      }
+    },
+    {
+      "event_id": "DRV-0005",
+      "event_type": "ceu_candidate_proposed",
+      "domain": "extras",
+      "ceu_id": "CEU-EXTRAS",
+      "evidence": {
+        "file_count": 151,
+        "import_in": 332,
+        "import_out": 587,
+        "inherits_in": 153,
+        "cross_domain_in": 131,
+        "cross_domain_out": 386
+      }
+    },
+    {
+      "event_id": "DRV-0006",
+      "event_type": "ceu_candidate_proposed",
+      "domain": "ipam",
+      "ceu_id": "CEU-IPAM",
+      "evidence": {
+        "file_count": 94,
+        "import_in": 247,
+        "import_out": 307,
+        "inherits_in": 47,
+        "cross_domain_in": 109,
+        "cross_domain_out": 169
+      }
+    },
+    {
+      "event_id": "DRV-0007",
+      "event_type": "ceu_candidate_proposed",
+      "domain": "netbox",
+      "ceu_id": "CEU-NETBOX",
+      "evidence": {
+        "file_count": 136,
+        "import_in": 815,
+        "import_out": 450,
+        "inherits_in": 1727,
+        "cross_domain_in": 620,
+        "cross_domain_out": 255
+      }
+    },
+    {
+      "event_id": "DRV-0008",
+      "event_type": "ceu_candidate_proposed",
+      "domain": "tenancy",
+      "ceu_id": "CEU-TENANCY",
+      "evidence": {
+        "file_count": 56,
+        "import_in": 161,
+        "import_out": 128,
+        "inherits_in": 233,
+        "cross_domain_in": 109,
+        "cross_domain_out": 76
+      }
+    },
+    {
+      "event_id": "DRV-0009",
+      "event_type": "ceu_candidate_proposed",
+      "domain": "users",
+      "ceu_id": "CEU-USERS",
+      "evidence": {
+        "file_count": 60,
+        "import_in": 165,
+        "import_out": 154,
+        "inherits_in": 61,
+        "cross_domain_in": 97,
+        "cross_domain_out": 86
+      }
+    },
+    {
+      "event_id": "DRV-0010",
+      "event_type": "ceu_candidate_proposed",
+      "domain": "utilities",
+      "ceu_id": "CEU-UTILITIES",
+      "evidence": {
+        "file_count": 105,
+        "import_in": 737,
+        "import_out": 241,
+        "inherits_in": 880,
+        "cross_domain_in": 612,
+        "cross_domain_out": 116
+      }
+    },
+    {
+      "event_id": "DRV-0011",
+      "event_type": "ceu_candidate_proposed",
+      "domain": "virtualization",
+      "ceu_id": "CEU-VIRTUALIZATION",
+      "evidence": {
+        "file_count": 65,
+        "import_in": 107,
+        "import_out": 250,
+        "inherits_in": 18,
+        "cross_domain_in": 52,
+        "cross_domain_out": 195
+      }
+    },
+    {
+      "event_id": "DRV-0012",
+      "event_type": "ceu_candidate_proposed",
+      "domain": "vpn",
+      "ceu_id": "CEU-VPN",
+      "evidence": {
+        "file_count": 51,
+        "import_in": 82,
+        "import_out": 167,
+        "inherits_in": 2,
+        "cross_domain_in": 20,
+        "cross_domain_out": 105
+      }
+    },
+    {
+      "event_id": "DRV-0013",
+      "event_type": "ceu_candidate_proposed",
+      "domain": "wireless",
+      "ceu_id": "CEU-WIRELESS",
+      "evidence": {
+        "file_count": 51,
+        "import_in": 95,
+        "import_out": 178,
+        "inherits_in": 5,
+        "cross_domain_in": 35,
+        "cross_domain_out": 118
+      }
+    },
+    {
+      "event_id": "DRV-0014",
+      "event_type": "ceu_classification",
+      "domain": "account",
+      "ceu_id": "CEU-ACCOUNT",
+      "tier": "OPERATIONAL_DOMAIN",
+      "rationale": "import_balance_ratio=0.06 \u2014 balanced cross-domain flow"
+    },
+    {
+      "event_id": "DRV-0015",
+      "event_type": "ceu_classification",
+      "domain": "circuits",
+      "ceu_id": "CEU-CIRCUITS",
+      "tier": "CONSUMER",
+      "rationale": "import_balance_ratio=0.21 (<0.5) with cross_out=133 \u2014 depends on many"
+    },
+    {
+      "event_id": "DRV-0016",
+      "event_type": "ceu_classification",
+      "domain": "core",
+      "ceu_id": "CEU-CORE",
+      "tier": "OPERATIONAL_DOMAIN",
+      "rationale": "import_balance_ratio=0.94 \u2014 balanced cross-domain flow"
+    },
+    {
+      "event_id": "DRV-0017",
+      "event_type": "ceu_classification",
+      "domain": "dcim",
+      "ceu_id": "CEU-DCIM",
+      "tier": "OPERATIONAL_DOMAIN",
+      "rationale": "import_balance_ratio=0.61 \u2014 balanced cross-domain flow"
+    },
+    {
+      "event_id": "DRV-0018",
+      "event_type": "ceu_classification",
+      "domain": "extras",
+      "ceu_id": "CEU-EXTRAS",
+      "tier": "CONSUMER",
+      "rationale": "import_balance_ratio=0.34 (<0.5) with cross_out=386 \u2014 depends on many"
+    },
+    {
+      "event_id": "DRV-0019",
+      "event_type": "ceu_classification",
+      "domain": "ipam",
+      "ceu_id": "CEU-IPAM",
+      "tier": "OPERATIONAL_DOMAIN",
+      "rationale": "import_balance_ratio=0.64 \u2014 balanced cross-domain flow"
+    },
+    {
+      "event_id": "DRV-0020",
+      "event_type": "ceu_classification",
+      "domain": "netbox",
+      "ceu_id": "CEU-NETBOX",
+      "tier": "FOUNDATION",
+      "rationale": "import_balance_ratio=2.43 (>2.0) \u2014 consumed by many, low outbound dependency"
+    },
+    {
+      "event_id": "DRV-0021",
+      "event_type": "ceu_classification",
+      "domain": "tenancy",
+      "ceu_id": "CEU-TENANCY",
+      "tier": "OPERATIONAL_DOMAIN",
+      "rationale": "import_balance_ratio=1.43 \u2014 balanced cross-domain flow"
+    },
+    {
+      "event_id": "DRV-0022",
+      "event_type": "ceu_classification",
+      "domain": "users",
+      "ceu_id": "CEU-USERS",
+      "tier": "OPERATIONAL_DOMAIN",
+      "rationale": "import_balance_ratio=1.13 \u2014 balanced cross-domain flow"
+    },
+    {
+      "event_id": "DRV-0023",
+      "event_type": "ceu_classification",
+      "domain": "utilities",
+      "ceu_id": "CEU-UTILITIES",
+      "tier": "FOUNDATION",
+      "rationale": "import_balance_ratio=5.28 (>2.0) \u2014 consumed by many, low outbound dependency"
+    },
+    {
+      "event_id": "DRV-0024",
+      "event_type": "ceu_classification",
+      "domain": "virtualization",
+      "ceu_id": "CEU-VIRTUALIZATION",
+      "tier": "CONSUMER",
+      "rationale": "import_balance_ratio=0.27 (<0.5) with cross_out=195 \u2014 depends on many"
+    },
+    {
+      "event_id": "DRV-0025",
+      "event_type": "ceu_classification",
+      "domain": "vpn",
+      "ceu_id": "CEU-VPN",
+      "tier": "CONSUMER",
+      "rationale": "import_balance_ratio=0.19 (<0.5) with cross_out=105 \u2014 depends on many"
+    },
+    {
+      "event_id": "DRV-0026",
+      "event_type": "ceu_classification",
+      "domain": "wireless",
+      "ceu_id": "CEU-WIRELESS",
+      "tier": "CONSUMER",
+      "rationale": "import_balance_ratio=0.30 (<0.5) with cross_out=118 \u2014 depends on many"
+    },
+    {
+      "event_id": "DRV-0027",
+      "event_type": "ceu_merge_decision",
+      "domain": "account",
+      "decision": "MERGE_CANDIDATE",
+      "reason": "file_count=5 <= threshold=10",
+      "merge_targets": [
+        "REVIEW_REQUIRED"
+      ],
+      "status": "PROPOSED"
+    },
+    {
+      "event_id": "DRV-0028",
+      "event_type": "dual_authority_observation",
+      "import_dominant": {
+        "domain": "netbox",
+        "cross_domain_import_in": 620
+      },
+      "inheritance_dominant": {
+        "domain": "utilities",
+        "inherits_in_degree": 107,
+        "spine": "netbox/utilities/choices.py"
+      },
+      "observation": "Import authority and inheritance authority are structurally separated across different domains"
+    }
+  ],
+  "governance": {
+    "all_decisions_have_evidence": true,
+    "all_classifications_have_rationale": true,
+    "no_human_judgment_embedded": true,
+    "replayable": true
+  }
+}
