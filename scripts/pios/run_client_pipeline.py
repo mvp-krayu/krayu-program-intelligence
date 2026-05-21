@@ -23,6 +23,7 @@ Usage:
 RULE-01: All stages execute through this orchestrator.
 RULE-02: No hardcoded client paths — all paths read from client.yaml + source_manifest.json.
 RULE-05: FAIL CLOSED if any stage fails.
+RULE-06: Learning-aware — loads governed learning registry, records activation manifest.
 """
 
 import argparse
@@ -37,6 +38,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS_DIR = Path(__file__).resolve().parent
+LEARNING_DIR = SCRIPTS_DIR / "learning"
 
 CONTRACT_ID = "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01"
 FIXUP_CONTRACT_ID = "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.FIXUP.01"
@@ -53,6 +55,9 @@ POPULATION_TYPES = {
     "PSIG-004": "cluster_membership",
     "PSIG-006": "node_isolation_ratio",
 }
+
+# Learning consumption state — populated by Phase 0L, consumed by Phase 10L
+_learning_context: dict = {}
 
 
 # ── Utilities ─────────────────────────────────────────────────────────────────
@@ -1384,6 +1389,127 @@ def phase_09_selector_update(client_cfg: dict, run_id: str) -> bool:
     return True
 
 
+# ── Phase 0L: Learning Registry Load ────────────────────────────────────────
+
+def phase_0L_learning_load(client_id: str, run_id: str) -> bool:
+    global _learning_context
+
+    sys.path.insert(0, str(LEARNING_DIR))
+    try:
+        from learning_registry import load_registry, resolve_consumable_for_consumer
+    except ImportError:
+        print("  WARN: learning module not available — running without learning awareness")
+        _learning_context = {"available": False, "reason": "module_not_found"}
+        return True
+    finally:
+        if str(LEARNING_DIR) in sys.path:
+            sys.path.remove(str(LEARNING_DIR))
+
+    registry = load_registry()
+    if not registry or registry["metadata"]["event_count"] == 0:
+        print("  INFO: learning registry empty — no learnings to consume")
+        _learning_context = {
+            "available": True,
+            "registry_loaded": True,
+            "registry_id": registry.get("registry_id"),
+            "event_count": 0,
+            "consumable_count": 0,
+            "consumer_activations": {},
+        }
+        return True
+
+    consumer_activations = {}
+    total_consumable = 0
+
+    for decl in registry.get("consumption_declarations", []):
+        consumer_id = decl["consumer_id"]
+        applicable = resolve_consumable_for_consumer(registry, consumer_id)
+        if applicable:
+            consumer_activations[consumer_id] = applicable
+            total_consumable += len(applicable)
+            print(f"    {consumer_id}: {len(applicable)} consumable learning(s)")
+
+    lifecycle = registry["metadata"].get("lifecycle_summary", {})
+    print(f"  Registry: {registry['metadata']['event_count']} events "
+          f"({lifecycle.get('CONSUMABLE', 0)} consumable, "
+          f"{lifecycle.get('PROPOSED', 0)} proposed)")
+    print(f"  Activated for this run: {total_consumable} learning(s) across "
+          f"{len(consumer_activations)} consumer(s)")
+
+    _learning_context = {
+        "available": True,
+        "registry_loaded": True,
+        "registry_id": registry.get("registry_id"),
+        "event_count": registry["metadata"]["event_count"],
+        "consumable_count": total_consumable,
+        "consumer_activations": consumer_activations,
+        "registry": registry,
+    }
+
+    print(f"  PASS: learning registry loaded")
+    return True
+
+
+# ── Phase 10L: Learning Activation Manifest ─────────────────────────────────
+
+def phase_10L_learning_manifest(client_id: str, run_id: str, run_dir: Path) -> bool:
+    global _learning_context
+
+    if not _learning_context.get("available"):
+        print("  SKIP: learning context not available")
+        return True
+
+    if not _learning_context.get("consumer_activations"):
+        manifest = {
+            "manifest_type": "LEARNING_ACTIVATION_MANIFEST",
+            "contract": "PI.GOVERNANCE.LEARNING-CONSUMPTION-ARCHITECTURE.01",
+            "schema_version": "1.0.0",
+            "client_id": client_id,
+            "run_id": run_id,
+            "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "activation_summary": {
+                "total_activated": 0,
+                "consumers_with_learnings": 0,
+                "governance_model": "ADVISORY_NON_MUTATING",
+            },
+            "explainability": {
+                "question": "Which historical learnings influenced this run?",
+                "answer": "None — no CONSUMABLE learnings in registry at run time",
+            },
+        }
+        manifest_path = run_dir / "governance" / "learning_activation_manifest.json"
+        save_json(manifest_path, manifest)
+        print(f"  PASS: empty activation manifest (no consumable learnings)")
+        return True
+
+    sys.path.insert(0, str(LEARNING_DIR))
+    try:
+        from learning_registry import produce_activation_manifest
+    except ImportError:
+        print("  WARN: learning module not available — skipping manifest")
+        return True
+    finally:
+        if str(LEARNING_DIR) in sys.path:
+            sys.path.remove(str(LEARNING_DIR))
+
+    registry = _learning_context.get("registry", {})
+    consumer_activations = _learning_context["consumer_activations"]
+
+    manifest = produce_activation_manifest(
+        registry=registry,
+        client_id=client_id,
+        run_id=run_id,
+        consumer_activations=consumer_activations,
+    )
+
+    manifest_path = run_dir / "governance" / "learning_activation_manifest.json"
+    save_json(manifest_path, manifest)
+
+    print(f"  PASS: activation manifest — {manifest['activation_summary']['total_activated']} "
+          f"learning(s) across {manifest['activation_summary']['consumers_with_learnings']} consumer(s)")
+    return True
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main() -> int:
@@ -1404,6 +1530,8 @@ def main() -> int:
     run_dir.mkdir(parents=True, exist_ok=True)
 
     phases = [
+        ("Phase 0L — Learning Registry Load",
+         lambda: phase_0L_learning_load(args.client, run_id)),
         ("Phase 1  — Source Boundary",
          lambda: phase_01_source_boundary(source_manifest)),
         ("Phase 2  — Intake Verification",
@@ -1433,6 +1561,8 @@ def main() -> int:
          lambda: phase_08b_vault_readiness(client_cfg, run_dir, run_id)),
         ("Phase 9  — Selector Update",
          lambda: phase_09_selector_update(client_cfg, run_id)),
+        ("Phase 10L — Learning Activation Manifest",
+         lambda: phase_10L_learning_manifest(args.client, run_id, run_dir)),
     ]
 
     if args.phase is not None:

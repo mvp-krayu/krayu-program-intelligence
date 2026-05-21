@@ -1,0 +1,36 @@
+{
+  "stream_id": "PI.GOVERNANCE.LEARNING-CONSUMPTION-ARCHITECTURE.01",
+  "classification": "G1",
+  "validated_at": "2026-05-21T19:45:00Z",
+  "checks": [
+    { "id": "V-001", "name": "Learning lifecycle state machine implemented", "result": "PASS", "detail": "PROPOSED → REVIEWED → PROMOTED → CONSUMABLE → SUPERSEDED + REJECTED branch, governed transitions, fail-closed" },
+    { "id": "V-002", "name": "Invalid transition raises LifecycleViolation", "result": "PASS", "detail": "REVIEWED → CONSUMABLE correctly rejected" },
+    { "id": "V-003", "name": "Transition log is append-only", "result": "PASS", "detail": "Each transition appends to transition_log with actor_id, justification, timestamp" },
+    { "id": "V-004", "name": "Central learning registry loads", "result": "PASS", "detail": "learning_registry.json loaded — 5 events, 5 capability classes, 5 consumption declarations" },
+    { "id": "V-005", "name": "Registry seeded with Phase 7 events", "result": "PASS", "detail": "LRNE-P7-0001 through LRNE-P7-0005 ingested with capability_class and registry_metadata" },
+    { "id": "V-006", "name": "Capability classes defined", "result": "PASS", "detail": "5 classes: SEMANTIC_DERIVATION, EVIDENCE_INTAKE, CODE_GRAPH_ENRICHMENT, SPINE_MANAGEMENT, GOVERNANCE_WORKFLOW" },
+    { "id": "V-007", "name": "Consumption declarations registered", "result": "PASS", "detail": "5 pipeline phases declare capability class consumption with governance_level and replay_guarantee" },
+    { "id": "V-008", "name": "Query by capability_class works", "result": "PASS", "detail": "SEMANTIC_DERIVATION query returns 2 events (LRNE-P7-0001, LRNE-P7-0003)" },
+    { "id": "V-009", "name": "Consumable resolution respects lifecycle state", "result": "PASS", "detail": "All events at PROPOSED — resolve_consumable_for_consumer returns 0 (correct: only CONSUMABLE-state events activate)" },
+    { "id": "V-010", "name": "Activation manifest structure complete", "result": "PASS", "detail": "manifest_type, activation_summary, consumer_activations, explainability — all fields present" },
+    { "id": "V-011", "name": "Pipeline syntax valid", "result": "PASS", "detail": "ast.parse on run_client_pipeline.py succeeds" },
+    { "id": "V-012", "name": "Phase 0L integrated into pipeline", "result": "PASS", "detail": "Learning Registry Load runs before Phase 1 — Source Boundary" },
+    { "id": "V-013", "name": "Phase 10L integrated into pipeline", "result": "PASS", "detail": "Learning Activation Manifest runs after Phase 9 — Selector Update" },
+    { "id": "V-014", "name": "Non-blocking when registry empty", "result": "PASS", "detail": "Phase 0L returns True with empty learning context when no consumable events" },
+    { "id": "V-015", "name": "Non-blocking when module unavailable", "result": "PASS", "detail": "Phase 0L catches ImportError and proceeds without learning awareness" },
+    { "id": "V-016", "name": "consumer_type extensible for agents", "result": "PASS", "detail": "PIPELINE_PHASE, ENRICHMENT_AGENT, MARKETPLACE_CAPABILITY — three consumer types documented" },
+    { "id": "V-017", "name": "Capability classes map to enrichment capabilities", "result": "PASS", "detail": "Each class lists target_capabilities (e.g., tier_classifier, scip_code_graph_enricher)" },
+    { "id": "V-018", "name": "No self-mutation in pipeline", "result": "PASS", "detail": "Governance model is ADVISORY_NON_MUTATING — learnings are recorded, not executed" },
+    { "id": "V-019", "name": "Replay contract defined", "result": "PASS", "detail": "Same registry state + same run inputs → same activation manifest" },
+    { "id": "V-020", "name": "Explainability answerable", "result": "PASS", "detail": "Every run answers: 'Which historical learnings influenced this result?' via activation manifest" },
+    { "id": "V-021", "name": "Architecture document complete", "result": "PASS", "detail": "LEARNING_CONSUMPTION_ARCHITECTURE.md covers lifecycle, registry, hooks, manifest, replay, future agentic slots" },
+    { "id": "V-022", "name": "Agentic boundaries preserved", "result": "PASS", "detail": "Architecture documents: agents MUST NOT mutate pipeline autonomously, promote without governance, create drift, bypass replay" },
+    { "id": "V-023", "name": "Stream governance artifacts present", "result": "PASS", "detail": "execution_report.md, validation_log.json, file_changes.json, CLOSURE.md, IMPLEMENTATION_SEMANTICS.md" }
+  ],
+  "summary": {
+    "total": 23,
+    "passed": 23,
+    "failed": 0,
+    "result": "ALL PASS"
+  }
+}
