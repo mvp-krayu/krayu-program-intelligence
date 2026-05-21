@@ -302,6 +302,8 @@ def main():
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--report-only", action="store_true")
+    parser.add_argument("--force", action="store_true",
+                        help="Overwrite existing reconciliation artifacts")
     args = parser.parse_args()
 
     paths = resolve_paths(args.client, args.run_id)
@@ -342,10 +344,12 @@ def main():
             print(f"    {paths['reconciliation_event_log']}")
         return
 
-    for output_key in ["reconciliation_state", "reconciliation_obligations", "reconciliation_event_log"]:
-        if paths[output_key].is_file():
-            print(f"FAIL: Output already exists (CREATE_ONLY): {paths[output_key]}", file=sys.stderr)
-            sys.exit(1)
+    if not args.force:
+        for output_key in ["reconciliation_state", "reconciliation_obligations", "reconciliation_event_log"]:
+            if paths[output_key].is_file():
+                print(f"FAIL: Output already exists (CREATE_ONLY): {paths[output_key]}", file=sys.stderr)
+                print(f"  Use --force to overwrite", file=sys.stderr)
+                sys.exit(1)
 
     paths["ceu_dir"].mkdir(parents=True, exist_ok=True)
 

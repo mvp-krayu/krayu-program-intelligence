@@ -18,6 +18,10 @@ Reads:
 Writes:
   clients/<client>/psee/runs/<run>/ceu/evidence_anchors.json
 
+Project type detection:
+  DJANGO            — apps.py, models/, api/urls.py extractors
+  PYTHON_PACKAGE    — setup.py, README, entry_points, cross-package deps
+
 Evidence types extracted:
   APP_CONFIG        — Django AppConfig class definition
   MODULE_DOCSTRING  — Top-level module docstrings
@@ -25,6 +29,10 @@ Evidence types extracted:
   URL_NAMESPACE     — API URL namespace definitions
   OFFICIAL_DOCS     — Feature/model documentation matching domain
   MODEL_DOCS        — Per-model documentation pages
+  SETUP_PY          — Python package setup.py metadata (name, description, entry_points, scripts)
+  PACKAGE_README    — Package-level README content
+  CROSS_PACKAGE_DEP — Internal cross-package dependencies (in-requirements.txt)
+  REPO_README_MAP   — Repository-level README section mapping to domain
 
 Usage:
     python3 scripts/pios/ceu_evidence_intake.py \\
@@ -33,10 +41,11 @@ Usage:
 
     --dry-run       Compute all results, log what would be written; no files written
     --report-only   Print detailed report; no files written
+    --force         Overwrite existing evidence_anchors.json
 
 RULE: No AI/LLM. All extraction is deterministic file reading.
 RULE: Evidence is structural extraction, not semantic authoring.
-RULE: CREATE_ONLY — abort if output file already exists (in write mode).
+RULE: CREATE_ONLY — abort if output file already exists (unless --force).
 RULE: Deterministic — same source repository → same evidence anchors.
 """
 
@@ -249,6 +258,234 @@ def extract_official_docs(docs_dir: Path, domain: str) -> list[dict]:
     return anchors
 
 
+# ---------------------------------------------------------------------------
+# Generic Python package extractors
+# ---------------------------------------------------------------------------
+
+def detect_project_type(source_repo: Path) -> str:
+    """Detect project type from repository structure."""
+    for subdir in source_repo.iterdir():
+        if subdir.is_dir() and (subdir / "apps.py").is_file():
+            return "DJANGO"
+        inner = subdir / subdir.name
+        if subdir.is_dir() and inner.is_dir() and (inner / "apps.py").is_file():
+            return "DJANGO"
+    setup_count = sum(1 for d in source_repo.iterdir()
+                      if d.is_dir() and (d / "setup.py").is_file())
+    if setup_count >= 2:
+        return "PYTHON_PACKAGE"
+    if (source_repo / "setup.py").is_file() or (source_repo / "pyproject.toml").is_file():
+        return "PYTHON_PACKAGE"
+    return "UNKNOWN"
+
+
+def extract_setup_py(domain_path: Path) -> dict | None:
+    """Extract metadata from setup.py (name, description, entry_points, scripts)."""
+    setup_file = domain_path / "setup.py"
+    if not setup_file.is_file():
+        return None
+
+    content = setup_file.read_text(errors="replace")
+    result = {
+        "source_path": str(setup_file),
+        "evidence_type": "SETUP_PY",
+    }
+
+    name_match = re.search(
+        r'''name\s*=\s*(?:ST2_COMPONENT|['"]([^'"]+)['"])''', content
+    )
+    st2_comp = re.search(r'''ST2_COMPONENT\s*=\s*['"]([^'"]+)['"]''', content)
+    if st2_comp:
+        result["package_name"] = st2_comp.group(1)
+    elif name_match and name_match.group(1):
+        result["package_name"] = name_match.group(1)
+
+    desc_match = re.search(
+        r'''description\s*=\s*(?:\(\s*)?['"](.+?)['"]''',
+        content, re.DOTALL,
+    )
+    desc_format = re.search(
+        r'''description\s*=\s*['"]\{[^}]*\}[^'"]*['"]\.format''', content
+    )
+    if desc_match:
+        desc = desc_match.group(1).strip()
+        desc = re.sub(r'\s+', ' ', desc)
+        if desc_format and result.get("package_name"):
+            desc = desc.replace("{}", result["package_name"])
+            desc = re.sub(r'\{ST2_COMPONENT\}', result.get("package_name", ""), desc)
+        result["description"] = desc[:500]
+
+    entry_blocks = re.findall(
+        r'''['"]([^'"]+)['"]\s*:\s*\[([^\]]*)\]''',
+        content.split("entry_points")[1] if "entry_points" in content else "",
+    )
+    if entry_blocks:
+        ep = {}
+        for group, items in entry_blocks:
+            entries = re.findall(r'''['"]([^'"]+)['"]''', items)
+            if entries:
+                ep[group] = entries
+        if ep:
+            result["entry_points"] = ep
+
+    scripts_match = re.search(r'scripts\s*=\s*\[([^\]]*)\]', content, re.DOTALL)
+    if scripts_match:
+        scripts = re.findall(r'''['"]([^'"]+)['"]''', scripts_match.group(1))
+        if scripts:
+            result["scripts"] = [s.split("/")[-1] for s in scripts]
+            result["script_count"] = len(scripts)
+
+    find_pkg = re.search(r'find_packages\(', content)
+    if find_pkg:
+        result["uses_find_packages"] = True
+
+    if len(result) > 2:
+        return result
+    return None
+
+
+def extract_package_readme(domain_path: Path) -> dict | None:
+    """Extract README content from a package directory."""
+    for name in ["README.md", "README.rst", "README.txt", "README"]:
+        readme = domain_path / name
+        if readme.is_file():
+            content = readme.read_text(errors="replace")
+            lines = content.strip().split("\n")
+            heading = ""
+            first_para = ""
+            for line in lines:
+                stripped = line.strip()
+                if not heading and stripped and not stripped.startswith(("[![", "![", "---", "===")):
+                    if stripped.startswith("# "):
+                        heading = stripped[2:].strip()
+                    elif len(lines) > 1 and lines[lines.index(line) + 1].strip().startswith(("===", "---")):
+                        heading = stripped
+                    else:
+                        heading = stripped
+                    continue
+                if heading and stripped and not stripped.startswith(("#", "[![", "![", "---", "===")):
+                    first_para = stripped
+                    break
+
+            return {
+                "source_path": str(readme),
+                "evidence_type": "PACKAGE_README",
+                "format": name.split(".")[-1] if "." in name else "txt",
+                "heading": heading[:200],
+                "summary": first_para[:500],
+                "line_count": len(lines),
+            }
+    return None
+
+
+def extract_cross_package_deps(domain_path: Path, all_domains: list[str]) -> dict | None:
+    """Extract internal cross-package dependencies from in-requirements.txt."""
+    req_file = domain_path / "in-requirements.txt"
+    if not req_file.is_file():
+        return None
+
+    content = req_file.read_text(errors="replace")
+    lines = [l.strip() for l in content.split("\n")
+             if l.strip() and not l.strip().startswith("#")]
+
+    internal_deps = []
+    external_deps = []
+    for line in lines:
+        pkg_name = re.split(r'[@>=<!\[; ]', line)[0].strip().lower()
+        is_internal = False
+        for domain in all_domains:
+            if pkg_name == domain.lower() or pkg_name.replace("-", "") == domain.lower().replace("-", ""):
+                internal_deps.append({
+                    "package": pkg_name,
+                    "domain": domain,
+                    "spec": line,
+                })
+                is_internal = True
+                break
+            if pkg_name.startswith(domain.lower().split("/")[0][:3]):
+                git_match = re.search(r'git\+https?://github\.com/\S+', line)
+                if git_match:
+                    internal_deps.append({
+                        "package": pkg_name,
+                        "spec": line,
+                        "external_repo": True,
+                    })
+                    is_internal = True
+                    break
+        if not is_internal:
+            external_deps.append(pkg_name)
+
+    if not internal_deps and not external_deps:
+        return None
+
+    return {
+        "source_path": str(req_file),
+        "evidence_type": "CROSS_PACKAGE_DEP",
+        "internal_dependencies": internal_deps,
+        "internal_dep_count": len(internal_deps),
+        "external_dep_count": len(external_deps),
+        "total_deps": len(internal_deps) + len(external_deps),
+    }
+
+
+def extract_repo_readme_mapping(source_repo: Path, domain: str) -> dict | None:
+    """Map repository-level README sections to a domain name."""
+    for name in ["README.md", "README.rst"]:
+        readme = source_repo / name
+        if readme.is_file():
+            content = readme.read_text(errors="replace")
+            domain_lower = domain.lower().replace("_", "").replace("-", "")
+
+            sections = []
+            current_heading = None
+            current_content = []
+            for line in content.split("\n"):
+                if line.startswith("# ") or line.startswith("## ") or line.startswith("### "):
+                    if current_heading:
+                        text = " ".join(current_content).strip()
+                        heading_clean = current_heading.lower().replace(" ", "").replace("-", "").replace("_", "")
+                        if domain_lower in heading_clean or domain_lower in text.lower().replace(" ", "")[:200]:
+                            sections.append({
+                                "heading": current_heading,
+                                "summary": text[:300] if text else "",
+                            })
+                    hashes = len(line.split(" ")[0])
+                    current_heading = line.lstrip("#").strip()
+                    current_content = []
+                elif line.startswith("* **") or line.startswith("- **"):
+                    bold_match = re.match(r'[*-]\s+\*\*([^*]+)\*\*\s*(.*)', line)
+                    if bold_match:
+                        term = bold_match.group(1).lower().replace(" ", "").replace("-", "")
+                        if domain_lower in term or term in domain_lower:
+                            desc = bold_match.group(2).strip(" -–—")
+                            sections.append({
+                                "heading": f"{current_heading} > {bold_match.group(1)}",
+                                "summary": desc[:300] if desc else "",
+                                "match_type": "inline_definition",
+                            })
+                        current_content.append(line)
+                else:
+                    current_content.append(line)
+
+            if current_heading:
+                text = " ".join(current_content).strip()
+                heading_clean = current_heading.lower().replace(" ", "").replace("-", "").replace("_", "")
+                if domain_lower in heading_clean or domain_lower in text.lower().replace(" ", "")[:200]:
+                    sections.append({
+                        "heading": current_heading,
+                        "summary": text[:300] if text else "",
+                    })
+
+            if sections:
+                return {
+                    "source_path": str(readme),
+                    "evidence_type": "REPO_README_MAP",
+                    "matched_sections": sections,
+                    "section_count": len(sections),
+                }
+    return None
+
+
 DOMAIN_DOC_ALIASES = {
     "dcim": ["dcim", "devices-cabling", "facilities", "power-tracking"],
     "ipam": ["ipam", "vlan-management"],
@@ -326,11 +563,21 @@ def build_evidence_anchors(
     else:
         effective_root = source_repo
 
+    project_type = detect_project_type(effective_root)
     docs_dir = source_repo / "docs"
+    all_domains = [c.get("domain", "") for c in candidates]
 
     anchors = []
     anchor_id = 0
     domain_summary = {}
+
+    def append_anchor(evidence: dict, ceu_id: str, domain: str, domain_anchors: list):
+        nonlocal anchor_id
+        anchor_id += 1
+        evidence["anchor_id"] = f"EA-{anchor_id:04d}"
+        evidence["ceu_id"] = ceu_id
+        evidence["domain"] = domain
+        domain_anchors.append(evidence)
 
     for candidate in candidates:
         domain = candidate.get("domain", "")
@@ -338,55 +585,53 @@ def build_evidence_anchors(
         domain_path = effective_root / domain
         domain_anchors = []
 
-        app_config = extract_app_config(domain_path)
-        if app_config:
-            anchor_id += 1
-            app_config["anchor_id"] = f"EA-{anchor_id:04d}"
-            app_config["ceu_id"] = ceu_id
-            app_config["domain"] = domain
-            domain_anchors.append(app_config)
+        if project_type == "DJANGO":
+            app_config = extract_app_config(domain_path)
+            if app_config:
+                append_anchor(app_config, ceu_id, domain, domain_anchors)
+
+            module_doc = extract_module_docstring(domain_path)
+            if module_doc:
+                append_anchor(module_doc, ceu_id, domain, domain_anchors)
+
+            model_inv = extract_model_inventory(domain_path)
+            if model_inv:
+                append_anchor(model_inv, ceu_id, domain, domain_anchors)
+
+            url_ns = extract_url_namespace(domain_path)
+            if url_ns:
+                append_anchor(url_ns, ceu_id, domain, domain_anchors)
+
+            official = extract_official_docs(docs_dir, domain)
+            for doc in official:
+                append_anchor(doc, ceu_id, domain, domain_anchors)
+
+            aliased = extract_aliased_docs(docs_dir, domain)
+            for doc in aliased:
+                existing_paths = {a["source_path"] for a in domain_anchors}
+                if doc["source_path"] not in existing_paths:
+                    append_anchor(doc, ceu_id, domain, domain_anchors)
+
+        if project_type in ("PYTHON_PACKAGE", "UNKNOWN"):
+            setup = extract_setup_py(domain_path)
+            if setup:
+                append_anchor(setup, ceu_id, domain, domain_anchors)
+
+            readme = extract_package_readme(domain_path)
+            if readme:
+                append_anchor(readme, ceu_id, domain, domain_anchors)
+
+            cross_deps = extract_cross_package_deps(domain_path, all_domains)
+            if cross_deps:
+                append_anchor(cross_deps, ceu_id, domain, domain_anchors)
+
+            repo_map = extract_repo_readme_mapping(source_repo, domain)
+            if repo_map:
+                append_anchor(repo_map, ceu_id, domain, domain_anchors)
 
         module_doc = extract_module_docstring(domain_path)
-        if module_doc:
-            anchor_id += 1
-            module_doc["anchor_id"] = f"EA-{anchor_id:04d}"
-            module_doc["ceu_id"] = ceu_id
-            module_doc["domain"] = domain
-            domain_anchors.append(module_doc)
-
-        model_inv = extract_model_inventory(domain_path)
-        if model_inv:
-            anchor_id += 1
-            model_inv["anchor_id"] = f"EA-{anchor_id:04d}"
-            model_inv["ceu_id"] = ceu_id
-            model_inv["domain"] = domain
-            domain_anchors.append(model_inv)
-
-        url_ns = extract_url_namespace(domain_path)
-        if url_ns:
-            anchor_id += 1
-            url_ns["anchor_id"] = f"EA-{anchor_id:04d}"
-            url_ns["ceu_id"] = ceu_id
-            url_ns["domain"] = domain
-            domain_anchors.append(url_ns)
-
-        official = extract_official_docs(docs_dir, domain)
-        for doc in official:
-            anchor_id += 1
-            doc["anchor_id"] = f"EA-{anchor_id:04d}"
-            doc["ceu_id"] = ceu_id
-            doc["domain"] = domain
-            domain_anchors.append(doc)
-
-        aliased = extract_aliased_docs(docs_dir, domain)
-        for doc in aliased:
-            existing_paths = {a["source_path"] for a in domain_anchors}
-            if doc["source_path"] not in existing_paths:
-                anchor_id += 1
-                doc["anchor_id"] = f"EA-{anchor_id:04d}"
-                doc["ceu_id"] = ceu_id
-                doc["domain"] = domain
-                domain_anchors.append(doc)
+        if module_doc and not any(a["evidence_type"] == "MODULE_DOCSTRING" for a in domain_anchors):
+            append_anchor(module_doc, ceu_id, domain, domain_anchors)
 
         anchors.extend(domain_anchors)
         type_counts = {}
@@ -407,6 +652,7 @@ def build_evidence_anchors(
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "source_repository": str(source_repo),
         "effective_source_root": str(effective_root),
+        "project_type": project_type,
         "total_anchors": len(anchors),
         "candidate_count": len(candidates),
         "domain_summary": domain_summary,
@@ -450,11 +696,16 @@ def print_report(evidence: dict):
         print(f"  {t:<25} {count}")
 
     gaps = []
+    project_type = evidence.get("project_type", "UNKNOWN")
     for ceu_id, info in evidence["domain_summary"].items():
         if info["total_anchors"] == 0:
             gaps.append(ceu_id)
-        elif "APP_CONFIG" not in info["evidence_types"] and "MODULE_DOCSTRING" not in info["evidence_types"]:
-            gaps.append(f"{ceu_id} (no app_config or docstring)")
+        elif project_type == "DJANGO":
+            if "APP_CONFIG" not in info["evidence_types"] and "MODULE_DOCSTRING" not in info["evidence_types"]:
+                gaps.append(f"{ceu_id} (no app_config or docstring)")
+        elif project_type == "PYTHON_PACKAGE":
+            if "SETUP_PY" not in info["evidence_types"] and "PACKAGE_README" not in info["evidence_types"]:
+                gaps.append(f"{ceu_id} (no setup.py or readme)")
     if gaps:
         print()
         print("-" * 72)
@@ -472,6 +723,8 @@ def main():
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--report-only", action="store_true")
+    parser.add_argument("--force", action="store_true",
+                        help="Overwrite existing evidence_anchors.json")
     args = parser.parse_args()
 
     paths = resolve_paths(args.client, args.run_id)
@@ -504,14 +757,16 @@ def main():
             print(f"  DRY RUN — would write: {paths['evidence_anchors']}")
         return
 
-    if paths["evidence_anchors"].is_file():
+    if paths["evidence_anchors"].is_file() and not args.force:
         print(f"FAIL: Output already exists (CREATE_ONLY): {paths['evidence_anchors']}", file=sys.stderr)
+        print(f"  Use --force to overwrite", file=sys.stderr)
         sys.exit(1)
 
     paths["output_dir"].mkdir(parents=True, exist_ok=True)
     with open(paths["evidence_anchors"], "w") as f:
         json.dump(evidence, f, indent=2)
-    print(f"  evidence_anchors.json written: {paths['evidence_anchors'].relative_to(REPO_ROOT)}")
+    overwritten = " (overwritten)" if args.force and paths["evidence_anchors"].is_file() else ""
+    print(f"  evidence_anchors.json written{overwritten}: {paths['evidence_anchors'].relative_to(REPO_ROOT)}")
 
 
 if __name__ == "__main__":

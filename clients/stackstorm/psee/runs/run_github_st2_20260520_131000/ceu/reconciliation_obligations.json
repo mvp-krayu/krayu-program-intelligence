@@ -1,0 +1,127 @@
+{
+  "contract_id": "PI.SQO.CEU-RECONCILIATION-WORKFLOW.01",
+  "client_id": "stackstorm",
+  "run_id": "run_github_st2_20260520_131000",
+  "total_obligations": 13,
+  "resolved": 0,
+  "unresolved": 13,
+  "obligations": [
+    {
+      "obligation_id": "OBL-CEU-0001",
+      "ceu_id": "CEU-CONFTEST.PY",
+      "obligation_type": "MERGE_REVIEW",
+      "description": "Merge candidate CEU-CONFTEST.PY (conftest.py) has 1 files \u2014 review whether to merge into a parent domain",
+      "required_evidence": "Structural coupling analysis and domain intent documentation",
+      "status": "UNRESOLVED",
+      "created_at": "2026-05-21T09:56:59.161221+00:00"
+    },
+    {
+      "obligation_id": "OBL-CEU-0002",
+      "ceu_id": "CEU-CONFTEST.PY",
+      "obligation_type": "EVIDENCE_GAP",
+      "description": "No documentation evidence found for CEU-CONFTEST.PY (conftest.py) \u2014 requires manual evidence attachment or rejection",
+      "required_evidence": "Documentation, README, or architectural description for this domain",
+      "status": "UNRESOLVED",
+      "created_at": "2026-05-21T09:56:59.161224+00:00"
+    },
+    {
+      "obligation_id": "OBL-CEU-0003",
+      "ceu_id": "CEU-CONFTEST.PY",
+      "obligation_type": "AUTHORITY_REVIEW",
+      "description": "CEU-CONFTEST.PY (conftest.py) has NEGLIGIBLE authority pattern \u2014 review whether this is a valid domain or structural noise",
+      "required_evidence": "Structural role justification or rejection rationale",
+      "status": "UNRESOLVED",
+      "created_at": "2026-05-21T09:56:59.161226+00:00"
+    },
+    {
+      "obligation_id": "OBL-CEU-0004",
+      "ceu_id": "CEU-PACKAGING",
+      "obligation_type": "MERGE_REVIEW",
+      "description": "Merge candidate CEU-PACKAGING (packaging) has 1 files \u2014 review whether to merge into a parent domain",
+      "required_evidence": "Structural coupling analysis and domain intent documentation",
+      "status": "UNRESOLVED",
+      "created_at": "2026-05-21T09:56:59.161228+00:00"
+    },
+    {
+      "obligation_id": "OBL-CEU-0005",
+      "ceu_id": "CEU-PACKAGING",
+      "obligation_type": "EVIDENCE_GAP",
+      "description": "No documentation evidence found for CEU-PACKAGING (packaging) \u2014 requires manual evidence attachment or rejection",
+      "required_evidence": "Documentation, README, or architectural description for this domain",
+      "status": "UNRESOLVED",
+      "created_at": "2026-05-21T09:56:59.161230+00:00"
+    },
+    {
+      "obligation_id": "OBL-CEU-0006",
+      "ceu_id": "CEU-PACKAGING",
+      "obligation_type": "AUTHORITY_REVIEW",
+      "description": "CEU-PACKAGING (packaging) has NEGLIGIBLE authority pattern \u2014 review whether this is a valid domain or structural noise",
+      "required_evidence": "Structural role justification or rejection rationale",
+      "status": "UNRESOLVED",
+      "created_at": "2026-05-21T09:56:59.161231+00:00"
+    },
+    {
+      "obligation_id": "OBL-CEU-0007",
+      "ceu_id": "CEU-PYLINT-PLUGINS",
+      "obligation_type": "MERGE_REVIEW",
+      "description": "Merge candidate CEU-PYLINT-PLUGINS (pylint_plugins) has 5 files \u2014 review whether to merge into a parent domain",
+      "required_evidence": "Structural coupling analysis and domain intent documentation",
+      "status": "UNRESOLVED",
+      "created_at": "2026-05-21T09:56:59.161233+00:00"
+    },
+    {
+      "obligation_id": "OBL-CEU-0008",
+      "ceu_id": "CEU-PYLINT-PLUGINS",
+      "obligation_type": "EVIDENCE_GAP",
+      "description": "No documentation evidence found for CEU-PYLINT-PLUGINS (pylint_plugins) \u2014 requires manual evidence attachment or rejection",
+      "required_evidence": "Documentation, README, or architectural description for this domain",
+      "status": "UNRESOLVED",
+      "created_at": "2026-05-21T09:56:59.161235+00:00"
+    },
+    {
+      "obligation_id": "OBL-CEU-0009",
+      "ceu_id": "CEU-PYLINT-PLUGINS",
+      "obligation_type": "AUTHORITY_REVIEW",
+      "description": "CEU-PYLINT-PLUGINS (pylint_plugins) has NEGLIGIBLE authority pattern \u2014 review whether this is a valid domain or structural noise",
+      "required_evidence": "Structural role justification or rejection rationale",
+      "status": "UNRESOLVED",
+      "created_at": "2026-05-21T09:56:59.161237+00:00"
+    },
+    {
+      "obligation_id": "OBL-CEU-0010",
+      "ceu_id": "CEU-SCRIPTS",
+      "obligation_type": "MERGE_REVIEW",
+      "description": "Merge candidate CEU-SCRIPTS (scripts) has 5 files \u2014 review whether to merge into a parent domain",
+      "required_evidence": "Structural coupling analysis and domain intent documentation",
+      "status": "UNRESOLVED",
+      "created_at": "2026-05-21T09:56:59.161238+00:00"
+    },
+    {
+      "obligation_id": "OBL-CEU-0011",
+      "ceu_id": "CEU-SCRIPTS",
+      "obligation_type": "EVIDENCE_GAP",
+      "description": "No documentation evidence found for CEU-SCRIPTS (scripts) \u2014 requires manual evidence attachment or rejection",
+      "required_evidence": "Documentation, README, or architectural description for this domain",
+      "status": "UNRESOLVED",
+      "created_at": "2026-05-21T09:56:59.161240+00:00"
+    },
+    {
+      "obligation_id": "OBL-CEU-0012",
+      "ceu_id": "CEU-SCRIPTS",
+      "obligation_type": "AUTHORITY_REVIEW",
+      "description": "CEU-SCRIPTS (scripts) has NEGLIGIBLE authority pattern \u2014 review whether this is a valid domain or structural noise",
+      "required_evidence": "Structural role justification or rejection rationale",
+      "status": "UNRESOLVED",
+      "created_at": "2026-05-21T09:56:59.161243+00:00"
+    },
+    {
+      "obligation_id": "OBL-CEU-0013",
+      "ceu_id": "CEU-TOOLS",
+      "obligation_type": "AUTHORITY_REVIEW",
+      "description": "CEU-TOOLS (tools) has NEGLIGIBLE authority pattern \u2014 review whether this is a valid domain or structural noise",
+      "required_evidence": "Structural role justification or rejection rationale",
+      "status": "UNRESOLVED",
+      "created_at": "2026-05-21T09:56:59.161248+00:00"
+    }
+  ]
+}

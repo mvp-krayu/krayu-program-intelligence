@@ -2,13 +2,13 @@
   "contract_id": "PI.SQO.CEU-RECONCILIATION-WORKFLOW.01",
   "client_id": "stackstorm",
   "run_id": "run_github_st2_20260520_131000",
-  "seeded_at": "2026-05-21T07:41:59.337809+00:00",
+  "seeded_at": "2026-05-21T09:56:59.161075+00:00",
   "review_mode": "UNCLASSIFIED",
   "reconciliation_status": "INITIALIZED",
   "summary": {
     "total": 15,
-    "proposed": 15,
-    "evidence_attached": 0,
+    "proposed": 4,
+    "evidence_attached": 11,
     "reconciled": 0,
     "confirmed": 0,
     "rejected": 0,
@@ -34,11 +34,14 @@
     },
     "CEU-CONTRIB": {
       "domain": "contrib",
-      "state": "PROPOSED",
+      "state": "EVIDENCE_ATTACHED",
       "tier": "CONSUMER",
       "file_count": 131,
-      "evidence_count": 0,
-      "evidence_types": {},
+      "evidence_count": 2,
+      "evidence_types": {
+        "PACKAGE_README": 1,
+        "REPO_README_MAP": 1
+      },
       "merge_candidate": false,
       "authority_pattern": "INHERITANCE_DOMINANT",
       "reconciliation_finding": null,
@@ -62,11 +65,13 @@
     },
     "CEU-PANTS-PLUGINS": {
       "domain": "pants-plugins",
-      "state": "PROPOSED",
+      "state": "EVIDENCE_ATTACHED",
       "tier": "OPERATIONAL_DOMAIN",
       "file_count": 57,
-      "evidence_count": 0,
-      "evidence_types": {},
+      "evidence_count": 1,
+      "evidence_types": {
+        "PACKAGE_README": 1
+      },
       "merge_candidate": false,
       "authority_pattern": "IMPORT_DOMINANT",
       "reconciliation_finding": null,
@@ -104,11 +109,15 @@
     },
     "CEU-ST2ACTIONS": {
       "domain": "st2actions",
-      "state": "PROPOSED",
+      "state": "EVIDENCE_ATTACHED",
       "tier": "CONSUMER",
       "file_count": 49,
-      "evidence_count": 0,
-      "evidence_types": {},
+      "evidence_count": 3,
+      "evidence_types": {
+        "SETUP_PY": 1,
+        "CROSS_PACKAGE_DEP": 1,
+        "REPO_README_MAP": 1
+      },
       "merge_candidate": false,
       "authority_pattern": "IMPORT_DOMINANT",
       "reconciliation_finding": null,
@@ -118,11 +127,14 @@
     },
     "CEU-ST2API": {
       "domain": "st2api",
-      "state": "PROPOSED",
+      "state": "EVIDENCE_ATTACHED",
       "tier": "CONSUMER",
       "file_count": 79,
-      "evidence_count": 0,
-      "evidence_types": {},
+      "evidence_count": 2,
+      "evidence_types": {
+        "SETUP_PY": 1,
+        "CROSS_PACKAGE_DEP": 1
+      },
       "merge_candidate": false,
       "authority_pattern": "DUAL_AUTHORITY",
       "reconciliation_finding": null,
@@ -132,11 +144,14 @@
     },
     "CEU-ST2AUTH": {
       "domain": "st2auth",
-      "state": "PROPOSED",
+      "state": "EVIDENCE_ATTACHED",
       "tier": "CONSUMER",
       "file_count": 25,
-      "evidence_count": 0,
-      "evidence_types": {},
+      "evidence_count": 2,
+      "evidence_types": {
+        "SETUP_PY": 1,
+        "CROSS_PACKAGE_DEP": 1
+      },
       "merge_candidate": false,
       "authority_pattern": "IMPORT_DOMINANT",
       "reconciliation_finding": null,
@@ -146,11 +161,15 @@
     },
     "CEU-ST2CLIENT": {
       "domain": "st2client",
-      "state": "PROPOSED",
+      "state": "EVIDENCE_ATTACHED",
       "tier": "FOUNDATION",
       "file_count": 92,
-      "evidence_count": 0,
-      "evidence_types": {},
+      "evidence_count": 3,
+      "evidence_types": {
+        "SETUP_PY": 1,
+        "PACKAGE_README": 1,
+        "CROSS_PACKAGE_DEP": 1
+      },
       "merge_candidate": false,
       "authority_pattern": "IMPORT_DOMINANT",
       "reconciliation_finding": null,
@@ -160,11 +179,14 @@
     },
     "CEU-ST2COMMON": {
       "domain": "st2common",
-      "state": "PROPOSED",
+      "state": "EVIDENCE_ATTACHED",
       "tier": "FOUNDATION",
       "file_count": 478,
-      "evidence_count": 0,
-      "evidence_types": {},
+      "evidence_count": 2,
+      "evidence_types": {
+        "SETUP_PY": 1,
+        "CROSS_PACKAGE_DEP": 1
+      },
       "merge_candidate": false,
       "authority_pattern": "DUAL_AUTHORITY",
       "reconciliation_finding": null,
@@ -174,11 +196,14 @@
     },
     "CEU-ST2REACTOR": {
       "domain": "st2reactor",
-      "state": "PROPOSED",
+      "state": "EVIDENCE_ATTACHED",
       "tier": "CONSUMER",
       "file_count": 57,
-      "evidence_count": 0,
-      "evidence_types": {},
+      "evidence_count": 2,
+      "evidence_types": {
+        "SETUP_PY": 1,
+        "CROSS_PACKAGE_DEP": 1
+      },
       "merge_candidate": false,
       "authority_pattern": "IMPORT_DOMINANT",
       "reconciliation_finding": null,
@@ -188,11 +213,14 @@
     },
     "CEU-ST2STREAM": {
       "domain": "st2stream",
-      "state": "PROPOSED",
+      "state": "EVIDENCE_ATTACHED",
       "tier": "OPERATIONAL_DOMAIN",
       "file_count": 15,
-      "evidence_count": 0,
-      "evidence_types": {},
+      "evidence_count": 2,
+      "evidence_types": {
+        "SETUP_PY": 1,
+        "CROSS_PACKAGE_DEP": 1
+      },
       "merge_candidate": false,
       "authority_pattern": "IMPORT_DOMINANT",
       "reconciliation_finding": null,
@@ -202,11 +230,14 @@
     },
     "CEU-ST2TESTS": {
       "domain": "st2tests",
-      "state": "PROPOSED",
+      "state": "EVIDENCE_ATTACHED",
       "tier": "FOUNDATION",
       "file_count": 116,
-      "evidence_count": 0,
-      "evidence_types": {},
+      "evidence_count": 2,
+      "evidence_types": {
+        "SETUP_PY": 1,
+        "CROSS_PACKAGE_DEP": 1
+      },
       "merge_candidate": false,
       "authority_pattern": "IMPORT_DOMINANT",
       "reconciliation_finding": null,
@@ -216,11 +247,13 @@
     },
     "CEU-TOOLS": {
       "domain": "tools",
-      "state": "PROPOSED",
+      "state": "EVIDENCE_ATTACHED",
       "tier": "OPERATIONAL_DOMAIN",
       "file_count": 15,
-      "evidence_count": 0,
-      "evidence_types": {},
+      "evidence_count": 1,
+      "evidence_types": {
+        "REPO_README_MAP": 1
+      },
       "merge_candidate": false,
       "authority_pattern": "NEGLIGIBLE",
       "reconciliation_finding": null,
@@ -231,7 +264,9 @@
   },
   "promotion_gate": {
     "all_candidates_resolved": false,
-    "unresolved_obligations": 24,
+    "unresolved_obligations": 13,
+    "review_mode": "UNCLASSIFIED",
+    "review_sufficient": false,
     "semantic_derivation_permitted": false,
     "gate_reason": "Reconciliation not started \u2014 candidates require review"
   }

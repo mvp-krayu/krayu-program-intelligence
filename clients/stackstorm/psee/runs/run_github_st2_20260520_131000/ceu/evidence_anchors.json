@@ -1,0 +1,467 @@
+{
+  "contract_id": "PI.SQO.CEU-RECONCILIATION-WORKFLOW.01",
+  "artifact_class": "ceu_evidence_anchors",
+  "client_id": "stackstorm",
+  "run_id": "run_github_st2_20260520_131000",
+  "generated_at": "2026-05-21T09:56:19.760481+00:00",
+  "source_repository": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo",
+  "effective_source_root": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo",
+  "project_type": "PYTHON_PACKAGE",
+  "total_anchors": 22,
+  "candidate_count": 15,
+  "domain_summary": {
+    "CEU-CONFTEST.PY": {
+      "domain": "conftest.py",
+      "total_anchors": 0,
+      "evidence_types": {}
+    },
+    "CEU-CONTRIB": {
+      "domain": "contrib",
+      "total_anchors": 2,
+      "evidence_types": {
+        "PACKAGE_README": 1,
+        "REPO_README_MAP": 1
+      }
+    },
+    "CEU-PACKAGING": {
+      "domain": "packaging",
+      "total_anchors": 0,
+      "evidence_types": {}
+    },
+    "CEU-PANTS-PLUGINS": {
+      "domain": "pants-plugins",
+      "total_anchors": 1,
+      "evidence_types": {
+        "PACKAGE_README": 1
+      }
+    },
+    "CEU-PYLINT-PLUGINS": {
+      "domain": "pylint_plugins",
+      "total_anchors": 0,
+      "evidence_types": {}
+    },
+    "CEU-SCRIPTS": {
+      "domain": "scripts",
+      "total_anchors": 0,
+      "evidence_types": {}
+    },
+    "CEU-ST2ACTIONS": {
+      "domain": "st2actions",
+      "total_anchors": 3,
+      "evidence_types": {
+        "SETUP_PY": 1,
+        "CROSS_PACKAGE_DEP": 1,
+        "REPO_README_MAP": 1
+      }
+    },
+    "CEU-ST2API": {
+      "domain": "st2api",
+      "total_anchors": 2,
+      "evidence_types": {
+        "SETUP_PY": 1,
+        "CROSS_PACKAGE_DEP": 1
+      }
+    },
+    "CEU-ST2AUTH": {
+      "domain": "st2auth",
+      "total_anchors": 2,
+      "evidence_types": {
+        "SETUP_PY": 1,
+        "CROSS_PACKAGE_DEP": 1
+      }
+    },
+    "CEU-ST2CLIENT": {
+      "domain": "st2client",
+      "total_anchors": 3,
+      "evidence_types": {
+        "SETUP_PY": 1,
+        "PACKAGE_README": 1,
+        "CROSS_PACKAGE_DEP": 1
+      }
+    },
+    "CEU-ST2COMMON": {
+      "domain": "st2common",
+      "total_anchors": 2,
+      "evidence_types": {
+        "SETUP_PY": 1,
+        "CROSS_PACKAGE_DEP": 1
+      }
+    },
+    "CEU-ST2REACTOR": {
+      "domain": "st2reactor",
+      "total_anchors": 2,
+      "evidence_types": {
+        "SETUP_PY": 1,
+        "CROSS_PACKAGE_DEP": 1
+      }
+    },
+    "CEU-ST2STREAM": {
+      "domain": "st2stream",
+      "total_anchors": 2,
+      "evidence_types": {
+        "SETUP_PY": 1,
+        "CROSS_PACKAGE_DEP": 1
+      }
+    },
+    "CEU-ST2TESTS": {
+      "domain": "st2tests",
+      "total_anchors": 2,
+      "evidence_types": {
+        "SETUP_PY": 1,
+        "CROSS_PACKAGE_DEP": 1
+      }
+    },
+    "CEU-TOOLS": {
+      "domain": "tools",
+      "total_anchors": 1,
+      "evidence_types": {
+        "REPO_README_MAP": 1
+      }
+    }
+  },
+  "anchors": [
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo/contrib/README.md",
+      "evidence_type": "PACKAGE_README",
+      "format": "md",
+      "heading": "Contrib",
+      "summary": "1. St2 contents that will be shipped with the product.  These contents will be copied over to /opt/stackstorm on install and then auto-registered.  Users are expected to be able to edit these contents post install:",
+      "line_count": 17,
+      "anchor_id": "EA-0001",
+      "ceu_id": "CEU-CONTRIB",
+      "domain": "contrib"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo/README.md",
+      "evidence_type": "REPO_README_MAP",
+      "matched_sections": [
+        {
+          "heading": "Hacking / Contributing",
+          "summary": "To set up a development environment and run StackStorm from sources, follow [these instructions](https://docs.stackstorm.com/development/sources.html).  For information on how to contribute, our style guide, coding conventions and more, please visit the [Development section](https://docs.stackstorm."
+        },
+        {
+          "heading": "Copyright, License, and Contributor Agreement",
+          "summary": "Copyright 2020 The StackStorm Authors. Copyright 2019 Extreme Networks, Inc. Copyright 2014-2018 StackStorm, Inc.  Licensed under the Apache License, Version 2.0 (the \"License\"); you may not use this work except in compliance with the License. You may obtain a copy of the License in the [LICENSE](LI"
+        }
+      ],
+      "section_count": 2,
+      "anchor_id": "EA-0002",
+      "ceu_id": "CEU-CONTRIB",
+      "domain": "contrib"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo/pants-plugins/README.md",
+      "evidence_type": "PACKAGE_README",
+      "format": "md",
+      "heading": "## pants plugins",
+      "summary": "This directory contains StackStorm-specific plugins for pantsbuild.",
+      "line_count": 101,
+      "anchor_id": "EA-0003",
+      "ceu_id": "CEU-PANTS-PLUGINS",
+      "domain": "pants-plugins"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo/st2actions/setup.py",
+      "evidence_type": "SETUP_PY",
+      "package_name": "st2actions",
+      "description": "st2actions StackStorm event-driven automation platform component",
+      "scripts": [
+        "st2actionrunner",
+        "st2notifier",
+        "st2workflowengine",
+        "st2scheduler"
+      ],
+      "script_count": 4,
+      "uses_find_packages": true,
+      "anchor_id": "EA-0004",
+      "ceu_id": "CEU-ST2ACTIONS",
+      "domain": "st2actions"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo/st2actions/in-requirements.txt",
+      "evidence_type": "CROSS_PACKAGE_DEP",
+      "internal_dependencies": [],
+      "internal_dep_count": 0,
+      "external_dep_count": 21,
+      "total_deps": 21,
+      "anchor_id": "EA-0005",
+      "ceu_id": "CEU-ST2ACTIONS",
+      "domain": "st2actions"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo/README.md",
+      "evidence_type": "REPO_README_MAP",
+      "matched_sections": [
+        {
+          "heading": "How it works > Actions",
+          "summary": "are StackStorm outbound integrations. There are generic actions (SSH, HTTP request), integrations (OpenStack, Docker, Puppet), or custom actions. Actions are either Python plugins, or any scripts, consumed into StackStorm by adding a few lines of metadata. Actions can be invoked directly by user via",
+          "match_type": "inline_definition"
+        }
+      ],
+      "section_count": 1,
+      "anchor_id": "EA-0006",
+      "ceu_id": "CEU-ST2ACTIONS",
+      "domain": "st2actions"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo/st2api/setup.py",
+      "evidence_type": "SETUP_PY",
+      "package_name": "st2api",
+      "description": "st2api StackStorm event-driven automation platform component",
+      "scripts": [
+        "st2api"
+      ],
+      "script_count": 1,
+      "uses_find_packages": true,
+      "anchor_id": "EA-0007",
+      "ceu_id": "CEU-ST2API",
+      "domain": "st2api"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo/st2api/in-requirements.txt",
+      "evidence_type": "CROSS_PACKAGE_DEP",
+      "internal_dependencies": [],
+      "internal_dep_count": 0,
+      "external_dep_count": 13,
+      "total_deps": 13,
+      "anchor_id": "EA-0008",
+      "ceu_id": "CEU-ST2API",
+      "domain": "st2api"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo/st2auth/setup.py",
+      "evidence_type": "SETUP_PY",
+      "package_name": "st2auth",
+      "description": "st2auth StackStorm event-driven automation platform component",
+      "entry_points": {
+        "st2auth.sso.backends": [
+          "noop = st2auth.sso.noop:NoOpSingleSignOnBackend"
+        ]
+      },
+      "scripts": [
+        "st2auth"
+      ],
+      "script_count": 1,
+      "uses_find_packages": true,
+      "anchor_id": "EA-0009",
+      "ceu_id": "CEU-ST2AUTH",
+      "domain": "st2auth"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo/st2auth/in-requirements.txt",
+      "evidence_type": "CROSS_PACKAGE_DEP",
+      "internal_dependencies": [
+        {
+          "package": "st2-auth-ldap",
+          "spec": "st2-auth-ldap@ git+https://github.com/StackStorm/st2-auth-ldap.git@master",
+          "external_repo": true
+        },
+        {
+          "package": "st2-auth-backend-pam",
+          "spec": "st2-auth-backend-pam@ git+https://github.com/StackStorm/st2-auth-backend-pam.git@master",
+          "external_repo": true
+        }
+      ],
+      "internal_dep_count": 2,
+      "external_dep_count": 8,
+      "total_deps": 10,
+      "anchor_id": "EA-0010",
+      "ceu_id": "CEU-ST2AUTH",
+      "domain": "st2auth"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo/st2client/setup.py",
+      "evidence_type": "SETUP_PY",
+      "package_name": "st2client",
+      "description": "Python client library and CLI for the StackStorm (st2) event-driven",
+      "entry_points": {
+        "console_scripts": [
+          "st2 = st2client.shell:main"
+        ]
+      },
+      "uses_find_packages": true,
+      "anchor_id": "EA-0011",
+      "ceu_id": "CEU-ST2CLIENT",
+      "domain": "st2client"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo/st2client/README.rst",
+      "evidence_type": "PACKAGE_README",
+      "format": "rst",
+      "heading": "StackStorm CLI and Python Client",
+      "summary": "Install stable / production version from Python Package Index (PyPi)",
+      "line_count": 127,
+      "anchor_id": "EA-0012",
+      "ceu_id": "CEU-ST2CLIENT",
+      "domain": "st2client"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo/st2client/in-requirements.txt",
+      "evidence_type": "CROSS_PACKAGE_DEP",
+      "internal_dependencies": [],
+      "internal_dep_count": 0,
+      "external_dep_count": 23,
+      "total_deps": 23,
+      "anchor_id": "EA-0013",
+      "ceu_id": "CEU-ST2CLIENT",
+      "domain": "st2client"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo/st2common/setup.py",
+      "evidence_type": "SETUP_PY",
+      "package_name": "st2common",
+      "description": "st2common StackStorm event-driven automation platform component",
+      "entry_points": {
+        "st2common.metrics.driver": [
+          "statsd = st2common.metrics.drivers.statsd_driver:StatsdDriver",
+          "noop = st2common.metrics.drivers.noop_driver:NoopDriver",
+          "echo = st2common.metrics.drivers.echo_driver:EchoDriver"
+        ],
+        "st2common.rbac.backend": [
+          "noop = st2common.rbac.backends.noop:NoOpRBACBackend"
+        ]
+      },
+      "scripts": [
+        "st2-bootstrap-rmq",
+        "st2-cleanup-db",
+        "st2-register-content",
+        "st2-purge-executions",
+        "st2-purge-workflows",
+        "st2-purge-task-executions",
+        "st2-purge-trigger-instances",
+        "st2-purge-traces",
+        "st2-purge-rule-enforcements",
+        "st2-purge-tokens",
+        "st2-run-pack-tests",
+        "st2ctl",
+        "st2-generate-symmetric-crypto-key",
+        "st2-self-check",
+        "st2-track-result",
+        "st2-validate-pack",
+        "st2-validate-pack-config",
+        "st2-pack-install",
+        "st2-pack-download",
+        "st2-pack-setup-virtualenv",
+        "st2-migrate-db-dict-field-values"
+      ],
+      "script_count": 21,
+      "uses_find_packages": true,
+      "anchor_id": "EA-0014",
+      "ceu_id": "CEU-ST2COMMON",
+      "domain": "st2common"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo/st2common/in-requirements.txt",
+      "evidence_type": "CROSS_PACKAGE_DEP",
+      "internal_dependencies": [
+        {
+          "package": "st2-rbac-backend",
+          "spec": "st2-rbac-backend@ git+https://github.com/StackStorm/st2-rbac-backend.git@master",
+          "external_repo": true
+        }
+      ],
+      "internal_dep_count": 1,
+      "external_dep_count": 43,
+      "total_deps": 44,
+      "anchor_id": "EA-0015",
+      "ceu_id": "CEU-ST2COMMON",
+      "domain": "st2common"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo/st2reactor/setup.py",
+      "evidence_type": "SETUP_PY",
+      "package_name": "st2reactor",
+      "description": "st2reactor StackStorm event-driven automation platform component",
+      "scripts": [
+        "st2-rule-tester",
+        "st2-trigger-refire",
+        "st2rulesengine",
+        "st2sensorcontainer",
+        "st2garbagecollector",
+        "st2timersengine"
+      ],
+      "script_count": 6,
+      "uses_find_packages": true,
+      "anchor_id": "EA-0016",
+      "ceu_id": "CEU-ST2REACTOR",
+      "domain": "st2reactor"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo/st2reactor/in-requirements.txt",
+      "evidence_type": "CROSS_PACKAGE_DEP",
+      "internal_dependencies": [],
+      "internal_dep_count": 0,
+      "external_dep_count": 9,
+      "total_deps": 9,
+      "anchor_id": "EA-0017",
+      "ceu_id": "CEU-ST2REACTOR",
+      "domain": "st2reactor"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo/st2stream/setup.py",
+      "evidence_type": "SETUP_PY",
+      "package_name": "st2stream",
+      "description": "st2stream StackStorm event-driven automation platform component",
+      "scripts": [
+        "st2stream"
+      ],
+      "script_count": 1,
+      "uses_find_packages": true,
+      "anchor_id": "EA-0018",
+      "ceu_id": "CEU-ST2STREAM",
+      "domain": "st2stream"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo/st2stream/in-requirements.txt",
+      "evidence_type": "CROSS_PACKAGE_DEP",
+      "internal_dependencies": [],
+      "internal_dep_count": 0,
+      "external_dep_count": 12,
+      "total_deps": 12,
+      "anchor_id": "EA-0019",
+      "ceu_id": "CEU-ST2STREAM",
+      "domain": "st2stream"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo/st2tests/setup.py",
+      "evidence_type": "SETUP_PY",
+      "package_name": "st2tests",
+      "description": "st2tests StackStorm event-driven automation platform component",
+      "uses_find_packages": true,
+      "anchor_id": "EA-0020",
+      "ceu_id": "CEU-ST2TESTS",
+      "domain": "st2tests"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo/st2tests/in-requirements.txt",
+      "evidence_type": "CROSS_PACKAGE_DEP",
+      "internal_dependencies": [],
+      "internal_dep_count": 0,
+      "external_dep_count": 6,
+      "total_deps": 6,
+      "anchor_id": "EA-0021",
+      "ceu_id": "CEU-ST2TESTS",
+      "domain": "st2tests"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo/README.md",
+      "evidence_type": "REPO_README_MAP",
+      "matched_sections": [
+        {
+          "heading": "About",
+          "summary": "StackStorm is a platform for integration and automation across services and tools. It ties together your existing infrastructure and application environment so you can more easily automate that environment -- with a particular focus on taking actions in response to events.  StackStorm helps automate"
+        }
+      ],
+      "section_count": 1,
+      "anchor_id": "EA-0022",
+      "ceu_id": "CEU-TOOLS",
+      "domain": "tools"
+    }
+  ],
+  "governance": {
+    "extraction_method": "DETERMINISTIC_FILE_READING",
+    "no_semantic_authoring": true,
+    "no_ai_llm": true,
+    "replayable": true
+  }
+}
