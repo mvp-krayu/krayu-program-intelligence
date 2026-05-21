@@ -13,6 +13,7 @@ import EvidenceIngestionCorridorPanel from './EvidenceIngestionCorridorPanel';
 import BlueEdgeRuntimeCorridorPanel from './BlueEdgeRuntimeCorridorPanel';
 import ExplicitEvidenceRebasePanel from './ExplicitEvidenceRebasePanel';
 import SemanticQualificationIntakePanel from './SemanticQualificationIntakePanel';
+import CeuReconciliationPanel from './CeuReconciliationPanel';
 import SectionUnavailableNotice from './SectionUnavailableNotice';
 
 const SECTION_PANELS = {
@@ -33,6 +34,10 @@ const SECTION_PANELS = {
   'ceu-admissibility': (data) => {
     if (!data || !data.available) return <SectionUnavailableNotice section="CEU Admissibility" reason={data && data.failReason} />;
     return <DynamicCEUAdmissibilityPanel admissibility={data} />;
+  },
+  'ceu-reconciliation': (data) => {
+    if (!data || !data.available) return <SectionUnavailableNotice section="CEU Reconciliation" reason={data && data.failReason} />;
+    return <CeuReconciliationPanel ceuData={data} />;
   },
   'evidence-ingestion': (data) => {
     if (!data || !data.available) return <SectionUnavailableNotice section="Evidence Ingestion" reason={data && data.failReason} />;
@@ -114,6 +119,12 @@ const SECTION_CONTEXT = {
     purpose: 'Canonical Evidence Unit admissibility evaluation and structural compatibility assessment.',
     focus: 'Review admissibility determinations for extracted semantic candidates.',
     type: 'engineering substrate',
+  },
+  'ceu-reconciliation': {
+    title: 'CEU Reconciliation',
+    purpose: 'Governed CEU candidate validation: structural evidence vs documentation reconciliation.',
+    focus: 'Review, reconcile, and confirm or reject structurally-derived CEU candidates.',
+    type: 'operational workflow',
   },
   'evidence-ingestion': {
     title: 'Evidence Ingestion',

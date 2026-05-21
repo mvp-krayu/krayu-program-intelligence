@@ -36,7 +36,7 @@ export default function SQOWorkspaceShell({
     const handleRouteChange = (url) => {
       const segments = url.split('?')[0].split('/').filter(Boolean);
       const last = segments[segments.length - 1];
-      const knownSections = ['debt', 'continuity', 'maturity', 'progression', 'evidence', 'reconciliation-loop', 'handoff', 'corridor', 'evidence-ingestion', 'semantic-candidates', 'ceu-admissibility', 'evidence-rebase', 'authority'];
+      const knownSections = ['debt', 'continuity', 'maturity', 'progression', 'evidence', 'reconciliation-loop', 'handoff', 'corridor', 'evidence-ingestion', 'semantic-candidates', 'ceu-admissibility', 'ceu-reconciliation', 'evidence-rebase', 'authority'];
       setActiveSection(knownSections.includes(last) ? last : 'overview');
     };
 

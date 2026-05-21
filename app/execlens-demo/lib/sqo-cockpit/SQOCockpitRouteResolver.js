@@ -2,7 +2,7 @@
 
 const { isClientRunAllowed, listAllowedClientRuns } = require('../lens-v2/manifests');
 
-const COCKPIT_SECTIONS = ['overview', 'debt', 'continuity', 'maturity', 'progression', 'evidence', 'reconciliation', 'reconciliation-loop', 'handoff', 'corridor', 'evidence-ingestion', 'semantic-candidates', 'ceu-admissibility', 'evidence-rebase', 'authority'];
+const COCKPIT_SECTIONS = ['overview', 'debt', 'continuity', 'maturity', 'progression', 'evidence', 'reconciliation', 'reconciliation-loop', 'handoff', 'corridor', 'evidence-ingestion', 'semantic-candidates', 'ceu-admissibility', 'ceu-reconciliation', 'evidence-rebase', 'authority'];
 
 const SECTION_ROUTES = {
   overview: '',
@@ -17,6 +17,7 @@ const SECTION_ROUTES = {
   'evidence-ingestion': '/evidence-ingestion',
   'semantic-candidates': '/semantic-candidates',
   'ceu-admissibility': '/ceu-admissibility',
+  'ceu-reconciliation': '/ceu-reconciliation',
   'evidence-rebase': '/evidence-rebase',
   'reconciliation-loop': '/reconciliation-loop',
   authority: '/authority',
@@ -35,6 +36,7 @@ const SECTION_LABELS = {
   'evidence-ingestion': 'Evidence Ingestion',
   'semantic-candidates': 'Semantic Intake',
   'ceu-admissibility': 'CEU Admissibility',
+  'ceu-reconciliation': 'CEU Reconciliation',
   'evidence-rebase': 'Evidence Rebase',
   'reconciliation-loop': 'Reconciliation Loop',
   authority: 'Authority',
