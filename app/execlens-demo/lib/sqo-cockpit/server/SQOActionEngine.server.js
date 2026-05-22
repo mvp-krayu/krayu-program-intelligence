@@ -1,6 +1,6 @@
 'use strict';
 
-const { loadPromotionState, writePromotionState, writeReviewObligations } = require('./PromotionStateLoader.server');
+const { loadPromotionState, writePromotionState, writeReviewObligations, writeQualificationBlockers } = require('./PromotionStateLoader.server');
 const { validateAction } = require('./SQOAuthorityValidator.server');
 const { readExistingLog, buildEvent, appendEvent } = require('./PromotionEventWriter.server');
 
@@ -25,6 +25,7 @@ function executeAction({ action, client, runId, actor_id, target_item, justifica
 
   const stateSnapshot = deepClone(promotionState);
   const obligationsSnapshot = deepClone(reviewObligations);
+  const blockersSnapshot = deepClone(qualificationBlockers);
 
   try {
     const result = applyAction({
@@ -46,6 +47,7 @@ function executeAction({ action, client, runId, actor_id, target_item, justifica
   } catch (err) {
     writePromotionState(client, runId, stateSnapshot);
     writeReviewObligations(client, runId, obligationsSnapshot);
+    writeQualificationBlockers(client, runId, blockersSnapshot);
     return { success: false, error: 'MUTATION_FAILED', detail: err.message };
   }
 }
@@ -55,10 +57,10 @@ function applyAction({ action, client, runId, actor_id, target_item, justificati
 
   switch (action) {
     case 'review_accept':
-      return applyReviewAccept({ client, runId, actor_id, target_item, promotionState, reviewObligations, existingLog, validation });
+      return applyReviewAccept({ client, runId, actor_id, target_item, promotionState, reviewObligations, qualificationBlockers, existingLog, validation });
 
     case 'review_reject':
-      return applyReviewReject({ client, runId, actor_id, target_item, justification, promotionState, reviewObligations, existingLog, validation });
+      return applyReviewReject({ client, runId, actor_id, target_item, justification, promotionState, reviewObligations, qualificationBlockers, existingLog, validation });
 
     case 'review_contest':
       return applyReviewContest({ client, runId, actor_id, target_item, justification, contested_aspects, promotionState, reviewObligations, existingLog, validation });
@@ -70,7 +72,7 @@ function applyAction({ action, client, runId, actor_id, target_item, justificati
       return applyEscalateArbitration({ client, runId, actor_id, target_item, justification, promotionState, reviewObligations, existingLog, validation });
 
     case 'resolve_arbitration':
-      return applyResolveArbitration({ client, runId, actor_id, target_item, justification, resolution_outcome, promotionState, reviewObligations, existingLog, validation });
+      return applyResolveArbitration({ client, runId, actor_id, target_item, justification, resolution_outcome, promotionState, reviewObligations, qualificationBlockers, existingLog, validation });
 
     case 'promotion_request':
       return applyPromotionRequest({ client, runId, actor_id, promotionState, existingLog, validation });
@@ -95,7 +97,7 @@ function applyAction({ action, client, runId, actor_id, target_item, justificati
   }
 }
 
-function applyReviewAccept({ client, runId, actor_id, target_item, promotionState, reviewObligations, existingLog, validation }) {
+function applyReviewAccept({ client, runId, actor_id, target_item, promotionState, reviewObligations, qualificationBlockers, existingLog, validation }) {
   const obl = reviewObligations.obligations.find(o => o.id === target_item);
   const priorState = obl.status;
   obl.status = 'RESOLVED';
@@ -104,7 +106,7 @@ function applyReviewAccept({ client, runId, actor_id, target_item, promotionStat
   obl.resolved_at = new Date().toISOString();
 
   updateObligationCounters(reviewObligations);
-  maybeUpdateReviewQueueLane(promotionState, reviewObligations);
+  maybeUpdateReviewQueueLane(promotionState, reviewObligations, qualificationBlockers, client, runId);
   writeReviewObligations(client, runId, reviewObligations);
   writePromotionState(client, runId, promotionState);
 
@@ -120,7 +122,7 @@ function applyReviewAccept({ client, runId, actor_id, target_item, promotionStat
   return { event, updatedState: { obligation: obl, lane: promotionState.lanes.review_queue } };
 }
 
-function applyReviewReject({ client, runId, actor_id, target_item, justification, promotionState, reviewObligations, existingLog, validation }) {
+function applyReviewReject({ client, runId, actor_id, target_item, justification, promotionState, reviewObligations, qualificationBlockers, existingLog, validation }) {
   const obl = reviewObligations.obligations.find(o => o.id === target_item);
   const priorState = obl.status;
   obl.status = 'REJECTED';
@@ -130,7 +132,7 @@ function applyReviewReject({ client, runId, actor_id, target_item, justification
   obl.rejection_justification = justification;
 
   updateObligationCounters(reviewObligations);
-  maybeUpdateReviewQueueLane(promotionState, reviewObligations);
+  maybeUpdateReviewQueueLane(promotionState, reviewObligations, qualificationBlockers, client, runId);
   writeReviewObligations(client, runId, reviewObligations);
   writePromotionState(client, runId, promotionState);
 
@@ -220,7 +222,7 @@ function applyEscalateArbitration({ client, runId, actor_id, target_item, justif
   return { event, updatedState: { obligation: obl } };
 }
 
-function applyResolveArbitration({ client, runId, actor_id, target_item, justification, resolution_outcome, promotionState, reviewObligations, existingLog, validation }) {
+function applyResolveArbitration({ client, runId, actor_id, target_item, justification, resolution_outcome, promotionState, reviewObligations, qualificationBlockers, existingLog, validation }) {
   const obl = reviewObligations.obligations.find(o => o.id === target_item);
   const priorState = obl.status;
   const resultingState = resolution_outcome === 'UNRESOLVABLE' ? 'UNRESOLVABLE' : 'RESOLVED';
@@ -231,7 +233,7 @@ function applyResolveArbitration({ client, runId, actor_id, target_item, justifi
   obl.arbitration_justification = justification;
 
   updateObligationCounters(reviewObligations);
-  maybeUpdateReviewQueueLane(promotionState, reviewObligations);
+  maybeUpdateReviewQueueLane(promotionState, reviewObligations, qualificationBlockers, client, runId);
   writeReviewObligations(client, runId, reviewObligations);
   writePromotionState(client, runId, promotionState);
 
@@ -403,13 +405,36 @@ function updateObligationCounters(reviewObligations) {
   reviewObligations.unresolved = obls.length - reviewObligations.resolved;
 }
 
-function maybeUpdateReviewQueueLane(promotionState, reviewObligations) {
+function maybeUpdateReviewQueueLane(promotionState, reviewObligations, qualificationBlockers, client, runId) {
   const obls = reviewObligations.obligations || [];
   if (obls.length === 0) return;
   const allTerminal = obls.every(o => TERMINAL_OBLIGATION_STATES.includes(o.status));
   if (allTerminal) {
     promotionState.lanes.review_queue.state = 'RESOLVED';
     promotionState.lanes.review_queue.blocking_gaps = [];
+
+    if (qualificationBlockers && qualificationBlockers.blockers) {
+      const reviewBlocker = qualificationBlockers.blockers.find(
+        b => b.lane === 'review_queue' && !b.resolved
+      );
+      if (reviewBlocker) {
+        reviewBlocker.resolved = true;
+        reviewBlocker.resolved_at = new Date().toISOString();
+        reviewBlocker.resolution_path = 'OPERATOR_REVIEW';
+        reviewBlocker.resolution_note = `All ${obls.length} proposition class obligations resolved through operator review`;
+        qualificationBlockers.unresolved_blockers = qualificationBlockers.blockers.filter(b => !b.resolved).length;
+        qualificationBlockers.promotion_eligible = qualificationBlockers.unresolved_blockers === 0;
+        writeQualificationBlockers(client, runId, qualificationBlockers);
+      }
+
+      if (promotionState.lanes.promotion_decision) {
+        const gaps = promotionState.lanes.promotion_decision.blocking_gaps || [];
+        const idx = gaps.indexOf('PROPOSITION_REVIEW_PENDING');
+        if (idx !== -1) {
+          gaps.splice(idx, 1);
+        }
+      }
+    }
   }
 }
 
