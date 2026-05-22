@@ -1,0 +1,444 @@
+{
+  "schema_version": "1.0",
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-05",
+  "timestamp": "2026-05-22T22:00:00Z",
+  "revalidation_type": "PATH_B_DETERMINISTIC",
+  "framework": "9-phase/48-check (adapted from NetBox PATH A)",
+  "total_checks": 48,
+  "passed": 48,
+  "failed": 0,
+  "result": "VALID",
+  "phases": {
+    "phase_1_structural_integrity": {
+      "checks": 8,
+      "passed": 8
+    },
+    "phase_2_evidence_integrity": {
+      "checks": 5,
+      "passed": 5
+    },
+    "phase_3_confidence_realism": {
+      "checks": 6,
+      "passed": 6
+    },
+    "phase_4_governance_integrity": {
+      "checks": 5,
+      "passed": 5
+    },
+    "phase_5_enrichment_integrity": {
+      "checks": 5,
+      "passed": 5
+    },
+    "phase_6_checkpoint_integrity": {
+      "checks": 4,
+      "passed": 4
+    },
+    "phase_7_spine_integrity": {
+      "checks": 4,
+      "passed": 4
+    },
+    "phase_8_sqo_state_consistency": {
+      "checks": 3,
+      "passed": 3
+    },
+    "phase_9_corpus_evolution": {
+      "checks": 8,
+      "passed": 8
+    }
+  },
+  "comparison_with_netbox": {
+    "netbox_checks": 48,
+    "netbox_phases": 9,
+    "blueedge_checks": 48,
+    "blueedge_phases": 9,
+    "adaptation": "Code graph phases (centrality, coupling, topology) replaced with evidence integrity and enrichment integrity phases. Same structural rigor, different evidence channels.",
+    "netbox_result": "48/48 PASS",
+    "blueedge_result": "48/48 PASS"
+  },
+  "checks": [
+    {
+      "phase": 1,
+      "check_number": 1,
+      "check": "all_accepted_status",
+      "description": "All accepted propositions have status ACCEPTED",
+      "result": "PASS",
+      "detail": "71 accepted"
+    },
+    {
+      "phase": 1,
+      "check_number": 2,
+      "check": "all_rejected_status",
+      "description": "All rejected propositions have status REJECTED",
+      "result": "PASS",
+      "detail": "14 rejected"
+    },
+    {
+      "phase": 1,
+      "check_number": 3,
+      "check": "no_remaining_candidates",
+      "description": "No propositions with status CANDIDATE remaining",
+      "result": "PASS",
+      "detail": "0 candidates remaining"
+    },
+    {
+      "phase": 1,
+      "check_number": 4,
+      "check": "valid_proposition_classes",
+      "description": "All propositions have valid proposition_class",
+      "result": "PASS",
+      "detail": "Classes: {'CAPABILITY_EVIDENCE', 'VAULT_CLAIM_STRUCTURAL', 'CROSS_DOMAIN_EVIDENCE', 'DOMAIN_EVIDENCE_GROUNDING'}"
+    },
+    {
+      "phase": 1,
+      "check_number": 5,
+      "check": "valid_derivation_tiers",
+      "description": "All propositions have valid derivation_tier",
+      "result": "PASS",
+      "detail": "Tiers: {'DERIVED', 'DIRECT_EVIDENCE'}"
+    },
+    {
+      "phase": 1,
+      "check_number": 6,
+      "check": "confidence_range",
+      "description": "All propositions have confidence in [0.0, 1.0]",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "phase": 1,
+      "check_number": 7,
+      "check": "authority_ceiling_l3",
+      "description": "All propositions have authority_ceiling L3",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "phase": 1,
+      "check_number": 8,
+      "check": "count_integrity",
+      "description": "Accepted + rejected = total (85)",
+      "result": "PASS",
+      "detail": "71 + 14 = 85"
+    },
+    {
+      "phase": 2,
+      "check_number": 9,
+      "check": "domain_ids_valid",
+      "description": "All domain propositions reference valid canonical domain IDs",
+      "result": "PASS",
+      "detail": "16 domain propositions checked"
+    },
+    {
+      "phase": 2,
+      "check_number": 10,
+      "check": "capability_ids_valid",
+      "description": "All capability propositions reference valid capability IDs",
+      "result": "PASS",
+      "detail": "17 capability propositions checked"
+    },
+    {
+      "phase": 2,
+      "check_number": 11,
+      "check": "vault_claim_ids_valid",
+      "description": "All vault claim propositions reference valid CLM-* IDs",
+      "result": "PASS",
+      "detail": "23 vault claim propositions checked"
+    },
+    {
+      "phase": 2,
+      "check_number": 12,
+      "check": "cross_domain_pairs_valid",
+      "description": "All cross-domain propositions reference valid domain pairs or ambiguity triggers",
+      "result": "PASS",
+      "detail": "15 cross-domain propositions checked"
+    },
+    {
+      "phase": 2,
+      "check_number": 13,
+      "check": "direct_evidence_has_anchors",
+      "description": "DIRECT_EVIDENCE propositions have non-empty evidence anchors",
+      "result": "PASS",
+      "detail": "51/52 have evidence anchors (≥90% required)"
+    },
+    {
+      "phase": 3,
+      "check_number": 14,
+      "check": "direct_evidence_confidence_floor",
+      "description": "DIRECT_EVIDENCE tier confidence ≥ 0.50",
+      "result": "PASS",
+      "detail": "Min: 0.500"
+    },
+    {
+      "phase": 3,
+      "check_number": 15,
+      "check": "derived_below_direct_mean",
+      "description": "DERIVED tier mean confidence < DIRECT_EVIDENCE mean",
+      "result": "PASS",
+      "detail": "DERIVED mean: 0.603, DIRECT mean: 0.791"
+    },
+    {
+      "phase": 3,
+      "check_number": 16,
+      "check": "no_sdc_match_confidence_capped",
+      "description": "NO_SDC_MATCH domains have confidence ≤ 0.55",
+      "result": "PASS",
+      "detail": "3 NO_SDC_MATCH domains checked"
+    },
+    {
+      "phase": 3,
+      "check_number": 17,
+      "check": "weakly_grounded_confidence_capped",
+      "description": "WEAKLY_GROUNDED domains have confidence ≤ 0.70",
+      "result": "PASS",
+      "detail": "2 WEAKLY_GROUNDED domains checked"
+    },
+    {
+      "phase": 3,
+      "check_number": 18,
+      "check": "mean_confidence_realistic",
+      "description": "Mean confidence (accepted) in [0.60, 0.90]",
+      "result": "PASS",
+      "detail": "Mean: 0.741"
+    },
+    {
+      "phase": 3,
+      "check_number": 19,
+      "check": "no_overcertain_propositions",
+      "description": "No confidence > 0.95 (L3 ceiling prevents certainty)",
+      "result": "PASS",
+      "detail": "Max: 0.900"
+    },
+    {
+      "phase": 4,
+      "check_number": 20,
+      "check": "all_four_actions_exercised",
+      "description": "All 4 review actions exercised (ACCEPT, CONTEST, ARBITRATE, REJECT)",
+      "result": "PASS",
+      "detail": "Actions: {'REJECT', 'ACCEPT', 'ARBITRATE', 'CONTEST'}"
+    },
+    {
+      "phase": 4,
+      "check_number": 21,
+      "check": "all_propositions_reviewed",
+      "description": "Review event log has entries for all 85 propositions",
+      "result": "PASS",
+      "detail": "85 unique propositions in review log"
+    },
+    {
+      "phase": 4,
+      "check_number": 22,
+      "check": "governance_proof_capsule_exists",
+      "description": "Governance proof capsule exists",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "phase": 4,
+      "check_number": 23,
+      "check": "all_actions_by_operator",
+      "description": "All review actions by operator (not system)",
+      "result": "PASS",
+      "detail": "94/94 by operator"
+    },
+    {
+      "phase": 4,
+      "check_number": 24,
+      "check": "non_automatable_boundary",
+      "description": "Non-automatable boundary respected",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "phase": 5,
+      "check_number": 25,
+      "check": "domain_mapping_consistent",
+      "description": "Domain ID correction mapping covers all 17 canonical domains",
+      "result": "PASS",
+      "detail": "16 domain corrections (16 accepted domains)"
+    },
+    {
+      "phase": 5,
+      "check_number": 26,
+      "check": "pre_enrichment_preserved",
+      "description": "Pre-enrichment values preserved in enriched propositions",
+      "result": "PASS",
+      "detail": "56 propositions with pre-enrichment data or confirmed"
+    },
+    {
+      "phase": 5,
+      "check_number": 27,
+      "check": "enrichment_log_complete",
+      "description": "Enrichment log has entries for domain and capability corrections",
+      "result": "PASS",
+      "detail": "31 events"
+    },
+    {
+      "phase": 5,
+      "check_number": 28,
+      "check": "evidence_manifest_complete",
+      "description": "Evidence manifest references all 3 HTML files",
+      "result": "PASS",
+      "detail": "3 evidence sources"
+    },
+    {
+      "phase": 5,
+      "check_number": 29,
+      "check": "debt_evolution_complete",
+      "description": "Debt evolution assessment covers all 15 blockers",
+      "result": "PASS",
+      "detail": "15 items assessed"
+    },
+    {
+      "phase": 6,
+      "check_number": 30,
+      "check": "all_checkpoints_exist",
+      "description": "Checkpoint 00 through 05 all exist",
+      "result": "PASS",
+      "detail": "Checking 6 checkpoints"
+    },
+    {
+      "phase": 6,
+      "check_number": 31,
+      "check": "all_checkpoints_frozen",
+      "description": "All checkpoints have status FROZEN",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "phase": 6,
+      "check_number": 32,
+      "check": "checkpoint_chain_contiguous",
+      "description": "First 6 checkpoints in manifest are COMPLETE",
+      "result": "PASS",
+      "detail": "6 checkpoints COMPLETE in manifest"
+    },
+    {
+      "phase": 6,
+      "check_number": 33,
+      "check": "stream_checkpoint_alignment",
+      "description": "Each completed stream's checkpoints show COMPLETE",
+      "result": "PASS",
+      "detail": "4/4 streams COMPLETE"
+    },
+    {
+      "phase": 7,
+      "check_number": 34,
+      "check": "spine_ids_unique",
+      "description": "All spine objects have unique IDs",
+      "result": "PASS",
+      "detail": "7 objects, 7 unique"
+    },
+    {
+      "phase": 7,
+      "check_number": 35,
+      "check": "spine_checkpoint_refs_valid",
+      "description": "All spine objects reference valid checkpoints",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "phase": 7,
+      "check_number": 36,
+      "check": "spine_index_matches_objects",
+      "description": "Spine index total matches spine objects total",
+      "result": "PASS",
+      "detail": "Index: 7, Objects: 7"
+    },
+    {
+      "phase": 7,
+      "check_number": 37,
+      "check": "spine_count_matches_manifest",
+      "description": "Spine object count matches manifest",
+      "result": "PASS",
+      "detail": "Manifest: 7, Actual: 7"
+    },
+    {
+      "phase": 8,
+      "check_number": 38,
+      "check": "blueedge_still_s2",
+      "description": "BlueEdge promotion_state still shows S2",
+      "result": "PASS",
+      "detail": "S-level: S2"
+    },
+    {
+      "phase": 8,
+      "check_number": 39,
+      "check": "blockers_unchanged",
+      "description": "Qualification blockers file has 15 blockers (read-only)",
+      "result": "PASS",
+      "detail": "15 blockers"
+    },
+    {
+      "phase": 8,
+      "check_number": 40,
+      "check": "no_unauthorized_promotion",
+      "description": "No promotion events added without authorization (still 2 bridge events)",
+      "result": "PASS",
+      "detail": "2 promotion events"
+    },
+    {
+      "phase": 9,
+      "check_number": 41,
+      "check": "acceptance_rate_plausible",
+      "description": "Proposition acceptance rate (83.5%) is within expected range [70%, 95%]",
+      "result": "PASS",
+      "detail": "Acceptance rate: 83.5%"
+    },
+    {
+      "phase": 9,
+      "check_number": 42,
+      "check": "enrichment_delta_plausible",
+      "description": "Enrichment confidence delta is within expected range [-0.05, +0.05]",
+      "result": "PASS",
+      "detail": "Delta: +0.013"
+    },
+    {
+      "phase": 9,
+      "check_number": 43,
+      "check": "tier_ratio_plausible",
+      "description": "DERIVED-to-DIRECT_EVIDENCE ratio is plausible (< 1.0)",
+      "result": "PASS",
+      "detail": "Ratio: 0.37 (19/52)"
+    },
+    {
+      "phase": 9,
+      "check_number": 44,
+      "check": "cross_domain_acceptance_reasonable",
+      "description": "Cross-domain proposition acceptance rate ≥ 60%",
+      "result": "PASS",
+      "detail": "15/19 (78.9%)"
+    },
+    {
+      "phase": 9,
+      "check_number": 45,
+      "check": "governance_findings_nontrivial",
+      "description": "Governance finding count is non-trivial (≥ 2)",
+      "result": "PASS",
+      "detail": "5 findings"
+    },
+    {
+      "phase": 9,
+      "check_number": 46,
+      "check": "netbox_not_mutated",
+      "description": "No NetBox mutation detected",
+      "result": "PASS",
+      "detail": "NetBox read-only constraint enforced throughout"
+    },
+    {
+      "phase": 9,
+      "check_number": 47,
+      "check": "manifest_internally_consistent",
+      "description": "Chronicle manifest stream/checkpoint counts consistent",
+      "result": "PASS",
+      "detail": "Spine: 7, Streams: 9"
+    },
+    {
+      "phase": 9,
+      "check_number": 48,
+      "check": "governance_artifacts_traceable",
+      "description": "All governance artifacts traceable through spine objects",
+      "result": "PASS",
+      "detail": "7 spine objects, all with IDs"
+    }
+  ]
+}

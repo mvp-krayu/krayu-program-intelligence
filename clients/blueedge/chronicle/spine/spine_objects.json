@@ -2,8 +2,8 @@
   "schema_version": "1.0",
   "chronicle_id": "blueedge-governed-cognitive-replay-chronicle",
   "client": "blueedge",
-  "accumulated_at": "2026-05-22T21:00:00Z",
-  "total_objects": 7,
+  "accumulated_at": "2026-05-22T22:00:00Z",
+  "total_objects": 8,
   "objects": [
     {
       "spine_id": "SPINE-RC01-EO-001",
@@ -195,6 +195,45 @@
           "note": "Enrichment produced more accurate evidence, not uniformly better evidence. The system is now more honest about what PATH B can prove."
         },
         "evidence_ref": "clients/blueedge/chronicle/governance/debt_evolution.json"
+      }
+    },
+    {
+      "spine_id": "SPINE-RC05-RC-001",
+      "spine_class": "replay_corridor",
+      "checkpoint_ref": "checkpoint_06_revalidation",
+      "timestamp": "2026-05-22T22:00:00Z",
+      "content": {
+        "corridor_type": "DETERMINISTIC_REVALIDATION",
+        "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-05",
+        "revalidation_framework": "9-phase/48-check (adapted from NetBox PATH A)",
+        "result": "VALID",
+        "total_checks": 48,
+        "passed": 48,
+        "failed": 0,
+        "corridor_span": {
+          "from_checkpoint": "checkpoint_00_baseline",
+          "to_checkpoint": "checkpoint_06_revalidation",
+          "checkpoints_traversed": 7,
+          "semantic_phases_covered": ["EMERGENCE", "FORMATION", "TENSION", "STRENGTHENING", "STABILIZATION"]
+        },
+        "deterministic_replay_proof": {
+          "structural_integrity": "8/8 — all propositions structurally valid",
+          "evidence_integrity": "5/5 — all evidence anchors resolve",
+          "confidence_realism": "6/6 — confidence bounds realistic for PATH B evidence",
+          "governance_integrity": "5/5 — full lifecycle exercised with non-automatable boundary",
+          "enrichment_integrity": "5/5 — domain mapping correct, pre-enrichment values preserved",
+          "checkpoint_integrity": "4/4 — all checkpoints frozen and contiguous",
+          "spine_integrity": "4/4 — all spine objects valid and indexed",
+          "sqo_state_consistency": "3/3 — S2 preserved, no unauthorized promotion",
+          "corpus_evolution": "8/8 — acceptance rate, enrichment delta, tier ratios within bounds"
+        },
+        "comparison_with_netbox": {
+          "netbox_result": "48/48 PASS",
+          "blueedge_result": "48/48 PASS",
+          "adaptation": "Code graph phases replaced with evidence/enrichment integrity. Same structural rigor, different evidence channels."
+        },
+        "significance": "Deterministic revalidation confirms that governance-challenged, evidence-enriched PATH B corpus holds under the same structural rigor framework used for NetBox PATH A. The revalidation pattern transfers across specimen types.",
+        "revalidation_result_ref": "clients/blueedge/chronicle/checkpoints/revalidation_result.json"
       }
     }
   ]

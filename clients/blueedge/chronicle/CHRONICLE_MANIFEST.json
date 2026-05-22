@@ -50,8 +50,9 @@
     "RC-05": {
       "name": "Deterministic Revalidation",
       "classification": "G2",
-      "status": "PENDING",
-      "checkpoint": "checkpoint_06_revalidation"
+      "status": "COMPLETE",
+      "checkpoint": "checkpoint_06_revalidation",
+      "completed_at": "2026-05-22T22:00:00Z"
     },
     "RC-06": {
       "name": "S2 Re-Advancement (Bridge → Governed)",
@@ -117,9 +118,9 @@
     },
     "checkpoint_06_revalidation": {
       "semantic_phase": "STABILIZATION",
-      "description": "After deterministic revalidation — what was challenged now holds",
+      "description": "After deterministic revalidation — 48/48 PASS, what was challenged now holds",
       "stream": "RC-05",
-      "status": "PENDING"
+      "status": "COMPLETE"
     },
     "checkpoint_07_advancement": {
       "semantic_phase": "QUALIFICATION",
@@ -197,7 +198,7 @@
     }
   ],
   "proof_object_count": 0,
-  "spine_object_count": 7,
+  "spine_object_count": 8,
   "narrative_chapter_count": 0,
   "media_capture_count": 0
 }

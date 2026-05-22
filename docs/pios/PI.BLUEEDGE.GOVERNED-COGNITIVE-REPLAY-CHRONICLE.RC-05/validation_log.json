@@ -1,0 +1,71 @@
+{
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-05",
+  "classification": "G2",
+  "timestamp": "2026-05-22T22:00:00Z",
+  "total_checks": 12,
+  "passed": 12,
+  "failed": 0,
+  "result": "VALID",
+  "checks": [
+    {
+      "check": "rc04_checkpoint_frozen",
+      "description": "checkpoint_05_debt.json exists and status is FROZEN",
+      "result": "PASS"
+    },
+    {
+      "check": "revalidation_script_created",
+      "description": "revalidation_rc05.py created with 48-check/9-phase framework",
+      "result": "PASS"
+    },
+    {
+      "check": "revalidation_executed",
+      "description": "revalidation_rc05.py executed successfully: 48/48 PASS",
+      "result": "PASS"
+    },
+    {
+      "check": "revalidation_result_created",
+      "description": "revalidation_result.json created with full check details",
+      "result": "PASS"
+    },
+    {
+      "check": "checkpoint_06_created",
+      "description": "checkpoint_06_revalidation.json created with status FROZEN",
+      "result": "PASS"
+    },
+    {
+      "check": "replay_corridor_spine_object",
+      "description": "SPINE-RC05-RC-001 replay_corridor spine object emitted",
+      "result": "PASS"
+    },
+    {
+      "check": "spine_objects_updated",
+      "description": "spine_objects.json updated to 8 objects",
+      "result": "PASS"
+    },
+    {
+      "check": "spine_index_updated",
+      "description": "spine_index.json updated with checkpoint_06 and replay_corridor references",
+      "result": "PASS"
+    },
+    {
+      "check": "manifest_updated",
+      "description": "CHRONICLE_MANIFEST.json updated: RC-05 COMPLETE, checkpoint_06 COMPLETE, spine_object_count 8",
+      "result": "PASS"
+    },
+    {
+      "check": "no_rejected_propositions_modified",
+      "description": "Revalidation is read-only — no proposition state modified",
+      "result": "PASS"
+    },
+    {
+      "check": "netbox_not_mutated",
+      "description": "No files under clients/netbox/ modified",
+      "result": "PASS"
+    },
+    {
+      "check": "comparison_with_netbox_documented",
+      "description": "NetBox vs BlueEdge revalidation comparison documented in revalidation_result.json",
+      "result": "PASS"
+    }
+  ]
+}

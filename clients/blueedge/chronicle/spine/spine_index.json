@@ -1,11 +1,12 @@
 {
   "schema_version": "1.0",
-  "total_objects": 7,
+  "total_objects": 8,
   "by_type": {
     "evidence_object": ["SPINE-RC01-EO-001", "SPINE-RC04-EO-001", "SPINE-RC04-EO-002"],
     "executive_projection_snapshot": ["SPINE-RC01-EP-001"],
     "semantic_proposition_derivation": ["SPINE-RC02-SP-001"],
-    "qualification_transition": ["SPINE-RC03-QT-001", "SPINE-RC03-QT-002"]
+    "qualification_transition": ["SPINE-RC03-QT-001", "SPINE-RC03-QT-002"],
+    "replay_corridor": ["SPINE-RC05-RC-001"]
   },
   "by_checkpoint": {
     "checkpoint_00_baseline": ["SPINE-RC01-EO-001", "SPINE-RC01-EP-001"],
@@ -13,7 +14,8 @@
     "checkpoint_02_review": ["SPINE-RC03-QT-001"],
     "checkpoint_03_governance": ["SPINE-RC03-QT-002"],
     "checkpoint_04_enrichment": ["SPINE-RC04-EO-001"],
-    "checkpoint_05_debt": ["SPINE-RC04-EO-002"]
+    "checkpoint_05_debt": ["SPINE-RC04-EO-002"],
+    "checkpoint_06_revalidation": ["SPINE-RC05-RC-001"]
   },
   "by_timestamp": [
     {"spine_id": "SPINE-RC01-EO-001", "timestamp": "2026-05-22T18:00:00Z", "spine_class": "evidence_object"},
@@ -22,6 +24,7 @@
     {"spine_id": "SPINE-RC03-QT-001", "timestamp": "2026-05-22T20:00:00Z", "spine_class": "qualification_transition"},
     {"spine_id": "SPINE-RC03-QT-002", "timestamp": "2026-05-22T20:00:00Z", "spine_class": "qualification_transition"},
     {"spine_id": "SPINE-RC04-EO-001", "timestamp": "2026-05-22T21:00:00Z", "spine_class": "evidence_object"},
-    {"spine_id": "SPINE-RC04-EO-002", "timestamp": "2026-05-22T21:00:00Z", "spine_class": "evidence_object"}
+    {"spine_id": "SPINE-RC04-EO-002", "timestamp": "2026-05-22T21:00:00Z", "spine_class": "evidence_object"},
+    {"spine_id": "SPINE-RC05-RC-001", "timestamp": "2026-05-22T22:00:00Z", "spine_class": "replay_corridor"}
   ]
 }
