@@ -306,6 +306,56 @@ class ChronicleEmitter:
         manifest["hero_moments_discovered"] = manifest.get("hero_moments_discovered", 0) + 1
         self._write_manifest(manifest)
 
+    def emit_ai_intervention(self, ai_event: dict):
+        """Emit an ai_intervention chronicle event and track count."""
+        event_id = ai_event.get("event_id", "AI-unknown")
+        event_type = ai_event.get("event_type", "UNKNOWN")
+        description = ai_event.get("description", "AI assistance event")
+        phase = ai_event.get("phase", "")
+        semantic_phase = SEMANTIC_PHASE_MAP.get(phase, "FORMATION")
+
+        self._emit_event(
+            event_type="ai_intervention",
+            semantic_phase=semantic_phase,
+            description=f"AI assistance ({event_type}): {description}",
+            evidence_refs=ai_event.get("input_context", {}).get("evidence_refs", []),
+            extra={
+                "ai_event_id": event_id,
+                "ai_event_type": event_type,
+                "authority_ceiling": "L3",
+                "requires_operator_decision": True,
+                "model_id": ai_event.get("replay_trace", {}).get("model_id", ""),
+            },
+        )
+
+        manifest = self._read_manifest()
+        manifest["ai_interventions_logged"] = manifest.get("ai_interventions_logged", 0) + 1
+        self._write_manifest(manifest)
+
+    def emit_operator_decision(self, decision_event: dict):
+        """Emit an operator_decision chronicle event and track count."""
+        decision_id = decision_event.get("decision_id", "OPD-unknown")
+        decision = decision_event.get("decision", "UNKNOWN")
+        ai_ref = decision_event.get("ai_event_ref", "")
+
+        self._emit_event(
+            event_type="operator_decision",
+            semantic_phase="TENSION",
+            description=f"Operator decision: {decision} on {ai_ref}",
+            evidence_refs=[],
+            extra={
+                "decision_id": decision_id,
+                "decision": decision,
+                "ai_event_ref": ai_ref,
+                "object_ref": decision_event.get("object_ref", ""),
+                "operator": decision_event.get("operator", ""),
+            },
+        )
+
+        manifest = self._read_manifest()
+        manifest["operator_decisions_recorded"] = manifest.get("operator_decisions_recorded", 0) + 1
+        self._write_manifest(manifest)
+
     def emit_custom(self, event_type: str, semantic_phase: str, description: str,
                     evidence_refs: Optional[list[str]] = None, extra: Optional[dict] = None):
         """Emit a custom chronicle event."""

@@ -67,10 +67,12 @@ _chronicle_emitter = None
 
 _hero_moment_detector = None
 
+_ai_logger = None
+
 
 def _init_chronicle(client_id: str, run_id: str, run_dir: Path):
-    """Initialize chronicle event emitter and hero moment detector. Graceful degradation."""
-    global _chronicle_emitter, _hero_moment_detector
+    """Initialize chronicle event emitter, hero moment detector, and AI assistance logger. Graceful degradation."""
+    global _chronicle_emitter, _hero_moment_detector, _ai_logger
     sys.path.insert(0, str(CHRONICLE_DIR))
     try:
         from emitter import ChronicleEmitter
@@ -85,6 +87,13 @@ def _init_chronicle(client_id: str, run_id: str, run_dir: Path):
     except Exception as exc:
         print(f"    [CHRONICLE] WARN: hero moment detector not available — {exc}")
         _hero_moment_detector = None
+    try:
+        from ai_assistance import AIAssistanceLogger
+        _ai_logger = AIAssistanceLogger(client_id, run_id, run_dir)
+        _ai_logger.initialize()
+    except Exception as exc:
+        print(f"    [CHRONICLE] WARN: AI assistance logger not available — {exc}")
+        _ai_logger = None
     finally:
         if str(CHRONICLE_DIR) in sys.path:
             sys.path.remove(str(CHRONICLE_DIR))
@@ -753,6 +762,19 @@ def phase_03_7_structural_centrality(client: str, run_id: str, run_dir: Path) ->
                     json.dump({"hero_moments": hm_candidates, "count": len(hm_candidates)}, f, indent=2)
                 for hm in hm_candidates:
                     _chronicle_emitter.emit_hero_moment(hm)
+                if _ai_logger:
+                    evidence_files = []
+                    if centrality_file.exists():
+                        evidence_files.append(str(centrality_file.relative_to(run_dir.parents[3])))
+                    if code_graph_file.exists():
+                        evidence_files.append(str(code_graph_file.relative_to(run_dir.parents[3])))
+                    ai_event = _ai_logger.log_inspection(
+                        phase="Phase 3.7 — Structural Centrality Derivation",
+                        artifacts_read=evidence_files,
+                        description=f"{len(hm_candidates)} hero moment candidate(s) surfaced from structural evidence",
+                        evidence_refs=evidence_files,
+                    )
+                    _chronicle_emitter.emit_ai_intervention(ai_event)
                 print(f"  [CHRONICLE] {len(hm_candidates)} hero moment candidate(s) detected")
             else:
                 print(f"  [CHRONICLE] No hero moment candidates detected")
@@ -819,6 +841,20 @@ def phase_03b_semantic_derivation(
         if result.stderr:
             print(f"  stderr: {result.stderr.strip()[:200]}")
         return True
+
+    # AI assistance logging (GEN-3) — SDC is an AI-assisted phase
+    if _ai_logger and _chronicle_emitter:
+        try:
+            ai_event = _ai_logger.log_proposal(
+                phase="Phase 3b — Semantic Derivation",
+                artifacts_read=[str(evidence_set)],
+                description=f"Semantic Derivation Compiler executed on {evidence_set.name}",
+                evidence_refs=[str(evidence_set)],
+            )
+            _chronicle_emitter.emit_ai_intervention(ai_event)
+            print(f"  [CHRONICLE] AI assistance event logged: {ai_event['event_id']}")
+        except Exception as exc:
+            print(f"  [CHRONICLE] WARN: AI assistance logging failed — {exc}")
 
     print("  Semantic derivation: OK")
     return True

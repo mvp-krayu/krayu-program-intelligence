@@ -556,6 +556,7 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.GENESIS.COGNITIVE-REPLAY-AND-AI-ASSISTED-ONBOARDING.01 | G1 | GENESIS doctrine — onboarding-origin governed cognition formation model. 10 doctrine deliverables: genesis replay doctrine, Hero Moment genesis model, AI-assisted onboarding operating model (first 10-50 clients), AI assistance governance contract (L3 ceiling, 6 object types), genesis cognitive chronicle model (chronicle as first-class runtime architecture, 18 event types, 7 object families), chronicle genesis adaptation, learning-to-capability pipeline (9-state lifecycle), BlueEdge RC reclassification (GOVERNED SEMANTIC REPLAY), genesis roadmap (GEN-1 through GEN-6), 12 mandatory questions answered. Chronicle elevated to first-class runtime via mid-execution steering | COMPLETE |
 | PI.GENESIS.GEN-1.CHRONICLE-EVENT-MODEL.01 | G1 | GEN-1 Chronicle Event Model — inline chronicle event emission during pipeline execution. ChronicleEmitter module (11 methods), append-only JSONL, runtime manifest accumulation, phase-boundary checkpoints, DISCOVERY/EMERGENCE/FORMATION semantic phase mapping, enriched events (source_discovery, evidence_acquisition, structural_emergence, relevance_classification, semantic_formation). Graceful degradation — pipeline unchanged if chronicle unavailable | COMPLETE |
 | PI.GENESIS.GEN-2.HERO-MOMENT-GENESIS-INTEGRATION.01 | G1 | GEN-2 Hero Moment Genesis Integration — structural hero moment candidate detection at pipeline Phase 3.6/3.7. 5 detection heuristics (gravitational dominance, enumeration coupling, dual authority, cross-domain coupling rate, bidirectional entanglement). ChronicleEmitter emit_hero_moment() integration. 23 candidates validated against NetBox reference. All CANDIDATE governance state — operator review for CONFIRMED | COMPLETE |
+| PI.GENESIS.GEN-3.AI-ASSISTED-OPERATIONALIZATION.01 | G1 | GEN-3 AI-Assisted Operationalization — AIAssistanceLogger runtime per AI_ASSISTANCE_GOVERNANCE_CONTRACT.md. 5 action methods (INSPECT/PROPOSE/EXPLAIN/RECONCILE/IMPROVE), 3 object types (ai_suggestion, ai_detected_gap, operator_decision_event), L3 ceiling enforced, replay-safe (prompt_hash, model_id, temperature), append-only JSONL. ChronicleEmitter emit_ai_intervention() + emit_operator_decision(). Pipeline Phase 3b + Phase 3.7 hooks. M2 infrastructure operational | COMPLETE |
 
 ## GENESIS — Onboarding-Origin Governed Cognition Formation
 
@@ -597,7 +598,7 @@ Marketplace modules emerge from repeated governed onboarding patterns — not pr
 |-------|---------|-------------|--------|
 | GEN-1 | Chronicle Event Model | None | **OPERATIONAL** |
 | GEN-2 | Hero Moment Integration | GEN-1 | **OPERATIONAL** |
-| GEN-3 | AI-Assisted Operationalization | GEN-1 | SPECIFIED_NOT_IMPLEMENTED |
+| GEN-3 | AI-Assisted Operationalization | GEN-1 | **OPERATIONAL** |
 | GEN-4 | Learning Promotion Pipeline | GEN-1 | SPECIFIED_NOT_IMPLEMENTED |
 | GEN-5 | First Full Genesis Chronicle | GEN-1–4 | SPECIFIED_NOT_IMPLEMENTED |
 | GEN-6 | Cross-Specimen Genesis Convergence | Multiple GEN-5 | SPECIFIED_NOT_IMPLEMENTED |
@@ -608,7 +609,7 @@ Marketplace modules emerge from repeated governed onboarding patterns — not pr
 |-----------|----------|
 | Genesis replay doctrine | SPECIFIED_NOT_IMPLEMENTED — doctrine locked, no implementation |
 | Hero Moment genesis model | OPERATIONAL — 5 detection heuristics, pipeline Phase 3.7 integration, 23 candidates validated against NetBox reference |
-| AI assistance governance contract | SPECIFIED_NOT_IMPLEMENTED — contract defined, no runtime integration |
+| AI assistance governance contract | OPERATIONAL — AIAssistanceLogger runtime, 5 action methods, 3 object types, L3 ceiling, replay-safe, pipeline Phase 3b + 3.7 hooks, M2 infrastructure |
 | Genesis cognitive chronicle model | PARTIALLY_OPERATIONAL — GEN-1 inline event emission operational; 18 event types defined, phase_started/completed/enriched events active |
 | Learning-to-capability pipeline | SPECIFIED_NOT_IMPLEMENTED — lifecycle defined, promotion pipeline not built |
 | BlueEdge RC (semantic replay corridor) | OPERATIONAL — REPLAY-CERTIFIED, proven reference |
