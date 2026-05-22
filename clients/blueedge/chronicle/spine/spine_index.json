@@ -1,12 +1,13 @@
 {
   "schema_version": "1.0",
-  "total_objects": 9,
+  "total_objects": 10,
   "by_type": {
     "evidence_object": ["SPINE-RC01-EO-001", "SPINE-RC04-EO-001", "SPINE-RC04-EO-002"],
     "executive_projection_snapshot": ["SPINE-RC01-EP-001"],
     "semantic_proposition_derivation": ["SPINE-RC02-SP-001"],
     "qualification_transition": ["SPINE-RC03-QT-001", "SPINE-RC03-QT-002", "SPINE-RC06-QT-001"],
-    "replay_corridor": ["SPINE-RC05-RC-001"]
+    "replay_corridor": ["SPINE-RC05-RC-001"],
+    "convergence_observation": ["SPINE-RC07-CO-001"]
   },
   "by_checkpoint": {
     "checkpoint_00_baseline": ["SPINE-RC01-EO-001", "SPINE-RC01-EP-001"],
@@ -16,7 +17,8 @@
     "checkpoint_04_enrichment": ["SPINE-RC04-EO-001"],
     "checkpoint_05_debt": ["SPINE-RC04-EO-002"],
     "checkpoint_06_revalidation": ["SPINE-RC05-RC-001"],
-    "checkpoint_07_advancement": ["SPINE-RC06-QT-001"]
+    "checkpoint_07_advancement": ["SPINE-RC06-QT-001"],
+    "checkpoint_08_convergence": ["SPINE-RC07-CO-001"]
   },
   "by_timestamp": [
     {"spine_id": "SPINE-RC01-EO-001", "timestamp": "2026-05-22T18:00:00Z", "spine_class": "evidence_object"},
@@ -27,6 +29,7 @@
     {"spine_id": "SPINE-RC04-EO-001", "timestamp": "2026-05-22T21:00:00Z", "spine_class": "evidence_object"},
     {"spine_id": "SPINE-RC04-EO-002", "timestamp": "2026-05-22T21:00:00Z", "spine_class": "evidence_object"},
     {"spine_id": "SPINE-RC05-RC-001", "timestamp": "2026-05-22T22:00:00Z", "spine_class": "replay_corridor"},
-    {"spine_id": "SPINE-RC06-QT-001", "timestamp": "2026-05-22T23:00:00Z", "spine_class": "qualification_transition"}
+    {"spine_id": "SPINE-RC06-QT-001", "timestamp": "2026-05-22T23:00:00Z", "spine_class": "qualification_transition"},
+    {"spine_id": "SPINE-RC07-CO-001", "timestamp": "2026-05-22T23:30:00Z", "spine_class": "convergence_observation"}
   ]
 }
