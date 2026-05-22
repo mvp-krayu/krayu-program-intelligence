@@ -1,0 +1,138 @@
+{
+  "stream_id": "PI.SQO.PROPOSITION-QUALIFICATION-PATHWAY.01",
+  "classification": "G1",
+  "date": "2026-05-22",
+  "specimen": "netbox",
+  "run_id": "run_github_netbox_20260520_134600",
+  "total_checks": 18,
+  "passed": 18,
+  "failed": 0,
+  "checks": [
+    {
+      "id": "V-001",
+      "name": "SPE_PROBE_DETECTED",
+      "description": "SQORuntimeResolver detects spe_derivation_report.json",
+      "status": "PASS",
+      "evidence": "capabilities.semantic_propositions = true"
+    },
+    {
+      "id": "V-002",
+      "name": "SEMANTIC_CANDIDATES_CASCADED",
+      "description": "semantic_candidates capability true via SPE path",
+      "status": "PASS",
+      "evidence": "capabilities.semantic_candidates = true (from spe_derivation_report probe)"
+    },
+    {
+      "id": "V-003",
+      "name": "SECTION_AVAILABILITY_CASCADED",
+      "description": "semantic-candidates section available via cascaded capability",
+      "status": "PASS",
+      "evidence": "sectionAvailability['semantic-candidates'] = true"
+    },
+    {
+      "id": "V-004",
+      "name": "SPE_INTAKE_RESOLVED",
+      "description": "SemanticQualificationIntakeResolver resolves SPE path",
+      "status": "PASS",
+      "evidence": "available: true, derivation_path: SPE"
+    },
+    {
+      "id": "V-005",
+      "name": "PROPOSITION_COUNT_CORRECT",
+      "description": "Intake reports correct proposition count from SPE",
+      "status": "PASS",
+      "evidence": "total_propositions: 75"
+    },
+    {
+      "id": "V-006",
+      "name": "CLASS_DISTRIBUTION_CORRECT",
+      "description": "All 6 proposition classes reported",
+      "status": "PASS",
+      "evidence": "STRUCTURAL_DOMINANCE: 12, COUPLING_PATTERN: 34, AUTHORITY_TOPOLOGY: 10, TIER_GROUNDING: 12, HERO_MOMENT_GROUNDING: 6, CLUSTER_ARCHITECTURE: 1"
+    },
+    {
+      "id": "V-007",
+      "name": "CONFIDENCE_ENVELOPE_CORRECT",
+      "description": "Confidence statistics from derivation report",
+      "status": "PASS",
+      "evidence": "mean: 0.872, min: 0.595, max: 0.972"
+    },
+    {
+      "id": "V-008",
+      "name": "CEU_COVERAGE_COMPUTED",
+      "description": "CEU coverage derived from proposition ceu_refs",
+      "status": "PASS",
+      "evidence": "ceu_coverage: 12 (unique CEUs across 75 propositions)"
+    },
+    {
+      "id": "V-009",
+      "name": "DERIVATION_HASH_PRESERVED",
+      "description": "Derivation hash passed through to intake summary",
+      "status": "PASS",
+      "evidence": "derivation_hash: a1356bb405053b5bb86a741ae361c47dcecbafcbba6ace7edd55b67262a67175"
+    },
+    {
+      "id": "V-010",
+      "name": "BLOCKERS_RECHARACTERIZED",
+      "description": "4 blockers resolved, 3 unresolved, total 7",
+      "status": "PASS",
+      "evidence": "BLK-001 RESOLVED, BLK-003 RESOLVED, BLK-004 RESOLVED, BLK-006 RESOLVED; BLK-002 PROPOSITION_REVIEW_PENDING, BLK-005 PROPOSITION_DEBT_PENDING, BLK-007 NO_SEMANTIC_AUTHORITY"
+    },
+    {
+      "id": "V-011",
+      "name": "LANE_STATES_UPDATED",
+      "description": "Promotion state lanes reflect SPE completion",
+      "status": "PASS",
+      "evidence": "semantic_candidate: COMPLETE, review_queue: PENDING, crosswalk: INAPPLICABLE, reconciliation: COMPLETE, qualification_debt: PENDING"
+    },
+    {
+      "id": "V-012",
+      "name": "POSTURE_CORRECT",
+      "description": "Qualification posture resolved correctly for SPE path",
+      "status": "PASS",
+      "evidence": "Posture: QUALIFICATION_PENDING (review_obligations.json exists with 0 obligations — pre-existing state)"
+    },
+    {
+      "id": "V-013",
+      "name": "EVIDENCE_STATE_PATH_AWARE",
+      "description": "Evidence state shows SPE-specific label",
+      "status": "PASS",
+      "evidence": "semantic_intake.detail: 'Semantic propositions available (SPE)'"
+    },
+    {
+      "id": "V-014",
+      "name": "PROGRESSION_PATH_AWARE",
+      "description": "Progression path shows SPE-specific derivation step",
+      "status": "PASS",
+      "evidence": "semantic_derivation: complete — 'Semantic propositions derived (SPE)'"
+    },
+    {
+      "id": "V-015",
+      "name": "BLUEEDGE_UNCHANGED",
+      "description": "BlueEdge capabilities unaffected by SPE probes",
+      "status": "PASS",
+      "evidence": "blueedge semantic_candidates: false, semantic_propositions: false — BlueEdge routes through loadBlueEdgeCandidates()"
+    },
+    {
+      "id": "V-016",
+      "name": "CSR_PATH_PRESERVED",
+      "description": "CSR intake path preserved as first-priority in resolver",
+      "status": "PASS",
+      "evidence": "resolveCsrIntake() called when candidate_csr.json exists — SPE path only attempted when CSR absent"
+    },
+    {
+      "id": "V-017",
+      "name": "RESOLVED_BLOCKER_FILTERING",
+      "description": "QualificationPostureResolver filters resolved blockers for crosswalk check",
+      "status": "PASS",
+      "evidence": "unresolvedBlockers = blockers.filter(b => !b.resolved) — resolved crosswalk blocker no longer triggers CROSSWALK_ACTIVE"
+    },
+    {
+      "id": "V-018",
+      "name": "GOVERNANCE_DISCLAIMER_SPE",
+      "description": "SPE path carries proposition-specific governance disclaimer",
+      "status": "PASS",
+      "evidence": "disclaimer: 'Semantic propositions are CANDIDATE (L3 ceiling). Not canonical semantic authority. Operator review required.'"
+    }
+  ]
+}

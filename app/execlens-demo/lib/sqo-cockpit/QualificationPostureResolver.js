@@ -73,7 +73,8 @@ function resolveQualificationPosture(promotionState, qualificationBlockers, runt
   }
 
   const blockers = qualificationBlockers ? qualificationBlockers.blockers || [] : [];
-  const hasCrosswalkBlocker = blockers.some(b => b.lane === 'crosswalk');
+  const unresolvedBlockers = blockers.filter(b => !b.resolved);
+  const hasCrosswalkBlocker = unresolvedBlockers.some(b => b.lane === 'crosswalk');
   if (hasCrosswalkBlocker && caps.semantic_candidates) {
     return {
       posture: POSTURE.CROSSWALK_ACTIVE,

@@ -59,6 +59,8 @@ function resolveRuntimeSubstrates(client, runId) {
 
   const semanticProbes = {
     candidate_csr: probeFile(path.join('clients', client, 'psee', 'runs', runId, 'semantic', 'compiler', 'candidate_csr.json')),
+    spe_derivation_report: probeFile(path.join('clients', client, 'psee', 'runs', runId, 'semantic', 'spe', 'spe_derivation_report.json')),
+    proposition_review_queue: probeFile(path.join('clients', client, 'psee', 'runs', runId, 'semantic', 'spe', 'proposition_review_queue.json')),
     semantic_topology: probeFile(path.join('clients', client, 'psee', 'runs', runId, 'semantic', 'topology', 'semantic_topology_model.json')),
     canonical_topology: probeFile(path.join('clients', client, 'psee', 'runs', runId, 'structure', '40.4', 'canonical_topology.json')),
     vault_readiness: probeFile(path.join('clients', client, 'psee', 'runs', runId, 'vault', 'vault_readiness.json')),
@@ -88,7 +90,8 @@ function resolveRuntimeSubstrates(client, runId) {
     event_lineage: operationalProbes.promotion_event_log,
     qualification_blockers: operationalProbes.qualification_blockers,
 
-    semantic_candidates: semanticProbes.candidate_csr,
+    semantic_candidates: semanticProbes.candidate_csr || semanticProbes.spe_derivation_report,
+    semantic_propositions: semanticProbes.spe_derivation_report,
     structural_topology: semanticProbes.canonical_topology,
     semantic_topology: semanticProbes.semantic_topology,
     vault_readiness: semanticProbes.vault_readiness,

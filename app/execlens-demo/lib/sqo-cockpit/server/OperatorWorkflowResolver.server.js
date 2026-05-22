@@ -256,7 +256,7 @@ function resolvePrimaryGuidance(currentPosture, obligationSummary, role, runtime
     case POSTURE.QUALIFICATION_PENDING:
       return { headline: `${obligationSummary.unresolved} review obligation${obligationSummary.unresolved !== 1 ? 's' : ''} pending resolution.`, action_target: 'authority', urgency: 'critical' };
     case POSTURE.SEMANTIC_INTAKE:
-      return { headline: 'Semantic intake available. Candidate capabilities awaiting review.', action_target: 'semantic-candidates', urgency: 'actionable' };
+      return { headline: caps.semantic_propositions ? 'Semantic propositions available. CANDIDATE propositions awaiting operator review.' : 'Semantic intake available. Candidate capabilities awaiting review.', action_target: 'semantic-candidates', urgency: 'actionable' };
     case POSTURE.STRUCTURAL_ONLY:
       return { headline: 'Structural topology only. Semantic derivation required for qualification.', action_target: null, urgency: 'informational' };
     default:
@@ -313,7 +313,7 @@ function resolveEvidenceState(runtimeCapabilities) {
   const caps = runtimeCapabilities || {};
   return {
     structural_topology: { available: !!caps.structural_topology, detail: caps.structural_topology ? 'Canonical topology available' : null },
-    semantic_intake: { available: !!caps.semantic_candidates, detail: caps.semantic_candidates ? 'Candidate CSR available' : null },
+    semantic_intake: { available: !!caps.semantic_candidates, detail: caps.semantic_propositions ? 'Semantic propositions available (SPE)' : caps.semantic_candidates ? 'Candidate CSR available' : null },
     crosswalk: { available: !!caps.static_reconciliation, detail: caps.static_reconciliation ? 'Crosswalk correspondence available' : null },
     reconciliation: { available: !!caps.static_reconciliation, detail: caps.static_reconciliation ? 'Reconciliation data available' : null },
     evidence_replay: { available: !!caps.static_replay, detail: caps.static_replay ? 'Replay verification available' : null },
@@ -494,7 +494,7 @@ function resolveProgressionPath(currentPosture, runtimeCapabilities, qualificati
 
   const steps = [
     { step: 'structural_onboarding', label: 'Structural Onboarding', status: stepStatus(hasStructural, !hasStructural), detail: hasStructural ? 'Canonical topology available' : 'Awaiting structural pipeline' },
-    { step: 'semantic_derivation', label: 'Semantic Derivation', status: stepStatus(hasSemantic, hasStructural && !hasSemantic), detail: hasSemantic ? 'Candidate CSR generated' : (hasStructural ? 'Awaiting semantic compiler' : null) },
+    { step: 'semantic_derivation', label: 'Semantic Derivation', status: stepStatus(hasSemantic, hasStructural && !hasSemantic), detail: hasSemantic ? (caps.semantic_propositions ? 'Semantic propositions derived (SPE)' : 'Candidate CSR generated') : (hasStructural ? 'Awaiting semantic derivation' : null) },
     { step: 'semantic_review', label: 'Semantic Review', status: stepStatus(reviewComplete, hasSemantic && !reviewComplete && (posture === POSTURE.QUALIFICATION_PENDING || posture === POSTURE.SEMANTIC_INTAKE)), detail: reviewComplete ? 'Review obligations resolved' : (hasReview ? 'Review obligations pending' : null) },
     { step: 'crosswalk_construction', label: 'Crosswalk Construction', status: stepStatus(crosswalkComplete, posture === POSTURE.CROSSWALK_ACTIVE), detail: crosswalkComplete ? 'Crosswalk validated' : (posture === POSTURE.CROSSWALK_ACTIVE ? 'Crosswalk construction in progress' : null) },
     { step: 'reconciliation', label: 'Reconciliation', status: stepStatus(reconComplete, posture === POSTURE.RECONCILIATION_ACTIVE), detail: reconComplete ? 'PATH A/B reconciliation complete' : (posture === POSTURE.RECONCILIATION_ACTIVE ? 'Reconciliation in progress' : null) },
