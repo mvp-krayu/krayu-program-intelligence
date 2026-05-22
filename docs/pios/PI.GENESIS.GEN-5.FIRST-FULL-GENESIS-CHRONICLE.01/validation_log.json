@@ -1,0 +1,109 @@
+{
+  "stream_id": "PI.GENESIS.GEN-5.FIRST-FULL-GENESIS-CHRONICLE.01",
+  "classification": "G2",
+  "timestamp": "2026-05-22T16:15:00Z",
+  "checks": [
+    {
+      "id": "V-01",
+      "name": "GenesisChronicleCompiler module exists",
+      "description": "scripts/pios/chronicle/genesis_compiler.py created with GenesisChronicleCompiler class",
+      "result": "PASS"
+    },
+    {
+      "id": "V-02",
+      "name": "Compiler loads all data sources",
+      "description": "34 events, 9 checkpoints, 23 hero moments, 77 propositions, 14 learning events",
+      "result": "PASS"
+    },
+    {
+      "id": "V-03",
+      "name": "GENESIS_CHRONICLE.html produced",
+      "description": "Self-contained HTML, 75819 bytes",
+      "result": "PASS"
+    },
+    {
+      "id": "V-04",
+      "name": "Compilation manifest produced",
+      "description": "compilation_manifest.json with content_hash and source counts",
+      "result": "PASS"
+    },
+    {
+      "id": "V-05",
+      "name": "Z1-Z5 zoom architecture in HTML",
+      "description": "45 zoom buttons across 9 chapters",
+      "result": "PASS"
+    },
+    {
+      "id": "V-06",
+      "name": "DISCOVERY semantic phase present",
+      "description": "Genesis-extended DISCOVERY phase in timeline and chapters",
+      "result": "PASS"
+    },
+    {
+      "id": "V-07",
+      "name": "All 9 semantic phases in timeline",
+      "description": "9/9 phases rendered",
+      "result": "PASS"
+    },
+    {
+      "id": "V-08",
+      "name": "Hero moments panel rendered",
+      "description": "15 hero moment rows",
+      "result": "PASS"
+    },
+    {
+      "id": "V-09",
+      "name": "Learning events panel rendered",
+      "description": "14 learning event rows",
+      "result": "PASS"
+    },
+    {
+      "id": "V-10",
+      "name": "75.x governance footer",
+      "description": "75.x bounded interpretive authority with 13 prohibitions",
+      "result": "PASS"
+    },
+    {
+      "id": "V-11",
+      "name": "Enriched chronicle event types",
+      "description": "9 event types including source_discovery, structural_emergence, evidence_acquisition. relevance_classification not emitted on idempotent run (correct \u2014 enriched events fire on processing, not on skip)",
+      "result": "PASS"
+    },
+    {
+      "id": "V-12",
+      "name": "Checkpoints at phase boundaries",
+      "description": "9 checkpoints: ['DISCOVERY', 'EMERGENCE', 'FORMATION']",
+      "result": "PASS"
+    },
+    {
+      "id": "V-13",
+      "name": "Self-contained HTML",
+      "description": "All CSS and JS inline, no external dependencies",
+      "result": "PASS"
+    },
+    {
+      "id": "V-14",
+      "name": "Manifest ribbon",
+      "description": "Ribbon with events, checkpoints, hero moments, propositions, learning counts",
+      "result": "PASS"
+    },
+    {
+      "id": "V-15",
+      "name": "BlueEdge RC not mutated",
+      "description": "No modifications to clients/blueedge/chronicle/",
+      "result": "PASS"
+    },
+    {
+      "id": "V-16",
+      "name": "NetBox S2 frozen \u2014 read-only",
+      "description": "Chronicle compilation reads spine/governance/propositions without mutation",
+      "result": "PASS"
+    }
+  ],
+  "summary": {
+    "total": 16,
+    "passed": 16,
+    "failed": 0,
+    "result": "PASS"
+  }
+}

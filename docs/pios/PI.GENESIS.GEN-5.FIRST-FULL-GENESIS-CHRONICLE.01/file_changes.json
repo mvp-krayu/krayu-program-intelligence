@@ -1,0 +1,66 @@
+{
+  "stream_id": "PI.GENESIS.GEN-5.FIRST-FULL-GENESIS-CHRONICLE.01",
+  "classification": "G2",
+  "changes": [
+    {
+      "file": "scripts/pios/chronicle/genesis_compiler.py",
+      "action": "CREATED",
+      "description": "GenesisChronicleCompiler — compiles chronicle events, checkpoints, hero moments, learning events, spine objects, and governance data into navigable HTML instrument with Z1-Z5 zoom and semantic rhythm."
+    },
+    {
+      "file": "scripts/pios/chronicle/__init__.py",
+      "action": "MODIFIED",
+      "description": "Added GenesisChronicleCompiler to module exports."
+    },
+    {
+      "file": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/chronicle/GENESIS_CHRONICLE.html",
+      "action": "CREATED",
+      "description": "First genesis chronicle — 76KB self-contained HTML with 9 chapters, Z1-Z5 zoom, 34 events, 23 hero moments, 77 propositions, 14 learning events."
+    },
+    {
+      "file": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/chronicle/compilation_manifest.json",
+      "action": "CREATED",
+      "description": "Compilation manifest with content hash and source counts."
+    },
+    {
+      "file": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/chronicle/hero_moments.json",
+      "action": "CREATED",
+      "description": "23 hero moment candidates from GEN-2 detector on existing 40.3c/40.3s data."
+    },
+    {
+      "file": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/chronicle/chronicle_events.jsonl",
+      "action": "CREATED",
+      "description": "34 chronicle events from pipeline re-execution with GEN-1 emitter active."
+    },
+    {
+      "file": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/chronicle/CHRONICLE_MANIFEST.json",
+      "action": "CREATED",
+      "description": "Chronicle runtime manifest — INCOMPLETE status (Phase 4 CEU grounding path), 3 semantic phases reached."
+    },
+    {
+      "file": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/chronicle/checkpoints/",
+      "action": "CREATED",
+      "description": "9 checkpoint files frozen at pipeline phase boundaries."
+    },
+    {
+      "file": "docs/pios/PI.GENESIS.GEN-5.FIRST-FULL-GENESIS-CHRONICLE.01/execution_report.md",
+      "action": "CREATED",
+      "description": "Execution report for GEN-5 stream."
+    },
+    {
+      "file": "docs/pios/PI.GENESIS.GEN-5.FIRST-FULL-GENESIS-CHRONICLE.01/validation_log.json",
+      "action": "CREATED",
+      "description": "Validation log — 16/16 PASS."
+    },
+    {
+      "file": "docs/pios/PI.GENESIS.GEN-5.FIRST-FULL-GENESIS-CHRONICLE.01/file_changes.json",
+      "action": "CREATED",
+      "description": "File change manifest for GEN-5 stream."
+    },
+    {
+      "file": "docs/pios/PI.GENESIS.GEN-5.FIRST-FULL-GENESIS-CHRONICLE.01/CLOSURE.md",
+      "action": "CREATED",
+      "description": "Closure document for GEN-5 stream."
+    }
+  ]
+}
