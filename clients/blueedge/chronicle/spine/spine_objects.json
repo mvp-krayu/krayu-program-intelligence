@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0",
+  "chronicle_id": "blueedge-governed-cognitive-replay-chronicle",
+  "client": "blueedge",
+  "accumulated_at": "2026-05-22T18:00:00Z",
+  "total_objects": 2,
+  "objects": [
+    {
+      "spine_id": "SPINE-RC01-EO-001",
+      "spine_class": "evidence_object",
+      "checkpoint_ref": "checkpoint_00_baseline",
+      "timestamp": "2026-05-22T18:00:00Z",
+      "content": {
+        "evidence_type": "BASELINE_STATE_CAPTURE",
+        "client": "blueedge",
+        "canonical_run": "run_blueedge_productized_01_fixed",
+        "captured_artifacts": {
+          "promotion_state": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/sqo/promotion_state.json",
+          "qualification_blockers": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/sqo/qualification_blockers.json",
+          "review_obligations": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/sqo/review_obligations.json",
+          "promotion_event_log": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/sqo/promotion_event_log.jsonl",
+          "client_semantic_registry": "clients/blueedge/semantic/client_semantic_registry.json",
+          "semantic_topology_model": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/semantic_topology_model.json",
+          "evidence_sources": "clients/blueedge/sqo/evidence_sources.yaml",
+          "sdc_candidate_csr": "clients/blueedge/psee/runs/run_blueedge_sdc_validation_01/semantic/compiler/candidate_csr.json",
+          "sdc_derivation_report": "clients/blueedge/psee/runs/run_blueedge_sdc_validation_01/semantic/compiler/derivation_report.json"
+        },
+        "state_summary": {
+          "s_level": "S2",
+          "qualification_provenance": "LEGACY_QUALIFICATION_BRIDGE",
+          "total_blockers": 15,
+          "irreducible_count": 4,
+          "enrichable_count": 8,
+          "evidence_reducible_count": 1,
+          "continuity_count": 2,
+          "csr_domains": 17,
+          "vault_claims": 28,
+          "evidence_files": 3,
+          "evidence_total_bytes": 505414,
+          "psee_runs": 18,
+          "governance_events": 2,
+          "propositions": 0,
+          "review_obligations": 0
+        }
+      }
+    },
+    {
+      "spine_id": "SPINE-RC01-EP-001",
+      "spine_class": "executive_projection_snapshot",
+      "checkpoint_ref": "checkpoint_00_baseline",
+      "timestamp": "2026-05-22T18:00:00Z",
+      "content": {
+        "projection_type": "BASELINE_EXECUTIVE_STATE",
+        "client": "blueedge",
+        "executive_summary": {
+          "qualification_state": "S2 via LEGACY QUALIFICATION BRIDGE",
+          "governance_maturity": "PROJECTED — no governed lifecycle exercised",
+          "evidence_depth": "3 HTML evidence files (505KB, 4,546 lines), 28 vault claims",
+          "semantic_coverage": "17 domains at domain level only. SDC candidate CSR exists (19 domains, 207 components, 95.17% DIRECT_EVIDENCE). No propositions derived.",
+          "debt_profile": "15 blockers: 4 irreducible structural absence, 8 reducible by enrichment, 1 reducible by evidence, 2 continuity gaps",
+          "governance_gap": "S2 earned via governance projection (system actors), not governed lifecycle (operator review, friction, strengthening)"
+        },
+        "what_the_chronicle_will_prove": [
+          "That governance patterns transfer from NetBox to BlueEdge",
+          "That PATH B evidence (HTML documents) can produce governed semantic propositions",
+          "That operator review generates genuine governance friction on document-derived claims",
+          "That evidence enrichment strengthens propositions even without code graph access",
+          "That deterministic revalidation confirms governance-driven improvement",
+          "That S2_BRIDGE → S2_GOVERNED transition demonstrates the governance lifecycle is specimen-independent",
+          "That cross-specimen convergence establishes Program Intelligence as a discipline, not a one-specimen trick"
+        ]
+      }
+    }
+  ]
+}

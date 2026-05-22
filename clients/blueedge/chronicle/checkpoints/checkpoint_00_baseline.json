@@ -1,0 +1,203 @@
+{
+  "checkpoint_id": "checkpoint_00_baseline",
+  "checkpoint_index": 0,
+  "semantic_phase": "EMERGENCE",
+  "chronicle_chapter": 1,
+  "chapter_title": "The Specimen",
+  "timestamp": "2026-05-22T18:00:00Z",
+  "stream_ref": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-01",
+  "description": "BlueEdge baseline state before governed cognitive replay. The system encounters unknown structure.",
+  "hash_algorithm": "sha256",
+  "status": "FROZEN",
+
+  "client_identity": {
+    "client_id": "blueedge",
+    "uuid": "6a6fcdbc-41b6-4e0e-99b9-37394f6c870d",
+    "display_name": "BlueEdge Platform v3",
+    "source_type": "external_archive",
+    "pipeline_mode": "multi_contract",
+    "ceu_model": "dynamic",
+    "ceu_count": 10,
+    "dom_group_count": 13,
+    "structural_node_count": 35
+  },
+
+  "sqo_state": {
+    "s_level": "S2",
+    "qualification_provenance": "LEGACY_QUALIFICATION_BRIDGE",
+    "authority_ceiling": "L3",
+    "promotion_eligible": false,
+    "total_blockers": 15,
+    "blocker_breakdown": {
+      "grounding_gap_HIGH": 13,
+      "continuity_gap_MEDIUM": 2
+    },
+    "debt_reducibility": {
+      "IRREDUCIBLE_STRUCTURAL_ABSENCE": 4,
+      "REDUCED_BY_ENRICHMENT": 8,
+      "REDUCIBLE_BY_EVIDENCE": 1,
+      "continuity_gap": 2
+    },
+    "irreducible_domains": ["DOMAIN-02", "DOMAIN-08", "DOMAIN-13", "DOMAIN-15"],
+    "review_obligations": 0,
+    "promotion_events": 2,
+    "governance_lifecycle_elements": {
+      "propositions": false,
+      "operator_review": false,
+      "arbitration": false,
+      "substrate_strengthening": false,
+      "revalidation": false,
+      "learning_events": false
+    },
+    "migration_provenance": {
+      "type": "GOVERNANCE_PROJECTION",
+      "source_stream": "PI.SQO.LEGACY-QUALIFICATION-BRIDGE.01",
+      "projection_class": "LEGACY_S2_TO_SQO_NATIVE",
+      "fabricated_history": false
+    }
+  },
+
+  "semantic_ontology": {
+    "path": "PATH_B",
+    "csr_domains": 17,
+    "csr_capabilities": 0,
+    "csr_components": 0,
+    "topology_model": {
+      "domains": 17,
+      "clusters": 5,
+      "edges": 12
+    },
+    "sdc_candidate_csr": {
+      "run": "run_blueedge_sdc_validation_01",
+      "domains": 19,
+      "confidence_distribution": {
+        "direct_evidence": 197,
+        "derived": 10,
+        "inferred": 0,
+        "total": 207,
+        "direct_evidence_ratio": 0.9517
+      }
+    },
+    "grounding_status": {
+      "grounded": 4,
+      "weakly_grounded": 13,
+      "grounding_ratio": 0.235
+    }
+  },
+
+  "evidence_sources": {
+    "evidence_set_id": "blueedge_explicit_html_rebase_01",
+    "evidence_root": "clients/blueedge/sqo/evidence/blueedge_explicit_html_rebase_01",
+    "source_class": "EXPLICIT_OPERATOR_PROVIDED_UPSTREAM_EVIDENCE",
+    "files": [
+      {
+        "name": "Blue_Edge_PMO_Dashboard.html",
+        "size_bytes": 364637,
+        "lines": 3575
+      },
+      {
+        "name": "BlueEdge_Competitive_Dashboard_Feb2026.html",
+        "size_bytes": 51135,
+        "lines": 698
+      },
+      {
+        "name": "BlueEdge_Unified_Architecture_v3_23_0.html",
+        "size_bytes": 89642,
+        "lines": 273
+      }
+    ],
+    "total_size_bytes": 505414,
+    "total_lines": 4546
+  },
+
+  "vault_claims": {
+    "total": 28,
+    "location": "clients/blueedge/vaults/run_01_authoritative/claims/"
+  },
+
+  "psee_history": {
+    "total_runs": 18,
+    "runs": [
+      "run_01_authoritative",
+      "run_be_orchestrated_01",
+      "run_be_orchestrated_fixup_01",
+      "run_blueedge_a5_validation_01",
+      "run_blueedge_a5_validation_02",
+      "run_blueedge_certification_01",
+      "run_blueedge_csr_validation_01",
+      "run_blueedge_e2e_execute_01",
+      "run_blueedge_e2e_execute_02",
+      "run_blueedge_intake_contract_closure_01",
+      "run_blueedge_productized_01",
+      "run_blueedge_productized_01_decision_reconstructed",
+      "run_blueedge_productized_01_dom_lineage_validation",
+      "run_blueedge_productized_01_fixed",
+      "run_blueedge_productized_01_psig_render_validation",
+      "run_blueedge_productized_01_semantic_render_validation",
+      "run_blueedge_revalidation_01",
+      "run_blueedge_sdc_validation_01"
+    ],
+    "canonical_run": "run_blueedge_productized_01_fixed"
+  },
+
+  "governance_streams": {
+    "total": 5,
+    "streams": [
+      {
+        "stream_id": "PI.SQO.LEGACY-QUALIFICATION-BRIDGE.01",
+        "classification": "G1",
+        "contribution": "Legacy qualification bridge — governance projection from validated legacy S2"
+      },
+      {
+        "stream_id": "PI.SQO.BLUEEDGE-S2-WORKFLOW-PROJECTION-CORRECTION.01",
+        "classification": "G1",
+        "contribution": "V2 workflow projection correction — generic remediation workflow for S2-with-debt"
+      },
+      {
+        "stream_id": "PI.SQO.BLUEEDGE-S2-MIGRATION-REHEARSAL.01",
+        "classification": "G2",
+        "contribution": "Migration rehearsal — validated projection approach before bridge"
+      },
+      {
+        "stream_id": "PI.SUBSTRATE.SEMANTIC-DERIVATION-COMPILER.01",
+        "classification": "G1",
+        "contribution": "SDC — proven on BlueEdge HTML evidence (run_blueedge_sdc_validation_01)"
+      },
+      {
+        "stream_id": "PI.BLUEEDGE.CROSSWALK-AND-RECONCILIATION-RECOVERY.01",
+        "classification": "G2",
+        "contribution": "Crosswalk/reconciliation operational ontology recovery"
+      }
+    ]
+  },
+
+  "lens_state": {
+    "operational": true,
+    "q_class": "Q-02",
+    "personas": ["BOARDROOM", "EXECUTIVE_BALANCED", "EXECUTIVE_DENSE", "INVESTIGATION_DENSE"],
+    "interactive_topology": true,
+    "guided_queries": true,
+    "pi_runtime_layer": true,
+    "evidence_record_export": true
+  },
+
+  "chronicle_state_at_baseline": {
+    "propositions": 0,
+    "governance_events": 2,
+    "learning_events": 0,
+    "revalidation_checks": 0,
+    "convergence_observations": 0,
+    "narrative_chapters": 0,
+    "proof_objects": 0
+  },
+
+  "what_is_missing": {
+    "semantic_propositions": "No PATH B propositions derived — SDC candidate_csr exists but no SPE-format semantic_proposition spine objects",
+    "operator_review": "No governed operator review — S2 via legacy qualification bridge with system:pipeline and system:governance_projection actors only",
+    "governance_friction": "No acceptance, rejection, contestation, or arbitration events — governance lifecycle has not been exercised",
+    "substrate_strengthening": "No evidence enrichment cycles — 8 REDUCED_BY_ENRICHMENT blockers untouched",
+    "revalidation": "No deterministic revalidation replay — no proof of governance-friction-driven improvement",
+    "learning_events": "No learning events generated — no governance feedback loop",
+    "convergence": "No cross-specimen convergence observations — single-specimen state"
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "schema_version": "1.0",
+  "chronicle_id": "blueedge-governed-cognitive-replay-chronicle",
+  "client": "blueedge",
+  "canonical_run": "run_blueedge_productized_01_fixed",
+  "chronicle_type": "GOVERNED_COGNITIVE_REPLAY",
+  "status": "IN_PROGRESS",
+  "created_at": "2026-05-22T18:00:00Z",
+  "canonical_principle": "THE CHRONICLE IS THE LENS. THE LINEAGE IS THE PROOF. THE OUTPUTS ARE THE CONCLUSIONS.",
+  "semantic_rhythm": [
+    "EMERGENCE",
+    "FORMATION",
+    "TENSION",
+    "STRENGTHENING",
+    "STABILIZATION",
+    "QUALIFICATION",
+    "CONVERGENCE",
+    "PROJECTION"
+  ],
+  "streams": {
+    "RC-01": {
+      "name": "Chronicle Vault Initialization + BlueEdge Baseline Capture",
+      "classification": "G1",
+      "status": "COMPLETE",
+      "branch": "feature/PI.BLUEEDGE.REPLAY-CHRONICLE.01",
+      "checkpoint": "checkpoint_00_baseline",
+      "completed_at": "2026-05-22T18:00:00Z"
+    },
+    "RC-02": {
+      "name": "PATH B Semantic Proposition Derivation",
+      "classification": "G2",
+      "status": "PENDING",
+      "checkpoint": "checkpoint_01_propositions"
+    },
+    "RC-03": {
+      "name": "Governed Semantic Review + Arbitration",
+      "classification": "G2",
+      "status": "PENDING",
+      "checkpoints": ["checkpoint_02_review", "checkpoint_03_governance"]
+    },
+    "RC-04": {
+      "name": "Evidence Enrichment from HTML Documents",
+      "classification": "G2",
+      "status": "PENDING",
+      "checkpoints": ["checkpoint_04_enrichment", "checkpoint_05_debt"]
+    },
+    "RC-05": {
+      "name": "Deterministic Revalidation",
+      "classification": "G2",
+      "status": "PENDING",
+      "checkpoint": "checkpoint_06_revalidation"
+    },
+    "RC-06": {
+      "name": "S2 Re-Advancement (Bridge → Governed)",
+      "classification": "G1",
+      "status": "PENDING",
+      "checkpoint": "checkpoint_07_advancement"
+    },
+    "RC-07": {
+      "name": "Cross-Specimen Convergence Observation",
+      "classification": "G2",
+      "status": "PENDING",
+      "checkpoint": "checkpoint_08_convergence"
+    },
+    "RC-08": {
+      "name": "Cognitive Traversal Orchestration",
+      "classification": "G2",
+      "status": "PENDING",
+      "checkpoint": "checkpoint_09_narrative"
+    },
+    "RC-09": {
+      "name": "Chronicle Certification + Vault Seal",
+      "classification": "G1",
+      "status": "PENDING",
+      "checkpoint": "checkpoint_10_certified"
+    }
+  },
+  "checkpoint_index": {
+    "checkpoint_00_baseline": {
+      "semantic_phase": "EMERGENCE",
+      "description": "State before replay — raw intake, the system encounters unknown structure",
+      "stream": "RC-01",
+      "status": "COMPLETE"
+    },
+    "checkpoint_01_propositions": {
+      "semantic_phase": "FORMATION",
+      "description": "After proposition derivation — semantic claims crystallize from evidence",
+      "stream": "RC-02",
+      "status": "PENDING"
+    },
+    "checkpoint_02_review": {
+      "semantic_phase": "TENSION",
+      "description": "After operator review — governance challenges weak meaning",
+      "stream": "RC-03",
+      "status": "PENDING"
+    },
+    "checkpoint_03_governance": {
+      "semantic_phase": "TENSION",
+      "description": "After governance freeze — friction, dispute, rejection complete",
+      "stream": "RC-03",
+      "status": "PENDING"
+    },
+    "checkpoint_04_enrichment": {
+      "semantic_phase": "STRENGTHENING",
+      "description": "After evidence enrichment — substrate enriches, debt evolves",
+      "stream": "RC-04",
+      "status": "PENDING"
+    },
+    "checkpoint_05_debt": {
+      "semantic_phase": "STRENGTHENING",
+      "description": "After debt assessment — the system self-corrects",
+      "stream": "RC-04",
+      "status": "PENDING"
+    },
+    "checkpoint_06_revalidation": {
+      "semantic_phase": "STABILIZATION",
+      "description": "After deterministic revalidation — what was challenged now holds",
+      "stream": "RC-05",
+      "status": "PENDING"
+    },
+    "checkpoint_07_advancement": {
+      "semantic_phase": "QUALIFICATION",
+      "description": "After S2 re-advancement — the system earns its state transition",
+      "stream": "RC-06",
+      "status": "PENDING"
+    },
+    "checkpoint_08_convergence": {
+      "semantic_phase": "CONVERGENCE",
+      "description": "After cross-specimen observations — generalized governed cognition emerges",
+      "stream": "RC-07",
+      "status": "PENDING"
+    },
+    "checkpoint_09_narrative": {
+      "semantic_phase": "PROJECTION",
+      "description": "After narrative compilation — cognition becomes communicable",
+      "stream": "RC-08",
+      "status": "PENDING"
+    },
+    "checkpoint_10_certified": {
+      "semantic_phase": "PROJECTION",
+      "description": "Final certification — chronicle sealed as REPLAY-CERTIFIED",
+      "stream": "RC-09",
+      "status": "PENDING"
+    }
+  },
+  "chapters": [
+    {
+      "chapter": 1,
+      "title": "The Specimen",
+      "semantic_phase": "EMERGENCE",
+      "checkpoint_ref": "checkpoint_00_baseline"
+    },
+    {
+      "chapter": 2,
+      "title": "The Claims",
+      "semantic_phase": "FORMATION",
+      "checkpoint_ref": "checkpoint_01_propositions"
+    },
+    {
+      "chapter": 3,
+      "title": "The Governance",
+      "semantic_phase": "TENSION",
+      "checkpoint_refs": ["checkpoint_02_review", "checkpoint_03_governance"]
+    },
+    {
+      "chapter": 4,
+      "title": "The Strengthening",
+      "semantic_phase": "STRENGTHENING",
+      "checkpoint_refs": ["checkpoint_04_enrichment", "checkpoint_05_debt"]
+    },
+    {
+      "chapter": 5,
+      "title": "The Proof",
+      "semantic_phase": "STABILIZATION",
+      "checkpoint_ref": "checkpoint_06_revalidation"
+    },
+    {
+      "chapter": 6,
+      "title": "The Advancement",
+      "semantic_phase": "QUALIFICATION",
+      "checkpoint_ref": "checkpoint_07_advancement"
+    },
+    {
+      "chapter": 7,
+      "title": "The Pattern",
+      "semantic_phase": "CONVERGENCE",
+      "checkpoint_ref": "checkpoint_08_convergence"
+    },
+    {
+      "chapter": 8,
+      "title": "The Projection",
+      "semantic_phase": "PROJECTION",
+      "checkpoint_refs": ["checkpoint_09_narrative", "checkpoint_10_certified"]
+    }
+  ],
+  "proof_object_count": 0,
+  "spine_object_count": 2,
+  "narrative_chapter_count": 0,
+  "media_capture_count": 0
+}

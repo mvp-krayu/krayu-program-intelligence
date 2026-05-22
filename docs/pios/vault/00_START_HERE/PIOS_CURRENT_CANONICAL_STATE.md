@@ -544,6 +544,7 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.SUBSTRATE.HERO-MOMENT-RECONCILIATION.01 | G2 | Hero moment reconciliation — 5/6 HM propositions NOVEL→ALIGNED via cross-validation against DIRECT_EVIDENCE corpus, SP-0073 honestly NOVEL | COMPLETE |
 | PI.SUBSTRATE.REPLAY-REVALIDATION-CYCLE.01 | G2 | Deterministic revalidation — 48/48 checks across 9 phases. Substrate replays stronger without manual intervention. Governance friction → evidence strengthening proven | COMPLETE |
 | PI.SQO.S2-ADVANCEMENT-REQUEST.01 | G1 | **First S2 semantic qualification advancement.** NetBox S1→S2 granted. Full governance lifecycle: 10-stream lineage, 12 governance events, CLUSTER_ARCHITECTURE rejection preserved. CANONICAL REFERENCE SPECIMEN — frozen, no exploratory mutation | COMPLETE |
+| PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-01 | G1 | Chronicle vault initialization + BlueEdge baseline capture. Chronicle vault architecture (checkpoint contract, proof object contract, semantic rhythm model). Baseline checkpoint frozen: S2 via LEGACY_QUALIFICATION_BRIDGE, 15 blockers, 17 CSR domains, 3 HTML evidence files, 28 vault claims, 18 PSEE runs. 2 baseline spine objects emitted | COMPLETE |
 
 ## SQO Operator Authority Workflow
 
