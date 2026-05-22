@@ -1,0 +1,22 @@
+{
+  "stream": "PI.FUSION.ENRICHED-STRUCTURAL-PROPAGATION.01",
+  "classification": "G2",
+  "changes": [
+    {
+      "file": "scripts/pios/run_client_pipeline.py",
+      "action": "MODIFIED",
+      "description": "Added structural evidence enrichment to Phase 5 (binding envelope) and Phase 5b (semantic topology). 3 helper functions + 2 enrichment functions. ~200 lines added.",
+      "functions_added": [
+        "_load_code_graph_imports(run_dir)",
+        "_load_centrality_index(run_dir)",
+        "_build_node_to_path_index(run_dir)",
+        "_enrich_binding_with_structural_evidence(envelope, run_dir, node_to_dom, ceus)",
+        "_enrich_semantic_topology_with_structural_evidence(model_path, run_dir)"
+      ],
+      "functions_modified": [
+        "phase_05_build_binding_envelope — added enrichment call before save",
+        "phase_05b_csr_semantic_topology — added post-enrichment call after generator"
+      ]
+    }
+  ]
+}
