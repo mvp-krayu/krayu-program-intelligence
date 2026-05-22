@@ -32,6 +32,7 @@ import json
 import shutil
 import subprocess
 import sys
+import time
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -39,6 +40,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS_DIR = Path(__file__).resolve().parent
 LEARNING_DIR = SCRIPTS_DIR / "learning"
+CHRONICLE_DIR = SCRIPTS_DIR / "chronicle"
 
 CONTRACT_ID = "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01"
 FIXUP_CONTRACT_ID = "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.FIXUP.01"
@@ -58,6 +60,25 @@ POPULATION_TYPES = {
 
 # Learning consumption state — populated by Phase 0L, consumed by Phase 10L
 _learning_context: dict = {}
+
+# Chronicle emitter — initialized in main(), used by phase loop
+_chronicle_emitter = None
+
+
+def _init_chronicle(client_id: str, run_id: str, run_dir: Path):
+    """Initialize chronicle event emitter. Graceful degradation if unavailable."""
+    global _chronicle_emitter
+    sys.path.insert(0, str(CHRONICLE_DIR))
+    try:
+        from emitter import ChronicleEmitter
+        _chronicle_emitter = ChronicleEmitter(client_id, run_id, run_dir)
+        _chronicle_emitter.initialize()
+    except Exception as exc:
+        print(f"    [CHRONICLE] WARN: initialization failed — {exc}")
+        _chronicle_emitter = None
+    finally:
+        if str(CHRONICLE_DIR) in sys.path:
+            sys.path.remove(str(CHRONICLE_DIR))
 
 
 # ── Utilities ─────────────────────────────────────────────────────────────────
@@ -153,6 +174,12 @@ def phase_01_source_boundary(source_manifest: dict) -> bool:
         print(f"    Actual:   {actual_sha}")
         return False
 
+    if _chronicle_emitter:
+        size_bytes = archive_path.stat().st_size if archive_path.exists() else 0
+        _chronicle_emitter.emit_source_discovery(
+            str(archive_path), actual_sha, size_bytes
+        )
+
     print(f"  PASS: Archive present, SHA256 verified ({actual_sha[:16]}...)")
     return True
 
@@ -187,6 +214,10 @@ def phase_02_intake(source_manifest: dict, run_dir: Path) -> bool:
 
     print(f"  [PATH-RESOLUTION] mode: {mode}; resolved_path: {resolved}")
     file_count = sum(1 for _ in intake_base.rglob("*") if _.is_file())
+
+    if _chronicle_emitter:
+        _chronicle_emitter.emit_evidence_acquisition(resolved, file_count, mode)
+
     print(f"  PASS: intake present ({file_count} files at {resolved})")
     return True
 
@@ -234,7 +265,18 @@ def phase_03_40x_structural(source_manifest: dict, run_dir: Path) -> bool:
             return False
 
     inv = load_json(struct_path / "40.2" / "structural_node_inventory.json")
-    node_count = inv.get("total_nodes", inv.get("node_count", "?"))
+    node_count = inv.get("total_nodes", inv.get("node_count", 0))
+    topo = load_json(struct_path / "40.3" / "structural_topology_log.json")
+    edge_count = len(topo.get("relations", topo.get("edges", [])))
+    clusters = load_json(struct_path / "40.4" / "canonical_topology.json")
+    cluster_count = len(clusters.get("clusters", []))
+
+    if _chronicle_emitter:
+        _chronicle_emitter.emit_structural_emergence(
+            int(node_count) if isinstance(node_count, (int, float)) else 0,
+            edge_count, cluster_count
+        )
+
     print(f"  PASS: 40.2 ({node_count} nodes), 40.3 (topology), 40.4 (clusters) all present")
     return True
 
@@ -589,6 +631,18 @@ def phase_03_5_structural_relevance(client: str, run_id: str, run_dir: Path) -> 
             print(f"  stderr: {result.stderr.strip()[:200]}")
         return True
 
+    if _chronicle_emitter and out_relevance.exists():
+        try:
+            rel_data = load_json(out_relevance)
+            summary = rel_data.get("summary", {})
+            _chronicle_emitter.emit_relevance_classification(
+                primary=summary.get("PRIMARY", summary.get("CORE_SOURCE", 0)),
+                support=summary.get("SUPPORT", summary.get("TESTING", 0) + summary.get("CONFIG", 0)),
+                peripheral=summary.get("PERIPHERAL", 0),
+            )
+        except Exception:
+            pass
+
     print("  Structural relevance classification: OK")
     return True
 
@@ -790,6 +844,14 @@ def phase_03c_semantic_proposition_derivation(
         if result.stderr:
             print(f"  stderr: {result.stderr.strip()[:200]}")
         return True
+
+    if _chronicle_emitter and report_path.exists():
+        try:
+            spe_report = load_json(report_path)
+            prop_count = spe_report.get("total_propositions", 0)
+            _chronicle_emitter.emit_semantic_formation(prop_count, "SPE")
+        except Exception:
+            pass
 
     print("  Semantic proposition derivation: OK")
     return True
@@ -1587,6 +1649,8 @@ def main() -> int:
     run_dir = REPO_ROOT / "clients" / args.client / "psee" / "runs" / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
 
+    _init_chronicle(args.client, run_id, run_dir)
+
     phases = [
         ("Phase 0L — Learning Registry Load",
          lambda: phase_0L_learning_load(args.client, run_id)),
@@ -1638,6 +1702,11 @@ def main() -> int:
         print(f"\n{'─'*60}")
         print(f"  {phase_name}")
         print(f"{'─'*60}")
+
+        if _chronicle_emitter:
+            _chronicle_emitter.emit_phase_started(phase_name)
+
+        t0 = time.time()
         try:
             ok = fn()
         except Exception as exc:
@@ -1645,11 +1714,22 @@ def main() -> int:
             import traceback
             traceback.print_exc()
             ok = False
+        duration_ms = int((time.time() - t0) * 1000)
+
+        if _chronicle_emitter:
+            _chronicle_emitter.emit_phase_completed(phase_name, ok, duration_ms)
+            if ok:
+                _chronicle_emitter.freeze_checkpoint(phase_name)
 
         results[phase_name] = "PASS" if ok else "FAIL"
         if not ok:
             print(f"\n  [ORCHESTRATOR] FAIL-CLOSED at: {phase_name}")
             break
+
+    all_pass = all(v == "PASS" for v in results.values())
+
+    if _chronicle_emitter:
+        _chronicle_emitter.finalize(all_pass)
 
     print(f"\n{'='*60}")
     print(f"  ORCHESTRATOR SUMMARY")
@@ -1658,7 +1738,6 @@ def main() -> int:
         marker = "✓" if status == "PASS" else "✗"
         print(f"  [{status}] {marker} {phase_name}")
 
-    all_pass = all(v == "PASS" for v in results.values())
     if all_pass:
         print(f"\n  [COMPLETE] run_id: {run_id}")
         print(f"  Vault:    clients/{args.client}/psee/runs/{run_id}/vault/")
