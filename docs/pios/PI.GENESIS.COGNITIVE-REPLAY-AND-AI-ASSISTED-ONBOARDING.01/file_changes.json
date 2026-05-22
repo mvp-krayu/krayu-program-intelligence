@@ -1,0 +1,82 @@
+{
+  "stream_id": "PI.GENESIS.COGNITIVE-REPLAY-AND-AI-ASSISTED-ONBOARDING.01",
+  "classification": "G1",
+  "total_files": 15,
+  "changes": [
+    {
+      "path": "docs/pios/PI.GENESIS.COGNITIVE-REPLAY-AND-AI-ASSISTED-ONBOARDING.01/GENESIS_REPLAY_DOCTRINE.md",
+      "action": "CREATED",
+      "purpose": "Defines onboarding-origin cognitive replay doctrine — genesis chain, genesis-critical phases, 6 replay requirements"
+    },
+    {
+      "path": "docs/pios/PI.GENESIS.COGNITIVE-REPLAY-AND-AI-ASSISTED-ONBOARDING.01/HERO_MOMENT_GENESIS_MODEL.md",
+      "action": "CREATED",
+      "purpose": "Defines Hero Moments as governed cognitive discontinuities — 13 emergence phases, detection contract, object contract, lifecycle"
+    },
+    {
+      "path": "docs/pios/PI.GENESIS.COGNITIVE-REPLAY-AND-AI-ASSISTED-ONBOARDING.01/AI_ASSISTED_ONBOARDING_OPERATING_MODEL.md",
+      "action": "CREATED",
+      "purpose": "Defines first 10-50 client AI-assisted onboarding operating model — 5 allowed actions, 10 forbidden, scaling phases"
+    },
+    {
+      "path": "docs/pios/PI.GENESIS.COGNITIVE-REPLAY-AND-AI-ASSISTED-ONBOARDING.01/AI_ASSISTANCE_GOVERNANCE_CONTRACT.md",
+      "action": "CREATED",
+      "purpose": "Defines AI assistance governance contract — L3 ceiling, 6 object types, 12 forbidden actions, replay-safe interaction, M0-M5 maturity"
+    },
+    {
+      "path": "docs/pios/PI.GENESIS.COGNITIVE-REPLAY-AND-AI-ASSISTED-ONBOARDING.01/GENESIS_COGNITIVE_CHRONICLE_MODEL.md",
+      "action": "CREATED",
+      "purpose": "Elevates chronicle to first-class runtime architecture — 18 event types, 7 object families, 7 traversal modes, DISCOVERY phase, runtime accumulation"
+    },
+    {
+      "path": "docs/pios/PI.GENESIS.COGNITIVE-REPLAY-AND-AI-ASSISTED-ONBOARDING.01/CHRONICLE_GENESIS_ADAPTATION.md",
+      "action": "CREATED",
+      "purpose": "Documents 6 changes from semantic replay to genesis chronicle — Chapter 0 DISCOVERY, event density model, migration path"
+    },
+    {
+      "path": "docs/pios/PI.GENESIS.COGNITIVE-REPLAY-AND-AI-ASSISTED-ONBOARDING.01/LEARNING_TO_CAPABILITY_PIPELINE.md",
+      "action": "CREATED",
+      "purpose": "Defines full learning-to-capability lifecycle — 9 states, 13 sources, capability emergence criteria, module emergence criteria, growth model"
+    },
+    {
+      "path": "docs/pios/PI.GENESIS.COGNITIVE-REPLAY-AND-AI-ASSISTED-ONBOARDING.01/BLUEEDGE_RC_RECLASSIFICATION_NOTE.md",
+      "action": "CREATED",
+      "purpose": "Formally classifies BlueEdge RC as GOVERNED SEMANTIC REPLAY — 9 proofs, 10 gaps, relationship to GENESIS"
+    },
+    {
+      "path": "docs/pios/PI.GENESIS.COGNITIVE-REPLAY-AND-AI-ASSISTED-ONBOARDING.01/GENESIS_ROADMAP_INSERT.md",
+      "action": "CREATED",
+      "purpose": "Inserts GEN-1 through GEN-6 into canonical roadmap — execution sequence, dependencies, timeline, success criteria"
+    },
+    {
+      "path": "docs/pios/PI.GENESIS.COGNITIVE-REPLAY-AND-AI-ASSISTED-ONBOARDING.01/MANDATORY_QUESTIONS_ANSWERED.md",
+      "action": "CREATED",
+      "purpose": "Answers all 12 mandatory questions from stream contract"
+    },
+    {
+      "path": "docs/pios/PI.GENESIS.COGNITIVE-REPLAY-AND-AI-ASSISTED-ONBOARDING.01/execution_report.md",
+      "action": "CREATED",
+      "purpose": "Full execution report with pre-flight, landscape assessment, deliverable summaries, steering adjustments, governance confirmation"
+    },
+    {
+      "path": "docs/pios/PI.GENESIS.COGNITIVE-REPLAY-AND-AI-ASSISTED-ONBOARDING.01/validation_log.json",
+      "action": "CREATED",
+      "purpose": "17/17 validation checks PASS"
+    },
+    {
+      "path": "docs/pios/PI.GENESIS.COGNITIVE-REPLAY-AND-AI-ASSISTED-ONBOARDING.01/file_changes.json",
+      "action": "CREATED",
+      "purpose": "This file — change manifest"
+    },
+    {
+      "path": "docs/pios/PI.GENESIS.COGNITIVE-REPLAY-AND-AI-ASSISTED-ONBOARDING.01/CLOSURE.md",
+      "action": "CREATED",
+      "purpose": "Stream closure with G1 Architecture Memory Propagation (Section 10)"
+    },
+    {
+      "path": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "action": "MODIFIED",
+      "purpose": "G1 vault propagation — GENESIS concept added to canonical state, stream lineage entry"
+    }
+  ]
+}
