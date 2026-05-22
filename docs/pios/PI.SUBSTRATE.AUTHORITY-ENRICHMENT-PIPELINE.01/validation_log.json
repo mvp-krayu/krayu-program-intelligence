@@ -1,0 +1,145 @@
+{
+  "stream": "PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01",
+  "classification": "G2",
+  "timestamp": "2026-05-22T13:00:00Z",
+  "checks": [
+    {
+      "id": "VAL-001",
+      "name": "Branch correct",
+      "result": "PASS",
+      "detail": "feature/PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01 from main @ 833eb7f"
+    },
+    {
+      "id": "VAL-002",
+      "name": "Dependency stream merged",
+      "result": "PASS",
+      "detail": "PI.SUBSTRATE.AUTHORITY-ENRICHMENT-FEASIBILITY.01 merged — PROCEED recommendation"
+    },
+    {
+      "id": "VAL-003",
+      "name": "Input artifact available",
+      "result": "PASS",
+      "detail": "authority_edge_extract.json present with 1,494 edges"
+    },
+    {
+      "id": "VAL-004",
+      "name": "All 10 existing AT propositions enriched",
+      "result": "PASS",
+      "detail": "SP-netbox-0047 through SP-netbox-0056, all DERIVED→DIRECT_EVIDENCE"
+    },
+    {
+      "id": "VAL-005",
+      "name": "CEU-EXTRAS coverage gap closed",
+      "result": "PASS",
+      "detail": "SP-netbox-0076 added: 286 edges, 6 categories, DIRECT_EVIDENCE @ 0.91"
+    },
+    {
+      "id": "VAL-006",
+      "name": "CEU-UTILITIES coverage gap closed",
+      "result": "PASS",
+      "detail": "SP-netbox-0077 added: 25 edges, 3 categories, DIRECT_EVIDENCE @ 0.72"
+    },
+    {
+      "id": "VAL-007",
+      "name": "Confidence not inflated",
+      "result": "PASS",
+      "detail": "Variable 0.72-0.95 (not uniform uplift). Thinnest evidence (CEU-UTILITIES) gets lowest confidence."
+    },
+    {
+      "id": "VAL-008",
+      "name": "Discrepancy CEU-DCIM corrected",
+      "result": "PASS",
+      "detail": "SP-netbox-0049 authority_pattern IMPORT_DOMINANT→FULL_STACK_VIEW_DOMINANT (matched dominant_axis)"
+    },
+    {
+      "id": "VAL-009",
+      "name": "Discrepancy CEU-TENANCY corrected",
+      "result": "PASS",
+      "detail": "SP-netbox-0052 authority_pattern IMPORT_DOMINANT→FULL_STACK_VIEW_DOMINANT (matched dominant_axis)"
+    },
+    {
+      "id": "VAL-010",
+      "name": "Evidence object added to spine",
+      "result": "PASS",
+      "detail": "AST authority extraction evidence object added with hash and lineage"
+    },
+    {
+      "id": "VAL-011",
+      "name": "All enriched propositions reference AST evidence anchor",
+      "result": "PASS",
+      "detail": "12 AUTHORITY_TOPOLOGY propositions reference AST evidence object in evidence_anchors"
+    },
+    {
+      "id": "VAL-012",
+      "name": "Original structural_refs preserved",
+      "result": "PASS",
+      "detail": "import_authority, inheritance_authority, authority_ratio fields retained alongside new ast_authority_composition"
+    },
+    {
+      "id": "VAL-013",
+      "name": "Original derivation rationale preserved",
+      "result": "PASS",
+      "detail": "Prior derivation rationale included in enriched rationale text for lineage"
+    },
+    {
+      "id": "VAL-014",
+      "name": "New propositions reconciliation state correct",
+      "result": "PASS",
+      "detail": "SP-netbox-0076 and SP-netbox-0077 marked NOVEL (first observation, no prior AT claim)"
+    },
+    {
+      "id": "VAL-015",
+      "name": "Summary counts updated",
+      "result": "PASS",
+      "detail": "evidence_objects=10, semantic_propositions=77, total_objects=94"
+    },
+    {
+      "id": "VAL-016",
+      "name": "Remaining DERIVED propositions untouched",
+      "result": "PASS",
+      "detail": "8 DERIVED remain: 6 HERO_MOMENT_GROUNDING, 1 CLUSTER_ARCHITECTURE, 1 TIER_GROUNDING"
+    },
+    {
+      "id": "VAL-017",
+      "name": "SQO review state unchanged",
+      "result": "PASS",
+      "detail": "review_obligations.json, qualification_blockers.json, promotion_state.json not modified"
+    },
+    {
+      "id": "VAL-018",
+      "name": "No S2 promotion",
+      "result": "PASS",
+      "detail": "No promotion attempted or executed"
+    },
+    {
+      "id": "VAL-019",
+      "name": "LRNE learning events appended",
+      "result": "PASS",
+      "detail": "2 events: LRNE-SUBSTRATE-0003 (enrichment result), LRNE-SUBSTRATE-0004 (discrepancy correction)"
+    },
+    {
+      "id": "VAL-020",
+      "name": "Enrichment summary artifact created",
+      "result": "PASS",
+      "detail": "authority_enrichment_summary.json with full before/after delta"
+    },
+    {
+      "id": "VAL-021",
+      "name": "Scope boundary respected",
+      "result": "PASS",
+      "detail": "No HERO_MOMENT reconciliation, no general code graph, no UI changes, no SPE output modified"
+    },
+    {
+      "id": "VAL-022",
+      "name": "All 12 CEUs now have AUTHORITY_TOPOLOGY propositions",
+      "result": "PASS",
+      "detail": "Complete coverage: CIRCUITS, CORE, DCIM, EXTRAS, IPAM, NETBOX, TENANCY, USERS, UTILITIES, VIRTUALIZATION, VPN, WIRELESS"
+    }
+  ],
+  "summary": {
+    "total": 22,
+    "pass": 22,
+    "fail": 0,
+    "result": "VALID"
+  }
+}

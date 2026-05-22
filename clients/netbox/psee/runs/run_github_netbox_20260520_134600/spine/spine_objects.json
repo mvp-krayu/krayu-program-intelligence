@@ -127,6 +127,18 @@
           }
         },
         "timestamp": "2026-05-20T13:45:31Z"
+      },
+      {
+        "id": "acf41496-b384-48be-aa1c-4f8f1b0a338d",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "phase": "40.3s",
+        "artifact_path": "structural/authority_probe/authority_edge_extract.json",
+        "artifact_hash": "ed20c0c69a5ad629b52ba04a2fbbe642ae3b05277cc23212fa903b5691591af2",
+        "timestamp": "2026-05-22T13:00:00Z",
+        "evidence_class": "STRUCTURAL",
+        "lineage": "PI.SUBSTRATE.AUTHORITY-ENRICHMENT-FEASIBILITY.01",
+        "authority_edges": 1494
       }
     ],
     "hero_moments": [
@@ -1959,13 +1971,14 @@
         "id": "SP-netbox-0047",
         "specimen_id": "netbox",
         "run_id": "run_github_netbox_20260520_134600",
-        "proposition": "CEU-CIRCUITS exhibits dual structural authority: import-dominant (10 inheritance, 28 import edges, 2.8x ratio)",
-        "derivation_tier": "DERIVED",
-        "confidence": 0.704,
+        "proposition": "CEU-CIRCUITS exhibits FULL_STACK_VIEW_DOMINANT framework authority (136 edges, 6 categories): MODEL=34, VIEW=77, FORM=14, SERIALIZER=5, FILTERSET=3, TABLE=3 \u2014 VIEW-dominant",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.88,
         "authority_ceiling": "L3",
         "evidence_anchors": [
           "980a6cfb-6ccf-4680-be4a-790ada4fab95",
-          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+          "8407316f-d24d-4f1e-a556-2a737a60afbf",
+          "acf41496-b384-48be-aa1c-4f8f1b0a338d"
         ],
         "status": "CANDIDATE",
         "timestamp": "2026-05-21T16:53:54.787084+00:00",
@@ -1978,26 +1991,40 @@
           "inheritance_authority": 10,
           "authority_ratio": 2.8,
           "dominant_axis": "import",
-          "authority_pattern": "IMPORT_DOMINANT"
+          "authority_pattern": "FULL_STACK_VIEW_DOMINANT",
+          "ast_authority_composition": {
+            "MODEL": 34,
+            "VIEW": 77,
+            "FORM": 14,
+            "SERIALIZER": 5,
+            "FILTERSET": 3,
+            "TABLE": 3,
+            "total_edges": 136,
+            "category_count": 6,
+            "dominant_category": "VIEW"
+          },
+          "enrichment_source": "authority_edge_extract.json",
+          "enrichment_stream": "PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01"
         },
         "hero_moment_refs": [],
         "replay_corridor_refs": [
           "9a624e6b-2bd8-497a-9e12-9a55848290b0"
         ],
-        "derivation_rationale": "Dual authority detected: import axis dominates at 2.8x. Pattern: IMPORT_DOMINANT.",
+        "derivation_rationale": "Enriched via AST authority extraction (PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01): 136 categorized authority edges across 6 Django framework categories replace dual-axis ratio derivation. VIEW-dominant pattern. Prior derivation: Dual authority detected: import axis dominates at 2.8x. Pattern: IMPORT_DOMINANT.",
         "reconciliation_state": "ALIGNED"
       },
       {
         "id": "SP-netbox-0048",
         "specimen_id": "netbox",
         "run_id": "run_github_netbox_20260520_134600",
-        "proposition": "CEU-CORE exhibits dual structural authority: import-dominant (44 inheritance, 155 import edges, 3.5x ratio)",
-        "derivation_tier": "DERIVED",
-        "confidence": 0.704,
+        "proposition": "CEU-CORE exhibits FULL_STACK_VIEW_DOMINANT framework authority (62 edges, 6 categories): MODEL=8, VIEW=28, FORM=7, SERIALIZER=4, FILTERSET=5, TABLE=10 \u2014 VIEW-dominant",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.82,
         "authority_ceiling": "L3",
         "evidence_anchors": [
           "980a6cfb-6ccf-4680-be4a-790ada4fab95",
-          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+          "8407316f-d24d-4f1e-a556-2a737a60afbf",
+          "acf41496-b384-48be-aa1c-4f8f1b0a338d"
         ],
         "status": "CANDIDATE",
         "timestamp": "2026-05-21T16:53:54.787084+00:00",
@@ -2010,26 +2037,40 @@
           "inheritance_authority": 44,
           "authority_ratio": 3.52,
           "dominant_axis": "import",
-          "authority_pattern": "IMPORT_DOMINANT"
+          "authority_pattern": "FULL_STACK_VIEW_DOMINANT",
+          "ast_authority_composition": {
+            "MODEL": 8,
+            "VIEW": 28,
+            "FORM": 7,
+            "SERIALIZER": 4,
+            "FILTERSET": 5,
+            "TABLE": 10,
+            "total_edges": 62,
+            "category_count": 6,
+            "dominant_category": "VIEW"
+          },
+          "enrichment_source": "authority_edge_extract.json",
+          "enrichment_stream": "PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01"
         },
         "hero_moment_refs": [],
         "replay_corridor_refs": [
           "9a624e6b-2bd8-497a-9e12-9a55848290b0"
         ],
-        "derivation_rationale": "Dual authority detected: import axis dominates at 3.5x. Pattern: IMPORT_DOMINANT.",
+        "derivation_rationale": "Enriched via AST authority extraction (PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01): 62 categorized authority edges across 6 Django framework categories replace dual-axis ratio derivation. VIEW-dominant pattern. Prior derivation: Dual authority detected: import axis dominates at 3.5x. Pattern: IMPORT_DOMINANT.",
         "reconciliation_state": "ALIGNED"
       },
       {
         "id": "SP-netbox-0049",
         "specimen_id": "netbox",
         "run_id": "run_github_netbox_20260520_134600",
-        "proposition": "CEU-DCIM exhibits dual structural authority: inheritance-dominant (466 inheritance, 228 import edges, 2.0x ratio)",
-        "derivation_tier": "DERIVED",
-        "confidence": 0.704,
+        "proposition": "CEU-DCIM exhibits FULL_STACK_VIEW_DOMINANT framework authority (444 edges, 6 categories): MODEL=51, VIEW=303, FORM=34, SERIALIZER=33, FILTERSET=18, TABLE=5 \u2014 VIEW-dominant",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.95,
         "authority_ceiling": "L3",
         "evidence_anchors": [
           "980a6cfb-6ccf-4680-be4a-790ada4fab95",
-          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+          "8407316f-d24d-4f1e-a556-2a737a60afbf",
+          "acf41496-b384-48be-aa1c-4f8f1b0a338d"
         ],
         "status": "CANDIDATE",
         "timestamp": "2026-05-21T16:53:54.787084+00:00",
@@ -2042,26 +2083,40 @@
           "inheritance_authority": 466,
           "authority_ratio": 2.04,
           "dominant_axis": "inheritance",
-          "authority_pattern": "IMPORT_DOMINANT"
+          "authority_pattern": "FULL_STACK_VIEW_DOMINANT",
+          "ast_authority_composition": {
+            "MODEL": 51,
+            "VIEW": 303,
+            "FORM": 34,
+            "SERIALIZER": 33,
+            "FILTERSET": 18,
+            "TABLE": 5,
+            "total_edges": 444,
+            "category_count": 6,
+            "dominant_category": "VIEW"
+          },
+          "enrichment_source": "authority_edge_extract.json",
+          "enrichment_stream": "PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01"
         },
         "hero_moment_refs": [],
         "replay_corridor_refs": [
           "9a624e6b-2bd8-497a-9e12-9a55848290b0"
         ],
-        "derivation_rationale": "Dual authority detected: inheritance axis dominates at 2.0x. Pattern: IMPORT_DOMINANT.",
+        "derivation_rationale": "Enriched via AST authority extraction (PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01): 444 categorized authority edges across 6 Django framework categories replace dual-axis ratio derivation. VIEW-dominant pattern. Prior derivation: Dual authority detected: inheritance axis dominates at 2.0x. Pattern: IMPORT_DOMINANT.",
         "reconciliation_state": "ALIGNED"
       },
       {
         "id": "SP-netbox-0050",
         "specimen_id": "netbox",
         "run_id": "run_github_netbox_20260520_134600",
-        "proposition": "CEU-IPAM exhibits dual structural authority: import-dominant (47 inheritance, 109 import edges, 2.3x ratio)",
-        "derivation_tier": "DERIVED",
-        "confidence": 0.704,
+        "proposition": "CEU-IPAM exhibits MODEL_DOMINANT framework authority (60 edges, 5 categories): MODEL=35, VIEW=0, FORM=6, SERIALIZER=11, FILTERSET=3, TABLE=5 \u2014 MODEL-dominant",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.82,
         "authority_ceiling": "L3",
         "evidence_anchors": [
           "980a6cfb-6ccf-4680-be4a-790ada4fab95",
-          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+          "8407316f-d24d-4f1e-a556-2a737a60afbf",
+          "acf41496-b384-48be-aa1c-4f8f1b0a338d"
         ],
         "status": "CANDIDATE",
         "timestamp": "2026-05-21T16:53:54.787084+00:00",
@@ -2074,26 +2129,40 @@
           "inheritance_authority": 47,
           "authority_ratio": 2.32,
           "dominant_axis": "import",
-          "authority_pattern": "IMPORT_DOMINANT"
+          "authority_pattern": "MODEL_DOMINANT",
+          "ast_authority_composition": {
+            "MODEL": 35,
+            "VIEW": 0,
+            "FORM": 6,
+            "SERIALIZER": 11,
+            "FILTERSET": 3,
+            "TABLE": 5,
+            "total_edges": 60,
+            "category_count": 5,
+            "dominant_category": "MODEL"
+          },
+          "enrichment_source": "authority_edge_extract.json",
+          "enrichment_stream": "PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01"
         },
         "hero_moment_refs": [],
         "replay_corridor_refs": [
           "9a624e6b-2bd8-497a-9e12-9a55848290b0"
         ],
-        "derivation_rationale": "Dual authority detected: import axis dominates at 2.3x. Pattern: IMPORT_DOMINANT.",
+        "derivation_rationale": "Enriched via AST authority extraction (PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01): 60 categorized authority edges across 5 Django framework categories replace dual-axis ratio derivation. MODEL-dominant pattern. Prior derivation: Dual authority detected: import axis dominates at 2.3x. Pattern: IMPORT_DOMINANT.",
         "reconciliation_state": "ALIGNED"
       },
       {
         "id": "SP-netbox-0051",
         "specimen_id": "netbox",
         "run_id": "run_github_netbox_20260520_134600",
-        "proposition": "CEU-NETBOX exhibits dual structural authority: inheritance-dominant (1727 inheritance, 620 import edges, 2.8x ratio)",
-        "derivation_tier": "DERIVED",
-        "confidence": 0.704,
+        "proposition": "CEU-NETBOX exhibits FULL_STACK_MODEL_DOMINANT framework authority (115 edges, 6 categories): MODEL=49, VIEW=18, FORM=22, SERIALIZER=13, FILTERSET=6, TABLE=7 \u2014 MODEL-dominant",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.86,
         "authority_ceiling": "L3",
         "evidence_anchors": [
           "980a6cfb-6ccf-4680-be4a-790ada4fab95",
-          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+          "8407316f-d24d-4f1e-a556-2a737a60afbf",
+          "acf41496-b384-48be-aa1c-4f8f1b0a338d"
         ],
         "status": "CANDIDATE",
         "timestamp": "2026-05-21T16:53:54.787084+00:00",
@@ -2106,26 +2175,40 @@
           "inheritance_authority": 1727,
           "authority_ratio": 2.79,
           "dominant_axis": "inheritance",
-          "authority_pattern": "INHERITANCE_DOMINANT"
+          "authority_pattern": "FULL_STACK_MODEL_DOMINANT",
+          "ast_authority_composition": {
+            "MODEL": 49,
+            "VIEW": 18,
+            "FORM": 22,
+            "SERIALIZER": 13,
+            "FILTERSET": 6,
+            "TABLE": 7,
+            "total_edges": 115,
+            "category_count": 6,
+            "dominant_category": "MODEL"
+          },
+          "enrichment_source": "authority_edge_extract.json",
+          "enrichment_stream": "PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01"
         },
         "hero_moment_refs": [],
         "replay_corridor_refs": [
           "9a624e6b-2bd8-497a-9e12-9a55848290b0"
         ],
-        "derivation_rationale": "Dual authority detected: inheritance axis dominates at 2.8x. Pattern: INHERITANCE_DOMINANT.",
+        "derivation_rationale": "Enriched via AST authority extraction (PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01): 115 categorized authority edges across 6 Django framework categories replace dual-axis ratio derivation. MODEL-dominant pattern. Prior derivation: Dual authority detected: inheritance axis dominates at 2.8x. Pattern: INHERITANCE_DOMINANT.",
         "reconciliation_state": "ALIGNED"
       },
       {
         "id": "SP-netbox-0052",
         "specimen_id": "netbox",
         "run_id": "run_github_netbox_20260520_134600",
-        "proposition": "CEU-TENANCY exhibits dual structural authority: inheritance-dominant (233 inheritance, 109 import edges, 2.1x ratio)",
-        "derivation_tier": "DERIVED",
-        "confidence": 0.704,
+        "proposition": "CEU-TENANCY exhibits FULL_STACK_VIEW_DOMINANT framework authority (70 edges, 6 categories): MODEL=13, VIEW=41, FORM=7, SERIALIZER=3, FILTERSET=3, TABLE=3 \u2014 VIEW-dominant",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.83,
         "authority_ceiling": "L3",
         "evidence_anchors": [
           "980a6cfb-6ccf-4680-be4a-790ada4fab95",
-          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+          "8407316f-d24d-4f1e-a556-2a737a60afbf",
+          "acf41496-b384-48be-aa1c-4f8f1b0a338d"
         ],
         "status": "CANDIDATE",
         "timestamp": "2026-05-21T16:53:54.787084+00:00",
@@ -2138,26 +2221,40 @@
           "inheritance_authority": 233,
           "authority_ratio": 2.14,
           "dominant_axis": "inheritance",
-          "authority_pattern": "IMPORT_DOMINANT"
+          "authority_pattern": "FULL_STACK_VIEW_DOMINANT",
+          "ast_authority_composition": {
+            "MODEL": 13,
+            "VIEW": 41,
+            "FORM": 7,
+            "SERIALIZER": 3,
+            "FILTERSET": 3,
+            "TABLE": 3,
+            "total_edges": 70,
+            "category_count": 6,
+            "dominant_category": "VIEW"
+          },
+          "enrichment_source": "authority_edge_extract.json",
+          "enrichment_stream": "PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01"
         },
         "hero_moment_refs": [],
         "replay_corridor_refs": [
           "9a624e6b-2bd8-497a-9e12-9a55848290b0"
         ],
-        "derivation_rationale": "Dual authority detected: inheritance axis dominates at 2.1x. Pattern: IMPORT_DOMINANT. Authority pattern refined during reconciliation.",
+        "derivation_rationale": "Enriched via AST authority extraction (PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01): 70 categorized authority edges across 6 Django framework categories replace dual-axis ratio derivation. VIEW-dominant pattern. Prior derivation: Dual authority detected: inheritance axis dominates at 2.1x. Pattern: IMPORT_DOMINANT. Authority pattern refined during reconciliation.",
         "reconciliation_state": "ALIGNED"
       },
       {
         "id": "SP-netbox-0053",
         "specimen_id": "netbox",
         "run_id": "run_github_netbox_20260520_134600",
-        "proposition": "CEU-USERS exhibits dual structural authority: import-dominant (61 inheritance, 97 import edges, 1.6x ratio)",
-        "derivation_tier": "DERIVED",
-        "confidence": 0.704,
+        "proposition": "CEU-USERS exhibits FULL_STACK_VIEW_DOMINANT framework authority (81 edges, 6 categories): MODEL=5, VIEW=41, FORM=13, SERIALIZER=9, FILTERSET=7, TABLE=6 \u2014 VIEW-dominant",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.84,
         "authority_ceiling": "L3",
         "evidence_anchors": [
           "980a6cfb-6ccf-4680-be4a-790ada4fab95",
-          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+          "8407316f-d24d-4f1e-a556-2a737a60afbf",
+          "acf41496-b384-48be-aa1c-4f8f1b0a338d"
         ],
         "status": "CANDIDATE",
         "timestamp": "2026-05-21T16:53:54.787084+00:00",
@@ -2170,26 +2267,40 @@
           "inheritance_authority": 61,
           "authority_ratio": 1.59,
           "dominant_axis": "import",
-          "authority_pattern": "DUAL_AUTHORITY"
+          "authority_pattern": "FULL_STACK_VIEW_DOMINANT",
+          "ast_authority_composition": {
+            "MODEL": 5,
+            "VIEW": 41,
+            "FORM": 13,
+            "SERIALIZER": 9,
+            "FILTERSET": 7,
+            "TABLE": 6,
+            "total_edges": 81,
+            "category_count": 6,
+            "dominant_category": "VIEW"
+          },
+          "enrichment_source": "authority_edge_extract.json",
+          "enrichment_stream": "PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01"
         },
         "hero_moment_refs": [],
         "replay_corridor_refs": [
           "9a624e6b-2bd8-497a-9e12-9a55848290b0"
         ],
-        "derivation_rationale": "Dual authority detected: import axis dominates at 1.6x. Pattern: DUAL_AUTHORITY.",
+        "derivation_rationale": "Enriched via AST authority extraction (PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01): 81 categorized authority edges across 6 Django framework categories replace dual-axis ratio derivation. VIEW-dominant pattern. Prior derivation: Dual authority detected: import axis dominates at 1.6x. Pattern: DUAL_AUTHORITY.",
         "reconciliation_state": "ALIGNED"
       },
       {
         "id": "SP-netbox-0054",
         "specimen_id": "netbox",
         "run_id": "run_github_netbox_20260520_134600",
-        "proposition": "CEU-VIRTUALIZATION exhibits dual structural authority: import-dominant (18 inheritance, 52 import edges, 2.9x ratio)",
-        "derivation_tier": "DERIVED",
-        "confidence": 0.704,
+        "proposition": "CEU-VIRTUALIZATION exhibits FULL_STACK_VIEW_DOMINANT framework authority (82 edges, 6 categories): MODEL=12, VIEW=54, FORM=9, SERIALIZER=4, FILTERSET=2, TABLE=1 \u2014 VIEW-dominant",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.84,
         "authority_ceiling": "L3",
         "evidence_anchors": [
           "980a6cfb-6ccf-4680-be4a-790ada4fab95",
-          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+          "8407316f-d24d-4f1e-a556-2a737a60afbf",
+          "acf41496-b384-48be-aa1c-4f8f1b0a338d"
         ],
         "status": "CANDIDATE",
         "timestamp": "2026-05-21T16:53:54.787084+00:00",
@@ -2202,26 +2313,40 @@
           "inheritance_authority": 18,
           "authority_ratio": 2.89,
           "dominant_axis": "import",
-          "authority_pattern": "IMPORT_DOMINANT"
+          "authority_pattern": "FULL_STACK_VIEW_DOMINANT",
+          "ast_authority_composition": {
+            "MODEL": 12,
+            "VIEW": 54,
+            "FORM": 9,
+            "SERIALIZER": 4,
+            "FILTERSET": 2,
+            "TABLE": 1,
+            "total_edges": 82,
+            "category_count": 6,
+            "dominant_category": "VIEW"
+          },
+          "enrichment_source": "authority_edge_extract.json",
+          "enrichment_stream": "PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01"
         },
         "hero_moment_refs": [],
         "replay_corridor_refs": [
           "9a624e6b-2bd8-497a-9e12-9a55848290b0"
         ],
-        "derivation_rationale": "Dual authority detected: import axis dominates at 2.9x. Pattern: IMPORT_DOMINANT.",
+        "derivation_rationale": "Enriched via AST authority extraction (PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01): 82 categorized authority edges across 6 Django framework categories replace dual-axis ratio derivation. VIEW-dominant pattern. Prior derivation: Dual authority detected: import axis dominates at 2.9x. Pattern: IMPORT_DOMINANT.",
         "reconciliation_state": "ALIGNED"
       },
       {
         "id": "SP-netbox-0055",
         "specimen_id": "netbox",
         "run_id": "run_github_netbox_20260520_134600",
-        "proposition": "CEU-VPN exhibits dual structural authority: import-dominant (2 inheritance, 20 import edges, 10.0x ratio)",
-        "derivation_tier": "DERIVED",
-        "confidence": 0.704,
+        "proposition": "CEU-VPN exhibits FULL_STACK_VIEW_DOMINANT framework authority (105 edges, 6 categories): MODEL=21, VIEW=70, FORM=8, SERIALIZER=2, FILTERSET=2, TABLE=2 \u2014 VIEW-dominant",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.86,
         "authority_ceiling": "L3",
         "evidence_anchors": [
           "980a6cfb-6ccf-4680-be4a-790ada4fab95",
-          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+          "8407316f-d24d-4f1e-a556-2a737a60afbf",
+          "acf41496-b384-48be-aa1c-4f8f1b0a338d"
         ],
         "status": "CANDIDATE",
         "timestamp": "2026-05-21T16:53:54.787084+00:00",
@@ -2234,26 +2359,40 @@
           "inheritance_authority": 2,
           "authority_ratio": 10.0,
           "dominant_axis": "import",
-          "authority_pattern": "IMPORT_DOMINANT"
+          "authority_pattern": "FULL_STACK_VIEW_DOMINANT",
+          "ast_authority_composition": {
+            "MODEL": 21,
+            "VIEW": 70,
+            "FORM": 8,
+            "SERIALIZER": 2,
+            "FILTERSET": 2,
+            "TABLE": 2,
+            "total_edges": 105,
+            "category_count": 6,
+            "dominant_category": "VIEW"
+          },
+          "enrichment_source": "authority_edge_extract.json",
+          "enrichment_stream": "PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01"
         },
         "hero_moment_refs": [],
         "replay_corridor_refs": [
           "9a624e6b-2bd8-497a-9e12-9a55848290b0"
         ],
-        "derivation_rationale": "Dual authority detected: import axis dominates at 10.0x. Pattern: IMPORT_DOMINANT.",
+        "derivation_rationale": "Enriched via AST authority extraction (PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01): 105 categorized authority edges across 6 Django framework categories replace dual-axis ratio derivation. VIEW-dominant pattern. Prior derivation: Dual authority detected: import axis dominates at 10.0x. Pattern: IMPORT_DOMINANT.",
         "reconciliation_state": "ALIGNED"
       },
       {
         "id": "SP-netbox-0056",
         "specimen_id": "netbox",
         "run_id": "run_github_netbox_20260520_134600",
-        "proposition": "CEU-WIRELESS exhibits dual structural authority: import-dominant (5 inheritance, 35 import edges, 7.0x ratio)",
-        "derivation_tier": "DERIVED",
-        "confidence": 0.704,
+        "proposition": "CEU-WIRELESS exhibits VIEW_DOMINANT framework authority (28 edges, 4 categories): MODEL=4, VIEW=21, FORM=0, SERIALIZER=2, FILTERSET=0, TABLE=1 \u2014 VIEW-dominant",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.76,
         "authority_ceiling": "L3",
         "evidence_anchors": [
           "980a6cfb-6ccf-4680-be4a-790ada4fab95",
-          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+          "8407316f-d24d-4f1e-a556-2a737a60afbf",
+          "acf41496-b384-48be-aa1c-4f8f1b0a338d"
         ],
         "status": "CANDIDATE",
         "timestamp": "2026-05-21T16:53:54.787084+00:00",
@@ -2266,13 +2405,26 @@
           "inheritance_authority": 5,
           "authority_ratio": 7.0,
           "dominant_axis": "import",
-          "authority_pattern": "IMPORT_DOMINANT"
+          "authority_pattern": "VIEW_DOMINANT",
+          "ast_authority_composition": {
+            "MODEL": 4,
+            "VIEW": 21,
+            "FORM": 0,
+            "SERIALIZER": 2,
+            "FILTERSET": 0,
+            "TABLE": 1,
+            "total_edges": 28,
+            "category_count": 4,
+            "dominant_category": "VIEW"
+          },
+          "enrichment_source": "authority_edge_extract.json",
+          "enrichment_stream": "PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01"
         },
         "hero_moment_refs": [],
         "replay_corridor_refs": [
           "9a624e6b-2bd8-497a-9e12-9a55848290b0"
         ],
-        "derivation_rationale": "Dual authority detected: import axis dominates at 7.0x. Pattern: IMPORT_DOMINANT.",
+        "derivation_rationale": "Enriched via AST authority extraction (PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01): 28 categorized authority edges across 4 Django framework categories replace dual-axis ratio derivation. VIEW-dominant pattern. Prior derivation: Dual authority detected: import axis dominates at 7.0x. Pattern: IMPORT_DOMINANT.",
         "reconciliation_state": "ALIGNED"
       },
       {
@@ -2993,6 +3145,82 @@
         ],
         "derivation_rationale": "Cluster CLU-20: cross-cutting with 12 CEUs across 1084 classified nodes (2129 total).",
         "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-netbox-0076",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-EXTRAS exhibits FULL_STACK_VIEW_DOMINANT framework authority (286 edges, 6 categories): MODEL=60, VIEW=126, FORM=41, SERIALIZER=21, FILTERSET=18, TABLE=20 \u2014 VIEW-dominant",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.91,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "acf41496-b384-48be-aa1c-4f8f1b0a338d"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T13:00:00Z",
+        "proposition_class": "AUTHORITY_TOPOLOGY",
+        "ceu_refs": [
+          "CEU-EXTRAS"
+        ],
+        "structural_refs": {
+          "authority_pattern": "FULL_STACK_VIEW_DOMINANT",
+          "ast_authority_composition": {
+            "MODEL": 60,
+            "VIEW": 126,
+            "FORM": 41,
+            "SERIALIZER": 21,
+            "FILTERSET": 18,
+            "TABLE": 20,
+            "total_edges": 286,
+            "category_count": 6,
+            "dominant_category": "VIEW"
+          },
+          "enrichment_source": "authority_edge_extract.json",
+          "enrichment_stream": "PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01"
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "New proposition from AST authority extraction (PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01): 286 categorized authority edges across 6 Django framework categories. VIEW-dominant pattern. No prior AUTHORITY_TOPOLOGY proposition existed for CEU-EXTRAS.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-netbox-0077",
+        "specimen_id": "netbox",
+        "run_id": "run_github_netbox_20260520_134600",
+        "proposition": "CEU-UTILITIES exhibits FORM_DOMINANT framework authority (25 edges, 3 categories): MODEL=3, VIEW=0, FORM=19, SERIALIZER=0, FILTERSET=3, TABLE=0 \u2014 FORM-dominant",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.72,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "acf41496-b384-48be-aa1c-4f8f1b0a338d"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T13:00:00Z",
+        "proposition_class": "AUTHORITY_TOPOLOGY",
+        "ceu_refs": [
+          "CEU-UTILITIES"
+        ],
+        "structural_refs": {
+          "authority_pattern": "FORM_DOMINANT",
+          "ast_authority_composition": {
+            "MODEL": 3,
+            "VIEW": 0,
+            "FORM": 19,
+            "SERIALIZER": 0,
+            "FILTERSET": 3,
+            "TABLE": 0,
+            "total_edges": 25,
+            "category_count": 3,
+            "dominant_category": "FORM"
+          },
+          "enrichment_source": "authority_edge_extract.json",
+          "enrichment_stream": "PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01"
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "New proposition from AST authority extraction (PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01): 25 categorized authority edges across 3 Django framework categories. FORM-dominant pattern. No prior AUTHORITY_TOPOLOGY proposition existed for CEU-UTILITIES.",
+        "reconciliation_state": "NOVEL"
       }
     ],
     "convergence_observations": [],
@@ -3001,12 +3229,12 @@
     "executive_projection_snapshots": []
   },
   "summary": {
-    "evidence_objects": 8,
-    "hero_moments": 5,
+    "evidence_objects": 10,
+    "hero_moments": 6,
     "replay_corridors": 1,
-    "total_spine_objects": 14,
-    "semantic_propositions": 75,
-    "total_objects": 91
+    "total_spine_objects": 17,
+    "semantic_propositions": 77,
+    "total_objects": 94
   },
   "last_updated": "2026-05-21T16:53:54.801059+00:00"
 }

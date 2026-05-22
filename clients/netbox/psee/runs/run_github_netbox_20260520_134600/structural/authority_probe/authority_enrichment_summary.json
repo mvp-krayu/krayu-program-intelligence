@@ -1,0 +1,200 @@
+{
+  "stream": "PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01",
+  "timestamp": "2026-05-22T13:00:00Z",
+  "source": "authority_edge_extract.json",
+  "total_authority_edges_consumed": 1494,
+  "enrichment_delta": {
+    "existing_propositions_enriched": 10,
+    "new_propositions_added": 2,
+    "tier_conversions": {
+      "DERIVED_to_DIRECT_EVIDENCE": 10
+    },
+    "discrepancies_fixed": [
+      {
+        "id": "SP-netbox-0049",
+        "ceu": "CEU-DCIM",
+        "field": "authority_pattern",
+        "old": "IMPORT_DOMINANT",
+        "new": "FULL_STACK_VIEW_DOMINANT",
+        "reason": "Pattern label contradicted dominant_axis (inheritance). AST confirms VIEW-dominant with 303 VIEW edges."
+      },
+      {
+        "id": "SP-netbox-0052",
+        "ceu": "CEU-TENANCY",
+        "field": "authority_pattern",
+        "old": "IMPORT_DOMINANT",
+        "new": "FULL_STACK_VIEW_DOMINANT",
+        "reason": "Pattern label contradicted dominant_axis (inheritance). AST confirms VIEW-dominant with 41 VIEW edges."
+      }
+    ],
+    "coverage_gaps_closed": [
+      {
+        "id": "SP-netbox-0076",
+        "ceu": "CEU-EXTRAS",
+        "edges": 286,
+        "categories": 6,
+        "confidence": 0.91
+      },
+      {
+        "id": "SP-netbox-0077",
+        "ceu": "CEU-UTILITIES",
+        "edges": 25,
+        "categories": 3,
+        "confidence": 0.72
+      }
+    ]
+  },
+  "per_proposition": [
+    {
+      "id": "SP-netbox-0047",
+      "ceu": "CEU-CIRCUITS",
+      "old_tier": "DERIVED",
+      "new_tier": "DIRECT_EVIDENCE",
+      "old_confidence": 0.704,
+      "new_confidence": 0.88,
+      "edges": 136,
+      "categories": 6,
+      "pattern": "FULL_STACK_VIEW_DOMINANT"
+    },
+    {
+      "id": "SP-netbox-0048",
+      "ceu": "CEU-CORE",
+      "old_tier": "DERIVED",
+      "new_tier": "DIRECT_EVIDENCE",
+      "old_confidence": 0.704,
+      "new_confidence": 0.82,
+      "edges": 62,
+      "categories": 6,
+      "pattern": "FULL_STACK_VIEW_DOMINANT"
+    },
+    {
+      "id": "SP-netbox-0049",
+      "ceu": "CEU-DCIM",
+      "old_tier": "DERIVED",
+      "new_tier": "DIRECT_EVIDENCE",
+      "old_confidence": 0.704,
+      "new_confidence": 0.95,
+      "edges": 444,
+      "categories": 6,
+      "pattern": "FULL_STACK_VIEW_DOMINANT"
+    },
+    {
+      "id": "SP-netbox-0050",
+      "ceu": "CEU-IPAM",
+      "old_tier": "DERIVED",
+      "new_tier": "DIRECT_EVIDENCE",
+      "old_confidence": 0.704,
+      "new_confidence": 0.82,
+      "edges": 60,
+      "categories": 5,
+      "pattern": "MODEL_DOMINANT"
+    },
+    {
+      "id": "SP-netbox-0051",
+      "ceu": "CEU-NETBOX",
+      "old_tier": "DERIVED",
+      "new_tier": "DIRECT_EVIDENCE",
+      "old_confidence": 0.704,
+      "new_confidence": 0.86,
+      "edges": 115,
+      "categories": 6,
+      "pattern": "FULL_STACK_MODEL_DOMINANT"
+    },
+    {
+      "id": "SP-netbox-0052",
+      "ceu": "CEU-TENANCY",
+      "old_tier": "DERIVED",
+      "new_tier": "DIRECT_EVIDENCE",
+      "old_confidence": 0.704,
+      "new_confidence": 0.83,
+      "edges": 70,
+      "categories": 6,
+      "pattern": "FULL_STACK_VIEW_DOMINANT"
+    },
+    {
+      "id": "SP-netbox-0053",
+      "ceu": "CEU-USERS",
+      "old_tier": "DERIVED",
+      "new_tier": "DIRECT_EVIDENCE",
+      "old_confidence": 0.704,
+      "new_confidence": 0.84,
+      "edges": 81,
+      "categories": 6,
+      "pattern": "FULL_STACK_VIEW_DOMINANT"
+    },
+    {
+      "id": "SP-netbox-0054",
+      "ceu": "CEU-VIRTUALIZATION",
+      "old_tier": "DERIVED",
+      "new_tier": "DIRECT_EVIDENCE",
+      "old_confidence": 0.704,
+      "new_confidence": 0.84,
+      "edges": 82,
+      "categories": 6,
+      "pattern": "FULL_STACK_VIEW_DOMINANT"
+    },
+    {
+      "id": "SP-netbox-0055",
+      "ceu": "CEU-VPN",
+      "old_tier": "DERIVED",
+      "new_tier": "DIRECT_EVIDENCE",
+      "old_confidence": 0.704,
+      "new_confidence": 0.86,
+      "edges": 105,
+      "categories": 6,
+      "pattern": "FULL_STACK_VIEW_DOMINANT"
+    },
+    {
+      "id": "SP-netbox-0056",
+      "ceu": "CEU-WIRELESS",
+      "old_tier": "DERIVED",
+      "new_tier": "DIRECT_EVIDENCE",
+      "old_confidence": 0.704,
+      "new_confidence": 0.76,
+      "edges": 28,
+      "categories": 4,
+      "pattern": "VIEW_DOMINANT"
+    },
+    {
+      "id": "SP-netbox-0076",
+      "ceu": "CEU-EXTRAS",
+      "old_tier": null,
+      "new_tier": "DIRECT_EVIDENCE",
+      "old_confidence": null,
+      "new_confidence": 0.91,
+      "edges": 286,
+      "categories": 6,
+      "pattern": "FULL_STACK_VIEW_DOMINANT"
+    },
+    {
+      "id": "SP-netbox-0077",
+      "ceu": "CEU-UTILITIES",
+      "old_tier": null,
+      "new_tier": "DIRECT_EVIDENCE",
+      "old_confidence": null,
+      "new_confidence": 0.72,
+      "edges": 25,
+      "categories": 3,
+      "pattern": "FORM_DOMINANT"
+    }
+  ],
+  "corpus_impact": {
+    "propositions_before": 75,
+    "propositions_after": 77,
+    "direct_evidence_before": 57,
+    "direct_evidence_after": 69,
+    "derived_before": 18,
+    "derived_after": 8,
+    "mean_confidence_before": 0.872,
+    "mean_confidence_after": 0.889,
+    "at_mean_confidence_before": 0.704,
+    "at_mean_confidence_after": 0.841
+  },
+  "not_modified": [
+    "HERO_MOMENT_GROUNDING (6 props) \u2014 follow-up reconciliation stream",
+    "CLUSTER_ARCHITECTURE (1 prop) \u2014 rejected, orthogonal concern",
+    "COUPLING_PATTERN (34 props) \u2014 already DIRECT_EVIDENCE",
+    "STRUCTURAL_DOMINANCE (12 props) \u2014 already DIRECT_EVIDENCE",
+    "TIER_GROUNDING (12 props) \u2014 not in scope"
+  ]
+}

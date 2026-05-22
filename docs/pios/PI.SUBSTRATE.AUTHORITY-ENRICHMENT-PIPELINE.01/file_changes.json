@@ -1,0 +1,43 @@
+{
+  "stream": "PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01",
+  "classification": "G2",
+  "timestamp": "2026-05-22T13:00:00Z",
+  "files": [
+    {
+      "path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/spine/spine_objects.json",
+      "action": "MODIFIED",
+      "description": "10 AUTHORITY_TOPOLOGY propositions enriched (DERIVED→DIRECT_EVIDENCE), 2 new AT propositions added (CEU-EXTRAS, CEU-UTILITIES), 1 evidence object added, summary counts updated"
+    },
+    {
+      "path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/structural/authority_probe/authority_enrichment_summary.json",
+      "action": "CREATED",
+      "description": "Enrichment delta with per-proposition before/after, discrepancy corrections, coverage gaps closed"
+    },
+    {
+      "path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/governance/learning_events.jsonl",
+      "action": "MODIFIED",
+      "description": "2 LRNE events appended (LRNE-SUBSTRATE-0003, LRNE-SUBSTRATE-0004)"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01/execution_report.md",
+      "action": "CREATED",
+      "description": "Enrichment results, per-proposition delta, confidence methodology, corpus impact"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01/validation_log.json",
+      "action": "CREATED",
+      "description": "22/22 validation checks PASS"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01/file_changes.json",
+      "action": "CREATED",
+      "description": "This file — stream change manifest"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01/CLOSURE.md",
+      "action": "CREATED",
+      "description": "Stream closure with G2 classification"
+    }
+  ],
+  "total_files": 7
+}
