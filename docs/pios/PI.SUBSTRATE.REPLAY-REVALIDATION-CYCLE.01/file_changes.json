@@ -1,0 +1,33 @@
+{
+  "stream": "PI.SUBSTRATE.REPLAY-REVALIDATION-CYCLE.01",
+  "classification": "G2",
+  "timestamp": "2026-05-22T15:00:00Z",
+  "files": [
+    {
+      "path": "docs/pios/PI.SUBSTRATE.REPLAY-REVALIDATION-CYCLE.01/revalidation_result.json",
+      "action": "CREATED",
+      "description": "48/48 revalidation checks with full corpus snapshot"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.REPLAY-REVALIDATION-CYCLE.01/execution_report.md",
+      "action": "CREATED",
+      "description": "9-phase revalidation results with per-class corpus summary"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.REPLAY-REVALIDATION-CYCLE.01/validation_log.json",
+      "action": "CREATED",
+      "description": "5/5 stream validation PASS + 48/48 revalidation summary"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.REPLAY-REVALIDATION-CYCLE.01/file_changes.json",
+      "action": "CREATED",
+      "description": "This file"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.REPLAY-REVALIDATION-CYCLE.01/CLOSURE.md",
+      "action": "CREATED",
+      "description": "Stream closure — substrate validated, S2 advancement justified"
+    }
+  ],
+  "total_files": 5
+}

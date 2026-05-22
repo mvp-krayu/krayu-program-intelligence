@@ -1,0 +1,352 @@
+{
+  "stream": "PI.SUBSTRATE.REPLAY-REVALIDATION-CYCLE.01",
+  "timestamp": "2026-05-22T15:00:00Z",
+  "total_checks": 48,
+  "passes": 48,
+  "fails": 0,
+  "result": "VALID",
+  "checks": [
+    {
+      "name": "All propositions have required fields",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No duplicate proposition IDs",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "All evidence anchors resolve to existing evidence objects",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Summary evidence_objects matches array",
+      "result": "PASS",
+      "detail": "summary=10, actual=10"
+    },
+    {
+      "name": "Summary semantic_propositions matches array",
+      "result": "PASS",
+      "detail": "summary=77, actual=77"
+    },
+    {
+      "name": "Summary total_objects consistent",
+      "result": "PASS",
+      "detail": "summary=94, computed=94"
+    },
+    {
+      "name": "All CEU refs are valid",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "AUTHORITY_TOPOLOGY count is 12",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "All 12 CEUs covered",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "All AT propositions are DIRECT_EVIDENCE",
+      "result": "PASS",
+      "detail": "Non-DIRECT: []"
+    },
+    {
+      "name": "AT confidence is variable (not uniform)",
+      "result": "PASS",
+      "detail": "Unique values: 9"
+    },
+    {
+      "name": "AT confidence range spans 0.72-0.95",
+      "result": "PASS",
+      "detail": "Range: 0.72\u20130.95"
+    },
+    {
+      "name": "All AT propositions have ast_authority_composition",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "All AT propositions reference enrichment source",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "CEU-DCIM authority_pattern corrected (not IMPORT_DOMINANT)",
+      "result": "PASS",
+      "detail": "Pattern: FULL_STACK_VIEW_DOMINANT"
+    },
+    {
+      "name": "CEU-TENANCY authority_pattern corrected (not IMPORT_DOMINANT)",
+      "result": "PASS",
+      "detail": "Pattern: FULL_STACK_VIEW_DOMINANT"
+    },
+    {
+      "name": "AT edge counts match authority_edge_extract.json",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "HERO_MOMENT_GROUNDING count is 6",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "All HM propositions remain DERIVED",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "5 HM ALIGNED, 1 NOVEL",
+      "result": "PASS",
+      "detail": "ALIGNED=5, NOVEL=1"
+    },
+    {
+      "name": "SP-netbox-0073 is the NOVEL one",
+      "result": "PASS",
+      "detail": "NOVEL id: SP-netbox-0073"
+    },
+    {
+      "name": "HM mean confidence above 0.65 threshold",
+      "result": "PASS",
+      "detail": "Mean: 0.704"
+    },
+    {
+      "name": "At least 5/6 HM above 0.65 threshold",
+      "result": "PASS",
+      "detail": "5/6 above threshold"
+    },
+    {
+      "name": "All ALIGNED HM have reconciliation_against references",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No confidence exceeds 0.972 (corpus maximum)",
+      "result": "PASS",
+      "detail": "Max: 0.972"
+    },
+    {
+      "name": "No confidence below 0.50",
+      "result": "PASS",
+      "detail": "Min: 0.604"
+    },
+    {
+      "name": "No tier inversions (DERIVED never exceeds DIRECT in same class)",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "No uniform confidence blocks (>2 props with identical confidence)",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Highest-edge CEU has highest AT confidence",
+      "result": "PASS",
+      "detail": "Highest edges: 444 @ 0.95"
+    },
+    {
+      "name": "Lowest-edge CEU has lowest AT confidence",
+      "result": "PASS",
+      "detail": "Lowest edges: 25 @ 0.72"
+    },
+    {
+      "name": "NOVEL count reduced to 8 or fewer",
+      "result": "PASS",
+      "detail": "NOVEL: 8"
+    },
+    {
+      "name": "ALIGNED count is 69 or more",
+      "result": "PASS",
+      "detail": "ALIGNED: 69"
+    },
+    {
+      "name": "NOVEL ratio below 15%",
+      "result": "PASS",
+      "detail": "Ratio: 10.4%"
+    },
+    {
+      "name": "All NOVEL propositions have structural justification",
+      "result": "PASS",
+      "detail": "Justified: 8/8"
+    },
+    {
+      "name": "All ALIGNED propositions have traceable reconciliation or enrichment lineage",
+      "result": "PASS",
+      "detail": "Traceable: 69/69"
+    },
+    {
+      "name": "Enriched propositions have enrichment_stream reference",
+      "result": "PASS",
+      "detail": "Count: 12 (expected 12)"
+    },
+    {
+      "name": "DCIM is present in both STRUCTURAL_DOMINANCE and AUTHORITY_TOPOLOGY",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DCIM has highest AT edge count (consistent with gravitational dominance)",
+      "result": "PASS",
+      "detail": "DCIM=444, max=444"
+    },
+    {
+      "name": "COUPLING_PATTERN class exists and is strong",
+      "result": "PASS",
+      "detail": "Count: 34, all DIRECT: True"
+    },
+    {
+      "name": "CEU-IPAM has zero VIEW edges (consistent with MODEL_DOMINANT)",
+      "result": "PASS",
+      "detail": "VIEW edges: 0"
+    },
+    {
+      "name": "CEU-UTILITIES is FORM_DOMINANT (structurally distinct)",
+      "result": "PASS",
+      "detail": "Pattern: FORM_DOMINANT"
+    },
+    {
+      "name": "All 7 blockers resolved",
+      "result": "PASS",
+      "detail": "Unresolved: 0"
+    },
+    {
+      "name": "Promotion eligible",
+      "result": "PASS",
+      "detail": "promotion_eligible: True"
+    },
+    {
+      "name": "All review obligations at terminal state",
+      "result": "PASS",
+      "detail": "Terminal: 6/6"
+    },
+    {
+      "name": "Review queue lane RESOLVED",
+      "result": "PASS",
+      "detail": "State: RESOLVED"
+    },
+    {
+      "name": "Corpus mean confidence above 0.85",
+      "result": "PASS",
+      "detail": "Mean: 0.897"
+    },
+    {
+      "name": "DIRECT_EVIDENCE percentage above 85%",
+      "result": "PASS",
+      "detail": "DIRECT: 89.6%"
+    },
+    {
+      "name": "ALIGNED percentage above 85%",
+      "result": "PASS",
+      "detail": "ALIGNED: 89.6%"
+    }
+  ],
+  "corpus_snapshot": {
+    "total_propositions": 77,
+    "evidence_objects": 10,
+    "tier_distribution": {
+      "DIRECT_EVIDENCE": 69,
+      "DERIVED": 8
+    },
+    "reconciliation_distribution": {
+      "ALIGNED": 69,
+      "NOVEL": 8
+    },
+    "class_distribution": {
+      "STRUCTURAL_DOMINANCE": 12,
+      "COUPLING_PATTERN": 34,
+      "AUTHORITY_TOPOLOGY": 12,
+      "TIER_GROUNDING": 12,
+      "HERO_MOMENT_GROUNDING": 6,
+      "CLUSTER_ARCHITECTURE": 1
+    },
+    "mean_confidence": 0.897,
+    "direct_evidence_pct": 89.6,
+    "aligned_pct": 89.6,
+    "per_class": {
+      "STRUCTURAL_DOMINANCE": {
+        "count": 12,
+        "mean_confidence": 0.937,
+        "min_confidence": 0.854,
+        "max_confidence": 0.954,
+        "tiers": {
+          "DIRECT_EVIDENCE": 12
+        },
+        "reconciliation": {
+          "ALIGNED": 10,
+          "NOVEL": 2
+        }
+      },
+      "COUPLING_PATTERN": {
+        "count": 34,
+        "mean_confidence": 0.956,
+        "min_confidence": 0.942,
+        "max_confidence": 0.972,
+        "tiers": {
+          "DIRECT_EVIDENCE": 34
+        },
+        "reconciliation": {
+          "ALIGNED": 34
+        }
+      },
+      "AUTHORITY_TOPOLOGY": {
+        "count": 12,
+        "mean_confidence": 0.841,
+        "min_confidence": 0.72,
+        "max_confidence": 0.95,
+        "tiers": {
+          "DIRECT_EVIDENCE": 12
+        },
+        "reconciliation": {
+          "ALIGNED": 10,
+          "NOVEL": 2
+        }
+      },
+      "TIER_GROUNDING": {
+        "count": 12,
+        "mean_confidence": 0.871,
+        "min_confidence": 0.604,
+        "max_confidence": 0.904,
+        "tiers": {
+          "DIRECT_EVIDENCE": 11,
+          "DERIVED": 1
+        },
+        "reconciliation": {
+          "ALIGNED": 10,
+          "NOVEL": 2
+        }
+      },
+      "HERO_MOMENT_GROUNDING": {
+        "count": 6,
+        "mean_confidence": 0.704,
+        "min_confidence": 0.604,
+        "max_confidence": 0.74,
+        "tiers": {
+          "DERIVED": 6
+        },
+        "reconciliation": {
+          "ALIGNED": 5,
+          "NOVEL": 1
+        }
+      },
+      "CLUSTER_ARCHITECTURE": {
+        "count": 1,
+        "mean_confidence": 0.604,
+        "min_confidence": 0.604,
+        "max_confidence": 0.604,
+        "tiers": {
+          "DERIVED": 1
+        },
+        "reconciliation": {
+          "NOVEL": 1
+        }
+      }
+    }
+  }
+}

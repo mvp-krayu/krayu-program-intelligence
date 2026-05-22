@@ -1,0 +1,24 @@
+{
+  "stream": "PI.SUBSTRATE.REPLAY-REVALIDATION-CYCLE.01",
+  "classification": "G2",
+  "timestamp": "2026-05-22T15:00:00Z",
+  "checks": [
+    {"id": "VAL-001", "name": "Revalidation script runs to completion", "result": "PASS", "detail": "48/48 checks PASS, exit code 0"},
+    {"id": "VAL-002", "name": "No data mutation during revalidation", "result": "PASS", "detail": "Read-only validation — no files modified"},
+    {"id": "VAL-003", "name": "Revalidation result artifact persisted", "result": "PASS", "detail": "revalidation_result.json written with full check results and corpus snapshot"},
+    {"id": "VAL-004", "name": "All 9 validation phases executed", "result": "PASS", "detail": "Structural integrity, AT strength, HM stability, confidence realism, novelty pressure, reconciliation cleanliness, cross-class consistency, SQO state, corpus evolution"},
+    {"id": "VAL-005", "name": "§5.5 assessment", "result": "PASS", "detail": "NOT required — validation only, no new primitives"}
+  ],
+  "summary": {
+    "total": 5,
+    "pass": 5,
+    "fail": 0,
+    "result": "VALID"
+  },
+  "revalidation_summary": {
+    "total_checks": 48,
+    "passes": 48,
+    "fails": 0,
+    "result": "VALID"
+  }
+}
