@@ -1,0 +1,61 @@
+{
+  "stream_id": "PI.SQO.PROPOSITION-QUALIFICATION-PATHWAY.01",
+  "classification": "G1",
+  "date": "2026-05-22",
+  "baseline_commit": "b2927b4",
+  "changes": [
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/server/SQORuntimeResolver.server.js",
+      "action": "MODIFIED",
+      "description": "Added SPE artifact probes (spe_derivation_report, proposition_review_queue) and semantic_propositions capability flag"
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/server/SemanticQualificationIntakeResolver.server.js",
+      "action": "MODIFIED",
+      "description": "Restructured to dual-path resolution — CSR path (existing) and SPE path (new). SPE reads derivation report, review queue, and spine objects."
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/server/OperatorWorkflowResolver.server.js",
+      "action": "MODIFIED",
+      "description": "Path-aware labels in evidence state, progression path, and primary guidance"
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/QualificationPostureResolver.js",
+      "action": "MODIFIED",
+      "description": "Filter resolved blockers before crosswalk check — aligns with existing pattern in OperatorWorkflowResolver"
+    },
+    {
+      "file": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/sqo/qualification_blockers.json",
+      "action": "MODIFIED",
+      "description": "Blocker recharacterization — 4 resolved (BLK-001, BLK-003, BLK-004, BLK-006), 2 recharacterized (BLK-002, BLK-005), 1 unchanged (BLK-007)"
+    },
+    {
+      "file": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/sqo/promotion_state.json",
+      "action": "MODIFIED",
+      "description": "Lane state update — semantic_candidate COMPLETE, crosswalk INAPPLICABLE, reconciliation COMPLETE, review_queue/qualification_debt PENDING"
+    },
+    {
+      "file": "docs/pios/PI.SQO.PROPOSITION-QUALIFICATION-PATHWAY.01/execution_report.md",
+      "action": "CREATED",
+      "description": "Stream execution report"
+    },
+    {
+      "file": "docs/pios/PI.SQO.PROPOSITION-QUALIFICATION-PATHWAY.01/validation_log.json",
+      "action": "CREATED",
+      "description": "18 validation checks — all PASS"
+    },
+    {
+      "file": "docs/pios/PI.SQO.PROPOSITION-QUALIFICATION-PATHWAY.01/file_changes.json",
+      "action": "CREATED",
+      "description": "File change manifest"
+    },
+    {
+      "file": "docs/pios/PI.SQO.PROPOSITION-QUALIFICATION-PATHWAY.01/CLOSURE.md",
+      "action": "CREATED",
+      "description": "Stream closure document"
+    }
+  ],
+  "files_modified": 6,
+  "files_created": 4,
+  "files_deleted": 0
+}
