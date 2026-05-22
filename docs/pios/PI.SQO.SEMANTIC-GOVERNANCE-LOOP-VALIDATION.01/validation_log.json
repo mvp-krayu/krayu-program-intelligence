@@ -1,0 +1,30 @@
+{
+  "stream": "PI.SQO.SEMANTIC-GOVERNANCE-LOOP-VALIDATION.01",
+  "classification": "G1",
+  "timestamp": "2026-05-22T08:15:00Z",
+  "checks": [
+    { "name": "OBL_SPE_002_REVIEWED", "result": "PASS", "detail": "COUPLING_PATTERN: 34 DIRECT_EVIDENCE propositions, 0.956 mean confidence, 100% ALIGNED — ACCEPTED" },
+    { "name": "OBL_SPE_004_REVIEWED", "result": "PASS", "detail": "TIER_GROUNDING: 12 propositions (92% DIRECT), 0.871 mean confidence — ACCEPTED" },
+    { "name": "OBL_SPE_003_REVIEWED", "result": "PASS", "detail": "AUTHORITY_TOPOLOGY: 10 DERIVED propositions — CONTESTED → ESCALATED → ARBITRATION RESOLVED (accepted with limitation)" },
+    { "name": "OBL_SPE_005_REVIEWED", "result": "PASS", "detail": "HERO_MOMENT_GROUNDING: 6 DERIVED/NOVEL propositions — CONTESTED → ESCALATED → ARBITRATION RESOLVED (accepted with limitation)" },
+    { "name": "OBL_SPE_006_REVIEWED", "result": "PASS", "detail": "CLUSTER_ARCHITECTURE: singleton DERIVED/NOVEL — REJECTED for insufficient structural coverage" },
+    { "name": "ALL_OBLIGATIONS_TERMINAL", "result": "PASS", "detail": "6/6 obligations at terminal state (5 RESOLVED, 1 REJECTED)" },
+    { "name": "REVIEW_QUEUE_LANE_RESOLVED", "result": "PASS", "detail": "promotion_state.lanes.review_queue.state = RESOLVED, blocking_gaps = []" },
+    { "name": "BLK_002_CASCADE_FIRED", "result": "PASS", "detail": "BLK-002 resolved via maybeUpdateReviewQueueLane cascade — resolution_path: OPERATOR_REVIEW" },
+    { "name": "PROMOTION_DECISION_GAPS_CLEARED", "result": "PASS", "detail": "promotion_decision.blocking_gaps: PROPOSITION_REVIEW_PENDING removed" },
+    { "name": "UNRESOLVED_BLOCKERS_ZERO", "result": "PASS", "detail": "qualification_blockers.unresolved_blockers = 0" },
+    { "name": "PROMOTION_ELIGIBLE_TRUE", "result": "PASS", "detail": "qualification_blockers.promotion_eligible = true" },
+    { "name": "EVENT_LINEAGE_COMPLETE", "result": "PASS", "detail": "11 events in promotion_event_log.jsonl — sequential EVT-001 through EVT-011, no duplicates" },
+    { "name": "REJECTION_NOT_RUBBER_STAMPED", "result": "PASS", "detail": "CLUSTER_ARCHITECTURE rejected with structural justification — evidence-first discipline enforced" },
+    { "name": "ARBITRATION_PATHWAY_EXERCISED", "result": "PASS", "detail": "CONTESTED → ARBITRATION_REQUIRED → RESOLVED pathway proven for 2 obligations" },
+    { "name": "CONTEST_JUSTIFICATION_RECORDED", "result": "PASS", "detail": "Both contested obligations carry contest_reasoning with structural evidence rationale" },
+    { "name": "ACTOR_LINEAGE_CONSISTENT", "result": "PASS", "detail": "All review events by operator:khorrix — consistent actor lineage" },
+    { "name": "NO_S2_PROMOTION_ATTEMPTED", "result": "PASS", "detail": "S-level remains S1 — no promotion_request issued" },
+    { "name": "BLUEEDGE_NO_REGRESSION", "result": "PASS", "detail": "BlueEdge SQO state unchanged — no NetBox review actions affect other clients" },
+    { "name": "REPLAY_VALID", "result": "PASS", "detail": "All review action responses returned replay_valid: true" },
+    { "name": "NO_CONSOLE_ERRORS", "result": "PASS", "detail": "Clean console on NetBox authority page during review execution" }
+  ],
+  "total": 20,
+  "pass": 20,
+  "fail": 0
+}

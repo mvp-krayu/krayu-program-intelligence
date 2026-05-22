@@ -1,0 +1,95 @@
+{
+  "client": "netbox",
+  "run_id": "run_github_netbox_20260520_134600",
+  "s_level": "S1",
+  "total_blockers": 7,
+  "unresolved_blockers": 0,
+  "promotion_eligible": true,
+  "qualification_path": "SPE",
+  "blockers": [
+    {
+      "blocker_id": "BLK-001",
+      "lane": "semantic_candidate",
+      "gap": "NO_SEMANTIC_DERIVATION",
+      "authority_domain": "semantic_authority",
+      "required_level": "L3",
+      "resolution": "Run semantic derivation",
+      "resolved": true,
+      "resolved_at": "2026-05-21T00:00:00Z",
+      "resolution_path": "SPE",
+      "resolution_note": "SPE delivered 75 CANDIDATE semantic propositions from PATH A structural evidence"
+    },
+    {
+      "blocker_id": "BLK-002",
+      "lane": "review_queue",
+      "gap": "PROPOSITION_REVIEW_PENDING",
+      "authority_domain": "semantic_authority",
+      "required_level": "L4",
+      "resolution": "Review semantic propositions for qualification progression",
+      "resolved": true,
+      "resolved_at": "2026-05-22T08:09:11.801Z",
+      "resolution_path": "OPERATOR_REVIEW",
+      "resolution_note": "All 6 proposition class obligations resolved through operator review"
+    },
+    {
+      "blocker_id": "BLK-003",
+      "lane": "crosswalk",
+      "gap": "NO_CROSSWALK",
+      "authority_domain": "governance_authority",
+      "required_level": "L5",
+      "resolution": "Crosswalk inapplicable for SPE-path specimens",
+      "resolved": true,
+      "resolved_at": "2026-05-21T00:00:00Z",
+      "resolution_path": "SPE",
+      "resolution_note": "SPE propositions are CEU-anchored — no DOM-to-CSR translation required"
+    },
+    {
+      "blocker_id": "BLK-004",
+      "lane": "reconciliation",
+      "gap": "NO_RECONCILIATION",
+      "authority_domain": "governance_authority",
+      "required_level": "L5",
+      "resolution": "CEU reconciliation complete",
+      "resolved": true,
+      "resolved_at": "2026-05-20T00:00:00Z",
+      "resolution_path": "CEU",
+      "resolution_note": "CEU reconciliation OPERATOR_VALIDATED — 12 confirmed, 46 events, Phase 7 governance loop proven"
+    },
+    {
+      "blocker_id": "BLK-005",
+      "lane": "qualification_debt",
+      "gap": "PROPOSITION_DEBT_PENDING",
+      "authority_domain": "governance_authority",
+      "required_level": "L5",
+      "resolution": "Proposition debt model operational",
+      "resolved": true,
+      "resolved_at": "2026-05-22T07:30:00Z",
+      "resolution_path": "SPE",
+      "resolution_note": "PropositionDebtResolver computes coverage, confidence, tier, review, and reconciliation debt from SPE proposition evidence"
+    },
+    {
+      "blocker_id": "BLK-006",
+      "lane": "promotion_decision",
+      "gap": "SEMANTIC_ABSENT",
+      "authority_domain": "governance_authority",
+      "required_level": "L5",
+      "resolution": "Semantic evidence now exists",
+      "resolved": true,
+      "resolved_at": "2026-05-21T00:00:00Z",
+      "resolution_path": "SPE",
+      "resolution_note": "75 semantic propositions operational — semantic absence claim no longer applicable"
+    },
+    {
+      "blocker_id": "BLK-007",
+      "lane": "runtime_projection",
+      "gap": "NO_SEMANTIC_AUTHORITY",
+      "authority_domain": "governance_authority",
+      "required_level": "L5",
+      "resolution": "SQO cockpit now consumes semantic_propositions via SPE intake panel",
+      "resolved": true,
+      "resolved_at": "2026-05-22",
+      "resolution_path": "SPE",
+      "resolution_note": "SemanticQualificationIntakePanel renders SPE proposition data — class distribution, confidence envelope, CEU coverage, blocker state"
+    }
+  ]
+}
