@@ -356,6 +356,42 @@ class ChronicleEmitter:
         manifest["operator_decisions_recorded"] = manifest.get("operator_decisions_recorded", 0) + 1
         self._write_manifest(manifest)
 
+    def emit_learning_promotion(self, transition_record: dict):
+        """Emit a learning_promotion chronicle event and track count."""
+        event_id = transition_record.get("event_id", "LRNE-unknown")
+        from_state = transition_record.get("from_state", "")
+        to_state = transition_record.get("to_state", "")
+        actor = transition_record.get("actor_id", "")
+
+        phase_map = {
+            "REVIEWED": "FORMATION",
+            "PROMOTED": "STRENGTHENING",
+            "CONSUMABLE": "STABILIZATION",
+            "CAPABILITY_CANDIDATE": "CONVERGENCE",
+            "MODULE_CANDIDATE": "PROJECTION",
+            "REJECTED": "TENSION",
+            "SUPERSEDED": "TENSION",
+        }
+        semantic_phase = phase_map.get(to_state, "FORMATION")
+
+        self._emit_event(
+            event_type="learning_promotion",
+            semantic_phase=semantic_phase,
+            description=f"Learning {event_id}: {from_state} → {to_state} (by {actor})",
+            evidence_refs=transition_record.get("evidence_refs", []),
+            extra={
+                "learning_event_id": event_id,
+                "from_state": from_state,
+                "to_state": to_state,
+                "actor_id": actor,
+                "justification": transition_record.get("justification", ""),
+            },
+        )
+
+        manifest = self._read_manifest()
+        manifest["learning_events_captured"] = manifest.get("learning_events_captured", 0) + 1
+        self._write_manifest(manifest)
+
     def emit_custom(self, event_type: str, semantic_phase: str, description: str,
                     evidence_refs: Optional[list[str]] = None, extra: Optional[dict] = None):
         """Emit a custom chronicle event."""

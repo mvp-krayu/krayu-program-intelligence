@@ -1,0 +1,109 @@
+{
+  "stream_id": "PI.GENESIS.GEN-4.LEARNING-PROMOTION-PIPELINE.01",
+  "classification": "G1",
+  "timestamp": "2026-05-22T16:30:00Z",
+  "checks": [
+    {
+      "id": "V-01",
+      "name": "lifecycle extended with OBSERVED state",
+      "description": "OBSERVED → PROPOSED transition added. Pre-formal friction capture before governed proposal.",
+      "result": "PASS"
+    },
+    {
+      "id": "V-02",
+      "name": "lifecycle extended with CAPABILITY_CANDIDATE state",
+      "description": "CONSUMABLE → CAPABILITY_CANDIDATE transition with EMERGENCE_THRESHOLD enforcement (3+ specimens)",
+      "result": "PASS"
+    },
+    {
+      "id": "V-03",
+      "name": "lifecycle extended with MODULE_CANDIDATE state",
+      "description": "CAPABILITY_CANDIDATE → MODULE_CANDIDATE transition for marketplace-candidate formalization",
+      "result": "PASS"
+    },
+    {
+      "id": "V-04",
+      "name": "LearningPromoter module exists",
+      "description": "scripts/pios/learning/learning_promoter.py created with LearningPromoter class",
+      "result": "PASS"
+    },
+    {
+      "id": "V-05",
+      "name": "7 transition methods implemented",
+      "description": "review, reject, promote, activate, elevate_to_capability, elevate_to_module, supersede",
+      "result": "PASS"
+    },
+    {
+      "id": "V-06",
+      "name": "AI actor rejection enforced",
+      "description": "Actors starting with ai_ or system_ raise LifecycleViolation for operator-required transitions",
+      "result": "PASS"
+    },
+    {
+      "id": "V-07",
+      "name": "3-specimen threshold for CAPABILITY_CANDIDATE",
+      "description": "elevate_to_capability requires specimen_refs with 3+ entries or 3+ ingestion sources in registry",
+      "result": "PASS"
+    },
+    {
+      "id": "V-08",
+      "name": "batch_review for multi-event governance",
+      "description": "batch_review(['LRNE-P7-0002', 'LRNE-P7-0003']) transitions both to REVIEWED in single session",
+      "result": "PASS"
+    },
+    {
+      "id": "V-09",
+      "name": "get_promotable returns grouped events",
+      "description": "Returns events grouped by lifecycle state with available transitions and event metadata",
+      "result": "PASS"
+    },
+    {
+      "id": "V-10",
+      "name": "session transition log",
+      "description": "get_transition_log returns all transitions made in session with event_id, from/to state, actor, timestamp",
+      "result": "PASS"
+    },
+    {
+      "id": "V-11",
+      "name": "emit_learning_promotion added to ChronicleEmitter",
+      "description": "Emits learning_promotion event, maps target state to semantic phase, tracks learning_events_captured counter",
+      "result": "PASS"
+    },
+    {
+      "id": "V-12",
+      "name": "semantic phase mapping for learning transitions",
+      "description": "REVIEWED→FORMATION, PROMOTED→STRENGTHENING, CONSUMABLE→STABILIZATION, CAPABILITY_CANDIDATE→CONVERGENCE, MODULE_CANDIDATE→PROJECTION, REJECTED/SUPERSEDED→TENSION",
+      "result": "PASS"
+    },
+    {
+      "id": "V-13",
+      "name": "full lifecycle traversal validated",
+      "description": "LRNE-P7-0001 traversed PROPOSED→REVIEWED→PROMOTED→CONSUMABLE→CAPABILITY_CANDIDATE→MODULE_CANDIDATE in test session",
+      "result": "PASS"
+    },
+    {
+      "id": "V-14",
+      "name": "CONSUMPTION_ELIGIBLE_STATES extended",
+      "description": "CONSUMABLE + CAPABILITY_CANDIDATE + MODULE_CANDIDATE all eligible for consumption",
+      "result": "PASS"
+    },
+    {
+      "id": "V-15",
+      "name": "append-only transition log per event",
+      "description": "Each event accumulates transition_log entries with from_state, to_state, actor_id, justification, timestamp",
+      "result": "PASS"
+    },
+    {
+      "id": "V-16",
+      "name": "existing registry backward compatible",
+      "description": "5 PROPOSED events in registry load and transition correctly with extended lifecycle",
+      "result": "PASS"
+    }
+  ],
+  "summary": {
+    "total": 16,
+    "passed": 16,
+    "failed": 0,
+    "result": "PASS"
+  }
+}
