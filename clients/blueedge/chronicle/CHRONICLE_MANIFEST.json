@@ -43,8 +43,9 @@
     "RC-04": {
       "name": "Evidence Enrichment from HTML Documents",
       "classification": "G2",
-      "status": "PENDING",
-      "checkpoints": ["checkpoint_04_enrichment", "checkpoint_05_debt"]
+      "status": "COMPLETE",
+      "checkpoints": ["checkpoint_04_enrichment", "checkpoint_05_debt"],
+      "completed_at": "2026-05-22T21:00:00Z"
     },
     "RC-05": {
       "name": "Deterministic Revalidation",
@@ -104,15 +105,15 @@
     },
     "checkpoint_04_enrichment": {
       "semantic_phase": "STRENGTHENING",
-      "description": "After evidence enrichment — substrate enriches, debt evolves",
+      "description": "After evidence enrichment — 12 domains corrected, 3 NO_SDC_MATCH, mean confidence 0.728→0.741",
       "stream": "RC-04",
-      "status": "PENDING"
+      "status": "COMPLETE"
     },
     "checkpoint_05_debt": {
       "semantic_phase": "STRENGTHENING",
-      "description": "After debt assessment — the system self-corrects",
+      "description": "After debt assessment — 4 improved, 6 worsened, 0 resolved. Honest limitation.",
       "stream": "RC-04",
-      "status": "PENDING"
+      "status": "COMPLETE"
     },
     "checkpoint_06_revalidation": {
       "semantic_phase": "STABILIZATION",
@@ -196,7 +197,7 @@
     }
   ],
   "proof_object_count": 0,
-  "spine_object_count": 5,
+  "spine_object_count": 7,
   "narrative_chapter_count": 0,
   "media_capture_count": 0
 }

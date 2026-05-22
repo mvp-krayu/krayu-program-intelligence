@@ -1,0 +1,81 @@
+{
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-04",
+  "classification": "G2",
+  "timestamp": "2026-05-22T21:00:00Z",
+  "total_checks": 14,
+  "passed": 14,
+  "failed": 0,
+  "result": "VALID",
+  "checks": [
+    {
+      "check": "rc03_checkpoint_frozen",
+      "description": "checkpoint_03_governance_frozen.json exists and status is FROZEN",
+      "result": "PASS"
+    },
+    {
+      "check": "domain_name_mapping_complete",
+      "description": "All 17 canonical domains have mapping entries (14 EXACT, 3 NO_SDC_MATCH)",
+      "result": "PASS"
+    },
+    {
+      "check": "enrichment_log_created",
+      "description": "enrichment_log.json created with 31 enrichment events",
+      "result": "PASS"
+    },
+    {
+      "check": "evidence_manifest_created",
+      "description": "evidence_manifest.json created with 3 HTML evidence files",
+      "result": "PASS"
+    },
+    {
+      "check": "domain_component_counts_corrected",
+      "description": "12 domain propositions updated with name-matched SDC component counts",
+      "result": "PASS"
+    },
+    {
+      "check": "capability_domain_refs_corrected",
+      "description": "15 capability propositions updated with canonical domain references",
+      "result": "PASS"
+    },
+    {
+      "check": "confidence_recalculated",
+      "description": "Mean confidence (accepted) recalculated: 0.728 → 0.741",
+      "result": "PASS"
+    },
+    {
+      "check": "debt_evolution_created",
+      "description": "debt_evolution.json created with 15 items assessed",
+      "result": "PASS"
+    },
+    {
+      "check": "checkpoint_04_created",
+      "description": "checkpoint_04_enrichment.json created with status FROZEN",
+      "result": "PASS"
+    },
+    {
+      "check": "checkpoint_05_created",
+      "description": "checkpoint_05_debt.json created with status FROZEN",
+      "result": "PASS"
+    },
+    {
+      "check": "spine_objects_updated",
+      "description": "spine_objects.json updated to 7 objects (SPINE-RC04-EO-001 and SPINE-RC04-EO-002 added)",
+      "result": "PASS"
+    },
+    {
+      "check": "manifest_updated",
+      "description": "CHRONICLE_MANIFEST.json updated: RC-04 COMPLETE, both checkpoints COMPLETE",
+      "result": "PASS"
+    },
+    {
+      "check": "no_rejected_propositions_modified",
+      "description": "14 REJECTED propositions unchanged by enrichment",
+      "result": "PASS"
+    },
+    {
+      "check": "netbox_not_mutated",
+      "description": "No files under clients/netbox/ modified",
+      "result": "PASS"
+    }
+  ]
+}

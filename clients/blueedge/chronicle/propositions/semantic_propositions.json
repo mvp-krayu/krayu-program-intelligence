@@ -40,16 +40,18 @@
       "final_rejected": 14,
       "governance_events": 94
     },
-    "mean_confidence_accepted": 0.754
+    "mean_confidence_accepted": 0.741,
+    "enrichment_applied": true,
+    "enrichment_stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-04"
   },
   "propositions": [
     {
       "id": "SP-blueedge-0001",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Edge Data Acquisition (DOMAIN-01) is a grounded functional domain with 7 SDC-derived components (7 DIRECT_EVIDENCE, 0 DERIVED)",
+      "proposition": "Edge Data Acquisition (DOMAIN-01) is a grounded functional domain with 14 SDC-derived components (14 DIRECT_EVIDENCE, 0 DERIVED)",
       "derivation_tier": "DIRECT_EVIDENCE",
-      "confidence": 0.85,
+      "confidence": 0.9,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
@@ -66,9 +68,15 @@
         "domain_name": "Edge Data Acquisition",
         "grounding_status": "GROUNDED",
         "sdc_confidence": "DIRECT_EVIDENCE",
-        "component_count": 7,
-        "direct_evidence_count": 7,
-        "derived_count": 0
+        "component_count": 14,
+        "direct_evidence_count": 14,
+        "derived_count": 0,
+        "component_count_pre_enrichment": 7,
+        "direct_evidence_count_pre_enrichment": 7,
+        "derived_count_pre_enrichment": 0,
+        "sdc_match": "EXACT",
+        "sdc_matched_domain": "DOMAIN-14",
+        "sdc_original_domain": "DOMAIN-01"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -76,7 +84,9 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "COMPONENT_COUNT_INCREASED",
+      "confidence_pre_enrichment": 0.85
     },
     {
       "id": "SP-blueedge-0002",
@@ -103,7 +113,9 @@
         "sdc_confidence": "DIRECT_EVIDENCE",
         "component_count": 3,
         "direct_evidence_count": 3,
-        "derived_count": 0
+        "derived_count": 0,
+        "sdc_match": "EXACT",
+        "sdc_matched_domain": "DOMAIN-15"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -115,15 +127,16 @@
       "annotation": "Confidence reduced from 0.85 to 0.65 to reflect WEAKLY_GROUNDED status.",
       "confidence_original": 0.85,
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "CONFIRMED_NO_CHANGE"
     },
     {
       "id": "SP-blueedge-0003",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Fleet Core Operations (DOMAIN-03) is a grounded functional domain with 3 SDC-derived components (3 DIRECT_EVIDENCE, 0 DERIVED)",
+      "proposition": "Fleet Core Operations (DOMAIN-03) is a grounded functional domain with 7 SDC-derived components (7 DIRECT_EVIDENCE, 0 DERIVED)",
       "derivation_tier": "DIRECT_EVIDENCE",
-      "confidence": 0.85,
+      "confidence": 0.9,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
@@ -140,9 +153,15 @@
         "domain_name": "Fleet Core Operations",
         "grounding_status": "GROUNDED",
         "sdc_confidence": "DIRECT_EVIDENCE",
-        "component_count": 3,
-        "direct_evidence_count": 3,
-        "derived_count": 0
+        "component_count": 7,
+        "direct_evidence_count": 7,
+        "derived_count": 0,
+        "component_count_pre_enrichment": 3,
+        "direct_evidence_count_pre_enrichment": 3,
+        "derived_count_pre_enrichment": 0,
+        "sdc_match": "EXACT",
+        "sdc_matched_domain": "DOMAIN-01",
+        "sdc_original_domain": "DOMAIN-03"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -150,15 +169,17 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "COMPONENT_COUNT_INCREASED",
+      "confidence_pre_enrichment": 0.85
     },
     {
       "id": "SP-blueedge-0004",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Fleet Vertical Extensions (DOMAIN-04) is a grounded functional domain with 6 SDC-derived components (6 DIRECT_EVIDENCE, 0 DERIVED)",
+      "proposition": "Fleet Vertical Extensions (DOMAIN-04) is a grounded functional domain with 3 SDC-derived components (3 DIRECT_EVIDENCE, 0 DERIVED)",
       "derivation_tier": "DIRECT_EVIDENCE",
-      "confidence": 0.85,
+      "confidence": 0.8,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
@@ -175,9 +196,15 @@
         "domain_name": "Fleet Vertical Extensions",
         "grounding_status": "GROUNDED",
         "sdc_confidence": "DIRECT_EVIDENCE",
-        "component_count": 6,
-        "direct_evidence_count": 6,
-        "derived_count": 0
+        "component_count": 3,
+        "direct_evidence_count": 3,
+        "derived_count": 0,
+        "component_count_pre_enrichment": 6,
+        "direct_evidence_count_pre_enrichment": 6,
+        "derived_count_pre_enrichment": 0,
+        "sdc_match": "EXACT",
+        "sdc_matched_domain": "DOMAIN-02",
+        "sdc_original_domain": "DOMAIN-04"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -185,15 +212,17 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "COMPONENT_COUNT_DECREASED",
+      "confidence_pre_enrichment": 0.85
     },
     {
       "id": "SP-blueedge-0005",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Analytics and Intelligence (DOMAIN-05) is a grounded functional domain with 2 SDC-derived components (2 DIRECT_EVIDENCE, 0 DERIVED)",
+      "proposition": "Analytics and Intelligence (DOMAIN-05) is a grounded functional domain with no SDC component evidence (NO_SDC_MATCH)",
       "derivation_tier": "DIRECT_EVIDENCE",
-      "confidence": 0.85,
+      "confidence": 0.5,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
@@ -210,9 +239,11 @@
         "domain_name": "Analytics and Intelligence",
         "grounding_status": "GROUNDED",
         "sdc_confidence": "DIRECT_EVIDENCE",
-        "component_count": 2,
-        "direct_evidence_count": 2,
-        "derived_count": 0
+        "component_count": 0,
+        "direct_evidence_count": 0,
+        "derived_count": 0,
+        "sdc_match": "NO_SDC_MATCH",
+        "sdc_match_note": "SDC DOMAIN-05 is 'Blockchain and Data Provenance' — different semantic scope"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -220,15 +251,17 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "confidence_pre_enrichment": 0.85,
+      "enrichment_action": "CONFIDENCE_REDUCED_NO_SDC_MATCH"
     },
     {
       "id": "SP-blueedge-0006",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "AI/ML Intelligence Layer (DOMAIN-06) is a grounded functional domain with 10 SDC-derived components (10 DIRECT_EVIDENCE, 0 DERIVED)",
+      "proposition": "AI/ML Intelligence Layer (DOMAIN-06) is a grounded functional domain with 6 SDC-derived components (6 DIRECT_EVIDENCE, 0 DERIVED)",
       "derivation_tier": "DIRECT_EVIDENCE",
-      "confidence": 0.85,
+      "confidence": 0.8,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
@@ -245,9 +278,15 @@
         "domain_name": "AI/ML Intelligence Layer",
         "grounding_status": "GROUNDED",
         "sdc_confidence": "DIRECT_EVIDENCE",
-        "component_count": 10,
-        "direct_evidence_count": 10,
-        "derived_count": 0
+        "component_count": 6,
+        "direct_evidence_count": 6,
+        "derived_count": 0,
+        "component_count_pre_enrichment": 10,
+        "direct_evidence_count_pre_enrichment": 10,
+        "derived_count_pre_enrichment": 0,
+        "sdc_match": "EXACT",
+        "sdc_matched_domain": "DOMAIN-04",
+        "sdc_original_domain": "DOMAIN-06"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -255,15 +294,17 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "COMPONENT_COUNT_DECREASED",
+      "confidence_pre_enrichment": 0.85
     },
     {
       "id": "SP-blueedge-0007",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Sensor and Security Ingestion (DOMAIN-07) is a grounded functional domain with 4 SDC-derived components (4 DIRECT_EVIDENCE, 0 DERIVED)",
+      "proposition": "Sensor and Security Ingestion (DOMAIN-07) is a grounded functional domain with 3 SDC-derived components (3 DIRECT_EVIDENCE, 0 DERIVED)",
       "derivation_tier": "DIRECT_EVIDENCE",
-      "confidence": 0.85,
+      "confidence": 0.8,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
@@ -280,9 +321,15 @@
         "domain_name": "Sensor and Security Ingestion",
         "grounding_status": "GROUNDED",
         "sdc_confidence": "DIRECT_EVIDENCE",
-        "component_count": 4,
-        "direct_evidence_count": 4,
-        "derived_count": 0
+        "component_count": 3,
+        "direct_evidence_count": 3,
+        "derived_count": 0,
+        "component_count_pre_enrichment": 4,
+        "direct_evidence_count_pre_enrichment": 4,
+        "derived_count_pre_enrichment": 0,
+        "sdc_match": "EXACT",
+        "sdc_matched_domain": "DOMAIN-03",
+        "sdc_original_domain": "DOMAIN-07"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -290,15 +337,17 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "COMPONENT_COUNT_DECREASED",
+      "confidence_pre_enrichment": 0.85
     },
     {
       "id": "SP-blueedge-0008",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Real-Time Streaming and Gateway (DOMAIN-08) is a grounded functional domain with 4 SDC-derived components (4 DIRECT_EVIDENCE, 0 DERIVED)",
+      "proposition": "Real-Time Streaming and Gateway (DOMAIN-08) is a grounded functional domain with no SDC component evidence (NO_SDC_MATCH)",
       "derivation_tier": "DIRECT_EVIDENCE",
-      "confidence": 0.85,
+      "confidence": 0.5,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
@@ -315,9 +364,11 @@
         "domain_name": "Real-Time Streaming and Gateway",
         "grounding_status": "GROUNDED",
         "sdc_confidence": "DIRECT_EVIDENCE",
-        "component_count": 4,
-        "direct_evidence_count": 4,
-        "derived_count": 0
+        "component_count": 0,
+        "direct_evidence_count": 0,
+        "derived_count": 0,
+        "sdc_match": "NO_SDC_MATCH",
+        "sdc_match_note": "No SDC domain with matching name. SDC-17 'Streaming Infrastructure' is partial but DERIVED."
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -325,15 +376,17 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "confidence_pre_enrichment": 0.85,
+      "enrichment_action": "CONFIDENCE_REDUCED_NO_SDC_MATCH"
     },
     {
       "id": "SP-blueedge-0009",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Access Control and Identity (DOMAIN-09) is a grounded functional domain with 4 SDC-derived components (4 DIRECT_EVIDENCE, 0 DERIVED)",
+      "proposition": "Access Control and Identity (DOMAIN-09) is a grounded functional domain with 8 SDC-derived components (8 DIRECT_EVIDENCE, 0 DERIVED)",
       "derivation_tier": "DIRECT_EVIDENCE",
-      "confidence": 0.85,
+      "confidence": 0.9,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
@@ -350,9 +403,15 @@
         "domain_name": "Access Control and Identity",
         "grounding_status": "GROUNDED",
         "sdc_confidence": "DIRECT_EVIDENCE",
-        "component_count": 4,
-        "direct_evidence_count": 4,
-        "derived_count": 0
+        "component_count": 8,
+        "direct_evidence_count": 8,
+        "derived_count": 0,
+        "component_count_pre_enrichment": 4,
+        "direct_evidence_count_pre_enrichment": 4,
+        "derived_count_pre_enrichment": 0,
+        "sdc_match": "EXACT",
+        "sdc_matched_domain": "DOMAIN-10",
+        "sdc_original_domain": "DOMAIN-09"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -360,15 +419,17 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "COMPONENT_COUNT_INCREASED",
+      "confidence_pre_enrichment": 0.85
     },
     {
       "id": "SP-blueedge-0010",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Platform Infrastructure and Data (DOMAIN-10) is a weakly grounded functional domain with 8 SDC-derived components (8 DIRECT_EVIDENCE, 0 DERIVED)",
+      "proposition": "Platform Infrastructure and Data (DOMAIN-10) is a weakly grounded functional domain with 10 SDC-derived components (10 DIRECT_EVIDENCE, 0 DERIVED)",
       "derivation_tier": "DIRECT_EVIDENCE",
-      "confidence": 0.65,
+      "confidence": 0.7,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
@@ -385,9 +446,15 @@
         "domain_name": "Platform Infrastructure and Data",
         "grounding_status": "WEAKLY_GROUNDED",
         "sdc_confidence": "DIRECT_EVIDENCE",
-        "component_count": 8,
-        "direct_evidence_count": 8,
-        "derived_count": 0
+        "component_count": 10,
+        "direct_evidence_count": 10,
+        "derived_count": 0,
+        "component_count_pre_enrichment": 8,
+        "direct_evidence_count_pre_enrichment": 8,
+        "derived_count_pre_enrichment": 0,
+        "sdc_match": "EXACT",
+        "sdc_matched_domain": "DOMAIN-12",
+        "sdc_original_domain": "DOMAIN-10"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -399,15 +466,17 @@
       "annotation": "Confidence reduced from 0.85 to 0.65 to reflect WEAKLY_GROUNDED status.",
       "confidence_original": 0.85,
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "COMPONENT_COUNT_INCREASED",
+      "confidence_pre_enrichment": 0.65
     },
     {
       "id": "SP-blueedge-0011",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Event-Driven Architecture (DOMAIN-11) is a grounded functional domain with 6 SDC-derived components (6 DIRECT_EVIDENCE, 0 DERIVED)",
+      "proposition": "Event-Driven Architecture (DOMAIN-11) is a grounded functional domain with no SDC component evidence (NO_SDC_MATCH)",
       "derivation_tier": "DIRECT_EVIDENCE",
-      "confidence": 0.85,
+      "confidence": 0.5,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
@@ -424,9 +493,11 @@
         "domain_name": "Event-Driven Architecture",
         "grounding_status": "GROUNDED",
         "sdc_confidence": "DIRECT_EVIDENCE",
-        "component_count": 6,
-        "direct_evidence_count": 6,
-        "derived_count": 0
+        "component_count": 0,
+        "direct_evidence_count": 0,
+        "derived_count": 0,
+        "sdc_match": "NO_SDC_MATCH",
+        "sdc_match_note": "No SDC domain with matching name. SDC-11 is 'Extended Operations and Driver Services'."
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -434,15 +505,17 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "confidence_pre_enrichment": 0.85,
+      "enrichment_action": "CONFIDENCE_REDUCED_NO_SDC_MATCH"
     },
     {
       "id": "SP-blueedge-0012",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "SaaS Platform Layer (DOMAIN-12) is a grounded functional domain with 10 SDC-derived components (10 DIRECT_EVIDENCE, 0 DERIVED)",
+      "proposition": "SaaS Platform Layer (DOMAIN-12) is a grounded functional domain with 4 SDC-derived components (4 DIRECT_EVIDENCE, 0 DERIVED)",
       "derivation_tier": "DIRECT_EVIDENCE",
-      "confidence": 0.85,
+      "confidence": 0.8,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
@@ -459,9 +532,15 @@
         "domain_name": "SaaS Platform Layer",
         "grounding_status": "GROUNDED",
         "sdc_confidence": "DIRECT_EVIDENCE",
-        "component_count": 10,
-        "direct_evidence_count": 10,
-        "derived_count": 0
+        "component_count": 4,
+        "direct_evidence_count": 4,
+        "derived_count": 0,
+        "component_count_pre_enrichment": 10,
+        "direct_evidence_count_pre_enrichment": 10,
+        "derived_count_pre_enrichment": 0,
+        "sdc_match": "EXACT",
+        "sdc_matched_domain": "DOMAIN-08",
+        "sdc_original_domain": "DOMAIN-12"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -469,15 +548,17 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "COMPONENT_COUNT_DECREASED",
+      "confidence_pre_enrichment": 0.85
     },
     {
       "id": "SP-blueedge-0013",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "External Integration (DOMAIN-13) is a grounded functional domain with 2 SDC-derived components (2 DIRECT_EVIDENCE, 0 DERIVED)",
+      "proposition": "External Integration (DOMAIN-13) is a grounded functional domain with 4 SDC-derived components (4 DIRECT_EVIDENCE, 0 DERIVED)",
       "derivation_tier": "DIRECT_EVIDENCE",
-      "confidence": 0.85,
+      "confidence": 0.9,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
@@ -494,9 +575,15 @@
         "domain_name": "External Integration",
         "grounding_status": "GROUNDED",
         "sdc_confidence": "DIRECT_EVIDENCE",
-        "component_count": 2,
-        "direct_evidence_count": 2,
-        "derived_count": 0
+        "component_count": 4,
+        "direct_evidence_count": 4,
+        "derived_count": 0,
+        "component_count_pre_enrichment": 2,
+        "direct_evidence_count_pre_enrichment": 2,
+        "derived_count_pre_enrichment": 0,
+        "sdc_match": "EXACT",
+        "sdc_matched_domain": "DOMAIN-09",
+        "sdc_original_domain": "DOMAIN-13"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -504,15 +591,17 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "COMPONENT_COUNT_INCREASED",
+      "confidence_pre_enrichment": 0.85
     },
     {
       "id": "SP-blueedge-0014",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Frontend Application (DOMAIN-14) is a grounded functional domain with 14 SDC-derived components (14 DIRECT_EVIDENCE, 0 DERIVED)",
+      "proposition": "Frontend Application (DOMAIN-14) is a grounded functional domain with 61 SDC-derived components (61 DIRECT_EVIDENCE, 0 DERIVED)",
       "derivation_tier": "DIRECT_EVIDENCE",
-      "confidence": 0.85,
+      "confidence": 0.9,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
@@ -529,9 +618,15 @@
         "domain_name": "Frontend Application",
         "grounding_status": "GROUNDED",
         "sdc_confidence": "DIRECT_EVIDENCE",
-        "component_count": 14,
-        "direct_evidence_count": 14,
-        "derived_count": 0
+        "component_count": 61,
+        "direct_evidence_count": 61,
+        "derived_count": 0,
+        "component_count_pre_enrichment": 14,
+        "direct_evidence_count_pre_enrichment": 14,
+        "derived_count_pre_enrichment": 0,
+        "sdc_match": "EXACT",
+        "sdc_matched_domain": "DOMAIN-16",
+        "sdc_original_domain": "DOMAIN-14"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -542,15 +637,17 @@
       "arbitration_rationale": "14 components is structurally plausible for Frontend Application domain. Domain name alignment verified: both canonical and SDC agree on 'Frontend Application' for this entry despite ID numbering mismatch in other domains. Component count is from SDC DOMAIN-14 which happens to align semantically.",
       "annotation": "Domain name alignment verified. Component count plausible. No confidence adjustment needed.",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "COMPONENT_COUNT_INCREASED",
+      "confidence_pre_enrichment": 0.85
     },
     {
       "id": "SP-blueedge-0015",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "EV and Electrification (DOMAIN-15) is a grounded functional domain with 3 SDC-derived components (3 DIRECT_EVIDENCE, 0 DERIVED)",
+      "proposition": "EV and Electrification (DOMAIN-15) is a grounded functional domain with 4 SDC-derived components (4 DIRECT_EVIDENCE, 0 DERIVED)",
       "derivation_tier": "DIRECT_EVIDENCE",
-      "confidence": 0.85,
+      "confidence": 0.9,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
@@ -567,9 +664,15 @@
         "domain_name": "EV and Electrification",
         "grounding_status": "GROUNDED",
         "sdc_confidence": "DIRECT_EVIDENCE",
-        "component_count": 3,
-        "direct_evidence_count": 3,
-        "derived_count": 0
+        "component_count": 4,
+        "direct_evidence_count": 4,
+        "derived_count": 0,
+        "component_count_pre_enrichment": 3,
+        "direct_evidence_count_pre_enrichment": 3,
+        "derived_count_pre_enrichment": 0,
+        "sdc_match": "EXACT",
+        "sdc_matched_domain": "DOMAIN-07",
+        "sdc_original_domain": "DOMAIN-15"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -577,15 +680,17 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "COMPONENT_COUNT_INCREASED",
+      "confidence_pre_enrichment": 0.85
     },
     {
       "id": "SP-blueedge-0016",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Operational Engineering (DOMAIN-16) is a grounded functional domain with 61 SDC-derived components (61 DIRECT_EVIDENCE, 0 DERIVED)",
+      "proposition": "Operational Engineering (DOMAIN-16) is a grounded functional domain with 10 SDC-derived components (10 DIRECT_EVIDENCE, 0 DERIVED)",
       "derivation_tier": "DIRECT_EVIDENCE",
-      "confidence": 0.6,
+      "confidence": 0.55,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         ""
@@ -602,9 +707,15 @@
         "domain_name": "Operational Engineering",
         "grounding_status": "GROUNDED",
         "sdc_confidence": "DIRECT_EVIDENCE",
-        "component_count": 61,
-        "direct_evidence_count": 61,
-        "derived_count": 0
+        "component_count": 10,
+        "direct_evidence_count": 10,
+        "derived_count": 0,
+        "component_count_pre_enrichment": 61,
+        "direct_evidence_count_pre_enrichment": 61,
+        "derived_count_pre_enrichment": 0,
+        "sdc_match": "EXACT",
+        "sdc_matched_domain": "DOMAIN-06",
+        "sdc_original_domain": "DOMAIN-16"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -616,7 +727,9 @@
       "annotation": "Component count (61) sourced from mismatched SDC domain. Grounding valid but component data suspect. Confidence reduced.",
       "confidence_original": 0.85,
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "COMPONENT_COUNT_DECREASED",
+      "confidence_pre_enrichment": 0.6
     },
     {
       "id": "SP-blueedge-0017",
@@ -670,16 +783,17 @@
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
       "domain_refs": [
-        "DOMAIN-01"
+        "DOMAIN-03"
       ],
       "structural_refs": {
         "capability_id": "CAP-001",
         "capability_name": "Core Fleet Management",
-        "domain_id": "DOMAIN-01",
+        "domain_id": "DOMAIN-03",
         "capability_type": "CORE",
         "component_count": 7,
         "direct_evidence_components": 7,
-        "weakly_grounded": false
+        "weakly_grounded": false,
+        "domain_id_pre_enrichment": "DOMAIN-01"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -687,7 +801,8 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "DOMAIN_REF_CORRECTED"
     },
     {
       "id": "SP-blueedge-0019",
@@ -705,16 +820,17 @@
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
       "domain_refs": [
-        "DOMAIN-02"
+        "DOMAIN-04"
       ],
       "structural_refs": {
         "capability_id": "CAP-002",
         "capability_name": "Fleet Verticals",
-        "domain_id": "DOMAIN-02",
+        "domain_id": "DOMAIN-04",
         "capability_type": "SUPPORTING",
         "component_count": 3,
         "direct_evidence_components": 3,
-        "weakly_grounded": false
+        "weakly_grounded": false,
+        "domain_id_pre_enrichment": "DOMAIN-02"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -722,7 +838,8 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "DOMAIN_REF_CORRECTED"
     },
     {
       "id": "SP-blueedge-0020",
@@ -740,16 +857,17 @@
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
       "domain_refs": [
-        "DOMAIN-03"
+        "DOMAIN-07"
       ],
       "structural_refs": {
         "capability_id": "CAP-003",
         "capability_name": "SVG Hardware & Security",
-        "domain_id": "DOMAIN-03",
+        "domain_id": "DOMAIN-07",
         "capability_type": "CORE",
         "component_count": 3,
         "direct_evidence_components": 3,
-        "weakly_grounded": false
+        "weakly_grounded": false,
+        "domain_id_pre_enrichment": "DOMAIN-03"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -757,7 +875,8 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "DOMAIN_REF_CORRECTED"
     },
     {
       "id": "SP-blueedge-0021",
@@ -775,16 +894,17 @@
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
       "domain_refs": [
-        "DOMAIN-04"
+        "DOMAIN-06"
       ],
       "structural_refs": {
         "capability_id": "CAP-004",
         "capability_name": "AI / Machine Learning",
-        "domain_id": "DOMAIN-04",
+        "domain_id": "DOMAIN-06",
         "capability_type": "ENABLING",
         "component_count": 6,
         "direct_evidence_components": 6,
-        "weakly_grounded": false
+        "weakly_grounded": false,
+        "domain_id_pre_enrichment": "DOMAIN-04"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -792,7 +912,8 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "DOMAIN_REF_CORRECTED"
     },
     {
       "id": "SP-blueedge-0022",
@@ -845,16 +966,17 @@
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
       "domain_refs": [
-        "DOMAIN-06"
+        "DOMAIN-16"
       ],
       "structural_refs": {
         "capability_id": "CAP-006",
         "capability_name": "Operations & Compliance",
-        "domain_id": "DOMAIN-06",
+        "domain_id": "DOMAIN-16",
         "capability_type": "ENABLING",
         "component_count": 10,
         "direct_evidence_components": 10,
-        "weakly_grounded": false
+        "weakly_grounded": false,
+        "domain_id_pre_enrichment": "DOMAIN-06"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -862,7 +984,8 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "DOMAIN_REF_CORRECTED"
     },
     {
       "id": "SP-blueedge-0024",
@@ -880,16 +1003,17 @@
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
       "domain_refs": [
-        "DOMAIN-07"
+        "DOMAIN-15"
       ],
       "structural_refs": {
         "capability_id": "CAP-007",
         "capability_name": "EV & Energy",
-        "domain_id": "DOMAIN-07",
+        "domain_id": "DOMAIN-15",
         "capability_type": "CORE",
         "component_count": 4,
         "direct_evidence_components": 4,
-        "weakly_grounded": false
+        "weakly_grounded": false,
+        "domain_id_pre_enrichment": "DOMAIN-07"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -897,7 +1021,8 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "DOMAIN_REF_CORRECTED"
     },
     {
       "id": "SP-blueedge-0025",
@@ -915,16 +1040,17 @@
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
       "domain_refs": [
-        "DOMAIN-08"
+        "DOMAIN-12"
       ],
       "structural_refs": {
         "capability_id": "CAP-008",
         "capability_name": "SaaS & Multi-Tenant",
-        "domain_id": "DOMAIN-08",
+        "domain_id": "DOMAIN-12",
         "capability_type": "CORE",
         "component_count": 4,
         "direct_evidence_components": 4,
-        "weakly_grounded": false
+        "weakly_grounded": false,
+        "domain_id_pre_enrichment": "DOMAIN-08"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -932,7 +1058,8 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "DOMAIN_REF_CORRECTED"
     },
     {
       "id": "SP-blueedge-0026",
@@ -950,16 +1077,17 @@
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
       "domain_refs": [
-        "DOMAIN-09"
+        "DOMAIN-13"
       ],
       "structural_refs": {
         "capability_id": "CAP-009",
         "capability_name": "Integration & Ecosystem",
-        "domain_id": "DOMAIN-09",
+        "domain_id": "DOMAIN-13",
         "capability_type": "INFRASTRUCTURE",
         "component_count": 4,
         "direct_evidence_components": 4,
-        "weakly_grounded": false
+        "weakly_grounded": false,
+        "domain_id_pre_enrichment": "DOMAIN-09"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -967,7 +1095,8 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "DOMAIN_REF_CORRECTED"
     },
     {
       "id": "SP-blueedge-0027",
@@ -985,16 +1114,17 @@
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
       "domain_refs": [
-        "DOMAIN-10"
+        "DOMAIN-09"
       ],
       "structural_refs": {
         "capability_id": "CAP-010",
         "capability_name": "People & Access",
-        "domain_id": "DOMAIN-10",
+        "domain_id": "DOMAIN-09",
         "capability_type": "CORE",
         "component_count": 8,
         "direct_evidence_components": 8,
-        "weakly_grounded": false
+        "weakly_grounded": false,
+        "domain_id_pre_enrichment": "DOMAIN-10"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -1002,7 +1132,8 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "DOMAIN_REF_CORRECTED"
     },
     {
       "id": "SP-blueedge-0028",
@@ -1020,16 +1151,17 @@
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
       "domain_refs": [
-        "DOMAIN-11"
+        "DOMAIN-17"
       ],
       "structural_refs": {
         "capability_id": "CAP-011",
         "capability_name": "Lifecycle & Market",
-        "domain_id": "DOMAIN-11",
+        "domain_id": "DOMAIN-17",
         "capability_type": "ENABLING",
         "component_count": 6,
         "direct_evidence_components": 6,
-        "weakly_grounded": false
+        "weakly_grounded": false,
+        "domain_id_pre_enrichment": "DOMAIN-11"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -1037,7 +1169,8 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "DOMAIN_REF_CORRECTED"
     },
     {
       "id": "SP-blueedge-0029",
@@ -1055,16 +1188,17 @@
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
       "domain_refs": [
-        "DOMAIN-12"
+        "DOMAIN-10"
       ],
       "structural_refs": {
         "capability_id": "CAP-012",
         "capability_name": "Infrastructure & Shared",
-        "domain_id": "DOMAIN-12",
+        "domain_id": "DOMAIN-10",
         "capability_type": "INFRASTRUCTURE",
         "component_count": 6,
         "direct_evidence_components": 6,
-        "weakly_grounded": false
+        "weakly_grounded": false,
+        "domain_id_pre_enrichment": "DOMAIN-12"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -1072,7 +1206,8 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "DOMAIN_REF_CORRECTED"
     },
     {
       "id": "SP-blueedge-0030",
@@ -1125,16 +1260,17 @@
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
       "domain_refs": [
-        "DOMAIN-14"
+        "DOMAIN-01"
       ],
       "structural_refs": {
         "capability_id": "CAP-014",
         "capability_name": "Vehicle Sensor Collection",
-        "domain_id": "DOMAIN-14",
+        "domain_id": "DOMAIN-01",
         "capability_type": "CORE",
         "component_count": 8,
         "direct_evidence_components": 8,
-        "weakly_grounded": false
+        "weakly_grounded": false,
+        "domain_id_pre_enrichment": "DOMAIN-14"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -1142,7 +1278,8 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "DOMAIN_REF_CORRECTED"
     },
     {
       "id": "SP-blueedge-0032",
@@ -1160,16 +1297,17 @@
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
       "domain_refs": [
-        "DOMAIN-14"
+        "DOMAIN-01"
       ],
       "structural_refs": {
         "capability_id": "CAP-015",
         "capability_name": "SVG Device Hardware Platform",
-        "domain_id": "DOMAIN-14",
+        "domain_id": "DOMAIN-01",
         "capability_type": "CORE",
         "component_count": 6,
         "direct_evidence_components": 6,
-        "weakly_grounded": false
+        "weakly_grounded": false,
+        "domain_id_pre_enrichment": "DOMAIN-14"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -1177,7 +1315,8 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "DOMAIN_REF_CORRECTED"
     },
     {
       "id": "SP-blueedge-0033",
@@ -1195,16 +1334,17 @@
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
       "domain_refs": [
-        "DOMAIN-15"
+        "DOMAIN-02"
       ],
       "structural_refs": {
         "capability_id": "CAP-016",
         "capability_name": "Stream Processing Infrastructure",
-        "domain_id": "DOMAIN-15",
+        "domain_id": "DOMAIN-02",
         "capability_type": "INFRASTRUCTURE",
         "component_count": 3,
         "direct_evidence_components": 3,
-        "weakly_grounded": false
+        "weakly_grounded": false,
+        "domain_id_pre_enrichment": "DOMAIN-15"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -1212,7 +1352,8 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "DOMAIN_REF_CORRECTED"
     },
     {
       "id": "SP-blueedge-0034",
@@ -1298,16 +1439,17 @@
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
       "domain_refs": [
-        "DOMAIN-12"
+        "DOMAIN-10"
       ],
       "structural_refs": {
         "capability_id": "CAP-019",
         "capability_name": "Data Persistence Layer",
-        "domain_id": "DOMAIN-12",
+        "domain_id": "DOMAIN-10",
         "capability_type": "CORE",
         "component_count": 4,
         "direct_evidence_components": 4,
-        "weakly_grounded": false
+        "weakly_grounded": false,
+        "domain_id_pre_enrichment": "DOMAIN-12"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
@@ -1315,7 +1457,8 @@
       "reconciliation_state": "NOVEL",
       "review_action": "ACCEPTED",
       "reviewed_at": "2026-05-22T20:00:00Z",
-      "reviewed_by": "operator:krayu"
+      "reviewed_by": "operator:krayu",
+      "enrichment_action": "DOMAIN_REF_CORRECTED"
     },
     {
       "id": "SP-blueedge-0037",

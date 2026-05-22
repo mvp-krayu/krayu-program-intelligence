@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.0",
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-04",
+  "timestamp": "2026-05-22T21:00:00Z",
+  "evidence_sources": [
+    {
+      "file": "BlueEdge_Unified_Architecture_v3_23_0.html",
+      "path": "clients/blueedge/sqo/evidence/blueedge_explicit_html_rebase_01/BlueEdge_Unified_Architecture_v3_23_0.html",
+      "size_bytes": 89642,
+      "type": "HTML_ARCHITECTURE_DOCUMENT",
+      "domains_evidenced": 16,
+      "sdc_extraction": "run_blueedge_sdc_validation_01"
+    },
+    {
+      "file": "Blue_Edge_PMO_Dashboard.html",
+      "path": "clients/blueedge/sqo/evidence/blueedge_explicit_html_rebase_01/Blue_Edge_PMO_Dashboard.html",
+      "size_bytes": 364637,
+      "type": "HTML_PMO_DASHBOARD",
+      "domains_evidenced": 0,
+      "sdc_extraction": "run_blueedge_sdc_validation_01",
+      "note": "PMO dashboard provides project/portfolio evidence, not domain structural evidence"
+    },
+    {
+      "file": "BlueEdge_Competitive_Dashboard_Feb2026.html",
+      "path": "clients/blueedge/sqo/evidence/blueedge_explicit_html_rebase_01/BlueEdge_Competitive_Dashboard_Feb2026.html",
+      "size_bytes": 51135,
+      "type": "HTML_COMPETITIVE_DASHBOARD",
+      "domains_evidenced": 0,
+      "sdc_extraction": "run_blueedge_sdc_validation_01",
+      "note": "Competitive dashboard provides market positioning evidence, not domain structural evidence"
+    }
+  ],
+  "total_evidence_bytes": 505414,
+  "domain_name_mapping": {
+    "DOMAIN-01": {
+      "sdc_id": "DOMAIN-14",
+      "name": "Edge Data Acquisition",
+      "match": "EXACT"
+    },
+    "DOMAIN-02": {
+      "sdc_id": "DOMAIN-15",
+      "name": "Telemetry Transport and Messaging",
+      "match": "EXACT"
+    },
+    "DOMAIN-03": {
+      "sdc_id": "DOMAIN-01",
+      "name": "Fleet Core Operations",
+      "match": "EXACT"
+    },
+    "DOMAIN-04": {
+      "sdc_id": "DOMAIN-02",
+      "name": "Fleet Vertical Extensions",
+      "match": "EXACT"
+    },
+    "DOMAIN-05": {
+      "sdc_id": null,
+      "name": "Analytics and Intelligence",
+      "match": "NO_SDC_MATCH",
+      "note": "SDC DOMAIN-05 is 'Blockchain and Data Provenance' — different semantic scope"
+    },
+    "DOMAIN-06": {
+      "sdc_id": "DOMAIN-04",
+      "name": "AI/ML Intelligence Layer",
+      "match": "EXACT"
+    },
+    "DOMAIN-07": {
+      "sdc_id": "DOMAIN-03",
+      "name": "Sensor and Security Ingestion",
+      "match": "EXACT"
+    },
+    "DOMAIN-08": {
+      "sdc_id": null,
+      "name": "Real-Time Streaming and Gateway",
+      "match": "NO_SDC_MATCH",
+      "note": "No SDC domain with matching name. SDC-17 'Streaming Infrastructure' is partial but DERIVED."
+    },
+    "DOMAIN-09": {
+      "sdc_id": "DOMAIN-10",
+      "name": "Access Control and Identity",
+      "match": "EXACT"
+    },
+    "DOMAIN-10": {
+      "sdc_id": "DOMAIN-12",
+      "name": "Platform Infrastructure and Data",
+      "match": "EXACT"
+    },
+    "DOMAIN-11": {
+      "sdc_id": null,
+      "name": "Event-Driven Architecture",
+      "match": "NO_SDC_MATCH",
+      "note": "No SDC domain with matching name. SDC-11 is 'Extended Operations and Driver Services'."
+    },
+    "DOMAIN-12": {
+      "sdc_id": "DOMAIN-08",
+      "name": "SaaS Platform Layer",
+      "match": "EXACT"
+    },
+    "DOMAIN-13": {
+      "sdc_id": "DOMAIN-09",
+      "name": "External Integration",
+      "match": "EXACT"
+    },
+    "DOMAIN-14": {
+      "sdc_id": "DOMAIN-16",
+      "name": "Frontend Application",
+      "match": "EXACT"
+    },
+    "DOMAIN-15": {
+      "sdc_id": "DOMAIN-07",
+      "name": "EV and Electrification",
+      "match": "EXACT"
+    },
+    "DOMAIN-16": {
+      "sdc_id": "DOMAIN-06",
+      "name": "Operational Engineering",
+      "match": "EXACT"
+    },
+    "DOMAIN-17": {
+      "sdc_id": "DOMAIN-11",
+      "name": "Extended Operations and Driver Services",
+      "match": "EXACT"
+    }
+  }
+}

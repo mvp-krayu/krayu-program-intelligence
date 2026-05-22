@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "checkpoint_id": "checkpoint_04_enrichment",
+  "semantic_phase": "STRENGTHENING",
+  "description": "After evidence enrichment — substrate enriches, debt evolves",
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-04",
+  "status": "FROZEN",
+  "frozen_at": "2026-05-22T21:00:00Z",
+  "enrichment_state": {
+    "primary_mechanism": "Domain ID correction via semantic name matching",
+    "secondary_mechanism": "Confidence recalculation from corrected component evidence",
+    "domains_corrected": 12,
+    "domains_confirmed": 1,
+    "domains_no_sdc_match": 3,
+    "capabilities_domain_corrected": 15,
+    "total_enrichment_events": 31,
+    "mean_confidence_before": 0.728,
+    "mean_confidence_after": 0.741,
+    "path_b_limitation": "No code graph available. Enrichment ceiling bounded by SDC HTML extraction."
+  },
+  "domain_id_correction_summary": {
+    "problem": "Proposition bridge matched canonical→SDC domains by ID. IDs use different numbering schemes.",
+    "solution": "Semantic name matching — match canonical domain names to SDC domain names",
+    "result": "12 of 16 accepted domains received corrected component counts. 3 domains (DOMAIN-05, DOMAIN-08, DOMAIN-11) have NO SDC name match.",
+    "domains_with_increased_components": ["DOMAIN-01 (7→14)", "DOMAIN-03 (3→7)", "DOMAIN-09 (4→8)", "DOMAIN-10 (8→10)", "DOMAIN-13 (2→4)", "DOMAIN-14 (14→61)", "DOMAIN-15 (3→4)"],
+    "domains_with_decreased_components": ["DOMAIN-04 (6→3)", "DOMAIN-06 (10→6)", "DOMAIN-07 (4→3)", "DOMAIN-12 (10→4)", "DOMAIN-16 (61→10)"],
+    "domains_with_no_sdc_match": ["DOMAIN-05 Analytics and Intelligence", "DOMAIN-08 Real-Time Streaming and Gateway", "DOMAIN-11 Event-Driven Architecture"]
+  },
+  "evidence_refs": {
+    "enrichment_log": "clients/blueedge/chronicle/evidence/enrichment_log.json",
+    "evidence_manifest": "clients/blueedge/chronicle/evidence/evidence_manifest.json",
+    "updated_propositions": "clients/blueedge/chronicle/propositions/semantic_propositions.json"
+  },
+  "predecessor": "checkpoint_03_governance",
+  "successor": "checkpoint_05_debt"
+}

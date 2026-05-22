@@ -2,8 +2,8 @@
   "schema_version": "1.0",
   "chronicle_id": "blueedge-governed-cognitive-replay-chronicle",
   "client": "blueedge",
-  "accumulated_at": "2026-05-22T20:00:00Z",
-  "total_objects": 5,
+  "accumulated_at": "2026-05-22T21:00:00Z",
+  "total_objects": 7,
   "objects": [
     {
       "spine_id": "SPINE-RC01-EO-001",
@@ -149,6 +149,52 @@
         },
         "significance": "First genuine operator governance review on BlueEdge specimen. Exercises full SQO Authority Workflow lifecycle (ACCEPT/CONTEST/ARBITRATE/REJECT). Governance friction surfaced structural defect in proposition bridge (domain ID matching) — the system cannot self-correct without operator challenge.",
         "ready_for": "RC-04 Evidence Enrichment from HTML Documents"
+      }
+    },
+    {
+      "spine_id": "SPINE-RC04-EO-001",
+      "spine_class": "evidence_object",
+      "checkpoint_ref": "checkpoint_04_enrichment",
+      "timestamp": "2026-05-22T21:00:00Z",
+      "content": {
+        "evidence_type": "DOMAIN_ID_CORRECTION_ENRICHMENT",
+        "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-04",
+        "enrichment_summary": {
+          "primary_mechanism": "Semantic name matching between canonical CSR and SDC candidate CSR domains",
+          "domains_corrected": 12,
+          "domains_confirmed": 1,
+          "domains_no_sdc_match": 3,
+          "capabilities_domain_corrected": 15,
+          "total_enrichment_events": 31,
+          "mean_confidence_before": 0.728,
+          "mean_confidence_after": 0.741,
+          "path_b_limitation": "No code graph. Enrichment bounded by SDC HTML extraction."
+        },
+        "finding_ref": "GF-RC03-001 (Domain ID mismatch)",
+        "evidence_refs": {
+          "enrichment_log": "clients/blueedge/chronicle/evidence/enrichment_log.json",
+          "evidence_manifest": "clients/blueedge/chronicle/evidence/evidence_manifest.json"
+        }
+      }
+    },
+    {
+      "spine_id": "SPINE-RC04-EO-002",
+      "spine_class": "evidence_object",
+      "checkpoint_ref": "checkpoint_05_debt",
+      "timestamp": "2026-05-22T21:00:00Z",
+      "content": {
+        "evidence_type": "DEBT_EVOLUTION_ASSESSMENT",
+        "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-04",
+        "debt_summary": {
+          "total_items": 15,
+          "improved": 4,
+          "unchanged": 5,
+          "worsened": 6,
+          "resolved": 0,
+          "trajectory": "HONEST_LIMITATION",
+          "note": "Enrichment produced more accurate evidence, not uniformly better evidence. The system is now more honest about what PATH B can prove."
+        },
+        "evidence_ref": "clients/blueedge/chronicle/governance/debt_evolution.json"
       }
     }
   ]
