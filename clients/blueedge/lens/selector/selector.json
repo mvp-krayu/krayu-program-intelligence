@@ -1,7 +1,7 @@
 {
   "client": "blueedge",
-  "current_run": "run_be_orchestrated_fixup_01",
-  "updated_at": "2026-05-17T14:25:09.811648+00:00",
+  "current_run": "run_blueedge_genesis_e2e_01",
+  "updated_at": "2026-05-22T17:18:59.314429+00:00",
   "output_root": "clients/blueedge/lens",
   "navigation_base": "/api/report-file",
   "run_status": {

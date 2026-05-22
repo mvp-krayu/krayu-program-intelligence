@@ -1,0 +1,39 @@
+{
+  "stream": "PI.BLUEEDGE.GENESIS-E2E-PARTIAL.01",
+  "changes": [
+    {"action": "MODIFIED", "path": "scripts/pios/run_client_pipeline.py", "detail": "Phase 8b: source_manifest fallback with SOURCE_MANIFEST_EXTERNAL_DEPENDENCY classification; VR-09 summary.status fallback"},
+    {"action": "MODIFIED", "path": "scripts/pios/chronicle/genesis_compiler.py", "detail": "_classify_corridor_type() from phase statuses; _render_manifest_ribbon() phase_statuses param"},
+    {"action": "CREATED", "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/intake/intake_manifest.json", "detail": "Intake manifest"},
+    {"action": "CREATED", "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/intake/source_boundary_validation.json", "detail": "Source boundary validation"},
+    {"action": "CREATED", "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/intake/source_checksum_validation.json", "detail": "SHA256 checksum validation"},
+    {"action": "CREATED", "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/intake/source_inventory.json", "detail": "741 files inventoried"},
+    {"action": "CREATED", "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/intake/canonical_repo/", "detail": "741 files extracted from archive"},
+    {"action": "CREATED", "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/structure/40.2/structural_node_inventory.json", "detail": "944 nodes"},
+    {"action": "CREATED", "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/structure/40.3/structural_topology_log.json", "detail": "934 edges, 0 IMPORTS"},
+    {"action": "CREATED", "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/structure/40.4/canonical_topology.json", "detail": "10 clusters"},
+    {"action": "CREATED", "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/structure/40.2r/structural_relevance.json", "detail": "830 PRIMARY, 80 SUPPORT, 34 PERIPHERAL"},
+    {"action": "CREATED", "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/structure/40.2r/structural_node_inventory_filtered.json", "detail": "Filtered inventory"},
+    {"action": "CREATED", "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/structure/40.3r/structural_topology_log_filtered.json", "detail": "0 edges after filtering"},
+    {"action": "CREATED", "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/binding/binding_envelope.json", "detail": "From FastAPI conformance"},
+    {"action": "CREATED", "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/75.x/", "detail": "3 pressure/condition state files from conformance"},
+    {"action": "CREATED", "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/41.x/", "detail": "2 projection files from conformance"},
+    {"action": "CREATED", "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/vault/", "detail": "9 vault artifacts + vault_manifest + vault_readiness"},
+    {"action": "CREATED", "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/semantic/topology/semantic_topology_model.json", "detail": "CSR semantic topology"},
+    {"action": "CREATED", "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/spine/spine_objects.json", "detail": "6 evidence objects, 0 propositions, 0 hero moments, 4 known gaps"},
+    {"action": "CREATED", "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/learning_events.jsonl", "detail": "LRNE-BE-0001: TypeScript import blindness"},
+    {"action": "CREATED", "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/chronicle/GENESIS_CHRONICLE.html", "detail": "86KB, PARTIAL_WITH_OPEN_GAPS"},
+    {"action": "CREATED", "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/chronicle/compilation_manifest.json", "detail": "Phase statuses, corridor type"},
+    {"action": "CREATED", "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/chronicle/chronicle_events.jsonl", "detail": "73 events"},
+    {"action": "CREATED", "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/chronicle/checkpoints/", "detail": "17 checkpoint files"},
+    {"action": "MODIFIED", "path": "clients/blueedge/lens/selector/selector.json", "detail": "current_run → run_blueedge_genesis_e2e_01"},
+    {"action": "MODIFIED", "path": "clients/blueedge/lens/selector/available_runs.json", "detail": "Added run_blueedge_genesis_e2e_01"},
+    {"action": "MODIFIED", "path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/chronicle/GENESIS_CHRONICLE.html", "detail": "Recompiled with corridor_type derivation"},
+    {"action": "MODIFIED", "path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/chronicle/GENESIS_CHRONICLE.html", "detail": "Recompiled with corridor_type derivation"},
+    {"action": "CREATED", "path": "docs/pios/PI.BLUEEDGE.GENESIS-E2E-PARTIAL.01/", "detail": "Stream governance artifacts"}
+  ],
+  "summary": {
+    "created": 24,
+    "modified": 5,
+    "total": 29
+  }
+}
