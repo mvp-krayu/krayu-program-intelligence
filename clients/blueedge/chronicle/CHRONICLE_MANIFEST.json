@@ -57,8 +57,9 @@
     "RC-06": {
       "name": "S2 Re-Advancement (Bridge → Governed)",
       "classification": "G1",
-      "status": "PENDING",
-      "checkpoint": "checkpoint_07_advancement"
+      "status": "COMPLETE",
+      "checkpoint": "checkpoint_07_advancement",
+      "completed_at": "2026-05-22T23:00:00Z"
     },
     "RC-07": {
       "name": "Cross-Specimen Convergence Observation",
@@ -124,9 +125,9 @@
     },
     "checkpoint_07_advancement": {
       "semantic_phase": "QUALIFICATION",
-      "description": "After S2 re-advancement — the system earns its state transition",
+      "description": "After S2 re-advancement — S2_BRIDGE → S2_GOVERNED within post-genesis replay corridor",
       "stream": "RC-06",
-      "status": "PENDING"
+      "status": "COMPLETE"
     },
     "checkpoint_08_convergence": {
       "semantic_phase": "CONVERGENCE",
@@ -198,7 +199,7 @@
     }
   ],
   "proof_object_count": 0,
-  "spine_object_count": 8,
+  "spine_object_count": 9,
   "narrative_chapter_count": 0,
   "media_capture_count": 0
 }

@@ -2,17 +2,33 @@
   "client": "blueedge",
   "run_id": "run_blueedge_productized_01_fixed",
   "s_level": "S2",
+  "qualification_provenance": "GOVERNED_REPLAY_QUALIFICATION",
   "authority_ceiling": "L3",
   "promotion_eligible": false,
-  "generated_at": "2026-05-20T00:00:00.000Z",
-  "migration_provenance": {
-    "type": "GOVERNANCE_PROJECTION",
-    "source_stream": "PI.SQO.LEGACY-QUALIFICATION-BRIDGE.01",
-    "source_artifact": "artifacts/sqo/blueedge/run_blueedge_productized_01_fixed/qualification_state.v1.json",
-    "projection_class": "LEGACY_S2_TO_SQO_NATIVE",
+  "generated_at": "2026-05-22T23:00:00.000Z",
+  "governance_provenance": {
+    "type": "GOVERNED_REPLAY_QUALIFICATION",
+    "qualification_corridor": "POST_GENESIS_SEMANTIC_REPLAY",
+    "source_stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE",
+    "advancement_stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-06",
+    "chronicle_id": "blueedge-governed-cognitive-replay-chronicle",
     "evidence_mutated": false,
     "qualification_recomputed": false,
-    "fabricated_history": false
+    "fabricated_history": false,
+    "prior_provenance": {
+      "type": "GOVERNANCE_PROJECTION",
+      "source_stream": "PI.SQO.LEGACY-QUALIFICATION-BRIDGE.01",
+      "replaced_at": "2026-05-22T23:00:00.000Z",
+      "replaced_by": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-06"
+    },
+    "governed_lifecycle_lineage": {
+      "proposition_derivation": "RC-02 — 85 propositions via PATH B proposition bridge",
+      "operator_review": "RC-03 — 71 accepted, 14 rejected, 9 contested→arbitrated, 5 governance findings",
+      "evidence_enrichment": "RC-04 — domain ID correction via semantic name matching, debt evolution assessment",
+      "deterministic_revalidation": "RC-05 — 48/48 PASS across 9 phases",
+      "advancement": "RC-06 — bridge provenance replaced by governed lifecycle lineage"
+    },
+    "replay_corridor_boundary": "This qualification was earned within the post-genesis semantic replay corridor. It validates governed lifecycle completion on already-materialized semantic substrates (SDC outputs, CSR domains, HTML evidence, vault claims). Full onboarding-origin cognitive genesis remains future upstream work."
   },
   "promotion_lineage": {
     "initial_state": "S0",
@@ -34,12 +50,35 @@
         "actor_id": "system:pipeline",
         "action": "legacy_qualification_bridge",
         "authority_domain": "governance_authority",
-        "audit_event_ref": "EVT-BRIDGE-002"
+        "audit_event_ref": "EVT-BRIDGE-002",
+        "superseded_by": "EVT-REPLAY-001"
+      },
+      {
+        "from": "S2_BRIDGE",
+        "to": "S2_GOVERNED",
+        "timestamp": "2026-05-22T23:00:00.000Z",
+        "actor_id": "operator:krayu",
+        "action": "governed_replay_qualification",
+        "authority_domain": "governance_authority",
+        "audit_event_ref": "EVT-REPLAY-001",
+        "qualification_type": "POST_GENESIS_SEMANTIC_REPLAY",
+        "governance_evidence": {
+          "propositions": 85,
+          "accepted": 71,
+          "rejected": 14,
+          "governance_events": 94,
+          "governance_findings": 5,
+          "enrichment_events": 31,
+          "revalidation_checks": 48,
+          "revalidation_result": "VALID",
+          "checkpoints_frozen": 7,
+          "spine_objects": 8
+        }
       }
     ]
   },
-  "last_transition_actor": "system:pipeline",
-  "last_transition_reason": "Governance projection from validated legacy S2 qualification — PI.SQO.LEGACY-QUALIFICATION-BRIDGE.01",
+  "last_transition_actor": "operator:krayu",
+  "last_transition_reason": "Bridge provenance replaced by governed lifecycle lineage. Full governed replay corridor completed: proposition derivation (RC-02), operator review with genuine friction (RC-03), evidence enrichment (RC-04), deterministic revalidation 48/48 PASS (RC-05). Post-genesis semantic replay corridor — not full onboarding-origin genesis.",
   "lanes": {
     "evidence_intake": {
       "state": "COMPLETE",
@@ -55,25 +94,23 @@
       "state": "ACCEPTED",
       "authority": "L3_CANDIDATE",
       "blocking_gaps": [],
-      "migration_note": "CSR authored prior to SQO operator workflow. 17 domains accepted via legacy computational qualification."
+      "governance_note": "85 propositions derived via PATH B proposition bridge. 71 accepted, 14 rejected through governed operator review."
     },
     "review_queue": {
       "state": "RESOLVED",
-      "authority": "LEGACY_COMPUTATIONAL",
+      "authority": "GOVERNED_OPERATOR_REVIEW",
       "blocking_gaps": [],
-      "migration_note": "Pre-dates SQO operator review workflow. Qualification certified via replay verification."
+      "governance_note": "Governed operator review exercised full SQO Authority Workflow: ACCEPT (62 direct), CONTEST (9), ARBITRATE (9→accept), REJECT (14). 94 governance events, 5 findings."
     },
     "crosswalk": {
       "state": "ACCEPTED",
       "authority": "L3_CORRESPONDENCE",
-      "blocking_gaps": [],
-      "migration_note": "Crosswalk operational. 13 DOM→DOMAIN correspondences."
+      "blocking_gaps": []
     },
     "reconciliation": {
       "state": "ACCEPTED",
       "authority": "L3_RECONCILIATION",
-      "blocking_gaps": [],
-      "migration_note": "Reconciliation complete. 4/17 L5, 0.235 ratio. 15 debt items registered."
+      "blocking_gaps": []
     },
     "qualification_debt": {
       "state": "ACTIVE",
@@ -81,19 +118,18 @@
       "blocking_gaps": [
         "GROUNDING_DEBT_BLOCKS_S3"
       ],
-      "migration_note": "15 debt items (13 grounding_gap/HIGH blocking S3, 2 continuity_gap/MEDIUM)."
+      "governance_note": "15 debt items assessed. Debt evolution: 4 improved, 5 unchanged, 6 worsened, 0 resolved. All block S3 requiring L5 authority. PATH B cannot provide L5 — honest limitation."
     },
     "promotion_decision": {
       "state": "APPROVED",
-      "authority": "LEGACY_CERTIFIED",
+      "authority": "GOVERNED_REPLAY_QUALIFICATION",
       "blocking_gaps": [],
-      "migration_note": "S2 qualification certified via deterministic replay. Governance projection bridge."
+      "governance_note": "S2 qualification confirmed via governed replay corridor. Deterministic revalidation 48/48 PASS."
     },
     "runtime_projection": {
       "state": "OPERATIONAL",
       "authority": "L3_QUALIFIED",
-      "blocking_gaps": [],
-      "migration_note": "LENS v2 + SQO cockpit operational."
+      "blocking_gaps": []
     }
   },
   "insufficiency_assessment": {
@@ -116,6 +152,7 @@
   },
   "audit_event_refs": [
     "EVT-BRIDGE-001",
-    "EVT-BRIDGE-002"
+    "EVT-BRIDGE-002",
+    "EVT-REPLAY-001"
   ]
 }

@@ -1,0 +1,81 @@
+{
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-06",
+  "classification": "G1",
+  "timestamp": "2026-05-22T23:00:00Z",
+  "total_checks": 14,
+  "passed": 14,
+  "failed": 0,
+  "result": "VALID",
+  "checks": [
+    {
+      "check": "rc05_checkpoint_frozen",
+      "description": "checkpoint_06_revalidation.json exists and status is FROZEN",
+      "result": "PASS"
+    },
+    {
+      "check": "revalidation_valid",
+      "description": "Revalidation result is VALID (48/48 PASS)",
+      "result": "PASS"
+    },
+    {
+      "check": "promotion_state_updated",
+      "description": "promotion_state.json updated with GOVERNED_REPLAY_QUALIFICATION provenance",
+      "result": "PASS"
+    },
+    {
+      "check": "prior_provenance_preserved",
+      "description": "Original GOVERNANCE_PROJECTION provenance preserved in prior_provenance field",
+      "result": "PASS"
+    },
+    {
+      "check": "bridge_transition_superseded",
+      "description": "EVT-BRIDGE-002 marked superseded_by EVT-REPLAY-001",
+      "result": "PASS"
+    },
+    {
+      "check": "operator_actor",
+      "description": "last_transition_actor is operator:krayu (not system:pipeline)",
+      "result": "PASS"
+    },
+    {
+      "check": "s_level_unchanged",
+      "description": "S-level remains S2 (no unauthorized S3 advancement)",
+      "result": "PASS"
+    },
+    {
+      "check": "corridor_boundary_documented",
+      "description": "replay_corridor_boundary field documents post-genesis scope limitation",
+      "result": "PASS"
+    },
+    {
+      "check": "checkpoint_07_created",
+      "description": "checkpoint_07_advancement.json created with status FROZEN",
+      "result": "PASS"
+    },
+    {
+      "check": "spine_object_emitted",
+      "description": "SPINE-RC06-QT-001 qualification_transition emitted",
+      "result": "PASS"
+    },
+    {
+      "check": "spine_objects_updated",
+      "description": "spine_objects.json updated to 9 objects",
+      "result": "PASS"
+    },
+    {
+      "check": "manifest_updated",
+      "description": "CHRONICLE_MANIFEST.json updated: RC-06 COMPLETE, checkpoint_07 COMPLETE, spine_object_count 9",
+      "result": "PASS"
+    },
+    {
+      "check": "netbox_not_mutated",
+      "description": "No files under clients/netbox/ modified",
+      "result": "PASS"
+    },
+    {
+      "check": "blockers_unchanged",
+      "description": "15 qualification blockers unchanged — S3 blocks preserved",
+      "result": "PASS"
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-06",
+  "classification": "G1",
+  "timestamp": "2026-05-22T23:00:00Z",
+  "files": [
+    {
+      "path": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/sqo/promotion_state.json",
+      "action": "MODIFIED",
+      "description": "S2_BRIDGE → S2_GOVERNED: governance_provenance replaced, EVT-REPLAY-001 added, operator actor, prior provenance preserved"
+    },
+    {
+      "path": "clients/blueedge/chronicle/checkpoints/checkpoint_07_advancement.json",
+      "action": "CREATED",
+      "description": "QUALIFICATION checkpoint — S2 re-advancement state frozen"
+    },
+    {
+      "path": "clients/blueedge/chronicle/spine/spine_objects.json",
+      "action": "MODIFIED",
+      "description": "SPINE-RC06-QT-001 (qualification_transition) added, total 9 objects"
+    },
+    {
+      "path": "clients/blueedge/chronicle/spine/spine_index.json",
+      "action": "MODIFIED",
+      "description": "Updated with checkpoint_07 and SPINE-RC06-QT-001 references"
+    },
+    {
+      "path": "clients/blueedge/chronicle/CHRONICLE_MANIFEST.json",
+      "action": "MODIFIED",
+      "description": "RC-06 → COMPLETE, checkpoint_07 → COMPLETE, spine_object_count → 9"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-06/execution_report.md",
+      "action": "CREATED",
+      "description": "G1 execution report with scope boundary and corridor summary"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-06/validation_log.json",
+      "action": "CREATED",
+      "description": "14/14 validation checks PASS"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-06/file_changes.json",
+      "action": "CREATED",
+      "description": "This file"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-06/CLOSURE.md",
+      "action": "CREATED",
+      "description": "G1 stream closure with Section 10 (Architecture Memory Propagation)"
+    }
+  ],
+  "total_files": 9
+}
