@@ -1,0 +1,256 @@
+{
+  "document_type": "AI_CORRECTIVE_PROPOSAL",
+  "stream": "PI.BLUEEDGE.GENESIS-CORRECTION-CORRIDORS.01",
+  "classification": "G2",
+  "authority_ceiling": "L3",
+  "governance_state": "CANDIDATE",
+  "generated_at": "2026-05-22T17:30:00Z",
+  "evidence_source": {
+    "chronicle": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/chronicle/compilation_manifest.json",
+    "corridor_type": "PARTIAL_WITH_OPEN_GAPS",
+    "phase_statuses": {
+      "DISCOVERY": "OPEN_GAP",
+      "EMERGENCE": "OPEN_GAP",
+      "FORMATION": "NOT_EXERCISED",
+      "TENSION": "NOT_EXERCISED",
+      "STRENGTHENING": "ACTIVE",
+      "STABILIZATION": "LAWFUL_SKIP",
+      "QUALIFICATION": "NOT_EXERCISED",
+      "CONVERGENCE": "NOT_ELIGIBLE",
+      "PROJECTION": "ACTIVE"
+    },
+    "known_gaps": [
+      "NO_CODE_GRAPH_40_3s",
+      "NO_CENTRALITY_40_3c",
+      "NO_PROPOSITIONS",
+      "NO_HERO_MOMENTS"
+    ],
+    "learning_events": ["LRNE-BE-0001"],
+    "external_dependencies": 4
+  },
+  "ai_goal_gap_analysis": {
+    "goal": "RICH_S2_BLUEEDGE_PROJECTION — BlueEdge with full PATH A + PATH B governed genesis, rich LENS projection, and S2 qualification via governed lifecycle",
+    "current_state": "PARTIAL_WITH_OPEN_GAPS — 17/17 pipeline phases pass, but 4 critical semantic phases not exercised due to upstream structural gaps",
+    "gap_chain": [
+      {
+        "gap_id": "GAP-TS-001",
+        "title": "TypeScript import blindness",
+        "layer": "L1 (Ingestion)",
+        "root_cause": "code_graph_feasibility.py uses Python ast module — cannot parse TypeScript",
+        "impact": "0 IMPORTS edges → no code graph (40.3s) → no centrality (40.3c) → no hero moments → degraded propositions → degraded governance friction → no revalidation → weakened S2 qualification evidence",
+        "blocks": ["GAP-CG-002", "GAP-CT-003", "GAP-HM-005"],
+        "evidence": "EO-BE-002 (PARTIAL_CONTAINMENT_ONLY), LRNE-BE-0001"
+      },
+      {
+        "gap_id": "GAP-CG-002",
+        "title": "Code graph absent (40.3s)",
+        "layer": "L1 (Ingestion)",
+        "root_cause": "GAP-TS-001 → no Python packages found → Phase 3.6 FAIL",
+        "impact": "No resolved import relationships for BlueEdge TypeScript files",
+        "blocks": ["GAP-CT-003"],
+        "evidence": "chronicle checkpoint_05_code_graph_enrichment"
+      },
+      {
+        "gap_id": "GAP-CT-003",
+        "title": "Centrality absent (40.3c)",
+        "layer": "L1 (Ingestion)",
+        "root_cause": "GAP-CG-002 → no 40.3s input → Phase 3.7 SKIP",
+        "impact": "No structural role classification, no centrality ranking, no hero moment evidence",
+        "blocks": ["GAP-HM-005"],
+        "evidence": "chronicle checkpoint_06_structural_centrality"
+      },
+      {
+        "gap_id": "GAP-SPE-004",
+        "title": "SPE propositions absent",
+        "layer": "L2-L3 (Core Derivation)",
+        "root_cause": "SPE requires reconciliation_state.json, BlueEdge uses grounding_state_v3 path. Two PATH A pipeline variants not yet unified.",
+        "impact": "0 propositions → FORMATION phase NOT_EXERCISED → no governance friction → TENSION NOT_EXERCISED → no revalidation material",
+        "blocks": [],
+        "evidence": "chronicle checkpoint_08_semantic_proposition, spine known_gaps"
+      },
+      {
+        "gap_id": "GAP-HM-005",
+        "title": "Hero moments absent",
+        "layer": "L2-L3 (Core Derivation)",
+        "root_cause": "GAP-CT-003 → hero_moment_detector has no centrality or code graph evidence",
+        "impact": "No structural surprises detected for BlueEdge",
+        "blocks": [],
+        "evidence": "spine hero_moments: []"
+      },
+      {
+        "gap_id": "GAP-FUSION-006",
+        "title": "PATH A/B Fusion not exercised",
+        "layer": "L2-L3 (Core Derivation)",
+        "root_cause": "No contract exists for fusing PATH A structural evidence with PATH B semantic ontology within a single governed pipeline run",
+        "impact": "BlueEdge has rich PATH B (17 domains, 42 capabilities, 89 components from RC streams) but genesis run cannot incorporate it. PATH A runs in isolation.",
+        "blocks": [],
+        "evidence": "BlueEdge has CSR (candidate_csr.json from SDC), grounding_state_v3 (10 CEUs at SOURCE_TRUTH), replay chronicle (REPLAY-CERTIFIED). None of this enters the genesis pipeline."
+      }
+    ]
+  },
+  "correction_corridors": [
+    {
+      "corridor_id": "CC-01",
+      "title": "TypeScript PATH A Enrichment",
+      "priority": 1,
+      "classification": "G1",
+      "estimated_complexity": "MEDIUM",
+      "goal": "Produce resolved IMPORTS edges for TypeScript files through 40.3s artifact contract",
+      "approach": {
+        "strategy": "Add TypeScript indexer to code_graph_feasibility.py alongside existing Python ast indexer. The 40.3s schema is already indexer-neutral — the contract does not change.",
+        "implementation_options": [
+          {
+            "option": "tree-sitter-typescript",
+            "pros": "C-native parser, no Node.js dependency, handles JSX/TSX, deterministic, well-maintained",
+            "cons": "Requires py-tree-sitter + tree-sitter-typescript grammar installation. Symbol resolution for path aliases (tsconfig.json paths) needs custom logic.",
+            "viability": "HIGH"
+          },
+          {
+            "option": "ts-morph (via subprocess)",
+            "pros": "Full TypeScript compiler API, accurate path resolution including tsconfig paths, handles re-exports",
+            "cons": "Requires Node.js, subprocess boundary, heavier dependency, non-deterministic install",
+            "viability": "MEDIUM"
+          },
+          {
+            "option": "regex-enhanced import scanning",
+            "pros": "Zero dependency, immediate implementation, extends existing pattern",
+            "cons": "Cannot resolve re-exports, path aliases, barrel imports. Quality ceiling well below ast-level extraction.",
+            "viability": "LOW — structurally insufficient for code-graph claims"
+          }
+        ],
+        "recommended": "tree-sitter-typescript — balances accuracy with deterministic, dependency-light operation"
+      },
+      "resolves_gaps": ["GAP-TS-001", "GAP-CG-002", "GAP-CT-003", "GAP-HM-005"],
+      "expected_evidence_uplift": {
+        "import_edges": "2040-3400 estimated (680 TS files × 3-5 imports avg, based on NetBox density)",
+        "centrality_ranking": "680 files ranked with structural role classification",
+        "hero_moments": "3-8 candidates estimated (based on TS module coupling patterns)",
+        "phase_status_changes": {
+          "DISCOVERY": "OPEN_GAP → COMPLETE",
+          "EMERGENCE": "OPEN_GAP → COMPLETE"
+        }
+      },
+      "dependencies": [],
+      "maturity_uplift_estimate": "DISCOVERY + EMERGENCE phases become COMPLETE. BlueEdge PATH A topology transforms from containment-only (934 CONTAINS, 0 IMPORTS) to structurally rich (~3000 IMPORTS + 934 CONTAINS).",
+      "replay_impact_assessment": "Non-breaking. Existing containment topology preserved. New IMPORTS edges are additive. 40.3s schema unchanged. Pipeline Phase 3.6 already handles graceful degradation.",
+      "governance_risk_assessment": "LOW. Indexer-neutral schema means the architecture does not change. Only the set of supported languages grows."
+    },
+    {
+      "corridor_id": "CC-02",
+      "title": "SPE Grounding-Path Bridge",
+      "priority": 2,
+      "classification": "G2",
+      "estimated_complexity": "LOW-MEDIUM",
+      "goal": "Enable SPE proposition derivation for specimens using grounding_state_v3 path (not reconciliation_state)",
+      "approach": {
+        "strategy": "SPE currently requires reconciliation_state.json to enumerate confirmed CEUs. BlueEdge uses grounding_state_v3.json with a different CEU inventory format. Two options:",
+        "implementation_options": [
+          {
+            "option": "SPE grounding adapter",
+            "pros": "Transforms grounding_state_v3 CEU format into SPE-consumable CEU list. Minimal change to SPE core. BlueEdge and future grounding-path clients immediately supported.",
+            "cons": "Adapter must handle grounding_state_v3 schema variations. Less CEU metadata than reconciliation (no evidence_anchors, no obligation lineage).",
+            "viability": "HIGH"
+          },
+          {
+            "option": "Reconciliation synthesis from grounding",
+            "pros": "Synthesizes a reconciliation_state.json from grounding_state_v3 data. SPE consumes it without modification. Already proven pattern (StackStorm Phase 5 fix).",
+            "cons": "Creates a derived artifact that may have incomplete fields. Synthesis is a projection — not genuine reconciliation.",
+            "viability": "HIGH — already proven in run_client_pipeline.py Phase 5"
+          }
+        ],
+        "recommended": "Reconciliation synthesis from grounding — already proven pattern, reuse _synthesize_ceu_registry_from_reconciliation() approach"
+      },
+      "resolves_gaps": ["GAP-SPE-004"],
+      "expected_evidence_uplift": {
+        "propositions": "30-50 estimated (10 CEUs × 3-5 propositions per CEU, similar to StackStorm density)",
+        "phase_status_changes": {
+          "FORMATION": "NOT_EXERCISED → COMPLETE"
+        }
+      },
+      "dependencies": ["CC-01 recommended but not required — propositions from centrality require CC-01, but grounding-tier propositions work without it"],
+      "maturity_uplift_estimate": "FORMATION phase becomes COMPLETE. BlueEdge gains semantic proposition corpus for governance review.",
+      "replay_impact_assessment": "Non-breaking. SPE already handles no-reconciliation gracefully (SKIP). Adding grounding support is additive.",
+      "governance_risk_assessment": "LOW. Propositions still CANDIDATE/L3. No authority escalation."
+    },
+    {
+      "corridor_id": "CC-03",
+      "title": "BlueEdge Full Genesis Re-Run",
+      "priority": 3,
+      "classification": "G2",
+      "estimated_complexity": "MEDIUM",
+      "goal": "Re-execute BlueEdge through complete pipeline with CC-01 + CC-02 corrections, producing FULL_COGNITIVE_GENESIS (or near-full) corridor",
+      "approach": {
+        "strategy": "Fresh pipeline execution with TypeScript parser (CC-01) and SPE grounding bridge (CC-02) operational. Followed by operator governance review (propositions), evidence enrichment (if possible from HTML evidence), revalidation, and S2 candidate assessment.",
+        "execution_sequence": [
+          "1. Fresh source extraction (same archive, same SHA256)",
+          "2. 40.2 structural scan → 40.3 topology (now with IMPORTS) → 40.4 clusters",
+          "3. 40.2r relevance → 40.3r filtered → 40.3s code graph (TypeScript) → 40.3c centrality",
+          "4. Phase 3c SPE with grounding bridge → propositions",
+          "5. Hero moment detection (now with centrality evidence)",
+          "6. Operator governance review of propositions (TENSION phase)",
+          "7. Evidence enrichment from 3 HTML files if SDC bridge available",
+          "8. Revalidation on enriched corpus",
+          "9. S2 candidate assessment — does BlueEdge qualify via governed genesis?",
+          "10. Genesis chronicle compilation — target: FULL_COGNITIVE_GENESIS"
+        ]
+      },
+      "resolves_gaps": ["All — comprehensive re-run after CC-01 + CC-02"],
+      "expected_evidence_uplift": {
+        "corridor_type": "PARTIAL_WITH_OPEN_GAPS → FULL_COGNITIVE_GENESIS (target) or PARTIAL_COGNITIVE_GENESIS (minimum)",
+        "phase_status_target": {
+          "DISCOVERY": "COMPLETE",
+          "EMERGENCE": "COMPLETE",
+          "FORMATION": "COMPLETE",
+          "TENSION": "COMPLETE (requires operator review)",
+          "STRENGTHENING": "COMPLETE (if HTML enrichment available) or ACTIVE",
+          "STABILIZATION": "COMPLETE (if revalidation passes)",
+          "QUALIFICATION": "COMPLETE (if S2 assessment passes) or NOT_EXERCISED",
+          "CONVERGENCE": "NOT_ELIGIBLE (single-specimen — requires GEN-6)",
+          "PROJECTION": "COMPLETE"
+        }
+      },
+      "dependencies": ["CC-01 (required)", "CC-02 (required)"],
+      "maturity_uplift_estimate": "BlueEdge transforms from PARTIAL_WITH_OPEN_GAPS (2/9 active, 2/9 open gap) to near-FULL_COGNITIVE_GENESIS (7-8/9 active or complete). Convergence remains NOT_ELIGIBLE until second specimen genesis (GEN-6).",
+      "replay_impact_assessment": "New run — no existing artifact mutation. run_blueedge_genesis_e2e_02 alongside existing _01.",
+      "governance_risk_assessment": "MEDIUM. Operator governance review is genuinely manual. S2 assessment depends on proposition quality. Cannot guarantee outcome."
+    },
+    {
+      "corridor_id": "CC-04",
+      "title": "LENS Rich Projection",
+      "priority": 4,
+      "classification": "G2",
+      "estimated_complexity": "LOW",
+      "goal": "Verify LENS v2 renders enriched BlueEdge data with full structural depth — topology with import edges, centrality visualization, proposition display, hero moment navigation",
+      "approach": {
+        "strategy": "After CC-03 produces enriched BlueEdge run, verify LENS projection surfaces consume the new evidence. Most LENS v2 components already handle these data types (proven on NetBox). The primary concern is binding envelope construction from enriched data.",
+        "verification_areas": [
+          "Interactive SVG topology renders IMPORTS edges (not just containment)",
+          "Centrality-ranked file list appears in INVESTIGATION mode",
+          "Propositions appear in semantic governance sections",
+          "Hero moments surface in cognitive traversal",
+          "Pressure zones derive from import-enriched topology (not containment-only)",
+          "BOARDROOM narrative reflects structural depth improvement",
+          "Genesis chronicle shows FULL_COGNITIVE_GENESIS corridor"
+        ]
+      },
+      "resolves_gaps": [],
+      "expected_evidence_uplift": {
+        "projection_depth": "Containment-only topology → import-enriched structural intelligence surface",
+        "user_visible": "BlueEdge LENS v2 transitions from structural skeleton to rich structural intelligence projection"
+      },
+      "dependencies": ["CC-03 (required)"],
+      "maturity_uplift_estimate": "PROJECTION phase reaches full operational depth. Executive audience sees governed structural intelligence, not just containment topology.",
+      "replay_impact_assessment": "Read-only — LENS consumes prepared payloads. No substrate mutation.",
+      "governance_risk_assessment": "LOW. Projection of existing governed evidence. No new authority claims."
+    }
+  ],
+  "dependency_sequence": "CC-01 → CC-02 → CC-03 → CC-04",
+  "critical_path": "CC-01 (TypeScript parser) is the single root blocker. Everything else cascades from it.",
+  "non_goals": [
+    "Do NOT implement TypeScript parser in this stream — this stream produces corridors, not implementation",
+    "Do NOT implement PATH A/B Fusion contract — Fusion is a separate architectural concern beyond the correction chain",
+    "Do NOT attempt S2 advancement — S2 is the outcome of CC-03, not this stream",
+    "Do NOT modify LENS v2 code — CC-04 is verification, not implementation"
+  ],
+  "operator_governance_note": "All corridors are CANDIDATE status at L3 authority ceiling. Operator approval required before any implementation stream begins. This document is advisory, replay-safe, lineage-bound, operator-governed, append-only."
+}
