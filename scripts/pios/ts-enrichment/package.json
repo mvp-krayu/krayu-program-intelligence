@@ -1,0 +1,9 @@
+{
+  "name": "pios-ts-enrichment",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PIPELINE_ENRICHMENT_DEPENDENCY: TypeScript import/export extraction for 40.3s code graph enrichment",
+  "dependencies": {
+    "typescript": "^5.3.3"
+  }
+}

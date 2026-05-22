@@ -1,0 +1,21 @@
+{
+  "stream": "PI.BLUEEDGE.TYPESCRIPT-PATH-A-ENRICHMENT.01",
+  "changes": [
+    {"action": "CREATED", "path": "scripts/pios/ts-enrichment/package.json", "detail": "PIPELINE_ENRICHMENT_DEPENDENCY manifest — typescript@^5.3.3"},
+    {"action": "CREATED", "path": "scripts/pios/ts-enrichment/.gitignore", "detail": "node_modules/ and package-lock.json exclusion"},
+    {"action": "CREATED", "path": "scripts/pios/ts-enrichment/ts_import_extractor.js", "detail": "TypeScript Compiler API extraction script — AST-based import/export/define extraction with scoped alias resolution"},
+    {"action": "MODIFIED", "path": "scripts/pios/code_graph_feasibility.py", "detail": "Added TypeScript detection + Node subprocess dispatch; main_typescript() parallel path; transform_ts_extraction_to_relationships()"},
+    {"action": "CREATED", "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/structure/40.3s/code_graph.json", "detail": "3331 relationships (2138 IMPORTS, 555 DEFINES_CLASS, 638 DEFINES_FUNCTION), 5/5 validation PASS"},
+    {"action": "CREATED", "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_01/structure/40.3c/structural_centrality.json", "detail": "643 files ranked, 6/6 validation PASS"},
+    {"action": "CREATED", "path": "docs/pios/PI.BLUEEDGE.TYPESCRIPT-PATH-A-ENRICHMENT.01/TS_EXTRACTION_ENGINE_DECISION.md", "detail": "Engine decision document — Option A selected"},
+    {"action": "CREATED", "path": "docs/pios/PI.BLUEEDGE.TYPESCRIPT-PATH-A-ENRICHMENT.01/execution_report.md", "detail": "Full execution report with before/after metrics"},
+    {"action": "CREATED", "path": "docs/pios/PI.BLUEEDGE.TYPESCRIPT-PATH-A-ENRICHMENT.01/validation_log.json", "detail": "15/15 PASS"},
+    {"action": "CREATED", "path": "docs/pios/PI.BLUEEDGE.TYPESCRIPT-PATH-A-ENRICHMENT.01/file_changes.json", "detail": "This file"},
+    {"action": "CREATED", "path": "docs/pios/PI.BLUEEDGE.TYPESCRIPT-PATH-A-ENRICHMENT.01/CLOSURE.md", "detail": "Stream closure"}
+  ],
+  "summary": {
+    "created": 10,
+    "modified": 1,
+    "total": 11
+  }
+}

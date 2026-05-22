@@ -1,0 +1,27 @@
+{
+  "stream": "PI.BLUEEDGE.TYPESCRIPT-PATH-A-ENRICHMENT.01",
+  "timestamp": "2026-05-22T22:30:00Z",
+  "checks": [
+    {"check": "Engine decision documented", "status": "PASS", "detail": "TS_EXTRACTION_ENGINE_DECISION.md — Option A selected, operator approved"},
+    {"check": "Specimen isolation enforced", "status": "PASS", "detail": "No specimen-native or workspace-app dependencies used; PIPELINE_ENRICHMENT_DEPENDENCY only"},
+    {"check": "TypeScript compiler installed as PIPELINE_ENRICHMENT_DEPENDENCY", "status": "PASS", "detail": "typescript@5.9.3 under scripts/pios/ts-enrichment/, node_modules gitignored"},
+    {"check": "Extractor uses AST parsing (certification-grade)", "status": "PASS", "detail": "ts.createSourceFile() — TypeScript Compiler API, not regex"},
+    {"check": "Scoped alias resolution correct", "status": "PASS", "detail": "frontend @/* and backend @/* resolve independently; 10 unresolved (genuine specimen gaps)"},
+    {"check": "40.3s artifact produced", "status": "PASS", "detail": "3331 relationships, 2138 IMPORTS, 555 DEFINES_CLASS, 638 DEFINES_FUNCTION"},
+    {"check": "40.3s validation 5/5 PASS", "status": "PASS", "detail": "no_self_references, all_relation_types_supported, all_source_paths_in_files, all_target_paths_in_files, has_evidence"},
+    {"check": "40.3s cross-reference with 40.2", "status": "PASS", "detail": "2138 matched targets, 0 unmatched paths"},
+    {"check": "40.3c centrality derived", "status": "PASS", "detail": "643 files ranked, 6/6 validation PASS"},
+    {"check": "Existing Python enricher unchanged", "status": "PASS", "detail": "Python path still operational — TypeScript path is additive branch in main()"},
+    {"check": "No specimen mutation", "status": "PASS", "detail": "BlueEdge intake directory unmodified; no node_modules installed in specimen"},
+    {"check": "Determinism", "status": "PASS", "detail": "Same source + same tsconfig evidence → same 40.3s → same 40.3c"},
+    {"check": "IMPORTS > 0 (gap closure)", "status": "PASS", "detail": "2138 IMPORTS edges (was 0)"},
+    {"check": "Centrality derivable (gap closure)", "status": "PASS", "detail": "40.3c produced from 40.3s (was ABSENT)"},
+    {"check": "Hero Moment eligibility restored", "status": "PASS", "detail": "Centrality data now available for hero moment detection"}
+  ],
+  "summary": {
+    "total": 15,
+    "pass": 15,
+    "open_gap": 0,
+    "fail": 0
+  }
+}

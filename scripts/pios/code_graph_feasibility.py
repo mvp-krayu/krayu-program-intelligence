@@ -39,6 +39,7 @@ import argparse
 import ast
 import json
 import os
+import subprocess
 import sys
 from collections import Counter
 from datetime import datetime, timezone
@@ -46,6 +47,8 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 CONTRACT_ID = "PI.PATHA.CODE-GRAPH-FEASIBILITY-AND-ARTIFACT-CONTRACT.01"
+TS_ENRICHMENT_DIR = Path(__file__).resolve().parent / "ts-enrichment"
+TS_EXTRACTOR_SCRIPT = TS_ENRICHMENT_DIR / "ts_import_extractor.js"
 
 SUPPORTED_RELATION_TYPES = frozenset([
     "IMPORTS",
@@ -769,6 +772,188 @@ def print_report(
     print("\n" + "=" * 72 + "\n")
 
 
+# ── TypeScript Detection + Extraction ────────────────────────────────────────
+
+def detect_typescript_specimen(intake_dir):
+    """
+    Detect if intake contains TypeScript sub-projects.
+    Returns list of (sub_project_rel, tsconfig_abs_path) tuples, or empty list.
+    """
+    tsconfigs = []
+    for root, dirs, files in os.walk(intake_dir):
+        dirs[:] = [d for d in dirs if d not in ("node_modules", "dist", ".git", "coverage")]
+        if "tsconfig.json" in files:
+            tc_path = Path(root) / "tsconfig.json"
+            sub_rel = str(Path(root).relative_to(intake_dir))
+            tsconfigs.append((sub_rel, tc_path))
+    return tsconfigs
+
+
+def find_typescript_files(intake_dir):
+    """Find all .ts/.tsx files under intake directory."""
+    results = []
+    for root, dirs, files in os.walk(intake_dir):
+        dirs[:] = [d for d in dirs if d not in ("node_modules", "dist", ".git", "coverage", "storybook-static")]
+        for f in sorted(files):
+            if f.endswith(".ts") or f.endswith(".tsx"):
+                abs_path = Path(root) / f
+                rel_path = str(abs_path.relative_to(intake_dir))
+                results.append((abs_path, rel_path))
+    return results
+
+
+TS_INDEXER_INFO = {
+    "name": "typescript-compiler-api",
+    "version": "pipeline",
+    "capabilities": sorted(SUPPORTED_RELATION_TYPES),
+    "dependency_class": "PIPELINE_ENRICHMENT_DEPENDENCY",
+}
+
+
+def run_ts_extractor(intake_dir, tsconfig_paths):
+    """
+    Invoke the Node.js TypeScript extractor as subprocess.
+    Returns parsed JSON output or None on failure.
+    """
+    if not TS_EXTRACTOR_SCRIPT.is_file():
+        print(f"\n  FAIL: TypeScript extractor not found: {TS_EXTRACTOR_SCRIPT}")
+        return None
+
+    node_modules = TS_ENRICHMENT_DIR / "node_modules" / "typescript"
+    if not node_modules.is_dir():
+        print(f"\n  FAIL: TypeScript PIPELINE_ENRICHMENT_DEPENDENCY not installed")
+        print(f"        Run: cd {TS_ENRICHMENT_DIR} && npm install")
+        return None
+
+    cmd = [
+        "node", str(TS_EXTRACTOR_SCRIPT),
+        "--intake", str(intake_dir),
+        "--extensions", ".ts,.tsx",
+    ]
+    if tsconfig_paths:
+        cmd.extend(["--tsconfig", ",".join(str(p) for p in tsconfig_paths)])
+
+    print(f"\n  Invoking TypeScript extractor (PIPELINE_ENRICHMENT_DEPENDENCY)...")
+    result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+
+    if result.returncode != 0:
+        print(f"\n  FAIL: TypeScript extractor returned {result.returncode}")
+        if result.stderr:
+            print(f"  stderr: {result.stderr[:500]}")
+        return None
+
+    try:
+        return json.loads(result.stdout)
+    except json.JSONDecodeError as e:
+        print(f"\n  FAIL: TypeScript extractor produced invalid JSON: {e}")
+        return None
+
+
+def transform_ts_extraction_to_relationships(ts_output, known_files):
+    """
+    Transform TypeScript extractor JSON into 40.3s relationship list.
+    Only emits relationships where both source and target are in known_files.
+    """
+    relationships = []
+    seen = set()
+
+    for file_result in ts_output.get("results", []):
+        source_path = file_result["file"]
+        if source_path not in known_files:
+            continue
+
+        for imp in file_result.get("imports", []):
+            if imp.get("resolution") != "RESOLVED":
+                continue
+            target_path = imp.get("resolved_path")
+            if not target_path or target_path not in known_files:
+                continue
+            if target_path == source_path:
+                continue
+
+            edge_key = (source_path, target_path, "IMPORTS")
+            if edge_key in seen:
+                continue
+            seen.add(edge_key)
+
+            bindings_str = ", ".join(imp.get("bindings", [])[:3])
+            if len(imp.get("bindings", [])) > 3:
+                bindings_str += ", ..."
+            type_prefix = "import type " if imp.get("type_only") else "import "
+            stmt = f"{type_prefix}{{{bindings_str}}} from '{imp['specifier']}'" if bindings_str else f"import '{imp['specifier']}'"
+
+            relationships.append({
+                "source_path": source_path,
+                "target_path": target_path,
+                "source_node_id": None,
+                "target_node_id": None,
+                "relation_type": "IMPORTS",
+                "evidence": {
+                    "line": imp.get("line", 0),
+                    "statement": stmt,
+                },
+            })
+
+        for exp in file_result.get("exports", []):
+            if not exp.get("is_reexport"):
+                continue
+            if exp.get("resolution") != "RESOLVED":
+                continue
+            target_path = exp.get("resolved_path")
+            if not target_path or target_path not in known_files:
+                continue
+            if target_path == source_path:
+                continue
+
+            edge_key = (source_path, target_path, "IMPORTS")
+            if edge_key in seen:
+                continue
+            seen.add(edge_key)
+
+            relationships.append({
+                "source_path": source_path,
+                "target_path": target_path,
+                "source_node_id": None,
+                "target_node_id": None,
+                "relation_type": "IMPORTS",
+                "evidence": {
+                    "line": exp.get("line", 0),
+                    "statement": f"export from '{exp['specifier']}'",
+                },
+            })
+
+        for defn in file_result.get("defines", []):
+            kind = defn.get("kind", "")
+            if kind in ("CLASS", "INTERFACE"):
+                relationships.append({
+                    "source_path": source_path,
+                    "target_path": None,
+                    "source_node_id": None,
+                    "target_node_id": None,
+                    "relation_type": "DEFINES_CLASS",
+                    "symbol": defn["name"],
+                    "evidence": {
+                        "line": defn.get("line", 0),
+                        "statement": f"{kind.lower()} {defn['name']}",
+                    },
+                })
+            elif kind in ("FUNCTION", "CONST"):
+                relationships.append({
+                    "source_path": source_path,
+                    "target_path": None,
+                    "source_node_id": None,
+                    "target_node_id": None,
+                    "relation_type": "DEFINES_FUNCTION",
+                    "symbol": defn["name"],
+                    "evidence": {
+                        "line": defn.get("line", 0),
+                        "statement": f"{kind.lower()} {defn['name']}",
+                    },
+                })
+
+    return relationships
+
+
 # ── Main ─────────────────────────────────────────────────────────────────────
 
 def main() -> int:
@@ -794,10 +979,21 @@ def main() -> int:
         print(f"\n  FAIL: output already exists (CREATE_ONLY): {paths['output_file']}")
         return 1
 
-    # ── Discover source root ─────────────────────────────────────────────
+    # ── Detect language ────────────────────────────────────────────────
+    ts_projects = detect_typescript_specimen(paths["intake_dir"])
     source_root = discover_source_root(paths["intake_dir"])
+
+    is_typescript = len(ts_projects) > 0 and source_root is None
+
+    if is_typescript:
+        return main_typescript(args, paths, ts_projects)
+
+    # ── Python path ──────────────────────────────────────────────────────
     if source_root is None:
         print(f"\n  FAIL: no Python package found in {paths['intake_dir']}")
+        if ts_projects:
+            print(f"  NOTE: TypeScript tsconfigs detected but Python source root also found.")
+            print(f"  Mixed-language enrichment not yet supported.")
         return 1
 
     source_root_rel = str(source_root.relative_to(paths["intake_dir"]))
@@ -813,14 +1009,11 @@ def main() -> int:
     print(f"  Python files found: {len(py_files)}")
 
     # ── Determine package root for relative import resolution ────────────
-    # Package root = the directory containing the top-level __init__.py
-    # For src-layout: intake/src/flask/__init__.py → package_root = intake/src/flask/
     package_candidates = []
     for abs_p, rel_p in py_files:
         if abs_p.name == "__init__.py":
             package_candidates.append(abs_p.parent)
 
-    # The package root is the shallowest directory with __init__.py under source_root
     package_root = source_root
     if package_candidates:
         package_candidates.sort(key=lambda p: len(p.parts))
@@ -836,8 +1029,8 @@ def main() -> int:
             print(f"    {pkg_name} → {pkg_path}/")
 
     # ── Extract relationships from all files ──────────────────────────────
-    all_relationships: list[dict] = []
-    file_import_names: dict[str, dict[str, str]] = {}
+    all_relationships = []
+    file_import_names = {}
     for abs_path, rel_path in py_files:
         rels, imp_names = extract_relationships(
             abs_path, rel_path, package_root, paths["intake_dir"], known_files, source_root_rel,
@@ -883,11 +1076,103 @@ def main() -> int:
     if args.dry_run:
         print(f"\n  [DRY-RUN] Would write: {paths['output_file']}")
         print(f"  [DRY-RUN] Relationships: {len(all_relationships)}")
-        type_counts: Counter = Counter()
+        type_counts = Counter()
         for r in all_relationships:
             type_counts[r["relation_type"]] += 1
         for rt in sorted(SUPPORTED_RELATION_TYPES):
             print(f"    {rt:25s}  {type_counts.get(rt, 0):>5d}")
+        print_report(all_relationships, validation, xref_stats, known_files, source_root_rel)
+        return 0
+
+    # ── Write artifact ───────────────────────────────────────────────────
+    paths["output_dir"].mkdir(parents=True, exist_ok=True)
+    paths["output_file"].write_text(
+        json.dumps(artifact, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    print(f"\n  WRITTEN: {paths['output_file'].relative_to(REPO_ROOT)}")
+    print_report(all_relationships, validation, xref_stats, known_files, source_root_rel)
+    return 0
+
+
+def main_typescript(args, paths, ts_projects):
+    """TypeScript specimen path — uses PIPELINE_ENRICHMENT_DEPENDENCY extractor."""
+    tsconfig_paths = [tc_path for _, tc_path in ts_projects]
+    sub_projects = [sub_rel for sub_rel, _ in ts_projects]
+
+    print(f"\n  Language:     TypeScript (detected {len(ts_projects)} sub-project(s))")
+    for sub_rel, tc_path in ts_projects:
+        print(f"    {sub_rel}/tsconfig.json")
+    print(f"  Indexer:      {TS_INDEXER_INFO['name']} (PIPELINE_ENRICHMENT_DEPENDENCY)")
+
+    # ── Find TypeScript files ────────────────────────────────────────────
+    ts_files = find_typescript_files(paths["intake_dir"])
+    if not ts_files:
+        print(f"\n  FAIL: no TypeScript files found")
+        return 1
+
+    known_files = {rel for _, rel in ts_files}
+    print(f"  TypeScript files found: {len(ts_files)}")
+
+    # ── Invoke Node extractor ────────────────────────────────────────────
+    ts_output = run_ts_extractor(paths["intake_dir"], tsconfig_paths)
+    if ts_output is None:
+        return 1
+
+    ts_stats = ts_output.get("stats", {})
+    print(f"\n  Extractor results:")
+    print(f"    Files processed:    {ts_stats.get('files_processed', 0)}")
+    print(f"    Files errored:      {ts_stats.get('files_errored', 0)}")
+    print(f"    Total imports:      {ts_stats.get('total_imports', 0)}")
+    print(f"    Imports resolved:   {ts_stats.get('imports_resolved', 0)}")
+    print(f"    Imports external:   {ts_stats.get('imports_external', 0)}")
+    print(f"    Imports unresolved: {ts_stats.get('imports_unresolved', 0)}")
+    print(f"    Total exports:      {ts_stats.get('total_exports', 0)}")
+    print(f"    Total defines:      {ts_stats.get('total_defines', 0)}")
+
+    # ── Transform to 40.3s relationships ─────────────────────────────────
+    all_relationships = transform_ts_extraction_to_relationships(ts_output, known_files)
+    all_relationships.sort(key=lambda r: (r["source_path"], r["relation_type"], r.get("evidence", {}).get("line", 0)))
+
+    print(f"\n  40.3s relationships produced: {len(all_relationships)}")
+    type_counts = Counter(r["relation_type"] for r in all_relationships)
+    for rt in sorted(SUPPORTED_RELATION_TYPES):
+        count = type_counts.get(rt, 0)
+        if count > 0:
+            print(f"    {rt:25s}  {count:>5d}")
+
+    # ── Cross-reference with 40.2 ────────────────────────────────────────
+    all_relationships, xref_stats = cross_reference_inventory(
+        all_relationships, paths["node_inventory"]
+    )
+
+    # ── Validate ─────────────────────────────────────────────────────────
+    validation = validate_graph(all_relationships, known_files)
+
+    # ── Report ───────────────────────────────────────────────────────────
+    source_root_rel = ", ".join(sub_projects)
+    if args.report_only:
+        print_report(all_relationships, validation, xref_stats, known_files, source_root_rel)
+        return 0
+
+    # ── Build artifact ───────────────────────────────────────────────────
+    artifact = build_artifact(
+        all_relationships, args.client, args.run_id,
+        source_root_rel, len(ts_files), validation, xref_stats,
+    )
+    artifact["indexer"] = TS_INDEXER_INFO
+    artifact["indexer"]["typescript_compiler_version"] = ts_output.get("typescript_version", "unknown")
+    artifact["typescript_extraction"] = {
+        "sub_projects": sub_projects,
+        "tsconfig_paths": [str(p) for p in tsconfig_paths],
+        "resolution_stats": ts_stats,
+        "errors": ts_output.get("errors", []),
+    }
+
+    if args.dry_run:
+        print(f"\n  [DRY-RUN] Would write: {paths['output_file']}")
+        print(f"  [DRY-RUN] Relationships: {len(all_relationships)}")
         print_report(all_relationships, validation, xref_stats, known_files, source_root_rel)
         return 0
 
