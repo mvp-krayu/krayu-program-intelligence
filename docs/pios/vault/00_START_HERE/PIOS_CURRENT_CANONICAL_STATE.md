@@ -1,6 +1,6 @@
 # PiOS Current Canonical State
 
-> **This page reflects the system's canonical state as of 2026-05-21.**
+> **This page reflects the system's canonical state as of 2026-05-22.**
 
 ---
 
@@ -148,7 +148,7 @@ DETERMINISTIC → INVESTIGATIVE → INTERPRETIVE
 | BlueEdge | SQO-native S2 (15 debt items, governance projection bridge) | OPERATIONAL (Q-02, 4-persona projection, interactive topology) | 3 HTML files, rebase complete |
 | FastAPI | S1_ONBOARDING_REQUIRED | PARTIAL (SQO cockpit, no LENS v2) | 15 SQO v1.json artifacts |
 | pallets-flask | S1 (permanent insufficiency acknowledged) | AUTHORITY WORKFLOW OPERATIONAL, posture-driven overview, semantic intake (Layer B) | PATH A structural onboarding complete, 15 clusters, 287 nodes, candidate CSR (L3), full client registration (client.yaml + source_manifest.json) |
-| NetBox | S1 CEU RECONCILED (OPERATOR_VALIDATED) | SQO: Proposition qualification pathway operational, CEU Reconciliation operational, promotion gate OPEN; LENS: LIVE_BINDING_FAILED | First live S2 candidate. PATH A complete: 2,540 nodes, 3,614 IMPORTS, 1,089 ranked files. 13 CEU candidates (12 confirmed, 1 merged, 1 reclassified CONSUMER→FOUNDATION, 1 authority refined), 74 evidence anchors, 46 reconciliation events. OPERATOR_VALIDATED. Phase 7 governance loop validated (12/12 replay PASS, 5 learning events PROPOSED). **Semantic Proposition Engine operational:** 75 CANDIDATE propositions (12 STRUCTURAL_DOMINANCE, 34 COUPLING_PATTERN, 10 AUTHORITY_TOPOLOGY, 12 TIER_GROUNDING, 6 HERO_MOMENT_GROUNDING, 1 CLUSTER_ARCHITECTURE), mean confidence 0.872, replayable, 3 SPE learning events PROPOSED. Phase 9 COMPLETE. **SQO proposition qualification pathway:** dual-path resolution (CSR + SPE), 4/7 blockers resolved, 3 remaining (proposition review, debt model, consumer pathway). Semantic_candidate lane COMPLETE, crosswalk INAPPLICABLE, reconciliation COMPLETE. |
+| NetBox | S1 REVIEW COMPLETE — S2 ADVANCEMENT REQUESTABLE | SQO: All 7 blockers resolved, promotion_eligible=true, review_queue RESOLVED; LENS: LIVE_BINDING_FAILED | First live S2 candidate. PATH A complete: 2,540 nodes, 3,614 IMPORTS, 1,089 ranked files. 13 CEU candidates (12 confirmed, 1 merged, 1 reclassified CONSUMER→FOUNDATION, 1 authority refined), 74 evidence anchors, 46 reconciliation events. OPERATOR_VALIDATED. **Semantic Proposition Engine operational:** 75 propositions (12 STRUCTURAL_DOMINANCE, 34 COUPLING_PATTERN, 10 AUTHORITY_TOPOLOGY, 12 TIER_GROUNDING, 6 HERO_MOMENT_GROUNDING, 1 CLUSTER_ARCHITECTURE), mean confidence 0.872. **Proposition review COMPLETE:** 5 accepted (2 direct, 2 via arbitration with noted limitations), 1 rejected (CLUSTER_ARCHITECTURE — insufficient structural coverage). 11 governance events, full actor lineage. **All blockers resolved:** BLK-001 through BLK-007, unresolved=0. S2 advancement requestable but not yet requested. |
 | StackStorm | S0 STRUCTURAL ONLY | SQO: CEU Reconciliation seeded (11 EVIDENCE_ATTACHED, 4 PROPOSED, 13 obligations); LENS: structural topology | Second specimen. PATH A complete: 1,804 nodes, 3,087 IMPORTS, 920 ranked files. 22 evidence anchors (SETUP_PY, CROSS_PACKAGE_DEP, PACKAGE_README, REPO_README_MAP). LRNE-0001 resolved. |
 
 ## Current Trustworthiness Model
@@ -537,6 +537,8 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.PATHB.SEMANTIC-PROPOSITION-ENGINE.01 | G1 | Phase 9 Semantic Proposition Engine — 6 deterministic class derivers, 75 CANDIDATE propositions on NetBox, spine Phase 5 activated (semantic_proposition OPERATIONAL), parallel to SDC (BlueEdge preserved), Pipeline Phase 3c | COMPLETE |
 | PI.GOVERNANCE.S1-S2-READINESS-REASSESSMENT.01 | G2 | Post-Phase 9 S2 readiness re-evaluation — BLOCKED PATH MISMATCH. CSR-path blockers do not align with SPE-path output. Recommended proposition-based qualification pathway | COMPLETE |
 | PI.SQO.PROPOSITION-QUALIFICATION-PATHWAY.01 | G1 | SQO proposition qualification pathway — dual-path resolution (CSR + SPE), blocker recharacterization (4/7 resolved), lane state update (semantic_candidate COMPLETE, crosswalk INAPPLICABLE), resolved blocker filtering in posture resolver | COMPLETE |
+| PI.SQO.PROPOSITION-DEBT-MODEL.01 | G2 | Proposition-based qualification debt model — PropositionDebtResolver computes debt from coverage, confidence, tier distribution, review state, reconciliation alignment. Resolves BLK-005. 9 debt items for NetBox across 5 categories | COMPLETE |
+| PI.SQO.SEMANTIC-GOVERNANCE-LOOP-VALIDATION.01 | G1 | Semantic governance loop validation — operational review of 5 proposition class obligations through Authority workflow. 2 accepted, 2 contested→arbitrated→accepted, 1 rejected. BLK-002 resolved via cascade. All 7 blockers resolved. S2 advancement requestable | COMPLETE |
 
 ## SQO Operator Authority Workflow
 
