@@ -1,0 +1,53 @@
+{
+  "stream": "PI.SQO.S2-ADVANCEMENT-REQUEST.01",
+  "classification": "G1",
+  "timestamp": "2026-05-22T15:30:00Z",
+  "files": [
+    {
+      "path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/sqo/promotion_state.json",
+      "action": "MODIFIED",
+      "description": "S1→S2: s_level, promotion_eligible, promotion_lineage (S1→S2 transition with governance lineage and rejected_classes), lanes.promotion_decision (ADVANCEMENT_GRANTED), insufficiency_assessment (S2_GRANTED), promotion_authority_ownership (operator:khorrix), s2_checkpoint (CANONICAL_REFERENCE_SPECIMEN), audit_event_refs (EVT-012)"
+    },
+    {
+      "path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/sqo/qualification_blockers.json",
+      "action": "MODIFIED",
+      "description": "s_level S1→S2"
+    },
+    {
+      "path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/sqo/promotion_event_log.jsonl",
+      "action": "MODIFIED",
+      "description": "EVT-012 appended: s2_advancement_granted, L5, QUALIFICATION_ADVANCEMENT, s2_checkpoint designation"
+    },
+    {
+      "path": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "action": "MODIFIED",
+      "description": "NetBox client row → S2 SEMANTIC QUALIFICATION COMPLETE — CANONICAL REFERENCE SPECIMEN. Ontology lineage table: 5 new stream entries"
+    },
+    {
+      "path": "docs/pios/PI.SQO.S2-ADVANCEMENT-REQUEST.01/S2_ADVANCEMENT_REQUEST.md",
+      "action": "CREATED",
+      "description": "Formal S2 advancement request with evidence basis, state changes, governance lineage"
+    },
+    {
+      "path": "docs/pios/PI.SQO.S2-ADVANCEMENT-REQUEST.01/execution_report.md",
+      "action": "CREATED",
+      "description": "G1 execution report with pre-flight, state mutations, operator steering record"
+    },
+    {
+      "path": "docs/pios/PI.SQO.S2-ADVANCEMENT-REQUEST.01/validation_log.json",
+      "action": "CREATED",
+      "description": "16/16 validation checks PASS"
+    },
+    {
+      "path": "docs/pios/PI.SQO.S2-ADVANCEMENT-REQUEST.01/file_changes.json",
+      "action": "CREATED",
+      "description": "This file"
+    },
+    {
+      "path": "docs/pios/PI.SQO.S2-ADVANCEMENT-REQUEST.01/CLOSURE.md",
+      "action": "CREATED",
+      "description": "G1 stream closure with §10 Architecture Memory Propagation"
+    }
+  ],
+  "total_files": 9
+}

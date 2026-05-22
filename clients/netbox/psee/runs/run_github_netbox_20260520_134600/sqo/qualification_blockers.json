@@ -1,7 +1,7 @@
 {
   "client": "netbox",
   "run_id": "run_github_netbox_20260520_134600",
-  "s_level": "S1",
+  "s_level": "S2",
   "total_blockers": 7,
   "unresolved_blockers": 0,
   "promotion_eligible": true,

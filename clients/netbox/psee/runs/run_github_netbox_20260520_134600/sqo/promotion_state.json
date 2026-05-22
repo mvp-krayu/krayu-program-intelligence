@@ -1,14 +1,14 @@
 {
   "client": "netbox",
   "run_id": "run_github_netbox_20260520_134600",
-  "s_level": "S1",
+  "s_level": "S2",
   "authority_ceiling": "L3",
-  "promotion_eligible": false,
+  "promotion_eligible": true,
   "generated_at": "2026-05-20T12:32:18.457620+00:00",
-  "last_updated": "2026-05-22T00:00:00Z",
+  "last_updated": "2026-05-22T15:30:00Z",
   "promotion_lineage": {
     "initial_state": "S0",
-    "current_state": "S1",
+    "current_state": "S2",
     "transitions": [
       {
         "from": "S0",
@@ -18,11 +18,43 @@
         "action": "structural_onboarding_complete",
         "authority_domain": "technical_authority",
         "audit_event_ref": "EVT-001"
+      },
+      {
+        "from": "S1",
+        "to": "S2",
+        "timestamp": "2026-05-22T15:30:00Z",
+        "actor_id": "operator:khorrix",
+        "action": "s2_advancement_granted",
+        "authority_domain": "governance_authority",
+        "authority_level": "L5",
+        "audit_event_ref": "EVT-012",
+        "justification": "Full governance lifecycle validated: structural onboarding, semantic derivation (77 propositions), operator review (5 accepted, 1 rejected), arbitration (2 contested → resolved), substrate enrichment (3 streams), deterministic revalidation (48/48 PASS). Governance friction strengthened weakest classes. Corpus: 89.6% DIRECT_EVIDENCE, 89.6% ALIGNED, 0.897 mean confidence.",
+        "governance_lineage": [
+          "PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01",
+          "PI.SQO.PROPOSITION-QUALIFICATION-PATHWAY.01",
+          "PI.SQO.PROPOSITION-DEBT-MODEL.01",
+          "PI.SQO.AUTHORITY-WORKFLOW-PROJECTION.01",
+          "PI.SQO.SEMANTIC-GOVERNANCE-LOOP-VALIDATION.01",
+          "PI.SUBSTRATE.AUTHORITY-ENRICHMENT-FEASIBILITY.01",
+          "PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01",
+          "PI.SUBSTRATE.HERO-MOMENT-RECONCILIATION.01",
+          "PI.SUBSTRATE.REPLAY-REVALIDATION-CYCLE.01",
+          "PI.SQO.S2-ADVANCEMENT-REQUEST.01"
+        ],
+        "rejected_classes": [
+          {
+            "class": "CLUSTER_ARCHITECTURE",
+            "disposition": "OPERATIONAL_REJECTION",
+            "reason": "Singleton proposition, DERIVED tier, NOVEL reconciliation, 0.604 confidence — insufficient structural coverage for classification dimension",
+            "permanent": true,
+            "governance_event": "EVT-007"
+          }
+        ]
       }
     ]
   },
-  "last_transition_actor": "system:governance_projection",
-  "last_transition_reason": "PATH A structural pipeline complete: 2,540 nodes, 24 clusters, 3,614 imports, 1,089 centrality-ranked files. All phases 1-3.7 PASS.",
+  "last_transition_actor": "operator:khorrix",
+  "last_transition_reason": "S2 semantic qualification complete. Full governance lifecycle exercised end-to-end. Substrate replays stronger deterministically.",
   "migration_provenance": {
     "type": "GOVERNANCE_PROJECTION",
     "fabricated_history": false,
@@ -46,17 +78,20 @@
       "authority": "L3_PROPOSITION_EVIDENCE",
       "blocking_gaps": [],
       "qualification_path": "SPE",
-      "proposition_count": 75,
+      "proposition_count": 77,
       "derivation_hash": "a1356bb405053b5bb86a741ae361c47dcecbafcbba6ace7edd55b67262a67175"
     },
     "review_queue": {
       "state": "RESOLVED",
       "authority": "PROPOSITION_REVIEW",
       "blocking_gaps": [],
-      "next_transition": "Review CANDIDATE propositions for qualification progression",
-      "required_authority": {
-        "domain": "semantic_authority",
-        "level": "L4"
+      "review_summary": {
+        "total_obligations": 6,
+        "accepted": 4,
+        "accepted_via_arbitration": 2,
+        "rejected": 1,
+        "rejected_classes": ["CLUSTER_ARCHITECTURE"],
+        "governance_events": 11
       }
     },
     "crosswalk": {
@@ -77,9 +112,16 @@
       "blocking_gaps": []
     },
     "promotion_decision": {
-      "state": "BLOCKED",
-      "authority": "NONE",
-      "blocking_gaps": []
+      "state": "ADVANCEMENT_GRANTED",
+      "authority": "GOVERNANCE_AUTHORITY_L5",
+      "blocking_gaps": [],
+      "advancement": {
+        "from": "S1",
+        "to": "S2",
+        "granted_by": "operator:khorrix",
+        "granted_at": "2026-05-22T15:30:00Z",
+        "reasoning_class": "GOVERNANCE_FRICTION_VALIDATED"
+      }
     },
     "runtime_projection": {
       "state": "SEMANTIC_CONSUMER_ACTIVE",
@@ -89,28 +131,50 @@
   },
   "insufficiency_assessment": {
     "semantic_coverage": "PROPOSITION_EVIDENCE",
-    "promotion_feasibility": "PROPOSITION_REVIEW_AND_QUALIFICATION_REQUIRED",
-    "indefinite_s1_risk": "LOW"
+    "promotion_feasibility": "S2_GRANTED",
+    "indefinite_s1_risk": "NONE"
   },
-  "unresolved_authority_requirements": [
-    {
-      "domain": "semantic_authority",
-      "level": "L4",
-      "for": "proposition_review"
-    },
-    {
-      "domain": "governance_authority",
-      "level": "L5",
-      "for": "promotion_decision"
-    }
-  ],
+  "unresolved_authority_requirements": [],
   "promotion_authority_ownership": {
-    "promotion_authority_owner": null,
+    "promotion_authority_owner": "operator:khorrix",
     "approval_required_from": "governance_authority:L5",
     "promotion_scope": "S1 → S2",
-    "promotion_reasoning_class": null
+    "promotion_reasoning_class": "GOVERNANCE_FRICTION_VALIDATED"
   },
   "audit_event_refs": [
-    "EVT-001"
-  ]
+    "EVT-001",
+    "EVT-002",
+    "EVT-003",
+    "EVT-004",
+    "EVT-005",
+    "EVT-006",
+    "EVT-007",
+    "EVT-008",
+    "EVT-009",
+    "EVT-010",
+    "EVT-011",
+    "EVT-012"
+  ],
+  "s2_checkpoint": {
+    "designation": "CANONICAL_REFERENCE_SPECIMEN",
+    "description": "First formally governed semantic qualification specimen in Program Intelligence",
+    "frozen": true,
+    "mutation_policy": "NO_EXPLORATORY_MUTATION — constitutional reference specimen for semantic governance evolution",
+    "corpus_snapshot": {
+      "total_propositions": 77,
+      "direct_evidence_pct": 89.6,
+      "aligned_pct": 89.6,
+      "mean_confidence": 0.897,
+      "classes": {
+        "COUPLING_PATTERN": 34,
+        "STRUCTURAL_DOMINANCE": 12,
+        "TIER_GROUNDING": 12,
+        "AUTHORITY_TOPOLOGY": 12,
+        "HERO_MOMENT_GROUNDING": 6,
+        "CLUSTER_ARCHITECTURE": 1
+      },
+      "rejected_classes": ["CLUSTER_ARCHITECTURE"],
+      "rejection_preserved": true
+    }
+  }
 }
