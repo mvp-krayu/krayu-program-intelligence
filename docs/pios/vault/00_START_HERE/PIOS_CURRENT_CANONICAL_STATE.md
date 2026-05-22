@@ -553,6 +553,67 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-07 | G2 | Cross-specimen convergence observation — 7 candidate laws, 15-dimension comparison matrix (8 convergent, 7 divergent), all DESCRIPTIVE maturity, OBSERVATIONAL not UNIFICATION | COMPLETE |
 | PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-08 | G2 | Cognitive traversal orchestration — REPLAY_CHRONICLE.html (64KB, 8 chapters, Z1-Z5 zoom), 75.x bounded, 13 prohibitions, self-contained HTML cognitive lens | COMPLETE |
 | PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-09 | G1 | Chronicle certification + vault seal — 10/10 certification checks, REPLAY-CERTIFIED, vault propagation complete, 12 spine objects, 11 checkpoints frozen | COMPLETE |
+| PI.GENESIS.COGNITIVE-REPLAY-AND-AI-ASSISTED-ONBOARDING.01 | G1 | GENESIS doctrine — onboarding-origin governed cognition formation model. 10 doctrine deliverables: genesis replay doctrine, Hero Moment genesis model, AI-assisted onboarding operating model (first 10-50 clients), AI assistance governance contract (L3 ceiling, 6 object types), genesis cognitive chronicle model (chronicle as first-class runtime architecture, 18 event types, 7 object families), chronicle genesis adaptation, learning-to-capability pipeline (9-state lifecycle), BlueEdge RC reclassification (GOVERNED SEMANTIC REPLAY), genesis roadmap (GEN-1 through GEN-6), 12 mandatory questions answered. Chronicle elevated to first-class runtime via mid-execution steering | COMPLETE |
+
+## GENESIS — Onboarding-Origin Governed Cognition Formation
+
+**Stream:** PI.GENESIS.COGNITIVE-REPLAY-AND-AI-ASSISTED-ONBOARDING.01 (COMPLETE — 2026-05-22)
+**Classification:** G1 — Architecture-Mutating (strategic doctrine and execution alignment)
+
+The GENESIS layer defines how governed cognition is **born** — from raw evidence intake through first topology emergence, Hero Moment discovery, governance friction, substrate strengthening, and executive projection. GENESIS is NOT "better onboarding." It is **onboarding-origin governed cognition formation.**
+
+**Key architectural distinction:**
+- **Governed Semantic Replay** (proven by BlueEdge RC) operates on already-materialized substrates — SDC outputs, CSR domains, vault claims. It replays governance over existing artifacts.
+- **Cognitive Genesis Replay** (this doctrine) operates from raw onboarding intake — source archives, evidence files, structural extraction. It captures cognition forming from nothing. Genesis replay is the superset; semantic replay is a corridor within it.
+
+**Chronicle as first-class runtime architecture:**
+The Chronicle is not an explanatory overlay. It is the governed nervous system of cognition formation: cognitive traversal substrate, replay corridor runtime, onboarding evolution surface, learning propagation surface, Hero Moment navigation layer, AI-assistance lineage surface. 18 chronicle-native event types, 7 chronicle object families, 7 traversal modes. DISCOVERY semantic phase added before EMERGENCE.
+
+**Genesis-extended semantic rhythm:**
+```
+DISCOVERY → EMERGENCE → FORMATION → TENSION → STRENGTHENING → STABILIZATION → QUALIFICATION → CONVERGENCE → PROJECTION
+```
+
+**Hero Moments:** Governed cognitive discontinuities that emerge at PATH A / S1 — structural surprises that reshape understanding. 13 emergence phases, lifecycle (CANDIDATE → REVIEWED → CONFIRMED → REJECTED). 6 NetBox reference specimens prove PATH A / S1 emergence.
+
+**AI-Assisted Onboarding (first 10-50 clients):**
+- 5 allowed AI actions: INSPECT, PROPOSE, EXPLAIN, RECONCILE, IMPROVE
+- L3 authority ceiling (ADVISORY_NON_MUTATING) — fixed, not negotiable
+- 6 governed object types with JSON schemas
+- 12 forbidden actions (truth mutation, qualification advancement, governance bypass, etc.)
+- AI maturity model: M0 (no AI) → M1 (basic inspection) → M2 (governed assistance, CURRENT TARGET) → M3/M4/M5 (future)
+
+**Learning-to-Capability Pipeline:**
+```
+OBSERVED → PROPOSED → REVIEWED → PROMOTED → CONSUMABLE → CAPABILITY_CANDIDATE → MODULE_CANDIDATE
+```
+Marketplace modules emerge from repeated governed onboarding patterns — not premature design.
+
+**Genesis Roadmap (GEN-1 through GEN-6):**
+
+| Stage | Purpose | Dependencies | Status |
+|-------|---------|-------------|--------|
+| GEN-1 | Chronicle Event Model | None | SPECIFIED_NOT_IMPLEMENTED |
+| GEN-2 | Hero Moment Integration | GEN-1 | SPECIFIED_NOT_IMPLEMENTED |
+| GEN-3 | AI-Assisted Operationalization | GEN-1 | SPECIFIED_NOT_IMPLEMENTED |
+| GEN-4 | Learning Promotion Pipeline | GEN-1 | SPECIFIED_NOT_IMPLEMENTED |
+| GEN-5 | First Full Genesis Chronicle | GEN-1–4 | SPECIFIED_NOT_IMPLEMENTED |
+| GEN-6 | Cross-Specimen Genesis Convergence | Multiple GEN-5 | SPECIFIED_NOT_IMPLEMENTED |
+
+**Maturity classification:**
+
+| Construct | Maturity |
+|-----------|----------|
+| Genesis replay doctrine | SPECIFIED_NOT_IMPLEMENTED — doctrine locked, no implementation |
+| Hero Moment genesis model | SPECIFIED_NOT_IMPLEMENTED — model defined, detection hooks not built |
+| AI assistance governance contract | SPECIFIED_NOT_IMPLEMENTED — contract defined, no runtime integration |
+| Genesis cognitive chronicle model | SPECIFIED_NOT_IMPLEMENTED — 18 event types defined, no inline emission |
+| Learning-to-capability pipeline | SPECIFIED_NOT_IMPLEMENTED — lifecycle defined, promotion pipeline not built |
+| BlueEdge RC (semantic replay corridor) | OPERATIONAL — REPLAY-CERTIFIED, proven reference |
+| Chronicle Z1-Z5 zoom architecture | OPERATIONAL — proven in BlueEdge RC |
+| Learning event capture | OPERATIONAL — 15 events captured (NetBox), lifecycle not promoted |
+
+**Reference:** `docs/pios/PI.GENESIS.COGNITIVE-REPLAY-AND-AI-ASSISTED-ONBOARDING.01/` — 10 doctrine deliverables + 4 governance artifacts.
 
 ## SQO Operator Authority Workflow
 
