@@ -1,0 +1,46 @@
+{
+  "stream_id": "PI.SQO.SEMANTIC-PROPOSITION-CONSUMER-PATHWAY.01",
+  "classification": "G2",
+  "date": "2026-05-22",
+  "baseline_commit": "dd278a4",
+  "changes": [
+    {
+      "file": "app/execlens-demo/components/sqo-cockpit/SemanticQualificationIntakePanel.jsx",
+      "action": "MODIFIED",
+      "description": "Dual-path rendering — SPE path shows propositions, class distribution, confidence envelope, CEU coverage; CSR path preserved"
+    },
+    {
+      "file": "app/execlens-demo/styles/globals.css",
+      "action": "MODIFIED",
+      "description": "Added ~350 lines of CSS for sqo-semantic-intake component family"
+    },
+    {
+      "file": "app/execlens-demo/lib/sqo-cockpit/server/SemanticQualificationIntakeResolver.server.js",
+      "action": "MODIFIED",
+      "description": "Bug fix — added process.env.REPO_ROOT check to resolveRepoRoot(), matching SQORuntimeResolver pattern"
+    },
+    {
+      "file": "docs/pios/PI.SQO.SEMANTIC-PROPOSITION-CONSUMER-PATHWAY.01/execution_report.md",
+      "action": "CREATED",
+      "description": "Stream execution report"
+    },
+    {
+      "file": "docs/pios/PI.SQO.SEMANTIC-PROPOSITION-CONSUMER-PATHWAY.01/validation_log.json",
+      "action": "CREATED",
+      "description": "14 validation checks — all PASS"
+    },
+    {
+      "file": "docs/pios/PI.SQO.SEMANTIC-PROPOSITION-CONSUMER-PATHWAY.01/file_changes.json",
+      "action": "CREATED",
+      "description": "File change manifest"
+    },
+    {
+      "file": "docs/pios/PI.SQO.SEMANTIC-PROPOSITION-CONSUMER-PATHWAY.01/CLOSURE.md",
+      "action": "CREATED",
+      "description": "Stream closure document"
+    }
+  ],
+  "files_modified": 3,
+  "files_created": 4,
+  "files_deleted": 0
+}
