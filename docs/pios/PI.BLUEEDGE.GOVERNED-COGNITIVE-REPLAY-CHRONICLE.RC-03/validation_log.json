@@ -1,0 +1,91 @@
+{
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-03",
+  "classification": "G2",
+  "timestamp": "2026-05-22T20:00:00Z",
+  "total_checks": 16,
+  "passed": 16,
+  "failed": 0,
+  "result": "VALID",
+  "checks": [
+    {
+      "check": "rc02_checkpoint_frozen",
+      "description": "checkpoint_01_propositions.json exists and status is FROZEN",
+      "result": "PASS"
+    },
+    {
+      "check": "all_85_reviewed",
+      "description": "All 85 CANDIDATE propositions received review action",
+      "result": "PASS"
+    },
+    {
+      "check": "no_remaining_candidates",
+      "description": "No propositions with status CANDIDATE after review",
+      "result": "PASS"
+    },
+    {
+      "check": "review_event_log_created",
+      "description": "review_event_log.jsonl created with 94 events",
+      "result": "PASS"
+    },
+    {
+      "check": "all_four_actions_exercised",
+      "description": "ACCEPT, CONTEST, ARBITRATE, REJECT all exercised at least once",
+      "result": "PASS"
+    },
+    {
+      "check": "governance_proof_capsule_created",
+      "description": "governance_proof_capsule.json created with review outcomes and findings",
+      "result": "PASS"
+    },
+    {
+      "check": "review_summary_created",
+      "description": "review_summary.json created with aggregate statistics",
+      "result": "PASS"
+    },
+    {
+      "check": "checkpoint_02_created",
+      "description": "checkpoint_02_review.json created with status FROZEN",
+      "result": "PASS"
+    },
+    {
+      "check": "checkpoint_03_created",
+      "description": "checkpoint_03_governance_frozen.json created with status FROZEN",
+      "result": "PASS"
+    },
+    {
+      "check": "spine_objects_updated",
+      "description": "spine_objects.json updated to 5 objects (SPINE-RC03-QT-001 and SPINE-RC03-QT-002 added)",
+      "result": "PASS"
+    },
+    {
+      "check": "spine_index_updated",
+      "description": "spine_index.json updated with checkpoint_02 and checkpoint_03 references",
+      "result": "PASS"
+    },
+    {
+      "check": "manifest_updated",
+      "description": "CHRONICLE_MANIFEST.json updated: RC-03 COMPLETE, both checkpoints COMPLETE",
+      "result": "PASS"
+    },
+    {
+      "check": "operator_authority_verified",
+      "description": "All review actions performed by operator:krayu at L2 authority. No automated acceptance or rejection.",
+      "result": "PASS"
+    },
+    {
+      "check": "authority_ceiling_maintained",
+      "description": "All propositions remain at L3 authority ceiling (operator L2 cannot elevate)",
+      "result": "PASS"
+    },
+    {
+      "check": "counts_consistent",
+      "description": "71 ACCEPTED + 14 REJECTED = 85 total. 62 direct + 9 arbitrated = 71 accepted.",
+      "result": "PASS"
+    },
+    {
+      "check": "netbox_not_mutated",
+      "description": "No files under clients/netbox/ modified",
+      "result": "PASS"
+    }
+  ]
+}

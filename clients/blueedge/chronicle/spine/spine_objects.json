@@ -1,0 +1,353 @@
+{
+  "schema_version": "1.0",
+  "chronicle_id": "blueedge-governed-cognitive-replay-chronicle",
+  "client": "blueedge",
+  "accumulated_at": "2026-05-23T00:30:00Z",
+  "total_objects": 12,
+  "objects": [
+    {
+      "spine_id": "SPINE-RC01-EO-001",
+      "spine_class": "evidence_object",
+      "checkpoint_ref": "checkpoint_00_baseline",
+      "timestamp": "2026-05-22T18:00:00Z",
+      "content": {
+        "evidence_type": "BASELINE_STATE_CAPTURE",
+        "client": "blueedge",
+        "canonical_run": "run_blueedge_productized_01_fixed",
+        "captured_artifacts": {
+          "promotion_state": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/sqo/promotion_state.json",
+          "qualification_blockers": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/sqo/qualification_blockers.json",
+          "review_obligations": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/sqo/review_obligations.json",
+          "promotion_event_log": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/sqo/promotion_event_log.jsonl",
+          "client_semantic_registry": "clients/blueedge/semantic/client_semantic_registry.json",
+          "semantic_topology_model": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/semantic_topology_model.json",
+          "evidence_sources": "clients/blueedge/sqo/evidence_sources.yaml",
+          "sdc_candidate_csr": "clients/blueedge/psee/runs/run_blueedge_sdc_validation_01/semantic/compiler/candidate_csr.json",
+          "sdc_derivation_report": "clients/blueedge/psee/runs/run_blueedge_sdc_validation_01/semantic/compiler/derivation_report.json"
+        },
+        "state_summary": {
+          "s_level": "S2",
+          "qualification_provenance": "LEGACY_QUALIFICATION_BRIDGE",
+          "total_blockers": 15,
+          "irreducible_count": 4,
+          "enrichable_count": 8,
+          "evidence_reducible_count": 1,
+          "continuity_count": 2,
+          "csr_domains": 17,
+          "vault_claims": 28,
+          "evidence_files": 3,
+          "evidence_total_bytes": 505414,
+          "psee_runs": 18,
+          "governance_events": 2,
+          "propositions": 0,
+          "review_obligations": 0
+        }
+      }
+    },
+    {
+      "spine_id": "SPINE-RC01-EP-001",
+      "spine_class": "executive_projection_snapshot",
+      "checkpoint_ref": "checkpoint_00_baseline",
+      "timestamp": "2026-05-22T18:00:00Z",
+      "content": {
+        "projection_type": "BASELINE_EXECUTIVE_STATE",
+        "client": "blueedge",
+        "executive_summary": {
+          "qualification_state": "S2 via LEGACY QUALIFICATION BRIDGE",
+          "governance_maturity": "PROJECTED — no governed lifecycle exercised",
+          "evidence_depth": "3 HTML evidence files (505KB, 4,546 lines), 28 vault claims",
+          "semantic_coverage": "17 domains at domain level only. SDC candidate CSR exists (19 domains, 207 components, 95.17% DIRECT_EVIDENCE). No propositions derived.",
+          "debt_profile": "15 blockers: 4 irreducible structural absence, 8 reducible by enrichment, 1 reducible by evidence, 2 continuity gaps",
+          "governance_gap": "S2 earned via governance projection (system actors), not governed lifecycle (operator review, friction, strengthening)"
+        },
+        "what_the_chronicle_will_prove": [
+          "That governance patterns transfer from NetBox to BlueEdge",
+          "That PATH B evidence (HTML documents) can produce governed semantic propositions",
+          "That operator review generates genuine governance friction on document-derived claims",
+          "That evidence enrichment strengthens propositions even without code graph access",
+          "That deterministic revalidation confirms governance-driven improvement",
+          "That S2_BRIDGE → S2_GOVERNED transition demonstrates the governance lifecycle is specimen-independent",
+          "That cross-specimen convergence establishes Program Intelligence as a discipline, not a one-specimen trick"
+        ]
+      }
+    },
+    {
+      "spine_id": "SPINE-RC02-SP-001",
+      "spine_class": "semantic_proposition_derivation",
+      "checkpoint_ref": "checkpoint_01_propositions",
+      "timestamp": "2026-05-22T19:00:00Z",
+      "content": {
+        "derivation_type": "PATH_B_PROPOSITION_BRIDGE",
+        "bridge_script": "scripts/pios/sdc/proposition_bridge.py",
+        "input_artifacts": [
+          "clients/blueedge/semantic/client_semantic_registry.json",
+          "clients/blueedge/psee/runs/run_blueedge_sdc_validation_01/semantic/compiler/candidate_csr.json",
+          "clients/blueedge/psee/runs/run_blueedge_sdc_validation_01/semantic/compiler/derivation_report.json",
+          "clients/blueedge/vaults/run_01_authoritative/claims/"
+        ],
+        "output_artifact": "clients/blueedge/chronicle/propositions/semantic_propositions.json",
+        "proposition_summary": {
+          "total": 85,
+          "DOMAIN_EVIDENCE_GROUNDING": 17,
+          "CAPABILITY_EVIDENCE": 24,
+          "VAULT_CLAIM_STRUCTURAL": 25,
+          "CROSS_DOMAIN_EVIDENCE": 19,
+          "DIRECT_EVIDENCE_count": 53,
+          "DERIVED_count": 32,
+          "mean_confidence": 0.728,
+          "all_status": "CANDIDATE",
+          "authority_ceiling": "L3"
+        }
+      }
+    },
+    {
+      "spine_id": "SPINE-RC03-QT-001",
+      "spine_class": "qualification_transition",
+      "checkpoint_ref": "checkpoint_02_review",
+      "timestamp": "2026-05-22T20:00:00Z",
+      "content": {
+        "transition_type": "OPERATOR_REVIEW_COMPLETE",
+        "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-03",
+        "operator": "operator:krayu",
+        "review_summary": {
+          "total_reviewed": 85,
+          "accepted_direct": 62,
+          "contested": 9,
+          "arbitrated_to_accept": 9,
+          "rejected": 14,
+          "final_accepted": 71,
+          "final_rejected": 14,
+          "governance_events": 94,
+          "governance_findings": 5,
+          "friction_types_exercised": ["ACCEPT", "CONTEST", "ARBITRATE", "REJECT"]
+        },
+        "key_findings": [
+          "Domain ID mismatch between canonical CSR and SDC candidate CSR (3 propositions affected)",
+          "SDC layer label parsing artifacts promoted to capabilities (3 rejected)",
+          "SDC domain overflow beyond canonical 17-domain ontology (2 rejected)",
+          "Grounding status conflict — uniform confidence ignoring WEAKLY_GROUNDED (2 adjusted)",
+          "Functional overlap misclassified as cross-domain evidence (4 rejected)"
+        ],
+        "governance_proof_ref": "clients/blueedge/chronicle/governance/governance_proof_capsule.json"
+      }
+    },
+    {
+      "spine_id": "SPINE-RC03-QT-002",
+      "spine_class": "qualification_transition",
+      "checkpoint_ref": "checkpoint_03_governance",
+      "timestamp": "2026-05-22T20:00:00Z",
+      "content": {
+        "transition_type": "GOVERNANCE_FREEZE",
+        "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-03",
+        "operator": "operator:krayu",
+        "governance_state": {
+          "review_complete": true,
+          "arbitration_complete": true,
+          "all_propositions_final": true,
+          "friction_exercised": true,
+          "non_automatable_boundary_held": true
+        },
+        "significance": "First genuine operator governance review on BlueEdge specimen. Exercises full SQO Authority Workflow lifecycle (ACCEPT/CONTEST/ARBITRATE/REJECT). Governance friction surfaced structural defect in proposition bridge (domain ID matching) — the system cannot self-correct without operator challenge.",
+        "ready_for": "RC-04 Evidence Enrichment from HTML Documents"
+      }
+    },
+    {
+      "spine_id": "SPINE-RC04-EO-001",
+      "spine_class": "evidence_object",
+      "checkpoint_ref": "checkpoint_04_enrichment",
+      "timestamp": "2026-05-22T21:00:00Z",
+      "content": {
+        "evidence_type": "DOMAIN_ID_CORRECTION_ENRICHMENT",
+        "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-04",
+        "enrichment_summary": {
+          "primary_mechanism": "Semantic name matching between canonical CSR and SDC candidate CSR domains",
+          "domains_corrected": 12,
+          "domains_confirmed": 1,
+          "domains_no_sdc_match": 3,
+          "capabilities_domain_corrected": 15,
+          "total_enrichment_events": 31,
+          "mean_confidence_before": 0.728,
+          "mean_confidence_after": 0.741,
+          "path_b_limitation": "No code graph. Enrichment bounded by SDC HTML extraction."
+        },
+        "finding_ref": "GF-RC03-001 (Domain ID mismatch)",
+        "evidence_refs": {
+          "enrichment_log": "clients/blueedge/chronicle/evidence/enrichment_log.json",
+          "evidence_manifest": "clients/blueedge/chronicle/evidence/evidence_manifest.json"
+        }
+      }
+    },
+    {
+      "spine_id": "SPINE-RC04-EO-002",
+      "spine_class": "evidence_object",
+      "checkpoint_ref": "checkpoint_05_debt",
+      "timestamp": "2026-05-22T21:00:00Z",
+      "content": {
+        "evidence_type": "DEBT_EVOLUTION_ASSESSMENT",
+        "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-04",
+        "debt_summary": {
+          "total_items": 15,
+          "improved": 4,
+          "unchanged": 5,
+          "worsened": 6,
+          "resolved": 0,
+          "trajectory": "HONEST_LIMITATION",
+          "note": "Enrichment produced more accurate evidence, not uniformly better evidence. The system is now more honest about what PATH B can prove."
+        },
+        "evidence_ref": "clients/blueedge/chronicle/governance/debt_evolution.json"
+      }
+    },
+    {
+      "spine_id": "SPINE-RC05-RC-001",
+      "spine_class": "replay_corridor",
+      "checkpoint_ref": "checkpoint_06_revalidation",
+      "timestamp": "2026-05-22T22:00:00Z",
+      "content": {
+        "corridor_type": "DETERMINISTIC_REVALIDATION",
+        "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-05",
+        "revalidation_framework": "9-phase/48-check (adapted from NetBox PATH A)",
+        "result": "VALID",
+        "total_checks": 48,
+        "passed": 48,
+        "failed": 0,
+        "corridor_span": {
+          "from_checkpoint": "checkpoint_00_baseline",
+          "to_checkpoint": "checkpoint_06_revalidation",
+          "checkpoints_traversed": 7,
+          "semantic_phases_covered": ["EMERGENCE", "FORMATION", "TENSION", "STRENGTHENING", "STABILIZATION"]
+        },
+        "deterministic_replay_proof": {
+          "structural_integrity": "8/8 — all propositions structurally valid",
+          "evidence_integrity": "5/5 — all evidence anchors resolve",
+          "confidence_realism": "6/6 — confidence bounds realistic for PATH B evidence",
+          "governance_integrity": "5/5 — full lifecycle exercised with non-automatable boundary",
+          "enrichment_integrity": "5/5 — domain mapping correct, pre-enrichment values preserved",
+          "checkpoint_integrity": "4/4 — all checkpoints frozen and contiguous",
+          "spine_integrity": "4/4 — all spine objects valid and indexed",
+          "sqo_state_consistency": "3/3 — S2 preserved, no unauthorized promotion",
+          "corpus_evolution": "8/8 — acceptance rate, enrichment delta, tier ratios within bounds"
+        },
+        "comparison_with_netbox": {
+          "netbox_result": "48/48 PASS",
+          "blueedge_result": "48/48 PASS",
+          "adaptation": "Code graph phases replaced with evidence/enrichment integrity. Same structural rigor, different evidence channels."
+        },
+        "significance": "Deterministic revalidation confirms that governance-challenged, evidence-enriched PATH B corpus holds under the same structural rigor framework used for NetBox PATH A. The revalidation pattern transfers across specimen types.",
+        "revalidation_result_ref": "clients/blueedge/chronicle/checkpoints/revalidation_result.json"
+      }
+    },
+    {
+      "spine_id": "SPINE-RC06-QT-001",
+      "spine_class": "qualification_transition",
+      "checkpoint_ref": "checkpoint_07_advancement",
+      "timestamp": "2026-05-22T23:00:00Z",
+      "content": {
+        "transition_type": "S2_BRIDGE_TO_S2_GOVERNED",
+        "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-06",
+        "operator": "operator:krayu",
+        "qualification_type": "POST_GENESIS_SEMANTIC_REPLAY",
+        "advancement_summary": {
+          "prior_provenance": "GOVERNANCE_PROJECTION (system:pipeline)",
+          "new_provenance": "GOVERNED_REPLAY_QUALIFICATION (operator:krayu)",
+          "transition": "S2_BRIDGE → S2_GOVERNED",
+          "governed_lifecycle_streams": ["RC-01", "RC-02", "RC-03", "RC-04", "RC-05", "RC-06"],
+          "checkpoints_frozen": 8,
+          "spine_objects_emitted": 9,
+          "governance_events": 94,
+          "propositions_reviewed": 85,
+          "revalidation_result": "48/48 PASS"
+        },
+        "significance": "BlueEdge's S2 qualification provenance transitions from LEGACY_QUALIFICATION_BRIDGE (system actors, governance projection) to GOVERNED_REPLAY_QUALIFICATION (operator review, genuine governance friction, deterministic revalidation). This proves governance lifecycle patterns transfer across specimens within a post-genesis replay corridor.",
+        "corridor_boundary": "Post-genesis semantic replay corridor. Operates on already-materialized semantic substrates. Genesis layer remains future upstream work.",
+        "promotion_state_ref": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/sqo/promotion_state.json"
+      }
+    },
+    {
+      "spine_id": "SPINE-RC07-CO-001",
+      "spine_class": "convergence_observation",
+      "checkpoint_ref": "checkpoint_08_convergence",
+      "timestamp": "2026-05-22T23:30:00Z",
+      "content": {
+        "observation_type": "CROSS_SPECIMEN_GOVERNANCE_CONVERGENCE",
+        "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-07",
+        "specimens": ["netbox (full governed semantic evolution)", "blueedge (post-genesis governed semantic replay)"],
+        "pattern_status": "OBSERVED",
+        "interpretation_maturity": "DESCRIPTIVE",
+        "total_observations": 7,
+        "candidate_laws": 7,
+        "all_evidence_strength": "SUPPORTED_BY_BOTH_SPECIMENS",
+        "comparison_dimensions": 15,
+        "convergent": 8,
+        "divergent": 7,
+        "significance": "First formal evidence that governed cognition patterns are not specimen-specific. Two independent specimens with different evidence channels, different proposition engines, and different enrichment mechanisms demonstrate convergent governance discipline. The governance framework generalizes across evidence sources.",
+        "scope_boundary": "Observations are DESCRIPTIVE (2 specimens = comparison, not pattern). BlueEdge proves governed replay qualification over a post-genesis corridor, NOT raw intake genesis. Candidate laws require 3+ specimens for promotion.",
+        "convergence_observations_ref": "clients/blueedge/chronicle/convergence/convergence_observations.json"
+      }
+    },
+    {
+      "spine_id": "SPINE-RC08-NO-001",
+      "spine_class": "narrative_orchestration",
+      "checkpoint_ref": "checkpoint_09_narrative",
+      "timestamp": "2026-05-23T00:00:00Z",
+      "content": {
+        "orchestration_type": "COGNITIVE_TRAVERSAL_CHRONICLE",
+        "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-08",
+        "chronicle_artifact": "clients/blueedge/chronicle/REPLAY_CHRONICLE.html",
+        "chronicle_size_bytes": 63825,
+        "chapters": 8,
+        "zoom_levels": 5,
+        "authority_level": "75.x",
+        "prohibitions_enforced": 13,
+        "semantic_rhythm": ["EMERGENCE", "FORMATION", "TENSION", "STRENGTHENING", "STABILIZATION", "QUALIFICATION", "CONVERGENCE", "PROJECTION"],
+        "narrative_architecture": {
+          "format": "Self-contained HTML, no JavaScript",
+          "depth_model": "Z1-Z5 via <details>/<summary> progressive disclosure",
+          "z1_executive_understanding": "Always visible — narrative prose per chapter",
+          "z2_semantic_interpretation": "Proposition statistics, confidence, tier changes",
+          "z3_governance_detail": "Review events, arbitration, governance findings",
+          "z4_structural_proof": "Spine object references, checkpoint state, evidence anchors",
+          "z5_raw_evidence": "Evidence file references, substrate state"
+        },
+        "proof_capsules_ref": "clients/blueedge/chronicle/narrative/narrative_proof_capsules.json",
+        "authority_ref": "clients/blueedge/chronicle/narrative/narrative_authority.json",
+        "spine_objects_referenced": 10,
+        "checkpoints_referenced": 9,
+        "significance": "The governed cognitive replay is now communicable. The chronicle composes 8 semantic phases into a navigable cognitive traversal instrument. The audience experiences how PI acted on intake — not documentation of cognition, but a lens into cognition."
+      }
+    },
+    {
+      "spine_id": "SPINE-RC09-DC-001",
+      "spine_class": "doctrine_evolution_record",
+      "checkpoint_ref": "checkpoint_10_certified",
+      "timestamp": "2026-05-23T00:30:00Z",
+      "content": {
+        "evolution_type": "CHRONICLE_CERTIFICATION",
+        "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-09",
+        "certification_status": "REPLAY-CERTIFIED",
+        "certification_checks": "10/10 PASS",
+        "chronicle_summary": {
+          "streams_completed": 9,
+          "checkpoints_frozen": 11,
+          "spine_objects_emitted": 12,
+          "chapters_rendered": 8,
+          "governance_events": 94,
+          "propositions_reviewed": 85,
+          "revalidation_checks_passed": 48,
+          "convergence_observations": 7,
+          "candidate_laws": 7,
+          "qualification_transition": "S2_BRIDGE → S2_GOVERNED",
+          "corridor_type": "POST_GENESIS_SEMANTIC_REPLAY"
+        },
+        "doctrine_contribution": "The governed cognitive replay chronicle establishes that: (1) governance lifecycle patterns transfer across specimens with different evidence channels, (2) cross-specimen convergence can be formally observed while preserving structural diversity, (3) governed cognition can be composed into navigable cognitive traversal instruments. These are OBSERVATIONAL contributions at DESCRIPTIVE maturity — they require additional specimens for pattern promotion.",
+        "vault_propagation": {
+          "canonical_state_updated": true,
+          "terminology_unchanged": true,
+          "blueedge_row_updated": true,
+          "chronicle_concept_added": true
+        },
+        "certification_ref": "clients/blueedge/chronicle/certification/chronicle_certification.json",
+        "corridor_ref": "clients/blueedge/chronicle/certification/replay_corridor_full.json"
+      }
+    }
+  ]
+}

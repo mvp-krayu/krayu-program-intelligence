@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "checkpoint_id": "checkpoint_03_governance",
+  "semantic_phase": "TENSION",
+  "description": "After governance freeze — friction, dispute, rejection complete",
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-03",
+  "status": "FROZEN",
+  "frozen_at": "2026-05-22T20:00:00Z",
+  "operator": "operator:krayu",
+  "governance_state": {
+    "review_complete": true,
+    "arbitration_complete": true,
+    "all_propositions_final": true,
+    "no_remaining_candidates": true,
+    "governance_friction_exercised": true,
+    "friction_types_exercised": ["ACCEPT", "CONTEST", "ARBITRATE", "REJECT"],
+    "operator_review_genuine": true,
+    "non_automatable_boundary_held": true
+  },
+  "final_proposition_state": {
+    "total": 85,
+    "accepted": 71,
+    "rejected": 14,
+    "by_class": {
+      "DOMAIN_EVIDENCE_GROUNDING": {"total": 17, "accepted": 16, "rejected": 1},
+      "CAPABILITY_EVIDENCE": {"total": 24, "accepted": 17, "rejected": 7},
+      "VAULT_CLAIM_STRUCTURAL": {"total": 25, "accepted": 23, "rejected": 2},
+      "CROSS_DOMAIN_EVIDENCE": {"total": 19, "accepted": 15, "rejected": 4}
+    },
+    "by_tier": {
+      "DIRECT_EVIDENCE": {"accepted": 49, "rejected": 4, "total": 53},
+      "DERIVED": {"accepted": 22, "rejected": 10, "total": 32}
+    }
+  },
+  "governance_lifecycle_proof": {
+    "genuine_operator_action": true,
+    "not_simulated": true,
+    "friction_generated_findings": true,
+    "findings_actionable_for_enrichment": true,
+    "domain_id_mismatch_discovered": true,
+    "governance_friction_comment": "Governance review surfaced a structural defect in the proposition bridge (domain ID matching by number instead of semantic name). This is precisely the kind of quality improvement that governed review provides — the system cannot self-correct without operator challenge."
+  },
+  "evidence_refs": {
+    "checkpoint_02_review": "clients/blueedge/chronicle/checkpoints/checkpoint_02_review.json",
+    "governance_proof_capsule": "clients/blueedge/chronicle/governance/governance_proof_capsule.json",
+    "review_event_log": "clients/blueedge/chronicle/propositions/review_event_log.jsonl"
+  },
+  "predecessor": "checkpoint_02_review",
+  "ready_for": "RC-04 Evidence Enrichment"
+}

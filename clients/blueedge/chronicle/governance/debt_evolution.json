@@ -1,0 +1,178 @@
+{
+  "schema_version": "1.0",
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-04",
+  "timestamp": "2026-05-22T21:00:00Z",
+  "total_debt_items": 15,
+  "improved": 4,
+  "unchanged": 5,
+  "worsened": 6,
+  "blockers_resolved": 0,
+  "resolution_note": "No blockers resolved — all block S3 and require L5 structural authority. PATH B enrichment from HTML evidence cannot provide code-level structural proof.",
+  "debt_trajectory": {
+    "pre_enrichment": {
+      "irreducible": 4,
+      "reduced_by_enrichment": 8,
+      "reducible_by_evidence": 1,
+      "continuity_gap": 2
+    },
+    "post_enrichment": {
+      "irreducible": 4,
+      "reduced_by_enrichment": 8,
+      "reducible_by_evidence": 1,
+      "continuity_gap": 2,
+      "note": "Reducibility classifications unchanged — enrichment improved evidence quality but did not change the structural authority required to resolve these blockers"
+    }
+  },
+  "items": [
+    {
+      "blocker_id": "BLK-BE-001",
+      "domain_id": "DOMAIN-02",
+      "original_reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "CONFIRMED_STABLE",
+      "post_enrichment_reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+      "evidence_change": "Component count confirmed by name-matched SDC domain"
+    },
+    {
+      "blocker_id": "BLK-BE-002",
+      "domain_id": "DOMAIN-03",
+      "original_reducibility": "REDUCED_BY_ENRICHMENT",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "IMPROVED",
+      "post_enrichment_reducibility": "REDUCED_BY_ENRICHMENT",
+      "evidence_change": "Component count increased: 3 → 7 (name-matched SDC domain has more components than ID-matched domain)"
+    },
+    {
+      "blocker_id": "BLK-BE-003",
+      "domain_id": "DOMAIN-04",
+      "original_reducibility": "REDUCED_BY_ENRICHMENT",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "REDUCED_EVIDENCE",
+      "post_enrichment_reducibility": "REDUCED_BY_ENRICHMENT",
+      "evidence_change": "Component count decreased: 6 → 3 (name-matched SDC domain has fewer components)"
+    },
+    {
+      "blocker_id": "BLK-BE-004",
+      "domain_id": "DOMAIN-05",
+      "original_reducibility": "REDUCED_BY_ENRICHMENT",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "WORSENED",
+      "post_enrichment_reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+      "evidence_change": "NO_SDC_MATCH — domain has no SDC component evidence after name-based matching"
+    },
+    {
+      "blocker_id": "BLK-BE-005",
+      "domain_id": "DOMAIN-06",
+      "original_reducibility": "REDUCED_BY_ENRICHMENT",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "REDUCED_EVIDENCE",
+      "post_enrichment_reducibility": "REDUCED_BY_ENRICHMENT",
+      "evidence_change": "Component count decreased: 10 → 6 (name-matched SDC domain has fewer components)"
+    },
+    {
+      "blocker_id": "BLK-BE-006",
+      "domain_id": "DOMAIN-07",
+      "original_reducibility": "REDUCED_BY_ENRICHMENT",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "REDUCED_EVIDENCE",
+      "post_enrichment_reducibility": "REDUCED_BY_ENRICHMENT",
+      "evidence_change": "Component count decreased: 4 → 3 (name-matched SDC domain has fewer components)"
+    },
+    {
+      "blocker_id": "BLK-BE-007",
+      "domain_id": "DOMAIN-08",
+      "original_reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "CONFIRMED_IRREDUCIBLE",
+      "post_enrichment_reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+      "evidence_change": "NO_SDC_MATCH — domain has no SDC component evidence after name-based matching"
+    },
+    {
+      "blocker_id": "BLK-BE-008",
+      "domain_id": "DOMAIN-09",
+      "original_reducibility": "REDUCED_BY_ENRICHMENT",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "IMPROVED",
+      "post_enrichment_reducibility": "REDUCED_BY_ENRICHMENT",
+      "evidence_change": "Component count increased: 4 → 8 (name-matched SDC domain has more components than ID-matched domain)"
+    },
+    {
+      "blocker_id": "BLK-BE-009",
+      "domain_id": "DOMAIN-12",
+      "original_reducibility": "REDUCED_BY_ENRICHMENT",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "REDUCED_EVIDENCE",
+      "post_enrichment_reducibility": "REDUCED_BY_ENRICHMENT",
+      "evidence_change": "Component count decreased: 10 → 4 (name-matched SDC domain has fewer components)"
+    },
+    {
+      "blocker_id": "BLK-BE-010",
+      "domain_id": "DOMAIN-13",
+      "original_reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "IMPROVED",
+      "post_enrichment_reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+      "evidence_change": "Component count increased: 2 → 4 (name-matched SDC domain has more components than ID-matched domain)"
+    },
+    {
+      "blocker_id": "BLK-BE-011",
+      "domain_id": "DOMAIN-15",
+      "original_reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "IMPROVED",
+      "post_enrichment_reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+      "evidence_change": "Component count increased: 3 → 4 (name-matched SDC domain has more components than ID-matched domain)"
+    },
+    {
+      "blocker_id": "BLK-BE-012",
+      "domain_id": "DOMAIN-17",
+      "original_reducibility": "REDUCED_BY_ENRICHMENT",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "NOT_AFFECTED",
+      "post_enrichment_reducibility": "REDUCED_BY_ENRICHMENT",
+      "evidence_change": "No domain enrichment applicable"
+    },
+    {
+      "blocker_id": "BLK-BE-013",
+      "domain_id": "DOMAIN-11",
+      "original_reducibility": "REDUCIBLE_BY_EVIDENCE",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "WORSENED",
+      "post_enrichment_reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+      "evidence_change": "NO_SDC_MATCH — domain has no SDC component evidence after name-based matching"
+    },
+    {
+      "blocker_id": "BLK-BE-014",
+      "domain_id": "",
+      "original_reducibility": "CONTINUITY_GAP",
+      "severity": "MEDIUM",
+      "blocks_s_state": "none",
+      "enrichment_impact": "NOT_AFFECTED",
+      "post_enrichment_reducibility": "CONTINUITY_GAP",
+      "evidence_change": "No domain enrichment applicable"
+    },
+    {
+      "blocker_id": "BLK-BE-015",
+      "domain_id": "",
+      "original_reducibility": "CONTINUITY_GAP",
+      "severity": "MEDIUM",
+      "blocks_s_state": "none",
+      "enrichment_impact": "NOT_AFFECTED",
+      "post_enrichment_reducibility": "CONTINUITY_GAP",
+      "evidence_change": "No domain enrichment applicable"
+    }
+  ]
+}

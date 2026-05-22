@@ -1,0 +1,63 @@
+{
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-09",
+  "classification": "G1",
+  "timestamp": "2026-05-23T00:30:00Z",
+  "files": [
+    {
+      "path": "clients/blueedge/chronicle/certification/chronicle_certification.json",
+      "action": "CREATED",
+      "description": "REPLAY-CERTIFIED — 10/10 certification checks, chronicle summary, proof/limitation documentation"
+    },
+    {
+      "path": "clients/blueedge/chronicle/certification/replay_corridor_full.json",
+      "action": "CREATED",
+      "description": "Full 11-checkpoint replay corridor with semantic phases and key metrics"
+    },
+    {
+      "path": "clients/blueedge/chronicle/checkpoints/checkpoint_10_certified.json",
+      "action": "CREATED",
+      "description": "PROJECTION checkpoint — chronicle certification frozen"
+    },
+    {
+      "path": "clients/blueedge/chronicle/spine/spine_objects.json",
+      "action": "MODIFIED",
+      "description": "SPINE-RC09-DC-001 (doctrine_evolution_record) added, total 12 objects"
+    },
+    {
+      "path": "clients/blueedge/chronicle/spine/spine_index.json",
+      "action": "MODIFIED",
+      "description": "Updated with checkpoint_10 and doctrine_evolution_record references"
+    },
+    {
+      "path": "clients/blueedge/chronicle/CHRONICLE_MANIFEST.json",
+      "action": "MODIFIED",
+      "description": "Status → REPLAY-CERTIFIED, RC-09 → COMPLETE, checkpoint_10 → COMPLETE, spine_object_count → 12"
+    },
+    {
+      "path": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "action": "MODIFIED",
+      "description": "G1 vault propagation: BlueEdge row updated (S2_GOVERNED + chronicle), 8 stream lineage entries added"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-09/execution_report.md",
+      "action": "CREATED",
+      "description": "G1 execution report with certification checks, vault propagation"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-09/validation_log.json",
+      "action": "CREATED",
+      "description": "14/14 validation checks PASS"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-09/file_changes.json",
+      "action": "CREATED",
+      "description": "This file"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-09/CLOSURE.md",
+      "action": "CREATED",
+      "description": "G1 stream closure with Section 10 Architecture Memory Propagation"
+    }
+  ],
+  "total_files": 11
+}

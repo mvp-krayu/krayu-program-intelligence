@@ -1,0 +1,58 @@
+{
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-05",
+  "classification": "G2",
+  "timestamp": "2026-05-22T22:00:00Z",
+  "files": [
+    {
+      "path": "scripts/pios/sdc/revalidation_rc05.py",
+      "action": "CREATED",
+      "description": "Deterministic revalidation script — 48 checks, 9 phases, adapted from NetBox PATH A"
+    },
+    {
+      "path": "clients/blueedge/chronicle/checkpoints/revalidation_result.json",
+      "action": "CREATED",
+      "description": "Revalidation result: 48/48 PASS, VALID, with NetBox comparison"
+    },
+    {
+      "path": "clients/blueedge/chronicle/checkpoints/checkpoint_06_revalidation.json",
+      "action": "CREATED",
+      "description": "STABILIZATION checkpoint — revalidation state frozen"
+    },
+    {
+      "path": "clients/blueedge/chronicle/spine/spine_objects.json",
+      "action": "MODIFIED",
+      "description": "SPINE-RC05-RC-001 (replay_corridor) added, total 8 objects"
+    },
+    {
+      "path": "clients/blueedge/chronicle/spine/spine_index.json",
+      "action": "MODIFIED",
+      "description": "Updated with checkpoint_06 and replay_corridor references"
+    },
+    {
+      "path": "clients/blueedge/chronicle/CHRONICLE_MANIFEST.json",
+      "action": "MODIFIED",
+      "description": "RC-05 → COMPLETE, checkpoint_06 → COMPLETE, spine_object_count → 8"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-05/execution_report.md",
+      "action": "CREATED",
+      "description": "G2 execution report with full 48-check detail"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-05/validation_log.json",
+      "action": "CREATED",
+      "description": "12/12 stream validation checks PASS"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-05/file_changes.json",
+      "action": "CREATED",
+      "description": "This file"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-05/CLOSURE.md",
+      "action": "CREATED",
+      "description": "G2 stream closure"
+    }
+  ],
+  "total_files": 10
+}

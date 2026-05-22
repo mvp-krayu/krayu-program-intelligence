@@ -1,0 +1,78 @@
+{
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-04",
+  "classification": "G2",
+  "timestamp": "2026-05-22T21:00:00Z",
+  "files": [
+    {
+      "path": "scripts/pios/sdc/evidence_enrichment_rc04.py",
+      "action": "CREATED",
+      "description": "Evidence enrichment script — domain ID correction + debt evolution"
+    },
+    {
+      "path": "clients/blueedge/chronicle/propositions/semantic_propositions.json",
+      "action": "MODIFIED",
+      "description": "12 domain propositions updated with corrected component counts, 15 capabilities with corrected domain refs, confidence recalculated"
+    },
+    {
+      "path": "clients/blueedge/chronicle/evidence/enrichment_log.json",
+      "action": "CREATED",
+      "description": "31 enrichment events: 12 domain corrections, 1 domain confirmed, 3 NO_SDC_MATCH, 15 capability corrections"
+    },
+    {
+      "path": "clients/blueedge/chronicle/evidence/evidence_manifest.json",
+      "action": "CREATED",
+      "description": "Evidence source inventory: 3 HTML files (505KB), domain name mapping"
+    },
+    {
+      "path": "clients/blueedge/chronicle/governance/debt_evolution.json",
+      "action": "CREATED",
+      "description": "Debt evolution: 4 improved, 5 unchanged, 6 worsened, 0 resolved"
+    },
+    {
+      "path": "clients/blueedge/chronicle/checkpoints/checkpoint_04_enrichment.json",
+      "action": "CREATED",
+      "description": "STRENGTHENING checkpoint — evidence enrichment state frozen"
+    },
+    {
+      "path": "clients/blueedge/chronicle/checkpoints/checkpoint_05_debt.json",
+      "action": "CREATED",
+      "description": "STRENGTHENING checkpoint — debt assessment state frozen"
+    },
+    {
+      "path": "clients/blueedge/chronicle/spine/spine_objects.json",
+      "action": "MODIFIED",
+      "description": "SPINE-RC04-EO-001 (enrichment) and SPINE-RC04-EO-002 (debt_evolution) added"
+    },
+    {
+      "path": "clients/blueedge/chronicle/spine/spine_index.json",
+      "action": "MODIFIED",
+      "description": "Updated with checkpoint_04 and checkpoint_05 references"
+    },
+    {
+      "path": "clients/blueedge/chronicle/CHRONICLE_MANIFEST.json",
+      "action": "MODIFIED",
+      "description": "RC-04 → COMPLETE, checkpoint_04 → COMPLETE, checkpoint_05 → COMPLETE, spine_object_count → 7"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-04/execution_report.md",
+      "action": "CREATED",
+      "description": "G2 execution report"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-04/validation_log.json",
+      "action": "CREATED",
+      "description": "14/14 validation checks PASS"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-04/file_changes.json",
+      "action": "CREATED",
+      "description": "This file"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-04/CLOSURE.md",
+      "action": "CREATED",
+      "description": "G2 stream closure"
+    }
+  ],
+  "total_files": 14
+}

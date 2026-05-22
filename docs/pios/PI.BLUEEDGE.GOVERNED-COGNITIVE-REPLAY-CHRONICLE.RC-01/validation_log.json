@@ -1,0 +1,101 @@
+{
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-01",
+  "classification": "G1",
+  "timestamp": "2026-05-22T18:00:00Z",
+  "total_checks": 18,
+  "passed": 18,
+  "failed": 0,
+  "result": "VALID",
+  "checks": [
+    {
+      "check": "chronicle_vault_directory_exists",
+      "description": "clients/blueedge/chronicle/ directory tree created",
+      "result": "PASS"
+    },
+    {
+      "check": "chronicle_manifest_exists",
+      "description": "CHRONICLE_MANIFEST.json created with valid schema",
+      "result": "PASS"
+    },
+    {
+      "check": "manifest_stream_count",
+      "description": "Manifest contains 9 stream entries (RC-01 through RC-09)",
+      "result": "PASS"
+    },
+    {
+      "check": "manifest_checkpoint_count",
+      "description": "Manifest contains 11 checkpoint definitions (00 through 10)",
+      "result": "PASS"
+    },
+    {
+      "check": "manifest_chapter_count",
+      "description": "Manifest contains 8 chapter definitions",
+      "result": "PASS"
+    },
+    {
+      "check": "manifest_semantic_rhythm",
+      "description": "All 8 semantic phases present: EMERGENCE through PROJECTION",
+      "result": "PASS"
+    },
+    {
+      "check": "checkpoint_00_exists",
+      "description": "checkpoint_00_baseline.json created",
+      "result": "PASS"
+    },
+    {
+      "check": "checkpoint_00_client_identity",
+      "description": "Client identity matches clients/blueedge/client.yaml",
+      "result": "PASS"
+    },
+    {
+      "check": "checkpoint_00_sqo_state",
+      "description": "SQO state captured: S2, LEGACY_QUALIFICATION_BRIDGE, 15 blockers",
+      "result": "PASS"
+    },
+    {
+      "check": "checkpoint_00_evidence_sources",
+      "description": "3 HTML evidence files captured with sizes and line counts",
+      "result": "PASS"
+    },
+    {
+      "check": "checkpoint_00_semantic_ontology",
+      "description": "CSR (17 domains), topology (17/5/12), SDC candidate (19 domains, 207 components)",
+      "result": "PASS"
+    },
+    {
+      "check": "checkpoint_00_psee_history",
+      "description": "18 PSEE runs enumerated",
+      "result": "PASS"
+    },
+    {
+      "check": "checkpoint_00_governance_gap",
+      "description": "what_is_missing section documents all governance lifecycle gaps",
+      "result": "PASS"
+    },
+    {
+      "check": "spine_objects_emitted",
+      "description": "2 spine objects emitted: evidence_object + executive_projection_snapshot",
+      "result": "PASS"
+    },
+    {
+      "check": "spine_index_consistent",
+      "description": "Spine index references match spine_objects.json",
+      "result": "PASS"
+    },
+    {
+      "check": "implementation_semantics_produced",
+      "description": "§5.5 IMPLEMENTATION_SEMANTICS.md created with 6 required sections",
+      "result": "PASS"
+    },
+    {
+      "check": "netbox_not_mutated",
+      "description": "No files under clients/netbox/ modified",
+      "result": "PASS"
+    },
+    {
+      "check": "checkpoint_status_frozen",
+      "description": "checkpoint_00_baseline.json status is FROZEN",
+      "result": "PASS"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-01",
+  "classification": "G1",
+  "timestamp": "2026-05-22T18:00:00Z",
+  "files": [
+    {
+      "path": "clients/blueedge/chronicle/CHRONICLE_MANIFEST.json",
+      "action": "CREATED",
+      "description": "Master chronicle manifest — 9 streams, 11 checkpoints, 8 chapters, semantic rhythm"
+    },
+    {
+      "path": "clients/blueedge/chronicle/checkpoints/checkpoint_00_baseline.json",
+      "action": "CREATED",
+      "description": "Baseline checkpoint — full BlueEdge state capture (SQO, CSR, evidence, PSEE history, governance gap)"
+    },
+    {
+      "path": "clients/blueedge/chronicle/spine/spine_objects.json",
+      "action": "CREATED",
+      "description": "2 baseline spine objects: evidence_object (SPINE-RC01-EO-001), executive_projection_snapshot (SPINE-RC01-EP-001)"
+    },
+    {
+      "path": "clients/blueedge/chronicle/spine/spine_index.json",
+      "action": "CREATED",
+      "description": "Spine cross-reference index by type, checkpoint, timestamp"
+    },
+    {
+      "path": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "action": "MODIFIED",
+      "description": "G1 vault propagation — chronicle concept added to ontology lineage"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-01/execution_report.md",
+      "action": "CREATED",
+      "description": "G1 execution report — 5 phases, architecture mutations, pre-flight verification"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-01/validation_log.json",
+      "action": "CREATED",
+      "description": "18/18 validation checks PASS"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-01/file_changes.json",
+      "action": "CREATED",
+      "description": "This file"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-01/CLOSURE.md",
+      "action": "CREATED",
+      "description": "G1 stream closure with §10 Architecture Memory Propagation"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-01/IMPLEMENTATION_SEMANTICS.md",
+      "action": "CREATED",
+      "description": "§5.5 implementation semantics — chronicle vault structure, checkpoint contract, proof object contract"
+    }
+  ],
+  "total_files": 10
+}

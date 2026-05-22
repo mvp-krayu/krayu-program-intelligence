@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-03",
+  "timestamp": "2026-05-22T20:00:00Z",
+  "total_reviewed": 85,
+  "final_accepted": 71,
+  "final_rejected": 14,
+  "acceptance_rate": 83.5,
+  "rejection_rate": 16.5,
+  "contest_rate": 10.6,
+  "governance_event_count": 94,
+  "rejection_categories": {
+    "domain_id_mismatch": 3,
+    "sdc_parsing_artifacts": 3,
+    "sdc_domain_overflow": 2,
+    "projected_value": 1,
+    "ambiguous_dual_value": 1,
+    "functional_overlap_misclassified": 4
+  },
+  "mean_confidence_accepted": 0.754,
+  "mean_confidence_original": 0.728
+}

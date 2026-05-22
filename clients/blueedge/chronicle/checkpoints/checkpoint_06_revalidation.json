@@ -1,0 +1,49 @@
+{
+  "checkpoint_id": "checkpoint_06_revalidation",
+  "status": "FROZEN",
+  "semantic_phase": "STABILIZATION",
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-05",
+  "classification": "G2",
+  "timestamp": "2026-05-22T22:00:00Z",
+  "description": "After deterministic revalidation — what was challenged now holds",
+  "predecessor": "checkpoint_05_debt",
+  "revalidation_summary": {
+    "framework": "9-phase/48-check (adapted from NetBox PATH A)",
+    "total_checks": 48,
+    "passed": 48,
+    "failed": 0,
+    "result": "VALID",
+    "phases": {
+      "structural_integrity": "8/8",
+      "evidence_integrity": "5/5",
+      "confidence_realism": "6/6",
+      "governance_integrity": "5/5",
+      "enrichment_integrity": "5/5",
+      "checkpoint_integrity": "4/4",
+      "spine_integrity": "4/4",
+      "sqo_state_consistency": "3/3",
+      "corpus_evolution": "8/8"
+    },
+    "adaptation_from_netbox": "Code graph phases (centrality, coupling, topology) replaced with evidence integrity and enrichment integrity phases. Same structural rigor, different evidence channels.",
+    "path_b_limitation": "No code graph authority. Revalidation confirms structural integrity of document-derived evidence, not code-structural authority."
+  },
+  "corpus_state_at_freeze": {
+    "total_propositions": 85,
+    "accepted": 71,
+    "rejected": 14,
+    "acceptance_rate": 0.835,
+    "mean_confidence_accepted": 0.741,
+    "direct_evidence_count": 52,
+    "derived_count": 19,
+    "domains_with_sdc_match": 14,
+    "domains_no_sdc_match": 3,
+    "governance_findings": 5,
+    "governance_events": 94,
+    "enrichment_events": 31,
+    "debt_items": 15,
+    "debt_resolved": 0,
+    "spine_objects": 7,
+    "checkpoints_complete": 6
+  },
+  "ready_for": "RC-06 S2 Re-Advancement (Bridge → Governed)"
+}

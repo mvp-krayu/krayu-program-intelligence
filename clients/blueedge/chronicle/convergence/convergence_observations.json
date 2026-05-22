@@ -1,0 +1,354 @@
+{
+  "schema_version": "1.0",
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-07",
+  "classification": "G2",
+  "timestamp": "2026-05-22T23:30:00Z",
+  "observation_maturity": "DESCRIPTIVE",
+  "maturity_justification": "Two specimens = comparison, not pattern. All observations start DESCRIPTIVE per convergence maturity discipline.",
+  "specimen_classification": {
+    "netbox": {
+      "label": "Full governed semantic evolution specimen",
+      "path_type": "PATH_A",
+      "evidence_channel": "Code graph (1,494 AST authority edges, 12 CEUs)",
+      "proposition_engine": "SPE (Semantic Proposition Engine)",
+      "governance_streams": 10,
+      "governance_events": 12,
+      "propositions": 77,
+      "s_level": "S2",
+      "qualification_type": "FULL_GOVERNED_SEMANTIC_EVOLUTION",
+      "blockers_resolved": "7/7",
+      "frozen_as": "CANONICAL_REFERENCE_SPECIMEN"
+    },
+    "blueedge": {
+      "label": "Post-genesis governed semantic replay specimen",
+      "path_type": "PATH_B",
+      "evidence_channel": "HTML documents (3 files, 505KB)",
+      "proposition_engine": "SDC + Proposition Bridge",
+      "governance_streams": 6,
+      "governance_events": 94,
+      "propositions": 85,
+      "s_level": "S2",
+      "qualification_type": "POST_GENESIS_SEMANTIC_REPLAY",
+      "blockers_resolved": "0/15",
+      "corridor_boundary": "Operates on already-materialized semantic substrates. Does NOT prove raw intake genesis."
+    }
+  },
+  "total_observations": 7,
+  "observations": [
+    {
+      "observation_id": "CONV-001",
+      "title": "Governance friction strengthens substrate",
+      "pattern_status": "OBSERVED",
+      "interpretation_maturity": "DESCRIPTIVE",
+      "evidence_strength": "SUPPORTED_BY_BOTH_SPECIMENS",
+      "description": "In both specimens, governance friction (operator challenge, contestation, rejection) directly triggered substrate strengthening that improved corpus quality. The friction was not noise — it was signal that drove enrichment.",
+      "netbox_evidence": {
+        "friction_events": "2 contested (AUTHORITY_TOPOLOGY, HERO_MOMENT_GROUNDING) → 2 arbitrated → both accepted with enrichment",
+        "enrichment_response": "3-stream substrate strengthening: authority enrichment feasibility → authority enrichment pipeline → hero moment reconciliation",
+        "corpus_impact": "DERIVED→DIRECT_EVIDENCE on 10 AUTHORITY_TOPOLOGY propositions, 5/6 HERO_MOMENT reconciled to ALIGNED, mean confidence 0.872→0.897",
+        "audit_refs": ["EVT-005", "EVT-006", "EVT-008", "EVT-009"]
+      },
+      "blueedge_evidence": {
+        "friction_events": "9 contested → 9 arbitrated → 9 accepted. 14 rejected outright. 5 governance findings surfaced.",
+        "enrichment_response": "RC-04 evidence enrichment: domain ID correction via semantic name matching (addressing GF-RC03-001), 31 enrichment events",
+        "corpus_impact": "12 domain propositions corrected, 15 capability domain refs corrected, mean confidence 0.728→0.741. Debt evolution: 4 improved, 6 worsened (honest), 0 resolved.",
+        "audit_refs": ["GF-RC03-001", "GF-RC03-002", "GF-RC03-003", "GF-RC03-004", "GF-RC03-005"]
+      },
+      "divergence": "NetBox enrichment used code graph authority (1,494 AST edges) producing tier conversion (DERIVED→DIRECT_EVIDENCE). BlueEdge enrichment used semantic name matching correcting evidence linkage without tier conversion. Different mechanisms, same pattern: friction → enrichment → improved corpus."
+    },
+    {
+      "observation_id": "CONV-002",
+      "title": "Semantic propositions require operator authority",
+      "pattern_status": "OBSERVED",
+      "interpretation_maturity": "DESCRIPTIVE",
+      "evidence_strength": "SUPPORTED_BY_BOTH_SPECIMENS",
+      "description": "In both specimens, AI-derived semantic propositions required explicit human operator review before qualification could advance. The non-automatable boundary held — no system actor could self-authorize progression.",
+      "netbox_evidence": {
+        "operator": "operator:khorrix",
+        "authority_level": "L2",
+        "review_actions": "5 accepted, 1 rejected (CLUSTER_ARCHITECTURE), 2 contested → arbitrated",
+        "review_obligations": "6 obligations, all resolved through governed operator review",
+        "non_automatable_boundary": "7 boundaries enforced — no system actor promotion, elevation, resolution, acceptance, closure, advancement, or override"
+      },
+      "blueedge_evidence": {
+        "operator": "operator:krayu",
+        "authority_level": "L2",
+        "review_actions": "62 direct accept, 9 contested → arbitrated → accepted, 14 rejected",
+        "review_events": "94 governance events (85 review + 9 arbitration)",
+        "non_automatable_boundary": "Same 7 boundaries enforced. System actors rejected at boundary."
+      },
+      "divergence": "NetBox reviewed 6 class-level obligations (one per proposition class). BlueEdge reviewed 85 individual propositions. Different granularity, same authority requirement: human operator must act."
+    },
+    {
+      "observation_id": "CONV-003",
+      "title": "Deterministic revalidation is necessary before qualification trust",
+      "pattern_status": "OBSERVED",
+      "interpretation_maturity": "DESCRIPTIVE",
+      "evidence_strength": "SUPPORTED_BY_BOTH_SPECIMENS",
+      "description": "In both specimens, deterministic multi-phase revalidation was required after enrichment and before qualification advancement. The revalidation framework transferred across specimen types without modification of the validation contract structure.",
+      "netbox_evidence": {
+        "framework": "9-phase/48-check",
+        "result": "48/48 PASS",
+        "phases": "Schema integrity, spine consistency, AUTHORITY_TOPOLOGY enrichment, HERO_MOMENT_GROUNDING, corpus quality, reconciliation metrics, cross-class consistency, SQO governance, corpus summary, enrichment lineage",
+        "revalidation_ref": "docs/pios/PI.SUBSTRATE.REPLAY-REVALIDATION-CYCLE.01/revalidation_result.json"
+      },
+      "blueedge_evidence": {
+        "framework": "9-phase/48-check (adapted from NetBox)",
+        "result": "48/48 PASS",
+        "phases": "Structural integrity, evidence integrity, confidence realism, governance integrity, enrichment integrity, checkpoint integrity, spine integrity, SQO state consistency, corpus evolution",
+        "revalidation_ref": "clients/blueedge/chronicle/checkpoints/revalidation_result.json"
+      },
+      "divergence": "NetBox's code graph phases (centrality, coupling, topology checks) were replaced in BlueEdge with evidence integrity and enrichment integrity phases appropriate for document-derived evidence. Same structural rigor, adapted for different evidence channels."
+    },
+    {
+      "observation_id": "CONV-004",
+      "title": "Weak claims must remain rejected or confidence-limited",
+      "pattern_status": "OBSERVED",
+      "interpretation_maturity": "DESCRIPTIVE",
+      "evidence_strength": "SUPPORTED_BY_BOTH_SPECIMENS",
+      "description": "In both specimens, the governance lifecycle preserved rejection and confidence limitation as valid terminal states. Neither specimen forced weak claims to acceptance to satisfy coverage targets.",
+      "netbox_evidence": {
+        "rejected": "CLUSTER_ARCHITECTURE (SP-netbox-0075) — permanently rejected. 0.604 confidence, DERIVED tier, NOVEL reconciliation. Singleton cross-cutting cluster claim from single observation. Preserved in lineage, not deleted.",
+        "limited": "8 NOVEL propositions retained at DERIVED tier — not forced to ALIGNED",
+        "mean_confidence": "0.897 — honest, not inflated"
+      },
+      "blueedge_evidence": {
+        "rejected": "14 propositions rejected — SDC parsing artifacts (3), SDC domain overflow (2), functional overlap misclassification (4), domain ID mismatch (3), grounding status conflict (2). All preserved in lineage.",
+        "limited": "3 NO_SDC_MATCH domains capped at 0.50 confidence. WEAKLY_GROUNDED propositions penalized. 15 debt items: 0 resolved, all requiring L5 authority PATH B cannot provide.",
+        "mean_confidence": "0.741 — honest, reflecting PATH B evidence limitations"
+      },
+      "divergence": "NetBox rejected 1/77 (1.3%) with all blockers resolved. BlueEdge rejected 14/85 (16.5%) with 0/15 blockers resolved. BlueEdge's higher rejection rate reflects genuine PATH B evidence limitations — the system is more honest about what document-derived evidence can prove."
+    },
+    {
+      "observation_id": "CONV-005",
+      "title": "Lineage and proof objects make cognition auditable",
+      "pattern_status": "OBSERVED",
+      "interpretation_maturity": "DESCRIPTIVE",
+      "evidence_strength": "SUPPORTED_BY_BOTH_SPECIMENS",
+      "description": "In both specimens, the governed lifecycle produced a complete audit trail through spine objects, governance events, checkpoint freezes, and proof capsules. Cognition is reconstructable from artifacts alone — no session memory required.",
+      "netbox_evidence": {
+        "governance_events": "12 (EVT-001 through EVT-012)",
+        "replay_validation": "12/12 PASS — governance state fully reconstructable from event logs, derivation lineage, and spine objects",
+        "learning_events": "14 PROPOSED (5 governance loop, 3 SPE derivation, 6 substrate enrichment)",
+        "audit_trail": "promotion_event_log.jsonl (append-only), review_obligations.json, baseline_freeze.json",
+        "session_independence": "Explicitly verified: no state requires Claude-session memory to reconstruct"
+      },
+      "blueedge_evidence": {
+        "governance_events": "94 (85 review + 9 arbitration)",
+        "checkpoints": "8 frozen (checkpoint_00 through checkpoint_07)",
+        "spine_objects": "9 accumulated (evidence, projection, proposition, qualification transition, replay corridor)",
+        "proof_capsule": "governance_proof_capsule.json with 5 findings",
+        "enrichment_log": "31 events with pre/post values for every correction"
+      },
+      "divergence": "NetBox used replay validation (12 reconstruction tests). BlueEdge used checkpoint-based chronicle architecture (8 frozen snapshots with semantic phase markers). Different auditability mechanisms, same outcome: full cognitive reconstructability."
+    },
+    {
+      "observation_id": "CONV-006",
+      "title": "S2 means governed semantic lifecycle completion, not semantic perfection",
+      "pattern_status": "OBSERVED",
+      "interpretation_maturity": "DESCRIPTIVE",
+      "evidence_strength": "SUPPORTED_BY_BOTH_SPECIMENS",
+      "description": "In both specimens, S2 was earned by completing the governed semantic lifecycle (derivation, review, enrichment, revalidation) — not by achieving perfect semantic coverage or resolving all debt. The qualification recognizes governance discipline, not ontological completeness.",
+      "netbox_evidence": {
+        "s2_state": "S2 granted with 1 rejected proposition (CLUSTER_ARCHITECTURE preserved), 8 NOVEL/DERIVED propositions retained",
+        "all_blockers_resolved": true,
+        "promotion_eligible": true,
+        "governance_lifecycle": "10 streams, 12 events, CANONICAL_REFERENCE_SPECIMEN",
+        "debt_state": "Qualification debt COMPLETE but CLUSTER_ARCHITECTURE rejection is permanent record"
+      },
+      "blueedge_evidence": {
+        "s2_state": "S2_GOVERNED within post-genesis replay corridor",
+        "all_blockers_resolved": false,
+        "blockers": "15 active — all block S3 requiring L5 authority. 0 resolved.",
+        "promotion_eligible": false,
+        "governance_lifecycle": "6 streams, 94 events, governed lifecycle proven on post-genesis substrates",
+        "debt_state": "4 improved, 5 unchanged, 6 worsened, 0 resolved. HONEST_LIMITATION."
+      },
+      "divergence": "NetBox achieved S2 with all blockers resolved (full PATH A structural authority). BlueEdge achieved S2_GOVERNED with 0 blockers resolved (PATH B cannot provide L5 authority). Both are valid S2 — the difference is in the evidence ceiling, not in the governance discipline. NetBox's S2 is advancement-ready. BlueEdge's S2 is governance-proven but structurally bounded.",
+      "boundary_note": "BlueEdge's S2_GOVERNED proves governed lifecycle completion within a post-genesis replay corridor. It does NOT prove full onboarding-origin genesis. The two S2 qualifications are operationally equivalent in governance discipline but structurally different in evidence depth."
+    },
+    {
+      "observation_id": "CONV-007",
+      "title": "Different evidence corridors enter the same governed spine model",
+      "pattern_status": "OBSERVED",
+      "interpretation_maturity": "DESCRIPTIVE",
+      "evidence_strength": "SUPPORTED_BY_BOTH_SPECIMENS",
+      "description": "Two fundamentally different evidence channels — code graph structural analysis (PATH A) and HTML document semantic derivation (PATH B) — both produced propositions, governance events, and spine objects that entered the same governed spine model and underwent the same revalidation framework.",
+      "netbox_evidence": {
+        "evidence_channel": "PATH A: GitHub repository code graph",
+        "evidence_depth": "2,540 nodes, 3,614 IMPORTS, 1,089 ranked files, 1,494 AST authority edges",
+        "proposition_engine": "SPE — 6 deterministic class derivers",
+        "proposition_classes": ["STRUCTURAL_DOMINANCE", "COUPLING_PATTERN", "AUTHORITY_TOPOLOGY", "TIER_GROUNDING", "HERO_MOMENT_GROUNDING", "CLUSTER_ARCHITECTURE"],
+        "enrichment_mechanism": "AST authority extraction — code-structural enrichment producing tier conversion"
+      },
+      "blueedge_evidence": {
+        "evidence_channel": "PATH B: 3 HTML evidence documents (505KB)",
+        "evidence_depth": "17 CSR domains, 42 capabilities, 89 components, 28 vault claims",
+        "proposition_engine": "SDC + Proposition Bridge — 4 proposition classes",
+        "proposition_classes": ["DOMAIN_EVIDENCE_GROUNDING", "CAPABILITY_EVIDENCE", "VAULT_CLAIM_STRUCTURAL", "CROSS_DOMAIN_EVIDENCE"],
+        "enrichment_mechanism": "Semantic name matching — evidence linkage correction without tier conversion"
+      },
+      "divergence": "Completely different proposition classes (code-structural vs document-semantic), different enrichment mechanisms (AST edges vs name matching), different evidence depths (1,494 AST edges vs 505KB HTML). Yet both produce spine objects in the same governed model and pass through the same 9-phase/48-check revalidation framework.",
+      "significance": "This is the strongest convergence evidence: the governed spine model is evidence-channel-independent. The governance framework does not care WHERE the evidence came from — it cares that the evidence was governed."
+    }
+  ],
+  "comparison_matrix": {
+    "dimensions": [
+      {
+        "dimension": "Evidence Channel",
+        "netbox": "Code graph (PATH A) — 1,494 AST edges",
+        "blueedge": "HTML documents (PATH B) — 505KB, 3 files",
+        "convergence": "DIVERGENT — different evidence sources"
+      },
+      {
+        "dimension": "Proposition Engine",
+        "netbox": "SPE — 6 structural class derivers",
+        "blueedge": "SDC + Proposition Bridge — 4 document-semantic classes",
+        "convergence": "DIVERGENT — different derivation mechanisms"
+      },
+      {
+        "dimension": "Proposition Count",
+        "netbox": "77 (75 initial + 2 enrichment)",
+        "blueedge": "85 (all from bridge)",
+        "convergence": "COMPARABLE — similar order of magnitude"
+      },
+      {
+        "dimension": "Acceptance Rate",
+        "netbox": "98.7% (76/77 accepted)",
+        "blueedge": "83.5% (71/85 accepted)",
+        "convergence": "DIVERGENT — PATH B has more evidence limitations"
+      },
+      {
+        "dimension": "Mean Confidence",
+        "netbox": "0.897",
+        "blueedge": "0.741",
+        "convergence": "DIVERGENT — code graph produces higher confidence than document parsing"
+      },
+      {
+        "dimension": "DIRECT_EVIDENCE Ratio",
+        "netbox": "89.6% (69/77)",
+        "blueedge": "73.2% (52/71 accepted)",
+        "convergence": "DIVERGENT — PATH A achieves higher structural grounding"
+      },
+      {
+        "dimension": "Governance Actions Exercised",
+        "netbox": "ACCEPT, CONTEST, ARBITRATE, REJECT",
+        "blueedge": "ACCEPT, CONTEST, ARBITRATE, REJECT",
+        "convergence": "CONVERGENT — identical governance action set"
+      },
+      {
+        "dimension": "Operator Authority",
+        "netbox": "L2 operator, non-automatable boundary",
+        "blueedge": "L2 operator, non-automatable boundary",
+        "convergence": "CONVERGENT — identical authority model"
+      },
+      {
+        "dimension": "Enrichment Mechanism",
+        "netbox": "AST authority edges (code graph structural enrichment)",
+        "blueedge": "Semantic name matching (evidence linkage correction)",
+        "convergence": "DIVERGENT — different evidence sources, same enrichment intent"
+      },
+      {
+        "dimension": "Enrichment Impact",
+        "netbox": "10 DERIVED→DIRECT_EVIDENCE, 2 new propositions, confidence 0.872→0.897",
+        "blueedge": "12 domains corrected, 15 capabilities corrected, confidence 0.728→0.741",
+        "convergence": "CONVERGENT in pattern — enrichment improves corpus quality"
+      },
+      {
+        "dimension": "Revalidation Framework",
+        "netbox": "9 phases, 48 checks, 48/48 PASS",
+        "blueedge": "9 phases, 48 checks, 48/48 PASS",
+        "convergence": "CONVERGENT — identical framework structure and result"
+      },
+      {
+        "dimension": "Blocker Resolution",
+        "netbox": "7/7 resolved",
+        "blueedge": "0/15 resolved",
+        "convergence": "DIVERGENT — PATH B cannot provide L5 authority"
+      },
+      {
+        "dimension": "S2 Qualification Type",
+        "netbox": "Full governed semantic evolution",
+        "blueedge": "Post-genesis governed semantic replay",
+        "convergence": "CONVERGENT in governance discipline, DIVERGENT in evidence depth"
+      },
+      {
+        "dimension": "Auditability",
+        "netbox": "12 governance events, replay validation 12/12, session-independent",
+        "blueedge": "94 governance events, 8 checkpoints, 9 spine objects, full chronicle",
+        "convergence": "CONVERGENT — both fully auditable from artifacts alone"
+      },
+      {
+        "dimension": "Authority Ceiling",
+        "netbox": "L3 (AI-derived propositions)",
+        "blueedge": "L3 (AI-derived propositions)",
+        "convergence": "CONVERGENT — identical ceiling"
+      }
+    ]
+  },
+  "law_assessment": {
+    "methodology": "Two specimens = comparison, not pattern. Observations that are SUPPORTED_BY_BOTH_SPECIMENS are candidate governed cognition laws — they hold across both specimens but require additional specimens to confirm as laws. No observation is promoted to LAW status with only two specimens.",
+    "supported_laws": [
+      {
+        "law_id": "CANDIDATE-LAW-001",
+        "statement": "Governance friction strengthens substrate",
+        "evidence_strength": "SUPPORTED_BY_BOTH_SPECIMENS",
+        "promotion_criteria": "Third specimen demonstrating friction→enrichment→improvement cycle",
+        "observation_ref": "CONV-001"
+      },
+      {
+        "law_id": "CANDIDATE-LAW-002",
+        "statement": "Semantic propositions require operator authority — the non-automatable boundary holds across specimen types",
+        "evidence_strength": "SUPPORTED_BY_BOTH_SPECIMENS",
+        "promotion_criteria": "Third specimen with operator review exercising same authority model",
+        "observation_ref": "CONV-002"
+      },
+      {
+        "law_id": "CANDIDATE-LAW-003",
+        "statement": "Deterministic revalidation is necessary before qualification trust",
+        "evidence_strength": "SUPPORTED_BY_BOTH_SPECIMENS",
+        "promotion_criteria": "Third specimen passing adapted revalidation framework",
+        "observation_ref": "CONV-003"
+      },
+      {
+        "law_id": "CANDIDATE-LAW-004",
+        "statement": "Weak claims must remain rejected or confidence-limited — the system does not inflate",
+        "evidence_strength": "SUPPORTED_BY_BOTH_SPECIMENS",
+        "promotion_criteria": "Third specimen demonstrating rejection/limitation without coverage pressure",
+        "observation_ref": "CONV-004"
+      },
+      {
+        "law_id": "CANDIDATE-LAW-005",
+        "statement": "Lineage and proof objects make cognition auditable — session-independent reconstructability",
+        "evidence_strength": "SUPPORTED_BY_BOTH_SPECIMENS",
+        "promotion_criteria": "Third specimen achieving auditability through governed artifacts",
+        "observation_ref": "CONV-005"
+      },
+      {
+        "law_id": "CANDIDATE-LAW-006",
+        "statement": "S2 means governed semantic lifecycle completion, not semantic perfection",
+        "evidence_strength": "SUPPORTED_BY_BOTH_SPECIMENS",
+        "promotion_criteria": "Third specimen qualifying at S2 with honest limitations documented",
+        "observation_ref": "CONV-006"
+      },
+      {
+        "law_id": "CANDIDATE-LAW-007",
+        "statement": "The governed spine model is evidence-channel-independent",
+        "evidence_strength": "SUPPORTED_BY_BOTH_SPECIMENS",
+        "promotion_criteria": "Third evidence channel (e.g., API documentation, design artifacts) entering same spine model",
+        "observation_ref": "CONV-007"
+      }
+    ],
+    "candidate_laws": [],
+    "note": "With only two specimens, ALL laws are candidates regardless of bilateral evidence strength. The distinction between 'supported' and 'candidate' here reflects evidence quality within the comparison, not pattern maturity. True LAW status requires 3+ specimens per convergence maturity discipline."
+  },
+  "scope_boundary": {
+    "what_this_proves": "Two independent specimens demonstrate convergent governance patterns — the governance lifecycle is not a one-specimen trick.",
+    "what_this_does_not_prove": [
+      "BlueEdge does NOT prove raw intake genesis — it proves governed replay qualification over a post-genesis semantic corridor",
+      "These observations are DESCRIPTIVE, not LAWS — two specimens is comparison, not pattern",
+      "Convergence in governance discipline does NOT imply convergence in evidence depth — PATH A and PATH B have fundamentally different ceilings",
+      "No claims about marketplace, modules, agentic AI, or Cortex architecture"
+    ]
+  }
+}

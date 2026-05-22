@@ -1,0 +1,41 @@
+{
+  "checkpoint_id": "checkpoint_07_advancement",
+  "status": "FROZEN",
+  "semantic_phase": "QUALIFICATION",
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-06",
+  "classification": "G1",
+  "timestamp": "2026-05-22T23:00:00Z",
+  "description": "After S2 re-advancement — bridge provenance replaced by governed replay corridor lineage",
+  "predecessor": "checkpoint_06_revalidation",
+  "advancement_summary": {
+    "transition": "S2_BRIDGE → S2_GOVERNED",
+    "qualification_type": "POST_GENESIS_SEMANTIC_REPLAY",
+    "prior_provenance": "GOVERNANCE_PROJECTION (system:pipeline via PI.SQO.LEGACY-QUALIFICATION-BRIDGE.01)",
+    "new_provenance": "GOVERNED_REPLAY_QUALIFICATION (operator:krayu via PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE)",
+    "governance_lifecycle_proven": {
+      "proposition_derivation": "85 propositions via PATH B bridge (RC-02)",
+      "operator_review": "71 accepted, 14 rejected, 9 arbitrated, 5 findings (RC-03)",
+      "evidence_enrichment": "31 enrichment events, domain ID correction (RC-04)",
+      "debt_evolution": "4 improved, 5 unchanged, 6 worsened, 0 resolved (RC-04)",
+      "deterministic_revalidation": "48/48 PASS across 9 phases (RC-05)"
+    },
+    "corridor_boundary": "Post-genesis semantic replay corridor. Operates on already-materialized semantic substrates. Genesis layer remains future upstream work."
+  },
+  "promotion_state_mutation": {
+    "artifact": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/sqo/promotion_state.json",
+    "fields_changed": [
+      "qualification_provenance: added (GOVERNED_REPLAY_QUALIFICATION)",
+      "governance_provenance: replaced migration_provenance",
+      "promotion_lineage.transitions: EVT-BRIDGE-002 superseded, EVT-REPLAY-001 added",
+      "last_transition_actor: system:pipeline → operator:krayu",
+      "last_transition_reason: updated with governed lifecycle lineage",
+      "lanes.semantic_candidate.governance_note: added",
+      "lanes.review_queue: authority LEGACY_COMPUTATIONAL → GOVERNED_OPERATOR_REVIEW",
+      "lanes.qualification_debt.governance_note: added",
+      "lanes.promotion_decision.authority: LEGACY_CERTIFIED → GOVERNED_REPLAY_QUALIFICATION",
+      "audit_event_refs: EVT-REPLAY-001 added"
+    ]
+  },
+  "what_this_does_not_claim": "This advancement does NOT claim full onboarding-origin cognitive genesis validation. It validates governed lifecycle completion within the post-genesis semantic replay corridor on already-materialized substrates.",
+  "ready_for": "RC-07 Cross-Specimen Convergence Observation"
+}

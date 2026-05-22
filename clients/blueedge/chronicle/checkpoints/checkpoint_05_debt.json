@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "checkpoint_id": "checkpoint_05_debt",
+  "semantic_phase": "STRENGTHENING",
+  "description": "After debt assessment — the system self-corrects",
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-04",
+  "status": "FROZEN",
+  "frozen_at": "2026-05-22T21:00:00Z",
+  "debt_state": {
+    "total_debt_items": 15,
+    "blockers_resolved": 0,
+    "items_improved": 4,
+    "items_unchanged": 5,
+    "items_worsened": 6,
+    "resolution_note": "No blockers resolved. All block S3 and require L5 structural authority. PATH B enrichment from HTML evidence cannot provide code-level structural proof.",
+    "trajectory": "HONEST_LIMITATION",
+    "trajectory_explanation": "Enrichment improved evidence quality for some domains (more components after name-matching) but worsened others (fewer components or NO_SDC_MATCH). The net effect is more accurate evidence rather than uniformly improved evidence. This is a correct outcome — the system is now more honest about what it can and cannot prove from document evidence."
+  },
+  "reducibility_distribution": {
+    "pre_enrichment": {
+      "IRREDUCIBLE_STRUCTURAL_ABSENCE": 4,
+      "REDUCED_BY_ENRICHMENT": 8,
+      "REDUCIBLE_BY_EVIDENCE": 1,
+      "CONTINUITY_GAP": 2
+    },
+    "post_enrichment": {
+      "IRREDUCIBLE_STRUCTURAL_ABSENCE": 4,
+      "REDUCED_BY_ENRICHMENT": 8,
+      "REDUCIBLE_BY_EVIDENCE": 1,
+      "CONTINUITY_GAP": 2,
+      "note": "Classifications unchanged. Enrichment improved evidence quality but did not change the structural authority required."
+    }
+  },
+  "evidence_refs": {
+    "debt_evolution": "clients/blueedge/chronicle/governance/debt_evolution.json",
+    "enrichment_log": "clients/blueedge/chronicle/evidence/enrichment_log.json",
+    "original_blockers": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/sqo/qualification_blockers.json"
+  },
+  "predecessor": "checkpoint_04_enrichment",
+  "ready_for": "RC-05 Deterministic Revalidation"
+}
