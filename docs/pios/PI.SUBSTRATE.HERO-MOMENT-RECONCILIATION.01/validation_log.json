@@ -1,0 +1,109 @@
+{
+  "stream": "PI.SUBSTRATE.HERO-MOMENT-RECONCILIATION.01",
+  "classification": "G2",
+  "timestamp": "2026-05-22T14:00:00Z",
+  "checks": [
+    {
+      "id": "VAL-001",
+      "name": "Branch correct",
+      "result": "PASS",
+      "detail": "feature/PI.SUBSTRATE.HERO-MOMENT-RECONCILIATION.01 from main @ 9a0f4e0"
+    },
+    {
+      "id": "VAL-002",
+      "name": "Dependency stream merged",
+      "result": "PASS",
+      "detail": "PI.SUBSTRATE.AUTHORITY-ENRICHMENT-PIPELINE.01 merged — enriched AT evidence available"
+    },
+    {
+      "id": "VAL-003",
+      "name": "All 6 HM propositions assessed",
+      "result": "PASS",
+      "detail": "SP-netbox-0069 through SP-netbox-0074"
+    },
+    {
+      "id": "VAL-004",
+      "name": "5 propositions reconciled NOVEL→ALIGNED",
+      "result": "PASS",
+      "detail": "SP-0069 (0.72), SP-0070 (0.74), SP-0071 (0.74), SP-0072 (0.68), SP-0074 (0.74)"
+    },
+    {
+      "id": "VAL-005",
+      "name": "1 proposition remains NOVEL (honest assessment)",
+      "result": "PASS",
+      "detail": "SP-netbox-0073 — pipeline emergence, not reconcilable from specimen evidence"
+    },
+    {
+      "id": "VAL-006",
+      "name": "All remain DERIVED tier",
+      "result": "PASS",
+      "detail": "Hero moments are interpretive observations — reconciliation does not change tier"
+    },
+    {
+      "id": "VAL-007",
+      "name": "Confidence not inflated",
+      "result": "PASS",
+      "detail": "Variable 0.604-0.74, SP-0072 at 0.68 (below others) reflects weaker cross-validation"
+    },
+    {
+      "id": "VAL-008",
+      "name": "Cross-validation sources identified per proposition",
+      "result": "PASS",
+      "detail": "reconciliation_against field lists specific proposition classes used for cross-validation"
+    },
+    {
+      "id": "VAL-009",
+      "name": "AST evidence anchors added correctly",
+      "result": "PASS",
+      "detail": "SP-0069, SP-0071, SP-0074 reference AST authority extraction evidence (acf41496)"
+    },
+    {
+      "id": "VAL-010",
+      "name": "Original evidence anchors preserved",
+      "result": "PASS",
+      "detail": "All original evidence anchors retained alongside new additions"
+    },
+    {
+      "id": "VAL-011",
+      "name": "HM class mean above operational threshold",
+      "result": "PASS",
+      "detail": "Mean 0.704 (was 0.598, threshold 0.65). 5/6 propositions above threshold."
+    },
+    {
+      "id": "VAL-012",
+      "name": "Non-HM propositions unchanged",
+      "result": "PASS",
+      "detail": "71 non-HM propositions identical pre/post reconciliation"
+    },
+    {
+      "id": "VAL-013",
+      "name": "SQO review state unchanged",
+      "result": "PASS",
+      "detail": "review_obligations.json, qualification_blockers.json, promotion_state.json not modified"
+    },
+    {
+      "id": "VAL-014",
+      "name": "No S2 promotion",
+      "result": "PASS",
+      "detail": "No promotion attempted or executed"
+    },
+    {
+      "id": "VAL-015",
+      "name": "LRNE learning event appended",
+      "result": "PASS",
+      "detail": "LRNE-SUBSTRATE-0005 — hero moment reconciliation result"
+    },
+    {
+      "id": "VAL-016",
+      "name": "Reconciliation rationale recorded per proposition",
+      "result": "PASS",
+      "detail": "derivation_rationale updated with reconciliation evidence and stream reference"
+    }
+  ],
+  "summary": {
+    "total": 16,
+    "pass": 16,
+    "fail": 0,
+    "result": "VALID"
+  }
+}

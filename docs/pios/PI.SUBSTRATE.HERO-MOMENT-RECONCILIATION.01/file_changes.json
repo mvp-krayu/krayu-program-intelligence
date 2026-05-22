@@ -1,0 +1,38 @@
+{
+  "stream": "PI.SUBSTRATE.HERO-MOMENT-RECONCILIATION.01",
+  "classification": "G2",
+  "timestamp": "2026-05-22T14:00:00Z",
+  "files": [
+    {
+      "path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/spine/spine_objects.json",
+      "action": "MODIFIED",
+      "description": "5 HERO_MOMENT_GROUNDING propositions reconciled NOVEL→ALIGNED with confidence uplift, 3 AST evidence anchors added"
+    },
+    {
+      "path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/governance/learning_events.jsonl",
+      "action": "MODIFIED",
+      "description": "1 LRNE event appended (LRNE-SUBSTRATE-0005)"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.HERO-MOMENT-RECONCILIATION.01/execution_report.md",
+      "action": "CREATED",
+      "description": "Per-proposition reconciliation decisions with cross-validation evidence"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.HERO-MOMENT-RECONCILIATION.01/validation_log.json",
+      "action": "CREATED",
+      "description": "16/16 validation checks PASS"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.HERO-MOMENT-RECONCILIATION.01/file_changes.json",
+      "action": "CREATED",
+      "description": "This file — stream change manifest"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.HERO-MOMENT-RECONCILIATION.01/CLOSURE.md",
+      "action": "CREATED",
+      "description": "Stream closure with G2 classification"
+    }
+  ],
+  "total_files": 6
+}

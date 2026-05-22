@@ -2901,10 +2901,12 @@
         "run_id": "run_github_netbox_20260520_134600",
         "proposition": "Structural surprise (CENTRALITY): DCIM gravitational dominance: dcim/models/__init__.py at 160 inbound imports exceeds core (114) + extras (95) combined. Appears as peer app in docs, structurally is the foundation.",
         "derivation_tier": "DERIVED",
-        "confidence": 0.595,
+        "confidence": 0.72,
         "authority_ceiling": "L3",
         "evidence_anchors": [
-          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+          "8407316f-d24d-4f1e-a556-2a737a60afbf",
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95",
+          "acf41496-b384-48be-aa1c-4f8f1b0a338d"
         ],
         "status": "CANDIDATE",
         "timestamp": "2026-05-21T16:53:54.787084+00:00",
@@ -2916,7 +2918,12 @@
         ],
         "structural_refs": {
           "surprise_class": "CENTRALITY",
-          "hero_moment_id": "f6503b5d-f80f-494d-8442-52e177ecbf89"
+          "hero_moment_id": "f6503b5d-f80f-494d-8442-52e177ecbf89",
+          "reconciliation_against": [
+            "STRUCTURAL_DOMINANCE",
+            "AUTHORITY_TOPOLOGY"
+          ],
+          "reconciliation_stream": "PI.SUBSTRATE.HERO-MOMENT-RECONCILIATION.01"
         },
         "hero_moment_refs": [
           "f6503b5d-f80f-494d-8442-52e177ecbf89"
@@ -2924,8 +2931,8 @@
         "replay_corridor_refs": [
           "9a624e6b-2bd8-497a-9e12-9a55848290b0"
         ],
-        "derivation_rationale": "Semantic grounding of hero moment (CENTRALITY). Cross-referenced with CEU evidence.",
-        "reconciliation_state": "NOVEL"
+        "derivation_rationale": "Semantic grounding of hero moment (CENTRALITY). Cross-referenced with CEU evidence. Reconciliation (PI.SUBSTRATE.HERO-MOMENT-RECONCILIATION.01): DCIM gravitational dominance cross-validated: STRUCTURAL_DOMINANCE propositions confirm CEU-DCIM as dominant structural node. Authority enrichment confirms 444 AST authority edges (largest of 12 CEUs), VIEW-dominant at 303 edges. The centrality observation (160 inbound imports > core + extras combined) aligns with systematic evidence from both coupling and authority dimensions.",
+        "reconciliation_state": "ALIGNED"
       },
       {
         "id": "SP-netbox-0070",
@@ -2933,7 +2940,7 @@
         "run_id": "run_github_netbox_20260520_134600",
         "proposition": "Structural surprise (COUPLING): 60.8% cross-domain import rate: 2,197 of 3,614 imports cross app boundaries. Django app structure implies modularity; PI reveals majority of imports are cross-app. Apparent modularity is organizationa",
         "derivation_tier": "DERIVED",
-        "confidence": 0.595,
+        "confidence": 0.74,
         "authority_ceiling": "L3",
         "evidence_anchors": [
           "980a6cfb-6ccf-4680-be4a-790ada4fab95"
@@ -2947,7 +2954,11 @@
         ],
         "structural_refs": {
           "surprise_class": "COUPLING",
-          "hero_moment_id": "a87f5be1-7aaa-4c96-821a-a591328ae35d"
+          "hero_moment_id": "a87f5be1-7aaa-4c96-821a-a591328ae35d",
+          "reconciliation_against": [
+            "COUPLING_PATTERN"
+          ],
+          "reconciliation_stream": "PI.SUBSTRATE.HERO-MOMENT-RECONCILIATION.01"
         },
         "hero_moment_refs": [
           "a87f5be1-7aaa-4c96-821a-a591328ae35d"
@@ -2955,8 +2966,8 @@
         "replay_corridor_refs": [
           "9a624e6b-2bd8-497a-9e12-9a55848290b0"
         ],
-        "derivation_rationale": "Semantic grounding of hero moment (COUPLING). Cross-referenced with CEU evidence.",
-        "reconciliation_state": "NOVEL"
+        "derivation_rationale": "Semantic grounding of hero moment (COUPLING). Cross-referenced with CEU evidence. Reconciliation (PI.SUBSTRATE.HERO-MOMENT-RECONCILIATION.01): 60.8% cross-domain coupling rate cross-validated: 34 COUPLING_PATTERN propositions at DIRECT_EVIDENCE tier (0.956 mean confidence) systematically cover the same structural phenomenon this hero moment observes. Per-CEU bidirectional entanglement data confirms pervasive cross-app coupling. The \"organizational fiction\" observation is grounded in the structural gap between Django app packaging and measured coupling topology.",
+        "reconciliation_state": "ALIGNED"
       },
       {
         "id": "SP-netbox-0071",
@@ -2964,10 +2975,11 @@
         "run_id": "run_github_netbox_20260520_134600",
         "proposition": "Structural surprise (COUPLING): Bidirectional DCIM-IPAM entanglement: 30 DCIM->IPAM + 28 IPAM->DCIM = 58 bidirectional imports. Domains appear separate in docs and UI but cannot be independently versioned, tested, or extracted.",
         "derivation_tier": "DERIVED",
-        "confidence": 0.595,
+        "confidence": 0.74,
         "authority_ceiling": "L3",
         "evidence_anchors": [
-          "980a6cfb-6ccf-4680-be4a-790ada4fab95"
+          "980a6cfb-6ccf-4680-be4a-790ada4fab95",
+          "acf41496-b384-48be-aa1c-4f8f1b0a338d"
         ],
         "status": "CANDIDATE",
         "timestamp": "2026-05-21T16:53:54.787084+00:00",
@@ -2978,7 +2990,11 @@
         ],
         "structural_refs": {
           "surprise_class": "COUPLING",
-          "hero_moment_id": "436ac01d-226d-4169-b13d-8fe10dd1e26a"
+          "hero_moment_id": "436ac01d-226d-4169-b13d-8fe10dd1e26a",
+          "reconciliation_against": [
+            "COUPLING_PATTERN"
+          ],
+          "reconciliation_stream": "PI.SUBSTRATE.HERO-MOMENT-RECONCILIATION.01"
         },
         "hero_moment_refs": [
           "436ac01d-226d-4169-b13d-8fe10dd1e26a"
@@ -2986,8 +3002,8 @@
         "replay_corridor_refs": [
           "9a624e6b-2bd8-497a-9e12-9a55848290b0"
         ],
-        "derivation_rationale": "Semantic grounding of hero moment (COUPLING). Cross-referenced with CEU evidence.",
-        "reconciliation_state": "NOVEL"
+        "derivation_rationale": "Semantic grounding of hero moment (COUPLING). Cross-referenced with CEU evidence. Reconciliation (PI.SUBSTRATE.HERO-MOMENT-RECONCILIATION.01): DCIM-IPAM bidirectional entanglement cross-validated: COUPLING_PATTERN propositions for CEU-DCIM and CEU-IPAM confirm bidirectional coupling with specific edge counts. The 58-edge bidirectional import relationship is a specific instance of the systematic coupling pattern evidence. Authority enrichment adds: DCIM=444 authority edges, IPAM=60 authority edges (MODEL-dominant, zero VIEW \u2014 structurally distinct authority profiles confirming complementary rather than redundant coupling).",
+        "reconciliation_state": "ALIGNED"
       },
       {
         "id": "SP-netbox-0072",
@@ -2995,7 +3011,7 @@
         "run_id": "run_github_netbox_20260520_134600",
         "proposition": "Structural surprise (CENTRALITY): Choice enumerations as coupling multipliers: dcim/choices.py at 76 inbound imports; 4 choices files totaling 203 combined inbound. Small enumeration files (~50-200 lines) have disproportionate structu",
         "derivation_tier": "DERIVED",
-        "confidence": 0.595,
+        "confidence": 0.68,
         "authority_ceiling": "L3",
         "evidence_anchors": [
           "8407316f-d24d-4f1e-a556-2a737a60afbf"
@@ -3008,7 +3024,12 @@
         ],
         "structural_refs": {
           "surprise_class": "CENTRALITY",
-          "hero_moment_id": "62ca6d51-a8ce-4945-a915-503d6213a2da"
+          "hero_moment_id": "62ca6d51-a8ce-4945-a915-503d6213a2da",
+          "reconciliation_against": [
+            "COUPLING_PATTERN",
+            "STRUCTURAL_DOMINANCE"
+          ],
+          "reconciliation_stream": "PI.SUBSTRATE.HERO-MOMENT-RECONCILIATION.01"
         },
         "hero_moment_refs": [
           "62ca6d51-a8ce-4945-a915-503d6213a2da"
@@ -3016,8 +3037,8 @@
         "replay_corridor_refs": [
           "9a624e6b-2bd8-497a-9e12-9a55848290b0"
         ],
-        "derivation_rationale": "Semantic grounding of hero moment (CENTRALITY). Cross-referenced with CEU evidence.",
-        "reconciliation_state": "NOVEL"
+        "derivation_rationale": "Semantic grounding of hero moment (CENTRALITY). Cross-referenced with CEU evidence. Reconciliation (PI.SUBSTRATE.HERO-MOMENT-RECONCILIATION.01): Choice enumeration coupling multipliers partially cross-validated: Centrality data (76 inbound imports for dcim/choices.py, 203 combined across 4 files) is verifiable from structural evidence. COUPLING_PATTERN data confirms that cross-domain imports include these enumeration references. The \"coupling multiplier\" characterization is observational but structurally grounded \u2014 small files with disproportionate inbound centrality is a measurable structural property. Confidence set below other reconciled hero moments because the multiplier interpretation extends beyond raw measurement.",
+        "reconciliation_state": "ALIGNED"
       },
       {
         "id": "SP-netbox-0073",
@@ -3040,7 +3061,9 @@
         ],
         "structural_refs": {
           "surprise_class": "EMERGENCE",
-          "hero_moment_id": "32270224-f206-4f98-8b7e-2c83457a0599"
+          "hero_moment_id": "32270224-f206-4f98-8b7e-2c83457a0599",
+          "reconciliation_against": [],
+          "reconciliation_stream": "PI.SUBSTRATE.HERO-MOMENT-RECONCILIATION.01"
         },
         "hero_moment_refs": [
           "32270224-f206-4f98-8b7e-2c83457a0599"
@@ -3048,7 +3071,7 @@
         "replay_corridor_refs": [
           "9a624e6b-2bd8-497a-9e12-9a55848290b0"
         ],
-        "derivation_rationale": "Semantic grounding of hero moment (EMERGENCE). Cross-referenced with CEU evidence.",
+        "derivation_rationale": "Semantic grounding of hero moment (EMERGENCE). Cross-referenced with CEU evidence. Reconciliation (PI.SUBSTRATE.HERO-MOMENT-RECONCILIATION.01): Pipeline self-improvement observation remains NOVEL: This is a meta-observation about pipeline behavior across specimens (BlueEdge \u2192 NetBox), not a specimen structural claim. Reconciliation requires cross-specimen evidence comparison which is outside per-specimen reconciliation scope. Assessed for reconciliation and found not reconcilable from NetBox evidence alone.",
         "reconciliation_state": "NOVEL"
       },
       {
@@ -3057,11 +3080,12 @@
         "run_id": "run_github_netbox_20260520_134600",
         "proposition": "Structural surprise (TOPOLOGY): Dual structural authority \u2014 import graph vs inheritance graph reveal different hierarchies. Import authority: dcim dominates (189 cross-domain edges) \u2014 vocabulary/data coupling. Inheritance authority:",
         "derivation_tier": "DERIVED",
-        "confidence": 0.604,
+        "confidence": 0.74,
         "authority_ceiling": "L3",
         "evidence_anchors": [
           "980a6cfb-6ccf-4680-be4a-790ada4fab95",
-          "8407316f-d24d-4f1e-a556-2a737a60afbf"
+          "8407316f-d24d-4f1e-a556-2a737a60afbf",
+          "acf41496-b384-48be-aa1c-4f8f1b0a338d"
         ],
         "status": "CANDIDATE",
         "timestamp": "2026-05-21T16:53:54.787084+00:00",
@@ -3076,7 +3100,11 @@
         ],
         "structural_refs": {
           "surprise_class": "TOPOLOGY",
-          "hero_moment_id": "9d2b670c-1c8c-4927-aa57-30884f6939db"
+          "hero_moment_id": "9d2b670c-1c8c-4927-aa57-30884f6939db",
+          "reconciliation_against": [
+            "AUTHORITY_TOPOLOGY"
+          ],
+          "reconciliation_stream": "PI.SUBSTRATE.HERO-MOMENT-RECONCILIATION.01"
         },
         "hero_moment_refs": [
           "9d2b670c-1c8c-4927-aa57-30884f6939db"
@@ -3084,8 +3112,8 @@
         "replay_corridor_refs": [
           "9a624e6b-2bd8-497a-9e12-9a55848290b0"
         ],
-        "derivation_rationale": "Semantic grounding of hero moment (TOPOLOGY). Cross-referenced with CEU evidence.",
-        "reconciliation_state": "NOVEL"
+        "derivation_rationale": "Semantic grounding of hero moment (TOPOLOGY). Cross-referenced with CEU evidence. Reconciliation (PI.SUBSTRATE.HERO-MOMENT-RECONCILIATION.01): Dual structural authority directly cross-validated: 12 enriched AUTHORITY_TOPOLOGY propositions at DIRECT_EVIDENCE tier (0.841 mean) confirm categorized authority composition across all CEUs. Import authority: DCIM dominates (confirmed by COUPLING_PATTERN). Framework authority: DCIM dominates in total edges (444), but authority enrichment reveals 8/12 CEUs are VIEW-dominant with full-stack profiles \u2014 confirming that inheritance authority is structurally distinct from import authority. CEU-IPAM (MODEL-dominant, zero VIEW) and CEU-UTILITIES (FORM-dominant) demonstrate the divergence this hero moment identified. The dual hierarchy observation is now the best-grounded hero moment in the corpus.",
+        "reconciliation_state": "ALIGNED"
       },
       {
         "id": "SP-netbox-0075",
