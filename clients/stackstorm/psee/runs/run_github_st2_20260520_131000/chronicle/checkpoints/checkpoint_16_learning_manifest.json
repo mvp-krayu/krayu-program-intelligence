@@ -1,0 +1,11 @@
+{
+  "checkpoint_id": "checkpoint_16_learning_manifest",
+  "checkpoint_index": 16,
+  "semantic_phase": "PROJECTION",
+  "pipeline_phase": "Phase 10L \u2014 Learning Activation Manifest",
+  "timestamp": "2026-05-22T16:37:19.807Z",
+  "status": "FROZEN",
+  "predecessor": "checkpoint_15_selector_update",
+  "events_since_predecessor": 54,
+  "state_snapshot": {}
+}

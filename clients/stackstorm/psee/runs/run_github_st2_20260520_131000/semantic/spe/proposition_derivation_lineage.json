@@ -1,0 +1,516 @@
+{
+  "contract_id": "PI.PATHB.SEMANTIC-PROPOSITION-ENGINE.01",
+  "specimen_id": "stackstorm",
+  "run_id": "run_github_st2_20260520_131000",
+  "generated_at": "2026-05-22T16:30:58.360012+00:00",
+  "input_hash": "f16ba03598c30f861c1fd92061a5a790796abe5e5a805f77e31a03525f28c4b2",
+  "derivation_hash": "5242e87f3c5aa746ef4234849ae82ba129bfb5ddd325b5925cfffa310d59c962",
+  "total_events": 32,
+  "events": [
+    {
+      "event_id": "SLE-0001",
+      "proposition_id": "SP-stackstorm-0001",
+      "event_type": "coupling_pattern_derivation",
+      "semantic_type": "RELATIONSHIP",
+      "derivation_class": "COUPLING_PATTERN",
+      "evidence": {
+        "src_domain": "contrib",
+        "tgt_domain": "st2common",
+        "forward": 366,
+        "reverse": 0,
+        "total": 366
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0002",
+      "proposition_id": "SP-stackstorm-0002",
+      "event_type": "coupling_pattern_derivation",
+      "semantic_type": "RELATIONSHIP",
+      "derivation_class": "COUPLING_PATTERN",
+      "evidence": {
+        "src_domain": "contrib",
+        "tgt_domain": "st2tests",
+        "forward": 119,
+        "reverse": 0,
+        "total": 119
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0003",
+      "proposition_id": "SP-stackstorm-0003",
+      "event_type": "coupling_pattern_derivation",
+      "semantic_type": "RELATIONSHIP",
+      "derivation_class": "COUPLING_PATTERN",
+      "evidence": {
+        "src_domain": "st2actions",
+        "tgt_domain": "st2common",
+        "forward": 270,
+        "reverse": 4,
+        "total": 274
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0004",
+      "proposition_id": "SP-stackstorm-0004",
+      "event_type": "coupling_pattern_derivation",
+      "semantic_type": "RELATIONSHIP",
+      "derivation_class": "COUPLING_PATTERN",
+      "evidence": {
+        "src_domain": "st2actions",
+        "tgt_domain": "st2tests",
+        "forward": 74,
+        "reverse": 6,
+        "total": 80
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0005",
+      "proposition_id": "SP-stackstorm-0005",
+      "event_type": "coupling_pattern_derivation",
+      "semantic_type": "RELATIONSHIP",
+      "derivation_class": "COUPLING_PATTERN",
+      "evidence": {
+        "src_domain": "st2api",
+        "tgt_domain": "st2common",
+        "forward": 390,
+        "reverse": 0,
+        "total": 390
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0006",
+      "proposition_id": "SP-stackstorm-0006",
+      "event_type": "coupling_pattern_derivation",
+      "semantic_type": "RELATIONSHIP",
+      "derivation_class": "COUPLING_PATTERN",
+      "evidence": {
+        "src_domain": "st2api",
+        "tgt_domain": "st2tests",
+        "forward": 82,
+        "reverse": 1,
+        "total": 83
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0007",
+      "proposition_id": "SP-stackstorm-0007",
+      "event_type": "coupling_pattern_derivation",
+      "semantic_type": "RELATIONSHIP",
+      "derivation_class": "COUPLING_PATTERN",
+      "evidence": {
+        "src_domain": "st2auth",
+        "tgt_domain": "st2common",
+        "forward": 49,
+        "reverse": 0,
+        "total": 49
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0008",
+      "proposition_id": "SP-stackstorm-0008",
+      "event_type": "coupling_pattern_derivation",
+      "semantic_type": "RELATIONSHIP",
+      "derivation_class": "COUPLING_PATTERN",
+      "evidence": {
+        "src_domain": "st2common",
+        "tgt_domain": "st2tests",
+        "forward": 195,
+        "reverse": 126,
+        "total": 321
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0009",
+      "proposition_id": "SP-stackstorm-0009",
+      "event_type": "coupling_pattern_derivation",
+      "semantic_type": "RELATIONSHIP",
+      "derivation_class": "COUPLING_PATTERN",
+      "evidence": {
+        "src_domain": "st2common",
+        "tgt_domain": "st2reactor",
+        "forward": 1,
+        "reverse": 215,
+        "total": 216
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0010",
+      "proposition_id": "SP-stackstorm-0010",
+      "event_type": "coupling_pattern_derivation",
+      "semantic_type": "RELATIONSHIP",
+      "derivation_class": "COUPLING_PATTERN",
+      "evidence": {
+        "src_domain": "st2reactor",
+        "tgt_domain": "st2tests",
+        "forward": 35,
+        "reverse": 1,
+        "total": 36
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0011",
+      "proposition_id": "SP-stackstorm-0011",
+      "event_type": "coupling_pattern_derivation",
+      "semantic_type": "RELATIONSHIP",
+      "derivation_class": "COUPLING_PATTERN",
+      "evidence": {
+        "src_domain": "st2stream",
+        "tgt_domain": "st2common",
+        "forward": 44,
+        "reverse": 0,
+        "total": 44
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0012",
+      "proposition_id": "SP-stackstorm-0012",
+      "event_type": "coupling_pattern_derivation",
+      "semantic_type": "RELATIONSHIP",
+      "derivation_class": "COUPLING_PATTERN",
+      "evidence": {
+        "src_domain": "tools",
+        "tgt_domain": "st2common",
+        "forward": 45,
+        "reverse": 0,
+        "total": 45
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0013",
+      "proposition_id": "SP-stackstorm-0013",
+      "event_type": "system_coupling_ratio_derivation",
+      "semantic_type": "GROUNDING",
+      "derivation_class": "COUPLING_PATTERN",
+      "evidence": {
+        "total_imports": 4006,
+        "cross_domain": 2070,
+        "ratio": 0.5167
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0014",
+      "proposition_id": "SP-stackstorm-0014",
+      "event_type": "authority_topology_derivation",
+      "semantic_type": "GROUNDING",
+      "derivation_class": "AUTHORITY_TOPOLOGY",
+      "evidence": {
+        "ceu_id": "CEU-ST2ACTIONS",
+        "import_in": 20,
+        "inherits_in": 2,
+        "pattern": "IMPORT_DOMINANT"
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0015",
+      "proposition_id": "SP-stackstorm-0015",
+      "event_type": "authority_topology_derivation",
+      "semantic_type": "GROUNDING",
+      "derivation_class": "AUTHORITY_TOPOLOGY",
+      "evidence": {
+        "ceu_id": "CEU-ST2API",
+        "import_in": 2,
+        "inherits_in": 44,
+        "pattern": "DUAL_AUTHORITY"
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0016",
+      "proposition_id": "SP-stackstorm-0016",
+      "event_type": "authority_topology_derivation",
+      "semantic_type": "GROUNDING",
+      "derivation_class": "AUTHORITY_TOPOLOGY",
+      "evidence": {
+        "ceu_id": "CEU-ST2AUTH",
+        "import_in": 2,
+        "inherits_in": 4,
+        "pattern": "IMPORT_DOMINANT"
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0017",
+      "proposition_id": "SP-stackstorm-0017",
+      "event_type": "authority_topology_derivation",
+      "semantic_type": "GROUNDING",
+      "derivation_class": "AUTHORITY_TOPOLOGY",
+      "evidence": {
+        "ceu_id": "CEU-ST2CLIENT",
+        "import_in": 16,
+        "inherits_in": 74,
+        "pattern": "IMPORT_DOMINANT"
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0018",
+      "proposition_id": "SP-stackstorm-0018",
+      "event_type": "authority_topology_derivation",
+      "semantic_type": "GROUNDING",
+      "derivation_class": "AUTHORITY_TOPOLOGY",
+      "evidence": {
+        "ceu_id": "CEU-ST2COMMON",
+        "import_in": 1506,
+        "inherits_in": 312,
+        "pattern": "DUAL_AUTHORITY"
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0019",
+      "proposition_id": "SP-stackstorm-0019",
+      "event_type": "authority_topology_derivation",
+      "semantic_type": "GROUNDING",
+      "derivation_class": "AUTHORITY_TOPOLOGY",
+      "evidence": {
+        "ceu_id": "CEU-ST2REACTOR",
+        "import_in": 10,
+        "inherits_in": 18,
+        "pattern": "IMPORT_DOMINANT"
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0020",
+      "proposition_id": "SP-stackstorm-0020",
+      "event_type": "authority_topology_derivation",
+      "semantic_type": "GROUNDING",
+      "derivation_class": "AUTHORITY_TOPOLOGY",
+      "evidence": {
+        "ceu_id": "CEU-ST2TESTS",
+        "import_in": 514,
+        "inherits_in": 223,
+        "pattern": "IMPORT_DOMINANT"
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0021",
+      "proposition_id": "SP-stackstorm-0021",
+      "event_type": "tier_grounding_derivation",
+      "semantic_type": "GROUNDING",
+      "derivation_class": "TIER_GROUNDING",
+      "evidence": {
+        "ceu_id": "CEU-CONTRIB",
+        "tier": "CONSUMER",
+        "file_count": 131,
+        "evidence_count": 2,
+        "finding": "CONFIRMED_WITH_EVIDENCE"
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0022",
+      "proposition_id": "SP-stackstorm-0022",
+      "event_type": "tier_grounding_derivation",
+      "semantic_type": "GROUNDING",
+      "derivation_class": "TIER_GROUNDING",
+      "evidence": {
+        "ceu_id": "CEU-PANTS-PLUGINS",
+        "tier": "OPERATIONAL_DOMAIN",
+        "file_count": 57,
+        "evidence_count": 1,
+        "finding": "CONFIRMED_WITH_EVIDENCE"
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0023",
+      "proposition_id": "SP-stackstorm-0023",
+      "event_type": "tier_grounding_derivation",
+      "semantic_type": "GROUNDING",
+      "derivation_class": "TIER_GROUNDING",
+      "evidence": {
+        "ceu_id": "CEU-ST2ACTIONS",
+        "tier": "CONSUMER",
+        "file_count": 49,
+        "evidence_count": 3,
+        "finding": "CONFIRMED_WITH_EVIDENCE"
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0024",
+      "proposition_id": "SP-stackstorm-0024",
+      "event_type": "tier_grounding_derivation",
+      "semantic_type": "GROUNDING",
+      "derivation_class": "TIER_GROUNDING",
+      "evidence": {
+        "ceu_id": "CEU-ST2API",
+        "tier": "CONSUMER",
+        "file_count": 79,
+        "evidence_count": 2,
+        "finding": "CONFIRMED_WITH_EVIDENCE"
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0025",
+      "proposition_id": "SP-stackstorm-0025",
+      "event_type": "tier_grounding_derivation",
+      "semantic_type": "GROUNDING",
+      "derivation_class": "TIER_GROUNDING",
+      "evidence": {
+        "ceu_id": "CEU-ST2AUTH",
+        "tier": "CONSUMER",
+        "file_count": 25,
+        "evidence_count": 2,
+        "finding": "CONFIRMED_WITH_EVIDENCE"
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0026",
+      "proposition_id": "SP-stackstorm-0026",
+      "event_type": "tier_grounding_derivation",
+      "semantic_type": "GROUNDING",
+      "derivation_class": "TIER_GROUNDING",
+      "evidence": {
+        "ceu_id": "CEU-ST2CLIENT",
+        "tier": "FOUNDATION",
+        "file_count": 92,
+        "evidence_count": 3,
+        "finding": "CONFIRMED_WITH_EVIDENCE"
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0027",
+      "proposition_id": "SP-stackstorm-0027",
+      "event_type": "tier_grounding_derivation",
+      "semantic_type": "GROUNDING",
+      "derivation_class": "TIER_GROUNDING",
+      "evidence": {
+        "ceu_id": "CEU-ST2COMMON",
+        "tier": "FOUNDATION",
+        "file_count": 478,
+        "evidence_count": 2,
+        "finding": "CONFIRMED_WITH_EVIDENCE"
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0028",
+      "proposition_id": "SP-stackstorm-0028",
+      "event_type": "tier_grounding_derivation",
+      "semantic_type": "GROUNDING",
+      "derivation_class": "TIER_GROUNDING",
+      "evidence": {
+        "ceu_id": "CEU-ST2REACTOR",
+        "tier": "CONSUMER",
+        "file_count": 57,
+        "evidence_count": 2,
+        "finding": "CONFIRMED_WITH_EVIDENCE"
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0029",
+      "proposition_id": "SP-stackstorm-0029",
+      "event_type": "tier_grounding_derivation",
+      "semantic_type": "GROUNDING",
+      "derivation_class": "TIER_GROUNDING",
+      "evidence": {
+        "ceu_id": "CEU-ST2STREAM",
+        "tier": "OPERATIONAL_DOMAIN",
+        "file_count": 15,
+        "evidence_count": 2,
+        "finding": "CONFIRMED_WITH_EVIDENCE"
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0030",
+      "proposition_id": "SP-stackstorm-0030",
+      "event_type": "tier_grounding_derivation",
+      "semantic_type": "GROUNDING",
+      "derivation_class": "TIER_GROUNDING",
+      "evidence": {
+        "ceu_id": "CEU-ST2TESTS",
+        "tier": "FOUNDATION",
+        "file_count": 116,
+        "evidence_count": 2,
+        "finding": "CONFIRMED_WITH_EVIDENCE"
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0031",
+      "proposition_id": "SP-stackstorm-0031",
+      "event_type": "tier_grounding_derivation",
+      "semantic_type": "GROUNDING",
+      "derivation_class": "TIER_GROUNDING",
+      "evidence": {
+        "ceu_id": "CEU-TOOLS",
+        "tier": "OPERATIONAL_DOMAIN",
+        "file_count": 15,
+        "evidence_count": 1,
+        "finding": "CONFIRMED_WITH_EVIDENCE"
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    },
+    {
+      "event_id": "SLE-0032",
+      "proposition_id": "SP-stackstorm-0032",
+      "event_type": "hero_moment_grounding_derivation",
+      "semantic_type": "GROUNDING",
+      "derivation_class": "HERO_MOMENT_GROUNDING",
+      "evidence": {
+        "hero_moment_id": "4d244360-1707-4704-b585-819becd1e2b9",
+        "surprise_class": "COUPLING",
+        "related_ceus": [
+          "CEU-ST2ACTIONS",
+          "CEU-ST2CLIENT",
+          "CEU-ST2COMMON"
+        ]
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-22T16:30:58.349961+00:00"
+    }
+  ]
+}

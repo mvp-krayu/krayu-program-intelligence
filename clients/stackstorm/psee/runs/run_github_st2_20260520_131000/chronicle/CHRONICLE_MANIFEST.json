@@ -1,0 +1,139 @@
+{
+  "schema_version": "2.0",
+  "chronicle_id": "stackstorm-run_github_st2_20260520_131000-genesis",
+  "client": "stackstorm",
+  "run_id": "run_github_st2_20260520_131000",
+  "corridor_type": "FULL_COGNITIVE_GENESIS",
+  "status": "COMPLETE",
+  "created_at": "2026-05-22T16:37:19.648Z",
+  "semantic_rhythm": [
+    "DISCOVERY",
+    "EMERGENCE",
+    "FORMATION",
+    "TENSION",
+    "STRENGTHENING",
+    "STABILIZATION",
+    "QUALIFICATION",
+    "CONVERGENCE",
+    "PROJECTION"
+  ],
+  "events_emitted": 56,
+  "checkpoints_frozen": 17,
+  "hero_moments_discovered": 0,
+  "learning_events_captured": 0,
+  "ai_interventions_logged": 0,
+  "operator_decisions_recorded": 0,
+  "semantic_phases_reached": [
+    "DISCOVERY",
+    "EMERGENCE",
+    "FORMATION",
+    "STABILIZATION",
+    "PROJECTION"
+  ],
+  "pipeline_phases": {
+    "Phase 0L \u2014 Learning Registry Load": {
+      "status": "PASS",
+      "semantic_phase": "DISCOVERY",
+      "completed_at": "2026-05-22T16:37:19.651Z",
+      "duration_ms": 0
+    },
+    "Phase 1  \u2014 Source Boundary": {
+      "status": "PASS",
+      "semantic_phase": "DISCOVERY",
+      "completed_at": "2026-05-22T16:37:19.682Z",
+      "duration_ms": 29
+    },
+    "Phase 2  \u2014 Intake Verification": {
+      "status": "PASS",
+      "semantic_phase": "DISCOVERY",
+      "completed_at": "2026-05-22T16:37:19.766Z",
+      "duration_ms": 82
+    },
+    "Phase 3  \u2014 40.x Structural Verification": {
+      "status": "PASS",
+      "semantic_phase": "EMERGENCE",
+      "completed_at": "2026-05-22T16:37:19.774Z",
+      "duration_ms": 6
+    },
+    "Phase 3.5 \u2014 Structural Relevance Classification": {
+      "status": "PASS",
+      "semantic_phase": "EMERGENCE",
+      "completed_at": "2026-05-22T16:37:19.775Z",
+      "duration_ms": 0
+    },
+    "Phase 3.6 \u2014 Code-Graph Structural Enrichment": {
+      "status": "PASS",
+      "semantic_phase": "EMERGENCE",
+      "completed_at": "2026-05-22T16:37:19.776Z",
+      "duration_ms": 0
+    },
+    "Phase 3.7 \u2014 Structural Centrality Derivation": {
+      "status": "PASS",
+      "semantic_phase": "EMERGENCE",
+      "completed_at": "2026-05-22T16:37:19.777Z",
+      "duration_ms": 0
+    },
+    "Phase 3b \u2014 Semantic Derivation": {
+      "status": "PASS",
+      "semantic_phase": "FORMATION",
+      "completed_at": "2026-05-22T16:37:19.779Z",
+      "duration_ms": 0
+    },
+    "Phase 3c \u2014 Semantic Proposition Derivation": {
+      "status": "PASS",
+      "semantic_phase": "FORMATION",
+      "completed_at": "2026-05-22T16:37:19.781Z",
+      "duration_ms": 0
+    },
+    "Phase 4  \u2014 CEU Grounding Verification": {
+      "status": "PASS",
+      "semantic_phase": "FORMATION",
+      "completed_at": "2026-05-22T16:37:19.782Z",
+      "duration_ms": 0
+    },
+    "Phase 5  \u2014 Build Binding Envelope": {
+      "status": "PASS",
+      "semantic_phase": "STABILIZATION",
+      "completed_at": "2026-05-22T16:37:19.798Z",
+      "duration_ms": 13
+    },
+    "Phase 5b \u2014 CSR Semantic Topology": {
+      "status": "PASS",
+      "semantic_phase": "STABILIZATION",
+      "completed_at": "2026-05-22T16:37:19.799Z",
+      "duration_ms": 0
+    },
+    "Phase 6+7 \u2014 75.x Activation + 41.x Projection": {
+      "status": "PASS",
+      "semantic_phase": "STABILIZATION",
+      "completed_at": "2026-05-22T16:37:19.800Z",
+      "duration_ms": 0
+    },
+    "Phase 8a \u2014 Vault Construction": {
+      "status": "PASS",
+      "semantic_phase": "PROJECTION",
+      "completed_at": "2026-05-22T16:37:19.802Z",
+      "duration_ms": 0
+    },
+    "Phase 8b \u2014 Vault Readiness": {
+      "status": "PASS",
+      "semantic_phase": "PROJECTION",
+      "completed_at": "2026-05-22T16:37:19.803Z",
+      "duration_ms": 0
+    },
+    "Phase 9  \u2014 Selector Update": {
+      "status": "PASS",
+      "semantic_phase": "PROJECTION",
+      "completed_at": "2026-05-22T16:37:19.804Z",
+      "duration_ms": 0
+    },
+    "Phase 10L \u2014 Learning Activation Manifest": {
+      "status": "PASS",
+      "semantic_phase": "PROJECTION",
+      "completed_at": "2026-05-22T16:37:19.807Z",
+      "duration_ms": 0
+    }
+  },
+  "completed_at": "2026-05-22T16:37:19.808Z",
+  "elapsed_ms": 159
+}

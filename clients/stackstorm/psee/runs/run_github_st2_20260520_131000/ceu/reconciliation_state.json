@@ -3,38 +3,38 @@
   "client_id": "stackstorm",
   "run_id": "run_github_st2_20260520_131000",
   "seeded_at": "2026-05-21T09:56:59.161075+00:00",
-  "review_mode": "UNCLASSIFIED",
-  "reconciliation_status": "INITIALIZED",
+  "review_mode": "STRUCTURAL_REVIEW",
+  "reconciliation_status": "COMPLETE",
   "summary": {
     "total": 15,
-    "proposed": 4,
-    "evidence_attached": 11,
+    "proposed": 0,
+    "evidence_attached": 0,
     "reconciled": 0,
-    "confirmed": 0,
-    "rejected": 0,
+    "confirmed": 11,
+    "rejected": 4,
     "merged": 0,
     "split": 0,
     "reclassified": 0,
-    "pending": 15
+    "pending": 0
   },
   "candidates": {
     "CEU-CONFTEST.PY": {
       "domain": "conftest.py",
-      "state": "PROPOSED",
+      "state": "REJECTED",
       "tier": "OPERATIONAL_DOMAIN",
       "file_count": 1,
       "evidence_count": 0,
       "evidence_types": {},
       "merge_candidate": true,
       "authority_pattern": "NEGLIGIBLE",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "REJECTED_NO_STRUCTURAL_ROLE",
+      "last_action": "REJECT",
+      "last_actor": "operator:krayu",
+      "last_action_at": "2026-05-22T16:29:56Z"
     },
     "CEU-CONTRIB": {
       "domain": "contrib",
-      "state": "EVIDENCE_ATTACHED",
+      "state": "CONFIRMED",
       "tier": "CONSUMER",
       "file_count": 131,
       "evidence_count": 2,
@@ -44,28 +44,28 @@
       },
       "merge_candidate": false,
       "authority_pattern": "INHERITANCE_DOMINANT",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "CONFIRMED_WITH_EVIDENCE",
+      "last_action": "CONFIRM",
+      "last_actor": "operator:krayu",
+      "last_action_at": "2026-05-22T16:29:56Z"
     },
     "CEU-PACKAGING": {
       "domain": "packaging",
-      "state": "PROPOSED",
+      "state": "REJECTED",
       "tier": "OPERATIONAL_DOMAIN",
       "file_count": 1,
       "evidence_count": 0,
       "evidence_types": {},
       "merge_candidate": true,
       "authority_pattern": "NEGLIGIBLE",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "REJECTED_NO_STRUCTURAL_ROLE",
+      "last_action": "REJECT",
+      "last_actor": "operator:krayu",
+      "last_action_at": "2026-05-22T16:29:56Z"
     },
     "CEU-PANTS-PLUGINS": {
       "domain": "pants-plugins",
-      "state": "EVIDENCE_ATTACHED",
+      "state": "CONFIRMED",
       "tier": "OPERATIONAL_DOMAIN",
       "file_count": 57,
       "evidence_count": 1,
@@ -74,42 +74,42 @@
       },
       "merge_candidate": false,
       "authority_pattern": "IMPORT_DOMINANT",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "CONFIRMED_WITH_EVIDENCE",
+      "last_action": "CONFIRM",
+      "last_actor": "operator:krayu",
+      "last_action_at": "2026-05-22T16:29:56Z"
     },
     "CEU-PYLINT-PLUGINS": {
       "domain": "pylint_plugins",
-      "state": "PROPOSED",
+      "state": "REJECTED",
       "tier": "OPERATIONAL_DOMAIN",
       "file_count": 5,
       "evidence_count": 0,
       "evidence_types": {},
       "merge_candidate": true,
       "authority_pattern": "NEGLIGIBLE",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "REJECTED_NO_STRUCTURAL_ROLE",
+      "last_action": "REJECT",
+      "last_actor": "operator:krayu",
+      "last_action_at": "2026-05-22T16:29:56Z"
     },
     "CEU-SCRIPTS": {
       "domain": "scripts",
-      "state": "PROPOSED",
+      "state": "REJECTED",
       "tier": "OPERATIONAL_DOMAIN",
       "file_count": 5,
       "evidence_count": 0,
       "evidence_types": {},
       "merge_candidate": true,
       "authority_pattern": "NEGLIGIBLE",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "REJECTED_NO_STRUCTURAL_ROLE",
+      "last_action": "REJECT",
+      "last_actor": "operator:krayu",
+      "last_action_at": "2026-05-22T16:29:56Z"
     },
     "CEU-ST2ACTIONS": {
       "domain": "st2actions",
-      "state": "EVIDENCE_ATTACHED",
+      "state": "CONFIRMED",
       "tier": "CONSUMER",
       "file_count": 49,
       "evidence_count": 3,
@@ -120,14 +120,14 @@
       },
       "merge_candidate": false,
       "authority_pattern": "IMPORT_DOMINANT",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "CONFIRMED_WITH_EVIDENCE",
+      "last_action": "CONFIRM",
+      "last_actor": "operator:krayu",
+      "last_action_at": "2026-05-22T16:29:56Z"
     },
     "CEU-ST2API": {
       "domain": "st2api",
-      "state": "EVIDENCE_ATTACHED",
+      "state": "CONFIRMED",
       "tier": "CONSUMER",
       "file_count": 79,
       "evidence_count": 2,
@@ -137,14 +137,14 @@
       },
       "merge_candidate": false,
       "authority_pattern": "DUAL_AUTHORITY",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "CONFIRMED_WITH_EVIDENCE",
+      "last_action": "CONFIRM",
+      "last_actor": "operator:krayu",
+      "last_action_at": "2026-05-22T16:29:56Z"
     },
     "CEU-ST2AUTH": {
       "domain": "st2auth",
-      "state": "EVIDENCE_ATTACHED",
+      "state": "CONFIRMED",
       "tier": "CONSUMER",
       "file_count": 25,
       "evidence_count": 2,
@@ -154,14 +154,14 @@
       },
       "merge_candidate": false,
       "authority_pattern": "IMPORT_DOMINANT",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "CONFIRMED_WITH_EVIDENCE",
+      "last_action": "CONFIRM",
+      "last_actor": "operator:krayu",
+      "last_action_at": "2026-05-22T16:29:56Z"
     },
     "CEU-ST2CLIENT": {
       "domain": "st2client",
-      "state": "EVIDENCE_ATTACHED",
+      "state": "CONFIRMED",
       "tier": "FOUNDATION",
       "file_count": 92,
       "evidence_count": 3,
@@ -172,14 +172,14 @@
       },
       "merge_candidate": false,
       "authority_pattern": "IMPORT_DOMINANT",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "CONFIRMED_WITH_EVIDENCE",
+      "last_action": "CONFIRM",
+      "last_actor": "operator:krayu",
+      "last_action_at": "2026-05-22T16:29:56Z"
     },
     "CEU-ST2COMMON": {
       "domain": "st2common",
-      "state": "EVIDENCE_ATTACHED",
+      "state": "CONFIRMED",
       "tier": "FOUNDATION",
       "file_count": 478,
       "evidence_count": 2,
@@ -189,14 +189,14 @@
       },
       "merge_candidate": false,
       "authority_pattern": "DUAL_AUTHORITY",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "CONFIRMED_WITH_EVIDENCE",
+      "last_action": "CONFIRM",
+      "last_actor": "operator:krayu",
+      "last_action_at": "2026-05-22T16:29:56Z"
     },
     "CEU-ST2REACTOR": {
       "domain": "st2reactor",
-      "state": "EVIDENCE_ATTACHED",
+      "state": "CONFIRMED",
       "tier": "CONSUMER",
       "file_count": 57,
       "evidence_count": 2,
@@ -206,14 +206,14 @@
       },
       "merge_candidate": false,
       "authority_pattern": "IMPORT_DOMINANT",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "CONFIRMED_WITH_EVIDENCE",
+      "last_action": "CONFIRM",
+      "last_actor": "operator:krayu",
+      "last_action_at": "2026-05-22T16:29:56Z"
     },
     "CEU-ST2STREAM": {
       "domain": "st2stream",
-      "state": "EVIDENCE_ATTACHED",
+      "state": "CONFIRMED",
       "tier": "OPERATIONAL_DOMAIN",
       "file_count": 15,
       "evidence_count": 2,
@@ -223,14 +223,14 @@
       },
       "merge_candidate": false,
       "authority_pattern": "IMPORT_DOMINANT",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "CONFIRMED_WITH_EVIDENCE",
+      "last_action": "CONFIRM",
+      "last_actor": "operator:krayu",
+      "last_action_at": "2026-05-22T16:29:56Z"
     },
     "CEU-ST2TESTS": {
       "domain": "st2tests",
-      "state": "EVIDENCE_ATTACHED",
+      "state": "CONFIRMED",
       "tier": "FOUNDATION",
       "file_count": 116,
       "evidence_count": 2,
@@ -240,14 +240,14 @@
       },
       "merge_candidate": false,
       "authority_pattern": "IMPORT_DOMINANT",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "CONFIRMED_WITH_EVIDENCE",
+      "last_action": "CONFIRM",
+      "last_actor": "operator:krayu",
+      "last_action_at": "2026-05-22T16:29:56Z"
     },
     "CEU-TOOLS": {
       "domain": "tools",
-      "state": "EVIDENCE_ATTACHED",
+      "state": "CONFIRMED",
       "tier": "OPERATIONAL_DOMAIN",
       "file_count": 15,
       "evidence_count": 1,
@@ -256,18 +256,18 @@
       },
       "merge_candidate": false,
       "authority_pattern": "NEGLIGIBLE",
-      "reconciliation_finding": null,
-      "last_action": null,
-      "last_actor": null,
-      "last_action_at": null
+      "reconciliation_finding": "CONFIRMED_WITH_EVIDENCE",
+      "last_action": "CONFIRM",
+      "last_actor": "operator:krayu",
+      "last_action_at": "2026-05-22T16:29:56Z"
     }
   },
   "promotion_gate": {
-    "all_candidates_resolved": false,
-    "unresolved_obligations": 13,
-    "review_mode": "UNCLASSIFIED",
-    "review_sufficient": false,
-    "semantic_derivation_permitted": false,
-    "gate_reason": "Reconciliation not started \u2014 candidates require review"
+    "all_candidates_resolved": true,
+    "unresolved_obligations": 0,
+    "review_mode": "STRUCTURAL_REVIEW",
+    "review_sufficient": true,
+    "semantic_derivation_permitted": true,
+    "gate_reason": "All 15 candidates resolved \u2014 11 confirmed, 4 rejected"
   }
 }

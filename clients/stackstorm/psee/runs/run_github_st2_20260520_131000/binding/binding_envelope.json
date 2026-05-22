@@ -1,0 +1,918 @@
+{
+  "artifact_id": "binding_envelope_stackstorm_orchestrated",
+  "contract_id": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+  "schema_version": "1.0",
+  "generated_at": "2026-05-22T16:37:19.796741+00:00",
+  "client_id": "cec9a6a9-0d6c-4b30-9734-1283d41fcabf",
+  "client_alias": "stackstorm",
+  "run_id": "run_github_st2_20260520_131000",
+  "stream": "PSEE-PIPELINE.ORCHESTRATOR",
+  "nodes": [
+    {
+      "node_id": "DOM-01",
+      "label": "CONTRIB",
+      "type": "binding_context",
+      "provenance": {
+        "source_artifact": "dom_path_domain_layer.json",
+        "derivation_rule": "ceu_domain_path_prefix",
+        "path_patterns": [
+          "contrib"
+        ]
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "DOM-02",
+      "label": "PANTS-PLUGINS",
+      "type": "binding_context",
+      "provenance": {
+        "source_artifact": "dom_path_domain_layer.json",
+        "derivation_rule": "ceu_domain_path_prefix",
+        "path_patterns": [
+          "pants-plugins"
+        ]
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "DOM-03",
+      "label": "ST2ACTIONS",
+      "type": "binding_context",
+      "provenance": {
+        "source_artifact": "dom_path_domain_layer.json",
+        "derivation_rule": "ceu_domain_path_prefix",
+        "path_patterns": [
+          "st2actions"
+        ]
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "DOM-04",
+      "label": "ST2API",
+      "type": "binding_context",
+      "provenance": {
+        "source_artifact": "dom_path_domain_layer.json",
+        "derivation_rule": "ceu_domain_path_prefix",
+        "path_patterns": [
+          "st2api"
+        ]
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "DOM-05",
+      "label": "ST2AUTH",
+      "type": "binding_context",
+      "provenance": {
+        "source_artifact": "dom_path_domain_layer.json",
+        "derivation_rule": "ceu_domain_path_prefix",
+        "path_patterns": [
+          "st2auth"
+        ]
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "DOM-06",
+      "label": "ST2CLIENT",
+      "type": "binding_context",
+      "provenance": {
+        "source_artifact": "dom_path_domain_layer.json",
+        "derivation_rule": "ceu_domain_path_prefix",
+        "path_patterns": [
+          "st2client"
+        ]
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "DOM-07",
+      "label": "ST2COMMON",
+      "type": "binding_context",
+      "provenance": {
+        "source_artifact": "dom_path_domain_layer.json",
+        "derivation_rule": "ceu_domain_path_prefix",
+        "path_patterns": [
+          "st2common"
+        ]
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "DOM-08",
+      "label": "ST2REACTOR",
+      "type": "binding_context",
+      "provenance": {
+        "source_artifact": "dom_path_domain_layer.json",
+        "derivation_rule": "ceu_domain_path_prefix",
+        "path_patterns": [
+          "st2reactor"
+        ]
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "DOM-09",
+      "label": "ST2STREAM",
+      "type": "binding_context",
+      "provenance": {
+        "source_artifact": "dom_path_domain_layer.json",
+        "derivation_rule": "ceu_domain_path_prefix",
+        "path_patterns": [
+          "st2stream"
+        ]
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "DOM-10",
+      "label": "ST2TESTS",
+      "type": "binding_context",
+      "provenance": {
+        "source_artifact": "dom_path_domain_layer.json",
+        "derivation_rule": "ceu_domain_path_prefix",
+        "path_patterns": [
+          "st2tests"
+        ]
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "DOM-11",
+      "label": "TOOLS",
+      "type": "binding_context",
+      "provenance": {
+        "source_artifact": "dom_path_domain_layer.json",
+        "derivation_rule": "ceu_domain_path_prefix",
+        "path_patterns": [
+          "tools"
+        ]
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CE-01",
+      "label": "contrib",
+      "type": "component_entity",
+      "ceu_id": "CEU-CONTRIB",
+      "grounding_status": "GROUNDED",
+      "provenance": {
+        "source_artifact": "ceu_grounding_registry.json",
+        "ceu_id": "CEU-CONTRIB",
+        "evidence_count": 2
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CE-02",
+      "label": "pants-plugins",
+      "type": "component_entity",
+      "ceu_id": "CEU-PANTS-PLUGINS",
+      "grounding_status": "GROUNDED",
+      "provenance": {
+        "source_artifact": "ceu_grounding_registry.json",
+        "ceu_id": "CEU-PANTS-PLUGINS",
+        "evidence_count": 1
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CE-03",
+      "label": "st2actions",
+      "type": "component_entity",
+      "ceu_id": "CEU-ST2ACTIONS",
+      "grounding_status": "GROUNDED",
+      "provenance": {
+        "source_artifact": "ceu_grounding_registry.json",
+        "ceu_id": "CEU-ST2ACTIONS",
+        "evidence_count": 3
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CE-04",
+      "label": "st2api",
+      "type": "component_entity",
+      "ceu_id": "CEU-ST2API",
+      "grounding_status": "GROUNDED",
+      "provenance": {
+        "source_artifact": "ceu_grounding_registry.json",
+        "ceu_id": "CEU-ST2API",
+        "evidence_count": 2
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CE-05",
+      "label": "st2auth",
+      "type": "component_entity",
+      "ceu_id": "CEU-ST2AUTH",
+      "grounding_status": "GROUNDED",
+      "provenance": {
+        "source_artifact": "ceu_grounding_registry.json",
+        "ceu_id": "CEU-ST2AUTH",
+        "evidence_count": 2
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CE-06",
+      "label": "st2client",
+      "type": "component_entity",
+      "ceu_id": "CEU-ST2CLIENT",
+      "grounding_status": "GROUNDED",
+      "provenance": {
+        "source_artifact": "ceu_grounding_registry.json",
+        "ceu_id": "CEU-ST2CLIENT",
+        "evidence_count": 3
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CE-07",
+      "label": "st2common",
+      "type": "component_entity",
+      "ceu_id": "CEU-ST2COMMON",
+      "grounding_status": "GROUNDED",
+      "provenance": {
+        "source_artifact": "ceu_grounding_registry.json",
+        "ceu_id": "CEU-ST2COMMON",
+        "evidence_count": 2
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CE-08",
+      "label": "st2reactor",
+      "type": "component_entity",
+      "ceu_id": "CEU-ST2REACTOR",
+      "grounding_status": "GROUNDED",
+      "provenance": {
+        "source_artifact": "ceu_grounding_registry.json",
+        "ceu_id": "CEU-ST2REACTOR",
+        "evidence_count": 2
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CE-09",
+      "label": "st2stream",
+      "type": "component_entity",
+      "ceu_id": "CEU-ST2STREAM",
+      "grounding_status": "GROUNDED",
+      "provenance": {
+        "source_artifact": "ceu_grounding_registry.json",
+        "ceu_id": "CEU-ST2STREAM",
+        "evidence_count": 2
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CE-10",
+      "label": "st2tests",
+      "type": "component_entity",
+      "ceu_id": "CEU-ST2TESTS",
+      "grounding_status": "GROUNDED",
+      "provenance": {
+        "source_artifact": "ceu_grounding_registry.json",
+        "ceu_id": "CEU-ST2TESTS",
+        "evidence_count": 2
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CE-11",
+      "label": "tools",
+      "type": "component_entity",
+      "ceu_id": "CEU-TOOLS",
+      "grounding_status": "GROUNDED",
+      "provenance": {
+        "source_artifact": "ceu_grounding_registry.json",
+        "ceu_id": "CEU-TOOLS",
+        "evidence_count": 1
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CS-01",
+      "label": "contrib_surface",
+      "type": "capability_surface",
+      "ceu_id": "CEU-CONTRIB",
+      "provenance": {
+        "parent_node": "CE-01",
+        "parent_ceu": "CEU-CONTRIB",
+        "source_artifact": "ceu_grounding_registry.json"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CS-02",
+      "label": "pants-plugins_surface",
+      "type": "capability_surface",
+      "ceu_id": "CEU-PANTS-PLUGINS",
+      "provenance": {
+        "parent_node": "CE-02",
+        "parent_ceu": "CEU-PANTS-PLUGINS",
+        "source_artifact": "ceu_grounding_registry.json"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CS-03",
+      "label": "st2actions_surface",
+      "type": "capability_surface",
+      "ceu_id": "CEU-ST2ACTIONS",
+      "provenance": {
+        "parent_node": "CE-03",
+        "parent_ceu": "CEU-ST2ACTIONS",
+        "source_artifact": "ceu_grounding_registry.json"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CS-04",
+      "label": "st2api_surface",
+      "type": "capability_surface",
+      "ceu_id": "CEU-ST2API",
+      "provenance": {
+        "parent_node": "CE-04",
+        "parent_ceu": "CEU-ST2API",
+        "source_artifact": "ceu_grounding_registry.json"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CS-05",
+      "label": "st2auth_surface",
+      "type": "capability_surface",
+      "ceu_id": "CEU-ST2AUTH",
+      "provenance": {
+        "parent_node": "CE-05",
+        "parent_ceu": "CEU-ST2AUTH",
+        "source_artifact": "ceu_grounding_registry.json"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CS-06",
+      "label": "st2client_surface",
+      "type": "capability_surface",
+      "ceu_id": "CEU-ST2CLIENT",
+      "provenance": {
+        "parent_node": "CE-06",
+        "parent_ceu": "CEU-ST2CLIENT",
+        "source_artifact": "ceu_grounding_registry.json"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CS-07",
+      "label": "st2common_surface",
+      "type": "capability_surface",
+      "ceu_id": "CEU-ST2COMMON",
+      "provenance": {
+        "parent_node": "CE-07",
+        "parent_ceu": "CEU-ST2COMMON",
+        "source_artifact": "ceu_grounding_registry.json"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CS-08",
+      "label": "st2reactor_surface",
+      "type": "capability_surface",
+      "ceu_id": "CEU-ST2REACTOR",
+      "provenance": {
+        "parent_node": "CE-08",
+        "parent_ceu": "CEU-ST2REACTOR",
+        "source_artifact": "ceu_grounding_registry.json"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CS-09",
+      "label": "st2stream_surface",
+      "type": "capability_surface",
+      "ceu_id": "CEU-ST2STREAM",
+      "provenance": {
+        "parent_node": "CE-09",
+        "parent_ceu": "CEU-ST2STREAM",
+        "source_artifact": "ceu_grounding_registry.json"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CS-10",
+      "label": "st2tests_surface",
+      "type": "capability_surface",
+      "ceu_id": "CEU-ST2TESTS",
+      "provenance": {
+        "parent_node": "CE-10",
+        "parent_ceu": "CEU-ST2TESTS",
+        "source_artifact": "ceu_grounding_registry.json"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CS-11",
+      "label": "tools_surface",
+      "type": "capability_surface",
+      "ceu_id": "CEU-TOOLS",
+      "provenance": {
+        "parent_node": "CE-11",
+        "parent_ceu": "CEU-TOOLS",
+        "source_artifact": "ceu_grounding_registry.json"
+      },
+      "temporal_classification": "STATIC"
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "EDGE-DOM-01-CE-01",
+      "edge_type": "GROUNDS",
+      "from_node": "DOM-01",
+      "to_node": "CE-01",
+      "containment_level": "domain_to_component",
+      "provenance": {
+        "derivation_rule": "CEU evidence_refs \u2192 structural node \u2192 DOM group membership",
+        "ceu_id": "CEU-CONTRIB"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-DOM-UNKNOWN-CE-01",
+      "edge_type": "GROUNDS",
+      "from_node": "DOM-UNKNOWN",
+      "to_node": "CE-01",
+      "containment_level": "domain_to_component",
+      "provenance": {
+        "derivation_rule": "CEU evidence_refs \u2192 structural node \u2192 DOM group membership",
+        "ceu_id": "CEU-CONTRIB"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-DOM-02-CE-02",
+      "edge_type": "GROUNDS",
+      "from_node": "DOM-02",
+      "to_node": "CE-02",
+      "containment_level": "domain_to_component",
+      "provenance": {
+        "derivation_rule": "CEU evidence_refs \u2192 structural node \u2192 DOM group membership",
+        "ceu_id": "CEU-PANTS-PLUGINS"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-DOM-03-CE-03",
+      "edge_type": "GROUNDS",
+      "from_node": "DOM-03",
+      "to_node": "CE-03",
+      "containment_level": "domain_to_component",
+      "provenance": {
+        "derivation_rule": "CEU evidence_refs \u2192 structural node \u2192 DOM group membership",
+        "ceu_id": "CEU-ST2ACTIONS"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-DOM-UNKNOWN-CE-03",
+      "edge_type": "GROUNDS",
+      "from_node": "DOM-UNKNOWN",
+      "to_node": "CE-03",
+      "containment_level": "domain_to_component",
+      "provenance": {
+        "derivation_rule": "CEU evidence_refs \u2192 structural node \u2192 DOM group membership",
+        "ceu_id": "CEU-ST2ACTIONS"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-DOM-04-CE-04",
+      "edge_type": "GROUNDS",
+      "from_node": "DOM-04",
+      "to_node": "CE-04",
+      "containment_level": "domain_to_component",
+      "provenance": {
+        "derivation_rule": "CEU evidence_refs \u2192 structural node \u2192 DOM group membership",
+        "ceu_id": "CEU-ST2API"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-DOM-05-CE-05",
+      "edge_type": "GROUNDS",
+      "from_node": "DOM-05",
+      "to_node": "CE-05",
+      "containment_level": "domain_to_component",
+      "provenance": {
+        "derivation_rule": "CEU evidence_refs \u2192 structural node \u2192 DOM group membership",
+        "ceu_id": "CEU-ST2AUTH"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-DOM-06-CE-06",
+      "edge_type": "GROUNDS",
+      "from_node": "DOM-06",
+      "to_node": "CE-06",
+      "containment_level": "domain_to_component",
+      "provenance": {
+        "derivation_rule": "CEU evidence_refs \u2192 structural node \u2192 DOM group membership",
+        "ceu_id": "CEU-ST2CLIENT"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-DOM-07-CE-07",
+      "edge_type": "GROUNDS",
+      "from_node": "DOM-07",
+      "to_node": "CE-07",
+      "containment_level": "domain_to_component",
+      "provenance": {
+        "derivation_rule": "CEU evidence_refs \u2192 structural node \u2192 DOM group membership",
+        "ceu_id": "CEU-ST2COMMON"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-DOM-08-CE-08",
+      "edge_type": "GROUNDS",
+      "from_node": "DOM-08",
+      "to_node": "CE-08",
+      "containment_level": "domain_to_component",
+      "provenance": {
+        "derivation_rule": "CEU evidence_refs \u2192 structural node \u2192 DOM group membership",
+        "ceu_id": "CEU-ST2REACTOR"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-DOM-09-CE-09",
+      "edge_type": "GROUNDS",
+      "from_node": "DOM-09",
+      "to_node": "CE-09",
+      "containment_level": "domain_to_component",
+      "provenance": {
+        "derivation_rule": "CEU evidence_refs \u2192 structural node \u2192 DOM group membership",
+        "ceu_id": "CEU-ST2STREAM"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-DOM-10-CE-10",
+      "edge_type": "GROUNDS",
+      "from_node": "DOM-10",
+      "to_node": "CE-10",
+      "containment_level": "domain_to_component",
+      "provenance": {
+        "derivation_rule": "CEU evidence_refs \u2192 structural node \u2192 DOM group membership",
+        "ceu_id": "CEU-ST2TESTS"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-DOM-UNKNOWN-CE-11",
+      "edge_type": "GROUNDS",
+      "from_node": "DOM-UNKNOWN",
+      "to_node": "CE-11",
+      "containment_level": "domain_to_component",
+      "provenance": {
+        "derivation_rule": "CEU evidence_refs \u2192 structural node \u2192 DOM group membership",
+        "ceu_id": "CEU-TOOLS"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-CE-01-CS-01",
+      "edge_type": "EXPOSES",
+      "from_node": "CE-01",
+      "to_node": "CS-01",
+      "containment_level": "component_to_surface",
+      "provenance": {
+        "derivation_rule": "CEU grounding \u2192 capability surface",
+        "ceu_id": "CEU-CONTRIB"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-CE-02-CS-02",
+      "edge_type": "EXPOSES",
+      "from_node": "CE-02",
+      "to_node": "CS-02",
+      "containment_level": "component_to_surface",
+      "provenance": {
+        "derivation_rule": "CEU grounding \u2192 capability surface",
+        "ceu_id": "CEU-PANTS-PLUGINS"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-CE-03-CS-03",
+      "edge_type": "EXPOSES",
+      "from_node": "CE-03",
+      "to_node": "CS-03",
+      "containment_level": "component_to_surface",
+      "provenance": {
+        "derivation_rule": "CEU grounding \u2192 capability surface",
+        "ceu_id": "CEU-ST2ACTIONS"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-CE-04-CS-04",
+      "edge_type": "EXPOSES",
+      "from_node": "CE-04",
+      "to_node": "CS-04",
+      "containment_level": "component_to_surface",
+      "provenance": {
+        "derivation_rule": "CEU grounding \u2192 capability surface",
+        "ceu_id": "CEU-ST2API"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-CE-05-CS-05",
+      "edge_type": "EXPOSES",
+      "from_node": "CE-05",
+      "to_node": "CS-05",
+      "containment_level": "component_to_surface",
+      "provenance": {
+        "derivation_rule": "CEU grounding \u2192 capability surface",
+        "ceu_id": "CEU-ST2AUTH"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-CE-06-CS-06",
+      "edge_type": "EXPOSES",
+      "from_node": "CE-06",
+      "to_node": "CS-06",
+      "containment_level": "component_to_surface",
+      "provenance": {
+        "derivation_rule": "CEU grounding \u2192 capability surface",
+        "ceu_id": "CEU-ST2CLIENT"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-CE-07-CS-07",
+      "edge_type": "EXPOSES",
+      "from_node": "CE-07",
+      "to_node": "CS-07",
+      "containment_level": "component_to_surface",
+      "provenance": {
+        "derivation_rule": "CEU grounding \u2192 capability surface",
+        "ceu_id": "CEU-ST2COMMON"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-CE-08-CS-08",
+      "edge_type": "EXPOSES",
+      "from_node": "CE-08",
+      "to_node": "CS-08",
+      "containment_level": "component_to_surface",
+      "provenance": {
+        "derivation_rule": "CEU grounding \u2192 capability surface",
+        "ceu_id": "CEU-ST2REACTOR"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-CE-09-CS-09",
+      "edge_type": "EXPOSES",
+      "from_node": "CE-09",
+      "to_node": "CS-09",
+      "containment_level": "component_to_surface",
+      "provenance": {
+        "derivation_rule": "CEU grounding \u2192 capability surface",
+        "ceu_id": "CEU-ST2STREAM"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-CE-10-CS-10",
+      "edge_type": "EXPOSES",
+      "from_node": "CE-10",
+      "to_node": "CS-10",
+      "containment_level": "component_to_surface",
+      "provenance": {
+        "derivation_rule": "CEU grounding \u2192 capability surface",
+        "ceu_id": "CEU-ST2TESTS"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-CE-11-CS-11",
+      "edge_type": "EXPOSES",
+      "from_node": "CE-11",
+      "to_node": "CS-11",
+      "containment_level": "component_to_surface",
+      "provenance": {
+        "derivation_rule": "CEU grounding \u2192 capability surface",
+        "ceu_id": "CEU-TOOLS"
+      },
+      "temporal_classification": "STATIC"
+    }
+  ],
+  "capability_surfaces": [
+    {
+      "surface_id": "CS-01",
+      "label": "CONTRIB_capability",
+      "parent_context": "DOM-01",
+      "path_pattern": "contrib/README.md",
+      "provenance": {
+        "parent_node": "CE-01",
+        "parent_ceu": "CEU-CONTRIB",
+        "source_artifact": "ceu_grounding_registry.json",
+        "source_type": "CAPABILITY_SURFACE",
+        "authority_level": "GROUNDED",
+        "validation_status": "PASS",
+        "generated_from": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+        "generated_at_stage": "PHASE_05_BINDING_ENVELOPE"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "surface_id": "CS-02",
+      "label": "PANTS-PLUGINS_capability",
+      "parent_context": "DOM-02",
+      "path_pattern": "pants-plugins/README.md",
+      "provenance": {
+        "parent_node": "CE-02",
+        "parent_ceu": "CEU-PANTS-PLUGINS",
+        "source_artifact": "ceu_grounding_registry.json",
+        "source_type": "CAPABILITY_SURFACE",
+        "authority_level": "GROUNDED",
+        "validation_status": "PASS",
+        "generated_from": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+        "generated_at_stage": "PHASE_05_BINDING_ENVELOPE"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "surface_id": "CS-03",
+      "label": "ST2ACTIONS_capability",
+      "parent_context": "DOM-03",
+      "path_pattern": "st2actions/setup.py",
+      "provenance": {
+        "parent_node": "CE-03",
+        "parent_ceu": "CEU-ST2ACTIONS",
+        "source_artifact": "ceu_grounding_registry.json",
+        "source_type": "CAPABILITY_SURFACE",
+        "authority_level": "GROUNDED",
+        "validation_status": "PASS",
+        "generated_from": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+        "generated_at_stage": "PHASE_05_BINDING_ENVELOPE"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "surface_id": "CS-04",
+      "label": "ST2API_capability",
+      "parent_context": "DOM-04",
+      "path_pattern": "st2api/setup.py",
+      "provenance": {
+        "parent_node": "CE-04",
+        "parent_ceu": "CEU-ST2API",
+        "source_artifact": "ceu_grounding_registry.json",
+        "source_type": "CAPABILITY_SURFACE",
+        "authority_level": "GROUNDED",
+        "validation_status": "PASS",
+        "generated_from": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+        "generated_at_stage": "PHASE_05_BINDING_ENVELOPE"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "surface_id": "CS-05",
+      "label": "ST2AUTH_capability",
+      "parent_context": "DOM-05",
+      "path_pattern": "st2auth/setup.py",
+      "provenance": {
+        "parent_node": "CE-05",
+        "parent_ceu": "CEU-ST2AUTH",
+        "source_artifact": "ceu_grounding_registry.json",
+        "source_type": "CAPABILITY_SURFACE",
+        "authority_level": "GROUNDED",
+        "validation_status": "PASS",
+        "generated_from": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+        "generated_at_stage": "PHASE_05_BINDING_ENVELOPE"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "surface_id": "CS-06",
+      "label": "ST2CLIENT_capability",
+      "parent_context": "DOM-06",
+      "path_pattern": "st2client/setup.py",
+      "provenance": {
+        "parent_node": "CE-06",
+        "parent_ceu": "CEU-ST2CLIENT",
+        "source_artifact": "ceu_grounding_registry.json",
+        "source_type": "CAPABILITY_SURFACE",
+        "authority_level": "GROUNDED",
+        "validation_status": "PASS",
+        "generated_from": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+        "generated_at_stage": "PHASE_05_BINDING_ENVELOPE"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "surface_id": "CS-07",
+      "label": "ST2COMMON_capability",
+      "parent_context": "DOM-07",
+      "path_pattern": "st2common/setup.py",
+      "provenance": {
+        "parent_node": "CE-07",
+        "parent_ceu": "CEU-ST2COMMON",
+        "source_artifact": "ceu_grounding_registry.json",
+        "source_type": "CAPABILITY_SURFACE",
+        "authority_level": "GROUNDED",
+        "validation_status": "PASS",
+        "generated_from": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+        "generated_at_stage": "PHASE_05_BINDING_ENVELOPE"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "surface_id": "CS-08",
+      "label": "ST2REACTOR_capability",
+      "parent_context": "DOM-08",
+      "path_pattern": "st2reactor/setup.py",
+      "provenance": {
+        "parent_node": "CE-08",
+        "parent_ceu": "CEU-ST2REACTOR",
+        "source_artifact": "ceu_grounding_registry.json",
+        "source_type": "CAPABILITY_SURFACE",
+        "authority_level": "GROUNDED",
+        "validation_status": "PASS",
+        "generated_from": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+        "generated_at_stage": "PHASE_05_BINDING_ENVELOPE"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "surface_id": "CS-09",
+      "label": "ST2STREAM_capability",
+      "parent_context": "DOM-09",
+      "path_pattern": "st2stream/setup.py",
+      "provenance": {
+        "parent_node": "CE-09",
+        "parent_ceu": "CEU-ST2STREAM",
+        "source_artifact": "ceu_grounding_registry.json",
+        "source_type": "CAPABILITY_SURFACE",
+        "authority_level": "GROUNDED",
+        "validation_status": "PASS",
+        "generated_from": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+        "generated_at_stage": "PHASE_05_BINDING_ENVELOPE"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "surface_id": "CS-10",
+      "label": "ST2TESTS_capability",
+      "parent_context": "DOM-10",
+      "path_pattern": "st2tests/setup.py",
+      "provenance": {
+        "parent_node": "CE-10",
+        "parent_ceu": "CEU-ST2TESTS",
+        "source_artifact": "ceu_grounding_registry.json",
+        "source_type": "CAPABILITY_SURFACE",
+        "authority_level": "GROUNDED",
+        "validation_status": "PASS",
+        "generated_from": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+        "generated_at_stage": "PHASE_05_BINDING_ENVELOPE"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "surface_id": "CS-11",
+      "label": "unknown_capability",
+      "parent_context": "DOM-UNKNOWN",
+      "path_pattern": "README.md",
+      "provenance": {
+        "parent_node": "CE-11",
+        "parent_ceu": "CEU-TOOLS",
+        "source_artifact": "ceu_grounding_registry.json",
+        "source_type": "CAPABILITY_SURFACE",
+        "authority_level": "GROUNDED",
+        "validation_status": "PASS",
+        "generated_from": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+        "generated_at_stage": "PHASE_05_BINDING_ENVELOPE"
+      },
+      "temporal_classification": "STATIC"
+    }
+  ],
+  "summary": {
+    "total_nodes": 33,
+    "binding_context_count": 11,
+    "component_entity_count": 11,
+    "capability_surface_node_count": 11,
+    "total_edges": 24,
+    "capability_surfaces_count": 11,
+    "derivation_basis": "CEU grounding registry + DOM path domain layer (PATH_EVIDENCE_ONLY)"
+  }
+}

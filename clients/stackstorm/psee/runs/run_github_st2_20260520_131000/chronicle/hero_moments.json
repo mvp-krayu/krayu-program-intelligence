@@ -1,0 +1,27 @@
+{
+  "hero_moments": [
+    {
+      "hero_moment_id": "HM-stackstorm-001",
+      "client": "stackstorm",
+      "run_id": "run_github_st2_20260520_131000",
+      "discovery_phase": "Phase 3.6 \u2014 Code-Graph Structural Enrichment",
+      "hero_type": "COUPLING_SURPRISE",
+      "s_level_at_discovery": "S1",
+      "path_at_discovery": "PATH_A",
+      "description": "High cross-domain coupling: 2706/4006 imports (67.5%) cross module boundaries",
+      "evidence_refs": [],
+      "structural_metric": {
+        "metric_name": "cross_domain_import_rate",
+        "observed_value": 0.675,
+        "expected_range": "<0.50 (less than half of imports cross boundaries)",
+        "deviation": 0.175
+      },
+      "governance_state": "CANDIDATE",
+      "operator_note": null,
+      "learning_event_ref": null,
+      "replay_safe": true,
+      "timestamp": "2026-05-22T16:38:02.766Z"
+    }
+  ],
+  "count": 1
+}

@@ -1,0 +1,109 @@
+{
+  "stream_id": "PI.STACKSTORM.GENESIS-ADVANCEMENT.01",
+  "classification": "G2",
+  "validation_timestamp": "2026-05-22T16:38:00Z",
+  "checks": [
+    {
+      "id": "V-01",
+      "name": "CEU reconciliation COMPLETE",
+      "status": "PASS",
+      "detail": "15 candidates: 11 CONFIRMED, 4 REJECTED. reconciliation_status=COMPLETE"
+    },
+    {
+      "id": "V-02",
+      "name": "All reconciliation obligations resolved",
+      "status": "PASS",
+      "detail": "13/13 obligations RESOLVED (RESOLVED_BY_REJECTION or RESOLVED_BY_CONFIRMATION)"
+    },
+    {
+      "id": "V-03",
+      "name": "SPE derivation complete",
+      "status": "PASS",
+      "detail": "32 propositions derived, mean confidence 0.80"
+    },
+    {
+      "id": "V-04",
+      "name": "Spine objects normalized",
+      "status": "PASS",
+      "detail": "Wrapped dict format with objects key — 16 evidence_objects, 1 hero_moment"
+    },
+    {
+      "id": "V-05",
+      "name": "Pipeline Phase 4 reconciliation path",
+      "status": "PASS",
+      "detail": "phase_04_ceu_grounding accepts reconciliation_state.json as fallback"
+    },
+    {
+      "id": "V-06",
+      "name": "Pipeline Phase 5 reconciliation synthesis",
+      "status": "PASS",
+      "detail": "11 confirmed CEUs synthesized to registry, 11 DOM groups from domains"
+    },
+    {
+      "id": "V-07",
+      "name": "Full pipeline 17/17 PASS",
+      "status": "PASS",
+      "detail": "All phases pass — LENS phases gracefully skip for S1 structural-only"
+    },
+    {
+      "id": "V-08",
+      "name": "Chronicle events emitted",
+      "status": "PASS",
+      "detail": "130 events in chronicle_events.jsonl"
+    },
+    {
+      "id": "V-09",
+      "name": "Chronicle checkpoints frozen",
+      "status": "PASS",
+      "detail": "17 checkpoints (checkpoint_00 through checkpoint_16)"
+    },
+    {
+      "id": "V-10",
+      "name": "Hero moments detected",
+      "status": "PASS",
+      "detail": "1 candidate: HM-stackstorm-001 (67.5% cross-domain coupling)"
+    },
+    {
+      "id": "V-11",
+      "name": "Genesis chronicle compiled",
+      "status": "PASS",
+      "detail": "92KB HTML, 9 chapters, Z1-Z5 zoom, FULL_COGNITIVE_GENESIS corridor"
+    },
+    {
+      "id": "V-12",
+      "name": "Compilation manifest present",
+      "status": "PASS",
+      "detail": "compilation_manifest.json with content hash and source counts"
+    },
+    {
+      "id": "V-13",
+      "name": "Binding envelope produced",
+      "status": "PASS",
+      "detail": "33 nodes (11 BC + 11 CE + 11 CS), 24 edges, 11 surfaces"
+    },
+    {
+      "id": "V-14",
+      "name": "DOM layer synthesized",
+      "status": "PASS",
+      "detail": "11 DOM groups from CEU domains, 3273 matched nodes"
+    },
+    {
+      "id": "V-15",
+      "name": "No NetBox mutation",
+      "status": "PASS",
+      "detail": "NetBox specimens untouched — read-only convergence observation"
+    },
+    {
+      "id": "V-16",
+      "name": "Reconciliation event log integrity",
+      "status": "PASS",
+      "detail": "15 events (RCE-ST2-0001 through RCE-ST2-0015), operator:krayu"
+    }
+  ],
+  "summary": {
+    "total": 16,
+    "pass": 16,
+    "fail": 0,
+    "result": "VALID"
+  }
+}

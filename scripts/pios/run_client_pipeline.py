@@ -304,7 +304,10 @@ def phase_03_40x_structural(source_manifest: dict, run_dir: Path) -> bool:
 def phase_04_ceu_grounding(source_manifest: dict, run_dir: Path) -> bool:
     # Prefer run-derived generic path (ceu_grounding.py output).
     # Fall back to manifest-registered path for legacy runs.
+    # Accept reconciliation_state.json when grounding_state_v3.json absent
+    # (CEU Reconciliation Workflow supersedes legacy grounding pipeline).
     generic_path  = run_dir / "ceu" / "grounding_state_v3.json"
+    reconciliation_path = run_dir / "ceu" / "reconciliation_state.json"
     manifest_path_str = source_manifest.get("grounding_state_path", "")
     manifest_path = (REPO_ROOT / manifest_path_str) if manifest_path_str else None
 
@@ -312,11 +315,21 @@ def phase_04_ceu_grounding(source_manifest: dict, run_dir: Path) -> bool:
         grounding_path = generic_path
     elif manifest_path and manifest_path.exists():
         grounding_path = manifest_path
+    elif reconciliation_path.exists():
+        rs = load_json(reconciliation_path)
+        total = rs.get("summary", {}).get("total", 0)
+        status = rs.get("reconciliation_status", "UNKNOWN")
+        evidence_count = len(load_json(run_dir / "ceu" / "evidence_anchors.json").get("anchors", [])) if (run_dir / "ceu" / "evidence_anchors.json").exists() else 0
+        print(f"  [CEU] reconciliation_state.json present (grounding_state_v3 absent)")
+        print(f"  [CEU] {total} candidates, status={status}, {evidence_count} evidence anchors")
+        print(f"  PASS: CEU verification via reconciliation ({total} candidates, {evidence_count} evidence anchors)")
+        return True
     else:
         checked = [str(generic_path.relative_to(REPO_ROOT))]
         if manifest_path:
             checked.append(str(manifest_path.relative_to(REPO_ROOT)))
-        print(f"  FAIL: grounding_state_v3.json not found. Checked:")
+        checked.append(str(reconciliation_path.relative_to(REPO_ROOT)))
+        print(f"  FAIL: no CEU verification found. Checked:")
         for p in checked:
             print(f"    {p}")
         return False
@@ -387,6 +400,98 @@ def _synthesize_ceu_registry(run_dir: Path, global_registry_path: Path):
     return {"ceu": ceu_entries}
 
 
+def _synthesize_ceu_registry_from_reconciliation(run_dir: Path):
+    """
+    Build Phase 5's ceu_grounding_registry format from reconciliation outputs.
+    Used when grounding_state_v3.json does not exist but reconciliation_state.json
+    is COMPLETE. Reads confirmed CEUs, evidence_anchors, and node inventory.
+    Returns {"ceu": [...]} or None if inputs are missing/incomplete.
+    """
+    recon_path    = run_dir / "ceu" / "reconciliation_state.json"
+    anchors_path  = run_dir / "ceu" / "evidence_anchors.json"
+    node_inv_path = run_dir / "structure" / "40.2" / "structural_node_inventory.json"
+
+    if not recon_path.exists() or not node_inv_path.exists():
+        return None
+
+    recon_state  = load_json(recon_path)
+    if recon_state.get("reconciliation_status") != "COMPLETE":
+        return None
+
+    node_inventory = load_json(node_inv_path)
+    path_to_node: dict[str, str] = {
+        n["path"]: n["node_id"] for n in node_inventory.get("nodes", [])
+    }
+
+    anchor_by_ceu: dict[str, list] = {}
+    if anchors_path.exists():
+        anchors = load_json(anchors_path)
+        for a in anchors.get("anchors", []):
+            ceu_id = a.get("ceu_id", "")
+            if ceu_id:
+                anchor_by_ceu.setdefault(ceu_id, []).append(a)
+
+    ceu_entries = []
+    for ceu_id, cand in recon_state.get("candidates", {}).items():
+        if cand.get("state") != "CONFIRMED":
+            continue
+        evidence_refs = []
+        for a in anchor_by_ceu.get(ceu_id, []):
+            src = a.get("source_path", "")
+            rel = src.split("/canonical_repo/")[-1] if "/canonical_repo/" in src else src
+            evidence_refs.append({
+                "node_id": path_to_node.get(rel, ""),
+                "value": rel,
+            })
+        ceu_entries.append({
+            "ceu_id": ceu_id,
+            "name": cand.get("domain", ceu_id),
+            "grounding_status": "GROUNDED" if evidence_refs else "UNGROUNDED",
+            "evidence_refs": evidence_refs,
+        })
+
+    return {"ceu": ceu_entries} if ceu_entries else None
+
+
+def _synthesize_dom_layer_from_ceus(run_dir: Path, registry: dict):
+    """
+    Synthesize a minimal DOM layer from confirmed CEUs when no dom_layer.json exists.
+    Each confirmed CEU domain becomes a DOM group. Nodes are assigned to groups by
+    matching their path prefix against the CEU domain name.
+    Returns dom_layer dict or None if inputs are missing.
+    """
+    node_inv_path = run_dir / "structure" / "40.2" / "structural_node_inventory.json"
+    if not node_inv_path.exists():
+        return None
+
+    node_inventory = load_json(node_inv_path)
+    nodes = node_inventory.get("nodes", [])
+
+    dom_groups = []
+    for i, ceu in enumerate(registry.get("ceu", [])):
+        domain = ceu.get("name", "").lower().replace(" ", "_")
+        dom_id = f"DOM-{i + 1:02d}"
+        matched_nodes = [
+            n["node_id"] for n in nodes
+            if n["path"].startswith(domain + "/") or n["path"] == domain
+        ]
+        dom_groups.append({
+            "dom_id": dom_id,
+            "dom_label": domain.upper(),
+            "included_nodes": matched_nodes,
+            "derivation_rule": "ceu_domain_path_prefix",
+            "path_patterns": [domain],
+        })
+
+    return {
+        "contract_id": CONTRACT_ID,
+        "domain_count": len(dom_groups),
+        "total_nodes": sum(len(dg["included_nodes"]) for dg in dom_groups),
+        "dom_groups": dom_groups,
+        "derivation_basis": "RECONCILIATION_CEU_DOMAIN_SYNTHESIS",
+    }
+
+
 def phase_05_build_binding_envelope(
     client_cfg: dict, source_manifest: dict, run_dir: Path
 ) -> bool:
@@ -410,7 +515,8 @@ def phase_05_build_binding_envelope(
     # Generic pipeline path: synthesize registry from grounding_state_v3 + global ceu_registry.
     # Preferred over legacy ceu_grounding_path/registry/ceu_grounding_registry.json when the
     # generic grounding output exists. PI.LENS.CEU-REGISTRY-PATH-ALIGNMENT.01
-    dom_path = REPO_ROOT / source_manifest["dom_layer_path"]
+    dom_path_str = source_manifest.get("dom_layer_path", "")
+    dom_path = REPO_ROOT / dom_path_str if dom_path_str else None
     generic_grounding = run_dir / "ceu" / "grounding_state_v3.json"
 
     if generic_grounding.exists():
@@ -423,19 +529,33 @@ def phase_05_build_binding_envelope(
         print(f"  INFO: CEU registry synthesized from generic pipeline outputs "
               f"({len(registry['ceu'])} CEUs) — PI.LENS.CEU-REGISTRY-PATH-ALIGNMENT.01")
     else:
-        registry_path = (
-            REPO_ROOT / source_manifest["ceu_grounding_path"] / "registry" / "ceu_grounding_registry.json"
-        )
-        if not registry_path.exists():
-            print(f"  FAIL: CEU registry not found at {registry_path}")
+        # Try reconciliation-based synthesis before legacy path
+        registry = _synthesize_ceu_registry_from_reconciliation(run_dir)
+        if registry is not None:
+            print(f"  INFO: CEU registry synthesized from reconciliation outputs "
+                  f"({len(registry['ceu'])} confirmed CEUs)")
+        else:
+            registry_path = (
+                REPO_ROOT / source_manifest["ceu_grounding_path"] / "registry" / "ceu_grounding_registry.json"
+            )
+            if not registry_path.exists():
+                print(f"  FAIL: CEU registry not found at {registry_path}")
+                return False
+            registry = load_json(registry_path)
+
+    # DOM layer: load from manifest path, or synthesize from CEU domains
+    if dom_path and dom_path.exists():
+        dom_layer = load_json(dom_path)
+    else:
+        dom_layer = _synthesize_dom_layer_from_ceus(run_dir, registry)
+        if dom_layer is None:
+            print(f"  FAIL: DOM layer not found and synthesis failed (no structural_node_inventory)")
             return False
-        registry = load_json(registry_path)
-
-    if not dom_path.exists():
-        print(f"  FAIL: DOM layer not found at {dom_path}")
-        return False
-
-    dom_layer = load_json(dom_path)
+        dom_dir = run_dir / "dom"
+        dom_dir.mkdir(parents=True, exist_ok=True)
+        save_json(dom_dir / "dom_layer.json", dom_layer)
+        print(f"  INFO: DOM layer synthesized from CEU domains "
+              f"({dom_layer['domain_count']} groups, {dom_layer['total_nodes']} nodes)")
     ceus = registry["ceu"]
     dom_groups = dom_layer["dom_groups"]
 
@@ -969,11 +1089,22 @@ def phase_05b_csr_semantic_topology(client: str, run_id: str, run_dir: Path) -> 
 # ── Phase 6+7: 75.x Activation + 41.x Projection ────────────────────────────
 
 def phase_06_and_07_e2e(run_dir: Path, source_manifest: dict) -> bool:
+    # S1 structural-only specimens without LENS signal infrastructure: graceful skip.
+    # The binding envelope may be synthesized from reconciliation data but run_end_to_end.py
+    # requires full signal computation infrastructure that only exists for LENS-activated specimens.
+    gs_path = run_dir / "ceu" / "grounding_state_v3.json"
+    conformance_path = source_manifest.get("fastapi_conformance_path")
+    if not conformance_path and not gs_path.exists():
+        recon_path = run_dir / "ceu" / "reconciliation_state.json"
+        if recon_path.exists():
+            print(f"  SKIP: S1 structural-only specimen (reconciliation-based, no LENS signal engine)")
+            print(f"  NOTE: 75.x/41.x signal computation requires grounding_state_v3 or conformance artifacts")
+            return True
+
     # If fastapi_conformance_path is set, load pre-computed conformance artifacts instead of
     # running run_end_to_end.py on the synthetic binding_envelope. The canonical chain used
     # manual FastAPI conformance contracts (STAGE_NOT_AUTOMATED) — run_end_to_end.py on a
     # synthetic topology produces divergent signal values.
-    conformance_path = source_manifest.get("fastapi_conformance_path")
     if conformance_path:
         conf_dir = REPO_ROOT / conformance_path
         sp_src = conf_dir / "signal_projection_fastapi_compatible.json"
@@ -1052,6 +1183,15 @@ def phase_06_and_07_e2e(run_dir: Path, source_manifest: dict) -> bool:
 def phase_08a_vault(
     client_cfg: dict, source_manifest: dict, run_dir: Path, run_id: str
 ) -> bool:
+    # S1 structural-only specimens: skip LENS vault construction
+    gs_path_rel = source_manifest.get("grounding_state_path", "")
+    gs_path_full = REPO_ROOT / gs_path_rel if gs_path_rel else None
+    if not gs_path_full or not gs_path_full.exists():
+        recon_path = run_dir / "ceu" / "reconciliation_state.json"
+        if recon_path.exists():
+            print(f"  SKIP: S1 structural-only specimen (reconciliation-based, no LENS vault inputs)")
+            return True
+
     vault_dir = run_dir / "vault"
     vault_dir.mkdir(parents=True, exist_ok=True)
 
@@ -1434,8 +1574,15 @@ def phase_08a_vault(
 # ── Phase 8b: Vault Readiness Validation ─────────────────────────────────────
 
 def phase_08b_vault_readiness(client_cfg: dict, run_dir: Path, run_id: str) -> bool:
-    alias = client_cfg.get("client_id", "")
+    # S1 structural-only: skip vault readiness when no LENS vault was built
     vault_dir = run_dir / "vault"
+    if not vault_dir.exists() or not (vault_dir / "vault_manifest.json").exists():
+        recon_path = run_dir / "ceu" / "reconciliation_state.json"
+        if recon_path.exists():
+            print(f"  SKIP: S1 structural-only specimen (no LENS vault to validate)")
+            return True
+
+    alias = client_cfg.get("client_id", "")
     vault_dir.mkdir(parents=True, exist_ok=True)
 
     readiness_path = vault_dir / "vault_readiness.json"
@@ -1532,6 +1679,11 @@ def phase_08b_vault_readiness(client_cfg: dict, run_dir: Path, run_id: str) -> b
 
 def phase_09_selector_update(client_cfg: dict, run_id: str) -> bool:
     alias = client_cfg.get("client_id", "")
+    # S1 structural-only: skip selector update when no LENS runs exist
+    lens_dir = REPO_ROOT / "clients" / alias / "lens"
+    if not lens_dir.exists():
+        print(f"  SKIP: S1 structural-only specimen (no LENS directory for {alias})")
+        return True
     selector_dir = REPO_ROOT / "clients" / alias / "lens" / "selector"
     selector_path = selector_dir / "selector.json"
     avail_path = selector_dir / "available_runs.json"

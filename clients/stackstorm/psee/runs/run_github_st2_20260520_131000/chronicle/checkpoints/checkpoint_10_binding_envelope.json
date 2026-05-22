@@ -1,0 +1,11 @@
+{
+  "checkpoint_id": "checkpoint_10_binding_envelope",
+  "checkpoint_index": 10,
+  "semantic_phase": "STABILIZATION",
+  "pipeline_phase": "Phase 5  \u2014 Build Binding Envelope",
+  "timestamp": "2026-05-22T16:37:19.798Z",
+  "status": "FROZEN",
+  "predecessor": "checkpoint_09_ceu_grounding",
+  "events_since_predecessor": 36,
+  "state_snapshot": {}
+}

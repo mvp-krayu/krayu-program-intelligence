@@ -1,0 +1,11 @@
+{
+  "checkpoint_id": "checkpoint_11_csr_topology",
+  "checkpoint_index": 11,
+  "semantic_phase": "STABILIZATION",
+  "pipeline_phase": "Phase 5b \u2014 CSR Semantic Topology",
+  "timestamp": "2026-05-22T16:37:19.799Z",
+  "status": "FROZEN",
+  "predecessor": "checkpoint_10_binding_envelope",
+  "events_since_predecessor": 39,
+  "state_snapshot": {}
+}

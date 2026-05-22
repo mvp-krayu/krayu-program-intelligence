@@ -1,0 +1,189 @@
+{
+  "contract_id": "PI.PATHB.SEMANTIC-PROPOSITION-ENGINE.01",
+  "specimen_id": "stackstorm",
+  "run_id": "run_github_st2_20260520_131000",
+  "generated_at": "2026-05-22T16:30:58.360012+00:00",
+  "input_hash": "f16ba03598c30f861c1fd92061a5a790796abe5e5a805f77e31a03525f28c4b2",
+  "derivation_hash": "5242e87f3c5aa746ef4234849ae82ba129bfb5ddd325b5925cfffa310d59c962",
+  "proposition_count": 32,
+  "confidence_report": {
+    "total": 32,
+    "confidence_distribution": {
+      "high": 16,
+      "medium": 16
+    },
+    "tier_distribution": {
+      "DIRECT_EVIDENCE": 24,
+      "DERIVED": 8
+    },
+    "class_distribution": {
+      "COUPLING_PATTERN": 13,
+      "AUTHORITY_TOPOLOGY": 7,
+      "TIER_GROUNDING": 11,
+      "HERO_MOMENT_GROUNDING": 1
+    },
+    "mean_confidence": 0.8,
+    "min_confidence": 0.604,
+    "max_confidence": 0.93
+  },
+  "review_queue_count": 0,
+  "learning_events_emitted": 0,
+  "learning_influence_summary": {
+    "active_events": 0,
+    "influenced_derivations": 0
+  },
+  "class_summary": {
+    "COUPLING_PATTERN": {
+      "count": 13,
+      "mean_confidence": 0.912,
+      "propositions": [
+        {
+          "id": "SP-stackstorm-0001",
+          "confidence": 0.93
+        },
+        {
+          "id": "SP-stackstorm-0002",
+          "confidence": 0.9
+        },
+        {
+          "id": "SP-stackstorm-0003",
+          "confidence": 0.93
+        },
+        {
+          "id": "SP-stackstorm-0004",
+          "confidence": 0.93
+        },
+        {
+          "id": "SP-stackstorm-0005",
+          "confidence": 0.93
+        },
+        {
+          "id": "SP-stackstorm-0006",
+          "confidence": 0.9
+        },
+        {
+          "id": "SP-stackstorm-0007",
+          "confidence": 0.9
+        },
+        {
+          "id": "SP-stackstorm-0008",
+          "confidence": 0.93
+        },
+        {
+          "id": "SP-stackstorm-0009",
+          "confidence": 0.93
+        },
+        {
+          "id": "SP-stackstorm-0010",
+          "confidence": 0.87
+        },
+        {
+          "id": "SP-stackstorm-0011",
+          "confidence": 0.9
+        },
+        {
+          "id": "SP-stackstorm-0012",
+          "confidence": 0.9
+        },
+        {
+          "id": "SP-stackstorm-0013",
+          "confidence": 0.91
+        }
+      ]
+    },
+    "AUTHORITY_TOPOLOGY": {
+      "count": 7,
+      "mean_confidence": 0.663,
+      "propositions": [
+        {
+          "id": "SP-stackstorm-0014",
+          "confidence": 0.68
+        },
+        {
+          "id": "SP-stackstorm-0015",
+          "confidence": 0.65
+        },
+        {
+          "id": "SP-stackstorm-0016",
+          "confidence": 0.65
+        },
+        {
+          "id": "SP-stackstorm-0017",
+          "confidence": 0.68
+        },
+        {
+          "id": "SP-stackstorm-0018",
+          "confidence": 0.68
+        },
+        {
+          "id": "SP-stackstorm-0019",
+          "confidence": 0.65
+        },
+        {
+          "id": "SP-stackstorm-0020",
+          "confidence": 0.65
+        }
+      ]
+    },
+    "TIER_GROUNDING": {
+      "count": 11,
+      "mean_confidence": 0.771,
+      "propositions": [
+        {
+          "id": "SP-stackstorm-0021",
+          "confidence": 0.744
+        },
+        {
+          "id": "SP-stackstorm-0022",
+          "confidence": 0.744
+        },
+        {
+          "id": "SP-stackstorm-0023",
+          "confidence": 0.804
+        },
+        {
+          "id": "SP-stackstorm-0024",
+          "confidence": 0.774
+        },
+        {
+          "id": "SP-stackstorm-0025",
+          "confidence": 0.774
+        },
+        {
+          "id": "SP-stackstorm-0026",
+          "confidence": 0.804
+        },
+        {
+          "id": "SP-stackstorm-0027",
+          "confidence": 0.804
+        },
+        {
+          "id": "SP-stackstorm-0028",
+          "confidence": 0.774
+        },
+        {
+          "id": "SP-stackstorm-0029",
+          "confidence": 0.744
+        },
+        {
+          "id": "SP-stackstorm-0030",
+          "confidence": 0.774
+        },
+        {
+          "id": "SP-stackstorm-0031",
+          "confidence": 0.744
+        }
+      ]
+    },
+    "HERO_MOMENT_GROUNDING": {
+      "count": 1,
+      "mean_confidence": 0.604,
+      "propositions": [
+        {
+          "id": "SP-stackstorm-0032",
+          "confidence": 0.604
+        }
+      ]
+    }
+  }
+}

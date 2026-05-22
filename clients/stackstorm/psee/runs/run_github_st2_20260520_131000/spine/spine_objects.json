@@ -1,0 +1,1312 @@
+{
+  "spine_version": "1.0",
+  "specimen_id": "stackstorm",
+  "run_id": "run_github_st2_20260520_131000",
+  "objects": {
+    "evidence_objects": [
+      {
+        "object_type": "evidence_object",
+        "id": "540118d2-5e24-4cb0-a8b9-0d975b9572b1",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "evidence_type": "source_intake_complete",
+        "description": "Source intake of StackStorm (StackStorm/st2) completed: 3016 files inventoried, SHA256 verified, boundary validation PASS",
+        "artifact_path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/intake_manifest.json",
+        "artifact_hash": null,
+        "pipeline_stage": "40.1",
+        "timestamp": "2026-05-20T13:23:11Z"
+      },
+      {
+        "object_type": "evidence_object",
+        "id": "5634febe-e5ac-43a1-bd2b-f71ea67a41a7",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "evidence_type": "structural_scan_complete",
+        "description": "Structural scan produced 3525 nodes, 3468 CONTAINS edges, 57 directory-based clusters from StackStorm microservice architecture",
+        "artifact_path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/structure/40.4/canonical_topology.json",
+        "artifact_hash": null,
+        "pipeline_stage": "40.4",
+        "timestamp": "2026-05-20T13:23:11Z"
+      },
+      {
+        "object_type": "evidence_object",
+        "id": "c9b25d29-e5ee-4cb7-afd1-cff06c96ccfd",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "evidence_type": "relevance_classification_complete",
+        "description": "SRC classification: 2229 PRIMARY (63.2%), 473 SUPPORT, 823 PERIPHERAL. 373 TESTING nodes, 100 CONFIG nodes. Core source ratio 0.632 \u2014 lower than NetBox (0.728) due to larger contrib/tooling surface",
+        "artifact_path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/structure/40.2r/structural_relevance.json",
+        "artifact_hash": null,
+        "pipeline_stage": "40.2r",
+        "timestamp": "2026-05-20T13:23:11Z"
+      },
+      {
+        "object_type": "evidence_object",
+        "id": "1845109c-6d05-444e-9e15-f781ec9164d6",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "evidence_type": "code_graph_complete",
+        "description": "Code graph produced 4291 AST-extracted import relationships across 1333 Python files. Microservice package boundaries visible in import topology",
+        "artifact_path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/structure/40.3s/code_graph.json",
+        "artifact_hash": null,
+        "pipeline_stage": "40.3s",
+        "timestamp": "2026-05-20T13:23:11Z"
+      },
+      {
+        "object_type": "evidence_object",
+        "id": "d78f8f9b-49b1-48a6-a680-82567d39cc3a",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "evidence_type": "centrality_complete",
+        "description": "Structural centrality computed: 984 nodes analyzed, 976 INTERFACE_BOUNDARY, 8 VALIDATION_SUPPORT. pants-plugins/uses_services/platform_rules.py highest in-degree (7)",
+        "artifact_path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/structure/40.3c/structural_centrality.json",
+        "artifact_hash": null,
+        "pipeline_stage": "40.3c",
+        "timestamp": "2026-05-20T13:23:11Z"
+      },
+      {
+        "object_type": "evidence_object",
+        "id": "275d2385-61bf-4461-8e81-de7ca646defb",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "evidence_type": "cluster_topology_57_clusters",
+        "description": "57 structural clusters identified \u2014 8 core microservice packages (st2common 699, st2tests 1019, st2client 150, st2reactor 136, st2api 130, st2actions 110, st2auth 69, st2stream 53) plus contrib (798), pants-plugins (85), conf (24), scripts (32)",
+        "artifact_path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/structure/40.4/canonical_topology.json",
+        "artifact_hash": null,
+        "pipeline_stage": "40.4",
+        "timestamp": "2026-05-20T13:23:11Z"
+      },
+      {
+        "object_type": "evidence_object",
+        "id": "2b30c58c-d612-4650-8ae2-48126e97a82d",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "evidence_type": "microservice_boundary_detection",
+        "description": "Pipeline detected 8 distinct microservice packages each with independent setup.cfg/setup.py, own test suites, and internal module hierarchies. st2common serves as shared library consumed by all other services",
+        "artifact_path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/structure/40.4/canonical_topology.json",
+        "artifact_hash": null,
+        "pipeline_stage": "40.4",
+        "timestamp": "2026-05-20T13:23:11Z"
+      },
+      {
+        "object_type": "evidence_object",
+        "id": "422a1968-956f-4023-9671-8e148629b577",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "evidence_type": "lens_v2_structural_rendering",
+        "description": "LENS v2 structural-only rendering operational for StackStorm at S1 qualification level. 57 clusters projected through INTELLIGENCE BLOCKED posture with full topology grid",
+        "artifact_path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/N/A \u2014 runtime rendering",
+        "artifact_hash": null,
+        "pipeline_stage": "lens",
+        "timestamp": "2026-05-20T13:23:11Z"
+      },
+      {
+        "object_type": "replay_corridor",
+        "id": "031c683f-86e5-419a-9661-dc6d87353b3a",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "commands": [
+          "git clone --depth 1 https://github.com/StackStorm/st2.git /tmp/st2-clone",
+          "cd /tmp/st2-clone && tar cf /tmp/st2-source.tar .",
+          "sha256sum /tmp/st2-source.tar",
+          "python3 scripts/pios/source_intake.py --client stackstorm --source source_01 --run-id run_github_st2_20260520_131000",
+          "python3 scripts/pios/structural_scanner.py --client stackstorm --source source_01 --run-id run_github_st2_20260520_131000",
+          "python3 scripts/pios/structural_relevance_classifier.py --client stackstorm --run-id run_github_st2_20260520_131000",
+          "python3 scripts/pios/code_graph_feasibility.py --client stackstorm --run-id run_github_st2_20260520_131000",
+          "python3 scripts/pios/structural_centrality.py --client stackstorm --run-id run_github_st2_20260520_131000"
+        ],
+        "input_hash": "c8765fd8d84cb7ea7c868b9b50365415acf04018f12b1bc268e021da1ab983e6",
+        "output_hash": null,
+        "deterministic": true,
+        "timestamp": "2026-05-20T13:23:11Z"
+      },
+      {
+        "object_type": "convergence_observation",
+        "id": "2cc5e232-4090-4f23-aa91-b4e706fd97e9",
+        "specimens": [
+          "netbox",
+          "stackstorm"
+        ],
+        "observation_type": "topology_concentration_divergence",
+        "description": "NetBox top-3 cluster concentration: 98.0%. StackStorm top-3 cluster concentration: 71.4%. Observed in one monolithic Django specimen vs one microservice specimen. Whether this pattern generalizes to other monolith/microservice pairs is unknown \u2014 two data points establish a comparative observation, not an architectural law.",
+        "convergence_classification": "COMPARATIVE_OBSERVATION",
+        "interpretation_maturity": "DESCRIPTIVE",
+        "evidence_anchors": [
+          "clients/netbox/psee/runs/run_github_netbox_20260520_134600/structure/40.4/canonical_topology.json",
+          "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/structure/40.4/canonical_topology.json"
+        ],
+        "timestamp": "2026-05-20T13:27:50Z"
+      },
+      {
+        "object_type": "convergence_observation",
+        "id": "093fc7db-c3f3-4686-b9c4-563f222e1e8a",
+        "specimens": [
+          "netbox",
+          "stackstorm"
+        ],
+        "observation_type": "cluster_granularity_vs_architecture",
+        "description": "NetBox: 24 clusters, 105.8 nodes/cluster. StackStorm: 57 clusters, 61.8 nodes/cluster. The microservice specimen produces more clusters with lower density. This is consistent with the expectation that explicit package boundaries create more top-level directories, but we cannot attribute the difference solely to architecture style \u2014 project age, team conventions, and build system choices may also contribute.",
+        "convergence_classification": "COMPARATIVE_OBSERVATION",
+        "interpretation_maturity": "DESCRIPTIVE",
+        "evidence_anchors": [
+          "clients/netbox/psee/runs/run_github_netbox_20260520_134600/structure/40.4/canonical_topology.json",
+          "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/structure/40.4/canonical_topology.json"
+        ],
+        "timestamp": "2026-05-20T13:27:50Z"
+      },
+      {
+        "object_type": "convergence_observation",
+        "id": "cd736402-1845-4376-a3ad-cd722c212896",
+        "specimens": [
+          "netbox",
+          "stackstorm"
+        ],
+        "observation_type": "core_source_ratio_profile",
+        "description": "NetBox core_source_ratio: 0.728. StackStorm core_source_ratio: 0.632. The difference comes primarily from StackStorm having 373 TESTING nodes (vs 132) and 100 CONFIG nodes (vs 6). This is a measured difference in two specimens, not a claim about microservice packaging overhead in general. A third specimen would begin to indicate whether this pattern recurs.",
+        "convergence_classification": "COMPARATIVE_OBSERVATION",
+        "interpretation_maturity": "DESCRIPTIVE",
+        "evidence_anchors": [
+          "clients/netbox/psee/runs/run_github_netbox_20260520_134600/structure/40.4/canonical_topology.json",
+          "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/structure/40.4/canonical_topology.json"
+        ],
+        "timestamp": "2026-05-20T13:27:50Z"
+      },
+      {
+        "object_type": "convergence_observation",
+        "id": "fe9569f3-9345-48ef-a217-c81645e94181",
+        "specimens": [
+          "netbox",
+          "stackstorm"
+        ],
+        "observation_type": "test_to_production_ratio_inversion",
+        "description": "StackStorm largest cluster is st2tests (1019 nodes), exceeding any production service cluster. NetBox tests (132 nodes) are a small fraction of its application cluster (2129 nodes). In this specific comparison, the microservice specimen has test mass exceeding production mass. Whether this is a property of microservice architectures or of this particular project is not established.",
+        "convergence_classification": "COMPARATIVE_OBSERVATION",
+        "interpretation_maturity": "DESCRIPTIVE",
+        "evidence_anchors": [
+          "clients/netbox/psee/runs/run_github_netbox_20260520_134600/structure/40.4/canonical_topology.json",
+          "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/structure/40.4/canonical_topology.json"
+        ],
+        "timestamp": "2026-05-20T13:27:50Z"
+      },
+      {
+        "object_type": "convergence_observation",
+        "id": "db2d9211-6f87-4dc4-ac18-db55fec52d05",
+        "specimens": [
+          "netbox",
+          "stackstorm"
+        ],
+        "observation_type": "edge_density_proximity",
+        "description": "CONTAINS-edge-to-node ratio: NetBox 0.99, StackStorm 0.98. These are close values observed in two Python specimens. This proximity is noted but not interpreted \u2014 CONTAINS edges reflect directory structure, so near-1.0 ratios may simply reflect that most files sit one level deep. Additional specimens are needed before any claim about edge density convergence.",
+        "convergence_classification": "COMPARATIVE_OBSERVATION",
+        "interpretation_maturity": "DESCRIPTIVE",
+        "evidence_anchors": [
+          "clients/netbox/psee/runs/run_github_netbox_20260520_134600/structure/40.4/canonical_topology.json",
+          "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/structure/40.4/canonical_topology.json"
+        ],
+        "timestamp": "2026-05-20T13:27:50Z"
+      },
+      {
+        "object_type": "evidence_object",
+        "id": "3531cde3-5699-4066-ace4-38fca747de61",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "evidence_type": "spine_enrichment_40_3s_multi_package_resolution",
+        "description": "40.3s code graph upgraded with multi-package import resolution. Before: 4291 relationships, ~0 resolved IMPORTS. After: 8254 relationships, 4006 resolved IMPORTS (2070 cross-package, 1936 intra-package). st2common/__init__.py identified as gravitational center (245 inbound imports). Centrality role distribution changed from 976 INTERFACE_BOUNDARY / 8 VALIDATION_SUPPORT to 1 RE_EXPORT_HUB / 1 UTILITY_HUB / 720 INTERFACE_BOUNDARY / 404 VALIDATION_SUPPORT.",
+        "artifact_path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/structure/40.3s/code_graph.json",
+        "artifact_hash": null,
+        "pipeline_stage": "40.3s",
+        "enrichment_event": true,
+        "prior_state": {
+          "total_relationships": 4291,
+          "resolved_imports": 0,
+          "role_distribution": {
+            "INTERFACE_BOUNDARY": 976,
+            "VALIDATION_SUPPORT": 8
+          }
+        },
+        "current_state": {
+          "total_relationships": 8254,
+          "resolved_imports": 4006,
+          "cross_package_imports": 2070,
+          "role_distribution": {
+            "RE_EXPORT_HUB": 1,
+            "UTILITY_HUB": 1,
+            "INTERFACE_BOUNDARY": 720,
+            "VALIDATION_SUPPORT": 404
+          }
+        },
+        "timestamp": "2026-05-20T13:44:30Z"
+      },
+      {
+        "object_type": "evidence_object",
+        "id": "befb8f91-835b-43a0-a075-ec2bb9f6b8b2",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "evidence_type": "spine_enrichment_40_3s_multi_package_resolution",
+        "description": "40.3s code graph upgraded with multi-package import resolution. Before: 4291 relationships, ~0 resolved IMPORTS. After: 8254 relationships, 4006 resolved IMPORTS (2070 cross-package, 1936 intra-package). st2common/__init__.py identified as gravitational center (245 inbound imports). Centrality changed from 976 INTERFACE_BOUNDARY / 8 VALIDATION_SUPPORT to 1 RE_EXPORT_HUB / 1 UTILITY_HUB / 720 INTERFACE_BOUNDARY / 404 VALIDATION_SUPPORT.",
+        "artifact_path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/structure/40.3s/code_graph.json",
+        "artifact_hash": null,
+        "pipeline_stage": "40.3s",
+        "enrichment_event": true,
+        "prior_state": {
+          "total_relationships": 4291,
+          "resolved_imports": 0,
+          "role_distribution": {
+            "INTERFACE_BOUNDARY": 976,
+            "VALIDATION_SUPPORT": 8
+          }
+        },
+        "current_state": {
+          "total_relationships": 8254,
+          "resolved_imports": 4006,
+          "cross_package_imports": 2070,
+          "role_distribution": {
+            "RE_EXPORT_HUB": 1,
+            "UTILITY_HUB": 1,
+            "INTERFACE_BOUNDARY": 720,
+            "VALIDATION_SUPPORT": 404
+          }
+        },
+        "timestamp": "2026-05-20T13:45:31Z"
+      }
+    ],
+    "hero_moments": [
+      {
+        "object_type": "hero_moment",
+        "id": "4d244360-1707-4704-b585-819becd1e2b9",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "discovery": "st2common hub-and-spoke inversion: the shared library (st2common) has 8 import edges reaching UP to service-layer packages \u2014 3 in production code (datastore.py \u2192 st2client, inquiry.py \u2192 st2actions/container) and 5 in tests. In a 12-package microservice system where 72.8% of 2,070 cross-package imports target st2common as the foundation, these upward dependencies invert the documented architecture. The hub depends on its spokes.",
+        "surprise_class": "COUPLING",
+        "evidence_anchors": [
+          "3531cde3-5699-4066-ace4-38fca747de61",
+          "d78f8f9b-49b1-48a6-a680-82567d39cc3a"
+        ],
+        "manufactured": false,
+        "timestamp": "2026-05-20T18:30:00Z"
+      }
+    ],
+    "replay_corridors": [],
+    "semantic_propositions": [
+      {
+        "id": "SP-stackstorm-0001",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-CONTRIB has unidirectional coupling to CEU-ST2COMMON: 366 cross-domain imports",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.93,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-CONTRIB",
+          "CEU-ST2COMMON"
+        ],
+        "structural_refs": {
+          "src_domain": "contrib",
+          "tgt_domain": "st2common",
+          "forward_count": 366,
+          "reverse_count": 0,
+          "total_bidirectional": 366,
+          "is_bidirectional": false
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Cross-domain import matrix shows 366 edges between contrib and st2common. Unidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-stackstorm-0002",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-CONTRIB has unidirectional coupling to CEU-ST2TESTS: 119 cross-domain imports",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.9,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-CONTRIB",
+          "CEU-ST2TESTS"
+        ],
+        "structural_refs": {
+          "src_domain": "contrib",
+          "tgt_domain": "st2tests",
+          "forward_count": 119,
+          "reverse_count": 0,
+          "total_bidirectional": 119,
+          "is_bidirectional": false
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Cross-domain import matrix shows 119 edges between contrib and st2tests. Unidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-stackstorm-0003",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-ST2ACTIONS and CEU-ST2COMMON exhibit bidirectional structural entanglement: 274 cross-domain imports (270+4)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.93,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-ST2ACTIONS",
+          "CEU-ST2COMMON"
+        ],
+        "structural_refs": {
+          "src_domain": "st2actions",
+          "tgt_domain": "st2common",
+          "forward_count": 270,
+          "reverse_count": 4,
+          "total_bidirectional": 274,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Cross-domain import matrix shows 274 edges between st2actions and st2common. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-stackstorm-0004",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-ST2ACTIONS and CEU-ST2TESTS exhibit bidirectional structural entanglement: 80 cross-domain imports (74+6)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.93,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-ST2ACTIONS",
+          "CEU-ST2TESTS"
+        ],
+        "structural_refs": {
+          "src_domain": "st2actions",
+          "tgt_domain": "st2tests",
+          "forward_count": 74,
+          "reverse_count": 6,
+          "total_bidirectional": 80,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Cross-domain import matrix shows 80 edges between st2actions and st2tests. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-stackstorm-0005",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-ST2API has unidirectional coupling to CEU-ST2COMMON: 390 cross-domain imports",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.93,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-ST2API",
+          "CEU-ST2COMMON"
+        ],
+        "structural_refs": {
+          "src_domain": "st2api",
+          "tgt_domain": "st2common",
+          "forward_count": 390,
+          "reverse_count": 0,
+          "total_bidirectional": 390,
+          "is_bidirectional": false
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Cross-domain import matrix shows 390 edges between st2api and st2common. Unidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-stackstorm-0006",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-ST2API and CEU-ST2TESTS exhibit bidirectional structural entanglement: 83 cross-domain imports (82+1)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.9,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-ST2API",
+          "CEU-ST2TESTS"
+        ],
+        "structural_refs": {
+          "src_domain": "st2api",
+          "tgt_domain": "st2tests",
+          "forward_count": 82,
+          "reverse_count": 1,
+          "total_bidirectional": 83,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Cross-domain import matrix shows 83 edges between st2api and st2tests. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-stackstorm-0007",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-ST2AUTH has unidirectional coupling to CEU-ST2COMMON: 49 cross-domain imports",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.9,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-ST2AUTH",
+          "CEU-ST2COMMON"
+        ],
+        "structural_refs": {
+          "src_domain": "st2auth",
+          "tgt_domain": "st2common",
+          "forward_count": 49,
+          "reverse_count": 0,
+          "total_bidirectional": 49,
+          "is_bidirectional": false
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Cross-domain import matrix shows 49 edges between st2auth and st2common. Unidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-stackstorm-0008",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-ST2COMMON and CEU-ST2TESTS exhibit bidirectional structural entanglement: 321 cross-domain imports (195+126)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.93,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-ST2COMMON",
+          "CEU-ST2TESTS"
+        ],
+        "structural_refs": {
+          "src_domain": "st2common",
+          "tgt_domain": "st2tests",
+          "forward_count": 195,
+          "reverse_count": 126,
+          "total_bidirectional": 321,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Cross-domain import matrix shows 321 edges between st2common and st2tests. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-stackstorm-0009",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-ST2COMMON and CEU-ST2REACTOR exhibit bidirectional structural entanglement: 216 cross-domain imports (1+215)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.93,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-ST2COMMON",
+          "CEU-ST2REACTOR"
+        ],
+        "structural_refs": {
+          "src_domain": "st2common",
+          "tgt_domain": "st2reactor",
+          "forward_count": 1,
+          "reverse_count": 215,
+          "total_bidirectional": 216,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Cross-domain import matrix shows 216 edges between st2common and st2reactor. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-stackstorm-0010",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-ST2REACTOR and CEU-ST2TESTS exhibit bidirectional structural entanglement: 36 cross-domain imports (35+1)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.87,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-ST2REACTOR",
+          "CEU-ST2TESTS"
+        ],
+        "structural_refs": {
+          "src_domain": "st2reactor",
+          "tgt_domain": "st2tests",
+          "forward_count": 35,
+          "reverse_count": 1,
+          "total_bidirectional": 36,
+          "is_bidirectional": true
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Cross-domain import matrix shows 36 edges between st2reactor and st2tests. Bidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-stackstorm-0011",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-ST2STREAM has unidirectional coupling to CEU-ST2COMMON: 44 cross-domain imports",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.9,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-ST2STREAM",
+          "CEU-ST2COMMON"
+        ],
+        "structural_refs": {
+          "src_domain": "st2stream",
+          "tgt_domain": "st2common",
+          "forward_count": 44,
+          "reverse_count": 0,
+          "total_bidirectional": 44,
+          "is_bidirectional": false
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Cross-domain import matrix shows 44 edges between st2stream and st2common. Unidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-stackstorm-0012",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-TOOLS has unidirectional coupling to CEU-ST2COMMON: 45 cross-domain imports",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.9,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-TOOLS",
+          "CEU-ST2COMMON"
+        ],
+        "structural_refs": {
+          "src_domain": "tools",
+          "tgt_domain": "st2common",
+          "forward_count": 45,
+          "reverse_count": 0,
+          "total_bidirectional": 45,
+          "is_bidirectional": false
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Cross-domain import matrix shows 45 edges between tools and st2common. Unidirectional coupling.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-stackstorm-0013",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "System-level cross-domain coupling rate: 51.7% (2070 of 4006 imports cross app boundaries)",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.91,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "COUPLING_PATTERN",
+        "ceu_refs": [
+          "CEU-CONTRIB",
+          "CEU-PANTS-PLUGINS",
+          "CEU-ST2ACTIONS",
+          "CEU-ST2API",
+          "CEU-ST2AUTH",
+          "CEU-ST2CLIENT",
+          "CEU-ST2COMMON",
+          "CEU-ST2REACTOR",
+          "CEU-ST2STREAM",
+          "CEU-ST2TESTS",
+          "CEU-TOOLS"
+        ],
+        "structural_refs": {
+          "total_imports": 4006,
+          "cross_domain_imports": 2070,
+          "cross_domain_ratio": 0.5167
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Cross-domain ratio computed from code graph: 2070/4006.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-stackstorm-0014",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-ST2ACTIONS exhibits dual structural authority: import-dominant (2 inheritance, 20 import edges, 10.0x ratio)",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.68,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "AUTHORITY_TOPOLOGY",
+        "ceu_refs": [
+          "CEU-ST2ACTIONS"
+        ],
+        "structural_refs": {
+          "import_authority": 20,
+          "inheritance_authority": 2,
+          "authority_ratio": 10.0,
+          "dominant_axis": "import",
+          "authority_pattern": "IMPORT_DOMINANT"
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Dual authority detected: import axis dominates at 10.0x. Pattern: IMPORT_DOMINANT.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-stackstorm-0015",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-ST2API exhibits dual structural authority: inheritance-dominant (44 inheritance, 2 import edges, 22.0x ratio)",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.65,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "AUTHORITY_TOPOLOGY",
+        "ceu_refs": [
+          "CEU-ST2API"
+        ],
+        "structural_refs": {
+          "import_authority": 2,
+          "inheritance_authority": 44,
+          "authority_ratio": 22.0,
+          "dominant_axis": "inheritance",
+          "authority_pattern": "DUAL_AUTHORITY"
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Dual authority detected: inheritance axis dominates at 22.0x. Pattern: DUAL_AUTHORITY.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-stackstorm-0016",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-ST2AUTH exhibits dual structural authority: inheritance-dominant (4 inheritance, 2 import edges, 2.0x ratio)",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.65,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "AUTHORITY_TOPOLOGY",
+        "ceu_refs": [
+          "CEU-ST2AUTH"
+        ],
+        "structural_refs": {
+          "import_authority": 2,
+          "inheritance_authority": 4,
+          "authority_ratio": 2.0,
+          "dominant_axis": "inheritance",
+          "authority_pattern": "IMPORT_DOMINANT"
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Dual authority detected: inheritance axis dominates at 2.0x. Pattern: IMPORT_DOMINANT.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-stackstorm-0017",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-ST2CLIENT exhibits dual structural authority: inheritance-dominant (74 inheritance, 16 import edges, 4.6x ratio)",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.68,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "AUTHORITY_TOPOLOGY",
+        "ceu_refs": [
+          "CEU-ST2CLIENT"
+        ],
+        "structural_refs": {
+          "import_authority": 16,
+          "inheritance_authority": 74,
+          "authority_ratio": 4.62,
+          "dominant_axis": "inheritance",
+          "authority_pattern": "IMPORT_DOMINANT"
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Dual authority detected: inheritance axis dominates at 4.6x. Pattern: IMPORT_DOMINANT.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-stackstorm-0018",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-ST2COMMON exhibits dual structural authority: import-dominant (312 inheritance, 1506 import edges, 4.8x ratio)",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.68,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "AUTHORITY_TOPOLOGY",
+        "ceu_refs": [
+          "CEU-ST2COMMON"
+        ],
+        "structural_refs": {
+          "import_authority": 1506,
+          "inheritance_authority": 312,
+          "authority_ratio": 4.83,
+          "dominant_axis": "import",
+          "authority_pattern": "DUAL_AUTHORITY"
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Dual authority detected: import axis dominates at 4.8x. Pattern: DUAL_AUTHORITY.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-stackstorm-0019",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-ST2REACTOR exhibits dual structural authority: inheritance-dominant (18 inheritance, 10 import edges, 1.8x ratio)",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.65,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "AUTHORITY_TOPOLOGY",
+        "ceu_refs": [
+          "CEU-ST2REACTOR"
+        ],
+        "structural_refs": {
+          "import_authority": 10,
+          "inheritance_authority": 18,
+          "authority_ratio": 1.8,
+          "dominant_axis": "inheritance",
+          "authority_pattern": "IMPORT_DOMINANT"
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Dual authority detected: inheritance axis dominates at 1.8x. Pattern: IMPORT_DOMINANT.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-stackstorm-0020",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-ST2TESTS exhibits dual structural authority: import-dominant (223 inheritance, 514 import edges, 2.3x ratio)",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.65,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "AUTHORITY_TOPOLOGY",
+        "ceu_refs": [
+          "CEU-ST2TESTS"
+        ],
+        "structural_refs": {
+          "import_authority": 514,
+          "inheritance_authority": 223,
+          "authority_ratio": 2.3,
+          "dominant_axis": "import",
+          "authority_pattern": "IMPORT_DOMINANT"
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Dual authority detected: import axis dominates at 2.3x. Pattern: IMPORT_DOMINANT.",
+        "reconciliation_state": "ALIGNED"
+      },
+      {
+        "id": "SP-stackstorm-0021",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-CONTRIB is structurally grounded as CONSUMER: 131 files, 2 evidence anchors, reconciliation CONFIRMED_WITH_EVIDENCE",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.744,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "540118d2-5e24-4cb0-a8b9-0d975b9572b1",
+          "5634febe-e5ac-43a1-bd2b-f71ea67a41a7"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "TIER_GROUNDING",
+        "ceu_refs": [
+          "CEU-CONTRIB"
+        ],
+        "structural_refs": {
+          "tier": "CONSUMER",
+          "file_count": 131,
+          "evidence_count": 2,
+          "reconciliation_finding": "CONFIRMED_WITH_EVIDENCE",
+          "was_reclassified": false,
+          "was_refined": false,
+          "import_in_degree": 2,
+          "import_out_degree": 513,
+          "inherits_in_degree": 6,
+          "cross_domain_import_in": 0,
+          "cross_domain_import_out": 511,
+          "import_balance_ratio": 0.0
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Tier CONSUMER grounded by 2 evidence anchors and 131 structural files. Finding: CONFIRMED_WITH_EVIDENCE.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-stackstorm-0022",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-PANTS-PLUGINS is structurally grounded as OPERATIONAL_DOMAIN: 57 files, 1 evidence anchors, reconciliation CONFIRMED_WITH_EVIDENCE",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.744,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "540118d2-5e24-4cb0-a8b9-0d975b9572b1",
+          "5634febe-e5ac-43a1-bd2b-f71ea67a41a7"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "TIER_GROUNDING",
+        "ceu_refs": [
+          "CEU-PANTS-PLUGINS"
+        ],
+        "structural_refs": {
+          "tier": "OPERATIONAL_DOMAIN",
+          "file_count": 57,
+          "evidence_count": 1,
+          "reconciliation_finding": "CONFIRMED_WITH_EVIDENCE",
+          "was_reclassified": false,
+          "was_refined": false,
+          "import_in_degree": 38,
+          "import_out_degree": 38,
+          "inherits_in_degree": 4,
+          "cross_domain_import_in": 0,
+          "cross_domain_import_out": 0,
+          "import_balance_ratio": 0.0
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Tier OPERATIONAL_DOMAIN grounded by 1 evidence anchors and 57 structural files. Finding: CONFIRMED_WITH_EVIDENCE.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-stackstorm-0023",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-ST2ACTIONS is structurally grounded as CONSUMER: 49 files, 3 evidence anchors, reconciliation CONFIRMED_WITH_EVIDENCE",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.804,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "540118d2-5e24-4cb0-a8b9-0d975b9572b1",
+          "5634febe-e5ac-43a1-bd2b-f71ea67a41a7"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "TIER_GROUNDING",
+        "ceu_refs": [
+          "CEU-ST2ACTIONS"
+        ],
+        "structural_refs": {
+          "tier": "CONSUMER",
+          "file_count": 49,
+          "evidence_count": 3,
+          "reconciliation_finding": "CONFIRMED_WITH_EVIDENCE",
+          "was_reclassified": false,
+          "was_refined": false,
+          "import_in_degree": 42,
+          "import_out_degree": 368,
+          "inherits_in_degree": 2,
+          "cross_domain_import_in": 20,
+          "cross_domain_import_out": 346,
+          "import_balance_ratio": 0.058
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Tier CONSUMER grounded by 3 evidence anchors and 49 structural files. Finding: CONFIRMED_WITH_EVIDENCE.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-stackstorm-0024",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-ST2API is structurally grounded as CONSUMER: 79 files, 2 evidence anchors, reconciliation CONFIRMED_WITH_EVIDENCE",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.774,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "540118d2-5e24-4cb0-a8b9-0d975b9572b1",
+          "5634febe-e5ac-43a1-bd2b-f71ea67a41a7"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "TIER_GROUNDING",
+        "ceu_refs": [
+          "CEU-ST2API"
+        ],
+        "structural_refs": {
+          "tier": "CONSUMER",
+          "file_count": 79,
+          "evidence_count": 2,
+          "reconciliation_finding": "CONFIRMED_WITH_EVIDENCE",
+          "was_reclassified": false,
+          "was_refined": false,
+          "import_in_degree": 69,
+          "import_out_degree": 539,
+          "inherits_in_degree": 44,
+          "cross_domain_import_in": 2,
+          "cross_domain_import_out": 472,
+          "import_balance_ratio": 0.004
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Tier CONSUMER grounded by 2 evidence anchors and 79 structural files. Finding: CONFIRMED_WITH_EVIDENCE.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-stackstorm-0025",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-ST2AUTH is structurally grounded as CONSUMER: 25 files, 2 evidence anchors, reconciliation CONFIRMED_WITH_EVIDENCE",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.774,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "540118d2-5e24-4cb0-a8b9-0d975b9572b1",
+          "5634febe-e5ac-43a1-bd2b-f71ea67a41a7"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "TIER_GROUNDING",
+        "ceu_refs": [
+          "CEU-ST2AUTH"
+        ],
+        "structural_refs": {
+          "tier": "CONSUMER",
+          "file_count": 25,
+          "evidence_count": 2,
+          "reconciliation_finding": "CONFIRMED_WITH_EVIDENCE",
+          "was_reclassified": false,
+          "was_refined": false,
+          "import_in_degree": 24,
+          "import_out_degree": 78,
+          "inherits_in_degree": 4,
+          "cross_domain_import_in": 2,
+          "cross_domain_import_out": 56,
+          "import_balance_ratio": 0.036
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Tier CONSUMER grounded by 2 evidence anchors and 25 structural files. Finding: CONFIRMED_WITH_EVIDENCE.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-stackstorm-0026",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-ST2CLIENT is structurally grounded as FOUNDATION: 92 files, 3 evidence anchors, reconciliation CONFIRMED_WITH_EVIDENCE",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.804,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "540118d2-5e24-4cb0-a8b9-0d975b9572b1",
+          "5634febe-e5ac-43a1-bd2b-f71ea67a41a7"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "TIER_GROUNDING",
+        "ceu_refs": [
+          "CEU-ST2CLIENT"
+        ],
+        "structural_refs": {
+          "tier": "FOUNDATION",
+          "file_count": 92,
+          "evidence_count": 3,
+          "reconciliation_finding": "CONFIRMED_WITH_EVIDENCE",
+          "was_reclassified": false,
+          "was_refined": false,
+          "import_in_degree": 216,
+          "import_out_degree": 201,
+          "inherits_in_degree": 74,
+          "cross_domain_import_in": 16,
+          "cross_domain_import_out": 1,
+          "import_balance_ratio": 16.0
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Tier FOUNDATION grounded by 3 evidence anchors and 92 structural files. Finding: CONFIRMED_WITH_EVIDENCE.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-stackstorm-0027",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-ST2COMMON is structurally grounded as FOUNDATION: 478 files, 2 evidence anchors, reconciliation CONFIRMED_WITH_EVIDENCE",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.804,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "540118d2-5e24-4cb0-a8b9-0d975b9572b1",
+          "5634febe-e5ac-43a1-bd2b-f71ea67a41a7"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "TIER_GROUNDING",
+        "ceu_refs": [
+          "CEU-ST2COMMON"
+        ],
+        "structural_refs": {
+          "tier": "FOUNDATION",
+          "file_count": 478,
+          "evidence_count": 2,
+          "reconciliation_finding": "CONFIRMED_WITH_EVIDENCE",
+          "was_reclassified": false,
+          "was_refined": false,
+          "import_in_degree": 2967,
+          "import_out_degree": 1664,
+          "inherits_in_degree": 312,
+          "cross_domain_import_in": 1506,
+          "cross_domain_import_out": 203,
+          "import_balance_ratio": 7.419
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Tier FOUNDATION grounded by 2 evidence anchors and 478 structural files. Finding: CONFIRMED_WITH_EVIDENCE.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-stackstorm-0028",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-ST2REACTOR is structurally grounded as CONSUMER: 57 files, 2 evidence anchors, reconciliation CONFIRMED_WITH_EVIDENCE",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.774,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "540118d2-5e24-4cb0-a8b9-0d975b9572b1",
+          "5634febe-e5ac-43a1-bd2b-f71ea67a41a7"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "TIER_GROUNDING",
+        "ceu_refs": [
+          "CEU-ST2REACTOR"
+        ],
+        "structural_refs": {
+          "tier": "CONSUMER",
+          "file_count": 57,
+          "evidence_count": 2,
+          "reconciliation_finding": "CONFIRMED_WITH_EVIDENCE",
+          "was_reclassified": false,
+          "was_refined": false,
+          "import_in_degree": 54,
+          "import_out_degree": 294,
+          "inherits_in_degree": 18,
+          "cross_domain_import_in": 10,
+          "cross_domain_import_out": 250,
+          "import_balance_ratio": 0.04
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Tier CONSUMER grounded by 2 evidence anchors and 57 structural files. Finding: CONFIRMED_WITH_EVIDENCE.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-stackstorm-0029",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-ST2STREAM is structurally grounded as OPERATIONAL_DOMAIN: 15 files, 2 evidence anchors, reconciliation CONFIRMED_WITH_EVIDENCE",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.744,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "540118d2-5e24-4cb0-a8b9-0d975b9572b1",
+          "5634febe-e5ac-43a1-bd2b-f71ea67a41a7"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "TIER_GROUNDING",
+        "ceu_refs": [
+          "CEU-ST2STREAM"
+        ],
+        "structural_refs": {
+          "tier": "OPERATIONAL_DOMAIN",
+          "file_count": 15,
+          "evidence_count": 2,
+          "reconciliation_finding": "CONFIRMED_WITH_EVIDENCE",
+          "was_reclassified": false,
+          "was_refined": false,
+          "import_in_degree": 10,
+          "import_out_degree": 57,
+          "inherits_in_degree": 2,
+          "cross_domain_import_in": 0,
+          "cross_domain_import_out": 47,
+          "import_balance_ratio": 0.0
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Tier OPERATIONAL_DOMAIN grounded by 2 evidence anchors and 15 structural files. Finding: CONFIRMED_WITH_EVIDENCE.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-stackstorm-0030",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-ST2TESTS is structurally grounded as FOUNDATION: 116 files, 2 evidence anchors, reconciliation CONFIRMED_WITH_EVIDENCE",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.774,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "540118d2-5e24-4cb0-a8b9-0d975b9572b1",
+          "5634febe-e5ac-43a1-bd2b-f71ea67a41a7"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "TIER_GROUNDING",
+        "ceu_refs": [
+          "CEU-ST2TESTS"
+        ],
+        "structural_refs": {
+          "tier": "FOUNDATION",
+          "file_count": 116,
+          "evidence_count": 2,
+          "reconciliation_finding": "CONFIRMED_WITH_EVIDENCE",
+          "was_reclassified": false,
+          "was_refined": false,
+          "import_in_degree": 583,
+          "import_out_degree": 207,
+          "inherits_in_degree": 223,
+          "cross_domain_import_in": 514,
+          "cross_domain_import_out": 138,
+          "import_balance_ratio": 3.725
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Tier FOUNDATION grounded by 2 evidence anchors and 116 structural files. Finding: CONFIRMED_WITH_EVIDENCE.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-stackstorm-0031",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "CEU-TOOLS is structurally grounded as OPERATIONAL_DOMAIN: 15 files, 1 evidence anchors, reconciliation CONFIRMED_WITH_EVIDENCE",
+        "derivation_tier": "DIRECT_EVIDENCE",
+        "confidence": 0.744,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "540118d2-5e24-4cb0-a8b9-0d975b9572b1",
+          "5634febe-e5ac-43a1-bd2b-f71ea67a41a7"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "TIER_GROUNDING",
+        "ceu_refs": [
+          "CEU-TOOLS"
+        ],
+        "structural_refs": {
+          "tier": "OPERATIONAL_DOMAIN",
+          "file_count": 15,
+          "evidence_count": 1,
+          "reconciliation_finding": "CONFIRMED_WITH_EVIDENCE",
+          "was_reclassified": false,
+          "was_refined": false,
+          "import_in_degree": 0,
+          "import_out_degree": 46,
+          "inherits_in_degree": 0,
+          "cross_domain_import_in": 0,
+          "cross_domain_import_out": 46,
+          "import_balance_ratio": 0.0
+        },
+        "hero_moment_refs": [],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Tier OPERATIONAL_DOMAIN grounded by 1 evidence anchors and 15 structural files. Finding: CONFIRMED_WITH_EVIDENCE.",
+        "reconciliation_state": "NOVEL"
+      },
+      {
+        "id": "SP-stackstorm-0032",
+        "specimen_id": "stackstorm",
+        "run_id": "run_github_st2_20260520_131000",
+        "proposition": "Structural surprise (COUPLING): st2common hub-and-spoke inversion: the shared library (st2common) has 8 import edges reaching UP to service-layer packages \u2014 3 in production code (datastore.py \u2192 st2client, inquiry.py \u2192 st2actions/con",
+        "derivation_tier": "DERIVED",
+        "confidence": 0.604,
+        "authority_ceiling": "L3",
+        "evidence_anchors": [
+          "3531cde3-5699-4066-ace4-38fca747de61",
+          "d78f8f9b-49b1-48a6-a680-82567d39cc3a"
+        ],
+        "status": "CANDIDATE",
+        "timestamp": "2026-05-22T16:30:58.349961+00:00",
+        "proposition_class": "HERO_MOMENT_GROUNDING",
+        "ceu_refs": [
+          "CEU-ST2ACTIONS",
+          "CEU-ST2CLIENT",
+          "CEU-ST2COMMON"
+        ],
+        "structural_refs": {
+          "surprise_class": "COUPLING",
+          "hero_moment_id": "4d244360-1707-4704-b585-819becd1e2b9"
+        },
+        "hero_moment_refs": [
+          "4d244360-1707-4704-b585-819becd1e2b9"
+        ],
+        "replay_corridor_refs": [],
+        "derivation_rationale": "Semantic grounding of hero moment (COUPLING). Cross-referenced with CEU evidence.",
+        "reconciliation_state": "NOVEL"
+      }
+    ],
+    "convergence_observations": [],
+    "qualification_transitions": [],
+    "doctrine_evolution_records": [],
+    "executive_projection_snapshots": []
+  },
+  "summary": {
+    "semantic_propositions": 32,
+    "total_objects": 49
+  },
+  "last_updated": "2026-05-22T16:30:58.360012+00:00"
+}

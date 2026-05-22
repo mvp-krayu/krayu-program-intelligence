@@ -1,0 +1,11 @@
+{
+  "checkpoint_id": "checkpoint_00_learning_load",
+  "checkpoint_index": 0,
+  "semantic_phase": "DISCOVERY",
+  "pipeline_phase": "Phase 0L \u2014 Learning Registry Load",
+  "timestamp": "2026-05-22T16:37:19.651Z",
+  "status": "FROZEN",
+  "predecessor": null,
+  "events_since_predecessor": 3,
+  "state_snapshot": {}
+}

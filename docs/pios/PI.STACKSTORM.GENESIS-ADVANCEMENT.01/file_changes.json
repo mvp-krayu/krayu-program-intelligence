@@ -1,0 +1,111 @@
+{
+  "stream_id": "PI.STACKSTORM.GENESIS-ADVANCEMENT.01",
+  "classification": "G2",
+  "changes": [
+    {
+      "file": "scripts/pios/run_client_pipeline.py",
+      "action": "MODIFIED",
+      "description": "Phase 4: reconciliation_state.json fallback when grounding_state_v3 absent. Phase 5: _synthesize_ceu_registry_from_reconciliation() + _synthesize_dom_layer_from_ceus() for reconciliation-based specimens. Phases 6+7, 8a, 8b, 9: graceful skip for S1 structural-only specimens without LENS infrastructure."
+    },
+    {
+      "file": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/ceu/reconciliation_state.json",
+      "action": "MODIFIED",
+      "description": "Reconciliation advanced from INITIALIZED to COMPLETE. 15 candidates: 11 CONFIRMED, 4 REJECTED."
+    },
+    {
+      "file": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/ceu/reconciliation_obligations.json",
+      "action": "MODIFIED",
+      "description": "All 13 obligations resolved (RESOLVED_BY_REJECTION or RESOLVED_BY_CONFIRMATION)."
+    },
+    {
+      "file": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/ceu/reconciliation_event_log.jsonl",
+      "action": "MODIFIED",
+      "description": "15 reconciliation events appended (RCE-ST2-0001 through RCE-ST2-0015)."
+    },
+    {
+      "file": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/spine/spine_objects.json",
+      "action": "MODIFIED",
+      "description": "Normalized from flat list to wrapped dict format; SPE updated with 32 propositions."
+    },
+    {
+      "file": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/semantic/spe/spe_derivation_report.json",
+      "action": "CREATED",
+      "description": "SPE derivation: 32 propositions, mean confidence 0.80."
+    },
+    {
+      "file": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/semantic/spe/proposition_derivation_lineage.json",
+      "action": "CREATED",
+      "description": "Proposition derivation lineage from SPE."
+    },
+    {
+      "file": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/semantic/spe/proposition_review_queue.json",
+      "action": "CREATED",
+      "description": "Proposition review queue for SQO operator workflow."
+    },
+    {
+      "file": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/dom/dom_layer.json",
+      "action": "CREATED",
+      "description": "DOM layer synthesized from CEU domains (11 groups, 3273 nodes)."
+    },
+    {
+      "file": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/binding/binding_envelope.json",
+      "action": "CREATED",
+      "description": "Binding envelope: 33 nodes, 24 edges, 11 capability surfaces."
+    },
+    {
+      "file": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/governance/learning_activation_manifest.json",
+      "action": "CREATED",
+      "description": "Empty learning activation manifest (no consumable learnings for this run)."
+    },
+    {
+      "file": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/chronicle/chronicle_events.jsonl",
+      "action": "MODIFIED",
+      "description": "130 chronicle events from full pipeline execution with GEN-1 emitter active."
+    },
+    {
+      "file": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/chronicle/CHRONICLE_MANIFEST.json",
+      "action": "MODIFIED",
+      "description": "Chronicle runtime manifest — COMPLETE status, 17 checkpoints."
+    },
+    {
+      "file": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/chronicle/checkpoints/",
+      "action": "CREATED",
+      "description": "17 checkpoint files frozen at pipeline phase boundaries (checkpoint_00 through checkpoint_16)."
+    },
+    {
+      "file": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/chronicle/hero_moments.json",
+      "action": "CREATED",
+      "description": "1 hero moment candidate: HM-stackstorm-001 (67.5% cross-domain coupling)."
+    },
+    {
+      "file": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/chronicle/GENESIS_CHRONICLE.html",
+      "action": "CREATED",
+      "description": "92KB genesis chronicle — 9 chapters, Z1-Z5 zoom, 130 events, 17 checkpoints, 32 propositions, 1 hero moment."
+    },
+    {
+      "file": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/chronicle/compilation_manifest.json",
+      "action": "CREATED",
+      "description": "Compilation manifest with content hash and source counts."
+    },
+    {
+      "file": "docs/pios/PI.STACKSTORM.GENESIS-ADVANCEMENT.01/execution_report.md",
+      "action": "CREATED",
+      "description": "Execution report for GENESIS-ADVANCEMENT stream."
+    },
+    {
+      "file": "docs/pios/PI.STACKSTORM.GENESIS-ADVANCEMENT.01/validation_log.json",
+      "action": "CREATED",
+      "description": "Validation log — 16/16 PASS."
+    },
+    {
+      "file": "docs/pios/PI.STACKSTORM.GENESIS-ADVANCEMENT.01/file_changes.json",
+      "action": "CREATED",
+      "description": "File change manifest."
+    },
+    {
+      "file": "docs/pios/PI.STACKSTORM.GENESIS-ADVANCEMENT.01/CLOSURE.md",
+      "action": "CREATED",
+      "description": "Closure document."
+    }
+  ]
+}

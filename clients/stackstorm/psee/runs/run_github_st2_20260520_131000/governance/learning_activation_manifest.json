@@ -1,0 +1,17 @@
+{
+  "manifest_type": "LEARNING_ACTIVATION_MANIFEST",
+  "contract": "PI.GOVERNANCE.LEARNING-CONSUMPTION-ARCHITECTURE.01",
+  "schema_version": "1.0.0",
+  "client_id": "stackstorm",
+  "run_id": "run_github_st2_20260520_131000",
+  "generated_at": "2026-05-22T16:37:19Z",
+  "activation_summary": {
+    "total_activated": 0,
+    "consumers_with_learnings": 0,
+    "governance_model": "ADVISORY_NON_MUTATING"
+  },
+  "explainability": {
+    "question": "Which historical learnings influenced this run?",
+    "answer": "None \u2014 no CONSUMABLE learnings in registry at run time"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "checkpoint_id": "checkpoint_13_vault_construction",
+  "checkpoint_index": 13,
+  "semantic_phase": "PROJECTION",
+  "pipeline_phase": "Phase 8a \u2014 Vault Construction",
+  "timestamp": "2026-05-22T16:37:19.802Z",
+  "status": "FROZEN",
+  "predecessor": "checkpoint_12_activation_projection",
+  "events_since_predecessor": 45,
+  "state_snapshot": {}
+}
