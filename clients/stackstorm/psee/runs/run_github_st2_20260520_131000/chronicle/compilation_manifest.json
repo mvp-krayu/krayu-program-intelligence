@@ -1,8 +1,8 @@
 {
   "chronicle_id": "stackstorm-run_github_st2_20260520_131000-genesis",
-  "compiled_at": "2026-05-22T16:52:51Z",
+  "compiled_at": "2026-05-22T17:22:52Z",
   "output_path": "stackstorm/psee/runs/run_github_st2_20260520_131000/chronicle/GENESIS_CHRONICLE.html",
-  "content_hash": "2031cf6434398d114058556754415c856f188a2f545797c613b98e55daa1e5f1",
+  "content_hash": "785ba04f8c82ab8dec2fba6380037aab47561c7cdaeb347f48348f272144350a",
   "sources": {
     "events": 130,
     "checkpoints": 17,
@@ -29,5 +29,5 @@
     "CONVERGENCE": "NOT_ELIGIBLE",
     "PROJECTION": "ACTIVE"
   },
-  "corridor_type": "FULL_COGNITIVE_GENESIS"
+  "corridor_type": "PARTIAL_COGNITIVE_GENESIS"
 }

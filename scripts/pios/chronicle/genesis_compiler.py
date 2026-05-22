@@ -250,6 +250,15 @@ class GenesisChronicleCompiler:
 
         return statuses
 
+    def _classify_corridor_type(self, phase_statuses: dict) -> str:
+        gap_or_skip = {"OPEN_GAP", "LAWFUL_SKIP", "NOT_EXERCISED", "NOT_ELIGIBLE"}
+        non_complete = sum(1 for s in phase_statuses.values() if s in gap_or_skip)
+        if non_complete == 0:
+            return "FULL_COGNITIVE_GENESIS"
+        if any(s == "OPEN_GAP" for s in phase_statuses.values()):
+            return "PARTIAL_WITH_OPEN_GAPS"
+        return "PARTIAL_COGNITIVE_GENESIS"
+
     # ── Compilation ──────────────────────────────────────────────────────────
 
     def _write_compilation_manifest(self, output_path: Path):
@@ -274,7 +283,7 @@ class GenesisChronicleCompiler:
             },
             "phases_reached": self.manifest.get("semantic_phases_reached", []),
             "phase_statuses": phase_statuses,
-            "corridor_type": "FULL_COGNITIVE_GENESIS",
+            "corridor_type": self._classify_corridor_type(phase_statuses),
         }
 
         manifest_path = self.chronicle_dir / "compilation_manifest.json"
@@ -306,7 +315,7 @@ class GenesisChronicleCompiler:
 
 {self._render_timeline(phases_reached, phase_statuses)}
 
-{self._render_manifest_ribbon()}
+{self._render_manifest_ribbon(phase_statuses)}
 
 {self._render_chapters(events_by_phase, phases_reached, hm_by_type, prop_stats, le_by_category, phase_statuses)}
 
@@ -366,13 +375,14 @@ class GenesisChronicleCompiler:
   </div>
 </div>"""
 
-    def _render_manifest_ribbon(self) -> str:
+    def _render_manifest_ribbon(self, phase_statuses=None) -> str:
         m = self.manifest
+        corridor = self._classify_corridor_type(phase_statuses or {}) if phase_statuses else m.get('corridor_type', 'GENESIS')
         return f"""
 <div class="manifest-ribbon">
   <div class="ribbon-segment">
     <span class="ribbon-key">CORRIDOR</span>
-    <span class="ribbon-val">{h(m.get('corridor_type', 'GENESIS'))}</span>
+    <span class="ribbon-val">{h(corridor)}</span>
   </div>
   <div class="ribbon-segment">
     <span class="ribbon-key">EVENTS</span>

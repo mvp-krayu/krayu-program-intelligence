@@ -1573,7 +1573,9 @@ def phase_08a_vault(
 
 # ── Phase 8b: Vault Readiness Validation ─────────────────────────────────────
 
-def phase_08b_vault_readiness(client_cfg: dict, run_dir: Path, run_id: str) -> bool:
+def phase_08b_vault_readiness(
+    client_cfg: dict, source_manifest: dict, run_dir: Path, run_id: str
+) -> bool:
     # S1 structural-only: skip vault readiness when no LENS vault was built
     vault_dir = run_dir / "vault"
     if not vault_dir.exists() or not (vault_dir / "vault_manifest.json").exists():
@@ -1590,6 +1592,12 @@ def phase_08b_vault_readiness(client_cfg: dict, run_dir: Path, run_id: str) -> b
         print(f"  [IDEMPOTENT] vault_readiness.json present — skipping WRITE")
         return True
 
+    source_manifest_fallbacks = {
+        "ceu/grounding_state_v3.json": "grounding_state_path",
+        "dom/dom_layer.json": "dom_layer_path",
+        "integration/integration_validation.json": "integration_validation_path",
+    }
+
     required_artifacts = [
         ("VR-01", "intake/intake_manifest.json"),
         ("VR-02", "structure/40.2/structural_node_inventory.json"),
@@ -1604,24 +1612,40 @@ def phase_08b_vault_readiness(client_cfg: dict, run_dir: Path, run_id: str) -> b
     checks = []
     all_pass = True
 
+    def _resolve_artifact(rel_path: str):
+        run_path = run_dir / rel_path
+        if run_path.exists():
+            return run_path, "RUN_GENERATED"
+        manifest_key = source_manifest_fallbacks.get(rel_path)
+        if manifest_key:
+            ext_rel = source_manifest.get(manifest_key, "")
+            if ext_rel:
+                ext_path = REPO_ROOT / ext_rel
+                if ext_path.exists():
+                    return ext_path, "SOURCE_MANIFEST_EXTERNAL_DEPENDENCY"
+        return None, None
+
     for check_id, rel_path in required_artifacts:
-        artifact_path = run_dir / rel_path
-        if not artifact_path.exists():
+        artifact_path, resolution_class = _resolve_artifact(rel_path)
+        if artifact_path is None:
             checks.append({
                 "check_id": check_id,
                 "status": "FAIL",
-                "path": str(artifact_path.relative_to(REPO_ROOT)),
+                "path": rel_path,
                 "reason": "FILE_NOT_FOUND",
             })
             all_pass = False
             continue
         try:
             load_json(artifact_path)
-            checks.append({
+            entry = {
                 "check_id": check_id,
                 "status": "PASS",
                 "path": str(artifact_path.relative_to(REPO_ROOT)),
-            })
+            }
+            if resolution_class == "SOURCE_MANIFEST_EXTERNAL_DEPENDENCY":
+                entry["resolution"] = resolution_class
+            checks.append(entry)
         except Exception as exc:
             checks.append({
                 "check_id": check_id,
@@ -1632,17 +1656,19 @@ def phase_08b_vault_readiness(client_cfg: dict, run_dir: Path, run_id: str) -> b
             all_pass = False
 
     # VR-09: integration_validation_status = PASS
-    iv_path = run_dir / "integration/integration_validation.json"
-    iv_check: dict = {
+    iv_path, iv_resolution = _resolve_artifact("integration/integration_validation.json")
+    iv_check = {
         "check_id": "VR-09",
-        "path": str(iv_path.relative_to(REPO_ROOT)),
+        "path": str(iv_path.relative_to(REPO_ROOT)) if iv_path else "integration/integration_validation.json",
     }
-    if iv_path.exists():
+    if iv_path and iv_path.exists():
         try:
             iv = load_json(iv_path)
-            iv_status = iv.get("validation_status", "")
+            iv_status = iv.get("validation_status") or iv.get("summary", {}).get("status", "")
             if iv_status == "PASS":
                 iv_check["status"] = "PASS"
+                if iv_resolution == "SOURCE_MANIFEST_EXTERNAL_DEPENDENCY":
+                    iv_check["resolution"] = iv_resolution
             else:
                 iv_check["status"] = "FAIL"
                 iv_check["reason"] = f"validation_status={iv_status!r} (expected PASS)"
@@ -1904,7 +1930,7 @@ def main() -> int:
         ("Phase 8a — Vault Construction",
          lambda: phase_08a_vault(client_cfg, source_manifest, run_dir, run_id)),
         ("Phase 8b — Vault Readiness",
-         lambda: phase_08b_vault_readiness(client_cfg, run_dir, run_id)),
+         lambda: phase_08b_vault_readiness(client_cfg, source_manifest, run_dir, run_id)),
         ("Phase 9  — Selector Update",
          lambda: phase_09_selector_update(client_cfg, run_id)),
         ("Phase 10L — Learning Activation Manifest",

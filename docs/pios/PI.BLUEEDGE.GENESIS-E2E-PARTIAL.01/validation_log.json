@@ -1,0 +1,39 @@
+{
+  "stream": "PI.BLUEEDGE.GENESIS-E2E-PARTIAL.01",
+  "timestamp": "2026-05-22T17:25:00Z",
+  "checks": [
+    {"check": "Source boundary verification", "status": "PASS", "detail": "SHA256 verified, 741 files extracted"},
+    {"check": "Intake manifest present", "status": "PASS", "detail": "intake_manifest.json with source_id=source_01"},
+    {"check": "Structural node inventory (40.2)", "status": "PASS", "detail": "944 nodes"},
+    {"check": "Structural topology (40.3)", "status": "PASS", "detail": "934 edges, 0 IMPORTS (TypeScript import-blind)"},
+    {"check": "Canonical topology (40.4)", "status": "PASS", "detail": "10 clusters"},
+    {"check": "Relevance classification (40.2r)", "status": "PASS", "detail": "830 PRIMARY, 80 SUPPORT, 34 PERIPHERAL"},
+    {"check": "Code graph (40.3s)", "status": "OPEN_GAP", "detail": "Python-AST parser, BlueEdge is TypeScript — known limitation"},
+    {"check": "Centrality (40.3c)", "status": "OPEN_GAP", "detail": "Depends on 40.3s — blocked"},
+    {"check": "SPE propositions (3c)", "status": "OPEN_GAP", "detail": "Requires reconciliation_state, BlueEdge uses grounding path"},
+    {"check": "CEU grounding verification", "status": "PASS", "detail": "Via SOURCE_MANIFEST_EXTERNAL_DEPENDENCY"},
+    {"check": "Binding envelope", "status": "PASS", "detail": "Via FastAPI conformance artifacts"},
+    {"check": "CSR semantic topology", "status": "PASS", "detail": "Topology generated from existing CSR"},
+    {"check": "75.x + 41.x activation", "status": "PASS", "detail": "Via FastAPI conformance artifacts"},
+    {"check": "Vault construction (8a)", "status": "PASS", "detail": "9 artifacts from source_manifest paths"},
+    {"check": "Vault readiness (8b)", "status": "PASS", "detail": "9/9 checks, 4 SOURCE_MANIFEST_EXTERNAL_DEPENDENCY"},
+    {"check": "Selector update (9)", "status": "PASS", "detail": "current_run updated"},
+    {"check": "Learning manifest (10L)", "status": "PASS", "detail": "SKIP — no consumable learnings"},
+    {"check": "Hero moment detection", "status": "PASS", "detail": "0 candidates — honest absence"},
+    {"check": "Genesis chronicle compilation", "status": "PASS", "detail": "86KB HTML, corridor: PARTIAL_WITH_OPEN_GAPS"},
+    {"check": "Spine objects", "status": "PASS", "detail": "6 evidence objects, 0 propositions, 0 hero moments"},
+    {"check": "Learning event emission", "status": "PASS", "detail": "LRNE-BE-0001: TypeScript import blindness"},
+    {"check": "External dependency classification", "status": "PASS", "detail": "All external artifacts classified SOURCE_MANIFEST_EXTERNAL_DEPENDENCY"},
+    {"check": "Phase status classification", "status": "PASS", "detail": "2 OPEN_GAP, 3 NOT_EXERCISED, 2 ACTIVE, 1 LAWFUL_SKIP, 1 NOT_ELIGIBLE"},
+    {"check": "Corridor type honest", "status": "PASS", "detail": "PARTIAL_WITH_OPEN_GAPS (not FULL_COGNITIVE_GENESIS)"},
+    {"check": "Pipeline infrastructure — Phase 8b fix", "status": "PASS", "detail": "source_manifest fallback with dependency classification"},
+    {"check": "Pipeline infrastructure — VR-09 fix", "status": "PASS", "detail": "summary.status fallback for integration_validation"},
+    {"check": "Pipeline infrastructure — corridor type derivation", "status": "PASS", "detail": "_classify_corridor_type from phase statuses"}
+  ],
+  "summary": {
+    "total": 27,
+    "pass": 24,
+    "open_gap": 3,
+    "fail": 0
+  }
+}
