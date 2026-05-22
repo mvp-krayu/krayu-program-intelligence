@@ -1,0 +1,110 @@
+{
+  "stream_id": "PI.SQO.SEMANTIC-PROPOSITION-CONSUMER-PATHWAY.01",
+  "classification": "G2",
+  "date": "2026-05-22",
+  "specimen": "netbox",
+  "run_id": "run_github_netbox_20260520_134600",
+  "total_checks": 14,
+  "passed": 14,
+  "failed": 0,
+  "checks": [
+    {
+      "id": "V-001",
+      "name": "SPE_PATH_DETECTED",
+      "description": "Component branches on derivation_path === SPE",
+      "status": "PASS",
+      "evidence": "intakeData.derivation_path === 'SPE' triggers SpeMetrics, class distribution, confidence envelope"
+    },
+    {
+      "id": "V-002",
+      "name": "SPE_METRICS_RENDERED",
+      "description": "Propositions, Classes, CEU Coverage, Review Items displayed",
+      "status": "PASS",
+      "evidence": "75 Propositions, 6 Classes, 12 CEU Coverage, 0 Review Items visible in snapshot"
+    },
+    {
+      "id": "V-003",
+      "name": "CLASS_DISTRIBUTION_RENDERED",
+      "description": "All 6 proposition classes with proportional bars",
+      "status": "PASS",
+      "evidence": "STRUCTURAL_DOMINANCE: 12, COUPLING_PATTERN: 34, AUTHORITY_TOPOLOGY: 10, TIER_GROUNDING: 12, HERO_MOMENT_GROUNDING: 6, CLUSTER_ARCHITECTURE: 1"
+    },
+    {
+      "id": "V-004",
+      "name": "CONFIDENCE_ENVELOPE_RENDERED",
+      "description": "Min/mean/max confidence range with labels",
+      "status": "PASS",
+      "evidence": "0.595, 0.872, 0.972 visible in confidence envelope section"
+    },
+    {
+      "id": "V-005",
+      "name": "BLOCKER_RESOLVED_DISTINCTION",
+      "description": "Resolved blockers show RESOLVED badge and resolution note",
+      "status": "PASS",
+      "evidence": "BLK-001, BLK-003, BLK-004, BLK-006 show RESOLVED badge; BLK-002, BLK-005, BLK-007 show unresolved"
+    },
+    {
+      "id": "V-006",
+      "name": "BLOCKER_COUNT_CORRECT",
+      "description": "3 unresolved, 4 resolved displayed in header",
+      "status": "PASS",
+      "evidence": "Heading shows '3 unresolved' and '4 resolved'"
+    },
+    {
+      "id": "V-007",
+      "name": "LANE_STATUS_RENDERED",
+      "description": "All 9 lanes with correct state indicators",
+      "status": "PASS",
+      "evidence": "evidence_intake COMPLETE, structural_analysis COMPLETE, semantic_candidate COMPLETE, review_queue PENDING/BLOCKED, crosswalk INAPPLICABLE, reconciliation COMPLETE, qualification_debt PENDING/BLOCKED, promotion_decision BLOCKED, runtime_projection STRUCTURAL_ONLY/BLOCKED"
+    },
+    {
+      "id": "V-008",
+      "name": "SPE_PROVENANCE_RENDERED",
+      "description": "Engine, Contract ID, Generated date, Learning Events displayed",
+      "status": "PASS",
+      "evidence": "Engine: SPE, Contract: PI.PATHB.SEMANTIC-PROPOSITION-ENGINE.01, Generated: 5/21/2026, Learning Events: 3"
+    },
+    {
+      "id": "V-009",
+      "name": "PATH_BADGE_DISPLAYED",
+      "description": "SPE badge in posture header",
+      "status": "PASS",
+      "evidence": "SPE badge visible in posture header alongside S1 and Semantic Intake"
+    },
+    {
+      "id": "V-010",
+      "name": "GOVERNANCE_FOOTER_SPE",
+      "description": "L3 ceiling disclaimer with deterministic/fail-closed markers",
+      "status": "PASS",
+      "evidence": "'Semantic propositions are CANDIDATE (L3 ceiling). Not canonical semantic authority. Operator review required. · Deterministic · Fail-closed · No grounding mutation'"
+    },
+    {
+      "id": "V-011",
+      "name": "BLUEEDGE_UNCHANGED",
+      "description": "BlueEdge semantic-candidates still uses Layer A panel",
+      "status": "PASS",
+      "evidence": "BlueEdge routes through loadBlueEdgeCandidates() → SemanticCandidateExtractionPanel — not affected by intake panel changes"
+    },
+    {
+      "id": "V-012",
+      "name": "V2_COCKPIT_RENDERS",
+      "description": "V2 detail route renders SPE intake panel",
+      "status": "PASS",
+      "evidence": "/v2/detail/semantic-candidates shows full SPE intake panel with role selection"
+    },
+    {
+      "id": "V-013",
+      "name": "CSR_PATH_PRESERVED",
+      "description": "CSR rendering path preserved in CsrMetrics component",
+      "status": "PASS",
+      "evidence": "CsrMetrics renders total_capabilities, total_components, direct_evidence_ratio — existing CSR fields"
+    },
+    {
+      "id": "V-014",
+      "name": "REPO_ROOT_FIX",
+      "description": "SemanticQualificationIntakeResolver uses process.env.REPO_ROOT",
+      "status": "PASS",
+      "evidence": "resolveRepoRoot() now checks process.env.REPO_ROOT first, matching SQORuntimeResolver pattern — resolves webpack __dirname issue"
+    }
+  ]
+}

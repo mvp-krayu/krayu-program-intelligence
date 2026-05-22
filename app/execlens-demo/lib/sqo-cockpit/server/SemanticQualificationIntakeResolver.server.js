@@ -5,6 +5,9 @@ const path = require('path');
 const { resolveQualificationPosture } = require('../QualificationPostureResolver');
 
 function resolveRepoRoot() {
+  if (process.env.REPO_ROOT && fs.existsSync(process.env.REPO_ROOT)) {
+    return path.resolve(process.env.REPO_ROOT);
+  }
   let cur = __dirname;
   for (let i = 0; i < 10; i += 1) {
     if (fs.existsSync(path.join(cur, '.git'))) return cur;
