@@ -36,8 +36,9 @@
     "RC-03": {
       "name": "Governed Semantic Review + Arbitration",
       "classification": "G2",
-      "status": "PENDING",
-      "checkpoints": ["checkpoint_02_review", "checkpoint_03_governance"]
+      "status": "COMPLETE",
+      "checkpoints": ["checkpoint_02_review", "checkpoint_03_governance"],
+      "completed_at": "2026-05-22T20:00:00Z"
     },
     "RC-04": {
       "name": "Evidence Enrichment from HTML Documents",
@@ -91,15 +92,15 @@
     },
     "checkpoint_02_review": {
       "semantic_phase": "TENSION",
-      "description": "After operator review — governance challenges weak meaning",
+      "description": "After operator review — 71 accepted, 14 rejected, 5 governance findings",
       "stream": "RC-03",
-      "status": "PENDING"
+      "status": "COMPLETE"
     },
     "checkpoint_03_governance": {
       "semantic_phase": "TENSION",
-      "description": "After governance freeze — friction, dispute, rejection complete",
+      "description": "After governance freeze — full friction lifecycle exercised (ACCEPT/CONTEST/ARBITRATE/REJECT)",
       "stream": "RC-03",
-      "status": "PENDING"
+      "status": "COMPLETE"
     },
     "checkpoint_04_enrichment": {
       "semantic_phase": "STRENGTHENING",
@@ -195,7 +196,7 @@
     }
   ],
   "proof_object_count": 0,
-  "spine_object_count": 3,
+  "spine_object_count": 5,
   "narrative_chapter_count": 0,
   "media_capture_count": 0
 }

@@ -1,0 +1,155 @@
+{
+  "schema_version": "1.0",
+  "capsule_id": "GPC-RC03-001",
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-03",
+  "timestamp": "2026-05-22T20:00:00Z",
+  "operator": "operator:krayu",
+  "classification": "G2",
+  "review_scope": {
+    "total_propositions": 85,
+    "proposition_classes": [
+      "DOMAIN_EVIDENCE_GROUNDING",
+      "CAPABILITY_EVIDENCE",
+      "VAULT_CLAIM_STRUCTURAL",
+      "CROSS_DOMAIN_EVIDENCE"
+    ],
+    "review_method": "SQO Operator Authority Workflow — ACCEPT/CONTEST/ARBITRATE/REJECT"
+  },
+  "review_outcomes": {
+    "accepted_direct": 62,
+    "contested": 9,
+    "arbitrated_to_accept": 9,
+    "rejected": 14,
+    "final_accepted": 71,
+    "final_rejected": 14,
+    "total_governance_events": 94,
+    "rejection_rate": 16.5,
+    "contest_rate": 10.6
+  },
+  "outcomes_by_class": {
+    "DOMAIN_EVIDENCE_GROUNDING": {
+      "total": 17,
+      "accepted": 12,
+      "contested_then_accepted": 4,
+      "rejected": 1,
+      "final_accepted": 16,
+      "final_rejected": 1
+    },
+    "CAPABILITY_EVIDENCE": {
+      "total": 24,
+      "accepted": 17,
+      "contested_then_accepted": 0,
+      "rejected": 7,
+      "final_accepted": 17,
+      "final_rejected": 7
+    },
+    "VAULT_CLAIM_STRUCTURAL": {
+      "total": 25,
+      "accepted": 21,
+      "contested_then_accepted": 2,
+      "rejected": 2,
+      "final_accepted": 23,
+      "final_rejected": 2
+    },
+    "CROSS_DOMAIN_EVIDENCE": {
+      "total": 19,
+      "accepted": 12,
+      "contested_then_accepted": 3,
+      "rejected": 4,
+      "final_accepted": 15,
+      "final_rejected": 4
+    }
+  },
+  "governance_findings": [
+    {
+      "finding_id": "GF-RC03-001",
+      "type": "DOMAIN_ID_MISMATCH",
+      "severity": "HIGH",
+      "description": "Canonical CSR and SDC candidate CSR use different domain numbering. Canonical DOMAIN-01='Edge Data Acquisition' but SDC DOMAIN-01='Fleet Core Operations'. The proposition bridge matched by domain_id, creating false component count cross-references in domain grounding propositions.",
+      "affected_propositions": [
+        "SP-blueedge-0016",
+        "SP-blueedge-0017",
+        "SP-blueedge-0038"
+      ],
+      "governance_action": "SP-0017 REJECTED (wrong domain mapping). SP-0016 CONTESTED then ACCEPTED with reduced confidence. SP-0038 REJECTED (61 components from wrong SDC domain).",
+      "remediation": "proposition_bridge.py should match domains by semantic name, not by ID. Requires re-derivation in RC-04 evidence enrichment."
+    },
+    {
+      "finding_id": "GF-RC03-002",
+      "type": "SDC_PARSING_ARTIFACTS",
+      "severity": "MEDIUM",
+      "description": "SDC extracted HTML layer labels as capability names: 'Layer 4 — NestJS Application', 'Layer 6 — Frontend Applicat' (truncated), 'Unknown Layer'. These are document structure artifacts, not semantic capabilities.",
+      "affected_propositions": [
+        "SP-blueedge-0034",
+        "SP-blueedge-0035",
+        "SP-blueedge-0037"
+      ],
+      "governance_action": "All 3 REJECTED. Layer labels are not capabilities.",
+      "remediation": "SDC section extraction should filter layer headers from capability derivation."
+    },
+    {
+      "finding_id": "GF-RC03-003",
+      "type": "SDC_DOMAIN_OVERFLOW",
+      "severity": "MEDIUM",
+      "description": "SDC derived 19 domains but canonical CSR has 17. DOMAIN-18 (Data Storage) and DOMAIN-19 (Platform Technology) are SDC-only — they don't exist in canonical ontology.",
+      "affected_propositions": [
+        "SP-blueedge-0040",
+        "SP-blueedge-0041"
+      ],
+      "governance_action": "Both REJECTED. Capabilities in non-canonical domains have no governance standing.",
+      "remediation": "SDC domain derivation should be constrained to canonical CSR domain count or explicitly flag novel domains."
+    },
+    {
+      "finding_id": "GF-RC03-004",
+      "type": "GROUNDING_STATUS_CONFLICT",
+      "severity": "LOW",
+      "description": "Two WEAKLY_GROUNDED domains (DOMAIN-02, DOMAIN-10) assigned 0.85 confidence identical to GROUNDED domains. The proposition bridge used uniform confidence for all domain grounding propositions regardless of grounding status.",
+      "affected_propositions": [
+        "SP-blueedge-0002",
+        "SP-blueedge-0010"
+      ],
+      "governance_action": "Both CONTESTED then ACCEPTED with confidence reduced to 0.65.",
+      "remediation": "proposition_bridge.py should scale confidence based on grounding_status."
+    },
+    {
+      "finding_id": "GF-RC03-005",
+      "type": "FUNCTIONAL_OVERLAP_MISCLASSIFICATION",
+      "severity": "LOW",
+      "description": "Four component duplications (Predictive Maintenance, Driver Scoring, Anomaly Detection, Digital Twin) classified as CROSS_DOMAIN_EVIDENCE but are functional overlaps within AI/ML capability space. No domain assignment — they don't demonstrate cross-domain relationships.",
+      "affected_propositions": [
+        "SP-blueedge-0082",
+        "SP-blueedge-0083",
+        "SP-blueedge-0084",
+        "SP-blueedge-0085"
+      ],
+      "governance_action": "All 4 REJECTED.",
+      "remediation": "Cross-domain propositions from review queue should require domain assignment to qualify."
+    }
+  ],
+  "governance_friction_metrics": {
+    "propositions_that_survived_friction": 71,
+    "propositions_eliminated_by_friction": 14,
+    "confidence_adjustments_applied": 6,
+    "key_friction_sources": [
+      "Domain ID mismatch between canonical CSR and SDC candidate CSR",
+      "SDC layer label parsing artifacts promoted to capabilities",
+      "SDC domain overflow beyond canonical 17-domain ontology",
+      "Uniform confidence assignment ignoring grounding status",
+      "Unassigned-domain components classified as cross-domain evidence"
+    ]
+  },
+  "authority_verification": {
+    "all_actions_by_operator": true,
+    "no_automated_acceptance": true,
+    "no_automated_rejection": true,
+    "authority_ceiling_enforced": "L3 (all propositions remain at L3)",
+    "operator_authority_level": "L2",
+    "non_automatable_boundary_respected": true
+  },
+  "evidence_refs": {
+    "review_event_log": "clients/blueedge/chronicle/propositions/review_event_log.jsonl",
+    "updated_propositions": "clients/blueedge/chronicle/propositions/semantic_propositions.json",
+    "checkpoint_02": "clients/blueedge/chronicle/checkpoints/checkpoint_02_review.json",
+    "checkpoint_03": "clients/blueedge/chronicle/checkpoints/checkpoint_03_governance_frozen.json"
+  }
+}

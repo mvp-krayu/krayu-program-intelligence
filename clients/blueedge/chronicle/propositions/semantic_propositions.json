@@ -28,8 +28,19 @@
       "INFERRED": 0
     },
     "mean_confidence": 0.728,
-    "all_status": "CANDIDATE",
-    "authority_ceiling": "L3"
+    "all_status": "REVIEWED",
+    "authority_ceiling": "L3",
+    "review_summary": {
+      "total_reviewed": 85,
+      "accepted_direct": 62,
+      "contested": 9,
+      "arbitrated_to_accept": 9,
+      "rejected": 14,
+      "final_accepted": 71,
+      "final_rejected": 14,
+      "governance_events": 94
+    },
+    "mean_confidence_accepted": 0.754
   },
   "propositions": [
     {
@@ -43,7 +54,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344074+00:00",
       "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
       "ceu_refs": [],
@@ -62,7 +73,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 7 components).",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0002",
@@ -70,12 +84,12 @@
       "run_id": "run_blueedge_productized_01_fixed",
       "proposition": "Telemetry Transport and Messaging (DOMAIN-02) is a weakly grounded functional domain with 3 SDC-derived components (3 DIRECT_EVIDENCE, 0 DERIVED)",
       "derivation_tier": "DIRECT_EVIDENCE",
-      "confidence": 0.85,
+      "confidence": 0.65,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344322+00:00",
       "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
       "ceu_refs": [],
@@ -94,7 +108,14 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Domain grounding from canonical CSR (WEAKLY_GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 3 components).",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "CONTESTED_THEN_ACCEPTED",
+      "contest_reason": "WEAKLY_GROUNDED domain claimed with 0.85 confidence (DIRECT_EVIDENCE). Grounding status contradicts confidence level.",
+      "arbitration_rationale": "Domain exists in canonical CSR with WEAKLY_GROUNDED status. Weak grounding is a legitimate structural state — the proposition should reflect it at reduced confidence.",
+      "annotation": "Confidence reduced from 0.85 to 0.65 to reflect WEAKLY_GROUNDED status.",
+      "confidence_original": 0.85,
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0003",
@@ -107,7 +128,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344327+00:00",
       "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
       "ceu_refs": [],
@@ -126,7 +147,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 3 components).",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0004",
@@ -139,7 +163,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344331+00:00",
       "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
       "ceu_refs": [],
@@ -158,7 +182,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 6 components).",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0005",
@@ -171,7 +198,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344335+00:00",
       "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
       "ceu_refs": [],
@@ -190,7 +217,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 2 components).",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0006",
@@ -203,7 +233,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344339+00:00",
       "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
       "ceu_refs": [],
@@ -222,7 +252,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 10 components).",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0007",
@@ -235,7 +268,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344343+00:00",
       "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
       "ceu_refs": [],
@@ -254,7 +287,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 4 components).",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0008",
@@ -267,7 +303,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344347+00:00",
       "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
       "ceu_refs": [],
@@ -286,7 +322,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 4 components).",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0009",
@@ -299,7 +338,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344350+00:00",
       "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
       "ceu_refs": [],
@@ -318,7 +357,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 4 components).",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0010",
@@ -326,12 +368,12 @@
       "run_id": "run_blueedge_productized_01_fixed",
       "proposition": "Platform Infrastructure and Data (DOMAIN-10) is a weakly grounded functional domain with 8 SDC-derived components (8 DIRECT_EVIDENCE, 0 DERIVED)",
       "derivation_tier": "DIRECT_EVIDENCE",
-      "confidence": 0.85,
+      "confidence": 0.65,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344354+00:00",
       "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
       "ceu_refs": [],
@@ -350,7 +392,14 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Domain grounding from canonical CSR (WEAKLY_GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 8 components).",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "CONTESTED_THEN_ACCEPTED",
+      "contest_reason": "WEAKLY_GROUNDED domain claimed with 0.85 confidence (DIRECT_EVIDENCE). Grounding status contradicts confidence level.",
+      "arbitration_rationale": "Domain exists in canonical CSR with WEAKLY_GROUNDED status. The 8 SDC components provide structural evidence even if grounding is weak.",
+      "annotation": "Confidence reduced from 0.85 to 0.65 to reflect WEAKLY_GROUNDED status.",
+      "confidence_original": 0.85,
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0011",
@@ -363,7 +412,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344358+00:00",
       "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
       "ceu_refs": [],
@@ -382,7 +431,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 6 components).",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0012",
@@ -395,7 +447,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344361+00:00",
       "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
       "ceu_refs": [],
@@ -414,7 +466,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 10 components).",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0013",
@@ -427,7 +482,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344364+00:00",
       "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
       "ceu_refs": [],
@@ -446,7 +501,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 2 components).",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0014",
@@ -459,7 +517,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344370+00:00",
       "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
       "ceu_refs": [],
@@ -478,7 +536,13 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 14 components).",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "CONTESTED_THEN_ACCEPTED",
+      "contest_reason": "DOMAIN-14 with 14 components — high density. Domain ID mismatch risk: canonical DOMAIN-14='Frontend Application' vs SDC DOMAIN-14='Edge Data Acquisition'.",
+      "arbitration_rationale": "14 components is structurally plausible for Frontend Application domain. Domain name alignment verified: both canonical and SDC agree on 'Frontend Application' for this entry despite ID numbering mismatch in other domains. Component count is from SDC DOMAIN-14 which happens to align semantically.",
+      "annotation": "Domain name alignment verified. Component count plausible. No confidence adjustment needed.",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0015",
@@ -491,7 +555,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344374+00:00",
       "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
       "ceu_refs": [],
@@ -510,7 +574,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 3 components).",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0016",
@@ -518,12 +585,12 @@
       "run_id": "run_blueedge_productized_01_fixed",
       "proposition": "Operational Engineering (DOMAIN-16) is a grounded functional domain with 61 SDC-derived components (61 DIRECT_EVIDENCE, 0 DERIVED)",
       "derivation_tier": "DIRECT_EVIDENCE",
-      "confidence": 0.85,
+      "confidence": 0.6,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         ""
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344378+00:00",
       "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
       "ceu_refs": [],
@@ -542,7 +609,14 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 61 components).",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "CONTESTED_THEN_ACCEPTED",
+      "contest_reason": "DOMAIN-16 with 61 components — COMPONENT_OVERLOAD flagged in SDC review queue. Canonical DOMAIN-16='Operational Engineering' but SDC DOMAIN-16='Frontend Application' (61 page components).",
+      "arbitration_rationale": "The domain grounding claim for canonical DOMAIN-16 'Operational Engineering' is structurally valid — the domain exists. But the 61 component count is from the WRONG SDC domain (Frontend Application pages). Accept the grounding claim but annotate that component count requires re-derivation after domain ID alignment.",
+      "annotation": "Component count (61) sourced from mismatched SDC domain. Grounding valid but component data suspect. Confidence reduced.",
+      "confidence_original": 0.85,
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0017",
@@ -555,7 +629,7 @@
       "evidence_anchors": [
         ""
       ],
-      "status": "CANDIDATE",
+      "status": "REJECTED",
       "timestamp": "2026-05-22T11:10:49.344381+00:00",
       "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
       "ceu_refs": [],
@@ -574,7 +648,11 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DERIVED, 2 components).",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "REJECTED",
+      "review_reason": "DOMAIN-17 domain ID mismatch: canonical DOMAIN-17='Extended Operations' mapped to SDC DOMAIN-17='Streaming Infrastructure'. Component counts from wrong SDC domain. 0 DIRECT_EVIDENCE, empty evidence anchors.",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0018",
@@ -587,7 +665,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344403+00:00",
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
@@ -606,7 +684,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Capability derived from SDC section extraction. 7 components, 7 at DIRECT_EVIDENCE.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0019",
@@ -619,7 +700,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344438+00:00",
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
@@ -638,7 +719,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Capability derived from SDC section extraction. 3 components, 3 at DIRECT_EVIDENCE.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0020",
@@ -651,7 +735,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344454+00:00",
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
@@ -670,7 +754,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Capability derived from SDC section extraction. 3 components, 3 at DIRECT_EVIDENCE.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0021",
@@ -683,7 +770,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344469+00:00",
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
@@ -702,7 +789,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Capability derived from SDC section extraction. 6 components, 6 at DIRECT_EVIDENCE.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0022",
@@ -715,7 +805,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344483+00:00",
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
@@ -734,7 +824,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Capability derived from SDC section extraction. 2 components, 2 at DIRECT_EVIDENCE.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0023",
@@ -747,7 +840,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344498+00:00",
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
@@ -766,7 +859,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Capability derived from SDC section extraction. 10 components, 10 at DIRECT_EVIDENCE.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0024",
@@ -779,7 +875,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344513+00:00",
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
@@ -798,7 +894,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Capability derived from SDC section extraction. 4 components, 4 at DIRECT_EVIDENCE.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0025",
@@ -811,7 +910,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344527+00:00",
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
@@ -830,7 +929,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Capability derived from SDC section extraction. 4 components, 4 at DIRECT_EVIDENCE.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0026",
@@ -843,7 +945,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344541+00:00",
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
@@ -862,7 +964,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Capability derived from SDC section extraction. 4 components, 4 at DIRECT_EVIDENCE.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0027",
@@ -875,7 +980,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344555+00:00",
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
@@ -894,7 +999,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Capability derived from SDC section extraction. 8 components, 8 at DIRECT_EVIDENCE.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0028",
@@ -907,7 +1015,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344571+00:00",
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
@@ -926,7 +1034,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Capability derived from SDC section extraction. 6 components, 6 at DIRECT_EVIDENCE.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0029",
@@ -939,7 +1050,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344586+00:00",
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
@@ -958,7 +1069,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Capability derived from SDC section extraction. 6 components, 6 at DIRECT_EVIDENCE.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0030",
@@ -971,7 +1085,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344600+00:00",
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
@@ -990,7 +1104,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Capability derived from SDC section extraction. 2 components, 2 at DIRECT_EVIDENCE.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0031",
@@ -1003,7 +1120,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344614+00:00",
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
@@ -1022,7 +1139,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Capability derived from SDC section extraction. 8 components, 8 at DIRECT_EVIDENCE.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0032",
@@ -1035,7 +1155,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344628+00:00",
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
@@ -1054,7 +1174,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Capability derived from SDC section extraction. 6 components, 6 at DIRECT_EVIDENCE.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0033",
@@ -1067,7 +1190,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344642+00:00",
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
@@ -1086,27 +1209,30 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Capability derived from SDC section extraction. 3 components, 3 at DIRECT_EVIDENCE.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0034",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Capability 'Layer: \ud83c\udfe2 Layer 4 \u2014 NestJS Application' (CAP-017) in unassigned domain is backed by 11 components (11 DIRECT_EVIDENCE). Type: CORE.",
+      "proposition": "Capability 'Layer: 🏢 Layer 4 — NestJS Application' (CAP-017) in unassigned domain is backed by 11 components (11 DIRECT_EVIDENCE). Type: CORE.",
       "derivation_tier": "DERIVED",
       "confidence": 0.5,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "REJECTED",
       "timestamp": "2026-05-22T11:10:49.344657+00:00",
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
       "domain_refs": [],
       "structural_refs": {
         "capability_id": "CAP-017",
-        "capability_name": "Layer: \ud83c\udfe2 Layer 4 \u2014 NestJS Application",
+        "capability_name": "Layer: 🏢 Layer 4 — NestJS Application",
         "domain_id": "",
         "capability_type": "CORE",
         "component_count": 11,
@@ -1116,27 +1242,31 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Capability derived from SDC section extraction. 11 components, 11 at DIRECT_EVIDENCE.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "REJECTED",
+      "review_reason": "Layer label artifact 'Layer 4 — NestJS Application' misclassified as capability. No domain assignment. SDC parsing artifact, not semantic capability.",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0035",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Capability 'Layer: \ud83d\udda5\ufe0f Layer 6 \u2014 Frontend Applicat' (CAP-018) in unassigned domain is backed by 7 components (7 DIRECT_EVIDENCE). Type: CORE.",
+      "proposition": "Capability 'Layer: 🖥️ Layer 6 — Frontend Applicat' (CAP-018) in unassigned domain is backed by 7 components (7 DIRECT_EVIDENCE). Type: CORE.",
       "derivation_tier": "DERIVED",
       "confidence": 0.5,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "REJECTED",
       "timestamp": "2026-05-22T11:10:49.344672+00:00",
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
       "domain_refs": [],
       "structural_refs": {
         "capability_id": "CAP-018",
-        "capability_name": "Layer: \ud83d\udda5\ufe0f Layer 6 \u2014 Frontend Applicat",
+        "capability_name": "Layer: 🖥️ Layer 6 — Frontend Applicat",
         "domain_id": "",
         "capability_type": "CORE",
         "component_count": 7,
@@ -1146,7 +1276,11 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Capability derived from SDC section extraction. 7 components, 7 at DIRECT_EVIDENCE.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "REJECTED",
+      "review_reason": "Truncated layer label artifact 'Layer 6 — Frontend Applicat'. No domain assignment. SDC parsing artifact.",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0036",
@@ -1159,7 +1293,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344686+00:00",
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
@@ -1178,7 +1312,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Capability derived from SDC section extraction. 4 components, 4 at DIRECT_EVIDENCE.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0037",
@@ -1191,7 +1328,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "REJECTED",
       "timestamp": "2026-05-22T11:10:49.344702+00:00",
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
@@ -1208,7 +1345,11 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Capability derived from SDC section extraction. 32 components, 32 at DIRECT_EVIDENCE.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "REJECTED",
+      "review_reason": "Layer label 'Unknown Layer' with 32 components. No domain assignment. SDC catch-all bucket, not meaningful capability.",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0038",
@@ -1221,7 +1362,7 @@
       "evidence_anchors": [
         "BlueEdge_Unified_Architecture_v3_23_0.html"
       ],
-      "status": "CANDIDATE",
+      "status": "REJECTED",
       "timestamp": "2026-05-22T11:10:49.344721+00:00",
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
@@ -1240,7 +1381,11 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Capability derived from SDC section extraction. 61 components, 61 at DIRECT_EVIDENCE.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "REJECTED",
+      "review_reason": "CAP-021 'Frontend Application Pages' with 61 components — COMPONENT_OVERLOAD. Domain ID mismatch: canonical DOMAIN-16='Operational Engineering' vs SDC DOMAIN-16='Frontend Application'. Component count from wrong domain context.",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0039",
@@ -1251,7 +1396,7 @@
       "confidence": 0.55,
       "authority_ceiling": "L3",
       "evidence_anchors": [],
-      "status": "CANDIDATE",
+      "status": "REJECTED",
       "timestamp": "2026-05-22T11:10:49.344735+00:00",
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
@@ -1270,7 +1415,11 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Capability derived from SDC section extraction. 2 components, 0 at DIRECT_EVIDENCE.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "REJECTED",
+      "review_reason": "CAP-022 in SDC DOMAIN-17 (canonical DOMAIN-17 mismatch). 0 DIRECT_EVIDENCE components. Empty evidence anchors.",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0040",
@@ -1281,7 +1430,7 @@
       "confidence": 0.55,
       "authority_ceiling": "L3",
       "evidence_anchors": [],
-      "status": "CANDIDATE",
+      "status": "REJECTED",
       "timestamp": "2026-05-22T11:10:49.344751+00:00",
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
@@ -1300,7 +1449,11 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Capability derived from SDC section extraction. 4 components, 0 at DIRECT_EVIDENCE.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "REJECTED",
+      "review_reason": "CAP-023 in DOMAIN-18 — domain does not exist in canonical CSR (17 domains). SDC-only domain.",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0041",
@@ -1311,7 +1464,7 @@
       "confidence": 0.55,
       "authority_ceiling": "L3",
       "evidence_anchors": [],
-      "status": "CANDIDATE",
+      "status": "REJECTED",
       "timestamp": "2026-05-22T11:10:49.344764+00:00",
       "proposition_class": "CAPABILITY_EVIDENCE",
       "ceu_refs": [],
@@ -1330,7 +1483,11 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Capability derived from SDC section extraction. 4 components, 0 at DIRECT_EVIDENCE.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "REJECTED",
+      "review_reason": "CAP-024 in DOMAIN-19 — domain does not exist in canonical CSR (17 domains). SDC-only domain.",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0042",
@@ -1343,7 +1500,7 @@
       "evidence_anchors": [
         "CLM-01 Structural Coverage Completeness.md"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344768+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -1359,7 +1516,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0043",
@@ -1372,7 +1532,7 @@
       "evidence_anchors": [
         "CLM-02 Structural Unit Count.md"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344771+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -1388,7 +1548,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0044",
@@ -1401,7 +1564,7 @@
       "evidence_anchors": [
         "CLM-03 Structural Reconstruction Pass-Fail.md"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344773+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -1417,7 +1580,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0045",
@@ -1430,7 +1596,7 @@
       "evidence_anchors": [
         "CLM-04 Four-Axis Reconstruction Detail.md"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344776+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -1446,7 +1612,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0046",
@@ -1459,7 +1628,7 @@
       "evidence_anchors": [
         "CLM-05 Escalation Clearance.md"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344778+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -1475,7 +1644,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0047",
@@ -1488,7 +1660,7 @@
       "evidence_anchors": [
         "CLM-07 Source Data Intake Complete.md"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344781+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -1504,7 +1676,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0048",
@@ -1517,7 +1692,7 @@
       "evidence_anchors": [
         "CLM-08 Structural Patterns Conform.md"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344783+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -1533,7 +1708,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0049",
@@ -1546,7 +1724,7 @@
       "evidence_anchors": [
         "CLM-09 Proven Structural Score.md"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344786+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -1562,7 +1740,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0050",
@@ -1575,7 +1756,7 @@
       "evidence_anchors": [
         "CLM-10 Achievable Score Projected.md"
       ],
-      "status": "CANDIDATE",
+      "status": "REJECTED",
       "timestamp": "2026-05-22T11:10:49.344788+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -1591,7 +1772,11 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "REJECTED",
+      "review_reason": "CLM-10 'Achievable Score Projected' asserts 100 — this is a projection, not evidence. CONDITIONAL admissibility + projected value = insufficient governance basis.",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0051",
@@ -1604,7 +1789,7 @@
       "evidence_anchors": [
         "CLM-11 Score Band Classification.md"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344791+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -1620,7 +1805,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0052",
@@ -1633,7 +1821,7 @@
       "evidence_anchors": [
         "CLM-12 Score Confidence Range.md"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344793+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -1649,7 +1837,13 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "CONTESTED_THEN_ACCEPTED",
+      "contest_reason": "CLM-12 'Score Confidence Range' dual value with SPLIT_EXECUTION_NOT_EVALUATED status. Ambiguous interpretation.",
+      "arbitration_rationale": "The range (60-100) is structurally derived. SPLIT_EXECUTION_NOT_EVALUATED is an honest admission of limitation. The claim carries governance value precisely because it records what is known and what is not.",
+      "annotation": "Dual value accepted as honest structural admission. Split execution status noted.",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0053",
@@ -1662,7 +1856,7 @@
       "evidence_anchors": [
         "CLM-13 Execution Layer Status.md"
       ],
-      "status": "CANDIDATE",
+      "status": "REJECTED",
       "timestamp": "2026-05-22T11:10:49.344797+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -1678,7 +1872,11 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "REJECTED",
+      "review_reason": "CLM-13 'Execution Layer Status' dual contradictory value: NOT_EVALUATED (Stream 10) / PHASE_1_ACTIVE (legacy). Ambiguous — cannot hold as a governed proposition.",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0054",
@@ -1691,7 +1889,7 @@
       "evidence_anchors": [
         "CLM-14 Structural Domain Count.md"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344800+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -1707,7 +1905,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0055",
@@ -1720,7 +1921,7 @@
       "evidence_anchors": [
         "CLM-15 Structural Capability Count.md"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344802+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -1736,7 +1937,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0056",
@@ -1749,7 +1953,7 @@
       "evidence_anchors": [
         "CLM-16 Structural Component Count.md"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344804+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -1765,7 +1969,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0057",
@@ -1778,7 +1985,7 @@
       "evidence_anchors": [
         "CLM-17 Cross-Domain Structural Overlaps.md"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344807+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -1794,7 +2001,13 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "CONTESTED_THEN_ACCEPTED",
+      "contest_reason": "CLM-17 'Cross-Domain Structural Overlaps' dual value: 0 in canonical model, 2 in binding_envelope. Which reference frame is authoritative?",
+      "arbitration_rationale": "Both values are structurally grounded in their respective reference frames. The claim documents a real divergence between canonical model and binding envelope — this divergence is itself a governance-relevant observation.",
+      "annotation": "Dual-frame observation accepted. Divergence between canonical and binding is a governance finding.",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0058",
@@ -1807,7 +2020,7 @@
       "evidence_anchors": [
         "CLM-18 Governed Signal Count.md"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344809+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -1823,7 +2036,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0059",
@@ -1836,7 +2052,7 @@
       "evidence_anchors": [
         "CLM-19 Signal Evidence Quality Distribution.md"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344811+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -1852,7 +2068,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0060",
@@ -1865,7 +2084,7 @@
       "evidence_anchors": [
         "CLM-20 SIG-001 Sensor Bridge Throughput.md"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344813+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -1881,7 +2100,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0061",
@@ -1894,7 +2116,7 @@
       "evidence_anchors": [
         "CLM-21 SIG-002 Platform Runtime State Seven Unknown Dimensions.md"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344816+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -1910,7 +2132,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0062",
@@ -1923,7 +2148,7 @@
       "evidence_anchors": [
         "CLM-22 SIG-003 Dependency Load 68 Percent.md"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344818+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -1939,7 +2164,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0063",
@@ -1952,7 +2180,7 @@
       "evidence_anchors": [
         "CLM-23 SIG-004 Structural Volatility Edge Density.md"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344822+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -1968,7 +2196,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0064",
@@ -1981,7 +2212,7 @@
       "evidence_anchors": [
         "CLM-25 Executive Three-Axis Verdict.md"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344824+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -1997,20 +2228,23 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0065",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Vault claim CLM-26 'Executive Narrative Phrase Set' asserts: 19 active concepts \u2192 rendered phrase set across three executive sections:\n- \"Under Control\": CONCEPT-01, CONCEPT-02, CONCEPT-03, CONCEPT-07, CONCEPT-12, CONCEPT-13, CONCEPT-14, CONCEPT-15, CONCEPT-17\n- \"Concentration\": CONCEPT-08, CONCEPT-09, CONCEPT-10, CONCEPT-11, CONCEPT-16\n- \"Outside Visibility\": CONCEPT-04, CONCEPT-05, CONCEPT-06, CONCEPT-18, CONCEPT-19. Traceability: FULL. LENS admissible: YES.",
+      "proposition": "Vault claim CLM-26 'Executive Narrative Phrase Set' asserts: 19 active concepts → rendered phrase set across three executive sections:\n- \"Under Control\": CONCEPT-01, CONCEPT-02, CONCEPT-03, CONCEPT-07, CONCEPT-12, CONCEPT-13, CONCEPT-14, CONCEPT-15, CONCEPT-17\n- \"Concentration\": CONCEPT-08, CONCEPT-09, CONCEPT-10, CONCEPT-11, CONCEPT-16\n- \"Outside Visibility\": CONCEPT-04, CONCEPT-05, CONCEPT-06, CONCEPT-18, CONCEPT-19. Traceability: FULL. LENS admissible: YES.",
       "derivation_tier": "DIRECT_EVIDENCE",
       "confidence": 0.8,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "CLM-26 Executive Narrative Phrase Set.md"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344827+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -2019,14 +2253,17 @@
         "claim_id": "CLM-26",
         "claim_label": "Executive Narrative Phrase Set",
         "claim_type": "narrative-support",
-        "authoritative_value": "19 active concepts \u2192 rendered phrase set across three executive sections:\n- \"Under Control\": CONCEPT-01, CONCEPT-02, CONCEPT-03, CONCEPT-07, CONCEPT-12, CONCEPT-13, CONCEPT-14, CONCEPT-15, CONCEPT-17\n- \"Concentration\": CONCEPT-08, CONCEPT-09, CONCEPT-10, CONCEPT-11, CONCEPT-16\n- \"Outside Visibility\": CONCEPT-04, CONCEPT-05, CONCEPT-06, CONCEPT-18, CONCEPT-19",
+        "authoritative_value": "19 active concepts → rendered phrase set across three executive sections:\n- \"Under Control\": CONCEPT-01, CONCEPT-02, CONCEPT-03, CONCEPT-07, CONCEPT-12, CONCEPT-13, CONCEPT-14, CONCEPT-15, CONCEPT-17\n- \"Concentration\": CONCEPT-08, CONCEPT-09, CONCEPT-10, CONCEPT-11, CONCEPT-16\n- \"Outside Visibility\": CONCEPT-04, CONCEPT-05, CONCEPT-06, CONCEPT-18, CONCEPT-19",
         "traceability": "FULL",
         "lens_admissible": "YES"
       },
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0066",
@@ -2039,7 +2276,7 @@
       "evidence_anchors": [
         "CLM-27 Full Node Inventory 148 Nodes.md"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344830+00:00",
       "proposition_class": "VAULT_CLAIM_STRUCTURAL",
       "ceu_refs": [],
@@ -2055,20 +2292,23 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0067",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Cross-domain relationship: DOMAIN-01 \u2192 DOMAIN-03 (EMITS, weight: 1). Topology edge from semantic topology model.",
+      "proposition": "Cross-domain relationship: DOMAIN-01 → DOMAIN-03 (EMITS, weight: 1). Topology edge from semantic topology model.",
       "derivation_tier": "DERIVED",
       "confidence": 0.6,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "semantic_topology_model.json"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344834+00:00",
       "proposition_class": "CROSS_DOMAIN_EVIDENCE",
       "ceu_refs": [],
@@ -2085,20 +2325,23 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Cross-domain edge from semantic topology model. EMITS relationship with weight 1.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0068",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Cross-domain relationship: DOMAIN-05 \u2192 DOMAIN-03 (CALLS, weight: 1). Topology edge from semantic topology model.",
+      "proposition": "Cross-domain relationship: DOMAIN-05 → DOMAIN-03 (CALLS, weight: 1). Topology edge from semantic topology model.",
       "derivation_tier": "DERIVED",
       "confidence": 0.6,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "semantic_topology_model.json"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344837+00:00",
       "proposition_class": "CROSS_DOMAIN_EVIDENCE",
       "ceu_refs": [],
@@ -2115,20 +2358,23 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Cross-domain edge from semantic topology model. CALLS relationship with weight 1.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0069",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Cross-domain relationship: DOMAIN-01 \u2192 DOMAIN-10 (EMITS, weight: 1). Topology edge from semantic topology model.",
+      "proposition": "Cross-domain relationship: DOMAIN-01 → DOMAIN-10 (EMITS, weight: 1). Topology edge from semantic topology model.",
       "derivation_tier": "DERIVED",
       "confidence": 0.6,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "semantic_topology_model.json"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344839+00:00",
       "proposition_class": "CROSS_DOMAIN_EVIDENCE",
       "ceu_refs": [],
@@ -2145,20 +2391,23 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Cross-domain edge from semantic topology model. EMITS relationship with weight 1.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0070",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Cross-domain relationship: DOMAIN-07 \u2192 DOMAIN-10 (EMITS, weight: 1). Topology edge from semantic topology model.",
+      "proposition": "Cross-domain relationship: DOMAIN-07 → DOMAIN-10 (EMITS, weight: 1). Topology edge from semantic topology model.",
       "derivation_tier": "DERIVED",
       "confidence": 0.6,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "semantic_topology_model.json"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344842+00:00",
       "proposition_class": "CROSS_DOMAIN_EVIDENCE",
       "ceu_refs": [],
@@ -2175,20 +2424,23 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Cross-domain edge from semantic topology model. EMITS relationship with weight 1.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0071",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Cross-domain relationship: DOMAIN-03 \u2192 DOMAIN-09 (inferred_semantic, weight: 1). Topology edge from semantic topology model.",
+      "proposition": "Cross-domain relationship: DOMAIN-03 → DOMAIN-09 (inferred_semantic, weight: 1). Topology edge from semantic topology model.",
       "derivation_tier": "DERIVED",
       "confidence": 0.6,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "semantic_topology_model.json"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344844+00:00",
       "proposition_class": "CROSS_DOMAIN_EVIDENCE",
       "ceu_refs": [],
@@ -2205,20 +2457,23 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Cross-domain edge from semantic topology model. inferred_semantic relationship with weight 1.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0072",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Cross-domain relationship: DOMAIN-03 \u2192 DOMAIN-16 (inferred_semantic, weight: 1). Topology edge from semantic topology model.",
+      "proposition": "Cross-domain relationship: DOMAIN-03 → DOMAIN-16 (inferred_semantic, weight: 1). Topology edge from semantic topology model.",
       "derivation_tier": "DERIVED",
       "confidence": 0.6,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "semantic_topology_model.json"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344847+00:00",
       "proposition_class": "CROSS_DOMAIN_EVIDENCE",
       "ceu_refs": [],
@@ -2235,20 +2490,23 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Cross-domain edge from semantic topology model. inferred_semantic relationship with weight 1.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0073",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Cross-domain relationship: DOMAIN-04 \u2192 DOMAIN-15 (structural_co_membership, weight: 1). Topology edge from semantic topology model.",
+      "proposition": "Cross-domain relationship: DOMAIN-04 → DOMAIN-15 (structural_co_membership, weight: 1). Topology edge from semantic topology model.",
       "derivation_tier": "DERIVED",
       "confidence": 0.6,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "semantic_topology_model.json"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344849+00:00",
       "proposition_class": "CROSS_DOMAIN_EVIDENCE",
       "ceu_refs": [],
@@ -2265,20 +2523,23 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Cross-domain edge from semantic topology model. structural_co_membership relationship with weight 1.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0074",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Cross-domain relationship: DOMAIN-02 \u2192 DOMAIN-05 (EMITS, weight: 1). Topology edge from semantic topology model.",
+      "proposition": "Cross-domain relationship: DOMAIN-02 → DOMAIN-05 (EMITS, weight: 1). Topology edge from semantic topology model.",
       "derivation_tier": "DERIVED",
       "confidence": 0.6,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "semantic_topology_model.json"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344851+00:00",
       "proposition_class": "CROSS_DOMAIN_EVIDENCE",
       "ceu_refs": [],
@@ -2295,20 +2556,23 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Cross-domain edge from semantic topology model. EMITS relationship with weight 1.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0075",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Cross-domain relationship: DOMAIN-10 \u2192 DOMAIN-03 (CALLS, weight: 1). Topology edge from semantic topology model.",
+      "proposition": "Cross-domain relationship: DOMAIN-10 → DOMAIN-03 (CALLS, weight: 1). Topology edge from semantic topology model.",
       "derivation_tier": "DERIVED",
       "confidence": 0.6,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "semantic_topology_model.json"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344854+00:00",
       "proposition_class": "CROSS_DOMAIN_EVIDENCE",
       "ceu_refs": [],
@@ -2325,20 +2589,23 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Cross-domain edge from semantic topology model. CALLS relationship with weight 1.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0076",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Cross-domain relationship: DOMAIN-10 \u2192 DOMAIN-12 (CALLS, weight: 1). Topology edge from semantic topology model.",
+      "proposition": "Cross-domain relationship: DOMAIN-10 → DOMAIN-12 (CALLS, weight: 1). Topology edge from semantic topology model.",
       "derivation_tier": "DERIVED",
       "confidence": 0.6,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "semantic_topology_model.json"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344856+00:00",
       "proposition_class": "CROSS_DOMAIN_EVIDENCE",
       "ceu_refs": [],
@@ -2355,20 +2622,23 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Cross-domain edge from semantic topology model. CALLS relationship with weight 1.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0077",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Cross-domain relationship: DOMAIN-10 \u2192 DOMAIN-16 (CALLS, weight: 1). Topology edge from semantic topology model.",
+      "proposition": "Cross-domain relationship: DOMAIN-10 → DOMAIN-16 (CALLS, weight: 1). Topology edge from semantic topology model.",
       "derivation_tier": "DERIVED",
       "confidence": 0.6,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "semantic_topology_model.json"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344858+00:00",
       "proposition_class": "CROSS_DOMAIN_EVIDENCE",
       "ceu_refs": [],
@@ -2385,20 +2655,23 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Cross-domain edge from semantic topology model. CALLS relationship with weight 1.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0078",
       "specimen_id": "blueedge",
       "run_id": "run_blueedge_productized_01_fixed",
-      "proposition": "Cross-domain relationship: DOMAIN-09 \u2192 DOMAIN-03 (CALLS, weight: 1). Topology edge from semantic topology model.",
+      "proposition": "Cross-domain relationship: DOMAIN-09 → DOMAIN-03 (CALLS, weight: 1). Topology edge from semantic topology model.",
       "derivation_tier": "DERIVED",
       "confidence": 0.6,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "semantic_topology_model.json"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344861+00:00",
       "proposition_class": "CROSS_DOMAIN_EVIDENCE",
       "ceu_refs": [],
@@ -2415,7 +2688,10 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "Cross-domain edge from semantic topology model. CALLS relationship with weight 1.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "ACCEPTED",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0079",
@@ -2423,12 +2699,12 @@
       "run_id": "run_blueedge_productized_01_fixed",
       "proposition": "Cross-domain ambiguity: Component 'Apache Kafka' appears in multiple contexts (2 occurrences), suggesting ambiguous grouping.. Affected elements: COMP-081, COMP-198.",
       "derivation_tier": "DERIVED",
-      "confidence": 0.5,
+      "confidence": 0.55,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "review_queue.json"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344865+00:00",
       "proposition_class": "CROSS_DOMAIN_EVIDENCE",
       "ceu_refs": [],
@@ -2447,7 +2723,14 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "SDC review queue flagged ambiguous cross-domain grouping. Requires operator review.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "CONTESTED_THEN_ACCEPTED",
+      "contest_reason": "Apache Kafka ambiguous grouping — is this a genuine cross-domain structural observation or a shared infrastructure naming collision?",
+      "arbitration_rationale": "Shared infrastructure components appearing in multiple domain contexts IS a genuine structural observation. Apache Kafka serving multiple domains is a real cross-domain relationship, not a naming error.",
+      "annotation": "Accepted as genuine shared infrastructure observation. Confidence adjusted to reflect ambiguity inherent in multi-context components.",
+      "confidence_original": 0.5,
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0080",
@@ -2455,12 +2738,12 @@
       "run_id": "run_blueedge_productized_01_fixed",
       "proposition": "Cross-domain ambiguity: Component 'Apache Flink' appears in multiple contexts (2 occurrences), suggesting ambiguous grouping.. Affected elements: COMP-082, COMP-199.",
       "derivation_tier": "DERIVED",
-      "confidence": 0.5,
+      "confidence": 0.55,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "review_queue.json"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344868+00:00",
       "proposition_class": "CROSS_DOMAIN_EVIDENCE",
       "ceu_refs": [],
@@ -2479,7 +2762,14 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "SDC review queue flagged ambiguous cross-domain grouping. Requires operator review.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "CONTESTED_THEN_ACCEPTED",
+      "contest_reason": "Apache Flink ambiguous grouping — shared infrastructure or naming collision?",
+      "arbitration_rationale": "Same reasoning as Apache Kafka — stream processing infrastructure legitimately spans domain boundaries.",
+      "annotation": "Accepted as shared infrastructure observation.",
+      "confidence_original": 0.5,
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0081",
@@ -2487,12 +2777,12 @@
       "run_id": "run_blueedge_productized_01_fixed",
       "proposition": "Cross-domain ambiguity: Component 'TimescaleDB' appears in multiple contexts (2 occurrences), suggesting ambiguous grouping.. Affected elements: COMP-096, COMP-201.",
       "derivation_tier": "DERIVED",
-      "confidence": 0.5,
+      "confidence": 0.55,
       "authority_ceiling": "L3",
       "evidence_anchors": [
         "review_queue.json"
       ],
-      "status": "CANDIDATE",
+      "status": "ACCEPTED",
       "timestamp": "2026-05-22T11:10:49.344870+00:00",
       "proposition_class": "CROSS_DOMAIN_EVIDENCE",
       "ceu_refs": [],
@@ -2511,7 +2801,14 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "SDC review queue flagged ambiguous cross-domain grouping. Requires operator review.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "CONTESTED_THEN_ACCEPTED",
+      "contest_reason": "TimescaleDB ambiguous grouping — shared infrastructure or naming collision?",
+      "arbitration_rationale": "Database infrastructure spanning domains is a genuine structural pattern. TimescaleDB serving both SaaS Platform and Data Storage contexts reflects real architectural coupling.",
+      "annotation": "Accepted as shared infrastructure observation.",
+      "confidence_original": 0.5,
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0082",
@@ -2524,7 +2821,7 @@
       "evidence_anchors": [
         "review_queue.json"
       ],
-      "status": "CANDIDATE",
+      "status": "REJECTED",
       "timestamp": "2026-05-22T11:10:49.344872+00:00",
       "proposition_class": "CROSS_DOMAIN_EVIDENCE",
       "ceu_refs": [],
@@ -2541,7 +2838,11 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "SDC review queue flagged ambiguous cross-domain grouping. Requires operator review.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "REJECTED",
+      "review_reason": "Component 'Predictive Maintenance' ambiguous grouping — no domain assignment. Functional overlap within AI/ML capabilities, not a structural cross-domain relationship.",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0083",
@@ -2554,7 +2855,7 @@
       "evidence_anchors": [
         "review_queue.json"
       ],
-      "status": "CANDIDATE",
+      "status": "REJECTED",
       "timestamp": "2026-05-22T11:10:49.344875+00:00",
       "proposition_class": "CROSS_DOMAIN_EVIDENCE",
       "ceu_refs": [],
@@ -2571,7 +2872,11 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "SDC review queue flagged ambiguous cross-domain grouping. Requires operator review.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "REJECTED",
+      "review_reason": "Component 'Driver Scoring' ambiguous grouping — no domain assignment. Functional overlap, not cross-domain relationship.",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0084",
@@ -2584,7 +2889,7 @@
       "evidence_anchors": [
         "review_queue.json"
       ],
-      "status": "CANDIDATE",
+      "status": "REJECTED",
       "timestamp": "2026-05-22T11:10:49.344877+00:00",
       "proposition_class": "CROSS_DOMAIN_EVIDENCE",
       "ceu_refs": [],
@@ -2601,7 +2906,11 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "SDC review queue flagged ambiguous cross-domain grouping. Requires operator review.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "REJECTED",
+      "review_reason": "Component 'Anomaly Detection' ambiguous grouping — no domain assignment. Functional overlap, not cross-domain relationship.",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     },
     {
       "id": "SP-blueedge-0085",
@@ -2614,7 +2923,7 @@
       "evidence_anchors": [
         "review_queue.json"
       ],
-      "status": "CANDIDATE",
+      "status": "REJECTED",
       "timestamp": "2026-05-22T11:10:49.344879+00:00",
       "proposition_class": "CROSS_DOMAIN_EVIDENCE",
       "ceu_refs": [],
@@ -2631,7 +2940,11 @@
       "hero_moment_refs": [],
       "replay_corridor_refs": [],
       "derivation_rationale": "SDC review queue flagged ambiguous cross-domain grouping. Requires operator review.",
-      "reconciliation_state": "NOVEL"
+      "reconciliation_state": "NOVEL",
+      "review_action": "REJECTED",
+      "review_reason": "Component 'Digital Twin' ambiguous grouping — no domain assignment. Functional overlap, not cross-domain relationship.",
+      "reviewed_at": "2026-05-22T20:00:00Z",
+      "reviewed_by": "operator:krayu"
     }
   ]
 }
