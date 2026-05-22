@@ -1272,7 +1272,6 @@ def _enrich_semantic_topology_with_structural_evidence(model_path: Path, run_dir
 
     # Build path→DOM from 40.2 node inventory + DOM layer
     dom_layer_path = run_dir / "dom" / "dom_layer.json"
-    binding_path = run_dir / "binding" / "binding_envelope.json"
     path_to_dom: dict[str, str] = {}
 
     if dom_layer_path.exists():
@@ -1282,14 +1281,6 @@ def _enrich_semantic_topology_with_structural_evidence(model_path: Path, run_dir
                 path = node_id_to_path.get(nid)
                 if path:
                     path_to_dom[path] = dg["dom_id"]
-    elif binding_path.exists():
-        envelope = load_json(binding_path)
-        for node in envelope.get("nodes", []):
-            if node.get("type") == "binding_context":
-                dom_id = node["node_id"]
-                for edge in envelope.get("edges", []):
-                    if edge.get("from_node") == dom_id and edge.get("edge_type") == "GROUNDS":
-                        pass
 
     if not path_to_dom:
         return
