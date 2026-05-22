@@ -725,6 +725,9 @@ def phase_05_build_binding_envelope(
         },
     }
 
+    # Enrich binding envelope with 40.3s/40.3c structural evidence (additive, graceful no-op)
+    _enrich_binding_with_structural_evidence(envelope, run_dir, node_to_dom, ceus)
+
     save_json(run_dir / "binding" / "binding_envelope.json", envelope)
     print(
         f"  PASS: binding_envelope.json built — "
@@ -732,6 +735,168 @@ def phase_05_build_binding_envelope(
         f"edges={len(edges)}, surfaces={len(cap_surfaces)}"
     )
     return True
+
+
+# ── Structural Evidence Enrichment (40.3s / 40.3c → Binding) ───────────────
+
+
+def _load_code_graph_imports(run_dir: Path):
+    """Load IMPORTS relationships from 40.3s code_graph.json. Returns list of (source_path, target_path) tuples."""
+    code_graph_path = run_dir / "structure" / "40.3s" / "code_graph.json"
+    if not code_graph_path.exists():
+        return None
+    cg = load_json(code_graph_path)
+    imports = []
+    for rel in cg.get("relationships", []):
+        if rel.get("relation_type") == "IMPORTS" and rel.get("source_path") and rel.get("target_path"):
+            imports.append((rel["source_path"], rel["target_path"]))
+    return imports
+
+
+def _load_centrality_index(run_dir: Path):
+    """Load 40.3c centrality_ranking into a path→metrics dict."""
+    centrality_path = run_dir / "structure" / "40.3c" / "structural_centrality.json"
+    if not centrality_path.exists():
+        return None
+    data = load_json(centrality_path)
+    index = {}
+    for entry in data.get("centrality_ranking", []):
+        path = entry.get("path")
+        if path:
+            index[path] = entry
+    return index
+
+
+def _build_node_to_path_index(run_dir: Path):
+    """Build node_id→path index from 40.2 structural_node_inventory."""
+    inv_path = run_dir / "structure" / "40.2" / "structural_node_inventory.json"
+    if not inv_path.exists():
+        return {}
+    inv = load_json(inv_path)
+    return {n["node_id"]: n["path"] for n in inv.get("nodes", []) if "node_id" in n and "path" in n}
+
+
+def _enrich_binding_with_structural_evidence(
+    envelope: dict, run_dir: Path, node_to_dom: dict, ceus: list
+):
+    """Enrich binding envelope with 40.3s import evidence and 40.3c centrality.
+    Additive — graceful no-op if enrichment artifacts are absent."""
+    imports = _load_code_graph_imports(run_dir)
+    centrality_index = _load_centrality_index(run_dir)
+
+    if imports is None and centrality_index is None:
+        return
+
+    node_id_to_path = _build_node_to_path_index(run_dir)
+    path_to_dom: dict[str, str] = {}
+    for nid, dom_id in node_to_dom.items():
+        path = node_id_to_path.get(nid)
+        if path:
+            path_to_dom[path] = dom_id
+
+    # Build CEU → set of file paths
+    ceu_file_paths: dict[str, set] = {}
+    for ceu in ceus:
+        paths = set()
+        for ref in ceu.get("evidence_refs", []):
+            nid = ref.get("node_id", "")
+            path = node_id_to_path.get(nid)
+            if path:
+                paths.add(path)
+        ceu_file_paths[ceu["ceu_id"]] = paths
+
+    enrichment_stats = {"source": "PI.FUSION.ENRICHED-STRUCTURAL-PROPAGATION.01"}
+
+    # === 1. Cross-DOM import edges ===
+    if imports is not None:
+        cross_dom_counts: dict[tuple, int] = defaultdict(int)
+        for src_path, tgt_path in imports:
+            src_dom = path_to_dom.get(src_path)
+            tgt_dom = path_to_dom.get(tgt_path)
+            if src_dom and tgt_dom and src_dom != tgt_dom:
+                cross_dom_counts[(src_dom, tgt_dom)] += 1
+
+        cross_dom_edges = []
+        for (src_dom, tgt_dom), count in sorted(cross_dom_counts.items(), key=lambda x: -x[1]):
+            cross_dom_edges.append({
+                "edge_id": f"EDGE-IMPORT-{src_dom}-{tgt_dom}",
+                "edge_type": "IMPORTS_ACROSS",
+                "from_node": src_dom,
+                "to_node": tgt_dom,
+                "import_count": count,
+                "provenance": {
+                    "derivation_rule": "40.3s cross-DOM import aggregation",
+                    "source_artifact": "structure/40.3s/code_graph.json",
+                },
+                "temporal_classification": "STATIC",
+            })
+
+        envelope["edges"].extend(cross_dom_edges)
+        enrichment_stats["cross_dom_import_edges"] = len(cross_dom_edges)
+        enrichment_stats["total_cross_dom_imports"] = sum(cross_dom_counts.values())
+
+        # Enrich GROUNDS edges with import density
+        grounds_enriched = 0
+        for edge in envelope["edges"]:
+            if edge.get("edge_type") != "GROUNDS":
+                continue
+            dom_id = edge["from_node"]
+            ce_id = edge["to_node"]
+            ceu_id = edge.get("provenance", {}).get("ceu_id")
+            if not ceu_id:
+                continue
+            dom_files = {p for p, d in path_to_dom.items() if d == dom_id}
+            ceu_files = ceu_file_paths.get(ceu_id, set())
+            import_count = 0
+            for src_path, tgt_path in imports:
+                if (src_path in dom_files and tgt_path in ceu_files) or \
+                   (src_path in ceu_files and tgt_path in dom_files):
+                    import_count += 1
+            if import_count > 0:
+                edge["provenance"]["import_evidence"] = {
+                    "import_count": import_count,
+                    "source_artifact": "structure/40.3s/code_graph.json",
+                }
+                grounds_enriched += 1
+
+        enrichment_stats["grounds_edges_with_import_evidence"] = grounds_enriched
+        print(f"  INFO: 40.3s enrichment — {len(cross_dom_edges)} cross-DOM edges, "
+              f"{grounds_enriched} GROUNDS edges annotated with import evidence")
+
+    # === 2. Component entity centrality enrichment ===
+    if centrality_index is not None:
+        ce_enriched = 0
+        for node in envelope["nodes"]:
+            if node.get("type") != "component_entity":
+                continue
+            ceu_id = node.get("ceu_id")
+            if not ceu_id:
+                continue
+            ceu_files = ceu_file_paths.get(ceu_id, set())
+            file_centralities = []
+            for fpath in ceu_files:
+                entry = centrality_index.get(fpath)
+                if entry:
+                    file_centralities.append(entry)
+            if file_centralities:
+                best = max(file_centralities, key=lambda e: e.get("import_in_degree", 0))
+                node["centrality_evidence"] = {
+                    "files_with_centrality": len(file_centralities),
+                    "hub_file": best.get("path", ""),
+                    "hub_import_in_degree": best.get("import_in_degree", 0),
+                    "hub_structural_role": best.get("structural_role", ""),
+                    "hub_centrality_rank": best.get("centrality_rank", 0),
+                    "source_artifact": "structure/40.3c/structural_centrality.json",
+                }
+                ce_enriched += 1
+
+        enrichment_stats["component_entities_with_centrality"] = ce_enriched
+        print(f"  INFO: 40.3c enrichment — {ce_enriched} component entities annotated with centrality")
+
+    envelope["summary"]["structural_enrichment"] = enrichment_stats
+    if imports is not None:
+        envelope["summary"]["total_edges"] = len(envelope["edges"])
+        envelope["summary"]["derivation_basis"] += " + 40.3s import topology + 40.3c centrality"
 
 
 # ── Phase 3.5: Structural Relevance Classification ──────────────────────────
@@ -1082,8 +1247,164 @@ def phase_05b_csr_semantic_topology(client: str, run_id: str, run_dir: Path) -> 
         print("  FAIL: semantic_topology_model.json not produced")
         return False
 
+    # Post-enrich semantic topology with 40.3s/40.3c structural evidence (additive)
+    _enrich_semantic_topology_with_structural_evidence(model_path, run_dir)
+
     print("  CSR → semantic_topology_model.json: OK")
     return True
+
+
+def _enrich_semantic_topology_with_structural_evidence(model_path: Path, run_dir: Path):
+    """Post-enrich semantic_topology_model.json with 40.3s import evidence and 40.3c centrality.
+    Adds per-domain structural evidence and import-derived structural edges.
+    Additive — graceful no-op if enrichment artifacts are absent."""
+    imports = _load_code_graph_imports(run_dir)
+    centrality_index = _load_centrality_index(run_dir)
+
+    if imports is None and centrality_index is None:
+        return
+
+    topology = load_json(model_path)
+    if not topology:
+        return
+
+    node_id_to_path = _build_node_to_path_index(run_dir)
+
+    # Build path→DOM from 40.2 node inventory + DOM layer
+    dom_layer_path = run_dir / "dom" / "dom_layer.json"
+    binding_path = run_dir / "binding" / "binding_envelope.json"
+    path_to_dom: dict[str, str] = {}
+
+    if dom_layer_path.exists():
+        dom_layer = load_json(dom_layer_path)
+        for dg in dom_layer.get("dom_groups", []):
+            for nid in dg.get("included_nodes", []):
+                path = node_id_to_path.get(nid)
+                if path:
+                    path_to_dom[path] = dg["dom_id"]
+    elif binding_path.exists():
+        envelope = load_json(binding_path)
+        for node in envelope.get("nodes", []):
+            if node.get("type") == "binding_context":
+                dom_id = node["node_id"]
+                for edge in envelope.get("edges", []):
+                    if edge.get("from_node") == dom_id and edge.get("edge_type") == "GROUNDS":
+                        pass
+
+    if not path_to_dom:
+        return
+
+    # Build domain_id → set of semantic topology domain entries with dom_id backing
+    topo_dom_to_dom_id: dict[str, str] = {}
+    for dom in topology.get("domains", []):
+        backing_dom = dom.get("dominant_dom_id")
+        if backing_dom:
+            topo_dom_to_dom_id[dom["domain_id"]] = backing_dom
+
+    enrichment_applied = False
+
+    # === 1. Per-domain structural evidence ===
+    if imports is not None:
+        dom_import_in: dict[str, int] = defaultdict(int)
+        dom_import_out: dict[str, int] = defaultdict(int)
+        for src_path, tgt_path in imports:
+            src_dom = path_to_dom.get(src_path)
+            tgt_dom = path_to_dom.get(tgt_path)
+            if src_dom:
+                dom_import_out[src_dom] += 1
+            if tgt_dom:
+                dom_import_in[tgt_dom] += 1
+
+        for dom in topology.get("domains", []):
+            backing_dom = topo_dom_to_dom_id.get(dom["domain_id"])
+            if not backing_dom:
+                continue
+            in_count = dom_import_in.get(backing_dom, 0)
+            out_count = dom_import_out.get(backing_dom, 0)
+            if in_count > 0 or out_count > 0:
+                dom["structural_import_evidence"] = {
+                    "import_in_count": in_count,
+                    "import_out_count": out_count,
+                    "backing_dom_id": backing_dom,
+                    "source_artifact": "structure/40.3s/code_graph.json",
+                }
+                enrichment_applied = True
+
+        # Cross-domain structural edges from imports
+        cross_dom_imports: dict[tuple, int] = defaultdict(int)
+        for src_path, tgt_path in imports:
+            src_dom = path_to_dom.get(src_path)
+            tgt_dom = path_to_dom.get(tgt_path)
+            if src_dom and tgt_dom and src_dom != tgt_dom:
+                cross_dom_imports[(src_dom, tgt_dom)] += 1
+
+        dom_id_to_topo_dom = {v: k for k, v in topo_dom_to_dom_id.items()}
+        structural_edges = []
+        edge_counter = 0
+        for (src_dom, tgt_dom), count in sorted(cross_dom_imports.items(), key=lambda x: -x[1]):
+            src_topo = dom_id_to_topo_dom.get(src_dom)
+            tgt_topo = dom_id_to_topo_dom.get(tgt_dom)
+            if src_topo and tgt_topo:
+                edge_counter += 1
+                structural_edges.append({
+                    "edge_id": f"L-IMPORT-{edge_counter:02d}",
+                    "source_domain": src_topo,
+                    "target_domain": tgt_topo,
+                    "relationship_type": "structural_import_coupling",
+                    "import_count": count,
+                    "provenance": "40.3s cross-DOM import aggregation",
+                })
+
+        if structural_edges:
+            existing_edge_ids = {e["edge_id"] for e in topology.get("edges", [])}
+            for se in structural_edges:
+                if se["edge_id"] not in existing_edge_ids:
+                    topology["edges"].append(se)
+            topology["metrics"]["structural_import_edges"] = len(structural_edges)
+            topology["metrics"]["total_edges"] = len(topology["edges"])
+            enrichment_applied = True
+
+    # === 2. Per-domain centrality evidence ===
+    if centrality_index is not None:
+        dom_files: dict[str, list] = defaultdict(list)
+        for fpath, dom_id in path_to_dom.items():
+            entry = centrality_index.get(fpath)
+            if entry:
+                dom_files[dom_id].append(entry)
+
+        for dom in topology.get("domains", []):
+            backing_dom = topo_dom_to_dom_id.get(dom["domain_id"])
+            if not backing_dom:
+                continue
+            files = dom_files.get(backing_dom, [])
+            if files:
+                best = max(files, key=lambda e: e.get("import_in_degree", 0))
+                roles = defaultdict(int)
+                for f in files:
+                    roles[f.get("structural_role", "UNKNOWN")] += 1
+                dom["centrality_evidence"] = {
+                    "files_ranked": len(files),
+                    "hub_file": best.get("path", ""),
+                    "hub_import_in_degree": best.get("import_in_degree", 0),
+                    "hub_structural_role": best.get("structural_role", ""),
+                    "structural_role_distribution": dict(roles),
+                    "source_artifact": "structure/40.3c/structural_centrality.json",
+                }
+                enrichment_applied = True
+
+    if enrichment_applied:
+        topology["provenance"]["structural_enrichment"] = {
+            "enriched_by": "PI.FUSION.ENRICHED-STRUCTURAL-PROPAGATION.01",
+            "artifacts_consumed": [
+                a for a in [
+                    "structure/40.3s/code_graph.json" if imports else None,
+                    "structure/40.3c/structural_centrality.json" if centrality_index else None,
+                ] if a
+            ],
+        }
+        save_json(model_path, topology)
+        print(f"  INFO: semantic topology enriched with structural evidence "
+              f"(40.3s={'YES' if imports else 'NO'}, 40.3c={'YES' if centrality_index else 'NO'})")
 
 
 # ── Phase 6+7: 75.x Activation + 41.x Projection ────────────────────────────

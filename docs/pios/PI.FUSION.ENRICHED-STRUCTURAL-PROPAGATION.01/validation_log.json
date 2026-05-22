@@ -1,0 +1,116 @@
+{
+  "stream": "PI.FUSION.ENRICHED-STRUCTURAL-PROPAGATION.01",
+  "classification": "G2",
+  "validated_at": "2026-05-22T23:45:00Z",
+  "validation_target": "scripts/pios/run_client_pipeline.py",
+  "checks": [
+    {
+      "id": "SYN-001",
+      "name": "Python syntax validity",
+      "result": "PASS",
+      "detail": "ast.parse succeeds"
+    },
+    {
+      "id": "LOAD-001",
+      "name": "load_code_graph_imports — StackStorm",
+      "result": "PASS",
+      "detail": "4006 IMPORTS loaded from run_github_st2_20260520_131000"
+    },
+    {
+      "id": "LOAD-002",
+      "name": "load_centrality_index — StackStorm",
+      "result": "PASS",
+      "detail": "1126 files ranked from 40.3c"
+    },
+    {
+      "id": "LOAD-003",
+      "name": "build_node_to_path_index — StackStorm",
+      "result": "PASS",
+      "detail": "3525 node→path mappings from 40.2"
+    },
+    {
+      "id": "LOAD-004",
+      "name": "load_code_graph_imports — BlueEdge",
+      "result": "PASS",
+      "detail": "2138 IMPORTS loaded from run_blueedge_genesis_e2e_02"
+    },
+    {
+      "id": "GRACE-001",
+      "name": "Graceful absence — no 40.3s",
+      "result": "PASS",
+      "detail": "Returns None when code_graph.json absent"
+    },
+    {
+      "id": "GRACE-002",
+      "name": "Graceful absence — no 40.3c",
+      "result": "PASS",
+      "detail": "Returns None when structural_centrality.json absent"
+    },
+    {
+      "id": "BIND-001",
+      "name": "Cross-DOM IMPORTS_ACROSS edges added",
+      "result": "PASS",
+      "detail": "30 IMPORTS_ACROSS edges added to StackStorm binding envelope"
+    },
+    {
+      "id": "BIND-002",
+      "name": "Enrichment stats in envelope summary",
+      "result": "PASS",
+      "detail": "structural_enrichment: 30 cross-DOM edges, 2070 total cross-DOM imports, 6 GROUNDS annotated"
+    },
+    {
+      "id": "BIND-003",
+      "name": "Component entity centrality annotation",
+      "result": "PASS",
+      "detail": "6 component entities annotated with hub_file, hub_import_in_degree, hub_structural_role"
+    },
+    {
+      "id": "BIND-004",
+      "name": "IMPORTS_ACROSS edge schema",
+      "result": "PASS",
+      "detail": "All 30 edges have edge_id, edge_type, from_node, to_node, import_count, provenance"
+    },
+    {
+      "id": "BIND-005",
+      "name": "Derivation basis updated",
+      "result": "PASS",
+      "detail": "derivation_basis includes '40.3s import topology + 40.3c centrality'"
+    },
+    {
+      "id": "TOPO-001",
+      "name": "Phase 5b enrichment — graceful skip without DOM layer",
+      "result": "PASS",
+      "detail": "BlueEdge has no dom_layer.json (pre-computed path) — enrichment correctly skipped"
+    },
+    {
+      "id": "TOPO-002",
+      "name": "Phase 5b enrichment — function structure valid",
+      "result": "PASS",
+      "detail": "Function handles: domain import evidence, cross-domain structural edges, per-domain centrality, provenance update"
+    },
+    {
+      "id": "REG-001",
+      "name": "No regression — Phase 5 pre-computed path unchanged",
+      "result": "PASS",
+      "detail": "fastapi_conformance_path early return precedes enrichment call"
+    },
+    {
+      "id": "REG-002",
+      "name": "No regression — Phase 5b base generation unchanged",
+      "result": "PASS",
+      "detail": "generate_semantic_topology.py call unmodified; enrichment is post-processing"
+    }
+  ],
+  "summary": {
+    "total": 16,
+    "pass": 16,
+    "fail": 0
+  },
+  "honest_gaps": [
+    {
+      "gap": "Phase 5b enrichment not exercisable on current data",
+      "reason": "Requires CSR-derived topology + DOM layer + 40.3s/40.3c aligned in same run. Currently: BlueEdge has topology but no DOM layer (pre-computed); other clients have DOM layer but no CSR. Enrichment is structurally correct and will fire when conditions align.",
+      "severity": "LOW — design gap, not implementation bug"
+    }
+  ]
+}
