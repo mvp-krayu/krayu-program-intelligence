@@ -1,0 +1,46 @@
+{
+  "stream_id": "PI.GENESIS.GEN-4.LEARNING-PROMOTION-PIPELINE.01",
+  "classification": "G1",
+  "changes": [
+    {
+      "file": "scripts/pios/learning/learning_lifecycle.py",
+      "action": "MODIFIED",
+      "description": "Extended lifecycle state machine: added OBSERVED, CAPABILITY_CANDIDATE, MODULE_CANDIDATE states. Added OPERATOR_REQUIRED_TRANSITIONS set and EMERGENCE_THRESHOLD constant. Extended CONSUMPTION_ELIGIBLE_STATES to include CAPABILITY_CANDIDATE and MODULE_CANDIDATE."
+    },
+    {
+      "file": "scripts/pios/learning/learning_promoter.py",
+      "action": "CREATED",
+      "description": "LearningPromoter — governed operator for learning lifecycle transitions. 7 transition methods (review, reject, promote, activate, elevate_to_capability, elevate_to_module, supersede). AI actor rejection enforcement. 3-specimen threshold for CAPABILITY_CANDIDATE. batch_review for multi-event governance. get_promotable for grouped event query. Session transition log."
+    },
+    {
+      "file": "scripts/pios/chronicle/emitter.py",
+      "action": "MODIFIED",
+      "description": "Added emit_learning_promotion() method. Maps target states to semantic phases (REVIEWED→FORMATION, PROMOTED→STRENGTHENING, CONSUMABLE→STABILIZATION, CAPABILITY_CANDIDATE→CONVERGENCE, MODULE_CANDIDATE→PROJECTION, REJECTED/SUPERSEDED→TENSION). Tracks learning_events_captured manifest counter."
+    },
+    {
+      "file": "docs/pios/PI.GENESIS.GEN-4.LEARNING-PROMOTION-PIPELINE.01/execution_report.md",
+      "action": "CREATED",
+      "description": "Execution report for GEN-4 stream."
+    },
+    {
+      "file": "docs/pios/PI.GENESIS.GEN-4.LEARNING-PROMOTION-PIPELINE.01/validation_log.json",
+      "action": "CREATED",
+      "description": "Validation log — 16/16 PASS."
+    },
+    {
+      "file": "docs/pios/PI.GENESIS.GEN-4.LEARNING-PROMOTION-PIPELINE.01/file_changes.json",
+      "action": "CREATED",
+      "description": "File change manifest for GEN-4 stream."
+    },
+    {
+      "file": "docs/pios/PI.GENESIS.GEN-4.LEARNING-PROMOTION-PIPELINE.01/CLOSURE.md",
+      "action": "CREATED",
+      "description": "Closure document with G1 architecture memory propagation."
+    },
+    {
+      "file": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "action": "MODIFIED",
+      "description": "G1 vault propagation — GEN-4 status SPECIFIED_NOT_IMPLEMENTED → OPERATIONAL, learning-to-capability pipeline maturity updated, stream lineage entry added."
+    }
+  ]
+}

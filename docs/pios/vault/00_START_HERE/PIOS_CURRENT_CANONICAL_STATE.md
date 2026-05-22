@@ -557,6 +557,7 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.GENESIS.GEN-1.CHRONICLE-EVENT-MODEL.01 | G1 | GEN-1 Chronicle Event Model — inline chronicle event emission during pipeline execution. ChronicleEmitter module (11 methods), append-only JSONL, runtime manifest accumulation, phase-boundary checkpoints, DISCOVERY/EMERGENCE/FORMATION semantic phase mapping, enriched events (source_discovery, evidence_acquisition, structural_emergence, relevance_classification, semantic_formation). Graceful degradation — pipeline unchanged if chronicle unavailable | COMPLETE |
 | PI.GENESIS.GEN-2.HERO-MOMENT-GENESIS-INTEGRATION.01 | G1 | GEN-2 Hero Moment Genesis Integration — structural hero moment candidate detection at pipeline Phase 3.6/3.7. 5 detection heuristics (gravitational dominance, enumeration coupling, dual authority, cross-domain coupling rate, bidirectional entanglement). ChronicleEmitter emit_hero_moment() integration. 23 candidates validated against NetBox reference. All CANDIDATE governance state — operator review for CONFIRMED | COMPLETE |
 | PI.GENESIS.GEN-3.AI-ASSISTED-OPERATIONALIZATION.01 | G1 | GEN-3 AI-Assisted Operationalization — AIAssistanceLogger runtime per AI_ASSISTANCE_GOVERNANCE_CONTRACT.md. 5 action methods (INSPECT/PROPOSE/EXPLAIN/RECONCILE/IMPROVE), 3 object types (ai_suggestion, ai_detected_gap, operator_decision_event), L3 ceiling enforced, replay-safe (prompt_hash, model_id, temperature), append-only JSONL. ChronicleEmitter emit_ai_intervention() + emit_operator_decision(). Pipeline Phase 3b + Phase 3.7 hooks. M2 infrastructure operational | COMPLETE |
+| PI.GENESIS.GEN-4.LEARNING-PROMOTION-PIPELINE.01 | G1 | GEN-4 Learning Promotion Pipeline — LearningPromoter governed operator with 7 transition methods (review, reject, promote, activate, elevate_to_capability, elevate_to_module, supersede). Extended lifecycle: 6→9 states (+ OBSERVED, CAPABILITY_CANDIDATE, MODULE_CANDIDATE). AI actor rejection enforcement. 3-specimen EMERGENCE_THRESHOLD for CAPABILITY_CANDIDATE. batch_review for multi-event governance. ChronicleEmitter emit_learning_promotion() with semantic phase mapping. CONSUMPTION_ELIGIBLE_STATES extended | COMPLETE |
 
 ## GENESIS — Onboarding-Origin Governed Cognition Formation
 
@@ -599,7 +600,7 @@ Marketplace modules emerge from repeated governed onboarding patterns — not pr
 | GEN-1 | Chronicle Event Model | None | **OPERATIONAL** |
 | GEN-2 | Hero Moment Integration | GEN-1 | **OPERATIONAL** |
 | GEN-3 | AI-Assisted Operationalization | GEN-1 | **OPERATIONAL** |
-| GEN-4 | Learning Promotion Pipeline | GEN-1 | SPECIFIED_NOT_IMPLEMENTED |
+| GEN-4 | Learning Promotion Pipeline | GEN-1 | **OPERATIONAL** |
 | GEN-5 | First Full Genesis Chronicle | GEN-1–4 | SPECIFIED_NOT_IMPLEMENTED |
 | GEN-6 | Cross-Specimen Genesis Convergence | Multiple GEN-5 | SPECIFIED_NOT_IMPLEMENTED |
 
@@ -611,10 +612,10 @@ Marketplace modules emerge from repeated governed onboarding patterns — not pr
 | Hero Moment genesis model | OPERATIONAL — 5 detection heuristics, pipeline Phase 3.7 integration, 23 candidates validated against NetBox reference |
 | AI assistance governance contract | OPERATIONAL — AIAssistanceLogger runtime, 5 action methods, 3 object types, L3 ceiling, replay-safe, pipeline Phase 3b + 3.7 hooks, M2 infrastructure |
 | Genesis cognitive chronicle model | PARTIALLY_OPERATIONAL — GEN-1 inline event emission operational; 18 event types defined, phase_started/completed/enriched events active |
-| Learning-to-capability pipeline | SPECIFIED_NOT_IMPLEMENTED — lifecycle defined, promotion pipeline not built |
+| Learning-to-capability pipeline | OPERATIONAL — 9-state lifecycle, LearningPromoter (7 transition methods), AI actor rejection, 3-specimen threshold, batch review, chronicle emit_learning_promotion() |
 | BlueEdge RC (semantic replay corridor) | OPERATIONAL — REPLAY-CERTIFIED, proven reference |
 | Chronicle Z1-Z5 zoom architecture | OPERATIONAL — proven in BlueEdge RC |
-| Learning event capture | OPERATIONAL — 15 events captured (NetBox), lifecycle not promoted |
+| Learning event capture | OPERATIONAL — 15 events captured (NetBox), governed promotion pipeline operational |
 
 **Reference:** `docs/pios/PI.GENESIS.COGNITIVE-REPLAY-AND-AI-ASSISTED-ONBOARDING.01/` — 10 doctrine deliverables + 4 governance artifacts.
 
