@@ -49,6 +49,15 @@ PHASE_COLORS = {
     "PROJECTION": "#ccd6f6",
 }
 
+PHASE_STATUS_COLORS = {
+    "COMPLETE": "#64ffda",
+    "ACTIVE": "#4a9eff",
+    "NOT_EXERCISED": "#4a5570",
+    "LAWFUL_SKIP": "#7a8aaa",
+    "NOT_ELIGIBLE": "#4a5570",
+    "OPEN_GAP": "#ff6b6b",
+}
+
 
 class GenesisChronicleCompiler:
     """Compiles genesis chronicle data into navigable HTML."""
@@ -122,13 +131,16 @@ class GenesisChronicleCompiler:
                 self.hero_moments = data.get("hero_moments", [])
 
     def _load_learning_events(self):
-        path = self.run_dir / "governance" / "learning_events.jsonl"
-        if path.exists():
-            with open(path) as f:
-                for line in f:
-                    line = line.strip()
-                    if line:
-                        self.learning_events.append(json.loads(line))
+        for candidate in [
+            self.run_dir / "governance" / "learning_events.jsonl",
+            self.run_dir / "learning_events.jsonl",
+        ]:
+            if candidate.exists():
+                with open(candidate) as f:
+                    for line in f:
+                        line = line.strip()
+                        if line:
+                            self.learning_events.append(json.loads(line))
 
     def _load_spine(self):
         path = self.run_dir / "spine" / "spine_objects.json"
@@ -152,9 +164,98 @@ class GenesisChronicleCompiler:
                     if line:
                         self.governance_events.append(json.loads(line))
 
+    # ── Semantic Phase Status Classification ───────────────────────────────
+
+    def _classify_phase_statuses(self, events_by_phase: dict) -> dict[str, str]:
+        """Classify each semantic phase with explicit maturity status.
+
+        COMPLETE — phase exercised with structural evidence
+        ACTIVE — phase in progress
+        NOT_EXERCISED — phase applicable but not yet reached
+        LAWFUL_SKIP — phase not applicable at current maturity
+        NOT_ELIGIBLE — phase requires prerequisites not present
+        OPEN_GAP — phase expected but missing evidence
+        """
+        phases_reached = set(self.manifest.get("semantic_phases_reached", []))
+        has_governance = len(self.governance_events) > 0
+        has_propositions = len(self.propositions) > 0
+        has_learning = len(self.learning_events) > 0
+
+        statuses = {}
+        for phase in SEMANTIC_PHASES:
+            events = events_by_phase.get(phase, [])
+            if phase in ("DISCOVERY", "EMERGENCE"):
+                statuses[phase] = "COMPLETE" if phase in phases_reached else "OPEN_GAP"
+            elif phase == "FORMATION":
+                if has_propositions and phase in phases_reached:
+                    statuses[phase] = "COMPLETE"
+                elif phase in phases_reached:
+                    statuses[phase] = "ACTIVE"
+                else:
+                    statuses[phase] = "NOT_EXERCISED"
+            elif phase == "TENSION":
+                if has_governance and any(
+                    e.get("detail", {}).get("action") in ("REJECT", "CONTEST", "ARBITRATE")
+                    for e in self.governance_events
+                ):
+                    statuses[phase] = "COMPLETE"
+                elif has_governance:
+                    statuses[phase] = "ACTIVE"
+                else:
+                    statuses[phase] = "NOT_EXERCISED"
+            elif phase == "STRENGTHENING":
+                if has_learning:
+                    statuses[phase] = "COMPLETE" if phase in phases_reached else "ACTIVE"
+                else:
+                    statuses[phase] = "NOT_EXERCISED"
+            elif phase == "STABILIZATION":
+                reval = self.run_dir / "governance" / "revalidation_result.json"
+                if reval.exists():
+                    statuses[phase] = "COMPLETE"
+                elif has_governance:
+                    statuses[phase] = "NOT_EXERCISED"
+                else:
+                    statuses[phase] = "LAWFUL_SKIP"
+            elif phase == "QUALIFICATION":
+                promo = self.run_dir / "sqo" / "promotion_state.json"
+                if promo.exists():
+                    try:
+                        ps = json.load(open(promo))
+                        if ps.get("current_state", "") in ("S2", "S2_GOVERNED"):
+                            statuses[phase] = "COMPLETE"
+                        else:
+                            statuses[phase] = "NOT_EXERCISED"
+                    except Exception:
+                        statuses[phase] = "NOT_EXERCISED"
+                else:
+                    statuses[phase] = "NOT_EXERCISED"
+            elif phase == "CONVERGENCE":
+                conv = self.run_dir / "governance" / "convergence_observations.json"
+                if conv.exists():
+                    statuses[phase] = "COMPLETE"
+                else:
+                    statuses[phase] = "NOT_ELIGIBLE"
+            elif phase == "PROJECTION":
+                if phase in phases_reached and len(events) > 0:
+                    if has_governance and has_propositions:
+                        statuses[phase] = "COMPLETE"
+                    else:
+                        statuses[phase] = "ACTIVE"
+                elif phase in phases_reached:
+                    statuses[phase] = "ACTIVE"
+                else:
+                    statuses[phase] = "LAWFUL_SKIP"
+            else:
+                statuses[phase] = "NOT_EXERCISED"
+
+        return statuses
+
     # ── Compilation ──────────────────────────────────────────────────────────
 
     def _write_compilation_manifest(self, output_path: Path):
+        events_by_phase = self._group_events_by_phase()
+        phase_statuses = self._classify_phase_statuses(events_by_phase)
+
         with open(output_path, "rb") as f:
             content_hash = hashlib.sha256(f.read()).hexdigest()
 
@@ -172,6 +273,7 @@ class GenesisChronicleCompiler:
                 "governance_events": len(self.governance_events),
             },
             "phases_reached": self.manifest.get("semantic_phases_reached", []),
+            "phase_statuses": phase_statuses,
             "corridor_type": "FULL_COGNITIVE_GENESIS",
         }
 
@@ -183,6 +285,7 @@ class GenesisChronicleCompiler:
         events_by_phase = self._group_events_by_phase()
         phases_reached = self.manifest.get("semantic_phases_reached", [])
         pipeline_status = self.manifest.get("status", "UNKNOWN")
+        phase_statuses = self._classify_phase_statuses(events_by_phase)
 
         prop_stats = self._proposition_stats()
         hm_by_type = self._hero_moments_by_type()
@@ -201,11 +304,11 @@ class GenesisChronicleCompiler:
 
 {self._render_header(pipeline_status, phases_reached)}
 
-{self._render_timeline(phases_reached)}
+{self._render_timeline(phases_reached, phase_statuses)}
 
 {self._render_manifest_ribbon()}
 
-{self._render_chapters(events_by_phase, phases_reached, hm_by_type, prop_stats, le_by_category)}
+{self._render_chapters(events_by_phase, phases_reached, hm_by_type, prop_stats, le_by_category, phase_statuses)}
 
 {self._render_hero_moments_panel()}
 
@@ -237,16 +340,22 @@ class GenesisChronicleCompiler:
   </div>
 </header>"""
 
-    def _render_timeline(self, phases_reached: list) -> str:
+    def _render_timeline(self, phases_reached: list, phase_statuses: Optional[dict] = None) -> str:
+        if phase_statuses is None:
+            phase_statuses = {}
         nodes = []
         for phase in SEMANTIC_PHASES:
             reached = phase in phases_reached
+            status = phase_statuses.get(phase, "COMPLETE" if reached else "NOT_EXERCISED")
             color = PHASE_COLORS.get(phase, "#4a5570")
-            opacity = "1.0" if reached else "0.25"
+            status_color = PHASE_STATUS_COLORS.get(status, "#4a5570")
+            opacity = "1.0" if status in ("COMPLETE", "ACTIVE") else "0.35"
+            status_label = status.replace("_", " ")
             nodes.append(f"""
       <div class="timeline-node" style="opacity: {opacity};" data-phase="{phase}">
         <div class="timeline-dot" style="background: {color};"></div>
         <div class="timeline-label" style="color: {color};">{phase}</div>
+        <div class="timeline-status" style="color: {status_color};">{status_label}</div>
       </div>""")
 
         return f"""
@@ -287,19 +396,23 @@ class GenesisChronicleCompiler:
   </div>
 </div>"""
 
-    def _render_chapters(self, events_by_phase, phases_reached, hm_by_type, prop_stats, le_by_category) -> str:
+    def _render_chapters(self, events_by_phase, phases_reached, hm_by_type, prop_stats, le_by_category, phase_statuses=None) -> str:
+        if phase_statuses is None:
+            phase_statuses = {}
         chapters = []
         for phase in SEMANTIC_PHASES:
             reached = phase in phases_reached
             events = events_by_phase.get(phase, [])
-            chapter = self._render_chapter(phase, events, reached, hm_by_type, prop_stats, le_by_category)
+            status = phase_statuses.get(phase, "COMPLETE" if reached else "NOT_EXERCISED")
+            chapter = self._render_chapter(phase, events, reached, hm_by_type, prop_stats, le_by_category, status)
             chapters.append(chapter)
         return "\n".join(chapters)
 
-    def _render_chapter(self, phase, events, reached, hm_by_type, prop_stats, le_by_category) -> str:
+    def _render_chapter(self, phase, events, reached, hm_by_type, prop_stats, le_by_category, status="COMPLETE") -> str:
         color = PHASE_COLORS.get(phase, "#4a5570")
         description = PHASE_DESCRIPTIONS.get(phase, "")
-        opacity = "1" if reached else "0.4"
+        status_color = PHASE_STATUS_COLORS.get(status, "#4a5570")
+        opacity = "1" if status in ("COMPLETE", "ACTIVE") else "0.4"
         event_count = len(events)
 
         z1 = self._render_z1(phase, events, hm_by_type, prop_stats, le_by_category)
@@ -310,11 +423,13 @@ class GenesisChronicleCompiler:
 
         checkpoint_html = self._render_checkpoint_for_phase(phase)
 
+        status_label = status.replace("_", " ")
         return f"""
 <section class="chapter" data-phase="{phase}" style="opacity: {opacity};">
   <div class="chapter-header">
     <div class="chapter-phase-marker" style="background: {color};">{phase}</div>
     <div class="chapter-title">{h(description)}</div>
+    <div class="chapter-status-badge" style="color: {status_color}; border-color: {status_color};">{status_label}</div>
     <div class="chapter-event-count">{event_count} events</div>
   </div>
 
@@ -920,6 +1035,12 @@ body {
   letter-spacing: 1px;
   font-weight: bold;
 }
+.timeline-status {
+  font-size: 7px;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+  opacity: 0.8;
+}
 
 /* Manifest Ribbon */
 .manifest-ribbon {
@@ -980,6 +1101,14 @@ body {
   font-size: 12px;
   color: var(--text-dim);
   font-family: var(--font-ui);
+}
+.chapter-status-badge {
+  font-size: 9px;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border: 1px solid;
+  border-radius: 2px;
+  font-weight: bold;
 }
 .chapter-event-count {
   font-size: 11px;

@@ -1,0 +1,11 @@
+{
+  "checkpoint_id": "checkpoint_04_relevance_classification",
+  "checkpoint_index": 4,
+  "semantic_phase": "EMERGENCE",
+  "pipeline_phase": "Phase 3.5 \u2014 Structural Relevance Classification",
+  "timestamp": "2026-05-22T16:06:47.879Z",
+  "status": "FROZEN",
+  "predecessor": "checkpoint_03_structural_verification",
+  "events_since_predecessor": 18,
+  "state_snapshot": {}
+}

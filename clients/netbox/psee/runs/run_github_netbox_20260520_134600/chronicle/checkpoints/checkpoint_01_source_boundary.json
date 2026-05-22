@@ -1,0 +1,11 @@
+{
+  "checkpoint_id": "checkpoint_01_source_boundary",
+  "checkpoint_index": 1,
+  "semantic_phase": "DISCOVERY",
+  "pipeline_phase": "Phase 1  \u2014 Source Boundary",
+  "timestamp": "2026-05-22T16:06:47.839Z",
+  "status": "FROZEN",
+  "predecessor": "checkpoint_00_learning_load",
+  "events_since_predecessor": 7,
+  "state_snapshot": {}
+}

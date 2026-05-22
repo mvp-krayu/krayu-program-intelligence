@@ -1,13 +1,13 @@
 {
   "chronicle_id": "stackstorm-run_github_st2_20260520_131000-genesis",
-  "compiled_at": "2026-05-22T16:38:22Z",
+  "compiled_at": "2026-05-22T16:52:51Z",
   "output_path": "stackstorm/psee/runs/run_github_st2_20260520_131000/chronicle/GENESIS_CHRONICLE.html",
-  "content_hash": "f0cfd13b99dd6f07a59585dcd55cab9b7d3d4d75b998356155278e8192d39b4a",
+  "content_hash": "2031cf6434398d114058556754415c856f188a2f545797c613b98e55daa1e5f1",
   "sources": {
     "events": 130,
     "checkpoints": 17,
     "hero_moments": 1,
-    "learning_events": 0,
+    "learning_events": 2,
     "propositions": 32,
     "governance_events": 0
   },
@@ -18,5 +18,16 @@
     "STABILIZATION",
     "PROJECTION"
   ],
+  "phase_statuses": {
+    "DISCOVERY": "COMPLETE",
+    "EMERGENCE": "COMPLETE",
+    "FORMATION": "COMPLETE",
+    "TENSION": "NOT_EXERCISED",
+    "STRENGTHENING": "ACTIVE",
+    "STABILIZATION": "LAWFUL_SKIP",
+    "QUALIFICATION": "NOT_EXERCISED",
+    "CONVERGENCE": "NOT_ELIGIBLE",
+    "PROJECTION": "ACTIVE"
+  },
   "corridor_type": "FULL_COGNITIVE_GENESIS"
 }

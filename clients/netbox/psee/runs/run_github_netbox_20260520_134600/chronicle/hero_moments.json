@@ -1,0 +1,521 @@
+{
+  "hero_moments": [
+    {
+      "hero_moment_id": "HM-netbox-001",
+      "client": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "discovery_phase": "Phase 3.7 \u2014 Structural Centrality Derivation",
+      "hero_type": "AUTHORITY_SURPRISE",
+      "s_level_at_discovery": "S1",
+      "path_at_discovery": "PATH_A",
+      "description": "Gravitational dominance: netbox/netbox/forms/__init__.py has 353 inbound edges (threshold: 57, role: RE_EXPORT_HUB)",
+      "evidence_refs": [
+        "netbox/netbox/forms/__init__.py"
+      ],
+      "structural_metric": {
+        "metric_name": "in_degree",
+        "observed_value": 353,
+        "expected_range": "0\u201357 (mean + 2\u03c3)",
+        "deviation": 296.2
+      },
+      "governance_state": "CANDIDATE",
+      "operator_note": null,
+      "learning_event_ref": null,
+      "replay_safe": true,
+      "timestamp": "2026-05-22T16:07:36.990Z"
+    },
+    {
+      "hero_moment_id": "HM-netbox-002",
+      "client": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "discovery_phase": "Phase 3.7 \u2014 Structural Centrality Derivation",
+      "hero_type": "AUTHORITY_SURPRISE",
+      "s_level_at_discovery": "S1",
+      "path_at_discovery": "PATH_A",
+      "description": "Gravitational dominance: netbox/utilities/testing/base.py has 344 inbound edges (threshold: 57, role: RUNTIME_SPINE)",
+      "evidence_refs": [
+        "netbox/utilities/testing/base.py"
+      ],
+      "structural_metric": {
+        "metric_name": "in_degree",
+        "observed_value": 344,
+        "expected_range": "0\u201357 (mean + 2\u03c3)",
+        "deviation": 287.2
+      },
+      "governance_state": "CANDIDATE",
+      "operator_note": null,
+      "learning_event_ref": null,
+      "replay_safe": true,
+      "timestamp": "2026-05-22T16:07:36.990Z"
+    },
+    {
+      "hero_moment_id": "HM-netbox-003",
+      "client": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "discovery_phase": "Phase 3.7 \u2014 Structural Centrality Derivation",
+      "hero_type": "AUTHORITY_SURPRISE",
+      "s_level_at_discovery": "S1",
+      "path_at_discovery": "PATH_A",
+      "description": "Enumeration coupling multiplier: netbox/utilities/testing/base.py has 344 inbound edges but only 2 definitions (potential passive data hub)",
+      "evidence_refs": [
+        "netbox/utilities/testing/base.py"
+      ],
+      "structural_metric": {
+        "metric_name": "in_degree_vs_definitions",
+        "observed_value": 344,
+        "expected_range": "<231 for files with \u22642 definitions",
+        "deviation": 113
+      },
+      "governance_state": "CANDIDATE",
+      "operator_note": null,
+      "learning_event_ref": null,
+      "replay_safe": true,
+      "timestamp": "2026-05-22T16:07:36.990Z"
+    },
+    {
+      "hero_moment_id": "HM-netbox-004",
+      "client": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "discovery_phase": "Phase 3.7 \u2014 Structural Centrality Derivation",
+      "hero_type": "AUTHORITY_SURPRISE",
+      "s_level_at_discovery": "S1",
+      "path_at_discovery": "PATH_A",
+      "description": "Gravitational dominance: netbox/utilities/testing/__init__.py has 240 inbound edges (threshold: 57, role: RE_EXPORT_HUB)",
+      "evidence_refs": [
+        "netbox/utilities/testing/__init__.py"
+      ],
+      "structural_metric": {
+        "metric_name": "in_degree",
+        "observed_value": 240,
+        "expected_range": "0\u201357 (mean + 2\u03c3)",
+        "deviation": 183.2
+      },
+      "governance_state": "CANDIDATE",
+      "operator_note": null,
+      "learning_event_ref": null,
+      "replay_safe": true,
+      "timestamp": "2026-05-22T16:07:36.990Z"
+    },
+    {
+      "hero_moment_id": "HM-netbox-005",
+      "client": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "discovery_phase": "Phase 3.7 \u2014 Structural Centrality Derivation",
+      "hero_type": "AUTHORITY_SURPRISE",
+      "s_level_at_discovery": "S1",
+      "path_at_discovery": "PATH_A",
+      "description": "Gravitational dominance: netbox/netbox/api/serializers/__init__.py has 232 inbound edges (threshold: 57, role: RE_EXPORT_HUB)",
+      "evidence_refs": [
+        "netbox/netbox/api/serializers/__init__.py"
+      ],
+      "structural_metric": {
+        "metric_name": "in_degree",
+        "observed_value": 232,
+        "expected_range": "0\u201357 (mean + 2\u03c3)",
+        "deviation": 175.2
+      },
+      "governance_state": "CANDIDATE",
+      "operator_note": null,
+      "learning_event_ref": null,
+      "replay_safe": true,
+      "timestamp": "2026-05-22T16:07:36.990Z"
+    },
+    {
+      "hero_moment_id": "HM-netbox-006",
+      "client": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "discovery_phase": "Phase 3.6 \u2014 Code-Graph Structural Enrichment",
+      "hero_type": "COUPLING_SURPRISE",
+      "s_level_at_discovery": "S1",
+      "path_at_discovery": "PATH_A",
+      "description": "High cross-domain coupling: 2197/3614 imports (60.8%) cross module boundaries",
+      "evidence_refs": [],
+      "structural_metric": {
+        "metric_name": "cross_domain_import_rate",
+        "observed_value": 0.608,
+        "expected_range": "<0.50 (less than half of imports cross boundaries)",
+        "deviation": 0.108
+      },
+      "governance_state": "CANDIDATE",
+      "operator_note": null,
+      "learning_event_ref": null,
+      "replay_safe": true,
+      "timestamp": "2026-05-22T16:07:37.019Z"
+    },
+    {
+      "hero_moment_id": "HM-netbox-007",
+      "client": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "discovery_phase": "Phase 3.6 \u2014 Code-Graph Structural Enrichment",
+      "hero_type": "COUPLING_SURPRISE",
+      "s_level_at_discovery": "S1",
+      "path_at_discovery": "PATH_A",
+      "description": "Bidirectional entanglement: circuits \u2194 dcim (24 + 14 = 38 mutual imports)",
+      "evidence_refs": [],
+      "structural_metric": {
+        "metric_name": "bidirectional_import_count",
+        "observed_value": 38,
+        "expected_range": "<20 mutual imports between domain pairs",
+        "deviation": 18
+      },
+      "governance_state": "CANDIDATE",
+      "operator_note": null,
+      "learning_event_ref": null,
+      "replay_safe": true,
+      "timestamp": "2026-05-22T16:07:37.025Z"
+    },
+    {
+      "hero_moment_id": "HM-netbox-008",
+      "client": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "discovery_phase": "Phase 3.6 \u2014 Code-Graph Structural Enrichment",
+      "hero_type": "COUPLING_SURPRISE",
+      "s_level_at_discovery": "S1",
+      "path_at_discovery": "PATH_A",
+      "description": "Bidirectional entanglement: core \u2194 netbox (82 + 40 = 122 mutual imports)",
+      "evidence_refs": [],
+      "structural_metric": {
+        "metric_name": "bidirectional_import_count",
+        "observed_value": 122,
+        "expected_range": "<20 mutual imports between domain pairs",
+        "deviation": 102
+      },
+      "governance_state": "CANDIDATE",
+      "operator_note": null,
+      "learning_event_ref": null,
+      "replay_safe": true,
+      "timestamp": "2026-05-22T16:07:37.025Z"
+    },
+    {
+      "hero_moment_id": "HM-netbox-009",
+      "client": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "discovery_phase": "Phase 3.6 \u2014 Code-Graph Structural Enrichment",
+      "hero_type": "COUPLING_SURPRISE",
+      "s_level_at_discovery": "S1",
+      "path_at_discovery": "PATH_A",
+      "description": "Bidirectional entanglement: core \u2194 utilities (54 + 16 = 70 mutual imports)",
+      "evidence_refs": [],
+      "structural_metric": {
+        "metric_name": "bidirectional_import_count",
+        "observed_value": 70,
+        "expected_range": "<20 mutual imports between domain pairs",
+        "deviation": 50
+      },
+      "governance_state": "CANDIDATE",
+      "operator_note": null,
+      "learning_event_ref": null,
+      "replay_safe": true,
+      "timestamp": "2026-05-22T16:07:37.025Z"
+    },
+    {
+      "hero_moment_id": "HM-netbox-010",
+      "client": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "discovery_phase": "Phase 3.6 \u2014 Code-Graph Structural Enrichment",
+      "hero_type": "COUPLING_SURPRISE",
+      "s_level_at_discovery": "S1",
+      "path_at_discovery": "PATH_A",
+      "description": "Bidirectional entanglement: core \u2194 extras (11 + 66 = 77 mutual imports)",
+      "evidence_refs": [],
+      "structural_metric": {
+        "metric_name": "bidirectional_import_count",
+        "observed_value": 77,
+        "expected_range": "<20 mutual imports between domain pairs",
+        "deviation": 57
+      },
+      "governance_state": "CANDIDATE",
+      "operator_note": null,
+      "learning_event_ref": null,
+      "replay_safe": true,
+      "timestamp": "2026-05-22T16:07:37.025Z"
+    },
+    {
+      "hero_moment_id": "HM-netbox-011",
+      "client": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "discovery_phase": "Phase 3.6 \u2014 Code-Graph Structural Enrichment",
+      "hero_type": "COUPLING_SURPRISE",
+      "s_level_at_discovery": "S1",
+      "path_at_discovery": "PATH_A",
+      "description": "Bidirectional entanglement: dcim \u2194 utilities (102 + 18 = 120 mutual imports)",
+      "evidence_refs": [],
+      "structural_metric": {
+        "metric_name": "bidirectional_import_count",
+        "observed_value": 120,
+        "expected_range": "<20 mutual imports between domain pairs",
+        "deviation": 100
+      },
+      "governance_state": "CANDIDATE",
+      "operator_note": null,
+      "learning_event_ref": null,
+      "replay_safe": true,
+      "timestamp": "2026-05-22T16:07:37.025Z"
+    },
+    {
+      "hero_moment_id": "HM-netbox-012",
+      "client": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "discovery_phase": "Phase 3.6 \u2014 Code-Graph Structural Enrichment",
+      "hero_type": "COUPLING_SURPRISE",
+      "s_level_at_discovery": "S1",
+      "path_at_discovery": "PATH_A",
+      "description": "Bidirectional entanglement: dcim \u2194 netbox (106 + 21 = 127 mutual imports)",
+      "evidence_refs": [],
+      "structural_metric": {
+        "metric_name": "bidirectional_import_count",
+        "observed_value": 127,
+        "expected_range": "<20 mutual imports between domain pairs",
+        "deviation": 107
+      },
+      "governance_state": "CANDIDATE",
+      "operator_note": null,
+      "learning_event_ref": null,
+      "replay_safe": true,
+      "timestamp": "2026-05-22T16:07:37.025Z"
+    },
+    {
+      "hero_moment_id": "HM-netbox-013",
+      "client": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "discovery_phase": "Phase 3.6 \u2014 Code-Graph Structural Enrichment",
+      "hero_type": "COUPLING_SURPRISE",
+      "s_level_at_discovery": "S1",
+      "path_at_discovery": "PATH_A",
+      "description": "Bidirectional entanglement: dcim \u2194 ipam (30 + 28 = 58 mutual imports)",
+      "evidence_refs": [],
+      "structural_metric": {
+        "metric_name": "bidirectional_import_count",
+        "observed_value": 58,
+        "expected_range": "<20 mutual imports between domain pairs",
+        "deviation": 38
+      },
+      "governance_state": "CANDIDATE",
+      "operator_note": null,
+      "learning_event_ref": null,
+      "replay_safe": true,
+      "timestamp": "2026-05-22T16:07:37.025Z"
+    },
+    {
+      "hero_moment_id": "HM-netbox-014",
+      "client": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "discovery_phase": "Phase 3.6 \u2014 Code-Graph Structural Enrichment",
+      "hero_type": "COUPLING_SURPRISE",
+      "s_level_at_discovery": "S1",
+      "path_at_discovery": "PATH_A",
+      "description": "Bidirectional entanglement: dcim \u2194 wireless (29 + 36 = 65 mutual imports)",
+      "evidence_refs": [],
+      "structural_metric": {
+        "metric_name": "bidirectional_import_count",
+        "observed_value": 65,
+        "expected_range": "<20 mutual imports between domain pairs",
+        "deviation": 45
+      },
+      "governance_state": "CANDIDATE",
+      "operator_note": null,
+      "learning_event_ref": null,
+      "replay_safe": true,
+      "timestamp": "2026-05-22T16:07:37.025Z"
+    },
+    {
+      "hero_moment_id": "HM-netbox-015",
+      "client": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "discovery_phase": "Phase 3.6 \u2014 Code-Graph Structural Enrichment",
+      "hero_type": "COUPLING_SURPRISE",
+      "s_level_at_discovery": "S1",
+      "path_at_discovery": "PATH_A",
+      "description": "Bidirectional entanglement: dcim \u2194 extras (25 + 34 = 59 mutual imports)",
+      "evidence_refs": [],
+      "structural_metric": {
+        "metric_name": "bidirectional_import_count",
+        "observed_value": 59,
+        "expected_range": "<20 mutual imports between domain pairs",
+        "deviation": 39
+      },
+      "governance_state": "CANDIDATE",
+      "operator_note": null,
+      "learning_event_ref": null,
+      "replay_safe": true,
+      "timestamp": "2026-05-22T16:07:37.025Z"
+    },
+    {
+      "hero_moment_id": "HM-netbox-016",
+      "client": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "discovery_phase": "Phase 3.6 \u2014 Code-Graph Structural Enrichment",
+      "hero_type": "COUPLING_SURPRISE",
+      "s_level_at_discovery": "S1",
+      "path_at_discovery": "PATH_A",
+      "description": "Bidirectional entanglement: dcim \u2194 virtualization (20 + 42 = 62 mutual imports)",
+      "evidence_refs": [],
+      "structural_metric": {
+        "metric_name": "bidirectional_import_count",
+        "observed_value": 62,
+        "expected_range": "<20 mutual imports between domain pairs",
+        "deviation": 42
+      },
+      "governance_state": "CANDIDATE",
+      "operator_note": null,
+      "learning_event_ref": null,
+      "replay_safe": true,
+      "timestamp": "2026-05-22T16:07:37.025Z"
+    },
+    {
+      "hero_moment_id": "HM-netbox-017",
+      "client": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "discovery_phase": "Phase 3.6 \u2014 Code-Graph Structural Enrichment",
+      "hero_type": "COUPLING_SURPRISE",
+      "s_level_at_discovery": "S1",
+      "path_at_discovery": "PATH_A",
+      "description": "Bidirectional entanglement: extras \u2194 utilities (108 + 17 = 125 mutual imports)",
+      "evidence_refs": [],
+      "structural_metric": {
+        "metric_name": "bidirectional_import_count",
+        "observed_value": 125,
+        "expected_range": "<20 mutual imports between domain pairs",
+        "deviation": 105
+      },
+      "governance_state": "CANDIDATE",
+      "operator_note": null,
+      "learning_event_ref": null,
+      "replay_safe": true,
+      "timestamp": "2026-05-22T16:07:37.025Z"
+    },
+    {
+      "hero_moment_id": "HM-netbox-018",
+      "client": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "discovery_phase": "Phase 3.6 \u2014 Code-Graph Structural Enrichment",
+      "hero_type": "COUPLING_SURPRISE",
+      "s_level_at_discovery": "S1",
+      "path_at_discovery": "PATH_A",
+      "description": "Bidirectional entanglement: extras \u2194 netbox (117 + 45 = 162 mutual imports)",
+      "evidence_refs": [],
+      "structural_metric": {
+        "metric_name": "bidirectional_import_count",
+        "observed_value": 162,
+        "expected_range": "<20 mutual imports between domain pairs",
+        "deviation": 142
+      },
+      "governance_state": "CANDIDATE",
+      "operator_note": null,
+      "learning_event_ref": null,
+      "replay_safe": true,
+      "timestamp": "2026-05-22T16:07:37.025Z"
+    },
+    {
+      "hero_moment_id": "HM-netbox-019",
+      "client": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "discovery_phase": "Phase 3.6 \u2014 Code-Graph Structural Enrichment",
+      "hero_type": "COUPLING_SURPRISE",
+      "s_level_at_discovery": "S1",
+      "path_at_discovery": "PATH_A",
+      "description": "Bidirectional entanglement: extras \u2194 virtualization (11 + 19 = 30 mutual imports)",
+      "evidence_refs": [],
+      "structural_metric": {
+        "metric_name": "bidirectional_import_count",
+        "observed_value": 30,
+        "expected_range": "<20 mutual imports between domain pairs",
+        "deviation": 10
+      },
+      "governance_state": "CANDIDATE",
+      "operator_note": null,
+      "learning_event_ref": null,
+      "replay_safe": true,
+      "timestamp": "2026-05-22T16:07:37.025Z"
+    },
+    {
+      "hero_moment_id": "HM-netbox-020",
+      "client": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "discovery_phase": "Phase 3.6 \u2014 Code-Graph Structural Enrichment",
+      "hero_type": "COUPLING_SURPRISE",
+      "s_level_at_discovery": "S1",
+      "path_at_discovery": "PATH_A",
+      "description": "Bidirectional entanglement: ipam \u2194 virtualization (10 + 22 = 32 mutual imports)",
+      "evidence_refs": [],
+      "structural_metric": {
+        "metric_name": "bidirectional_import_count",
+        "observed_value": 32,
+        "expected_range": "<20 mutual imports between domain pairs",
+        "deviation": 12
+      },
+      "governance_state": "CANDIDATE",
+      "operator_note": null,
+      "learning_event_ref": null,
+      "replay_safe": true,
+      "timestamp": "2026-05-22T16:07:37.025Z"
+    },
+    {
+      "hero_moment_id": "HM-netbox-021",
+      "client": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "discovery_phase": "Phase 3.6 \u2014 Code-Graph Structural Enrichment",
+      "hero_type": "COUPLING_SURPRISE",
+      "s_level_at_discovery": "S1",
+      "path_at_discovery": "PATH_A",
+      "description": "Bidirectional entanglement: netbox \u2194 users (19 + 31 = 50 mutual imports)",
+      "evidence_refs": [],
+      "structural_metric": {
+        "metric_name": "bidirectional_import_count",
+        "observed_value": 50,
+        "expected_range": "<20 mutual imports between domain pairs",
+        "deviation": 30
+      },
+      "governance_state": "CANDIDATE",
+      "operator_note": null,
+      "learning_event_ref": null,
+      "replay_safe": true,
+      "timestamp": "2026-05-22T16:07:37.025Z"
+    },
+    {
+      "hero_moment_id": "HM-netbox-022",
+      "client": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "discovery_phase": "Phase 3.6 \u2014 Code-Graph Structural Enrichment",
+      "hero_type": "COUPLING_SURPRISE",
+      "s_level_at_discovery": "S1",
+      "path_at_discovery": "PATH_A",
+      "description": "Bidirectional entanglement: netbox \u2194 utilities (112 + 45 = 157 mutual imports)",
+      "evidence_refs": [],
+      "structural_metric": {
+        "metric_name": "bidirectional_import_count",
+        "observed_value": 157,
+        "expected_range": "<20 mutual imports between domain pairs",
+        "deviation": 137
+      },
+      "governance_state": "CANDIDATE",
+      "operator_note": null,
+      "learning_event_ref": null,
+      "replay_safe": true,
+      "timestamp": "2026-05-22T16:07:37.025Z"
+    },
+    {
+      "hero_moment_id": "HM-netbox-023",
+      "client": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "discovery_phase": "Phase 3.6 \u2014 Code-Graph Structural Enrichment",
+      "hero_type": "COUPLING_SURPRISE",
+      "s_level_at_discovery": "S1",
+      "path_at_discovery": "PATH_A",
+      "description": "Bidirectional entanglement: users \u2194 utilities (38 + 10 = 48 mutual imports)",
+      "evidence_refs": [],
+      "structural_metric": {
+        "metric_name": "bidirectional_import_count",
+        "observed_value": 48,
+        "expected_range": "<20 mutual imports between domain pairs",
+        "deviation": 28
+      },
+      "governance_state": "CANDIDATE",
+      "operator_note": null,
+      "learning_event_ref": null,
+      "replay_safe": true,
+      "timestamp": "2026-05-22T16:07:37.025Z"
+    }
+  ],
+  "count": 23
+}

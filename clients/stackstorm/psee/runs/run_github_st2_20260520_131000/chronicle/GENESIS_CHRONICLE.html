@@ -128,6 +128,12 @@ body {
   letter-spacing: 1px;
   font-weight: bold;
 }
+.timeline-status {
+  font-size: 7px;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+  opacity: 0.8;
+}
 
 /* Manifest Ribbon */
 .manifest-ribbon {
@@ -188,6 +194,14 @@ body {
   font-size: 12px;
   color: var(--text-dim);
   font-family: var(--font-ui);
+}
+.chapter-status-badge {
+  font-size: 9px;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border: 1px solid;
+  border-radius: 2px;
+  font-weight: bold;
 }
 .chapter-event-count {
   font-size: 11px;
@@ -487,38 +501,47 @@ body {
       <div class="timeline-node" style="opacity: 1.0;" data-phase="DISCOVERY">
         <div class="timeline-dot" style="background: #7a8aaa;"></div>
         <div class="timeline-label" style="color: #7a8aaa;">DISCOVERY</div>
+        <div class="timeline-status" style="color: #64ffda;">COMPLETE</div>
       </div>
       <div class="timeline-node" style="opacity: 1.0;" data-phase="EMERGENCE">
         <div class="timeline-dot" style="background: #4a9eff;"></div>
         <div class="timeline-label" style="color: #4a9eff;">EMERGENCE</div>
+        <div class="timeline-status" style="color: #64ffda;">COMPLETE</div>
       </div>
       <div class="timeline-node" style="opacity: 1.0;" data-phase="FORMATION">
         <div class="timeline-dot" style="background: #64ffda;"></div>
         <div class="timeline-label" style="color: #64ffda;">FORMATION</div>
+        <div class="timeline-status" style="color: #64ffda;">COMPLETE</div>
       </div>
-      <div class="timeline-node" style="opacity: 0.25;" data-phase="TENSION">
+      <div class="timeline-node" style="opacity: 0.35;" data-phase="TENSION">
         <div class="timeline-dot" style="background: #ff6b6b;"></div>
         <div class="timeline-label" style="color: #ff6b6b;">TENSION</div>
+        <div class="timeline-status" style="color: #4a5570;">NOT EXERCISED</div>
       </div>
-      <div class="timeline-node" style="opacity: 0.25;" data-phase="STRENGTHENING">
+      <div class="timeline-node" style="opacity: 1.0;" data-phase="STRENGTHENING">
         <div class="timeline-dot" style="background: #ffd700;"></div>
         <div class="timeline-label" style="color: #ffd700;">STRENGTHENING</div>
+        <div class="timeline-status" style="color: #4a9eff;">ACTIVE</div>
       </div>
-      <div class="timeline-node" style="opacity: 1.0;" data-phase="STABILIZATION">
+      <div class="timeline-node" style="opacity: 0.35;" data-phase="STABILIZATION">
         <div class="timeline-dot" style="background: #64ffda;"></div>
         <div class="timeline-label" style="color: #64ffda;">STABILIZATION</div>
+        <div class="timeline-status" style="color: #7a8aaa;">LAWFUL SKIP</div>
       </div>
-      <div class="timeline-node" style="opacity: 0.25;" data-phase="QUALIFICATION">
+      <div class="timeline-node" style="opacity: 0.35;" data-phase="QUALIFICATION">
         <div class="timeline-dot" style="background: #4a9eff;"></div>
         <div class="timeline-label" style="color: #4a9eff;">QUALIFICATION</div>
+        <div class="timeline-status" style="color: #4a5570;">NOT EXERCISED</div>
       </div>
-      <div class="timeline-node" style="opacity: 0.25;" data-phase="CONVERGENCE">
+      <div class="timeline-node" style="opacity: 0.35;" data-phase="CONVERGENCE">
         <div class="timeline-dot" style="background: #ff9e4a;"></div>
         <div class="timeline-label" style="color: #ff9e4a;">CONVERGENCE</div>
+        <div class="timeline-status" style="color: #4a5570;">NOT ELIGIBLE</div>
       </div>
       <div class="timeline-node" style="opacity: 1.0;" data-phase="PROJECTION">
         <div class="timeline-dot" style="background: #ccd6f6;"></div>
         <div class="timeline-label" style="color: #ccd6f6;">PROJECTION</div>
+        <div class="timeline-status" style="color: #4a9eff;">ACTIVE</div>
       </div>
   </div>
 </div>
@@ -547,7 +570,7 @@ body {
   </div>
   <div class="ribbon-segment">
     <span class="ribbon-key">LEARNING</span>
-    <span class="ribbon-val">0</span>
+    <span class="ribbon-val">2</span>
   </div>
 </div>
 
@@ -556,6 +579,7 @@ body {
   <div class="chapter-header">
     <div class="chapter-phase-marker" style="background: #7a8aaa;">DISCOVERY</div>
     <div class="chapter-title">Raw intake — the system encounters unknown structure</div>
+    <div class="chapter-status-badge" style="color: #64ffda; border-color: #64ffda;">COMPLETE</div>
     <div class="chapter-event-count">36 events</div>
   </div>
 
@@ -747,6 +771,7 @@ body {
   <div class="chapter-header">
     <div class="chapter-phase-marker" style="background: #4a9eff;">EMERGENCE</div>
     <div class="chapter-title">First structural topology materializes from evidence</div>
+    <div class="chapter-status-badge" style="color: #64ffda; border-color: #64ffda;">COMPLETE</div>
     <div class="chapter-event-count">39 events</div>
   </div>
 
@@ -937,6 +962,7 @@ body {
   <div class="chapter-header">
     <div class="chapter-phase-marker" style="background: #64ffda;">FORMATION</div>
     <div class="chapter-title">Semantic claims crystallize from structural evidence</div>
+    <div class="chapter-status-badge" style="color: #64ffda; border-color: #64ffda;">COMPLETE</div>
     <div class="chapter-event-count">27 events</div>
   </div>
 
@@ -1136,6 +1162,7 @@ body {
   <div class="chapter-header">
     <div class="chapter-phase-marker" style="background: #ff6b6b;">TENSION</div>
     <div class="chapter-title">Governance challenges weak meaning — friction, dispute, rejection</div>
+    <div class="chapter-status-badge" style="color: #4a5570; border-color: #4a5570;">NOT EXERCISED</div>
     <div class="chapter-event-count">0 events</div>
   </div>
 
@@ -1186,10 +1213,11 @@ body {
   
 </section>
 
-<section class="chapter" data-phase="STRENGTHENING" style="opacity: 0.4;">
+<section class="chapter" data-phase="STRENGTHENING" style="opacity: 1;">
   <div class="chapter-header">
     <div class="chapter-phase-marker" style="background: #ffd700;">STRENGTHENING</div>
     <div class="chapter-title">Evidence enrichment, debt evolution — the system self-corrects</div>
+    <div class="chapter-status-badge" style="color: #4a9eff; border-color: #4a9eff;">ACTIVE</div>
     <div class="chapter-event-count">0 events</div>
   </div>
 
@@ -1210,11 +1238,11 @@ body {
     and reconciliation. Learning events capture what the system discovers about its own
     onboarding process.
   </div>
-  <div class="z1-metric">0 learning events captured</div>
-  <div class="z1-metric">Categories: none captured</div>
+  <div class="z1-metric">2 learning events captured</div>
+  <div class="z1-metric">Categories: UNKNOWN: 1, ORCHESTRATION_ADAPTATION: 1</div>
   <div class="z1-finding">
     <span class="finding-label">KEY FINDING</span>
-    Strengthening phase — enrichment and learning capture
+    System learning from its own genesis — substrate strengthening through evidence
   </div>
 </div></div>
     <div class="zoom-level z2"><div class='z2-content'><div class='z2-empty'>No semantic data for this phase.</div></div></div>
@@ -1242,10 +1270,11 @@ body {
   
 </section>
 
-<section class="chapter" data-phase="STABILIZATION" style="opacity: 1;">
+<section class="chapter" data-phase="STABILIZATION" style="opacity: 0.4;">
   <div class="chapter-header">
     <div class="chapter-phase-marker" style="background: #64ffda;">STABILIZATION</div>
     <div class="chapter-title">Deterministic replay confirms — what was challenged now holds</div>
+    <div class="chapter-status-badge" style="color: #7a8aaa; border-color: #7a8aaa;">LAWFUL SKIP</div>
     <div class="chapter-event-count">15 events</div>
   </div>
 
@@ -1444,6 +1473,7 @@ body {
   <div class="chapter-header">
     <div class="chapter-phase-marker" style="background: #4a9eff;">QUALIFICATION</div>
     <div class="chapter-title">Governed advancement — the system earns its state transition</div>
+    <div class="chapter-status-badge" style="color: #4a5570; border-color: #4a5570;">NOT EXERCISED</div>
     <div class="chapter-event-count">0 events</div>
   </div>
 
@@ -1497,6 +1527,7 @@ body {
   <div class="chapter-header">
     <div class="chapter-phase-marker" style="background: #ff9e4a;">CONVERGENCE</div>
     <div class="chapter-title">Cross-specimen pattern — generalized governed cognition emerges</div>
+    <div class="chapter-status-badge" style="color: #4a5570; border-color: #4a5570;">NOT ELIGIBLE</div>
     <div class="chapter-event-count">0 events</div>
   </div>
 
@@ -1550,6 +1581,7 @@ body {
   <div class="chapter-header">
     <div class="chapter-phase-marker" style="background: #ccd6f6;">PROJECTION</div>
     <div class="chapter-title">Executive understanding crystallizes — cognition becomes communicable</div>
+    <div class="chapter-status-badge" style="color: #4a9eff; border-color: #4a9eff;">ACTIVE</div>
     <div class="chapter-event-count">13 events</div>
   </div>
 
@@ -1756,6 +1788,25 @@ body {
 </section>
 
 
+<section class="learning-panel">
+  <div class="panel-header">LEARNING EVENTS — 2 CAPTURED</div>
+  <div class="panel-subtitle">Governed learning from onboarding experience</div>
+  
+<div class="le-row">
+  <span class="le-id"></span>
+  <span class="le-state">PROPOSED</span>
+  <span class="le-cat"></span>
+  <div class="le-title"></div>
+  <div class="le-cap"></div>
+</div>
+<div class="le-row">
+  <span class="le-id"></span>
+  <span class="le-state">PROPOSED</span>
+  <span class="le-cat">ORCHESTRATION_ADAPTATION</span>
+  <div class="le-title">S1 structural-only specimens require maturity-aware orchestration and lawful ski</div>
+  <div class="le-cap"></div>
+</div>
+</section>
 
 
 <footer class="governance-footer">
@@ -1765,7 +1816,7 @@ body {
   </div>
   <div class="footer-section">
     <div class="footer-label">COMPILED</div>
-    <div class="footer-value">2026-05-22T16:38:22Z</div>
+    <div class="footer-value">2026-05-22T16:52:51Z</div>
   </div>
   <div class="footer-section">
     <div class="footer-label">CONTRACT</div>

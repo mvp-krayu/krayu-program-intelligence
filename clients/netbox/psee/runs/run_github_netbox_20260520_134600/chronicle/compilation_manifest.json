@@ -1,0 +1,31 @@
+{
+  "chronicle_id": "netbox-run_github_netbox_20260520_134600-genesis",
+  "compiled_at": "2026-05-22T16:53:10Z",
+  "output_path": "netbox/psee/runs/run_github_netbox_20260520_134600/chronicle/GENESIS_CHRONICLE.html",
+  "content_hash": "5ce096c789c5c9508d2a24c1c9bc4651051a3ffba85edebefd99e675bf10322b",
+  "sources": {
+    "events": 34,
+    "checkpoints": 9,
+    "hero_moments": 23,
+    "learning_events": 14,
+    "propositions": 77,
+    "governance_events": 0
+  },
+  "phases_reached": [
+    "DISCOVERY",
+    "EMERGENCE",
+    "FORMATION"
+  ],
+  "phase_statuses": {
+    "DISCOVERY": "COMPLETE",
+    "EMERGENCE": "COMPLETE",
+    "FORMATION": "COMPLETE",
+    "TENSION": "NOT_EXERCISED",
+    "STRENGTHENING": "ACTIVE",
+    "STABILIZATION": "LAWFUL_SKIP",
+    "QUALIFICATION": "NOT_EXERCISED",
+    "CONVERGENCE": "NOT_ELIGIBLE",
+    "PROJECTION": "LAWFUL_SKIP"
+  },
+  "corridor_type": "FULL_COGNITIVE_GENESIS"
+}

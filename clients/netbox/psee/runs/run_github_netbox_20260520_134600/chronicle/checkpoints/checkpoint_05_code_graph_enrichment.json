@@ -1,0 +1,11 @@
+{
+  "checkpoint_id": "checkpoint_05_code_graph_enrichment",
+  "checkpoint_index": 5,
+  "semantic_phase": "EMERGENCE",
+  "pipeline_phase": "Phase 3.6 \u2014 Code-Graph Structural Enrichment",
+  "timestamp": "2026-05-22T16:06:47.879Z",
+  "status": "FROZEN",
+  "predecessor": "checkpoint_04_relevance_classification",
+  "events_since_predecessor": 21,
+  "state_snapshot": {}
+}

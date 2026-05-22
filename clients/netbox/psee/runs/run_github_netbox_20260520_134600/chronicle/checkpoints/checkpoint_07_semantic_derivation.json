@@ -1,0 +1,11 @@
+{
+  "checkpoint_id": "checkpoint_07_semantic_derivation",
+  "checkpoint_index": 7,
+  "semantic_phase": "FORMATION",
+  "pipeline_phase": "Phase 3b \u2014 Semantic Derivation",
+  "timestamp": "2026-05-22T16:06:47.882Z",
+  "status": "FROZEN",
+  "predecessor": "checkpoint_06_structural_centrality",
+  "events_since_predecessor": 27,
+  "state_snapshot": {}
+}

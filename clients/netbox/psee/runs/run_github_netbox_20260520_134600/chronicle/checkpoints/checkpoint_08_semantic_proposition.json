@@ -1,0 +1,11 @@
+{
+  "checkpoint_id": "checkpoint_08_semantic_proposition",
+  "checkpoint_index": 8,
+  "semantic_phase": "FORMATION",
+  "pipeline_phase": "Phase 3c \u2014 Semantic Proposition Derivation",
+  "timestamp": "2026-05-22T16:06:47.883Z",
+  "status": "FROZEN",
+  "predecessor": "checkpoint_07_semantic_derivation",
+  "events_since_predecessor": 30,
+  "state_snapshot": {}
+}

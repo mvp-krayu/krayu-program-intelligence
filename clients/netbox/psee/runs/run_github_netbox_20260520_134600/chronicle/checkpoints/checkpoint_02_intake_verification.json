@@ -1,0 +1,11 @@
+{
+  "checkpoint_id": "checkpoint_02_intake_verification",
+  "checkpoint_index": 2,
+  "semantic_phase": "DISCOVERY",
+  "pipeline_phase": "Phase 2  \u2014 Intake Verification",
+  "timestamp": "2026-05-22T16:06:47.872Z",
+  "status": "FROZEN",
+  "predecessor": "checkpoint_01_source_boundary",
+  "events_since_predecessor": 11,
+  "state_snapshot": {}
+}

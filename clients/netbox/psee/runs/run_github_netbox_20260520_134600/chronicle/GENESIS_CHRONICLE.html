@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Genesis Chronicle — netbox</title>
+<style>
+:root {
+  --bg-base: #0d0f14;
+  --bg-panel: #141720;
+  --bg-card: #1a1e2b;
+  --bg-deep: #12151f;
+  --border: #2a2f40;
+  --border-dim: #1e2330;
+  --accent: #4a9eff;
+  --text-primary: #ccd6f6;
+  --text-dim: #7a8aaa;
+  --text-muted: #4a5570;
+  --green: #64ffda;
+  --yellow: #ffd700;
+  --orange: #ff9e4a;
+  --red: #ff6b6b;
+  --font-mono: 'Courier New', monospace;
+  --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.chronicle-shell {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+/* Header */
+.chronicle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 24px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin-bottom: 24px;
+}
+.header-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.header-client {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.header-run {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+.header-status { text-align: right; }
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border: 1px solid;
+  border-radius: 2px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  font-weight: bold;
+}
+.status-detail {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+/* Timeline */
+.semantic-timeline {
+  margin-bottom: 24px;
+  padding: 16px 24px;
+  background: var(--bg-deep);
+  border: 1px solid var(--border-dim);
+  border-radius: 4px;
+}
+.timeline-track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  position: relative;
+}
+.timeline-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--border);
+  transform: translateY(-50%);
+}
+.timeline-node {
+  flex: 1;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+.timeline-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin: 0 auto 4px;
+}
+.timeline-label {
+  font-size: 8px;
+  letter-spacing: 1px;
+  font-weight: bold;
+}
+.timeline-status {
+  font-size: 7px;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+  opacity: 0.8;
+}
+
+/* Manifest Ribbon */
+.manifest-ribbon {
+  display: flex;
+  gap: 0;
+  margin-bottom: 24px;
+  border: 1px solid var(--border-dim);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.ribbon-segment {
+  flex: 1;
+  padding: 10px 16px;
+  background: var(--bg-panel);
+  border-right: 1px solid var(--border-dim);
+  text-align: center;
+}
+.ribbon-segment:last-child { border-right: none; }
+.ribbon-key {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.ribbon-val {
+  display: block;
+  font-size: 14px;
+  color: var(--text-primary);
+  font-weight: bold;
+}
+
+/* Chapter */
+.chapter {
+  margin-bottom: 20px;
+  border: 1px solid var(--border-dim);
+  border-radius: 4px;
+  background: var(--bg-panel);
+  transition: opacity 0.2s ease;
+}
+.chapter-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-dim);
+}
+.chapter-phase-marker {
+  padding: 3px 10px;
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: var(--bg-base);
+}
+.chapter-title {
+  flex: 1;
+  font-size: 12px;
+  color: var(--text-dim);
+  font-family: var(--font-ui);
+}
+.chapter-status-badge {
+  font-size: 9px;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border: 1px solid;
+  border-radius: 2px;
+  font-weight: bold;
+}
+.chapter-event-count {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Zoom */
+.zoom-container { padding: 16px; }
+.zoom-controls {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+.zoom-btn {
+  padding: 4px 10px;
+  background: var(--bg-deep);
+  border: 1px solid var(--border-dim);
+  border-radius: 2px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.zoom-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.zoom-btn.active {
+  background: var(--accent);
+  color: var(--bg-base);
+  border-color: var(--accent);
+}
+
+.zoom-level {
+  display: none;
+  animation: fadeIn 0.15s ease;
+}
+.zoom-level.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Z1 */
+.z1-content { padding: 8px 0; }
+.z1-narrative {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+.z1-metric {
+  font-size: 12px;
+  color: var(--accent);
+  margin-bottom: 4px;
+  padding-left: 12px;
+  border-left: 2px solid var(--accent);
+}
+.z1-evidence {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+.z1-finding {
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: var(--bg-deep);
+  border-left: 3px solid var(--yellow);
+  font-size: 12px;
+}
+.finding-label {
+  display: inline-block;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--yellow);
+  margin-right: 8px;
+  font-weight: bold;
+}
+
+/* Z2 */
+.z2-content { padding: 8px 0; }
+.z2-section { margin-bottom: 12px; }
+.z2-section-title {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border-dim);
+}
+.z2-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 8px;
+  font-size: 11px;
+}
+.z2-type { color: var(--text-dim); }
+.z2-count { color: var(--accent); font-weight: bold; }
+.z2-empty { color: var(--text-muted); font-style: italic; font-size: 11px; }
+
+/* Z3 */
+.z3-content { padding: 8px 0; }
+.z3-section { margin-bottom: 12px; }
+.z3-section-title {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border-dim);
+}
+.z3-row {
+  display: flex;
+  gap: 12px;
+  padding: 3px 8px;
+  font-size: 11px;
+  border-bottom: 1px solid var(--border-dim);
+}
+.z3-action { color: var(--accent); min-width: 120px; }
+.z3-target { color: var(--text-dim); flex: 1; }
+.z3-actor { color: var(--text-muted); }
+.z3-truncated { color: var(--text-muted); font-size: 10px; padding: 4px 8px; }
+
+/* Z4 */
+.z4-content { padding: 8px 0; }
+.z4-section-title {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border-dim);
+}
+.z4-row {
+  display: flex;
+  gap: 12px;
+  padding: 3px 8px;
+  font-size: 11px;
+}
+.z4-id { color: var(--text-muted); min-width: 160px; }
+.z4-refs { color: var(--text-dim); }
+.z4-empty { color: var(--text-muted); font-style: italic; font-size: 11px; padding: 4px 8px; }
+
+/* Z5 */
+.z5-content { padding: 8px 0; }
+.z5-section-title {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border-dim);
+}
+.z5-raw {
+  background: var(--bg-base);
+  padding: 8px;
+  margin-bottom: 6px;
+  border-radius: 2px;
+  font-size: 10px;
+  color: var(--text-dim);
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+.z5-truncated { color: var(--text-muted); font-size: 10px; padding: 4px 0; }
+
+/* Checkpoint Bar */
+.checkpoint-bar {
+  padding: 8px 16px;
+  background: var(--bg-deep);
+  border-top: 1px solid var(--border-dim);
+}
+.checkpoint-label {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.checkpoint-row {
+  display: flex;
+  gap: 12px;
+  font-size: 11px;
+  padding: 2px 0;
+}
+.checkpoint-id { color: var(--green); min-width: 280px; }
+.checkpoint-phase { color: var(--text-dim); flex: 1; }
+.checkpoint-ts { color: var(--text-muted); }
+
+/* Hero Moments Panel */
+.hero-moments-panel, .learning-panel {
+  margin-bottom: 20px;
+  border: 1px solid var(--border-dim);
+  border-radius: 4px;
+  background: var(--bg-panel);
+  padding: 16px;
+}
+.panel-header {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--orange);
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+.panel-subtitle {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  font-family: var(--font-ui);
+}
+.hm-row, .le-row {
+  padding: 8px;
+  background: var(--bg-deep);
+  border-radius: 2px;
+  margin-bottom: 6px;
+}
+.hm-id, .le-id {
+  font-size: 10px;
+  color: var(--accent);
+  margin-right: 8px;
+}
+.hm-type, .le-state {
+  font-size: 10px;
+  color: var(--yellow);
+  padding: 1px 6px;
+  background: rgba(255,215,0,0.1);
+  border-radius: 2px;
+}
+.le-cat {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-left: 8px;
+}
+.hm-desc, .le-title {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  font-family: var(--font-ui);
+}
+.hm-metric, .le-cap {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.panel-truncated { color: var(--text-muted); font-size: 10px; margin-top: 4px; }
+
+/* Learning Panel */
+.learning-panel .panel-header { color: var(--green); }
+
+/* Governance Footer */
+.governance-footer {
+  display: flex;
+  gap: 24px;
+  padding: 16px 24px;
+  background: var(--bg-deep);
+  border: 1px solid var(--border-dim);
+  border-radius: 4px;
+  margin-top: 32px;
+}
+.footer-section { flex: 1; }
+.footer-label {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.footer-value {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+</style>
+</head>
+<body>
+<div class="chronicle-shell">
+
+
+<header class="chronicle-header">
+  <div class="header-identity">
+    <div class="header-label">GENESIS CHRONICLE</div>
+    <div class="header-client">netbox</div>
+    <div class="header-run">run_github_netbox_20260520_134600</div>
+  </div>
+  <div class="header-status">
+    <div class="status-badge" style="border-color: #ffd700; color: #ffd700;">INCOMPLETE</div>
+    <div class="status-detail">3/9 semantic phases</div>
+    <div class="status-detail">34 events &middot; 9 checkpoints</div>
+  </div>
+</header>
+
+
+<div class="semantic-timeline">
+  <div class="timeline-track">
+    <div class="timeline-line"></div>
+    
+      <div class="timeline-node" style="opacity: 1.0;" data-phase="DISCOVERY">
+        <div class="timeline-dot" style="background: #7a8aaa;"></div>
+        <div class="timeline-label" style="color: #7a8aaa;">DISCOVERY</div>
+        <div class="timeline-status" style="color: #64ffda;">COMPLETE</div>
+      </div>
+      <div class="timeline-node" style="opacity: 1.0;" data-phase="EMERGENCE">
+        <div class="timeline-dot" style="background: #4a9eff;"></div>
+        <div class="timeline-label" style="color: #4a9eff;">EMERGENCE</div>
+        <div class="timeline-status" style="color: #64ffda;">COMPLETE</div>
+      </div>
+      <div class="timeline-node" style="opacity: 1.0;" data-phase="FORMATION">
+        <div class="timeline-dot" style="background: #64ffda;"></div>
+        <div class="timeline-label" style="color: #64ffda;">FORMATION</div>
+        <div class="timeline-status" style="color: #64ffda;">COMPLETE</div>
+      </div>
+      <div class="timeline-node" style="opacity: 0.35;" data-phase="TENSION">
+        <div class="timeline-dot" style="background: #ff6b6b;"></div>
+        <div class="timeline-label" style="color: #ff6b6b;">TENSION</div>
+        <div class="timeline-status" style="color: #4a5570;">NOT EXERCISED</div>
+      </div>
+      <div class="timeline-node" style="opacity: 1.0;" data-phase="STRENGTHENING">
+        <div class="timeline-dot" style="background: #ffd700;"></div>
+        <div class="timeline-label" style="color: #ffd700;">STRENGTHENING</div>
+        <div class="timeline-status" style="color: #4a9eff;">ACTIVE</div>
+      </div>
+      <div class="timeline-node" style="opacity: 0.35;" data-phase="STABILIZATION">
+        <div class="timeline-dot" style="background: #64ffda;"></div>
+        <div class="timeline-label" style="color: #64ffda;">STABILIZATION</div>
+        <div class="timeline-status" style="color: #7a8aaa;">LAWFUL SKIP</div>
+      </div>
+      <div class="timeline-node" style="opacity: 0.35;" data-phase="QUALIFICATION">
+        <div class="timeline-dot" style="background: #4a9eff;"></div>
+        <div class="timeline-label" style="color: #4a9eff;">QUALIFICATION</div>
+        <div class="timeline-status" style="color: #4a5570;">NOT EXERCISED</div>
+      </div>
+      <div class="timeline-node" style="opacity: 0.35;" data-phase="CONVERGENCE">
+        <div class="timeline-dot" style="background: #ff9e4a;"></div>
+        <div class="timeline-label" style="color: #ff9e4a;">CONVERGENCE</div>
+        <div class="timeline-status" style="color: #4a5570;">NOT ELIGIBLE</div>
+      </div>
+      <div class="timeline-node" style="opacity: 0.35;" data-phase="PROJECTION">
+        <div class="timeline-dot" style="background: #ccd6f6;"></div>
+        <div class="timeline-label" style="color: #ccd6f6;">PROJECTION</div>
+        <div class="timeline-status" style="color: #7a8aaa;">LAWFUL SKIP</div>
+      </div>
+  </div>
+</div>
+
+
+<div class="manifest-ribbon">
+  <div class="ribbon-segment">
+    <span class="ribbon-key">CORRIDOR</span>
+    <span class="ribbon-val">FULL_COGNITIVE_GENESIS</span>
+  </div>
+  <div class="ribbon-segment">
+    <span class="ribbon-key">EVENTS</span>
+    <span class="ribbon-val">34</span>
+  </div>
+  <div class="ribbon-segment">
+    <span class="ribbon-key">CHECKPOINTS</span>
+    <span class="ribbon-val">9</span>
+  </div>
+  <div class="ribbon-segment">
+    <span class="ribbon-key">HERO MOMENTS</span>
+    <span class="ribbon-val">23</span>
+  </div>
+  <div class="ribbon-segment">
+    <span class="ribbon-key">PROPOSITIONS</span>
+    <span class="ribbon-val">77</span>
+  </div>
+  <div class="ribbon-segment">
+    <span class="ribbon-key">LEARNING</span>
+    <span class="ribbon-val">14</span>
+  </div>
+</div>
+
+
+<section class="chapter" data-phase="DISCOVERY" style="opacity: 1;">
+  <div class="chapter-header">
+    <div class="chapter-phase-marker" style="background: #7a8aaa;">DISCOVERY</div>
+    <div class="chapter-title">Raw intake — the system encounters unknown structure</div>
+    <div class="chapter-status-badge" style="color: #64ffda; border-color: #64ffda;">COMPLETE</div>
+    <div class="chapter-event-count">12 events</div>
+  </div>
+
+  <div class="zoom-container" data-current-zoom="1">
+    <div class="zoom-controls">
+      <button class="zoom-btn" data-zoom="1" title="Executive Understanding">Z1</button>
+      <button class="zoom-btn" data-zoom="2" title="Semantic Interpretation">Z2</button>
+      <button class="zoom-btn" data-zoom="3" title="Governance Detail">Z3</button>
+      <button class="zoom-btn" data-zoom="4" title="Structural Proof">Z4</button>
+      <button class="zoom-btn" data-zoom="5" title="Raw Evidence">Z5</button>
+    </div>
+
+    <div class="zoom-level z1 active">
+<div class="z1-content">
+  <div class="z1-narrative">
+    The system encounters raw evidence for the first time.
+    Source boundaries are verified, intake structures are extracted and SHA256-stamped.
+    12 events captured the intake corridor from archive identification through evidence acquisition.
+  </div>
+  <div class='z1-metric'>2173 evidence files extracted</div>
+  <div class='z1-evidence'>SHA256: 043d4ca2b85fde16...</div>
+  <div class="z1-finding">
+    <span class="finding-label">KEY FINDING</span>
+    2 source/evidence events &middot; 6 phase boundary events
+  </div>
+</div></div>
+    <div class="zoom-level z2">
+<div class="z2-content">
+  <div class="z2-section">
+    <div class="z2-section-title">EVENT TYPES IN THIS PHASE</div>
+    <div class='z2-row'><span class='z2-type'>phase_started</span><span class='z2-count'>3</span></div>
+<div class='z2-row'><span class='z2-type'>phase_completed</span><span class='z2-count'>3</span></div>
+<div class='z2-row'><span class='z2-type'>chronicle_checkpoint</span><span class='z2-count'>3</span></div>
+<div class='z2-row'><span class='z2-type'>chronicle_initialized</span><span class='z2-count'>1</span></div>
+<div class='z2-row'><span class='z2-type'>source_discovery</span><span class='z2-count'>1</span></div>
+<div class='z2-row'><span class='z2-type'>evidence_acquisition</span><span class='z2-count'>1</span></div>
+  </div>
+  
+</div></div>
+    <div class="zoom-level z3">
+<div class="z3-content">
+  
+  <div class="z3-section">
+    <div class="z3-section-title">CHRONICLE EVENTS</div>
+    <div class='z3-row'><span class='z3-action'>chronicle_initialized</span><span class='z3-target'>Chronicle initialized for netbox/run_github_netbox_20260520_134600</span></div><div class='z3-row'><span class='z3-action'>phase_started</span><span class='z3-target'>Pipeline phase started: Phase 0L — Learning Registry Load</span></div><div class='z3-row'><span class='z3-action'>phase_completed</span><span class='z3-target'>Pipeline phase completed: Phase 0L — Learning Registry Load</span></div><div class='z3-row'><span class='z3-action'>chronicle_checkpoint</span><span class='z3-target'>Checkpoint frozen: checkpoint_00_learning_load</span></div><div class='z3-row'><span class='z3-action'>phase_started</span><span class='z3-target'>Pipeline phase started: Phase 1  — Source Boundary</span></div><div class='z3-row'><span class='z3-action'>source_discovery</span><span class='z3-target'>Source archive identified and SHA256-verified: clients/netbox/archives/netbox-64</span></div><div class='z3-row'><span class='z3-action'>phase_completed</span><span class='z3-target'>Pipeline phase completed: Phase 1  — Source Boundary</span></div><div class='z3-row'><span class='z3-action'>chronicle_checkpoint</span><span class='z3-target'>Checkpoint frozen: checkpoint_01_source_boundary</span></div><div class='z3-row'><span class='z3-action'>phase_started</span><span class='z3-target'>Pipeline phase started: Phase 2  — Intake Verification</span></div><div class='z3-row'><span class='z3-action'>evidence_acquisition</span><span class='z3-target'>Evidence files extracted and verified: clients/netbox/psee/runs/run_github_netbo</span></div><div class='z3-row'><span class='z3-action'>phase_completed</span><span class='z3-target'>Pipeline phase completed: Phase 2  — Intake Verification</span></div><div class='z3-row'><span class='z3-action'>chronicle_checkpoint</span><span class='z3-target'>Checkpoint frozen: checkpoint_02_intake_verification</span></div>
+  </div>
+</div></div>
+    <div class="zoom-level z4">
+<div class="z4-content">
+  <div class="z4-section-title">STRUCTURAL PROOF — EVIDENCE ANCHORS</div>
+  <div class='z4-row'><span class='z4-id'>CE-netbox-run_github_netbox_20260520_134600-0004</span><span class='z4-refs'>netbox/psee/runs/run_github_netbox_20260</span></div><div class='z4-row'><span class='z4-id'>CE-netbox-run_github_netbox_20260520_134600-0006</span><span class='z4-refs'>clients/netbox/archives/netbox-64d3b11.t</span></div><div class='z4-row'><span class='z4-id'>CE-netbox-run_github_netbox_20260520_134600-0008</span><span class='z4-refs'>netbox/psee/runs/run_github_netbox_20260</span></div><div class='z4-row'><span class='z4-id'>CE-netbox-run_github_netbox_20260520_134600-0010</span><span class='z4-refs'>clients/netbox/psee/runs/run_github_netb</span></div><div class='z4-row'><span class='z4-id'>CE-netbox-run_github_netbox_20260520_134600-0012</span><span class='z4-refs'>netbox/psee/runs/run_github_netbox_20260</span></div>
+</div></div>
+    <div class="zoom-level z5">
+<div class="z5-content">
+  <div class="z5-section-title">RAW EVIDENCE — CHRONICLE EVENTS</div>
+  <pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0001&quot;,
+  &quot;event_type&quot;: &quot;chronicle_initialized&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.805Z&quot;,
+  &quot;semantic_phase&quot;: &quot;DISCOVERY&quot;,
+  &quot;description&quot;: &quot;Chronicle initialized for netbox/run_github_netbox_20260520_134600&quot;,
+  &quot;evidence_refs&quot;: [],
+  &quot;replay_safe&quot;: true
+}</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0002&quot;,
+  &quot;event_type&quot;: &quot;phase_started&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.806Z&quot;,
+  &quot;semantic_phase&quot;: &quot;DISCOVERY&quot;,
+  &quot;description&quot;: &quot;Pipeline phase started: Phase 0L \u2014 Learning Registry Load&quot;,
+  &quot;evidence_refs&quot;: [],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;pipeline_phase&quot;: &quot;Phase 0L \u2014 Learning Registry Load&quot;
+  }
+}</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0003&quot;,
+  &quot;event_type&quot;: &quot;phase_completed&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.807Z&quot;,
+  &quot;semantic_phase&quot;: &quot;DISCOVERY&quot;,
+  &quot;description&quot;: &quot;Pipeline phase completed: Phase 0L \u2014 Learning Registry Load&quot;,
+  &quot;evidence_refs&quot;: [],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;pipeline_phase&quot;: &quot;Phase 0L \u2014 Learning Registry Load&quot;,
+    &quot;phase_index&quot;: 0,
+    &quot;status&quot;: &quot;PASS&quot;,
+    &quot;duration_ms&quot;: 0,
+    &quot;artifacts_produced&quot;: []
+  }
+}</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0004&quot;,
+  &quot;event_type&quot;: &quot;chronicle_checkpoint&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.808Z&quot;,
+  &quot;semantic_phase&quot;: &quot;DISCOVERY&quot;,
+  &quot;description&quot;: &quot;Checkpoint frozen: checkpoint_00_learning_load&quot;,
+  &quot;evidence_refs&quot;: [
+    &quot;netbox/psee/runs/run_github_netbox_20260520_134600/chronicle/checkpoints/checkpoint_00_learning_load.json&quot;
+  ],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;checkpoint_id&quot;: &quot;checkpoint_00_learning_load&quot;
+  }
+}</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0005&quot;,
+  &quot;event_type&quot;: &quot;phase_started&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.808Z&quot;,
+  &quot;semantic_phase&quot;: &quot;DISCOVERY&quot;,
+  &quot;description&quot;: &quot;Pipeline phase started: Phase 1  \u2014 Source Boundary&quot;,
+  &quot;evidence_refs&quot;: [],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;pipeline_phase&quot;: &quot;Phase 1  \u2014 Source Boundary&quot;
+  }
+}</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0006&quot;,
+  &quot;event_type&quot;: &quot;source_discovery&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.838Z&quot;,
+  &quot;semantic_phase&quot;: &quot;DISCOVERY&quot;,
+  &quot;description&quot;: &quot;Source archive identified and SHA256-verified: clients/netbox/archives/netbox-64d3b11.tar&quot;,
+  &quot;evidence_refs&quot;: [
+    &quot;clients/netbox/archives/netbox-64d3b11.tar&quot;
+  ],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;archive_path&quot;: &quot;clients/netbox/archives/netbox-64d3b11.tar&quot;,
+    &quot;sha256&quot;: &quot;043d4ca2b85fde16e</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0007&quot;,
+  &quot;event_type&quot;: &quot;phase_completed&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.838Z&quot;,
+  &quot;semantic_phase&quot;: &quot;DISCOVERY&quot;,
+  &quot;description&quot;: &quot;Pipeline phase completed: Phase 1  \u2014 Source Boundary&quot;,
+  &quot;evidence_refs&quot;: [],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;pipeline_phase&quot;: &quot;Phase 1  \u2014 Source Boundary&quot;,
+    &quot;phase_index&quot;: 1,
+    &quot;status&quot;: &quot;PASS&quot;,
+    &quot;duration_ms&quot;: 30,
+    &quot;artifacts_produced&quot;: []
+  }
+}</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0008&quot;,
+  &quot;event_type&quot;: &quot;chronicle_checkpoint&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.839Z&quot;,
+  &quot;semantic_phase&quot;: &quot;DISCOVERY&quot;,
+  &quot;description&quot;: &quot;Checkpoint frozen: checkpoint_01_source_boundary&quot;,
+  &quot;evidence_refs&quot;: [
+    &quot;netbox/psee/runs/run_github_netbox_20260520_134600/chronicle/checkpoints/checkpoint_01_source_boundary.json&quot;
+  ],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;checkpoint_id&quot;: &quot;checkpoint_01_source_boundary&quot;
+  }
+}</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0009&quot;,
+  &quot;event_type&quot;: &quot;phase_started&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.839Z&quot;,
+  &quot;semantic_phase&quot;: &quot;DISCOVERY&quot;,
+  &quot;description&quot;: &quot;Pipeline phase started: Phase 2  \u2014 Intake Verification&quot;,
+  &quot;evidence_refs&quot;: [],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;pipeline_phase&quot;: &quot;Phase 2  \u2014 Intake Verification&quot;
+  }
+}</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0010&quot;,
+  &quot;event_type&quot;: &quot;evidence_acquisition&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.871Z&quot;,
+  &quot;semantic_phase&quot;: &quot;DISCOVERY&quot;,
+  &quot;description&quot;: &quot;Evidence files extracted and verified: clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake&quot;,
+  &quot;evidence_refs&quot;: [
+    &quot;clients/netbox/psee/runs/run_github_netbox_20260520_134600/intake&quot;
+  ],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;intake_path&quot;: &quot;clients/netbox/psee/runs/run_github_</pre>
+  <div class='z5-truncated'>... 2 more events</div>
+</div></div>
+  </div>
+
+  
+<div class="checkpoint-bar">
+  <div class="checkpoint-label">FROZEN CHECKPOINTS</div>
+  <div class='checkpoint-row'><span class='checkpoint-id'>checkpoint_00_learning_load</span><span class='checkpoint-phase'>Phase 0L — Learning Registry Load</span><span class='checkpoint-ts'>2026-05-22T16:06:47</span></div><div class='checkpoint-row'><span class='checkpoint-id'>checkpoint_01_source_boundary</span><span class='checkpoint-phase'>Phase 1  — Source Boundary</span><span class='checkpoint-ts'>2026-05-22T16:06:47</span></div><div class='checkpoint-row'><span class='checkpoint-id'>checkpoint_02_intake_verification</span><span class='checkpoint-phase'>Phase 2  — Intake Verification</span><span class='checkpoint-ts'>2026-05-22T16:06:47</span></div>
+</div>
+</section>
+
+<section class="chapter" data-phase="EMERGENCE" style="opacity: 1;">
+  <div class="chapter-header">
+    <div class="chapter-phase-marker" style="background: #4a9eff;">EMERGENCE</div>
+    <div class="chapter-title">First structural topology materializes from evidence</div>
+    <div class="chapter-status-badge" style="color: #64ffda; border-color: #64ffda;">COMPLETE</div>
+    <div class="chapter-event-count">13 events</div>
+  </div>
+
+  <div class="zoom-container" data-current-zoom="1">
+    <div class="zoom-controls">
+      <button class="zoom-btn" data-zoom="1" title="Executive Understanding">Z1</button>
+      <button class="zoom-btn" data-zoom="2" title="Semantic Interpretation">Z2</button>
+      <button class="zoom-btn" data-zoom="3" title="Governance Detail">Z3</button>
+      <button class="zoom-btn" data-zoom="4" title="Structural Proof">Z4</button>
+      <button class="zoom-btn" data-zoom="5" title="Raw Evidence">Z5</button>
+    </div>
+
+    <div class="zoom-level z1 active">
+<div class="z1-content">
+  <div class="z1-narrative">
+    First structural topology materializes. From raw file inventory, the system
+    extracts containment edges, import relationships, and structural clusters.
+    Relevance classification separates architectural spine from peripheral noise.
+    Centrality derivation reveals which files are structurally dominant.
+  </div>
+  <div class="z1-metric">2540 nodes &middot; 2516 edges &middot; 24 clusters</div>
+  <div class="z1-metric">23 hero moment candidates detected</div>
+  <div class="z1-finding">
+    <span class="finding-label">KEY FINDING</span>
+    AUTHORITY_SURPRISE: 5, COUPLING_SURPRISE: 18
+  </div>
+</div></div>
+    <div class="zoom-level z2">
+<div class="z2-content">
+  <div class="z2-section">
+    <div class="z2-section-title">EVENT TYPES IN THIS PHASE</div>
+    <div class='z2-row'><span class='z2-type'>phase_started</span><span class='z2-count'>4</span></div>
+<div class='z2-row'><span class='z2-type'>phase_completed</span><span class='z2-count'>4</span></div>
+<div class='z2-row'><span class='z2-type'>chronicle_checkpoint</span><span class='z2-count'>4</span></div>
+<div class='z2-row'><span class='z2-type'>structural_emergence</span><span class='z2-count'>1</span></div>
+  </div>
+  
+</div></div>
+    <div class="zoom-level z3">
+<div class="z3-content">
+  
+  <div class="z3-section">
+    <div class="z3-section-title">CHRONICLE EVENTS</div>
+    <div class='z3-row'><span class='z3-action'>phase_started</span><span class='z3-target'>Pipeline phase started: Phase 3  — 40.x Structural Verification</span></div><div class='z3-row'><span class='z3-action'>structural_emergence</span><span class='z3-target'>First topology materialized: 2540 nodes, 2516 edges, 24 clusters</span></div><div class='z3-row'><span class='z3-action'>phase_completed</span><span class='z3-target'>Pipeline phase completed: Phase 3  — 40.x Structural Verification</span></div><div class='z3-row'><span class='z3-action'>chronicle_checkpoint</span><span class='z3-target'>Checkpoint frozen: checkpoint_03_structural_verification</span></div><div class='z3-row'><span class='z3-action'>phase_started</span><span class='z3-target'>Pipeline phase started: Phase 3.5 — Structural Relevance Classification</span></div><div class='z3-row'><span class='z3-action'>phase_completed</span><span class='z3-target'>Pipeline phase completed: Phase 3.5 — Structural Relevance Classification</span></div><div class='z3-row'><span class='z3-action'>chronicle_checkpoint</span><span class='z3-target'>Checkpoint frozen: checkpoint_04_relevance_classification</span></div><div class='z3-row'><span class='z3-action'>phase_started</span><span class='z3-target'>Pipeline phase started: Phase 3.6 — Code-Graph Structural Enrichment</span></div><div class='z3-row'><span class='z3-action'>phase_completed</span><span class='z3-target'>Pipeline phase completed: Phase 3.6 — Code-Graph Structural Enrichment</span></div><div class='z3-row'><span class='z3-action'>chronicle_checkpoint</span><span class='z3-target'>Checkpoint frozen: checkpoint_05_code_graph_enrichment</span></div><div class='z3-row'><span class='z3-action'>phase_started</span><span class='z3-target'>Pipeline phase started: Phase 3.7 — Structural Centrality Derivation</span></div><div class='z3-row'><span class='z3-action'>phase_completed</span><span class='z3-target'>Pipeline phase completed: Phase 3.7 — Structural Centrality Derivation</span></div><div class='z3-row'><span class='z3-action'>chronicle_checkpoint</span><span class='z3-target'>Checkpoint frozen: checkpoint_06_structural_centrality</span></div>
+  </div>
+</div></div>
+    <div class="zoom-level z4">
+<div class="z4-content">
+  <div class="z4-section-title">STRUCTURAL PROOF — EVIDENCE ANCHORS</div>
+  <div class='z4-row'><span class='z4-id'>CE-netbox-run_github_netbox_20260520_134600-0016</span><span class='z4-refs'>netbox/psee/runs/run_github_netbox_20260</span></div><div class='z4-row'><span class='z4-id'>CE-netbox-run_github_netbox_20260520_134600-0019</span><span class='z4-refs'>netbox/psee/runs/run_github_netbox_20260</span></div><div class='z4-row'><span class='z4-id'>CE-netbox-run_github_netbox_20260520_134600-0022</span><span class='z4-refs'>netbox/psee/runs/run_github_netbox_20260</span></div><div class='z4-row'><span class='z4-id'>CE-netbox-run_github_netbox_20260520_134600-0025</span><span class='z4-refs'>netbox/psee/runs/run_github_netbox_20260</span></div>
+</div></div>
+    <div class="zoom-level z5">
+<div class="z5-content">
+  <div class="z5-section-title">RAW EVIDENCE — CHRONICLE EVENTS</div>
+  <pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0013&quot;,
+  &quot;event_type&quot;: &quot;phase_started&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.873Z&quot;,
+  &quot;semantic_phase&quot;: &quot;EMERGENCE&quot;,
+  &quot;description&quot;: &quot;Pipeline phase started: Phase 3  \u2014 40.x Structural Verification&quot;,
+  &quot;evidence_refs&quot;: [],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;pipeline_phase&quot;: &quot;Phase 3  \u2014 40.x Structural Verification&quot;
+  }
+}</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0014&quot;,
+  &quot;event_type&quot;: &quot;structural_emergence&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.877Z&quot;,
+  &quot;semantic_phase&quot;: &quot;EMERGENCE&quot;,
+  &quot;description&quot;: &quot;First topology materialized: 2540 nodes, 2516 edges, 24 clusters&quot;,
+  &quot;evidence_refs&quot;: [],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;node_count&quot;: 2540,
+    &quot;edge_count&quot;: 2516,
+    &quot;cluster_count&quot;: 24
+  }
+}</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0015&quot;,
+  &quot;event_type&quot;: &quot;phase_completed&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.877Z&quot;,
+  &quot;semantic_phase&quot;: &quot;EMERGENCE&quot;,
+  &quot;description&quot;: &quot;Pipeline phase completed: Phase 3  \u2014 40.x Structural Verification&quot;,
+  &quot;evidence_refs&quot;: [],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;pipeline_phase&quot;: &quot;Phase 3  \u2014 40.x Structural Verification&quot;,
+    &quot;phase_index&quot;: 3,
+    &quot;status&quot;: &quot;PASS&quot;,
+    &quot;duration_ms&quot;: 4,
+    &quot;artifacts_produced&quot;: []
+  }
+}</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0016&quot;,
+  &quot;event_type&quot;: &quot;chronicle_checkpoint&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.878Z&quot;,
+  &quot;semantic_phase&quot;: &quot;EMERGENCE&quot;,
+  &quot;description&quot;: &quot;Checkpoint frozen: checkpoint_03_structural_verification&quot;,
+  &quot;evidence_refs&quot;: [
+    &quot;netbox/psee/runs/run_github_netbox_20260520_134600/chronicle/checkpoints/checkpoint_03_structural_verification.json&quot;
+  ],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;checkpoint_id&quot;: &quot;checkpoint_03_structural_verific</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0017&quot;,
+  &quot;event_type&quot;: &quot;phase_started&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.878Z&quot;,
+  &quot;semantic_phase&quot;: &quot;EMERGENCE&quot;,
+  &quot;description&quot;: &quot;Pipeline phase started: Phase 3.5 \u2014 Structural Relevance Classification&quot;,
+  &quot;evidence_refs&quot;: [],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;pipeline_phase&quot;: &quot;Phase 3.5 \u2014 Structural Relevance Classification&quot;
+  }
+}</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0018&quot;,
+  &quot;event_type&quot;: &quot;phase_completed&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.878Z&quot;,
+  &quot;semantic_phase&quot;: &quot;EMERGENCE&quot;,
+  &quot;description&quot;: &quot;Pipeline phase completed: Phase 3.5 \u2014 Structural Relevance Classification&quot;,
+  &quot;evidence_refs&quot;: [],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;pipeline_phase&quot;: &quot;Phase 3.5 \u2014 Structural Relevance Classification&quot;,
+    &quot;phase_index&quot;: 4,
+    &quot;status&quot;: &quot;PASS&quot;,
+    &quot;duration_ms&quot;: 0,
+    &quot;artifacts_pro</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0019&quot;,
+  &quot;event_type&quot;: &quot;chronicle_checkpoint&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.879Z&quot;,
+  &quot;semantic_phase&quot;: &quot;EMERGENCE&quot;,
+  &quot;description&quot;: &quot;Checkpoint frozen: checkpoint_04_relevance_classification&quot;,
+  &quot;evidence_refs&quot;: [
+    &quot;netbox/psee/runs/run_github_netbox_20260520_134600/chronicle/checkpoints/checkpoint_04_relevance_classification.json&quot;
+  ],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;checkpoint_id&quot;: &quot;checkpoint_04_relevance_classi</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0020&quot;,
+  &quot;event_type&quot;: &quot;phase_started&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.879Z&quot;,
+  &quot;semantic_phase&quot;: &quot;EMERGENCE&quot;,
+  &quot;description&quot;: &quot;Pipeline phase started: Phase 3.6 \u2014 Code-Graph Structural Enrichment&quot;,
+  &quot;evidence_refs&quot;: [],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;pipeline_phase&quot;: &quot;Phase 3.6 \u2014 Code-Graph Structural Enrichment&quot;
+  }
+}</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0021&quot;,
+  &quot;event_type&quot;: &quot;phase_completed&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.879Z&quot;,
+  &quot;semantic_phase&quot;: &quot;EMERGENCE&quot;,
+  &quot;description&quot;: &quot;Pipeline phase completed: Phase 3.6 \u2014 Code-Graph Structural Enrichment&quot;,
+  &quot;evidence_refs&quot;: [],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;pipeline_phase&quot;: &quot;Phase 3.6 \u2014 Code-Graph Structural Enrichment&quot;,
+    &quot;phase_index&quot;: 5,
+    &quot;status&quot;: &quot;PASS&quot;,
+    &quot;duration_ms&quot;: 0,
+    &quot;artifacts_produced&quot;</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0022&quot;,
+  &quot;event_type&quot;: &quot;chronicle_checkpoint&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.880Z&quot;,
+  &quot;semantic_phase&quot;: &quot;EMERGENCE&quot;,
+  &quot;description&quot;: &quot;Checkpoint frozen: checkpoint_05_code_graph_enrichment&quot;,
+  &quot;evidence_refs&quot;: [
+    &quot;netbox/psee/runs/run_github_netbox_20260520_134600/chronicle/checkpoints/checkpoint_05_code_graph_enrichment.json&quot;
+  ],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;checkpoint_id&quot;: &quot;checkpoint_05_code_graph_enrichment&quot;</pre>
+  <div class='z5-truncated'>... 3 more events</div>
+</div></div>
+  </div>
+
+  
+<div class="checkpoint-bar">
+  <div class="checkpoint-label">FROZEN CHECKPOINTS</div>
+  <div class='checkpoint-row'><span class='checkpoint-id'>checkpoint_03_structural_verification</span><span class='checkpoint-phase'>Phase 3  — 40.x Structural Verification</span><span class='checkpoint-ts'>2026-05-22T16:06:47</span></div><div class='checkpoint-row'><span class='checkpoint-id'>checkpoint_04_relevance_classification</span><span class='checkpoint-phase'>Phase 3.5 — Structural Relevance Classification</span><span class='checkpoint-ts'>2026-05-22T16:06:47</span></div><div class='checkpoint-row'><span class='checkpoint-id'>checkpoint_05_code_graph_enrichment</span><span class='checkpoint-phase'>Phase 3.6 — Code-Graph Structural Enrichment</span><span class='checkpoint-ts'>2026-05-22T16:06:47</span></div><div class='checkpoint-row'><span class='checkpoint-id'>checkpoint_06_structural_centrality</span><span class='checkpoint-phase'>Phase 3.7 — Structural Centrality Derivation</span><span class='checkpoint-ts'>2026-05-22T16:06:47</span></div>
+</div>
+</section>
+
+<section class="chapter" data-phase="FORMATION" style="opacity: 1;">
+  <div class="chapter-header">
+    <div class="chapter-phase-marker" style="background: #64ffda;">FORMATION</div>
+    <div class="chapter-title">Semantic claims crystallize from structural evidence</div>
+    <div class="chapter-status-badge" style="color: #64ffda; border-color: #64ffda;">COMPLETE</div>
+    <div class="chapter-event-count">9 events</div>
+  </div>
+
+  <div class="zoom-container" data-current-zoom="1">
+    <div class="zoom-controls">
+      <button class="zoom-btn" data-zoom="1" title="Executive Understanding">Z1</button>
+      <button class="zoom-btn" data-zoom="2" title="Semantic Interpretation">Z2</button>
+      <button class="zoom-btn" data-zoom="3" title="Governance Detail">Z3</button>
+      <button class="zoom-btn" data-zoom="4" title="Structural Proof">Z4</button>
+      <button class="zoom-btn" data-zoom="5" title="Raw Evidence">Z5</button>
+    </div>
+
+    <div class="zoom-level z1 active">
+<div class="z1-content">
+  <div class="z1-narrative">
+    Semantic claims crystallize from structural evidence. The Semantic Proposition Engine
+    transforms verified structural artifacts into governed propositions — each carrying
+    derivation tier, confidence score, and authority ceiling.
+  </div>
+  <div class="z1-metric">77 propositions derived</div>
+  <div class="z1-metric">STRUCTURAL_DOMINANCE: 12, COUPLING_PATTERN: 34, AUTHORITY_TOPOLOGY: 12, TIER_GROUNDING: 12, HERO_MOMENT_GROUNDING: 6, CLUSTER_ARCHITECTURE: 1</div>
+  <div class="z1-finding">
+    <span class="finding-label">KEY FINDING</span>
+    Semantic DNA formed from structural evidence — all at L3 authority ceiling, CANDIDATE status
+  </div>
+</div></div>
+    <div class="zoom-level z2">
+<div class="z2-content">
+  <div class="z2-section">
+    <div class="z2-section-title">EVENT TYPES IN THIS PHASE</div>
+    <div class='z2-row'><span class='z2-type'>phase_started</span><span class='z2-count'>3</span></div>
+<div class='z2-row'><span class='z2-type'>phase_completed</span><span class='z2-count'>2</span></div>
+<div class='z2-row'><span class='z2-type'>chronicle_checkpoint</span><span class='z2-count'>2</span></div>
+<div class='z2-row'><span class='z2-type'>phase_failed</span><span class='z2-count'>1</span></div>
+<div class='z2-row'><span class='z2-type'>chronicle_finalized</span><span class='z2-count'>1</span></div>
+  </div>
+  
+<div class="z2-section">
+  <div class="z2-section-title">PROPOSITION CLASSES</div>
+  <div class='z2-row'><span class='z2-type'>COUPLING_PATTERN</span><span class='z2-count'>34</span></div>
+<div class='z2-row'><span class='z2-type'>STRUCTURAL_DOMINANCE</span><span class='z2-count'>12</span></div>
+<div class='z2-row'><span class='z2-type'>AUTHORITY_TOPOLOGY</span><span class='z2-count'>12</span></div>
+<div class='z2-row'><span class='z2-type'>TIER_GROUNDING</span><span class='z2-count'>12</span></div>
+<div class='z2-row'><span class='z2-type'>HERO_MOMENT_GROUNDING</span><span class='z2-count'>6</span></div>
+<div class='z2-row'><span class='z2-type'>CLUSTER_ARCHITECTURE</span><span class='z2-count'>1</span></div>
+</div>
+</div></div>
+    <div class="zoom-level z3">
+<div class="z3-content">
+  
+  <div class="z3-section">
+    <div class="z3-section-title">CHRONICLE EVENTS</div>
+    <div class='z3-row'><span class='z3-action'>phase_started</span><span class='z3-target'>Pipeline phase started: Phase 3b — Semantic Derivation</span></div><div class='z3-row'><span class='z3-action'>phase_completed</span><span class='z3-target'>Pipeline phase completed: Phase 3b — Semantic Derivation</span></div><div class='z3-row'><span class='z3-action'>chronicle_checkpoint</span><span class='z3-target'>Checkpoint frozen: checkpoint_07_semantic_derivation</span></div><div class='z3-row'><span class='z3-action'>phase_started</span><span class='z3-target'>Pipeline phase started: Phase 3c — Semantic Proposition Derivation</span></div><div class='z3-row'><span class='z3-action'>phase_completed</span><span class='z3-target'>Pipeline phase completed: Phase 3c — Semantic Proposition Derivation</span></div><div class='z3-row'><span class='z3-action'>chronicle_checkpoint</span><span class='z3-target'>Checkpoint frozen: checkpoint_08_semantic_proposition</span></div><div class='z3-row'><span class='z3-action'>phase_started</span><span class='z3-target'>Pipeline phase started: Phase 4  — CEU Grounding Verification</span></div><div class='z3-row'><span class='z3-action'>phase_failed</span><span class='z3-target'>Pipeline phase FAILED: Phase 4  — CEU Grounding Verification</span></div><div class='z3-row'><span class='z3-action'>chronicle_finalized</span><span class='z3-target'>Chronicle finalized: INCOMPLETE (33 events, 9 checkpoints)</span></div>
+  </div>
+</div></div>
+    <div class="zoom-level z4">
+<div class="z4-content">
+  <div class="z4-section-title">STRUCTURAL PROOF — EVIDENCE ANCHORS</div>
+  <div class='z4-row'><span class='z4-id'>CE-netbox-run_github_netbox_20260520_134600-0028</span><span class='z4-refs'>netbox/psee/runs/run_github_netbox_20260</span></div><div class='z4-row'><span class='z4-id'>CE-netbox-run_github_netbox_20260520_134600-0031</span><span class='z4-refs'>netbox/psee/runs/run_github_netbox_20260</span></div>
+</div></div>
+    <div class="zoom-level z5">
+<div class="z5-content">
+  <div class="z5-section-title">RAW EVIDENCE — CHRONICLE EVENTS</div>
+  <pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0026&quot;,
+  &quot;event_type&quot;: &quot;phase_started&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.881Z&quot;,
+  &quot;semantic_phase&quot;: &quot;FORMATION&quot;,
+  &quot;description&quot;: &quot;Pipeline phase started: Phase 3b \u2014 Semantic Derivation&quot;,
+  &quot;evidence_refs&quot;: [],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;pipeline_phase&quot;: &quot;Phase 3b \u2014 Semantic Derivation&quot;
+  }
+}</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0027&quot;,
+  &quot;event_type&quot;: &quot;phase_completed&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.881Z&quot;,
+  &quot;semantic_phase&quot;: &quot;FORMATION&quot;,
+  &quot;description&quot;: &quot;Pipeline phase completed: Phase 3b \u2014 Semantic Derivation&quot;,
+  &quot;evidence_refs&quot;: [],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;pipeline_phase&quot;: &quot;Phase 3b \u2014 Semantic Derivation&quot;,
+    &quot;phase_index&quot;: 7,
+    &quot;status&quot;: &quot;PASS&quot;,
+    &quot;duration_ms&quot;: 0,
+    &quot;artifacts_produced&quot;: []
+  }
+}</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0028&quot;,
+  &quot;event_type&quot;: &quot;chronicle_checkpoint&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.882Z&quot;,
+  &quot;semantic_phase&quot;: &quot;FORMATION&quot;,
+  &quot;description&quot;: &quot;Checkpoint frozen: checkpoint_07_semantic_derivation&quot;,
+  &quot;evidence_refs&quot;: [
+    &quot;netbox/psee/runs/run_github_netbox_20260520_134600/chronicle/checkpoints/checkpoint_07_semantic_derivation.json&quot;
+  ],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;checkpoint_id&quot;: &quot;checkpoint_07_semantic_derivation&quot;
+  }
+}</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0029&quot;,
+  &quot;event_type&quot;: &quot;phase_started&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.882Z&quot;,
+  &quot;semantic_phase&quot;: &quot;FORMATION&quot;,
+  &quot;description&quot;: &quot;Pipeline phase started: Phase 3c \u2014 Semantic Proposition Derivation&quot;,
+  &quot;evidence_refs&quot;: [],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;pipeline_phase&quot;: &quot;Phase 3c \u2014 Semantic Proposition Derivation&quot;
+  }
+}</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0030&quot;,
+  &quot;event_type&quot;: &quot;phase_completed&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.882Z&quot;,
+  &quot;semantic_phase&quot;: &quot;FORMATION&quot;,
+  &quot;description&quot;: &quot;Pipeline phase completed: Phase 3c \u2014 Semantic Proposition Derivation&quot;,
+  &quot;evidence_refs&quot;: [],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;pipeline_phase&quot;: &quot;Phase 3c \u2014 Semantic Proposition Derivation&quot;,
+    &quot;phase_index&quot;: 8,
+    &quot;status&quot;: &quot;PASS&quot;,
+    &quot;duration_ms&quot;: 0,
+    &quot;artifacts_produced&quot;: []</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0031&quot;,
+  &quot;event_type&quot;: &quot;chronicle_checkpoint&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.883Z&quot;,
+  &quot;semantic_phase&quot;: &quot;FORMATION&quot;,
+  &quot;description&quot;: &quot;Checkpoint frozen: checkpoint_08_semantic_proposition&quot;,
+  &quot;evidence_refs&quot;: [
+    &quot;netbox/psee/runs/run_github_netbox_20260520_134600/chronicle/checkpoints/checkpoint_08_semantic_proposition.json&quot;
+  ],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;checkpoint_id&quot;: &quot;checkpoint_08_semantic_proposition&quot;
+  </pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0032&quot;,
+  &quot;event_type&quot;: &quot;phase_started&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.883Z&quot;,
+  &quot;semantic_phase&quot;: &quot;FORMATION&quot;,
+  &quot;description&quot;: &quot;Pipeline phase started: Phase 4  \u2014 CEU Grounding Verification&quot;,
+  &quot;evidence_refs&quot;: [],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;pipeline_phase&quot;: &quot;Phase 4  \u2014 CEU Grounding Verification&quot;
+  }
+}</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0033&quot;,
+  &quot;event_type&quot;: &quot;phase_failed&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.884Z&quot;,
+  &quot;semantic_phase&quot;: &quot;FORMATION&quot;,
+  &quot;description&quot;: &quot;Pipeline phase FAILED: Phase 4  \u2014 CEU Grounding Verification&quot;,
+  &quot;evidence_refs&quot;: [],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;pipeline_phase&quot;: &quot;Phase 4  \u2014 CEU Grounding Verification&quot;,
+    &quot;phase_index&quot;: 9,
+    &quot;status&quot;: &quot;FAIL&quot;,
+    &quot;duration_ms&quot;: 0,
+    &quot;artifacts_produced&quot;: []
+  }
+}</pre><pre class='z5-raw'>{
+  &quot;event_id&quot;: &quot;CE-netbox-run_github_netbox_20260520_134600-0034&quot;,
+  &quot;event_type&quot;: &quot;chronicle_finalized&quot;,
+  &quot;timestamp&quot;: &quot;2026-05-22T16:06:47.884Z&quot;,
+  &quot;semantic_phase&quot;: &quot;FORMATION&quot;,
+  &quot;description&quot;: &quot;Chronicle finalized: INCOMPLETE (33 events, 9 checkpoints)&quot;,
+  &quot;evidence_refs&quot;: [],
+  &quot;replay_safe&quot;: true,
+  &quot;detail&quot;: {
+    &quot;final_status&quot;: &quot;INCOMPLETE&quot;,
+    &quot;total_events&quot;: 33,
+    &quot;total_checkpoints&quot;: 9,
+    &quot;elapsed_ms&quot;: 79
+  }
+}</pre>
+  
+</div></div>
+  </div>
+
+  
+<div class="checkpoint-bar">
+  <div class="checkpoint-label">FROZEN CHECKPOINTS</div>
+  <div class='checkpoint-row'><span class='checkpoint-id'>checkpoint_07_semantic_derivation</span><span class='checkpoint-phase'>Phase 3b — Semantic Derivation</span><span class='checkpoint-ts'>2026-05-22T16:06:47</span></div><div class='checkpoint-row'><span class='checkpoint-id'>checkpoint_08_semantic_proposition</span><span class='checkpoint-phase'>Phase 3c — Semantic Proposition Derivation</span><span class='checkpoint-ts'>2026-05-22T16:06:47</span></div>
+</div>
+</section>
+
+<section class="chapter" data-phase="TENSION" style="opacity: 0.4;">
+  <div class="chapter-header">
+    <div class="chapter-phase-marker" style="background: #ff6b6b;">TENSION</div>
+    <div class="chapter-title">Governance challenges weak meaning — friction, dispute, rejection</div>
+    <div class="chapter-status-badge" style="color: #4a5570; border-color: #4a5570;">NOT EXERCISED</div>
+    <div class="chapter-event-count">0 events</div>
+  </div>
+
+  <div class="zoom-container" data-current-zoom="1">
+    <div class="zoom-controls">
+      <button class="zoom-btn" data-zoom="1" title="Executive Understanding">Z1</button>
+      <button class="zoom-btn" data-zoom="2" title="Semantic Interpretation">Z2</button>
+      <button class="zoom-btn" data-zoom="3" title="Governance Detail">Z3</button>
+      <button class="zoom-btn" data-zoom="4" title="Structural Proof">Z4</button>
+      <button class="zoom-btn" data-zoom="5" title="Raw Evidence">Z5</button>
+    </div>
+
+    <div class="zoom-level z1 active">
+<div class="z1-content">
+  <div class="z1-narrative">
+    Governance challenges weak meaning. Operator review exercises the full authority
+    workflow — accept, contest, arbitrate, reject. Claims that cannot survive
+    governance friction are removed. This is genuine friction, not ceremony.
+  </div>
+  <div class="z1-metric">0 governance events recorded</div>
+  <div class="z1-finding">
+    <span class="finding-label">KEY FINDING</span>
+    Governance phase — operator review required
+  </div>
+</div></div>
+    <div class="zoom-level z2"><div class='z2-content'><div class='z2-empty'>No semantic data for this phase.</div></div></div>
+    <div class="zoom-level z3">
+<div class="z3-content">
+  
+  <div class="z3-section">
+    <div class="z3-section-title">CHRONICLE EVENTS</div>
+    
+  </div>
+</div></div>
+    <div class="zoom-level z4">
+<div class="z4-content">
+  <div class="z4-section-title">STRUCTURAL PROOF — EVIDENCE ANCHORS</div>
+  <div class='z4-empty'>No evidence anchors for this phase.</div>
+</div></div>
+    <div class="zoom-level z5">
+<div class="z5-content">
+  <div class="z5-section-title">RAW EVIDENCE — CHRONICLE EVENTS</div>
+  
+  
+</div></div>
+  </div>
+
+  
+</section>
+
+<section class="chapter" data-phase="STRENGTHENING" style="opacity: 1;">
+  <div class="chapter-header">
+    <div class="chapter-phase-marker" style="background: #ffd700;">STRENGTHENING</div>
+    <div class="chapter-title">Evidence enrichment, debt evolution — the system self-corrects</div>
+    <div class="chapter-status-badge" style="color: #4a9eff; border-color: #4a9eff;">ACTIVE</div>
+    <div class="chapter-event-count">0 events</div>
+  </div>
+
+  <div class="zoom-container" data-current-zoom="1">
+    <div class="zoom-controls">
+      <button class="zoom-btn" data-zoom="1" title="Executive Understanding">Z1</button>
+      <button class="zoom-btn" data-zoom="2" title="Semantic Interpretation">Z2</button>
+      <button class="zoom-btn" data-zoom="3" title="Governance Detail">Z3</button>
+      <button class="zoom-btn" data-zoom="4" title="Structural Proof">Z4</button>
+      <button class="zoom-btn" data-zoom="5" title="Raw Evidence">Z5</button>
+    </div>
+
+    <div class="zoom-level z1 active">
+<div class="z1-content">
+  <div class="z1-narrative">
+    Evidence enrichment strengthens weak claims. The substrate self-corrects through
+    additional structural evidence — code graph authority, cross-reference validation,
+    and reconciliation. Learning events capture what the system discovers about its own
+    onboarding process.
+  </div>
+  <div class="z1-metric">14 learning events captured</div>
+  <div class="z1-metric">Categories: TIER_CLASSIFICATION_GAP: 1, EVIDENCE_TYPE_GAP: 1, AUTHORITY_PATTERN_GAP: 1, SPINE_CONSISTENCY_GAP: 1, GOVERNANCE_PROCESS_GAP: 1, over_generalization_risk: 2, reconciliation_friction: 1, SUBSTRATE_ENRICHMENT_FEASIBILITY: 1, SUBSTRATE_COVERAGE_GAP: 1, AUTHORITY_ENRICHMENT_RESULT: 1, PATTERN_DISCREPANCY_CORRECTION: 1, HERO_MOMENT_RECONCILIATION: 1, GOVERNANCE_EVOLUTION_PATTERN: 1</div>
+  <div class="z1-finding">
+    <span class="finding-label">KEY FINDING</span>
+    System learning from its own genesis — substrate strengthening through evidence
+  </div>
+</div></div>
+    <div class="zoom-level z2"><div class='z2-content'><div class='z2-empty'>No semantic data for this phase.</div></div></div>
+    <div class="zoom-level z3">
+<div class="z3-content">
+  
+  <div class="z3-section">
+    <div class="z3-section-title">CHRONICLE EVENTS</div>
+    
+  </div>
+</div></div>
+    <div class="zoom-level z4">
+<div class="z4-content">
+  <div class="z4-section-title">STRUCTURAL PROOF — EVIDENCE ANCHORS</div>
+  <div class='z4-empty'>No evidence anchors for this phase.</div>
+</div></div>
+    <div class="zoom-level z5">
+<div class="z5-content">
+  <div class="z5-section-title">RAW EVIDENCE — CHRONICLE EVENTS</div>
+  
+  
+</div></div>
+  </div>
+
+  
+</section>
+
+<section class="chapter" data-phase="STABILIZATION" style="opacity: 0.4;">
+  <div class="chapter-header">
+    <div class="chapter-phase-marker" style="background: #64ffda;">STABILIZATION</div>
+    <div class="chapter-title">Deterministic replay confirms — what was challenged now holds</div>
+    <div class="chapter-status-badge" style="color: #7a8aaa; border-color: #7a8aaa;">LAWFUL SKIP</div>
+    <div class="chapter-event-count">0 events</div>
+  </div>
+
+  <div class="zoom-container" data-current-zoom="1">
+    <div class="zoom-controls">
+      <button class="zoom-btn" data-zoom="1" title="Executive Understanding">Z1</button>
+      <button class="zoom-btn" data-zoom="2" title="Semantic Interpretation">Z2</button>
+      <button class="zoom-btn" data-zoom="3" title="Governance Detail">Z3</button>
+      <button class="zoom-btn" data-zoom="4" title="Structural Proof">Z4</button>
+      <button class="zoom-btn" data-zoom="5" title="Raw Evidence">Z5</button>
+    </div>
+
+    <div class="zoom-level z1 active">
+<div class="z1-content">
+  <div class="z1-narrative">
+    Deterministic replay confirms. What was challenged now holds under structural rigor.
+    The revalidation framework replays derivation, reconciliation, and governance
+    decisions to verify deterministic reproducibility.
+  </div>
+  <div class="z1-finding">
+    <span class="finding-label">KEY FINDING</span>
+    Stabilization — deterministic revalidation confirms governance-challenged corpus
+  </div>
+</div></div>
+    <div class="zoom-level z2"><div class='z2-content'><div class='z2-empty'>No semantic data for this phase.</div></div></div>
+    <div class="zoom-level z3">
+<div class="z3-content">
+  
+  <div class="z3-section">
+    <div class="z3-section-title">CHRONICLE EVENTS</div>
+    
+  </div>
+</div></div>
+    <div class="zoom-level z4">
+<div class="z4-content">
+  <div class="z4-section-title">STRUCTURAL PROOF — EVIDENCE ANCHORS</div>
+  <div class='z4-empty'>No evidence anchors for this phase.</div>
+</div></div>
+    <div class="zoom-level z5">
+<div class="z5-content">
+  <div class="z5-section-title">RAW EVIDENCE — CHRONICLE EVENTS</div>
+  
+  
+</div></div>
+  </div>
+
+  
+</section>
+
+<section class="chapter" data-phase="QUALIFICATION" style="opacity: 0.4;">
+  <div class="chapter-header">
+    <div class="chapter-phase-marker" style="background: #4a9eff;">QUALIFICATION</div>
+    <div class="chapter-title">Governed advancement — the system earns its state transition</div>
+    <div class="chapter-status-badge" style="color: #4a5570; border-color: #4a5570;">NOT EXERCISED</div>
+    <div class="chapter-event-count">0 events</div>
+  </div>
+
+  <div class="zoom-container" data-current-zoom="1">
+    <div class="zoom-controls">
+      <button class="zoom-btn" data-zoom="1" title="Executive Understanding">Z1</button>
+      <button class="zoom-btn" data-zoom="2" title="Semantic Interpretation">Z2</button>
+      <button class="zoom-btn" data-zoom="3" title="Governance Detail">Z3</button>
+      <button class="zoom-btn" data-zoom="4" title="Structural Proof">Z4</button>
+      <button class="zoom-btn" data-zoom="5" title="Raw Evidence">Z5</button>
+    </div>
+
+    <div class="zoom-level z1 active">
+<div class="z1-content">
+  <div class="z1-narrative">
+    The system earns its state transition. S-level advancement is not granted by
+    blocker resolution alone — it requires completion of the full governance lifecycle:
+    proposition derivation, operator review, substrate strengthening, deterministic revalidation.
+  </div>
+  <div class="z1-finding">
+    <span class="finding-label">KEY FINDING</span>
+    Qualification — governed advancement through lifecycle completion
+  </div>
+</div></div>
+    <div class="zoom-level z2"><div class='z2-content'><div class='z2-empty'>No semantic data for this phase.</div></div></div>
+    <div class="zoom-level z3">
+<div class="z3-content">
+  
+  <div class="z3-section">
+    <div class="z3-section-title">CHRONICLE EVENTS</div>
+    
+  </div>
+</div></div>
+    <div class="zoom-level z4">
+<div class="z4-content">
+  <div class="z4-section-title">STRUCTURAL PROOF — EVIDENCE ANCHORS</div>
+  <div class='z4-empty'>No evidence anchors for this phase.</div>
+</div></div>
+    <div class="zoom-level z5">
+<div class="z5-content">
+  <div class="z5-section-title">RAW EVIDENCE — CHRONICLE EVENTS</div>
+  
+  
+</div></div>
+  </div>
+
+  
+</section>
+
+<section class="chapter" data-phase="CONVERGENCE" style="opacity: 0.4;">
+  <div class="chapter-header">
+    <div class="chapter-phase-marker" style="background: #ff9e4a;">CONVERGENCE</div>
+    <div class="chapter-title">Cross-specimen pattern — generalized governed cognition emerges</div>
+    <div class="chapter-status-badge" style="color: #4a5570; border-color: #4a5570;">NOT ELIGIBLE</div>
+    <div class="chapter-event-count">0 events</div>
+  </div>
+
+  <div class="zoom-container" data-current-zoom="1">
+    <div class="zoom-controls">
+      <button class="zoom-btn" data-zoom="1" title="Executive Understanding">Z1</button>
+      <button class="zoom-btn" data-zoom="2" title="Semantic Interpretation">Z2</button>
+      <button class="zoom-btn" data-zoom="3" title="Governance Detail">Z3</button>
+      <button class="zoom-btn" data-zoom="4" title="Structural Proof">Z4</button>
+      <button class="zoom-btn" data-zoom="5" title="Raw Evidence">Z5</button>
+    </div>
+
+    <div class="zoom-level z1 active">
+<div class="z1-content">
+  <div class="z1-narrative">
+    Cross-specimen patterns emerge. When two or more specimens traverse the same
+    governance lifecycle, convergent and divergent patterns become observable.
+    All observations at DESCRIPTIVE maturity — two specimens is comparison, not law.
+  </div>
+  <div class="z1-finding">
+    <span class="finding-label">KEY FINDING</span>
+    Convergence — governed cognition generalizes across specimens
+  </div>
+</div></div>
+    <div class="zoom-level z2"><div class='z2-content'><div class='z2-empty'>No semantic data for this phase.</div></div></div>
+    <div class="zoom-level z3">
+<div class="z3-content">
+  
+  <div class="z3-section">
+    <div class="z3-section-title">CHRONICLE EVENTS</div>
+    
+  </div>
+</div></div>
+    <div class="zoom-level z4">
+<div class="z4-content">
+  <div class="z4-section-title">STRUCTURAL PROOF — EVIDENCE ANCHORS</div>
+  <div class='z4-empty'>No evidence anchors for this phase.</div>
+</div></div>
+    <div class="zoom-level z5">
+<div class="z5-content">
+  <div class="z5-section-title">RAW EVIDENCE — CHRONICLE EVENTS</div>
+  
+  
+</div></div>
+  </div>
+
+  
+</section>
+
+<section class="chapter" data-phase="PROJECTION" style="opacity: 0.4;">
+  <div class="chapter-header">
+    <div class="chapter-phase-marker" style="background: #ccd6f6;">PROJECTION</div>
+    <div class="chapter-title">Executive understanding crystallizes — cognition becomes communicable</div>
+    <div class="chapter-status-badge" style="color: #7a8aaa; border-color: #7a8aaa;">LAWFUL SKIP</div>
+    <div class="chapter-event-count">0 events</div>
+  </div>
+
+  <div class="zoom-container" data-current-zoom="1">
+    <div class="zoom-controls">
+      <button class="zoom-btn" data-zoom="1" title="Executive Understanding">Z1</button>
+      <button class="zoom-btn" data-zoom="2" title="Semantic Interpretation">Z2</button>
+      <button class="zoom-btn" data-zoom="3" title="Governance Detail">Z3</button>
+      <button class="zoom-btn" data-zoom="4" title="Structural Proof">Z4</button>
+      <button class="zoom-btn" data-zoom="5" title="Raw Evidence">Z5</button>
+    </div>
+
+    <div class="zoom-level z1 active">
+<div class="z1-content">
+  <div class="z1-narrative">
+    Executive understanding crystallizes. Cognition becomes communicable through
+    governed projection surfaces — LENS views, SQO cockpit, BOARDROOM narratives.
+    The genesis corridor is complete: from raw intake to governed understanding.
+  </div>
+  <div class="z1-finding">
+    <span class="finding-label">KEY FINDING</span>
+    Projection — the system's understanding is now structurally communicable
+  </div>
+</div></div>
+    <div class="zoom-level z2"><div class='z2-content'><div class='z2-empty'>No semantic data for this phase.</div></div></div>
+    <div class="zoom-level z3">
+<div class="z3-content">
+  
+  <div class="z3-section">
+    <div class="z3-section-title">CHRONICLE EVENTS</div>
+    
+  </div>
+</div></div>
+    <div class="zoom-level z4">
+<div class="z4-content">
+  <div class="z4-section-title">STRUCTURAL PROOF — EVIDENCE ANCHORS</div>
+  <div class='z4-empty'>No evidence anchors for this phase.</div>
+</div></div>
+    <div class="zoom-level z5">
+<div class="z5-content">
+  <div class="z5-section-title">RAW EVIDENCE — CHRONICLE EVENTS</div>
+  
+  
+</div></div>
+  </div>
+
+  
+</section>
+
+
+<section class="hero-moments-panel">
+  <div class="panel-header">HERO MOMENTS — 23 CANDIDATES</div>
+  <div class="panel-subtitle">Cognitive discontinuities detected during structural emergence</div>
+  
+<div class="hm-row">
+  <span class="hm-id">HM-netbox-001</span>
+  <span class="hm-type">AUTHORITY_SURPRISE</span>
+  <div class="hm-desc">Gravitational dominance: netbox/netbox/forms/__init__.py has 353 inbound edges (threshold: 57, role:</div>
+  <div class="hm-metric">{&quot;metric_name&quot;: &quot;in_degree&quot;, &quot;observed_value&quot;: 353, &quot;expecte</div>
+</div>
+<div class="hm-row">
+  <span class="hm-id">HM-netbox-002</span>
+  <span class="hm-type">AUTHORITY_SURPRISE</span>
+  <div class="hm-desc">Gravitational dominance: netbox/utilities/testing/base.py has 344 inbound edges (threshold: 57, role</div>
+  <div class="hm-metric">{&quot;metric_name&quot;: &quot;in_degree&quot;, &quot;observed_value&quot;: 344, &quot;expecte</div>
+</div>
+<div class="hm-row">
+  <span class="hm-id">HM-netbox-003</span>
+  <span class="hm-type">AUTHORITY_SURPRISE</span>
+  <div class="hm-desc">Enumeration coupling multiplier: netbox/utilities/testing/base.py has 344 inbound edges but only 2 d</div>
+  <div class="hm-metric">{&quot;metric_name&quot;: &quot;in_degree_vs_definitions&quot;, &quot;observed_value&quot;</div>
+</div>
+<div class="hm-row">
+  <span class="hm-id">HM-netbox-004</span>
+  <span class="hm-type">AUTHORITY_SURPRISE</span>
+  <div class="hm-desc">Gravitational dominance: netbox/utilities/testing/__init__.py has 240 inbound edges (threshold: 57, </div>
+  <div class="hm-metric">{&quot;metric_name&quot;: &quot;in_degree&quot;, &quot;observed_value&quot;: 240, &quot;expecte</div>
+</div>
+<div class="hm-row">
+  <span class="hm-id">HM-netbox-005</span>
+  <span class="hm-type">AUTHORITY_SURPRISE</span>
+  <div class="hm-desc">Gravitational dominance: netbox/netbox/api/serializers/__init__.py has 232 inbound edges (threshold:</div>
+  <div class="hm-metric">{&quot;metric_name&quot;: &quot;in_degree&quot;, &quot;observed_value&quot;: 232, &quot;expecte</div>
+</div>
+<div class="hm-row">
+  <span class="hm-id">HM-netbox-006</span>
+  <span class="hm-type">COUPLING_SURPRISE</span>
+  <div class="hm-desc">High cross-domain coupling: 2197/3614 imports (60.8%) cross module boundaries</div>
+  <div class="hm-metric">{&quot;metric_name&quot;: &quot;cross_domain_import_rate&quot;, &quot;observed_value&quot;</div>
+</div>
+<div class="hm-row">
+  <span class="hm-id">HM-netbox-007</span>
+  <span class="hm-type">COUPLING_SURPRISE</span>
+  <div class="hm-desc">Bidirectional entanglement: circuits ↔ dcim (24 + 14 = 38 mutual imports)</div>
+  <div class="hm-metric">{&quot;metric_name&quot;: &quot;bidirectional_import_count&quot;, &quot;observed_valu</div>
+</div>
+<div class="hm-row">
+  <span class="hm-id">HM-netbox-008</span>
+  <span class="hm-type">COUPLING_SURPRISE</span>
+  <div class="hm-desc">Bidirectional entanglement: core ↔ netbox (82 + 40 = 122 mutual imports)</div>
+  <div class="hm-metric">{&quot;metric_name&quot;: &quot;bidirectional_import_count&quot;, &quot;observed_valu</div>
+</div>
+<div class="hm-row">
+  <span class="hm-id">HM-netbox-009</span>
+  <span class="hm-type">COUPLING_SURPRISE</span>
+  <div class="hm-desc">Bidirectional entanglement: core ↔ utilities (54 + 16 = 70 mutual imports)</div>
+  <div class="hm-metric">{&quot;metric_name&quot;: &quot;bidirectional_import_count&quot;, &quot;observed_valu</div>
+</div>
+<div class="hm-row">
+  <span class="hm-id">HM-netbox-010</span>
+  <span class="hm-type">COUPLING_SURPRISE</span>
+  <div class="hm-desc">Bidirectional entanglement: core ↔ extras (11 + 66 = 77 mutual imports)</div>
+  <div class="hm-metric">{&quot;metric_name&quot;: &quot;bidirectional_import_count&quot;, &quot;observed_valu</div>
+</div>
+<div class="hm-row">
+  <span class="hm-id">HM-netbox-011</span>
+  <span class="hm-type">COUPLING_SURPRISE</span>
+  <div class="hm-desc">Bidirectional entanglement: dcim ↔ utilities (102 + 18 = 120 mutual imports)</div>
+  <div class="hm-metric">{&quot;metric_name&quot;: &quot;bidirectional_import_count&quot;, &quot;observed_valu</div>
+</div>
+<div class="hm-row">
+  <span class="hm-id">HM-netbox-012</span>
+  <span class="hm-type">COUPLING_SURPRISE</span>
+  <div class="hm-desc">Bidirectional entanglement: dcim ↔ netbox (106 + 21 = 127 mutual imports)</div>
+  <div class="hm-metric">{&quot;metric_name&quot;: &quot;bidirectional_import_count&quot;, &quot;observed_valu</div>
+</div>
+<div class="hm-row">
+  <span class="hm-id">HM-netbox-013</span>
+  <span class="hm-type">COUPLING_SURPRISE</span>
+  <div class="hm-desc">Bidirectional entanglement: dcim ↔ ipam (30 + 28 = 58 mutual imports)</div>
+  <div class="hm-metric">{&quot;metric_name&quot;: &quot;bidirectional_import_count&quot;, &quot;observed_valu</div>
+</div>
+<div class="hm-row">
+  <span class="hm-id">HM-netbox-014</span>
+  <span class="hm-type">COUPLING_SURPRISE</span>
+  <div class="hm-desc">Bidirectional entanglement: dcim ↔ wireless (29 + 36 = 65 mutual imports)</div>
+  <div class="hm-metric">{&quot;metric_name&quot;: &quot;bidirectional_import_count&quot;, &quot;observed_valu</div>
+</div>
+<div class="hm-row">
+  <span class="hm-id">HM-netbox-015</span>
+  <span class="hm-type">COUPLING_SURPRISE</span>
+  <div class="hm-desc">Bidirectional entanglement: dcim ↔ extras (25 + 34 = 59 mutual imports)</div>
+  <div class="hm-metric">{&quot;metric_name&quot;: &quot;bidirectional_import_count&quot;, &quot;observed_valu</div>
+</div>
+  <div class='panel-truncated'>... and 8 more</div>
+</section>
+
+
+<section class="learning-panel">
+  <div class="panel-header">LEARNING EVENTS — 14 CAPTURED</div>
+  <div class="panel-subtitle">Governed learning from onboarding experience</div>
+  
+<div class="le-row">
+  <span class="le-id">LRNE-P7-0001</span>
+  <span class="le-state">PROPOSED</span>
+  <span class="le-cat">TIER_CLASSIFICATION_GAP</span>
+  <div class="le-title">Structural tier classifier misclassifies cross-cutting infrastructure as CONSUME</div>
+  <div class="le-cap"></div>
+</div>
+<div class="le-row">
+  <span class="le-id">LRNE-P7-0002</span>
+  <span class="le-state">PROPOSED</span>
+  <span class="le-cat">EVIDENCE_TYPE_GAP</span>
+  <div class="le-title">Architecture documentation not consumed as evidence type</div>
+  <div class="le-cap"></div>
+</div>
+<div class="le-row">
+  <span class="le-id">LRNE-P7-0003</span>
+  <span class="le-state">PROPOSED</span>
+  <span class="le-cat">AUTHORITY_PATTERN_GAP</span>
+  <div class="le-title">Import-only authority pattern misses inheritance-dominant behavioral authority</div>
+  <div class="le-cap"></div>
+</div>
+<div class="le-row">
+  <span class="le-id">LRNE-P7-0004</span>
+  <span class="le-state">PROPOSED</span>
+  <span class="le-cat">SPINE_CONSISTENCY_GAP</span>
+  <div class="le-title">Spine objects summary section does not auto-update on append</div>
+  <div class="le-cap"></div>
+</div>
+<div class="le-row">
+  <span class="le-id">LRNE-P7-0005</span>
+  <span class="le-state">PROPOSED</span>
+  <span class="le-cat">GOVERNANCE_PROCESS_GAP</span>
+  <div class="le-title">Evidence ingestion selection requires human judgment without persistent workflow</div>
+  <div class="le-cap"></div>
+</div>
+<div class="le-row">
+  <span class="le-id">LRNE-SPE-0001</span>
+  <span class="le-state">PROPOSED</span>
+  <span class="le-cat">over_generalization_risk</span>
+  <div class="le-title"></div>
+  <div class="le-cap">SEMANTIC_PROPOSITION</div>
+</div>
+<div class="le-row">
+  <span class="le-id">LRNE-SPE-0002</span>
+  <span class="le-state">PROPOSED</span>
+  <span class="le-cat">over_generalization_risk</span>
+  <div class="le-title"></div>
+  <div class="le-cap">SEMANTIC_PROPOSITION</div>
+</div>
+<div class="le-row">
+  <span class="le-id">LRNE-SPE-0003</span>
+  <span class="le-state">PROPOSED</span>
+  <span class="le-cat">reconciliation_friction</span>
+  <div class="le-title"></div>
+  <div class="le-cap">SEMANTIC_PROPOSITION</div>
+</div>
+<div class="le-row">
+  <span class="le-id">LRNE-SUBSTRATE-0001</span>
+  <span class="le-state">PROPOSED</span>
+  <span class="le-cat">SUBSTRATE_ENRICHMENT_FEASIBILITY</span>
+  <div class="le-title">AST-based authority extraction is feasible, high-fidelity, and immediately actio</div>
+  <div class="le-cap"></div>
+</div>
+<div class="le-row">
+  <span class="le-id">LRNE-SUBSTRATE-0002</span>
+  <span class="le-state">PROPOSED</span>
+  <span class="le-cat">SUBSTRATE_COVERAGE_GAP</span>
+  <div class="le-title">Two CEUs lack AUTHORITY_TOPOLOGY propositions despite having authority edges</div>
+  <div class="le-cap"></div>
+</div>
+<div class="le-row">
+  <span class="le-id">LRNE-SUBSTRATE-0003</span>
+  <span class="le-state">PROPOSED</span>
+  <span class="le-cat">AUTHORITY_ENRICHMENT_RESULT</span>
+  <div class="le-title">AST authority enrichment converts all 10 AUTHORITY_TOPOLOGY propositions from DE</div>
+  <div class="le-cap"></div>
+</div>
+<div class="le-row">
+  <span class="le-id">LRNE-SUBSTRATE-0004</span>
+  <span class="le-state">PROPOSED</span>
+  <span class="le-cat">PATTERN_DISCREPANCY_CORRECTION</span>
+  <div class="le-title">Two AUTHORITY_TOPOLOGY propositions had authority_pattern labels contradicting t</div>
+  <div class="le-cap"></div>
+</div>
+<div class="le-row">
+  <span class="le-id">LRNE-SUBSTRATE-0005</span>
+  <span class="le-state">PROPOSED</span>
+  <span class="le-cat">HERO_MOMENT_RECONCILIATION</span>
+  <div class="le-title">5 of 6 HERO_MOMENT_GROUNDING propositions reconciled NOVEL→ALIGNED against DIREC</div>
+  <div class="le-cap"></div>
+</div>
+<div class="le-row">
+  <span class="le-id">LRNE-SUBSTRATE-0006</span>
+  <span class="le-state">PROPOSED</span>
+  <span class="le-cat">GOVERNANCE_EVOLUTION_PATTERN</span>
+  <div class="le-title">PATH B strengthening through governance friction is operationally proven</div>
+  <div class="le-cap"></div>
+</div>
+</section>
+
+
+<footer class="governance-footer">
+  <div class="footer-section">
+    <div class="footer-label">GOVERNANCE</div>
+    <div class="footer-value">75.x bounded &middot; evidence-bound &middot; 13 prohibitions enforced</div>
+  </div>
+  <div class="footer-section">
+    <div class="footer-label">COMPILED</div>
+    <div class="footer-value">2026-05-22T16:53:10Z</div>
+  </div>
+  <div class="footer-section">
+    <div class="footer-label">CONTRACT</div>
+    <div class="footer-value">PI.GENESIS.GEN-5.FIRST-FULL-GENESIS-CHRONICLE.01</div>
+  </div>
+  <div class="footer-section">
+    <div class="footer-label">AUTHORITY</div>
+    <div class="footer-value">BOUNDED INTERPRETATION &middot; lineage-grounded &middot; no inference beyond evidence</div>
+  </div>
+</footer>
+
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.zoom-controls').forEach(function(controls) {
+    var container = controls.closest('.zoom-container');
+    var buttons = controls.querySelectorAll('.zoom-btn');
+    var levels = container.querySelectorAll('.zoom-level');
+
+    buttons.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var zoom = btn.getAttribute('data-zoom');
+        buttons.forEach(function(b) { b.classList.remove('active'); });
+        levels.forEach(function(l) { l.classList.remove('active'); });
+        btn.classList.add('active');
+        container.querySelector('.z' + zoom).classList.add('active');
+        container.setAttribute('data-current-zoom', zoom);
+      });
+    });
+
+    if (buttons.length > 0) buttons[0].classList.add('active');
+  });
+
+  document.querySelectorAll('.timeline-node').forEach(function(node) {
+    node.addEventListener('click', function() {
+      var phase = node.getAttribute('data-phase');
+      var chapter = document.querySelector('.chapter[data-phase="' + phase + '"]');
+      if (chapter) {
+        chapter.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>
