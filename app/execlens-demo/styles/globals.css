@@ -11653,3 +11653,356 @@ a.topo-chip:hover {
 .sqo-blocker-list__obl--resolved { color: var(--green); }
 .sqo-blocker-list__obl--rejected { color: var(--red); }
 .sqo-blocker-list__obl--contested { color: var(--orange); }
+
+/* ───────────────────────────────────────────────
+   Semantic Debt Panel — House-Style Projection
+   ─────────────────────────────────────────────── */
+
+.sqo-debt-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sqo-debt-panel--empty {
+  padding: 24px;
+}
+
+.sqo-debt-panel__empty-notice {
+  color: var(--text-dim);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  margin: 0;
+}
+
+/* Executive summary */
+
+.sqo-debt-panel__summary {
+  background: var(--bg-card-deep);
+  border: 1px solid var(--border-dim);
+  border-radius: 4px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sqo-debt-panel__summary-primary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.sqo-debt-panel__total {
+  font-size: 15px;
+  font-weight: 600;
+  font-family: var(--font-ui);
+  color: var(--text-primary);
+}
+
+.sqo-debt-panel__severity-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.sqo-debt-panel__severity-chip {
+  font-size: 10px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.sqo-debt-panel__severity-chip--critical {
+  color: var(--red);
+  background: rgba(255, 107, 107, 0.1);
+}
+
+.sqo-debt-panel__severity-chip--high {
+  color: var(--orange);
+  background: rgba(255, 158, 74, 0.1);
+}
+
+.sqo-debt-panel__severity-chip--medium-high {
+  color: var(--yellow);
+  background: rgba(255, 215, 0, 0.08);
+}
+
+.sqo-debt-panel__severity-chip--medium {
+  color: var(--yellow);
+  background: rgba(255, 215, 0, 0.06);
+}
+
+.sqo-debt-panel__severity-chip--low {
+  color: var(--text-dim);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.sqo-debt-panel__summary-impact,
+.sqo-debt-panel__summary-action {
+  font-size: 12px;
+  font-family: var(--font-ui);
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+.sqo-debt-panel__impact-label,
+.sqo-debt-panel__action-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  display: block;
+  margin-bottom: 3px;
+}
+
+/* Debt group cards */
+
+.sqo-debt-panel__groups {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sqo-debt-group {
+  background: var(--bg-card-deep);
+  border: 1px solid var(--border-dim);
+  border-left: 3px solid var(--text-muted);
+  border-radius: 4px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sqo-debt-group:hover {
+  border-color: var(--border-color);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.sqo-debt-group--critical {
+  border-left-color: var(--red);
+}
+
+.sqo-debt-group--high {
+  border-left-color: var(--orange);
+}
+
+.sqo-debt-group--medium-high {
+  border-left-color: var(--yellow);
+}
+
+.sqo-debt-group--medium {
+  border-left-color: var(--yellow);
+}
+
+.sqo-debt-group--low {
+  border-left-color: var(--text-muted);
+}
+
+/* Group header */
+
+.sqo-debt-group__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.sqo-debt-group__icon {
+  font-size: 18px;
+  color: var(--accent);
+  flex-shrink: 0;
+  line-height: 1.2;
+  margin-top: 1px;
+}
+
+.sqo-debt-group--critical .sqo-debt-group__icon { color: var(--red); }
+.sqo-debt-group--high .sqo-debt-group__icon { color: var(--orange); }
+.sqo-debt-group--medium-high .sqo-debt-group__icon { color: var(--yellow); }
+
+.sqo-debt-group__headline-block {
+  flex: 1;
+  min-width: 0;
+}
+
+.sqo-debt-group__headline {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.sqo-debt-group__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-dim);
+  flex-wrap: wrap;
+}
+
+.sqo-debt-group__count {
+  color: var(--text-dim);
+}
+
+.sqo-debt-group__separator {
+  color: var(--text-muted);
+}
+
+.sqo-debt-group__severity {
+  font-weight: 600;
+}
+
+.sqo-debt-group__severity--critical { color: var(--red); }
+.sqo-debt-group__severity--high { color: var(--orange); }
+.sqo-debt-group__severity--medium-high { color: var(--yellow); }
+.sqo-debt-group__severity--medium { color: var(--yellow); }
+.sqo-debt-group__severity--low { color: var(--text-dim); }
+
+.sqo-debt-group__blocking {
+  color: var(--orange);
+  font-weight: 600;
+}
+
+/* Body content */
+
+.sqo-debt-group__description {
+  font-size: 12px;
+  font-family: var(--font-ui);
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.sqo-debt-group__impact {
+  font-size: 11px;
+  font-family: var(--font-ui);
+  color: var(--text-dim);
+  line-height: 1.4;
+  padding: 8px 10px;
+  background: rgba(74, 158, 255, 0.04);
+  border-left: 2px solid rgba(74, 158, 255, 0.2);
+  border-radius: 0 3px 3px 0;
+}
+
+.sqo-debt-group__impact-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  display: inline;
+  margin-right: 6px;
+}
+
+/* Debt items */
+
+.sqo-debt-group__items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 4px;
+}
+
+.sqo-debt-group__item {
+  padding: 6px 8px;
+  background: rgba(255, 255, 255, 0.015);
+  border-radius: 3px;
+}
+
+.sqo-debt-group__item-desc {
+  font-size: 11px;
+  font-family: var(--font-ui);
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+
+.sqo-debt-group__item-action {
+  margin-top: 4px;
+  font-size: 11px;
+  font-family: var(--font-ui);
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.sqo-debt-group__item-action-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-right: 6px;
+}
+
+/* Expand toggle */
+
+.sqo-debt-group__expand-toggle {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  padding: 4px 0;
+  text-align: left;
+  transition: color 0.15s ease;
+}
+
+.sqo-debt-group__expand-toggle:hover {
+  color: var(--text-dim);
+}
+
+/* Lineage detail (expandable) */
+
+.sqo-debt-group__lineage {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sqo-debt-group__lineage-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.sqo-debt-group__lineage-row {
+  display: flex;
+  gap: 12px;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.sqo-debt-group__lineage-label {
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  min-width: 100px;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sqo-debt-group__lineage-value {
+  font-family: var(--font-mono);
+  color: var(--text-dim);
+  word-break: break-all;
+}
