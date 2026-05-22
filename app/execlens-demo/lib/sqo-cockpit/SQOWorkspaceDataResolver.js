@@ -108,6 +108,15 @@ function resolveWorkspaceData(client, runId, initialSection) {
     sectionData['reconciliation-loop'] = formatReconciliationLoopSection(state.artifacts);
   }
 
+  if (!sectionData.debt && runtime.capabilities.proposition_debt) {
+    try {
+      const { resolvePropositionDebt } = require('./server/PropositionDebtResolver.server');
+      sectionData.debt = resolvePropositionDebt(client, runId);
+    } catch (_e) {
+      // fail-closed: no debt section rather than broken page
+    }
+  }
+
   return normalizeSSRProps({
     client,
     runId,

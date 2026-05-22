@@ -1,0 +1,10 @@
+{
+  "stream": "PI.SQO.PROPOSITION-DEBT-MODEL.01",
+  "changes": [
+    { "file": "app/execlens-demo/lib/sqo-cockpit/server/PropositionDebtResolver.server.js", "action": "CREATED", "description": "Proposition-based debt resolver: confidence, coverage, tier, review, reconciliation debt from SPE evidence" },
+    { "file": "app/execlens-demo/lib/sqo-cockpit/server/SQORuntimeResolver.server.js", "action": "MODIFIED", "description": "Added proposition_debt capability, extended debt section availability" },
+    { "file": "app/execlens-demo/lib/sqo-cockpit/SQOWorkspaceDataResolver.js", "action": "MODIFIED", "description": "Added proposition debt fallback when static debt unavailable" },
+    { "file": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/sqo/promotion_state.json", "action": "MODIFIED", "description": "qualification_debt lane PENDING→COMPLETE, promotion_decision gaps reduced" },
+    { "file": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/sqo/qualification_blockers.json", "action": "MODIFIED", "description": "BLK-005 resolved, unresolved_blockers 3→2" }
+  ]
+}

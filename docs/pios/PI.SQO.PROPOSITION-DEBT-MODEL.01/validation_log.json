@@ -1,0 +1,24 @@
+{
+  "stream": "PI.SQO.PROPOSITION-DEBT-MODEL.01",
+  "classification": "G2",
+  "timestamp": "2026-05-22T07:36:00Z",
+  "checks": [
+    { "name": "RESOLVER_COMPUTES_CONFIDENCE_GAPS", "result": "PASS", "detail": "3 confidence gap items: Hero Moment (HIGH), Authority Topology (MEDIUM), Cluster Architecture (HIGH)" },
+    { "name": "RESOLVER_COMPUTES_COVERAGE_GAPS", "result": "PASS", "detail": "1 coverage gap: Cluster Architecture singleton" },
+    { "name": "RESOLVER_COMPUTES_TIER_IMBALANCE", "result": "PASS", "detail": "3 tier imbalance items for all-DERIVED classes" },
+    { "name": "RESOLVER_COMPUTES_REVIEW_DEBT", "result": "PASS", "detail": "1 review debt item: 5/6 obligations unresolved" },
+    { "name": "RESOLVER_COMPUTES_RECONCILIATION_NOVELTY", "result": "PASS", "detail": "1 novelty item: 11 NOVEL propositions" },
+    { "name": "DEBT_SHAPE_COMPATIBLE", "result": "PASS", "detail": "Output matches SemanticDebtPanel expected shape (total_items, blocking_count, by_severity, by_category)" },
+    { "name": "NETBOX_DEBT_RENDERS", "result": "PASS", "detail": "9 debt items render in SemanticDebtPanel with severity badges, descriptions, remediation pathways" },
+    { "name": "BLUEEDGE_NO_REGRESSION", "result": "PASS", "detail": "BlueEdge debt page renders 15 grounding gap items unchanged" },
+    { "name": "SECTION_AVAILABILITY_EXTENDED", "result": "PASS", "detail": "debt section available for NetBox via proposition_debt capability" },
+    { "name": "BLK005_RESOLVED", "result": "PASS", "detail": "qualification_blockers.json BLK-005 marked resolved, unresolved count 3→2" },
+    { "name": "QUALIFICATION_DEBT_LANE_UPDATED", "result": "PASS", "detail": "promotion_state qualification_debt lane → COMPLETE / PROPOSITION_DEBT_MODEL" },
+    { "name": "PROMOTION_DECISION_GAPS_UPDATED", "result": "PASS", "detail": "promotion_decision blocking_gaps reduced to PROPOSITION_REVIEW_PENDING only" },
+    { "name": "FAIL_CLOSED_ON_MISSING_SPINE", "result": "PASS", "detail": "Missing spine_objects returns null, no debt section rendered" },
+    { "name": "NO_CONSOLE_ERRORS", "result": "PASS", "detail": "Clean console on both NetBox and BlueEdge debt pages" }
+  ],
+  "total": 14,
+  "pass": 14,
+  "fail": 0
+}

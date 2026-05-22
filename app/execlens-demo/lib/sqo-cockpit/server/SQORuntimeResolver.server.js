@@ -92,6 +92,7 @@ function resolveRuntimeSubstrates(client, runId) {
 
     semantic_candidates: semanticProbes.candidate_csr || semanticProbes.spe_derivation_report,
     semantic_propositions: semanticProbes.spe_derivation_report,
+    proposition_debt: semanticProbes.spe_derivation_report && operationalProbes.review_obligations,
     structural_topology: semanticProbes.canonical_topology,
     semantic_topology: semanticProbes.semantic_topology,
     vault_readiness: semanticProbes.vault_readiness,
@@ -104,7 +105,7 @@ function resolveRuntimeSubstrates(client, runId) {
 
   const sectionAvailability = {
     overview: capabilities.static_qualification,
-    debt: capabilities.static_debt,
+    debt: capabilities.static_debt || capabilities.proposition_debt,
     continuity: capabilities.static_continuity,
     maturity: capabilities.static_qualification,
     progression: capabilities.static_progression,
