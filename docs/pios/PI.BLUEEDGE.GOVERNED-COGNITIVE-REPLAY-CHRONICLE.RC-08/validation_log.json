@@ -1,0 +1,91 @@
+{
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-08",
+  "classification": "G2",
+  "timestamp": "2026-05-23T00:00:00Z",
+  "total_checks": 16,
+  "passed": 16,
+  "failed": 0,
+  "result": "VALID",
+  "checks": [
+    {
+      "check": "rc07_checkpoint_frozen",
+      "description": "checkpoint_08_convergence.json exists and status is FROZEN",
+      "result": "PASS"
+    },
+    {
+      "check": "chronicle_html_generated",
+      "description": "REPLAY_CHRONICLE.html exists and is non-empty (63,825 bytes)",
+      "result": "PASS"
+    },
+    {
+      "check": "chronicle_chapters_count",
+      "description": "8 chapters present in chronicle HTML",
+      "result": "PASS"
+    },
+    {
+      "check": "zoom_levels_present",
+      "description": "32 details/summary pairs = 4 zoom levels × 8 chapters (Z2-Z5)",
+      "result": "PASS"
+    },
+    {
+      "check": "semantic_phases_complete",
+      "description": "All 8 semantic phases represented: EMERGENCE through PROJECTION",
+      "result": "PASS"
+    },
+    {
+      "check": "narrative_proof_capsules_created",
+      "description": "narrative_proof_capsules.json created with 8 chapter proof capsules",
+      "result": "PASS"
+    },
+    {
+      "check": "all_capsules_have_spine_refs",
+      "description": "Every proof capsule references at least one spine object",
+      "result": "PASS"
+    },
+    {
+      "check": "all_capsules_have_evidence_refs",
+      "description": "Every proof capsule references at least one evidence artifact",
+      "result": "PASS"
+    },
+    {
+      "check": "narrative_authority_created",
+      "description": "narrative_authority.json created with 75.x declaration and 13 prohibitions",
+      "result": "PASS"
+    },
+    {
+      "check": "checkpoint_09_created",
+      "description": "checkpoint_09_narrative.json created with status FROZEN",
+      "result": "PASS"
+    },
+    {
+      "check": "spine_object_emitted",
+      "description": "SPINE-RC08-NO-001 narrative_orchestration spine object emitted",
+      "result": "PASS"
+    },
+    {
+      "check": "spine_updated",
+      "description": "spine_objects.json updated to 11 objects, spine_index.json updated",
+      "result": "PASS"
+    },
+    {
+      "check": "manifest_updated",
+      "description": "CHRONICLE_MANIFEST.json updated: RC-08 COMPLETE, checkpoint_09 COMPLETE, spine_object_count 11, narrative_chapter_count 8",
+      "result": "PASS"
+    },
+    {
+      "check": "no_source_artifact_mutation",
+      "description": "No propositions, evidence, governance, convergence, or checkpoint artifacts modified",
+      "result": "PASS"
+    },
+    {
+      "check": "no_marketplace_expansion",
+      "description": "No marketplace, module, agentic, or Cortex claims introduced",
+      "result": "PASS"
+    },
+    {
+      "check": "authority_prohibitions_complete",
+      "description": "All 13 absolute prohibitions declared in narrative_authority.json",
+      "result": "PASS"
+    }
+  ]
+}

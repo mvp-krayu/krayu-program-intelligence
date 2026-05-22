@@ -2,8 +2,8 @@
   "schema_version": "1.0",
   "chronicle_id": "blueedge-governed-cognitive-replay-chronicle",
   "client": "blueedge",
-  "accumulated_at": "2026-05-22T23:30:00Z",
-  "total_objects": 10,
+  "accumulated_at": "2026-05-23T00:00:00Z",
+  "total_objects": 11,
   "objects": [
     {
       "spine_id": "SPINE-RC01-EO-001",
@@ -282,6 +282,37 @@
         "significance": "First formal evidence that governed cognition patterns are not specimen-specific. Two independent specimens with different evidence channels, different proposition engines, and different enrichment mechanisms demonstrate convergent governance discipline. The governance framework generalizes across evidence sources.",
         "scope_boundary": "Observations are DESCRIPTIVE (2 specimens = comparison, not pattern). BlueEdge proves governed replay qualification over a post-genesis corridor, NOT raw intake genesis. Candidate laws require 3+ specimens for promotion.",
         "convergence_observations_ref": "clients/blueedge/chronicle/convergence/convergence_observations.json"
+      }
+    },
+    {
+      "spine_id": "SPINE-RC08-NO-001",
+      "spine_class": "narrative_orchestration",
+      "checkpoint_ref": "checkpoint_09_narrative",
+      "timestamp": "2026-05-23T00:00:00Z",
+      "content": {
+        "orchestration_type": "COGNITIVE_TRAVERSAL_CHRONICLE",
+        "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-08",
+        "chronicle_artifact": "clients/blueedge/chronicle/REPLAY_CHRONICLE.html",
+        "chronicle_size_bytes": 63825,
+        "chapters": 8,
+        "zoom_levels": 5,
+        "authority_level": "75.x",
+        "prohibitions_enforced": 13,
+        "semantic_rhythm": ["EMERGENCE", "FORMATION", "TENSION", "STRENGTHENING", "STABILIZATION", "QUALIFICATION", "CONVERGENCE", "PROJECTION"],
+        "narrative_architecture": {
+          "format": "Self-contained HTML, no JavaScript",
+          "depth_model": "Z1-Z5 via <details>/<summary> progressive disclosure",
+          "z1_executive_understanding": "Always visible — narrative prose per chapter",
+          "z2_semantic_interpretation": "Proposition statistics, confidence, tier changes",
+          "z3_governance_detail": "Review events, arbitration, governance findings",
+          "z4_structural_proof": "Spine object references, checkpoint state, evidence anchors",
+          "z5_raw_evidence": "Evidence file references, substrate state"
+        },
+        "proof_capsules_ref": "clients/blueedge/chronicle/narrative/narrative_proof_capsules.json",
+        "authority_ref": "clients/blueedge/chronicle/narrative/narrative_authority.json",
+        "spine_objects_referenced": 10,
+        "checkpoints_referenced": 9,
+        "significance": "The governed cognitive replay is now communicable. The chronicle composes 8 semantic phases into a navigable cognitive traversal instrument. The audience experiences how PI acted on intake — not documentation of cognition, but a lens into cognition."
       }
     }
   ]

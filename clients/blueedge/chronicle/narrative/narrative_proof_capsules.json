@@ -1,0 +1,177 @@
+{
+  "schema_version": "1.0",
+  "chronicle_id": "blueedge-governed-cognitive-replay-chronicle",
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-08",
+  "generated_at": "2026-05-23T00:00:00Z",
+  "total_chapters": 8,
+  "chapters": [
+    {
+      "chapter": 1,
+      "title": "The Specimen",
+      "semantic_phase": "EMERGENCE",
+      "proof_capsule": {
+        "proof_id": "NPC-CH01-EMERGENCE",
+        "proof_type": "MILESTONE",
+        "checkpoint_ref": "checkpoint_00_baseline",
+        "spine_object_refs": ["SPINE-RC01-EO-001", "SPINE-RC01-EP-001"],
+        "evidence_refs": [
+          "clients/blueedge/sqo/evidence/blueedge_explicit_html_rebase_01/blueedge_lens_full_diagnostic_20250307.html",
+          "clients/blueedge/sqo/evidence/blueedge_explicit_html_rebase_01/blueedge_module_compliance_evidence_20250307.html",
+          "clients/blueedge/sqo/evidence/blueedge_explicit_html_rebase_01/blueedge_tech_governance_architecture_20250307.html"
+        ],
+        "narrative_claims": [
+          "BlueEdge arrives as 3 HTML evidence files (505KB, 4,546 lines) with 28 vault claims and 17-domain PATH B ontology",
+          "S2 state held via LEGACY_QUALIFICATION_BRIDGE — governance projection, not governed lifecycle",
+          "15 debt items (4 irreducible, 8 enrichable, 1 evidence-reducible) documented before replay begins"
+        ],
+        "claim_authority": "75.x bounded — all claims trace to checkpoint_00_baseline state capture"
+      }
+    },
+    {
+      "chapter": 2,
+      "title": "The Claims",
+      "semantic_phase": "FORMATION",
+      "proof_capsule": {
+        "proof_id": "NPC-CH02-FORMATION",
+        "proof_type": "SEMANTIC_TRANSITION",
+        "checkpoint_ref": "checkpoint_01_propositions",
+        "spine_object_refs": ["SPINE-RC02-SP-001"],
+        "evidence_refs": [
+          "clients/blueedge/chronicle/propositions/semantic_propositions.json",
+          "clients/blueedge/psee/runs/run_blueedge_sdc_validation_01/semantic/compiler/candidate_csr.json"
+        ],
+        "narrative_claims": [
+          "85 CANDIDATE propositions derived via two-stage PATH B bridge (SDC → proposition_bridge.py)",
+          "4 derivation tiers: 17 DOMAIN_EVIDENCE_GROUNDING, 24 CAPABILITY_EVIDENCE, 25 VAULT_CLAIM_STRUCTURAL, 19 CROSS_DOMAIN_EVIDENCE",
+          "Mean confidence 0.728, all at L3 authority ceiling — AI-derived, requiring operator review"
+        ],
+        "claim_authority": "75.x bounded — all claims trace to proposition derivation artifacts"
+      }
+    },
+    {
+      "chapter": 3,
+      "title": "The Governance",
+      "semantic_phase": "TENSION",
+      "proof_capsule": {
+        "proof_id": "NPC-CH03-TENSION",
+        "proof_type": "GOVERNANCE",
+        "checkpoint_ref": "checkpoint_02_review",
+        "spine_object_refs": ["SPINE-RC03-QT-001", "SPINE-RC03-QT-002"],
+        "evidence_refs": [
+          "clients/blueedge/chronicle/propositions/review_event_log.jsonl",
+          "clients/blueedge/chronicle/governance/governance_proof_capsule.json",
+          "clients/blueedge/chronicle/governance/review_summary.json"
+        ],
+        "narrative_claims": [
+          "Operator reviewed all 85 propositions: 62 accepted directly, 9 contested then arbitrated to accept, 14 rejected",
+          "5 governance findings surfaced structural defects in proposition bridge — domain ID mismatches, layer label artifacts, ontology overflow",
+          "Full SQO Authority Workflow exercised: ACCEPT, CONTEST, ARBITRATE, REJECT — genuine governance friction, not simulation"
+        ],
+        "claim_authority": "75.x bounded — all claims trace to review_event_log.jsonl and governance_proof_capsule.json"
+      }
+    },
+    {
+      "chapter": 4,
+      "title": "The Strengthening",
+      "semantic_phase": "STRENGTHENING",
+      "proof_capsule": {
+        "proof_id": "NPC-CH04-STRENGTHENING",
+        "proof_type": "STRENGTHENING",
+        "checkpoint_ref": "checkpoint_04_enrichment",
+        "spine_object_refs": ["SPINE-RC04-EO-001", "SPINE-RC04-EO-002"],
+        "evidence_refs": [
+          "clients/blueedge/chronicle/evidence/enrichment_log.json",
+          "clients/blueedge/chronicle/governance/debt_evolution.json"
+        ],
+        "narrative_claims": [
+          "12 domains corrected via semantic name matching between canonical CSR and SDC candidate CSR",
+          "31 enrichment events total, mean confidence 0.728 → 0.741 — modest uplift bounded by PATH B evidence ceiling",
+          "Debt trajectory: 4 improved, 6 worsened, 0 resolved — the system is now more honest about what PATH B can prove"
+        ],
+        "claim_authority": "75.x bounded — all claims trace to enrichment_log.json and debt_evolution.json"
+      }
+    },
+    {
+      "chapter": 5,
+      "title": "The Proof",
+      "semantic_phase": "STABILIZATION",
+      "proof_capsule": {
+        "proof_id": "NPC-CH05-STABILIZATION",
+        "proof_type": "MILESTONE",
+        "checkpoint_ref": "checkpoint_06_revalidation",
+        "spine_object_refs": ["SPINE-RC05-RC-001"],
+        "evidence_refs": [
+          "clients/blueedge/chronicle/checkpoints/revalidation_result.json"
+        ],
+        "narrative_claims": [
+          "48/48 revalidation checks PASS across 9 phases — structural, evidence, confidence, governance, enrichment, checkpoint, spine, SQO, corpus",
+          "Same revalidation framework as NetBox (adapted for PATH B) — the deterministic validation contract transfers",
+          "What governance challenged in TENSION now holds deterministically in STABILIZATION"
+        ],
+        "claim_authority": "75.x bounded — all claims trace to revalidation_result.json"
+      }
+    },
+    {
+      "chapter": 6,
+      "title": "The Advancement",
+      "semantic_phase": "QUALIFICATION",
+      "proof_capsule": {
+        "proof_id": "NPC-CH06-QUALIFICATION",
+        "proof_type": "MILESTONE",
+        "checkpoint_ref": "checkpoint_07_advancement",
+        "spine_object_refs": ["SPINE-RC06-QT-001"],
+        "evidence_refs": [
+          "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/sqo/promotion_state.json"
+        ],
+        "narrative_claims": [
+          "S2_BRIDGE → S2_GOVERNED — qualification provenance replaced from GOVERNANCE_PROJECTION to GOVERNED_REPLAY_QUALIFICATION",
+          "Transition scoped to post-genesis semantic replay corridor — genesis layer remains future upstream work",
+          "S2 earned through governed lifecycle completion (6 streams, 8 checkpoints, 94 governance events, 48/48 revalidation)"
+        ],
+        "claim_authority": "75.x bounded — all claims trace to promotion_state.json transition record"
+      }
+    },
+    {
+      "chapter": 7,
+      "title": "The Pattern",
+      "semantic_phase": "CONVERGENCE",
+      "proof_capsule": {
+        "proof_id": "NPC-CH07-CONVERGENCE",
+        "proof_type": "MILESTONE",
+        "checkpoint_ref": "checkpoint_08_convergence",
+        "spine_object_refs": ["SPINE-RC07-CO-001"],
+        "evidence_refs": [
+          "clients/blueedge/chronicle/convergence/convergence_observations.json"
+        ],
+        "narrative_claims": [
+          "7 convergence observations across 15 comparison dimensions — 8 convergent, 7 divergent",
+          "Governance discipline converges; evidence channels diverge — diversity within common laws IS the proof of generalization",
+          "All observations at DESCRIPTIVE maturity, SUPPORTED_BY_BOTH_SPECIMENS — 2 specimens = comparison, not pattern"
+        ],
+        "claim_authority": "75.x bounded — all claims trace to convergence_observations.json"
+      }
+    },
+    {
+      "chapter": 8,
+      "title": "The Projection",
+      "semantic_phase": "PROJECTION",
+      "proof_capsule": {
+        "proof_id": "NPC-CH08-PROJECTION",
+        "proof_type": "CERTIFICATION",
+        "checkpoint_ref": "checkpoint_09_narrative",
+        "spine_object_refs": ["SPINE-RC08-NO-001"],
+        "evidence_refs": [
+          "clients/blueedge/chronicle/REPLAY_CHRONICLE.html",
+          "clients/blueedge/chronicle/narrative/narrative_proof_capsules.json",
+          "clients/blueedge/chronicle/narrative/narrative_authority.json"
+        ],
+        "narrative_claims": [
+          "8-chapter cognitive traversal orchestration — EMERGENCE through PROJECTION — with Z1-Z5 depth on each chapter",
+          "Cognition becomes communicable: the chronicle IS the lens into how PI acted on intake",
+          "Every narrative claim traces to structural evidence — no fabricated narrative, no ungrounded interpretation"
+        ],
+        "claim_authority": "75.x bounded — meta-narrative: the chronicle itself is the proof of communicable cognition"
+      }
+    }
+  ]
+}
