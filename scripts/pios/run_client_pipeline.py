@@ -65,17 +65,26 @@ _learning_context: dict = {}
 _chronicle_emitter = None
 
 
+_hero_moment_detector = None
+
+
 def _init_chronicle(client_id: str, run_id: str, run_dir: Path):
-    """Initialize chronicle event emitter. Graceful degradation if unavailable."""
-    global _chronicle_emitter
+    """Initialize chronicle event emitter and hero moment detector. Graceful degradation."""
+    global _chronicle_emitter, _hero_moment_detector
     sys.path.insert(0, str(CHRONICLE_DIR))
     try:
         from emitter import ChronicleEmitter
         _chronicle_emitter = ChronicleEmitter(client_id, run_id, run_dir)
         _chronicle_emitter.initialize()
     except Exception as exc:
-        print(f"    [CHRONICLE] WARN: initialization failed — {exc}")
+        print(f"    [CHRONICLE] WARN: emitter initialization failed — {exc}")
         _chronicle_emitter = None
+    try:
+        from hero_moment_detector import detect_hero_moments as _detect
+        _hero_moment_detector = _detect
+    except Exception as exc:
+        print(f"    [CHRONICLE] WARN: hero moment detector not available — {exc}")
+        _hero_moment_detector = None
     finally:
         if str(CHRONICLE_DIR) in sys.path:
             sys.path.remove(str(CHRONICLE_DIR))
@@ -725,6 +734,30 @@ def phase_03_7_structural_centrality(client: str, run_id: str, run_dir: Path) ->
         if result.stderr:
             print(f"  stderr: {result.stderr.strip()[:200]}")
         return True
+
+    # Hero Moment detection (GEN-2) — runs after centrality derivation
+    if _hero_moment_detector and _chronicle_emitter:
+        try:
+            centrality_file = run_dir / "structure" / "40.3c" / "structural_centrality.json"
+            code_graph_file = run_dir / "structure" / "40.3s" / "code_graph.json"
+            hm_candidates = _hero_moment_detector(
+                client, run_id,
+                centrality_path=centrality_file if centrality_file.exists() else None,
+                code_graph_path=code_graph_file if code_graph_file.exists() else None,
+            )
+            if hm_candidates:
+                hm_dir = run_dir / "chronicle"
+                hm_dir.mkdir(parents=True, exist_ok=True)
+                hm_path = hm_dir / "hero_moments.json"
+                with open(hm_path, "w", encoding="utf-8") as f:
+                    json.dump({"hero_moments": hm_candidates, "count": len(hm_candidates)}, f, indent=2)
+                for hm in hm_candidates:
+                    _chronicle_emitter.emit_hero_moment(hm)
+                print(f"  [CHRONICLE] {len(hm_candidates)} hero moment candidate(s) detected")
+            else:
+                print(f"  [CHRONICLE] No hero moment candidates detected")
+        except Exception as exc:
+            print(f"  [CHRONICLE] WARN: hero moment detection failed — {exc}")
 
     print("  Structural centrality derivation: OK")
     return True

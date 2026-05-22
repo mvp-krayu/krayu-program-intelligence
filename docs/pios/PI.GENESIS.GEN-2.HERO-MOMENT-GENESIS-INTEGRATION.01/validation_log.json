@@ -1,0 +1,109 @@
+{
+  "stream_id": "PI.GENESIS.GEN-2.HERO-MOMENT-GENESIS-INTEGRATION.01",
+  "classification": "G1",
+  "timestamp": "2026-05-22T15:41:00Z",
+  "checks": [
+    {
+      "id": "V-01",
+      "name": "hero_moment_detector module exists",
+      "description": "scripts/pios/chronicle/hero_moment_detector.py created with detect_hero_moments entry point",
+      "result": "PASS"
+    },
+    {
+      "id": "V-02",
+      "name": "5 detection heuristics implemented",
+      "description": "Gravitational Dominance, Enumeration Coupling, Dual Authority, Cross-Domain Rate, Bidirectional Entanglement",
+      "result": "PASS"
+    },
+    {
+      "id": "V-03",
+      "name": "all candidates returned at CANDIDATE governance_state",
+      "description": "All 23 NetBox candidates have governance_state: CANDIDATE — operator review required for CONFIRMED",
+      "result": "PASS"
+    },
+    {
+      "id": "V-04",
+      "name": "hero moment object contract compliance",
+      "description": "All fields per HERO_MOMENT_GENESIS_MODEL.md §5: hero_moment_id, client, run_id, discovery_phase, hero_type, s_level_at_discovery, path_at_discovery, description, evidence_refs, structural_metric, governance_state, operator_note, learning_event_ref, replay_safe, timestamp",
+      "result": "PASS"
+    },
+    {
+      "id": "V-05",
+      "name": "emit_hero_moment method added to ChronicleEmitter",
+      "description": "Method emits hero_moment_emergence event, maps semantic phase, tracks manifest counter",
+      "result": "PASS"
+    },
+    {
+      "id": "V-06",
+      "name": "pipeline Phase 3.7 detection hook",
+      "description": "Detection hook in run_client_pipeline.py after centrality derivation, before completion print",
+      "result": "PASS"
+    },
+    {
+      "id": "V-07",
+      "name": "graceful degradation preserved",
+      "description": "_hero_moment_detector initialized with try/except in _init_chronicle, pipeline unchanged if unavailable",
+      "result": "PASS"
+    },
+    {
+      "id": "V-08",
+      "name": "hero_moments.json persisted to chronicle directory",
+      "description": "Candidates written to run_dir/chronicle/hero_moments.json with count and hero_moments array",
+      "result": "PASS"
+    },
+    {
+      "id": "V-09",
+      "name": "NetBox reference validation — AUTHORITY_SURPRISE detection",
+      "description": "4 gravitational dominance + 1 enumeration coupling = 5 AUTHORITY_SURPRISE candidates. Top: forms/__init__.py (353 in_degree, threshold 57)",
+      "result": "PASS"
+    },
+    {
+      "id": "V-10",
+      "name": "NetBox reference validation — COUPLING_SURPRISE detection",
+      "description": "1 cross-domain rate (60.8%) + 17 bidirectional entanglement = 18 COUPLING_SURPRISE candidates",
+      "result": "PASS"
+    },
+    {
+      "id": "V-11",
+      "name": "NetBox reference validation — total candidate count",
+      "description": "23 total candidates detected. Expected range for 1,089-file codebase with 3,614 imports",
+      "result": "PASS"
+    },
+    {
+      "id": "V-12",
+      "name": "chronicle __init__.py exports detect_hero_moments",
+      "description": "detect_hero_moments added to __all__ in scripts/pios/chronicle/__init__.py",
+      "result": "PASS"
+    },
+    {
+      "id": "V-13",
+      "name": "centrality data key compatibility",
+      "description": "All centrality lookups use entry.get('path', entry.get('file', '')) — handles both key conventions",
+      "result": "PASS"
+    },
+    {
+      "id": "V-14",
+      "name": "no pipeline mutation without hero moment detector",
+      "description": "Detection block guarded by 'if _hero_moment_detector and _chronicle_emitter' — no execution path changes if either unavailable",
+      "result": "PASS"
+    },
+    {
+      "id": "V-15",
+      "name": "structural_metric field populated on all candidates",
+      "description": "All 23 candidates carry metric_name, observed_value, expected_range, deviation",
+      "result": "PASS"
+    },
+    {
+      "id": "V-16",
+      "name": "no interpretation or ranking in detection",
+      "description": "Detector returns raw candidates with structural evidence only — no inference, no prioritization, no operator-level claims",
+      "result": "PASS"
+    }
+  ],
+  "summary": {
+    "total": 16,
+    "passed": 16,
+    "failed": 0,
+    "result": "PASS"
+  }
+}

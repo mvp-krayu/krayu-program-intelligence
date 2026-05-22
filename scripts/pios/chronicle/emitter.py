@@ -281,6 +281,31 @@ class ChronicleEmitter:
             },
         )
 
+    def emit_hero_moment(self, hero_moment: dict):
+        """Emit a hero_moment_emergence chronicle event and track count."""
+        hm_id = hero_moment.get("hero_moment_id", "HM-unknown")
+        hero_type = hero_moment.get("hero_type", "UNKNOWN")
+        description = hero_moment.get("description", "Hero Moment detected")
+        phase = hero_moment.get("discovery_phase", "")
+        semantic_phase = SEMANTIC_PHASE_MAP.get(phase, "EMERGENCE")
+
+        self._emit_event(
+            event_type="hero_moment_emergence",
+            semantic_phase=semantic_phase,
+            description=f"Hero Moment candidate: {description}",
+            evidence_refs=hero_moment.get("evidence_refs", []),
+            extra={
+                "hero_moment_id": hm_id,
+                "hero_type": hero_type,
+                "governance_state": "CANDIDATE",
+                "structural_metric": hero_moment.get("structural_metric", {}),
+            },
+        )
+
+        manifest = self._read_manifest()
+        manifest["hero_moments_discovered"] = manifest.get("hero_moments_discovered", 0) + 1
+        self._write_manifest(manifest)
+
     def emit_custom(self, event_type: str, semantic_phase: str, description: str,
                     evidence_refs: Optional[list[str]] = None, extra: Optional[dict] = None):
         """Emit a custom chronicle event."""

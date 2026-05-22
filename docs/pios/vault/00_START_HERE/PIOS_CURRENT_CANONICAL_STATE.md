@@ -555,6 +555,7 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-09 | G1 | Chronicle certification + vault seal — 10/10 certification checks, REPLAY-CERTIFIED, vault propagation complete, 12 spine objects, 11 checkpoints frozen | COMPLETE |
 | PI.GENESIS.COGNITIVE-REPLAY-AND-AI-ASSISTED-ONBOARDING.01 | G1 | GENESIS doctrine — onboarding-origin governed cognition formation model. 10 doctrine deliverables: genesis replay doctrine, Hero Moment genesis model, AI-assisted onboarding operating model (first 10-50 clients), AI assistance governance contract (L3 ceiling, 6 object types), genesis cognitive chronicle model (chronicle as first-class runtime architecture, 18 event types, 7 object families), chronicle genesis adaptation, learning-to-capability pipeline (9-state lifecycle), BlueEdge RC reclassification (GOVERNED SEMANTIC REPLAY), genesis roadmap (GEN-1 through GEN-6), 12 mandatory questions answered. Chronicle elevated to first-class runtime via mid-execution steering | COMPLETE |
 | PI.GENESIS.GEN-1.CHRONICLE-EVENT-MODEL.01 | G1 | GEN-1 Chronicle Event Model — inline chronicle event emission during pipeline execution. ChronicleEmitter module (11 methods), append-only JSONL, runtime manifest accumulation, phase-boundary checkpoints, DISCOVERY/EMERGENCE/FORMATION semantic phase mapping, enriched events (source_discovery, evidence_acquisition, structural_emergence, relevance_classification, semantic_formation). Graceful degradation — pipeline unchanged if chronicle unavailable | COMPLETE |
+| PI.GENESIS.GEN-2.HERO-MOMENT-GENESIS-INTEGRATION.01 | G1 | GEN-2 Hero Moment Genesis Integration — structural hero moment candidate detection at pipeline Phase 3.6/3.7. 5 detection heuristics (gravitational dominance, enumeration coupling, dual authority, cross-domain coupling rate, bidirectional entanglement). ChronicleEmitter emit_hero_moment() integration. 23 candidates validated against NetBox reference. All CANDIDATE governance state — operator review for CONFIRMED | COMPLETE |
 
 ## GENESIS — Onboarding-Origin Governed Cognition Formation
 
@@ -595,7 +596,7 @@ Marketplace modules emerge from repeated governed onboarding patterns — not pr
 | Stage | Purpose | Dependencies | Status |
 |-------|---------|-------------|--------|
 | GEN-1 | Chronicle Event Model | None | **OPERATIONAL** |
-| GEN-2 | Hero Moment Integration | GEN-1 | SPECIFIED_NOT_IMPLEMENTED |
+| GEN-2 | Hero Moment Integration | GEN-1 | **OPERATIONAL** |
 | GEN-3 | AI-Assisted Operationalization | GEN-1 | SPECIFIED_NOT_IMPLEMENTED |
 | GEN-4 | Learning Promotion Pipeline | GEN-1 | SPECIFIED_NOT_IMPLEMENTED |
 | GEN-5 | First Full Genesis Chronicle | GEN-1–4 | SPECIFIED_NOT_IMPLEMENTED |
@@ -606,7 +607,7 @@ Marketplace modules emerge from repeated governed onboarding patterns — not pr
 | Construct | Maturity |
 |-----------|----------|
 | Genesis replay doctrine | SPECIFIED_NOT_IMPLEMENTED — doctrine locked, no implementation |
-| Hero Moment genesis model | SPECIFIED_NOT_IMPLEMENTED — model defined, detection hooks not built |
+| Hero Moment genesis model | OPERATIONAL — 5 detection heuristics, pipeline Phase 3.7 integration, 23 candidates validated against NetBox reference |
 | AI assistance governance contract | SPECIFIED_NOT_IMPLEMENTED — contract defined, no runtime integration |
 | Genesis cognitive chronicle model | PARTIALLY_OPERATIONAL — GEN-1 inline event emission operational; 18 event types defined, phase_started/completed/enriched events active |
 | Learning-to-capability pipeline | SPECIFIED_NOT_IMPLEMENTED — lifecycle defined, promotion pipeline not built |
