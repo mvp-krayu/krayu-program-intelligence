@@ -1,9 +1,58 @@
 'use strict';
 
+const fs = require('fs');
+const path = require('path');
 const { loadPromotionState } = require('./PromotionStateLoader.server');
 const { ROLE_ACTION_MAP, ACTION_AUTHORITY } = require('./SQOAuthorityValidator.server');
 const { resolveQualificationPosture, POSTURE } = require('../QualificationPostureResolver');
 const { resolveRuntimeSubstrates } = require('./SQORuntimeResolver.server');
+
+const REPO_ROOT = process.env.REPO_ROOT || path.resolve(__dirname, '..', '..', '..', '..', '..');
+
+function loadSpinePropositions(client, runId) {
+  const spinePath = path.join(REPO_ROOT, 'clients', client, 'psee', 'runs', runId, 'spine', 'spine_objects.json');
+  try {
+    const data = JSON.parse(fs.readFileSync(spinePath, 'utf-8'));
+    return data.objects?.semantic_propositions || [];
+  } catch (_e) {
+    return [];
+  }
+}
+
+function enrichObligationsWithPropositions(obligations, propositions) {
+  const byClass = {};
+  for (const p of propositions) {
+    const cls = p.proposition_class;
+    if (!byClass[cls]) byClass[cls] = [];
+    byClass[cls].push(p);
+  }
+
+  for (const obl of obligations) {
+    const cls = obl.proposition_class;
+    const classProps = byClass[cls] || [];
+    const sorted = classProps.slice().sort((a, b) => (b.confidence || 0) - (a.confidence || 0));
+    obl.representative_propositions = sorted.slice(0, 3).map(p => ({
+      id: p.id,
+      proposition: p.proposition,
+      confidence: p.confidence,
+      derivation_tier: p.derivation_tier,
+      ceu_refs: p.ceu_refs || [],
+    }));
+    const confidences = classProps.map(p => p.confidence).filter(c => c != null);
+    if (confidences.length > 0) {
+      obl.confidence_envelope = {
+        min: Math.min(...confidences),
+        max: Math.max(...confidences),
+        mean: obl.mean_confidence || (confidences.reduce((a, b) => a + b, 0) / confidences.length),
+      };
+      obl.tier_distribution = {};
+      for (const p of classProps) {
+        const tier = p.derivation_tier || 'UNKNOWN';
+        obl.tier_distribution[tier] = (obl.tier_distribution[tier] || 0) + 1;
+      }
+    }
+  }
+}
 
 function resolveAuthorityWorkspace(client, runId) {
   const loaded = loadPromotionState(client, runId);
@@ -12,6 +61,11 @@ function resolveAuthorityWorkspace(client, runId) {
   }
 
   const { promotionState, qualificationBlockers, reviewObligations, promotionEventLog } = loaded;
+
+  const propositions = loadSpinePropositions(client, runId);
+  if (reviewObligations?.obligations) {
+    enrichObligationsWithPropositions(reviewObligations.obligations, propositions);
+  }
 
   const authorityPosture = resolveAuthorityPosture(promotionState);
   const reviewQueue = resolveReviewQueue(reviewObligations);

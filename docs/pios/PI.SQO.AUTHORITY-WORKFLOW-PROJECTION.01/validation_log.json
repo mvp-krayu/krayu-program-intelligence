@@ -1,0 +1,24 @@
+{
+  "stream": "PI.SQO.AUTHORITY-WORKFLOW-PROJECTION.01",
+  "classification": "G2",
+  "timestamp": "2026-05-22T07:20:00Z",
+  "checks": [
+    { "name": "RESOLVER_ENRICHMENT_LOADS_SPINE", "result": "PASS", "detail": "loadSpinePropositions reads spine_objects.json and extracts semantic_propositions" },
+    { "name": "ENRICHMENT_ATTACHES_REPRESENTATIVES", "result": "PASS", "detail": "Top 3 propositions by confidence attached per obligation class" },
+    { "name": "ENRICHMENT_COMPUTES_ENVELOPE", "result": "PASS", "detail": "confidence_envelope (min/max/mean) computed per class" },
+    { "name": "ENRICHMENT_GRACEFUL_DEGRADATION", "result": "PASS", "detail": "Missing spine returns empty array, obligations render without examples" },
+    { "name": "NARRATIVE_MAPPING_COMPLETE", "result": "PASS", "detail": "All 6 proposition classes have narrative headlines, descriptions, impact, icons" },
+    { "name": "CONFIDENCE_POSTURE_LABELS", "result": "PASS", "detail": "5 confidence tiers: Very high (0.95+), High (0.85+), Moderate (0.75+), Developing (0.65+), Limited (<0.65)" },
+    { "name": "REVIEW_GUIDANCE_BY_STATUS", "result": "PASS", "detail": "Contextual guidance for UNRESOLVED/RESOLVED/REJECTED/CONTESTED/ARBITRATION_REQUIRED/PARTIAL_ACCEPT" },
+    { "name": "NETBOX_AUTHORITY_RENDERS", "result": "PASS", "detail": "6 posture groups: 5 awaiting review, 1 resolved (STRUCTURAL_DOMINANCE)" },
+    { "name": "NARRATIVE_FIRST_PROJECTION", "result": "PASS", "detail": "Headlines are primary cognition; obligation IDs hidden behind expandable lineage" },
+    { "name": "LINEAGE_EXPANDABLE", "result": "PASS", "detail": "Toggle reveals obligation ID, class, review type, authority domain, confidence range, CEU refs, trigger" },
+    { "name": "ACTION_BUTTONS_PRESENT", "result": "PASS", "detail": "Accept as Operational, Reject Interpretation, Contest Evidence, Partial Acceptance rendered for UNRESOLVED" },
+    { "name": "RESOLVED_GROUP_READONLY", "result": "PASS", "detail": "Resolved posture group shows no action buttons, displays 'Accepted' status" },
+    { "name": "BLUEEDGE_NO_REGRESSION", "result": "PASS", "detail": "BlueEdge authority page renders correctly with empty review queue message" },
+    { "name": "NO_CONSOLE_ERRORS", "result": "PASS", "detail": "Clean console on both NetBox and BlueEdge authority pages" }
+  ],
+  "total": 14,
+  "pass": 14,
+  "fail": 0
+}
