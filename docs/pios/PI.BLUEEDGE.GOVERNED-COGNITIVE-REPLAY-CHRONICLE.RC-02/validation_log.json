@@ -1,0 +1,81 @@
+{
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-02",
+  "classification": "G2",
+  "timestamp": "2026-05-22T19:00:00Z",
+  "total_checks": 14,
+  "passed": 14,
+  "failed": 0,
+  "result": "VALID",
+  "checks": [
+    {
+      "check": "rc01_checkpoint_frozen",
+      "description": "checkpoint_00_baseline.json exists and status is FROZEN",
+      "result": "PASS"
+    },
+    {
+      "check": "proposition_bridge_created",
+      "description": "scripts/pios/sdc/proposition_bridge.py created",
+      "result": "PASS"
+    },
+    {
+      "check": "proposition_bridge_executes",
+      "description": "proposition_bridge.py runs without errors and produces output",
+      "result": "PASS"
+    },
+    {
+      "check": "proposition_count_nonzero",
+      "description": "85 propositions produced (target: 55-65, actual higher due to rich vault claims)",
+      "result": "PASS"
+    },
+    {
+      "check": "all_status_candidate",
+      "description": "All 85 propositions have status: CANDIDATE",
+      "result": "PASS"
+    },
+    {
+      "check": "all_authority_ceiling_l3",
+      "description": "All 85 propositions have authority_ceiling: L3",
+      "result": "PASS"
+    },
+    {
+      "check": "domain_count_matches_csr",
+      "description": "17 DOMAIN_EVIDENCE_GROUNDING propositions = 17 canonical CSR domains",
+      "result": "PASS"
+    },
+    {
+      "check": "capability_count_matches_sdc",
+      "description": "24 CAPABILITY_EVIDENCE propositions = 24 SDC capabilities",
+      "result": "PASS"
+    },
+    {
+      "check": "tier_distribution_valid",
+      "description": "53 DIRECT_EVIDENCE + 32 DERIVED + 0 INFERRED = 85 total",
+      "result": "PASS"
+    },
+    {
+      "check": "confidence_range_valid",
+      "description": "All propositions have confidence in [0.0, 1.0], mean: 0.728",
+      "result": "PASS"
+    },
+    {
+      "check": "propositions_output_created",
+      "description": "chronicle/propositions/semantic_propositions.json created",
+      "result": "PASS"
+    },
+    {
+      "check": "checkpoint_01_created",
+      "description": "checkpoint_01_propositions.json created with status FROZEN",
+      "result": "PASS"
+    },
+    {
+      "check": "spine_objects_updated",
+      "description": "spine_objects.json updated to 3 objects (SPINE-RC02-SP-001 added)",
+      "result": "PASS"
+    },
+    {
+      "check": "netbox_not_mutated",
+      "description": "No files under clients/netbox/ modified",
+      "result": "PASS"
+    }
+  ]
+}

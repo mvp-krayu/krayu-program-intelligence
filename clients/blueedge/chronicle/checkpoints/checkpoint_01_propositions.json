@@ -1,0 +1,74 @@
+{
+  "checkpoint_id": "checkpoint_01_propositions",
+  "checkpoint_index": 1,
+  "semantic_phase": "FORMATION",
+  "chronicle_chapter": 2,
+  "chapter_title": "The Claims",
+  "timestamp": "2026-05-22T19:00:00Z",
+  "stream_ref": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-02",
+  "description": "Semantic propositions crystallize from PATH B evidence. The system forms claims from HTML documents and vault evidence.",
+  "status": "FROZEN",
+
+  "proposition_derivation": {
+    "bridge_script": "scripts/pios/sdc/proposition_bridge.py",
+    "derivation_path": "PATH_B",
+    "source_artifacts": {
+      "canonical_csr": "clients/blueedge/semantic/client_semantic_registry.json",
+      "candidate_csr": "clients/blueedge/psee/runs/run_blueedge_sdc_validation_01/semantic/compiler/candidate_csr.json",
+      "derivation_report": "clients/blueedge/psee/runs/run_blueedge_sdc_validation_01/semantic/compiler/derivation_report.json",
+      "review_queue": "clients/blueedge/psee/runs/run_blueedge_sdc_validation_01/semantic/compiler/review_queue.json",
+      "topology_model": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/semantic_topology_model.json",
+      "vault_claims": "clients/blueedge/vaults/run_01_authoritative/claims/"
+    },
+    "total_propositions": 85,
+    "by_class": {
+      "DOMAIN_EVIDENCE_GROUNDING": 17,
+      "CAPABILITY_EVIDENCE": 24,
+      "VAULT_CLAIM_STRUCTURAL": 25,
+      "CROSS_DOMAIN_EVIDENCE": 19
+    },
+    "by_tier": {
+      "DIRECT_EVIDENCE": 53,
+      "DERIVED": 32,
+      "INFERRED": 0
+    },
+    "mean_confidence": 0.728,
+    "all_status": "CANDIDATE",
+    "authority_ceiling": "L3"
+  },
+
+  "path_b_derivation_characteristics": {
+    "evidence_channel": "HTML document structure (not code graph)",
+    "sdc_domain_count": 19,
+    "sdc_capability_count": 24,
+    "sdc_component_count": 207,
+    "sdc_direct_evidence_ratio": 0.9517,
+    "canonical_csr_domains": 17,
+    "vault_claims_total": 28,
+    "vault_claims_with_backing": 25,
+    "topology_edges": 12,
+    "review_queue_items": 8,
+    "review_queue_ambiguous": 7
+  },
+
+  "comparison_with_netbox": {
+    "netbox_propositions": 77,
+    "blueedge_propositions": 85,
+    "netbox_path": "PATH_A (code graph centrality, coupling, topology)",
+    "blueedge_path": "PATH_B (HTML document evidence, vault claims)",
+    "netbox_classes": ["STRUCTURAL_DOMINANCE", "COUPLING_PATTERN", "AUTHORITY_TOPOLOGY", "TIER_GROUNDING", "HERO_MOMENT_GROUNDING", "CLUSTER_ARCHITECTURE"],
+    "blueedge_classes": ["DOMAIN_EVIDENCE_GROUNDING", "CAPABILITY_EVIDENCE", "VAULT_CLAIM_STRUCTURAL", "CROSS_DOMAIN_EVIDENCE"],
+    "divergence_note": "Different evidence channels produce comparable proposition volumes but through fundamentally different structural derivation paths"
+  },
+
+  "governance_gap_closed": {
+    "propositions": true,
+    "operator_review": false,
+    "arbitration": false,
+    "substrate_strengthening": false,
+    "revalidation": false,
+    "learning_events": false
+  },
+
+  "spine_objects_emitted": ["SPINE-RC02-SP-001"]
+}

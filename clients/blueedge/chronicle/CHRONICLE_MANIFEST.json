@@ -29,8 +29,9 @@
     "RC-02": {
       "name": "PATH B Semantic Proposition Derivation",
       "classification": "G2",
-      "status": "PENDING",
-      "checkpoint": "checkpoint_01_propositions"
+      "status": "COMPLETE",
+      "checkpoint": "checkpoint_01_propositions",
+      "completed_at": "2026-05-22T19:00:00Z"
     },
     "RC-03": {
       "name": "Governed Semantic Review + Arbitration",
@@ -84,9 +85,9 @@
     },
     "checkpoint_01_propositions": {
       "semantic_phase": "FORMATION",
-      "description": "After proposition derivation — semantic claims crystallize from evidence",
+      "description": "After proposition derivation — 85 CANDIDATE propositions from PATH B evidence",
       "stream": "RC-02",
-      "status": "PENDING"
+      "status": "COMPLETE"
     },
     "checkpoint_02_review": {
       "semantic_phase": "TENSION",
@@ -194,7 +195,7 @@
     }
   ],
   "proof_object_count": 0,
-  "spine_object_count": 2,
+  "spine_object_count": 3,
   "narrative_chapter_count": 0,
   "media_capture_count": 0
 }

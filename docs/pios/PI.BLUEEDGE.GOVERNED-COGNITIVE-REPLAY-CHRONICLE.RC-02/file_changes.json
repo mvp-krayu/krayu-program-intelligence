@@ -1,0 +1,58 @@
+{
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-02",
+  "classification": "G2",
+  "timestamp": "2026-05-22T19:00:00Z",
+  "files": [
+    {
+      "path": "scripts/pios/sdc/proposition_bridge.py",
+      "action": "CREATED",
+      "description": "PATH B proposition bridge — transforms SDC output + vault claims + CSR into SPE-format propositions"
+    },
+    {
+      "path": "clients/blueedge/chronicle/propositions/semantic_propositions.json",
+      "action": "CREATED",
+      "description": "85 CANDIDATE propositions: 17 domain, 24 capability, 25 vault claim, 19 cross-domain"
+    },
+    {
+      "path": "clients/blueedge/chronicle/checkpoints/checkpoint_01_propositions.json",
+      "action": "CREATED",
+      "description": "FORMATION checkpoint — proposition derivation complete"
+    },
+    {
+      "path": "clients/blueedge/chronicle/spine/spine_objects.json",
+      "action": "MODIFIED",
+      "description": "SPINE-RC02-SP-001 added (semantic_proposition_derivation)"
+    },
+    {
+      "path": "clients/blueedge/chronicle/spine/spine_index.json",
+      "action": "MODIFIED",
+      "description": "Updated with checkpoint_01 references"
+    },
+    {
+      "path": "clients/blueedge/chronicle/CHRONICLE_MANIFEST.json",
+      "action": "MODIFIED",
+      "description": "RC-02 → COMPLETE, checkpoint_01 → COMPLETE, spine_object_count → 3"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-02/execution_report.md",
+      "action": "CREATED",
+      "description": "G2 execution report"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-02/validation_log.json",
+      "action": "CREATED",
+      "description": "14/14 validation checks PASS"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-02/file_changes.json",
+      "action": "CREATED",
+      "description": "This file"
+    },
+    {
+      "path": "docs/pios/PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-02/CLOSURE.md",
+      "action": "CREATED",
+      "description": "G2 stream closure"
+    }
+  ],
+  "total_files": 10
+}

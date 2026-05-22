@@ -1,0 +1,2637 @@
+{
+  "schema_version": "1.0",
+  "specimen_id": "blueedge",
+  "run_id": "run_blueedge_productized_01_fixed",
+  "derivation_path": "PATH_B",
+  "bridge_version": "1.0.0",
+  "bridge_contract": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-02",
+  "generated_at": "2026-05-22T11:10:49.344881+00:00",
+  "source_artifacts": {
+    "canonical_csr": "/Users/khorrix/Projects/k-pi-core/clients/blueedge/semantic/client_semantic_registry.json",
+    "candidate_csr": "/Users/khorrix/Projects/k-pi-core/clients/blueedge/psee/runs/run_blueedge_sdc_validation_01/semantic/compiler/candidate_csr.json",
+    "derivation_report": "/Users/khorrix/Projects/k-pi-core/clients/blueedge/psee/runs/run_blueedge_sdc_validation_01/semantic/compiler/derivation_report.json",
+    "review_queue": "/Users/khorrix/Projects/k-pi-core/clients/blueedge/psee/runs/run_blueedge_sdc_validation_01/semantic/compiler/review_queue.json",
+    "topology_model": "/Users/khorrix/Projects/k-pi-core/clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/semantic_topology_model.json",
+    "vault_claims_dir": "/Users/khorrix/Projects/k-pi-core/clients/blueedge/vaults/run_01_authoritative/claims"
+  },
+  "proposition_summary": {
+    "total": 85,
+    "by_class": {
+      "DOMAIN_EVIDENCE_GROUNDING": 17,
+      "CAPABILITY_EVIDENCE": 24,
+      "VAULT_CLAIM_STRUCTURAL": 25,
+      "CROSS_DOMAIN_EVIDENCE": 19
+    },
+    "by_tier": {
+      "DIRECT_EVIDENCE": 53,
+      "DERIVED": 32,
+      "INFERRED": 0
+    },
+    "mean_confidence": 0.728,
+    "all_status": "CANDIDATE",
+    "authority_ceiling": "L3"
+  },
+  "propositions": [
+    {
+      "id": "SP-blueedge-0001",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Edge Data Acquisition (DOMAIN-01) is a grounded functional domain with 7 SDC-derived components (7 DIRECT_EVIDENCE, 0 DERIVED)",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344074+00:00",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-01"
+      ],
+      "structural_refs": {
+        "domain_id": "DOMAIN-01",
+        "domain_name": "Edge Data Acquisition",
+        "grounding_status": "GROUNDED",
+        "sdc_confidence": "DIRECT_EVIDENCE",
+        "component_count": 7,
+        "direct_evidence_count": 7,
+        "derived_count": 0
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 7 components).",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0002",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Telemetry Transport and Messaging (DOMAIN-02) is a weakly grounded functional domain with 3 SDC-derived components (3 DIRECT_EVIDENCE, 0 DERIVED)",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344322+00:00",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-02"
+      ],
+      "structural_refs": {
+        "domain_id": "DOMAIN-02",
+        "domain_name": "Telemetry Transport and Messaging",
+        "grounding_status": "WEAKLY_GROUNDED",
+        "sdc_confidence": "DIRECT_EVIDENCE",
+        "component_count": 3,
+        "direct_evidence_count": 3,
+        "derived_count": 0
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Domain grounding from canonical CSR (WEAKLY_GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 3 components).",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0003",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Fleet Core Operations (DOMAIN-03) is a grounded functional domain with 3 SDC-derived components (3 DIRECT_EVIDENCE, 0 DERIVED)",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344327+00:00",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-03"
+      ],
+      "structural_refs": {
+        "domain_id": "DOMAIN-03",
+        "domain_name": "Fleet Core Operations",
+        "grounding_status": "GROUNDED",
+        "sdc_confidence": "DIRECT_EVIDENCE",
+        "component_count": 3,
+        "direct_evidence_count": 3,
+        "derived_count": 0
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 3 components).",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0004",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Fleet Vertical Extensions (DOMAIN-04) is a grounded functional domain with 6 SDC-derived components (6 DIRECT_EVIDENCE, 0 DERIVED)",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344331+00:00",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-04"
+      ],
+      "structural_refs": {
+        "domain_id": "DOMAIN-04",
+        "domain_name": "Fleet Vertical Extensions",
+        "grounding_status": "GROUNDED",
+        "sdc_confidence": "DIRECT_EVIDENCE",
+        "component_count": 6,
+        "direct_evidence_count": 6,
+        "derived_count": 0
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 6 components).",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0005",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Analytics and Intelligence (DOMAIN-05) is a grounded functional domain with 2 SDC-derived components (2 DIRECT_EVIDENCE, 0 DERIVED)",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344335+00:00",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-05"
+      ],
+      "structural_refs": {
+        "domain_id": "DOMAIN-05",
+        "domain_name": "Analytics and Intelligence",
+        "grounding_status": "GROUNDED",
+        "sdc_confidence": "DIRECT_EVIDENCE",
+        "component_count": 2,
+        "direct_evidence_count": 2,
+        "derived_count": 0
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 2 components).",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0006",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "AI/ML Intelligence Layer (DOMAIN-06) is a grounded functional domain with 10 SDC-derived components (10 DIRECT_EVIDENCE, 0 DERIVED)",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344339+00:00",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-06"
+      ],
+      "structural_refs": {
+        "domain_id": "DOMAIN-06",
+        "domain_name": "AI/ML Intelligence Layer",
+        "grounding_status": "GROUNDED",
+        "sdc_confidence": "DIRECT_EVIDENCE",
+        "component_count": 10,
+        "direct_evidence_count": 10,
+        "derived_count": 0
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 10 components).",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0007",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Sensor and Security Ingestion (DOMAIN-07) is a grounded functional domain with 4 SDC-derived components (4 DIRECT_EVIDENCE, 0 DERIVED)",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344343+00:00",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-07"
+      ],
+      "structural_refs": {
+        "domain_id": "DOMAIN-07",
+        "domain_name": "Sensor and Security Ingestion",
+        "grounding_status": "GROUNDED",
+        "sdc_confidence": "DIRECT_EVIDENCE",
+        "component_count": 4,
+        "direct_evidence_count": 4,
+        "derived_count": 0
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 4 components).",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0008",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Real-Time Streaming and Gateway (DOMAIN-08) is a grounded functional domain with 4 SDC-derived components (4 DIRECT_EVIDENCE, 0 DERIVED)",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344347+00:00",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-08"
+      ],
+      "structural_refs": {
+        "domain_id": "DOMAIN-08",
+        "domain_name": "Real-Time Streaming and Gateway",
+        "grounding_status": "GROUNDED",
+        "sdc_confidence": "DIRECT_EVIDENCE",
+        "component_count": 4,
+        "direct_evidence_count": 4,
+        "derived_count": 0
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 4 components).",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0009",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Access Control and Identity (DOMAIN-09) is a grounded functional domain with 4 SDC-derived components (4 DIRECT_EVIDENCE, 0 DERIVED)",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344350+00:00",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-09"
+      ],
+      "structural_refs": {
+        "domain_id": "DOMAIN-09",
+        "domain_name": "Access Control and Identity",
+        "grounding_status": "GROUNDED",
+        "sdc_confidence": "DIRECT_EVIDENCE",
+        "component_count": 4,
+        "direct_evidence_count": 4,
+        "derived_count": 0
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 4 components).",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0010",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Platform Infrastructure and Data (DOMAIN-10) is a weakly grounded functional domain with 8 SDC-derived components (8 DIRECT_EVIDENCE, 0 DERIVED)",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344354+00:00",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-10"
+      ],
+      "structural_refs": {
+        "domain_id": "DOMAIN-10",
+        "domain_name": "Platform Infrastructure and Data",
+        "grounding_status": "WEAKLY_GROUNDED",
+        "sdc_confidence": "DIRECT_EVIDENCE",
+        "component_count": 8,
+        "direct_evidence_count": 8,
+        "derived_count": 0
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Domain grounding from canonical CSR (WEAKLY_GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 8 components).",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0011",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Event-Driven Architecture (DOMAIN-11) is a grounded functional domain with 6 SDC-derived components (6 DIRECT_EVIDENCE, 0 DERIVED)",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344358+00:00",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-11"
+      ],
+      "structural_refs": {
+        "domain_id": "DOMAIN-11",
+        "domain_name": "Event-Driven Architecture",
+        "grounding_status": "GROUNDED",
+        "sdc_confidence": "DIRECT_EVIDENCE",
+        "component_count": 6,
+        "direct_evidence_count": 6,
+        "derived_count": 0
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 6 components).",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0012",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "SaaS Platform Layer (DOMAIN-12) is a grounded functional domain with 10 SDC-derived components (10 DIRECT_EVIDENCE, 0 DERIVED)",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344361+00:00",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-12"
+      ],
+      "structural_refs": {
+        "domain_id": "DOMAIN-12",
+        "domain_name": "SaaS Platform Layer",
+        "grounding_status": "GROUNDED",
+        "sdc_confidence": "DIRECT_EVIDENCE",
+        "component_count": 10,
+        "direct_evidence_count": 10,
+        "derived_count": 0
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 10 components).",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0013",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "External Integration (DOMAIN-13) is a grounded functional domain with 2 SDC-derived components (2 DIRECT_EVIDENCE, 0 DERIVED)",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344364+00:00",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-13"
+      ],
+      "structural_refs": {
+        "domain_id": "DOMAIN-13",
+        "domain_name": "External Integration",
+        "grounding_status": "GROUNDED",
+        "sdc_confidence": "DIRECT_EVIDENCE",
+        "component_count": 2,
+        "direct_evidence_count": 2,
+        "derived_count": 0
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 2 components).",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0014",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Frontend Application (DOMAIN-14) is a grounded functional domain with 14 SDC-derived components (14 DIRECT_EVIDENCE, 0 DERIVED)",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344370+00:00",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-14"
+      ],
+      "structural_refs": {
+        "domain_id": "DOMAIN-14",
+        "domain_name": "Frontend Application",
+        "grounding_status": "GROUNDED",
+        "sdc_confidence": "DIRECT_EVIDENCE",
+        "component_count": 14,
+        "direct_evidence_count": 14,
+        "derived_count": 0
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 14 components).",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0015",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "EV and Electrification (DOMAIN-15) is a grounded functional domain with 3 SDC-derived components (3 DIRECT_EVIDENCE, 0 DERIVED)",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344374+00:00",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-15"
+      ],
+      "structural_refs": {
+        "domain_id": "DOMAIN-15",
+        "domain_name": "EV and Electrification",
+        "grounding_status": "GROUNDED",
+        "sdc_confidence": "DIRECT_EVIDENCE",
+        "component_count": 3,
+        "direct_evidence_count": 3,
+        "derived_count": 0
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 3 components).",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0016",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Operational Engineering (DOMAIN-16) is a grounded functional domain with 61 SDC-derived components (61 DIRECT_EVIDENCE, 0 DERIVED)",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        ""
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344378+00:00",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-16"
+      ],
+      "structural_refs": {
+        "domain_id": "DOMAIN-16",
+        "domain_name": "Operational Engineering",
+        "grounding_status": "GROUNDED",
+        "sdc_confidence": "DIRECT_EVIDENCE",
+        "component_count": 61,
+        "direct_evidence_count": 61,
+        "derived_count": 0
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DIRECT_EVIDENCE, 61 components).",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0017",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Extended Operations and Driver Services (DOMAIN-17) is a grounded functional domain with 2 SDC-derived components (0 DIRECT_EVIDENCE, 2 DERIVED)",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.55,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        ""
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344381+00:00",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-17"
+      ],
+      "structural_refs": {
+        "domain_id": "DOMAIN-17",
+        "domain_name": "Extended Operations and Driver Services",
+        "grounding_status": "GROUNDED",
+        "sdc_confidence": "DERIVED",
+        "component_count": 2,
+        "direct_evidence_count": 0,
+        "derived_count": 2
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Domain grounding from canonical CSR (GROUNDED) cross-referenced with SDC derivation (DERIVED, 2 components).",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0018",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Capability 'Core Fleet Management' (CAP-001) in DOMAIN-01 is backed by 7 components (7 DIRECT_EVIDENCE). Type: CORE.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344403+00:00",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-01"
+      ],
+      "structural_refs": {
+        "capability_id": "CAP-001",
+        "capability_name": "Core Fleet Management",
+        "domain_id": "DOMAIN-01",
+        "capability_type": "CORE",
+        "component_count": 7,
+        "direct_evidence_components": 7,
+        "weakly_grounded": false
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Capability derived from SDC section extraction. 7 components, 7 at DIRECT_EVIDENCE.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0019",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Capability 'Fleet Verticals' (CAP-002) in DOMAIN-02 is backed by 3 components (3 DIRECT_EVIDENCE). Type: SUPPORTING.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344438+00:00",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-02"
+      ],
+      "structural_refs": {
+        "capability_id": "CAP-002",
+        "capability_name": "Fleet Verticals",
+        "domain_id": "DOMAIN-02",
+        "capability_type": "SUPPORTING",
+        "component_count": 3,
+        "direct_evidence_components": 3,
+        "weakly_grounded": false
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Capability derived from SDC section extraction. 3 components, 3 at DIRECT_EVIDENCE.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0020",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Capability 'SVG Hardware & Security' (CAP-003) in DOMAIN-03 is backed by 3 components (3 DIRECT_EVIDENCE). Type: CORE.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344454+00:00",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-03"
+      ],
+      "structural_refs": {
+        "capability_id": "CAP-003",
+        "capability_name": "SVG Hardware & Security",
+        "domain_id": "DOMAIN-03",
+        "capability_type": "CORE",
+        "component_count": 3,
+        "direct_evidence_components": 3,
+        "weakly_grounded": false
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Capability derived from SDC section extraction. 3 components, 3 at DIRECT_EVIDENCE.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0021",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Capability 'AI / Machine Learning' (CAP-004) in DOMAIN-04 is backed by 6 components (6 DIRECT_EVIDENCE). Type: ENABLING.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344469+00:00",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-04"
+      ],
+      "structural_refs": {
+        "capability_id": "CAP-004",
+        "capability_name": "AI / Machine Learning",
+        "domain_id": "DOMAIN-04",
+        "capability_type": "ENABLING",
+        "component_count": 6,
+        "direct_evidence_components": 6,
+        "weakly_grounded": false
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Capability derived from SDC section extraction. 6 components, 6 at DIRECT_EVIDENCE.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0022",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Capability 'Blockchain & Data' (CAP-005) in DOMAIN-05 is backed by 2 components (2 DIRECT_EVIDENCE). Type: CORE.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344483+00:00",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-05"
+      ],
+      "structural_refs": {
+        "capability_id": "CAP-005",
+        "capability_name": "Blockchain & Data",
+        "domain_id": "DOMAIN-05",
+        "capability_type": "CORE",
+        "component_count": 2,
+        "direct_evidence_components": 2,
+        "weakly_grounded": false
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Capability derived from SDC section extraction. 2 components, 2 at DIRECT_EVIDENCE.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0023",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Capability 'Operations & Compliance' (CAP-006) in DOMAIN-06 is backed by 10 components (10 DIRECT_EVIDENCE). Type: ENABLING.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344498+00:00",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-06"
+      ],
+      "structural_refs": {
+        "capability_id": "CAP-006",
+        "capability_name": "Operations & Compliance",
+        "domain_id": "DOMAIN-06",
+        "capability_type": "ENABLING",
+        "component_count": 10,
+        "direct_evidence_components": 10,
+        "weakly_grounded": false
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Capability derived from SDC section extraction. 10 components, 10 at DIRECT_EVIDENCE.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0024",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Capability 'EV & Energy' (CAP-007) in DOMAIN-07 is backed by 4 components (4 DIRECT_EVIDENCE). Type: CORE.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344513+00:00",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-07"
+      ],
+      "structural_refs": {
+        "capability_id": "CAP-007",
+        "capability_name": "EV & Energy",
+        "domain_id": "DOMAIN-07",
+        "capability_type": "CORE",
+        "component_count": 4,
+        "direct_evidence_components": 4,
+        "weakly_grounded": false
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Capability derived from SDC section extraction. 4 components, 4 at DIRECT_EVIDENCE.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0025",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Capability 'SaaS & Multi-Tenant' (CAP-008) in DOMAIN-08 is backed by 4 components (4 DIRECT_EVIDENCE). Type: CORE.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344527+00:00",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-08"
+      ],
+      "structural_refs": {
+        "capability_id": "CAP-008",
+        "capability_name": "SaaS & Multi-Tenant",
+        "domain_id": "DOMAIN-08",
+        "capability_type": "CORE",
+        "component_count": 4,
+        "direct_evidence_components": 4,
+        "weakly_grounded": false
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Capability derived from SDC section extraction. 4 components, 4 at DIRECT_EVIDENCE.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0026",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Capability 'Integration & Ecosystem' (CAP-009) in DOMAIN-09 is backed by 4 components (4 DIRECT_EVIDENCE). Type: INFRASTRUCTURE.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344541+00:00",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-09"
+      ],
+      "structural_refs": {
+        "capability_id": "CAP-009",
+        "capability_name": "Integration & Ecosystem",
+        "domain_id": "DOMAIN-09",
+        "capability_type": "INFRASTRUCTURE",
+        "component_count": 4,
+        "direct_evidence_components": 4,
+        "weakly_grounded": false
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Capability derived from SDC section extraction. 4 components, 4 at DIRECT_EVIDENCE.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0027",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Capability 'People & Access' (CAP-010) in DOMAIN-10 is backed by 8 components (8 DIRECT_EVIDENCE). Type: CORE.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344555+00:00",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-10"
+      ],
+      "structural_refs": {
+        "capability_id": "CAP-010",
+        "capability_name": "People & Access",
+        "domain_id": "DOMAIN-10",
+        "capability_type": "CORE",
+        "component_count": 8,
+        "direct_evidence_components": 8,
+        "weakly_grounded": false
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Capability derived from SDC section extraction. 8 components, 8 at DIRECT_EVIDENCE.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0028",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Capability 'Lifecycle & Market' (CAP-011) in DOMAIN-11 is backed by 6 components (6 DIRECT_EVIDENCE). Type: ENABLING.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344571+00:00",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-11"
+      ],
+      "structural_refs": {
+        "capability_id": "CAP-011",
+        "capability_name": "Lifecycle & Market",
+        "domain_id": "DOMAIN-11",
+        "capability_type": "ENABLING",
+        "component_count": 6,
+        "direct_evidence_components": 6,
+        "weakly_grounded": false
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Capability derived from SDC section extraction. 6 components, 6 at DIRECT_EVIDENCE.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0029",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Capability 'Infrastructure & Shared' (CAP-012) in DOMAIN-12 is backed by 6 components (6 DIRECT_EVIDENCE). Type: INFRASTRUCTURE.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344586+00:00",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-12"
+      ],
+      "structural_refs": {
+        "capability_id": "CAP-012",
+        "capability_name": "Infrastructure & Shared",
+        "domain_id": "DOMAIN-12",
+        "capability_type": "INFRASTRUCTURE",
+        "component_count": 6,
+        "direct_evidence_components": 6,
+        "weakly_grounded": false
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Capability derived from SDC section extraction. 6 components, 6 at DIRECT_EVIDENCE.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0030",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Capability 'Cold Chain & V2G' (CAP-013) in DOMAIN-13 is backed by 2 components (2 DIRECT_EVIDENCE). Type: CORE.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344600+00:00",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-13"
+      ],
+      "structural_refs": {
+        "capability_id": "CAP-013",
+        "capability_name": "Cold Chain & V2G",
+        "domain_id": "DOMAIN-13",
+        "capability_type": "CORE",
+        "component_count": 2,
+        "direct_evidence_components": 2,
+        "weakly_grounded": false
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Capability derived from SDC section extraction. 2 components, 2 at DIRECT_EVIDENCE.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0031",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Capability 'Vehicle Sensor Collection' (CAP-014) in DOMAIN-14 is backed by 8 components (8 DIRECT_EVIDENCE). Type: CORE.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344614+00:00",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-14"
+      ],
+      "structural_refs": {
+        "capability_id": "CAP-014",
+        "capability_name": "Vehicle Sensor Collection",
+        "domain_id": "DOMAIN-14",
+        "capability_type": "CORE",
+        "component_count": 8,
+        "direct_evidence_components": 8,
+        "weakly_grounded": false
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Capability derived from SDC section extraction. 8 components, 8 at DIRECT_EVIDENCE.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0032",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Capability 'SVG Device Hardware Platform' (CAP-015) in DOMAIN-14 is backed by 6 components (6 DIRECT_EVIDENCE). Type: CORE.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344628+00:00",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-14"
+      ],
+      "structural_refs": {
+        "capability_id": "CAP-015",
+        "capability_name": "SVG Device Hardware Platform",
+        "domain_id": "DOMAIN-14",
+        "capability_type": "CORE",
+        "component_count": 6,
+        "direct_evidence_components": 6,
+        "weakly_grounded": false
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Capability derived from SDC section extraction. 6 components, 6 at DIRECT_EVIDENCE.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0033",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Capability 'Stream Processing Infrastructure' (CAP-016) in DOMAIN-15 is backed by 3 components (3 DIRECT_EVIDENCE). Type: INFRASTRUCTURE.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344642+00:00",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-15"
+      ],
+      "structural_refs": {
+        "capability_id": "CAP-016",
+        "capability_name": "Stream Processing Infrastructure",
+        "domain_id": "DOMAIN-15",
+        "capability_type": "INFRASTRUCTURE",
+        "component_count": 3,
+        "direct_evidence_components": 3,
+        "weakly_grounded": false
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Capability derived from SDC section extraction. 3 components, 3 at DIRECT_EVIDENCE.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0034",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Capability 'Layer: \ud83c\udfe2 Layer 4 \u2014 NestJS Application' (CAP-017) in unassigned domain is backed by 11 components (11 DIRECT_EVIDENCE). Type: CORE.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.5,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344657+00:00",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "capability_id": "CAP-017",
+        "capability_name": "Layer: \ud83c\udfe2 Layer 4 \u2014 NestJS Application",
+        "domain_id": "",
+        "capability_type": "CORE",
+        "component_count": 11,
+        "direct_evidence_components": 11,
+        "weakly_grounded": false
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Capability derived from SDC section extraction. 11 components, 11 at DIRECT_EVIDENCE.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0035",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Capability 'Layer: \ud83d\udda5\ufe0f Layer 6 \u2014 Frontend Applicat' (CAP-018) in unassigned domain is backed by 7 components (7 DIRECT_EVIDENCE). Type: CORE.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.5,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344672+00:00",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "capability_id": "CAP-018",
+        "capability_name": "Layer: \ud83d\udda5\ufe0f Layer 6 \u2014 Frontend Applicat",
+        "domain_id": "",
+        "capability_type": "CORE",
+        "component_count": 7,
+        "direct_evidence_components": 7,
+        "weakly_grounded": false
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Capability derived from SDC section extraction. 7 components, 7 at DIRECT_EVIDENCE.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0036",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Capability 'Data Persistence Layer' (CAP-019) in DOMAIN-12 is backed by 4 components (4 DIRECT_EVIDENCE). Type: CORE.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344686+00:00",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-12"
+      ],
+      "structural_refs": {
+        "capability_id": "CAP-019",
+        "capability_name": "Data Persistence Layer",
+        "domain_id": "DOMAIN-12",
+        "capability_type": "CORE",
+        "component_count": 4,
+        "direct_evidence_components": 4,
+        "weakly_grounded": false
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Capability derived from SDC section extraction. 4 components, 4 at DIRECT_EVIDENCE.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0037",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Capability 'Layer: Unknown Layer' (CAP-020) in unassigned domain is backed by 32 components (32 DIRECT_EVIDENCE). Type: CORE.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.5,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344702+00:00",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "capability_id": "CAP-020",
+        "capability_name": "Layer: Unknown Layer",
+        "domain_id": "",
+        "capability_type": "CORE",
+        "component_count": 32,
+        "direct_evidence_components": 32,
+        "weakly_grounded": false
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Capability derived from SDC section extraction. 32 components, 32 at DIRECT_EVIDENCE.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0038",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Capability 'Frontend Application Pages' (CAP-021) in DOMAIN-16 is backed by 61 components (61 DIRECT_EVIDENCE). Type: CORE.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "BlueEdge_Unified_Architecture_v3_23_0.html"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344721+00:00",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-16"
+      ],
+      "structural_refs": {
+        "capability_id": "CAP-021",
+        "capability_name": "Frontend Application Pages",
+        "domain_id": "DOMAIN-16",
+        "capability_type": "CORE",
+        "component_count": 61,
+        "direct_evidence_components": 61,
+        "weakly_grounded": false
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Capability derived from SDC section extraction. 61 components, 61 at DIRECT_EVIDENCE.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0039",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Capability 'Streaming and Messaging Infrastructure' (CAP-022) in DOMAIN-17 is backed by 2 components (0 DIRECT_EVIDENCE). Type: INFRASTRUCTURE.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.55,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344735+00:00",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-17"
+      ],
+      "structural_refs": {
+        "capability_id": "CAP-022",
+        "capability_name": "Streaming and Messaging Infrastructure",
+        "domain_id": "DOMAIN-17",
+        "capability_type": "INFRASTRUCTURE",
+        "component_count": 2,
+        "direct_evidence_components": 0,
+        "weakly_grounded": false
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Capability derived from SDC section extraction. 2 components, 0 at DIRECT_EVIDENCE.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0040",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Capability 'Data Storage Infrastructure' (CAP-023) in DOMAIN-18 is backed by 4 components (0 DIRECT_EVIDENCE). Type: INFRASTRUCTURE.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.55,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344751+00:00",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-18"
+      ],
+      "structural_refs": {
+        "capability_id": "CAP-023",
+        "capability_name": "Data Storage Infrastructure",
+        "domain_id": "DOMAIN-18",
+        "capability_type": "INFRASTRUCTURE",
+        "component_count": 4,
+        "direct_evidence_components": 0,
+        "weakly_grounded": false
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Capability derived from SDC section extraction. 4 components, 0 at DIRECT_EVIDENCE.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0041",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Capability 'Platform Technology Services' (CAP-024) in DOMAIN-19 is backed by 4 components (0 DIRECT_EVIDENCE). Type: INFRASTRUCTURE.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.55,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344764+00:00",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-19"
+      ],
+      "structural_refs": {
+        "capability_id": "CAP-024",
+        "capability_name": "Platform Technology Services",
+        "domain_id": "DOMAIN-19",
+        "capability_type": "INFRASTRUCTURE",
+        "component_count": 4,
+        "direct_evidence_components": 0,
+        "weakly_grounded": false
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Capability derived from SDC section extraction. 4 components, 0 at DIRECT_EVIDENCE.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0042",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-01 'Structural Coverage Completeness' asserts: 100.0% (30/30 units). Traceability: FULL. LENS admissible: YES.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-01 Structural Coverage Completeness.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344768+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-01",
+        "claim_label": "Structural Coverage Completeness",
+        "claim_type": "metric",
+        "authoritative_value": "100.0% (30/30 units)",
+        "traceability": "FULL",
+        "lens_admissible": "YES"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0043",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-02 'Structural Unit Count' asserts: 30 admitted / 30 required. Traceability: FULL. LENS admissible: YES.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-02 Structural Unit Count.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344771+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-02",
+        "claim_label": "Structural Unit Count",
+        "claim_type": "count",
+        "authoritative_value": "30 admitted / 30 required",
+        "traceability": "FULL",
+        "lens_admissible": "YES"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0044",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-03 'Structural Reconstruction Pass-Fail' asserts: PASS. Traceability: FULL. LENS admissible: YES.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-03 Structural Reconstruction Pass-Fail.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344773+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-03",
+        "claim_label": "Structural Reconstruction Pass-Fail",
+        "claim_type": "verdict",
+        "authoritative_value": "PASS",
+        "traceability": "FULL",
+        "lens_admissible": "YES"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0045",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-04 'Four-Axis Reconstruction Detail' asserts: - COMPLETENESS: PASS\n- STRUCTURAL_LINK: PASS\n- REFERENTIAL_INTEGRITY: PASS\n- LAYER_CONSISTENCY: PASS. Traceability: FULL. LENS admissible: CONDITIONAL.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.65,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-04 Four-Axis Reconstruction Detail.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344776+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-04",
+        "claim_label": "Four-Axis Reconstruction Detail",
+        "claim_type": "verdict",
+        "authoritative_value": "- COMPLETENESS: PASS\n- STRUCTURAL_LINK: PASS\n- REFERENTIAL_INTEGRITY: PASS\n- LAYER_CONSISTENCY: PASS",
+        "traceability": "FULL",
+        "lens_admissible": "CONDITIONAL"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0046",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-05 'Escalation Clearance' asserts: CLEAR (value=100). Traceability: FULL. LENS admissible: YES.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-05 Escalation Clearance.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344778+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-05",
+        "claim_label": "Escalation Clearance",
+        "claim_type": "verdict",
+        "authoritative_value": "CLEAR (value=100)",
+        "traceability": "FULL",
+        "lens_admissible": "YES"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0047",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-07 'Source Data Intake Complete' asserts: COMPLETE. Traceability: FULL. LENS admissible: YES.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-07 Source Data Intake Complete.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344781+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-07",
+        "claim_label": "Source Data Intake Complete",
+        "claim_type": "verdict",
+        "authoritative_value": "COMPLETE",
+        "traceability": "FULL",
+        "lens_admissible": "YES"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0048",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-08 'Structural Patterns Conform' asserts: PASS. Traceability: FULL. LENS admissible: CONDITIONAL.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.65,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-08 Structural Patterns Conform.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344783+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-08",
+        "claim_label": "Structural Patterns Conform",
+        "claim_type": "verdict",
+        "authoritative_value": "PASS",
+        "traceability": "FULL",
+        "lens_admissible": "CONDITIONAL"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0049",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-09 'Proven Structural Score' asserts: 60. Traceability: FULL. LENS admissible: YES.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-09 Proven Structural Score.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344786+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-09",
+        "claim_label": "Proven Structural Score",
+        "claim_type": "metric",
+        "authoritative_value": "60",
+        "traceability": "FULL",
+        "lens_admissible": "YES"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0050",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-10 'Achievable Score Projected' asserts: 100. Traceability: FULL. LENS admissible: CONDITIONAL.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.65,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-10 Achievable Score Projected.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344788+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-10",
+        "claim_label": "Achievable Score Projected",
+        "claim_type": "metric",
+        "authoritative_value": "100",
+        "traceability": "FULL",
+        "lens_admissible": "CONDITIONAL"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0051",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-11 'Score Band Classification' asserts: CONDITIONAL. Traceability: FULL. LENS admissible: YES.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-11 Score Band Classification.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344791+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-11",
+        "claim_label": "Score Band Classification",
+        "claim_type": "status",
+        "authoritative_value": "CONDITIONAL",
+        "traceability": "FULL",
+        "lens_admissible": "YES"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0052",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-12 'Score Confidence Range' asserts: lower=60, upper=100, status=SPLIT_EXECUTION_NOT_EVALUATED. Traceability: FULL. LENS admissible: CONDITIONAL.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.65,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-12 Score Confidence Range.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344793+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-12",
+        "claim_label": "Score Confidence Range",
+        "claim_type": "metric",
+        "authoritative_value": "lower=60, upper=100, status=SPLIT_EXECUTION_NOT_EVALUATED",
+        "traceability": "FULL",
+        "lens_admissible": "CONDITIONAL"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0053",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-13 'Execution Layer Status' asserts: NOT_EVALUATED (Stream 10 schema) / PHASE_1_ACTIVE (legacy). Traceability: FULL. LENS admissible: CONDITIONAL.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.65,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-13 Execution Layer Status.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344797+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-13",
+        "claim_label": "Execution Layer Status",
+        "claim_type": "status",
+        "authoritative_value": "NOT_EVALUATED (Stream 10 schema) / PHASE_1_ACTIVE (legacy)",
+        "traceability": "FULL",
+        "lens_admissible": "CONDITIONAL"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0054",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-14 'Structural Domain Count' asserts: 17. Traceability: FULL. LENS admissible: YES.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-14 Structural Domain Count.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344800+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-14",
+        "claim_label": "Structural Domain Count",
+        "claim_type": "count",
+        "authoritative_value": "17",
+        "traceability": "FULL",
+        "lens_admissible": "YES"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0055",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-15 'Structural Capability Count' asserts: 42. Traceability: FULL. LENS admissible: YES.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-15 Structural Capability Count.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344802+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-15",
+        "claim_label": "Structural Capability Count",
+        "claim_type": "count",
+        "authoritative_value": "42",
+        "traceability": "FULL",
+        "lens_admissible": "YES"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0056",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-16 'Structural Component Count' asserts: 89. Traceability: FULL. LENS admissible: YES.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-16 Structural Component Count.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344804+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-16",
+        "claim_label": "Structural Component Count",
+        "claim_type": "count",
+        "authoritative_value": "89",
+        "traceability": "FULL",
+        "lens_admissible": "YES"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0057",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-17 'Cross-Domain Structural Overlaps' asserts: 0 in canonical model; 2 in binding_envelope (run_335c0575a080). Traceability: FULL. LENS admissible: CONDITIONAL.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.65,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-17 Cross-Domain Structural Overlaps.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344807+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-17",
+        "claim_label": "Cross-Domain Structural Overlaps",
+        "claim_type": "count",
+        "authoritative_value": "0 in canonical model; 2 in binding_envelope (run_335c0575a080)",
+        "traceability": "FULL",
+        "lens_admissible": "CONDITIONAL"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0058",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-18 'Governed Signal Count' asserts: 5. Traceability: FULL. LENS admissible: YES.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-18 Governed Signal Count.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344809+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-18",
+        "claim_label": "Governed Signal Count",
+        "claim_type": "count",
+        "authoritative_value": "5",
+        "traceability": "FULL",
+        "lens_admissible": "YES"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0059",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-19 'Signal Evidence Quality Distribution' asserts: STRONG:2 (SIG-001, SIG-002), MODERATE:2 (SIG-003, SIG-004), WEAK:1 (SIG-005). Traceability: FULL. LENS admissible: YES.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-19 Signal Evidence Quality Distribution.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344811+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-19",
+        "claim_label": "Signal Evidence Quality Distribution",
+        "claim_type": "entity-summary",
+        "authoritative_value": "STRONG:2 (SIG-001, SIG-002), MODERATE:2 (SIG-003, SIG-004), WEAK:1 (SIG-005)",
+        "traceability": "FULL",
+        "lens_admissible": "YES"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0060",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-20 'SIG-001 Sensor Bridge Throughput' asserts: Sensor Bridge Throughput Ceiling: Configuration Confirmed, Runtime Unknown\n- signal_id: SIG-001\n- evidence_confidence: STRONG\n- domain: Edge Data Acquisition (DOMAIN-01)\n- capability: Network Security Intelligence Collection (CAP-02). Traceability: FULL. LENS admissible: YES.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-20 SIG-001 Sensor Bridge Throughput.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344813+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-20",
+        "claim_label": "SIG-001 Sensor Bridge Throughput",
+        "claim_type": "entity-summary",
+        "authoritative_value": "Sensor Bridge Throughput Ceiling: Configuration Confirmed, Runtime Unknown\n- signal_id: SIG-001\n- evidence_confidence: STRONG\n- domain: Edge Data Acquisition (DOMAIN-01)\n- capability: Network Security Intelligence Collection (CAP-02)",
+        "traceability": "FULL",
+        "lens_admissible": "YES"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0061",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-21 'SIG-002 Platform Runtime State Seven Unknown Dimensions' asserts: Platform Runtime State: Seven Core Dimensions Are Currently Unknown\n- signal_id: SIG-002\n- evidence_confidence: STRONG\n- domain: Platform Infrastructure and Data (DOMAIN-10)\n- capability: Caching Layer (CAP-27). Traceability: FULL. LENS admissible: YES.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-21 SIG-002 Platform Runtime State Seven Unknown Dimensions.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344816+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-21",
+        "claim_label": "SIG-002 Platform Runtime State Seven Unknown Dimensions",
+        "claim_type": "entity-summary",
+        "authoritative_value": "Platform Runtime State: Seven Core Dimensions Are Currently Unknown\n- signal_id: SIG-002\n- evidence_confidence: STRONG\n- domain: Platform Infrastructure and Data (DOMAIN-10)\n- capability: Caching Layer (CAP-27)",
+        "traceability": "FULL",
+        "lens_admissible": "YES"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0062",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-22 'SIG-003 Dependency Load 68 Percent' asserts: Dependency Load: 68% of Architectural Relationships Are Dependency Edges\n- signal_id: SIG-003\n- evidence_confidence: MODERATE\n- ratio: 0.682 (15 dependency edges of 22 total architectural edges)\n- domain: Event-Driven Architecture (DOMAIN-11)\n- capability: Domain Event Bus (CAP-30). Traceability: FULL. LENS admissible: YES.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-22 SIG-003 Dependency Load 68 Percent.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344818+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-22",
+        "claim_label": "SIG-003 Dependency Load 68 Percent",
+        "claim_type": "entity-summary",
+        "authoritative_value": "Dependency Load: 68% of Architectural Relationships Are Dependency Edges\n- signal_id: SIG-003\n- evidence_confidence: MODERATE\n- ratio: 0.682 (15 dependency edges of 22 total architectural edges)\n- domain: Event-Driven Architecture (DOMAIN-11)\n- capability: Domain Event Bus (CAP-30)",
+        "traceability": "FULL",
+        "lens_admissible": "YES"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0063",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-23 'SIG-004 Structural Volatility Edge Density' asserts: Structural Volatility: Edge-to-Node Density Exceeds Unity\n- signal_id: SIG-004\n- evidence_confidence: MODERATE\n- edge-to-node density: 1.273\n- containment depth ratio: 0.545\n- responsibility concentration: 0.364\n- module boundary ratio: 0.455\n- domain: Platform Infrastructure and Data (DOMAIN-10)\n- capability: Platform Monorepo Container (CAP-29). Traceability: FULL. LENS admissible: YES.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-23 SIG-004 Structural Volatility Edge Density.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344822+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-23",
+        "claim_label": "SIG-004 Structural Volatility Edge Density",
+        "claim_type": "entity-summary",
+        "authoritative_value": "Structural Volatility: Edge-to-Node Density Exceeds Unity\n- signal_id: SIG-004\n- evidence_confidence: MODERATE\n- edge-to-node density: 1.273\n- containment depth ratio: 0.545\n- responsibility concentration: 0.364\n- module boundary ratio: 0.455\n- domain: Platform Infrastructure and Data (DOMAIN-10)\n- capability: Platform Monorepo Container (CAP-29)",
+        "traceability": "FULL",
+        "lens_admissible": "YES"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0064",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-25 'Executive Three-Axis Verdict' asserts: STRUCTURE=STRONG, COMPLEXITY=LOW, EXECUTION=UNKNOWN. Traceability: FULL. LENS admissible: YES.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-25 Executive Three-Axis Verdict.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344824+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-25",
+        "claim_label": "Executive Three-Axis Verdict",
+        "claim_type": "verdict",
+        "authoritative_value": "STRUCTURE=STRONG, COMPLEXITY=LOW, EXECUTION=UNKNOWN",
+        "traceability": "FULL",
+        "lens_admissible": "YES"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0065",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-26 'Executive Narrative Phrase Set' asserts: 19 active concepts \u2192 rendered phrase set across three executive sections:\n- \"Under Control\": CONCEPT-01, CONCEPT-02, CONCEPT-03, CONCEPT-07, CONCEPT-12, CONCEPT-13, CONCEPT-14, CONCEPT-15, CONCEPT-17\n- \"Concentration\": CONCEPT-08, CONCEPT-09, CONCEPT-10, CONCEPT-11, CONCEPT-16\n- \"Outside Visibility\": CONCEPT-04, CONCEPT-05, CONCEPT-06, CONCEPT-18, CONCEPT-19. Traceability: FULL. LENS admissible: YES.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-26 Executive Narrative Phrase Set.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344827+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-26",
+        "claim_label": "Executive Narrative Phrase Set",
+        "claim_type": "narrative-support",
+        "authoritative_value": "19 active concepts \u2192 rendered phrase set across three executive sections:\n- \"Under Control\": CONCEPT-01, CONCEPT-02, CONCEPT-03, CONCEPT-07, CONCEPT-12, CONCEPT-13, CONCEPT-14, CONCEPT-15, CONCEPT-17\n- \"Concentration\": CONCEPT-08, CONCEPT-09, CONCEPT-10, CONCEPT-11, CONCEPT-16\n- \"Outside Visibility\": CONCEPT-04, CONCEPT-05, CONCEPT-06, CONCEPT-18, CONCEPT-19",
+        "traceability": "FULL",
+        "lens_admissible": "YES"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0066",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Vault claim CLM-27 'Full Node Inventory 148 Nodes' asserts: 148 nodes: 17 domains + 42 capabilities + 89 components. Traceability: FULL. LENS admissible: YES.",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "CLM-27 Full Node Inventory 148 Nodes.md"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344830+00:00",
+      "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "claim_id": "CLM-27",
+        "claim_label": "Full Node Inventory 148 Nodes",
+        "claim_type": "entity-summary",
+        "authoritative_value": "148 nodes: 17 domains + 42 capabilities + 89 components",
+        "traceability": "FULL",
+        "lens_admissible": "YES"
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Vault claim with full traceability and LENS admissibility. Structural backing from governed evidence vault.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0067",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Cross-domain relationship: DOMAIN-01 \u2192 DOMAIN-03 (EMITS, weight: 1). Topology edge from semantic topology model.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.6,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "semantic_topology_model.json"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344834+00:00",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-01",
+        "DOMAIN-03"
+      ],
+      "structural_refs": {
+        "source_domain": "DOMAIN-01",
+        "target_domain": "DOMAIN-03",
+        "edge_type": "EMITS",
+        "weight": 1
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Cross-domain edge from semantic topology model. EMITS relationship with weight 1.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0068",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Cross-domain relationship: DOMAIN-05 \u2192 DOMAIN-03 (CALLS, weight: 1). Topology edge from semantic topology model.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.6,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "semantic_topology_model.json"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344837+00:00",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-05",
+        "DOMAIN-03"
+      ],
+      "structural_refs": {
+        "source_domain": "DOMAIN-05",
+        "target_domain": "DOMAIN-03",
+        "edge_type": "CALLS",
+        "weight": 1
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Cross-domain edge from semantic topology model. CALLS relationship with weight 1.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0069",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Cross-domain relationship: DOMAIN-01 \u2192 DOMAIN-10 (EMITS, weight: 1). Topology edge from semantic topology model.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.6,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "semantic_topology_model.json"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344839+00:00",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-01",
+        "DOMAIN-10"
+      ],
+      "structural_refs": {
+        "source_domain": "DOMAIN-01",
+        "target_domain": "DOMAIN-10",
+        "edge_type": "EMITS",
+        "weight": 1
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Cross-domain edge from semantic topology model. EMITS relationship with weight 1.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0070",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Cross-domain relationship: DOMAIN-07 \u2192 DOMAIN-10 (EMITS, weight: 1). Topology edge from semantic topology model.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.6,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "semantic_topology_model.json"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344842+00:00",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-07",
+        "DOMAIN-10"
+      ],
+      "structural_refs": {
+        "source_domain": "DOMAIN-07",
+        "target_domain": "DOMAIN-10",
+        "edge_type": "EMITS",
+        "weight": 1
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Cross-domain edge from semantic topology model. EMITS relationship with weight 1.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0071",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Cross-domain relationship: DOMAIN-03 \u2192 DOMAIN-09 (inferred_semantic, weight: 1). Topology edge from semantic topology model.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.6,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "semantic_topology_model.json"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344844+00:00",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-03",
+        "DOMAIN-09"
+      ],
+      "structural_refs": {
+        "source_domain": "DOMAIN-03",
+        "target_domain": "DOMAIN-09",
+        "edge_type": "inferred_semantic",
+        "weight": 1
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Cross-domain edge from semantic topology model. inferred_semantic relationship with weight 1.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0072",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Cross-domain relationship: DOMAIN-03 \u2192 DOMAIN-16 (inferred_semantic, weight: 1). Topology edge from semantic topology model.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.6,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "semantic_topology_model.json"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344847+00:00",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-03",
+        "DOMAIN-16"
+      ],
+      "structural_refs": {
+        "source_domain": "DOMAIN-03",
+        "target_domain": "DOMAIN-16",
+        "edge_type": "inferred_semantic",
+        "weight": 1
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Cross-domain edge from semantic topology model. inferred_semantic relationship with weight 1.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0073",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Cross-domain relationship: DOMAIN-04 \u2192 DOMAIN-15 (structural_co_membership, weight: 1). Topology edge from semantic topology model.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.6,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "semantic_topology_model.json"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344849+00:00",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-04",
+        "DOMAIN-15"
+      ],
+      "structural_refs": {
+        "source_domain": "DOMAIN-04",
+        "target_domain": "DOMAIN-15",
+        "edge_type": "structural_co_membership",
+        "weight": 1
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Cross-domain edge from semantic topology model. structural_co_membership relationship with weight 1.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0074",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Cross-domain relationship: DOMAIN-02 \u2192 DOMAIN-05 (EMITS, weight: 1). Topology edge from semantic topology model.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.6,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "semantic_topology_model.json"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344851+00:00",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-02",
+        "DOMAIN-05"
+      ],
+      "structural_refs": {
+        "source_domain": "DOMAIN-02",
+        "target_domain": "DOMAIN-05",
+        "edge_type": "EMITS",
+        "weight": 1
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Cross-domain edge from semantic topology model. EMITS relationship with weight 1.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0075",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Cross-domain relationship: DOMAIN-10 \u2192 DOMAIN-03 (CALLS, weight: 1). Topology edge from semantic topology model.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.6,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "semantic_topology_model.json"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344854+00:00",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-10",
+        "DOMAIN-03"
+      ],
+      "structural_refs": {
+        "source_domain": "DOMAIN-10",
+        "target_domain": "DOMAIN-03",
+        "edge_type": "CALLS",
+        "weight": 1
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Cross-domain edge from semantic topology model. CALLS relationship with weight 1.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0076",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Cross-domain relationship: DOMAIN-10 \u2192 DOMAIN-12 (CALLS, weight: 1). Topology edge from semantic topology model.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.6,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "semantic_topology_model.json"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344856+00:00",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-10",
+        "DOMAIN-12"
+      ],
+      "structural_refs": {
+        "source_domain": "DOMAIN-10",
+        "target_domain": "DOMAIN-12",
+        "edge_type": "CALLS",
+        "weight": 1
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Cross-domain edge from semantic topology model. CALLS relationship with weight 1.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0077",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Cross-domain relationship: DOMAIN-10 \u2192 DOMAIN-16 (CALLS, weight: 1). Topology edge from semantic topology model.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.6,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "semantic_topology_model.json"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344858+00:00",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-10",
+        "DOMAIN-16"
+      ],
+      "structural_refs": {
+        "source_domain": "DOMAIN-10",
+        "target_domain": "DOMAIN-16",
+        "edge_type": "CALLS",
+        "weight": 1
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Cross-domain edge from semantic topology model. CALLS relationship with weight 1.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0078",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Cross-domain relationship: DOMAIN-09 \u2192 DOMAIN-03 (CALLS, weight: 1). Topology edge from semantic topology model.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.6,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "semantic_topology_model.json"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344861+00:00",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-09",
+        "DOMAIN-03"
+      ],
+      "structural_refs": {
+        "source_domain": "DOMAIN-09",
+        "target_domain": "DOMAIN-03",
+        "edge_type": "CALLS",
+        "weight": 1
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "Cross-domain edge from semantic topology model. CALLS relationship with weight 1.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0079",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Cross-domain ambiguity: Component 'Apache Kafka' appears in multiple contexts (2 occurrences), suggesting ambiguous grouping.. Affected elements: COMP-081, COMP-198.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.5,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "review_queue.json"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344865+00:00",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-15"
+      ],
+      "structural_refs": {
+        "trigger": "AMBIGUOUS_GROUPING",
+        "domain_id": "DOMAIN-15",
+        "description": "Component 'Apache Kafka' appears in multiple contexts (2 occurrences), suggesting ambiguous grouping.",
+        "affected_elements": [
+          "COMP-081",
+          "COMP-198"
+        ]
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "SDC review queue flagged ambiguous cross-domain grouping. Requires operator review.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0080",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Cross-domain ambiguity: Component 'Apache Flink' appears in multiple contexts (2 occurrences), suggesting ambiguous grouping.. Affected elements: COMP-082, COMP-199.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.5,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "review_queue.json"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344868+00:00",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-15"
+      ],
+      "structural_refs": {
+        "trigger": "AMBIGUOUS_GROUPING",
+        "domain_id": "DOMAIN-15",
+        "description": "Component 'Apache Flink' appears in multiple contexts (2 occurrences), suggesting ambiguous grouping.",
+        "affected_elements": [
+          "COMP-082",
+          "COMP-199"
+        ]
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "SDC review queue flagged ambiguous cross-domain grouping. Requires operator review.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0081",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Cross-domain ambiguity: Component 'TimescaleDB' appears in multiple contexts (2 occurrences), suggesting ambiguous grouping.. Affected elements: COMP-096, COMP-201.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.5,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "review_queue.json"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344870+00:00",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [
+        "DOMAIN-12"
+      ],
+      "structural_refs": {
+        "trigger": "AMBIGUOUS_GROUPING",
+        "domain_id": "DOMAIN-12",
+        "description": "Component 'TimescaleDB' appears in multiple contexts (2 occurrences), suggesting ambiguous grouping.",
+        "affected_elements": [
+          "COMP-096",
+          "COMP-201"
+        ]
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "SDC review queue flagged ambiguous cross-domain grouping. Requires operator review.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0082",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Cross-domain ambiguity: Component 'Predictive Maintenance' appears in multiple contexts (2 occurrences), suggesting ambiguous grouping.. Affected elements: COMP-120, COMP-155.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.5,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "review_queue.json"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344872+00:00",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "trigger": "AMBIGUOUS_GROUPING",
+        "domain_id": "",
+        "description": "Component 'Predictive Maintenance' appears in multiple contexts (2 occurrences), suggesting ambiguous grouping.",
+        "affected_elements": [
+          "COMP-120",
+          "COMP-155"
+        ]
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "SDC review queue flagged ambiguous cross-domain grouping. Requires operator review.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0083",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Cross-domain ambiguity: Component 'Driver Scoring' appears in multiple contexts (2 occurrences), suggesting ambiguous grouping.. Affected elements: COMP-121, COMP-156.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.5,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "review_queue.json"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344875+00:00",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "trigger": "AMBIGUOUS_GROUPING",
+        "domain_id": "",
+        "description": "Component 'Driver Scoring' appears in multiple contexts (2 occurrences), suggesting ambiguous grouping.",
+        "affected_elements": [
+          "COMP-121",
+          "COMP-156"
+        ]
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "SDC review queue flagged ambiguous cross-domain grouping. Requires operator review.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0084",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Cross-domain ambiguity: Component 'Anomaly Detection' appears in multiple contexts (2 occurrences), suggesting ambiguous grouping.. Affected elements: COMP-122, COMP-154.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.5,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "review_queue.json"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344877+00:00",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "trigger": "AMBIGUOUS_GROUPING",
+        "domain_id": "",
+        "description": "Component 'Anomaly Detection' appears in multiple contexts (2 occurrences), suggesting ambiguous grouping.",
+        "affected_elements": [
+          "COMP-122",
+          "COMP-154"
+        ]
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "SDC review queue flagged ambiguous cross-domain grouping. Requires operator review.",
+      "reconciliation_state": "NOVEL"
+    },
+    {
+      "id": "SP-blueedge-0085",
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_productized_01_fixed",
+      "proposition": "Cross-domain ambiguity: Component 'Digital Twin' appears in multiple contexts (2 occurrences), suggesting ambiguous grouping.. Affected elements: COMP-124, COMP-160.",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.5,
+      "authority_ceiling": "L3",
+      "evidence_anchors": [
+        "review_queue.json"
+      ],
+      "status": "CANDIDATE",
+      "timestamp": "2026-05-22T11:10:49.344879+00:00",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "ceu_refs": [],
+      "domain_refs": [],
+      "structural_refs": {
+        "trigger": "AMBIGUOUS_GROUPING",
+        "domain_id": "",
+        "description": "Component 'Digital Twin' appears in multiple contexts (2 occurrences), suggesting ambiguous grouping.",
+        "affected_elements": [
+          "COMP-124",
+          "COMP-160"
+        ]
+      },
+      "hero_moment_refs": [],
+      "replay_corridor_refs": [],
+      "derivation_rationale": "SDC review queue flagged ambiguous cross-domain grouping. Requires operator review.",
+      "reconciliation_state": "NOVEL"
+    }
+  ]
+}
