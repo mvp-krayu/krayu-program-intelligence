@@ -1,0 +1,38 @@
+{
+  "stream": "PI.SUBSTRATE.AUTHORITY-ENRICHMENT-FEASIBILITY.01",
+  "classification": "G2",
+  "timestamp": "2026-05-22T12:00:00Z",
+  "files": [
+    {
+      "path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/structural/authority_probe/authority_edge_extract.json",
+      "action": "CREATED",
+      "description": "1,494 categorized authority inheritance edges with per-CEU summary, top 30 carrier files, 50-edge sample"
+    },
+    {
+      "path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/governance/learning_events.jsonl",
+      "action": "MODIFIED",
+      "description": "2 LRNE events appended (LRNE-SUBSTRATE-0001, LRNE-SUBSTRATE-0002)"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.AUTHORITY-ENRICHMENT-FEASIBILITY.01/execution_report.md",
+      "action": "CREATED",
+      "description": "Feasibility assessment with extraction results, impact analysis, PROCEED recommendation"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.AUTHORITY-ENRICHMENT-FEASIBILITY.01/validation_log.json",
+      "action": "CREATED",
+      "description": "20/20 validation checks PASS"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.AUTHORITY-ENRICHMENT-FEASIBILITY.01/file_changes.json",
+      "action": "CREATED",
+      "description": "This file — stream change manifest"
+    },
+    {
+      "path": "docs/pios/PI.SUBSTRATE.AUTHORITY-ENRICHMENT-FEASIBILITY.01/CLOSURE.md",
+      "action": "CREATED",
+      "description": "Stream closure with G2 classification, feasibility PROCEED finding"
+    }
+  ],
+  "total_files": 6
+}

@@ -1,0 +1,850 @@
+{
+  "probe_type": "40.3s_authority_enrichment_feasibility",
+  "specimen": "netbox",
+  "files_processed": 896,
+  "total_classes_with_inheritance": 4561,
+  "total_authority_edges": 1494,
+  "unique_ceus": 12,
+  "authority_by_category": {
+    "FILTERSET": 70,
+    "TABLE": 63,
+    "MODEL": 295,
+    "FORM": 180,
+    "VIEW": 779,
+    "SERIALIZER": 107
+  },
+  "per_ceu_summary": {
+    "CEU-CIRCUITS": {
+      "edge_count": 136,
+      "categories": [
+        "FILTERSET",
+        "FORM",
+        "MODEL",
+        "SERIALIZER",
+        "TABLE",
+        "VIEW"
+      ],
+      "category_counts": {
+        "FILTERSET": 3,
+        "VIEW": 77,
+        "TABLE": 3,
+        "FORM": 14,
+        "MODEL": 34,
+        "SERIALIZER": 5
+      }
+    },
+    "CEU-CORE": {
+      "edge_count": 62,
+      "categories": [
+        "FILTERSET",
+        "FORM",
+        "MODEL",
+        "SERIALIZER",
+        "TABLE",
+        "VIEW"
+      ],
+      "category_counts": {
+        "MODEL": 8,
+        "FILTERSET": 5,
+        "VIEW": 28,
+        "TABLE": 10,
+        "FORM": 7,
+        "SERIALIZER": 4
+      }
+    },
+    "CEU-DCIM": {
+      "edge_count": 444,
+      "categories": [
+        "FILTERSET",
+        "FORM",
+        "MODEL",
+        "SERIALIZER",
+        "TABLE",
+        "VIEW"
+      ],
+      "category_counts": {
+        "FILTERSET": 18,
+        "VIEW": 303,
+        "TABLE": 5,
+        "FORM": 34,
+        "MODEL": 51,
+        "SERIALIZER": 33
+      }
+    },
+    "CEU-EXTRAS": {
+      "edge_count": 286,
+      "categories": [
+        "FILTERSET",
+        "FORM",
+        "MODEL",
+        "SERIALIZER",
+        "TABLE",
+        "VIEW"
+      ],
+      "category_counts": {
+        "MODEL": 60,
+        "FILTERSET": 18,
+        "VIEW": 126,
+        "TABLE": 20,
+        "FORM": 41,
+        "SERIALIZER": 21
+      }
+    },
+    "CEU-IPAM": {
+      "edge_count": 60,
+      "categories": [
+        "FILTERSET",
+        "FORM",
+        "MODEL",
+        "SERIALIZER",
+        "TABLE"
+      ],
+      "category_counts": {
+        "MODEL": 35,
+        "FILTERSET": 3,
+        "TABLE": 5,
+        "FORM": 6,
+        "SERIALIZER": 11
+      }
+    },
+    "CEU-NETBOX": {
+      "edge_count": 115,
+      "categories": [
+        "FILTERSET",
+        "FORM",
+        "MODEL",
+        "SERIALIZER",
+        "TABLE",
+        "VIEW"
+      ],
+      "category_counts": {
+        "FILTERSET": 6,
+        "TABLE": 7,
+        "MODEL": 49,
+        "FORM": 22,
+        "VIEW": 18,
+        "SERIALIZER": 13
+      }
+    },
+    "CEU-TENANCY": {
+      "edge_count": 70,
+      "categories": [
+        "FILTERSET",
+        "FORM",
+        "MODEL",
+        "SERIALIZER",
+        "TABLE",
+        "VIEW"
+      ],
+      "category_counts": {
+        "FILTERSET": 3,
+        "VIEW": 41,
+        "TABLE": 3,
+        "FORM": 7,
+        "MODEL": 13,
+        "SERIALIZER": 3
+      }
+    },
+    "CEU-USERS": {
+      "edge_count": 81,
+      "categories": [
+        "FILTERSET",
+        "FORM",
+        "MODEL",
+        "SERIALIZER",
+        "TABLE",
+        "VIEW"
+      ],
+      "category_counts": {
+        "FILTERSET": 7,
+        "TABLE": 6,
+        "VIEW": 41,
+        "FORM": 13,
+        "MODEL": 5,
+        "SERIALIZER": 9
+      }
+    },
+    "CEU-UTILITIES": {
+      "edge_count": 25,
+      "categories": [
+        "FILTERSET",
+        "FORM",
+        "MODEL"
+      ],
+      "category_counts": {
+        "MODEL": 3,
+        "FORM": 19,
+        "FILTERSET": 3
+      }
+    },
+    "CEU-VIRTUALIZATION": {
+      "edge_count": 82,
+      "categories": [
+        "FILTERSET",
+        "FORM",
+        "MODEL",
+        "SERIALIZER",
+        "TABLE",
+        "VIEW"
+      ],
+      "category_counts": {
+        "FILTERSET": 2,
+        "VIEW": 54,
+        "TABLE": 1,
+        "FORM": 9,
+        "MODEL": 12,
+        "SERIALIZER": 4
+      }
+    },
+    "CEU-VPN": {
+      "edge_count": 105,
+      "categories": [
+        "FILTERSET",
+        "FORM",
+        "MODEL",
+        "SERIALIZER",
+        "TABLE",
+        "VIEW"
+      ],
+      "category_counts": {
+        "FILTERSET": 2,
+        "VIEW": 70,
+        "TABLE": 2,
+        "FORM": 8,
+        "MODEL": 21,
+        "SERIALIZER": 2
+      }
+    },
+    "CEU-WIRELESS": {
+      "edge_count": 28,
+      "categories": [
+        "MODEL",
+        "SERIALIZER",
+        "TABLE",
+        "VIEW"
+      ],
+      "category_counts": {
+        "MODEL": 4,
+        "VIEW": 21,
+        "TABLE": 1,
+        "SERIALIZER": 2
+      }
+    }
+  },
+  "top_carrier_files": [
+    {
+      "file": "netbox/dcim/views.py",
+      "authority_count": 303,
+      "categories": {
+        "VIEW": 303
+      }
+    },
+    {
+      "file": "netbox/extras/views.py",
+      "authority_count": 126,
+      "categories": {
+        "VIEW": 126
+      }
+    },
+    {
+      "file": "netbox/circuits/views.py",
+      "authority_count": 77,
+      "categories": {
+        "VIEW": 77
+      }
+    },
+    {
+      "file": "netbox/vpn/views.py",
+      "authority_count": 70,
+      "categories": {
+        "VIEW": 70
+      }
+    },
+    {
+      "file": "netbox/virtualization/views.py",
+      "authority_count": 54,
+      "categories": {
+        "VIEW": 54
+      }
+    },
+    {
+      "file": "netbox/tenancy/views.py",
+      "authority_count": 41,
+      "categories": {
+        "VIEW": 41
+      }
+    },
+    {
+      "file": "netbox/users/views.py",
+      "authority_count": 41,
+      "categories": {
+        "VIEW": 41
+      }
+    },
+    {
+      "file": "netbox/core/views.py",
+      "authority_count": 28,
+      "categories": {
+        "VIEW": 28
+      }
+    },
+    {
+      "file": "netbox/extras/models/models.py",
+      "authority_count": 26,
+      "categories": {
+        "MODEL": 26
+      }
+    },
+    {
+      "file": "netbox/wireless/views.py",
+      "authority_count": 21,
+      "categories": {
+        "VIEW": 21
+      }
+    },
+    {
+      "file": "netbox/extras/tables/tables.py",
+      "authority_count": 20,
+      "categories": {
+        "TABLE": 20
+      }
+    },
+    {
+      "file": "netbox/extras/filtersets.py",
+      "authority_count": 18,
+      "categories": {
+        "FILTERSET": 18
+      }
+    },
+    {
+      "file": "netbox/dcim/filtersets.py",
+      "authority_count": 17,
+      "categories": {
+        "FILTERSET": 17
+      }
+    },
+    {
+      "file": "netbox/extras/forms/model_forms.py",
+      "authority_count": 16,
+      "categories": {
+        "FORM": 16
+      }
+    },
+    {
+      "file": "netbox/netbox/models/features.py",
+      "authority_count": 15,
+      "categories": {
+        "MODEL": 15
+      }
+    },
+    {
+      "file": "netbox/extras/forms/filtersets.py",
+      "authority_count": 15,
+      "categories": {
+        "FORM": 15
+      }
+    },
+    {
+      "file": "netbox/netbox/models/__init__.py",
+      "authority_count": 13,
+      "categories": {
+        "MODEL": 13
+      }
+    },
+    {
+      "file": "netbox/circuits/models/circuits.py",
+      "authority_count": 12,
+      "categories": {
+        "MODEL": 12
+      }
+    },
+    {
+      "file": "netbox/dcim/api/serializers_/device_components.py",
+      "authority_count": 12,
+      "categories": {
+        "SERIALIZER": 12
+      }
+    },
+    {
+      "file": "netbox/dcim/forms/object_import.py",
+      "authority_count": 11,
+      "categories": {
+        "FORM": 11
+      }
+    },
+    {
+      "file": "netbox/dcim/api/serializers_/nested.py",
+      "authority_count": 11,
+      "categories": {
+        "SERIALIZER": 11
+      }
+    },
+    {
+      "file": "netbox/dcim/models/devices.py",
+      "authority_count": 10,
+      "categories": {
+        "MODEL": 10
+      }
+    },
+    {
+      "file": "netbox/ipam/models/ip.py",
+      "authority_count": 10,
+      "categories": {
+        "MODEL": 10
+      }
+    },
+    {
+      "file": "netbox/circuits/graphql/types.py",
+      "authority_count": 9,
+      "categories": {
+        "MODEL": 9
+      }
+    },
+    {
+      "file": "netbox/extras/models/configs.py",
+      "authority_count": 9,
+      "categories": {
+        "MODEL": 9
+      }
+    },
+    {
+      "file": "netbox/netbox/graphql/types.py",
+      "authority_count": 8,
+      "categories": {
+        "MODEL": 8
+      }
+    },
+    {
+      "file": "netbox/vpn/models/tunnels.py",
+      "authority_count": 8,
+      "categories": {
+        "MODEL": 8
+      }
+    },
+    {
+      "file": "netbox/dcim/models/sites.py",
+      "authority_count": 8,
+      "categories": {
+        "MODEL": 8
+      }
+    },
+    {
+      "file": "netbox/dcim/graphql/types.py",
+      "authority_count": 8,
+      "categories": {
+        "MODEL": 8
+      }
+    },
+    {
+      "file": "netbox/utilities/tests/test_filter_modifiers.py",
+      "authority_count": 8,
+      "categories": {
+        "MODEL": 1,
+        "FILTERSET": 1,
+        "FORM": 6
+      }
+    }
+  ],
+  "edge_sample": [
+    {
+      "child_class": "BaseFilterSet",
+      "parent_class": "django_filters.FilterSet",
+      "category": "FILTERSET",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/filtersets.py",
+      "line": 49
+    },
+    {
+      "child_class": "ChangeLoggedModelFilterSet",
+      "parent_class": "BaseFilterSet",
+      "category": "FILTERSET",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/filtersets.py",
+      "line": 262
+    },
+    {
+      "child_class": "NetBoxModelFilterSet",
+      "parent_class": "ChangeLoggedModelFilterSet",
+      "category": "FILTERSET",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/filtersets.py",
+      "line": 296
+    },
+    {
+      "child_class": "PrimaryModelFilterSet",
+      "parent_class": "NetBoxModelFilterSet",
+      "category": "FILTERSET",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/filtersets.py",
+      "line": 332
+    },
+    {
+      "child_class": "OrganizationalModelFilterSet",
+      "parent_class": "NetBoxModelFilterSet",
+      "category": "FILTERSET",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/filtersets.py",
+      "line": 339
+    },
+    {
+      "child_class": "NestedGroupModelFilterSet",
+      "parent_class": "NetBoxModelFilterSet",
+      "category": "FILTERSET",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/filtersets.py",
+      "line": 353
+    },
+    {
+      "child_class": "BaseTable",
+      "parent_class": "tables.Table",
+      "category": "TABLE",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/tables/tables.py",
+      "line": 39
+    },
+    {
+      "child_class": "NetBoxTable",
+      "parent_class": "BaseTable",
+      "category": "TABLE",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/tables/tables.py",
+      "line": 238
+    },
+    {
+      "child_class": "PrimaryModelTable",
+      "parent_class": "NetBoxTable",
+      "category": "TABLE",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/tables/tables.py",
+      "line": 303
+    },
+    {
+      "child_class": "OrganizationalModelTable",
+      "parent_class": "NetBoxTable",
+      "category": "TABLE",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/tables/tables.py",
+      "line": 318
+    },
+    {
+      "child_class": "NestedGroupModelTable",
+      "parent_class": "NetBoxTable",
+      "category": "TABLE",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/tables/tables.py",
+      "line": 333
+    },
+    {
+      "child_class": "SearchTable",
+      "parent_class": "tables.Table",
+      "category": "TABLE",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/tables/tables.py",
+      "line": 356
+    },
+    {
+      "child_class": "NetBoxModelForm",
+      "parent_class": "CustomFieldsMixin",
+      "category": "MODEL",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/model_forms.py",
+      "line": 21
+    },
+    {
+      "child_class": "NetBoxModelForm",
+      "parent_class": "TagsMixin",
+      "category": "MODEL",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/model_forms.py",
+      "line": 21
+    },
+    {
+      "child_class": "NetBoxModelForm",
+      "parent_class": "forms.ModelForm",
+      "category": "FORM",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/model_forms.py",
+      "line": 21
+    },
+    {
+      "child_class": "PrimaryModelForm",
+      "parent_class": "NetBoxModelForm",
+      "category": "FORM",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/model_forms.py",
+      "line": 119
+    },
+    {
+      "child_class": "OrganizationalModelForm",
+      "parent_class": "NetBoxModelForm",
+      "category": "FORM",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/model_forms.py",
+      "line": 126
+    },
+    {
+      "child_class": "NestedGroupModelForm",
+      "parent_class": "NetBoxModelForm",
+      "category": "FORM",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/model_forms.py",
+      "line": 134
+    },
+    {
+      "child_class": "ChangelogMessageMixin",
+      "parent_class": "forms.Form",
+      "category": "FORM",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/mixins.py",
+      "line": 20
+    },
+    {
+      "child_class": "SavedFiltersMixin",
+      "parent_class": "forms.Form",
+      "category": "FORM",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/mixins.py",
+      "line": 92
+    },
+    {
+      "child_class": "TagsMixin",
+      "parent_class": "forms.Form",
+      "category": "FORM",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/mixins.py",
+      "line": 124
+    },
+    {
+      "child_class": "OwnerMixin",
+      "parent_class": "forms.Form",
+      "category": "FORM",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/mixins.py",
+      "line": 147
+    },
+    {
+      "child_class": "OwnerFilterMixin",
+      "parent_class": "forms.Form",
+      "category": "FORM",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/mixins.py",
+      "line": 170
+    },
+    {
+      "child_class": "NetBoxModelFilterSetForm",
+      "parent_class": "CustomFieldsMixin",
+      "category": "MODEL",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/filtersets.py",
+      "line": 18
+    },
+    {
+      "child_class": "NetBoxModelFilterSetForm",
+      "parent_class": "forms.Form",
+      "category": "FORM",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/filtersets.py",
+      "line": 18
+    },
+    {
+      "child_class": "PrimaryModelFilterSetForm",
+      "parent_class": "NetBoxModelFilterSetForm",
+      "category": "FORM",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/filtersets.py",
+      "line": 52
+    },
+    {
+      "child_class": "OrganizationalModelFilterSetForm",
+      "parent_class": "NetBoxModelFilterSetForm",
+      "category": "FORM",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/filtersets.py",
+      "line": 59
+    },
+    {
+      "child_class": "NestedGroupModelFilterSetForm",
+      "parent_class": "NetBoxModelFilterSetForm",
+      "category": "FORM",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/filtersets.py",
+      "line": 66
+    },
+    {
+      "child_class": "NetBoxModelImportForm",
+      "parent_class": "NetBoxModelForm",
+      "category": "FORM",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/bulk_import.py",
+      "line": 22
+    },
+    {
+      "child_class": "OwnerCSVMixin",
+      "parent_class": "forms.Form",
+      "category": "FORM",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/bulk_import.py",
+      "line": 74
+    },
+    {
+      "child_class": "PrimaryModelImportForm",
+      "parent_class": "NetBoxModelImportForm",
+      "category": "FORM",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/bulk_import.py",
+      "line": 83
+    },
+    {
+      "child_class": "OrganizationalModelImportForm",
+      "parent_class": "NetBoxModelImportForm",
+      "category": "FORM",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/bulk_import.py",
+      "line": 90
+    },
+    {
+      "child_class": "NestedGroupModelImportForm",
+      "parent_class": "NetBoxModelImportForm",
+      "category": "FORM",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/bulk_import.py",
+      "line": 97
+    },
+    {
+      "child_class": "SearchForm",
+      "parent_class": "forms.Form",
+      "category": "FORM",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/search.py",
+      "line": 18
+    },
+    {
+      "child_class": "NetBoxModelBulkEditForm",
+      "parent_class": "CustomFieldsMixin",
+      "category": "MODEL",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/bulk_edit.py",
+      "line": 20
+    },
+    {
+      "child_class": "PrimaryModelBulkEditForm",
+      "parent_class": "NetBoxModelBulkEditForm",
+      "category": "FORM",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/bulk_edit.py",
+      "line": 74
+    },
+    {
+      "child_class": "OrganizationalModelBulkEditForm",
+      "parent_class": "NetBoxModelBulkEditForm",
+      "category": "FORM",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/bulk_edit.py",
+      "line": 86
+    },
+    {
+      "child_class": "NestedGroupModelBulkEditForm",
+      "parent_class": "NetBoxModelBulkEditForm",
+      "category": "FORM",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/forms/bulk_edit.py",
+      "line": 98
+    },
+    {
+      "child_class": "TagColumnTable",
+      "parent_class": "NetBoxTable",
+      "category": "TABLE",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/tests/test_tables.py",
+      "line": 93
+    },
+    {
+      "child_class": "DummyModel",
+      "parent_class": "models.Model",
+      "category": "MODEL",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/tests/dummy_plugin/models.py",
+      "line": 6
+    },
+    {
+      "child_class": "DummyNetBoxModel",
+      "parent_class": "NetBoxModel",
+      "category": "MODEL",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/tests/dummy_plugin/models.py",
+      "line": 18
+    },
+    {
+      "child_class": "DummyModelsView",
+      "parent_class": "View",
+      "category": "VIEW",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/tests/dummy_plugin/views.py",
+      "line": 21
+    },
+    {
+      "child_class": "DummyModelAddView",
+      "parent_class": "View",
+      "category": "VIEW",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/tests/dummy_plugin/views.py",
+      "line": 28
+    },
+    {
+      "child_class": "DummyNetBoxModelView",
+      "parent_class": "generic.ObjectView",
+      "category": "VIEW",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/tests/dummy_plugin/views.py",
+      "line": 46
+    },
+    {
+      "child_class": "ExtraCoreModelView",
+      "parent_class": "View",
+      "category": "VIEW",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/tests/dummy_plugin/views.py",
+      "line": 55
+    },
+    {
+      "child_class": "DummySerializer",
+      "parent_class": "ModelSerializer",
+      "category": "SERIALIZER",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/tests/dummy_plugin/api/serializers.py",
+      "line": 6
+    },
+    {
+      "child_class": "OwnerMixin",
+      "parent_class": "models.Model",
+      "category": "MODEL",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/models/mixins.py",
+      "line": 15
+    },
+    {
+      "child_class": "WeightMixin",
+      "parent_class": "models.Model",
+      "category": "MODEL",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/models/mixins.py",
+      "line": 30
+    },
+    {
+      "child_class": "DistanceMixin",
+      "parent_class": "models.Model",
+      "category": "MODEL",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/models/mixins.py",
+      "line": 72
+    },
+    {
+      "child_class": "NetBoxFeatureSet",
+      "parent_class": "CloningMixin",
+      "category": "MODEL",
+      "ceu": "CEU-NETBOX",
+      "file": "netbox/netbox/models/__init__.py",
+      "line": 25
+    }
+  ]
+}
