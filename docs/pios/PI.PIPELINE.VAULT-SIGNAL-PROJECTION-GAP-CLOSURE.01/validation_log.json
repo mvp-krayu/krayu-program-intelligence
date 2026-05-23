@@ -1,0 +1,87 @@
+{
+  "stream": "PI.PIPELINE.VAULT-SIGNAL-PROJECTION-GAP-CLOSURE.01",
+  "classification": "G2",
+  "baseline_commit": "6c001e5",
+  "timestamp": "2026-05-23T00:00:00Z",
+  "checks": [
+    {
+      "id": "VL-01",
+      "name": "aggregate_function_exists",
+      "description": "_aggregate_standalone_signals() defined in run_client_pipeline.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-02",
+      "name": "isig_projection_works",
+      "description": "ISIG-001 and ISIG-002 projected into signal_registry with correct fields",
+      "status": "PASS",
+      "evidence": "Tested: 4 PSIG + 2 ISIG + 2 DPSIG = 8 total signals"
+    },
+    {
+      "id": "VL-03",
+      "name": "dpsig_vault_projection_works",
+      "description": "DPSIG-031 and DPSIG-032 projected into signal_registry with correct fields",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-04",
+      "name": "graceful_no_op",
+      "description": "Function is no-op when standalone signal sets absent",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-05",
+      "name": "idempotent_dedup",
+      "description": "Signals already in registry are not duplicated",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-06",
+      "name": "signal_family_projected",
+      "description": "signal_family and derivation_level added to projectPSIGSignals mapper",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-07",
+      "name": "signal_interpretations_extended",
+      "description": "buildSignalInterpretations appends vault ISIG/PSIG signals after DPSIG",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-08",
+      "name": "interpretation_deduplication",
+      "description": "DPSIG signals from standalone not duplicated from vault",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-09",
+      "name": "sqo_initialization_exists",
+      "description": "Phase 8a creates sqo/promotion_state.json at S0 when absent",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-10",
+      "name": "sqo_idempotent",
+      "description": "Existing promotion_state.json preserved (not overwritten)",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-11",
+      "name": "python_syntax_valid",
+      "description": "run_client_pipeline.py parses without syntax errors",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-12",
+      "name": "no_ui_redesign",
+      "description": "No component structure changes — signals flow through existing arrays",
+      "status": "PASS"
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 12,
+    "fail": 0,
+    "result": "VALID"
+  }
+}

@@ -240,16 +240,17 @@ function clusterToEvidenceBlock(cluster, role, displayResolution, zoneAnchorBusi
   };
 }
 
-function buildSignalInterpretations(dpsigSummary, evidenceBlocks, derived, zoneAnchorBusinessLabel, qualificationLevel) {
-  if (!dpsigSummary || !dpsigSummary.ok || !dpsigSummary.signals) return [];
-  const signals = dpsigSummary.signals;
-  const nb = dpsigSummary.normalization_basis || {};
+function buildSignalInterpretations(dpsigSummary, evidenceBlocks, derived, zoneAnchorBusinessLabel, qualificationLevel, psigSummary) {
+  const dpsigSignals = (dpsigSummary && dpsigSummary.ok && dpsigSummary.signals) ? dpsigSummary.signals : [];
+  const nb = (dpsigSummary && dpsigSummary.normalization_basis) || {};
   const s1 = qualificationLevel === 'S1';
-  const activatedSignals = signals.filter(s => s.activation_state && s.activation_state !== 'NOMINAL' && s.activation_state !== 'CLUSTER_BALANCED');
-  const nominalSignals = signals.filter(s => s.activation_state === 'NOMINAL' || s.activation_state === 'CLUSTER_BALANCED');
 
-  const coPresenceNote = signals.length > 1
-    ? `${activatedSignals.length} of ${signals.length} signals are structurally activated. ` +
+  const activatedSignals = dpsigSignals.filter(s => s.activation_state && s.activation_state !== 'NOMINAL' && s.activation_state !== 'CLUSTER_BALANCED');
+  const nominalSignals = dpsigSignals.filter(s => s.activation_state === 'NOMINAL' || s.activation_state === 'CLUSTER_BALANCED');
+
+  const allSignalCount = dpsigSignals.length;
+  const coPresenceNote = allSignalCount > 1
+    ? `${activatedSignals.length} of ${allSignalCount} topology signals are structurally activated. ` +
       (activatedSignals.length > 1
         ? `Co-presence of activated signals indicates compound structural pressure.`
         : activatedSignals.length === 1
@@ -266,9 +267,11 @@ function buildSignalInterpretations(dpsigSummary, evidenceBlocks, derived, zoneA
         : `${derived.backed_count} of ${derived.total_domains} semantic domains are structurally backed; ${derived.semantic_only_count} remain advisory-bound.`)
     : null;
 
-  return signals.map(sig => ({
+  const results = dpsigSignals.map(sig => ({
     signal_id: sig.signal_id,
     signal_name: sig.signal_name,
+    signal_family: 'DPSIG',
+    derivation_level: 'Topology',
     signal_value: sig.signal_value,
     severity: sig.severity,
     activation_state: sig.activation_state,
@@ -286,6 +289,38 @@ function buildSignalInterpretations(dpsigSummary, evidenceBlocks, derived, zoneA
         ? `Signal derived under ${derived.qualifier_label || derived.qualifier_class}. Advisory confirmation required.`
         : 'Signal derived from fully grounded structural evidence.',
   }));
+
+  // Append ISIG and PSIG signals from vault signal_registry (Level 1 + Level 2)
+  if (psigSummary && psigSummary.ok && Array.isArray(psigSummary.signals)) {
+    const existingIds = new Set(results.map(r => r.signal_id));
+    for (const vs of psigSummary.signals) {
+      if (existingIds.has(vs.signal_id)) continue;
+      const family = vs.signal_family || 'PSIG';
+      const level = vs.derivation_level || 'Level_2';
+      results.push({
+        signal_id: vs.signal_id,
+        signal_name: vs.signal_label || vs.signal_id,
+        signal_family: family,
+        derivation_level: level,
+        signal_value: vs.signal_value,
+        severity: vs.activation_state,
+        activation_state: vs.activation_state,
+        interpretation: family === 'ISIG'
+          ? `${vs.signal_label}: file-level structural pressure detected at ${vs.primary_entity || 'unknown file'}.`
+          : `${vs.signal_label}: architectural pressure at Level 2.`,
+        engineering_detail: vs.source_traceability || null,
+        concentration: vs.primary_entity ? `Primary entity: ${vs.primary_entity}` : null,
+        co_presence: null,
+        compound_narrative: null,
+        confidence: s1 ? 'STRUCTURAL' : 'FULL',
+        confidence_note: family === 'ISIG'
+          ? 'Level 1 signal derived from file-level import topology (40.3s code graph).'
+          : 'Level 2 signal derived from architectural binding topology.',
+      });
+    }
+  }
+
+  return results;
 }
 
 /**
@@ -775,7 +810,7 @@ function resolveSemanticPayload(manifest) {
     header_block: headerBlock,
     narrative_block: narrative,
     evidence_blocks: evidenceBlocks,
-    signal_interpretations: buildSignalInterpretations(dpsigSummary, evidenceBlocks, derived, zoneAnchorBusinessLabel, manifest.qualification_level),
+    signal_interpretations: buildSignalInterpretations(dpsigSummary, evidenceBlocks, derived, zoneAnchorBusinessLabel, manifest.qualification_level, psigSummary),
     trace_block: traceBlock,
     trace_linkage: traceLinkage,
     rendering_metadata: renderingMetadataCompat,
