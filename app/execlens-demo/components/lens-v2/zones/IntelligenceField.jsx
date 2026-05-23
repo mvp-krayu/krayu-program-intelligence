@@ -37,6 +37,7 @@ const DENSE_ZONE_REGISTRY = {
   signalAssessment:    { key: 'signalAssessment',      code: 'SA', label: 'Signal Assessment' },
   propagationFlow:     { key: 'propagationFlow',       code: 'PF', label: 'Propagation Flow' },
   pressureZoneFocus:   { key: 'pressureZoneFocus',     code: 'PZ', label: 'Pressure Zone Focus' },
+  governanceLifecycle: { key: 'governanceLifecycle',   code: 'GL', label: 'Governance Lifecycle' },
 }
 
 const REP_TIER_COLOR = {
@@ -339,6 +340,32 @@ const DENSE_ZONE_PATHS = {
       narrative: 'Lists organizational domains not part of the active propagation path — areas outside current pressure exposure.',
       answers: 'Which organizational domains remain outside the propagation path?',
       boundary: 'Domain subtraction from semantic_domain_registry — deterministic.' },
+  ],
+  governanceLifecycle: [
+    { label: 'Governance lifecycle traversal', icon: '◇', tone: 'operational', archetype: 'SCAN', depth: 'standard',
+      narrative: 'Shows the full governance lifecycle: S-level transitions, qualification provenance, and authority ceiling.',
+      answers: 'What governance lifecycle did this specimen traverse?',
+      boundary: 'Derived from promotion_state.json — deterministic.' },
+    { label: 'Governance friction analysis', icon: '△', tone: 'architectural', archetype: 'INTERPRET', depth: 'standard',
+      narrative: 'Reveals what was challenged and what survived during operator review — acceptance, rejection, and arbitration.',
+      answers: 'What was challenged and what survived?',
+      boundary: 'Derived from proposition_review_state and review_obligations — deterministic.' },
+    { label: 'Constitutional anchor assessment', icon: '■', tone: 'executive', archetype: 'INTERPRET', depth: 'deep',
+      narrative: 'Compares this specimen against the constitutional reference across 8 semantic adequacy dimensions.',
+      answers: 'How does this specimen compare to the reference?',
+      boundary: 'Derived from constitutional_replay_anchor.json — deterministic.' },
+    { label: 'Evidence enrichment impact', icon: '↓', tone: 'forensic', archetype: 'TRACE', depth: 'standard',
+      narrative: 'Shows how evidence corrections strengthened the substrate — domain corrections, confidence changes, and debt evolution.',
+      answers: 'What evidence corrections strengthened the substrate?',
+      boundary: 'Derived from enrichment_summary and debt_reassessment — deterministic.' },
+    { label: 'Convergence pattern', icon: '◎', tone: 'containment', archetype: 'BOUNDARY', depth: 'standard',
+      narrative: 'Cross-specimen governance patterns: what converges across independent specimens and what diverges.',
+      answers: 'What governance patterns generalize across specimens?',
+      boundary: 'Derived from convergence_observations — observational, not prescriptive.' },
+    { label: 'Certification status', icon: '◆', tone: 'quiet', archetype: 'SCAN', depth: 'micro',
+      narrative: 'Full chronicle certification status: phase-by-phase pass/fail across the governed lifecycle.',
+      answers: 'What does REPLAY-CERTIFIED prove?',
+      boundary: 'Derived from chronicle_certification.json — deterministic.' },
   ],
 }
 
@@ -1001,6 +1028,34 @@ const DENSE_ZONE_INTERPRETATIONS = {
         signalSummary: activated.length > 0
           ? { total: activated.length, critical: critical.length, compound: compound || null }
           : null,
+      }
+    },
+  },
+  governanceLifecycle: {
+    sectionLabel: 'GOVERNANCE INTERPRETATION',
+    code: 'GL',
+    derive: (fullReport) => {
+      const gl = fullReport && fullReport.governance_lifecycle
+      const pc = fullReport && fullReport.proposition_corpus
+      const rv = fullReport && fullReport.revalidation_intelligence
+      const cc = fullReport && fullReport.chronicle_certification
+      if (!gl || !gl.available) {
+        return {
+          heading: 'Governance lifecycle not available',
+          body: 'This run does not have governance lifecycle data. Governance intelligence requires a governed lifecycle run.',
+          structuralNote: null,
+        }
+      }
+      const frictionRate = pc && pc.available && pc.governance_friction_rate > 0
+        ? `${(pc.governance_friction_rate * 100).toFixed(1)}%`
+        : '0%'
+      return {
+        heading: 'What the governed lifecycle reveals',
+        body: `${gl.s_level} achieved via ${(gl.qualification_provenance || '').replace(/_/g, ' ')}. `
+          + (pc && pc.available ? `${pc.total} propositions evaluated — ${pc.disposition_counts.accepted} accepted, ${pc.disposition_counts.rejected} rejected, ${pc.disposition_counts.arbitrated} arbitrated (${frictionRate} friction). ` : '')
+          + (rv && rv.available ? `Deterministic revalidation: ${rv.passed}/${rv.total_checks} PASS. ` : '')
+          + (cc && cc.available ? `Chronicle certification: ${cc.passed}/${cc.total_checks} checks across ${cc.phase_count} phases.` : ''),
+        structuralNote: `Provenance: ${gl.qualification_provenance || 'unknown'} · Ceiling: ${gl.authority_ceiling || 'unknown'} · Transitions: ${gl.transition_count || 0}`,
       }
     },
   },
@@ -1859,6 +1914,125 @@ const GUIDED_QUERY_ANSWERS = {
             severity: 'nominal',
           })),
           structuralContext: null,
+        }
+      },
+    },
+  ],
+  governanceLifecycle: [
+    {
+      derive: (fullReport) => {
+        const gl = fullReport && fullReport.governance_lifecycle
+        if (!gl || !gl.available) return { summary: 'Governance lifecycle data not available for this run.', evidence: [], structuralContext: null }
+        return {
+          summary: `${gl.s_level} qualification via ${(gl.qualification_provenance || '').replace(/_/g, ' ')}. Authority ceiling: ${gl.authority_ceiling || 'unknown'}. ${gl.transition_count || 0} state transition${gl.transition_count !== 1 ? 's' : ''} in the governed lifecycle.`,
+          evidence: (gl.transitions || []).map(t => ({
+            label: `${t.from} → ${t.to}`,
+            value: t.action || 'transition',
+            severity: t.to === 'S2' ? 'nominal' : 'elevated',
+          })).concat([
+            { label: 'Provenance', value: (gl.qualification_provenance || '').replace(/_/g, ' '), severity: 'nominal' },
+            { label: 'Authority ceiling', value: gl.authority_ceiling || '—', severity: 'nominal' },
+          ]),
+          structuralContext: gl.hold_reason
+            ? `Note: ${gl.hold_reason}`
+            : 'Governance lifecycle completed without holds or blocks.',
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const pc = fullReport && fullReport.proposition_corpus
+        if (!pc || !pc.available) return { summary: 'Proposition review data not available.', evidence: [], structuralContext: null }
+        const dc = pc.disposition_counts || {}
+        const friction = dc.rejected + dc.arbitrated + dc.contested
+        return {
+          summary: `${pc.total} propositions reviewed. ${dc.accepted} accepted, ${dc.rejected} rejected, ${dc.arbitrated} arbitrated. ${pc.flagged_count} flagged for operator attention. Governance friction rate: ${(pc.governance_friction_rate * 100).toFixed(1)}%.`,
+          evidence: [
+            { label: 'Accepted', value: String(dc.accepted), severity: 'nominal' },
+            { label: 'Rejected', value: String(dc.rejected), severity: dc.rejected > 0 ? 'elevated' : 'nominal' },
+            { label: 'Arbitrated', value: String(dc.arbitrated), severity: dc.arbitrated > 0 ? 'elevated' : 'nominal' },
+            { label: 'Flagged', value: String(pc.flagged_count), severity: pc.flagged_count > 0 ? 'elevated' : 'nominal' },
+            { label: 'Friction rate', value: `${(pc.governance_friction_rate * 100).toFixed(1)}%`, severity: pc.governance_friction_rate > 0.1 ? 'critical' : pc.governance_friction_rate > 0 ? 'elevated' : 'nominal' },
+          ],
+          structuralContext: friction > 0
+            ? `Governance friction is evidence that review was substantive — ${friction} proposition${friction !== 1 ? 's were' : ' was'} challenged. Friction rate above 0% demonstrates non-rubber-stamp governance.`
+            : 'All propositions accepted without friction. Review was substantive but found no grounds for challenge.',
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const ca = fullReport && fullReport.constitutional_anchor
+        if (!ca || !ca.available) return { summary: 'Constitutional anchor data not available.', evidence: [], structuralContext: null }
+        return {
+          summary: `Constitutional distance: ${ca.overall_verdict ? ca.overall_verdict.replace(/_/g, ' ') : 'unknown'}. ${ca.summary.passed || 0}/${ca.summary.total || 0} dimensions PASS. Target: ${ca.target_level || '—'}. Reference specimen: ${ca.reference_specimen || '—'}.`,
+          evidence: (ca.dimensions || []).map(dim => ({
+            label: dim.dimension,
+            value: dim.ratio != null ? `${dim.ratio.toFixed(2)} (threshold: ${dim.threshold})` : `${dim.candidate}`,
+            severity: dim.verdict === 'PASS' ? 'nominal' : dim.severity === 'CRITICAL' ? 'critical' : 'elevated',
+          })),
+          structuralContext: ca.advancement_blocked
+            ? 'Constitutional distance blocks advancement — specimen does not meet minimum adequacy threshold on one or more critical dimensions.'
+            : 'All constitutional dimensions within acceptable distance. Advancement is not blocked by semantic adequacy.',
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const ei = fullReport && fullReport.enrichment_intelligence
+        if (!ei || !ei.available) return { summary: 'Enrichment data not available.', evidence: [], structuralContext: null }
+        const evidence = [
+          { label: 'Enrichment events', value: String(ei.enrichment_events), severity: ei.enrichment_events > 10 ? 'elevated' : 'nominal' },
+          { label: 'Domains corrected', value: String(ei.domains_corrected), severity: ei.domains_corrected > 5 ? 'elevated' : 'nominal' },
+          { label: 'Domains confirmed', value: String(ei.domains_confirmed), severity: 'nominal' },
+          { label: 'No SDC match', value: String(ei.domains_no_sdc_match), severity: ei.domains_no_sdc_match > 0 ? 'elevated' : 'nominal' },
+        ]
+        if (ei.debt && ei.debt.available) {
+          evidence.push(
+            { label: 'Debt improved', value: String(ei.debt.improved), severity: 'nominal' },
+            { label: 'Debt worsened', value: String(ei.debt.worsened), severity: ei.debt.worsened > 0 ? 'elevated' : 'nominal' },
+          )
+        }
+        return {
+          summary: `${ei.enrichment_events} evidence corrections across ${ei.domains_corrected} domains. ${ei.capabilities_domain_corrected} capabilities had domain references corrected.`
+            + (ei.debt && ei.debt.available ? ` Debt evolution: ${ei.debt.improved} improved, ${ei.debt.worsened} worsened, ${ei.debt.unchanged} unchanged of ${ei.debt.total_items} items.` : ''),
+          evidence,
+          structuralContext: 'Enrichment is deterministic re-extraction from source evidence. Corrections reflect alignment between structural artifacts and semantic claims, not inference.',
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const ci = fullReport && fullReport.convergence_intelligence
+        if (!ci || !ci.available) return { summary: 'Convergence data not available.', evidence: [], structuralContext: null }
+        return {
+          summary: `${ci.total_observations} cross-specimen observations at ${ci.observation_maturity || 'unknown'} maturity. ${ci.convergences.length} convergences, ${ci.divergences.length} divergences, ${ci.mixed.length} mixed. ${ci.verdict || ''}`,
+          evidence: (ci.observations || []).slice(0, 5).map(o => ({
+            label: o.title || o.observation_id,
+            value: o.divergence ? 'convergence + divergence' : 'convergence',
+            severity: o.divergence ? 'elevated' : 'nominal',
+          })),
+          structuralContext: ci.observation_maturity === 'DESCRIPTIVE'
+            ? 'Two specimens = comparison, not pattern. All observations are DESCRIPTIVE — convergence claims require additional specimens for law-level assertions.'
+            : `Observation maturity: ${ci.observation_maturity}. Convergence strength proportional to specimen count.`,
+        }
+      },
+    },
+    {
+      derive: (fullReport) => {
+        const cc = fullReport && fullReport.chronicle_certification
+        if (!cc || !cc.available) return { summary: 'Chronicle certification data not available.', evidence: [], structuralContext: null }
+        const pb = cc.phase_breakdown || {}
+        return {
+          summary: `${cc.certification_status}: ${cc.passed}/${cc.total_checks} checks PASS across ${cc.phase_count} phases. ${cc.failed > 0 ? `${cc.failed} checks FAILED.` : 'No failures.'}`,
+          evidence: Object.entries(pb).map(([phase, data]) => ({
+            label: phase.replace(/_/g, ' '),
+            value: `${data.passed}/${data.total} PASS`,
+            severity: data.failed > 0 ? 'critical' : 'nominal',
+          })),
+          structuralContext: cc.governed_lifecycle_summary
+            ? `Governed lifecycle: ${cc.governed_lifecycle_summary.s_level} via ${cc.governed_lifecycle_summary.provenance || 'unknown'}. ${cc.governed_lifecycle_summary.propositions || 0} propositions. Revalidation: ${cc.governed_lifecycle_summary.revalidation || 'unknown'}.`
+            : 'Chronicle certification verifies end-to-end governed lifecycle integrity.',
         }
       },
     },
@@ -3028,6 +3202,87 @@ function DenseSignalSection({ fullReport }) {
   )
 }
 
+function DenseGovernanceZone({ fullReport }) {
+  const gl = fullReport && fullReport.governance_lifecycle
+  const pc = fullReport && fullReport.proposition_corpus
+  const rv = fullReport && fullReport.revalidation_intelligence
+  const ca = fullReport && fullReport.constitutional_anchor
+  const cc = fullReport && fullReport.chronicle_certification
+
+  if (!gl || !gl.available) return null
+
+  return (
+    <div className="actor actor--governance-lifecycle" data-zone-key="governanceLifecycle">
+      <div className="actor-tag">
+        <span className="actor-code">GL</span>
+        <span className="actor-name">Governance Lifecycle</span>
+      </div>
+
+      <div className="dense-governance-header">
+        <span className="dense-governance-s-level" data-level={gl.s_level}>{gl.s_level}</span>
+        <span className="dense-governance-provenance">{(gl.qualification_provenance || '').replace(/_/g, ' ')}</span>
+        <span className="dense-governance-ceiling">Ceiling: {gl.authority_ceiling}</span>
+        {cc && cc.available && (
+          <span className="dense-governance-cert" data-status={cc.certification_status}>
+            {cc.certification_status === 'CERTIFIED' ? 'REPLAY-CERTIFIED' : cc.certification_status}
+          </span>
+        )}
+      </div>
+
+      {pc && pc.available && (
+        <div className="dense-governance-propositions">
+          <div className="dense-governance-prop-row">
+            <span className="dense-governance-prop-total">{pc.total} propositions</span>
+            <span className="dense-governance-prop-detail">
+              {pc.disposition_counts.accepted} accepted · {pc.disposition_counts.rejected} rejected · {pc.disposition_counts.arbitrated} arbitrated
+            </span>
+          </div>
+          <div className="dense-governance-class-row">
+            {Object.entries(pc.by_class || {}).map(([cls, count]) => (
+              <span key={cls} className="dense-governance-class-chip">
+                <span className="dense-governance-class-count">{count}</span>
+                <span className="dense-governance-class-name">{cls.replace(/_/g, ' ')}</span>
+              </span>
+            ))}
+          </div>
+          <div className="dense-governance-confidence">
+            Mean confidence: {pc.mean_confidence.toFixed(3)} · Friction: {(pc.governance_friction_rate * 100).toFixed(1)}%
+          </div>
+        </div>
+      )}
+
+      <div className="dense-governance-checks">
+        {rv && rv.available && (
+          <span className="dense-governance-check-item" data-status={rv.status}>
+            Revalidation {rv.passed}/{rv.total_checks} · {rv.phase_count} phases
+          </span>
+        )}
+        {ca && ca.available && (
+          <span className="dense-governance-check-item" data-status={ca.advancement_blocked ? 'BLOCKED' : 'PASS'}>
+            Anchor {ca.summary.passed}/{ca.summary.total} dimensions
+          </span>
+        )}
+        {cc && cc.available && (
+          <span className="dense-governance-check-item" data-status={cc.failed > 0 ? 'FAIL' : 'PASS'}>
+            Certification {cc.passed}/{cc.total_checks} checks
+          </span>
+        )}
+      </div>
+
+      {gl.transitions && gl.transitions.length > 0 && (
+        <div className="dense-governance-transitions">
+          {gl.transitions.map((t, i) => (
+            <div key={i} className="dense-governance-transition">
+              <span className="dense-governance-transition-path">{t.from} → {t.to}</span>
+              <span className="dense-governance-transition-actor">{t.actor || '—'}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onZoneChange }) {
   const [topoModalOpen, setTopoModalOpen] = useState(false)
   const openTopoModal = useCallback(() => setTopoModalOpen(true), [])
@@ -3221,6 +3476,8 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
       )}
 
       {!isS1 && <PressureZoneFocusBlock fullReport={fullReport} />}
+
+      <DenseGovernanceZone fullReport={fullReport} />
 
       {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (() => {
         const tm = (fullReport && fullReport.topology_maturity) || {}

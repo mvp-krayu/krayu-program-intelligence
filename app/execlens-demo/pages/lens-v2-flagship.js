@@ -2901,6 +2901,149 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-style: italic;
         }
 
+        /* DENSE Governance Lifecycle Zone */
+        .actor--governance-lifecycle {
+          margin-top: 12px;
+          padding: 20px 0 8px;
+          border-top: 1px solid rgba(100, 255, 218, 0.1);
+        }
+        .dense-governance-header {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          flex-wrap: wrap;
+          margin: 10px 0;
+        }
+        .dense-governance-s-level {
+          font-family: 'Courier New', monospace;
+          font-size: 16px;
+          font-weight: 700;
+          color: #64ffda;
+          padding: 2px 10px;
+          background: rgba(100, 255, 218, 0.1);
+          border: 1px solid rgba(100, 255, 218, 0.2);
+          border-radius: 2px;
+        }
+        .dense-governance-provenance {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 12px;
+          color: #8a96b2;
+          text-transform: lowercase;
+        }
+        .dense-governance-ceiling {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #6a7a9a;
+        }
+        .dense-governance-cert {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          padding: 2px 6px;
+          border-radius: 2px;
+          background: rgba(100, 255, 218, 0.08);
+          color: #64ffda;
+          border: 1px solid rgba(100, 255, 218, 0.15);
+        }
+        .dense-governance-propositions {
+          margin: 10px 0;
+          padding: 10px 12px;
+          background: rgba(26, 30, 43, 0.5);
+          border-radius: 3px;
+        }
+        .dense-governance-prop-row {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          margin-bottom: 6px;
+        }
+        .dense-governance-prop-total {
+          font-family: 'Courier New', monospace;
+          font-size: 13px;
+          font-weight: 600;
+          color: #ccd6f6;
+        }
+        .dense-governance-prop-detail {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11px;
+          color: #7a8aaa;
+        }
+        .dense-governance-class-row {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          margin: 6px 0;
+        }
+        .dense-governance-class-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 10px;
+          padding: 2px 6px;
+          background: rgba(74, 158, 255, 0.06);
+          border: 1px solid rgba(74, 158, 255, 0.1);
+          border-radius: 2px;
+        }
+        .dense-governance-class-count {
+          font-family: 'Courier New', monospace;
+          font-weight: 600;
+          color: #ccd6f6;
+        }
+        .dense-governance-class-name {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          color: #6a7a9a;
+          text-transform: lowercase;
+          font-size: 9px;
+        }
+        .dense-governance-confidence {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #6a7a9a;
+          margin-top: 4px;
+        }
+        .dense-governance-checks {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin: 8px 0;
+        }
+        .dense-governance-check-item {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #7a8aaa;
+          padding: 3px 8px;
+          border: 1px solid #1e2330;
+          border-radius: 2px;
+        }
+        .dense-governance-check-item[data-status="PASS"] {
+          color: #64ffda;
+          border-color: rgba(100, 255, 218, 0.15);
+        }
+        .dense-governance-check-item[data-status="BLOCKED"],
+        .dense-governance-check-item[data-status="FAIL"] {
+          color: #ff6b6b;
+          border-color: rgba(255, 107, 107, 0.15);
+        }
+        .dense-governance-transitions {
+          margin-top: 8px;
+        }
+        .dense-governance-transition {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 3px 0;
+          font-size: 11px;
+        }
+        .dense-governance-transition-path {
+          font-family: 'Courier New', monospace;
+          color: #64ffda;
+          font-weight: 600;
+        }
+        .dense-governance-transition-actor {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          color: #6a7a9a;
+          font-size: 10px;
+        }
+
         .actor--propagation-flow {
           margin-top: 12px;
           padding: 20px 0 8px;
