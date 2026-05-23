@@ -2,13 +2,22 @@
 
 Operational inventory of existing materializers, derivers, and gate tools. Loaded during cognitive rehydration (CLAUDE.md §12.4) to prevent redundant script creation.
 
+## SQO Execution Model
+
+| Artifact | Path | Purpose |
+|----------|------|---------|
+| SQO Execution Graph (JSON) | `docs/pios/sqo_execution_graph.json` | Machine-loadable governance stage sequence, state vocabulary, allowed transitions, artifact requirements. MUST be loaded before any SQO work after context compaction. |
+| SQO Execution Graph (MD) | `docs/pios/SQO_EXECUTION_GRAPH.md` | Human-readable reference. |
+
+SQO is an executable governance graph, not a conversation memory. After reboot/compaction, reload — do not rediscover.
+
 ## Semantic Derivation
 
 | Capability | Implementation | Status | Path | Notes |
 |------------|---------------|--------|------|-------|
 | PATH A Structural Proposition Derivation | `scripts/pios/spe/derivation_engine.py` | OPERATIONAL | PATH A | 6 deterministic derivers. Produces STRUCTURAL_DOMINANCE, COUPLING_PATTERN, AUTHORITY_TOPOLOGY, TIER_GROUNDING, HERO_MOMENT_GROUNDING, CLUSTER_ARCHITECTURE. Requires code graph + centrality + topology + hero moments. |
 | PATH A SPE Orchestrator | `scripts/pios/semantic_proposition_engine.py` | OPERATIONAL | PATH A | Entry point. Calls derivation_engine, confidence_engine, review_queue_emitter, learning_emitter, output_emitter. |
-| PATH B Semantic DNA to Proposition Materializer | `scripts/pios/sdc/proposition_bridge.py` | EXISTS_NEEDS_PARAMETERIZATION_AND_ROUTING | PATH B | 4 derivers: DOMAIN_EVIDENCE_GROUNDING (from CSR domains), CAPABILITY_EVIDENCE (from SDC capabilities), VAULT_CLAIM_STRUCTURAL (from vault claims), CROSS_DOMAIN_EVIDENCE (from topology edges + ambiguities). Expected yield ~60-75 propositions. Currently hardcoded to chronicle paths and specific runs. Needs --client/--run-id parameterization and output routing to semantic/spe/. |
+| PATH B Semantic DNA to Proposition Materializer | `scripts/pios/sdc/proposition_bridge.py` | OPERATIONAL | PATH B | 4 derivers: DOMAIN_EVIDENCE_GROUNDING, CAPABILITY_EVIDENCE, VAULT_CLAIM_STRUCTURAL, CROSS_DOMAIN_EVIDENCE. Parameterized: --client, --run-id, --sdc-run. Output: semantic/spe/semantic_propositions.json. Proven: 85 propositions on BlueEdge run_blueedge_genesis_e2e_03. |
 | SDC Evidence Compiler | `scripts/pios/sdc/` (multiple) | OPERATIONAL | PATH B | Produces candidate_csr.json, derivation_report.json, review_queue.json from HTML evidence files. Proven on BlueEdge (3 HTML files, 19 domains, 24 capabilities, 207 components). |
 | Semantic Topology Generator | `scripts/pios/generate_semantic_topology.py` | OPERATIONAL | Generic | Produces semantic_topology_model.json from CSR. |
 | SPE Confidence Engine | `scripts/pios/spe/confidence_engine.py` | OPERATIONAL | Generic | Scores propositions by tier, evidence strength, reconciliation state. |

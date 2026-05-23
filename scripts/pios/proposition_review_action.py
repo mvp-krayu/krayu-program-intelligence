@@ -265,7 +265,11 @@ def main() -> int:
             print(f"FAIL: --rationale required for {args.action}")
             return 1
         disposition = args.action.upper()
-        if args.action == "contest":
+        if args.action == "accept":
+            disposition = "ACCEPTED"
+        elif args.action == "reject":
+            disposition = "REJECTED"
+        elif args.action == "contest":
             disposition = "CONTESTED"
         elif args.action == "arbitrate":
             disposition = "ARBITRATED"

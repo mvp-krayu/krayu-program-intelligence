@@ -508,7 +508,18 @@ After any session resume, context compaction, or continuation from a prior conve
 - Summary-level understanding of the codebase is insufficient — verify with file reads
 - If the capability registry (docs/pios/CAPABILITY_REGISTRY.md) exists, load it
 
-**Fail condition:** Proposing a new script for a function that already exists in the codebase is a rehydration failure. The scan was either skipped or insufficient.
+**SQO domain rehydration (MANDATORY when execution domain is SQO governance):**
+
+When the identified execution domain involves SQO governance (Gates 1-5, proposition review, revalidation, promotion), Claude MUST load the SQO execution graph before acting:
+
+1. Load `docs/pios/sqo_execution_graph.json` — canonical state vocabulary, allowed transitions, artifact requirements
+2. Load `docs/pios/CAPABILITY_REGISTRY.md` — operational script inventory
+3. Load `clients/{client}/psee/runs/{run_id}/sqo/promotion_state.json` — current S-level
+4. Load `clients/{client}/psee/runs/{run_id}/semantic/spe/proposition_review_state.json` — current review state
+
+**Hard rule:** No S-state advancement may be evaluated unless the SQO execution graph has been loaded and current run state is mapped onto it. SQO is an executable governance graph, not a conversation memory. After reboot/compaction, Claude must reload SQO mechanics — not rediscover them.
+
+**Fail condition:** Proposing a new script for a function that already exists in the codebase is a rehydration failure. The scan was either skipped or insufficient. Using non-canonical state names (e.g., ACCEPT instead of ACCEPTED) is an SQO rehydration failure — the execution graph was not loaded.
 
 ### 12.5 Reference Boundary Contract Load (CONDITIONAL)
 

@@ -1,0 +1,275 @@
+{
+  "contract_id": "PI.SQO.EXECUTION-GRAPH.01",
+  "version": "1.0.0",
+  "purpose": "Machine-loadable SQO execution model. Canonical source of truth for governance stage sequencing, state vocabulary, allowed transitions, and artifact requirements. Must be loaded after any context compaction before SQO work.",
+
+  "state_vocabulary": {
+    "proposition_dispositions": {
+      "CANDIDATE": {
+        "terminal": false,
+        "description": "Initial state after derivation. Awaiting operator review."
+      },
+      "ACCEPTED": {
+        "terminal": true,
+        "description": "Operator accepted the proposition as structurally valid."
+      },
+      "REJECTED": {
+        "terminal": true,
+        "description": "Operator rejected the proposition as structurally invalid or ungrounded."
+      },
+      "CONTESTED": {
+        "terminal": false,
+        "description": "Operator disputes the proposition. Requires arbitration."
+      },
+      "ARBITRATED": {
+        "terminal": true,
+        "description": "Arbitration resolved a contested proposition. Final disposition."
+      }
+    },
+
+    "stage_states": {
+      "NOT_STARTED": "Stage has not begun. Prerequisites may or may not be met.",
+      "IN_PROGRESS": "Stage execution underway. Artifacts partially produced.",
+      "COMPLETE": "Stage finished. All required artifacts produced and valid.",
+      "BLOCKED": "Stage cannot proceed. Missing prerequisites or governance hold.",
+      "DEFERRED": "Stage intentionally postponed. Not a failure — a governed decision."
+    },
+
+    "promotion_states": {
+      "S0": "Initial. No governance lifecycle exercised.",
+      "S1": "First governed advancement. Full gate traversal proven.",
+      "S2": "Full qualification. Enrichment, convergence, and revalidation complete."
+    },
+
+    "revalidation_verdicts": {
+      "PASS": "All checks passed. Gate 4 cleared.",
+      "PARTIAL": "Some checks failed. Gate 4 NOT cleared. Fix required.",
+      "FAIL": "Critical checks failed. Gate 4 blocked."
+    },
+
+    "anchor_verdicts": {
+      "CONSTITUTIONAL_DISTANCE_NOMINAL": "Candidate corpus is dimensionally comparable to reference. No block.",
+      "CONSTITUTIONAL_DISTANCE_ELEVATED": "Some dimensions failed but no CRITICAL failures. Operator override permitted.",
+      "CONSTITUTIONAL_DISTANCE_CRITICAL": "CRITICAL dimensions failed. Advancement blocked. No override."
+    }
+  },
+
+  "allowed_transitions": {
+    "proposition_dispositions": [
+      { "from": "CANDIDATE", "to": "ACCEPTED", "actor": "operator", "action": "accept" },
+      { "from": "CANDIDATE", "to": "REJECTED", "actor": "operator", "action": "reject" },
+      { "from": "CANDIDATE", "to": "CONTESTED", "actor": "operator", "action": "contest" },
+      { "from": "CONTESTED", "to": "ARBITRATED", "actor": "operator", "action": "arbitrate" },
+      { "from": "CANDIDATE", "to": "ACCEPTED", "actor": "batch", "action": "accept-unflagged" }
+    ],
+    "invalid_transitions": [
+      { "from": "ACCEPTED", "to": "any", "reason": "Terminal disposition. No further transitions." },
+      { "from": "REJECTED", "to": "any", "reason": "Terminal disposition. No further transitions." },
+      { "from": "ARBITRATED", "to": "any", "reason": "Terminal disposition. No further transitions." },
+      { "from": "CANDIDATE", "to": "ARBITRATED", "reason": "Must contest before arbitrating." },
+      { "from": "CONTESTED", "to": "ACCEPTED", "reason": "Contested propositions resolve through arbitration only." },
+      { "from": "CONTESTED", "to": "REJECTED", "reason": "Contested propositions resolve through arbitration only." }
+    ],
+    "promotion": [
+      { "from": "S0", "to": "S1", "requires": ["revalidation_PASS", "constitutional_anchor_not_blocked"] },
+      { "from": "S1", "to": "S2", "requires": ["revalidation_PASS", "constitutional_anchor_not_blocked", "enrichment_exercised"] }
+    ],
+    "stage_progression": [
+      { "from": "gate_1_ceu_reconciliation", "to": "gate_2_proposition_derivation" },
+      { "from": "gate_2_proposition_derivation", "to": "gate_3_proposition_review" },
+      { "from": "gate_3_proposition_review", "to": "gate_4_revalidation" },
+      { "from": "gate_4_revalidation", "to": "gate_5_promotion" },
+      { "from": "gate_5_promotion", "to": "enrichment", "condition": "S1 achieved, enrichment targets identified" },
+      { "from": "enrichment", "to": "gate_4_revalidation", "condition": "Re-run revalidation on enriched corpus" }
+    ]
+  },
+
+  "stages": {
+    "gate_1_ceu_reconciliation": {
+      "name": "CEU Reconciliation",
+      "gate_number": 1,
+      "type": "operator_governed",
+      "deterministic": false,
+      "description": "Operator confirms, rejects, or merges CEU candidates. Establishes the structural partition that all downstream derivation operates on.",
+      "input_artifacts": [
+        "ceu/candidate_registry.json",
+        "ceu/evidence_anchors.json"
+      ],
+      "output_artifacts": [
+        "ceu/reconciliation_state.json",
+        "ceu/reconciliation_event_log.jsonl"
+      ],
+      "materializer": "scripts/pios/ceu_reconciliation_action.py",
+      "completion_condition": "reconciliation_state.json status == COMPLETE",
+      "operator_actions": ["confirm", "reject", "merge", "complete"],
+      "chronicle_event": "CEU_RECONCILIATION_COMPLETE"
+    },
+
+    "gate_2_proposition_derivation": {
+      "name": "Semantic Proposition Derivation",
+      "gate_number": 2,
+      "type": "deterministic",
+      "deterministic": true,
+      "description": "Derives propositions from structural or evidence substrate. PATH A uses derivation_engine.py (code graph). PATH B uses proposition_bridge.py (SDC/CSR evidence).",
+      "input_artifacts": {
+        "path_a": [
+          "ceu/reconciliation_state.json (COMPLETE)",
+          "ceu/candidate_registry.json",
+          "ceu/evidence_anchors.json",
+          "structure/40.3c/structural_centrality.json",
+          "structure/40.3s/code_graph.json",
+          "structure/40.4/canonical_topology.json",
+          "spine/spine_objects.json (hero_moments)"
+        ],
+        "path_b": [
+          "ceu/reconciliation_state.json (COMPLETE)",
+          "SDC candidate_csr.json",
+          "SDC derivation_report.json",
+          "SDC review_queue.json",
+          "dom/client_semantic_registry.json",
+          "vault claims (CLM-* .md files)",
+          "semantic_topology_model.json"
+        ]
+      },
+      "output_artifacts": [
+        "semantic/spe/semantic_propositions.json",
+        "semantic/spe/spe_derivation_report.json"
+      ],
+      "materializer": {
+        "path_a": "scripts/pios/semantic_proposition_engine.py",
+        "path_b": "scripts/pios/sdc/proposition_bridge.py"
+      },
+      "completion_condition": "semantic_propositions.json exists with propositions array",
+      "operator_actions": [],
+      "chronicle_event": "PROPOSITION_DERIVATION_COMPLETE"
+    },
+
+    "gate_3_proposition_review": {
+      "name": "Proposition Review",
+      "gate_number": 3,
+      "type": "operator_governed",
+      "deterministic": false,
+      "description": "Operator reviews candidate propositions. Exercises governance friction: accept, reject, contest, arbitrate. Batch accept-unflagged for non-flagged propositions.",
+      "input_artifacts": [
+        "semantic/spe/semantic_propositions.json",
+        "semantic/spe/spe_review_queue.json (if exists)"
+      ],
+      "output_artifacts": [
+        "semantic/spe/proposition_review_state.json",
+        "semantic/spe/review_event_log.jsonl"
+      ],
+      "materializer": "scripts/pios/proposition_review_action.py",
+      "completion_condition": "proposition_review_state.json status == COMPLETE AND all dispositions terminal",
+      "terminal_dispositions": ["ACCEPTED", "REJECTED", "ARBITRATED"],
+      "non_terminal_dispositions": ["CANDIDATE", "CONTESTED"],
+      "operator_actions": ["accept", "reject", "contest", "arbitrate", "accept-unflagged", "complete"],
+      "naming_rule": "Individual actions produce past-participle form: accept→ACCEPTED, reject→REJECTED, contest→CONTESTED, arbitrate→ARBITRATED. Never ACCEPT or REJECT (present tense).",
+      "chronicle_event": "PROPOSITION_REVIEW_COMPLETE"
+    },
+
+    "gate_4_revalidation": {
+      "name": "Deterministic Revalidation",
+      "gate_number": 4,
+      "type": "deterministic",
+      "deterministic": true,
+      "description": "25-check deterministic revalidation across 8 phases. All checks must PASS for gate clearance.",
+      "input_artifacts": [
+        "semantic/spe/semantic_propositions.json",
+        "semantic/spe/proposition_review_state.json (COMPLETE)",
+        "ceu/reconciliation_state.json",
+        "sqo/promotion_state.json",
+        "spine/spine_objects.json"
+      ],
+      "output_artifacts": [
+        "sqo/revalidation_result.json",
+        "sqo/revalidation_event_log.jsonl"
+      ],
+      "materializer": "scripts/pios/revalidation_engine.py",
+      "completion_condition": "revalidation_result.json status == PASS",
+      "revalidation_phases": [
+        "input_gate_verification",
+        "proposition_integrity",
+        "confidence_realism",
+        "derivation_tier_validity",
+        "disposition_completeness",
+        "reconciliation_cleanliness",
+        "spine_consistency",
+        "sqo_state_consistency"
+      ],
+      "operator_actions": [],
+      "chronicle_event": "REVALIDATION_COMPLETE"
+    },
+
+    "gate_5_promotion": {
+      "name": "Promotion Evaluation",
+      "gate_number": 5,
+      "type": "operator_governed",
+      "deterministic": false,
+      "description": "Operator evaluates S-level advancement. Constitutional replay anchor runs automatically before advancement. Anchor can block if CRITICAL dimensions fail.",
+      "input_artifacts": [
+        "sqo/revalidation_result.json (PASS)",
+        "semantic/spe/proposition_review_state.json (COMPLETE)",
+        "sqo/promotion_state.json"
+      ],
+      "output_artifacts": [
+        "sqo/promotion_state.json (updated)",
+        "sqo/promotion_event_log.jsonl",
+        "sqo/constitutional_replay_anchor.json"
+      ],
+      "materializer": "scripts/pios/promotion_action.py",
+      "constitutional_anchor": "scripts/pios/constitutional_replay_anchor.py",
+      "completion_condition": "promotion_state.json s_level advanced AND provenance == GOVERNED_LIFECYCLE",
+      "anchor_dimensions": [
+        "proposition_count (CRITICAL)",
+        "class_diversity (CRITICAL)",
+        "review_obligations (HIGH)",
+        "governance_friction (HIGH)",
+        "confidence_distribution (HIGH)",
+        "tier_diversity (HIGH)",
+        "governance_event_density (MEDIUM)",
+        "enrichment_activity (MEDIUM)"
+      ],
+      "operator_actions": ["advance", "hold", "block", "status"],
+      "chronicle_event": "PROMOTION_ADVANCED"
+    },
+
+    "enrichment": {
+      "name": "Substrate Enrichment",
+      "gate_number": null,
+      "type": "deterministic",
+      "deterministic": true,
+      "description": "Strengthens weak/DERIVED propositions with additional evidence. PATH A: code graph authority edges. PATH B: HTML document structure re-extraction. Feeds back into Gate 4 for re-revalidation.",
+      "input_artifacts": [
+        "semantic/spe/semantic_propositions.json",
+        "semantic/spe/proposition_review_state.json",
+        "evidence source files (codebase or HTML documents)"
+      ],
+      "output_artifacts": [
+        "semantic/spe/semantic_propositions.json (enriched)",
+        "semantic/spe/enrichment_log.json"
+      ],
+      "materializer": null,
+      "completion_condition": "enrichment_log.json exists with enrichment events",
+      "operator_actions": [],
+      "chronicle_event": "ENRICHMENT_COMPLETE",
+      "note": "Materializer not yet formalized. PATH A used code graph enrichment. PATH B enrichment TBD."
+    }
+  },
+
+  "rehydration_contract": {
+    "trigger": "Context compaction, session resume, or continuation from prior conversation",
+    "mandatory_loads": [
+      "docs/pios/sqo_execution_graph.json",
+      "docs/pios/CAPABILITY_REGISTRY.md",
+      "clients/{client}/psee/runs/{run_id}/sqo/promotion_state.json",
+      "clients/{client}/psee/runs/{run_id}/semantic/spe/proposition_review_state.json"
+    ],
+    "verification": [
+      "State vocabulary loaded — disposition names are canonical, not reconstructed",
+      "Current stage identified — which gate is the run at?",
+      "Allowed transitions known — what can happen next?",
+      "Artifact locations known — where are inputs and outputs?"
+    ],
+    "hard_rule": "No S-state advancement may be evaluated unless SQO_EXECUTION_GRAPH has been loaded and current run state is mapped onto it."
+  }
+}

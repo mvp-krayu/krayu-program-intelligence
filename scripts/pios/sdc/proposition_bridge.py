@@ -336,27 +336,74 @@ def derive_cross_domain_propositions(topology_model, review_queue, specimen_id, 
     return propositions, idx
 
 
+def resolve_paths(base, client, run_id, sdc_run=None):
+    """Resolve input/output paths. SDC artifacts may come from a prior validation run."""
+    client_dir = os.path.join(base, "clients", client)
+    run_dir = os.path.join(client_dir, "psee", "runs", run_id)
+
+    sdc_source = sdc_run or run_id
+    sdc_dir = os.path.join(client_dir, "psee", "runs", sdc_source, "semantic", "compiler")
+
+    canonical_csr = os.path.join(client_dir, "semantic", "client_semantic_registry.json")
+    candidate_csr = os.path.join(sdc_dir, "candidate_csr.json")
+    derivation_report = os.path.join(sdc_dir, "derivation_report.json")
+    review_queue = os.path.join(sdc_dir, "review_queue.json")
+    topology = os.path.join(run_dir, "semantic", "topology", "semantic_topology_model.json")
+    claims_dir = os.path.join(client_dir, "vaults", "run_01_authoritative", "claims")
+    output = os.path.join(run_dir, "semantic", "spe", "semantic_propositions.json")
+
+    return {
+        "canonical_csr": canonical_csr,
+        "candidate_csr": candidate_csr,
+        "derivation_report": derivation_report,
+        "review_queue": review_queue,
+        "topology": topology,
+        "claims_dir": claims_dir,
+        "output": output,
+        "sdc_source": sdc_source,
+    }
+
+
 def main():
-    base = os.environ.get("REPO_ROOT", "/Users/khorrix/Projects/k-pi-core")
+    import argparse
+    p = argparse.ArgumentParser(description="PATH B proposition bridge: SDC/CSR → SPE-format propositions")
+    p.add_argument("--client", required=True, help="Client ID (e.g. blueedge)")
+    p.add_argument("--run-id", required=True, help="Target run ID")
+    p.add_argument("--sdc-run", help="SDC validation run to source candidate_csr/derivation_report from (defaults to --run-id)")
+    p.add_argument("--output", help="Override output path (defaults to run's semantic/spe/semantic_propositions.json)")
+    args = p.parse_args()
 
-    canonical_csr_path = os.path.join(base, "clients/blueedge/semantic/client_semantic_registry.json")
-    candidate_csr_path = os.path.join(base, "clients/blueedge/psee/runs/run_blueedge_sdc_validation_01/semantic/compiler/candidate_csr.json")
-    derivation_report_path = os.path.join(base, "clients/blueedge/psee/runs/run_blueedge_sdc_validation_01/semantic/compiler/derivation_report.json")
-    review_queue_path = os.path.join(base, "clients/blueedge/psee/runs/run_blueedge_sdc_validation_01/semantic/compiler/review_queue.json")
-    topology_path = os.path.join(base, "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/semantic/topology/semantic_topology_model.json")
-    claims_dir = os.path.join(base, "clients/blueedge/vaults/run_01_authoritative/claims")
-    output_path = os.path.join(base, "clients/blueedge/chronicle/propositions/semantic_propositions.json")
+    base = os.environ.get("REPO_ROOT", os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))))
+    paths = resolve_paths(base, args.client, args.run_id, args.sdc_run)
 
-    canonical_csr = load_json(canonical_csr_path)
-    candidate_csr = load_json(candidate_csr_path)
-    derivation_report = load_json(derivation_report_path)
-    review_queue = load_json(review_queue_path)
-    topology_model = load_json(topology_path)
-    vault_claims = load_vault_claims(claims_dir)
+    if args.output:
+        paths["output"] = args.output
 
-    specimen_id = "blueedge"
-    run_id = "run_blueedge_productized_01_fixed"
+    for name in ("canonical_csr", "candidate_csr", "derivation_report", "review_queue", "topology"):
+        if not os.path.exists(paths[name]):
+            print(f"FAIL: {name} not found: {paths[name]}")
+            sys.exit(1)
+
+    if not os.path.isdir(paths["claims_dir"]):
+        print(f"WARNING: claims_dir not found: {paths['claims_dir']} — vault claim propositions will be empty")
+        vault_claims = []
+    else:
+        vault_claims = load_vault_claims(paths["claims_dir"])
+
+    canonical_csr = load_json(paths["canonical_csr"])
+    candidate_csr = load_json(paths["candidate_csr"])
+    derivation_report = load_json(paths["derivation_report"])
+    review_queue = load_json(paths["review_queue"])
+    topology_model = load_json(paths["topology"])
+
+    specimen_id = args.client
+    run_id = args.run_id
     idx = 1
+
+    print(f"PATH B PROPOSITION BRIDGE: {specimen_id}/{run_id}")
+    if paths["sdc_source"] != run_id:
+        print(f"  SDC source: {paths['sdc_source']}")
+    print()
 
     domain_props, idx = derive_domain_propositions(
         canonical_csr, candidate_csr, derivation_report, specimen_id, run_id, idx
@@ -378,16 +425,17 @@ def main():
         "specimen_id": specimen_id,
         "run_id": run_id,
         "derivation_path": "PATH_B",
-        "bridge_version": "1.0.0",
-        "bridge_contract": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-02",
+        "bridge_version": "1.1.0",
+        "bridge_contract": "PI.SQO.PATH-B-PROPOSITION-BRIDGE.01",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "source_artifacts": {
-            "canonical_csr": canonical_csr_path,
-            "candidate_csr": candidate_csr_path,
-            "derivation_report": derivation_report_path,
-            "review_queue": review_queue_path,
-            "topology_model": topology_path,
-            "vault_claims_dir": claims_dir,
+            "canonical_csr": paths["canonical_csr"],
+            "candidate_csr": paths["candidate_csr"],
+            "derivation_report": paths["derivation_report"],
+            "review_queue": paths["review_queue"],
+            "topology_model": paths["topology"],
+            "vault_claims_dir": paths["claims_dir"],
+            "sdc_source_run": paths["sdc_source"],
         },
         "proposition_summary": {
             "total": len(all_props),
@@ -409,21 +457,21 @@ def main():
         "propositions": all_props,
     }
 
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    with open(output_path, "w") as f:
+    os.makedirs(os.path.dirname(paths["output"]), exist_ok=True)
+    with open(paths["output"], "w") as f:
         json.dump(output, f, indent=2)
 
-    print(f"Proposition bridge complete.")
-    print(f"Total propositions: {len(all_props)}")
     print(f"  DOMAIN_EVIDENCE_GROUNDING: {len(domain_props)}")
-    print(f"  CAPABILITY_EVIDENCE: {len(cap_props)}")
-    print(f"  VAULT_CLAIM_STRUCTURAL: {len(claim_props)}")
-    print(f"  CROSS_DOMAIN_EVIDENCE: {len(cross_props)}")
-    print(f"  DIRECT_EVIDENCE: {sum(1 for p in all_props if p['derivation_tier'] == 'DIRECT_EVIDENCE')}")
-    print(f"  DERIVED: {sum(1 for p in all_props if p['derivation_tier'] == 'DERIVED')}")
+    print(f"  CAPABILITY_EVIDENCE:       {len(cap_props)}")
+    print(f"  VAULT_CLAIM_STRUCTURAL:    {len(claim_props)}")
+    print(f"  CROSS_DOMAIN_EVIDENCE:     {len(cross_props)}")
+    print(f"  ─────────────────────────")
+    print(f"  Total propositions:        {len(all_props)}")
+    print(f"  DIRECT_EVIDENCE:           {sum(1 for p in all_props if p['derivation_tier'] == 'DIRECT_EVIDENCE')}")
+    print(f"  DERIVED:                   {sum(1 for p in all_props if p['derivation_tier'] == 'DERIVED')}")
     mean_conf = sum(p["confidence"] for p in all_props) / len(all_props) if all_props else 0
-    print(f"  Mean confidence: {mean_conf:.3f}")
-    print(f"Output: {output_path}")
+    print(f"  Mean confidence:           {mean_conf:.3f}")
+    print(f"  Output: {paths['output']}")
 
 
 if __name__ == "__main__":
