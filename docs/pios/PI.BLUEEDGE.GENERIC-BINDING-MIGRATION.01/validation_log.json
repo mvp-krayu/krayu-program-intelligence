@@ -1,0 +1,149 @@
+{
+  "stream": "PI.BLUEEDGE.GENERIC-BINDING-MIGRATION.01",
+  "classification": "G2",
+  "validated_at": "2026-05-23T01:30:00Z",
+  "validation_target": "scripts/pios/run_client_pipeline.py",
+  "checks": [
+    {
+      "id": "SYN-001",
+      "name": "Python syntax validity",
+      "result": "PASS",
+      "detail": "ast.parse succeeds after all modifications"
+    },
+    {
+      "id": "ADAPT-001",
+      "name": "Legacy grounding adapter — loads grounding_state_v3",
+      "result": "PASS",
+      "detail": "10 CEUs loaded from grounding_state_v3.json (ceu_grounding key, legacy format)"
+    },
+    {
+      "id": "ADAPT-002",
+      "name": "Legacy grounding adapter — loads ceu_node_map",
+      "result": "PASS",
+      "detail": "35 node→CEU mappings loaded from ceu_node_map.json (co-located with grounding_state)"
+    },
+    {
+      "id": "ADAPT-003",
+      "name": "Legacy grounding adapter — evidence_refs derived",
+      "result": "PASS",
+      "detail": "36 evidence_refs produced (35 nodes, 1 multi-boundary contributing to 2 CEUs)"
+    },
+    {
+      "id": "ADAPT-004",
+      "name": "Legacy grounding adapter — multi-boundary node handling",
+      "result": "PASS",
+      "detail": "NODE-0021 (ceu_id array [CEU-01, CEU-04]) expanded to both CEU assignments"
+    },
+    {
+      "id": "ADAPT-005",
+      "name": "Legacy grounding adapter — grounding status mapping",
+      "result": "PASS",
+      "detail": "All 10 CEUs: SOURCE_TRUTH → GROUNDED (semantic equivalence)"
+    },
+    {
+      "id": "ADAPT-006",
+      "name": "Legacy grounding adapter — node ID resolution via 40.2",
+      "result": "PASS",
+      "detail": "All 35 paths resolved to 40.2 structural_node_inventory node IDs"
+    },
+    {
+      "id": "ADAPT-007",
+      "name": "Legacy grounding adapter — graceful absence",
+      "result": "PASS",
+      "detail": "Returns None when grounding_state_path absent, ceu_grounding key absent, or ceu_node_map absent"
+    },
+    {
+      "id": "DOM-001",
+      "name": "DOM layer save-through",
+      "result": "PASS",
+      "detail": "Manifest DOM layer saved to run_dir/dom/dom_layer.json (13 groups, 35 nodes)"
+    },
+    {
+      "id": "DOM-002",
+      "name": "DOM layer re-indexing — node namespace alignment",
+      "result": "PASS",
+      "detail": "included_nodes re-indexed from run_integrated_01 IDs to run_genesis_e2e_02 IDs via evidence_paths"
+    },
+    {
+      "id": "DOM-003",
+      "name": "DOM layer re-indexing — coverage",
+      "result": "PASS",
+      "detail": "33/35 DOM nodes resolved to 40.2 IDs (2 nodes have paths not in 40.2: NODE-0950, NODE-0952)"
+    },
+    {
+      "id": "BIND-001",
+      "name": "Binding envelope — zero DOM-UNKNOWN edges",
+      "result": "PASS",
+      "detail": "All 10 CEUs map to valid DOM groups. 0 DOM-UNKNOWN in majority-vote primary DOM assignment"
+    },
+    {
+      "id": "BIND-002",
+      "name": "Binding envelope — node/edge counts",
+      "result": "PASS",
+      "detail": "33 nodes (13 BC + 10 CE + 10 CS), 29 edges (19 GROUNDS + 10 EXPOSES)"
+    },
+    {
+      "id": "ENRICH-001",
+      "name": "Phase 5 enrichment — cross-DOM edges from 40.3s",
+      "result": "PASS",
+      "detail": "4 IMPORTS_ACROSS edges, 8 total cross-DOM imports (top: backend_modules→backend_common, 5)"
+    },
+    {
+      "id": "ENRICH-002",
+      "name": "Phase 5b enrichment — DOM layer now available",
+      "result": "PASS",
+      "detail": "run_dir/dom/dom_layer.json exists after save-through. 5/17 topology domains have DOM backing."
+    },
+    {
+      "id": "SIGNAL-001",
+      "name": "Phase 6+7 signal shortcut retained",
+      "result": "PASS",
+      "detail": "SIGNAL_SHORTCUT_RETAINED: fastapi_conformance_path still used in phase_06_and_07_e2e"
+    },
+    {
+      "id": "REG-001",
+      "name": "No regression — Phase 5 generic path for existing clients",
+      "result": "PASS",
+      "detail": "Generic grounding (run_dir/ceu/) and reconciliation paths unchanged. Legacy adapter is additional fallback."
+    },
+    {
+      "id": "REG-002",
+      "name": "No regression — Phase 6+7 unchanged",
+      "result": "PASS",
+      "detail": "Signal computation path unmodified. Only classification comment added."
+    },
+    {
+      "id": "REG-003",
+      "name": "No regression — Phase 8a/8b vault construction",
+      "result": "PASS",
+      "detail": "Vault reads grounding from manifest (unchanged), copies binding from run_dir (now generic schema)"
+    }
+  ],
+  "summary": {
+    "total": 19,
+    "pass": 19,
+    "fail": 0
+  },
+  "honest_gaps": [
+    {
+      "gap": "910 unmapped structural nodes",
+      "reason": "ceu_node_map has 35 nodes; 40.2 inventory has 944. The 910 unmapped nodes have no governed CEU assignment. Classified as UNMAPPED_STRUCTURAL_NODE — explicit coverage boundary, not a bug.",
+      "severity": "LOW — coverage boundary, not implementation gap"
+    },
+    {
+      "gap": "2 DOM nodes not in 40.2 inventory",
+      "reason": "NODE-0950 (svg-agents/hasi-bridge/hasi_bridge.py) and NODE-0952 (svg-agents/sensor-collector/sensor_collector.py) in DOM layer have evidence_paths that don't resolve to 40.2 node IDs. These nodes drop from re-indexed DOM. CEU-09 (EDGE_AGENTS) evidence_refs still resolve correctly via path_to_node.",
+      "severity": "LOW — 2 of 35 DOM node IDs not re-indexed; evidence_refs unaffected"
+    },
+    {
+      "gap": "Phase 6+7 signal computation not migrated",
+      "reason": "SIGNAL_SHORTCUT_RETAINED. Pre-computed conformance artifacts still used for signal computation. Generic binding may produce different signal values. Separate future migration stream required.",
+      "severity": "MEDIUM — documented, scoped, deferred by design"
+    },
+    {
+      "gap": "LENS compatibility with generic binding schema untested",
+      "reason": "LENS v2 may depend on pre-computed schema fields (bindings, domain_telemetry, pressure_zone_designations). Generic schema uses nodes, edges, capability_surfaces. Downstream verification needed.",
+      "severity": "MEDIUM — known downstream concern, not pipeline concern"
+    }
+  ]
+}
