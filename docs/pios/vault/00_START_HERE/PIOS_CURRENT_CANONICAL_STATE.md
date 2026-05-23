@@ -560,6 +560,8 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.GENESIS.GEN-4.LEARNING-PROMOTION-PIPELINE.01 | G1 | GEN-4 Learning Promotion Pipeline — LearningPromoter governed operator with 7 transition methods (review, reject, promote, activate, elevate_to_capability, elevate_to_module, supersede). Extended lifecycle: 6→9 states (+ OBSERVED, CAPABILITY_CANDIDATE, MODULE_CANDIDATE). AI actor rejection enforcement. 3-specimen EMERGENCE_THRESHOLD for CAPABILITY_CANDIDATE. batch_review for multi-event governance. ChronicleEmitter emit_learning_promotion() with semantic phase mapping. CONSUMPTION_ELIGIBLE_STATES extended | COMPLETE |
 | PI.GENESIS.GEN-5.FIRST-FULL-GENESIS-CHRONICLE.01 | G2 | GEN-5 First Full Genesis Chronicle — GenesisChronicleCompiler (6-source loader, 9-chapter HTML compiler, Z1-Z5 zoom). First genesis chronicle produced on NetBox retrospective: 76KB HTML, 34 events, 9 checkpoints, 23 hero moments, 77 propositions, 14 learning events. Pipeline re-execution with GEN-1 emitter. DISCOVERY phase operational. CLI compiler | COMPLETE |
 | PI.GENESIS.GENERIC-SIGNAL-LINEAGE-VERIFICATION.01 | G1 | Signal derivation spine canonicalization — signal family taxonomy (PSIG/DPSIG/BSIG/ISIG/CSIG/ESIG), derivation levels (Level 1 vs Level 2), derivation contract (8 rules, 4 prohibitions), PATH A signal integration map, chronicle signal lineage requirements, E2E derivation chain. Signal doctrine embedded as constitutional spine knowledge | COMPLETE |
+| PI.BLUEEDGE.GENERIC-SIGNAL-COMPUTATION.01 | G2 | SIGNAL_SHORTCUT_RETAINED permanently removed. Generic PSIG computation on BlueEdge binding envelope (4 signals, 4 zones). DPSIG re-derived on genesis 40.4 topology (CFA BALANCED→ASYMMETRIC). Intelligence delta certified: 4 IMPROVED_READ, 1 DIFFERENT_ABSTRACTION, 1 NEW_READ, 1 LOST_READ. Net result: generic corridor produces MORE truthful structural cognition. PSIG-004 LOST_READ → OPEN_GAP → LEVEL_1_SIGNAL_FAMILY_REQUIRED | COMPLETE |
+| PI.GENESIS.SIGNAL-LEVEL-DOCTRINE-CANONICALIZATION.01 | G1 | Level 1 vs Level 2 signal doctrine elevated to constitutional knowledge. LEVEL_1_VS_LEVEL_2_SIGNAL_DOCTRINE.md created. 6 vault pages updated: SIGNAL_FAMILY_TAXONOMY, SIGNAL_DERIVATION_SPINE, PATH_A_SIGNAL_INTEGRATION_MAP, CHRONICLE_SIGNAL_LINEAGE_REQUIREMENTS, TERMINOLOGY_LOCK, PIOS_CURRENT_CANONICAL_STATE. Abstraction gap causes documented (population compression, edge abstraction 535:1, surface normalization). DPSIG-032 correction rationale locked. ISIG justification canonicalized as structural necessity, not shortcut nostalgia | COMPLETE |
 
 ## Signal Derivation Spine — Canonical Signal Intelligence Doctrine
 
@@ -570,40 +572,45 @@ Signal families are structural cognition outputs of the generic derivation spine
 
 **Key architectural concepts:**
 
-**Signal Derivation Levels (LOCKED):**
-- **Level 1 — File-Level Structural Intelligence:** Evidence from 40.3s code graph (resolved IMPORTS between source files). Population: individual source files. Available to PATH A only. Influences PSIG indirectly via Phase 5 enrichment (IMPORTS_ACROSS edges).
-- **Level 2 — Architectural Binding Intelligence:** Evidence from Phase 5 binding envelope. Population: architectural binding nodes (DOM + CE + CS). Available to ALL specimens. The generic corridor.
+**Signal Derivation Levels (LOCKED — elevated to constitutional doctrine 2026-05-23):**
+- **Level 1 — File-Topology Structural Intelligence:** Evidence from 40.3s code graph and 40.3c centrality. Population: individual source files (hundreds to thousands). Measures import hub pressure, fan asymmetry, centrality concentration. Available to PATH A only. Level 1 is inherently SOFTWARE EXECUTION intelligence — predicts change propagation, PR complexity, deployment coordination. Signal families: ISIG, CSIG.
+- **Level 2 — Architectural Binding Intelligence:** Evidence from Phase 5 binding envelope. Population: architectural binding nodes (tens — DOM + CE + CS). Measures coupling pressure, export pressure, isolation, surface concentration. Available to ALL specimens. Level 2 is ARCHITECTURAL GOVERNANCE intelligence — predicts domain coupling, capability distribution, governance gaps. Signal families: PSIG, BSIG.
+- **Topology level (independent):** DPSIG derives from 40.4 canonical topology. Independent of both Level 1 and Level 2.
+
+Level 1 and Level 2 are NOT interchangeable. Both are necessary for complete structural intelligence. Level 2 cannot reproduce Level 1 intelligence due to population compression, edge abstraction, and surface normalization.
+
+**Generic Corridor Certification (2026-05-23):** SIGNAL_SHORTCUT_RETAINED permanently removed. BlueEdge intelligence delta: 4 IMPROVED_READ, 1 DIFFERENT_ABSTRACTION, 1 NEW_READ, 1 LOST_READ. The generic corridor produces MORE truthful structural cognition than the historical shortcut. Most consequential correction: DPSIG-032 false BALANCED → genuine ASYMMETRIC (57% structural mass in one cluster — previously invisible). PSIG-004 LOST_READ (file-level hub concentration) classified as OPEN_GAP → LEVEL_1_SIGNAL_FAMILY_REQUIRED (ISIG).
 
 **Signal Family Classification (LOCKED):**
-- **Generic GENESIS** (any specimen): PSIG (Level 2 binding topology), DPSIG (40.4 topology), BSIG (Level 2 binding quality meta — NEW)
-- **Software Module** (code graph required): ISIG (Level 1 imports), CSIG (Level 1 centrality), ESIG (Level 1→2 bridge — NEW)
+- **Generic GENESIS** (any specimen): PSIG (Level 2), DPSIG (topology), BSIG (Level 2 meta — NEW)
+- **Software Module** (code graph required): ISIG (Level 1 — LEVEL_1_SIGNAL_FAMILY_REQUIRED), CSIG (Level 1), ESIG (Level 1→2 bridge — NEW)
 - **Concept-Only:** ESI (structural coherence delta), RAG (representation alignment gap)
 
 **Signal Family Maturity:**
 
-| Family | Status | Evidence |
-|--------|--------|---------|
-| PSIG | OPERATIONAL | 4 signals, 5 computation scripts, Phase 6+7 pipeline, vault integration, LENS consumption |
-| DPSIG | OPERATIONAL (Class 4) | 2 signals, topology-native derivation, LENS additive sidecar |
-| BSIG | SPECIFIED_NOT_IMPLEMENTED | Raw data in binding envelope; no computation pipeline |
-| ISIG | PARTIALLY_IMPLIED | Raw metrics in 40.3c; no named signal computation |
-| CSIG | PARTIALLY_IMPLIED | Raw metrics in 40.3c; no named signal computation |
-| ESIG | SPECIFIED_NOT_IMPLEMENTED | Enrichment delta observable; no computation pipeline |
+| Family | Level | Status | Evidence |
+|--------|-------|--------|---------|
+| PSIG | Level 2 | OPERATIONAL | Generic corridor certified. 4 signals, 4 pressure zones on BlueEdge binding |
+| DPSIG | Topology | OPERATIONAL (Class 4) | CFA corrected: BALANCED → ASYMMETRIC. 944-node real substrate |
+| BSIG | Level 2 | SPECIFIED_NOT_IMPLEMENTED | Raw data in binding envelope; no computation pipeline |
+| ISIG | Level 1 | PARTIALLY_IMPLIED — **LEVEL_1_SIGNAL_FAMILY_REQUIRED** | PSIG-004 LOST_READ justifies this family. Raw data in 40.3c. Not yet approved for implementation |
+| CSIG | Level 1 | PARTIALLY_IMPLIED | Raw metrics in 40.3c; no named signal computation |
+| ESIG | Level 1→2 | SPECIFIED_NOT_IMPLEMENTED | Enrichment delta observable; no computation pipeline |
 
 **Signal Derivation Contract (LOCKED):**
-8 derivation rules governing signal computation: single source of truth (SD-01), deterministic computation (SD-02), threshold ownership (SD-03), no cross-family dependency (SD-04), additive enrichment (SD-05), Level 1/Level 2 separation (SD-06), module-specific availability (SD-07), signal authority ceiling (SD-08 — PROVISIONAL_CKR_CANDIDATE).
-4 prohibitions: no synthetic fabrication (PR-01), no cross-specimen comparison without population reference (PR-02), no signal as recommendation (PR-03), no shortcut normalization (PR-04).
+8 derivation rules: SD-01 through SD-08. 4 prohibitions: PR-01 through PR-04. See SIGNAL_DERIVATION_CONTRACT.md.
 
 **Chronicle Integration (SPECIFIED):**
-Signal lineage objects, chronicle event types (signal_derivation, signal_enrichment, signal_projection), Z1-Z5 zoom depth for signals, GEN-1 ChronicleEmitter extension methods — all specified, not yet implemented.
+Signal lineage objects, chronicle event types, Z1-Z5 zoom depth — all specified, not yet implemented.
 
 **Vault pages:**
+- [[../05_RUNTIME_AND_CORRIDOR/LEVEL_1_VS_LEVEL_2_SIGNAL_DOCTRINE]] — canonical Level 1 vs Level 2 doctrine
 - [[../05_RUNTIME_AND_CORRIDOR/SIGNAL_DERIVATION_SPINE]] — full E2E derivation chain from intake to projection
-- [[../05_RUNTIME_AND_CORRIDOR/SIGNAL_FAMILY_TAXONOMY]] — canonical signal family registry
-- [[../05_RUNTIME_AND_CORRIDOR/PATH_A_SIGNAL_INTEGRATION_MAP]] — PATH A signal emergence points
+- [[../05_RUNTIME_AND_CORRIDOR/SIGNAL_FAMILY_TAXONOMY]] — canonical signal family registry with intelligence delta
+- [[../05_RUNTIME_AND_CORRIDOR/PATH_A_SIGNAL_INTEGRATION_MAP]] — PATH A signal emergence points with gap analysis
 - Signal Derivation Contract and Chronicle Requirements in stream directory
 
-**Reference:** `docs/pios/PI.GENESIS.GENERIC-SIGNAL-LINEAGE-VERIFICATION.01/` — 3 canonical documents + 4 governance artifacts.
+**Reference:** `docs/pios/PI.GENESIS.GENERIC-SIGNAL-LINEAGE-VERIFICATION.01/` + `docs/pios/PI.BLUEEDGE.GENERIC-SIGNAL-COMPUTATION.01/`
 
 ## GENESIS — Onboarding-Origin Governed Cognition Formation
 

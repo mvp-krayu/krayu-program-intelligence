@@ -1,0 +1,62 @@
+{
+  "stream": "PI.GENESIS.SIGNAL-LEVEL-DOCTRINE-CANONICALIZATION.01",
+  "classification": "G1",
+  "date": "2026-05-23",
+  "changes": [
+    {
+      "file": "docs/pios/vault/05_RUNTIME_AND_CORRIDOR/LEVEL_1_VS_LEVEL_2_SIGNAL_DOCTRINE.md",
+      "action": "CREATED",
+      "purpose": "Constitutional doctrine: Level 1 vs Level 2 signal abstraction levels, abstraction gap causes, correction rationales, ISIG justification"
+    },
+    {
+      "file": "docs/pios/vault/05_RUNTIME_AND_CORRIDOR/SIGNAL_FAMILY_TAXONOMY.md",
+      "action": "MODIFIED",
+      "purpose": "Added Level column to maturity table, ISIG LEVEL_1_SIGNAL_FAMILY_REQUIRED status, Intelligence Delta Certification section"
+    },
+    {
+      "file": "docs/pios/vault/05_RUNTIME_AND_CORRIDOR/SIGNAL_DERIVATION_SPINE.md",
+      "action": "MODIFIED",
+      "purpose": "SIGNAL_SHORTCUT_RETAINED section → PERMANENTLY REMOVED with governance lineage"
+    },
+    {
+      "file": "docs/pios/vault/05_RUNTIME_AND_CORRIDOR/PATH_A_SIGNAL_INTEGRATION_MAP.md",
+      "action": "MODIFIED",
+      "purpose": "Added Level 1 → Level 2 Intelligence Gap (Certified) section with loss table and enrichment propagation"
+    },
+    {
+      "file": "docs/pios/PI.GENESIS.GENERIC-SIGNAL-LINEAGE-VERIFICATION.01/CHRONICLE_SIGNAL_LINEAGE_REQUIREMENTS.md",
+      "action": "MODIFIED",
+      "purpose": "Added Level column to signal family chronicle status index, ISIG LEVEL_1_SIGNAL_FAMILY_REQUIRED"
+    },
+    {
+      "file": "docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md",
+      "action": "MODIFIED",
+      "purpose": "Expanded Signal Derivation Level entry with Level 1/2 definitions, compression ratio, certification reference"
+    },
+    {
+      "file": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "action": "MODIFIED",
+      "purpose": "Expanded signal spine section with doctrine, certification, maturity table; added ontology git lineage entries for PI.BLUEEDGE.GENERIC-SIGNAL-COMPUTATION.01 and PI.GENESIS.SIGNAL-LEVEL-DOCTRINE-CANONICALIZATION.01"
+    },
+    {
+      "file": "docs/pios/PI.GENESIS.SIGNAL-LEVEL-DOCTRINE-CANONICALIZATION.01/execution_report.md",
+      "action": "CREATED",
+      "purpose": "Stream execution report"
+    },
+    {
+      "file": "docs/pios/PI.GENESIS.SIGNAL-LEVEL-DOCTRINE-CANONICALIZATION.01/validation_log.json",
+      "action": "CREATED",
+      "purpose": "Stream validation log — 20/20 PASS"
+    },
+    {
+      "file": "docs/pios/PI.GENESIS.SIGNAL-LEVEL-DOCTRINE-CANONICALIZATION.01/file_changes.json",
+      "action": "CREATED",
+      "purpose": "Stream file change manifest"
+    },
+    {
+      "file": "docs/pios/PI.GENESIS.SIGNAL-LEVEL-DOCTRINE-CANONICALIZATION.01/CLOSURE.md",
+      "action": "CREATED",
+      "purpose": "Stream closure with G1 Section 10 (Architecture Memory Propagation)"
+    }
+  ]
+}

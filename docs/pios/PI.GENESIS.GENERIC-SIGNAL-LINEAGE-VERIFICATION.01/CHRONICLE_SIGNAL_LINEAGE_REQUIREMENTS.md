@@ -131,16 +131,16 @@ Within the Chronicle Z1-Z5 zoom architecture, signals are visible at:
 
 ## Signal Family Chronicle Status Index
 
-| Family | Status | Chronicle Visibility | Notes |
-|--------|--------|---------------------|-------|
-| PSIG | IMPLEMENTED | FULL — all chronicle events emittable | Phase 6+7 derivation, vault projection, LENS consumption |
-| DPSIG | IMPLEMENTED | FULL — all chronicle events emittable | Independent derivation, LENS sidecar projection |
-| BSIG | NEW | NOT YET — no computation to emit from | Binding metadata available; no computation pipeline |
-| ISIG | PARTIAL | NOT YET — 40.3c has raw data, no named signal emit | ISIG-001/002 computable from 40.3c import_in/out_degree |
-| CSIG | PARTIAL | NOT YET — 40.3c has raw data, no named signal emit | CSIG-001/002/003 computable from centrality metrics |
-| ESIG | NEW | NOT YET — enrichment delta observable but not emitted | Phase 5 enrichment step has the delta |
-| ESI | CONCEPT | NOT ELIGIBLE — no implementation | |
-| RAG | CONCEPT | NOT ELIGIBLE — no implementation | |
+| Family | Level | Status | Chronicle Visibility | Notes |
+|--------|-------|--------|---------------------|-------|
+| PSIG | Level 2 | IMPLEMENTED | FULL — all chronicle events emittable | Generic corridor: Phase 6+7 on binding envelope. Certified NET IMPROVEMENT |
+| DPSIG | Topology | IMPLEMENTED | FULL — all chronicle events emittable | Independent derivation from 40.4. CFA corrected to ASYMMETRIC |
+| BSIG | Level 2 | NEW | NOT YET — no computation to emit from | Binding metadata available; no computation pipeline |
+| ISIG | Level 1 | PARTIAL — **LEVEL_1_SIGNAL_FAMILY_REQUIRED** | NOT YET — raw data in 40.3c, no named signal emit | Required to preserve file-topology early-warning cognition lost at Level 2 |
+| CSIG | Level 1 | PARTIAL | NOT YET — raw data in 40.3c, no named signal emit | CSIG-001/002/003 computable from centrality metrics |
+| ESIG | Level 1→2 | NEW | NOT YET — enrichment delta observable but not emitted | Phase 5 enrichment step has the delta |
+| ESI | Cross-run | CONCEPT | NOT ELIGIBLE — no implementation | |
+| RAG | Cross-registry | CONCEPT | NOT ELIGIBLE — no implementation | |
 
 ---
 

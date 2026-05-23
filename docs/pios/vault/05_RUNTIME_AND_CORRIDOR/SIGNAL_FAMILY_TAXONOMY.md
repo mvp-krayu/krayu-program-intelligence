@@ -212,23 +212,44 @@ PATH A STRUCTURAL SUBSTRATE
 
 ## Maturity Classification
 
-| Family | Maturity | Evidence |
-|--------|----------|---------|
-| PSIG | OPERATIONAL | 4 signals, 5 computation scripts, pipeline Phase 6+7, vault integration |
-| DPSIG | OPERATIONAL (Class 4) | 2 signals, topology-native script, LENS additive sidecar |
-| BSIG | SPECIFIED_NOT_IMPLEMENTED | Raw data exists in binding envelope; no computation pipeline |
-| ISIG | PARTIALLY_IMPLIED | Raw metrics in 40.3c; no named signal family or computation pipeline |
-| CSIG | PARTIALLY_IMPLIED | Raw metrics in 40.3c; no named signal family or computation pipeline |
-| ESIG | SPECIFIED_NOT_IMPLEMENTED | Enrichment delta observable; no computation pipeline |
-| ESI | CONCEPT_ONLY | Defined, no evidence or implementation |
-| RAG | CONCEPT_ONLY | Defined, no evidence or implementation |
-| EXSIG | FUTURE_DECLARED | Requires TEMPORAL capability class |
-| TIMSIG | FUTURE_DECLARED | Requires TEMPORAL capability class |
+| Family | Level | Maturity | Evidence |
+|--------|-------|----------|---------|
+| PSIG | Level 2 | OPERATIONAL | 4 signals, 5 computation scripts, pipeline Phase 6+7, vault integration. Generic corridor certified: NET IMPROVEMENT over historical shortcut |
+| DPSIG | Topology | OPERATIONAL (Class 4) | 2 signals, topology-native script, LENS additive sidecar. CFA correction: false BALANCED → genuine ASYMMETRIC on BlueEdge |
+| BSIG | Level 2 | SPECIFIED_NOT_IMPLEMENTED | Raw data exists in binding envelope; no computation pipeline |
+| ISIG | Level 1 | PARTIALLY_IMPLIED — **LEVEL_1_SIGNAL_FAMILY_REQUIRED** | Raw metrics in 40.3c; no named signal computation. Intelligence delta LOST_READ (PSIG-004) confirms this family is needed to preserve file-topology early-warning cognition |
+| CSIG | Level 1 | PARTIALLY_IMPLIED | Raw metrics in 40.3c; no named signal computation |
+| ESIG | Level 1→2 bridge | SPECIFIED_NOT_IMPLEMENTED | Enrichment delta observable; no computation pipeline |
+| ESI | Cross-run | CONCEPT_ONLY | Defined, no evidence or implementation |
+| RAG | Cross-registry | CONCEPT_ONLY | Defined, no evidence or implementation |
+| EXSIG | Temporal | FUTURE_DECLARED | Requires TEMPORAL capability class |
+| TIMSIG | Temporal | FUTURE_DECLARED | Requires TEMPORAL capability class |
+
+---
+
+## Intelligence Delta Certification (BlueEdge, 2026-05-23)
+
+The generic corridor (Level 2) was certified against the historical shortcut corridor (Level 1) on BlueEdge:
+
+| Change | Classification | Significance |
+|--------|---------------|-------------|
+| PSIG-002: 1 domain → 4 domains | IMPROVED_READ | Export pressure revealed as systemic, not localized |
+| DPSIG-032: BALANCED → ASYMMETRIC | IMPROVED_READ | Historical was false reassurance; 57% mass in one cluster |
+| DPSIG-031: same state, real substrate | IMPROVED_READ | 944-node evidence vs 35-node abstraction |
+| Pressure zones: 1 → 4 | IMPROVED_READ | Pressure distributed across architecture |
+| PSIG-001: different entity, same read | DIFFERENT_ABSTRACTION_SAME_READ | Coupling concentration preserved at architectural level |
+| PSIG-006: theoretical → genuine | NEW_READ | Architectural fragmentation discovered |
+| PSIG-004: HIGH → uniform | **LOST_READ** | File-level hub concentration invisible at Level 2 → ISIG required |
+
+**Verdict:** The generic corridor produces MORE truthful structural cognition than the historical shortcut corridor. One LOST_READ exists with a governed resolution path (ISIG).
+
+See [[../../PI.BLUEEDGE.GENERIC-SIGNAL-COMPUTATION.01/BLUEEDGE_SIGNAL_INTELLIGENCE_DELTA]] for full evidence.
 
 ---
 
 ## Cross-References
 
+- [[LEVEL_1_VS_LEVEL_2_SIGNAL_DOCTRINE]] — canonical Level 1 vs Level 2 doctrine
 - [[SIGNAL_DERIVATION_SPINE]] — full derivation chain from intake to projection
 - [[PATH_A_SIGNAL_INTEGRATION_MAP]] — detailed PATH A signal emergence points
 - [[../06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK]] — locked signal terminology
