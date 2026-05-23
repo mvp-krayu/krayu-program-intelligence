@@ -492,25 +492,72 @@ def _synthesize_dom_layer_from_ceus(run_dir: Path, registry: dict):
     }
 
 
+def _synthesize_ceu_registry_from_legacy_grounding(source_manifest: dict, run_dir: Path):
+    """
+    Build Phase 5's ceu_grounding_registry format from legacy grounding_state_v3 + ceu_node_map.
+    Used when run_dir has no generic grounding or reconciliation, but the source manifest
+    references a legacy grounding_state_v3 with a co-located ceu_node_map.
+    All fields derived from governed source truth. No synthetic expansion.
+    PI.BLUEEDGE.GENERIC-BINDING-MIGRATION.01
+    """
+    gs_path_str = source_manifest.get("grounding_state_path", "")
+    if not gs_path_str:
+        return None
+    gs_path = REPO_ROOT / gs_path_str
+    if not gs_path.exists():
+        return None
+
+    grounding_state = load_json(gs_path)
+    ceu_grounding = grounding_state.get("ceu_grounding")
+    if not ceu_grounding:
+        return None
+
+    node_map_path = gs_path.parent / "ceu_node_map.json"
+    if not node_map_path.exists():
+        return None
+
+    node_map_data = load_json(node_map_path)
+    node_map = node_map_data.get("node_map", [])
+
+    node_inv_path = run_dir / "structure" / "40.2" / "structural_node_inventory.json"
+    path_to_node: dict[str, str] = {}
+    if node_inv_path.exists():
+        node_inventory = load_json(node_inv_path)
+        path_to_node = {n["path"]: n["node_id"] for n in node_inventory.get("nodes", [])}
+
+    ceu_evidence: dict[str, list[dict]] = {}
+    for entry in node_map:
+        node_id = entry.get("node_id", "")
+        path = entry.get("path", "")
+        ceu_ids = entry.get("ceu_id", "")
+        if isinstance(ceu_ids, str):
+            ceu_ids = [ceu_ids]
+        for cid in ceu_ids:
+            ceu_evidence.setdefault(cid, []).append({
+                "node_id": path_to_node.get(path, node_id),
+                "value": path,
+            })
+
+    ceu_entries = []
+    for ceu in ceu_grounding:
+        ceu_id = ceu["ceu_id"]
+        ceu_entries.append({
+            "ceu_id": ceu_id,
+            "name": ceu.get("name", ceu_id),
+            "grounding_status": "GROUNDED" if ceu.get("grounding_status") == "SOURCE_TRUTH" else "UNGROUNDED",
+            "evidence_refs": ceu_evidence.get(ceu_id, []),
+        })
+
+    return {"ceu": ceu_entries} if ceu_entries else None
+
+
 def phase_05_build_binding_envelope(
     client_cfg: dict, source_manifest: dict, run_dir: Path
 ) -> bool:
-    # If fastapi_conformance_path is set, use pre-computed canonical conformance artifacts.
-    # The canonical signal computation pathway (FastAPI conformance contracts) is NOT automated —
-    # running run_end_to_end.py on a synthetic binding_envelope produces divergent signal values.
-    conformance_path = source_manifest.get("fastapi_conformance_path")
-    if conformance_path:
-        conf_dir = REPO_ROOT / conformance_path
-        be_src = conf_dir / "binding_envelope_fastapi_compatible.json"
-        if not be_src.exists():
-            print(f"  FAIL: fastapi_conformance_path set but binding_envelope_fastapi_compatible.json not found at {be_src}")
-            return False
-        be_dst = run_dir / "binding" / "binding_envelope.json"
-        be_dst.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(str(be_src), str(be_dst))
-        print(f"  PASS: binding_envelope loaded from FastAPI conformance artifacts (canonical pre-computed path)")
-        print(f"  NOTE: STAGE_NOT_AUTOMATED — signal computation uses pre-computed conformance artifacts; synthetic topology builder bypassed")
-        return True
+    # SIGNAL_SHORTCUT_RETAINED: fastapi_conformance_path is no longer used for Phase 5 binding.
+    # Phase 5 always takes the generic pipeline path. Phase 6+7 signal computation retains the
+    # pre-computed conformance shortcut independently.
+    # PI.BLUEEDGE.GENERIC-BINDING-MIGRATION.01
 
     # Generic pipeline path: synthesize registry from grounding_state_v3 + global ceu_registry.
     # Preferred over legacy ceu_grounding_path/registry/ceu_grounding_registry.json when the
@@ -535,17 +582,47 @@ def phase_05_build_binding_envelope(
             print(f"  INFO: CEU registry synthesized from reconciliation outputs "
                   f"({len(registry['ceu'])} confirmed CEUs)")
         else:
-            registry_path = (
-                REPO_ROOT / source_manifest["ceu_grounding_path"] / "registry" / "ceu_grounding_registry.json"
-            )
-            if not registry_path.exists():
-                print(f"  FAIL: CEU registry not found at {registry_path}")
-                return False
-            registry = load_json(registry_path)
+            # Try legacy grounding_state + ceu_node_map (governed source truth)
+            registry = _synthesize_ceu_registry_from_legacy_grounding(source_manifest, run_dir)
+            if registry is not None:
+                print(f"  INFO: CEU registry synthesized from legacy grounding + ceu_node_map "
+                      f"({len(registry['ceu'])} CEUs) — PI.BLUEEDGE.GENERIC-BINDING-MIGRATION.01")
+            else:
+                registry_path = (
+                    REPO_ROOT / source_manifest["ceu_grounding_path"] / "registry" / "ceu_grounding_registry.json"
+                )
+                if not registry_path.exists():
+                    print(f"  FAIL: CEU registry not found at {registry_path}")
+                    return False
+                registry = load_json(registry_path)
 
-    # DOM layer: load from manifest path, or synthesize from CEU domains
+    # DOM layer: load from manifest path, or synthesize from CEU domains.
+    # Save-through: persist to run_dir/dom/ so Phase 5b enrichment can find it.
     if dom_path and dom_path.exists():
         dom_layer = load_json(dom_path)
+        # Re-index included_nodes to current run's node namespace. Manifest DOM layers
+        # may use node IDs from a different run; evidence_paths are the authoritative mapping.
+        node_inv_path = run_dir / "structure" / "40.2" / "structural_node_inventory.json"
+        if node_inv_path.exists():
+            _node_inv = load_json(node_inv_path)
+            _p2n = {n["path"]: n["node_id"] for n in _node_inv.get("nodes", [])}
+            reindexed = 0
+            for dg in dom_layer["dom_groups"]:
+                evidence_paths = dg.get("evidence_paths", [])
+                if evidence_paths:
+                    new_nodes = [_p2n[ep] for ep in evidence_paths if ep in _p2n]
+                    if new_nodes:
+                        dg["included_nodes"] = new_nodes
+                        reindexed += 1
+            if reindexed:
+                dom_layer["total_nodes"] = sum(len(dg["included_nodes"]) for dg in dom_layer["dom_groups"])
+                print(f"  INFO: DOM layer re-indexed to current run node namespace ({reindexed} groups)")
+        dom_dir = run_dir / "dom"
+        dom_dir.mkdir(parents=True, exist_ok=True)
+        save_json(dom_dir / "dom_layer.json", dom_layer)
+        print(f"  INFO: DOM layer loaded from manifest and saved to run_dir/dom/ "
+              f"({dom_layer.get('total_dom_groups', len(dom_layer.get('dom_groups', [])))} groups, "
+              f"{dom_layer.get('total_nodes', 0)} nodes)")
     else:
         dom_layer = _synthesize_dom_layer_from_ceus(run_dir, registry)
         if dom_layer is None:
@@ -1401,6 +1478,10 @@ def _enrich_semantic_topology_with_structural_evidence(model_path: Path, run_dir
 # ── Phase 6+7: 75.x Activation + 41.x Projection ────────────────────────────
 
 def phase_06_and_07_e2e(run_dir: Path, source_manifest: dict) -> bool:
+    # SIGNAL_SHORTCUT_RETAINED: fastapi_conformance_path is still used here for signal computation.
+    # Phase 5 binding has migrated to the generic pipeline path independently.
+    # Signal migration is a separate future stream. PI.BLUEEDGE.GENERIC-BINDING-MIGRATION.01
+    #
     # S1 structural-only specimens without LENS signal infrastructure: graceful skip.
     # The binding envelope may be synthesized from reconciliation data but run_end_to_end.py
     # requires full signal computation infrastructure that only exists for LENS-activated specimens.

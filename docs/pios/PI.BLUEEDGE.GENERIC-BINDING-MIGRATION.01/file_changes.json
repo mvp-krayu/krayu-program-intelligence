@@ -1,0 +1,43 @@
+{
+  "stream": "PI.BLUEEDGE.GENERIC-BINDING-MIGRATION.01",
+  "classification": "G2",
+  "changes": [
+    {
+      "file": "scripts/pios/run_client_pipeline.py",
+      "action": "MODIFIED",
+      "description": "Phase 5 conformance shortcut removed. Legacy grounding adapter added. DOM layer save-through with re-indexing. Phase 6+7 SIGNAL_SHORTCUT_RETAINED classified.",
+      "functions_added": [
+        "_synthesize_ceu_registry_from_legacy_grounding(source_manifest, run_dir)"
+      ],
+      "functions_modified": [
+        "phase_05_build_binding_envelope — removed fastapi_conformance_path shortcut, added legacy adapter call in fallback chain, added DOM save-through with re-indexing",
+        "phase_06_and_07_e2e — added SIGNAL_SHORTCUT_RETAINED classification comment"
+      ]
+    },
+    {
+      "file": "docs/pios/PI.BLUEEDGE.GENERIC-BINDING-MIGRATION.01/BLUEEDGE_GENERIC_BINDING_MIGRATION_FEASIBILITY.md",
+      "action": "CREATED",
+      "description": "Feasibility assessment. Verdict: MIGRATION_REQUIRES_CEU_MATERIALIZATION. All required inputs exist as governed source truth."
+    },
+    {
+      "file": "docs/pios/PI.BLUEEDGE.GENERIC-BINDING-MIGRATION.01/execution_report.md",
+      "action": "CREATED",
+      "description": "Stream execution report with implementation details and evidence of correctness."
+    },
+    {
+      "file": "docs/pios/PI.BLUEEDGE.GENERIC-BINDING-MIGRATION.01/validation_log.json",
+      "action": "CREATED",
+      "description": "19/19 validation checks PASS. 4 honest gaps documented."
+    },
+    {
+      "file": "docs/pios/PI.BLUEEDGE.GENERIC-BINDING-MIGRATION.01/file_changes.json",
+      "action": "CREATED",
+      "description": "This file."
+    },
+    {
+      "file": "docs/pios/PI.BLUEEDGE.GENERIC-BINDING-MIGRATION.01/CLOSURE.md",
+      "action": "CREATED",
+      "description": "Stream closure artifact."
+    }
+  ]
+}
