@@ -1,0 +1,85 @@
+{
+  "stream": "PI.GENESIS.GENERIC-SIGNAL-LINEAGE-VERIFICATION.01",
+  "classification": "G1",
+  "date": "2026-05-23",
+  "checks": [
+    {
+      "name": "VL-01: Signal derivation chain traced end-to-end",
+      "description": "Full derivation chain from raw intake through LENS/BOARDROOM consumption verified against pipeline code",
+      "result": "PASS",
+      "evidence": "SIGNAL_DERIVATION_SPINE.md documents 17-phase chain from source boundary to LENS projection"
+    },
+    {
+      "name": "VL-02: All implemented signal families documented",
+      "description": "PSIG and DPSIG families fully documented with formulas, thresholds, source artifacts, derivation levels",
+      "result": "PASS",
+      "evidence": "SIGNAL_FAMILY_TAXONOMY.md contains complete registry with per-signal formulas and early-warning value"
+    },
+    {
+      "name": "VL-03: Derivation levels defined and distinguished",
+      "description": "Level 1 (file-level) and Level 2 (binding topology) formally defined with non-equivalence explicitly stated",
+      "result": "PASS",
+      "evidence": "SIGNAL_DERIVATION_SPINE.md §Signal Derivation Levels, TERMINOLOGY_LOCK.md Signal Derivation Level entry"
+    },
+    {
+      "name": "VL-04: Generic vs module-specific classification complete",
+      "description": "All 6 derivable signal families classified as generic GENESIS or software module",
+      "result": "PASS",
+      "evidence": "SIGNAL_FAMILY_TAXONOMY.md §Generic GENESIS Families + §Software Module Families"
+    },
+    {
+      "name": "VL-05: PATH A signal emergence map complete",
+      "description": "Per-phase signal emergence points documented with PATH B differences",
+      "result": "PASS",
+      "evidence": "PATH_A_SIGNAL_INTEGRATION_MAP.md — Phase 3 through Phase 8a, PATH B difference table"
+    },
+    {
+      "name": "VL-06: Signal derivation contract locked",
+      "description": "8 derivation rules and 4 prohibitions governing signal computation",
+      "result": "PASS",
+      "evidence": "SIGNAL_DERIVATION_CONTRACT.md — SD-01 through SD-08, PR-01 through PR-04"
+    },
+    {
+      "name": "VL-07: Chronicle integration requirements specified",
+      "description": "Signal lineage object contract, chronicle events, zoom depth all specified",
+      "result": "PASS",
+      "evidence": "CHRONICLE_SIGNAL_LINEAGE_REQUIREMENTS.md — JSON schemas, 3 event types, Z1-Z5 table"
+    },
+    {
+      "name": "VL-08: Terminology lock updated",
+      "description": "Signal-related terms added to TERMINOLOGY_LOCK.md with CANONICAL status",
+      "result": "PASS",
+      "evidence": "TERMINOLOGY_LOCK.md updated: PSIG, DPSIG expanded, Signal Derivation Level, Signal Family terms"
+    },
+    {
+      "name": "VL-09: Canonical state propagated",
+      "description": "PIOS_CURRENT_CANONICAL_STATE.md updated with signal derivation spine section and stream lineage entry",
+      "result": "PASS",
+      "evidence": "PIOS_CURRENT_CANONICAL_STATE.md §Signal Derivation Spine, ontology git lineage table"
+    },
+    {
+      "name": "VL-10: No implementation produced",
+      "description": "Stream produces canonicalization only — no signal computation code, no script modifications",
+      "result": "PASS",
+      "evidence": "No files modified in scripts/ or app/ directories"
+    },
+    {
+      "name": "VL-11: Maturity classification honest",
+      "description": "Each signal family classified at actual maturity (OPERATIONAL, PARTIALLY_IMPLIED, SPECIFIED_NOT_IMPLEMENTED, CONCEPT_ONLY) — no overclaim",
+      "result": "PASS",
+      "evidence": "SIGNAL_FAMILY_TAXONOMY.md §Maturity Classification table"
+    },
+    {
+      "name": "VL-12: Cross-references resolve",
+      "description": "All vault page cross-references point to existing or newly created pages",
+      "result": "PASS",
+      "evidence": "SIGNAL_DERIVATION_SPINE, SIGNAL_FAMILY_TAXONOMY, PATH_A_SIGNAL_INTEGRATION_MAP all cross-reference each other and TERMINOLOGY_LOCK"
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 12,
+    "fail": 0
+  },
+  "verdict": "VALID"
+}

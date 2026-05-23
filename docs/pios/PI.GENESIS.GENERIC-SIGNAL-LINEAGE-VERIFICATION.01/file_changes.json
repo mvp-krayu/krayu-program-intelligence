@@ -1,0 +1,84 @@
+{
+  "stream": "PI.GENESIS.GENERIC-SIGNAL-LINEAGE-VERIFICATION.01",
+  "classification": "G1",
+  "date": "2026-05-23",
+  "changes": [
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.GENESIS.GENERIC-SIGNAL-LINEAGE-VERIFICATION.01/GENERIC_SIGNAL_LINEAGE_AND_DPSIG_VERIFICATION.md",
+      "purpose": "Investigation document answering 5 required signal derivation questions",
+      "classification": "stream artifact"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.GENESIS.GENERIC-SIGNAL-LINEAGE-VERIFICATION.01/SIGNAL_DERIVATION_CONTRACT.md",
+      "purpose": "Formal contract governing signal computation: 8 rules, 4 prohibitions, output contracts",
+      "classification": "canonical document"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.GENESIS.GENERIC-SIGNAL-LINEAGE-VERIFICATION.01/CHRONICLE_SIGNAL_LINEAGE_REQUIREMENTS.md",
+      "purpose": "Chronicle integration requirements: lineage objects, event types, zoom depth, GEN-1 extension",
+      "classification": "canonical document"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/vault/05_RUNTIME_AND_CORRIDOR/SIGNAL_DERIVATION_SPINE.md",
+      "purpose": "Full E2E derivation chain from intake to projection. Defines Level 1 vs Level 2. Constitutional knowledge.",
+      "classification": "vault page (G1)"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/vault/05_RUNTIME_AND_CORRIDOR/SIGNAL_FAMILY_TAXONOMY.md",
+      "purpose": "Canonical registry of all xxSIG signal families. Generic GENESIS vs Software Module. Per-family documentation.",
+      "classification": "vault page (G1)"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/vault/05_RUNTIME_AND_CORRIDOR/PATH_A_SIGNAL_INTEGRATION_MAP.md",
+      "purpose": "Phase-by-phase PATH A signal emergence points. PATH B differences. Enrichment propagation quantification.",
+      "classification": "vault page (G1)"
+    },
+    {
+      "action": "UPDATE",
+      "path": "docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md",
+      "purpose": "Added: PSIG expanded, DPSIG expanded, Signal Derivation Level, Signal Family — all CANONICAL status",
+      "classification": "vault page (G1 mutation)"
+    },
+    {
+      "action": "UPDATE",
+      "path": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "purpose": "Added Signal Derivation Spine section. Added stream to ontology git lineage table. Updated date.",
+      "classification": "vault page (G1 propagation)"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.GENESIS.GENERIC-SIGNAL-LINEAGE-VERIFICATION.01/execution_report.md",
+      "purpose": "Stream execution report",
+      "classification": "mandatory artifact"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.GENESIS.GENERIC-SIGNAL-LINEAGE-VERIFICATION.01/validation_log.json",
+      "purpose": "Stream validation log (12/12 PASS)",
+      "classification": "mandatory artifact"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.GENESIS.GENERIC-SIGNAL-LINEAGE-VERIFICATION.01/file_changes.json",
+      "purpose": "Stream file changes manifest",
+      "classification": "mandatory artifact"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.GENESIS.GENERIC-SIGNAL-LINEAGE-VERIFICATION.01/CLOSURE.md",
+      "purpose": "Stream closure with G1 Section 10 Architecture Memory Propagation",
+      "classification": "mandatory artifact"
+    }
+  ],
+  "summary": {
+    "created": 10,
+    "updated": 2,
+    "deleted": 0
+  }
+}
