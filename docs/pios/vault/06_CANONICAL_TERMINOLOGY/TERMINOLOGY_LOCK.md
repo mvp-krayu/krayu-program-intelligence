@@ -650,6 +650,36 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 **What it is NOT:** A spine class. The 8 canonical spine classes are LOCKED. Semantic sub-types are modeled within derivation lineage, not as spine classes. This keeps the spine schema clean while preserving rich semantic classification within the derivation record.
 
+### Governed Cognitive Replay Chronicle
+
+**Definition:** A cognitive traversal instrument — not a report, not a document, not a hyperlinked filesystem. The chronicle is a LENS into governed cognition, rendering how a specimen's semantic lifecycle unfolded through controlled depth traversal (Z1-Z5 zoom levels). Each chapter implements a descent/ascent cycle: narrative orients → proof anchors → evidence grounds → comprehension ascends. The chronicle derives ALL narrative content from actual run artifacts — no fabricated data.
+
+**Status:** CANONICAL — OPERATIONAL (BlueEdge run_blueedge_genesis_e2e_03: 57KB HTML, 8 chapters, Z1-Z5 zoom, REPLAY-CERTIFIED 62/62, 2026-05-23).
+
+**What it is NOT:** A report replacing platform outputs. A generated webpage. Hyperlinked documentation. A filesystem explorer. The chronicle is a cognitive traversal orchestration through which an audience experiences governed cognition unfolding.
+
+### Chronicle Certification
+
+**Definition:** Deterministic verification of a governed cognitive replay lifecycle. 10 phases: artifact existence, governance lifecycle, proposition consistency, revalidation, constitutional anchor, enrichment, convergence, chronicle, promotion, cross-artifact consistency. Each phase contains multiple checks. All checks must PASS for REPLAY-CERTIFIED status.
+
+**Status:** CANONICAL — OPERATIONAL (62/62 checks, chronicle_certification_rc09.py, 2026-05-23).
+
+### Constitutional Replay Anchor
+
+**Definition:** An 8-dimension semantic adequacy comparator that measures a candidate specimen's governance corpus against a reference specimen (currently NetBox). Dimensions: proposition_count, class_diversity, review_obligations, governance_friction, confidence_distribution, tier_diversity, governance_event_density, enrichment_activity. CONSTITUTIONAL_DISTANCE_ACCEPTABLE = all dimensions pass. Used as a gate before S-level advancement.
+
+**Status:** CANONICAL — OPERATIONAL (BlueEdge 8/8 PASS at S2, 2026-05-23).
+
+**What it is NOT:** A universal governance norm. The anchor uses a single reference specimen — conformity to that reference, not to abstract ideals. A third specimen may expose dimensions where the reference is atypical.
+
+### Convergence Observation
+
+**Definition:** A formal descriptive comparison between two specimens' governance patterns. All observations start at DESCRIPTIVE maturity — two specimens produce a comparison, not a pattern. Law-claims require additional specimens and governance review. Classification: convergences (patterns that hold across specimens), divergences (patterns that differ), mixed (convergence in mechanism, divergence in content).
+
+**Status:** CANONICAL — OPERATIONAL (9 observations, 5 convergences, 3 divergences, 2 mixed, all DESCRIPTIVE, 2026-05-23).
+
+**What it is NOT:** A unification claim. Convergence is OBSERVATIONAL — diversity within common governance IS the proof. Never claim generalized laws from two specimens.
+
 ## Term Usage Rules
 
 1. **Use locked definitions exactly.** Do not paraphrase, simplify, or reinterpret.

@@ -158,6 +158,8 @@
 | semantic_derivation_compiler.py | scripts/pios/ | AI-assisted semantic derivation (Phase 3b) |
 | code_graph_feasibility.py | scripts/pios/ | ast-based code-graph structural enrichment prototype (40.3s) |
 | structural_centrality.py | scripts/pios/ | Structural centrality derivation from 40.3s (40.3c — Phase 3.7) |
+| chronicle_builder_rc08.py | scripts/pios/sdc/ | Parameterized chronicle HTML builder (--client, --run-id). 8-chapter Z1-Z5 cognitive traversal, data-derived from run artifacts |
+| chronicle_certification_rc09.py | scripts/pios/sdc/ | 10-phase/62-check deterministic chronicle certification engine (--client, --run-id) |
 
 ## Evidence / Data
 
@@ -177,6 +179,10 @@
 | NetBox source manifest | clients/netbox/sources/source_01/source_manifest.json | Source registration |
 | NetBox manifest | app/execlens-demo/lib/lens-v2/manifests/netbox.run_github_netbox_20260520_134600.json | LENS REGISTRY entry (S1 structural-only) |
 | NetBox structural artifacts | clients/netbox/psee/runs/run_github_netbox_20260520_134600/structure/ | 40.2, 40.3, 40.4, 40.2r, 40.3s, 40.3c (gitignored) |
+| BlueEdge chronicle vault | clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/chronicle/ | REPLAY_CHRONICLE.html + chronicle_certification.json (REPLAY-CERTIFIED) |
+| BlueEdge convergence observations | clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/convergence/ | 9 cross-specimen convergence observations (DESCRIPTIVE) |
+| BlueEdge semantic propositions | clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/semantic/spe/ | 85 propositions, review state, enrichment log |
+| BlueEdge SQO governance | clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/sqo/ | promotion_state, revalidation_result, constitutional_replay_anchor |
 
 ## Governance
 
