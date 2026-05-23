@@ -47,8 +47,15 @@ SQO is an executable governance graph, not a conversation memory. After reboot/c
 
 | Capability | Implementation | Status | Path | Notes |
 |------------|---------------|--------|------|-------|
-| PATH B Evidence Enrichment | `scripts/pios/sdc/evidence_enrichment_rc04.py` | EXISTS_NEEDS_PARAMETERIZATION | PATH B | Domain ID mismatch correction + confidence recalculation from HTML evidence. Hardcoded to chronicle paths. Needs --client/--run-id parameterization (same pattern as proposition_bridge.py before generalization). |
+| PATH B Evidence Enrichment | `scripts/pios/sdc/evidence_enrichment_rc04.py` | OPERATIONAL | PATH B | Domain ID mismatch correction + confidence recalculation from HTML evidence. Parameterized: --client, --run-id, --sdc-run, --blockers-run. Emits enrichment_activity_event.json. Proven: 32 enrichment events on BlueEdge run_blueedge_genesis_e2e_03. |
 | Enrichment Participation Advisory | `scripts/pios/psee_handoff/evaluate_enrichment_participation.py` | OPERATIONAL | Generic | Observational only — evaluates enrichment participation. Does not perform enrichment. |
+
+## Chronicle
+
+| Capability | Implementation | Status | Path | Notes |
+|------------|---------------|--------|------|-------|
+| RC-08 Chronicle Builder | `scripts/pios/sdc/chronicle_builder_rc08.py` | OPERATIONAL | Generic | 8-chapter cognitive traversal HTML with Z1-Z5 zoom levels. Parameterized: --client, --run-id. Reads from PSEE run artifacts (semantic/spe, sqo, convergence). All narrative derived from actual data. Proven: 57KB HTML on BlueEdge run_blueedge_genesis_e2e_03. |
+| RC-09 Chronicle Certification | `scripts/pios/sdc/chronicle_certification_rc09.py` | OPERATIONAL | Generic | 10-phase/62-check deterministic certification of governed cognitive replay lifecycle. Parameterized: --client, --run-id. Verifies: artifact existence, governance lifecycle, proposition consistency, revalidation, anchor, enrichment, convergence, chronicle, promotion, cross-artifact consistency. Proven: 62/62 PASS on BlueEdge run_blueedge_genesis_e2e_03. |
 
 ## Signal Derivation
 
