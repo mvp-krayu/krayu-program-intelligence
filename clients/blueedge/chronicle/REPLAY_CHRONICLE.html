@@ -524,9 +524,29 @@
     <div class="data-card orange">
       <div class="data-label">Qualification Blockers</div>
       <div class="data-value">15 (4 irreducible, 8 enrichable, 1 evidence-reducible, 2 continuity)</div>
-      
+
     </div>
-    
+
+          <p style="margin-top: 16px; color: var(--text-dim); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;">Signal Intelligence (post-certification enrichment)</p>
+
+    <div class="data-card blue">
+      <div class="data-label">PSIG — Structural Pressure</div>
+      <div class="data-value">4 signals on generic binding (Level 2)</div>
+      <div class="data-explain">PSIG-001: coupling 4.0 HIGH · PSIG-002: export 4.0 HIGH · PSIG-004: coverage 1.0 NORMAL · PSIG-006: isolation 0.15 ACTIVATED</div>
+    </div>
+
+    <div class="data-card yellow">
+      <div class="data-label">DPSIG — Topology Pressure</div>
+      <div class="data-value">CPI 3.45 ELEVATED · CFA 0.57 ASYMMETRIC (57% in one cluster)</div>
+      <div class="data-explain">Corrected from historical: CFA was 0.17 BALANCED on 35-node abstraction — false reassurance. Real substrate: 944 nodes.</div>
+    </div>
+
+    <div class="data-card orange">
+      <div class="data-label">Intelligence Gap</div>
+      <div class="data-value">PSIG-004 LOST_READ — file-level hub concentration invisible at Level 2</div>
+      <div class="data-explain">OPEN_GAP → LEVEL_1_SIGNAL_FAMILY_REQUIRED (ISIG). Resolution path declared, not yet implemented.</div>
+    </div>
+
         </div>
         </details>
 
@@ -1486,7 +1506,35 @@
           <td>L3 (AI-derived propositions)</td>
           <td class="convergent">CONVERGENT — identical ceiling</td>
         </tr>
-        
+
+        <tr>
+          <td>Signal Framework</td>
+          <td>PSIG (Level 2, enriched with Level 1 IMPORTS_ACROSS) + DPSIG (topology)</td>
+          <td>PSIG (Level 2, generic binding) + DPSIG (topology, corrected from 35→944 nodes)</td>
+          <td class="convergent">CONVERGENT — same signal families, same derivation spine</td>
+        </tr>
+
+        <tr>
+          <td>Signal Derivation Level</td>
+          <td>Level 2 + Level 1 enrichment (code graph → IMPORTS_ACROSS edges)</td>
+          <td>Level 2 only (no code graph — PATH B)</td>
+          <td class="divergent">DIVERGENT — PATH A gets Level 1 enrichment, PATH B does not</td>
+        </tr>
+
+        <tr>
+          <td>DPSIG Topology Accuracy</td>
+          <td>1,494 AST-derived nodes — CFA computed on real substrate</td>
+          <td>944 genesis nodes — CFA corrected: BALANCED→ASYMMETRIC (0.17→0.57). Historical 35-node abstraction was false reassurance</td>
+          <td class="convergent">CONVERGENT — both now compute on real structural substrate</td>
+        </tr>
+
+        <tr>
+          <td>Signal Intelligence Gaps</td>
+          <td>ISIG candidate (40.3s available, not yet computed as named family)</td>
+          <td>PSIG-004 LOST_READ — file-level hub concentration invisible at Level 2. ISIG required.</td>
+          <td class="convergent">CONVERGENT — both specimens surface ISIG as Level 1 gap</td>
+        </tr>
+
           </table>
         </div>
         </details>
@@ -1716,6 +1764,177 @@
     </div>
     
   
+    <!-- POST-CERTIFICATION ENRICHMENT: Signal Intelligence Integration -->
+    <div class="chapter" style="border-left: 2px solid var(--yellow); margin-top: 48px;">
+      <div class="chapter-header">
+        <div>
+          <div class="chapter-number" style="color: var(--yellow);">Post-Certification Enrichment</div>
+          <div class="chapter-title" style="color: var(--yellow);">The Signals</div>
+        </div>
+        <div class="chapter-phase" style="color: var(--yellow); border-color: var(--yellow);">STRUCTURAL INTELLIGENCE</div>
+      </div>
+      <div class="chapter-body">
+        <div class="z1-executive">
+          After the chronicle was certified, the system's signal derivation spine underwent a constitutional
+          transformation. The historical shortcut corridor — which copied pre-computed Level 1 conformance
+          artifacts — was permanently removed. In its place, the generic signal corridor computed structural
+          pressure directly from the binding envelope. The result was not signal parity. It was signal truth.
+          <br><br>
+          The most consequential correction: DPSIG-032 (Cluster Fan Asymmetry) had reported BALANCED (0.17)
+          on a 35-node abstraction. The real substrate — 944 structural nodes — shows ASYMMETRIC (0.57),
+          with 57% of structural mass concentrated in a single cluster. The historical signal was false
+          reassurance. The generic corridor exposed what the shortcut concealed.
+        </div>
+        <div class="z1-finding">
+          <div class="z1-finding-label">Key Governed Finding</div>
+          Generic signal corridor produces MORE truthful structural cognition than the historical shortcut. Intelligence delta certified: 4 IMPROVED_READ, 1 DIFFERENT_ABSTRACTION, 1 NEW_READ, 1 LOST_READ. Net: structural intelligence improved. SIGNAL_SHORTCUT_RETAINED permanently removed.
+        </div>
+
+        <details class="zoom-section">
+          <summary>Z2 · Signal Intelligence Profile</summary>
+          <div class="zoom-content">
+          <p>Signal computation on generic binding envelope (run_blueedge_genesis_e2e_02):</p>
+
+    <div class="data-card blue">
+      <div class="data-label">PSIG-001 — Coupling Pressure</div>
+      <div class="data-value">4.0 — HIGH (threshold: 2.0)</div>
+      <div class="data-explain">CE-04, CE-08 — grounded by 4 DOM groups each. Generic corridor: IMPROVED_READ (domain-level attribution replaces single-node)</div>
+    </div>
+
+    <div class="data-card blue">
+      <div class="data-label">PSIG-002 — Export Pressure</div>
+      <div class="data-value">4.0 — HIGH (threshold: 2.0)</div>
+      <div class="data-explain">DOM-04, DOM-05, DOM-08, DOM-09 — 4 zones. Generic corridor: IMPROVED_READ (4 distinct zones vs historical 1)</div>
+    </div>
+
+    <div class="data-card">
+      <div class="data-label">PSIG-004 — Coverage Concentration</div>
+      <div class="data-value">1.0 — NORMAL at entity level</div>
+      <div class="data-explain">Binding normalizes surface distribution (1:1 CE:CS). File-level hub concentration INVISIBLE at Level 2. LOST_READ → ISIG required.</div>
+    </div>
+
+    <div class="data-card green">
+      <div class="data-label">PSIG-006 — Isolation Pressure</div>
+      <div class="data-value">0.1515 — ACTIVATED (6 connected components)</div>
+      <div class="data-explain">Generic corridor: NEW_READ — structural fragmentation detection not available in historical shortcut</div>
+    </div>
+
+    <div class="data-card yellow">
+      <div class="data-label">DPSIG-031 — Cluster Pressure Index</div>
+      <div class="data-value">3.4532 — ELEVATED (944 nodes, max cluster "backend" = 541)</div>
+      <div class="data-explain">Historical: 2.12 ELEVATED on 35 nodes. Corrected: real substrate reveals true concentration</div>
+    </div>
+
+    <div class="data-card orange">
+      <div class="data-label">DPSIG-032 — Cluster Fan Asymmetry</div>
+      <div class="data-value">0.5731 — ASYMMETRIC (57% in one cluster)</div>
+      <div class="data-explain">Historical: 0.17 BALANCED — false reassurance on 35-node abstraction. Most consequential correction in the signal spine.</div>
+    </div>
+
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z3 · Intelligence Delta Certification</summary>
+          <div class="zoom-content">
+          <p>Per-signal intelligence classification (generic corridor vs historical shortcut):</p>
+          <table class="matrix-table">
+            <tr><th>Signal</th><th>Classification</th><th>Evidence</th></tr>
+            <tr>
+              <td>PSIG-001</td>
+              <td class="convergent">IMPROVED_READ</td>
+              <td>Domain-level attribution (4 CEU nodes) vs single-node (NODE-0021). Broader structural visibility.</td>
+            </tr>
+            <tr>
+              <td>PSIG-002</td>
+              <td class="convergent">IMPROVED_READ</td>
+              <td>4 distinct pressure zones vs 1. Generic corridor identifies export pressure across 4 DOM groups.</td>
+            </tr>
+            <tr>
+              <td>PSIG-004</td>
+              <td class="divergent">LOST_READ</td>
+              <td>File-level hub concentration (app.module.ts=69, common/dto/index.ts=111) invisible at Level 2. OPEN_GAP → ISIG.</td>
+            </tr>
+            <tr>
+              <td>PSIG-006</td>
+              <td class="convergent">NEW_READ</td>
+              <td>Structural fragmentation detection — 6 connected components. Not available in historical shortcut.</td>
+            </tr>
+            <tr>
+              <td>DPSIG-031</td>
+              <td class="convergent">IMPROVED_READ</td>
+              <td>Real substrate (944 nodes) vs abstraction (35 nodes). True concentration visible.</td>
+            </tr>
+            <tr>
+              <td>DPSIG-032</td>
+              <td class="convergent">IMPROVED_READ</td>
+              <td>BALANCED→ASYMMETRIC. Historical was false reassurance. Most consequential correction.</td>
+            </tr>
+          </table>
+          <p style="margin-top: 12px; color: var(--green);">Certification gate: PASS — NET IMPROVEMENT (4 IMPROVED + 1 NEW + 1 DIFFERENT vs 1 LOST)</p>
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z4 · Level 1 vs Level 2 Doctrine</summary>
+          <div class="zoom-content">
+          <p>Constitutional doctrine established (PI.GENESIS.SIGNAL-LEVEL-DOCTRINE-CANONICALIZATION.01):</p>
+
+    <div class="data-card blue">
+      <div class="data-label">Level 1 — Software Execution Intelligence</div>
+      <div class="data-value">40.3s/40.3c · File-level · PATH A only</div>
+      <div class="data-explain">Import hub pressure, fan asymmetry, centrality concentration. Predicts change propagation, PR complexity, deployment coordination.</div>
+    </div>
+
+    <div class="data-card green">
+      <div class="data-label">Level 2 — Architectural Governance Intelligence</div>
+      <div class="data-value">Binding envelope · Architectural nodes · All specimens</div>
+      <div class="data-explain">Coupling pressure, export pressure, isolation, surface concentration. Predicts domain coupling, capability distribution, governance gaps.</div>
+    </div>
+
+    <div class="data-card">
+      <div class="data-label">Topology Level — Independent</div>
+      <div class="data-value">40.4 canonical topology · DPSIG</div>
+      <div class="data-explain">Cluster pressure, fan asymmetry. Independent of both Level 1 and Level 2.</div>
+    </div>
+
+          <p style="margin-top: 12px;">Abstraction gap causes: population compression (944→33 nodes), edge abstraction (2,138→4 IMPORTS_ACROSS, 535:1 ratio), surface normalization (1:1 CE:CS uniform). Both levels necessary — neither replaces the other.</p>
+          <p>Vault doctrine: LEVEL_1_VS_LEVEL_2_SIGNAL_DOCTRINE.md (constitutional spine knowledge)</p>
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z5 · Governance Lineage</summary>
+          <div class="zoom-content">
+          <p>Signal integration streams:</p>
+
+    <div class="data-card">
+      <div class="data-label">PI.GENESIS.GENERIC-SIGNAL-LINEAGE-VERIFICATION.01</div>
+      <div class="data-value">G1 — Signal derivation spine canonicalization</div>
+    </div>
+
+    <div class="data-card">
+      <div class="data-label">PI.BLUEEDGE.GENERIC-SIGNAL-COMPUTATION.01</div>
+      <div class="data-value">G2 — Shortcut removal, generic PSIG, DPSIG re-derivation, intelligence delta</div>
+    </div>
+
+    <div class="data-card">
+      <div class="data-label">PI.GENESIS.SIGNAL-LEVEL-DOCTRINE-CANONICALIZATION.01</div>
+      <div class="data-value">G1 — Level 1 vs Level 2 doctrine elevated to constitutional knowledge</div>
+    </div>
+
+          <p>Run: run_blueedge_genesis_e2e_02 (generic signal computation)</p>
+          <p>Artifacts: vault/signal_registry.json, 41.x/signal_projection.json, dpsig_signal_set.json</p>
+        </div>
+        </details>
+
+        <div class="ascent">
+          <div class="ascent-label">Ascent — What the Depth Proved</div>
+          <div class="ascent-text">The generic signal corridor produces more truthful structural cognition than the historical shortcut. The abstraction gap between Level 1 and Level 2 is real, documented, and governed — not buried. The signal derivation spine is now constitutional knowledge, not operational folklore. ISIG remains an open gap with a governed resolution path.</div>
+        </div>
+      </div>
+    </div>
+
     <div class="chronicle-footer">
       <div class="governance-boundary">
         <p><strong>Evidence Boundary Statement</strong></p>
@@ -1726,9 +1945,13 @@
         <p>Structural derivation remains primary. Interpretive authority is additive, not replacement.</p>
         <p>BlueEdge qualification was earned within the post-genesis semantic replay corridor.
         Full onboarding-origin cognitive genesis remains future upstream work.</p>
+        <p>Post-certification signal enrichment (2026-05-23): generic signal corridor certified,
+        SIGNAL_SHORTCUT_RETAINED permanently removed, Level 1 vs Level 2 doctrine canonicalized.
+        Signal integration does not modify the governance lifecycle — it adds structural intelligence
+        to the cognitive lens.</p>
       </div>
       <div class="snapshot-id">
-        CHRONICLE · PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE · 2026-05-23 · format v1.0
+        CHRONICLE · PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE · 2026-05-23 · format v1.1 (signal-enriched)
       </div>
     </div>
     

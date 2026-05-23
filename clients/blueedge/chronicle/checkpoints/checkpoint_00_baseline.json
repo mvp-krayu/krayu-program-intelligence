@@ -191,6 +191,48 @@
     "proof_objects": 0
   },
 
+  "signal_state_addendum": {
+    "enrichment_stream": "PI.BLUEEDGE.CHRONICLE-SIGNAL-INTEGRATION.01",
+    "enrichment_date": "2026-05-23",
+    "note": "Signal state computed post-certification on run_blueedge_genesis_e2e_02. Added as addendum — does not modify the frozen baseline.",
+    "signal_run": "run_blueedge_genesis_e2e_02",
+    "structural_node_count_real": 944,
+    "structural_node_count_abstracted": 35,
+    "psig": {
+      "derivation_level": "Level_2",
+      "source": "binding/binding_envelope.json",
+      "signals": {
+        "PSIG-001": {"value": 4.0, "state": "HIGH", "entities": ["CE-04", "CE-08"]},
+        "PSIG-002": {"value": 4.0, "state": "HIGH", "entities": ["DOM-04", "DOM-05", "DOM-08", "DOM-09"]},
+        "PSIG-004": {"value": 1.0, "state": "NORMAL", "note": "LOST_READ — file-level hub concentration invisible at Level 2"},
+        "PSIG-006": {"value": 0.1515, "state": "ACTIVATED", "connected_components": 6}
+      },
+      "pressure_zones": 4
+    },
+    "dpsig": {
+      "derivation_level": "Topology",
+      "source": "structure/40.4/canonical_topology.json",
+      "signals": {
+        "DPSIG-031": {"value": 3.4532, "state": "ELEVATED", "total_nodes": 944, "max_cluster_size": 541},
+        "DPSIG-032": {"value": 0.5731, "state": "ASYMMETRIC", "historical_value": 0.1714, "historical_state": "BALANCED", "correction_note": "False reassurance on 35-node abstraction → truth on 944-node real substrate"}
+      }
+    },
+    "intelligence_delta": {
+      "IMPROVED_READ": 4,
+      "DIFFERENT_ABSTRACTION_SAME_READ": 1,
+      "NEW_READ": 1,
+      "LOST_READ": 1,
+      "certification": "PASS — NET IMPROVEMENT"
+    },
+    "open_gaps": {
+      "PSIG-004_LOST_READ": {
+        "classification": "LEVEL_1_SIGNAL_FAMILY_REQUIRED",
+        "resolution_family": "ISIG",
+        "status": "DECLARED_NOT_IMPLEMENTED"
+      }
+    }
+  },
+
   "what_is_missing": {
     "semantic_propositions": "No PATH B propositions derived — SDC candidate_csr exists but no SPE-format semantic_proposition spine objects",
     "operator_review": "No governed operator review — S2 via legacy qualification bridge with system:pipeline and system:governance_projection actors only",

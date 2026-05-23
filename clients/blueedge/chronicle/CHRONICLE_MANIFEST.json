@@ -204,5 +204,28 @@
   "proof_object_count": 0,
   "spine_object_count": 12,
   "narrative_chapter_count": 8,
-  "media_capture_count": 0
+  "media_capture_count": 0,
+
+  "post_certification_enrichments": [
+    {
+      "enrichment_id": "SIGNAL_INTEGRATION_01",
+      "stream": "PI.BLUEEDGE.CHRONICLE-SIGNAL-INTEGRATION.01",
+      "classification": "G2",
+      "date": "2026-05-23",
+      "description": "Generic signal corridor integration — PSIG/DPSIG computation results, intelligence delta certification, Level 1 vs Level 2 doctrine, convergence matrix signal dimensions",
+      "source_streams": [
+        "PI.GENESIS.GENERIC-SIGNAL-LINEAGE-VERIFICATION.01",
+        "PI.BLUEEDGE.GENERIC-SIGNAL-COMPUTATION.01",
+        "PI.GENESIS.SIGNAL-LEVEL-DOCTRINE-CANONICALIZATION.01"
+      ],
+      "chronicle_modifications": [
+        "Chapter 1 Z2: signal profile data cards added",
+        "Chapter 7 Z3: 4 signal convergence dimensions added to comparison matrix (19 total)",
+        "Post-Certification Enrichment section: The Signals — full signal intelligence profile, delta certification, Level 1/2 doctrine",
+        "Footer: enrichment disclosure and format version 1.1"
+      ],
+      "signal_run": "run_blueedge_genesis_e2e_02",
+      "certification_status": "REPLAY-CERTIFIED remains valid — enrichment is additive"
+    }
+  ]
 }

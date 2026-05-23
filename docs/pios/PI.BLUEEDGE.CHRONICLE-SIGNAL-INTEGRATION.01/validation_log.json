@@ -1,0 +1,83 @@
+{
+  "stream": "PI.BLUEEDGE.CHRONICLE-SIGNAL-INTEGRATION.01",
+  "classification": "G2",
+  "date": "2026-05-23",
+  "checks": [
+    {
+      "name": "VL-01: Chronicle HTML renders with signal content",
+      "status": "PASS",
+      "detail": "Chapter 1 Z2 signal cards, Chapter 7 Z3 matrix rows, post-certification enrichment section all added"
+    },
+    {
+      "name": "VL-02: Signal values match certified source",
+      "status": "PASS",
+      "detail": "All PSIG/DPSIG values match BLUEEDGE_SIGNAL_INTELLIGENCE_DELTA.md and run_blueedge_genesis_e2e_02 artifacts"
+    },
+    {
+      "name": "VL-03: Intelligence delta classifications match source",
+      "status": "PASS",
+      "detail": "4 IMPROVED_READ, 1 DIFFERENT_ABSTRACTION, 1 NEW_READ, 1 LOST_READ — matches delta document exactly"
+    },
+    {
+      "name": "VL-04: DPSIG-032 correction documented accurately",
+      "status": "PASS",
+      "detail": "BALANCED (0.17, 35 nodes) → ASYMMETRIC (0.57, 944 nodes) with 'false reassurance' rationale"
+    },
+    {
+      "name": "VL-05: PSIG-004 LOST_READ documented with ISIG resolution path",
+      "status": "PASS",
+      "detail": "OPEN_GAP → LEVEL_1_SIGNAL_FAMILY_REQUIRED, DECLARED_NOT_IMPLEMENTED"
+    },
+    {
+      "name": "VL-06: Existing chapters 1-8 narrative prose unmodified",
+      "status": "PASS",
+      "detail": "Only Z2 data cards added to Chapter 1; only table rows added to Chapter 7. No prose changes."
+    },
+    {
+      "name": "VL-07: REPLAY-CERTIFIED status preserved",
+      "status": "PASS",
+      "detail": "Enrichment is additive. Manifest documents enrichment scope. Certification status unchanged."
+    },
+    {
+      "name": "VL-08: Baseline checkpoint addendum does not overwrite frozen state",
+      "status": "PASS",
+      "detail": "signal_state_addendum field added alongside existing fields. Original checkpoint data intact."
+    },
+    {
+      "name": "VL-09: Manifest records enrichment metadata",
+      "status": "PASS",
+      "detail": "post_certification_enrichments array with source streams, modifications, date"
+    },
+    {
+      "name": "VL-10: Convergence matrix dimensions correct",
+      "status": "PASS",
+      "detail": "4 signal dimensions added: Signal Framework, Signal Derivation Level, DPSIG Topology Accuracy, Signal Intelligence Gaps"
+    },
+    {
+      "name": "VL-11: 75.x boundary enforced on enrichment narrative",
+      "status": "PASS",
+      "detail": "All prose traces to structural evidence. No team behavior, no remediation prioritization, no human attribution."
+    },
+    {
+      "name": "VL-12: Footer reflects enrichment",
+      "status": "PASS",
+      "detail": "Enrichment disclosure paragraph added. Format version 1.0 → 1.1 (signal-enriched)."
+    },
+    {
+      "name": "VL-13: No architectural concepts introduced",
+      "status": "PASS",
+      "detail": "G2 stream — reads Level 1/2 doctrine, signal delta, signal values. No new concepts."
+    },
+    {
+      "name": "VL-14: Governance lineage references resolve",
+      "status": "PASS",
+      "detail": "3 source streams referenced: GENERIC-SIGNAL-LINEAGE-VERIFICATION.01, GENERIC-SIGNAL-COMPUTATION.01, SIGNAL-LEVEL-DOCTRINE-CANONICALIZATION.01"
+    }
+  ],
+  "summary": {
+    "total": 14,
+    "pass": 14,
+    "fail": 0,
+    "result": "VALID"
+  }
+}
