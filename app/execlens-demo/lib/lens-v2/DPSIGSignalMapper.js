@@ -109,6 +109,8 @@ function projectPSIGSignals(signalRegistryData) {
     signals: signalRegistryData.signals.map((s) => ({
       signal_id: s.signal_id || null,
       signal_label: s.signal_label || null,
+      signal_family: s.signal_family || 'PSIG',
+      derivation_level: s.derivation_level || 'Level_2',
       activation_state: s.activation_state || null,
       signal_value: s.signal_value != null ? s.signal_value : null,
       activation_method: s.activation_method || null,

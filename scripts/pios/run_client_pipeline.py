@@ -1643,6 +1643,122 @@ def phase_06_and_07_e2e(run_dir: Path, source_manifest: dict) -> bool:
     return True
 
 
+# ── Standalone Signal Aggregation (ISIG + DPSIG → vault signal_registry) ─────
+
+def _aggregate_standalone_signals(vault_dir: Path, run_id: str, alias: str):
+    """Append ISIG and DPSIG signals to vault signal_registry.json.
+    Additive only — existing PSIG signals are preserved. Graceful no-op if
+    standalone signal sets are absent (PATH B specimens, pre-ISIG runs)."""
+    sr_path = vault_dir / "signal_registry.json"
+    if not sr_path.exists():
+        return
+
+    sr = load_json(sr_path)
+    existing_signals = sr.get("signals", [])
+    existing_ids = {s.get("signal_id") for s in existing_signals}
+    appended = []
+
+    # Resolve client_id from run_id prefix or alias
+    client_id = alias.lower().replace(" ", "_")
+
+    # ISIG
+    isig_path = REPO_ROOT / "artifacts" / "isig" / client_id / run_id / "isig_signal_set.json"
+    if isig_path.exists():
+        isig = load_json(isig_path)
+        for entry in isig.get("signal_entries", []):
+            sid = entry.get("signal_id", "")
+            if sid in existing_ids:
+                continue
+            existing_signals.append({
+                "signal_id": sid,
+                "signal_label": entry.get("signal_name", sid.lower()),
+                "signal_family": "ISIG",
+                "derivation_level": "Level_1",
+                "signal_authority": "PROVISIONAL_CKR_CANDIDATE",
+                "condition_id": f"COND-{sid}-01",
+                "activation_state": entry.get("severity", entry.get("activation_state", "")),
+                "signal_value": entry.get("signal_value", 0),
+                "activation_method": entry.get("activation_method", "RATIO_THRESHOLD"),
+                "threshold": entry.get("threshold_high", 5.0),
+                "population_type": "file_import_degree",
+                "population_size": isig.get("normalization_basis", {}).get("total_files", 0),
+                "primary_entity": entry.get("derivation_trace", {}).get("numerator_file", ""),
+                "primary_domain": "",
+                "zone_id": "",
+                "zone_class": "STANDALONE_LEVEL_1",
+                "source_traceability": (
+                    f"structure/40.3s/code_graph.json → {sid} via "
+                    f"derive_import_signals.py → artifacts/isig/{client_id}/{run_id}/isig_signal_set.json"
+                ),
+                "runtime_required": False,
+            })
+            existing_ids.add(sid)
+            appended.append(sid)
+        if appended:
+            print(f"    [VAULT] ISIG projected: {', '.join(appended)}")
+
+    isig_count = len(appended)
+    appended = []
+
+    # DPSIG
+    dpsig_path = REPO_ROOT / "artifacts" / "dpsig" / client_id / run_id / "dpsig_signal_set.json"
+    if dpsig_path.exists():
+        dpsig = load_json(dpsig_path)
+        for entry in dpsig.get("signal_entries", []):
+            sid = entry.get("signal_id", "")
+            if sid in existing_ids:
+                continue
+            existing_signals.append({
+                "signal_id": sid,
+                "signal_label": entry.get("signal_name", sid.lower()),
+                "signal_family": "DPSIG",
+                "derivation_level": "Topology",
+                "signal_authority": "PROVISIONAL_CKR_CANDIDATE",
+                "condition_id": f"COND-{sid}-01",
+                "activation_state": entry.get("severity", entry.get("activation_state", "")),
+                "signal_value": entry.get("signal_value", 0),
+                "activation_method": entry.get("activation_method", "CLUSTER_MASS_THRESHOLD"),
+                "threshold": entry.get("threshold_high", entry.get("threshold_asymmetric", 2.0)),
+                "population_type": "cluster_topology",
+                "population_size": dpsig.get("normalization_basis", {}).get("total_structural_node_count", 0),
+                "primary_entity": "",
+                "primary_domain": "",
+                "zone_id": "",
+                "zone_class": "STANDALONE_TOPOLOGY",
+                "source_traceability": (
+                    f"structure/40.4/canonical_topology.json → {sid} via "
+                    f"derive_relational_signals.py → artifacts/dpsig/{client_id}/{run_id}/dpsig_signal_set.json"
+                ),
+                "runtime_required": False,
+            })
+            existing_ids.add(sid)
+            appended.append(sid)
+        if appended:
+            print(f"    [VAULT] DPSIG projected: {', '.join(appended)}")
+
+    dpsig_count = len(appended)
+
+    if isig_count + dpsig_count == 0:
+        return
+
+    # Update counts
+    active_count = sum(
+        1 for s in existing_signals
+        if s.get("activation_state") in ("HIGH",)
+        or (s.get("activation_state") in ("ACTIVATED", "ACTIVE", "ELEVATED")
+            and s.get("activation_method") != "THEORETICAL_BASELINE")
+    )
+    sr["signals"] = existing_signals
+    sr["total_signals"] = len(existing_signals)
+    sr["active_pressure_signals"] = active_count
+    sr["telemetry_signals"] = len(existing_signals) - active_count
+    sr["registry_basis"] = sr.get("registry_basis", "") + f" + ISIG({isig_count}) + DPSIG({dpsig_count})"
+
+    save_json(vault_dir / "signal_registry.json", sr)
+    print(f"    [VAULT] signal_registry.json updated: {len(existing_signals)} total signals "
+          f"({isig_count} ISIG, {dpsig_count} DPSIG appended)")
+
+
 # ── Phase 8a: Vault Construction ──────────────────────────────────────────────
 
 def phase_08a_vault(
@@ -1945,6 +2061,9 @@ def phase_08a_vault(
             },
         })
 
+    # 5b. Aggregate ISIG/DPSIG into signal_registry.json (additive — appends to existing PSIG signals)
+    _aggregate_standalone_signals(vault_dir, run_id, alias)
+
     # 6. binding_envelope.json (copy from run binding/)
     be_src = run_dir / "binding" / "binding_envelope.json"
     be_dst = vault_dir / "binding_envelope.json"
@@ -2033,6 +2152,38 @@ def phase_08a_vault(
     })
 
     print(f"  PASS: Vault built — 9 artifacts in {vault_dir.relative_to(REPO_ROOT)}")
+
+    # 10. SQO initialization — create promotion_state.json at S0 if absent.
+    sqo_dir = run_dir / "sqo"
+    sqo_dir.mkdir(parents=True, exist_ok=True)
+    promo_path = sqo_dir / "promotion_state.json"
+    if promo_path.exists():
+        print(f"    [IDEMPOTENT] sqo/promotion_state.json already exists — preserving")
+    else:
+        save_json(promo_path, {
+            "client": alias,
+            "run_id": run_id,
+            "current_state": "S0",
+            "s_level": "S0",
+            "qualification_provenance": "PIPELINE_GENESIS",
+            "authority_ceiling": "L3",
+            "promotion_eligible": True,
+            "generated_at": now_iso,
+            "governance_provenance": {
+                "type": "PIPELINE_GENESIS",
+                "source_stream": CONTRACT_ID,
+                "qualification_corridor": "FULL_COGNITIVE_GENESIS",
+                "note": "Initial S0 — structural substrate materialized. Governance lifecycle not yet exercised.",
+            },
+            "s0_evidence": {
+                "vault_readiness": "PENDING",
+                "structural_substrate": True,
+                "signal_families_projected": True,
+                "governance_lifecycle": "NOT_STARTED",
+            },
+        })
+        print(f"    [SQO] promotion_state.json initialized at S0 (PIPELINE_GENESIS)")
+
     return True
 
 
