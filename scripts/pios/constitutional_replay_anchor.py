@@ -158,11 +158,17 @@ def load_candidate_dimensions(client: str, run_id: str) -> dict:
                     if line.strip():
                         governance_event_count += 1
 
-    # Enrichment: check if any enrichment artifacts exist
+    # Enrichment: check for enrichment_activity_event.json (SQO execution graph signal)
     enrichment_present = False
-    enrichment_dir = run_dir / "enrichment"
-    if enrichment_dir.exists():
-        enrichment_present = any(enrichment_dir.iterdir())
+    enrichment_event = run_dir / "semantic" / "spe" / "enrichment_activity_event.json"
+    if enrichment_event.exists():
+        with open(enrichment_event) as f:
+            event = json.load(f)
+        enrichment_present = event.get("enrichment_exercised", False)
+    if not enrichment_present:
+        enrichment_dir = run_dir / "enrichment"
+        if enrichment_dir.exists():
+            enrichment_present = any(enrichment_dir.iterdir())
 
     return {
         "specimen_id": client,

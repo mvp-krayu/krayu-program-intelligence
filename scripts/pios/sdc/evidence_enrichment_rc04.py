@@ -1,31 +1,31 @@
 #!/usr/bin/env python3
 """
-RC-04 Evidence Enrichment from HTML Documents
+Evidence Enrichment — PATH B domain ID correction and confidence recalculation.
 
-Primary enrichment: correct domain ID mismatch discovered in RC-03.
+Primary enrichment: correct domain ID mismatch between canonical CSR and SDC.
 The proposition bridge matched canonical→SDC domains by ID, but the numbering
 schemes are different. This script re-derives component counts using semantic
 name matching and recalculates confidence.
 
 Secondary enrichment: debt evolution assessment against enriched propositions.
+
+Usage:
+    python3 scripts/pios/sdc/evidence_enrichment_rc04.py \\
+        --client blueedge \\
+        --run-id run_blueedge_genesis_e2e_03 \\
+        --sdc-run run_blueedge_sdc_validation_01
+
+Contract: PI.SQO.EXECUTION-GRAPH.01 (S1→S2 Stage 2)
 """
 
+import argparse
 import json
 import os
+import sys
 from datetime import datetime, timezone
 
-BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-CHRONICLE = os.path.join(BASE, "clients", "blueedge", "chronicle")
-PROPS_FILE = os.path.join(CHRONICLE, "propositions", "semantic_propositions.json")
-
-TIMESTAMP = "2026-05-22T21:00:00Z"
-STREAM = "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-04"
-
-CANONICAL_CSR_PATH = os.path.join(BASE, "clients", "blueedge", "semantic", "client_semantic_registry.json")
-SDC_DERIVATION_PATH = os.path.join(BASE, "clients", "blueedge", "psee", "runs",
-                                    "run_blueedge_sdc_validation_01", "semantic", "compiler", "derivation_report.json")
-BLOCKERS_PATH = os.path.join(BASE, "clients", "blueedge", "psee", "runs",
-                              "run_blueedge_productized_01_fixed", "sqo", "qualification_blockers.json")
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+STREAM = "PI.SQO.PATH-B-EVIDENCE-ENRICHMENT.01"
 
 
 # Canonical domain name → SDC domain ID (matched by semantic name)
@@ -59,8 +59,28 @@ for can_id, info in CANONICAL_TO_SDC_NAME_MAP.items():
         SDC_NAME_TO_CANONICAL[info["sdc_id"]] = can_id
 
 
-def load_sdc_derivation():
-    with open(SDC_DERIVATION_PATH) as f:
+def resolve_paths(client, run_id, sdc_run, blockers_run=None):
+    client_dir = os.path.join(REPO_ROOT, "clients", client)
+    run_dir = os.path.join(client_dir, "psee", "runs", run_id)
+    sdc_dir = os.path.join(client_dir, "psee", "runs", sdc_run, "semantic", "compiler")
+    blockers_source = blockers_run or run_id
+    blockers_dir = os.path.join(client_dir, "psee", "runs", blockers_source, "sqo")
+
+    return {
+        "props_file": os.path.join(run_dir, "semantic", "spe", "semantic_propositions.json"),
+        "review_state": os.path.join(run_dir, "semantic", "spe", "proposition_review_state.json"),
+        "sdc_derivation": os.path.join(sdc_dir, "derivation_report.json"),
+        "canonical_csr": os.path.join(client_dir, "semantic", "client_semantic_registry.json"),
+        "blockers": os.path.join(blockers_dir, "qualification_blockers.json"),
+        "enrichment_log": os.path.join(run_dir, "semantic", "spe", "enrichment_log.json"),
+        "enrichment_activity": os.path.join(run_dir, "semantic", "spe", "enrichment_activity_event.json"),
+        "debt_reassessment": os.path.join(run_dir, "semantic", "spe", "debt_reassessment.json"),
+        "enrichment_summary": os.path.join(run_dir, "semantic", "spe", "enrichment_summary.json"),
+    }
+
+
+def load_sdc_derivation(sdc_derivation_path):
+    with open(sdc_derivation_path) as f:
         data = json.load(f)
     sdc_domains = {}
     for d in data["per_domain_confidence"]:
@@ -217,9 +237,11 @@ def enrich_capability_propositions(props, sdc_domains):
     return enrichment_log
 
 
-def assess_debt_evolution(enrichment_log_domain):
-    """Re-assess 15 debt items against enriched evidence."""
-    with open(BLOCKERS_PATH) as f:
+def assess_debt_evolution(enrichment_log_domain, blockers_path, timestamp=None):
+    """Re-assess debt items against enriched evidence."""
+    if timestamp is None:
+        timestamp = datetime.now(timezone.utc).isoformat()
+    with open(blockers_path) as f:
         blockers = json.load(f)
 
     domain_enrichment = {}
@@ -284,7 +306,7 @@ def assess_debt_evolution(enrichment_log_domain):
     return {
         "schema_version": "1.0",
         "stream": STREAM,
-        "timestamp": TIMESTAMP,
+        "timestamp": timestamp,
         "total_debt_items": len(debt_items),
         "improved": improved_count,
         "unchanged": unchanged_count,
@@ -310,38 +332,68 @@ def assess_debt_evolution(enrichment_log_domain):
     }
 
 
-def run():
-    sdc_domains = load_sdc_derivation()
+def run(client, run_id, sdc_run, blockers_run=None):
+    timestamp = datetime.now(timezone.utc).isoformat()
+    paths = resolve_paths(client, run_id, sdc_run, blockers_run)
 
-    with open(PROPS_FILE) as f:
+    for name in ("props_file", "sdc_derivation"):
+        if not os.path.exists(paths[name]):
+            print(f"FAIL: {name} not found: {paths[name]}")
+            sys.exit(1)
+
+    sdc_domains = load_sdc_derivation(paths["sdc_derivation"])
+
+    with open(paths["props_file"]) as f:
         data = json.load(f)
 
+    print(f"PATH B EVIDENCE ENRICHMENT: {client}/{run_id}")
+    print(f"  SDC source: {sdc_run}")
+    print()
+
+    # Sync dispositions from review state into propositions
+    if os.path.exists(paths["review_state"]):
+        with open(paths["review_state"]) as f:
+            review_state = json.load(f)
+        dispositions = review_state.get("dispositions", {})
+        synced = 0
+        for prop in data["propositions"]:
+            disp_entry = dispositions.get(prop["id"], {})
+            if disp_entry.get("disposition"):
+                prop["status"] = disp_entry["disposition"]
+                synced += 1
+        print(f"  Synced {synced} dispositions into propositions")
+    else:
+        print(f"  WARNING: review_state not found — enriching all propositions")
+
+    # Stage 2: Evidence Enrichment Execution
     domain_log = enrich_domain_propositions(data["propositions"], sdc_domains)
     cap_log = enrich_capability_propositions(data["propositions"], sdc_domains)
 
     # Recalculate summary stats
     accepted = [p for p in data["propositions"] if p["status"] == "ACCEPTED"]
     confidences = [p["confidence"] for p in accepted]
-    data["proposition_summary"]["mean_confidence_accepted"] = round(sum(confidences) / len(confidences), 3)
+    if confidences:
+        data["proposition_summary"]["mean_confidence_accepted"] = round(sum(confidences) / len(confidences), 3)
     data["proposition_summary"]["enrichment_applied"] = True
     data["proposition_summary"]["enrichment_stream"] = STREAM
 
-    with open(PROPS_FILE, "w") as f:
+    with open(paths["props_file"], "w") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
     # Enrichment log
     full_log = {
         "schema_version": "1.0",
+        "contract_id": "PI.SQO.EXECUTION-GRAPH.01",
+        "sqo_stage": "evidence_enrichment_execution",
+        "s1_to_s2_stage": 2,
         "stream": STREAM,
-        "timestamp": TIMESTAMP,
+        "client": client,
+        "run_id": run_id,
+        "sdc_run": sdc_run,
+        "timestamp": timestamp,
         "enrichment_type": "DOMAIN_ID_CORRECTION_AND_EVIDENCE_REALIGNMENT",
         "primary_mechanism": "Semantic name matching between canonical CSR and SDC candidate CSR domains",
         "secondary_mechanism": "Confidence recalculation based on corrected component evidence",
-        "html_evidence_files": [
-            "BlueEdge_Unified_Architecture_v3_23_0.html (89KB)",
-            "Blue_Edge_PMO_Dashboard.html (365KB)",
-            "BlueEdge_Competitive_Dashboard_Feb2026.html (51KB)"
-        ],
         "path_b_enrichment_limitation": "No code graph available. Enrichment limited to SDC-extracted HTML evidence realignment. Cannot provide L5 structural authority from document evidence alone.",
         "domain_corrections": domain_log,
         "capability_corrections": cap_log,
@@ -354,70 +406,89 @@ def run():
         }
     }
 
-    enrichment_log_path = os.path.join(CHRONICLE, "evidence", "enrichment_log.json")
-    os.makedirs(os.path.dirname(enrichment_log_path), exist_ok=True)
-    with open(enrichment_log_path, "w") as f:
+    os.makedirs(os.path.dirname(paths["enrichment_log"]), exist_ok=True)
+    with open(paths["enrichment_log"], "w") as f:
         json.dump(full_log, f, indent=2, ensure_ascii=False)
 
-    # Evidence manifest
-    evidence_manifest = {
+    # Stage 2 output: enrichment_activity_event — signals to constitutional anchor
+    activity_event = {
         "schema_version": "1.0",
-        "stream": STREAM,
-        "timestamp": TIMESTAMP,
-        "evidence_sources": [
-            {
-                "file": "BlueEdge_Unified_Architecture_v3_23_0.html",
-                "path": "clients/blueedge/sqo/evidence/blueedge_explicit_html_rebase_01/BlueEdge_Unified_Architecture_v3_23_0.html",
-                "size_bytes": 89642,
-                "type": "HTML_ARCHITECTURE_DOCUMENT",
-                "domains_evidenced": 16,
-                "sdc_extraction": "run_blueedge_sdc_validation_01"
-            },
-            {
-                "file": "Blue_Edge_PMO_Dashboard.html",
-                "path": "clients/blueedge/sqo/evidence/blueedge_explicit_html_rebase_01/Blue_Edge_PMO_Dashboard.html",
-                "size_bytes": 364637,
-                "type": "HTML_PMO_DASHBOARD",
-                "domains_evidenced": 0,
-                "sdc_extraction": "run_blueedge_sdc_validation_01",
-                "note": "PMO dashboard provides project/portfolio evidence, not domain structural evidence"
-            },
-            {
-                "file": "BlueEdge_Competitive_Dashboard_Feb2026.html",
-                "path": "clients/blueedge/sqo/evidence/blueedge_explicit_html_rebase_01/BlueEdge_Competitive_Dashboard_Feb2026.html",
-                "size_bytes": 51135,
-                "type": "HTML_COMPETITIVE_DASHBOARD",
-                "domains_evidenced": 0,
-                "sdc_extraction": "run_blueedge_sdc_validation_01",
-                "note": "Competitive dashboard provides market positioning evidence, not domain structural evidence"
-            }
-        ],
-        "total_evidence_bytes": 505414,
-        "domain_name_mapping": {k: v for k, v in CANONICAL_TO_SDC_NAME_MAP.items()}
+        "contract_id": "PI.SQO.EXECUTION-GRAPH.01",
+        "sqo_stage": "evidence_enrichment_execution",
+        "s1_to_s2_stage": 2,
+        "event_type": "ENRICHMENT_ACTIVITY",
+        "client": client,
+        "run_id": run_id,
+        "timestamp": timestamp,
+        "enrichment_exercised": True,
+        "enrichment_events": full_log["summary"]["total_enrichment_events"],
+        "enrichment_type": full_log["enrichment_type"],
+        "path_b_limitation": full_log["path_b_enrichment_limitation"],
     }
+    with open(paths["enrichment_activity"], "w") as f:
+        json.dump(activity_event, f, indent=2)
 
-    evidence_manifest_path = os.path.join(CHRONICLE, "evidence", "evidence_manifest.json")
-    with open(evidence_manifest_path, "w") as f:
-        json.dump(evidence_manifest, f, indent=2, ensure_ascii=False)
+    # Stage 3: Debt Reassessment
+    if os.path.exists(paths["blockers"]):
+        debt_evolution = assess_debt_evolution(domain_log, paths["blockers"], timestamp)
+        with open(paths["debt_reassessment"], "w") as f:
+            json.dump(debt_evolution, f, indent=2, ensure_ascii=False)
+        debt_summary = f"improved={debt_evolution['improved']} unchanged={debt_evolution['unchanged']} worsened={debt_evolution['worsened']}"
+    else:
+        print(f"  WARNING: qualification_blockers.json not found — skipping debt reassessment")
+        debt_summary = "SKIPPED (no blockers file)"
 
-    # Debt evolution
-    debt_evolution = assess_debt_evolution(domain_log)
-    debt_path = os.path.join(CHRONICLE, "governance", "debt_evolution.json")
-    with open(debt_path, "w") as f:
-        json.dump(debt_evolution, f, indent=2, ensure_ascii=False)
+    # Stage 4: Enrichment Summary
+    pre_enrichment_confs = [t.get("old_confidence", t.get("confidence", 0)) for t in domain_log if "old_confidence" in t]
+    post_enrichment_confs = [t.get("new_confidence", t.get("confidence", 0)) for t in domain_log if "new_confidence" in t]
 
-    print(f"Enrichment complete:")
-    print(f"  Domains corrected: {full_log['summary']['domains_corrected']}")
-    print(f"  Domains confirmed: {full_log['summary']['domains_confirmed']}")
-    print(f"  Domains NO_SDC_MATCH: {full_log['summary']['domains_no_sdc_match']}")
-    print(f"  Capabilities domain-corrected: {full_log['summary']['capabilities_domain_corrected']}")
-    print(f"  Total enrichment events: {full_log['summary']['total_enrichment_events']}")
-    print(f"  Mean confidence (accepted): {data['proposition_summary']['mean_confidence_accepted']}")
-    print(f"  Debt improved: {debt_evolution['improved']}")
-    print(f"  Debt unchanged: {debt_evolution['unchanged']}")
-    print(f"  Debt worsened: {debt_evolution['worsened']}")
-    print(f"  Blockers resolved: {debt_evolution['blockers_resolved']}")
+    summary = {
+        "schema_version": "1.0",
+        "contract_id": "PI.SQO.EXECUTION-GRAPH.01",
+        "sqo_stage": "enriched_proposition_update",
+        "s1_to_s2_stage": 4,
+        "client": client,
+        "run_id": run_id,
+        "timestamp": timestamp,
+        "total_propositions": len(data["propositions"]),
+        "enrichment_events": full_log["summary"]["total_enrichment_events"],
+        "domains_corrected": full_log["summary"]["domains_corrected"],
+        "domains_confirmed": full_log["summary"]["domains_confirmed"],
+        "domains_no_sdc_match": full_log["summary"]["domains_no_sdc_match"],
+        "capabilities_domain_corrected": full_log["summary"]["capabilities_domain_corrected"],
+        "confidence_deltas": {
+            "domains_with_change": len([e for e in domain_log if e.get("old_confidence") != e.get("new_confidence")]),
+            "mean_confidence_post_enrichment": data["proposition_summary"].get("mean_confidence_accepted", 0),
+        },
+        "debt_reassessment": debt_summary,
+    }
+    with open(paths["enrichment_summary"], "w") as f:
+        json.dump(summary, f, indent=2)
+
+    print(f"  Domains corrected:            {full_log['summary']['domains_corrected']}")
+    print(f"  Domains confirmed:            {full_log['summary']['domains_confirmed']}")
+    print(f"  Domains NO_SDC_MATCH:         {full_log['summary']['domains_no_sdc_match']}")
+    print(f"  Capabilities domain-corrected:{full_log['summary']['capabilities_domain_corrected']}")
+    print(f"  Total enrichment events:      {full_log['summary']['total_enrichment_events']}")
+    print(f"  Mean confidence (accepted):   {data['proposition_summary'].get('mean_confidence_accepted', '?')}")
+    print(f"  Debt: {debt_summary}")
+    print()
+    print(f"  enrichment_log.json written")
+    print(f"  enrichment_activity_event.json written")
+    print(f"  enrichment_summary.json written")
+    if os.path.exists(paths["blockers"]):
+        print(f"  debt_reassessment.json written")
+
+
+def main():
+    p = argparse.ArgumentParser(description="PATH B evidence enrichment (SQO S1→S2 Stages 2-4)")
+    p.add_argument("--client", required=True, help="Client ID")
+    p.add_argument("--run-id", required=True, help="Target run ID")
+    p.add_argument("--sdc-run", required=True, help="SDC validation run for derivation_report.json")
+    p.add_argument("--blockers-run", help="Run containing qualification_blockers.json (defaults to --run-id)")
+    args = p.parse_args()
+    run(args.client, args.run_id, args.sdc_run, args.blockers_run)
 
 
 if __name__ == "__main__":
-    run()
+    main()
