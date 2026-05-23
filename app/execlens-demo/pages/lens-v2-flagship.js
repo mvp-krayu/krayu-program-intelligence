@@ -1987,6 +1987,239 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #4a9eff;
         }
 
+        /* ── Investigation Governance Audit ── */
+        .actor--investigation-governance {
+          margin: 20px 0;
+          padding: 16px;
+          background: var(--card-deep, #12151f);
+          border: 1px solid var(--border-dim, #1e2330);
+          border-left: 2px solid #4a9eff;
+        }
+        .inv-gov-section {
+          margin: 14px 0 0;
+          padding: 12px 0 0;
+          border-top: 1px solid var(--border-dim, #1e2330);
+        }
+        .inv-gov-section:first-of-type {
+          margin-top: 10px;
+          border-top: none;
+          padding-top: 0;
+        }
+        .inv-gov-section-head {
+          font: 500 11px/1 'Courier New', monospace;
+          color: #ccd6f6;
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          margin-bottom: 8px;
+        }
+        .inv-gov-sub-head {
+          font: 400 10px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          margin: 10px 0 6px;
+        }
+        .inv-gov-table {
+          width: 100%;
+          border-collapse: collapse;
+          font: 11px/1.4 'Courier New', monospace;
+        }
+        .inv-gov-table th {
+          text-align: left;
+          font-weight: 500;
+          color: #7a8aaa;
+          font-size: 9px;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          padding: 4px 8px 4px 0;
+          border-bottom: 1px solid var(--border-dim, #1e2330);
+        }
+        .inv-gov-table td {
+          padding: 3px 8px 3px 0;
+          color: #8a96b2;
+          vertical-align: top;
+          border-bottom: 1px solid rgba(30, 35, 48, 0.4);
+        }
+        .inv-gov-table--compact td,
+        .inv-gov-table--compact th {
+          padding: 2px 6px 2px 0;
+          font-size: 10px;
+        }
+        .inv-gov-table--dim td {
+          font-size: 10px;
+        }
+        .inv-gov-key {
+          color: #5a6580;
+          white-space: nowrap;
+          width: 160px;
+        }
+        .inv-gov-val {
+          color: #ccd6f6;
+        }
+        .inv-gov-val--warn {
+          color: #ffd700;
+        }
+        .inv-gov-val--reject,
+        .inv-gov-stat-val--reject {
+          color: #ff6b6b;
+        }
+        .inv-gov-val--arb,
+        .inv-gov-stat-val--arb {
+          color: #ff9e4a;
+        }
+        .inv-gov-val[data-verdict="PASS"],
+        .inv-gov-val[data-status="PASS"],
+        .inv-gov-val[data-status="CERTIFIED"] {
+          color: #64ffda;
+        }
+        .inv-gov-val[data-verdict="FAIL"],
+        .inv-gov-val[data-status="FAIL"] {
+          color: #ff6b6b;
+        }
+        .inv-gov-id {
+          font-size: 9px;
+          color: #5a6580;
+          font-family: 'Courier New', monospace;
+        }
+        .inv-gov-num {
+          text-align: right;
+          font-variant-numeric: tabular-nums;
+          font-family: 'Courier New', monospace;
+        }
+        .inv-gov-ts {
+          font-size: 9px;
+          color: #5a6580;
+        }
+        .inv-gov-detail {
+          font-size: 10px;
+          color: #5a6580;
+          max-width: 280px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .inv-gov-dim-name {
+          text-transform: lowercase;
+          font-size: 10px;
+        }
+        .inv-gov-grid {
+          display: flex;
+          gap: 16px;
+          margin: 6px 0;
+        }
+        .inv-gov-stat {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+        .inv-gov-stat-val {
+          font: 600 16px/1 'Courier New', monospace;
+          color: #ccd6f6;
+        }
+        .inv-gov-stat-label {
+          font: 400 9px/1 'Courier New', monospace;
+          color: #5a6580;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+        }
+        .inv-gov-class-grid {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          margin: 4px 0;
+        }
+        .inv-gov-class-item {
+          display: flex;
+          align-items: baseline;
+          gap: 4px;
+          background: rgba(74, 158, 255, 0.06);
+          padding: 3px 8px;
+          border-radius: 2px;
+        }
+        .inv-gov-class-count {
+          font: 600 12px/1 'Courier New', monospace;
+          color: #4a9eff;
+        }
+        .inv-gov-class-name {
+          font: 400 9px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+        }
+        .inv-gov-trajectory {
+          font: 400 11px/1.3 'Courier New', monospace;
+          color: #8a96b2;
+          margin: 6px 0;
+        }
+        .inv-gov-trajectory strong {
+          color: #ccd6f6;
+        }
+        .inv-gov-phase-block {
+          margin: 8px 0 0;
+        }
+        .inv-gov-observation {
+          margin: 8px 0;
+          padding: 8px 10px;
+          background: rgba(74, 158, 255, 0.04);
+          border-left: 2px solid var(--border-dim, #1e2330);
+        }
+        .inv-gov-observation[data-status="convergence"] {
+          border-left-color: #64ffda;
+        }
+        .inv-gov-observation[data-status="divergence"] {
+          border-left-color: #ff9e4a;
+        }
+        .inv-gov-observation[data-status="convergence_with_divergence"] {
+          border-left-color: #ffd700;
+        }
+        .inv-gov-obs-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 4px;
+        }
+        .inv-gov-obs-id {
+          font: 400 9px/1 'Courier New', monospace;
+          color: #5a6580;
+        }
+        .inv-gov-obs-status {
+          font: 500 9px/1 'Courier New', monospace;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          color: #7a8aaa;
+        }
+        .inv-gov-obs-title {
+          font: 500 11px/1.3 'Courier New', monospace;
+          color: #ccd6f6;
+          margin-bottom: 4px;
+        }
+        .inv-gov-obs-body {
+          font: 400 10px/1.4 'Courier New', monospace;
+          color: #8a96b2;
+        }
+        .inv-gov-obs-divergence {
+          font: 400 10px/1.3 'Courier New', monospace;
+          color: #ff9e4a;
+          margin-top: 4px;
+        }
+        .inv-gov-footer {
+          margin-top: 14px;
+          padding-top: 10px;
+          border-top: 1px solid var(--border-dim, #1e2330);
+          font: 400 9px/1.3 'Courier New', monospace;
+          color: #4a5570;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+        }
+        tr[data-result="PASS"] td[data-result] { color: #64ffda; }
+        tr[data-result="FAIL"] td[data-result] { color: #ff6b6b; }
+        tr[data-verdict="PASS"] td[data-verdict] { color: #64ffda; }
+        tr[data-verdict="FAIL"] td[data-verdict] { color: #ff6b6b; }
+        tr[data-severity="CRITICAL"] { background: rgba(255, 107, 107, 0.06); }
+        td[data-disposition="REJECTED"] { color: #ff6b6b; }
+        td[data-disposition="ARBITRATED"] { color: #ff9e4a; }
+        td[data-disposition="ACCEPTED"] { color: #64ffda; }
+
         .cockpit-impact {
           padding: 18px 0;
           border-bottom: 1px solid #1e2330;

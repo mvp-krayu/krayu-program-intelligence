@@ -3577,6 +3577,7 @@ function InvestigationTraceField({ adapted, blocks, scope, fullReport, correspon
           { id: 'Z7', name: 'Evidence Trace' },
           { id: 'Z5', name: 'Signal Stack' },
           { id: 'Z2', name: 'Resolution Boundary' },
+          { id: 'GA', name: 'Governance Audit' },
         ]}
       />
 
@@ -3664,6 +3665,8 @@ function InvestigationTraceField({ adapted, blocks, scope, fullReport, correspon
         </div>
       </div>
 
+      <InvestigationGovernanceAudit fullReport={fullReport} />
+
       {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (
         <div className="investigation-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
           <TopologyGraph
@@ -3679,6 +3682,285 @@ function InvestigationTraceField({ adapted, blocks, scope, fullReport, correspon
       {topoModalOpen && createPortal(<TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} mode="investigation" />, document.body)}
 
       <TierHandoffStatement />
+    </div>
+  )
+}
+
+function InvestigationGovernanceAudit({ fullReport }) {
+  const gl = fullReport && fullReport.governance_lifecycle
+  const pc = fullReport && fullReport.proposition_corpus
+  const ei = fullReport && fullReport.enrichment_intelligence
+  const rv = fullReport && fullReport.revalidation_intelligence
+  const ca = fullReport && fullReport.constitutional_anchor
+  const ci = fullReport && fullReport.convergence_intelligence
+  const cc = fullReport && fullReport.chronicle_certification
+
+  if (!gl || !gl.available) return null
+
+  return (
+    <div className="actor actor--investigation-governance">
+      <div className="actor-tag">
+        <span className="actor-code">GA</span>
+        <span className="actor-name">Governance Audit · full traversal</span>
+      </div>
+
+      <div className="inv-gov-section">
+        <div className="inv-gov-section-head">Governance Lifecycle</div>
+        <table className="inv-gov-table">
+          <tbody>
+            <tr><td className="inv-gov-key">S-Level</td><td className="inv-gov-val">{gl.s_level}</td></tr>
+            <tr><td className="inv-gov-key">Provenance</td><td className="inv-gov-val">{(gl.qualification_provenance || '—').replace(/_/g, ' ')}</td></tr>
+            <tr><td className="inv-gov-key">Authority ceiling</td><td className="inv-gov-val">{gl.authority_ceiling || '—'}</td></tr>
+            <tr><td className="inv-gov-key">Promotion eligible</td><td className="inv-gov-val">{gl.promotion_eligible != null ? String(gl.promotion_eligible) : '—'}</td></tr>
+            {gl.hold_reason && <tr><td className="inv-gov-key">Hold reason</td><td className="inv-gov-val inv-gov-val--warn">{gl.hold_reason}</td></tr>}
+            <tr><td className="inv-gov-key">Last updated</td><td className="inv-gov-val">{gl.last_updated || '—'}</td></tr>
+          </tbody>
+        </table>
+        {gl.transitions && gl.transitions.length > 0 && (
+          <div className="inv-gov-transitions">
+            <div className="inv-gov-sub-head">State Transitions ({gl.transition_count})</div>
+            <table className="inv-gov-table">
+              <thead><tr><th>From</th><th>To</th><th>Actor</th><th>Action</th><th>Timestamp</th></tr></thead>
+              <tbody>
+                {gl.transitions.map((t, i) => (
+                  <tr key={i}>
+                    <td>{t.from}</td><td>{t.to}</td>
+                    <td>{t.actor || '—'}</td><td>{t.action || '—'}</td>
+                    <td className="inv-gov-ts">{t.timestamp || '—'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {pc && pc.available && (
+        <div className="inv-gov-section">
+          <div className="inv-gov-section-head">Proposition Corpus ({pc.total})</div>
+          <div className="inv-gov-grid">
+            <div className="inv-gov-stat"><span className="inv-gov-stat-val">{pc.disposition_counts.accepted}</span><span className="inv-gov-stat-label">Accepted</span></div>
+            <div className="inv-gov-stat"><span className="inv-gov-stat-val inv-gov-stat-val--reject">{pc.disposition_counts.rejected}</span><span className="inv-gov-stat-label">Rejected</span></div>
+            <div className="inv-gov-stat"><span className="inv-gov-stat-val inv-gov-stat-val--arb">{pc.disposition_counts.arbitrated}</span><span className="inv-gov-stat-label">Arbitrated</span></div>
+            <div className="inv-gov-stat"><span className="inv-gov-stat-val">{pc.disposition_counts.contested}</span><span className="inv-gov-stat-label">Contested</span></div>
+          </div>
+          <table className="inv-gov-table">
+            <tbody>
+              <tr><td className="inv-gov-key">Mean confidence</td><td className="inv-gov-val">{pc.mean_confidence.toFixed(4)}</td></tr>
+              <tr><td className="inv-gov-key">Friction rate</td><td className="inv-gov-val">{(pc.governance_friction_rate * 100).toFixed(2)}%</td></tr>
+              <tr><td className="inv-gov-key">Derivation path</td><td className="inv-gov-val">{pc.derivation_path || '—'}</td></tr>
+              <tr><td className="inv-gov-key">Review status</td><td className="inv-gov-val">{pc.review_status || '—'}</td></tr>
+              <tr><td className="inv-gov-key">Review completed by</td><td className="inv-gov-val">{pc.review_completed_by || '—'}</td></tr>
+              <tr><td className="inv-gov-key">Obligations</td><td className="inv-gov-val">{pc.obligations_met}/{pc.obligations_total} met</td></tr>
+            </tbody>
+          </table>
+          <div className="inv-gov-sub-head">By Class</div>
+          <div className="inv-gov-class-grid">
+            {Object.entries(pc.by_class || {}).map(([cls, count]) => (
+              <div key={cls} className="inv-gov-class-item">
+                <span className="inv-gov-class-count">{count}</span>
+                <span className="inv-gov-class-name">{cls.replace(/_/g, ' ')}</span>
+              </div>
+            ))}
+          </div>
+          <div className="inv-gov-sub-head">By Tier</div>
+          <div className="inv-gov-class-grid">
+            {Object.entries(pc.by_tier || {}).map(([tier, count]) => (
+              <div key={tier} className="inv-gov-class-item">
+                <span className="inv-gov-class-count">{count}</span>
+                <span className="inv-gov-class-name">{tier}</span>
+              </div>
+            ))}
+          </div>
+          {pc.flagged_items && pc.flagged_items.length > 0 && (
+            <>
+              <div className="inv-gov-sub-head">Flagged Items ({pc.flagged_items.length})</div>
+              <table className="inv-gov-table inv-gov-table--compact">
+                <thead><tr><th>Proposition</th><th>Disposition</th><th>Rationale</th></tr></thead>
+                <tbody>
+                  {pc.flagged_items.map((fi, i) => (
+                    <tr key={i}>
+                      <td className="inv-gov-id">{fi.proposition_id}</td>
+                      <td data-disposition={fi.disposition}>{fi.disposition}</td>
+                      <td>{fi.rationale || '—'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </>
+          )}
+        </div>
+      )}
+
+      {ca && ca.available && (
+        <div className="inv-gov-section">
+          <div className="inv-gov-section-head">Constitutional Anchor ({ca.dimensions.length} dimensions)</div>
+          <table className="inv-gov-table">
+            <tbody>
+              <tr><td className="inv-gov-key">Overall verdict</td><td className="inv-gov-val" data-verdict={ca.overall_verdict}>{ca.overall_verdict}</td></tr>
+              <tr><td className="inv-gov-key">Target level</td><td className="inv-gov-val">{ca.target_level || '—'}</td></tr>
+              <tr><td className="inv-gov-key">Advancement blocked</td><td className="inv-gov-val">{String(ca.advancement_blocked)}</td></tr>
+              <tr><td className="inv-gov-key">Reference specimen</td><td className="inv-gov-val">{ca.reference_specimen || '—'}</td></tr>
+              <tr><td className="inv-gov-key">Candidate specimen</td><td className="inv-gov-val">{ca.candidate_specimen || '—'}</td></tr>
+            </tbody>
+          </table>
+          <div className="inv-gov-sub-head">Dimension Assessment</div>
+          <table className="inv-gov-table inv-gov-table--dim">
+            <thead><tr><th>Dimension</th><th>Reference</th><th>Candidate</th><th>Ratio</th><th>Threshold</th><th>Verdict</th></tr></thead>
+            <tbody>
+              {ca.dimensions.map((dim, i) => (
+                <tr key={i} data-verdict={dim.verdict} data-severity={dim.severity}>
+                  <td className="inv-gov-dim-name">{dim.dimension.replace(/_/g, ' ')}</td>
+                  <td className="inv-gov-num">{dim.reference}</td>
+                  <td className="inv-gov-num">{dim.candidate}</td>
+                  <td className="inv-gov-num">{dim.ratio != null ? dim.ratio.toFixed(3) : '—'}</td>
+                  <td className="inv-gov-num">{dim.threshold}</td>
+                  <td data-verdict={dim.verdict}>{dim.verdict}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {rv && rv.available && (
+        <div className="inv-gov-section">
+          <div className="inv-gov-section-head">Revalidation ({rv.passed}/{rv.total_checks} · {rv.phase_count} phases)</div>
+          <table className="inv-gov-table">
+            <tbody>
+              <tr><td className="inv-gov-key">Status</td><td className="inv-gov-val" data-status={rv.status}>{rv.status}</td></tr>
+              <tr><td className="inv-gov-key">Total checks</td><td className="inv-gov-val">{rv.total_checks}</td></tr>
+              <tr><td className="inv-gov-key">Passed</td><td className="inv-gov-val">{rv.passed}</td></tr>
+              <tr><td className="inv-gov-key">Failed</td><td className="inv-gov-val inv-gov-val--reject">{rv.failed}</td></tr>
+            </tbody>
+          </table>
+          {rv.phases.map((phase, pi) => (
+            <div key={pi} className="inv-gov-phase-block">
+              <div className="inv-gov-sub-head">Phase {phase.phase} — {phase.passed}/{phase.total} PASS</div>
+              <table className="inv-gov-table inv-gov-table--compact">
+                <thead><tr><th>#</th><th>Check</th><th>Result</th><th>Detail</th></tr></thead>
+                <tbody>
+                  {phase.checks.map((c, ci) => (
+                    <tr key={ci} data-result={c.result}>
+                      <td className="inv-gov-num">{c.check_number}</td>
+                      <td>{c.check}</td>
+                      <td data-result={c.result}>{c.result}</td>
+                      <td className="inv-gov-detail">{c.detail || '—'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {ei && ei.available && (
+        <div className="inv-gov-section">
+          <div className="inv-gov-section-head">Evidence Enrichment</div>
+          <table className="inv-gov-table">
+            <tbody>
+              <tr><td className="inv-gov-key">Enrichment events</td><td className="inv-gov-val">{ei.enrichment_events}</td></tr>
+              <tr><td className="inv-gov-key">Domains corrected</td><td className="inv-gov-val">{ei.domains_corrected}</td></tr>
+              <tr><td className="inv-gov-key">Domains confirmed</td><td className="inv-gov-val">{ei.domains_confirmed}</td></tr>
+              <tr><td className="inv-gov-key">Domains no SDC match</td><td className="inv-gov-val">{ei.domains_no_sdc_match}</td></tr>
+              <tr><td className="inv-gov-key">Capabilities corrected</td><td className="inv-gov-val">{ei.capabilities_domain_corrected}</td></tr>
+              <tr><td className="inv-gov-key">Mean confidence post</td><td className="inv-gov-val">{ei.mean_confidence_post != null ? ei.mean_confidence_post.toFixed(4) : '—'}</td></tr>
+              <tr><td className="inv-gov-key">Domains with change</td><td className="inv-gov-val">{ei.domains_with_change}</td></tr>
+            </tbody>
+          </table>
+          {ei.debt && ei.debt.available && (
+            <>
+              <div className="inv-gov-sub-head">Debt Reassessment ({ei.debt.total_items} items)</div>
+              <div className="inv-gov-grid">
+                <div className="inv-gov-stat"><span className="inv-gov-stat-val">{ei.debt.improved}</span><span className="inv-gov-stat-label">Improved</span></div>
+                <div className="inv-gov-stat"><span className="inv-gov-stat-val">{ei.debt.unchanged}</span><span className="inv-gov-stat-label">Unchanged</span></div>
+                <div className="inv-gov-stat"><span className="inv-gov-stat-val inv-gov-stat-val--reject">{ei.debt.worsened}</span><span className="inv-gov-stat-label">Worsened</span></div>
+                <div className="inv-gov-stat"><span className="inv-gov-stat-val">{ei.debt.blockers_resolved}</span><span className="inv-gov-stat-label">Blockers resolved</span></div>
+              </div>
+              {ei.debt.trajectory && (
+                <div className="inv-gov-trajectory">Trajectory: <strong>{typeof ei.debt.trajectory === 'string' ? ei.debt.trajectory : JSON.stringify(ei.debt.trajectory)}</strong></div>
+              )}
+              {ei.debt.items && ei.debt.items.length > 0 && (
+                <table className="inv-gov-table inv-gov-table--compact">
+                  <thead><tr><th>Blocker</th><th>Domain</th><th>Severity</th><th>Blocks</th><th>Before</th><th>After</th><th>Impact</th></tr></thead>
+                  <tbody>
+                    {ei.debt.items.map((it, i) => (
+                      <tr key={i}>
+                        <td className="inv-gov-id">{it.blocker_id}</td>
+                        <td>{it.domain_id || '—'}</td>
+                        <td data-severity={it.severity}>{it.severity || '—'}</td>
+                        <td>{it.blocks_s_state || '—'}</td>
+                        <td>{it.original_reducibility || '—'}</td>
+                        <td>{it.post_enrichment_reducibility || '—'}</td>
+                        <td>{it.enrichment_impact || '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </>
+          )}
+        </div>
+      )}
+
+      {ci && ci.available && (
+        <div className="inv-gov-section">
+          <div className="inv-gov-section-head">Convergence Observations ({ci.total_observations})</div>
+          <table className="inv-gov-table">
+            <tbody>
+              <tr><td className="inv-gov-key">Maturity</td><td className="inv-gov-val">{ci.observation_maturity || '—'}</td></tr>
+              <tr><td className="inv-gov-key">Verdict</td><td className="inv-gov-val">{ci.verdict || '—'}</td></tr>
+              <tr><td className="inv-gov-key">Convergences</td><td className="inv-gov-val">{ci.convergences.length}</td></tr>
+              <tr><td className="inv-gov-key">Divergences</td><td className="inv-gov-val">{ci.divergences.length}</td></tr>
+              <tr><td className="inv-gov-key">Mixed</td><td className="inv-gov-val">{ci.mixed.length}</td></tr>
+            </tbody>
+          </table>
+          {ci.observations.map((obs, i) => (
+            <div key={i} className="inv-gov-observation" data-status={obs.pattern_status}>
+              <div className="inv-gov-obs-header">
+                <span className="inv-gov-obs-id">{obs.observation_id}</span>
+                <span className="inv-gov-obs-status">{obs.pattern_status}</span>
+              </div>
+              <div className="inv-gov-obs-title">{obs.title}</div>
+              <div className="inv-gov-obs-body">{obs.observation}</div>
+              {obs.divergence && <div className="inv-gov-obs-divergence">Divergence: {obs.divergence}</div>}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {cc && cc.available && (
+        <div className="inv-gov-section">
+          <div className="inv-gov-section-head">Chronicle Certification ({cc.passed}/{cc.total_checks})</div>
+          <table className="inv-gov-table">
+            <tbody>
+              <tr><td className="inv-gov-key">Status</td><td className="inv-gov-val" data-status={cc.certification_status}>{cc.certification_status}</td></tr>
+              <tr><td className="inv-gov-key">Phases</td><td className="inv-gov-val">{cc.phase_count}</td></tr>
+              <tr><td className="inv-gov-key">Passed</td><td className="inv-gov-val">{cc.passed}</td></tr>
+              <tr><td className="inv-gov-key">Failed</td><td className="inv-gov-val inv-gov-val--reject">{cc.failed}</td></tr>
+            </tbody>
+          </table>
+          <div className="inv-gov-sub-head">Phase Breakdown</div>
+          <table className="inv-gov-table inv-gov-table--compact">
+            <thead><tr><th>Phase</th><th>Passed</th><th>Failed</th><th>Total</th></tr></thead>
+            <tbody>
+              {Object.entries(cc.phase_breakdown || {}).map(([phase, data]) => (
+                <tr key={phase} data-result={data.failed > 0 ? 'FAIL' : 'PASS'}>
+                  <td>{phase.replace(/_/g, ' ')}</td>
+                  <td className="inv-gov-num">{data.passed}</td>
+                  <td className="inv-gov-num">{data.failed}</td>
+                  <td className="inv-gov-num">{data.total}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <div className="inv-gov-footer">
+        All governance data derived from governed artifacts. No interpretation applied. Evidence lineage preserved.
+      </div>
     </div>
   )
 }
