@@ -1,0 +1,96 @@
+{
+  "stream": "PI.BLUEEDGE.GENERIC-SIGNAL-COMPUTATION.01",
+  "classification": "G2",
+  "date": "2026-05-23",
+  "changes": [
+    {
+      "action": "UPDATE",
+      "path": "scripts/pios/run_client_pipeline.py",
+      "purpose": "Remove SIGNAL_SHORTCUT_RETAINED — fastapi_conformance_path shortcut block removed from phase_06_and_07_e2e()",
+      "classification": "pipeline modification"
+    },
+    {
+      "action": "UPDATE",
+      "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_02/75.x/condition_correlation_state.json",
+      "purpose": "Generic PSIG condition computation (replaces shortcut-copied conformance artifact)",
+      "classification": "pipeline output (generated)"
+    },
+    {
+      "action": "UPDATE",
+      "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_02/75.x/pressure_candidate_state.json",
+      "purpose": "Generic pressure candidate computation",
+      "classification": "pipeline output (generated)"
+    },
+    {
+      "action": "UPDATE",
+      "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_02/75.x/pressure_zone_state.json",
+      "purpose": "Generic pressure zone computation",
+      "classification": "pipeline output (generated)"
+    },
+    {
+      "action": "UPDATE",
+      "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_02/41.x/signal_projection.json",
+      "purpose": "Generic signal projection (replaces shortcut-copied conformance artifact)",
+      "classification": "pipeline output (generated)"
+    },
+    {
+      "action": "UPDATE",
+      "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_02/41.x/pressure_zone_projection.json",
+      "purpose": "Generic pressure zone projection",
+      "classification": "pipeline output (generated)"
+    },
+    {
+      "action": "CREATE",
+      "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_02/41.x/projection_manifest.json",
+      "purpose": "Projection manifest (new — not present in shortcut path)",
+      "classification": "pipeline output (generated)"
+    },
+    {
+      "action": "CREATE",
+      "path": "artifacts/dpsig/blueedge/run_blueedge_genesis_e2e_02/dpsig_signal_set.json",
+      "purpose": "DPSIG derivation on genesis run 40.4 topology",
+      "classification": "pipeline output (generated)"
+    },
+    {
+      "action": "UPDATE",
+      "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_02/vault/signal_registry.json",
+      "purpose": "Vault rebuilt with generic signal values",
+      "classification": "pipeline output (generated)"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.BLUEEDGE.GENERIC-SIGNAL-COMPUTATION.01/BLUEEDGE_SIGNAL_INTELLIGENCE_DELTA.md",
+      "purpose": "Signal intelligence delta certification — per-signal classification of intelligence quality change",
+      "classification": "certification artifact"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.BLUEEDGE.GENERIC-SIGNAL-COMPUTATION.01/execution_report.md",
+      "purpose": "Stream execution report",
+      "classification": "mandatory artifact"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.BLUEEDGE.GENERIC-SIGNAL-COMPUTATION.01/validation_log.json",
+      "purpose": "Stream validation log (12/12 PASS)",
+      "classification": "mandatory artifact"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.BLUEEDGE.GENERIC-SIGNAL-COMPUTATION.01/file_changes.json",
+      "purpose": "Stream file changes manifest",
+      "classification": "mandatory artifact"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.BLUEEDGE.GENERIC-SIGNAL-COMPUTATION.01/CLOSURE.md",
+      "purpose": "Stream closure",
+      "classification": "mandatory artifact"
+    }
+  ],
+  "summary": {
+    "created": 6,
+    "updated": 8,
+    "deleted": 0
+  }
+}

@@ -1,0 +1,179 @@
+{
+  "schema_version": "1.0",
+  "run_id": "run_blueedge_genesis_e2e_02",
+  "client_id": "blueedge",
+  "source_contract": "PI.CONDITION-CORRELATION.ANALYSIS.75X.03",
+  "source_files": [
+    "pressure_candidate_set.md"
+  ],
+  "candidate_count": 4,
+  "entity_level_candidate_count": 0,
+  "domain_attribution_candidate_count": 4,
+  "candidate_rule": "activation_count >= 2",
+  "candidates": [
+    {
+      "candidate_id": "PC-001",
+      "entity_id": "DOM-04",
+      "entity_type": "DOMAIN",
+      "domain_id": "DOM-04",
+      "domain_name": "backend_app_root",
+      "active_conditions": ["PSIG-001", "PSIG-002", "PSIG-004"],
+      "activation_count": 3,
+      "combination_signature": "PSIG-001|PSIG-002|PSIG-004",
+      "psig_006_flag": "NOT",
+      "candidate_level": "domain_attribution",
+      "evidence_trace": {
+        "PSIG-001": {
+          "st_source": "ST-030",
+          "psig_signal_value": 4.0,
+          "condition_id": "COND-PSIG-001-01",
+          "condition_state": "HIGH",
+          "attribution_type": "domain_attribution",
+          "via_entity": "CE-01",
+          "attribution_role": "zone_domain_secondary"
+        },
+        "PSIG-002": {
+          "st_source": "ST-031",
+          "psig_signal_value": 4.0,
+          "condition_id": "COND-PSIG-002-01",
+          "condition_state": "HIGH",
+          "attribution_type": "direct",
+          "domain_fan_out": 4,
+          "domain_ratio": 4.0
+        },
+        "PSIG-004": {
+          "st_sources": ["ST-033", "ST-034"],
+          "psig_signal_value": 1.0,
+          "condition_id": "COND-PSIG-004-01",
+          "condition_state": "HIGH",
+          "attribution_type": "domain_attribution",
+          "via_entity": "CE-01",
+          "attribution_role": "zone_domain_secondary"
+        }
+      }
+    },
+    {
+      "candidate_id": "PC-002",
+      "entity_id": "DOM-05",
+      "entity_type": "DOMAIN",
+      "domain_id": "DOM-05",
+      "domain_name": "backend_common",
+      "active_conditions": ["PSIG-001", "PSIG-002", "PSIG-004"],
+      "activation_count": 3,
+      "combination_signature": "PSIG-001|PSIG-002|PSIG-004",
+      "psig_006_flag": "NOT",
+      "candidate_level": "domain_attribution",
+      "evidence_trace": {
+        "PSIG-001": {
+          "st_source": "ST-030",
+          "psig_signal_value": 4.0,
+          "condition_id": "COND-PSIG-001-01",
+          "condition_state": "HIGH",
+          "attribution_type": "domain_attribution",
+          "via_entity": "CE-08",
+          "attribution_role": "zone_domain_secondary"
+        },
+        "PSIG-002": {
+          "st_source": "ST-031",
+          "psig_signal_value": 4.0,
+          "condition_id": "COND-PSIG-002-01",
+          "condition_state": "HIGH",
+          "attribution_type": "direct",
+          "domain_fan_out": 4,
+          "domain_ratio": 4.0
+        },
+        "PSIG-004": {
+          "st_sources": ["ST-033", "ST-034"],
+          "psig_signal_value": 1.0,
+          "condition_id": "COND-PSIG-004-01",
+          "condition_state": "HIGH",
+          "attribution_type": "domain_attribution",
+          "via_entity": "CE-08",
+          "attribution_role": "zone_domain_secondary"
+        }
+      }
+    },
+    {
+      "candidate_id": "PC-003",
+      "entity_id": "DOM-08",
+      "entity_type": "DOMAIN",
+      "domain_id": "DOM-08",
+      "domain_name": "backend_health",
+      "active_conditions": ["PSIG-001", "PSIG-002", "PSIG-004"],
+      "activation_count": 3,
+      "combination_signature": "PSIG-001|PSIG-002|PSIG-004",
+      "psig_006_flag": "NOT",
+      "candidate_level": "domain_attribution",
+      "evidence_trace": {
+        "PSIG-001": {
+          "st_source": "ST-030",
+          "psig_signal_value": 4.0,
+          "condition_id": "COND-PSIG-001-01",
+          "condition_state": "HIGH",
+          "attribution_type": "domain_attribution",
+          "via_entity": null,
+          "attribution_role": "zone_domain_secondary"
+        },
+        "PSIG-002": {
+          "st_source": "ST-031",
+          "psig_signal_value": 4.0,
+          "condition_id": "COND-PSIG-002-01",
+          "condition_state": "HIGH",
+          "attribution_type": "direct",
+          "domain_fan_out": 3,
+          "domain_ratio": 3.0
+        },
+        "PSIG-004": {
+          "st_sources": ["ST-033", "ST-034"],
+          "psig_signal_value": 1.0,
+          "condition_id": "COND-PSIG-004-01",
+          "condition_state": "HIGH",
+          "attribution_type": "domain_attribution",
+          "via_entity": null,
+          "attribution_role": "zone_domain_secondary"
+        }
+      }
+    },
+    {
+      "candidate_id": "PC-004",
+      "entity_id": "DOM-09",
+      "entity_type": "DOMAIN",
+      "domain_id": "DOM-09",
+      "domain_name": "backend_modules",
+      "active_conditions": ["PSIG-001", "PSIG-002", "PSIG-004"],
+      "activation_count": 3,
+      "combination_signature": "PSIG-001|PSIG-002|PSIG-004",
+      "psig_006_flag": "NOT",
+      "candidate_level": "domain_attribution",
+      "evidence_trace": {
+        "PSIG-001": {
+          "st_source": "ST-030",
+          "psig_signal_value": 4.0,
+          "condition_id": "COND-PSIG-001-01",
+          "condition_state": "HIGH",
+          "attribution_type": "domain_attribution",
+          "via_entity": "CE-04",
+          "attribution_role": "zone_domain_primary"
+        },
+        "PSIG-002": {
+          "st_source": "ST-031",
+          "psig_signal_value": 4.0,
+          "condition_id": "COND-PSIG-002-01",
+          "condition_state": "HIGH",
+          "attribution_type": "direct",
+          "domain_fan_out": 3,
+          "domain_ratio": 3.0
+        },
+        "PSIG-004": {
+          "st_sources": ["ST-033", "ST-034"],
+          "psig_signal_value": 1.0,
+          "condition_id": "COND-PSIG-004-01",
+          "condition_state": "HIGH",
+          "attribution_type": "domain_attribution",
+          "via_entity": "CE-04",
+          "attribution_role": "zone_domain_primary"
+        }
+      }
+    }
+  ]
+}

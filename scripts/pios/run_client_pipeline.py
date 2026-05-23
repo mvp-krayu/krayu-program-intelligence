@@ -1478,69 +1478,17 @@ def _enrich_semantic_topology_with_structural_evidence(model_path: Path, run_dir
 # ── Phase 6+7: 75.x Activation + 41.x Projection ────────────────────────────
 
 def phase_06_and_07_e2e(run_dir: Path, source_manifest: dict) -> bool:
-    # SIGNAL_SHORTCUT_RETAINED: fastapi_conformance_path is still used here for signal computation.
-    # Phase 5 binding has migrated to the generic pipeline path independently.
-    # Signal migration is a separate future stream. PI.BLUEEDGE.GENERIC-BINDING-MIGRATION.01
-    #
-    # S1 structural-only specimens without LENS signal infrastructure: graceful skip.
-    # The binding envelope may be synthesized from reconciliation data but run_end_to_end.py
-    # requires full signal computation infrastructure that only exists for LENS-activated specimens.
-    gs_path = run_dir / "ceu" / "grounding_state_v3.json"
-    conformance_path = source_manifest.get("fastapi_conformance_path")
-    if not conformance_path and not gs_path.exists():
-        recon_path = run_dir / "ceu" / "reconciliation_state.json"
-        if recon_path.exists():
-            print(f"  SKIP: S1 structural-only specimen (reconciliation-based, no LENS signal engine)")
-            print(f"  NOTE: 75.x/41.x signal computation requires grounding_state_v3 or conformance artifacts")
-            return True
-
-    # If fastapi_conformance_path is set, load pre-computed conformance artifacts instead of
-    # running run_end_to_end.py on the synthetic binding_envelope. The canonical chain used
-    # manual FastAPI conformance contracts (STAGE_NOT_AUTOMATED) — run_end_to_end.py on a
-    # synthetic topology produces divergent signal values.
-    if conformance_path:
-        conf_dir = REPO_ROOT / conformance_path
-        sp_src = conf_dir / "signal_projection_fastapi_compatible.json"
-        if not sp_src.exists():
-            print(f"  FAIL: signal_projection_fastapi_compatible.json not found at {sp_src}")
-            return False
-
-        (run_dir / "41.x").mkdir(parents=True, exist_ok=True)
-        (run_dir / "75.x").mkdir(parents=True, exist_ok=True)
-
-        # 41.x: signal_projection + pressure_zone_projection
-        shutil.copy2(str(sp_src), str(run_dir / "41.x" / "signal_projection.json"))
-        pz_src = conf_dir / "pressure_zone_state_fastapi_compatible.json"
-        if pz_src.exists():
-            shutil.copy2(str(pz_src), str(run_dir / "41.x" / "pressure_zone_projection.json"))
-        else:
-            save_json(run_dir / "41.x" / "pressure_zone_projection.json",
-                      {"note": "STAGE_NOT_AUTOMATED", "source": str(conformance_path)})
-
-        # 75.x: condition_correlation_state + pressure_zone_state
-        cc_src = conf_dir / "condition_correlation_state_fastapi_compatible.json"
-        if cc_src.exists():
-            shutil.copy2(str(cc_src), str(run_dir / "75.x" / "condition_correlation_state.json"))
-        else:
-            save_json(run_dir / "75.x" / "condition_correlation_state.json",
-                      {"note": "STAGE_NOT_AUTOMATED", "source": str(conformance_path)})
-        if pz_src.exists():
-            shutil.copy2(str(pz_src), str(run_dir / "75.x" / "pressure_zone_state.json"))
-        else:
-            save_json(run_dir / "75.x" / "pressure_zone_state.json",
-                      {"note": "STAGE_NOT_AUTOMATED", "source": str(conformance_path)})
-
-        # 75.x: pressure_candidate_state (stub — derived from pressure_zone_state)
-        save_json(run_dir / "75.x" / "pressure_candidate_state.json", {
-            "note": "STAGE_NOT_AUTOMATED — pressure candidates derived from FastAPI conformance pressure_zone_state",
-            "source_artifact": str(pz_src.relative_to(REPO_ROOT)) if pz_src.exists() else str(conformance_path),
-            "total_candidates": 1,
-            "candidates": [{"zone_id": "PZ-001", "anchor_dom": "DOM-04", "zone_class": "COMPOUND_ZONE"}],
-        })
-
-        print(f"  PASS: 75.x + 41.x artifacts loaded from FastAPI conformance (canonical pre-computed path)")
-        print(f"  NOTE: STAGE_NOT_AUTOMATED — run_end_to_end.py bypassed; canonical signal values preserved")
-        return True
+    # S1 structural-only specimens without binding: graceful skip.
+    binding_path = run_dir / "binding" / "binding_envelope.json"
+    if not binding_path.exists():
+        gs_path = run_dir / "ceu" / "grounding_state_v3.json"
+        if not gs_path.exists():
+            recon_path = run_dir / "ceu" / "reconciliation_state.json"
+            if recon_path.exists():
+                print(f"  SKIP: S1 structural-only specimen (reconciliation-based, no binding envelope)")
+                return True
+        print(f"  FAIL: binding/binding_envelope.json not found — required for signal computation")
+        return False
 
     script = SCRIPTS_DIR / "run_end_to_end.py"
     if not script.exists():

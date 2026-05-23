@@ -1,0 +1,85 @@
+{
+  "stream": "PI.BLUEEDGE.GENERIC-SIGNAL-COMPUTATION.01",
+  "classification": "G2",
+  "date": "2026-05-23",
+  "checks": [
+    {
+      "name": "VL-01: SIGNAL_SHORTCUT_RETAINED removed",
+      "description": "fastapi_conformance_path shortcut block removed from phase_06_and_07_e2e()",
+      "result": "PASS",
+      "evidence": "run_client_pipeline.py no longer contains conformance_path shortcut"
+    },
+    {
+      "name": "VL-02: Generic PSIG computation succeeds",
+      "description": "run_end_to_end.py completes all 5 stages on generic binding envelope",
+      "result": "PASS",
+      "evidence": "5/5 stages COMPLETE, 5 output artifacts present"
+    },
+    {
+      "name": "VL-03: PSIG-001 activates",
+      "description": "coupling_pressure detected at Level 2",
+      "result": "PASS",
+      "evidence": "PSIG-001=4.0, HIGH, CE-04 and CE-08"
+    },
+    {
+      "name": "VL-04: PSIG-002 activates",
+      "description": "export_pressure detected at Level 2",
+      "result": "PASS",
+      "evidence": "PSIG-002=4.0, HIGH, 4 domains"
+    },
+    {
+      "name": "VL-05: PSIG-006 activates genuinely",
+      "description": "isolation_pressure detects real fragmentation",
+      "result": "PASS",
+      "evidence": "PSIG-006=0.1515, ACTIVATED, 6 connected components"
+    },
+    {
+      "name": "VL-06: Pressure zones form",
+      "description": "At least 1 pressure zone from generic computation",
+      "result": "PASS",
+      "evidence": "4 COMPOUND_ZONE zones (PZ-001 through PZ-004)"
+    },
+    {
+      "name": "VL-07: DPSIG re-derivation succeeds",
+      "description": "DPSIG derived on genesis run 40.4 topology",
+      "result": "PASS",
+      "evidence": "DPSIG-031=3.4532 ELEVATED, DPSIG-032=0.5731 ASYMMETRIC"
+    },
+    {
+      "name": "VL-08: Vault rebuilt with generic signals",
+      "description": "Phase 8a vault construction completes with new signal artifacts",
+      "result": "PASS",
+      "evidence": "vault/signal_registry.json rebuilt, 9 vault artifacts present"
+    },
+    {
+      "name": "VL-09: Intelligence delta report produced",
+      "description": "BLUEEDGE_SIGNAL_INTELLIGENCE_DELTA.md with per-signal classification",
+      "result": "PASS",
+      "evidence": "7 signals classified: 4 IMPROVED, 1 PRESERVED, 1 NEW, 1 LOST"
+    },
+    {
+      "name": "VL-10: No UNDETERMINED classifications",
+      "description": "Every signal change has a definitive classification",
+      "result": "PASS",
+      "evidence": "0 UNDETERMINED in intelligence delta"
+    },
+    {
+      "name": "VL-11: LOST_READ documented as OPEN_GAP",
+      "description": "PSIG-004 LOST_READ classified as OPEN_GAP with resolution path",
+      "result": "PASS",
+      "evidence": "LEVEL_1_SIGNAL_FAMILY_REQUIRED — ISIG resolution path documented"
+    },
+    {
+      "name": "VL-12: Certification gate — net improvement",
+      "description": "Generic corridor does not make PI blinder",
+      "result": "PASS",
+      "evidence": "4 improved + 1 preserved + 1 new > 1 lost"
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 12,
+    "fail": 0
+  },
+  "verdict": "VALID"
+}
