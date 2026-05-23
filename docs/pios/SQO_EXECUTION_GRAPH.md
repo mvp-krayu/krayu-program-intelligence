@@ -6,23 +6,71 @@ Operational reference for the SQO governance lifecycle. Machine-loadable source 
 
 ## Stage Sequence
 
+### S0 → S1 Path (Initial Governance Lifecycle)
+
 ```
-GATE 1          GATE 2              GATE 3            GATE 4           GATE 5
+GATE 1          GATE 2              GATE 3            GATE 4           GATE 5 (S1)
 CEU             Proposition         Proposition       Revalidation     Promotion
-Reconciliation  Derivation          Review                             Evaluation
+Reconciliation  Derivation          Review                             → S1
 (operator)      (deterministic)     (operator)        (deterministic)  (operator + anchor)
     │               │                   │                  │               │
     ▼               ▼                   ▼                  ▼               ▼
 reconciliation  semantic_           proposition_       revalidation_    promotion_
-_state.json     propositions.json   review_state.json  result.json      state.json
-                                                                         │
-                                                           ┌─────────────┘
-                                                           ▼
-                                                       ENRICHMENT ──→ re-run Gate 4
-                                                       (deterministic)
+_state.json     propositions.json   review_state.json  result.json      state.json [S1]
 ```
 
-Each gate requires the previous gate's completion artifact.
+### S1 → S2 Path (Full Qualification)
+
+```
+S1 achieved
+    │
+    ▼
+┌─ ENRICHMENT PLANNING ─────────────────────────────────────────────┐
+│  Identify targets: weak/DERIVED propositions, debt items,         │
+│  evidence sources. Output: enrichment_plan.json                   │
+└───────────────────────────────────────────────────────────────────┘
+    │
+    ▼
+┌─ EVIDENCE ENRICHMENT EXECUTION ───────────────────────────────────┐
+│  PATH A: code graph authority edges (AST)                         │
+│  PATH B: HTML document structure re-extraction                    │
+│  Output: enrichment_log.json, enrichment_activity_event.json      │
+└───────────────────────────────────────────────────────────────────┘
+    │
+    ▼
+┌─ DEBT REASSESSMENT ───────────────────────────────────────────────┐
+│  Re-evaluate debt items against enriched propositions.            │
+│  Output: debt_reassessment.json                                   │
+└───────────────────────────────────────────────────────────────────┘
+    │
+    ▼
+┌─ ENRICHED PROPOSITION UPDATE ─────────────────────────────────────┐
+│  Apply enrichment: confidence deltas, tier upgrades, evidence     │
+│  anchors. Output: enrichment_summary.json                         │
+└───────────────────────────────────────────────────────────────────┘
+    │
+    ▼
+┌─ POST-ENRICHMENT REVALIDATION (Gate 4 re-run) ────────────────────┐
+│  Same 25-check engine. Must PASS on enriched corpus.              │
+│  Output: revalidation_result.json (overwritten)                   │
+└───────────────────────────────────────────────────────────────────┘
+    │
+    ▼
+┌─ CONSTITUTIONAL ANCHOR RE-CHECK ──────────────────────────────────┐
+│  enrichment_activity must now be PASS.                            │
+│  All 8 dimensions evaluated. No CRITICAL failures.                │
+│  Output: constitutional_replay_anchor.json (overwritten)          │
+└───────────────────────────────────────────────────────────────────┘
+    │
+    ▼
+┌─ S2 PROMOTION EVALUATION (Gate 5, L5 authority) ──────────────────┐
+│  Operator evaluates. Requires: post-enrichment revalidation PASS, │
+│  anchor not blocked, enrichment_activity PASS.                    │
+│  Output: promotion_state.json [S2, GOVERNED_LIFECYCLE]            │
+└───────────────────────────────────────────────────────────────────┘
+```
+
+Each stage requires the previous stage's output artifact. S2 cannot be evaluated until `enrichment_activity == true` and post-enrichment revalidation PASS.
 
 ---
 
@@ -152,7 +200,7 @@ S1 ──advance──→ S2  requires: revalidation PASS + anchor not blocked +
 | Complete when | status == PASS (25/25 checks) |
 | Phases | input_gate, proposition_integrity, confidence_realism, tier_validity, disposition_completeness, reconciliation_cleanliness, spine_consistency, sqo_state_consistency |
 
-### Gate 5: Promotion
+### Gate 5: Promotion (S0 → S1)
 
 | | |
 |---|---|
@@ -161,9 +209,87 @@ S1 ──advance──→ S2  requires: revalidation PASS + anchor not blocked +
 | Anchor | `scripts/pios/constitutional_replay_anchor.py` |
 | Input | revalidation_result (PASS), proposition_review_state (COMPLETE), promotion_state |
 | Output | `sqo/promotion_state.json`, `sqo/promotion_event_log.jsonl`, `sqo/constitutional_replay_anchor.json` |
-| Complete when | s_level advanced AND provenance == GOVERNED_LIFECYCLE |
+| Complete when | s_level == S1 AND provenance == GOVERNED_LIFECYCLE |
 | Anchor dimensions | proposition_count (CRITICAL), class_diversity (CRITICAL), review_obligations (HIGH), governance_friction (HIGH), confidence_distribution (HIGH), tier_diversity (HIGH), governance_event_density (MEDIUM), enrichment_activity (MEDIUM) |
 | Actions | advance, hold, block, status |
+
+---
+
+## S1 → S2 Advancement Path
+
+### Stage 1: Enrichment Planning
+
+| | |
+|---|---|
+| Type | Deterministic |
+| Script | TBD (part of enrichment stream) |
+| Input | semantic_propositions.json, proposition_review_state.json (COMPLETE), promotion_state.json (S1), constitutional_replay_anchor.json (enrichment_activity: false) |
+| Output | `semantic/spe/enrichment_plan.json` |
+| Complete when | enrichment_plan.json exists with target propositions and evidence sources |
+
+### Stage 2: Evidence Enrichment Execution
+
+| | |
+|---|---|
+| Type | Deterministic |
+| Script (PATH B) | `scripts/pios/sdc/evidence_enrichment_rc04.py` (EXISTS — needs parameterization) |
+| Input | enrichment_plan.json, evidence source files |
+| Output | `semantic/spe/enrichment_log.json`, `semantic/spe/enrichment_activity_event.json` |
+| Complete when | enrichment_log.json exists with enrichment events AND enrichment_activity_event.json emitted |
+
+### Stage 3: Debt Reassessment
+
+| | |
+|---|---|
+| Type | Deterministic |
+| Script | TBD |
+| Input | enrichment_log.json, qualification_blockers.json (or debt inventory) |
+| Output | `semantic/spe/debt_reassessment.json` |
+| Complete when | debt_reassessment.json exists with before/after debt classification |
+
+### Stage 4: Enriched Proposition Update
+
+| | |
+|---|---|
+| Type | Deterministic |
+| Script | TBD |
+| Input | semantic_propositions.json, enrichment_log.json, debt_reassessment.json |
+| Output | `semantic/spe/semantic_propositions.json` (enriched), `semantic/spe/enrichment_summary.json` |
+| Complete when | enrichment_summary.json exists with proposition count, confidence deltas, tier changes |
+
+### Stage 5: Post-Enrichment Revalidation
+
+| | |
+|---|---|
+| Type | Deterministic |
+| Script | `scripts/pios/revalidation_engine.py` (same engine, re-run) |
+| Input | semantic_propositions.json (enriched), proposition_review_state.json, reconciliation_state.json, promotion_state.json (S1), spine_objects.json |
+| Output | `sqo/revalidation_result.json` (overwritten), `sqo/revalidation_event_log.jsonl` (appended) |
+| Complete when | status == PASS |
+
+### Stage 6: Constitutional Anchor Re-check
+
+| | |
+|---|---|
+| Type | Deterministic |
+| Script | `scripts/pios/constitutional_replay_anchor.py` (same engine, re-run) |
+| Input | revalidation_result.json (PASS), enrichment_activity_event.json, promotion_state.json (S1) |
+| Output | `sqo/constitutional_replay_anchor.json` (overwritten) |
+| Complete when | advancement_blocked == false AND enrichment_activity == PASS |
+
+### Stage 7: S2 Promotion Evaluation
+
+| | |
+|---|---|
+| Type | Operator governed + constitutional anchor (L5 authority) |
+| Script | `scripts/pios/promotion_action.py` |
+| Anchor | `scripts/pios/constitutional_replay_anchor.py` |
+| Input | revalidation_result.json (PASS, post-enrichment), constitutional_replay_anchor.json (not blocked, enrichment PASS), enrichment_summary.json, debt_reassessment.json, promotion_state.json (S1) |
+| Output | `sqo/promotion_state.json` (S2, GOVERNED_LIFECYCLE), `sqo/promotion_event_log.jsonl` |
+| Complete when | s_level == S2 AND provenance == GOVERNED_LIFECYCLE |
+| Actions | advance, hold, block, status |
+
+**S2 promotion rule:** S2 cannot be evaluated until enrichment_activity == true AND post-enrichment revalidation PASS. This is enforced by the constitutional anchor and the promotion action's integrated anchor check.
 
 ---
 
@@ -176,11 +302,15 @@ On context compaction or session resume, before any SQO work:
 2. `docs/pios/CAPABILITY_REGISTRY.md`
 3. `clients/{client}/psee/runs/{run_id}/sqo/promotion_state.json`
 4. `clients/{client}/psee/runs/{run_id}/semantic/spe/proposition_review_state.json`
+5. `clients/{client}/psee/runs/{run_id}/sqo/constitutional_replay_anchor.json` (if exists — shows which dimensions are elevated/failed)
+6. `clients/{client}/psee/runs/{run_id}/semantic/spe/enrichment_activity_event.json` (if S1 — determines S1→S2 stage position)
 
 **Verification:**
 - State vocabulary loaded — disposition names are canonical, not reconstructed
-- Current stage identified — which gate is the run at?
+- Current S-level identified — S0, S1, or S2?
+- Current advancement path identified — in S0→S1 or S1→S2 sequence?
+- If S1: which S1→S2 stage is active? (enrichment_planning through gate_5_promotion_s2)
 - Allowed transitions known — what can happen next?
 - Artifact locations known — where are inputs and outputs?
 
-**Hard rule:** No S-state advancement may be evaluated unless this graph has been loaded and current run state mapped onto it.
+**Hard rule:** No S-state advancement may be evaluated unless this graph has been loaded and current run state mapped onto it. The process must know how it advances — not rely on Claude remembering it.

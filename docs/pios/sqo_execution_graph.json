@@ -1,6 +1,6 @@
 {
   "contract_id": "PI.SQO.EXECUTION-GRAPH.01",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "purpose": "Machine-loadable SQO execution model. Canonical source of truth for governance stage sequencing, state vocabulary, allowed transitions, and artifact requirements. Must be loaded after any context compaction before SQO work.",
 
   "state_vocabulary": {
@@ -74,14 +74,31 @@
       { "from": "S0", "to": "S1", "requires": ["revalidation_PASS", "constitutional_anchor_not_blocked"] },
       { "from": "S1", "to": "S2", "requires": ["revalidation_PASS", "constitutional_anchor_not_blocked", "enrichment_exercised"] }
     ],
-    "stage_progression": [
-      { "from": "gate_1_ceu_reconciliation", "to": "gate_2_proposition_derivation" },
-      { "from": "gate_2_proposition_derivation", "to": "gate_3_proposition_review" },
-      { "from": "gate_3_proposition_review", "to": "gate_4_revalidation" },
-      { "from": "gate_4_revalidation", "to": "gate_5_promotion" },
-      { "from": "gate_5_promotion", "to": "enrichment", "condition": "S1 achieved, enrichment targets identified" },
-      { "from": "enrichment", "to": "gate_4_revalidation", "condition": "Re-run revalidation on enriched corpus" }
-    ]
+    "stage_progression": {
+      "s0_to_s1": {
+        "description": "Initial governance lifecycle traversal. Proves gates work.",
+        "sequence": [
+          { "from": "gate_1_ceu_reconciliation", "to": "gate_2_proposition_derivation" },
+          { "from": "gate_2_proposition_derivation", "to": "gate_3_proposition_review" },
+          { "from": "gate_3_proposition_review", "to": "gate_4_revalidation" },
+          { "from": "gate_4_revalidation", "to": "gate_5_promotion_s1" }
+        ]
+      },
+      "s1_to_s2": {
+        "description": "Full qualification. Enrichment strengthens substrate, re-revalidation confirms, anchor clears all dimensions.",
+        "required_entry_state": "S1",
+        "required_blocker": "enrichment_activity == false on constitutional anchor",
+        "sequence": [
+          { "from": "gate_5_promotion_s1", "to": "enrichment_planning" },
+          { "from": "enrichment_planning", "to": "evidence_enrichment_execution" },
+          { "from": "evidence_enrichment_execution", "to": "debt_reassessment" },
+          { "from": "debt_reassessment", "to": "enriched_proposition_update" },
+          { "from": "enriched_proposition_update", "to": "gate_4_revalidation_post_enrichment" },
+          { "from": "gate_4_revalidation_post_enrichment", "to": "constitutional_anchor_recheck" },
+          { "from": "constitutional_anchor_recheck", "to": "gate_5_promotion_s2" }
+        ]
+      }
+    }
   },
 
   "stages": {
@@ -233,26 +250,164 @@
       "chronicle_event": "PROMOTION_ADVANCED"
     },
 
-    "enrichment": {
-      "name": "Substrate Enrichment",
+    "enrichment_planning": {
+      "name": "Enrichment Planning",
       "gate_number": null,
       "type": "deterministic",
       "deterministic": true,
-      "description": "Strengthens weak/DERIVED propositions with additional evidence. PATH A: code graph authority edges. PATH B: HTML document structure re-extraction. Feeds back into Gate 4 for re-revalidation.",
+      "s1_to_s2_stage": 1,
+      "description": "Identify enrichment targets: weak/DERIVED propositions, confidence gaps, debt items eligible for evidence reduction. Produces enrichment plan specifying which propositions to strengthen and which evidence sources to use.",
       "input_artifacts": [
         "semantic/spe/semantic_propositions.json",
-        "semantic/spe/proposition_review_state.json",
-        "evidence source files (codebase or HTML documents)"
+        "semantic/spe/proposition_review_state.json (COMPLETE)",
+        "sqo/promotion_state.json (S1)",
+        "sqo/constitutional_replay_anchor.json (enrichment_activity: false)"
       ],
       "output_artifacts": [
-        "semantic/spe/semantic_propositions.json (enriched)",
-        "semantic/spe/enrichment_log.json"
+        "semantic/spe/enrichment_plan.json"
       ],
       "materializer": null,
-      "completion_condition": "enrichment_log.json exists with enrichment events",
+      "completion_condition": "enrichment_plan.json exists with target propositions and evidence sources",
       "operator_actions": [],
-      "chronicle_event": "ENRICHMENT_COMPLETE",
-      "note": "Materializer not yet formalized. PATH A used code graph enrichment. PATH B enrichment TBD."
+      "chronicle_event": "ENRICHMENT_PLANNED",
+      "note": "Enrichment plan identifies: propositions with DERIVED tier or low confidence, debt items classified as REDUCIBLE_BY_EVIDENCE or ENRICHABLE, evidence sources available for re-extraction."
+    },
+
+    "evidence_enrichment_execution": {
+      "name": "Evidence Enrichment Execution",
+      "gate_number": null,
+      "type": "deterministic",
+      "deterministic": true,
+      "s1_to_s2_stage": 2,
+      "description": "Execute enrichment against evidence sources. PATH A: code graph authority edges (AST). PATH B: HTML document structure re-extraction (module cards, layers, capability descriptions). Produces enrichment log with per-proposition evidence deltas.",
+      "input_artifacts": [
+        "semantic/spe/enrichment_plan.json",
+        "evidence source files (PATH A: codebase, PATH B: HTML documents)"
+      ],
+      "output_artifacts": [
+        "semantic/spe/enrichment_log.json",
+        "semantic/spe/enrichment_activity_event.json"
+      ],
+      "materializer": {
+        "path_a": null,
+        "path_b": "scripts/pios/sdc/evidence_enrichment_rc04.py",
+        "note": "PATH B materializer exists but is hardcoded to chronicle paths. Needs parameterization (same pattern as proposition_bridge.py before generalization)."
+      },
+      "completion_condition": "enrichment_log.json exists with enrichment events AND enrichment_activity_event.json emitted",
+      "operator_actions": [],
+      "chronicle_event": "ENRICHMENT_EXECUTED"
+    },
+
+    "debt_reassessment": {
+      "name": "Debt Item Reassessment",
+      "gate_number": null,
+      "type": "deterministic",
+      "deterministic": true,
+      "s1_to_s2_stage": 3,
+      "description": "Re-evaluate specimen debt items against enriched propositions. Debt items classified as ENRICHABLE or REDUCIBLE_BY_EVIDENCE may change status. IRREDUCIBLE_STRUCTURAL_ABSENCE items remain unchanged.",
+      "input_artifacts": [
+        "semantic/spe/enrichment_log.json",
+        "sqo/qualification_blockers.json (or debt inventory)"
+      ],
+      "output_artifacts": [
+        "semantic/spe/debt_reassessment.json"
+      ],
+      "materializer": null,
+      "completion_condition": "debt_reassessment.json exists with before/after debt classification",
+      "operator_actions": [],
+      "chronicle_event": "DEBT_REASSESSED"
+    },
+
+    "enriched_proposition_update": {
+      "name": "Enriched Proposition Update",
+      "gate_number": null,
+      "type": "deterministic",
+      "deterministic": true,
+      "s1_to_s2_stage": 4,
+      "description": "Apply enrichment results to propositions. Updates confidence scores, evidence anchors, and derivation tier where enrichment provides stronger grounding. Writes enriched propositions back to semantic_propositions.json.",
+      "input_artifacts": [
+        "semantic/spe/semantic_propositions.json",
+        "semantic/spe/enrichment_log.json",
+        "semantic/spe/debt_reassessment.json"
+      ],
+      "output_artifacts": [
+        "semantic/spe/semantic_propositions.json (enriched — confidence and tier updates)",
+        "semantic/spe/enrichment_summary.json"
+      ],
+      "materializer": null,
+      "completion_condition": "enrichment_summary.json exists with proposition count, confidence deltas, tier changes",
+      "operator_actions": [],
+      "chronicle_event": "PROPOSITIONS_ENRICHED"
+    },
+
+    "gate_4_revalidation_post_enrichment": {
+      "name": "Post-Enrichment Revalidation",
+      "gate_number": 4,
+      "type": "deterministic",
+      "deterministic": true,
+      "s1_to_s2_stage": 5,
+      "description": "Re-run full 25-check revalidation on enriched corpus. Same engine as initial revalidation. Must PASS for S2 advancement.",
+      "input_artifacts": [
+        "semantic/spe/semantic_propositions.json (enriched)",
+        "semantic/spe/proposition_review_state.json (COMPLETE)",
+        "ceu/reconciliation_state.json",
+        "sqo/promotion_state.json (S1)",
+        "spine/spine_objects.json"
+      ],
+      "output_artifacts": [
+        "sqo/revalidation_result.json (overwritten with post-enrichment result)",
+        "sqo/revalidation_event_log.jsonl (appended)"
+      ],
+      "materializer": "scripts/pios/revalidation_engine.py",
+      "completion_condition": "revalidation_result.json status == PASS",
+      "operator_actions": [],
+      "chronicle_event": "POST_ENRICHMENT_REVALIDATION_COMPLETE"
+    },
+
+    "constitutional_anchor_recheck": {
+      "name": "Constitutional Anchor Re-check",
+      "gate_number": null,
+      "type": "deterministic",
+      "deterministic": true,
+      "s1_to_s2_stage": 6,
+      "description": "Re-run constitutional replay anchor with enrichment_activity now satisfied. All 8 dimensions must clear (no CRITICAL failures). enrichment_activity dimension should now PASS.",
+      "input_artifacts": [
+        "sqo/revalidation_result.json (PASS)",
+        "semantic/spe/enrichment_activity_event.json",
+        "sqo/promotion_state.json (S1)"
+      ],
+      "output_artifacts": [
+        "sqo/constitutional_replay_anchor.json (overwritten with post-enrichment result)"
+      ],
+      "materializer": "scripts/pios/constitutional_replay_anchor.py",
+      "completion_condition": "constitutional_replay_anchor.json advancement_blocked == false AND enrichment_activity == PASS",
+      "operator_actions": [],
+      "chronicle_event": "CONSTITUTIONAL_ANCHOR_CLEARED"
+    },
+
+    "gate_5_promotion_s2": {
+      "name": "S2 Promotion Evaluation",
+      "gate_number": 5,
+      "type": "operator_governed",
+      "deterministic": false,
+      "s1_to_s2_stage": 7,
+      "description": "Operator evaluates S1→S2 advancement. Requires: post-enrichment revalidation PASS, constitutional anchor not blocked with enrichment_activity satisfied, operator rationale. S2 authority level is L5.",
+      "input_artifacts": [
+        "sqo/revalidation_result.json (PASS, post-enrichment)",
+        "sqo/constitutional_replay_anchor.json (not blocked, enrichment_activity PASS)",
+        "semantic/spe/enrichment_summary.json",
+        "semantic/spe/debt_reassessment.json",
+        "sqo/promotion_state.json (S1)"
+      ],
+      "output_artifacts": [
+        "sqo/promotion_state.json (S2, provenance: GOVERNED_LIFECYCLE)",
+        "sqo/promotion_event_log.jsonl (appended)"
+      ],
+      "materializer": "scripts/pios/promotion_action.py",
+      "completion_condition": "promotion_state.json s_level == S2 AND provenance == GOVERNED_LIFECYCLE",
+      "operator_actions": ["advance", "hold", "block", "status"],
+      "chronicle_event": "S2_PROMOTION_ADVANCED",
+      "authority_level": "L5"
     }
   },
 
@@ -262,14 +417,18 @@
       "docs/pios/sqo_execution_graph.json",
       "docs/pios/CAPABILITY_REGISTRY.md",
       "clients/{client}/psee/runs/{run_id}/sqo/promotion_state.json",
-      "clients/{client}/psee/runs/{run_id}/semantic/spe/proposition_review_state.json"
+      "clients/{client}/psee/runs/{run_id}/semantic/spe/proposition_review_state.json",
+      "clients/{client}/psee/runs/{run_id}/sqo/constitutional_replay_anchor.json (if exists)",
+      "clients/{client}/psee/runs/{run_id}/semantic/spe/enrichment_activity_event.json (if S1)"
     ],
     "verification": [
       "State vocabulary loaded — disposition names are canonical, not reconstructed",
-      "Current stage identified — which gate is the run at?",
+      "Current S-level identified — S0, S1, or S2?",
+      "Current advancement path identified — in S0→S1 or S1→S2 sequence?",
+      "If S1: which S1→S2 stage is active? (enrichment_planning through gate_5_promotion_s2)",
       "Allowed transitions known — what can happen next?",
       "Artifact locations known — where are inputs and outputs?"
     ],
-    "hard_rule": "No S-state advancement may be evaluated unless SQO_EXECUTION_GRAPH has been loaded and current run state is mapped onto it."
+    "hard_rule": "No S-state advancement may be evaluated unless SQO_EXECUTION_GRAPH has been loaded and current run state is mapped onto it. The process must know how it advances — not rely on Claude remembering it."
   }
 }

@@ -43,6 +43,13 @@ SQO is an executable governance graph, not a conversation memory. After reboot/c
 | Promotion Action (Gate 5) | `scripts/pios/promotion_action.py` | OPERATIONAL | Operator CLI: advance/hold/block. Integrated with constitutional replay anchor. |
 | Constitutional Replay Anchor | `scripts/pios/constitutional_replay_anchor.py` | OPERATIONAL | 8-dimension semantic adequacy check. Blocks advancement when constitutional distance too high. Needs PATH B class awareness update. |
 
+## Enrichment
+
+| Capability | Implementation | Status | Path | Notes |
+|------------|---------------|--------|------|-------|
+| PATH B Evidence Enrichment | `scripts/pios/sdc/evidence_enrichment_rc04.py` | EXISTS_NEEDS_PARAMETERIZATION | PATH B | Domain ID mismatch correction + confidence recalculation from HTML evidence. Hardcoded to chronicle paths. Needs --client/--run-id parameterization (same pattern as proposition_bridge.py before generalization). |
+| Enrichment Participation Advisory | `scripts/pios/psee_handoff/evaluate_enrichment_participation.py` | OPERATIONAL | Generic | Observational only — evaluates enrichment participation. Does not perform enrichment. |
+
 ## Signal Derivation
 
 | Capability | Implementation | Status | Notes |
