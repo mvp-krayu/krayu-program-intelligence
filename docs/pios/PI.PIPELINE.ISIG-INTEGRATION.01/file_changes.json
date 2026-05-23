@@ -1,0 +1,32 @@
+{
+  "stream": "PI.PIPELINE.ISIG-INTEGRATION.01",
+  "classification": "G2",
+  "baseline_commit": "c543e85",
+  "changes": [
+    {
+      "path": "scripts/pios/run_client_pipeline.py",
+      "action": "MODIFIED",
+      "reason": "Add Phase 3.8 — ISIG Import Structure Intelligence Derivation (function + phase list + docstring)"
+    },
+    {
+      "path": "docs/pios/PI.PIPELINE.ISIG-INTEGRATION.01/execution_report.md",
+      "action": "CREATED",
+      "reason": "Mandatory governance artifact"
+    },
+    {
+      "path": "docs/pios/PI.PIPELINE.ISIG-INTEGRATION.01/validation_log.json",
+      "action": "CREATED",
+      "reason": "Mandatory governance artifact"
+    },
+    {
+      "path": "docs/pios/PI.PIPELINE.ISIG-INTEGRATION.01/file_changes.json",
+      "action": "CREATED",
+      "reason": "Mandatory governance artifact"
+    },
+    {
+      "path": "docs/pios/PI.PIPELINE.ISIG-INTEGRATION.01/CLOSURE.md",
+      "action": "CREATED",
+      "reason": "Mandatory governance artifact"
+    }
+  ]
+}
