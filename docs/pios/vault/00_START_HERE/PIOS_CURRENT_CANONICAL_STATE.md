@@ -1,6 +1,6 @@
 # PiOS Current Canonical State
 
-> **This page reflects the system's canonical state as of 2026-05-22.**
+> **This page reflects the system's canonical state as of 2026-05-23.**
 
 ---
 
@@ -559,6 +559,51 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.GENESIS.GEN-3.AI-ASSISTED-OPERATIONALIZATION.01 | G1 | GEN-3 AI-Assisted Operationalization — AIAssistanceLogger runtime per AI_ASSISTANCE_GOVERNANCE_CONTRACT.md. 5 action methods (INSPECT/PROPOSE/EXPLAIN/RECONCILE/IMPROVE), 3 object types (ai_suggestion, ai_detected_gap, operator_decision_event), L3 ceiling enforced, replay-safe (prompt_hash, model_id, temperature), append-only JSONL. ChronicleEmitter emit_ai_intervention() + emit_operator_decision(). Pipeline Phase 3b + Phase 3.7 hooks. M2 infrastructure operational | COMPLETE |
 | PI.GENESIS.GEN-4.LEARNING-PROMOTION-PIPELINE.01 | G1 | GEN-4 Learning Promotion Pipeline — LearningPromoter governed operator with 7 transition methods (review, reject, promote, activate, elevate_to_capability, elevate_to_module, supersede). Extended lifecycle: 6→9 states (+ OBSERVED, CAPABILITY_CANDIDATE, MODULE_CANDIDATE). AI actor rejection enforcement. 3-specimen EMERGENCE_THRESHOLD for CAPABILITY_CANDIDATE. batch_review for multi-event governance. ChronicleEmitter emit_learning_promotion() with semantic phase mapping. CONSUMPTION_ELIGIBLE_STATES extended | COMPLETE |
 | PI.GENESIS.GEN-5.FIRST-FULL-GENESIS-CHRONICLE.01 | G2 | GEN-5 First Full Genesis Chronicle — GenesisChronicleCompiler (6-source loader, 9-chapter HTML compiler, Z1-Z5 zoom). First genesis chronicle produced on NetBox retrospective: 76KB HTML, 34 events, 9 checkpoints, 23 hero moments, 77 propositions, 14 learning events. Pipeline re-execution with GEN-1 emitter. DISCOVERY phase operational. CLI compiler | COMPLETE |
+| PI.GENESIS.GENERIC-SIGNAL-LINEAGE-VERIFICATION.01 | G1 | Signal derivation spine canonicalization — signal family taxonomy (PSIG/DPSIG/BSIG/ISIG/CSIG/ESIG), derivation levels (Level 1 vs Level 2), derivation contract (8 rules, 4 prohibitions), PATH A signal integration map, chronicle signal lineage requirements, E2E derivation chain. Signal doctrine embedded as constitutional spine knowledge | COMPLETE |
+
+## Signal Derivation Spine — Canonical Signal Intelligence Doctrine
+
+**Stream:** PI.GENESIS.GENERIC-SIGNAL-LINEAGE-VERIFICATION.01 (COMPLETE — 2026-05-23)
+**Classification:** G1 — Architecture-Mutating (introduces signal family taxonomy and derivation contracts as constitutional knowledge)
+
+Signal families are structural cognition outputs of the generic derivation spine — NOT standalone metrics, NOT dashboards, NOT optional overlays. They are positioned WITHIN the derivation spine, not alongside it.
+
+**Key architectural concepts:**
+
+**Signal Derivation Levels (LOCKED):**
+- **Level 1 — File-Level Structural Intelligence:** Evidence from 40.3s code graph (resolved IMPORTS between source files). Population: individual source files. Available to PATH A only. Influences PSIG indirectly via Phase 5 enrichment (IMPORTS_ACROSS edges).
+- **Level 2 — Architectural Binding Intelligence:** Evidence from Phase 5 binding envelope. Population: architectural binding nodes (DOM + CE + CS). Available to ALL specimens. The generic corridor.
+
+**Signal Family Classification (LOCKED):**
+- **Generic GENESIS** (any specimen): PSIG (Level 2 binding topology), DPSIG (40.4 topology), BSIG (Level 2 binding quality meta — NEW)
+- **Software Module** (code graph required): ISIG (Level 1 imports), CSIG (Level 1 centrality), ESIG (Level 1→2 bridge — NEW)
+- **Concept-Only:** ESI (structural coherence delta), RAG (representation alignment gap)
+
+**Signal Family Maturity:**
+
+| Family | Status | Evidence |
+|--------|--------|---------|
+| PSIG | OPERATIONAL | 4 signals, 5 computation scripts, Phase 6+7 pipeline, vault integration, LENS consumption |
+| DPSIG | OPERATIONAL (Class 4) | 2 signals, topology-native derivation, LENS additive sidecar |
+| BSIG | SPECIFIED_NOT_IMPLEMENTED | Raw data in binding envelope; no computation pipeline |
+| ISIG | PARTIALLY_IMPLIED | Raw metrics in 40.3c; no named signal computation |
+| CSIG | PARTIALLY_IMPLIED | Raw metrics in 40.3c; no named signal computation |
+| ESIG | SPECIFIED_NOT_IMPLEMENTED | Enrichment delta observable; no computation pipeline |
+
+**Signal Derivation Contract (LOCKED):**
+8 derivation rules governing signal computation: single source of truth (SD-01), deterministic computation (SD-02), threshold ownership (SD-03), no cross-family dependency (SD-04), additive enrichment (SD-05), Level 1/Level 2 separation (SD-06), module-specific availability (SD-07), signal authority ceiling (SD-08 — PROVISIONAL_CKR_CANDIDATE).
+4 prohibitions: no synthetic fabrication (PR-01), no cross-specimen comparison without population reference (PR-02), no signal as recommendation (PR-03), no shortcut normalization (PR-04).
+
+**Chronicle Integration (SPECIFIED):**
+Signal lineage objects, chronicle event types (signal_derivation, signal_enrichment, signal_projection), Z1-Z5 zoom depth for signals, GEN-1 ChronicleEmitter extension methods — all specified, not yet implemented.
+
+**Vault pages:**
+- [[../05_RUNTIME_AND_CORRIDOR/SIGNAL_DERIVATION_SPINE]] — full E2E derivation chain from intake to projection
+- [[../05_RUNTIME_AND_CORRIDOR/SIGNAL_FAMILY_TAXONOMY]] — canonical signal family registry
+- [[../05_RUNTIME_AND_CORRIDOR/PATH_A_SIGNAL_INTEGRATION_MAP]] — PATH A signal emergence points
+- Signal Derivation Contract and Chronicle Requirements in stream directory
+
+**Reference:** `docs/pios/PI.GENESIS.GENERIC-SIGNAL-LINEAGE-VERIFICATION.01/` — 3 canonical documents + 4 governance artifacts.
 
 ## GENESIS — Onboarding-Origin Governed Cognition Formation
 

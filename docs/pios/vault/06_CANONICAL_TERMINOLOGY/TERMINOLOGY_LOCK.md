@@ -86,11 +86,45 @@
 
 **Status:** CANONICAL — active in crosswalk mapper.
 
+### PSIG
+
+**Definition:** Primary Structural Intelligence Signals. The first signal family — derives from the binding envelope topology (Phase 5 output). Measures architectural coupling pressure (fan_in), export pressure (fan_out), zone coverage concentration (surfaces_per_ceu), and isolation pressure (graph fragmentation). Computed by `run_end_to_end.py` (5 scripts in 75.x and 41.x). Sole structural input: `binding/binding_envelope.json`.
+
+**Signals:** PSIG-001 (coupling_pressure), PSIG-002 (export_pressure), PSIG-004 (zone_coverage_concentration), PSIG-006 (isolation_pressure).
+
+**Derivation level:** Level 2 — Architectural Binding Intelligence. All specimens with a binding envelope produce PSIGs.
+
+**Status:** CANONICAL — active signal infrastructure, OPERATIONAL.
+
+**Source:** [[../05_RUNTIME_AND_CORRIDOR/SIGNAL_FAMILY_TAXONOMY]]
+
 ### DPSIG
 
-**Definition:** Deterministic signal family for executive intelligence projection.
+**Definition:** Derived Program Structural Intelligence Signals. Topology-native, client-agnostic signal family. Derives from `canonical_topology.json` (40.4) only — no binding, no 40.3s, no conformance artifacts. Currently Class 4 only (DPSIG-031 CPI, DPSIG-032 CFA). Classes 1-3, 5-8 reserved.
 
-**Status:** CANONICAL — active signal infrastructure.
+**Derivation level:** Topology-level (independent of Level 1 and Level 2).
+
+**Status:** CANONICAL — active signal infrastructure, OPERATIONAL (Class 4).
+
+### Signal Derivation Level
+
+**Definition:** The abstraction layer at which a signal measures structural phenomena. Two levels defined:
+
+- **Level 1 — File-Level Structural Intelligence:** Evidence source is 40.3s code graph (resolved IMPORTS between source files). Population: individual source files (hundreds to thousands). Available for PATH A specimens with code graph only. Enters PSIG INDIRECTLY through 40.3s enrichment → IMPORTS_ACROSS edges in binding.
+
+- **Level 2 — Architectural Binding Intelligence:** Evidence source is Phase 5 binding envelope (CEU→DOM grounding, DOM→CE→CS exposure, cross-DOM coupling). Population: architectural binding nodes (tens). Available for ALL specimens with a binding envelope. PSIG derives at this level.
+
+**Level 1 and Level 2 are NOT interchangeable.** They measure different structural phenomena at different granularity. Level 2 is the generic corridor. Level 1 is enrichment.
+
+**Status:** CANONICAL — architectural concept (2026-05-23).
+
+### Signal Family
+
+**Definition:** A named, governed collection of structural intelligence signals that derive from a single primary artifact and measure a specific structural phenomenon. Generic GENESIS families (PSIG, DPSIG, BSIG) are available to all specimens. Software Module families (ISIG, CSIG, ESIG) require code graph evidence (40.3s/40.3c).
+
+**Registry:** [[../05_RUNTIME_AND_CORRIDOR/SIGNAL_FAMILY_TAXONOMY]]
+
+**Status:** CANONICAL — classification model (2026-05-23).
 
 ### LENS v2
 
