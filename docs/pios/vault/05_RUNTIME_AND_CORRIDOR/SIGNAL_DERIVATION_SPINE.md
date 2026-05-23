@@ -236,15 +236,14 @@ DPSIG reads `structure/40.4/canonical_topology.json` as the SOLE input. No bindi
 
 ---
 
-## Known Shortcut: SIGNAL_SHORTCUT_RETAINED
+## SIGNAL_SHORTCUT_RETAINED — PERMANENTLY REMOVED
 
-**Status:** ACTIVE (as of 2026-05-23)
-**Location:** `run_client_pipeline.py`, Phase 6+7, lines 1501-1539
-**Mechanism:** When `source_manifest["fastapi_conformance_path"]` is set, Phase 6+7 copies pre-computed conformance artifacts instead of running `run_end_to_end.py` on the generic binding.
-**Affected clients:** BlueEdge
-**Classified by:** PI.BLUEEDGE.GENERIC-BINDING-MIGRATION.01
+**Status:** REMOVED (2026-05-23, PI.BLUEEDGE.GENERIC-SIGNAL-COMPUTATION.01)
+**Previously:** `run_client_pipeline.py`, Phase 6+7 copied pre-computed conformance artifacts when `source_manifest["fastapi_conformance_path"]` was set.
+**Removed because:** The generic corridor produces MORE truthful structural cognition than the shortcut corridor. Intelligence delta certified: 4 IMPROVED_READ, 1 NEW_READ, 1 DIFFERENT_ABSTRACTION_SAME_READ, 1 LOST_READ (OPEN_GAP with resolution path).
+**The shortcut must not be restored.** The LOST_READ (PSIG-004 file-level hub concentration) has a governed resolution path: ISIG as a first-class Level 1 signal family. Shortcut restoration would reintroduce false reassurance (DPSIG-032 BALANCED when the structure is genuinely ASYMMETRIC).
 
-The pre-computed conformance artifacts derive from a DIFFERENT evidence source (40.3 per-file IMPORTS distributions) than the generic binding topology. Their signal values are NOT equivalent to what the generic corridor would produce. See [[GENERIC_SIGNAL_LINEAGE_AND_DPSIG_VERIFICATION]] §2 for detailed comparison.
+See [[LEVEL_1_VS_LEVEL_2_SIGNAL_DOCTRINE]] for why the abstraction difference is structural, not a deficiency.
 
 ---
 

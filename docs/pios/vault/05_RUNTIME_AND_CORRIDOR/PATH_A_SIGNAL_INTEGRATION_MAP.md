@@ -147,8 +147,27 @@ The enrichment path is the critical bridge between Level 1 and Level 2:
 
 ---
 
+## Level 1 → Level 2 Intelligence Gap (Certified)
+
+The enrichment path compresses 2,138 source-level IMPORTS to 4 IMPORTS_ACROSS edges (535:1 ratio). This compression preserves aggregate coupling direction but LOSES file-level distribution. Specific intelligence gaps:
+
+| Intelligence | Level 1 (40.3s/40.3c) | Level 2 (binding) | Status |
+|-------------|----------------------|-------------------|--------|
+| Import hub concentration (e.g., common/dto/index.ts = 111 inbound) | VISIBLE | INVISIBLE | LOST_READ → ISIG required |
+| Import fan concentration (e.g., app.module.ts = 69 outbound) | VISIBLE | INVISIBLE | LOST_READ → ISIG required |
+| Centrality distribution skew | VISIBLE | INVISIBLE | PARTIALLY_IMPLIED → CSIG candidate |
+| Cross-domain coupling direction | VISIBLE (2,138 edges) | VISIBLE (4 IMPORTS_ACROSS edges) | PRESERVED (compressed) |
+| Architectural isolation | NOT VISIBLE | VISIBLE (PSIG-006 = 0.1515) | NEW_READ at Level 2 |
+
+The compression is by design — Level 2 exists to see architectural patterns. But Level 1 intelligence must exist as independent signal families, not only as enrichment artifacts.
+
+See [[LEVEL_1_VS_LEVEL_2_SIGNAL_DOCTRINE]] for the canonical doctrine.
+
+---
+
 ## Cross-References
 
+- [[LEVEL_1_VS_LEVEL_2_SIGNAL_DOCTRINE]] — Level 1 vs Level 2 signal doctrine
 - [[SIGNAL_DERIVATION_SPINE]] — full derivation chain
 - [[SIGNAL_FAMILY_TAXONOMY]] — signal family registry
 - [[../03_PATH_SPLIT_EVOLUTION/PATH_A_EMERGENCE]] — PATH A/PATH B architectural split

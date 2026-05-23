@@ -108,15 +108,21 @@
 
 ### Signal Derivation Level
 
-**Definition:** The abstraction layer at which a signal measures structural phenomena. Two levels defined:
+**Definition:** The abstraction layer at which a signal measures structural phenomena. Two levels plus one independent tier:
 
-- **Level 1 — File-Level Structural Intelligence:** Evidence source is 40.3s code graph (resolved IMPORTS between source files). Population: individual source files (hundreds to thousands). Available for PATH A specimens with code graph only. Enters PSIG INDIRECTLY through 40.3s enrichment → IMPORTS_ACROSS edges in binding.
+- **Level 1 — File-Topology Structural Intelligence:** Evidence from 40.3s code graph and 40.3c centrality. Population: individual source files (hundreds to thousands). Measures import hub pressure, fan asymmetry, centrality concentration, role distribution. Available for PATH A only. Signal families: ISIG, CSIG. Enters Level 2 through Phase 5 enrichment (IMPORTS_ACROSS edges) but with lossy compression (BlueEdge: 2,138 IMPORTS → 4 IMPORTS_ACROSS edges, 535:1 ratio). Level 1 intelligence is inherently SOFTWARE EXECUTION intelligence — it predicts change propagation risk, PR review complexity, deployment coordination cost.
 
-- **Level 2 — Architectural Binding Intelligence:** Evidence source is Phase 5 binding envelope (CEU→DOM grounding, DOM→CE→CS exposure, cross-DOM coupling). Population: architectural binding nodes (tens). Available for ALL specimens with a binding envelope. PSIG derives at this level.
+- **Level 2 — Architectural Binding Intelligence:** Evidence from Phase 5 binding envelope. Population: architectural binding nodes (tens — DOM + CE + CS). Measures coupling pressure, export pressure, surface concentration, isolation. Available for ALL specimens with a binding envelope. Signal families: PSIG, BSIG. Level 2 intelligence is ARCHITECTURAL GOVERNANCE intelligence — it predicts domain coupling, capability distribution, governance gaps.
 
-**Level 1 and Level 2 are NOT interchangeable.** They measure different structural phenomena at different granularity. Level 2 is the generic corridor. Level 1 is enrichment.
+- **Topology level (independent):** DPSIG derives from 40.4 canonical topology. Independent of both Level 1 and Level 2.
 
-**Status:** CANONICAL — architectural concept (2026-05-23).
+**Level 1 and Level 2 are NOT interchangeable.** They measure different structural phenomena at different populations. Level 2 cannot reproduce Level 1 intelligence (population compression, edge abstraction, surface normalization). Both levels are necessary for complete structural cognition.
+
+**Certified:** BlueEdge intelligence delta (2026-05-23) — generic Level 2 corridor produces MORE truthful cognition than historical Level 1 shortcut, except for one LOST_READ (PSIG-004 file-level hub concentration) which requires ISIG to resolve.
+
+**Canonical doctrine:** [[../05_RUNTIME_AND_CORRIDOR/LEVEL_1_VS_LEVEL_2_SIGNAL_DOCTRINE]]
+
+**Status:** CANONICAL — constitutional doctrine (2026-05-23).
 
 ### Signal Family
 
