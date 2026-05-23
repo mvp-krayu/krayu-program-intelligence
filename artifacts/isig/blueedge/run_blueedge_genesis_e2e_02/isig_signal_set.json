@@ -1,0 +1,254 @@
+{
+  "schema_version": "1.0",
+  "script_version": "1.0",
+  "client_id": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_02",
+  "generated_at": "2026-05-23T09:05:44.220511+00:00",
+  "derivation_context": {
+    "code_graph_hash": "269740270097cbc92fe9dac55d1c9ec2b2fa7d3476599b110b7aa1beec82bda2",
+    "file_count": 680,
+    "total_imports": 2138,
+    "files_with_in_degree": 479,
+    "files_with_out_degree": 465,
+    "indexer": {
+      "name": "typescript-compiler-api",
+      "version": "pipeline",
+      "capabilities": [
+        "DEFINES_CLASS",
+        "DEFINES_FUNCTION",
+        "IMPORTS",
+        "INHERITS",
+        "INHERITS_UNRESOLVED"
+      ],
+      "dependency_class": "PIPELINE_ENRICHMENT_DEPENDENCY",
+      "typescript_compiler_version": "5.9.3"
+    }
+  },
+  "normalization_basis": {
+    "file_count": 680,
+    "total_import_edges": 2138,
+    "mean_import_in_degree": 3.1441,
+    "mean_import_out_degree": 3.1441,
+    "max_import_in_degree": 111,
+    "max_import_in_file": "backend/src/common/dto/index.ts",
+    "max_import_out_degree": 70,
+    "max_import_out_file": "frontend/App.tsx",
+    "top_10_in_degree": [
+      {
+        "file": "backend/src/common/dto/index.ts",
+        "degree": 111
+      },
+      {
+        "file": "frontend/hooks/index.tsx",
+        "degree": 74
+      },
+      {
+        "file": "frontend/api/client.ts",
+        "degree": 68
+      },
+      {
+        "file": "backend/src/common/guards/roles.guard.ts",
+        "degree": 63
+      },
+      {
+        "file": "backend/src/common/guards/jwt-auth.guard.ts",
+        "degree": 62
+      },
+      {
+        "file": "backend/src/common/cache/index.ts",
+        "degree": 61
+      },
+      {
+        "file": "frontend/socket/index.tsx",
+        "degree": 59
+      },
+      {
+        "file": "frontend/components/layout/PageHeader.tsx",
+        "degree": 57
+      },
+      {
+        "file": "frontend/utils/index.ts",
+        "degree": 54
+      },
+      {
+        "file": "frontend/components/ui/Badge.tsx",
+        "degree": 52
+      }
+    ],
+    "top_10_out_degree": [
+      {
+        "file": "frontend/App.tsx",
+        "degree": 70
+      },
+      {
+        "file": "backend/src/app.module.ts",
+        "degree": 69
+      },
+      {
+        "file": "frontend/api/index.ts",
+        "degree": 61
+      },
+      {
+        "file": "frontend/router/LazyRoutes.tsx",
+        "degree": 56
+      },
+      {
+        "file": "frontend/pages/fleet/BusPage.tsx",
+        "degree": 20
+      },
+      {
+        "file": "frontend/pages/safety/SafetyPage.tsx",
+        "degree": 20
+      },
+      {
+        "file": "frontend/pages/fleet/OperationsPage.tsx",
+        "degree": 19
+      },
+      {
+        "file": "frontend/pages/fleet/TankerPage.tsx",
+        "degree": 19
+      },
+      {
+        "file": "frontend/pages/fleet/TaxiPage.tsx",
+        "degree": 19
+      },
+      {
+        "file": "frontend/pages/fleet/VehiclesPage.tsx",
+        "degree": 19
+      }
+    ]
+  },
+  "signal_entries": [
+    {
+      "signal_id": "ISIG-001",
+      "signal_name": "Import Hub Pressure",
+      "signal_family": "ISIG",
+      "derivation_level": "Level_1",
+      "formula": "max(import_in_degree) / mean(import_in_degree)",
+      "normalization_scope": "FILE_POPULATION_RELATIVE",
+      "activation_method": "RATIO_THRESHOLD",
+      "threshold_high": 5.0,
+      "threshold_elevated": 2.0,
+      "signal_value": 35.304,
+      "activation_state": "HUB_PRESSURE_HIGH",
+      "severity": "HIGH",
+      "signal_stable_key": "b13a5dc48f1ad24d",
+      "derivation_hash": "29c08f330f27b5b6088ef49b18e52649dd1c6e9a34be362b3d925ee615262ee3",
+      "denominator_guard": {
+        "guard_condition": "total_imports == 0 OR file_count == 0",
+        "guard_action": "emit null \u2014 NO_IMPORTS",
+        "denominator_zero_flag": false
+      },
+      "derivation_trace": {
+        "numerator_field": "max(import_in_degree across all files)",
+        "numerator_value": 111,
+        "numerator_file": "backend/src/common/dto/index.ts",
+        "denominator_field": "mean(import_in_degree) = total_imports / file_count",
+        "denominator_value": 3.1441,
+        "denominator_source": "code_graph.json \u2192 2138 IMPORTS / 680 files",
+        "result": 35.304,
+        "raw_result": 35.30402245088868,
+        "rounding": "round(raw, 4)"
+      },
+      "topology_dependencies": [
+        {
+          "artifact": "code_graph.json",
+          "field": "relationships[relation_type=IMPORTS].target_path",
+          "usage": "per-file import in-degree (count of files that import this file)"
+        }
+      ],
+      "explainability_template": "The file {max_file} is imported by {max_deg} other files \u2014 {signal_value}x the mean import in-degree of {mean_deg}.",
+      "explainability_render": "The file backend/src/common/dto/index.ts is imported by 111 other files \u2014 35.304x the mean import in-degree of 3.1441.",
+      "executive_summary": "backend/src/common/dto/index.ts is a structural import hub: 111 dependents, 35.304x the population mean. A breaking change here propagates to 111 files.",
+      "engineering_summary": "IHP=35.304 (HUB_PRESSURE_HIGH): backend/src/common/dto/index.ts in_degree=111, mean=3.1441, file_count=680, total_imports=2138",
+      "derivation_summary": "IHP = 111 / 3.1441 = 35.304",
+      "source_artifacts": {
+        "code_graph": "269740270097cbc92fe9dac55d1c9ec2b2fa7d3476599b110b7aa1beec82bda2"
+      }
+    },
+    {
+      "signal_id": "ISIG-002",
+      "signal_name": "Import Fan Asymmetry",
+      "signal_family": "ISIG",
+      "derivation_level": "Level_1",
+      "formula": "max(import_out_degree) / mean(import_out_degree)",
+      "normalization_scope": "FILE_POPULATION_RELATIVE",
+      "activation_method": "RATIO_THRESHOLD",
+      "threshold_high": 5.0,
+      "threshold_elevated": 2.0,
+      "signal_value": 22.2638,
+      "activation_state": "FAN_ASYMMETRY_HIGH",
+      "severity": "HIGH",
+      "signal_stable_key": "50a1ec88846c15d4",
+      "derivation_hash": "079365bb5858382c62b6a13f205986dcac9a17f4b8f3ef88c108d543b04faa57",
+      "denominator_guard": {
+        "guard_condition": "total_imports == 0 OR file_count == 0",
+        "guard_action": "emit null \u2014 NO_IMPORTS",
+        "denominator_zero_flag": false
+      },
+      "derivation_trace": {
+        "numerator_field": "max(import_out_degree across all files)",
+        "numerator_value": 70,
+        "numerator_file": "frontend/App.tsx",
+        "denominator_field": "mean(import_out_degree) = total_imports / file_count",
+        "denominator_value": 3.1441,
+        "denominator_source": "code_graph.json \u2192 2138 IMPORTS / 680 files",
+        "result": 22.2638,
+        "raw_result": 22.263797942001872,
+        "rounding": "round(raw, 4)"
+      },
+      "topology_dependencies": [
+        {
+          "artifact": "code_graph.json",
+          "field": "relationships[relation_type=IMPORTS].source_path",
+          "usage": "per-file import out-degree (count of files this file imports)"
+        }
+      ],
+      "explainability_template": "The file {max_file} imports {max_deg} other files \u2014 {signal_value}x the mean import out-degree of {mean_deg}.",
+      "explainability_render": "The file frontend/App.tsx imports 70 other files \u2014 22.2638x the mean import out-degree of 3.1441.",
+      "executive_summary": "frontend/App.tsx is a coupling orchestrator: imports 70 files, 22.2638x the population mean. This file is an integration bottleneck.",
+      "engineering_summary": "IFA=22.2638 (FAN_ASYMMETRY_HIGH): frontend/App.tsx out_degree=70, mean=3.1441, file_count=680, total_imports=2138",
+      "derivation_summary": "IFA = 70 / 3.1441 = 22.2638",
+      "source_artifacts": {
+        "code_graph": "269740270097cbc92fe9dac55d1c9ec2b2fa7d3476599b110b7aa1beec82bda2"
+      }
+    }
+  ],
+  "derivation_summary": {
+    "signals_derived": 2,
+    "signals_activated": 2,
+    "signals_null": 0,
+    "null_reasons": [],
+    "severity_band": "HIGH"
+  },
+  "replay_taxonomy": {
+    "TAXONOMY_01_REPLAY_STABLE": [
+      "normalization_basis.*",
+      "signal_entries[*].signal_id",
+      "signal_entries[*].signal_value",
+      "signal_entries[*].activation_state",
+      "signal_entries[*].severity",
+      "signal_entries[*].signal_stable_key",
+      "signal_entries[*].derivation_hash",
+      "signal_entries[*].derivation_trace.*"
+    ],
+    "TAXONOMY_02_TIME_VARYING": [
+      "generated_at"
+    ],
+    "TAXONOMY_03_VERSION_DEPENDENT": [
+      "schema_version",
+      "script_version",
+      "derivation_context.*",
+      "signal_entries[*].source_artifacts.*"
+    ]
+  },
+  "provenance_chain": {
+    "stream": "PI.BLUEEDGE.ISIG-LEVEL1-SIGNAL-DERIVATION.01",
+    "signal_family": "ISIG",
+    "derivation_level": "Level_1",
+    "classification": "SOFTWARE_MODULE",
+    "source_artifact": "40.3s/code_graph.json",
+    "client_agnostic": true,
+    "code_graph_native": true
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "stream": "PI.BLUEEDGE.ISIG-LEVEL1-SIGNAL-DERIVATION.01",
+  "classification": "G2",
+  "date": "2026-05-23",
+  "checks": [
+    {
+      "name": "VL-01: derive_import_signals.py exists and executes",
+      "status": "PASS",
+      "detail": "scripts/pios/isig/derive_import_signals.py — runs on BlueEdge and NetBox without error"
+    },
+    {
+      "name": "VL-02: Reads 40.3s/code_graph.json only",
+      "status": "PASS",
+      "detail": "Single input artifact. No 40.3c, no binding, no 40.4 dependency."
+    },
+    {
+      "name": "VL-03: ISIG-001 computation correct (BlueEdge)",
+      "status": "PASS",
+      "detail": "max_in=111 (common/dto/index.ts) / mean=3.1441 = 35.304 → HUB_PRESSURE_HIGH"
+    },
+    {
+      "name": "VL-04: ISIG-002 computation correct (BlueEdge)",
+      "status": "PASS",
+      "detail": "max_out=70 (App.tsx) / mean=3.1441 = 22.2638 → FAN_ASYMMETRY_HIGH"
+    },
+    {
+      "name": "VL-05: Cross-validation on NetBox succeeds",
+      "status": "PASS",
+      "detail": "ISIG-001=51.1345 HIGH, ISIG-002=8.9485 HIGH on 1155 files, 3614 IMPORTS"
+    },
+    {
+      "name": "VL-06: Output follows DPSIG pattern",
+      "status": "PASS",
+      "detail": "derivation_context, normalization_basis, signal_entries, replay_taxonomy, provenance_chain"
+    },
+    {
+      "name": "VL-07: Derivation trace complete",
+      "status": "PASS",
+      "detail": "numerator_field, numerator_value, numerator_file, denominator_field, denominator_value, denominator_source"
+    },
+    {
+      "name": "VL-08: Guard conditions implemented",
+      "status": "PASS",
+      "detail": "NO_IMPORTS guard, ZERO_MEAN guard, file_count==0 guard"
+    },
+    {
+      "name": "VL-09: Deterministic hashing",
+      "status": "PASS",
+      "detail": "signal_stable_key and derivation_hash computed from signal_id, numerator, denominator, value, activation_state"
+    },
+    {
+      "name": "VL-10: Top-N attribution lists present",
+      "status": "PASS",
+      "detail": "top_10_in_degree and top_10_out_degree in normalization_basis"
+    },
+    {
+      "name": "VL-11: No Lane A artifacts modified",
+      "status": "PASS",
+      "detail": "Output to artifacts/isig/ only — parallel derivation path"
+    },
+    {
+      "name": "VL-12: Client-agnostic",
+      "status": "PASS",
+      "detail": "No client-specific logic. Proven on BlueEdge (680 files) and NetBox (1155 files)"
+    },
+    {
+      "name": "VL-13: PSIG-004 LOST_READ addressed",
+      "status": "PASS",
+      "detail": "ISIG-001=35.304 reveals file-level hub concentration invisible at Level 2 (PSIG-004=1.0 NORMAL)"
+    },
+    {
+      "name": "VL-14: Explainability templates present",
+      "status": "PASS",
+      "detail": "explainability_template, explainability_render, executive_summary, engineering_summary, derivation_summary"
+    }
+  ],
+  "summary": {
+    "total": 14,
+    "pass": 14,
+    "fail": 0,
+    "result": "VALID"
+  }
+}
