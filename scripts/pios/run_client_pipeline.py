@@ -8,6 +8,7 @@ Multi-client E2E pipeline orchestrator. Executes 10+ phases:
   Phase 2  — Intake Verification (canonical_repo present)
   Phase 3  — 40.x Structural Verification (artifacts present)
   Phase 3.8 — ISIG Import Structure Intelligence (Level 1, PATH A)
+  Phase 3.9 — DPSIG Topology Intelligence (Topology, all specimens)
   Phase 4  — CEU Grounding Verification (readiness_gate=PASS)
   Phase 5  — Build Binding Envelope (CEU + DOM → FastAPI PIOS schema)
   Phase 6+7 — 75.x Activation + 41.x Projection (run_end_to_end.py)
@@ -1209,6 +1210,67 @@ def phase_03_8_isig_derivation(client: str, run_id: str, run_dir: Path) -> bool:
     return True
 
 
+# ── Phase 3.9: DPSIG Topology Intelligence Derivation ───────────────────────
+
+def phase_03_9_dpsig_derivation(client: str, run_id: str, run_dir: Path) -> bool:
+    """Run derive_relational_signals.py to produce DPSIG topology signal set.
+    Default ON — always runs. If 40.4 is absent, logs warning and skips
+    (graceful degradation). All specimens."""
+    script = SCRIPTS_DIR / "dpsig" / "derive_relational_signals.py"
+    if not script.is_file():
+        print(f"  WARNING: dpsig/derive_relational_signals.py not found — skipping")
+        return True
+
+    out_dir = REPO_ROOT / "artifacts" / "dpsig" / client / run_id
+    out_signal_set = out_dir / "dpsig_signal_set.json"
+    if out_signal_set.exists():
+        print(f"  [IDEMPOTENT] artifacts/dpsig/{client}/{run_id}/dpsig_signal_set.json already exists — skipping")
+        return True
+
+    in_topology = run_dir / "structure" / "40.4" / "canonical_topology.json"
+    if not in_topology.exists():
+        print(f"  WARNING: 40.4/canonical_topology.json not found — skipping DPSIG derivation")
+        return True
+
+    cmd = [
+        sys.executable, str(script),
+        "--client-id", client,
+        "--run-id", run_id,
+        "--repo-root", str(REPO_ROOT),
+    ]
+    print(f"  Running: derive_relational_signals.py --client-id {client} --run-id {run_id}")
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+
+    if result.stdout:
+        for line in result.stdout.strip().split("\n"):
+            print(f"    {line}")
+
+    if result.returncode != 0:
+        print(f"  WARNING: DPSIG derivation exited {result.returncode} — continuing without DPSIG")
+        if result.stderr:
+            print(f"  stderr: {result.stderr.strip()[:200]}")
+        return True
+
+    if _chronicle_emitter:
+        try:
+            _chronicle_emitter.emit_event(
+                "signal_derivation",
+                {
+                    "signal_family": "DPSIG",
+                    "derivation_level": "Topology",
+                    "source_artifact": "structure/40.4/canonical_topology.json",
+                    "output_artifact": f"artifacts/dpsig/{client}/{run_id}/dpsig_signal_set.json",
+                    "semantic_phase": "EMERGENCE",
+                },
+            )
+        except Exception as exc:
+            print(f"  [CHRONICLE] WARN: DPSIG event emission failed — {exc}")
+
+    print("  DPSIG topology intelligence derivation: OK")
+    return True
+
+
 # ── Phase 3b: Semantic Derivation (optional, explicit opt-in) ──────────────────
 
 def phase_03b_semantic_derivation(
@@ -2318,6 +2380,8 @@ def main() -> int:
          lambda: phase_03_7_structural_centrality(args.client, run_id, run_dir)),
         ("Phase 3.8 — ISIG Import Structure Intelligence",
          lambda: phase_03_8_isig_derivation(args.client, run_id, run_dir)),
+        ("Phase 3.9 — DPSIG Topology Intelligence",
+         lambda: phase_03_9_dpsig_derivation(args.client, run_id, run_dir)),
         ("Phase 3b — Semantic Derivation",
          lambda: phase_03b_semantic_derivation(
              args.client, run_id, run_dir, args.enable_semantic_derivation)),
