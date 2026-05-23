@@ -478,7 +478,39 @@ If WARN → proceed with explicit acknowledgment logged in execution_report.md.
 
 Full protocol: docs/pios/vault/operations/ARCHITECTURE_MEMORY_PREFLIGHT.md
 
-### 12.4 Reference Boundary Contract Load (CONDITIONAL)
+### 12.4 Operational Cognitive Rehydration (MANDATORY after context compaction)
+
+After any session resume, context compaction, or continuation from a prior conversation, Claude MUST run a targeted capability scan before executing in any domain.
+
+**Trigger:** Context compaction detected (conversation summary present, prior session continuation, or explicit resume directive).
+
+**Procedure:**
+
+1. **Identify execution domain.** What area of the codebase will this work touch? (e.g., semantic derivation, pipeline orchestration, SQO governance, LENS projection)
+
+2. **Scan existing capability.** Run targeted search of `scripts/pios/` (and relevant subdirectories) for scripts that cover the planned function:
+   - `find scripts/pios -name "*.py" | head -40`
+   - `grep -r` for key terms related to the planned work
+
+3. **Classify the gap.** Before proposing ANY new script or materializer, classify:
+   - **EXISTS** — capability fully operational, no work needed
+   - **EXISTS_NEEDS_PARAMETERIZATION** — logic present, needs CLI args or path generalization
+   - **EXISTS_NEEDS_ROUTING** — logic present, not connected to pipeline/orchestrator
+   - **EXISTS_NEEDS_INTEGRATION** — logic present, needs wiring to upstream/downstream gates
+   - **PARTIALLY_EXISTS** — some logic present, specific extension needed
+   - **GENUINELY_MISSING** — no comparable capability found after scan
+
+4. **Log classification.** State the classification before proceeding. If classification is anything other than GENUINELY_MISSING, the work is adaptation of existing code — not creation of new code.
+
+**Rules:**
+- No new script/materializer may be proposed until this scan is complete
+- "I need to build X" is invalid until "does X already exist?" is answered
+- Summary-level understanding of the codebase is insufficient — verify with file reads
+- If the capability registry (docs/pios/CAPABILITY_REGISTRY.md) exists, load it
+
+**Fail condition:** Proposing a new script for a function that already exists in the codebase is a rehydration failure. The scan was either skipped or insufficient.
+
+### 12.5 Reference Boundary Contract Load (CONDITIONAL)
 
 Claude MUST load and comply with the following document ONLY WHEN a stream involves cross-layer operations:
 
