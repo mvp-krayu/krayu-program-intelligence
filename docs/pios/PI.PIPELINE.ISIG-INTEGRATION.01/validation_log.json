@@ -1,0 +1,76 @@
+{
+  "stream": "PI.PIPELINE.ISIG-INTEGRATION.01",
+  "classification": "G2",
+  "baseline_commit": "c543e85",
+  "timestamp": "2026-05-23T00:00:00Z",
+  "checks": [
+    {
+      "id": "VL-01",
+      "name": "phase_function_exists",
+      "description": "phase_03_8_isig_derivation() defined in run_client_pipeline.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-02",
+      "name": "phase_list_registration",
+      "description": "Phase 3.8 registered in phases list between 3.7 and 3b",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-03",
+      "name": "idempotent_guard",
+      "description": "Skips when isig_signal_set.json already exists",
+      "status": "PASS",
+      "evidence": "Tested against blueedge/run_blueedge_genesis_e2e_02 — [IDEMPOTENT] detected"
+    },
+    {
+      "id": "VL-04",
+      "name": "graceful_degradation",
+      "description": "Skips when 40.3s/code_graph.json absent (PATH B specimens)",
+      "status": "PASS",
+      "evidence": "Tested with temp dir missing code_graph.json — WARNING logged, returned True"
+    },
+    {
+      "id": "VL-05",
+      "name": "script_path_correct",
+      "description": "Script path resolves to scripts/pios/isig/derive_import_signals.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-06",
+      "name": "cli_args_correct",
+      "description": "CLI args match derive_import_signals.py interface (--client-id, --run-id, --repo-root)",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-07",
+      "name": "non_blocking_failure",
+      "description": "Non-zero exit code produces WARNING, returns True (pipeline continues)",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-08",
+      "name": "chronicle_event_emission",
+      "description": "Chronicle emit_event called on success with signal_derivation type",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-09",
+      "name": "docstring_updated",
+      "description": "Module docstring includes Phase 3.8",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-10",
+      "name": "no_lane_a_mutation",
+      "description": "Phase writes only to artifacts/isig/ — no Lane A artifacts modified",
+      "status": "PASS"
+    }
+  ],
+  "summary": {
+    "total": 10,
+    "pass": 10,
+    "fail": 0,
+    "result": "VALID"
+  }
+}

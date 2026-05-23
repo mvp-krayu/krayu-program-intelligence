@@ -7,6 +7,7 @@ Multi-client E2E pipeline orchestrator. Executes 10+ phases:
   Phase 1  — Source Boundary (archive existence + SHA256)
   Phase 2  — Intake Verification (canonical_repo present)
   Phase 3  — 40.x Structural Verification (artifacts present)
+  Phase 3.8 — ISIG Import Structure Intelligence (Level 1, PATH A)
   Phase 4  — CEU Grounding Verification (readiness_gate=PASS)
   Phase 5  — Build Binding Envelope (CEU + DOM → FastAPI PIOS schema)
   Phase 6+7 — 75.x Activation + 41.x Projection (run_end_to_end.py)
@@ -1147,6 +1148,67 @@ def phase_03_7_structural_centrality(client: str, run_id: str, run_dir: Path) ->
     return True
 
 
+# ── Phase 3.8: ISIG Import Structure Intelligence Derivation ─────────────────
+
+def phase_03_8_isig_derivation(client: str, run_id: str, run_dir: Path) -> bool:
+    """Run derive_import_signals.py to produce ISIG Level 1 signal set.
+    Default ON — always runs. If 40.3s is absent, logs warning and skips
+    (graceful degradation). PATH A only."""
+    script = SCRIPTS_DIR / "isig" / "derive_import_signals.py"
+    if not script.is_file():
+        print(f"  WARNING: isig/derive_import_signals.py not found — skipping")
+        return True
+
+    out_dir = REPO_ROOT / "artifacts" / "isig" / client / run_id
+    out_signal_set = out_dir / "isig_signal_set.json"
+    if out_signal_set.exists():
+        print(f"  [IDEMPOTENT] artifacts/isig/{client}/{run_id}/isig_signal_set.json already exists — skipping")
+        return True
+
+    in_code_graph = run_dir / "structure" / "40.3s" / "code_graph.json"
+    if not in_code_graph.exists():
+        print(f"  WARNING: 40.3s/code_graph.json not found — skipping ISIG derivation")
+        return True
+
+    cmd = [
+        sys.executable, str(script),
+        "--client-id", client,
+        "--run-id", run_id,
+        "--repo-root", str(REPO_ROOT),
+    ]
+    print(f"  Running: derive_import_signals.py --client-id {client} --run-id {run_id}")
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+
+    if result.stdout:
+        for line in result.stdout.strip().split("\n"):
+            print(f"    {line}")
+
+    if result.returncode != 0:
+        print(f"  WARNING: ISIG derivation exited {result.returncode} — continuing without ISIG")
+        if result.stderr:
+            print(f"  stderr: {result.stderr.strip()[:200]}")
+        return True
+
+    if _chronicle_emitter:
+        try:
+            _chronicle_emitter.emit_event(
+                "signal_derivation",
+                {
+                    "signal_family": "ISIG",
+                    "derivation_level": "Level 1",
+                    "source_artifact": "structure/40.3s/code_graph.json",
+                    "output_artifact": f"artifacts/isig/{client}/{run_id}/isig_signal_set.json",
+                    "semantic_phase": "FORMATION",
+                },
+            )
+        except Exception as exc:
+            print(f"  [CHRONICLE] WARN: ISIG event emission failed — {exc}")
+
+    print("  ISIG import structure intelligence derivation: OK")
+    return True
+
+
 # ── Phase 3b: Semantic Derivation (optional, explicit opt-in) ──────────────────
 
 def phase_03b_semantic_derivation(
@@ -2254,6 +2316,8 @@ def main() -> int:
          lambda: phase_03_6_code_graph_enrichment(args.client, run_id, run_dir)),
         ("Phase 3.7 — Structural Centrality Derivation",
          lambda: phase_03_7_structural_centrality(args.client, run_id, run_dir)),
+        ("Phase 3.8 — ISIG Import Structure Intelligence",
+         lambda: phase_03_8_isig_derivation(args.client, run_id, run_dir)),
         ("Phase 3b — Semantic Derivation",
          lambda: phase_03b_semantic_derivation(
              args.client, run_id, run_dir, args.enable_semantic_derivation)),
