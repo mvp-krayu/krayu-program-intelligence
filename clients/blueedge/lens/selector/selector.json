@@ -1,7 +1,7 @@
 {
   "client": "blueedge",
-  "current_run": "run_blueedge_genesis_e2e_01",
-  "updated_at": "2026-05-22T17:18:59.314429+00:00",
+  "current_run": "run_blueedge_genesis_e2e_02",
+  "updated_at": "2026-05-23T07:25:35.562161+00:00",
   "output_root": "clients/blueedge/lens",
   "navigation_base": "/api/report-file",
   "run_status": {
