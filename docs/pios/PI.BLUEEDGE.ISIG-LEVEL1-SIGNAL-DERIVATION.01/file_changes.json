@@ -1,0 +1,42 @@
+{
+  "stream": "PI.BLUEEDGE.ISIG-LEVEL1-SIGNAL-DERIVATION.01",
+  "classification": "G2",
+  "date": "2026-05-23",
+  "changes": [
+    {
+      "file": "scripts/pios/isig/derive_import_signals.py",
+      "action": "CREATED",
+      "purpose": "ISIG Level 1 derivation script — Import Hub Pressure (ISIG-001) and Import Fan Asymmetry (ISIG-002)"
+    },
+    {
+      "file": "artifacts/isig/blueedge/run_blueedge_genesis_e2e_02/isig_signal_set.json",
+      "action": "CREATED",
+      "purpose": "ISIG signal set for BlueEdge genesis run — ISIG-001=35.304 HIGH, ISIG-002=22.264 HIGH"
+    },
+    {
+      "file": "artifacts/isig/netbox/run_github_netbox_20260520_134600/isig_signal_set.json",
+      "action": "CREATED",
+      "purpose": "ISIG signal set for NetBox — ISIG-001=51.135 HIGH, ISIG-002=8.949 HIGH (cross-validation)"
+    },
+    {
+      "file": "docs/pios/PI.BLUEEDGE.ISIG-LEVEL1-SIGNAL-DERIVATION.01/execution_report.md",
+      "action": "CREATED",
+      "purpose": "Stream execution report"
+    },
+    {
+      "file": "docs/pios/PI.BLUEEDGE.ISIG-LEVEL1-SIGNAL-DERIVATION.01/validation_log.json",
+      "action": "CREATED",
+      "purpose": "Stream validation log — 14/14 PASS"
+    },
+    {
+      "file": "docs/pios/PI.BLUEEDGE.ISIG-LEVEL1-SIGNAL-DERIVATION.01/file_changes.json",
+      "action": "CREATED",
+      "purpose": "Stream file change manifest"
+    },
+    {
+      "file": "docs/pios/PI.BLUEEDGE.ISIG-LEVEL1-SIGNAL-DERIVATION.01/CLOSURE.md",
+      "action": "CREATED",
+      "purpose": "Stream closure"
+    }
+  ]
+}

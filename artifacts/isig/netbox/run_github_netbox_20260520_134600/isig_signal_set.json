@@ -1,0 +1,252 @@
+{
+  "schema_version": "1.0",
+  "script_version": "1.0",
+  "client_id": "netbox",
+  "run_id": "run_github_netbox_20260520_134600",
+  "generated_at": "2026-05-23T09:06:06.220852+00:00",
+  "derivation_context": {
+    "code_graph_hash": "a2491c64bfada3616dcf9aabd676e172bb3184a746258a754b1cf2d24ef3de52",
+    "file_count": 1155,
+    "total_imports": 3614,
+    "files_with_in_degree": 598,
+    "files_with_out_degree": 769,
+    "indexer": {
+      "name": "python-ast",
+      "version": "3.9.6",
+      "capabilities": [
+        "DEFINES_CLASS",
+        "DEFINES_FUNCTION",
+        "IMPORTS",
+        "INHERITS",
+        "INHERITS_UNRESOLVED"
+      ]
+    }
+  },
+  "normalization_basis": {
+    "file_count": 1155,
+    "total_import_edges": 3614,
+    "mean_import_in_degree": 3.129,
+    "mean_import_out_degree": 3.129,
+    "max_import_in_degree": 160,
+    "max_import_in_file": "netbox/dcim/models/__init__.py",
+    "max_import_out_degree": 28,
+    "max_import_out_file": "netbox/dcim/views.py",
+    "top_10_in_degree": [
+      {
+        "file": "netbox/dcim/models/__init__.py",
+        "degree": 160
+      },
+      {
+        "file": "netbox/core/models/__init__.py",
+        "degree": 114
+      },
+      {
+        "file": "netbox/extras/models/__init__.py",
+        "degree": 95
+      },
+      {
+        "file": "netbox/ipam/models/__init__.py",
+        "degree": 86
+      },
+      {
+        "file": "netbox/dcim/choices.py",
+        "degree": 76
+      },
+      {
+        "file": "netbox/users/models/__init__.py",
+        "degree": 73
+      },
+      {
+        "file": "netbox/netbox/api/serializers/__init__.py",
+        "degree": 64
+      },
+      {
+        "file": "netbox/utilities/testing/__init__.py",
+        "degree": 60
+      },
+      {
+        "file": "netbox/utilities/forms/fields/__init__.py",
+        "degree": 57
+      },
+      {
+        "file": "netbox/netbox/api/fields.py",
+        "degree": 52
+      }
+    ],
+    "top_10_out_degree": [
+      {
+        "file": "netbox/dcim/views.py",
+        "degree": 28
+      },
+      {
+        "file": "netbox/extras/views.py",
+        "degree": 27
+      },
+      {
+        "file": "netbox/core/views.py",
+        "degree": 24
+      },
+      {
+        "file": "netbox/netbox/views/generic/bulk_views.py",
+        "degree": 24
+      },
+      {
+        "file": "netbox/dcim/api/serializers_/device_components.py",
+        "degree": 21
+      },
+      {
+        "file": "netbox/dcim/filtersets.py",
+        "degree": 20
+      },
+      {
+        "file": "netbox/dcim/graphql/types.py",
+        "degree": 20
+      },
+      {
+        "file": "netbox/netbox/models/features.py",
+        "degree": 20
+      },
+      {
+        "file": "netbox/virtualization/views.py",
+        "degree": 20
+      },
+      {
+        "file": "netbox/dcim/forms/filtersets.py",
+        "degree": 19
+      }
+    ]
+  },
+  "signal_entries": [
+    {
+      "signal_id": "ISIG-001",
+      "signal_name": "Import Hub Pressure",
+      "signal_family": "ISIG",
+      "derivation_level": "Level_1",
+      "formula": "max(import_in_degree) / mean(import_in_degree)",
+      "normalization_scope": "FILE_POPULATION_RELATIVE",
+      "activation_method": "RATIO_THRESHOLD",
+      "threshold_high": 5.0,
+      "threshold_elevated": 2.0,
+      "signal_value": 51.1345,
+      "activation_state": "HUB_PRESSURE_HIGH",
+      "severity": "HIGH",
+      "signal_stable_key": "4b0ebb0b75ce4164",
+      "derivation_hash": "a788cd50c968ee4b4020f169463ea3f31c4b9f8adda89802ade9bfe8d6f6a0cf",
+      "denominator_guard": {
+        "guard_condition": "total_imports == 0 OR file_count == 0",
+        "guard_action": "emit null \u2014 NO_IMPORTS",
+        "denominator_zero_flag": false
+      },
+      "derivation_trace": {
+        "numerator_field": "max(import_in_degree across all files)",
+        "numerator_value": 160,
+        "numerator_file": "netbox/dcim/models/__init__.py",
+        "denominator_field": "mean(import_in_degree) = total_imports / file_count",
+        "denominator_value": 3.129,
+        "denominator_source": "code_graph.json \u2192 3614 IMPORTS / 1155 files",
+        "result": 51.1345,
+        "raw_result": 51.13447703375761,
+        "rounding": "round(raw, 4)"
+      },
+      "topology_dependencies": [
+        {
+          "artifact": "code_graph.json",
+          "field": "relationships[relation_type=IMPORTS].target_path",
+          "usage": "per-file import in-degree (count of files that import this file)"
+        }
+      ],
+      "explainability_template": "The file {max_file} is imported by {max_deg} other files \u2014 {signal_value}x the mean import in-degree of {mean_deg}.",
+      "explainability_render": "The file netbox/dcim/models/__init__.py is imported by 160 other files \u2014 51.1345x the mean import in-degree of 3.129.",
+      "executive_summary": "netbox/dcim/models/__init__.py is a structural import hub: 160 dependents, 51.1345x the population mean. A breaking change here propagates to 160 files.",
+      "engineering_summary": "IHP=51.1345 (HUB_PRESSURE_HIGH): netbox/dcim/models/__init__.py in_degree=160, mean=3.129, file_count=1155, total_imports=3614",
+      "derivation_summary": "IHP = 160 / 3.129 = 51.1345",
+      "source_artifacts": {
+        "code_graph": "a2491c64bfada3616dcf9aabd676e172bb3184a746258a754b1cf2d24ef3de52"
+      }
+    },
+    {
+      "signal_id": "ISIG-002",
+      "signal_name": "Import Fan Asymmetry",
+      "signal_family": "ISIG",
+      "derivation_level": "Level_1",
+      "formula": "max(import_out_degree) / mean(import_out_degree)",
+      "normalization_scope": "FILE_POPULATION_RELATIVE",
+      "activation_method": "RATIO_THRESHOLD",
+      "threshold_high": 5.0,
+      "threshold_elevated": 2.0,
+      "signal_value": 8.9485,
+      "activation_state": "FAN_ASYMMETRY_HIGH",
+      "severity": "HIGH",
+      "signal_stable_key": "65df8cf68e385ab8",
+      "derivation_hash": "24bdc10dd0b2ded4c86e70be784ff4a8ac700ae4111e205bf30728ec4ff1ade7",
+      "denominator_guard": {
+        "guard_condition": "total_imports == 0 OR file_count == 0",
+        "guard_action": "emit null \u2014 NO_IMPORTS",
+        "denominator_zero_flag": false
+      },
+      "derivation_trace": {
+        "numerator_field": "max(import_out_degree across all files)",
+        "numerator_value": 28,
+        "numerator_file": "netbox/dcim/views.py",
+        "denominator_field": "mean(import_out_degree) = total_imports / file_count",
+        "denominator_value": 3.129,
+        "denominator_source": "code_graph.json \u2192 3614 IMPORTS / 1155 files",
+        "result": 8.9485,
+        "raw_result": 8.948533480907582,
+        "rounding": "round(raw, 4)"
+      },
+      "topology_dependencies": [
+        {
+          "artifact": "code_graph.json",
+          "field": "relationships[relation_type=IMPORTS].source_path",
+          "usage": "per-file import out-degree (count of files this file imports)"
+        }
+      ],
+      "explainability_template": "The file {max_file} imports {max_deg} other files \u2014 {signal_value}x the mean import out-degree of {mean_deg}.",
+      "explainability_render": "The file netbox/dcim/views.py imports 28 other files \u2014 8.9485x the mean import out-degree of 3.129.",
+      "executive_summary": "netbox/dcim/views.py is a coupling orchestrator: imports 28 files, 8.9485x the population mean. This file is an integration bottleneck.",
+      "engineering_summary": "IFA=8.9485 (FAN_ASYMMETRY_HIGH): netbox/dcim/views.py out_degree=28, mean=3.129, file_count=1155, total_imports=3614",
+      "derivation_summary": "IFA = 28 / 3.129 = 8.9485",
+      "source_artifacts": {
+        "code_graph": "a2491c64bfada3616dcf9aabd676e172bb3184a746258a754b1cf2d24ef3de52"
+      }
+    }
+  ],
+  "derivation_summary": {
+    "signals_derived": 2,
+    "signals_activated": 2,
+    "signals_null": 0,
+    "null_reasons": [],
+    "severity_band": "HIGH"
+  },
+  "replay_taxonomy": {
+    "TAXONOMY_01_REPLAY_STABLE": [
+      "normalization_basis.*",
+      "signal_entries[*].signal_id",
+      "signal_entries[*].signal_value",
+      "signal_entries[*].activation_state",
+      "signal_entries[*].severity",
+      "signal_entries[*].signal_stable_key",
+      "signal_entries[*].derivation_hash",
+      "signal_entries[*].derivation_trace.*"
+    ],
+    "TAXONOMY_02_TIME_VARYING": [
+      "generated_at"
+    ],
+    "TAXONOMY_03_VERSION_DEPENDENT": [
+      "schema_version",
+      "script_version",
+      "derivation_context.*",
+      "signal_entries[*].source_artifacts.*"
+    ]
+  },
+  "provenance_chain": {
+    "stream": "PI.BLUEEDGE.ISIG-LEVEL1-SIGNAL-DERIVATION.01",
+    "signal_family": "ISIG",
+    "derivation_level": "Level_1",
+    "classification": "SOFTWARE_MODULE",
+    "source_artifact": "40.3s/code_graph.json",
+    "client_agnostic": true,
+    "code_graph_native": true
+  }
+}
