@@ -1,0 +1,42 @@
+{
+  "stream": "PI.BLUEEDGE.CHRONICLE-SIGNAL-INTEGRATION.01",
+  "classification": "G2",
+  "date": "2026-05-23",
+  "changes": [
+    {
+      "file": "clients/blueedge/chronicle/REPLAY_CHRONICLE.html",
+      "action": "MODIFIED",
+      "purpose": "Chapter 1 Z2 signal cards, Chapter 7 Z3 convergence matrix signal dimensions, post-certification enrichment section (The Signals), footer enrichment disclosure"
+    },
+    {
+      "file": "clients/blueedge/chronicle/CHRONICLE_MANIFEST.json",
+      "action": "MODIFIED",
+      "purpose": "Added post_certification_enrichments array with signal integration metadata"
+    },
+    {
+      "file": "clients/blueedge/chronicle/checkpoints/checkpoint_00_baseline.json",
+      "action": "MODIFIED",
+      "purpose": "Added signal_state_addendum with PSIG/DPSIG values, intelligence delta, ISIG open gap"
+    },
+    {
+      "file": "docs/pios/PI.BLUEEDGE.CHRONICLE-SIGNAL-INTEGRATION.01/execution_report.md",
+      "action": "CREATED",
+      "purpose": "Stream execution report"
+    },
+    {
+      "file": "docs/pios/PI.BLUEEDGE.CHRONICLE-SIGNAL-INTEGRATION.01/validation_log.json",
+      "action": "CREATED",
+      "purpose": "Stream validation log — 14/14 PASS"
+    },
+    {
+      "file": "docs/pios/PI.BLUEEDGE.CHRONICLE-SIGNAL-INTEGRATION.01/file_changes.json",
+      "action": "CREATED",
+      "purpose": "Stream file change manifest"
+    },
+    {
+      "file": "docs/pios/PI.BLUEEDGE.CHRONICLE-SIGNAL-INTEGRATION.01/CLOSURE.md",
+      "action": "CREATED",
+      "purpose": "Stream closure"
+    }
+  ]
+}
