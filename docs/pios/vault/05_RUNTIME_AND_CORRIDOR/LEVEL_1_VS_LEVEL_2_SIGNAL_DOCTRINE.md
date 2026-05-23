@@ -36,7 +36,7 @@ Program Intelligence reads structural truth at two distinct abstraction levels. 
 **Availability:** PATH A specimens with code graph only. PATH B specimens have no Level 1.
 
 **Signal families at Level 1:**
-- ISIG (Import Structure Intelligence Signals) — PARTIALLY_IMPLIED, not yet implemented
+- ISIG (Import Structure Intelligence Signals) — **OPERATIONAL** (ISIG-001 Import Hub Pressure, ISIG-002 Import Fan Asymmetry)
 - CSIG (Centrality Structure Intelligence Signals) — PARTIALLY_IMPLIED, not yet implemented
 
 ---
@@ -145,13 +145,13 @@ The generic corridor (Level 2) compared to the historical shortcut corridor (Lev
 |--------|---------------------|-------------------|----------------|
 | PSIG-001 | 5.663, 1 entity, 1 zone | 4.0, 2 entities, 4 zones | DIFFERENT_ABSTRACTION_SAME_READ |
 | PSIG-002 | 3.210, 1 domain | 4.0, 4 domains | IMPROVED_READ |
-| PSIG-004 | 2.182, 1 hub entity | 1.0, uniform distribution | **LOST_READ** |
+| PSIG-004 | 2.182, 1 hub entity | 1.0, uniform distribution | **LOST_READ → RESOLVED by ISIG-001** |
 | PSIG-006 | 0, theoretical | 0.1515, genuine isolation | NEW_READ |
 | Zones | 1 zone | 4 zones | IMPROVED_READ |
 | DPSIG-031 | 2.12, ELEVATED (35 nodes) | 3.45, ELEVATED (944 nodes) | IMPROVED_READ |
 | DPSIG-032 | 0.17, BALANCED (false) | 0.57, ASYMMETRIC (true) | IMPROVED_READ |
 
-**Net result:** The generic corridor reveals MORE truthful structural cognition than the historical shortcut corridor. The single LOST_READ (PSIG-004 file-level hub concentration) is classified as LEVEL_1_SIGNAL_FAMILY_REQUIRED — it justifies ISIG, not shortcut restoration.
+**Net result:** The generic corridor reveals MORE truthful structural cognition than the historical shortcut corridor. The single LOST_READ (PSIG-004 file-level hub concentration) has been resolved by ISIG-001 (Import Hub Pressure = 35.304 HIGH on BlueEdge, 51.135 HIGH on NetBox). All signal intelligence is now preserved or improved across both abstraction levels.
 
 ### Why DPSIG-032 Changed: BALANCED → ASYMMETRIC
 
@@ -169,18 +169,19 @@ At Level 1, the evidence was genuine: one file (app.module.ts) with 69 outbound 
 
 This is not a generic corridor failure. It is a demonstration that Level 1 and Level 2 see fundamentally different structural realities.
 
-### Why ISIG Is Now Justified
+### Why ISIG Was Justified — And Is Now Operational
 
-ISIG (Import Structure Intelligence Signals) is not feature creep, nostalgia, or shortcut rehabilitation. It is a legitimate Level 1 signal family required to preserve file-topology early-warning cognition on the generic spine.
+ISIG (Import Structure Intelligence Signals) is not feature creep, nostalgia, or shortcut rehabilitation. It is a legitimate Level 1 signal family that preserves file-topology early-warning cognition on the generic spine.
 
-**Evidence:**
-- `common/dto/index.ts` = 111 inbound IMPORTS (import hub pressure — blast radius for breaking changes)
-- `app.module.ts` = 69 outbound IMPORTS (import fan asymmetry — coupling surface for dependency upgrades)
-- Both are Level 1 structural truths that Level 2 cannot reproduce
+**Evidence (operational):**
+- `common/dto/index.ts` = 111 inbound IMPORTS → ISIG-001 = 35.304 HIGH (35x mean — structural single-point-of-failure)
+- `App.tsx` = 70 outbound IMPORTS → ISIG-002 = 22.264 HIGH (22x mean — integration bottleneck)
+- Cross-validated on NetBox: ISIG-001 = 51.135 HIGH, ISIG-002 = 8.949 HIGH (1,155 files, 3,614 IMPORTS)
 
-**ISIG would compute:** `max(import_in_degree) / mean(import_in_degree)` from 40.3s/40.3c — the same evidence source that enrichment reads, but producing named signals instead of aggregate edge counts.
+**ISIG computes:** `max(import_in_degree) / mean(import_in_degree)` (ISIG-001) and `max(import_out_degree) / mean(import_out_degree)` (ISIG-002) directly from 40.3s code graph IMPORTS relationships. Client-agnostic, code-graph-native, standalone derivation.
 
-The raw data exists. The evidence is available. The gap is named. Implementation requires operator approval.
+**Script:** `scripts/pios/isig/derive_import_signals.py`
+**Output:** `artifacts/isig/<client>/<run>/isig_signal_set.json`
 
 ---
 
@@ -191,7 +192,7 @@ The raw data exists. The evidence is available. The gap is named. Implementation
 | PSIG | Level 2 | binding_envelope.json | YES | OPERATIONAL |
 | BSIG | Level 2 | binding_envelope.json | YES | SPECIFIED_NOT_IMPLEMENTED |
 | DPSIG | Topology | canonical_topology.json (40.4) | YES | OPERATIONAL |
-| ISIG | Level 1 | code_graph.json (40.3s) | PATH A only | PARTIALLY_IMPLIED |
+| ISIG | Level 1 | code_graph.json (40.3s) | PATH A only | **OPERATIONAL** |
 | CSIG | Level 1 | structural_centrality.json (40.3c) | PATH A only | PARTIALLY_IMPLIED |
 | ESIG | Level 1→2 bridge | Phase 5 enrichment delta | PATH A only | SPECIFIED_NOT_IMPLEMENTED |
 

@@ -562,6 +562,9 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.GENESIS.GENERIC-SIGNAL-LINEAGE-VERIFICATION.01 | G1 | Signal derivation spine canonicalization — signal family taxonomy (PSIG/DPSIG/BSIG/ISIG/CSIG/ESIG), derivation levels (Level 1 vs Level 2), derivation contract (8 rules, 4 prohibitions), PATH A signal integration map, chronicle signal lineage requirements, E2E derivation chain. Signal doctrine embedded as constitutional spine knowledge | COMPLETE |
 | PI.BLUEEDGE.GENERIC-SIGNAL-COMPUTATION.01 | G2 | SIGNAL_SHORTCUT_RETAINED permanently removed. Generic PSIG computation on BlueEdge binding envelope (4 signals, 4 zones). DPSIG re-derived on genesis 40.4 topology (CFA BALANCED→ASYMMETRIC). Intelligence delta certified: 4 IMPROVED_READ, 1 DIFFERENT_ABSTRACTION, 1 NEW_READ, 1 LOST_READ. Net result: generic corridor produces MORE truthful structural cognition. PSIG-004 LOST_READ → OPEN_GAP → LEVEL_1_SIGNAL_FAMILY_REQUIRED | COMPLETE |
 | PI.GENESIS.SIGNAL-LEVEL-DOCTRINE-CANONICALIZATION.01 | G1 | Level 1 vs Level 2 signal doctrine elevated to constitutional knowledge. LEVEL_1_VS_LEVEL_2_SIGNAL_DOCTRINE.md created. 6 vault pages updated: SIGNAL_FAMILY_TAXONOMY, SIGNAL_DERIVATION_SPINE, PATH_A_SIGNAL_INTEGRATION_MAP, CHRONICLE_SIGNAL_LINEAGE_REQUIREMENTS, TERMINOLOGY_LOCK, PIOS_CURRENT_CANONICAL_STATE. Abstraction gap causes documented (population compression, edge abstraction 535:1, surface normalization). DPSIG-032 correction rationale locked. ISIG justification canonicalized as structural necessity, not shortcut nostalgia | COMPLETE |
+| PI.BLUEEDGE.CHRONICLE-SIGNAL-INTEGRATION.01 | G2 | Post-certification chronicle enrichment — signal intelligence integrated into REPLAY_CHRONICLE.html (Chapter 1 Z2 signal cards, Chapter 7 convergence matrix +4 dimensions, post-certification enrichment section "The Signals"). Format v1.0→v1.1. Certification preserved. | COMPLETE |
+| PI.BLUEEDGE.ISIG-LEVEL1-SIGNAL-DERIVATION.01 | G2 | First Level 1 signal family operational. ISIG-001 Import Hub Pressure (BlueEdge 35.3 HIGH, NetBox 51.1 HIGH). ISIG-002 Import Fan Asymmetry (BlueEdge 22.3 HIGH, NetBox 8.9 HIGH). PSIG-004 LOST_READ closed. Client-agnostic, code-graph-native. Cross-validated on 2 specimens | COMPLETE |
+| PI.GENESIS.ISIG-VAULT-STATUS-UPDATE.01 | G1 | ISIG vault status update — PARTIALLY_IMPLIED→OPERATIONAL across all vault pages. LOST_READ→RESOLVED in delta certification. Signal family classification updated. Ontology lineage current | COMPLETE |
 
 ## Signal Derivation Spine — Canonical Signal Intelligence Doctrine
 
@@ -579,11 +582,11 @@ Signal families are structural cognition outputs of the generic derivation spine
 
 Level 1 and Level 2 are NOT interchangeable. Both are necessary for complete structural intelligence. Level 2 cannot reproduce Level 1 intelligence due to population compression, edge abstraction, and surface normalization.
 
-**Generic Corridor Certification (2026-05-23):** SIGNAL_SHORTCUT_RETAINED permanently removed. BlueEdge intelligence delta: 4 IMPROVED_READ, 1 DIFFERENT_ABSTRACTION, 1 NEW_READ, 1 LOST_READ. The generic corridor produces MORE truthful structural cognition than the historical shortcut. Most consequential correction: DPSIG-032 false BALANCED → genuine ASYMMETRIC (57% structural mass in one cluster — previously invisible). PSIG-004 LOST_READ (file-level hub concentration) classified as OPEN_GAP → LEVEL_1_SIGNAL_FAMILY_REQUIRED (ISIG).
+**Generic Corridor Certification (2026-05-23):** SIGNAL_SHORTCUT_RETAINED permanently removed. BlueEdge intelligence delta: 4 IMPROVED_READ, 1 DIFFERENT_ABSTRACTION, 1 NEW_READ, 1 LOST_READ. The generic corridor produces MORE truthful structural cognition than the historical shortcut. Most consequential correction: DPSIG-032 false BALANCED → genuine ASYMMETRIC (57% structural mass in one cluster — previously invisible). PSIG-004 LOST_READ (file-level hub concentration) resolved by ISIG implementation — ISIG-001=35.3 HIGH reveals the intelligence that was invisible at Level 2. All signal intelligence is now preserved or improved.
 
 **Signal Family Classification (LOCKED):**
 - **Generic GENESIS** (any specimen): PSIG (Level 2), DPSIG (topology), BSIG (Level 2 meta — NEW)
-- **Software Module** (code graph required): ISIG (Level 1 — LEVEL_1_SIGNAL_FAMILY_REQUIRED), CSIG (Level 1), ESIG (Level 1→2 bridge — NEW)
+- **Software Module** (code graph required): ISIG (Level 1 — OPERATIONAL), CSIG (Level 1), ESIG (Level 1→2 bridge — NEW)
 - **Concept-Only:** ESI (structural coherence delta), RAG (representation alignment gap)
 
 **Signal Family Maturity:**
@@ -593,7 +596,7 @@ Level 1 and Level 2 are NOT interchangeable. Both are necessary for complete str
 | PSIG | Level 2 | OPERATIONAL | Generic corridor certified. 4 signals, 4 pressure zones on BlueEdge binding |
 | DPSIG | Topology | OPERATIONAL (Class 4) | CFA corrected: BALANCED → ASYMMETRIC. 944-node real substrate |
 | BSIG | Level 2 | SPECIFIED_NOT_IMPLEMENTED | Raw data in binding envelope; no computation pipeline |
-| ISIG | Level 1 | PARTIALLY_IMPLIED — **LEVEL_1_SIGNAL_FAMILY_REQUIRED** | PSIG-004 LOST_READ justifies this family. Raw data in 40.3c. Not yet approved for implementation |
+| ISIG | Level 1 | **OPERATIONAL** (ISIG-001, ISIG-002) | First Level 1 signal family. IHP=35.3 HIGH, IFA=22.3 HIGH (BlueEdge). Cross-validated on NetBox. PSIG-004 LOST_READ closed |
 | CSIG | Level 1 | PARTIALLY_IMPLIED | Raw metrics in 40.3c; no named signal computation |
 | ESIG | Level 1→2 | SPECIFIED_NOT_IMPLEMENTED | Enrichment delta observable; no computation pipeline |
 

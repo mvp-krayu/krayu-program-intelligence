@@ -1,0 +1,104 @@
+{
+  "stream": "PI.GENESIS.ISIG-VAULT-STATUS-UPDATE.01",
+  "classification": "G1",
+  "baseline_commit": "78ae369",
+  "timestamp": "2026-05-23T00:00:00Z",
+  "checks": [
+    {
+      "id": "VL-01",
+      "name": "signal_family_taxonomy_isig_operational",
+      "description": "SIGNAL_FAMILY_TAXONOMY.md shows ISIG as OPERATIONAL",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-02",
+      "name": "signal_family_taxonomy_maturity_table",
+      "description": "Maturity table shows ISIG OPERATIONAL with evidence",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-03",
+      "name": "signal_family_taxonomy_delta_resolved",
+      "description": "Intelligence delta table shows PSIG-004 LOST_READ → RESOLVED",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-04",
+      "name": "signal_family_taxonomy_integration_model",
+      "description": "PATH A integration model shows ISIG source (OPERATIONAL)",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-05",
+      "name": "canonical_state_isig_maturity",
+      "description": "PIOS_CURRENT_CANONICAL_STATE.md shows ISIG OPERATIONAL",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-06",
+      "name": "canonical_state_signal_classification",
+      "description": "Signal classification shows OPERATIONAL (not LEVEL_1_SIGNAL_FAMILY_REQUIRED)",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-07",
+      "name": "canonical_state_lost_read_resolution",
+      "description": "LOST_READ text reflects ISIG resolution",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-08",
+      "name": "canonical_state_ontology_lineage",
+      "description": "Ontology lineage includes ISIG-related stream entries",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-09",
+      "name": "chronicle_lineage_isig_operational",
+      "description": "CHRONICLE_SIGNAL_LINEAGE_REQUIREMENTS.md shows ISIG OPERATIONAL",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-10",
+      "name": "level_doctrine_isig_operational",
+      "description": "LEVEL_1_VS_LEVEL_2_SIGNAL_DOCTRINE.md shows ISIG OPERATIONAL in families list",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-11",
+      "name": "level_doctrine_delta_resolved",
+      "description": "Level doctrine delta table shows PSIG-004 LOST_READ → RESOLVED by ISIG-001",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-12",
+      "name": "level_doctrine_level_map",
+      "description": "Signal family level map shows ISIG OPERATIONAL",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-13",
+      "name": "cross_page_consistency",
+      "description": "All 4 vault pages agree on ISIG OPERATIONAL status",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-14",
+      "name": "no_terminology_collision",
+      "description": "No new terms introduced (status change only)",
+      "status": "PASS"
+    },
+    {
+      "id": "VL-15",
+      "name": "evidence_traceability",
+      "description": "All status changes trace to PI.BLUEEDGE.ISIG-LEVEL1-SIGNAL-DERIVATION.01 operational evidence",
+      "status": "PASS"
+    }
+  ],
+  "summary": {
+    "total": 15,
+    "pass": 15,
+    "fail": 0,
+    "result": "VALID"
+  }
+}
