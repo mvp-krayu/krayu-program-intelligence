@@ -118,22 +118,34 @@ These families derive from 40.3s and 40.3c artifacts. They are available ONLY fo
 
 | Field | Value |
 |-------|-------|
-| Status | **PARTIALLY IMPLIED** — raw data exists in 40.3c; not computed as named signals |
+| Status | **OPERATIONAL** (ISIG-001, ISIG-002) |
 | Source artifact | `structure/40.3s/code_graph.json` (IMPORTS relationships) |
 | Derivation level | Level 1 — File-Level Structural Intelligence |
-| Derivation phase | Would derive from Phase 3.6 output |
+| Derivation phase | Independent — `derive_import_signals.py` (not part of Phase 6+7) |
+| Computation script | `scripts/pios/isig/derive_import_signals.py` |
+| Downstream projection | `artifacts/isig/<client>/<run>/isig_signal_set.json` (standalone; LENS integration future) |
 | PATH A dependency | 40.3s code graph (IMPORTS relationship type) |
-| Chronicle eligibility | YES (when implemented) |
+| Chronicle eligibility | YES |
 
-**Candidate signals:**
+**Signals (implemented):**
 
 | ID | Name | Formula | What It Measures | Early-Warning Value |
 |----|------|---------|-----------------|---------------------|
 | ISIG-001 | Import Hub Pressure | max(import_in_degree) / mean(import_in_degree) | File-level import centrality concentration | Structural single-point-of-failure — a file imported by 111 others means 111 dependents break on change |
-| ISIG-002 | Import Fan Asymmetry | max(import_out_degree) / mean(import_out_degree) | File-level coupling concentration | Monolithic coupling — a file importing 69 others is an integration bottleneck |
-| ISIG-003 | Import Chain Depth | max(transitive import chain length) | Dependency chain depth | Deep chains = hidden transitive coupling, slow build propagation |
+| ISIG-002 | Import Fan Asymmetry | max(import_out_degree) / mean(import_out_degree) | File-level coupling concentration | Monolithic coupling — a file importing 70 others is an integration bottleneck |
 
-**Evidence basis (BlueEdge):** `common/dto/index.ts` = 111 in-degree, `App.tsx` = 70 out-degree, `app.module.ts` = 69 out-degree. 40.3c already computes `import_in_degree` and `import_out_degree` for 643 files.
+**Deferred signal:**
+
+| ID | Name | Formula | What It Measures | Status |
+|----|------|---------|-----------------|--------|
+| ISIG-003 | Import Chain Depth | max(transitive import chain length) | Dependency chain depth | DEFERRED — requires transitive graph traversal |
+
+**Operational evidence:**
+- BlueEdge: ISIG-001=35.304 HIGH (`common/dto/index.ts`: 111 inbound, mean 3.14), ISIG-002=22.264 HIGH (`App.tsx`: 70 outbound)
+- NetBox: ISIG-001=51.135 HIGH, ISIG-002=8.949 HIGH (1,155 files, 3,614 IMPORTS)
+- Cross-validated on both PATH A specimens. Client-agnostic, code-graph-native.
+
+**PSIG-004 LOST_READ resolution:** ISIG-001=35.304 reveals file-level hub concentration that is invisible at Level 2 (PSIG-004=1.0 NORMAL). The LOST_READ is closed.
 
 **Software execution connection:** Import in-degree = blast radius for breaking changes. Import out-degree = coupling surface for dependency upgrades. Both directly predict PR review complexity, deployment risk, and change coordination cost.
 
@@ -192,7 +204,7 @@ PATH A STRUCTURAL SUBSTRATE
 │
 ├── 40.3 structural_topology_log ───────────── Relationship surface
 │     └── 40.3r filtered_topology ───────────── PRIMARY-only relationships
-│           └── 40.3s code_graph ────────────── ISIG candidate source
+│           └── 40.3s code_graph ────────────── ISIG source (OPERATIONAL)
 │                 └── 40.3c structural_centrality ─ CSIG candidate source
 │
 ├── 40.4 canonical_topology ────────────────── DPSIG source (IMPLEMENTED)
@@ -217,7 +229,7 @@ PATH A STRUCTURAL SUBSTRATE
 | PSIG | Level 2 | OPERATIONAL | 4 signals, 5 computation scripts, pipeline Phase 6+7, vault integration. Generic corridor certified: NET IMPROVEMENT over historical shortcut |
 | DPSIG | Topology | OPERATIONAL (Class 4) | 2 signals, topology-native script, LENS additive sidecar. CFA correction: false BALANCED → genuine ASYMMETRIC on BlueEdge |
 | BSIG | Level 2 | SPECIFIED_NOT_IMPLEMENTED | Raw data exists in binding envelope; no computation pipeline |
-| ISIG | Level 1 | PARTIALLY_IMPLIED — **LEVEL_1_SIGNAL_FAMILY_REQUIRED** | Raw metrics in 40.3c; no named signal computation. Intelligence delta LOST_READ (PSIG-004) confirms this family is needed to preserve file-topology early-warning cognition |
+| ISIG | Level 1 | **OPERATIONAL** (ISIG-001, ISIG-002) | 2 signals, code-graph-native script, standalone derivation. PSIG-004 LOST_READ closed. BlueEdge: IHP=35.3 HIGH, IFA=22.3 HIGH. NetBox: IHP=51.1 HIGH, IFA=8.9 HIGH |
 | CSIG | Level 1 | PARTIALLY_IMPLIED | Raw metrics in 40.3c; no named signal computation |
 | ESIG | Level 1→2 bridge | SPECIFIED_NOT_IMPLEMENTED | Enrichment delta observable; no computation pipeline |
 | ESI | Cross-run | CONCEPT_ONLY | Defined, no evidence or implementation |
@@ -239,9 +251,9 @@ The generic corridor (Level 2) was certified against the historical shortcut cor
 | Pressure zones: 1 → 4 | IMPROVED_READ | Pressure distributed across architecture |
 | PSIG-001: different entity, same read | DIFFERENT_ABSTRACTION_SAME_READ | Coupling concentration preserved at architectural level |
 | PSIG-006: theoretical → genuine | NEW_READ | Architectural fragmentation discovered |
-| PSIG-004: HIGH → uniform | **LOST_READ** | File-level hub concentration invisible at Level 2 → ISIG required |
+| PSIG-004: HIGH → uniform | **LOST_READ → RESOLVED** | File-level hub concentration invisible at Level 2 → ISIG-001=35.3 HIGH now provides this intelligence at Level 1 |
 
-**Verdict:** The generic corridor produces MORE truthful structural cognition than the historical shortcut corridor. One LOST_READ exists with a governed resolution path (ISIG).
+**Verdict:** The generic corridor produces MORE truthful structural cognition than the historical shortcut corridor. The single LOST_READ (PSIG-004) has been resolved by ISIG implementation — all signal intelligence is now preserved or improved.
 
 See [[../../PI.BLUEEDGE.GENERIC-SIGNAL-COMPUTATION.01/BLUEEDGE_SIGNAL_INTELLIGENCE_DELTA]] for full evidence.
 

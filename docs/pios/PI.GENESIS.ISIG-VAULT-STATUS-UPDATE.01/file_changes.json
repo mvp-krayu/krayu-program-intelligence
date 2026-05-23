@@ -1,0 +1,47 @@
+{
+  "stream": "PI.GENESIS.ISIG-VAULT-STATUS-UPDATE.01",
+  "classification": "G1",
+  "baseline_commit": "78ae369",
+  "changes": [
+    {
+      "path": "docs/pios/vault/05_RUNTIME_AND_CORRIDOR/SIGNAL_FAMILY_TAXONOMY.md",
+      "action": "MODIFIED",
+      "reason": "Update ISIG section to OPERATIONAL status with computation script, evidence, and maturity classification"
+    },
+    {
+      "path": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "action": "MODIFIED",
+      "reason": "Update ISIG maturity, signal classification, LOST_READ resolution, and ontology lineage"
+    },
+    {
+      "path": "docs/pios/PI.GENESIS.GENERIC-SIGNAL-LINEAGE-VERIFICATION.01/CHRONICLE_SIGNAL_LINEAGE_REQUIREMENTS.md",
+      "action": "MODIFIED",
+      "reason": "Update ISIG row in signal family chronicle status index to OPERATIONAL"
+    },
+    {
+      "path": "docs/pios/vault/05_RUNTIME_AND_CORRIDOR/LEVEL_1_VS_LEVEL_2_SIGNAL_DOCTRINE.md",
+      "action": "MODIFIED",
+      "reason": "Update ISIG to OPERATIONAL in families list, delta table, justification section, and level map"
+    },
+    {
+      "path": "docs/pios/PI.GENESIS.ISIG-VAULT-STATUS-UPDATE.01/execution_report.md",
+      "action": "CREATED",
+      "reason": "Mandatory governance artifact"
+    },
+    {
+      "path": "docs/pios/PI.GENESIS.ISIG-VAULT-STATUS-UPDATE.01/validation_log.json",
+      "action": "CREATED",
+      "reason": "Mandatory governance artifact"
+    },
+    {
+      "path": "docs/pios/PI.GENESIS.ISIG-VAULT-STATUS-UPDATE.01/file_changes.json",
+      "action": "CREATED",
+      "reason": "Mandatory governance artifact"
+    },
+    {
+      "path": "docs/pios/PI.GENESIS.ISIG-VAULT-STATUS-UPDATE.01/CLOSURE.md",
+      "action": "CREATED",
+      "reason": "Mandatory governance artifact with G1 Section 10"
+    }
+  ]
+}

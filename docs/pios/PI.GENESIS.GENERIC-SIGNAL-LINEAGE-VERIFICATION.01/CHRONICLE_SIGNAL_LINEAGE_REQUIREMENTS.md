@@ -136,7 +136,7 @@ Within the Chronicle Z1-Z5 zoom architecture, signals are visible at:
 | PSIG | Level 2 | IMPLEMENTED | FULL — all chronicle events emittable | Generic corridor: Phase 6+7 on binding envelope. Certified NET IMPROVEMENT |
 | DPSIG | Topology | IMPLEMENTED | FULL — all chronicle events emittable | Independent derivation from 40.4. CFA corrected to ASYMMETRIC |
 | BSIG | Level 2 | NEW | NOT YET — no computation to emit from | Binding metadata available; no computation pipeline |
-| ISIG | Level 1 | PARTIAL — **LEVEL_1_SIGNAL_FAMILY_REQUIRED** | NOT YET — raw data in 40.3c, no named signal emit | Required to preserve file-topology early-warning cognition lost at Level 2 |
+| ISIG | Level 1 | **OPERATIONAL** (ISIG-001, ISIG-002) | READY — derive_import_signals.py emits isig_signal_set.json | PSIG-004 LOST_READ resolved. BlueEdge IHP=35.3 HIGH, IFA=22.3 HIGH. Chronicle events emittable when pipeline-integrated |
 | CSIG | Level 1 | PARTIAL | NOT YET — raw data in 40.3c, no named signal emit | CSIG-001/002/003 computable from centrality metrics |
 | ESIG | Level 1→2 | NEW | NOT YET — enrichment delta observable but not emitted | Phase 5 enrichment step has the delta |
 | ESI | Cross-run | CONCEPT | NOT ELIGIBLE — no implementation | |
