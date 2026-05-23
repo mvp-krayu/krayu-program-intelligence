@@ -28,6 +28,7 @@ import argparse
 import hashlib
 import json
 import sys
+import tarfile
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -140,6 +141,175 @@ def resolve_inventory_source_path(client_id: str, run_id: str, manifest: dict) -
         "resolved_path": None,
         "resolved_path_abs": None,
         "candidate_paths": candidates,
+    }
+
+
+# ── Source Intake Materialization ──────────────────────────────────────────────
+# Generic framework: source_type drives adapter selection.
+# Supported: TAR_ARCHIVE, ARCH-PL (alias), GITHUB_CLONE (alias).
+# Extensible: EXISTING_LOCAL_REPO, EVIDENCE_BUNDLE — NOT_IMPLEMENTED guards.
+
+MATERIALIZATION_PROVENANCE = {
+    "TAR_ARCHIVE": "LIVE_MATERIALIZED_FROM_RAW_ARCHIVE",
+    "LOCAL_REPO":  "LIVE_MATERIALIZED_FROM_LOCAL_REPO",
+    "REUSED":      "REUSED_FROM_PRIOR_RUN_EXPLICIT",
+    "EXISTING":    "EXISTING_INTAKE_PRESENT",
+    "BLOCKED":     "MATERIALIZATION_BLOCKED",
+}
+
+SOURCE_TYPE_TO_ADAPTER = {
+    "ARCH-PL": "TAR_ARCHIVE",
+    "GITHUB_CLONE": "TAR_ARCHIVE",
+    "TAR_ARCHIVE": "TAR_ARCHIVE",
+    "EXISTING_LOCAL_REPO": "LOCAL_REPO",
+}
+
+
+def _resolve_archive_path(manifest: dict) -> Path:
+    archive_path_str = manifest.get("archive_path", "")
+    if not archive_path_str:
+        return Path()
+    p = Path(archive_path_str)
+    if p.is_absolute():
+        return p
+    return REPO_ROOT / archive_path_str
+
+
+def _safe_member_target(member_name: str, target_dir: Path) -> bool:
+    """Validate extracted path stays within target_dir (path traversal guard)."""
+    resolved = (target_dir / member_name).resolve()
+    return str(resolved).startswith(str(target_dir.resolve()))
+
+
+def _materialize_tar_archive(manifest: dict, canonical_repo: Path) -> dict:
+    """TAR_ARCHIVE adapter: extract verified archive to canonical_repo."""
+    archive_path = _resolve_archive_path(manifest)
+    if not archive_path or not archive_path.exists():
+        return {
+            "materialization_result": "FAIL",
+            "materialization_provenance": MATERIALIZATION_PROVENANCE["BLOCKED"],
+            "reason": f"archive not found: {manifest.get('archive_path', 'MISSING')}",
+            "adapter": "TAR_ARCHIVE",
+        }
+
+    canonical_repo.mkdir(parents=True, exist_ok=True)
+
+    with tarfile.open(archive_path, "r:*") as tar:
+        members = tar.getmembers()
+        top_dirs = {m.name.split("/")[0] for m in members if "/" in m.name}
+        has_single_prefix = len(top_dirs) == 1
+        prefix = top_dirs.pop() + "/" if has_single_prefix else ""
+
+        extracted_count = 0
+        skipped_unsafe = 0
+        for member in members:
+            if member.name == prefix.rstrip("/"):
+                continue
+            stripped_name = member.name
+            if prefix and stripped_name.startswith(prefix):
+                stripped_name = stripped_name[len(prefix):]
+            if not stripped_name:
+                continue
+            if not _safe_member_target(stripped_name, canonical_repo):
+                skipped_unsafe += 1
+                continue
+            if member.islnk() or member.issym():
+                skipped_unsafe += 1
+                continue
+            safe_member = tarfile.TarInfo(name=stripped_name)
+            safe_member.size = member.size
+            safe_member.mode = member.mode & 0o755
+            safe_member.type = member.type
+            safe_member.mtime = member.mtime
+            if member.isreg():
+                fileobj = tar.extractfile(member)
+                if fileobj is None:
+                    continue
+                target = canonical_repo / stripped_name
+                target.parent.mkdir(parents=True, exist_ok=True)
+                with open(target, "wb") as out:
+                    while True:
+                        chunk = fileobj.read(65536)
+                        if not chunk:
+                            break
+                        out.write(chunk)
+            elif member.isdir():
+                (canonical_repo / stripped_name).mkdir(parents=True, exist_ok=True)
+            else:
+                continue
+            extracted_count += 1
+
+    file_count = sum(1 for _ in canonical_repo.rglob("*") if _.is_file())
+    print(f"  [MATERIALIZATION] adapter=TAR_ARCHIVE")
+    print(f"  [MATERIALIZATION] {extracted_count} entries extracted to intake/canonical_repo")
+    print(f"  [MATERIALIZATION] {file_count} files on disk after extraction")
+    if prefix:
+        print(f"  [MATERIALIZATION] tar prefix stripped: {prefix.rstrip('/')}/")
+    if skipped_unsafe:
+        print(f"  [MATERIALIZATION] WARNING: {skipped_unsafe} entries skipped (path traversal)")
+
+    return {
+        "materialization_result": "PASS",
+        "materialization_provenance": MATERIALIZATION_PROVENANCE["TAR_ARCHIVE"],
+        "adapter": "TAR_ARCHIVE",
+        "archive_path": manifest.get("archive_path", ""),
+        "extracted_to": str(canonical_repo.relative_to(REPO_ROOT)),
+        "tar_prefix_stripped": prefix.rstrip("/") if prefix else None,
+        "entries_extracted": extracted_count,
+        "entries_skipped_unsafe": skipped_unsafe,
+        "files_on_disk": file_count,
+    }
+
+
+def materialize_intake(manifest: dict, client_id: str, run_id: str, intake_dir: Path, dry_run: bool) -> dict:
+    """SOURCE_INTAKE_MATERIALIZATION — generic framework.
+    Resolves source_type → adapter, materializes canonical_repo if absent.
+    Returns materialization record with provenance classification."""
+    canonical_repo = intake_dir / "canonical_repo"
+
+    resolution = resolve_inventory_source_path(client_id, run_id, manifest)
+    if resolution["resolution_mode"] != "MISSING":
+        print(f"  [MATERIALIZATION] canonical_repo present at {resolution['resolved_path']}")
+        return {
+            "materialization_result": "PASS",
+            "materialization_provenance": MATERIALIZATION_PROVENANCE["EXISTING"],
+            "adapter": "NONE",
+            "resolved_path": resolution["resolved_path"],
+            "resolution_mode": resolution["resolution_mode"],
+        }
+
+    source_type = manifest.get("archive_type", manifest.get("source_type", "UNKNOWN"))
+    adapter = SOURCE_TYPE_TO_ADAPTER.get(source_type)
+
+    if not adapter:
+        return {
+            "materialization_result": "FAIL",
+            "materialization_provenance": MATERIALIZATION_PROVENANCE["BLOCKED"],
+            "adapter": "NONE",
+            "reason": f"source_type={source_type} has no materialization adapter (NOT_IMPLEMENTED)",
+            "source_type": source_type,
+        }
+
+    print(f"  [MATERIALIZATION] source_type={source_type} → adapter={adapter}")
+
+    if dry_run:
+        print(f"  [DRY-RUN] Would materialize canonical_repo via {adapter}")
+        return {
+            "materialization_result": "DRY_RUN",
+            "materialization_provenance": "DRY_RUN",
+            "adapter": adapter,
+            "source_type": source_type,
+        }
+
+    if adapter == "TAR_ARCHIVE":
+        return _materialize_tar_archive(manifest, canonical_repo)
+
+    return {
+        "materialization_result": "FAIL",
+        "materialization_provenance": MATERIALIZATION_PROVENANCE["BLOCKED"],
+        "adapter": adapter,
+        "reason": f"adapter={adapter} not yet implemented",
+        "source_type": source_type,
     }
 
 
@@ -383,6 +553,7 @@ def main() -> None:
         "source_boundary_validation.json",
         "source_checksum_validation.json",
         "source_inventory.json",
+        "source_intake_materialization.json",
         "intake_manifest.json",
     ]
 
@@ -397,7 +568,22 @@ def main() -> None:
     print(f"  SHA256 match: {boundary['sha256_match']}")
     print(f"  Boundary result: {bnd_status}")
 
-    # Step B: Source inventory
+    # Step B: Source intake materialization
+    print("\n[3b] Source intake materialization ...")
+    if bnd_status != "PASS":
+        materialization = {
+            "materialization_result": "FAIL",
+            "materialization_provenance": MATERIALIZATION_PROVENANCE["BLOCKED"],
+            "adapter": "NONE",
+            "reason": "boundary validation failed — cannot materialize",
+        }
+        print(f"  [MATERIALIZATION] BLOCKED — boundary validation failed")
+    else:
+        materialization = materialize_intake(manifest, client_id, run_id, intake_dir, dry_run)
+        if materialization["materialization_result"] == "FAIL":
+            fail_closed(f"Intake materialization failed: {materialization.get('reason', 'unknown')}")
+
+    # Step C: Source inventory
     print("\n[4] Source inventory ...")
     inventory = step_inventory(manifest, client_id, run_id)
     inv_status = inventory["inventory_result"]
@@ -408,19 +594,23 @@ def main() -> None:
         print(f"  count match: {inventory['file_count_match']}")
     print(f"  Inventory result: {inv_status}")
 
-    # Step C: Checksum record
+    # Step D: Checksum record
     checksum = step_checksum(manifest, boundary)
 
-    # Step D: Intake manifest
+    # Step E: Intake manifest
     intake_manifest = build_intake_manifest(
         client_id, source_id, run_id,
         client_config, manifest,
         boundary, inventory,
         dry_run, validate_only,
     )
+    intake_manifest["materialization_provenance"] = materialization.get(
+        "materialization_provenance", "UNKNOWN"
+    )
     overall = intake_manifest["intake_result"]
 
     print(f"\n[5] Intake result: {overall}")
+    print(f"  materialization_provenance: {intake_manifest['materialization_provenance']}")
     for note in boundary.get("notes", []):
         print(f"  NOTE: {note}")
     for note in inventory.get("notes", []):
@@ -434,6 +624,7 @@ def main() -> None:
         save_json(intake_dir / "source_boundary_validation.json", boundary, dry_run)
         save_json(intake_dir / "source_checksum_validation.json",  checksum,  dry_run)
         save_json(intake_dir / "source_inventory.json",             inventory, dry_run)
+        save_json(intake_dir / "source_intake_materialization.json", materialization, dry_run)
         save_json(intake_dir / "intake_manifest.json",              intake_manifest, dry_run)
 
     print("\n" + "=" * 64)

@@ -204,6 +204,134 @@ def phase_01_source_boundary(source_manifest: dict) -> bool:
     return True
 
 
+# ── Phase Materialization Registry ────────────────────────────────────────────
+# Universal answer to: "how does each phase materialize its truth from
+# previous phase truth?" Each entry maps a phase to its materializer.
+#
+# Registry entry contract:
+#   phase_id:    phase name (matches phase list)
+#   materializer: script path relative to SCRIPTS_DIR
+#   readiness:   callable(run_dir) → bool — are outputs already present?
+#   args_fn:     callable(ctx) → list[str] — CLI args for materializer
+#   provenance:  callable(run_dir) → str — provenance classification after materialization
+#
+# The orchestrator calls _materialize_phase_truth() before each verification
+# phase. If readiness() returns False, the materializer is invoked. If the
+# materializer fails, the pipeline FAIL-CLOSEs. If readiness() returns True,
+# the materializer is skipped (idempotent).
+
+def _materialize_phase_truth(phase_id: str, ctx: dict) -> bool:
+    """Generic materializer invocation. Returns True if truth is ready."""
+    registry = ctx.get("_materialization_registry", {})
+    entry = registry.get(phase_id)
+    if not entry:
+        return True
+
+    run_dir = ctx["run_dir"]
+    readiness_fn = entry["readiness"]
+    if readiness_fn(run_dir):
+        provenance_fn = entry.get("provenance")
+        prov = provenance_fn(run_dir) if provenance_fn else "EXISTING_INTAKE_PRESENT"
+        print(f"  [MATERIALIZATION] {phase_id}: truth already present — provenance={prov}")
+
+        if _chronicle_emitter:
+            try:
+                _chronicle_emitter.emit("materialization_check", {
+                    "phase": phase_id,
+                    "action": "IDEMPOTENT_SKIP",
+                    "provenance": prov,
+                })
+            except Exception:
+                pass
+        return True
+
+    materializer = entry["materializer"]
+    script = SCRIPTS_DIR / materializer
+    if not script.is_file():
+        print(f"  [MATERIALIZATION] FAIL: {materializer} not found")
+        return False
+
+    args_fn = entry["args_fn"]
+    cmd = [sys.executable, str(script)] + args_fn(ctx)
+    print(f"  [MATERIALIZATION] {phase_id}: invoking {materializer}")
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    for line in result.stdout.strip().split("\n"):
+        print(f"    {line}")
+    if result.returncode != 0:
+        for line in (result.stderr or "").strip().split("\n"):
+            if line.strip():
+                print(f"    [STDERR] {line}")
+        print(f"  [MATERIALIZATION] FAIL: {materializer} exited with code {result.returncode}")
+        return False
+
+    if not readiness_fn(run_dir):
+        print(f"  [MATERIALIZATION] FAIL: {materializer} completed but outputs not found")
+        return False
+
+    provenance_fn = entry.get("provenance")
+    prov = provenance_fn(run_dir) if provenance_fn else "LIVE_MATERIALIZED"
+    print(f"  [MATERIALIZATION] PASS: {phase_id} — provenance={prov}")
+
+    if _chronicle_emitter:
+        try:
+            _chronicle_emitter.emit("materialization_complete", {
+                "phase": phase_id,
+                "materializer": materializer,
+                "provenance": prov,
+            })
+        except Exception:
+            pass
+    return True
+
+
+def _build_materialization_registry(client: str, source: str, run_id: str) -> dict:
+    """Build the phase→materializer registry for this run."""
+
+    def _intake_ready(run_dir: Path) -> bool:
+        return (run_dir / "intake" / "intake_manifest.json").exists() and \
+               (run_dir / "intake" / "canonical_repo").exists()
+
+    def _intake_provenance(run_dir: Path) -> str:
+        im_path = run_dir / "intake" / "intake_manifest.json"
+        if im_path.exists():
+            im = load_json(im_path)
+            return im.get("materialization_provenance", "UNKNOWN")
+        return "UNKNOWN"
+
+    def _structure_ready(run_dir: Path) -> bool:
+        sd = run_dir / "structure"
+        return all((sd / p).exists() for p in [
+            "40.2/structural_node_inventory.json",
+            "40.3/structural_topology_log.json",
+            "40.4/canonical_topology.json",
+        ])
+
+    def _ceu_ready(run_dir: Path) -> bool:
+        return (run_dir / "ceu" / "grounding_state_v3.json").exists() or \
+               (run_dir / "ceu" / "reconciliation_state.json").exists()
+
+    return {
+        "Phase 2  — Intake Verification": {
+            "materializer": "source_intake.py",
+            "readiness": _intake_ready,
+            "args_fn": lambda ctx: ["--client", ctx["client"], "--source", ctx["source"], "--run-id", ctx["run_id"]],
+            "provenance": _intake_provenance,
+        },
+        "Phase 3  — 40.x Structural Verification": {
+            "materializer": "structural_scanner.py",
+            "readiness": _structure_ready,
+            "args_fn": lambda ctx: ["--client", ctx["client"], "--source", ctx["source"], "--run-id", ctx["run_id"]],
+            "provenance": lambda _: "LIVE_MATERIALIZED_FROM_STRUCTURAL_SCANNER",
+        },
+        "Phase 4  — CEU Grounding Verification": {
+            "materializer": "ceu_grounding.py",
+            "readiness": _ceu_ready,
+            "args_fn": lambda ctx: ["--client", ctx["client"], "--run-id", ctx["run_id"]],
+            "provenance": lambda _: "LIVE_MATERIALIZED_FROM_CEU_GROUNDING",
+        },
+    }
+
+
 # ── Phase 2: Intake Verification ─────────────────────────────────────────────
 
 def phase_02_intake(source_manifest: dict, run_dir: Path) -> bool:
@@ -2564,11 +2692,27 @@ def main() -> int:
         phases = [phases[args.phase - 1]]
         print(f"  mode: single-phase ({args.phase})")
 
+    materialization_registry = _build_materialization_registry(args.client, args.source, run_id)
+    materialization_ctx = {
+        "client": args.client,
+        "source": args.source,
+        "run_id": run_id,
+        "run_dir": run_dir,
+        "_materialization_registry": materialization_registry,
+    }
+
     results: dict[str, str] = {}
     for phase_name, fn in phases:
         print(f"\n{'─'*60}")
         print(f"  {phase_name}")
         print(f"{'─'*60}")
+
+        if phase_name in materialization_registry:
+            mat_ok = _materialize_phase_truth(phase_name, materialization_ctx)
+            if not mat_ok:
+                results[phase_name] = "FAIL"
+                print(f"\n  [ORCHESTRATOR] FAIL-CLOSED at materialization: {phase_name}")
+                break
 
         if _chronicle_emitter:
             _chronicle_emitter.emit_phase_started(phase_name)
