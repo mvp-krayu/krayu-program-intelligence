@@ -3167,36 +3167,78 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
   )
 }
 
+function DenseSignalEntry({ sig }) {
+  const family = sig.signal_family || 'DPSIG'
+  const level = sig.derivation_level || (family === 'ISIG' ? 'Level_1' : family === 'PSIG' ? 'Level_2' : 'Topology')
+  return (
+    <div className="dense-signal-entry" data-severity={sig.severity} data-family={family} data-level={level}>
+      <div className="dense-signal-header">
+        <span className="dense-signal-family-tag" data-family={family}>{family}</span>
+        <span className="dense-signal-name">{sig.signal_name}</span>
+        <span className="dense-signal-badge" data-severity={sig.severity}>{sig.severity}</span>
+        <span className="dense-signal-val">{sig.signal_value != null ? sig.signal_value.toFixed(4) : '—'}</span>
+      </div>
+      <div className="dense-signal-prose">{sig.interpretation}</div>
+      {sig.concentration && (
+        <div className="dense-signal-where">{sig.concentration}</div>
+      )}
+      {sig.confidence_note && (
+        <div className="dense-signal-level-note">{sig.confidence_note}</div>
+      )}
+    </div>
+  )
+}
+
 function DenseSignalSection({ fullReport }) {
   const sigs = (fullReport && fullReport.signal_interpretations) || []
   if (!sigs.length) return null
 
-  const activated = sigs.filter(s => s.severity !== 'NOMINAL')
+  const isigSigs = sigs.filter(s => s.signal_family === 'ISIG')
+  const dpsigSigs = sigs.filter(s => !s.signal_family || s.signal_family === 'DPSIG')
+  const psigSigs = sigs.filter(s => s.signal_family === 'PSIG')
+  const hasMultipleFamilies = (isigSigs.length > 0) + (dpsigSigs.length > 0) + (psigSigs.length > 0) > 1
 
   return (
     <div className="actor actor--signal-assessment" data-zone-key="signalAssessment">
       <div className="actor-tag">
         <span className="actor-code">SA</span>
-        <span className="actor-name">Signal Assessment</span>
+        <span className="actor-name">Signal Assessment · {sigs.length} signals</span>
       </div>
-      {sigs.map(sig => (
-        <div key={sig.signal_id} className="dense-signal-entry" data-severity={sig.severity}>
-          <div className="dense-signal-header">
-            <span className="dense-signal-name">{sig.signal_name}</span>
-            <span className="dense-signal-badge" data-severity={sig.severity}>{sig.severity}</span>
-            <span className="dense-signal-val">{sig.signal_value != null ? sig.signal_value.toFixed(4) : '—'}</span>
-          </div>
-          <div className="dense-signal-prose">{sig.interpretation}</div>
-          {sig.concentration && (
-            <div className="dense-signal-where">{sig.concentration}</div>
+      {hasMultipleFamilies ? (
+        <>
+          {isigSigs.length > 0 && (
+            <div className="dense-signal-group" data-family="ISIG">
+              <div className="dense-signal-group-head">
+                <span className="dense-signal-group-label">Level 1 — File Structure</span>
+                <span className="dense-signal-group-count">{isigSigs.length}</span>
+              </div>
+              {isigSigs.map(sig => <DenseSignalEntry key={sig.signal_id} sig={sig} />)}
+            </div>
           )}
-        </div>
-      ))}
+          {dpsigSigs.length > 0 && (
+            <div className="dense-signal-group" data-family="DPSIG">
+              <div className="dense-signal-group-head">
+                <span className="dense-signal-group-label">Topology — Cluster Pressure</span>
+                <span className="dense-signal-group-count">{dpsigSigs.length}</span>
+              </div>
+              {dpsigSigs.map(sig => <DenseSignalEntry key={sig.signal_id} sig={sig} />)}
+            </div>
+          )}
+          {psigSigs.length > 0 && (
+            <div className="dense-signal-group" data-family="PSIG">
+              <div className="dense-signal-group-head">
+                <span className="dense-signal-group-label">Level 2 — Architectural Binding</span>
+                <span className="dense-signal-group-count">{psigSigs.length}</span>
+              </div>
+              {psigSigs.map(sig => <DenseSignalEntry key={sig.signal_id} sig={sig} />)}
+            </div>
+          )}
+        </>
+      ) : (
+        sigs.map(sig => <DenseSignalEntry key={sig.signal_id} sig={sig} />)
+      )}
       {sigs[0].compound_narrative && (
         <div className="dense-signal-compound">{sigs[0].compound_narrative}</div>
-      )}
-      {sigs[0].confidence_note && (
-        <div className="dense-signal-confidence">{sigs[0].confidence_note}</div>
       )}
     </div>
   )
@@ -3641,6 +3683,8 @@ function InvestigationTraceField({ adapted, blocks, scope, fullReport, correspon
         </div>
       )}
 
+      <InvestigationSignalAudit fullReport={fullReport} signalRowCount={signalRows.length} />
+
       <div className="actor actor--inference-prohibition">
         <div className="actor-tag">
           <span className="actor-code">IP</span>
@@ -3682,6 +3726,66 @@ function InvestigationTraceField({ adapted, blocks, scope, fullReport, correspon
       {topoModalOpen && createPortal(<TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} mode="investigation" />, document.body)}
 
       <TierHandoffStatement />
+    </div>
+  )
+}
+
+function InvestigationSignalAudit({ fullReport, signalRowCount }) {
+  const sigs = (fullReport && fullReport.signal_interpretations) || []
+  if (!sigs.length || sigs.length <= signalRowCount) return null
+
+  const isigSigs = sigs.filter(s => s.signal_family === 'ISIG')
+  const dpsigSigs = sigs.filter(s => !s.signal_family || s.signal_family === 'DPSIG')
+  const psigSigs = sigs.filter(s => s.signal_family === 'PSIG')
+
+  const renderEntry = (sig) => {
+    const family = sig.signal_family || 'DPSIG'
+    return (
+      <tr key={sig.signal_id} data-severity={sig.severity} data-family={family}>
+        <td className="inv-gov-id">{sig.signal_id}</td>
+        <td><span className="dense-signal-family-tag" data-family={family}>{family}</span></td>
+        <td>{sig.signal_name}</td>
+        <td className="inv-gov-num">{sig.signal_value != null ? sig.signal_value.toFixed(4) : '—'}</td>
+        <td data-severity={sig.severity}>{sig.severity}</td>
+        <td className="inv-gov-detail">{sig.interpretation}</td>
+      </tr>
+    )
+  }
+
+  return (
+    <div className="actor actor--signal-audit">
+      <div className="actor-tag">
+        <span className="actor-code">SA</span>
+        <span className="actor-name">Signal Audit · {sigs.length} signals across {(isigSigs.length > 0) + (dpsigSigs.length > 0) + (psigSigs.length > 0)} families</span>
+      </div>
+      <div className="inv-signal-summary">
+        {isigSigs.length > 0 && <span className="inv-signal-family-chip" data-family="ISIG">ISIG Level 1 · {isigSigs.length}</span>}
+        {dpsigSigs.length > 0 && <span className="inv-signal-family-chip" data-family="DPSIG">DPSIG Topology · {dpsigSigs.length}</span>}
+        {psigSigs.length > 0 && <span className="inv-signal-family-chip" data-family="PSIG">PSIG Level 2 · {psigSigs.length}</span>}
+      </div>
+      <table className="inv-gov-table">
+        <thead><tr><th>ID</th><th>Family</th><th>Signal</th><th>Value</th><th>Severity</th><th>Interpretation</th></tr></thead>
+        <tbody>
+          {isigSigs.map(renderEntry)}
+          {dpsigSigs.map(renderEntry)}
+          {psigSigs.map(renderEntry)}
+        </tbody>
+      </table>
+      {isigSigs.length > 0 && (
+        <div className="inv-signal-isig-detail">
+          <div className="inv-gov-sub-head">Level 1 — File Structure Signals</div>
+          {isigSigs.map(sig => (
+            <div key={sig.signal_id} className="inv-signal-isig-entry">
+              <div className="inv-signal-isig-header">
+                <span className="inv-signal-isig-name">{sig.signal_name}</span>
+                <span className="inv-signal-isig-value">{sig.signal_value != null ? sig.signal_value.toFixed(4) : '—'}</span>
+              </div>
+              {sig.concentration && <div className="inv-signal-isig-entity">{sig.concentration}</div>}
+              <div className="inv-signal-isig-note">{sig.confidence_note}</div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

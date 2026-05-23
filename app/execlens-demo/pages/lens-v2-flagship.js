@@ -3134,6 +3134,141 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-style: italic;
         }
 
+        /* Signal Family Tags + Grouping */
+        .dense-signal-family-tag {
+          font: 500 8px/1 'Courier New', monospace;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          padding: 2px 5px;
+          border-radius: 2px;
+          border: 1px solid;
+          white-space: nowrap;
+        }
+        .dense-signal-family-tag[data-family="ISIG"] {
+          color: #4a9eff;
+          background: rgba(74, 158, 255, 0.08);
+          border-color: rgba(74, 158, 255, 0.25);
+        }
+        .dense-signal-family-tag[data-family="DPSIG"] {
+          color: #ff9e4a;
+          background: rgba(255, 158, 74, 0.06);
+          border-color: rgba(255, 158, 74, 0.2);
+        }
+        .dense-signal-family-tag[data-family="PSIG"] {
+          color: #64ffda;
+          background: rgba(100, 255, 218, 0.06);
+          border-color: rgba(100, 255, 218, 0.2);
+        }
+        .dense-signal-level-note {
+          font: italic 10px/1.35 'Courier New', monospace;
+          color: #5a6580;
+          margin-top: 3px;
+          padding-left: 2px;
+        }
+        .dense-signal-group {
+          margin: 10px 0 0;
+          padding: 8px 0 0;
+          border-top: 1px solid rgba(42, 47, 64, 0.6);
+        }
+        .dense-signal-group:first-of-type {
+          margin-top: 4px;
+          border-top: none;
+          padding-top: 0;
+        }
+        .dense-signal-group-head {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 4px;
+        }
+        .dense-signal-group-label {
+          font: 500 10px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+        }
+        .dense-signal-group-count {
+          font: 600 10px/1 'Courier New', monospace;
+          color: #4a5570;
+        }
+        .dense-signal-group[data-family="ISIG"] .dense-signal-group-label { color: #4a9eff; }
+        .dense-signal-group[data-family="PSIG"] .dense-signal-group-label { color: #64ffda; }
+
+        /* Investigation Signal Audit */
+        .actor--signal-audit {
+          margin: 16px 0;
+          padding: 14px;
+          background: var(--card-deep, #12151f);
+          border: 1px solid var(--border-dim, #1e2330);
+          border-left: 2px solid #ff9e4a;
+        }
+        .inv-signal-summary {
+          display: flex;
+          gap: 10px;
+          margin: 8px 0;
+        }
+        .inv-signal-family-chip {
+          font: 500 9px/1 'Courier New', monospace;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          padding: 3px 8px;
+          border-radius: 2px;
+          border: 1px solid;
+        }
+        .inv-signal-family-chip[data-family="ISIG"] {
+          color: #4a9eff;
+          background: rgba(74, 158, 255, 0.06);
+          border-color: rgba(74, 158, 255, 0.2);
+        }
+        .inv-signal-family-chip[data-family="DPSIG"] {
+          color: #ff9e4a;
+          background: rgba(255, 158, 74, 0.06);
+          border-color: rgba(255, 158, 74, 0.2);
+        }
+        .inv-signal-family-chip[data-family="PSIG"] {
+          color: #64ffda;
+          background: rgba(100, 255, 218, 0.06);
+          border-color: rgba(100, 255, 218, 0.2);
+        }
+        td[data-severity="HIGH"],
+        td[data-severity="CRITICAL"] { color: #ff6b6b; }
+        td[data-severity="ELEVATED"] { color: #ff9e4a; }
+        td[data-severity="ACTIVATED"] { color: #ffd700; }
+        td[data-severity="NOMINAL"] { color: #64ffda; }
+        .inv-signal-isig-detail {
+          margin-top: 10px;
+          padding-top: 10px;
+          border-top: 1px solid var(--border-dim, #1e2330);
+        }
+        .inv-signal-isig-entry {
+          padding: 6px 0;
+          border-bottom: 1px solid rgba(30, 35, 48, 0.4);
+        }
+        .inv-signal-isig-entry:last-child { border-bottom: none; }
+        .inv-signal-isig-header {
+          display: flex;
+          align-items: baseline;
+          gap: 10px;
+        }
+        .inv-signal-isig-name {
+          font: 600 11px/1.3 'Courier New', monospace;
+          color: #4a9eff;
+        }
+        .inv-signal-isig-value {
+          font: 400 11px/1 'Courier New', monospace;
+          color: #ccd6f6;
+        }
+        .inv-signal-isig-entity {
+          font: 400 10px/1.3 'Courier New', monospace;
+          color: #8a96b2;
+          margin-top: 2px;
+        }
+        .inv-signal-isig-note {
+          font: italic 9px/1.3 'Courier New', monospace;
+          color: #5a6580;
+          margin-top: 2px;
+        }
+
         /* DENSE Governance Lifecycle Zone */
         .actor--governance-lifecycle {
           margin-top: 12px;
