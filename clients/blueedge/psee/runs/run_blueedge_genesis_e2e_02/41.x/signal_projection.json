@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0",
+  "projection_stage": "41.x",
+  "source_stage": "75.x",
+  "source_contract": "PI.CONDITION-CORRELATION.ANALYSIS.75X.03",
+  "projection_contract": "PI.41X.PRESSURE-ZONE.PROJECTION.01",
+  "run_id": "run_blueedge_genesis_e2e_02",
+  "client_id": "blueedge",
+  "generated_at": "2026-04-25",
+  "signal_authority": "PROVISIONAL_CKR_CANDIDATE",
+  "note": "All signal IDs are PSIG-XXX provisional candidates. No new SIG-XXX IDs introduced.",
+  "active_conditions_in_scope": [
+    {
+      "condition_id": "COND-PSIG-001-01",
+      "signal_id": "PSIG-001",
+      "signal_authority": "PROVISIONAL_CKR_CANDIDATE",
+      "activation_state": "HIGH",
+      "signal_value": 4.0,
+      "activation_method": "RUN_RELATIVE_OUTLIER",
+      "threshold": 2.0,
+      "zone_ids_where_active": ["PZ-001", "PZ-002", "PZ-003", "PZ-004"],
+      "primary_attribution_entity": "CE-04",
+      "primary_attribution_domain": "DOM-05",
+      "secondary_attribution_entities": ["CE-08"],
+      "entity_level_scope": ["CE-04", "CE-08"],
+      "domain_attribution_scope": ["DOM-05", "DOM-09"]
+    },
+    {
+      "condition_id": "COND-PSIG-002-01",
+      "signal_id": "PSIG-002",
+      "signal_authority": "PROVISIONAL_CKR_CANDIDATE",
+      "activation_state": "HIGH",
+      "signal_value": 4.0,
+      "activation_method": "RUN_RELATIVE_OUTLIER",
+      "threshold": 2.0,
+      "zone_ids_where_active": ["PZ-001", "PZ-002", "PZ-003", "PZ-004"],
+      "primary_attribution_entity": null,
+      "primary_attribution_domain": "DOM-05",
+      "secondary_attribution_entities": [],
+      "entity_level_scope": ["DOM-04", "DOM-05", "DOM-08", "DOM-09"],
+      "domain_attribution_scope": ["DOM-04", "DOM-05", "DOM-08", "DOM-09"]
+    },
+    {
+      "condition_id": "COND-PSIG-004-01",
+      "signal_id": "PSIG-004",
+      "signal_authority": "PROVISIONAL_CKR_CANDIDATE",
+      "activation_state": "HIGH",
+      "signal_value": 1.0,
+      "activation_method": "RUN_RELATIVE_OUTLIER",
+      "threshold": 2.0,
+      "zone_ids_where_active": ["PZ-001", "PZ-002", "PZ-003", "PZ-004"],
+      "primary_attribution_entity": "CE-04",
+      "primary_attribution_domain": "DOM-05",
+      "secondary_attribution_entities": ["CE-08"],
+      "entity_level_scope": [],
+      "domain_attribution_scope": []
+    },
+    {
+      "condition_id": "COND-PSIG-006-01",
+      "signal_id": "PSIG-006",
+      "signal_authority": "PROVISIONAL_CKR_CANDIDATE",
+      "activation_state": "ACTIVATED",
+      "signal_value": 0.15151515151515152,
+      "activation_method": "THEORETICAL_BASELINE",
+      "threshold": 1,
+      "threshold_type": "binary",
+      "zone_ids_where_active": [],
+      "note": "PSIG-006 activated; structural blind-spot condition only; not a pressure candidate; no zone assigned",
+      "entity_level_scope": []
+    }
+  ],
+  "combination_signature": {
+    "primary": "PSIG-001|PSIG-002|PSIG-004",
+    "all_active": "PSIG-001|PSIG-002|PSIG-004|PSIG-006"
+  },
+  "signals_not_activated": ["PSIG-003", "PSIG-005"],
+  "ranking_applied": false,
+  "interpretation_applied": false
+}
