@@ -63,12 +63,14 @@ def now_iso() -> str:
 
 
 def resolve_paths(client: str, run_id: str) -> dict:
-    spe_dir = REPO_ROOT / "clients" / client / "psee" / "runs" / run_id / "semantic" / "spe"
+    run_dir = REPO_ROOT / "clients" / client / "psee" / "runs" / run_id
+    spe_dir = run_dir / "semantic" / "spe"
     return {
         "propositions": spe_dir / "semantic_propositions.json",
         "review_queue": spe_dir / "review_queue.json",
         "review_state": spe_dir / "proposition_review_state.json",
         "event_log": spe_dir / "proposition_review_event_log.jsonl",
+        "review_obligations": run_dir / "sqo" / "review_obligations.json",
     }
 
 
@@ -183,7 +185,58 @@ def do_accept_unflagged(state: dict, operator: str, event_log: Path) -> bool:
     return True
 
 
-def do_complete(state: dict, operator: str, event_log: Path) -> bool:
+def emit_review_obligations(state: dict, output_path: Path) -> None:
+    """Emit review_obligations.json from completed review state.
+
+    Consumed by constitutional_replay_anchor.py (D3 dimension)
+    and chronicle_certification_rc09.py (artifact existence check).
+    """
+    dispositions = state.get("dispositions", {})
+
+    obligations = []
+    for pid, d in sorted(dispositions.items()):
+        if not d.get("flagged"):
+            continue
+        obligations.append({
+            "proposition_id": pid,
+            "disposition": d.get("disposition"),
+            "flagged": True,
+            "derivation_class": d.get("derivation_class", "UNKNOWN"),
+            "reviewed_by": d.get("reviewed_by"),
+            "rationale": d.get("rationale"),
+        })
+
+    class_summary = {}
+    for d in dispositions.values():
+        cls = d.get("derivation_class", "UNKNOWN")
+        disp = d.get("disposition", "PENDING")
+        if cls not in class_summary:
+            class_summary[cls] = {"total": 0, "accepted": 0, "rejected": 0, "arbitrated": 0}
+        class_summary[cls]["total"] += 1
+        if disp == "ACCEPTED":
+            class_summary[cls]["accepted"] += 1
+        elif disp == "REJECTED":
+            class_summary[cls]["rejected"] += 1
+        elif disp == "ARBITRATED":
+            class_summary[cls]["arbitrated"] += 1
+
+    result = {
+        "schema_version": "2.0",
+        "contract_id": CONTRACT_ID,
+        "total_obligations": len(obligations),
+        "obligations_met": sum(1 for o in obligations if o["disposition"] in TERMINAL_DISPOSITIONS),
+        "total_propositions": state.get("total_propositions", 0),
+        "flagged_count": state.get("flagged_count", 0),
+        "review_status": state.get("status"),
+        "class_summary": class_summary,
+        "obligations": obligations,
+        "generated_at": now_iso(),
+    }
+
+    save_json(output_path, result)
+
+
+def do_complete(state: dict, operator: str, event_log: Path, review_obligations_path: Path) -> bool:
     dispositions = state.get("dispositions", {})
     pending = [pid for pid, d in dispositions.items() if d.get("disposition") is None]
     if pending:
@@ -218,7 +271,11 @@ def do_complete(state: dict, operator: str, event_log: Path) -> bool:
         "arbitrated": arbitrated,
         "timestamp": now_iso(),
     })
+
+    emit_review_obligations(state, review_obligations_path)
+
     print(f"  COMPLETE: {accepted} accepted, {rejected} rejected, {contested} contested, {arbitrated} arbitrated")
+    print(f"  review_obligations.json emitted ({state.get('flagged_count', 0)} obligations)")
     return True
 
 
@@ -277,7 +334,7 @@ def main() -> int:
     elif args.action == "accept-unflagged":
         ok = do_accept_unflagged(state, args.operator, event_log)
     elif args.action == "complete":
-        ok = do_complete(state, args.operator, event_log)
+        ok = do_complete(state, args.operator, event_log, paths["review_obligations"])
     else:
         print(f"FAIL: unknown action {args.action}")
         return 1

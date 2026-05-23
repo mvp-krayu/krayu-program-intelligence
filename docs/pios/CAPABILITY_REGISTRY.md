@@ -38,7 +38,7 @@ SQO is an executable governance graph, not a conversation memory. After reboot/c
 | Capability | Implementation | Status | Notes |
 |------------|---------------|--------|-------|
 | CEU Reconciliation (Gate 1) | `scripts/pios/ceu_reconciliation_action.py` | OPERATIONAL | Operator CLI: confirm/reject/merge/complete. |
-| Proposition Review (Gate 3) | `scripts/pios/proposition_review_action.py` | OPERATIONAL | Operator CLI: accept/reject/contest/arbitrate/accept-unflagged/complete. |
+| Proposition Review (Gate 3) | `scripts/pios/proposition_review_action.py` | OPERATIONAL | Operator CLI: accept/reject/contest/arbitrate/accept-unflagged/complete. Emits `sqo/review_obligations.json` on complete (consumed by constitutional anchor D3). |
 | Revalidation Engine (Gate 4) | `scripts/pios/revalidation_engine.py` | OPERATIONAL | 25-check deterministic revalidation. |
 | Promotion Action (Gate 5) | `scripts/pios/promotion_action.py` | OPERATIONAL | Operator CLI: advance/hold/block. Integrated with constitutional replay anchor. |
 | Constitutional Replay Anchor | `scripts/pios/constitutional_replay_anchor.py` | OPERATIONAL | 8-dimension semantic adequacy check. Blocks advancement when constitutional distance too high. Needs PATH B class awareness update. |
