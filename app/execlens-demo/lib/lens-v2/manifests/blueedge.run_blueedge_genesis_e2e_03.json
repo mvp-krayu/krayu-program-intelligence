@@ -1,0 +1,50 @@
+{
+  "manifest_version": "1.0",
+  "client": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "stream_anchor": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-08",
+  "labels": {
+    "client_display_name": "BlueEdge",
+    "run_display_name": "BlueEdge genesis E2E · S2 GOVERNED · REPLAY-CERTIFIED"
+  },
+  "baseline": {
+    "governance_tag": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-09",
+    "pipeline_commit": "9f181a9"
+  },
+  "artifacts": {
+    "required": {
+      "canonical_topology_40_4": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/structure/40.4/canonical_topology.json",
+      "semantic_topology_model": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/semantic/topology/semantic_topology_model.json",
+      "dpsig_signal_set": "artifacts/dpsig/blueedge/run_blueedge_genesis_e2e_03/dpsig_signal_set.json"
+    },
+    "optional": {
+      "structural_topology_log_40_3": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/structure/40.3/structural_topology_log.json",
+      "code_graph_40_3s": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/structure/40.3s/code_graph.json",
+      "structural_centrality_40_3c": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/structure/40.3c/structural_centrality.json",
+      "signal_registry": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/vault/signal_registry.json",
+      "evidence_trace": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/vault/evidence_trace.json",
+      "vault_readiness": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/vault/vault_readiness.json",
+      "semantic_bundle_manifest": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/semantic/semantic_bundle_manifest.json",
+      "spine_objects": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/spine/spine_objects.json",
+      "semantic_propositions": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/semantic/spe/semantic_propositions.json",
+      "proposition_review_state": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/semantic/spe/proposition_review_state.json",
+      "enrichment_summary": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/semantic/spe/enrichment_summary.json",
+      "debt_reassessment": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/semantic/spe/debt_reassessment.json",
+      "promotion_state": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/sqo/promotion_state.json",
+      "revalidation_result": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/sqo/revalidation_result.json",
+      "constitutional_replay_anchor": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/sqo/constitutional_replay_anchor.json",
+      "review_obligations": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/sqo/review_obligations.json",
+      "convergence_observations": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/convergence/convergence_observations.json",
+      "chronicle_certification": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/chronicle/chronicle_certification.json"
+    }
+  },
+  "report_pack": {},
+  "governance": {
+    "lane_a_read_only": true,
+    "lane_d_dpsig_read_only": true,
+    "additive_only": true,
+    "no_ai_inference": true,
+    "no_topology_mutation": true,
+    "no_synthetic_telemetry": true
+  }
+}

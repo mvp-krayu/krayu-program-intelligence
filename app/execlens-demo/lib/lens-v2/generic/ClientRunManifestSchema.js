@@ -31,7 +31,10 @@ const S2_STRUCTURAL_ARTIFACT_KEYS = [
   'dpsig_signal_set',
 ];
 
-const SEMANTIC_ARTIFACT_KEYS = [
+// Legacy semantic qualification artifacts — required only when the manifest
+// declares them in artifacts.required (productized runs).  Governed lifecycle
+// runs (genesis_e2e) reach S2 without these.
+const LEGACY_SEMANTIC_ARTIFACT_KEYS = [
   'decision_validation',
   'reproducibility_verdict',
   'semantic_continuity_crosswalk',
@@ -39,7 +42,6 @@ const SEMANTIC_ARTIFACT_KEYS = [
 
 const REQUIRED_ARTIFACT_KEYS = [
   ...STRUCTURAL_ARTIFACT_KEYS,
-  ...SEMANTIC_ARTIFACT_KEYS,
 ];
 
 const OPTIONAL_ARTIFACT_KEYS_HINT = [
@@ -116,13 +118,11 @@ function validateClientRunManifest(doc) {
           errors.push(`ARTIFACT_REQUIRED_MISSING:${k}`);
         }
       }
-      for (const k of SEMANTIC_ARTIFACT_KEYS) {
+      for (const k of LEGACY_SEMANTIC_ARTIFACT_KEYS) {
         if (Object.prototype.hasOwnProperty.call(doc.artifacts.required, k)) {
           if (!looksLikeRelativePath(doc.artifacts.required[k])) {
             errors.push(`ARTIFACT_REQUIRED_PATH_INVALID:${k}`);
           }
-        } else if (!isS1) {
-          errors.push(`ARTIFACT_REQUIRED_MISSING:${k}`);
         }
       }
     }
@@ -160,7 +160,7 @@ module.exports = {
   OPTIONAL_TOPLEVEL_HINT,
   STRUCTURAL_ARTIFACT_KEYS,
   S2_STRUCTURAL_ARTIFACT_KEYS,
-  SEMANTIC_ARTIFACT_KEYS,
+  LEGACY_SEMANTIC_ARTIFACT_KEYS,
   REQUIRED_ARTIFACT_KEYS,
   OPTIONAL_ARTIFACT_KEYS_HINT,
   REPORT_PACK_ARTIFACT_KEYS_HINT,

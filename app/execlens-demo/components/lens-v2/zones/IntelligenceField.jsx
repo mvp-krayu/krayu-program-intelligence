@@ -502,6 +502,89 @@ const BALANCED_INTERPRETIVE_NARRATIVES = {
       }
     },
   },
+  deriveGovernancePosture: {
+    key: 'governancePosture',
+    emergenceClass: 'SECONDARY',
+    label: 'GOVERNANCE POSTURE',
+    subordinateLabel: 'Governance lifecycle',
+    emergenceLabel: 'Governed lifecycle active',
+    nominalLabel: 'Governance posture nominal',
+    derive: (fullReport) => {
+      const gl = fullReport && fullReport.governance_lifecycle
+      const pc = fullReport && fullReport.proposition_corpus
+      if (!gl || !gl.available) return { narrative: null, evidenceChain: [], structuralBasis: '', authority: 'INTERPRETIVE', emergenceClass: 'SECONDARY' }
+      const provLabel = (gl.qualification_provenance || '').replace(/_/g, ' ')
+      const frictionPct = pc && pc.available && pc.governance_friction_rate > 0
+        ? `${(pc.governance_friction_rate * 100).toFixed(1)}%`
+        : null
+      let narrative = `${gl.s_level} qualification achieved via ${provLabel}.`
+      if (pc && pc.available && pc.total > 0) {
+        narrative += ` ${pc.disposition_counts.accepted} propositions accepted, ${pc.disposition_counts.rejected} rejected, ${pc.disposition_counts.arbitrated} arbitrated`
+        if (frictionPct) narrative += ` — ${frictionPct} governance friction rate`
+        narrative += '.'
+      }
+      if (gl.transition_count > 0) {
+        narrative += ` ${gl.transition_count} state transitions in the governed lifecycle.`
+      }
+      const evidenceChain = [
+        { source: 'governance_lifecycle', claim: `${gl.s_level} via ${provLabel} · ceiling ${gl.authority_ceiling}`, severity: 'NOMINAL' },
+      ]
+      if (pc && pc.available) {
+        evidenceChain.push({ source: 'proposition_corpus', claim: `${pc.total} propositions · friction: ${frictionPct || '0%'}`, severity: pc.governance_friction_rate > 0.1 ? 'ELEVATED' : 'NOMINAL' })
+      }
+      return { narrative, evidenceChain, structuralBasis: `${gl.s_level} · ${provLabel} · ${pc ? pc.total : 0} propositions`, authority: 'INTERPRETIVE', emergenceClass: 'SECONDARY' }
+    },
+  },
+  deriveEnrichmentPosture: {
+    key: 'enrichmentPosture',
+    emergenceClass: 'TERTIARY',
+    label: 'ENRICHMENT POSTURE',
+    subordinateLabel: 'Substrate correction',
+    emergenceLabel: 'Substrate self-correction detected',
+    nominalLabel: 'Enrichment posture nominal',
+    derive: (fullReport) => {
+      const ei = fullReport && fullReport.enrichment_intelligence
+      if (!ei || !ei.available || !ei.enrichment_events) return { narrative: null, evidenceChain: [], structuralBasis: '', authority: 'INTERPRETIVE', emergenceClass: 'TERTIARY' }
+      let narrative = `The substrate self-corrected through ${ei.enrichment_events} evidence corrections across ${ei.domains_corrected} domains.`
+      if (ei.debt && ei.debt.available && ei.debt.total_items > 0) {
+        narrative += ` Of ${ei.debt.total_items} debt items: ${ei.debt.improved} improved, ${ei.debt.worsened} worsened, ${ei.debt.unchanged} unchanged.`
+      }
+      const evidenceChain = [
+        { source: 'enrichment_intelligence', claim: `${ei.enrichment_events} corrections · ${ei.domains_corrected} domains`, severity: ei.domains_corrected > 5 ? 'ELEVATED' : 'NOMINAL' },
+      ]
+      if (ei.debt && ei.debt.available) {
+        evidenceChain.push({ source: 'debt_reassessment', claim: `${ei.debt.improved} improved · ${ei.debt.worsened} worsened · ${ei.debt.blockers_resolved} resolved`, severity: ei.debt.worsened > ei.debt.improved ? 'ELEVATED' : 'NOMINAL' })
+      }
+      return { narrative, evidenceChain, structuralBasis: `${ei.enrichment_events} events · ${ei.domains_corrected} domains · debt: ${ei.debt ? ei.debt.improved : 0} improved`, authority: 'INTERPRETIVE', emergenceClass: 'TERTIARY' }
+    },
+  },
+  deriveConvergencePosture: {
+    key: 'convergencePosture',
+    emergenceClass: 'TERTIARY',
+    label: 'CONVERGENCE POSTURE',
+    subordinateLabel: 'Cross-specimen pattern',
+    emergenceLabel: 'Cross-specimen convergence observed',
+    nominalLabel: 'Convergence data unavailable',
+    derive: (fullReport) => {
+      const ci = fullReport && fullReport.convergence_intelligence
+      if (!ci || !ci.available || !ci.total_observations) return { narrative: null, evidenceChain: [], structuralBasis: '', authority: 'INTERPRETIVE', emergenceClass: 'TERTIARY' }
+      let narrative = `${ci.total_observations} cross-specimen observations: ${ci.convergences.length} governance patterns converge, ${ci.divergences.length} diverge.`
+      if (ci.convergences.length > ci.divergences.length) {
+        narrative += ' Governance patterns generalize across independent specimens.'
+      } else if (ci.divergences.length > ci.convergences.length) {
+        narrative += ' Specimen-specific divergence exceeds shared pattern — governance generalisation is incomplete.'
+      }
+      return {
+        narrative,
+        evidenceChain: [
+          { source: 'convergence_intelligence', claim: `${ci.convergences.length} convergences · ${ci.divergences.length} divergences · ${ci.total_observations} total`, severity: ci.divergences.length > ci.convergences.length ? 'ELEVATED' : 'NOMINAL' },
+        ],
+        structuralBasis: `${ci.total_observations} observations · maturity: ${ci.observation_maturity || 'unknown'}`,
+        authority: 'INTERPRETIVE',
+        emergenceClass: 'TERTIARY',
+      }
+    },
+  },
 }
 
 function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass, activeQueryKey, onQuerySelect, exploredQueries, emergenceState, escalationAvailable, piRuntimeActive, onEscalate, onDeescalate, expansions, activeExpansionIndex, onExpansionSelect, interrogationTrail, onTrailExport, selectedNarrativeArc }) {
@@ -2894,6 +2977,10 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
       <StructuralConclusionBlock fullReport={fullReport} />
       <BalancedNarrativeSection derived={narratives.qualificationIntelligence} subordinateLabel="Qualification compression" />
 
+      <BalancedNarrativeSection derived={narratives.governancePosture} subordinateLabel="Governance lifecycle" />
+      <BalancedNarrativeSection derived={narratives.enrichmentPosture} subordinateLabel="Substrate correction" />
+      <BalancedNarrativeSection derived={narratives.convergencePosture} subordinateLabel="Cross-specimen pattern" />
+
       <div className="tier-handoff" aria-label="Governance handoff">
         <div className="tier-handoff-rule" />
         <div className="tier-handoff-text">
@@ -4855,9 +4942,105 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
         )}
       </div>
 
+      <BoardroomGovernanceIntelligence fullReport={fullReport} />
+
       <div className="cockpit-footer">
         All outputs structurally derived — no inference, no AI-generated assessment.
       </div>
+    </div>
+  )
+}
+
+function BoardroomGovernanceIntelligence({ fullReport }) {
+  if (!fullReport) return null
+  const gl = fullReport.governance_lifecycle
+  const pc = fullReport.proposition_corpus
+  const ei = fullReport.enrichment_intelligence
+  const rv = fullReport.revalidation_intelligence
+  const ca = fullReport.constitutional_anchor
+  const ci = fullReport.convergence_intelligence
+  const cc = fullReport.chronicle_certification
+
+  const hasAny = (gl && gl.available) || (cc && cc.available) || (ca && ca.available)
+  if (!hasAny) return null
+
+  return (
+    <div className="cockpit-governance-intelligence">
+      <div className="cockpit-governance-intelligence-label">GOVERNANCE INTELLIGENCE</div>
+
+      {gl && gl.available && (
+        <div className="cockpit-governance-row">
+          <span className="cockpit-governance-badge cockpit-governance-badge--s-level" data-level={gl.s_level}>
+            {gl.s_level}
+          </span>
+          {gl.qualification_provenance && (
+            <span className="cockpit-governance-provenance">
+              via {gl.qualification_provenance.replace(/_/g, ' ')}
+            </span>
+          )}
+          {gl.authority_ceiling && (
+            <span className="cockpit-governance-ceiling">
+              Ceiling: {gl.authority_ceiling}
+            </span>
+          )}
+        </div>
+      )}
+
+      {cc && cc.available && (
+        <div className="cockpit-governance-row">
+          <span className="cockpit-governance-badge cockpit-governance-badge--certified" data-status={cc.certification_status}>
+            {cc.certification_status === 'CERTIFIED' ? 'REPLAY-CERTIFIED' : cc.certification_status}
+          </span>
+          <span className="cockpit-governance-detail">
+            {cc.passed}/{cc.total_checks} checks · {cc.phase_count} phases
+          </span>
+        </div>
+      )}
+
+      {ca && ca.available && (
+        <div className="cockpit-governance-row">
+          <span className="cockpit-governance-anchor-verdict" data-verdict={ca.advancement_blocked ? 'BLOCKED' : 'PASS'}>
+            {ca.summary && ca.summary.passed != null
+              ? `${ca.summary.passed}/${ca.summary.total} constitutional dimensions PASS`
+              : ca.overall_verdict && ca.overall_verdict.replace(/_/g, ' ')}
+          </span>
+        </div>
+      )}
+
+      {pc && pc.available && pc.total > 0 && (
+        <div className="cockpit-governance-row">
+          <span className="cockpit-governance-statement">
+            {pc.disposition_counts.accepted} accepted, {pc.disposition_counts.rejected} rejected, {pc.disposition_counts.arbitrated} arbitrated
+            {pc.governance_friction_rate > 0 && (
+              <span> — governance was exercised, not rubber-stamped</span>
+            )}
+          </span>
+        </div>
+      )}
+
+      {ei && ei.available && ei.enrichment_events > 0 && (
+        <div className="cockpit-governance-row">
+          <span className="cockpit-governance-statement">
+            {ei.enrichment_events} evidence corrections across {ei.domains_corrected} domains — the substrate self-corrected
+          </span>
+        </div>
+      )}
+
+      {rv && rv.available && (
+        <div className="cockpit-governance-row">
+          <span className="cockpit-governance-statement" data-status={rv.status}>
+            Deterministic revalidation: {rv.passed}/{rv.total_checks} PASS across {rv.phase_count} phases
+          </span>
+        </div>
+      )}
+
+      {ci && ci.available && ci.total_observations > 0 && (
+        <div className="cockpit-governance-row">
+          <span className="cockpit-governance-statement">
+            {ci.total_observations} cross-specimen observations — {ci.convergences.length} convergences, {ci.divergences.length} divergences
+          </span>
+        </div>
+      )}
     </div>
   )
 }

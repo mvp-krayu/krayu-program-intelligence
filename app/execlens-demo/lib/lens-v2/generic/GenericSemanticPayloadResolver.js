@@ -323,6 +323,233 @@ function buildSignalInterpretations(dpsigSummary, evidenceBlocks, derived, zoneA
   return results;
 }
 
+function projectGovernanceLifecycle(sources) {
+  const ps = sources.promotion_state;
+  if (!ps || !ps.ok || !ps.data) return { available: false };
+  const d = ps.data;
+  const lineage = d.promotion_lineage || {};
+  const transitions = (lineage.transitions || []).map(t => ({
+    from: t.from,
+    to: t.to,
+    timestamp: t.timestamp,
+    actor: t.actor_id || null,
+    action: t.action || null,
+    mechanism: t.rationale || null,
+  }));
+  return {
+    available: true,
+    s_level: d.current_state || d.s_level,
+    qualification_provenance: d.qualification_provenance || null,
+    authority_ceiling: d.authority_ceiling || null,
+    promotion_eligible: d.promotion_eligible != null ? d.promotion_eligible : null,
+    hold_reason: d.hold_reason || null,
+    transitions,
+    transition_count: transitions.length,
+    last_updated: d.last_updated || d.generated_at || null,
+  };
+}
+
+function projectPropositionCorpus(sources) {
+  const sp = sources.semantic_propositions;
+  if (!sp || !sp.ok || !sp.data) return { available: false };
+  const d = sp.data;
+  const summary = d.proposition_summary || {};
+
+  const reviewState = sources.proposition_review_state;
+  const review = reviewState && reviewState.ok && reviewState.data ? reviewState.data : null;
+
+  const obligations = sources.review_obligations;
+  const oblData = obligations && obligations.ok && obligations.data ? obligations.data : null;
+
+  const dispositionCounts = { accepted: 0, rejected: 0, arbitrated: 0, contested: 0 };
+  if (review && review.dispositions) {
+    for (const v of Object.values(review.dispositions)) {
+      const disp = (v.disposition || '').toLowerCase();
+      if (dispositionCounts[disp] != null) dispositionCounts[disp] += 1;
+    }
+  }
+
+  const flaggedItems = oblData ? (oblData.obligations || []).map(o => ({
+    proposition_id: o.proposition_id,
+    disposition: o.disposition,
+    rationale: o.rationale || null,
+  })) : [];
+
+  return {
+    available: true,
+    total: summary.total || 0,
+    by_class: summary.by_class || {},
+    by_tier: summary.by_tier || {},
+    mean_confidence: summary.mean_confidence || 0,
+    derivation_path: d.derivation_path || null,
+    disposition_counts: dispositionCounts,
+    flagged_count: review ? review.flagged_count || 0 : 0,
+    review_status: review ? review.status || null : null,
+    review_completed_by: review ? review.completed_by || null : null,
+    obligations_total: oblData ? oblData.total_obligations || 0 : 0,
+    obligations_met: oblData ? oblData.obligations_met || 0 : 0,
+    flagged_items: flaggedItems,
+    governance_friction_rate: summary.total > 0
+      ? ((dispositionCounts.rejected + dispositionCounts.arbitrated + dispositionCounts.contested) / summary.total)
+      : 0,
+  };
+}
+
+function projectEnrichmentIntelligence(sources) {
+  const es = sources.enrichment_summary;
+  if (!es || !es.ok || !es.data) return { available: false };
+  const d = es.data;
+
+  const debt = sources.debt_reassessment;
+  const debtData = debt && debt.ok && debt.data ? debt.data : null;
+
+  const result = {
+    available: true,
+    enrichment_events: d.enrichment_events || 0,
+    domains_corrected: d.domains_corrected || 0,
+    domains_confirmed: d.domains_confirmed || 0,
+    domains_no_sdc_match: d.domains_no_sdc_match || 0,
+    capabilities_domain_corrected: d.capabilities_domain_corrected || 0,
+    mean_confidence_post: (d.confidence_deltas || {}).mean_confidence_post_enrichment || null,
+    domains_with_change: (d.confidence_deltas || {}).domains_with_change || 0,
+  };
+
+  if (debtData) {
+    result.debt = {
+      available: true,
+      total_items: debtData.total_debt_items || 0,
+      improved: debtData.improved || 0,
+      unchanged: debtData.unchanged || 0,
+      worsened: debtData.worsened || 0,
+      blockers_resolved: debtData.blockers_resolved || 0,
+      trajectory: debtData.debt_trajectory || null,
+      items: (debtData.items || []).map(it => ({
+        blocker_id: it.blocker_id,
+        domain_id: it.domain_id || null,
+        severity: it.severity || null,
+        blocks_s_state: it.blocks_s_state || null,
+        enrichment_impact: it.enrichment_impact || null,
+        original_reducibility: it.original_reducibility || null,
+        post_enrichment_reducibility: it.post_enrichment_reducibility || null,
+      })),
+    };
+  } else {
+    result.debt = { available: false };
+  }
+
+  return result;
+}
+
+function projectRevalidationIntelligence(sources) {
+  const rv = sources.revalidation_result;
+  if (!rv || !rv.ok || !rv.data) return { available: false };
+  const d = rv.data;
+
+  const phaseMap = {};
+  for (const c of (d.checks || [])) {
+    const p = c.phase != null ? c.phase : 0;
+    if (!phaseMap[p]) phaseMap[p] = { phase: p, total: 0, passed: 0, failed: 0, checks: [] };
+    phaseMap[p].total += 1;
+    if (c.result === 'PASS') phaseMap[p].passed += 1;
+    else phaseMap[p].failed += 1;
+    phaseMap[p].checks.push({
+      check_number: c.check_number,
+      check: c.check,
+      result: c.result,
+      detail: c.detail || null,
+    });
+  }
+
+  return {
+    available: true,
+    status: d.status,
+    total_checks: d.total_checks || 0,
+    passed: d.passed || 0,
+    failed: d.failed || 0,
+    phases: Object.values(phaseMap).sort((a, b) => a.phase - b.phase),
+    phase_count: Object.keys(phaseMap).length,
+  };
+}
+
+function projectConstitutionalAnchor(sources) {
+  const ca = sources.constitutional_replay_anchor;
+  if (!ca || !ca.ok || !ca.data) return { available: false };
+  const d = ca.data;
+  const assessment = d.assessment || {};
+
+  return {
+    available: true,
+    status: d.status,
+    advancement_blocked: d.advancement_blocked || false,
+    target_level: d.target_level || null,
+    overall_verdict: assessment.overall_verdict || d.status,
+    summary: assessment.summary || {},
+    dimensions: (assessment.dimensions || []).map(dim => ({
+      dimension: dim.dimension,
+      reference: dim.reference,
+      candidate: dim.candidate,
+      ratio: dim.ratio != null ? dim.ratio : null,
+      threshold: dim.threshold,
+      verdict: dim.verdict,
+      severity: dim.severity,
+    })),
+    reference_specimen: d.reference ? d.reference.specimen_id : null,
+    candidate_specimen: d.candidate ? d.candidate.specimen_id : null,
+  };
+}
+
+function projectConvergenceIntelligence(sources) {
+  const co = sources.convergence_observations;
+  if (!co || !co.ok || !co.data) return { available: false };
+  const d = co.data;
+  const summary = d.summary || {};
+
+  return {
+    available: true,
+    observation_maturity: d.observation_maturity || null,
+    total_observations: summary.total_observations || (d.observations || []).length,
+    convergences: summary.convergences || [],
+    divergences: summary.divergences || [],
+    mixed: summary.convergence_with_divergence || [],
+    verdict: summary.verdict || null,
+    observations: (d.observations || []).map(o => ({
+      observation_id: o.observation_id,
+      title: o.title,
+      pattern_status: o.pattern_status,
+      observation: o.observation,
+      divergence: o.divergence || null,
+    })),
+    specimens: d.specimens || null,
+  };
+}
+
+function projectChronicleCertification(sources) {
+  const cc = sources.chronicle_certification;
+  if (!cc || !cc.ok || !cc.data) return { available: false };
+  const d = cc.data;
+
+  const phaseBreakdown = {};
+  for (const [phaseName, phaseData] of Object.entries(d.phases || {})) {
+    const checks = phaseData.checks || [];
+    phaseBreakdown[phaseName] = {
+      total: checks.length,
+      passed: checks.filter(c => c.result === 'PASS').length,
+      failed: checks.filter(c => c.result !== 'PASS').length,
+    };
+  }
+
+  return {
+    available: true,
+    certification_status: d.certification_status,
+    total_checks: d.total_checks || 0,
+    passed: d.passed || 0,
+    failed: d.failed || 0,
+    phase_count: Object.keys(d.phases || {}).length,
+    phase_breakdown: phaseBreakdown,
+    governed_lifecycle_summary: d.governed_lifecycle_summary || null,
+  };
+}
+
 /**
  * Resolve the canonical semantic payload for a validated manifest.
  *
@@ -874,6 +1101,16 @@ function resolveSemanticPayload(manifest) {
         },
       ],
     },
+
+    // Governance lifecycle artifacts — loaded from optional manifest entries.
+    // These power chronicle-backed intelligence consumption across all personas.
+    governance_lifecycle: projectGovernanceLifecycle(sources),
+    proposition_corpus: projectPropositionCorpus(sources),
+    enrichment_intelligence: projectEnrichmentIntelligence(sources),
+    revalidation_intelligence: projectRevalidationIntelligence(sources),
+    constitutional_anchor: projectConstitutionalAnchor(sources),
+    convergence_intelligence: projectConvergenceIntelligence(sources),
+    chronicle_certification: projectChronicleCertification(sources),
   };
 }
 

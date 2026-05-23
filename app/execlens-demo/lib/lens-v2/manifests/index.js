@@ -20,6 +20,7 @@ const MANIFESTS_REPO_RELATIVE = 'app/execlens-demo/lib/lens-v2/manifests';
 const REGISTRY = {
   blueedge: {
     run_blueedge_productized_01_fixed: 'blueedge.run_blueedge_productized_01_fixed.json',
+    run_blueedge_genesis_e2e_03: 'blueedge.run_blueedge_genesis_e2e_03.json',
   },
   fastapi: {
     run_02_oss_fastapi_pipeline: 'fastapi.run_02_oss_fastapi_pipeline.json',

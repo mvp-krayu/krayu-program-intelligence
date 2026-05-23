@@ -3190,6 +3190,87 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           line-height: 1.4;
         }
 
+        /* BOARDROOM Governance Intelligence */
+        .cockpit-governance-intelligence {
+          margin: 20px 0 0;
+          padding: 16px 20px;
+          background: rgba(100, 255, 218, 0.03);
+          border: 1px solid rgba(100, 255, 218, 0.08);
+          border-radius: 4px;
+        }
+        .cockpit-governance-intelligence-label {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: #64ffda;
+          margin-bottom: 12px;
+          opacity: 0.7;
+        }
+        .cockpit-governance-row {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 6px 0;
+          flex-wrap: wrap;
+          border-bottom: 1px solid rgba(42, 47, 64, 0.4);
+        }
+        .cockpit-governance-row:last-child {
+          border-bottom: none;
+        }
+        .cockpit-governance-badge {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          font-weight: 600;
+          padding: 2px 8px;
+          border-radius: 2px;
+          letter-spacing: 0.05em;
+        }
+        .cockpit-governance-badge--s-level {
+          background: rgba(100, 255, 218, 0.12);
+          color: #64ffda;
+          border: 1px solid rgba(100, 255, 218, 0.2);
+        }
+        .cockpit-governance-badge--certified {
+          background: rgba(100, 255, 218, 0.08);
+          color: #64ffda;
+          border: 1px solid rgba(100, 255, 218, 0.15);
+        }
+        .cockpit-governance-badge--certified[data-status="CERTIFIED"] {
+          background: rgba(100, 255, 218, 0.12);
+        }
+        .cockpit-governance-provenance,
+        .cockpit-governance-ceiling {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11px;
+          color: #8a96b2;
+        }
+        .cockpit-governance-detail {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          color: #8a96b2;
+        }
+        .cockpit-governance-anchor-verdict {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          color: #8a96b2;
+        }
+        .cockpit-governance-anchor-verdict[data-verdict="PASS"] {
+          color: #64ffda;
+        }
+        .cockpit-governance-anchor-verdict[data-verdict="BLOCKED"] {
+          color: #ff6b6b;
+        }
+        .cockpit-governance-statement {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 12px;
+          color: #8a96b2;
+          line-height: 1.5;
+        }
+        .cockpit-governance-statement[data-status="PASS"] {
+          color: #64ffda;
+        }
+
         /* BALANCED Narrative Emergence (5B.2 — interpretive surfaces) */
         .balanced-narrative {
           margin: 20px 0;
