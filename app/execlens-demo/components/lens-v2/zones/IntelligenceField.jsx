@@ -2558,6 +2558,67 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
       )
     }
 
+    const gl = fullReport && fullReport.governance_lifecycle
+    const isGovernedS1Plus = gl && gl.available && gl.s_level && ['S1', 'S2', 'S3'].includes(gl.s_level)
+
+    if (isGovernedS1Plus) {
+      const pc = fullReport.proposition_corpus
+      const ei = fullReport.enrichment_intelligence
+      const rv = fullReport.revalidation_intelligence
+      const cc = fullReport.chronicle_certification
+      const govFamilyKeys = [...new Set(activatedSignals.map(s => s.signal_family).filter(Boolean))]
+      return (
+        <aside className="intel-interp" data-tone={framing.tone} aria-label="Executive intelligence briefing">
+          <div className="interp-tag">
+            <span className="interp-tag-label">EXECUTIVE BRIEFING</span>
+            <span className="interp-tag-state">{gl.s_level}</span>
+          </div>
+
+          <div className="interp-block interp-block--lead">
+            <div className="interp-section-label">INTELLIGENCE POSTURE</div>
+            <div className="interp-synthesis">
+              {gl.s_level} governed intelligence across {totalDomains} semantic domains.
+              {govFamilyKeys.length > 0
+                ? ` Structural pressure concentrated${pressureZone ? ` in "${pressureZone}"` : ''}.`
+                : ' No elevated structural pressure.'}
+            </div>
+            <div className="interp-synthesis-meta">
+              {(gl.qualification_provenance || '').replace(/_/g, ' ')} · {gl.authority_ceiling || 'L3'} ceiling
+            </div>
+          </div>
+
+          {govFamilyKeys.length > 0 && (
+            <div className="interp-block">
+              <div className="interp-section-label">STRUCTURAL TENSION</div>
+              <div className="interp-synthesis">
+                {govFamilyKeys.length} pressure dimension{govFamilyKeys.length !== 1 ? 's' : ''} active{pressureZone ? ` — gravity concentrated in "${pressureZone}"` : ''}.
+              </div>
+            </div>
+          )}
+
+          <div className="interp-block">
+            <div className="interp-section-label">GOVERNANCE CONFIDENCE</div>
+            <div className="interp-synthesis">
+              {pc && pc.available && pc.governance_friction_rate > 0
+                ? 'Governed review exercised. Governance friction surfaced and resolved.'
+                : pc && pc.available
+                  ? 'Governed review completed. All claims accepted.'
+                  : 'Governance lifecycle complete.'}
+              {rv && rv.available && rv.status === 'PASS' ? ' Deterministic replay confirmed.' : ''}
+              {cc && cc.available && cc.certification_status === 'CERTIFIED' ? ' Replay-certified.' : ''}
+            </div>
+          </div>
+
+          <div className="interp-block">
+            <div className="interp-section-label interp-section-label--descent">DEPTH</div>
+            <div className="interp-synthesis interp-synthesis--descent">
+              Descend into BALANCED for the governed qualification journey.
+            </div>
+          </div>
+        </aside>
+      )
+    }
+
     return (
       <aside className="intel-interp" data-tone={framing.tone} aria-label="Executive environmental synthesis">
         <div className="interp-tag">
@@ -4069,10 +4130,8 @@ function InvestigationGovernanceAudit({ fullReport }) {
   )
 }
 
-function CockpitRadialGauge({ score, groundingPct }) {
-  const s = typeof score === 'number' ? score : 0
-  const g = typeof groundingPct === 'number' ? groundingPct : 0
-  const r = 58
+function CockpitRadialGauge({ score, groundingPct, governedLevel, tensionPct }) {
+  const isGoverned = !!governedLevel
   const cx = 75
   const cy = 68
 
@@ -4084,13 +4143,41 @@ function CockpitRadialGauge({ score, groundingPct }) {
     }
   }
 
+  if (isGoverned) {
+    const levelPct = { S0: 0, S1: 33, S2: 66, S3: 100 }[governedLevel] || 0
+    const tPct = typeof tensionPct === 'number' ? tensionPct : 0
+    const r = 58
+    const gr = 49
+    const le = arcEnd(r, levelPct)
+    const levelPath = levelPct > 0 ? `M ${cx - r} ${cy} A ${r} ${r} 0 ${levelPct > 50 ? 1 : 0} 1 ${le.x.toFixed(1)} ${le.y.toFixed(1)}` : ''
+    const te = arcEnd(gr, tPct)
+    const tensionPath = tPct > 0 ? `M ${cx - gr} ${cy} A ${gr} ${gr} 0 0 1 ${te.x.toFixed(1)} ${te.y.toFixed(1)}` : ''
+    const levelColor = levelPct >= 66 ? '#64ffda' : levelPct >= 33 ? '#4a9eff' : '#6a7a9a'
+    const tensionColor = tPct >= 60 ? '#ff9e4a' : tPct >= 30 ? '#ffd700' : '#4a9eff'
+
+    return (
+      <svg viewBox="0 0 150 84" className="cockpit-gauge-svg" role="img" aria-label={`Qualification: ${governedLevel}, Tension: ${tPct}%`}>
+        <path d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`} fill="none" stroke="#1e2330" strokeWidth="8" strokeLinecap="round" />
+        {levelPath && <path d={levelPath} fill="none" stroke={levelColor} strokeWidth="8" strokeLinecap="round" />}
+        <path d={`M ${cx - gr} ${cy} A ${gr} ${gr} 0 0 1 ${cx + gr} ${cy}`} fill="none" stroke="#1e2330" strokeWidth="5" strokeLinecap="round" />
+        {tensionPath && <path d={tensionPath} fill="none" stroke={tensionColor} strokeWidth="5" strokeLinecap="round" opacity="0.7" />}
+        <text x={cx} y={cy - 16} textAnchor="middle" fontSize="24" fontWeight="600" fill={levelColor} fontFamily="'Courier New', monospace">{governedLevel}</text>
+        <text x={cx} y={cy - 2} textAnchor="middle" fontSize="8" fill="#6a7a9a" letterSpacing="0.15em" fontFamily="-apple-system, sans-serif">GOVERNED</text>
+        <text x={cx - r + 2} y={cy + 12} textAnchor="start" fontSize="7" fill={levelColor} fontFamily="-apple-system, sans-serif">qualified</text>
+        <text x={cx + r - 2} y={cy + 12} textAnchor="end" fontSize="7" fill={tensionColor} fontFamily="-apple-system, sans-serif">{tPct > 0 ? `${tPct}% tension` : 'nominal'}</text>
+      </svg>
+    )
+  }
+
+  const s = typeof score === 'number' ? score : 0
+  const g = typeof groundingPct === 'number' ? groundingPct : 0
+  const r = 58
+  const gr = 49
+
   const se = arcEnd(r, s)
   const scorePath = s > 0 ? `M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${se.x.toFixed(1)} ${se.y.toFixed(1)}` : ''
-
-  const gr = 49
   const ge = arcEnd(gr, g)
   const groundPath = g > 0 ? `M ${cx - gr} ${cy} A ${gr} ${gr} 0 0 1 ${ge.x.toFixed(1)} ${ge.y.toFixed(1)}` : ''
-
   const scoreColor = s >= 80 ? '#64ffda' : s >= 60 ? '#ffd700' : s >= 40 ? '#ff9e4a' : '#ff6b6b'
 
   return (
@@ -4107,16 +4194,17 @@ function CockpitRadialGauge({ score, groundingPct }) {
   )
 }
 
-function CockpitSignalBar({ signal }) {
+function CockpitSignalBar({ signal, governed }) {
   const sevColor = { CRITICAL: '#ff6b6b', HIGH: '#ff6b6b', ELEVATED: '#ff9e4a', MODERATE: '#ffd700', NOMINAL: '#64ffda' }
   const color = sevColor[signal.severity] || '#5e6d8a'
   const isActive = signal.severity !== 'NOMINAL'
+  const reading = (governed && signal.boardroom_interpretation) || signal.interpretation
   return (
     <div className={`cockpit-signal${isActive ? ' cockpit-signal--active' : ''}`} data-severity={signal.severity}>
       <div className="cockpit-signal-bar" style={{ background: color }} />
       <div className="cockpit-signal-body">
         <div className="cockpit-signal-name">{signal.signal_name}</div>
-        <div className="cockpit-signal-reading">{signal.interpretation}</div>
+        <div className="cockpit-signal-reading">{reading}</div>
       </div>
     </div>
   )
@@ -5398,15 +5486,12 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
   const qs = (fullReport && fullReport.qualifier_summary) || {}
   const ps = (fullReport && fullReport.propagation_summary) || {}
   const sigs = (fullReport && fullReport.signal_interpretations) || []
-
-  const score = rs.score != null ? rs.score : 0
-  const band = rs.band || '—'
-  const posture = rs.posture || '—'
+  const gl = fullReport && fullReport.governance_lifecycle
+  const isGovernedS1Plus = gl && gl.available && gl.s_level && ['S1', 'S2', 'S3'].includes(gl.s_level)
 
   const backedCount = ts.structurally_backed_count || 0
   const totalDomains = ts.semantic_domain_count || 0
   const semanticOnlyCount = ts.semantic_only_count || Math.max(0, totalDomains - backedCount)
-  const groundingPct = Math.round((backedCount / Math.max(1, totalDomains)) * 100)
 
   const activatedSignals = sigs.filter(s => s.severity !== 'NOMINAL')
   const nominalSignals = sigs.filter(s => s.severity === 'NOMINAL')
@@ -5416,6 +5501,181 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
   const origin = evidenceBlocks && evidenceBlocks.find(b => b && b.propagation_role === 'ORIGIN')
   const passthrough = evidenceBlocks && evidenceBlocks.find(b => b && b.propagation_role === 'PASS_THROUGH')
   const receiver = evidenceBlocks && evidenceBlocks.find(b => b && b.propagation_role === 'RECEIVER')
+
+  const SIGNAL_FAMILY_CAPTIONS = {
+    ISIG: 'Import dependency tension',
+    DPSIG: 'Structural concentration pressure',
+    PSIG: 'Architectural binding stress',
+  }
+
+  const signalFamilies = sigs.reduce((acc, s) => {
+    const fam = s.signal_family || (s.signal_id && s.signal_id.startsWith('ISIG') ? 'ISIG' : s.signal_id && s.signal_id.startsWith('PSIG') ? 'PSIG' : 'DPSIG')
+    if (!acc[fam]) acc[fam] = []
+    acc[fam].push(s)
+    return acc
+  }, {})
+  const familyKeys = Object.keys(signalFamilies)
+
+  if (isGovernedS1Plus) {
+    const tensionPct = sigs.length > 0 ? Math.round((activatedSignals.length / sigs.length) * 100) : 0
+    const pc = fullReport.proposition_corpus
+    const ei = fullReport.enrichment_intelligence
+    const rv = fullReport.revalidation_intelligence
+    const ca = fullReport.constitutional_anchor
+    const ci = fullReport.convergence_intelligence
+    const cc = fullReport.chronicle_certification
+
+    const activeFamilyCount = familyKeys.filter(fam => signalFamilies[fam].some(s => s.severity !== 'NOMINAL')).length
+    const findingHeadline = somethingFound
+      ? `${gl.s_level} GOVERNED · ${activeFamilyCount} STRUCTURAL TENSION${activeFamilyCount > 1 ? 'S' : ''}`
+      : `${gl.s_level} GOVERNED · NO ELEVATED PRESSURE`
+
+    const tensionNarrative = somethingFound
+      ? `Governed intelligence shows structural tension${pressureZone ? ` concentrated around "${pressureZone}"` : ''} across ${activeFamilyCount} pressure ${activeFamilyCount === 1 ? 'dimension' : 'dimensions'} — ${familyKeys.filter(fam => signalFamilies[fam].some(s => s.severity !== 'NOMINAL')).map(f => SIGNAL_FAMILY_CAPTIONS[f] || f).join(', ')}. Qualification holds — pressure is operational context, not qualification failure.`
+      : `Governed intelligence across ${totalDomains} semantic domains. All ${sigs.length} signal indicators nominal. No structural tension requiring executive attention.`
+
+    const governanceNarrative = `This intelligence holds ${gl.s_level} qualification through ${(gl.qualification_provenance || '').replace(/_/g, ' ').toLowerCase()}. `
+      + (pc && pc.available && pc.total > 0 ? `Operator review exercised across ${pc.total} propositions. ` : '')
+      + (rv && rv.available && rv.status === 'PASS' ? 'Deterministic replay confirmed. ' : '')
+      + (cc && cc.available && cc.certification_status === 'CERTIFIED' ? 'Replay-certified.' : '')
+
+    return (
+      <div className="rep-field rep-field--boardroom rep-field--cockpit rep-field--governed">
+        <RepModeTag
+          label="Boardroom lens"
+          sub="Board · governed intelligence posture"
+          zones={[{ id: 'Z1', name: 'Governed Intelligence' }, { id: 'Z2', name: 'Structural Tension' }]}
+        />
+
+        <div className="cockpit-finding" data-found={String(somethingFound)} data-governed="true">
+          <div className="cockpit-finding-verdict">{findingHeadline}</div>
+          <div className="cockpit-finding-summary">{tensionNarrative}</div>
+        </div>
+
+        {sigs.length > 0 && (
+          <div className="signal-field" data-pressure={somethingFound ? 'active' : 'nominal'}>
+            <div className="signal-field-families">
+              {familyKeys.map(fam => {
+                const famSigs = signalFamilies[fam]
+                const famActivated = famSigs.filter(s => s.severity !== 'NOMINAL')
+                return (
+                  <span key={fam} className="signal-field-family-chip" data-family={fam} data-active={String(famActivated.length > 0)}>
+                    <span className="signal-field-family-name">{fam}</span>
+                    <span className="signal-field-family-caption">{SIGNAL_FAMILY_CAPTIONS[fam] || fam}</span>
+                    {famActivated.length > 0 && <span className="signal-field-family-count">{famActivated.length} elevated</span>}
+                  </span>
+                )
+              })}
+            </div>
+            <div className="signal-field-strip">
+              {activatedSignals.map(sig => (
+                <span key={sig.signal_id} className="signal-field-pip" data-severity={sig.severity} title={sig.signal_name} />
+              ))}
+              {activatedSignals.length > 0 && (
+                <span className="signal-field-count">{activatedSignals.length} activated</span>
+              )}
+              {nominalSignals.length > 0 && (
+                <span className="signal-field-nominal">{nominalSignals.length} nominal</span>
+              )}
+            </div>
+          </div>
+        )}
+
+        <div className="cockpit-synthesis">
+          <div className="cockpit-synthesis-conclusion">{governanceNarrative}</div>
+          {ci && ci.available && ci.total_observations > 0 && (
+            <div className="cockpit-synthesis-convergence">
+              Governance patterns confirmed across independent specimens — {ci.convergences.length} convergences observed.
+            </div>
+          )}
+        </div>
+
+        <div className="cockpit-instruments">
+          <div className="cockpit-gauge-panel">
+            <CockpitRadialGauge governedLevel={gl.s_level} tensionPct={tensionPct} />
+            <div className="cockpit-gauge-meta">
+              <span className="cockpit-gauge-band">{gl.s_level}</span>
+              <span className="cockpit-gauge-sep">·</span>
+              <span className="cockpit-gauge-posture">{(gl.qualification_provenance || '').replace(/_/g, ' ')}</span>
+            </div>
+          </div>
+
+          <div className="cockpit-signal-panel">
+            <div className="cockpit-signal-label">SIGNAL ASSESSMENT</div>
+            {sigs.map(sig => (
+              <CockpitSignalBar key={sig.signal_id} signal={sig} governed />
+            ))}
+            {sigs.length > 0 && (
+              <div className="cockpit-signal-tally">
+                {activatedSignals.length > 0
+                  ? `${activatedSignals.length} of ${sigs.length} activated`
+                  : `${sigs.length} nominal`
+                }
+              </div>
+            )}
+            <div className="cockpit-governance-chips">
+              {rv && rv.available && (
+                <span className="cockpit-gov-chip" data-status={rv.status}>{rv.status === 'PASS' ? 'REPLAY PASS' : 'REPLAY ' + rv.status}</span>
+              )}
+              {ca && ca.available && (
+                <span className="cockpit-gov-chip" data-status={ca.advancement_blocked ? 'BLOCKED' : 'PASS'}>{ca.advancement_blocked ? 'ANCHOR BLOCKED' : 'ANCHOR PASS'}</span>
+              )}
+              {cc && cc.available && (
+                <span className="cockpit-gov-chip" data-status={cc.certification_status === 'CERTIFIED' ? 'PASS' : 'PENDING'}>{cc.certification_status === 'CERTIFIED' ? 'CERTIFIED' : cc.certification_status}</span>
+              )}
+            </div>
+          </div>
+
+          <div className="cockpit-coverage-panel">
+            <div className="cockpit-coverage-label">GOVERNED DOMAINS</div>
+            <div className="cockpit-coverage-ring">
+              <svg viewBox="0 0 80 80" className="cockpit-coverage-svg" aria-label={`${backedCount} of ${totalDomains} governed`}>
+                <circle cx="40" cy="40" r="32" fill="none" stroke="#1e2330" strokeWidth="6" />
+                <circle cx="40" cy="40" r="32" fill="none" stroke="#64ffda" strokeWidth="6"
+                  strokeDasharray={`${(backedCount / Math.max(1, totalDomains)) * 201} 201`}
+                  strokeLinecap="round" transform="rotate(-90 40 40)" />
+                <text x="40" y="37" textAnchor="middle" fontSize="16" fontWeight="600" fill="#ccd6f6" fontFamily="'Courier New', monospace">{totalDomains}</text>
+                <text x="40" y="49" textAnchor="middle" fontSize="7" fill="#6a7a9a" fontFamily="-apple-system, sans-serif">domains</text>
+              </svg>
+            </div>
+            <div className="cockpit-coverage-meta">
+              {pc && pc.available && (
+                <div className="cockpit-coverage-row"><span className="cockpit-coverage-dot cockpit-coverage-dot--backed" />{pc.disposition_counts.accepted} propositions accepted</div>
+              )}
+              {ei && ei.available && ei.enrichment_events > 0 && (
+                <div className="cockpit-coverage-row"><span className="cockpit-coverage-dot cockpit-coverage-dot--advisory" />{ei.enrichment_events} evidence corrections</div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (
+          <div className="cockpit-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
+            <TopologyGraph
+              domains={fullReport.semantic_domain_registry}
+              clusters={fullReport.semantic_cluster_registry || []}
+              edges={fullReport.semantic_topology_edges || []}
+              pressureZoneLabel={pressureZone || ''}
+            />
+            <div className="cockpit-topology-hint">Click to explore governed topology</div>
+          </div>
+        )}
+
+        {topoModalOpen && createPortal(<TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} initialSignalTrace={signalTraceId} onSignalTraceConsumed={() => setSignalTraceId(null)} mode="boardroom" onModeTransition={(targetMode, domainId, targetZoneKey) => { closeTopoModal(); if (onModeTransition) onModeTransition(targetMode, domainId, targetZoneKey) }} />, document.body)}
+
+        <BoardroomGovernanceIntelligence fullReport={fullReport} />
+
+        <div className="cockpit-footer">
+          Governed intelligence under 75.x bounded authority. Structural derivation primary. All claims trace to evidence.
+        </div>
+      </div>
+    )
+  }
+
+  const score = rs.score != null ? rs.score : 0
+  const band = rs.band || '—'
+  const posture = rs.posture || '—'
+  const groundingPct = Math.round((backedCount / Math.max(1, totalDomains)) * 100)
 
   const findingVerdict = somethingFound
     ? `Structural analysis detected ${activatedSignals.length} elevated signal${activatedSignals.length > 1 ? 's' : ''}. Pressure is concentrated${pressureZone ? ` around "${pressureZone}"` : ''}.`
@@ -5606,6 +5866,42 @@ function BoardroomGovernanceIntelligence({ fullReport }) {
 
   const hasAny = (gl && gl.available) || (cc && cc.available) || (ca && ca.available)
   if (!hasAny) return null
+
+  const isGovernedS1Plus = gl && gl.available && gl.s_level && ['S1', 'S2', 'S3'].includes(gl.s_level)
+
+  if (isGovernedS1Plus) {
+    const sentences = []
+    sentences.push(
+      `${gl.s_level} qualification earned through ${(gl.qualification_provenance || '').replace(/_/g, ' ').toLowerCase()} — not bridge certification.`
+    )
+    if (pc && pc.available && pc.governance_friction_rate > 0) {
+      sentences.push('Operator review exercised. Governance friction surfaced — claims were challenged, and some did not survive.')
+    } else if (pc && pc.available) {
+      sentences.push('Operator review completed. All semantic claims accepted through governed evaluation.')
+    }
+    if (rv && rv.available && rv.status === 'PASS' && cc && cc.available && cc.certification_status === 'CERTIFIED') {
+      sentences.push('Deterministic revalidation confirmed. Replay-certified across constitutional dimensions.')
+    } else if (rv && rv.available && rv.status === 'PASS') {
+      sentences.push('Deterministic revalidation confirmed.')
+    }
+    if (ci && ci.available && ci.total_observations > 0) {
+      sentences.push('Governance patterns confirmed across independent specimens.')
+    }
+
+    return (
+      <div className="cockpit-governance-intelligence cockpit-governance-intelligence--governed">
+        <div className="cockpit-governance-intelligence-label">GOVERNANCE LEGITIMACY</div>
+        <div className="cockpit-governance-envelope">
+          {sentences.map((s, i) => (
+            <div key={i} className="cockpit-governance-sentence">{s}</div>
+          ))}
+        </div>
+        <div className="cockpit-governance-authority">
+          75.x bounded authority · {gl.authority_ceiling || 'L3'} ceiling · evidence-traced
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="cockpit-governance-intelligence">

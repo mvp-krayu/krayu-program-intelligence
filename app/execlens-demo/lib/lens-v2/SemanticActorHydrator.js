@@ -135,6 +135,7 @@ function hydrateActors({
   dpsigSummary,
   unresolvedGaps,
   renderingMetadata,
+  promotionState,
 }) {
   // 17-domain registry summary
   const domains = (semanticTopologyModel && semanticTopologyModel.domains) || [];
@@ -151,9 +152,13 @@ function hydrateActors({
 
   // Semantic continuity is treated as VALIDATED whenever the crosswalk
   // artifact is present; ABSENT otherwise. Evidence availability is
-  // VALIDATED whenever decision_validation is present.
+  // AVAILABLE when decision_validation is present OR when the run has
+  // a governed lifecycle (S1+) — the governed lifecycle IS the evidence.
   const semanticContinuityStatus = semanticCrosswalk ? 'VALIDATED' : 'ABSENT';
-  const evidenceAvailability = decisionValidation ? 'AVAILABLE' : 'ABSENT';
+  const isGovernedS1Plus = promotionState
+    && promotionState.s_level
+    && ['S1', 'S2', 'S3'].includes(promotionState.s_level);
+  const evidenceAvailability = (decisionValidation || isGovernedS1Plus) ? 'AVAILABLE' : 'ABSENT';
 
   // Qualifier from grounding ratio (new four-class model)
   const qualifier = deriveQualifierClass(backedDomains.length, totalDomains, {

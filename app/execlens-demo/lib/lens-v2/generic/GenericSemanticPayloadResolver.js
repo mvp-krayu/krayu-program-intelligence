@@ -240,10 +240,21 @@ function clusterToEvidenceBlock(cluster, role, displayResolution, zoneAnchorBusi
   };
 }
 
-function buildSignalInterpretations(dpsigSummary, evidenceBlocks, derived, zoneAnchorBusinessLabel, qualificationLevel, psigSummary) {
+function buildSignalInterpretations(dpsigSummary, evidenceBlocks, derived, zoneAnchorBusinessLabel, qualificationLevel, psigSummary, semanticTopologyData) {
   const dpsigSignals = (dpsigSummary && dpsigSummary.ok && dpsigSummary.signals) ? dpsigSummary.signals : [];
   const nb = (dpsigSummary && dpsigSummary.normalization_basis) || {};
   const s1 = qualificationLevel === 'S1';
+
+  const clusterToDomain = {};
+  if (semanticTopologyData && semanticTopologyData.domains) {
+    for (const d of semanticTopologyData.domains) {
+      if (!d.cluster_id) continue;
+      if (d.zone_anchor || !clusterToDomain[d.cluster_id]) {
+        clusterToDomain[d.cluster_id] = d.domain_name || d.business_label || d.cluster_id;
+      }
+    }
+  }
+  const maxClusterDomain = clusterToDomain[nb.max_cluster_id] || zoneAnchorBusinessLabel || null;
 
   const activatedSignals = dpsigSignals.filter(s => s.activation_state && s.activation_state !== 'NOMINAL' && s.activation_state !== 'CLUSTER_BALANCED');
   const nominalSignals = dpsigSignals.filter(s => s.activation_state === 'NOMINAL' || s.activation_state === 'CLUSTER_BALANCED');
@@ -267,28 +278,40 @@ function buildSignalInterpretations(dpsigSummary, evidenceBlocks, derived, zoneA
         : `${derived.backed_count} of ${derived.total_domains} semantic domains are structurally backed; ${derived.semantic_only_count} remain advisory-bound.`)
     : null;
 
-  const results = dpsigSignals.map(sig => ({
-    signal_id: sig.signal_id,
-    signal_name: sig.signal_name,
-    signal_family: 'DPSIG',
-    derivation_level: 'Topology',
-    signal_value: sig.signal_value,
-    severity: sig.severity,
-    activation_state: sig.activation_state,
-    interpretation: sig.executive_summary || null,
-    engineering_detail: sig.engineering_summary || null,
-    concentration: nb.max_cluster_name
-      ? `Concentrated in "${nb.max_cluster_name}" (${nb.max_cluster_id}), ${nb.max_cluster_node_count || '?'} of ${nb.total_structural_node_count || '?'} structural nodes.`
-      : null,
-    co_presence: coPresenceNote,
-    compound_narrative: compoundNarrative,
-    confidence: s1 ? 'STRUCTURAL' : derived.qualifier_class === 'Q-01' ? 'FULL' : derived.qualifier_class === 'Q-02' ? 'PARTIAL' : 'ADVISORY',
-    confidence_note: s1
-      ? 'Signal derived from structural topology. Semantic qualification pending.'
-      : derived.qualifier_class !== 'Q-01'
-        ? `Signal derived under ${derived.qualifier_label || derived.qualifier_class}. Advisory confirmation required.`
-        : 'Signal derived from fully grounded structural evidence.',
-  }));
+  const results = dpsigSignals.map(sig => {
+    const domainLabel = maxClusterDomain || nb.max_cluster_name || 'primary structural zone';
+    const boardroomInterp = sig.signal_name === 'Cluster Pressure Index'
+      ? `Structural load concentrated in "${domainLabel}" — this domain carries disproportionate architectural weight across the system.`
+      : sig.signal_name === 'Cluster Fan Asymmetry'
+        ? `${domainLabel} dominates the structural topology. Organizational dependency on this domain is elevated.`
+        : maxClusterDomain
+          ? (sig.executive_summary || '').replace(/\b(?:CLU-\d+|the \w+ cluster \(CLU-\d+\))/gi, `"${domainLabel}"`).replace(/\bcluster\b/gi, 'domain') || null
+          : sig.executive_summary || null;
+
+    return {
+      signal_id: sig.signal_id,
+      signal_name: sig.signal_name,
+      signal_family: 'DPSIG',
+      derivation_level: 'Topology',
+      signal_value: sig.signal_value,
+      severity: sig.severity,
+      activation_state: sig.activation_state,
+      interpretation: sig.executive_summary || null,
+      boardroom_interpretation: boardroomInterp,
+      engineering_detail: sig.engineering_summary || null,
+      concentration: nb.max_cluster_name
+        ? `Concentrated in "${nb.max_cluster_name}" (${nb.max_cluster_id}), ${nb.max_cluster_node_count || '?'} of ${nb.total_structural_node_count || '?'} structural nodes.`
+        : null,
+      co_presence: coPresenceNote,
+      compound_narrative: compoundNarrative,
+      confidence: s1 ? 'STRUCTURAL' : derived.qualifier_class === 'Q-01' ? 'FULL' : derived.qualifier_class === 'Q-02' ? 'PARTIAL' : 'ADVISORY',
+      confidence_note: s1
+        ? 'Signal derived from structural topology. Semantic qualification pending.'
+        : derived.qualifier_class !== 'Q-01'
+          ? `Signal derived under ${derived.qualifier_label || derived.qualifier_class}. Advisory confirmation required.`
+          : 'Signal derived from fully grounded structural evidence.',
+    };
+  });
 
   // Append ISIG and PSIG signals from vault signal_registry (Level 1 + Level 2)
   if (psigSummary && psigSummary.ok && Array.isArray(psigSummary.signals)) {
@@ -297,6 +320,26 @@ function buildSignalInterpretations(dpsigSummary, evidenceBlocks, derived, zoneA
       if (existingIds.has(vs.signal_id)) continue;
       const family = vs.signal_family || 'PSIG';
       const level = vs.derivation_level || 'Level_2';
+      const BOARDROOM_PSIG_CAPTIONS = {
+        coupling_pressure: 'Cross-domain coupling exceeds structural norms — changes in the pressure zone propagate broadly.',
+        domain_coupling_pressure: 'Domain-level interdependency is elevated — architectural binding creates organizational exposure.',
+        zone_coverage_concentration: 'Structural coverage concentrated in a single zone — organizational resilience depends on this area.',
+        unanchored_nodes: vs.activation_state === 'ACTIVATED' && vs.signal_value === 0
+          ? 'All structural nodes are domain-anchored. No orphaned components.'
+          : 'Structural components exist without domain anchoring — governance coverage has gaps.',
+      };
+      const BOARDROOM_ISIG_CAPTIONS = {
+        'Import Hub Pressure': 'A structural dependency hub concentrates import traffic — failure at this point has disproportionate downstream impact.',
+        'Import Fan Asymmetry': 'Outbound dependency spread is asymmetric — one component\'s changes ripple disproportionately across the system.',
+        'Import Fan-Out Pressure': 'Outbound dependency spread is elevated — this component\'s changes ripple across multiple domains.',
+      };
+      const domainForEntity = vs.primary_domain && clusterToDomain[vs.primary_domain]
+        ? clusterToDomain[vs.primary_domain] : null;
+      const boardroomPsig = BOARDROOM_PSIG_CAPTIONS[vs.signal_label]
+        || (domainForEntity ? `Architectural pressure detected in "${domainForEntity}".` : `Architectural binding pressure at structural level.`);
+      const boardroomIsig = BOARDROOM_ISIG_CAPTIONS[vs.signal_label]
+        || (domainForEntity ? `Structural dependency pressure in "${domainForEntity}".` : `File-level structural dependency pressure detected.`);
+
       results.push({
         signal_id: vs.signal_id,
         signal_name: vs.signal_label || vs.signal_id,
@@ -308,6 +351,7 @@ function buildSignalInterpretations(dpsigSummary, evidenceBlocks, derived, zoneA
         interpretation: family === 'ISIG'
           ? `${vs.signal_label}: file-level structural pressure detected at ${vs.primary_entity || 'unknown file'}.`
           : `${vs.signal_label}: architectural pressure at Level 2.`,
+        boardroom_interpretation: family === 'ISIG' ? boardroomIsig : boardroomPsig,
         engineering_detail: vs.source_traceability || null,
         concentration: vs.primary_entity ? `Primary entity: ${vs.primary_entity}` : null,
         co_presence: null,
@@ -625,6 +669,8 @@ function resolveSemanticPayload(manifest) {
     ? sources.reproducibility_verdict.data : null;
   const semanticTopologyData = sources.semantic_topology_model && sources.semantic_topology_model.ok
     ? sources.semantic_topology_model.data : null;
+  const promotionStateData = sources.promotion_state && sources.promotion_state.ok
+    ? sources.promotion_state.data : null;
   const hydrated = hydrateActors({
     semanticTopologyModel: semanticTopologyData,
     decisionValidation: decisionValidationData,
@@ -637,6 +683,7 @@ function resolveSemanticPayload(manifest) {
     dpsigSummary,
     unresolvedGaps,
     renderingMetadata,
+    promotionState: promotionStateData,
   });
 
   const derived = hydrated.derived;
@@ -652,13 +699,25 @@ function resolveSemanticPayload(manifest) {
     manifest, structuralEnrichment, dpsigSummary, semanticTopologyData
   );
 
-  // Active zone anchor (from VF-05 evidence text, or DPSIG max cluster for S1).
+  // Active zone anchor (from VF-05 evidence text, semantic domain registry, or DPSIG max cluster).
   const vf05 = ((decisionValidation || {}).checks || []).find((c) => c.id === 'VF-05');
   const zoneAnchorBusinessLabel = (() => {
-    if (!vf05 || !vf05.evidence) return null;
-    const m = vf05.evidence.match(/centered on ['"]?([^'".]+)['"]?/);
-    return m ? m[1].trim() : null;
-  })() || 'Coordination group';
+    if (vf05 && vf05.evidence) {
+      const m = vf05.evidence.match(/centered on ['"]?([^'".]+)['"]?/);
+      if (m) return m[1].trim();
+    }
+    // Governed runs: derive from semantic domain with zone_anchor in the max DPSIG cluster
+    const maxCluster = (dpsigSummary.normalization_basis || {}).max_cluster_id;
+    if (maxCluster && semanticTopologyData && semanticTopologyData.domains) {
+      const zoneAnchorDomain = semanticTopologyData.domains.find(
+        d => d.cluster_id === maxCluster && d.zone_anchor
+      );
+      if (zoneAnchorDomain) return zoneAnchorDomain.domain_name || zoneAnchorDomain.business_label;
+      const clusterDomain = semanticTopologyData.domains.find(d => d.cluster_id === maxCluster);
+      if (clusterDomain) return clusterDomain.domain_name || clusterDomain.business_label;
+    }
+    return (dpsigSummary.normalization_basis || {}).max_cluster_name || 'Primary structural zone';
+  })();
 
   // S1 qualification gating — used for domain registry, narrative, header.
   const isS1 = manifest.qualification_level === 'S1';
@@ -1037,7 +1096,7 @@ function resolveSemanticPayload(manifest) {
     header_block: headerBlock,
     narrative_block: narrative,
     evidence_blocks: evidenceBlocks,
-    signal_interpretations: buildSignalInterpretations(dpsigSummary, evidenceBlocks, derived, zoneAnchorBusinessLabel, manifest.qualification_level, psigSummary),
+    signal_interpretations: buildSignalInterpretations(dpsigSummary, evidenceBlocks, derived, zoneAnchorBusinessLabel, manifest.qualification_level, psigSummary, semanticTopologyData),
     trace_block: traceBlock,
     trace_linkage: traceLinkage,
     rendering_metadata: renderingMetadataCompat,

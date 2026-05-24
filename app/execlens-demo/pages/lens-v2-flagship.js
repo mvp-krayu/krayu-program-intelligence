@@ -3782,6 +3782,166 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #64ffda;
         }
 
+        /* Governed BOARDROOM — governance legitimacy envelope */
+        .cockpit-governance-intelligence--governed {
+          background: rgba(100, 255, 218, 0.02);
+          border-color: rgba(100, 255, 218, 0.06);
+          padding: 14px 20px;
+        }
+        .cockpit-governance-intelligence--governed .cockpit-governance-intelligence-label {
+          font-size: 9px;
+          opacity: 0.5;
+          margin-bottom: 10px;
+        }
+        .cockpit-governance-envelope {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+        .cockpit-governance-sentence {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 12px;
+          line-height: 1.55;
+          color: #a0adc8;
+        }
+        .cockpit-governance-authority {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          letter-spacing: 0.08em;
+          color: #4a5570;
+          margin-top: 10px;
+          padding-top: 8px;
+          border-top: 1px solid rgba(42, 47, 64, 0.3);
+        }
+
+        /* Governed BOARDROOM — cockpit finding with governed framing */
+        .cockpit-finding[data-governed="true"] .cockpit-finding-verdict {
+          letter-spacing: 0.06em;
+        }
+        .cockpit-finding[data-governed="true"][data-found="true"] .cockpit-finding-verdict {
+          color: #ffd700;
+        }
+        .cockpit-finding[data-governed="true"][data-found="false"] .cockpit-finding-verdict {
+          color: #64ffda;
+        }
+
+        /* Governed BOARDROOM — signal family chips */
+        .signal-field-families {
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
+          margin-bottom: 10px;
+        }
+        .signal-field-family-chip {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 4px 10px;
+          border: 1px solid rgba(42, 47, 64, 0.5);
+          border-radius: 3px;
+          background: rgba(20, 23, 32, 0.6);
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #6a7a9a;
+        }
+        .signal-field-family-chip[data-active="true"] {
+          border-color: rgba(74, 158, 255, 0.25);
+          background: rgba(74, 158, 255, 0.04);
+        }
+        .signal-field-family-name {
+          font-weight: 600;
+          letter-spacing: 0.06em;
+          color: #8a96b2;
+        }
+        .signal-field-family-chip[data-active="true"] .signal-field-family-name {
+          color: #4a9eff;
+        }
+        .signal-field-family-caption {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 10px;
+          color: #4a5570;
+        }
+        .signal-field-family-count {
+          font-size: 9px;
+          color: #ff9e4a;
+          letter-spacing: 0.04em;
+        }
+
+        /* Governed BOARDROOM — governance chips below signal panel */
+        .cockpit-governance-chips {
+          display: flex;
+          gap: 6px;
+          flex-wrap: wrap;
+          margin-top: 10px;
+          padding-top: 8px;
+          border-top: 1px solid rgba(42, 47, 64, 0.3);
+        }
+        .cockpit-gov-chip {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          letter-spacing: 0.06em;
+          padding: 2px 7px;
+          border-radius: 2px;
+          background: rgba(42, 47, 64, 0.3);
+          color: #6a7a9a;
+        }
+        .cockpit-gov-chip[data-status="PASS"] {
+          background: rgba(100, 255, 218, 0.08);
+          color: #64ffda;
+        }
+        .cockpit-gov-chip[data-status="BLOCKED"] {
+          background: rgba(255, 107, 107, 0.08);
+          color: #ff6b6b;
+        }
+
+        /* Governed BOARDROOM — synthesis convergence */
+        .cockpit-synthesis-convergence {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 12px;
+          color: #8a96b2;
+          line-height: 1.55;
+          margin-top: 6px;
+          font-style: italic;
+        }
+
+        /* Governed BOARDROOM — declaration zone tension line */
+        .declaration-zone--governed .declaration-boardroom-posture {
+          color: #64ffda;
+        }
+        .declaration-zone--governed .declaration-boardroom-posture[data-level="S2"] {
+          color: #64ffda;
+        }
+        .declaration-zone--governed .declaration-boardroom-posture[data-level="S1"] {
+          color: #4a9eff;
+        }
+        .declaration-boardroom-tension {
+          font-family: 'Courier New', monospace;
+          font-size: 13px;
+          letter-spacing: 0.1em;
+          margin-top: 8px;
+          color: #6a7a9a;
+        }
+        .declaration-boardroom-tension[data-active="true"] {
+          color: #ffd700;
+        }
+        .declaration-boardroom-tension[data-active="false"] {
+          color: #64ffda;
+          opacity: 0.7;
+        }
+
+        /* Governed BOARDROOM — left panel descent invitation */
+        .interp-section-label--descent {
+          color: #4a5570 !important;
+          font-size: 9px !important;
+          letter-spacing: 0.14em !important;
+        }
+        .interp-synthesis--descent {
+          font-style: italic;
+          color: #4a9eff !important;
+          font-size: 12px !important;
+          opacity: 0.7;
+        }
+
         /* BALANCED Narrative Emergence (5B.2 — interpretive surfaces) */
         .balanced-narrative {
           margin: 20px 0;
