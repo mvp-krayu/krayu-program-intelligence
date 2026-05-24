@@ -59,6 +59,8 @@ function resolveQualificationPosture(fullReport) {
 
 function compileTensionSummary(fullReport, qualificationPosture) {
   const sigs = fullReport.signal_interpretations || [];
+  const ts = fullReport.topology_summary || {};
+  const totalDomains = ts.semantic_domain_count || 0;
   const activated = sigs.filter(s =>
     s.severity !== 'NOMINAL' && s.activation_state !== 'NOMINAL' && s.activation_state !== 'CLUSTER_BALANCED'
   );
@@ -78,12 +80,32 @@ function compileTensionSummary(fullReport, qualificationPosture) {
     pressureZoneNarrative = `Structural load concentrates in ${pressureZone} — this domain carries disproportionate weight across the system.`;
   }
 
+  const sLevel = qualificationPosture.s_level;
+  const somethingFound = activated.length > 0;
+
+  const findingHeadline = qualificationPosture.governed
+    ? (somethingFound
+      ? `${sLevel} GOVERNED · ${tensionCount} STRUCTURAL TENSION${tensionCount > 1 ? 'S' : ''}`
+      : `${sLevel} GOVERNED · NO ELEVATED PRESSURE`)
+    : null;
+
+  const activeFamilyLabels = familySet.map(f => FAMILY_LABELS[f] || f);
+  const tensionNarrative = qualificationPosture.governed
+    ? (somethingFound
+      ? `Governed intelligence shows structural tension${pressureZone ? ` concentrated around "${pressureZone}"` : ''} across ${tensionCount} pressure ${tensionCount === 1 ? 'dimension' : 'dimensions'} — ${activeFamilyLabels.join(', ')}. Qualification holds — pressure is operational context, not qualification failure.`
+      : `Governed intelligence across ${totalDomains} semantic domains. All ${sigs.length} signal indicators nominal. No structural tension requiring executive attention.`)
+    : null;
+
   return {
     tension_count: tensionCount,
     tension_label: tensionLabel,
     active_families: familySet,
     pressure_zone: pressureZone,
     pressure_zone_narrative: pressureZoneNarrative,
+    finding_headline: findingHeadline,
+    tension_narrative: tensionNarrative,
+    activated_count: activated.length,
+    total_signals: sigs.length,
   };
 }
 
@@ -185,6 +207,14 @@ function compileGovernanceLegitimacy(fullReport, qualificationPosture) {
   const gl = fullReport.governance_lifecycle || {};
   const transitionCount = gl.transition_count || (gl.transitions || []).length;
   const lifecycleSummary = `Fully governed ${qualificationPosture.s_level} lifecycle. ${transitionCount} governance transition${transitionCount !== 1 ? 's' : ''}.`;
+
+  const governanceNarrative = `This intelligence holds ${qualificationPosture.s_level} qualification through ${(qualificationPosture.provenance_summary || 'governed lifecycle').toLowerCase().replace(/\.$/, '')}. `
+    + (fullReport.proposition_corpus && fullReport.proposition_corpus.available && fullReport.proposition_corpus.total > 0
+      ? `Operator review exercised across ${fullReport.proposition_corpus.total} propositions. ` : '')
+    + (fullReport.revalidation_intelligence && fullReport.revalidation_intelligence.available && fullReport.revalidation_intelligence.status === 'PASS'
+      ? 'Deterministic replay confirmed. ' : '')
+    + (fullReport.chronicle_certification && fullReport.chronicle_certification.available && fullReport.chronicle_certification.certification_status === 'CERTIFIED'
+      ? 'Replay-certified.' : '');
 
   const sections = {};
 
@@ -302,6 +332,7 @@ function compileGovernanceLegitimacy(fullReport, qualificationPosture) {
   return {
     available: true,
     lifecycle_summary: lifecycleSummary,
+    governance_narrative: governanceNarrative,
     sections,
   };
 }

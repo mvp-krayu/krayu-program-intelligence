@@ -2444,7 +2444,7 @@ const INTERROGATION_EXPANSION_REGISTRY = {
   },
 }
 
-function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport, activeZoneKey, activeQueryKey, onQueryDismiss, emergenceState, piRuntimeActive, activeExpansionIndex, expansions, onExpansionDismiss, selectedNarrativeArc }) {
+function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport, boardroomProjection, activeZoneKey, activeQueryKey, onQueryDismiss, emergenceState, piRuntimeActive, activeExpansionIndex, expansions, onExpansionDismiss, selectedNarrativeArc }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const framing = boardroomMode
     ? INTERP_MODE_FRAMING.BOARDROOM
@@ -2561,9 +2561,65 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
     const gl = fullReport && fullReport.governance_lifecycle
     const isGovernedS1Plus = gl && gl.available && gl.s_level && ['S1', 'S2', 'S3'].includes(gl.s_level)
 
+    if (isGovernedS1Plus && boardroomProjection) {
+      const qp = boardroomProjection.qualification_posture
+      const bpTs = boardroomProjection.tension_summary
+      const bpGl = boardroomProjection.governance_legitimacy
+      const sec = bpGl && bpGl.sections
+      return (
+        <aside className="intel-interp" data-tone={framing.tone} aria-label="Executive intelligence briefing">
+          <div className="interp-tag">
+            <span className="interp-tag-label">EXECUTIVE BRIEFING</span>
+            <span className="interp-tag-state">{qp.s_level}</span>
+          </div>
+
+          <div className="interp-block interp-block--lead">
+            <div className="interp-section-label">INTELLIGENCE POSTURE</div>
+            <div className="interp-synthesis">
+              {qp.s_level} governed intelligence across {totalDomains} semantic domains.
+              {bpTs.tension_count > 0
+                ? ` Structural pressure concentrated${bpTs.pressure_zone ? ` in "${bpTs.pressure_zone}"` : ''}.`
+                : ' No elevated structural pressure.'}
+            </div>
+            <div className="interp-synthesis-meta">
+              {(qp.provenance_summary || '').replace(/\.$/, '')} · {qp.authority_ceiling || 'L3'} ceiling
+            </div>
+          </div>
+
+          {bpTs.tension_count > 0 && (
+            <div className="interp-block">
+              <div className="interp-section-label">STRUCTURAL TENSION</div>
+              <div className="interp-synthesis">
+                {bpTs.tension_count} pressure dimension{bpTs.tension_count !== 1 ? 's' : ''} active{bpTs.pressure_zone ? ` — gravity concentrated in "${bpTs.pressure_zone}"` : ''}.
+              </div>
+            </div>
+          )}
+
+          <div className="interp-block">
+            <div className="interp-section-label">GOVERNANCE CONFIDENCE</div>
+            <div className="interp-synthesis">
+              {sec && sec.proposition_review && sec.proposition_review.available && sec.proposition_review.detail.friction_rate > 0
+                ? 'Governed review exercised. Governance friction surfaced and resolved.'
+                : sec && sec.proposition_review && sec.proposition_review.available
+                  ? 'Governed review completed. All claims accepted.'
+                  : 'Governance lifecycle complete.'}
+              {sec && sec.deterministic_replay && sec.deterministic_replay.available && sec.deterministic_replay.detail.status === 'PASS' ? ' Deterministic replay confirmed.' : ''}
+              {sec && sec.replay_certification && sec.replay_certification.available && sec.replay_certification.detail.certification_status === 'CERTIFIED' ? ' Replay-certified.' : ''}
+            </div>
+          </div>
+
+          <div className="interp-block">
+            <div className="interp-section-label interp-section-label--descent">DEPTH</div>
+            <div className="interp-synthesis interp-synthesis--descent">
+              Descend into BALANCED for the governed qualification journey.
+            </div>
+          </div>
+        </aside>
+      )
+    }
+
     if (isGovernedS1Plus) {
       const pc = fullReport.proposition_corpus
-      const ei = fullReport.enrichment_intelligence
       const rv = fullReport.revalidation_intelligence
       const cc = fullReport.chronicle_certification
       const govFamilyKeys = [...new Set(activatedSignals.map(s => s.signal_family).filter(Boolean))]
@@ -5516,28 +5572,16 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
   }, {})
   const familyKeys = Object.keys(signalFamilies)
 
-  if (isGovernedS1Plus) {
-    const tensionPct = sigs.length > 0 ? Math.round((activatedSignals.length / sigs.length) * 100) : 0
-    const pc = fullReport.proposition_corpus
-    const ei = fullReport.enrichment_intelligence
-    const rv = fullReport.revalidation_intelligence
-    const ca = fullReport.constitutional_anchor
-    const ci = fullReport.convergence_intelligence
-    const cc = fullReport.chronicle_certification
+  if (isGovernedS1Plus && boardroomProjection) {
+    const bp = boardroomProjection
+    const qp = bp.qualification_posture
+    const bpTs = bp.tension_summary
+    const bpSi = bp.signal_intelligence
+    const bpDc = bp.domain_coverage
+    const bpGl = bp.governance_legitimacy
+    const sec = bpGl.sections
 
-    const activeFamilyCount = familyKeys.filter(fam => signalFamilies[fam].some(s => s.severity !== 'NOMINAL')).length
-    const findingHeadline = somethingFound
-      ? `${gl.s_level} GOVERNED · ${activeFamilyCount} STRUCTURAL TENSION${activeFamilyCount > 1 ? 'S' : ''}`
-      : `${gl.s_level} GOVERNED · NO ELEVATED PRESSURE`
-
-    const tensionNarrative = somethingFound
-      ? `Governed intelligence shows structural tension${pressureZone ? ` concentrated around "${pressureZone}"` : ''} across ${activeFamilyCount} pressure ${activeFamilyCount === 1 ? 'dimension' : 'dimensions'} — ${familyKeys.filter(fam => signalFamilies[fam].some(s => s.severity !== 'NOMINAL')).map(f => SIGNAL_FAMILY_CAPTIONS[f] || f).join(', ')}. Qualification holds — pressure is operational context, not qualification failure.`
-      : `Governed intelligence across ${totalDomains} semantic domains. All ${sigs.length} signal indicators nominal. No structural tension requiring executive attention.`
-
-    const governanceNarrative = `This intelligence holds ${gl.s_level} qualification through ${(gl.qualification_provenance || '').replace(/_/g, ' ').toLowerCase()}. `
-      + (pc && pc.available && pc.total > 0 ? `Operator review exercised across ${pc.total} propositions. ` : '')
-      + (rv && rv.available && rv.status === 'PASS' ? 'Deterministic replay confirmed. ' : '')
-      + (cc && cc.available && cc.certification_status === 'CERTIFIED' ? 'Replay-certified.' : '')
+    const tensionPct = bpTs.total_signals > 0 ? Math.round((bpTs.activated_count / bpTs.total_signals) * 100) : 0
 
     return (
       <div className="rep-field rep-field--boardroom rep-field--cockpit rep-field--governed">
@@ -5547,81 +5591,77 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
           zones={[{ id: 'Z1', name: 'Governed Intelligence' }, { id: 'Z2', name: 'Structural Tension' }]}
         />
 
-        <div className="cockpit-finding" data-found={String(somethingFound)} data-governed="true">
-          <div className="cockpit-finding-verdict">{findingHeadline}</div>
-          <div className="cockpit-finding-summary">{tensionNarrative}</div>
+        <div className="cockpit-finding" data-found={String(bpTs.activated_count > 0)} data-governed="true">
+          <div className="cockpit-finding-verdict">{bpTs.finding_headline}</div>
+          <div className="cockpit-finding-summary">{bpTs.tension_narrative}</div>
         </div>
 
-        {sigs.length > 0 && (
-          <div className="signal-field" data-pressure={somethingFound ? 'active' : 'nominal'}>
+        {bpSi.families.length > 0 && (
+          <div className="signal-field" data-pressure={bpTs.activated_count > 0 ? 'active' : 'nominal'}>
             <div className="signal-field-families">
-              {familyKeys.map(fam => {
-                const famSigs = signalFamilies[fam]
-                const famActivated = famSigs.filter(s => s.severity !== 'NOMINAL')
-                return (
-                  <span key={fam} className="signal-field-family-chip" data-family={fam} data-active={String(famActivated.length > 0)}>
-                    <span className="signal-field-family-name">{fam}</span>
-                    <span className="signal-field-family-caption">{SIGNAL_FAMILY_CAPTIONS[fam] || fam}</span>
-                    {famActivated.length > 0 && <span className="signal-field-family-count">{famActivated.length} elevated</span>}
-                  </span>
-                )
-              })}
+              {bpSi.families.map(fam => (
+                <span key={fam.family} className="signal-field-family-chip" data-family={fam.family} data-active={String(fam.activated_count > 0)}>
+                  <span className="signal-field-family-name">{fam.family}</span>
+                  <span className="signal-field-family-caption">{fam.family_label}</span>
+                  {fam.activated_count > 0 && <span className="signal-field-family-count">{fam.activated_count} elevated</span>}
+                </span>
+              ))}
             </div>
             <div className="signal-field-strip">
-              {activatedSignals.map(sig => (
+              {bpSi.families.flatMap(fam => fam.signals).filter(s => s.severity !== 'NOMINAL' && s.severity !== 'CLUSTER_BALANCED').map(sig => (
                 <span key={sig.signal_id} className="signal-field-pip" data-severity={sig.severity} title={sig.signal_name} />
               ))}
-              {activatedSignals.length > 0 && (
-                <span className="signal-field-count">{activatedSignals.length} activated</span>
+              {bpTs.activated_count > 0 && (
+                <span className="signal-field-count">{bpTs.activated_count} activated</span>
               )}
-              {nominalSignals.length > 0 && (
-                <span className="signal-field-nominal">{nominalSignals.length} nominal</span>
+              {(bpTs.total_signals - bpTs.activated_count) > 0 && (
+                <span className="signal-field-nominal">{bpTs.total_signals - bpTs.activated_count} nominal</span>
               )}
             </div>
           </div>
         )}
 
         <div className="cockpit-synthesis">
-          <div className="cockpit-synthesis-conclusion">{governanceNarrative}</div>
-          {ci && ci.available && ci.total_observations > 0 && (
+          <div className="cockpit-synthesis-conclusion">{bpGl.governance_narrative}</div>
+          {sec.cross_specimen && sec.cross_specimen.available && sec.cross_specimen.detail.total_observations > 0 && (
             <div className="cockpit-synthesis-convergence">
-              Governance patterns confirmed across independent specimens — {ci.convergences.length} convergences observed.
+              Governance patterns confirmed across independent specimens — {sec.cross_specimen.detail.convergences} convergences observed.
             </div>
           )}
         </div>
 
         <div className="cockpit-instruments">
           <div className="cockpit-gauge-panel">
-            <CockpitRadialGauge governedLevel={gl.s_level} tensionPct={tensionPct} />
+            <CockpitRadialGauge governedLevel={qp.s_level} tensionPct={tensionPct} />
             <div className="cockpit-gauge-meta">
-              <span className="cockpit-gauge-band">{gl.s_level}</span>
+              <span className="cockpit-gauge-band">{qp.s_level}</span>
               <span className="cockpit-gauge-sep">·</span>
-              <span className="cockpit-gauge-posture">{(gl.qualification_provenance || '').replace(/_/g, ' ')}</span>
+              <span className="cockpit-gauge-posture">{(qp.provenance_summary || '').replace(/\.$/, '')}</span>
             </div>
           </div>
 
           <div className="cockpit-signal-panel">
             <div className="cockpit-signal-label">SIGNAL ASSESSMENT</div>
-            {sigs.map(sig => (
-              <CockpitSignalBar key={sig.signal_id} signal={sig} governed />
+            {bpSi.families.flatMap(fam => fam.signals).map(sig => (
+              <CockpitSignalBar key={sig.signal_id} signal={{ ...sig, interpretation: sig.executive_reading, boardroom_interpretation: sig.executive_reading }} governed />
             ))}
-            {sigs.length > 0 && (
+            {bpTs.total_signals > 0 && (
               <div className="cockpit-signal-tally">
-                {activatedSignals.length > 0
-                  ? `${activatedSignals.length} of ${sigs.length} activated`
-                  : `${sigs.length} nominal`
+                {bpTs.activated_count > 0
+                  ? `${bpTs.activated_count} of ${bpTs.total_signals} activated`
+                  : `${bpTs.total_signals} nominal`
                 }
               </div>
             )}
             <div className="cockpit-governance-chips">
-              {rv && rv.available && (
-                <span className="cockpit-gov-chip" data-status={rv.status}>{rv.status === 'PASS' ? 'REPLAY PASS' : 'REPLAY ' + rv.status}</span>
+              {sec.deterministic_replay && sec.deterministic_replay.available && (
+                <span className="cockpit-gov-chip" data-status={sec.deterministic_replay.detail.status}>{sec.deterministic_replay.detail.status === 'PASS' ? 'REPLAY PASS' : 'REPLAY ' + sec.deterministic_replay.detail.status}</span>
               )}
-              {ca && ca.available && (
-                <span className="cockpit-gov-chip" data-status={ca.advancement_blocked ? 'BLOCKED' : 'PASS'}>{ca.advancement_blocked ? 'ANCHOR BLOCKED' : 'ANCHOR PASS'}</span>
+              {sec.constitutional_anchor && sec.constitutional_anchor.available && (
+                <span className="cockpit-gov-chip" data-status={sec.constitutional_anchor.detail.advancement_blocked ? 'BLOCKED' : 'PASS'}>{sec.constitutional_anchor.detail.advancement_blocked ? 'ANCHOR BLOCKED' : 'ANCHOR PASS'}</span>
               )}
-              {cc && cc.available && (
-                <span className="cockpit-gov-chip" data-status={cc.certification_status === 'CERTIFIED' ? 'PASS' : 'PENDING'}>{cc.certification_status === 'CERTIFIED' ? 'CERTIFIED' : cc.certification_status}</span>
+              {sec.replay_certification && sec.replay_certification.available && (
+                <span className="cockpit-gov-chip" data-status={sec.replay_certification.detail.certification_status === 'CERTIFIED' ? 'PASS' : 'PENDING'}>{sec.replay_certification.detail.certification_status === 'CERTIFIED' ? 'CERTIFIED' : sec.replay_certification.detail.certification_status}</span>
               )}
             </div>
           </div>
@@ -5629,21 +5669,21 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
           <div className="cockpit-coverage-panel">
             <div className="cockpit-coverage-label">GOVERNED DOMAINS</div>
             <div className="cockpit-coverage-ring">
-              <svg viewBox="0 0 80 80" className="cockpit-coverage-svg" aria-label={`${backedCount} of ${totalDomains} governed`}>
+              <svg viewBox="0 0 80 80" className="cockpit-coverage-svg" aria-label={`${bpDc.structurally_backed} of ${bpDc.total_domains} governed`}>
                 <circle cx="40" cy="40" r="32" fill="none" stroke="#1e2330" strokeWidth="6" />
                 <circle cx="40" cy="40" r="32" fill="none" stroke="#64ffda" strokeWidth="6"
-                  strokeDasharray={`${(backedCount / Math.max(1, totalDomains)) * 201} 201`}
+                  strokeDasharray={`${(bpDc.structurally_backed / Math.max(1, bpDc.total_domains)) * 201} 201`}
                   strokeLinecap="round" transform="rotate(-90 40 40)" />
-                <text x="40" y="37" textAnchor="middle" fontSize="16" fontWeight="600" fill="#ccd6f6" fontFamily="'Courier New', monospace">{totalDomains}</text>
+                <text x="40" y="37" textAnchor="middle" fontSize="16" fontWeight="600" fill="#ccd6f6" fontFamily="'Courier New', monospace">{bpDc.total_domains}</text>
                 <text x="40" y="49" textAnchor="middle" fontSize="7" fill="#6a7a9a" fontFamily="-apple-system, sans-serif">domains</text>
               </svg>
             </div>
             <div className="cockpit-coverage-meta">
-              {pc && pc.available && (
-                <div className="cockpit-coverage-row"><span className="cockpit-coverage-dot cockpit-coverage-dot--backed" />{pc.disposition_counts.accepted} propositions accepted</div>
+              {sec.proposition_review && sec.proposition_review.available && (
+                <div className="cockpit-coverage-row"><span className="cockpit-coverage-dot cockpit-coverage-dot--backed" />{sec.proposition_review.detail.accepted} propositions accepted</div>
               )}
-              {ei && ei.available && ei.enrichment_events > 0 && (
-                <div className="cockpit-coverage-row"><span className="cockpit-coverage-dot cockpit-coverage-dot--advisory" />{ei.enrichment_events} evidence corrections</div>
+              {sec.evidence_enrichment && sec.evidence_enrichment.available && sec.evidence_enrichment.detail.enrichment_events > 0 && (
+                <div className="cockpit-coverage-row"><span className="cockpit-coverage-dot cockpit-coverage-dot--advisory" />{sec.evidence_enrichment.detail.enrichment_events} evidence corrections</div>
               )}
             </div>
           </div>
@@ -5655,7 +5695,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
               domains={fullReport.semantic_domain_registry}
               clusters={fullReport.semantic_cluster_registry || []}
               edges={fullReport.semantic_topology_edges || []}
-              pressureZoneLabel={pressureZone || ''}
+              pressureZoneLabel={bpTs.pressure_zone || ''}
             />
             <div className="cockpit-topology-hint">Click to explore governed topology</div>
           </div>
@@ -6173,6 +6213,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         boardroomMode={boardroomMode}
         adapted={adapted}
         fullReport={fullReport}
+        boardroomProjection={boardroomProjection}
         activeZoneKey={isDense ? activeZoneKey : null}
         activeQueryKey={isDense ? activeQueryKey : null}
         onQueryDismiss={handleQueryDismiss}
