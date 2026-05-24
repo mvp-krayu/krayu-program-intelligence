@@ -138,6 +138,7 @@ LENS currently has no governed projection object layer. The resolver (`GenericSe
 **Tracking stream:** PI.LENS.GOVERNED-PROJECTION-OBJECT-MODEL.01
 **Reality check:** See `docs/pios/PI.LENS.GOVERNED-PROJECTION-OBJECT-MODEL.01/CURRENT_LENS_PROJECTION_REALITY_CHECK.md`
 **Object model:** See `docs/pios/PI.LENS.GOVERNED-PROJECTION-OBJECT-MODEL.01/GOVERNED_PROJECTION_OBJECT_MODEL.md` (4-layer architecture, boundary rules, interim classification map)
+**BOARDROOM contract:** See `docs/pios/PI.LENS.GOVERNED-PROJECTION-OBJECT-MODEL.01/BOARDROOM_PROJECTION_OBJECT_CONTRACT.md` (9-section projection object, field inventory, compilation rules, migration path)
 
 ## Three-Tier Authority Model
 
