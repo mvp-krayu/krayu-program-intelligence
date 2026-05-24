@@ -26,6 +26,8 @@ const {
   resolvePresenceToken,
 } = require('../flagship-experience/flagshipOrchestration')
 
+const { compileBoardroomProjection } = require('../lib/lens-v2/generic/BoardroomProjectionCompiler')
+
 /* Live binding migration — PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01
  * Productized — PI.LENS.V2.GENERIC-SEMANTIC-PAYLOAD-RESOLVER.01
  * Parameterized — PI.LENS.V2.RUNTIME-PARAMETERIZATION-AND-REGISTRY-UNIFICATION.01
@@ -251,6 +253,11 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
     )
   }, [reportObject, densityClass, boardroomMode, investigationStage])
 
+  const boardroomProjection = useMemo(() => {
+    if (!reportObject || !boardroomMode) return null
+    return compileBoardroomProjection(reportObject)
+  }, [reportObject, boardroomMode])
+
   // Live binding failure surface — fixture fallback DISABLED per contract
   if (!reportObject || !result) {
     return (
@@ -432,6 +439,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             narrative={narrative}
             evidenceBlocks={reportObject.evidence_blocks}
             fullReport={reportObject}
+            boardroomProjection={boardroomProjection}
             reportPackArtifacts={reportPackArtifactsForRender}
             propagationChains={livePropagationChains || []}
             correspondenceData={correspondenceData}

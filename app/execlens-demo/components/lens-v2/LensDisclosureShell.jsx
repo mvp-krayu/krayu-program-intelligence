@@ -88,6 +88,7 @@ export default function LensDisclosureShell({
   narrative,
   evidenceBlocks,
   fullReport,
+  boardroomProjection,
   reportPackArtifacts,
   propagationChains,
   correspondenceData,
@@ -147,7 +148,7 @@ export default function LensDisclosureShell({
     switch (zoneName) {
       case 'DeclarationZone':
         if (renderState === 'BLOCKED') return null
-        return <DeclarationZone renderState={renderState} adapted={adapted} boardroomMode={boardroomMode} fullReport={fullReport} />
+        return <DeclarationZone renderState={renderState} adapted={adapted} boardroomMode={boardroomMode} fullReport={fullReport} boardroomProjection={boardroomProjection} />
       case 'QualifierMandate':
         return (
           <QualifierMandate
@@ -186,6 +187,7 @@ export default function LensDisclosureShell({
             renderState={renderState}
             evidenceBlocks={evidenceBlocks}
             fullReport={fullReport}
+            boardroomProjection={boardroomProjection}
             reportPackArtifacts={reportPackArtifacts}
             qualifierClass={qualifierClass}
             qualifierLabel={qualifierLabel}

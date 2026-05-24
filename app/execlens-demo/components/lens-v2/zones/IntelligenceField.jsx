@@ -5450,7 +5450,7 @@ function BoardroomStructuralPosture({ fullReport }) {
   )
 }
 
-function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, narrative, evidenceBlocks, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, selectedNarrativeArc, onNarrativeSelect }) {
+function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boardroomProjection, narrative, evidenceBlocks, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, selectedNarrativeArc, onNarrativeSelect }) {
   const [topoModalOpen, setTopoModalOpen] = useState(false)
   const [signalTraceId, setSignalTraceId] = useState(null)
   const openTopoModal = useCallback(() => setTopoModalOpen(true), [])
@@ -5663,7 +5663,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
 
         {topoModalOpen && createPortal(<TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} initialSignalTrace={signalTraceId} onSignalTraceConsumed={() => setSignalTraceId(null)} mode="boardroom" onModeTransition={(targetMode, domainId, targetZoneKey) => { closeTopoModal(); if (onModeTransition) onModeTransition(targetMode, domainId, targetZoneKey) }} />, document.body)}
 
-        <BoardroomGovernanceIntelligence fullReport={fullReport} />
+        <BoardroomGovernanceIntelligence fullReport={fullReport} boardroomProjection={boardroomProjection} />
 
         <div className="cockpit-footer">
           Governed intelligence under 75.x bounded authority. Structural derivation primary. All claims trace to evidence.
@@ -5854,37 +5854,35 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, nar
   )
 }
 
-function BoardroomGovernanceIntelligence({ fullReport }) {
+function BoardroomGovernanceIntelligence({ fullReport, boardroomProjection }) {
   if (!fullReport) return null
-  const gl = fullReport.governance_lifecycle
-  const pc = fullReport.proposition_corpus
-  const ei = fullReport.enrichment_intelligence
-  const rv = fullReport.revalidation_intelligence
-  const ca = fullReport.constitutional_anchor
-  const ci = fullReport.convergence_intelligence
-  const cc = fullReport.chronicle_certification
 
-  const hasAny = (gl && gl.available) || (cc && cc.available) || (ca && ca.available)
-  if (!hasAny) return null
+  const bp = boardroomProjection
+  const gleg = bp && bp.governance_legitimacy
 
-  const isGovernedS1Plus = gl && gl.available && gl.s_level && ['S1', 'S2', 'S3'].includes(gl.s_level)
-
-  if (isGovernedS1Plus) {
+  if (gleg && gleg.available) {
+    const qp = bp.qualification_posture
+    const sec = gleg.sections
     const sentences = []
     sentences.push(
-      `${gl.s_level} qualification earned through ${(gl.qualification_provenance || '').replace(/_/g, ' ').toLowerCase()} — not bridge certification.`
+      `${qp.s_level} qualification earned through ${(qp.provenance_summary || 'governed lifecycle').toLowerCase().replace(/\.$/, '')} — not bridge certification.`
     )
-    if (pc && pc.available && pc.governance_friction_rate > 0) {
-      sentences.push('Operator review exercised. Governance friction surfaced — claims were challenged, and some did not survive.')
-    } else if (pc && pc.available) {
-      sentences.push('Operator review completed. All semantic claims accepted through governed evaluation.')
+    if (sec.proposition_review && sec.proposition_review.available) {
+      const fr = sec.proposition_review.detail.friction_rate
+      if (fr > 0) {
+        sentences.push('Operator review exercised. Governance friction surfaced — claims were challenged, and some did not survive.')
+      } else {
+        sentences.push('Operator review completed. All semantic claims accepted through governed evaluation.')
+      }
     }
-    if (rv && rv.available && rv.status === 'PASS' && cc && cc.available && cc.certification_status === 'CERTIFIED') {
-      sentences.push('Deterministic revalidation confirmed. Replay-certified across constitutional dimensions.')
-    } else if (rv && rv.available && rv.status === 'PASS') {
-      sentences.push('Deterministic revalidation confirmed.')
+    if (sec.deterministic_replay && sec.deterministic_replay.available) {
+      if (sec.replay_certification && sec.replay_certification.available && sec.replay_certification.detail.certification_status === 'CERTIFIED') {
+        sentences.push('Deterministic revalidation confirmed. Replay-certified across constitutional dimensions.')
+      } else if (sec.deterministic_replay.detail.status === 'PASS') {
+        sentences.push('Deterministic revalidation confirmed.')
+      }
     }
-    if (ci && ci.available && ci.total_observations > 0) {
+    if (sec.cross_specimen && sec.cross_specimen.available && sec.cross_specimen.detail.total_observations > 0) {
       sentences.push('Governance patterns confirmed across independent specimens.')
     }
 
@@ -5897,11 +5895,22 @@ function BoardroomGovernanceIntelligence({ fullReport }) {
           ))}
         </div>
         <div className="cockpit-governance-authority">
-          75.x bounded authority · {gl.authority_ceiling || 'L3'} ceiling · evidence-traced
+          75.x bounded authority · {qp.authority_ceiling || 'L3'} ceiling · evidence-traced
         </div>
       </div>
     )
   }
+
+  const gl = fullReport.governance_lifecycle
+  const pc = fullReport.proposition_corpus
+  const ei = fullReport.enrichment_intelligence
+  const rv = fullReport.revalidation_intelligence
+  const ca = fullReport.constitutional_anchor
+  const ci = fullReport.convergence_intelligence
+  const cc = fullReport.chronicle_certification
+
+  const hasAny = (gl && gl.available) || (cc && cc.available) || (ca && ca.available)
+  if (!hasAny) return null
 
   return (
     <div className="cockpit-governance-intelligence">
@@ -5984,9 +5993,9 @@ function BoardroomGovernanceIntelligence({ fullReport }) {
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect }) {
   if (boardroomMode) {
-    return <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} />
+    return <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} />
   }
   if (densityClass === 'INVESTIGATION_DENSE') {
     return <InvestigationTraceField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} />
@@ -5997,7 +6006,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   return <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onZoneChange={onZoneChange} />
 }
 
-export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed, onAuthorityChange }) {
+export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, boardroomProjection, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed, onAuthorityChange }) {
   const scope = (fullReport && fullReport.topology_scope) || {}
   const [activeZoneKey, setActiveZoneKey] = useState(null)
   const [activeQueryKey, setActiveQueryKey] = useState(null)
@@ -6184,6 +6193,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           blocks={evidenceBlocks}
           scope={scope}
           fullReport={fullReport}
+          boardroomProjection={boardroomProjection}
           qualifierClass={qualifierClass}
           narrative={narrative}
           correspondenceData={correspondenceData}
