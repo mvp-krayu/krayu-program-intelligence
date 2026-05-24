@@ -96,6 +96,20 @@ function compileTensionSummary(fullReport, qualificationPosture) {
       : `Governed intelligence across ${totalDomains} semantic domains. All ${sigs.length} signal indicators nominal. No structural tension requiring executive attention.`)
     : null;
 
+  const postureNarrative = qualificationPosture.governed
+    ? `${sLevel} governed intelligence across ${totalDomains} semantic domains.${
+        tensionCount > 0
+          ? (pressureZone ? ` Structural pressure concentrated in "${pressureZone}".` : ' Structural tension active.')
+          : ' No elevated structural pressure.'
+      }`
+    : null;
+
+  const structuralTensionNarrative = tensionCount > 0
+    ? (pressureZone
+      ? `${tensionCount} pressure ${tensionCount === 1 ? 'dimension' : 'dimensions'} active — structural load concentrates in "${pressureZone}".`
+      : `${tensionCount} pressure ${tensionCount === 1 ? 'dimension' : 'dimensions'} active across the system.`)
+    : null;
+
   return {
     tension_count: tensionCount,
     tension_label: tensionLabel,
@@ -104,6 +118,8 @@ function compileTensionSummary(fullReport, qualificationPosture) {
     pressure_zone_narrative: pressureZoneNarrative,
     finding_headline: findingHeadline,
     tension_narrative: tensionNarrative,
+    posture_narrative: postureNarrative,
+    structural_tension_narrative: structuralTensionNarrative,
     activated_count: activated.length,
     total_signals: sigs.length,
   };
@@ -329,10 +345,48 @@ function compileGovernanceLegitimacy(fullReport, qualificationPosture) {
     sections.replay_certification = { available: false, finding: null, detail: null };
   }
 
+  const confidenceParts = [];
+  if (sections.proposition_review && sections.proposition_review.available) {
+    confidenceParts.push(sections.proposition_review.detail.friction_rate > 0
+      ? 'Governed review exercised. Governance friction surfaced and resolved.'
+      : 'Governed review completed. All claims accepted.');
+  } else {
+    confidenceParts.push('Governance lifecycle complete.');
+  }
+  if (sections.deterministic_replay && sections.deterministic_replay.available && sections.deterministic_replay.detail.status === 'PASS') {
+    confidenceParts.push('Deterministic replay confirmed.');
+  }
+  if (sections.replay_certification && sections.replay_certification.available && sections.replay_certification.detail.certification_status === 'CERTIFIED') {
+    confidenceParts.push('Replay-certified.');
+  }
+  const confidenceNarrative = confidenceParts.join(' ');
+
+  const legitimacySentences = [];
+  legitimacySentences.push(
+    `${qualificationPosture.s_level} qualification earned through ${(qualificationPosture.provenance_summary || 'governed lifecycle').toLowerCase().replace(/\.$/, '')} — not bridge certification.`
+  );
+  if (sections.proposition_review && sections.proposition_review.available) {
+    legitimacySentences.push(sections.proposition_review.detail.friction_rate > 0
+      ? 'Operator review exercised. Governance friction surfaced — claims were challenged, and some did not survive.'
+      : 'Operator review completed. All semantic claims accepted through governed evaluation.');
+  }
+  if (sections.deterministic_replay && sections.deterministic_replay.available) {
+    if (sections.replay_certification && sections.replay_certification.available && sections.replay_certification.detail.certification_status === 'CERTIFIED') {
+      legitimacySentences.push('Deterministic revalidation confirmed. Replay-certified across constitutional dimensions.');
+    } else if (sections.deterministic_replay.detail.status === 'PASS') {
+      legitimacySentences.push('Deterministic revalidation confirmed.');
+    }
+  }
+  if (sections.cross_specimen && sections.cross_specimen.available && sections.cross_specimen.detail.total_observations > 0) {
+    legitimacySentences.push('Governance patterns confirmed across independent specimens.');
+  }
+
   return {
     available: true,
     lifecycle_summary: lifecycleSummary,
     governance_narrative: governanceNarrative,
+    confidence_narrative: confidenceNarrative,
+    legitimacy_sentences: legitimacySentences,
     sections,
   };
 }

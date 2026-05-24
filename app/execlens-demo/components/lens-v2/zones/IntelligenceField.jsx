@@ -699,6 +699,7 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
         </div>
       )}
 
+      {/* LEGACY-ONLY: S1 support section — governed S2+ runs never match qualification_level === 'S1' */}
       {boardroomMode && fullReport && fullReport.qualification_level === 'S1' && (() => {
         const gn = fullReport.governed_narrative
         const gnAvail = gn && gn.available
@@ -2558,14 +2559,10 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
       )
     }
 
-    const gl = fullReport && fullReport.governance_lifecycle
-    const isGovernedS1Plus = gl && gl.available && gl.s_level && ['S1', 'S2', 'S3'].includes(gl.s_level)
-
-    if (isGovernedS1Plus && boardroomProjection) {
+    if (boardroomProjection && boardroomProjection.qualification_posture.governed) {
       const qp = boardroomProjection.qualification_posture
       const bpTs = boardroomProjection.tension_summary
       const bpGl = boardroomProjection.governance_legitimacy
-      const sec = bpGl && bpGl.sections
       return (
         <aside className="intel-interp" data-tone={framing.tone} aria-label="Executive intelligence briefing">
           <div className="interp-tag">
@@ -2575,37 +2572,22 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
 
           <div className="interp-block interp-block--lead">
             <div className="interp-section-label">INTELLIGENCE POSTURE</div>
-            <div className="interp-synthesis">
-              {qp.s_level} governed intelligence across {totalDomains} semantic domains.
-              {bpTs.tension_count > 0
-                ? ` Structural pressure concentrated${bpTs.pressure_zone ? ` in "${bpTs.pressure_zone}"` : ''}.`
-                : ' No elevated structural pressure.'}
-            </div>
+            <div className="interp-synthesis">{bpTs.posture_narrative}</div>
             <div className="interp-synthesis-meta">
               {(qp.provenance_summary || '').replace(/\.$/, '')} · {qp.authority_ceiling || 'L3'} ceiling
             </div>
           </div>
 
-          {bpTs.tension_count > 0 && (
+          {bpTs.structural_tension_narrative && (
             <div className="interp-block">
               <div className="interp-section-label">STRUCTURAL TENSION</div>
-              <div className="interp-synthesis">
-                {bpTs.tension_count} pressure dimension{bpTs.tension_count !== 1 ? 's' : ''} active{bpTs.pressure_zone ? ` — gravity concentrated in "${bpTs.pressure_zone}"` : ''}.
-              </div>
+              <div className="interp-synthesis">{bpTs.structural_tension_narrative}</div>
             </div>
           )}
 
           <div className="interp-block">
             <div className="interp-section-label">GOVERNANCE CONFIDENCE</div>
-            <div className="interp-synthesis">
-              {sec && sec.proposition_review && sec.proposition_review.available && sec.proposition_review.detail.friction_rate > 0
-                ? 'Governed review exercised. Governance friction surfaced and resolved.'
-                : sec && sec.proposition_review && sec.proposition_review.available
-                  ? 'Governed review completed. All claims accepted.'
-                  : 'Governance lifecycle complete.'}
-              {sec && sec.deterministic_replay && sec.deterministic_replay.available && sec.deterministic_replay.detail.status === 'PASS' ? ' Deterministic replay confirmed.' : ''}
-              {sec && sec.replay_certification && sec.replay_certification.available && sec.replay_certification.detail.certification_status === 'CERTIFIED' ? ' Replay-certified.' : ''}
-            </div>
+            <div className="interp-synthesis">{bpGl.confidence_narrative}</div>
           </div>
 
           <div className="interp-block">
@@ -2618,6 +2600,8 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
       )
     }
 
+    const gl = fullReport && fullReport.governance_lifecycle
+    const isGovernedS1Plus = gl && gl.available && gl.s_level && ['S1', 'S2', 'S3'].includes(gl.s_level)
     if (isGovernedS1Plus) {
       const pc = fullReport.proposition_corpus
       const rv = fullReport.revalidation_intelligence
@@ -5512,6 +5496,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
   const openTopoModal = useCallback(() => setTopoModalOpen(true), [])
   const closeTopoModal = useCallback(() => { setTopoModalOpen(false); setSignalTraceId(null) }, [])
 
+  // LEGACY PRE-PROJECTION PATH: S1 narrative rendering — governed S2+ runs (genesis_e2e_03) never enter this branch
   const isS1 = fullReport && fullReport.qualification_level === 'S1'
   const governedNarrative = fullReport && fullReport.governed_narrative
 
@@ -5542,8 +5527,6 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
   const qs = (fullReport && fullReport.qualifier_summary) || {}
   const ps = (fullReport && fullReport.propagation_summary) || {}
   const sigs = (fullReport && fullReport.signal_interpretations) || []
-  const gl = fullReport && fullReport.governance_lifecycle
-  const isGovernedS1Plus = gl && gl.available && gl.s_level && ['S1', 'S2', 'S3'].includes(gl.s_level)
 
   const backedCount = ts.structurally_backed_count || 0
   const totalDomains = ts.semantic_domain_count || 0
@@ -5572,7 +5555,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
   }, {})
   const familyKeys = Object.keys(signalFamilies)
 
-  if (isGovernedS1Plus && boardroomProjection) {
+  if (boardroomProjection && boardroomProjection.qualification_posture.governed) {
     const bp = boardroomProjection
     const qp = bp.qualification_posture
     const bpTs = bp.tension_summary
@@ -5642,6 +5625,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
 
           <div className="cockpit-signal-panel">
             <div className="cockpit-signal-label">SIGNAL ASSESSMENT</div>
+            {/* INTERIM_COMPONENT_COMPATIBILITY_MAPPING: executive_reading → boardroom_interpretation adapter until CockpitSignalBar accepts projection-native fields */}
             {bpSi.families.flatMap(fam => fam.signals).map(sig => (
               <CockpitSignalBar key={sig.signal_id} signal={{ ...sig, interpretation: sig.executive_reading, boardroom_interpretation: sig.executive_reading }} governed />
             ))}
@@ -5902,35 +5886,11 @@ function BoardroomGovernanceIntelligence({ fullReport, boardroomProjection }) {
 
   if (gleg && gleg.available) {
     const qp = bp.qualification_posture
-    const sec = gleg.sections
-    const sentences = []
-    sentences.push(
-      `${qp.s_level} qualification earned through ${(qp.provenance_summary || 'governed lifecycle').toLowerCase().replace(/\.$/, '')} — not bridge certification.`
-    )
-    if (sec.proposition_review && sec.proposition_review.available) {
-      const fr = sec.proposition_review.detail.friction_rate
-      if (fr > 0) {
-        sentences.push('Operator review exercised. Governance friction surfaced — claims were challenged, and some did not survive.')
-      } else {
-        sentences.push('Operator review completed. All semantic claims accepted through governed evaluation.')
-      }
-    }
-    if (sec.deterministic_replay && sec.deterministic_replay.available) {
-      if (sec.replay_certification && sec.replay_certification.available && sec.replay_certification.detail.certification_status === 'CERTIFIED') {
-        sentences.push('Deterministic revalidation confirmed. Replay-certified across constitutional dimensions.')
-      } else if (sec.deterministic_replay.detail.status === 'PASS') {
-        sentences.push('Deterministic revalidation confirmed.')
-      }
-    }
-    if (sec.cross_specimen && sec.cross_specimen.available && sec.cross_specimen.detail.total_observations > 0) {
-      sentences.push('Governance patterns confirmed across independent specimens.')
-    }
-
     return (
       <div className="cockpit-governance-intelligence cockpit-governance-intelligence--governed">
         <div className="cockpit-governance-intelligence-label">GOVERNANCE LEGITIMACY</div>
         <div className="cockpit-governance-envelope">
-          {sentences.map((s, i) => (
+          {gleg.legitimacy_sentences.map((s, i) => (
             <div key={i} className="cockpit-governance-sentence">{s}</div>
           ))}
         </div>
