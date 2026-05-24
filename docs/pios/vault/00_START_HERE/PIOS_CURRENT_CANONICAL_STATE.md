@@ -116,6 +116,28 @@ Four distinct cognitive projections represent different executive cognition mode
 
 **Governing principle:** Same structural truth, different projection depths. Persona gates evidence deterministically — it selects depth, not content.
 
+## LENS Projection Architecture Gap (OPEN — 2026-05-24)
+
+**Classification:** INTERIM_RESOLVER_EMBEDDED_PROJECTION
+
+LENS currently has no governed projection object layer. The resolver (`GenericSemanticPayloadResolver`) performs both resolution (artifact loading, validation, structural derivation) and projection (altitude-aware interpretation, narrative composition, governance lifecycle summaries) in a single pass. The output (`fullReport`) is an emergent 42-field bag with no contract — all four personas receive the same object and select fields ad hoc.
+
+**Architectural gap:** The handoff from substrate to persona surface collapses three layers that should be distinct:
+1. **Resolved payload** (altitude-neutral specimen facts) — partially exists inside resolver
+2. **Governed projection objects** (altitude-aware, persona-consumable) — does not exist
+3. **Persona surfaces** (rendering only) — currently also derives semantic meaning inline
+
+**Current interim state:**
+- `boardroom_interpretation` field on signal objects — executive-altitude text generated inline in resolver (patch, not architecture)
+- Seven `project*()` governance functions — clean projection objects in the wrong file
+- Zone anchor business label — derived from semantic domain registry inside resolver (projection work)
+- Signal caption maps — hardcoded in resolver, not governed
+
+**Target architecture:** Resolver → Resolved Payload → Projection Compiler → Persona Projection Objects → Persona Surfaces.
+
+**Tracking stream:** PI.LENS.GOVERNED-PROJECTION-OBJECT-MODEL.01
+**Reality check:** See `docs/pios/PI.LENS.GOVERNED-PROJECTION-OBJECT-MODEL.01/CURRENT_LENS_PROJECTION_REALITY_CHECK.md`
+
 ## Three-Tier Authority Model
 
 ```

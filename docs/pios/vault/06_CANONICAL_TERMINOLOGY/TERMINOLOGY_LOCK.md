@@ -680,6 +680,28 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 **What it is NOT:** A unification claim. Convergence is OBSERVATIONAL — diversity within common governance IS the proof. Never claim generalized laws from two specimens.
 
+### RESOLVED PAYLOAD
+
+**Definition:** The altitude-neutral, validated, specimen-specific data bundle produced by resolution. Contains structural facts (domain registry, signal families, pressure zones, qualification state, governance lifecycle) without executive interpretation or persona-specific prose.
+
+**Status:** PROPOSED — named in PI.LENS.GOVERNED-PROJECTION-OBJECT-MODEL.01. Not yet implemented as a distinct artifact.
+
+**What it is NOT:** The same as `fullReport`. fullReport currently collapses resolved payload with projection objects and legacy compatibility fields.
+
+### GOVERNED PROJECTION OBJECT
+
+**Definition:** An altitude-aware, persona-consumable intelligence object produced by a projection compiler from the resolved payload. Contains semantic language appropriate to its target persona altitude, bounded interpretation under 75.x authority, proof references, and source lineage.
+
+**Status:** PROPOSED — named in PI.LENS.GOVERNED-PROJECTION-OBJECT-MODEL.01. Not yet implemented.
+
+**What it is NOT:** A display template. Projection objects contain governed intelligence, not layout instructions.
+
+### INTERIM_RESOLVER_EMBEDDED_PROJECTION
+
+**Definition:** Classification for projection work currently located inside GenericSemanticPayloadResolver instead of a projection layer. Code so classified works correctly but lives in the wrong architectural layer and will be extracted when the projection layer is built.
+
+**Status:** ACTIVE — applied to boardroom_interpretation, signal caption maps, governance lifecycle projections (3dcf894).
+
 ## Term Usage Rules
 
 1. **Use locked definitions exactly.** Do not paraphrase, simplify, or reinterpret.
