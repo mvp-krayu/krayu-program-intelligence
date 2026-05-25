@@ -1,0 +1,61 @@
+{
+  "stream_id": "PI.NEXTGEN.AGENTIC-RUNTIME-IMPLEMENTATION.01",
+  "phase": "P1 — Continuity Materializers",
+  "changes": [
+    {
+      "path": "scripts/pios/governance/enrichment_planner.py",
+      "action": "CREATED",
+      "purpose": "Enrichment planning materializer — formal target declaration with operator approval gate"
+    },
+    {
+      "path": "scripts/pios/governance/path_a_enrichment.py",
+      "action": "CREATED",
+      "purpose": "PATH A enrichment engine — code graph (40.3s) and centrality (40.3c) to proposition confidence enrichment"
+    },
+    {
+      "path": "scripts/pios/governance/debt_reassessment.py",
+      "action": "CREATED",
+      "purpose": "Standalone debt reassessment — generalized for PATH A and PATH B, extracted from evidence_enrichment_rc04.py"
+    },
+    {
+      "path": "scripts/pios/governance/enriched_proposition_update.py",
+      "action": "CREATED",
+      "purpose": "Standalone enrichment summary computation with full lineage tracking"
+    },
+    {
+      "path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/sqo/enrichment_plan.json",
+      "action": "CREATED",
+      "purpose": "NetBox enrichment plan (61 targets, EXECUTED)"
+    },
+    {
+      "path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/semantic/spe/enrichment_log.json",
+      "action": "CREATED",
+      "purpose": "NetBox PATH A enrichment log (10 enriched, 45 confirmed)"
+    },
+    {
+      "path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/semantic/spe/enrichment_activity_event.json",
+      "action": "CREATED",
+      "purpose": "NetBox enrichment activity event"
+    },
+    {
+      "path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/semantic/spe/debt_reassessment.json",
+      "action": "CREATED",
+      "purpose": "NetBox debt reassessment (7 items, all unchanged)"
+    },
+    {
+      "path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/semantic/spe/enrichment_summary.json",
+      "action": "CREATED",
+      "purpose": "NetBox enrichment summary"
+    },
+    {
+      "path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/spine/spine_objects.json",
+      "action": "MODIFIED",
+      "purpose": "Proposition confidence values updated by PATH A enrichment"
+    },
+    {
+      "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/sqo/enrichment_plan.json",
+      "action": "CREATED",
+      "purpose": "BlueEdge enrichment plan (23 PATH B targets)"
+    }
+  ]
+}

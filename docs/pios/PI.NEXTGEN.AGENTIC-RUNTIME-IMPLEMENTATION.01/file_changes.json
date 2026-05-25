@@ -1,0 +1,36 @@
+{
+  "stream_id": "PI.NEXTGEN.AGENTIC-RUNTIME-IMPLEMENTATION.01",
+  "phase": "P0 — Runtime Legality Foundation",
+  "changes": [
+    {
+      "path": "scripts/pios/governance/__init__.py",
+      "action": "CREATED",
+      "purpose": "Package init for governance module"
+    },
+    {
+      "path": "scripts/pios/governance/artifact_integrity.py",
+      "action": "CREATED",
+      "purpose": "Artifact hash manifest build/verify — SHA-256 integrity for all governed artifacts across 8 artifact classes"
+    },
+    {
+      "path": "scripts/pios/governance/terminal_state_guard.py",
+      "action": "CREATED",
+      "purpose": "Storage-layer terminal state enforcement — GovernedWriter class wrapping JSON writes with constitutional guard assertions"
+    },
+    {
+      "path": "scripts/pios/governance/replay_determinism.py",
+      "action": "CREATED",
+      "purpose": "Replay determinism test harness — re-executes deterministic computations and asserts bit-identical output"
+    },
+    {
+      "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/artifact_hash_manifest.json",
+      "action": "CREATED",
+      "purpose": "Hash manifest for BlueEdge governed specimen (46 artifacts)"
+    },
+    {
+      "path": "clients/netbox/psee/runs/run_github_netbox_20260520_134600/artifact_hash_manifest.json",
+      "action": "CREATED",
+      "purpose": "Hash manifest for NetBox reference specimen (25 artifacts)"
+    }
+  ]
+}
