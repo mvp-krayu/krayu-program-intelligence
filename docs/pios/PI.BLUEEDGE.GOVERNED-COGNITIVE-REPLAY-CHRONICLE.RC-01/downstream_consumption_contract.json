@@ -1,0 +1,126 @@
+{
+  "schema_version": "1.0",
+  "contract_type": "DOWNSTREAM_CONSUMPTION",
+  "stream_id": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-01",
+  "runtime_baseline": {
+    "stream": "PI.NEXTGEN.AGENTIC-RUNTIME-IMPLEMENTATION.01",
+    "commit": "8001810",
+    "phases": "P0-P4"
+  },
+  "consumed_strata": [
+    "A",
+    "C",
+    "D"
+  ],
+  "consumed_strata_labels": {
+    "A": "DETERMINISTIC_COGNITION",
+    "C": "CONTINUITY",
+    "D": "QUALIFICATION"
+  },
+  "mutation_intent": "CONTINUITY_WRITER",
+  "mutation_intent_description": "Writes to continuity artifacts (spine objects, checkpoints, trails)",
+  "required_guards": [
+    "ARTIFACT_HASH",
+    "IMMUTABLE_VERIFICATION",
+    "TERMINAL_STATE",
+    "STRATUM_BOUNDARY",
+    "ARTIFACT_CONSISTENCY"
+  ],
+  "required_guards_detail": {
+    "ARTIFACT_HASH": {
+      "script": "artifact_integrity.py",
+      "phase": "P0",
+      "description": "Artifact hash verification \u2014 integrity baseline enforcement"
+    },
+    "IMMUTABLE_VERIFICATION": {
+      "script": "artifact_integrity.py",
+      "phase": "P0",
+      "description": "Immutable artifact protection \u2014 prevents mutation of sealed artifacts"
+    },
+    "TERMINAL_STATE": {
+      "script": "terminal_state_guard.py",
+      "phase": "P0",
+      "description": "Terminal state enforcement \u2014 irreversible transitions are respected"
+    },
+    "STRATUM_BOUNDARY": {
+      "script": "stratum_boundary.py",
+      "phase": "P3",
+      "description": "Cross-stratum write legality \u2014 constitutional boundary enforcement"
+    },
+    "ARTIFACT_CONSISTENCY": {
+      "script": "artifact_consistency.py",
+      "phase": "P2",
+      "description": "Cross-artifact consistency validation \u2014 spine/proposition/promotion alignment"
+    }
+  },
+  "replay_impact": "CORRIDOR_WRITER",
+  "replay_impact_description": "Writes replay corridor \u2014 creates checkpoints, proof objects",
+  "authority_ceiling": "L2",
+  "authority_ceiling_description": "Semantic \u2014 structural derivation with governed confidence",
+  "consumed_artifacts": [
+    "clients/blueedge/psee/runs/*/sqo/promotion_state.json",
+    "clients/blueedge/psee/runs/*/sqo/qualification_blockers.json",
+    "clients/blueedge/psee/runs/*/spine/spine_objects.json",
+    "clients/blueedge/psee/runs/*/semantic/spe/semantic_propositions.json",
+    "clients/blueedge/client.yaml",
+    "clients/blueedge/sqo/evidence/"
+  ],
+  "consumer_artifacts": [
+    "clients/blueedge/chronicle/CHRONICLE_MANIFEST.json",
+    "clients/blueedge/chronicle/checkpoints/checkpoint_00_baseline.json",
+    "clients/blueedge/chronicle/spine/spine_objects.json",
+    "clients/blueedge/chronicle/spine/spine_index.json"
+  ],
+  "bypass_prohibitions": [
+    "stratum_boundary_bypass",
+    "immutable_verification_bypass",
+    "terminal_state_bypass",
+    "replay_certification_bypass",
+    "adaptive_boundary_bypass"
+  ],
+  "declared_at": "2026-05-25T08:42:17.231762+00:00",
+  "declared_by": "operator_krayu",
+  "verification_status": "VERIFIED",
+  "guard_availability": {
+    "ARTIFACT_HASH": {
+      "available": true,
+      "scripts": "artifact_integrity.py",
+      "phase": "P0"
+    },
+    "IMMUTABLE_VERIFICATION": {
+      "available": true,
+      "scripts": "artifact_integrity.py",
+      "phase": "P0"
+    },
+    "TERMINAL_STATE": {
+      "available": true,
+      "scripts": "terminal_state_guard.py",
+      "phase": "P0"
+    },
+    "STRATUM_BOUNDARY": {
+      "available": true,
+      "scripts": "stratum_boundary.py",
+      "phase": "P3"
+    },
+    "ARTIFACT_CONSISTENCY": {
+      "available": true,
+      "scripts": "artifact_consistency.py",
+      "phase": "P2"
+    },
+    "SESSION_TRAIL": {
+      "available": true,
+      "scripts": "session_lifecycle.py + trail_persistence.py",
+      "phase": "P2/P3"
+    },
+    "AGENT_REGISTRATION": {
+      "available": true,
+      "scripts": "agent_registration.py",
+      "phase": "P4"
+    },
+    "ADAPTIVE_BOUNDARY": {
+      "available": true,
+      "scripts": "adaptive_enrichment.py + convergence_maturity.py",
+      "phase": "P4"
+    }
+  }
+}
