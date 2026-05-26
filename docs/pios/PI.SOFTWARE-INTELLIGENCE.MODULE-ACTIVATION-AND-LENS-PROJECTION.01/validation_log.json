@@ -1,0 +1,87 @@
+{
+  "stream_id": "PI.SOFTWARE-INTELLIGENCE.MODULE-ACTIVATION-AND-LENS-PROJECTION.01",
+  "classification": "G2",
+  "timestamp": "2026-05-26T07:39:00Z",
+  "checks": [
+    {
+      "check": "Build compilation",
+      "result": "PASS",
+      "detail": "npx next build succeeds with zero errors"
+    },
+    {
+      "check": "Module state derivation — AVAILABLE",
+      "result": "PASS",
+      "detail": "deriveModuleState returns AVAILABLE for blueedge/run_blueedge_productized_01_fixed (6 signals, 17 domains)"
+    },
+    {
+      "check": "Projection derivation — completeness",
+      "result": "PASS",
+      "detail": "17 role_abstractions, 5 pressure_interpretations, 3 execution_corridors, 5 attention_signals, validation_posture, deployment_risk derived"
+    },
+    {
+      "check": "Projection derivation — trace metadata",
+      "result": "PASS",
+      "detail": "All derived statements carry trace object with source and field"
+    },
+    {
+      "check": "Toggle visibility — AVAILABLE state",
+      "result": "PASS",
+      "detail": "SW-INTEL toggle button visible in AuthorityBand when module state is AVAILABLE"
+    },
+    {
+      "check": "Toggle activation — DENSE",
+      "result": "PASS",
+      "detail": "Clicking toggle activates SW-Intel DENSE view, replaces PI Core DenseTopologyField"
+    },
+    {
+      "check": "Toggle activation — INVESTIGATION",
+      "result": "PASS",
+      "detail": "SW-Intel INVESTIGATION view renders with evidence-first panel ordering"
+    },
+    {
+      "check": "Toggle activation — BALANCED",
+      "result": "PASS",
+      "detail": "SW-Intel balanced narrative appended below standard BalancedConsequenceField"
+    },
+    {
+      "check": "Toggle activation — BOARDROOM",
+      "result": "PASS",
+      "detail": "SW-Intel boardroom summary appended below BoardroomDecisionSurface"
+    },
+    {
+      "check": "PI Core fallback — toggle deactivation",
+      "result": "PASS",
+      "detail": "Clicking toggle off restores PI Core view; rep-field--dense visible, sw-intel-fallback-btn removed"
+    },
+    {
+      "check": "PI Core fallback — button deactivation",
+      "result": "PASS",
+      "detail": "'Return to PI Core view' button deactivates module; toggle state syncs to false"
+    },
+    {
+      "check": "No PI Core mutation",
+      "result": "PASS",
+      "detail": "No changes to GenericSemanticPayloadResolver, no corridor implementation, no manifest changes"
+    },
+    {
+      "check": "Inference prohibition enforced",
+      "result": "PASS",
+      "detail": "All rendered statements are structurally derived with trace metadata; no AI commentary"
+    },
+    {
+      "check": "Projection type marking",
+      "result": "PASS",
+      "detail": "Projection marked as PROVISIONAL_DERIVED_SW_INTEL_PROJECTION in both data and UI"
+    },
+    {
+      "check": "Graceful degradation — missing fields",
+      "result": "PASS",
+      "detail": "topology_roles, coordination_spines, qualification_cognition correctly empty when structural_enrichment/governance_lifecycle unavailable"
+    }
+  ],
+  "summary": {
+    "total": 15,
+    "passed": 15,
+    "failed": 0
+  }
+}

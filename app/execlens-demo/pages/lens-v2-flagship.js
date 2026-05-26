@@ -17,6 +17,7 @@
 import Head from 'next/head'
 import { useState, useMemo, useCallback } from 'react'
 import LensDisclosureShell from '../components/lens-v2/LensDisclosureShell'
+import { SoftwareIntelligenceModuleToggle } from '../components/lens-v2/zones/SoftwareIntelligenceField'
 
 
 const {
@@ -27,6 +28,7 @@ const {
 } = require('../flagship-experience/flagshipOrchestration')
 
 const { compileBoardroomProjection } = require('../lib/lens-v2/generic/BoardroomProjectionCompiler')
+const { deriveProjection, deriveModuleState, PROJECTION_STATUS } = require('../lib/lens-v2/SoftwareIntelligenceProjectionAdapter')
 
 /* Live binding migration — PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01
  * Productized — PI.LENS.V2.GENERIC-SEMANTIC-PAYLOAD-RESOLVER.01
@@ -82,7 +84,7 @@ const BOARDROOM_PERSONA = {
 
 // ── Inner components ──────────────────────────────────────────────────────────
 
-function AuthorityBand({ densityClass, boardroomMode, onDensityChange, onBoardroomToggle }) {
+function AuthorityBand({ densityClass, boardroomMode, onDensityChange, onBoardroomToggle, swIntelActive, swIntelAvailable, onSwIntelToggle }) {
   const activeDensity = DENSITY_OPTIONS.find(o => o.value === densityClass) || DENSITY_OPTIONS[0]
   const activePersona = boardroomMode ? BOARDROOM_PERSONA : activeDensity
   return (
@@ -137,6 +139,11 @@ function AuthorityBand({ densityClass, boardroomMode, onDensityChange, onBoardro
             <span className="auth-persona-sep"> · </span>
             <span className="auth-persona-sub">{activePersona.persona_sub}</span>
           </div>
+          <SoftwareIntelligenceModuleToggle
+            active={swIntelActive}
+            available={swIntelAvailable}
+            onToggle={onSwIntelToggle}
+          />
         </div>
       </div>
     </div>
@@ -226,12 +233,13 @@ export async function getServerSideProps(context) {
   }
 }
 
-export default function LensV2FlagshipPage({ livePayload, livePropagationChains, liveBindingError, bindingClient, bindingRun, reconciliationAwareness, domainTraceability, substrateBinding, reportBinding, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData }) {
+export default function LensV2FlagshipPage({ livePayload, livePropagationChains, liveBindingError, bindingClient, bindingRun, reconciliationAwareness, domainTraceability, substrateBinding, reportBinding, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, sqoAuthorityWorkspace, sqoBinding }) {
   const [densityClass, setDensityClass] = useState('EXECUTIVE_DENSE')
   const [boardroomMode, setBoardroomMode] = useState(false)
   const [investigationStage, setInvestigationStage] = useState('SUMMARY')
   const [pendingTransitionDomain, setPendingTransitionDomain] = useState(null)
   const [pendingTransitionZone, setPendingTransitionZone] = useState(null)
+  const [swIntelActive, setSwIntelActive] = useState(false)
 
   const handleModeTransition = useCallback((targetMode, focusedDomainId, targetZoneKey) => {
     setBoardroomMode(false)
@@ -257,6 +265,15 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
     if (!reportObject || !boardroomMode) return null
     return compileBoardroomProjection(reportObject)
   }, [reportObject, boardroomMode])
+
+  const swIntelProjection = useMemo(() => {
+    if (!reportObject) return null
+    return deriveProjection(reportObject)
+  }, [reportObject])
+
+  const swIntelAvailable = swIntelProjection && swIntelProjection.module_state !== PROJECTION_STATUS.ABSENT
+  const handleSwIntelToggle = useCallback(() => setSwIntelActive(p => !p), [])
+  const handleSwIntelDeactivate = useCallback(() => setSwIntelActive(false), [])
 
   // Live binding failure surface — fixture fallback DISABLED per contract
   if (!reportObject || !result) {
@@ -417,6 +434,9 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           boardroomMode={boardroomMode}
           onDensityChange={v => { setDensityClass(v); setBoardroomMode(false) }}
           onBoardroomToggle={() => setBoardroomMode(p => !p)}
+          swIntelActive={swIntelActive}
+          swIntelAvailable={swIntelAvailable}
+          onSwIntelToggle={handleSwIntelToggle}
         />
 
         <div className="v2-body">
@@ -452,6 +472,11 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             onModeTransition={handleModeTransition}
             pendingTransitionZone={pendingTransitionZone}
             onTransitionZoneConsumed={() => setPendingTransitionZone(null)}
+            swIntelActive={swIntelActive}
+            swIntelProjection={swIntelProjection}
+            onSwIntelDeactivate={handleSwIntelDeactivate}
+            sqoAuthorityWorkspace={sqoAuthorityWorkspace}
+            sqoBinding={sqoBinding}
           />
         </div>
       </div>
@@ -8315,6 +8340,1445 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           letter-spacing: 0.06em;
           text-transform: uppercase;
         }
+
+        /* ── Software Intelligence Module ─────────────────────────────── */
+        .sw-intel-toggle {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 4px 12px;
+          border: 1px solid #2a2f40;
+          border-radius: 4px;
+          background: #12151f;
+          color: #7a8aaa;
+          font-size: 10px;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: border-color 0.15s, color 0.15s, background 0.15s;
+          margin-left: 12px;
+        }
+        .sw-intel-toggle:hover { border-color: #4a9eff; color: #ccd6f6; }
+        .sw-intel-toggle--active {
+          border-color: #4a9eff;
+          background: rgba(74,158,255,0.08);
+          color: #4a9eff;
+        }
+        .sw-intel-toggle-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #4a5570;
+          transition: background 0.15s;
+        }
+        .sw-intel-toggle--active .sw-intel-toggle-dot { background: #4a9eff; }
+
+        .sw-intel-status {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 8px 16px;
+          border: 1px solid #2a2f40;
+          border-radius: 4px;
+          background: #12151f;
+          margin-bottom: 16px;
+        }
+        .sw-intel-status-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: #4a5570;
+        }
+        .sw-intel-status[data-state="AVAILABLE"] .sw-intel-status-dot { background: #4a9eff; }
+        .sw-intel-status[data-state="INVALID"] .sw-intel-status-dot { background: #ff6b6b; }
+        .sw-intel-status-label {
+          font-size: 10px;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.12em;
+          color: #ccd6f6;
+          text-transform: uppercase;
+        }
+        .sw-intel-status-type {
+          font-size: 9px;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.08em;
+          color: #4a5570;
+          margin-left: auto;
+        }
+
+        .sw-intel-view { padding: 0 0 16px; }
+        .sw-intel-view--dense .sw-intel-panel,
+        .sw-intel-view--investigation .sw-intel-panel { margin-bottom: 12px; }
+
+        .sw-intel-panel {
+          border: 1px solid #1e2330;
+          border-radius: 4px;
+          background: #141720;
+          padding: 12px 16px;
+        }
+        .sw-intel-panel-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 10px;
+        }
+        .sw-intel-panel-code {
+          font-size: 9px;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.14em;
+          color: #4a9eff;
+          padding: 2px 6px;
+          background: rgba(74,158,255,0.06);
+          border-radius: 2px;
+        }
+        .sw-intel-panel-title {
+          font-size: 12px;
+          font-weight: 600;
+          color: #ccd6f6;
+          letter-spacing: 0.04em;
+        }
+        .sw-intel-panel-count {
+          font-size: 10px;
+          color: #7a8aaa;
+          margin-left: auto;
+          font-family: 'Courier New', monospace;
+        }
+
+        .sw-intel-trace {
+          font-size: 9px;
+          color: #4a5570;
+          font-family: 'Courier New', monospace;
+          margin-top: 6px;
+          letter-spacing: 0.04em;
+        }
+
+        /* Attention panel */
+        .sw-intel-attention-list { display: flex; flex-direction: column; gap: 8px; }
+        .sw-intel-attention-item {
+          padding: 8px 12px;
+          background: #1a1e2b;
+          border-radius: 3px;
+          border-left: 3px solid #4a5570;
+        }
+        .sw-intel-attention-item[data-severity="HIGH"] { border-left-color: #ff6b6b; }
+        .sw-intel-attention-item[data-severity="ELEVATED"] { border-left-color: #ff9e4a; }
+        .sw-intel-attention-item[data-severity="MODERATE"] { border-left-color: #ffd700; }
+        .sw-intel-attention-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 4px;
+        }
+        .sw-intel-attention-severity {
+          font-size: 9px;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.12em;
+          font-weight: 600;
+        }
+        .sw-intel-attention-name {
+          font-size: 11px;
+          color: #ccd6f6;
+          font-weight: 500;
+        }
+        .sw-intel-attention-statement {
+          font-size: 12px;
+          color: #9aa0bc;
+          line-height: 1.5;
+        }
+        .sw-intel-attention-trace {
+          font-size: 8px;
+          color: #4a5570;
+          font-family: 'Courier New', monospace;
+          margin-top: 4px;
+        }
+
+        /* Pressure panel */
+        .sw-intel-pressure-list { display: flex; flex-direction: column; gap: 8px; }
+        .sw-intel-pressure-item {
+          padding: 8px 12px;
+          background: #1a1e2b;
+          border-radius: 3px;
+        }
+        .sw-intel-pressure-row {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 4px;
+        }
+        .sw-intel-pressure-type {
+          font-size: 10px;
+          color: #ccd6f6;
+          font-family: 'Courier New', monospace;
+          font-weight: 600;
+          letter-spacing: 0.04em;
+        }
+        .sw-intel-pressure-family {
+          font-size: 9px;
+          padding: 1px 5px;
+          border-radius: 2px;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.08em;
+        }
+        .sw-intel-pressure-family[data-family="DPSIG"] { color: #4a9eff; background: rgba(74,158,255,0.08); }
+        .sw-intel-pressure-family[data-family="ISIG"] { color: #64ffda; background: rgba(100,255,218,0.08); }
+        .sw-intel-pressure-family[data-family="PSIG"] { color: #ffd700; background: rgba(255,215,0,0.08); }
+        .sw-intel-pressure-severity {
+          font-size: 9px;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.1em;
+          margin-left: auto;
+        }
+        .sw-intel-pressure-statement {
+          font-size: 12px;
+          color: #9aa0bc;
+          line-height: 1.5;
+        }
+        .sw-intel-pressure-concentration {
+          font-size: 11px;
+          color: #7a8aaa;
+          margin-top: 2px;
+        }
+
+        /* Execution corridors */
+        .sw-intel-corridor-flow {
+          display: flex;
+          align-items: stretch;
+          gap: 0;
+        }
+        .sw-intel-corridor-node {
+          display: flex;
+          align-items: center;
+          gap: 0;
+          flex: 1;
+        }
+        .sw-intel-corridor-arrow {
+          font-size: 16px;
+          color: #4a5570;
+          padding: 0 8px;
+          flex-shrink: 0;
+        }
+        .sw-intel-corridor-card {
+          flex: 1;
+          padding: 10px 12px;
+          background: #1a1e2b;
+          border-radius: 3px;
+          border-top: 2px solid #2a2f40;
+        }
+        .sw-intel-corridor-node[data-role="ORIGIN"] .sw-intel-corridor-card { border-top-color: #ff6b6b; }
+        .sw-intel-corridor-node[data-role="PASS_THROUGH"] .sw-intel-corridor-card { border-top-color: #ff9e4a; }
+        .sw-intel-corridor-node[data-role="RECEIVER"] .sw-intel-corridor-card { border-top-color: #ffd700; }
+        .sw-intel-corridor-role {
+          font-size: 9px;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.12em;
+          color: #7a8aaa;
+          text-transform: uppercase;
+          margin-bottom: 4px;
+        }
+        .sw-intel-corridor-domain {
+          font-size: 13px;
+          color: #ccd6f6;
+          font-weight: 600;
+          margin-bottom: 4px;
+        }
+        .sw-intel-corridor-desc {
+          font-size: 11px;
+          color: #9aa0bc;
+          line-height: 1.4;
+          margin-bottom: 4px;
+        }
+        .sw-intel-corridor-grounding {
+          font-size: 9px;
+          font-family: 'Courier New', monospace;
+          color: #4a5570;
+          letter-spacing: 0.06em;
+        }
+        .sw-intel-corridor-grounding[data-grounding="Q-00"] { color: #64ffda; }
+
+        /* Coordination spines */
+        .sw-intel-spine-list { display: flex; flex-direction: column; gap: 4px; }
+        .sw-intel-spine-item {
+          display: flex;
+          align-items: flex-start;
+          gap: 10px;
+          padding: 6px 10px;
+          background: #1a1e2b;
+          border-radius: 3px;
+        }
+        .sw-intel-spine-rank {
+          font-size: 10px;
+          font-family: 'Courier New', monospace;
+          color: #4a9eff;
+          min-width: 24px;
+          padding-top: 2px;
+        }
+        .sw-intel-spine-body { flex: 1; min-width: 0; }
+        .sw-intel-spine-path {
+          font-size: 11px;
+          color: #ccd6f6;
+          font-family: 'Courier New', monospace;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .sw-intel-spine-role { margin-top: 2px; }
+        .sw-intel-spine-role-tag {
+          font-size: 9px;
+          color: #7a8aaa;
+          padding: 1px 6px;
+          background: rgba(122,138,170,0.08);
+          border-radius: 2px;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.06em;
+        }
+        .sw-intel-spine-role-tag[data-role="hub"] { color: #ff9e4a; background: rgba(255,158,74,0.08); }
+        .sw-intel-spine-role-tag[data-role="spine"] { color: #4a9eff; background: rgba(74,158,255,0.08); }
+        .sw-intel-spine-role-tag[data-role="bridge"] { color: #ffd700; background: rgba(255,215,0,0.08); }
+        .sw-intel-spine-metrics {
+          display: flex;
+          gap: 10px;
+          margin-top: 2px;
+          font-size: 10px;
+          color: #4a5570;
+          font-family: 'Courier New', monospace;
+        }
+
+        /* Validation posture */
+        .sw-intel-validation-grid { display: flex; flex-direction: column; gap: 8px; }
+        .sw-intel-validation-coverage-bar {
+          height: 6px;
+          background: #1a1e2b;
+          border-radius: 3px;
+          overflow: hidden;
+          margin-bottom: 4px;
+        }
+        .sw-intel-validation-coverage-fill {
+          height: 100%;
+          background: #4a9eff;
+          border-radius: 3px;
+          transition: width 0.3s;
+        }
+        .sw-intel-validation-coverage-label {
+          font-size: 11px;
+          color: #9aa0bc;
+        }
+        .sw-intel-validation-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          font-size: 11px;
+        }
+        .sw-intel-validation-key {
+          color: #7a8aaa;
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          letter-spacing: 0.06em;
+        }
+        .sw-intel-validation-value { color: #ccd6f6; }
+
+        /* Deployment risk */
+        .sw-intel-risk-level {
+          font-size: 10px;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.12em;
+          font-weight: 600;
+          margin-left: auto;
+        }
+        .sw-intel-risk-level[data-level="LOW"] { color: #64ffda; }
+        .sw-intel-risk-level[data-level="MODERATE"] { color: #ffd700; }
+        .sw-intel-risk-level[data-level="ELEVATED"] { color: #ff6b6b; }
+        .sw-intel-risk-statement {
+          font-size: 12px;
+          color: #ccd6f6;
+          line-height: 1.5;
+          margin-bottom: 4px;
+        }
+        .sw-intel-risk-detail {
+          font-size: 10px;
+          color: #7a8aaa;
+          font-family: 'Courier New', monospace;
+        }
+
+        /* Qualification cognition */
+        .sw-intel-qual-header {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 6px;
+        }
+        .sw-intel-qual-level {
+          font-size: 18px;
+          font-weight: 700;
+          color: #ccd6f6;
+          font-family: 'Courier New', monospace;
+        }
+        .sw-intel-qual-ceiling {
+          font-size: 10px;
+          color: #7a8aaa;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.06em;
+        }
+        .sw-intel-qual-eligible {
+          font-size: 9px;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.12em;
+          padding: 2px 8px;
+          border-radius: 2px;
+          margin-left: auto;
+        }
+        .sw-intel-qual-eligible[data-eligible="true"] { color: #64ffda; background: rgba(100,255,218,0.08); }
+        .sw-intel-qual-eligible[data-eligible="false"] { color: #ff6b6b; background: rgba(255,107,107,0.08); }
+        .sw-intel-qual-statement {
+          font-size: 12px;
+          color: #9aa0bc;
+          line-height: 1.5;
+        }
+        .sw-intel-qual-meta {
+          font-size: 10px;
+          color: #4a5570;
+          font-family: 'Courier New', monospace;
+          margin-top: 4px;
+        }
+
+        /* Topology roles */
+        .sw-intel-role-grid { display: flex; flex-direction: column; gap: 6px; }
+        .sw-intel-role-item { }
+        .sw-intel-role-bar-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          margin-bottom: 2px;
+        }
+        .sw-intel-role-name {
+          font-size: 11px;
+          color: #ccd6f6;
+        }
+        .sw-intel-role-count {
+          font-size: 10px;
+          color: #7a8aaa;
+          font-family: 'Courier New', monospace;
+        }
+        .sw-intel-role-bar {
+          height: 4px;
+          background: #1a1e2b;
+          border-radius: 2px;
+          overflow: hidden;
+        }
+        .sw-intel-role-bar-fill {
+          height: 100%;
+          background: #4a9eff;
+          border-radius: 2px;
+        }
+
+        /* Domain role abstractions */
+        .sw-intel-domain-summary {
+          display: flex;
+          gap: 8px;
+          margin-bottom: 8px;
+        }
+        .sw-intel-domain-chip {
+          font-size: 10px;
+          padding: 2px 8px;
+          border-radius: 2px;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.06em;
+        }
+        .sw-intel-domain-chip--anchor { color: #ffd700; background: rgba(255,215,0,0.08); }
+        .sw-intel-domain-chip--backed { color: #64ffda; background: rgba(100,255,218,0.08); }
+        .sw-intel-domain-chip--semantic { color: #7a8aaa; background: rgba(122,138,170,0.08); }
+        .sw-intel-domain-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          padding: 4px 8px;
+          border-radius: 2px;
+          font-size: 11px;
+        }
+        .sw-intel-domain-row:nth-child(odd) { background: rgba(26,30,43,0.5); }
+        .sw-intel-domain-name { color: #ccd6f6; font-weight: 500; }
+        .sw-intel-domain-role { color: #7a8aaa; font-size: 10px; }
+        .sw-intel-domain-row[data-backing="SEMANTIC_ONLY"] .sw-intel-domain-name { color: #7a8aaa; }
+        .sw-intel-domain-toggle {
+          display: block;
+          width: 100%;
+          padding: 6px;
+          margin-top: 6px;
+          background: none;
+          border: 1px solid #1e2330;
+          border-radius: 3px;
+          color: #7a8aaa;
+          font-size: 10px;
+          font-family: 'Courier New', monospace;
+          cursor: pointer;
+          transition: border-color 0.15s, color 0.15s;
+        }
+        .sw-intel-domain-toggle:hover { border-color: #4a9eff; color: #ccd6f6; }
+
+        /* Evidence footer */
+        .sw-intel-evidence-footer {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 8px 16px;
+          margin-top: 8px;
+          border-top: 1px solid #1e2330;
+          font-size: 9px;
+          font-family: 'Courier New', monospace;
+          color: #4a5570;
+          letter-spacing: 0.06em;
+        }
+        .sw-intel-evidence-sep { color: #2a2f40; }
+
+        /* Qualification Context Strip — ambient one-line */
+        .sw-intel-context-strip {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 6px 12px;
+          margin-bottom: 10px;
+          background: rgba(20,23,31,0.7);
+          border: 1px solid #1e2330;
+          border-radius: 3px;
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          letter-spacing: 0.08em;
+          flex-wrap: wrap;
+        }
+        .sw-intel-context-axis {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+        }
+        .sw-intel-context-label {
+          color: #4a5570;
+          text-transform: uppercase;
+        }
+        .sw-intel-context-value {
+          font-weight: 600;
+        }
+        .sw-intel-context-sep {
+          display: inline-block;
+          width: 1px;
+          height: 10px;
+          background: #2a2f40;
+          margin: 0 2px;
+        }
+        .sw-intel-context-qclass {
+          color: #ffd700;
+          font-weight: 600;
+        }
+        .sw-intel-context-slevel {
+          color: #4a9eff;
+          font-weight: 600;
+        }
+
+        /* Guided Action Flow — orchestrated LENS→SQO coordination */
+        .sw-intel-guided-flow {
+          margin-top: 14px;
+          border: 1px solid #1e2330;
+          border-radius: 4px;
+          background: #12151f;
+          overflow: hidden;
+        }
+        .sw-intel-guided-flow-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 10px 14px;
+          border-bottom: 1px solid #1e2330;
+          background: rgba(20,23,31,0.5);
+        }
+        .sw-intel-guided-flow-title {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          font-weight: 600;
+          color: #ccd6f6;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+        }
+        .sw-intel-guided-flow-count {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #4a5570;
+          letter-spacing: 0.04em;
+        }
+        .sw-intel-guided-flow-high {
+          color: #ff6b6b;
+          font-weight: 600;
+        }
+        .sw-intel-guided-flow-list {
+          display: flex;
+          flex-direction: column;
+        }
+        .sw-intel-guided-flow-staged-summary {
+          padding: 8px 14px;
+          border-top: 1px solid #1e2330;
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #ffd700;
+          letter-spacing: 0.04em;
+          background: rgba(255,215,0,0.03);
+        }
+
+        /* Guided Action Card */
+        .sw-intel-guided-action {
+          border-bottom: 1px solid #1e2330;
+        }
+        .sw-intel-guided-action:last-child {
+          border-bottom: none;
+        }
+        .sw-intel-guided-action-header {
+          display: flex;
+          align-items: flex-start;
+          gap: 8px;
+          width: 100%;
+          padding: 10px 14px;
+          background: none;
+          border: none;
+          cursor: pointer;
+          text-align: left;
+          transition: background 0.12s;
+        }
+        .sw-intel-guided-action-header:hover {
+          background: rgba(74,158,255,0.03);
+        }
+        .sw-intel-guided-action-dot {
+          display: inline-block;
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          margin-top: 4px;
+          flex-shrink: 0;
+          background: #4a5570;
+        }
+        .sw-intel-guided-action-dot[data-priority="HIGH"] { background: #ff6b6b; }
+        .sw-intel-guided-action-dot[data-priority="MEDIUM"] { background: #ffd700; }
+        .sw-intel-guided-action-dot[data-priority="LOW"] { background: #64ffda; }
+        .sw-intel-guided-action-titles {
+          flex: 1;
+          min-width: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+        .sw-intel-guided-action-title {
+          font-family: 'Courier New', monospace;
+          font-size: 12px;
+          color: #ccd6f6;
+          font-weight: 500;
+        }
+        .sw-intel-guided-action-target {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #4a5570;
+          letter-spacing: 0.03em;
+        }
+        .sw-intel-guided-action-mode {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          color: #4a9eff;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          flex-shrink: 0;
+          padding: 2px 6px;
+          border: 1px solid rgba(74,158,255,0.2);
+          border-radius: 2px;
+          background: rgba(74,158,255,0.04);
+        }
+        .sw-intel-guided-action-status {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          color: #4a5570;
+          letter-spacing: 0.04em;
+          flex-shrink: 0;
+        }
+        .sw-intel-guided-action-status[data-status="staged"] { color: #ffd700; }
+        .sw-intel-guided-action-status[data-status="completed"] { color: #64ffda; }
+        .sw-intel-guided-action-caret {
+          font-size: 10px;
+          color: #4a5570;
+          flex-shrink: 0;
+          margin-top: 2px;
+        }
+
+        /* Guided Action Card — expanded body */
+        .sw-intel-guided-action-body {
+          padding: 0 14px 14px 28px;
+        }
+        .sw-intel-guided-action-meaning {
+          font-family: -apple-system, "system-ui", sans-serif;
+          font-size: 12px;
+          color: #9aa0bc;
+          line-height: 1.5;
+          margin-bottom: 12px;
+        }
+        .sw-intel-guided-action-section-label {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          color: #4a5570;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          margin-bottom: 6px;
+        }
+        .sw-intel-guided-action-evidence {
+          margin-bottom: 12px;
+        }
+        .sw-intel-guided-action-evidence-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+        }
+        .sw-intel-guided-action-evidence-row {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          padding: 2px 0;
+        }
+        .sw-intel-guided-action-evidence-key {
+          color: #4a5570;
+          min-width: 100px;
+          flex-shrink: 0;
+          font-size: 10px;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+        }
+        .sw-intel-guided-action-evidence-val {
+          color: #ccd6f6;
+        }
+        .sw-intel-guided-action-evidence-row[data-type="ok"] .sw-intel-guided-action-evidence-val { color: #64ffda; }
+        .sw-intel-guided-action-evidence-row[data-type="warn"] .sw-intel-guided-action-evidence-val { color: #ff6b6b; }
+        .sw-intel-guided-action-evidence-row[data-type="dim"] .sw-intel-guided-action-evidence-val { color: #7a8aaa; }
+        .sw-intel-guided-action-evidence-detail {
+          color: #4a5570;
+          font-size: 10px;
+        }
+        .sw-intel-guided-action-workflow {
+          margin-bottom: 12px;
+        }
+        .sw-intel-guided-action-steps {
+          margin: 0;
+          padding-left: 18px;
+          font-family: -apple-system, "system-ui", sans-serif;
+          font-size: 11px;
+          color: #7a8aaa;
+          line-height: 1.7;
+          list-style: decimal;
+        }
+        .sw-intel-guided-action-steps li:last-child {
+          color: #4a9eff;
+        }
+
+        /* Guided Action Card — operator decisions */
+        .sw-intel-guided-action-decisions {
+          margin-bottom: 12px;
+        }
+        .sw-intel-guided-action-decision-row {
+          display: flex;
+          gap: 6px;
+          flex-wrap: wrap;
+        }
+        .sw-intel-guided-action-decision-btn {
+          padding: 5px 12px;
+          background: rgba(74,158,255,0.06);
+          border: 1px solid rgba(74,158,255,0.2);
+          border-radius: 3px;
+          color: #ccd6f6;
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          cursor: pointer;
+          transition: background 0.12s, border-color 0.12s;
+        }
+        .sw-intel-guided-action-decision-btn:hover {
+          background: rgba(74,158,255,0.12);
+          border-color: #4a9eff;
+        }
+
+        /* Guided Action Card — staged notice */
+        .sw-intel-guided-action-staged-notice {
+          padding: 8px 12px;
+          margin-bottom: 10px;
+          background: rgba(255,215,0,0.04);
+          border: 1px solid rgba(255,215,0,0.15);
+          border-radius: 3px;
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #ffd700;
+          letter-spacing: 0.03em;
+        }
+
+        /* Guided Action Card — footer */
+        .sw-intel-guided-action-footer {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          padding-top: 8px;
+          border-top: 1px solid #1e2330;
+        }
+        .sw-intel-guided-action-stage-btn {
+          padding: 5px 14px;
+          background: rgba(74,158,255,0.08);
+          border: 1px solid rgba(74,158,255,0.3);
+          border-radius: 3px;
+          color: #4a9eff;
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          cursor: pointer;
+          transition: background 0.12s, border-color 0.12s;
+        }
+        .sw-intel-guided-action-stage-btn:hover {
+          background: rgba(74,158,255,0.15);
+          border-color: #4a9eff;
+        }
+        .sw-intel-guided-action-exec-path {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          color: #4a5570;
+          letter-spacing: 0.04em;
+          margin-left: auto;
+        }
+
+        /* SQO orchestration execution UI */
+        .sw-intel-guided-action-sqo-exec {
+          padding: 8px 0 4px;
+          border-top: 1px solid #1e2330;
+        }
+        .sw-intel-sqo-targets {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .sw-intel-sqo-target {
+          border: 1px solid #1e2330;
+          border-radius: 4px;
+          overflow: hidden;
+          transition: border-color 0.12s;
+        }
+        .sw-intel-sqo-target--selected {
+          border-color: #4a9eff;
+        }
+        .sw-intel-sqo-target-select {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          padding: 6px 10px;
+          background: transparent;
+          border: none;
+          color: #ccd6f6;
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          cursor: pointer;
+          text-align: left;
+        }
+        .sw-intel-sqo-target-select:hover {
+          background: rgba(74,158,255,0.06);
+        }
+        .sw-intel-sqo-target-label {
+          color: #ccd6f6;
+        }
+        .sw-intel-sqo-target-status {
+          color: #7a8aaa;
+          font-size: 10px;
+        }
+        .sw-intel-sqo-target-actions {
+          display: flex;
+          gap: 6px;
+          padding: 4px 10px 8px;
+          flex-wrap: wrap;
+        }
+        .sw-intel-sqo-target-props {
+          padding: 0 10px 8px;
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+        }
+        .sw-intel-sqo-prop {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          font-size: 10px;
+        }
+        .sw-intel-sqo-prop-text {
+          color: #7a8aaa;
+          flex: 1;
+        }
+        .sw-intel-sqo-prop-conf {
+          color: #4a5570;
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+        }
+        .sw-intel-sqo-exec-btn {
+          padding: 4px 10px;
+          background: rgba(74,158,255,0.08);
+          border: 1px solid #2a2f40;
+          border-radius: 3px;
+          color: #4a9eff;
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          cursor: pointer;
+          transition: background 0.12s, border-color 0.12s;
+        }
+        .sw-intel-sqo-exec-btn:hover:not(:disabled) {
+          background: rgba(74,158,255,0.15);
+          border-color: #4a9eff;
+        }
+        .sw-intel-sqo-exec-btn:disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+        }
+        .sw-intel-sqo-exec-btn--primary {
+          background: rgba(74,158,255,0.12);
+          border-color: #4a9eff;
+        }
+        .sw-intel-sqo-exec-btn[data-action="review_accept"] { color: #64ffda; border-color: rgba(100,255,218,0.2); }
+        .sw-intel-sqo-exec-btn[data-action="review_reject"] { color: #ff6b6b; border-color: rgba(255,107,107,0.2); }
+        .sw-intel-sqo-exec-btn[data-action="review_contest"] { color: #ffd700; border-color: rgba(255,215,0,0.2); }
+        .sw-intel-sqo-exec-btn[data-action="promotion_approve"] { color: #64ffda; border-color: rgba(100,255,218,0.3); }
+        .sw-intel-sqo-exec-btn[data-action="promotion_deny"] { color: #ff6b6b; border-color: rgba(255,107,107,0.2); }
+        .sw-intel-sqo-confirm {
+          display: flex;
+          gap: 8px;
+          padding: 4px 0;
+        }
+        .sw-intel-sqo-justification {
+          padding: 6px 0;
+        }
+        .sw-intel-sqo-justification-input {
+          width: 100%;
+          padding: 6px 8px;
+          background: #12151f;
+          border: 1px solid #2a2f40;
+          border-radius: 3px;
+          color: #ccd6f6;
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          resize: vertical;
+          margin-top: 4px;
+        }
+        .sw-intel-sqo-justification-input:focus {
+          outline: none;
+          border-color: #4a9eff;
+        }
+        .sw-intel-sqo-result {
+          padding: 6px 10px;
+          border-radius: 3px;
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          margin-top: 6px;
+        }
+        .sw-intel-sqo-result--ok {
+          background: rgba(100,255,218,0.08);
+          border: 1px solid rgba(100,255,218,0.2);
+          color: #64ffda;
+        }
+        .sw-intel-sqo-result--error {
+          background: rgba(255,107,107,0.08);
+          border: 1px solid rgba(255,107,107,0.2);
+          color: #ff6b6b;
+        }
+        .sw-intel-guided-flow-posture {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 4px 12px 6px;
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+        }
+        .sw-intel-guided-flow-posture-level {
+          color: #4a9eff;
+          font-weight: 600;
+        }
+        .sw-intel-guided-flow-posture-sep {
+          color: #2a2f40;
+        }
+        .sw-intel-guided-flow-posture-label {
+          color: #7a8aaa;
+        }
+        .sw-intel-guided-flow-sqo {
+          color: #4a9eff;
+        }
+        .sw-intel-guided-action-learning {
+          padding: 8px 12px;
+          margin: 0 0 4px;
+          border-left: 2px solid rgba(74,158,255,0.25);
+          background: rgba(74,158,255,0.04);
+        }
+        .sw-intel-guided-action-learning-summary {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          color: #7a8aaa;
+          line-height: 1.4;
+        }
+        .sw-intel-guided-action-learning-detail {
+          display: flex;
+          gap: 12px;
+          margin-top: 4px;
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+        }
+        .sw-intel-guided-action-learning-detail span[data-type="ok"] { color: #64ffda; }
+        .sw-intel-guided-action-learning-detail span[data-type="warn"] { color: #ffd700; }
+        .sw-intel-guided-action-learning-detail span[data-type="dim"] { color: #4a5570; }
+        .sw-intel-guided-action[data-status="completed"] {
+          opacity: 0.5;
+        }
+
+        /* Legacy decomposition — removed from component tree */
+        .sw-intel-panel--decomposition {
+          border-left-color: #4a9eff;
+        }
+        .sw-intel-decomp-axes {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          padding: 10px 0 14px;
+        }
+        .sw-intel-axis-bar {
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+        }
+        .sw-intel-axis-bar-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+        }
+        .sw-intel-axis-bar-label {
+          font-size: 10px;
+          font-family: 'Courier New', monospace;
+          color: #7a8aaa;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+        }
+        .sw-intel-axis-bar-level {
+          font-size: 10px;
+          font-family: 'Courier New', monospace;
+          font-weight: 600;
+          letter-spacing: 0.06em;
+        }
+        .sw-intel-axis-bar-track {
+          height: 4px;
+          background: #1a1e2b;
+          border-radius: 2px;
+          overflow: hidden;
+        }
+        .sw-intel-axis-bar-fill {
+          height: 100%;
+          border-radius: 2px;
+          transition: width 0.3s ease;
+        }
+        .sw-intel-axis-bar-count {
+          font-size: 9px;
+          font-family: 'Courier New', monospace;
+          color: #4a5570;
+        }
+        .sw-intel-axis-qclass {
+          color: #7a8aaa;
+        }
+
+        /* Decomposition detail grid */
+        .sw-intel-decomp-detail-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+          padding: 12px 0;
+          border-top: 1px solid #1e2330;
+        }
+        .sw-intel-decomp-column-title {
+          font-size: 9px;
+          font-family: 'Courier New', monospace;
+          color: #4a5570;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          margin-bottom: 8px;
+        }
+        .sw-intel-decomp-item {
+          display: flex;
+          align-items: flex-start;
+          gap: 6px;
+          padding: 3px 0;
+          font-size: 10px;
+          font-family: 'Courier New', monospace;
+        }
+        .sw-intel-decomp-item[data-present="false"] {
+          opacity: 0.4;
+        }
+        .sw-intel-decomp-dot {
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          margin-top: 3px;
+          flex-shrink: 0;
+        }
+        .sw-intel-decomp-item-name {
+          color: #ccd6f6;
+        }
+        .sw-intel-decomp-item[data-present="false"] .sw-intel-decomp-item-name {
+          color: #4a5570;
+        }
+        .sw-intel-decomp-item-detail {
+          color: #4a5570;
+          margin-left: auto;
+          text-align: right;
+          white-space: nowrap;
+        }
+
+        /* Reconciliation section */
+        .sw-intel-decomp-reconciliation {
+          padding: 8px 0;
+          border-top: 1px solid #1e2330;
+        }
+        .sw-intel-decomp-reconciliation--absent {
+          opacity: 0.5;
+        }
+        .sw-intel-decomp-reconciliation-header {
+          display: flex;
+          align-items: baseline;
+          gap: 10px;
+          font-size: 10px;
+          font-family: 'Courier New', monospace;
+        }
+        .sw-intel-decomp-reconciliation-label {
+          color: #7a8aaa;
+          font-size: 10px;
+          font-family: 'Courier New', monospace;
+        }
+        .sw-intel-decomp-reconciliation-ratio {
+          color: #ccd6f6;
+          font-weight: 600;
+        }
+        .sw-intel-decomp-reconciliation-confidence {
+          color: #4a5570;
+        }
+        .sw-intel-decomp-reconciliation-qlabel {
+          font-size: 10px;
+          font-family: 'Courier New', monospace;
+          color: #7a8aaa;
+          margin-top: 4px;
+          line-height: 1.4;
+        }
+
+        /* Condition-driven guidance */
+        .sw-intel-decomp-guidance {
+          padding: 10px 0 4px;
+          border-top: 1px solid #1e2330;
+        }
+        .sw-intel-decomp-guidance-title {
+          font-size: 9px;
+          font-family: 'Courier New', monospace;
+          color: #4a5570;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          margin-bottom: 8px;
+        }
+        .sw-intel-decomp-guidance-item {
+          padding: 6px 0;
+          border-bottom: 1px solid #12151f;
+        }
+        .sw-intel-decomp-guidance-item:last-child {
+          border-bottom: none;
+        }
+        .sw-intel-decomp-guidance-header {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          margin-bottom: 3px;
+        }
+        .sw-intel-decomp-guidance-priority {
+          font-size: 9px;
+          font-family: 'Courier New', monospace;
+          font-weight: 600;
+          letter-spacing: 0.06em;
+          flex-shrink: 0;
+        }
+        .sw-intel-decomp-guidance-condition {
+          font-size: 10px;
+          font-family: 'Courier New', monospace;
+          color: #ccd6f6;
+        }
+        .sw-intel-decomp-guidance-axis {
+          font-size: 9px;
+          font-family: 'Courier New', monospace;
+          color: #4a5570;
+          margin-left: auto;
+          text-transform: lowercase;
+          white-space: nowrap;
+        }
+        .sw-intel-decomp-guidance-action {
+          font-size: 10px;
+          font-family: 'Courier New', monospace;
+          color: #7a8aaa;
+          line-height: 1.5;
+          padding-left: 2px;
+        }
+
+        /* Compact decomposition (boardroom/balanced) */
+        .sw-intel-decomp-compact {
+          padding: 8px 0;
+          margin-bottom: 8px;
+          border-bottom: 1px solid #1e2330;
+        }
+        .sw-intel-decomp-compact-axes {
+          display: flex;
+          align-items: baseline;
+          gap: 6px;
+          flex-wrap: wrap;
+        }
+        .sw-intel-decomp-compact-axis {
+          display: flex;
+          align-items: baseline;
+          gap: 4px;
+        }
+        .sw-intel-decomp-compact-label {
+          font-size: 9px;
+          font-family: 'Courier New', monospace;
+          color: #4a5570;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+        }
+        .sw-intel-decomp-compact-value {
+          font-size: 10px;
+          font-family: 'Courier New', monospace;
+          font-weight: 600;
+        }
+        .sw-intel-decomp-compact-sep {
+          color: #2a2f40;
+          font-size: 10px;
+        }
+        .sw-intel-decomp-compact-guidance {
+          margin-top: 6px;
+        }
+        .sw-intel-decomp-compact-guidance-item {
+          font-size: 9px;
+          font-family: 'Courier New', monospace;
+          color: #ff9e4a;
+          line-height: 1.4;
+          padding: 2px 0;
+        }
+
+        /* Balanced guidance items */
+        .sw-intel-balanced-guidance-item {
+          display: flex;
+          align-items: flex-start;
+          gap: 8px;
+          padding: 4px 0;
+          font-size: 11px;
+          font-family: 'Courier New', monospace;
+        }
+        .sw-intel-balanced-guidance-priority {
+          font-size: 9px;
+          font-weight: 600;
+          letter-spacing: 0.06em;
+          flex-shrink: 0;
+          margin-top: 2px;
+        }
+        .sw-intel-balanced-guidance-text {
+          color: #7a8aaa;
+          line-height: 1.5;
+        }
+
+        /* Fallback button */
+        .sw-intel-fallback-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          padding: 6px 14px;
+          margin-bottom: 12px;
+          background: none;
+          border: 1px solid #2a2f40;
+          border-radius: 3px;
+          color: #7a8aaa;
+          font-size: 11px;
+          font-family: 'Courier New', monospace;
+          cursor: pointer;
+          transition: border-color 0.15s, color 0.15s;
+        }
+        .sw-intel-fallback-btn:hover { border-color: #4a9eff; color: #ccd6f6; }
+
+        /* Boardroom summary */
+        .sw-intel-boardroom-summary {
+          padding: 16px;
+          margin-top: 16px;
+          border: 1px solid #1e2330;
+          border-radius: 4px;
+          background: #141720;
+        }
+        .sw-intel-boardroom-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 12px;
+        }
+        .sw-intel-boardroom-module-tag {
+          font-size: 9px;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.14em;
+          color: #4a9eff;
+          padding: 2px 8px;
+          background: rgba(74,158,255,0.06);
+          border-radius: 2px;
+        }
+        .sw-intel-boardroom-state {
+          font-size: 9px;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.1em;
+          color: #7a8aaa;
+        }
+        .sw-intel-boardroom-risk {
+          padding: 10px 14px;
+          background: #1a1e2b;
+          border-radius: 3px;
+          margin-bottom: 10px;
+          border-left: 3px solid #4a5570;
+        }
+        .sw-intel-boardroom-risk[data-level="ELEVATED"] { border-left-color: #ff6b6b; }
+        .sw-intel-boardroom-risk[data-level="MODERATE"] { border-left-color: #ffd700; }
+        .sw-intel-boardroom-risk[data-level="LOW"] { border-left-color: #64ffda; }
+        .sw-intel-boardroom-risk-label {
+          font-size: 9px;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.1em;
+          color: #7a8aaa;
+          text-transform: uppercase;
+        }
+        .sw-intel-boardroom-risk-level {
+          font-size: 14px;
+          font-weight: 700;
+          color: #ccd6f6;
+          margin-left: 8px;
+          font-family: 'Courier New', monospace;
+        }
+        .sw-intel-boardroom-risk-desc {
+          font-size: 12px;
+          color: #9aa0bc;
+          margin-top: 4px;
+          line-height: 1.5;
+        }
+        .sw-intel-boardroom-qual {
+          display: flex;
+          align-items: baseline;
+          gap: 10px;
+          padding: 8px 14px;
+          background: #1a1e2b;
+          border-radius: 3px;
+          margin-bottom: 10px;
+        }
+        .sw-intel-boardroom-qual-level {
+          font-size: 16px;
+          font-weight: 700;
+          color: #ccd6f6;
+          font-family: 'Courier New', monospace;
+        }
+        .sw-intel-boardroom-qual-desc {
+          font-size: 12px;
+          color: #9aa0bc;
+          line-height: 1.4;
+        }
+        .sw-intel-boardroom-attention { display: flex; flex-direction: column; gap: 6px; }
+        .sw-intel-boardroom-attention-item {
+          display: flex;
+          align-items: flex-start;
+          gap: 8px;
+          padding: 6px 10px;
+          border-radius: 3px;
+          background: #1a1e2b;
+        }
+        .sw-intel-boardroom-attention-sev {
+          font-size: 9px;
+          font-family: 'Courier New', monospace;
+          font-weight: 600;
+          letter-spacing: 0.1em;
+          min-width: 56px;
+        }
+        .sw-intel-boardroom-attention-item[data-severity="HIGH"] .sw-intel-boardroom-attention-sev { color: #ff6b6b; }
+        .sw-intel-boardroom-attention-item[data-severity="ELEVATED"] .sw-intel-boardroom-attention-sev { color: #ff9e4a; }
+        .sw-intel-boardroom-attention-desc {
+          font-size: 12px;
+          color: #9aa0bc;
+          line-height: 1.4;
+        }
+
+        /* Balanced narrative */
+        .sw-intel-balanced-narrative {
+          padding: 16px;
+          margin-top: 16px;
+          border: 1px solid #1e2330;
+          border-radius: 4px;
+          background: #141720;
+        }
+        .sw-intel-balanced-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 14px;
+        }
+        .sw-intel-balanced-module-tag {
+          font-size: 9px;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.14em;
+          color: #4a9eff;
+          padding: 2px 8px;
+          background: rgba(74,158,255,0.06);
+          border-radius: 2px;
+        }
+        .sw-intel-balanced-state {
+          font-size: 9px;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.1em;
+          color: #7a8aaa;
+        }
+        .sw-intel-balanced-section {
+          margin-bottom: 12px;
+          padding-bottom: 12px;
+          border-bottom: 1px solid #1e2330;
+        }
+        .sw-intel-balanced-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .sw-intel-balanced-section-title {
+          font-size: 10px;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.1em;
+          color: #7a8aaa;
+          text-transform: uppercase;
+          margin-bottom: 6px;
+        }
+        .sw-intel-balanced-section-body {
+          font-size: 13px;
+          color: #ccd6f6;
+          line-height: 1.6;
+        }
+        .sw-intel-balanced-corridor {
+          display: flex;
+          gap: 10px;
+          padding: 4px 0;
+          font-size: 12px;
+        }
+        .sw-intel-balanced-corridor-role {
+          font-size: 9px;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.08em;
+          color: #7a8aaa;
+          min-width: 80px;
+          text-transform: uppercase;
+        }
+        .sw-intel-balanced-corridor-desc { color: #9aa0bc; }
+        .sw-intel-balanced-attention {
+          padding: 6px 10px;
+          margin-bottom: 4px;
+          border-radius: 3px;
+          background: #1a1e2b;
+          font-size: 12px;
+          color: #9aa0bc;
+          line-height: 1.5;
+          border-left: 3px solid #4a5570;
+        }
+        .sw-intel-balanced-attention[data-severity="HIGH"] { border-left-color: #ff6b6b; }
+        .sw-intel-balanced-attention[data-severity="ELEVATED"] { border-left-color: #ff9e4a; }
       `}</style>
     </>
   )

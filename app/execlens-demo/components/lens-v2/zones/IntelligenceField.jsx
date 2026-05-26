@@ -4,6 +4,7 @@ import { PRESSURE_META, ROLE_META, DEFAULT_BINDING_CLIENT, DEFAULT_BINDING_RUN }
 import InvestigationReadingGuide, { TermHint } from './InvestigationReadingGuide'
 import { TopologyGraph, StructuralSpinesPanel } from './StructuralTopologyZone'
 import { buildTrailHTML } from '../../../lib/lens-v2/InterrogationTrailBuilder'
+import { SoftwareIntelligenceDenseView, SoftwareIntelligenceInvestigationView, SoftwareIntelligenceBoardroomSummary, SoftwareIntelligenceBalancedNarrative } from './SoftwareIntelligenceField'
 
 const SEMANTIC_ACTORS = {
   decisionPosture:       { id: 'A', code: 'DP', name: 'Decision Posture' },
@@ -5993,20 +5994,40 @@ function BoardroomGovernanceIntelligence({ fullReport, boardroomProjection }) {
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, sqoAuthorityWorkspace, sqoBinding }) {
   if (boardroomMode) {
-    return <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} />
+    return (
+      <>
+        <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} />
+        {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
+          <SoftwareIntelligenceBoardroomSummary projection={swIntelProjection} fullReport={fullReport} sqoAuthorityWorkspace={sqoAuthorityWorkspace} sqoBinding={sqoBinding} />
+        )}
+      </>
+    )
   }
   if (densityClass === 'INVESTIGATION_DENSE') {
+    if (swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT') {
+      return <SoftwareIntelligenceInvestigationView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} fullReport={fullReport} sqoAuthorityWorkspace={sqoAuthorityWorkspace} sqoBinding={sqoBinding} />
+    }
     return <InvestigationTraceField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} />
   }
   if (densityClass === 'EXECUTIVE_BALANCED') {
-    return <BalancedConsequenceField adapted={adapted} blocks={blocks} scope={scope} renderState={renderState} fullReport={fullReport} qualifierClass={qualifierClass} onAuthorityChange={onAuthorityChange} onEmergenceState={onEmergenceState} />
+    return (
+      <>
+        <BalancedConsequenceField adapted={adapted} blocks={blocks} scope={scope} renderState={renderState} fullReport={fullReport} qualifierClass={qualifierClass} onAuthorityChange={onAuthorityChange} onEmergenceState={onEmergenceState} />
+        {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
+          <SoftwareIntelligenceBalancedNarrative projection={swIntelProjection} fullReport={fullReport} sqoAuthorityWorkspace={sqoAuthorityWorkspace} sqoBinding={sqoBinding} />
+        )}
+      </>
+    )
+  }
+  if (swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT') {
+    return <SoftwareIntelligenceDenseView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} fullReport={fullReport} sqoAuthorityWorkspace={sqoAuthorityWorkspace} sqoBinding={sqoBinding} />
   }
   return <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onZoneChange={onZoneChange} />
 }
 
-export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, boardroomProjection, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed, onAuthorityChange }) {
+export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, boardroomProjection, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed, onAuthorityChange, swIntelActive, swIntelProjection, onSwIntelDeactivate, sqoAuthorityWorkspace, sqoBinding }) {
   const scope = (fullReport && fullReport.topology_scope) || {}
   const [activeZoneKey, setActiveZoneKey] = useState(null)
   const [activeQueryKey, setActiveQueryKey] = useState(null)
@@ -6210,6 +6231,11 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           onEmergenceState={isBalanced ? handleEmergenceState : undefined}
           selectedNarrativeArc={selectedNarrativeArc}
           onNarrativeSelect={setSelectedNarrativeArc}
+          swIntelActive={swIntelActive}
+          swIntelProjection={swIntelProjection}
+          onSwIntelDeactivate={onSwIntelDeactivate}
+          sqoAuthorityWorkspace={sqoAuthorityWorkspace}
+          sqoBinding={sqoBinding}
         />
       </main>
 
