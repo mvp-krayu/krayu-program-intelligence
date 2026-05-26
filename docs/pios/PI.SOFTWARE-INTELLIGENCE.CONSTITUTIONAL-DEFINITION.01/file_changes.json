@@ -1,0 +1,68 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01",
+  "classification": "G1",
+  "baseline_commit": "3cf76de",
+  "files": [
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/CONSTITUTIONAL_DEFINITION.md",
+      "action": "CREATED",
+      "description": "Core constitutional definition: what Software Intelligence IS, PI Core / domain module separation, 10 cognition functions, attachment model, artifact contract, corridor activation criteria, expanded prohibitions"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/MARKETPLACE_ARCHITECTURE.md",
+      "action": "CREATED",
+      "description": "Marketplace as domain cognition module ecosystem: not-plugins distinction, module pattern contract, first module precedent, future modules, registration, versioning, governance, strategic alignment"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/PERSONA_CONSUMPTION_SPEC.md",
+      "action": "CREATED",
+      "description": "Per-persona SW-Intel consumption: BOARDROOM 7 executive channels, BALANCED vocabulary enrichment, DENSE topology annotation, INVESTIGATION full lineage trace"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/PRESSURE_TOPOLOGY_SPEC.md",
+      "action": "CREATED",
+      "description": "Pressure-topology integration: orphaned artifact gap, target data flow through SW-Intel, zone rendering requirements, topology reactivity model, persona-specific projections"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/IMPLEMENTATION_SEMANTICS.md",
+      "action": "CREATED",
+      "description": "§5.5 reusable concept definitions: 8 primitives, input/output contracts, calibration assumptions, extension points, module responsibility map"
+    },
+    {
+      "path": "docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md",
+      "action": "MODIFIED",
+      "description": "Added Software Intelligence and Domain Cognition Module locked terms. Updated Marketplace definition from 'extension ecosystem' to 'governed ecosystem of domain cognition modules'"
+    },
+    {
+      "path": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "action": "MODIFIED",
+      "description": "Updated product hierarchy and invariants. Added stream to ontology lineage. Added Domain Cognition Module Architecture section with maturity classification"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/execution_report.md",
+      "action": "CREATED",
+      "description": "Stream execution report"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/validation_log.json",
+      "action": "CREATED",
+      "description": "Validation log — 19/19 PASS"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/file_changes.json",
+      "action": "CREATED",
+      "description": "File change manifest"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/CLOSURE.md",
+      "action": "CREATED",
+      "description": "Stream closure artifact with G1 Architecture Memory Propagation"
+    }
+  ],
+  "summary": {
+    "created": 9,
+    "modified": 2,
+    "deleted": 0,
+    "total": 11
+  }
+}

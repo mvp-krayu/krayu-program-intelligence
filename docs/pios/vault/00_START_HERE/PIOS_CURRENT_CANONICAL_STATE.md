@@ -36,7 +36,10 @@ Program Intelligence (category/discipline)
         │     ├── Operator Authority Workflow (12 actions, 5 RBAC roles)
         │     ├── CEU Reconciliation Workflow (10 actions, review_mode governance, bidirectional obligation lineage)
         │     └── Reconciliation Loop
-        └── Marketplace (extension ecosystem — future)
+        ├── Marketplace (domain cognition module ecosystem)
+        │     ├── Software Intelligence (first module — constitutionally defined, implementation pending)
+        │     └── Module Registration (constitutionally specified, not yet implemented)
+        └── Domain Cognition Modules (interpretation layers attached to PI Spine)
 ```
 
 **Hierarchy invariants:**
@@ -45,7 +48,8 @@ Program Intelligence (category/discipline)
 - **PiOS** is the computational substrate — deterministic derivation from evidence to governed output
 - **LENS** is the projection surface — executive interaction shell that renders governed outputs
 - **SQO** is the qualification overlay — assessment of operational maturity on governed data
-- **Marketplace** is the extension ecosystem — future capability for governed third-party/first-party extensions
+- **Marketplace** is the governed ecosystem of domain cognition modules — replaceable interpretation layers that give PI Core intelligence domain-specific operational meaning
+- **Domain Cognition Modules** are semantic embodiment layers that permeate all strata — not plugins, not add-ons, not optional extensions
 
 **Historical note:** PiOS remains historically canonical as the original Program Intelligence Operating System. GEIOS emerged later through Path B and ecosystem maturation as the broader governing architecture. GEIOS codified an emergent operational reality rather than inventing a disconnected theoretical architecture — the runtime implementation achieved many GEIOS outcomes before the framework was formally specified.
 
@@ -589,6 +593,44 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.BLUEEDGE.CHRONICLE-SIGNAL-INTEGRATION.01 | G2 | Post-certification chronicle enrichment — signal intelligence integrated into REPLAY_CHRONICLE.html (Chapter 1 Z2 signal cards, Chapter 7 convergence matrix +4 dimensions, post-certification enrichment section "The Signals"). Format v1.0→v1.1. Certification preserved. | COMPLETE |
 | PI.BLUEEDGE.ISIG-LEVEL1-SIGNAL-DERIVATION.01 | G2 | First Level 1 signal family operational. ISIG-001 Import Hub Pressure (BlueEdge 35.3 HIGH, NetBox 51.1 HIGH). ISIG-002 Import Fan Asymmetry (BlueEdge 22.3 HIGH, NetBox 8.9 HIGH). PSIG-004 LOST_READ closed. Client-agnostic, code-graph-native. Cross-validated on 2 specimens | COMPLETE |
 | PI.GENESIS.ISIG-VAULT-STATUS-UPDATE.01 | G1 | ISIG vault status update — PARTIALLY_IMPLIED→OPERATIONAL across all vault pages. LOST_READ→RESOLVED in delta certification. Signal family classification updated. Ontology lineage current | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01 | G1 | Software Intelligence constitutional definition — formal operational cognition module, 10 cognition functions (CF-01 through CF-10), PI Core / domain module separation, artifact contract, corridor activation criteria, permeation model. Marketplace redefined as domain cognition module ecosystem. Domain Cognition Module pattern constitutionally defined. Persona consumption specification. Pressure-topology integration model | COMPLETE |
+
+## Domain Cognition Module Architecture
+
+**Stream:** PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01 (COMPLETE — 2026-05-26)
+**Classification:** G1 — Architecture-Mutating (introduces domain cognition module pattern as constitutional knowledge)
+
+Program Intelligence operates through domain cognition modules — replaceable interpretation layers attached to the PI Spine that provide domain-specific operational meaning to PI Core cognition primitives.
+
+**Architectural separation:**
+- **PI Core (~90%+):** Domain-agnostic cognition primitives — topology, centrality, signals, pressure, SQO, governance, replay, enrichment, personas. Same for all domains.
+- **Domain Module (~9%):** Domain-specific operational interpretation — role abstractions, pressure types, execution corridors, operational vocabulary. Swappable per domain.
+- **Module Infrastructure (~1%):** Registration, versioning, governance. Marketplace infrastructure.
+
+**Software Intelligence** is the first domain cognition module. It provides operational software cognition: pressure becomes "deployment fragility," centrality becomes "orchestration hub," propagation becomes "delivery corridor." Without it, PI Core intelligence is structurally correct but operationally abstract.
+
+**10 Cognition Functions (CF-01 through CF-10):**
+CF-01 Pressure Interpretation, CF-02 Execution Corridor Detection, CF-03 Coordination Spine Detection, CF-04 Validation Intelligence, CF-05 Release/Deployment Cognition, CF-06 Execution Governance, CF-07 Topology Role Abstraction, CF-08 Operational Attention Routing, CF-09 Pressure-Aware Topology Projection, CF-10 Engineering Qualification Cognition.
+
+**Permeation model:** Domain modules permeate all 5 strata — evidence (role seeds), derivation (pressure types), projection (domain objects), persona (operational language), governance (qualification semantics). A domain module is NOT an attachment point — it is a semantic embodiment layer (PI_RUNTIME_STATE_MODEL.md §9.3.4).
+
+**Corridor integration:** SOFTWARE_INTELLIGENCE corridor transitions ABSENT → VALID when module artifact exists with complete structural trace and zero orphaned abstractions. Currently ABSENT for all specimens.
+
+**Marketplace:** The governed ecosystem of domain cognition modules. Software Intelligence is the first. Future modules (Infrastructure Intelligence, Cyber Intelligence, Regulatory Intelligence, etc.) follow the same PI Core + domain interpretation architecture.
+
+**Maturity classification:**
+
+| Construct | Maturity |
+|---|---|
+| Software Intelligence constitutional definition | CONSTITUTIONALLY_DEFINED — all concepts specified, no implementation |
+| Domain Cognition Module pattern | CONSTITUTIONALLY_DEFINED — architectural pattern locked |
+| Marketplace architecture | CONSTITUTIONALLY_DEFINED — module ecosystem defined |
+| SOFTWARE_INTELLIGENCE corridor evaluation | STUB — returns ABSENT unconditionally |
+| software_intelligence_module.json artifact | NOT_IMPLEMENTED — no pipeline produces it |
+| Pressure-topology integration | SPECIFIED_NOT_IMPLEMENTED — rendering model defined |
+| Persona consumption of SW-Intel | SPECIFIED_NOT_IMPLEMENTED — consumption spec defined |
+
+**Reference:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/` — 5 deliverable documents + 4 governance artifacts.
 
 ## Signal Derivation Spine — Canonical Signal Intelligence Doctrine
 

@@ -1,0 +1,29 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01",
+  "checks": [
+    { "id": "NO_CODE_CHANGES", "name": "No code files modified", "result": "PASS", "detail": "0 code files in file_changes.json — constitutional definition only" },
+    { "id": "CORRIDOR_STUB_PRESERVED", "name": "evaluateSoftwareIntelligenceCorridor remains a stub returning ABSENT", "result": "PASS", "detail": "CognitionAuthorityCompositionEngine.js not modified — corridor evaluation unchanged" },
+    { "id": "TERM_SOFTWARE_INTELLIGENCE", "name": "Software Intelligence term locked in TERMINOLOGY_LOCK.md", "result": "PASS", "detail": "Full definition with status, prohibitions, source reference" },
+    { "id": "TERM_DOMAIN_COGNITION_MODULE", "name": "Domain Cognition Module term locked in TERMINOLOGY_LOCK.md", "result": "PASS", "detail": "Full definition with architectural pattern, status, prohibitions, source reference" },
+    { "id": "TERM_MARKETPLACE_UPDATED", "name": "Marketplace term updated in TERMINOLOGY_LOCK.md", "result": "PASS", "detail": "Updated from 'extension ecosystem' to 'governed ecosystem of domain cognition modules'" },
+    { "id": "NO_TERM_COLLISION", "name": "No term collision with existing locked terminology", "result": "PASS", "detail": "Software Intelligence and Domain Cognition Module are new terms; Marketplace is an update" },
+    { "id": "CANONICAL_STATE_UPDATED", "name": "PIOS_CURRENT_CANONICAL_STATE.md updated with architectural mutations", "result": "PASS", "detail": "Product hierarchy, hierarchy invariants, ontology lineage, new Domain Cognition Module Architecture section" },
+    { "id": "CONSTITUTIONAL_DEF_COMPLETE", "name": "Constitutional definition document covers all planned sections", "result": "PASS", "detail": "9 sections: identity, prohibitions, separation, 10 CFs, attachment, artifact contract, corridor criteria, expanded prohibitions, existing architecture relationships" },
+    { "id": "MARKETPLACE_ARCH_COMPLETE", "name": "Marketplace architecture document covers all planned sections", "result": "PASS", "detail": "8 sections: not-plugins distinction, module pattern, first module, future modules, registration, versioning, governance, strategic alignment" },
+    { "id": "PERSONA_SPEC_COMPLETE", "name": "Persona consumption spec covers all 4 personas", "result": "PASS", "detail": "BOARDROOM (7 channels), BALANCED (vocabulary + narrative + evidence), DENSE (topology + pressure + corridor + strip), INVESTIGATION (lineage + trace + evidence + query)" },
+    { "id": "PRESSURE_TOPO_COMPLETE", "name": "Pressure-topology integration spec addresses gap", "result": "PASS", "detail": "Current gap documented, target flow defined, rendering requirements, reactivity model, persona-specific projections, implementation boundaries" },
+    { "id": "IMPL_SEMANTICS_COMPLETE", "name": "Implementation semantics document per §5.5", "result": "PASS", "detail": "8 reusable primitives, input/output contracts, calibration assumptions, extension points, responsibility map" },
+    { "id": "ARTIFACT_BACKED", "name": "All constitutional claims trace to existing PI architecture", "result": "PASS", "detail": "References: corridor model §3.9, BOARDROOM advisory, PI_RUNTIME_STATE_MODEL §9.3.4, 40.3c structural roles, pressure_zone_state.json, signal derivation levels" },
+    { "id": "COMMERCIAL_IDENTITY_RESPECTED", "name": "Frozen commercial identity not modified", "result": "PASS", "detail": "Tier 1A/1B packaging, category, wedge, differentiator, tagline — all untouched. Marketplace definition refined (not replaced)" },
+    { "id": "BOARDROOM_ADVISORY_CONSUMED", "name": "BOARDROOM advisory 7 executive consequence channels formalized", "result": "PASS", "detail": "All 7 channels from BOARDROOM_SOFTWARE_INTELLIGENCE_ADVISORY.md Phase 2 appear in PERSONA_CONSUMPTION_SPEC.md §2" },
+    { "id": "PERMEATION_DOCTRINE_CITED", "name": "Module permeation doctrine from PI_RUNTIME_STATE_MODEL.md §9.3.4 cited", "result": "PASS", "detail": "CONSTITUTIONAL_DEFINITION.md §5 explicitly references line 934 permeation guarantee" },
+    { "id": "NO_RENDERING_CHANGES", "name": "No LENS surfaces modified", "result": "PASS", "detail": "All deliverables are documents — no rendering, no projection, no UI changes" },
+    { "id": "NO_MANIFEST_CHANGES", "name": "No manifest or artifact registration changes", "result": "PASS", "detail": "No new artifact declarations, no pipeline changes, no resolver modifications" },
+    { "id": "CLOSURE_SECTION_10", "name": "CLOSURE.md includes Section 10 Architecture Memory Propagation", "result": "PASS", "detail": "G1 stream — full architecture mutation delta with vault files updated and propagation verification" }
+  ],
+  "summary": {
+    "total": 19,
+    "passed": 19,
+    "failed": 0
+  }
+}

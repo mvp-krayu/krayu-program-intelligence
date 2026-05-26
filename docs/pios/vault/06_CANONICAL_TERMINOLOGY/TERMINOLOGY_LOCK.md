@@ -290,9 +290,13 @@
 
 ### Marketplace
 
-**Definition:** The extension ecosystem that enables third-party and first-party capability extension on governed rails. Includes semantic signal packs, industry overlays, governance templates, and integration adapters.
+**Definition:** The governed ecosystem of domain cognition modules attached to the PI Spine. Each module interprets PI cognition primitives through domain-specific operational semantics. Domain cognition modules permeate all strata — they are not plugins, not optional add-ons, not feature extensions. They are the interpretation layer that gives PI Core structural intelligence domain-specific operational meaning. Software Intelligence is the first module. Marketplace outputs (semantic signal packs, industry overlays, governance templates, integration adapters) are produced BY domain modules, not independent marketplace items.
 
-**Status:** CANONICAL — future capability, not yet implemented (2026-05-17).
+**Status:** CANONICAL — constitutionally defined (2026-05-26). First module (Software Intelligence) constitutionally defined, implementation pending.
+
+**What it is NOT:** A plugin marketplace. An app store. An extension registry. Marketplace is domain cognition modules — replaceable interpretation layers that transform PI Core intelligence into domain-specific operational cognition.
+
+**Source:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/MARKETPLACE_ARCHITECTURE.md`
 
 ### Signäl
 
@@ -701,6 +705,28 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 **Definition:** Classification for projection work currently located inside GenericSemanticPayloadResolver instead of a projection layer. Code so classified works correctly but lives in the wrong architectural layer and will be extracted when the projection layer is built.
 
 **Status:** ACTIVE — applied to boardroom_interpretation, signal caption maps, governance lifecycle projections (3dcf894).
+
+### Software Intelligence
+
+**Definition:** A domain cognition module attached to the PI Spine that provides operational software cognition — the interpretation of PI cognition primitives through software-system semantics. Software Intelligence transforms PI Core outputs from structurally correct but operationally abstract intelligence into domain-specific operational meaning. 10 cognition functions (CF-01 through CF-10) transform PI Core primitives into software-domain operational intelligence: pressure interpretation, execution corridor detection, coordination spine detection, validation intelligence, release/deployment cognition, execution governance, topology role abstraction, operational attention routing, pressure-aware topology projection, and engineering qualification cognition.
+
+**Status:** CANONICAL — constitutionally defined (2026-05-26). Implementation pending. SOFTWARE_INTELLIGENCE corridor currently returns ABSENT unconditionally.
+
+**What it is NOT:** Code metrics. GitHub analytics. Repository visualization. Taxonomy mapping. AI commentary. A separate product. Software Intelligence is a domain cognition module WITHIN Program Intelligence that permeates all strata.
+
+**Source:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/CONSTITUTIONAL_DEFINITION.md`
+
+### Domain Cognition Module
+
+**Definition:** A replaceable interpretation layer attached to the PI Spine that provides domain-specific operational meaning to PI Core cognition primitives. Every domain cognition module follows the same architecture: read PI Core corridor outputs, interpret through domain-specific operational semantics, produce domain-specific projection objects consumed by LENS personas. Domain modules permeate all 5 PI strata (evidence, derivation, projection, persona, governance). They are not attachment points — they are semantic embodiment layers that give structural intelligence operational meaning.
+
+**Status:** CANONICAL — architectural pattern constitutionally defined (2026-05-26). Software Intelligence is the first module instance.
+
+**What it is NOT:** A plugin. An extension. An optional add-on. A separate product. Domain cognition modules are the interpretation layer that makes PI Core intelligence actionable in a specific operational domain.
+
+**Architectural pattern:** Same PI Core (~90%+) + domain-specific interpretation layer (~9%) + module registration infrastructure (~1%). Swapping the domain module changes operational vocabulary without changing PI Core computation.
+
+**Source:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/MARKETPLACE_ARCHITECTURE.md`
 
 ## Term Usage Rules
 
