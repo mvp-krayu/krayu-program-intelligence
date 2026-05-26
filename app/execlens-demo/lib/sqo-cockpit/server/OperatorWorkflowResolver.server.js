@@ -6,6 +6,7 @@ const { loadPromotionState } = require('./PromotionStateLoader.server');
 const { ROLE_ACTION_MAP, ACTION_AUTHORITY } = require('./SQOAuthorityValidator.server');
 const { resolveQualificationPosture, POSTURE } = require('../QualificationPostureResolver');
 const { resolveRuntimeSubstrates } = require('./SQORuntimeResolver.server');
+const { deriveLearningSignals } = require('./SQOLearningSignalDerivation.server');
 
 const REPO_ROOT = process.env.REPO_ROOT || path.resolve(__dirname, '..', '..', '..', '..', '..');
 
@@ -73,6 +74,12 @@ function resolveAuthorityWorkspace(client, runId) {
   const blockerList = resolveBlockerList(qualificationBlockers, reviewObligations);
   const eventTimeline = resolveEventTimeline(promotionEventLog);
 
+  let learningSignals = null;
+  try {
+    const signals = deriveLearningSignals(client, runId);
+    if (signals.available) learningSignals = signals;
+  } catch (_) { /* learning signal derivation is non-critical */ }
+
   return {
     available: true,
     client,
@@ -82,6 +89,7 @@ function resolveAuthorityWorkspace(client, runId) {
     promotionControl,
     blockerList,
     eventTimeline,
+    learningSignals,
     _disclaimer: 'actor_id is DECLARATIVE ONLY. Not production RBAC. Not secure identity enforcement.',
   };
 }
@@ -127,7 +135,7 @@ function resolveReviewQueue(reviewObligations) {
 
   const affordances = {};
   for (const obl of obligations) {
-    affordances[obl.id] = resolveObligationAffordances(obl);
+    affordances[obl.id || obl.proposition_id] = resolveObligationAffordances(obl);
   }
 
   return {

@@ -48,7 +48,17 @@ export async function getServerSideProps(context) {
   const tempLifePath = `artifacts/sqo/${client}/${run}/reconciliation_lifecycle.v1.json`
   const tempLifeResult = loadJSON(tempLifePath)
   const temporalLifecycleData = tempLifeResult.ok ? tempLifeResult.data : null
-  return { props: { ...result.props, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData } }
+
+  let sqoAuthorityWorkspace = null
+  try {
+    const { resolveAuthorityWorkspace } = require('../../../lib/sqo-cockpit/server/OperatorWorkflowResolver.server')
+    const workspace = resolveAuthorityWorkspace(client, run)
+    if (workspace && workspace.available) {
+      sqoAuthorityWorkspace = JSON.parse(JSON.stringify(workspace, (_, v) => v === undefined ? null : v))
+    }
+  } catch (_) { /* SQO workspace unavailable — graceful */ }
+
+  return { props: { ...result.props, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, sqoAuthorityWorkspace, sqoBinding: { client, runId: run } } }
 }
 
 export default LensV2FlagshipPage

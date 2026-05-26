@@ -269,6 +269,286 @@ function deriveQualificationCognition(fullReport) {
   }
 }
 
+function deriveStructuralRichnessAxis(fullReport) {
+  const se = fullReport.structural_enrichment || {}
+  const ts = fullReport.topology_summary || {}
+  const sigs = fullReport.signal_interpretations || []
+
+  const substrates = [
+    {
+      name: 'Code Graph (40.3s)',
+      present: !!(se.available && se.code_graph),
+      detail: se.available && se.code_graph
+        ? `${se.code_graph.total_import_edges || 0} import edges, ${se.code_graph.total_classes || 0} classes`
+        : null,
+      trace: { source: 'fullReport.structural_enrichment.code_graph' },
+    },
+    {
+      name: 'Structural Centrality (40.3c)',
+      present: !!(se.available && se.centrality),
+      detail: se.available && se.centrality
+        ? `${Object.values(se.centrality.role_summary || {}).reduce((a, b) => a + b, 0)} files classified`
+        : null,
+      trace: { source: 'fullReport.structural_enrichment.centrality' },
+    },
+    {
+      name: 'Signal Registry',
+      present: sigs.length > 0,
+      detail: sigs.length > 0 ? `${sigs.length} signals loaded` : null,
+      trace: { source: 'fullReport.signal_interpretations' },
+    },
+    {
+      name: 'Semantic Domain Registry',
+      present: !!(ts.semantic_domain_count && ts.semantic_domain_count > 0),
+      detail: ts.semantic_domain_count ? `${ts.semantic_domain_count} domains` : null,
+      trace: { source: 'fullReport.topology_summary' },
+    },
+  ]
+
+  const presentCount = substrates.filter(s => s.present).length
+  const families = new Set(sigs.map(s => s.signal_family || 'DPSIG'))
+  const activated = sigs.filter(s =>
+    s.severity !== 'NOMINAL' && s.activation_state !== 'NOMINAL' && s.activation_state !== 'CLUSTER_BALANCED'
+  )
+
+  let level = 'MINIMAL'
+  if (presentCount >= 4) level = 'FULL'
+  else if (presentCount >= 2) level = 'PARTIAL'
+
+  return {
+    axis: 'STRUCTURAL_RICHNESS',
+    level,
+    substrates,
+    present_count: presentCount,
+    total_count: substrates.length,
+    signal_families: {
+      total: sigs.length,
+      activated: activated.length,
+      families: [...families],
+    },
+    domain_count: ts.semantic_domain_count || 0,
+    trace: { source: 'fullReport.structural_enrichment + topology_summary + signal_interpretations' },
+  }
+}
+
+function deriveGovernanceDepthAxis(fullReport) {
+  const gl = fullReport.governance_lifecycle || {}
+  const pc = fullReport.proposition_corpus || {}
+  const ri = fullReport.revalidation_intelligence || {}
+  const ca = fullReport.constitutional_anchor || {}
+  const ci = fullReport.convergence_intelligence || {}
+  const cc = fullReport.chronicle_certification || {}
+  const ei = fullReport.enrichment_intelligence || {}
+
+  const artifacts = [
+    {
+      name: 'Governance Lifecycle',
+      present: !!gl.available,
+      detail: gl.available
+        ? `${gl.s_level}, ${gl.transition_count || 0} transition${(gl.transition_count || 0) !== 1 ? 's' : ''}`
+        : null,
+      trace: { source: 'fullReport.governance_lifecycle' },
+    },
+    {
+      name: 'Proposition Corpus',
+      present: !!pc.available,
+      detail: pc.available
+        ? `${pc.total || 0} propositions, ${pc.disposition_counts?.accepted || 0} accepted`
+        : null,
+      trace: { source: 'fullReport.proposition_corpus' },
+    },
+    {
+      name: 'Revalidation',
+      present: !!ri.available,
+      detail: ri.available
+        ? `${ri.passed || 0}/${ri.total_checks || 0} ${ri.status || ''}`
+        : null,
+      trace: { source: 'fullReport.revalidation_intelligence' },
+    },
+    {
+      name: 'Constitutional Anchor',
+      present: !!ca.available,
+      detail: ca.available
+        ? `${ca.status || 'UNKNOWN'}, ${(ca.dimensions || []).length} dimensions`
+        : null,
+      trace: { source: 'fullReport.constitutional_anchor' },
+    },
+    {
+      name: 'Convergence Intelligence',
+      present: !!ci.available,
+      detail: ci.available
+        ? `${ci.total_observations || 0} observations`
+        : null,
+      trace: { source: 'fullReport.convergence_intelligence' },
+    },
+    {
+      name: 'Chronicle Certification',
+      present: !!cc.available,
+      detail: cc.available
+        ? `${cc.passed || 0}/${cc.total_checks || 0} ${cc.certification_status || ''}`
+        : null,
+      trace: { source: 'fullReport.chronicle_certification' },
+    },
+    {
+      name: 'Enrichment Intelligence',
+      present: !!ei.available,
+      detail: ei.available
+        ? `${ei.enrichment_events || 0} events, ${ei.domains_corrected || 0} corrected`
+        : null,
+      trace: { source: 'fullReport.enrichment_intelligence' },
+    },
+  ]
+
+  const presentCount = artifacts.filter(a => a.present).length
+  let level = 'NONE'
+  if (presentCount >= 6) level = 'FULL'
+  else if (presentCount >= 3) level = 'EXERCISED'
+  else if (presentCount >= 1) level = 'MINIMAL'
+
+  return {
+    axis: 'GOVERNANCE_DEPTH',
+    level,
+    artifacts,
+    present_count: presentCount,
+    total_count: artifacts.length,
+    s_level: gl.available ? gl.s_level : null,
+    transition_count: gl.available ? (gl.transition_count || 0) : 0,
+    trace: { source: 'fullReport.governance_lifecycle + proposition_corpus + revalidation + constitutional_anchor + convergence + chronicle + enrichment' },
+  }
+}
+
+function deriveReconciliationAuthorityAxis(fullReport) {
+  const rs = fullReport.reconciliation_summary || {}
+  const qs = fullReport.qualifier_summary || {}
+  const ts = fullReport.topology_summary || {}
+
+  const reconciled = rs.available ? (rs.reconciled_count || rs.aligned_count || 0) : 0
+  const total = rs.available ? (rs.total_semantic_domains || ts.semantic_domain_count || 0) : (ts.semantic_domain_count || 0)
+  const ratio = total > 0 ? reconciled / total : 0
+  const weightedConfidence = rs.available ? (rs.weighted_confidence_score || 0) : 0
+
+  const qClass = qs.qualifier_class || fullReport.qualifier_class || 'Q-01'
+  const qClassDisplay = qs.derived_qualifier_class || qs.qualifier_class_compat || qClass
+
+  let level = 'UNAVAILABLE'
+  if (!rs.available) level = 'UNAVAILABLE'
+  else if (ratio >= 0.8) level = 'RECONCILED'
+  else if (ratio > 0) level = 'PARTIAL'
+  else level = 'UNRECONCILED'
+
+  return {
+    axis: 'RECONCILIATION_AUTHORITY',
+    level,
+    reconciled_count: reconciled,
+    total_domains: total,
+    reconciliation_ratio: Math.round(ratio * 100),
+    weighted_confidence: Math.round(weightedConfidence * 10) / 10,
+    q_class: qClass,
+    q_class_display: qClassDisplay,
+    q_label: qs.qualifier_label || null,
+    available: !!rs.available,
+    trace: { source: 'fullReport.reconciliation_summary + qualifier_summary + topology_summary' },
+  }
+}
+
+function deriveQualificationGuidance(fullReport) {
+  const guidance = []
+  const gl = fullReport.governance_lifecycle || {}
+  const pc = fullReport.proposition_corpus || {}
+  const rs = fullReport.reconciliation_summary || {}
+  const se = fullReport.structural_enrichment || {}
+  const ri = fullReport.revalidation_intelligence || {}
+  const ts = fullReport.topology_summary || {}
+
+  if (!gl.available) {
+    guidance.push({
+      condition: 'No governance lifecycle artifacts present',
+      action: 'SQO governance lifecycle not exercised — promotion state, transitions, and authority ceiling unavailable',
+      priority: 'MEDIUM',
+      axis: 'GOVERNANCE_DEPTH',
+      trace: { source: 'fullReport.governance_lifecycle.available === false' },
+    })
+  }
+
+  if (!pc.available) {
+    guidance.push({
+      condition: 'No proposition corpus',
+      action: 'Semantic propositions not derived — governed structural claims not produced for this run',
+      priority: 'MEDIUM',
+      axis: 'GOVERNANCE_DEPTH',
+      trace: { source: 'fullReport.proposition_corpus.available === false' },
+    })
+  }
+
+  if (!rs.available) {
+    guidance.push({
+      condition: 'Reconciliation unavailable',
+      action: 'Crosswalk translation required before reconciliation can assess structural backing of semantic domains',
+      priority: 'HIGH',
+      axis: 'RECONCILIATION_AUTHORITY',
+      trace: { source: 'fullReport.reconciliation_summary.available === false' },
+    })
+  } else {
+    const reconciled = rs.reconciled_count || rs.aligned_count || 0
+    const total = rs.total_semantic_domains || ts.semantic_domain_count || 0
+    const unreconciled = total - reconciled
+    if (unreconciled > 0) {
+      guidance.push({
+        condition: `${unreconciled} of ${total} domains unreconciled`,
+        action: `Structural backing required for ${unreconciled} domain${unreconciled !== 1 ? 's' : ''} — advisory confirmation mandatory before executive commitment`,
+        priority: unreconciled > total * 0.5 ? 'HIGH' : 'MEDIUM',
+        axis: 'RECONCILIATION_AUTHORITY',
+        trace: { source: `fullReport.reconciliation_summary: ${reconciled}/${total} reconciled` },
+      })
+    }
+  }
+
+  if (!se.available) {
+    guidance.push({
+      condition: 'No code graph or structural centrality',
+      action: 'Code graph enrichment (40.3s) and structural centrality (40.3c) not available — file-level structural intelligence absent',
+      priority: 'LOW',
+      axis: 'STRUCTURAL_RICHNESS',
+      trace: { source: 'fullReport.structural_enrichment.available === false' },
+    })
+  }
+
+  if (gl.available && !gl.promotion_eligible && gl.hold_reason) {
+    guidance.push({
+      condition: `Advancement held: ${gl.hold_reason}`,
+      action: `Qualification at ${gl.s_level} — advancement held, resolution required before progression`,
+      priority: 'MEDIUM',
+      axis: 'GOVERNANCE_DEPTH',
+      trace: { source: `fullReport.governance_lifecycle: hold_reason=${gl.hold_reason}` },
+    })
+  }
+
+  if (pc.available && pc.flagged_count > 0) {
+    guidance.push({
+      condition: `${pc.flagged_count} proposition${pc.flagged_count !== 1 ? 's' : ''} flagged`,
+      action: 'Flagged propositions require operator review before qualification progression',
+      priority: 'HIGH',
+      axis: 'GOVERNANCE_DEPTH',
+      trace: { source: `fullReport.proposition_corpus.flagged_count=${pc.flagged_count}` },
+    })
+  }
+
+  if (ri.available && ri.failed > 0) {
+    guidance.push({
+      condition: `Revalidation: ${ri.failed} check${ri.failed !== 1 ? 's' : ''} failed`,
+      action: `Revalidation detected ${ri.failed} failure${ri.failed !== 1 ? 's' : ''} — substrate does not replay cleanly under structural rigor`,
+      priority: 'HIGH',
+      axis: 'GOVERNANCE_DEPTH',
+      trace: { source: `fullReport.revalidation_intelligence: ${ri.passed}/${ri.total_checks}` },
+    })
+  }
+
+  return guidance.sort((a, b) => {
+    const order = { HIGH: 0, MEDIUM: 1, LOW: 2 }
+    return (order[a.priority] ?? 3) - (order[b.priority] ?? 3)
+  })
+}
+
 function deriveProjection(fullReport) {
   const moduleState = deriveModuleState(fullReport)
 
@@ -286,6 +566,7 @@ function deriveProjection(fullReport) {
       validation_posture: null,
       deployment_risk: null,
       qualification_cognition: null,
+      qualification_decomposition: null,
     }
   }
 
@@ -301,6 +582,12 @@ function deriveProjection(fullReport) {
     validation_posture: deriveValidationPosture(fullReport),
     deployment_risk: deriveDeploymentRisk(fullReport),
     qualification_cognition: deriveQualificationCognition(fullReport),
+    qualification_decomposition: {
+      structural_richness: deriveStructuralRichnessAxis(fullReport),
+      governance_depth: deriveGovernanceDepthAxis(fullReport),
+      reconciliation_authority: deriveReconciliationAuthorityAxis(fullReport),
+      guidance: deriveQualificationGuidance(fullReport),
+    },
   }
 }
 
